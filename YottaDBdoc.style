@@ -321,12 +321,12 @@
 
     heading2:
       parent: heading
-      fontName: stdSansBold
+      fontName: stdSansBoldItalic
       fontSize: 150%
 
     heading3:
       parent: heading
-      fontName: stdSansBoldItalic
+      fontName: stdSansBold
       fontSize: 125%
 
     heading4:

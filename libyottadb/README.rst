@@ -46,6 +46,13 @@ Data types are defined by including ``yottadb.h`` and are one of:
 User Defined Types
 ==================
 
+----
+Byte
+----
+
+``ydb_zchar_t`` -- An unsigned data value that is *exactly* 8-bits (one
+byte).
+
 -------
 Integer
 -------
@@ -91,6 +98,7 @@ within YottaDB. Functions such as ``ydb_get()`` or
 be directed to return token values of type
 ``ydb_token_t``. Depending on the circumstances, using tokens may
 save CPU cycles on type conversion. See `Tokens`_ below.
+*Consider whether to omit tokens on initial implementation.*
 
 ``ydb_tpfnptr_t`` -- A pointer to a function with a single ``void *``
 parameter passed by value, and a single ``ydb_status__t`` parameter
@@ -115,9 +123,6 @@ structure. Values of a ``ydb_type_t`` are:
 - ``YDB_LONG_VAL`` -- value of type ``ydb_long_t``
 - ``YDB_LONGLONG_STAR`` -- pointer to a ``ydb_longlong_t`` type
 - ``YDB_LONGLONG_VAL`` -- value of type ``ydb_long_t``
-- ``YDB_NUMERIC_REQ`` -- caller requests YottaDB to return a numeric
-  value (i.e. one of the ``YDB_*_VAL`` types); see `Numeric
-  Considerations`_ below
 - ``YDB_NUMERIC_STAR`` -- pointer to a ``ydb_numeric_t`` type
 - ``YDB_NUMERIC_VAL`` -- value of type ``ydb_numeric_t``
 - ``YDB_STRING_STAR`` -- pointer to a structure of type ``ydb_string_t``
@@ -126,6 +131,8 @@ structure. Values of a ``ydb_type_t`` are:
 - ``YDB_UINT_VAL`` -- value of type ``ydb_uint_t``
 - ``YDB_ULONG_STAR`` -- pointer to a ``ydb_ulong_t`` value
 - ``YDB_ULONG_VAL`` -- value of type ``ydb_ulong_t``
+- ``YDB_ZCHAR_STAR`` - pointer to a ``ydb_zchar_t`` value
+- ``YDB_ZCHAR_VAL`` -- value of type ``ydb_zchar_t``
 
 ==================
 Symbolic Constants
@@ -205,9 +212,9 @@ Symbolic constants for limits are prefixed with ``YDB_MAX_``. Unless
 otherwise noted, symbolic constants are unsigned integers guaranteed to
 fit within the range of a ``ydb_uint_t`` type.
 
-``YDB_MAX_IDENT`` -- The maximum space in bytes required to store a
-complete identifier (including subscripts, but not including any
-preceding global directory name for a global variable reference).
+``YDB_MAX_IDENT`` --The maximum space in bytes required to store a
+complete variable name, including the preceding caret for a global
+variable.
 
 ``YDB_MAX_MSG`` -- The maximum length in bytes of any message string
 associated with a message code. A buffer of length ``YDB_MAX_MSG``
@@ -223,6 +230,14 @@ to fit in a ``ydb_ulong_t`` type.
 or global variable. An array of ``YDB_MAX_SUB`` elements always
 suffices to pass subscripts.
 
+``YDB_MAX_VAR`` -- The maximum space in bytes required to store a
+complete subscripted variable [#]_ (including caret and subscripts, but not
+including any preceding global directory name for a global variable
+reference).
+
+.. [#] In M source code, as might be appropriate for an indirect
+       reference.
+
 Other
 =====
 
@@ -233,6 +248,87 @@ provided by a caller as the timeout parameter for the functions
 ===============
 Data Structures
 ===============
+
+``ydb_string_t`` is a descriptor for a string [#]_ value, and consists of
+the following fields:
+
+ - ``alloc`` and ``used`` -- fields of type ``ydb_strlen_t`` where
+   ``alloc`` ≥ ``used``
+ - ``address`` -- pointer to a ``ydb_zchar_t``, the starting address of
+   a string
+
+.. [#] Strings in YottaDB are arbitrary sequences of bytes that are not
+       null-terminated. Other languages may refer to them as binary
+       data or blobs.
+
+``ydb_value_t`` -- used to transfer data between libyottadb and
+callers. As libyottadb freely accepts both numbers and strings,
+automatically convering as needed (see `Canonical Numbers`_ below),
+whereas C is statically typed, the ``ydb_value_t`` is a structure that
+contains a tag describing the data, and a container for the data which
+is a union of the supported types. ``ydb_value_t`` consists of:
+
+- ``tag`` -- a field of type ``ydb_type_t``
+
+- a union of fields with the following names:
+
+  - ``double_star`` -- pointer to a ``ydb_double_t`` value
+  - ``double_val`` -- value of type ``ydb_double_t``
+  - ``float_star`` -- pointer to a ``ydb_float_t`` value
+  - ``float_val`` -- value of type ``ydb_float_t``
+  - ``int_star`` -- pointer to a ``ydb_int_t`` value
+  - ``int_val`` -- value of type ``ydb_int_t``
+  - ``long_star`` -- pointer to a ``ydb_long_t`` value
+  - ``long_val`` -- value of type ``ydb_long_t``
+  - ``longlong_star`` -- pointer to a ``ydb_longlong_t`` type
+  - ``longlong_val`` -- value of type ``ydb_long_t``
+  - ``numeric_star`` -- pointer to a ``ydb_numeric_t`` type
+  - ``numeric_val`` -- value of type ``ydb_numeric_t``
+  - ``string_star`` -- pointer to a structure of type ``ydb_string_t``
+  - ``uint_star`` -- pointer to a ``ydb_uint_t`` type
+  - ``uint_val`` -- value of type ``ydb_uint_t``
+  - ``ulong_star`` -- pointer to a ``ydb_ulong_t`` value
+  - ``ulong_val`` -- value of type ``ydb_ulong_t``
+  - ``zchar_star`` -- pointer to a ``ydb_zchar_t`` value
+  - ``zchar_val`` -- value of type ``ydb_zchar_t``
+
+``ydb_var_t`` -- used to specify names (i.e., without subscripts). It
+consists of two fields:
+
+- ``name`` -- a pointer to a ``ydb_string_t`` structure whose ``alloc``
+  ≥ ``YDB_MAX_IDENT``
+- ``accel`` -- a field that is opaque to the caller, but which
+  libyottadb may use to optimize variable name processing. When a
+  caller initializes a ``ydb_var_t`` structure, or changes the
+  ``varname`` field to point to a different variable name, the caller
+  **must** directly or indirectly invoke the ``YDB_RESET_ACCEL()``
+  macro. A caller **must not** modify or otherwise use the ``accel``
+  field except to reset it.
+
+``ydb_varsub_t`` -- used to transfer complete variable names between
+caller and libyottadb, and consists of the four fields:
+
+- ``varname`` -- a ``ydb_var_t`` structure
+- ``varsub_alloc`` and ``varsub_used`` --``ydb_uint_t`` values with a
+  range of 0 through ``YDB_MAX_SUB`` that specify the number of
+  subscripts for which space has been allocated and used in the
+  ``varsubs`` array
+- ``varsubs`` -- an array of ``ydb_value_t`` structures, each providing
+  the value of a subscript
+
+We recommend that applications use the ``YDB_VARSUB_ALLOC(num_subs)``
+and ``YDB_VARSUB_RELEASE()`` macros to allocate ``ydb_varsub_t``
+structures.
+
+======
+Macros
+======
+
+``YDB_RESET_ACCEL``
+
+``YDB_VARSUB_ALLOC``
+
+``YDB_VARSUB_RELEASE``
 
 =================
 Programming Notes
@@ -245,25 +341,121 @@ The YottaDB engine internally automatically converts values between
 numbers and strings as needed. Thus it is legitimate to lexically
 compare the numbers 2 and 11, with the expected result that 11 precedes
 2, and it is equally legitimate to numerically compare the strings "2"
-and '11", with the expected result that 11 is greater than 2. The
+and "11", with the expected result that 11 is greater than 2. The
 functions for numeric and lexical comparisons are different. A
 subscript (key) of a variable can include numbers as well as
 non-numeric strings, with all numeric subscripts preceding all
 non-numeric strings when stepping through the subscripts in order.
 
-Furthermore, in order to ensure the accuracy of certain financial
-calculations, YottaDB internally stores nnumbers as, and performs
-arithmetic using, a scaled packed decimal representation, with
+To ensure the accuracy of financial calculations, YottaDB internally
+stores nnumbers as, and performs arithmetic using, a scaled packed
+decimal representation with 18 signicant decimal digits, with
 optimizations for values within a certain subset of its full
-range of 18 significant decimal digits.
+range. Consequently:
 
-As a consequence of this:
-
-- There are numbers which can be exactly represented in YottaDB (such
-  as 0.1) but which cannot be exactly represented in binary floating
+- Any number that is exactly represented in YottaDB can be exactly
+  represented as a string, with reasonably efficient conversion back
+  and forth.
+- Any integer value of up to 18 significant digits can be exactly
+  represented by an integer type such as ``ydb_longlong-t``, and
+  integers in the inclusive range ±999,999 are handled more efficiently
+  than larger integers.
+- In YottaDB there are numbers which can be exactly represented (such
+  as 0.1), but whcih cannot be exactly represented in binary floating
   point.
-- There are numbers which are represented in 64 bit integers and binary
-  floating point which cannot be exactly represented
+- In 64 bit integers and binary floating point formats, there are
+  numbers which can be exactly represented, but which cannot be exactly
+  represented in YottaDB.
+
+This means that for numeric keys which are not guaranteed to be
+integers:
+
+- In theory, there are edge cases where a value (which would internally
+  be in YottaDB format) returned by a function such as
+  ``ydb_subscript_next()`` and converted to a ``ydb_double_t`` when
+  passed back to C application code, and then converted back to YottaDB
+  internal format in a call to ``ydb_get()`` can result in the node not
+  being found because the double conversion produces a number not
+  identical to the original. Furthermore, there is a cost to the
+  conversion.
+- Passing keys back and forth as strings avoids those edge cases, but of
+  course still has a conversion cost.
+
+To preserve accuracy of numeric values that are returned by libyottadb,
+and which an application code intends to simply pass back to libyottadb
+as a libyottadb provides a ``ydb_numeric_t`` type. A value obtained
+from libyottadb in ``ydb_numeric_t`` loses no precision when returned
+to libyottadb, and as a further benefit is very efficient. While the
+actual value of ``ydb_numeric_t`` is opaque to application cod, the
+``ydb_convert()`` function is available.
+
+Conversely, when passed a string that is a `canonical number`_ for use
+as a key, libyottadb automatically converts it to a number. This
+automatic internal conversion is irrelevant for the majority of typical
+application that:
+
+- simply store and retrieve data associated with keys, potentially
+  testing for the existence of nodes; or
+- transfer keys which are numeric values between application code and
+  libyottadb using numeric types and expect numeric ordering.
+
+However, this automatic internal conversion does affect applications
+that:
+
+- use numeric keys and expect the keys to be sorted in lexical order
+  rather than numeric order; or
+- transfer keys which are numeric values between application code and
+  libyottadb as strings that may or may not be canonical numbers.
+
+Applications that are affected by automatic internal conversion should
+prefix their keys with a character such as "x" which ensures that keys
+are not canonical numbers.
+
+.. _canonical number:
+
+-----------------
+Canonical Numbers
+-----------------
+
+Conceptually, a canonical number is a string that represents a decimal
+number in a standard, concise, form.
+
+#. Any string of decimal digits, optionally preceded by a minus sign
+   ("-"), the first of which is not "0" (except for the number zero
+   itself), that represents an integer of no more than 18 significant
+   digits.
+
+   - The following are canonical numbers: "-1", "0", "3", "10",
+     "99999999999999999999", "999999999999999999990". Note that the
+     last string has only 18 significant digits even though it is 19
+     characters long.
+   - The following are not canonical numbers: "+1" (starts with "+"),
+     "00" (has an extra leading zero), "999999999999999999999" (19
+     significant digits).
+
+#. Any string of decimal digits, optionally preceded by a minus sign
+   that includes one decimal point ("."), the first and last of which
+   are not "0", that represents a number of no more than 18 significant
+   digits.
+
+   - The following are canonical numbers: "-.1", ".3",
+     ".99999999999999999999".
+   - The following are not canonical numbers "+.1" (starts with "+"),
+     "0.3" (first digit is "0"), ".999999999999999999990" (last digit
+     is "0"), ".999999999999999999999" (more than 18 significant
+     digits).
+
+#. Any of the above two forms followed by "E" followed by a canonical
+   number integer in the range -43 to +47 such that the magnitude of
+   the resulting number is between 1E-43 through.1E47.
+  
 
 Tokens
 ======
+
+Since numeric and non-numeric subscripts can be freely intermixed in
+YottaDB, it requires knowledge of the application schema to know
+whether an application mixes numeric and string subscripts at the same
+level for a variable.
+
+*Consider whether this can be deferred for an initial implementation.*
