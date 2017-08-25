@@ -150,6 +150,7 @@
     toc2:
       parent: toc
       leftIndent: 20
+      fontName: stdItalic
 
     toc3:
       parent: toc
