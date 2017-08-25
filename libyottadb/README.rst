@@ -388,7 +388,7 @@ Query
   variable referenced by lvsub. It is not meaningful for a caller to perform any
   operations on handles except to compare two handles for equality.
 
-``ydb_status_t ydb_exists( ydb_uint_t *value, ydb_varsub_t *glvn )``
+``ydb_status_t ydb_data( ydb_uint_t *value, ydb_varsub_t *glvn )``
   In the location pointed to by ``value``, returns the following information about
   the local or global variable node identified by glvn:
 
@@ -404,6 +404,8 @@ Query
   - 110 - The node is an alias with no value, but with a sub-tree.
   - 111 - The node is an alias with a value and a sub-tree.
 
+``ydb_status_t ydb_
+    
 Update
 ======
 
