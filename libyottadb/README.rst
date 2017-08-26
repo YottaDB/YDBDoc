@@ -404,7 +404,6 @@ Query
   - 110 - The node is an alias with no value, but with a sub-tree.
   - 111 - The node is an alias with a value and a sub-tree.
 
-``ydb_status_t ydb_
     
 Update
 ======
