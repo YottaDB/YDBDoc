@@ -74,6 +74,12 @@ below.
 ``ydb_status_t`` -- A signed integer which is the return value
 (status) of a call to a libyottadb function.
 
+``ydb_strlen_t`` -- An unsigned integer type that is able to store the
+maximum length of a string, ``YDB_MAX_STR``.
+
+``ydb_uchar_t`` -- An unsigned data value that is *exactly* 8-bits
+(one byte).
+
 ==================
 Symbolic Constants
 ==================
@@ -135,9 +141,15 @@ node. [#]_
 .. [#] Note for implementers: under the covers, this is ``UNDEF`` but
        renamed to be more meaningful.
 
+.. _YDB_ERR_INVSTRLEN:
+
 ``YDB_ERR_INVSTRLEN`` -- A buffer provided by the caller is not long
 enough for the string to be returned, or the length of a string passed
-as a parameter exceeds ``YDB_MAX_STR``.
+as a parameter exceeds ``YDB_MAX_STR``. In the event the return code
+is ``YDB_ERR_INVSTRLEN`` (for which the first parameter must be of the
+form ``ydb_string_t *value``), then ``value->used`` is set to the
+size required of a sufficiently large buffer, and ``value->address``
+points to the first ``value->alloc`` bytes of the value.
 
 ``YDB_ERR_KEY2BIG`` -- The length of a global variable name and
 subscripts exceeds the limit configured for a database region.
@@ -181,12 +193,16 @@ the following fields:
 
  - ``alloc`` and ``used`` -- fields of type ``ydb_strlen_t`` where
    ``alloc`` ≥ ``used``
- - ``address`` -- pointer to a ``ydb_zchar_t``, the starting address of
+ - ``address`` -- pointer to a ``ydb_uchar_t``, the starting address of
    a string
 
 .. [#] Strings in YottaDB are arbitrary sequences of bytes that are not
        null-terminated. Other languages may refer to them as binary
        data or blobs.
+
+Under normal circumstances ``alloc`` ≥ ``used``; however, this may not
+be the case when a function returns a ``YDB_ERR_INVSTRLEN`` error. See
+`YDB_ERR_INVSTRLEN`_ for details.
 
 ======
 Macros
@@ -207,30 +223,92 @@ value. [#]_
 ``YDB_FREE_STRING(x)`` -- Free the ``ydb_string_t`` structure pointed
 to by ``x``.
    
-===
-API
-===
+==========
+Simple API
+==========
 
 As YottaDB local and global variables can have variable numbers of
 subscripts, to allow the libyottadb Simple API functions to have
 variable numbers of parameters, the last parameter must always be NULL
-(the standard C symbolic constant).
+(the standard C symbolic constant). In the definitions of functions,
+``ydb_string_t *varname`` refers to the name of a variable,
+``[ydb_string_t *subscript, ...]`` refers to optional subscripts
+following a variable name, and ``NULL);`` always terminates a function
+with optional subscripts.
 
-.. code-block:: c
+Function names specific to the libyottadb Simple API end in
+``_s``. Others are common to both Simple API as well as the
+Comprehensive API.
 
-	ydb_status_t ydb_data(
-		ydb_uint_t *value,
+.. code-block:: C
+
+	ydb_status_t ydb_data_s(ydb_uint_t *value,
 		ydb_string_t *varname,
-		[ ydb_string_t *subscript, ... ]
+		[ydb_string_t *subscript, ...]
 		NULL);
 
-In the location pointed to by ``value``, returns the following information about
-the local or global variable node identified by glvn:
+In the location pointed to by ``value``, ``ydb_data_s()`` returns the
+following information about the local or global variable node
+identified by glvn:
 
 - 0 -- There is neither a value nor a sub-tree, i.e., it is undefined.
 - 1 -- There is a value, but no sub-tree
 - 10 -- There is no value, but there is a sub-tree.
 - 11 -- There are both a value and a subtree.
+
+.. code-block:: C
+
+	ydb_status_t ydb_get_s(ydb_string_t *value,
+		ydb_string_t *varname,
+		[ ydb_string_t *subscript, ... ]
+		NULL);
+
+In the location pointed to by ``value``, ``ydb_get_s()`` reports the
+value of the value of the data at the specified node.
+
+If there is no value at the requested global or local variable node,
+or if the intrinsic special variable does not exist,a non-zero return
+value of YDB_ERR_GVUNDEF, YDB_ERR_INVSVN, or YDB_ERR_UNDEF indicates
+the error.
+
+In a database application, a global variable node can potentially be
+changed by another process between the time that a process calls
+``ydb_length()`` to get the length of the data in a node and a
+``ydb_get()`` call to get that data. If a caller cannot ensure from
+the application schema that the size of the buffer it provides is
+large enough for a string returned by ``ydb_get()``, it should code in
+anticipation of a potential ``YDB_ERR_INVSTRLEN`` return code from
+``ydb_get()``. See also the discussion at `YDB_ERR_INVSTRLEN`_
+describing the contents of ``*value`` when ``ydb_get-s()`` returns a
+``YDB_ERR_INVSTRLEN`` return code.
+
+.. code-block:: C
+
+	ydb_status_t ydb_length_s(ydb_strlen_t *value,
+		ydb_string_t *varname,
+		[ ydb_string_t *subscript, ... ]
+		NULL);
+
+In the location pointed to by ``*value``, ``ydb_length_S()`` reports
+the length of the data in bytes. If the data is numeric, ``*value``
+has the length of the canonical string representation of that value.
+
+If there is no value at the requested global or local variable node,
+or if the intrinsic special variable does not exist,a non-zero return
+value of YDB_ERR_GVUNDEF, YDB_ERR_INVSVN, or YDB_ERR_UNDEF indicates
+the error.
+
+.. code-block:: C
+
+	ydb_status_t ydb_node_next_s(ydb_string_t *value,
+		ydb_string_t *varname,
+		[ ydb_string_t *subscript, ... ]
+		NULL);
+
+In the ``ydb_string_t`` returns the next node in the tree in depth first
+  search order, if one exists:
+
+
 
 ================================
 STUFF BELOW IS FROM OLD DOCUMENT
