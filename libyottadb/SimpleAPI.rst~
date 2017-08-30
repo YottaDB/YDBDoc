@@ -1,5 +1,5 @@
 .. header::
-   libyottadb user documentation
+   libyottadb - Simple API User Documentation
 
 .. footer::
    Page ###Page### of ###Total###
@@ -11,10 +11,9 @@
 Overview
 ========
 
-This is the user documentation for directly accessing the YottaDB
-engine without the need to go through a shim implemented in its
-embedded scripting language, M. A process can both call the engine
-directly as well as call functions written in M and exported.
+This is user documentation for accessing the YottaDB engine from C
+using the Simple API. A process can both call the Simple API as well as
+call functions written in M and exported.
 
 **Caveat:** This code does not exist yet. The user documentation is
 being written ahead of the code, and will change in the event the code
@@ -38,41 +37,29 @@ Concepts
 
 Key-value
 
-A subscript (key) of a variable can include numbers as well as
-non-numeric strings, with all numeric subscripts preceding all
-non-numeric strings when stepping through the subscripts in order.
-
 Local and global variables
 
-Aliases
+Subscripts (keys) of variables accessed using Simple API are
+strings. When a string is a `canonical number`_ YottaDB internally
+converts and stores it as a number. When ordering (collating)
+subscripts:
+
+  - Null (empty string) subscripts precede all numeric
+    subscripts.
+
+    - **YottaDB strongly recommends against applications that use null subscripts.**
+
+  - Numeric subscripts precede string subscripts.
+    
+    - Numeric subscripts in numeric order.
+
+  - String subscripts collate in byte order.
 
 ==========
 Data Types
 ==========
 
 Data types are defined by including ``yottadb.h`` and are one of:
-
-- User Defined Types, which in turn are one of:
-
-  - Integer
-  - Floating Point
-  - Other
-
-- Enumerated Types
-
-User Defined Types
-==================
-
-----
-Byte
-----
-
-``ydb_zchar_t`` -- An unsigned data value that is *exactly* 8-bits
-(one byte).
-
--------
-Integer
--------
 
 ``ydb_int_t`` and ``ydb_uint_t`` -- Signed and unsigned integers,
 that are *at least* 16 bits.
@@ -84,75 +71,8 @@ that are *at least* 32 bits.
 integers that are *at least* 64 bits. See `Numeric Considerations`_
 below.
 
---------------
-Floating Point
---------------
-
-``ydb_float_t`` -- A floating point number that is *at least* 32 bits
-in the representation of the underlying computing platform. See
-`Numeric Considerations`_ below.
-
-``ydb_double_t`` -- A floating point number that is *at least* 64 bits
-in the representation of the underlying computing platform. See
-`Numeric Considerations`_ below.
-
--------------
-Other Scalars
--------------
-
-``ydb_numeric_t`` -- A numeric quantity in YottaDB's internal
-representation used to get values known to be numeric from YottaDB in
-order to pass them back to other functions without processing by the
-caller. Except when a caller needs to manipulate a numeric value
-returned by YottaDB, passing parameters as ``ydb_numeric_t`` types is
-the most efficient way to pass numeric quantities between YottaDB
-and C.
-
-``ydb_status_t`` -- Return value (status) of a call to a libyottadb
-function.
-
-``ydb_token_t`` -- The type of a token that represents a value stored
-within YottaDB. Functions such as ``ydb_get()`` or
-``ydb_subscript_*()`` used to get values -- either numeric or strings
--- to be passed to other functions without processing by the caller can
-be directed to return token values of type
-``ydb_token_t``. Depending on the circumstances, using tokens may
-save CPU cycles on type conversion. See `Tokens`_ below.
-*Consider whether to omit tokens on initial implementation.*
-
-``ydb_tpfnptr_t`` -- A pointer to a function with a single ``void *``
-parameter passed by value, and a single ``ydb_status__t`` parameter
-passed by reference. see `Transaction Processing`_ below.
-
-Ennumerated Types
-=================
-
-``ydb_type_t`` -- Defines the type of value in a ``ydb_value_t``
-structure. Values of a ``ydb_type_t`` are:
-
-- ``YDB_CONSTSTRING_STAR`` -- pointer to a literal string constant
-- ``YDB_DOUBLE_STAR`` -- pointer to a ``ydb_double_t`` value
-- ``YDB_DOUBLE_VAL`` -- value of type ``ydb_double_t``
-- ``YDB_EMPTY`` -- the ``ydb_value_t`` structure does not contain a
-  value
-- ``YDB_FLOAT_STAR`` -- pointer to a ``ydb_float_t`` value
-- ``YDB_FLOAT_VAL`` -- value of type ``ydb_float_t``
-- ``YDB_INT_STAR`` -- pointer to a ``ydb_int_t`` value
-- ``YDB_INT_VAL`` -- value of type ``ydb_int_t``
-- ``YDB_LONG_STAR`` -- pointer to a ``ydb_long_t`` value
-- ``YDB_LONG_VAL`` -- value of type ``ydb_long_t``
-- ``YDB_LONGLONG_STAR`` -- pointer to a ``ydb_longlong_t`` type
-- ``YDB_LONGLONG_VAL`` -- value of type ``ydb_long_t``
-- ``YDB_NUMERIC_STAR`` -- pointer to a ``ydb_numeric_t`` type
-- ``YDB_NUMERIC_VAL`` -- value of type ``ydb_numeric_t``
-- ``YDB_STRING_STAR`` -- pointer to a structure of type ``ydb_string_t``
-- ``YDB_TOKEN_VAL`` -- value of type ``ydb_token_t``
-- ``YDB_UINT_STAR`` -- pointer to a ``ydb_uint_t`` type
-- ``YDB_UINT_VAL`` -- value of type ``ydb_uint_t``
-- ``YDB_ULONG_STAR`` -- pointer to a ``ydb_ulong_t`` value
-- ``YDB_ULONG_VAL`` -- value of type ``ydb_ulong_t``
-- ``YDB_ZCHAR_STAR`` - pointer to a ``ydb_zchar_t`` value
-- ``YDB_ZCHAR_VAL`` -- value of type ``ydb_zchar_t``
+``ydb_status_t`` -- An unsigned integer which is the return value
+(status) of a call to a libyottadb function.
 
 ==================
 Symbolic Constants
@@ -574,8 +494,8 @@ are not canonical numbers.
 Canonical Numbers
 -----------------
 
-Conceptually, a canonical number is a string that represents a decimal
-number in a standard, concise, form.
+Conceptually, a canonical number is a string from the Latin character
+set that represents a decimal number in a standard, concise, form.
 
 #. Any string of decimal digits, optionally preceded by a minus sign
    ("-"), the first of which is not "0" (except for the number zero

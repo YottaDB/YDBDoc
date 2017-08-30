@@ -1,5 +1,5 @@
 .. header::
-   libyottadb user documentation
+   libyottadb - Simple API User Documentation
 
 .. footer::
    Page ###Page### of ###Total###
@@ -11,10 +11,9 @@
 Overview
 ========
 
-This is the user documentation for directly accessing the YottaDB
-engine without the need to go through a shim implemented in its
-embedded scripting language, M. A process can both call the engine
-directly as well as call functions written in M and exported.
+This is user documentation for accessing the YottaDB engine from C
+using the Simple API. A process can both call the Simple API as well as
+call functions written in M and exported.
 
 **Caveat:** This code does not exist yet. The user documentation is
 being written ahead of the code, and will change in the event the code
@@ -38,41 +37,29 @@ Concepts
 
 Key-value
 
-A subscript (key) of a variable can include numbers as well as
-non-numeric strings, with all numeric subscripts preceding all
-non-numeric strings when stepping through the subscripts in order.
-
 Local and global variables
 
-Aliases
+Subscripts (keys) of variables accessed using Simple API are
+strings. When a string is a `canonical number`_ YottaDB internally
+converts and stores it as a number. When ordering (collating)
+subscripts:
+
+  - Null (empty string) subscripts precede all numeric
+    subscripts.
+
+    - **YottaDB strongly recommends against applications that use null subscripts.**
+
+  - Numeric subscripts precede string subscripts.
+    
+    - Numeric subscripts in numeric order.
+
+  - String subscripts collate in byte order.
 
 ==========
 Data Types
 ==========
 
 Data types are defined by including ``yottadb.h`` and are one of:
-
-- User Defined Types, which in turn are one of:
-
-  - Integer
-  - Floating Point
-  - Other
-
-- Enumerated Types
-
-User Defined Types
-==================
-
-----
-Byte
-----
-
-``ydb_zchar_t`` -- An unsigned data value that is *exactly* 8-bits
-(one byte).
-
--------
-Integer
--------
 
 ``ydb_int_t`` and ``ydb_uint_t`` -- Signed and unsigned integers,
 that are *at least* 16 bits.
@@ -84,75 +71,8 @@ that are *at least* 32 bits.
 integers that are *at least* 64 bits. See `Numeric Considerations`_
 below.
 
---------------
-Floating Point
---------------
-
-``ydb_float_t`` -- A floating point number that is *at least* 32 bits
-in the representation of the underlying computing platform. See
-`Numeric Considerations`_ below.
-
-``ydb_double_t`` -- A floating point number that is *at least* 64 bits
-in the representation of the underlying computing platform. See
-`Numeric Considerations`_ below.
-
--------------
-Other Scalars
--------------
-
-``ydb_numeric_t`` -- A numeric quantity in YottaDB's internal
-representation used to get values known to be numeric from YottaDB in
-order to pass them back to other functions without processing by the
-caller. Except when a caller needs to manipulate a numeric value
-returned by YottaDB, passing parameters as ``ydb_numeric_t`` types is
-the most efficient way to pass numeric quantities between YottaDB
-and C.
-
-``ydb_status_t`` -- Return value (status) of a call to a libyottadb
-function.
-
-``ydb_token_t`` -- The type of a token that represents a value stored
-within YottaDB. Functions such as ``ydb_get()`` or
-``ydb_subscript_*()`` used to get values -- either numeric or strings
--- to be passed to other functions without processing by the caller can
-be directed to return token values of type
-``ydb_token_t``. Depending on the circumstances, using tokens may
-save CPU cycles on type conversion. See `Tokens`_ below.
-*Consider whether to omit tokens on initial implementation.*
-
-``ydb_tpfnptr_t`` -- A pointer to a function with a single ``void *``
-parameter passed by value, and a single ``ydb_status__t`` parameter
-passed by reference. see `Transaction Processing`_ below.
-
-Ennumerated Types
-=================
-
-``ydb_type_t`` -- Defines the type of value in a ``ydb_value_t``
-structure. Values of a ``ydb_type_t`` are:
-
-- ``YDB_CONSTSTRING_STAR`` -- pointer to a literal string constant
-- ``YDB_DOUBLE_STAR`` -- pointer to a ``ydb_double_t`` value
-- ``YDB_DOUBLE_VAL`` -- value of type ``ydb_double_t``
-- ``YDB_EMPTY`` -- the ``ydb_value_t`` structure does not contain a
-  value
-- ``YDB_FLOAT_STAR`` -- pointer to a ``ydb_float_t`` value
-- ``YDB_FLOAT_VAL`` -- value of type ``ydb_float_t``
-- ``YDB_INT_STAR`` -- pointer to a ``ydb_int_t`` value
-- ``YDB_INT_VAL`` -- value of type ``ydb_int_t``
-- ``YDB_LONG_STAR`` -- pointer to a ``ydb_long_t`` value
-- ``YDB_LONG_VAL`` -- value of type ``ydb_long_t``
-- ``YDB_LONGLONG_STAR`` -- pointer to a ``ydb_longlong_t`` type
-- ``YDB_LONGLONG_VAL`` -- value of type ``ydb_long_t``
-- ``YDB_NUMERIC_STAR`` -- pointer to a ``ydb_numeric_t`` type
-- ``YDB_NUMERIC_VAL`` -- value of type ``ydb_numeric_t``
-- ``YDB_STRING_STAR`` -- pointer to a structure of type ``ydb_string_t``
-- ``YDB_TOKEN_VAL`` -- value of type ``ydb_token_t``
-- ``YDB_UINT_STAR`` -- pointer to a ``ydb_uint_t`` type
-- ``YDB_UINT_VAL`` -- value of type ``ydb_uint_t``
-- ``YDB_ULONG_STAR`` -- pointer to a ``ydb_ulong_t`` value
-- ``YDB_ULONG_VAL`` -- value of type ``ydb_ulong_t``
-- ``YDB_ZCHAR_STAR`` - pointer to a ``ydb_zchar_t`` value
-- ``YDB_ZCHAR_VAL`` -- value of type ``ydb_zchar_t``
+``ydb_status_t`` -- A signed integer which is the return value
+(status) of a call to a libyottadb function.
 
 ==================
 Symbolic Constants
@@ -173,7 +93,9 @@ one of the following types:
 Function Return Codes
 =====================
 
-Return codes from calls to libyottadb are of type ``ydb_status_t``.
+Return codes from calls to libyottadb are of type
+``ydb_status_t``. Normal return codes are non-negative (greater than
+or equal to zero); error return codes are negative.
 
 -------------------
 Normal Return Codes
@@ -183,47 +105,48 @@ Symbolic constants for normal return codes are prefixed with ``YDB_``.
 
 ``YDB_STATUS_OK`` -- Normal return following successful execution.
 
-``YDB_VALUE_EQU`` -- A call to a ``ydb_*_compare()`` function reports
-that the arguments are equal.
-
-``YDB_VALUE_GT`` -- A call to a ``ydb_*_compare()`` function reports
-that the first argument is greater than the second (for numeric
-comparisons) or lexically follows the second (for string comparisons).
-
-``YDB_VALUE_LT`` -- A call to a ``ydb_*_compare()`` function reports
-that the first argument is less than the second (for numeric
-comparisons) or lexically precedes the second (for string comparisons).
-
-
 ------------------
 Error Return Codes
 ------------------
 
 Symbolic constants for error codes returned by calls to libyottadb are
-prefixed with ``YDB_ERR_``.
+prefixed with ``YDB_ERR_``. [#]_ The symbolic constants below are not
+intended to be a complete list of all error messages that Simple API
+functions can return - the ``ydb_message()`` functions provides a way
+to get detailed information about a error codes for those without
+symbolic constants.
+
+.. [#] Note for implementers: the actual values are negated ZMESSAGE
+       error codes.
+
+``YDB_ERR_GVINVALID`` -- A global variable name is too long. [#]_
+
+.. [#] Note for implementers: YottaDB silently truncates local
+       variable names that are too long. The implementation should
+       catch this and return an error code, e.g., something like
+       ``YDB_ERR_LVINVALID``.
 
 ``YDB_ERR_GVUNDEF`` -- No value exists at a requested global variable
 node.
 
-``YDB_ERR_INVMSGNNUM`` -- A call to ``ydb_zmessage()`` specified an
-invalid message code.
+``YDB_ERR_LVUNDEF`` -- No value exists at a requested local variable
+node. [#]_
+
+.. [#] Note for implementers: under the covers, this is ``UNDEF`` but
+       renamed to be more meaningful.
 
 ``YDB_ERR_INVSTRLEN`` -- A buffer provided by the caller is not long
-enough for the string to be returned.
+enough for the string to be returned, or the length of a string passed
+as a parameter exceeds ``YDB_MAX_STR``.
 
-``YDB_ERR_INVSUBS`` -- The number of entries in a ``ydb_varsub_t``
-structure provided by the caller is insufficient for the actual number
-of subscripts to be returned.
+``YDB_ERR_KEY2BIG`` -- The length of a global variable name and
+subscripts exceeds the limit configured for a database region.
 
-``YDB_ERR_INVSVN`` -- A call referenced a non-existent intrinsic
-special variable.
+``YDB_ERR_MAXNRSUBSCRIPTS`` -- The number of subscripts specified in
+the call exceeded ``YDB_MAX_SUB``.
 
-``YDB_ERR_INVTOKEN`` -- Either a call parameter specifies that the
-value is a token, but the token is invalid, or libyottadb expects a
-token, but the tag field is not ``YDB_INTERNAL``.
-
-``YDB_ERR_LVUNDEF`` -- No value exists at a requested local variable
-node.
+``YDB_ERR_UNKNOWN`` -- A call to ``ydb_zmessage()`` specified an
+invalid message code.
 
 Limits
 ======
@@ -246,24 +169,8 @@ caller to ``ydb_get()`` that provides a buffer of ``YDB_MAX_STR`` will
 never get a ``YDB_ERR_INVSTRLEN`` error. ``YDB_MAX_STR`` is guaranteed
 to fit in a ``ydb_ulong_t`` type.
 
-``YDB_MAX_SUB`` -- The maximum number of subscripts (keys) for a local
-or global variable. An array of ``YDB_MAX_SUB`` elements always
-suffices to pass subscripts.
-
-``YDB_MAX_VAR`` -- The maximum space in bytes required to store a
-complete subscripted variable [#]_ (including caret and subscripts, but not
-including any preceding global directory name for a global variable
-reference).
-
-.. [#] In M source code, as might be appropriate for an indirect
-       reference.
-
-Other
-=====
-
-``YDB_UNTIMED`` is a negative integer of type ``ydb_long_t`` to be
-provided by a caller as the timeout parameter for the functions
-``ydb_lock()`` and ``ydb_lock_incr()``.
+``YDB_MAX_SUB`` -- The maximum number of subscripts for a local or
+global variable.
 
 ===============
 Data Structures
@@ -281,112 +188,53 @@ the following fields:
        null-terminated. Other languages may refer to them as binary
        data or blobs.
 
-``ydb_value_t`` -- used to transfer data between libyottadb and
-callers. As libyottadb freely accepts both numbers and strings,
-automatically convering as needed (see `Dynamic typing with automatic
-conversion`_ below), whereas C is statically typed, the
-``ydb_value_t`` is a structure that contains a tag describing the
-data, and a container for the data which is a union of the supported
-types. ``ydb_value_t`` consists of:
-
-- ``tag`` -- a field of type ``ydb_type_t``
-
-- a union of fields with the following names:
-
-  - ``double_star`` -- pointer to a ``ydb_double_t`` value
-  - ``double_val`` -- value of type ``ydb_double_t``
-  - ``float_star`` -- pointer to a ``ydb_float_t`` value
-  - ``float_val`` -- value of type ``ydb_float_t``
-  - ``int_star`` -- pointer to a ``ydb_int_t`` value
-  - ``int_val`` -- value of type ``ydb_int_t``
-  - ``long_star`` -- pointer to a ``ydb_long_t`` value
-  - ``long_val`` -- value of type ``ydb_long_t``
-  - ``longlong_star`` -- pointer to a ``ydb_longlong_t`` type
-  - ``longlong_val`` -- value of type ``ydb_long_t``
-  - ``numeric_star`` -- pointer to a ``ydb_numeric_t`` type
-  - ``numeric_val`` -- value of type ``ydb_numeric_t``
-  - ``string_star`` -- pointer to a structure of type ``ydb_string_t``
-  - ``uint_star`` -- pointer to a ``ydb_uint_t`` type
-  - ``uint_val`` -- value of type ``ydb_uint_t``
-  - ``ulong_star`` -- pointer to a ``ydb_ulong_t`` value
-  - ``ulong_val`` -- value of type ``ydb_ulong_t``
-  - ``zchar_star`` -- pointer to a ``ydb_zchar_t`` value
-  - ``zchar_val`` -- value of type ``ydb_zchar_t``
-
-``ydb_var_t`` -- used to specify names (i.e., without subscripts). It
-consists of two fields:
-
-- ``name`` -- a pointer to a ``ydb_string_t`` structure whose ``alloc``
-  ≥ ``YDB_MAX_IDENT``
-- ``accel`` -- a field that is opaque to the caller, but which
-  libyottadb may use to optimize variable name processing. When a
-  caller initializes a ``ydb_var_t`` structure, or changes the
-  ``varname`` field to point to a different variable name, the caller
-  **must** directly or indirectly invoke the ``YDB_RESET_ACCEL()``
-  macro. A caller **must not** modify or otherwise use the ``accel``
-  field except to reset it.
-
-``ydb_varsub_t`` -- used to transfer complete variable names between
-caller and libyottadb, and consists of the four fields:
-
-- ``varname`` -- a ``ydb_var_t`` structure
-- ``varsub_alloc`` and ``varsub_used`` --``ydb_uint_t`` values with a
-  range of 0 through ``YDB_MAX_SUB`` that specify the number of
-  subscripts for which space has been allocated and used in the
-  ``varsubs`` array
-- ``varsubs`` -- an array of ``ydb_value_t`` structures, each providing
-  the value of a subscript
-
-We recommend that applications use the ``YDB_VARSUB_ALLOC(num_subs)``
-and ``YDB_VARSUB_RELEASE()`` macros to allocate ``ydb_varsub_t``
-structures.
-
 ======
 Macros
 ======
 
-``YDB_RESET_ACCEL(x)`` -- Reset (initializes) the ``accel`` field of a
-``ydb_var_t`` structure.
+``YDB_ALLOC_STRING(x, strlit)`` -- Allocate a ``ydb_string_t`` structure
+and initialize it to ``strlit``, returning the address of the
+structure. Note that while the ``used`` field is the size of
+``strlit``, the ``alloc`` field may be rounded up to a larger
+value. [#]_
 
-``YDB_SET_STRING(x, strlit)`` -- Allocate a ``ydb_string_t`` structure
-and initialize it to ``strlit``. Note that while the ``used`` field is
-the size of ``strlit``, the ``alloc`` field may be rounded up to a
-larger value.
+.. [#] Note for implementers: under the covers, ``YDB_ALLOC_STRING()``
+       and ``YDB_FREE_STRING()`` should call the ``ydb_malloc()`` and
+       ``ydb_free()`` functions, which are aliases for the
+       ``gtm_malloc()`` and ``gtm_free()`` functions (i.e., either
+       prefix calls the same function).
 
-``YDB_SET_VARNAME_LIT(x, strlit)`` and ``YDB_SET_VARNAME(x, varname)``
--- Where x is a pointer to a ``ydb_var_t`` structure initialize that
-structure, with a literal string in the first case, and where
-``varname`` is a pointer to a ``ydb_string_t`` structure, to the string
-in that structure. They also reset the ``accel`` field, removing the
-need to call ``YDB_RESET_ACCEL()``.
-
-``YDB_VARSUB_ALLOC(num_subs)`` -- Allocate a ``ydb_varsubs_t``
-structure with space for ``num_subs`` subscripts, and initialize the
-``varsub_alloc`` field to ``num_subs`` and the ``varsub_used`` field to
-zero.
-
-``YDB_VARSUB_FREE(x)`` -- Free (release back to unused memory) the
-``ydb_varsub_t`` structure pointed to by x.
-
+``YDB_FREE_STRING(x)`` -- Free the ``ydb_string_t`` structure pointed
+to by ``x``.
+   
 ===
 API
 ===
 
-API functions are classified as one of:
+As YottaDB local and global variables can have variable numbers of
+subscripts, to allow the libyottadb Simple API functions to have
+variable numbers of parameters, the last parameter must always be NULL
+(the standard C symbolic constant).
 
-- Query -- Functions that do not update any intrinsic, local or global
-  variables. [#]_
-- Update -- Functions that update intrinsic, local or global variables.
-- Transaction Processing -- Functions that implement support for ACID
-  transactions.
+.. code-block:: c
 
-.. [#] Any call to libyottadb is permitted to update the ``accel``
-       field of a ``ydb_var_t`` structure passed in to it.
+	ydb_status_t ydb_data(
+		ydb_uint_t *value,
+		ydb_string_t *varname,
+		[ ydb_string_t *subscript, ... ]
+		NULL);
 
-**Need definition of conventions: gvn, glivn, etc.**
+In the location pointed to by ``value``, returns the following information about
+the local or global variable node identified by glvn:
 
-lvn subscripted or unsubscripted local
+- 0 -- There is neither a value nor a sub-tree, i.e., it is undefined.
+- 1 -- There is a value, but no sub-tree
+- 10 -- There is no value, but there is a sub-tree.
+- 11 -- There are both a value and a subtree.
 
+================================
+STUFF BELOW IS FROM OLD DOCUMENT
+================================
 
 Query
 =====
@@ -574,8 +422,8 @@ are not canonical numbers.
 Canonical Numbers
 -----------------
 
-Conceptually, a canonical number is a string that represents a decimal
-number in a standard, concise, form.
+Conceptually, a canonical number is a string from the Latin character
+set that represents a decimal number in a standard, concise, form.
 
 #. Any string of decimal digits, optionally preceded by a minus sign
    ("-"), the first of which is not "0" (except for the number zero
