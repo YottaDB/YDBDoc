@@ -11,9 +11,10 @@
 Overview
 ========
 
-This is user documentation for accessing the YottaDB engine from C
-using the Simple API. A process can both call the Simple API as well as
-call functions written in M and exported.
+libyottadb is a library for for accessing the YottaDB engine from C
+using the Simple API. A process can both call the Simple API as well
+as call functions exported from M, the scripting language embedded in
+YottaDB.
 
 **Caveat:** This code does not exist yet. The user documentation is
 being written ahead of the code, and will change in the event the code
@@ -24,7 +25,7 @@ Using libyottadb
 ================
 
 1. Install YottaDB.
-#. Include the ``yottadb.h`` file in your C program and compile it.
+#. ``#include`` the ``yottadb.h`` file in your C program and compile it.
 #. Perform any database configuration and initialization needed
    (configuring global directories, creating database files, starting a
    Source Server process, etc.).
@@ -35,6 +36,8 @@ Using libyottadb
 Concepts
 ========
 
+**This section needs to be written.*
+
 Key-value
 
 Local and global variables
@@ -44,16 +47,16 @@ strings. When a string is a `canonical number`_ YottaDB internally
 converts and stores it as a number. When ordering (collating)
 subscripts:
 
-  - Null (empty string) subscripts precede all numeric
-    subscripts.
+- Null (empty string) subscripts precede all numeric
+  subscripts.
 
-    - **YottaDB strongly recommends against applications that use null subscripts.**
+  - **YottaDB strongly recommends against applications that use null subscripts.**
 
-  - Numeric subscripts precede string subscripts.
-    
-    - Numeric subscripts in numeric order.
+- Numeric subscripts precede string subscripts.
 
-  - String subscripts collate in byte order.
+  - Numeric subscripts in numeric order.
+
+- String subscripts collate in byte order.
 
 ==========
 Data Types
@@ -70,6 +73,12 @@ that are *at least* 32 bits.
 ``ydb_longlong_t`` and ``ydb_ulonglong_t`` - Signed and unsigned
 integers that are *at least* 64 bits. See `Numeric Considerations`_
 below.
+
+``ydb_maxsub_t`` -- A signed integer that is able to store the maximum
+number of subscripts of a local or global variable,
+``YDB_MAX_SUB``. It is signed rather than unsigned to permit a
+negative value for "name level" invocations of
+``ydb_subscript_next_s()`` and ``ydb_subscript_previous_t()``.
 
 ``ydb_status_t`` -- A signed integer which is the return value
 (status) of a call to a libyottadb function.
@@ -141,15 +150,24 @@ node. [#]_
 .. [#] Note for implementers: under the covers, this is ``UNDEF`` but
        renamed to be more meaningful.
 
+``YDB_ERR_INSUFFSUBS`` -- A call to ``ydb_node_next_s()`` or
+``ydb_node_previous_s()`` did not provide enough parameters for the
+return values. [#]_
+
+.. [#] Note for implementers: this is a new error, not currently in
+       the code base.
+
 .. _YDB_ERR_INVSTRLEN:
 
 ``YDB_ERR_INVSTRLEN`` -- A buffer provided by the caller is not long
 enough for the string to be returned, or the length of a string passed
 as a parameter exceeds ``YDB_MAX_STR``. In the event the return code
-is ``YDB_ERR_INVSTRLEN`` (for which the first parameter must be of the
-form ``ydb_string_t *value``), then ``value->used`` is set to the
-size required of a sufficiently large buffer, and ``value->address``
-points to the first ``value->alloc`` bytes of the value.
+is ``YDB_ERR_INVSTRLEN`` and if ``*xyz`` is the ``ydb_string_t`` value
+which does not provide sufficient space, then ``xyz->used`` is set to
+the size required of a sufficiently large buffer, and ``xyz->address``
+points to the first ``xyz->alloc`` bytes of the value. In this case
+the ``used`` field of the ``ydb_string_t`` structure is greater than
+the ``alloc`` field.
 
 ``YDB_ERR_KEY2BIG`` -- The length of a global variable name and
 subscripts exceeds the limit configured for a database region.
@@ -227,25 +245,41 @@ to by ``x``.
 Simple API
 ==========
 
-As YottaDB local and global variables can have variable numbers of
-subscripts, to allow the libyottadb Simple API functions to have
-variable numbers of parameters, the last parameter must always be NULL
-(the standard C symbolic constant). In the definitions of functions,
-``ydb_string_t *varname`` refers to the name of a variable,
-``[ydb_string_t *subscript, ...]`` refers to optional subscripts
-following a variable name, and ``NULL);`` always terminates a function
-with optional subscripts.
+To allow the libyottadb Simple API functions to handle
+a variable tree whose nodes have varying numbers of subscripts, the
+actual number of subscripts is itself passed as a parameter.
+
+In the definitions of functions:
+
+- ``ydb_maxsub_t count`` and ``ydb_maxsub_t *count`` refer to an
+  actual number subscripts,
+- ``ydb_string_t *varname`` refers to the name of a variable, and
+- ``[, ydb_string_t *subscript, ...]`` and ``ydb_string_t *subscript[,
+  ydb_string_t *subscript]`` refer to placeholders for
+  subscripts whose actual number is defined by ``count`` or
+  ``*count``.
+
+**Caveat** Specifying a count that exceeds the actual number of
+parameters passed will almost certainly result in an unpleasant bug
+that is difficult to troubleshoot. [#]_
+
+.. [#] Note for implementers: the implementation should attempt to
+       limit the damage by not looking for more subscripts than are
+       permitted by ``YDB_MAX_SUB``.
 
 Function names specific to the libyottadb Simple API end in
-``_s``. Others are common to both Simple API as well as the
-Comprehensive API.
+``_s``. Those common to both Simple API as well as the Comprehensive
+API do not.
+
+ydb_data_s()
+============
 
 .. code-block:: C
 
 	ydb_status_t ydb_data_s(ydb_uint_t *value,
-		ydb_string_t *varname,
-		[ydb_string_t *subscript, ...]
-		NULL);
+		ydb_maxsub_t count,
+		ydb_string_t *varname[,
+		ydb_string_t *subscript, ...]);
 
 In the location pointed to by ``value``, ``ydb_data_s()`` returns the
 following information about the local or global variable node
@@ -256,17 +290,20 @@ identified by glvn:
 - 10 -- There is no value, but there is a sub-tree.
 - 11 -- There are both a value and a subtree.
 
+ydb_get_s()
+===========
+ 
 .. code-block:: C
 
 	ydb_status_t ydb_get_s(ydb_string_t *value,
-		ydb_string_t *varname,
-		[ ydb_string_t *subscript, ... ]
-		NULL);
+		ydb_maxsub_t count,
+		ydb_string_t *varname[,
+		ydb_string_t *subscript, ... ]);
 
 In the location pointed to by ``value``, ``ydb_get_s()`` reports the
 value of the value of the data at the specified node.
 
-If there is no value at the requested global or local variable node,
+If there is no value at the specified global or local variable node,
 or if the intrinsic special variable does not exist,a non-zero return
 value of YDB_ERR_GVUNDEF, YDB_ERR_INVSVN, or YDB_ERR_UNDEF indicates
 the error.
@@ -279,17 +316,50 @@ the application schema that the size of the buffer it provides is
 large enough for a string returned by ``ydb_get()``, it should code in
 anticipation of a potential ``YDB_ERR_INVSTRLEN`` return code from
 ``ydb_get()``. See also the discussion at `YDB_ERR_INVSTRLEN`_
-describing the contents of ``*value`` when ``ydb_get-s()`` returns a
-``YDB_ERR_INVSTRLEN`` return code.
+describing the contents of ``*value`` when ``ydb_get_s()`` returns a
+``YDB_ERR_INVSTRLEN`` return code. Similarly, since a node can always
+be deleted between a call such as ``ydb_node_next_s()`` and a call to
+``ydb_get-s()``, a caller of ``ydb_get_s()`` to access a global
+variable node should code in anticipation of a potential
+``YDB_ERR_GVUNDEF``.
+
+ydb_kill_s()
+============
+
+.. code-block:: C
+
+	ydb_status_t ydb_kill_s([ydb_maxsub_t count,
+		ydb_string_t *varname[,
+		ydb_string_t *subscript, ...], ...,] NULL);
+
+**Note:** the parameter list **must** be terminated by a NULL pointer.
+
+Kills -- deletes all nodes in -- each of the local or global variable
+trees or sub-trees specified. In the special case where the only
+parameter is a NULL, ``ydb_kill_s()`` kills all local variables.
+
+ydb_kill_excl_s()
+=================
+
+.. code-block:: C
+
+	ydb_status_t ydb_kill_excl_s(ydb_string_t *varnamelist);
+
+``*varnamelist`` is a comma separated list of local variable names.
+``ydb_kill_excl_s()`` kills the trees of all local variable names
+except those on the list.
+
+ydb_length_s()
+==============
 
 .. code-block:: C
 
 	ydb_status_t ydb_length_s(ydb_strlen_t *value,
-		ydb_string_t *varname,
-		[ ydb_string_t *subscript, ... ]
-		NULL);
+		ydb_maxsub_t count,
+		ydb_string_t *varname[,
+		ydb_string_t *subscript, ... ]);
 
-In the location pointed to by ``*value``, ``ydb_length_S()`` reports
+In the location pointed to by ``*value``, ``ydb_length_s()`` reports
 the length of the data in bytes. If the data is numeric, ``*value``
 has the length of the canonical string representation of that value.
 
@@ -298,105 +368,152 @@ or if the intrinsic special variable does not exist,a non-zero return
 value of YDB_ERR_GVUNDEF, YDB_ERR_INVSVN, or YDB_ERR_UNDEF indicates
 the error.
 
+ydb_node_next_s()
+=================
+		
 .. code-block:: C
 
-	ydb_status_t ydb_node_next_s(ydb_string_t *value,
+	ydb_status_t ydb_node_next_s(ydb_maxsub_t *value,
+		ydb_maxsub_t *count,
+		ydb_string_t *varname,
+		ydb_string_t *subscript[, ... ]);
+
+``ydb_node_next_s()`` facilitates breadth-first traversal of a local or
+global variable tree. Note that the parameters are both inputs to  the
+function as well as outputs from the function, and that the number of
+subscripts can differ between the input node of the call and the
+output node reported by the call, which is the reason the number of
+subscripts is passed by reference.
+
+As an input parameter ``*value`` specifies the number of subscripts in
+the input node, which does not need to exist -- a value of 0 will
+return the first node in the tree.
+
+Except when the ``ydb_status_t`` value returned by
+``ydb_node_next_s()`` returns an error code, ``*value`` on the return
+from a call specifies the number of subscripts in the next node, which
+will be a node with data unless there is no next node (i.e., the input
+node is the last in the tree), in which case ``*value`` will be 0 on
+output.
+
+``ydb_node_next_s()`` does not change ``*varname``, but does change
+the ``*subscript`` parameters.
+
+- A ``YDB_ERR_INSUFFSUBS`` return code indicates an error if there are
+  insufficient parameters to return the subscript.
+- If one of the ``subscript->alloc`` values indicates insufficient
+  space for an output value, the return code is the error
+  ``YDB_ERR_INVSTRLEN``. See also the discussion at
+  `YDB_ERR_INVSTRLEN`_ describing the contents of that ``*subscript``
+  parameter. In the event of a ``YDB_ERR_INVSTRLEN`` error, the values
+  in any subscripts beyond that identified by ``*value`` do not
+  contain meaningful values.
+
+Note that a call to ``ydb_node_next_s()`` must always have at least
+one subscript, since it is a *non-sequitur* to call it without
+subscripts and expect a return without subscripts.
+
+ydb_node_previous_s()
+=====================
+
+.. code-block:: C
+
+	ydb_status_t ydb_node_previous_s(ydb_maxsub_t *value,
+		ydb_maxsub_t *count,
 		ydb_string_t *varname,
 		[ ydb_string_t *subscript, ... ]
 		NULL);
 
-In the ``ydb_string_t`` returns the next node in the tree in depth first
-  search order, if one exists:
+Analogous to ``ydb_node_next(s)``, ``ydb_node_previous_s()``
+facilitates breadth-first traversal of a local or global variable
+tree, except that:
 
+- ``ydb_node_previous_s()`` reports the predecessor node,
+- an input value of 0 for ``*value`` reports the last node in the tree
+  on output, and 
+- an output value of 0 for ``*value`` means there is no previous node.
 
+Other behavior of ``ydb_node_previous_s()`` is the same as
+`ydb_node_next_s()`_.
 
-================================
-STUFF BELOW IS FROM OLD DOCUMENT
-================================
+ydb_put_s()
+===========
 
-Query
-=====
+.. code-block:: C
 
-``ydb_status_t ydb_alias_handle( ydb_string_t *value, ydb_varsub_t *lvn )``
-  In the location pointed to by ``value->address`` returns the handle of the local
-  variable referenced by lvsub. It is not meaningful for a caller to perform any
-  operations on handles except to compare two handles for equality.
+	ydb_status_t ydb_put_s(ydb_string_t *value,
+		ydb_maxsub_t count,
+		ydb_string_t *varname[,
+		ydb_string_t *subscript, ... ]);
 
-``ydb_status_t ydb_data( ydb_uint_t *value, ydb_varsub_t *glvn )``
-  In the location pointed to by ``value``, returns the following information about
-  the local or global variable node identified by glvn:
+``ydb_get_s()`` sets the value of the data at the specified node to
+the value referenced by ``*value``. If ``*value`` references a string
+that is a `canonical number`_, YottaDB converts it to a number and
+stores the number.
 
-  - 0 -- There is neither a value nor a sub-tree, i.e., it is undefined.
-  - 1 -- There is a value, but no sub-tree
-  - 10 -- There is no value, but there is a sub-tree.
-  - 11 -- There are both a value and a subtree.
-
-  The following values are only meaningful if glvn identifies a local variable node:
-
-  - 100 -- The node is an alias, but there is neither a value nor a sub-tree.
-  - 101 -- The node is an alias with a value but sub-tree.
-  - 110 -- The node is an alias with no value, but with a sub-tree.
-  - 111 -- The node is an alias with a value and a sub-tree.
-
-``ydb_get( ydb_value_t *value, ydb_varsub_t *glivn )``
-  In the container pointer to by ``value``, libyottadb returns the value referred to
-  by ``glivn``. If there is no value at the requested global or local variable node,
-  or if the intrinsic special variable does not exist,a non-zero return value of
-  YDB_ERR_GVUNDEF, YDB_ERR_INVSVN, or YDB_ERR_UNDEF indicates the error.
-
-  In a database application, a global variable node can potentially be
-  changed by another process between the time that a process calls
-  ``ydb_length()`` to get the length of the data in a node and a
-  ``ydb_get()`` call to get that data. If a caller cannot ensure from
-  the application schema that the size of the buffer it provides is
-  large enough for a string returned by ``ydb_get()``, it should code
-  in anticipation of a potential ``YDB_ERR_INVSTRLEN`` return code
-  from ``ydb_get()``.
-
-``ydb_length(ydb_ulong_t *value1, ydb_ulong_t *value2, ydb_ulong_t *value3, ydb_varsub_t *glivn)``
-
-  For each non-null ``value*`` parameter, in the memory location
-  pointed to by that parameter, lobyottadb returns the following
-  information about the node specified by ``*glivsub``. If there is no
-  value at the requested global or local variable node, or if a
-  requested intrinsic special variable does not exist,a non-zero
-  return value of YDB_ERR_GVUNDEF, YDB_ERR_INVSVN, or YDB_ERR_UNDEF
-  indicates the error.
-
-  - ``*value1`` -- the length of the data in bytes. If the data is
-    numeric, ``*value1`` has the length of the canonical string
-    representation of that value.
-  - ``*value2`` -- if the environment variable ``ydb_chset`` at
-    process startup has the (case insensitive) value "UTF-8",
-    ``*value2`` has the length of ``*glivsub`` in bytes; otherwise
-    ``*value2`` is the same as ``*value1``.
-  - ``*value3`` -- if the environment variable ``ydb_chset`` at
-    process startup has the (case insensitive) value "UTF-8",
-    ``*value3`` has the length of ``*glivsub`` in glyphs; otherwise
-    ``*value3`` is the same as ``*value1``.
-
-``ydb_node_next(ydb_varsub_t *next, ydb_value_t *value, ydb_varsub_t *glvn)``
-
-  ``ydb_node_next()`` returns the next node in the tree in depth first
-  search order, if one exists:
-
-  - If ``next->varname->name->alloc`` ≥ ``glvn->varname->name->used``
-    ``ydb_node_next()`` copies the ``name->address`` and
-    ``name->used`` sub-fields from the
-    ``glvn->varname`` stucture to the ``next->varname`` structure, returning a
-    ``YDB_ERR_INVSTRLEN`` error if ``next->varname->name->alloc`` <
-    ``glvn->varname->name->used``.
-
-  - If ``next->varsub_alloc`` is large enough to hold the subscripts
-    ``ydb_node_next()`` sets ``next->varsub_used`` to the actual
-    number of subscripts, and
-
-  
-Update
-======
-
-Transaction Processing
+ydb_subscript_next_s()
 ======================
+
+.. code-block:: C
+
+	ydb_status_t ydb_subscript_next_s(ydb_string_t *value,
+		ydb_maxsub_t *count, ydb_string_t *varname[,
+		ydb_string_t *subscript, ... ]);
+
+``ydb_subscript_next_s()`` returns the next subscript at the lowest
+level specified by ``*count``, by replacing the ``subscript->address``
+at the specified level with the next subscript, and the corresponding
+``subscript->used`` with its length. If there is no next subscript at
+that level, it decrements ``*count``. [#]_
+
+.. [#] This behavior provides symmetry with
+       `ydb_subscript_previous_s()`_.
+
+If ``*count`` is zero, ``ydb_subscript_next_s()`` returns the next
+local or global variable name, and if ``*varname`` references the
+last variable name, ``*count`` is -1 on the return.
+
+ydb_subscript_previous_s()
+==========================
+
+.. code-block:: C
+
+	ydb_status_t ydb_subscript_previous_s(ydb_string_t *value,
+		ydb_maxsub_t *count, ydb_string_t *varname[,
+		ydb_string_t *subscript, ... ]);
+
+``ydb_subscript_previous_s()`` returns the preceding subscript at the
+lowest level specified by ``*count``, by replacing the
+``subscript->address`` at the lowest level with the next subscript,
+and the corresponding ``subscript->used`` with its length. If there is
+no previous subscript, it decrements ``*count``. [#]_
+
+.. [#] Since the empty string is a legal subscript and is the first in
+       YottaDB's natural collation order, simply setting
+       ``subscript->used`` to zero does not discriminate between the
+       case where the input specifies the first subscript, and the
+       case where there actually is a preceding node with the empty
+       string as a subscript. Decrementing ``*count`` allows the
+       Simple API to allow for this case.
+
+If ``*count`` is zero, ``ydb_subscript_previous_s()`` returns the
+preceding local or global variable name, and if ``*varname``
+references the first global variable name, ``*count`` is -1 on the
+return.
+
+ydb_withdraw_s()
+================
+
+.. code-block:: C
+
+	ydb_status_t ydb_withdraw_s(ydb_maxsub_t count,
+		ydb_string_t *varname[,
+		ydb_string_t *subscript, ...][, ...] NULL);
+
+**Note:** the parameter list **must** be terminated by a NULL pointer.
+
+Deletes the root node in each of the local or global variable
+trees or sub-trees specified, leaving the sub-trees unmodified.
 
 =================
 Programming Notes
@@ -434,61 +551,26 @@ To ensure the accuracy of financial calculations, YottaDB internally
 stores nnumbers as, and performs arithmetic using, a scaled packed
 decimal representation with 18 signicant decimal digits, with
 optimizations for values within a certain subset of its full
-range. Consequently:
+range. Consequently, any number that is exactly represented in YottaDB
+can be exactly represented as a string, with reasonably efficient
+conversion back and forth.
 
-- Any number that is exactly represented in YottaDB can be exactly
-  represented as a string, with reasonably efficient conversion back
-  and forth.
-- Any integer value of up to 18 significant digits can be exactly
-  represented by an integer type such as ``ydb_longlong-t``, and
-  integers in the inclusive range ±999,999 are handled more efficiently
-  than larger integers.
-- In YottaDB there are numbers which can be exactly represented (such
-  as 0.1), but whcih cannot be exactly represented in binary floating
-  point.
-- In 64 bit integers and binary floating point formats, there are
-  numbers which can be exactly represented, but which cannot be exactly
-  represented in YottaDB.
-
-This means that for numeric keys which are not guaranteed to be
-integers:
-
-- In theory, there are edge cases where a value (which would internally
-  be in YottaDB format) returned by a function such as
-  ``ydb_subscript_next()`` and converted to a ``ydb_double_t`` when
-  passed back to C application code, and then converted back to YottaDB
-  internal format in a call to ``ydb_get()`` can result in the node not
-  being found because the double conversion produces a number not
-  identical to the original. Furthermore, there is a cost to the
-  conversion.
-- Passing keys back and forth as strings avoids those edge cases, but of
-  course still has a conversion cost.
-
-To preserve accuracy of numeric values that are returned by libyottadb,
-and which an application code intends to simply pass back to libyottadb
-as a libyottadb provides a ``ydb_numeric_t`` type. A value obtained
-from libyottadb in ``ydb_numeric_t`` loses no precision when returned
-to libyottadb, and as a further benefit is very efficient. While the
-actual value of ``ydb_numeric_t`` is opaque to application cod, the
-``ydb_convert()`` function is available.
-
-Conversely, when passed a string that is a `canonical number`_ for use
+When passed a string that is a `canonical number`_ for use
 as a key, libyottadb automatically converts it to a number. This
 automatic internal conversion is irrelevant for the majority of typical
-application that:
+application that
 
 - simply store and retrieve data associated with keys, potentially
   testing for the existence of nodes; or
-- transfer keys which are numeric values between application code and
-  libyottadb using numeric types and expect numeric ordering.
+- whose keys are all numeric, and should be collated in numeric order.
 
 However, this automatic internal conversion does affect applications
 that:
 
 - use numeric keys and expect the keys to be sorted in lexical order
   rather than numeric order; or
-- transfer keys which are numeric values between application code and
-  libyottadb as strings that may or may not be canonical numbers.
+- use mixed numeric and non-numeric keys, including keys that are not
+  canonical numbers.
 
 Applications that are affected by automatic internal conversion should
 prefix their keys with a character such as "x" which ensures that keys
