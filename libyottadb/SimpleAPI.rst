@@ -18,7 +18,8 @@ YottaDB, and exported.
 
 **Caveat:** This code does not exist yet. The user documentation is
 being written ahead of the code, and will change in the event the code
-needs to differ from this document for a valid technical reason.
+needs to differ from this document for a valid technical reason. Also,
+this document itself is incomplete and still evolving.
 
 ===========
 Quick Start
@@ -60,36 +61,6 @@ subscripts:
 
 - String subscripts collate in byte order.
 
-==========
-Data Types
-==========
-
-Data types are defined by including ``yottadb.h`` and are one of:
-
-``ydb_int_t`` and ``ydb_uint_t`` -- Signed and unsigned integers,
-that are *at least* 16 bits.
-
-``ydb_long_t`` and ``ydb_ulong_t`` -- Signed and unsigned integers,
-that are *at least* 32 bits.
-
-``ydb_maxsub_t`` -- A signed integer that is able to store the maximum
-number of subscripts of a local or global variable,
-``YDB_MAX_SUB``. It is signed rather than unsigned to permit a
-negative value for "name level" invocations of
-`ydb_subscript_next_s()`_ and `ydb_subscript_previous_s()`_.
-``ydb_maxsub_t`` is a subset of ``ydb_int_t``.
-
-``ydb_status_t`` -- A signed integer which is the return value
-(status) of a call to a libyottadb function. ``ydb_status_t`` is a
-subset of ``ydb_long_t``.
-
-``ydb_strlen_t`` -- An unsigned integer type that is able to store the
-maximum length of a string, ``YDB_MAX_STR``. ``ydb_strlen_t`` is a
-subset of ``ydb_ulong_t``.
-
-``ydb_uchar_t`` -- An unsigned data value that is *exactly* 8-bits
-(one byte).
-
 ==================
 Symbolic Constants
 ==================
@@ -105,12 +76,14 @@ one of the following types:
 - Limits
 - Other
 
+Symbolic constants all fit within the range of a C ``int``.
+
 
 Function Return Codes
 =====================
 
 Return codes from calls to libyottadb are of type
-``ydb_status_t``. Normal return codes are non-negative (greater than
+``int``. Normal return codes are non-negative (greater than
 or equal to zero); error return codes are negative.
 
 -------------------
@@ -161,6 +134,9 @@ is set to the size required of a sufficiently large buffer, and
 value. In this case the ``used`` field of a ``ydb_string_t``
 structure is greater than the ``alloc`` field.
 
+``YDB_ERR_INVSVN`` -- A special variable name provided by the caller
+is invalid.
+
 ``YDB_ERR_KEY2BIG`` -- The length of a global variable name and
 subscripts exceeds the limit configured for the database region to
 which it is mapped.
@@ -189,9 +165,7 @@ invalid message code.
 Limits
 ======
 
-Symbolic constants for limits are prefixed with ``YDB_MAX_``. Symbolic
-constants are unsigned integers guaranteed to fit within the range of
-a ``ydb_uint_t`` type.
+Symbolic constants for limits are prefixed with ``YDB_MAX_``.
 
 ``YDB_MAX_IDENT`` --The maximum space in bytes required to store a
 complete variable name, not including the preceding caret for a global
@@ -204,7 +178,7 @@ directory file.
 ``YDB_MAX_STR`` -- The maximum length of a string (or blob) in
 bytes. A caller to ``ydb_get()`` that provides a buffer of
 ``YDB_MAX_STR`` will never get a ``YDB_ERR_INVSTRLEN``
-error. ``YDB_MAX_STR`` fits in a ``ydb_ulong_t`` type.
+error.
 
 ``YDB_MAX_SUB`` -- The maximum number of subscripts for a local or
 global variable.
@@ -216,10 +190,10 @@ Data Structures
 ``ydb_string_t`` is a descriptor for a string [#]_ value, and consists of
 the following fields:
 
- - ``alloc`` and ``used`` -- fields of type ``ydb_strlen_t`` where
+ - ``alloc`` and ``used`` -- fields of type ``unsigned int`` where
    ``alloc`` ≥ ``used`` except when a `YDB_ERR_INVSTRLEN`_ occurs.
- - ``address`` -- pointer to a ``ydb_uchar_t``, the starting address of
-   a string.
+ - ``address`` -- pointer to an ``unsigned char``, the starting
+   address of a string.
 
 .. [#] Strings in YottaDB are arbitrary sequences of bytes that are not
        null-terminated. Other languages may refer to them as binary
@@ -229,13 +203,14 @@ the following fields:
 Macros
 ======
 
-``YDB_ALLOC_STRING(string)`` -- Allocate a ``ydb_string_t`` structure
-and set its ``address`` field to point to ``string``, and its
-``alloc`` and ``used`` fields to the length of string excluding the
-terminating null character. Return the address of the structure. Note
-that if string is a ``const`` any code that attempts to change the
-value of the string pointed to by this ``ydb_string_t`` structure will
-almost certainly result in a segmentation violation (SIGSEGV). [#]_
+``YDB_ALLOC_STRING(string[,actalloc])`` -- Allocate a ``ydb_string_t``
+structure and set its ``address`` field to point to ``string``, and
+its ``used`` field to the length of string excluding the terminating
+null character. Set its ``alloc`` field to ``actalloc`` if specified,
+otherwise to ``used``. Return the address of the structure. Note that
+if string is a ``const`` any code that attempts to change the value of
+the string pointed to by this ``ydb_string_t`` structure will almost
+certainly result in a segmentation violation (SIGSEGV). [#]_
 
 .. [#] Note for implementers: under the covers, ``YDB_ALLOC_*()``,
        ``YDB_FREE_*()``, and ``YDB_NEW_*()`` macros should call the
@@ -282,7 +257,7 @@ by ``x->address`` and set ``x->used`` to the length of ``string``.
 Simple API
 ==========
 
-As all subscripts and node data passed to lobyottadb using the Simple
+As all subscripts and node data passed to libyottadb using the Simple
 API are strings, use the ``printf()`` and ``scanf()`` family of
 functions to convert between numeric values and strings which are
 `canonical numbers`_.
@@ -292,7 +267,7 @@ whose nodes have varying numbers of subscripts, the actual number of
 subscripts is itself passed as a parameter. In the definitions of
 functions:
 
-- ``ydb_maxsub_t count`` and ``ydb_maxsub_t *count`` refer to an
+- ``int count`` and ``int *count`` refer to an
   actual number subscripts,
 - ``ydb_string_t *varname`` refers to the name of a variable, and
 - ``[, ydb_string_t *subscript, ...]`` and ``ydb_string_t *subscript[,
@@ -316,8 +291,8 @@ ydb_data_s()
 
 .. code-block:: C
 
-	ydb_status_t ydb_data_s(ydb_uint_t *value,
-		ydb_maxsub_t count,
+	int ydb_data_s(unsigned int *value,
+		int count,
 		ydb_string_t *varname[,
 		ydb_string_t *subscript, ...]);
 
@@ -335,8 +310,8 @@ ydb_get_s()
  
 .. code-block:: C
 
-	ydb_status_t ydb_get_s(ydb_string_t *value,
-		ydb_maxsub_t count,
+	int ydb_get_s(ydb_string_t *value,
+		int count,
 		ydb_string_t *varname[,
 		ydb_string_t *subscript, ... ]);
 
@@ -371,7 +346,7 @@ ydb_kill_s()
 
 .. code-block:: C
 
-	ydb_status_t ydb_kill_s([ydb_maxsub_t count,
+	int ydb_kill_s([int count,
 		ydb_string_t *varname[,
 		ydb_string_t *subscript, ...], ...,] NULL);
 
@@ -386,7 +361,7 @@ ydb_kill_excl_s()
 
 .. code-block:: C
 
-	ydb_status_t ydb_kill_excl_s(ydb_string_t *varnamelist);
+	int ydb_kill_excl_s(ydb_string_t *varnamelist);
 
 ``*varnamelist->address`` points to a comma separated list of local
 variable names. ``ydb_kill_excl_s()`` kills the trees of all local
@@ -397,8 +372,8 @@ ydb_length_s()
 
 .. code-block:: C
 
-	ydb_status_t ydb_length_s(ydb_strlen_t *value,
-		ydb_maxsub_t count,
+	int ydb_length_s(unsigned int *value,
+		int count,
 		ydb_string_t *varname[,
 		ydb_string_t *subscript, ... ]);
 
@@ -416,7 +391,7 @@ ydb_message()
 
 .. code-block:: C
 
-	ydb_status_t ydb_message(ydb_string_t *msgtext, ydb_status_t status)
+	int ydb_message(ydb_string_t *msgtext, int status)
 
 Set ``msgtext->address`` to a location that has the text for the
 condition corresponding to ``status``, and both ``msgtext->alloc`` and
@@ -432,7 +407,7 @@ ydb_node_next_s()
 		
 .. code-block:: C
 
-	ydb_status_t ydb_node_next_s(ydb_maxsub_t *count,
+	int ydb_node_next_s(int *count,
 		ydb_string_t *varname,
 		ydb_string_t *subscript[, ... ]);
 
@@ -447,7 +422,7 @@ As an input parameter ``*count`` specifies the number of subscripts in
 the input node, which does not need to exist -- a value of 0 will
 return the first node in the tree.
 
-Except when the ``ydb_status_t`` value returned by
+Except when the ``int`` value returned by
 ``ydb_node_next_s()`` returns an error code, ``*count`` on the return
 from a call specifies the number of subscripts in the next node, which
 will be a node with data unless there is no next node (i.e., the input
@@ -478,7 +453,7 @@ ydb_node_previous_s()
 
 .. code-block:: C
 
-	ydb_status_t ydb_node_previous_s(ydb_maxsub_t *count,
+	int ydb_node_previous_s(int *count,
 		ydb_string_t *varname,
 		[ ydb_string_t *subscript, ... ]);
 
@@ -499,24 +474,24 @@ ydb_put_s()
 
 .. code-block:: C
 
-	ydb_status_t ydb_put_s(ydb_string_t *value,
-		ydb_maxsub_t count,
+	int ydb_put_s(ydb_string_t *value,
+		int count,
 		ydb_string_t *varname[,
 		ydb_string_t *subscript, ... ]);
 
 Copies the ``value->used`` bytes at ``value->address`` as the value of
 the specified node or intrinsic special variable specified, returning
-``YDB_STATUS_OK`` or an error code.
+``YDB_STATUS_OK`` or an error code such as ``YDB_ERR_INVSVN``.
 
 ydb_subscript_next_s()
 ======================
 
 .. code-block:: C
 
-	ydb_status_t ydb_subscript_next_s(ydb_maxsub_t *count,
+	int ydb_subscript_next_s(int *count,
 		ydb_string_t *varname[, ydb_string_t *subscript, ... ]);
 
-``ydb_subscript_next_s()`` returns the next subscript at the lowest
+``ydb_subscript_next_s()`` returns the next subscript at the deepest
 level specified by ``*count``, by copying that next subscript to the
 memory referenced by that ``subscript->address``, and setting the
 corresponding ``subscript->used`` with its length. If there is no next
@@ -534,11 +509,11 @@ ydb_subscript_previous_s()
 
 .. code-block:: C
 
-	ydb_status_t ydb_subscript_previous_s(ydb_maxsub_t *count,
+	int ydb_subscript_previous_s(int *count,
 		ydb_string_t *varname[,	ydb_string_t *subscript, ... ]);
 
 ``ydb_subscript_previous_s()`` returns the preceding subscript at the
-lowest level specified by ``*count``, by copying that previous
+deepest level specified by ``*count``, by copying that previous
 subscript to the memory referenced by that ``subscript->address``, and
 setting the corresponding ``subscript->used`` to its length. If there
 is no previous subscript, it decrements ``*count``. [#]_
@@ -560,7 +535,7 @@ ydb_withdraw_s()
 
 .. code-block:: C
 
-	ydb_status_t ydb_withdraw_s(ydb_maxsub_t count,
+	int ydb_withdraw_s(int count,
 		ydb_string_t *varname[,
 		ydb_string_t *subscript, ...][, ...] NULL);
 
