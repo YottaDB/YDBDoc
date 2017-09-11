@@ -39,11 +39,95 @@ Quick Start
 Concepts
 ========
 
-**The Concepts section needs to be written.**
+The fundamental core data structure provided by YottaDB is *key-value
+tuples*. For example, the following is a set of key value tuples:
 
-Key-value
+::
 
-Local and global variables
+    ["Capital","Belgium","Brussels"]
+    ["Capital","Thailand","Bangkok"]
+    ["Capital","USA","Washington, DC"]
+
+Note that data in YottaDB is *always* ordered. [#]_ Even if you input
+data out of order, YottaDB always stores them in order. In the
+discussion below, data is therefore always shown in order. For
+example, in the example below, data may well be loaded by country.
+
+.. [#] The terms "collate", "order", and "sort" are equivalent.
+
+Each of the above tuples is called a *node*. In an *n*-tuple, the
+first *n*-1 items can be thought of as the *keys*, and the last item is
+the *value* associated with the keys.
+
+While YottaDB itself assigns no meaning to the data in each node, by
+convention, application maintainability is improved by using
+meaningful keys, for example:
+
+::
+
+    ["Capital","Belgium","Brussels"]
+    ["Capital","Thailand","Bangkok"]
+    ["Capital","USA","Washington, DC"]
+    ["Population","Belgium",1367000]
+    ["Population","Thailand",8414000]
+    ["Population","USA",325737000]
+
+As YottaDB assigns no inherent meaning to the keys or values, its key
+value structure lends itself to implementing *Variety*. [#]_ For
+example, if an application wishes to add historical census results
+under "Population", the following is a perfectly valid set of tuples:
+
+::
+
+    ["Capital","Belgium","Brussels"]
+    ["Capital","Thailand","Bangkok"]
+    ["Capital","USA","Washington, DC"]
+    ["Population","Belgium",1367000]
+    ["Population","Thailand",8414000]
+    ["Population","USA",17900802,3929326]
+    ["Population","USA",18000804,5308483]
+    …
+    ["Population","USA",20100401,308745538]
+    ["Population","USA",325737000]
+
+In the above, 17900802 represents August 2, 1790, and an application
+would determine from the number of keys whether a node represents the
+current population or historical census data.
+
+.. [#] Variety is one of the *three "V"s* of "big data" - Velocity,
+       Volume, and Variety. YottaDB handles all three very well.
+
+In YottaDB, the first key is called a *variable*, and the remaining
+keys are called *subscripts* allowing for a representation both
+compact and familiar to a programmer, e.g.,
+``Capital("Belgium")="Brussels"``. The set of all nodes under a
+variable is called a *tree* (so in the example, there are two trees,
+one under ``Capital`` and the other under ``Population``). The set of
+all nodes under a variable and a leading set of its subscripts is
+called a *sub-tree* (e.g., ``Population("USA")`` is a sub-tree of the
+``Population`` tree). [#]_
+
+.. [#] Of course, the ability to represent the data this way does not
+       in any way detract from the ability to represent the same data
+       another way, such as XML or JSON, with which you are
+       comfortable. However, note while any data that can be
+       represented in JSON can be stored in a YottaDB tree not all
+       trees that YottaDB is capable of storing can be represented in
+       JSON, or at least, may require some encoding in order to be
+       represented in JSON.
+
+With this notation, the ``Population`` tree can be represented as
+follows:
+
+::
+
+    Population("Belgium")=1367000
+    Population("Thailand")=8414000
+    Population("USA",17900802)=3929326
+    Population("USA",18000804)=5308483
+    …
+    Population("USA",20100401)=308745538
+    Population("USA")=325737000
 
 Subscripts (keys) of variables accessed using Simple API are
 strings. When a string is a `canonical number`_ YottaDB internally
@@ -60,6 +144,13 @@ subscripts:
   - Numeric subscripts in numeric order.
 
 - String subscripts collate in byte order.
+
+
+
+Key-value
+
+Local and global variables
+
 
 ==================
 Symbolic Constants
@@ -552,7 +643,7 @@ Numeric Considerations
 ======================
 
 To ensure the accuracy of financial calculations, [#]_ YottaDB internally
-stores nnumbers as, and performs arithmetic using, a scaled packed
+stores numbers as, and performs arithmetic using, a scaled packed
 decimal representation with 18 signicant decimal digits, with
 optimizations for values within a certain subset of its full
 range. Consequently, any number that is exactly represented in YottaDB
@@ -625,3 +716,11 @@ set that represents a decimal number in a standard, concise, form.
    followed by a canonical integer in the range -43 to 47 such
    that the magnitude of the resulting number is between 1E-43
    through.1E47.
+
+=====
+To do
+=====
+
+Universal NoSQL
+
+Collation
