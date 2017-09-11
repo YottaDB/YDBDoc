@@ -39,6 +39,9 @@ Quick Start
 Concepts
 ========
 
+Keys, Values, Nodes, Variables, and Subscripts
+==============================================
+
 The fundamental core data structure provided by YottaDB is *key-value
 tuples*. For example, the following is a set of key value tuples:
 
@@ -75,7 +78,9 @@ meaningful keys, for example:
 As YottaDB assigns no inherent meaning to the keys or values, its key
 value structure lends itself to implementing *Variety*. [#]_ For
 example, if an application wishes to add historical census results
-under "Population", the following is a perfectly valid set of tuples:
+under "Population", the following is a perfectly valid set of tuples
+(source: `United States Census
+<https://en.wikipedia.org/wiki/United_States_Census>`_):
 
 ::
 
@@ -84,11 +89,11 @@ under "Population", the following is a perfectly valid set of tuples:
     ["Capital","USA","Washington, DC"]
     ["Population","Belgium",1367000]
     ["Population","Thailand",8414000]
+    ["Population","USA",325737000]
     ["Population","USA",17900802,3929326]
     ["Population","USA",18000804,5308483]
     …
     ["Population","USA",20100401,308745538]
-    ["Population","USA",325737000]
 
 In the above, 17900802 represents August 2, 1790, and an application
 would determine from the number of keys whether a node represents the
@@ -104,7 +109,7 @@ compact and familiar to a programmer, e.g.,
 variable is called a *tree* (so in the example, there are two trees,
 one under ``Capital`` and the other under ``Population``). The set of
 all nodes under a variable and a leading set of its subscripts is
-called a *sub-tree* (e.g., ``Population("USA")`` is a sub-tree of the
+called a *subtree* (e.g., ``Population("USA")`` is a subtree of the
 ``Population`` tree). [#]_
 
 .. [#] Of course, the ability to represent the data this way does not
@@ -123,33 +128,54 @@ follows:
 
     Population("Belgium")=1367000
     Population("Thailand")=8414000
+    Population("USA")=325737000
     Population("USA",17900802)=3929326
     Population("USA",18000804)=5308483
     …
     Population("USA",20100401)=308745538
-    Population("USA")=325737000
+
+Note that the trees are displayed in breadth-first order. YottaDB has
+functions for applications to traverse trees in both breadth-first and
+depth-first order.
+
+If the application designers now wish to enhance the application to
+add historical dates for capitals, the ``Capital("Thailand")`` subtree
+might look like this (source: `The Four Capitals of Thailand
+<https://blogs.transparent.com/thai/the-four-capitals-of-thailand/>`_).
+
+::
+
+   Capital("Thailand")="Bangkok"
+   Capital("Thailand",1238,1378)="Sukhothai"
+   Capital("Thailand",1350,1767)="Ayutthaya"
+   Capital("Thailand",1767,1782)="Thonburi"
+   Capital("Thailand",1782)="Bangkok"
 
 Subscripts (keys) of variables accessed using Simple API are
 strings. When a string is a `canonical number`_ YottaDB internally
-converts and stores it as a number. When ordering (collating)
-subscripts:
+converts and stores it as a number. When ordering subscripts:
 
 - Null (empty string) subscripts precede all numeric
-  subscripts.
+  subscripts. *Note: YottaDB strongly recommends against applications that
+  use null subscripts.*
+- Numeric subscripts precede string subscripts. Numeric subscripts are in numeric order.
+- String subscripts follow numeric subscripts and collate in byte
+  order.
 
-  - **YottaDB strongly recommends against applications that use null subscripts.**
+This means that if an application were to store the current capital of
+Thailand as ``Capital("Thailand","current")="Bangkok"`` the above
+subtree would have the following order:
 
-- Numeric subscripts precede string subscripts.
+::
 
-  - Numeric subscripts in numeric order.
-
-- String subscripts collate in byte order.
-
-
-
-Key-value
+   Capital("Thailand",1238,1378)="Sukhothai"
+   Capital("Thailand",1350,1767)="Ayutthaya"
+   Capital("Thailand",1767,1782)="Thonburi"
+   Capital("Thailand",1782)="Bangkok"
+   Capital("Thailand","current")="Bangkok"
 
 Local and global variables
+==========================
 
 
 ==================
@@ -391,9 +417,9 @@ In the location pointed to by ``value``, ``ydb_data_s()`` returns the
 following information about the local or global variable node
 identified by ``*varname`` and the ``*subscript`` list.
 
-- 0 -- There is neither a value nor a sub-tree, i.e., it is undefined.
-- 1 -- There is a value, but no sub-tree
-- 10 -- There is no value, but there is a sub-tree.
+- 0 -- There is neither a value nor a subtree, i.e., it is undefined.
+- 1 -- There is a value, but no subtree
+- 10 -- There is no value, but there is a subtree.
 - 11 -- There are both a value and a subtree.
 
 ydb_get_s()
@@ -444,7 +470,7 @@ ydb_kill_s()
 Note that the parameter list **must** be terminated by a NULL pointer.
 
 Kills -- deletes all nodes in -- each of the local or global variable
-trees or sub-trees specified. In the special case where the only
+trees or subtrees specified. In the special case where the only
 parameter is a NULL, ``ydb_kill_s()`` kills all local variables.
 
 ydb_kill_excl_s()
@@ -633,7 +659,7 @@ ydb_withdraw_s()
 **Note:** the parameter list **must** be terminated by a NULL pointer.
 
 Deletes the root node in each of the local or global variable
-trees or sub-trees specified, leaving the sub-trees intact.
+trees or subtrees specified, leaving the subtrees intact.
 
 =================
 Programming Notes
