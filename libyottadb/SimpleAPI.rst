@@ -151,20 +151,44 @@ might look like this (source: `The Four Capitals of Thailand
    Capital("Thailand",1767,1782)="Thonburi"
    Capital("Thailand",1782)="Bangkok"
 
-Subscripts (keys) of variables accessed using Simple API are
-strings. When a string is a `canonical number`_ YottaDB internally
-converts and stores it as a number. When ordering subscripts:
+-----------------------------------
+Variables vs. Subscripts vs. Values
+-----------------------------------
 
-- Null (empty string) subscripts precede all numeric
-  subscripts. *Note: YottaDB strongly recommends against applications that
-  use null subscripts.*
-- Numeric subscripts precede string subscripts. Numeric subscripts are in numeric order.
-- String subscripts follow numeric subscripts and collate in byte
-  order.
+When viewed as ``["Capital","Belgium","Brussels"]`` each component is
+a string, and in an abstract sense they are all conceptually the
+same. When viewed as ``Capital("Belgium")="Brussels"`` differences
+become apparent:
+
+- Variables are ASCII strings from 1 to 31 characters, the first of
+  which is "%", or a letter from "A" through "Z" and "a" through
+  "z". Subsequent characters are alphanumeric ("A" through "Z", "a"
+  through "z", and "0" through "9"). Variable names are
+  case-sensitive, and are always in ASCII order (i.e., "Capital"
+  always precedes "Population").
+- Subscripts are sequences of bytes from 0 (the null or empty string,
+  "") to 1048576 bytes (1MiB). When a subscript is a `canonical
+  number`_, YottaDB internally converts it to, and stores it as, a
+  number. When ordering subscripts:
+
+  - Empty string subscripts precede all numeric subscripts. *Note:
+    YottaDB strongly recommends against applications that use null
+    subscripts.*
+  - Numeric subscripts precede string subscripts. Numeric subscripts
+    are in numeric order.
+  - String subscripts follow numeric subscripts and collate in byte
+    order. [#]_
+
+- Like subscripts, values are sequences of bytes, except that ordering
+  is not meaningful. YottaDB automatically converts between numbers
+  and strings, depending on the type of operand required by an
+  operator or argument required by a function (see `Numeric
+  Considerations`_).
 
 This means that if an application were to store the current capital of
-Thailand as ``Capital("Thailand","current")="Bangkok"`` the above
-subtree would have the following order:
+Thailand as ``Capital("Thailand","current")="Bangkok"`` instead of
+``Capital("Thailand")="Bangkok"``, the above subtree would have the
+following order:
 
 ::
 
@@ -174,8 +198,88 @@ subtree would have the following order:
    Capital("Thailand",1782)="Bangkok"
    Capital("Thailand","current")="Bangkok"
 
-Local and global variables
+.. [#] Where the natural byte order does not result in linguistically
+       and culturally correct ordering of strings, YottaDB has a
+       framework for an application to create and use custom collation
+       routines.
+
+Local and Global Variables
 ==========================
+
+YottaDB is a database, and data in a database must *persist* and *be
+shared*. The variables discussed above are specific to an application
+process (i.e., are not shared).
+
+- *Local* variables reside in process memory, are specific to an
+  application process, are not shared between processes, and do not
+  persist beyond the lifetime of a process. [#]_
+- *Global* variables reside in databases, are shared between
+  processes, and persist beyond the lifetime of any individual
+  process.
+
+.. [#] In other words, what YottaDB calls a local variable, the C
+       programming language calls a global variable. There is no C
+       counterpart to a YottaDB global variable.
+
+Syntactically, local and global variables look alike, with global
+variable names having a caret ("^") preceding their names. Unlike the
+local variables above, the global variables below are shared between
+processes and are persistent.
+
+::
+
+    ^Population("Belgium")=1367000
+    ^Population("Thailand")=8414000
+    ^Population("USA")=325737000
+
+Even though they may appear superficially similar, a local variable is
+distinct from a global variable of the same name. Thus ``^X`` can have
+the value 1 and ``X`` can at the same time have the value ``"The quick
+brown fox jumps over the lazy dog.`` For maintainability **YottaDB
+strongly recommends that applications use different names for local
+and global variables, except in the special case where a local
+variable is an in-process cached copy of a corresponding global
+variable.**
+
+Global Directories
+==================
+
+To application software, files in a file system provide
+persistence. This means that global variables must be stored in files
+for persistence. A *global directory file* provides a process with a
+mapping from the name of every possible global variable name to a
+*database file*. A *database* is a set of database files to which
+global variables are mapped by a global directory. Global directories
+are created and maintaind by a utility program called the Global
+Directory Editor, which is discussed at length in the `GT.M
+Administration and Operations Guide
+<http://tinco.pair.com/bhaskar/gtm/doc/books/ao/UNIX_manual/>`_ and is
+outside the purview of this document.
+
+The name of the global directory file required to access a global
+variable such as ``^Capital``, is provided to the process at startup
+by the environment variable ``ydb_gbldir``.
+
+In addition to the implicit global directory used with a global
+variable name such as ``^Capital``, a global directory file name can
+be explicitly specfied by placing the file name between vertical bars
+("|") between the caret and the variable name, e.g.,
+``^|ThaiNames.gld|Capital``.
+
+For example, consider an application that wishes to be able to provide
+names in Thai, e.g.,
+
+::
+
+   Capital("Thailand")="กรุ่งเทพฯ"
+   Capital("Thailand",1238,1378)="สุโขทัย"
+   Capital("Thailand",1350,1767)="อยุธยา"
+   Capital("Thailand",1767,1782)="ธนบุรี"
+   Capital("Thailand",1782)="กรุ่งเทพฯ"
+
+Intrinsic Special Variables
+===========================
+
 
 
 ==================
