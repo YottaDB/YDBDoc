@@ -260,27 +260,54 @@ The name of the global directory file required to access a global
 variable such as ``^Capital``, is provided to the process at startup
 by the environment variable ``ydb_gbldir``.
 
-In addition to the implicit global directory used with a global
-variable name such as ``^Capital``, a global directory file name can
-be explicitly specfied by placing the file name between vertical bars
-("|") between the caret and the variable name, e.g.,
-``^|ThaiNames.gld|Capital``.
+In addition to the implicit global directory an application may wish
+to use alternate global directory names. For example, consider an
+application that wishes to provide an option to display names in other
+languages while defaulting to English. This can be accomplished by
+having different versions of the global variable ``^Capital`` for
+different languages, and having a global directory for each
+language. A global variable such as ``^Population`` would be mapped to
+the same database file for all languages, but a global variable such
+as ``^Capital`` would be mapped to a database file with
+language-specific entries. So a default global directory
+``Default.gld`` mapping a ``^Capital`` to a database file with English
+names can be specified in the environment variable ``ydb_gbldir`` but
+a different global directory file, e.g., ``ThaiNames.gld`` can have
+the same mapping for a global variable such as ``^Population`` but a
+different database file for ``^Capital``.
 
-For example, consider an application that wishes to be able to provide
-names in Thai, e.g.,
+Thus, we can have:
 
 ::
 
-   Capital("Thailand")="กรุ่งเทพฯ"
-   Capital("Thailand",1238,1378)="สุโขทัย"
-   Capital("Thailand",1350,1767)="อยุธยา"
-   Capital("Thailand",1767,1782)="ธนบุรี"
-   Capital("Thailand",1782)="กรุ่งเทพฯ"
+   ^|"ThaiNames.gld"|Capital("Thailand")="กรุ่งเทพฯ"
+   ^|"ThaiNames.gld"|Capital("Thailand",1238,1378)="สุโขทัย"
+   ^|"ThaiNames.gld"|Capital("Thailand",1350,1767)="อยุธยา"
+   ^|"ThaiNames.gld"|Capital("Thailand",1767,1782)="ธนบุรี"
+   ^|"ThaiNames.gld"|Capital("Thailand",1782)="กรุ่งเทพฯ"
+
+The global directory name can itself be a variable name. So if the
+variable ``CurrLangGld`` is set to ``"ThaiNames.gld"``, the capital of
+Thailand can be referred to in the current language, e.g.,
+``^|CurrLangGld|Capital("Thailand")="กรุ่งเทพฯ"``
+
+A global variable reference that explictly specifies a global
+directory is called an *extended reference*.
 
 Intrinsic Special Variables
 ===========================
 
+In addition to local and global variables, YottaDB also has a set of
+*Intrinsic Special Variables*. Just as global variables are
+distinguised by a "^" prefix, intrinsic special variables are
+distinguished by a "$" prefix. Instead of using an extended reference,
+an application can set an intrinsic special variable
+``$zgbldir="ThaiNames.gld"`` to use the ``ThaiNames.gld`` mapping.
 
+Unlike local and global variable names, intrinsic special variable
+names are case-insensitive and so ``^zgbldir`` and ``$ZGblDir`` refer
+to the same intrinsic special variable. Also intrinsic special
+variables have no subscripts.
 
 ==================
 Symbolic Constants
@@ -851,6 +878,7 @@ set that represents a decimal number in a standard, concise, form.
 To do
 =====
 
+Transaction Processing
+
 Universal NoSQL
 
-Collation
