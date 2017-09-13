@@ -114,14 +114,13 @@ called a *subtree* (e.g., ``Population("USA")`` is a subtree of the
 
 .. [#] Of course, the ability to represent the data this way does not
        in any way detract from the ability to represent the same data
-       another way, such as XML or JSON, with which you are
-       comfortable. However, note while any data that can be
-       represented in JSON can be stored in a YottaDB tree not all
-       trees that YottaDB is capable of storing can be represented in
-       JSON, or at least, may require some encoding in order to be
-       represented in JSON.
+       another way with which you are comfortable, such as XML or
+       JSON. However, note while any data that can be represented in
+       JSON can be stored in a YottaDB tree not all trees that YottaDB
+       is capable of storing can be represented in JSON, or at least,
+       may require some encoding in order to be represented in JSON.
 
-With this notation, the ``Population`` tree can be represented as
+With this representation, the ``Population`` tree can be represented as
 follows:
 
 ::
@@ -164,12 +163,12 @@ become apparent:
   which is "%", or a letter from "A" through "Z" and "a" through
   "z". Subsequent characters are alphanumeric ("A" through "Z", "a"
   through "z", and "0" through "9"). Variable names are
-  case-sensitive, and are always in ASCII order (i.e., "Capital"
-  always precedes "Population").
-- Subscripts are sequences of bytes from 0 (the null or empty string,
-  "") to 1048576 bytes (1MiB). When a subscript is a `canonical
-  number`_, YottaDB internally converts it to, and stores it as, a
-  number. When ordering subscripts:
+  case-sensitive, and variables of a given type are always in ASCII
+  order (i.e., "Capital" always precedes "Population").
+- Subscripts are sequences of bytes from 0 bytes (the null or empty
+  string, "") to 1048576 bytes (1MiB). When a subscript is a
+  `canonical number`_, YottaDB internally converts it to, and stores
+  it as, a number. When ordering subscripts:
 
   - Empty string subscripts precede all numeric subscripts. *Note:
     YottaDB strongly recommends against applications that use null
@@ -235,7 +234,7 @@ processes and are persistent.
 Even though they may appear superficially similar, a local variable is
 distinct from a global variable of the same name. Thus ``^X`` can have
 the value 1 and ``X`` can at the same time have the value ``"The quick
-brown fox jumps over the lazy dog.`` For maintainability **YottaDB
+brown fox jumps over the lazy dog."`` For maintainability **YottaDB
 strongly recommends that applications use different names for local
 and global variables, except in the special case where a local
 variable is an in-process cached copy of a corresponding global
@@ -302,12 +301,81 @@ In addition to local and global variables, YottaDB also has a set of
 distinguised by a "^" prefix, intrinsic special variables are
 distinguished by a "$" prefix. Instead of using an extended reference,
 an application can set an intrinsic special variable
-``$zgbldir="ThaiNames.gld"`` to use the ``ThaiNames.gld`` mapping.
+``$zgbldir="ThaiNames.gld"`` to use the ``ThaiNames.gld`` mapping. At
+process startup, YottaDB initializes ``$zgbldir`` from
+``$ydb_gbldir``.
 
 Unlike local and global variable names, intrinsic special variable
-names are case-insensitive and so ``^zgbldir`` and ``$ZGblDir`` refer
+names are case-insensitive and so ``$zgbldir`` and ``$ZGblDir`` refer
 to the same intrinsic special variable. Also intrinsic special
 variables have no subscripts.
+
+Transaction Processing
+======================
+
+YottaDB provides a mechanism for an application to implement `ACID
+(Atomic, Consistent, Isolated, Durable) transactions
+<https://en.wikipedia.org/wiki/ACID>`_, ensuring strict serialization
+of transactions, using `optimistic concurrency control
+<http://sites.fas.harvard.edu/~cs265/papers/kung-1981.pdf>`_.
+
+Here is a simplified view [#]_ of YottaDB's implementation of
+optimistic concurrency control:
+
+- Each database file header has a field of the next *transaction
+  number* for updates in that database.
+- The block header of each database block in a database file has the
+  transaction number when that block was last updated.
+- When a process is inside a transaction, it keeps track of every
+  database block it has read, and the transaction numbner of that
+  block when read. Other processes are free to update the database
+  during this time.
+- The process retains updates in its memory, without committing them
+  to the database, so that it's own logic sees the updates, but no
+  other process does. As every block that the process wishes to write
+  must also be read, tracking the transaction numbers of blocks read
+  suffices to track them for blocks to be writen.
+- To commit a transaction, a process checks whether any block it has
+  read has been updated since it was read. If none has, the process
+  commits the transaction to the database, incrementing the file
+  header fields of each updated database file for the next
+  transaction.
+- If even one block has been updated, the process discards its work,
+  and starts over. If after three attempts, it is still unable to
+  commit the transaction, it executes the transaction logic on the
+  fourth attempt with updates by all other processes blocked so that
+  the transaction at commit time will not encounter database changes
+  made by other processes.
+
+.. [#] At the high level at which optimistic concurrency control is
+       described here, a single logical database update (which can
+       span multiple blocks and even multiple regions) is a
+       transaction that contains a single update.
+
+In libyottadb's API for transaction processing, an application
+packages the logic for a transaction into a function with one
+parameter, passing the function and its parameter as parameters to the
+`ydb_tp()`_ function. libyottadb then calls that function.
+
+- If the function returns a ``YDB_OK``, libyottadb attempts to commit
+  the transaction. If it is unable to commit as described above, or if
+  the called function returns a ``YDB_TP_RESTART`` return code, it
+  calls the function again.
+- If the function returns a ``YDB_TP_ROLLBACK``, `ydb_tp()`_ returns
+  to its caller with that return code.
+- To protect applications against poorly coded transactions, if a
+  transaction takes longer than the number of seconds specified by
+  the environment variable ``ydb_maxtptime``, libyottadb aborts the
+  transaction and the `ydb_tp()`_ function returns the
+  ``YDB_ERR_TPTIMEOUT`` error.
+
+Application code can read the intrinsic special variable ``$tretries``
+to determine how many times a transaction has been restarted. Although
+YottaDB recommends against accessing external resources within a
+transaction, logic that needs to access an external resource (e.g., to
+read data in a file) can use ``$tretries`` to restrict that access to
+the first time it executes (``$tretries=0``), saving the data read for
+subsequent accesses.
 
 ==================
 Symbolic Constants
@@ -341,7 +409,15 @@ Normal Return Codes
 Symbolic constants for normal return codes have ``YDB_`` prefixes
 other than ``YDB_ERR_``
 
-``YDB_STATUS_OK`` -- Normal return following successful execution.
+``YDB_OK`` -- Normal return following successful execution.
+
+``YDB_TP_RESTART`` -- Code returned to libyottadb by an application
+function that packages a transaction to indicate that it wishes
+libyottadb to restart the transaction.
+
+``YDB_TP_ROLLBACK`` -- Code returned to libyottadb by an application
+function that packages a transaction, and in turn returned to the
+caller indicating that the transaction should not be committed.
 
 ------------------
 Error Return Codes
@@ -398,7 +474,10 @@ node. [#]_
 ``YDB_ERR_MAXNRSUBSCRIPTS`` -- The number of subscripts specified in
 the call exceeds ``YDB_MAX_SUB``.
 
-``YDB_ERR_UNKNOWN`` -- A call to ``ydb_zmessage()`` specified an
+``YDB_ERR_TPTMEOUT`` -- This return code from `ydb_tp()`_ indicates
+that the transaction took too long to commit.
+
+``YDB_ERR_UNKNOWN`` -- A call to `ydb_message()`_ specified an
 invalid message code.
 
 ``YDB_ERR_VARNAMEINVALID`` -- A  variable name is too long. [#]_
@@ -421,7 +500,7 @@ variable. Therefore, when allocating space for a string to hold a
 global variable name, add 1 for the caret, and when allocating space
 for a string to hold an extended global reference, add 3 (the caret
 and two "|" characters) as well as the maximum path for a global
-directory file.
+directory file, or for a variable that holds the maximum path.
 
 ``YDB_MAX_STR`` -- The maximum length of a string (or blob) in
 bytes. A caller to ``ydb_get()`` that provides a buffer of
@@ -471,7 +550,7 @@ certainly result in a segmentation violation (SIGSEGV). [#]_
 ``YDB_COPY_STRING(dest,src)`` -- Confirm that ``dest->alloc`` ≥
 ``src->used``, and if so copy ``src->used`` bytes from memory pointed
 to by ``src->address`` to the memory pointed to by ``dest->address``,
-returning ``YDB_STATUS_OK``. If ``dest->alloc`` < ``src-used``, return
+returning ``YDB_OK``. If ``dest->alloc`` < ``src-used``, return
 ``YDB_ERR_INVSTRLEN``.
 
 ``YDB_FREE_STRING(x)`` -- Free the ``ydb_string_t`` structure pointed
@@ -567,7 +646,7 @@ If ``value->alloc`` is large enough to accommodate the result, to the
 location pointed to by ``value->address``, ``ydb_get_s()`` copies the
 value of the value of the data at the specified node or intrinsic
 special variable, setting ``value->used``, and returning
-``YDB_STATUS_OK``; and ``YDB_ERR_INVSTRLEN`` otherwise.
+``YDB_OK``; and ``YDB_ERR_INVSTRLEN`` otherwise.
 
 If there is no value at the specified global or local variable node,
 or if the intrinsic special variable does not exist,a non-zero return
@@ -647,7 +726,7 @@ condition corresponding to ``status``, and both ``msgtext->alloc`` and
 character). Note: as ``msgtext->address`` points to an address in a
 read-only region of memory, any attempt to modify the message will
 result in a segmentation violation (SIGSEGV). ``ydb_message()``
-returns ``YDB_STATUS_OK`` for a valid ``status`` and
+returns ``YDB_OK`` for a valid ``status`` and
 ``YDB_ERR_UNKNOWN`` if ``status`` does not map to a known error.
 
 ydb_node_next_s()
@@ -729,7 +808,7 @@ ydb_put_s()
 
 Copies the ``value->used`` bytes at ``value->address`` as the value of
 the specified node or intrinsic special variable specified, returning
-``YDB_STATUS_OK`` or an error code such as ``YDB_ERR_INVSVN``.
+``YDB_OK`` or an error code such as ``YDB_ERR_INVSVN``.
 
 ydb_subscript_next_s()
 ======================
@@ -777,6 +856,9 @@ is no previous subscript, it decrements ``*count``. [#]_
 If ``*count`` is zero, ``ydb_subscript_previous_s()`` returns the
 preceding local or global variable name, and if ``*varname``
 references the first variable name, ``*count`` is -1 on the return.
+
+ydb_tp()
+========
 
 ydb_withdraw_s()
 ================
@@ -835,6 +917,8 @@ prefix their subscripts with a character such as "x" which ensures
 that subscripts are not canonical numbers.
 
 .. _canonical number:
+
+.. _canonical numbers:
 
 -----------------
 Canonical Numbers
