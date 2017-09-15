@@ -31,13 +31,15 @@ Quick Start
 
 1. Install YottaDB.
 
-  - Create a temporary directory and change to it, e.g.: ``mkdir
-    /tmp/tmp ; cd /tmp/tmp``
-  - Get the YottaDB installer: ``wget
-    https://raw.githubusercontent.com/YottaDB/YottaDB/master/sr_unix/ydbinstall.sh``
-  - Make it executable: ``chmod +x ydbinstall.sh``
-  - Run it with your choice of directory where you want it installed
-    (omit the ``--verbose`` option for less output): ``sudo ./ydbinstall.sh --installdir /opt/yottadb/ --utf8 default --verbose``
+- Create a temporary directory and change to it, e.g.: ``mkdir
+  /tmp/tmp ; cd /tmp/tmp``
+- Get the YottaDB installer: ``wget
+  https://raw.githubusercontent.com/YottaDB/YottaDB/master/sr_unix/ydbinstall.sh``
+- Make it executable: ``chmod +x ydbinstall.sh``
+- Run it with your choice of directory where you want it installed
+  (omit the ``--verbose`` option for less output): ``sudo
+  ./ydbinstall.sh --installdir /opt/yottadb/ --utf8 default
+  --verbose``
 
 2. Choose a directory for your default environment and initialize it:
    ``export ydbdir=$HOME/.yottadb ; . /opt/yottadb/latest/yottadbprofile``
