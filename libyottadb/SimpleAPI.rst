@@ -14,7 +14,9 @@ Overview
 libyottadb is a library for for accessing the YottaDB engine from C
 using its Simple API. A process can both call the Simple API as well
 as call functions written in M, the scripting language embedded in
-YottaDB, and exported.
+YottaDB, and exported. The libyottadb Simple API adds upward
+compatible functionality in YottaDB - no existing functionality is
+diminished or altered.
 
 **Caveat:** This code does not exist yet. The user documentation is
 being written ahead of the code, and will change in the event the code
@@ -28,6 +30,9 @@ Quick Start
 **The Quick Start section needs to be fleshed out.**
 
 1. Install YottaDB.
+
+  - Get the YottaDB installer
+   
 #. ``#include`` the ``yottadb.h`` file in your C program and compile it.
 #. Perform any database configuration and initialization needed
    (configuring global directories, creating database files, starting a
@@ -355,18 +360,18 @@ optimistic concurrency control:
 In libyottadb's API for transaction processing, an application
 packages the logic for a transaction into a function with one
 parameter, passing the function and its parameter as parameters to the
-`ydb_tp()`_ function. libyottadb then calls that function.
+`ydb_tp_s()`_ function. libyottadb then calls that function.
 
 - If the function returns a ``YDB_OK``, libyottadb attempts to commit
   the transaction. If it is unable to commit as described above, or if
   the called function returns a ``YDB_TP_RESTART`` return code, it
   calls the function again.
-- If the function returns a ``YDB_TP_ROLLBACK``, `ydb_tp()`_ returns
+- If the function returns a ``YDB_TP_ROLLBACK``, `ydb_tp_s()`_ returns
   to its caller with that return code.
 - To protect applications against poorly coded transactions, if a
   transaction takes longer than the number of seconds specified by
   the environment variable ``ydb_maxtptime``, libyottadb aborts the
-  transaction and the `ydb_tp()`_ function returns the
+  transaction and the `ydb_tp_s()`_ function returns the
   ``YDB_ERR_TPTIMEOUT`` error.
 
 Application code can read the intrinsic special variable ``$tretries``
@@ -413,7 +418,14 @@ other than ``YDB_ERR_``
 
 ``YDB_TP_RESTART`` -- Code returned to libyottadb by an application
 function that packages a transaction to indicate that it wishes
-libyottadb to restart the transaction.
+libyottadb to restart the transaction, or by a libyottadb function
+invoked within a transaction to its caller that the database engine
+has detected that it will be unable to commit the transaction and will
+need to restart. Application code designed to be executed within a
+transaction should be written to recognize this return code and in
+turn return to the libyottadb `ydb_tp_s()`_ invocation from which it
+was called. See `Transaction Processing`_ for a discussion of
+restarts.
 
 ``YDB_TP_ROLLBACK`` -- Code returned to libyottadb by an application
 function that packages a transaction, and in turn returned to the
@@ -474,7 +486,7 @@ node. [#]_
 ``YDB_ERR_MAXNRSUBSCRIPTS`` -- The number of subscripts specified in
 the call exceeds ``YDB_MAX_SUB``.
 
-``YDB_ERR_TPTMEOUT`` -- This return code from `ydb_tp()`_ indicates
+``YDB_ERR_TPTMEOUT`` -- This return code from `ydb_tp_s()`_ indicates
 that the transaction took too long to commit.
 
 ``YDB_ERR_UNKNOWN`` -- A call to `ydb_message()`_ specified an
@@ -857,8 +869,37 @@ If ``*count`` is zero, ``ydb_subscript_previous_s()`` returns the
 preceding local or global variable name, and if ``*varname``
 references the first variable name, ``*count`` is -1 on the return.
 
-ydb_tp()
-========
+ydb_tp_s()
+==========
+
+.. code-block:: C
+
+	int ydb_tp(ydb_string_t *tpfn,
+		ydb_string_t *transid,
+		ydb_string_t *varnamelist);
+
+The string referenced by ``*tpfn`` is the name of a function returning
+a value that has one of the following forms with no embedded spaces:
+
+- ``package.function[(param[,param],...)]`` where ``package.function``
+  maps to an external call as described in Chapter 11 (Integrating
+  External Routines) of `GT.M Programmers Guide
+  <http://tinco.pair.com/bhaskar/gtm/doc/books/pg/UNIX_manual/>`_.
+- ``routine^label[(param[,param,...])]`` where ``routine^label`` maps
+  to an M entry reference as described in Chapter 5 (General Language
+  Features of M) of `GT.M Programmers Guide
+  <http://tinco.pair.com/bhaskar/gtm/doc/books/pg/UNIX_manual/>`_.
+
+In both cases, ``package.function`` or ``routine^label`` should
+return one of the following:
+
+- ``YDB_OK`` -- application logic indicates that the transaction can
+  be committed (the YottaDB engine may still decide that a restart is
+  required to ensure ACID transaction properties)
+- ``YDB_RESTART``  -- application logic indicates that the
+  transaction should restart
+- ``YDB_ROLLBACK`` -- application logic indicates that the transaction
+  should not be committed
 
 ydb_withdraw_s()
 ================
@@ -957,12 +998,3 @@ set that represents a decimal number in a standard, concise, form.
    followed by a canonical integer in the range -43 to 47 such
    that the magnitude of the resulting number is between 1E-43
    through.1E47.
-
-=====
-To do
-=====
-
-Transaction Processing
-
-Universal NoSQL
-
