@@ -31,14 +31,22 @@ Quick Start
 
 1. Install YottaDB.
 
-  - Get the YottaDB installer
-   
-#. ``#include`` the ``yottadb.h`` file in your C program and compile it.
-#. Perform any database configuration and initialization needed
-   (configuring global directories, creating database files, starting a
-   Source Server process, etc.).
+  - Create a temporary directory and change to it, e.g.: ``mkdir
+    /tmp/tmp ; cd /tmp/tmp``
+  - Get the YottaDB installer: ``wget
+    https://raw.githubusercontent.com/YottaDB/YottaDB/master/sr_unix/ydbinstall.sh``
+  - Make it executable: ``chmod +x ydbinstall.sh``
+  - Run it with your choice of directory where you want it installed
+    (omit the ``--verbose`` option for less output): ``sudo ./ydbinstall.sh --installdir /opt/yottadb/ --utf8 default --verbose``
+
+2. Choose a directory for your default environment and initialize it:
+   ``export ydbdir=$HOME/.yottadb ; . /opt/yottadb/latest/yottadbprofile``
+#. ``#include`` the file ``/opt/yottadb/latest/yottadb.h`` in your C
+   program and compile it.
 #. Run your program, ensuring either that ``libyottadb.so`` is in the
-   load path of your program, or that it is preloaded.
+   load path of your program (e.g., using ``ldcache`` or the
+   ``LD_LIBRARY_PATH`` environment variable), or that it is
+   preloaded using ``LD_PRELOAD``.
 
 ========
 Concepts
