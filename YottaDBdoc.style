@@ -6,7 +6,7 @@
   # stylesheets with -s
 
   pageSetup:
-    size: Letter
+    size: letter
     width: null
     height: null
     margin-top: .75in
@@ -73,12 +73,12 @@
     stdBoldItalic: Lora-BoldItalic
     stdSans: Raleway-Regular
     stdSansBold: Raleway-Bold
-    stdSansItalic: Raleway-Regular-Italic
-    stdSansBoldItalic: Raleway-Bold-Italic
-    stdMono: UbuntuMono-R
-    stdMonoItalic: UbuntuMono-RI
-    stdMonoBold: UbuntuMono-B
-    stdMonoBoldItalic: UbuntuMono-BI
+    stdSansItalic: Raleway-Italic
+    stdSansBoldItalic: Raleway-BoldItalic
+    stdMono: TlwgTypist-Regular
+    stdMonoItalic: TlwgTypist-Oblique
+    stdMonoBold: TlwgTypist-Bold
+    stdMonoBoldItalic: TlwgTypist-BoldOblique
     stdSerif: Lora-Regular
     stdSerifBold: Lora-Bold
     stdSerifItalic: Lora-Italic
