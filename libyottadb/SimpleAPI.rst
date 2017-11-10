@@ -384,6 +384,8 @@ parameter, passing the function and its parameter as parameters to the
   transaction and the `ydb_tp_s()`_ function returns the
   ``YDB_ERR_TPTIMEOUT`` error.
 
+.. _$tretries:
+
 Application code can read the intrinsic special variable ``$tretries``
 to determine how many times a transaction has been restarted. Although
 YottaDB recommends against accessing external resources within a
@@ -391,6 +393,107 @@ transaction, logic that needs to access an external resource (e.g., to
 read data in a file) can use ``$tretries`` to restrict that access to
 the first time it executes (``$tretries=0``), saving the data read for
 subsequent accesses.
+
+Locks
+=====
+
+YottaDB locks are a fast, lightweight tool for multiple processes to
+coordinate their work. An analogy with the physical world may help to
+explain the functionality. Wen it is locked, the lock on a door
+prevents you from going through it. In contrast, a traffic light does
+not stop you from driving through a street intersection: it works
+because drivers by convention stop when their light is red and drive
+when it is green.
+
+YottaDB locks are more akin to traffic lights than door locks. Each
+lock has a name: as lock names have the same syntax local or global
+variable names, ``Population``, ``^Capital``, and
+``^|"ThaiNames.gld"|Capital("Thailand",1350,1767)`` are all valid lock
+names. Features of YottaDB locks include:
+
+- Locks are exclusive: one and only process can acquire a lock with the
+  resource name. For example, if process P1 acquires lock ``Population("USA")``,
+  process P2 cannot simultaneously acquire that lock. However, P2 can acquire
+  lock ``Population("Canada")`` at the same time that process P1 acquires
+  ``Population("USA")``.
+- Locks are hierarchical: a process that has a lock at a higher level
+  blocks locks at lower levels and vice versa. For example, if P1
+  acquires ``Population("USA")``, P2 can acquire
+  ``Population("Canada")``, but P3 cannot acquire ``Population`` until
+  both P1 and P2 release their locks.
+- Locks include counters: a process that acquires
+  ``^Capital("Belgium")`` can acquire that lock again, incrementing
+  its count to 2. This simplifies application code logic: for example,
+  a routine in application code that requires ``^Capital("Belgium")``
+  can simply incrementally acquire that lock again without needing to
+  test whether a higher level routine has already acqured it, and when
+  it completes its work, can decrementally release the lock without
+  concern for whether or not a higher level routine needs that
+  lock. When the count goes from 1 to 0, the lock becomes available
+  for acquisition by another process.
+- Locks are robust: while normal process exit releases locks held by
+  that process, if a process holding a lock exits abnormally without
+  releasing it, another process that needs the lock, and finding it
+  held by a non-existent process will scavenge the lock.
+
+Although YottaDB lock names are the same as local and global variable
+names, YottaDB imposes no connection between a lock name and the same
+variable name. By convention, and for application maintainability, it
+is good practice to use lock names associated with the variables to
+which application code requires exclusive access, e.g., use a lock
+called ``^Population`` to protect or restrict access to a global
+variable called ``^Population``. [#]_
+
+.. [#] Since a process always has exclusive access to its local
+       variables, access to them never needs protection from a
+       lock. So, it would be reasonable to use a lock ``Population``
+       to restrict access to the global variable ``^Population``.
+
+An application whose lock acquisitons are ill-designed can `deadlock
+<https://en.wikipedia.org/wiki/Deadlock>`_. Acquire and release locks
+in an order that ensures your application will not deadlock. [#]_
+
+.. [#] Multiple locks acquired by a call to `ydb_lock_s()`_ or
+       `ydb_lock_incr_s()`_ are acquired atomically in the sense
+       that on returning from the call, either all of them have been
+       acquired, or none of them have been acquired.
+
+---------------------------------------
+Locks and Transaction Processing
+---------------------------------------
+
+`Transaction Processing`_ and Locks solve overlapping though not
+congruent use cases. For example, consider application code to
+transfer $100 from a customer's savings account to that same
+customer's savings account, which would likely include the requirement
+that business transactions on an account must be serializable. This
+can be implemented by acquiring a lock on that customer (with an
+application coded so that other accesses to that customer are blocked
+till the lock is released) or by executing the transfer inside a
+YottaDB transaction (which provides ACID properties). Unless the
+application logic or data force pathological transaction restarts that
+cannot be eliminated or worked around, transaction processing's
+optimistic concurrency control typically results in better application
+throughput than the pessimistic concurrency control that locks imply.
+
+In general, we recommend using either transaction processing or locks,
+and not mixing them. However, there may be business logic that
+requires the use of locks for some logic, but otherwise permits the
+use of transaction processing. If an application must mix them, the
+following rules apply:
+
+- A lock that a process acquires prior to starting a transaction
+  cannot be released inside the transaction - it can only be released
+  after the transaction is committed or abandoned. Locks acquired
+  inside a transaction can be released either inside the transaction,
+  or after the transaction is committed or abandoned.
+- As repeated acquisitions of the same lock during retries of a
+  transaction will result in the lock count being incremented each
+  time, we recommend either matching lock acquition and releases
+  within a transaction, or, for locks acquired within a transaction but
+  released after the transaction is committed or abandoned, to
+  acquisition only on the first attempt, using the intrinsic special
+  variable `$tretries`_.
 
 ==================
 Symbolic Constants
