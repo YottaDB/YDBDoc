@@ -399,7 +399,7 @@ Locks
 
 YottaDB locks are a fast, lightweight tool for multiple processes to
 coordinate their work. An analogy with the physical world may help to
-explain the functionality. Wen it is locked, the lock on a door
+explain the functionality. When it is locked, the lock on a door
 prevents you from going through it. In contrast, a traffic light does
 not stop you from driving through a street intersection: it works
 because drivers by convention stop when their light is red and drive
