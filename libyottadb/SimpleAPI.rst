@@ -314,16 +314,35 @@ Intrinsic Special Variables
 In addition to local and global variables, YottaDB also has a set of
 *Intrinsic Special Variables*. Just as global variables are
 distinguised by a "^" prefix, intrinsic special variables are
-distinguished by a "$" prefix. Instead of using an extended reference,
-an application can set an intrinsic special variable
-``$zgbldir="ThaiNames.gld"`` to use the ``ThaiNames.gld`` mapping. At
-process startup, YottaDB initializes ``$zgbldir`` from
-``$ydb_gbldir``.
+distinguished by a "$" prefix.  Unlike local and global variable
+names, intrinsic special variable names are case-insensitive and so
+``$zgbldir`` and ``$ZGblDir`` refer to the same intrinsic special
+variable. Intrinsic special variables have no subscripts.
 
-Unlike local and global variable names, intrinsic special variable
-names are case-insensitive and so ``$zgbldir`` and ``$ZGblDir`` refer
-to the same intrinsic special variable. Also intrinsic special
-variables have no subscripts.
+---------
+$tretries
+---------
+
+Application code inside a transaction can read the intrinsic special
+variable ``$tretries`` to determine how many times a transaction has
+been restarted. Although YottaDB recommends against accessing external
+resources within a transaction, logic that needs to access an external
+resource (e.g., to read data in a file), or to aquire a lock, can use
+``$tretries`` to restrict that access or acquisition to the first time
+it executes (``$tretries=0``).
+
+--------
+$zgbldir
+--------
+
+``$zgbldir`` is the name of the current global directory file; any
+global variable reference that does not explicitly specify a global
+directory uses $zgbldir. For example, instead of using an extended
+reference, an application can set an intrinsic special variable
+``$zgbldir="ThaiNames.gld"`` to use the ``ThaiNames.gld`` mapping. At
+process startup, YottaDB initializes ``$zgbldir`` from the environment
+variable value ``$ydb_gbldir``.
+
 
 Transaction Processing
 ======================
@@ -384,16 +403,6 @@ parameter, passing the function and its parameter as parameters to the
   transaction and the `ydb_tp_s()`_ function returns the
   ``YDB_ERR_TPTIMEOUT`` error.
 
-.. _$tretries:
-
-Application code can read the intrinsic special variable ``$tretries``
-to determine how many times a transaction has been restarted. Although
-YottaDB recommends against accessing external resources within a
-transaction, logic that needs to access an external resource (e.g., to
-read data in a file) can use ``$tretries`` to restrict that access to
-the first time it executes (``$tretries=0``), saving the data read for
-subsequent accesses.
-
 Locks
 =====
 
@@ -449,18 +458,15 @@ variable called ``^Population``. [#]_
        lock. So, it would be reasonable to use a lock ``Population``
        to restrict access to the global variable ``^Population``.
 
-An application whose lock acquisitons are ill-designed can `deadlock
-<https://en.wikipedia.org/wiki/Deadlock>`_. Acquire and release locks
-in an order that ensures your application will not deadlock. [#]_
+Since YottaDB locks acquisitions are always timed for languages other
+than M, it is not possible for applications to `deadlock
+<https://en.wikipedia.org/wiki/Deadlock>`_ on YottaDB locks. However,
+this does mean that defensive application code always validates the
+return code of calls to acquire locks.
 
-.. [#] Multiple locks acquired by a call to `ydb_lock_s()`_ or
-       `ydb_lock_incr_s()`_ are acquired atomically in the sense
-       that on returning from the call, either all of them have been
-       acquired, or none of them have been acquired.
-
----------------------------------------
+--------------------------------
 Locks and Transaction Processing
----------------------------------------
+--------------------------------
 
 `Transaction Processing`_ and Locks solve overlapping though not
 congruent use cases. For example, consider application code to
@@ -529,6 +535,10 @@ other than ``YDB_ERR_``
 
 ``YDB_OK`` -- Normal return following successful execution.
 
+``YDB_LOCK_TIMEOUT`` -- This return code from lock acquisition
+functions indicates that the specified timeout was reached without
+requested locks being acquired.
+
 ``YDB_TP_RESTART`` -- Code returned to libyottadb by an application
 function that packages a transaction to indicate that it wishes
 libyottadb to restart the transaction, or by a libyottadb function
@@ -577,11 +587,11 @@ return values. [#]_
 enough for a string to be returned, or the length of a string passed
 as a parameter exceeds ``YDB_MAX_STR``. In the event the return code
 is ``YDB_ERR_INVSTRLEN`` and if ``*xyz`` is a ``ydb_string_t`` value
-whose ``xyz->alloc`` indicates insufficient space, then ``xyz->used``
+whose ``xyz->length`` indicates insufficient space, then ``xyz->used``
 is set to the size required of a sufficiently large buffer, and
-``xyz->address`` points to the first ``xyz->alloc`` bytes of the
+``xyz->address`` points to the first ``xyz->length`` bytes of the
 value. In this case the ``used`` field of a ``ydb_string_t``
-structure is greater than the ``alloc`` field.
+structure is greater than the ``length`` field.
 
 ``YDB_ERR_INVSVN`` -- A special variable name provided by the caller
 is invalid.
@@ -619,13 +629,18 @@ Limits
 
 Symbolic constants for limits are prefixed with ``YDB_MAX_``.
 
-``YDB_MAX_IDENT`` --The maximum space in bytes required to store a
+``YDB_MAX_IDENT`` -- The maximum space in bytes required to store a
 complete variable name, not including the preceding caret for a global
 variable. Therefore, when allocating space for a string to hold a
 global variable name, add 1 for the caret, and when allocating space
 for a string to hold an extended global reference, add 3 (the caret
 and two "|" characters) as well as the maximum path for a global
 directory file, or for a variable that holds the maximum path.
+
+``YDB_MAXKCKTIME`` -- The maximum value in microseconds that an
+application can instruct libyottab to wait until the process is able
+to acquire locks it needs before timing out. This value is guaranteed
+to be no less than 2\ :superscript:`32`\ -1.
 
 ``YDB_MAX_STR`` -- The maximum length of a string (or blob) in
 bytes. A caller to ``ydb_get()`` that provides a buffer of
@@ -635,6 +650,11 @@ error.
 ``YDB_MAX_SUB`` -- The maximum number of subscripts for a local or
 global variable.
 
+Other
+=====
+
+Other symbolic constants have a prefix of ``YDB_``.
+
 ===============
 Data Structures
 ===============
@@ -642,8 +662,8 @@ Data Structures
 ``ydb_string_t`` is a descriptor for a string [#]_ value, and consists of
 the following fields:
 
- - ``alloc`` and ``used`` -- fields of type ``unsigned int`` where
-   ``alloc`` ≥ ``used`` except when a `YDB_ERR_INVSTRLEN`_ occurs.
+ - ``length`` and ``used`` -- fields of type ``unsigned int`` where
+   ``length`` ≥ ``used`` except when a `YDB_ERR_INVSTRLEN`_ occurs.
  - ``address`` -- pointer to an ``unsigned char``, the starting
    address of a string.
 
@@ -658,7 +678,7 @@ Macros
 ``YDB_ALLOC_STRING(string[,actalloc])`` -- Allocate a ``ydb_string_t``
 structure and set its ``address`` field to point to ``string``, and
 its ``used`` field to the length of string excluding the terminating
-null character. Set its ``alloc`` field to ``actalloc`` if specified,
+null character. Set its ``length`` field to ``actalloc`` if specified,
 otherwise to ``used``. Return the address of the structure. Note that
 if string is a ``const`` any code that attempts to change the value of
 the string pointed to by this ``ydb_string_t`` structure will almost
@@ -672,10 +692,10 @@ certainly result in a segmentation violation (SIGSEGV). [#]_
        efficiency reasons, we may want to have two macros,
        ``YDB_ALLOC_STRING()`` and ``YDB_ALLOC_STRLIT()``.
 
-``YDB_COPY_STRING(dest,src)`` -- Confirm that ``dest->alloc`` ≥
+``YDB_COPY_STRING(dest,src)`` -- Confirm that ``dest->length`` ≥
 ``src->used``, and if so copy ``src->used`` bytes from memory pointed
 to by ``src->address`` to the memory pointed to by ``dest->address``,
-returning ``YDB_OK``. If ``dest->alloc`` < ``src-used``, return
+returning ``YDB_OK``. If ``dest->length`` < ``src-used``, return
 ``YDB_ERR_INVSTRLEN``.
 
 ``YDB_FREE_STRING(x)`` -- Free the ``ydb_string_t`` structure pointed
@@ -692,7 +712,7 @@ least ``minalloc`` bytes. At the implementer's option, the allocation
 may be further rounded up to a preferred size. Copy ``string`` to the
 newly allocated memory. Allocate a ``ydb_string_t`` structure and set
 its ``address`` field to point to the newly allocated memory, its
-``alloc`` field to point to the size of allocated memory, and its
+``length`` field to point to the size of allocated memory, and its
 ``used`` field to the length of ``string``. Return the address of the
 new ``ydb_string_t`` structure. Use an empty string as the value of
 ``string`` to preallocate structures for use, e.g.,
@@ -700,7 +720,7 @@ new ``ydb_string_t`` structure. Use an empty string as the value of
 variable name to be returned by a function such as
 ``ydb_subscript_next_s()``.
 
-``YDB_SET_STRING(x, string)`` -- Check whether the ``x->alloc`` has
+``YDB_SET_STRING(x, string)`` -- Check whether the ``x->length`` has
 sufficient space for ``string`` and if so, copy ``string`` excluding
 the terminating null character to the memory pointed to
 by ``x->address`` and set ``x->used`` to the length of ``string``.
@@ -767,7 +787,7 @@ ydb_get_s()
 		ydb_string_t *varname[,
 		ydb_string_t *subscript, ... ]);
 
-If ``value->alloc`` is large enough to accommodate the result, to the
+If ``value->length`` is large enough to accommodate the result, to the
 location pointed to by ``value->address``, ``ydb_get_s()`` copies the
 value of the value of the data at the specified node or intrinsic
 special variable, setting ``value->used``, and returning
@@ -838,6 +858,26 @@ or if the intrinsic special variable does not exist,a non-zero return
 value of YDB_ERR_GVUNDEF, YDB_ERR_INVSVN, or YDB_ERR_UNDEF indicates
 the error.
 
+ydb_lock_s()
+============
+
+.. code-block:: C
+
+	int ydb_lock_s(unsigned int timeout,
+		[int count,
+		ydb_string_t *varname[,
+		ydb_string_t *subscript, ...], ...,] NULL);
+
+Note that the parameter list **must** be terminated by a NULL pointer.
+
+Release any locks held by the process, attempt to acquire all the
+specified locks. While the release is unconditional, on return, the
+function will have acquired all specified locks or no specified
+locks. If no locks are specified, the function releases all locks and
+returns ``YDB_OK``.
+
+``timeout`` specifies a time in
+
 ydb_message()
 =============
 
@@ -846,7 +886,7 @@ ydb_message()
 	int ydb_message(ydb_string_t *msgtext, int status)
 
 Set ``msgtext->address`` to a location that has the text for the
-condition corresponding to ``status``, and both ``msgtext->alloc`` and
+condition corresponding to ``status``, and both ``msgtext->length`` and
 ``msgtext->used`` to its length (with no trailing null
 character). Note: as ``msgtext->address`` points to an address in a
 read-only region of memory, any attempt to modify the message will
@@ -888,7 +928,7 @@ the ``*subscript`` parameters.
   insufficient parameters to return the subscript. In this case
   ``*count`` reports the actual number of subscripts in the node, and
   the parameters report as many subscripts as can be reported.
-- If one of the ``subscript->alloc`` values indicates insufficient
+- If one of the ``subscript->length`` values indicates insufficient
   space for an output value, the return code is the error
   ``YDB_ERR_INVSTRLEN``. See also the discussion at
   `YDB_ERR_INVSTRLEN`_ describing the contents of that ``*subscript``
