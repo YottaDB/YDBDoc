@@ -1,5 +1,5 @@
 .. header::
-   YottaDB -- libyottadb Simple API User Documentation
+   YottaDB -- Multi-Language Programmers Guide
 
 .. footer::
    Page ###Page### of ###Total###
@@ -11,12 +11,16 @@
 Overview
 ========
 
-libyottadb is a library for for accessing the YottaDB engine from C
-using its Simple API. A process can both call the Simple API as well
-as call functions written in M, the scripting language embedded in
-YottaDB, and exported. The libyottadb Simple API adds upward
-compatible functionality in YottaDB - no existing functionality is
-diminished or altered.
+YottaDB is a multi-language NoSQL database. The daemonless database
+engine resides in the address space of the process, and can be
+accessed from any supported language. Functions in the supported
+languages can call one another to the extent that such calling is
+permitted by the Supported language implementations.
+
+As C is the *lingua franca* of programming, the C API provides access
+the YottaDB engine from any language. As YottaDB adds standard APIs
+for other languages, additional sections will be added to ths
+Programmers Guide.
 
 **Caveat:** This code does not exist yet. The user documentation is
 being written ahead of the code, and will change in the event the code
@@ -725,7 +729,10 @@ sufficient space for ``string`` and if so, copy ``string`` excluding
 the terminating null character to the memory pointed to
 by ``x->address`` and set ``x->used`` to the length of ``string``.
 
-==========
+================
+Programming in C
+================
+
 Simple API
 ==========
 
@@ -758,8 +765,9 @@ Function names specific to the libyottadb Simple API end in
 ``_s``. Those common to both Simple API as well as the Complete API do
 not.
 
+------------
 ydb_data_s()
-============
+------------
 
 .. code-block:: C
 
@@ -777,8 +785,9 @@ identified by ``*varname`` and the ``*subscript`` list.
 - 10 -- There is no value, but there is a subtree.
 - 11 -- There are both a value and a subtree.
 
+-----------
 ydb_get_s()
-===========
+-----------
  
 .. code-block:: C
 
@@ -813,8 +822,9 @@ such as ``ydb_node_next_s()`` and a call to ``ydb_get-s()``, a caller
 of ``ydb_get_s()`` to access a global variable node should code in
 anticipation of a potential ``YDB_ERR_GVUNDEF``.
 
+------------
 ydb_kill_s()
-============
+------------
 
 .. code-block:: C
 
@@ -828,8 +838,9 @@ Kills -- deletes all nodes in -- each of the local or global variable
 trees or subtrees specified. In the special case where the only
 parameter is a NULL, ``ydb_kill_s()`` kills all local variables.
 
+-----------------
 ydb_kill_excl_s()
-=================
+-----------------
 
 .. code-block:: C
 
@@ -839,8 +850,9 @@ ydb_kill_excl_s()
 variable names. ``ydb_kill_excl_s()`` kills the trees of all local
 variable names except those on the list.
 
+--------------
 ydb_length_s()
-==============
+--------------
 
 .. code-block:: C
 
@@ -858,8 +870,9 @@ or if the intrinsic special variable does not exist,a non-zero return
 value of YDB_ERR_GVUNDEF, YDB_ERR_INVSVN, or YDB_ERR_UNDEF indicates
 the error.
 
+------------
 ydb_lock_s()
-============
+------------
 
 .. code-block:: C
 
@@ -878,8 +891,9 @@ returns ``YDB_OK``.
 
 ``timeout`` specifies a time in
 
+-------------
 ydb_message()
-=============
+-------------
 
 .. code-block:: C
 
@@ -894,8 +908,9 @@ result in a segmentation violation (SIGSEGV). ``ydb_message()``
 returns ``YDB_OK`` for a valid ``status`` and
 ``YDB_ERR_UNKNOWN`` if ``status`` does not map to a known error.
 
+-----------------
 ydb_node_next_s()
-=================
+-----------------
 		
 .. code-block:: C
 
@@ -940,8 +955,9 @@ Note that a call to ``ydb_node_next_s()`` must always have at least
 one ``*subscript`` parameter, since it is a *non-sequitur* to call it
 without subscripts and expect a return without subscripts.
 
+---------------------
 ydb_node_previous_s()
-=====================
+---------------------
 
 .. code-block:: C
 
@@ -961,8 +977,9 @@ tree, except that:
 Other behavior of ``ydb_node_previous_s()`` is the same as
 `ydb_node_next_s()`_.
 
+-----------
 ydb_put_s()
-===========
+-----------
 
 .. code-block:: C
 
@@ -975,8 +992,9 @@ Copies the ``value->used`` bytes at ``value->address`` as the value of
 the specified node or intrinsic special variable specified, returning
 ``YDB_OK`` or an error code such as ``YDB_ERR_INVSVN``.
 
+----------------------
 ydb_subscript_next_s()
-======================
+----------------------
 
 .. code-block:: C
 
@@ -996,8 +1014,9 @@ If ``*count`` is zero, ``ydb_subscript_next_s()`` returns the next
 local or global variable name, and if ``*varname`` references the
 last variable name, ``*count`` is -1 on the return.
 
+--------------------------
 ydb_subscript_previous_s()
-==========================
+--------------------------
 
 .. code-block:: C
 
@@ -1022,8 +1041,9 @@ If ``*count`` is zero, ``ydb_subscript_previous_s()`` returns the
 preceding local or global variable name, and if ``*varname``
 references the first variable name, ``*count`` is -1 on the return.
 
+----------
 ydb_tp_s()
-==========
+----------
 
 .. code-block:: C
 
@@ -1054,8 +1074,9 @@ return one of the following:
 - ``YDB_ROLLBACK`` -- application logic indicates that the transaction
   should not be committed
 
+----------------
 ydb_withdraw_s()
-================
+----------------
 
 .. code-block:: C
 
@@ -1067,6 +1088,18 @@ ydb_withdraw_s()
 
 Deletes the root node in each of the local or global variable
 trees or subtrees specified, leaving the subtrees intact.
+
+================
+Programming in M
+================
+
+As YottaDB is built on `FIS GT.M <http://fis-gtm.com>`_ , it includes
+a complete implementation of the `M <https://en.wikipedia.org/wiki/MUMPS>`_ programming language (also
+known as MUMPS) that mostly conforms to
+`ISO/IEC 11756:1999 <http://www.iso.ch/iso/en/CatalogueDetailPage.CatalogueDetail?CSNUMBER=29268&ICS1=35&ICS2=60&ICS3=&scopelist>`_.
+The
+`GT.M Programmers Guide  <http://tinco.pair.com/bhaskar/gtm/doc/books/pg/UNIX_manual/>`_
+documents programming YottaDB in M and is not duplicated here.
 
 =================
 Programming Notes
