@@ -1,5 +1,5 @@
 .. header::
-   YottaDB -- Multi-Language Programmers Guide
+   YottaDB — Multi-Language Programmers Guide
 
 .. footer::
    Page ###Page### of ###Total###
@@ -47,7 +47,7 @@ Quick Start
 
 2. Choose a directory for your default environment and initialize it:
    ``export ydbdir=$HOME/.yottadb ; . /opt/yottadb/latest/yottadbprofile``
-#. ``#include`` the file ``/opt/yottadb/latest/yottadb.h`` in your C
+#. ``#include`` the file ``/opt/yottadb/latest/libyottadb.h`` in your C
    program and compile it.
 #. Run your program, ensuring either that ``libyottadb.so`` is in the
    load path of your program (e.g., using ``ldcache`` or the
@@ -323,6 +323,12 @@ names, intrinsic special variable names are case-insensitive and so
 ``$zgbldir`` and ``$ZGblDir`` refer to the same intrinsic special
 variable. Intrinsic special variables have no subscripts.
 
+While the majority of intrinisic special variables as enumerated in
+Chapter 8 (Intrinsic Special Variables) of `GT.M Programmers Guide
+<http://tinco.pair.com/bhaskar/gtm/doc/books/pg/UNIX_manual/>`_ are
+useful to M application code, others are more generally useful and
+documented here.
+
 ---------
 $tretries
 ---------
@@ -390,12 +396,12 @@ optimistic concurrency control:
        span multiple blocks and even multiple regions) is a
        transaction that contains a single update.
 
-In libyottadb's API for transaction processing, an application
+In YottaDB's API for transaction processing, an application
 packages the logic for a transaction into a function with one
 parameter, passing the function and its parameter as parameters to the
-`ydb_tp_s()`_ function. libyottadb then calls that function.
+`ydb_tp_s()`_ function. YottaDB then calls that function.
 
-- If the function returns a ``YDB_OK``, libyottadb attempts to commit
+- If the function returns a ``YDB_OK``, YottaDB attempts to commit
   the transaction. If it is unable to commit as described above, or if
   the called function returns a ``YDB_TP_RESTART`` return code, it
   calls the function again.
@@ -403,7 +409,7 @@ parameter, passing the function and its parameter as parameters to the
   to its caller with that return code.
 - To protect applications against poorly coded transactions, if a
   transaction takes longer than the number of seconds specified by
-  the environment variable ``ydb_maxtptime``, libyottadb aborts the
+  the environment variable ``ydb_maxtptime``, YottaDB aborts the
   transaction and the `ydb_tp_s()`_ function returns the
   ``YDB_ERR_TPTIMEOUT`` error.
 
@@ -430,24 +436,25 @@ names. Features of YottaDB locks include:
   lock ``Population("Canada")`` at the same time that process P1 acquires
   ``Population("USA")``.
 - Locks are hierarchical: a process that has a lock at a higher level
-  blocks locks at lower levels and vice versa. For example, if P1
-  acquires ``Population("USA")``, P2 can acquire
-  ``Population("Canada")``, but P3 cannot acquire ``Population`` until
-  both P1 and P2 release their locks.
+  blocks locks at lower levels and vice versa. For example, if a
+  process P0 must wait for processes P1, P2, … to complete, each of
+  P1, P2, … can acquire lock ``Process(``\ *pid*\ ``)``. P0's
+  subsequent attempt to acquire lock ``Process`` is blocked till
+  processes P1, P2, … complete.
 - Locks include counters: a process that acquires
   ``^Capital("Belgium")`` can acquire that lock again, incrementing
   its count to 2. This simplifies application code logic: for example,
   a routine in application code that requires ``^Capital("Belgium")``
-  can simply incrementally acquire that lock again without needing to
-  test whether a higher level routine has already acqured it, and when
-  it completes its work, can decrementally release the lock without
-  concern for whether or not a higher level routine needs that
-  lock. When the count goes from 1 to 0, the lock becomes available
-  for acquisition by another process.
+  can simply incrementally acquire that lock without needing to test
+  whether a higher level routine has already acqured it. More
+  importantly, when it completes its work, the routine can
+  decrementally release the lock without concern for whether or not a
+  higher level routine needs that lock. When the count goes from 1 to
+  0, the lock becomes available for acquisition by another process.
 - Locks are robust: while normal process exit releases locks held by
   that process, if a process holding a lock exits abnormally without
   releasing it, another process that needs the lock, and finding it
-  held by a non-existent process will scavenge the lock.
+  held by a non-existent process will automatically scavenge the lock.
 
 Although YottaDB lock names are the same as local and global variable
 names, YottaDB imposes no connection between a lock name and the same
@@ -464,9 +471,9 @@ variable called ``^Population``. [#]_
 
 Since YottaDB locks acquisitions are always timed for languages other
 than M, it is not possible for applications to `deadlock
-<https://en.wikipedia.org/wiki/Deadlock>`_ on YottaDB locks. However,
-this does mean that defensive application code always validates the
-return code of calls to acquire locks.
+<https://en.wikipedia.org/wiki/Deadlock>`_ on YottaDB
+locks. Consequently defensive application code must always validate
+the return code of calls to acquire locks.
 
 --------------------------------
 Locks and Transaction Processing
@@ -526,7 +533,7 @@ Symbolic constants all fit within the range of a C ``int``.
 Function Return Codes
 =====================
 
-Return codes from calls to libyottadb are of type
+Return codes from calls to YottaDB are of type
 ``int``. Normal return codes are non-negative (greater than
 or equal to zero); error return codes are negative.
 
@@ -537,24 +544,24 @@ Normal Return Codes
 Symbolic constants for normal return codes have ``YDB_`` prefixes
 other than ``YDB_ERR_``
 
-``YDB_OK`` -- Normal return following successful execution.
+``YDB_OK`` — Normal return following successful execution.
 
-``YDB_LOCK_TIMEOUT`` -- This return code from lock acquisition
+``YDB_LOCK_TIMEOUT`` — This return code from lock acquisition
 functions indicates that the specified timeout was reached without
 requested locks being acquired.
 
-``YDB_TP_RESTART`` -- Code returned to libyottadb by an application
+``YDB_TP_RESTART`` — Code returned to YottaDB by an application
 function that packages a transaction to indicate that it wishes
-libyottadb to restart the transaction, or by a libyottadb function
+YottaDB to restart the transaction, or by a YottaDB function
 invoked within a transaction to its caller that the database engine
 has detected that it will be unable to commit the transaction and will
 need to restart. Application code designed to be executed within a
 transaction should be written to recognize this return code and in
-turn return to the libyottadb `ydb_tp_s()`_ invocation from which it
+turn return to the YottaDB `ydb_tp_s()`_ invocation from which it
 was called. See `Transaction Processing`_ for a discussion of
 restarts.
 
-``YDB_TP_ROLLBACK`` -- Code returned to libyottadb by an application
+``YDB_TP_ROLLBACK`` — Code returned to YottaDB by an application
 function that packages a transaction, and in turn returned to the
 caller indicating that the transaction should not be committed.
 
@@ -562,10 +569,10 @@ caller indicating that the transaction should not be committed.
 Error Return Codes
 ------------------
 
-Symbolic constants for error codes returned by calls to libyottadb are
+Symbolic constants for error codes returned by calls to YottaDB are
 prefixed with ``YDB_ERR_`` and are all less than zero. [#]_ The
 symbolic constants below are not a complete list of all error messages
-that Simple API functions can return -- error return codes can
+that Simple API functions can return — error return codes can
 indicate system errors and database errors, not just application
 errors. The ``ydb_message()`` function provides a way to get more
 detailed information about any error code returned by a Simple API
@@ -575,10 +582,10 @@ constants.
 .. [#] Note for implementers: the actual values are negated ZMESSAGE
        error codes.
 
-``YDB_ERR_GVUNDEF`` -- No value exists at a requested global variable
+``YDB_ERR_GVUNDEF`` — No value exists at a requested global variable
 node.
 
-``YDB_ERR_INSUFFSUBS`` -- A call to ``ydb_node_next_s()`` or
+``YDB_ERR_INSUFFSUBS`` — A call to ``ydb_node_next_s()`` or
 ``ydb_node_previous_s()`` did not provide enough parameters for the
 return values. [#]_
 
@@ -587,7 +594,7 @@ return values. [#]_
 
 .. _YDB_ERR_INVSTRLEN:
 
-``YDB_ERR_INVSTRLEN`` -- A buffer provided by the caller is not long
+``YDB_ERR_INVSTRLEN`` — A buffer provided by the caller is not long
 enough for a string to be returned, or the length of a string passed
 as a parameter exceeds ``YDB_MAX_STR``. In the event the return code
 is ``YDB_ERR_INVSTRLEN`` and if ``*xyz`` is a ``ydb_string_t`` value
@@ -597,29 +604,29 @@ is set to the size required of a sufficiently large buffer, and
 value. In this case the ``used`` field of a ``ydb_string_t``
 structure is greater than the ``length`` field.
 
-``YDB_ERR_INVSVN`` -- A special variable name provided by the caller
+``YDB_ERR_INVSVN`` — A special variable name provided by the caller
 is invalid.
 
-``YDB_ERR_KEY2BIG`` -- The length of a global variable name and
+``YDB_ERR_KEY2BIG`` — The length of a global variable name and
 subscripts exceeds the limit configured for the database region to
 which it is mapped.
 
-``YDB_ERR_LVUNDEF`` -- No value exists at a requested local variable
+``YDB_ERR_LVUNDEF`` — No value exists at a requested local variable
 node. [#]_
 
 .. [#] Note for implementers: under the covers, this is ``UNDEF`` but
        renamed to be more meaningful.
 
-``YDB_ERR_MAXNRSUBSCRIPTS`` -- The number of subscripts specified in
+``YDB_ERR_MAXNRSUBSCRIPTS`` — The number of subscripts specified in
 the call exceeds ``YDB_MAX_SUB``.
 
-``YDB_ERR_TPTMEOUT`` -- This return code from `ydb_tp_s()`_ indicates
+``YDB_ERR_TPTMEOUT`` — This return code from `ydb_tp_s()`_ indicates
 that the transaction took too long to commit.
 
-``YDB_ERR_UNKNOWN`` -- A call to `ydb_message()`_ specified an
+``YDB_ERR_UNKNOWN`` — A call to `ydb_message()`_ specified an
 invalid message code.
 
-``YDB_ERR_VARNAMEINVALID`` -- A  variable name is too long. [#]_
+``YDB_ERR_VARNAMEINVALID`` — A  variable name is too long. [#]_
 
 .. [#] Note for implementers: While correctly issuing GVINVALID for
        too-long global variable names, YottaDB silently truncates
@@ -633,7 +640,7 @@ Limits
 
 Symbolic constants for limits are prefixed with ``YDB_MAX_``.
 
-``YDB_MAX_IDENT`` -- The maximum space in bytes required to store a
+``YDB_MAX_IDENT`` — The maximum space in bytes required to store a
 complete variable name, not including the preceding caret for a global
 variable. Therefore, when allocating space for a string to hold a
 global variable name, add 1 for the caret, and when allocating space
@@ -641,17 +648,17 @@ for a string to hold an extended global reference, add 3 (the caret
 and two "|" characters) as well as the maximum path for a global
 directory file, or for a variable that holds the maximum path.
 
-``YDB_MAXKCKTIME`` -- The maximum value in microseconds that an
+``YDB_MAXKCKTIME`` — The maximum value in microseconds that an
 application can instruct libyottab to wait until the process is able
 to acquire locks it needs before timing out. This value is guaranteed
 to be no less than 2\ :superscript:`32`\ -1.
 
-``YDB_MAX_STR`` -- The maximum length of a string (or blob) in
+``YDB_MAX_STR`` — The maximum length of a string (or blob) in
 bytes. A caller to ``ydb_get()`` that provides a buffer of
 ``YDB_MAX_STR`` will never get a ``YDB_ERR_INVSTRLEN``
 error.
 
-``YDB_MAX_SUB`` -- The maximum number of subscripts for a local or
+``YDB_MAX_SUB`` — The maximum number of subscripts for a local or
 global variable.
 
 Other
@@ -666,9 +673,9 @@ Data Structures
 ``ydb_string_t`` is a descriptor for a string [#]_ value, and consists of
 the following fields:
 
- - ``length`` and ``used`` -- fields of type ``unsigned int`` where
+ - ``length`` and ``used`` — fields of type ``unsigned int`` where
    ``length`` ≥ ``used`` except when a `YDB_ERR_INVSTRLEN`_ occurs.
- - ``address`` -- pointer to an ``unsigned char``, the starting
+ - ``address`` — pointer to an ``unsigned char``, the starting
    address of a string.
 
 .. [#] Strings in YottaDB are arbitrary sequences of bytes that are not
@@ -679,7 +686,7 @@ the following fields:
 Macros
 ======
 
-``YDB_ALLOC_STRING(string[,actalloc])`` -- Allocate a ``ydb_string_t``
+``YDB_ALLOC_STRING(string[,actalloc])`` — Allocate a ``ydb_string_t``
 structure and set its ``address`` field to point to ``string``, and
 its ``used`` field to the length of string excluding the terminating
 null character. Set its ``length`` field to ``actalloc`` if specified,
@@ -696,20 +703,20 @@ certainly result in a segmentation violation (SIGSEGV). [#]_
        efficiency reasons, we may want to have two macros,
        ``YDB_ALLOC_STRING()`` and ``YDB_ALLOC_STRLIT()``.
 
-``YDB_COPY_STRING(dest,src)`` -- Confirm that ``dest->length`` ≥
+``YDB_COPY_STRING(dest,src)`` — Confirm that ``dest->length`` ≥
 ``src->used``, and if so copy ``src->used`` bytes from memory pointed
 to by ``src->address`` to the memory pointed to by ``dest->address``,
 returning ``YDB_OK``. If ``dest->length`` < ``src-used``, return
 ``YDB_ERR_INVSTRLEN``.
 
-``YDB_FREE_STRING(x)`` -- Free the ``ydb_string_t`` structure pointed
+``YDB_FREE_STRING(x)`` — Free the ``ydb_string_t`` structure pointed
 to by ``x``.
 
-``YDB_FREE_STRING_DEEP(x)`` -- Free the memory referenced by
+``YDB_FREE_STRING_DEEP(x)`` — Free the memory referenced by
 ``x->address`` and free the ``ydb_string_t`` structure pointed to by
 ``x``.
 
-``YDB_NEW_STRING(string[,minalloc])`` -- Allocate memory sufficient to
+``YDB_NEW_STRING(string[,minalloc])`` — Allocate memory sufficient to
 hold ``string`` (excluding the trailing null character) and copy
 ``string`` to that memory. If ``minalloc`` is specified, allocate at
 least ``minalloc`` bytes. At the implementer's option, the allocation
@@ -724,7 +731,7 @@ new ``ydb_string_t`` structure. Use an empty string as the value of
 variable name to be returned by a function such as
 ``ydb_subscript_next_s()``.
 
-``YDB_SET_STRING(x, string)`` -- Check whether the ``x->length`` has
+``YDB_SET_STRING(x, string)`` — Check whether the ``x->length`` has
 sufficient space for ``string`` and if so, copy ``string`` excluding
 the terminating null character to the memory pointed to
 by ``x->address`` and set ``x->used`` to the length of ``string``.
@@ -733,15 +740,26 @@ by ``x->address`` and set ``x->used`` to the length of ``string``.
 Programming in C
 ================
 
+YottaDB functions are divided into:
+
+- Simple API - a core set of functions that provides easy-to-use
+  access to the major features of YottaBD.
+- Comprehensive API - a more elaborate set of functions for
+  specialized or optimized access to additional functionality within
+  ``libyottadb.so`` that YottaDB itself uses. The Comprehensive API is
+  a project for the future.
+- Utility Functions - Functions useful to a C application using
+  YottaDB.
+
 Simple API
 ==========
 
-As all subscripts and node data passed to libyottadb using the Simple
+As all subscripts and node data passed to YottaDB using the Simple
 API are strings, use the ``printf()`` and ``scanf()`` family of
 functions to convert between numeric values and strings which are
 `canonical numbers`_.
 
-To allow the libyottadb Simple API functions to handle a variable tree
+To allow the YottaDB Simple API functions to handle a variable tree
 whose nodes have varying numbers of subscripts, the actual number of
 subscripts is itself passed as a parameter. In the definitions of
 functions:
@@ -761,9 +779,7 @@ that is difficult to troubleshoot. [#]_
        limit the damage by not looking for more subscripts than are
        permitted by ``YDB_MAX_SUB``.
 
-Function names specific to the libyottadb Simple API end in
-``_s``. Those common to both Simple API as well as the Complete API do
-not.
+Function names specific to the YottaDB Simple API end in ``_s``.
 
 ------------
 ydb_data_s()
@@ -780,10 +796,10 @@ In the location pointed to by ``value``, ``ydb_data_s()`` returns the
 following information about the local or global variable node
 identified by ``*varname`` and the ``*subscript`` list.
 
-- 0 -- There is neither a value nor a subtree, i.e., it is undefined.
-- 1 -- There is a value, but no subtree
-- 10 -- There is no value, but there is a subtree.
-- 11 -- There are both a value and a subtree.
+- 0 — There is neither a value nor a subtree, i.e., it is undefined.
+- 1 — There is a value, but no subtree
+- 10 — There is no value, but there is a subtree.
+- 11 — There are both a value and a subtree.
 
 -----------
 ydb_get_s()
@@ -834,7 +850,7 @@ ydb_kill_s()
 
 Note that the parameter list **must** be terminated by a NULL pointer.
 
-Kills -- deletes all nodes in -- each of the local or global variable
+Kills — deletes all nodes in — each of the local or global variable
 trees or subtrees specified. In the special case where the only
 parameter is a NULL, ``ydb_kill_s()`` kills all local variables.
 
@@ -891,23 +907,6 @@ returns ``YDB_OK``.
 
 ``timeout`` specifies a time in
 
--------------
-ydb_message()
--------------
-
-.. code-block:: C
-
-	int ydb_message(ydb_string_t *msgtext, int status)
-
-Set ``msgtext->address`` to a location that has the text for the
-condition corresponding to ``status``, and both ``msgtext->length`` and
-``msgtext->used`` to its length (with no trailing null
-character). Note: as ``msgtext->address`` points to an address in a
-read-only region of memory, any attempt to modify the message will
-result in a segmentation violation (SIGSEGV). ``ydb_message()``
-returns ``YDB_OK`` for a valid ``status`` and
-``YDB_ERR_UNKNOWN`` if ``status`` does not map to a known error.
-
 -----------------
 ydb_node_next_s()
 -----------------
@@ -926,7 +925,7 @@ output node reported by the call, which is the reason the number of
 subscripts is passed by reference.
 
 As an input parameter ``*count`` specifies the number of subscripts in
-the input node, which does not need to exist -- a value of 0 will
+the input node, which does not need to exist — a value of 0 will
 return the first node in the tree.
 
 Except when the ``int`` value returned by
@@ -1066,12 +1065,12 @@ a value that has one of the following forms with no embedded spaces:
 In both cases, ``package.function`` or ``routine^label`` should
 return one of the following:
 
-- ``YDB_OK`` -- application logic indicates that the transaction can
+- ``YDB_OK`` — application logic indicates that the transaction can
   be committed (the YottaDB engine may still decide that a restart is
   required to ensure ACID transaction properties)
-- ``YDB_RESTART``  -- application logic indicates that the
+- ``YDB_RESTART``  — application logic indicates that the
   transaction should restart
-- ``YDB_ROLLBACK`` -- application logic indicates that the transaction
+- ``YDB_ROLLBACK`` — application logic indicates that the transaction
   should not be committed
 
 ----------------
@@ -1088,6 +1087,67 @@ ydb_withdraw_s()
 
 Deletes the root node in each of the local or global variable
 trees or subtrees specified, leaving the subtrees intact.
+
+Comprehensive API
+=================
+
+The Comprehensive API is a project for the future.
+
+Utility Functions
+=================
+
+Utility functions are functions that are not core to YottaDB
+functionality, but which may be useful to C application code.
+
+**Need to add hiber_start, hiber_start_wait_any, start_timer,
+and cancel_timer to this section.**
+
+----------
+ydb_free()
+----------
+
+.. code-block:: C
+
+	int ydb_free(void *ptr)
+
+Releases memory previously allocated by ``ydb_malloc()``. Passing
+``ydb_free()`` a pointer not previously provided to the application by
+``ydb_malloc()`` can result in unpredictable behavior. The signature
+of ``ydb_free()`` matches that of the POSIX ``free()`` call.
+
+------------
+ydb_malloc()
+------------
+
+.. code-block:: C
+
+	void *ydb_malloc(size_t size)
+
+With a signature matching that of the POSIX ``malloc()`` call,
+``ydb_malloc()`` returns an address to a block of memory of the
+requested size, or NULL if it is unable to satisfy the request. As
+``ydb_malloc()`` uses a `buddy system
+<https://en.wikipedia.org/wiki/Buddy_memory_allocation>`_, it may be
+more efficient than the system ``malloc()``. Also, it provdes
+debugging functionality under the control of the environment variable
+``ydbdbglevel``.
+
+-------------
+ydb_message()
+-------------
+
+.. code-block:: C
+
+	int ydb_message(ydb_string_t *msgtext, int status)
+
+Set ``msgtext->address`` to a location that has the text for the
+condition corresponding to ``status``, and both ``msgtext->length`` and
+``msgtext->used`` to its length (with no trailing null
+character). Note: as ``msgtext->address`` points to an address in a
+read-only region of memory, any attempt to modify the message will
+result in a segmentation violation (SIGSEGV). ``ydb_message()``
+returns ``YDB_OK`` for a valid ``status`` and
+``YDB_ERR_UNKNOWN`` if ``status`` does not map to a known error.
 
 ================
 Programming in M
@@ -1124,7 +1184,7 @@ conversion back and forth.
        calculations.
 
 When passed a string that is a `canonical number`_ for use as a subscript,
-libyottadb automatically converts it to a number. This automatic
+YottaDB automatically converts it to a number. This automatic
 internal conversion is immaterial for applications:
 
 - that simply store and retrieve data associated with subscripts,
@@ -1184,3 +1244,12 @@ set that represents a decimal number in a standard, concise, form.
    followed by a canonical integer in the range -43 to 47 such
    that the magnitude of the resulting number is between 1E-43
    through.1E47.
+
+Signals
+=======
+
+As ``libyottadb.so`` includes a database engine that uses timers and
+signals, YottaDB uses signals, especially timers.  YottaDB strongly
+discourages the use of signals, especially SIGALARM, in application
+code functions. Use the exposed timer APIs for application timing
+functionality (see `Utility Functions`_).
