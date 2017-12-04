@@ -4,8 +4,7 @@
 .. footer::
    Page ###Page### of ###Total###
 
-.. contents:: Table of Contents
-   :depth: 3
+.. index:: Multi-language Programming Guide
 
 ========
 Overview
@@ -977,12 +976,12 @@ Other behavior of ``ydb_node_previous_s()`` is the same as
 `ydb_node_next_s()`_.
 
 -----------
-ydb_put_s()
+ydb_set_s()
 -----------
 
 .. code-block:: C
 
-	int ydb_put_s(ydb_string_t *value,
+	int ydb_set_s(ydb_string_t *value,
 		int count,
 		ydb_string_t *varname[,
 		ydb_string_t *subscript, ... ]);
