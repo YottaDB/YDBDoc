@@ -625,14 +625,18 @@ that the transaction took too long to commit.
 ``YDB_ERR_UNKNOWN`` — A call to `ydb_message()`_ specified an
 invalid message code.
 
-``YDB_ERR_VARNAMEINVALID`` — A  variable name is too long. [#]_
+``YDB_ERR_VARNAMEINVALID`` — A  variable name is invalid. [#]_
 
 .. [#] Note for implementers: While correctly issuing GVINVALID for
        too-long global variable names, YottaDB silently truncates
        local variable names that are too long. The implementation
        should catch this. ``YDB_ERR_VARNAMEINVALID`` can map to the
        existing GVINVALID, and change the message returned by
-       ``ydb_message()`` appropriately.
+       ``ydb_message()`` appropriately. Invalid variable
+       name errors are typically caught by the M compiler, resulting
+       in messages like EQUAL or RPARENMISSING depending on the
+       context. For the Simple API, all invalid variable names should
+       map to VARNAMEINVALID.
 
 Limits
 ======
@@ -647,7 +651,7 @@ for a string to hold an extended global reference, add 3 (the caret
 and two "|" characters) as well as the maximum path for a global
 directory file, or for a variable that holds the maximum path.
 
-``YDB_MAXKCKTIME`` — The maximum value in microseconds that an
+``YDB_MAXLOCKTIME`` — The maximum value in microseconds that an
 application can instruct libyottab to wait until the process is able
 to acquire locks it needs before timing out. This value is guaranteed
 to be no less than 2\ :superscript:`32`\ -1.
@@ -742,7 +746,7 @@ Programming in C
 YottaDB functions are divided into:
 
 - Simple API - a core set of functions that provides easy-to-use
-  access to the major features of YottaBD.
+  access to the major features of YottaDB.
 - Comprehensive API - a more elaborate set of functions for
   specialized or optimized access to additional functionality within
   ``libyottadb.so`` that YottaDB itself uses. The Comprehensive API is
@@ -899,12 +903,75 @@ ydb_lock_s()
 Note that the parameter list **must** be terminated by a NULL pointer.
 
 Release any locks held by the process, attempt to acquire all the
-specified locks. While the release is unconditional, on return, the
-function will have acquired all specified locks or no specified
-locks. If no locks are specified, the function releases all locks and
-returns ``YDB_OK``.
+requested locks. While the release is unconditional, on return, the
+function will have acquired all requested locks or none of them. If no
+locks are requested, the function releases all locks and returns
+``YDB_OK``.
 
-``timeout`` specifies a time in
+``timeout`` specifies a time in microseconds that the function waits
+to acquire the requested locks. If it is not able to acquire all
+requested locks, it acquires no locks, returning with a
+``YDB_LOCK_TIMEOUT`` return value.
+
+If ``timeout`` is zero, the function makes exactly one attempt to
+acquire the locks, and if it is unable to, it returns
+``YDB_LOCK_TIMEOUT``.
+
+If all requested locks are successfully acquired, the function returns
+``YDB_OK``.
+
+-----------------
+ydb_lock_decr_s()
+-----------------
+
+.. code-block:: C
+
+	int ydb_lock_s([int count,
+		ydb_string_t *varname[,
+		ydb_string_t *subscript, ...], ...,] NULL);
+
+Note that the parameter list **must** be terminated by a NULL pointer.
+
+Decrements counts of the specified locks held by the process. As
+noted in the `Concepts`_ section, a lock whose count goes from 1 to 0
+is released. Any lock whose name is specified in the argument list,
+but which the process does not hold, is ignored.
+
+As releasing locks cannot fail, the function returns ``YDB_OK``,
+unless there is an error such as an invalid name that results in the
+return of an error code such as ``YDB_ERR_VARNAMEINVALID``.
+
+-----------------
+ydb_lock_incr_s()
+-----------------
+
+.. code-block:: C
+
+	int ydb_lock_s(unsigned int timeout,
+		[int count,
+		ydb_string_t *varname[,
+		ydb_string_t *subscript, ...], ...,] NULL);
+
+Note that the parameter list **must** be terminated by a NULL pointer.
+
+Without releasing any locks held by the process, attempt to acquire
+all the requested locks, and increment any locks already held by the
+process. On return, the process will have acquired all requested
+locks, and incremented those already held, or will have neither
+acquired nor incremented any of them. If no locks are specified, the
+function returns ``YDB_OK`` (i.e., it is a no-op).
+
+``timeout`` specifies a time in microseconds that the function waits
+to acquire the requested locks. If it is not able to acquire all
+requested locks, it acquires no locks, returning with a
+``YDB_LOCK_TIMEOUT`` return value.
+
+If ``timeout`` is zero, the function makes exactly one attempt to
+acquire the locks, and if it is unable to, it returns
+``YDB_LOCK_TIMEOUT``.
+
+If all requested locks are successfully acquired, the function returns
+``YDB_OK``.
 
 -----------------
 ydb_node_next_s()
