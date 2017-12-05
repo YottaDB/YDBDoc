@@ -117,7 +117,7 @@ In the above, 17900802 represents August 2, 1790, and an application
 would determine from the number of keys whether a node represents the
 current population or historical census data.
 
-.. [#] Variety is one of the *three "V"s* of "big data" - Velocity,
+.. [#] Variety is one of the *three "V"s* of "big data" — Velocity,
        Volume, and Variety. YottaDB handles all three very well.
 
 In YottaDB, the first key is called a *variable*, and the remaining
@@ -291,25 +291,20 @@ language-specific entries. So a default global directory
 names can be specified in the environment variable ``ydb_gbldir`` but
 a different global directory file, e.g., ``ThaiNames.gld`` can have
 the same mapping for a global variable such as ``^Population`` but a
-different database file for ``^Capital``.
+different database file for ``^Capital``. The intrinsic special
+variable ``$zgbldir`` can be set to a global directory name to change
+the mapping from one global directory to another.
 
 Thus, we can have:
 
 ::
 
-   ^|"ThaiNames.gld"|Capital("Thailand")="กรุ่งเทพฯ"
-   ^|"ThaiNames.gld"|Capital("Thailand",1238,1378)="สุโขทัย"
-   ^|"ThaiNames.gld"|Capital("Thailand",1350,1767)="อยุธยา"
-   ^|"ThaiNames.gld"|Capital("Thailand",1767,1782)="ธนบุรี"
-   ^|"ThaiNames.gld"|Capital("Thailand",1782)="กรุ่งเทพฯ"
-
-The global directory name can itself be a variable name. So if the
-variable ``CurrLangGld`` is set to ``"ThaiNames.gld"``, the capital of
-Thailand can be referred to in the current language, e.g.,
-``^|CurrLangGld|Capital("Thailand")="กรุ่งเทพฯ"``
-
-A global variable reference that explictly specifies a global
-directory is called an *extended reference*.
+   $zgbldir="ThaiNames.gld"
+   ^Capital("Thailand")="กรุ่งเทพฯ"
+   ^Capital("Thailand",1238,1378)="สุโขทัย"
+   ^Capital("Thailand",1350,1767)="อยุธยา"
+   ^Capital("Thailand",1767,1782)="ธนบุรี"
+   ^Capital("Thailand",1782)="กรุ่งเทพฯ"
 
 Intrinsic Special Variables
 ===========================
@@ -426,7 +421,7 @@ when it is green.
 YottaDB locks are more akin to traffic lights than door locks. Each
 lock has a name: as lock names have the same syntax local or global
 variable names, ``Population``, ``^Capital``, and
-``^|"ThaiNames.gld"|Capital("Thailand",1350,1767)`` are all valid lock
+``^Capital("Thailand",1350,1767)`` are all valid lock
 names. Features of YottaDB locks include:
 
 - Locks are exclusive: one and only process can acquire a lock with the
@@ -603,8 +598,19 @@ is set to the size required of a sufficiently large buffer, and
 value. In this case the ``used`` field of a ``ydb_string_t``
 structure is greater than the ``length`` field.
 
+``YDB_ERR_INVSUB`` — A subscript provided by the caller is invalid. In
+the case of a name with multiple subscripts, the intrinsic special
+variable $zstatus acquired with a subsequent call to `ydb_get_s()`_
+provides details on which subscript had the invalid value.
+
 ``YDB_ERR_INVSVN`` — A special variable name provided by the caller
 is invalid.
+
+``YDB_ERR_INVVARNAME`` — A variable name provided by the caller is
+invalid. In the case of a call with multiple variable names, such as
+`ydb_lock_s()`_, the intrinsic special variable $zstatus acquired with
+a subsequent call to `ydb_get_s()`_ provides details on which variable
+name was invalid.
 
 ``YDB_ERR_KEY2BIG`` — The length of a global variable name and
 subscripts exceeds the limit configured for the database region to
@@ -625,18 +631,6 @@ that the transaction took too long to commit.
 ``YDB_ERR_UNKNOWN`` — A call to `ydb_message()`_ specified an
 invalid message code.
 
-``YDB_ERR_VARNAMEINVALID`` — A  variable name is invalid. [#]_
-
-.. [#] Note for implementers: While correctly issuing GVINVALID for
-       too-long global variable names, YottaDB silently truncates
-       local variable names that are too long. The implementation
-       should catch this. ``YDB_ERR_VARNAMEINVALID`` can map to the
-       existing GVINVALID, and change the message returned by
-       ``ydb_message()`` appropriately. Invalid variable
-       name errors are typically caught by the M compiler, resulting
-       in messages like EQUAL or RPARENMISSING depending on the
-       context. For the Simple API, all invalid variable names should
-       map to VARNAMEINVALID.
 
 Limits
 ======
@@ -646,10 +640,7 @@ Symbolic constants for limits are prefixed with ``YDB_MAX_``.
 ``YDB_MAX_IDENT`` — The maximum space in bytes required to store a
 complete variable name, not including the preceding caret for a global
 variable. Therefore, when allocating space for a string to hold a
-global variable name, add 1 for the caret, and when allocating space
-for a string to hold an extended global reference, add 3 (the caret
-and two "|" characters) as well as the maximum path for a global
-directory file, or for a variable that holds the maximum path.
+global variable name, add 1 for the caret.
 
 ``YDB_MAXLOCKTIME`` — The maximum value in microseconds that an
 application can instruct libyottab to wait until the process is able
@@ -745,13 +736,13 @@ Programming in C
 
 YottaDB functions are divided into:
 
-- Simple API - a core set of functions that provides easy-to-use
+- Simple API — a core set of functions that provides easy-to-use
   access to the major features of YottaDB.
-- Comprehensive API - a more elaborate set of functions for
+- Comprehensive API — a more elaborate set of functions for
   specialized or optimized access to additional functionality within
   ``libyottadb.so`` that YottaDB itself uses. The Comprehensive API is
   a project for the future.
-- Utility Functions - Functions useful to a C application using
+- Utility Functions — Functions useful to a C application using
   YottaDB.
 
 Simple API
@@ -837,7 +828,7 @@ return code from ``ydb_get()``. See also the discussion at
 `YDB_ERR_INVSTRLEN`_ describing the contents of ``*value`` when
 ``ydb_get_s()`` returns a ``YDB_ERR_INVSTRLEN`` return
 code. Similarly, since a node can always be deleted between a call
-such as ``ydb_node_next_s()`` and a call to ``ydb_get-s()``, a caller
+such as ``ydb_node_next_s()`` and a call to ``ydb_get_s()``, a caller
 of ``ydb_get_s()`` to access a global variable node should code in
 anticipation of a potential ``YDB_ERR_GVUNDEF``.
 
@@ -847,15 +838,16 @@ ydb_kill_s()
 
 .. code-block:: C
 
-	int ydb_kill_s([int count,
+	int ydb_kill_s(int namecount,
+		[int count,
 		ydb_string_t *varname[,
-		ydb_string_t *subscript, ...], ...,] NULL);
+		ydb_string_t *subscript, ...], ...,]);
 
-Note that the parameter list **must** be terminated by a NULL pointer.
+``namecount`` is the number of variable names in the call.
 
 Kills — deletes all nodes in — each of the local or global variable
-trees or subtrees specified. In the special case where the only
-parameter is a NULL, ``ydb_kill_s()`` kills all local variables.
+trees or subtrees specified. In the special case where ``namecount``
+is zero, ``ydb_kill_s()`` kills all local variables.
 
 -----------------
 ydb_kill_excl_s()
@@ -895,12 +887,12 @@ ydb_lock_s()
 
 .. code-block:: C
 
-	int ydb_lock_s(unsigned int timeout,
+	int ydb_lock_s(unsigned long long timeout, int namecount,
 		[int count,
 		ydb_string_t *varname[,
-		ydb_string_t *subscript, ...], ...,] NULL);
+		ydb_string_t *subscript, ...], ...,]);
 
-Note that the parameter list **must** be terminated by a NULL pointer.
+``namecount`` is the number of variable names in the call.
 
 Release any locks held by the process, attempt to acquire all the
 requested locks. While the release is unconditional, on return, the
@@ -926,11 +918,12 @@ ydb_lock_decr_s()
 
 .. code-block:: C
 
-	int ydb_lock_s([int count,
+	int ydb_lock_s(int namecount,
+		[int count,
 		ydb_string_t *varname[,
-		ydb_string_t *subscript, ...], ...,] NULL);
+		ydb_string_t *subscript, ...], ...,]);
 
-Note that the parameter list **must** be terminated by a NULL pointer.
+``namecount`` is the number of variable names in the call.
 
 Decrements counts of the specified locks held by the process. As
 noted in the `Concepts`_ section, a lock whose count goes from 1 to 0
@@ -939,7 +932,7 @@ but which the process does not hold, is ignored.
 
 As releasing locks cannot fail, the function returns ``YDB_OK``,
 unless there is an error such as an invalid name that results in the
-return of an error code such as ``YDB_ERR_VARNAMEINVALID``.
+return of an error code such as ``YDB_ERR_INVVARNAME``.
 
 -----------------
 ydb_lock_incr_s()
@@ -947,12 +940,12 @@ ydb_lock_incr_s()
 
 .. code-block:: C
 
-	int ydb_lock_s(unsigned int timeout,
+	int ydb_lock_s(unsigned long long timeout, int namecount,
 		[int count,
 		ydb_string_t *varname[,
-		ydb_string_t *subscript, ...], ...,] NULL);
+		ydb_string_t *subscript, ...], ...,]);
 
-Note that the parameter list **must** be terminated by a NULL pointer.
+``namecount`` is the number of variable names in the call.
 
 Without releasing any locks held by the process, attempt to acquire
 all the requested locks, and increment any locks already held by the
@@ -1145,11 +1138,12 @@ ydb_withdraw_s()
 
 .. code-block:: C
 
-	int ydb_withdraw_s(int count,
+	int ydb_withdraw_s(int namecount,
+		int count,
 		ydb_string_t *varname[,
-		ydb_string_t *subscript, ...][, ...] NULL);
+		ydb_string_t *subscript, ...][, ...]);
 
-**Note:** the parameter list **must** be terminated by a NULL pointer.
+``namecount`` (≥1) is the number of variable names in the call.
 
 Deletes the root node in each of the local or global variable
 trees or subtrees specified, leaving the subtrees intact.
