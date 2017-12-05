@@ -197,10 +197,10 @@ become apparent:
     order. [#]_
 
 - Like subscripts, values are sequences of bytes, except that ordering
-  is not meaningful. YottaDB automatically converts between numbers
-  and strings, depending on the type of operand required by an
-  operator or argument required by a function (see `Numeric
-  Considerations`_).
+  of values is not meaningful unlike ordering of subscripts. YottaDB
+  automatically converts between numbers and strings, depending on the
+  type of operand required by an operator or argument required by a
+  function (see `Numeric Considerations`_).
 
 This means that if an application were to store the current capital of
 Thailand as ``Capital("Thailand","current")="Bangkok"`` instead of
@@ -346,6 +346,24 @@ reference, an application can set an intrinsic special variable
 ``$zgbldir="ThaiNames.gld"`` to use the ``ThaiNames.gld`` mapping. At
 process startup, YottaDB initializes ``$zgbldir`` from the environment
 variable value ``$ydb_gbldir``.
+
+--------
+$zstatus
+--------
+
+``$zstatus`` provides additional details of the last
+error. Application code can retrieve ``$zstatus`` using
+`ydb_get_s()`_. ``$zstatus`` typically consists of three
+comma-separated substrings.
+
+- The first is an error number. Application code can use the
+  `ydb_message()`_ function to get more detailed information.
+- C application code should ignore the second substring.
+- The third substring is more detailed information about the error.
+
+After retrieving ``$zstatus`` and acting on the error, application
+code should clear it (set it to the empty string using `ydb_set_s()`_)
+in preparation for any subsequent error.
 
 
 Transaction Processing
@@ -591,12 +609,12 @@ return values. [#]_
 ``YDB_ERR_INVSTRLEN`` — A buffer provided by the caller is not long
 enough for a string to be returned, or the length of a string passed
 as a parameter exceeds ``YDB_MAX_STR``. In the event the return code
-is ``YDB_ERR_INVSTRLEN`` and if ``*xyz`` is a ``ydb_string_t`` value
-whose ``xyz->length`` indicates insufficient space, then ``xyz->used``
+is ``YDB_ERR_INVSTRLEN`` and if ``*xyz`` is a ``ydb_buffer_t`` value
+whose ``xyz->len_alloc`` indicates insufficient space, then ``xyz->len_used``
 is set to the size required of a sufficiently large buffer, and
-``xyz->address`` points to the first ``xyz->length`` bytes of the
-value. In this case the ``used`` field of a ``ydb_string_t``
-structure is greater than the ``length`` field.
+``xyz->address`` points to the first ``xyz->len_alloc`` bytes of the
+value. In this case the ``len_used`` field of a ``ydb_buffer_t``
+structure is greater than the ``len_alloc`` field.
 
 ``YDB_ERR_INVSUB`` — A subscript provided by the caller is invalid. In
 the case of a name with multiple subscripts, the intrinsic special
@@ -642,10 +660,9 @@ complete variable name, not including the preceding caret for a global
 variable. Therefore, when allocating space for a string to hold a
 global variable name, add 1 for the caret.
 
-``YDB_MAXLOCKTIME`` — The maximum value in microseconds that an
+``YDB_MAX_LOCKTIME`` — The maximum value in microseconds that an
 application can instruct libyottab to wait until the process is able
-to acquire locks it needs before timing out. This value is guaranteed
-to be no less than 2\ :superscript:`32`\ -1.
+to acquire locks it needs before timing out.
 
 ``YDB_MAX_STR`` — The maximum length of a string (or blob) in
 bytes. A caller to ``ydb_get()`` that provides a buffer of
@@ -664,30 +681,42 @@ Other symbolic constants have a prefix of ``YDB_``.
 Data Structures
 ===============
 
-``ydb_string_t`` is a descriptor for a string [#]_ value, and consists of
+``ydb_buffer_t`` is a descriptor for a string [#]_ value, and consists of
 the following fields:
 
- - ``length`` and ``used`` — fields of type ``unsigned int`` where
-   ``length`` ≥ ``used`` except when a `YDB_ERR_INVSTRLEN`_ occurs.
  - ``address`` — pointer to an ``unsigned char``, the starting
    address of a string.
+ - ``len_alloc`` and ``len_used`` — fields of type ``unsigned int`` where
+   ``len_alloc`` ≥ ``len_used`` except when a `YDB_ERR_INVSTRLEN`_ occurs.
 
 .. [#] Strings in YottaDB are arbitrary sequences of bytes that are not
        null-terminated. Other languages may refer to them as binary
        data or blobs.
 
+``ydb_string_t`` is a descriptor for a string provided for
+compatibility with existing code, and consists of the following
+fields: [#]_
+
+- ``address`` — pointer to an ``unsigned char``, the starting
+   address of a string.
+- ``length`` — the length of the string starting at the ``address`` field.
+
+.. [#] Note for implementers: ``ydb_string_t`` is the same structure
+       as ``gtm_string_t``.
+
 ======
 Macros
 ======
 
-``YDB_ALLOC_STRING(string[,actalloc])`` — Allocate a ``ydb_string_t``
+``YDB_ALLOC_BUFFER(string[, actalloc])`` — Allocate a ``ydb_buffer_t``
 structure and set its ``address`` field to point to ``string``, and
-its ``used`` field to the length of string excluding the terminating
-null character. Set its ``length`` field to ``actalloc`` if specified,
-otherwise to ``used``. Return the address of the structure. Note that
-if string is a ``const`` any code that attempts to change the value of
-the string pointed to by this ``ydb_string_t`` structure will almost
-certainly result in a segmentation violation (SIGSEGV). [#]_
+its ``len_used`` field to the length of string excluding its
+terminating null character. Set its ``len_alloc`` field to
+``actalloc`` if specified, otherwise to ``len_used``. Return the
+address of the structure. Note that if string is a ``const`` any code
+that attempts to change the value of the string pointed to by this
+``ydb_buffer_t`` structure will almost certainly result in a
+segmentation violation (SIGSEGV). [#]_
 
 .. [#] Note for implementers: under the covers, ``YDB_ALLOC_*()``,
        ``YDB_FREE_*()``, and ``YDB_NEW_*()`` macros should call the
@@ -695,13 +724,44 @@ certainly result in a segmentation violation (SIGSEGV). [#]_
        aliases for the ``gtm_malloc()`` and ``gtm_free()`` functions
        (i.e., either prefix calls the same function). Also, for
        efficiency reasons, we may want to have two macros,
-       ``YDB_ALLOC_STRING()`` and ``YDB_ALLOC_STRLIT()``.
+       ``YDB_ALLOC_BUFFER()`` and ``YDB_ALLOC_BUFFER_LITERAL()``.
 
-``YDB_COPY_STRING(dest,src)`` — Confirm that ``dest->length`` ≥
-``src->used``, and if so copy ``src->used`` bytes from memory pointed
+``YDB_ALLOC_STRING(string[, actalloc])`` — Allocate a ``ydb_string_t``
+structure and set its ``address`` field to point to ``string``, and
+its ``length`` field to the length of string excluding its terminating
+null character. Return the address of the structure. Note that if
+string is a ``const`` any code that attempts to change the value of
+the string pointed to by this ``ydb_string_t`` structure will almost
+certainly result in a segmentation violation (SIGSEGV).
+
+``YDB_BUFFER_ALLOC_TO_STRING(ydbstring, ydbbuffer)`` — With
+``ydbstring`` a pointer to a ``ydb_string_t`` structure and
+``ydbbuffer`` a pointer to a ``ydb_buffer_t`` structure, set:
+
+- ``ydbstring->address=ydbbuffer->address``, and
+- ``ydb_string->length=ydbbuffer->len_alloc`` (i.e., no changes to
+  ``ydbbuffer``).
+
+``YDB_BUFFER_USED_TO_STRING(ydbstring, ydbbuffer)`` — With
+``ydbstring`` a pointer to a ``ydb_string_t`` structure and
+``ydbbuffer`` a pointer to a ``ydb_buffer_t`` structure, set:
+
+- ``ydbstring->address=ydbbuffer->address``, and
+- ``ydb_string->length=ydbbuffer->len_used`` (i.e., no changes to
+  ``ydbbuffer``).
+
+``YDB_COPY_BUFFER(dest, src)`` — Confirm that ``dest->len_alloc`` ≥
+``src->len_used``, and if so copy ``src->len_used`` bytes from memory pointed
 to by ``src->address`` to the memory pointed to by ``dest->address``,
-returning ``YDB_OK``. If ``dest->length`` < ``src-used``, return
+returning ``YDB_OK``. If ``dest->len_alloc`` < ``src-len_used``, return
 ``YDB_ERR_INVSTRLEN``.
+
+``YDB_FREE_BUFFER(x)`` — Free the ``ydb_buffer_t`` structure pointed
+to by ``x``.
+
+``YDB_FREE_BUFFER_DEEP(x)`` — Free the memory referenced by
+``x->address`` and free the ``ydb_buffer_t`` structure pointed to by
+``x``.
 
 ``YDB_FREE_STRING(x)`` — Free the ``ydb_string_t`` structure pointed
 to by ``x``.
@@ -710,25 +770,40 @@ to by ``x``.
 ``x->address`` and free the ``ydb_string_t`` structure pointed to by
 ``x``.
 
-``YDB_NEW_STRING(string[,minalloc])`` — Allocate memory sufficient to
-hold ``string`` (excluding the trailing null character) and copy
+``YDB_NEW_BUFFER(string[, minalloc])`` — Allocate memory sufficient to
+hold ``string`` (excluding its trailing null character) and copy
 ``string`` to that memory. If ``minalloc`` is specified, allocate at
 least ``minalloc`` bytes. At the implementer's option, the allocation
 may be further rounded up to a preferred size. Copy ``string`` to the
-newly allocated memory. Allocate a ``ydb_string_t`` structure and set
+newly allocated memory. Allocate a ``ydb_buffer_t`` structure and set
 its ``address`` field to point to the newly allocated memory, its
-``length`` field to point to the size of allocated memory, and its
-``used`` field to the length of ``string``. Return the address of the
-new ``ydb_string_t`` structure. Use an empty string as the value of
-``string`` to preallocate structures for use, e.g.,
-``YDB_NEW_STRING("",YDB_MAX_IDENT)`` to create space for a local
+``len_alloc`` field to point to the size of allocated memory, and its
+``len_used`` field to the length of ``string``. Return the address of
+the new ``ydb_buffer_t`` structure. Use an empty string as the value
+of ``string`` to preallocate structures for use, e.g.,
+``YDB_NEW_BUFFER("",YDB_MAX_IDENT)`` to create space for a local
 variable name to be returned by a function such as
 ``ydb_subscript_next_s()``.
 
-``YDB_SET_STRING(x, string)`` — Check whether the ``x->length`` has
+``YDB_NEW_STRING(string)`` — Allocate memory to hold ``string``
+(excluding its trailing null character) and copy ``string`` to that
+memory. Allocate a ``ydb_string_t`` structure and set its ``address``
+field to point to the newly allocated memory, and its ``length`` field
+to point to the size of allocated memory. Return the address of the
+new ``ydb_string_t`` structure.
+
+``YDB_SET_BUFFER(x, string)`` — Check whether the ``x->len_alloc`` has
 sufficient space for ``string`` and if so, copy ``string`` excluding
 the terminating null character to the memory pointed to
-by ``x->address`` and set ``x->used`` to the length of ``string``.
+by ``x->address`` and set ``x->len_used`` to the length of ``string``.
+
+``YDB_STRING_TO_BUFFER(ydbbuffer, ydbstring, used)`` — With ``ydbbuffer``
+a pointer to a ``ydb_buffer_t`` structure, ``ydbstring`` a pointer to
+a ``ydb_string_t`` structure, and ``used`` an unsigned integer, set:
+
+- ``ydbbuffer->address=ydbstring->address``,
+- ``ydbbuffer->len_alloc=ydbstring->used``, and
+- ``ydbbuffer->len_used=used`` (i.e., no changes to ``ydbstring``).
 
 ================
 Programming in C
@@ -760,9 +835,9 @@ functions:
 
 - ``int count`` and ``int *count`` refer to an
   actual number subscripts,
-- ``ydb_string_t *varname`` refers to the name of a variable, and
-- ``[, ydb_string_t *subscript, ...]`` and ``ydb_string_t *subscript[,
-  ydb_string_t *subscript, ...]`` refer to placeholders for subscripts
+- ``ydb_buffer_t *varname`` refers to the name of a variable, and
+- ``[, ydb_buffer_t *subscript, ...]`` and ``ydb_buffer_t *subscript[,
+  ydb_buffer_t *subscript, ...]`` refer to placeholders for subscripts
   whose actual number is defined by ``count`` or ``*count``.
 
 **Caveat:** Specifying a count that exceeds the actual number of
@@ -783,8 +858,8 @@ ydb_data_s()
 
 	int ydb_data_s(unsigned int *value,
 		int count,
-		ydb_string_t *varname[,
-		ydb_string_t *subscript, ...]);
+		ydb_buffer_t *varname[,
+		ydb_buffer_t *subscript, ...]);
 
 In the location pointed to by ``value``, ``ydb_data_s()`` returns the
 following information about the local or global variable node
@@ -798,18 +873,18 @@ identified by ``*varname`` and the ``*subscript`` list.
 -----------
 ydb_get_s()
 -----------
- 
+
 .. code-block:: C
 
-	int ydb_get_s(ydb_string_t *value,
+	int ydb_get_s(ydb_buffer_t *value,
 		int count,
-		ydb_string_t *varname[,
-		ydb_string_t *subscript, ... ]);
+		ydb_buffer_t *varname[,
+		ydb_buffer_t *subscript, ... ]);
 
-If ``value->length`` is large enough to accommodate the result, to the
+If ``value->len_alloc`` is large enough to accommodate the result, to the
 location pointed to by ``value->address``, ``ydb_get_s()`` copies the
 value of the value of the data at the specified node or intrinsic
-special variable, setting ``value->used``, and returning
+special variable, setting ``value->len_used``, and returning
 ``YDB_OK``; and ``YDB_ERR_INVSTRLEN`` otherwise.
 
 If there is no value at the specified global or local variable node,
@@ -840,8 +915,8 @@ ydb_kill_s()
 
 	int ydb_kill_s(int namecount,
 		[int count,
-		ydb_string_t *varname[,
-		ydb_string_t *subscript, ...], ...,]);
+		ydb_buffer_t *varname[,
+		ydb_buffer_t *subscript, ...], ...,]);
 
 ``namecount`` is the number of variable names in the call.
 
@@ -855,7 +930,7 @@ ydb_kill_excl_s()
 
 .. code-block:: C
 
-	int ydb_kill_excl_s(ydb_string_t *varnamelist);
+	int ydb_kill_excl_s(ydb_buffer_t *varnamelist);
 
 ``*varnamelist->address`` points to a comma separated list of local
 variable names. ``ydb_kill_excl_s()`` kills the trees of all local
@@ -869,8 +944,8 @@ ydb_length_s()
 
 	int ydb_length_s(unsigned int *value,
 		int count,
-		ydb_string_t *varname[,
-		ydb_string_t *subscript, ... ]);
+		ydb_buffer_t *varname[,
+		ydb_buffer_t *subscript, ... ]);
 
 In the location pointed to by ``*value``, ``ydb_length_s()`` reports
 the length of the data in bytes. If the data is numeric, ``*value``
@@ -889,8 +964,8 @@ ydb_lock_s()
 
 	int ydb_lock_s(unsigned long long timeout, int namecount,
 		[int count,
-		ydb_string_t *varname[,
-		ydb_string_t *subscript, ...], ...,]);
+		ydb_buffer_t *varname[,
+		ydb_buffer_t *subscript, ...], ...,]);
 
 ``namecount`` is the number of variable names in the call.
 
@@ -920,8 +995,8 @@ ydb_lock_decr_s()
 
 	int ydb_lock_s(int namecount,
 		[int count,
-		ydb_string_t *varname[,
-		ydb_string_t *subscript, ...], ...,]);
+		ydb_buffer_t *varname[,
+		ydb_buffer_t *subscript, ...], ...,]);
 
 ``namecount`` is the number of variable names in the call.
 
@@ -942,8 +1017,8 @@ ydb_lock_incr_s()
 
 	int ydb_lock_s(unsigned long long timeout, int namecount,
 		[int count,
-		ydb_string_t *varname[,
-		ydb_string_t *subscript, ...], ...,]);
+		ydb_buffer_t *varname[,
+		ydb_buffer_t *subscript, ...], ...,]);
 
 ``namecount`` is the number of variable names in the call.
 
@@ -969,12 +1044,12 @@ If all requested locks are successfully acquired, the function returns
 -----------------
 ydb_node_next_s()
 -----------------
-		
+
 .. code-block:: C
 
 	int ydb_node_next_s(int *count,
-		ydb_string_t *varname,
-		ydb_string_t *subscript[, ... ]);
+		ydb_buffer_t *varname,
+		ydb_buffer_t *subscript[, ... ]);
 
 ``ydb_node_next_s()`` facilitates depth-first traversal of a local or
 global variable tree. Note that the parameters are both inputs to  the
@@ -1001,7 +1076,7 @@ the ``*subscript`` parameters.
   insufficient parameters to return the subscript. In this case
   ``*count`` reports the actual number of subscripts in the node, and
   the parameters report as many subscripts as can be reported.
-- If one of the ``subscript->length`` values indicates insufficient
+- If one of the ``subscript->len_alloc`` values indicates insufficient
   space for an output value, the return code is the error
   ``YDB_ERR_INVSTRLEN``. See also the discussion at
   `YDB_ERR_INVSTRLEN`_ describing the contents of that ``*subscript``
@@ -1020,8 +1095,8 @@ ydb_node_previous_s()
 .. code-block:: C
 
 	int ydb_node_previous_s(int *count,
-		ydb_string_t *varname,
-		[ ydb_string_t *subscript, ... ]);
+		ydb_buffer_t *varname,
+		[ ydb_buffer_t *subscript, ... ]);
 
 Analogous to ``ydb_node_next(s)``, ``ydb_node_previous_s()``
 facilitates breadth-first traversal of a local or global variable
@@ -1029,7 +1104,7 @@ tree, except that:
 
 - ``ydb_node_previous_s()`` reports the predecessor node,
 - an input value of 0 for ``*value`` reports the last node in the tree
-  on output, and 
+  on output, and
 - an output value of 0 for ``*value`` means there is no previous node.
 
 Other behavior of ``ydb_node_previous_s()`` is the same as
@@ -1041,12 +1116,12 @@ ydb_set_s()
 
 .. code-block:: C
 
-	int ydb_set_s(ydb_string_t *value,
+	int ydb_set_s(ydb_buffer_t *value,
 		int count,
-		ydb_string_t *varname[,
-		ydb_string_t *subscript, ... ]);
+		ydb_buffer_t *varname[,
+		ydb_buffer_t *subscript, ... ]);
 
-Copies the ``value->used`` bytes at ``value->address`` as the value of
+Copies the ``value->len_used`` bytes at ``value->address`` as the value of
 the specified node or intrinsic special variable specified, returning
 ``YDB_OK`` or an error code such as ``YDB_ERR_INVSVN``.
 
@@ -1057,12 +1132,12 @@ ydb_subscript_next_s()
 .. code-block:: C
 
 	int ydb_subscript_next_s(int *count,
-		ydb_string_t *varname[, ydb_string_t *subscript, ... ]);
+		ydb_buffer_t *varname[, ydb_buffer_t *subscript, ... ]);
 
 ``ydb_subscript_next_s()`` returns the next subscript at the deepest
 level specified by ``*count``, by copying that next subscript to the
 memory referenced by that ``subscript->address``, and setting the
-corresponding ``subscript->used`` with its length. If there is no next
+corresponding ``subscript->len_used`` with its length. If there is no next
 subscript at that level, it decrements ``*count``. [#]_
 
 .. [#] This behavior provides symmetry with
@@ -1079,17 +1154,17 @@ ydb_subscript_previous_s()
 .. code-block:: C
 
 	int ydb_subscript_previous_s(int *count,
-		ydb_string_t *varname[,	ydb_string_t *subscript, ... ]);
+		ydb_buffer_t *varname[,	ydb_buffer_t *subscript, ... ]);
 
 ``ydb_subscript_previous_s()`` returns the preceding subscript at the
 deepest level specified by ``*count``, by copying that previous
 subscript to the memory referenced by that ``subscript->address``, and
-setting the corresponding ``subscript->used`` to its length. If there
+setting the corresponding ``subscript->len_used`` to its length. If there
 is no previous subscript, it decrements ``*count``. [#]_
 
 .. [#] Since the empty string is a legal subscript and is the first in
        YottaDB's natural collation order, simply setting
-       ``subscript->used`` to zero does not discriminate between the
+       ``subscript->len_used`` to zero does not discriminate between the
        case where the input specifies the first subscript, and the
        case where there actually is a preceding node with the empty
        string as a subscript. Decrementing ``*count`` allows the
@@ -1105,9 +1180,9 @@ ydb_tp_s()
 
 .. code-block:: C
 
-	int ydb_tp(ydb_string_t *tpfn,
-		ydb_string_t *transid,
-		ydb_string_t *varnamelist);
+	int ydb_tp(ydb_buffer_t *tpfn,
+		ydb_buffer_t *transid,
+		ydb_buffer_t *varnamelist);
 
 The string referenced by ``*tpfn`` is the name of a function returning
 a value that has one of the following forms with no embedded spaces:
@@ -1140,8 +1215,8 @@ ydb_withdraw_s()
 
 	int ydb_withdraw_s(int namecount,
 		int count,
-		ydb_string_t *varname[,
-		ydb_string_t *subscript, ...][, ...]);
+		ydb_buffer_t *varname[,
+		ydb_buffer_t *subscript, ...][, ...]);
 
 ``namecount`` (≥1) is the number of variable names in the call.
 
@@ -1198,11 +1273,11 @@ ydb_message()
 
 .. code-block:: C
 
-	int ydb_message(ydb_string_t *msgtext, int status)
+	int ydb_message(ydb_buffer_t *msgtext, int status)
 
 Set ``msgtext->address`` to a location that has the text for the
-condition corresponding to ``status``, and both ``msgtext->length`` and
-``msgtext->used`` to its length (with no trailing null
+condition corresponding to ``status``, and both ``msgtext->len_alloc`` and
+``msgtext->len_used`` to its length (with no trailing null
 character). Note: as ``msgtext->address`` points to an address in a
 read-only region of memory, any attempt to modify the message will
 result in a segmentation violation (SIGSEGV). ``ydb_message()``
