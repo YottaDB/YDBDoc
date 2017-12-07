@@ -5,16 +5,16 @@
    Page ###Page### of ###Total###
 
 .. index::
-    About YottaDB/GT.M
+    About YottaDB
 
 ==========================
- About YottaDB/GT.M
+ About YottaDB
 ==========================
 
 .. contents::
    :depth: 2
 
-YottaDB and GT.M are high-end performance database application development and deployment platforms from YottaDB LLC and Fidelity National Information Services (FIS). YottaDB/GT.M provides an M language subsystem, a database engine, and a complete set of utilities for administration and operation. One can install and manage YottaDB/GT.M using the utilities described in this manual and standard operating system tools. This chapter provides an overview of the YottaDB and GT.M system environment and utilities. 
+YottaDB is a high-end performance database application development and deployment platforms from YottaDB LLC. YottaDB provides an M language subsystem, a database engine, and a complete set of utilities for administration and operation. One can install and manage YottaDB using the utilities described in this manual and standard operating system tools. This chapter provides an overview of the YottaDB system environment and utilities. 
 
 --------------------------------------
 Hardware/ Operating System Environment
