@@ -324,16 +324,16 @@ useful to M application code, others are more generally useful and
 documented here.
 
 ---------
-$tretries
+$trestart
 ---------
 
 Application code inside a transaction can read the intrinsic special
-variable ``$tretries`` to determine how many times a transaction has
+variable ``$trestart`` to determine how many times a transaction has
 been restarted. Although YottaDB recommends against accessing external
 resources within a transaction, logic that needs to access an external
 resource (e.g., to read data in a file), or to aquire a lock, can use
-``$tretries`` to restrict that access or acquisition to the first time
-it executes (``$tretries=0``).
+``$trestart`` to restrict that access or acquisition to the first time
+it executes (``$trestart=0``).
 
 --------
 $zgbldir
@@ -522,7 +522,7 @@ following rules apply:
   within a transaction, or, for locks acquired within a transaction but
   released after the transaction is committed or abandoned, to
   acquisition only on the first attempt, using the intrinsic special
-  variable `$tretries`_.
+  variable `$trestart`_.
 
 ==================
 Symbolic Constants
@@ -643,6 +643,13 @@ node. [#]_
 ``YDB_ERR_MAXNRSUBSCRIPTS`` — The number of subscripts specified in
 the call exceeds ``YDB_MAX_SUB``.
 
+``YDB_ERR_NUMOFLOW`` — a `ydb_incr_s()`_ operation resulted in a
+numeric overflow.
+
+``YDB_ERR_SVNOSET`` — the application inappropriately attempted to
+modify the value of an instrinsic special variable such as an attempt
+to increment ``$trestart`` using `ydb_incr_s()`_.
+
 ``YDB_ERR_TPTMEOUT`` — This return code from `ydb_tp_s()`_ indicates
 that the transaction took too long to commit.
 
@@ -708,32 +715,6 @@ fields: [#]_
 Macros
 ======
 
-``YDB_ALLOC_BUFFER(string[, actalloc])`` — Allocate a ``ydb_buffer_t``
-structure and set its ``address`` field to point to ``string``, and
-its ``len_used`` field to the length of string excluding its
-terminating null character. Set its ``len_alloc`` field to
-``actalloc`` if specified, otherwise to ``len_used``. Return the
-address of the structure. Note that if string is a ``const`` any code
-that attempts to change the value of the string pointed to by this
-``ydb_buffer_t`` structure will almost certainly result in a
-segmentation violation (SIGSEGV). [#]_
-
-.. [#] Note for implementers: under the covers, ``YDB_ALLOC_*()``,
-       ``YDB_FREE_*()``, and ``YDB_NEW_*()`` macros should call the
-       ``ydb_malloc()`` and ``ydb_free()`` functions, which are
-       aliases for the ``gtm_malloc()`` and ``gtm_free()`` functions
-       (i.e., either prefix calls the same function). Also, for
-       efficiency reasons, we may want to have two macros,
-       ``YDB_ALLOC_BUFFER()`` and ``YDB_ALLOC_BUFFER_LITERAL()``.
-
-``YDB_ALLOC_STRING(string[, actalloc])`` — Allocate a ``ydb_string_t``
-structure and set its ``address`` field to point to ``string``, and
-its ``length`` field to the length of string excluding its terminating
-null character. Return the address of the structure. Note that if
-string is a ``const`` any code that attempts to change the value of
-the string pointed to by this ``ydb_string_t`` structure will almost
-certainly result in a segmentation violation (SIGSEGV).
-
 ``YDB_BUFFER_ALLOC_TO_STRING(ydbstring, ydbbuffer)`` — With
 ``ydbstring`` a pointer to a ``ydb_string_t`` structure and
 ``ydbbuffer`` a pointer to a ``ydb_buffer_t`` structure, set:
@@ -741,6 +722,17 @@ certainly result in a segmentation violation (SIGSEGV).
 - ``ydbstring->address=ydbbuffer->address``, and
 - ``ydb_string->length=ydbbuffer->len_alloc`` (i.e., no changes to
   ``ydbbuffer``).
+
+``YDB_BUFFER_FREE(ydbbuffer)`` — using `ydb_free()`_ free the memory
+at ``ydbbuffer->address`` and set ``ydbbuffer->address``,
+``ydbbuffer->len_alloc``, and ``ydbbuffer->len)used`` to zero.
+
+``YDB_BUFFER_NEW(ydbbuffer,size)`` — using `ydb_malloc()`_ allocate 
+memory of ``size`` bytes and set:
+
+- ``ydbbuffer->address`` to the address of the allocated memory,
+- ``ydbbuffer->len_alloc`` to ``size``, and
+- ``ydbbuffer->len_used`` to zero.
 
 ``YDB_BUFFER_USED_TO_STRING(ydbstring, ydbbuffer)`` — With
 ``ydbstring`` a pointer to a ``ydb_string_t`` structure and
@@ -750,52 +742,15 @@ certainly result in a segmentation violation (SIGSEGV).
 - ``ydb_string->length=ydbbuffer->len_used`` (i.e., no changes to
   ``ydbbuffer``).
 
-``YDB_COPY_BUFFER(dest, src)`` — Confirm that ``dest->len_alloc`` ≥
-``src->len_used``, and if so copy ``src->len_used`` bytes from memory pointed
-to by ``src->address`` to the memory pointed to by ``dest->address``,
-returning ``YDB_OK``. If ``dest->len_alloc`` < ``src-len_used``, return
-``YDB_ERR_INVSTRLEN``.
+``YDB_STRING_FREE(ydbstring)`` — using `ydb_free()`_ free the memory
+at ``ydbstring->address`` and set ``ydbstring->address``,
+``ydbstring->length`` to zero.
 
-``YDB_FREE_BUFFER(x)`` — Free the ``ydb_buffer_t`` structure pointed
-to by ``x``.
+``YDB_STRING_NEW(ydbstring,size)`` — using `ydb_malloc()`_ allocate 
+memory of ``size`` bytes and set:
 
-``YDB_FREE_BUFFER_DEEP(x)`` — Free the memory referenced by
-``x->address`` and free the ``ydb_buffer_t`` structure pointed to by
-``x``.
-
-``YDB_FREE_STRING(x)`` — Free the ``ydb_string_t`` structure pointed
-to by ``x``.
-
-``YDB_FREE_STRING_DEEP(x)`` — Free the memory referenced by
-``x->address`` and free the ``ydb_string_t`` structure pointed to by
-``x``.
-
-``YDB_NEW_BUFFER(string[, minalloc])`` — Allocate memory sufficient to
-hold ``string`` (excluding its trailing null character) and copy
-``string`` to that memory. If ``minalloc`` is specified, allocate at
-least ``minalloc`` bytes. At the implementer's option, the allocation
-may be further rounded up to a preferred size. Copy ``string`` to the
-newly allocated memory. Allocate a ``ydb_buffer_t`` structure and set
-its ``address`` field to point to the newly allocated memory, its
-``len_alloc`` field to point to the size of allocated memory, and its
-``len_used`` field to the length of ``string``. Return the address of
-the new ``ydb_buffer_t`` structure. Use an empty string as the value
-of ``string`` to preallocate structures for use, e.g.,
-``YDB_NEW_BUFFER("",YDB_MAX_IDENT)`` to create space for a local
-variable name to be returned by a function such as
-``ydb_subscript_next_s()``.
-
-``YDB_NEW_STRING(string)`` — Allocate memory to hold ``string``
-(excluding its trailing null character) and copy ``string`` to that
-memory. Allocate a ``ydb_string_t`` structure and set its ``address``
-field to point to the newly allocated memory, and its ``length`` field
-to point to the size of allocated memory. Return the address of the
-new ``ydb_string_t`` structure.
-
-``YDB_SET_BUFFER(x, string)`` — Check whether the ``x->len_alloc`` has
-sufficient space for ``string`` and if so, copy ``string`` excluding
-the terminating null character to the memory pointed to
-by ``x->address`` and set ``x->len_used`` to the length of ``string``.
+- ``ydbstring->address`` to the address of the allocated memory, and
+- ``ydbstring->length`` to ``size``.
 
 ``YDB_STRING_TO_BUFFER(ydbbuffer, ydbstring, used)`` — With ``ydbbuffer``
 a pointer to a ``ydb_buffer_t`` structure, ``ydbstring`` a pointer to
@@ -804,6 +759,22 @@ a ``ydb_string_t`` structure, and ``used`` an unsigned integer, set:
 - ``ydbbuffer->address=ydbstring->address``,
 - ``ydbbuffer->len_alloc=ydbstring->used``, and
 - ``ydbbuffer->len_used=used`` (i.e., no changes to ``ydbstring``).
+
+``YDB_STRLIT_TO_BUFFER(ydbbuffer, strlit)`` — With ``ydbbuffer`` a
+pointer to a ``ydb_buffer_t`` structure, and ``strlit`` a string
+literal, set:
+
+- ``ydbbuffer->address`` to the address of ``strlit``, and
+- ``ydbbuffer->len_alloc`` and ``ydbbuffer->len_used`` to the length
+  of the string literal excluding its terminating null character.
+
+``YDB_STRLIT_TO_STRING(ydbstring,strlit)`` — With ``ydbstring`` a
+pointer to a ``ydb_string_t`` structure, and ``strlit`` a string
+literal, set
+
+- ``ydbstring->address`` to the address of ``strlit``, and
+- ``ydbstring->length`` to the length of the string literal excluding
+  its terminating null character.
 
 ================
 Programming in C
@@ -906,6 +877,38 @@ code. Similarly, since a node can always be deleted between a call
 such as ``ydb_node_next_s()`` and a call to ``ydb_get_s()``, a caller
 of ``ydb_get_s()`` to access a global variable node should code in
 anticipation of a potential ``YDB_ERR_GVUNDEF``.
+
+------------
+ydb_incr_s()
+------------
+
+.. code-block:: C
+
+	int ydb_incr_s(int count,
+		ydb_buffer_t *varname[,
+		ydb_buffer_t *subscript, ...],
+		ydb_buffer_t *result,
+		ydb_bufer_t *increment);
+
+Atomically,
+
+- converts the value in the specified node to a number if it is not
+  one already, and
+- increments it by the value specified by ``*increment``, converting
+  the value to a number if it is not a canonical number, and
+  defaulting to 1 if ``increment`` is NULL.
+
+If the atomic increment results in a numeric overflow, the function
+returns a ``YDB_ERR_NUMOFLOW`` error; in this case, the value in the
+node is unreliable. Otherwise, the result is returned as a canonical
+string in ``*result``, with a function return value of ``YDB_OK``.
+
+In the event the ``ydb_buffer_t`` structure pointed to by ``result``
+is not large enough for the result, the function returns a
+``YDB_ERR_INVSTRLEN`` error.
+
+Note: intrinsic special variables cannot be atomically incremented,
+and an attempt to do so returns the ``YDB_ERR_SVNOSET`` error.
 
 ------------
 ydb_kill_s()
