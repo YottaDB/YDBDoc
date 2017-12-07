@@ -10,8 +10,10 @@ Welcome to GTMAdminOps's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   gtmaoman
-   gtmaoabout
+   man
+   about
+   installydb
+   basicops
 
 Indices and tables
 ==================
