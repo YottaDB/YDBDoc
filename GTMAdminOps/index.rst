@@ -15,6 +15,7 @@ Welcome to GTMAdminOps's documentation!
    installydb
    basicops
    gde
+   dbmgmt
 
 Indices and tables
 ==================
