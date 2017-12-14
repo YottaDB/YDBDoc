@@ -16,6 +16,8 @@ Welcome to GTMAdminOps's documentation!
    basicops
    gde
    dbmgmt
+   ydbjournal
+   dbrepl
 
 Indices and tables
 ==================
