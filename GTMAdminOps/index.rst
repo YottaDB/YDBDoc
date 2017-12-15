@@ -19,6 +19,7 @@ Welcome to GTMAdminOps's documentation!
    ydbjournal
    dbrepl
    mlocks
+   gds
 
 Indices and tables
 ==================
