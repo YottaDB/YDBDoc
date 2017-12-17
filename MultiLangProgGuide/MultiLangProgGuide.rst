@@ -558,9 +558,10 @@ Normal Return Codes
 -------------------
 
 Symbolic constants for normal return codes have ``YDB_`` prefixes
-other than ``YDB_ERR_``
+other than ``YDB_ERR_``.
 
-``YDB_OK`` — Normal return following successful execution.
+``YDB_OK`` — This the standard return code of all functions following
+successful execution.
 
 ``YDB_LOCK_TIMEOUT`` — This return code from lock acquisition
 functions indicates that the specified timeout was reached without
@@ -580,6 +581,8 @@ restarts.
 ``YDB_TP_ROLLBACK`` — Code returned to YottaDB by an application
 function that packages a transaction, and in turn returned to the
 caller indicating that the transaction should not be committed.
+
+.. _error return code:
 
 ------------------
 Error Return Codes
@@ -688,9 +691,9 @@ Other
 
 Other symbolic constants have a prefix of ``YDB_``.
 
-===============
-Data Structures
-===============
+==================================
+Data Structures & Type Definitions
+==================================
 
 ``ydb_buffer_t`` is a descriptor for a string [#]_ value, and consists of
 the following fields:
@@ -714,6 +717,13 @@ fields: [#]_
 
 .. [#] Note for implementers: ``ydb_string_t`` is the same structure
        as ``gtm_string_t``.
+
+``ydb_tpfnptr_t`` is a pointer to a function with one parameter, a
+pointer, and which returns an integer, defined thus:
+
+.. code-block:: C
+		
+	typedef int (*ydb_tpfnptr_t)(void *tpfnparm);
 
 ======
 Macros
@@ -845,6 +855,8 @@ identified by ``*varname`` and the ``*subscript`` list.
 - 10 — There is no value, but there is a subtree.
 - 11 — There are both a value and a subtree.
 
+``ydb_data_s()`` returns ``YDB_OK`` or an `error return code`_.
+
 -----------
 ydb_get_s()
 -----------
@@ -862,8 +874,9 @@ value of the value of the data at the specified node or intrinsic
 special variable, setting ``value->len_used``, and returning
 ``YDB_OK``; and ``YDB_ERR_INVSTRLEN`` otherwise.
 
-If there is no value at the specified global or local variable node,
-or if the intrinsic special variable does not exist,a non-zero return
+``ydb_get_s()`` returns ``YDB_OK`` or an `error return code`_.  If
+there is no value at the specified global or local variable node, or
+if the intrinsic special variable does not exist,a non-zero return
 value of YDB_ERR_GVUNDEF, YDB_ERR_INVSVN, or YDB_ERR_UNDEF indicates
 the error.
 
@@ -931,6 +944,8 @@ Kills — deletes all nodes in — each of the local or global variable
 trees or subtrees specified. In the special case where ``namecount``
 is zero, ``ydb_kill_s()`` kills all local variables.
 
+``ydb_kill_s()`` returns ``YDB_OK`` or an `error return code`_.
+
 -----------------
 ydb_kill_excl_s()
 -----------------
@@ -942,6 +957,8 @@ ydb_kill_excl_s()
 ``*varnamelist->address`` points to a comma separated list of local
 variable names. ``ydb_kill_excl_s()`` kills the trees of all local
 variable names except those on the list.
+
+``ydb_kill_excl_s()`` returns ``YDB_OK`` or an `error return code`_.
 
 --------------
 ydb_length_s()
@@ -958,8 +975,9 @@ In the location pointed to by ``*value``, ``ydb_length_s()`` reports
 the length of the data in bytes. If the data is numeric, ``*value``
 has the length of the canonical string representation of that value.
 
-If there is no value at the requested global or local variable node,
-or if the intrinsic special variable does not exist,a non-zero return
+``ydb_length_s()`` returns ``YDB_OK`` or an `error return code`_. If
+there is no value at the requested global or local variable node, or
+if the intrinsic special variable does not exist,a non-zero return
 value of YDB_ERR_GVUNDEF, YDB_ERR_INVSVN, or YDB_ERR_UNDEF indicates
 the error.
 
@@ -1054,29 +1072,28 @@ ydb_node_next_s()
 
 .. code-block:: C
 
-	int ydb_node_next_s(int *count,
+	int ydb_node_next_s(int parmcount,
+		int *count,
 		ydb_buffer_t *varname,
 		ydb_buffer_t *subscript[, ... ]);
 
 ``ydb_node_next_s()`` facilitates depth-first traversal of a local or
-global variable tree. Note that the parameters are both inputs to  the
-function as well as outputs from the function, and that the number of
-subscripts can differ between the input node of the call and the
-output node reported by the call, which is the reason the number of
-subscripts is passed by reference.
+global variable tree. As the number of subscripts can differ between
+the input node of the call and the output node reported by the call:
 
-As an input parameter ``*count`` specifies the number of subscripts in
-the input node, which does not need to exist — a value of 0 will
-return the first node in the tree.
+- ``parmcount`` is the number of parameters in this ``ydb_node_next_s()``
+  call to return subscripts. If the actual number of subscripts to be
+  returned exceeds ``parmcount``, the function returns the
+  ``YDB_ERR_INSUFFSUBS`` error (see below).
+- On input, ``*count`` specifies the number of subscripts in the
+  input node, which does not need to exist — a value of 0 will return
+  the first node in the tree. On the return, ``*count`` specifies the
+  number of subscripts in the next node, which will be a node with
+  data unless there is no next node (i.e., the input node is the last
+  in the tree), in which case ``*count`` will be 0 on output.
 
-Except when the ``int`` value returned by
-``ydb_node_next_s()`` returns an error code, ``*count`` on the return
-from a call specifies the number of subscripts in the next node, which
-will be a node with data unless there is no next node (i.e., the input
-node is the last in the tree), in which case ``*count`` will be 0 on
-output.
-
-``ydb_node_next_s()`` does not change ``*varname``, but does change
+``ydb_node_next_s()`` returns ``YDB_OK`` or an `error return code`_.
+``ydb_node_next_s()`` does not change ``*varname``, but changes the
 the ``*subscript`` parameters.
 
 - A ``YDB_ERR_INSUFFSUBS`` return code indicates an error if there are
@@ -1101,7 +1118,8 @@ ydb_node_previous_s()
 
 .. code-block:: C
 
-	int ydb_node_previous_s(int *count,
+	int ydb_node_previous_s(int parmcount,
+		int *count,
 		ydb_buffer_t *varname,
 		[ ydb_buffer_t *subscript, ... ]);
 
@@ -1110,12 +1128,14 @@ facilitates breadth-first traversal of a local or global variable
 tree, except that:
 
 - ``ydb_node_previous_s()`` reports the predecessor node,
-- an input value of 0 for ``*value`` reports the last node in the tree
+- an input value of 0 for ``*count`` reports the last node in the tree
   on output, and
-- an output value of 0 for ``*value`` means there is no previous node.
+- an output value of 0 for ``*count`` means there is no previous node.
 
 Other behavior of ``ydb_node_previous_s()`` is the same as
 `ydb_node_next_s()`_.
+
+``ydb_node_previous_s()`` returns ``YDB_OK`` or an `error return code`_.
 
 -----------
 ydb_set_s()
@@ -1181,38 +1201,59 @@ If ``*count`` is zero, ``ydb_subscript_previous_s()`` returns the
 preceding local or global variable name, and if ``*varname``
 references the first variable name, ``*count`` is -1 on the return.
 
+``ydb_subscript_previous_s()`` returns ``YDB_OK`` or an `error return code`_.
+
 ----------
 ydb_tp_s()
 ----------
 
 .. code-block:: C
 
-	int ydb_tp(ydb_buffer_t *tpfn,
-		ydb_buffer_t *transid,
-		ydb_buffer_t *varnamelist);
+	int ydb_tp_s(ydb_tpfnptr_t tpfn,
+		void *tpfnparm,
+		const char *transid,
+		const char *varnamelist);
 
-The string referenced by ``*tpfn`` is the name of a function returning
-a value that has one of the following forms with no embedded spaces:
-
-- ``package.function[(param[,param],...)]`` where ``package.function``
-  maps to an external call as described in Chapter 11 (Integrating
-  External Routines) of `GT.M Programmers Guide
-  <http://tinco.pair.com/bhaskar/gtm/doc/books/pg/UNIX_manual/>`_.
-- ``routine^label[(param[,param,...])]`` where ``routine^label`` maps
-  to an M entry reference as described in Chapter 5 (General Language
-  Features of M) of `GT.M Programmers Guide
-  <http://tinco.pair.com/bhaskar/gtm/doc/books/pg/UNIX_manual/>`_.
-
-In both cases, ``package.function`` or ``routine^label`` should
+``ydb_tp_s()`` calls the function pointed to by ``tpfn`` passing it
+``tpfnparm`` as a parameter. As discussed under `Transaction
+Processing`_, the function should use the intrinsic special variable
+``$trestart`` to manage any externally visible action (which YottaDB
+recommends against, but which may be unavoidable). The function should
 return one of the following:
 
 - ``YDB_OK`` — application logic indicates that the transaction can
   be committed (the YottaDB engine may still decide that a restart is
-  required to ensure ACID transaction properties)
-- ``YDB_RESTART``  — application logic indicates that the
-  transaction should restart
-- ``YDB_ROLLBACK`` — application logic indicates that the transaction
-  should not be committed
+  required to ensure ACID transaction properties) as discussed under
+  `Transaction Processing`_.
+- ``YDB_TP_RESTART``  — application logic indicates that the
+  transaction should restart.
+- ``YDB_TP_ROLLBACK`` — application logic indicates that the
+  transaction should not be committed. Any return code from the
+  function pointed to by ``tpfn`` other than ``YDB_OK`` or
+  ``YDB_TP_RESTART`` results in ``ydb_tp_s()`` forthwith returning to
+  its caller with that return code. The symbolic constant
+  ``YDB_TP_ROLLBACK`` is provided to improve future code
+  maintainability, and should be used when the intent is to rollback
+  the transaction.
+
+If not NULL or the empty string ``transid`` is case-insensitive
+``"BA"`` or ``"BATCH"`` to indicate that at transaction commit,
+YottaDB need not ensure Durability (it always ensures Atomicity,
+Consistency, and Isolation). Use of this flag may improve latency and
+throughput for those applications where an alternative mechanism (such
+as a checkpoint) provides acceptable durability. To ensure strict
+serialization, if a transaction that is not flagged as ``"BATCH"``
+follows one or more transactions so flagged, Durability of the later
+transaction ensures Durability of the the earlier ``"BATCH"``
+transaction(s).
+
+If not NULL or the empty string, ``varnamelist`` is a list of local
+variable names whose values are restored to their original values when
+a transaction is restarted. A value of ``"*"`` means that all local
+variables should be restored on a restart.
+
+``ydb_tp_s()`` returns ``YDB_OK``, ``YDB_TP_ROLLBACK``, or an `error
+return code`_.
 
 ----------------
 ydb_withdraw_s()
@@ -1229,6 +1270,8 @@ ydb_withdraw_s()
 
 Deletes the root node in each of the local or global variable
 trees or subtrees specified, leaving the subtrees intact.
+
+``ydb_withdraw_s()`` returns ``YDB_OK`` or an `error return code`_.
 
 Comprehensive API
 =================
