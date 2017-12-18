@@ -578,7 +578,7 @@ requested locks being acquired.
 
 ``YDB_NOSUCH`` when `ydb_node_next_s()`_ or `ydb_node_previous_s()`_
 report no next or previous node; or `ydb_subscript_next_s()`_ or
-`ydb_subscript_previous_next()`_ report no next or previous subscript
+`ydb_subscript_previous_s()`_ report no next or previous subscript
 or variable.
 
 ``YDB_OK`` — This the standard return code of all functions following
@@ -835,14 +835,14 @@ whose nodes have varying numbers of subscripts, the actual number of
 subscripts is itself passed as a parameter. In the definitions of
 functions:
 
-- ``int count`` and ``int *count`` refer to an
+- ``int subs_used`` and ``int *subs_used`` refer to an
   actual number subscripts,
 - ``ydb_buffer_t *varname`` refers to the name of a variable, and
 - ``[, ydb_buffer_t *subscript, ...]`` and ``ydb_buffer_t *subscript[,
   ydb_buffer_t *subscript, ...]`` refer to placeholders for subscripts
-  whose actual number is defined by ``count`` or ``*count``.
+  whose actual number is defined by ``subs_used`` or ``*subs_used``.
 
-**Caveat:** Specifying a count that exceeds the actual number of
+**Caveat:** Specifying a subs_used that exceeds the actual number of
 parameters passed will almost certainly result in an unpleasant bug
 that is difficult to troubleshoot. [#]_
 
@@ -859,7 +859,7 @@ ydb_data_s()
 .. code-block:: C
 
 	int ydb_data_s(unsigned int *value,
-		int count,
+		int subs_used,
 		ydb_buffer_t *varname[,
 		ydb_buffer_t *subscript, ...]);
 
@@ -881,7 +881,7 @@ ydb_get_s()
 .. code-block:: C
 
 	int ydb_get_s(ydb_buffer_t *value,
-		int count,
+		int subs_used,
 		ydb_buffer_t *varname[,
 		ydb_buffer_t *subscript, ... ]);
 
@@ -918,7 +918,7 @@ ydb_incr_s()
 
 .. code-block:: C
 
-	int ydb_incr_s(int count,
+	int ydb_incr_s(int subs_used,
 		ydb_buffer_t *varname[,
 		ydb_buffer_t *subscript, ...],
 		ydb_buffer_t *result,
@@ -951,7 +951,7 @@ ydb_kill_s()
 .. code-block:: C
 
 	int ydb_kill_s(int namecount,
-		[int count,
+		[int subs_used,
 		ydb_buffer_t *varname[,
 		ydb_buffer_t *subscript, ...], ...,]);
 
@@ -984,7 +984,7 @@ ydb_length_s()
 .. code-block:: C
 
 	int ydb_length_s(unsigned int *value,
-		int count,
+		int subs_used,
 		ydb_buffer_t *varname[,
 		ydb_buffer_t *subscript, ... ]);
 
@@ -1005,7 +1005,7 @@ ydb_lock_s()
 .. code-block:: C
 
 	int ydb_lock_s(unsigned long long timeout, int namecount,
-		[int count,
+		[int subs_used,
 		ydb_buffer_t *varname[,
 		ydb_buffer_t *subscript, ...], ...,]);
 
@@ -1036,13 +1036,13 @@ ydb_lock_decr_s()
 .. code-block:: C
 
 	int ydb_lock_s(int namecount,
-		[int count,
+		[int subs_used,
 		ydb_buffer_t *varname[,
 		ydb_buffer_t *subscript, ...], ...,]);
 
 ``namecount`` is the number of variable names in the call.
 
-Decrements counts of the specified locks held by the process. As
+Decrements subs_useds of the specified locks held by the process. As
 noted in the `Concepts`_ section, a lock whose count goes from 1 to 0
 is released. Any lock whose name is specified in the argument list,
 but which the process does not hold, is ignored.
@@ -1058,7 +1058,7 @@ ydb_lock_incr_s()
 .. code-block:: C
 
 	int ydb_lock_s(unsigned long long timeout, int namecount,
-		[int count,
+		[int subs_used,
 		ydb_buffer_t *varname[,
 		ydb_buffer_t *subscript, ...], ...,]);
 
@@ -1089,8 +1089,8 @@ ydb_node_next_s()
 
 .. code-block:: C
 
-	int ydb_node_next_s(int parmcount,
-		int *count,
+	int ydb_node_next_s(int subs_alloc,
+		int *subs_used,
 		ydb_buffer_t *varname,
 		ydb_buffer_t *subscript[, ... ]);
 
@@ -1098,27 +1098,27 @@ ydb_node_next_s()
 global variable tree. As the number of subscripts can differ between
 the input node of the call and the output node reported by the call:
 
-- ``parmcount`` is the number of parameters in this ``ydb_node_next_s()``
-  call to return subscripts. If the actual number of subscripts to be
-  returned exceeds ``parmcount``, the function returns the
+- ``subs_alloc`` is the number of parameters in this ``ydb_node_next_s()``
+  call to pass subscripts. If the actual number of subscripts to be
+  returned exceeds ``subs_alloc``, the function returns the
   ``YDB_ERR_INSUFFSUBS`` error (see below).
-- On input, ``*count`` specifies the number of subscripts in the
+- On input, ``*subs_used`` specifies the number of subscripts in the
   input node, which does not need to exist — a value of 0 will return
-  the first node in the tree. On the return, ``*count`` specifies the
+  the first node in the tree. On the return, ``*subs_used`` specifies the
   number of subscripts in the next node, which will be a node with
   data unless there is no next node, in which case applications should
-  consider ``*count`` to be undefined on output.
+  consider ``*subs_used`` to be undefined on output.
 
 ``ydb_node_next_s()`` returns:
 
-- ``YDB_OK`` with the next node, if there is one, changing ``*count``
+- ``YDB_OK`` with the next node, if there is one, changing ``*subs_used``
    and ``*subscript`` parameters to those of the next node;
 - ``YDB_NOSUCH`` if there is no next node, in which case the
-  application code should consider the values of ``*count`` and the
+  application code should consider the values of ``*subs_used`` and the
   ``*subscript`` to be undefined; or
 - an `error return code`_, in which case the application code should
-  consider the values of ``*count`` (except in the case of
-  ``YDB_ERR_INSUFFSUBS`` – see below) and the ``*subscript`` to be
+  consider the values of ``*subs_used`` (except in the case of
+  ``YDB_ERR_INVSTRLEN`` – see below) and the ``*subscript`` to be
   undefined.
 
 ``ydb_node_next_s()`` never changes ``*varname``, or the
@@ -1127,18 +1127,18 @@ parameter.
 
 - A ``YDB_ERR_INSUFFSUBS`` return code indicates an error if there are
   insufficient parameters to return the subscript. In this case
-  ``*count`` reports the actual number of subscripts in the node, and
+  ``*subs_used`` reports the actual number of subscripts in the node, and
   the parameters report as many subscripts as can be reported.
 - If one of the ``subscript->len_alloc`` values indicates insufficient
   space for an output value, the return code is the error
   ``YDB_ERR_INVSTRLEN``. See also the discussion at
   `YDB_ERR_INVSTRLEN`_ describing the contents of that ``*subscript``
   parameter. In the event of a ``YDB_ERR_INVSTRLEN`` error, the values
-  in any subscripts beyond that identified by ``*count`` do not
+  in any subscripts beyond that identified by ``*subs_used`` do not
   contain meaningful values.
 
 Note that a call to ``ydb_node_next_s()`` must always have at least
-one ``*subscript`` parameter (i.e., ``parmcount>0``), since it is a
+one ``*subscript`` parameter (i.e., ``subs_alloc>0``), since it is a
 *non-sequitur* to call the function without subscripts and expect a
 return without subscripts.
 
@@ -1148,8 +1148,8 @@ ydb_node_previous_s()
 
 .. code-block:: C
 
-	int ydb_node_previous_s(int parmcount,
-		int *count,
+	int ydb_node_previous_s(int subs_alloc,
+		int *subs_used,
 		ydb_buffer_t *varname,
 		[ ydb_buffer_t *subscript, ... ]);
 
@@ -1171,7 +1171,7 @@ ydb_set_s()
 .. code-block:: C
 
 	int ydb_set_s(ydb_buffer_t *value,
-		int count,
+		int subs_used,
 		ydb_buffer_t *varname[,
 		ydb_buffer_t *subscript, ... ]);
 
@@ -1185,12 +1185,12 @@ ydb_subscript_next_s()
 
 .. code-block:: C
 
-	int ydb_subscript_next_s(int count,
+	int ydb_subscript_next_s(int subs_used,
 		ydb_buffer_t *varname[, ydb_buffer_t *subscript, ... ]);
 
 ``ydb_subscript_next_s()`` provides a primitive for implementing
 breadth-first traversal of a tree by searching for the next subscript
-at the level specified by ``count``. A node need not exist at the
+at the level specified by ``subs_used``. A node need not exist at the
 subscripted variable name provided as input to the
 function. ``ydb_subscript_next_s()`` returns:
 
@@ -1207,7 +1207,7 @@ function. ``ydb_subscript_next_s()`` returns:
   correct before re-using the ``ydb_buffer_t`` structure pointed to by
   the ``->buf_addr`` of that last subscript.
 
-In the special case where ``count`` is zero,
+In the special case where ``subs_used`` is zero,
 ``ydb_subscript_next_s()`` returns the next local or global variable
 name.
 
@@ -1217,13 +1217,13 @@ ydb_subscript_previous_s()
 
 .. code-block:: C
 
-	int ydb_subscript_previous_s(int count,
+	int ydb_subscript_previous_s(int subs_used,
 		ydb_buffer_t *varname[,	ydb_buffer_t *subscript, ... ]);
 
 Analagous to `ydb_subscript_next_s()`_, ``ydb_subscript_previous_s()``
 provides a primitive for implementing reverse breadth-first traversal
 of a tree by searching for the previous subscript at the level
-specified by ``count``.  ``ydb_subscript_previous_s()`` returns
+specified by ``subs_used``.  ``ydb_subscript_previous_s()`` returns
 ``YDB_OK``, ``YDB_NOSUCH``, or an `error return code`_.  See
 `ydb_subscript_next_s()`_ for more details.
 
@@ -1294,7 +1294,7 @@ ydb_withdraw_s()
 .. code-block:: C
 
 	int ydb_withdraw_s(int namecount,
-		int count,
+		int subs_used,
 		ydb_buffer_t *varname[,
 		ydb_buffer_t *subscript, ...][, ...]);
 
