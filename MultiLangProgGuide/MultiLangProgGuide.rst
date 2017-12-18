@@ -336,7 +336,8 @@ to determine whether it is executing inside a
 transaction. ``$tlevel>0`` means that it is inside a transaction, and
 ``$tlevel>1`` means that it is inside a nested transaction. Note that
 a transaction can be started explicitly, e.g., by calling
-`ydb_tp_s()`_ ,or implicitly by a trigger on a database update.
+`ydb_tp_s()`_ ,or implicitly by a trigger resulting from a
+`ydb_kill_s()`_, `ydb_set_s()`_, or `ydb_withdraw_s()`_.
 
 ---------
 $trestart
@@ -1283,7 +1284,8 @@ caller. [#]_
 
 .. [#] An enclosing transaction can result not just from another
        ``ydb_tp_s()`` higher in the stack, but also from an M
-       ``tstart`` command as well as a database trigger.
+       ``tstart`` command as well as a database trigger resulting from
+       a `ydb_kill_s()`_, `ydb_set_s()`_, or `ydb_withdraw_s()`_.
 
 ----------------
 ydb_withdraw_s()
