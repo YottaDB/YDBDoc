@@ -539,7 +539,7 @@ LKE Exercises
 
 When using M Locks, you must use a well designed and defined locking protocol. Your locking protocol must specify guidelines for acquiring LOCKs, selecting and using timeout, releasing M Locks, defining a lock s
 trategy according the given situation, identifying potential deadlock situations, and providing ways to avoid or recover from them. This section contains two exercises. The first exercise reinforces the concepts
- of YottaDB/GT.M LOCKs previously explained in this chapter. The second exercise describes a deadlock situation and demonstrates how one can use LKE to identify and resolve it.
+of YottaDB/GT.M LOCKs previously explained in this chapter. The second exercise describes a deadlock situation and demonstrates how one can use LKE to identify and resolve it.
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Exercise 1: Preventing concurrent updates using M Locks

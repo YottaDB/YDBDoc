@@ -2816,8 +2816,8 @@ Example:
      err
      set $ztrap=""
      use log
-     write !!!,"**** ERROR ENCOUNTERED ****",!!!
-     zshow "*"
+     write !!!,"\*\*\*\* ERROR ENCOUNTERED \*\*\*\*",!!!
+     zshow "\*"
      halt
 
 This example reads logical database updates associated with a transaction from STDIN and writes them to log.out and STDOUT just like the UNIX tee command. It runs on GT.M V5.5-000 where it is no longer required to treat filter output as a transaction. To run this example on a pre-YottaDB/GT.M V5.5-000 version, replace the line:

@@ -20,6 +20,7 @@ Welcome to GTMAdminOps's documentation!
    dbrepl
    mlocks
    gds
+   dse
 
 Indices and tables
 ==================
