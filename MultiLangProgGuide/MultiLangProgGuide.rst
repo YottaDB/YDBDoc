@@ -327,6 +327,17 @@ Chapter 8 (Intrinsic Special Variables) of `GT.M Programmers Guide
 useful to M application code, others are more generally useful and
 documented here.
 
+-------
+$tlevel
+-------
+
+Application code can read the intrinsic special variable ``$tlevel``
+to determine whether it is executing inside a
+transaction. ``$tlevel>0`` means that it is inside a transaction, and
+``$tlevel>1`` means that it is inside a nested transaction. Note that
+a transaction can be started explicitly, e.g., by calling
+`ydb_tp_s()`_ ,or implicitly by a trigger on a database update.
+
 ---------
 $trestart
 ---------
@@ -560,12 +571,17 @@ Normal Return Codes
 Symbolic constants for normal return codes have ``YDB_`` prefixes
 other than ``YDB_ERR_``.
 
-``YDB_OK`` — This the standard return code of all functions following
-successful execution.
-
 ``YDB_LOCK_TIMEOUT`` — This return code from lock acquisition
 functions indicates that the specified timeout was reached without
 requested locks being acquired.
+
+``YDB_NOSUCH`` when `ydb_node_next_s()`_ or `ydb_node_previous_s()`_
+report no next or previous node; or `ydb_subscript_next_s()`_ or
+`ydb_subscript_previous_next()`_ report no next or previous subscript
+or variable.
+
+``YDB_OK`` — This the standard return code of all functions following
+successful execution.
 
 ``YDB_TP_RESTART`` — Code returned to YottaDB by an application
 function that packages a transaction to indicate that it wishes
@@ -616,12 +632,12 @@ return values. [#]_
 ``YDB_ERR_INVSTRLEN`` — A buffer provided by the caller is not long
 enough for a string to be returned, or the length of a string passed
 as a parameter exceeds ``YDB_MAX_STR``. In the event the return code
-is ``YDB_ERR_INVSTRLEN`` and if ``*xyz`` is a ``ydb_buffer_t`` value
-whose ``xyz->len_alloc`` indicates insufficient space, then ``xyz->len_used``
-is set to the size required of a sufficiently large buffer, and
-``xyz->address`` points to the first ``xyz->len_alloc`` bytes of the
-value. In this case the ``len_used`` field of a ``ydb_buffer_t``
-structure is greater than the ``len_alloc`` field.
+is ``YDB_ERR_INVSTRLEN`` and if ``*xyz`` is a ``ydb_buffer_t``
+structure whose ``xyz->len_alloc`` indicates insufficient space, then
+``xyz->len_used`` is set to the size required of a sufficiently large
+buffer, and ``xyz->buf_addr`` points to the first ``xyz->len_alloc``
+bytes of the value. In this case the ``len_used`` field of a
+``ydb_buffer_t`` structure is greater than the ``len_alloc`` field.
 
 ``YDB_ERR_INVSUB`` — A subscript provided by the caller is invalid. In
 the case of a name with multiple subscripts, the intrinsic special
@@ -733,18 +749,18 @@ Macros
 ``ydbstring`` a pointer to a ``ydb_string_t`` structure and
 ``ydbbuffer`` a pointer to a ``ydb_buffer_t`` structure, set:
 
-- ``ydbstring->address=ydbbuffer->address``, and
+- ``ydbstring->address=ydbbuffer->buf_addr``, and
 - ``ydb_string->length=ydbbuffer->len_alloc`` (i.e., no changes to
   ``ydbbuffer``).
 
 ``YDB_BUFFER_FREE(ydbbuffer)`` — using `ydb_free()`_ free the memory
-at ``ydbbuffer->address`` and set ``ydbbuffer->address``,
+at ``ydbbuffer->buf_addr`` and set ``ydbbuffer->buf_addr``,
 ``ydbbuffer->len_alloc``, and ``ydbbuffer->len)used`` to zero.
 
 ``YDB_BUFFER_NEW(ydbbuffer,size)`` — using `ydb_malloc()`_ allocate 
 memory of ``size`` bytes and set:
 
-- ``ydbbuffer->address`` to the address of the allocated memory,
+- ``ydbbuffer->buf_addr`` to the address of the allocated memory,
 - ``ydbbuffer->len_alloc`` to ``size``, and
 - ``ydbbuffer->len_used`` to zero.
 
@@ -752,7 +768,7 @@ memory of ``size`` bytes and set:
 ``ydbstring`` a pointer to a ``ydb_string_t`` structure and
 ``ydbbuffer`` a pointer to a ``ydb_buffer_t`` structure, set:
 
-- ``ydbstring->address=ydbbuffer->address``, and
+- ``ydbstring->address=ydbbuffer->buf_addr``, and
 - ``ydb_string->length=ydbbuffer->len_used`` (i.e., no changes to
   ``ydbbuffer``).
 
@@ -770,7 +786,7 @@ memory of ``size`` bytes and set:
 a pointer to a ``ydb_buffer_t`` structure, ``ydbstring`` a pointer to
 a ``ydb_string_t`` structure, and ``used`` an unsigned integer, set:
 
-- ``ydbbuffer->address=ydbstring->address``,
+- ``ydbbuffer->buf_addr=ydbstring->address``,
 - ``ydbbuffer->len_alloc=ydbstring->used``, and
 - ``ydbbuffer->len_used=used`` (i.e., no changes to ``ydbstring``).
 
@@ -778,7 +794,7 @@ a ``ydb_string_t`` structure, and ``used`` an unsigned integer, set:
 pointer to a ``ydb_buffer_t`` structure, and ``strlit`` a string
 literal, set:
 
-- ``ydbbuffer->address`` to the address of ``strlit``, and
+- ``ydbbuffer->buf_addr`` to the address of ``strlit``, and
 - ``ydbbuffer->len_alloc`` and ``ydbbuffer->len_used`` to the length
   of the string literal excluding its terminating null character.
 
@@ -869,7 +885,7 @@ ydb_get_s()
 		ydb_buffer_t *subscript, ... ]);
 
 If ``value->len_alloc`` is large enough to accommodate the result, to the
-location pointed to by ``value->address``, ``ydb_get_s()`` copies the
+location pointed to by ``value->buf_addr``, ``ydb_get_s()`` copies the
 value of the value of the data at the specified node or intrinsic
 special variable, setting ``value->len_used``, and returning
 ``YDB_OK``; and ``YDB_ERR_INVSTRLEN`` otherwise.
@@ -954,7 +970,7 @@ ydb_kill_excl_s()
 
 	int ydb_kill_excl_s(ydb_buffer_t *varnamelist);
 
-``*varnamelist->address`` points to a comma separated list of local
+``*varnamelist->buf_addr`` points to a comma separated list of local
 variable names. ``ydb_kill_excl_s()`` kills the trees of all local
 variable names except those on the list.
 
@@ -1089,12 +1105,24 @@ the input node of the call and the output node reported by the call:
   input node, which does not need to exist — a value of 0 will return
   the first node in the tree. On the return, ``*count`` specifies the
   number of subscripts in the next node, which will be a node with
-  data unless there is no next node (i.e., the input node is the last
-  in the tree), in which case ``*count`` will be 0 on output.
+  data unless there is no next node, in which case applications should
+  consider ``*count`` to be undefined on output.
 
-``ydb_node_next_s()`` returns ``YDB_OK`` or an `error return code`_.
-``ydb_node_next_s()`` does not change ``*varname``, but changes the
-the ``*subscript`` parameters.
+``ydb_node_next_s()`` returns:
+
+- ``YDB_OK`` with the next node, if there is one, changing ``*count``
+   and ``*subscript`` parameters to those of the next node;
+- ``YDB_NOSUCH`` if there is no next node, in which case the
+  application code should consider the values of ``*count`` and the
+  ``*subscript`` to be undefined; or
+- an `error return code`_, in which case the application code should
+  consider the values of ``*count`` (except in the case of
+  ``YDB_ERR_INSUFFSUBS`` – see below) and the ``*subscript`` to be
+  undefined.
+
+``ydb_node_next_s()`` never changes ``*varname``, or the
+``->buf_addr`` and ``->len_alloc`` fields of any ``*subscript``
+parameter.
 
 - A ``YDB_ERR_INSUFFSUBS`` return code indicates an error if there are
   insufficient parameters to return the subscript. In this case
@@ -1109,8 +1137,9 @@ the ``*subscript`` parameters.
   contain meaningful values.
 
 Note that a call to ``ydb_node_next_s()`` must always have at least
-one ``*subscript`` parameter, since it is a *non-sequitur* to call it
-without subscripts and expect a return without subscripts.
+one ``*subscript`` parameter (i.e., ``parmcount>0``), since it is a
+*non-sequitur* to call the function without subscripts and expect a
+return without subscripts.
 
 ---------------------
 ydb_node_previous_s()
@@ -1124,18 +1153,15 @@ ydb_node_previous_s()
 		[ ydb_buffer_t *subscript, ... ]);
 
 Analogous to ``ydb_node_next(s)``, ``ydb_node_previous_s()``
-facilitates breadth-first traversal of a local or global variable
-tree, except that:
-
-- ``ydb_node_previous_s()`` reports the predecessor node,
-- an input value of 0 for ``*count`` reports the last node in the tree
-  on output, and
-- an output value of 0 for ``*count`` means there is no previous node.
+facilitates reverse breadth-first traversal of a local or global
+variable tree, except that ``ydb_node_previous_s()`` searches for and
+reports the predecessor node.
 
 Other behavior of ``ydb_node_previous_s()`` is the same as
 `ydb_node_next_s()`_.
 
-``ydb_node_previous_s()`` returns ``YDB_OK`` or an `error return code`_.
+``ydb_node_previous_s()`` returns ``YDB_OK``, ``YDB_NOSUCH``, or an
+`error return code`_.
 
 -----------
 ydb_set_s()
@@ -1148,7 +1174,7 @@ ydb_set_s()
 		ydb_buffer_t *varname[,
 		ydb_buffer_t *subscript, ... ]);
 
-Copies the ``value->len_used`` bytes at ``value->address`` as the value of
+Copies the ``value->len_used`` bytes at ``value->buf_addr`` as the value of
 the specified node or intrinsic special variable specified, returning
 ``YDB_OK`` or an error code such as ``YDB_ERR_INVSVN``.
 
@@ -1158,21 +1184,31 @@ ydb_subscript_next_s()
 
 .. code-block:: C
 
-	int ydb_subscript_next_s(int *count,
+	int ydb_subscript_next_s(int count,
 		ydb_buffer_t *varname[, ydb_buffer_t *subscript, ... ]);
 
-``ydb_subscript_next_s()`` returns the next subscript at the deepest
-level specified by ``*count``, by copying that next subscript to the
-memory referenced by that ``subscript->address``, and setting the
-corresponding ``subscript->len_used`` with its length. If there is no next
-subscript at that level, it decrements ``*count``. [#]_
+``ydb_subscript_next_s()`` provides a primitive for implementing
+breadth-first traversal of a tree by searching for the next subscript
+at the level specified by ``count``. A node need not exist at the
+subscripted variable name provided as input to the
+function. ``ydb_subscript_next_s()`` returns:
 
-.. [#] This behavior provides symmetry with
-       `ydb_subscript_previous_s()`_.
+- ``YDB_OK`` on finding the requested next node, returning the
+  subscript in the memory referenced by the ``->buf_addr`` of the last
+  ``*subscript`` parameter, setting its ``->len_used`` field
+  appropriately;
+- ``YDB_NOSUCH`` if there is no next node; or
+- an `error return code`_, including ``YDB_ERR_INVSTRLEN`` if the
+  ``->len_alloc`` field of the last subscript indicates that there is
+  insufficent space for the subscript. In this special case, it sets
+  the ``->len_used`` field to be the ``len->alloc`` value required to
+  store the subscript, a condition that the application code should
+  correct before re-using the ``ydb_buffer_t`` structure pointed to by
+  the ``->buf_addr`` of that last subscript.
 
-If ``*count`` is zero, ``ydb_subscript_next_s()`` returns the next
-local or global variable name, and if ``*varname`` references the
-last variable name, ``*count`` is -1 on the return.
+In the special case where ``count`` is zero,
+``ydb_subscript_next_s()`` returns the next local or global variable
+name.
 
 --------------------------
 ydb_subscript_previous_s()
@@ -1180,28 +1216,15 @@ ydb_subscript_previous_s()
 
 .. code-block:: C
 
-	int ydb_subscript_previous_s(int *count,
+	int ydb_subscript_previous_s(int count,
 		ydb_buffer_t *varname[,	ydb_buffer_t *subscript, ... ]);
 
-``ydb_subscript_previous_s()`` returns the preceding subscript at the
-deepest level specified by ``*count``, by copying that previous
-subscript to the memory referenced by that ``subscript->address``, and
-setting the corresponding ``subscript->len_used`` to its length. If there
-is no previous subscript, it decrements ``*count``. [#]_
-
-.. [#] Since the empty string is a legal subscript and is the first in
-       YottaDB's natural collation order, simply setting
-       ``subscript->len_used`` to zero does not discriminate between the
-       case where the input specifies the first subscript, and the
-       case where there actually is a preceding node with the empty
-       string as a subscript. Decrementing ``*count`` allows the
-       Simple API to discriminate between the two cases.
-
-If ``*count`` is zero, ``ydb_subscript_previous_s()`` returns the
-preceding local or global variable name, and if ``*varname``
-references the first variable name, ``*count`` is -1 on the return.
-
-``ydb_subscript_previous_s()`` returns ``YDB_OK`` or an `error return code`_.
+Analagous to `ydb_subscript_next_s()`_, ``ydb_subscript_previous_s()``
+provides a primitive for implementing reverse breadth-first traversal
+of a tree by searching for the previous subscript at the level
+specified by ``count``.  ``ydb_subscript_previous_s()`` returns
+``YDB_OK``, ``YDB_NOSUCH``, or an `error return code`_.  See
+`ydb_subscript_next_s()`_ for more details.
 
 ----------
 ydb_tp_s()
@@ -1241,19 +1264,26 @@ If not NULL or the empty string ``transid`` is case-insensitive
 YottaDB need not ensure Durability (it always ensures Atomicity,
 Consistency, and Isolation). Use of this flag may improve latency and
 throughput for those applications where an alternative mechanism (such
-as a checkpoint) provides acceptable durability. To ensure strict
-serialization, if a transaction that is not flagged as ``"BATCH"``
-follows one or more transactions so flagged, Durability of the later
-transaction ensures Durability of the the earlier ``"BATCH"``
-transaction(s).
+as a checkpoint) provides acceptable durability. If a transaction that
+is not flagged as ``"BATCH"`` follows one or more transactions so
+flagged, Durability of the later transaction ensures Durability of the
+the earlier ``"BATCH"`` transaction(s).
 
 If not NULL or the empty string, ``varnamelist`` is a list of local
 variable names whose values are restored to their original values when
 a transaction is restarted. A value of ``"*"`` means that all local
 variables should be restored on a restart.
 
-``ydb_tp_s()`` returns ``YDB_OK``, ``YDB_TP_ROLLBACK``, or an `error
-return code`_.
+A ``ydb_tp_s()`` that is not itself within a transaction returns
+``YDB_OK``, ``YDB_TP_ROLLBACK``, or an `error return code`_ – a
+``ydb_tp_s()`` that is the top level transaction handles restarts and
+never returns a ``YDB_TP_RESTART``. A ``ydb_tp_s()`` call that is
+within another transaction can also return ``YDB_TP_RESTART`` to its
+caller. [#]_
+
+.. [#] An enclosing transaction can result not just from another
+       ``ydb_tp_s()`` higher in the stack, but also from an M
+       ``tstart`` command as well as a database trigger.
 
 ----------------
 ydb_withdraw_s()
@@ -1325,10 +1355,10 @@ ydb_message()
 
 	int ydb_message(ydb_buffer_t *msgtext, int status)
 
-Set ``msgtext->address`` to a location that has the text for the
+Set ``msgtext->buf_addr`` to a location that has the text for the
 condition corresponding to ``status``, and both ``msgtext->len_alloc`` and
 ``msgtext->len_used`` to its length (with no trailing null
-character). Note: as ``msgtext->address`` points to an address in a
+character). Note: as ``msgtext->buf_addr`` points to an address in a
 read-only region of memory, any attempt to modify the message will
 result in a segmentation violation (SIGSEGV). ``ydb_message()``
 returns ``YDB_OK`` for a valid ``status`` and
