@@ -21,6 +21,7 @@ Welcome to GTMAdminOps's documentation!
    mlocks
    gds
    dse
+   integrity
 
 Indices and tables
 ==================
