@@ -23,6 +23,7 @@ Welcome to GTMAdminOps's documentation!
    dse
    integrity
    encryption
+   gtcm
 
 Indices and tables
 ==================
