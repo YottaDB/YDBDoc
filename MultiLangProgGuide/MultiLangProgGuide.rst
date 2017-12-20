@@ -654,6 +654,10 @@ invalid. In the case of a call with multiple variable names, such as
 a subsequent call to `ydb_get_s()`_ provides details on which variable
 name was invalid.
 
+``YDB_ERR_INVZWRITECHAR`` — The zwrite formatted string provided to
+`ydb_zwr2str_s()`_ has an error and is not a valid `zwrite format`_
+string.
+
 ``YDB_ERR_KEY2BIG`` — The length of a global variable name and
 subscripts exceeds the limit configured for the database region to
 which it is mapped.
@@ -1179,6 +1183,19 @@ Copies the ``value->len_used`` bytes at ``value->buf_addr`` as the value of
 the specified node or intrinsic special variable specified, returning
 ``YDB_OK`` or an error code such as ``YDB_ERR_INVSVN``.
 
+---------------
+ydb_str2zwr_s()
+---------------
+
+.. code-block:: C
+
+	int ydb_str2zwr_s(ydb_buffer_t *str, ydb_buffer_t *zwr);
+
+In the buffer referenced by ``*zwr``, provides the zwrite formatted
+version of the string pointed to by ``*str``, returning ``YDB_OK``, or
+the ``YDB_ERR_INVSTRLEN`` error if the ``*zwr`` buffer is not long
+enough.
+
 ----------------------
 ydb_subscript_next_s()
 ----------------------
@@ -1304,6 +1321,20 @@ Deletes the root node in each of the local or global variable
 trees or subtrees specified, leaving the subtrees intact.
 
 ``ydb_withdraw_s()`` returns ``YDB_OK`` or an `error return code`_.
+
+---------------
+ydb_zwr2str_s()
+---------------
+
+.. code-block:: C
+
+	int ydb_str2zwr_s(ydb_buffer_t *zwr, ydb_buffer_t *str);
+
+In the buffer referenced by ``*str``, provides the string described by
+the `zwrite formatted`_ string pointed to by ``*zwr``, returning
+``YDB_OK``, the ``YDB_ERR_INVZWRITECHAR`` error if the zwrite
+formatted string has an error, or the ``YDB_ERR_INVSTRLEN`` error if
+the ``*str`` buffer is not long enough.
 
 Comprehensive API
 =================
@@ -1461,6 +1492,21 @@ set that represents a decimal number in a standard, concise, form.
    followed by a canonical integer in the range -43 to 47 such
    that the magnitude of the resulting number is between 1E-43
    through.1E47.
+
+.. _zwrite format:
+
+.. _zwrite formatted:
+
+Zwrite Format
+=============
+
+Strings used as subscripts and as values can include unprintable
+bytes, for example control characters or binary data. YottaDB's zwrite
+format is an encoding in printable ASCII of any sequence of
+bytes. Unlike formats such as Base64, The zwrite format attempts to
+preserve readability of printable ASCII characters. Note that a zwrite
+formatted string is always longer than the original string (at the
+very least, it has enclosing quotes).
 
 Signals
 =======
