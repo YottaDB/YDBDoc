@@ -22,6 +22,9 @@ Welcome to GTMAdminOps's documentation!
    gds
    dse
    integrity
+   encryption
+   gtcm
+   ipcresource
 
 Indices and tables
 ==================
