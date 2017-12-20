@@ -24,6 +24,7 @@ Welcome to GTMAdminOps's documentation!
    integrity
    encryption
    gtcm
+   ipcresource
 
 Indices and tables
 ==================
