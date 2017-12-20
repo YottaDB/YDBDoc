@@ -654,10 +654,6 @@ invalid. In the case of a call with multiple variable names, such as
 a subsequent call to `ydb_get_s()`_ provides details on which variable
 name was invalid.
 
-``YDB_ERR_INVZWRITECHAR`` — The zwrite formatted string provided to
-`ydb_zwr2str_s()`_ has an error and is not a valid `zwrite format`_
-string.
-
 ``YDB_ERR_KEY2BIG`` — The length of a global variable name and
 subscripts exceeds the limit configured for the database region to
 which it is mapped.
@@ -898,7 +894,7 @@ special variable, setting ``value->len_used``, and returning
 ``ydb_get_s()`` returns ``YDB_OK`` or an `error return code`_.  If
 there is no value at the specified global or local variable node, or
 if the intrinsic special variable does not exist,a non-zero return
-value of YDB_ERR_GVUNDEF, YDB_ERR_INVSVN, or YDB_ERR_UNDEF indicates
+value of YDB_ERR_GVUNDEF, YDB_ERR_INVSVN, or YDB_ERR_LVUNDEF indicates
 the error.
 
 Note: In a database application, a global variable node can
@@ -999,7 +995,7 @@ has the length of the canonical string representation of that value.
 ``ydb_length_s()`` returns ``YDB_OK`` or an `error return code`_. If
 there is no value at the requested global or local variable node, or
 if the intrinsic special variable does not exist,a non-zero return
-value of YDB_ERR_GVUNDEF, YDB_ERR_INVSVN, or YDB_ERR_UNDEF indicates
+value of YDB_ERR_GVUNDEF, YDB_ERR_INVSVN, or YDB_ERR_LVUNDEF indicates
 the error.
 
 ------------
@@ -1191,10 +1187,10 @@ ydb_str2zwr_s()
 
 	int ydb_str2zwr_s(ydb_buffer_t *str, ydb_buffer_t *zwr);
 
-In the buffer referenced by ``*zwr``, provides the zwrite formatted
-version of the string pointed to by ``*str``, returning ``YDB_OK``, or
-the ``YDB_ERR_INVSTRLEN`` error if the ``*zwr`` buffer is not long
-enough.
+In the buffer referenced by ``*zwr``, ``ydb_str2zwr_s()`` provides the
+`zwrite formatted`_ version of the string pointed to by ``*str``,
+returning ``YDB_OK``, or the ``YDB_ERR_INVSTRLEN`` error if the
+``*zwr`` buffer is not long enough.
 
 ----------------------
 ydb_subscript_next_s()
@@ -1202,7 +1198,8 @@ ydb_subscript_next_s()
 
 .. code-block:: C
 
-	int ydb_subscript_next_s(int subs_used,
+	int ydb_subscript_next_s(ydb_buffer_t *value,
+		int subs_used,
 		ydb_buffer_t *varname[, ydb_buffer_t *subscript, ... ]);
 
 ``ydb_subscript_next_s()`` provides a primitive for implementing
@@ -1212,17 +1209,15 @@ subscripted variable name provided as input to the
 function. ``ydb_subscript_next_s()`` returns:
 
 - ``YDB_OK`` on finding the requested next node, returning the
-  subscript in the memory referenced by the ``->buf_addr`` of the last
-  ``*subscript`` parameter, setting its ``->len_used`` field
-  appropriately;
+  subscript in the memory referenced by the ``value->buf_addr``
+  setting ``value->len_used`` appropriately;
 - ``YDB_NOSUCH`` if there is no next node; or
 - an `error return code`_, including ``YDB_ERR_INVSTRLEN`` if the
-  ``->len_alloc`` field of the last subscript indicates that there is
-  insufficent space for the subscript. In this special case, it sets
-  the ``->len_used`` field to be the ``len->alloc`` value required to
-  store the subscript, a condition that the application code should
-  correct before re-using the ``ydb_buffer_t`` structure pointed to by
-  the ``->buf_addr`` of that last subscript.
+  ``value->len_alloc`` indicates that there is insufficent space for
+  the subscript. In this special case, it sets ``value->len_used`` to
+  be the ``value->len_alloc`` value required to store the subscript, a
+  condition that the application code should correct before re-using
+  the ``ydb_buffer_t`` structure pointed to by ``value``.
 
 In the special case where ``subs_used`` is zero,
 ``ydb_subscript_next_s()`` returns the next local or global variable
@@ -1234,7 +1229,8 @@ ydb_subscript_previous_s()
 
 .. code-block:: C
 
-	int ydb_subscript_previous_s(int subs_used,
+	int ydb_subscript_previous_s(ydb_buffer_t *value,
+		int subs_used,
 		ydb_buffer_t *varname[,	ydb_buffer_t *subscript, ... ]);
 
 Analagous to `ydb_subscript_next_s()`_, ``ydb_subscript_previous_s()``
@@ -1328,13 +1324,13 @@ ydb_zwr2str_s()
 
 .. code-block:: C
 
-	int ydb_str2zwr_s(ydb_buffer_t *zwr, ydb_buffer_t *str);
+	int ydb_zwr2str_s(ydb_buffer_t *zwr, ydb_buffer_t *str);
 
-In the buffer referenced by ``*str``, provides the string described by
-the `zwrite formatted`_ string pointed to by ``*zwr``, returning
-``YDB_OK``, the ``YDB_ERR_INVZWRITECHAR`` error if the zwrite
-formatted string has an error, or the ``YDB_ERR_INVSTRLEN`` error if
-the ``*str`` buffer is not long enough.
+In the buffer referenced by ``*str``, ``ydb_zwr2str_s()`` provides the
+string described by the `zwrite formatted`_ string pointed to by
+``*zwr``, returning ``YDB_OK`` (with ``str->len_used`` set to zero if
+the zwrite formatted string has an error), or the
+``YDB_ERR_INVSTRLEN`` error if the ``*str`` buffer is not long enough.
 
 Comprehensive API
 =================
