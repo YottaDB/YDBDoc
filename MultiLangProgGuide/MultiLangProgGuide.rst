@@ -193,18 +193,30 @@ become apparent:
   it as, a number. When ordering subscripts:
 
   - Empty string subscripts precede all numeric subscripts. *Note:
-    YottaDB strongly recommends against applications that use null
-    subscripts.*
+    YottaDB recommends against applications that use empty string
+    subscripts.* [#]_
   - Numeric subscripts precede string subscripts. Numeric subscripts
     are in numeric order.
   - String subscripts follow numeric subscripts and collate in byte
-    order. [#]_
+    order. Where the natural byte order does not result in
+    linguistically and culturally correct ordering of strings, YottaDB
+    has a framework for an application to create and use custom
+    collation routines.
 
-- Like subscripts, values are sequences of bytes, except that ordering
-  of values is not meaningful unlike ordering of subscripts. YottaDB
-  automatically converts between numbers and strings, depending on the
-  type of operand required by an operator or argument required by a
-  function (see `Numeric Considerations`_).
+.. [#] The YottaDB code base includes code for a legacy subscript
+       collation in which empty strings collate after numeric
+       subscripts and before non-empty strings. This is supported
+       **only** in M code for backward compatibility reasons, and is
+       not supported for use with C or any other language. Any attempt
+       to bypass protections and use this legacy collation with new
+       code will almost certainly result in buggy applications that
+       are hard to debug.
+
+Like subscripts, values are sequences of bytes, except that ordering
+of values is not meaningful unlike ordering of subscripts. YottaDB
+automatically converts between numbers and strings, depending on the
+type of operand required by an operator or argument required by a
+function (see `Numeric Considerations`_).
 
 This means that if an application were to store the current capital of
 Thailand as ``Capital("Thailand","current")="Bangkok"`` instead of
@@ -218,11 +230,6 @@ following order:
    Capital("Thailand",1767,1782)="Thonburi"
    Capital("Thailand",1782)="Bangkok"
    Capital("Thailand","current")="Bangkok"
-
-.. [#] Where the natural byte order does not result in linguistically
-       and culturally correct ordering of strings, YottaDB has a
-       framework for an application to create and use custom collation
-       routines.
 
 Local and Global Variables
 ==========================
@@ -381,6 +388,7 @@ After retrieving ``$zstatus`` and acting on the error, application
 code should clear it (set it to the empty string using `ydb_set_s()`_)
 in preparation for any subsequent error.
 
+.. _transaction processing:
 
 Transaction Processing
 ======================
@@ -576,11 +584,6 @@ other than ``YDB_ERR_``.
 functions indicates that the specified timeout was reached without
 requested locks being acquired.
 
-``YDB_NOSUCH`` when `ydb_node_next_s()`_ or `ydb_node_previous_s()`_
-report no next or previous node; or `ydb_subscript_next_s()`_ or
-`ydb_subscript_previous_s()`_ report no next or previous subscript
-or variable.
-
 ``YDB_OK`` — This the standard return code of all functions following
 successful execution.
 
@@ -600,6 +603,8 @@ function that packages a transaction, and in turn returned to the
 caller indicating that the transaction should not be committed.
 
 .. _error return code:
+
+.. _error return codes:
 
 ------------------
 Error Return Codes
@@ -636,9 +641,9 @@ as a parameter exceeds ``YDB_MAX_STR``. In the event the return code
 is ``YDB_ERR_INVSTRLEN`` and if ``*xyz`` is a ``ydb_buffer_t``
 structure whose ``xyz->len_alloc`` indicates insufficient space, then
 ``xyz->len_used`` is set to the size required of a sufficiently large
-buffer, and ``xyz->buf_addr`` points to the first ``xyz->len_alloc``
-bytes of the value. In this case the ``len_used`` field of a
-``ydb_buffer_t`` structure is greater than the ``len_alloc`` field.
+buffer. In this case the ``len_used`` field of a ``ydb_buffer_t``
+structure is greater than the ``len_alloc`` field, and the caller is
+responsible for correcting the ``xyz->len_used`` field.
 
 ``YDB_ERR_INVSUB`` — A subscript provided by the caller is invalid. In
 the case of a name with multiple subscripts, the intrinsic special
@@ -707,6 +712,12 @@ Other
 =====
 
 Other symbolic constants have a prefix of ``YDB_``.
+
+``YDB_NODE_END`` – In the event a call to ``ydb_node_next_s()`` or
+``ydb_node_previous_s()`` wish to report that there no further nodes,
+the ``*ret_subs`` parameter is set to this value. Application code
+should make no assumption about this constant other than that it is
+negative (<0).
 
 ==================================
 Data Structures & Type Definitions
@@ -807,6 +818,15 @@ literal, set
 - ``ydbstring->length`` to the length of the string literal excluding
   its terminating null character.
 
+Note that the addresses of the ``strlit`` string literals set in
+``*ydbbuffer`` by invocations of ``YDB_STRLIT_TO_BUFFER()`` and
+``*ydbstring`` by invocations of ``YDB_STRLIT_TO_STRING()`` are almost
+certainly pointers to read-only sections of memory, and any subsequent
+attempt to modify the contents of ``ydbbuffer->buf_addr`` or
+``ydb_string->address`` will thus result in abnormal process
+termination with segmentation violation (SIG-11) that may be hard to
+troubleshoot.
+
 ================
 Programming in C
 ================
@@ -832,19 +852,22 @@ functions to convert between numeric values and strings which are
 
 To allow the YottaDB Simple API functions to handle a variable tree
 whose nodes have varying numbers of subscripts, the actual number of
-subscripts is itself passed as a parameter. In the definitions of
-functions:
+subscripts is itself passed as a parameter. In the prototypes of
+functions, parameters of the form:
 
-- ``int subs_used`` and ``int *subs_used`` refer to an
-  actual number subscripts,
-- ``ydb_buffer_t *varname`` refers to the name of a variable, and
-- ``[, ydb_buffer_t *subscript, ...]`` and ``ydb_buffer_t *subscript[,
-  ydb_buffer_t *subscript, ...]`` refer to placeholders for subscripts
-  whose actual number is defined by ``subs_used`` or ``*subs_used``.
+- ``ydb_buffer_t *varname`` refers to the name of a variable;
+- ``int subs_used`` and ``int *subs_used`` refer to an actual number
+  subscripts; and
+- ``ydb_buffer_t *subsarray`` refers to an array of ``ydb_buffer_t``
+  structures used to pass subscripts whose actual number is defined by
+  ``subs_used`` or ``*subs_used`` parameters.
 
-**Caveat:** Specifying a subs_used that exceeds the actual number of
-parameters passed will almost certainly result in an unpleasant bug
-that is difficult to troubleshoot. [#]_
+To pass an intrinsic special variable, ``subs_used`` should be zero
+and ``*subsarray`` should be NULL.
+
+**Caveat:** Specifying a ``subs_used`` that exceeds the actual number
+of parameters passed in ``*subsarray`` will almost certainly result in
+an unpleasant bug that is difficult to troubleshoot. [#]_
 
 .. [#] Note for implementers: the implementation should attempt to
        limit the damage by not looking for more subscripts than are
@@ -858,21 +881,23 @@ ydb_data_s()
 
 .. code-block:: C
 
-	int ydb_data_s(unsigned int *value,
+	int ydb_data_s(ydb_buffer_t *varname,
 		int subs_used,
-		ydb_buffer_t *varname[,
-		ydb_buffer_t *subscript, ...]);
+		ydb_buffer_t *subsarray,
+		unsigned int *value);
 
 In the location pointed to by ``value``, ``ydb_data_s()`` returns the
 following information about the local or global variable node
-identified by ``*varname`` and the ``*subscript`` list.
+identified by ``*varname``, ``subs_used`` and ``*subsarray``.
 
 - 0 — There is neither a value nor a subtree, i.e., it is undefined.
 - 1 — There is a value, but no subtree
 - 10 — There is no value, but there is a subtree.
 - 11 — There are both a value and a subtree.
 
-``ydb_data_s()`` returns ``YDB_OK`` or an `error return code`_.
+It is an error to call ``ydb_data_s()`` on an intrinsic special
+variable. ``ydb_data_s()`` returns ``YDB_OK`` or an `error return
+code`_.
 
 -----------
 ydb_get_s()
@@ -880,37 +905,37 @@ ydb_get_s()
 
 .. code-block:: C
 
-	int ydb_get_s(ydb_buffer_t *value,
+	int ydb_get_s(ydb_buffer_t *varname,
 		int subs_used,
-		ydb_buffer_t *varname[,
-		ydb_buffer_t *subscript, ... ]);
+		ydb_buffer_t *subsarray,
+		ydb_buffer_t *ret_value);
 
-If ``value->len_alloc`` is large enough to accommodate the result, to the
-location pointed to by ``value->buf_addr``, ``ydb_get_s()`` copies the
-value of the value of the data at the specified node or intrinsic
-special variable, setting ``value->len_used``, and returning
-``YDB_OK``; and ``YDB_ERR_INVSTRLEN`` otherwise.
+To the location pointed to by ``ret_value->buf_addr``, ``ydb_get_s()``
+copies the value of the specified node or intrinsic special variable,
+setting ``ret_value->len_used``. Return values are:
 
-``ydb_get_s()`` returns ``YDB_OK`` or an `error return code`_.  If
-there is no value at the specified global or local variable node, or
-if the intrinsic special variable does not exist,a non-zero return
-value of YDB_ERR_GVUNDEF, YDB_ERR_INVSVN, or YDB_ERR_LVUNDEF indicates
-the error.
+- ``YDB_OK`` for a normal return;
+- ``YDB_ERR_GVUNDEF``, ``YDB_ERR_INVSVN``, or ``YDB_ERR_LVUNDEF`` as
+  appropriate if no such variable or node exists;
+- ``YDB_ERR_INVSTRLEN`` if ``ret_value->len_alloc`` is insufficient for
+  the value at the node; or
+- another applicable `error return code`_.
 
-Note: In a database application, a global variable node can
-potentially be changed by another process between the time that a
-process calls ``ydb_length()`` to get the length of the data in a node
-and a subsequent call to ``ydb_get()`` to get that data. If a caller
-cannot ensure from the application design that the size of the buffer
-it provides is large enough for a string returned by ``ydb_get()``, it
-should code in anticipation of a potential ``YDB_ERR_INVSTRLEN``
-return code from ``ydb_get()``. See also the discussion at
-`YDB_ERR_INVSTRLEN`_ describing the contents of ``*value`` when
-``ydb_get_s()`` returns a ``YDB_ERR_INVSTRLEN`` return
-code. Similarly, since a node can always be deleted between a call
-such as ``ydb_node_next_s()`` and a call to ``ydb_get_s()``, a caller
-of ``ydb_get_s()`` to access a global variable node should code in
-anticipation of a potential ``YDB_ERR_GVUNDEF``.
+Notes:
+
+- In the unlikely event an application wishes to know the length of
+  the value at a node, but not access the data, it can call
+  ``ydb_get_s()`` and provide an output buffer
+  (``retvalue->len_alloc``) with a length of zero.
+- Within a transaction implemented by `ydb_tp_s()`_ application
+  code observes stable data at global variable nodes because YottaDB
+  `transaction processing`_ ensures ACID properties.
+- Outside a transaction, a global variable node can potentially be
+  changed by another, concurrent, process between time that a process
+  calls ``ydb_data_s()`` to ascertain the existence of the data and a
+  subsequent call to ``ydb_get()`` to get that data. A caller of
+  ``ydb_get_s()`` to access a global variable node should code in
+  anticipation of a potential ``YDB_ERR_GVUNDEF``.
 
 ------------
 ydb_incr_s()
@@ -918,31 +943,37 @@ ydb_incr_s()
 
 .. code-block:: C
 
-	int ydb_incr_s(int subs_used,
-		ydb_buffer_t *varname[,
-		ydb_buffer_t *subscript, ...],
-		ydb_buffer_t *result,
-		ydb_bufer_t *increment);
+	int ydb_incr_s(ydb_buffer_t *varname,
+		int subs_used,
+		ydb_buffer_t *subsarray,
+		ydb_buffer_t *increment,
+		ydb_buffer_t *result);
 
-Atomically,
+``ydb_incr_s()`` atomically:
 
 - converts the value in the specified node to a number if it is not
-  one already, and
+  one already, using a zero value if the node does not exist;
 - increments it by the value specified by ``*increment``, converting
-  the value to a number if it is not a canonical number, and
-  defaulting to 1 if ``increment`` is NULL.
+  the value to a number if it is not a canonical number, defaulting to
+  1 if the parameter is NULL; and
+- storing the value as a `canonical number`_ in ``*result``.
 
-If the atomic increment results in a numeric overflow, the function
-returns a ``YDB_ERR_NUMOFLOW`` error; in this case, the value in the
-node is unreliable. Otherwise, the result is returned as a canonical
-string in ``*result``, with a function return value of ``YDB_OK``.
+Return values:
 
-In the event the ``ydb_buffer_t`` structure pointed to by ``result``
-is not large enough for the result, the function returns a
-``YDB_ERR_INVSTRLEN`` error.
+- The normal return value is ``YDB_OK``.
+- If the atomic increment results in a numeric overflow, the function
+  returns a ``YDB_ERR_NUMOFLOW`` error; in this case, the value in the
+  node ``*result`` is unreliable.
+- In the event the ``ydb_buffer_t`` structure pointed to by ``result``
+  is not large enough for the result, the function returns a
+  ``YDB_ERR_INVSTRLEN`` error.
 
-Note: intrinsic special variables cannot be atomically incremented,
-and an attempt to do so returns the ``YDB_ERR_SVNOSET`` error.
+Notes:
+
+- Intrinsic special variables cannot be atomically incremented, and an
+  attempt to do so returns the ``YDB_ERR_SVNOSET`` error.
+- Since it changes the value of the node, ``ydb_incr_s()`` is a
+  function with a side effect.
 
 ------------
 ydb_kill_s()
@@ -951,15 +982,16 @@ ydb_kill_s()
 .. code-block:: C
 
 	int ydb_kill_s(int namecount,
-		[int subs_used,
-		ydb_buffer_t *varname[,
-		ydb_buffer_t *subscript, ...], ...,]);
+		[[ydb_buffer_t *varname,
+		int subs_used,
+		ydb_buffer_t *subsarray], ...]);
 
 ``namecount`` is the number of variable names in the call.
 
 Kills — deletes all nodes in — each of the local or global variable
 trees or subtrees specified. In the special case where ``namecount``
-is zero, ``ydb_kill_s()`` kills all local variables.
+is zero, ``ydb_kill_s()`` kills all local variables. Intrinsic special
+variables cannot be killed.
 
 ``ydb_kill_s()`` returns ``YDB_OK`` or an `error return code`_.
 
@@ -977,37 +1009,17 @@ variable names except those on the list.
 
 ``ydb_kill_excl_s()`` returns ``YDB_OK`` or an `error return code`_.
 
---------------
-ydb_length_s()
---------------
-
-.. code-block:: C
-
-	int ydb_length_s(unsigned int *value,
-		int subs_used,
-		ydb_buffer_t *varname[,
-		ydb_buffer_t *subscript, ... ]);
-
-In the location pointed to by ``*value``, ``ydb_length_s()`` reports
-the length of the data in bytes. If the data is numeric, ``*value``
-has the length of the canonical string representation of that value.
-
-``ydb_length_s()`` returns ``YDB_OK`` or an `error return code`_. If
-there is no value at the requested global or local variable node, or
-if the intrinsic special variable does not exist,a non-zero return
-value of YDB_ERR_GVUNDEF, YDB_ERR_INVSVN, or YDB_ERR_LVUNDEF indicates
-the error.
-
 ------------
 ydb_lock_s()
 ------------
 
 .. code-block:: C
 
-	int ydb_lock_s(unsigned long long timeout, int namecount,
-		[int subs_used,
-		ydb_buffer_t *varname[,
-		ydb_buffer_t *subscript, ...], ...,]);
+	int ydb_lock_s(unsigned long long timeout,
+		int namecount[,
+		[ydb_buffer_t *varname,
+		int subs_used,
+		ydb_buffer_t *subsarray], ...]);
 
 ``namecount`` is the number of variable names in the call.
 
@@ -1036,13 +1048,14 @@ ydb_lock_decr_s()
 .. code-block:: C
 
 	int ydb_lock_s(int namecount,
-		[int subs_used,
-		ydb_buffer_t *varname[,
-		ydb_buffer_t *subscript, ...], ...,]);
+		ydb_buffer_t *varname,
+		int subs_used,
+		ydb_buffer_t *suubsarray[, ...]);
 
-``namecount`` is the number of variable names in the call.
+``namecount`` is the number of variable names in the call. At least
+one variable must be specified.
 
-Decrements subs_useds of the specified locks held by the process. As
+Decrements the count held by the process of each specified lock. As
 noted in the `Concepts`_ section, a lock whose count goes from 1 to 0
 is released. Any lock whose name is specified in the argument list,
 but which the process does not hold, is ignored.
@@ -1057,19 +1070,20 @@ ydb_lock_incr_s()
 
 .. code-block:: C
 
-	int ydb_lock_s(unsigned long long timeout, int namecount,
-		[int subs_used,
-		ydb_buffer_t *varname[,
-		ydb_buffer_t *subscript, ...], ...,]);
+	int ydb_lock_s(unsigned long long timeout,
+		int namecount[,
+		ydb_buffer_t *varname,
+		int subs_used,
+		ydb_buffer_t *subsarray], ...]);
 
-``namecount`` is the number of variable names in the call.
+``namecount`` is the number of variable names in the call. At least
+one variable must be specified.
 
 Without releasing any locks held by the process, attempt to acquire
-all the requested locks, and increment any locks already held by the
-process. On return, the process will have acquired all requested
-locks, and incremented those already held, or will have neither
-acquired nor incremented any of them. If no locks are specified, the
-function returns ``YDB_OK`` (i.e., it is a no-op).
+all the requested locks, and increment any locks already held. On
+return, the process will have acquired all requested locks, and
+incremented those already held, or will have neither acquired nor
+incremented any of them.
 
 ``timeout`` specifies a time in microseconds that the function waits
 to acquire the requested locks. If it is not able to acquire all
@@ -1089,58 +1103,42 @@ ydb_node_next_s()
 
 .. code-block:: C
 
-	int ydb_node_next_s(int subs_alloc,
-		int *subs_used,
-		ydb_buffer_t *varname,
-		ydb_buffer_t *subscript[, ... ]);
+	int ydb_node_next_s(ydb_buffer_t *varname,
+		int subs_used,
+		ydb_buffer_t *subsarray,
+		int *ret_subs_used,
+		ydb_buffer_t *ret_subsarray);
 
 ``ydb_node_next_s()`` facilitates depth-first traversal of a local or
 global variable tree. As the number of subscripts can differ between
-the input node of the call and the output node reported by the call:
+the input node of the call and the output node reported by the call
+``*ret_subs_used`` is an input as well as an output parameter:
 
-- ``subs_alloc`` is the number of parameters in this ``ydb_node_next_s()``
-  call to pass subscripts. If the actual number of subscripts to be
-  returned exceeds ``subs_alloc``, the function returns the
-  ``YDB_ERR_INSUFFSUBS`` error (see below).
-- On input, ``*subs_used`` specifies the number of subscripts in the
-  input node, which does not need to exist — a value of 0 will return
-  the first node in the tree. On the return, ``*subs_used`` specifies the
-  number of subscripts in the next node, which will be a node with
-  data unless there is no next node, in which case applications should
-  consider ``*subs_used`` to be undefined on output.
+- On input, ``*ret_subs_used`` specifies the number of elements (>0)
+  allocated for returning the subscripts of the next node.
+- On output, ``*ret_subs_used`` contains the actual number of
+  subscripts returned or is ``YDB_NODE_END``. If the actual number of
+  subscripts to be returned exceeds the input value specified by
+  ``*ret_subs_used``, the function returns the ``YDB_ERR_INSUFFSUBS``
+  error (see below).
 
-``ydb_node_next_s()`` returns:
+Return values of ``ydb_node_next_s()`` are:
 
-- ``YDB_OK`` with the next node, if there is one, changing ``*subs_used``
-   and ``*subscript`` parameters to those of the next node;
-- ``YDB_NOSUCH`` if there is no next node, in which case the
-  application code should consider the values of ``*subs_used`` and the
-  ``*subscript`` to be undefined; or
-- an `error return code`_, in which case the application code should
-  consider the values of ``*subs_used`` (except in the case of
-  ``YDB_ERR_INVSTRLEN`` – see below) and the ``*subscript`` to be
-  undefined.
-
-``ydb_node_next_s()`` never changes ``*varname``, or the
-``->buf_addr`` and ``->len_alloc`` fields of any ``*subscript``
-parameter.
-
-- A ``YDB_ERR_INSUFFSUBS`` return code indicates an error if there are
+- ``YDB_OK`` with the next node, if there is one, changing
+   ``*ret_subs_used`` and ``*ret_subsarray`` parameters to those of
+   the next node. If there is no next node (i.e., the input node is
+   the last), ``*ret_subs_used`` on output is ``YDB_NODE_END``.
+- ``YDB_ERR_INSUFFSUBS`` if ``*ret_subs_used`` specifies
   insufficient parameters to return the subscript. In this case
-  ``*subs_used`` reports the actual number of subscripts in the node, and
-  the parameters report as many subscripts as can be reported.
-- If one of the ``subscript->len_alloc`` values indicates insufficient
-  space for an output value, the return code is the error
-  ``YDB_ERR_INVSTRLEN``. See also the discussion at
-  `YDB_ERR_INVSTRLEN`_ describing the contents of that ``*subscript``
-  parameter. In the event of a ``YDB_ERR_INVSTRLEN`` error, the values
-  in any subscripts beyond that identified by ``*subs_used`` do not
-  contain meaningful values.
-
-Note that a call to ``ydb_node_next_s()`` must always have at least
-one ``*subscript`` parameter (i.e., ``subs_alloc>0``), since it is a
-*non-sequitur* to call the function without subscripts and expect a
-return without subscripts.
+  ``*ret_subs_used`` reports the actual number of subscripts required.
+- ``YDB_ERR_INVSTRLEN`` if one of the ``ydb_buffer_t`` structures
+  pointed to by ``*ret_subsarray`` does not have enough space for the
+  subscript. In this case, ``*ret_subs_used`` is the index into the
+  ``*ret_subsarray`` array with the error, and the ``len_used`` field
+  of that structure specifies the size required.
+- Another `error return code`_, in which case the application should
+  consider the values of ``*ret_subs_used`` and the ``*ret_subsarray``
+  to be undefined.
 
 ---------------------
 ydb_node_previous_s()
@@ -1148,21 +1146,19 @@ ydb_node_previous_s()
 
 .. code-block:: C
 
-	int ydb_node_previous_s(int subs_alloc,
-		int *subs_used,
-		ydb_buffer_t *varname,
-		[ ydb_buffer_t *subscript, ... ]);
+	int ydb_node_previous_s(ydb_buffer_t *varname,
+		int subs_used,
+		ydb_buffer_t *subsarray,
+		int *ret_subs_used,
+		ydb_buffer_t *ret_subsarray);
 
 Analogous to ``ydb_node_next(s)``, ``ydb_node_previous_s()``
 facilitates reverse breadth-first traversal of a local or global
 variable tree, except that ``ydb_node_previous_s()`` searches for and
 reports the predecessor node.
 
-Other behavior of ``ydb_node_previous_s()`` is the same as
-`ydb_node_next_s()`_.
-
-``ydb_node_previous_s()`` returns ``YDB_OK``, ``YDB_NOSUCH``, or an
-`error return code`_.
+``ydb_node_previous_s()`` returns ``YDB_OK``, ``YDB_ERR_INSUFFSUBS``,
+``YDB_ERR_INVSTRLEN``, or an `error return code`_.
 
 -----------
 ydb_set_s()
@@ -1170,14 +1166,14 @@ ydb_set_s()
 
 .. code-block:: C
 
-	int ydb_set_s(ydb_buffer_t *value,
+	int ydb_set_s(ydb_buffer_t *varname,
 		int subs_used,
-		ydb_buffer_t *varname[,
-		ydb_buffer_t *subscript, ... ]);
+		ydb_buffer_t *subsarray,
+		ydb_buffer_t *value);
 
 Copies the ``value->len_used`` bytes at ``value->buf_addr`` as the value of
 the specified node or intrinsic special variable specified, returning
-``YDB_OK`` or an error code such as ``YDB_ERR_INVSVN``.
+``YDB_OK`` or an `error return code`_.
 
 ---------------
 ydb_str2zwr_s()
@@ -1198,26 +1194,25 @@ ydb_subscript_next_s()
 
 .. code-block:: C
 
-	int ydb_subscript_next_s(ydb_buffer_t *value,
+	int ydb_subscript_next_s(ydb_buffer_t *varname,
 		int subs_used,
-		ydb_buffer_t *varname[, ydb_buffer_t *subscript, ... ]);
+		ydb_buffer_t *subsarray,
+		ydb_buffer_t *ret_value);
 
 ``ydb_subscript_next_s()`` provides a primitive for implementing
 breadth-first traversal of a tree by searching for the next subscript
-at the level specified by ``subs_used``. A node need not exist at the
-subscripted variable name provided as input to the
-function. ``ydb_subscript_next_s()`` returns:
+at the level specified by ``subs_used``, i.e., the next subscript
+after ``*subsarray[subsused].buf_addr``. A node need not exist at the
+subscripted variable name provided as input to the function. If
+``subsarray[subs_used].len_used`` is zero, ``ydb_subscript_next()``
+returns the first node at that level with a subscript that is not the
+empty string. ``ydb_subscript_next_s()`` returns ``YDB_OK`` or an
+`error return code`_.
 
-- ``YDB_OK`` on finding the requested next node, returning the
-  subscript in the memory referenced by the ``value->buf_addr``
-  setting ``value->len_used`` appropriately;
-- ``YDB_NOSUCH`` if there is no next node; or
-- an `error return code`_, including ``YDB_ERR_INVSTRLEN`` if the
-  ``value->len_alloc`` indicates that there is insufficent space for
-  the subscript. In this special case, it sets ``value->len_used`` to
-  be the ``value->len_alloc`` value required to store the subscript, a
-  condition that the application code should correct before re-using
-  the ``ydb_buffer_t`` structure pointed to by ``value``.
+On return from ``ydb_subscript_next_s()`` with a ``YDB_OK``, if
+``ret_value->len_used`` is non-zero, ``*ret_value->buf_addr`` contains
+the value of the next subscript. If it is zero, it means that the
+input node was the last at that level.
 
 In the special case where ``subs_used`` is zero,
 ``ydb_subscript_next_s()`` returns the next local or global variable
@@ -1229,16 +1224,32 @@ ydb_subscript_previous_s()
 
 .. code-block:: C
 
-	int ydb_subscript_previous_s(ydb_buffer_t *value,
+	int ydb_subscript_previous_s(ydb_buffer_t *varname,
 		int subs_used,
-		ydb_buffer_t *varname[,	ydb_buffer_t *subscript, ... ]);
+		ydb_buffer_t *subsarray,
+		ydb_buffer_t *ret_value);
 
-Analagous to `ydb_subscript_next_s()`_, ``ydb_subscript_previous_s()``
-provides a primitive for implementing reverse breadth-first traversal
-of a tree by searching for the previous subscript at the level
-specified by ``subs_used``.  ``ydb_subscript_previous_s()`` returns
-``YDB_OK``, ``YDB_NOSUCH``, or an `error return code`_.  See
-`ydb_subscript_next_s()`_ for more details.
+``ydb_subscript_previous_s()`` provides a primitive for implementing
+reverse breadth-first traversal of a tree by searching for the
+previous subscript at the level specified by ``subs_used``. i.e. the
+subscript preceding ``*subsarray[subsuser].buf_addr``. A node need not
+exist at the subscripted variable name provided as input to the
+function. ``ydb_subscript_previous_s()`` returns ``YDB_OK`` or an
+`error return code`_.
+
+On return from ``ydb_subscript_previous_s()``, if
+``ret_value->len_used`` is non-zero, ``*ret_value->buf_addr`` contains
+the value of the previous subscript. If it is zero, and the
+application does not use empty strings as subscripts, it means that
+the input node was the first at that level. If an application uses
+empty strings as subscripts, a subsequent call to ``ydb_data_s()`` is
+required to determine whether the first subscript has been reached or
+whether the first subscript is a node with the empty string as a
+subscript.
+
+In the special case where ``subs_used`` is zero,
+``ydb_subscript_previous_s()`` returns the previous local or global
+variable name.
 
 ----------
 ydb_tp_s()
@@ -1307,11 +1318,11 @@ ydb_withdraw_s()
 .. code-block:: C
 
 	int ydb_withdraw_s(int namecount,
+		ydb_buffer_t *varname,
 		int subs_used,
-		ydb_buffer_t *varname[,
-		ydb_buffer_t *subscript, ...][, ...]);
+		ydb_buffer_t *suubsarray[, ...]);
 
-``namecount`` (≥1) is the number of variable names in the call.
+``namecount`` (>0) is the number of variable names in the call.
 
 Deletes the root node in each of the local or global variable
 trees or subtrees specified, leaving the subtrees intact.
