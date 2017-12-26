@@ -25,6 +25,14 @@ Welcome to GTMAdminOps's documentation!
    encryption
    gtcm
    ipcresource
+   monitoring
+   compilingicu
+   buildenclib
+   securityph
+   gtmpcat
+   packaging
+   tls
+   glossary
 
 Indices and tables
 ==================
