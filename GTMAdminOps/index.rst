@@ -29,6 +29,7 @@ Welcome to GTMAdminOps's documentation!
    compilingicu
    buildenclib
    securityph
+   gtmpcat
 
 Indices and tables
 ==================
