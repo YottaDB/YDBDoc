@@ -26,6 +26,7 @@ Welcome to GTMAdminOps's documentation!
    gtcm
    ipcresource
    monitoring
+   compilingicu
 
 Indices and tables
 ==================
