@@ -15,7 +15,6 @@ Welcome to YottaDB Documentation!
    :caption: Contents
 
    MultiLangProgGuide
-   gtmacculturation
    README
    LICENSE
 
