@@ -25,6 +25,7 @@ Welcome to GTMAdminOps's documentation!
    encryption
    gtcm
    ipcresource
+   monitoring
 
 Indices and tables
 ==================
