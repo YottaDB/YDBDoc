@@ -2,9 +2,9 @@
 .. index::
    Compiling ICU on supported platforms
 
-==================================================
-Compiling ICU on YottaDB/GT.M Supported Platforms
-==================================================
+==============================================================
+Appendix C: Compiling ICU on YottaDB/GT.M Supported Platforms
+==============================================================
 
 .. contents::
    : depth: 2

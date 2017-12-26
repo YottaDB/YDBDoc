@@ -1,10 +1,10 @@
 
 .. index:: 
-   Monitoring
+   Monitoring YottaDB/GT.M
 
-=========================
-Monitoring YottaDB/GT.M
-=========================
+====================================
+Appendix B: Monitoring YottaDB/GT.M
+====================================
 
 .. contents::
    :depth: 2
