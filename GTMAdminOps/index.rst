@@ -30,6 +30,7 @@ Welcome to GTMAdminOps's documentation!
    buildenclib
    securityph
    gtmpcat
+   packaging
 
 Indices and tables
 ==================
