@@ -102,4 +102,137 @@ Based on the security model, the following are recommended best practices for se
 .. note::
    YottaDB/FIS neither endorses nor has tested any specific layered security product.
 
+------------------------------
+gtmsecshr Commands
+------------------------------
+
++---------------------+-----------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------+
+| Commands            | Action                                                                            | Comments                                                                                                       |
++=====================+===================================================================================+================================================================================================================+
+| WAKE_MESSAGE        | Sends SIGALRM to specified process.                                               | Used to inform receiving process that a resource (such as a critical section) it awaits has become available.  |
++---------------------+-----------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------+
+| CONTINUE_PROCESS    | Sends SIGCONT to specified process.                                               | Used to awake a process that has been suspended while holding a resource. (Please do not ever suspend a        |
+|                     |                                                                                   | YottaDB/GT.M process. In the event YottaDB/GT.M finds a process suspended while holding a resource, it is sent |
+|                     |                                                                                   | a SIGCONT.                                                                                                     |
++---------------------+-----------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------+
+| CHECK_PROCESS_ALIVE | Test sending a signal to specified process. (no longer needed)                    | Used to determine if a process owning a resource still exists; if not, the resource is available to be grabbed |
+|                     |                                                                                   | by another process that needs it.                                                                              |
++---------------------+-----------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------+
+| REMOVE_SEM          | Remove a specified POSIX semaphore.                                               | Used to remove an abandoned semaphore (for example, if the last attached process terminated abnormally).       |
++---------------------+-----------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------+
+| REMOVE_SHMMEM       | Remove a specified shared memory segment.                                         | Used to remove an abandoned shared memory segment. Before removing the segment, gtmsecshr checks that there are|
+|                     |                                                                                   | no processes attached to it.                                                                                   |
++---------------------+-----------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------+
+| REMOVE_FILE         | Remove a specified file.                                                          | Used to remove an abandoned socket file (for example, as a result of abnormal process termination) used for    |
+|                     |                                                                                   | interprocess communication on platforms that do not support memory semaphores (msems); unused on other         |
+|                     |                                                                                   | platforms. Before removal, gtmsecshr verifies that the file is a socket file, in directory $gtm_tmp, and its   |
+|                     |                                                                                   | name matches YottaDB/GT.M socket file naming conventions.                                                      |
++---------------------+-----------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------+
+| FLUSH_DB_IPCS_INFO  | Writes file header of specified database file to disk.                            | The ipc resources (shared memory and semaphore) created for a database file are stored in the database file    |
+|                     |                                                                                   | header. The first process opening a database file initializes these fields while the last process to use the   |
+|                     |                                                                                   | database clears them. If neither of them has read-write access permissions to the database file, they set/reset|
+|                     |                                                                                   | these fields in shared memory and gtmsecshr will write the database file header from shared memory to disk on  |
+|                     |                                                                                   | their behalf.                                                                                                  |
++---------------------+-----------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------+
+
+------------------------------------------
+Shared Resource Authorization Permissions
+------------------------------------------
+
+YottaDB/GT.M uses several types of shared resources to implement concurrent access to databases. The first YottaDB/GT.M process to open a database file creates IPC resources (semaphores and shared memory) required for concurrent use by other YottaDB/GT.M processes, and in the course of operations YottaDB/GT.M processes create files (journal, backup, snapshot) which are required by other YottaDB/GT.M processes. In order to provide access to database files required by M language commands and administration operations consistent with file permissions based on the user, group and world classes, the shared resources created by YottaDB/GT.M may have different ownership, groups and permissions from their associated database files as described below. As an example of the complexity involved, consider a first process opening a database based on its group access permissions. In other words, the database file is owned by a different userid from the semaphores and shared memory created by that first process. Now, if the userid owning the database file is not a member of the database file's group, a process of the userid owning the database file can only have access to the shared resources if the shared resources have world access permissions or if they have a group that is guaranteed to be shared by all processes accessing the database file, even if that group is different from the database file's own group. Again, although YottaDB/FIS strongly recommends against running YottaDB/GT.M processes as root, a root first process opening the database file must still be able to open it although it may not be the owner of the database file or even in its group - but it must ensure access to other, non-root processes. Some things to keep in mind:
+
+* Even a process with read-only access to the database file requires read-write access to the shared memory control structures and semaphores.
+* Creating and renaming files (for example, journal files) requires write access to both the files and the directories in which they reside.
+* If you use additional layered security (such as Access Control Lists or SELinux), you must ensure that you analyze these cases in the context of configuring that layered security.
+
+YottaDB/GT.M takes a number of factors into account to determine the resulting permissions:
+
+* The owner/group/other permissions of the database file or object directory
+* The owner of the database file or object directory
+* The group of the database file or object directory
+* The group memberships of the database file's or object directory's owner
+* The owner/group/other permissions of the libgtmshr file
+* The group of the libgtmshr file
+* The effective user id of the creating process
+* The effective group id of the creating process
+* The group memberships of the creating process' user
+
+The following table describes how these factors are combined to determine the permissions to use:
+
++---------------------------+-------------------------------+------------------------------------+---------------------------------+-------------------------------------------------------------------+
+| Database File* Permissions| Opening Process is owner of   | Owner is member of group of        | Opening Process is a member of  | Execution of YottaDB/GT.M restricted to members of a group?       |
+|                           | database file* ?              | database file* ?                   | database file* group?           |                                                                   |
++===========================+===============================+====================================+=================================+===================================================================+
+| **Group of Resource**                                     | **IPC Permissions** \*\*                                             | **File Permissions** \*\*\*                                       |
++---------------------------+-------------------------------+------------------------------------+---------------------------------+-------------------------------------------------------------------+
+| -r--r--rw-                | N                             | Y                                  | N                               | N                                                                 |
++---------------------------+-------------------------------+------------------------------------+---------------------------------+-------------------------------------------------------------------+
+| Current Group of Process                                  |  -rw-rw-rw-                                                          |  -rw-rw-rw-                                                       |
++---------------------------+-------------------------------+------------------------------------+---------------------------------+-------------------------------------------------------------------+
+| -\*--rw----               | N                             | Y                                  | Y                               | \-                                                                |
++---------------------------+-------------------------------+------------------------------------+---------------------------------+-------------------------------------------------------------------+
+| Group of Database File                                    |  -rw-rw----                                                          |  -rw-rw----                                                       |
++---------------------------+-------------------------------+------------------------------------+---------------------------------+-------------------------------------------------------------------+
+| -r*-r*-r*-                | \-                            | \-                                 | Y                               | \-                                                                |
++---------------------------+-------------------------------+------------------------------------+---------------------------------+-------------------------------------------------------------------+
+| Group of Database File                                    |  -rw-rw-rw                                                           |  -r*-r*-r*                                                        |
++---------------------------+-------------------------------+------------------------------------+---------------------------------+-------------------------------------------------------------------+
+| -rw-rw-r*                 | \-                            | \-                                 | N                               | \-                                                                |
++---------------------------+-------------------------------+------------------------------------+---------------------------------+-------------------------------------------------------------------+
+| Current Group of Process                                  |  -rw-rw-rw                                                           |  -rw-rw-rw                                                        |
++---------------------------+-------------------------------+------------------------------------+---------------------------------+-------------------------------------------------------------------+
+| -rw-rw-rw                 | \-                            | \-                                 | N                               | \-                                                                |
++---------------------------+-------------------------------+------------------------------------+---------------------------------+-------------------------------------------------------------------+
+| Current Group of Process                                  |  -rw-rw-rw                                                           |  -rw-rw-rw                                                        |
++---------------------------+-------------------------------+------------------------------------+---------------------------------+-------------------------------------------------------------------+
+| -rw-rw-rw                 | Y                             | Y                                  | \-                              | \-                                                                |
++---------------------------+-------------------------------+------------------------------------+---------------------------------+-------------------------------------------------------------------+
+| Group of Database File                                    |  -rw-rw-rw                                                           |  -r*-r*----                                                       |
++---------------------------+-------------------------------+------------------------------------+---------------------------------+-------------------------------------------------------------------+
+|  -r*-r*----               | Y                             | N                                  | \-                              | N                                                                 |
++---------------------------+-------------------------------+------------------------------------+---------------------------------+-------------------------------------------------------------------+
+| Current Group of Process                                  |  -rw-rw-rw-                                                          |  -rw-rw-rw-                                                       |
++---------------------------+-------------------------------+------------------------------------+---------------------------------+-------------------------------------------------------------------+
+| -r*-r*----                | Y                             | N                                  | \-                              | Y                                                                 |
++---------------------------+-------------------------------+------------------------------------+---------------------------------+-------------------------------------------------------------------+
+| Group to which YottaDB/GT.M is restricted                 |  -rw-rw----                                                          |  -rw-rw----                                                       |
++---------------------------+-------------------------------+------------------------------------+---------------------------------+-------------------------------------------------------------------+
+| -r*-r*----                | \-                            | Y                                  | \-                              | \-                                                                |
++---------------------------+-------------------------------+------------------------------------+---------------------------------+-------------------------------------------------------------------+
+| Group of Database File                                    |  -rw-rw----                                                          |  -r*-r*----                                                       |
++---------------------------+-------------------------------+------------------------------------+---------------------------------+-------------------------------------------------------------------+
+|  -r*-r*----               | \-                            | N                                  | \-                              | N                                                                 |
++---------------------------+-------------------------------+------------------------------------+---------------------------------+-------------------------------------------------------------------+
+| Group of Database File                                    |  -rw-rw-rw-                                                          | -rw-rw-rw-                                                        |
++---------------------------+-------------------------------+------------------------------------+---------------------------------+-------------------------------------------------------------------+
+| -r*-r*----                | \-                            | N                                  | \-                              | Y                                                                 |
++---------------------------+-------------------------------+------------------------------------+---------------------------------+-------------------------------------------------------------------+
+| Group to which YottaDB/GT.M is restricted                 |  -rw-rw----                                                          |  -rw-rw----                                                       |
++---------------------------+-------------------------------+------------------------------------+---------------------------------+-------------------------------------------------------------------+
+| ----r*----                | \-                            | N                                  | \-                              | \-                                                                |
++---------------------------+-------------------------------+------------------------------------+---------------------------------+-------------------------------------------------------------------+
+| Group of database file                                    |  -rw-rw----                                                          |  ----r*----                                                       |
++---------------------------+-------------------------------+------------------------------------+---------------------------------+-------------------------------------------------------------------+
+| -r*-------                | Y                             | \-                                 | \-                              | \-                                                                |
++---------------------------+-------------------------------+------------------------------------+---------------------------------+-------------------------------------------------------------------+
+| Current Group of Process                                  |  -rw-------                                                          |  -rw-------                                                       |
++---------------------------+-------------------------------+------------------------------------+---------------------------------+-------------------------------------------------------------------+
+
+**For Autorelink permissions:**
+
+\* : Routine directory
+
+\*\* : rtnobj shared memory and relinkctl shared memory permissions. Note that rtnobj shared memory permissions have the x bit set wherever r or w are set.
+
+\*\*\* : relinkctl file permissions 
+
+* The resulting group ownership and permissions are found by matching the database file permissions, then determining which question columns produce the correct "Y" or "N" answer; "-" answers are "don't care".
+* An asterisk ("*") in the Database File Permissions matches writable or not writable. An asterisk in the Resulting File Permissions means that YottaDB/GT.M uses the write permissions from the database file.
+* YottaDB/GT.M determines group restrictions by examining the permissions of the libgtmshr file. If it is not executable to others, YottaDB/GT.M treats it as restricted to members of the group of the libgtmshr file.
+* Group membership can either be established by the operating system's group configuration or by the effective group id of the process.
+* A YottaDB/GT.M process requires read access in order to perform write access to database file - a file permission of write access without read access is an error.
+* YottaDB/GT.M treats the "root" user the same as other users, except that when it is not the file owner and not a member of the group, it is treated as if it were a member of the group.
+* "Execution of YottaDB/GT.M restricted to members of a group" may remove "other" permissions.
+
+
 
