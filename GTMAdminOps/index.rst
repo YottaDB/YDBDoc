@@ -32,6 +32,7 @@ Welcome to GTMAdminOps's documentation!
    gtmpcat
    packaging
    tls
+   glossary
 
 Indices and tables
 ==================
