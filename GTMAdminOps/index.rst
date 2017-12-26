@@ -27,6 +27,7 @@ Welcome to GTMAdminOps's documentation!
    ipcresource
    monitoring
    compilingicu
+   buildenclib
 
 Indices and tables
 ==================
