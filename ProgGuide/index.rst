@@ -1,0 +1,23 @@
+.. Programmer's Guide documentation master file, created by
+   sphinx-quickstart on Wed Dec 27 09:20:16 2017.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+Welcome to Programmer's Guide's documentation!
+==============================================
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+   man
+   about
+   langext
+
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
