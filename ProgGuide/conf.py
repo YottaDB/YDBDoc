@@ -50,7 +50,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Programmer\'s Guide'
-copyright = u'2017, Ranjani Hathaway'
+copyright = u'2017, YottaDB LLC'
 author = u'Ranjani Hathaway'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -92,7 +92,9 @@ html_theme = 'classic'
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
-html_theme_options = {'stickysidebar':'true','sidebarbgcolor':'#3b1a68','relbarbgcolor':'#3b1a68','footerbgcolor':'#3b1a68', 'sidebarlinkcolor':'#f77825','bodyfont':'Lora','headfont':'Raleway'}
+
+html_theme_options = {'stickysidebar':'true','sidebarbgcolor':'#3b1a68','relbarbgcolor':'#3b1a68','footerbgcolor':'#3b1a68', 'sidebarlinkcolor':'#f77825','bodyfont':'Raleway','headfont':'Lora'}
+
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
