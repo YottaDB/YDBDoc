@@ -887,5 +887,252 @@ The following table summarizes YottaDB/GT.M Unicode support.
 |                             | commands execute with the same setting for the environment variable gtm_chset. The M utility programs %GO and %GI have the same requirement for mode matching. For more information on     |
 |                             | MUPIP EXTRACT and MUPIP LOAD, refer to the General Database Management chapter in the Administration and Operations Guide.                                                                 |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Open                        | In UTF-8 mode, the OPEN command recognizes ICHSET, OCHSET, and CHSET as three additional deviceparameters to determine the encoding of the input / output devices. For more information and|
+|                             | usage examples, refer to “Open”.                                                                                                                                                           |
++-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Pattern Match Operator (?)  | YottaDB/GT.M allows the pattern string literals to contain the characters in Unicode. Additionally, YottaDB/GT.M extends the M standard pattern codes (patcodes) A, C, N, U, L, P and E to |
+|                             | the Unicode character set. For more information, refer to “Pattern Match Operator” and “$ZPATNumeric”.                                                                                     |
++-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Read                        | In UTF-8 mode, the READ command uses the character set value specified on the device OPEN as the character encoding of the input device. If character set "M" or "UTF-8" is specified, the |
+|                             | data is read with no transformation. If character set is "UTF-16", "UTF-16LE", or "UTF-16BE", the data is read with the specified encoding and transformed to UTF-8. If the READ command   |
+|                             | encounters an illegal character or a character outside the selected representation, it triggers a run-time error. The READ command recognizes all Unicode line terminators for non-FIXED   |
+|                             | devices. For more information and usage examples, refer to “Read”.                                                                                                                         |
++-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Read #                      | When a number sign (#) and a non-zero integer expression immediately follow the variable name, the integer expression determines the maximum number of characters accepted as the input to |
+|                             | the READ command. In UTF-8 or UTF-16 modes, this can occur in the middle of a sequence of combining code-points (some of which are typically non-spacing). When this happens, any display  |
+|                             | on the input device, may not represent the characters returned by the fixed-length READ (READ #). For more information and usage examples, refer to “Read”.                                |
++-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Read *                      | In UTF-8 or UTF-16 modes, the READ * command accepts one character in Unicode of input and puts the numeric code-point value for that character into the variable. For more information and|
+|                             | usage examples, refer to “Read”.                                                                                                                                                           |
++-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| View "[NO]BADCHAR"          | As an aid to migrating applications to Unicode, this UTF-8 mode VIEW command determines whether Unicode enabled functions trigger errors when they encounter illegal strings. For more     |
+|                             | information and usage examples, refer to “View”.                                                                                                                                           |
++-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| User-defined Collation      | For some languages (such as Chinese), the ordering of strings according to Unicode code-points (character values) may not be the linguistically or culturally correct ordering. Supporting |
+|                             | applications in such languages requires development of collation modules - YottaDB/GT.M natively supports M collation, but does not include pre-built collation modules for any specific   |
+|                             | natural language. Therefore, applications that use characters in Unicode may need to implement their own collation functions. For more information on developing a collation module for    |
+|                             | Unicode, refer to “Implementing an Alternative Collation Sequence for Unicode”.                                                                                                            |
++-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Unicode Byte Order Marker   | When ICHSET is UTF-16, YottaDB/GT.M uses BOM (U+FEFF) to automatically determine the endianess. For this to happen, the BOM must appear at the beginning of the file or data stream. If BOM|
+| (BOM)                       | is not present, YottaDB/GT.M assumes big endianess. SEEK or APPEND operations require specifying the endianess (UTF-16LE or UTF-16BE) because they do not go to the beginning of the file  |
+|                             | or data stream to automatically determine the endianess. When endianess is not specified, SEEK or APPEND assume big endianess.                                                             |
+|                             |                                                                                                                                                                                            |
+|                             | If the character set of a device is UTF-8, YottaDB/GT.M checks for and ignores a BOM on input.                                                                                             |
+|                             |                                                                                                                                                                                            |
+|                             | If the BOM does not match the character set specified at device OPEN, YottaDB/GT.M produces an error. READ does not return BOM to the application and the BOM is not counted as part of the|
+|                             | first record.                                                                                                                                                                              |
+|                             |                                                                                                                                                                                            |
+|                             | If the output character set for a device is UTF-16 (but not UTF-16BE or UTF-16LE,) YottaDB/GT.M writes a BOM before the initial output. The application code does not need to explicitly   |
+|                             | write the BOM.                                                                                                                                                                             |
++-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| WIDTH=intexpr (USE)         | In UTF-8 mode and TRM and SD output, the WIDTH deviceparameter specifies the display-columns and is used with $X to control truncation and WRAPing of the visual representation of the     |
+|                             | stream. For more information and usage examples, refer to “WIDTH”.                                                                                                                         |
++-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Write                       | In UTF-8 mode, the WRITE command uses the character set specified on the device OPEN as the character encoding of the output device. If character set specifies "M" or "UTF-8",            |
+|                             | YottaDB/GT.M WRITEs the data with no transformation. If character set specifies "UTF-16", "UTF-16LE" or "UTF-16BE", the data is assumed to be encoded in UTF-8 and WRITE transforms it to  |
+|                             | the character encoding specified by character set device parameter. For more information and usage examples, refer to “Write”.                                                             |
++-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Write *                     | When the argument of a WRITE command consists of a leading asterisk (*) followed by an integer expression, the WRITE command outputs the character represented by the code-point value of  |
+|                             | that integer expression. For more information and usage examples, refer to “Write”.                                                                                                        |
++-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| ZSHow                       | In UTF-8 mode, the ZSHOW command exhibits byte-oriented and display-oriented behavior as follows:                                                                                          |
+|                             |                                                                                                                                                                                            |
+|                             | - ZSHOW targeted to a device (ZSHOW "*") aligns the output according to the numbers of display columns specified by the WIDTH deviceparameter.                                             |
+|                             | - ZSHOW targeted to a local (ZSHOW "*":lcl) truncates data exceeding 2048KB at the last character that fully fits within the 2048KB limit.                                                 |
+|                             | - ZSHOW targeted to a global (ZSHOW "*":^CC) truncates data exceeding the maximum record size for the target global at the last character that fully fits within that record size.         |
+|                             |                                                                                                                                                                                            |
+|                             | For more information and usage examples, refer to “ZSHOW Destination Variables”.                                                                                                           |
++-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+
++++++++++++++++++++++++++++++++++++++++++++
+Philosophy of YottaDB/GT.M Unicode Support
++++++++++++++++++++++++++++++++++++++++++++
+
+With the support of Unicode, there is no change to the YottaDB/GT.M database engine or to the way that data is stored and manipulated. YottaDB/GT.M has always allowed indexes and values of M global and local variables to be either canonical numbers or any arbitrary sequence of bytes. There is also no change to the character set used for M source programs. M source programs have always been in ASCII (standard ASCII - $C(0) through $C(127) - is a proper subset of the UTF-8 encoding specified by the Unicode standard). YottaDB/GT.M accepts some non-ASCII characters in comments and string literals.
+
+The changes in YottaDB/GT.M to support Unicode are principally enhancements to M language features. Although conceptually simple, these changes fundamentally alter certain previously ingrained assumptions. For example:
+
+1. The length of a string in characters is not the same as the length of a string in bytes. The length of a Unicode string in characters is always less than or equal to its length in bytes.
+2. The display width of a string on a terminal is different from the length of a string in characters - for example, with Unicode, a complex glyph may actually be composed of a series of glyphs or component symbols, each in turn a UTF-8 encoded character in a Unicode string.
+3. As a glyph may be composed of multiple characters, a string in Unicode can have canonical and non-canonical forms. The forms may be conceptually equivalent, but they are different strings of characters in Unicode.
+
+.. note::
+   YottaDB/GT.M treats canonical and non-canonical versions of the same string as different and unequal. YottaDB/FIS recommends that applications be written to use canonical forms. Where conformance to a canonical representation of input strings cannot be assured, application logic linguistically and culturally correct for each language should convert non-canonical strings to canonical strings.
+
+Applications may operate on a combination of character and binary data - for example, some strings in the database may be digitized images of signatures and others may include escape sequences for laboratory instruments. Furthermore, since M applications have traditionally overloaded strings by storing different data items as pieces of the same string, the same string may contain both Unicode and binary data. YottaDB/GT.M has functionality to allow a process to manipulate Unicode strings as well as binary data including strings containing both Unicode and binary data.
+
+The YottaDB/GT.M design philosophy is to keep things simple, but no simpler than they need to be. There are areas of processing where the use of Unicode adds complexity. These typically arise where interpretations of lengths and interpretations of characters interact. For example:
+
+1. A sequence of bytes is never illegal when considered as binary data, but can be illegal when treated as a Unicode string. The detection and handling of illegal Unicode strings adds complexity, especially when binary and Unicode data reside in different pieces of the same string.
+
+2. Since binary data may not map to graphic characters in Unicode, the ZWRite format must represent such characters differently. A sequence of bytes that is output by a process interpreting it as Unicode may require processing to form correctly input to a process that is interpreting that sequence as binary, and vice versa. Therefore, when performing IO operations, including MUPIP EXTRACT and MUPIP LOAD operations in ZWR format, ensure that processes have the compatible environment variables and /or logic to generate the desired output and correctly read and process the input.
+
+3. Application logic managing input / output that interacts with human beings or non-YottaDB/GT.M applications requires even closer scrutiny. For example, fixed length records in files are always defined in terms of bytes. In Unicode-related operation, an application may output data such that a character would cross a record boundary (for example, a record may have two bytes of space left, and the next UTF-8 character may be three bytes long), in which case YottaDB/GT.M fills the record with one or more pad bytes. When a padded record is read as UTF-8, trailing pad bytes are stripped by YottaDB/GT.M and not provided to the application code.
+
+For some languages (such as Chinese), the ordering of strings according to Unicode code-points (character values) may not be the linguistically or culturally correct ordering. Supporting applications in such languages requires development of collation modules - YottaDB/GT.M natively supports M collation, but does not include pre-built collation modules for any specific natural language.
+
+**Glyphs and Unicode Characters**
+
+Glyphs are the visual representation of text elements in writing systems and Unicode code-points are the underlying data. Internally, YottaDB/GT.M stores UTF-8 encoded strings as sequences of Unicode code-points. A Unicode compatible output device - terminal, printer or application - renders the characters as sequences of glyphs that depict the sequence of code-points, but there may not be a one-to-one correspondence between characters and glyphs.
+
+For example, consider the following word from the Devanagari writing system.
+
+अच्छी
+
+On a screen or a printer, it is displayed in 4 columns. Internally YottaDB/GT.M stores it as a sequence of 5 Unicode code-points:
+
++-----------+---------------------+--------------------------------+----------------------------------------------+
+| Number    | Character           | Unicode code-point             | Name                                         |
++===========+=====================+================================+==============================================+
+| 1         | अ                   | U+0905                         | DEVANAGARI LETTER A                          |
++-----------+---------------------+--------------------------------+----------------------------------------------+
+| 2         | च                   | U+091A                         | DEVANAGARI LETTER CA                         |
++-----------+---------------------+--------------------------------+----------------------------------------------+
+| 3         | ्                   | U+094D                         | DEVANAGARI SIGN VIRAMA                       |
++-----------+---------------------+--------------------------------+----------------------------------------------+
+| 4         | छ                   | U+091B                         | DEVANAGARI LETTER CHA                        |
++-----------+---------------------+--------------------------------+----------------------------------------------+
+| 5         | ी                   | U+0940                         | DEVANAGARI VOWEL SIGN II                     |
++-----------+---------------------+--------------------------------+----------------------------------------------+
+
+The Devanagari writing system (U+0900 to U+097F) is based on the representation of syllables as contrasted with the use of an alphabet in English. Therefore, it uses the half-form of a consonant to represent certain syllables. The above example uses the half-form of the consonant (U+091A).
+
+Although the half-form form consonant is a valid text element in the context of the Devanagari writing system, it does not map directly to a character in the Unicode Standard. It is obtained by combining the DEVANAGARI LETTER CA, with DEVANAGARI SIGN VIRAMA, and DEVANAGARI LETTER CHA.
+
+.. parsed-literal::
+   च + ्  +  छ  =  च्छ 
+
+On a screen or a printer, the terminal font detects the glyph image of the half-consonant and displays it at the next display position. Internally, YottaDB/GT.M uses ICU's glyph-related conventions for the Devanagari writing system to calculate the number of columns needed to display it. As a result, YottaDB/GT.M advances $X by 1 when it encounters the combination of the 3 Unicode code-points that represent the half-form consonant.
+
+To view this example at YottaDB/GT.M prompt, type the following command sequence:
+
+.. parsed-literal::
+   GTM>write $ZCHSET
+   UTF-8
+   GTM>set DS=$char($$FUNC^%HD("0905"))_$char($$FUNC^%HD("091A"))_$char($$FUNC^%HD("094D"))
+   GTM>set DS=DS_$char($$FUNC^%HD("091B"))_$char($$FUNC^%HD("0940"))
+   GTM>write $zwidth(DS); 4 columns are required to display local variable DS on the screen.
+   4
+   GTM>write $length(DS); DS contains 5 characters or Unicode code-points.
+   5
+   GTM>
+
+For all writing systems supported by Unicode, a character is a code-point for string processing, network transmission, storage, and retrieval of Unicode data whereas a character is a glyph for displaying on the screen or printer. This holds true for many other popular programming languages. Keep this distinction in mind throughout the application development life-cycle.
+
++++
+ICU
++++
+
+ICU is a widely used, defacto standard package (see http://icu-project.org for more information) that YottaDB/GT.M relies on for most operations that require knowledge of the Unicode character sets, such as text boundary detection, character string conversion between UTF-8 and UTF-16, and calculating glyph display widths.
+
+.. note::
+   Unless Unicode support is sought for a process (that is, unless the environment variable gtm_chset is UTF8"), YottaDB/GT.M processes do not need ICU. In other words, existing, non-Unicode, applications continue to work on supported platforms without ICU.
+
+An ICU version number is of the form major.minor.milli.micro where major, minor, milli and micro are integers. Two versions that have different major and/or minor version numbers can differ in functionality and API compatibility is not guaranteed. Differences in milli or micro versions are maintenance releases that preserve functionality and API compatibility. ICU reference releases are defined by major and minor version numbers. Note that display widths for some characters changed in ICU 4.0 and may change again in the future, as both languages and ICU evolve.
+
+An operating system's distribution generally includes an ICU library tailored to the OS and hardware, therefore YottaDB/FIS does not provide any ICU library. In order to support Unicode functionality, YottaDB/GT.M requires an appropriate version of ICU to be installed on the system - check the release notes for your YottaDB/GT.M release for supported ICU versions.
+
+YottaDB/GT.M expects ICU to be compiled with symbol renaming disabled and will issue an error at startup if the available version of ICU is built with symbol renaming enabled. To use a version of ICU built with symbol renaming enabled, the $gtm_icu_version environment variable indicates the MAJOR VERSION and MINOR VERSION numbers of the desired ICU formatted as MajorVersion.MinorVersion (for example "3.6" to denote ICU-3.6). When $gtm_icu_version is so defined, YottaDB/GT.M attempts to open the specific version of ICU. In this case, YottaDB/GT.M works regardless of whether or not symbols in this ICU have been renamed. A missing or ill-formed value for this environment variable causes YottaDB/GT.M to only look for non-renamed ICU symbols. The release notes for each YottaDB/GT.M release identify the required reference release version number as well as the milli and micro version numbers that were used to test YottaDB/GT.M prior to release. In general, it should be safe to use any version of ICU with the specific ICU reference version number required and milli and micro version numbers greater than those identified in the release notes for that YottaDB/GT.M version.
+
+ICU supports multiple threads within a process, and an ICU binary library can be compiled from source code to either support or not support multiple threads. In contrast, YottaDB/GT.M does not support multiple threads within a YottaDB/GT.M process. On some platforms, the stock ICU library, which is usually compiled to support multiple threads, may work unaltered with YottaDB/GT.M. On other platforms, it may be required to rebuild ICU from its source files with support for multiple threads turned off. Refer to the release notes for each YottaDB/GT.M release for details about the specific configuration tested and supported. In general, the YottaDB/GT.M team's preference for ICU binaries used for each YottaDB/GT.M version are, in decreasing order of preference:
+
+1. The stock ICU binary provided with the operating system distribution.
+2. A binary distribution of ICU from the download section of the ICU project page.
+3. A version of ICU locally compiled from source code provided by the operating system distribution with a configuration disabling multi-threading.
+4. A version of ICU locally compiled from the source code from the ICU project page with a configuration disabling multi-threading.
+
+YottaDB/GT.M uses the POSIX function dlopen() to dynamically link to ICU. In the event you have other applications that require ICU compiled with threads, place the different builds of ICU in different locations, and use the dlopen() search path feature (for example, the LD_LIBRARY_PATH environment variable on Linux) to enable each application to link with its appropriate ICU.
+
++++++++++++++++++++++++++++++++++++++++
+Discussion and Best Practices
++++++++++++++++++++++++++++++++++++++++
+
+~~~~~~~~~~~~~~~~~~~
+Data Interchange
+~~~~~~~~~~~~~~~~~~~
+
+The support for Unicode in YottaDB/GT.M only affects the interpretation of data in databases, and not databases themselves, a simple way to convert from a ZWR format extract in one mode to an extract in the other is to load it in the database using a process in the mode in which it was generated, and to once more extract it from the database using a process in the other mode.
+
+If a sequence of 8-bit octets contains bytes other than those in the ASCII range (0 through 127), an extract in ZWR format for the same sequence of bytes is different in "M" and "UTF-8" modes. In "M" mode, the $C() values in a ZWR format extract are always equal to or less than 255. In "UTF-8" mode, they can have larger values - the code-points of legal characters in Unicode can be far greater than 255.
+
+Note that the characters written to the output device are subject to the OCHSET transformation of the controlling output device. If OCHSET is "M", the multi-byte characters are written in raw bytes without any transformation.
+
+1. Each multi-byte graphic character (as classified by $ZCHSET) is written directly to the device converted to the encoding form specified by the OCHSET of the output device.
+2. Each multi-byte non-graphic character (as classified by $ZCHSET) is written in $CHAR(nnnn) notation, where nnnn is the decimal character code (that is, code-point up to 1114111 if $ZCHSET="UTF-8" or up to 255 if $ZCHSET="M").
+3. If $ZCHSET="UTF-8" and a subscript or data contains a malformed UTF-8 byte sequence, ZWRITE treats each byte in the sequence as a separate malformed character. Each such byte is written in $ZCHAR(nn[,...]) notation, where each nn is the corresponding byte in the illegal UTF-8 byte sequence.
+
+Note that attempts to use ZWRITE output from a system as input to another system using a different character set may result in errors or not yield the same state as existed on the source system. Application developers can deal with this by defining and using one or more pattern tables that declare all non-ASCII characters (or any useful subset thereof) to be non-graphic (see ). For more details on defining pattern tables, please refer to "Pattern Code Definition" section of Chapter 12: “Internationalization”.
+
+~~~~~~~~~~~~
+Limitations
+~~~~~~~~~~~~
+
+**User-defined pattern codes are not supported**
+
+Although the M standard patcodes (A,C,L,U,N,P,E) are extended to work with Unicode, application developers can neither change their default classification nor define the non-standard patcodes ((B,D,F-K,M,O,Q-T,V-X) beyond the ASCII subset. This means that the pattern tables cannot contain characters with codes greater than the maximum ASCII code 127.
+
+**String Normalization**
+
+In YottaDB/GT.M, strings are not implicitly normalized. Unicode normalization is a method of computing canonical representation of the character strings. Normalization is required if the strings contain combination characters (such as accented characters consisting of a base character followed by an accent character) as well as precomposed characters. The Unicode™ standard assigned code-points to such precomposed characters for backward compatibility with legacy code sets. For the applications containing both versions of the same character (or combining characters), Unicode recommends one of the normal forms. Because YottaDB/GT.M does not normalize strings, the application developers must develop the functionality of normalizing the strings, as needed, in order for string matching and string collation to behave in a conventional and wholesome fashion. In such a case, edit checks can be used that only accept a single representation when multiple representations are possible. 
+
+**UTF-16 is not supported for $PRINCIPAL Device**
+
+In YottaDB/GT.M does not support UTF-16, UTF-16LE and UTF-16BE encodings for $PRINCIPAL I/O devices (including Terminal, Sequential and Socket devices). In order to perform Unicode™-related I/O with the $PRINCIPAL device, application developers must use "UTF-8" for the ICHSET or OCHSET deviceparameters.
+
+**UTF-16 is not supported for Terminal Devices**
+
+Due to the uncommon usage and lack of support for UTF-16 by UNIX terminals and terminal emulators, YottaDB/GT.M does not support UTF-16, UTF-16LE and UTF-16BE encodings for Terminal I/O devices. Note that UNIX platforms use UTF-8 as the defacto character encoding for Unicode. The terminal connections from remote hosts (such as Windows) must communicate with YottaDB/GT.M in UTF-8 encoding.
+
+**Error Messages are in [American] English**
+
+YottaDB/GT.M has no facility for a translation of product error messages or on-line help into languages other than [American] English. All error message text (except the messages arguments that could include Unicode™ data) is in the [American] English language.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~
+Performance and Capacity
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+With the use of "UTF-8" as YottaDB/GT.M's internal character encoding, the additional requirements for CPU cycles, excluding collation algorithms, should not increase significantly compared with the identical application using the "M" character set. Additional memory requirements for "UTF-8" vary depending on the application as well as the actual character set used. For example, applications based on Latin-1 (2-byte encoded) characters may require up to twice the memory and those based on Chinese/Japanese (3-byte encoded) characters may require up to three times the memory compared to an identical application using "M" characters. The additional disk-space and I/O performance trade-offs for "UTF-8" also vary based on the application and the characters used.
+
+**Characters in arguments exchanged with external routines must be validated by the external routines**
+
+YottaDB/GT.M does not check for illegal characters in a string before passing it to an external routine or in a returned value before assigning it to a YottaDB/GT.M variable. This is because such checks add parameter-processing overhead. The application must ensure that the strings are in the encoding form expected by the respective routines. More robustly, external routines must interpret passed strings based on the value of the intrinsic variable $ZCHSET or the environment variable gtm_chset. The external routines can perform validation if needed. 
+
+~~~~~~~~~~~~~~~~~~
+Maximums
+~~~~~~~~~~~~~~~~~~
+
+In the prior versions of YottaDB/GT.M, the restrictions on certain objects were put in place with the assumption that a character is represented by a single byte. With support for Unicode enabled in YottaDB/GT.M, the following restrictions are in terms of bytes- not characters.
+
+**M Name Length**
+
+The maximum length of an M identifier is restricted to 31 bytes. Since identifier names are restricted to be in ASCII, programmers can define M names up to 31 characters long.
+
+**M String Length**
+
+The maximum length of an M string is restricted to 1,048,576 bytes (1Mib). Therefore, depending on the characters used, the maximum number of characters could be reduced from 1,048,576 characters to as few as 262,144 (256K) characters.
+
+**M Source Line Length**
+
+The maximum length of a program or indirect source line is restricted to 2,048 bytes. Application developers must be aware of this byte limit if they consider using multi-byte source comments or string literals in a source line.
+
+**Database Key and Record Sizes**
+
+The maximum allowed size for database keys (both global and nref keys) is 255 bytes, and for database records is 32K bytes. Application developers must be aware that the keys or data containing multi-byte characters in Unicode are limited at a smaller number of characters than the number of available bytes.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+Golden Rules
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Adhere to the following rules of thumb to design and develop Unicode-based applications for deployment on YottaDB/GT.M.
+
+* YottaDB/GT.M functionality related to Unicode becomes available only in UTF-8 mode.
+* [At least] in UTF-8 mode, byte manipulation must use Z* equivalent functions.
+* In M mode, standard functions are always identical to their Z equivalents.
+* Use the same character set for all globals names and subscripts in an instance.
+* Define a collation system according to the linguistic and cultural tenets of the language used.
+* Create the application logic to ensure strings used as keys are canonical.
+* Specify CHSET="M" or otherwise handle illegal characters during the I/O operations.
+* Communicate with any external routines using a compatible character encoding form.
+* Compile and run programs in the same setting of $ZCHSET and "BADCHAR".
 
 

@@ -3,8 +3,8 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to YottaDB Documentation!
-=================================
+Welcome to the Multi Language Programmer's Guide!
+=================================================
 .. toctree::
    :hidden:
   
