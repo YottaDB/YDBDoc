@@ -3,7 +3,9 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
+
 Welcome to The Programmer's Guide!
+
 ==============================================
 
 .. toctree::
@@ -14,6 +16,7 @@ Welcome to The Programmer's Guide!
    about
    langext
    devcycle
+
 
 
 Indices and tables
