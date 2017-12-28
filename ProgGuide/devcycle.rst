@@ -375,6 +375,394 @@ When the program is very simple (and its lines do not need revision after they a
 Editing from YottaDB/GT.M
 +++++++++++++++++++++++++
 
+If you focus on program development outside the YottaDB/GT.M environment, skip this section and continue with the section "Editing from the Shell".
+
+ZEDIT <filename>
+
+Invoke Direct Mode to create and edit a source program in YottaDB/GT.M. At the GTM> or YDB> prompt, invoke the editor by typing:
+
+ZEDIT <filename>
+
+ZEDIT invokes the editor specified by the EDITOR environment variable, which creates a seperate file for each M source module.
+
+The YottaDB/GT.M environment works most efficiently if the file has the same name as the M routine it contains, and has an .m extension. Since ZEDIT automatically defaults the.m extension, it is not necessary to specify an extension unless you require a different one. If you use another extension, you must specify that extension with every reference to the file. Multiple character file extensions are permitted for M source file names.
+
+Example:
+
+.. parsed-literal::
+   $ /usr/lib/.fis-gtm/V5.4-002B_x86/gtm
+   GTM>ZEDIT "payroll"
+
+This syntax uses the gtm script to enter YottaDB/GT.M from the shell, and uses ZEDIT to initiate an editing session on payroll.m Because ZEDIT defaults the extension to .m, it is not necessary to provide an extension. If payroll.m does not already exist, YottaDB/GT.M creates it in the first source directory identified by $ZROUTINES. If $ZROUTINES is null, ZEDIT places the source file in the process's current working directory.
+
+$ZROUTINES is a read-write special variable containing an ordered list of directories that certain YottaDB/GT.M functions use to locate source and object files. Generally, a system manager sets up the environment to define the environment variable gtmroutines. At image invocation, YottaDB/GT.M initializes $ZROUTINES to the value of gtmroutines. Once you are running M, you can SET and refer to $ZROUTINES using the format:
+
+.. parsed-literal::
+   GTM>SET $ZROUTINES=expr
+
+Where:
+
+* The expression may contain a list of UNIX directories and/or file-specifications delimited by spaces.
+* The expression specifies one or more directories to search.
+* An element of the expression contains an environment variable evaluating to a directory specification.
+* If $ZROUTINES contains an environment variable that evaluates to a list, YottaDB/GT.M uses the first name in that list.
+
+For more information on $ZROUTINES, see Chapter 8: “Intrinsic Special Variables”.
+
++++++++++++++++++++++++++
+Editing from the Shell
++++++++++++++++++++++++++
+
+To create and edit a source program from the shell, invoke any text editor at the shell prompt and specify a UNIX file as the source. The YottaDB/GT.M environment works best when you give a file the name of the M routine that it contains, and an .m extension.
+
+Example:
+
+.. parsed-literal::
+   $ vi payroll.m
+
+The vi command initiates an editing session for payroll.m from the shell prompt. If payroll.m does not already exist, vi creates it. Because this example uses UNIX rather than YottaDB/GT.M tools, we must specify the .m file extension.
+
+----------------------------
+Compiling a Source Program
+----------------------------
+
+If you wish to focus on program development outside the YottaDB/GT.M environment, skip the next section and continue with the section "Compiling from the Shell".
+
+YottaDB/GT.M compiles M source code files and produces object files for complete integration into the UNIX enviroment. The object modules have the same name as the compiled M source file with an .o file extension, unless otherwise specified. The object files contain machine instructions and information necessary to connect the routine with other routines, and map it into memory. An M routine source file must be compiled after it is created or modified. You can compile explicitly with the ZLINK command or implicitly with auto-ZLINK. At the shell command line, compile by issuing the mumps command.
+
+The compiler checks M code for syntax errors and displays error messages on the terminal, when processing is complete. Each error message provides the source line in error with an indicator pointing to the place on the line where the error is occurring. For a list and description of the compiler error messages, refer to the Message and Recovery Procedures Reference Manual.
+
+You can generate a listing file containing the compile results by including the -list qualifier as a modifier to the argument to the ZLINK command in Direct Mode. This can also be done by redirecting the compiler messages to a file by adding >filename 2>&1 to the mumps command when compiling a program from the shell. See “Compiling from the Shell” for an explanation of the M command describing -list, and other valid qualifiers for the M and ZLINK commands.
+
+The compiler stops processing a routine line when it detects an error on that line. Under most conditions the compiler continues processing the remaining routine lines. This allows the compiler to produce a more complete error analysis of the routine and to generate code that may have valid executable paths. The compiler does not report multiple syntax errors on the same line. When it detects more than 127 syntax errors in a source file, the compiler ceases to process the file.
+
+++++++++++++++++++++++++++++
+Compiling from YottaDB/GT.M
+++++++++++++++++++++++++++++
+
+In Direct Mode, YottaDB/GT.M provides access to the compiler explicitly through the ZLINK and ZCOMPILE commands, and implicitly through automatic invocation of ZLINK functionality (auto-ZLINK) to add required routines to the image. ZCOMPILE is a YottaDB/GT.M routine compilation command, it compiles the routine and creates a new object module. The primary task of ZLINK is to place the object code in memory and "connect" it with other routines. However, under certain circumstances, ZLINK may first use the YottaDB/GT.M compiler to create a new object module.
+
+The difference between ZCOMPILE and ZLINK is that ZCOMPILE creates a new object module on compiling, whereas the ZLINK command links the object module with other routines and places the object code in memory.
+
+ZLINK compiles under these circumstances:
+
+* ZLINK cannot locate a copy of the object module but can locate a copy of the source module.
+* ZLINK can locate both object and source module, and finds the object module to be older than the source module.
+* The file-specification portion of the ZLINK argument includes an explicit extension of .m.
+
+Auto-ZLINK compiles under the first two circumstances, but can never encounter the last one.
+
+When a command refers to an M routine that is not part of the current image, YottaDB/GT.M automatically attempts to ZLINK and, if necessary, compile that routine. In Direct Mode, the most common method to invoke the compiler through an auto-ZLINK is to enter DO ^routinename at the GTM> or YDB> prompt. When the current image does not contain the routine, YottaDB/GT.M does the following:
+
+* Locates the source and object
+* Determines whether the source has been edited since it was last compiled
+* Compiles the routine, if appropriate
+* Adds the object to the image
+
+By using the DO command, you implicitly instruct YottaDB/GT.M to compile, link, and execute the program. With this method, you can test your routine interactively.
+
+For complete descriptions of ZLINK and auto-ZLINK, see Chapter 6: “Commands” .
+
+Example:
+
+.. parsed-literal::
+   GTM>do ^payroll
+   GTM>do ^taxes
+
+This uses the M DO command to invoke the YottaDB/GT.M compiler implicitly from the YDB> or GTM> prompt if the routine requires new object code. When the compiler runs, it produces two object module files, payroll.o and taxes.o.
+
+If you receive error messages from the compilation, you may fix them immediately by returning to the editor and correcting the source. By default, the YottaDB/GT.M compiler operates in "compile-as-written" mode, and produces object code even when a routine contains syntax errors. This code includes all lines that are correct and all commands on a line with an error, up to the error. Therefore, you may decide to tailor the debugging cycle by running the program without removing the syntax errors.
+
+.. note::
+   The DO command does not add an edited routine to the current image if the image already includes a routine matching the DO argument routine name. When the image contains a routine, YottaDB/GT.M simply executes the routine without examining whether a more recent version of the module exists. If you have a routine in your image, and you wish to change it, you must explicitly ZLINK that routine.
+
+Example:
+
+.. parsed-literal::
+   GTM>zlink "payroll"
+   GTM>zlink "taxes.m"
+
+The first ZLINK compiles payroll.m if it cannot locate payroll, or if it finds that payroll.m has a more recent date/time stamp than payroll.o. The second ZLINK always compiles taxes.m producing a new taxes.o.
+
+For more information on debugging in Direct Mode, see Chapter 4: “Operating and Debugging in Direct Mode”.
+
++++++++++++++++++++++++++++++++++
+Compiling from the Shell
++++++++++++++++++++++++++++++++++
+
+From the shell, invoke the compiler by entering mumps file-name at the shell prompt.
+
+Example:
+
+.. parsed-literal::
+   $ mumps payroll.m
+   $ mumps taxes.m
+
+This uses the mumps command to invoke the YottaDB/GT.M compiler from the shell prompt, and creates .o versions of these files.
+
+Use the mumps command at the shell prompt to:
+
+* Check the syntax of a newly entered program.
+* Optionally, get a formatted listing of the program.
+* Ensure that all object code is up to date before linking.
+
+The mumps command invokes the compiler to translate an M source file into object code.
+
+The format for the MUMPS command is:
+
+.. parsed-literal::
+   MUMPS [-qualifier[...]] pathname
+
+* Source programs must have an extension of .m.
+* Each pathname identifies an M source program to compile.
+* Qualifiers determine characteristics of the compiler output.
+* Qualifiers must appear after the command, but before the file name to be properly applied.
+* YottaDB/GT.M allows the UNIX * and ? wildcards in a file name.
+* The MUMPS command returns a status of 1 after any error in compilation.
+
+The * wildcard accepts any legal combination of numbers and characters including a null, in the position the wildcard holds.
+
+The ? wildcard accepts exactly one legal character in its position.
+
+For example, mumps \*.m compiles all files in the current default directory with an .m extension. mumps \*pay?.m compiles .m files with names that contain any characters followed by pay, followed by one character. Unlike when using ZLINK or ZCOMPILE, the filename must be fully specified when compiling from the shell.
+
+.. note::
+   When forming routine names, the compiler truncates object filenames to a maximum length of 31 characters. For example, for a source file called Adatabaseenginewithscalabilityproven.m the compiler generates an object file called Adatabaseenginewithscalabilityp.o. Ensure that the first 31 characters of source file names are unique.
 
 
++++++++++++++++++++++++++++++++++
+Qualifiers for the mumps command
++++++++++++++++++++++++++++++++++
 
+The mumps command allows qualifiers that customize the type and form of the compiler output to meet specific programming needs. MUMPS command qualifiers may also appear as a modifier to the argument to the ZLINK and ZCOMPILE commands. The following section describes the mumps command qualifiers. Make sure the arguments are specified ahead of file name and after the command itself.
+
+**-di[rect_mode]**
+
+Invokes a small YottaDB/GT.M image that immediately initiates Direct Mode.
+
+-direct_mode does not invoke the M compiler.
+
+The -direct_mode qualifier is incompatible with a file specification and with all other qualifiers.
+
+**-dy[namic_literals]**
+
+Compiles certain data structures associated with literals used in the source code in a way that they are dynamically loaded and unloaded from the object code. The dynamic loading and unloading of these data structures:
+
+* Supersedes any specification of -NOINLINE_LITERALS.
+* Reduces the amount of private memory required by each process which in turn allows more processes to execute with the same memory.
+* In some circumstances, increases application performance by making more memory available for file system buffers.
+* Increases the CPU and stack costs of local variable processing
+
+With no -DYNAMIC_LITERALS specified, these data structures continue to be generated when a routine is linked and stay in the private memory of each process. As the use of -DYNAMIC_LITERALS increases object code size, and as the dynamic loading and unloading only saves memory when the object code is in shared libraries, YottaDB/FIS recommends restricting the use of -DYNAMIC_LITERALS to only when compiling object code to be loaded into shared libraries or executed from an auto relink enabled directory.
+
+**-[no]embed_source**
+
+Instructs YottaDB/GT.M to embeds routine source code in the object code. The default is NOEMBED_SOURCE. Like other YottaDB/GT.M compilation qualifiers, this qualifier can be specified through the $ZCOMPILE intrinsic special variable and gtmcompile environment variable. EMBED_SOURCE provides $TEXT and ZPRINT access to the correct source code, even if the original M source file has been edited or removed. Where the source code is not embedded in the object code, YottaDB/GT.M attempts to locate the source code file. If it cannot find source code matching the object code, $TEXT() returns a null string. ZPRINT prints whatever source code found and also prints a TXTSRCMAT message in direct mode; if it cannot find a source file, ZPRINT issues a FILENOTFND error. 
+
+**-[no]i[gnore]**
+
+Instructs the compiler to produce an object file even when the compiler detects errors in the source code (-ignore), or not to produce an object file when the compiler encounters an error (-noignore).
+
+When used with the -noobject qualifier, the -ignore qualifier has no effect.
+
+Execution of a routine that compiles with errors produces run-time errors when the execution path encounters any of the compile time errors.
+
+This compile-as-written mode facilitates a flexible approach to debugging and expedites conversion to YottaDB/GT.M from an interpreted environment. Many M applications from an interpreted environment contain syntax abnormalities. This feature of compiling and later executing a routine provides the feel of developing in an interpreted environment.
+
+By default, the compiler operates in -ignore mode and produces an object module even when the source routine contains errors.
+
+**-le[ngth]=lines**
+
+Controls the page length of the listing file.
+
+The M compiler ignores the -length qualifier unless it appears with the -list qualifier.
+
+By default, the listing has -length=66.
+
+**-[no]li[st][=filename]**
+
+Instructs the compiler to produce a source program listing file, and optionally specifies a name for the listing file. The listing file contains numbered source program text lines. When the routine has errors, the listing file also includes an error count, information about the location, and the cause of the errors.
+
+When you do not specify a file name for the listing file, the compiler produces a listing file with the same name as the source file with a .lis file extension.
+
+The -length and -space qualifiers modify the format and content of the listing file. The M compiler ignores these qualifiers unless the command includes the -list qualifier.
+
+By default, the compiler operates -nolist and does not produce listings.
+
+**-noin[line_literals]**
+
+Compiles routines to use library code in order to load literals instead of generating in-line code thereby reducing the routine size. At the cost of a small increase in CPU, the use of -NOINLINE_LITERAL may help counteract growth in object size due to -DYNAMIC_LITERALS.
+
+.. note::
+   Both -DYNAMIC_LITERALS and -NOINLINE_LITERALS help optimize performance and virtual memory usage for applications whose source code includes literals. As the scalability and performance from reduced per-process memory usage may or may not compensate for the incremental cost of dynamically loading and unloading the data structures, and as the performance of routines vs. inline code can be affected by the availability of routines in cache, YottaDB/FIS suggests benchmarking to determine the combination of qualifiers best suited to each workload. Note that applications can freely mix routines compiled with different combinations of qualifiers.
+
+**-[no]o[bject][=filename]**
+
+Instructs the compiler to produce an output object file and optionally specifies a name for the object file using the optional filename argument.
+
+When you do not specify a file name, the compiler produces an object file with the same file name as the source file and an .o file extension.
+
+When forming routine names, the compiler truncates object filenames to a maximum length of 31 characters. For example, for a source file called Adatabaseenginewithscalabilityproven.m the compiler generates an object file called Adatabaseenginewithscalabilityp.o. Ensure that first 31 characters of source file names are unique.
+
+The -noobject qualifier suppresses the production of an object file and is usually used with the -list qualifier to produce only a listing file.
+
+By default, the compiler produces object modules.
+
+**-[no]w[arning]**
+
+Instructs the compiler to suppress error output; the default is -warning.
+
+When used with the -list qualifier, the -nowarning qualifier does not affect errors in the listing.
+
+.. note::
+   When used with the -noobject qualifier, the -nowarning qualifier instructs the compiler to produce no object with no indication of the fact or the cause of any errors.
+
+**-r[un]**
+
+Invokes YottaDB/GT.M in Autostart Mode.
+
+The next argument is taken to be an M entryref. That routine is immediately executed, bypassing Direct Mode. Depending on the shell, you may need to put the entryref in quotation marks (""). This qualifier does not invoke the M compiler and is not compatible with any other qualifier.
+
+**-s[pace]=lines**
+
+Controls the spacing of the output in the listing file. -space=n specifies n-1 blank lines separating every source line in the listing file. If n<1, the M command uses single spacing in the listing.
+
+If this qualifier appears without the -list qualifier, the M compiler ignores the -space qualifier.
+
+By default, listings use single spaced output (-space=1).
+
+**MUMPS Command Qualifiers Summary**
+
++----------------------------------------------+--------------------------------------------+
+| Qualifier                                    | Default                                    |
++==============================================+============================================+
+| “-di[rect_mode]”                             | N/A                                        |
++----------------------------------------------+--------------------------------------------+
+| “-dy[namic_literals]”                        | N/A                                        |
++----------------------------------------------+--------------------------------------------+
+| “-[no]embed_source”                          | -noembedsource                             |
++----------------------------------------------+--------------------------------------------+
+| “-[no]i[gnore]”                              | -ignore                                    |
++----------------------------------------------+--------------------------------------------+
+| “-le[ngth]=lines”                            | -length=66                                 |
++----------------------------------------------+--------------------------------------------+
+| “-[no]li[st][=filename]”                     | -nolist                                    |
++----------------------------------------------+--------------------------------------------+
+| “-noin[line_literals]”                       | N/A                                        |
++----------------------------------------------+--------------------------------------------+
+| “-[no]o[bject][=filename]”                   | -object                                    |
++----------------------------------------------+--------------------------------------------+
+| “-r[un]”                                     | N/A                                        |
++----------------------------------------------+--------------------------------------------+
+| “-s[pace]=lines”                             | -space=1                                   |
++----------------------------------------------+--------------------------------------------+
+
+-------------------------------
+Executing a Source Program
+-------------------------------
+
+M source programs can be executed either from the shell or from YottaDB/GT.M (Direct Mode).
+
+++++++++++++++++++++++++++++
+Executing in the Direct Mode
+++++++++++++++++++++++++++++
+
+As discussed in the section on compiling source programs, the GT.M command ZLINK compiles the source code into an object module and adds the object module to the current image.
+
+The run-time system also invokes auto-ZLINKing when an M command, in a program or in Direct Mode, refers to a routine that is not part of the current image.
+
+M commands and functions that may initiate auto-ZLINKing are:
+
+* DO
+* GOTO
+* ZBREAK
+* ZGOTO
+* ZPRINT
+* $TEXT()
+
+YottaDB/GT.M auto-ZLINKs the routine only under these conditions:
+
+* The routine has the same name as the source file.
+* ZLINK can locate the routine file using $ZROUTINES, or the current directory if $ZROUTINES is null.
+
+$ZROUTINES is a read-write special variable that contains a directory search path used by ZLINK and auto-ZLINK to locate source and object files.
+
+When the argument to a ZLINK command includes a pathname, $ZSOURCE maintains that pathname as a default for ZEDIT and ZLINK. $ZSOURCE is a read-write special variable.
+
+Once you use the ZEDIT or ZLINK commands, $ZSOURCE can contain a partial file specification. The partial file specification can be a directory path (full or relative), a file name, and a file extension. You can set $ZSOURCE with an M SET command. A ZLINK without an argument is equivalent to ZLINK $ZSOURCE.
+
+For additional information on $ZSOURCE and $ZROUTINES, refer to Chapter 8: “Intrinsic Special Variables”.
+
+Example:
+
+.. parsed-literal::
+   GTM>ZLINK "taxes"
+
+If ZLINK finds taxes.m or taxes.o, the command adds the routine taxes to the current image. When ZLINK cannot locate taxes.o, or when it finds taxes.o is older than taxes.m, it compiles taxes.m, producing a new taxes.o. Then, it adds the contents of the new object file to the image.
+
+++++++++++++++++++++++++++++++++++++
+Locating the Source File Directory
+++++++++++++++++++++++++++++++++++++
+
+A ZLINK command that does not specify a directory uses $ZROUTINES to locate files. When $ZROUTINES is null, ZLINK uses the current directory. $ZROUTINES is initialized to the value of the gtmroutines environment variable.
+
+When the file being linked includes an explicit directory, ZLINK and auto-ZLINK searches only that directory for both the object and the source files. If compilation is required, ZLINK places the new object file in the named directory.
+
+A subsequent ZLINK searching for this object file will never find the object file in the specified directory unless the directory is added to the search path in $ZROUTINES, or the object file is moved to another directory already in the search path.
+
+ZLINK cannot change a currently active routine, (e.g., a routine displayed in a ZSHOW "S" of the stack). ZLINK a currently active routine by first removing it from the M stack, using ZGOTO, or one or more QUITs. For additional information on the functionality of ZGOTO and ZSHOW, see their entries in Chapter 6: “Commands”.
+
+To maintain compatibility with other editions of YottaDB/GT.M that do not permit the percent sign (%) in a file name, YottaDB/GT.M uses an underscore (_) in place of the percent in the file name.
+
+Example:
+
+.. parsed-literal::
+   GTM>zlink "_MGR"
+
+This ZLINK links the M routine %MGR into the current image.
+
+---------------------------------
+Executing from the Shell
+---------------------------------
+
+You can run a program from the shell prompt using the following command:
+
+.. parsed-literal::
+   $ mumps -run ^filename
+
+The mumps command searches the directories specified by the environment variable gtmroutines to locate the specified file name.
+
+Example:
+
+.. parsed-literal::
+   $ mumps -run ^payroll
+
+This executes a routine named payroll.
+
+---------------------------------------------
+Processing Errors from Direct Mode and Shell
+---------------------------------------------
+
++----------------------------+---------------------------------------------------------------------------+-------------------------------------------------------------------------+
+|                            | Executing in Direct Mode                                                  | Executing from the Shell (mumps -run ^routine)                          |
++============================+===========================================================================+=========================================================================+
+| Usage                      | Suitable for Development and Debugging                                    | Suitable for production                                                 |
++----------------------------+---------------------------------------------------------------------------+-------------------------------------------------------------------------+
+| Error Handling             | Not invoked for code entered at the direct mode prompt; Note that XECUTE  | Errors are suppressed and cause a silent process exit. Set the          |
+|                            | code is treated as not entered at the Direct Mode prompt.                 | environment variable gtm_etrap which overrides the default $ZTRAP="B".  |
+|                            |                                                                           |                                                                         |
+|                            | The default $ZTRAP="B" brings a process to the Direct Mode for debugging. | If needed, error handlers can include appropriate error notification to |
+|                            |                                                                           | $PRINCIPAL. For example, the gtmprofile script sets a default $ETRAP    |
+|                            |                                                                           | value of "Write:(0=$STACK) ""Error occurred: "",$ZStatus,!" which you   |
+|                            |                                                                           | can customize to suit your needs.                                       |
++----------------------------+---------------------------------------------------------------------------+-------------------------------------------------------------------------+
+| stderr                     | YottaDB/GT.M processes send error messages to stderr only under the following conditions:                                                           |
+|                            |                                                                                                                                                     |
+|                            | * The error is fatal which means that the process is about to terminate                                                                             |
+|                            | * During compilation except of indirection or XECUTE                                                                                                |
+|                            | * The process is about to enter direct mode due to a BREAK command                                                                                  |
+|                            | * The erroneous code was entered at the direct mode prompt                                                                                          |
+|                            |                                                                                                                                                     |
++----------------------------+---------------------------------------------------------------------------+-------------------------------------------------------------------------+
+
+For more information, see Chapter 13: “Error Processing”.
