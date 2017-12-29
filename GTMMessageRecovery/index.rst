@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to the Message and Recovery Procedures Reference Manual!
+Welcome to the Messages and Recovery Procedures Reference Manual!
 =================================================================
 
 .. toctree::
