@@ -41,11 +41,11 @@ YottaDB/GT.M
 
 `YottaDB <http://yottadb.com>`_/`FIS GT.M <http://fis-gtm.com>`_ is an implementation of the ISO standard scripting & application development language M, commonly known as MUMPS, developed and released by YottaDB and FIS. As the platform for the FIS Profile application, YottaDB/GT.M is the most widely used M implementation in banking and finance, including several of the largest real time core processing systems we know of that are live at any bank anywhere in the world. YottaDB/GT.M is increasingly used in healthcare. The implementation of YottaDB/GT.M on the GNU/Linux operating system on industry standard x86_64 architecture and Raspberry Pi hardware is the M implementation used for the FOSS (Free / Open Source Software) stack for `VistA <http://worldvista.org/AboutVistA>`_.
 
-GT.M is architected with the following objectives:
+YottaDB/GT.M is architected with the following objectives:
 
 - Without compromise, the robustness, security and integrity of the information entrusted to it.
 -  Open architecture, with easy, standards based access to the information in the database.
-- Continuity of business – GT.M has unique functionality for the deployment of mission-critical applications that must be available 24 hours a day, 365 days a year, with no down time even for planned events.
+- Continuity of business – YottaDB/GT.M has unique functionality for the deployment of mission-critical applications that must be available 24 hours a day, 365 days a year, with no down time even for planned events.
 - Throughput, performance and scalability to meet the needs of the largest institutions in the world.
 
 Free support for YottaDB/GT.M is available from the community on various mailing lists and forums. Support for YottaDB with assured service levels is available from YottaDB LLC on a commercial basis.
