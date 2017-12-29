@@ -17,6 +17,7 @@ Welcome to The Programmer's Guide!
    langext
    devcycle
    opdebug
+   langfeat
 
 
 Indices and tables
