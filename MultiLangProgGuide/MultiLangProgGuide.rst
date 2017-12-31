@@ -279,10 +279,10 @@ mapping from the name of every possible global variable name to a
 *database file*. A *database* is a set of database files to which
 global variables are mapped by a global directory. Global directories
 are created and maintaind by a utility program called the Global
-Directory Editor, which is discussed at length in the `GT.M
+Directory Editor, which is discussed at length in the `YottaDB
 Administration and Operations Guide
-<http://tinco.pair.com/bhaskar/gtm/doc/books/ao/UNIX_manual/>`_ and is
-outside the purview of this document.
+<http://docs.yottadb.com/AdminOpsGuide/>`_ and is outside the purview
+of this document.
 
 The name of the global directory file required to access a global
 variable such as ``^Capital``, is provided to the process at startup
@@ -329,8 +329,8 @@ names, intrinsic special variable names are case-insensitive and so
 variable. Intrinsic special variables have no subscripts.
 
 While the majority of intrinisic special variables as enumerated in
-Chapter 8 (Intrinsic Special Variables) of `GT.M Programmers Guide
-<http://tinco.pair.com/bhaskar/gtm/doc/books/pg/UNIX_manual/>`_ are
+Chapter 8 (Intrinsic Special Variables) of `YottaDB M Programmers Guide
+<http://docs.yottadb.com/ProgrammersGuide/>`_ are
 useful to M application code, others are more generally useful and
 documented here.
 
@@ -613,9 +613,14 @@ Error Return Codes
 Symbolic constants for error codes returned by calls to YottaDB are
 prefixed with ``YDB_ERR_`` and are all less than zero. [#]_ The
 symbolic constants below are not a complete list of all error messages
-that Simple API functions can return — error return codes can
-indicate system errors and database errors, not just application
-errors. The ``ydb_message()`` function provides a way to get more
+that Simple API functions can return — error return codes can indicate
+system errors and database errors, not just application errors. Also,
+some of the errors listed below can be raised in other circumstances
+as well. A full set of error messages is in the `YottaDB Messages and
+Recovery Procedures Manual
+<http://docs.yottadb.com/MessageRecovery/>`_.
+
+The ``ydb_message()`` function provides a way to get more
 detailed information about any error code returned by a Simple API
 function, including error codes for return values without symbolic
 constants.
@@ -682,6 +687,9 @@ to increment ``$trestart`` using `ydb_incr_s()`_.
 ``YDB_ERR_TPTMEOUT`` — This return code from `ydb_tp_s()`_ indicates
 that the transaction took too long to commit.
 
+``YDB_ERR_UNIMPLOP`` — A `ydb_data_s()`_ or `ydb_incr_s()`_ was
+attempted on an intrinsic special variable.
+
 ``YDB_ERR_UNKNOWN`` — A call to `ydb_message()`_ specified an
 invalid message code.
 
@@ -713,7 +721,7 @@ Other
 
 Other symbolic constants have a prefix of ``YDB_``.
 
-``YDB_NODE_END`` – In the event a call to ``ydb_node_next_s()`` or
+``YDB_NODE_END`` — In the event a call to ``ydb_node_next_s()`` or
 ``ydb_node_previous_s()`` wish to report that there no further nodes,
 the ``*ret_subs`` parameter is set to this value. Application code
 should make no assumption about this constant other than that it is
@@ -896,8 +904,8 @@ identified by ``*varname``, ``subs_used`` and ``*subsarray``.
 - 11 — There are both a value and a subtree.
 
 It is an error to call ``ydb_data_s()`` on an intrinsic special
-variable. ``ydb_data_s()`` returns ``YDB_OK`` or an `error return
-code`_.
+variable; doing so results in the ``YDB_ERR_UNIMPLOP``
+error. ``ydb_data_s()`` returns ``YDB_OK`` or an `error return code`_.
 
 -----------
 ydb_get_s()
@@ -947,7 +955,7 @@ ydb_incr_s()
 		int subs_used,
 		ydb_buffer_t *subsarray,
 		ydb_buffer_t *increment,
-		ydb_buffer_t *result);
+		ydb_buffer_t *ret_value);
 
 ``ydb_incr_s()`` atomically:
 
@@ -956,22 +964,22 @@ ydb_incr_s()
 - increments it by the value specified by ``*increment``, converting
   the value to a number if it is not a canonical number, defaulting to
   1 if the parameter is NULL; and
-- storing the value as a `canonical number`_ in ``*result``.
+- storing the value as a `canonical number`_ in ``*ret_value``.
 
 Return values:
 
 - The normal return value is ``YDB_OK``.
 - If the atomic increment results in a numeric overflow, the function
   returns a ``YDB_ERR_NUMOFLOW`` error; in this case, the value in the
-  node ``*result`` is unreliable.
-- In the event the ``ydb_buffer_t`` structure pointed to by ``result``
+  node and ``*ret_value`` is unreliable.
+- In the event the ``ydb_buffer_t`` structure pointed to by ``ret_value``
   is not large enough for the result, the function returns a
   ``YDB_ERR_INVSTRLEN`` error.
 
 Notes:
 
 - Intrinsic special variables cannot be atomically incremented, and an
-  attempt to do so returns the ``YDB_ERR_SVNOSET`` error.
+  attempt to do so returns the ``YDB_ERR_UNIMPLOP`` error.
 - Since it changes the value of the node, ``ydb_incr_s()`` is a
   function with a side effect.
 
@@ -1155,7 +1163,9 @@ ydb_node_previous_s()
 Analogous to ``ydb_node_next(s)``, ``ydb_node_previous_s()``
 facilitates reverse breadth-first traversal of a local or global
 variable tree, except that ``ydb_node_previous_s()`` searches for and
-reports the predecessor node.
+reports the predecessor node. Unlike ``ydb_node_next_s()``,
+``*ret_subs_used`` can be zero if an expected previous node is the
+unsubscripted root. However ``*subs_used`` must be greater than zero.
 
 ``ydb_node_previous_s()`` returns ``YDB_OK``, ``YDB_ERR_INSUFFSUBS``,
 ``YDB_ERR_INVSTRLEN``, or an `error return code`_.
@@ -1173,7 +1183,8 @@ ydb_set_s()
 
 Copies the ``value->len_used`` bytes at ``value->buf_addr`` as the value of
 the specified node or intrinsic special variable specified, returning
-``YDB_OK`` or an `error return code`_.
+``YDB_OK`` or an `error return code`_. A ``*value`` of ``NULL`` is
+treated as equivalent to a ``*value`` that specifies an empty string.
 
 ---------------
 ydb_str2zwr_s()
@@ -1357,6 +1368,17 @@ functionality, but which may be useful to C application code.
 **Need to add hiber_start, hiber_start_wait_any, start_timer,
 and cancel_timer to this section.**
 
+------------------
+ydb_cancel_timer()
+------------------
+
+.. code-block:: C
+
+	void ydb_cancel_timer(int timer_id)
+
+Cancel a timer identifier by ``timer_id`` and previously started with
+`ydb_start_timer()`_.
+
 ----------
 ydb_free()
 ----------
@@ -1369,6 +1391,28 @@ Releases memory previously allocated by ``ydb_malloc()``. Passing
 ``ydb_free()`` a pointer not previously provided to the application by
 ``ydb_malloc()`` can result in unpredictable behavior. The signature
 of ``ydb_free()`` matches that of the POSIX ``free()`` call.
+
+-----------------
+ydb_hiber_start()
+-----------------
+
+.. code-block:: C
+
+	void ydb_hiber_start(unsigned int sleep_msec)
+
+The process sleeps for the time in milliseconds specified by
+``sleep_msec``.
+
+--------------------------
+ydb_hiber_start_wait_any()
+--------------------------
+
+.. code-block:: C
+
+	void ydb_hiber_start_wait_any(unsigned int sleep_msec)
+
+The process sleeps for the time in milliseconds specified by
+``sleep_msec`` or until it receives a signal.
 
 ------------
 ydb_malloc()
@@ -1404,17 +1448,34 @@ result in a segmentation violation (SIGSEGV). ``ydb_message()``
 returns ``YDB_OK`` for a valid ``status`` and
 ``YDB_ERR_UNKNOWN`` if ``status`` does not map to a known error.
 
+-----------------
+ydb_start_timer()
+-----------------
+
+.. code-block:: C
+
+	typedef void (*handler_fun_ptr_t)(unsigned int timer_id,
+		unsigned int handler_data_len,
+		char *handler_data);
+	void start_timer(unsigned int timer_id,
+		unsigned int limit_msec,
+		handler_fun_ptr_t handler,
+		unsigned int handler_data_len
+		char *handler_data);
+
+
 ================
 Programming in M
 ================
 
 As YottaDB is built on `FIS GT.M <http://fis-gtm.com>`_ , it includes
-a complete implementation of the `M <https://en.wikipedia.org/wiki/MUMPS>`_ programming language (also
-known as MUMPS) that mostly conforms to
-`ISO/IEC 11756:1999 <http://www.iso.ch/iso/en/CatalogueDetailPage.CatalogueDetail?CSNUMBER=29268&ICS1=35&ICS2=60&ICS3=&scopelist>`_.
-The
-`GT.M Programmers Guide  <http://tinco.pair.com/bhaskar/gtm/doc/books/pg/UNIX_manual/>`_
-documents programming YottaDB in M and is not duplicated here.
+a complete implementation of the `M
+<https://en.wikipedia.org/wiki/MUMPS>`_ programming language (also
+known as MUMPS) that mostly conforms to `ISO/IEC 11756:1999
+<http://www.iso.ch/iso/en/CatalogueDetailPage.CatalogueDetail?CSNUMBER=29268&ICS1=35&ICS2=60&ICS3=&scopelist>`_.
+The `YottaDB M Programmers Guide
+<http://docs.yottadb.com/ProgrammersGuide/>`_ documents programming
+YottaDB in M and is not duplicated here.
 
 =================
 Programming Notes
