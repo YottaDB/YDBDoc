@@ -18,6 +18,7 @@ Welcome to The Programmer's Guide!
    devcycle
    opdebug
    langfeat
+   commands
 
 
 Indices and tables
