@@ -4,8 +4,7 @@
    contain the root `toctree` directive.
 
 
-Welcome to The Programmer's Guide!
-
+Welcome to The M Programmer's Guide!
 ==============================================
 
 .. toctree::
