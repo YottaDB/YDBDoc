@@ -2441,4 +2441,1530 @@ To avoid deadlocks, use a timeout. Because unsigned LOCKs always release previou
 |                            | ZD M                                | No effect                                                                                                            |
 +----------------------------+-------------------------------------+----------------------------------------------------------------------------------------------------------------------+
 
+------------------------
+ZBREAK
+------------------------
+
+The ZBREAK command sets or clears routine breakpoints during debugging.
+
+The format of the ZBREAK command is:
+
+.. parsed-literal::
+   ZB[REAK][:tvexpr] [-]entryref[:[expr][:intexpr]][,...]
+
+* The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB/GT.M executes the command.
+* The required entryref specifies a location within a routine or a trigger at which to set or remove a breakpoint.
+* The optional minus sign (-) specifies that ZBREAK remove the breakpoint; -* means remove all breakpoints.
+* The optional expression specifies a fragment of YottaDB/GT.M code to XECUTE when YottaDB/GT.M execution encounters the breakpoint; if the ZBREAK argument does not specify an action, the default action is "BREAK".
+* The optional integer expression immediately following the expression specifies a count of process transits through the breakpoint before the breakpoint action takes effect; once YottaDB/GT.M exhausts the count and the action takes effect, the action occurs every time the process encounters the breakpoint. If the action expression is omitted, the optional integer expression must be separated from the entryref by two adjacent colons (::).
+* An indirection operator and an expression atom evaluating to a list of one or more ZBREAK arguments form a legal argument for a ZBREAK.
+* If a concurrent process reloads a trigger in which a process has an active ZBREAK, YottaDB/GT.M automatically removes the breakpoint and issues a TRIGZBRKREM warning message when it refreshes the trigger; the TRIGZBRKREM warning message respects a message mask of 8 as maintained by the VIEW "BREAKMSG" command.
+
+When YottaDB/GT.M encounters the entryref, YottaDB/GT.M suspends execution of the routine code and XECUTEs the breakpoint action before executing any of the commands on the line. For more information on entryrefs, see Chapter 5: “General Language Features of M”.
+
+When the optional integer expression is used, YottaDB/GT.M activates the breakpoint on the intexpr-th time the process encounters the breakpoint during routine execution. Once YottaDB/GT.M activates the breakpoint, that breakpoint remains active for the process until explicitly replaced or removed, or until the process terminates.
+
+For more information, refer to Chapter 4: “Operating and Debugging in Direct Mode”.
+
+++++++++++++++++++
+Examples of ZBREAK
+++++++++++++++++++
+
+Example:
+
+.. parsed-literal::
+   GTM>ZPRint ^ZBTEST
+   ZBTEST;
+        Do SUB
+        Quit
+   SUB  Write !,"This is ZBTEST"
+        Quit
+   GTM>ZBREAK SUB^ZBTEST
+   GTM>Do ^ZBTEST
+   %GTM-I-BREAKZBA, Break instruction encountered during ZBREAK action
+   At M source location SUB^ZBTEST
+   GTM>ZSHOW "B"
+   SUB^ZBTEST
+
+This inserts a ZBREAK with a default action at SUB^ZBTEST. After YottaDB/GT.M encounters the BREAK, the ZSHOW "B" displays this as the only ZBREAK in the image.
+
+Example:
+
+.. parsed-literal::
+   GTM>ZBREAK -*
+                   
+   GTM>ZGOTO
+   GTM>ZBREAK SUB^ZBTEST:"W !,""Trace"""
+   GTM>Do ^ZBTEST
+   Trace
+   This is ZBTEST
+   GTM>
+
+This removes all existing ZBREAKs with a ZBREAK -\*. Note that it is not necessary to remove ZBREAKs before modifying them. It also clears the process invocation stack with an argumentless ZGOTO. Then it uses a ZBREAK to insert a trace-point. Every time YottaDB/GT.M executes the line to where ZBREAK has established a trace-point, it performs the specified action without entering Direct Mode.
+
+Example:
+
+.. parsed-literal::
+   ZBreak PRINT^TIME::5
+
+This BREAKs execution at line PRINT in routine just before the fifth time the line is executed.
+
+Example:
+
+.. parsed-literal::
+   ZBREAK PRINT^TIME:"WRITE AVE BREAK":3
+
+This inserts a ZBREAK action of WRITE AVE and BREAK before the third execution of PRINT^TIME.
+
+------------------------------
+ZCOMpile
+------------------------------
+
+The ZCOMPILE command invokes the YottaDB/GT.M compiler from within the YottaDB/GT.M run-time environment.
+
+Within YottaDB/GT.M itself, ZCOMPILE provides the functionality of the mumps command, except for mumps -direct.
+
+The format of the ZCOMPILE command is:
+
+.. parsed-literal::
+   ZCOM[PILE][:tvexpr] expr[,...]
+
+* The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB/GT.M executes the command.
+* The expression argument specifies one or more filenames, which must include the .m extension. Wildcards are acceptable in the filename specification. The filename specification can be optionally prefixed by qualifiers valid for a mumps command.
+
+The $ZCSTATUS intrinsic special variable holds the value of the status code for the compilation performed by a ZCOMPILE command.
+
+For a description of the arguments and qualifiers of the mumps command, refer to Chapter 3: “Development Cycle”.
+
++++++++++++++++++++++++++++++
+Examples of ZCOMPILE
++++++++++++++++++++++++++++++
+
+Example:
+
+.. parsed-literal::
+   ZCOMPILE "EXAMPLE'.m"
+
+This compiles EXAMPLE.m in the current working directory.
+
+Example:
+
+.. parsed-literal::
+   ZCOMPILE "-list A*.m"
+
+This compiles all files starting with a [capital] A and an extension of .m in the current working directory and produces corresponding listing files for each source / object.
+
+-------------------
+ZContinue
+-------------------
+
+The ZCONTINUE command continues routine execution after a BREAK command or a <CTRL-C>.
+
+The format of the ZCONTINUE command is:
+
+.. parsed-literal::
+   ZC[ONTINUE][:tvexpr]
+
+* The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB/GT.M executes the command.
+* Because ZCONTINUE changes the flow of execution away from control of the principal device back to the current routine, it is usually the final command on a line; however, if it is not, because the ZCONTINUE has no argument, at least two (2) spaces must follow the command to separate it from the next command on the line.
+* If the process is not in Direct Mode, ZCONTINUE has no effect.
+
+
+For more information, refer to Chapter 4: “Operating and Debugging in Direct Mode”.
+
+
+-----------------------
+ZDeallocate
+-----------------------
+
+The ZDEALLOCATE command releases a specified resource name or names previously reserved by the ZALLOCATE command. The ZDEALLOCATE command releases only the specified name(s) without releasing other names previously reserved with the ZALLOCATE or LOCK command.
+
+The ZDEALLOCATE command provides compatibility with some other YottaDB/GT.M implementations. The M Development Committee choose to add the + and - delimiters to the LOCK command rather than adopt the ZALLOCATE and ZDEALLOCATE approach. Therefore, when a design requires an incremental lock mechanism, LOCK +/- has the advantage of being part of the M standard. LOCK +/- also has the advantage of working symmetrically when routines using LOCKs are nested.
+
+The format of the ZDEALLOCATE command is:
+
+.. parsed-literal::
+   ZD[EALLOCATE][:tvexpr] [nref[,...]]
+
+* The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB/GT.M executes the command
+* The nref argument specifies a name in the format of a YottaDB/GT.M name with or without subscripts and with or without a leading caret (^).
+* A ZDEALLOCATE with no argument releases all names currently reserved with ZALLOCATE by the process; in this case, at least two (2) spaces must follow the ZDEALLOCATE to separate it from the next command on the line.
+* ZDEALLOCATEing a named resource that is not currently owned by the process has no effect.
+* An indirection operator and an expression atom evaluating to a list of one or more ZDEALLOCATE arguments form a legal argument for a ZDEALLOCATE.
+
+++++++++++++++++++++++++
+Examples of ZDEALLOCATE
+++++++++++++++++++++++++
+
+Example:
+
+For examples of ZALLOCATE, refer to “Examples of ZALLOCATE”.
+
+---------------------
+ZEdit
+---------------------
+
+The ZEDIT command invokes the editor specified by the EDITOR environment variable for GT.M and opens the specified file for editing. If the EDITOR environment variable is undefined, ZEDIT tries to invoke the UNIX vi editor.
+
+By default, ZEDIT puts a new file into the first source directory in $ZROUTINES. You can specify a file path explicitly in the argument to the ZEDIT command, for example: the current working directory: 
+
+.. parsed-literal::
+   ZEDIT "./file"
+
+The format of the ZEDIT command is:
+
+.. parsed-literal::
+   ZED[IT][:tvexpr] [expr[,...]]
+
+* The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB/GT.M executes the command.
+* The optional expression(s) specifies the name of a file to edit; note the argument is an expression rather than a routinename; ZEDIT rejects arguments with a file extension of .o as illegal. A valid YottaDB/GT.M file name with no extension will be given an extension of .m; therefore it is not possible, through ZEDIT, to edit a file with a valid YottaDB/GT.M filename and no extension.
+* If ZEDIT has an argument, it not only invokes the editor, but also sets $ZSOURCE=expr.
+* If ZEDIT has no argument or expr="", the command acts as a ZEDIT $ZSOURCE; at least two (2) spaces must follow a ZEDIT command with no argument to separate it from the next command on the line.
+* YottaDB/GT.M stores source code in files with standard operating system format; generally the file name is the same as the YottaDB/GT.M routinename with a default extention or type of .m.
+* An indirection operator and an expression atom evaluating to a list of one or more ZEDIT arguments form a legal argument for a ZEDIT
+
+If the expression includes a directory, ZEDIT searches only that directory. If $ZROUTINES is not null, a ZEDIT command that does not specify a directory uses $ZROUTINES to locate files. If $ZROUTINES is equal to an empty string, ZEDIT edits a file in the current working directory. For more information on $ZROUTINES, see the appropriate section in Chapter 8: “Intrinsic Special Variables”.
+
+When the argument to a ZEDIT includes a file or path name, $ZSOURCE maintains that as a default for ZEDIT and ZLINK. For more information on $ZSOURCE see the appropriate section in Chapter 8: “Intrinsic Special Variables”.
+
+++++++++++++++++++
+Examples of ZEDIT
+++++++++++++++++++
+
+Example:
+
+.. parsed-literal::
+   GTM>ZEDIT "BAL"
+
+This invokes the editor for a file with a name of BAL and an extension of .m. Notice that BAL is a string literal.
+
+Example:
+
+.. parsed-literal::
+   GTM>Set prog="BAL"
+                   
+   GTM>ZEDit prog
+
+This is similar to the first example except that it uses a variable argument rather than a string literal.
+
+Example:
+
+.. parsed-literal::
+   GTM>zedit ".login"
+
+This invokes the editor for a file with the name .login. Notice that in this case the file is not a YottaDB/GT.M file, since .login starts with a period, and therefore, cannot be a YottaDB/GT.M file.
+
+-----------
+ZGoto
+-----------
+
+The ZGOTO command transfers control to various levels in the GT.M invocation stack. It also can transfer control from one part of the routine to another or from one routine to another using the specified entryref.
+
+The format of the ZGOTO command is:
+
+.. parsed-literal::
+   ZG[OTO][:tvexpr] [[intexpr][:entryref[:tvexpr]],...]
+
+* The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB/GT.M executes the command.
+* The optional integer expression specifies the stack frame nesting level reached by performing the ZGOTO. If the optional integer expression specifies a negative level, ZGOTO treats it as $zlevel-intexpr.
+* A ZGOTO with no argument returns control to the next command at the bottom of the stack (level 1); in this case, at least two (2) spaces must follow the command to separate it from the next command on the line.
+* The optional entryref specifies a location to which ZGOTO transfers control.
+* If ZGOTO specifies no entryref, it returns control to the next command at the level specified by the integer expression.
+* The optional truth-valued expression immediately following the entryref specifies the argument postconditional and controls whether YottaDB/GT.M uses the argument.
+* If the ZGOTO includes the level and the argument postconditional but not the entryref, two colons (::) separate the integer expression from the truth-valued expression.
+* An indirection operator and an expression atom evaluating to a list of one or more ZGOTO arguments form a legal argument for a ZGOTO.
+* ZGOTO accepts a trigger entryref (with a trailing hash-sign (#)); if the trigger is not currently loaded (by some previous trigger action), YottaDB/GT.M generates a ZLINKFILE error. Note that ZGOTO should be reserved for error handling and testing, as it is a very unstructured operation.
+
+A ZGOTO command with an entryref performs a similar function to the GOTO command, with the additional capability of reducing the YottaDB/GT.M stack level. In a single operation, ZGOTO executes ($ZLEVEL - intexpr) implicit QUITs and a GOTO operation, transferring control to the named entryref. For more information on entryrefs, refer to Chapter 5: “General Language Features of M”.
+
+The ZGOTO command leaves the invocation stack at the level specified by the integer expression. YottaDB/GT.M implicitly terminates any intervening FOR loops and unstacks variables stacked with NEW commands as appropriate.
+
+Using ZGOTO 0 results in an exit from the current YottaDB/GT.M invocation.
+
+Using ZGOTO 0:entryref invokes the "unlink all" facility. It allows a process to disassociate itself from all routines it has linked, releases memory, and continue execution with entryref as the only current entry in the M virtual stack. ZGOTO 0:entryref preserves local variables and IO devices across this transition and performs the following:
+
+* Stops M-profiling (if active).
+* Unwinds all routines in the M stack.
+* Unlinks all routines, releases allocated memory, and closes any shared libraries containing YottaDB/GT.M generated object code.
+* Purges all cached objects (code generated for XECUTE and indirection).
+* Resets $ECODE, $REFERENCE, and $TEST to their initial (empty) values.
+
+ZGOTO resembles HALT (and not QUIT) in that it causes an exit regardless of the number of active levels in the current invocation. ZGOTO resembles QUIT (and not HALT) in that it destroys the YottaDB/GT.M context and terminates the process only if the current YottaDB/GT.M invocation is at the base of the process. Understanding the difference between ZGOTO and HALT has an impact only in an environment where YottaDB/GT.M is invoked recursively from other languages.
+
+ZGOTO $ZLEVEL:LABEL^ROUTINE produces identical results to GOTO LABEL^ROUTINE. ZGOTO $ZLEVEL-1 responds like a QUIT (followed by ZCONTINUE, if in Direct Mode). If the integer expression evaluates to a value greater than the current value of $ZLEVEL or less than zero (0), YottaDB/GT.M issues a run-time error.
+
+If ZGOTO has no entryref, it performs some number of implicit QUITs and transfers control to the next command at the specified level. If ZGOTO has no argument, it behaves like ZGOTO 1, which resumes operation of the lowest level YottaDB/GT.M routine as displayed by ZSHOW "S". In the image invoked by $gtm_dist mumps -direct, a ZGOTO without arguments returns the process to Direct Mode.
+
+ZGOTO provides a useful debugging tool in Direct Mode. However, because ZGOTO is not conducive to structured coding, it is best to restrict its use in production programs to error handling. For more information on YottaDB/GT.M error handling, refer to Chapter 13: “Error Processing”.
+
+++++++++++++++++++
+Examples of ZGOTO
+++++++++++++++++++
+
+Example:
+
+.. parsed-literal::
+   GTM>ZGOTO
+   GTM>ZSHow
+   +1^GTM$DMOD (Direct mode)
+   GTM>
+
+This uses ZGOTO to clear all levels of the GT.M invocation stack. ZSHOW with no arguments displays the stack.
+
+Example:
+
+.. parsed-literal::
+   SET $ZTRAP="ZGOTO "_$ZLEVEL\_":^ERROR"
+
+This SETs $ZTRAP to contain a ZGOTO, so if an error causes GT.M to XECUTE $ZTRAP, the routine ERROR executes at the same level as the SET command shown in the example.
+
+---------------
+ZHALT
+---------------
+
+The ZHALT command stops program execution and causes YottaDB/GT.M to return control to the invoking environment/program with a return code.
+
+The format of the ZHALT command is:
+
+.. parsed-literal::
+   ZHALT[:tvexpr] [intexpr]
+
+* The optional truth-valued expression immediately following the command is a command postconditional that controls whether YottaDB/GT.M executes the command.
+* The optional integer expression specifies the return code. If an integer expression is not specified, ZHALT returns 0. Because UNIX limits return codes to zero through 255, ZHALT returns intexpr modulo 256, unless the intexpr is non-zero but the intexpr modulo 256 is zero, in which case ZHALT returns a (non-success) value of 255 so that the return code is non-zero.
+* If no arguments are specified, at least two (2) spaces must follow the command to separate it from the next command on the line. Note that additional commands do not serve any purpose unless the ZHALT has a postconditional.
+* A ZHALT releases all shared resources held by the process, such as devices OPENed in YottaDB/GT.M, databases, and YottaDB/GT.M LOCKs. If the the process has an active M transaction (the value of $TLEVEL is greater than zero (0)), YottaDB/GT.M performs a ROLLBACK prior to terminating.
+
++++++++++++++++++
+Examples of ZHALT
++++++++++++++++++
+
+Example:
+
+.. parsed-literal::
+   GTM>zhalt 230
+   $ echo $?
+   230
+
+Example:
+
+.. parsed-literal::
+   GTM>zhalt 257
+   $ echo $?
+   1
+
+----------------
+ZHelp
+----------------
+
+The ZHELP command accesses the help information from the YottaDB/GT.M help library or from any help library specified in the command argument.
+
+The format of the ZHELP command is:
+
+.. parsed-literal::
+   ZH[ELP][:tvexpr] [expr1[:expr2],...]
+
+* The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB/GT.M executes the command.
+* The optional first expression specifies the help topic.
+* If ZHELP has no argument or expr1="", ZHELP invokes base level help; at least two (2) spaces must follow a ZHELP command with no argument to separate it from the next command on the line.
+* The optional second expression specifies the name of a Global Directory containing ^HELP.
+* If ZHELP does not specify the second expression, the Global Directory defaults to $gtm_dist/gtmhelp.gld.
+* An indirection operator and an expression atom evaluating to a list of one or more ZHELP arguments form a legal argument for a ZHELP
+
+++++++++++++++++++
+Examples of ZHELP
+++++++++++++++++++
+
+Example:
+
+.. parsed-literal::
+   GTM>zhelp "func $data"
+
+This lists the help for function $DATA, which is a subtopic of functions topic.
+
+Example:
+
+.. parsed-literal::
+   GTM>zhelp
+
+This uses ZHELP to list all the keywords in the help library.
+
+Example:
+
+.. parsed-literal::
+   GTM>zhelp "ZSHOW"
+
+This lists the help for command ZSHOW.
+
+-------------------
+ZLink
+-------------------
+
+The ZLINK command adds an executable YottaDB/GT.M routine to the current process if the current process does not contain a copy of a routine. If the current process contains a copy of a routine and the routine is not active, the ZLINK command replaces the current routine process with a "new" version. If necessary, the ZLINK command compiles the routine prior to integrating it with the process.
+
+With VIEW "LINK":"RECURSIVE" specified or by starting the process with the environment variable gtm_link set to "RECURSIVE", the ZLINK command adds an executable routine even when a routine with the same name is active and available in the current stack. When a process links a routine with the same name as an existing routine, future calls use the new routine. Prior versions of that routine referenced by the stack remain tied to the stack until they QUIT, at which point they become inaccessible. This provides a mechanism to patch long-running processes.
+
+.. note::
+   An active routine is displayed with $STACK() or ZSHOW "S" of the M virtual stack. By default, an attempt to replace an active routine results in a run-time error . To replace an active routine with a new version, either use VIEW "LINK":"RECURSIVE" or  remove the active routine from the stack using ZGOTO or the appropriate number of QUITs and then execute the ZLINK command.
+
+The format of the ZLINK command is:
+
+.. parsed-literal::
+   ZL[INK][:tvexpr] [expr1[:expr2][,...]]
+
+* The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB/GT.M executes the command.
+* The optional first expression specifies the pathname of a routine to ZLINK; if ZLINK has an argument, it not only adds the routine to the image, but also sets $ZSOURCE=expr.
+* If ZLINK has no argument, or expr="", it uses value of $ZSOURCE as the routine specification filename; at least two (2) spaces must follow a ZLINK command with no argument to separate it from the next command on the line.
+* The optional second expression specifies a string holding MUMPS command qualifiers delimited by a dash (-); the qualifiers control compile options when the current ZLINK requires a compile; if ZLINK omits the second expression, the command uses the $ZCOMPILE intrinsic special variable to determine the compile qualifiers.
+* An indirection operator and an expression atom evaluating to a list of one or more ZLINK arguments form a legal argument for a ZLINK.
+* When ZLINK encounters a bad object file it produces an INVOBJFILE error that identifies the problem object file.
+
+When the ZLINK command specifies a file, YottaDB/GT.M sets $ZSOURCE to that filename. By default, ZLINK and ZEDIT use $ZSOURCE for a filename when they have a missing or null argument. A subsequent ZLINK without an argument is equivalent to ZLINK $ZSOURCE. For more information on $ZSOURCE, see the appropriate section in Chapter 8: “Intrinsic Special Variables”.
+
+.. note::
+   In order to ensure compatibility with YottaDB/GT.M versions that do not permit the percent sign (%) in a file name, use an underscore (_) in place of the percent in the ZLINK file name for routines beginning with a percent sign.
+
+If the expression includes an explicit directory, ZLINK searches only that directory. Otherwise, if $ZROUTINES is not null, a ZLINK command uses $ZROUTINES to locate files. If $ZROUTINES is null, ZLINK uses the current directory. For more information on $ZROUTINES, see the appropriate section in Chapter 8: “Intrinsic Special Variables”.
+
+If the filename contains an explicit file extension, ZLINK processes the file according to the extension, object (.o) or source (usually .m). If the file name does not specify a file extension, ZLINK attempts to find and match both the object and source for a routine.
+
+The following table illustrates how ZLINK processes the three possibilities of file extension.
+
+**ZLink Operation Summary**
+
++-----------------------------+--------------------------------------------------------+------------------------------------------------------------+--------------------------------------+
+| Extension Specified         | Extension Sought by ZLINK                                                                                           | Result                               |
++=============================+========================================================+============================================================+======================================+
+|                             | .o                                                     | .m                                                         |                                      |
++-----------------------------+--------------------------------------------------------+------------------------------------------------------------+--------------------------------------+
+| .o                          | found                                                  | N/A                                                        | Link only                            |
++-----------------------------+--------------------------------------------------------+------------------------------------------------------------+--------------------------------------+
+|                             | not found                                              | N/A                                                        | Error                                |
++-----------------------------+--------------------------------------------------------+------------------------------------------------------------+--------------------------------------+
+| .m                          | N/A                                                    | found                                                      | Compile and Link                     |
++-----------------------------+--------------------------------------------------------+------------------------------------------------------------+--------------------------------------+
+|                             | N/A                                                    | not found                                                  | Error                                |
++-----------------------------+--------------------------------------------------------+------------------------------------------------------------+--------------------------------------+
+| none                        | not found                                              | found                                                      | Compile and Link                     |
++-----------------------------+--------------------------------------------------------+------------------------------------------------------------+--------------------------------------+
+|                             | found                                                  | not found                                                  | Link only                            |
++-----------------------------+--------------------------------------------------------+------------------------------------------------------------+--------------------------------------+
+|                             | not found                                              | not found                                                  | Error                                |
++-----------------------------+--------------------------------------------------------+------------------------------------------------------------+--------------------------------------+
+|                             | found .o file newer than .m and version okay           | found .m file older than .o                                | Link only                            |
++-----------------------------+--------------------------------------------------------+------------------------------------------------------------+--------------------------------------+
+|                             | found .o file older than .m or version mismatch        | found .m file newer than .o                                | Compile and Link                     |
++-----------------------------+--------------------------------------------------------+------------------------------------------------------------+--------------------------------------+
+
+++++++++++++++++++++++
+ZLINK Compilation
+++++++++++++++++++++++
+
+If ZLINK compiles a routine and the -OBJECT= qualifier does not redirect the output, it places the resulting object file in the directory indicated by the search criteria. ZLINK incorporates the new object file into the image, regardless of its directory placement.
+
+If the command does not specify compile qualifiers (with expr2) and $ZCOMPILE is null, YottaDB/GT.M uses the default M command qualifiers, -ignore, -labels=lower, -nolist, and -object. For more information on $ZCOMPILE, refer to the appropriate section in Chapter 8: “Intrinsic Special Variables”. For detailed descriptions of the M command qualifiers, see Chapter 3: “Development Cycle”.
+
+For information on producing object files, but not adding them to the current image, see “ZCOMpile”.
+
+++++++++++++++++++++
+Examples of ZLINK
+++++++++++++++++++++
+
+Example:
+
+.. parsed-literal::
+   GTM>ZLINK "test"
+
+If ZLINK finds test.m or test.o, it adds the routine test to the current image. If ZLINK does not find test.o, or finds that test.o is older than test.m, YottaDB/GT.M compiles test.m to produce a new test.o, and adds the contents of the new object file to the image. This example assumes "test" is not on the current M stack - if it is on the stack, YottaDB/GT.M gives an error.
+
+Example:
+
+.. parsed-literal::
+   GTM>zlink "test.m":"-noobject -list"
+
+This compiles the routine "test" and produces a listing but no object file. Because the example produces no object file, it must locate an existing object file (which might be the same as any copy in the current image); if there is noexisting object file, YottaDB/GT.M produces an error. While this example shows the use of compilation qualifiers with ZLINK, a -noobject -list compilation might better be done with ZCOMPILE.
+
+Example: 
+
+.. parsed-literal::
+   GTM>zlink "sockexamplemulti2"
+   %GTM-E-LOADRUNNING, Cannot ZLINK an active routine sockexamplemulti2
+   GTM>zshow "S"
+   sockexamplemulti2+12^sockexamplemulti2    (Direct mode)
+   GTM>view "LINK":"RECURSIVE"
+   GTM>zlink "sockexamplemulti2"
+   GTM>
+
+This example demonstrates how VIEW "LINK":"RECURSIVE" command ZLINKs a routine when its prior version is already there in the active M virtual stack. 
+
+++++++++++++++++++++++
+Auto ZLINK
+++++++++++++++++++++++
+
+If a YottaDB/GT.M routine refers to a routine that is not linked in the process memory, YottaDB/GT.M automatically attempts to ZLINK that routine. An auto-ZLINK is functionally equivalent to an explicit ZLINK of a routine without a specified directory or file extension.
+
+The following YottaDB/GT.M commands and functions can initiate auto-ZLINKing:
+
+* DO
+* GOTO
+* ZBREAK
+* ZGOTO
+* ZPRINT
+* $TEXT()
+
+YottaDB/GT.M auto-ZLINKs the routine if the following conditions are met:
+
+* ZLINK can locate and process the routine file, as indicated in the previous ZLINK Operation Summary table
+* The name of the routine is the same as the name of the source file; the only exception is that YottaDB/GT.M converts a leading percent sign (%) in a file name to an underscore (_).
+
+++++++++++++++++++
+Auto ZLINK Setup
+++++++++++++++++++
+
+This section describes the procedure to setup the auto-relink functionality. YottaDB/GT.M loads an object file linked from an object directory (in $ZROUTINES) with a \*-suffix (i.e. auto-relink-enabled) into a shared memory segment (referred to henceforth as a Rtnobj shared memory segment). At the invocation of DO, GOTO, or ZGOTO, extrinsic functions, ZBREAK, ZPRINT or $TEXT() that specify an entryref which includes a routine name (in contrast to a label without a routine name), YottaDB/GT.M processes (and MUPIP processes executing trigger logic) automatically relink ("auto-relink") and execute published new versions of routines.
+
+.. note::
+   Label references (that is, without a routine name), whether direct or through indirection, always refer to the current routine, and do not invoke auto-relink logic. Use shell quoting rules when appending asterisks to directory names in the gtmroutines environment variable - asterisks must be passed in to YottaDB/GT.M, and not expanded by the shell. YottaDB/GT.M accepts but ignores asterisk suffixes to directory names on 32-bit Linux on x86 platforms, where it does not provide auto-relinking.
+
+The ZRUPDATE command publishes of new versions of routines to subscribers. To remove routines, delete the object files and publish the names of the deleted object files. Removal requires file names to be explicitly specified, because patterns with wildcards cannot match deleted files.
+
+If the path to a file is non-existent, the request is ignored except in the case where one desires a currently shared object file (one that was accessed before it was deleted) to no longer be shared.
+
+For each auto-relink enabled directory which a YottaDB/GT.M process accesses while searching through $ZROUTINES, YottaDB/GT.M creates a small control file (Relinkctl) in the directory identified by $gtm_linktmpdir (defaulting to $gtm_tmp, which in turn defaults to /tmp, if unspecified). The names of these files are of the form gtm-relinkctl-<murmur> where <murmur> is a hash of the realpath() to an auto-relink directory; for example: /tmp/gtm-relinkctl-f0938d18ab001a7ef09c2bfba946f002). With each Relinkctl file, YottaDB/GT.M creates and associates a block of shared memory that contains associated control structures. Among the structures is a cycle number corresponding to each routine found in the routine directory; a change in the cycle number informs a process that it may need to determine whether there is a new version of a routine. Although YottaDB/GT.M only creates relinkctl records for routines that actually exist on disk, it may increment cycle numbers for existing relinkctl records even if they no longer exist on disk.
+
+YottaDB/GT.M creates both the Relinkctl file and shared memory with permissions based on the logic described in the "IPC Permissions" column of the "Shared Resource Authorization Permissions" section in the Administration and Operations Guide, except that the object directory, rather than the database file, provides the base permissions.
+
+The MUPIP RCTLDUMP command reports information related to relinkctl files and their associated shared memory segments.
+
+The environment variable gtm_autorelink_keeprtn if set to 1, t[rue], or y[es] causes exiting processes to leave auto-relinked object code in the shared memory repositories, while if undefined, 0, f[alse] or n[o] causes exiting processes to purge any routines currently use by no processes. All values are case-independent. When gtm_autorelink_keeprtn is defined and TRUE:
+
+* Process exit is simplified, with the performance gain - faster process termination - likely to be observable only when a large number of processes exit concurrently.
+* Where routines are likely to be repeatedly used by other processes, such as in a production environment, leaving a routine in shared memory even when no longer used by existing processes, results in slightly faster linking of that routine by future processes, although the effect may not be observable except when an application frequently uses short-lived processes, such as YottaDB/GT.M routines invoked by web servers using a CGI interface.
+
+YottaDB/FIS recommends that a directory in the $zroutines of a process be either auto-relink-enabled or auto-relink-disabled for the life of the process. Changing the auto-relink mode of the directory within a process is likely to result in counter-intuitive results..
+
+As arguments, ZRUPDATE takes object file names, including wild-cards of the form accepted by $ZSEARCH(). If ZRUPDATE fails to find at least one file to match an argument with a wild card, it issues an INFO message (seen only if $PRINCIPAL has CENABLE). When the argument specifies an explicit name without a wild card, but there is no file in the directory or a corresponding entry in the Relinkctl, ZRUPDATE produces an error. ZRUPDATE issues most errors as FILEPARSE errors with a secondary error describing the actual issue although some errors, depending on the reason and path by which ZRUPDATE detects them, can be rather cryptic.
+
+An explicit ZLINK or an auto-relink check the hash of an object and its replacement. If they are identical, YottaDB/GT.M may take no action to replace the current object, saving both memory and time. YottaDB/GT.M bypasses the dynamic link of a routine when it determines the requested object matches the currently linked object file under either of the following circumstances:
+
+* auto-relink from the same directory
+* explicit ZLINK where neither the original object nor the new object are auto-relinked
+
+In other cases YottaDB/GT.M always performs the dynamic link.
+
+An explicit ZLINK from an auto-relink directory acts as an implicit ZRUPDATE.
+
+Any ZBREAK in a routine disables that routine from auto-relinking by a process until all ZBREAKs are removed.
+
+If recursive relink is not enabled, routines currently active in the M virtual machine stack are disabled from auto-relinking until they complete (or are removed from the stack by a ZGOTO).
+
+**Auto-Zlink Benefits and Example**
+
+The benefits of auto-relink are as follows:
+
+* Auto-relink provides the convenience of automatically running the current routine under most conditions. When combined with VIEW "LINK":"RECURSIVE", auto-relink automatically relinks routines even when they are active and available in the current stack. While it is possible to run auto-relink without VIEW "LINK":"RECURSIVE", routines currently active in a stack do not auto-relink and, if explicitly ZLINK'd, induce a LOADRUNNING error until they complete or are removed from the stack.
+* Use of auto-relink loads routine object files into the shared memory. Therefore, the use of a given routine by multiple processes results in significant memory savings (one copy per system instead of one copy per user). This is analogous to the memory sharing from using shared object libraries, but allows dynamic updates, where shared libraries do not.
+* When combined with routines explicitly compiled with the -embed_source option or auto-compiled with $ZCOMPILE set to "-embed_source", auto-relink may improve the performance of $TEXT() and ZPRINT as they access source code from shared memory instead of the disk.
+* When $gtm_autorelink_keeprtn is defined and TRUE, applications that frequently invoke YottaDB/GT.M routines in short running processes (such as those over interfaces like CGI) may give better performance because it keeps routines in shared memory so that they can be reused when short running processes need them.
+
+The use and setup of the auto-relink facility depends upon the requirements. Here is an example:
+
+.. parsed-literal::
+   $ /usr/lib/fis-gtm/V6.2-001_x86_64/gtm
+   GTM>w $zroutines
+   /home/jdoe/.fis-gtm/V6.2-001_x86_64/o*(/home/jdoe/.fis-gtm/V6.2-001_x86_64/r /home/jdoe/.fis-gtm/r) /usr/lib/fis-gtm/V6.2-001_x86_64/plugin/o/_POSIX.so /usr/lib/fis-gtm/V6.2-001_x86_64/plugin/o(/usr/lib/fis-gtm/V6.2-001_x86_64/plugin/r) /usr/lib/fis-gtm/V6.2-001_x86_64/libgtmutil.so /usr/lib/fis-gtm/V6.2-001_x86_64
+
+In $ZROUTINES, the \*-suffix after the object directory enables the auto-relink facility. By default, the gtm/gtmprofile scripts that are available as part of YottaDB/GT.M distribution on sourceforge.net have auto-relink enabled.
+
+With auto-relink enabled, YottaDB/GT.M loads an object file from an object directory into Rtnobj shared memory segment on an explicit ZLINK, implicit ZLINK (DO, GOTO, ZPRINT, $TEXT()), and extrinsic function invocations ($$) enabling the routines to be accessed by other concurrent/future processes.
+
+With auto-relink, YottaDB/GT.M creates an initial Rtnobj shared memory segment of 1 MiB (2 MiB or more if hugepages is configured) and allocates 92MiB of shared memory segment for managing the auto-relink facility. Therefore, always ensure that your system has adequate shared memory configured; if not, YottaDB/GT.M displays messages along the lines of: 
+
+.. parsed-literal::
+   %GTM-E-SYSCALL, Error received from system call shmget() failed
+
+Refer to your OS documentation to configure shared memory limits (for example, on common Linux systems, the kernel.shmmax parameter in /etc/sysctl.conf).
+
+If your routines require more MiB shared memory, set the environment variable $gtm_autorelink_shm to an integer value (in powers of two). When auto-relink needs more shared memory for storing routines, YottaDB/GT.M automatically allocates twice the size of $gtm_autorelink_shm MiB for auto-relink operations.
+
+.. parsed-literal::
+   GTM>zedit "myprogram.m"
+   GTM>
+
+ZEDIT puts a new file into the first source directory in $ZROUTINES, that is, in the /home/jdoe/.fis-gtm/V6.2-001_x86_64/r directory.
+
+.. parsed-literal::
+   GTM>do ^myprogram
+
+The first invocation of an implicit ZLINK (DO, GOTO ZGOTO, ZPRINT, $TEXT() or function/extrinsic invocation) or an explicit ZLINK "myprogram.m" or ZRUPDATE "/home/jdoe/.fis-gtm/V6.2-001_x86_64/myprogram.o" creates a Relinkctl file if one does not already exist and the associated shared memory. The relinkctl file has a name associated with the hash of the directory to provide a pointer in the form of segment ids to shared memory so that processes can locate routines.
+
+As the gtm_linktmpdir environment variable is not set by default in the gtm/gtmprofile scripts, YottaDB/GT.M stores the Relinkctl file in the directory pointed to by the gtm_tmp environment variable.
+
+.. parsed-literal::
+   GTM>zshow "A"
+   Object Directory : /home/jdoe/.fis-gtm/V6.2-001_x86_64/o
+   Relinkctl filename : /tmp/fis-gtm/V6.2-001_x86_64/gtm-relinkctl-43b26ca8384ddbf74b94d90a830c0bc9
+   # of routines : 1
+   # of attached processes : 1
+   Relinkctl shared memory : shmid: 375586821 shmlen: 0x5800000
+   Rtnobj shared memory # 1 : shmid: 375619590 shmlen: 0x200000 shmused: 0x400 shmfree: 0x1ffc00 objlen: 0x280
+   rec#1: rtnname: myprogram cycle: 1 objhash: 0xd81f1cdcc275e13d numvers: 1 objlen: 0x280 shmlen: 0x400
+
+ZSHOW "A" command displays information related to relinkctl file and the routine records that it points to in the shared memory segments. The routine records appears in the order in which they were inserted into the shared memory in the context of the relinkctl file.
+
+.. parsed-literal::
+   GTM>zedit "myprogram2.m"
+
+ZEDIT puts a new file into the first source directory in $ZROUTINES, that is, in the /home/jdoe/.fis-gtm/V6.2-001_x86_64/r directory.
+
+.. parsed-literal::
+   GTM> zrupdate "/home/jdoe/.fis-gtm/V6.2-001_x86_64/o/\*.o"
+
+The ZRUPDATE command increments the cycle counter of those routine records whose object hash is different than the one last loaded in the Rtnobj shared memory. In this case, it would be rec#2, that is, myprogram.o. ZRUPDATE does not recompile/relink the routines. Instead, it instructs all current and future processes that the object code is out-of-date and must be auto-relinked (if required) on the next invocation. An explicit ZLINK or an auto-relink (whichever happens first) checks the hash of an object and its replacement and initiates recompile/relink on finding that are they not identical.
+
+.. parsed-literal::
+   GTM>zshow "A":zru
+
+If there are hundreds of routines, a command like ZSHOW "A":zru transfers the output of ZSHOW "A" to a local variable. The following example uses that result to display the information on all routines that contain the string passed to the disprtn function:
+
+.. parsed-literal::
+   GTM>zprint ^disprtn
+   disprtn(rtn)
+   set x="" for set x=$order(zru("A",x)) quit:x="" write:$piece(zru("A",x),":",3)[rtn zru("A",x),!
+   quit ""
+
+and produces a result like the following:
+
+.. parsed-literal::
+   GTM>w $$^disprtn("myprogram")
+   rec#1: rtnname: myprogram2 cycle: 1 objhash: 0x436c855d5891e7cf numvers: 1 objlen: 0x370 shmlen: 0x400
+   rec#2: rtnname: myprogram cycle: 1 objhash: 0xd81f1cdcc275e13d numvers: 1 objlen: 0x280 shmlen: 0x400
+   GTM>
+
+++++++++++++++++++++++++++++++++++++
+ZLINK, auto-ZLINK and Routine Names
+++++++++++++++++++++++++++++++++++++
+
+In YottaDB/GT.M, the name of the source file determines the name of the YottaDB/GT.M routine. The file name of the object file is not required to match the name of the routine. Linking the object file makes the internal routine name (derived from the source file) known to YottaDB/GT.M. This can lead to potential confusion, however, since both ZLINK and auto-ZLINK use the name of the object file to find the routine. When the object file name differs from the name of the routine, auto-ZLINK generates a run-time error.
+
+.. note::
+   Auto-ZLINK and ZLINK commands without a .m or .o file extension in their argument determine the need to recompile based on whether the object file was more recently modified than the source file using time in nanoseconds, as provided by the underlying system call. Note that, although the format of the file modification timestamps provides a nanosecond granularity, many supported OSs currently update the file timestamps with an accuracy of one second.
+
+---------------------
+ZKill
+---------------------
+
+The ZKILL command KILLs the data value for a variable name without affecting the nodes descended from that node.
+
+The format of the ZKILL command is:
+
+.. parsed-literal::
+   ZK[ILL][:tvexpr] glvn
+
+The functionality of ZKILL is identical to ZWITHDRAW. For a comprehensive description of the format and usage, refer to “ZWIthdraw”.
+
+------------------
+ZMessage
+------------------
+
+The ZMESSAGE command raises an exception condition based on the specified message code.
+
+The format of the ZMESSAGE command is:
+
+.. parsed-literal::
+   ZM[ESSAGE][:tvexpr] intexpr[:expr2][:...]
+
+The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB/GT.M executes the command.
+
+The required integer expression specifies the message code. There are two types of message codes:
+
+* Message codes from 150339592 are raised from YottaDB/GT.M. For examining the text of a message code, refer to $ZMESSAGE().
+
+The three least significant bits (lsb) of these message codes indicate the severity which determines the error handling action: 
+
++----------------+----------------------------------+---------------------------------------------------------------------------------------------------------+
+| 3 lsb          | Severity                         | Action                                                                                                  |
++================+==================================+=========================================================================================================+
+| 0              | Warning                          | XECUTEs $ETRAP or $ZTRAP and terminates the process                                                     |
++----------------+----------------------------------+---------------------------------------------------------------------------------------------------------+
+| 1              | Success                          | Displays the associated message and continues execution                                                 |
++----------------+----------------------------------+---------------------------------------------------------------------------------------------------------+
+| 2              | Error                            | XECUTEs $ETRAP or $ZTRAP and terminates the process                                                     |
++----------------+----------------------------------+---------------------------------------------------------------------------------------------------------+
+| 3              | Information (success & error)    | Displays the associated message and continues execution. It does not invoke $ETRAP or $ZTRAP.           |
++----------------+----------------------------------+---------------------------------------------------------------------------------------------------------+
+| 4              | Severe/Fatal                     | Displays the associated message and terminates the process.                                             |
++----------------+----------------------------------+---------------------------------------------------------------------------------------------------------+
+| 5, 6, 7        | Unassigned/Unsupported           | \-                                                                                                      |
++----------------+----------------------------------+---------------------------------------------------------------------------------------------------------+
+
+* Message codes between 1 and 132 come from OS services. ZMESSAGE treats all such codes as a either a trappable error or a fatal event.
+
+ZMESSAGE can be used as a tool to simulate an error condition. The additional expressions specified after a colon ":" are the ordered context substitutions for the given exception condition. For example, if the message associated with the condition contains a substitution directive, passing a string as an additional expression causes the string to be inserted in the message text dat the point of the corresponding substitution directive.
+
+ZMESSAGE transforms two sets of error messages into SPCLZMSG errors:
+
+* The internal error messages which should not be user visible.
+* The error messages which are expected to be driven when their corresponding internal state is available. The list of such errors is as follows: CTRLY, CTRLC, CTRAP, JOBINTRRQST, JOBINTRRETHROW, REPEATERROR, STACKCRIT, SPCLZMSG, TPRETRY, UNSOLCNTERR.
+* ZMESSAGE is conceptually similar to SET $ECODE=",<expr>,".
+
++++++++++++++++++++++++++++++
+Examples of ZMESSAGE
++++++++++++++++++++++++++++++
+
+All of the following examples issue ZMESSAGE from Direct Mode where exception conditions do not invoke $ZTRAP.
+
+Example:
+
+.. parsed-literal::
+   GTM>ZMessage 2
+   %SYSTEM-E-ENO2, No such file or directory
+
+This ZMESSAGE does not specify substitution text and the message does not include any substitution directives.
+
+Example:
+
+.. parsed-literal::
+   GTM>ZMESSAGE 150372994
+   %GTM-E-GVUNDEF, Global Variable undefined:
+
+The message specified by this ZMESSAGE command includes a substitution directive but the command does not supply any text.
+
+Example:
+
+.. parsed-literal::
+   GTM>ZMESSAGE 150373850:"x"
+   %GTM-E-GVUNDEF, Undefined local variable: x
+
+This ZMESSAGE command supplies the substitution text for the message.
+
+YottaDB/GT.M treats its own odd-numbered conditions as "successful." YottaDB/GT.M handles successful conditions by displaying the associated message and continuing execution. YottaDB/GT.M treats its own even-numbered conditions as failures. YottaDB/GT.M handles failure conditions by storing the error information in $ZSTATUS and XECUTEing $ETRAP or $ZTRAP In Direct Mode, YottaDB/GT.M only reports failure conditions to the principal device and does not XECUTE $ETRAP or $ZTRAP or set $ZSTATUS; if $PRINCIPAL is in CENABLE mode, YottaDB/GT.M sends it Informational messages which are not errors but a form of success. System service errors do not follow the YottaDB/GT.M odd/even pattern.
+
+---------------------
+ZPrint
+---------------------
+
+The ZPRINT command displays the source code lines selected by its argument.
+
+The format of the ZPRINT command is:
+
+.. parsed-literal::
+   ZP[RINT][:tvexpr][entryref[:label[+intexpr]][,...]
+
+* The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB/GT.M executes the command.
+* A ZPRINT with no argument prints the entire current routine or the current trigger. The current routine is the routine closest to the top of an invocation stack, as displayed by a ZSHOW "S"; in this case, at least two (2) spaces must follow the command to separate it from the next command on the line.
+* The optional entryref specifies the location in a routine at which to start printing; the entryref can include either a routinename or a label plus a routinename in the format LABEL^ROUTINENAME or LABEL+OFFSET^ROUTINENAME; if the entryref does not contain a routinename, ZPRINT defaults to the current routine.
+* The optional label following the entryref identifies a location at which to stop printing; the optional integer expression specifies an offset from the label; the label and offset together are referred to as a lineref and this lineref identifies the last line to print; if the offset is specified without the label, the offset in the optional lineref is always counted from the beginning of the routine, even when the entryref specifies a label.
+* If the ZPRINT argument includes the colon (:) delimiter, then the argument must also include at least one component of the optional lineref.
+* If the ZPRINT argument contains only the entryref, with no components of the optional lineref and the entryref contains a label or offset, ZPRINT displays only the one line that occurs at that entryref.
+* If the entryref contains only a routinename, ZPRINT displays the entire routine.
+* If the entryref contains a trigger name, ZPRINT displays its trigger code.
+* If the entryref contains only a routinename and the argument includes the optional lineref, ZPRINT starts the display at the beginning of the routine.
+* If the optional lineref specifies a line prior to the lineref specified within the entryref, ZPRINT does not display any lines.
+* If the offset in the optional lineref specifies a line beyond the end of the routine, ZPRINT displays the remainder of the routine.
+* If ZPRINT cannot locate the routine or if either of the labels does not appear in the routine, ZPRINT issues an error.
+* An indirection operator and an expression atom evaluating to a list of one or more ZPRINT arguments form a legal argument for a ZPRINT.
+
+Note that the routinename may only appear before the colon (:) delimiter. The integer expression offsets may be positive or negative, but they must always be delimited by a plus sign (+).
+
+For more information on entryrefs, refer to Chapter 5: “General Language Features of M”.
+
+++++++++++++++++++++++++
+Examples of ZPRINT
+++++++++++++++++++++++++
+
+Example:
+
+.. parsed-literal::
+   GTM>ZPRINT X^RTN
+
+This example displays the line beginning with the label X in the routine RTN.
+
+Example:
+
+.. parsed-literal::
+   GTM>ZPRINT X^RTN:X+5
+       
+   GTM>ZPRINT X+-5^RTN:X
+   GTM>ZPRINT X^RTN:X+-5^RTN
+
+The first line displays the line beginning with the label X and the next 5 lines in routine RTN. The second line displays the 5 lines preceding label X in the same routine and the line beginning with label X. The third line generates a run-time error because the routine name must appear only before the colon in the argument.
+
+Example:
+
+.. parsed-literal::
+   GTM>zprint ^A#1#
+    do ^test1
+     do stop^test2
+   GTM>
+
+This command displays the trigger code for trigger name A#1#. 
+
+.. parsed-literal::
+   ZPRINT ^x#/BREG : Print trigger routine user-named "x" in region BREG
+   ZPRINT ^x#1#/BREG : Print trigger routine auto-named "x#1" in region BREG
+   ZPRINT ^x#1#A/BREG : Print trigger routine auto-named "x#1", runtime disambiguated by "#A", AND in region BREG
+   ZPRINT +1^x#1#A/BREG : Print line 1 of trigger routine auto-named "x#1", runtime disambiguated by "#A", AND in region BREG
+
+These are some examples of disambiguator combinations.
+
+-----------------------
+ZRUPDATE
+-----------------------
+
+Publishes the new versions of routines to subscribers. The format of the ZRUPDATE command is:
+
+.. parsed-literal::
+   ZRUP[DATE][:tvexpr] expr [,...]
+
+* The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB/GT.M executes the command.
+* expr contains a list of object file names, with or without wildcards, which ZRUPDATE publishes new versions to subscribers.
+* To remove routines, delete the object files and publish the names of the deleted object files. Removal requires file names to be explicitly specified, because patterns with wildcards cannot match deleted files.
+* ZRUPDATE rejects file-name arguments that are symbolic links or start with a percent-sign (%)
+* ZRUPDATE recognizes question-mark (?) as a single character wild-card
+* If the path to a file is non-existent, the request is ignored except in the case where one desires a currently shared object file (one that was accessed before it was deleted) to no longer be shared.
+* To effect auto-relink, YottaDB/GT.M creates small temporary files in the directory referred to by $gtm_linktmpdir (defaulting to $gtm_tmp, which in turn defaults to /tmp, if unspecified). The names of these files are of the form gtm-relinkctl<md5sum> where <md5sum> is a hash of the realpath() to an auto-relink directory. The group and permissions match those for the directory as described in the section Shared Resources Authorization Permissions in Appendix E (YottaDB/GT.M Security Philosophy) of the UNIX Administration and Operations Guide. YottaDB/FIS recommends that all processes that share a directory whose contents are subject to ZRUPDATE use the same value for $gtm_linktmpdir so that all processes see update notifications - with different values of $gtm_linktmpdir, a ZRUPDATE by a process with one value of $gtm_linktmpdir would not be observed by a process with a different value of that environment variable.
+* ZRUPDATE always updates the existing shared memory relinkctl information for a file with an existing entry.
+
+-----------------------
+ZSHow
+-----------------------
+
+The ZSHOW command displays information about the current GT.M environment.
+
+The format of the ZSHOW command is:
+
+.. parsed-literal::
+   ZSH[OW][:tvexpr][expr[:glvn][,...]]
+
+* The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB/GT.M executes the command.
+* The optional expression specifies one or more codes determining the nature of the information displayed.
+* A ZSHOW with no argument defaults to ZSHOW "S"; in this case, at least two (2) spaces must follow the ZSHOW to separate it from the next command on the line.
+* The optional global or local variable name specifies the destination for the ZSHOW output; if the ZSHOW argument does not contain a global or local variable name, ZSHOW directs its display to the current device ($IO).
+* When the desination for the ZSHOW output is a local variable or the current device ($IO), ZSHOW sets the maximum length of a ZSHOW line output to 8192 bytes. ZSHOW stores information that does not fit within 8192 bytes in the next line.
+* When the destination for the ZSHOW output is a global variable, ZSHOW sets the maximum length of a ZSHOW line output to the maximum database record size. ZSHOW stores information that does not fit within the maximum database record size as immediate descendants, using ordinal subscripts starting at one (1), of the node holding the beginning of the information.
+* When the destination for the ZSHOW "V" output is a global variable, the %ZSHOWVTOLCL utility program can be used to restore data from that global variable into its original local variables. For more information refer to “ %ZSHOWVTOLCL”.
+* An indirection operator and an expression atom evaluating to a list of one or more ZSHOW arguments form a legal argument for a ZSHOW.
+
+++++++++++++++++++++++++++
+ZSHOW Information Codes
+++++++++++++++++++++++++++
+
+A ZSHOW argument is an expression containing codes selecting one or more types of information.
+
+A: A stands for Autorelink and provides output in the same format as MUPIP RCTLDUMP, but restricted to the routines contained in the relinkctl areas in use by the process issuing the command. ZSHOW "*" does not include ZSHOW "A" because of an expectation that the typical volume of the information does not provide a good return for its value. If you wish your error handling or INTRPT routines to dump this information, ask for it explicitly, possibly by doing a ZSHOW "A" into a local variable before doing a ZSHOW "*".
+
+B: displays active ZBREAK breakpoints
+
+C: provides the list of loaded external call packages and their routines. ZSHOW "C" does not report packages that are accessible but have not been accessed by the process.
+
+D: displays device information
+
+G: displays the access statistics for global variables and access to database file since process startup
+
+I: displays the current values of all intrinsic special variables
+
+L: displays LOCKs and ZALLOCATEs held by the process
+
+R: displays the invocation stack and a hash based on the MurmurHash3 algorithm of M source code for each routine on the stack.
+
+S: displays the invocation stack
+
+V: displays local and alias variables
+
+\* displays all possible types of ZSHOW information
+
+Codes may be upper- or lower-case. Invalid codes produce a run-time error. Multiple occurrences of the same code in one ZSHOW argument only produce one output instance of the corresponding information. The order of the first appearance of the codes in the argument determines the order of the corresponding output instances.
+
+If you are using a local variable destination and place another code ahead of "V", the effect is to have the results of the earlier code also appear in the results of the "V" code.
+
+If the wildcard (\*) occurs in the list, ZSHOW uses the default order (ZSHOW "IVBDLGR" ):
+
+* intrinsic special variables
+* local variables
+* ZBREAK information
+* device information
+* LOCK and ZALLOCATE information
+* Access statistics for global variables and database files(s).
+* YottaDB/GT.M invocation stack and an MD5 checksum of M source code for each routine on the stack.
+* the YottaDB/GT.M stack
+
+If G occurs in the list, the statistics are displayed in the following order in a comma-separated list where each item has its mnemonic followed by a colon and a counter. YottaDB/GT.M maintains the counter in DECIMAL. Each counter has 8-byte (can get as high as 2**64). If these counters exceed 18 decimal digits (somewhere between 2**59 and 2**60), which is the current YottaDB/GT.M numeric representation precision threshold, their use in arithmetic expressions in YottaDB/GT.M results in loss of precision. The mnemonics are:
+
+.. parsed-literal::
+   SET : # of SET operations (TP and non-TP) 
+   KIL : # of KILl operations (kill as well as zwithdraw, TP and non-TP) 
+   GET : # of GET operations (TP and non-TP) 
+   CAT : total of critical section acquisitions successes
+   CFE : total attempts in CFT caused by epochs
+   CFS : sum of squares of blocked critical section acquisitions
+   CFT : total of blocked critical section acquisitions
+   CQS : sum of squares of critical section acquisition queued sleeps
+   CQT : total of critical section acquisition queued sleeps
+   CYS : sum of squares of critical section acquisition processor yields
+   CYT : total of critical section acquisition processor yields
+   DTA : # of DaTA operations (TP and non-TP) 
+   ORD : # of $ORDer() operations (TP and non-TP). The count of $Order(xxx,1) operations are reported under this item. 
+   ZPR : # of $ZPRevious() (reverse order) operations (TP and non-TP). The count of $Order(xxx,-1) operations are reported under this item. 
+   QRY : # of $QueRY() operations (TP and non-TP) 
+   LKS : # of LocK calls (mapped to this db) that Succeeded 
+   LKF : # of LocK calls (mapped to this db) that Failed 
+   CTN : Current Transaction Number of the database for the last committed read-write transaction (TP and non-TP) 
+   DRD : # of Disk ReaDs from the database file (TP and non-TP, committed and rolled-back).This does not include reads that are satisfied by buffered globals for databases that use the BG (Buffered Global) access method. GT.M always reports 0 for databases that use the MM (memory-mapped) access method as this has no real meaning in that mode. 
+   DWT : # of Disk WriTes to the database file (TP and non-TP, committed and rolled-back). This does not include writes that are satisfied by buffered globals for databases that use the BG (Buffered Global) access method. GT.M always reports 0 for databases that use the MM (memory-mapped) access method as this has no real meaning in that mode.
+   NTW : # of Non-TP committed Transactions that were read-Write on this database 
+   NTR : # of Non-TP committed Transactions that were Read-only on this database 
+   NBW : # of Non-TP committed transaction induced Block Writes on this database 
+   NBR : # of Non-TP committed transaction induced Block Reads on this database 
+   NR0 : # of Non-TP transaction Restarts at try 0 
+   NR1 : # of Non-TP transaction Restarts at try 1 
+   NR2 : # of Non-TP transaction Restarts at try 2 
+   NR3 : # of Non-TP transaction Restarts at try 3 
+   TTW : # of TP committed Transactions that were read-Write on this database 
+   TTR : # of TP committed Transactions that were Read-only on this database 
+   TRB : # of TP read-only or read-write transactions that got Rolled Back (incremental rollbacks are not counted) 
+   TBW : # of TP transaction induced Block Writes on this database 
+   TBR : # of TP transaction induced Block Reads on this database 
+   TR0 : # of TP transaction Restarts at try 0 (counted for all regions participating in restarting TP transaction)
+   TR1 : # of TP transaction Restarts at try 1 (counted for all regions participating in restarting TP transaction)
+   TR2 : # of TP transaction Restarts at try 2 (counted for all regions participating in restarting TP transaction)
+   TR3 : # of TP transaction Restarts at try 3 (counted for all regions participating in restarting TP transaction)
+   TR4 : # of TP transaction Restarts at try 4 and above (restart counted for all regions participating in restarting TP transaction) 
+   TC0 : # of TP transaction Conflicts at try 0 (counted only for that region which caused the TP transaction restart)
+   TC1 : # of TP transaction Conflicts at try 1 (counted only for that region which caused the TP transaction restart)
+   TC2 : # of TP transaction Conflicts at try 2 (counted only for that region which caused the TP transaction restart)
+   TC3 : # of TP transaction Conflicts at try 3 (counted only for that region which caused the TP transaction restart)
+   TC4 : # of TP transaction Conflicts at try 4 and above (counted only for that region which caused the TP transaction restart)
+   DFL : # of times a process flushes the entire set of dirty database global buffers in shared memory to disk.
+   DFS : # of times a process does an fsync of the database file. For example: a) after writing an epoch journal record, b) as part of database file extension c) during database rundown d) as part of mupip reorg -truncate etc.
+   JFL : # of times a process flushes all dirty journal buffers in shared memory to disk. For example: when switching journal files etc.
+   JFS : # of times a process does an fsync of the journal file. For example: when writing an epoch record, switching a journal file etc.
+   JBB : # of bytes written to the journal buffer in shared memory.
+   JFB : # of bytes written to the journal file on disk. For performance reasons, GT.M always aligns the beginning of these writes to file system block size boundaries. On Unix, JFB counts all bytes including those needed for alignment in order to reflect the actual IO load on the journal file. Since the bytes required to achieve alignment may have already been counted as part of the previous JFB, processes may write the same bytes more than once, causing the JFB counter to typically be higher than JBB.
+   JFW : # of times a process invokes a write system call for a journal file.
+   JRL : # of logical journal records (e.g. SET, KILL etc.)
+   JRP : # of PBLK and AIMG journal records written to the journal file (these records are seen only in a -detail journal extract)
+   JRE : # of regular EPOCH journal records written to the journal file (only seen in a -detail journal extract); these are written every time an epoch-interval boundary is crossed while processing updates
+   JRI : # of idle EPOCH journal records written to the journal file (only seen in a -detail journal extract); these are written when a burst of updates is followed by an idle period, around 5 seconds of no updates after the database flush timer has flushed all dirty global buffers to the database file on disk
+   JRO : # of all journal records other than logical, PBLK, AIMG and EPOCH records written to the journal file (for example, PINI, PFIN, and so on.)
+   JEX : # of times a process extends the journal file
+   DEX : # of times a process extends the database file
+   [NT]B[WR] mnemonics are satisfied by either disk access or, for databases that use the BG (buffered global) access method, global buffers in shared memory.
+   ZTR : # of ZTRIGGER command operations
+   DFL : # of Database FLushes
+   DFS : # of Database FSyncs
+   JFL : # of Journal FLushes
+   JFS : # of Journal FSyncs
+   JBB : # of Bytes written to Journal Buffer
+   JFB : # of Bytes written to Journal File
+   JFW : # of Journal File Writes
+   JRL : # of Logical Journal Records
+   JRP : # of Pblk Journal Records
+   JRE : # of Regular Epoch Journal Records
+   JRI : # of Idle epoch Journal Records
+   JRO : # of Other Journal Records
+   JEX : # of Journal file EXtensions
+   DEX : # of Database file EXtensions
+   CAT : # of crit acquired total successes
+   CFE : # of attempts in CFT caused by epochs
+   CFS : sum of squares grab crit failed
+   CFT : # of grab crit failures
+   CQS : sum of squares grab crit queued sleeps
+   CQT : # of grab crit queued sleeps
+   CYS : sum of squares grab crit yields
+   CYT : # of grab crit yields
+   BTD : # of Block Transitions to Dirty
+
+If an operation is performed inside a TP transaction, and not committed as a consequence of a rollback, or an explicit or implicit restart, YottaDB/GT.M still counts it.
+
+KILL/GET/DATA/QUERY/ORDER/ZPREVIOUS operations on globals that never existed are not counted, while the same operations on globals that once existed but have since been killed are counted.
+
+Name-level ORDER/ZPREVIOUS operations (for example, $ORDER(^a) with no subscripts) increment the count for each transition into a region as they process the global directory map up to the point they find a global with data .
+
+.. note::
+   The use of comma-separated pieces for ZSHOW "G" allows for future releases of YottaDB/GT.M to provide additional data while facilitating upward compatibility of application code. Since YottaDB/FIS reserves the right to change the order in which statistics are reported in future versions of YottaDB/GT.M, application programs should use the names (mnemonics) when picking pieces from the string instead of relying on field position or ordering.
+
+In addition, "G" also displays a line containing aggregated statistics (GLD:\*,REG:* line) for all database files for the global directory and region name. If two or more regions (in the same or different global directories) map to the same physical database file, the ZSHOW "G" reports identical statistics for those two regions, but counts them only once across all database files in this line. It always reports the value for CTN as 0 because this statistic makes sense only for individual database files.
+
+ZSHOW "G" can be used for a benchmark exercise. A process can make periodic commands to ZSHOW "G" and store the returned strings in a local variable - a fast storage mechanism in YottaDB/GT.M - for subsequent analysis.
+
+Alternatively, since the $ZJOBEXAM() function by default performs a ZSHOW "*" which in turn automatically includes the "G" information code, invoking MUPIP INTRPT commands periodically on a particular process causes it to additionally record all global access statistics in the $ZJOBEXAM dump file.
+
+ZSHOW "G" reports process private global access statistics only for regions whose corresponding segments have an access method of BG or MM in the global directory. For regions with other access methods, for example GT.CM GNP, which maps a region/segment to a remote database file, ZSHOW "G" does not report any process private statistics even though aggregated statistics (across all processes) will continue to be gathered in the remote database file header.
+
+If "L" occurs in the list, ZSHOW displays the current active M LOCKs and their corresponding LEVEL. On a active M lock, a LOCK+ increases LEVEL by 1 and LOCK- decreases the LEVEL by 1. GT.M increments MLG (M Locks Granted) by 1 for every LOCK successful LOCK acquiring action. YottaDB/GT.M treats LOCKs grouped into a single action by specifying them within parentheses as a single lock action. For example, LOCK (^SUCCESS1,^SUCCESS2) increments MLG by 1.
+
+YottaDB/GT.M increment MLT (M Locks Timeout) by 1 for every failed (timeout) attempt to LOCK a resource.
+
+Every user level lock request in turn translates to one or more calls to the database lock code (depending on the timeout and the number of lock names specified in the same lock command) which increments the LKS and/or LKF statistics of the ZSHOW "G" output appropriately.
+
+When $PRINCIPAL input and output are different devices, ZSHOW "D" shows them as separate items identified as 0 for input and 0-out for output. ZSHOW "D" includes "TLS" in the second line of the output for an encrypted socket. ZSHOW "D" reports available information on both the local and remote sides of a TCP socket.
+
+In UTF-8 mode, the ZSHOW command exhibits byte-oriented and display-oriented behavior as follows:
+
+* ZSHOW targeted to a device (ZSHOW "*") aligns the output according to the numbers of display columns specified by the WIDTH deviceparameter.
+* ZSHOW targeted to a local (ZSHOW "*":lcl) truncates data exceeding 2048KB at the last character that fully fits within the 2048KB limit.
+* ZSHOW targeted to a global (ZSHOW "*":^CC) truncates data exceeding the maximum record size for the target global at the last character that fully fits within that record size. 
+* ZSHOW "L" displays the following M-lock statistics in one line just before displaying the LOCKs held by the process.
+
+++++++++++++++++++++
+Examples of ZSHOW
+++++++++++++++++++++
+
+Example:
+
+.. parsed-literal::
+   GTM>ZSHOW "db"
+
+This command displays all devices with deviceparameters reflecting their current characteristics followed by any current ZBREAK locations with their corresponding actions.
+
+Example:
+
+.. parsed-literal::
+   GTM>ZSHOW "dbd"
+
+This command displays the same output as the previous example.
+
+Example:
+
+.. parsed-literal::
+   GTM>ZSHOW "ax"
+
+This command generates a run-time error.
+
+Example:
+
+.. parsed-literal::
+   LAB1  DO LAB2
+         Quit
+   LAB2  Do LAB3
+         Quit
+   LAB3  ZSHow
+         Quit
+
+Produces the results:
+
+.. parsed-literal::
+   LAB3^RTN
+   LAB2^RTN
+   LAB1^RTN
+
+Example:
+
+.. parsed-literal::
+   GTM>ZSHOW "G"
+
+For process that has access to two database files produces results like the following:
+
+.. parsed-literal::
+   GLD:*,REG:*,SET:205,KIL:0,GET:1,DTA:0,ORD:0,ZPR:0,QRY:0,LKS:0,LKF:0,CTN:0,DRD:9,DWT:15,
+   NTW:203,NTR:4,NBW:212,NBR:414,NR0:0,NR1:0,NR2:0,NR3:0,TTW:1,TTR:0,TRB:0,TBW:2,TBR:6,
+   TR0:0,TR1:0,TR2:0,TR3:0,TR4:0,TC0:0,TC1:0,TC2:0,TC3:0,TC4:0,ZTR:0,DFL:0,DFS:0,JFL:0,JFS:0,JBB:0,JFB:0,JFW:0,JRL:0,JRP:0,
+   JRE:0,JRI:0,JRO:0,JEX:0,DEX:0,CAT:4,CFE:0,CFS:0,CFT:0,CQS:0,CQT:0,CYS:0,CYT:0,BTD:0
+   GLD:/home/gtmuser1/.fis-gtm/V5.4-002B_x86/g/mumps.gld,REG:DEFAULT,SET:205,KIL:0,GET:1,
+   DTA:0,ORD:0,ZPR:0,QRY:0,LKS:0,LKF:0,CTN:411,DRD:9,DWT:15,NTW:2
+   03,NTR:4,NBW:212,NBR:414,NR0:0,NR1:0,NR2:0,NR3:0,TTW:1,TTR:0,TRB:0,TBW:2,TBR:6,TR0:0,
+   TR1:0,TR2:0,TR3:0,TR4:0,TC0:0,TC1:0,TC2:0,TC3:0,TC4:0
+   GLD:/tmp/tst/test.gld,REG:DEFAULT,SET:205,KIL:0,GET:1,DTA:0,ORD:0,ZPR:0,QRY:0,LKS:0,LKF:0,
+   CTN:411,DRD:9,DWT:15,NTW:203,NTR:4,NBW:212,NBR:414,NR0:0,NR1:0,NR2:0,NR3:0,TTW:1,TTR:0,TRB:0,
+   TBW:2,TBR:6,TR0:0,TR1:0,TR2:0,TR3:0,TR4:0,TC0:0,TC1:0,TC2:0,TC3:0,TC4:0,ZTR:0,DFL:0,DFS:0,JFL:0,JFS:0,JBB:0,JFB:0,JFW:0,
+   JRL:0,JRP:0,JRE:0,JRI:0,JRO:0,JEX:0,DEX:0,CAT:4,CFE:0,CFS:0,CFT:0,CQS:0,CQT:0,CYS:0,CYT:0,BTD:0
+
+Example:
+
+.. parsed-literal::
+   GTM>ZSHOW "G"
+
+Assuming that a YottaDB/GT.M process uses the global directory "/tmp/x1.gld" and opens two regions REG1 and REG2 corresponding to two database files, the above command produces results like the following:
+
+.. parsed-literal::
+   GLD:*,REG:*,SET:0,KIL:0,GET:0,DTA:0,ORD:0,ZPR:0,QRY:0,LKS:0,LKF:0,CTN:0,DRD:0,DWT:0,NTW:0,
+   NTR:0,NBW:0,NBR:0,NR0:0,NR1:0,NR2:0,NR3:0,TTW:0,TTR:0,TRB:0,
+   TBW:0,TBR:0,TR0:0,TR1:0,TR2:0,TR3:0,TR4:0,TC0:0,TC1:0,TC2:0,TC3:0,TC4:0
+   GLD:/tmp/x1.gld,REG:REG1,SET:0,KIL:0,GET:0,DTA:0,ORD:0,ZPR:0,QRY:0,LKS:0,LKF:0,CTN:0,DRD:0,
+   DWT:0,NTW:0,NTR:0,NBW:0,NBR:0,NR0:0,NR1:0,NR2:0,NR3:0,TTW:0,
+   TTR:0,TRB:0,TBW:0,TBR:0,TR0:0,TR1:0,TR2:0,TR3:0,TR4:0,TC0:0,TC1:0,TC2:0,TC3:0,TC4:0,ZTR:0,DFL:0,DFS:0,JFL:0,JFS:0,JBB:0,
+   JFB:0,JFW:0,JRL:0,JRP:0,JRE:0,JRI:0,JRO:0,JEX:0,DEX:0,CAT:4,CFE:0,CFS:0,CFT:0,CQS:0,CQT:0,CYS:0,CYT:0,BTD:0
+   GLD:/tmp/x1.gld,REG:REG2,SET:0,KIL:0,GET:0,DTA:0,ORD:0,ZPR:0,QRY:0,LKS:0,LKF:0,CTN:0,DRD:0,
+   DWT:0,NTW:0,NTR:0,NBW:0,NBR:0,NR0:0,NR1:0,NR2:0,NR3:0,TTW:0,
+   TTR:0,TRB:0,TBW:0,TBR:0,TR0:0,TR1:0,TR2:0,TR3:0,TR4:0,TC0:0,TC1:0,TC2:0,TC3:0,TC4:0,ZTR:0,DFL:0,DFS:0,JFL:0,JFS:0,JBB:0,
+   JFB:0,JFW:0,JRL:0,JRP:0,JRE:0,JRI:0,JRO:0,JEX:0,DEX:0,CAT:4,CFE:0,CFS:0,CFT:0,CQS:0,CQT:0,CYS:0,CYT:0,BTD:0
+
+Example:
+
+.. parsed-literal::
+   GTM>ZSHOW "G":zgbl
+
+This example redirects the output of ZSHOW "G" into a local variable zgbl:
+
+.. parsed-literal::
+   zgbl("G",0)="GLD:*,REG:*,SET:0,KIL:0,GET:0,DTA:0,ORD:0,
+   ZPR:0,QRY:0,LKS:0,LKF:0,CTN:0,DRD:0,DWT:0,NTW:0,NTR:0,NBW:0,NBR:0,NR0:0,NR1:0,NR2:0,NR3:0,TTW:0,
+   TTR:0,TRB:0,TBW:0,TBR:0,TR0:0,TR1:0,TR2:0,TR3:0,TR4:0,TC0:0,TC1:0,TC2:0,TC3:0,TC4:0,ZTR:0,DFL:0,DFS:0,JFL:0,JFS:0,JBB:0,
+   JFB:0,JFW:0,JRL:0,JRP:0,JRE:0,JRI:0,JRO:0,JEX:0,DEX:0,CAT:4,CFE:0,CFS:0,CFT:0,CQS:0,CQT:0,CYS:0,CYT:0,BTD:0"
+   zgbl("G",1)="GLD:/tmp/x1.gld,REG:REG1,SET:0,KIL:0,GET:0,DTA:0,ORD:0,ZPR:0,QRY:0,
+   LKS:0,LKF:0,CTN:0,DRD:0,DWT:0,NTW:0,NTR:0,NBW:0,NBR:0,NR0:0,NR1:0,NR2:0,
+   NR3:0,TTW:0,TTR:0,TRB:0,TBW:0,TBR:0,TR0:0,TR1:0,TR2:0,TR3:0,TR4:0,TC0:0,TC1:0,TC2:0,TC3:0,TC4:0,ZTR:0,DFL:0,DFS:0,JFL:0,
+   JFS:0,JBB:0,JFB:0,JFW:0,JRL:0,JRP:0,JRE:0,JRI:0,JRO:0,JEX:0,DEX:0,CAT:4,CFE:0,CFS:0,CFT:0,CQS:0,CQT:0,CYS:0,CYT:0,BTD:0"
+   zgbl("G",2)="GLD:/tmp/x1.gld,REG:REG2,SET:0,KIL:0,GET:0,DTA:0,ORD:0,ZPR:0,QRY:0,LKS:0,
+   LKF:0,CTN:0,DRD:0,DWT:0,NTW:0,NTR:0,NBW:0,NBR:0,NR0:0,NR1:0,NR2:0,
+   NR3:0,TTW:0,TTR:0,TRB:0,TBW:0,TBR:0,TR0:0,TR1:0,TR2:0,TR3:0,TR4:0,TC0:0,TC1:0,TC2:0,TC3:0,TC4:0,ZTR:0,DFL:0,DFS:0,JFL:0,
+   JFS:0,JBB:0,JFB:0,JFW:0,JRL:0,JRP:0,JRE:0,JRI:0,JRO:0,JEX:0,DEX:0,CAT:4,CFE:0,CFS:0,CFT:0,CQS:0,CQT:0,CYS:0,CYT:0,BTD:0"
+
+Example:
+
+.. parsed-literal::
+   GTM>LOCK ^FAIL:10
+   GTM>lock (^SUCCESS1,^SUCCESS2)
+   GTM>zshow "L"
+   MLG:1,MLT:1
+   LOCK ^SUCCESS1 LEVEL=1
+   LOCK ^SUCCESS2 LEVEL=1
+
+This output shows that a process locked ^SUCCESS1 and ^SUCCESS2 and another the lock on ^FAIL failed due to time out.
+
+Note that even though two lock resources ^SUCCESS1 and ^SUCCESS2 were specified in the LOCK command that succeeded, YottaDB/GT.M increments the MLG counter by only 1 because they are part of the same LOCK command. A ZSHOW "L":var by the same process (redirecting the output of ZSHOW into a local or global variable) would result in <var> holding the following contents.
+
+.. parsed-literal::
+   var("L",0)="MLG:1,MLT:1"
+   var("L",1)="LOCK ^SUCCESS1 LEVEL=1"
+   var("L",2)="LOCK ^SUCCESS2 LEVEL=1"
+
+Example:
+
+.. parsed-literal::
+   GTM>ZSHOW "L":var
+   GTM>ZWRITE var
+   var("L",0)="MLG:1,MLT:1"
+   var("L",1)="LOCK ^SUCCESS1 LEVEL=1"
+   var("L",2)="LOCK ^SUCCESS2 LEVEL=1"
+
+This example shows how ZSHOW "L" redirects it output into a local variable var.
+
+Example:
+
+Suppose a process runs LOCK (^SUCCESS1,^SUCCESS2) which succeeds and a LOCK +^FAIL:1 which times out due to another process holding that lock. A ZSHOW "L" at this point displays the following output.
+
+++++++++++++++++++++++++++++
+ZSHOW Destination Variables
+++++++++++++++++++++++++++++
+
+ZSHOW may specify an unsubscripted or subscripted global or local variable name (glvn) into which ZSHOW places its output. If the argument does not include a global or local variable name, ZSHOW directs its output to the current device.
+
+When ZSHOW directs its output to a variable, it adds two levels of descendants to that variable. The first level subscript contains a one-character string from the set of upper-case ZSHOW action codes, identifying the type of information. ZSHOW implicitly KILLs all descendants of the first level nodes. ZSHOW stores information elements at the second level using ascending integers, starting at 1.
+
+When a ZSHOW "V" directs its output to a local variable (lvn), the result does not contain a copy of the descendants of the resulting "V" node.
+
+Example:
+
+.. parsed-literal::
+   GTM>Kill  Set b(1,"two")="test" ZSHow "v":a ZWRite
+   a("V",1)="b(1,""two"")=""test"""
+   b(1,"two")="test"
+   GTM>
+
+This ZSHow stores all local variables in the local variable a. Note that ZSHOW does not replicate a("V") and a("V",1).
+
+Example:
+
+.. parsed-literal::
+   GTM>KILL  SET a(1,"D",3,5)="stuff",a(1,"X",2)="",a(1)=1
+   GTM>ZSHow "d":a(1)
+   GTM>ZWRite
+   a(1)=1
+   a(1,"D",1)="/dev/pts/1 OPEN TERMINAL NOPAST NOESCA NOREADS TYPE WIDTH=80 LENG=24 
+   EDIT "
+   a(1,"X",2)="" 
+   GTM>
+
+This ZSHOW stores the current open device information under a(1). Notice how the ZSHOW overlays the prior value of a(1,"D",3,5).
+
+Example:
+
+.. parsed-literal::
+   GTM>KILL ^ZSHOW
+                   
+   GTM>ZB -\*,lab^rout ZSH "B":^ZSHOW
+   GTM>ZWRite ^ZSHOW
+   ^ZSHOW("B",1)="LAB^ROUT"
+   GTM>
+
+This ZSHOW stores the current ZBREAK information under the global variable ^ZSHOW.
+
++++++++++++++++++++++
+Use of ZSHOW
++++++++++++++++++++++
+
+Use ZSHOW as
+
+* a debugging tool to display information on the environment.
+* an error-handling tool to capture context information after an unpredictable error with output directed to a sequential file or a global.
+* part of a context-switching mechanism in a server program that must manage multiple contexts.
+* a development tool to determine the external call table entries available from the current process.
+
+To minimize confusing data interactions, limit instances of directing ZSHOW output into variables holding other kinds of information and directing ZSHOW "V" output into local variables. For a comparison of ZSHOW "V" and ZWRITE, refer to “ZWRite”.
+
+--------------------
+ZSTep
+--------------------
+
+The ZSTEP command provides the ability to control YottaDB/GT.M execution. When a ZSTEP is issued from Direct Mode, execution continues to the beginning of the next target line and then YottaDB/GT.M XECUTEs the ZSTEP action. The keyword in the optional ZSTEP argument determines the class of eligible target lines.
+
+The format of the ZSTEP command is:
+
+.. parsed-literal::
+   ZST[EP][:tvexpr] [keyword[:expr]][,...]
+
+* The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB/GT.M executes the command.
+* The optional keyword specifies the nature of the step; the keywords are INTO, OVER, and OUTOF.
+* A ZSTEP with no argument performs the default action OVER; in this case, at least two (2) spaces must follow the ZSTEP to separate it from the next command on the line, which will be ignored.
+* The optional expression specifies GT.M code to XECUTE when the ZSTEP arrives at its destination.
+* If the ZSTEP argument does not contain an expression argument, ZSTEP defaults the action to the value of $ZSTEP, which defaults to "BREAK."
+
+.. note::
+   The ZSTEP argument keywords are not expressions and ZSTEP does not accept argument indirection.
+
+In Direct Mode, ZSTEP performs an implicit ZCONTINUE and therefore YottaDB/GT.M ignores all commands on the Direct Mode command line after the ZSTEP.
+
+The keyword arguments define the class of lines where ZSTEP next pauses execution to XECUTE the ZSTEP action. When a ZSTEP command has multiple arguments, it ignores all arguments except the last.
+
+++++++++++++++++++
+ZSTEP INTO
+++++++++++++++++++
+
+ZSTEP INTO pauses at the beginning of the next line, regardless of transfers of control. When the ZSTEPed line invokes another routine or a subroutine in the current routine, ZSTEP INTO pauses at the first line of code associated with the new YottaDB/GT.M stack level.
+
+++++++++++++++++++
+ZSTEP OUtof
+++++++++++++++++++
+
+ZSTEP OUTOF pauses at the beginning of the next line executed after an explicit or implicit QUIT from the current YottaDB/GT.M invocation stack level. A ZSTEP OUTOF does not pause at lines associated with the current YottaDB/GT.M stack level or with levels invoked from the current level.
+
++++++++++++++++++
+ZSTep OVer
++++++++++++++++++
+
+ZSTEP OVER pauses at the beginning of the next line in the code associated with either the current YottaDB/GT.M stack level or a previous YottaDB/GT.M stack level if the ZSTEPed line contains an explicit or implicit QUIT from the current level. A ZSTEP OVER does not pause at lines invoked from the current line by DOs, XECUTEs or extrinsics.
+
++++++++++++++++++++
+ZStep Actions
++++++++++++++++++++
+
+The optional action parameter of a ZSTEP must contain an expression evaluating to valid YottaDB/GT.M code. By default, ZSTEP uses the value of $ZSTEP, which defaults to "B" ("BREAK"), and enters Direct Mode. When a ZSTEP command specifies an action, the process does not enter Direct Mode unless the action explicitly includes a BREAK command.
+
++++++++++++++++++++
+ZStep Interactions
++++++++++++++++++++
+
+ZSTEP currently interacts with certain other elements in the YottaDB/GT.M environment.
+
+* If a <CTRL-C> or a CTRAP character arrives at certain points in ZSTEP processing, there is a small chance YottaDB/GT.M may ignore the <CTRL-C> or CTRAP; in a later release, <CTRL-C> and CTRAPs will always have priority over ZSTEP.
+* If GT.CM reports an asynchronous network error, a ZSTEP may cause the network error to go unreported; the chance of such an occurrence is small and the chance the error would subsequently be reported is high; in a later release, network errors will always be given priority over ZSTEP.
+
++++++++++++++++
+Use of ZSTEP
++++++++++++++++
+
+Use ZSTEP to incrementally execute a routine or series of routines. Execute any YottaDB/GT.M command from Direct Mode at any ZSTEP pause. To resume normal execution, use ZCONTINUE.
+
+Note that ZSTEP arguments are keywords rather than expressions. They do not allow indirection, and argument lists have no utility.
+
+ZSTEP actions that include commands followed by a BREAK perform some action before entering Direct Mode. ZSTEP actions that do not include a BREAK perform the command action and continue execution. Use ZSTEP actions that issue conditional BREAKs and subsequent ZSTEPs to do such things as test for changes in the value of a variable.
+
+++++++++++++++++++++++++
+Examples of ZSTEP
+++++++++++++++++++++++++
+
+Example:
+
+.. parsed-literal::
+   GTM>ZSTEP INTO:"W ! ZP @$ZPOS W !"
+
+This ZSTEP resumes execution of the current routine. At the beginning of the next line executed, the ZSTEP action ZPRINTs the source code for that line. Because the specified action does not contain a BREAK command, execution continues to the next line and all subsequent lines in the program flow.
+
+Example:
+
+.. parsed-literal::
+   GTM>Set curx=$get(x),zact="ZSTEP:$get(curx)=$get(x) INTO:zact Break:$get(curx)'=$get(x)"
+   GTM>ZSTEP INTO:zact
+
+This sequence uses ZSTEP to invoke Direct Mode at the beginning of the first line after the line that alters the value of x.
+
+------------------------
+ZSYstem
+------------------------
+
+The ZSYSTEM command creates a child of the current process .
+
+The format of the ZSYSTEM command is:
+
+.. parsed-literal::
+   ZSY[STEM][:tvexpr] [expr][,...]]
+
+* The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB/GT.M executes the command.
+* The optional expression specifies the command passed to the shell; after processing the command, the shell returns control to YottaDB/GT.M. The maximum length for the optional expression is 4K bytes.
+* An indirection operator and an expression atom evaluating to a list of one or more ZSYSTEM arguments form a legal argument for a ZSYSTEM.
+
+The ZSYSTEM command creates a new process and passes its argument to a shell for execution. The new process executes in the same directory as the initiating process using the shell specified by the SHELL environment variable, or if that is not defined, the default shell (typically Bourne). The new process has the same operating system environment, such as environment variables and input/output devices, as the initiating process. The initiating process pauses until the new process completes before continuing execution. After control returns to YottaDB/GT.M, $ZSYSTEM contains the return status of the forked process.
+
+A ZSYSTEM with a null argument creates a shell with the standard input and output devices. When the shell exits, control is returned to YottaDB/GT.M. For an interactive process, both stdin and stdout are generally the user's terminal, in which case the shell prompts for input until provided with an exit command. A ZSYSTEM with no arguments must be followed by two (2) spaces before any following command on the same line and is equivalent to a ZSYSTEM with a single null string argument.
+
+If a ZSYSTEM command has multiple arguments, it starts a new process for each argument, one at a time. ZSYSTEM waits for one process to complete before starting the next one.
+
+A ZSYSTEM command within a TP transaction, violates the property of Isolation. Consequently because of the way that YottaDB/GT.M implements transaction processing, a ZSYSTEM within a transaction may suffer an indefinite number of restarts ("live lock").
+
+An indirection operator and an expression atom evaluating to a list of one or more ZSYSTEM arguments form a legal argument for a ZSYSTEM.
+
+.. note::
+   PIPE devices are frequently a better alternative to ZSYSTEM commands as they have timeouts, can perform controlled co-processing, easily return more information and are more efficient where you need multiple operations.
+
++++++++++++++++++++++++++++
+Examples of ZSYSTEM
++++++++++++++++++++++++++++
+
+Example:
+
+.. parsed-literal::
+   GTM>zsystem "ls \*.m"
+
+This uses ZSYSTEM to fork a process that then performs the ls command with \*.m as an argument to ls. Once the command completes, the forked process terminates.
+
+.. parsed-literal::
+   GTM>zsystem "echo 'hello world'"
+   hello world
+
+This examples show a possible use of quoting with ZSYSTEM to run the echo command.
+
+Example:
+
+.. parsed-literal::
+   GTM>zsystem
+   $
+
+This ZSYSTEM has no argument so the forked process prompts for input.
+
+------------------
+ZTCommit
+------------------
+
+The ZTCOMMIT command marks the end of a logical transaction within a YottaDB/GT.M program. ZTCOMMIT used with ZTSTART "fences" transactions (that is, marks the end and beginning). Fencing transactions allows the MUPIP JOURNAL facility to prevent incomplete application transactions consisting of multiple global updates from affecting the database during a database recovery. YottaDB/FIS strongly recommends the use of the M transaction processing commands such as TSTART and TCOMMIT rather than ZTSTART and ZTCOMMIT. YottaDB/FIS no longer tests the deprecated ZTSTART / ZTCOMMIT functionally.
+
+The format of the ZTCOMMIT command is:
+
+.. parsed-literal::
+   ZTC[OMMIT][:tvexpr] [intexpr]
+
+* The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB/GT.M executes the command.
+* The optional integer expression specifies the number of currently open ZTSTARTs for the ZTCOMMIT to close.
+* A ZTCOMMIT with no argument closes one ZTSTART; in this case, at least two (2) spaces must follow the command to separate it from the next command on the line; with an argument of 0, ZTCOMMIT closes all open ZTSTARTs.
+* When an application requires sub-transactions, it may nest ZTSTARTs and ZTCOMMITs to a maximum depth of 255. However, a ZTCOMMIT must "close" the outer-most ZTSTART before journaling accepts any part of the "transaction" as complete.
+* An indirection operator and an expression atom evaluating to a list of one or more ZTCOMMIT arguments form a legal argument for a ZTCOMMIT.
+
+++++++++++++++++++++++
+Examples of ZTCOMMIT
+++++++++++++++++++++++
+
+Example:
+
+.. parsed-literal::
+   GTM>ZTCOMMIT 0
+
+This ZTCOMMIT issued from Direct Mode would close any open ZTSTARTs.
+
+Example:
+
+.. image:: ztcommit.gif
+
+This shows a transaction with two independent nested sub-transactions. For additional examples, refer to the ZTSTART examples.
+
+------------------------
+ZTRigger
+------------------------
+
+Invokes all triggers with signatures matching the global variable name and the command type of ZTR[IGGER]. The format of the ZTRIGGER command is:
+
+.. parsed-literal::
+   ZTR[IGGER] gvn 
+
+* ZTRIGGER allows an application to invoke triggers without a specific global update.
+* ZTRIGGER actions are Atomic whether they are executed inside or outside a TP transaction; but inside TP they remain process-private until the TCOMMIT of the full transaction. ZTRIGGER might be associated with a series of updates grouped into a TP transaction or to perform an implicit transaction without a TSTART/TCOMMIT.
+* A ZTRIGGER operation sets $ZTRIGGEROP to ZTR.
+
+Example:
+
+.. parsed-literal::
+   GTM>write $ztrigger("S")
+   ;trigger name: C#1#  cycle: 1
+   +^C -commands=ZTR -xecute="write ""ZTR trigger invoked"""
+   1
+   GTM>ztrigger ^C
+   ZTR trigger invoked
+   GTM>
+
+--------------------
+ZTStart
+--------------------
+
+The ZTSTART command marks the beginning of a logical transaction within a YottaDB/GT.M program. ZTSTART and ZTCOMMIT "fence" transactions (that is, mark the beginning and end). Fenced transactions prevent the MUPIP JOURNAL facility from recovering incomplete transactions. All ZTSTARTs must be matched with ZTCOMMITs before the journal processing facility recognizes the transaction as complete. YottaDB/FIS strongly recommends the use of the M transaction processing commands such as TSTART and TCOMMIT rather than ZTSTART and ZTCOMMIT. YottaDB/FIS no longer tests the deprecated ZTSTART / ZTCOMMIT functionally.
+
+The format of the ZTSTART command is:
+
+.. parsed-literal::
+   ZTS[TART][:tvexpr]
+
+* The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB/GT.M executes the command.
+* Because ZTSTART has no argument, at least two (2) spaces must follow the command to separate it from the next command on the line.
+
+For more information on Journaling and transaction fencing, refer to the "YottaDB/GT.M Journaling" chapter in the Administration and Operations Guide.
+
+-------------------
+ZWIthdraw
+-------------------
+
+The ZWITHDRAW command KILLs the data value for a variable name without affecting the nodes descended from that node.
+
+The format of the ZWITHDRAW command is:
+
+.. parsed-literal::
+   ZWI[THDRAW][:tvexpr] glvn
+
+* The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB/GT.M executes the command.
+* The global or local variable name identifies the variable for which ZWITHDRAW removes the data value.
+* An indirection operator and an expression atom evaluating to a list of one or more ZWITHDRAW arguments form a legal argument for a ZWITHDRAW.
+
+ZWITHDRAW provides a tool to quickly restore a node to a state where it has descendants and no value-- that is, where $DATA for that node will have a value of 10 -- for the case where such a state has some control meaning. YottaDB/GT.M also provides the ZKILL command, with functionality identical to ZWITHDRAW.
+
+++++++++++++++++++++++
+Examples of ZWITHDRAW
+++++++++++++++++++++++
+
+Example:
+
+.. parsed-literal::
+   Kill A
+   Set A="A",A(1)=1,A(1,1)=1
+   WRite $Data(A(1)),!
+   ZWIthdraw A(1)
+   WRite $D(A(1)),!
+   ZWRite A
+   Quit
+
+produces the result:
+
+.. parsed-literal::
+   11
+   10
+   A="A"
+   A(1,1)=1
+
+This sets up local variables A and A(1) and A(1,1). It then deletes the data for A(1) with ZWITHDRAW. The ZWRITE command shows ZWITHDRAW KILLed A(1) but left A and A(1,1).
+
+-------------------
+ZWRite
+-------------------
+
+The ZWRITE command displays the current value of one or more local , alias variables, ISVs, or global variables. ZWRITE formats its output so that each item in the display forms a valid argument to a SET @ command. This means ZWRITE encloses string values in quotes and represents non-graphic (control) characters in $CHAR() syntax.
+
+The format of the ZWRITE command is:
+
+.. parsed-literal::
+   ZWR[ITE][:tvexpr] [zwrglvn[,...]]
+
+* The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB/GT.M executes the command.
+* The optional global or local variable name specifies the variable for ZWRITE to display.
+* ZWRITE accepts several alternative syntaxes in place of subscripts; ZWRITE also accepts arguments specifying naked references to globals. Because ZWRITE is primarily a debugging tool, ZWRITE does not affect the naked indicator.
+* ZWRITE accepts null subscripts in its arguments, when these are allowed, and reports array nodes that have null subscripts.
+* A ZWRITE with no arguments displays all the currently available local variables; in this case, at least two (2) spaces must follow the command to separate it from the next command on the line.
+* If the specified global or local variable name is unsubscripted, ZWRITE displays the unsubscripted variable and all subscripted descendants.
+* If an asterisk (*) appears in the space normally occupied by the last subscript in a subscripted variable name, ZWRITE displays all variable nodes descended from the previously specified subscripts.
+* ZWRITE accepts YottaDB/GT.M pattern-match syntax in place of both variable names and subscripts.
+* ZWRITE <name>(), where <name> is a local or a global is treated as a synonym for ZWRITE <name>.
+* A colon acts as a range operator for subscript values; ZWRITE displays all subscripts of the variable starting with the value on the left side of the colon and ending with the value on the right side of the colon; if the range delimiter has no left-hand value, or has the empty string as the left-hand value, the display begins at the first subscript; if the range delimiter has no right-hand value or has the empty string as the right-hand value, the display ends at the last subscript at that level; if the range delimiter has no values or empty strings on either side, ZWRITE displays all subscripts at that level; an empty subscript level also displays all subscripts at that level.
+* An indirection operator and an expression atom evaluating to a list of one or more ZWRITE arguments form a legal argument for a ZWRITE.
+* Long ZWRITE format records can be loaded.
+* ZWRITE as applied to local variables and ZSHOW "V" are conceptually similar, with two differences:
+
+  * ZWRITE allows the use of patterns to specify variables and subscripts to display whereas ZSHOW "V" applies to all local variables.
+  * ZSHOW "V" optionally allows the output to be directed to a global or local variable, whereas ZWRITE always directs its output to the current output device.
+
++++++++++++++++++++++++++++++++++++
+ZWRITE Format for Alias Variables
++++++++++++++++++++++++++++++++++++
+
+ZWRITE and ZSHOW "V" dump the values of alias variables, alias container variables, and the associated data as described below, in ZWRITE format. In the ZWRITE format, the contents of an array are displayed with the name associated with that array that appears first in the lexical ordering of names. YottaDB/GT.M displays both the unsubscripted and subscripted nodes and values, appending a notational space-semicolon-asterisk (";*") sequence to the unsubscripted value, if any. The ZWRITE format output can be read into a YottaDB/GT.M process with the commands Read x and Set @x (where x is any name) executed in a loop. ";*" acts as a comment ignored by the SET command. In the following example, since A and C are aliases associated with the same array, the nodes of that array are output with A, which occurs lexically before C, even though the values were assigned to C:
+
+.. parsed-literal::
+   GTM>Set C=1,C("Malvern")="Wales",*A=C,*B(-3.14)=C
+           
+   GTM>ZSHow "V" ; ZWRite would produce the same output
+   A=1 ;*
+   A("Malvern")="Wales"
+   \*B(-3.14)=A
+   \*C=A
+   GTM>ZWRite C ; Only one is name associated with the array on this ZWRite command
+   C=1 ;*
+   C("Malvern")="Wales"
+   GTM>
+
+Continuing the example, if the variables selected for the ZWRITE command do not include any of the the associated alias variables, the output shows only the reference, not the data:
+
+.. parsed-literal::
+   GTM>ZWRITE B ; B only has a container
+   \*B(-3.14)=A
+   GTM>
+
+When ZWRITE / ZSHOW "V" encounters an alias container for an array with no current alias variable, it uses a name $ZWRTACn as the made-up name of an alias variable for that array, where n is an arbitrary but unique integer. The SET command recognizes this special name, thus enabling the output of a ZWRITE / ZSHOW "V" to be used to recreate alias containers without associated alias variables. Continuing the above example:
+
+.. parsed-literal::
+   GTM>Kill \*A,\*C ; Delete alias variables and associations, leaving only the container
+           
+   GTM>ZWRite
+   $ZWRTAC=""
+   \*B(-3.14)=$ZWRTAC1
+   $ZWRTAC1=3 ;*
+   $ZWRTAC1("Malvern")="Wales"
+   $ZWRTAC=""
+   GTM> 
+
+ZWRITE produces $ZWRTACn names to serve as data cell anchors which SET @ accepts as valid set left targets. $ZWRTACn names are created and destroyed when using ZWRITE output to drive restoration of a previously captured variable state. Except for their appearance in ZWRITE output and as left-hand side SET @ targets, they have no function. Other than SET, no other commands can use $ZWRTAC* in their syntax. Although $ZWRTACn superficially looks like an intrinsic special variable (ISV), they are not ISVs. $ZWRTACn with no subscripts can serve as the target (left side of the equals-sign) of a SET * command. SET $ZWRTAC (no trailing integer) deletes all data cell associations with the $ZWRTAC prefixed aliases. YottaDB/GT.M only recognizes the upper-case unabbreviated name and prefix $ZWRTAC.
+
+When ZWRITE displays values for an alias variable, it appends a " ;*" to the name which visually tags the alias without interfering with use of ZWRITE output as arguments to a SET @. ZWRITE can only identify alias variables when at least two aliases for the same data match its argument. When ZWRITE encounters an alias container variable with no current associated alias, it uses the ZWRTAC mechanism to expose the data; SET @ can restore data exposed with the ZWRTAC mechanism. 
+
+.. note::
+   YottaDB/FIS strongly recommends that you should not create or manipulate your own $ZWRTACn "variables". They are not part of the supported functionality for implementing alias variables and containers, but are rather a part of the underlying implementation that is visible to you, the YottaDB/GT.M user. YottaDB/FIS can arbitrarily, for its own convenience change the use of $ZWRTAC in YottaDB/GT.M at any time. They are only documented here since you may see them in the output of ZWRITE and ZSHOW "V".
+
+++++++++++++++++++++++++++++
+Examples of ZWRITE
+++++++++++++++++++++++++++++
+
+Example:
+
+.. parsed-literal::
+   GTM>ZWRITE ^?1"%"2U(0:":",)
+
+This command displays the descendants of all subscripts between 0 and ":" of all global names starting with a "%" and having two upper case letters -- for example, "%AB".
+
+Example:
+
+.. parsed-literal::
+   GTM>ZWRITE A(,:,3)
+
+This command displays all of the third level nodes with a subscript of 3 for local variable A.
+
+Example:
+
+.. parsed-literal::
+   ZWRITE ?1"A".E(?1"X"3N)
+
+This displays data for any local variables starting with "A", optionally followed by any characters, and having any subscripts starting with "X" followed by three numerics.
+
+Example:
+
+.. parsed-literal::
+   GTM>Set A=1,*B=A ; Create an array and an alias association
+                   
+   GTM>ZWRite ; Show that the array and association exist
+   A=1 ;*
+   \*B=A
+
+
 
