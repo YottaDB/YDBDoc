@@ -18,6 +18,7 @@ Welcome to The M Programmer's Guide!
    opdebug
    langfeat
    commands
+   functions
 
 
 Indices and tables
