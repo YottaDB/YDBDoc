@@ -344,7 +344,7 @@ transaction. ``$tlevel>0`` means that it is inside a transaction, and
 ``$tlevel>1`` means that it is inside a nested transaction. Note that
 a transaction can be started explicitly, e.g., by calling
 `ydb_tp_s()`_ ,or implicitly by a trigger resulting from a
-`ydb_kill_s()`_, `ydb_set_s()`_, or `ydb_withdraw_s()`_.
+`ydb_delete_s()`_, `ydb_set_s()`_, or `ydb_withdraw_s()`_.
 
 ---------
 $trestart
@@ -721,6 +721,11 @@ Other
 
 Other symbolic constants have a prefix of ``YDB_``.
 
+``YDB_DEL_NODE`` and ``YDB_DEL_TREE`` — As values of the ``deltype``
+parameter, these values indicate to ``ydb_delete_s()`` and
+``ydb_delete_multi_s()`` whether to delete an entire subtree or just
+the node at the root, leaving the subtree intact.
+
 ``YDB_NODE_END`` — In the event a call to ``ydb_node_next_s()`` or
 ``ydb_node_previous_s()`` wish to report that there no further nodes,
 the ``*ret_subs`` parameter is set to this value. Application code
@@ -907,6 +912,70 @@ It is an error to call ``ydb_data_s()`` on an intrinsic special
 variable; doing so results in the ``YDB_ERR_UNIMPLOP``
 error. ``ydb_data_s()`` returns ``YDB_OK`` or an `error return code`_.
 
+--------------
+ydb_delete_s()
+--------------
+
+.. code-block:: C
+
+	int ydb_kill_s(ydb_buffer_t *varname,
+		int subs_used,
+		ydb_buffer_t *subsarray,
+		int deltype);
+
+Deletes nodes in the local or global variable tree or subtree
+specified. A value of ``YDB_DEL_NODE`` or ``YDB_DEL_TREE`` for
+``deltype`` specifies whether to delete just the node at the root,
+leaving the (sub)tree intact, or to delete the node as well as the
+(sub)tree.
+
+In the special case where ``*varname`` is NULL, ``ydb_delete_s()``
+deletes all local variables. Intrinsic special variables cannot be
+deleted.
+
+``ydb_delete_s()`` returns ``YDB_OK`` or an `error return code`_.
+
+-------------------
+ydb_delete_excl_s()
+-------------------
+
+.. code-block:: C
+
+	int ydb_delete_excl_s(ydb_buffer_t *varnamelist);
+
+``*varnamelist->buf_addr`` points to a comma separated list of local
+variable names. ``ydb_delete_excl_s()`` kills the trees of all local
+variable names except those on the list.
+
+``ydb_delete_excl_s()`` returns ``YDB_OK`` or an `error return code`_.
+
+--------------------
+ydb_delete_multi_s()
+--------------------
+
+*This function is optional for the initial release of the Simple API,
+time permitting.*
+
+.. code-block:: C
+
+	int ydb_kill_multi_s(int namecount,
+		ydb_buffer_t *varname,
+		int subs_used,
+		ydb_buffer_t *subsarray[, ...],
+		int deltype);
+
+``namecount`` (>0) is the number of variable names in the call.
+
+Deletes nodes in each of the local or global variable trees or
+subtrees specified.  A value of ``YDB_DEL_NODE`` or ``YDB_DEL_TREE``
+for ``deltype`` specifies whether to delete just the node at each
+root, leaving (sub)trees intact, or to delete nodes as well as
+(sub)trees.
+
+Intrinsic special variables cannot be killed.
+
+``ydb_delete_s()`` returns ``YDB_OK`` or an `error return code`_.
+
 -----------
 ydb_get_s()
 -----------
@@ -984,40 +1053,6 @@ Notes:
   function with a side effect.
 
 ------------
-ydb_kill_s()
-------------
-
-.. code-block:: C
-
-	int ydb_kill_s(int namecount,
-		[[ydb_buffer_t *varname,
-		int subs_used,
-		ydb_buffer_t *subsarray], ...]);
-
-``namecount`` is the number of variable names in the call.
-
-Kills — deletes all nodes in — each of the local or global variable
-trees or subtrees specified. In the special case where ``namecount``
-is zero, ``ydb_kill_s()`` kills all local variables. Intrinsic special
-variables cannot be killed.
-
-``ydb_kill_s()`` returns ``YDB_OK`` or an `error return code`_.
-
------------------
-ydb_kill_excl_s()
------------------
-
-.. code-block:: C
-
-	int ydb_kill_excl_s(ydb_buffer_t *varnamelist);
-
-``*varnamelist->buf_addr`` points to a comma separated list of local
-variable names. ``ydb_kill_excl_s()`` kills the trees of all local
-variable names except those on the list.
-
-``ydb_kill_excl_s()`` returns ``YDB_OK`` or an `error return code`_.
-
-------------
 ydb_lock_s()
 ------------
 
@@ -1055,10 +1090,10 @@ ydb_lock_decr_s()
 
 .. code-block:: C
 
-	int ydb_lock_s(int namecount,
+	int ydb_lock_decr_s(int namecount,
 		ydb_buffer_t *varname,
 		int subs_used,
-		ydb_buffer_t *suubsarray[, ...]);
+		ydb_buffer_t *subsarray[, ...]);
 
 ``namecount`` is the number of variable names in the call. At least
 one variable must be specified.
@@ -1078,11 +1113,11 @@ ydb_lock_incr_s()
 
 .. code-block:: C
 
-	int ydb_lock_s(unsigned long long timeout,
-		int namecount[,
+	int ydb_lock_incr_s(unsigned long long timeout,
+		int namecount,
 		ydb_buffer_t *varname,
 		int subs_used,
-		ydb_buffer_t *subsarray], ...]);
+		ydb_buffer_t *subsarray[, ...]);
 
 ``namecount`` is the number of variable names in the call. At least
 one variable must be specified.
@@ -1122,7 +1157,7 @@ global variable tree. As the number of subscripts can differ between
 the input node of the call and the output node reported by the call
 ``*ret_subs_used`` is an input as well as an output parameter:
 
-- On input, ``*ret_subs_used`` specifies the number of elements (>0)
+- On input, ``*ret_subs_used`` specifies the number of elements
   allocated for returning the subscripts of the next node.
 - On output, ``*ret_subs_used`` contains the actual number of
   subscripts returned or is ``YDB_NODE_END``. If the actual number of
@@ -1185,6 +1220,27 @@ Copies the ``value->len_used`` bytes at ``value->buf_addr`` as the value of
 the specified node or intrinsic special variable specified, returning
 ``YDB_OK`` or an `error return code`_. A ``*value`` of ``NULL`` is
 treated as equivalent to a ``*value`` that specifies an empty string.
+
+-----------------
+ydb_set_multi_s()
+-----------------
+
+*This function is optional for the initial release of the Simple API,
+time permitting.*
+
+.. code-block:: C
+
+	int ydb_set_multi_s(int namecount,
+		ydb_buffer_t *varname,
+		int subs_used,
+		ydb_buffer_t *subsarray[, ...],
+		ydb_buffer_t *value);
+
+Copies the ``value->len_used`` bytes at ``value->buf_addr`` as the
+value of the specified nodes or intrinsic special variables specified,
+returning ``YDB_OK`` or an `error return code`_. A ``*value`` of
+``NULL`` is treated as equivalent to a ``*value`` that specifies an
+empty string.
 
 ---------------
 ydb_str2zwr_s()
@@ -1320,7 +1376,7 @@ caller. [#]_
 .. [#] An enclosing transaction can result not just from another
        ``ydb_tp_s()`` higher in the stack, but also from an M
        ``tstart`` command as well as a database trigger resulting from
-       a `ydb_kill_s()`_, `ydb_set_s()`_, or `ydb_withdraw_s()`_.
+       a `ydb_delete_s()`_, `ydb_set_s()`_, or `ydb_withdraw_s()`_.
 
 ----------------
 ydb_withdraw_s()
@@ -1331,7 +1387,7 @@ ydb_withdraw_s()
 	int ydb_withdraw_s(int namecount,
 		ydb_buffer_t *varname,
 		int subs_used,
-		ydb_buffer_t *suubsarray[, ...]);
+		ydb_buffer_t *subsarray[, ...]);
 
 ``namecount`` (>0) is the number of variable names in the call.
 
