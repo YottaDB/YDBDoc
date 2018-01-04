@@ -19,6 +19,7 @@ Welcome to The M Programmer's Guide!
    langfeat
    commands
    functions
+   isv
 
 
 Indices and tables
