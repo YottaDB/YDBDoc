@@ -1319,5 +1319,2135 @@ Example:
 
 This uses $TEXT() to WRITE the name of the current routine, then it tries to access the source and returns an empty string. This occurs because the default Direct Mode image is compiled by YottaDB/FIS and delivered without source. The exact failure message may vary.
 
+---------------------
+$TRanslate()
+---------------------
+
+Returns a string that results from replacing or dropping characters in the first of its arguments as specified by the patterns of its other arguments.
+
+The format for the $TRANSLATE function is:
+
+.. parsed-literal::
+   $TR[ANSLATE](expr1[,expr2[,expr3]])
+
+
+* The first expression specifies the string on which $TRANSLATE() operates. If the other arguments are omitted, $TRANSLATE() returns this expression.
+* The optional second expression specifies the characters for $TRANSLATE() to replace. If a character occurs more than once in the second expression, the first occurrence controls the translation, and $TRANSLATE() ignores subsequent occurrences. If this argument is omitted, $TRANSLATE() returns the first expression without modification.
+* The optional third expression specifies the replacement characters for positionally corresponding characters in the second expression. If this argument is omitted or shorter than the second expression, $TRANSLATE() drops all occurrences of characters in the second expression that have no replacement in the corresponding position of the third expression.
+* For a process started in UTF-8 mode, the algorithm of $TRANSLATE() treats the string arguments as UTF-8 encoded. With VIEW "BADCHAR" enabled, $TRANSLATE() produces a run-time error when it encounters a malformed character.
+* Irrespective of the settings of VIEW "BADCHAR" and $ZCHSET, $ZTRANSLATE() interprets argument as a sequence of bytes (rather than a sequence of characters) and performs all byte-oriented $TRANSLATE() operations. For more information, refer to “$ZTRanslate()”.
+* $TRANSLATE() provides a tool for tasks such as changing case and doing encryption. For examples of case translation, refer to the ^%LCASE and ^%UCASE utility routines.
+
+The $TRANSLATE() algorithm can be understood as follows:
+
+* $TRANSLATE() evaluates each character in the first expression, comparing it character by character to the second expression looking for a match. If there is no match in the second expression, the resulting expression contains the character without modification.
+* When it locates a character match, $TRANSLATE() uses the position of the match in the second expression to identify the appropriate replacement for the original expression. If the second expression has more characters than the third expression, $TRANSLATE() replaces the original character with a null, thereby deleting it from the result. By extension of this principle, if the third expression is missing, $TRANSLATE() deletes all characters from the first expression that occur in the second expression.
+
+++++++++++++++++++++++++++
+Examples of $TRANSLATE()
+++++++++++++++++++++++++++
+
+Example:
+
+.. parsed-literal::
+   GTM>write $translate("ABC","CB","1")
+   A1
+   GTM>
+
+* First, $TRANSLATE() searches for "A" (the first character in the first expression, "ABC") within the second expression ("CB"). Since "A" does not exist in the second expression, it appears unchanged in the result.
+* Next, $TRANSLATE() searches for "B" (the second character in the first expression) within the second expression ("CB"). Because "B" holds the second position in the second expression ("CB"), $TRANSLATE() searches for the character holding the second position in the third expression. Since there is no second character in the third expression, $TRANSLATE() replaces "B" with a null, effectively deleting it from the result.
+* Finally, $TRANSLATE() searches for "C" (the third character in the first expression) within the second expression ("CB"), finds it in the first position, and replaces it with the number 1, which is in the first position of the third expression. The translated result is "A1."
+
+.. note::
+   While this example provides an explanation for the work done by $TRANSLATE(), it does not necessarily correspond to how YottaDB/GT.M implements $TRANSLATE().
+
+Example:
+
+.. parsed-literal::
+   GTM>write $translate("A","AA","BC")
+   B
+   GTM>
+
+This $TRANSLATE() example finds the first occurrence of "A" in the second expression, which holds the first character position, and substitutes the character in the first position of the third expression.
+
+Example:
+
+.. parsed-literal::
+   GTM>write $translate("BACKUP","AEIOU")
+   BCKP
+   GTM>
+
+Because the $TRANSLATE() has only two parameters in this example, it finds the characters in the first expression that also exist in the second expression and deletes them from the result.
+
+---------------------
+$View()
+---------------------
+
+Returns information about an environmental factor selected by the arguments. In YottaDB/GT.M, the first argument contains a keyword identifying the environmental factor and, where appropriate, subsequent arguments select among multiple possible occurrences of that factor.
+
+The format for the $VIEW() function is:
+
+.. parsed-literal::
+   $V[IEW](expr1[,expr2])
+
+* The first expression specifies a keyword identifying the target factor for $VIEW() to examine.
+* The second expression differentiates between multiple possible targets for some keywords. $VIEW() requires the second expression for some keywords and does not permit it for others.
+
++++++++++++++++++++++++++++++
+Argument Keywords of $VIEW()
++++++++++++++++++++++++++++++
+
+$VIEW() provides a means to access YottaDB/GT.M environmental information. When YottaDB/GT.M permits modification of the factors accessible with $VIEW(), the VIEW command generally provides the means for effecting the change.
+
+**$VIEW() Argument Keywords**
+
++---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Arg 1         | Arg 2            | Return Value                                                                                                                                                        |
++===============+==================+=====================================================================================================================================================================+
+| "BADCHAR"     | none             | In UTF-8 mode processes, enables or disable the generation of an error when character-oriented functions encounter malformed byte sequences (illegal characters).   |
+|               |                  | The default is 1.                                                                                                                                                   |
++---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| "BREAKMSG"    | none             | Value of the break message mask; YottaDB/GT.M defaults this to 31.                                                                                                  |
++---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| "FREEBLOCKS"  | region           | Number of free database blocks in a given region.                                                                                                                   |
++---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| "FREEZE"      | region           | Process-id of a process that has frozen the database associated with the region specified (using DSE or MUPIP). If the region is currently not frozen, returns zero.|
++---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| "FULL_BOOLEAN"| none             | Returns a string describing the current compiler setting. The default is "YottaDB/GT.M Boolean short-circuit". $VIEW("FULL_BOOLEAN") reports "Standard Boolean      |
+|               |                  | evaluation side effects" when it is not explicitly set, but that mode of operation is required by the setting of gtm_side_effects, and "Standard Boolean side-effect|
+|               |                  | warning" when warnings have been specified.                                                                                                                         |
++---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| "GDSCERT"     | none             | Truth Value indicating whether Database block certification is currently enabled or disabled. To enable or disable Database block certification, use the VIEW       |
+|               |                  | "GDSCERT" command.                                                                                                                                                  |
++---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| "GVACCESS_METH| none             | Access method of the region.                                                                                                                                        |
+| OD"           |                  |                                                                                                                                                                     |
++---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| "GVFILE"      | region           | Name of the database associated with the region.                                                                                                                    |
++---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| "GVFIRST"     | none             | Name of the first database region in the current global directory; functionally equivalent to $VIEW("GVNEXT","").                                                   |
++---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| "GVNEXT"      | region           | Name of the next database region after the given one in alphabetical order (or M collation sequence); "" for region starts with the first region. A return value of |
+|               |                  | "" means that the global directory defines no additional regions.                                                                                                   |
++---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| "GVSTAT"      | region           | When read-only processes are the active in a database, they cannot update the database including the file header where GVSTATS are stored. Therefore their counts   |
+|               |                  | are only stored in associated shared memory and must be flushed to the file header by a process with write access, which might be a MUPIP RUNDOWN.                  |
++---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| "ICHITS"      | none             | Number of indirection cache hits since YottaDB/GT.M process startup. Indirection cache is a pool of compiled expressions that YottaDB/GT.M maintains for indirection|
+|               |                  | and XECUTE.                                                                                                                                                         |
++---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| "ICMISS"      | none             | Number of indirection cache misses since YottaDB/GT.M process startup.                                                                                              |
++---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| "JNLACTIVE"   | region           | can return the following values:                                                                                                                                    |
+|               |                  |                                                                                                                                                                     |
+|               |                  | * -1 (internal error)                                                                                                                                               |
+|               |                  |                                                                                                                                                                     |
+|               |                  | * 0 journaling is disabled                                                                                                                                          |
+|               |                  |                                                                                                                                                                     |
+|               |                  | * 1 journaling is enabled but closed (OFF)                                                                                                                          |
+|               |                  |                                                                                                                                                                     |
+|               |                  | * 2 journaling is enabled and open (ON)                                                                                                                             |
++---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| "JNLFILE"     | region           | Journal file name associated with the region.                                                                                                                       |
++---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| "JNLTRANSACTI | none             | Index showing how many ZTSTART transaction fences have been opened (and not closed).                                                                                |
+| ON"           |                  |                                                                                                                                                                     |
++---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| "LABELS"      | none             | Truth value showing whether label case sensitivity is ON (1 for "LOWER") or OFF (0 for "UPPER"); YottaDB/GT.M defaults to 1.                                        |
++---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| "LINK"        | none             | Returns the current relink recursive setting of ZLINK.                                                                                                              |
++---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| "LV_CREF"     | local variable   | returns the total number of references to the data-space associated with an unsubscripted local variable name specified as a second expr (for example a quoted      |
+|               | name (lvn)       | string).                                                                                                                                                            |
++---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| "LVNULLSUBS"  | none             | Truth value showing whether null subscripts are permitted in local arrays (1 for "LVNULLSUBS") or not (0 for "NOLVNULLSUBS"); YottaDB/GT.M defaults to 1.           |
++---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| "NOISOLATION" | global           | The current isolation-status of the specified global variable which must have a leading "^" in its specification.                                                   |
+|               |                  |                                                                                                                                                                     |
+|               |                  | This function returns 1 if YottaDB/GT.M has been instructed to not enforce the ACID property of Isolation (i.e., "NOISOLATION" has been specified) and 0 otherwise. |
+|               |                  |                                                                                                                                                                     |
+|               |                  | By default, YottaDB/GT.M ensures Isolation, that is, a $VIEW command will return 0. The isolation-status of a global variable can be turned on and off by the VIEW  |
+|               |                  | "NOISOLATION" command.                                                                                                                                              |
++---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| "PATCODE"     | none             | Name of the active patcode table; YottaDB/GT.M defaults this to "M".                                                                                                |
++---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| "POOLLIMIT"   | region           | The current limit on global buffers for the region .                                                                                                                |
++---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| "PROBECRIT"   | region           | Acquires and releases a critical section for the region (the "probe"), returning a string with the following fields:                                                |
+|               |                  |                                                                                                                                                                     |
+|               |                  | * CPT - nanoseconds for the probe to get the critical section                                                                                                       |
+|               |                  |                                                                                                                                                                     |
+|               |                  | * CFN - number of failures of the probe to get the critical section                                                                                                 |
+|               |                  |                                                                                                                                                                     |
+|               |                  | * CQN - number of queue sleeps by the probe                                                                                                                         |
+|               |                  |                                                                                                                                                                     |
+|               |                  | * CYN - number of process yields by the probe                                                                                                                       |
+|               |                  |                                                                                                                                                                     |
+|               |                  | * CQF - number of queue fulls encountered by the probe                                                                                                              |
+|               |                  |                                                                                                                                                                     |
+|               |                  | * CQE - number of empty queue slots found by the probe                                                                                                              |
+|               |                  |                                                                                                                                                                     |
+|               |                  | * CAT - total of critical section acquisitions successes                                                                                                            |
++---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| "REGION"      | gvn              | Name of the region(s) holding the specified gvn.                                                                                                                    |
+|               |                  |                                                                                                                                                                     |
+|               |                  | If gvn spans more than one region, this function returns region name in an order where the first region is the region to which the unsubscripted global variable    |
+|               |                  | name maps; and other regions are in the order in which they would be encountered by traversing the subscripts of gvn in order (with duplicates removed).            |
+|               |                  |                                                                                                                                                                     |
+|               |                  | gvn is a subscripted or unsubscripted global variable name in the same form as that generated by $NAME(). You can use $NAME() inside $VIEW() to ensure that         |
+|               |                  | subscripts are in a correct form, for example, $VIEW("REGION",$NAME(^abcd(1,2E4))) instead of $VIEW("REGION","^abcd(1,20000)").                                     |
++---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| "RTNCHECKSUM" | routine name     | Source code check-sum for the most recently ZLINK'd version of the specified routine name (these check-sums use a 128 bit hash based on the MurmurHash3 algorithm). |
++---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| "RTNNEXT"     | routine name     | Name of the next routine in the image after the given one; "" (empty string) for routinename starts with the first routine in ASCII collating sequence and a return |
+|               |                  | value of the empty string indicates the end of the list.                                                                                                            |
++---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| "SPSIZE"      | none             | Returns a string with three comma separated values: Number of bytes currently allocated as process working storage: YottaDB/GT.M manages this space as what is      |
+|               |                  | commonly called a heap, and uses the term stringpool to refer to it. The YottaDB/GT.M garbage collector reclaims unused space from the stringpool from time to time,|
+|               |                  | and YottaDB/GT.M automatically expands the stringpool as needed by the application program; Number of bytes currently used by the process; Number of bytes reserved:|
+|               |                  | The reserved space is used to reduce the active memory usage, for example, when a process uses a large amount of memory then subsequently uses a significantly      |
+|               |                  | reduced amount.                                                                                                                                                     |
++---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| "STKSIZ"      | none             | Returns the YottaDB/GT.M stack size in bytes.                                                                                                                       |
++---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| "TOTALBLOCKS" | region           | Total number of database blocks in a given region.                                                                                                                  |
++---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| "TRANSACTIONI | NULL or          | Transaction ID specified in the particular level (when the transaction level is specified). The first level TSTART is returned if the level is not specified as     |
+| D"            | transaction level| second argument. A NULL string is returned if the specified level (explicitly or implicitly) is greater than the current value of $TLEVEL.                          |
++---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| "UNDEF"       | none             | Truth value showing whether undefined variables should be treated as having a null value (1 for "UNDEF"; 0 for "NOUNDEF"); YottaDB/GT.M defaults to 0.              |
++---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| "ZDATE_FORM"  | none             | Integer value showing whether four digit year code is active for $ZDATE(); YottaDB/GT.M defaults to 0 (for "YY" format). Use the environment variable gtm_zdate_form|
+|               |                  | to set the initial value of this factor. For usage examples, refer to “$ZDate()”.                                                                                   |
++---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+.. note::
+   YottaDB/FIS uses the LC_CREF, LV_GCOL, LV_REF keywords in testing and is documenting them to ensure completeness in product documentation. They may (or may not) be useful during application development for debugging or performance testing implementation alternatives. 
+
+++++++++++++++++++++++++
+Examples of $VIEW()
+++++++++++++++++++++++++
+
+Example:
+
+.. parsed-literal::
+   GTM>Set a=1,*b(1)=a
+   GTM>write $view("LV_CREF","a")," ",$view("LV_CREF","b")
+   1 0
+   GTM>write $view("LV_REF","a")," ",$view("LV_REF","b") 
+   2 1
+   GTM>
+
+This example creates an alias variable and an alias container variable and checks the number of both container references and total references to the cells associated with both a and b.
+
+Example:
+
+.. parsed-literal::
+   GTM>Set \*a(1)=b,\*b(1)=a
+   GTM>kill \*a,\*b
+   GTM>write $view("LV_GCOL")
+   2
+   GTM>
+
+This example creates two cross associated alias containers, destroys their ancestor nodes with KILL * and uses $VIEW("LV_GCOL") to force a clean-up of the abandoned data-spaces. In the absence of the $VIEW("LV_GCOL"), YottaDB/GT.M would do this automatically at some subsequent convenient time.
+
+Example:
+
+.. parsed-literal::
+   GTM>write $view("GVSTAT","DEFAULT")
+   SET:203,KIL:12,GET:203,DTA:2,ORD:23,ZPR:21,QRY:0,LKS:0,LKF:0,CTN:44,DRD:103,DWT:59,
+   NTW:24,NTR:55,NBW:27,NBR:138,NR0:0,NR1:0,NR2:0,NR3:0,TTW:17,TTR:5,TRB:0,TBW:32,
+   TBR:80,TR0:0,TR1:0,TR2:0,TR3:0,TR4:0,TC0:0,TC1:0,TC2:0,TC3:0,TC4:0,ZTR:7,DFL:9,
+   DFS:0,JFL:0,JFS:0,JBB:0,JFB:0,JFW:0,JRL:0,JRP:0,JRE:0,JRI:0,JRO:0,JEX:0,DEX:0,
+   CAT:35,CFE:0,CFS:0,CFT:0,CQS:0,CQT:0,CYS:0,CYT:0,BTD:13
+   GTM>
+
+These are statistics associated with the DEFAULT region. Refer to “ZSHOW Information Codes” for information on the parameters.
+
+Example:
+
+Given the following global directory configuration:
+
+.. parsed-literal::
+   GDE>add -name a(1:10)      -region=a1
+   GDE>add -name a(10,1)      -region=a2
+   GDE>add -name a(10,2)      -region=a3
+   GDE>add -name a(120:300)   -region=a4
+   GDE>add -name a(60:325)    -region=a5
+   GDE> show -name
+    *** NAMES ***
+   Global        Region
+   ------------------------------------------------------------------------------
+   *             DEFAULT
+   a(1:10)       A1
+   a(10,1)       A2
+   a(10,2)       A3
+   a(60:120)     A5
+   a(120:300)    A4
+   a(300:325)    A5
+
+Here are some $VIEW("REGION",gvn) outputs:
+
+.. parsed-literal::
+   GTM>write $view("REGION","^a(1)")
+   A1
+   GTM>write $view("REGION","^a(10)")
+   DEFAULT,A2,A3
+   GTM>w $view("REGION","^a(60)")
+   A5
+   GTM>w $view("REGION","^a")
+   DEFAULT,A1,A2,A3,A5,A4
+
+------------------------
+$ZAHandle
+------------------------
+
+$ZAHANDLE() returns a unique identifier (handle) for the array associated with a name or an alias container; for an subscripted lvn, it returns an empty string. To facilitate debugging, the handle is a printable string representation of a hexadecimal number. The only meaningful operation on the value returned by a call to $ZAHANDLE() is to compare it for equality with the value returned by another call. Changing nodes within the array doesn't change its handle. $ZAHANDLE() returns different results for copies of an array.
+
+Example:
+
+.. parsed-literal::
+   GTM>set A=1,*B(1)=A
+   GTM>write "$zahandle(A)=""",$zahandle(A),""" $zahandle(B(1))=""",$zahandle(B(1)),""""
+   $zahandle(A)="17B8810" $zahandle(B(1))="17B8810"
+   GTM>set A("Subscript")="Value" ; Change array - but $ZAHandle() doesn't change
+   GTM>write "$zahandle(A)=""",$zahandle(A),""" $zahandle(B(1))=""",$zahandle(B(1)),""""
+   $zahandle(A)="17B8810" $zahandle(B(1))="17B8810"
+   GTM>merge D=A ; A copy of the data has a different $zahandle()
+   GTM>Write "$ZAHandle(A)=""",$ZAHandle(A),""" $ZAHandle(D)=""",$ZAHandle(D),""""      
+   $zahandle(A)="17B8810" $zahandle(D)="17B8C10"
+   GTM>
+
+Since YottaDB/GT.M does not provide a way for a function to return an array or alias variable as its result, the uniqueness of $ZAHandle() can be exploited to effect this capability, by placing the result in a local variable with an agreed prefix (e.g., "%") and its $ZAHANDLE() as a suffix. The handle can be returned as the value.
+
+.. parsed-literal::
+   $ /usr/lib/fis-gtm/V5.4-002B_x86/gtm -run retval
+   retval        ; Return an array / object from a function
+      ;;Data for the object array
+      ;;Albert Einstein,14-March-1879
+      ;;Arthur Eddington,28-December-1882
+      ;;
+      zprint    ; Print this program
+      new tmp1,tmp2,tmp3
+      for i=3:1 set tmp1=$text(+i),tmp2=$piece(tmp1,";;",2) quit:'$length(tmp2)  do  
+      .set tmp3="%"_$$NewPerson($piece(tmp2,",",1),$piece(tmp2,",",2))
+      .set @("\*Relativists("_(i-2)_")="_tmp3)
+      .kill @("*"_tmp3)
+      kill tmp1,tmp2,tmp3
+      write "------------",!
+      write "Array of objects of relativists:",!
+      zwrite
+      quit
+      ;    
+  NewPerson(name,birthdate)    ; Create new person object
+      new lname,fname,dob,tmp1,tmp2 ; New variables used by this function
+      set lname=$Piece(name," ",2),fname=$Piece(name," ",1)
+      set dob=$$FUNC^%DATE(birthdate)
+      set tmp1("fname")=fname,tmp1("lname")=lname,tmp1("dob")=dob
+      set tmp2=$ZAHandle(tmp1)
+      set @("\*%"_tmp2_"=tmp1")
+      quit tmp2
+  ------------
+  Array of objects of relativists:
+  $ZWRTAC=""
+  \*Relativists(1)=$ZWRTAC1
+  $ZWRTAC1("dob")=13952
+  $ZWRTAC1("fname")="Albert"
+  $ZWRTAC1("lname")="Einstein"
+  \*Relativists(2)=$ZWRTAC2
+  $ZWRTAC2("dob")=15337
+  $ZWRTAC2("fname")="Arthur"
+  $ZWRTAC2("lname")="Eddington"
+  i=5
+  $ZWRTAC=""
+  $
+
+---------------------
+$ZAscii()
+---------------------
+
+Returns the numeric byte value (0 through 255) of a given sequence of octets (8-bit bytes).
+
+The format for the $ASCII function is:
+
+.. parsed-literal::
+   $ZA[SCII](expr[,intexpr])
+
+* The expression is the sequence of octets (8-bit bytes) from which $ZASCII() extracts the byte it decodes.
+* The optional integer expression contains the position within the expression of the byte that $ZASCII() decodes. If this argument is missing, $ZASCII() returns a result based on the first byte position. $ZASCII() starts numbering byte positions at one (1), (the first byte of a string is at position one (1)).
+* If the explicit or implicit position is before the beginning or after the end of the expression, $ZASCII() returns a value of negative one (-1).
+* $ZASCII() provides a means of examining bytes in a byte sequence. When used with $ZCHAR(), $ZASCII() also provides a means to perform arithmetic operations on the byte values associated with a sequence of octets (8-bit bytes).
+
++++++++++++++++++++++
+Examples of $ZASCII()
++++++++++++++++++++++
+
+Example:
+
+.. parsed-literal::
+   GTM>for i=0:1:4 write !,$zascii("主",i)
+ 
+   -1
+   228
+   184
+   187
+   -1
+   GTM>
+
+This UTF-8 mode example displays the result of $ZASCII() specifying a byte position before, first, second and third positions, and after the sequence of octets (8-bit bytes) represented by 主. In the above example, 228, 184, and 187 represents the numeric byte value of the three-byte in the sequence of octets (8-bit bytes) represented by 主.
+
+-----------------------
+$ZATRansform
+-----------------------
+
+Returns the transformed representation of the first argument expr in a normalized form using the alternative transform specified by the second argument intexpr; the return can be used as an operand to the follows (]) or sorts-after (]]) operator such that, if both operands are in the normalized form, the result is independent of alternative collation. The format for the $ZATRANSFORM() function is:
+
+
+.. parsed-literal::
+   $ZTRANSFORM(expr,intexpr[,{0|1}][,{0|1}])
+
+* The expression specifies the string to transform.
+* The intexpr specifies the ID of the alternative transform to use.
+* The optional third argument specifies whether the transform is to normalized form, by default or if zero (0), or, if one (1), the reverse transform from the normalized to the native form..
+* The optional forth argument specifes whether to use standard M collation of numbers before strings, the default or zero (0), or to sort all values as strings (1).
+
+Please see the section on $ZCOLLATE() for a similar alternative.
+
++++++++++++++++++++++++
+Examples of $ZTRANSFORM
++++++++++++++++++++++++
+
+Example:
+
+.. parsed-literal::
+   GTM>write $ztransform("John Smythe",1)]$zatransform("Jane Smith",2)
+   0
+   GTM>
+
+This example uses $ZATRANSFORM() and two (here unspecified) collation definitions to compare the ordering of two (literal) expressions as YottaDB/GT.M would collate them if there was a way to collate them together. The result indicates that the first would collate before the second.
+
+---------------------
+$ZBIT Functions
+---------------------
+
+A series of functions beginning with $ZBIT lets you manipulate a bit stream. Internally, YottaDB/GT.M stores a bit stream in the form of a bit string. A bit string embeds a bit stream in such a way that the first byte specifies the number of trailing bits in the last byte that are not part of the bit-stream. In this way, GT.M is able to store bit-streams of lengths other than multiples of 8 bits in byte format. So for example, a first byte of value of zero (0) indicates that all of the bits in the last byte belong to the bit-stream, while a one (1) indicates the last bit is excluded and a seven (7) indicates that only the first bit in the last byte belongs to the bit-stream.
+
+If you have to convert a character string into a bit string then add a leading byte to that character string so that all $ZBIT functions can recognize it. The most common and straightforward way of doing this is to concatenate a $CHAR(n) on the front of the character string, where the value of n is zero through seven (0-7) – most commonly zero (0). If you pass a bit string as an argument to a routine that is expecting a character string, then that caller routine must strip off the first (and possibly the last) byte so that it can recognize the character string.
+
+This section contains the description of all $ZBIT function and an example of using $ZBIT functions to turn a character into a bit stream and return a coded value. However, the most appropriate use of these functions may include the formation of checksums, handling of bit-data (say pixels from a scan), or interfacing with a routine that requires bit-oriented arguments.
+
+++++++++++++++
+$ZBITAND()
+++++++++++++++
+
+Performs a logical AND function on two bit strings and returns a bit string equal in length to the shorter of the two arguments (containing set bits in those positions where both of the input strings have set bits). Positions corresponding to positions where either of the input strings have a cleared bit, also have cleared bits in the resulting string.
+
+The format for the $ZBITAND() function is:
+
+.. parsed-literal::
+   $ZBITAND(expr1,expr2)
+
+* The first expression specifies one of the bit strings that is input to the AND operation.
+* The second expression specifies the other bit string that is input to the AND operation.
+
+**Example of $ZBITAND()**
+
+.. parsed-literal::
+   GTM> 
+   ; The binary representation of A is 01000001
+   GTM>Set BITSTRINGB=$zbitset($zbitset($zbitstr(8,0),2,1),7,1)
+   ; The binary representation of B is 01000010
+   GTM>set BITSTRINGAB=$zbitand(BITSTRINGA,BITSTRINGB)
+   GTM>for i=1:1:8 write $zbitget(BITSTRINGAB,I)
+   01000000 
+
+This examples uses $ZBITAND to perform a bitwise AND operation on A and B.
+
+.. parsed-literal::
+   A= 01000001
+   B= 01000010
+   A bitwise AND B=0100000
+
+++++++++++++++++
+$ZBITCOUNT()
+++++++++++++++++
+
+Returns the number of ON bits in a bit string.
+
+The format for the $ZBITCOUNT function is:
+
+.. parsed-literal::
+   $ZBITCOUNT(expr)
+    
+The expression specifies the bit string to examine.
+
+**Example of $ZBITCOUNT()**
+
+Example:
+
+.. parsed-literal::
+   GTM>set BITSTRINGA=$ZBITSET($ZBITSET($ZBITSTR(8,0),2,1),8,1) 
+   ; The binary representation of A is 01000001
+   GTM>set BITSTRINGB=$zbitset($zbitset($zbitstr(8,0),2,1),7,1)
+   ; The binary representation of B is 01000010
+   GTM>Set BITSTRINGC=$zbitor(BITSTRINGA,BITSTRINGB) 
+   ; A OR B=01000011 
+   GTM>write $zbitcount(BITSTRINGA)
+   2
+   GTM>write $zbitcount(BITSTRINGB)
+   2
+   GTM>write $zbitcount(BITSTRINGC)
+   3
+   GTM>
+
+This example displays the number of ON bits in BITSTRINGA, BITSTRINGB, and BITSTRINGC.
+
++++++++++++++++++++
+$ZBITFIND()
++++++++++++++++++++
+
+Performs the analog of $FIND() on a bit string. It returns an integer that identifies the position after the first position equal to a truth-valued expression that occurs at, or after, the specified starting position.
+
+The format for the $ZBITFIND function is:
+
+.. parsed-literal::
+   $ZBITFIND(expr,tvexpr[,intexpr])
+
+* The expression specifies the bit string to examine.
+* The truth-valued expression specifies the bit value for which $ZBITFIND() searches (1 or 0).
+* The optional integer argument specifies the starting position at which to begin the search. If this argument is missing, $ZBITFIND() begins searching at the first position of the string. $ZBIT functions count the first bit as position one (1).
+
+If the optional integer argument exceeds the length of the string, or if the function finds no further bits, $ZBITFIND() returns a zero value.
+
+**Examples of $ZBITFIND()**
+
+Example:
+
+.. parsed-literal::
+   GTM>Set BITSTRINGA=$ZBITSET($ZBITSET($ZBITSTR(8,0),2,1),8,1) 
+   ; The binary representation of A is 01000001
+   GTM>write $zbitfind(BITSTRINGA,1,3)
+   9
+   GTM>
+
+This example searches for bit value 1 starting from the 3rd bit of BITSTRINGA.
+
++++++++++++++++++++++++
+$ZBITGET()
++++++++++++++++++++++++
+
+Returns the value of a specified position in the bit string.
+
+The format for the $ZBITGET function is:
+
+.. parsed-literal::
+   $ZBITGET(expr,intexpr)
+
+* The expression specifies the bit string to examine.
+* The integer argument specifies the position in the string for which the value is requested. If the integer argument is negative, zero, or exceeds the length of the bit string, it is rejected with a run-time error. $ZBIT functions count the first bit as position one (1).
+
+**Examples of $ZBITGET()**
+
+Example:
+
+.. parsed-literal::
+   GTM>set BITSTRINGA=$zbitset($zbitset($zbitstr(8,0),2,1),8,1) 
+   ; The binary representation of A is 01000001
+   GTM>for i=1:1:8 write $zbitget(BITSTRINGA,I)
+   01000001
+   GTM>
+
+This examples uses $ZBITGET() to display the binary representation of A.
+
+++++++++++++++
+$ZBITLEN()
+++++++++++++++
+
+Returns the length of a bit string, in bits.
+
+The format for the $ZBITLEN function is:
+
+.. parsed-literal::
+   $ZBITLEN(expr)
+
+The expression specifies the bit string to examine.
+
+**Examples of $ZBITLEN()**
+
+Example:
+
+.. parsed-literal::
+   GTM>set BITSTR=$zbitstr(6,1)
+        
+   GTM>write $zbitlen(BITSTR)
+   6
+   GTM>
+
+This example displays the length of a bit string of 6 bits. 
+
++++++++++++++++++++++
+$ZBITNOT()
++++++++++++++++++++++
+
+Returns a copy of the bit string with each input bit position inverted.
+
+The format for the $ZBITNOT function is:
+
+.. parsed-literal::
+   $ZBITNOT(expr)
+
+The expression specifies the bit string whose inverted bit pattern becomes the result of the function.
+
+**Examples of $ZBITNOT()**
+
+.. parsed-literal::
+   GTM>set BITSTRINGA=$zbitset($zbitset($zbitstr(8,0),2,1),8,1) 
+   ; The binary representation of A is 01000001
+   GTM>for i=1:1:8 write $zbitget($zbitnot(BITSTRINGA),I)
+   10111110
+   GTM>
+
+This example displays inverted bits for all the bits in BITSTRINGA.
+
+++++++++++++++
+$ZBITOR()
+++++++++++++++
+
+Performs a bitwise logical OR on two bit strings, and returns a bit string equal in length to the longer of the two arguments (containing set bits in those positions where either or both of the input strings have set bits). Positions that correspond to positions where neither input string has a set bit have cleared bits in the resulting string.
+
+The format for the $ZBITOR function is:
+
+.. parsed-literal::
+   $ZBITOR(expr1,expr2)
+
+* The first expression specifies one of the bit strings that is input to the OR operation.
+* The second expression specifies the other bit string that is input to the OR operation.
+
+**Examples of $ZBITOR()**
+
+Example:
+
+.. parsed-literal::
+   GTM>set BITSTRINGA=$zbitset($zbitset($zbitstr(8,0),2,1),8,1) 
+   ; The binary representation of A is 01000001
+   GTM>set BITSTRINGB=$zbitset($zbitset($zbitstr(8,0),2,1),7,1)
+   ; The binary representation of B is 01000010
+   GTM>set BITSTRINGC=$zbitor(BITSTRINGA,BITSTRINGB) 
+   ; A OR B=01000011 
+   GTM>write BITSTRINGC
+   C
+   GTM>
+
+This example displays the result of BITSTRINGA bitwise ORed with BITSTRINGB.
+
++++++++++++++++++++++
+$ZBITSET()
++++++++++++++++++++++
+
+Returns an edited copy of the input bit string with a specified bit set to the value of the truth-valued expression.
+
+The format for the $ZBITSET function is:
+
+.. parsed-literal::
+   $ZBITSET(expr,intexpr,tvexpr)
+
+* The expression specifies the input bit string.
+* The integer expression specifies the position of the bit to manipulate. Arguments that are negative, zero, or exceed the length of the bit string produce a run-time error. $ZBIT functions count the first bit as position one (1).
+* The truth-valued expression specifies the value to which to set the specified bit (0 or 1).
+
+**Examples of $ZBITSET()**
+
+Example:
+
+.. parsed-literal::
+   GTM>set X="A",Y=$extract($zbitset($char(0)_X,3,1),2) zwrite
+   X="A"
+   Y="a"
+
+This example changes the case of the ASCII letter A to the corresponding lowercase version.
+
++++++++++++++++
+$ZBITSTR()
++++++++++++++++
+
+Returns a bit string of a specified length with all bit positions initially set to either zero or one.
+
+The format for the $ZBITSTR function is:
+
+.. parsed-literal::
+   $ZBITSTR(intexpr[,tvexpr])
+
+* The integer expression specifies the length of the bit string to return; arguments that exceed the maximum length of 253,952 produce a run-time error.
+* The optional truth-valued expression specifies the value to which all bit positions should initially be set (0 or 1). If this argument is missing, the bits are set to zero.
+
+**Examples of $ZBITSTR()**
+
+.. parsed-literal::
+   GTM>set BITSTR=$zbitstr(6,1)
+
+This example sets the value of expression BITSTR to 6 bit with all bits set to 1.
+
++++++++++++++++
+$ZBITXOR()
++++++++++++++++
+
+Performs a bitwise exclusive OR on two bit strings, and returns a bit string equal in length to the shorter of the two arguments (containing set bits in those position where either but not both of the input strings have set bits). Positions that correspond to positions where neither or both input string has a set bit have cleared bits in the resulting string.
+
+The format for the $ZBITXOR function is:
+
+.. parsed-literal::
+   $ZBITXOR(expr1,expr2)
+
+* The first expression specifies one of the bit strings that is input to the XOR operation.
+* The second expression specifies the other bit string that is input to the XOR operation.
+
+**Examples of $ZBITXOR()**
+
+.. parsed-literal::
+   GTM>set BITSTRINGA=$zbitset($zbitset($zbitstr(8,0),2,1),8,1) ; The binary representation of A is 01000001
+   GTM>set BITSTRINGB=$zbitset($zbitset($zbitstr(8,0),2,1),7,1); The binary representation of B is 01000010
+   GTM>set BITSTRINGC=$zbitor(BITSTRINGA,BITSTRINGB) ; A XOR B=00000011
+   GTM>for I=1:1:8 write $zbitget(BITSTRINGC,I)
+   00000011
+   GTM>
+
+This example displays the result of the bitwise XOR of A and B.
+
+++++++++++++++++++++++++++++
+Examples of $ZBIT Functions
+++++++++++++++++++++++++++++
+
+Example:
+
+.. parsed-literal::
+   ZCRC(X) 
+    new R,I,J,B,X1,K 
+    set R=$zbitstr(8,0) 
+    for I=1:1:$length(X) Set R=$zbitxor(R,$$bitin($A(X,I))) 
+    quit $$bitout(R) 
+      
+   bitin(X) ;CONVERT A BYTE TO A BIT STRING
+     set X1=$zbitstr(8,0) 
+     for J=1:1:8 set B=X#2,X=X\2 if B set X1=$zbitset(X1,J,1) 
+     quit X1 
+      
+   bitout(X) ; CONVERT A BITSTRING TO A NUMBER
+     set X1=0 
+     for K=1:1:8 I $zbitget(X,K) set X1=X1+(2**(K-1)) 
+     quit X1
+
+This uses several $ZBIT functions to turn a character into a bit stream and return a coded value.
+
+While this example illustrates the use of several of the $ZBIT functions, the following example produces identical results if you need to code the function illustrated above for production.
+
+.. parsed-literal::
+   ZCRC(X) 
+    new R,I,J,B,X1,K 
+    set R=$zbitstr(8,0) 
+    for I=1:1:$length(X) Set R=$zbitxor(R,$char(0)_$extract(X,I)) 
+    quit $ascii(R,2)
+
+This example illustrates the use of $Char() to specify the number of invalid bits that exist at the end of the character string. In this case there are zero invalid bits.
+
+---------------
+$ZCHar()
+---------------
+
+Returns a string composed of bytes represented by the integer octet values specified in its argument(s).
+
+The format for the $ZCHAR() function is:
+
+.. parsed-literal::
+   $ZCH[AR](intexpr[,...])
+
+* The integer expression(s) specify the numeric byte value of the byte(s) $ZCHAR() returns.
+* YottaDB/GT.M limits the number of arguments to a maximum of 254. $ZCHAR() provides a means of producing byte sequences. In the UTF-8 mode, $ZCHAR() returns a malformed characters for numeric byte values 128 to 255. In the M mode, $ZCHAR() can create valid UTF-8 characters that includes bytes in the range 128-255. 
+
+.. note::
+   The output of $ZCHAR() for values of integer expression(s) from 0 through 127 does not vary with choice of the character encoding scheme. This is because 7-bit ASCII is a proper subset of UTF-8 character encoding scheme. The representation of characters returned by $ZCHAR() for values 128 through 255 differ for each character encoding scheme.
+
+* When used with $ZASCII(), $ZCHAR() can also perform arithmetic operations on the byte values of the bytes associated with a sequence of octets (8-bit bytes).
+
+++++++++++++++++++++
+Example of $ZCHAR()
+++++++++++++++++++++
+
+Example:
+
+.. parsed-literal::
+  GTM>write $zchar(228,184,187,7)
+  主
+  GTM>
+
+This example WRITEs the byte sequence represented by 主 and signals the terminal bell.
+
+-----------------
+$ZCOllate()
+-----------------
+
+Returns the transformed representation of the first argument glvn in a normalized form using the alternative transform specified by the second argument intexpr; the return can be used as an operand to the follows (]) or sorts-after (]]) operator such that, if both operands are in the normalized form, the result is independent of alternative collation.
+
+The format for the $ZCOLLATE() function is:
+
+.. parsed-literal::
+   $ZCO[llate](glvn,intexpr[,{0|1}])
+
+* The subscripted or unsubscripted global or local variable name specifies the key to transform.
+* The integer expression specifies the ID of the alternative transform to use.
+* The optional third argument specifies whether the transform is to normalized form, by default or if zero (0), or, if one (1), the reverse transform from the normalized to the native form.
+
+Note that because the forward transform is to the GDS global storage format, the reverse transform always shows a global form. This is not material when the result is used for most comparisons, but for some uses the applcation might need to remove the leading up-arrow (^).
+
+Please see the section on $ZATRANSFORM() for a similar alternative.
+
+++++++++++++++++++++++++
+Examples of $ZCOLLATE()
+++++++++++++++++++++++++
+
+Example:
+
+.. parsed-literal::
+   GTM>write $zwrite($zcollate("A(""foo"")",0))
+   "A"_$C(0,255)_"foo"_$C(0,0)
+   GTM>write $zcollate($zcollate("A(""foo"")",0),0,1)
+   ^A("foo")
+   GTM>
+
+The first WRITE in this example shows the readable form or the value produced by the $ZCOLLATE() revealing the details of how YottaDB/GT.M internally represents this key using default (M) collation. The second WRITE shows how the combination of the transform and reverse transform restores the value to the original representation.
+
+-------------------
+$ZCOnvert()
+-------------------
+
+Returns its first argument as a string converted to a different encoding. The two argument form changes the encoding for case within a character set. The three argument form changes the encoding scheme.
+
+The format for the $ZCONVERT() function is:
+
+.. parsed-literal::
+   $ZCO[NVERT](expr1, expr2,[expr3])
+
+* The first expression is the string to convert. If the expression contains a code-point value that is not in the character set, $ZCONVERT() generates a run-time error.
+* In the two argument form, the second expression specifies a code that determines the form of the result. In the three-argument form, the second expression specifies a code that controls the character set interpretation of the first argument. If the expression does not evaluate to one of the defined codes corresponding to a valid code for the number of available arguments, $ZCONVERT() generates a run-time error.
+* The optional third expression specifies the a code that determines the character set of the result. If the expression does not evaluate to one of the defined codes $ZCONVERT() generates a run-time argument. The three-argument form is not supported in M mode.
+
+The valid (case insensitive) character codes for expr2 in the two-argument form are:
+
+* U converts the string to UPPER-CASE. "UPPER-CASE" refers to words where all the characters are converted to their "capital letter" equivalents. $ZCONVERT() retains characters already in UPPER-CASE "capital letter" form unchanged.
+* L converts the string to lower-case. "lower-case" refers to words where all the letters are converted to their "small letter" equivalents. $ZCONVERT() retains characters already in lower-case or having no lower-case equivalent unchanged.
+* T converts the string to title case. "Title case" refers to a string with the first character of each word in upper-case and the remaining characters in the lower-case. $ZCONVERT() retains characters already conforming to "Title case" unchanged. "T" (title case) is not supported in M mode.
+
+
+The valid (case insensitive) codes for character set encoding for expr2 and expr3 in the three-argument form are:
+
+* "UTF-8"-- a multi-byte variable length encoding form of Unicode.
+* "UTF-16LE"-- a multi-byte 16-bit encoding form of Unicode in little-endian.
+* "UTF-16BE"-- a multi-byte 16-bit encoding form of Unicode in big-endian.
+* "UTF-16"-- a multi-byte 16-bit encoding form which uses the same endian level as that of the current system.
+
+.. note::
+   When UTF-8 mode is enabled, YottaDB/GT.M uses the ICU Library to perform case conversion. As mentioned in the Theory of Operation section, the case conversion of the strings occurs according to Unicode code-point values. This may not be the linguistically or culturally correct case conversion, for example, of the names in the telephone directories. Therefore, application developers must ensure that the actual case conversion is linguistically and culturally correct for their specific needs. The two-argument form of the $ZCONVERT() function in M mode does not use the ICU Library to perform operation related to the case conversion of the strings.
+
+++++++++++++++++++++++++
+Examples of $ZCONVERT()
+++++++++++++++++++++++++
+
+Example:
+
+.. parsed-literal:: 
+   GTM>write $zconvert("Happy New Year","U")
+   HAPPY NEW YEAR
+
+Example:
+
+.. parsed-literal::
+   GTM>write $ZCHSET
+   M
+   GTM>Write $zconvert("HAPPY NEW YEAR","T")
+   %GTM-E-BADCASECODE, T is not a valid case conversion code
+
+Example:
+
+.. parsed-literal::
+   GTM>Set T8="主要雨在西班牙停留在平原"
+   GTM>Write $Length(T8)
+   12
+   GTM>Set T16=$zconvert(T8,"UTF-8","UTF-16LE")
+   GTM>Write $length(T16)
+   %GTM-E-BADCHAR, $ZCHAR(129,137,232,150) is not a valid character in the UTF-8 encoding form
+   GTM>Set T16=$ZCOnvert(T16,"UTF-16LE","UTF-8")
+   GTM>Write $length(T16)
+   9
+
+In the above example, $LENGTH() function triggers an error because it takes only UTF-8 encoding strings as the argument.
+
+-------------------
+$ZDATA()
+-------------------
+
+Extends $DATA() to reflects the current alias state of the lvn or name argument to identify alias and alias container variables. It treats variables joined through pass-by-reference as well as TP RESTART variables within a transaction as alias variables. However, it does not distinguish nodes having alias containers among their descendants.
+
+In addition to the four standard M results from $DATA(), $ZDATA() returns:
+
+* 100 for an uninitialized alias or alias container
+* 101 for an alias or alias container with no descendants
+* 111 for an alias or alias container with descendants
+
+Existing $DATA() tests for data and descendants report on alias and alias container variables, as well as other variables in the standard fashion. When an application uses alias and alias container variables $ZDATA() supplies additional information when needed.
+
+++++++++++++++++++++++
+Examples for $ZDATA()
+++++++++++++++++++++++
+
+Example:
+
+.. parsed-literal::
+   GTM>set a=1,*b(1)=a,*c=d
+   GTM>write $data(a)," ",$zdata(a)
+   1 101
+   GTM>write $data(b)," ",$zdata(b)
+   10 10
+   GTM>write $data(c)," ",$zdata(c)
+   0 100
+   GTM>write $data(d)," ",$zdata(d)
+   0 100
+   GTM>write $data(b(1))," ",$zdata(b(1))
+   1 101
+   GTM>set b(1,2)=2
+   GTM>write $data(b(1))," ",$zdata(b(1))
+   11 111
+   GTM>write $data(b(1,2))," ",$zdata(b(1,2))
+   1 1
+   GTM>
+
+-----------------
+$ZDate()
+-----------------
+
+Returns a date and/or time formatted as text based on an argument formatted in the manner of $HOROLOG. For information on the format of $HOROLOG, refer to Chapter 8: “Intrinsic Special Variables”.
+
+The format for the $ZDATE function is:
+
+.. parsed-literal::
+   $ZD[ATE](expr1[,expr2[,expr3[,expr4]]]])
+
+* The first expression specifies in $HOROLOG format the date and/or time that $ZDATE() returns in text format. If the output requires only the date or the time, the other piece of the argument that is delimited by a comma (,) may be null.
+* The optional second expression specifies a string providing $ZDATE() with a "picture" of the desired output format. If this argument is missing or null, $ZDATE() uses the default format string "MM/DD/YY". If the optional second expression exceeds 64 characters, $ZDATE() generates a run-time error.
+* The optional third expression specifies a list of 12 month codes, separated by commas (,), that $ZDATE() uses in formatting text months called for by the "MON" picture, (that is, $ZDATE() outputs $PIECE(expr3,",",month-number) when "MON" appears in the second expression). If this argument is missing or null, $ZDATE() uses three-character English abbreviations for months.
+* The optional fourth expression specifies a list of seven day codes, separated by commas (,), which $ZDATE() uses in formatting text days of the week called for by the "DAY" picture, $ZDATE() outputs $PIECE (expr4,",",day-of-week-number) when "DAY" appears in the second expression; if this argument is missing or null, $ZDATE() uses three-character English abbreviations for days of the week.
+* $ZDATE() returns 31-Dec-1840 as a date representation of day 0.
+
+$ZDATE() provides an easy and flexible tool for putting M internal date/time ($HOROLOG) formats into more user-friendly formats.
+
+.. note::
+   $ZDATE() generates an error for input date values greater than 31-Dec-999999 (364570088) or less than 01-JAN-1840 (-365) and for time values greater than a second before midnight (86399) or less than 0 (zero).
+
+The Intrinsic Special Variable $ZDATEFORM determines the output format for years. The default value is zero (0), in which case $ZDATE() with one argument (no format specification) uses a "YY" (two digit) format for all years. If $ZDATEFORM is one (1), a "YYYY" (four digit) format is used for years later than 1999. For all other values of $ZDATEFORM, "YYYY" (four digit) format is used for all years. $ZDATEFORM does not affect $ZDATE() when the format argument is specified.
+
+The following table summarizes the usage of $ZDATE() when only first argument is specified.
+
++-------------------------------------------+---------------------------------------------------------------+
+| Value of $DATEFORM                        | $ZDATE() Output Format                                        |
++===========================================+===============================================================+
+| 0                                         | 2 digits                                                      |
++-------------------------------------------+---------------------------------------------------------------+
+| 1                                         | 4 digits for years 2000 and after                             |
+|                                           |                                                               |
+|                                           | 2 digits otherwise (for years ranging between 1840, 1999)     |
++-------------------------------------------+---------------------------------------------------------------+
+| other                                     | 4 digits                                                      |
++-------------------------------------------+---------------------------------------------------------------+
+
+++++++++++++++++++++++++++++++++++++++++++
+$ZDATE() Format Specifification Elements
+++++++++++++++++++++++++++++++++++++++++++
+
+This section lists the $ZDATE format specification elements. $ZDATE() format specifications must appear in upper case. When any alphabetic characters in format specifications are in lower case, $ZDATE() generates a run-time error.
+
+YY: Outputs the rightmost two digits of the year.
+
+YEAR: Outputs the year as a four-digit number.
+
+YYYYYY: Outputs the year as a six-digit number.
+
+MM: Outputs the month as a two-digit zero-filled number between 01 and 12.
+
+MON: Outputs the month as a three-letter abbreviation. (You can modify the output further using expr3).
+
+DD: Outputs the day of the month as a two-digit zero-filled number between 01 and 31.
+
+DAY: Outputs the day of the week as a three-letter abbreviation. (You can modify the output further using expr4).
+
+24: Outputs the hour of the day as a zero-filled number between 00 and 23.
+
+12: Outputs the hour of the day as a zero-filled number between 01 and 12.
+
+60: Outputs the minute of the hour as a zero-filled number between 00 and 59.
+
+SS: Outputs the second of the minute as a zero-filled number between 00 and 59.
+
+AM: Outputs the letters AM and PM depending on the time.
+
+\+: Inserts a plus sign (+) in the output string
+
+\-: Inserts a minus sign (-) in the output string.
+
+\.: Inserts a period (.) in the output string.
+
+,: Inserts a comma (,)in the output string.
+
+/: Inserts a slash (/) in the output string.
+
+\:: Inserts a colon (:) in the output string.
+
+;: Inserts a semi-colon (;) in the output string.
+
+\*: Inserts an asterisk (*) in the output string.
+
+.. note::
+   A blank space inserts a blank space in the output string.
+
++++++++++++++++++++++
+Examples of $ZDATE()
++++++++++++++++++++++
+
+Example:
+
+.. parsed-literal::
+   GTM>write $horolog,!,$zdate($H)
+   62109,60946
+   01/18/11
+   GTM>
+
+This displays $HOROLOG and then uses $ZDATE() to display today's date. The output shown would appear if today were the eighteenth day of January, 2011.
+
+Example:
+
+.. parsed-literal::
+   GTM>write $zdate($H,"DD-MON-YEAR")
+   18-JAN-2011
+   GTM>
+
+This uses the second argument to specify a text format different from the default.
+
+Example:
+
+.. parsed-literal::
+   GTM>set m="Januar,Februar,Marz,April,Mai,Juni,Juli,August,"
+   GTM>set m=m\_"September,October,November,Dezember"
+   GTM>write $zdate($horolog,"DD-MON-YEAR",m)
+   18-Januar-2011
+   GTM>
+
+This is similar to the prior example, however it uses the third argument to specify the months in German.
+
+Example:
+
+.. parsed-literal::
+   GTM>set d="Dimanche,Lundi,Mardi,Mercredi,Jeudi,Vendredi,Samedi"
+   GTM>write $zdate($H,"DAY, DD/MM/YY","",d)
+   Mardi, 18/01/2011
+   GTM>
+
+This example displays the eighteenth of January, however it uses the fourth argument to specify the days of the week in French.
+
+Example:
+
+.. parsed-literal::
+   GTM>write !,$zdate($H,"12:60:SS AM")
+   10:35:51 PM
+   GTM>
+
+This example shows hours, minutes, and seconds in a 12 hour clock with an AM/PM indicator.
+
+Example:
+
+.. parsed-literal::
+   GTM>write !,$zdate(",36524","24-60")
+   10-08
+   GTM>
+
+This example shows hours and minutes on a 24 hour clock. Notice that the first argument must provide the time in the second comma delimiter piece to match $HOROLOG format.
+
+Example:
+
+.. parsed-literal::
+   
+  GTM>write $zdateform
+  0
+  GTM>write $zdate($H)
+  01/18/11
+  GTM>set $zdateform=1
+  GTM>write $zdate($horolog)
+  01/18/2011
+  GTM>write $zdate($horolog,"MM/DD/YY")
+  01/18/11
+
+This example converts the output format for years from the default ("YY") format to the four digit format ("YYYY") using the Intrinsic Special Variable $ZDATEFORM.
+
+Example:
+
+.. parsed-literal::
+   GTM>write $zdate(123456789,"DAY MON DD, YYYYYY")
+   FRI MAR 17, 339854
+   GTM>
+
+This example displays year as a six-digit number.
+
+
+---------------------
+$ZExtract()
+---------------------
+
+Returns a byte sequence from a given sequence of octets (8-bit bytes).
+
+The format for the $ZEXTRACT function is:
+
+.. parsed-literal::
+   $ZE[XTRACT](expr[,intexpr1[,intexpr2]])
+
+* The expression specifies a sequence of octets (8-bit bytes) from which $ZEXTRACT() derives a byte sequence.
+* The first optional integer expression (second argument) specifies the starting byte position in the byte string. If the starting position is beyond the end of the expression, $ZEXTRACT() returns an empty string. If the starting position is zero (0) or negative, $ZEXTRACT() starts at the first byte position in the expression; if this argument is omitted, $ZEXTRACT() returns the first byte. $ZEXTRACT() numbers byte positions starting at one (1) (the first byte of a sequence of octets (8-bit bytes) is at position one (1)).
+* The second optional integer expression (third argument) specifies the ending byte position for the result. If the ending position is beyond the end of the expression, $ZEXTRACT() stops with the last byte of the expression. If the ending position precedes the starting position, $ZEXTRACT() returns null. If this argument is omitted, $ZEXTRACT() returns one byte.
+* $ZEXTRACT() provides a tool for manipulating strings based on byte positions.
+* As $ZEXTRACT() operates on bytes, it can produce a string that is not well-formed according to the UTF-8 character set.
+
++++++++++++++++++++++++++++++
+Examples of $ZEXTRACT()
++++++++++++++++++++++++++++++
+
+Example:
+
+.. parsed-literal::
+   GTM>Set A="主要雨在西班牙停留在平原" 
+        
+   GTM>For i=0:1:$zlength(A) 
+   GTM>write !,$zascii($zextract(A,i)),"|"
+   GTM>
+
+This example displays the numeric byte sequence of the sequence of octets ("主要雨在西班牙停留在平原").
+
+
+-----------------------
+$ZFind()
+-----------------------
+
+Returns an integer byte position that locates the occurrence of a byte sequence within a sequence of octets(8-bit bytes).
+
+The format of the $ZFIND function is:
+
+.. parsed-literal::
+   $ZF[IND](expr1,expr2[,intexpr])
+
+* The first expression specifies the sequence of octets (8-bit bytes) in which $ZFIND() searches for the byte sequence.
+* The second expression specifies the byte sequence for which $ZFIND() searches.
+* The optional integer expression identifies the starting byte position for the $ZFIND() search. If this argument is missing, zero (0), or negative, $ZFIND() begins to search from the first position of the sequence of octets (8-bite bytes).
+* If $ZFIND() locates the byte sequence, it returns the position after its last byte. If the end of the byte sequence coincides with the end of the the sequence of octets (expr1), it returns an integer equal to the byte length of the expr1 plus one ($L(expr1)+1).
+* If $ZFIND() does not locate the byte sequence, it returns zero (0).
+* $ZFIND() provides a tool to locate byte sequences. The ( [ ) operator and the two-argument $ZLENGTH() are other tools that provide related functionality.
+
++++++++++++++++++++++++
+Examples of $ZFIND()
++++++++++++++++++++++++
+
+Example:
+
+.. parsed-literal::
+   GTM>write $zfind("主要雨",$zchar(187))
+   4
+   GTM>
+
+This example uses $ZFIND() to WRITE the position of the first occurrence of the numeric byte code 150. The return of 3 gives the position after the "found" byte.
+
+Example:
+
+.. parsed-literal::
+   GTM>write $zfind("新年好",$zchar(229),5)
+   8
+   GTM>
+
+This example uses $ZFIND() to WRITE the position of the next occurrence of the byte code 229 starting in byte position five.
+
+Example:
+
+.. parsed-literal::
+   GTM>set t=1 for  set t=$zfind("新年好",$zchar(230,150,176),t) quit:'t  write !,t
+   4
+   GTM>
+
+This example uses a loop with $ZFIND() to locate all the occurrences of the byte sequence $ZCHAR(230,150,176) in the sequence of octets ("新年好"). The $ZFIND() returns 4 giving the position after the occurrence of byte sequence $ZCHAR(230,150,176).
+
+----------------
+$ZGetjpi()
+----------------
+
+Returns job or process information of the specified process. The format for the $ZGETJPI function is:
+
+.. parsed-literal::
+   $ZGETJPI(expr1,expr2)
+
+* expr1 identifies the PID of the target job. If expr1 is an empty string (""), $ZGETJPI() returns information about the current process.
+* expr2 specifies the item keyword identifying the type of information returned; keywords may be upper, lower, or mixed-case. The keywords are as follows:
+
+**ZGETJPI()**
+
++----------------------------+--------------------------------------------------------------------------------------------------------------------------------------+
+| Keywords                   | Data Returned                                                                                                                        |
++============================+======================================================================================================================================+
+| ISPROCALIVE                | Determines whether the specified process is alive.                                                                                   |
++----------------------------+--------------------------------------------------------------------------------------------------------------------------------------+
+| CPUTIM                     | Total process and child CPU time used in hundredths of a second.                                                                     |
++----------------------------+--------------------------------------------------------------------------------------------------------------------------------------+
+| CSTIME                     | System time of child processes                                                                                                       |
++----------------------------+--------------------------------------------------------------------------------------------------------------------------------------+
+| CUTIME                     | User time of child processes                                                                                                         |
++----------------------------+--------------------------------------------------------------------------------------------------------------------------------------+
+| STIME                      | Process system time                                                                                                                  |
++----------------------------+--------------------------------------------------------------------------------------------------------------------------------------+
+| UTIME                      | Process user time                                                                                                                    |
++----------------------------+--------------------------------------------------------------------------------------------------------------------------------------+
+
+* Note that the $ZGETJPI() retrieves process time measurements (CPUTIM, CSTIME, CUTIME, STIME, and UTIME) only of the current process ($JOB). The "child" process time includes ZSYSTEM and PIPE device sub-processes (only after the PIPE CLOSEs), but excludes processes created by JOB commands.
+* $ZGETJPI() provides a tool for examining the characteristics of a UNIX process. Accessing information about processes belonging to other users requires certain UNIX privileges. Consult your system manager if you require additional privileges.
+
++++++++++++++++++++++++
+Examples of $ZGETJPI()
++++++++++++++++++++++++
+
+Example:
+
+.. parsed-literal::
+   GTM>write $zgetjpi(1975,"isprocalive")
+   1
+   GTM>
+
+This uses $ZGETJPI() to determine whether process 1975 is alive.
+
+Example:
+
+.. parsed-literal::
+   GTM>set t=$zgetjpi("","cputim")
+   GTM>do ^bench write $zgetjpi("","cputim")-t
+   1738
+   GTM>
+
+This uses $ZGETJPI() to measure the actual CPU time, measured in hundredths of a second, consumed by performing the BENCH routine.
+
+--------------------
+$ZJOBEXAM()
+--------------------
+
+Returns the full specification of the file into which the function places a ZSHOW "*". The return value serves as a way to save, to notify others of the exact location of the output, or to open the file for further processing. YottaDB/GT.M reports each $ZJOBEXAM() to the operator log facility with its file specification.
+
+The optional expression argument is a template output device specification. It can be a device, a file directory, or a file name. The template is an expression that is pre-processed to create a file specification as the target for the ZSHOW. The preprocessing is equivalent to $ZPARSE(), as illustrated by the following M code:
+
+.. parsed-literal::
+   set deffn="GTM_JOBEXAMINE.ZSHOW_DMP\_"_$JOB\_"_"_<cntr>
+   set filespec=$zparse(expr1,"",deffn)
+
+The $ZJOBEXAM()does not trigger error processing except when there is a problem storing its return value, so no error is reported to the process until after any dump is complete. In the event of any error encountered during the $ZJOBEXAM(), YottaDB/GT.M sends an appropriate message to operator log facility and returns control to the caller. Note that this special error handling applies only to the $ZJOBEXAM(), and is not a property of the $ZINTERRUPT interrupt handler, which uses $ZJOBEXAM() by default.
+
+$ZJOBEXAM() dump files contain the context of a process at the time the function executes. Placement and management of these files should consider their potential size and security implications.
+
+++++++++++++++++++++++++
+Examples of $ZJOBEXAM()
+++++++++++++++++++++++++
+
+Example:
+
+.. parsed-literal::
+   GTM>set x=$zjobexam()
+   GTM>write x
+   /home/gtmuser1/.fis-gtm/V5.4-002B_x86/r/GTM_JOBEXAM.ZSHOW_DMP_28760_1
+   GTM>set x=$zjobexam("test.file")
+   GTM>write x
+   /home/gtmuser1/.fis-gtm/V5.4-002B_x86/r/test.file
+   GTM>
+
+Shows default file name and type of the files created containing the zshow dump information and the difference when the name and type are specified.
+
+-------------------
+$ZJustify()
+-------------------
+
+Returns a formatted and fixed length byte sequence.
+
+The format for the $ZJUSTIFY() function is:
+
+.. parsed-literal::
+   $ZJ[USTIFY](expr,intexpr1[,intexpr2])
+
+* The expression specifies the sequence of octets formatted by $ZJUSTIFY().
+* The first integer expression (second argument) specifies the minimum size of the resulting byte sequence.
+* If the first integer expression is larger than the length of the expression, $ZJUSTIFY() right justifies the expression to a byte sequence of the specified length by adding leading spaces. Otherwise, $ZJUSTIFY() returns the expression unmodified unless specified by the second integer argument.
+* The behavior of the optional second expression (third argument) for $ZJUSTIFY() is the same at $JUSTIFY(). For more information, refer to “$Justify()”.
+* When the second argument is specified and the first argument evaluates to a fraction between -1 and 1, $ZJUSTIFY() returns a number with a leading zero (0) before the decimal point (.).
+* $ZJUSTIFY() fills a sequence of octets to create a fixed length byte sequence. However, if the length of the specified expression exceeds the specified byte size, $ZJUSTIFY() does not truncate the result (although it may still round based on the third argument). When required, $ZEXTRACT() performs truncation.
+
+$ZJUSTIFY() optionally rounds the portion of the result after the decimal point. In the absence of the third argument, $ZJUSTIFY() does not restrict the evaluation of the expression. In the presence of the third (rounding) argument, $JUSTIFY() evaluates the expression as a numeric value. The rounding algorithm can be understood as follows:
+
+* If necessary, the rounding algorithm extends the expression to the right with 0s (zeros) to have at least one more digit than specified by the rounding argument.
+* Then, it adds 5 (five) to the digit position after the digit specified by the rounding argument.
+* Finally, it truncates the result to the specified number of digits. The algorithm rounds up when excess digits specify a half or more of the last retained digit and rounds down when they specify less than a half.
+
+++++++++++++++++++++++++
+Examples of $ZJUSTIFY()
+++++++++++++++++++++++++
+
+Example:
+
+.. parsed-literal::
+   GTM>write "123456789012345",! write $zjustify("新年好",15),!,$zjustify("新年好",5)
+   123456789012345
+        新年好
+   新年好
+   GTM>
+
+This example uses $ZJUSTIFY() to display the sequence of octets represented by "新年好" in fields of 15 space octets and 5 space octets. Because the byte length of "新年好" is 9, it exceeds 5 spaces, the result overflows the specification.
+
+-------------------------
+$ZLength()
+-------------------------
+
+Returns the length of a sequence of octets measured in bytes, or in "pieces" separated by a delimiter specified by one of its arguments.
+
+The format for the $ZLENGTH() function is:
+
+.. parsed-literal::
+   $ZL[ENGTH](expr1[,expr2])
+
+* The first expression specifies the sequence of octets that $ZLENGTH() "measures".
+* The optional second expression specifies the delimiter that defines the measure; if this argument is missing, $ZLENGTH() returns the number of bytes in the sequence of octets.
+* If the second argument is present and not null, $ZLENGTH() returns one more than the count of the number of occurrences of the second byte sequence in the first byte sequence; if the second argument is null , the M standard for the analogous $LENGTH() dictates that $ZLENGTH() returns a zero (0).$ZLENGTH() provides a tool for determining the lengths of a sequence of octets in two ways--bytes and pieces. The two argument $ZLENGTH() returns the number of existing pieces, while the one argument returns the number of bytes.
+
++++++++++++++++++++++++
+Examples of $ZLENGTH()
++++++++++++++++++++++++
+
+Example:
+
+.. parsed-literal::
+   GTM>write $zlength("主要雨在西班牙停留在平原")
+   36
+   GTM>
+
+This uses $ZLENGTH() to WRITE the length in bytes of the sequence of octets "主要雨在西班牙停留在平原".
+
+Example:
+
+.. parsed-literal::
+   GTM>set x="主"_$zchar(63)_"要"_$zchar(63)_"雨"
+   GTM>write $zlength(x,$zchar(63))
+   3
+   GTM>
+
+This uses $ZLENGTH() to WRITE the number of pieces in a sequence of octets, as delimited by the byte code $ZCHAR(63).
+
+Example:
+
+.. parsed-literal::
+   GTM>set x=$zchar(63)_"主"_$zchar(63)_"要"_$zchar(63)_"雨"_$zchar(63)"
+   GTM>write $zlength(x,$zchar(63))
+   5
+   GTM>
+
+This also uses $ZLENGTH() to WRITE the number of pieces in a sequence of octets, as delimited by byte code $ZCHAR(63). Notice that GT.M counts both the empty beginning and ending pieces in the string because they are both delimited.
+
+-------------------
+$ZMessage()
+-------------------
+
+Returns a message string associated with a specified status code .
+
+The format for the $ZMESSAGE function is:
+
+.. parsed-literal::
+   $ZM[ESSAGE](intexpr)
+
+The integer expression specifies the status code for which $ZMESSAGE() returns error message text .
+
+$ZMESSAGE() provides a tool for examining the message and/or mnemonic associated with a particular message code as reported in $ZSTATUS.
+
+The $ZSTATUS Intrinsic Special Variable holds the message code and the message of the last non-Direct Mode YottaDB/GT.M error. For more information on $ZSTATUS, refer "Intrinsic Special Variables".
+
+++++++++++++++++++++++++
+Examples of $ZMESSAGE()
+++++++++++++++++++++++++
+
+Example:
+
+.. parsed-literal::
+   GTM>write $zmessage(150373210)
+   %GTM-E-DIVZERO, Attempt to divide by zero
+   GTM>
+
+This uses $ZMESSAGE() to display the message string corresponding to code 150373210.
+
+-------------------
+$ZPARSE()
+-------------------
+
+Expands a file name to a full pathname and then returns the full pathname or one of its fields (directory, name, or extension).
+
+The format for the $ZPARSE function is:
+
+.. parsed-literal::
+   $ZPARSE(expr1[,expr2[,expr3[,expr4[,expr5]]]])
+
+* The first expression specifies the file name; if the file name is not valid, $ZPARSE() returns a null string; if the file name contains a wildcard (* and/or ?), $ZPARSE() returns a file name containing the wildcard(s).
+* The optional second expression specifies the field of the pathname that $ZPARSE() returns; if this argument is missing or null, $ZPARSE() returns a full pathname constructed using default values in place of any fields missing for directory, file and extension.
+* The optional third and fourth expressions specify default values to use during file name expansion for missing fields (directory, name, or extension), if any, in the original file name. For any field missing in the original file name specified in expr1, $ZPARSE() will attempt to substitute the corresponding field from expr3; if that field is not present in expr3, $ZPARSE() will attempt to use the corresponding field from expr4.
+* If the file extension is missing from all three of expr1, expr3, and expr4, $ZPARSE() will return a null string for the corresponding field. If the file or directory is missing from all three of expr1, expr3, and expr4, $ZPARSE() will substitute the information from your current working directory.
+* The optional fifth expression specifies the mode or type of parse that $ZPARSE() performs.
+
+$ZPARSE() provides a tool for verifying that a file name is syntactically correct, for examining specific fields of a file name, and for filling in missing pieces in a partial specification based on a hierarchy of defaults. For information about determining whether a file exists, see “$ZSEARCH()”.
+
+$ZPARSE() arguments, after the first, are optional. If you use no other arguments, a single argument is sufficient. However, if you use selected arguments $ZPARSE() requires that null strings ("") be filled in for the unspecified arguments.
+
+The acceptable keywords for the second argument are:
+
+"DIRECTORY": Directory name
+
+"NAME": File name (excluding file extension)
+
+"TYPE": File type extension
+
+The keywords may be entered in either upper or lower case. Variables that evaluate to these strings and indirection are acceptable for argument two. When the keywords themselves appear as string literals, they must be enclosed in quotation marks (" ").
+
+The following guidelines must be followed in constructing arguments one, three and four:
+
+* Directory specifications must end in a slash; anything after the final slash in the directory specification is assumed to be part of the name specification.
+* A file name with an extension must include at least one character to the left of the period (.). Thus, "/user/.login" refers to the file named ".login", while "/usr/taxes.c" refers to a file named "taxes" with the extension "c". If a file name includes more than one period, the extension includes all letters to the right of the rightmost period.
+
+The keywords for the fifth argument $ZPARSE() are:
+
+NULL (""): Returns a full file-specification or device
+
+"SYNTAX_ONLY": Disables checking for the existence of the directory or device.
+
+++++++++++++++++++++++++++++++
+Examples of $ZPARSE()
+++++++++++++++++++++++++++++++
+
+Example:
+
+.. parsed-literal::
+   GTM>write $zparse("test","","/usr/work/","dust.lis")
+   /usr/work/test.lis
+   GTM>
+
+This uses $ZPARSE() to demonstrate defaulting using the third and fourth arguments. The result gets the directory field from the third expression, the name from the first expression, and the type from the fourth expression.
+
+Example:
+
+.. parsed-literal::
+   GTM>r!,"file :",f w ?20,$zparse(f,"directory")
+   file: test.list /usr/work/
+   GTM>
+
+This uses $ZPARSE() to display the directory for the file name entered as input at the prompt file: , in this case, the current working directory.
+
+Example:
+
+.. parsed-literal::
+   $ cd /usr/work/me
+   $ $gtm
+   GTM>write $zparse("test","","x.list","y.c")/usr/work/me/test.lis
+   GTM>write $zparse("test","","/usr/work/","/dev/y.c")/usr/work/test.c
+   GTM>write $zparse("test","","/usr/work","/dev/y.c")/usr/test.c
+   GTM>
+
+This example illustratest the use of the third and fourth arguments to $ZPARSE(). In the first statement, the first argument has no directory or extension field, so $ZPARSE() substitutes the extension field from the third argument. Since neither the third nor fourth argument specifies a directory, and because the fourth argument does not contain any fields that are not present in the third argument, the fourth argument is not used.
+
+In the second statement, the first argument to $ZPARSE() is again missing both the directory and extension. In this instance, $ZPARSE() uses the directory specified in the third argument and, becuase neither the first nor third argument specifies a file extension, $ZPARSE() uses the file extension from the fourth argument.
+
+In the third statement, because "/usr/work" does not end with a backward slash (/), $ZPARSE() interprets the substring "work" as a file name. Then, $ZPARSE() substitutes "/usr/" for the directory missing in the first argument and substitutes ".c" from the fourth argument for the extension missing from both the first and third arguments.
+
+Example:
+
+.. parsed-literal::
+   $ cd /usr/work/me
+   $ /usr/lib/fis-gtm/V5.4-002B_x86/gtm
+   GTM>For i="DIRECTORY","NAME","TYPE","" Write $ZPARSE("test.m",i),!
+   /usr/work/me/
+   test
+   .m
+   /usr/work/me/test.m
+   GTM>
+
+
+This example illustrates the output produced for each of the possible values for the second argument.
+
+--------------------------
+$ZPIece()
+--------------------------
+
+Return a sequence of bytes delimited by a specified byte sequence made up of one or more bytes.
+
+The format for the $ZPIECE function is:
+
+.. parsed-literal::
+   $ZPI[ECE](expr1,expr2[,intexpr1[,intexpr2]])
+
+* The first expression specifies the sequence of octets from which $ZPIECE() takes its result.
+* The second expression specifies the delimiting byte sequence that determines the piece "boundaries"; if this argument is a null string, $ZPIECE() returns a null string.
+* If the second expression does not appear anywhere in the first expression, $ZPIECE() returns the entire first expression (unless forced to return null by the second integer expression).
+* The optional first integer expression (third argument) specifies the beginning piece to return; if this argument is missing, $ZPIECE() returns the first piece.
+* The optional second integer expression (fourth argument) specifies the last piece to return. If this argument is missing, $ZPIECE() returns only one piece unless the first integer expression is zero (0) or negative, in which case it returns a null string. If this argument is less than the first integer expression, $ZPIECE() returns null.
+* If the second integer expression exceeds the actual number of pieces in the first expression, $ZPIECE() returns all of the expression after the delimiter selected by the first integer expression.
+* The $ZPIECE() result never includes the "outside" delimiters; however, when the second integer argument specifies multiple pieces, the result contains the "inside" occurrences of the delimiter.
+* $ZPIECE() provides a tool for efficiently using values that contain multiple elements or fields, each of which may be variable in length.
+* Applications typically use a single byte for a $ZPIECE() delimiter (second argument) to minimize storage overhead, and increase efficiency at run-time. The delimiter must be chosen so the data values never contain the delimiter. Failure to enforce this convention with edit checks may result in unanticipated changes in the position of pieces within the data value. The caret symbol (^), backward slash (\), and asterisk (*) characters are examples of popular visible delimiters. Multiple byte delimiters may reduce the likelihood of conflict with field contents. However, they decrease storage efficiency, and are processed with less efficiency than single byte delimiters. Some applications use control characters, which reduce the chances of the delimiter appearing in the data but sacrifice the readability provided by visible delimiters.
+* A SET command argument can have something that has the format of a $ZPIECE() on the left-hand side of its equal sign (=). This construct permits easy maintenance of individual pieces within a sequence of octets. It also can be used to generate a byte sequence of delimiters. For more information on SET $ZPIECE(), refer to SET in the "Commands" chapter.
+
++++++++++++++++++++++
+Examples of $ZPIECE()
++++++++++++++++++++++
+
+Example:
+
+.. parsed-literal::
+   GTM>for i=0:1:3 write !,$zpiece("主"_$zchar(64)_"要",$zchar(64),i),"|"
+   |
+   主|
+   要|
+   |
+   GTM>
+
+This loop displays the result of $ZPIECE(), specifying $ZCHAR(64) as a delimiter, a piece position "before," first and second, and "after" the sequence of octets.
+
+Example:
+
+.. parsed-literal::
+   GTM>for i=-1:1:3 write !,$zpiece("主"_$zchar(64)_"要",$zchar(64),i,i+1),"|"
+   |
+   主|
+   主@要|
+   要|
+   |
+   GTM>
+
+This example is similar to the previous example except that it displays two pieces on each iteration. Notice the delimiter () in the middle of the output for the third iteration, which displays both pieces.
+
+Example:
+
+.. parsed-literal::
+   For p=1:1:$ZLength(x,"/") Write ?p-1*10,$ZPIece(x,"/",p)
+
+This loop uses $ZLENGTH() and $ZPIECE() to display all the pieces of x in columnar format.
+
+Example:
+
+.. parsed-literal::
+   GTM>Set $piece(x,$zchar(64),25)="" write x
+   @@@@@@@@@@@@@@@@@@@@@@@@
+
+This SETs the 25th piece of the variable x to null, with delimiter $ZCHAR(64). This produces a byte sequence of 24 at-signs (@) preceding the null.
+
+------------------
+$ZPEEK()
+------------------
+
+Provides a way to examine memory in the current process address space. Use of this function requires information about YottaDB/GT.M internals, which may change from release to release. Contact YottaDB/FIS support for information on techniques for using $ZPEEK() in largely release independent ways.
+
+The $ZPEEK() function returns the contents of the memory requested as a string depending on the requested (or defaulted) formatting.
+
+The format of the $ZPEEK() function is:
+
+.. parsed-literal::
+   $ZPEEK("mnemonic[:argument]",offset,length[,format])
+
+mnemonic specifies the memory area $ZPEEK() is to access. Some mnemonics have arguments separated from the mnemonic by a colon (":"). The mnemonics are case independent. Possible mnemonics, their possible abbreviations and their arguments are:
+
+* CSA[REG] - returns a value from the sgmnt_addrs (process private) control block. Takes a case independent region name as an argument.
+* FH[REG] - returns a value from the sgmnt_data (shared file header) control block. Takes a case independent region name as an argument..
+* GDR[REG] - returns a value from the gd_region (process private) control block. Takes a case independent region name as an argument.
+* GLF[REPL] - returns a value from the jnlpool.gtmsrc_lcl_array[n] control block. Takes a numeric index (n) as an argument.
+* GRL[REPL] - returns a value from the recvpool.gtmrecv_local control block. No argument allowed. Only available when run on a non-primary instance.
+* GSL[REPL] - returns a value from the jnlpool.gtmsource_local_array[n] control block. Takes a numeric index (n) as an argument.
+* JBF[REG]:region[ -obtains fields in shared jnl_buffer structure.
+* JNL[REG]:region[ - obtains fields in the jnl_private_control structure.
+* JPC[REPL] - returns a value from the jnlpool.jnlpool_ctl control block. No argument allowed.
+* NL[REG] - returns a value from the node_local (shared) control block. Takes a case independent region name as an argument.
+* NLREPL - returns a value from the node_local (shared) control block associated with replication. No argument allowed.
+* PEEK - returns a value based on the supplied argument. Argument is the base address of the value to obtain in 0xhhhhhhh format where the h's are hex digits.
+* RIH[REPL] - returns a value from the jnlpool.repl_inst_filehdr control block. No argument allowed.
+* RPC[REPL] - returns a value from the recvpool.recvpool_ctl control block. No argument allowed. Only available when run on a non-primary instance.
+* UHC[REPL] - returns a value from the recvpool.upd_helper_ctl control block. No argument allowed. Only available when run on a non-primary instance.
+* UPL[REPL] - returns a value from the recvpool.upd_proc_local control block. No argument allowed. Only available when run on a non-primary instance.
+
+offset (first integer expression) is a numeric value that specifies the offset from the address supplied or implied by the the mnemonic and argument. Specifying a negative offset results in a BADZPEEKARG error. Specifying too large an offset such that unavailable memory is specified results in a BADZPEEKRANGE error.
+
+length (second integer expression) is a numeric value that specifies the length of the field to obtain. Specifying a negative legnth results in a BADZPEEKARG error. Specifying a length that exceeds the maximum string length results in a MAXSTRLEN error. Specifying too large a length such that unavailable memory is specified results in a BADZPEEKRANGE error.
+
+format is an optional single case independent character formatting code for the retrieved data. The formatting codes are:
+
+* C : returns a character representations of the memory locations; this is the DEFAULT if the fourth argument is not specified.
+* I : returns a signed integer value - negative values have a preceding minus sign (-); the length can be 1, 2, 4, or 8 bytes.
+* U : returns an unsigned integer value - all bits are part of the numeric value; the length can be 1, 2, 4, or 8 bytes.
+* S : returns a character representation of the memory locations and the first NULL character found terminates the returned string; that is: the specified length is a maximum.
+* T: Selects a $HOROLOG format for a field of 4 or 8 bytes which is intended for use on fields in UNIX time format (seconds since 01/01/1970)
+* X : returns a hexadecimal value as 0xXXXXXX where XXXXXX is twice the specified length in bytes, so requested length 1 returns 0xXX and length 4 returns 0xXXXXXXXX; the length can be 1, 2, 4, or 8 bytes.
+* Z : returns a hexadecimal representation of the memory locations as 'X' does, without regard to endianness, and with no length restriction other than max string length.
+* $ZPEEK() function generates an UNDEF error when VIEW UNDEF is not set and a format parameter is specified but is undefined.
+
+$ZPEEK() has no UTF-8 checking. It is possible for values returned by the 'C' and 'S' codes to have invalid UTF-8 values in them. Take care when processing values obtained by these codes to either use "VIEW NOBADCHAR" when dealing with such values and/or use the $Zxxx() flavors of functions like $ZPIECE(), $ZEXTRACT(),etc which also do not raise BADCHAR errors when encountering invalid UTF-8 encoded strings.
+
+Note that $ZPEEK() with 8 byte numeric formatting can return numeric string values that exceed GT.M's current limit of 18 digits of precision. If the values are used as strings, the extra digits are preserved, but if used arithmetically, the lower precision digits can be lost.
+
+When values from replication structures are requested and the structures are not available due to replication not running or, in the case of the gtmrecv.* control block base options, if not running on a non-primary instance where the gtmrecv.* control are available, a ZPEEKNOREPLINFO error is raised.
+
+The JNL[REG] and JBL[REG] mnemonics and characteristics are defined by the running the GTMDefinedTypesInit.m utility, which produces a cross-index in the form:
+
+.. parsed-literal::
+   gtmtypfldindx(<structure-name>.<field-mnemonic>)=<n>
+
+where gtmtypes(<structure-name>,<n>,*) nodes contain the field characteristics
+
+----------------------
+$ZPrevious()
+----------------------
+
+The $ZPREVIOUS function returns the subscript of the previous local or global variable name in collation sequence within the array level specified by its argument. When $ZPREVIOUS() has an unsubscripted argument, it returns the previous unsubscripted local or global variable name in collating sequence.
+
+The $ZPREVIOUS function provides compatibility with some other M implementations. The M Development Committee chose to implement this functionality with the optional second -1 argument of $ORDER(). Therefore, when a design requires this functionality $ORDER() has the advantage over $ZPREVIOUS of being part of the M standard.
+
+The format for the $ZPREVIOUS function is:
+
+.. parsed-literal::
+   $ZP[REVIOUS](glvn)
+
+* The subscripted or unsubscripted global or local variable name specifies the node prior to which $ZPREVIOUS() searches backwards for a defined node with data and/or descendants. The number of subscripts contained in the argument implicitly defines the array level.
+* If $ZPREVIOUS() finds no node at the specified level before the specified global or local variable, it returns a null string.
+* If the last subscript in the subscripted global or local variable name is null, $ZPREVIOUS() returns the last node at the specified level.
+
+$ZPREVIOUS() is equivalent to $ORDER() with a second argument of -1.
+
+------------------------
+$ZSOCKET()
+------------------------
+
+Returns information about a SOCKET device and its attached sockets. The format of the $ZSOCKET() function is:
+
+.. parsed-literal::
+   $ZSOCKET(expr1,expr2[,[expr3][,expr4]])
+
+The first expression specifies the SOCKET device name; an empty string returns the same result as the current device ($IO). If the first expression is not specified, $ZSOCKET() returns information about sockets in the socketpool. Specifying a device other than a SOCKET device for the $ZSOCKET() function produces a ZSOCKETNOTSOCK error. When a YottaDB/GT.M process starts with different sockets for input and output on $PRINCIPAL, $ZSOCKET() accepts $ZPIN or $ZPOUT as its first argument and supplies information on the input or output side, respectively. The following is an example of getting the handles for the $PRINCIPAL input and output socket devices.
+
+.. parsed-literal::
+   set handlein=$ZSOCKET($ZPIN,"SOCKETHANDLE",0)
+   set handleout=$ZSOCKET($ZPOUT,"SOCKETHANDLE",0)
+
+For more information, refer to “$ZPIN” and “$ZPOUT”.
+
+The second expression specifies a keyword identifying the type of information returned and the optional third expression usually specifies the index (starting at zero) of a socket attached to the device; if the index is outside the range of attached sockets, $ZSOCKET() returns an empty string. If the third expression is not specified, $ZSOCKET() returns information about the current socket. Using an invalid keyword produces a ZSOCKETATTR error. The fourth expression specifies an individual delimiter when the second expression specifies DELIMITER. For more information, see the following table. Note that changes to the socket collection for a SOCKET device using OPEN, CLOSE, USE :ATTACH, or USE :DETACH may change the index for a socket.
+
++----------------------------+----------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
+| Keyword                    | Arguments                        | Returns                                                                                                                           |
++============================+==================================+===================================================================================================================================+
+| CURRENTINDEX               |                                  | The index (starting at zero) of the current socket for the SOCKET device.                                                         |
++----------------------------+----------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
+| DELIMITER                  | index[, delimiter]               | If only index is specified, the number of delimiters. If delimiter is also specified, selects which delimiter to return. The first|
+|                            |                                  | delimiter is zero.                                                                                                                |
++----------------------------+----------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
+| DESCRIPTOR                 | index                            | The OS socket descriptor for the socket.                                                                                          |
++----------------------------+----------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
+| HOWCREATED                 | index                            | LISTEN, CONNECT, ACCEPTED, PRINCIPAL, or PASSED                                                                                   |
+|                            |                                  |                                                                                                                                   |
+|                            |                                  | ACCEPTED indicates a connection created from a LISTENing socket.                                                                  |
+|                            |                                  |                                                                                                                                   |
+|                            |                                  | PRINCIPAL indicates that the socket is the $PRINCIPAL of the process.                                                             |
+|                            |                                  |                                                                                                                                   |
+|                            |                                  | PASSED indicates a socket passed by WRITE /ACCEPT.                                                                                |
++----------------------------+----------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
+| INDEX                      | handle                           | The current index of the socket named by handle.                                                                                  |
++----------------------------+----------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
+| IOERROR                    | handle                           | 1 (TRUE) if IOERROR=TRAP otherwise 0 (FALSE).                                                                                     |
++----------------------------+----------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
+| LOCALADDRESS               | index                            | The address of the local side of the socket. For TCP sockets: the IPv6 or IPv4 numeric address. For LOCAL sockets: the path.      |
++----------------------------+----------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
+| LOCALPORT                  | index                            | The numeric port of the local side of a TCP socket.                                                                               |
++----------------------------+----------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
+| MOREREADTIME               | index                            | The value of the MOREREADTIME device parameter if it was specified, otherwise an empty string.                                    |
++----------------------------+----------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
+| NUMBER                     |                                  | The number of sockets in the SOCKET device.                                                                                       |
++----------------------------+----------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
+| PARENT                     | index                            | If the socket was created from a LISTENing socket: the handle of the LISTENing socket.                                            |
++----------------------------+----------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
+| PROTOCOL                   | index                            | TCP, TCP6, or LOCAL                                                                                                               |
++----------------------------+----------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
+| REMOTEADDRESS              | index                            | The address of the remote side of the socket. For TCP sockets: the IPv6 or IPv4 numeric address. For LOCAL sockets: the path.     |
++----------------------------+----------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
+| REMOTEPORT                 | index                            | The numeric port of the remote side of a TCP socket.                                                                              |
++----------------------------+----------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
+| SOCKETHANDLE               | index                            | The handle for the selected socket.                                                                                               |
++----------------------------+----------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
+| STATE                      | index                            | One of LISTENING, CONNECTED, BOUND, or CONNECTINPROGRESS                                                                          |
++----------------------------+----------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
+| TLS                        | index[,expr4]                    | If the selected socket is using TLS, a string of the form: 1,{SERVER|CLIENT}[,tlsid], where the optional tlsid comes from the     |
+|                            |                                  | WRITE /TLS which enabled TLS on the socket; otherwise an empty string. See the following table for a description of all options   |
+|                            |                                  | for the fourth expression for the TLS keyword.                                                                                    |
++----------------------------+----------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
+| ZBFSIZE                    | index                            | Size of the YottaDB/GT.M buffer in bytes.                                                                                         |
++----------------------------+----------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
+| ZFF                        | index                            | The value of the ZFF device parameter.                                                                                            |
++----------------------------+----------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
+| ZIBFSIZE                   | index                            | Size of the OS buffer in bytes (SO_RCVBUF).                                                                                       |
++----------------------------+----------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
+| ZDELAY                     | index                            | 1 if Nagle algorithm enabled, otherwise 0.                                                                                        |
++----------------------------+----------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
+
+The following table describes the values for the fourth expression for the TLS keyword.
+
++------------------+-----------------------------------------------------------------------------------------------------------------------------------------------+
+| expr4 (TLS)      | Description                                                                                                                                   |
++==================+===============================================================================================================================================+
+| SESSION          | Returns information related to SSL sessions including information about renegotiations. Here is an example:                                   |
+|                  |                                                                                                                                               |
+|                  | \|S:RENSEC:1,RENTOT:1,SESSID:<SESSID>, SESEXP:Thu Jun 4 21:07:11 2015                                                                         |
+|                  |                                                                                                                                               |
+|                  | "\|S:" denotes this piece contains session information, "RENSEC:" indicates whether secure renegotiation is available (1) or not (0),         |
+|                  | "RENTOT:" gives the current total number of renegotiations done on this socket, "SESSID:" shows the session id in hexadecimal, and "SESEXP:"  |
+|                  | indicates when the session expires respresented as time in the local time zone.                                                               |
++------------------+-----------------------------------------------------------------------------------------------------------------------------------------------+
+| OPTIONS          | the hexadecimal representation of the ssl-options selected by the combination of the OpenSSL defaults, options set by the YottaDB/GT.M TLS    |
+|                  | plugin, and options specified in the gtmcrypt_config configuration file prefixed by "O:", a comma, and the verify mode as two hexadecimal     |
+|                  | digits. Here is an example:                                                                                                                   |
+|                  |                                                                                                                                               |
+|                  | \|O:0000000001520004,01                                                                                                                       |
+|                  |                                                                                                                                               |
+|                  | The values for the SSL_OP options and verify modes are defined in the include/openssl/ssl.h file provided by the OpenSSL development package. |
++------------------+-----------------------------------------------------------------------------------------------------------------------------------------------+
+| CIPHER           | The SSL protocol version prefixed by "P:" and the algorithm negotiated between the server and client prefixed by "C:". Here is an example:    |
+|                  |                                                                                                                                               |
+|                  | \|P:TLSv1.2|C:DHE-RSA-AES256-SHA                                                                                                              |
++------------------+-----------------------------------------------------------------------------------------------------------------------------------------------+
+| ALL              | returns all available information. Here is an example:                                                                                        |
+|                  |                                                                                                                                               |
+|                  | \|P:TLSv1.2|C:AES256-GCM-SHA384|O:0000000001020004,01|S:RENSEC:1,RENTOT:0,SESEXP:Mon Jun 22 23:58:09 2015                                     |
++------------------+-----------------------------------------------------------------------------------------------------------------------------------------------+
+
+----------------------
+$ZSYSLOG()
+----------------------
+
+Sends its string parameter to the system log and always returns TRUE (1). The text appears in the syslog with the same format as any other YottaDB/GT.M syslog message (that is, in the user.info log with GTM-MUMPS[pid]" or "GTM-MUPIP[pid]" prefix along with instance information where appropriate). The format of the $ZSYSLOG function is:
+
+.. parsed-literal::
+   $ZSYSLOG(expr)
+
+---------------------
+$ZQGBLMOD()
+---------------------
+
+The $ZQGBLMOD function enables an application to determine whether it can safely apply a lost transaction to the database. A lost transaction is a transaction that must be rolled off a database to maintain logical multisite consistency. $ZQGBLMOD() always applies to data-level (level-0) nodes.
+
+The format for the $ZQGBLMOD function is:
+
+.. parsed-literal::
+   $ZQGBLMOD(gvn)
+
+* The subscripted or non-subscripted global variable name (gvn) specifies the target node.
+* A return value of zero (0) means the value of the global variable has not changed since the last synchronization of the originating and replicating instances.
+* A return value of one (1) means the value of the global variable may have changed since the last synchronization of the originating and replicating instance.
+
+$ZQGBLMOD function produces an error if you submit an argument that is not a global variable name.
+
+Internally, $ZQGBLMOD (gvn) compares the YottaDB/GT.M transaction number in the database block in which the global variable name is (or would be) stored with the value in the Zqgblmod_Trans field stored in the database file header.
+
+For example, if x is the transaction number of the level-0 database block in which gvn resides, and y is the value of Zqgblmod_Trans of region reg containing gvn, then the following is true:
+
+* If x <= y, no transaction modified the level-0 database block z in which gvn resides since the originating and replicating instances synchronized with each other. $ZQGBLMOD() returns a zero (0).
+* If x > y, some transaction modified z, but not necessarily gvn, after the originating and replicating instances synchronized with each other. $ZQGBLMOD() returns a one (1).
+
+
+If a transaction is a lost transaction that has been rolled back and it is determined that for all the M globals set and killed in the transaction $ZQGBLMOD() is zero (0), it is probably safe to apply the updates automatically. However, this determination of safety can only be made by the application designer and not by YottaDB/GT.M. If the $ZQGBLMOD() is one (1) for any set or kill in the transaction, it is not safe to apply the update.
+
+.. note::
+   The test of $ZQGBLMOD() and applying the updates must be encapsulated inside a YottaDB/GT.M transaction.
+
+Another approach to handling lost transactions would be to store in the database the initial message sent by a client, as well as the outcome and the response, and to reprocess the message with normal business logic. If the outcome is the same, the transaction can be safely applied.
+
+.. note::
+   If restartable batch operations are implemented, lost batch transactions can be ignored since a subsequent batch restart will process them correctly.
+
+--------------------
+$ZSEARCH()
+--------------------
+
+The $ZSEARCH function attempts to locate a file matching the specified file name. If the file exists, it returns the file name; if the file does not exist, it returns the null string.
+
+The format for the $ZSEARCH function is:
+
+.. parsed-literal::
+   $ZSEARCH(expr[,intexpr])
+
+* The expression contains a file name, with or without wildcards, for which $ZSEARCH() attempts to locate a matching file. Repeating $ZSEARCH with the same filename uses the same context and return a sequence of matching files when they exist; when the sequence is exhausted, $ZSEARCH() returns an empty string (""). Any change to the file name starts a new context.
+* $ZSEARCH() uses the process current working directory, if the expression does not specify a directory.
+* The optional integer expression specifies a "stream" number from 0 to 255 for each search; streams provide a means of having up to 256 $ZSEARCH() contexts simultaneously in progress.
+* If a $ZSEARCH() stream has never been used or if the expression differs from the argument to the last $ZSEARCH() of the stream, the function resets the context and returns the first pathname matching the expression; otherwise, it returns the next matching file in collating sequence; if the last prior pathname returned for the same expression and same stream was the last one matching the argument, $ZSEARCH() returns a null string.
+
+$ZSEARCH() provides a tool for verifying that a file exists. For information to help determine the validity of a file name, see “$ZPARSE()”.
+
+.. note::
+   You can call the POSIX stat() function to access metadata. The optional YottaDB/GT.M POSIX plug-in packages the stat() function for easy access from M application code.
+
++++++++++++++++++++++++
+Examples of $ZSEARCH()
++++++++++++++++++++++++
+
+Example:
+
+.. parsed-literal::
+   GTM>write $zsearch("data.dat")
+   /usr/staff/ccc/data.dat
+   GTM>
+
+This uses $ZSEARCH() to display the full file path name of "data.dat" in the process current default directory.
+
+Example:
+
+.. parsed-literal::
+   GTM>set x=$zsearch("\*.c")
+   GTM>for  set x=$zsearch("\*.m") quit:x=""  write !,$zparse(x,"NAME")
+
+This FOR loop uses $ZSEARCH() and $ZPARSE() to display M source file names in the process current working directory. To ensure that the search starts at the beginning, the example resets the context by first searching with a different argument.
+
+-------------------
+$ZSIGPROC()
+-------------------
+
+Sends a signal to a process. The format for the $ZSIGPROC function is:
+
+.. parsed-literal::
+   $ZSIGPROC(expr1,expr2)
+
+* The first expression is the pid of the process to which the signal is to be sent.
+* The second expression is the system signal number. Because a signal number of a signal name can be different for various platforms, YottaDB/FIS recommends using signal names to maintain code portability across different platforms. For example, the signal number for SIGUSR1 is 10 on Linux, 30 on AIX, and 16 for some other platforms. Use the $&gtmposix.signalval(signame,.sigval) function available in the gtmposix plugin to determine the signal number of a signal name.
+
+If the second expression is 0, $ZSIGPROC() checks the validity of the pid specified in the first expression.
+
+There are four possible return values from $ZSIGPROC():
+
++------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------+
+| Return Codes/ POSIX Error Definitions          | Description                                                                                                               |
++================================================+===========================================================================================================================+
+| 0                                              | The specified signal number was successfully sent to the specified pid. Any return value other than 0 indicates an error. |
++------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------+
+| EPERM                                          | The process has insufficient permissions to send the signal to the specified pid.                                         |
++------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------+
+| ESRCH                                          | The specified pid does not exist.                                                                                         |
++------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------+
+| EINVAL                                         | Invalid expression(s).                                                                                                    |
++------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------+
+
+.. note::
+   Although $ZSIGPROC() may work today as a way to invoke the asynchronous interrupt mechanism of YottaDB/GT.M processes to XECUTE $ZINTERRUPT because the underlying mechanism uses the POSIX USR1 signal, YottaDB/FIS reserves the right to change the underlying mechanism to suit its convenience and sending a POSIX USR1 may cease to work as a way to invoke the asynchronous interrupt mechanism. Use MUPIP INTRPT as the supported and stable API to invoke the asynchronous interrupt mechanism.
+
+++++++++++++++++++++++++++
+Examples of $ZSIGPROC()
+++++++++++++++++++++++++++
+
+Example:
+
+.. parsed-literal:: 
+   GTM>job ^Somejob
+   GTM>set ret=$&gtmposix.signalval("SIGUSR1",.sigusr1) zwrite 
+   ret=0
+   sigusr1=10
+   GTM>write $zsigproc($zjob,sigusr1)
+   0
+   GTM>
+
+This example sends the SIGUSR1 signal to the pid specified by $zjob.
+
+-------------------------
+$ZSUBstr()
+-------------------------
+
+Returns a properly encoded string from a sequence of bytes.
+
+.. parsed-literal::
+   $ZSUB[STR] (expr ,intexpr1 [,intexpr2])
+
+* The first expression is an expression of the byte string from which $ZSUBSTR() derives the character sequence.
+* The second expression is the starting byte position (counting from 1 for the first position) in the first expression from where $ZSUBSTR() begins to derive the character sequence.
+* The optional third expression specifies the number of bytes from the starting byte position specified by the second expression that contribute to the result. If the third expression is not specified, the $ZSUBSTR() function returns the sequence of characters starting from the byte position specified by the second expression up to the end of the byte string.
+* The $ZSUBSTR() function never returns a string with illegal or invalid characters. With VIEW "NOBADCHAR", the $ZSUBSTR() function ignores all byte sequences within the specified range that do not correspond to valid Unicode code-points, With VIEW "BADCHAR", the $ZSUBSTR() function triggers a run-time error if the specified byte sequence contains a code-point value that is not in the character set.
+* The $ZSUBSTR() is similar to the $ZEXTRACT() byte equivalent function but differs from that function in restricting its result to conform to the valid characters in the current encoding.
+
+
++++++++++++++++++++++++++++
+Examples of $ZSUBSTR()
++++++++++++++++++++++++++++
+
+Example:
+
+.. parsed-literal::
+   GTM>write $ZCHSET
+   M
+   GTM>set char1="a" ; one byte character
+   GTM>set char2="ç"; two-byte character
+   GTM>set char3="新"; three-byte character
+   GTM>set y=char1_char2_char3
+   GTM>write $zsubstr(y,1,3)=$zsubstr(y,1,5)
+   0
+
+With character set M specified, the expression $ZSUBSTR(y,1,3)=$ZSUBSTR(y,1,5) evaluates to 0 or "false" because the expression $ZSUBSTR(y,1,5) returns more characters than $ZSUBSTR(y,1,3).
+
+Example:
+
+.. parsed-literal::
+   GTM>write $zchset
+   UTF-8
+   GTM>set char1="a" ; one byte character
+   GTM>set char2="ç"; two-byte character
+   GTM>set char3="新"; three-byte character
+   GTM>set y=char1_char2_char3
+   GTM>write $zsubstr(y,1,3)=$zsubstr(y,1,5)
+   1
+
+For a process started in UTF-8 mode, the expression $ZSUBSTR(y,1,3)=$ZSUBSTR(y,1,5) evaluates to 1 or "true" because the expression $ZSUBSTR(y,1,5) returns a string made up of char1 and char2 excluding the three-byte char3 because it was not completely included in the specified byte-length.
+
+In many ways, the $ZSUBSTR() function is similar to the $ZEXTRACT() function. For example, $ZSUBSTR(expr,intexpr1) is equivalent to $ZEXTRACT(expr,intexpr1,$L(expr)). Note that this means when using the M character set, $ZSUBSTR() behaves identically to $EXTRACT() and $ZEXTRACT(). The differences are as follows:
+
+* $ZSUBSTR() cannot appear on the left of the equal sign in the SET command where as $ZEXTRACT() can.
+* In both the modes, the third expression of $ZSUBSTR() is a byte, rather than character, position within the first expression.
+* $EXTRACT() operates on characters, irrespective of byte length.
+* $ZEXTRACT() operates on bytes, irrespective of multi-byte character boundaries.
+* $ZSUBSTR() is the only way to extract as valid UTF-8 encoded characters from a byte string containing mixed UTF-8 and non UTF-8 data. It operates on characters in Unicode so that its result does not exceed the given byte length.
+
+-------------------------
+$ZTRanslate()
+-------------------------
+
+Returns a byte sequence that results from replacing or dropping bytes in the first of its arguments as specified by the patterns of its other arguments.
+
+The format for the $ZTRANSLATE() function is:
+
+.. parsed-literal::
+   $ZTR[ANSLATE](expr1[,expr2[,expr3]])
+
+* The first expression specifies the sequence of octets on which $ZTRANSLATE() operates. If the other arguments are omitted, $ZTRANSLATE() returns this expression.
+* The optional second expression specifies the byte for $TRANSLATE() to replace. If a byte occurs more than once in the second expression, the first occurrence controls the translation, and $ZTRANSLATE() ignores subsequent occurrences. If this argument is omitted, $ZTRANSLATE() returns the first expression without modification.
+* The optional third expression specifies the replacement bytes for the positionally corresponding bytes in the second expression. If this argument is omitted or shorter than the second expression, $ZTRANSLATE() drops all occurrences of the bytes in the second expression that have no replacement in the corresponding position of the third expression.
+* $ZTRANSLATE() provides a tool for tasks such as encryption.
+
+The $ZTRANSLATE() algorithm can be understood as follows:
+
+* $ZTRANSLATE() evaluates each byte in the first expression, comparing it byte by byte to the second expression looking for a match. If there is no match in the second expression, the resulting expression contains the byte without modification.
+* When it locates a byte match, $ZTRANSLATE() uses the position of the match in the second expression to identify the appropriate replacement for the original expression. If the second expression has more bytes than the third expression, $ZTRANSLATE() replaces the original byte with a null, thereby deleting it from the result. By extension of this principle, if the third expression is missing, $ZTRANSLATE() deletes all bytes from the first expression that occur in the second expression.
+
++++++++++++++++++++++++++++++
+Examples of $ZTRANSLATE()
++++++++++++++++++++++++++++++
+
+Example:
+
+.. parsed-literal::
+   GTM>set hiraganaA=$char(12354) ; $zchar(227,129,130) 
+   GTM>set temp1=$zchar(130)
+   GTM>set temp2=$zchar(140)
+   GTM>set tr=$ztranslate(hiraganaA,temp1,temp2)
+   GTM>w $ascii(tr)
+   12364 
+   GTM>
+
+In the above example, $ZTRANSLATE() replaces byte $ZCHAR(130) in first expression and matching the first (and only) byte in the second expression with byte $ZCHAR(140) - the corresponding byte in the third expression.
+
+------------------------
+$ZTRIgger
+------------------------
+
+Examine or load trigger definition. The format of the $ZTRIGGER() function is:
+
+.. parsed-literal::
+   $ZTRIgger(expr1[,expr2]) 
+
+* $ZTRIGGER() returns a truth value (1 or 0) depending on the success of the specified action.
+* $ZTRIGGER() performs trigger maintenance actions similar those performed by MUPIP TRIGGER.
+* If expr1 evaluates to case-insensitive "FILE", $ZTRIGGER() evaluates expr2 as the location of the trigger definition file. Then, it applies the trigger definitions in the file specified by expr2. If a file contains a delete all (-*), that action produces no user confirmation.
+* If expr1 evaluates to case-insensitive "ITEM", $ZTRIGGER() evaluates expr2 as a single line or multi-line trigger definition entry. A multi-line trigger definition or a multi-line XECUTE string starts with << and uses $char(10) to denote the newline separator. expr2 with ITEM does not permit a multi-line XECUTE string to end with the >> terminator. It does not require trigger logic to appear immediately after the -xecute=<<, but a $char(10) must prefix the logic as shown in the following examples:
+
+ .. parsed-literal::
+    set trigstr="+^a -xecute=<< -commands=S"_$char(10)_" do ^twork1"_$char(10)_" do ^twork2"_$char(10) write $ztrigger("item",trigstr)
+    set trigstr="+^a -xecute=<< -commands=S "_$c(10)_" do ^twork1"_$c(10)_" do ^twork2"_$c(10) write $ztrigger("item",trigstr)
+
+* If expr1 evaluates to case-insensitive "SELECT", $ZTRIGGER() evaluates the optional expr2 as a trigger name or name wildcard, and directs its output to $IO. A FALSE result (0) indicates there are no matching triggers.
+* $ZTRIGGER() always operates within a TP transaction even if it needs to implicitly create one to encapsulate its work. Trigger maintenance operations reserve their output until the transaction commits (TCOMMIT where $TLEVEL goes to zero), at which time they deliver their entire output to the current $IO containing consistent information for all $ZTRIGGER() invocations within the successful processing of a larger transaction at that ultimate TCOMMIT. If an explicit transaction ends with a TROLLBACK, it does not produce any $ZTRIGGER() output.
+* $ZTRIGGER() can appear within a transaction as long as it does not update any triggers for globals which have had triggers invoked earlier in the same transaction.
+* An attempt by a $ZTRIGGER() within a transaction to remove or replace a trigger on a global after the transaction has activated any trigger defined within the named global generates a TRIGMODINTP error.
+* $ZTRIGGER() treats the deletion of a non-existent trigger as a success; if that is the only operation, or one of a set of successful operations, it return success (TRUE/1) to the YottaDB/GT.M process. $ZTRIGGER() returns failure in case of trigger selection using trigger names where the number after the pound-sign (#) starts with a 0 (which is an impossible auto-generated trigger name).
+* YottaDB/GT.M maps trigger definitions to the region to which they apply.
+* YottaDB/GT.M allows defining triggers with the same name and signature in different regions, but does not allow defining triggers with the same name, but different signatures, in different regions within the same global directory. When loading a trigger definition, if a user-defined name conflicts with a name in any region to which the trigger applies, $ZTRIGGER() reports an error. However, when the name is auto-generated, it generates a name in every region, so if there are multiple (spanning) regions, the same trigger might have a differing auto-generated name in each region.
+
+.. note::
+   A $ZTRIGGER() action (delete or select) applies to all triggers in all regions matching the specified signature. If the argument specifies an incomplete trigger signature, for example, only the name, the specification may match multiple triggers and apply the delete or select to all of them. YottaDB/FIS recommends you run a select and analyze the scope of the signature before any signature limited delete. 
+
+++++++++++++++++++++++++++
+Examples of $ZTRIGGER()
+++++++++++++++++++++++++++
+
+Example:
+
+.. parsed-literal::
+   GTM>set X=$ztrigger("S")
+   GTM>
+
+This example displays the current trigger definitions stored in the database.
+
+.. parsed-literal::
+   GTM>set X=$ztrigger("i","+^Acct(sub=:) -command=set -xecute=""set ^X($ztvalue)=sub""")
+   GTM>
+
+This example adds a trigger definition for the first level node of ^Acct.
+
+Example:
+
+.. parsed-literal::
+   GTM>set trigstr="+^a -commands=S -xecute=<<"_$c(10)_" do ^twork1"_$c(10)_" do ^twork2"_$c(10) write $ztrigger("item",trigstr)
+
+This example demonstrates the usage of the $ztrigger("ITEM",<multi-line-trigger-definition>> where <<denotes the definition of a multi-line -XECUTE string and $c(10) to denote the newline separator. Unlike the $ztrigger("FILE") form, $ztrigger("ITEM",<multi-line-trigger-definition>> does not require the trigger definition to terminate with >>.
+
+Example:
+
+.. parsed-literal::
+   GTM>write $ztrigger("file","agbl.trg")
+   1
+   GTM>
+
+This example is equivalent to the previous $ztrigger("ITEM") example. In this example, agbl.trg contains the following multi-line trigger definition:
+
+.. parsed-literal::
+   +^a -commands=S -xecute=<<
+   do ^twork1
+   do ^twork2
+   >>
+
+Unlike $ztrigger("ITEM"), $ztrigger("FILE") usages require the trigger definition to terminate with >>
+
+----------------------
+$ZTRNLNM()
+----------------------
+
+The $ZTRNLNM function returns the value of an environment variable.The $ZTRNLNM function is analogous to the DCL Lexical function F$TRNLNM on OpenVMS.
+
+.. note::
+   $ZTRNLNM() does not perform iterative translation.
+
+The format for the $ZTRNLNM function is:
+
+.. parsed-literal::
+   $ZTRNLNM(expr1[,expr2[,expr3[,expr4[,expr5[,expr6]]]]])
+
+expr1 specifies the environment variable whose value needs to be returned.
+
+expr2 to expr5 are OpenVMS-related expressions that specify logical name table(s), index (numbered from 0), initial mode of the look-up, and a value indicating whether the look-up is case sensitive. To ensure interoperability between UNIX and OpenVMS versions, $ZTRNLNM() on UNIX accepts these expressions and ignores them.
+
+expr6 specifies any one of the following keywords:
+
++---------------------------------+-------------------------------------------------+
+| Item Keyword                    | Data Returned                                   |
++=================================+=================================================+
+| FULL                            | Returns the translation.                        |
++---------------------------------+-------------------------------------------------+
+| LENGTH                          | Length of the return value in bytes.            |
++---------------------------------+-------------------------------------------------+
+| VALUE                           | Returns the translation.                        |
++---------------------------------+-------------------------------------------------+
+
++++++++++++++++++++++++
+Examples of $ZTRNLNM()
++++++++++++++++++++++++
+
+Example:
+
+.. parsed-literal::
+   GTM>write $ztrnlnm("gtm_dist","","","","","VALUE")
+   /usr/lib/fis-gtm/V6.0-000_x86_64/utf8
+   GTM>
+
+This uses $ZTRNLNM() to display the translation value for gtm_dist.
+
+-----------------------
+$ZWidth()
+-----------------------
+
+Returns the numbers of columns required to display a given string on the screen or printer. The format of the $ZWIDTH() function is:
+
+.. parsed-literal::
+   $ZW[IDTH] (expr)
+
+* The expression is the string which $ZWIDTH() evaluates for display length. If the expression contains a code-point value that is not a valid character in Unicode, $ZWIDTH() generates a run-time error.
+* If the expression contains any non-graphic characters, the $ZWIDTH() function does count not those characters.
+* If the string contains any escape sequences containing graphical characters (which they typically do), $ZWIDTH() includes those characters in calculating its result, as it does not do escape processing. In such a case, the result many be larger than the actual display width
+
+.. note::
+   When in "NOBADCHAR" mode, $ZWIDTH() returns give any bad characters a length of zero (0), which may or may not match the behavior of any device used to display the string.
+
+With character set UTF-8 specified, the $ZWIDTH() function uses the ICU's glyph-related conventions to calculate the number of columns required to represent the expression.
+
++++++++++++++++++++++++++++
+Examples of $ZWIDTH()
++++++++++++++++++++++++++++
+
+Example:
+
+.. parsed-literal::
+   GTM>set NG=$char($$FUNC^%HD("200B"))
+   GTM>set S=$char(26032)_NG_$CHAR(26033)
+   GTM>W $ZWidth(STR)
+   4
+   GTM>
+
+In the above example, the local variable NG contains a non-graphic character which does not display between two double-width characters in Unicode.
+
+Example:
+
+.. parsed-literal::
+   GTM>write $zwidth("The rain in Spain stays mainly in the plain.")
+   44    
+   GTM>set A="主要雨在西班牙停留在平原"
+   GTM>write $length(A)
+   12
+   GTM>write $zwidth(A)
+   24
+
+In the above example, the $ZWIDTH() function returns 24 because each character in A occupies 2 columns when they are displayed on the screen or printer.
+
+-------------------
+$ZWrite()
+-------------------
+
+Converts its first string argument to or from ZWRITE format (quoted graphics characters concatenated with $CHAR() representations of any non-graphic characters). The second integer expression controls the direction of conversion. The format of the $ZWRITE() function is:
+
+.. parsed-literal::
+   $ZWRITE(expr[,intexpr])
+
+* The first argument specifies the string to convert to or from the ZWRITE format.
+* The second argument specifies the direction of conversion. When intexpr is not specified or evaluates to zero, $zwrite() converts the first argument to the ZWRITE format. When intexpr evaluates to a non-zero value, $ZWRITE() treats the first argument as being in ZWRITE format and attempts to convert it to a string with embedded non-graphic characters; if it is not in ZWRITE format, it returns an empty string.
+* Converting to zwrite format tends to produce a string that is longer than the input and therefore a $ZWRITE() result may exceed the maximum string length - the maximum input length that is guaranteed not to do so is a 116,510 byte string.
+* If all its arguments are literals, $ZWRITE() evaluates to a literal constant at compile time.
+* Note that non-graphic characters differ between M mode and UTF-8 mode.
+
++++++++++++++++++++++
+Examples of $ZWRITE()
++++++++++++++++++++++
+
+Example:
+
+.. parsed-literal::
+   GTM>set temp="X"_$char(10)_"X" ; $CHAR(10) is the linefeed character
+   GTM>write temp
+   X
+   X
+   GTM>write $zwrite(temp)
+   "X"_$C(10)_"X"
+   GTM>write $zwrite($zwrite(temp),1)
+   X
+   X
+   GTM>
+
+
+
 
 
