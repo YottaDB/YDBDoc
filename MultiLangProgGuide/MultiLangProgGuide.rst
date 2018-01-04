@@ -1419,10 +1419,7 @@ Utility Functions
 =================
 
 Utility functions are functions that are not core to YottaDB
-functionality, but which may be useful to C application code.
-
-**Need to add hiber_start, hiber_start_wait_any, start_timer,
-and cancel_timer to this section.**
+functionality, but which are useful to application code.
 
 ------------------
 ydb_cancel_timer()
@@ -1434,6 +1431,28 @@ ydb_cancel_timer()
 
 Cancel a timer identifier by ``timer_id`` and previously started with
 `ydb_start_timer()`_.
+
+----------------
+ydb_child_init()
+----------------
+
+.. code-block:: C
+
+	void ydb_child_init(void *param)
+
+As noted in the `Overview`_, the YottaDB database engine resides in
+the address space of the process, and the data structures of the
+database engine include information such as the pid, which differs
+between parent and child processes. After a ``fork()``, the child
+process **must** call ``ydb_child_init()`` in order to re-initialize
+the data structures of the database engine. No action is needed on the
+part of the parent process. *A child process that fails to call*
+``ydb_child_init()`` *after a* ``fork()`` *or equivalent, such as*
+``os.fork()`` *in Python, can cause structural damage to database
+files.*
+
+The ``void *param`` is reserved for future expansion. As the initial
+release of YottaDB ignores it, we recommend using NULL.
 
 ----------
 ydb_free()
