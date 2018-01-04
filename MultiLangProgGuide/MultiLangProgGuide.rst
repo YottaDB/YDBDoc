@@ -1438,7 +1438,7 @@ ydb_child_init()
 
 .. code-block:: C
 
-	void ydb_child_init(void *param)
+	int ydb_child_init(void *param)
 
 As noted in the `Overview`_, the YottaDB database engine resides in
 the address space of the process, and the data structures of the
@@ -1452,7 +1452,9 @@ part of the parent process. *A child process that fails to call*
 files.*
 
 The ``void *param`` is reserved for future expansion. As the initial
-release of YottaDB ignores it, we recommend using NULL.
+release of YottaDB ignores it, we recommend using
+NULL. ``ydb_child_init()`` returns ``YDB_OK`` or an `error return
+code`_.
 
 ----------
 ydb_free()
