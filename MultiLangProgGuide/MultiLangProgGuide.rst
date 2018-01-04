@@ -281,7 +281,7 @@ global variables are mapped by a global directory. Global directories
 are created and maintaind by a utility program called the Global
 Directory Editor, which is discussed at length in the `YottaDB
 Administration and Operations Guide
-<http://docs.yottadb.com/AdminOpsGuide/>`_ and is outside the purview
+<https://docs.yottadb.com/AdminOpsGuide/>`_ and is outside the purview
 of this document.
 
 The name of the global directory file required to access a global
@@ -330,7 +330,7 @@ variable. Intrinsic special variables have no subscripts.
 
 While the majority of intrinisic special variables as enumerated in
 Chapter 8 (Intrinsic Special Variables) of `YottaDB M Programmers Guide
-<http://docs.yottadb.com/ProgrammersGuide/>`_ are
+<https://docs.yottadb.com/ProgrammersGuide/UNIX_manual/>`_ are
 useful to M application code, others are more generally useful and
 documented here.
 
@@ -618,7 +618,7 @@ system errors and database errors, not just application errors. Also,
 some of the errors listed below can be raised in other circumstances
 as well. A full set of error messages is in the `YottaDB Messages and
 Recovery Procedures Manual
-<http://docs.yottadb.com/MessageRecovery/>`_.
+<https://docs.yottadb.com/MessageRecovery/>`_.
 
 The ``ydb_message()`` function provides a way to get more
 detailed information about any error code returned by a Simple API
@@ -1551,7 +1551,7 @@ a complete implementation of the `M
 known as MUMPS) that mostly conforms to `ISO/IEC 11756:1999
 <http://www.iso.ch/iso/en/CatalogueDetailPage.CatalogueDetail?CSNUMBER=29268&ICS1=35&ICS2=60&ICS3=&scopelist>`_.
 The `YottaDB M Programmers Guide
-<http://docs.yottadb.com/ProgrammersGuide/>`_ documents programming
+<https://docs.yottadb.com/ProgrammersGuide/UNIX_manual/>`_ documents programming
 YottaDB in M and is not duplicated here.
 
 =================
