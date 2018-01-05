@@ -16,9 +16,9 @@ M Intrinsic Special Variables start with a single dollar sign ($). YottaDB/GT.M 
 .. note::
    None of the Intrinsic Special Variables can be KILLed. SETting or NEWing is generally not allowed, but is specifically noted in the descriptions of those that do.
 
-++++++++++++++
+--------------
 $ZTrap
-++++++++++++++
+--------------
 
 $ZT[RAP] contains a string value that YottaDB/GT.M XECUTEs when an error occurs during routine execution. 
 
@@ -329,7 +329,7 @@ Example:
 
 This example uses the IF 1 to ensure that the ELSE works counter to the IF.
 
-----------------
+---------------
 $TLEVEL
 ---------------
 
@@ -562,5 +562,1354 @@ Provides termination status of the last PIPE CLOSE as follows:
 
 If positive, $ZCLOSE contains the exit status returned by the last co-process.
 
+-----------------
+$ZDATEFORM
+-----------------
+
+$ZDA[TEFORM] contains an integer value, specifying the output year format of $ZDATE(). $ZDATEFORM can be modified using the SET command. YottaDB/GT.M initializes $ZDATEFORM to the translation of the environment variable gtm_zdate_form. If gtm_zdate_form is not defined, YottaDB/GT.M initializes $ZDATEFORM to zero (0).
+
+See “$ZDate()” for the usage of $ZDATEFORM. $ZDATEFORM also defines the behavior of some date and time utility routines; refer "M utility Routines".
+
+Example:
+
+.. parsed-literal::
+   GTM>WRITE $ZDATEFROM
+   0
+   GTM>WRITE $ZDATE($H)
+   11/15/02
+   GTM>SET $ZDATEFORM=1
+   GTM>WRITE $ZDATE($H)
+   11/15/2002
+
+----------------
+$ZDIRECTORY
+----------------
+
+$ZD[IRECTORY] contains the string value of the full path of the current directory. Initially $ZDIRECTORY contains the default/current directory from which the YottaDB/GT.M image/process was activated.
+
+If the current directory does not exist at the time of YottaDB/GT.M process activation, YottaDB/GT.M errors out.
+
+Example: 
+
+.. parsed-literal::
+   GTM>WRITE $ZDIR
+   /usr/tmp
+   GTM>SET $ZDIR=".."
+   GTM>WRITE $ZDIR
+   /usr
+
+This example displays the current working directory and changes $ZDIR to the parent directory.
+
+$ZDIRECTORY is a read-write Intrinsic Special Variable, that is, it can appear on the left side of the equal sign (=) in the argument to a SET command. If an attempt is made to set $ZDIRECTORY to a non-existent directory specification, YottaDB/GT.M issues an error and keeps the value of $ZDIRECTORY unchanged.
+
+At image exit, YottaDB/GT.M restores the current directory to the directory that was the current directory when YottaDB/GT.M was invoked even if that directory does not exist.
+
+-----------------
+$ZEDIT
+-----------------
+
+$ZED[IT] holds the value of the status code for the last edit session invoked by a ZEDIT command.
+
+YottaDB/GT.M does not permit the SET or NEW command to modify $ZEDIT.
+
+-----------------------
+$ZEOF
+-----------------------
+
+$ZEO[F] contains a truth-valued expression indicating whether the last READ operation reached the end-of-file. $ZEOF equals TRUE (1) at EOF and FALSE (0) at other positions.
+
+YottaDB/GT.M does not maintain $ZEOF for terminal devices.
+
+$ZEOF refers to the end-of-file status of the current device. Therefore, exercise care in sequencing USE commands and references to $ZEOF.
+
+YottaDB/GT.M does not permit the SET or NEW command to modify $ZEOF.
+
+For more information on $ZEOF, refer to the "Input/Output Processing" chapter.
+
+--------------------
+$ZERROR
+--------------------
+
+$ZE[RROR] is supposed to hold the application-specific error-code corresponding to the YottaDB/GT.M error-code stored in $ECODE/$ZSTATUS (see “$ECode” and “$ZStatus”).
+
+$ZERROR contains a default value of "Unprocessed $ZERROR, see $ZSTATUS" at process startup.
+
+$ZERROR can be SET but not NEWed.
+
+The mapping of a YottaDB/GT.M error-code to the application-specific error-code is achieved as follows. Whenever YottaDB/GT.M encounters an error, $ECODE/$ZSTATUS gets set first. It then invokes the code that $ZYERROR points to if it is not null. It is intended that the code invoked by $ZYERROR use the value of $ZSTATUS to select or construct a value to which it SETs $ZERROR. If an error is encountered by the attempt to execute the code specified in $ZYERROR, YottaDB/GT.M sets $ZERROR to the error status encountered. If $ZYERROR is null, YottaDB/GT.M does not change the value of $ZERROR. In all cases, YottaDB/GT.M proceeds to return control to the code specified by $ETRAP/$ZTRAP or device EXCEPTION whichever is applicable. For details, see “$ZYERror”.
+
+-------------------
+$ZGBLDIR
+-------------------
+
+$ZG[BLDIR] contains the value of the current Global Directory filename. When $ZGBLDIR specifies an invalid or inaccessible file, YottaDB/GT.M cannot successfully perform database operations.
+
+YottaDB/GT.M initializes $ZGBLDIR to the translation of the environment variable gtmgbldir. The value of the gtmgbldir environment variable may include a reference to another environment variable. If gtmgbldir is not defined, YottaDB/GT.M initializes $ZGBLDIR to null. When $ZGBLDIR is null, YottaDB/GT.M constructs a file name for the Global Directory using the name $gtmgbldir and the extension .gld in the current working directory.
+
+$ZGBLDIR is a read-write Intrinsic Special Variable, (i.e., it can appear on the left side of the equal sign (=) in the argument to the SET command). SET $ZGBLDIR="" causes YottaDB/GT.M to assign $ZGBLDIR to the translation of gtmgbldir if that environment variable is defined. If it is not defined, then SET $ZGBLDIR="" causes YottaDB/GT.M to construct a file name using the name $gtmgbldir.gld in the current directory. YottaDB/GT.M permits $ZGBLDIR to be NEW'd. A $ZGBLDIR value may include an environment variable.
+
+SETting $ZGBLDIR also causes YottaDB/GT.M to attempt to open the specified file. If the file name is invalid or the file is inaccessible, YottaDB/GT.M triggers an error without changing the value of $ZGBLDIR.
+
+To establish a value for $ZGBLDIR outside of M, use the appropriate shell command to assign a translation to gtmgbldir. Defining gtmgbldir provides a convenient way to use the same Global Directory during a session where you repeatedly invoke and leave YottaDB/GT.M.
+
+Changes to the value of $ZGBLDIR during a YottaDB/GT.M invocation only last for the current invocation and do not change the value of gtmgbldir.
+
+Example:
+
+.. parsed-literal::
+   $ gtmgbldir=test.gld
+   $ export gtmgbldir
+   $ gtm
+   GTM>WRITE $zgbldir
+   /usr/dev/test.gld
+   GTM>SET $zgbldir="mumps.gld"
+   GTM>WRITE $zgbldir
+   mumps.gld
+   GTM>HALT
+   $ echo $gtmgbldir
+   test.gld
+
+This example defines the environment variable gtmgbldir. Upon entering YottaDB/GT.M Direct Mode, $ZGBLDIR has the value supplied by gtmgbldir. The SET command changes the value. After the YottaDB/GT.M image terminates, the echo command demonstrates that gtmgbldir was not modified by the M SET command.
+
+.. parsed-literal::
+   $ ls test.gld
+   test.gld not found
+   $ gtm
+   GTM>WRITE $zgbldir
+   /usr/dev/mumps.gld
+   GTM>set $zgbldir="test.gld"
+   %GTM-E-ZGBLDIRACC, Cannot access global directory
+   "/usr/dev/test.gld". Retaining /usr/dev/mumps.gld"
+   %SYSTEM-E-ENO2, No such file or directory
+   GTM>WRITE $zgbldir
+   /usr/dev/mumps.gld
+   GTM>halt
+   $
+
+The SET command attempts to change the value of $ZGBLDIR to test.gld. Because the file does not exist, YottaDB/GT.M reports an error and does not change the value of $ZGBLDIR.
+
+.. note::
+   Attempting to restore an inaccessible initial Global Directory that has been NEW'd, can cause an error.
+
+-----------------
+$ZHOROLOG
+-----------------
+
+$ZH[OROLOG] returns 4 comma-separated pieces (for example, "63638,39194,258602,14400"). The first two pieces are identical to the two pieces of $HOROLOG. $ZHOROLOG is a drop-in replacement for $HOROLOG in all application code of the form $PIECE($HOROLOG,",",...). For example, $ZHOROLOG can be used as the first argument of $ZDATE(). The third piece is the number of microseconds in the current second. The accuracy of the third piece is subject to the precision of the system clock. The fourth piece is an offset in seconds to UTC. For any valid UTC time offset, the fourth piece is a number between -43200 (for UTC-12:00) and +50400 (for UTC+14:00). The value of the fourth piece remains constant all through the year except for those places that observe daylight saving time. To obtain the $HOROLOG representation of UTC, add the fourth piece to the second piece of $ZHOROLOG and proceed as follows: 
+
+* If the result is a negative number, subtract one from the first piece and add 86400 (number of seconds in a day) to the second piece.
+* If the result is a positive number greater than 86400, add one to the first piece and subtract 86400 from the second piece.
+
+Example:
+
+.. parsed-literal::
+   GTM>zprint ^zhoro
+   zhoro(zone)
+    set:'$data(zone) zone="Europe/London"
+    new zutzh
+    set zutzh=$$getzutzh(zone)
+    do displaytzdetails(zutzh,zone)
+    quit
+   getzutzh(zone)
+    set shcommand="TZ="_zone_" $gtm_dist/mumps -run %XCMD 'write $zut,"" "",$zhorolog,"" "",$zdate($horolog,""MON DD,YYYY 12:60:SS AM""),!'"
+    set descname="tzpipe"
+    open descname:(shell="/bin/sh":command=shcommand:readonly)::"pipe"
+    use descname read dateline use $principal close descname
+    quit dateline
+   displaytzdetails(zutzh,zone)  
+    set zut=$piece(zutzh," ",1)   ; $ZUT
+    set zh=$piece(zutzh," ",2)    ; $ZHOROLOG
+    set zhfp=$piece(zh,",",1)     ; first piece of $ZH of zone
+    set zhsp=$piece(zh,",",2)
+    set zhtp=$piece(zh,",",3)
+    set zhfop=$piece(zh,",",4)
+    set tz=zhfop/3600,hours=$select(tz*tz=1:" Hour ",1:" Hours ")
+    write "Time in ",zone," ",$piece(zutzh," ",3,6)," $ZUT=",zut,!,$select(tz<0:-tz_hours\_"Ahead of",1:tz_hours\_"Behind")," UTC",!
+    set zhsp=zhsp+zhfop
+    if zhsp>86400 set zhfp=zhfp+1,zhsp=zhsp-86400     ; 86400 seconds in a day
+    else  if zhsp<1 set zhfp=zhfp-1,zhsp=zhsp+86400
+    write "Time in UTC ",$zdate(zhfp\_","_zhsp,"MON DD,YYYY 12:60:SS AM")
+    quit
+   GTM>do ^zhoro
+   Time in Europe/London APR 10,2015 05:20:29 PM $ZUT=1428682829213711
+   1 Hour Ahead of UTC
+   Time in UTC APR 10,2015 04:20:29 PM
+   GTM>
+
+---------------------
+$ZINTERRUPT
+---------------------
+
+$ZINT[ERRUPT] specifies the code to be XECUTE'd when an interrupt (for example, through a MUPIP INTRPT) is processed. While a $ZINTERRUPT action is in process, any additional interrupt signals are discarded. When an interrupt handler is invoked, the current values of $REFERENCE is saved and restored when the interrupt handler returns. The current device ($IO) is neither saved nor restored.
+
+YottaDB/GT.M permits the SET command to modify the value of $ZINTERRUPT.
+
+If an interrupt handler changes the current IO device (via USE), it is the responsibility of the interrupt handler to restore the current IO device before returning. There are sufficient legitimate possibilities why an interrupt routine would want to change the current IO device (for example; daily log switching), that this part of the process context is not saved and restored automatically.
+
+The initial value for $ZINTERRUPT is taken from the UNIX environment variable gtm_zinterrupt if it is specified, otherwise it defaults to the following string:
+
+.. parsed-literal::
+   IF $ZJOBEXAM()
+
+The IF statement executes the $ZJOBEXAM function but effectively discards the return value. 
+
+.. note::
+   If the default value for $ZINTERRUPT is modified, no $ZJOBEXAM() will occur unless the replacement value directly or indirectly invokes that function. In other words, while $ZJOBEXAM() is part of the interrupt handling by default, it is not an implicit part of the interrupt handling.
+
++++++++++++++++++++++
+Interrupt Handling
++++++++++++++++++++++
+
+YottaDB/GT.M process execution is interruptible with the following events:
+
+* Typing CTRL+C or getting SIGINT (if CENABLE). YottaDB/GT.M ignores SIGINT (CTRL+C) if $PRINCIPAL is not a terminal. 
+* Typing one of the CTRAP characters
+* Exceeding $ZMAXTPTIME in a transaction
+* Getting a MUPIP INTRPT (SIGUSR1)
+* +$ZTEXit evaluates to a truth value at the outermost TCOMMIT or TROLLBACK
+
+When YottaDB/GT.M detects any of these events, it transfers control to a vector that depends on the event. For CTRAP characters and ZMAXTPTIME, YottaDB/GT.M uses the $ETRAP or $ZTRAP vectors described in more detail in the Error Processing chapter. For INTRPT and $ZTEXit, it XECUTEs the interrupt handler code placed in $ZINTERRUPT. If $ZINTERRUPT is an empty string, nothing is done in response to a MUPIP INTRPT. The default value of $ZINTERRUPT is "IF $ZJOBEXAM()" which redirects a dump of ZSHOW "*" to a file and reports each such occasion to the operator log. For CTRL+C with CENABLE, it enters Direct Mode to give the programmer control.
+
+YottaDB/GT.M recognizes most of these events when they occur but transfers control to the interrupt vector at the start of each M line, at each iteration of a FOR LOOP, at certain points during the execution of commands which may take a "long" time. For example, ZWRITE, HANG, LOCK, MERGE, ZSHOW "V", OPENs of disk files and FIFOs, OPENs of SOCKETs with the CONNECT parameter (unless zero timeout,) WRITE /WAIT for SOCKETs, and READ for terminals, SOCKETs, FIFOs, and PIPEs. If +$ZTEXIT evaluates to a truth value at the outermost TCOMMIT or TROLLBACK, YottaDB/GT.M XECUTEs $ZINTERRUPT after completing the commit or rollback. CTRAP characters are recognized when they are typed on OpenVMS but when they are read on UNIX.
+
+If an interrupt event occurs in a long running external call (for example, waiting in a message queue), YottaDB/GT.M recognizes the event but makes the vector transfer after the external call returns when it reaches the next appropriate execution boundary.
+
+When an interrupt handler is invoked, YottaDB/GT.M saves and restores the current values of $REFERENCE. However, the current device ($IO) is neither saved nor restored. If an interrupt handler changes $IO (via USE), ensure that the interrupt handler restores the current device before returning. To restore the device which was current when the interrupt handler began, specify USE without any deviceparameters. Any attempt to do IO on a device which was actively doing IO when the interrupt was recognized may result in a ZINTERCURSEIO error.
+
+Example:
+
+.. parsed-literal::
+   set $zinterrupt="do ^interrupthandler($io)"
+   interrupthandler(currentdev)
+          do ^handleinterrupt ; handle the interrupt
+          use currentdev      ; restore the device which was current when the interrupt was recognized
+          quit
 
 
+The use of the INTRPT facility may create a temporary hang or pause while the interrupt handler code is executed. For the default case where the interrupt handler uses IF $ZJOBEXAM() to create a dump, the pause duration depends on the number of local variables in the process at the time of the dump and on the speed of the disk being written to. The dumps are slower on a network-mounted disk than on a disk directly connected to the local system. Any interrupt driven code should be designed to account for this issue.
+
+.. note::
+   Because sending an interrupt signal requires the sender to have appropriate permissions, the use of the job interrupt facility itself does not present any inherent security exposures. Nonetheless, because the dump files created by the default action contain the values of every local variable in the context at the time they are made, inappropriate access to the dump files would constitute a security exposure. Make sure the design and implementation of any interrupt logic includes careful consideration to security issues.
+
+During the execution of the interrupt handling code, $ZINTERRUPT evaluates to 1 (TRUE).
+
+If an error occurs while compiling the $ZINTERRUPT code, the error handler is not invoked (the error handler is invoked if an error occurs while executing the $ZINTERRUPT code), YottaDB/GT.M sends the GTM-ERRWZINTR message and the compiler error message to the operator log facility. If the YottaDB/GT.M process is at a direct mode prompt or is executing a direct mode command (for example, a FOR loop), YottaDB/GT.M sends also sends the GTM-ERRWZINTR error message to the user console along with the compilation error. In both cases, the interrupted process resumes execution without performing any action specified by the defective $ZINTERRUPT vector.
+
+If YottaDB/GT.M encounters an error during creation of the interrupt handler's stack frame (before transferring control to the application code specified by the vector), that error is prefixed with a GTM-ERRWZINTR error. The error handler then executes normal error processing associated with the interrupted routine. Any other errors that occur in code called by the interrupt vector invoke error processing as described in Chapter 13: “Error Processing”.
+
+.. parsed-literal::
+   The interrupt handler does not operate "outside" the current M environment but rather within the environment of the process.
+
+TP transaction is in progress (0<$TLEVEL), updates to globals are not safe since a TP restart can be signaled at any time prior to the transaction being committed - even after the interrupt handler returns. A TP restart reverses all global updates and unwinds the M stack so it is as if the interrupt never occurred. The interrupt handler is not redriven as part of a transaction restart. Referencing (reading) globals inside an interrupt handler can trigger a TP restart if a transaction is active. When programming interrupt handling, either discard interrupts when 0<$TLEVEL (forcing the interrupting party to try again), or use local variables that are not restored by a TRESTART to defer the interrupt action until after the final TCOMMIT.
+
+--------------------
+$ZININTERRUPT
+--------------------
+
+$ZINI[NTERRUPT] evaluates to 1 (TRUE) when a process is executing code initiated by the interrupt mechanism, and otherwise 0 (FALSE).
+
+YottaDB/GT.M does not permit the SET or NEW commands to modify $ZININTERRUPT.
+
+---------------
+$ZIO
+---------------
+
+$ZIO contains the translated name of the current device, in contrast to $IO, which contains the name as specified by the USE command.
+
+YottaDB/GT.M does not permit the SET or NEW command to modify $ZIO.
+
+An example where $ZIO contains a value different from $IO is if the environment variable gtm_principal is defined.
+
+Example:
+
+.. parsed-literal::
+   $ gtm_principal="foo"
+   $ export gtm_principal
+   GTM>WRITE $IO
+   foo
+   GTM>WRITE $ZIO
+   /dev/pts/8
+
+Notice that $ZIO contains the actual terminal device name while $IO contains the string pointed to by the environment variable gtm_principal.
+
+----------------
+$ZJOB
+----------------
+
+$ZJ[OB] holds the pid of the process created by the last JOB command performed by the current process.
+
+YottaDB/GT.M initializes $ZJOB to zero (0) at process startup. If the JOB command fails to spawn a new job, YottaDB/GT.M sets $ZJOB to zero (0). Note that because of the left to right evaluation order of M, using $ZJOB in the jobparameter string results in using the value created by the last, rather than the current JOB command, which is not likely to match common coding practice.
+
+YottaDB/GT.M does not permit the SET or NEW command to modify $ZJOB.
+
+-----------------
+$ZKEY
+-----------------
+
+For Socket devices:
+
+$ZKEY contains a list of sockets in the current SOCKET device which are ready for use. Its contents include both non selected but ready sockets from the prior WRITE /WAITs and any sockets with unread data in their YottaDB/GT.M buffer. $ZKEY can be used any time a SOCKET device is current. Once an incoming socket (that is, "LISTENING") has been accepted either by being selected by WRITE /WAIT or by USE socdev:socket="listeningsocket", it is removed from $ZKEY.
+
+$ZKEY contains any one of the following values:
+
+.. parsed-literal::
+   "LISTENING|<listening_socket_handle>|{<portnumber>|</path/to/LOCAL_socket>}"
+
+.. parsed-literal::
+   "READ|<socket_handle>|<address>"
+
+If $ZKEY contains one or more "READ|<socket_handle>|<address>" entries, it means there are ready to READ sockets that were selected by WRITE /WAIT or were partially read and there is data left in their buffer. Each entry is delimited by a ";".
+
+If $ZKEY contains one or more "LISTENING|<listening_socket_handle>|{<portnumber|/path/to/LOCAL_socket>}" entries, it means that there are pending connections and a USE s:socket=listening_socket_handle will accept a pending connection and remove the LISTENING|<listening_socket_handle> entry from $ZKEY.
+
+$ZKEY is empty if no sockets have data in the buffer and there are no unaccepted incoming sockets from previous WRITE /WAITs.
+
+For Sequential File Device:
+
+$ZKEY contains the current position in the file based on the last READ. This is in bytes for STREAM and VARIABLE formats, and in a record,byte pair for FIXED format. For FIXED format, SEEKs and normal READs always produce a zero byte position; a non-zero byte position in $ZKEY for FIXED format operation indicates a partially read record, caused by a READ # or READ \*. In FIXED mode, the information returned for $ZKEY is a function of record size, and, if a USE command changes record size by specifying the WIDTH deviceparameter while the file is open, $ZKEY offsets change accordingly; if record size changes, previously saved values of $ZKEY are likely inappropriate for use with SEEK.
+
+-----------------
+$ZLEVEL
+-----------------
+
+$ZL[EVEL] contains an integer value indicating the "level of nesting" caused by DO commands, XECUTE commands, and extrinsic functions in the M invocation stack.
+
+$ZLEVEL has an initial value of one (1) and increments by one with each DO, XECUTE or extrinsic function. Any QUIT that does not terminate a FOR loop decrements $ZLEVEL. ZGOTO may also reduce $ZLEVEL. In accordance with the M standard, a FOR command does not increase $ZLEVEL. M routines cannot modify $ZLEVEL with the SET or NEW commands.
+
+Use $ZLEVEL in debugging or in an error-handling mechanism to capture a level for later use in a ZGOTO argument.
+
+Example:
+
+.. parsed-literal::
+   GTM>zprint ^zleve
+   zleve;
+    do B
+    write X,!
+    quit
+   B
+    goto C
+    quit
+   C
+    do D
+    quit
+   D
+    set X=$ZLEVEL
+    quit
+   GTM>do ^zleve
+    4
+   GTM>
+
+This program, executed from Direct Mode, produces a value of 4 for $ZLEVEL. If you run this program from the shell, the value of $ZLEVEL is three (3). 
+
+------------------
+$ZMAXTPTIME
+------------------
+
+$ZMAXTPTI[ME] contains an integer value indicating the time duration YottaDB/GT.M should wait for the completion of all activities fenced by the current transaction's outermost TSTART/TCOMMIT pair.
+
+$ZMAXTPTIME can be SET but cannot be NEWed.
+
+$ZMAXTPTIME takes its value from the environment variable gtm_zmaxtptime. If gtm_zmaxtptime is not defined, the initial value of $ZMAXTPTIME is zero (0) seconds which indicates "no timeout" (unlimited time). The value of $ZMAXTPTIME when a transaction's outermost TSTART operation executes determines the timeout setting for that transaction.
+
+When a $ZMAXTPTIME expires, YottaDB/GT.M executes the $ETRAP/$ZTRAP exception handler currently in effect.
+
+.. note::
+   Negative values of $ZMAXTPTIME are also treated as "no timeout". Timeouts apply only to the outermost transaction, that is, $ZMAXTPTIME has no effect when TSTART is nested within another transaction.
+
+Example:
+
+.. parsed-literal::
+   Test;testing TP timeouts
+     set $ZMAXTPTIME=6,^X=0,^Y=0,^Z=0
+     write "Start with $ZMAXTPTIME=",$ZMAXTPTIME,":",!
+     for sleep=3:2:9 do
+     . set retlvl=$zlevel
+     . do longtran;ztrap on longtran 
+     ;continues execution
+     ;on next line
+     . write "(^X,^Y)=(",^X,",",^Y,")",!
+     write !,"Done TP Timeout test.",!
+     quit
+   longtran ;I/O in TP doesn't get rolled back
+     set $etrap=" goto err"
+     tstart ():serial
+     set ^X=1+^X
+     write !,"^X=",^X,",will set ^Y to ",sleep
+     write " in ",sleep," seconds..."
+     hang sleep
+     set ^Y=sleep
+     write "^Y=",^Y
+     tcommit
+     write "...committed.",!
+     quit
+   err;
+     write !,"In $ETRAP handler. Error was: "
+     write !," ",$zstatus
+     if $TLEVEL do ;test allows handler use outside of TP
+     . trollback
+     . write "Rolled back transaction."
+     write !
+     set $ecode=""
+     zgoto retlvl
+
+Results:
+
+.. parsed-literal::
+   Start with $ZMAXTPTIME=6:
+   ^X=1,will set ^Y to 3 in 3 seconds...^Y=3...committed.
+   ^X=2,will set ^Y to 5 in 5 seconds...^Y=5...committed.
+   ^X=3,will set ^Y to 7 in 7 seconds...
+   In $ETRAP handler. Error was:
+   150377322,longtran+7^tptime,%GTM-E-TPTIMEOUT, Transaction timeoutRolled back transaction.
+   ^X=3,will set ^Y to 9 in 9 seconds...
+   In $ETRAP handler. Error was:
+   150377322,longtran+7^tptime,%GTM-E-TPTIMEOUT, Transaction timeoutRolled back transaction.
+   Done TP Timeout test.
+
+--------------
+$ZMODE
+--------------
+
+$ZMO[DE] contains a string value indicating the process execution mode.
+
+The mode can be:
+
+* INTERACTIVE
+* OTHER
+
+M routines cannot modify $ZMODE.
+
+Example:
+
+.. parsed-literal::
+   GTM>WRITE $ZMODE
+   INTERACTIVE
+
+This displays the process mode.
+
+--------------------
+$ZONLNRLBK
+--------------------
+
+$ZONLNRLBK increments every time a process detects a concurrent MUPIP JOURNAL -ONLINE -ROLLBACK.
+
+YottaDB/GT.M initializes $ZONLNRLBK to zero (0) at process startup. YottaDB/GT.M does not permit the SET or NEW commands to modify $ZONLNRLBK.
+
+For more information on online rollback, refer to the -ONLINE qualifier of -ROLLBACK in the Administration and Operations Guide.
+
+-------------------
+$ZPATNUMERIC
+-------------------
+
+$ZPATN[UMERIC] is a read-only intrinsic special variable that determines how YottaDB/GT.M interprets the patcode "N" used in the pattern match operator.
+
+With $ZPATNUMERIC="UTF-8", the patcode "N" matches any numeric character as defined by UTF-8 encoding. With $ZPATNUMERIC="M", YottaDB/GT.M restricts the patcode "N" to match only ASCII digits 0-9 (that is, ASCII 48-57). When a process starts in UTF-8 mode, intrinsic special variable $ZPATNUMERIC takes its value from the environment variable gtm_patnumeric. YottaDB/GT.M initializes the intrinsic special variable $ZPATNUMERIC to "UTF-8" if the environment variable gtm_patnumeric is defined to "UTF-8". If the environment variable gtm_patnumeric is not defined or set to a value other than "UTF-8", YottaDB/GT.M initializes $ZPATNUMERIC to "M".
+
+YottaDB/GT.M populates $ZPATNUMERIC at process initialization from the environment variable gtm_patnumeric and does not allow the process to change the value.
+
+.. note::
+   YottaDB/GT.M performs operations on literals at compile time and the pattern codes settings may have an impact on such operations. Therefore, always compile with the same pattern code settings as those used at runtime.
+
+For characters in Unicode, YottaDB/GT.M assigns patcodes based on the default classification of the Unicode character set by the ICU library with three adjustments:
+
+* If $ZPATNUMERIC is not "UTF-8", non-ASCII decimal digits are classified as A.
+* Non-decimal numerics (Nl and No) are classified as A.
+* The remaining characters (those not classified by ICU functions: u_isalpha, u_isdigit, u_ispunct, u_iscntrl, 1), or 2) above) are classified into either patcode P or C. The ICU function u_isprint is used since is returns "TRUE" for non-control characters.
+
+The following table contains the resulting Unicode general category to M patcode mapping:
+
++-------------------------------------------+---------------------------------------------------+
+| Unicode General Category                  | Patcode Class                                     |
++===========================================+===================================================+
+| L* (all letters)                          | A                                                 |
++-------------------------------------------+---------------------------------------------------+
+| M* (all marks)                            | P                                                 |
++-------------------------------------------+---------------------------------------------------+
+| Nd (decimal numbers)                      | N (if decimal digit is ASCII or $ZPATNUMERIC is   |
+|                                           | "UTF-8", otherwise A                              |
++-------------------------------------------+---------------------------------------------------+
+| Nl (letter numbers)                       | A (examples of Nl are Roman numerals)             |
++-------------------------------------------+---------------------------------------------------+
+| No (other numbers)                        | A (examples of No are fractions)                  |
++-------------------------------------------+---------------------------------------------------+
+| P* (all punctuation)                      | P                                                 |
++-------------------------------------------+---------------------------------------------------+
+| S* (all symbols)                          | P                                                 |
++-------------------------------------------+---------------------------------------------------+
+| Zs (spaces)                               | P                                                 |
++-------------------------------------------+---------------------------------------------------+
+| Zl (line separators)                      | C                                                 |
++-------------------------------------------+---------------------------------------------------+
+| Zp (paragraph separators)                 | C                                                 |
++-------------------------------------------+---------------------------------------------------+
+| C* (all control code points)              | C                                                 |
++-------------------------------------------+---------------------------------------------------+
+
+For a description of the Unicode general categories, refer to http://unicode.org/charts/.
+
+Example:
+
+.. parsed-literal::
+   GTM>write $zpatnumeric
+   UTF-8
+   GTM>Write $Char($$FUNC^%HD("D67"))?.N ; This is the Malayalam decimal digit 1                            
+   1
+   GTM>Write 1+$Char($$FUNC^%HD("D67"))
+   1
+   GTM>Write 1+$Char($$FUNC^%HD("31")) ; This is the ASCII digit 1
+   2
+
+----------------
+$ZPIN
+----------------
+
+When $PRINCIPAL has different input/output devices, the USE command recognizes intrinsic special variable $ZPIN to apply appropriate deviceparameters to the input side of $PRINCIPAL. A USE with $ZPIN sets $IO to $PRINCIPAL for READs and WRITEs from the input and output side of $PRINCIPAL. $ZSOCKET() also accepts $ZPIN as its first argument and, if the device is a split SOCKET device, supplies information on the input SOCKET device. In any context other than USE or $ZSOCKET(), or if $PRINCIPAL is not a split device, $PRINCIPAL, $ZPIN and $ZPOUT are synonyms. In the case of a split $PRINCIPAL, $ZPIN returns the value of $PRINCIPAL followed by the string "< /" Any attempt to OPEN $ZPIN results in a DEVOPENFAIL error.
+
+For more information refer to “$Principal”, “$ZPOUT”, and “$ZSOCKET()”.
+
+-----------------
+$ZPOUT
+-----------------
+
+When $PRINCIPAL has different input/output devices, the USE command recognizes intrinsic special variables $ZPOUT to apply appropriate deviceparameters to the output side of $PRINCIPAL. A USE with $ZPOUT sets $IO to $PRINCIPAL for READs and WRITEs from the input and output side of $PRINCIPAL. $ZSOCKET() also accepts $ZPOUT as its first argument and, if the device is a split SOCKET device, supplies information on the output SOCKET device. In any context other than USE or $ZSOCKET(), or if $PRINCIPAL is not a split device, $PRINCIPAL, $ZPIN and $ZPOUT are synonyms. In the case of a split $PRINCIPAL, $ZPOUT returns the value of $PRINCIPAL followed by the string "> /" Any attempt to OPEN $ZPOUT results in a DEVOPENFAIL error.
+
+For more information refer to “$Principal”, “$ZPIN”, and “$ZSOCKET()”.
+
+Example:
+
+.. parsed-literal::
+   ;zpioin
+   ;123456789012345678901234567890123456789012345678901234567890
+   ;A12345678901234567890123456789012345678901234567890123456789
+   zpio
+     ; mumps -r zpio < zpioin
+     write "$PRINCIPAL = ",$P,!
+     write "$ZPIN = ",$ZPIN,!
+     write "$ZPOUT = ",$ZPOUT,!
+     write "Read first line from zpioin with default settings",!
+     read x
+     write x,!
+     zshow "d"
+     use $ZPIN:(wrap:width=50)
+     write "After $ZPIN set to wrap and width set to 50",!
+     zshow "d"
+     write "Read next 50 characters from zpioin",!
+     read y
+     write y,!
+     use $ZPOUT:wrap
+     use $ZPIN:nowrap
+     write "After $ZPOUT set to wrap and $ZPIN set to nowrap",!
+     zshow "d"
+     use $ZPOUT:nowrap
+     write "After $ZPOUT set to nowrap",!
+     zshow "d"
+     use $P:wrap
+     write "After $P set to wrap",!
+     zshow "d"
+     use $ZPOUT:width=40
+     write "After $ZPOUT width set to 40",!
+     zshow "d"
+     use $ZPOUT:nowrap
+     write "After $ZPOUT set to nowrap",!
+     zshow "d"
+     write x,!
+     quit
+
+-----------------
+$ZPOSITION
+-----------------
+
+$ZPOS[ITION] contains a string value specifying the current entryref, where entryref is [label][+offset]^routine, and the offset is evaluated from the closest preceding label.
+
+YottaDB/GT.M does not permit the SET or NEW commands to modify $ZPOSITION.
+
+Example:
+
+.. parsed-literal::
+   GTM>WRITE !,$ZPOS,! ZPRINT @$ZPOS
+
+This example displays the current location followed by the source code for that line.
+
+--------------
+$ZPROMPT
+--------------
+
+$ZPROM[PT] contains a string value specifying the current Direct Mode prompt. By default, YDB> or GTM> is the Direct Mode prompt. M routines can modify $ZPROMPT by means of a SET command. $ZPROMPT cannot exceed 16 characters. If an attempt is made to assign $ZPROMPT to a longer string, only the first 16 characters will be taken.
+
+In UTF-8 mode, if the 31st byte is not the end of a valid UTF-8 character, YottaDB/GT.M truncates the $ZPROMPT value at the end of last character that completely fits within the 31 byte limit.
+
+The environment gtm_prompt initializes $ZPROMPT at process startup.
+
+Example:
+
+.. parsed-literal::
+   GTM>set $zprompt="Test01">"
+   Test01>set $zprompt="GTM>"
+
+This example changes the YottaDB/GT.M prompt to Test01> and then back to GTM>.
+
+---------------
+$ZREALSTOR
+---------------
+
+$ZREALSTOR contains the total memory (in bytes) allocated by the YottaDB/GT.M process, which may or may not actually be in use. It provides one view (see also “$ZALlocstor” and “$ZUSedstor”) of the process memory utilization and can help identify storage related problems. YottaDB/GT.M does not permit $ZREALSTOR to be SET or NEWed.
+
+-----------------
+$ZROUTINES
+-----------------
+
+$ZRO[UTINES] contains a string value specifying a directory or list of directories containing object files. Each object directory may also have an associated directory, or list of directories, containing the corresponding source files. These directory lists are used by certain YottaDB/GT.M functions, primarily auto-ZLINK, to locate object and source files. The order in which directories appear in a given list determines the order in which they are searched for the appropriate item.
+
+Searches that use $ZROUTINES treat files as either object or source files. YottaDB/GT.M treats files with an extension of .o as object files and files with an extension of .m as source files.
+
+.. note::
+   Paths used in $ZROUTINES to locate routines must not include embedded spaces, as $ZROUTINES uses spaces as delimiters.
+
++++++++++++++++++++++++++++++++++++++++++
+Establishing the value from $gtmroutines
++++++++++++++++++++++++++++++++++++++++++
+
+When the environment variable gtmroutines is defined, YottaDB/GT.M initializes $ZROUTINES to the value of gtmroutines. Otherwise, YottaDB/GT.M initializes $ZROUTINES to ".". When $ZROUTINES is ".", YottaDB/GT.M attempts to locate all source and object files in the current working directory. $ZROUTINES="" is equivalent to $ZROUTINES=".".
+
+Commands or functions such as DO, GOTO, ZGOTO, ZBREAK, ZPRINT, and $TEXT may auto-ZLINK and thereby indirectly use $ZROUTINES. If their argument does not specify a directory, ZEDIT and explicit ZLINK use $ZROUTINES. ZPRINT and $TEXT use $ZROUTINES to locate a source file if YottaDB/GT.M cannot find the source file pointed to by the object file. For more information on ZLINK and auto-ZLINK, see the “Development Cycle” and “Commands” chapters.
+
++++++++++++++++++++++++++++++++
+Setting a Value for $ZROUTINES
++++++++++++++++++++++++++++++++
+
+$ZRO[UTINES] is a read-write Intrinsic Special Variable, so M can also SET the value.
+
+By default, each directory entry in $ZROUTINES is assumed to contain both object and source files. However, each object directory may have an associated directory or list of directories to search for the corresponding source files. This is done by specifying the source directory list, in parentheses, following the object directory specification.
+
+If the command specifies more than one source directory for an object directory, the source directories must be separated by spaces, and the entire list must be enclosed in parentheses ( ) following the object directory-specification. If the object directory should also be searched for source, the name of that directory must be included in the parentheses, (usually as the first element in the list). Directory-specifications may also include empty parentheses, directing YottaDB/GT.M to proceed as if no source files exist for objects located in the qualified directory.
+
+To set $ZROUTINES outside of M, use the appropriate shell command to set gtmroutines. Because gtmroutines is a list, enclose the value in quotation marks (" ").
+
+Changes to the value of $ZROUTINES during a YottaDB/GT.M invocation only last for the current invocation, and do not change the value of gtmroutines.
+
+Directory specifications may include an environment variable. When YottaDB/GT.M SETs $ZROUTINES, it translates all environment variables and verifies the syntax and the existence of all specified directories. If $ZROUTINES is set to an invalid value, YottaDB/GT.M generates a run-time error and does not change the value of $ZROUTINES. Because the environment variables are translated when $ZROUTINES is set, any changes to their definition have no effect until $ZROUTINES is set again.
+
+++++++++++++++++++++++++++++
+$ZROUTINES Examples
+++++++++++++++++++++++++++++
+
+Example:
+
+.. parsed-literal::
+   GTM>s $zroutines=".(../src) $gtm_dist"
+
+This example directs YottaDB/GT.M to look for object modules first in your current directory, then in the distribution directory that contains the percent routines. YottaDB/GT.M locates sources for objects in your current directory in the sibling /src directory.
+
+Example:
+
+.. parsed-literal::
+   $ gtmroutines="/usr/jones /usr/smith"
+   $ export gtmroutines
+   $ gtm
+   GTM>write $zroutines
+   "/usr/jones /usr/smith"
+   GTM>set $zro="/usr/jones/utl /usr/smith/utl"
+   GTM>write $zroutines
+   "/usr/jones/utl /usr/smith/utl"
+   GTM>halt
+   $ echo $gtmroutines
+   /usr/jones /usr/smith
+
+This example defines the environment variable gtmroutines. Upon entering YottaDB/GT.M Direct Mode $zroutines has the value supplied by gtmroutines. The SET command changes the value. When the YottaDB/GT.M image terminates, the shell echo command demonstrates that gtmroutines has not been modified by the M SET command.
+
+Example:
+
+.. parsed-literal::
+   GTM>SET $ZRO=". /usr/smith"
+
+This example sets $zroutines to a list containing two directories.
+
+Example:
+
+.. parsed-literal::
+   GTM>SET $ZRO=". /usr/smith"
+
+This example sets $zroutines to a list containing two directories.
+
+Example:
+
+.. parsed-literal::
+   GTM>set $zro="/usr/smith(/usr/smith/tax /usr/smith/fica)"
+
+This example specifies that YottaDB/GT.M should search the directory /usr/smith for object files, and the directories /usr/smith/tax and /usr/smith/fica for source files. Note that in this example. YottaDB/GT.M does not search /usr/smith for source files.
+
+Example:
+
+.. parsed-literal::
+   GTM>set $zro="/usr/smith(/usr/smith /usr/smith/tax /usr/smith/fica)"
+
+This example specifies that YottaDB/GT.M should search the directory /usr/smith for object files and the directories /usr/smith/tax and /usr/smith/fica for source files. Note that the difference between this example and the previous one is that YottaDB/GT.M searches /usr/smith for both object and source files.
+
+Example:
+
+.. parsed-literal::
+   GTM>set $zro="/usr/smith /usr/smith/tax() /usr/smith/fica"
+
+This specifies that YottaDB/GT.M should search /usr/smith and /usr/smith/fica for object and source files. However, because the empty parentheses indicate directories searched only for object files, YottaDB/GT.M does not search /usr/smith/tax for source files.
+
+Omitting the parentheses indicates that YottaDB/GT.M can search the directory for both source and object files. $ZROUTINES=/usr/smith is equivalent to $ZROUTINES=/usr/smith(/usr/smith).
+
+++++++++++++++++++++++++++++
+$ZROUTINES Search Types
+++++++++++++++++++++++++++++
+
+YottaDB/GT.M uses $ZRO[UTINES] to perform three types of searches:
+
+* Object-only when the command or function using $ZROUTINES requires a .o file extension.
+* Source-only when the command or function using $ZROUTINES requires a file extension other than .o.
+* Object-source match when the command or function using $ZROUTINES does not specify a file extension.
+
+An explicit ZLINK that specifies a non .OBJ .o extension is considered as a function that has not specified a file extension for the above searching purposes.
+
+All searches proceed from left to right through $ZROUTINES. By default, YottaDB/GT.M searches directories for both source and object files. YottaDB/GT.M searches directories followed by empty parentheses ( ) for object files only. YottaDB/GT.M searches directories in parentheses only for source files.
+
+Once an object-matching search locates an object file, the source search becomes limited. If the directory containing the object file has an attached parenthetical list of directories, YottaDB/GT.M only searches the directories in the attached list for matching source files. If the directory containing the object files does not have following parentheses, YottaDB/GT.M restricts the search for matching source files to the same directory. If the object module is in a directory qualified by empty parentheses, YottaDB/GT.M cannot perform any operation that refers to the source file.
+
+The following table shows YottaDB/GT.M commands and functions using $ZROUTINES and the search types they support.
+
+**YottaDB/GT.M Commands and $ZROUTINES Search Types**
+
++---------------------------------------+-----------------------------------------+-------------------------------+--------------------------------+-------------------------------+
+| Search / Function                     | File Extension Specified                | Search Type                                                                                    |
++=======================================+=========================================+===============================+================================+===============================+
+|                                       |                                         | **Obj Only**                  | **Source Only**                | **Match**                     |
++---------------------------------------+-----------------------------------------+-------------------------------+--------------------------------+-------------------------------+
+| EXPLICIT ZLINK                        | .o                                      | X                             |                                |                               |
++---------------------------------------+-----------------------------------------+-------------------------------+--------------------------------+-------------------------------+
+|                                       | Not .o                                  |                               |                                | X                             |
++---------------------------------------+-----------------------------------------+-------------------------------+--------------------------------+-------------------------------+
+|                                       | None                                    |                               |                                | X                             |
++---------------------------------------+-----------------------------------------+-------------------------------+--------------------------------+-------------------------------+
+| AUTO-ZLINK                            | None                                    |                               |                                | X                             |
++---------------------------------------+-----------------------------------------+-------------------------------+--------------------------------+-------------------------------+
+| ZEDIT                                 | Not .o                                  |                               | X                              |                               |
++---------------------------------------+-----------------------------------------+-------------------------------+--------------------------------+-------------------------------+
+| ZPRINT                                | None                                    |                               | X                              |                               |
++---------------------------------------+-----------------------------------------+-------------------------------+--------------------------------+-------------------------------+
+| $TEXT                                 | None                                    |                               | X                              |                               |
++---------------------------------------+-----------------------------------------+-------------------------------+--------------------------------+-------------------------------+
+
+If ZPRINT or $TEXT() require a source module for a routine that is not in the current image, YottaDB/GT.M first performs an auto-ZLINK with a matching search.
+
+ZPRINT or $TEXT locate the source module using a file specification for the source file located in the object module. If YottaDB/GT.M finds the source module in the directory where it was when it was compiled, the run-time system does not use $ZROUTINES. If YottaDB/GT.M cannot find the source file in the indicated location, the run-time system uses $ZROUTINES.
+
+++++++++++++++++++++++++++++++++
+$ZROUTINES Search Examples
+++++++++++++++++++++++++++++++++
+
+This section describes a model for understanding $ZROUTINES operations and the illustrating examples, which may assist you if you wish to examine the topic closely.
+
+You may think of $ZROUTINES as supplying a two dimensional matrix of places to look for files. The matrix has one or more rows. The first row in the matrix contains places to look for object and the second and following rows contain places to look for source. Each column represents the set of places that contain information related to the object modules in the first row of the column.
+
+Example:
+
+.. parsed-literal::
+   GTM>s $zro=". /usr/smi/utl() /usr/jon/utl
+   (/usr/jon/utl/so /usr/smi/utl)"
+
+The following table illustrates the matrix view of this $ZROUTINES.
+
+**$ZROUTINES Search Matrix**
+
++---------------------+----------------------------+------------------------------+--------------------------+
+| Search For          | Column 1                   | Column 2                     | Column 3                 |
++=====================+============================+==============================+==========================+
+| OBJECTS             | \.                         | /usr/smi/utl                 | /usr/jon/utl             |
++---------------------+----------------------------+------------------------------+--------------------------+
+| SOURCE              | \.                         |                              | /usr/jon/utl/so          |
++---------------------+----------------------------+------------------------------+--------------------------+
+|                     |                            |                              | /usr/smi/utl             |
++---------------------+----------------------------+------------------------------+--------------------------+
+
+To perform object-only searches, YottaDB/GT.M searches only the directories or object libraries in the top 'objects' row for each column starting at column one. If YottaDB/GT.M does not locate the object file in a directory or object library in the 'objects' row of a column, YottaDB/GT.M begins searching again in the next column. If YottaDB/GT.M cannot locate the file in any of the columns, it issues a run-time error.
+
+As illustrated in the preceding table, YottaDB/GT.M searches for object files in the directories . ,/usr/smi/utl and /usr/jon/utl.
+
+To perform source-only searches, YottaDB/GT.M looks down to the 'source' row at the bottom of each column, excluding columns headed by object-only directories (that is, those object directories, which consist of an empty list of source directories) or object libraries. If YottaDB/GT.M cannot locate the source file in the 'source' row of a column, it searches the next eligible column.
+
+To perform object-source match searches, YottaDB/GT.M looks at each column starting at column one. YottaDB/GT.M does an object-only search in the 'objects' row of a column and a source-only search in the 'source' row(s) of a column. If YottaDB/GT.M locates either the object-file or the souce-file, the search is completed. Else, YottaDB/GT.M starts searching the next column. If YottaDB/GT.M cannot locate either the object file or the source file in any of the columns, it issues a run-time error.
+
+As illustrated in the preceding table, YottaDB/GT.M searches for source-files in the directory "." in column one. If YottaDB/GT.M cannot locate the source file in ".", it omits column two because it is an object-only directory and instead searches column three. Since column three specifies /usr/jon/utl/so and /usr/smi/utl, YottaDB/GT.M searches for the source-file in these directories in column three and not in /usr/jon/utl. If YottaDB/GT.M cannot locate the source-file in column three, it terminates the search and issues a run-time error.
+
+Once the object-source match search is done, YottaDB/GT.M now has either the object-file or source-file or both available. YottaDB/GT.M then recompiles the source-file based on certain conditions, before linking the object-file into the current image. See “ZLink” for more information on those conditions.
+
+If auto-ZLINK or ZLINK determines that the source file requires [re]compilation, YottaDB/GT.M places the object file in the above object directory in the same column as the source file. For example, if YottaDB/GT.M locates the source file in /usr/smi/utl in column three, YottaDB/GT.M places the resultant object file in /usr/jon/utl.
+
+++++++++++++++++++++++++++++++++++++++++++++++++
+Shared Library File Specification in $ZROUTINES
+++++++++++++++++++++++++++++++++++++++++++++++++
+
+The $ZROUTINES ISV allows individual UNIX shared library file names to be specified in the search path. During a search for auto-ZLINK, when a shared library is encountered, it is probed for a given routine and, if found, that routine is linked/loaded into the image. During an explicit ZLINK, all shared libraries in $ZROUTINES are ignored and are not searched for a given routine.
+
+$ZROUTINES syntax contains a file-specification indicating shared library file path. YottaDB/GT.M does not require any designated extension for the shared library component of $ZROUTINES. Any file specification that does not name a directory is treated as shared library. However, it is recommended that the extension commonly used on a given platform for shared library files be given to any YottaDB/GT.M shared libraries. See “Linking YottaDB/GT.M Shared Images”. A shared library component cannot specify source directories. YottaDB/GT.M reports an error at an attempt to associate any source directory with a shared library in $ZROUTINES.
+
+The following traits of $ZROUTINES help support shared libraries:
+
+* The $ZROUTINES search continues to find objects in the first place, processing from left to right, that holds a copy; it ignores any copies in subsequent locations. However, now for auto-ZLINK, shared libraries are accepted as object repositories with the same ability to supply objects as directories.
+* Explicit ZLINK, never searches Shared Libraries. This is because explicit ZLINK is used to link a newly created routine or re-link a modified routine and there is no mechanism to load new objects into an active shared library.
+* ZPRINT and $TEXT() of the routines in a shared library, read source file path from the header of the loaded routine. If the image does not contain the routine, an auto-ZLINK is initiated. If the source file path recorded in the routine header when the module was compiled cannot be located, ZPRINT and $TEXT() initiate a search from the beginning of $ZROUTINES, skipping over the shared library file specifications. If the located source does not match the code in image (checked via checksum), ZPRINT generates an object-source mismatch status and $TEXT() returns a null string.
+* ZEDIT, when searching $ZROUTINES, skips shared libraries like explicit ZLINK for the same reasons. $ZSOURCE ISV is implicitly set to the appropriate source file.
+
+For example, if libshare.so is built with foo.o compiled from ./shrsrc/foo.m, the following commands specify that YottaDB/GT.M should search the library ./libshare.so for symbol foo when do ^foo is encountered.
+
+.. parsed-literal::
+   GTM>SET $ZROUTINES="./libshare.so ./obj(./shrsrc)"
+   GTM>DO ^foo;auto-ZLINK foo - shared
+   GTM>ZEDIT "foo";edit ./shrsrc/foo.m
+   GTM>W $ZSOURCE,!;prints foo
+   GTM>ZPRINT +0^foo;issues a source-object mismatch status TXTSRCMAT error message
+   GTM>ZLINK "foo";re-compile ./shrsrc/foo.m to generate ./obj/foo.o.
+   GTM>W $TEXT(+0^foo);prints foo
+
+Note that ZPRINT reports an error, as foo.m does not match the routine already linked into image. Also note that, to recompile and re-link the ZEDITed foo.m, its source directory needs to be attached to the object directory [./obj] in $ZROUTINES. The example assumes the shared library (libshare.so) has been built using shell commands. For the procedure to build a shared library from a list of YottaDB/GT.M generated object (.o) files, see “Linking YottaDB/GT.M Shared Images”.
+
+
+**Linking YottaDB/GT.M Shared Images**
+
+Following are the steps (UNIX system commands, and YottaDB/GT.M commands) that need to be taken to use YottaDB/GT.M shared image linking with $ZROUTINES.
+
+* *Compile source (.m) files to object (.o) files*
+
+In order to share M routines, YottaDB/GT.M generates objects (.o) with position independent code, a primary requirement for shared libraries, done automatically by YottaDB/GT.M V4.4-000 and later releases. No change to the compiling procedures is needed. However, any objects generated by a previous release must be recompiled.
+
+* *Create a shared library from object (.o) files*
+
+To create a shared library, use the following syntax:
+
+.. parsed-literal::
+   ld -brtl -G -bexpfull -bnoentry -b64 -o libshr.so file1.o file2.o (on AIX)
+   ld -shared -o libshr.so file1.o file2.o (on Linux)
+
+Where libshr.so is replaced with name of the shared library one wishes to create. The file1.o and file2.o are replaced with one or more object files created by the YottaDB/GT.M compiler that the user wishes to put into the shared library. Note that the list of input files can also be put into a file and then specified on the command line with the -f option (AIX). Refer to the ld man page on specific platform for details on each option mentioned above.
+
+.. note::
+   Source directories cannot be specified with a shared library in $ZROUTINES, as YottaDB/GT.M does not support additions or modifications to active shared libraries. Searching for a routine in a shared library is a two step process: (1) Load the library and (2) Lookup the symbol corresponding to the M entryref. Since YottaDB/GT.M always performs the first step (even on platforms with no shared binary support), use shared libraries in $ZROUTINES with care to keep the process footprint minimal. On all platforms, it is strongly recommended not to include unused shared libraries in $ZROUTINES.
+
+.. note::
+   There are some tools on AIX that can aid in mitigating the problems of shared library allocation. The /usr/bin/genkld command on AIX lists all of the shared libraries currently loaded. This command requires root privileges on AIX 4.3.3 but seems to be a general user command on AIX 5. The /usr/sbin/slibclean command requires root privileges and will purge the shared library segment of unused shared libraries making room for new libraries to be loaded.
+
+* *Establish $ZROUTINES from gtmroutines*
+
+When the environment variable gtmroutines is defined, YottaDB/GT.M initializes $ZROUTINES to the value of gtmroutines. The $ZROUTINES ISV can also be modified using SET command.
+
+Example:
+
+.. parsed-literal::
+   $ gtmroutines="./libabc.so ./obj(./src)"
+   $ export gtmroutines
+   $ mumps -direct
+   GTM>w $ZROUTINES,!;writes "./libabc.so ./obj(./src)"
+   GTM>do ^a;runs ^a from libabc.so
+   GTM>do ^b;runs ^b from libabc.so
+   GTM>do ^c;runs ^c from libabc.so
+   GTM>h
+   $
+
+* *$ZROUTINES settings for auto-relink*
+
+By suffixing one or more directory names in $ZROUTINES with a single asterisk (*), processes can subscribe to updates of object files published in those directories. At the invocation of DO, GOTO, or ZGOTO, extrinsic functions, $TEXT(), or ZPRINT that specify an entryref which includes a routine name (vs. a label without a routine name), mumps processes (and mupip processes executing trigger logic) automatically relink ("auto-relink") and execute published new versions of routines.
+
+* Label references (that is, without a routine name), whether direct or through indirection, always refer to the current routine, and do not invoke auto-relink logic.
+* Use shell quoting rules when appending asterisks to directory names in the gtmroutines environment variable - asterisks must be passed in to YottaDB/GT.M, and not expanded by the shell.
+* YottaDB/GT.M accepts but ignores asterisk suffixes to directory names on 32-bit Linux on x86 platforms, where it does not provide auto-relinking.
+* Changing $ZROUTINES causes all routines linked from auto-relink-enabled directories in the process to be re-linked.
+* Note that a relink does not automatically reload a routine every time. When YottaDB/GT.M initiates a relink and the object file (object hash) is the same as the existing one, YottaDB/GT.M bypasses the relink and uses the existing object file.
+
+The ZRUPDATE command publishes of new versions of routines to subscribers. 
+
+--------------------
+$ZSOURCE
+--------------------
+
+$ZSO[URCE] contains a string value specifying the default pathname for the ZEDIT and ZLINK commands. ZEDIT or ZLINK without an argument is equivalent to ZEDIT/ZLINK $ZSOURCE.
+
+$ZSOURCE initially contains the null string. When ZEDIT and ZLINK commands have a pathname for an argument, they implicitly set $ZSOURCE to that argument. This ZEDIT/ZLINK argument can include a full pathname or a relative one. A relative path could include a file in the current directory, or the path to the file from the current working directory. In the latter instance, do not include the slash before the first directory name. $ZSOURCE will prefix the path to the current working directory including that slash.
+
+The file name may contain a file extension. If the extension is .m or .o, $ZSOURCE drops it. The ZEDIT command accepts arguments with extensions other than .m or .o. $ZSOURCE retains the extension when such arguments are passed.
+
+If $ZSOURCE contains a file with an extension other than .m or .o, ZEDIT processes it but ZLINK returns an error message
+
+$ZSOURCE is a read-write Intrinsic Special Variable, (i.e., it can appear on the left side of the equal sign (=) in the argument to the SET command). A $ZSOURCE value may include an environment variable. YottaDB/GT.M handles logical names that translate to other logical names by performing iterative translations according to VMS conventions. If a logical name translates to a VMS search list, YottaDB/GT.M uses only the first name in the list.
+
+Example:
+
+.. parsed-literal::
+   GTM>ZEDIT "subr.m"
+   .
+   .
+   GTM>WRITE $ZSOURCE
+   subr
+
+Example:
+
+.. parsed-literal::
+   GTM>ZEDIT "test"
+   .
+   .
+   .
+   GTM>WRITE $ZSOURCE
+   "test"
+
+Example:
+
+.. parsed-literal::
+   GTM>ZEDIT "/usr/smith/report.txt"
+   .
+   .
+   .
+   GTM>WRITE $ZSOURCE
+   /usr/smith/report.txt
+
+Example:
+
+.. parsed-literal::
+   GTM>ZLINK "BASE.O"
+   .
+   .
+   .
+   GTM>WRITE $ZSOURCE
+   BASE
+
+-------------------
+$ZSTATUS
+-------------------
+
+$ZS[TATUS] contains a string value specifying the error condition code and location of the last exception condition that occurred during routine execution.
+
+YottaDB/GT.M maintains $ZSTATUS as a string consisting of three or more substrings. The string consists of the following:
+
+* An error message number as the first substring.
+* The entryref of the line in error as the second substring; a comma (,) separates the first and second substrings.
+* The message detail as the third substring. The format of this is a percent sign (%) identifying the message facility, a hyphen (-) identifying the error severity, another hyphen identifying the message identification followed by a comma (,), which is followed by the message text if any:
+
+.. parsed-literal::
+   Format: %<FAC>-<SEV>-<ID>, <TEXT>
+   Example: %GTM-E-DIVZERO, Attempt to divide by zero
+
+YottaDB/GT.M sets $ZSTATUS when it encounters errors during program execution, but not when it encounters errors in a Direct Mode command.
+
+$ZSTATUS is a read-write Intrinsic Special Variable, (i.e., it can occur on the left side of the equal sign (=) in the argument to the SET command). While it will accept any string, YottaDB/FIS recommends setting it to null. M routines cannot modify $ZSTATUS with the NEW command.
+
+Example:
+
+.. parsed-literal::
+   GTM>WRITE $ZSTATUS
+   150373110,+1^MYFILE,%GTM-E-DIVZERO,
+   Attempt to divide by zero
+
+This example displays the status generated by a divide by zero (0).
+
+---------------
+$ZSTEP
+---------------
+
+$ZST[EP] contains a string value specifying the default action for the ZSTEP command. $ZSTEP provides the ZSTEP action only when the ZSTEP command does not specify an action.
+
+$ZSTEP initially contains the the value of the $gtm_zstep environment variable or string "B" if $gtm_zstep is not defined; note that the default "B" causes the process to enter direct mode. $ZSTEP is a read-write Intrinsic Special Variable, (that is, it can appear on the left side of the equal sign (=) in the argument to the SET command).
+
+Example:
+
+.. parsed-literal::
+   GTM>WRITE $ZSTEP
+   B
+   GTM>
+
+This example displays the current value of $ZSTEP, which is the default.
+
+Example:
+
+.. parsed-literal::
+   GTM>SET $ZSTEP="ZP @$ZPOS B"
+
+This example sets $ZSTEP to code that displays the contents of the next line to execute, and then enters Direct Mode.
+
+-----------------
+$ZSYSTEM
+-----------------
+
+$ZSY[STEM] holds the value of the status code for the last subprocess invoked with the ZSYSTEM command. 
+
+---------------
+$ZTEXIT
+---------------
+
+$ZTE[XIT] contains an expression that controls the YottaDB/GT.M interrupt facility at the transaction commit or rollback. At each outermost TCOMMIT or TROLLBACK, If +$ZTEXIT evaluates to non-zero (TRUE), then $ZINTERRUPT is XECUTEd after completing the commit or rollback.
+
+$ZTEXIT is a read-write ISV, that is, it can appear on the left side of the equal sign (=) in the argument to the SET command. M routines cannot NEW $ZTEXIT. YottaDB/GT.M initializes $ZTEXIT to null at the process startup. Note that the changes to the value of $ZTEXIT during a YottaDB/GT.M invocation last for the entire duration of the process, so it is the application's responsibility to reset $ZTEXIT after $ZINTERRUPT is delivered in order to turn off redelivering the interrupt every subsequent transaction commit or rollback.
+
+Example:
+
+.. parsed-literal::
+   $ export sigusrval=10
+   $ /usr/lib/fis-gtm/V6.1-000_x86_64/gtm
+   GTM>zprint ^ztran
+   foo;
+     set $ztexit=1
+     set $zinterrupt="d ^throwint"
+     tstart ()
+     for i=1:1:10 do
+     . set ^ACN(i,"bal")=i*100
+     tstart ()
+     do ^throwint
+     ;do ^proc
+     tcommit:$tlevel=2
+     for i=1:1:10 do
+     . set ^ACN(i,"int")=i*0.05
+     ;do ^srv
+     if $tlevel trollback
+     ;do ^exc
+     set $ztexit="",$zinterrupt=""
+     quit
+   bar;
+     write "Begin Transaction",!
+     set $ztexit=1
+     tstart ()
+     i '$zsigproc($j,$ztrnlnm("sigusrval")) write "interrupt sent...",!!
+     for i=1:1:4 set ^B(i)=i*i
+     tcommit
+     write "End Transaction",!
+     ;do ^srv
+     quit
+   GTM>zprint ^throwint
+   throwint
+     set $zinterrupt="write !,""interrupt occurred at : "",$stack($stack-1,""PLACE""),! set $ztexit=1"
+     if '$zsigproc($job,$ztrnlnm("sigusrval")) write "interrupt sent to process"
+     write "***************************************",!!
+     quit
+   GTM>do foo^ztran
+   interrupt sent to process
+   interrupt occurred at : throwint+3^throwint
+   ***************************************
+   interrupt occurred at : foo+13^ztran
+   GTM>
+
+In the above call to foo^ztran, the interrupt handler is a user-defined routine, throwint. The process is sent a signal (SIGUSR1), and $ZINTERRUPT is executed. At the outermost trollback, the interrupt is rethrown, causing $ZINTERRUPT to be executed again.
+
+Example:
+
+.. parsed-literal::
+   GTM>w $zinterrupt
+   "IF $ZJOBEXAM()"
+   GTM>zsystem "ls GTM*"
+   ls: No match.
+   GTM>do bar^ztran
+   Begin Transaction
+   interrupt sent...
+   End Transaction
+   GTM>zsystem "ls GTM*"
+   GTM_JOBEXAM.ZSHOW_DMP_3951_1  GTM_JOBEXAM.ZSHOW_DMP_3951_2
+   GTM>
+
+This uses the default value of $ZINTERRUPT to service interrupts issued to the process. The $ZJOBEXAM function executes a ZSHOW "*", and stores the output in each GTM_ZJOBEXAM_ZSHOW_DMP for the initial interrupt, and at tcommit when the interrupt is rethrown.
+
+-----------------
+$ZUSEDSTOR
+-----------------
+
+$ZUSEDSTOR is the value in $ZALLOCSTOR minus storage management overhead and represents the actual memory, in bytes, requested by current activities. It provides one view (see also “$ZALlocstor” and “$ZREalstor”) of the process memory utilization and can help identify storage related problems. YottaDB/GT.M does not permit $ZUSEDSTOR to be SET or NEWed. 
+
+-----------------
+$ZUT
+-----------------
+
+$ZUT (UNIX time or universal time) returns the number of microseconds since January 1, 1970 00:00:00 UTC, which provides a time stamp for directly comparing different timezones. $ZUT accuracy is subject to the precision of the system clock (use man gettimeofday from the UNIX shell for more information).
+
+---------------
+$ZVERSION
+---------------
+
+$ZV[ERSION] contains a string value specifying the currently installed YottaDB/GT.M. $ZV[ERSION] is a space-delimited string with four pieces as follows:
+
+.. parsed-literal::
+   <product> <release> <OS> <architecture> 
+
+<product> is always "YottaDB" or "GT.M".
+
+<release> always begins with "V", and has the structure V<DB_Format>.<major_release>-<minor_release>[<bug_fix_level>] where:
+
+* <DB_Format> identifies the block format of YottaDB/GT.M database files compatible with the release. For example, V4, V5, and V6. The <DB_Format> piece in $ZVERSION does not change even when a MUPIP UPRGRADE or MUPIP DOWNGRADE changes the DB Format element in the database fileheader.
+* <major_release> identifies a release with major enhancements.
+* <minor_release> identifies minor enhancements to a major release. The classification of major and minor enhancements is at the discretion of YottaDB/FIS.
+* An optional <bug_fix_level> is an upper-case letter indicating bug fixes but no new enhancements. Note that YottaDB/GT.M is built monolithically and never patched. Even though a bug fix release has only bug fixes, it should be treated as a new YottaDB/GT.M release and installed in a separate directory.
+
+<OS> is the host operating system name.
+
+<architecture> is the hardware architecture for which the release of YottaDB/GT.M is compiled. Note that YottaDB/GT.M retains it original names for continuity even if vendor branding changes, for example, "RS6000".
+
+M routines cannot modify $ZVERSION.
+
+.. note::
+   YottaDB/GT.M treats $ZVERSION as a literal at compile time. Therefore, always compile with the same version as that used at runtime.
+
+Example:
+
+.. parsed-literal::
+   GTM>w $zversion
+   GT.M V6.0-003 Linux x86_64
+
+This example displays the current version identifier for YottaDB/GT.M.
+
+-----------------
+$ZYERROR
+-----------------
+
+$ZYER[ROR] is a read/write ISV that contains a string value pointing to an entryref. After YottaDB/GT.M encounters an error, if $ZYERROR is set a non-null value, YottaDB/GT.M invokes the routine at the entryref specified by $ZYERROR with an implicit DO. It is intended that the code invoked by $ZYERROR use the value of $ZSTATUS to select or construct a value to which it SETs $ZERROR. If $ZYERROR is not a valid entryref or if an error occurs while executing the entryref specified by $ZYERROR, YottaDB/GT.M SETs $ZERROR to the error status encountered. YottaDB/GT.M then returns control to the M code specified by $ETRAP/$ZTRAP or device EXCEPTION.
+
+$ZYERROR is implicitly NEWed on entry to the routine specified by $ZYERROR. However, if YottaDB/GT.M fails to compile, YottaDB/GT.M does not transfer control to the entryref specified by $ZYERROR.
+
+YottaDB/GT.M permits $ZYERROR to be modified by the SET and NEW commands.
+
+------------------
+Trigger ISVs
+------------------
+
+YottaDB/GT.M provides nine ISVs (Intrinsic Special Variables) to facilitate trigger operations. With the exception of $ZTWORMHOLE, all numeric trigger-related ISVs return zero (0) outside of a trigger context; non-numeric ISVs return the empty string.
+
++++++++++++
+$ZTDATA
++++++++++++
+
+Within trigger context, $ZTDATA returns $DATA(@$REFERENCE)#2 for a SET or $DATA(@$REFERENCE) for a KILL, ZKILL or ZWITHDRAW prior to the explicit update. This provides a fast path alternative, avoiding the need for indirection in trigger code, to help trigger code determine the characteristics of the triggering node prior to the triggering update. For a SET, it shows whether the node did or did not hold data - whether a SET is modifying the contents of an existing node or creating data at a new node. For a KILL it shows whether the node had descendants and whether it had data.
+
+++++++++++++++
+$ZTDELIM
+++++++++++++++
+
+Within a SET trigger context, $ZTDE[LIM] returns the piece separator, as specified by -delim in the trigger definition. This allows triggers to extract updated pieces defined in $ZTUPDATE without having the piece separator hard coded into the routine. Outside of a SET trigger context, $ZTDELIM is null. 
+
++++++++++++++
+$ZTLEVEL
++++++++++++++
+
+Within trigger context, $ZTLEVEL returns the current level of trigger nesting (invocation by a trigger of an additional trigger by an update in trigger context).
+
+$ZTLEVEL greater than one (>1) indicates that there are nested triggers in progress. When a single update invokes multiple triggers solely because of multiple trigger matches of that initial (non-trigger) update, they are not nested (they are chained) and thus all have same $ZTLEVEL.
+
+Example:
+
+.. parsed-literal::
+   +^Cycle(1) -commands=Set -xecute="Write ""$ZTLevel for ^Cycle(1) is: "",$ZTLevel Set ^Cycle(2)=1"
+   +^Cycle(2) -commands=Set -xecute="Write ""$ZTLevel for ^Cycle(2) is: "",$ZTLevel Set ^Cycle(1)=1"
+
+These trigger definitions show different values of $ZTLEVEL when two triggers are called recursively (and pathologically).
+
+.. parsed-literal::
+   +^Acct("ID") -commands=set -xecute="set ^Acct(1)=$ztvalue+1"
+   +^Acct(sub=:) -command=set -xecute="set ^X($ztvalue)=sub" 
+
+SET ^Acct("ID")=10 invokes both the above triggers in some order and $ZTLEVEL will have the same value in both because these triggers are chained rather than nested.
+
++++++++++++++++
+$ZTNAME
++++++++++++++++
+
+Within a trigger context, $ZTNAME returns the trigger name. Outside a trigger context, $ZTNAME returns an empty string. 
+
+++++++++++++
+$ZTOLDVAL
+++++++++++++
+
+Within trigger context, $ZTOLDVAL returns the prior (old) value of the global node whose update caused the trigger invocation. This provides a fast path alternative to $GET(@$REFERENCE) at trigger entry (which avoids the heavyweight indirection ). If there are multiple triggers matching the same node (chained), $ZTOLDVAL returns the same result for each of them.
+
+Example:
+
+.. parsed-literal::
+   +^Acct(1,"ID") -commands=Set -xecute="Write:$ZTOLdval ""The prior value of ^Acct(1,ID) was: "",$ZTOLdval" 
+
+This trigger gets invoked with a SET and displays the prior value (if it exists) of ^Acct(1,"ID").
+
+.. parsed-literal::
+   GTM>w ^Acct(1,"ID")       
+   1975
+   GTM>s ^Acct(1,"ID")=2011
+   The prior value of ^Acct(1,ID) was: 1975
+
++++++++++++++++
+$ZTRIGGEROP
++++++++++++++++
+
+Within trigger context, for SET (including MERGE and $INCREMENT() operations), $ZTRIGGEROP has the value "S". For KILL, $ZTRIGGEROP has the value "K" For ZKILL or ZWITHDRAW, $ZTRIGGEROP has the value "ZK". 
+
++++++++++++++++
+$ZTSLATE
++++++++++++++++
+
+$ZTSLATE allows you to specify a string that you want to make available in chained or nested triggers invoked for an outermost transaction (when a TSTART takes $TLEVEL from 0 to 1). You might use $ZTSLATE to accumulate transaction-related information, for example $ZTOLDVAL and $ZTVALUE, available within trigger context for use in a subsequent trigger later in the same transaction. For example, you can use $ZTSLATE to build up an application history or journal record to be written when a transaction is about to commit.
+
+You can SET $ZTSLATE only while a database trigger is active. YottaDB/GT.M clears $ZTSLATE for the outermost transaction or on a TRESTART. However, YottaDB/GT.M retains $ZTSLATE for all sub-transactions (where $TLEVEL>1).
+
+Example:
+
+.. parsed-literal::
+   TSTART ()       ; Implicitly clears $ZTSLAT
+   SET ^ACC(ACN1,BAL)=AMT          ; Trigger sets $ZTSLATE=ACN\_"|"
+   SET ^ACC(ACN2,BAL)=-AMT         ; Trigger sets $ZTSLATE=$ZTSLATE_ACN\_"|"
+   ZTRIGGER ^ACT("TRANS")          ; Trigger uses $ZTSLATE to update transaction log
+   TCOMMIT
+
+++++++++++++
+$ZTUPDATE
+++++++++++++
+
+Within trigger context, for SET commands where the GT.M trigger specifies a piece separator, $ZTUPDATE provides a comma separated list of piece numbers of pieces that differ between the current values of $ZTOLDVAL and $ZTVALUE. If the trigger specifies a piece separator, but does not specify any pieces of interest, $ZTUPDATE identifies all changed pieces. $ZTUPDATE is 0 in all other cases (that is: for SET commands where the YottaDB/GT.M trigger does not specify a piece separator or for KILLs). Note that if an update matches more than one trigger, all matching triggers see the same $ZTOLDVAL at trigger entry but potentially different values of $ZTVALUE so $ZTUPDATE could change due to the actions of each matching trigger even though all matching triggers have identical -[z]delim and -piece specifications.
+
+Example:
+
+.. parsed-literal::
+   +^trigvn -commands=Set -pieces=1;3:6 -delim="|" -xecute="Write !,$ZTUPDATE" 
+
+In the above trigger definition entry, $ZTUPDATE displays a comma separated list of the changed piece numbers if on of the pieces of interest: 1,3,4,5,or 6 are modified by the update.
+
+.. parsed-literal::
+   GTM>write ^trigvn
+   Window|Table|Chair|Curtain|Cushion|Air Conditioner
+   GTM>set ^trigvn="Window|Dining Table|Chair|Vignette|Pillow|Air Conditioner"
+   4,5 
+
+Note that even though piece numbers 2,4 and 5 are changed, $ZTUPDATE displays only 4,5 because the trigger is not defined for updates for the second piece.
+
++++++++++++++
+$ZTVALUE
++++++++++++++
+
+For SET, $ZTVALUE has the value assigned to the node by the explicit SET operation. Modifying $ZTVALUE within a trigger modifies the eventual value YottaDB/GT.M assigns to the node. Note that changing $ZTVALUE has a small performance impact because it causes an additional update operation on the node once all trigger code completes. If a node has multiple associated triggers each trigger receives the current value of $ZTVALUE, however, because the triggers run in arbitrary order, YottaDB/FIS strongly recommends no more than one trigger change any given element of application data, for example, a particular piece. For KILL and its variants, $ZTVALUE returns the empty string. While YottaDB/GT.M accepts updates to $ZTVALUE within the trigger code invoked for a KILL or any of its variants, it ultimately discards any such value. Outside trigger context, attempting to SET $ZTVALUE produces a SETINTRIGONLY error.
+
++++++++++++++
+$ZTWORMHOLE
++++++++++++++
+
+$ZTWORMHOLE allows you to specify a string up to 128KB of information you want to make available during trigger execution. You can use $ZTWORMHOLE to supply an application-context or process context to your trigger logic. Because YottaDB/GT.M makes $ZTWORMHOLE available throughout the duration of the process, you can access or update $ZTWORMHOLE both from inside and outside a trigger.
+
+$ZTWORMHOLE provides a mechanism to access information from a process/application context that is otherwise unavailable in trigger context. YottaDB/GT.M records any non-empty string value of $ZTWORMHOLE in the YottaDB/GT.M database journal file as part of any update that invokes at least one trigger which references $ZTWORMHOLE. YottaDB/GT.M also transmits any non-NULL $ZTWORMHOLE value in the replication stream, thus providing the same context to triggers invoked by MUPIP processes (either as part of the replicating instance update process or as part of MUPIP journal recovery/rollback). Therefore, whenever you use $ZTWORMHOLE in a trigger, you create something like a wormhole for process context that is otherwise NEWed in the run-time or non-existent in MUPIP.
+
+Note that if trigger code does not reference $ZTMORMHOLE, YottaDB/GT.M does not make it available to MUPIP (via the journal files or replication stream). Therefore, if a replicating secondary has different trigger code than the initiating primary (an unusual configuration) and the triggers on the replicating node require information from $ZTWORMHOLE, the triggers on the initiating node must reference $ZTWORMHOLE to ensure YottaDB/GT.M maintains the data it contains for use by the update process on the replicating node. While you can change $ZTWORMHOLE within trigger code, because of the arbitrary ordering of triggers on the same node, such an approach requires careful design and implementation. YottaDB/GT.M allows $ZTWORMHOLE to be NEW'd. NEWing $ZTWORMHOLE is slightly different from NEWing other ISVs/variables in the sense that the former retains its original value whereas the latter does not. However, like other NEWs, YottaDB/GT.M restores $ZTWORMHOLE's value when the stack level pops.
+
+The following table summarizes the read/write permissions assigned to all trigger-related ISVs within trigger context and outside trigger context.
+
++------------------------------+----------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Intrinsic Special Variable   | Within Trigger Context           | Notes                                                                                                                                                 |
++==============================+==================================+=======================================================================================================================================================+
+| $ETRAP                       | Read/Write                       | Set to gtm_trigger_etrap or the empty string when entering trigger context. For more information on using the $ETRAP mechanism for handling errors    |
+|                              |                                  | during trigger execution, refer to “Error Handling during Trigger Execution”.                                                                         |
++------------------------------+----------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------+
+| $REFERENCE                   | Read Only                        | Restored at the completion of a trigger.                                                                                                              |
++------------------------------+----------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------+
+| $TEST                        | Read Only                        | Restored at the completion of a trigger.                                                                                                              |
++------------------------------+----------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------+
+| $TLEVEL                      | Read Only                        | Always >=1 in trigger code; must be the same as the completion of processing a trigger as it was at the start.                                        |
++------------------------------+----------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------+
+| $ZTNAME                      | Read Only                        | Returns the trigger name.                                                                                                                             |
++------------------------------+----------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------+
+| $ZTDATA                      | Read Only                        | Shows prior state.                                                                                                                                    |
++------------------------------+----------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------+
+| $ZTLEVEL                     | Read Only                        | Shows trigger nesting.                                                                                                                                |
++------------------------------+----------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------+
+| $ZTOLDVAL                    | Read Only                        | Shows the pre-update value.                                                                                                                           |
++------------------------------+----------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------+
+| $ZTRAP                       |  Read only - ""                  | Must use $ETRAP in trigger code.                                                                                                                      |
++------------------------------+----------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------+
+| $ZTRIGGEROP                  | Read Only                        | Shows the triggering command.                                                                                                                         |
++------------------------------+----------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------+
+| $ZTUPDATE                    | Read Only                        | Lists modified pieces (if requested) for SET.                                                                                                         |
++------------------------------+----------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------+
+| $ZTVALUE                     | Read/Write                       | Can change the eventual applied value for SET.                                                                                                        |
++------------------------------+----------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------+
+| $ZTWORMHOLE                  | Read/Write                       | Holds application context because trigger code has no access to the local variable context.                                                           |
++------------------------------+----------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------+
+| $ZTSLATE                     | Read/Write                       | Holds outermost transaction context for chained or nested triggers.                                                                                   |
++------------------------------+----------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+**Examples of Trigger ISVs**
+
+The following examples are derived from the FIS Profile application.
+
+Nodes in ^ACN(CID,50) have TYPE in piece 1, CLS in piece 2, FEEPLN in piece 15 and EMPLNO in piece 31. Indexes are ^XACN(CLS,ACN,CID), ^XREF("EMPLCTA",EMPLNO,ACN,TYPE,CID) and ^XREF("FEEPLN",FEEPLN,CID) and use ACN from the first piece of ^ACN(CLS,99). These indexes are maintained with four triggers: one invoked by a KILL or ZKill of an ^ACN(:,50) node and three invoked by SETs to different pieces of ^ACN(:,50) nodes. Note that ACN, CID, CLS and TYPE are required, whereas EMPLNO and FEEPLN can be null, which requires (in our convention) the use of $ZC(254) in indexes. The triggerfile definitions are:
+
+.. parsed-literal::
+   +^ACN(cid=:,50) -zdelim="|" -pieces=2 -commands=SET -xecute="Do ^SclsACN50"  
+   +^ACN(cid=:,50) -zdelim="|" -pieces=1,31 -commands=SET -xecute="Do ^SemplnoTypeACN50" +^ACN(cid=:,50) -zdelim="|" -pieces=15 -commands=SET -xecute="Do ^SfeeplnACN50" 
+   +^ACN(cid=:,50) -commands=KILL,ZKill -xecute="Do ^KACN50"
+
+The code in KACN50.m KILLs cross reference indexes when the application deletes any ^ACN(:,50).
+
+.. parsed-literal::
+   KACN50 ; KILL of entire ^ACN(:,50) node, e.g., from account deletion
+     ; Capture information
+     Set cls=$Piece($ZTOLD,"|",2)                   ; CLS
+     Set emplno=$Piece($ZTOLD,"|",31)
+     Set:'$Length(emplno) emplno=$ZC(254)                ; EMPLNO
+     Set feepln=$Piece($ZTOLD,"|",15) 
+     Set:'$L(feepln) feepln=$ZC(254)                     ; FEEPLN
+     Set type=$Piece($ZTOLD,"|",1)                  ; TYPE
+     Set acn=$Piece(^ACN(cid,99),"|",1)             ; ACN
+     Kill ^XACN(cls,acn,cid)
+     Kill ^XREF("EMPLCTA",emplno,acn,type,cid)
+     Kill ^XREF("FEEPLN",feepln,cid)
+     Quit
+
+The routine in SclsACN50.m creates cross references for a SET or a SET $PIECE() that modifies the second piece of ^ACN(:,50).
+
+.. parsed-literal::
+   SClsACN50 ; Update to CLS in ^ACN(,50)
+    ; Capture information 
+    Set oldcls=$Piece($ZTOLD,"|",2)                ; Old CLS 
+    Set cls=$Piece($ZTVAL,"|",2)                   ; New CLS 
+    Set acn=$Piece(^ACN(cid,99),"|",1)             ; ACN 
+    Set processMode=$Piece($ZTWORM,"|",1)          ; Process
+    If processMode<2 Kill ^XACN(oldcls,acn,cid)
+    Set ^XACN(cls,acn,cid)="" 
+    Quit
+
+Note that the example is written for clarity. Eliminating values that need not be assigned to temporary local variables produces: 
+
+.. parsed-literal::
+   SclsACN50
+     S acn=$P(^ACN(cid,99),"|",1)
+     I $P($ZTWORM,"|",1)<2 K ^XACN($P($ZTOLD,"|",2),acn,cid)
+     S ^XACN($P($ZTVAL,"|",2),acn,cid)=""
+     Q
+
+Indeed, this index can simply be included in the (one line) triggerfile specification itself:
+
+.. parsed-literal::
+   +^ACN(cid=:,50) -zdelim="|" -pieces=2 -commands=SET -xecute="S oldcls=$P($ZTOLD,""|"",2),acn=$P(^ACN(cid,99),""|"",1) K:$P($ZTWO,""|"",1)<2 ^XACN(oldcls,acn,cid) S ^XACN($P($ZTVAL,""|"",2),acn,cid)="""""
+
+In the interest of readability most triggerfile definitions in this chapter are written as complete routines. The code in SemplnoTypeACN50.m handles changes to pieces 1 and 31 of ^ACN(:,50). Note that a SET to ^ACN(:,50) that modifies either or both pieces causes this trigger to execute just once, whereas two sequential SET $Piece() commands, to first modify one piece and then the other cause it to execute twice, at different times, once for each piece.
+
+.. parsed-literal::
+   EmplnoTypeACN50 ; Update to EMPLNO and/or TYPE in ^ACN(,50)
+    ; Capture information 
+    Set oldemplno=$Piece($ZTOLD,"|",31)
+    Set:'$Length(oldemplno) oldemplno=$ZC(254)
+    Set emplno=$Piece($ZTVAL,"|",31)
+    Set:'$L(emplno) emplno=$ZC(254)
+    Set oldtype=$Piece($ZTOLD,"|",1)
+    Set type=$Piece($ZTVAL,"|",1)
+    Set acn=$Piece(^ACN(cid,99),"|",1)
+    Set processMode=$Piece($ZTWORM,"|",1)
+    If processMode<2 Do
+    . Kill ^XREF("EMPLNO",oldemplno,acn,oldtype,cid) 
+    . Set ^XREF("EMPLNO",emplno,acn,type,cid)=""
+    Quit
+
+The code in SFeeplnACN50.m handles changes to piece 15.
+
+.. parsed-literal::
+   SFeeplnACN50 ; Update to FEEPLN in ^ACN(,50)
+     ; Capture information     
+     Set oldfeepln=$Piece($ZTOLD,"|",15)
+     Set:'$Length(oldfeepln) oldfeepln=$ZC(254)    
+     Set feepln=$Piece($ZTVAL,"|",15)
+     Set:'$Length(feepln) feepln=$ZC(254)
+     Set processMode=$Piece($ZTWORM,"|",1)
+     If processMode<2 Do 
+     . Kill ^XREF("FEEPLN",oldfeepln,cid) Set ^XREF("FEEPLN",feepln,cid)=""
+     Quit
+
+
+ 
