@@ -3265,7 +3265,7 @@ Examine or load trigger definition. The format of the $ZTRIGGER() function is:
 
 * $ZTRIGGER() returns a truth value (1 or 0) depending on the success of the specified action.
 * $ZTRIGGER() performs trigger maintenance actions similar those performed by MUPIP TRIGGER.
-* If expr1 evaluates to case-insensitive "FILE", $ZTRIGGER() evaluates expr2 as the location of the trigger definition file. Then, it applies the trigger definitions in the file specified by expr2. If a file contains a delete all (-*), that action produces no user confirmation.
+* If expr1 evaluates to case-insensitive "FILE", $ZTRIGGER() evaluates expr2 as the location of the trigger definition file. Then, it applies the trigger definitions in the file specified by expr2. If a file contains a delete all (-\*), that action produces no user confirmation.
 * If expr1 evaluates to case-insensitive "ITEM", $ZTRIGGER() evaluates expr2 as a single line or multi-line trigger definition entry. A multi-line trigger definition or a multi-line XECUTE string starts with << and uses $char(10) to denote the newline separator. expr2 with ITEM does not permit a multi-line XECUTE string to end with the >> terminator. It does not require trigger logic to appear immediately after the -xecute=<<, but a $char(10) must prefix the logic as shown in the following examples:
 
  .. parsed-literal::
