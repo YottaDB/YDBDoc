@@ -20,6 +20,7 @@ Welcome to The M Programmer's Guide!
    commands
    functions
    isv
+   ioproc
 
 
 Indices and tables
