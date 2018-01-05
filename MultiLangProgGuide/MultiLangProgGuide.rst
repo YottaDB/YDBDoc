@@ -918,7 +918,7 @@ ydb_delete_s()
 
 .. code-block:: C
 
-	int ydb_kill_s(ydb_buffer_t *varname,
+	int ydb_delete_s(ydb_buffer_t *varname,
 		int subs_used,
 		ydb_buffer_t *subsarray,
 		int deltype);
@@ -941,11 +941,19 @@ ydb_delete_excl_s()
 
 .. code-block:: C
 
-	int ydb_delete_excl_s(ydb_buffer_t *varnamelist);
+	int ydb_delete_excl_s(int namecount,
+		ydb_buffer_t *varname[, ...]);
 
-``*varnamelist->buf_addr`` points to a comma separated list of local
-variable names. ``ydb_delete_excl_s()`` kills the trees of all local
-variable names except those on the list.
+``ydb_delete_excl_s()`` deletes the trees of all local variables except
+those on the list. Subscripts cannot be specified, and it is an error
+for a ``*varname`` to specify a global or intrinsic special
+variable. Note that ``namecount`` must be greater than zero.
+
+If your application mixes M and non M code, and you wish to use
+``ydb_delete_excl_s()`` to delete local variables that are aliases,
+formal parameters, or actual parameters passed by reference, make sure
+you understand what (sub)trees are being deleted. This does not apply
+to applications that do not include M code.
 
 ``ydb_delete_excl_s()`` returns ``YDB_OK`` or an `error return code`_.
 
@@ -958,13 +966,13 @@ time permitting.*
 
 .. code-block:: C
 
-	int ydb_kill_multi_s(int namecount,
+	int ydb_delete_multi_s(int deltype,
+		int namecount,
 		ydb_buffer_t *varname,
 		int subs_used,
-		ydb_buffer_t *subsarray[, ...],
-		int deltype);
+		ydb_buffer_t *subsarray[, ...]);
 
-``namecount`` (>0) is the number of variable names in the call.
+``namecount`` (>0) is the number of nodes specified in the call.
 
 Deletes nodes in each of the local or global variable trees or
 subtrees specified.  A value of ``YDB_DEL_NODE`` or ``YDB_DEL_TREE``
@@ -972,7 +980,7 @@ for ``deltype`` specifies whether to delete just the node at each
 root, leaving (sub)trees intact, or to delete nodes as well as
 (sub)trees.
 
-Intrinsic special variables cannot be killed.
+Intrinsic special variables cannot be deleted.
 
 ``ydb_delete_s()`` returns ``YDB_OK`` or an `error return code`_.
 
@@ -1090,10 +1098,9 @@ ydb_lock_decr_s()
 
 .. code-block:: C
 
-	int ydb_lock_decr_s(int namecount,
-		ydb_buffer_t *varname,
+	int ydb_lock_decr_s(ydb_buffer_t *varname,
 		int subs_used,
-		ydb_buffer_t *subsarray[, ...]);
+		ydb_buffer_t *subsarray);
 
 ``namecount`` is the number of variable names in the call. At least
 one variable must be specified.
@@ -1114,10 +1121,9 @@ ydb_lock_incr_s()
 .. code-block:: C
 
 	int ydb_lock_incr_s(unsigned long long timeout,
-		int namecount,
 		ydb_buffer_t *varname,
 		int subs_used,
-		ydb_buffer_t *subsarray[, ...]);
+		ydb_buffer_t *subsarray);
 
 ``namecount`` is the number of variable names in the call. At least
 one variable must be specified.
@@ -1230,11 +1236,11 @@ time permitting.*
 
 .. code-block:: C
 
-	int ydb_set_multi_s(int namecount,
+	int ydb_set_multi_s(ydb_buffer_t *value,
+		int namecount,
 		ydb_buffer_t *varname,
 		int subs_used,
-		ydb_buffer_t *subsarray[, ...],
-		ydb_buffer_t *value);
+		ydb_buffer_t *subsarray[, ...]);
 
 Copies the ``value->len_used`` bytes at ``value->buf_addr`` as the
 value of the specified nodes or intrinsic special variables specified,
@@ -1327,7 +1333,8 @@ ydb_tp_s()
 	int ydb_tp_s(ydb_tpfnptr_t tpfn,
 		void *tpfnparm,
 		const char *transid,
-		const char *varnamelist);
+		int namecount[,
+		ydb_buffer_t *varname, ...]);
 
 ``ydb_tp_s()`` calls the function pointed to by ``tpfn`` passing it
 ``tpfnparm`` as a parameter. As discussed under `Transaction
@@ -1361,10 +1368,13 @@ is not flagged as ``"BATCH"`` follows one or more transactions so
 flagged, Durability of the later transaction ensures Durability of the
 the earlier ``"BATCH"`` transaction(s).
 
-If not NULL or the empty string, ``varnamelist`` is a list of local
-variable names whose values are restored to their original values when
-a transaction is restarted. A value of ``"*"`` means that all local
-variables should be restored on a restart.
+If ``namecount>0``, the ``*varname`` parameters specify a list of
+local variable names whose values are restored to their original
+values when a transaction is restarted. In the special case where
+``namecount=1`` and the sole ``*varname`` provides the value ``"*"``,
+all local variables are restored on a restart. Subscripts cannot be
+specified, and it is an error for a ``*varname`` to specify a global
+or intrinsic special variable.
 
 A ``ydb_tp_s()`` that is not itself within a transaction returns
 ``YDB_OK``, ``YDB_TP_ROLLBACK``, or an `error return code`_ – a
@@ -1443,16 +1453,32 @@ ydb_child_init()
 As noted in the `Overview`_, the YottaDB database engine resides in
 the address space of the process, and the data structures of the
 database engine include information such as the pid, which differs
-between parent and child processes. After a ``fork()``, the child
-process **must** call ``ydb_child_init()`` in order to re-initialize
-the data structures of the database engine. No action is needed on the
-part of the parent process. *A child process that fails to call*
-``ydb_child_init()`` *after a* ``fork()`` *or equivalent, such as*
-``os.fork()`` *in Python, can cause structural damage to database
-files.*
+between parent and child processes.
 
-The ``void *param`` is reserved for future expansion. As the initial
-release of YottaDB ignores it, we recommend using
+Notes:
+
+- If a process has open database files, after a ``fork()``, the child
+  process **must** call ``ydb_child_init()`` in order to re-initialize
+  the data structures of the database engine. No action is needed on
+  the part of the parent process. *A child process that fails to call*
+  ``ydb_child_init()`` *after a* ``fork()`` *or equivalent, such as*
+  ``os.fork()`` *in Python, can cause structural damage to database
+  files.* As ``ydb_child_init)`` is effectively a no-op if there are
+  no open database files, a child process that is unsure whether there
+  are open database files can unconditionally call the function.
+- After a ``fork()`` or equivalent, a parent process should not exit
+  until the child process has executed ``ydb_child_init()``. An
+  efficient way to implement this would be for the parent to set a
+  node such as ``^Proc(ppid)=1`` where ``ppid`` is the parent's pid,
+  and for the child to set it to zero or to delete the node. A parent
+  process that wishes to ``fork()`` a number of child processes can
+  use ``ydb_incr_s()`` to increment a node such as ``^Proc(ppid)`` and
+  each child can decrement it after executing
+  ``ydb_child_init()``. When the value at the node is zero, the parent
+  process knows that it is safe for it to exit.
+
+The ``void *param`` is reserved for future enhancements. As the
+initial release of YottaDB ignores it, we recommend using
 NULL. ``ydb_child_init()`` returns ``YDB_OK`` or an `error return
 code`_.
 
