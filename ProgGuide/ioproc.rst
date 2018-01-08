@@ -561,4 +561,518 @@ Example:
 This example disables <CTRL-C>.
 
 
+--------------------------
+Using Sequential Files
+--------------------------
+
+YottaDB/GT.M provides access to sequential files. These files allow linear access to records. Sequential files are used to create programs, store reports, and to communicate with facilities outside of YottaDB/GT.M.
+
++++++++++++++++++++++++++++++++++++++++++
+Setting Sequential File Characteristics
++++++++++++++++++++++++++++++++++++++++++
+
+The ANSI standard specifies that when a process CLOSEs and then reOPENs a device, YottaDB/GT.M restores any characteristics not explicitly specified with deviceparameters to the values they had prior to the last CLOSE. However, because it is difficult for a large menu-driven application to ensure the previous OPEN state, YottaDB/GT.M always sets unspecified sequential file characteristics to their default value on OPEN. This approach also reduces potential memory overhead imposed by OPENing and CLOSEing a large number of sequential files during the life of a process.
+
+YottaDB/GT.M does not restrict multiple OPEN commands. However, if a file is already open, YottaDB/GT.M ignores attempts to modify sequential file OPEN characteristics, except for RECORDSIZE and for deviceparameters that also exist for USE.
+
+Sequential files can be READONLY, or read/write (NOREADONLY).
+
+Sequential files can be composed of either FIXED or VARIABLE (NOFIXED) length records. By default, records have VARIABLE length.
+
+UNIX enforces its standard security when YottaDB/GT.M OPENs a sequential file. This includes any directory access required to locate or create the file. If you are unable to OPEN a file, contact your system manager.
+
+++++++++++++++++++++++++++++++
+Sequential File Pointers
+++++++++++++++++++++++++++++++
+
+Sequential file I/O operations use a construct called a file pointer. The file pointer logically identifies the next record to read or write. OPEN commands position the file pointer at the beginning of the file (REWIND) or at the end-of-file (APPEND). APPEND cannot reposition a file currently open. Because the position of each record depends on the previous record, a WRITE destroys the ability to reliably position the file pointer to subsequent records in a file. Therefore, by default (NOTRUNCATE), YottaDB/GT.M permits WRITEs only when the file pointer is positioned at the end of the file.
+
+A file that has been previously created and contains data that should be retained can also be opened with the device parameter APPEND.
+
+If a device has TRUNCATE enabled, a WRITE issued when the file pointer is not at the end of the file causes all contents after the current file pointer to be discarded. This effectively moves the end of the file to the current position and permits the WRITE.
+
+++++++++++++++++++++++++
+Line Terminators
+++++++++++++++++++++++++
+
+LF ($CHAR(10)) terminates the logical record for all M mode sequential files, TRM, PIPE, and FIFO. For non FIXED format sequential files and terminal devices for which character set is not M, all the standard Unicode line terminators terminate the logical record. These are U+000A (LF), U+0000D (CR), U+000D followed by U+000A (CRLF), U+0085 (NEL), U+000C (FF), U+2028 (LS) and U+2029 (PS). 
+
+++++++++++++++++++++++++
+READ/WRITE Operations
+++++++++++++++++++++++++
+
+The following table describes all READ and WRITE operations for STREAM, VARIABLE, and FIXED format sequential files having automatic record termination enabled (WRAP) or disabled (NOWRAP).
+
++-------------------------------+-------------------------------+-------------------------------------------------------------------------------------------------+------------------------------------------------------------------+
+| Command                       | WRAP or NOWRAP                | STREAM or VARIABLE format file behavior                                                         | FIXED format file behavior                                       |
++===============================+===============================+=================================================================================================+==================================================================+
+| READ format or WRITE or WRITE | WRAP                          | Write the entire argument, but anytime $X is about to exceed WIDTH: insert a <LF> character,    | Similar to VARIABLE but no <LF>                                  |
+| \*                            |                               | set $X to 0, increment $Y                                                                       |                                                                  |
++-------------------------------+-------------------------------+-------------------------------------------------------------------------------------------------+------------------------------------------------------------------+
+| READ format or WRITE or WRITE | NOWRAP                        | Update $X based on STREAM or VARIABLE format as described below:                                | Same as VARIABLE                                                 |
+| \*                            |                               |                                                                                                 |                                                                  |
+|                               |                               | STREAM: Write all of the argument with no truncation nor with a line terminator being inserted. |                                                                  |
+|                               |                               | Add length of argument to $X.                                                                   |                                                                  |
+|                               |                               |                                                                                                 |                                                                  |
+|                               |                               | VARIABLE ($X=WIDTH): Write up to WIDTH-$X characters. Write no more output to the device until a|                                                                  |
+|                               |                               | WRITE ! or a SET $X makes $X less than WIDTH.                                                   |                                                                  |
++-------------------------------+-------------------------------+-------------------------------------------------------------------------------------------------+------------------------------------------------------------------+
+| READ or WRITE !               | either                        | Write <LF>, set $X to 0, increment $Y                                                           | Write PAD bytes to bring the current record to WIDTH             |
++-------------------------------+-------------------------------+-------------------------------------------------------------------------------------------------+------------------------------------------------------------------+
+| WRITE #                       | either                        | Write <FF>,<LF>, set $X to 0, increment $Y                                                      | Write PAD bytes to bring the current record to WIDTH, then a <FF>|
+|                               |                               |                                                                                                 | followed by WIDTH-1 PAD bytes                                    |
++-------------------------------+-------------------------------+-------------------------------------------------------------------------------------------------+------------------------------------------------------------------+
+| CLOSE                         | either                        | After a WRITE, if $X > 0, Write <LF>                                                            | After a WRITE, if $X >0, perform an implicit "WRITE !" adding PAD|
+|                               |                               |                                                                                                 | bytes to create a full record. If you need to avoid trailing PAD |
+|                               |                               |                                                                                                 | bytes set $X to 0 before closing a FIXED format file.            |
++-------------------------------+-------------------------------+-------------------------------------------------------------------------------------------------+------------------------------------------------------------------+
+| READ X                        | either                        | Return characters up to $X=WIDTH, or until encountering an <LF> or EOF. If <LF> encountered, set| Return WIDTH characters; no maintenance of $X and $Y, except that|
+|                               |                               | $X to 0, increment $Y                                                                           | EOF increments $Y                                                |
++-------------------------------+-------------------------------+-------------------------------------------------------------------------------------------------+------------------------------------------------------------------+
+| READ X#len                    | either                        | Return characters up to the first of $X=WIDTH or len characters, or encountering a <LF> or EOF; | Return MIN(WIDTH, len) characters; no maintenance of $X and $Y,  |
+|                               |                               | if up to len characters or EOF update $X, otherwise set $X to 0 and increment $Y                | except that EOF increments $Y                                    |
++-------------------------------+-------------------------------+-------------------------------------------------------------------------------------------------+------------------------------------------------------------------+
+| READ \*X                      | either                        | Return the code for one character and increment $X, if WIDTH=$X or <LF> encountered, set $X=0,  | Return the code for one character, if EOF return -1; no          |
+|                               |                               | increment $Y; if EOF return -1                                                                  | maintenance of $X and $Y, except that EOF increments $Y          |
++-------------------------------+-------------------------------+-------------------------------------------------------------------------------------------------+------------------------------------------------------------------+
+
+**Notes**
+
+* EOF == end-of-file; <FF>== ASCII form feed; <LF> == ASCII line feed; 
+* In M mode, and by default in UTF-8 mode PAD == <SP> == ASCII space.
+* "READ format" in this table means READ ? or READ <strlit>
+* A change to WIDTH implicitly sets WRAP unless NOWRAP follows in the deviceparameter list
+* In VARIABLE and STREAM mode, READ (except for READ \*) never returns <LF> characters
+* In M mode, the last setting of RECORDSIZE or WIDTH for the device determines WIDTH
+* In M Mode, a WRITE to a sequential device after setting $X to a value greater than the device WIDTH or a reducing WIDTH to less than the current $X acts as if the first character caused $X to exceed the WIDTH induces an immediate WRAP, if WRAP is enabled
+* In UTF-8 mode, RECORDSIZE is in bytes and WIDTH is in characters and the smaller acts as the WIDTH limit in the table.
+* In UTF-8 mode, FIXED mode writes <SP> to the RECORDSIZE when the next character won't fit.
+* In UTF-8 mode, all READ forms do not return trailing  PAD characters.
+* In UTF-8 mode, all characters returned by all forms of FIXED mode READ are from a single record. 
+* WRITE for a Sequential Disk (SD) device works at the current file position, whether attained with APPEND, REWIND or SEEK.
+* YottaDB/GT.M manages any BOM for UTF mode files by ensuring they are at the beginning of the file and produces a BOMMISMATCH error for an attempt to change the byte-ordering on OPEN for an existing file.
+* An attempt to OPEN a non-zero length file WRITEONLY without either NEWVERSION or TRUNCATE in UTF mode produces an OPENDEVFAIL due to the fact that any existing BOM information cannot be verified.
+* Note that with YottaDB/GT.M SD encryption, because of the state information associated with encryption processing, encrypted files require the file to be WRITEn or READ from the beginning rather than from an arbitrary position. 
+
+
+++++++++++++++++++++++++++++
+Writing Binary Files
+++++++++++++++++++++++++++++
+
+To write a binary data file, open it with FIXED:WRAP:CHSET="M" and set $X to zero before the WRITE to avoid filling the last record with spaces (the default PAD byte value). 
+
+.. note::
+   With CHSET not "M", FIXED has a different definition. Each record is really the same number of bytes as specified by RECORDSIZE. Padding bytes are added as needed to each record.
+
+Example:
+
+.. parsed-literal::
+   bincpy(inname,outname); YottaDB/GT.M routine to do a binary copy from file named in argument 1 to file named in argument 2
+           ;
+     new adj,nrec,rsize,x
+     new $etrap
+     set $ecode="",$etrap="goto error",$zstatus=""
+     set rsize=32767                          ; max recordsize that keeps $X on track
+     open inname:(readonly:fixed:recordsize=rsize:exception="goto eof")
+     open outname:(newversion:stream:nowrap:chset="M")
+     for nrec=1:1 use inname read x use outname write x
+   eof     
+     if $zstatus["IOEOF" do  quit
+     . set $ecode=""
+     . close inname
+     . use outname
+     . set adj=$x
+     . set $x=0 close outname
+     . write !,"Copied ",$select((nrec-1)<adj:adj,1:((nrec-1)*rsize)+adj)," bytes from ",inname," to ",outname
+     else  use $principal write !,"Error with file ",inname,":"
+  error   
+     write !,$zstatus
+     close inname,outname
+     quit
+
+
+++++++++++++++++++++++++++++++++++++++++
+Sequential File Deviceparameter Summary
+++++++++++++++++++++++++++++++++++++++++
+
+The following tables provide a brief summary of deviceparameters for sequential files grouped into related areas. For more detailed information, refer to “Open”, “Use”, and “Close”.
+
+**Error Processing Deviceparameters**
+
++-----------------------------------+--------------------------+---------------------------------------------------------------------+
+| Deviceparameter                   | Command                  | Comment                                                             |
++===================================+==========================+=====================================================================+
+| EXCEPTION=expr                    | O/U/C                    | Controls device-specific error handling.                            |
++-----------------------------------+--------------------------+---------------------------------------------------------------------+
+
+**File Pointer Positioning Deviceparameters**
+
++-----------------------------------+--------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Deviceparameter                   | Command                  | Comment                                                                                                                                              |
++===================================+==========================+======================================================================================================================================================+
+| APPEND                            | O                        | Positions file pointer at EOF.                                                                                                                       |
++-----------------------------------+--------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
+| REWIND                            | O/U/C                    | Positions file pointer at start of the file.                                                                                                         |
++-----------------------------------+--------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
+| SEEK=strexpr                      | O/U                      | Positions the current file pointer to the location specified in strexpr. The format of strexpr is a string of the form "[+|-]integer" where unsigned |
+|                                   |                          | value specifies an offset from the beginning of the file, and an explicitly signed value specifies an offset relative to the current file position.  |
+|                                   |                          | For STREAM or VARIABLE format, the positive intexpr after any sign is a byte offset, while for a FIXED format, it is a record offset. In order to    |
+|                                   |                          | deal with the possible presence of a Byte Order Marker (BOM), SEEK for a FIXED format file written in a UTF character set must follow at least one   |
+|                                   |                          | prior READ since the device was created.                                                                                                             |
++-----------------------------------+--------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+**File Format Deviceparameters**
+
++-----------------------------------+--------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Deviceparameter                   | Command                  | Comment                                                                                                                                              |
++===================================+==========================+======================================================================================================================================================+
+| [NO]FIXED                         | O                        | Controls whether records have fixed length.                                                                                                          |
++-----------------------------------+--------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
+| [Z]LENGTH=intexpr                 | U                        | Controls virtual page length.                                                                                                                        |
++-----------------------------------+--------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
+| RECORDSIZE=intexpr                | O                        | Specifies maximum record size.                                                                                                                       |
++-----------------------------------+--------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
+| STREAM                            | O                        | Specifies the STREAM format.                                                                                                                         |
++-----------------------------------+--------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
+| VARIABLE                          | O                        | Controls whether records have variable length.                                                                                                       |
++-----------------------------------+--------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
+| [Z]WIDTH=intexpr                  | U                        | Controls maximum width of an output line.                                                                                                            |
++-----------------------------------+--------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
+| [Z][NO]WRAP                       | O/U                      | Controls handling of records longer than device width.                                                                                               |
++-----------------------------------+--------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+**File Access Deviceparameters**
+
++-----------------------------------+--------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Deviceparameter                   | Command                  | Comment                                                                                                                                              |
++===================================+==========================+======================================================================================================================================================+
+| DELETE                            | C                        | Specifies file be deleted by CLOSE.                                                                                                                  |
++-----------------------------------+--------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
+| GROUP=expr                        | O/C                      | Specifies file permissions for other users in the owner's group.                                                                                     |
++-----------------------------------+--------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
+| NEWVERSION                        | O                        | Specifies YottaDB/GT.M create a new version of file.                                                                                                 |
++-----------------------------------+--------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
+| OWNER=expr                        | O/C                      | Specifies file permissions for the owner of file.                                                                                                    |
++-----------------------------------+--------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
+| [NO]READONLY                      | O                        | Controls read-only file access.                                                                                                                      |
++-----------------------------------+--------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
+| RENAME=expr                       | C                        | Specifies CLOSE replace name of a disk file with name specified by expression.                                                                       |
++-----------------------------------+--------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
+| SYSTEM=expr                       | O/C                      | Specifies file permissions for the owner of the file (same as OWNER).                                                                                |
++-----------------------------------+--------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
+| [NO]TRUNCATE                      | O/U                      | Controls overwriting of existing data in file.                                                                                                       |
++-----------------------------------+--------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
+| UIC=expr                          | O/C                      | Specifies file's owner ID.                                                                                                                           |
++-----------------------------------+--------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
+| WORLD=expr                        | O/C                      | Specifies file permissions for users not in the owner's group.                                                                                       |
++-----------------------------------+--------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+O: Applies to the OPEN command
+
+U: Applies to the USE command
+
+C: Applies to the CLOSE command
+
++++++++++++++++++++++++++++
+Sequential File Examples
++++++++++++++++++++++++++++
+
+This section contains a few brief examples of YottaDB/GT.M sequential file handling.
+
+Example:
+
+.. parsed-literal::
+   GTM>do ^FREAD
+   FREAD;
+    zprint ^FREAD 
+    read "File > ",sd
+    set retry=0
+    set $ztrap="BADAGAIN"
+    open sd:(readonly:exception="do BADOPEN")
+    use sd:exception="goto EOF"
+    for  use sd read x use $principal write x,!
+   EOF;
+    if '$zeof zmessage +$zstatus
+    close sd
+    quit
+   BADOPEN;
+    set retry=retry+1 
+    if retry=2 open sd
+    if retry=4 halt
+    if $piece($zstatus,",",1)=2 do  
+    . write !,"The file ",sd," does not exist. Retrying in about 2 seconds ..."
+    . hang 2.1
+    . quit 
+    if $piece($zstatus,",",1)=13 do  
+    . write !,"The file ",sd," is not accessible. Retrying in about 3 seconds ..."
+    . hang 3.1
+    . quit
+    quit
+   BADAGAIN;
+    w !,"BADAGAIN",!
+                           
+  File >
+
+This example asks for the name of the file and displays its contents. It OPENs that file as READONLY and specifies an EXCEPTION. The exception handler for the OPEN deals with file-not-found and file-access errors and retries the OPEN command on error. The first USE sets the EXCEPTION to handle end-of-file. The FOR loop reads the file one record at a time and transfers each record to the principal device. The GOTO in the EXCEPTION terminates the FOR loop. At label EOF, if $ZEOF is false, the code reissues the error that triggered the exception. Otherwise, the CLOSE releases the file.
+
+Example:
+
+.. parsed-literal::
+   GTM>do ^formatACCT
+   formatACCT;
+    zprint ^formatACCT; 
+    set sd="temp.dat",acct=""
+    open sd:newversion 
+    use sd:width=132
+    for  set acct=$order(^ACCT(acct)) quit:acct=""  do  
+    . set rec=$$FORMAT(acct)
+    . write:$y>55 #,hdr write !,rec
+    close sd
+    quit
+
+This OPENs a NEWVERSION of file temp.dat. The FOR loop cycles through the ^ACCT global formatting (not shown in this code fragment) lines and writing them to the file. The FOR loop uses the argumentless DO construct to break a long line of code into more manageable blocks. The program writes a header record (set up in initialization and not shown in this code fragment) every 55 lines, because that is the application page length, allowing for top and bottom margins.
+
+
+------------------------
+FIFO Characteristics
+------------------------
+
+FIFOs have most of the same characteristics as other sequential files, except that READs and WRITEs can occur in any order.
+
+The following characteristics of FIFO behavior may be helpful in using them effectively.
+
+With READ:
+
+* If a READ is done while there is no data in the FIFO: 
+* The process hangs until data is put into the FIFO by another process, or the READ times out, when a timeout is specified.
+
+The following table shows the result and the values of I/O status variables for different types of READ operations on a FIFO device. 
+
++-------------------------+-----------------------------------------+----------------------------------+----------------------------+-------------------+------------------+------------------+
+| Operation               | Result                                  | $DEVICE                          | $ZA                        | $TEST             | X                | $ZEOF            |
++=========================+=========================================+==================================+============================+===================+==================+==================+
+| READ X:n                | Normal Termination                      | 0                                | 0                          | 1                 | DATA READ        | 0                |
++-------------------------+-----------------------------------------+----------------------------------+----------------------------+-------------------+------------------+------------------+
+| READ X:n                | Timeout with no data read               | 0                                | 0                          | 0                 | empty string     | 0                |
++-------------------------+-----------------------------------------+----------------------------------+----------------------------+-------------------+------------------+------------------+
+| READ X:n                | Timeout with partial data read          | 0                                | 0                          | 0                 | partial data     | 0                |
++-------------------------+-----------------------------------------+----------------------------------+----------------------------+-------------------+------------------+------------------+
+| READ X:n                | End of File                             | 1,Device detected EOF            | 9                          | 1                 | empty string     | 1                |
++-------------------------+-----------------------------------------+----------------------------------+----------------------------+-------------------+------------------+------------------+
+| READ X:0                | Normal Termination                      | 0                                | 0                          | 1                 | DATA READ        | 0                |
++-------------------------+-----------------------------------------+----------------------------------+----------------------------+-------------------+------------------+------------------+
+| READ X:0                | No data available                       | 0                                | 0                          | 0                 | empty string     | 0                |
++-------------------------+-----------------------------------------+----------------------------------+----------------------------+-------------------+------------------+------------------+
+| READ X:0                | Timeout with partial data read          | 0                                | 0                          | 0                 | Partial data     | 0                | 
++-------------------------+-----------------------------------------+----------------------------------+----------------------------+-------------------+------------------+------------------+
+| READ X:0                | End of File                             | 1,Device detected EOF            | 9                          | 1                 | empty string     | 1                |
++-------------------------+-----------------------------------------+----------------------------------+----------------------------+-------------------+------------------+------------------+
+| READ X                  | Error                                   | 1,<error signature>              | 9                          | n/c               | empty string     | 0                |
++-------------------------+-----------------------------------------+----------------------------------+----------------------------+-------------------+------------------+------------------+
+
+With WRITE:
+
+* The FIFO device does non-blocking writes. If a process tries to WRITE to a full FIFO and the WRITE would block, the device implicitly tries to complete the operation up to a default of 10 times. If the gtm_non_blocked_write_retries environment variable is defined, this overrides the default number of retries. If the retries do not succeed (remain blocked), the WRITE sets $DEVICE to "1,Resource temporarily unavailable", $ZA to 9, and produces an error. If the YottaDB/GT.M process has defined an EXCEPTION, $ETRAP or $ZTRAP, the error trap may choose to retry the WRITE after some action or delay that might remove data from the FIFO device.
+* While it is hung, the process will not respond to <CTRL-C>.
+
+With CLOSE:
+
+* The FIFO is not deleted unless the DELETE qualifier is specified.
+* If a process closes the FIFO with the DELETE qualifier, the FIFO becomes unavailable to new users at that time.
+* All processes currently USEing the FIFO may continue to use it, until the last process attached to it CLOSES it, and is destroyed.
+* Any process OPENing a FIFO with the same name as a deleted FIFO creates a new one to which subsequent OPENs attach.
+* The default access permissions on a FIFO are the same as the mask settings of the process that created the FIFO. Use the SYSTEM, GROUP, WORLD, and UIC deviceparameters to specify FIFO access permissions. File permissions have no affect on a process that already has the FIFO open. 
+
+++++++++++++++++++++++++++++++++++++++
+Considerations in implementing FIFOs
+++++++++++++++++++++++++++++++++++++++
+
+As you establish FIFOs for interprocess communication, consider whether, and how, the following issues will be addressed:
+
+* Do READs occur immediately, or can the process wait?
+* Are timed READs useful to avoid system hangs and provide a way to remove the process?
+* Does the WRITE process need to know whether the READ data was received?
+* Will there be multiple processes READing and WRITEing into a single FIFO?
+
++++++++++++++++++++++++++++++
+Error Handling for FIFOs
++++++++++++++++++++++++++++++
+
+Deleting devices (or files) created by an OPEN which has an error has deeper implications when that device, especially a FIFO, serves as a means of communications between a two processes. If one process OPENs a FIFO device for WRITE, there is an interval during which another process can OPEN the same device for READ. During that interval the writer process can encounter an error (for example, an invalid parameter) causing YottaDB/GT.M to delete the device, but the reader process can complete its OPEN successfully. This sequence results in a process with an orphaned device open for READ. Any other process that OPENs the same device for WRITE creates a new instance of it, so the reader can never find data to READ from the orphaned device. Since YottaDB/GT.M has insufficient context to enforce process synchronization between reader and writer, the application must use appropriate communication protocols and error handling techniques to provide synchronization between processes using files and FIFOs for communication.
+
++++++++++++++++++++++++++++++++++
+YottaDB/GT.M Recognition of FIFOs
++++++++++++++++++++++++++++++++++
+
+Like a sequential file, the path of a FIFO is specified as an argument expression to the OPEN, USE, and CLOSE commands. A device OPENed with a FIFO deviceparameter becomes a FIFO unless another device of that name is already OPEN. In that case, OPENing a device that has previously been OPENed by another process as a FIFO causes the process (the process here is the process trying to open the FIFO) to attach to the existing FIFO.
+
+.. note::
+   If an existing named pipe (aka fifo special file) is OPENed even without specifying the FIFO deviceparameter, it is treated as if FIFO had been specified.
+
++++++++++++++++++++++++++++++
+FIFO Device Examples
++++++++++++++++++++++++++++++
+
+The following two examples represent a master/slave arrangement where the slave waits in a read state on the FIFO until the master sends it some data that it then processes.
+
+Example:
+
+.. parsed-literal::
+   set x="named.pipe"
+   open x:fifo
+   do getres
+   use x write res,!
+
+This routine opens the FIFO, performs its own processing which includes starting the slave process (not shown in this code fragment).
+
+Example:
+
+.. parsed-literal::
+   set x="named.pipe"
+   open x:fifo
+   use x read res
+   do process(res)
+
+This routine waits for information from the master process, then begins processing.
+
++++++++++++++++++++++++++++++++++
+FIFO Deviceparameter Summary
++++++++++++++++++++++++++++++++++
+
+The following table summarizes the deviceparameters that can be used with FIFOs.
+
+**File Format Deviceparameters**
+
++---------------------------+-------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------+
+| Deviceparameter           | Command                       | Description                                                                                                                             |
++===========================+===============================+=========================================================================================================================================+
+| [NO]FIXED                 | O                             | Controls whether records have fixed length.                                                                                             |
++---------------------------+-------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------+
+| [Z]LENGTH=intexpr         | U                             | Controls the virtual page length.                                                                                                       |
++---------------------------+-------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------+
+| RECORDSIZE=intexpr        | O                             | Specifies the maximum record size                                                                                                       |
++---------------------------+-------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------+
+| VARIABLE                  | O                             | Controls whether records have variable length.                                                                                          |
++---------------------------+-------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------+
+| [Z]WIDTH=intexpr          | U                             | Sets the device's logical record size and enables WRAP.                                                                                 |
++---------------------------+-------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------+
+| [Z][NO]WRAP               | O/U                           | Controls the handling of records longer than the device width.                                                                          |
++---------------------------+-------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------+
+
+**File Access Deviceparameters**
+
++---------------------------+-------------------------------+------------------------------------------------------------------------------------------------------------------------------------------+
+| Deviceparameter           | Command                       | Description                                                                                                                              |
++===========================+===============================+==========================================================================================================================================+
+| DELETE                    | C                             | Specifies that the FIFO should be deleted when the last user closes it. If specified on an OPEN, DELETE is activated only at the time of |
+|                           |                               | the close. No new attachments are allowed to a deleted FIFO and any new attempt to use a FIFO with the name of the deleted device creates|
+|                           |                               | a new device.                                                                                                                            |
++---------------------------+-------------------------------+------------------------------------------------------------------------------------------------------------------------------------------+
+| GROUP=expr                | O/C                           | Specifies file permissions for other users in owner's group.                                                                             |
++---------------------------+-------------------------------+------------------------------------------------------------------------------------------------------------------------------------------+
+| [NO]READONLY              | O                             | OPENs a device for reading only (READONLY) or reading and writing (NOREADONLY).                                                          |
++---------------------------+-------------------------------+------------------------------------------------------------------------------------------------------------------------------------------+
+| OWNER=expr                | O/C                           | Specifies file permissions for owner of file.                                                                                            |
++---------------------------+-------------------------------+------------------------------------------------------------------------------------------------------------------------------------------+
+| RENAME=expr               | C                             | Specifies that CLOSE replace the name of a disk file with the name specified by the expression.                                          |
++---------------------------+-------------------------------+------------------------------------------------------------------------------------------------------------------------------------------+
+| SYSTEM=expr               | O/C                           | Specifies file permissions for owner of file (same as OWNER).                                                                            |
++---------------------------+-------------------------------+------------------------------------------------------------------------------------------------------------------------------------------+
+| UIC=expr                  | O/C                           | Specifies the file's owner ID.                                                                                                           |
++---------------------------+-------------------------------+------------------------------------------------------------------------------------------------------------------------------------------+
+| WORLD=expr                | O/C                           | Specifies file permissions for users not in the owner's group.                                                                           |
++---------------------------+-------------------------------+------------------------------------------------------------------------------------------------------------------------------------------+
+
+-----------------------------------
+Using NULL Devices
+-----------------------------------
+
+Null devices comprise of a collection of system purpose devices that include /dev/null, /dev/zero, /dev/random, and /dev/urandom.
+
+* /dev/null returns a null string on READ and sets $ZEOF
+* /dev/random and /dev/urandom return a random value on READ and set $ZEOF
+* /dev/zero returns 0's on READ and does not set $ZEOF
+
+A null device discards all output. YottaDB/GT.M maintains a virtual cursor position for null devices as it does for terminals on output. Use null devices for program testing and debugging, or for jobs that permit I/O to be discarded under certain circumstances. For example, JOB processes must have input and output devices associated with them, even though they do not use them. Null devices are low overhead never-fail alternatives for certain classes of I/O.
+
+++++++++++++++++++++++++++++
+NULL Deviceparameter Summary
+++++++++++++++++++++++++++++
+
+The following table provides a brief summary of deviceparameters for null devices. For more detailed information, refer to “Open”, “Use”, and “Close”.
+
++----------------------------+------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------+
+| Deviceparameter            | Command                      | Comment                                                                                                                                     |
++============================+==============================+=============================================================================================================================================+
+| EXCEPTION=expr             | O/U/C                        | Controls device-specified error handling. For the null device this is only EOF handling and therefore exceptions can never be invoked except|
+|                            |                              | by a READ.                                                                                                                                  |
++----------------------------+------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------+
+| [NO]FILTER[=expr]          | U                            | Controls some $X,$Y maintenance.                                                                                                            |
++----------------------------+------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------+
+| [Z]LENGTH=intexpr          | U                            | Controls the length of the virtual page.                                                                                                    |
++----------------------------+------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------+
+| [Z]WIDTH=intexpr           | U                            | Controls maximum size of a record.                                                                                                          |
++----------------------------+------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------+
+| [Z][NO]WRAP                | O/U                          | Controls handling of records longer than the maximum width.                                                                                 |
++----------------------------+------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------+
+| X=intexpr                  | U                            | Sets $X to intexpr.                                                                                                                         |
++----------------------------+------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------+
+| Y=intexpr                  | U                            | Sets $Y to intexpr.                                                                                                                         |
++----------------------------+------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------+
+
+O: Applies to the OPEN command
+
+U: Applies to the USE command
+
+C: Applies to the CLOSE command
+
+++++++++++++++++++++++++
+NULL Device Examples
+++++++++++++++++++++++++
+
+This section contains examples of null device usage.
+
+Example:
+
+.. parsed-literal::
+   GTM>do ^runrep
+   runrep;
+    zprint ^runrep
+    set dev="/dev/null"
+    set hdr="********* REPORT HEADER ************"
+    open dev use dev
+    set x="" write hdr,!,$zdate($horolog),?30,$job,!
+    for  set x=$order(^tmp($job,x)) quit:x=""  do REPORT
+    quit
+   REPORT;
+    ;large amount of code
+    quit;
+
+This program produces a report derived from the information in the global variable ^tmp. The unspecified routine REPORT may potentially contain a large amount of code. To see that the basic program functions without error, the programmer may discard the output involved in favor of watching the function. To run the program normally, the programmer simply has to change the variable dev to name another device and the routine REPORT writes to the dev device.
+
+Example:
+
+.. parsed-literal::
+   job ^X:(in="/dev/null":out="/dev/null":err="error.log")
+   JOB ^X:(IN="/dev/null":OUT="/dev/null":ERR="error.log") 
+
+This example issues a YottaDB/GT.M JOB command to execute the routine ^X in another process. This routine processes a large number of global variables and produces no output. In the example, the JOBbed process takes its input from a null device, and sends its output to a null device. If the JOBbed process encounters an error, it directs the error message to error.log.
+
+---------------------------
+Using PIPE Devices
+---------------------------
+
+A PIPE device is used to access and manipulate the input and/or output of a shell command as a YottaDB/GT.M I/O device. YottaDB/GT.M maintains I/O status variables for a PIPE device just as it does for other devices. An OPEN of the device starts a sub-process. Data written to the device by the M program is available to the process on its STDIN. The M program can read the STDOUT and STDERR of the sub-process. This facilitates output only applications, such as printing directly from a YottaDB/GT.M program to an lp command; input only applications, such as reading the output of a command such as ps; and co-processing applications, such as using iconv to convert data from one encoding to another.
+
+A PIPE is akin to a FIFO device. Both FIFO and PIPE map YottaDB/GT.M devices to UNIX pipes, the conceptual difference being that whereas a FIFO device specifies a named pipe, but does not specify the process on the other end of the pipe, a PIPE device specifies a process to communicate with, but the pipes are unnamed. Specifically, an OPEN of a PIPE creates a subprocess with which the YottaDB/GT.M process communicates.
+
+A PIPE device is specified with a "PIPE" value for mnemonicspace on an OPEN command. 
+
+.. note::
+   YottaDB/GT.M ignores the mnemonicspace specification on an OPEN of a previously OPEN device and leaves the existing device with its original characteristics.
+
+++++++++++++++++++++++++
+Modes of PIPE Operation
+++++++++++++++++++++++++
+
 
