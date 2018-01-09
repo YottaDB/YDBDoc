@@ -21,6 +21,7 @@ Welcome to The M Programmer's Guide!
    functions
    isv
    ioproc
+   utility
 
 
 Indices and tables
