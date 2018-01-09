@@ -2481,6 +2481,1689 @@ Example:
    GTM>open filename:(readonly:recordsize=1048576) 
    GTM>
 
-This example open the file foo.txt with read permission.
+This example opens the file foo.txt with read permission.
+
+**RECORDSIZE**
+
+RECORDSIZE=intexpr Applies to: SD FIFO PIPE
+
+Overrides the default record size for a disk.
+
+RECORDSIZE specifies an initial WIDTH. Note because RECORDSIZE is in bytes that in UTF-8 mode it produces a WIDTH that assumes one-byte characters.
+
+The RECORDSIZE of a fixed length record for a YottaDB/GT.M sequential disk device is always specified in bytes, rather than characters.
+
+For all UTF-16 CHSET values, RECORDSIZE must be even and PAD characters each occupy two bytes in the record.
+
+The maximum size of intexpr is 1,048,576 bytes. YottaDB/GT.M produces an error if you specify a value greater than 1,048,576.
+
+When a Unicode CHSET is in use, YottaDB/GT.M treats RECORDSIZE as a byte limit at which to wrap or truncate output depending on [Z][NO]WRAP. For any Unicode character set, GT.M ignores RECORDSIZE for a device which is already open if any I/O has been done.
+
+If the character set is not UTF-16, UTF-16LE, UTF-16BE, the default RECORDSIZE is 32K-1bytes.
+
+If the character set is UTF-16, UTF-16LE or UTF16-BE, the RECORDSIZE must always be in multiples of 2. For these character sets, the default RECORDIZE is 32K-4 bytes.
+
+For all UTF-16 CHSET values, RECORDSIZE must be even and PAD characters each occupy two bytes in the record.
+
+**REWIND**
+
+REWIND Applies to: SD
+
+REWIND positions the file pointer of a sequential disk.
+
+When $PRINCIPAL identifies a device that supports REWIND, the REWIND or INREWIND device parameters perform a REWIND of the input and OUTREWIND performs a REWIND of the output.
+
+By default, OPEN does not REWIND.
+
+Example: 
+
+.. parsed-literal::
+   OPEN "test40.txt":(REWIND:RECORDSIZE=70:NOWRAP) 
+
+This example opens file test40.txt and places the file pointer at the beginning of the file. 
+
+**SEEK=strexpr**
+
+SEEK Applies to: SD
+
+Positions the current file pointer to the location specified in strexpr. The format of strexpr is a string of the form "[+|-]integer" where unsigned value specifies an offset from the beginning of the file, and an explicitly signed value specifies an offset relative to the current file position. For STREAM or VARIABLE format, the positive intexpr after any sign is a byte offset, while for a FIXED format, it is a record offset. In order to deal with the possible presence of a Byte Order Marker (BOM), SEEK for a FIXED format file written in a UTF character set must follow at least one prior READ since the device was created.
+
+.. note::
+   If an APPEND is combined with a SEEK deviceparameter the APPEND is done first - regardless of deviceparameter order.
+
+Example:
+
+.. parsed-literal::
+   GTM>zprint ^seekdemo
+   seekdemo
+     new x,p
+     set p="seekfixed"
+     open p:(newversion:fixed:recordsize=60)
+     use p
+     ; create file with 9 records of length 60 bytes each
+     ; number from 0 to correspond to record offset
+                
+     for i=0:1:8 write $justify(i\_\" - [\-05\-\|-10-\|-15-\|-20-\|-25-\|-30-\|-35-\|-40-\|-45-\|-50-\|-55-\|\",60)
+     use p:rewind
+     for i=0:1:8 read x set zk=$zkey use $p write "x= ",x," $zkey= ",zk,! use p
+     close p
+     write !!,"** OPEN with FIXED:RECORDSIZE=60:seek=""5""",!
+     open p:(fixed:recordsize=60:seek="5")
+     use p
+     read x set ZKEY=$zkey
+     ;expect: $ZKEY= 6,0
+     use $p write "x= ",x," $zkey= ",ZKEY,!
+     write !,"** use with SEEK=""-3""",!
+     use p:seek="-3"
+     read x set ZKEY=$zkey
+     ;expect: $ZKEY= 4,0
+     use $p write "x= ",x," $zkey= ",ZKEY,!
+     write !,"** use with SEEK=""-1"" to read from the same record. read x#20 to read a partial record",!
+     use p:seek="-1"
+     read x#20 set ZKEY=$zkey
+     ;expect: $ZKEY= 3,20
+     use $p write "x= ",x," $zkey= ",ZKEY,!
+     write !,"** read x#40 to finish reading the record",!
+     use p
+     read x#40 set ZKEY=$zkey
+     ;expect: $ZKEY= 4,0
+     use $p write "x= ",x," $zkey= ",ZKEY,!
+     write !,"** CLOSE NODESTROY and reOPEN with no deviceparameters",!
+     close p:nodestroy
+     open p
+     use p
+     read x set ZKEY=$zkey
+     ;expect: $ZKEY= 5,0
+     use $p write "x= ",x," $zkey= ",ZKEY,!
+     write !,"** CLOSE NODESTROY and reOPEN with SEEK=""+2""",!
+     close p:nodestroy
+     open p:seek="+2"
+     use p
+     read x set ZKEY=$zkey
+     ;expect: $ZKEY= 8,0
+     use $p write "x= ",x," $zkey= ",ZKEY,!
+     write !,"** CLOSE NODESTROY and reOPEN with M:SEEK=""+3""",!
+     close p:nodestroy
+     open p:(M:seek="+3")
+     use p
+     read x set ZKEY=$zkey
+     ;expect: $ZKEY= 4,0
+      use $p write "x= ",x," $zkey= ",ZKEY,!
+     write !,"** CLOSE NODESTROY and reOPEN with APPEND:SEEK=""-1""",!
+     close p:nodestroy
+     open p:(append:seek="-1")
+     use p
+     read x set ZKEY=$zkey
+     ;expect: $ZKEY= 9,0
+     use $p write "x= ",x," $zkey= ",ZKEY,!
+     close p
+     write !,"** CLOSE DESTROY and OPEN non-fixed with SEEK=""120"" and read 60 bytes",!
+      open p:seek="120"
+     use p
+     read x#60 set ZKEY=$zkey
+     ;expect: $ZKEY= 180
+     use $p write "x= ",x," $zkey= ",ZKEY,!
+     write !,"** CLOSE NODESTROY and reOPEN with append:SEEK=""-60"" and read last 60 bytes",!
+     close p:nodestroy
+     open p:(append:seek="-60")
+     use p
+     read x#60 set ZKEY=$zkey
+     ;expect: $ZKEY= 540
+     use $p write "x= ",x," $zkey= \",ZKEY,!
+     close p
+     quit
+                                                                                                                                                       
+                                                                                                                                                       
+                                                                                                                                                     
+   GTM>do ^seekdemo
+   x= 0 - [-05-\|-10-\|-15-\|-20-\|-25-\|-30-\|-35-\|-40-\|-45-\|-50-\|-55-\| $zkey= 1,0
+   x= 1 - [-05-\|-10-\|-15-\|-20-\|-25-\|-30-\|-35-\|-40-\|-45-\|-50-\|-55-\| $zkey= 2,0
+   x= 2 - [-05-\|-10-\|-15-\|-20-\|-25-\|-30-\|-35-\|-40-\|-45-\|-50-\|-55-\| $zkey= 3,0
+   x= 3 - [-05-\|-10-\|-15-\|-20-\|-25-\|-30-\|-35-\|-40-\|-45-\|-50-\|-55-\| $zkey= 4,0
+   x= 4 - [-05-\|-10-\|-15-\|-20-\|-25-\|-30-\|-35-\|-40-\|-45-\|-50-\|-55-\| $zkey= 5,0
+   x= 5 - [-05-\|-10-\|-15-\|-20-\|-25-\|-30-\|-35-\|-40-\|-45-\|-50-\|-55-\| $zkey= 6,0
+   x= 6 - [-05-\|-10-\|-15-\|-20-\|-25-\|-30-\|-35-\|-40-\|-45-\|-50-\|-55-\| $zkey= 7,0
+   x= 7 - [-05-\|-10-\|-15-\|-20-\|-25-\|-30-\|-35-\|-40-\|-45-\|-50-\|-55-\| $zkey= 8,0
+   x= 8 - [-05-\|-10-\|-15-\|-20-\|-25-\|-30-\|-35-\|-40-\|-45-\|-50-\|-55-\| $zkey= 9,0
+   ** OPEN with FIXED:RECORDSIZE=60:seek="5"
+   x= 5 - [-05-\|-10-\|-15-\|-20-\|-25-\|-30-\|-35-\|-40-\|-45-\|-50-\|-55-\| $zkey= 6,0
+   ** use with SEEK="-3"
+   x= 3 - [-05-\|-10-\|-15-\|-20-\|-25-\|-30-\|-35-\|-40-\|-45-\|-50-\|-55-\| $zkey= 4,0
+   ** use with SEEK="-1" to read from the same record. read x#20 to read a partial record
+   x= 3 - [-05-\|-10-\|-15-\| $zkey= 3,20
+   ** read x#40 to finish reading the record
+   x= -20-\|-25-\|-30-\|-35-\|-40-\|-45-\|-50-\|-55-\| $zkey= 4,0
+   ** CLOSE NODESTROY and reOPEN with no deviceparameters
+   x= 4 - [-05-\|-10-\|-15-\|-20-\|-25-\|-30-\|-35-\|-40-\|-45-\|-50-\|-55-\| $zkey= 5,0
+   ** CLOSE NODESTROY and reOPEN with SEEK="+2"
+   x= 7 - [-05-\|-10-\|-15-\|-20-\|-25-\|-30-\|-35-\|-40-\|-45-\|-50-\|-55-\| $zkey= 8,0
+   ** CLOSE NODESTROY and reOPEN with M:SEEK="+3"
+   x= 3 - [-05-\|-10-\|-15-\|-20-\|-25-\|-30-\|-35-\|-40-\|-45-\|-50-\|-55-\| $zkey= 4,0
+   ** CLOSE NODESTROY and reOPEN with APPEND:SEEK="-1"
+   x= 8 - [-05-\|-10-\|-15-\|-20-\|-25-\|-30-\|-35-\|-40-\|-45-\|-50-\|-55-\| $zkey= 9,0
+   ** CLOSE DESTROY and OPEN non-fixed with SEEK="120" and read 60 bytes
+   x= 2 - [-05-\|-10-\|-15-\|-20-\|-25-\|-30-\|-35-\|-40-\|-45-\|-50-\|-55-\| $zkey= 180
+   ** CLOSE NODESTROY and reOPEN with append:SEEK="-60" and read last 60 bytes
+   x= 8 - [-05-\|-10-\|-15-\|-20-\|-25-\|-30-\|-35-\|-40-\|-45-\|-50-\|-55-\| $zkey= 540
+                                                                                                                                                       
+   GTM>
+
+This program demonstrates the use of the SEEK deviceparameter on OPEN and USE and reOPEN after CLOSE NODESTROY. This test is shown as an M program which may be executed, followed by the expected test output. First the test creates the file called "seekfixed" with 9, 60-byte records and then REWINDs and reads each record and outputs the record followed by $ZKEY which is a record,byte pair. Note that the records are numbered from 0 to match the SEEK record offset. Later in the test the same file is OPENed VARIABLE so $ZKEY will be a byte offset in that case. Details are given after the file output.
+
+The first OPEN has deviceparameters set to (FIXED:RECORDSIZE=60:SEEK="5") which SEEKs to record offset 5 or physical record 6. Note, FIXED length records and RECORDSIZE remain in effect after a CLOSE NODESTROY unless changed on a reOPEN. Record offset 5 is read and output along with $ZKEY= 6,0 which points to the beginning of record offset 6. Next, a USE with SEEK="-3" is done to move back 3 records to read and output record followed by $ZKEY= 4,0. A USE with SEEK="-1" moves back one record to the beginning of the record just processed. A partial read of 20 bytes is done to show a record offset 3 with a byte offset of 20 or $ZKEY= 3,20. A read of 40 bytes is then done to finish processing that record for a $ZKEY= 4,0. Next a sequence of CLOSE NODESTROY and reOPENs are done. After the first CLOSE NODESTROY a reOPEN is done with no deviceparameters. The state of the file device, including file position, is restored and a read is done of record offset 4 which is output followed by $ZKEY= 5,0. The file device is then CLOSEd NODESTROY and a reOPEN is done with the only deviceparameter being SEEK="+2". The state of the file device is restored and a relative SEEK is done 2 records later in the file with a read which outputs record offset 7 followed by $ZKEY= 8,0. The file device is then CLOSEd NODESTORY and a reOPEN is done with deviceparameters (M:SEEK="+3"). The file device is OPENed at the beginning of the file due to the presence of a deviceparameter (M) other than SEEK on reOPEN. A relative SEEK forward of 3 records is then done from the beginning of the file and record offset 3 is read and output followed by $ZKEY= 4,0. The file device is then CLOSEd NODESTORY and a reOPEN is done with the (APPEND:SEEK="-1"). APPEND moves the file position to the EOF and then the SEEK="-1" moves the file position to the beginning of record 8 - the final record in the file. Note, the APPEND is applied prior to the SEEK - regardless of deviceparameter order. The file device is then CLOSEd (DESTROY is the default) and OPENed with the only deviceparameter being absolute SEEK="120" to byte offset 120. This processing is NOFIXED by default and a read of x#60 is done and output followed by $ZKEY= 180. The output is the same as record 2 in FIXED format. Finally, the file device is then CLOSEd NODESTROY and a reOPEN is done with deviceparameters (APPEND:SEEK="-60"). This will move the file position to the EOF and go back 60 bytes which is the starting offset to the final record in the file. Another read of x#60 and is done and output followed by $ZKEY= 540 - which is the size of the file. 
+
+**SHELL**
+
+SHELL Applies to: PIPE
+
+The SHELL deviceparameter specifies the shell for the new process. By default the newly created process uses the shell specified by the $SHELL environment variable, otherwise, if the environment variable SHELL is undefined the process uses /bin/sh.
+
+**STDERR**
+
+STDERR Applies to: PIPE
+
+The STDERR deviceparameter specifies that the stderr output from the created process goes to a PIPE device with the name of the STDERR value. This PIPE device acts as a restricted device that can appear only as the argument to USE, READ and CLOSE commands. It is implicitly READONLY and an attempt to WRITE to it triggers an error. If it has not previously acted as the argument to an explicit CLOSE command, the CLOSE of the PIPE device implicitly closes the the STDERR device.
+
+**STREAM**
+
+[NO]STREAM Applies to: SD FIFO PIPE
+
+STREAM and VARIABLE are semantically equivalent unless WRAP is disabled. As long as records do not exceed the WIDTH, they are also equivalent.
+
+When WRAP is disabled and a WRITE exceeds the WIDTH, VARIABLE format truncates the line at the WIDTH, however in STREAM format, each WRITE argument is output without truncation or line terminator and the total record can be of arbitrary length.
+
+For STREAM or VARIABLE record format files, a READ returns when it encounters an EOL, or has read #length characters for a READ #(fixed length READ), or WIDTH characters if #length is not specified, whichever occurs first.
+
+By default, records are VARIABLE, NOSTREAM.
+
+Example: 
+
+.. parsed-literal::
+   set sd="foo.txt"
+   open sd:(newversion:stream)
+   use sd:(width=20:nowrap)
+   for i=1:1:10 write " the quick brown fox jumped over the lazy dog ",$x,!
+   use sd:(rewind:width=100)
+   for i=1:1 use sd read x quit:$zeof use $principal write !,i,?5,x
+   close sd
+   quit 
+
+The output of this example is as follows: 
+
+.. parsed-literal::
+   1     the quick brown fox jumped over the lazy dog 46
+   2     the quick brown fox jumped over the lazy dog 46
+   3     the quick brown fox jumped over the lazy dog 46
+   4     the quick brown fox jumped over the lazy dog 46
+   5     the quick brown fox jumped over the lazy dog 46
+   6     the quick brown fox jumped over the lazy dog 46
+   7     the quick brown fox jumped over the lazy dog 46
+   8     the quick brown fox jumped over the lazy dog 46
+   9     the quick brown fox jumped over the lazy dog 46
+   10    the quick brown fox jumped over the lazy dog 46
+
+If you change the FORMAT to VARIABLE, the same example produces the following output. 
+
+.. parsed-literal::
+   1     the quick brown fox 
+   2     the quick brown fox 
+   3     the quick brown fox 
+   4     the quick brown fox 
+   5     the quick brown fox 
+   6     the quick brown fox 
+   7     the quick brown fox 
+   8     the quick brown fox 
+   9     the quick brown fox 
+   10    the quick brown fox 
+
+If you remove the "!" format from the WRITE sequence for VARIABLE, the same example produces the following output: 
+
+.. parsed-literal::
+   1     the quick brown fox 
+
+With STREAM, the same example produces the following output: 
+
+.. parsed-literal::
+   1     the quick brown fox jumped over the lazy dog 46 the quick brown fox jumped over the lazy dog 94 the
+   2     quick brown fox jumped over the lazy dog 142 the quick brown fox jumped over the lazy dog 191 the q
+   3    uick brown fox jumped over the lazy dog 240 the quick brown fox jumped over the lazy dog 289 the qui
+   4    ck brown fox jumped over the lazy dog 338 the quick brown fox jumped over the lazy dog 387 the quick
+   5     brown fox jumped over the lazy dog 436 the quick brown fox jumped over the lazy dog 485
+
+**SYSTEM**
+
+SYSTEM=expr Applies to: SOC(LOCAL) SD FIFO
+
+This deviceparameter is a synonym for OWNER that is provided in the UNIX version of YottaDB/GT.M for compatibility with OpenVMS applications.
+
+Example: 
+
+.. parsed-literal::
+   GTM> set perm="rwx" 
+   GTM>OPEN "test52.txt":(NEWVERSION:SYSTEM="r":GROUP=perm:WORLD=perm) 
+   GTM>ZSYSTEM "ls -la test52.txt"
+
+.. parsed-literal::
+   -r--rwxrwx 1 user group 0 Aug 20 18:36 test52.txt
+   GTM> 
+
+This example opens file test52.txt and sets read access for the owner, while others have complete access. 
+
+**TRUNCATE**
+
+[NO]TRUNCATE Applies to: SD
+
+Truncates the file destroying all data beyond the current file pointer. If APPEND is also specified, the file pointer will be positioned at the end of the file even if TRUNCATE is before APPEND in the list of device parameters.
+
+TRUNCATE on a USE $PRINCIPAL command works on a stdout device when the device supports the action.
+
+**UIC**
+
+UIC=expr Applies to: SOC(LOCAL) SD FIFO
+
+Specifies the owner and group for the file.
+
+Specifies the group that has access to the file. The format of the string is "o,g" where g is a decimal number representing the group portion of the UIC and o is a decimal number representing the owner portion. The super-user can set the file UIC to any value. See the man page for the chown() system call for the rules for regular users since they vary by platform and system configuration. 
+
+**VARIABLE**
+
+VARIABLE Applies to: SD FIFO PIPE
+
+Specifies the VARIABLE record length format for sequential disk files.
+
+By default, records have variable length format.
+
+For more information, refer to “STREAM”.
+
+**WORLD**
+
+WORLD=expr Applies to: SOC(LOCAL) SD FIFO
+
+Specifies access permissions for users other than the owner who are not in the group specified for a file. This category of users is usually referred to as other in UNIX. The expression is a character string evaluating to null or to any combination of the letters RWX, indicating respectively Read, Write, and eXecute access. When any one of these deviceparameters appear on an OPEN of an existing file, any user category that is not explicitly specified remains unchanged.
+
+To modify file security, the user who issues the OPEN must have ownership.
+
+By default, OPEN and CLOSE do not modify the permissions on an existing file. Unless otherwise specified, when OPEN creates a new file, it establishes security using standard defaulting rules.
+
+Example: 
+
+.. parsed-literal::
+   OPEN "test51.txt":(NEWVERSION:WORLD="rw")
+
+This example opens file test51.txt and specifies Read Write permission for users not in owner's group. 
+
+**WRAP**
+
+[NO]WRAP Applies to: TRM SD NULL FIFO PIPE SOC
+
+Enables or disables automatic record termination. When the current record size ($X) reaches the maximum WIDTH and the device has WRAP enabled, YottaDB/GT.M starts a new record, as if the routine had issued a WRITE ! Command. When reading, WRAP only determines whether $X remains within the range of zero to WIDTH.
+
+Note that WRAP is enabled by default for SD, NULL, FIFO, PIPE and SOCKET. For TRM, WRAP is enabled by default if the terminfo variable auto_right_margin (capname "am") is set.
+
+NOWRAP causes YottaDB/GT.M to require a WRITE ! to terminate the record. NOWRAP allows $X to become greater than the device WIDTH for terminals and null devices.
+
+The combination of STREAM and NOWRAP on disk files allows you to write data of arbitrary length without truncation. Without the STREAM option, the WRAP option determines the action taken when the record length exceeds the device WIDTH. NOWRAP causes YottaDB/GT.M to truncate the record, while WRAP causes YottaDB/GT.M to insert a format control character except for FIXED format.
+
+NOTE: FIFO, SD and SOCKET devices opened as $PRINCIPAL (at process start-up) default to NOWRAP and for SD and FIFO devices, STREAM.
+
+**WRITEONLY**
+
+[NO]WRITEONLY Applies to: PIPE
+
+The WRITEONLY deviceparameter specifies that the PIPE acts only to send its output to the created process. Any attempt to READ from such a PIPE triggers an error. Note that when you open a PIPE with both STDERR and WRITEONLY you can still READ from the STDERR device.
+
+**ZBFSIZE**
+
+ZBFSIZE Applies to: SOC
+
+Allocates a buffer used by YottaDB/GT.M when reading from a socket. The ZBFSIZE deviceparameter should be at least as big as the largest message expected.
+
+By default, the size of ZBFSIZE is 1024 and the maximum it can be is 1048576.
+
+**ZDELAY**
+
+Z[NO]DELAY Applies to: SOC(TCP)
+
+Controls buffering of data packets by the system TCP stack using the TCP_NODELAY option to the setsockopt system call. This behavior is sometimes known as the Nagle algorithm. The default is ZDELAY. This delays sending additional packets until either an acknowledgment of previous packets is received or an interval passes. If several packets are sent from one end of a connection before the other end responds, setting ZNODELAY may be desirable though at the cost of additional packets being transmitted over the network. ZNODELAY must be fully spelled out.
+
+LOCAL sockets ignore the ZDELAY deviceparameter.
+
+Example: 
+
+.. parsed-literal::
+   open tcpdev:(LISTEN=portno\_":TCP":attach="server":zbfsize=2048:zibfsize=1024):timeout:"SOCKET"
+
+This example opens the socket device tcpdev and allocates a buffer size of 2048 bytes. 
+
+**ZFF**
+
+Z[NO]FF=expr Applied to: SOC
+
+expr specifies a string of characters, typically in $CHAR() format to send to socket device, whenever a routine issues a WRITE #. When no string is specified or when ZFF="", then no characters are sent. The default in YottaDB/GT.M is ZNOFF.
+
+**ZIBFSIZE**
+
+ZIBFSIZE Applies to: SOC
+
+Sets the buffer size used by the network software (setsockopt SO_RCVBUF).
+
+The default and the maximum values depend on the platform and/or system parameters.
+
+Note that LOCAL sockets ignore the ZIBFSIZE deviceparameter. 
+
+**OPEN Deviceparameter Table**
+
++-----------------------------------------------------+----------+------------+---------+----------+------------+---------------+
+| OPEN Deviceparameter                                | TRM      | SD         | FIFO    | PIPE     | NULL       | SOC           |
++=====================================================+==========+============+=========+==========+============+===============+
+| APPEND                                              |          | X          |         |          |            |               |
++-----------------------------------------------------+----------+------------+---------+----------+------------+---------------+
+| ATTACH=expr                                         |          |            |         |          |            | X             |
++-----------------------------------------------------+----------+------------+---------+----------+------------+---------------+
+| CHSET=encoding                                      | X        | X          | X       | X        | X          | X             |
++-----------------------------------------------------+----------+------------+---------+----------+------------+---------------+
+| COMMAND=expr                                        |          |            |         | X        |            |               |
++-----------------------------------------------------+----------+------------+---------+----------+------------+---------------+
+| CONNECT=expr                                        |          |            |         |          |            | X             |
++-----------------------------------------------------+----------+------------+---------+----------+------------+---------------+
+| [NO]DELIMITER                                       |          |            |         |          |            | X             |
++-----------------------------------------------------+----------+------------+---------+----------+------------+---------------+
+| [NO]EMPT[ERM]                                       | X        |            |         |          |            |               |
++-----------------------------------------------------+----------+------------+---------+----------+------------+---------------+
+| EXCEPTION=expr                                      | X        | X          | X       | X        | X          | X             |
++-----------------------------------------------------+----------+------------+---------+----------+------------+---------------+
+| FIFO                                                |          |            | X       |          |            |               |
++-----------------------------------------------------+----------+------------+---------+----------+------------+---------------+
+| [NO]FIXED                                           |          | X          | X       | X        |            |               |
++-----------------------------------------------------+----------+------------+---------+----------+------------+---------------+
+| [NO]FOLLOW                                          |          | X          |         |          |            |               |
++-----------------------------------------------------+----------+------------+---------+----------+------------+---------------+
+| GROUP=expr                                          |          | X          | X       |          |            |               |
++-----------------------------------------------------+----------+------------+---------+----------+------------+---------------+
+| ICHSET=encoding                                     | X        | X          | X       | X        | X          | X             |
++-----------------------------------------------------+----------+------------+---------+----------+------------+---------------+
+| IKEY                                                |          | X          | X       | X        |            |               |
++-----------------------------------------------------+----------+------------+---------+----------+------------+---------------+
+| INDEPENDENT                                         |          |            |         | X        |            |               |
++-----------------------------------------------------+----------+------------+---------+----------+------------+---------------+
+| IOERROR=expr                                        |          |            |         |          |            | X             |
++-----------------------------------------------------+----------+------------+---------+----------+------------+---------------+
+| KEY                                                 |          | X          | X       | X        |            |               |
++-----------------------------------------------------+----------+------------+---------+----------+------------+---------------+
+| LISTEN=expr                                         |          |            |         |          |            | X             |
++-----------------------------------------------------+----------+------------+---------+----------+------------+---------------+
+| [NO]NEWVERSION                                      |          | X          | X       |          |            |               |
++-----------------------------------------------------+----------+------------+---------+----------+------------+---------------+
+| OCHSET=encoding                                     | X        | X          | X       | X        | X          | X             |
++-----------------------------------------------------+----------+------------+---------+----------+------------+---------------+
+| OKEY                                                |          | X          | X       | X        |            |               |
++-----------------------------------------------------+----------+------------+---------+----------+------------+---------------+
+| OWNER=expr                                          |          | X          | X       |          |            |               |
++-----------------------------------------------------+----------+------------+---------+----------+------------+---------------+
+| PARSE                                               |          |            |         | X        |            |               |
++-----------------------------------------------------+----------+------------+---------+----------+------------+---------------+
+| [NO]READONLY                                        |          | X          | X       | X        |            |               |
++-----------------------------------------------------+----------+------------+---------+----------+------------+---------------+
+| RECORDSIZE=intexpr                                  |          | X          | X       | X        |            |               |
++-----------------------------------------------------+----------+------------+---------+----------+------------+---------------+
+| SEEK=strexpr                                        |          | X          |         |          |            |               |
++-----------------------------------------------------+----------+------------+---------+----------+------------+---------------+
+| SHELL=expr                                          |          |            |         | X        |            |               |
++-----------------------------------------------------+----------+------------+---------+----------+------------+---------------+
+| STDERR=expr                                         |          |            |         | X        |            |               |
++-----------------------------------------------------+----------+------------+---------+----------+------------+---------------+
+| [NO]STREAM                                          |          | X          | X       | X        |            |               |
++-----------------------------------------------------+----------+------------+---------+----------+------------+---------------+
+| SYSTEM=expr                                         |          | X          | X       |          |            |               |
++-----------------------------------------------------+----------+------------+---------+----------+------------+---------------+
+| [NO]TRUNCATE                                        |          | X          | X       |          |            |               |
++-----------------------------------------------------+----------+------------+---------+----------+------------+---------------+
+| UIC=expr                                            |          | X          | X       |          |            |               |
++-----------------------------------------------------+----------+------------+---------+----------+------------+---------------+
+| VARIABLE                                            |          | X          | X       | X        |            |               |
++-----------------------------------------------------+----------+------------+---------+----------+------------+---------------+
+| WORLD=expr                                          |          | X          | X       |          |            |               |
++-----------------------------------------------------+----------+------------+---------+----------+------------+---------------+
+| [NO]WRAP                                            | X        | X          | X       | X        | X          | X             |
++-----------------------------------------------------+----------+------------+---------+----------+------------+---------------+
+| [NO]WRITEONLY                                       |          | X          | X       | X        |            |               |
++-----------------------------------------------------+----------+------------+---------+----------+------------+---------------+
+| ZBFSIZE                                             |          |            |         |          |            | X             |
++-----------------------------------------------------+----------+------------+---------+----------+------------+---------------+
+| Z[NO]DELAY                                          |          |            |         |          |            | X             |
++-----------------------------------------------------+----------+------------+---------+----------+------------+---------------+
+| Z[NO]FF                                             |          |            |         |          |            | X             |
++-----------------------------------------------------+----------+------------+---------+----------+------------+---------------+
+| ZIBFSIZE                                            |          |            |         |          |            | X             |
++-----------------------------------------------------+----------+------------+---------+----------+------------+---------------+
+
+TRM: Valid for terminals and printers
+
+SD: Valid for sequential disk files
+
+FIFO: Valid for FIFOs
+
+NULL: Valid for null devices
+
+PIPE: Valid for PIPEs
+
+SOC: Valid for Socket devices
+
++++
+USE
++++
+
+The USE command selects the current device for READs (input) and WRITEs (output).
+
+The format of the USE command is:
+
+.. parsed-literal::
+   U[SE][:tvexpr] expr[:(keyword[=expr][:...])][,...]
+
+* The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB/GT.M executes the command.
+* The required expression specifies the device to make the current device.
+* A USE that selects a device not currently OPENed by the process causes a run-time error.
+* The optional keywords specify deviceparameters that control device behavior; some deviceparameters take arguments delimited by an equal sign (=). If there is only one deviceparameter, the surrounding parentheses are optional.
+* An indirection operator and an expression atom evaluating to a list of one or more USE arguments form a legal argument for a USE.
+
+The intrinsic special variable $IO identifies the current device, so GT.M directs all READs and WRITEs to $IO. When a YottaDB/GT.M image starts, $PRINCIPAL is implicitly OPENed and USEd. Once the YottaDB/GT.M image USEs a device, $IO holds the name of that device until the next USE command.
+
+A USE command modifies the device in accordance with the deviceparameters that apply to the device type and ignores those that do not apply. Characteristics set with USE deviceparameters persist until another USE for the same device with the corresponding deviceparameter. Characteristics persist through USEs of other devices and, except for SD, FIFO, and PIPE, through a subsequent CLOSE and re-OPEN.
+
+Example:
+
+.. parsed-literal::
+   USE $P:(X=0:Y=$Y-1:NOECHO)
+
+This example USEs the principal device. If that device is a terminal, the deviceparameters turn off echo and position the cursor to the beginning of the previous line.
+
+~~~~~~~~~~~~~~~~~~~~~
+USE Deviceparameters
+~~~~~~~~~~~~~~~~~~~~~
+
+**ATTACH**
+
+ATTACH=expr Applies to: SOC
+
+expr specifies the handle for a socket in the socketpool. ATTACH looks up expr in the socketpool's collection of sockets and brings the one found to the current SOCKET device. If an ATTACH operation is successful, the attached socket becomes the current socket for the device.
+
+ATTACH is not compatible with any other device parameters in the USE command.A socket can move from one device to another using DETACH/ATTACH.
+
+.. note::
+   A socket does not carry [I|O]CHSET with it while being moved. Such a socket uses the [I|O]CHSET of the device it is ATTACHed to. If there is input still buffered, this may cause unintentional consequences in the application if [I|O]CHSET changes. YottaDB/GT.M does not detect (or report) a change in [I|O]CHSET due to DETACH/ATTACH.
+
+For information on using the ATTACH with OPEN, refer to “ATTACH” in the OPEN Deviceparameters section.
+
+**CANONICAL**
+
+[NO]CANONICAL Applies to: TRM
+
+Enables or disables canonical input as controlled by the ICANON terminal attribute. See the documentation on your platform for details, but in general this would be erase and kill edit functions, and lines delimited by NL (usually <LF>), EOF (usually ^D), and EOL (usually not defined).
+
+By default, canonical input is enabled (that is [NO]CANONICAL is the default).
+
+**CENABLE**
+
+[NO]CENABLE Applies to: TRM
+
+Enables or disables the ability to force YottaDB/GT.M into Direct Mode by entering <CTRL-C> at $PRINCIPAL.
+
+If CENABLE is set, <CTRL-C> interrupts process execution. For more information on interrupt handling, refer to “Interrupt Handling”.
+
+By default, CENABLE is set. If CTRAP contains $C(3), CENABLE is disabled.
+
+Example: 
+
+.. parsed-literal::
+   use $principal:(nocenable:ctrap="":exception="") 
+
+**CLEARSCREEN**
+
+CLEARSCREEN Applies to: TRM
+
+Clears the terminal screen from the present cursor position to the bottom of the screen. The CLEARSCREEN deviceparameter does not change the cursor position or the $X and $Y variables.
+
+Example:
+
+.. parsed-literal::
+   U $P:(X=0:Y=0:CLEAR)
+
+This example positions the cursor to "home" in the upper left corner of a VDT and clears the entire current screen "page."
+
+**CONNECT**
+
+CONNECT=expr Applies to: SOC
+
+Enables a client connection with a server, which is located by the information provided by expr. A new socket is allocated for the client connection and is made the current socket for the device, if the operation is successful.
+
+expr specifies the protocol and the protocol-specific information. Currently, YottaDB/GT.M supports TCP/IP and LOCAL (also known as UNIX domain) socket protocols.
+
+For more information, refer to “CONNECT”.
+
+.. note::
+   CONNECT is not compatible with LISTEN.
+
+Although CONNECT can be used with USE command, YottaDB/FIS recommends not to use it that way, because unlike the OPEN command, there is no way to specify a timeout to the USE command. CONNECT in the USE command take a default timeout value of 0.
+
+Example:
+
+Refer to the "CONNECT" examples in “Examples of OPEN”.
+
+**CONVERT**
+
+[NO]CONVERT Applies to: TRM
+
+Enables or disables YottaDB/GT.M from converting lowercase input to uppercase during READs.
+
+By default, the terminal device driver operates NOCONVERT.
+
+Example: 
+
+.. parsed-literal::
+   use $principal:(convert) 
+   READ X
+
+This example converts all lowercase to uppercase during READ X. 
+
+**CTRAP**
+
+CTRAP=expr Applies to: TRM
+
+Establishes the <CTRL> characters in the expression as trap characters for the current device. When YottaDB/GT.M receives a trap character in the input from a device, YottaDB/GT.M issues a run-time exception. The device does not have to be the current device, that is $IO.
+
+The <CTRL> characters are ASCII 0 though 31.
+
+For example, the command U $P:CTRAP=$C(26,30,7,19) sets a trap for the ASCII characters <SUB>, <RS>, <BEL> and <DC3>.
+
+Specifying CTRAP completely replaces the previous CTRAP list. Setting CTRAP to the null string ("") disables character trapping.
+
+A trap character enabled by CTRAP produces one of the following actions:
+
+* If an EXCEPTION deviceparameter has been issued for the device, the process executes the EXCEPTION argument.
+* Otherwise, if $ETRAP is not the empty string, execute $ETRAP.
+* Otherwise, if $ZTRAP is not the empty string, the process executes $ZTRAP.
+* Otherwise, the YottaDB/GT.M image terminates.
+
+For more information on error handling, refer to Chapter 13: “Error Processing”.
+
+When CTRAP includes <CTRL-C>, [NO]CENABLE has no effect. CTRAPping <CTRL-C> also takes precedence over CENABLE.
+
+**DELIMITER**
+
+[NO]DELIMITER Applies to: SOC
+
+DELIMITER establishes or replaces the list of delimiters used by the current socket. The default is NODELIMITER.
+
+expr must be a string of the following format: 
+
+* ':' is used to separate delimiters (it is the delimiter for delimiters).
+* '/' serves as an escape character.
+
+.. note::
+   expr "ab:/:://:bc" is interpreted as four delimiters, which are "ab", ":", "/", and "bc". One socket can have 0-64 delimiters and each delimiter can contain 1-64 characters.
+
+Example:
+
+See "Socket (server.m)" example. 
+
+**DETACH**
+
+DETACH=expr Applies to: SOC
+
+Removes the socket identified by expr from the current socket device, without affecting any existing connection of that socket. The removed socket is placed in the socketpool and may be attached to another socket device. If the socket being removed is the current socket, then YottaDB/GT.M does the following:
+
+* The socket ATTACHed prior to the removed socket, is made current, if one such exists.
+* The socket ATTACHed after the removed socket, is made current, if the removed one was the first socket.
+* $PRINCIPAL is made the current device ($IO), if the removed socket was the only one in the current socket device.
+
+.. note::
+   A socket can move from one device to another using DETACH/ATTACH. A socket does not carry [I|O]CHSET with it while being moved. Such a socket uses the [I|O]CHSET of the device it is ATTACHed to. If there is input still buffered, this may cause unintentional consequences in the application if [I|O]CHSET changes. YottaDB/GT.M does not detect (or report) a change in [I|O]CHSET due to DETACH/ATTACH.
+
+Example:
+
+.. parsed-literal::
+   GTM>set tcp="seerv" open tcp:(listen="6321:TCP":attach="serv")::"SOCKET"
+   GTM>zshow "D"
+   /dev/pts/9 OPEN TERMINAL NOPAST NOESCA NOREADS TYPE WIDTH=80 LENG=24
+   seerv OPEN SOCKET TOTAL=1 CURRENT=0
+       SOCKET[0]=serv DESC=3 LISTENING PASSIVE NOTRAP PORT=6321
+                ZDELAY ZBFSIZE=1024 ZIBFSIZE=87380 NODELIMITER
+   GTM>set tcp="seerv" o tcp:(listen="6322:TCP":attach="serv2")::"SOCKET"
+   GTM>zshow "D"
+   /dev/pts/9 OPEN TERMINAL NOPAST NOESCA NOREADS TYPE WIDTH=80 LENG=24
+   seerv OPEN SOCKET TOTAL=2 CURRENT=1
+       SOCKET[0]=serv DESC=3 LISTENING PASSIVE NOTRAP PORT=6321
+                ZDELAY ZBFSIZE=1024 ZIBFSIZE=87380 NODELIMITER
+       SOCKET[1]=serv2 DESC=4 LISTENING PASSIVE NOTRAP PORT=6322
+                ZDELAY ZBFSIZE=1024 ZIBFSIZE=87380 NODELIMITER
+
+At this point, the socket device "seerv" has two sockets associated with it.
+
+The following command moves the "serv" socket to the "socketpool" device. 
+
+.. parsed-literal::
+   GTM>use tcp:detach="serv"
+   GTM>use 0 zshow "D"
+   /dev/pts/9 OPEN TERMINAL NOPAST NOESCA NOREADS TYPE WIDTH=80 LENG=24
+   seerv OPEN SOCKET TOTAL=1 CURRENT=0
+       SOCKET[0]=serv2 DESC=4 LISTENING PASSIVE NOTRAP PORT=6322
+                ZDELAY ZBFSIZE=1024 ZIBFSIZE=87380 NODELIMITER
+   socketpool OPEN SOCKET TOTAL=1 CURRENT=0
+       SOCKET[0]=serv DESC=3 LISTENING PASSIVE NOTRAP PORT=6321
+                ZDELAY ZBFSIZE=1024 ZIBFSIZE=87380 NODELIMITER
+
+Notice how socket "serv" is now associated with the pseudo socket device "socketpool". Its only purpose is to hold detached sockets.
+
+.. parsed-literal::
+   GTM>set tcp2="s2" o tcp2:::"SOCKET"
+
+This creates a new socket device.
+
+.. parsed-literal::
+   GTM>zshow "D"
+   /dev/pts/9 OPEN TERMINAL NOPAST NOESCA NOREADS TYPE WIDTH=80 LENG=24
+    s2 OPEN SOCKET TOTAL=0 CURRENT=0
+    seerv OPEN SOCKET TOTAL=1 CURRENT=0
+        SOCKET[0]=serv2 DESC=4 LISTENING PASSIVE NOTRAP PORT=6322
+                ZDELAY ZBFSIZE=1024 ZIBFSIZE=87380 NODELIMITER
+    socketpool OPEN SOCKET TOTAL=1 CURRENT=0
+        SOCKET[0]=serv DESC=3 LISTENING PASSIVE NOTRAP PORT=6321
+                ZDELAY ZBFSIZE=1024 ZIBFSIZE=87380 NODELIMITER
+
+The following command moves the serv socket from the socketpool to the tcp2 device.
+
+.. parsed-literal::
+   GTM>use tcp2:attach="serv"
+   GTM>use 0 zshow "D"
+   /dev/pts/9 OPEN TERMINAL NOPAST NOESCA NOREADS TYPE WIDTH=80 LENG=24
+   s2 OPEN SOCKET TOTAL=1 CURRENT=0
+      SOCKET[0]=serv DESC=3 LISTENING PASSIVE NOTRAP PORT=6321
+             ZDELAY ZBFSIZE=1024 ZIBFSIZE=87380 NODELIMITER
+   seerv OPEN SOCKET TOTAL=1 CURRENT=0
+      SOCKET[0]=serv2 DESC=4 LISTENING PASSIVE NOTRAP PORT=6322
+             ZDELAY ZBFSIZE=1024 ZIBFSIZE=87380 NODELIMITER
+   socketpool OPEN SOCKET TOTAL=0 CURRENT=-1
+
+**DOWNSCROLL**
+
+DOWNSCROLL Applies to: TRM
+
+If $Y=0, DOWNSCROLL does nothing. Otherwise, DOWNSCROLL moves the cursor up one line on the terminal screen and decrements $Y by one. DOWNSCROLL does not change the column position or $X. Some terminal hardware may not support DOWNSCROLL.
+
+**ECHO**
+
+[NO]ECHO Applies to: TRM
+
+Enables or disables the echo of terminal input. If you disable ECHO, the EDITING functions will be disabled and any input is not available for later recall.
+
+By default, terminal input ECHOes.
+
+Example: 
+
+.. parsed-literal::
+   use $principal:noecho
+
+This example disables the echo of terminal input. 
+
+**EDITING**
+
+[NO]EDITING Applies to: TRM
+
+Enables the EDITING mode for the $PRINCIPAL device. If you enable EDITING, YottaDB/GT.M allows the use of the left and right cursor movement keys and certain <CTRL> characters within the current input line. You can recall the last input line using the up or down arrow key. The editing functions are the same as during direct mode command input as described in the "Line Editing" section of the "Operating & Debugging in Direct Mode" chapter except that backspace is not treated the same as the erase character from terminfo which is usually delete (ASCII 127). NOECHO disables EDITING mode.
+
+Set the environment variable gtm_principal_editing to specify the mode for EDITING. For example, gtm_principal_editing="EDITING" enables EDITING mode at YottaDB/GT.M startup. You can also specify the mode for INSERT. For example, gtm_principal_editing="NOINSERT:EDITING". If you specify both modes then separate them with a colon (":") and put them in any order.
+
+By default, EDITING mode is disabled.
+
+If you enable the EDITING mode, escape sequences do not terminate READs.
+
+Enabling PASTHRU mode supersedes EDITING mode.
+
+If any of the EDITING <CTRL> characters are in the CTRAP list, their editing functions are not available since CTRAP takes precedence. However the EDITING <CTRL> characters takes precedence over the TERMINATOR list. 
+
+.. note::
+   M READ EDITING depends on the values of $X and $Y being correct. If the application sends its own escape sequences or control characters, which change the cursor position, it must properly update $X and $Y before doing a M READ with EDITING enabled to ensure correct formatting during input. 
+
+**EMPTERM**
+
+[NO]EMPT[ERM] Applies to: TRM
+
+Allows an "Erase" character on an empty input line to terminate a READ or READ # command. The default is NOEMPTERM. The gtm_principal_editing environment variable specifies the initial setting of [NO]EMPTERM. The TERMINFO specified by the current value of the TERM environment variable defines capnames values "kbs" and/or "kdch1" with character sequences for "Erase." If "kbs" or "kdch1" are multi-character values, you must also specify the ESCAPE or EDIT deviceparameters for EMPTERM recognition.
+
+The erase character as set and shown by stty also terminates a READ command with an empty input line. You can set this erase character to various values using the stty shell command. Typical values of an erase character are <CTRL-H> and <CTRL-?>. Characters set and shown with stty setting must match what the terminal emulator sends.
+
+The environment variable TERM must specify a terminfo entry that matches both what the terminal (or terminal emulator) sends and expects.
+
+**ERASELINE**
+
+ERASELINE Applies to: TRM
+
+Clears the current line from the physical cursor position to the end of the line. ERASELINE does not affect the physical cursor position, or $X and $Y.
+
+**ESCAPE**
+
+[NO]ESCAPE Applies to: TRM
+
+Enables or disables YottaDB/GT.M processing of escape sequences.
+
+The following events result when a terminal has ESCAPE sequence processing enabled. When an <ESC> or <CSI> arrives in the terminal input, the device driver verifies the sequence that follows as a valid ANSI escape sequence, terminates the READ, and sets $ZB to contain the entire escape sequence. In the case of a READ * when ESCAPE sequence processing is enabled and an escape introducer is read, the entire escape sequence is returned in $ZB and the ASCII representation of the first character is returned in the argument of the READ \*.
+
+When escape processing is disabled, READ \*x returns 27 in x for an <ESC>. If the escape introducer is also a TERMINATOR, $ZB has a string of length one (1), and a value of the $ASCII() representation of the escape introducer; otherwise, $ZB holds the empty string. For single character and short fixed reads with NOESCAPE, the remaining characters in the escape sequence will be in the input stream for subsequent READS regardless of [NO]TYPEAHEAD.
+
+An application that operates with (NOESCAPE:TERM=$C(13)) must provide successive READ * commands to remove the remaining characters in the escape sequence from the input stream.
+
+By default, ESCAPE processing is disabled.
+
+Example: 
+
+.. parsed-literal::
+   use $principal:(noescape:term=$c(13)) 
+
+This example disables the escape sequence processing and set $c(13) as the line terminator. 
+
+**EXCEPTION**
+
+EXCEPTION=expr Applies to: All devices
+
+Defines an error handler for an I/O device. The expression must contain a fragment of YottaDB/GT.M code (for example, GOTO ERRFILE) that YottaDB/GT.M XECUTEs when the driver for the device detects an error, or an entryref to which YottaDB/GT.M transfers control, as appropriate for the current gtm_ztrap_form.
+
+For more information on error handling, refer to Chapter 13: “Error Processing”.
+
+**FILTER**
+
+[NO]FILTER[=expr] Applies to: TRM SOC NULL
+
+Specifies character filtering for specified cursor movement sequences. Filtering requires character by character examination of all output and reduces I/O performance.
+
+Each FILTER deviceparameter can have only one argument. However, multiple FILTER deviceparameters can appear in a single USE command, each with different arguments.
+
+The valid values for expr:
+
+* [NO]CHARACTERS enables or disables maintenance of $X and $Y according to the M ANSI standard for the characters <BS>, <LF>, <CR> and <FF>. CHARACTERS causes the device driver to examine all output for the above characters, and to adjust $X and $Y accordingly. By default, YottaDB/GT.M performs special maintenance on $X and $Y only for M format control characters, WRAPped records, and certain action deviceparameters.
+* In UTF-8 mode, the usual Unicode line terminators are recognized.
+* [NO]ESCAPE alters the effect of ANSI escape sequences on $X and $Y. ESCAPE causes YottaDB/GT.M to filter the output, searching for ANSI escape sequences and preventing them from updating $X and $Y. By default, YottaDB/GT.M does not screen output for escape sequences.
+
+By default, YottaDB/GT.M does not perform output filtering. For YottaDB/GT.M to maintain $X for non-graphic characters as described by the standard, FILTER="CHARACTERS" must be enabled. Output filtering adds additional overhead to I/O processing.
+
+Example: 
+
+.. parsed-literal::
+   use tcpdev:filter="NOESCAPE" 
+
+This example removes the effect of escape sequences on the maintenance $X and $Y. 
+
+**FOLLOW**
+
+[NO]FOLLOW Applies to: SD
+
+Configures READ to return only when it has a complete record or reaches any specified timeout; it waits for more input rather than terminating on an EOF (end-of-file) condition.
+
+The USE command can switch a device from NOFOLLOW to FOLLOW or from FOLLOW to NOFOLLOW. This provides a READ mode of operation similar to a tail -f in UNIX.
+
+**HOSTSYNC**
+
+[NO]HOSTSYNC Applies to: TRM
+
+Enables or disables the use of XON/XOFF by the host to throttle input and prevent impending buffer overruns for a terminal. This deviceparameter provides a control mechanism for the host over asynchronous communication lines to help prevent data loss when hardware is slow and/or processing load is high.
+
+By default, HOSTSYNC is disabled. 
+
+**IKEY**
+
+Applies to: SD, PIPE, and FIFO
+
+IKEY allows the use of a seperate key to READ from a device; for example, when a GT.M process is an element of a UNIX pipe. The format of the IKEY deviceparameter is:
+
+IKEY="key_name [IV]"
+
+key_name is case-sensitive and must match a key name in the "files" section of the gtmcrypt_config file. The optional IV specifies an initialization vector to use for encryption and decryption.
+
+For more information, refer to the description of KEY deviceparameter of OPEN.
+
+**INREWIND**
+
+Applies to: SD
+
+Performs a REWIND on input when $PRINCIPAL identifies a device that supports REWIND. Use this deviceparameter with $PRINCIPAL when redirected from a file. For more information, refer to “SEEK=strexpr”. 
+
+**INSEEK=strexpr**
+
+Applies to: SD
+
+Performs a SEEK on input when $PRINCIPAL identifies a device that supports SEEK. Use this deviceparameter with $PRINCIPAL when redirected from a file. For more information, refer to “SEEK=strexpr”. 
+
+**INSERT**
+
+[NO]INSERT Applies to: TRM
+
+Enables or disables insert mode for the $PRINCIPAL device. If INSERT mode is enabled, YottaDB/GT.M inserts input characters at the logical position in the input stream designated by the virtual cursor as defined by $X and $Y, for example in the middle of the line/record. If INSERT mode is disabled, input characters overwrite the existing characters in the input stream at the logical position designated by the virtual cursor. You can toggle the insert mode within a direct mode line or if EDITING is enabled for a single READ argument's input using the terminal's INSERT key. The INSERT mode is reset to the default or what was last specified with USE at the beginning of each direct mode line or READ argument. 
+
+**IOERROR**
+
+IOERROR=expr Applies to: SOC
+
+Enables exception handling in socket devices. expr specifies the I/O error trapping mode. A value equal to "TRAP" specifies that I/O errors on a device raise error conditions. A value equal to "NOTRAP", or when IOERROR is not specified, indicates that an I/O error on a device does not raise error conditions.
+
+.. note::
+   YottaDB/GT.M currently handles exception handling at device level instead of socket level.
+
+Example:
+
+.. parsed-literal::
+   use sock:(ioerror="TRAP":exception="zgoto "_$zlevel\_":error") 
+
+This example enables exception handling in socket device sock and specifies that all I/O errors on sock raise the error condition.
+
+If $LENGTH(strexpr)&("Tt"[$EXTRACT(strexpr)) then Error Trapping is enabled; otherwise the application must check $DEVICE for errors.
+
+**KEY**
+
+Applies to: SD, PIPE, and FIFO
+
+Specifies information about the key file to use for reading and writing encrypted data. The syntax of the KEY deviceparameter is as follows:
+
+KEY="key_name [IV]"
+
+key_name is case-sensitive and must match a key name in the "files" section of the gtmcrypt_config file. The optional IV specifies an initialization vector to use for encryption and decryption.
+
+For more information and an example, refer to the description of KEY deviceparameter of OPEN.
+
+**LENGTH**
+
+[Z]LENGTH=intexpr Applies to: TRM SOC SD FIFO PIPE NULL
+
+Sets the virtual page length for an I/O device to the integer expression. You can specify the virtual page length up to 1,048,576. The page length controls the point at which the device driver automatically resets $Y to 0.
+
+By default, for terminals, YottaDB/GT.M uses the terminfo variable lines (which may be from the terminal definition or from a stty command) as the initial value for LENGTH. The default length for null device and socket device is 66.
+
+Setting LENGTH to zero prevents resetting $Y to zero.
+
+Example: 
+
+.. parsed-literal::
+   use sock:(width=80:znoff:zlength=24) 
+
+This example sets the virtual page length to 24 for socket device sock. 
+
+.. parsed-literal::
+   GTM>set tcp="seerv" open tcp:(listen="6321:TCP":attach="serv")::"SOCKET"
+   GTM>use tcp:listen="6322:TCP"
+   GTM>use 0 zshow "D"
+   /dev/pts/9 OPEN TERMINAL NOPAST NOESCA NOREADS TYPE WIDTH=80 LENG=24
+   seerv OPEN SOCKET TOTAL=2 CURRENT=1
+   SOCKET[0]=serv DESC=3 LISTENING PASSIVE NOTRAP PORT=6321
+        ZDELAY ZBFSIZE=1024 ZIBFSIZE=87380 NODELIMITER
+   SOCKET[1]=h12185825450 DESC=4 LISTENING PASSIVE NOTRAP PORT=6322
+        ZDELAY ZBFSIZE=1024 ZIBFSIZE=87380 NODELIMITER
+
+**OKEY**
+
+Applies to: SD, PIPE, and FIFO
+
+OKEY allows the use of a seperate key for WRITE to a device; for example, when a YottaDB/GT.M process is an element of a UNIX pipe. The format of the IKEY deviceparameter is:
+
+OKEY="key_name [IV]"
+
+key_name is case-sensitive and must match a key name in the "files" section of the gtmcrypt_config file. The optional IV specifies an initialization vector to use for encryption and decryption.
+
+For more information, refer to the description of KEY deviceparameter of OPEN. 
+
+**OUTREWIND**
+
+Applies to: SD
+
+Performs a REWIND on output when $PRINCIPAL identifies a device that supports REWIND. Use this deviceparameter with $PRINCIPAL when redirected to a file. For more information, refer to “REWIND”. 
+
+**OUTSEEK=strexpr**
+
+Applies to: SD
+
+Performs a SEEK on output when $PRINCIPAL identifies a device that supports SEEK. Use this deviceparameter with $PRINCIPAL when redirected to a file. For more information, refer to “SEEK=strexpr”.
+
+**PASSTHRU**
+
+[NO]PASTHRU Applies to: TRM
+
+Enables or disables interpretation of the ERASE character for a terminal. PASTHRU shifts management of handling and response to ERASE characters in the input stream from YottaDB/GT.M to the application code.
+
+Exercise caution with PASTHRU in debugging, because using a PASTHRU terminal in Direct Mode is somewhat awkward.
+
+[NO]TTSYNC must be used with [NO]PASTHRU to control XON/XOFF handling.
+
+By default, the device driver operates NOPASTHRU.
+
+PASTHRU supersedes line editing. 
+
+**READSYNC**
+
+[NO]READSYNC Applies to: TRM
+
+Enables or disables automatic output of <XON> before a READ and <XOFF> after a READ.
+
+By default, the terminal drivers operate NOREADSYNC. 
+
+**REWIND**
+
+REWIND Applies to: SD
+
+REWIND places the file pointer to the beginning of the file.
+
+By default, USE does not REWIND.
+
+REWIND on redirected output for $PRINCIPAL is the same as OUTREWIND.
+
+**SEEK=strexpr**
+
+SEEK Applies to: SD
+
+Positions the current file pointer to the location specified in strexpr. The format of strexpr is a string of the form "[+|-]integer" where an unsigned value specifies an offset from the beginning of the file, and an explicitly signed value specifies an offset relative to the current file position. For STREAM or VARIABLE format, the positive intexpr after any sign is a byte offset, while for a FIXED format, it is a record offset. In order to deal with the possible presence of a Byte Order Marker (BOM), SEEK for a FIXED format file written in a UTF character set must follow at least one prior READ since the device was created.
+
+SEEK on redirected input for $PRINCIPAL is the same as INSEEK.
+
+**SOCKET**
+
+SOCKET=expr Applies to: SOC
+
+Makes the socket specified by the handle named in expr the current socket for the Socket device . If the named socket is a listening socket, it checks for an incoming connection request and if one is available, it accepts the request and creates a new connected socket in which case $KEY provides information on the new socket Specifying a socket handle not contained in the Socket device generates an error.
+
+.. note::
+   SOCKET is compatible with DELIMITER only.
+
+For a usage example, refer to the socketexamplemulti2.m in the Section : “Socket Device Examples”. 
+
+**TERMINATOR**
+
+[NO]TERMINATOR[=expr] Applies to: TRM
+
+Specifies which of the 256 ASCII characters terminate a READ. For example, TERMINATOR=$C(0) makes <NUL> the terminator.
+
+When NOESCAPE is in effect, TERMINATOR controls whether or not <ESC> or <CSI> are treated as terminators, however, when ESCAPE processing is enabled, the entire escape sequence is treated as a terminator regardless of the TERMINATOR specification.
+
+When EDITING is enabled, the control characters used for editing are not treated as terminators even if they are in the TERMINATOR list.
+
+You can define any control character as a terminator, but they are all single character.
+
+When the terminal is in UTF-8 mode (chset=utf8,) YottaDB/GT.M limits the terminator characters to the first 127 which are common between ASCII and Unicode. In M mode, any of the 256 characters may be specified a terminator.
+
+In UTF-8 mode, if CR is in the terminator list (either by default or explicitly,) YottaDB/GT.M ignore the following LF to keep with the standard Unicode line terminator scheme.
+
+NOTERMINATOR eliminates all terminators. When a terminal has all terminators disabled, fixed length READ and READ * terminate on receipt of some number of characters, and a timed READ terminates on timeout, but any other READ only terminates when the input fills the terminal read buffer.
+
+By default, terminals recognize <CR>, <LF>, and <ESC> as terminators (that is, TERMINATOR=$C(10, 13,27)). TERMINATOR="" restores the default. In UTF-8 mode, the usual Unicode line terminators are also included in the default set of terminators.
+
+Example:
+
+.. parsed-literal::
+   GTM> USE $P:TERM=$C(26,13,11,7)
+
+This example enables the ASCII characters <SUB>, <CR>, <VT> and <BEL> as READ terminators.
+
+**TRUNCATE**
+
+[NO]TRUNCATE Applies to: SD
+
+Enables or disables overwriting of existing data in sequential files. Because the position of each record depends on the prior record, a WRITE destroys the ability to reliably position to subsequent records in a file. Therefore, by default (NOTRUNCATE), YottaDB/GT.M permits WRITEs only when the file pointer is positioned at the end-of-file. When a device has TRUNCATE enabled, a WRITE issued when the file pointer is not at end-of-file truncates the file by destroying all data from the file pointer to the end-of-file.
+
+By default, OPEN accesses files NOTRUNCATE, which does not allow overwriting of sequential files.
+
+This deviceparameter may not be supported by your platform.
+
+**TTSYNC**
+
+[NO]TTSYNC Applies to: TRM
+
+Enables or disables recognition of XON/XOFF for terminal output. 
+
+.. note::
+   A terminal may have its own handling of XON/XOFF, controlled by a set-up mode or by switches. If an application requires program recognition of <CTRL-S> and <CTRL-Q>, the terminals may require reconfiguration.
+
+**TYPEAHEAD**
+
+[NO]TYPEAHEAD Applies to: TRM
+
+Enables or disables type-ahead buffering for a terminal. When TYPEAHEAD is disabled, any pending input which has not yet been read will be discarded before input is read for each READ argument. When TYPEAHEAD is enabled, any input not read by one READ argument will remain available for the next READ argument or command.
+
+The size of the type-ahead buffer limits the amount of data entered at the terminal that the device driver can store in anticipation of future READs.
+
+By default, the terminal device driver accepts TYPEAHEAD.
+
+**UPSCROLL**
+
+UPSCROLL Applies to: TRM
+
+Moves the cursor down one line on the terminal screen. If $Y=LENGTH-1, UPSCROLL sets $Y=0. Otherwise UPSCROLL increments $Y by one. If the cursor is physically at the bottom of the page, the screen scrolls up one line. UPSCROLL does not change the column position or $X.
+
+
+**WIDTH**
+
+[Z]WIDTH=intexpr Applies to: TRM SOC NULL SD FIFO PIPE
+
+Sets the device's logical record size and enables WRAP. The default WIDTH for SOC, SD and FIFO is taken from the RECORDSIZE.
+
+NOWRAP and WIDTH supersede each other. When WIDTH and NOWRAP appear together on the same USE command, the final one controls the device behavior. For a terminal, WIDTH=0 is equivalent to WIDTH=n:NOWRAP, where n is the default length of a logical record on that terminal.
+
+Terminals inherit their default WIDTH in YottaDB/GT.M from the invoking shell environment. The default WIDTH for null and socket device is 255.
+
+For SD and SOC which support 1MB strings, you can specify WIDTH up to 1,048,576.
+
+In UTF-8 mode and TRM, SOC, SD, and FIFO output, the WIDTH deviceparameter is in units of display-columns and is used with $X to control truncation and WRAPing for output and maintenance of $X and $Y for input.
+
+In UTF-8 mode and SOC, the WIDTH deviceparameter is in units of Unicode code points and is used with $X to control truncation and wrapping for output and maintenance of $X and $Y for input.
+
+In M mode if WIDTH is set to 0, YottaDB/GT.M uses the default WIDTH of the TRM and SOC devices. USE x:WIDTH=0 is equivalent to USE x:(WIDTH=<device-default>:NOWRAP. For SOC, SD and FIFO devices in M mode, the device default is the RECORDSIZE.
+
+YottaDB/GT.M format control characters, FILTER, and the device WIDTH and WRAP also have an effect on $X.
+
+In UTF-8 mode and SOC output, the WIDTH deviceparameter specifies the number of characters in Unicode.
+
+**WRAP**
+
+[NO]WRAP Applies to: TRM SOC NULL SD FIFO PIPE
+
+Enables or disables automatic record termination. When the current record size ($X) reaches the maximum WIDTH and the device has WRAP enabled, YottaDB/GT.M starts a new record, as if the routine had issued a WRITE ! command. When reading, WRAP only determines whether $X remains within the range of zero to WIDTH.
+
+Note that WRAP is enabled by default for SD, NULL, FIFO, PIPE and SOCKET. For TRM, WRAP is enabled by default if the terminfo variable auto_right_margin (capname "am") is set.
+
+NOWRAP causes YottaDB/GT.M to require a WRITE ! to terminate the record. NOWRAP allows $X to become greater than the device WIDTH for terminals and null devices.
+
+The combination of STREAM and NOWRAP on disk files allows you to write data of arbitrary length without truncation. Without the STREAM option, the WRAP option determines the action taken when the record length exceeds the device WIDTH. NOWRAP causes YottaDB/GT.M to truncate the record, while WRAP causes YottaDB/GT.M to insert a format control character except for FIXED format.
+
+Example:
+
+See WRAP examples in the OPEN deviceparameters section.
+
+**X**
+
+X=intexpr Applies to: TRM
+
+$X positions the cursor to a vertical column on the terminal. If NOWRAP is enabled or intexpr<WIDTH, YottaDB/GT.M sets $X=intexpr. If WRAP is enabled and intexpr>WIDTH, YottaDB/GT.M sets $X=intexpr#WIDTH, where # is the YottaDB/GT.M modulo operator. The resulting $X determines the actual physical position.
+
+To ensure that $Y and $X match what is occurring visually on the terminal, the YottaDB/GT.M deviceparameters and the device characteristics must match at all times.
+
+The terminal hardware may affect physical cursor positioning. The X deviceparameter does not change the cursor row or update $Y.
+
+**Y**
+
+Y=intexpr Applies to: TRM
+
+Positions the cursor to a horizontal row on the terminal.
+
+YottaDB/GT.M sets $Y=intexpr#LENGTH, where # is the YottaDB/GT.M modulo operator. If intexpr<LENGTH, the resulting $Y determines the physical position. If intexpr>LENGTH, the cursor is positioned so that $Y=intexpr#LENGTH, where # is the YottaDB/GT.M module operator. The terminal hardware may affect physical cursor positioning.
+
+To ensure that $Y and $X match what is occurring visually on the terminal, the YottaDB/GT.M deviceparameters and the device characteristics must match at all times. For example, if a process initiates a subprocess that changes the terminal wrap setting from NOWRAP, previously set with the YottaDB/GT.M USE command to WRAP , YottaDB/GT.M does not reflect the change when the subprocess completes. Therefore, wraps on the terminal do not reflect in the values of $X and $Y.
+
+The Y deviceparameter does not change the cursor column or update $X.
+
+**ZBFSIZE**
+
+ZBFSIZE Applies to: SOC
+
+Allocates a buffer used by GT.M when reading from a socket. The ZBFSIZE deviceparameter should be at least as big as the largest message expected.
+
+By default, the size of ZBFSIZE is 1024 and the maximum it can be is 1048576.
+
+**ZDELAY**
+
+Z[NO]DELAY Applies to: SOC
+
+Controls buffering of data packets by the system TCP stack using the TCP_NODELAY option to the SETSOCKOPT system call. This behavior is sometimes known as the Nagle algorithm. The default is ZDELAY. This delays sending additional packets until either an acknowledgement of previous packets is received or an interval passes. If several packets are sent from one end of a connection before the other end responds, setting ZNODELAY may be desirable though at the cost of additional packets being transmitted over the network. ZNODELAY must be fully spelled out.
+
+**ZFF**
+
+Z[NO]FF=expr Applies to: SOC
+
+expr specifies a string of characters, typically in $CHAR() format to send to socket device, whenever a routine issues a WRITE #. When no string is specified or when ZFF="", then no characters are sent. The default in YottaDB/GT.M is ZNOFF.
+
+Example:
+
+.. parsed-literal::
+   u tcpdev:(zwidth=80:zff=$char(13):zlength=24) 
+
+This example sends $char(13) to the current socket of device tcpdev on every WRITE #. 
+
+**ZIBFSIZE**
+
+ZIBFSIZE Applies to: SOC
+
+Sets the buffer size used by the network software (setsockopt SO_RCVBUF).
+
+The default and the maximum values depend on the platform and/or system parameters.
+
+Note that LOCAL sockets ignore the ZIBFSIZE deviceparameter. 
+
+**USE Deviceparameters Summary**
+
++-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
+| USE Deviceparameter                 | TRM          | SD              | FIFO            | PIPE            | NULL            | SOC              |
++=====================================+==============+=================+=================+=================+=================+==================+
+| ATTACH                              |              |                 |                 |                 |                 | X                |
++-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
+| CANONICAL                           | X            |                 |                 |                 |                 |                  |
++-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
+| [NO]CENABLE                         | X            |                 |                 |                 |                 |                  |
++-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
+| [I|O]CHSET                          | X            | X               | X               | X               | X               | X                |
++-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
+| CLEARSCREEN                         | X            |                 |                 |                 |                 |                  |
++-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
+| CONNECT                             |              |                 |                 |                 |                 | X                |
++-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
+| [NO]CONVERT                         | X            |                 |                 |                 |                 |                  |
++-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
+| CTRAP=expr                          | X            |                 |                 |                 |                 |                  |
++-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
+| [NO]DELIMITER                       |              |                 |                 |                 |                 | X                |
++-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
+| DETACH=expr                         |              |                 |                 |                 |                 | X                |
++-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
+| DOWNSCROLL                          | X            |                 |                 |                 |                 |                  |
++-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
+| [NO]ECHO                            | X            |                 |                 |                 |                 |                  |
++-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
+| [NO]EMPTERM                         | X            |                 |                 |                 |                 |                  |
++-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
+| ERASELINE                           | X            |                 |                 |                 |                 |                  |
++-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
+| [NO]ESCAPE                          | X            |                 |                 |                 |                 |                  |
++-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
+| EXCEPTION=expr                      | X            | X               | X               | X               | X               | X                |
++-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
+| [NO]FILTER[=expr]                   | X            |                 |                 |                 | X               | X                |
++-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
+| FLUSH                               | X            |                 |                 |                 |                 | X                |
++-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
+| [NO]FOLLOW                          |              | X               |                 |                 |                 |                  |
++-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
+| [NO]HOSTSYNC                        | X            |                 |                 |                 |                 |                  |
++-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
+| IKEY                                |              | X               | X               | X               |                 |                  |
++-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
+| INREWIND                            |              | X               |                 |                 |                 |                  |
++-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
+| INSEEK                              |              | X               |                 |                 |                 |                  |
++-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
+| IOERROR                             |              |                 |                 |                 |                 | X                |
++-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
+| KEY                                 |              | X               | X               | X               |                 |                  |
++-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
+| [Z]LENGTH=expr                      | X            | X               | X               | X               | X               | X                |
++-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
+| LISTEN                              |              |                 |                 |                 |                 | X                |
++-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
+| OKEY                                |              | X               | X               | X               |                 |                  |
++-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
+| OUTREWIND                           |              | X               |                 |                 |                 |                  |
++-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
+| OUTSEEK                             |              | X               |                 |                 |                 |                  |
++-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
+| [NO]PASTHRU                         | X            |                 |                 |                 |                 |                  |
++-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
+| REWIND                              |              | X               |                 |                 |                 |                  |
++-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
+| SEEK=strexpr                        |              | X               |                 |                 |                 |                  |
++-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
+| SOCKET                              |              |                 |                 |                 |                 | X                |
++-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
+| TERMINATOR[=expr]                   | X            |                 |                 |                 |                 |                  |
++-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
+| [NO]TRUNCATE                        |              | X               |                 |                 |                 |                  |
++-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
+| [NO]TYPEAHEAD                       | X            |                 |                 |                 |                 |                  |
++-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
+| UPSCROLL                            | X            |                 |                 |                 |                 |                  |
++-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
+| [Z]WIDTH=intexpr                    | X            | X               | X               | X               | X               | X                |
++-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
+| [NO]WRAP                            | X            | X               | X               | X               | X               | X                |
++-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
+| X=intexpr                           | X            |                 |                 |                 | X               |                  |
++-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
+| Y=intexpr                           | X            |                 |                 |                 | X               |                  |
++-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
+| ZBFSIZE                             |              |                 |                 |                 |                 | X                |
++-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
+| Z[NO]DELAY                          |              |                 |                 |                 |                 | X                |
++-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
+| Z[NO]FF                             |              |                 |                 |                 |                 | X                |
++-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
+| ZIBFSIZE                            |              |                 |                 |                 |                 | X                |
++-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
+
+TRM: Valid for terminals and printers
+
+SD: Valid for sequential files
+
+FIFO: Valid for FIFOs
+
+PIPE: Valid for PIPE devices
+
+NULL: Valid for null devices
+
+SOC: Valid for socket devices
+
+++++
+READ
+++++
+
+The READ command transfers input from the current device to a global or local variable specified as a READ argument. For convenience, READ also accepts arguments that perform limited output to the current device.
+
+The format of the READ command is:
+
+.. parsed-literal::
+   R[EAD][:tvexpr] glvn|*glvn|glvn#intexpr|strlit|fcc[,...]
+
+* The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB/GT.M executes the command.
+* A subscripted or unsubscripted global or local variable name specifies a variable into which to store the input; the variable does not have to exist prior to the READ; if the variable does exist prior to the READ, the READ replaces its old value.
+* For fixed format files, READ X always read WIDTH characters.
+* For VARIABLE or STREAM format files, READ X reads up to WIDTH characters, stopping if a line terminator or end of file is found first.
+* When an asterisk (*) immediately precedes the variable name, READ accepts one character of input and places the ASCII code for that character in the variable.
+* When a number sign (#) and a non-zero integer expression immediately follow the variable name, the integer expression determines the maximum number of characters accepted as input to the read; such reads terminate when YottaDB/GT.M reads the number of characters specified by the integer expression or a terminator in the input stream, whichever occurs first.
+* To provide a concise means of issuing prompts, YottaDB/GT.M sends string literal and format control character (!,?intexpr,#) arguments of a READ to the current device as if they were arguments of a WRITE.
+* An indirection operator and an expression atom evaluating to a list of one or more READ arguments form a legal argument for a READ.
+
+The maximum length of the input string is the smaller of the device buffer size limitation or the YottaDB/GT.M maximum string size (1,048,576 bytes). If a record is longer than the maximum record length, YottaDB/GT.M returns the record piece by piece during sequential reads, for devices that allow it.
+
+When a string literal appears as an argument to a READ, M writes the literal to the current device. String literals appear as READ arguments to serve as prompts for input. YottaDB/GT.M does not permit expression arguments on a READ to act as prompts. Variable prompts must appear as arguments to a WRITE. If a variable appears as an argument to a READ, YottaDB/GT.M always interprets it as input, never as output. This facility is used mostly with terminal I/O.
+
+The READ commands adjust $X and $Y, based on the length of the input read.
+
+In UTF-8 mode, the READ command uses the character set value specified on the device OPEN as the character encoding of the input device. If character set "M" or "UTF-8" is specified, the data is read with no transformation. If character set is "UTF-16", "UTF-16LE", or "UTF-16BE", the data is read with the specified encoding and transformed to UTF-8. If the READ command encounters an illegal character or a character outside the selected representation, it produces a run-time error. The READ command recognizes all Unicode(TM) line terminators for non-FIXED devices. See "Line Terminators" section for more details. In M mode, characters and bytes have a one-to-one relationship and therefore READ can be used to read bit-streams of non-character data.
+
+~~~~~~~~~~~~~~~
+READ * Command
+~~~~~~~~~~~~~~~
+
+The READ * command reads one character from the current device and returns the decimal ASCII representation of that character into the variable specified for the READ * command. READ * appears most frequently in communication protocols, or in interactive programs where single character answers are appropriate.
+
+In UTF-8 mode, the READ * command accepts one character in Unicode of input and puts the numeric code-point value for that character into the variable. The READ * command reads one to four bytes, depending on the encoding and returns the numeric code-point value of the character. If ICHSET specifies "UTF-16", "UTF-16LE" or "UTF-16BE", the READ * command reads a byte pair or two byte pairs (if it is a surrogate pair) and returns the numeric code-point value. If ICHSET is M, the READ * command reads a single byte and returns the numeric byte value just like in M mode.
+
+The following example reads the value "A", and returns the decimal ASCII representation of "A" in the variable X.
+
+Example:
+
+.. parsed-literal::
+   GTM> READ \*X
+   A
+   GTM> WRITE X
+   65
+
+If a timeout occurs before YottaDB/GT.M reads a character, the READ * returns a negative one (-1) in the variable.
+
+.. parsed-literal::
+   GTM>Set filename="mydata.out"; assume that mydata.out contains "主要雨在西班牙停留在平原".
+   GTM>Open filename:(readonly:ichset="UTF-16LE")
+   GTM>Use filename
+   GTM>Read \*x
+   GTM>Close filename
+   GTM>Write $char(x)
+   主
+
+In this example, the READ * command reads the first character of the file mydata.out according to the encoding specified by ICHSET. 
+
+~~~~~~~~~~~~~~~~~~~~~
+Read X#maxlen command
+~~~~~~~~~~~~~~~~~~~~~
+
+The READ X#maxlen command limits the maximum size of the input to a maximum of "maxlen" characters, where maxlen is an integer expression.
+
+If a READ follows a READ X#maxlen command, the READ returns the remainder of the current record.
+
+If a terminator arrives before maxlen characters are received the READ X#maxlen terminates.
+
+For fixed format files, If WIDTH - $X is greater than len, READ X#maxlen reads maxlen characters otherwise READ reads WIDTH - $X characters. Fewer may be returned if end of file is reached.
+
+For VARIABLE or STREAM format files, READ X#maxlen reads up to MIN(maxlen, WIDTH - $X) characters, stopping if it finds line terminator or end of file.
+
+++++++
+WRITE
+++++++
+
+The WRITE command transfers a character stream specified by its arguments to the current device.
+
+The format of the WRITE command is:
+
+.. parsed-literal::
+   W[RITE][:tvexpr] expr|*intexpr|fcc[,...]
+
+* The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB/GT.M executes the command.
+* An expression argument supplies the text of a WRITE.
+* When a WRITE argument consists of a leading asterisk (*) followed by an integer expression, WRITE outputs one character associated with the ASCII code specified by the integer evaluation of the expression.
+* WRITE also accepts format control characters as arguments; format control characters modify the position of a virtual cursor: an exclamation point (!) produces the device specific record terminator (for example, new line for a terminal), a number sign (#) produces device specific page terminator (for example, form feed for a terminal) and a question mark (?) followed by an expression moves the virtual cursor to the column specified by the integer evaluation of the expression if the virtual cursor is to the "left" of the specified column.
+* When directed to a device bound to a mnemonicspace, WRITE also accepts controlmnemonics, which are keywords specific to the binding – they are delimited by a slash (/) prefix and optionally followed by a parenthetical list of arguments. The parentheses "( )" are optional when there are no arguments, but must appear even if there is a single argument
+* An indirection operator and an expression atom evaluating to a list of one or more WRITE arguments form a legal argument for a WRITE.
+
+YottaDB/GT.M can write up to 1,048,576 bytes (the YottaDB/GT.M maximum string size) as a result of a single WRITE argument. YottaDB/GT.M buffers output into a "logical record" for all devices except sockets without DELIMITERs and sequential devices with STREAM enabled. The WRITE command appends a string to the current record of the current device. YottaDB/GT.M does not write to the output device until the buffer is full, a YottaDB/GT.M format control character forces a write, a USE command, a CLOSE command, or, for terminals, the buffer becomes stale .
+
+Each device has a WIDTH and a LENGTH that define the virtual "page". The WIDTH determines the maximum size of a record for a device, while the LENGTH determines how many records fit on a page. When the current record size ($X) reaches the maximum WIDTH and the device has WRAP enabled, YottaDB/GT.M starts a new record. When the current line ($Y) reaches the maximum LENGTH, YottaDB/GT.M starts a new page.
+
+For devices OPENed with a Unicode CHSET, WRITE * takes intexpr as a code-point and writes the associated Unicode character in the encoding specified by CHSET. For devices OPENed in M mode, WRITE * takes intexpr as an ASCII value and writes the associated ASCII character.
+
+The WRITE command also has several format control characters that allow the manipulation of the virtual cursor. For all I/O devices, the YottaDB/GT.M format control characters do the following:
+
+* WRITE !: Clears $X and increments $Y and terminates the logical record in progress. The definition of "logical record" varies from device to device, and is discussed in each device section.
+* WRITE #: Clears $X and $Y and terminates the logical record in progress.
+* WRITE ?n: If n is greater than $X, writes n-$X spaces to the device, bringing $X to n. If n is less than or equal to $X, WRITE ?n has no effect. When WRAP is enabled and n exceeds the LENGTH of the line, WRITE ?n increments $Y.
+
+.. note::
+   If $X is less than WIDTH, WRITE ! writes WIDTH - $X spaces. 
+
+For devices OPENed with a Unicode CHSET, WRITE * takes intexpr as a code-point and writes the associated Unicode character in the encoding specified by CHSET. For devices OPENed in M mode, WRITE * takes intexpr as an ASCII value and writes the associated ASCII character.
+
+In UTF-8 mode, if a WRITE command encounters an illegal character, it produces a run-time error irrespective of the setting of VIEW "BADCHAR".
+
+For more information, see the sections on specific I/O devices.
+
+++++++++++
+WRITE *
+++++++++++
+
+When the argument of a WRITE command consists of a leading asterisk (*) followed by an integer expression, the WRITE command outputs the character represented by the code-point value of that integer expression.
+
+With character set M specified at device OPEN, the WRITE * command transfers the character (byte) associated with the numeric value of the integer expression. With character UTF-8 specified at device OPEN, the WRITE command outputs the character associated with the numeric code-point value. If character set "UTF-16", "UTF-16LE" or "UTF-16BE" is specified, WRITE * transforms the character code to the mapping specified by that character set. 
+
++++++++++++
+CLOSE
++++++++++++
+
+The CLOSE command breaks the connection between a process and a device.
+
+The format of the CLOSE command is:
+
+.. parsed-literal::
+   C[LOSE][:tvexpr] expr[:(keyword[=expr][:...])][,...]
+
+* The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB/GT.M executes the command.
+* The required expression specifies the device to CLOSE.
+* The optional keywords specify deviceparameters that control device behavior; some deviceparameters take arguments delimited by an equal sign (=); if there is only one keyword, the surrounding parentheses are optional.
+* An indirection operator and an expression atom evaluating to a list of one or more CLOSE arguments form a legal argument for a CLOSE.
+
+When a CLOSE is issued, YottaDB/GT.M flushes all pending output to the device, and processes any deviceparameters. CLOSEing a device not currently OPEN has no effect.
+
+If a partial record has been output, a WRITE ! is done to complete it. To suppress this action, set $X to zero before the CLOSE.
+
+YottaDB/GT.M retains the characteristics of all device types, except a sequential file, for use in case of subsequent re-OPENs. If the device is a sequential file, characteristics controlled by deviceparameters are lost after the CLOSE.
+
+If the device being CLOSEd is $IO, YottaDB/GT.M implicitly USEs $PRINCIPAL. YottaDB/GT.M ignores CLOSE $PRINCIPAL.
+
+Example:
+
+.. parsed-literal::
+   CLOSE SD:RENAME=SD\_".SAV"
+
+This closes the device and, if it is a disk file, renames it to have the type .SAV.
+
+Example:
+
+.. parsed-literal::
+   CLOSE SOCKDEV:(SOCKET="LOCALSOCK1":DELETE)
+
+This deletes the socket file associated with LOCALSOCK1 if it is a listening socket and closes only the named socket on the socket device.
+
+~~~~~~~~~~~~~~~~~~~~~~~
+CLOSE Deviceparameters
+~~~~~~~~~~~~~~~~~~~~~~~
+
+**DELETE**
+
+DELETE Applies to: SD FIFO SOC(LOCAL)
+
+Instructs YottaDB/GT.M to delete the disk file after YottaDB/GT.M closes it.
+
+**DESTROY**
+
+[NO]DESTROY Applies to: SD, FIFO, SOC
+
+Determines whether the process retains device characteristics after CLOSE. The default is DESTROY for sequential disk files and FIFO devices and NODESTROY for SOCKET devices. While NODESTROY allows the re-OPEN of previously CLOSE'd device with the same characteristics as when it was last CLOSE'd, as described by the M standard, every tracked device uses process memory. A device that has been DESTROYed on CLOSE cannot be re-opened with the previous characteristics, but reclaims memory used by the process for that device. [NO]DESTROY is ignored for CLOSE of a specific socket rather than the entire socket device.
+
+Because it forms a communication link with a process it creates, CLOSE of a PIPE device always eliminates the device and hence ignores any [NO]DESTROY deviceparameter.
+
+**EXCEPTION**
+
+EXCEPTION=expr Applies to: All devices
+
+Defines an error handler for an I/O device. The expression must contain a fragment of YottaDB/GT.M code (for example, GOTO ERRFILE) that YottaDB/GT.M XECUTEs when the driver for the device detects an error, or an entryref to which YottaDB/GT.M transfers control, as appropriate for the current gtm_ztrap_form.
+
+The expression must contain a fragment of YottaDB/GT.M code (for example, GOTO ERRFILE) that YottaDB/GT.M XECUTEs when the driver for the device detects an error, or an entryref to which YottaDB/GT.M transfers control, as appropriate for the current gtm_ztrap_form.
+
+For more information on error handling, refer to Chapter 13: “Error Processing”.
+
+**GROUP**
+
+GROUP=expr Applies to: SOC(LOCAL), SD, FIFO
+
+Specifies access permission on a UNIX file for other users in the file owner's group. The expression is a character string evaluating to null or to any combination of the letters RWX, indicating respectively Read, Write, and eXecute access. When any one of these deviceparameters (OWNER, GROUP, WORLD) appear on a CLOSE of an existing file, any user category, that is not explicitly specified remains unchanged.
+
+In order to modify file security, the user who issues the CLOSE must have ownership.
+
+By default, CLOSE does not modify the permissions on an existing file. 
+
+**OWNER**
+
+OWNER=expr Applies to: SOC(LOCAL) SD FIFO
+
+Specifies access permission on a UNIX file for the owner of the file. The expression is a character string evaluating to null or to any combination of the letters RWX, indicating respectively Read, Write, and eXecute access. When any one of these deviceparameters appear on a CLOSE of an existing file, any user category (GROUP, SYSTEM, WORLD), that is not explicitly specified remains unchanged.
+
+In order to modify file security, the user who issues the CLOSE must have ownership.
+
+By default, CLOSE does not modify the permissions on an existing file. 
+
+**RENAME**
+
+RENAME=expr Applies to: SD
+
+Changes the file name to the name contained in the argument string. When the expression omits part of the pathname, GT.M constructs the full pathname by applying the defaults discussed in the section on device specifications.
+
+If the process has sufficient access permissions, it may use RENAME to specify a different directory as well as file name. RENAME cannot move a file to a different filesystem.
+
+**SOCKET**
+
+SOCKET=expr Applies to: SOC
+
+The socket specified in expr is closed. Specifying a socket that has not been previously OPENed generates an error. If no SOCKET deviceparameter is specified on a CLOSE for a socket device, the socket device and all sockets associated with it are closed.
+
+**SYSTEM**
+
+SYSTEM=expr Applies to: SOC(LOCAL) SD FIFO
+
+This deviceparameter is a synonym for OWNER that is maintained in UNIX for compatibility with VMS applications.
+
+By default, CLOSE does not modify the permissions on an existing file. 
+
+**TIMEOUT**
+
+TIMEOUT=expr Applies to: PIPE
+
+Performs a timed check (in seconds) on the termination status of the PIPE co-process of a PIPE device that is not OPEN'd with the INDEPENDENT deviceparameter. intexpr specifies time in seconds. The default is 2 seconds if TIMEOUT is not specified.
+
+**UIC**
+
+UIC=exprgroup number Applies to: SOC(LOCAL) SD FIFO
+
+Specifies the group that has access to the file. The format of the string is "g,i" where g is a decimal number representing the group portion of the UIC and i is a decimal number representing the individual portion.
+
+Specifies the owner and affects access to the file. The expression evaluates to the numeric identifier of the new owner.
+
+**WORLD**
+
+WORLD=expr Applies to: SOC(LOCAL) SD FIFO
+
+Specifies access permissions for users not in the owner's group on a UNIX file. The expression is a character string evaluating to null or to any combination of the letters RWX, indicating respectively Read, Write, and eXecute access. When any one of these deviceparameters (OWNER, GROUP, WORLD) appears on a CLOSE of a new file, any user category that is not explicitly specified is given the default character string. When any one of these deviceparameters (OWNER, GROUP, WORLD) appears on a CLOSE of an existing file, any user category , that is not explicitly specified remains unchanged.
+
+In order to modify file security, the user who issues the CLOSE must have ownership.
+
+By default, CLOSE and CLOSE do not modify the permissions on an existing file. Unless otherwise specified, when CLOSE creates a new file, it establishes security using standard defaulting rules.
+
+In order to modify file security, the user who issues the CLOSE must have ownership.
+
+**CLOSE Deviceparameters Table**
+
++------------------------------------+--------------------+------------------+------------+--------------+
+| CLOSE Deviceparameter              | TRM                | SD               | FIFO       | SOC          |
++====================================+====================+==================+============+==============+
+| “DELETE”                           |                    | X                | X          | X            |
++------------------------------------+--------------------+------------------+------------+--------------+
+| “DESTROY”                          |                    | X                | X          | X            |
++------------------------------------+--------------------+------------------+------------+--------------+
+| “EXCEPTION”                        | X                  | X                | X          | X            |
++------------------------------------+--------------------+------------------+------------+--------------+
+| “GROUP”                            |                    | X                | X          |              |
++------------------------------------+--------------------+------------------+------------+--------------+
+| “OWNER”                            |                    | X                | X          |              |
++------------------------------------+--------------------+------------------+------------+--------------+
+| “RENAME”                           |                    | X                | X          |              |
++------------------------------------+--------------------+------------------+------------+--------------+
+| “REWIND”                           |                    | X                |            |              |
++------------------------------------+--------------------+------------------+------------+--------------+
+| “SOCKET”                           |                    |                  |            | X            |
++------------------------------------+--------------------+------------------+------------+--------------+
+| “SYSTEM”                           |                    | X                | X          |              |
++------------------------------------+--------------------+------------------+------------+--------------+
+| “UIC”                              |                    | X                | X          |              |
++------------------------------------+--------------------+------------------+------------+--------------+
+| “WORLD”                            |                    | X                | X          |              |
++------------------------------------+--------------------+------------------+------------+--------------+
+
+SD: Valid for sequential disk files
+
+TRM: Valid for terminals and printers
+
+FIFO: Valid for FIFOs
+
+NULL: Valid for NULL devices
+
+SOC: Valid for Socket devices
+
+.. note::
+   Since EXCEPTION is the only CLOSE deviceparameter that applies to NULL, the NULL device column is not shown in the table above.
+
+++++++++++++++++++++++++++++++++++
+Deviceparameter Summary Table
+++++++++++++++++++++++++++++++++++
+
+The following table lists all of the deviceparameters and shows the commands to which they apply.
+
++---------------------------------+---------------------+---------------------+---------------------+
+| Deviceparameter                 | OPEN                | USE                 | CLOSE               |
++=================================+=====================+=====================+=====================+
+| APPEND                          | X                   |                     |                     |
++---------------------------------+---------------------+---------------------+---------------------+
+| ATTACH                          |                     | X                   |                     |
++---------------------------------+---------------------+---------------------+---------------------+
+| BLOCKSIZE=intexpr               | X                   |                     |                     |
++---------------------------------+---------------------+---------------------+---------------------+
+| [NO]CENABLE                     |                     | X                   |                     |
++---------------------------------+---------------------+---------------------+---------------------+
+| CLEARSCREEN                     |                     | X                   |                     |
++---------------------------------+---------------------+---------------------+---------------------+
+| CONNECT                         | X                   | X                   |                     |
++---------------------------------+---------------------+---------------------+---------------------+
+| [NO]CONVERT                     |                     | X                   |                     |
++---------------------------------+---------------------+---------------------+---------------------+
+| CTRAP                           |                     | X                   |                     |
++---------------------------------+---------------------+---------------------+---------------------+
+| DELETE                          |                     |                     | X                   |
++---------------------------------+---------------------+---------------------+---------------------+
+| [NO]DELIMITER                   | X                   | X                   |                     |
++---------------------------------+---------------------+---------------------+---------------------+
+| [NO]DESTROY                     |                     |                     | X                   |
++---------------------------------+---------------------+---------------------+---------------------+
+| DETACH                          |                     | X                   |                     |
++---------------------------------+---------------------+---------------------+---------------------+
+| DOWNSCROLL                      |                     | X                   |                     |
++---------------------------------+---------------------+---------------------+---------------------+
+| [NO]ECHO                        |                     | X                   |                     |
++---------------------------------+---------------------+---------------------+---------------------+
+| ERASELINE                       |                     | X                   |                     |
++---------------------------------+---------------------+---------------------+---------------------+
+| [NO]ESCAPE                      |                     | X                   |                     |
++---------------------------------+---------------------+---------------------+---------------------+
+| EXCEPTION=expr                  | X                   | X                   | X                   |
++---------------------------------+---------------------+---------------------+---------------------+
+| [NO]FILTER[=expr]               |                     | X                   |                     |
++---------------------------------+---------------------+---------------------+---------------------+
+| [NO]FIXED                       | X                   |                     |                     |
++---------------------------------+---------------------+---------------------+---------------------+
+| FLUSH                           |                     | X                   |                     |
++---------------------------------+---------------------+---------------------+---------------------+
+| GROUP=expr                      | X                   | X                   | X                   |
++---------------------------------+---------------------+---------------------+---------------------+
+| KEY                             | X                   | X                   |                     |
++---------------------------------+---------------------+---------------------+---------------------+
+| IKEY                            | X                   | X                   |                     |
++---------------------------------+---------------------+---------------------+---------------------+
+| IOERROR=expr                    | X                   | X                   |                     |
++---------------------------------+---------------------+---------------------+---------------------+
+| [NO]HOSTSYNC                    |                     | X                   |                     |
++---------------------------------+---------------------+---------------------+---------------------+
+| [Z]LENGTH=intexpr               |                     | X                   |                     |
++---------------------------------+---------------------+---------------------+---------------------+
+| NEWVERSION                      | X                   |                     |                     |
++---------------------------------+---------------------+---------------------+---------------------+
+| OKEY                            | X                   | X                   |                     |
++---------------------------------+---------------------+---------------------+---------------------+
+| OWNER=expr                      | X                   | X                   | X                   |
++---------------------------------+---------------------+---------------------+---------------------+
+| [NO]PASTHRU                     |                     | X                   |                     |
++---------------------------------+---------------------+---------------------+---------------------+
+| [NO]RCHK                        | X                   | X                   |                     |
++---------------------------------+---------------------+---------------------+---------------------+
+| [NO]READONLY                    | X                   |                     |                     |
++---------------------------------+---------------------+---------------------+---------------------+
+| RECORDSIZE=intexpr              | X                   |                     |                     |
++---------------------------------+---------------------+---------------------+---------------------+
+| RENAME=expr                     |                     |                     | X                   |
++---------------------------------+---------------------+---------------------+---------------------+
+| [NO]RETRY                       | X                   | X                   |                     |
++---------------------------------+---------------------+---------------------+---------------------+
+| REWIND                          | X                   | X                   | X                   |
++---------------------------------+---------------------+---------------------+---------------------+
+| SKIPFILE=intexpr                |                     | X                   |                     |
++---------------------------------+---------------------+---------------------+---------------------+
+| SOCKET                          |                     | X                   | X                   |
++---------------------------------+---------------------+---------------------+---------------------+
+| SPACE=intexpr                   |                     | X                   | X                   |
++---------------------------------+---------------------+---------------------+---------------------+
+| [NO]STREAM                      | X                   |                     |                     |
++---------------------------------+---------------------+---------------------+---------------------+
+| SYSTEM=expr                     | X                   |                     | X                   |
++---------------------------------+---------------------+---------------------+---------------------+
+| TERMINATOR=expr                 |                     | X                   |                     |
++---------------------------------+---------------------+---------------------+---------------------+
+| TIMEOUT=expr                    |                     |                     | X                   |
++---------------------------------+---------------------+---------------------+---------------------+
+| [NO]TRUNCATE                    | X                   | X                   |                     |
++---------------------------------+---------------------+---------------------+---------------------+
+| [NO]TTSYNC                      |                     | X                   |                     |
++---------------------------------+---------------------+---------------------+---------------------+
+| [NO]TYPEAHEAD                   |                     | X                   |                     |
++---------------------------------+---------------------+---------------------+---------------------+
+| UIC=expr                        | X                   |                     | X                   |
++---------------------------------+---------------------+---------------------+---------------------+
+| UPSCROLL                        |                     | X                   |                     |
++---------------------------------+---------------------+---------------------+---------------------+
+| VARIABLE                        | X                   |                     |                     |
++---------------------------------+---------------------+---------------------+---------------------+
+| [Z]WIDTH=intexpr                |                     | X                   |                     |
++---------------------------------+---------------------+---------------------+---------------------+
+| WORLD=expr                      | X                   |                     | X                   |
++---------------------------------+---------------------+---------------------+---------------------+
+| [Z][NO]WRAP                     | X                   | X                   |                     |
++---------------------------------+---------------------+---------------------+---------------------+
+| WRITELB=expr                    |                     | X                   |                     |
++---------------------------------+---------------------+---------------------+---------------------+
+| X=intexpr                       |                     | X                   |                     |
++---------------------------------+---------------------+---------------------+---------------------+
+| Y=intexpr                       |                     | X                   |                     |
++---------------------------------+---------------------+---------------------+---------------------+
+| ZBFSIZE                         | X                   | X                   |                     |
++---------------------------------+---------------------+---------------------+---------------------+
+| Z[NO]DELAY                      | X                   | X                   |                     |
++---------------------------------+---------------------+---------------------+---------------------+
+| Z[NO]FF                         | X                   | X                   |                     |
++---------------------------------+---------------------+---------------------+---------------------+
+| ZIBFSIZE                        | X                   | X                   |                     |
++---------------------------------+---------------------+---------------------+---------------------+
+| LISTEN=expr                     | X                   | X                   |                     |
++---------------------------------+---------------------+---------------------+---------------------+
 
 
