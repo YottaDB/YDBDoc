@@ -9,8 +9,8 @@ Welcome to The M Programmer's Guide!
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
 
+   Documentation <http://yottadb.com/resources/documentation/>
    man
    about
    langext
@@ -22,6 +22,7 @@ Welcome to The M Programmer's Guide!
    isv
    ioproc
    utility
+   extrout
 
 
 Indices and tables
