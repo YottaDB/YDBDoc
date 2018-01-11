@@ -21,7 +21,7 @@ languages can call one another to the extent that such calling is
 permitted by the Supported language implementations.
 
 As C is the *lingua franca* of programming, the C API provides access
-the YottaDB engine from any language. As YottaDB adds standard APIs
+the YottaDB engine from any language. As YottaDB adds standard APIs()
 for other languages, additional sections will be added to ths
 Programmers Guide.
 
@@ -1481,6 +1481,34 @@ The ``void *param`` is reserved for future enhancements. As the
 initial release of YottaDB ignores it, we recommend using
 NULL. ``ydb_child_init()`` returns ``YDB_OK`` or an `error return
 code`_.
+
+-----------------
+ydb_fork_n_core()
+-----------------
+
+.. code-block:: C
+
+	void ydb_fork_n_core(void)
+
+The core of a process can help debug application code, for example to
+troubleshoot an out-of-design condition. However, generating a core
+terminates the process, and furthermore, if the process is last
+process with a database file open, that file can be left in an
+“unclean” state, even if a state that is easily recovered; and
+cleaning up open database files before generating the core perturbs
+the process state to be debugged.
+
+When a process executes ``ydb_fork_n_core()``, the process forks. The
+child process does essential cleanup (such as erasing encryption
+passphrases) and sends itself a signal to generate a core and
+terminate, while the parent process continues execution.
+
+The content, location, naming, and management of cores is managed by
+the operating system – see ``man 5 core`` for details. We recommend
+that you set ``kernel.core_uses_pid`` to 1 to make it easier to
+identify and track cores. As cores can contain protected confidential
+information, you *must* ensure appropriate configuration and
+management of cores.
 
 ----------
 ydb_free()
