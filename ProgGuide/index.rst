@@ -24,6 +24,7 @@ Welcome to The M Programmer's Guide!
    utility
    extrout
    internatn
+   errproc
 
 
 Indices and tables
