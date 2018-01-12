@@ -1102,15 +1102,12 @@ ydb_lock_decr_s()
 		int subs_used,
 		ydb_buffer_t *subsarray);
 
-``namecount`` is the number of variable names in the call. At least
-one variable must be specified.
-
-Decrements the count held by the process of each specified lock. As
+Decrements the count held by the process of the specified lock. As
 noted in the `Concepts`_ section, a lock whose count goes from 1 to 0
-is released. Any lock whose name is specified in the argument list,
-but which the process does not hold, is ignored.
+is released. A lock whose name is specified, but which the process
+does not hold, is ignored.
 
-As releasing locks cannot fail, the function returns ``YDB_OK``,
+As releasing a lock cannot fail, the function returns ``YDB_OK``,
 unless there is an error such as an invalid name that results in the
 return of an error code such as ``YDB_ERR_INVVARNAME``.
 
@@ -1125,23 +1122,15 @@ ydb_lock_incr_s()
 		int subs_used,
 		ydb_buffer_t *subsarray);
 
-``namecount`` is the number of variable names in the call. At least
-one variable must be specified.
-
 Without releasing any locks held by the process, attempt to acquire
-all the requested locks, and increment any locks already held. On
-return, the process will have acquired all requested locks, and
-incremented those already held, or will have neither acquired nor
-incremented any of them.
+the requested lock incrementing it if already held.
 
 ``timeout`` specifies a time in microseconds that the function waits
-to acquire the requested locks. If it is not able to acquire all
-requested locks, it acquires no locks, returning with a
-``YDB_LOCK_TIMEOUT`` return value.
+to acquire the requested lock. If it is not able to acquire the lock,
+it returns with a ``YDB_LOCK_TIMEOUT`` return value.
 
 If ``timeout`` is zero, the function makes exactly one attempt to
-acquire the locks, and if it is unable to, it returns
-``YDB_LOCK_TIMEOUT``.
+acquire the lock, and if unable to, it returns ``YDB_LOCK_TIMEOUT``.
 
 If all requested locks are successfully acquired, the function returns
 ``YDB_OK``.
