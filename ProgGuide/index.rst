@@ -25,6 +25,7 @@ Welcome to The M Programmer's Guide!
    extrout
    internatn
    errproc
+   triggers
 
 
 Indices and tables
