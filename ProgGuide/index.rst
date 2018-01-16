@@ -26,6 +26,7 @@ Welcome to The M Programmer's Guide!
    internatn
    errproc
    triggers
+   appendix
 
 
 Indices and tables
