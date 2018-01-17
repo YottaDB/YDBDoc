@@ -10,7 +10,7 @@ Welcome to The M Programmer's Guide!
 .. toctree::
    :maxdepth: 2
 
-   YottaDB Documentation <http://yottadb.com/resources/documentation/>
+   Main YottaDB Documentation Page <https://yottadb.com/resources/documentation>
    man
    about
    langext
