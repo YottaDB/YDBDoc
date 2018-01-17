@@ -8,8 +8,8 @@ Welcome to Acculturation's documentation!
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
-
+  
+   Main YottaDB Documentation Page <https://yottadb.com/resources/documentation>
    gtmacculturation
 
 Indices and tables
