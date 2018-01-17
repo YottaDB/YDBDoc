@@ -1828,14 +1828,14 @@ The following table summarizes the read/write permissions assigned to all trigge
 
 The following examples are derived from the FIS Profile application.
 
-Nodes in ^ACN(CID,50) have TYPE in piece 1, CLS in piece 2, FEEPLN in piece 15 and EMPLNO in piece 31. Indexes are ^XACN(CLS,ACN,CID), ^XREF("EMPLCTA",EMPLNO,ACN,TYPE,CID) and ^XREF("FEEPLN",FEEPLN,CID) and use ACN from the first piece of ^ACN(CLS,99). These indexes are maintained with four triggers: one invoked by a KILL or ZKill of an ^ACN(:,50) node and three invoked by SETs to different pieces of ^ACN(:,50) nodes. Note that ACN, CID, CLS and TYPE are required, whereas EMPLNO and FEEPLN can be null, which requires (in our convention) the use of $ZC(254) in indexes. The triggerfile definitions are:
+Nodes in ^ACN(CID,50) have TYPE in piece 1, CLS in piece 2, FEEPLN in piece 15 and EMPLNO in piece 31. Indexes are ^XACN(CLS,ACN,CID), ^XREF("EMPLCTA",EMPLNO,ACN,TYPE,CID) and ^XREF("FEEPLN",FEEPLN,CID) and use ACN from the first piece of ^ACN(CLS,99). These indices are maintained with four triggers: one invoked by a KILL or ZKill of an ^ACN(:,50) node and three invoked by SETs to different pieces of ^ACN(:,50) nodes. Note that ACN, CID, CLS and TYPE are required, whereas EMPLNO and FEEPLN can be null, which requires (in our convention) the use of $ZC(254) in indices. The triggerfile definitions are:
 
 .. parsed-literal::
    +^ACN(cid=:,50) -zdelim="|" -pieces=2 -commands=SET -xecute="Do ^SclsACN50"  
    +^ACN(cid=:,50) -zdelim="|" -pieces=1,31 -commands=SET -xecute="Do ^SemplnoTypeACN50" +^ACN(cid=:,50) -zdelim="|" -pieces=15 -commands=SET -xecute="Do ^SfeeplnACN50" 
    +^ACN(cid=:,50) -commands=KILL,ZKill -xecute="Do ^KACN50"
 
-The code in KACN50.m KILLs cross reference indexes when the application deletes any ^ACN(:,50).
+The code in KACN50.m KILLs cross reference indices when the application deletes any ^ACN(:,50).
 
 .. parsed-literal::
    KACN50 ; KILL of entire ^ACN(:,50) node, e.g., from account deletion
