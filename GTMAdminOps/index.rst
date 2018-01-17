@@ -8,8 +8,8 @@ Welcome to the Administration and Operations Guide!
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
 
+   Main YottaDB Documentation Page <https://yottadb.com/resources/documentation/>
    man
    about
    installydb
