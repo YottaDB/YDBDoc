@@ -71,7 +71,7 @@ YottaDB/GT.M processes receive responses from gtmsecshr via socket files owned b
 
 **Triggers**
 
-A YottaDB/GT.M trigger is a code fragment stored in the database file that all processes performing a matching update to a global variable in that file execute automatically, for example, to maintain cross-reference indexes and referential integrity. Any process that has read-write permission for a database file can change the triggers in that database file, which can in turn force other processes updating that database to execute the changed triggers.
+A YottaDB/GT.M trigger is a code fragment stored in the database file that all processes performing a matching update to a global variable in that file execute automatically, for example, to maintain cross-reference indices and referential integrity. Any process that has read-write permission for a database file can change the triggers in that database file, which can in turn force other processes updating that database to execute the changed triggers.
 
 ++++++++++++++++++++++++++
 Recommendations

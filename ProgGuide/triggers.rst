@@ -18,7 +18,7 @@ YottaDB/GT.M allows you to set up a trigger mechanism that automatically execute
 Triggers meet many application needs including (but not limited to) the following:
 
 * **Enforce schema-level consistency**: Since database schema created in a normal M application are implicit, M applications implement logic to maintain and enforce conformance with an application schema. Using triggers to enforce schema-level consistency ensures all processes invoke the code uniformly, and increases code modularity and maintainability.
-* **Allow an application to maintain one or more non-primary key indexes**. For example, a trigger on updates to global nodes containing a customer id can maintain an index on the last name.
+* **Allow an application to maintain one or more non-primary key indices**. For example, a trigger on updates to global nodes containing a customer id can maintain an index on the last name.
 * **Implement business logic**: For example, an update to an account could automatically trigger updates to related accounts.
 * **Reducing replication traffic**: Since the YottaDB/GT.M replication stream carries only the triggering updates, not the triggered updates, triggers reduce network traffic.
 * **Automate application defined logging or journaling of updates or maintaining historical records**. Triggers can be used to control these.
