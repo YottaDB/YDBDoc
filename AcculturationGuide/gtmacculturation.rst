@@ -185,9 +185,9 @@ Run YottaDB/GT.M
 YottaDB/GT.M needs several environment variables to be set up. YottaDB/GT.M provides a script that sets up reasonable defaults and allows you to start using YottaDB/GT.M immediately. When you set up environments in YottaDB/GT.M, you should set up your own scripting, but the default is a good place to start. You can source the gtmprofile file in the directory in which you have installed YottaDB/GT.M (e.g, /usr/local/lib/yottadb/r110/gtmprofile or /usr/lib/fis gtm/V6.2 000_x86_64/gtmprofile) to set up reasonable defaults or simply execute the script gtm to execute YottaDB/GT.M. A default environment is created only if it does not exist already.
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ source /usr/lib/fis-gtm/V6.2-000_x86_64/gtmprofile
+   gtmuser@gtmworkshop:~$ source /usr/local/lib/yottadb/r110/gtmprofile
    %GDE-I-GDUSEDEFS, Using defaults for Global Directory 
-           /home/gtmuser/.fis-gtm/V6.2-000_x86_64/g/gtm.gld
+           /home/gtmuser/fis-gtm/V6.2-000_x86_64/g/gtm.gld
 
    GDE> 
    %GDE-I-EXECOM, Executing command file /usr/lib/fis-gtm/V6.2-000_x86_64/gdedefaults
@@ -201,31 +201,30 @@ YottaDB/GT.M needs several environment variables to be set up. YottaDB/GT.M prov
     %GTM-I-JNLSTATE, Journaling state for region DEFAULT is now ON
     gtmuser@gtmworkshop:~$
 
-Sourcing gtmprofile also defines gtm as an alias to the script gtm that runs YottaDB/GT.M (but more on that later).
+Sourcing gtmprofile also defines ydb as an alias to the script gtm that runs YottaDB/GT.M (but more on that later).
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ alias gtm
-   gtm='/usr/lib/fis-gtm/V6.2-000_x86_64/gtm'
-   gtmuser@gtmworkshop:~$ gtm
-   GTM>
+   gtmuser@gtmworkshop:~$ alias ydb='/usr/local/lib/yottadb/r110/gtm'
+   gtmuser@gtmworkshop:~$ ydb
+   YDB>
 
 Now you are in the YottaDB/GT.M “direct mode” where you can execute commands interactively. For example:
 
 .. parsed-literal::
-   GTM>set ^Capital("USA")="Washington"
+   YDB>set ^Capital("USA")="Washington"
 
-   GTM>set ^Capital("India")="New Delhi"
+   YDB>set ^Capital("India")="New Delhi"
 
-   GTM>set ^Capital("Jordan")="Amman"
+   YDB>set ^Capital("Jordan")="Amman"
 
-The commands perform database updates, which are shared between processes. You can see this if you start a new terminal session, start a new GT.M process and ask it to dump the “global variable” (a key-value association) ^Capital. The halt command takes you back to the Linux shell.
+The commands perform database updates, which are shared between processes. You can see this if you start a new terminal session, start a new YottaDB/GT.M process and ask it to dump the “global variable” (a key-value association) ^Capital. The halt command takes you back to the Linux shell.
 
 .. parsed-literal::
-   GTM>zwrite ^Capital
+   YDB>zwrite ^Capital
    ^Capital("India")="New Delhi"
    ^Capital("Jordan")="Amman"
    ^Capital("USA")="Washington"
-   GTM>halt
+   YDB>halt
    gtmuser@gtmworkshop:~$
 
 The operation of YottaDB/GT.M is controlled by a number of environment variables. In our exercise, the gtmprofile script automatically sets a number of environment variables:
@@ -234,7 +233,7 @@ The operation of YottaDB/GT.M is controlled by a number of environment variables
    gtmuser@gtmworkshop:~$ env | grep ^gtm
    gtm_repl_instance=/home/gtmuser/.fis-gtm/V6.2-000_x86_64/g/gtm.repl
    gtm_log=/tmp/fis-gtm/V6.2-000_x86_64
-   gtm_prompt=GTM>
+   gtm_prompt=YDB>
    gtm_retention=42
    gtmver=V6.2-000_x86_64
    gtm_icu_version=5.2
@@ -280,14 +279,14 @@ With YottaDB/GT.M, you can write applications that implement international chara
    gtmuser@gtmworkshop:~$ export gtm_chset=UTF-8 LC_CTYPE=en_US.utf8
    gtmuser@gtmworkshop:~$ source /usr/lib/fis-gtm/V6.2-000_x86_64/gtmprofile
    gtmuser@gtmworkshop:~$ gtm
-   GTM>write $zchset
+   YDB>write $zchset
    UTF-8
-   GTM>for i=1040:16:1072 write ! for j=0:1:15 write $char(i+j)," "
+   YDB>for i=1040:16:1072 write ! for j=0:1:15 write $char(i+j)," "
 
    А Б В Г Д Е Ж З И Й К Л М Н О П
    Р С Т У Ф Х Ц Ч Ш Щ Ъ Ы Ь Э Ю Я
    а б в г д е ж з и й к л м н о п
-   GTM>
+   YDB>
 
 Note that Unicode support requires additional infrastructure, such as Unicode enabled terminal emulators, and is likely to require custom collation modules to be written to ensure that strings such as names are sorted in linguistically and culturally correct order.
 
@@ -306,7 +305,7 @@ To use YottaDB/GT.M, at a minimum you need:
 
 **User Documentation**
 
-YottaDB/GT.M user documentation consists of manuals and technical bulletins. Manuals are updated periodically, and technical bulletins serve as user documentation updates that are available in a more timely manner. Current YottaDB documentation is available online at the YottaDB documentation site. All current YottaDB/GT.M documentation is accessible on the Internet. Go to the `YottaDB home page <http://yottadb.com>`_ and click on the User Documentation tab.
+YottaDB/GT.M user documentation consists of manuals and technical bulletins. Manuals are updated periodically, and technical bulletins serve as user documentation updates that are available in a more timely manner. Current YottaDB documentation is available online at the YottaDB documentation site. All current YottaDB/GT.M documentation is accessible on the Internet. Go to the `YottaDB home page <https://yottadb.com>`_ and click on the Documentation tab under Resources.
 
 YottaDB/GT.M documentation is organized into manuals, technical bulletins, suggested practices and advisories:
 
@@ -317,10 +316,10 @@ YottaDB/GT.M documentation is organized into manuals, technical bulletins, sugge
 
 **Routines in the File System**
 
-Routines in YottaDB/GT.M are simply files in the file system; they do not reside in databases. You can edit routines from the GTM> prompt. Start GT.M and at the GTM> prompt, type zedit "hello" and hit ENTER. This starts the vi editor editing the source routine for ^hello, /home/gtmuser/.fis-gtm/V6.2-000_x86_64/r/hello.m. Use the five key sequence ESCAPE : q ! ENTER to exit vi without changing the file.
+Routines in YottaDB/GT.M are simply files in the file system; they do not reside in databases. You can edit routines from the YDB> prompt. Start YottaDB/GT.M and at the YDB> prompt, type zedit "hello" and hit ENTER. This starts the vi editor editing the source routine for ^hello, /home/gtmuser/.fis-gtm/V6.2-000_x86_64/r/hello.m. Use the five key sequence ESCAPE : q ! ENTER to exit vi without changing the file.
 
 .. note::
-  although vi always puts a newline at the end of your file; other editors may not. A GT.M program file should always end with a newline.
+  although vi always puts a newline at the end of your file; other editors may not. A YottaDB/GT.M program file should always end with a newline.
 
 The philosophy of YottaDB/GT.M is to focus on what it does well, providing a robust, scalable, transaction processing database and a compiler for the M language, and to leverage tools and capabilities of the underlying operating system for the rest. This is powerful because whenever there are enhancements to the underlying operating environment, YottaDB/GT.M can benefit from them. It can also be a little uncomfortable for M programmers migrating to YottaDB/GT.M, because traditional M implementations carry their environments around with them, like the shell on a snail's back.
 
@@ -337,199 +336,199 @@ The purpose of this exercise is to understand compiling and linking routines. Us
 You can also perform the same operation from inside YottaDB/GT.M
 
 .. parsed-literal::
-   GTM>zsystem "find .fis-gtm -iname hello.[mo]"
-   GTM>
+   YDB>zsystem "find .fis-gtm -iname hello.[mo]"
+   YDB>
 
 or
 
 .. parsed-literal::
-   GTM>do SILENT^%RSEL("hello") zwrite %ZR
+   YDB>do SILENT^%RSEL("hello") zwrite %ZR
    %ZR=0
 
-   GTM>
+   YDB>
 
 Had there been a routine, the response might look like this:
 
 .. parsed-literal::
-   GTM>do SILENT^%RSEL("hello") zwrite %ZR    
+   YDB>do SILENT^%RSEL("hello") zwrite %ZR    
    %ZR=1
    %ZR("hello")="/home/gtmuser/.fis-gtm/r/"
 
-   GTM>
+   YDB>
 
 If you are not comfortable with the terse commands of the default vi editor, you can install your preferred editor. Other editors that are installed on the virtual machine are fte, jed, joe and nano. Nano may be the easiest editor for you to use if you are not familiar with any editor included with the virtual machine. In nano Ctrl-G provides a screen with keyboard shortcuts.
 
 .. parsed-literal::
    gtmuser@gtmworkshop:~$ export EDITOR=`which nano`
    gtmuser@gtmworkshop:~$ gtm
-   GTM>
+   YDB>
 
 Instruct YottaDB/GT.M to run the routine ^hello and note that it reports an error:
 
 .. parsed-literal::
-   GTM>do ^hello
+   YDB>do ^hello
    %GTM-E-ZLINKFILE, Error while zlinking "hello"
    %GTM-E-FILENOTFND, File hello not found
-   GTM>do SILENT^%RSEL("hello") zwrite %ZR
+   YDB>do SILENT^%RSEL("hello") zwrite %ZR
    %ZR=0
-   GTM>
+   YDB>
 
 Within YottaDB/GT.M, use zedit "hello" to start the editor. Create a simple “Hello, World” program,save it and return to YottaDB/GT.M. Now notice that the source file exists (you can use the arrow key to recall the previous command within YottaDB/GT.M) but there is no object file.
 
 .. parsed-literal::
-   GTM>do SILENT^%RSEL("hello") zwrite %ZR
+   YDB>do SILENT^%RSEL("hello") zwrite %ZR
    %ZR=1
    %ZR("hello")="/home/gtmuser/.fis-gtm/V6.2-000_x86_64/r/"
 
-   GTM>do SILENT^%RSEL("hello","OBJ") zwrite %ZR
+   YDB>do SILENT^%RSEL("hello","OBJ") zwrite %ZR
    %ZR=0
    
-   GTM>
+   YDB>
 
 Now run the program - it runs as expected.
 
 .. parsed-literal::
-   GTM>do ^hello
+   YDB>do ^hello
    Hello, World
 
-   GTM>
+   YDB>
 
 Now you now also have an object file. YottaDB/GT.M dynamically, and automatically, compiles the source program into the object program when you execute do ^hello.
 
 .. parsed-literal::
-   GTM>do SILENT^%RSEL("hello","OBJ") zwrite %ZR
+   YDB>do SILENT^%RSEL("hello","OBJ") zwrite %ZR
    %ZR=1
    %ZR("hello")="/home/gtmuser/.fis-gtm/V6.2-000_x86_64/o/"
 
-   GTM>
+   YDB>
 
-[Note that since YottaDb/GT.M is a compiler, it can generate error messages at compile time as well as at run time. Indeed when compiling an application such as VistA, there may be hundreds of lines of error messages triggered by lines of code that are legal for other M implementations but not for GT.M. These lines are protected in VistA and are inside conditional statements that are executed only on the appropriate M implementation, so they are nothing to be concerned about.]
+[Note that since YottaDB/GT.M is a compiler, it can generate error messages at compile time as well as at run time. Indeed when compiling an application such as VistA, there may be hundreds of lines of error messages triggered by lines of code that are legal for other M implementations but not for YottaDB/GT.M. These lines are protected in VistA and are inside conditional statements that are executed only on the appropriate M implementation, so they are nothing to be concerned about.]
 
 Let's also get the time stamps of the files; notice that the source code file is older than the object code file:
 
 .. parsed-literal::
-   GTM>zsystem "find .fis-gtm -name hello.[mo] -exec ls -l {} \;"
+   YDB>zsystem "find .fis-gtm -name hello.[mo] -exec ls -l {} \;"
    -rw-rw-r-- 1 gtmuser gtmuser 1048 Nov 14 11:15 .fis-gtm/V6.2-000_x86_64/o/hello.o
    -rw-rw-r-- 1 gtmuser gtmuser 35 Nov 14 11:14 .fis-gtm/V6.2-000_x86_64/r/hello.m
 
-   GTM>
+   YDB>
 
 Now edit the program with zedit "hello" then change it, e.g., make it print "Aloha, World" instead and save it.
 
-Again execute do ^hello and note that YottaDb/GT.M still prints "Hello, World". This is because YottaDb/GT.M already has an hello module linked in its address space, and does not go out every time to check if there is a new version. This is “clobber protection” and a YottaDb/GT.M feature.
+Again execute do ^hello and note that YottaDB/GT.M still prints "Hello, World". This is because YottaDB/GT.M already has an hello module linked in its address space, and does not go out every time to check if there is a new version. This is “clobber protection” and a YottaDB/GT.M feature.
 
-Execute zLink "hello" which tells YottaDb/GT.M to re-link hello even if it already has one linked in its address space, followed by do ^hello and note that it now prints "Aloha, World" . Verify that the source file is newer and that YottaDb/GT.M has created a new object file.
+Execute zLink "hello" which tells YottaDB/GT.M to re-link hello even if it already has one linked in its address space, followed by do ^hello and note that it now prints "Aloha, World" . Verify that the source file is newer and that YottaDB/GT.M has created a new object file.
 
 .. parsed-literal::
-   GTM>zedit "hello"
+   YDB>zedit "hello"
 
-   GTM>do ^hello
+   YDB>do ^hello
    Hello,world
 
-   GTM>zlink "hello"
+   YDB>zlink "hello"
 
-   GTM>do ^hello
+   YDB>do ^hello
    Aloha, world
 
-   GTM>zsystem "find .fis-gtm -name hello.[mo] -exec ls -l {} \;"
+   YDB>zsystem "find .fis-gtm -name hello.[mo] -exec ls -l {} \;"
    -rw-rw-r-- 1 gtmuser gtmuser 1048 Nov 14 11:20 .fis-gtm/V6.2-000_x86_64/o/hello.o
    -rw-rw-r-- 1 gtmuser gtmuser 35 Nov 14 11:20 .fis-gtm/V6.2-000_x86_64/r/hello.m
 
-   GTM>
+   YDB>
 
 .. note::
-    To avoid being surprised by running an old version of a routine that you have just edited, it is important to understand how dynamic compilation and linking work on GT.M.
+    To avoid being surprised by running an old version of a routine that you have just edited, it is important to understand how dynamic compilation and linking work on YottaDB/GT.M.
 
-The $zroutines ISV tells YottaDb/GT.M where to find routines:
+The $zroutines ISV tells YottaDB/GT.M where to find routines:
 
 .. parsed-literal::
-   GTM>write $zroutines
+   YDB>write $zroutines
    /home/gtmuser/.fis-gtm/V6.2-000_x86_64/o(/home/gtmuser/.fis-gtm/V6.2-000_x86_64/r /home/gtmuser/.fis-gtm/r) /usr/lib/fis-gtm/V6.2-000_x86_64/plugin/o(/usr/lib/fis-gtm/V6.2-000_x86_64/plugin/r) /usr/lib/fis-gtm/V6.2-000_x86_64/libgtmutil.so /usr/lib/fis-gtm/V6.2-000_x86_64
-   GTM>
+   YDB>
 
-V6.2-000, the latest GT.M release as of the date of this document, is used in this release of the Acculturation Workshop. Future YottaDB/GT.M releases may by default suffix one or more directories with an asterisk, e.g., instead of /home/gtmuser/.fis-gtm/V6.2-000_x86_64/o, you may see /home/gtmuser/.fis-gtm/V6.2-000_x86_64/o*. More on this below.
+V6.2-000, the latest GT.M release and r1.10, the latest YottaDB release as of the date of this document, are used in this release of the Acculturation Workshop. Future YottaDB/GT.M releases may by default suffix one or more directories with an asterisk, e.g., instead of /home/gtmuser/.fis-gtm/V6.2-000_x86_64/o, you may see /home/gtmuser/.fis-gtm/V6.2-000_x86_64/o*. More on this below.
 
-At process startup, $zroutines is initialized from the environment variable $gtmroutines, but it can be altered from within the GT.M process.
+At process startup, $zroutines is initialized from the environment variable $gtmroutines, but it can be altered from within the YottaDB/GT.M process.
 
 .. parsed-literal::
-   GTM>set $zroutines=". "_$ztrnlnm("gtm_dist")
+   YDB>set $zroutines=". "_$ztrnlnm("gtm_dist")
 
-   GTM>write $zroutines
+   YDB>write $zroutines
    . /usr/lib/fis-gtm/V6.2-000_x86_64
-   GTM>write $ztrnlnm("gtmroutines")
+   YDB>write $ztrnlnm("gtmroutines")
    /home/gtmuser/.fis-gtm/V6.2-000_x86_64/o(/home/gtmuser/.fis-gtm/V6.2-000_x86_64/r /home/gtmuser/.fis-gtm/r) /usr/lib/fis-gtm/V6.2-000_x86_64
-   GTM>
+   YDB>
 
 The ZEDIT command always puts new routines in the first source directory in the search path. Use it to create a new routine to print the current date and time at the Universal Time Coordinate. After the change to $zroutines above, notice how a newly created program and object file are created in the current directory (.).
 
 .. parsed-literal::
-   GTM>zedit "UTC"
-   GTM>zprint ^UTC
+   YDB>zedit "UTC"
+   YDB>zprint ^UTC
    UTC     zsystem "TZ=UTC date"
            quit
 
-   GTM>do ^UTC
+   YDB>do ^UTC
    Fri Nov 14 16:25:28 UTC 2014
 
-   GTM>zsystem "find . -name UTC\* -exec ls -l {} \;"
+   YDB>zsystem "find . -name UTC\* -exec ls -l {} \;"
    -rw-rw-r-- 1 gtmuser gtmuser 32 Nov 14 11:24 ./UTC.m
    -rw-rw-r-- 1 gtmuser gtmuser 1000 Nov 14 11:25 ./UTC.o
 
-   GTM>
+   YDB>
 
 YottaDB/GT.M also provides a mechanism for processes to indicate that instead of explicitly relinking newer versions of routines, they would like to “subscribe” to and automatically execute the latest updated (“published”) object code of routines. Processes indicate this interest by appending an asterisk (“*”) to each directory name from which they wish to execute the latest object code.
 
-Start a new session of YottaDb/GT.M (so that you don't have any routines linked the old way), and modify $zroutines to append an asterisk to the object directory from which your routines are executed. If you are using a version of YottaDb/GT.M newer than V6.2-000, the gtmprofile script may already have appended the requisite asterisk. Then execute the “hello” program to make the process link the object code:
+Start a new session of YottaDB/GT.M (so that you don't have any routines linked the old way), and modify $zroutines to append an asterisk to the object directory from which your routines are executed. If you are using a version of YottaDB/GT.M newer than V6.2-000, the gtmprofile script may already have appended the requisite asterisk. Then execute the “hello” program to make the process link the object code:
 
 .. parsed-literal::
    gtmuser@gtmworkshop:~$ gtm
 
-   GTM>write $zroutines
+   YDB>write $zroutines
    /home/gtmuser/.fis-gtm/V6.2-000_x86_64/o(/home/gtmuser/.fis-gtm/V6.2-000_x86_64/r /home/gtmuser/.fis-gtm/r) /usr/lib/fis-gtm/V6.2-000_x86_64/plugin/o(/usr/lib/fis-gtm/V6.2-000_x86_64/plugin/r) /usr/lib/fis-gtm/V6.2-000_x86_64/libgtmutil.so /usr/lib/fis-gtm/V6.2-000_x86_64
-   GTM>set $zroutines=$piece($zroutines,"4/o",1)_"4/o*"_$piece($zroutines,"4/o",2)
+   YDB>set $zroutines=$piece($zroutines,"4/o",1)_"4/o*"_$piece($zroutines,"4/o",2)
 
-   GTM>write $zroutines
+   YDB>write $zroutines
    /home/gtmuser/.fis-gtm/V6.2-000_x86_64/o*(/home/gtmuser/.fis-gtm/V6.2-000_x86_64/r /home/gtmuser/.fis-gtm/r) /usr/lib/fis-gtm/V6.2-000_x86_64/plugin/o(/usr/lib/fis-gtm/V6.2-000_x86_64/plugin/r) /usr/lib/fis-gtm/V6.2-000_x86_64/libgtmutil.so /usr/lib/fis-gtm/V6.2-000_x86_64
-   GTM>do ^hello
+   YDB>do ^hello
    Aloha, world
 
-   GTM>
+   YDB>
 
 In a different YottaDB/GT.M process in a different shell session, after appending the asterisk to the object directory, modify the “hello” program to say “Aloha, Universe”. Note the use of the environment variable gtm_prompt to differentiate it from the original session. After editing it, run the routine, which will compile the new version. They use the ZRUPDATE command to publish the new object file:
 
 .. parsed-literal::
-   GTM2>set $zroutines=$piece($zroutines,"4/o",1)_"4/o*"_$piece($zroutines,"4/o",2)
+   YDB2>set $zroutines=$piece($zroutines,"4/o",1)_"4/o*"_$piece($zroutines,"4/o",2)
 
-   GTM2>zedit "hello" ; modify it to print Aloha, universe
+   YDB2>zedit "hello" ; modify it to print Aloha, universe
 
-   GTM2>do ^hello ; this ensures that the new version is compiled
+   YDB2>do ^hello ; this ensures that the new version is compiled
    Aloha, universe
 
-   GTM2>zrupdate $piece($zroutines,"*",1)_"/hello.o" ; publish the object code
+   YDB2>zrupdate $piece($zroutines,"*",1)_"/hello.o" ; publish the object code
 
-   GTM2>
+   YDB2>
 
-In a different YottaDb/GT.M process in a different shell session, after appending the asterisk to the object directory, modify the “hello” program to say “Aloha, Universe”. Note the use of the environment variable gtm_prompt to differentiate it from the original session. After editing it, run the routine, which will compile the new version. They use the ZRUPDATE command to publish the new object file:
+In a different YottaDB/GT.M process in a different shell session, after appending the asterisk to the object directory, modify the “hello” program to say “Aloha, Universe”. Note the use of the environment variable gtm_prompt to differentiate it from the original session. After editing it, run the routine, which will compile the new version. They use the ZRUPDATE command to publish the new object file:
 
 .. parsed-literal::
-   GTM2>set $zroutines=$piece($zroutines,"4/o",1)_"4/o*"_$piece($zroutines,"4/o",2)
+   YDB2>set $zroutines=$piece($zroutines,"4/o",1)_"4/o*"_$piece($zroutines,"4/o",2)
 
-   GTM2>zedit "hello" ; modify it to print Aloha, universe
+   YDB2>zedit "hello" ; modify it to print Aloha, universe
 
-   GTM2>do ^hello ; this ensures that the new version is compiled
+   YDB2>do ^hello ; this ensures that the new version is compiled
    Aloha, universe
 
-   GTM2>zrupdate $piece($zroutines,"*",1)_"/hello.o" ; publish the object code
+   YDB2>zrupdate $piece($zroutines,"*",1)_"/hello.o" ; publish the object code
 
-   GTM2>
+   YDB2>
 
 In the original session, again run the hello program, and notice that even without an explicit zlink, it has the latest version of the program:
 
 .. parsed-literal::
-   GTM>do ^hello
+   YDB>do ^hello
    Aloha, universe
 
-   GTM>
+   YDB>
 
 The Programmer's Guide explains the use of $ZROUTINES in more detail.
 
@@ -541,11 +540,11 @@ Use the tree -d .fis-gtm command from the shell to look at the default directory
 Global Directories Point to Global Variables
 --------------------------------------------
 
-Routines in YottaDB/GT.M reside in the file system rather than in the database, whereas global variables reside in databases. Routines are completely independent of global variables. In this respect, YottaDb/GT.M may be different from other M implementations.
+Routines in YottaDB/GT.M reside in the file system rather than in the database, whereas global variables reside in databases. Routines are completely independent of global variables. In this respect, YottaDB/GT.M may be different from other M implementations.
 
-Given a person's name, a telephone directory helps you find the person by giving you the phone number, and sometimes their address as well. Analogously, given an M global variable name, a global directory helps a GT.M process find the variable by giving it the database file where that variable resides, as well as other pertinent information.
+Given a person's name, a telephone directory helps you find the person by giving you the phone number, and sometimes their address as well. Analogously, given an M global variable name, a global directory helps a YottaDB/GT.M process find the variable by giving it the database file where that variable resides, as well as other pertinent information.
 
-The global directory is a binary file pointed to by the ISV $zgbldir. The GDE utility program (invoked with do ^GDE inside GT.M or mumps -run ^GDE from the shell) is used to manage global directories. [Note that the input to GDE can be a text file. In a production environment, YottaDB LLC/FIS recommends that text files be used to define database configurations, and that these text files be put under version control.]
+The global directory is a binary file pointed to by the ISV $zgbldir. The GDE utility program (invoked with do ^GDE inside YottaDB/GT.M or mumps -run ^GDE from the shell) is used to manage global directories. [Note that the input to GDE can be a text file. In a production environment, YottaDB/FIS recommends that text files be used to define database configurations, and that these text files be put under version control.]
 
 In YottaDB/GT.M, sets of M global variables (Names or Name spaces) are mapped to Regions that define properties relating to the M global. Each Region is mapped to a Segment that defines properties relating to the file system. Consider the example in the figure below:
 
@@ -562,11 +561,11 @@ Each database file can have a single active journal file. A journal file can be 
 The ISV $zgbldir points a YottaDB/GT.M process to the global directory. $zgbldir is initialized from $gtmgbldir at process startup, but it can be modified by the process during execution.
 
 .. parsed-literal::
-   GTM>write $ztrnlnm("gtmgbldir")
+   YDB>write $ztrnlnm("gtmgbldir")
    /home/gtmuser/.fis-gtm/V6.2-000_x86_64/g/gtm.gld
-   GTM>write $zgbldir
+   YDB>write $zgbldir
    /home/gtmuser/.fis-gtm/V6.2-000_x86_64/g/gtm.gld
-   GTM>
+   YDB>
 
 GDE, the Global Directory Editor, is a program used to manipulate global directories. GDE is itself written in M, and you can invoke it from the shell with mumps -run GDE (or, with the gtm alias, gtm -run GDE) or from inside the direct mode with do ^GDE.
 
@@ -910,7 +909,7 @@ First, create the directory structure.
 
 The first process to open a database file sets up all the shared memory control structures needed. The last one out tears it down. There is no daemon that must run with elevated provileges, that can be a single point of failure, a performance bottleneck, or a potential security vulnerability. Note that if replication is in use, then at least one Source Server process (see below) must be brought up first, but that is not a database daemon.
 
-Upon bringing the system back up, if the system crashes, or is forcibly brought down: if journaling is in use, mupip journal -recover (or mupip journal -rollback if replication is in use) will recover the database. If journaling is not in use, mupip rundown -region "*" will clean up the database control structures in the file header, but cannot fix any integrity errors resulting from shutting down a computer without cleanly terminating GT.M processes.
+Upon bringing the system back up, if the system crashes, or is forcibly brought down: if journaling is in use, mupip journal -recover (or mupip journal -rollback if replication is in use) will recover the database. If journaling is not in use, mupip rundown -region "*" will clean up the database control structures in the file header, but cannot fix any integrity errors resulting from shutting down a computer without cleanly terminating YottaDB/GT.M processes.
 
 .. note::
    Do not use mupip rundown if journaling is in use and you plan to recover the database after a crash with a mupip journal operation.
@@ -937,13 +936,13 @@ When possible, gtmprofile provides reasonable defaults for any of the following 
 
 - **gtmgbldir** - points to the global directory.
 
-- **gtm_icu_version** - this is meaningful only when $gtm_chset is "UTF-8". GT.M requires libicu version 3.6 or higher. If libicu has been compiled with symbol renaming enabled (as is the case with Ubuntu Linux), GT.M requires gtm_icu_version to be explictly set (see the release notes for your GT.M release). Note that ICU changed its version numbering system so that the version after 4.8 was 49. As GT.M retains the old numbering scheme, for ICU versions after 4.8, please set gtm_icu_version using the old scheme, e.g., if your Linux system has ICU version 52, set gtm_icu_version to 5.2.
+- **gtm_icu_version** - this is meaningful only when $gtm_chset is "UTF-8". YottaDB/GT.M requires libicu version 3.6 or higher. If libicu has been compiled with symbol renaming enabled (as is the case with Ubuntu Linux), YottaDB/GT.M requires gtm_icu_version to be explicitly set (see the release notes for your YottaDB/GT.M release). Note that ICU changed its version numbering system so that the version after 4.8 was 49. As YottaDB/GT.M retains the old numbering scheme, for ICU versions after 4.8, please set gtm_icu_version using the old scheme, e.g., if your Linux system has ICU version 52, set gtm_icu_version to 5.2.
 
-- **gtm_log** - this is where the gtmsecshr process creates log files and all processes that use an installation of GT.M (from one directory) should have the same value of this environment variable. In conformance with the `Filesystem Hierarchy Standard <http://www.pathname.com/fhs/>`_ /var/log/fis-gtm/$gtmver is suggested (unless the same version of GT.M is installed in multiple directories).
+- **gtm_log** - this is where the gtmsecshr process creates log files and all processes that use an installation of YottaDB/GT.M (from one directory) should have the same value of this environment variable. In conformance with the `Filesystem Hierarchy Standard <http://www.pathname.com/fhs/>`_ /var/log/fis-gtm/$gtmver is suggested (unless the same version of YottaDB/GT.M is installed in multiple directories).
 
 - **gtm_principal_editing** - determines whether the previous input to a Read command can be recalled and edited before ENTER is pressed to submit it. Note: direct mode commands have a more extensive capability in this regard, independent of the value of this environment variable.
 
-- **gtm_prompt** - if set, this is the YottaDB/GT.M direct mode prompt. If not set, the direct mode prompt is "GTM>". If you routinely work in different environments, you can use this to remind yourself which environment you are in, e.g., "DEV>" for development, "TEST>" for testing and "PROD>" for production.
+- **gtm_prompt** - if set, this is the YottaDB/GT.M direct mode prompt. If not set, the direct mode prompt is "YDB>". If you routinely work in different environments, you can use this to remind yourself which environment you are in, e.g., "DEV>" for development, "TEST>" for testing and "PROD>" for production.
 
 - **gtm_repl_instance** - specifies the path to the replication instance file when database replication is in use. We suggest putting this file in the same directory as your global directory.
 
@@ -959,7 +958,7 @@ When possible, gtmprofile provides reasonable defaults for any of the following 
 
 YottaDB/GT.M directly or indirectly uses a number of other environment variables that are not touched by gtmprofile (they can be set before or after gtmprofile is sourced). These are documented in the YottaDB/GT.M Administration and Operations Guide. Some worth noting are:
 
-- **gtm_badchar** is used to initialize the setting of the VIEW command that determines whether GT.M should raise an error when it encounters an illegal UTF-8 character sequence.
+- **gtm_badchar** is used to initialize the setting of the VIEW command that determines whether YottaDB/GT.M should raise an error when it encounters an illegal UTF-8 character sequence.
 
 - **gtm_baktmpdir** is used by mupip as the directory where it is to create temporary files for backup. Mupip online integ also creates temporary files in this directory if gtm_snaptmpdir is not defined.
 
@@ -973,7 +972,7 @@ YottaDB/GT.M directly or indirectly uses a number of other environment variables
 
 - **EDITOR** - a standard system environment variable that specifies the editor invoked by YottaDB/GT.M in response to the ZEDIT command (defaults to vi, if $EDITOR is not set).
 
-- **TZ** - a standard system environment variable that specifies the timezone to be used by YottaDB/GT.M processes, if they are not to use the default system timezone (GT.M assumes the system clock is set to UTC).
+- **TZ** - a standard system environment variable that specifies the timezone to be used by YottaDB/GT.M processes, if they are not to use the default system timezone (YottaDB/GT.M assumes the system clock is set to UTC).
 
 Here are the environment variables set by the default gtmprofile file (which the gtm script sources).
 
@@ -983,7 +982,7 @@ Here are the environment variables set by the default gtmprofile file (which the
    gtmuser@gtmworkshop:~$ env | grep ^gtm
    gtm_repl_instance=/home/gtmuser/.fis-gtm/V6.2-000_x86_64/g/gtm.repl
    gtm_log=/tmp/fis-gtm/V6.2-000_x86_64
-   gtm_prompt=GTM>
+   gtm_prompt=YDB>
    gtm_retention=42
    gtmver=V6.2-000_x86_64
    gtm_icu_version=5.2
@@ -1025,12 +1024,12 @@ Verify that you can read and write your default database and change the permissi
    -rw-r----- 1 gtmuser gtmuser 20783616 Nov 17 16:51 .fis-gtm/V6.2-000_x86_64/g/gtm.dat
    gtmuser@gtmworkshop:~$ gtm
 
-   GTM>set ^X=1
+   YDB>set ^X=1
 
-   GTM>zwrite ^X
+   YDB>zwrite ^X
    ^X=1
 
-   GTM>halt
+   YDB>halt
 
 Create another user who is also a member of the group users. See that usersuser can read from the database owned by gtmuser, but cannot update it.
 
@@ -1045,19 +1044,19 @@ Create another user who is also a member of the group users. See that usersuser 
    staffuser@gtmworkshop:~$ export gtmgbldir=$gtmdir/$gtmver/g/gtm.gld
    staffuser@gtmworkshop:~$ $gtm_dist/mumps -dir
 
-   GTM>zwrite ^X
+   YDB>zwrite ^X
    ^X=1
 
-   GTM>set ^X=2
+   YDB>set ^X=2
    %GTM-E-DBPRIVERR, No privilege for attempted update operation for file: /home/gtmuser/.fis-gtm/V6.2-000_x86_64/g/gtm.dat
 
-   GTM>halt
+   YDB>halt
    staffuser@gtmworkshop:~$ exit
    gtmuser@gtmworkshop:~$ sudo userdel staffuser
    gtmuser@gtmworkshop:~$ grep staffuser /etc/passwd
    gtmuser@gtmworkshop:~$ sudo rm -rf /home/staffuser
 
-There is an installation option to restrict access to GT.M to a group. If you use this option, only those in the specified group will be able to use GT.M.
+There is an installation option to restrict access to GT.M to a group. If you use this option, only those in the specified group will be able to use YottaDB/GT.M.
 
 It is extremely straightforward to creat a userid that can only login, run an application and log out.
 
@@ -1081,7 +1080,7 @@ There are two switches to turn on journaling – ENABLE / DISABLE and ON/OFF. En
 
 In this exercise, we will crash your virtual machine and then recover the database. First, we'll just do it on the existing database; then we will set up journaling from scratch.
 
-First, clean out old journal files. Verify that there are no shared memory segments in use. Then go into GT.M and perform a database operation and verify that there is now a new shared memory segment.
+First, clean out old journal files. Verify that there are no shared memory segments in use. Then go into YottaDB/GT.M and perform a database operation and verify that there is now a new shared memory segment.
 
 .. parsed-literal::
    gtmuser@gtmworkshop:~$ rm -f .fis-gtm/V6.2-000_x86_64/g/gtm.mjl_*
@@ -1092,19 +1091,19 @@ First, clean out old journal files. Verify that there are no shared memory segme
 
    gtmuser@gtmworkshop:~$ /usr/lib/fis-gtm/V6.2-000_x86_64/gtm
 
-   GTM>set ^X=$zdate($horolog,"MON DD, YEAR") ; opens database file and creates a shared memory segment
+   YDB>set ^X=$zdate($horolog,"MON DD, YEAR") ; opens database file and creates a shared memory segment
 
-   GTM>zwrite ^X
+   YDB>zwrite ^X
    ^X="DEC 01, 2014"
 
-   GTM>zsystem "ipcs -m"
+   YDB>zsystem "ipcs -m"
 
    ------ Shared Memory Segments --------
    key        shmid      owner      perms      bytes      nattch     status
    0x00000000 65536      gtmuser    660        7208960    1
 
 
-   GTM>
+   YDB>
 
 Now kill the virtual machine by clicking on the “X” of the console window, or with a kill -9 of the virtual machine process, and then reboot it. Go back into YottaDB/GT.M and verify that the data is still there. Instead of running the gtm script (which performs an automatic recovery), run mumps and try to access the database. Note: you should not run the gtm script for this exercise, since it performs a recovery as part of its operation.
 
@@ -1112,40 +1111,40 @@ Now kill the virtual machine by clicking on the “X” of the console window, o
    gtmuser@gtmworkshop:~$ source /usr/lib/fis-gtm/V6.2-000_x86_64/gtmprofile
    gtmuser@gtmworkshop:~$ mumps -dir
 
-   GTM>zwrite ^X
+   YDB>zwrite ^X
    %GTM-E-REQRECOV, Error accessing database /home/gtmuser/.fis-gtm/V6.2-000_x86_64/g/gtm.dat.  Must be recovered on cluster node gtmworkshop.
    %GTM-I-TEXT, Error with database control shmctl
    %SYSTEM-E-ENO22, Invalid argument
 
-   GTM>zsystem "ls -l $gtmdir/$gtmver/g" ; notice the journal file
+   YDB>zsystem "ls -l $gtmdir/$gtmver/g" ; notice the journal file
    total 1008
    -rw-r----- 1 gtmuser gtmuser 20783616 Dec  1 11:48 gtm.dat
    -rw-rw-r-- 1 gtmuser gtmuser     1536 Nov 13 13:14 gtm.gld
    -rw-r----- 1 gtmuser gtmuser    69632 Dec  1 11:48 gtm.mjl
    -rw-r----- 1 gtmuser gtmuser    69632 Nov 20 17:29 gtm.mjl_2014335114732
 
-   GTM>zsystem "ipcs -m" ; and there are no shared memory segments indicating an open database
+   YDB>zsystem "ipcs -m" ; and there are no shared memory segments indicating an open database
 
 
    ------ Shared Memory Segments --------
    key        shmid      owner      perms      bytes      nattch     status      
 
 
-   GTM>zsystem "ls -lR $gtm_tmp" ; and no log files from the gtm script
+   YDB>zsystem "ls -lR $gtm_tmp" ; and no log files from the gtm script
    /tmp/fis-gtm/V6.2-000_x86_64:
    total 0
 
-  GTM>halt
+  YDB>halt
 
-Now, try the gtm script instead of running the mumps executable directly.
+Now, try the ydb script instead of running the mumps executable directly.
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ gtm
+   gtmuser@gtmworkshop:~$ ydb
 
-   GTM>zwrite ^X ; database access works
+   YDB>zwrite ^X ; database access works
    ^X="DEC 01, 2014"
 
-   GTM>zsystem "ls -l $gtmdir/$gtmver/g" ; there are two new journal files
+   YDB>zsystem "ls -l $gtmdir/$gtmver/g" ; there are two new journal files
    total 1144
    -rw-r----- 1 gtmuser gtmuser 20783616 Dec  1 11:58 gtm.dat
    -rw-rw-r-- 1 gtmuser gtmuser     1536 Nov 13 13:14 gtm.gld
@@ -1154,20 +1153,20 @@ Now, try the gtm script instead of running the mumps executable directly.
    -rw-r----- 1 gtmuser gtmuser    69632 Dec  1 11:58 gtm.mjl_2014335115831
    -rw-r----- 1 gtmuser gtmuser    69632 Dec  1 11:58 gtm.mjl_2014335115832
 
-   GTM>zsystem "ipcs -m" ; there is a shared memory segment for the open database file
+   YDB>zsystem "ipcs -m" ; there is a shared memory segment for the open database file
 
    ------ Shared Memory Segments --------
    key        shmid      owner      perms      bytes      nattch     status
    0x00000000 65536      gtmuser    660        7208960    1 
 
 
-   GTM>zsystem "ls -lR $gtm_tmp" ; and log files from the commands in the gtm script
+   YDB>zsystem "ls -lR $gtm_tmp" ; and log files from the commands in the gtm script
    /tmp/fis-gtm/V6.2-000_x86_64:
    total 8
    -rw-rw-r-- 1 gtmuser gtmuser 617 Dec  1 11:58 gtmuser_20141201165831UTC_mupip_recover
    -rw-rw-r-- 1 gtmuser gtmuser 339 Dec  1 11:58 gtmuser_20141201165831UTC_mupip_set
 
-   GTM>halt
+   YDB>halt
 
 How did the recovery happen? The answer is in the gtm script.
 
@@ -1330,7 +1329,7 @@ Now boot the three virtual machines. Each virtual machine will need two ports to
    kvm -enable-kvm -cpu host -m 256 -display none -net nic -net user,hostfwd=tcp::2222-:22,hostfwd=tcp::5000-:3000 -hda Philadelphia.vmdk &
    kvm -enable-kvm -cpu host -m 256 -display none -net nic -net user,hostfwd=tcp::2223-:22,hostfwd=tcp::6000-:3000 -hda Shanghai.vmdk &
 
-To avoid confusion when you are working with multiple machine, change the name of each machine from GT.M workshop to its location. The examples here are from the Cape Town machine. You should do likewise with Philadelphia and Shanghai. To effect a name change will need to (as root) edit the files /etc/hosts and /etc/hostname to change gtmworkshop to capetown and then reboot.
+To avoid confusion when you are working with multiple machine, change the name of each machine from YottaDB/GT.M workshop to its location. The examples here are from the Cape Town machine. You should do likewise with Philadelphia and Shanghai. To effect a name change will need to (as root) edit the files /etc/hosts and /etc/hostname to change gtmworkshop to capetown and then reboot.
 
 .. parsed-literal::
    $ qemu-img create -f vmdk -o zeroed_grain,backing_file=ubuntu-14.04_gtmworkshop9.vmdk Philadelphia.vmdk
@@ -1358,7 +1357,7 @@ Now boot the three virtual machines. Each virtual machine will need two ports to
    kvm -enable-kvm -cpu host -m 256 -display none -net nic -net user,hostfwd=tcp::2222-:22,hostfwd=tcp::5000-:3000 -hda Philadelphia.vmdk &
    kvm -enable-kvm -cpu host -m 256 -display none -net nic -net user,hostfwd=tcp::2223-:22,hostfwd=tcp::6000-:3000 -hda Shanghai.vmdk &
 
-To avoid confusion when you are working with multiple machine, change the name of each machine from GT.M workshop to its location. The examples here are from the Cape Town machine. You should do likewise with Philadelphia and Shanghai. To effect a name change will need to (as root) edit the files /etc/hosts and /etc/hostname to change gtmworkshop to capetown and then reboot.
+To avoid confusion when you are working with multiple machine, change the name of each machine from YottaDB/GT.M workshop to its location. The examples here are from the Cape Town machine. You should do likewise with Philadelphia and Shanghai. To effect a name change will need to (as root) edit the files /etc/hosts and /etc/hostname to change gtmworkshop to capetown and then reboot.
 
 
 .. parsed-literal::
@@ -1441,17 +1440,17 @@ Start a YottaDB/GT.M process in Philadelphia and perform some database updates:
 .. parsed-literal::
    gtmuser@philadelphia:~/myApp$ mumps -dir
 
-   GTM>set ^Weather("Philadelphia",$Piece($Horolog,",",1),$Piece($Horolog,",",2))="Rainy"
+   YDB>set ^Weather("Philadelphia",$Piece($Horolog,",",1),$Piece($Horolog,",",2))="Rainy"
 
 Verify that the data is replicated at Cape Town and Shanghai. Execute the following at both instances:
 
 .. parsed-literal::
    gtmuser@shanghai:~/myApp$ mumps -dir
 
-   GTM>zwrite ^Weather
+   YDB>zwrite ^Weather
    ^Weather("Philadelphia",63523,51308)="Rainy"
 
-   GTM>
+   YDB>
 
 Bring down Shanghai (simulating system maintenance, or a network outage), but leave Cape Town untouched.
 
@@ -1473,24 +1472,24 @@ Bring down Shanghai (simulating system maintenance, or a network outage), but le
 Create another update in Philadelphia.
 
 .. parsed-literal::
-   GTM>set ^Weather("Philadelphia",$Piece($Horolog,",",1),$Piece($Horolog,",",2))="Sunny"
+   YDB>set ^Weather("Philadelphia",$Piece($Horolog,",",1),$Piece($Horolog,",",2))="Sunny"
 
 Verify that this is updated in Cape Town.
 
 .. parsed-literal::
-   GTM>zwrite ^Weather
+   YDB>zwrite ^Weather
    ^Weather("Philadelphia",63523,51308)="Rainy"
    ^Weather("Philadelphia",63523,51921)="Sunny"
 
-   GTM>
+   YDB>
 
 But it is not replicated in Shanghai.
 
 .. parsed-literal::
-   GTM>zwrite ^Weather
+   YDB>zwrite ^Weather
    ^Weather("Philadelphia",63523,51308)="Rainy"
 
-   GTM>
+   YDB>
 
 Restart Shanghai as a replicating instance and notice that it catches up with updates at the originating instance when replication was not active in Shanghai.
 
@@ -1499,11 +1498,11 @@ Restart Shanghai as a replicating instance and notice that it catches up with up
    Thu Nov 10 07:33:47 2011 : Initiating START of source server for secondary instance [dummy]
    gtmuser@shanghai:~/myApp$ mumps -dir
 
-   GTM>zwrite ^Weather
+   YDB>zwrite ^Weather
    ^Weather("Philadelphia",63523,51308)="Rainy"
    ^Weather("Philadelphia",63523,51921)="Sunny"
 
-   GTM>
+   YDB>
 
 Now, simulate an unplanned outage of Philadelphia by clicking on the “X” of the virtual machine console window, kill -9 of the process on the host, or otherwise powering down the virtual machine. Make Shanghai the new originating instance Cape Town its replicating instance. [In a controlled switchover / planned outage, bringing down the originating primary first helps to ensure that you do not have two concurrently operating originating primary instances.]
 
@@ -1624,12 +1623,12 @@ Now reboot Philadelphia to simulate its recovery. When the system comes up (befo
 Now, create a database update in Shanghai.
 
 .. parsed-literal::
-   GTM>set ^Weather("Shanghai",$Piece($Horolog,",",1),$Piece($Horolog,",",2))="Stormy"
+   YDB>set ^Weather("Shanghai",$Piece($Horolog,",",1),$Piece($Horolog,",",2))="Stormy"
 
 And confirm that it is replicated to both Cape Town and Philadelphia.
 
 .. parsed-literal::
-   GTM>zwrite ^Weather
+   YDB>zwrite ^Weather
    ^Weather("Philadelphia",63523,51308)="Rainy"
    ^Weather("Philadelphia",63523,51921)="Sunny"
    ^Weather("Shanghai",63524,13176)="Stormy"
@@ -1681,7 +1680,7 @@ In order to provide continuity of business, when an originating primary instance
 | Repaired and brought back up |        P:120 (processing has moved it ahead)                                                             |
 +------------------------------+----------------------------------------------------------------------------------------------------------+
 
-This situation needs to be remedied, because updates (transactions) 96-100 on Cape Town are different from updates 96-100 on Shanghai. This has a GT.M part and an application software part. The GT.M part is to rollback the transactions on the former originating primary instance with the mupip journal -rollback -fetchresync command. These rolled back updates (“unreplicated” or “lost” transactions) are placed in a file and must be transmitted to the new originating instance for reprocessing / reconciliation by application logic.
+This situation needs to be remedied, because updates (transactions) 96-100 on Cape Town are different from updates 96-100 on Shanghai. This has a YottaDB/GT.M part and an application software part. The YottaDB/GT.M part is to rollback the transactions on the former originating primary instance with the mupip journal -rollback -fetchresync command. These rolled back updates (“unreplicated” or “lost” transactions) are placed in a file and must be transmitted to the new originating instance for reprocessing / reconciliation by application logic.
 
 +---------------------------------------------------------------------------------+-------------------------------------------------------------------+
 | Cape Town                                                                       |      Shanghai                                                     |
@@ -1777,12 +1776,12 @@ You can also check replication health and the backlog on the originating instanc
 Now create an update in Cape Town.
 
 .. parsed-literal::
-   GTM>set ^Weather("Cape Town",$Piece($Horolog,",",1),$Piece($Horolog,",",2))="Snowing"
+   YDB>set ^Weather("Cape Town",$Piece($Horolog,",",1),$Piece($Horolog,",",2))="Snowing"
 
 Verify that it is replicated in Philadelphia and Shanghai.
 
 .. parsed-literal::
-   GTM>zwrite ^Weather
+   YDB>zwrite ^Weather
    ^Weather("Cape Town",63523,86064)="Snowing"
    ^Weather("Philadelphia",63523,51308)="Rainy"
    ^Weather("Philadelphia",63523,51921)="Sunny"
@@ -1808,9 +1807,9 @@ Now simulate a failure with a backlog by first shutting down replication in Shan
 In Cape Town:
 
 .. parsed-literal::
-   GTM>set ^Weather("Cape Town",$Piece($Horolog,",",1),$Piece($Horolog,",",2))="Blizzards"
+   YDB>set ^Weather("Cape Town",$Piece($Horolog,",",1),$Piece($Horolog,",",2))="Blizzards"
 
-   GTM>zsystem "$gtm_dist/mupip replicate -source -showbacklog"
+   YDB>zsystem "$gtm_dist/mupip replicate -source -showbacklog"
    Tue Dec  2 23:57:00 2014 : Initiating SHOWBACKLOG operation on source server pid [1063] for secondary instance [Philadelphia]
    0 : backlog number of transactions written to journal pool and yet to be sent by the source server
    5 : sequence number of last transaction written to journal pool
@@ -1820,7 +1819,7 @@ In Cape Town:
    5 : sequence number of last transaction written to journal pool
    4 : sequence number of last transaction sent by source server
 
-   GTM>
+   YDB>
 
 Notice that there is a backlog to Shanghai, but none to Philadelphia. Now shut down replication in Philadelphia and make another update in Cape Town. Verify that there is a backlog of 1 to Philadelphia and 2 to Shanghai.
 
@@ -1844,9 +1843,9 @@ In Philadelphia:
 In Cape Town:
 
 .. parsed-literal::
-   GTM>set ^Weather("Cape Town",$Piece($Horolog,",",1),$Piece($Horolog,",",2))="Cloudy"
+   YDB>set ^Weather("Cape Town",$Piece($Horolog,",",1),$Piece($Horolog,",",2))="Cloudy"
 
-   GTM>zwrite ^Weather
+   YDB>zwrite ^Weather
    ^Weather("Cape Town",63523,86064)="Snowing"
    ^Weather("Cape Town",63523,86207)="Blizzards"
    ^Weather("Cape Town",63523,86342)="Cloudy"
@@ -1854,7 +1853,7 @@ In Cape Town:
    ^Weather("Philadelphia",63523,51921)="Sunny"
    ^Weather("Shanghai",63524,13176)="Stormy"
 
-   GTM>zsystem "$gtm_dist/mupip replicate -source -showbacklog"
+   YDB>zsystem "$gtm_dist/mupip replicate -source -showbacklog"
    Tue Dec  2 23:59:27 2014 : Initiating SHOWBACKLOG operation on source server pid [1063] for secondary instance [Philadelphia]
    1 : backlog number of transactions written to journal pool and yet to be sent by the source server
    6 : sequence number of last transaction written to journal pool
@@ -1864,7 +1863,7 @@ In Cape Town:
    6 : sequence number of last transaction written to journal pool
    4 : sequence number of last transaction sent by source server
 
-   GTM>
+   YDB>
 
 Now crash Cape Town. You have a choice of bringing up Philadelphia or Shanghai. If you don't have time to make a decision as to which replicating instance to make the new primary, just choose the most convenient. If you have time to make a decision, you can see which one is further ahead by looking at the “Region Seqno” field in the database file header with DSE (in a multi-region database, you need to look at all replicated regions and take the maximum).
 
@@ -2111,9 +2110,9 @@ Perform an update in Philadelphia and verify that there is a backlog to Cape Tow
 .. parsed-literal::
    gtmuser@philadelphia:~/myApp$ mumps -dir
 
-   GTM>set ^Weather("Philadelphia",$Piece($Horolog,",",1),$Piece($Horolog,",",2))="Heat Wave"
+   YDB>set ^Weather("Philadelphia",$Piece($Horolog,",",1),$Piece($Horolog,",",2))="Heat Wave"
 
-   GTM>zsystem "$gtm_dist/mupip replicate -source -showbacklog" 
+   YDB>zsystem "$gtm_dist/mupip replicate -source -showbacklog" 
    Tue Dec  2 17:24:09 2014 : Initiating SHOWBACKLOG operation on source server pid [1059] for secondary instance [CapeTown]
    4 : backlog number of transactions written to journal pool and yet to be sent by the source server
    6 : sequence number of last transaction written to journal pool
@@ -2123,9 +2122,9 @@ Perform an update in Philadelphia and verify that there is a backlog to Cape Tow
    6 : sequence number of last transaction written to journal pool
    6 : sequence number of last transaction sent by source server
 
-   GTM>
+   YDB>
 
-Now boot the Cape Town machine and performa fetchresync:
+Now boot the Cape Town machine and perform a fetchresync:
 
 .. parsed-literal::
    gtmuser@capetown:~/myApp$ source gtmenv
@@ -2176,7 +2175,7 @@ Cape Town can now start as a replicating instance:
 Notice that Philadelphia now reports no backlog:
 
 .. parsed-literal::
-   GTM>zsystem "$gtm_dist/mupip replicate -source -showbacklog"
+   YDB>zsystem "$gtm_dist/mupip replicate -source -showbacklog"
    Tue Dec  2 17:32:01 2014 : Initiating SHOWBACKLOG operation on source server pid [1059] for secondary instance [CapeTown]
    0 : backlog number of transactions written to journal pool and yet to be sent by the source server
    6 : sequence number of last transaction written to journal pool
@@ -2186,7 +2185,7 @@ Notice that Philadelphia now reports no backlog:
    6 : sequence number of last transaction written to journal pool
    6 : sequence number of last transaction sent by source server
 
-   GTM>
+   YDB>
 
 If your application uses the $ZQGBLMOD() function to process unreplicated transactions, read the logical multi site replication technical bulletin for information about the mupip replicate source losttncomplete command to be executed after processing unreplicated transactions from all originating instances.
 
@@ -2198,7 +2197,7 @@ Backup
 
 Backup **when an application is not running** is straightforward – just copy the database files. [However, remember that the copy will have the same journal file name in the database file header and the system now potentially has two database files pointing to the same journal file. Before using that file on the same computer system as the original database file, disable journaling and re-enable it if appropriate (do not simply switch journal files).]
 
-Backup when an application is operating normally, without impacting the application (except of course for the additional IO load of the backup activity) is easy with YottaDB/GT.M, and can be accomplished in two ways, one non-GT.M and other GT.M:
+Backup when an application is operating normally, without impacting the application (except of course for the additional IO load of the backup activity) is easy with YottaDB/GT.M, and can be accomplished in two ways, one non-YottaDB/GT.M and other YottaDB/GT.M:
 
 - The non-YottaDB/GT.M way is to use a disk mirror (e.g., RAID or SAN). Issue a mupip freeze to momentarily freeze updates and flush updates to disk, break the mirror; then release the freeze. After backing up the mirror, rebuild it, and let it “catch up.” This is not discussed further here.
 
@@ -2602,7 +2601,7 @@ Unicode (ISO/IEC-10646)
 
 YottaDB/GT.M supports international character sets using Unicode. A mumps process can operate in one of two modes: M mode and UTF-8 mode, which is specified by the environment variable gtm_chset at process startup and which is immutable for the life of the process.
 
-In M mode, the process interprets strings as single byte characters with characters from $Char(0) through $Char(127) encoded as ASCII (M mode). A GT.M process in M mode places no interpretation on characters $Char(128) through $Char (255) – the application is free to use any interpretation it chooses, and ISO-8859 variants are commonly used. There is no distinction between a string of bytes and a string of characters and all bytes are valid characters – the concept of an illegal or a non-canonical character is a non-sequitur in M mode.
+In M mode, the process interprets strings as single byte characters with characters from $Char(0) through $Char(127) encoded as ASCII (M mode). A YottaDB/GT.M process in M mode places no interpretation on characters $Char(128) through $Char (255) – the application is free to use any interpretation it chooses, and ISO-8859 variants are commonly used. There is no distinction between a string of bytes and a string of characters and all bytes are valid characters – the concept of an illegal or a non-canonical character is a non-sequitur in M mode.
 
 In UTF-8 mode, the process by default interprets strings as multi-byte characters encoded using UTF-8 (UTF-8 mode). Some sequences of bytes are not defined by the standard, and are considered illegal characters – for example $char(55296), U+D800, is an illegal character. The process can also interpret a string as a sequence of bytes, and the same string can have different properties (such as its length) when it is considered a sequence of bytes than as a sequence of characters.
 
@@ -2770,9 +2769,9 @@ Start a shell in M mode and display in M mode the characters that you just set i
 .. parsed-literal::
    gtmuser@gtmworkshop:~/utf8demo$ mumps -dir
 
-   GTM>write $zchset
+   YDB>write $zchset
    M
-   GTM>for i=0:16:240 write ! for j=0:1:15 write ^Ch(i+j)," : "
+   YDB>for i=0:16:240 write ! for j=0:1:15 write ^Ch(i+j)," : "
 
    :  :  :  :  :  :  :  : :        : 
    : 
@@ -2793,7 +2792,7 @@ Start a shell in M mode and display in M mode the characters that you just set i
   Ã : Ã : Ã : Ã : Ã : Ã : Ã : Ã : Ã : Ã : Ã : Ã: Ã : Ã : Ã : Ã : 
   Ã : Ã¡ : Ã¢ : Ã£ : Ã¤ : Ã¥ : Ã¦ : Ã§ : Ã¨ : Ã© : Ãª : Ã« : Ã¬ : Ã : Ã® : Ã¯ : 
   Ã° : Ã± : Ã² : Ã³ : Ã´ : Ãµ : Ã¶ : Ã· : Ã¸ : Ã¹ : Ãº : Ã» : Ã¼ : Ã½ : Ã¾ : Ã¿ : 
-  GTM>
+  YDB>
 
 Notice that the lengths of the strings are different – the process in UTF-8 mode reports all as being of length 1, whereas the M mode process reports some as being of length 2.
 
@@ -2818,7 +2817,7 @@ Notice that the lengths of the strings are different – the process in UTF-8 mo
    1 : 1 : 1 : 1 : 1 : 1 : 1 : 1 : 1 : 1 : 1 : 1 : 1 : 1 : 1 : 1 :
    UTF8>
 
-   GTM>for i=0:16:240 write ! for j=0:1:15 write $length(^Ch(i+j))," : "
+   YDB>for i=0:16:240 write ! for j=0:1:15 write $length(^Ch(i+j))," : "
 
    1 : 1 : 1 : 1 : 1 : 1 : 1 : 1 : 1 : 1 : 1 : 1 : 1 : 1 : 1 : 1 :
    1 : 1 : 1 : 1 : 1 : 1 : 1 : 1 : 1 : 1 : 1 : 1 : 1 : 1 : 1 : 1 :
@@ -2836,7 +2835,7 @@ Notice that the lengths of the strings are different – the process in UTF-8 mo
    2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 :
    2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 :
    2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 :
-   GTM>
+   YDB>
 
 However, both report the same string lengths in bytes using the $Zlength() function instead of the $Length() function.
 
@@ -2861,7 +2860,7 @@ However, both report the same string lengths in bytes using the $Zlength() funct
    2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 :
    UTF8>
 
-   GTM>for i=0:16:240 write ! for j=0:1:15 write $zlength(^Ch(i+j))," : "
+   YDB>for i=0:16:240 write ! for j=0:1:15 write $zlength(^Ch(i+j))," : "
 
    1 : 1 : 1 : 1 : 1 : 1 : 1 : 1 : 1 : 1 : 1 : 1 : 1 : 1 : 1 : 1 :
    1 : 1 : 1 : 1 : 1 : 1 : 1 : 1 : 1 : 1 : 1 : 1 : 1 : 1 : 1 : 1 :
@@ -2879,17 +2878,17 @@ However, both report the same string lengths in bytes using the $Zlength() funct
    2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 :
    2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 :
    2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 : 2 :
-   GTM>
+   YDB>
 
-Remember that Unicode only provides a character encoding. The ordering of strings encoded in UTF-8 may not be linguistically or culturally correct for your language. For example, Chinese names may be encoded in UTF-8 using characters in either the simplified or the traditional Chinese script, but the linguistically and culturally appropriate ordering of names (for example in the Beijing phone book) is the order in pinyin, which uses the Latin script. In order to use GT.M to store strings in the correct order, there may be an additional requirement to provide a collation module.
+Remember that Unicode only provides a character encoding. The ordering of strings encoded in UTF-8 may not be linguistically or culturally correct for your language. For example, Chinese names may be encoded in UTF-8 using characters in either the simplified or the traditional Chinese script, but the linguistically and culturally appropriate ordering of names (for example in the Beijing phone book) is the order in pinyin, which uses the Latin script. In order to use YottaDB/GT.M to store strings in the correct order, there may be an additional requirement to provide a collation module.
 
 -------------------
 Database Encryption
 -------------------
 
-Before proceeding with this exercise, it is important to understand the limitations and architecture of GT.M database encryption: **GT.M itself includes no cryptographic software whatsoever and performs no encryption** – it has a plug-in architecture with a reference plug-in that interfaces with GPG (GNU Privacy Guard) and OpenSSL. Remember also that key management & distribution is a much harder problem than database encryption itself.
+Before proceeding with this exercise, it is important to understand the limitations and architecture of YottaDB/GT.M database encryption: **YottaDB/GT.M itself includes no cryptographic software whatsoever and performs no encryption** – it has a plug-in architecture with a reference plug-in that interfaces with GPG (GNU Privacy Guard) and OpenSSL. Remember also that key management & distribution is a much harder problem than database encryption itself.
 
-The exercise below illustrates the reference implementation and GPG more than it does GT.M's capabilities. Much of the exercises here are scripted with the reference plugin – we go through them here in detail so that you can understand what happens under the covers. Remember that there are actually three layers of encryption, required in order to manage & distribute keys securely:
+The exercise below illustrates the reference implementation and GPG more than it does YottaDB/GT.M's capabilities. Much of the exercises here are scripted with the reference plugin – we go through them here in detail so that you can understand what happens under the covers. Remember that there are actually three layers of encryption, required in order to manage & distribute keys securely:
 
 - The data in the database is encrypted using a symmetric cipher (AES).
 
@@ -3296,10 +3295,10 @@ Now create the database file. Notice that in order to supply mupip create with t
 .. parsed-literal::
    gtmuser@philadelphia:~/enc$ gtm_passwd="" mumps -dir
    Enter Passphrase: 
-   GTM>zsystem "$gtm_dist/mupip create"
+   YDB>zsystem "$gtm_dist/mupip create"
    Created file /home/gtmuser/enc/gtm.dat
 
-   GTM>halt
+   YDB>halt
    gtmuser@philadelphia:~/enc$
 
 You can use DSE to verify that the file is encrypted. Note the warning from DSE which means that it can only access unencrypted parts of the database file, 
@@ -3350,7 +3349,7 @@ You can use DSE to verify that the file is encrypted. Note the warning from DSE 
 
    gtmuser@philadelphia:~/enc$ 
 
-Now turn on journaling, and attempt to make some updates without setting the gtm_passed environment variable. This fails. Now, invoke GT.M with the environment variable set, and make an update.
+Now turn on journaling, and attempt to make some updates without setting the gtm_passed environment variable. This fails. Now, invoke YottaDB/GT.M with the environment variable set, and make an update.
 
 .. parsed-literal::
    gtmuser@philadelphia:~/enc$ mupip set -journal="before,on" -region "*"
@@ -3358,15 +3357,15 @@ Now turn on journaling, and attempt to make some updates without setting the gtm
    %GTM-I-JNLCREATE, Journal file /home/gtmuser/enc/gtm.mjl created for region DEFAULT with BEFORE_IMAGES
    gtmuser@philadelphia:~/enc$ mumps -dir
 
-   GTM>set ^X="The quick brown fox"
+   YDB>set ^X="The quick brown fox"
    %GTM-E-CRYPTINIT, Could not initialize encryption library while opening encrypted file /home/gtmuser/enc/gtm.dat. Environment variable gtm_passwd not set
 
-   GTM>halt
+   YDB>halt
    gtmuser@philadelphia:~/enc$ gtm_passwd="" mumps -dir
    Enter Passphrase: 
-   GTM>set ^X="This string should be encrypted in the database"
+   YDB>set ^X="This string should be encrypted in the database"
 
-   GTM>halt
+   YDB>halt
    gtmuser@philadelphia:~/enc$
 
 Confirm that the data is indeed visible in neither the database file nor the journal file.
@@ -3566,17 +3565,17 @@ You can now run VistA – just enough to convince yourself that it is working, t
 .. parsed-literal::
    gtmuser@gtmworkshop:~$ mumps -dir
 
-   GTM>set DUZ=1 do P^DI
+   YDB>set DUZ=1 do P^DI
 
 
    VA FileMan 22.0
 
 
    Select OPTION: ^
-   GTM>halt
+   YDB>halt
    gtmuser@gtmworkshop:~$
 
-Note that GT.M has dynamically compiled modules as needed.
+Note that YottaDB/GT.M has dynamically compiled modules as needed.
 
 .. parsed-literal::
    gtmuser@gtmworkshop:~$ ls -l VistA/o
@@ -3629,7 +3628,7 @@ Make sure you can start and run VistA after recompiling the modules.
 
 **Multiple YottaDB/GT.M Versions**
 
-YottaDB/GT.M object files are specific to each release of YottaDB/GT.M – so V6.2-000 cannot use object files generated by V5.4-000A, for example. Although the database format is more stable, a database file can only be concurrently open only by processes of one YottaDB/GT.M. The same source code, however, can be used by an unlimited number of GT.M releases. Also, even within a single GT.M release, the same source code can be used by processes running in M mode and UTF-8 mode – but the object files are different. The directory tree structure implemented in the simple environment allows only processes of only one GT.M release operating in only one mode to use a set of YottaDB/GT.M source modules.
+YottaDB/GT.M object files are specific to each release of YottaDB/GT.M – so V6.2-000 cannot use object files generated by V5.4-000A, for example. Although the database format is more stable, a database file can only be concurrently open only by processes of one YottaDB/GT.M. The same source code, however, can be used by an unlimited number of YottaDB/GT.M releases. Also, even within a single YottaDB/GT.M release, the same source code can be used by processes running in M mode and UTF-8 mode – but the object files are different. The directory tree structure implemented in the simple environment allows only processes of only one YottaDB/GT.M release operating in only one mode to use a set of YottaDB/GT.M source modules.
 
 .. parsed-literal::
    gtmuser@gtmworkshop:~$ tree -d VistA/
@@ -3641,7 +3640,7 @@ YottaDB/GT.M object files are specific to each release of YottaDB/GT.M – so V6
    3 directories
    gtmuser@gtmworkshop:~$
 
-By creating another layer in the directory structure, the same VistA routines can be made to work in multiple GT.M releases, for example, if we had:
+By creating another layer in the directory structure, the same VistA routines can be made to work in multiple YottaDB/GT.M releases, for example, if we had:
 
 .. parsed-literal::
    gtmuser@gtmworkshop:~$ mkdir VistA/V6.2-000_x86_64
@@ -3745,14 +3744,14 @@ And now VistA is again ready for use with the new directory structure:
 .. parsed-literal::
    gtmuser@gtmworkshop:~$ mumps -dir
 
-   GTM>set DUZ=1 do P^DI
+   YDB>set DUZ=1 do P^DI
 
 
    VA FileMan 22.0
 
 
    Select OPTION: ^
-   GTM>halt
+   YDB>halt
    gtmuser@gtmworkshop:~$ 
 
 We can add additional directories for other versions of YottaDB/GT.M. e.g.,
@@ -3810,9 +3809,9 @@ In general, program source code is independent of the YottaDB/GT.M version. On o
     gtmuser@gtmworkshop:~$ source VistA/V6.2-000_x86_64/gtmenv
     gtmuser@gtmworkshop:~$ mumps -dir
 
-    GTM>write $zroutines
+    YDB>write $zroutines
     /home/gtmuser/VistA/V6.2-000_x86_64/o*(/home/gtmuser/VistA/V6.2-000_x86_64/r /home/gtmuser/VistA/r) /usr/lib/fis-gtm/V6.2-000\_x86_64/libgtmutil.so
-    GTM>halt
+    YDB>halt
     gtmuser@gtmworkshop:~$
 
 **Segregating Local Modifications**
@@ -3853,7 +3852,7 @@ Installations of large applications often have local or modifications. In such c
     alias mupip=$gtm_dist/mupip
     gtmuser@gtmworkshop:~$
 
-Now you can look at this in operation by applying some modifications to VistA that allow it to operate better with GT.M to the /home/gtmuser/VistA/p directory. Download the file KSBVistAPatches.zip from the same location that you obtained the GT.M Acculturation Workshop, and put it in the /Distrib/VistA directory. Then unpack it to /home/gtmuser/VistA/p directory.
+Now you can look at this in operation by applying some modifications to VistA that allow it to operate better with YottaDB/GT.M to the /home/gtmuser/VistA/p directory. Download the file KSBVistAPatches.zip from the same location that you obtained the Acculturation Workshop, and put it in the /Distrib/VistA directory. Then unpack it to /home/gtmuser/VistA/p directory.
 
 .. parsed-literal::
    gtmuser@gtmworkshop:~$ ls -l /Distrib/VistA/KSBVistAPatches.zip
@@ -3883,7 +3882,7 @@ Now, you can run VistA with the local modifications. In this case, one of the mo
    total 0
    gtmuser@gtmworkshop:~$ mumps -dir
 
-   GTM>do ^ZTMGRSET
+   YDB>do ^ZTMGRSET
 
 
    ZTMGRSET Version 8.0 Patch level \**34,36,69,94,121,127,136,191,275,355**
@@ -3978,14 +3977,14 @@ Now, you can run VistA with the local modifications. In this case, one of the mo
 
    Now, I will check your % globals...........
    ALL DONE
-   GTM>halt
+   YDB>halt
    gtmuser@gtmworkshop:~$ ls -l VistA/V6.2-000_x86_64/p|wc
         57     506    3132
    gtmuser@gtmworkshop:~$
 
 **Creating a Development Environment**
 
-When you work on an application, either to enhance it or to fix a bug, you typically modify only a small part of the application. With GT.M, you do not need to make a copy of an entire application environment to work on your project. Nor do you need to work in the same environment as other developers, with the risk of stepping on one another's toes. All you need is to to set up your processes so that their $ZROUTINES search path finds your development routines before finding the main application routines. If your work involves changes to global variables, you can set up your own copy of the database – or, even, if it makes sense, a part of the database with the remaining globals mapped to the parent environment. Of course, in a large project, your environment's parent may itself have a parent.
+When you work on an application, either to enhance it or to fix a bug, you typically modify only a small part of the application. With YottaDB/GT.M, you do not need to make a copy of an entire application environment to work on your project. Nor do you need to work in the same environment as other developers, with the risk of stepping on one another's toes. All you need is to to set up your processes so that their $ZROUTINES search path finds your development routines before finding the main application routines. If your work involves changes to global variables, you can set up your own copy of the database – or, even, if it makes sense, a part of the database with the remaining globals mapped to the parent environment. Of course, in a large project, your environment's parent may itself have a parent.
 
 Delete the V6.2-001_x86_64 subdirectory, and copy the files inc and install to the VistA environment from the same location as this Acculturation Workshop, and make install executable.
 
@@ -4074,14 +4073,14 @@ Now run the dev environment and notice the values of the environment variables. 
 .. parsed-literal::
    gtmuser@gtmworkshop:~$ dev/V6.2-000_x86_64/run
 
-   GTM>write $zgbldir
+   YDB>write $zgbldir
    /home/gtmuser/dev/V6.2-000_x86_64/g/gtm.gld
-   GTM>write $zroutines
+   YDB>write $zroutines
    /home/gtmuser/dev/V6.2-000_x86_64/o(/home/gtmuser/dev/V6.2-000_x86_64/p /home/gtmuser/dev/V6.2-000_x86_64/r /home/gtmuser/dev/p /home/gtmuser/dev/r) /home/gtmuser/dev/parent/V6.2-000_x86_64/o(/home/gtmuser/dev/parent/V6.2-000_x86_64/p /home/gtmuser/dev/parent/V6.2-000_x86_64/r /home/gtmuser/dev/parent/p /home/gtmuser/dev/parent/r) /home/gtmuser/dev/V6.2-000_x86_64/gtm/libgtmutil.so
-   GTM>zsystem "env | grep ^gtm"
+   YDB>zsystem "env | grep ^gtm"
    gtm_repl_instance=/home/gtmuser/dev/parent/V6.2-000_x86_64/g/gtm.repl
    gtm_log=/tmp/fis-gtm/V6.2-000_x86_64
-   gtm_prompt=GTM>
+   gtm_prompt=YDB>
    gtm_retention=42
    gtmver=V6.2-000_x86_64
    gtm_icu_version=5.2
@@ -4093,7 +4092,7 @@ Now run the dev environment and notice the values of the environment variables. 
    gtm_tmp=/tmp/fis-gtm/V6.2-000_x86_64
    gtm_dist=/usr/lib/fis-gtm/V6.2-000_x86_64
 
-   GTM>do ^GDE
+   YDB>do ^GDE
    %GDE-I-LOADGD, Loading Global Directory file
            /home/gtmuser/dev/V6.2-000_x86_64/g/gtm.gld
    %GDE-I-VERIFY, Verification OK
@@ -4112,7 +4111,7 @@ Now run the dev environment and notice the values of the environment variables. 
    GDE> quit
    %GDE-I-NOACTION, Not updating Global Directory /home/gtmuser/dev/V6.2-000_x86_64/g/gtm.gld
 
-   GTM>halt
+   YDB>halt
    gtmuser@gtmworkshop:~$
 
 
