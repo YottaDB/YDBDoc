@@ -506,10 +506,12 @@ variable called ``^Population``. [#]_
        to restrict access to the global variable ``^Population``.
 
 Since YottaDB locks acquisitions are always timed for languages other
-than M, it is not possible for applications to `deadlock
+than M, it is not in principle possible for applications to `deadlock
 <https://en.wikipedia.org/wiki/Deadlock>`_ on YottaDB
 locks. Consequently defensive application code must always validate
-the return code of calls to acquire locks.
+the return code of calls to acquire locks. As a practical matter, it
+is possible to set timeouts that are long enough that users may
+perceive applications to be hung.
 
 --------------------------------
 Locks and Transaction Processing
@@ -704,7 +706,7 @@ complete variable name, not including the preceding caret for a global
 variable. Therefore, when allocating space for a string to hold a
 global variable name, add 1 for the caret.
 
-``YDB_MAX_LOCKTIME`` — The maximum value in microseconds that an
+``YDB_MAX_LOCKTIME`` — The maximum value in nanoseconds that an
 application can instruct libyottab to wait until the process is able
 to acquire locks it needs before timing out.
 
@@ -1080,7 +1082,7 @@ function will have acquired all requested locks or none of them. If no
 locks are requested (``namecount`` is zero), the function releases all
 locks and returns ``YDB_OK``.
 
-``timeout`` specifies a time in microseconds that the function waits
+``timeout`` specifies a time in nanoseconds that the function waits
 to acquire the requested locks. If it is not able to acquire all
 requested locks, it acquires no locks, returning with a
 ``YDB_LOCK_TIMEOUT`` return value.
@@ -1125,7 +1127,7 @@ ydb_lock_incr_s()
 Without releasing any locks held by the process, attempt to acquire
 the requested lock incrementing it if already held.
 
-``timeout`` specifies a time in microseconds that the function waits
+``timeout`` specifies a time in nanoseconds that the function waits
 to acquire the requested lock. If it is not able to acquire the lock,
 it returns with a ``YDB_LOCK_TIMEOUT`` return value.
 
@@ -1403,17 +1405,6 @@ Utility Functions
 Utility functions are functions that are not core to YottaDB
 functionality, but which are useful to application code.
 
-------------------
-ydb_cancel_timer()
-------------------
-
-.. code-block:: C
-
-	void ydb_cancel_timer(int timer_id)
-
-Cancel a timer identifier by ``timer_id`` and previously started with
-`ydb_start_timer()`_.
-
 ----------------
 ydb_child_init()
 ----------------
@@ -1553,10 +1544,10 @@ ydb_hiber_start()
 
 .. code-block:: C
 
-	void ydb_hiber_start(unsigned int sleep_msec)
+	void ydb_hiber_start(unsigned int sleep_nsec)
 
-The process sleeps for the time in milliseconds specified by
-``sleep_msec``.
+The process sleeps for the time in nanoseconds specified by
+``sleep_nsec``.
 
 --------------------------
 ydb_hiber_start_wait_any()
@@ -1564,10 +1555,10 @@ ydb_hiber_start_wait_any()
 
 .. code-block:: C
 
-	void ydb_hiber_start_wait_any(unsigned int sleep_msec)
+	void ydb_hiber_start_wait_any(unsigned int sleep_nsec)
 
-The process sleeps for the time in milliseconds specified by
-``sleep_msec`` or until it receives a signal.
+The process sleeps for the time in nanoseconds specified by
+``sleep_nsec`` or until it receives a signal.
 
 ------------
 ydb_malloc()
@@ -1603,21 +1594,6 @@ result in a segmentation violation (SIGSEGV). ``ydb_message()``
 returns ``YDB_OK`` for a valid ``status`` and
 ``YDB_ERR_UNKNOWN`` if ``status`` does not map to a known error.
 
------------------
-ydb_start_timer()
------------------
-
-.. code-block:: C
-
-	typedef void (*handler_fun_ptr_t)(unsigned int timer_id,
-		unsigned int handler_data_len,
-		char *handler_data);
-	void start_timer(unsigned int timer_id,
-		unsigned int limit_msec,
-		handler_fun_ptr_t handler,
-		unsigned int handler_data_len
-		char *handler_data);
-
 --------------------
 ydb_thread_is_main()
 --------------------
@@ -1629,6 +1605,51 @@ ydb_thread_is_main()
 Returns ``YDB_OK`` if the thread is the main thread of the process,
 and another value if the thread is not.
 	
+------------------
+ydb_timer_cancel()
+------------------
+
+.. code-block:: C
+
+	void ydb_timer_cancel(int timer_id)
+
+Cancel a timer identifier by ``timer_id`` and previously started with
+`ydb_timer_start()`_.
+
+-----------------
+ydb_timer_start()
+-----------------
+
+.. code-block:: C
+
+	typedef void (*handler_fun_ptr_t)(unsigned int timer_id,
+		unsigned int handler_data_len,
+		char *handler_data);
+	void ydb_timer_start(unsigned int timer_id,
+		unsigned int limit_nsec,
+		handler_fun_ptr_t handler,
+		unsigned int handler_data_len
+		char *handler_data);
+
+
+Starts a timer. Unless canceled, when the timer expires,
+``ydb_timer_start()`` invokes a handler function, providing that
+function with input data.
+
+``timer_id`` is an identifier for the the timer. It is the
+responsibility of application code to ensure that ``timer_id`` is
+different from those of any other active / pending timers.
+
+``limit_nsec`` is the minimum number of nanoseconds before the timer
+expires and invokes the handler function. Owing to overhead and system
+load, the actual time will almost always be greater than this value.
+
+``handler`` is a pointer to the function to be called when the timer
+expires.
+
+``handler_data`` is a pointer to the data to be passed to ``handler``
+and ``handler_data_len`` is the length of the data at
+``*handler_data``.
 
 ================
 Programming in M
@@ -1770,3 +1791,13 @@ YottaDB runtime system. Also, while local variables are shared by all
 threads that call into YottaDB, this behavior may or may not continue
 if and when YottaDB makes the runtime system multi-threaded in the
 future.
+
+Timers and Timeouts
+===================
+
+Although the Simple API uses nanosecond resolution to specify all time
+intervals, in practice underlying functions may have more granular
+resolutions (microseconds or milliseconds). Furthermore, even with a
+microsecond or millisecond resolution, the accuracy is always
+determined by the underlying hardware and operating system, as well as
+factors such as system load.
