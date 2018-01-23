@@ -47,7 +47,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'GTMMessageRecovery'
+project = u'MessageRecovery'
 copyright = u'2017, YottaDB LLC'
 author = u'Ranjani Hathaway'
 
@@ -90,7 +90,7 @@ html_theme = 'classic'
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
-html_theme_options = {'stickysidebar':'true','sidebarbgcolor':'#3b1a68','relbarbgcolor':'#3b1a68','footerbgcolor':'#3b1a68','sidebarlinkcolor':'#f77825','bodyfont':'Raleway','headfont':'Lora'}
+html_theme_options = {'stickysidebar':'true','sidebarwidth':'400','sidebarbgcolor':'#f3f3f3','relbarbgcolor':'#3b1a68','footerbgcolor':'#3b1a68','sidebarlinkcolor':'#3b1a68','sidebartextcolor':'#3b1a68','bodyfont':'Raleway','headfont':'Lora'}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -114,7 +114,7 @@ html_sidebars = {
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'GTMMessageRecoverydoc'
+htmlhelp_basename = 'MessageRecoverydoc'
 
 
 # -- Options for LaTeX output ---------------------------------------------

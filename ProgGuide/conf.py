@@ -93,7 +93,7 @@ html_theme = 'classic'
 # documentation.
 #
 
-html_theme_options = {'stickysidebar':'true','sidebarbgcolor':'#3b1a68','relbarbgcolor':'#3b1a68','footerbgcolor':'#3b1a68', 'sidebarlinkcolor':'#f77825','bodyfont':'Raleway','headfont':'Lora'}
+html_theme_options = {'stickysidebar':'true','sidebarwidth':'400','sidebarbgcolor':'#f3f3f3','relbarbgcolor':'#3b1a68','footerbgcolor':'#3b1a68', 'sidebarlinkcolor':'#3b1a68','sidebartextcolor':'#3b1a68','bodyfont':'Raleway','headfont':'Lora'}
 
 
 # Add any paths that contain custom static files (such as style sheets) here,

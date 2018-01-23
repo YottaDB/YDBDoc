@@ -92,7 +92,7 @@ html_theme = 'classic'
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
-html_theme_options = {'stickysidebar':'true','sidebarbgcolor':'#3b1a68','relbarbgcolor':'#3b1a68','footerbgcolor':'#3b1a68','sidebarlinkcolor':'#f77825','bodyfont':'Raleway','headfont':'Lora'}
+html_theme_options = {'stickysidebar':'true','sidebarwidth':'400','sidebarbgcolor':'#f3f3f3','sidebartextcolor':'#3b1a68','relbarbgcolor':'#3b1a68','footerbgcolor':'#3b1a68','sidebarlinkcolor':'#3b1a68','bodyfont':'Raleway','headfont':'Lora'}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -107,8 +107,8 @@ html_static_path = ['_static']
 html_sidebars = {
     '**': [
         'relations.html',  # needs 'show_related': True theme option to display
-        'searchbox.html',
-        'globaltoc.html'
+        'globaltoc.html',
+        'searchbox.html'
     ]
 }
 
