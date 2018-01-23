@@ -1,8 +1,3 @@
-.. header::
-   YottaDB/GT.M Acculturation Workshop
-
-.. footer::
-   Page ###Page### of ###Total###
 
 .. index::
    YottaDB/GT.M Acculturation Workshop
