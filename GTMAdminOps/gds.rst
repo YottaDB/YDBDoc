@@ -7,7 +7,7 @@ YottaDB/GT.M Database Structure (GDS)
 ======================================
 
 .. contents::
-   :depth:2
+   :depth: 2
 
 GDS is a proprietary internal database structure used to store global variables and lock resource names. A high-level understanding of GDS can help database administrators correctly interpret YottaDB/GT.M logs/error messages, and maintain database metrics. You should always consult YottaDB support (info@yottadb.com) in the unlikely event of getting database integrity issues.
 
