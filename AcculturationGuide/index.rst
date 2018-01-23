@@ -10,7 +10,7 @@ Welcome to the Acculturation Guide!
    :maxdepth: 2
   
    Main YottaDB Documentation Page <https://yottadb.com/resources/documentation>
-   gtmacculturation
+   acculturation
 
 Indices and tables
 ==================
