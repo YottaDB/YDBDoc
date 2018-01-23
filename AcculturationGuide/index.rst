@@ -12,6 +12,7 @@ Welcome to the Acculturation Guide!
    Main YottaDB Documentation Page <https://yottadb.com/resources/documentation>
    acculturation
 
+
 Indices and tables
 ==================
 
