@@ -147,12 +147,12 @@ With a terminal emulator initiate an ssh connection to port 2222 on localhost an
  $ ssh -p 2222 -X gtmuser@localhost
  Welcome to Ubuntu 16.04.1 LTS (GNU/Linux 3.13.0-39-generic x86_64)
  * Documentation:  https://help.ubuntu.com/
- System information as of Wed Nov 12 18:08:22 EST 2014
+ System information as of Mon Jan 22 18:08:22 EST 2018
  System load: 0.48              Memory usage: 52%   Processes:       81
  Usage of /:  12.3% of 9.99GB   Swap usage:   0%    Users logged in: 0
 
  Graph this data and manage this system at: https://landscape.canonical.com/
- Last login: Tue Nov 11 16:51:37 2014 from 10.0.2.2
+ Last login: Fri Jan 19 16:51:37 2018 from 10.0.2.2
  gtmuser@gtmworkshop:~$ 
 
 
@@ -259,9 +259,9 @@ The tree program shows the default environment YottaDB/GT.M creates in your home
        │ ├── gtm.dat
        │ ├── gtm.gld
        │ ├── gtm.mjl
-       │ ├── gtm.mjl_2014317131528
-       │ ├── gtm.mjl_2014317131909
-       │ └── gtm.mjl_2014317134042
+       │ ├── gtm.mjl_2018317131528
+       │ ├── gtm.mjl_2018317131909
+       │ └── gtm.mjl_2018317134042
        ├── o
        │ └── utf8
        └── r
@@ -1134,9 +1134,9 @@ Now, try the ydb script instead of running the mumps executable directly.
    -rw-r----- 1 gtmuser gtmuser 20783616 Jan 22 14:22 gtm.dat
    -rw-rw-r-- 1 gtmuser gtmuser     1536 Jan 15 13:14 gtm.gld
    -rw-r----- 1 gtmuser gtmuser    69632 Jan 22 14:22 gtm.mjl
-   -rw-r----- 1 gtmuser gtmuser    69632 Jan 15 17:29 gtm.mjl_2014335172932
-   -rw-r----- 1 gtmuser gtmuser    69632 Jan 22 14:30 gtm.mjl_2014335143031
-   -rw-r----- 1 gtmuser gtmuser    69632 Jan 22 14:30 gtm.mjl_2014335143032
+   -rw-r----- 1 gtmuser gtmuser    69632 Jan 15 17:29 gtm.mjl_2018335172932
+   -rw-r----- 1 gtmuser gtmuser    69632 Jan 22 14:30 gtm.mjl_2018335143031
+   -rw-r----- 1 gtmuser gtmuser    69632 Jan 22 14:30 gtm.mjl_2018335143032
 
    YDB>zsystem "ipcs -m" ; there is a shared memory segment for the open database file
 
@@ -1148,8 +1148,8 @@ Now, try the ydb script instead of running the mumps executable directly.
    YDB>zsystem "ls -lR $gtm_tmp" ; and log files from the commands in the gtm script
    /tmp/fis-gtm/V6.2-000_x86_64:
    total 8
-   -rw-rw-r-- 1 gtmuser gtmuser 617 Jan  22 14:30 gtmuser_20141201165831UTC_mupip_recover
-   -rw-rw-r-- 1 gtmuser gtmuser 339 Jan  22 14:30 gtmuser_20141201165831UTC_mupip_set
+   -rw-rw-r-- 1 gtmuser gtmuser 617 Jan  22 14:30 gtmuser_20181201165831UTC_mupip_recover
+   -rw-rw-r-- 1 gtmuser gtmuser 339 Jan  22 14:30 gtmuser_20181201165831UTC_mupip_set
 
    YDB>halt
 
@@ -1193,17 +1193,17 @@ The mupip journal recover command performs the recovery. Review the output of th
 
 .. parsed-literal::
    gtmuser@gtmworkshop:~$ cat $gtm_tmp/gtmuser_20111107223555UTC_mupip_recover
-   %GTM-I-MUJNLSTAT, Initial processing started at Mon Dec  1 11:58:31 2014
-   %GTM-I-MUJNLSTAT, Backward processing started at Mon Dec  1 11:58:31 2014
-   %GTM-I-MUJNLSTAT, Before image applying started at Mon Dec  1 11:58:31 2014
-   %GTM-I-FILERENAME, File /home/gtmuser/.fis-gtm/V6.2-000_x86_64/g/gtm.mjl is renamed to /home/gtmuser/.fis-gtm/V6.2-000_x86_64/g/gtm.mjl_2014335115831
-   %GTM-I-MUJNLSTAT, Forward processing started at Mon Dec  1 11:58:32 2014
+   %GTM-I-MUJNLSTAT, Initial processing started at Mon Jan  1 11:58:31 2018
+   %GTM-I-MUJNLSTAT, Backward processing started at Mon Jan  1 11:58:31 2018
+   %GTM-I-MUJNLSTAT, Before image applying started at Mon Jan  1 11:58:31 2018
+   %GTM-I-FILERENAME, File /home/gtmuser/.fis-gtm/V6.2-000_x86_64/g/gtm.mjl is renamed to /home/gtmuser/.fis-gtm/V6.2-000_x86_64/g/gtm.mjl_2018335115831
+   %GTM-I-MUJNLSTAT, Forward processing started at Mon Jan  1 11:58:32 2018
    %GTM-S-JNLSUCCESS, Show successful
    %GTM-S-JNLSUCCESS, Verify successful
    %GTM-S-JNLSUCCESS, Recover successful
-   %GTM-I-MUJNLSTAT, End processing at Mon Dec  1 11:58:32 2014
+   %GTM-I-MUJNLSTAT, End processing at Mon Jan  1 11:58:32 2018
    gtmuser@gtmworkshop:~$ cat $gtm_tmp/gtmuser_20111107223555UTC_mupip_set 
-   %GTM-I-FILERENAME, File /home/gtmuser/.fis-gtm/V6.2-000_x86_64/g/gtm.mjl is renamed to /home/gtmuser/.fis-gtm/V6.2-000_x86_64/g/gtm.mjl_2014335115832
+   %GTM-I-FILERENAME, File /home/gtmuser/.fis-gtm/V6.2-000_x86_64/g/gtm.mjl is renamed to /home/gtmuser/.fis-gtm/V6.2-000_x86_64/g/gtm.mjl_2018335115832
    %GTM-I-JNLCREATE, Journal file /home/gtmuser/.fis-gtm/V6.2-000_x86_64/g/gtm.mjl created for region DEFAULT with BEFORE_IMAGES
    %GTM-I-JNLSTATE, Journaling state for region DEFAULT is now ON
    gtmuser@gtmworkshop:~$ 
@@ -1234,7 +1234,7 @@ Hints:
 Database Replication
 ----------------------
 
-When an application must have the best possible continuity of business, use database replication in addition to before image journaling to create a logical multi site configuration. A major restriction of YottaDB/GT.M replication today is the 20,000 kilometer distance restriction on replication (since the circumference of Planet Earth is approximately 40,000 kilometers, it is difficult to place data centers more than 20,000 kilometers apart). In our example, we will simulate data centers in Cape Town (34°S, 19°E), Philadelphia (40°N, 75°W) and Shanghai (31°N, 122°E). Cape Town to Philadelphia is 12,550 kilometers, Philadelphia to Shanghai is 11,900 kilometers, and Shanghai to Cape Town is 12,900 kilometers (information courtesy `Great Circle Mapper <http://gcmap.com/>`_).
+When an application must have the best possible continuity of business, use database replication in addition to before image journaling to create a logical multi site configuration. A major restriction of YottaDB/GT.M replication today is the 20,000 kilometer distance restriction on replication (since the circumference of Planet Earth is approximately 40,000 kilometers, it is difficult to place data centers more than 20,000 kilometers apart). In our example, we will simulate data centers in Santiago (33°S, 70°W), Paris (49°N, 2°E) and Melbourne (37°S, 144°E). Santiago to Paris is 11,642 kilometers, Paris to Melbourne is 16,781 kilometers, and Melbourne to Santiago is 11,269 kilometers (approximately).
 
 **Exercise - Replication**
 
@@ -1242,7 +1242,7 @@ Because replication builds on journaling, use the directory exDir created above.
 
 .. parsed-literal::
    gtmuser@gtmworkshop:~$ cd exDir ; cat gtmenv
-   export gtm_dist=/usr/lib/fis-gtm/V6.2-000_x86_64
+   export gtm_dist=/usr/local/lib/yottadb/r110
    export gtmgbldir=$HOME/exDir/gtm.gld
    export gtm_log=/tmp/fis-gtm/V6.2-000_x86_64
    export gtm_tmp=$gtm_log
@@ -1258,12 +1258,12 @@ Turn on replication and journaling (remember to source gtmenv to set the environ
 
 .. parsed-literal::
    gtmuser@gtmworkshop:~$ mupip set -replication=on -region "*"
-   %GTM-I-FILERENAME, File /home/gtmuser/exDir/aA.mjl is renamed to /home/gtmuser/exDir/aA.mjl_2014335181257
+   %GTM-I-FILERENAME, File /home/gtmuser/exDir/aA.mjl is renamed to /home/gtmuser/exDir/aA.mjl_2018335181257
    %GTM-I-JNLCREATE, Journal file /home/gtmuser/exDir/aA.mjl created for region A with BEFORE_IMAGES
    %GTM-I-PREVJNLLINKCUT, Previous journal file name link set to NULL in new journal file /home/gtmuser/exDir/aA.mjl created for database file /home/gtmuser/exDir/aA.dat
    %GTM-I-JNLSTATE, Journaling state for region A is now ON
    %GTM-I-REPLSTATE, Replication state for region A is now ON
-   %GTM-I-FILERENAME, File /home/gtmuser/exDir/others.mjl is renamed to /home/gtmuser/exDir/others.mjl_2014335181257
+   %GTM-I-FILERENAME, File /home/gtmuser/exDir/others.mjl is renamed to /home/gtmuser/exDir/others.mjl_2018335181257
    %GTM-I-JNLCREATE, Journal file /home/gtmuser/exDir/others.mjl created for region DEFAULT with BEFORE_IMAGES
    %GTM-I-PREVJNLLINKCUT, Previous journal file name link set to NULL in new journal file /home/gtmuser/exDir/others.mjl created for database file /home/gtmuser/exDir/others.dat
    %GTM-I-JNLSTATE, Journaling state for region DEFAULT is now ON
@@ -1287,9 +1287,9 @@ Create the following shell scripts inside exDir and make them executable:
    $gtm_dist/mupip rundown -region "*"
    gtmuser@gtmworkshop:~$ chmod +x {originating_stop,replicating_*}
    gtmuser@gtmworkshop:~$ ls -l {originating_stop,replicating_*}
-   -rwxrwxr-x 1 gtmuser gtmuser  81 Dec  1 18:17 originating_stop
-   -rwxrwxr-x 1 gtmuser gtmuser 219 Dec  1 18:19 replicating_start
-   -rwxrwxr-x 1 gtmuser gtmuser 127 Dec  1 18:16 replicating_stop
+   -rwxrwxr-x 1 gtmuser gtmuser  81 Jan  23 10:17 originating_stop
+   -rwxrwxr-x 1 gtmuser gtmuser 219 Jan  23 10:19 replicating_start
+   -rwxrwxr-x 1 gtmuser gtmuser 127 Jan  23 10:16 replicating_stop
    gtmuser@gtmworkshop:~$ 
 
 You can delete the prior generation journal files, just to keep the directory clean:
@@ -1298,57 +1298,28 @@ You can delete the prior generation journal files, just to keep the directory cl
    gtmuser@gtmworkshop:~$ rm * .mjl\_ *
    gtmuser@gtmworkshop:~$ 
 
-Shut down the Acculturation Workshop virtual machine and make three copies of the Acculturation Workshop called Philadelphia.vmdk, Shanghai.vmdk and CapeTown.vmdk. Alternatively, if your host system is short of disk space, make two copies and rename the original ubuntu-14.04_gtmworkshop9.vmdk file.
+Shut down the Acculturation Workshop virtual machine and make three copies of the Acculturation Workshop called Paris.vmdk, Melbourne.vmdk and Santiago.vmdk. Alternatively, if your host system is short of disk space, make two copies and rename the original ubuntu-14.04_gtmworkshop9.vmdk file.
 
 If you are using qcow2 or vmdk disk images with QEMU/kvm on Linux, you can use a feature that allows a disk image to be created off a base image so that the base image does not change and all changes go to the new disk image. Check with your virtualization software to determine whether it supports this feature. Execute commands such as the following on the host (with the guest shut down) – depending on the version of QEMU/kvm on your PC, the exact command may vary.
 
 .. parsed-literal::
-   $ qemu-img create -f vmdk -o zeroed_grain,backing_file=ubuntu-14.04_gtmworkshop9.vmdk Philadelphia.vmdk
-   Formatting ' Philadelphia.vmdk', fmt=vmdk size=10737418240 backing_file='ubuntu-14.04_gtmworkshop9.vmdk' compat6=off zeroed_grain=on
+   $ qemu-img create -f vmdk -o zeroed_grain,backing_file=ubuntu-14.04_gtmworkshop9.vmdk Paris.vmdk
+   Formatting ' Paris.vmdk', fmt=vmdk size=10737418240 backing_file='ubuntu-14.04_gtmworkshop9.vmdk' compat6=off zeroed_grain=on
    $
 
-Now boot the three virtual machines. Each virtual machine will need two ports to be forwarded from the host, one for ssh access forwarded to port 22 on each virtual machine and one for replication forwarded to port 3000 on each virtual machine (i.e., a total of six ports on the host for the three instances). The examples here use host ports 2221 & 4000 for Cape Town, 2222 & 5000 for Philadelphia, and 2223 & 6000 for Shanghai. The commands given here use kvm on Linux – use the commands appropriate to virtualization on your host).
+Now boot the three virtual machines. Each virtual machine will need two ports to be forwarded from the host, one for ssh access forwarded to port 22 on each virtual machine and one for replication forwarded to port 3000 on each virtual machine (i.e., a total of six ports on the host for the three instances). The examples here use host ports 2221 & 4000 for Santiago, 2222 & 5000 for Paris, and 2223 & 6000 for Melbourne. The commands given here use kvm on Linux – use the commands appropriate to virtualization on your host).
 
 .. parsed-literal::
-   kvm -enable-kvm -cpu host -m 256 -display none -net nic -net user,hostfwd=tcp::2221-:22,hostfwd=tcp::4000-:3000 -hda CapeTown.vmdk &
-   kvm -enable-kvm -cpu host -m 256 -display none -net nic -net user,hostfwd=tcp::2222-:22,hostfwd=tcp::5000-:3000 -hda Philadelphia.vmdk &
-   kvm -enable-kvm -cpu host -m 256 -display none -net nic -net user,hostfwd=tcp::2223-:22,hostfwd=tcp::6000-:3000 -hda Shanghai.vmdk &
+   kvm -enable-kvm -cpu host -m 256 -display none -net nic -net user,hostfwd=tcp::2221-:22,hostfwd=tcp::4000-:3000 -hda Santiago.vmdk &
+   kvm -enable-kvm -cpu host -m 256 -display none -net nic -net user,hostfwd=tcp::2222-:22,hostfwd=tcp::5000-:3000 -hda Paris.vmdk &
+   kvm -enable-kvm -cpu host -m 256 -display none -net nic -net user,hostfwd=tcp::2223-:22,hostfwd=tcp::6000-:3000 -hda Melbourne.vmdk &
 
-To avoid confusion when you are working with multiple machine, change the name of each machine from YottaDB/GT.M workshop to its location. The examples here are from the Cape Town machine. You should do likewise with Philadelphia and Shanghai. To effect a name change will need to (as root) edit the files /etc/hosts and /etc/hostname to change gtmworkshop to capetown and then reboot.
-
-.. parsed-literal::
-   $ qemu-img create -f vmdk -o zeroed_grain,backing_file=ubuntu-14.04_gtmworkshop9.vmdk Philadelphia.vmdk
-   Formatting ' Philadelphia.vmdk', fmt=vmdk size=10737418240 backing_file='ubuntu-14.04_gtmworkshop9.vmdk' compat6=off zeroed_grain=on
-   $
-
-Now boot the three virtual machines. Each virtual machine will need two ports to be forwarded from the host, one for ssh access forwarded to port 22 on each virtual machine and one for replication forwarded to port 3000 on each virtual machine (i.e., a total of six ports on the host for the three instances). The examples here use host ports 2221 & 4000 for Cape Town, 2222 & 5000 for Philadelphia, and 2223 & 6000 for Shanghai. The commands given here use kvm on Linux – use the commands appropriate to virtualization on your host).
+To avoid confusion when you are working with multiple machines, change the name of each machine from YottaDB/GT.M workshop to its location. The examples here are from the Santiago machine. You should do likewise with Paris and Melbourne. To effect a name change will need to (as root) edit the files /etc/hosts and /etc/hostname to change gtmworkshop to santiago and then reboot.
 
 .. parsed-literal::
-   kvm -enable-kvm -cpu host -m 256 -display none -net nic -net user,hostfwd=tcp::2221-:22,hostfwd=tcp::4000-:3000 -hda CapeTown.vmdk &
-   kvm -enable-kvm -cpu host -m 256 -display none -net nic -net user,hostfwd=tcp::2222-:22,hostfwd=tcp::5000-:3000 -hda Philadelphia.vmdk &
-   kvm -enable-kvm -cpu host -m 256 -display none -net nic -net user,hostfwd=tcp::2223-:22,hostfwd=tcp::6000-:3000 -hda Shanghai.vmdk &
-
-To avoid confusion when you are working with multiple machine, change the name of each machine from YottaDB/GT.M workshop to its location. The examples here are from the Cape Town machine. You should do likewise with Philadelphia and Shanghai. To effect a name change will need to (as root) edit the files /etc/hosts and /etc/hostname to change gtmworkshop to capetown and then reboot.
-
-.. parsed-literal::
-   $ qemu-img create -f vmdk -o zeroed_grain,backing_file=ubuntu-14.04_gtmworkshop9.vmdk Philadelphia.vmdk
-   Formatting ' Philadelphia.vmdk', fmt=vmdk size=10737418240 backing_file='ubuntu-14.04_gtmworkshop9.vmdk' compat6=off zeroed_grain=on
-   $
-
-Now boot the three virtual machines. Each virtual machine will need two ports to be forwarded from the host, one for ssh access forwarded to port 22 on each virtual machine and one for replication forwarded to port 3000 on each virtual machine (i.e., a total of six ports on the host for the three instances). The examples here use host ports 2221 & 4000 for Cape Town, 2222 & 5000 for Philadelphia, and 2223 & 6000 for Shanghai. The commands given here use kvm on Linux – use the commands appropriate to virtualization on your host).
-
-.. parsed-literal::
-   kvm -enable-kvm -cpu host -m 256 -display none -net nic -net user,hostfwd=tcp::2221-:22,hostfwd=tcp::4000-:3000 -hda CapeTown.vmdk &
-   kvm -enable-kvm -cpu host -m 256 -display none -net nic -net user,hostfwd=tcp::2222-:22,hostfwd=tcp::5000-:3000 -hda Philadelphia.vmdk &
-   kvm -enable-kvm -cpu host -m 256 -display none -net nic -net user,hostfwd=tcp::2223-:22,hostfwd=tcp::6000-:3000 -hda Shanghai.vmdk &
-
-To avoid confusion when you are working with multiple machine, change the name of each machine from YottaDB/GT.M workshop to its location. The examples here are from the Cape Town machine. You should do likewise with Philadelphia and Shanghai. To effect a name change will need to (as root) edit the files /etc/hosts and /etc/hostname to change gtmworkshop to capetown and then reboot.
-
-
-.. parsed-literal::
-   gtmuser@capetown:~$ cat /etc/hosts
+   gtmuser@santiago:~$ cat /etc/hosts
    127.0.0.1       localhost
-   127.0.1.1       capetown
+   127.0.1.1       santiago
 
    # The following lines are desirable for IPv6 capable hosts
    ::1     ip6-localhost ip6-loopback
@@ -1356,307 +1327,305 @@ To avoid confusion when you are working with multiple machine, change the name o
    ff00::0 ip6-mcastprefix
    ff02::1 ip6-allnodes
    ff02::2 ip6-allrouters
-   gtmuser@capetown:~$ cat /etc/hostname
-   capetown
-   gtmuser@capetown:~$ 
+   gtmuser@santiago:~$ cat /etc/hostname
+   santiago
+   gtmuser@santiago:~$ 
 
-You may also want to change the window/tab labels on your terminal emulator on the host to show which machine each session is connected to, for example:
+You may also want to change the window/tab labels on your terminal emulator on the host to show which machine each session is connected to.
 
-.. image:: replication.png
+To make it more realistic (and to reduce the probability of operator error) on each machine, execute sudo dpkg-reconfigure tzdata to specify the “local” time zone. Select Paris for Paris and Chile for Santiago.
 
-To make it more realistic (and to reduce the probability of operator error) on each machine, execute sudo dpkg-reconfigure tzdata to specify the “local” time zone. Select New York for Philadelphia and Johannesburg for Cape Town.
-
-In each machine. Edit exDir/env in each instance and change the line export gtm_repl_instname=dummy and the line export gtm_repl_instance=/home/gtmuser/exDir/gtm.repl to an instance file name for that instance. For example, on the Cape Town instance:
+In each machine. Edit exDir/env in each instance and change the line export gtm_repl_instname=dummy and the line export gtm_repl_instance=/home/gtmuser/exDir/gtm.repl to an instance file name for that instance. For example, on the Santiago instance:
 
 .. parsed-literal::
-   gtmuser@capetown:~/exDir$ cat gtmenv 
-   export gtm_dist=/usr/lib/fis-gtm/V6.2-000_x86_64
+   gtmuser@santiago:~/exDir$ cat gtmenv 
+   export gtm_dist=/usr/local/lib/yottadb/r110
    export gtmgbldir=$HOME/exDir/gtm.gld
    export gtm_log=/tmp/fis-gtm/V6.2-000_x86_64
    export gtm_tmp=$gtm_log
    export gtm_principal_editing=EDITING
    export gtm_repl_instance=$HOME/exDir/gtm.repl
-   export gtm_repl_instname=CapeTown
+   export gtm_repl_instname=Santiago
    export gtmroutines="$HOME/exDir* $gtm_dist/libgtmutil.so"
    mkdir -p $gtm_tmp
    alias mumps=$gtm_dist/mumps
    alias mupip=$gtm_dist/mupip
-   gtmuser@capetown:~$
+   gtmuser@santiago:~$
 
 Then on each instance, create a replication instance file.
 
 .. parsed-literal::
-   gtmuser@capetown:~/exDir$ ls -l \*.repl
+   gtmuser@santiago:~/exDir$ ls -l \*.repl
    ls: cannot access exDir/\*.repl: No such file or directory
-   gtmuser@capetown:~/exDir$ source gtmenv 
-   gtmuser@capetown:~/exDir$ mupip replicate -instance_create
-   gtmuser@capetown:~/exDir$ ls -l \*.repl
-   -rw-rw-r-- 1 gtmuser gtmuser 1536 2011-11-10 00:47 exDir/capetown.repl
-   gtmuser@capetown:~/exDir$
+   gtmuser@santiago:~/exDir$ source gtmenv 
+   gtmuser@santiago:~/exDir$ mupip replicate -instance_create
+   gtmuser@santiago:~/exDir$ ls -l \*.repl
+   -rw-rw-r-- 1 gtmuser gtmuser 1536 2011-11-10 00:47 exDir/santiago.repl
+   gtmuser@santiago:~/exDir$
 
-Start the configuration with Philadelphia as the originating primary instance, and Cape Town and Shanghai in replicating secondary roles. The following commands, on the three instances can be executed in any order.
+Start the configuration with Paris as the originating primary instance, and Santiago and Melbourne in replicating secondary roles. The following commands, on the three instances can be executed in any order.
 
-Start Shanghai as a replicating instance.
-
-.. parsed-literal::
-   gtmuser@shanghai:~/exDir$ ./replicating_start 
-   Wed Dec  3 03:08:09 2014 : Initiating START of source server for secondary instance [dummy]
-   gtmuser@shanghai:~/exDir$
-
-Start Cape Town as a replicating instance.
+Start Melbourne as a replicating instance.
 
 .. parsed-literal::
-   gtmuser@capetown:~/exDir$ ./replicating_start
-   Tue Dec  2 21:08:01 2014 : Initiating START of source server for secondary instance [dummy]
-   gtmuser@capetown:~/exDir$
+   gtmuser@melbourne:~/exDir$ ./replicating_start 
+   Tue Jan  23 11:08:09 2018 : Initiating START of source server for secondary instance [dummy]
+   gtmuser@melbourne:~/exDir$
 
-Start Philadelphia as an originating instance replicating to Cape Town and Shanghai (notice the use of ports on the host to reach the different replicating instances in the virtual machines).
-
-.. parsed-literal::
-   gtmuser@philadelphia:~/exDir$ mupip replicate -source -start -instsecondary=CapeTown -secondary=10.0.2.2:4000 -buffsize=1048576 -log=/home/gtmuser/exDir/source_CapeTown.log
-   Tue Dec  2 14:12:25 2014 : Initiating START of source server for secondary instance [CapeTown]
-   gtmuser@philadelphia:~/exDir$ mupip replicate -source -start -instsecondary=Shanghai -secondary=10.0.2.2:6000 -buffsize=1048576 -log=/home/gtmuser/exDir/source_Shanghai.log
-   Tue Dec  2 14:12:53 2014 : Initiating START of source server for secondary instance [Shanghai]
-   gtmuser@philadelphia:~/exDir$
-
-
-Start a YottaDB/GT.M process in Philadelphia and perform some database updates:
+Start Santiago as a replicating instance.
 
 .. parsed-literal::
-   gtmuser@philadelphia:~/exDir$ mumps -dir
+   gtmuser@santiago:~/exDir$ ./replicating_start
+   Tue Jan  23 12:08:01 2018 : Initiating START of source server for secondary instance [dummy]
+   gtmuser@santiago:~/exDir$
 
-   YDB>set ^Weather("Philadelphia",$Piece($Horolog,",",1),$Piece($Horolog,",",2))="Rainy"
-
-Verify that the data is replicated at Cape Town and Shanghai. Execute the following at both instances:
+Start Paris as an originating instance replicating to Santiago and Melbourne (notice the use of ports on the host to reach the different replicating instances in the virtual machines).
 
 .. parsed-literal::
-   gtmuser@shanghai:~/exDir$ mumps -dir
+   gtmuser@paris:~/exDir$ mupip replicate -source -start -instsecondary=Santiago -secondary=10.0.2.2:4000 -buffsize=1048576 -log=/home/gtmuser/exDir/source_Santiago.log
+   Tue Jan  23 12:12:25 2018 : Initiating START of source server for secondary instance [Santiago]
+   gtmuser@paris:~/exDir$ mupip replicate -source -start -instsecondary=Melbourne -secondary=10.0.2.2:6000 -buffsize=1048576 -log=/home/gtmuser/exDir/source_Melbourne.log
+   Tue Jan  23 12:12:53 2018 : Initiating START of source server for secondary instance [Melbourne]
+   gtmuser@paris:~/exDir$
+
+
+Start a YottaDB/GT.M process in Paris and perform some database updates:
+
+.. parsed-literal::
+   gtmuser@paris:~/exDir$ mumps -dir
+
+   YDB>set ^Weather("Paris",$Piece($Horolog,",",1),$Piece($Horolog,",",2))="Rainy"
+
+Verify that the data is replicated at Santiago and Melbourne. Execute the following at both instances:
+
+.. parsed-literal::
+   gtmuser@melbourne:~/exDir$ mumps -dir
 
    YDB>zwrite ^Weather
-   ^Weather("Philadelphia",63523,51308)="Rainy"
+   ^Weather("Paris",63523,51308)="Rainy"
 
    YDB>
 
-Bring down Shanghai (simulating system maintenance, or a network outage), but leave Cape Town untouched.
+Bring down Melbourne (simulating system maintenance, or a network outage), but leave Santiago untouched.
 
 .. parsed-literal::
-   gtmuser@shanghai:~/exDir$ ./replicating_stop 
+   gtmuser@melbourne:~/exDir$ ./replicating_stop 
    Signalling immediate shutdown
-   Wed Dec  3 03:24:46 2014 : Initiating shut down
-   Wed Dec  3 03:24:47 2014 : Receive pool shared memory removed
-   Wed Dec  3 03:24:47 2014 : Receive pool semaphore removed
-   Wed Dec  3 03:24:47 2014 : Signalling shutdown immediate
-   Wed Dec  3 03:24:47 2014 : Initiating SHUTDOWN operation on source server pid [1009] for secondary instance [dummy]
-   Wed Dec  3 03:24:47 2014 : Waiting for upto [180] seconds for the source server to shutdown
-   Wed Dec  3 03:24:49 2014 : Journal pool shared memory removed
-   Wed Dec  3 03:24:49 2014 : Journal pool semaphore removed
+   Tue Jan  23 03:24:46 2018 : Initiating shut down
+   Tue Jan  23 03:24:47 2018 : Receive pool shared memory removed
+   Tue Jan  23 03:24:47 2018 : Receive pool semaphore removed
+   Tue Jan  23 03:24:47 2018 : Signalling shutdown immediate
+   Tue Jan  23 03:24:47 2018 : Initiating SHUTDOWN operation on source server pid [1009] for secondary instance [dummy]
+   Tue Jan  23 03:24:47 2018 : Waiting for upto [180] seconds for the source server to shutdown
+   Tue Jan  23 03:24:49 2018 : Journal pool shared memory removed
+   Tue Jan  23 03:24:49 2018 : Journal pool semaphore removed
    %GTM-I-MUFILRNDWNSUC, File /home/gtmuser/exDir/aA.dat successfully rundown
    %GTM-I-MUFILRNDWNSUC, File /home/gtmuser/exDir/others.dat successfully rundown
-   gtmuser@shanghai:~/exDir$ 
+   gtmuser@melbourne:~/exDir$ 
 
-Create another update in Philadelphia.
-
-.. parsed-literal::
-   YDB>set ^Weather("Philadelphia",$Piece($Horolog,",",1),$Piece($Horolog,",",2))="Sunny"
-
-Verify that this is updated in Cape Town.
+Create another update in Paris.
 
 .. parsed-literal::
-   YDB>zwrite ^Weather
-   ^Weather("Philadelphia",63523,51308)="Rainy"
-   ^Weather("Philadelphia",63523,51921)="Sunny"
+   YDB>set ^Weather("Paris",$Piece($Horolog,",",1),$Piece($Horolog,",",2))="Sunny"
 
-   YDB>
-
-But it is not replicated in Shanghai.
+Verify that this is updated in Santiago.
 
 .. parsed-literal::
    YDB>zwrite ^Weather
-   ^Weather("Philadelphia",63523,51308)="Rainy"
+   ^Weather("Paris",63523,51308)="Rainy"
+   ^Weather("Paris",63523,51921)="Sunny"
 
    YDB>
 
-Restart Shanghai as a replicating instance and notice that it catches up with updates at the originating instance when replication was not active in Shanghai.
+But it is not replicated in Melbourne.
 
 .. parsed-literal::
-   gtmuser@shanghai:~/exDir$ exDir/replicating_start 
+   YDB>zwrite ^Weather
+   ^Weather("Paris",63523,51308)="Rainy"
+
+   YDB>
+
+Restart Melbourne as a replicating instance and notice that it catches up with updates at the originating instance when replication was not active in Melbourne.
+
+.. parsed-literal::
+   gtmuser@melbourne:~/exDir$ exDir/replicating_start 
    Thu Nov 10 07:33:47 2011 : Initiating START of source server for secondary instance [dummy]
-   gtmuser@shanghai:~/exDir$ mumps -dir
+   gtmuser@melbourne:~/exDir$ mumps -dir
 
    YDB>zwrite ^Weather
-   ^Weather("Philadelphia",63523,51308)="Rainy"
-   ^Weather("Philadelphia",63523,51921)="Sunny"
+   ^Weather("Paris",63523,51308)="Rainy"
+   ^Weather("Paris",63523,51921)="Sunny"
 
    YDB>
 
-Now, simulate an unplanned outage of Philadelphia by clicking on the “X” of the virtual machine console window, kill -9 of the process on the host, or otherwise powering down the virtual machine. Make Shanghai the new originating instance Cape Town its replicating instance. [In a controlled switchover / planned outage, bringing down the originating primary first helps to ensure that you do not have two concurrently operating originating primary instances.]
+Now, simulate an unplanned outage of Paris by clicking on the “X” of the virtual machine console window, kill -9 of the process on the host, or otherwise powering down the virtual machine. Make Melbourne the new originating instance and Santiago its replicating instance. [In a controlled switchover / planned outage, bringing down the originating primary first helps to ensure that you do not have two concurrently operating originating primary instances.]
 
-Bring down Shanghai as a replicating instance and bring it up as the originating instance. Notice that you can bring up the Source Server process to replicate to Philadelphia – it will make the connection when Philadelphia comes up.
-
-.. parsed-literal::
-   gtmuser@shanghai:~/exDir$ ./replicating_stop
-   Signalling immediate shutdown
-   Wed Dec  3 03:30:01 2014 : Initiating shut down
-   Wed Dec  3 03:30:02 2014 : Receive pool shared memory removed
-   Wed Dec  3 03:30:02 2014 : Receive pool semaphore removed
-   Wed Dec  3 03:30:02 2014 : Signalling shutdown immediate
-   Wed Dec  3 03:30:02 2014 : Initiating SHUTDOWN operation on source server pid [1025] for secondary instance [dummy]
-   Wed Dec  3 03:30:02 2014 : Waiting for upto [180] seconds for the source server to shutdown
-   Wed Dec  3 03:30:03 2014 : Journal pool shared memory removed
-   Wed Dec  3 03:30:03 2014 : Journal pool semaphore removed
-   %GTM-I-MUFILRNDWNSUC, File /home/gtmuser/exDir/aA.dat successfully rundown
-   %GTM-I-MUFILRNDWNSUC, File /home/gtmuser/exDir/others.dat successfully rundown
-   gtmuser@shanghai:~/exDir$ mupip replicate -source -start -instsecondary=CapeTown -secondary=10.0.2.2:4000 -buffsize=1048576 -log=/home/gtmuser/exDir/source_CapeTown.log
-   Wed Dec  3 03:30:42 2014 : Initiating START of source server for secondary instance [CapeTown]
-   gtmuser@shanghai:~/exDir$ mupip replicate -source -start -instsecondary=Philadelphia -secondary=10.0.2.2:5000 -buffsize=1048576 -log=/home/gtmuser/exDir/source_Philadelphia.log
-   Wed Dec  3 03:31:06 2014 : Initiating START of source server for secondary instance [Philadelphia]
-   gtmuser@shanghai:~/exDir$ 
-
-Both Cape Town and Philadelphia should perform a rollback fetchresync before they become secondary instances to Shanghai. First Cape Town (since Philadelphia has crashed and is down; notice that the times look very different because they show times in their local timezones).
+Bring down Melbourne as a replicating instance and bring it up as the originating instance. Notice that you can bring up the Source Server process to replicate to Paris – it will make the connection when Paris comes up.
 
 .. parsed-literal::
-   gtmuser@capetown:~/exDir$ ./replicating_stop
+   gtmuser@melbourne:~/exDir$ ./replicating_stop
    Signalling immediate shutdown
-   Tue Dec  2 21:31:42 2014 : Initiating shut down
-   Tue Dec  2 21:31:43 2014 : Receive pool shared memory removed
-   Tue Dec  2 21:31:43 2014 : Receive pool semaphore removed
-   Tue Dec  2 21:31:43 2014 : Signalling shutdown immediate
-   Tue Dec  2 21:31:43 2014 : Initiating SHUTDOWN operation on source server pid [1024] for secondary instance [dummy]
-   Tue Dec  2 21:31:43 2014 : Waiting for upto [180] seconds for the source server to shutdown
-   Tue Dec  2 21:31:44 2014 : Journal pool shared memory removed
-   Tue Dec  2 21:31:44 2014 : Journal pool semaphore removed
+   Tue Jan  23 12:30:01 2018 : Initiating shut down
+   Tue Jan  23 12:30:02 2018 : Receive pool shared memory removed
+   Tue Jan  23 12:30:02 2018 : Receive pool semaphore removed
+   Tue Jan  23 12:30:02 2018 : Signalling shutdown immediate
+   Tue Jan  23 12:30:02 2018 : Initiating SHUTDOWN operation on source server pid [1025] for secondary instance [dummy]
+   Tue Jan  23 12:30:02 2018 : Waiting for upto [180] seconds for the source server to shutdown
+   Tue Jan  23 12:30:03 2018 : Journal pool shared memory removed
+   Tue Jan  23 12:30:03 2018 : Journal pool semaphore removed
    %GTM-I-MUFILRNDWNSUC, File /home/gtmuser/exDir/aA.dat successfully rundown
    %GTM-I-MUFILRNDWNSUC, File /home/gtmuser/exDir/others.dat successfully rundown
-   gtmuser@capetown:~/exDir$ mupip journal -rollback -backward -fetchresync=3000 -losttrans=/home/gtmuser/exDir/Unreplic_Trans_Report_`date +%Y%m%d%H%M%S`.txt "*"
-   %GTM-I-MUJNLSTAT, Initial processing started at Tue Dec  2 21:32:10 2014
-   %GTM-I-MUJNLSTAT, FETCHRESYNC processing started at Tue Dec  2 21:32:10 2014
-   Tue Dec  2 21:32:10 2014 : Assuming primary supports multisite functionality. Connecting using multisite communication protocol.
-   Tue Dec  2 21:32:10 2014 : Waiting for a connection...
-   Tue Dec  2 21:32:10 2014 : Connection established, using TCP send buffer size 87040 receive buffer size 374400
-   Tue Dec  2 21:32:10 2014 : Connection information:: Local: ::ffff:10.0.2.15:3000 Remote: ::ffff:10.0.2.2:48768
-   Tue Dec  2 21:32:10 2014 : Sending REPL_FETCH_RESYNC message with seqno 3 [0x3]
-   Tue Dec  2 21:32:10 2014 : Source and Receiver sides have same endianness
-   Tue Dec  2 21:32:10 2014 : Remote side source log file path is /home/gtmuser/exDir/source_CapeTown.log; Source Server PID = 1035
-   Tue Dec  2 21:32:10 2014 : Received REPL_NEED_INSTINFO message from primary instance [Shanghai]
-   Tue Dec  2 21:32:10 2014 : Sending REPL_INSTINFO message
-   Tue Dec  2 21:32:10 2014 : Received REPL_NEED_HISTINFO message for Seqno 3 [0x3]
-   Tue Dec  2 21:32:10 2014 : Sending REPL_HISTINFO message with seqno 1 [0x1]
-   Tue Dec  2 21:32:10 2014 : History sent : Start Seqno = 1 [0x1] : Stream Seqno = 0 [0x0] : Root Primary = [Philadelphia] : Cycle = [1] : Creator pid = 1007 : Created time = 1417547545 [0x547e0f19] : History number = 0 : Prev History number = -1 : Stream # = 0 : History type = 1
-   Tue Dec  2 21:32:10 2014 : Received REPL_RESYNC_SEQNO message
-   Tue Dec  2 21:32:10 2014 : Received RESYNC SEQNO is 3 [0x3]
-   %GTM-I-MUJNLSTAT, Backward processing started at Tue Dec  2 21:32:10 2014
+   gtmuser@melbourne:~/exDir$ mupip replicate -source -start -instsecondary=Santiago -secondary=10.0.2.2:4000 -buffsize=1048576 -log=/home/gtmuser/exDir/source_Santiago.log
+   Tue Jan  23 12:30:42 2018 : Initiating START of source server for secondary instance [Santiago]
+   gtmuser@melbourne:~/exDir$ mupip replicate -source -start -instsecondary=Paris -secondary=10.0.2.2:5000 -buffsize=1048576 -log=/home/gtmuser/exDir/source_Paris.log
+   Tue Jan  23 12:31:06 2018 : Initiating START of source server for secondary instance [Paris]
+   gtmuser@melbourne:~/exDir$ 
+
+Both Santiago and Paris should perform a rollback fetchresync before they become secondary instances to Melbourne. First Santiago (since Paris has crashed and is down; notice that the times look very different because they show times in their local timezones).
+
+.. parsed-literal::
+   gtmuser@santiago:~/exDir$ ./replicating_stop
+   Signalling immediate shutdown
+   Tue Jan  23 21:31:42 2018 : Initiating shut down
+   Tue Jan  23 21:31:43 2018 : Receive pool shared memory removed
+   Tue Jan  23 21:31:43 2018 : Receive pool semaphore removed
+   Tue Jan  23 21:31:43 2018 : Signalling shutdown immediate
+   Tue Jan  23 21:31:43 2018 : Initiating SHUTDOWN operation on source server pid [1024] for secondary instance [dummy]
+   Tue Jan  23 21:31:43 2018 : Waiting for upto [180] seconds for the source server to shutdown
+   Tue Jan  23 21:31:44 2018 : Journal pool shared memory removed
+   Tue Jan  23 21:31:44 2018 : Journal pool semaphore removed
+   %GTM-I-MUFILRNDWNSUC, File /home/gtmuser/exDir/aA.dat successfully rundown
+   %GTM-I-MUFILRNDWNSUC, File /home/gtmuser/exDir/others.dat successfully rundown
+   gtmuser@santiago:~/exDir$ mupip journal -rollback -backward -fetchresync=3000 -losttrans=/home/gtmuser/exDir/Unreplic_Trans_Report_`date +%Y%m%d%H%M%S`.txt "*"
+   %GTM-I-MUJNLSTAT, Initial processing started at Tue Jan  23 21:32:10 2018
+   %GTM-I-MUJNLSTAT, FETCHRESYNC processing started at Tue Jan  23 21:32:10 2018
+   Tue Jan  23 21:32:10 2018 : Assuming primary supports multisite functionality. Connecting using multisite communication protocol.
+   Tue Jan  23 21:32:10 2018 : Waiting for a connection...
+   Tue Jan  23 21:32:10 2018 : Connection established, using TCP send buffer size 87040 receive buffer size 374400
+   Tue Jan  23 21:32:10 2018 : Connection information:: Local: ::ffff:10.0.2.15:3000 Remote: ::ffff:10.0.2.2:48768
+   Tue Jan  23 21:32:10 2018 : Sending REPL_FETCH_RESYNC message with seqno 3 [0x3]
+   Tue Jan  23 21:32:10 2018 : Source and Receiver sides have same endianness
+   Tue Jan  23 21:32:10 2018 : Remote side source log file path is /home/gtmuser/exDir/source_Santiago.log; Source Server PID = 1035
+   Tue Jan  23 21:32:10 2018 : Received REPL_NEED_INSTINFO message from primary instance [Melbourne]
+   Tue Jan  23 21:32:10 2018 : Sending REPL_INSTINFO message
+   Tue Jan  23 21:32:10 2018 : Received REPL_NEED_HISTINFO message for Seqno 3 [0x3]
+   Tue Jan  23 21:32:10 2018 : Sending REPL_HISTINFO message with seqno 1 [0x1]
+   Tue Jan  23 21:32:10 2018 : History sent : Start Seqno = 1 [0x1] : Stream Seqno = 0 [0x0] : Root Primary = [Paris] : Cycle = [1] : Creator pid = 1007 : Created time = 1417547545 [0x547e0f19] : History number = 0 : Prev History number = -1 : Stream # = 0 : History type = 1
+   Tue Jan  23 21:32:10 2018 : Received REPL_RESYNC_SEQNO message
+   Tue Jan  23 21:32:10 2018 : Received RESYNC SEQNO is 3 [0x3]
+   %GTM-I-MUJNLSTAT, Backward processing started at Tue Jan  2 21:32:10 2018
    %GTM-I-RESOLVESEQNO, Resolving until sequence number 3 [0x0000000000000003]
-   %GTM-I-MUJNLSTAT, Before image applying started at Tue Dec  2 21:32:10 2014
-   %GTM-I-FILERENAME, File /home/gtmuser/exDir/aA.mjl is renamed to /home/gtmuser/exDir/aA.mjl_2014336213210
-   %GTM-I-FILERENAME, File /home/gtmuser/exDir/others.mjl is renamed to /home/gtmuser/exDir/others.mjl_2014336213210
-   %GTM-I-MUJNLSTAT, Forward processing started at Tue Dec  2 21:32:10 2014
-   %GTM-I-FILECREATE, Lost transactions extract file /home/gtmuser/exDir/Unreplic_Trans_Report_20141202213210.txt created
+   %GTM-I-MUJNLSTAT, Before image applying started at Tue Jan  2 21:32:10 2018
+   %GTM-I-FILERENAME, File /home/gtmuser/exDir/aA.mjl is renamed to /home/gtmuser/exDir/aA.mjl_2018336213210
+   %GTM-I-FILERENAME, File /home/gtmuser/exDir/others.mjl is renamed to /home/gtmuser/exDir/others.mjl_2018336213210
+   %GTM-I-MUJNLSTAT, Forward processing started at Tue Jan  2 21:32:10 2018
+   %GTM-I-FILECREATE, Lost transactions extract file /home/gtmuser/exDir/Unreplic_Trans_Report_20181202213210.txt created
    %GTM-I-RLBKJNSEQ, Journal seqno of the instance after rollback is 3 [0x0000000000000003]
    %GTM-S-JNLSUCCESS, Show successful
    %GTM-S-JNLSUCCESS, Verify successful
    %GTM-S-JNLSUCCESS, Rollback successful
-   %GTM-I-MUJNLSTAT, End processing at Tue Dec  2 21:32:11 2014
-   gtmuser@capetown:~/exDir$ ./replicating_start
-   Tue Dec  2 21:33:22 2014 : Initiating START of source server for secondary instance [dummy]
-   gtmuser@capetown:~/exDir$
+   %GTM-I-MUJNLSTAT, End processing at Tue Jan  23 21:32:11 2018
+   gtmuser@santiago:~/exDir$ ./replicating_start
+   Tue Jan  23 21:33:22 2018 : Initiating START of source server for secondary instance [dummy]
+   gtmuser@santiago:~/exDir$
 
 Note that the Unreplicated Transaction File has no transactions rolled back:
 
 .. parsed-literal::
-   gtmuser@capetown:~/exDir$ cat Unreplic_Trans_Report_20141202213210.txt 
-   GDSJEX07 ROLLBACK SECONDARY CapeTown
+   gtmuser@santiago:~/exDir$ cat Unreplic_Trans_Report_20181202213210.txt 
+   GDSJEX07 ROLLBACK SECONDARY Santiago
    02\63523,77504\4\1024\0
    03\63523,77504\4\1024\0\3
-   gtmuser@capetown:~/exDir$
+   gtmuser@santiago:~/exDir$
 
-Now reboot Philadelphia to simulate its recovery. When the system comes up (before performing any other database access), perform a rollback fetchresync.
+Now reboot Paris to simulate its recovery. When the system comes up (before performing any other database access), perform a rollback fetchresync.
 
 .. parsed-literal::
-   gtmuser@philadelphia:~/exDir$ mupip journal -rollback -backward -fetchresync=3000 -losttrans=/home/gtmuser/exDir/Unreplic_Trans_Report_`date +%Y%m%d%H%M%S`.txt "*"
-   %GTM-I-MUJNLSTAT, Initial processing started at Tue Dec  2 14:35:55 2014
-   %GTM-I-MUJNLSTAT, FETCHRESYNC processing started at Tue Dec  2 14:35:55 2014
-   Tue Dec  2 14:35:55 2014 : Assuming primary supports multisite functionality. Connecting using multisite communication protocol.
-   Tue Dec  2 14:35:55 2014 : Waiting for a connection...
-   Tue Dec  2 14:35:56 2014 : Connection established, using TCP send buffer size 87040 receive buffer size 374400
-   Tue Dec  2 14:35:56 2014 : Connection information:: Local: ::ffff:10.0.2.15:3000 Remote: ::ffff:10.0.2.2:49353
-   Tue Dec  2 14:35:56 2014 : Sending REPL_FETCH_RESYNC message with seqno 3 [0x3]
-   Tue Dec  2 14:35:56 2014 : Source and Receiver sides have same endianness
-   Tue Dec  2 14:35:56 2014 : Remote side source log file path is /home/gtmuser/exDir/source_Philadelphia.log; Source Server PID = 1037
-   Tue Dec  2 14:35:56 2014 : Received REPL_NEED_INSTINFO message from primary instance [Shanghai]
-   Tue Dec  2 14:35:56 2014 : Sending REPL_INSTINFO message
-   Tue Dec  2 14:35:56 2014 : Received REPL_NEED_HISTINFO message for Seqno 3 [0x3]
-   Tue Dec  2 14:35:56 2014 : Sending REPL_HISTINFO message with seqno 1 [0x1]
-   Tue Dec  2 14:35:56 2014 : History sent : Start Seqno = 1 [0x1] : Stream Seqno = 0 [0x0] : Root Primary = [Philadelphia] : Cycle = [1] : Creator pid = 1007 : Created time = 1417547545 [0x547e0f19] : History number = 0 : Prev History number = -1 : Stream # = 0 : History type = 1
-   Tue Dec  2 14:35:56 2014 : Received REPL_RESYNC_SEQNO message
-   Tue Dec  2 14:35:56 2014 : Received RESYNC SEQNO is 3 [0x3]
-   %GTM-I-MUJNLSTAT, Backward processing started at Tue Dec  2 14:35:56 2014
+   gtmuser@paris:~/exDir$ mupip journal -rollback -backward -fetchresync=3000 -losttrans=/home/gtmuser/exDir/Unreplic_Trans_Report_`date +%Y%m%d%H%M%S`.txt "*"
+   %GTM-I-MUJNLSTAT, Initial processing started at Tue Jan  23 14:35:55 2018
+   %GTM-I-MUJNLSTAT, FETCHRESYNC processing started at Tue Jan  23 14:35:55 2018
+   Tue Jan  23 14:35:55 2018 : Assuming primary supports multisite functionality. Connecting using multisite communication protocol.
+   Tue Jan  23 14:35:55 2018 : Waiting for a connection...
+   Tue Jan  23 14:35:56 2018 : Connection established, using TCP send buffer size 87040 receive buffer size 374400
+   Tue Jan  23 14:35:56 2018 : Connection information:: Local: ::ffff:10.0.2.15:3000 Remote: ::ffff:10.0.2.2:49353
+   Tue Jan  23 14:35:56 2018 : Sending REPL_FETCH_RESYNC message with seqno 3 [0x3]
+   Tue Jan  23 14:35:56 2018 : Source and Receiver sides have same endianness
+   Tue Jan  23 14:35:56 2018 : Remote side source log file path is /home/gtmuser/exDir/source_Paris.log; Source Server PID = 1037
+   Tue Jan  23 14:35:56 2018 : Received REPL_NEED_INSTINFO message from primary instance [Melbourne]
+   Tue Jan  23 14:35:56 2018 : Sending REPL_INSTINFO message
+   Tue Jan  23 14:35:56 2018 : Received REPL_NEED_HISTINFO message for Seqno 3 [0x3]
+   Tue Jan  23 14:35:56 2018 : Sending REPL_HISTINFO message with seqno 1 [0x1]
+   Tue Jan  23 14:35:56 2018 : History sent : Start Seqno = 1 [0x1] : Stream Seqno = 0 [0x0] : Root Primary = [Paris] : Cycle = [1] : Creator pid = 1007 : Created time = 1417547545 [0x547e0f19] : History number = 0 : Prev History number = -1 : Stream # = 0 : History type = 1
+   Tue Jan  23 14:35:56 2018 : Received REPL_RESYNC_SEQNO message
+   Tue Jan  23 14:35:56 2018 : Received RESYNC SEQNO is 3 [0x3]
+   %GTM-I-MUJNLSTAT, Backward processing started at Tue Jan  23 14:35:56 2018
    %GTM-I-RESOLVESEQNO, Resolving until sequence number 3 [0x0000000000000003]
-   %GTM-I-MUJNLSTAT, Before image applying started at Tue Dec  2 14:35:56 2014
-   %GTM-I-FILERENAME, File /home/gtmuser/exDir/aA.mjl is renamed to /home/gtmuser/exDir/aA.mjl_2014336143556
-   %GTM-I-FILERENAME, File /home/gtmuser/exDir/others.mjl is renamed to /home/gtmuser/exDir/others.mjl_2014336143556
-   %GTM-I-MUJNLSTAT, Forward processing started at Tue Dec  2 14:35:56 2014
-   %GTM-I-FILECREATE, Lost transactions extract file /home/gtmuser/exDir/Unreplic_Trans_Report_20141202143555.txt created
+   %GTM-I-MUJNLSTAT, Before image applying started at Tue Jan  23 14:35:56 2018
+   %GTM-I-FILERENAME, File /home/gtmuser/exDir/aA.mjl is renamed to /home/gtmuser/exDir/aA.mjl_2018336143556
+   %GTM-I-FILERENAME, File /home/gtmuser/exDir/others.mjl is renamed to /home/gtmuser/exDir/others.mjl_2018336143556
+   %GTM-I-MUJNLSTAT, Forward processing started at Tue Jan  23 14:35:56 2018
+   %GTM-I-FILECREATE, Lost transactions extract file /home/gtmuser/exDir/Unreplic_Trans_Report_20181202143555.txt created
    %GTM-I-RLBKJNSEQ, Journal seqno of the instance after rollback is 3 [0x0000000000000003]
    %GTM-S-JNLSUCCESS, Show successful
    %GTM-S-JNLSUCCESS, Verify successful
    %GTM-S-JNLSUCCESS, Rollback successful
-   %GTM-I-MUJNLSTAT, End processing at Tue Dec  2 14:35:57 2014
-   gtmuser@philadelphia:~/exDir$ ./replicating_start
-   Tue Dec  2 14:37:14 2014 : Initiating START of source server for secondary instance [dummy]
-   gtmuser@philadelphia:~/exDir$
+   %GTM-I-MUJNLSTAT, End processing at Tue Jan  23 14:35:57 2018
+   gtmuser@paris:~/exDir$ ./replicating_start
+   Tue Jan  23 14:37:14 2018 : Initiating START of source server for secondary instance [dummy]
+   gtmuser@paris:~/exDir$
 
-Now, create a database update in Shanghai.
+Now, create a database update in Melbourne.
 
 .. parsed-literal::
-   YDB>set ^Weather("Shanghai",$Piece($Horolog,",",1),$Piece($Horolog,",",2))="Stormy"
+   YDB>set ^Weather("Melbourne",$Piece($Horolog,",",1),$Piece($Horolog,",",2))="Stormy"
 
-And confirm that it is replicated to both Cape Town and Philadelphia.
+And confirm that it is replicated to both Santiago and Paris.
 
 .. parsed-literal::
    YDB>zwrite ^Weather
-   ^Weather("Philadelphia",63523,51308)="Rainy"
-   ^Weather("Philadelphia",63523,51921)="Sunny"
-   ^Weather("Shanghai",63524,13176)="Stormy"
+   ^Weather("Paris",63523,51308)="Rainy"
+   ^Weather("Paris",63523,51921)="Sunny"
+   ^Weather("Melbourne",63524,13176)="Stormy"
 
-Shut down all three instances cleanly to end the exercise. On the originating instance in Shanghai:
+Shut down all three instances cleanly to end the exercise. On the originating instance in Melbourne:
 
 .. parsed-literal::
-   gtmuser@shanghai:~/exDir$ ./originating_stop
-   Wed Dec  3 03:42:11 2014 : Signalling shutdown immediate
-   Wed Dec  3 03:42:11 2014 : Initiating SHUTDOWN operation on source server pid [1049] for secondary instance [CapeTown]
-   Wed Dec  3 03:42:11 2014 : Initiating SHUTDOWN operation on source server pid [1051] for secondary instance [Philadelphia]
-   Wed Dec  3 03:42:11 2014 : Waiting for upto [180] seconds for the source server to shutdown
-   Wed Dec  3 03:42:12 2014 : Journal pool shared memory removed
-   Wed Dec  3 03:42:12 2014 : Journal pool semaphore removed
+   gtmuser@melbourne:~/exDir$ ./originating_stop
+   Wed Jan  24 03:42:11 2018 : Signalling shutdown immediate
+   Wed Jan  24 03:42:11 2018 : Initiating SHUTDOWN operation on source server pid [1049] for secondary instance [Santiago]
+   Wed Jan  24 03:42:11 2018 : Initiating SHUTDOWN operation on source server pid [1051] for secondary instance [Paris]
+   Wed Jan  24 03:42:11 2018 : Waiting for upto [180] seconds for the source server to shutdown
+   Wed Jan  24 03:42:12 2018 : Journal pool shared memory removed
+   Wed Jan  24 03:42:12 2018 : Journal pool semaphore removed
    %GTM-I-MUFILRNDWNSUC, File /home/gtmuser/exDir/aA.dat successfully rundown
    %GTM-I-MUFILRNDWNSUC, File /home/gtmuser/exDir/others.dat successfully rundown
-   gtmuser@shanghai:~/exDir$
+   gtmuser@melbourne:~/exDir$
 
-And on the replicating instances in Cape Town and Philadelphia, execute replicating_stop to stop the replication.
+And on the replicating instances in Santiago and Paris, execute replicating_stop to stop the replication.
 
 .. parsed-literal::
-   gtmuser@philadelphia:~/exDir$ ./replicating_stop
+   gtmuser@paris:~/exDir$ ./replicating_stop
    Signalling immediate shutdown
-   Tue Dec  2 14:42:53 2014 : Initiating shut down
-   Tue Dec  2 14:42:54 2014 : Receive pool shared memory removed
-   Tue Dec  2 14:42:54 2014 : Receive pool semaphore removed
-   Tue Dec  2 14:42:54 2014 : Signalling shutdown immediate
-   Tue Dec  2 14:42:54 2014 : Initiating SHUTDOWN operation on source server pid [1018] for secondary instance [dummy]
-   Tue Dec  2 14:42:54 2014 : Waiting for upto [180] seconds for the source server to shutdown
-   Tue Dec  2 14:42:55 2014 : Journal pool shared memory removed
-   Tue Dec  2 14:42:55 2014 : Journal pool semaphore removed
+   Tue Jan  23 14:42:53 2018 : Initiating shut down
+   Tue Jan  23 14:42:54 2018 : Receive pool shared memory removed
+   Tue Jan  23 14:42:54 2018 : Receive pool semaphore removed
+   Tue Jan  23 14:42:54 2018 : Signalling shutdown immediate
+   Tue Jan  23 14:42:54 2018 : Initiating SHUTDOWN operation on source server pid [1018] for secondary instance [dummy]
+   Tue Jan  23 14:42:54 2018 : Waiting for upto [180] seconds for the source server to shutdown
+   Tue Jan  23 14:42:55 2018 : Journal pool shared memory removed
+   Tue Jan  23 14:42:55 2018 : Journal pool semaphore removed
    %GTM-I-MUFILRNDWNSUC, File /home/gtmuser/exDir/aA.dat successfully rundown
    %GTM-I-MUFILRNDWNSUC, File /home/gtmuser/exDir/others.dat successfully rundown
-   gtmuser@philadelphia:~/exDir$
+   gtmuser@paris:~/exDir$
 
 **Replication and Backlogs**
 
 In an ideal world, an originating instance never goes down with a backlog. In the real world, it may well go down with a backlog of updates that have not been replicated. Asynchronous replication is a consequence of the fact that committing an update requires a remote commit and a local commit, then l oss of the network between the remote instance the local instance stops the local instance; and network delays slow down the local instance.
 
-In order to provide continuity of business, when an originating primary instance goes down a former replicating secondary instance can be brought up as a new originating primary instance to keep the application available. When the former originating primary instance comes up, it is in a secondary role, and the updates that were part of the backlog must be handled. GT.M provides the hooks needed to create applications that are continuously available, but the application must take advantage of these hooks. Consider the following two-instance example (the notation P: 100 means that the site is operating as the primary and has committed update number 100):
+In order to provide continuity of business, when an originating primary instance goes down a former replicating secondary instance can be brought up as a new originating primary instance to keep the application available. When the former originating primary instance comes up, it is in a secondary role, and the updates that were part of the backlog must be handled. YottaDB/GT.M provides the hooks needed to create applications that are continuously available, but the application must take advantage of these hooks. Consider the following two-instance example (the notation P: 100 means that the site is operating as the primary and has committed update number 100):
 
 +------------------------------+----------------------------------------------------------------------------------------------------------+
-| Cape Town                    |        Shanghai                                                                                          |
+| Santiago                     |        Melbourne                                                                                         |
 +==============================+==========================================================================================================+
 | P:100                        |        S:95 (backlog of 5 updates)                                                                       |
 +------------------------------+----------------------------------------------------------------------------------------------------------+
@@ -1665,197 +1634,197 @@ In order to provide continuity of business, when an originating primary instance
 | Repaired and brought back up |        P:120 (processing has moved it ahead)                                                             |
 +------------------------------+----------------------------------------------------------------------------------------------------------+
 
-This situation needs to be remedied, because updates (transactions) 96-100 on Cape Town are different from updates 96-100 on Shanghai. This has a YottaDB/GT.M part and an application software part. The YottaDB/GT.M part is to rollback the transactions on the former originating primary instance with the mupip journal -rollback -fetchresync command. These rolled back updates (“unreplicated” or “lost” transactions) are placed in a file and must be transmitted to the new originating instance for reprocessing / reconciliation by application logic.
+This situation needs to be remedied, because updates (transactions) 96-100 on Santiago are different from updates 96-100 on Melbourne. This has a YottaDB/GT.M part and an application software part. The YottaDB/GT.M part is to rollback the transactions on the former originating primary instance with the mupip journal -rollback -fetchresync command. These rolled back updates (“unreplicated” or “lost” transactions) are placed in a file and must be transmitted to the new originating instance for reprocessing / reconciliation by application logic.
 
 +---------------------------------------------------------------------------------+-------------------------------------------------------------------+
-| Cape Town                                                                       |      Shanghai                                                     |
+| Santiago                                                                        |      Melbourne                                                    |
 +=================================================================================+===================================================================+
 | S: 95 (database rolled back; updates 96-100 in unreplicated transaction file)   |      P:120                                                        |
 +---------------------------------------------------------------------------------+-------------------------------------------------------------------+
-| S: 120 (catches up with Shanghai once replication resumes)                      |      P: 120 (receives unreplicated transaction file)              |
+| S: 120 (catches up with Melbourne once replication resumes)                     |      P: 120 (receives unreplicated transaction file)              |
 +---------------------------------------------------------------------------------+-------------------------------------------------------------------+
 | S: 125 (unreplicated transactions make it back after reprocessing)              |      P: 125 (processing unreplicated transactions moves it ahead) |
 +---------------------------------------------------------------------------------+-------------------------------------------------------------------+
 
-Adding Philadelphia to the example above complicates it only slightly. There are two cases to consider when Cape Town crashes:
+Adding Paris to the example above complicates it only slightly. There are two cases to consider when Santiago crashes:
 
-- Philadelphia is at transaction 95 or less. In this case, Philadelphia simply becomes a replicating instance to Shanghai and there is no need for Philadelphia to rollback any transactions.
+- Paris is at transaction 95 or less. In this case, Paris simply becomes a replicating instance to Melbourne and there is no need for Paris to rollback any transactions.
 
-- Philadelphia is at a transaction 96 or more. In this case, when Philadelphia becomes a replicating instance to Shanghai, it performs a rollback to transaction 95 before starting replication. These transactions in the unreplicated transaction file do not need to be sent to Shanghai for reprocessing because they will be in the unreplicated transaction file from Cape Town.
+- Paris is at a transaction 96 or more. In this case, when Paris becomes a replicating instance to Melbourne, it performs a rollback to transaction 95 before starting replication. These transactions in the unreplicated transaction file do not need to be sent to Melbourne for reprocessing because they will be in the unreplicated transaction file from Santiago.
 
 **Exercise - Replication and Backlogs**
 
-This exercise simulates a replication with a backlog (smaller than the five updates in the example above). Start with Cape Town as the originating instance replicating to Philadelphia and Shanghai as replicating instances. Since Cape Town most recently was a secondary instance, you should start with mupip journal -rollback -fetchresync in Shanghai and Philadelphia.
+This exercise simulates a replication with a backlog (smaller than the five updates in the example above). Start with Santiago as the originating instance replicating to Paris and Melbourne as replicating instances. Since Santiago most recently was a secondary instance, you should start with mupip journal -rollback -fetchresync in Melbourne and Paris.
 
-Start Cape Town as the originating instance:
-
-.. parsed-literal::
-   gtmuser@capetown:~/exDir$ mupip replicate -source -start -instsecondary=Philadelphia -secondary=10.0.2.2:5000 -buffsize=1048576 -log=/home/gtmuser/exDir/source_Philadelphia.log
-   Tue Dec  2 23:42:32 2014 : Initiating START of source server for secondary instance [Philadelphia]
-   gtmuser@capetown:~/exDir$ mupip replicate -source -start -instsecondary=Shanghai -secondary=10.0.2.2:6000 -buffsize=1048576 -log=/home/gtmuser/exDir/source_Shanghai.log
-   Tue Dec  2 23:43:02 2014 : Initiating START of source server for secondary instance [Shanghai]
-   gtmuser@capetown:~/exDir$
-
-At Philadelphia (and also in Shanghai) perform the fetchresync operation and then start replication. You can ask YottaDB/GT.M to tell you the health of replication and also the replication backlog.
+Start Santiago as the originating instance:
 
 .. parsed-literal::
-   gtmuser@philadelphia:~/exDir$ mupip journal -rollback -backward -fetchresync=3000 -losttrans=/home/gtmuser/exDir/Unreplic_Trans_Report_`date +%Y%m%d%H%M%S`.txt "*"
-   %GTM-I-MUJNLSTAT, Initial processing started at Tue Dec  2 16:43:40 2014
-   %GTM-I-MUJNLSTAT, FETCHRESYNC processing started at Tue Dec  2 16:43:40 2014
-   Tue Dec  2 16:43:40 2014 : Assuming primary supports multisite functionality. Connecting using multisite communication protocol.
-   Tue Dec  2 16:43:40 2014 : Waiting for a connection...
-   Tue Dec  2 16:43:41 2014 : Connection established, using TCP send buffer size 87040 receive buffer size 374400
-   Tue Dec  2 16:43:41 2014 : Connection information:: Local: ::ffff:10.0.2.15:3000 Remote: ::ffff:10.0.2.2:49967
-   Tue Dec  2 16:43:41 2014 : Sending REPL_FETCH_RESYNC message with seqno 4 [0x4]
-   Tue Dec  2 16:43:41 2014 : Source and Receiver sides have same endianness
-   Tue Dec  2 16:43:41 2014 : Remote side source log file path is /home/gtmuser/exDir/source_Philadelphia.log; Source Server PID = 1063
-   Tue Dec  2 16:43:41 2014 : Received REPL_NEED_INSTINFO message from primary instance [CapeTown]
-   Tue Dec  2 16:43:41 2014 : Sending REPL_INSTINFO message
-   Tue Dec  2 16:43:41 2014 : Received REPL_NEED_HISTINFO message for Seqno 4 [0x4]
-   Tue Dec  2 16:43:41 2014 : Sending REPL_HISTINFO message with seqno 3 [0x3]
-   Tue Dec  2 16:43:41 2014 : History sent : Start Seqno = 3 [0x3] : Stream Seqno = 0 [0x0] : Root Primary = [Shanghai] : Cycle = [1] : Creator pid = 1035 : Created time = 1417548642 [0x547e1362] : History number = 1 : Prev History number = 0 : Stream # = 0 : History type = 1
-   Tue Dec  2 16:43:41 2014 : Received REPL_RESYNC_SEQNO message
-   Tue Dec  2 16:43:41 2014 : Received RESYNC SEQNO is 4 [0x4]
-   %GTM-I-MUJNLSTAT, Backward processing started at Tue Dec  2 16:43:41 2014
+   gtmuser@santiago:~/exDir$ mupip replicate -source -start -instsecondary=Paris -secondary=10.0.2.2:5000 -buffsize=1048576 -log=/home/gtmuser/exDir/source_Paris.log
+   Tue Jan  2 23:42:32 2018 : Initiating START of source server for secondary instance [Paris]
+   gtmuser@santiago:~/exDir$ mupip replicate -source -start -instsecondary=Melbourne -secondary=10.0.2.2:6000 -buffsize=1048576 -log=/home/gtmuser/exDir/source_Melbourne.log
+   Tue Jan  2 23:43:02 2018 : Initiating START of source server for secondary instance [Melbourne]
+   gtmuser@santiago:~/exDir$
+
+At Paris (and also in Melbourne) perform the fetchresync operation and then start replication. You can ask YottaDB/GT.M to tell you the health of replication and also the replication backlog.
+
+.. parsed-literal::
+   gtmuser@paris:~/exDir$ mupip journal -rollback -backward -fetchresync=3000 -losttrans=/home/gtmuser/exDir/Unreplic_Trans_Report_`date +%Y%m%d%H%M%S`.txt "*"
+   %GTM-I-MUJNLSTAT, Initial processing started at Tue Jan  2 16:43:40 2018
+   %GTM-I-MUJNLSTAT, FETCHRESYNC processing started at Tue Jan  2 16:43:40 2018
+   Tue Jan  23 16:43:40 2018 : Assuming primary supports multisite functionality. Connecting using multisite communication protocol.
+   Tue Jan  23 16:43:40 2018 : Waiting for a connection...
+   Tue Jan  23 16:43:41 2018 : Connection established, using TCP send buffer size 87040 receive buffer size 374400
+   Tue Jan  23 16:43:41 2018 : Connection information:: Local: ::ffff:10.0.2.15:3000 Remote: ::ffff:10.0.2.2:49967
+   Tue Jan  23 16:43:41 2018 : Sending REPL_FETCH_RESYNC message with seqno 4 [0x4]
+   Tue Jan  23 16:43:41 2018 : Source and Receiver sides have same endianness
+   Tue Jan  23 16:43:41 2018 : Remote side source log file path is /home/gtmuser/exDir/source_Paris.log; Source Server PID = 1063
+   Tue Jan  23 16:43:41 2018 : Received REPL_NEED_INSTINFO message from primary instance [Santiago]
+   Tue Jan  23 16:43:41 2018 : Sending REPL_INSTINFO message
+   Tue Jan  23 16:43:41 2018 : Received REPL_NEED_HISTINFO message for Seqno 4 [0x4]
+   Tue Jan  23 16:43:41 2018 : Sending REPL_HISTINFO message with seqno 3 [0x3]
+   Tue Jan  23 16:43:41 2018 : History sent : Start Seqno = 3 [0x3] : Stream Seqno = 0 [0x0] : Root Primary = [Melbourne] : Cycle = [1] : Creator pid = 1035 : Created time = 1417548642 [0x547e1362] : History number = 1 : Prev History number = 0 : Stream # = 0 : History type = 1
+   Tue Jan  23 16:43:41 2018 : Received REPL_RESYNC_SEQNO message
+   Tue Jan  23 16:43:41 2018 : Received RESYNC SEQNO is 4 [0x4]
+   %GTM-I-MUJNLSTAT, Backward processing started at Tue Jan  23 16:43:41 2018
    %GTM-I-RESOLVESEQNO, Resolving until sequence number 4 [0x0000000000000004]
-   %GTM-I-MUJNLSTAT, Before image applying started at Tue Dec  2 16:43:41 2014
-   %GTM-I-FILERENAME, File /home/gtmuser/exDir/aA.mjl is renamed to /home/gtmuser/exDir/aA.mjl_2014336164341
-   %GTM-I-FILERENAME, File /home/gtmuser/exDir/others.mjl is renamed to /home/gtmuser/exDir/others.mjl_2014336164341
-   %GTM-I-MUJNLSTAT, Forward processing started at Tue Dec  2 16:43:41 2014
-   %GTM-I-FILECREATE, Lost transactions extract file /home/gtmuser/exDir/Unreplic_Trans_Report_20141202164340.txt created
+   %GTM-I-MUJNLSTAT, Before image applying started at Tue Jan  23 16:43:41 2018
+   %GTM-I-FILERENAME, File /home/gtmuser/exDir/aA.mjl is renamed to /home/gtmuser/exDir/aA.mjl_2018336164341
+   %GTM-I-FILERENAME, File /home/gtmuser/exDir/others.mjl is renamed to /home/gtmuser/exDir/others.mjl_2018336164341
+   %GTM-I-MUJNLSTAT, Forward processing started at Tue Jan  23 16:43:41 2018
+   %GTM-I-FILECREATE, Lost transactions extract file /home/gtmuser/exDir/Unreplic_Trans_Report_20181202164340.txt created
    %GTM-I-RLBKJNSEQ, Journal seqno of the instance after rollback is 4 [0x0000000000000004]
    %GTM-S-JNLSUCCESS, Show successful
    %GTM-S-JNLSUCCESS, Verify successful
    %GTM-S-JNLSUCCESS, Rollback successful
-   %GTM-I-MUJNLSTAT, End processing at Tue Dec  2 16:43:41 2014
-   gtmuser@philadelphia:~/exDir$ ./replicating_start
-   Tue Dec  2 16:47:50 2014 : Initiating START of source server for secondary instance [dummy]
-   gtmuser@philadelphia:~/exDir$ mupip replicate -receiver -checkhealth
+   %GTM-I-MUJNLSTAT, End processing at Tue Jan  23 16:43:41 2018
+   gtmuser@paris:~/exDir$ ./replicating_start
+   Tue Jan  23 16:47:50 2018 : Initiating START of source server for secondary instance [dummy]
+   gtmuser@paris:~/exDir$ mupip replicate -receiver -checkhealth
    PID 1040 Receiver server is alive
    PID 1041 Update process is alive
-   gtmuser@philadelphia:~/exDir$ mupip replicate -receiver -showbacklog
+   gtmuser@paris:~/exDir$ mupip replicate -receiver -showbacklog
    0 : number of backlog transactions received by receiver server and yet to be processed by update process
    3 : sequence number of last transaction received from Source Server and written to receive pool
    3 : sequence number of last transaction processed by update process
-   gtmuser@philadelphia:~/exDir$
+   gtmuser@paris:~/exDir$
 
-You can also check replication health and the backlog on the originating instance, Cape Town. Notice that if you do not specify which replication connection you want details for, you get information on all.
+You can also check replication health and the backlog on the originating instance, Santiago. Notice that if you do not specify which replication connection you want details for, you get information on all.
 
 .. parsed-literal::
-   gtmuser@capetown:~/exDir$ mupip replicate -source -checkhealth
-   Tue Dec  2 23:51:20 2014 : Initiating CHECKHEALTH operation on source server pid [1063] for secondary instance name [Philadelphia]
+   gtmuser@santiago:~/exDir$ mupip replicate -source -checkhealth
+   Tue Jan  23 23:51:20 2018 : Initiating CHECKHEALTH operation on source server pid [1063] for secondary instance name [Paris]
    PID 1063 Source server is alive in ACTIVE mode
-   Tue Dec  2 23:51:20 2014 : Initiating CHECKHEALTH operation on source server pid [1065] for secondary instance name [Shanghai]
+   Tue Jan  23 23:51:20 2018 : Initiating CHECKHEALTH operation on source server pid [1065] for secondary instance name [Melbourne]
    PID 1065 Source server is alive in ACTIVE mode
-   gtmuser@capetown:~/exDir$ mupip replicate -source -showbacklog
-   Tue Dec  2 23:51:35 2014 : Initiating SHOWBACKLOG operation on source server pid [1063] for secondary instance [Philadelphia]
+   gtmuser@santiago:~/exDir$ mupip replicate -source -showbacklog
+   Tue Jan  23 23:51:35 2018 : Initiating SHOWBACKLOG operation on source server pid [1063] for secondary instance [Paris]
    0 : backlog number of transactions written to journal pool and yet to be sent by the source server
    3 : sequence number of last transaction written to journal pool
    3 : sequence number of last transaction sent by source server
-   Tue Dec  2 23:51:35 2014 : Initiating SHOWBACKLOG operation on source server pid [1065] for secondary instance [Shanghai]
+   Tue Jan  2 23:51:35 2018 : Initiating SHOWBACKLOG operation on source server pid [1065] for secondary instance [Melbourne]
    0 : backlog number of transactions written to journal pool and yet to be sent by the source server
    3 : sequence number of last transaction written to journal pool
    3 : sequence number of last transaction sent by source server
-   gtmuser@capetown:~/exDir$
+   gtmuser@santiago:~/exDir$
 
-Now create an update in Cape Town.
+Now create an update in Santiago.
 
 .. parsed-literal::
-   YDB>set ^Weather("Cape Town",$Piece($Horolog,",",1),$Piece($Horolog,",",2))="Snowing"
+   YDB>set ^Weather("Santiago",$Piece($Horolog,",",1),$Piece($Horolog,",",2))="Snowing"
 
-Verify that it is replicated in Philadelphia and Shanghai.
+Verify that it is replicated in Paris and Melbourne.
 
 .. parsed-literal::
    YDB>zwrite ^Weather
-   ^Weather("Cape Town",63523,86064)="Snowing"
-   ^Weather("Philadelphia",63523,51308)="Rainy"
-   ^Weather("Philadelphia",63523,51921)="Sunny"
-   ^Weather("Shanghai",63524,13176)="Stormy"
+   ^Weather("Santiago",63523,86064)="Snowing"
+   ^Weather("Paris",63523,51308)="Rainy"
+   ^Weather("Paris",63523,51921)="Sunny"
+   ^Weather("Melbourne",63524,13176)="Stormy"
 
-Now simulate a failure with a backlog by first shutting down replication in Shanghai, and then making an update in Cape Town. In Shanghai:
+Now simulate a failure with a backlog by first shutting down replication in Melbourne, and then making an update in Santiago. In Melbourne:
 
 .. parsed-literal::
-   gtmuser@shanghai:~/exDir$ ./replicating_stop
+   gtmuser@melbourne:~/exDir$ ./replicating_stop
    Signalling immediate shutdown
-   Wed Dec  3 05:56:09 2014 : Initiating shut down
-   Wed Dec  3 05:56:10 2014 : Receive pool shared memory removed
-   Wed Dec  3 05:56:10 2014 : Receive pool semaphore removed
-   Wed Dec  3 05:56:10 2014 : Signalling shutdown immediate
-   Wed Dec  3 05:56:10 2014 : Initiating SHUTDOWN operation on source server pid [1075] for secondary instance [dummy]
-   Wed Dec  3 05:56:10 2014 : Waiting for upto [180] seconds for the source server to shutdown
-   Wed Dec  3 05:56:11 2014 : Journal pool shared memory removed
-   Wed Dec  3 05:56:11 2014 : Journal pool semaphore removed
+   Wed Jan  24 05:56:09 2018 : Initiating shut down
+   Wed Jan  24 05:56:10 2018 : Receive pool shared memory removed
+   Wed Jan  24 05:56:10 2018 : Receive pool semaphore removed
+   Wed Jan  24 05:56:10 2018 : Signalling shutdown immediate
+   Wed Jan  24 05:56:10 2018 : Initiating SHUTDOWN operation on source server pid [1075] for secondary instance [dummy]
+   Wed Jan  24 05:56:10 2018 : Waiting for upto [180] seconds for the source server to shutdown
+   Wed Jan  24 05:56:11 2018 : Journal pool shared memory removed
+   Wed Jan  24 05:56:11 2018 : Journal pool semaphore removed
    %GTM-I-MUFILRNDWNSUC, File /home/gtmuser/exDir/aA.dat successfully rundown
    %GTM-I-MUFILRNDWNSUC, File /home/gtmuser/exDir/others.dat successfully rundown
-   gtmuser@shanghai:~/exDir$
+   gtmuser@melbourne:~/exDir$
 
-In Cape Town:
+In Santiago:
 
 .. parsed-literal::
-   YDB>set ^Weather("Cape Town",$Piece($Horolog,",",1),$Piece($Horolog,",",2))="Blizzards"
+   YDB>set ^Weather("Santiago",$Piece($Horolog,",",1),$Piece($Horolog,",",2))="Blizzards"
 
    YDB>zsystem "$gtm_dist/mupip replicate -source -showbacklog"
-   Tue Dec  2 23:57:00 2014 : Initiating SHOWBACKLOG operation on source server pid [1063] for secondary instance [Philadelphia]
+   Tue Jan  23 23:57:00 2018 : Initiating SHOWBACKLOG operation on source server pid [1063] for secondary instance [Paris]
    0 : backlog number of transactions written to journal pool and yet to be sent by the source server
    5 : sequence number of last transaction written to journal pool
    5 : sequence number of last transaction sent by source server
-   Tue Dec  2 23:57:00 2014 : Initiating SHOWBACKLOG operation on source server pid [1065] for secondary instance [Shanghai]
+   Tue Jan  23 23:57:00 2018 : Initiating SHOWBACKLOG operation on source server pid [1065] for secondary instance [Melbourne]
    1 : backlog number of transactions written to journal pool and yet to be sent by the source server
    5 : sequence number of last transaction written to journal pool
    4 : sequence number of last transaction sent by source server
 
    YDB>
 
-Notice that there is a backlog to Shanghai, but none to Philadelphia. Now shut down replication in Philadelphia and make another update in Cape Town. Verify that there is a backlog of 1 to Philadelphia and 2 to Shanghai.
+Notice that there is a backlog to Melbourne, but none to Paris. Now shut down replication in Paris and make another update in Santiago. Verify that there is a backlog of 1 to Paris and 2 to Melbourne.
 
-In Philadelphia:
+In Paris:
 
 .. parsed-literal::
-   gtmuser@philadelphia:~/exDir$ ./replicating_stop
+   gtmuser@paris:~/exDir$ ./replicating_stop
    Signalling immediate shutdown
-   Tue Dec  2 16:57:32 2014 : Initiating shut down
-   Tue Dec  2 16:57:33 2014 : Receive pool shared memory removed
-   Tue Dec  2 16:57:33 2014 : Receive pool semaphore removed
-   Tue Dec  2 16:57:33 2014 : Signalling shutdown immediate
-   Tue Dec  2 16:57:33 2014 : Initiating SHUTDOWN operation on source server pid [1038] for secondary instance [dummy]
-   Tue Dec  2 16:57:33 2014 : Waiting for upto [180] seconds for the source server to shutdown
-   Tue Dec  2 16:57:34 2014 : Journal pool shared memory removed
-   Tue Dec  2 16:57:34 2014 : Journal pool semaphore removed
+   Tue Jan  23 16:57:32 2018 : Initiating shut down
+   Tue Jan  23 16:57:33 2018 : Receive pool shared memory removed
+   Tue Jan  23 16:57:33 2018 : Receive pool semaphore removed
+   Tue Jan  23 16:57:33 2018 : Signalling shutdown immediate
+   Tue Jan  23 16:57:33 2018 : Initiating SHUTDOWN operation on source server pid [1038] for secondary instance [dummy]
+   Tue Jan  23 16:57:33 2018 : Waiting for upto [180] seconds for the source server to shutdown
+   Tue Jan  23 16:57:34 2018 : Journal pool shared memory removed
+   Tue Jan  23 16:57:34 2018 : Journal pool semaphore removed
    %GTM-I-MUFILRNDWNSUC, File /home/gtmuser/exDir/aA.dat successfully rundown
    %GTM-I-MUFILRNDWNSUC, File /home/gtmuser/exDir/others.dat successfully rundown
-   gtmuser@philadelphia:~/exDir$
+   gtmuser@paris:~/exDir$
 
-In Cape Town:
+In Santiago:
 
 .. parsed-literal::
-   YDB>set ^Weather("Cape Town",$Piece($Horolog,",",1),$Piece($Horolog,",",2))="Cloudy"
+   YDB>set ^Weather("Santiago",$Piece($Horolog,",",1),$Piece($Horolog,",",2))="Cloudy"
 
    YDB>zwrite ^Weather
-   ^Weather("Cape Town",63523,86064)="Snowing"
-   ^Weather("Cape Town",63523,86207)="Blizzards"
-   ^Weather("Cape Town",63523,86342)="Cloudy"
-   ^Weather("Philadelphia",63523,51308)="Rainy"
-   ^Weather("Philadelphia",63523,51921)="Sunny"
-   ^Weather("Shanghai",63524,13176)="Stormy"
+   ^Weather("Santiago",63523,86064)="Snowing"
+   ^Weather("Santiago",63523,86207)="Blizzards"
+   ^Weather("Santiago",63523,86342)="Cloudy"
+   ^Weather("Paris",63523,51308)="Rainy"
+   ^Weather("Paris",63523,51921)="Sunny"
+   ^Weather("Melbourne",63524,13176)="Stormy"
 
    YDB>zsystem "$gtm_dist/mupip replicate -source -showbacklog"
-   Tue Dec  2 23:59:27 2014 : Initiating SHOWBACKLOG operation on source server pid [1063] for secondary instance [Philadelphia]
+   Tue Jan  23 23:59:27 2018 : Initiating SHOWBACKLOG operation on source server pid [1063] for secondary instance [Paris]
    1 : backlog number of transactions written to journal pool and yet to be sent by the source server
    6 : sequence number of last transaction written to journal pool
    5 : sequence number of last transaction sent by source server
-   Tue Dec  2 23:59:27 2014 : Initiating SHOWBACKLOG operation on source server pid [1065] for secondary instance [Shanghai]
+   Tue Jan  23 23:59:27 2018 : Initiating SHOWBACKLOG operation on source server pid [1065] for secondary instance [Melbourne]
    2 : backlog number of transactions written to journal pool and yet to be sent by the source server
    6 : sequence number of last transaction written to journal pool
    4 : sequence number of last transaction sent by source server
 
    YDB>
 
-Now crash Cape Town. You have a choice of bringing up Philadelphia or Shanghai. If you don't have time to make a decision as to which replicating instance to make the new primary, just choose the most convenient. If you have time to make a decision, you can see which one is further ahead by looking at the “Region Seqno” field in the database file header with DSE (in a multi-region database, you need to look at all replicated regions and take the maximum).
+Now crash Santiago. You have a choice of bringing up Paris or Melbourne. If you don't have time to make a decision as to which replicating instance to make the new primary, just choose the most convenient. If you have time to make a decision, you can see which one is further ahead by looking at the “Region Seqno” field in the database file header with DSE (in a multi-region database, you need to look at all replicated regions and take the maximum).
 
-In Philadelphia (note the use of the find -region DSE command):
+In Paris (note the use of the find -region DSE command):
 
 .. parsed-literal::
-   gtmuser@philadelphia:~/exDir$ $gtm_dist/dse
+   gtmuser@paris:~/exDir$ $gtm_dist/dse
 
 
    File    /home/gtmuser/exDir/aA.dat
@@ -1865,7 +1834,7 @@ In Philadelphia (note the use of the find -region DSE command):
 
    File            /home/gtmuser/exDir/aA.dat
    Region          A
-   Date/Time       02-DEC-2014 17:11:44 [$H = 63523,61904]
+   Date/Time       23-JAN-2018 17:11:44 [$H = 63523,61904]
 
     Access method                          BG  Global Buffers                1000
     Reserved Bytes                          0  Block size (in bytes)         4096
@@ -1917,7 +1886,7 @@ In Philadelphia (note the use of the find -region DSE command):
 
     File            /home/gtmuser/exDir/others.dat
     Region          DEFAULT
-    Date/Time       02-DEC-2014 17:12:57 [$H = 63523,61977]
+    Date/Time       23-JAN-2018 17:12:57 [$H = 63523,61977]
 
       Access method                          BG  Global Buffers                1000
       Reserved Bytes                          0  Block size (in bytes)         4096
@@ -1952,12 +1921,12 @@ In Philadelphia (note the use of the find -region DSE command):
       Spanning Node Absent                 TRUE  Maximum Key Size Assured      TRUE
 
       DSE> exit
-      gtmuser@philadelphia:~/exDir$
+      gtmuser@paris:~/exDir$
 
-And in Shanghai:
+And in Melbourne:
 
 .. parsed-literal::
-   gtmuser@shanghai:~/exDir$ $gtm_dist/dse
+   gtmuser@melbourne:~/exDir$ $gtm_dist/dse
 
    File    /home/gtmuser/exDir/aA.dat
    Region  A
@@ -1966,7 +1935,7 @@ And in Shanghai:
 
    File            /home/gtmuser/exDir/aA.dat
    Region          A
-   Date/Time       03-DEC-2014 06:15:09 [$H = 63524,22509]
+   Date/Time       24-JAN-2018 06:15:09 [$H = 63524,22509]
 
      Access method                          BG  Global Buffers                1000
      Reserved Bytes                          0  Block size (in bytes)         4096
@@ -2009,7 +1978,7 @@ And in Shanghai:
 
    File            /home/gtmuser/exDir/others.dat
    Region          DEFAULT
-   Date/Time       03-DEC-2014 06:16:12 [$H = 63524,22572]
+   Date/Time       24-JAN-2018 06:16:12 [$H = 63524,22572]
       Access method                          BG  Global Buffers                1000
       Reserved Bytes                          0  Block size (in bytes)         4096
       Maximum record size                  4080  Starting VBN                   513
@@ -2043,129 +2012,129 @@ And in Shanghai:
       Spanning Node Absent                 TRUE  Maximum Key Size Assured      TRUE
 
    DSE> exit
-   gtmuser@shanghai:~/exDir$ 
+   gtmuser@melbourne:~/exDir$ 
 
-Since the largest Region Seqno is 6 (region DEFAULT in Philadelphia), that is the preferred new originating primary instance. So, make it the new originating primary.
-
-.. parsed-literal::
-   gtmuser@philadelphia:~/exDir$ mupip replicate -source -start -instsecondary=Shanghai -secondary=10.0.2.2:6000 -buffsize=1048576 -log=/home/gtmuser/exDir/source_Shanghai.log
-   Tue Dec  2 17:20:13 2014 : Initiating START of source server for secondary instance [Shanghai]
-   gtmuser@philadelphia:~/exDir$ mupip replicate -source -start -instsecondary=CapeTown -secondary=10.0.2.2:4000 -buffsize=1048576 -log=/home/gtmuser/exDir/source_CapeTown.log
-   Tue Dec  2 17:20:39 2014 : Initiating START of source server for secondary instance [CapeTown]
-   gtmuser@philadelphia:~/exDir$
-
-On Shanghai, perform the mupip journal -rollback -fetchresync operation and start operation as a replicating instance.
+Since the largest Region Seqno is 6 (region DEFAULT in Paris), that is the preferred new originating primary instance. So, make it the new originating primary.
 
 .. parsed-literal::
-   gtmuser@shanghai:~/exDir$ mupip journal -rollback -backward -fetchresync=3000 -losttrans=/home/gtmuser/exDir/Unreplic_Trans_Report_`date +%Y%m%d%H%M%S`.txt "*"
-   %GTM-I-MUJNLSTAT, Initial processing started at Wed Dec  3 06:21:18 2014
-   %GTM-I-MUJNLSTAT, FETCHRESYNC processing started at Wed Dec  3 06:21:18 2014
-   Wed Dec  3 06:21:18 2014 : Assuming primary supports multisite functionality. Connecting using multisite communication protocol.
-   Wed Dec  3 06:21:18 2014 : Waiting for a connection...
-   Wed Dec  3 06:21:19 2014 : Connection established, using TCP send buffer size 87040 receive buffer size 374400
-   Wed Dec  3 06:21:19 2014 : Connection information:: Local: ::ffff:10.0.2.15:3000 Remote: ::ffff:10.0.2.2:53668
-   Wed Dec  3 06:21:19 2014 : Sending REPL_FETCH_RESYNC message with seqno 5 [0x5]
-   Wed Dec  3 06:21:19 2014 : Source and Receiver sides have same endianness
-   Wed Dec  3 06:21:19 2014 : Remote side source log file path is /home/gtmuser/exDir/source_Shanghai.log; Source Server PID = 1057
-   Wed Dec  3 06:21:19 2014 : Received REPL_NEED_INSTINFO message from primary instance [Philadelphia]
-   Wed Dec  3 06:21:19 2014 : Sending REPL_INSTINFO message
-   Wed Dec  3 06:21:19 2014 : Received REPL_NEED_HISTINFO message for Seqno 5 [0x5]
-   Wed Dec  3 06:21:19 2014 : Sending REPL_HISTINFO message with seqno 4 [0x4]
-   Wed Dec  3 06:21:19 2014 : History sent : Start Seqno = 4 [0x4] : Stream Seqno = 0 [0x0] : Root Primary = [CapeTown] : Cycle = [1] : Creator pid = 1063 : Created time = 1417556552 [0x547e3248] : History number = 2 : Prev History number = 1 : Stream # = 0 : History type = 1
-   Wed Dec  3 06:21:19 2014 : Received REPL_RESYNC_SEQNO message
-   Wed Dec  3 06:21:19 2014 : Received RESYNC SEQNO is 5 [0x5]
-   %GTM-I-MUJNLSTAT, Backward processing started at Wed Dec  3 06:21:19 2014
+   gtmuser@paris:~/exDir$ mupip replicate -source -start -instsecondary=Melbourne -secondary=10.0.2.2:6000 -buffsize=1048576 -log=/home/gtmuser/exDir/source_Melbourne.log
+   Tue Jan  2 17:20:13 2018 : Initiating START of source server for secondary instance [Melbourne]
+   gtmuser@paris:~/exDir$ mupip replicate -source -start -instsecondary=Santiago -secondary=10.0.2.2:4000 -buffsize=1048576 -log=/home/gtmuser/exDir/source_Santiago.log
+   Tue Jan  2 17:20:39 2018 : Initiating START of source server for secondary instance [Santiago]
+   gtmuser@paris:~/exDir$
+
+On Melbourne, perform the mupip journal -rollback -fetchresync operation and start operation as a replicating instance.
+
+.. parsed-literal::
+   gtmuser@melbourne:~/exDir$ mupip journal -rollback -backward -fetchresync=3000 -losttrans=/home/gtmuser/exDir/Unreplic_Trans_Report_`date +%Y%m%d%H%M%S`.txt "*"
+   %GTM-I-MUJNLSTAT, Initial processing started at Wed Jan  24 06:21:18 2018
+   %GTM-I-MUJNLSTAT, FETCHRESYNC processing started at Wed Jan  24 06:21:18 2018
+   Wed Jan  24 06:21:18 2018 : Assuming primary supports multisite functionality. Connecting using multisite communication protocol.
+   Wed Jan  24 06:21:18 2018 : Waiting for a connection...
+   Wed Jan  24 06:21:19 2018 : Connection established, using TCP send buffer size 87040 receive buffer size 374400
+   Wed Jan  24 06:21:19 2018 : Connection information:: Local: ::ffff:10.0.2.15:3000 Remote: ::ffff:10.0.2.2:53668
+   Wed Jan  24 06:21:19 2018 : Sending REPL_FETCH_RESYNC message with seqno 5 [0x5]
+   Wed Jan  24 06:21:19 2018 : Source and Receiver sides have same endianness
+   Wed Jan  24 06:21:19 2018 : Remote side source log file path is /home/gtmuser/exDir/source_Melbourne.log; Source Server PID = 1057
+   Wed Jan  24 06:21:19 2018 : Received REPL_NEED_INSTINFO message from primary instance [Paris]
+   Wed Jan  24 06:21:19 2018 : Sending REPL_INSTINFO message
+   Wed Jan  24 06:21:19 2018 : Received REPL_NEED_HISTINFO message for Seqno 5 [0x5]
+   Wed Jan  24 06:21:19 2018 : Sending REPL_HISTINFO message with seqno 4 [0x4]
+   Wed Jan  24 06:21:19 2018 : History sent : Start Seqno = 4 [0x4] : Stream Seqno = 0 [0x0] : Root Primary = [Santiago] : Cycle = [1] : Creator pid = 1063 : Created time = 1417556552 [0x547e3248] : History number = 2 : Prev History number = 1 : Stream # = 0 : History type = 1
+   Wed Jan  24 06:21:19 2018 : Received REPL_RESYNC_SEQNO message
+   Wed Jan  24 06:21:19 2018 : Received RESYNC SEQNO is 5 [0x5]
+   %GTM-I-MUJNLSTAT, Backward processing started at Wed Jan  24 06:21:19 2018
    %GTM-I-RESOLVESEQNO, Resolving until sequence number 5 [0x0000000000000005]
-   %GTM-I-MUJNLSTAT, Before image applying started at Wed Dec  3 06:21:19 2014
-   %GTM-I-FILERENAME, File /home/gtmuser/exDir/aA.mjl is renamed to /home/gtmuser/exDir/aA.mjl_2014337062119
-   %GTM-I-FILERENAME, File /home/gtmuser/exDir/others.mjl is renamed to /home/gtmuser/exDir/others.mjl_2014337062119
-   %GTM-I-MUJNLSTAT, Forward processing started at Wed Dec  3 06:21:20 2014
-   %GTM-I-FILECREATE, Lost transactions extract file /home/gtmuser/exDir/Unreplic_Trans_Report_20141203062118.txt created
+   %GTM-I-MUJNLSTAT, Before image applying started at Wed Jan  24 06:21:19 2018
+   %GTM-I-FILERENAME, File /home/gtmuser/exDir/aA.mjl is renamed to /home/gtmuser/exDir/aA.mjl_2018337062119
+   %GTM-I-FILERENAME, File /home/gtmuser/exDir/others.mjl is renamed to /home/gtmuser/exDir/others.mjl_2018337062119
+   %GTM-I-MUJNLSTAT, Forward processing started at Wed Jan  24 06:21:20 2018
+   %GTM-I-FILECREATE, Lost transactions extract file /home/gtmuser/exDir/Unreplic_Trans_Report_20181203062118.txt created
    %GTM-I-RLBKJNSEQ, Journal seqno of the instance after rollback is 5 [0x0000000000000005]
    %GTM-S-JNLSUCCESS, Show successful
    %GTM-S-JNLSUCCESS, Verify successful
    %GTM-S-JNLSUCCESS, Rollback successful
-   %GTM-I-MUJNLSTAT, End processing at Wed Dec  3 06:21:20 2014
-   gtmuser@shanghai:~/exDir$ ./replicating_start
-   Wed Dec  3 06:21:59 2014 : Initiating START of source server for secondary instance [dummy]
-   gtmuser@shanghai:~/exDir$
+   %GTM-I-MUJNLSTAT, End processing at Wed Jan  24 06:21:20 2018
+   gtmuser@melbourne:~/exDir$ ./replicating_start
+   Wed Jan  24 06:21:59 2018 : Initiating START of source server for secondary instance [dummy]
+   gtmuser@melbourne:~/exDir$
 
-Perform an update in Philadelphia and verify that there is a backlog to Cape Town (the actual number may not be correct because Cape Town was not recently a replicating instance to Philadelphia, but it shows a non-zero value), but there is no backlog to Shanghai.
+Perform an update in Paris and verify that there is a backlog to Santiago (the actual number may not be correct because Santiago was not recently a replicating instance to Paris, but it shows a non-zero value), but there is no backlog to Melbourne.
 
 .. parsed-literal::
-   gtmuser@philadelphia:~/exDir$ mumps -dir
+   gtmuser@paris:~/exDir$ mumps -dir
 
-   YDB>set ^Weather("Philadelphia",$Piece($Horolog,",",1),$Piece($Horolog,",",2))="Heat Wave"
+   YDB>set ^Weather("Paris",$Piece($Horolog,",",1),$Piece($Horolog,",",2))="Heat Wave"
 
    YDB>zsystem "$gtm_dist/mupip replicate -source -showbacklog" 
-   Tue Dec  2 17:24:09 2014 : Initiating SHOWBACKLOG operation on source server pid [1059] for secondary instance [CapeTown]
+   Tue Jan  23 17:24:09 2018 : Initiating SHOWBACKLOG operation on source server pid [1059] for secondary instance [Santiago]
    4 : backlog number of transactions written to journal pool and yet to be sent by the source server
    6 : sequence number of last transaction written to journal pool
    2 : sequence number of last transaction sent by source server
-   Tue Dec  2 17:24:09 2014 : Initiating SHOWBACKLOG operation on source server pid [1057] for secondary instance [Shanghai]
+   Tue Jan  23 17:24:09 2018 : Initiating SHOWBACKLOG operation on source server pid [1057] for secondary instance [Melbourne]
    0 : backlog number of transactions written to journal pool and yet to be sent by the source server
    6 : sequence number of last transaction written to journal pool
    6 : sequence number of last transaction sent by source server
 
    YDB>
 
-Now boot the Cape Town machine and perform a fetchresync:
+Now boot the Santiago machine and perform a fetchresync:
 
 .. parsed-literal::
-   gtmuser@capetown:~/exDir$ source gtmenv
-   gtmuser@capetown:~/exDir$ mupip journal -rollback -backward -fetchresync=3000 -losttrans=/home/gtmuser/exDir/Unreplic_Trans_Report_`date +%Y%m%d%H%M%S`.txt "*"
-   %GTM-I-MUJNLSTAT, Initial processing started at Wed Dec  3 00:27:54 2014
-   %GTM-I-MUJNLSTAT, FETCHRESYNC processing started at Wed Dec  3 00:27:54 2014
-   Wed Dec  3 00:27:54 2014 : Assuming primary supports multisite functionality. Connecting using multisite communication protocol.
-   Wed Dec  3 00:27:54 2014 : Waiting for a connection...
-   Wed Dec  3 00:27:55 2014 : Connection established, using TCP send buffer size 87040 receive buffer size 374400
-   Wed Dec  3 00:27:55 2014 : Connection information:: Local: ::ffff:10.0.2.15:3000 Remote: ::ffff:10.0.2.2:51387
-   Wed Dec  3 00:27:55 2014 : Sending REPL_FETCH_RESYNC message with seqno 7 [0x7]
-   Wed Dec  3 00:27:55 2014 : Source and Receiver sides have same endianness
-   Wed Dec  3 00:27:55 2014 : Remote side source log file path is /home/gtmuser/exDir/source_CapeTown.log; Source Server PID = 1059
-   Wed Dec  3 00:27:55 2014 : Received REPL_NEED_INSTINFO message from primary instance [Philadelphia]
-   Wed Dec  3 00:27:55 2014 : Sending REPL_INSTINFO message
-   Wed Dec  3 00:27:55 2014 : Received REPL_NEED_HISTINFO message for Seqno 7 [0x7]
-   Wed Dec  3 00:27:55 2014 : Sending REPL_HISTINFO message with seqno 4 [0x4]
-   Wed Dec  3 00:27:55 2014 : History sent : Start Seqno = 4 [0x4] : Stream Seqno = 0 [0x0] : Root Primary = [CapeTown] : Cycle = [1] : Creator pid = 1063 : Created time = 1417556552 [0x547e3248] : History number = 2 : Prev History number = 1 : Stream # = 0 : History type = 1
-   Wed Dec  3 00:27:55 2014 : Received REPL_RESYNC_SEQNO message
-   Wed Dec  3 00:27:55 2014 : Received RESYNC SEQNO is 6 [0x6]
-   %GTM-I-MUJNLSTAT, Backward processing started at Wed Dec  3 00:27:55 2014
+   gtmuser@santiago:~/exDir$ source gtmenv
+   gtmuser@santiago:~/exDir$ mupip journal -rollback -backward -fetchresync=3000 -losttrans=/home/gtmuser/exDir/Unreplic_Trans_Report_`date +%Y%m%d%H%M%S`.txt "*"
+   %GTM-I-MUJNLSTAT, Initial processing started at Wed Jan  3 00:27:54 2018
+   %GTM-I-MUJNLSTAT, FETCHRESYNC processing started at Wed Jan  3 00:27:54 2018
+   Wed Jan  24 00:27:54 2018 : Assuming primary supports multisite functionality. Connecting using multisite communication protocol.
+   Wed Jan  24 00:27:54 2018 : Waiting for a connection...
+   Wed Jan  24 00:27:55 2018 : Connection established, using TCP send buffer size 87040 receive buffer size 374400
+   Wed Jan  24 00:27:55 2018 : Connection information:: Local: ::ffff:10.0.2.15:3000 Remote: ::ffff:10.0.2.2:51387
+   Wed Jan  24 00:27:55 2018 : Sending REPL_FETCH_RESYNC message with seqno 7 [0x7]
+   Wed Jan  24 00:27:55 2018 : Source and Receiver sides have same endianness
+   Wed Jan  24 00:27:55 2018 : Remote side source log file path is /home/gtmuser/exDir/source_Santiago.log; Source Server PID = 1059
+   Wed Jan  24 00:27:55 2018 : Received REPL_NEED_INSTINFO message from primary instance [Paris]
+   Wed Jan  24 00:27:55 2018 : Sending REPL_INSTINFO message
+   Wed Jan  24 00:27:55 2018 : Received REPL_NEED_HISTINFO message for Seqno 7 [0x7]
+   Wed Jan  24 00:27:55 2018 : Sending REPL_HISTINFO message with seqno 4 [0x4]
+   Wed Jan  24 00:27:55 2018 : History sent : Start Seqno = 4 [0x4] : Stream Seqno = 0 [0x0] : Root Primary = [Santiago] : Cycle = [1] : Creator pid = 1063 : Created time = 1417556552 [0x547e3248] : History number = 2 : Prev History number = 1 : Stream # = 0 : History type = 1
+   Wed Jan  24 00:27:55 2018 : Received REPL_RESYNC_SEQNO message
+   Wed Jan  24 00:27:55 2018 : Received RESYNC SEQNO is 6 [0x6]
+   %GTM-I-MUJNLSTAT, Backward processing started at Wed Jan  24 00:27:55 2018
    %GTM-I-RESOLVESEQNO, Resolving until sequence number 6 [0x0000000000000006]
-   %GTM-I-MUJNLSTAT, Before image applying started at Wed Dec  3 00:27:55 2014
-   %GTM-I-FILERENAME, File /home/gtmuser/exDir/aA.mjl is renamed to /home/gtmuser/exDir/aA.mjl_2014337002755
-   %GTM-I-FILERENAME, File /home/gtmuser/exDir/others.mjl is renamed to /home/gtmuser/exDir/others.mjl_2014337002755
-   %GTM-I-MUJNLSTAT, Forward processing started at Wed Dec  3 00:27:55 2014
-   %GTM-I-FILECREATE, Lost transactions extract file /home/gtmuser/exDir/Unreplic_Trans_Report_20141203002754.txt created
+   %GTM-I-MUJNLSTAT, Before image applying started at Wed Jan  24 00:27:55 2018
+   %GTM-I-FILERENAME, File /home/gtmuser/exDir/aA.mjl is renamed to /home/gtmuser/exDir/aA.mjl_2018337002755
+   %GTM-I-FILERENAME, File /home/gtmuser/exDir/others.mjl is renamed to /home/gtmuser/exDir/others.mjl_2018337002755
+   %GTM-I-MUJNLSTAT, Forward processing started at Wed Jan  24 00:27:55 2018
+   %GTM-I-FILECREATE, Lost transactions extract file /home/gtmuser/exDir/Unreplic_Trans_Report_20181203002754.txt created
    %GTM-I-RLBKJNSEQ, Journal seqno of the instance after rollback is 6 [0x0000000000000006]
    %GTM-S-JNLSUCCESS, Show successful
    %GTM-S-JNLSUCCESS, Verify successful
    %GTM-S-JNLSUCCESS, Rollback successful
-   %GTM-I-MUJNLSTAT, End processing at Wed Dec  3 00:27:56 2014
-   gtmuser@capetown:~/exDir$ cat /home/gtmuser/exDir/Unreplic_Trans_Report_20141203002754.txt 
-   GDSJEX07 ROLLBACK PRIMARY CapeTown
-   05\63523,86342\7\1068\0\6\0\0\0\0\^Weather("Cape Town",63523,86342)="Cloudy"
+   %GTM-I-MUJNLSTAT, End processing at Wed Jan  24 00:27:56 2018
+   gtmuser@santiago:~/exDir$ cat /home/gtmuser/exDir/Unreplic_Trans_Report_20181203002754.txt 
+   GDSJEX07 ROLLBACK PRIMARY Santiago
+   05\63523,86342\7\1068\0\6\0\0\0\0\^Weather("Santiago",63523,86342)="Cloudy"
    02\63524,251\8\1068\0
-   gtmuser@capetown:~/exDir$
+   gtmuser@santiago:~/exDir$
 
-Now, notice that the Unreplicated Transaction File has meaningful content – the update that was made when Cape Town was an originating instance, but which did not get replicated. This file will now need to be processed by the new originating instance in Philadelphia.
+Now, notice that the Unreplicated Transaction File has meaningful content – the update that was made when Santiago was an originating instance, but which did not get replicated. This file will now need to be processed by the new originating instance in Paris.
 
-Cape Town can now start as a replicating instance:
+Santiago can now start as a replicating instance:
 
 .. parsed-literal::
-   gtmuser@capetown:~/exDir$ ./replicating_start
-   Wed Dec  3 00:31:44 2014 : Initiating START of source server for secondary instance [dummy]
-   gtmuser@capetown:~/exDir$
+   gtmuser@santiago:~/exDir$ ./replicating_start
+   Wed Jan  24 00:31:44 2018 : Initiating START of source server for secondary instance [dummy]
+   gtmuser@santiago:~/exDir$
 
-Notice that Philadelphia now reports no backlog:
+Notice that Paris now reports no backlog:
 
 .. parsed-literal::
    YDB>zsystem "$gtm_dist/mupip replicate -source -showbacklog"
-   Tue Dec  2 17:32:01 2014 : Initiating SHOWBACKLOG operation on source server pid [1059] for secondary instance [CapeTown]
+   Tue Jan  23 17:32:01 2018 : Initiating SHOWBACKLOG operation on source server pid [1059] for secondary instance [Santiago]
    0 : backlog number of transactions written to journal pool and yet to be sent by the source server
    6 : sequence number of last transaction written to journal pool
    6 : sequence number of last transaction sent by source server
-   Tue Dec  2 17:32:01 2014 : Initiating SHOWBACKLOG operation on source server pid [1057] for secondary instance [Shanghai]
+   Tue Jan  23 17:32:01 2018 : Initiating SHOWBACKLOG operation on source server pid [1057] for secondary instance [Melbourne]
    0 : backlog number of transactions written to journal pool and yet to be sent by the source server
    6 : sequence number of last transaction written to journal pool
    6 : sequence number of last transaction sent by source server
@@ -2174,7 +2143,7 @@ Notice that Philadelphia now reports no backlog:
 
 If your application uses the $ZQGBLMOD() function to process unreplicated transactions, read the logical multi site replication technical bulletin for information about the mupip replicate source losttncomplete command to be executed after processing unreplicated transactions from all originating instances.
 
-Shut down whichever were the replicating secondary instances - CapeTown and Shanghai in the example above – and use the originating primary instance (Philadelphia) for the backup exercises.
+Shut down whichever were the replicating secondary instances - Santiago and Melbourne in the example above – and use the originating primary instance (Paris) for the backup exercises.
 
 ------
 Backup
@@ -2190,7 +2159,7 @@ Backup when an application is operating normally, without impacting the applicat
 
 **Exercise - Backup**
 
-Work with whichever instance was your last originating instance (although it does not really matter, since you can always bring the others up as replicating instances no matter which was the last originating instance because you will always start with a mupip journal rollback fetchresync step; in this case the example shows Philadelphia).
+Work with whichever instance was your last originating instance (although it does not really matter, since you can always bring the others up as replicating instances no matter which was the last originating instance because you will always start with a mupip journal rollback fetchresync step; in this case the example shows Paris).
 
 Create a directory where you can put your backups: mkdir backup
 
@@ -2216,24 +2185,24 @@ Start the program as a background process from the shell: mumps -run XYZ </dev/n
 Notice that the journal files are growing, indicating that the program is running:
 
 .. parsed-literal::
-   gtmuser@philadelphia:~/exDir$ ls -l \*.mjl
-   -rw-rw-rw- 1 gtmuser gtmuser 81920 Dec  2 17:52 aA.mjl
-   -rw-rw-rw- 1 gtmuser gtmuser 81920 Dec  2 17:52 others.mjl
-   gtmuser@philadelphia:~/exDir$ ls -l \*.mjl
-   -rw-rw-rw- 1 gtmuser gtmuser 86016 Dec  2 17:52 aA.mjl
-   -rw-rw-rw- 1 gtmuser gtmuser 90112 Dec  2 17:52 others.mjl
-   gtmuser@philadelphia:~/exDir$ ls -l \*.mjl
-   -rw-rw-rw- 1 gtmuser gtmuser 94208 Dec  2 17:53 aA.mjl
-   -rw-rw-rw- 1 gtmuser gtmuser 98304 Dec  2 17:53 others.mjl
-   gtmuser@philadelphia:~/exDir$ 
+   gtmuser@paris:~/exDir$ ls -l \*.mjl
+   -rw-rw-rw- 1 gtmuser gtmuser 81920 Jan  23 17:52 aA.mjl
+   -rw-rw-rw- 1 gtmuser gtmuser 81920 Jan  23 17:52 others.mjl
+   gtmuser@paris:~/exDir$ ls -l \*.mjl
+   -rw-rw-rw- 1 gtmuser gtmuser 86016 Jan  23 17:52 aA.mjl
+   -rw-rw-rw- 1 gtmuser gtmuser 90112 Jan  23 17:52 others.mjl
+   gtmuser@paris:~/exDir$ ls -l \*.mjl
+   -rw-rw-rw- 1 gtmuser gtmuser 94208 Jan  23 17:53 aA.mjl
+   -rw-rw-rw- 1 gtmuser gtmuser 98304 Jan  23 17:53 others.mjl
+   gtmuser@paris:~/exDir$ 
 
 Take a backup of the entire database (a "comprehensive backup"):
 
 .. parsed-literal::
-   gtmuser@philadelphia:~/exDir$ mupip backup -nojournal "*" backup/
-   %GTM-I-FILERENAME, File /home/gtmuser/exDir/aA.mjl is renamed to /home/gtmuser/exDir/aA.mjl_2014336175401
+   gtmuser@paris:~/exDir$ mupip backup -nojournal "*" backup/
+   %GTM-I-FILERENAME, File /home/gtmuser/exDir/aA.mjl is renamed to /home/gtmuser/exDir/aA.mjl_2018336175401
    %GTM-I-JNLCREATE, Journal file /home/gtmuser/exDir/aA.mjl created for region A with BEFORE_IMAGES
-   %GTM-I-FILERENAME, File /home/gtmuser/exDir/others.mjl is renamed to /home/gtmuser/exDir/others.mjl_2014336175401
+   %GTM-I-FILERENAME, File /home/gtmuser/exDir/others.mjl is renamed to /home/gtmuser/exDir/others.mjl_2018336175401
    %GTM-I-JNLCREATE, Journal file /home/gtmuser/exDir/others.mjl created for region DEFAULT with BEFORE_IMAGES
    %GTM-I-JNLSTATE, Journaling state for database file backup//aA.dat is now DISABLED
    %GTM-I-JNLSTATE, Journaling state for database file backup//others.dat is now DISABLED
@@ -2245,7 +2214,7 @@ Take a backup of the entire database (a "comprehensive backup"):
 
    BACKUP COMPLETED.
 
-   gtmuser@philadelphia:~/exDir$
+   gtmuser@paris:~/exDir$
 
 Take a backup of that part of the database that has changed (a "bytestream" backup). Note
 
@@ -2254,129 +2223,129 @@ Take a backup of that part of the database that has changed (a "bytestream" back
 - The fact that the backup files for others.dat have the name gtm*.bck – YottaDB/GT.M does not care what you name the files, but maps the targets in the alphabetic order of region name.
 
 .. parsed-literal::
-   gtmuser@philadelphia:~/exDir$ mupip backup -bytestream -since=database "*" backup/aA`date +%Y%m%d%H%M%S`.bck,backup/gtm`date +%Y%m%d%H%M%S`.bck
-   %GTM-I-FILERENAME, File /home/gtmuser/exDir/aA.mjl is renamed to /home/gtmuser/exDir/aA.mjl_2014336175445
+   gtmuser@paris:~/exDir$ mupip backup -bytestream -since=database "*" backup/aA`date +%Y%m%d%H%M%S`.bck,backup/gtm`date +%Y%m%d%H%M%S`.bck
+   %GTM-I-FILERENAME, File /home/gtmuser/exDir/aA.mjl is renamed to /home/gtmuser/exDir/aA.mjl_2018336175445
    %GTM-I-JNLCREATE, Journal file /home/gtmuser/exDir/aA.mjl created for region A with BEFORE_IMAGES
-   %GTM-I-FILERENAME, File /home/gtmuser/exDir/others.mjl is renamed to /home/gtmuser/exDir/others.mjl_2014336175445
+   %GTM-I-FILERENAME, File /home/gtmuser/exDir/others.mjl is renamed to /home/gtmuser/exDir/others.mjl_2018336175445
    %GTM-I-JNLCREATE, Journal file /home/gtmuser/exDir/others.mjl created for region DEFAULT with BEFORE_IMAGES
-   MUPIP backup of database file /home/gtmuser/exDir/aA.dat to backup/aA20141202175445.bck
-   DB file /home/gtmuser/exDir/aA.dat incrementally backed up in file backup/aA20141202175445.bck
+   MUPIP backup of database file /home/gtmuser/exDir/aA.dat to backup/aA20181202175445.bck
+   DB file /home/gtmuser/exDir/aA.dat incrementally backed up in file backup/aA20181202175445.bck
    13 blocks saved.
    Transactions from 0x00000000000001E7 to 0x00000000000002B7 are backed up.
-   MUPIP backup of database file /home/gtmuser/exDir/others.dat to backup/gtm20141202175445.bck
-   DB file /home/gtmuser/exDir/others.dat incrementally backed up in file backup/gtm20141202175445.bck
+   MUPIP backup of database file /home/gtmuser/exDir/others.dat to backup/gtm20181202175445.bck
+   DB file /home/gtmuser/exDir/others.dat incrementally backed up in file backup/gtm20181202175445.bck
    13 blocks saved.
    Transactions from 0x00000000000001ED to 0x00000000000002BD are backed up.
 
 
    BACKUP COMPLETED.
 
-   gtmuser@philadelphia:~/exDir$ ls -l backup/
+   gtmuser@paris:~/exDir$ ls -l backup/
    total 2704
-   -rw-rw-rw- 1 gtmuser gtmuser   324608 Dec  2 17:54 aA20141202175445.bck
-   -rw-rw-rw- 1 gtmuser gtmuser 20783616 Dec  2 17:54 aA.dat
-   -rw-rw-rw- 1 gtmuser gtmuser   324608 Dec  2 17:54 gtm20141202175445.bck
-   -rw-rw-rw- 1 gtmuser gtmuser 20783616 Dec  2 17:54 others.dat
-   gtmuser@philadelphia:~/exDir$
+   -rw-rw-rw- 1 gtmuser gtmuser   324608 Jan  23 17:54 aA20181202175445.bck
+   -rw-rw-rw- 1 gtmuser gtmuser 20783616 Jan  23 17:54 aA.dat
+   -rw-rw-rw- 1 gtmuser gtmuser   324608 Jan  23 17:54 gtm20181202175445.bck
+   -rw-rw-rw- 1 gtmuser gtmuser 20783616 Jan  23 17:54 others.dat
+   gtmuser@paris:~/exDir$
 
 Take further bytestream backups of that part of the database that has changed – as many as desired (note the use of the -since=bytestream qualifier to backup only those blocks that have changed since the last bytestream backup):
 
 .. parsed-literal::
-   gtmuser@philadelphia:~/exDir$ mupip backup -bytestream -since=bytestream "*" backup/aA`date +%Y%m%d%H%M%S`.bck,backup/gtm`date +%Y%m%d%H%M%S`.bck
-   %GTM-I-FILERENAME, File /home/gtmuser/exDir/aA.mjl is renamed to /home/gtmuser/exDir/aA.mjl_2014336175610
+   gtmuser@paris:~/exDir$ mupip backup -bytestream -since=bytestream "*" backup/aA`date +%Y%m%d%H%M%S`.bck,backup/gtm`date +%Y%m%d%H%M%S`.bck
+   %GTM-I-FILERENAME, File /home/gtmuser/exDir/aA.mjl is renamed to /home/gtmuser/exDir/aA.mjl_2018336175610
    %GTM-I-JNLCREATE, Journal file /home/gtmuser/exDir/aA.mjl created for region A with BEFORE_IMAGES
-   %GTM-I-FILERENAME, File /home/gtmuser/exDir/others.mjl is renamed to /home/gtmuser/exDir/others.mjl_2014336175610
+   %GTM-I-FILERENAME, File /home/gtmuser/exDir/others.mjl is renamed to /home/gtmuser/exDir/others.mjl_2018336175610
    %GTM-I-JNLCREATE, Journal file /home/gtmuser/exDir/others.mjl created for region DEFAULT with BEFORE_IMAGES
-   MUPIP backup of database file /home/gtmuser/exDir/aA.dat to backup/aA20141202175610.bck
-   DB file /home/gtmuser/exDir/aA.dat incrementally backed up in file backup/aA20141202175610.bck
+   MUPIP backup of database file /home/gtmuser/exDir/aA.dat to backup/aA20181202175610.bck
+   DB file /home/gtmuser/exDir/aA.dat incrementally backed up in file backup/aA20181202175610.bck
    13 blocks saved.
    Transactions from 0x00000000000002B7 to 0x0000000000000439 are backed up.
-   MUPIP backup of database file /home/gtmuser/exDir/others.dat to backup/gtm20141202175610.bck
-   DB file /home/gtmuser/exDir/others.dat incrementally backed up in file backup/gtm20141202175610.bck
+   MUPIP backup of database file /home/gtmuser/exDir/others.dat to backup/gtm20181202175610.bck
+   DB file /home/gtmuser/exDir/others.dat incrementally backed up in file backup/gtm20181202175610.bck
    13 blocks saved.
    Transactions from 0x00000000000002BD to 0x000000000000043F are backed up.
 
 
    BACKUP COMPLETED.
 
-   gtmuser@philadelphia:~/exDir$
+   gtmuser@paris:~/exDir$
 
 Take as many additional bytestream backups as you want, in each case specifying that the updates since the preceding bytestream backup should be backed up.
 
 .. parsed-literal::
-   gtmuser@philadelphia:~/exDir$ mupip backup -bytestream -since=bytestream "*" backup/aA`date +%Y%m%d%H%M%S`.bck,backup/gtm`date +%Y%m%d%H%M%S`.bck
-   %GTM-I-FILERENAME, File /home/gtmuser/exDir/aA.mjl is renamed to /home/gtmuser/exDir/aA.mjl_2014336175650
+   gtmuser@paris:~/exDir$ mupip backup -bytestream -since=bytestream "*" backup/aA`date +%Y%m%d%H%M%S`.bck,backup/gtm`date +%Y%m%d%H%M%S`.bck
+   %GTM-I-FILERENAME, File /home/gtmuser/exDir/aA.mjl is renamed to /home/gtmuser/exDir/aA.mjl_2018336175650
    %GTM-I-JNLCREATE, Journal file /home/gtmuser/exDir/aA.mjl created for region A with BEFORE_IMAGES
-   %GTM-I-FILERENAME, File /home/gtmuser/exDir/others.mjl is renamed to /home/gtmuser/exDir/others.mjl_2014336175650
+   %GTM-I-FILERENAME, File /home/gtmuser/exDir/others.mjl is renamed to /home/gtmuser/exDir/others.mjl_2018336175650
    %GTM-I-JNLCREATE, Journal file /home/gtmuser/exDir/others.mjl created for region DEFAULT with BEFORE_IMAGES
-   MUPIP backup of database file /home/gtmuser/exDir/aA.dat to backup/aA20141202175650.bck
-   DB file /home/gtmuser/exDir/aA.dat incrementally backed up in file backup/aA20141202175650.bck
+   MUPIP backup of database file /home/gtmuser/exDir/aA.dat to backup/aA20181202175650.bck
+   DB file /home/gtmuser/exDir/aA.dat incrementally backed up in file backup/aA20181202175650.bck
    15 blocks saved.
    Transactions from 0x0000000000000439 to 0x00000000000004F3 are backed up.
-   MUPIP backup of database file /home/gtmuser/exDir/others.dat to backup/gtm20141202175650.bck
-   DB file /home/gtmuser/exDir/others.dat incrementally backed up in file backup/gtm20141202175650.bck
+   MUPIP backup of database file /home/gtmuser/exDir/others.dat to backup/gtm20181202175650.bck
+   DB file /home/gtmuser/exDir/others.dat incrementally backed up in file backup/gtm20181202175650.bck
    15 blocks saved.
    Transactions from 0x000000000000043F to 0x00000000000004F9 are backed up.
 
 
    BACKUP COMPLETED.
 
-   gtmuser@philadelphia:~/exDir$
+   gtmuser@paris:~/exDir$
 
 When you are satisfied, terminate the mumps process updating the database:
 
 .. parsed-literal::
-   gtmuser@philadelphia:~/exDir$ ps -ef | grep mumps | grep -v grep
+   gtmuser@paris:~/exDir$ ps -ef | grep mumps | grep -v grep
    gtmuser   1080   988  0 17:52 pts/0    00:00:02 /usr/lib/fis-gtm/V6.2-000_x86_64/mumps -run XYZ
-   gtmuser@philadelphia:~/exDir$ mupip stop 1080
+   gtmuser@paris:~/exDir$ mupip stop 1080
    STOP issued to process 1080
-   gtmuser@philadelphia:~/exDir$
+   gtmuser@paris:~/exDir$
 
 Take a final backup, and note the values of the final nodes of ^a and ^b (and verify that they still sum to zero). After the final restore, we will verify that the values restored from the backup is the same as these values.
 
 .. parsed-literal::
-   gtmuser@philadelphia:~/exDir$ mupip backup -bytestream -since=bytestream "*" backup/aA`date +%Y%m%d%H%M%S`.bck,backup/gtm`date +%Y%m%d%H%M%S`.bck
-   %GTM-I-FILERENAME, File /home/gtmuser/exDir/aA.mjl is renamed to /home/gtmuser/exDir/aA.mjl_2014336175946
+   gtmuser@paris:~/exDir$ mupip backup -bytestream -since=bytestream "*" backup/aA`date +%Y%m%d%H%M%S`.bck,backup/gtm`date +%Y%m%d%H%M%S`.bck
+   %GTM-I-FILERENAME, File /home/gtmuser/exDir/aA.mjl is renamed to /home/gtmuser/exDir/aA.mjl_2018336175946
    %GTM-I-JNLCREATE, Journal file /home/gtmuser/exDir/aA.mjl created for region A with BEFORE_IMAGES
-   %GTM-I-FILERENAME, File /home/gtmuser/exDir/others.mjl is renamed to /home/gtmuser/exDir/others.mjl_2014336175946
+   %GTM-I-FILERENAME, File /home/gtmuser/exDir/others.mjl is renamed to /home/gtmuser/exDir/others.mjl_2018336175946
    %GTM-I-JNLCREATE, Journal file /home/gtmuser/exDir/others.mjl created for region DEFAULT with BEFORE_IMAGES
-   MUPIP backup of database file /home/gtmuser/exDir/aA.dat to backup/aA20141202175946.bck
-   DB file /home/gtmuser/exDir/aA.dat incrementally backed up in file backup/aA20141202175946.bck
+   MUPIP backup of database file /home/gtmuser/exDir/aA.dat to backup/aA20181202175946.bck
+   DB file /home/gtmuser/exDir/aA.dat incrementally backed up in file backup/aA20181202175946.bck
    13 blocks saved.
    Transactions from 0x00000000000004F3 to 0x0000000000000745 are backed up.
-   MUPIP backup of database file /home/gtmuser/exDir/others.dat to backup/gtm20141202175946.bck
-   DB file /home/gtmuser/exDir/others.dat incrementally backed up in file backup/gtm20141202175946.bck
+   MUPIP backup of database file /home/gtmuser/exDir/others.dat to backup/gtm20181202175946.bck
+   DB file /home/gtmuser/exDir/others.dat incrementally backed up in file backup/gtm20181202175946.bck
    13 blocks saved.
    Transactions from 0x00000000000004F9 to 0x000000000000074B are backed up
 
 
    BACKUP COMPLETED.
 
-   gtmuser@philadelphia:~/exDir$ mumps -run %XCMD 'set x=$order(^a(""),-1) write x," ",^a(x)," ",^b(x)," ",^a(x)+^b(x),!'
+   gtmuser@paris:~/exDir$ mumps -run %XCMD 'set x=$order(^a(""),-1) write x," ",^a(x)," ",^b(x)," ",^a(x)+^b(x),!'
    63523,64737 -778521900 778521900 0
-   gtmuser@philadelphia:~/exDir$
+   gtmuser@paris:~/exDir$
 
 Now it's time to work on restoring the backup. The first backup (the database backup) provides a complete, ready-to-run database. The subsequent bytestream backups can be applied to the database backup using the mupip restore command.
 
 Create an environment to restore the backup. It may be easiest if you simply use the backup directory you created, and working in a new shell session, copy exDir/env and exDir/gtm.gld to the backup directory and edit them to reflect their new locations. [Note that since global directories are used only to create databases, there is no reason to change the default journal file names in the regions of the global directory file in backup. Nevertheless, it is good hygiene to keep global directories correct, since that global directory may be used at a future time to create new database files.]
 
 .. parsed-literal::
-   gtmuser@philadelphia:~/exDir$ cp gtmenv gtm.gld backup/
-   gtmuser@philadelphia:~/exDir$ cd backup; jed backup/gtmenv # edit to point to backup directory
-   gtmuser@philadelphia:~/exDir/backup$ cat gtmenv
-   export gtm_dist=/usr/lib/fis-gtm/V6.2-000_x86_64
+   gtmuser@paris:~/exDir$ cp gtmenv gtm.gld backup/
+   gtmuser@paris:~/exDir$ cd backup; jed backup/gtmenv # edit to point to backup directory
+   gtmuser@paris:~/exDir/backup$ cat gtmenv
+   export gtm_dist=/usr/local/lib/yottadb/r110
    export gtmgbldir=$HOME/exDir/backup/gtm.gld
    export gtm_log=/tmp/fis-gtm/V6.2-000_x86_64
    export gtm_tmp=$gtm_log
    export gtm_principal_editing=EDITING
    export gtm_repl_instance=$HOME/exDir/backup/gtm.repl
-   export gtm_repl_instname=Philadelphia
+   export gtm_repl_instname=Paris
    export gtmroutines="$HOME/exDir/backup* $gtm_dist/libgtmutil.so"
    mkdir -p $gtm_tmp
    alias mumps=$gtm_dist/mumps
    alias mupip=$gtm_dist/mupip
-   gtmuser@philadelphia:~/exDir/backup$ source gtmenv
-   gtmuser@philadelphia:~/exDir/backup$ mumps -run GDE
+   gtmuser@paris:~/exDir/backup$ source gtmenv
+   gtmuser@paris:~/exDir/backup$ mumps -run GDE
    %GDE-I-LOADGD, Loading Global Directory file /home/gtmuser/exDir/backup/gtm.gld
    %GDE-I-VERIFY, Verification OK
 
@@ -2450,135 +2419,135 @@ Create an environment to restore the backup. It may be easiest if you simply use
    %GDE-I-VERIFY, Verification OK
 
    %GDE-I-GDUPDATE, Updating Global Directory file /home/gtmuser/exDir/backup/gtm.gld
-   gtmuser@philadelphia:~/exDir/backup$
+   gtmuser@paris:~/exDir/backup$
 
 Confirm the values of the last global nodes of ^a and ^b are equal and opposite (demonstrating the value of transaction processing):
 
 .. parsed-literal::
-   gtmuser@philadelphia:~$ mumps -run %XCMD 'set x=$order(^a(""),-1) write x," ",^a(x)," ",^b(x)," ",^a(x)+^b(x),!'
+   gtmuser@paris:~$ mumps -run %XCMD 'set x=$order(^a(""),-1) write x," ",^a(x)," ",^b(x)," ",^a(x)+^b(x),!'
    63523,64441 -910877047 910877047 0
-   gtmuser@philadelphia:~/exDir/backup$
+   gtmuser@paris:~/exDir/backup$
 
 Notice the file names of the bytestream backups that we will restore one by one.
  
 .. parsed-literal::
-   gtmuser@philadelphia:~/exDir/backup$ ls -l backup/\*.bck
-   -rw-rw-rw- 1 gtmuser gtmuser 324608 Dec  2 17:54 aA20141202175445.bck
-   -rw-rw-rw- 1 gtmuser gtmuser 324608 Dec  2 17:56 aA20141202175610.bck
-   -rw-rw-rw- 1 gtmuser gtmuser 332800 Dec  2 17:56 aA20141202175650.bck
-   -rw-rw-rw- 1 gtmuser gtmuser 320512 Dec  2 17:59 aA20141202175946.bck
-   -rw-rw-rw- 1 gtmuser gtmuser 324608 Dec  2 17:54 gtm20141202175445.bck
-   -rw-rw-rw- 1 gtmuser gtmuser 324608 Dec  2 17:56 gtm20141202175610.bck
-   -rw-rw-rw- 1 gtmuser gtmuser 332800 Dec  2 17:56 gtm20141202175650.bck
-   -rw-rw-rw- 1 gtmuser gtmuser 320512 Dec  2 17:59 gtm20141202175946.bck
-   gtmuser@philadelphia:~/exDir/backup$
+   gtmuser@paris:~/exDir/backup$ ls -l backup/\*.bck
+   -rw-rw-rw- 1 gtmuser gtmuser 324608 Jan  23 17:54 aA20181202175445.bck
+   -rw-rw-rw- 1 gtmuser gtmuser 324608 Jan  23 17:56 aA20181202175610.bck
+   -rw-rw-rw- 1 gtmuser gtmuser 332800 Jan  23 17:56 aA20181202175650.bck
+   -rw-rw-rw- 1 gtmuser gtmuser 320512 Jan  23 17:59 aA20181202175946.bck
+   -rw-rw-rw- 1 gtmuser gtmuser 324608 Jan  23 17:54 gtm20181202175445.bck
+   -rw-rw-rw- 1 gtmuser gtmuser 324608 Jan  23 17:56 gtm20181202175610.bck
+   -rw-rw-rw- 1 gtmuser gtmuser 332800 Jan  23 17:56 gtm20181202175650.bck
+   -rw-rw-rw- 1 gtmuser gtmuser 320512 Jan  23 17:59 gtm20181202175946.bck
+   gtmuser@paris:~/exDir/backup$
 
 Restore the first bytestream backup (with the since=database qualifier), and check the values of ^a and ^b:
 
 .. parsed-literal::
-   gtmuser@philadelphia:~/exDir/backup$ mupip restore aA.dat aA20141202175445.bck 
+   gtmuser@paris:~/exDir/backup$ mupip restore aA.dat aA20181202175445.bck 
 
    RESTORE COMPLETED
    14 blocks restored
-   gtmuser@philadelphia:~/exDir/backup$ mupip restore others.dat gtm20141202175445.bck 
+   gtmuser@paris:~/exDir/backup$ mupip restore others.dat gtm20181202175445.bck 
 
    RESTORE COMPLETED
    14 blocks restored
-   gtmuser@philadelphia:~/exDir/backup$ 
+   gtmuser@paris:~/exDir/backup$ 
 
 Confirm new values for ^a and ^b. Notice that the time stamp is later than that of the database before the first bytestream backup (with a since=database qualifier) was restored and the values of the nodes in ^a and ^b still add up to zero.
 
 .. parsed-literal::
-   gtmuser@philadelphia:~/exDir/backup$ mumps -run %XCMD 'set x=$order(^a(""),-1) write x," ",^a(x)," ",^b(x)," ",^a(x)+^b(x),!'
+   gtmuser@paris:~/exDir/backup$ mumps -run %XCMD 'set x=$order(^a(""),-1) write x," ",^a(x)," ",^b(x)," ",^a(x)+^b(x),!'
    63523,64485 -1612950378 1612950378 0
-   gtmuser@philadelphia:~/exDir/backup$
+   gtmuser@paris:~/exDir/backup$
 
 Restore the second bytestream backup (the first with a since=bytestream qualifier), and check the values. Repeat for any additional bytestream backups. Notice that the final values are the same as the final values in exDir.
 
 .. parsed-literal::
-   gtmuser@philadelphia:~/exDir/backup$ mupip restore aA.dat aA20141202175610.bck 
+   gtmuser@paris:~/exDir/backup$ mupip restore aA.dat aA20181202175610.bck 
 
    RESTORE COMPLETED
    14 blocks restored
-   gtmuser@philadelphia:~/exDir/backup$ mupip restore others.dat gtm20141202175610.bck 
+   gtmuser@paris:~/exDir/backup$ mupip restore others.dat gtm20181202175610.bck 
 
    RESTORE COMPLETED
    14 blocks restored
-   gtmuser@philadelphia:~/exDir/backup$ mumps -run %XCMD 'set x=$order(^a(""),-1) write x," ",^a(x)," ",^b(x)," ",^a(x)+^b(x),!'
+   gtmuser@paris:~/exDir/backup$ mumps -run %XCMD 'set x=$order(^a(""),-1) write x," ",^a(x)," ",^b(x)," ",^a(x)+^b(x),!'
    63523,64570 -1558529283 1558529283 0
-   gtmuser@philadelphia:~/exDir/backup$ mupip restore aA.dat aA20141202175650.bck 
+   gtmuser@paris:~/exDir/backup$ mupip restore aA.dat aA20181202175650.bck 
 
    RESTORE COMPLETED
    16 blocks restored
-   gtmuser@philadelphia:~/exDir/backup$ mupip restore others.dat gtm20141202175650.bck 
+   gtmuser@paris:~/exDir/backup$ mupip restore others.dat gtm20181202175650.bck 
 
    RESTORE COMPLETED
    16 blocks restored
-   gtmuser@philadelphia:~/exDir/backup$ mumps -run %XCMD 'set x=$order(^a(""),-1) write x," ",^a(x)," ",^b(x)," ",^a(x)+^b(x),!'
+   gtmuser@paris:~/exDir/backup$ mumps -run %XCMD 'set x=$order(^a(""),-1) write x," ",^a(x)," ",^b(x)," ",^a(x)+^b(x),!'
    63523,64610 -2074012206 2074012206 0
-   gtmuser@philadelphia:~/exDir/backup$ mupip restore aA.dat aA20141202175946.bck 
+   gtmuser@paris:~/exDir/backup$ mupip restore aA.dat aA20181202175946.bck 
 
    RESTORE COMPLETED
    13 blocks restored
-   gtmuser@philadelphia:~/exDir/backup$ mupip restore others.dat gtm20141202175946.bck 
+   gtmuser@paris:~/exDir/backup$ mupip restore others.dat gtm20181202175946.bck 
 
    RESTORE COMPLETED
    13 blocks restored
-   gtmuser@philadelphia:~$ mumps -run %XCMD 'set x=$order(^a(""),-1) write x," ",^a(x)," ",^b(x)," ",^a(x)+^b(x),!'
+   gtmuser@paris:~$ mumps -run %XCMD 'set x=$order(^a(""),-1) write x," ",^a(x)," ",^b(x)," ",^a(x)+^b(x),!'
    63523,64737 -778521900 778521900 0
-   gtmuser@philadelphia:~$
+   gtmuser@paris:~$
 
 Note that ending values of ^a and ^b in the environment with the restored backups is exactly the same as in the original database. Also, the values of ^a and ^b always add to zero even though the global variables reside in different databases, demonstrating transaction processing.
 
 **Replication Briefly Revisited**
 
-We have been ignoring Cape Town and Shanghai during the backup exercise, and we have created quite a backlog. Here is the backlog report in the exDir environment in Philadelphia. [If you are using the same shell session to restore backups, you will need to source exDir/gtmenv to get the environment variables for the original environment, and restart Source Servers if they are not running.]
+We have been ignoring Santiago and Melbourne during the backup exercise, and we have created quite a backlog. Here is the backlog report in the exDir environment in Paris. [If you are using the same shell session to restore backups, you will need to source exDir/gtmenv to get the environment variables for the original environment, and restart Source Servers if they are not running.]
 
 .. parsed-literal::
-   gtmuser@philadelphia:~/exDir$ mupip replicate -source -showbacklog
-   Fri Dec  5 04:50:18 2014 : Initiating SHOWBACKLOG operation on source server pid [1068] for secondary instance [CapeTown]
+   gtmuser@paris:~/exDir$ mupip replicate -source -showbacklog
+   Fri Jan  26 04:50:18 2018 : Initiating SHOWBACKLOG operation on source server pid [1068] for secondary instance [Santiago]
    1860 : backlog number of transactions written to journal pool and yet to be sent by the source server
    1866 : sequence number of last transaction written to journal pool
    6 : sequence number of last transaction sent by source server
-   Fri Dec  5 04:50:18 2014 : Initiating SHOWBACKLOG operation on source server pid [1064] for secondary instance [Shanghai]
+   Fri Jan  26 04:50:18 2018 : Initiating SHOWBACKLOG operation on source server pid [1064] for secondary instance [Melbourne]
    1860 : backlog number of transactions written to journal pool and yet to be sent by the source server
    1866 : sequence number of last transaction written to journal pool
    6 : sequence number of last transaction sent by source server
-   gtmuser@philadelphia:~/exDir$
+   gtmuser@paris:~/exDir$
 
-Boot Shanghai and check the state of the database with respect to ^a and ^b – notice the error because no node of ^a is defined. 
+Boot Melbourne and check the state of the database with respect to ^a and ^b – notice the error because no node of ^a is defined. 
 
 .. parsed-literal::
-   gtmuser@shanghai:~/exDir$ source gtmenv
-   gtmuser@shanghai:~/exDir$ mumps -run %XCMD 'set x=$order(^a(""),-1) write x," ",^a(x)," ",^b(x)," ",^a(x)+^b(x),!'
+   gtmuser@melbourne:~/exDir$ source gtmenv
+   gtmuser@melbourne:~/exDir$ mumps -run %XCMD 'set x=$order(^a(""),-1) write x," ",^a(x)," ",^b(x)," ",^a(x)+^b(x),!'
    %GTM-E-NULSUBSC, Null subscripts are not allowed for region: A
    %GTM-I-GVIS,            Global variable: ^a("")
-   gtmuser@shanghai:~/exDir$
+   gtmuser@melbourne:~/exDir$
 
-Then execute the exDir/replicating_start script and notice that Shanghai catches up.
+Then execute the exDir/replicating_start script and notice that Melbourne catches up.
 
 .. parsed-literal::
-   gtmuser@shanghai:~/exDir$ ./replicating_start 
-   Fri Nov 11 07:12:07 2011 : Initiating START of source server for secondary instance [dummy]
-   gtmuser@shanghai:~/exDir$ mumps -run %XCMD 'set x=$order(^a(""),-1) write x," ",^a(x)," ",^b(x)," ",^a(x)+^b(x),!'
+   gtmuser@melbourne:~/exDir$ ./replicating_start 
+   Fri Jan 26 07:12:07 2018 : Initiating START of source server for secondary instance [dummy]
+   gtmuser@melbourne:~/exDir$ mumps -run %XCMD 'set x=$order(^a(""),-1) write x," ",^a(x)," ",^b(x)," ",^a(x)+^b(x),!'
    63523,64737 -778521900 778521900 0
-   gtmuser@shanghai:~/exDir$
+   gtmuser@melbourne:~/exDir$
 
-Notice that Philadelphia now shows a zero backlog for Shanghai, but still has a large backlog for CapeTown.
+Notice that Paris now shows a zero backlog for Melbourne, but still has a large backlog for Santiago.
 
 .. parsed-literal::
-   gtmuser@philadelphia:~/exDir$ mupip replicate -source -showbacklog
-   Fri Dec  5 05:05:04 2014 : Initiating SHOWBACKLOG operation on source server pid [1068] for secondary instance [CapeTown]
+   gtmuser@paris:~/exDir$ mupip replicate -source -showbacklog
+   Fri Jan  26 05:05:04 2018 : Initiating SHOWBACKLOG operation on source server pid [1068] for secondary instance [Santiago]
    1860 : backlog number of transactions written to journal pool and yet to be sent by the source server
    1866 : sequence number of last transaction written to journal pool
    6 : sequence number of last transaction sent by source server
-   Fri Dec  5 05:05:04 2014 : Initiating SHOWBACKLOG operation on source server pid [1064] for secondary instance [Shanghai]
+   Fri Jan  26 05:05:04 2018 : Initiating SHOWBACKLOG operation on source server pid [1064] for secondary instance [Melbourne]
    0 : backlog number of transactions written to journal pool and yet to be sent by the source server
    1866 : sequence number of last transaction written to journal pool
    1866 : sequence number of last transaction sent by source server
-   gtmuser@philadelphia:~/exDir$
+   gtmuser@paris:~/exDir$
 
-If you like, you can similarly boot CapeTown and show that it also clears the backlog automatically. Shut down the instances when you are done.
+If you like, you can similarly boot Santiago and show that it also clears the backlog automatically. Shut down the instances when you are done.
 
 -----------------------
 Unicode (ISO/IEC-10646)
@@ -2596,11 +2565,11 @@ The mode of a process is controlled by the environment variable gtm_chset. If it
 
 For a process to operate in UTF-8 mode requires:
 
-- ICU with a level of 3.6 or higher packaged as libicu. GT.M may also require the environment variable gtm_icu_version to be defined (the gtmprofile script attempts to detect and set it, if it is not set, but is not guaranteed to succeed).
+- ICU with a level of 3.6 or higher packaged as libicu. YottaDB/GT.M may also require the environment variable gtm_icu_version to be defined (the gtmprofile script attempts to detect and set it, if it is not set, but is not guaranteed to succeed).
 
 - The environment variable LC_CTYPE (or the environment variable LC_ALL) to specify a UTF-8 locale available on the system.
 
-The locale command provides a list of available locales; the locale-gen command generates additional locales. In the example below, the locale command is used to list available locales, and the locale-gen command is used to generate the ar_JO.utf8 locale for Arabic as used in Jordan:
+The locale command provides a list of available locales; the locale-gen command generates additional locales. In the example below, the locale command is used to list available locales, and the locale-gen command is used to generate the fr_BE.utf8 locale for French as used in Belgium:
 
 .. parsed-literal::
    gtmuser@gtmworkshop:~$ locale -a
@@ -2628,12 +2597,12 @@ The locale command provides a list of available locales; the locale-gen command 
    en_ZM.utf8
    en_ZW.utf8
    POSIX
-   gtmuser@gtmworkshop:~$ sudo locale-gen ar_JO.utf8
+   gtmuser@gtmworkshop:~$ sudo locale-gen fr_BE.utf8
    Generating locales...
-     ar_JO.UTF-8... done
+     fr_BE.UTF-8... done
    Generation complete.
-   gtmuser@gtmworkshop:~$ locale -a | grep ar_JO.utf8
-   ar_JO.utf8
+   gtmuser@gtmworkshop:~$ locale -a | grep fr_BE.utf8
+   fr_BE.utf8
    gtmuser@gtmworkshop:~$
 
 For interactive usage, the terminal emulator must be configured to display characters in UTF-8 mode; otherwise you will become very confused.
@@ -2642,7 +2611,7 @@ This exercise uses two sessions, one with a mumps process in UTF-8 mode and the 
 
 .. parsed-literal::
    gtmuser@gtmworkshop:~/utf8demo$ cd utf8demo; jed gtmenv_m ; cat gtmenv_m
-   export gtm_dist=/usr/lib/fis-gtm/V6.2-000_x86_64
+   export gtm_dist=/usr/local/lib/yottadb/r110
    export gtmgbldir=$HOME/utf8demo/gtm.gld
    export gtm_log=/tmp/fis-gtm/V6.2-000_x86_64
    export gtm_tmp=$gtm_log
@@ -2654,7 +2623,7 @@ This exercise uses two sessions, one with a mumps process in UTF-8 mode and the 
    alias mumps=$gtm_dist/mumps
    alias mupip=$gtm_dist/mupip
    gtmuser@gtmworkshop:~/utf8demo$ cp gtmenv_m gtmenv_utf8 ; jed gtmenv_utf8 ; cat gtmenv_utf8 
-   export gtm_dist=/usr/lib/fis-gtm/V6.2-000_x86_64/utf8
+   export gtm_dist=/usr/local/lib/yottadb/r110/utf8
    export gtmgbldir=$HOME/utf8demo/gtm.gld
    export gtm_log=/tmp/fis-gtm/V6.2-000_x86_64
    export gtm_tmp=$gtm_log
@@ -2684,7 +2653,7 @@ Create a global directory and database file, as you did before. Only now, do thi
 
    GDE> show -segment
 
-                            *** SEGMENTS ***
+                            \*\*\* SEGMENTS \*\*\*
      Segment            File (def ext: .dat)           Acct  Type  Block   Alloc Exten Options
      ------------------------------------------------------------------------------------------
      DEFAULT            $gtmdir/$gtmver/g/gtm.dat      BG    DYN   4096    5000 10000 GLOB=1000
@@ -2697,7 +2666,7 @@ Create a global directory and database file, as you did before. Only now, do thi
    GDE> show -segment
 
 
-                           *** SEGMENTS ***
+                           \*\*\* SEGMENTS \*\*\*
    Segment             File (def ext: .dat)           Acct   Type   Block  Alloc Exten Options
    --------------------------------------------------------------------------------------------
    DEFAULT             $HOMW/utf8demo.dat              BG    DYN    4096   5000 10000 GLOB=1000
@@ -2891,10 +2860,10 @@ The creation of keys requires a considerable amount of entropy (randomness). Thi
 Note that owing to available functionality with GPG, since the reference plug-in uses RSA exclusively as an asymmetric cipher, the asymmetric keys have to be generated in two steps. First Mary.
 
 .. parsed-literal::
-   gtmuser@philadelphia:~$ export GNUPGHOME=~/.marygnupg
-   gtmuser@philadelphia:~$ mkdir $GNUPGHOME
-   gtmuser@philadelphia:~$ chmod go-rwx $GNUPGHOME
-   gtmuser@philadelphia:~$ gpg --gen-key
+   gtmuser@paris:~$ export GNUPGHOME=~/.marygnupg
+   gtmuser@paris:~$ mkdir $GNUPGHOME
+   gtmuser@paris:~$ chmod go-rwx $GNUPGHOME
+   gtmuser@paris:~$ gpg --gen-key
    gpg (GnuPG) 1.4.16; Copyright (C) 2013 Free Software Foundation, Inc.
    This is free software: you are free to change and redistribute it.
    There is NO WARRANTY, to the extent permitted by law.
@@ -2950,7 +2919,7 @@ Note that owing to available functionality with GPG, since the reference plug-in
    uid                  Mary Keymaster (Demo for Acculturation) <mary.keymaster@yottadb>
 
    Note that this key cannot be used for encryption.  You may want to use the command "--edit-key" to generate a subkey for this purpose.
-   gtmuser@philadelphia:~$ gpg --edit-key mary.keymaster@yottadb
+   gtmuser@paris:~$ gpg --edit-key mary.keymaster@yottadb
    gpg (GnuPG) 1.4.16; Copyright (C) 2013 Free Software Foundation, Inc.
    This is free software: you are free to change and redistribute it.
    There is NO WARRANTY, to the extent permitted by law.
@@ -2997,16 +2966,16 @@ Note that owing to available functionality with GPG, since the reference plug-in
   [ultimate] (1). Mary Keymaster (Demo for Acculturation) <mary.keymaster@yottadb>
 
   gpg> save
-  gtmuser@philadelphia:~$
+  gtmuser@paris:~$
 
 The Mary keyring now has RSA keys for both encryption and signing. And now for the Ken keyring.
 
 .. parsed-literal::
 
-   gtmuser@philadelphia:~$ export GNUPGHOME=~/.kengnupg
-   gtmuser@philadelphia:~$ mkdir $GNUPGHOME
-   gtmuser@philadelphia:~$ chmod go-rwx $GNUPGHOME
-   gtmuser@philadelphia:~$ gpg --gen-key
+   gtmuser@paris:~$ export GNUPGHOME=~/.kengnupg
+   gtmuser@paris:~$ mkdir $GNUPGHOME
+   gtmuser@paris:~$ chmod go-rwx $GNUPGHOME
+   gtmuser@paris:~$ gpg --gen-key
    gpg (GnuPG) 1.4.16; Copyright (C) 2013 Free Software Foundation, Inc.
    This is free software: you are free to change and redistribute it.
    There is NO WARRANTY, to the extent permitted by law.
@@ -3066,7 +3035,7 @@ The Mary keyring now has RSA keys for both encryption and signing. And now for t
 
   Note that this key cannot be used for encryption.  You may want to use
   the command "--edit-key" to generate a subkey for this purpose.
-  gtmuser@philadelphia:~$ gpg --edit-key ken.keyuser@yottadb
+  gtmuser@paris:~$ gpg --edit-key ken.keyuser@yottadb
   gpg (GnuPG) 1.4.16; Copyright (C) 2013 Free Software Foundation, Inc.
   This is free software: you are free to change and redistribute it.
   There is NO WARRANTY, to the extent permitted by law.
@@ -3114,48 +3083,48 @@ The Mary keyring now has RSA keys for both encryption and signing. And now for t
   [ultimate] (1). Ken Keyuser (Demo for Acculturation) <ken.keyuser@yottadb>
 
   gpg> save
-  gtmuser@philadelphia:~$
+  gtmuser@paris:~$
 
 Export the Mary public key. In practice, you would need to export it and transfer it to Ken.
 
 .. parsed-literal::
-   gtmuser@philadelphia:~$ gpg --armor --output mary.publickey.txt --export mary.keymaster@yottadb
-   gtmuser@philadelphia:~$ ls -l mary.publickey.txt 
-   -rw-rw-r-- 1 gtmuser gtmuser 1743 Jan 22 15:25 helen.publickey.txt
-   gtmuser@philadelphia:~$
+   gtmuser@paris:~$ gpg --armor --output mary.publickey.txt --export mary.keymaster@yottadb
+   gtmuser@paris:~$ ls -l mary.publickey.txt 
+   -rw-rw-r-- 1 gtmuser gtmuser 1743 Jan 22 15:25 mary.publickey.txt
+   gtmuser@paris:~$
 
 Ken should similarly export his public key.
 
 .. parsed-literal::
-   gtmuser@philadelphia:~$ gpg --armor --output ken.publickey.txt --export ken.keyuser@yottadb
-   gtmuser@philadelphia:~$ ls -l ken.publickey.txt 
+   gtmuser@paris:~$ gpg --armor --output ken.publickey.txt --export ken.keyuser@yottadb
+   gtmuser@paris:~$ ls -l ken.publickey.txt 
    -rw-rw-r-- 1 gtmuser gtmuser 1735 Jan  22 15:30 ken.publickey.txt
-   gtmuser@philadelphia:~$
+   gtmuser@paris:~$
 
 Mary should import Ken's public key.
 
 .. parsed-literal::
-   gtmuser@philadelphia:~$ gpg --import ken.publickey.txt 
+   gtmuser@paris:~$ gpg --import ken.publickey.txt 
    gpg: key BDA0E521: public key "Ken Keyuser (Demo for Acculturation) <ken.keyuser@yottadb>" imported
    gpg: Total number processed: 1
    gpg:               imported: 1  (RSA: 1)
-   gtmuser@philadelphia:~$ 
+   gtmuser@paris:~$ 
 
 And Ken should likewise import Mary's public key.
 
 .. parsed-literal::
-   gtmuser@philadelphia:~$ gpg --import mary.publickey.txt 
+   gtmuser@paris:~$ gpg --import mary.publickey.txt 
    gpg: key A863791B: public key "Mary Keymaster (Demo for Acculturation) <mary.keymaster@yottadb>" imported
    gpg: Total number processed: 1
    gpg:               imported: 1  (RSA: 1)
-   gtmuser@philadelphia:~$
+   gtmuser@paris:~$
 
 This completes the key exchange required for Mary to later securely transmit to Ken the key to the symmetric cipher. Alternatively, Mary and Ken may both also upload their public keys to a keyserver such as pgp.mit.edu for anyone who might need their public keys. They should directly exchange their public key fingerprints over a different channel, such as a fax or phone call, in order to protect themselves against “man in the middle” attacks.
 
 Mary can now manually generate a 32-byte key for the symmetric cipher, but it is better to use a truly random key using GPG or other tool (for example, http://www.random.org). If you have not installed the haveged package, you may want to use gpg -gen-random 1 32 instead to avoid depleting the entropy in your system. This key is then encrypted with the Ken public key and signed with the Mary private key. Then push the key to the guest.
 
 .. parsed-literal::
-   gtmuser@philadelphia:~$ gpg --gen-random 2 32 | gpg --encrypt --recipient ken.keyuser@yottadb --sign --armor >gtm_workshop_key.txt
+   gtmuser@paris:~$ gpg --gen-random 2 32 | gpg --encrypt --recipient ken.keyuser@yottadb --sign --armor >gtm_workshop_key.txt
 
    You need a passphrase to unlock the secret key for
    user: "Mary Keymaster (Demo for Acculturation) <mary.keymaster@yottadb>"
@@ -3172,7 +3141,7 @@ Mary can now manually generate a 32-byte key for the symmetric cipher, but it is
    It is NOT certain that the key belongs to the person named in the user ID.  If you *really* know what you are doing, you may answer the next question with yes.
 
    Use this key anyway? (y/N) y
-   gtmuser@philadelphia:~$ 
+   gtmuser@paris:~$ 
 
 As the Ken user, create a directory enc, with a gtmenv file to set the environment. You can copy the gtmenv file from a directory such as exDir. Also, create a master key file for the environment variable gtm_dbkeys to point to. Note that libconfig file syntax needs to be just right.
 
@@ -3186,15 +3155,15 @@ As the Ken user, create a directory enc, with a gtmenv file to set the environme
    export gtm_tmp=$gtm_log
    export gtm_principal_editing=EDITING
    export gtm_repl_instance=$HOME/enc/gtm.repl
-   export gtm_repl_instname=Philadelphia
+   export gtm_repl_instname=Paris
    export gtmroutines="$HOME/enc* $gtm_dist/libgtmutil.so"
    export gtmcrypt_config=$HOME/enc/gtmcrypt.cfg
    mkdir -p $gtm_tmp
    alias mumps=$gtm_dist/mumps
    alias mupip=$gtm_dist/mupipexport gtm_dist=/usr/lib/fis-gtm/V6.2-000_x86_64
-   gtmuser@philadelphia:~/enc$ source gtmenv
-   gtmuser@philadelphia:~/enc$ jed $gtmcrypt_config # create file to link database files to encryption keys
-   gtmuser@philadelphia:~/enc$ cat $gtmcrypt_config
+   gtmuser@paris:~/enc$ source gtmenv
+   gtmuser@paris:~/enc$ jed $gtmcrypt_config # create file to link database files to encryption keys
+   gtmuser@paris:~/enc$ cat $gtmcrypt_config
    database: {
        keys:   (
                  {
@@ -3203,12 +3172,12 @@ As the Ken user, create a directory enc, with a gtmenv file to set the environme
                  }
                );
              }
-   gtmuser@philadelphia:~/enc$
+   gtmuser@paris:~/enc$
 
 Create the database key file from the gtm_workshop_key.txt file from Mary.
   
 .. parsed-literal::
-   gtmuser@philadelphia:~/enc$ gpg --decrypt <../gtm_workshop_key.txt | gpg --encrypt --armor --default-recipient-self --output gtm.key 
+   gtmuser@paris:~/enc$ gpg --decrypt <../gtm_workshop_key.txt | gpg --encrypt --armor --default-recipient-self --output gtm.key 
    You need a passphrase to unlock the secret key for
    user: "Ken Keyuser (Demo for Acculturation) <ken.keyuser@yottadb>"
    2048-bit RSA key, ID 6403B065, created 2018-01-22 (main key ID BDA0E521)
@@ -3220,7 +3189,7 @@ Create the database key file from the gtm_workshop_key.txt file from Mary.
    gpg: WARNING: This key is not certified with a trusted signature!
    gpg:          There is no indication that the signature belongs to the owner.
    Primary key fingerprint: 983C C19C 26F4 4188 FDEB  F20B DD6A 26FA A863 791B
-   gtmuser@philadelphia:~/enc$ cat gtm.key
+   gtmuser@paris:~/enc$ cat gtm.key
    -----BEGIN PGP MESSAGE-----
    Version: GnuPG v1
 
@@ -3234,7 +3203,7 @@ Create the database key file from the gtm_workshop_key.txt file from Mary.
    IV5Pg3eIpJdkM/PjDvxx1umob8N+Rr6CsfbDYuUG5w==
    =uGve
    -----END PGP MESSAGE-----
-   gtmuser@philadelphia:~/enc$
+   gtmuser@paris:~/enc$
 
 Now create a global directory that specifies that the database file is encrypted.
 
@@ -3273,23 +3242,23 @@ Now create a global directory that specifies that the database file is encrypted
 
    %GDE-I-GDCREATE, Creating Global Directory file 
            /home/gtmuser/enc/gtm.gld
-   gtmuser@philadelphia:~/enc$
+   gtmuser@paris:~/enc$
 
 Now create the database file. Notice that in order to supply mupip create with the obfuscated GPG keyring password in the environment, we have to invoke mupip through an intermediary mumps process that prompts for the password and places and obfuscated password in the environment.
 
 .. parsed-literal::
-   gtmuser@philadelphia:~/enc$ gtm_passwd="" mumps -dir
+   gtmuser@paris:~/enc$ gtm_passwd="" mumps -dir
    Enter Passphrase: 
    YDB>zsystem "$gtm_dist/mupip create"
    Created file /home/gtmuser/enc/gtm.dat
 
    YDB>halt
-   gtmuser@philadelphia:~/enc$
+   gtmuser@paris:~/enc$
 
 You can use DSE to verify that the file is encrypted. Note the warning from DSE which means that it can only access unencrypted parts of the database file, 
 
 .. parsed-literal::
-   gtmuser@philadelphia:~/enc$ $gtm_dist/dse dump -fileheader
+   gtmuser@paris:~/enc$ $gtm_dist/dse dump -fileheader
    %GTM-W-CRYPTINIT, Could not initialize encryption library while opening encrypted file /home/gtmuser/enc/gtm.dat. Environment variable gtm_passwd not set
 
    File    /home/gtmuser/enc/gtm.dat
@@ -3298,7 +3267,7 @@ You can use DSE to verify that the file is encrypted. Note the warning from DSE 
 
    File            /home/gtmuser/enc/gtm.dat
    Region          DEFAULT
-   Date/Time       05-DEC-2014 20:55:40 [$H = 63526,75340]
+   Date/Time       23-JAN-2018 20:55:40 [$H = 63526,75340]
 
    Access method                          BG  Global Buffers                1024
    Reserved Bytes                          0  Block size (in bytes)         1024
@@ -3332,53 +3301,53 @@ You can use DSE to verify that the file is encrypted. Note the warning from DSE 
    Database file encrypted              TRUE  Inst Freeze on Error         FALSE
    Spanning Node Absent                 TRUE  Maximum Key Size Assured      TRUE
 
-   gtmuser@philadelphia:~/enc$ 
+   gtmuser@paris:~/enc$ 
 
 Now turn on journaling, and attempt to make some updates without setting the gtm_passed environment variable. This fails. Now, invoke YottaDB/GT.M with the environment variable set, and make an update.
 
 .. parsed-literal::
-   gtmuser@philadelphia:~/enc$ mupip set -journal="before,on" -region "*"
+   gtmuser@paris:~/enc$ mupip set -journal="before,on" -region "*"
    %GTM-W-CRYPTINIT, Could not initialize encryption library while opening encrypted file /home/gtmuser/enc/gtm.dat. Environment variable gtm_passwd not set
    %GTM-I-JNLCREATE, Journal file /home/gtmuser/enc/gtm.mjl created for region DEFAULT with BEFORE_IMAGES
-   gtmuser@philadelphia:~/enc$ mumps -dir
+   gtmuser@paris:~/enc$ mumps -dir
 
    YDB>set ^X="The quick brown fox"
    %GTM-E-CRYPTINIT, Could not initialize encryption library while opening encrypted file /home/gtmuser/enc/gtm.dat. Environment variable gtm_passwd not set
 
    YDB>halt
-   gtmuser@philadelphia:~/enc$ gtm_passwd="" mumps -dir
+   gtmuser@paris:~/enc$ gtm_passwd="" mumps -dir
    Enter Passphrase: 
    YDB>set ^X="This string should be encrypted in the database"
 
    YDB>halt
-   gtmuser@philadelphia:~/enc$
+   gtmuser@paris:~/enc$
 
 Confirm that the data is indeed visible in neither the database file nor the journal file.
 
 .. parsed-literal::
-   gtmuser@philadelphia:~/enc$ strings gtm.dat
+   gtmuser@paris:~/enc$ strings gtm.dat
    GDSDYNUNX03
    /home/gtmuser/enc/gtm.mjl
    TUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
    4y(q.
-   gtmuser@philadelphia:~/enc$ strings gtm.mjl
+   gtmuser@paris:~/enc$ strings gtm.mjl
    GDSJNL24
-   philadelphia
+   paris
    gtmuser
    gtmuser
-   philadelphia
+   paris
    gtmuser
    gtmuser
    /home/gtmuser/enc/gtm.dat
-   philadelphia
+   paris
    gtmuser
    gtmuser
    TO4<
-   philadelphia
+   paris
    gtmuser
    gtmuser
    @UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
-   gtmuser@philadelphia:~/enc$
+   gtmuser@paris:~/enc$
 
 --------------------
 Pulling It Together
@@ -3413,7 +3382,7 @@ To get VistA, you will need to download two archive files, the routines and the 
 
    100%[===================================================>] 33,432,464   970KB/s   in 36s    
 
-   2014-12-15 15:05:10 (895 KB/s) - ‘/Distrib/VistA/WVEHRVOE10Routines’ saved [33432464/33432464]
+   2018-01-25 15:05:10 (895 KB/s) - ‘/Distrib/VistA/WVEHRVOE10Routines’ saved [33432464/33432464]
 
    gtmuser@gtmworkshop:~$ wget -P /Distrib/VistA/ http://tinyurl.com/WVEHRVOE10Globals
 
@@ -3424,7 +3393,7 @@ To get VistA, you will need to download two archive files, the routines and the 
 
    100%[========================================================================================>] 140,631,465  690KB/s   in 2m 49s 
 
-   2014-12-15 15:10:08 (813 KB/s) - ‘/Distrib/VistA/WVEHRVOE10Globals’ saved [140631465/140631465]
+   2018-01-25 15:10:08 (813 KB/s) - ‘/Distrib/VistA/WVEHRVOE10Globals’ saved [140631465/140631465]
 
    gtmuser@gtmworkshop:~$
 
@@ -3439,7 +3408,7 @@ Create a VistA directory. Use a g subdirectory for global variables, an o subdir
 .. parsed-literal::
    gtmuser@gtmworkshop:~$ mkdir -p VistA/{g,o,r}
    gtmuser@gtmworkshop:~$ nano VistA/gtmenv ; cat VistA/gtmenv
-   export gtm_dist=/usr/lib/fis-gtm/V6.2-000_x86_64
+   export gtm_dist=/usr/local/lib/yottadb/r110
    export gtmgbldir=$HOME/VistA/g/gtm.gld
    export gtm_log=/tmp/fis-gtm/V6.2-000_x86_64
    export gtm_tmp=$gtm_log
@@ -3498,7 +3467,7 @@ Load the global variables into the database.
 .. parsed-literal::
    gtmuser@gtmworkshop:~$ gzip -d </Distrib/VistA/WVEHRVOE10Globals | mupip load -stdin
    GT.M MUPIP EXTRACT
-   10-AUG-2010  14:38:37 ZWR
+   26-JAN-2018  14:38:37 ZWR
    Beginning LOAD at record number: 3
 
    LOAD TOTAL              Key Cnt: 20337342  Max Subsc Len: 223  Max Data Len: 834
@@ -3507,15 +3476,15 @@ Load the global variables into the database.
    gtmuser@gtmworkshop:~$ ls -lhR VistA/
    VistA/:
    total 4.0K
-   drwxrwxr-x 2 gtmuser gtmuser  34 Dec 15 15:33 g
-   -rw-rw-r-- 1 gtmuser gtmuser 384 Dec 15 15:25 gtmenv
-   drwxrwxr-x 2 gtmuser gtmuser   6 Dec 15 15:17 o
-   drwxrwxr-x 2 gtmuser gtmuser   6 Dec 15 15:17 r
+   drwxrwxr-x 2 gtmuser gtmuser  34 Jan 26 15:33 g
+   -rw-rw-r-- 1 gtmuser gtmuser 384 Jan 26 15:25 gtmenv
+   drwxrwxr-x 2 gtmuser gtmuser   6 Jan 26 15:17 o
+   drwxrwxr-x 2 gtmuser gtmuser   6 Jan 26 15:17 r
 
    VistA/g:
    total 421M
-   -rw-rw-rw- 1 gtmuser gtmuser 451M Dec 15 15:39 gtm.dat
-   -rw-rw-r-- 1 gtmuser gtmuser 1.5K Dec 15 15:33 gtm.gld
+   -rw-rw-rw- 1 gtmuser gtmuser 451M Jan 26 15:39 gtm.dat
+   -rw-rw-r-- 1 gtmuser gtmuser 1.5K Jan 26 15:33 gtm.gld
 
    VistA/o:
    total 0
@@ -3540,9 +3509,9 @@ This tells us that WorldVistA EHR has 25,163 source code modules. Now that the g
    %GTM-I-JNLSTATE, Journaling state for region DEFAULT is now ON
    gtmuser@gtmworkshop:~$ ls -l VistA/g
    total 430948
-   -rw-rw-rw- 1 gtmuser gtmuser 472228352 Dec 15 15:51 gtm.dat
-   -rw-rw-r-- 1 gtmuser gtmuser      1536 Dec 15 15:33 gtm.gld
-   -rw-rw-rw- 1 gtmuser gtmuser     69632 Dec 15 15:51 gtm.mjl
+   -rw-rw-rw- 1 gtmuser gtmuser 472228352 Jan 26 15:51 gtm.dat
+   -rw-rw-r-- 1 gtmuser gtmuser      1536 Jan 26 15:33 gtm.gld
+   -rw-rw-rw- 1 gtmuser gtmuser     69632 Jan 26 15:51 gtm.mjl
    gtmuser@gtmworkshop:~$
 
 You can now run VistA – just enough to convince yourself that it is working, then exit.
@@ -3565,27 +3534,27 @@ Note that YottaDB/GT.M has dynamically compiled modules as needed.
 .. parsed-literal::
    gtmuser@gtmworkshop:~$ ls -l VistA/o
    total 456
-   -rw-rw-r-- 1 gtmuser gtmuser 25752 Dec 15 15:53 DIALOG.o
-   -rw-rw-r-- 1 gtmuser gtmuser 11784 Dec 15 15:53 DIARB.o
-   -rw-rw-r-- 1 gtmuser gtmuser 22520 Dec 15 15:53 DIB.o
-   -rw-rw-r-- 1 gtmuser gtmuser 21528 Dec 15 15:53 DIC0.o
-   -rw-rw-r-- 1 gtmuser gtmuser 13496 Dec 15 15:53 DIC11.o
-   -rw-rw-r-- 1 gtmuser gtmuser 33160 Dec 15 15:53 DIC1.o
-   -rw-rw-r-- 1 gtmuser gtmuser 22520 Dec 15 15:53 DIC2.o
-   -rw-rw-r-- 1 gtmuser gtmuser 21176 Dec 15 15:53 DICATT2.o
-   -rw-rw-r-- 1 gtmuser gtmuser 14616 Dec 15 15:53 DICL.o
-   -rw-rw-r-- 1 gtmuser gtmuser 28808 Dec 15 15:53 DIC.o
-   -rw-rw-r-- 1 gtmuser gtmuser 18552 Dec 15 15:53 DICRW.o
-   -rw-rw-r-- 1 gtmuser gtmuser 15800 Dec 15 15:53 DICUIX1.o
-   -rw-rw-r-- 1 gtmuser gtmuser 20520 Dec 15 15:53 DICUIX2.o
-   -rw-rw-r-- 1 gtmuser gtmuser 19336 Dec 15 15:53 DICUIX.o
-   -rw-rw-r-- 1 gtmuser gtmuser 22472 Dec 15 15:53 DII.o
-   -rw-rw-r-- 1 gtmuser gtmuser 10424 Dec 15 15:53 DILF.o
-   -rw-rw-r-- 1 gtmuser gtmuser 29848 Dec 15 15:53 DILIBF.o
-   -rw-rw-r-- 1 gtmuser gtmuser  2904 Dec 15 15:53 DI.o
-   -rw-rw-r-- 1 gtmuser gtmuser 14104 Dec 15 15:53 DIQGU.o
-   -rw-rw-r-- 1 gtmuser gtmuser 27240 Dec 15 15:53 _DTC.o
-   -rw-rw-r-- 1 gtmuser gtmuser 23176 Dec 15 15:53 _ZOSV.o
+   -rw-rw-r-- 1 gtmuser gtmuser 25752 Jan 26 15:53 DIALOG.o
+   -rw-rw-r-- 1 gtmuser gtmuser 11784 Jan 26 15:53 DIARB.o
+   -rw-rw-r-- 1 gtmuser gtmuser 22520 Jan 26 15:53 DIB.o
+   -rw-rw-r-- 1 gtmuser gtmuser 21528 Jan 26 15:53 DIC0.o
+   -rw-rw-r-- 1 gtmuser gtmuser 13496 Jan 26 15:53 DIC11.o
+   -rw-rw-r-- 1 gtmuser gtmuser 33160 Jan 26 15:53 DIC1.o
+   -rw-rw-r-- 1 gtmuser gtmuser 22520 Jan 26 15:53 DIC2.o
+   -rw-rw-r-- 1 gtmuser gtmuser 21176 Jan 26 15:53 DICATT2.o
+   -rw-rw-r-- 1 gtmuser gtmuser 14616 Jan 26 15:53 DICL.o
+   -rw-rw-r-- 1 gtmuser gtmuser 28808 Jan 26 15:53 DIC.o
+   -rw-rw-r-- 1 gtmuser gtmuser 18552 Jan 26 15:53 DICRW.o
+   -rw-rw-r-- 1 gtmuser gtmuser 15800 Jan 26 15:53 DICUIX1.o
+   -rw-rw-r-- 1 gtmuser gtmuser 20520 Jan 26 15:53 DICUIX2.o
+   -rw-rw-r-- 1 gtmuser gtmuser 19336 Jan 26 15:53 DICUIX.o
+   -rw-rw-r-- 1 gtmuser gtmuser 22472 Jan 26 15:53 DII.o
+   -rw-rw-r-- 1 gtmuser gtmuser 10424 Jan 26 15:53 DILF.o
+   -rw-rw-r-- 1 gtmuser gtmuser 29848 Jan 26 15:53 DILIBF.o
+   -rw-rw-r-- 1 gtmuser gtmuser  2904 Jan 26 15:53 DI.o
+   -rw-rw-r-- 1 gtmuser gtmuser 14104 Jan 26 15:53 DIQGU.o
+   -rw-rw-r-- 1 gtmuser gtmuser 27240 Jan 26 15:53 _DTC.o
+   -rw-rw-r-- 1 gtmuser gtmuser 23176 Jan 26 15:53 _ZOSV.o
    gtmuser@gtmworkshop:~$
 
 **Pre-compiled Routines**
@@ -3613,7 +3582,7 @@ Make sure you can start and run VistA after recompiling the modules.
 
 **Multiple YottaDB/GT.M Versions**
 
-YottaDB/GT.M object files are specific to each release of YottaDB/GT.M – so V6.2-000 cannot use object files generated by V5.4-000A, for example. Although the database format is more stable, a database file can only be concurrently open only by processes of one YottaDB/GT.M. The same source code, however, can be used by an unlimited number of YottaDB/GT.M releases. Also, even within a single YottaDB/GT.M release, the same source code can be used by processes running in M mode and UTF-8 mode – but the object files are different. The directory tree structure implemented in the simple environment allows only processes of only one YottaDB/GT.M release operating in only one mode to use a set of YottaDB/GT.M source modules.
+YottaDB/GT.M object files are specific to each release of YottaDB/GT.M – so r1.10 cannot use object files generated by r1.00, for example. Although the database format is more stable, a database file can only be concurrently open only by processes of one YottaDB/GT.M. The same source code, however, can be used by an unlimited number of YottaDB/GT.M releases. Also, even within a single YottaDB/GT.M release, the same source code can be used by processes running in M mode and UTF-8 mode – but the object files are different. The directory tree structure implemented in the simple environment allows only processes of only one YottaDB/GT.M release operating in only one mode to use a set of YottaDB/GT.M source modules.
 
 .. parsed-literal::
    gtmuser@gtmworkshop:~$ tree -d VistA/
@@ -3652,7 +3621,7 @@ Notice that we simply moved the object, journal, global directory and database f
 
 - Global directories have pointers to database files. The global directory should be edited with GDE to correct this. Also, although the journal file information in the DEFAULT region is not meaningful once the database is created, it should be edited since it may be used in the future to create a database file, and the journal file name from the global is placed in the database file header when a new database file is created.
 
-- Environment setup should be updated. Although our env file can exist anywhere, since it sets environment variables that include path information, it is probably best to move it to the V6.2-000_x86_64 directory.
+- Environment setup should be updated. Although our env file can exist anywhere, since it sets environment variables that include path information, it is probably best to move it to the r1.10 directory.
 
 Fixing the above (starting with the environment file, since it points to the global directory, and then the global directory, since it points to the database file):
 
@@ -3714,7 +3683,7 @@ Notice that since the YottaDB/GT.M version occurs in multiple locations, it has 
            /home/gtmuser/VistA/V6.2-000_x86_64/g/gtm.gld
    gtmuser@gtmworkshop:~$
 
-Now re-enable journaling so that the database and journal pointers are correct. You will need to delete the prior journal file, because the database file does not have a pointer to it, and GT.M will refuse to create a new journal file where a file already exists that is not pointed to by the database file.
+Now re-enable journaling so that the database and journal pointers are correct. You will need to delete the prior journal file, because the database file does not have a pointer to it, and YottaDB/GT.M will refuse to create a new journal file where a file already exists that is not pointed to by the database file.
 
 .. parsed-literal::
    gtmuser@gtmworkshop:~$ rm /home/gtmuser/VistA/V6.2-000_x86_64/g/gtm.mjl
@@ -3756,7 +3725,7 @@ We can add additional directories for other versions of YottaDB/GT.M. e.g.,
    7 directories
    gtmuser@gtmworkshop:~$
  
-This facilitates simple upgrades. For example, if you wanted to migrate from V6.2-000 to (an as yet unreleased as of this writing) V5.4-003, you could effect a rolling upgrade using replicating between the V6.2-000 and V5.4-003 sub-directories within the same directory.
+This facilitates simple upgrades. For example, if you wanted to migrate from r1.10 to (an as yet unreleased as of this writing) r1.20, you could effect a rolling upgrade using replicating between the r1.10 and r1.20 sub-directories within the same directory.
 
 **A Minor Refinement – YottaDB/GT.M Version Dependent Source**
 
@@ -3837,11 +3806,11 @@ Installations of large applications often have local or modifications. In such c
     alias mupip=$gtm_dist/mupip
     gtmuser@gtmworkshop:~$
 
-Now you can look at this in operation by applying some modifications to VistA that allow it to operate better with YottaDB/GT.M to the /home/gtmuser/VistA/p directory. Download the file KSBVistAPatches.zip from the same location that you obtained the Acculturation Workshop, and put it in the /Distrib/VistA directory. Then unpack it to /home/gtmuser/VistA/p directory.
+Now you can look at this in operation by applying some modifications to VistA that allow it to operate better with YottaDB/GT.M to the /home/gtmuser/VistA/p directory. Download the file KSBVistAPatches.zip from `YottaDB on Github <https://github.com/YottaDB/YottaDBdoc/tree/master/AcculturationGuide>`_, and put it in the /Distrib/VistA directory. Then unpack it to /home/gtmuser/VistA/p directory.
 
 .. parsed-literal::
    gtmuser@gtmworkshop:~$ ls -l /Distrib/VistA/KSBVistAPatches.zip
-   -rw-r--r-- 1 gtmuser gtmuser 20530 Dec 15 17:49 /Distrib/VistA/KSBVistAPatches.zip
+   -rw-r--r-- 1 gtmuser gtmuser 20530 Jan 15 17:49 /Distrib/VistA/KSBVistAPatches.zip
    gtmuser@gtmworkshop:~$ unzip -d VistA/p /Distrib/VistA/KSBVistAPatches.zip
    Archive:  /Distrib/VistA/KSBVistAPatches.zip
    inflating: VistA/p/XPDR.m          
@@ -3976,11 +3945,11 @@ Delete the V6.2-001_x86_64 subdirectory, and copy the files inc and install to t
 .. parsed-literal::
    gtmuser@gtmworkshop:~$ ls -l VistA/
    total 872
-   -rw-r--r-- 1 gtmuser gtmuser    894 Dec 16 13:20 inc
-   -rwxr-xr-x 1 gtmuser gtmuser   4416 Dec 16 13:20 install
-   drwxrwxr-x 2 gtmuser gtmuser    114 Dec 15 17:54 p
+   -rw-r--r-- 1 gtmuser gtmuser    894 Jan 16 13:20 inc
+   -rwxr-xr-x 1 gtmuser gtmuser   4416 Jan 16 13:20 install
+   drwxrwxr-x 2 gtmuser gtmuser    114 Jan 15 17:54 p
    drwxr-x--- 2 gtmuser gtmuser 606208 Feb  6  2009 r
-   drwxrwxr-x 6 gtmuser gtmuser    108 Dec 16 13:20 V6.2-000_x86_64
+   drwxrwxr-x 6 gtmuser gtmuser    108 Jan 16 13:20 V6.2-000_x86_64
    gtmuser@gtmworkshop:~$
 
 Similarly, to VistA/V6.2-000_x86_64 copy the files wvehrstop, wvehrstart, run, newjnls and gtmenv (yes, the latter overwrites the gtmenv file you already have there). Make wvehrstop, wvehrstart, run and newjnls executable. Also, replace the env in VistA/V6.2-000_x86_64 with the new env file. Create a symbolic link called gtm to /usr/lib/fis-gtm/V6.2-000_x86_64.
@@ -3988,16 +3957,16 @@ Similarly, to VistA/V6.2-000_x86_64 copy the files wvehrstop, wvehrstart, run, n
 .. parsed-literal::
    gtmuser@gtmworkshop:~$ ls -l VistA/V6.2-000_x86_64/
    total 896
-   drwxrwxr-x 2 gtmuser gtmuser     48 Dec 15 16:47 g
-   lrwxrwxrwx 1 gtmuser gtmuser     32 Dec 16 13:24 gtm -> /usr/lib/fis-gtm/V6.2-000_x86_64
-   -rw-rw-r-- 1 gtmuser gtmuser    735 Dec 16 13:20 gtmenv
-   -rwxr-xr-x 1 gtmuser gtmuser    181 Dec 16 13:20 newjnls
-   drwxrwxr-x 2 gtmuser gtmuser 610304 Dec 16 11:57 o
-   drwxrwxr-x 2 gtmuser gtmuser   4096 Dec 16 12:01 p
-   drwxrwxr-x 2 gtmuser gtmuser   4096 Dec 16 11:59 r
-   -rwxr-xr-x 1 gtmuser gtmuser    340 Dec 16 13:20 run
-   -rwxr-xr-x 1 gtmuser gtmuser    277 Dec 16 13:20 wvehrstart
-   -rwxr-xr-x 1 gtmuser gtmuser    161 Dec 16 13:20 wvehrstop
+   drwxrwxr-x 2 gtmuser gtmuser     48 Jan 15 16:47 g
+   lrwxrwxrwx 1 gtmuser gtmuser     32 Jan 16 13:24 gtm -> /usr/lib/fis-gtm/V6.2-000_x86_64
+   -rw-rw-r-- 1 gtmuser gtmuser    735 Jan 16 13:20 gtmenv
+   -rwxr-xr-x 1 gtmuser gtmuser    181 Jan 16 13:20 newjnls
+   drwxrwxr-x 2 gtmuser gtmuser 610304 Jan 16 11:57 o
+   drwxrwxr-x 2 gtmuser gtmuser   4096 Jan 16 12:01 p
+   drwxrwxr-x 2 gtmuser gtmuser   4096 Jan 16 11:59 r
+   -rwxr-xr-x 1 gtmuser gtmuser    340 Jan 16 13:20 run
+   -rwxr-xr-x 1 gtmuser gtmuser    277 Jan 16 13:20 wvehrstart
+   -rwxr-xr-x 1 gtmuser gtmuser    161 Jan 16 13:20 wvehrstop
    gtmuser@gtmworkshop:~$
 
 Starting with a clean environment (no gtm* environment variables defined), create a child environment of VistA called dev using the install script.
