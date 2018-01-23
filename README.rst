@@ -10,5 +10,5 @@ The documentation consists of:
 * Administration and Operations Guide
 * Multi-language Programmer's Guide
 * Messages and Recovery Procedures Manual
-* Programmer's Guide
+* M Programmer's Guide
 * Acculturation Workshop
