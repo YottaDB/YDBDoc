@@ -16,6 +16,7 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
+# import sphinx_rtd_theme
 # import os
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
@@ -92,8 +93,8 @@ html_theme = 'classic'
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
-html_theme_options = {'stickysidebar':'true','sidebarwidth':'350','sidebartextcolor':'#3b1a68','sidebarbgcolor':'#f3f3f3','relbarbgcolor':'#3b1a68','footerbgcolor':'#3b1a68', 'sidebarlinkcolor':'#3b1a68','bodyfont':'Raleway','headfont':'Lora'}
-
+html_theme_options = {'stickysidebar':'true','sidebarwidth':'330','sidebartextcolor':'#3b1a68','sidebarbgcolor':'#f3f3f3','relbarbgcolor':'#3b1a68','footerbgcolor':'#3b1a68', 'sidebarlinkcolor':'#3b1a68','bodyfont':'Raleway','headfont':'Lora'}
+#html_theme_path=[sphinx_rtd_theme.get_html_theme_path()]
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
