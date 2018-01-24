@@ -1,12 +1,12 @@
 
 .. index::
-   YottaDB/GT.M Acculturation Workshop
+   Acculturation Workshop
 
 ====================================
-YottaDB/GT.M Acculturation Workshop
+Acculturation Workshop
 ====================================
 
-Welcome to the YottaDB/GT.M Acculturation Workshop!
+Welcome to the YottaDB Acculturation Workshop!
 
 Copyright © 2014 Fidelity National Information Services, Inc. and/or its subsidiaries. All Rights Reserved.
 
@@ -22,24 +22,24 @@ GT.M™ is a trademark of Fidelity National Information Services, Inc. YottaDB�
 Acculturation Workshop Expectations
 -----------------------------------
 
-The YottaDB/GT.M Acculturation Workshop is a hands-on YottaDB/GT.M “boot camp” for those interested in the configuration, administration and operation of applications on YottaDB/GT.M. This file is the script, or workbook, for the workshop, and consists of the exercises below.
+The Acculturation Workshop is a hands-on “boot camp” for those interested in the configuration, administration and operation of applications on YottaDB/GT.M. This file is the script, or workbook, for the workshop, and consists of the exercises below.
 
-At the end of these exercises, you will have a basic working knowledge of the essential aspects of YottaDB/GT.M administration and operations. While this workshop alone will not make you a YottaDB/GT.M expert by any means, the basic working knowledge will help you quickly understand the concepts explained in the user documentation and put you on the path to becoming an expert.
+At the end of these exercises, you will have a basic working knowledge of the essential aspects of YottaDB administration and operations. While this workshop alone will not make you a YottaDB expert by any means, the basic working knowledge will help you quickly understand the concepts explained in the user documentation and put you on the path to becoming an expert.
 
 The workshop is not a course in M programming. Familiarity with Linux® (or at least UNIX®) will allow you to move faster through the material, but is not absolutely required. If you have no experience whatsoever with Linux or UNIX, supplementary tutorial material on the side will increase your level of comfort.
 
-As the differences between YottaDB/GT.M and other M implementations are more in the area of configuration and systems administration rather than M language features, the former topic is the major thrust of the workshop.
+As the differences between YottaDB and other M implementations are more in the area of configuration and systems administration rather than M language features, the former topic is the major thrust of the workshop.
 
 -------------
 YottaDB/GT.M
 -------------
 
-`YottaDB <http://yottadb.com>`_/`FIS GT.M <http://fis-gtm.com>`_ is an implementation of the ISO standard scripting & application development language M, commonly known as MUMPS, developed and released by YottaDB and FIS. As the platform for the FIS Profile application, YottaDB/GT.M is the most widely used M implementation in banking and finance, including several of the largest real time core processing systems we know of that are live at any bank anywhere in the world. YottaDB/GT.M is increasingly used in healthcare. The implementation of YottaDB/GT.M on the GNU/Linux operating system on industry standard x86_64 architecture and Raspberry Pi hardware is the M implementation used for the FOSS (Free / Open Source Software) stack for `VistA <http://worldvista.org/AboutVistA>`_.
+`YottaDB <http://yottadb.com>`_/`FIS GT.M <http://fis-gtm.com>`_ is an implementation of the ISO standard scripting & application development language M, commonly known as MUMPS, developed and released by YottaDB and FIS. YottaDB/GT.M is the most widely used M implementation in banking and finance, including several of the largest real time core processing systems that are live at any bank anywhere in the world. YottaDB/GT.M is increasingly used in healthcare. The implementation of YottaDB/GT.M on the GNU/Linux operating system on industry standard x86_64 architecture and Raspberry Pi hardware is the M implementation used for the FOSS (Free / Open Source Software) stack for `VistA <http://worldvista.org/AboutVistA>`_.
 
 YottaDB/GT.M is architected with the following objectives:
 
 - Without compromise, the robustness, security and integrity of the information entrusted to it.
--  Open architecture, with easy, standards based access to the information in the database.
+-  Open architecture, with easy, standards-based access to the information in the database.
 - Continuity of business – YottaDB/GT.M has unique functionality for the deployment of mission-critical applications that must be available 24 hours a day, 365 days a year, with no down time even for planned events.
 - Throughput, performance and scalability to meet the needs of the largest institutions in the world.
 
@@ -48,20 +48,20 @@ Free support for YottaDB/GT.M is available from the community on various mailing
 YottaDB/GT.M provides:
 
 - Full `ACID (Atomic, Consistent, Isolated, Durable) <https://en.wikipedia.org/wiki/ACID>`_ transaction semantics
-- throughput that scales to the needs of enterprise wide applications
+- throughput that scales to the needs of enterprise-wide applications
 - unique functionality for creating logical multi-site configurations for mission critical applications that must always be available, including doing upgrades, and upgrades involving changes to the database schema.
 
 With the exception of Structured System Variable Names (SSVNs), YottaDB/GT.M mostly implements ISO standard M (ISO/IEC 11756:1999), including a full implementation of transaction processing (TP) that provides ACID (Atomic, Consistent, Isolated, Durable) transactions. As with any M implementation, there are extensions. IO parameters are implementation specific, as are parameters of the VIEW command, and commands & variables starting with the letter Z.
 
 Despite the fact that the dialect of M implemented by YottaDB/GT.M shares so much in common with other M implementations, operationally, YottaDB/GT.M is unlike any other M implementation.
 
-This Acculturation Workshop is based on GT.M V6.2-000, but any more recent version of YottaDB/GT.M should also work well.
+This Acculturation Workshop is largely based on GT.M V6.2-000 and YottaDB r1.10, but any more recent version of YottaDB/GT.M should also work well.
 
 ---------
 Packaging
 ---------
 
-The exercises are carried out by booting guest virtual machines (also called software appliances) on your host computer. Think of a virtual machine as a “computer within a computer”. A guest virtual machine can run a different operating system from that of the host computer. The host computer might itself run Linux, Windows, OS X, or any other operating system and the guest can run Linux with YottaDB/GT.M as well as other applications. "Emulation" or "virtualization" software helps you set up a guest system on a host computer. On the host computer, the disk images of the YottaDB/GT.M Acculturation Workshop guide look like ordinary files in the file system.
+The exercises are carried out by booting guest virtual machines (also called software appliances) on your host computer. Think of a virtual machine as a “computer within a computer”. A guest virtual machine can run a different operating system from that of the host computer. The host computer might itself run Linux, Windows, OS X, or any other operating system and the guest can run Linux with YottaDB/GT.M as well as other applications. "Emulation" or "virtualization" software helps you set up a guest system on a host computer. On the host computer, the disk images of the Acculturation Workshop guide look like ordinary files in the file system.
 
 +++++
 Linux
@@ -71,15 +71,15 @@ Linux is the common name for the GNU/Linux operating system, consisting of the G
 
 Free support for Linux is available on numerous mailing lists and electronic forums. Commercial support is widely available from multiple vendors.
 
-The YottaDB/GT.M Acculturation Workshop is virtual machine which starts with the disk image of a minimal `Ubuntu <https://www.ubuntu.com/>`_ 12.04 LTS (“Precise Pangolin”) Linux distribution, with `additional documentation resources <https://help.ubuntu.com/>`_.
+The Acculturation Workshop is on a virtual machine which starts with the disk image of a minimal `Ubuntu <https://www.ubuntu.com/>`_ 12.04 LTS (“Precise Pangolin”) Linux distribution, with `additional documentation resources <https://help.ubuntu.com/>`_.
 
-For other documentation resources, although dated, `Linux: Rute User's Tutorial and Exposition <https://rlworkman.net/howtos/rute/>`_ is still a very useful and usable tutorial for anyone getting started with Linux. The `Debian Project <https://www.debian.org/>`_ maintains a `page of books <https://www.debian.org/doc/books>`_ on Linux. The `Debian Wiki <https://wiki.debian.org/>`_ has useful reference information and a having handy a paper copy of the `Debian Reference Card <https://www.debian.org/doc/manuals/refcard/>`_ (available in several languages) would be useful for anyone not entirely comfortable with Linux.
+For other documentation resources, although dated, `Linux: Rute User's Tutorial and Exposition <https://rlworkman.net/howtos/rute/>`_ is still a very useful tutorial for anyone getting started with Linux. The `Debian Project <https://www.debian.org/>`_ maintains a `page of books <https://www.debian.org/doc/books>`_ on Linux. The `Debian Wiki <https://wiki.debian.org/>`_ has useful reference information and having a paper copy of the `Debian Reference Card <https://www.debian.org/doc/manuals/refcard/>`_ (available in several languages) would be useful for anyone not entirely comfortable with Linux.
 
 +++++++++++++++++++++++++++++++
 Control of the Keyboard & Mouse
 +++++++++++++++++++++++++++++++
 
-When you boot a guest virtual machine, booting it “headless” (i.e., without a console), means that the host always has control of the keyboard and mouse. If it is not headless, ownership of the keyboard or mouse may need to toggle between the host and guest. The software you use for virtualization determines how to transfer control.
+When you boot a guest virtual machine, booting it “headless” (i.e., without a console - no keyboard and mouse attached), means that the host (you) always has control of the keyboard and mouse. If it is not headless, ownership of the keyboard or mouse may need to toggle between the host and guest. The software you use for virtualization determines how to transfer control.
 
 With kvm / QEMU, use the Ctrl-Alt key combination to toggle ownership of the mouse and keyboard between host and guest. Even if the host owns the keyboard, you can type into the guest console when it has focus, but not the other way around. Mouse clicks are visible to only the machine, host or guest, that owns the mouse.
 
@@ -91,11 +91,11 @@ Even when running with a console, we recommend that you boot and minimize the vi
 
 For the Unicode exercises, you will either need a terminal emulator that can be switched between UTF-8 and single-byte characters, or you will need two emulators. If you intend to use languages that write right to left, you will need a terminal emulator with bidirectional capabilities.
 
-+++++++++++++
-Visualization
-+++++++++++++
++++++++++++++++
+Virtualization
++++++++++++++++
 
-The software used for virtualization and used in the examples herein is `QEMU <https://www.qemu.org/>`_ which is available for many popular computing platforms, including Linux, Windows, and more. Instructions are provided below for Windows and Linux hosts. On Linux hosts, `kvm <https://www.linux-kvm.org/page/Main_Page>`_ may be the preferred choice (kvm and QEMU provide a very similar user interface). `VirtualBox <https://www.virtualbox.org/>`_ is another popular FOSS virtualization application. There is also proprietary virtualization software. Even though the examples herein are kvm/QEMU, you should be able to use the virtualization software of your choice.
+The software used for virtualization and used in some of the examples in this document is `QEMU <https://www.qemu.org/>`_ which is available for many popular computing platforms, including Linux, Windows, and more. Instructions are provided below for Windows and Linux hosts. On Linux hosts, `kvm <https://www.linux-kvm.org/page/Main_Page>`_ may be the preferred choice (kvm and QEMU provide a very similar user interface - kvm is a fork of QEMU focusing on the kernel module). `VirtualBox <https://www.virtualbox.org/>`_ (by Oracle) is another popular FOSS (Free and Open Source Software) virtualization application. There is also proprietary virtualization software. Even though the examples used below are kvm/QEMU, you should be able to use the virtualization software of your choice.
 
 You are at liberty to use a Linux host, or any Linux virtual machine of your choice. The virtual machine used to develop the exercises is a 64-bit Ubuntu Linux 14.04 LTS, using kvm on a 64-bit Ubuntu Linux 14.10 host.
 
@@ -103,21 +103,25 @@ You are at liberty to use a Linux host, or any Linux virtual machine of your cho
 Disk Formats
 ++++++++++++
 
+<<<<<<< HEAD
 The YottaDB/GT.M Acculturation Workshop is distributed as a `vmdk format <https://en.wikipedia.org/wiki/VMDK>`_ disk image file  (e.g., **ubuntu-16.04_gtmworkshop9.vmdk**) that should work with most virtualization software, both FOSS and proprietary.
+=======
+The Acculturation Workshop is distributed as a `vmdk format <https://en.wikipedia.org/wiki/VMDK>`_ disk image file  (`ubuntu-16.04_workshop.vmdk <https://github.com/YottaDB/YottaDBdoc/tree/master/AcculturationGuide>`_) that should work with most virtualization software, both FOSS and proprietary.
+>>>>>>> 7e15dad... Updates to acculturation guide
 
 +++++++++++++++++++++++++++++
 Virtual Machine Configuration
 +++++++++++++++++++++++++++++
 
-Virtualization software configures virtual machines either with their own IP addresses where the network connection (wired or wireless) of the host has multiple IP addresses, or, more commonly using network address translation (NAT). In the latter case, the network connection of the host has one IP address that it presents to the outside world, but each virtual machine has an IP address in a subnet within the host (the host acts just like a home Wifi access point / router).
+Virtualization software configures virtual machines either with their own IP addresses where the network connection (wired or wireless) of the host has multiple IP addresses, or, more commonly - using network address translation (NAT). In the latter case, the network connection of the host has one IP address that it presents to the outside world, but each virtual machine has an IP address in a subnet within the host (the host acts just like a home wifi access point / router).
 
-You will need to configure your virtual machine for outbound and inbound network access. While outbound access should require no configuration to work with either type of virtual machine network connection, inbound network access in a NAT'd environment will require a TCP port on the host to be forwarded to the virtual machine for each port at which a service on the virtual machine needs to respond. For example each virtual machine has a secure shell (ssh) server listening at port 22 for incoming connections, and you might choose to forward port 2222 on the host to port 22 on your virtual machine.
+You will need to configure your virtual machine for outbound and inbound network access. While outbound access should require no configuration to work with either type of virtual machine network connection, inbound network access in a NAT'd environment will require a TCP port on the host to be forwarded to the virtual machine for each port at which a service on the virtual machine needs to respond. For example, each virtual machine has a secure shell (ssh) server listening at port 22 for incoming connections, and you might choose to forward port 2222 on the host to port 22 on your virtual machine.
 
 Refer to the user documentation for your virtualization software to set up virtual machine networking. For example, using kvm on a Linux host, the following command boots the vmdk image with port 2222 on the host forwarded to port 22 on the guest for ssh sessions:
 
 .. parsed-literal::
 
-    kvm -enable-kvm -cpu host -m 256 -display none -net nic -net user,hostfwd=tcp::2222-:22 -hda ubuntu-16.04_gtmworkshop9.vmdk &
+    kvm -enable-kvm -cpu host -m 256 -display none -net nic -net user,hostfwd=tcp::2222-:22 -hda ubuntu-16.04_workshop.vmdk &
 
 +++++++++++
 Legal Stuff
@@ -135,7 +139,7 @@ The Linux kernel, GNU utilities, the WorldVistA EHR extensions to VistA and all 
 Getting Started
 ---------------
 
-With a terminal emulator initiate an ssh connection to port 2222 on localhost and login with userid gtmuser, password GT.M Rocks! (including a space and an exclamation point). For example, on Linux, you can use the command: ssh -p 2222 -X gtmuser@localhost to connect as user gtmuser to port 2222 on the host which is forwarded to port 22 on the guest.
+With a terminal emulator, initiate an ssh connection to port 2222 on localhost and login with userid 'gtmuser' and password 'GT.M Rocks!' (including a space and an exclamation point). For example, on Linux, you can use the command: ssh -p 2222 -X gtmuser@localhost to connect as user gtmuser to port 2222 on the host which is forwarded to port 22 on the guest.
 
 .. parsed-literal::
 
@@ -163,14 +167,6 @@ Install YottaDB
  .. parsed-literal::
      sudo ./ydbinstall.sh --installdir /opt/yottadb/ --utf8 default --verbose
 
-- Choose a directory for your default environment and initialize it: 
- 
-  .. parsed-literal::
-     export ydbdir=$HOME/.yottadb ; . /opt/yottadb/latest/yottadbprofile
-
-- #include the file /opt/yottadb/latest/libyottadb.h in your C program and compile it.
-- Run your program, ensuring either that libyottadb.so is in the load path of your program (e.g., using ldcache or the LD_LIBRARY_PATH environment variable), or that it is preloaded using LD_PRELOAD.
-
 +++++++++++++++++
 Run YottaDB/GT.M
 +++++++++++++++++
@@ -196,14 +192,14 @@ YottaDB/GT.M needs several environment variables to be set up. YottaDB/GT.M prov
     %GTM-I-JNLSTATE, Journaling state for region DEFAULT is now ON
     gtmuser@gtmworkshop:~$
 
-Sourcing gtmprofile also defines ydb as an alias to the script gtm that runs YottaDB/GT.M (but more on that later).
+Also define ydb as an alias to the script that runs YottaDB/GT.M.
 
 .. parsed-literal::
    gtmuser@gtmworkshop:~$ alias ydb='/usr/local/lib/yottadb/r110/gtm'
    gtmuser@gtmworkshop:~$ ydb
    YDB>
 
-Now you are in the YottaDB/GT.M “direct mode” where you can execute commands interactively. For example:
+Now you are in the “direct mode” where you can execute commands interactively. For example:
 
 .. parsed-literal::
    YDB>set ^Disney("Mulan")="China"
@@ -241,9 +237,9 @@ The operation of YottaDB/GT.M is controlled by a number of environment variables
    gtm_dist=/usr/local/lib/yottadb/r110
    gtmuser@gtmworkshop:~$ 
 
-YottaDB/GT.M databases can also be configured so that they can be recovered after a system crash. Simulate a crash right now by either clicking on the “X” in the top right corner of your virtual machine console window to instantly “power down” your virtual machine, or if you started it headless, then performing a hard power-down using a command on the host (in the case of virtualization using qemu/kvm on Linux, a kill -9 of the virtual machine process). Then boot it, run ydb and use a zwrite ^Disney command to confirm that the data in the database is still intact.
+YottaDB/GT.M databases can also be configured so that they can be recovered after a system crash. Simulate a crash right now by either clicking on the “X” in the top right corner of your virtual machine console window to instantly “power down” your virtual machine, or, if you started it headless, perform a hard power-down using a command on the host (in the case of virtualization using qemu/kvm on Linux, a kill -9 of the virtual machine process). Then reboot the virtual machine, run ydb and use a zwrite ^Disney command to confirm that the data in the database is still intact.
 
-The tree program shows the default environment YottaDB/GT.M creates in your home directory. In this case, the output bolding and colors are as displayed by the tree program, and not according to the conventions of this document.
+The tree program shows the default environment YottaDB/GT.M creates in your home directory. 
 
 .. parsed-literal::
    gtmuser@gtmworkshop:~$ tree .fis-gtm/
@@ -264,7 +260,7 @@ The tree program shows the default environment YottaDB/GT.M creates in your home
     6 directories, 6 files
     gtmuser@gtmworkshop:~$ 
 
-Note that you may have to install the program 'tree' before running the above command. We will get into this in more detail below.
+Note that you may have to install the program 'tree' before running the above command, and make sure you provide the correct path to the .fis-gtm directory (now and in the future). We will get into the environment in more detail below.
 
 **UTF-8 Mode**
 
@@ -273,7 +269,7 @@ With YottaDB/GT.M, you can write applications that implement international chara
 .. parsed-literal::
    gtmuser@gtmworkshop:~$ export gtm_chset=UTF-8 LC_CTYPE=en_US.utf8
    gtmuser@gtmworkshop:~$ source /usr/lib/fis-gtm/V6.2-000_x86_64/gtmprofile
-   gtmuser@gtmworkshop:~$ gtm
+   gtmuser@gtmworkshop:~$ ydb
    YDB>write $zchset
    UTF-8
    YDB>for i=1040:16:1072 write ! for j=0:1:15 write $char(i+j)," "
@@ -283,7 +279,7 @@ With YottaDB/GT.M, you can write applications that implement international chara
    а б в г д е ж з и й к л м н о п
    YDB>
 
-Note that Unicode support requires additional infrastructure, such as Unicode enabled terminal emulators, and is likely to require custom collation modules to be written to ensure that strings such as names are sorted in linguistically and culturally correct order.
+Note that Unicode support requires additional infrastructure, such as Unicode enabled terminal emulators and is likely to require custom collation modules to be written to ensure that strings such as names are sorted in linguistically and culturally correct order.
 
 In the exercises below, we will set up environments for use with Unicode.
 
@@ -294,27 +290,25 @@ The Basics
 To use YottaDB/GT.M, at a minimum you need:
 
 - User documentation
-- To specifiy the location of YottaDB/GT.M on your computer, in the gtm_dist environment variable
-- To provide a search path for a YottaDB/GT.M process to routines - the gtmroutines environment variable and the $zroutines intrinsic special variable (or "ISV" - all ISVs are case insensitive, as are YottaDB/GT.M commands).
+- To specify the location of YottaDB/GT.M on your computer, in the gtm_dist environment variable
+- To provide a search path for a YottaDB/GT.M process to routines - the gtmroutines environment variable and the $zroutines intrinsic special variable (or "ISV" - all ISVs are case insensitive, as are YottaDB commands).
 - To map its global variables to database files - the gtmgbldir environment variable and the $zgbldir ISV point to a global directory file with the mapping.
 
 **User Documentation**
 
-YottaDB user documentation is organized into Manuals and Release Notes. Current YottaDB documentation is available on the YottaDB Documentation site. Go to the `YottaDB home page <https://yottadb.com>`_ and click on the Documentation tab under Resources.
+YottaDB user documentation is organized into Manuals and Release Notes. Current YottaDB documentation is available from the `YottaDB Documentation page <https://yottadb.com/resources/documentation/>`_.
 
-YottaDB documentation is organized into Manuals and Release Notes.
-
-- Each software release has accompanying Release Notes to document changes between that release and its immediate predecessor, as well as release-specific information such as Supported platforms. While a software release is frozen for all time, e.g., there will never be another YottaDB r1.10, we may update release notes from time to time to correct and clarify the information within.
+- Each software release has accompanying Release Notes to document changes between that release and its immediate predecessor, as well as release-specific information such as Supported platforms. While a software release is frozen for all time, e.g., there will never be another YottaDB r1.10, release notes may be updated from time to time to correct and clarify the information within.
 - Manuals are published periodically. Within manuals with chapters, the content for each chapter is updated independently, reflecting information that is current as of the update date. Thus, in principle, release notes prior to the date that a chapter is updated are obsolete with regard to the content of that chapter.
 
 **Routines in the File System**
 
-Routines in YottaDB/GT.M are simply files in the file system; they do not reside in databases. You can edit routines from the YDB> prompt. Start YottaDB/GT.M and at the YDB> prompt, type zedit "greeting" and hit ENTER. This starts the vi editor editing the source routine for ^greeting, /home/gtmuser/.fis-gtm/V6.2-000_x86_64/r/greeting.m. Use the five key sequence ESCAPE : q ! ENTER to exit vi without changing the file.
+Routines in YottaDB/GT.M are simply files in the file system; they do not reside in databases. You can edit routines from the YDB> prompt. Start YottaDB and at the YDB> prompt, type zedit "greeting" and hit ENTER. This starts the vi editor editing the source routine for ^greeting, /home/gtmuser/.fis-gtm/V6.2-000_x86_64/r/greeting.m. Use the five key-sequence ESCAPE : q ! ENTER to exit vi without changing the file.
 
 .. note::
   although vi always puts a newline at the end of your file; other editors may not. A YottaDB/GT.M program file should always end with a newline.
 
-The philosophy of YottaDB/GT.M is to focus on what it does well, providing a robust, scalable, transaction processing database and a compiler for the M language, and to leverage tools and capabilities of the underlying operating system for the rest. This is powerful because whenever there are enhancements to the underlying operating environment, YottaDB/GT.M can benefit from them. It can also be a little uncomfortable for M programmers migrating to YottaDB/GT.M, because traditional M implementations carry their environments around with them, like the shell on a snail's back.
+The philosophy of YottaDB/GT.M is to focus on what it does well, providing a robust, scalable, transaction processing database and a compiler for the M language, and to leverage tools and capabilities of the underlying operating system for the rest. This is powerful because whenever there are enhancements to the underlying operating environment, YottaDB/GT.M can benefit from them. This can be a little uncomfortable for M programmers migrating to YottaDB/GT.M, because traditional M implementations carry their environments around with them.
 
 As you saw when executing M commands interactively, even though YottaDB/GT.M is a true compiler it still provides an interactive direct mode – YottaDB/GT.M simply compiles and executes each line.
 
@@ -326,7 +320,7 @@ The purpose of this exercise is to understand compiling and linking routines. Us
    gtmuser@gtmworkshop:~$ find .fis-gtm -iname greeting.[mo]
    gtmuser@gtmworkshop:~$ 
 
-You can also perform the same operation from inside YottaDB/GT.M
+You can perform the same operation from inside YottaDB/GT.M
 
 .. parsed-literal::
    YDB>zsystem "find .fis-gtm -iname greeting.[mo]"
@@ -351,12 +345,14 @@ Had there been a routine, the response might look like this:
 
 If you are not comfortable with the terse commands of the default vi editor, you can install your preferred editor. Other editors that are installed on the virtual machine are fte, jed, joe and nano. Nano may be the easiest editor for you to use if you are not familiar with any editor included with the virtual machine. In nano, Ctrl-G provides a screen with keyboard shortcuts.
 
+To switch editors:
+
 .. parsed-literal::
    gtmuser@gtmworkshop:~$ export EDITOR=`which nano`
    gtmuser@gtmworkshop:~$ ydb
    YDB>
 
-Instruct YottaDB/GT.M to run the routine ^greeting and note that it reports an error:
+Instruct YottaDB to run the routine ^greeting and note that it reports an error:
 
 .. parsed-literal::
    YDB>do ^greeting
@@ -366,7 +362,7 @@ Instruct YottaDB/GT.M to run the routine ^greeting and note that it reports an e
    %ZR=0
    YDB>
 
-Within YottaDB/GT.M, use zedit "greeting" to start the editor. Create a simple program that says "Hello!",save it and return to YottaDB/GT.M. Now notice that the source file exists (you can use the arrow key to recall the previous command within YottaDB/GT.M) but there is no object file.
+Within YottaDB, use zedit "greeting" to start the editor. Create a simple program that says "Hello!",save it and return to YottaDB. Now notice that the source file exists (you can use the arrow key to recall the previous command within YottaDB) but there is no object file.
 
 .. parsed-literal::
    YDB>do SILENT^%RSEL("greeting") zwrite %ZR
@@ -386,7 +382,7 @@ Now run the program - it runs as expected.
 
    YDB>
 
-Now you now also have an object file. YottaDB/GT.M dynamically, and automatically, compiles the source program into the object program when you execute do ^greeting.
+Now you now also have an object file. YottaDB dynamically, and automatically, compiles the source program into the object program when you execute do ^greeting.
 
 .. parsed-literal::
    YDB>do SILENT^%RSEL("greeting","OBJ") zwrite %ZR
@@ -395,7 +391,8 @@ Now you now also have an object file. YottaDB/GT.M dynamically, and automaticall
 
    YDB>
 
-[Note that since YottaDB/GT.M is a compiler, it can generate error messages at compile time as well as at run time. Indeed when compiling an application such as VistA, there may be hundreds of lines of error messages triggered by lines of code that are legal for other M implementations but not for YottaDB/GT.M. These lines are protected in VistA and are inside conditional statements that are executed only on the appropriate M implementation, so they are nothing to be concerned about.]
+.. note::
+   Since YottaDB/GT.M is a compiler, it can generate error messages at compile time as well as at run time. Indeed when compiling an application such as VistA, there may be hundreds of lines of error messages triggered by lines of code that are legal for other M implementations but not for YottaDB/GT.M. These lines are protected in VistA and are inside conditional statements that are executed only on the appropriate M implementation, so they are nothing to be concerned about.
 
 Let's also get the time stamps of the files; notice that the source code file is older than the object code file:
 
@@ -439,7 +436,7 @@ The $zroutines ISV tells YottaDB/GT.M where to find routines:
    /home/gtmuser/.fis-gtm/V6.2-000_x86_64/o(/home/gtmuser/.fis-gtm/V6.2-000_x86_64/r /home/gtmuser/.fis-gtm/r) /usr/local/lib/yottadb/r110/plugin/o(/usr/local/lib/yottadb/r110/plugin/r) /usr/local/lib/yottadb/r110/libgtmutil.so /usr/local/lib/yottadb/r110
    YDB>
 
-V6.2-000, the latest GT.M release and r1.10, the latest YottaDB release as of the date of this document, are used in this release of the Acculturation Workshop. Future YottaDB/GT.M releases may by default suffix one or more directories with an asterisk, e.g., instead of /home/gtmuser/.fis-gtm/V6.2-000_x86_64/o, you may see /home/gtmuser/.fis-gtm/V6.2-000_x86_64/o*. More on this below.
+The V6.2-000 release of GT.M and r1.10, the latest YottaDB release as of the date of this document, are used in this release of the Acculturation Workshop. The YottaDB release suffixes directories with an asterisk by default, e.g., instead of /home/gtmuser/.fis-gtm/V6.2-000_x86_64/o, you may see /home/gtmuser/.fis-gtm/V6.2-000_x86_64/o*. The V6.2-000 release of GT.M does not. More on what the asterisk represents below.
 
 At process startup, $zroutines is initialized from the environment variable $gtmroutines, but it can be altered from within the YottaDB/GT.M process.
 
@@ -471,7 +468,8 @@ The ZEDIT command always puts new routines in the first source directory in the 
 
 YottaDB/GT.M also provides a mechanism for processes to indicate that instead of explicitly relinking newer versions of routines, they would like to “subscribe” to and automatically execute the latest updated (“published”) object code of routines. Processes indicate this interest by appending an asterisk (“*”) to each directory name from which they wish to execute the latest object code.
 
-Start a new session of YottaDB/GT.M (so that you don't have any routines linked the old way), and modify $zroutines to append an asterisk to the object directory from which your routines are executed. If you are using a version of YottaDB/GT.M newer than V6.2-000, the gtmprofile script may already have appended the requisite asterisk. Then execute the “greeting” program to make the process link the object code:
+Start a new session of YottaDB/GT.M (so that you don't have any routines linked the old way), and modify $zroutines to append an asterisk to the object directory from which your routines are executed. If you are using a version of GT.M newer than V6.2-000, or a YottaDB version, the gtmprofile script may already have appended the requisite asterisk. Then execute the “greeting” program to make the process link the object code:
+
 
 .. parsed-literal::
    gtmuser@gtmworkshop:~$ gtm
@@ -520,17 +518,17 @@ Use the tree -d .fis-gtm command from the shell to look at the default directory
 Global Directories Point to Global Variables
 --------------------------------------------
 
-Routines in YottaDB/GT.M reside in the file system rather than in the database, whereas global variables reside in databases. Routines are completely independent of global variables. In this respect, YottaDB/GT.M may be different from other M implementations.
+Routines in YottaDB/GT.M reside in the file system rather than in the database, whereas global variables reside in the database. Routines are completely independent of global variables. In this respect, YottaDB/GT.M may be different from other M implementations.
 
-Given a person's name, a telephone directory helps you find the person by giving you the phone number, and sometimes their address as well. Analogously, given an M global variable name, a global directory helps a YottaDB/GT.M process find the variable by giving it the database file where that variable resides, as well as other pertinent information.
+Given a person's name, a telephone directory helps you find the person by giving you their phone number, and sometimes their address as well. Analogously, given an M global variable name, a global directory helps a YottaDB/GT.M process find the variable by giving it the database file where that variable resides, as well as other pertinent information.
 
-The global directory is a binary file pointed to by the ISV $zgbldir. The GDE utility program (invoked with do ^GDE inside YottaDB/GT.M or mumps -run ^GDE from the shell) is used to manage global directories. [Note that the input to GDE can be a text file. In a production environment, YottaDB/FIS recommends that text files be used to define database configurations, and that these text files be put under version control.]
+The global directory is a binary file pointed to by the ISV $zgbldir. The GDE utility program (invoked with do "^GDE" inside YottaDB/GT.M or "mumps -run ^GDE" from the shell) is used to manage global directories. [Note that the input to GDE can be a text file. In a production environment, YottaDB/FIS recommends that text files be used to define database configurations, and that these text files be put under version control.]
 
 In YottaDB/GT.M, sets of M global variables (Names or Name spaces) are mapped to Regions that define properties relating to the M global. Each Region is mapped to a Segment that defines properties relating to the file system. Consider the example in the figure below:
 
 .. image:: globaldir.png
 
-In this example, there are four M global variables that we would like to separate from the rest (e.g., for purposes of sharing globals between applications, or for reasons of protection – perhaps they contain special information, so that only mammalogists are to have access to globals ^Horse and ^Platypus, and only carcinologists are to have access to globals ^Crab and ^Lobster). This is accomplished by creating five Name Spaces (note that a name space can contain a single variable, as in this example, or a range of global variables, e.g., everything starting with ^A through ^Horse). There is always a default (*) name space.
+In this example, there are four M global variables that we would like to separate from the rest (e.g., for purposes of sharing globals between applications, or for reasons of protection – perhaps they contain special information, so that only mammalogists are to have access to globals ^Horse and ^Platypus, and only carcinologists are to have access to globals ^Crab and ^Lobster). This is accomplished by creating five name spaces (note that a name space can contain a single variable, as in this example, or a range of global variables, e.g., everything starting with ^A through ^Horse). There is always a default (*) name space.
 
 One or more name spaces are mapped to a Region. All global variables in a region share a common set of M global variable properties, such as the maximum record length, whether null subscripts are permitted, etc. In this case ^Horse and ^Platypus are mapped to the region "Mammals", whereas ^Crab and ^Lobster are mapped to the region "Crustaceans". The default name space * is mapped to a region called "Default".
 
@@ -547,7 +545,7 @@ The ISV $zgbldir points a YottaDB/GT.M process to the global directory. $zgbldir
    /home/gtmuser/.fis-gtm/V6.2-000_x86_64/g/gtm.gld
    YDB>
 
-GDE, the Global Directory Editor, is a program used to manipulate global directories. GDE is itself written in M, and you can invoke it from the shell with mumps -run GDE (or, with the gtm alias, gtm -run GDE) or from inside the direct mode with do ^GDE.
+GDE, the Global Directory Editor, is a program used to manipulate global directories. GDE is itself written in M, and you can invoke it from the shell with "mumps -run GDE" (or, with the ydb alias, "ydb -run GDE") or from inside the direct mode with "do ^GDE".
 
 .. parsed-literal::
    gtmuser@gtmworkshop:~$ $gtm_dist/mumps -run GDE
@@ -562,7 +560,7 @@ You can use the show command to examine name spaces, regions and segments.
 .. parsed-literal::
    GDE> show -name
 
-         *** NAMES ***
+         \*\*\* NAMES \*\*\*
    Global                             Region
    ------------------------------------------------------------------------------
    *                                  DEFAULT
@@ -582,7 +580,7 @@ In this case, there is only one name space, the default. There is also only one 
     DEFAULT   DEFAULT            0          4080    255      NEVER      Y         Y      DISABLED         DISABLED
     =======   =======        =======   ========  =======     ======  ============ ===    ========         ========
 
-Notice the region parameters – review them in the Administration and Operations Guide. Since there is one region, there is also one segment, also called DEFAULT (the region and segment names can be different; it is good practice to keep them the same).
+Notice the region parameters – review them in the Administration and Operations Guide. Since there is one region, there is also one segment, also called DEFAULT. (the region and segment names can be different; it is good practice to keep them the same).
 
 .. parsed-literal::
    
@@ -592,7 +590,7 @@ Notice the region parameters – review them in the Administration and Operation
           SEGMENTS
    ---------------------------------------
    Segment   File (def ext: .dat)Acc Typ Block      Alloc Exten Options
-   =======   =================================      ===================
+   =======   =================================      ======================
    DEFAULT   $gtmdir/$gtmver/g/gtm.dat              
                    BG  DYN  4096                     5000 10000 GLOB=1000
                                                                 LOCK=  40
@@ -603,7 +601,7 @@ Notice the region parameters – review them in the Administration and Operation
 
    GDE>
 
-Notice how the database file is defined using the environment variables $gtmdir and $gtmver. This means that, as long as the environment variables are defined, one global directory can point to a database file wherever it happens to be on the system. This can allow two processes to share a global directory, but to have different database files.
+Notice how the database file is defined using the environment variables $gtmdir and $gtmver. This means that, as long as the environment variables are defined, one global directory can point to a database file wherever it happens to be in the system. This can allow two processes to share a global directory, but to have different database files.
 
 .. note:: 
    The parameters in the global directory are used only by mupip create to create a new database file. At other times, the global directory is used only to map global variable names to database files. So, if you change the global directory, existing database files are not changed. If you change a parameter in a database file, unless you also change the global directory used to create the database file, the next time you create that file, it will use old parameters in the global directory.
@@ -642,7 +640,7 @@ Start from the shell. Assign a value to $gtmgbldir so as to not overwrite any ex
 
    GDE>
 
-While not essential, it may be conceptually helpful to build the global directory from the bottom up – first create the segments, then the regions, and then the name spaces. First edit the default to make the parameters more useful – the out-of-box defaults are suitable for experimentation but not real use. Using a template reduces the work needed to create multiple regions and segments. Notice the use of different access methods for BIRDS and REPTILES.
+While not essential, it may be conceptually helpful to build the global directory from the bottom up – first create the segments, then the regions, and then the name spaces. First edit the default to make the parameters more useful – the out-of-the-box defaults are suitable for experimentation but not real use. Using a template reduces the work needed to create multiple regions and segments. Notice the use of different access methods for MAMMALS and CRUSTACEANS.
 
 .. parsed-literal::
    GDE> change -segment DEFAULT -block_size=4096 -allocation=1000 -extension=1000 -global_buffer_count=1000 -file_name=/home/gtmuser/gtm.dat
@@ -711,7 +709,7 @@ Then we can map the regions to the segments. Notice that the segment names (spec
 
    GDE>
 
-Now map the name spaces to the regions.
+Now we map the name spaces to the regions.
 
 .. parsed-literal::
    GDE> add -name Horse -region=mammals
@@ -826,13 +824,13 @@ For production environments, we suggest that you put your GDE commands in a text
 
 **$zroutines and $zgbldir vs. UCI & Volume set**
 
-The YottaDB/GT.M environment is defined by $ZROUTINES (initialized from $gtmroutines) and $zgbldir (initialized from $gtmgbldir). Concepts from other M implementations such as UCI and volume set do not exist on YottaDB/GT.M.
+The YottaDB/GT.M environment is defined by $ZROUTINES (initialized from $gtmroutines) and $zgbldir (initialized from $gtmgbldir). Concepts from other M implementations such as UCI and Volume Sets do not exist on YottaDB/GT.M.
 
-The YottaDB/GT.M separation between routines and the database is very powerful, especially in real-world environments. Apart from the flexibility this offers, it enables the practice of “defensive programming”, not unlike defensive driving. We are human beings who are prone to err, and defensive practices reduce the probability of errors.
+The YottaDB/GT.M separation between routines and the database is very powerful, especially in real-world environments. Apart from the flexibility this offers, it enables the practice of “defensive programming”, not unlike defensive driving. This is desirable as defensive practices reduce the probability of errors.
 
 **Exercise - Set Up a Simulated ASP Environment**
 
-In an Application Service Provider (ASP) environment, the same application code can be used for a number of sites, but each site has its own database. Sometimes parts of the database may also be common and used on a read-only basis for normal operation, such as a data dictionary, an approved budget, or a table of sales tax rates for location. Each site may also have a small set of custom routines. Let us consider an ASP serving two financial institutions, called fi (for Financial Institution) and cb (for Credit Bank).
+In an Application Service Provider (ASP) environment, the same application code can be used for a number of sites, but each site has its own database. Sometimes parts of the database may also be common and used on a read-only basis for normal operation, such as a data dictionary, an approved budget, or a table of sales tax rates for a specific location. Each site may also have a small set of custom routines. Let us consider an ASP serving two financial institutions, called fi (for Financial Institution) and cb (for Credit Bank).
 
 The majority of routines are shared, with:
 
@@ -887,7 +885,7 @@ First, create the directory structure.
 
 **No Special Startup or Shut Down**
 
-The first process to open a database file sets up all the shared memory control structures needed. The last one out tears it down. There is no daemon that must run with elevated provileges, that can be a single point of failure, a performance bottleneck, or a potential security vulnerability. Note that if replication is in use, then at least one Source Server process (see below) must be brought up first, but that is not a database daemon.
+The first process to open a database file sets up all the shared memory control structures needed. The last one out tears it down. There is no daemon that needs to run with elevated provileges, can be a single point of failure, a performance bottleneck, or a potential security vulnerability. Note that if replication is in use, then at least one Source Server process (see the section on Replication) must be brought up first, but that is not a database daemon.
 
 Upon bringing the system back up, if the system crashes, or is forcibly brought down: if journaling is in use, mupip journal -recover (or mupip journal -rollback if replication is in use) will recover the database. If journaling is not in use, mupip rundown -region "*" will clean up the database control structures in the file header, but cannot fix any integrity errors resulting from shutting down a computer without cleanly terminating YottaDB/GT.M processes.
 
@@ -936,11 +934,11 @@ When possible, gtmprofile provides reasonable defaults for any of the following 
 
 - **LC_CTYPE** - a standard system environment variable used to specify a locale. When $gtm_chset has the value "UTF-8", $LC_CTYPE must specify a UTF-8 locale (e.g., "en_US.utf8").
 
-YottaDB/GT.M directly or indirectly uses a number of other environment variables that are not touched by gtmprofile (they can be set before or after gtmprofile is sourced). These are documented in the YottaDB/GT.M Administration and Operations Guide. Some worth noting are:
+YottaDB/GT.M directly or indirectly uses a number of other environment variables that are not touched by gtmprofile (they can be set before or after gtmprofile is sourced). These are documented in the Administration and Operations Guide. Some worth noting are:
 
 - **gtm_badchar** is used to initialize the setting of the VIEW command that determines whether YottaDB/GT.M should raise an error when it encounters an illegal UTF-8 character sequence.
 
-- **gtm_baktmpdir** is used by mupip as the directory where it is to create temporary files for backup. Mupip online integ also creates temporary files in this directory if gtm_snaptmpdir is not defined.
+- **gtm_baktmpdir** is used by mupip to create temporary files for backup in the directory where it is. Mupip online integ also creates temporary files in this directory if gtm_snaptmpdir is not defined.
 
 - **gtm_dbkeys** (not used by YottaDB/GT.M directly) – used by the encryption reference plugin for the name of a file providing a list of database files and their corresponding key files.
 
@@ -975,7 +973,7 @@ Here are the environment variables set by the default gtmprofile file (which the
    gtm_dist=/usr/local/lib/yottadb/r110
    gtmuser@gtmworkshop:~$ 
 
-While gtmprofile and ydb are good resources when you initially start with YottaDB/GT.M, once you get to a certain level of expertise, you may prefer to create your own scripting instead of gtmprofile and ydb.
+While gtmprofile and ydb are good resources when you initially start with YottaDB/GT.M, once you get to a certain level of expertise, you may prefer to create your own scripting.
 
 --------
 Security
@@ -988,13 +986,13 @@ YottaDB/GT.M was designed from the very beginning to be secure.
 
 A YottaDB/GT.M process can access a database file only if the file ownership and permissions allow. Under normal operation, there is only one small component of YottaDB/GT.M that operates as the super user (root) – the gtmsecshr helper process. The YottaDB/GT.M security model is simple, well understood and documented.
 
-Review the YottaDB/GT.M Security Philosophy and Implementation technical bulletin.
+Review `Appendix E of the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/securityph.html>`_.
 
 **Exercise - Access Controls with Ownership and Permissions**
 
 Start with a fresh session to discard environment variables from the last exercise. In the following, notice how Linux file permissions are used to allow user gtmuser full access to the database, preventing another user from updating a database, while allowing that user to read from it.
 
-Verify that you can read and write your default database and change the permissions to make it not accessible to the world, and to make it read-only by others in the group.
+Verify that you can read from and write to your default database and change the permissions to make it not accessible to the world, and to make it read-only by others in the group.
 
 .. parsed-literal::
    gtmuser@gtmworkshop:~$ ls -l .fis-gtm/V6.2-000_x86_64/g/gtm.dat
@@ -1011,7 +1009,7 @@ Verify that you can read and write your default database and change the permissi
 
    YDB>halt
 
-Create another user who is also a member of the group users. See that usersuser can read from the database owned by gtmuser, but cannot update it.
+Create another user who is also a member of the group users. See that users user can read from the database owned by gtmuser, but cannot update it.
 
 .. parsed-literal::
    gtmuser@gtmworkshop:~$ sudo useradd -g gtmuser -m staffuser
@@ -1184,7 +1182,7 @@ How did the recovery happen? The answer is in the gtm script.
  fi
  gtmuser@gtmworkshop:~$
 
-The mupip journal recover command performs the recovery. Review the output of the mupip commands – as new journal files are created, older journal files being renamed. Each journal file has a back-pointer to its predecessor. The gtm script removes non-current journal files and temporary files, those older than the number of days specified by the $gtm_retention environment variable.
+The mupip journal recover command performs the recovery. Review the output of the mupip commands – as new journal files are created, older journal files are being renamed. Each journal file has a back-pointer to its predecessor. The gtm script removes non-current journal files and temporary files, those older than the number of days specified by the $gtm_retention environment variable.
 
 .. parsed-literal::
    gtmuser@gtmworkshop:~$ cat $gtm_tmp/gtmuser_20111107223555UTC_mupip_recover
@@ -1211,7 +1209,7 @@ Robust operation of YottaDB/GT.M recovery after a crash requires robust recovery
 
 **Exercise - Journaling from Scratch**
 
-*Create a directory (e.g., exDir) in your home directory. In it create a global directory that maps all variables starting with A or a in aA.dat and others in others.dat. Create the database files. Then enable and turn on before image journaling for both files. Start a process and update both databases. With the process open, kill the virtual machine. Reboot the virtual machine, see for yourself that you cannot access the database, then recover the database (which consists of two database files) and demonstrate that you can now access the database.*
+*Create a directory (e.g., exDir) in your home directory. In it, create a global directory that maps all variables starting with A or a in aA.dat and others in others.dat. Create the database files. Then enable and turn on before image journaling for both files. Start a process and update both databases. With the process open, kill the virtual machine. Reboot the virtual machine, see for yourself that you cannot access the database, then recover the database (which consists of two database files) and demonstrate that you can now access the database.*
 
 Hints:
 
@@ -1229,7 +1227,7 @@ Hints:
 Database Replication
 ----------------------
 
-When an application must have the best possible continuity of business, use database replication in addition to before image journaling to create a logical multi site configuration. A major restriction of YottaDB/GT.M replication today is the 20,000 kilometer distance restriction on replication (since the circumference of Planet Earth is approximately 40,000 kilometers, it is difficult to place data centers more than 20,000 kilometers apart). In our example, we will simulate data centers in Santiago (33°S, 70°W), Paris (49°N, 2°E) and Melbourne (37°S, 144°E). Santiago to Paris is 11,642 kilometers, Paris to Melbourne is 16,781 kilometers, and Melbourne to Santiago is 11,269 kilometers (approximately).
+When an application must have the best possible continuity of business, use database replication in addition to before-image journaling to create a logical multi-site configuration. A major restriction of YottaDB/GT.M replication today is the 20,000 kilometer distance restriction on replication (since the circumference of Planet Earth is approximately 40,000 kilometers, it is difficult to place data centers more than 20,000 kilometers apart). In our example, we will simulate data centers in Santiago (33°S, 70°W), Paris (49°N, 2°E) and Melbourne (37°S, 144°E). Santiago to Paris is 11,642 kilometers, Paris to Melbourne is 16,781 kilometers, and Melbourne to Santiago is 11,269 kilometers (approximately).
 
 **Exercise - Replication**
 
@@ -1293,13 +1291,13 @@ You can delete the prior generation journal files, just to keep the directory cl
    gtmuser@gtmworkshop:~$ rm * .mjl\_ *
    gtmuser@gtmworkshop:~$ 
 
-Shut down the Acculturation Workshop virtual machine and make three copies of the Acculturation Workshop called Paris.vmdk, Melbourne.vmdk and Santiago.vmdk. Alternatively, if your host system is short of disk space, make two copies and rename the original ubuntu-14.04_gtmworkshop9.vmdk file.
+Shut down the Acculturation Workshop virtual machine and make three copies of the Acculturation Workshop called Paris.vmdk, Melbourne.vmdk and Santiago.vmdk. Alternatively, if your host system is short of disk space, make two copies and rename the original ubuntu-14.04_workshop.vmdk file.
 
 If you are using qcow2 or vmdk disk images with QEMU/kvm on Linux, you can use a feature that allows a disk image to be created off a base image so that the base image does not change and all changes go to the new disk image. Check with your virtualization software to determine whether it supports this feature. Execute commands such as the following on the host (with the guest shut down) – depending on the version of QEMU/kvm on your PC, the exact command may vary.
 
 .. parsed-literal::
-   $ qemu-img create -f vmdk -o zeroed_grain,backing_file=ubuntu-14.04_gtmworkshop9.vmdk Paris.vmdk
-   Formatting ' Paris.vmdk', fmt=vmdk size=10737418240 backing_file='ubuntu-14.04_gtmworkshop9.vmdk' compat6=off zeroed_grain=on
+   $ qemu-img create -f vmdk -o zeroed_grain,backing_file=ubuntu-14.04_workshop.vmdk Paris.vmdk
+   Formatting ' Paris.vmdk', fmt=vmdk size=10737418240 backing_file='ubuntu-14.04_workshop.vmdk' compat6=off zeroed_grain=on
    $
 
 Now boot the three virtual machines. Each virtual machine will need two ports to be forwarded from the host, one for ssh access forwarded to port 22 on each virtual machine and one for replication forwarded to port 3000 on each virtual machine (i.e., a total of six ports on the host for the three instances). The examples here use host ports 2221 & 4000 for Santiago, 2222 & 5000 for Paris, and 2223 & 6000 for Melbourne. The commands given here use kvm on Linux – use the commands appropriate to virtualization on your host).
@@ -1309,7 +1307,7 @@ Now boot the three virtual machines. Each virtual machine will need two ports to
    kvm -enable-kvm -cpu host -m 256 -display none -net nic -net user,hostfwd=tcp::2222-:22,hostfwd=tcp::5000-:3000 -hda Paris.vmdk &
    kvm -enable-kvm -cpu host -m 256 -display none -net nic -net user,hostfwd=tcp::2223-:22,hostfwd=tcp::6000-:3000 -hda Melbourne.vmdk &
 
-To avoid confusion when you are working with multiple machines, change the name of each machine from YottaDB/GT.M workshop to its location. The examples here are from the Santiago machine. You should do likewise with Paris and Melbourne. To effect a name change will need to (as root) edit the files /etc/hosts and /etc/hostname to change gtmworkshop to santiago and then reboot.
+To avoid confusion when you are working with multiple machines, change the name of each machine from gtmworkshop to its location. The examples here are from the Santiago machine. You should do likewise with Paris and Melbourne. To effect a name change will need to (as root) edit the files /etc/hosts and /etc/hostname to change gtmworkshop to santiago and then reboot.
 
 .. parsed-literal::
    gtmuser@santiago:~$ cat /etc/hosts
@@ -1328,7 +1326,7 @@ To avoid confusion when you are working with multiple machines, change the name 
 
 You may also want to change the window/tab labels on your terminal emulator on the host to show which machine each session is connected to.
 
-To make it more realistic (and to reduce the probability of operator error) on each machine, execute sudo dpkg-reconfigure tzdata to specify the “local” time zone. Select Paris for Paris and Chile for Santiago.
+To make it more realistic (and to reduce the probability of operator error) on each machine, execute sudo dpkg-reconfigure tzdata to specify the “local” time zone. Select Paris and Santiago.
 
 In each machine. Edit exDir/env in each instance and change the line export gtm_repl_instname=dummy and the line export gtm_repl_instance=/home/gtmuser/exDir/gtm.repl to an instance file name for that instance. For example, on the Santiago instance:
 
@@ -1453,7 +1451,7 @@ Restart Melbourne as a replicating instance and notice that it catches up with u
 
    YDB>
 
-Now, simulate an unplanned outage of Paris by clicking on the “X” of the virtual machine console window, kill -9 of the process on the host, or otherwise powering down the virtual machine. Make Melbourne the new originating instance and Santiago its replicating instance. [In a controlled switchover / planned outage, bringing down the originating primary first helps to ensure that you do not have two concurrently operating originating primary instances.]
+Now, simulate an unplanned outage of Paris by clicking on the “X” of the virtual machine console window, kill -9 of the process on the host, or otherwise powering down the virtual machine. Make Melbourne the new originating instance and Santiago its replicating instance. (In a controlled switchover / planned outage, bringing down the originating primary first helps to ensure that you do not have two concurrently operating originating primary instances.)
 
 Bring down Melbourne as a replicating instance and bring it up as the originating instance. Notice that you can bring up the Source Server process to replicate to Paris – it will make the connection when Paris comes up.
 
@@ -1615,9 +1613,9 @@ And on the replicating instances in Santiago and Paris, execute replicating_stop
 
 **Replication and Backlogs**
 
-In an ideal world, an originating instance never goes down with a backlog. In the real world, it may well go down with a backlog of updates that have not been replicated. Asynchronous replication is a consequence of the fact that committing an update requires a remote commit and a local commit, then l oss of the network between the remote instance the local instance stops the local instance; and network delays slow down the local instance.
+In an ideal world, an originating instance never goes down with a backlog. In the real world, it may well go down with a backlog of updates that have not been replicated. Asynchronous replication is a consequence of the fact that committing an update requires a remote commit and a local commit, that the loss of the network between the remote instance and the local instance stops the local instance; and network delays slow down the local instance.
 
-In order to provide continuity of business, when an originating primary instance goes down a former replicating secondary instance can be brought up as a new originating primary instance to keep the application available. When the former originating primary instance comes up, it is in a secondary role, and the updates that were part of the backlog must be handled. YottaDB/GT.M provides the hooks needed to create applications that are continuously available, but the application must take advantage of these hooks. Consider the following two-instance example (the notation P: 100 means that the site is operating as the primary and has committed update number 100):
+In order to provide continuity of business, when an originating primary instance goes down, a former replicating secondary instance can be brought up as the new originating primary instance to keep the application available. When the former originating primary instance comes up, it is in a secondary role, and the updates that were part of the backlog must be handled. YottaDB/GT.M provides the hooks needed to create applications that are continuously available, but the application must take advantage of these hooks. Consider the following two-instance example (the notation P: 100 means that the site is operating as the primary and has committed update number 100):
 
 +------------------------------+----------------------------------------------------------------------------------------------------------+
 | Santiago                     |        Melbourne                                                                                         |
@@ -2136,7 +2134,7 @@ Notice that Paris now reports no backlog:
 
    YDB>
 
-If your application uses the $ZQGBLMOD() function to process unreplicated transactions, read the logical multi site replication technical bulletin for information about the mupip replicate source losttncomplete command to be executed after processing unreplicated transactions from all originating instances.
+If your application uses the $ZQGBLMOD() function to process unreplicated transactions, read the `Database Replication chapter in the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html#processing-lost-transactions-file>`_ for information about the mupip replicate source losttncomplete command to be executed after processing unreplicated transactions from all originating instances.
 
 Shut down whichever were the replicating secondary instances - Santiago and Melbourne in the example above – and use the originating primary instance (Paris) for the backup exercises.
 
@@ -2144,7 +2142,7 @@ Shut down whichever were the replicating secondary instances - Santiago and Melb
 Backup
 ------
 
-Backup **when an application is not running** is straightforward – just copy the database files. [However, remember that the copy will have the same journal file name in the database file header and the system now potentially has two database files pointing to the same journal file. Before using that file on the same computer system as the original database file, disable journaling and re-enable it if appropriate (do not simply switch journal files).]
+Backup **when an application is not running** is straightforward – just copy the database files. (However, remember that the copy will have the same journal file name in the database file header and the system now potentially has two database files pointing to the same journal file. Before using that file on the same computer system as the original database file, disable journaling and re-enable it if appropriate (do not simply switch journal files).)
 
 Backup when an application is operating normally, without impacting the application (except of course for the additional IO load of the backup activity) is easy with YottaDB/GT.M, and can be accomplished in two ways, one non-YottaDB/GT.M and other YottaDB/GT.M:
 
@@ -2158,7 +2156,7 @@ Work with whichever instance was your last originating instance (although it doe
 
 Create a directory where you can put your backups: mkdir backup
 
-In the exDir directory of that instance, create a YottaDB/GT.M program XYZ in file XYZ.m that creates updates, e.g.:
+In the exDir directory of that instance, create a program XYZ in file XYZ.m that creates updates, e.g.:
 
 .. parsed-literal::
    XYZ    Set (^a,^b)=0
@@ -2173,7 +2171,7 @@ In the exDir directory of that instance, create a YottaDB/GT.M program XYZ in fi
 
 Note that the global variables ^a and ^b go into different database files, but the use of transaction processing provides ACID properties across regions.
 
-Since the database is a replicated environment, if no Source Servers are running, start at least one. [A replicated environment needs at least one source server to be running before updates are permitted. You can certainly start the second Source Server now – or you can start it up later for the Replication Briefly Revisited exercise below.]
+Since the database is a replicated environment, if no Source Servers are running, start at least one. (A replicated environment needs at least one source server to be running before updates are permitted. You can certainly start the second Source Server now – or you can start it up later for the **Replication Briefly Revisited** exercise below.)
 
 Start the program as a background process from the shell: mumps -run XYZ </dev/null 1>/dev/null 2>&1 &
 
@@ -2211,7 +2209,7 @@ Take a backup of the entire database (a "comprehensive backup"):
 
    gtmuser@paris:~/exDir$
 
-Take a backup of that part of the database that has changed (a "bytestream" backup). Note
+Take a backup of the part of the database that has changed (a "bytestream" backup). Note that
 
 - The use of the -since=database qualifier to only backup those database blocks that have changed since the last backup of the entire database).
 
@@ -2296,7 +2294,7 @@ When you are satisfied, terminate the mumps process updating the database:
    STOP issued to process 1080
    gtmuser@paris:~/exDir$
 
-Take a final backup, and note the values of the final nodes of ^a and ^b (and verify that they still sum to zero). After the final restore, we will verify that the values restored from the backup is the same as these values.
+Take a final backup, and note the values of the final nodes ^a and ^b (and verify that they still sum to zero). After the final restore, we will verify that the values restored from the backup is the same as these values.
 
 .. parsed-literal::
    gtmuser@paris:~/exDir$ mupip backup -bytestream -since=bytestream "*" backup/aA`date +%Y%m%d%H%M%S`.bck,backup/gtm`date +%Y%m%d%H%M%S`.bck
@@ -2322,7 +2320,7 @@ Take a final backup, and note the values of the final nodes of ^a and ^b (and ve
 
 Now it's time to work on restoring the backup. The first backup (the database backup) provides a complete, ready-to-run database. The subsequent bytestream backups can be applied to the database backup using the mupip restore command.
 
-Create an environment to restore the backup. It may be easiest if you simply use the backup directory you created, and working in a new shell session, copy exDir/env and exDir/gtm.gld to the backup directory and edit them to reflect their new locations. [Note that since global directories are used only to create databases, there is no reason to change the default journal file names in the regions of the global directory file in backup. Nevertheless, it is good hygiene to keep global directories correct, since that global directory may be used at a future time to create new database files.]
+Create an environment to restore the backup. It may be easiest if you simply use the backup directory you created, and working in a new shell session, copy exDir/env and exDir/gtm.gld to the backup directory and edit them to reflect their new locations. (Note that since global directories are used only to create databases, there is no reason to change the default journal file names in the regions of the global directory file in backup. Nevertheless, it is good practice to keep global directories correct, since that global directory may be used at a future time to create new database files.]
 
 .. parsed-literal::
    gtmuser@paris:~/exDir$ cp gtmenv gtm.gld backup/
@@ -2496,7 +2494,7 @@ Note that ending values of ^a and ^b in the environment with the restored backup
 
 **Replication Briefly Revisited**
 
-We have been ignoring Santiago and Melbourne during the backup exercise, and we have created quite a backlog. Here is the backlog report in the exDir environment in Paris. [If you are using the same shell session to restore backups, you will need to source exDir/gtmenv to get the environment variables for the original environment, and restart Source Servers if they are not running.]
+We have been ignoring Santiago and Melbourne during the backup exercise, and we have created quite a backlog. Here is the backlog report in the exDir environment in Paris. (If you are using the same shell session to restore backups, you will need to source exDir/gtmenv to get the environment variables for the original environment, and restart Source Servers if they are not running.)
 
 .. parsed-literal::
    gtmuser@paris:~/exDir$ mupip replicate -source -showbacklog
@@ -3210,7 +3208,7 @@ Now create a global directory that specifies that the database file is encrypted
    GDE> change -segment default -encryption -file=$HOME/enc/gtm.dat
    GDE> show -segment
 
-                            *** SEGMENTS ***
+                            \*\*\* SEGMENTS \*\*\*
    Segment            File (def ext: .dat)   Acc  Type  Block   Alloc  Exten  Options
    -----------------------------------------------------------------------------------
    DEFAULT           $HOME/enc/gtm.dat      BG    DYN   1024    100    100   GLOB=1000
@@ -3222,12 +3220,12 @@ Now create a global directory that specifies that the database file is encrypted
    GDE> change -region DEFAULT -journal=(before,file="$HOME/enc/gtm.mjl")
    GDE> show -region
 
-                           *** REGIONS  ***
+                           \*\*\* REGIONS  \*\*\*
    Region   Dynamic Segment     Def Coll     Rec Size     Key Size   Null Subs   Std Null Col  Jnl   Inst Freeze on Error   Qdb Rundown
    ------------------------------------------------------------------------------------------------------------------------------------
    DEFAULT   DEFAULT             0            256           64        NEVER          N          Y      DISABLED              DISABLED
 
-                          *** JOURNALING INFORMATION ***
+                          \*\*\* JOURNALING INFORMATION \*\*\*
    Region         Jnl File (def ext: .mjl)    Before  Buff  Alloc  Exten   Autoswitch
    ----------------------------------------------------------------------------------
    DEFAULT        $HOME/enc/gtm.mjl             Y     2308  2048   2048    8386560
@@ -3348,21 +3346,21 @@ Confirm that the data is indeed visible in neither the database file nor the jou
 Pulling It Together
 --------------------
 
-Thus far, the Acculturation Workshop has taken you through core concepts. Now, it is time to pull the concepts together. In order to do that, we will go through a series of installations, each more sophisticated than its predecessor, of the VistA application on GT.M.
+Thus far, the Acculturation Workshop has taken you through different core concepts. Now, it is time to pull these concepts together. In order to do that, we will go through a series of installations, each more sophisticated than its predecessor, of the VistA application on GT.M.
 
-No knowledge of VistA is assumed or required for the Acculturation Workshop – VistA is simply used as a freely usable sample application to explore configuring an application on GT.M.
+No knowledge of VistA is assumed or required for the Acculturation Workshop – VistA is simply used as a freely usable sample application to explore configuring an application on YottaDB/GT.M.
 
 **About VistA**
 
-The `US Department of Veterans Affairs (VA) <http://va.gov/>`_ operates one of the largest integrated healthcare networks in the world. Delivering legally mandated high quality care to veterans of the US armed forces, it has repeatedly been recognized not only for the quality, but also for the cost-effectiveness, of the care that it provides. VistA is a healthcare information system (HIS) developed and maintained by the VA. The software is in the public domain and freely available. Many providers support VistA on a commercial basis, and there is an `active online VistA community <http://groups.google.com/group/hardhats>`_.
+The `US Department of Veterans Affairs (VA) <http://va.gov/>`_ operates one of the largest integrated healthcare networks in the world. Delivering legally mandated high quality care to veterans of the US armed forces, it has repeatedly been recognized not only for the quality, but also for the cost-effectiveness of the care that it provides. VistA is a healthcare information system (HIS) developed and maintained by the VA. The software is in the public domain and freely available. Many providers support VistA on a commercial basis, and there is an `active online VistA community <http://groups.google.com/group/hardhats>`_.
 
 For all healthcare organizations, VistA can provide a cost-effective enterprise resource planning (ERP) system. It is written in the ANSI/ISO standard programming language M (also known as MUMPS), With origins in the field of healthcare informatics, M is the de facto standard for healthcare software.
 
-The YottaDB/GT.M Acculturation Workshop uses the `WorldVistA EHR® <http://worldvista.org/World_VistA_EHR>`_ flavor of VistA as a sample YottaDB/GT.M application, and can be downloaded from the `WorldVistA project at Source Forge <http://sourceforge.net/projects/worldvista>`_.
+The Acculturation Workshop uses the `WorldVistA EHR® <http://worldvista.org/World_VistA_EHR>`_ flavor of VistA as a sample YottaDB/GT.M application, and can be downloaded from the `WorldVistA project at Source Forge <http://sourceforge.net/projects/worldvista>`_.
 
 **Download VistA**
 
-To get VistA, you will need to download two archive files, the routines and the global variables. First, create a directory to store the archive files, then download the files into that directory.
+To get VistA, you will need to download two archive files : routines and global variables. First, create a directory to store the archive files, then download the files into that directory.
 
 .. parsed-literal::
    gtmuser@gtmworkshop:~$ sudo mkdir -p /Distrib/VistA
@@ -3396,7 +3394,7 @@ To get VistA, you will need to download two archive files, the routines and the 
 
 The very simplest environment is one where you put everything – source, object, global directory, database and journal files – in one directory (as you did for the environments in the exercises above). But for any real application, this would rapidly become unwieldy.
 
-The first step up from that simplest environment is to have separate sub-directories for the source files, object files, database; with shell scripts in the parent directory. Note that in production environments, you should consider putting the journal files elsewhere, on a file system on disks different from the database, and ideally even on a separate disk controller.
+The first step up from the simplest environment is to have separate sub-directories for the source files, object files, and database; with shell scripts in the parent directory. Note that in production environments, you should consider putting the journal files elsewhere, on a file system on disks different from the database, and ideally even on a separate disk controller.
 
 Create a VistA directory. Use a g subdirectory for global variables, an o subdirectory for object files and an r subdirectory for routines. Create a file to source to set up environment variables. Create a global directory and a database file into which to load the global variables. We will not set gtm_principal_editing since VistA has a mode where it manages its own screen cursors (Screenman) which requires VistA application code to receive terminal escape sequences.
 
@@ -3554,7 +3552,7 @@ Note that YottaDB/GT.M has dynamically compiled modules as needed.
 
 **Pre-compiled Routines**
 
-VistA is written to be portable across different MUMPS implementations. This means that it is guaranteed to contain code that is syntactically incorrect for every every MUMPS implementation. As modules are dynamically compiled, they will generate compilation errors that are sent to STDERR. Since you may find these disconcerting, you can prevent them by dynamically compiling all the modules.
+VistA is written to be portable across different MUMPS implementations. This means that it is guaranteed to contain code that is syntactically incorrect for every MUMPS implementation. As modules are dynamically compiled, they will generate compilation errors that are sent to STDERR. Since you may find these disconcerting, you can prevent them by dynamically compiling all the modules.
 
 .. parsed-literal::
    gtmuser@gtmworkshop:~$ cd VistA/o
@@ -3649,7 +3647,7 @@ Notice that since the YottaDB/GT.M version occurs in multiple locations, it has 
    GDE> change -segment DEFAULT -file=$gtmdir/$gtmver/g/gtm.dat
    GDE> show -segment
 
-                                   ***  SEGMENTS  ***
+                                   \*\*\*  SEGMENTS  \*\*\*
    Segment      File (def ext: .dat)          Acc   Type  Block   Alloc   Exten   Options
    ---------------------------------------------------------------------------------------
    DEFAULT      $gtmdir/$gtmver/g/gtm.dat     BG    DYN   4096    5000    10000   GLOB=1000
@@ -3661,12 +3659,12 @@ Notice that since the YottaDB/GT.M version occurs in multiple locations, it has 
    GDE> change -region DEFAULT -journal=file=$gtmdir/$gtmver/g/gtm.mjl
    GDE> show -region
 
-                                   *** REGIONS  ***
+                                   \*\*\* REGIONS  \*\*\*
    Region        Dynamic Segment          Def Coll   Rec Size   Key Size  Null Subs  Std Null Coll Jnl Inst Freeze on Error  Qdb Rundown
    --------------------------------------------------------------------------------------------------------------------------------------
    DEFAULT         DEFAULT                   0        4080        255         NEVER         Y       Y     DISABLED            DISABLED
 
-                                   ***  JOURNALING INFORMATION  ***
+                                   \*\*\*  JOURNALING INFORMATION  \*\*\*
    Region        Jnl File (def ext: .mjl)    Before   Buff   Alloc   Exten  Autoswitch
    ------------------------------------------------------------------------------------
    DEFAULT      $gtmdir/$gtmver/g/gtm.mjl      Y      2308   2048    2048   8386560
@@ -3824,7 +3822,7 @@ Then compile it with the object files in the VistA/V6.2-000_x86_64/o directory
    gtmuser@gtmworkshop:~/VistA/V6.2-000_x86_64/o$ mumps ../../p/\*.m
    gtmuser@gtmworkshop:~/VistA/V6.2-000_x86_64/o$
 
-Now, you can run VistA with the local modifications. In this case, one of the modifications is a fix to a minor bug in VistA: it treats spaces separating source directories in a parenthesized list as part of the directory name, rather than as a separator. With the change, when you run a function for example to apply a patch, it correctly puts the new routine in the first source directory even if it is within a parenthesized list of directories. In this example, you will run the ^ZTMGRTSET function. Notice that the VistA/V6.2-000/p directory is initially empty, but has some tens of files afterwards.
+Now, you can run VistA with the local modifications. In this case, one of the modifications is a fix to a minor bug in VistA: it treats spaces separating source directories in a parenthesized list as part of the directory name, rather than as a separator. With the change, when you run a function - for example, to apply a patch - it correctly puts the new routine in the first source directory even if it is within a parenthesized list of directories. In this example, you will run the ^ZTMGRTSET function. Notice that the VistA/V6.2-000/p directory is initially empty, but has some tens of files afterwards.
 
 .. parsed-literal::
    gtmuser@gtmworkshop:~$ ls -l VistA/V6.2-000_x86_64/p
@@ -3935,7 +3933,7 @@ Now, you can run VistA with the local modifications. In this case, one of the mo
 
 When you work on an application, either to enhance it or to fix a bug, you typically modify only a small part of the application. With YottaDB/GT.M, you do not need to make a copy of an entire application environment to work on your project. Nor do you need to work in the same environment as other developers, with the risk of stepping on one another's toes. All you need is to to set up your processes so that their $ZROUTINES search path finds your development routines before finding the main application routines. If your work involves changes to global variables, you can set up your own copy of the database – or, even, if it makes sense, a part of the database with the remaining globals mapped to the parent environment. Of course, in a large project, your environment's parent may itself have a parent.
 
-Delete the V6.2-001_x86_64 subdirectory, and copy the files inc and install to the VistA environment from the same location as this Acculturation Workshop, and make install executable.
+Delete the V6.2-001_x86_64 subdirectory, and obtain the files inc and install for the VistA environment, and make install executable.
 
 .. parsed-literal::
    gtmuser@gtmworkshop:~$ ls -l VistA/
@@ -4048,7 +4046,7 @@ Now run the dev environment and notice the values of the environment variables. 
 
    GDE> show -segment
 
-                                *** SEGMENTS  ***
+                                \*\*\* SEGMENTS  \*\*\*
    Segment              File (def ext: .dat)        Acc  Type  Block   Alloc  Exten  Options
    ------------------------------------------------------------------------------------------
    DEFAULT            $gtmdir/$gtmver/g/gtm.dat    BG   DYN   4096    5000   10000  GLOB=1000
