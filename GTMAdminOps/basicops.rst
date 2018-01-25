@@ -2,7 +2,7 @@
 .. index:: Basic Operations
 
 =======================
-Basic Operations
+3. Basic Operations
 =======================
 
 .. contents::
@@ -19,9 +19,7 @@ Your YottaDB distribution comes with many scripts that set up a default YottaDB 
 
 **gtmprofile**: uses reasonable defaults to set up a system and YottaDB application development environment for POSIX shells. The gtmprofile script sets default values for environment variables gtm_dist, gtmgbldir, gtm_icu_version, gtm_log, gtm_principal_editing, gtm_prompt, gtm_retention, gtmroutines, gtm_tmp, and gtmver. When you source the gtmprofile script, it creates a default execution environment (global directory and a default database file with BEFORE_IMAGE journaling) if none exists.
 
-* **gtmcshrc**: sets up a default YottaDB environment for C-shell compatible shells. It sets up default values for gtm_dist, gtmgbldir, gtm_chset and gtmroutines. It also creates aliases so you can execute YottaDB and its utilities without typing the full path. While gtmprofile is current with YottaDB releases, gtmcshrc is at the same level of sophistication as gtmprofile_preV54000. It is not as actively maintained as the gtmprofile script.
-
-* **gtmprofile_preV54000**: This script was provided as gtmprofile in YottaDB/GT.M distributions prior to V5.4-000. This script is a POSIX shell equivalent of gtmschrc.
+* **gtmcshrc**: sets up a default YottaDB environment for C-shell compatible shells. It sets up default values for gtm_dist, gtmgbldir, gtm_chset and gtmroutines. It also creates aliases so you can execute YottaDB and its utilities without typing the full path.
 
 * **gtmbase**: detects the shell type and adds gtmprofile to .profile or gtmchsrc to .cshrc so the shell automatically sources gtmprofile or gtmschrc on a subsequent login operation. YottaDB does not recommend using gtmbase as is - use it as an example of a script for you to develop suitable for your systems. It is not as actively maintained as the gtmprofile script.
 
@@ -29,7 +27,7 @@ Your YottaDB distribution comes with many scripts that set up a default YottaDB 
 
 * **gdedefaults**: a GDE command file that specifies the default values for database characteristics defined by GDE.
 
-These scripts are designed to give you a friendly out-of-the-box YottaDB experience. Even though you can set up an environment for normal YottaDB operation without using these scripts, it is important to go through these scripts to understand the how to manage environment configuration. 
+These scripts are designed to give you a friendly out-of-the-box YottaDB experience. Even though you can set up an environment for normal YottaDB operation without using these scripts, it is important to go through these scripts to understand how to configure environments. 
 
 
 ++++++++++
@@ -48,7 +46,7 @@ You can set the following environment variables before sourcing gtmprofile or ru
 
 * **gtm_chset** - set this to "UTF-8" to run YottaDB in UTF-8 mode; it defaults to M mode. As UTF-8 mode requires a UTF-8 locale to be set in LC_CTYPE or LC_ALL, if a locale is not specified, gtmprofile also attempts to set a UTF-8 locale. Since YottaDB in UTF-8 mode often requires gtm_icu_version to be set, if it is not set, gtmprofile attempts to determine the ICU version on the system and set it. This requires the icu-config program to be installed and executable by gtmprofile.
 
-* **gtmdir** - set this to define a directory for the environment set by gtmprofile
+* **gtmdir** - set this to define a directory for the environment set by gtmprofile.
 
 The following shell variables are used by the script and left unset at its completion: 
 
@@ -64,13 +62,13 @@ Refer to your OS documentation to configure shared memory limits (for example, o
 
 The gtmprofile (and gtm) scripts, by design, are idempotent so that calling them repeatedly is safe. The YottaDB installation process ensures that gtmprofile always sets gtm_dist correctly. Idempotency is implemented by checking the value of $gtm_dist and skipping all changes to environment variables if gtm_dist is already defined.
 
-When gtm sources gtmprofile, it provides a default execution environment (global directory and a default database (with BEFORE_IMAGE journaling) if none exists. By default, it creates the database in $HOME/.yottadb with a structure like the following; note that this directory structure has different locations for YottaDB routines (r), object files (o), and database-related files (g):
+When gtm sources gtmprofile, it provides a default execution environment (global directory and a default database (with BEFORE_IMAGE journaling) if none exists. By default, it creates the database in $HOME/.fis-gtm with a structure like the following; note that this directory structure has different locations for YottaDB routines (r), object files (o), and database-related files (g):
 
 .. parsed-literal::
 
-   .yottadb
+   .fis-gtm
       | -- r
-      | -- V6.2-000_x86_64
+      | -- r1.00
       | | -- g 
       | | | -- gtm.dat 
       | | | -- gtm.gld 
@@ -78,17 +76,17 @@ When gtm sources gtmprofile, it provides a default execution environment (global
       | | -- o 
       | | ` -- utf8 
       | ` -- r 
-      | -- V6.2-001_x86_64
+      | -- r1.10
        | -- g 
-        | | -- gtm.dat 
-         | | -- gtm.gld 
+       | | -- gtm.dat 
+       | | -- gtm.gld 
           | ` -- gtm.mjl 
-           | -- o 
-            | ` -- utf8 
-             ` -- r
+       | -- o 
+       | ` -- utf8 
+         ` -- r
 
 
-where V6.2-001_x86_64 represents the current release and platform information and V6.2-000_x86_64 represents a previously used YottaDB/GT.M release.
+where r1.10 represents the current release and platform information and r1.00 represents a previously used YottaDB release.
 
 On 64-bit platforms in M mode, gtmprofile sets the environment variable gtmroutines to something like the following (where $gtm_dist and $gtmver are as discussed above):
 
@@ -104,10 +102,10 @@ When $gtm_chset is set to UTF-8, gtmprofile sets gtmroutines to something like t
 .. parsed-literal::
    $gtmdir/$gtmver/o/utf8*($gtmdir/$gtmver/r $gtmdir/r) $gtm_dist/plugin/o/utf8($gtm_dist/plugin/r) $gtm_dist/libgtmutil.so $gtm_dist
 
-Note that gtmprofile sets $gtm_dist in UTF-8 mode to the utf8 subdirectory of the YottaDB installation directory. If you have installed any plugins that include shared libraries, gtmprofile script includes those. For example, with the POSIX and ZLIB plugins installed on a 64-bit platform, gtmdir set to /home/jdoe1 and YottaDB installed in /opt/yottadb/V1.10, gtmprofile would set gtmroutines to:
+Note that gtmprofile sets $gtm_dist in UTF-8 mode to the utf8 subdirectory of the YottaDB installation directory. If you have installed any plugins that include shared libraries, the gtmprofile script includes those. For example, with the POSIX and ZLIB plugins installed on a 64-bit platform, gtmdir set to /home/jdoe1 and YottaDB installed in /opt/yottadb/r1.10, gtmprofile would set gtmroutines to:
 
 .. parsed-literal::
-   /home/jdoe1/.yottadb/V1.10/o*(/home/jdoe1/.yottadb/V1.10/r /home/jdoe1/.yottadb/r) /usr/lib/yottadb/V1.10/plugin/o/_POSIX.so /usr/lib/yottadb/V1.10/plugin/o/_ZLIB.so /usr/lib/yottadb/V1.10/plugin/o(/usr/lib/yottadb/V1.10/plugin/r) /usr/lib/yottadb/V1.10/libgtmutil.so /usr/lib/yottadb/V1.10
+   /home/jdoe1/.yottadb/r1.10/o*(/home/jdoe1/.yottadb/r1.10/r /home/jdoe1/.yottadb/r) /usr/lib/yottadb/r1.10/plugin/o/_POSIX.so /usr/lib/yottadb/r1.10/plugin/o/_ZLIB.so /usr/lib/yottadb/r1.10/plugin/o(/usr/lib/yottadb/r1.10/plugin/r) /usr/lib/yottadb/r1.10/libgtmutil.so /usr/lib/yottadb/r1.10
 
 .. note::
    This scenario of sourcing gtmprofile is only for the sake of example. Consult your system administrator before implementing gtmprofile for a multi-user environment.
@@ -139,7 +137,7 @@ You can also run the gtmbase script which places the above command in the .cshrc
 gtmcshrc also creates the following aliases. 
 
 .. parsed-literal::
-   lias gtm '$gtm_dist/mumps -direct'
+   alias gtm '$gtm_dist/mumps -direct'
    alias mupip '$gtm_dist/mupip'
    alias lke '$gtm_dist/lke'
    alias gde '$gtm_dist/mumps -r ^GDE'
@@ -198,6 +196,7 @@ If you intend to use Database Encryption, set the gtm_passwd and gtmcrypt_config
    gtm -run <entryref> to start executing at an entryref
    gtm -help / gtm -h / gtm -? to display this text
 
+
 ----------------------
 Environment Variables
 ----------------------
@@ -220,7 +219,7 @@ A comprehensive list of environment variables that are directly or indirectly us
 
 **gtmcompile** specifies the initial value of the $ZCOmpile ISV. The SET command can alter the value of $ZCOMPILE in an active process.
 
-**gtmcrypt_config** specifies the location of the configuration file required for database encryption, Sequential file, PIPE, and FIFO device encryption and/or TLS support. A configuration file is divided into two sections: database encryption section and TLS section. The database encryption section contains a list of database files and their corresponding key files. You do not need to add a database encryption section if you are not using an encrypted database, or a TLS section if you are not using TLS for replication or sockets. The TLS section provides information needed for OpenSSL (in the reference plugin implementation) or other encryption package, such as the location of root certification authority certificate in PEM format and leaf-level certificates with their corresponding private key files. Note that the use of the gtmcrypt_config environment variable requires prior installation of the libconfig package.
+**gtmcrypt_config** specifies the location of the configuration file required for database encryption, Sequential file, PIPE, and FIFO device encryption and/or TLS support. A configuration file is divided into two sections: the database encryption section and the TLS section. The database encryption section contains a list of database files and their corresponding key files. You do not need to add a database encryption section if you are not using an encrypted database, or a TLS section if you are not using TLS for replication or sockets. The TLS section provides information needed for OpenSSL (in the reference plugin implementation) or other encryption package, such as the location of the root certification authority certificate in PEM format and leaf-level certificates with their corresponding private key files. Note that the use of the gtmcrypt_config environment variable requires prior installation of the libconfig package.
 
 **gtmcrypt_FIPS** specifies whether the plugin reference implementation should attempt to use either OpenSSL or Libgcrypt to provide database encryption that complies with FIPS 140-2. When the environment variable $gtmcrypt_FIPS is set to 1 (or evaluates to a non-zero integer, or any case-independent string or leading substring of "TRUE" or "YES"), the plugin reference implementation attempts to use libgcrypt (from GnuPG) and libcrypto (OpenSSL) in "FIPS mode." Note that to comply with FIPS 140-2 you should be knowledgeable with that standard and take many steps beyond setting this environment variable. By default YottaDB does not enforce "FIPS mode."
 
@@ -248,7 +247,7 @@ All values are case-independent. When gtm_autorelink_keeprtn is defined and TRUE
 
 **gtm_badchar** specifies the initial setting that determines whether YottaDB should raise an error when it encounters an illegal UTF-8 character sequence. This setting can be changed with a VIEW "[NO]BADCHAR" command, and is ignored for I/O processing and in M mode.
 
-**gtm_baktmpdir** specifies the directory where mupip backup creates temporary files. If $gtm_baktmpdir is not defined, GT.M currently uses the deprecated $GTM_BAKTMPDIR environment variable if defined, and otherwise uses /tmp. All processes performing updates during an online IBACKUP must have the use the same directory and have write access to it.
+**gtm_baktmpdir** specifies the directory where mupip backup creates temporary files. If $gtm_baktmpdir is not defined, YottaDB currently uses the deprecated $GTM_BAKTMPDIR environment variable if defined, and otherwise uses /tmp. All processes performing updates during an online IBACKUP must have the use the same directory and have write access to it.
 
 **gtm_boolean** specifies the initial setting that determines how YottaDB compiles Boolean expression evaluation (expressions evaluated as a logical TRUE or FALSE). If gtm_boolean is undefined or evaluates to an integer zero (0), YottaDB behaves as it would after a VIEW "NOFULL_BOOLEAN" and compiles such that it stops evaluating a Boolean expression as soon as it establishes a definitive result . Note that:
 
@@ -276,7 +275,7 @@ All values are case-independent. When gtm_autorelink_keeprtn is defined and TRUE
 
 * > 0 - Seconds to wait - rounded to the nearest multiple of eight (8); if the specification is 96 or more seconds, the waiting process uses the gtm_procstuckexec mechanism at one half the wait and at the end of the wait; if the resource remains unavailable, the process issues DBFILERR error with an associated SEMWT2LONG
 
-**gtm_dist** specifies the path to the directory containing the YottaDB system distribution. gtm_dist must be defined for each user. If you are not using the gtm script or sourcing gtmprofile, consider defining gtm_dist in the login file or as part of the default system environment. In UTF-8 mode, the gtm_dist environment variable specifies the path to the directory containing the YottaDB system distribution for Unicode. The distribution for Unicode is located in subdirectory utf8 under the YottaDB distribution directory. For example, if the YottaDB distribution is in /usr/lib/yottadb/V1.10, set gtm_dist to point to /usr/lib/yottadb/V1.10/utf8 for UTF-8 mode. Correct operation of YottaDB executable programs requires gtm_dist to be set correctly.
+**gtm_dist** specifies the path to the directory containing the YottaDB system distribution. gtm_dist must be defined for each user. If you are not using the gtm script or sourcing gtmprofile, consider defining gtm_dist in the login file or as part of the default system environment. In UTF-8 mode, the gtm_dist environment variable specifies the path to the directory containing the YottaDB system distribution for Unicode. The distribution for Unicode is located in subdirectory utf8 under the YottaDB distribution directory. For example, if the YottaDB distribution is in /usr/local/lib/yottadb/r110, set gtm_dist to point to /usr/local/lib/yottadb/r110/utf8 for UTF-8 mode. Correct operation of YottaDB executable programs requires gtm_dist to be set correctly.
 
 **gtm_dmterm** specifies a [NO]DMTERM state at process initiation where application setting applied to $PRINCIPAL also apply to direct mode interactions; a case-insensitive value of "1", "yes", or "true" establishes a DMTERM state at process initiation where direct mode uses default terminal characteristics and ignores application settings for $PRINCIPAL; all other values, including no value, result in the default VIEW "NODMTERM" behavior.
 
@@ -309,7 +308,7 @@ All values are case-independent. When gtm_autorelink_keeprtn is defined and TRUE
 
 **gtm_local_collate** specifies an alternative collation sequence for local variables.
 
-**gtm_log** specifies a directory where the gtm_secshr_log file is stored. The gtm_secshr_log file stores information gathered in the gtmsecshr process. YottaDB recommends that a system-wide default be established for gtm_log so that gtmsecshr always logs its information in the same directory, regardless of which user's YottaDB process invokes gtmsecshr. In conformance with the Filesystem Hierarchy Standard, YottaDB recommends /var/log/yottadb/$gtmver as the value for $gtm_log unless you are installing the same version of YottaDB in multiple directories. Note that $gtmver can be in the form of V1.10 which represents the current YottaDB release and platform information. If you do not set $gtm_log, YottaDB creates log files in a directory in /tmp (AIX, GNU/Linux). However, this is not recommended because it makes YottaDB log files vulnerable to the retention policy of a temporary directory.
+**gtm_log** specifies a directory where the gtm_secshr_log file is stored. The gtm_secshr_log file stores information gathered in the gtmsecshr process. YottaDB recommends that a system-wide default be established for gtm_log so that gtmsecshr always logs its information in the same directory, regardless of which user's YottaDB process invokes gtmsecshr. In conformance with the Filesystem Hierarchy Standard, YottaDB recommends /var/log/yottadb/$gtmver as the value for $gtm_log unless you are installing the same version of YottaDB in multiple directories. Note that $gtmver can be in the form of the current YottaDB release and platform. If you do not set $gtm_log, YottaDB creates log files in a directory in /tmp (AIX, GNU/Linux). However, this is not recommended because it makes YottaDB log files vulnerable to the retention policy of a temporary directory.
 
 .. note::
    In the latest versions, gtmsecshr logs its messages in the system log and the environment variable gtm_log is ignored.
@@ -344,37 +343,7 @@ gtm_obfuscation_key can be used as a mechanism to pass an obfuscated password be
 
 **gtm_principal** specifies the value for $PRINCIPAL, which designates an alternative name (synonym) for the principal $IO device.
 
-**gtm_principal_editing** specifies the initial settings for $PRINCIPAL of the following colon-delimited deviceparameters: [NO]EDITING [NO]EMPTERM and [NO]INSERT; in an active process the USE command can modify these device characteristics.gtm_max_sockets specifies the maximum number of client connections for socket devices. The default is 64.While it must be large enough to accommodate the actual need, each reservation requires some memory in socket structures, so setting this number unnecessarily high causes requires a bit of additional memory for no benefit.
-
-**gtm_memory_reserve** specifies the size in kilobytes of the reserve memory that YottaDB should use in handling and reporting an out-of-memory condition. The default is 64 (KiB). Setting this too low can impede investigations of memory issues, but YottaDB only uses this reserve when a process runs out of memory so it almost never requires actual memory, only address space.
-
-**gtm_mupjnl_parallel** defines the number of processes or threads used by MUPIP JOURNAL -RECOVER/-ROLLBACK when the invoking command does not have a -PARALLEL qualifier. When defined with no value, it specifies one process or thread per region. When undefined or defined to one (1), it specifies MUPIP should process all regions without using additional processes or threads. When defined with an integer value greater than one (1), it specifies the maximum number of processes or threads for MUPIP to use. If the value is greater than the number of regions, MUPIP never uses more processes or threads than there are regions. If it is less than the number of regions, MUPIP allocates work to the additional processes or threads based on the time stamps in the journal files.
-
-**gtm_nocenable** specifies whether the $principal terminal device should ignore <CTRL-C> or use <CTRL-C> as a signal to place the process into direct mode; a USE command can modify this device characteristic. If gtm_nocenable is defined and evaluates to a non-zero integer or any case-independent string or leading substrings of "TRUE" or "YES", $principal ignores <CTRL-C>. If gtm_nocenable is not set or evaluates to a value other than a positive integer or any case-independent string or leading substrings of "FALSE" or "NO", <CTRL-C> on $principal places the process into direct mode at the next opportunity (usually at a point corresponding to the beginning of the next source line).
-
-**gtm_non_blocked_write_retries** modifies FIFO or PIPE write behavior. A WRITE which would block is retried up to the number specified with a 100 milliseconds delay between each retry. The default value is 10 times.
-
-**gtm_nontprestart_log_delta** specifies the number of non-transaction restarts for which YottaDB should wait before reporting a non-transaction restart to the operator logging facility. If gtm_nontprestart_log_delta is not defined, YottaDB initializes gtm_nontprestart_log_delta to 0.
-
-**gtm_nontprestart_log_first** specifies the initial number of non-transaction restarts which YottaDB should report before placing non-transaction restart reports to the operator logging facility using the gtm_nontprestart_log_delta value. If gtm_nontprestart_log_delta is defined and gtm_nontprestart_log_first is not defined, YottaDB initializes gtm_nontprestart_log_first to 1.
-
-**gtm_noundef** specifies the initial setting that controls whether a YottaDB process should treat undefined global or local variables as having an implicit value of an empty string. If it is defined, and evaluates to a non-zero integer or any case-independent string or leading substring of "TRUE" or "YES", then YottaDB treats undefined variables as having an implicit value of an empty string. The VIEW "[NO]UNDEF" command can alter this behavior in an active process. By default, YottaDB signals an error on an attempt to use the value of an undefined variable.
-
-**gtm_obfuscation_key**: If $gtm_obfuscation_key specifies the name of file readable by the process, the encryption reference plug-in uses an SHA-512 hash of the file's contents as the XOR mask for the obfuscated password in the environment variable gtm_passwd. When gtm_obfuscation_key does not point to a readable file, the plug-in creates an XOR mask based on the userid and inode of the mumps executable and then computes an SHA-512 hash of the XOR mask to use as a mask.
-
-gtm_obfuscation_key can be used as a mechanism to pass an obfuscated password between unrelated processes (for example, a child process with a different userid invoked via a sudo mechanism), or even from one system to another (for example, over an ssh connection).
-
-**gtm_passwd** used by the encryption reference plugin (not used by YottaDB directly) for the obfuscated (not encrypted) password to the GNU Privacy Guard key ring. If the environment variable gtm_patnumeric is not defined or set to a value other than "UTF-8", YottaDB initializes $ZPATNUMERIC to "M".
-
-**gtm_patnumeric** specifies the value of the read-only ISV $ZPATNUMERIC that determines how YottaDB interprets the patcode "N" used in the pattern match operator. The SET command can alter the value of $ZPATNUMERIC in an active process.
-
-**gtm_pattern_file** and **gtm_pattern_table** specify alternative patterns for the pattern (?) syntax. Refer to the Internationalization chapter in the Programmer's Guide for additional information.
-
-**gtm_poollimit** restricts the number of global buffers a process uses in order to limit the potential impact on other processes. It is intended for use by a relatively small subset of processes when those processes have the potential to "churn" global buffers; the value is of the form n[%] when it ends with a per-cent sign (%), the number is taken as an as a percentage of the configured global buffers and otherwise as an ordinal number of preferred buffers; standard M parsing and integer conversions apply. Note that this environment variable applies to all regions accessed by a process; the VIEW command for this feature allows finer grained control. MUPIP REORG uses this facility to limit its buffers with a default of 64 if gtm_poollimit is not specified. Note that this may slightly slow a standalone REORG but can be overridden by defining gtm_poollimit as 0 or "100%".
-
-**gtm_principal** specifies the value for $PRINCIPAL, which designates an alternative name (synonym) for the principal $IO device.
-
-**gtm_principal_editing** specifies the initial settings for $PRINCIPAL of the following colon-delimited deviceparameters: [NO]EDITING [NO]EMPTERM and [NO]INSERT; in an active process the USE command can modify these device characteristics.
+**gtm_principal_editing** specifies the initial settings for $PRINCIPAL of the following colon-delimited deviceparameters: [NO]EDITING [NO]EMPTERM and [NO]INSERT; in an active process the USE command can modify these device characteristics. gtm_max_sockets specifies the maximum number of client connections for socket devices. The default is 64. While it must be large enough to accommodate the need, each reservation requires some memory in the socket structures, so setting this number unnecessarily high requires additional memory for no benefit.
 
 .. note::
    The YottaDB direct mode commands have a more extensive capability in this regard, independent of the value of this environment variable.
@@ -383,7 +352,7 @@ gtm_obfuscation_key can be used as a mechanism to pass an obfuscated password be
 
 * A one minute wait on a region due to an explicit MUPIP FREEZE or an implicit freeze, such as BACKUP, INTEG -ONLINE, and so on.
 
-* MUPIP actions find kill_in_prog (KILLs in progress) to be non-zero after a one minute wait on a region. Note that GT.M internally maintains a list of PIDs (up to a maximum of 8 PIDs) currently doing a KILL operation.
+* MUPIP actions find kill_in_prog (KILLs in progress) to be non-zero after a one minute wait on a region. Note that YottaDB internally maintains a list of PIDs (up to a maximum of 8 PIDs) currently doing a KILL operation.
 
 * A process encounters conditions that produce the following operator log messages: BUFOWNERSTUCK, INTERLOCK_FAIL, JNLPROCSTUCK, SHUTDOWN, WRITERSTUCK, MAXJNLQIOLOCKWAIT, MUTEXLCKALERT, SEMWT2LONG, and COMMITWAITPID.
 
@@ -397,10 +366,10 @@ You can use this as a monitoring facility for processes holding a resource for a
 
 * *count* is the number of times the script has been invoked for the current condition (1 for the first occurrence).
 
-Each invocation generates an operator log message and if the invocation fails an error message to the operator log. The shell script should start with a line beginning with #! that designates the shell.
+Each invocation generates an operator log message and if the invocation fails, an error message to the operator log. The shell script should start with a line beginning with #! that designates the shell.
 
 .. note::
-   Make sure user processes have sufficient space and permissions to run the shell command / script. For example for the script to invoke the debugger, the process must be of the same group or have a way to elevate privileges.
+   Make sure that user processes have sufficient space and permissions to run the shell command / script. For example - for the script to invoke the debugger, the process must be of the same group or have a way to elevate privileges.
 
 **gtm_prompt** specifies the initial value of the ISV $ZPROMPT, which controls the YottaDB direct mode prompt. The SET command can alter the value of $ZPROMPT in an active process. By default, the direct mode prompt is "YDB>".
 
@@ -414,7 +383,7 @@ Each invocation generates an operator log message and if the invocation fails an
 
 **gtm_retention** (not used by YottaDB directly) - used by the gtm script to delete old journal files and old temporary files it creates.
 
-**gtm_side_effects**: When the environment variable gtm_side_effects is set to one (1) at process startup, YottaDB generates code that performs left to right evaluation of actual list arguments, function arguments, operands for non-Boolean binary operators, SET arguments where the target destination is an indirect subscripted glvn, and variable subscripts. When the environment variable is not set, or set to zero (0), YottaDB retains its traditional behavior, which re-orders the evaluation of operands using rules intended to improve computational efficiency. This reordering assumes that functions have no side effects, and may generate unexpected behavior (x+$increment(x) is a pathological example). When gtm_side_effects is set to two (2), YottaDB generates code with the left-to-right behavior, and also generates SIDEEFFECTEVAL warning messages for each construct that potentially generates different results depending on the order of evaluation. As extrinsic functions and external calls are opaque to the compiler at the point of their invocation, it cannot statically determine whether there is a real interaction. Therefore SIDEEFFECTEVAL warnings may be much more frequent than actual side effect interactions and the warning mode may be most useful as a diagnostic tool to investigate problematic or unexpected behavior in targeted code rather than for an audit of an entire application. Note that a string of concatenations in the same expression may generate more warnings than the code warrants. Other values of the environment variable are reserved for potential future use by YottaDB. It is important to note that gtm_side_effects affects the generated code, and must be in effect when code is compiled - the value when that compiled code is executed is irrelevant. Note also that XECUTE and auto-ZLINK, explicit ZLINK and ZCOMPILE all perform run-time compilation subject to the characteristic selected when the process started. Please be aware that programming style where one term of an expression changes a prior term in the same expression is an unsafe programming practice. The environment variable gtm_boolean may separately control short-circuit evaluation of Boolean expressions but a setting of 1 (or 2) for gtm_side_effects causes the same boolean evaluations as setting gtm_boolean to 1 (or 2). Note that warning reports for the two features are separately controlled by setting their values to 2. The differences in the compilation modes may include not only differences in results, but differences in flow of control when the code relies on side effect behavior.
+**gtm_side_effects**: When the environment variable gtm_side_effects is set to one (1) at process startup, YottaDB generates code that performs left to right evaluation of actual list arguments, function arguments, operands for non-Boolean binary operators, SET arguments where the target destination is an indirect subscripted glvn, and variable subscripts. When the environment variable is not set, or set to zero (0), YottaDB retains its traditional behavior, which re-orders the evaluation of operands using rules intended to improve computational efficiency. This reordering assumes that functions have no side effects, and may generate unexpected behavior (x+$increment(x) is a pathological example). When gtm_side_effects is set to two (2), YottaDB generates code with the left-to-right behavior, and also generates SIDEEFFECTEVAL warning messages for each construct that potentially generates different results depending on the order of evaluation. As extrinsic functions and external calls are opaque to the compiler at the point of their invocation, it cannot statically determine whether there is a real interaction. Therefore SIDEEFFECTEVAL warnings may be much more frequent than actual side effect interactions and the warning mode may be most useful as a diagnostic tool to investigate problematic or unexpected behavior in targeted code rather than for an audit of an entire application. Note that a string of concatenations in the same expression may generate more warnings than the code warrants. Other values of the environment variable are reserved for potential future use by YottaDB. It is important to note that gtm_side_effects affects the generated code, and must be in effect when code is compiled - the value when that compiled code is executed is irrelevant. Note also that XECUTE and auto-ZLINK, explicit ZLINK and ZCOMPILE all perform run-time compilation subject to the characteristic selected when the process started. Please be aware that the programming style where one term of an expression changes a prior term in the same expression is an unsafe programming practice. The environment variable gtm_boolean may separately control short-circuit evaluation of Boolean expressions but a setting of 1 (or 2) for gtm_side_effects causes the same boolean evaluations as setting gtm_boolean to 1 (or 2). Note that warning reports for the two features are separately controlled by setting their values to 2. The differences in the compilation modes may include not only differences in results, but differences in flow of control when the code relies on side effect behavior.
 
 **gtm_snaptmpdir** specifies the location to place the temporary "snapshot" file created by facilities such as on-line mupip integ. If $gtm_snaptmpdir is not defined, YottaDB uses the $gtm_baktmpdir environment variable if defined, and otherwise uses the current working directory. All processes performing updates during an online INTEG must have the use the same directory and have write access to it.
 
@@ -424,11 +393,11 @@ Each invocation generates an operator log message and if the invocation fails an
 
 **gtm_stdxkill** enables the standard-compliant behavior to kill local variables in the exclusion list if they had an alias that as not in the exclusion list. By default, this behavior is disabled.
 
-**gtm_sysid** specifies the value for the second piece of the $SYSTEM ISV. $SYSTEM contains a string that identifies the executing M in stance. The value of $SYSTEM is a string that starts with a unique numeric code that identifies the manufacturer . Codes were originally assigned by the MDC (MUMPS Development Committee). $SYSTEM in YottaDB starts with "47" followed by a comma and $gtm_sysid.
+**gtm_sysid** specifies the value for the second piece of the $SYSTEM ISV. $SYSTEM contains a string that identifies the executing M instance. The value of $SYSTEM is a string that starts with a unique numeric code that identifies the manufacturer. Codes were originally assigned by the MDC (MUMPS Development Committee). $SYSTEM in YottaDB starts with "47" followed by a comma and $gtm_sysid.
 
 **gtm_tmp** specifies a directory where socket files used for communication between gtmsecshr and YottaDB processes are stored. All processes using the same YottaDB should have the same $gtm_tmp.
 
-**gtm_tpnotacidtime** specifies the maximum time that a YottaDB process waits for non-Isolated timed command (HANG, JOB, LOCK, OPEN, READ, WRITE /* or ZALLOCATE) running within a transaction to complete before it releases all critical sections it owns and sends a TPNOTACID information message to the system log. A YottaDB process owns critical sections on all or some of the regions participating in a transactions only during final retry attempts (when $TRETRY>2). gtm_tpnotacidtime specifies time in seconds to millisecond precision (three decimal places); the default is 2 seconds. The maximum value of gtm_tpnotacidtime is 30 and the minimum is 0. If gtm_tpnotacidtime specifies a time outside of this range, YottaDB uses the default value. The YottaDB behavior of releasing critical sections in final retry attempt to provide protection from certain risky coding patterns which, because they are not Isolated, can cause deadlocks (in the worst case) and long hangs (in the best case). As ZSYSTEM and BREAK are neither isolated nor timed, YottaDB initiates TPNOTACID behavior for them immediately as it encounters them during execution in a final retry attempt (independent of gtm_tpnotacidtime). Rapidly repeating TPNOTACID messages are likely associated with live-lock, which means that a process is consuming critical resources repeatedly within a transaction, and is unable to commit because the transaction duration is too long to commit while maintaining ACID transaction properties.
+**gtm_tpnotacidtime** specifies the maximum time that a YottaDB process waits for a non-isolated timed command (HANG, JOB, LOCK, OPEN, READ, WRITE /* or ZALLOCATE) running within a transaction to complete before it releases all critical sections it owns and sends a TPNOTACID information message to the system log. A YottaDB process owns critical sections on all or some of the regions participating in a transactions only during final retry attempts (when $TRETRY>2). gtm_tpnotacidtime specifies time in seconds to millisecond precision (three decimal places); the default is 2 seconds. The maximum value of gtm_tpnotacidtime is 30 and the minimum is 0. If gtm_tpnotacidtime specifies a time outside of this range, YottaDB uses the default value. YottaDB releases critical sections in a final retry attempt to provide protection from certain risky coding patterns which, because they are not isolated, can cause deadlocks (in the worst case) and long hangs (in the best case). As ZSYSTEM and BREAK are neither isolated nor timed, YottaDB initiates TPNOTACID behavior for them immediately as it encounters them during execution in a final retry attempt (independent of gtm_tpnotacidtime). Rapidly repeating TPNOTACID messages are likely associated with live-lock, which means that a process is consuming critical resources repeatedly within a transaction, and is unable to commit because the transaction duration is too long to commit while maintaining ACID transaction properties.
 
 **gtm_tprestart_log_delta** specifies the number of transaction restarts for which YottaDB should wait before reporting a transaction restart to the operator logging facility. If gtm_tprestart_log_delta is not defined, YottaDB initializes gtm_tp_restart_log_delta to 0.
 
@@ -510,7 +479,7 @@ While creating an environment for multiple processes accessing the same version 
 
 * A YottaDB version has an associated gtmsecshr (located by $gtm_dist). If multiple processes are accessing the same YottaDB version, each process must use the same combination of $gtm_tmp and $gtm_log.
 
-* In conformance with the Filesystem Hierarchy Standard, YottaDB recommends /var/log/yottadb/$gtmver as the value for $gtm_log. Note that $gtmver can be in the form of V1.10 which represents the current YottaDB release and platform information.
+* In conformance with the Filesystem Hierarchy Standard, YottaDB recommends /var/log/yottadb/$gtmver as the value for $gtm_log. Note that $gtmver can be in the form of the current YottaDB release and platform information.
 
 * YottaDB recommends setting $gtm_tmp to a temporary directory /tmp (AIX, GNU/Linux). The gtmprofile script sets $gtm_tmp to /tmp/yottadb/$gtmver.
 
@@ -538,7 +507,7 @@ If you install YottaDB with Unicode™ support, all YottaDB components related t
 
 In addition to $gtm_chset, recent versions use $gtm_icu_version to choose an ICU library library version other than the default. For ICU libraries built with symbol renaming enabled, $gtm_icu_version becomes a required setting.
 
-$gtm_icu_version specifies the ICU version that YottaDB should use for Unicode operations. It is in the form of MajorVersion.MinorVersion where MajorVersion and MinorVersion specify the desired Major verion and Minor version of ICU. For example, 3.6 refers to ICU version 3.6. If $gtm_icu_version is defined, YottaDB works regardless of whether or not symbols are renamed in ICU. If $gtm_icu_version is not defined or does not evaluate to an installed ICU version, YottaDB look for non-renamed symbols in the default ICU version. Note that display widths for a few characters are different starting in ICU 4.0. 
+$gtm_icu_version specifies the ICU version that YottaDB should use for Unicode operations. It is in the form of MajorVersion.MinorVersion where MajorVersion and MinorVersion specify the desired major verison and minor version of ICU. For example, 3.6 refers to ICU version 3.6. If $gtm_icu_version is defined, YottaDB works regardless of whether or not symbols are renamed in ICU. If $gtm_icu_version is not defined or does not evaluate to an installed ICU version, YottaDB look for non-renamed symbols in the default ICU version. Note that display widths for a few characters are different starting in ICU 4.0. 
 
 .. note::
    The gtmprofile script defines $gtm_icu_version as necessary.
@@ -592,7 +561,7 @@ First source the gtmschrc script to set up a default YottaDB environment. At you
 Run the gtm alias to start YottaDB in direct mode.
 
 .. parsed-literal::
-   $ gtm 
+   $ ydb 
 
 **To start YottaDB in UTF-8 mode from a C-type shell**:
 
@@ -622,7 +591,7 @@ Run the ydb alias to start YottaDB in direct mode.
 
 * Consider adding these environment variables in your login file so you do not have to create them again the next time you start your shell.
 
-* Set the following aliases to run YottaDB and its utlities.
+* Set up the following aliases to run YottaDB and its utilities.
 
  .. parsed-literal::
     alias dse="$gtm_dist/dse"
@@ -655,7 +624,7 @@ Run the ydb alias to start YottaDB in direct mode.
 
 * Consider adding these environment variables in your login file so you do not have to create them again the next time you start your shell.
 
-* Set the following aliases to run YottaDB and its utilities.
+* Set up the following aliases to run YottaDB and its utilities.
 
   .. parsed-literal::
      alias dse="$gtm_dist/dse"
@@ -686,7 +655,7 @@ YottaDB has three invocation modes: compiler, direct, and auto-start. To invoke 
 
 * **-run ^routine_name**: -r invokes YottaDB in auto-start mode. The second argument is taken to be an M entryref, and that routine is automatically executed, bypassing direct mode. Depending on your shell, you may need to put the entryref in quotes.
 
-When executing M programs, YottaDB incrementally links any called programs. For example, the command YDB> do ^TEST links the object file TEST.o and executes it; if the TESTM program calls other M routines, those are automatically compiled and linked. 
+When executing M programs, YottaDB incrementally links any called programs. For example, the command YDB> do ^TEST links the object file TEST.o and executes it; if the TEST.m program calls other M routines, those are automatically compiled and linked. 
 
 .. note::
    When possible, YottaDB verifies that MUMPS, MUPIP, DSE and LKE reside in $gtm_dist. If the path to the executable and the path to $gtm_dist do not match each executable issues an error. In cases where the executable path could not be determined, each executable defers issuing an error until it is required.
@@ -695,7 +664,7 @@ When executing M programs, YottaDB incrementally links any called programs. For 
  Configuring huge pages for YottaDB on Linux
 --------------------------------------------------
 
-Huge pages are a Linux feature that may improve the performance of YottaDB applications in production. Huge pages create a single page table entry for a large block (typically 2MiB) of memory in place of hundreds entries for many smaller (typically 4KiB) blocks. This reduction of memory used for page tables frees memory for other uses, such as file system caches, and increases the probability of TLB (translation lookaside buffer) matches, both of which can improve performance. The performance improvement related to reducing the page table size becomes evident when many processes share memory as they do for global buffers, journal buffers, and replication journal pools. Configuring huge pages on Linux for x86 or x86_64 CPU architectures help improve:
+Huge pages are a Linux feature that may improve the performance of YottaDB applications in production. Huge pages create a single page table entry for a large block (typically 2MiB) of memory in place of hundreds of entries for many smaller (typically 4KiB) blocks. This reduction of memory used for page tables frees up memory for other uses, such as file system caches, and increases the probability of TLB (translation lookaside buffer) matches - both of which can improve performance. The performance improvement related to reducing the page table size becomes evident when many processes share memory as they do for global buffers, journal buffers, and replication journal pools. Configuring huge pages on Linux for x86 or x86_64 CPU architectures help improve:
 
 * YottaDB shared memory performance: When your YottaDB database uses journaling, replication, and the BG access method.
 
@@ -704,7 +673,9 @@ Huge pages are a Linux feature that may improve the performance of YottaDB appli
   .. note::
      At this time, huge pages have no effect for MM databases; the text, data, or bss segments for each process; or for process stack.
 
-While YottaDB recommends you configure huge page for shared memory, you need to evaluate whether or not configuring huge page for process-private memory is appropriate for your application. Having insufficient huge pages available during certain commands (for example, a JOB command - see complete list below) can result in a process terminating with a SIGBUS error. This is a current limitation of Linux. Before you use huge pages for process private memory on production systems, YottaDB recommends that you perform appropriate peak load tests on your application and ensure that you have an adequate number of huge pages configured for your peak workloads or that your application is configured to perform robustly when processes terminate with SIGBUS errors. The following YottaDB features fork processes and may generate SIGBUS errors when huge pages are not available-JOB, OPEN of a PIPE device, ZSYSTEM, interprocess signaling that requires the services of gtmsecshr when gtmsecshr is not already running, SPAWN commands in DSE, GDE, and LKE, argumentless MUPIP RUNDOWN, and replication-related MUPIP commands that start server processes and/or helper processes. As increasing the available huge pages may require a reboot, an interim workaround is to unset the environment variable HUGETLB_MORECORE for YottaDB processes until you are able to reboot or otherwise make available an adequate supply of huge pages.
+While YottaDB recommends you configure huge pages for shared memory, you need to evaluate whether or not configuring huge pages for process-private memory is appropriate for your application. Having insufficient huge pages available during certain commands (for example, a JOB command - see complete list below) can result in a process terminating with a SIGBUS error. This is a current limitation of Linux. Before you use huge pages for process-private memory on production systems, YottaDB recommends that you perform appropriate peak load tests on your application and ensure that you have an adequate number of huge pages configured for your peak workloads or that your application is configured to perform robustly when processes terminate with SIGBUS errors. 
+
+The following YottaDB features fork processes and may generate SIGBUS errors when huge pages are not available - JOB, OPEN a PIPE device, ZSYSTEM, interprocess signaling that requires the services of gtmsecshr when gtmsecshr is not already running, SPAWN commands in DSE, GDE, and LKE, argumentless MUPIP RUNDOWN, and replication-related MUPIP commands that start server processes and/or helper processes. As increasing the available huge pages may require a reboot, an interim workaround is to unset the environment variable HUGETLB_MORECORE for YottaDB processes until you are able to reboot or otherwise make available an adequate supply of huge pages.
 
 Consider the following example of a memory map report of a Source Server process running at peak load:
 
@@ -716,9 +687,9 @@ Consider the following example of a memory map report of a Source Server process
    mapped: 61604K writeable/private: 3592K shared: 33532K
    $
 
-Process id 18839 uses a large amount of shared memory (33535K) and can benefit from configuring huge pages for shared memory. Configuring huge pages for shared memory does not cause a SIGBUS error when a process does a fork. For information on configuring huge pages for shared memory, refer to "Using huge pages" and "Using huge pages for shared memory" sections. SIGBUS errors only occur when you configure huge pages for process private memory; these errors indicate you have not configured your system with an adequate number of huge pages. To prevent SIGBUS errors, you should perform peak load tests on your application to determine the number of required huge pages. For information on configuring huge pages for process private memory, refer to "Using huge pages" and "Using huge pages for process working space" sections.
+Process id 18839 uses a large amount of shared memory (33535K) and can benefit from configuring huge pages for shared memory. Configuring huge pages for shared memory does not cause a SIGBUS error when a process does a fork. For information on configuring huge pages for shared memory, refer to the "Using huge pages" and "Using huge pages for shared memory" sections. SIGBUS errors only occur when you configure huge pages for process-private memory; these errors indicate you have not configured your system with an adequate number of huge pages. To prevent SIGBUS errors, you should perform peak load tests on your application to determine the number of required huge pages. For information on configuring huge pages for process-private memory, refer to the "Using huge pages" and "Using huge pages for process working space" sections.
 
-As application response time can be deleteriously affected if processes and database shared memory segments are paged out, YottaDB recommends configuring systems for use in production with sufficient RAM so as to not require swap space or a swap file. While you must configure an adequate number of huge pages for your application needs as empirically determined by benchmarking / testing, and there is little downside to a generous configuration to ensure a buffer of huge pages available for workload spikes, an excessive allocation of huge pages may affect system throughput by reserving memory for huge pages that could otherwise be used by applications that cannot use huge pages.
+As application response time can be adversely affected if processes and database shared memory segments are paged out, YottaDB recommends configuring systems for use in production with sufficient RAM so as to not require swap space or a swap file. While you must configure an adequate number of huge pages for your application needs as empirically determined by benchmarking / testing, and there is little downside to a generous configuration to ensure a buffer of huge pages available for workload spikes, an excessive allocation of huge pages may affect system throughput by reserving memory for huge pages that could otherwise be used by applications that cannot use huge pages.
 
 
 ++++++++++++++++++++++++++++++++++
@@ -745,12 +716,14 @@ Using huge pages
 
 To use huge pages for shared memory (journal buffers, replication journal pool and global buffers):
 
-* Permit GT.M processes to use huge pages for shared memory segments (where available, YottaDB recommends option 1 below; however not all file systems support extended attributes). Either:
+* Permit YottaDB processes to use huge pages for shared memory segments (where available, YottaDB recommends option 1 below; however not all file systems support extended attributes). Either:
  
  1. Set the CAP_IPC_LOCK capability needs for your mumps, mupip and dse processes with a command such as:
 
     .. parsed-literal::
        setcap 'cap_ipc_lock+ep' $gtm_dist/mumps
+
+.
 
  2. Permit the group used by YottaDB processes needs to use huge pages with the following command, which requires root privileges: 
 
@@ -775,12 +748,12 @@ Refer to the documentation of your Linux distribution for details. Other sources
 
 * http://lwn.net/Articles/374424/
 
-* http://www.ibm.com/developerworks/wikis/display/LinuxP/libhuge+short+and+simple
+* https://www.ibm.com/developerworks/community/blogs/fe313521-2e95-46f2-817d-44a4f27eba32/entry/backing_guests_with_hugepages?lang=en 
 
 * the HOWTO guide that comes with libhugetlbfs (http://sourceforge.net/projects/libhugetlbfs/files/)
 
 .. note::
-   Since the memory allocated by Linux for shared memory segments mapped with huge pages is rounded up to the next multiple of huge pages, there is potentially unused memory in each such shared memory segment. You can therefore increase any or all of the number of global buffers, journal buffers, and lock space to make use of this otherwise unused space. You can make this determination by looking at the size of shared memory segments using ipcs. Contact YottaDB support for a sample program to help you automate the estimate.Transparent huge pages may further improve virtual memory page table efficiency. Some Supported releases automatically set transparent_hugepages to "always"; others may require it to be set at or shortly after boot-up. Consult your Linux distribution's documentation.
+   Since the memory allocated by Linux for shared memory segments mapped with huge pages is rounded up to the next multiple of huge pages, there is potentially unused memory in each such shared memory segment. You can therefore increase any or all of the number of global buffers, journal buffers, and lock space to make use of this otherwise unused space. You can make this determination by looking at the size of shared memory segments using ipcs. Contact YottaDB support for a sample program to help you automate the estimate. Transparent huge pages may further improve virtual memory page table efficiency. Some supported releases automatically set transparent_hugepages to "always"; others may require it to be set at or shortly after boot-up. Consult your Linux distribution's documentation.
 
 -------------------------------------
 Configuring the Restriction Facility
