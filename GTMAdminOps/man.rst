@@ -35,7 +35,7 @@ This Administration and Operations Guide explains how to install and manage Yott
 How to Use This Manual
 -----------------------
 
-First, read Chapter 1: “About YottaDB” for an overview of YottaDB system management. Then, proceed to the chapter that discusses the area of interest.
+First, read `Chapter 1: “About YottaDB” <https://docs.yottadb.com/AdminOpsGuide/about.html>`_ for an overview of YottaDB system management. Then, proceed to the chapter that discusses the area of interest.
 
 The presentation of information in each chapter is designed to be useful for even a first-time user. Each chapter starts with an overview of the topic at hand and then moves on to related YottaDB utility program commands and qualifiers. This list is organized alphabetically by command and then by the qualifiers for each command. Then, the chapter provides recommendations from YottaDB to implement and operate important aspects of the topic. It ends with an exercise that reinforces the concepts introduced in the chapter.
 
@@ -83,7 +83,7 @@ This manual contains twelve chapters and an Appendix. Here is a brief overview o
 Conventions Used in this Manual
 -------------------------------
 
-Use YottaDB with any UNIX shell as long as environment variables and scripts are consistently created for that shell. In this manual, UNIX examples are validated on Ubuntu Linux (Ubuntu Linux uses dash for /bin/sh). Examples in later chapters assume that an environment has been set up as described in the chapters Chapter 2: “Installing YottaDB” and Chapter 3: “Basic Operations”.
+Use YottaDB with any UNIX shell as long as environment variables and scripts are consistently created for that shell. In this manual, UNIX examples are validated on Ubuntu Linux (Ubuntu Linux uses dash for /bin/sh). Examples in later chapters assume that an environment has been set up as described in the chapters `Chapter 2: “Installing YottaDB” <https://docs.yottadb.com/AdminOpsGuide/installydb.html>`_ and `Chapter 3: “Basic Operations” <https://docs.yottadb.com/AdminOpsGuide/basicops.html>`_.
 
 We have made a conscientious effort to present intuitive examples and related error messages that appear if a user tries those examples. However, due to environment and shell differences, you may occasionally obtain different results (although the differences should be relatively minor). Therefore, it is suggested that you try the examples in a database environment that does not contain any valued information.
 

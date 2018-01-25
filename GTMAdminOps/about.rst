@@ -54,13 +54,13 @@ YottaDB requires minimal administrative effort.
 
 M routines are stored as text files and object files in the native file system. Compilation of source text into object code is typically automatic, but may be invoked explicitly. A user may store routines in multiple libraries and/or directories organized into search hierarchies, and change the search paths as needed.
 
-For more information on the YottaDB language and programming environment, see the Programmer's Guide.
+For more information on the YottaDB language and programming environment, see the `Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/index.html>`_.
 
 ------------------
 Database Subsystem
 ------------------
 
-The YottaDB database subsystem consists of a run-time library and a set of utilities which operate on one or more user-specified Global Directories (GD) and database files. YottaDB stores M global variables in database files, which are ordinary UNIX files. Internally, the UNIX files are organized as balanced trees (B-trees) in YottaDB Data Structures (GDS). See the "YottaDB Database Structure" chapter for more information on B-trees and the GDS file structure.
+The YottaDB database subsystem consists of a run-time library and a set of utilities which operate on one or more user-specified Global Directories (GD) and database files. YottaDB stores M global variables in database files, which are ordinary UNIX files. Internally, the UNIX files are organized as balanced trees (B-trees) in YottaDB Data Structures (GDS). See the `"YottaDB Database Structure" chapter <https://docs.yottadb.com/AdminOpsGuide/gds.html>`_ for more information on B-trees and the GDS file structure.
 
 A directory maps global names to a database file. YottaDB processes use this mapping when storing and retrieving globals from the database. Multiple global directories can reference a single database file, and a database file can be referenced in multiple global directories, with some exceptions, as discussed in `Chapter 4: “Global Directory Editor” <https://docs.yottadb.com/AdminOpsGuide/gde.html>`_. Use the Global Directory Editor (GDE) to create and maintain global directories.
 
