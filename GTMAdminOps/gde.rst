@@ -3,7 +3,7 @@
    Global Directory Editor
 
 =============================
-Global Directory Editor
+4. Global Directory Editor
 =============================
 
 .. contents::
@@ -13,7 +13,7 @@ Global Directory Editor
 Global Directory
 ----------------------
 
-A global directory is analogous to a telephone directory. Just as a telephone directory helps you find the phone number (and the address) given a person's name, a global directory helps YottaDB processes find the database file of an M global variable node. But because its life is independent of the databases it maps, a global directory has a second purpose in addition to holding key mappings, which is to hold database characteristics for MUPIP CREATE. While changes to the mappings take effect as soon as a process loads a new global directory, MUPIP CREATE transfers the other characteristics to the database file, but other YottaDB processes never use the global directory defined characteristics, they always use those in the database file.
+A global directory is analogous to a telephone directory. Just as a telephone directory helps you find the phone number (and the address) given a person's name, a global directory helps YottaDB processes find the database file of an M global variable node. But because its life is independent of the databases it maps, a global directory has a second purpose in addition to holding key mappings, which is to hold database characteristics for MUPIP CREATE. While changes to the mappings take effect as soon as a process loads a new global directory, MUPIP CREATE transfers the other characteristics to the database file. Other YottaDB processes never use the global directory defined characteristics, so they always use those in the database file.
 
 YottaDB manages routines in files and libraries separately from globals. For more information on routine management, refer to the Development Cycle chapter in the Programmer's Guide.
 
@@ -25,9 +25,9 @@ Consider a global variable ^TMP that holds only temporary data that is no longer
 
 Consider the following illustration: 
 
-.. image:: dir.png
+.. image:: globaldir.png
 
-There are four M global variables--^Gharial, ^Hoopoe, ^Jacare, and ^Trogon. ^Gharial and ^Jacare map to region REPTILES that maps to database file creep.dat and ^Hoopoe and ^Trogon map to region BIRDS that maps to database file flap.dat. The default namespace * maps to a region called DEFAULT that maps to database file gtm.dat. * denotes all globals other than the explicitly named ^Gharial, ^Hoope, ^Jacare, and ^Trogon. All globals store data in their respective database files. Each database file has a single active journal file. To enforce access restrictions on globals so that herpetologists have access to ^Gharial and ^Jacare and only ornithologists have access to ^Hoopoe and ^Trogon, one just needs to assign appropriate read / write permissions to creep.dat and flap.dat.
+There are four M global variables--^Horse, ^Crab, ^Platypus, and ^Lobster. ^Horse and ^Platypus map to region MAMMALS that maps to database file linnaeus.dat and ^Crab and ^Lobster map to region CRUSTACEANS that maps to database file brunnich.dat. The default namespace * maps to a region called DEFAULT that maps to database file gtm.dat. * denotes all globals other than the explicitly named ^Horse, ^Platypus, ^Crab, and ^Lobster. All globals store data in their respective database files. Each database file has a single active journal file. To enforce access restrictions on globals so that only mammalogists have access to ^Horse and ^Platypus and only carcinologists have access to ^Crab and ^Lobster, one just needs to assign appropriate read / write permissions to linnaeus.dat and brunnich.dat.
 
 .. note::
    Each database file can have a single active journal file. A journal can be linked to its predecessor journal file to form a chain of journal files. 
@@ -44,7 +44,7 @@ In a nutshell, the database attributes and mapping rules defined in a global dir
 
 * **Improve Operational Administration**- When a global becomes so big that that breaking it up improves operational administration or permit a larger total size.
 
-* **Compliment Application Design**- To separate global and / or their subscripts in a way that achieves a design goal without writing addition code. For example, mapping globals to regions that are not replicated.
+* **Compliment Application Design**- To separate globals and / or their subscripts in a way that achieves a design goal without writing additional code. For example, mapping globals to regions that are not replicated.
 
 * **Manage Volatility**- some data is static, or relatively so, and you wish to leverage that to tailor your backup and integrity verification patterns, or to use MM access.
 
@@ -215,7 +215,7 @@ The function of each section in the Global Directory is described as follows:
 
 **TEMPLATES**
 
-This section of the Global Directory provides a default value for every database or file parameter passed to GT.M as part of a region or segment definition. GDE uses templates to complete a region or segment definition where one of these necessary values is not explicitly defined.
+This section of the Global Directory provides a default value for every database or file parameter passed to YottaDB as part of a region or segment definition. GDE uses templates to complete a region or segment definition where one of these necessary values is not explicitly defined.
 
 GDE provides initial default values when creating a new Global Directory. You can then change any of the values using the appropriate -REGION or -SEGMENT qualifiers with the TEMPLATE command.
 
@@ -369,7 +369,7 @@ Guidelines for Mapping
 
 This section lists the parameters that apply to defining each component of a mapping.
 
-*NAMES*
+**NAMES**
 
 The NAMES section contains mappings of M global name spaces. More than one name space can map to a single region but a single name space can only map to one region.
 
@@ -381,12 +381,12 @@ A name space:
 * Can be a global name ending with a wild card ("*"), for example, abc* represents the set of global nodes which have abc as the starting prefix.
 * Can be a subtree of a global name, for example, abc(1) represents a subtree of the global ^abc. 
 * Can be a subscript range, for example, abc(1:10) represents all nodes starting from ^abc(1) up to (but not including) to ^abc(10).
-* A global name can be one to 31 alphanumeric characters. However, the combined length of a global and its subscripts is limited to 1,019 bytes (the maximum key size supported by GT.M). Note that the byte length of the subscripted global specification can exceed the maximum KeySize specified for its region. 
+* A global name can be one to 31 alphanumeric characters. However, the combined length of a global and its subscripts is limited to 1,019 bytes (the maximum key size supported by YottaDB). Note that the byte length of the subscripted global specification can exceed the maximum KeySize specified for its region. 
 * Maps to only one region in the Global Directory.
 
-*REGIONS*
+**REGIONS**
 
-The REGIONS section contain mappings of database region. A region is a logical structure that holds information about a portion of a database, such as key-size and record-size. A key is the internal representation of a global variable name. In this chapter the terms global variable name and key are used interchangeably. A record refers to a key and its data.
+The REGIONS section contains mappings of the database. A region is a logical structure that holds information about a portion of the database, such as key-size and record-size. A key is the internal representation of a global variable name. In this chapter the terms global variable name and key are used interchangeably. A record refers to a key and its data.
 
 A Global Directory must have at least one region. A region only maps to a single segment. More than one name may map to a region.
 
@@ -397,7 +397,7 @@ A region name:
 
 GDE automatically converts region names to uppercase, and uses DEFAULT for the default region name.
 
-*SEGMENTS*
+**SEGMENTS**
 
 The SEGMENTS section contains mappings for segments. A segment defines file-related database storage characteristics. A segment must map to a single file. A segment can be mapped by only one region.
 
@@ -410,7 +410,7 @@ A segment-name:
 
 GDE automatically converts segment names to uppercase. GDE uses DEFAULT for the default segment name.
 
-*FILE*
+**FILE**
 
 Files are the structures provided by UNIX for the storage and retrieval of information. Files used by YottaDB must be random-access files resident on disk.
 
@@ -505,9 +505,9 @@ The descriptions of these commands and qualifiers appear in various cases and fo
 
 * In examples: the entire command line is shown in lower case.
 
-++
-@
-++
++++
+\@
++++
 
 The @ command executes a GDE command file. Use the @ command to execute GDE commands stored in a text file.
 
@@ -525,7 +525,7 @@ Example:
 .. parsed-literal::
    GDE> @standard
 
-This command executes the GDE commands in the file to standard in the current working directory. standard should contain GDE commands; comments should start with an exclamation mark (!). 
+This command executes the GDE commands in the file standard in the current working directory. standard should contain GDE commands; comments should start with an exclamation mark (!). 
 
 +++
 Add
@@ -553,7 +553,6 @@ Maps a namespace to a region in the global directory. The format of the ADD -NAM
 
 .. parsed-literal::
    A[DD]-N[AME] namespace -R[EGION]=region-name
-
 
 
 * You can map a global and its subtrees to different regions.
@@ -663,7 +662,7 @@ Provides a mechanism to specify the collation for global variables sharing the s
 
 * Because string subscripts are subject to collation (the unsubscripted portion of a global variable name and numeric subscripts are not), GDE needs to know the collation sequence number associated with each unsubscripted global variable name. M standard collation (the default) has a collation number of zero (0). As a consequence, when you use alternative collation(s) (other than 0), the collation transforms must be available to GDE in the same way as they are to other YottaDB components. All of a global (all nodes sharing the same unsubscripted global name) must have a single collation, which is implicitly the case for globals that do not span multiple regions.
 
-* Globals that do not span multiple regions and do not have any collation characteristics defined in the GBLNAME section of the global directory take on the default collation characteristics defined in the database region to which they map. On the other hand, globals that span multiple regions have their collation implicitly (collation 0), or explicitly, established by the GBLNAME section of the global directory and cannot adopt a differing collation based on the region collation characteristic. Because GT.M determines collation for globals spanning multiple regions by the GBLNAME characteristic, which cannot change once the database files are created, GDE reports collation on many error messages.
+* Globals that do not span multiple regions and do not have any collation characteristics defined in the GBLNAME section of the global directory take on the default collation characteristics defined in the database region to which they map. On the other hand, globals that span multiple regions have their collation implicitly (collation 0), or explicitly, established by the GBLNAME section of the global directory and cannot adopt a differing collation based on the region collation characteristic. Because YottaDB determines collation for globals spanning multiple regions by the GBLNAME characteristic, which cannot change once the database files are created, GDE reports collation on many error messages.
 
 Example:
 
@@ -704,7 +703,7 @@ This command changes the region master to use the segment temp and establishes a
 Delete
 ++++++++++++++
 
-The DELETE command removes a name, region, or segment from the Global Directory. The DELETE command does not delete any actual data. However, GT.M does not access database files that do not have mapped global variables except through extended references using an alternative global directory that does not map to them. Note that YottaDB replication does not support global updates made with extended references, unless they actually map to a database file that is a part of the replicated instance.
+The DELETE command removes a name, region, or segment from the Global Directory. The DELETE command does not delete any actual data. However, YottaDB does not access database files that do not have mapped global variables except through extended references using an alternative global directory that does not map to them. Note that YottaDB replication does not support global updates made with extended references, unless they actually map to a database file that is a part of the replicated instance.
 
 The format of the DELETE command is: 
 
@@ -763,7 +762,7 @@ where topic specifies the GDE command for which you want information. If you omi
 LOCKS
 ++++++++
 
-The LOCKS command specifies the region into which GT.M maps "local" locks(those with resource names not starting with a caret symbol ^). GDE maps locks on resource names, starting with a caret symbol, to the database region mapped for the global variable name matching the resource name.
+The LOCKS command specifies the region into which YottaDB maps "local" locks(those with resource names not starting with a caret symbol ^). GDE maps locks on resource names, starting with a caret symbol, to the database region mapped for the global variable name matching the resource name.
 
 The format of the LOCKS command is:
 
@@ -892,7 +891,7 @@ The format of the SHOW command is:
 
 -F[ILE]=gde-command-file: Optionally specifies a file to hold the GDE commands produced by -COMMAND. -FILE must must always appear after -COMMAND.
 
-Please consider using command files produced with the SHOW -COMMAND -FILE for creating new regions and segments in a global directory as the defaults come from the templates. If you inadvertently upgrade a global directory, you can use SHOW -COMMAND to create a file of commands that you can input to GDE with the prior GT.M release to recreate the prior global directory file.
+Please consider using command files produced with the SHOW -COMMAND -FILE for creating new regions and segments in a global directory as the defaults come from the templates. If you inadvertently upgrade a global directory, you can use SHOW -COMMAND to create a file of commands that you can input to GDE with the prior YottaDB release to recreate the prior global directory file.
 
 SHOW -COMMAND displays the GDE commands for creating names, regions, and segments of the current global directory state in a target environment. However, it does not always include the same template settings (SHOW -TEMPLATE) of the current global directory. SHOW -COMMAND creates an appropriate set of templates that minimize other adjustments to recreate the current global directory. If the current GDE template settings (SHOW -TEMPLATE) are important for your application, you need set them again after applying the commands from GDE SHOW -COMMAND in the target environment.
 
@@ -901,7 +900,7 @@ SHOW -COMMAND displays the GDE commands for creating names, regions, and segment
 
 -NAME, -REGION, -SEGMENT, -GBLNAME, -MAP, -TEMPLATE, and -ALL are qualifiers that cause GDE to display selected portions of the Global Directory as follows:
 
--MAP: Displays the current mapping of all names, regions, segments, and files. This qualifier corresponds to the section of the SHOW report titled ***MAP***. The output of a SHOW -MAP may be restricted to a particular region by specifying a -REGION qualifier with a region name argument.
+-MAP: Displays the current mapping of all names, regions, segments, and files. This qualifier corresponds to the section of the SHOW report titled \*\*\*MAP\*\*\*. The output of a SHOW -MAP may be restricted to a particular region by specifying a -REGION qualifier with a region name argument.
 
 -TEMPLATE: Displays the current region and segment templates. This qualifier corresponds to the section of the SHOW report titled: 
 
@@ -1143,7 +1142,7 @@ The maximum length is 31 alphanumeric characters.
 
 **-[NO]EPOCHTAPER**
 
-Tries to minimize epoch duration by reducing the number of buffers to flush by GT.M and the file system (via an fsync()) as the epoch (time-based or due to a journal file auto-switch) approaches. By default, EPOCHTAPER is enabled.
+Tries to minimize epoch duration by reducing the number of buffers to flush by YottaDB and the file system (via an fsync()) as the epoch (time-based or due to a journal file auto-switch) approaches. By default, EPOCHTAPER is enabled.
 
 **-[NO]INST[_FREEZE_ON_ERROR]**
 
@@ -1212,7 +1211,7 @@ Example:
 .. parsed-literal::
    CHANGE -REGION DEFAULT -JOURNAL=(ALLOCATION=2048,AUTOSWITCHLIMIT=8386560,BEFORE_IMAGE,BUFFER_SIZE=2312,EXTENSION=2048)
 
-For information on all Journal options and their allowable minimum and maximum values, see “SET -JOURNAL Options ” in the "GT.M Journaling" chapter.
+For information on all Journal options and their allowable minimum and maximum values, see “SET -JOURNAL Options ” in the "YottaDB Journaling" chapter.
 
 *Summary*
 
@@ -1340,7 +1339,7 @@ Specifies the access method or the YottaDB buffering strategy for storing and re
   - BG supports both forward and backward recovery and rollback to recover a database without a restore. For more information forward and backward recovery and rollback, see Chapter 5: “General Database Management”.
   - BG is a likely choice when you need faster recovery times from system failures.
 
-* With MM, YottaDB bypasses the global buffer pool and relies entirely on the OS/file system to manage the data traffic between memory and disk. GT.M has no control over the timing of disk updates, therefore there is a greater reliance on the OS/file system for database performance.
+* With MM, YottaDB bypasses the global buffer pool and relies entirely on the OS/file system to manage the data traffic between memory and disk. YottaDB has no control over the timing of disk updates, therefore there is a greater reliance on the OS/file system for database performance.
   - MM supports NOBEFORE_IMAGE journaling only. YottaDB issues an error if you use MM with BEFORE_IMAGE Journaling. MM supports MUPIP JOURNAL -RECOVER -FORWARD and MUPIP JOURNAL -ROLLBACK -FORWARD. With MM, MUPIP JOURNAL -RECOVER -BACKWARD only generates lost and broken transaction files but cannot recover the database. 
   - Depending on your file system, MM may be an option when you need performance advantage in situations where the above restrictions are acceptable.
 
@@ -1367,7 +1366,7 @@ Specifies the number of blocks YottaDB allocates to a disk file when MUPIP creat
 
 * The maximum size of a database file is 1,040,187,392(992Mi) blocks.
 
-* The default ALLOCATION was chosen for initial development and experimentation with GT.M. Because file fragmentation impairs performance, make the initial allocation for production files and large projects large enough to hold the anticipated contents of the file for a length of time consistent with your UNIX file reorganization schedule.
+* The default ALLOCATION was chosen for initial development and experimentation with YottaDB. Because file fragmentation impairs performance, make the initial allocation for production files and large projects large enough to hold the anticipated contents of the file for a length of time consistent with your UNIX file reorganization schedule.
 
  **--[NO]AS[YNCIO]**
 
@@ -1377,7 +1376,7 @@ Specifies the number of blocks YottaDB allocates to a disk file when MUPIP creat
 
 * As asynchronous IO dispenses with the UNIX file buffer cache, YottaDB global buffers are the sole caching mechanism. To make asynchronous IO perform well, you will likely need to increase the number of global buffers considerably. With YottaDB's limit of 2GiB per shared memory segment, a database segment with 4KiB blocks has a limit of almost two million global buffers.
 
-* A large number of global buffers potentially implies a large number of dirty global buffers to be flushed at an epoch. You should investigate the impact on application response time of GT.M epoch tapering vs. turning off epoch tapering and using a separate stand-alone process that executes a line of code such as: for set x="" for set x=$view("gvnext",x) quit:""=x view "dbflush":x,"dbsync":x,"epoch":x hang n where n is a number that causes each region to be flushed at an appropriate interval. If you choose this option, remember to turn off epoch tapering, and to set the epoch interval in the file header to be large enough to prevent application processes from performing epochs, and consider scripted timely switching of journal files by other than application processes (switching journal files involves an epoch).
+* A large number of global buffers potentially implies a large number of dirty global buffers to be flushed at an epoch. You should investigate the impact on application response time of YottaDB epoch tapering vs. turning off epoch tapering and using a separate stand-alone process that executes a line of code such as: for set x="" for set x=$view("gvnext",x) quit:""=x view "dbflush":x,"dbsync":x,"epoch":x hang n where n is a number that causes each region to be flushed at an appropriate interval. If you choose this option, remember to turn off epoch tapering, and to set the epoch interval in the file header to be large enough to prevent application processes from performing epochs, and consider scripted timely switching of journal files by other than application processes (switching journal files involves an epoch).
 
 * On AIX, consider mounting file systems with the CIO mount option. The CIO mount option drops support for the file buffer cache (unused by asynchronous IO), and also eliminates a lock that is a potential bottleneck to YottaDB performance on the AIX jfs2 filesystem.
 
@@ -1462,7 +1461,7 @@ Choose the settings for this qualifier carefully. Small numbers of global buffer
 
 If database global buffers are paged out, it will result in poor performance. Therefore, do not increase this factor to a large value without careful observation.
 
-The proper number of GLOBAL_BUFFERs depends on the application and the amount of primary memory available on the system. Most production databases exhibit a direct relationship between the number of GLOBAL_BUFFERs and performance. However, the relationship is not linear, but asymptotic, so that increases past some point have progressively less benefit. This point of diminishing returns depends on the application. For most applications, FIS expects the optimum number of GLOBAL_BUFFERs to be between 1K and 64K.
+The proper number of GLOBAL_BUFFERs depends on the application and the amount of primary memory available on the system. Most production databases exhibit a direct relationship between the number of GLOBAL_BUFFERs and performance. However, the relationship is not linear, but asymptotic, so that increases past some point have progressively less benefit. This point of diminishing returns depends on the application. For most applications, YottaDB expects the optimum number of GLOBAL_BUFFERs to be between 1K and 64K.
 
 Because transaction processing can be involved in an update and a transaction is limited to half the GLOBAL_BUFFER_COUNT, the value for GLOBAL_BUFFER_COUNT should therefore be at least 32 plus twice the number of the blocks required by the largest global variable node in your application.
 
@@ -1568,13 +1567,13 @@ Specifies the collation number for a global name; a value of 0 specifies standar
   - If there is a collation specified in the Directory Tree (DT) for that variable, use it after confirming that this matches the collation in the global directory.
   - else (that is, there is no collation specified in the DT): 
     
-    * If there is collation specified for that global variable in the global directory use it
+    * If there is collation specified for that global variable in the global directory, use it
     * else if there is a default for that database file, use it
     * else (that is, neither exists), use standard M collation
 
 * else (that is, a GVT does not exist, which in turn means there is no DT):
   
-  - If there is collation specified for that global variable in the global directory use it
+  - If there is collation specified for that global variable in the global directory, use it
   - else, if there is a default for that database file, use it
   - else (that is, neither exists), use standard M collation
 

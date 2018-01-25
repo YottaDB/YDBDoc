@@ -3,7 +3,7 @@
     Installing YottaDB
 
 ========================
-Installing YottaDB
+2. Installing YottaDB
 ========================
 
 .. contents::
@@ -24,12 +24,11 @@ Before You Begin
 
 Before you begin installing YottaDB, perform the following tasks:
 
-* Read the YottaDB Release Notes Documentation. The release documents contain the latest information that may be critical for installing and configuring YottaDB. They are located under the Releases tab on the YottaDB Github repository. (https://github.com/YottaDB/YottaDB)
+* Read the YottaDB Release Notes Documentation. The release documents contain the latest information that may be critical for installing and configuring YottaDB. They are located under the `Releases tab on the YottaDB Github repository <https://github.com/YottaDB/YottaDB/releases>`_ and can also be reached from the `Documentation page on the YottaDB website <https://yottadb.com/resources/documentation/>`_
 
 * Determine whether or not YottaDB access is restricted to a specific group. Keep the group name handy as you will have to enter it during the installation process.
 
-* Set the environment variable gtm_log to a directory where YottaDB should create log files.
-  If you do not set gtm_log, YottaDB creates log files in a directory in /tmp (AIX, GNU/Linux). However, this is not recommended because it makes YottaDB log files vulnerable to the retention policy of a temporary directory.
+* Set the environment variable gtm_log to a directory where YottaDB should create log files. If you do not set gtm_log, YottaDB creates log files in a directory in /tmp (AIX, GNU/Linux). However, this is not recommended because it makes YottaDB log files vulnerable to the retention policy of a temporary directory.
 
 .. note::
    In the latest version, gtmsecshr logs its messages in the system log and the environment variable gtm_log is ignored.
@@ -56,17 +55,6 @@ Installation Procedure
  .. parsed-literal::
 
     sudo ./ydbinstall.sh --installdir /opt/yottadb/ --utf8 default --verbose
-
-* Choose a directory for your default environment and initialize it: 
-
- .. parsed-literal::
-
-  export ydbdir=$HOME/.yottadb ; . /opt/yottadb/latest/yottadbprofile
-
-* #include the file /opt/yottadb/latest/libyottadb.h in your C program and compile it.
-
-* Run your program, ensuring either that libyottadb.so is in the load path of your program (e.g., using ldcache or the LD_LIBRARY_PATH environment variable), or that it is preloaded using LD_PRELOAD.
-
 
 +++++++++++++++++++++++++++++++++++++++++++++
 Compiling the Reference Implementation Plugin
@@ -103,7 +91,7 @@ The package names vary by distribution / version.
 ydbinstall Script
 ---------------------
 
-ydbinstall is a stand-alone YottaDB installation facility that attempts to download the latest / current production YottaDB distribution from github.com and install YottaDB using reasonable defaults. gtminstall is a part of the YottaDB binary distribution and you can also use it to install YottaDB from the temporary directory in which you unpack the YottaDB distribution. It allows considerable customization using the following command line switches:
+ydbinstall is a stand-alone YottaDB installation script that installs YottaDB using reasonable defaults. ydbinstall is a part of the YottaDB binary distribution and you can also use it to install YottaDB from the temporary directory in which you unpack the YottaDB distribution. It allows considerable customization using the following command line switches:
 
 +-------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
 | Command Line Switches                                 | \* | Description                                                                                                            |
@@ -114,7 +102,7 @@ ydbinstall is a stand-alone YottaDB installation facility that attempts to downl
 +-------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
 | --copyexec dirname                                    |    | Copy gtm script to dirname; incompatible with linkexec                                                                 |
 +-------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
-| --debug                                               | \* | Turn on script debugging option set -x                                                                                 |
+| --debug                                               | \* | Turn on  debugging option with set -x                                                                                  |
 +-------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
 | --distrib dirname or URL                              |    | Source directory for YottaDB distribution tarball, local or remote                                                     |
 +-------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
@@ -124,9 +112,11 @@ ydbinstall is a stand-alone YottaDB installation facility that attempts to downl
 +-------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
 | --group-restriction                                   |    | Limit execution to a group; defaults to unlimited if not specified                                                     |
 +-------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
+| --gtm                                                 |    | Install GT.M instead of YottaDB                                                                                        |
++-------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
 | --help                                                |    | Print this usage information                                                                                           |
 +-------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
-| --installdir dirname                                  |    | Directory where YottaDB is to be installed                                                                             |
+| --installdir dirname                                  |    | Directory where YottaDB is to be installed (defaults to /usr/local/lib/yottadb/version)                                |
 +-------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
 | --keep-obj                                            |    | Keep .o files of M routines (normally deleted on platforms with YottaDB support for routines in shared libraries);     |
 +-------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
@@ -144,7 +134,7 @@ ydbinstall is a stand-alone YottaDB installation facility that attempts to downl
 +-------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
 | --utf8 ICU_version                                    |    | Install UTF-8 support using specified major.minor ICU version; specify default to use default version                  |
 +-------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
-| --verbose -                                           | \* | Output diagnostic information as the script executes; default is to run quietly                                        |
+| --verbose                                             | \* | Output diagnostic information as the script executes; default is to run quietly                                        |
 +-------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
 
 
@@ -157,12 +147,31 @@ ydbinstall is a stand-alone YottaDB installation facility that attempts to downl
 
 * This version must run as root.
 
-If ydbinstall finds that the environment is a Linux installation using systemd, it prompts the user for permission to insert addRemoveIPC=no into /etc/systemd/logind.conf and restart logind; if the user denies permission, ydbinstall stops the installation after issuing instructions on how to perform the task independently and information on why it is necessary.
 
-To run the ydbinstall script, unpack and run it as root.
+To run the ydbinstall script, run it as root.
+
+**Examples**
 
 .. parsed-literal::
-   sudo ./ydbinstall.sh --installdir /opt/yottadb/ --utf8 default --verbose
+   sudo ./ydbinstall.sh
+
+This example installs the latest YottaDB release at /usr/local/lib/yottadb/version.
+
+.. parsed-literal::
+   sudo ./ydbinstall.sh --utf8 default --verbose
+
+This example installs the latest YottaDB release with added support for UTF-8 and outputs diagnostic information as the script executes.
+
+.. parsed-literal::
+   sudo ./ydbinstall.sh --installdir /r110 r1.10
+
+This example installs YottaDB release r1.10 in the r110 directory.
+
+.. parsed-literal::
+   sudo ./ydbinstall.sh --gtm
+
+This example installs the latest GT.M version at /usr/local/lib/fis-gtm/version.
+
 
 
 
