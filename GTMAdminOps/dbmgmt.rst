@@ -2123,6 +2123,50 @@ If the forecasted growth of a global is 5% per month from relatively uniformly d
 .. parsed-literal::
    $ mupip reorg -fill_factor=80 
 
+
++++++++++++++++++++
+USER_DEFINED_REORG
++++++++++++++++++++
+
+The major REORG operations are COALESCE, SPLIT and SWAP, in terms of how database files are defragmented and reorganized.
+
+As defined above:
+
+* Blocks coalesced - the number of blocks that were sufficiently compacted enough to free a block
+* Blocks split - the number of blocks expanded enough to require the allocation of a new block
+* Blocks swapped - the number of blocks moved to improve adjacency; this can exceed the number of blocks processed as a consequence of the movement of blocks
+
+USER_DEFINED_REORG gives the user more control over which operations are performed during the REORG process.
+
+As REORG is IO intensive, an organization may opt to skip swapping or splitting files, especially as these operations may only yield a minimal benefit while also impacting the operation of normal processes.
+
+Examples of USER_DEFINED_REORG are as follows:
+
+.. parsed-literal::
+   mupip reorg -user_defined_reorg="DETAIL"
+
+This example records every block and every operation (coalesce/swap/split) and gives detailed information about the REORG.
+
+.. parsed-literal::
+   mupip reorg -user_defined_reorg="NOCOALESCE"
+
+This example carries out the REORG but does not coalesce (combine) any blocks.
+
+.. parsed-literal::
+   mupip reorg -user_defined_reorg="NOSPLIT"
+
+This example carries out the REORG but does not split any blocks.
+
+.. parsed-literal::
+   mupip reorg -user_defined_reorg="NOSWAP"
+
+This example carries out the REORG but does not swap any blocks.
+
+.. parsed-literal::
+   mupip reorg -user_defined_reorg="NOSWAP,NOCOALESCE"
+
+This example combines two specifications, and carries out the REORG without swapping or coalescing any blocks.
+
 ++++++++++++
 REPLICATE
 ++++++++++++
