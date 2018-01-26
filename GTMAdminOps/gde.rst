@@ -1368,11 +1368,11 @@ Specifies the number of blocks YottaDB allocates to a disk file when MUPIP creat
 
 * The default ALLOCATION was chosen for initial development and experimentation with YottaDB. Because file fragmentation impairs performance, make the initial allocation for production files and large projects large enough to hold the anticipated contents of the file for a length of time consistent with your UNIX file reorganization schedule.
 
- **--[NO]AS[YNCIO]**
+**--[NO]AS[YNCIO]**
 
- Determines whether an access method BG database file uses asynchronous I/O rather than using synchronous I/O through the file system cache.
+Determines whether an access method BG database file uses asynchronous I/O rather than using synchronous I/O through the file system cache.
 
- The performance characteristics of asynchronous IO are likely to be quite different from the traditional sequential IO. Although asynchronous IO in theory should be more efficient than synchronous IO by eliminating the need for the UNIX file buffer cache and eliminating certain filesystem locks, in practice asynchronous IO is likely to emerge from the starting gate under-performing synchronous IO because of the years that synchronous IO has been the common IO model operating systems and filesystems have had used by applications. So, you should anticipate extensive benchmarking and tuning for your application to achieve the best performance it can with asynchronous IO. Some notes and observations that we have to share:
+The performance characteristics of asynchronous IO are likely to be quite different from the traditional sequential IO. Although asynchronous IO in theory should be more efficient than synchronous IO by eliminating the need for the UNIX file buffer cache and eliminating certain filesystem locks, in practice asynchronous IO is likely to emerge from the starting gate under-performing synchronous IO because of the years that synchronous IO has been the common IO model operating systems and filesystems have had used by applications. So, you should anticipate extensive benchmarking and tuning for your application to achieve the best performance it can with asynchronous IO. Some notes and observations that we have to share:
 
 * As asynchronous IO dispenses with the UNIX file buffer cache, YottaDB global buffers are the sole caching mechanism. To make asynchronous IO perform well, you will likely need to increase the number of global buffers considerably. With YottaDB's limit of 2GiB per shared memory segment, a database segment with 4KiB blocks has a limit of almost two million global buffers.
 
