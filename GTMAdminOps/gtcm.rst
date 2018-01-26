@@ -2,9 +2,9 @@
 .. index::
    GT.CM Client Server
 
-======================
-GT.CM Client/Server
-======================
+========================
+13. GT.CM Client/Server
+========================
 
 .. contents::
    :depth: 2

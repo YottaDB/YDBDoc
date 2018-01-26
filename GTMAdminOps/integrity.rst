@@ -3,7 +3,7 @@
    Maintaining Database Integrity
 
 ==================================
-Maintaining Database Integrity
+11. Maintaining Database Integrity
 ==================================
 
 .. contents::

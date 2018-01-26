@@ -3,7 +3,7 @@
    Database Encryption
 
 ================================
-Database Encryption
+12. Database Encryption
 ================================
 
 .. contents::

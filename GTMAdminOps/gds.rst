@@ -3,7 +3,7 @@
    GDS
 
 ======================================
-YottaDB/GT.M Database Structure (GDS)
+9. YottaDB Database Structure (GDS)
 ======================================
 
 .. contents::
