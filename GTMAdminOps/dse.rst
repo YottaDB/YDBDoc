@@ -3,7 +3,7 @@
    Database Structure Editor
 
 =================================
-Database Structure Editor
+10. Database Structure Editor
 =================================
 
 .. contents::

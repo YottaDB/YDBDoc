@@ -3,7 +3,7 @@
     Database Replication
 
 ====================================
-Database Replication
+7. Database Replication
 ====================================
 
 .. contents::

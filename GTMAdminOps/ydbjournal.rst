@@ -2,9 +2,9 @@
 .. index::
    Journaling
 
-========================
-YottaDB/GT.M Journaling
-========================
+===========================
+6. YottaDB/GT.M Journaling
+===========================
 
 .. contents::
    :depth: 2
