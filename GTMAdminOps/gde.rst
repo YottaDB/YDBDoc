@@ -1577,6 +1577,20 @@ Specifies the collation number for a global name; a value of 0 specifies standar
   - else, if there is a default for that database file, use it
   - else (that is, neither exists), use standard M collation
 
+
++++++++++++++++++++++++++++
+Instance Qualifier
++++++++++++++++++++++++++++
+
+The following -INSTANCE qualifier is used with the CHANGE command.
+
+-F[ILE_NAME=[repl_inst_filename|""] 
+
+* -FILE_NAME=repl_inst_filename maps a replication instance file with the global directory. -FILE_NAME="" removes the mapping of a global directory with a replication instance file. 
+
+* When a global directory is use, the mapping set with CHANGE -INSTANCE FILE_NAME=repl_inst_filename overrides any setting of the gtm_repl_instance environment variable. However, other utilities (MUPIP, LKE, and DSE) use the setting of the gtm_repl_instance environment variable. 
+
+
 -------------------------------------
 GDE Command Summary
 -------------------------------------
