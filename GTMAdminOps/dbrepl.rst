@@ -129,6 +129,52 @@ On a primary instance that is the recipient of an SI replication stream, the jou
 
 Stream sequence numbers are 64-bit unsigned integers.
 
++++++++++++++++++++++++++++++++++++++++++++++
+Using Multiple Instances in the same Process
++++++++++++++++++++++++++++++++++++++++++++++
+
+YottaDB allows updating globals belonging to a different source instance using extended global references or SET $ZGBLDIR. While the replication setup remains the same, these are the main considerations:
+
+* Use one of two ways to identify the current instance as specified by a replication instance file:
+
+  * A global directory can define a mapping to a replication instance file as specified with a GDE CHANGE -INSTANCE -FILE_NAME=<replication_instance_file> command. When a global directory is use, if it has a mapping of an instance file, that mapping overrides any setting of the gtm_repl_instance environment variable. GDE CHANGE -INSTANCE -FILE_NAME="" removes any global directory mapping for an instance file. 
+  * The gtm_repl_instance environment variable specifies a replication instance file for utilities, and, as the default, whenever a user processes relies on a global directory with no instance file specification.
+
+* In order to use multiple instances, at least one global directory must have an instance mapping.
+
+* A replication instance file cannot share any region with another instance file. 
+
+* The Source Servers of all the instances have properly set up Replication Journal Pools.
+
+* A TP transaction or a trigger, as it always executes within a TP transaction, must always restrict updates to globals in one replicating instance. 
+
+**Notes**
+
+* Like other mapping specified by a global directory, a process determines any instance mapping by a global directory at the time a process first uses uses the global directory. Processes other than MUPIP CREATE ignore other (non-mapping) global directory database characteristics, except for collation, which interacts with mapping.
+
+* When Instance Freeze is enabled  (gtm_custom_errors is appropriately defined), a process attaches a region to an instance at the first access to the region; the access may be a read or a VIEW/$VIEW(). Otherwise, the process attaches to a region at the first update to that region. When the mappings are correct, this difference does not matter.
+
+* A process can always update globals that are not in a replicated region.
+
+* Use $VIEW("JNLPOOL") to determine the state of the current Journal Pool. $VIEW("JNLPOOL") returns the replication instance file name for the current Journal Pool and an empty string when there is no Journal Pool. Note that the current Journal Pool may not be associated with the last global accessed by an extended reference.
+
+**Example**:
+
+An EHR application uses a BC replication configuration (A->B) to provide continuous availability. There are two data warehouses for billing information and medical history. For research purposes, the data in these medical history warehouses is cleansed of patient identifiers. Two SI replication instances (Q->R) are setup for the two data warehouses.
+
+The primary global directory (specified via the environment variable gtmgbldir) includes the regions needed for the application proper. It may have the instance file as specified in the global directory or via the environment variable gtm_repl_instance. Each warehouse instance would have its own global directory (e.g. q.gld and r.gld). These global directories have an instance file specified with GDE CHANGE -INSTANCE -FILE_NAME=<replication_instance_file>.
+
+Such a replication setup may benefit from this facility in the following ways:
+
+* A trigger on the primary database A uses normal global references to update a staging global (say ^%BACKLOG) in a non-replicated region of A to store information meant for the warehouses. At an appropriate time, a separate batch process runs across the ^%BACKLOG staging global and applies updates using extended references to P or Q using a transaction or non-TP. If the transaction succeeds, the process removes the applied updates from ^%BACKLOG. Locks control access to ^%BACKLOG and enforce the serialization of updates to P
+
+or 
+
+* The application does not use triggers but updates a global on A in a transaction. If the transaction succeeds, the application starts two more transactions for the warehouses. The second transaction uses extended references to update P. If it fails, the application updates ^%BACKLOG("P") on a non-replicated region of A. The third transaction uses extended references to update Q. If it fails, the application updates ^%BACKLOG("Q") on a non-replicated region of A. A batch process runs periodically to apply updates from ^%BACKLOG to P and Q using TP or non-TP and remove updates that have been applied. This batch process uses LOCKs to control access and enforce serialization of updates to P and Q.
+
+.. note::
+   This functionality has a wide variety of user stories (use cases) and has substantial complexity and changes in future releases may not be backwards compatible. It is recommended to consult your YottaDB support channel before using this in production.
+
 ++++++++++++++++++
 Examples
 ++++++++++++++++++
