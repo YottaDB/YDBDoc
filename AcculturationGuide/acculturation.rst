@@ -103,11 +103,8 @@ You are at liberty to use a Linux host, or any Linux virtual machine of your cho
 Disk Formats
 ++++++++++++
 
-<<<<<<< HEAD
-The YottaDB/GT.M Acculturation Workshop is distributed as a `vmdk format <https://en.wikipedia.org/wiki/VMDK>`_ disk image file  (e.g., **ubuntu-16.04_gtmworkshop9.vmdk**) that should work with most virtualization software, both FOSS and proprietary.
-=======
-The Acculturation Workshop is distributed as a `vmdk format <https://en.wikipedia.org/wiki/VMDK>`_ disk image file  (`ubuntu-16.04_workshop.vmdk <https://github.com/YottaDB/YottaDBdoc/tree/master/AcculturationGuide>`_) that should work with most virtualization software, both FOSS and proprietary.
->>>>>>> 7e15dad... Updates to acculturation guide
+The Acculturation Workshop is distributed as a `vmdk format <https://en.wikipedia.org/wiki/VMDK>`_ disk image file  (`ubuntu-16.04_yottadbworkshop10.vmdk <https://docs.yottadb.com/ubuntu-16.04_yottadbworkshop10.zip>`_) that should work with most virtualization software, both FOSS and proprietary.
+
 
 +++++++++++++++++++++++++++++
 Virtual Machine Configuration
@@ -139,11 +136,11 @@ The Linux kernel, GNU utilities, the WorldVistA EHR extensions to VistA and all 
 Getting Started
 ---------------
 
-With a terminal emulator, initiate an ssh connection to port 2222 on localhost and login with userid 'gtmuser' and password 'GT.M Rocks!' (including a space and an exclamation point). For example, on Linux, you can use the command: ssh -p 2222 -X gtmuser@localhost to connect as user gtmuser to port 2222 on the host which is forwarded to port 22 on the guest.
+With a terminal emulator, initiate an ssh connection to port 2222 on localhost and login with userid 'yottadbuser' and password 'YottaDB Rocks!' (including a space and an exclamation point). For example, on Linux, you can use the command: ssh -p 2222 -X yottadbuser@localhost to connect as user yottadbuser to port 2222 on the host which is forwarded to port 22 on the guest.
 
 .. parsed-literal::
 
- $ ssh -p 2222 -X gtmuser@localhost
+ $ ssh -p 2222 -X yottadbuser@localhost
  Welcome to Ubuntu 16.04.1 LTS (GNU/Linux 3.13.0-39-generic x86_64)
  * Documentation:  https://help.ubuntu.com/
  System information as of Mon Jan 22 18:08:22 EST 2018
@@ -152,7 +149,7 @@ With a terminal emulator, initiate an ssh connection to port 2222 on localhost a
 
  Graph this data and manage this system at: https://landscape.canonical.com/
  Last login: Fri Jan 19 16:51:37 2018 from 10.0.2.2
- gtmuser@gtmworkshop:~$ 
+ yottadbuser@yottadbworkshop:~$ 
 
 
 ++++++++++++++++
@@ -176,9 +173,9 @@ Run YottaDB/GT.M
 YottaDB/GT.M needs several environment variables to be set up. YottaDB/GT.M provides a script that sets up reasonable defaults and allows you to start using YottaDB/GT.M immediately. When you set up environments in YottaDB/GT.M, you should set up your own scripting, but the default is a good place to start. You can source the gtmprofile file in the directory in which you have installed YottaDB/GT.M (e.g, /usr/local/lib/yottadb/r110/gtmprofile or /usr/lib/fis gtm/V6.2 000_x86_64/gtmprofile) to set up reasonable defaults or simply execute the script gtm to execute YottaDB/GT.M. A default environment is created only if it does not exist already.
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ source /usr/local/lib/yottadb/r110/gtmprofile
+   yottadbuser@yottadbworkshop:~$ source /usr/local/lib/yottadb/r110/gtmprofile
    %GDE-I-GDUSEDEFS, Using defaults for Global Directory 
-           /home/gtmuser/fis-gtm/V6.2-000_x86_64/g/gtm.gld
+           /home/yottadbuser/fis-gtm/V6.2-000_x86_64/g/gtm.gld
 
    GDE> 
    %GDE-I-EXECOM, Executing command file /usr/lib/fis-gtm/V6.2-000_x86_64/gdedefaults
@@ -186,17 +183,17 @@ YottaDB/GT.M needs several environment variables to be set up. YottaDB/GT.M prov
    GDE> 
    %GDE-I-VERIFY, Verification OK
 
-   %GDE-I-GDCREATE, Creating Global Directory file /home/gtmuser/.fis-gtm/V6.2-000_x86_64/g/gtm.gld
-    Created file /home/gtmuser/.fis-gtm/V6.2-000_x86_64/g/gtm.dat
-    %GTM-I-JNLCREATE, Journal file /home/gtmuser/.fis-gtm/V6.2-000_x86_64/g/gtm.mjl created for region DEFAULT with BEFORE_IMAGES
+   %GDE-I-GDCREATE, Creating Global Directory file /home/yottadbuser/.fis-gtm/V6.2-000_x86_64/g/gtm.gld
+    Created file /home/yottadbuser/.fis-gtm/V6.2-000_x86_64/g/gtm.dat
+    %GTM-I-JNLCREATE, Journal file /home/yottadbuser/.fis-gtm/V6.2-000_x86_64/g/gtm.mjl created for region DEFAULT with BEFORE_IMAGES
     %GTM-I-JNLSTATE, Journaling state for region DEFAULT is now ON
-    gtmuser@gtmworkshop:~$
+    yottadbuser@yottadbworkshop:~$
 
 Also define ydb as an alias to the script that runs YottaDB/GT.M.
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ alias ydb='/usr/local/lib/yottadb/r110/gtm'
-   gtmuser@gtmworkshop:~$ ydb
+   yottadbuser@yottadbworkshop:~$ alias ydb='/usr/local/lib/yottadb/r110/gtm'
+   yottadbuser@yottadbworkshop:~$ ydb
    YDB>
 
 Now you are in the “direct mode” where you can execute commands interactively. For example:
@@ -216,33 +213,33 @@ The commands perform database updates, which are shared between processes. You c
    ^Disney("Moana")="Polynesia"
    ^Disney("Jungle Book")="India"
    YDB>halt
-   gtmuser@gtmworkshop:~$
+   yottadbuser@yottadbworkshop:~$
 
 The operation of YottaDB/GT.M is controlled by a number of environment variables. In our exercise, the gtmprofile script automatically sets a number of environment variables:
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ env | grep ^gtm
-   gtm_repl_instance=/home/gtmuser/.fis-gtm/V6.2-000_x86_64/g/gtm.repl
+   yottadbuser@yottadbworkshop:~$ env | grep ^gtm
+   gtm_repl_instance=/home/yottadbuser/.fis-gtm/V6.2-000_x86_64/g/gtm.repl
    gtm_log=/tmp/fis-gtm/V6.2-000_x86_64
    gtm_prompt=YDB>
    gtm_retention=42
    gtmver=V6.2-000_x86_64
    gtm_icu_version=5.2
-   gtmgbldir=/home/gtmuser/.fis-gtm/V6.2-000_x86_64/g/gtm.gld
-   gtmroutines=/home/gtmuser/.fis-gtm/V6.2-000_x86_64/o(/home/gtmuser/.fis-gtm/V6.2-000_x86_64/r /home/gtmuser/.fis-gtm/r) /usr/local/lib/yottadb/r110/plugin/o(/usr/local/lib/yottadb/r110/plugin/r) /usr/local/lib/yottadb/r110/libgtmutil.so /usr/local/lib/yottadb/r110
-   gtmdir=/home/gtmuser/.fis-gtm
+   gtmgbldir=/home/yottadbuser/.fis-gtm/V6.2-000_x86_64/g/gtm.gld
+   gtmroutines=/home/yottadbuser/.fis-gtm/V6.2-000_x86_64/o(/home/yottadbuser/.fis-gtm/V6.2-000_x86_64/r /home/yottadbuser/.fis-gtm/r) /usr/local/lib/yottadb/r110/plugin/o(/usr/local/lib/yottadb/r110/plugin/r) /usr/local/lib/yottadb/r110/libgtmutil.so /usr/local/lib/yottadb/r110
+   gtmdir=/home/yottadbuser/.fis-gtm
    gtm_etrap=Write:(0=$STACK) "Error occurred: ",$ZStatus,!
    gtm_principal_editing=EDITING
    gtm_tmp=/tmp/fis-gtm/V6.2-000_x86_64
    gtm_dist=/usr/local/lib/yottadb/r110
-   gtmuser@gtmworkshop:~$ 
+   yottadbuser@yottadbworkshop:~$ 
 
 YottaDB/GT.M databases can also be configured so that they can be recovered after a system crash. Simulate a crash right now by either clicking on the “X” in the top right corner of your virtual machine console window to instantly “power down” your virtual machine, or, if you started it headless, perform a hard power-down using a command on the host (in the case of virtualization using qemu/kvm on Linux, a kill -9 of the virtual machine process). Then reboot the virtual machine, run ydb and use a zwrite ^Disney command to confirm that the data in the database is still intact.
 
 The tree program shows the default environment YottaDB/GT.M creates in your home directory. 
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ tree .fis-gtm/
+   yottadbuser@yottadbworkshop:~$ tree .fis-gtm/
    .fis-gtm/
    ├── r
    └── V6.2-000_x86_64
@@ -258,7 +255,7 @@ The tree program shows the default environment YottaDB/GT.M creates in your home
        └── r
 
     6 directories, 6 files
-    gtmuser@gtmworkshop:~$ 
+    yottadbuser@yottadbworkshop:~$ 
 
 Note that you may have to install the program 'tree' before running the above command, and make sure you provide the correct path to the .fis-gtm directory (now and in the future). We will get into the environment in more detail below.
 
@@ -267,9 +264,9 @@ Note that you may have to install the program 'tree' before running the above co
 With YottaDB/GT.M, you can write applications that implement international character sets using Unicode or ISO/IEC-10646 (the two standards track each other). Connect to the virtual machine with your terminal emulator configured to support the UTF-8 character set. In a fresh terminal session execute the following (the non-printable characters may look different on your session from the screen here, depending on how your terminal emulator renders them):
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ export gtm_chset=UTF-8 LC_CTYPE=en_US.utf8
-   gtmuser@gtmworkshop:~$ source /usr/lib/fis-gtm/V6.2-000_x86_64/gtmprofile
-   gtmuser@gtmworkshop:~$ ydb
+   yottadbuser@yottadbworkshop:~$ export gtm_chset=UTF-8 LC_CTYPE=en_US.utf8
+   yottadbuser@yottadbworkshop:~$ source /usr/lib/fis-gtm/V6.2-000_x86_64/gtmprofile
+   yottadbuser@yottadbworkshop:~$ ydb
    YDB>write $zchset
    UTF-8
    YDB>for i=1040:16:1072 write ! for j=0:1:15 write $char(i+j)," "
@@ -303,7 +300,7 @@ YottaDB user documentation is organized into Manuals and Release Notes. Current 
 
 **Routines in the File System**
 
-Routines in YottaDB/GT.M are simply files in the file system; they do not reside in databases. You can edit routines from the YDB> prompt. Start YottaDB and at the YDB> prompt, type zedit "greeting" and hit ENTER. This starts the vi editor editing the source routine for ^greeting, /home/gtmuser/.fis-gtm/V6.2-000_x86_64/r/greeting.m. Use the five key-sequence ESCAPE : q ! ENTER to exit vi without changing the file.
+Routines in YottaDB/GT.M are simply files in the file system; they do not reside in databases. You can edit routines from the YDB> prompt. Start YottaDB and at the YDB> prompt, type zedit "greeting" and hit ENTER. This starts the vi editor editing the source routine for ^greeting, /home/yottadbuser/.fis-gtm/V6.2-000_x86_64/r/greeting.m. Use the five key-sequence ESCAPE : q ! ENTER to exit vi without changing the file.
 
 .. note::
   although vi always puts a newline at the end of your file; other editors may not. A YottaDB/GT.M program file should always end with a newline.
@@ -317,8 +314,8 @@ As you saw when executing M commands interactively, even though YottaDB/GT.M is 
 The purpose of this exercise is to understand compiling and linking routines. Use the command find .fis-gtm -iname greeting.[mo] to confirm that your default YottaDB/GT.M environment does not have a program called greeting.
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ find .fis-gtm -iname greeting.[mo]
-   gtmuser@gtmworkshop:~$ 
+   yottadbuser@yottadbworkshop:~$ find .fis-gtm -iname greeting.[mo]
+   yottadbuser@yottadbworkshop:~$ 
 
 You can perform the same operation from inside YottaDB/GT.M
 
@@ -339,7 +336,7 @@ Had there been a routine, the response might look like this:
 .. parsed-literal::
    YDB>do SILENT^%RSEL("greeting") zwrite %ZR    
    %ZR=1
-   %ZR("greeting")="/home/gtmuser/.fis-gtm/r/"
+   %ZR("greeting")="/home/yottadbuser/.fis-gtm/r/"
 
    YDB>
 
@@ -348,8 +345,8 @@ If you are not comfortable with the terse commands of the default vi editor, you
 To switch editors:
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ export EDITOR=`which nano`
-   gtmuser@gtmworkshop:~$ ydb
+   yottadbuser@yottadbworkshop:~$ export EDITOR=`which nano`
+   yottadbuser@yottadbworkshop:~$ ydb
    YDB>
 
 Instruct YottaDB to run the routine ^greeting and note that it reports an error:
@@ -367,7 +364,7 @@ Within YottaDB, use zedit "greeting" to start the editor. Create a simple progra
 .. parsed-literal::
    YDB>do SILENT^%RSEL("greeting") zwrite %ZR
    %ZR=1
-   %ZR("greeting")="/home/gtmuser/.fis-gtm/V6.2-000_x86_64/r/"
+   %ZR("greeting")="/home/yottadbuser/.fis-gtm/V6.2-000_x86_64/r/"
 
    YDB>do SILENT^%RSEL("greeting","OBJ") zwrite %ZR
    %ZR=0
@@ -387,7 +384,7 @@ Now you now also have an object file. YottaDB dynamically, and automatically, co
 .. parsed-literal::
    YDB>do SILENT^%RSEL("greeting","OBJ") zwrite %ZR
    %ZR=1
-   %ZR("greeting")="/home/gtmuser/.fis-gtm/V6.2-000_x86_64/o/"
+   %ZR("greeting")="/home/yottadbuser/.fis-gtm/V6.2-000_x86_64/o/"
 
    YDB>
 
@@ -398,8 +395,8 @@ Let's also get the time stamps of the files; notice that the source code file is
 
 .. parsed-literal::
    YDB>zsystem "find .fis-gtm -name greeting.[mo] -exec ls -l {} \;"
-   -rw-rw-r-- 1 gtmuser gtmuser 1048 Jan 22 10:16 .fis-gtm/V6.2-000_x86_64/o/greeting.o
-   -rw-rw-r-- 1 gtmuser gtmuser 35 Jan 22 10:14 .fis-gtm/V6.2-000_x86_64/r/greeting.m
+   -rw-rw-r-- 1 yottadbuser yottadbuser 1048 Jan 22 10:16 .fis-gtm/V6.2-000_x86_64/o/greeting.o
+   -rw-rw-r-- 1 yottadbuser yottadbuser 35 Jan 22 10:14 .fis-gtm/V6.2-000_x86_64/r/greeting.m
 
    YDB>
 
@@ -421,8 +418,8 @@ Execute zLink "greeting" which tells YottaDB/GT.M to re-link greeting even if it
    Goodbye!
 
    YDB>zsystem "find .fis-gtm -name greeting.[mo] -exec ls -l {} \;"
-   -rw-rw-r-- 1 gtmuser gtmuser 1048 Jan 22 10:20 .fis-gtm/V6.2-000_x86_64/o/greeting.o
-   -rw-rw-r-- 1 gtmuser gtmuser 35 Jan 22 10:20 .fis-gtm/V6.2-000_x86_64/r/greeting.m
+   -rw-rw-r-- 1 yottadbuser yottadbuser 1048 Jan 22 10:20 .fis-gtm/V6.2-000_x86_64/o/greeting.o
+   -rw-rw-r-- 1 yottadbuser yottadbuser 35 Jan 22 10:20 .fis-gtm/V6.2-000_x86_64/r/greeting.m
 
    YDB>
 
@@ -433,10 +430,10 @@ The $zroutines ISV tells YottaDB/GT.M where to find routines:
 
 .. parsed-literal::
    YDB>write $zroutines
-   /home/gtmuser/.fis-gtm/V6.2-000_x86_64/o(/home/gtmuser/.fis-gtm/V6.2-000_x86_64/r /home/gtmuser/.fis-gtm/r) /usr/local/lib/yottadb/r110/plugin/o(/usr/local/lib/yottadb/r110/plugin/r) /usr/local/lib/yottadb/r110/libgtmutil.so /usr/local/lib/yottadb/r110
+   /home/yottadbuser/.fis-gtm/V6.2-000_x86_64/o(/home/yottadbuser/.fis-gtm/V6.2-000_x86_64/r /home/yottadbuser/.fis-gtm/r) /usr/local/lib/yottadb/r110/plugin/o(/usr/local/lib/yottadb/r110/plugin/r) /usr/local/lib/yottadb/r110/libgtmutil.so /usr/local/lib/yottadb/r110
    YDB>
 
-The V6.2-000 release of GT.M and r1.10, the latest YottaDB release as of the date of this document, are used in this release of the Acculturation Workshop. The YottaDB release suffixes directories with an asterisk by default, e.g., instead of /home/gtmuser/.fis-gtm/V6.2-000_x86_64/o, you may see /home/gtmuser/.fis-gtm/V6.2-000_x86_64/o*. The V6.2-000 release of GT.M does not. More on what the asterisk represents below.
+The V6.2-000 release of GT.M and r1.10, the latest YottaDB release as of the date of this document, are used in this release of the Acculturation Workshop. The YottaDB release suffixes directories with an asterisk by default, e.g., instead of /home/yottadbuser/.fis-gtm/V6.2-000_x86_64/o, you may see /home/yottadbuser/.fis-gtm/V6.2-000_x86_64/o*. The V6.2-000 release of GT.M does not. More on what the asterisk represents below.
 
 At process startup, $zroutines is initialized from the environment variable $gtmroutines, but it can be altered from within the YottaDB/GT.M process.
 
@@ -446,7 +443,7 @@ At process startup, $zroutines is initialized from the environment variable $gtm
    YDB>write $zroutines
    . /usr/local/lib/yottadb/r110
    YDB>write $ztrnlnm("gtmroutines")
-   /home/gtmuser/.fis-gtm/V6.2-000_x86_64/o(/home/gtmuser/.fis-gtm/V6.2-000_x86_64/r /home/gtmuser/.fis-gtm/r) /usr/local/lib/yottadb/r110
+   /home/yottadbuser/.fis-gtm/V6.2-000_x86_64/o(/home/yottadbuser/.fis-gtm/V6.2-000_x86_64/r /home/yottadbuser/.fis-gtm/r) /usr/local/lib/yottadb/r110
    YDB>
 
 The ZEDIT command always puts new routines in the first source directory in the search path. Use it to create a new routine to print the current date and time at the Universal Time Coordinate. After the change to $zroutines above, notice how a newly created program and object file are created in the current directory (.).
@@ -461,8 +458,8 @@ The ZEDIT command always puts new routines in the first source directory in the 
    Mon Jan 22 10:40:01 UTC 2018
 
    YDB>zsystem "find . -name UTC\* -exec ls -l {} \;"
-   -rw-rw-r-- 1 gtmuser gtmuser 32 Jan 22 10:39 ./UTC.m
-   -rw-rw-r-- 1 gtmuser gtmuser 1000 Jan 22 10:40 ./UTC.o
+   -rw-rw-r-- 1 yottadbuser yottadbuser 32 Jan 22 10:39 ./UTC.m
+   -rw-rw-r-- 1 yottadbuser yottadbuser 1000 Jan 22 10:40 ./UTC.o
 
    YDB>
 
@@ -472,14 +469,14 @@ Start a new session of YottaDB/GT.M (so that you don't have any routines linked 
 
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ gtm
+   yottadbuser@yottadbworkshop:~$ gtm
 
    YDB>write $zroutines
-   /home/gtmuser/.fis-gtm/V6.2-000_x86_64/o(/home/gtmuser/.fis-gtm/V6.2-000_x86_64/r /home/gtmuser/.fis-gtm/r) /usr/local/lib/yottadb/r110/plugin/o(/usr/local/lib/yottadb/r110/plugin/r) /usr/local/lib/yottadb/r110/libgtmutil.so /usr/local/lib/yottadb/r110
+   /home/yottadbuser/.fis-gtm/V6.2-000_x86_64/o(/home/yottadbuser/.fis-gtm/V6.2-000_x86_64/r /home/yottadbuser/.fis-gtm/r) /usr/local/lib/yottadb/r110/plugin/o(/usr/local/lib/yottadb/r110/plugin/r) /usr/local/lib/yottadb/r110/libgtmutil.so /usr/local/lib/yottadb/r110
    YDB>set $zroutines=$piece($zroutines,"4/o",1)_"4/o*"_$piece($zroutines,"4/o",2)
 
    YDB>write $zroutines
-   /home/gtmuser/.fis-gtm/V6.2-000_x86_64/o*(/home/gtmuser/.fis-gtm/V6.2-000_x86_64/r /home/gtmuser/.fis-gtm/r) /usr/local/lib/yottadb/r110/plugin/o(/usr/local/lib/yottadb/r110/plugin/r) /usr/local/lib/yottadb/r110/libgtmutil.so /usr/local/lib/yottadb/r110
+   /home/yottadbuser/.fis-gtm/V6.2-000_x86_64/o*(/home/yottadbuser/.fis-gtm/V6.2-000_x86_64/r /home/yottadbuser/.fis-gtm/r) /usr/local/lib/yottadb/r110/plugin/o(/usr/local/lib/yottadb/r110/plugin/r) /usr/local/lib/yottadb/r110/libgtmutil.so /usr/local/lib/yottadb/r110
    YDB>do ^greeting
    Goodbye!
 
@@ -540,16 +537,16 @@ The ISV $zgbldir points a YottaDB/GT.M process to the global directory. $zgbldir
 
 .. parsed-literal::
    YDB>write $ztrnlnm("gtmgbldir")
-   /home/gtmuser/.fis-gtm/V6.2-000_x86_64/g/gtm.gld
+   /home/yottadbuser/.fis-gtm/V6.2-000_x86_64/g/gtm.gld
    YDB>write $zgbldir
-   /home/gtmuser/.fis-gtm/V6.2-000_x86_64/g/gtm.gld
+   /home/yottadbuser/.fis-gtm/V6.2-000_x86_64/g/gtm.gld
    YDB>
 
 GDE, the Global Directory Editor, is a program used to manipulate global directories. GDE is itself written in M, and you can invoke it from the shell with "mumps -run GDE" (or, with the ydb alias, "ydb -run GDE") or from inside the direct mode with "do ^GDE".
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ $gtm_dist/mumps -run GDE
-   %GDE-I-LOADGD, Loading Global Directory file /home/gtmuser/.fis-gtm/V6.2-000_x86_64/g/gtm.gld
+   yottadbuser@yottadbworkshop:~$ $gtm_dist/mumps -run GDE
+   %GDE-I-LOADGD, Loading Global Directory file /home/yottadbuser/.fis-gtm/V6.2-000_x86_64/g/gtm.gld
    %GDE-I-VERIFY, Verification OK
 
 
@@ -633,21 +630,21 @@ The show map command gives a good visualization of mapping of names to database 
 Start from the shell. Assign a value to $gtmgbldir so as to not overwrite any existing global directory in the Acculturation Workshop and then invoke GDE.
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ export gtmgbldir=/home/gtmuser/gtm.gld
-   gtmuser@gtmworkshop:~$ mumps -run GDE
+   yottadbuser@yottadbworkshop:~$ export gtmgbldir=/home/yottadbuser/gtm.gld
+   yottadbuser@yottadbworkshop:~$ mumps -run GDE
    %GDE-I-GDUSEDEFS, Using defaults for Global Directory
-           /home/gtmuser/gtm.gld
+           /home/yottadbuser/gtm.gld
 
    GDE>
 
 While not essential, it may be conceptually helpful to build the global directory from the bottom up – first create the segments, then the regions, and then the name spaces. First edit the default to make the parameters more useful – the out-of-the-box defaults are suitable for experimentation but not real use. Using a template reduces the work needed to create multiple regions and segments. Notice the use of different access methods for MAMMALS and CRUSTACEANS.
 
 .. parsed-literal::
-   GDE> change -segment DEFAULT -block_size=4096 -allocation=1000 -extension=1000 -global_buffer_count=1000 -file_name=/home/gtmuser/gtm.dat
+   GDE> change -segment DEFAULT -block_size=4096 -allocation=1000 -extension=1000 -global_buffer_count=1000 -file_name=/home/yottadbuser/gtm.dat
    GDE> template -segment -access_method=bg -block_size=4096 -allocation=1000 -extension=1000 -global_buffer_count=1000
    GDE> template -segment -access_method=mm -block_size=4096 -allocation=1000 -extension=1000 -global_buffer_count=1000
-   GDE> add -segment MAMMALS -access_method=mm -file_name=/home/gtmuser/linnaeus.dat
-   GDE> add -segment CRUSTACEANS -access_method=bg -file_name=/home/gtmuser/brunnich.dat
+   GDE> add -segment MAMMALS -access_method=mm -file_name=/home/yottadbuser/linnaeus.dat
+   GDE> add -segment CRUSTACEANS -access_method=bg -file_name=/home/yottadbuser/brunnich.dat
    GDE> show -segment
 
    ==================================
@@ -655,19 +652,19 @@ While not essential, it may be conceptually helpful to build the global director
    ----------------------------------
     Segment    File (def ext: .dat)Acc Typ Block  Alloc Exten Options
     =======    =================================  ===================
-    MAMMALS      /home/gtmuser/linnaeus.dat               
+    MAMMALS      /home/yottadbuser/linnaeus.dat               
                                     MM DYN 4096   1000 1000 DEFER
                                                             LOCK=40
                                                             RES= 0
                                                             ENCR=OFF
                                                             MSLT=1024
-    DEFAULT   /home/gtmuser/gtm.dat
+    DEFAULT   /home/yottadbuser/gtm.dat
                                    BG DYN 4096    1000 1000 GLOB=100
                                                             LOCK=40
                                                             RES=0
                                                             ENCR=OFF
                                                             MSLT=1024
-    CRUSTACEANS /home/gtmuser/brunnich.dat
+    CRUSTACEANS /home/yottadbuser/brunnich.dat
                                    BG DYN 4096    1000 1000 GLOB=100
                                                             LOCK=40
                                                             RES=0
@@ -680,10 +677,10 @@ While not essential, it may be conceptually helpful to build the global director
 Then we can map the regions to the segments. Notice that the segment names (specified with the -dynamic qualifier) are converted to and displayed in upper case.
 
 .. parsed-literal::
-   GDE> change -region DEFAULT -stdnull -key_size=255 -record_size=4080 -journal=(before,file="/home/gtmuser/gtm.mjl")
+   GDE> change -region DEFAULT -stdnull -key_size=255 -record_size=4080 -journal=(before,file="/home/yottadbuser/gtm.mjl")
    GDE> template -region -stdnull -key_size=255 -record_size=4080 -journal=nobefore
-   GDE> add -region MAMMALS -dynamic=mammals -journal=(nobefore,file="/home/gtmuser/linnaeus.mjl")
-   GDE> add -region CRUSTACEANS -dynamic=crustaceans -journal=(before,file="/home/gtmuser/brunnich.mjl")
+   GDE> add -region MAMMALS -dynamic=mammals -journal=(nobefore,file="/home/yottadbuser/linnaeus.mjl")
+   GDE> add -region CRUSTACEANS -dynamic=crustaceans -journal=(before,file="/home/yottadbuser/brunnich.mjl")
    GDE> show -region
    
    ==============================
@@ -702,9 +699,9 @@ Then we can map the regions to the segments. Notice that the segment names (spec
    ----------------------------------
    Region      Jnl File (def ext: .mjl)       Before  Buff   Alloc  Exten   Autoswitch
    ======      ===========================   ======   ====   =====  =====   ==========
-   MAMMALS     /home/gtmuser/linnaeus.mjl      N      2308   2048   2048    8386560
-   DEFAULT     /home/gtmuser/gtm.dat           Y      2308   2048   2048    8386560
-   CRUSTACEANS /home/gtmuser/brunnich.mjl      Y      2308   2048   2048    8386560
+   MAMMALS     /home/yottadbuser/linnaeus.mjl      N      2308   2048   2048    8386560
+   DEFAULT     /home/yottadbuser/gtm.dat           Y      2308   2048   2048    8386560
+   CRUSTACEANS /home/yottadbuser/brunnich.mjl      Y      2308   2048   2048    8386560
    ========    ==========================    ======  ======  =====  ====   ===========
 
    GDE>
@@ -744,34 +741,34 @@ You can examine the entire map, and ask GDE to perform a check for consistency.
    =====     =======        ===================================
    %         Crab             REG= DEFAULT
                               SEG= DEFAULT
-                              FILE= /home/gtmuser/gtm.dat
+                              FILE= /home/yottadbuser/gtm.dat
    Crab      Crab0            REG= CRUSTACEANS
                               SEG= CRUSTACEANS
-                              FILE= /home/gtmuser/brunnich.dat
+                              FILE= /home/yottadbuser/brunnich.dat
    Crab0     Horse            REG= DEFAULT
                               SEG= DEFAULT
-                              FILE= /home/gtmuser/gtm.dat
+                              FILE= /home/yottadbuser/gtm.dat
    Horse    Horse0            REG= MAMMALS
                               SEG= MAMMALS
-                              FILE= /home/gtmuser/linnaeus.dat
+                              FILE= /home/yottadbuser/linnaeus.dat
    Horse0   Lobster           REG= DEFAULT
                               SEG= DEFAULT
-                              FILE= /home/gtmuser/gtm.dat
+                              FILE= /home/yottadbuser/gtm.dat
    Lobster  Lobster0          REG= CRUSTACEANS
                               SEG= CRUSTACEANS
-                              FILE= /home/gtmuser/brunnich.dat
+                              FILE= /home/yottadbuser/brunnich.dat
    Lobster0  Platypus         REG= DEFAULT
                               SEG= DEFAULT
-                              FILE= /home/gtmuser/gtm.dat
+                              FILE= /home/yottadbuser/gtm.dat
    Platypus  Platypus0        REG= MAMMALS
                               SEG= MAMMALS
-                              FILE= /home/gtmuser/linnaeus.dat
+                              FILE= /home/yottadbuser/linnaeus.dat
    Platypus0 .....            REG= DEFAULT
                               SEG= DEFAULT
-                              FILE= /home/gtmuser/gtm.dat
+                              FILE= /home/yottadbuser/gtm.dat
    LOCAL LOCKS                REG= DEFAULT
                               SEG= DEFAULT
-                              FILE= /home/gtmuser/gtm.dat
+                              FILE= /home/yottadbuser/gtm.dat
    ======     =========       ==============================
 
    GDE> verify
@@ -785,40 +782,40 @@ Exiting GDE creates the global directory. You can then use a mupip create comman
    GDE> exit
    %GDE-I-VERIFY, Verification OK
 
-   %GDE-I-GDCREATE, Creating Global Directory file /home/gtmuser/gtm.gld
-   gtmuser@gtmworkshop:~$ ls -l * .dat * .mjl
+   %GDE-I-GDCREATE, Creating Global Directory file /home/yottadbuser/gtm.gld
+   yottadbuser@yottadbworkshop:~$ ls -l * .dat * .mjl
    ls: cannot access * .dat: No such file or directory
    ls: cannot access * .mjl: No such file or directory
-   gtmuser@gtmworkshop:~$ mupip create
-   Created file /home/gtmuser/linnaeus.dat
-   Created file /home/gtmuser/gtm.dat
-   Created file /home/gtmuser/brunnich.dat
-   gtmuser@gtmworkshop:~$ ls -l * .dat * .mjl
+   yottadbuser@yottadbworkshop:~$ mupip create
+   Created file /home/yottadbuser/linnaeus.dat
+   Created file /home/yottadbuser/gtm.dat
+   Created file /home/yottadbuser/brunnich.dat
+   yottadbuser@yottadbworkshop:~$ ls -l * .dat * .mjl
    ls: cannot access * .mjl: No such file or directory
-   -rw-rw-rw- 1 gtmuser gtmuser 4366848 Jan 22 12:15 creep.dat
-   -rw-rw-rw- 1 gtmuser gtmuser 4366848 Jan 22 12:15 flap.dat
-   -rw-rw-rw- 1 gtmuser gtmuser 4366848 Jan 22 12:15 gtm.dat
-   gtmuser@gtmworkshop:~$
+   -rw-rw-rw- 1 yottadbuser yottadbuser 4366848 Jan 22 12:15 creep.dat
+   -rw-rw-rw- 1 yottadbuser yottadbuser 4366848 Jan 22 12:15 flap.dat
+   -rw-rw-rw- 1 yottadbuser yottadbuser 4366848 Jan 22 12:15 gtm.dat
+   yottadbuser@yottadbworkshop:~$
 
 Then you can turn on journaling. As YottaDB/GT.M requires you to explicitly specify the type of journaling to be used, you need separate commands depending on the type of journaling – before image and no-before image journaling.
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ mupip set -journal=nobefore -region CRUSTACEANS
-   %GTM-I-JNLCREATE, Journal file /home/gtmuser/brunnich.mjl created for region CRUSTACEANS with NOBEFORE_IMAGES
+   yottadbuser@yottadbworkshop:~$ mupip set -journal=nobefore -region CRUSTACEANS
+   %GTM-I-JNLCREATE, Journal file /home/yottadbuser/brunnich.mjl created for region CRUSTACEANS with NOBEFORE_IMAGES
    %GTM-I-JNLSTATE, Journaling state for region CRUSTACEANS is now ON
-   gtmuser@gtmworkshop:~$ mupip set -journal=before -region MAMMALS,DEFAULT
-   %GTM-I-JNLCREATE, Journal file /home/gtmuser/gtm.mjl created for region DEFAULT with BEFORE_IMAGES
+   yottadbuser@yottadbworkshop:~$ mupip set -journal=before -region MAMMALS,DEFAULT
+   %GTM-I-JNLCREATE, Journal file /home/yottadbuser/gtm.mjl created for region DEFAULT with BEFORE_IMAGES
    %GTM-I-JNLSTATE, Journaling state for region DEFAULT is now ON
-   %GTM-I-JNLCREATE, Journal file /home/gtmuser/linnaeus.mjl created for region MAMMALS with BEFORE_IMAGES
+   %GTM-I-JNLCREATE, Journal file /home/yottadbuser/linnaeus.mjl created for region MAMMALS with BEFORE_IMAGES
    %GTM-I-JNLSTATE, Journaling state for region MAMMALS is now ON
-   gtmuser@gtmworkshop:~$ ls -l * .dat * .mjl
-   -rw-rw-rw- 1 gtmuser gtmuser 4366848 Jan 22 12:22 brunnich.dat
-   -rw-rw-rw- 1 gtmuser gtmuser   69632 Jan 22 12:22 brunnich.mjl
-   -rw-rw-rw- 1 gtmuser gtmuser 4366848 Jan 22 12:24 linnaeus.dat
-   -rw-rw-rw- 1 gtmuser gtmuser   69632 Jan 22 12:24 linnaeus.mjl
-   -rw-rw-rw- 1 gtmuser gtmuser 4366848 Jan 22 12:24 gtm.dat
-   -rw-rw-rw- 1 gtmuser gtmuser   69632 Jan 22 12:24 gtm.mjl
-   gtmuser@gtmworkshop:~$
+   yottadbuser@yottadbworkshop:~$ ls -l * .dat * .mjl
+   -rw-rw-rw- 1 yottadbuser yottadbuser 4366848 Jan 22 12:22 brunnich.dat
+   -rw-rw-rw- 1 yottadbuser yottadbuser   69632 Jan 22 12:22 brunnich.mjl
+   -rw-rw-rw- 1 yottadbuser yottadbuser 4366848 Jan 22 12:24 linnaeus.dat
+   -rw-rw-rw- 1 yottadbuser yottadbuser   69632 Jan 22 12:24 linnaeus.mjl
+   -rw-rw-rw- 1 yottadbuser yottadbuser 4366848 Jan 22 12:24 gtm.dat
+   -rw-rw-rw- 1 yottadbuser yottadbuser   69632 Jan 22 12:24 gtm.mjl
+   yottadbuser@yottadbworkshop:~$
 
 For production environments, we suggest that you put your GDE commands in a text file and invoke them with a heredoc or using GDE's @ command. Put the text file under version control.
 
@@ -849,14 +846,14 @@ The approved Tax Rate is in the global variable ^TXR and is shared by both insti
 First, create the directory structure.
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ sudo mkdir -p /opt/bank/VOE10
-   gtmuser@gtmworkshop:~$ sudo chown -R gtmuser.users /opt/bank/VOE10
-   gtmuser@gtmworkshop:~$ cd /opt/bank/VOE10 ; mkdir -p r V6.2-000_x86_64/r V6.2-000_x86_64/o V6.2-000_x86_64/g
-   gtmuser@gtmworkshop:/opt/bank/VOE10$ sudo mkdir -p /var/opt/EHR/VOE10
-   gtmuser@gtmworkshop:/var/opt/bank/VOE10$ sudo chown -R gtmuser.users /var/opt/bank/VOE10
-   gtmuser@gtmworkshop:/var/opt/bank/VOE10$ cd /var/opt/bank/VOE10 ; mkdir -p fi/r fi/V6.2-000_x86_64/r fi/V6.2-000_x86_64/o fi/V6.2-000_x86_64/g
-   gtmuser@gtmworkshop:/var/opt/bank/VOE10$ mkdir -p cb/r cb/V6.2-000_x86_64/r cb/V6.2-000_x86_64/o cb/V6.2-000_x86_64/g
-   gtmuser@gtmworkshop:/var/opt/bank/VOE10$ tree -d
+   yottadbuser@yottadbworkshop:~$ sudo mkdir -p /opt/bank/VOE10
+   yottadbuser@yottadbworkshop:~$ sudo chown -R yottadbuser.users /opt/bank/VOE10
+   yottadbuser@yottadbworkshop:~$ cd /opt/bank/VOE10 ; mkdir -p r V6.2-000_x86_64/r V6.2-000_x86_64/o V6.2-000_x86_64/g
+   yottadbuser@yottadbworkshop:/opt/bank/VOE10$ sudo mkdir -p /var/opt/EHR/VOE10
+   yottadbuser@yottadbworkshop:/var/opt/bank/VOE10$ sudo chown -R yottadbuser.users /var/opt/bank/VOE10
+   yottadbuser@yottadbworkshop:/var/opt/bank/VOE10$ cd /var/opt/bank/VOE10 ; mkdir -p fi/r fi/V6.2-000_x86_64/r fi/V6.2-000_x86_64/o fi/V6.2-000_x86_64/g
+   yottadbuser@yottadbworkshop:/var/opt/bank/VOE10$ mkdir -p cb/r cb/V6.2-000_x86_64/r cb/V6.2-000_x86_64/o cb/V6.2-000_x86_64/g
+   yottadbuser@yottadbworkshop:/var/opt/bank/VOE10$ tree -d
    .
    ├── cb
    │ ├── r
@@ -871,7 +868,7 @@ First, create the directory structure.
           ├── o
           └── r
  12 directories
- gtmuser@gtmworkshop:~$
+ yottadbuser@yottadbworkshop:~$
 
 *What should $gtmgbldir be for an FI user and what should it be for a CB user? Add these to the command files you created earlier. Create a file of commands to be fed to GDE either with a heredoc or with GDE's @ command that will create the global directories and then create the global directories.*
 
@@ -955,23 +952,23 @@ YottaDB/GT.M directly or indirectly uses a number of other environment variables
 Here are the environment variables set by the default gtmprofile file (which the gtm script sources).
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ env | grep ^gtm # No gtm environment variables defined initially
-   gtmuser@gtmworkshop:~$ source /usr/lib/fis-gtm/V6.2-000_x86_64/gtmprofile
-   gtmuser@gtmworkshop:~$ env | grep ^gtm
-   gtm_repl_instance=/home/gtmuser/.fis-gtm/V6.2-000_x86_64/g/gtm.repl
+   yottadbuser@yottadbworkshop:~$ env | grep ^gtm # No gtm environment variables defined initially
+   yottadbuser@yottadbworkshop:~$ source /usr/lib/fis-gtm/V6.2-000_x86_64/gtmprofile
+   yottadbuser@yottadbworkshop:~$ env | grep ^gtm
+   gtm_repl_instance=/home/yottadbuser/.fis-gtm/V6.2-000_x86_64/g/gtm.repl
    gtm_log=/tmp/fis-gtm/V6.2-000_x86_64
    gtm_prompt=YDB>
    gtm_retention=42
    gtmver=V6.2-000_x86_64
    gtm_icu_version=5.2
-   gtmgbldir=/home/gtmuser/.fis-gtm/V6.2-000_x86_64/g/gtm.gld
-   gtmroutines=/home/gtmuser/.fis-gtm/V6.2-000_x86_64/o(/home/gtmuser/.fis-gtm/V6.2-000_x86_64/r /home/gtmuser/.fis-gtm/r) /usr/local/lib/yottadb/r110/plugin/o(/usr/local/lib/yottadb/r110/plugin/r) /usr/local/lib/yottadb/r110/libgtmutil.so /usr/local/lib/yottadb/r110
-   gtmdir=/home/gtmuser/.fis-gtm
+   gtmgbldir=/home/yottadbuser/.fis-gtm/V6.2-000_x86_64/g/gtm.gld
+   gtmroutines=/home/yottadbuser/.fis-gtm/V6.2-000_x86_64/o(/home/yottadbuser/.fis-gtm/V6.2-000_x86_64/r /home/yottadbuser/.fis-gtm/r) /usr/local/lib/yottadb/r110/plugin/o(/usr/local/lib/yottadb/r110/plugin/r) /usr/local/lib/yottadb/r110/libgtmutil.so /usr/local/lib/yottadb/r110
+   gtmdir=/home/yottadbuser/.fis-gtm
    gtm_etrap=Write:(0=$STACK) "Error occurred: ",$ZStatus,!
    gtm_principal_editing=EDITING
    gtm_tmp=/tmp/fis-gtm/V6.2-000_x86_64
    gtm_dist=/usr/local/lib/yottadb/r110
-   gtmuser@gtmworkshop:~$ 
+   yottadbuser@yottadbworkshop:~$ 
 
 While gtmprofile and ydb are good resources when you initially start with YottaDB/GT.M, once you get to a certain level of expertise, you may prefer to create your own scripting.
 
@@ -990,17 +987,17 @@ Review `Appendix E of the Administration and Operations Guide <https://docs.yott
 
 **Exercise - Access Controls with Ownership and Permissions**
 
-Start with a fresh session to discard environment variables from the last exercise. In the following, notice how Linux file permissions are used to allow user gtmuser full access to the database, preventing another user from updating a database, while allowing that user to read from it.
+Start with a fresh session to discard environment variables from the last exercise. In the following, notice how Linux file permissions are used to allow user yottadbuser full access to the database, preventing another user from updating a database, while allowing that user to read from it.
 
 Verify that you can read from and write to your default database and change the permissions to make it not accessible to the world, and to make it read-only by others in the group.
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ ls -l .fis-gtm/V6.2-000_x86_64/g/gtm.dat
-   -rw-rw-rw- 1 gtmuser gtmuser 20783616 Jan 22 13:56 .fis-gtm/V6.2-000_x86_64/g/gtm.dat
-   gtmuser@gtmworkshop:~$ chmod o-rw,g-w .fis-gtm/V6.2-000_x86_64/g/gtm.dat
-   gtmuser@gtmworkshop:~$ ls -l .fis-gtm/V6.2-000_x86_64/g/gtm.dat
-   -rw-r----- 1 gtmuser gtmuser 20783616 Jan 22 13:56 .fis-gtm/V6.2-000_x86_64/g/gtm.dat
-   gtmuser@gtmworkshop:~$ gtm
+   yottadbuser@yottadbworkshop:~$ ls -l .fis-gtm/V6.2-000_x86_64/g/gtm.dat
+   -rw-rw-rw- 1 yottadbuser yottadbuser 20783616 Jan 22 13:56 .fis-gtm/V6.2-000_x86_64/g/gtm.dat
+   yottadbuser@yottadbworkshop:~$ chmod o-rw,g-w .fis-gtm/V6.2-000_x86_64/g/gtm.dat
+   yottadbuser@yottadbworkshop:~$ ls -l .fis-gtm/V6.2-000_x86_64/g/gtm.dat
+   -rw-r----- 1 yottadbuser yottadbuser 20783616 Jan 22 13:56 .fis-gtm/V6.2-000_x86_64/g/gtm.dat
+   yottadbuser@yottadbworkshop:~$ gtm
 
    YDB>set ^X=1
 
@@ -1009,30 +1006,30 @@ Verify that you can read from and write to your default database and change the 
 
    YDB>halt
 
-Create another user who is also a member of the group users. See that users user can read from the database owned by gtmuser, but cannot update it.
+Create another user who is also a member of the group users. See that users user can read from the database owned by yottadbuser, but cannot update it.
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ sudo useradd -g gtmuser -m staffuser
-   gtmuser@gtmworkshop:~$ sudo su - staffuser
-   staffuser@gtmworkshop:~$ pwd
+   yottadbuser@yottadbworkshop:~$ sudo useradd -g yottadbuser -m staffuser
+   yottadbuser@yottadbworkshop:~$ sudo su - staffuser
+   staffuser@yottadbworkshop:~$ pwd
    /home/staffuser
-   staffuser@gtmworkshop:~$ export gtm_dist=/usr/local/lib/yottadb/r110
-   staffuser@gtmworkshop:~$ export gtmver=V6.2-000_x86_64
-   staffuser@gtmworkshop:~$ export gtmdir=/home/gtmuser/.fis-gtm
-   staffuser@gtmworkshop:~$ export gtmgbldir=$gtmdir/$gtmver/g/gtm.gld
-   staffuser@gtmworkshop:~$ $gtm_dist/mumps -dir
+   staffuser@yottadbworkshop:~$ export gtm_dist=/usr/local/lib/yottadb/r110
+   staffuser@yottadbworkshop:~$ export gtmver=V6.2-000_x86_64
+   staffuser@yottadbworkshop:~$ export gtmdir=/home/yottadbuser/.fis-gtm
+   staffuser@yottadbworkshop:~$ export gtmgbldir=$gtmdir/$gtmver/g/gtm.gld
+   staffuser@yottadbworkshop:~$ $gtm_dist/mumps -dir
 
    YDB>zwrite ^X
    ^X=1
 
    YDB>set ^X=2
-   %GTM-E-DBPRIVERR, No privilege for attempted update operation for file: /home/gtmuser/.fis-gtm/V6.2-000_x86_64/g/gtm.dat
+   %GTM-E-DBPRIVERR, No privilege for attempted update operation for file: /home/yottadbuser/.fis-gtm/V6.2-000_x86_64/g/gtm.dat
 
    YDB>halt
-   staffuser@gtmworkshop:~$ exit
-   gtmuser@gtmworkshop:~$ sudo userdel staffuser
-   gtmuser@gtmworkshop:~$ grep staffuser /etc/passwd
-   gtmuser@gtmworkshop:~$ sudo rm -rf /home/staffuser
+   staffuser@yottadbworkshop:~$ exit
+   yottadbuser@yottadbworkshop:~$ sudo userdel staffuser
+   yottadbuser@yottadbworkshop:~$ grep staffuser /etc/passwd
+   yottadbuser@yottadbworkshop:~$ sudo rm -rf /home/staffuser
 
 There is an installation option to restrict access to YottaDB/GT.M to a group. If you use this option, only those in the specified group will be able to use YottaDB/GT.M.
 
@@ -1061,13 +1058,13 @@ In this exercise, we will crash your virtual machine and then recover the databa
 First, clean out old journal files. Verify that there are no shared memory segments in use. Then go into YottaDB/GT.M and perform a database operation and verify that there is now a new shared memory segment.
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ rm -f .fis-gtm/V6.2-000_x86_64/g/gtm.mjl_*
-   gtmuser@gtmworkshop:~$ ipcs -m
+   yottadbuser@yottadbworkshop:~$ rm -f .fis-gtm/V6.2-000_x86_64/g/gtm.mjl_*
+   yottadbuser@yottadbworkshop:~$ ipcs -m
 
    ------ Shared Memory Segments --------
    key        shmid      owner      perms      bytes      nattch     status
 
-   gtmuser@gtmworkshop:~$ /usr/lib/fis-gtm/V6.2-000_x86_64/gtm
+   yottadbuser@yottadbworkshop:~$ /usr/lib/fis-gtm/V6.2-000_x86_64/gtm
 
    YDB>set ^X=$zdate($horolog,"MON DD, YEAR") ; opens database file and creates a shared memory segment
 
@@ -1078,7 +1075,7 @@ First, clean out old journal files. Verify that there are no shared memory segme
 
    ------ Shared Memory Segments --------
    key        shmid      owner      perms      bytes      nattch     status
-   0x00000000 65536      gtmuser    660        7208960    1
+   0x00000000 65536      yottadbuser    660        7208960    1
 
 
    YDB>
@@ -1086,20 +1083,20 @@ First, clean out old journal files. Verify that there are no shared memory segme
 Now kill the virtual machine by clicking on the “X” of the console window, or with a kill -9 of the virtual machine process, and then reboot it. Go back into YottaDB/GT.M and verify that the data is still there. Instead of running the ydb script (which performs an automatic recovery), run mumps and try to access the database. Note: you should not run the ydb script for this exercise, since it performs a recovery as part of its operation.
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ source /usr/lib/fis-gtm/V6.2-000_x86_64/gtmprofile
-   gtmuser@gtmworkshop:~$ mumps -dir
+   yottadbuser@yottadbworkshop:~$ source /usr/lib/fis-gtm/V6.2-000_x86_64/gtmprofile
+   yottadbuser@yottadbworkshop:~$ mumps -dir
 
    YDB>zwrite ^X
-   %GTM-E-REQRECOV, Error accessing database /home/gtmuser/.fis-gtm/V6.2-000_x86_64/g/gtm.dat.  Must be recovered on cluster node gtmworkshop.
+   %GTM-E-REQRECOV, Error accessing database /home/yottadbuser/.fis-gtm/V6.2-000_x86_64/g/gtm.dat.  Must be recovered on cluster node yottadbworkshop.
    %GTM-I-TEXT, Error with database control shmctl
    %SYSTEM-E-ENO22, Invalid argument
 
    YDB>zsystem "ls -l $gtmdir/$gtmver/g" ; notice the journal file
    total 1008
-   -rw-r----- 1 gtmuser gtmuser 20783616 Jan 22 14:22 gtm.dat
-   -rw-rw-r-- 1 gtmuser gtmuser     1536 Jan 15 13:14 gtm.gld
-   -rw-r----- 1 gtmuser gtmuser    69632 Jan 22 14:22 gtm.mjl
-   -rw-r----- 1 gtmuser gtmuser    69632 Jan 15 17:29 gtm.mjl_2018335172932
+   -rw-r----- 1 yottadbuser yottadbuser 20783616 Jan 22 14:22 gtm.dat
+   -rw-rw-r-- 1 yottadbuser yottadbuser     1536 Jan 15 13:14 gtm.gld
+   -rw-r----- 1 yottadbuser yottadbuser    69632 Jan 22 14:22 gtm.mjl
+   -rw-r----- 1 yottadbuser yottadbuser    69632 Jan 15 17:29 gtm.mjl_2018335172932
 
    YDB>zsystem "ipcs -m" ; and there are no shared memory segments indicating an open database
 
@@ -1117,39 +1114,39 @@ Now kill the virtual machine by clicking on the “X” of the console window, o
 Now, try the ydb script instead of running the mumps executable directly.
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ ydb
+   yottadbuser@yottadbworkshop:~$ ydb
 
    YDB>zwrite ^X ; database access works
    ^X="JAN 22, 2018"
 
    YDB>zsystem "ls -l $gtmdir/$gtmver/g" ; there are two new journal files
    total 1144
-   -rw-r----- 1 gtmuser gtmuser 20783616 Jan 22 14:22 gtm.dat
-   -rw-rw-r-- 1 gtmuser gtmuser     1536 Jan 15 13:14 gtm.gld
-   -rw-r----- 1 gtmuser gtmuser    69632 Jan 22 14:22 gtm.mjl
-   -rw-r----- 1 gtmuser gtmuser    69632 Jan 15 17:29 gtm.mjl_2018335172932
-   -rw-r----- 1 gtmuser gtmuser    69632 Jan 22 14:30 gtm.mjl_2018335143031
-   -rw-r----- 1 gtmuser gtmuser    69632 Jan 22 14:30 gtm.mjl_2018335143032
+   -rw-r----- 1 yottadbuser yottadbuser 20783616 Jan 22 14:22 gtm.dat
+   -rw-rw-r-- 1 yottadbuser yottadbuser     1536 Jan 15 13:14 gtm.gld
+   -rw-r----- 1 yottadbuser yottadbuser    69632 Jan 22 14:22 gtm.mjl
+   -rw-r----- 1 yottadbuser yottadbuser    69632 Jan 15 17:29 gtm.mjl_2018335172932
+   -rw-r----- 1 yottadbuser yottadbuser    69632 Jan 22 14:30 gtm.mjl_2018335143031
+   -rw-r----- 1 yottadbuser yottadbuser    69632 Jan 22 14:30 gtm.mjl_2018335143032
 
    YDB>zsystem "ipcs -m" ; there is a shared memory segment for the open database file
 
    ------ Shared Memory Segments --------
    key        shmid      owner      perms      bytes      nattch     status
-   0x00000000 65536      gtmuser    660        7208960    1 
+   0x00000000 65536      yottadbuser    660        7208960    1 
 
 
    YDB>zsystem "ls -lR $gtm_tmp" ; and log files from the commands in the gtm script
    /tmp/fis-gtm/V6.2-000_x86_64:
    total 8
-   -rw-rw-r-- 1 gtmuser gtmuser 617 Jan  22 14:30 gtmuser_20181201165831UTC_mupip_recover
-   -rw-rw-r-- 1 gtmuser gtmuser 339 Jan  22 14:30 gtmuser_20181201165831UTC_mupip_set
+   -rw-rw-r-- 1 yottadbuser yottadbuser 617 Jan  22 14:30 yottadbuser_20181201165831UTC_mupip_recover
+   -rw-rw-r-- 1 yottadbuser yottadbuser 339 Jan  22 14:30 yottadbuser_20181201165831UTC_mupip_set
 
    YDB>halt
 
 How did the recovery happen? The answer is in the gtm script.
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ cat \`which gtm\`
+   yottadbuser@yottadbworkshop:~$ cat \`which gtm\`
    #!/bin/sh
    #################################################################
    #                                                               #
@@ -1180,26 +1177,26 @@ How did the recovery happen? The answer is in the gtm script.
            $gtm_dist/mupip rundown -region "*" 2>$gtm_tmp/"$USER"_$timestamp"-"`date -u +%Y%m%d%H%M%S`"UTC_mupip_rundown" )
        find $gtm_tmp -name "$USER"_\\* -mtime +$gtm_retention -exec rm -f {} \\;
  fi
- gtmuser@gtmworkshop:~$
+ yottadbuser@yottadbworkshop:~$
 
 The mupip journal recover command performs the recovery. Review the output of the mupip commands – as new journal files are created, older journal files are being renamed. Each journal file has a back-pointer to its predecessor. The gtm script removes non-current journal files and temporary files, those older than the number of days specified by the $gtm_retention environment variable.
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ cat $gtm_tmp/gtmuser_20111107223555UTC_mupip_recover
+   yottadbuser@yottadbworkshop:~$ cat $gtm_tmp/yottadbuser_20111107223555UTC_mupip_recover
    %GTM-I-MUJNLSTAT, Initial processing started at Mon Jan  1 11:58:31 2018
    %GTM-I-MUJNLSTAT, Backward processing started at Mon Jan  1 11:58:31 2018
    %GTM-I-MUJNLSTAT, Before image applying started at Mon Jan  1 11:58:31 2018
-   %GTM-I-FILERENAME, File /home/gtmuser/.fis-gtm/V6.2-000_x86_64/g/gtm.mjl is renamed to /home/gtmuser/.fis-gtm/V6.2-000_x86_64/g/gtm.mjl_2018335115831
+   %GTM-I-FILERENAME, File /home/yottadbuser/.fis-gtm/V6.2-000_x86_64/g/gtm.mjl is renamed to /home/yottadbuser/.fis-gtm/V6.2-000_x86_64/g/gtm.mjl_2018335115831
    %GTM-I-MUJNLSTAT, Forward processing started at Mon Jan  1 11:58:32 2018
    %GTM-S-JNLSUCCESS, Show successful
    %GTM-S-JNLSUCCESS, Verify successful
    %GTM-S-JNLSUCCESS, Recover successful
    %GTM-I-MUJNLSTAT, End processing at Mon Jan  1 11:58:32 2018
-   gtmuser@gtmworkshop:~$ cat $gtm_tmp/gtmuser_20111107223555UTC_mupip_set 
-   %GTM-I-FILERENAME, File /home/gtmuser/.fis-gtm/V6.2-000_x86_64/g/gtm.mjl is renamed to /home/gtmuser/.fis-gtm/V6.2-000_x86_64/g/gtm.mjl_2018335115832
-   %GTM-I-JNLCREATE, Journal file /home/gtmuser/.fis-gtm/V6.2-000_x86_64/g/gtm.mjl created for region DEFAULT with BEFORE_IMAGES
+   yottadbuser@yottadbworkshop:~$ cat $gtm_tmp/yottadbuser_20111107223555UTC_mupip_set 
+   %GTM-I-FILERENAME, File /home/yottadbuser/.fis-gtm/V6.2-000_x86_64/g/gtm.mjl is renamed to /home/yottadbuser/.fis-gtm/V6.2-000_x86_64/g/gtm.mjl_2018335115832
+   %GTM-I-JNLCREATE, Journal file /home/yottadbuser/.fis-gtm/V6.2-000_x86_64/g/gtm.mjl created for region DEFAULT with BEFORE_IMAGES
    %GTM-I-JNLSTATE, Journaling state for region DEFAULT is now ON
-   gtmuser@gtmworkshop:~$ 
+   yottadbuser@yottadbworkshop:~$ 
 
 Look at the animation of journaling in action at the beginning of Chapter 6 (YottaDB/GT.M Journaling) in the Administration and Operations Guide.
 
@@ -1217,7 +1214,7 @@ Hints:
 
 - Create an gtmenv file in the directory to set up the environment variables. You can then source it with a command such as source ./gtmenv to set up the environment. Set up the environment variables yourself and do not source /usr/lib/fis-gtm/V6.2-000_x86_64/gtmprofile because it will recover the database when you source it and you will miss the point of the exercise. At a minimum, the env file should specify values for the following environment variables: gtm_dist (set to /usr/local/lib/yottadb/r110), gtmgbldir (set to $HOME/exDir/gtm.gld), gtm_log and gtm_tmp (set to /tmp/yottadb/r110; make sure it exists), gtm_principal_editing (set to EDITING), gtmroutines (set to "$HOME/exDir* $gtm_dist/libgtmutil.so"). Make sure the directory /tmp/yottadb/r110 exists by creating it in the gtmenv file with a mkdir -p command. It may be convenient to alias mumps to $gtm_dist/mumps and mupip to $gtm_dist/mupip. [Hint: if you read a little further, you may find a gtmenv file that you can copy and paste into an editor.]
 
-- In GDE, source the commands in the file /usr/lib/fis-gtm/V6.2-000_x86_64/gdedefaults to set reasonable defaults for the global directory and then change the database file names in the segment and the journal file names in the region to place the database and journal files in /home/gtmuser/exDir.
+- In GDE, source the commands in the file /usr/lib/fis-gtm/V6.2-000_x86_64/gdedefaults to set reasonable defaults for the global directory and then change the database file names in the segment and the journal file names in the region to place the database and journal files in /home/yottadbuser/exDir.
 
 - Look at the example with mammalogists and carcinologists for commands to set up journaling.
 
@@ -1234,7 +1231,7 @@ When an application must have the best possible continuity of business, use data
 Because replication builds on journaling, use the directory exDir created above. Enhance the shell script gtmenv to assign values to two more environment variables, gtm_repl_instance and gtm_repl_instname. gtm_repl_instance is the name of a replication instance file where a replicated instance stores information about the state of replication and gtm_repl_instance is the name of an instance – in this case, dummy, but we will change it as we create copies of the instances.
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ cd exDir ; cat gtmenv
+   yottadbuser@yottadbworkshop:~$ cd exDir ; cat gtmenv
    export gtm_dist=/usr/local/lib/yottadb/r110
    export gtmgbldir=$HOME/exDir/gtm.gld
    export gtm_log=/tmp/fis-gtm/V6.2-000_x86_64
@@ -1250,46 +1247,46 @@ Because replication builds on journaling, use the directory exDir created above.
 Turn on replication and journaling (remember to source gtmenv to set the environment variables first)
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ mupip set -replication=on -region "*"
-   %GTM-I-FILERENAME, File /home/gtmuser/exDir/aA.mjl is renamed to /home/gtmuser/exDir/aA.mjl_2018335181257
-   %GTM-I-JNLCREATE, Journal file /home/gtmuser/exDir/aA.mjl created for region A with BEFORE_IMAGES
-   %GTM-I-PREVJNLLINKCUT, Previous journal file name link set to NULL in new journal file /home/gtmuser/exDir/aA.mjl created for database file /home/gtmuser/exDir/aA.dat
+   yottadbuser@yottadbworkshop:~$ mupip set -replication=on -region "*"
+   %GTM-I-FILERENAME, File /home/yottadbuser/exDir/aA.mjl is renamed to /home/yottadbuser/exDir/aA.mjl_2018335181257
+   %GTM-I-JNLCREATE, Journal file /home/yottadbuser/exDir/aA.mjl created for region A with BEFORE_IMAGES
+   %GTM-I-PREVJNLLINKCUT, Previous journal file name link set to NULL in new journal file /home/yottadbuser/exDir/aA.mjl created for database file /home/yottadbuser/exDir/aA.dat
    %GTM-I-JNLSTATE, Journaling state for region A is now ON
    %GTM-I-REPLSTATE, Replication state for region A is now ON
-   %GTM-I-FILERENAME, File /home/gtmuser/exDir/others.mjl is renamed to /home/gtmuser/exDir/others.mjl_2018335181257
-   %GTM-I-JNLCREATE, Journal file /home/gtmuser/exDir/others.mjl created for region DEFAULT with BEFORE_IMAGES
-   %GTM-I-PREVJNLLINKCUT, Previous journal file name link set to NULL in new journal file /home/gtmuser/exDir/others.mjl created for database file /home/gtmuser/exDir/others.dat
+   %GTM-I-FILERENAME, File /home/yottadbuser/exDir/others.mjl is renamed to /home/yottadbuser/exDir/others.mjl_2018335181257
+   %GTM-I-JNLCREATE, Journal file /home/yottadbuser/exDir/others.mjl created for region DEFAULT with BEFORE_IMAGES
+   %GTM-I-PREVJNLLINKCUT, Previous journal file name link set to NULL in new journal file /home/yottadbuser/exDir/others.mjl created for database file /home/yottadbuser/exDir/others.dat
    %GTM-I-JNLSTATE, Journaling state for region DEFAULT is now ON
    %GTM-I-REPLSTATE, Replication state for region DEFAULT is now ON
 
 Create the following shell scripts inside exDir and make them executable:
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ cat originating_stop 
+   yottadbuser@yottadbworkshop:~$ cat originating_stop 
    #!/bin/sh
    $gtm_dist/mupip replicate -source -shutdown -timeout=0
    $gtm_dist/mupip rundown -region "*"
-   gtmuser@gtmworkshop:~$ cat replicating_start 
+   yottadbuser@yottadbworkshop:~$ cat replicating_start 
    #!/bin/sh
    $gtm_dist/mupip replicate -source -start -passive -instsecondary=dummy -buffsize=1048576 -log=$HOME/exDir/source_dummy.log
    $gtm_dist/mupip replicate -receive -start -listenport=3000 -buffsize=1048576 -log=$HOME/exDir/receive.log
-   gtmuser@gtmworkshop:~$ cat replicating_stop
+   yottadbuser@yottadbworkshop:~$ cat replicating_stop
    #!/bin/sh
    $gtm_dist/mupip replicate -receive -shutdown -timeout=0
    $gtm_dist/mupip replicate -source -shutdown -timeout=0
    $gtm_dist/mupip rundown -region "*"
-   gtmuser@gtmworkshop:~$ chmod +x {originating_stop,replicating_*}
-   gtmuser@gtmworkshop:~$ ls -l {originating_stop,replicating_*}
-   -rwxrwxr-x 1 gtmuser gtmuser  81 Jan  23 10:17 originating_stop
-   -rwxrwxr-x 1 gtmuser gtmuser 219 Jan  23 10:19 replicating_start
-   -rwxrwxr-x 1 gtmuser gtmuser 127 Jan  23 10:16 replicating_stop
-   gtmuser@gtmworkshop:~$ 
+   yottadbuser@yottadbworkshop:~$ chmod +x {originating_stop,replicating_*}
+   yottadbuser@yottadbworkshop:~$ ls -l {originating_stop,replicating_*}
+   -rwxrwxr-x 1 yottadbuser yottadbuser  81 Jan  23 10:17 originating_stop
+   -rwxrwxr-x 1 yottadbuser yottadbuser 219 Jan  23 10:19 replicating_start
+   -rwxrwxr-x 1 yottadbuser yottadbuser 127 Jan  23 10:16 replicating_stop
+   yottadbuser@yottadbworkshop:~$ 
 
 You can delete the prior generation journal files, just to keep the directory clean:
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ rm * .mjl\_ *
-   gtmuser@gtmworkshop:~$ 
+   yottadbuser@yottadbworkshop:~$ rm * .mjl\_ *
+   yottadbuser@yottadbworkshop:~$ 
 
 Shut down the Acculturation Workshop virtual machine and make three copies of the Acculturation Workshop called Paris.vmdk, Melbourne.vmdk and Santiago.vmdk. Alternatively, if your host system is short of disk space, make two copies and rename the original ubuntu-14.04_workshop.vmdk file.
 
@@ -1307,10 +1304,10 @@ Now boot the three virtual machines. Each virtual machine will need two ports to
    kvm -enable-kvm -cpu host -m 256 -display none -net nic -net user,hostfwd=tcp::2222-:22,hostfwd=tcp::5000-:3000 -hda Paris.vmdk &
    kvm -enable-kvm -cpu host -m 256 -display none -net nic -net user,hostfwd=tcp::2223-:22,hostfwd=tcp::6000-:3000 -hda Melbourne.vmdk &
 
-To avoid confusion when you are working with multiple machines, change the name of each machine from gtmworkshop to its location. The examples here are from the Santiago machine. You should do likewise with Paris and Melbourne. To effect a name change will need to (as root) edit the files /etc/hosts and /etc/hostname to change gtmworkshop to santiago and then reboot.
+To avoid confusion when you are working with multiple machines, change the name of each machine from yottadbworkshop to its location. The examples here are from the Santiago machine. You should do likewise with Paris and Melbourne. To effect a name change will need to (as root) edit the files /etc/hosts and /etc/hostname to change yottadbworkshop to santiago and then reboot.
 
 .. parsed-literal::
-   gtmuser@santiago:~$ cat /etc/hosts
+   yottadbuser@santiago:~$ cat /etc/hosts
    127.0.0.1       localhost
    127.0.1.1       santiago
 
@@ -1320,18 +1317,18 @@ To avoid confusion when you are working with multiple machines, change the name 
    ff00::0 ip6-mcastprefix
    ff02::1 ip6-allnodes
    ff02::2 ip6-allrouters
-   gtmuser@santiago:~$ cat /etc/hostname
+   yottadbuser@santiago:~$ cat /etc/hostname
    santiago
-   gtmuser@santiago:~$ 
+   yottadbuser@santiago:~$ 
 
 You may also want to change the window/tab labels on your terminal emulator on the host to show which machine each session is connected to.
 
 To make it more realistic (and to reduce the probability of operator error) on each machine, execute sudo dpkg-reconfigure tzdata to specify the “local” time zone. Select Paris and Santiago.
 
-In each machine. Edit exDir/env in each instance and change the line export gtm_repl_instname=dummy and the line export gtm_repl_instance=/home/gtmuser/exDir/gtm.repl to an instance file name for that instance. For example, on the Santiago instance:
+In each machine. Edit exDir/env in each instance and change the line export gtm_repl_instname=dummy and the line export gtm_repl_instance=/home/yottadbuser/exDir/gtm.repl to an instance file name for that instance. For example, on the Santiago instance:
 
 .. parsed-literal::
-   gtmuser@santiago:~/exDir$ cat gtmenv 
+   yottadbuser@santiago:~/exDir$ cat gtmenv 
    export gtm_dist=/usr/local/lib/yottadb/r110
    export gtmgbldir=$HOME/exDir/gtm.gld
    export gtm_log=/tmp/fis-gtm/V6.2-000_x86_64
@@ -1343,56 +1340,56 @@ In each machine. Edit exDir/env in each instance and change the line export gtm_
    mkdir -p $gtm_tmp
    alias mumps=$gtm_dist/mumps
    alias mupip=$gtm_dist/mupip
-   gtmuser@santiago:~$
+   yottadbuser@santiago:~$
 
 Then on each instance, create a replication instance file.
 
 .. parsed-literal::
-   gtmuser@santiago:~/exDir$ ls -l \*.repl
+   yottadbuser@santiago:~/exDir$ ls -l \*.repl
    ls: cannot access exDir/\*.repl: No such file or directory
-   gtmuser@santiago:~/exDir$ source gtmenv 
-   gtmuser@santiago:~/exDir$ mupip replicate -instance_create
-   gtmuser@santiago:~/exDir$ ls -l \*.repl
-   -rw-rw-r-- 1 gtmuser gtmuser 1536 2011-11-10 00:47 exDir/santiago.repl
-   gtmuser@santiago:~/exDir$
+   yottadbuser@santiago:~/exDir$ source gtmenv 
+   yottadbuser@santiago:~/exDir$ mupip replicate -instance_create
+   yottadbuser@santiago:~/exDir$ ls -l \*.repl
+   -rw-rw-r-- 1 yottadbuser yottadbuser 1536 2011-11-10 00:47 exDir/santiago.repl
+   yottadbuser@santiago:~/exDir$
 
 Start the configuration with Paris as the originating primary instance, and Santiago and Melbourne in replicating secondary roles. The following commands, on the three instances can be executed in any order.
 
 Start Melbourne as a replicating instance.
 
 .. parsed-literal::
-   gtmuser@melbourne:~/exDir$ ./replicating_start 
+   yottadbuser@melbourne:~/exDir$ ./replicating_start 
    Tue Jan  23 11:08:09 2018 : Initiating START of source server for secondary instance [dummy]
-   gtmuser@melbourne:~/exDir$
+   yottadbuser@melbourne:~/exDir$
 
 Start Santiago as a replicating instance.
 
 .. parsed-literal::
-   gtmuser@santiago:~/exDir$ ./replicating_start
+   yottadbuser@santiago:~/exDir$ ./replicating_start
    Tue Jan  23 12:08:01 2018 : Initiating START of source server for secondary instance [dummy]
-   gtmuser@santiago:~/exDir$
+   yottadbuser@santiago:~/exDir$
 
 Start Paris as an originating instance replicating to Santiago and Melbourne (notice the use of ports on the host to reach the different replicating instances in the virtual machines).
 
 .. parsed-literal::
-   gtmuser@paris:~/exDir$ mupip replicate -source -start -instsecondary=Santiago -secondary=10.0.2.2:4000 -buffsize=1048576 -log=/home/gtmuser/exDir/source_Santiago.log
+   yottadbuser@paris:~/exDir$ mupip replicate -source -start -instsecondary=Santiago -secondary=10.0.2.2:4000 -buffsize=1048576 -log=/home/yottadbuser/exDir/source_Santiago.log
    Tue Jan  23 12:12:25 2018 : Initiating START of source server for secondary instance [Santiago]
-   gtmuser@paris:~/exDir$ mupip replicate -source -start -instsecondary=Melbourne -secondary=10.0.2.2:6000 -buffsize=1048576 -log=/home/gtmuser/exDir/source_Melbourne.log
+   yottadbuser@paris:~/exDir$ mupip replicate -source -start -instsecondary=Melbourne -secondary=10.0.2.2:6000 -buffsize=1048576 -log=/home/yottadbuser/exDir/source_Melbourne.log
    Tue Jan  23 12:12:53 2018 : Initiating START of source server for secondary instance [Melbourne]
-   gtmuser@paris:~/exDir$
+   yottadbuser@paris:~/exDir$
 
 
 Start a YottaDB/GT.M process in Paris and perform some database updates:
 
 .. parsed-literal::
-   gtmuser@paris:~/exDir$ mumps -dir
+   yottadbuser@paris:~/exDir$ mumps -dir
 
    YDB>set ^Weather("Paris",$Piece($Horolog,",",1),$Piece($Horolog,",",2))="Rainy"
 
 Verify that the data is replicated at Santiago and Melbourne. Execute the following at both instances:
 
 .. parsed-literal::
-   gtmuser@melbourne:~/exDir$ mumps -dir
+   yottadbuser@melbourne:~/exDir$ mumps -dir
 
    YDB>zwrite ^Weather
    ^Weather("Paris",63523,51308)="Rainy"
@@ -1402,7 +1399,7 @@ Verify that the data is replicated at Santiago and Melbourne. Execute the follow
 Bring down Melbourne (simulating system maintenance, or a network outage), but leave Santiago untouched.
 
 .. parsed-literal::
-   gtmuser@melbourne:~/exDir$ ./replicating_stop 
+   yottadbuser@melbourne:~/exDir$ ./replicating_stop 
    Signalling immediate shutdown
    Tue Jan  23 03:24:46 2018 : Initiating shut down
    Tue Jan  23 03:24:47 2018 : Receive pool shared memory removed
@@ -1412,9 +1409,9 @@ Bring down Melbourne (simulating system maintenance, or a network outage), but l
    Tue Jan  23 03:24:47 2018 : Waiting for upto [180] seconds for the source server to shutdown
    Tue Jan  23 03:24:49 2018 : Journal pool shared memory removed
    Tue Jan  23 03:24:49 2018 : Journal pool semaphore removed
-   %GTM-I-MUFILRNDWNSUC, File /home/gtmuser/exDir/aA.dat successfully rundown
-   %GTM-I-MUFILRNDWNSUC, File /home/gtmuser/exDir/others.dat successfully rundown
-   gtmuser@melbourne:~/exDir$ 
+   %GTM-I-MUFILRNDWNSUC, File /home/yottadbuser/exDir/aA.dat successfully rundown
+   %GTM-I-MUFILRNDWNSUC, File /home/yottadbuser/exDir/others.dat successfully rundown
+   yottadbuser@melbourne:~/exDir$ 
 
 Create another update in Paris.
 
@@ -1441,9 +1438,9 @@ But it is not replicated in Melbourne.
 Restart Melbourne as a replicating instance and notice that it catches up with updates at the originating instance when replication was not active in Melbourne.
 
 .. parsed-literal::
-   gtmuser@melbourne:~/exDir$ exDir/replicating_start 
+   yottadbuser@melbourne:~/exDir$ exDir/replicating_start 
    Thu Nov 10 07:33:47 2011 : Initiating START of source server for secondary instance [dummy]
-   gtmuser@melbourne:~/exDir$ mumps -dir
+   yottadbuser@melbourne:~/exDir$ mumps -dir
 
    YDB>zwrite ^Weather
    ^Weather("Paris",63523,51308)="Rainy"
@@ -1456,7 +1453,7 @@ Now, simulate an unplanned outage of Paris by clicking on the “X” of the vir
 Bring down Melbourne as a replicating instance and bring it up as the originating instance. Notice that you can bring up the Source Server process to replicate to Paris – it will make the connection when Paris comes up.
 
 .. parsed-literal::
-   gtmuser@melbourne:~/exDir$ ./replicating_stop
+   yottadbuser@melbourne:~/exDir$ ./replicating_stop
    Signalling immediate shutdown
    Tue Jan  23 12:30:01 2018 : Initiating shut down
    Tue Jan  23 12:30:02 2018 : Receive pool shared memory removed
@@ -1466,18 +1463,18 @@ Bring down Melbourne as a replicating instance and bring it up as the originatin
    Tue Jan  23 12:30:02 2018 : Waiting for upto [180] seconds for the source server to shutdown
    Tue Jan  23 12:30:03 2018 : Journal pool shared memory removed
    Tue Jan  23 12:30:03 2018 : Journal pool semaphore removed
-   %GTM-I-MUFILRNDWNSUC, File /home/gtmuser/exDir/aA.dat successfully rundown
-   %GTM-I-MUFILRNDWNSUC, File /home/gtmuser/exDir/others.dat successfully rundown
-   gtmuser@melbourne:~/exDir$ mupip replicate -source -start -instsecondary=Santiago -secondary=10.0.2.2:4000 -buffsize=1048576 -log=/home/gtmuser/exDir/source_Santiago.log
+   %GTM-I-MUFILRNDWNSUC, File /home/yottadbuser/exDir/aA.dat successfully rundown
+   %GTM-I-MUFILRNDWNSUC, File /home/yottadbuser/exDir/others.dat successfully rundown
+   yottadbuser@melbourne:~/exDir$ mupip replicate -source -start -instsecondary=Santiago -secondary=10.0.2.2:4000 -buffsize=1048576 -log=/home/yottadbuser/exDir/source_Santiago.log
    Tue Jan  23 12:30:42 2018 : Initiating START of source server for secondary instance [Santiago]
-   gtmuser@melbourne:~/exDir$ mupip replicate -source -start -instsecondary=Paris -secondary=10.0.2.2:5000 -buffsize=1048576 -log=/home/gtmuser/exDir/source_Paris.log
+   yottadbuser@melbourne:~/exDir$ mupip replicate -source -start -instsecondary=Paris -secondary=10.0.2.2:5000 -buffsize=1048576 -log=/home/yottadbuser/exDir/source_Paris.log
    Tue Jan  23 12:31:06 2018 : Initiating START of source server for secondary instance [Paris]
-   gtmuser@melbourne:~/exDir$ 
+   yottadbuser@melbourne:~/exDir$ 
 
 Both Santiago and Paris should perform a rollback fetchresync before they become secondary instances to Melbourne. First Santiago (since Paris has crashed and is down; notice that the times look very different because they show times in their local timezones).
 
 .. parsed-literal::
-   gtmuser@santiago:~/exDir$ ./replicating_stop
+   yottadbuser@santiago:~/exDir$ ./replicating_stop
    Signalling immediate shutdown
    Tue Jan  23 21:31:42 2018 : Initiating shut down
    Tue Jan  23 21:31:43 2018 : Receive pool shared memory removed
@@ -1487,9 +1484,9 @@ Both Santiago and Paris should perform a rollback fetchresync before they become
    Tue Jan  23 21:31:43 2018 : Waiting for upto [180] seconds for the source server to shutdown
    Tue Jan  23 21:31:44 2018 : Journal pool shared memory removed
    Tue Jan  23 21:31:44 2018 : Journal pool semaphore removed
-   %GTM-I-MUFILRNDWNSUC, File /home/gtmuser/exDir/aA.dat successfully rundown
-   %GTM-I-MUFILRNDWNSUC, File /home/gtmuser/exDir/others.dat successfully rundown
-   gtmuser@santiago:~/exDir$ mupip journal -rollback -backward -fetchresync=3000 -losttrans=/home/gtmuser/exDir/Unreplic_Trans_Report_`date +%Y%m%d%H%M%S`.txt "*"
+   %GTM-I-MUFILRNDWNSUC, File /home/yottadbuser/exDir/aA.dat successfully rundown
+   %GTM-I-MUFILRNDWNSUC, File /home/yottadbuser/exDir/others.dat successfully rundown
+   yottadbuser@santiago:~/exDir$ mupip journal -rollback -backward -fetchresync=3000 -losttrans=/home/yottadbuser/exDir/Unreplic_Trans_Report_`date +%Y%m%d%H%M%S`.txt "*"
    %GTM-I-MUJNLSTAT, Initial processing started at Tue Jan  23 21:32:10 2018
    %GTM-I-MUJNLSTAT, FETCHRESYNC processing started at Tue Jan  23 21:32:10 2018
    Tue Jan  23 21:32:10 2018 : Assuming primary supports multisite functionality. Connecting using multisite communication protocol.
@@ -1498,7 +1495,7 @@ Both Santiago and Paris should perform a rollback fetchresync before they become
    Tue Jan  23 21:32:10 2018 : Connection information:: Local: ::ffff:10.0.2.15:3000 Remote: ::ffff:10.0.2.2:48768
    Tue Jan  23 21:32:10 2018 : Sending REPL_FETCH_RESYNC message with seqno 3 [0x3]
    Tue Jan  23 21:32:10 2018 : Source and Receiver sides have same endianness
-   Tue Jan  23 21:32:10 2018 : Remote side source log file path is /home/gtmuser/exDir/source_Santiago.log; Source Server PID = 1035
+   Tue Jan  23 21:32:10 2018 : Remote side source log file path is /home/yottadbuser/exDir/source_Santiago.log; Source Server PID = 1035
    Tue Jan  23 21:32:10 2018 : Received REPL_NEED_INSTINFO message from primary instance [Melbourne]
    Tue Jan  23 21:32:10 2018 : Sending REPL_INSTINFO message
    Tue Jan  23 21:32:10 2018 : Received REPL_NEED_HISTINFO message for Seqno 3 [0x3]
@@ -1509,32 +1506,32 @@ Both Santiago and Paris should perform a rollback fetchresync before they become
    %GTM-I-MUJNLSTAT, Backward processing started at Tue Jan  2 21:32:10 2018
    %GTM-I-RESOLVESEQNO, Resolving until sequence number 3 [0x0000000000000003]
    %GTM-I-MUJNLSTAT, Before image applying started at Tue Jan  2 21:32:10 2018
-   %GTM-I-FILERENAME, File /home/gtmuser/exDir/aA.mjl is renamed to /home/gtmuser/exDir/aA.mjl_2018336213210
-   %GTM-I-FILERENAME, File /home/gtmuser/exDir/others.mjl is renamed to /home/gtmuser/exDir/others.mjl_2018336213210
+   %GTM-I-FILERENAME, File /home/yottadbuser/exDir/aA.mjl is renamed to /home/yottadbuser/exDir/aA.mjl_2018336213210
+   %GTM-I-FILERENAME, File /home/yottadbuser/exDir/others.mjl is renamed to /home/yottadbuser/exDir/others.mjl_2018336213210
    %GTM-I-MUJNLSTAT, Forward processing started at Tue Jan  2 21:32:10 2018
-   %GTM-I-FILECREATE, Lost transactions extract file /home/gtmuser/exDir/Unreplic_Trans_Report_20181202213210.txt created
+   %GTM-I-FILECREATE, Lost transactions extract file /home/yottadbuser/exDir/Unreplic_Trans_Report_20181202213210.txt created
    %GTM-I-RLBKJNSEQ, Journal seqno of the instance after rollback is 3 [0x0000000000000003]
    %GTM-S-JNLSUCCESS, Show successful
    %GTM-S-JNLSUCCESS, Verify successful
    %GTM-S-JNLSUCCESS, Rollback successful
    %GTM-I-MUJNLSTAT, End processing at Tue Jan  23 21:32:11 2018
-   gtmuser@santiago:~/exDir$ ./replicating_start
+   yottadbuser@santiago:~/exDir$ ./replicating_start
    Tue Jan  23 21:33:22 2018 : Initiating START of source server for secondary instance [dummy]
-   gtmuser@santiago:~/exDir$
+   yottadbuser@santiago:~/exDir$
 
 Note that the Unreplicated Transaction File has no transactions rolled back:
 
 .. parsed-literal::
-   gtmuser@santiago:~/exDir$ cat Unreplic_Trans_Report_20181202213210.txt 
+   yottadbuser@santiago:~/exDir$ cat Unreplic_Trans_Report_20181202213210.txt 
    GDSJEX07 ROLLBACK SECONDARY Santiago
    02\63523,77504\4\1024\0
    03\63523,77504\4\1024\0\3
-   gtmuser@santiago:~/exDir$
+   yottadbuser@santiago:~/exDir$
 
 Now reboot Paris to simulate its recovery. When the system comes up (before performing any other database access), perform a rollback fetchresync.
 
 .. parsed-literal::
-   gtmuser@paris:~/exDir$ mupip journal -rollback -backward -fetchresync=3000 -losttrans=/home/gtmuser/exDir/Unreplic_Trans_Report_`date +%Y%m%d%H%M%S`.txt "*"
+   yottadbuser@paris:~/exDir$ mupip journal -rollback -backward -fetchresync=3000 -losttrans=/home/yottadbuser/exDir/Unreplic_Trans_Report_`date +%Y%m%d%H%M%S`.txt "*"
    %GTM-I-MUJNLSTAT, Initial processing started at Tue Jan  23 14:35:55 2018
    %GTM-I-MUJNLSTAT, FETCHRESYNC processing started at Tue Jan  23 14:35:55 2018
    Tue Jan  23 14:35:55 2018 : Assuming primary supports multisite functionality. Connecting using multisite communication protocol.
@@ -1543,7 +1540,7 @@ Now reboot Paris to simulate its recovery. When the system comes up (before perf
    Tue Jan  23 14:35:56 2018 : Connection information:: Local: ::ffff:10.0.2.15:3000 Remote: ::ffff:10.0.2.2:49353
    Tue Jan  23 14:35:56 2018 : Sending REPL_FETCH_RESYNC message with seqno 3 [0x3]
    Tue Jan  23 14:35:56 2018 : Source and Receiver sides have same endianness
-   Tue Jan  23 14:35:56 2018 : Remote side source log file path is /home/gtmuser/exDir/source_Paris.log; Source Server PID = 1037
+   Tue Jan  23 14:35:56 2018 : Remote side source log file path is /home/yottadbuser/exDir/source_Paris.log; Source Server PID = 1037
    Tue Jan  23 14:35:56 2018 : Received REPL_NEED_INSTINFO message from primary instance [Melbourne]
    Tue Jan  23 14:35:56 2018 : Sending REPL_INSTINFO message
    Tue Jan  23 14:35:56 2018 : Received REPL_NEED_HISTINFO message for Seqno 3 [0x3]
@@ -1554,18 +1551,18 @@ Now reboot Paris to simulate its recovery. When the system comes up (before perf
    %GTM-I-MUJNLSTAT, Backward processing started at Tue Jan  23 14:35:56 2018
    %GTM-I-RESOLVESEQNO, Resolving until sequence number 3 [0x0000000000000003]
    %GTM-I-MUJNLSTAT, Before image applying started at Tue Jan  23 14:35:56 2018
-   %GTM-I-FILERENAME, File /home/gtmuser/exDir/aA.mjl is renamed to /home/gtmuser/exDir/aA.mjl_2018336143556
-   %GTM-I-FILERENAME, File /home/gtmuser/exDir/others.mjl is renamed to /home/gtmuser/exDir/others.mjl_2018336143556
+   %GTM-I-FILERENAME, File /home/yottadbuser/exDir/aA.mjl is renamed to /home/yottadbuser/exDir/aA.mjl_2018336143556
+   %GTM-I-FILERENAME, File /home/yottadbuser/exDir/others.mjl is renamed to /home/yottadbuser/exDir/others.mjl_2018336143556
    %GTM-I-MUJNLSTAT, Forward processing started at Tue Jan  23 14:35:56 2018
-   %GTM-I-FILECREATE, Lost transactions extract file /home/gtmuser/exDir/Unreplic_Trans_Report_20181202143555.txt created
+   %GTM-I-FILECREATE, Lost transactions extract file /home/yottadbuser/exDir/Unreplic_Trans_Report_20181202143555.txt created
    %GTM-I-RLBKJNSEQ, Journal seqno of the instance after rollback is 3 [0x0000000000000003]
    %GTM-S-JNLSUCCESS, Show successful
    %GTM-S-JNLSUCCESS, Verify successful
    %GTM-S-JNLSUCCESS, Rollback successful
    %GTM-I-MUJNLSTAT, End processing at Tue Jan  23 14:35:57 2018
-   gtmuser@paris:~/exDir$ ./replicating_start
+   yottadbuser@paris:~/exDir$ ./replicating_start
    Tue Jan  23 14:37:14 2018 : Initiating START of source server for secondary instance [dummy]
-   gtmuser@paris:~/exDir$
+   yottadbuser@paris:~/exDir$
 
 Now, create a database update in Melbourne.
 
@@ -1583,21 +1580,21 @@ And confirm that it is replicated to both Santiago and Paris.
 Shut down all three instances cleanly to end the exercise. On the originating instance in Melbourne:
 
 .. parsed-literal::
-   gtmuser@melbourne:~/exDir$ ./originating_stop
+   yottadbuser@melbourne:~/exDir$ ./originating_stop
    Wed Jan  24 03:42:11 2018 : Signalling shutdown immediate
    Wed Jan  24 03:42:11 2018 : Initiating SHUTDOWN operation on source server pid [1049] for secondary instance [Santiago]
    Wed Jan  24 03:42:11 2018 : Initiating SHUTDOWN operation on source server pid [1051] for secondary instance [Paris]
    Wed Jan  24 03:42:11 2018 : Waiting for upto [180] seconds for the source server to shutdown
    Wed Jan  24 03:42:12 2018 : Journal pool shared memory removed
    Wed Jan  24 03:42:12 2018 : Journal pool semaphore removed
-   %GTM-I-MUFILRNDWNSUC, File /home/gtmuser/exDir/aA.dat successfully rundown
-   %GTM-I-MUFILRNDWNSUC, File /home/gtmuser/exDir/others.dat successfully rundown
-   gtmuser@melbourne:~/exDir$
+   %GTM-I-MUFILRNDWNSUC, File /home/yottadbuser/exDir/aA.dat successfully rundown
+   %GTM-I-MUFILRNDWNSUC, File /home/yottadbuser/exDir/others.dat successfully rundown
+   yottadbuser@melbourne:~/exDir$
 
 And on the replicating instances in Santiago and Paris, execute replicating_stop to stop the replication.
 
 .. parsed-literal::
-   gtmuser@paris:~/exDir$ ./replicating_stop
+   yottadbuser@paris:~/exDir$ ./replicating_stop
    Signalling immediate shutdown
    Tue Jan  23 14:42:53 2018 : Initiating shut down
    Tue Jan  23 14:42:54 2018 : Receive pool shared memory removed
@@ -1607,9 +1604,9 @@ And on the replicating instances in Santiago and Paris, execute replicating_stop
    Tue Jan  23 14:42:54 2018 : Waiting for upto [180] seconds for the source server to shutdown
    Tue Jan  23 14:42:55 2018 : Journal pool shared memory removed
    Tue Jan  23 14:42:55 2018 : Journal pool semaphore removed
-   %GTM-I-MUFILRNDWNSUC, File /home/gtmuser/exDir/aA.dat successfully rundown
-   %GTM-I-MUFILRNDWNSUC, File /home/gtmuser/exDir/others.dat successfully rundown
-   gtmuser@paris:~/exDir$
+   %GTM-I-MUFILRNDWNSUC, File /home/yottadbuser/exDir/aA.dat successfully rundown
+   %GTM-I-MUFILRNDWNSUC, File /home/yottadbuser/exDir/others.dat successfully rundown
+   yottadbuser@paris:~/exDir$
 
 **Replication and Backlogs**
 
@@ -1652,16 +1649,16 @@ This exercise simulates a replication with a backlog (smaller than the five upda
 Start Santiago as the originating instance:
 
 .. parsed-literal::
-   gtmuser@santiago:~/exDir$ mupip replicate -source -start -instsecondary=Paris -secondary=10.0.2.2:5000 -buffsize=1048576 -log=/home/gtmuser/exDir/source_Paris.log
+   yottadbuser@santiago:~/exDir$ mupip replicate -source -start -instsecondary=Paris -secondary=10.0.2.2:5000 -buffsize=1048576 -log=/home/yottadbuser/exDir/source_Paris.log
    Tue Jan  2 23:42:32 2018 : Initiating START of source server for secondary instance [Paris]
-   gtmuser@santiago:~/exDir$ mupip replicate -source -start -instsecondary=Melbourne -secondary=10.0.2.2:6000 -buffsize=1048576 -log=/home/gtmuser/exDir/source_Melbourne.log
+   yottadbuser@santiago:~/exDir$ mupip replicate -source -start -instsecondary=Melbourne -secondary=10.0.2.2:6000 -buffsize=1048576 -log=/home/yottadbuser/exDir/source_Melbourne.log
    Tue Jan  2 23:43:02 2018 : Initiating START of source server for secondary instance [Melbourne]
-   gtmuser@santiago:~/exDir$
+   yottadbuser@santiago:~/exDir$
 
 At Paris (and also in Melbourne) perform the fetchresync operation and then start replication. You can ask YottaDB/GT.M to tell you the health of replication and also the replication backlog.
 
 .. parsed-literal::
-   gtmuser@paris:~/exDir$ mupip journal -rollback -backward -fetchresync=3000 -losttrans=/home/gtmuser/exDir/Unreplic_Trans_Report_`date +%Y%m%d%H%M%S`.txt "*"
+   yottadbuser@paris:~/exDir$ mupip journal -rollback -backward -fetchresync=3000 -losttrans=/home/yottadbuser/exDir/Unreplic_Trans_Report_`date +%Y%m%d%H%M%S`.txt "*"
    %GTM-I-MUJNLSTAT, Initial processing started at Tue Jan  2 16:43:40 2018
    %GTM-I-MUJNLSTAT, FETCHRESYNC processing started at Tue Jan  2 16:43:40 2018
    Tue Jan  23 16:43:40 2018 : Assuming primary supports multisite functionality. Connecting using multisite communication protocol.
@@ -1670,7 +1667,7 @@ At Paris (and also in Melbourne) perform the fetchresync operation and then star
    Tue Jan  23 16:43:41 2018 : Connection information:: Local: ::ffff:10.0.2.15:3000 Remote: ::ffff:10.0.2.2:49967
    Tue Jan  23 16:43:41 2018 : Sending REPL_FETCH_RESYNC message with seqno 4 [0x4]
    Tue Jan  23 16:43:41 2018 : Source and Receiver sides have same endianness
-   Tue Jan  23 16:43:41 2018 : Remote side source log file path is /home/gtmuser/exDir/source_Paris.log; Source Server PID = 1063
+   Tue Jan  23 16:43:41 2018 : Remote side source log file path is /home/yottadbuser/exDir/source_Paris.log; Source Server PID = 1063
    Tue Jan  23 16:43:41 2018 : Received REPL_NEED_INSTINFO message from primary instance [Santiago]
    Tue Jan  23 16:43:41 2018 : Sending REPL_INSTINFO message
    Tue Jan  23 16:43:41 2018 : Received REPL_NEED_HISTINFO message for Seqno 4 [0x4]
@@ -1681,35 +1678,35 @@ At Paris (and also in Melbourne) perform the fetchresync operation and then star
    %GTM-I-MUJNLSTAT, Backward processing started at Tue Jan  23 16:43:41 2018
    %GTM-I-RESOLVESEQNO, Resolving until sequence number 4 [0x0000000000000004]
    %GTM-I-MUJNLSTAT, Before image applying started at Tue Jan  23 16:43:41 2018
-   %GTM-I-FILERENAME, File /home/gtmuser/exDir/aA.mjl is renamed to /home/gtmuser/exDir/aA.mjl_2018336164341
-   %GTM-I-FILERENAME, File /home/gtmuser/exDir/others.mjl is renamed to /home/gtmuser/exDir/others.mjl_2018336164341
+   %GTM-I-FILERENAME, File /home/yottadbuser/exDir/aA.mjl is renamed to /home/yottadbuser/exDir/aA.mjl_2018336164341
+   %GTM-I-FILERENAME, File /home/yottadbuser/exDir/others.mjl is renamed to /home/yottadbuser/exDir/others.mjl_2018336164341
    %GTM-I-MUJNLSTAT, Forward processing started at Tue Jan  23 16:43:41 2018
-   %GTM-I-FILECREATE, Lost transactions extract file /home/gtmuser/exDir/Unreplic_Trans_Report_20181202164340.txt created
+   %GTM-I-FILECREATE, Lost transactions extract file /home/yottadbuser/exDir/Unreplic_Trans_Report_20181202164340.txt created
    %GTM-I-RLBKJNSEQ, Journal seqno of the instance after rollback is 4 [0x0000000000000004]
    %GTM-S-JNLSUCCESS, Show successful
    %GTM-S-JNLSUCCESS, Verify successful
    %GTM-S-JNLSUCCESS, Rollback successful
    %GTM-I-MUJNLSTAT, End processing at Tue Jan  23 16:43:41 2018
-   gtmuser@paris:~/exDir$ ./replicating_start
+   yottadbuser@paris:~/exDir$ ./replicating_start
    Tue Jan  23 16:47:50 2018 : Initiating START of source server for secondary instance [dummy]
-   gtmuser@paris:~/exDir$ mupip replicate -receiver -checkhealth
+   yottadbuser@paris:~/exDir$ mupip replicate -receiver -checkhealth
    PID 1040 Receiver server is alive
    PID 1041 Update process is alive
-   gtmuser@paris:~/exDir$ mupip replicate -receiver -showbacklog
+   yottadbuser@paris:~/exDir$ mupip replicate -receiver -showbacklog
    0 : number of backlog transactions received by receiver server and yet to be processed by update process
    3 : sequence number of last transaction received from Source Server and written to receive pool
    3 : sequence number of last transaction processed by update process
-   gtmuser@paris:~/exDir$
+   yottadbuser@paris:~/exDir$
 
 You can also check replication health and the backlog on the originating instance, Santiago. Notice that if you do not specify which replication connection you want details for, you get information on all.
 
 .. parsed-literal::
-   gtmuser@santiago:~/exDir$ mupip replicate -source -checkhealth
+   yottadbuser@santiago:~/exDir$ mupip replicate -source -checkhealth
    Tue Jan  23 23:51:20 2018 : Initiating CHECKHEALTH operation on source server pid [1063] for secondary instance name [Paris]
    PID 1063 Source server is alive in ACTIVE mode
    Tue Jan  23 23:51:20 2018 : Initiating CHECKHEALTH operation on source server pid [1065] for secondary instance name [Melbourne]
    PID 1065 Source server is alive in ACTIVE mode
-   gtmuser@santiago:~/exDir$ mupip replicate -source -showbacklog
+   yottadbuser@santiago:~/exDir$ mupip replicate -source -showbacklog
    Tue Jan  23 23:51:35 2018 : Initiating SHOWBACKLOG operation on source server pid [1063] for secondary instance [Paris]
    0 : backlog number of transactions written to journal pool and yet to be sent by the source server
    3 : sequence number of last transaction written to journal pool
@@ -1718,7 +1715,7 @@ You can also check replication health and the backlog on the originating instanc
    0 : backlog number of transactions written to journal pool and yet to be sent by the source server
    3 : sequence number of last transaction written to journal pool
    3 : sequence number of last transaction sent by source server
-   gtmuser@santiago:~/exDir$
+   yottadbuser@santiago:~/exDir$
 
 Now create an update in Santiago.
 
@@ -1737,7 +1734,7 @@ Verify that it is replicated in Paris and Melbourne.
 Now simulate a failure with a backlog by first shutting down replication in Melbourne, and then making an update in Santiago. In Melbourne:
 
 .. parsed-literal::
-   gtmuser@melbourne:~/exDir$ ./replicating_stop
+   yottadbuser@melbourne:~/exDir$ ./replicating_stop
    Signalling immediate shutdown
    Wed Jan  24 05:56:09 2018 : Initiating shut down
    Wed Jan  24 05:56:10 2018 : Receive pool shared memory removed
@@ -1747,9 +1744,9 @@ Now simulate a failure with a backlog by first shutting down replication in Melb
    Wed Jan  24 05:56:10 2018 : Waiting for upto [180] seconds for the source server to shutdown
    Wed Jan  24 05:56:11 2018 : Journal pool shared memory removed
    Wed Jan  24 05:56:11 2018 : Journal pool semaphore removed
-   %GTM-I-MUFILRNDWNSUC, File /home/gtmuser/exDir/aA.dat successfully rundown
-   %GTM-I-MUFILRNDWNSUC, File /home/gtmuser/exDir/others.dat successfully rundown
-   gtmuser@melbourne:~/exDir$
+   %GTM-I-MUFILRNDWNSUC, File /home/yottadbuser/exDir/aA.dat successfully rundown
+   %GTM-I-MUFILRNDWNSUC, File /home/yottadbuser/exDir/others.dat successfully rundown
+   yottadbuser@melbourne:~/exDir$
 
 In Santiago:
 
@@ -1773,7 +1770,7 @@ Notice that there is a backlog to Melbourne, but none to Paris. Now shut down re
 In Paris:
 
 .. parsed-literal::
-   gtmuser@paris:~/exDir$ ./replicating_stop
+   yottadbuser@paris:~/exDir$ ./replicating_stop
    Signalling immediate shutdown
    Tue Jan  23 16:57:32 2018 : Initiating shut down
    Tue Jan  23 16:57:33 2018 : Receive pool shared memory removed
@@ -1783,9 +1780,9 @@ In Paris:
    Tue Jan  23 16:57:33 2018 : Waiting for upto [180] seconds for the source server to shutdown
    Tue Jan  23 16:57:34 2018 : Journal pool shared memory removed
    Tue Jan  23 16:57:34 2018 : Journal pool semaphore removed
-   %GTM-I-MUFILRNDWNSUC, File /home/gtmuser/exDir/aA.dat successfully rundown
-   %GTM-I-MUFILRNDWNSUC, File /home/gtmuser/exDir/others.dat successfully rundown
-   gtmuser@paris:~/exDir$
+   %GTM-I-MUFILRNDWNSUC, File /home/yottadbuser/exDir/aA.dat successfully rundown
+   %GTM-I-MUFILRNDWNSUC, File /home/yottadbuser/exDir/others.dat successfully rundown
+   yottadbuser@paris:~/exDir$
 
 In Santiago:
 
@@ -1817,15 +1814,15 @@ Now crash Santiago. You have a choice of bringing up Paris or Melbourne. If you 
 In Paris (note the use of the find -region DSE command):
 
 .. parsed-literal::
-   gtmuser@paris:~/exDir$ $gtm_dist/dse
+   yottadbuser@paris:~/exDir$ $gtm_dist/dse
 
 
-   File    /home/gtmuser/exDir/aA.dat
+   File    /home/yottadbuser/exDir/aA.dat
    Region  A
 
    DSE> dump -fileheader
 
-   File            /home/gtmuser/exDir/aA.dat
+   File            /home/yottadbuser/exDir/aA.dat
    Region          A
    Date/Time       23-JAN-2018 17:11:44 [$H = 63523,61904]
 
@@ -1852,7 +1849,7 @@ In Paris (note the use of the find -region DSE command):
     Journal Buffer Size                  2312  Journal Alignsize             4096
     Journal AutoSwitchLimit           8386560  Journal Epoch Interval         300
     Journal Yield Limit                     8  Journal Sync IO              FALSE
-    Journal File: /home/gtmuser/exDir/aA.mjl
+    Journal File: /home/yottadbuser/exDir/aA.mjl
     Mutex Hard Spin Count                 128  Mutex Sleep Spin Count         128
     Mutex Queue Slots                    1024  KILLs in progress                0
     Replication State                      ON  Region Seqno    0x0000000000000004
@@ -1865,19 +1862,19 @@ In Paris (note the use of the find -region DSE command):
     List of global directory:       
 
 
-    File    /home/gtmuser/exDir/aA.dat
+    File    /home/yottadbuser/exDir/aA.dat
     Region  A
 
-    File    /home/gtmuser/exDir/gtm.dat
+    File    /home/yottadbuser/exDir/gtm.dat
     Region  DEFAULT
     DSE> find -region=DEFAULT
 
-    File    /home/gtmuser/exDir/gtm.dat
+    File    /home/yottadbuser/exDir/gtm.dat
     Region  DEFAULT
 
     DSE> dump -fileheader
 
-    File            /home/gtmuser/exDir/others.dat
+    File            /home/yottadbuser/exDir/others.dat
     Region          DEFAULT
     Date/Time       23-JAN-2018 17:12:57 [$H = 63523,61977]
 
@@ -1904,7 +1901,7 @@ In Paris (note the use of the find -region DSE command):
       Journal Buffer Size                  2312  Journal Alignsize             4096
       Journal AutoSwitchLimit           8386560  Journal Epoch Interval         300
       Journal Yield Limit                     8  Journal Sync IO              FALSE
-      Journal File: /home/gtmuser/exDir/others.mjl
+      Journal File: /home/yottadbuser/exDir/others.mjl
       Mutex Hard Spin Count                 128  Mutex Sleep Spin Count         128
       Mutex Queue Slots                    1024  KILLs in progress                0
       Replication State                      ON  Region Seqno    0x0000000000000006
@@ -1914,19 +1911,19 @@ In Paris (note the use of the find -region DSE command):
       Spanning Node Absent                 TRUE  Maximum Key Size Assured      TRUE
 
       DSE> exit
-      gtmuser@paris:~/exDir$
+      yottadbuser@paris:~/exDir$
 
 And in Melbourne:
 
 .. parsed-literal::
-   gtmuser@melbourne:~/exDir$ $gtm_dist/dse
+   yottadbuser@melbourne:~/exDir$ $gtm_dist/dse
 
-   File    /home/gtmuser/exDir/aA.dat
+   File    /home/yottadbuser/exDir/aA.dat
    Region  A
 
    DSE> dump -fileheader
 
-   File            /home/gtmuser/exDir/aA.dat
+   File            /home/yottadbuser/exDir/aA.dat
    Region          A
    Date/Time       24-JAN-2018 06:15:09 [$H = 63524,22509]
 
@@ -1953,7 +1950,7 @@ And in Melbourne:
      Journal Buffer Size                  2312  Journal Alignsize             4096
      Journal AutoSwitchLimit           8386560  Journal Epoch Interval         300
      Journal Yield Limit                     8  Journal Sync IO              FALSE
-     Journal File: /home/gtmuser/exDir/aA.mjl
+     Journal File: /home/yottadbuser/exDir/aA.mjl
      Mutex Hard Spin Count                 128  Mutex Sleep Spin Count         128
      Mutex Queue Slots                    1024  KILLs in progress                0
      Replication State                      ON  Region Seqno    0x0000000000000004
@@ -1964,12 +1961,12 @@ And in Melbourne:
 
    DSE> find -region=DEFAULT
 
-   File    /home/gtmuser/exDir/gtm.dat
+   File    /home/yottadbuser/exDir/gtm.dat
    Region  DEFAULT
 
    DSE> dump -fileheader
 
-   File            /home/gtmuser/exDir/others.dat
+   File            /home/yottadbuser/exDir/others.dat
    Region          DEFAULT
    Date/Time       24-JAN-2018 06:16:12 [$H = 63524,22572]
       Access method                          BG  Global Buffers                1000
@@ -1995,7 +1992,7 @@ And in Melbourne:
       Journal Buffer Size                  2312  Journal Alignsize             4096
       Journal AutoSwitchLimit           8386560  Journal Epoch Interval         300
       Journal Yield Limit                     8  Journal Sync IO              FALSE
-      Journal File: /home/gtmuser/exDir/others.mjl
+      Journal File: /home/yottadbuser/exDir/others.mjl
       Mutex Hard Spin Count                 128  Mutex Sleep Spin Count         128
       Mutex Queue Slots                    1024  KILLs in progress                0
       Replication State                      ON  Region Seqno    0x0000000000000005
@@ -2005,21 +2002,21 @@ And in Melbourne:
       Spanning Node Absent                 TRUE  Maximum Key Size Assured      TRUE
 
    DSE> exit
-   gtmuser@melbourne:~/exDir$ 
+   yottadbuser@melbourne:~/exDir$ 
 
 Since the largest Region Seqno is 6 (region DEFAULT in Paris), that is the preferred new originating primary instance. So, make it the new originating primary.
 
 .. parsed-literal::
-   gtmuser@paris:~/exDir$ mupip replicate -source -start -instsecondary=Melbourne -secondary=10.0.2.2:6000 -buffsize=1048576 -log=/home/gtmuser/exDir/source_Melbourne.log
+   yottadbuser@paris:~/exDir$ mupip replicate -source -start -instsecondary=Melbourne -secondary=10.0.2.2:6000 -buffsize=1048576 -log=/home/yottadbuser/exDir/source_Melbourne.log
    Tue Jan  2 17:20:13 2018 : Initiating START of source server for secondary instance [Melbourne]
-   gtmuser@paris:~/exDir$ mupip replicate -source -start -instsecondary=Santiago -secondary=10.0.2.2:4000 -buffsize=1048576 -log=/home/gtmuser/exDir/source_Santiago.log
+   yottadbuser@paris:~/exDir$ mupip replicate -source -start -instsecondary=Santiago -secondary=10.0.2.2:4000 -buffsize=1048576 -log=/home/yottadbuser/exDir/source_Santiago.log
    Tue Jan  2 17:20:39 2018 : Initiating START of source server for secondary instance [Santiago]
-   gtmuser@paris:~/exDir$
+   yottadbuser@paris:~/exDir$
 
 On Melbourne, perform the mupip journal -rollback -fetchresync operation and start operation as a replicating instance.
 
 .. parsed-literal::
-   gtmuser@melbourne:~/exDir$ mupip journal -rollback -backward -fetchresync=3000 -losttrans=/home/gtmuser/exDir/Unreplic_Trans_Report_`date +%Y%m%d%H%M%S`.txt "*"
+   yottadbuser@melbourne:~/exDir$ mupip journal -rollback -backward -fetchresync=3000 -losttrans=/home/yottadbuser/exDir/Unreplic_Trans_Report_`date +%Y%m%d%H%M%S`.txt "*"
    %GTM-I-MUJNLSTAT, Initial processing started at Wed Jan  24 06:21:18 2018
    %GTM-I-MUJNLSTAT, FETCHRESYNC processing started at Wed Jan  24 06:21:18 2018
    Wed Jan  24 06:21:18 2018 : Assuming primary supports multisite functionality. Connecting using multisite communication protocol.
@@ -2028,7 +2025,7 @@ On Melbourne, perform the mupip journal -rollback -fetchresync operation and sta
    Wed Jan  24 06:21:19 2018 : Connection information:: Local: ::ffff:10.0.2.15:3000 Remote: ::ffff:10.0.2.2:53668
    Wed Jan  24 06:21:19 2018 : Sending REPL_FETCH_RESYNC message with seqno 5 [0x5]
    Wed Jan  24 06:21:19 2018 : Source and Receiver sides have same endianness
-   Wed Jan  24 06:21:19 2018 : Remote side source log file path is /home/gtmuser/exDir/source_Melbourne.log; Source Server PID = 1057
+   Wed Jan  24 06:21:19 2018 : Remote side source log file path is /home/yottadbuser/exDir/source_Melbourne.log; Source Server PID = 1057
    Wed Jan  24 06:21:19 2018 : Received REPL_NEED_INSTINFO message from primary instance [Paris]
    Wed Jan  24 06:21:19 2018 : Sending REPL_INSTINFO message
    Wed Jan  24 06:21:19 2018 : Received REPL_NEED_HISTINFO message for Seqno 5 [0x5]
@@ -2039,23 +2036,23 @@ On Melbourne, perform the mupip journal -rollback -fetchresync operation and sta
    %GTM-I-MUJNLSTAT, Backward processing started at Wed Jan  24 06:21:19 2018
    %GTM-I-RESOLVESEQNO, Resolving until sequence number 5 [0x0000000000000005]
    %GTM-I-MUJNLSTAT, Before image applying started at Wed Jan  24 06:21:19 2018
-   %GTM-I-FILERENAME, File /home/gtmuser/exDir/aA.mjl is renamed to /home/gtmuser/exDir/aA.mjl_2018337062119
-   %GTM-I-FILERENAME, File /home/gtmuser/exDir/others.mjl is renamed to /home/gtmuser/exDir/others.mjl_2018337062119
+   %GTM-I-FILERENAME, File /home/yottadbuser/exDir/aA.mjl is renamed to /home/yottadbuser/exDir/aA.mjl_2018337062119
+   %GTM-I-FILERENAME, File /home/yottadbuser/exDir/others.mjl is renamed to /home/yottadbuser/exDir/others.mjl_2018337062119
    %GTM-I-MUJNLSTAT, Forward processing started at Wed Jan  24 06:21:20 2018
-   %GTM-I-FILECREATE, Lost transactions extract file /home/gtmuser/exDir/Unreplic_Trans_Report_20181203062118.txt created
+   %GTM-I-FILECREATE, Lost transactions extract file /home/yottadbuser/exDir/Unreplic_Trans_Report_20181203062118.txt created
    %GTM-I-RLBKJNSEQ, Journal seqno of the instance after rollback is 5 [0x0000000000000005]
    %GTM-S-JNLSUCCESS, Show successful
    %GTM-S-JNLSUCCESS, Verify successful
    %GTM-S-JNLSUCCESS, Rollback successful
    %GTM-I-MUJNLSTAT, End processing at Wed Jan  24 06:21:20 2018
-   gtmuser@melbourne:~/exDir$ ./replicating_start
+   yottadbuser@melbourne:~/exDir$ ./replicating_start
    Wed Jan  24 06:21:59 2018 : Initiating START of source server for secondary instance [dummy]
-   gtmuser@melbourne:~/exDir$
+   yottadbuser@melbourne:~/exDir$
 
 Perform an update in Paris and verify that there is a backlog to Santiago (the actual number may not be correct because Santiago was not recently a replicating instance to Paris, but it shows a non-zero value), but there is no backlog to Melbourne.
 
 .. parsed-literal::
-   gtmuser@paris:~/exDir$ mumps -dir
+   yottadbuser@paris:~/exDir$ mumps -dir
 
    YDB>set ^Weather("Paris",$Piece($Horolog,",",1),$Piece($Horolog,",",2))="Heat Wave"
 
@@ -2074,8 +2071,8 @@ Perform an update in Paris and verify that there is a backlog to Santiago (the a
 Now boot the Santiago machine and perform a fetchresync:
 
 .. parsed-literal::
-   gtmuser@santiago:~/exDir$ source gtmenv
-   gtmuser@santiago:~/exDir$ mupip journal -rollback -backward -fetchresync=3000 -losttrans=/home/gtmuser/exDir/Unreplic_Trans_Report_`date +%Y%m%d%H%M%S`.txt "*"
+   yottadbuser@santiago:~/exDir$ source gtmenv
+   yottadbuser@santiago:~/exDir$ mupip journal -rollback -backward -fetchresync=3000 -losttrans=/home/yottadbuser/exDir/Unreplic_Trans_Report_`date +%Y%m%d%H%M%S`.txt "*"
    %GTM-I-MUJNLSTAT, Initial processing started at Wed Jan  3 00:27:54 2018
    %GTM-I-MUJNLSTAT, FETCHRESYNC processing started at Wed Jan  3 00:27:54 2018
    Wed Jan  24 00:27:54 2018 : Assuming primary supports multisite functionality. Connecting using multisite communication protocol.
@@ -2084,7 +2081,7 @@ Now boot the Santiago machine and perform a fetchresync:
    Wed Jan  24 00:27:55 2018 : Connection information:: Local: ::ffff:10.0.2.15:3000 Remote: ::ffff:10.0.2.2:51387
    Wed Jan  24 00:27:55 2018 : Sending REPL_FETCH_RESYNC message with seqno 7 [0x7]
    Wed Jan  24 00:27:55 2018 : Source and Receiver sides have same endianness
-   Wed Jan  24 00:27:55 2018 : Remote side source log file path is /home/gtmuser/exDir/source_Santiago.log; Source Server PID = 1059
+   Wed Jan  24 00:27:55 2018 : Remote side source log file path is /home/yottadbuser/exDir/source_Santiago.log; Source Server PID = 1059
    Wed Jan  24 00:27:55 2018 : Received REPL_NEED_INSTINFO message from primary instance [Paris]
    Wed Jan  24 00:27:55 2018 : Sending REPL_INSTINFO message
    Wed Jan  24 00:27:55 2018 : Received REPL_NEED_HISTINFO message for Seqno 7 [0x7]
@@ -2095,29 +2092,29 @@ Now boot the Santiago machine and perform a fetchresync:
    %GTM-I-MUJNLSTAT, Backward processing started at Wed Jan  24 00:27:55 2018
    %GTM-I-RESOLVESEQNO, Resolving until sequence number 6 [0x0000000000000006]
    %GTM-I-MUJNLSTAT, Before image applying started at Wed Jan  24 00:27:55 2018
-   %GTM-I-FILERENAME, File /home/gtmuser/exDir/aA.mjl is renamed to /home/gtmuser/exDir/aA.mjl_2018337002755
-   %GTM-I-FILERENAME, File /home/gtmuser/exDir/others.mjl is renamed to /home/gtmuser/exDir/others.mjl_2018337002755
+   %GTM-I-FILERENAME, File /home/yottadbuser/exDir/aA.mjl is renamed to /home/yottadbuser/exDir/aA.mjl_2018337002755
+   %GTM-I-FILERENAME, File /home/yottadbuser/exDir/others.mjl is renamed to /home/yottadbuser/exDir/others.mjl_2018337002755
    %GTM-I-MUJNLSTAT, Forward processing started at Wed Jan  24 00:27:55 2018
-   %GTM-I-FILECREATE, Lost transactions extract file /home/gtmuser/exDir/Unreplic_Trans_Report_20181203002754.txt created
+   %GTM-I-FILECREATE, Lost transactions extract file /home/yottadbuser/exDir/Unreplic_Trans_Report_20181203002754.txt created
    %GTM-I-RLBKJNSEQ, Journal seqno of the instance after rollback is 6 [0x0000000000000006]
    %GTM-S-JNLSUCCESS, Show successful
    %GTM-S-JNLSUCCESS, Verify successful
    %GTM-S-JNLSUCCESS, Rollback successful
    %GTM-I-MUJNLSTAT, End processing at Wed Jan  24 00:27:56 2018
-   gtmuser@santiago:~/exDir$ cat /home/gtmuser/exDir/Unreplic_Trans_Report_20181203002754.txt 
+   yottadbuser@santiago:~/exDir$ cat /home/yottadbuser/exDir/Unreplic_Trans_Report_20181203002754.txt 
    GDSJEX07 ROLLBACK PRIMARY Santiago
    05\63523,86342\7\1068\0\6\0\0\0\0\^Weather("Santiago",63523,86342)="Cloudy"
    02\63524,251\8\1068\0
-   gtmuser@santiago:~/exDir$
+   yottadbuser@santiago:~/exDir$
 
 Now, notice that the Unreplicated Transaction File has meaningful content – the update that was made when Santiago was an originating instance, but which did not get replicated. This file will now need to be processed by the new originating instance in Paris.
 
 Santiago can now start as a replicating instance:
 
 .. parsed-literal::
-   gtmuser@santiago:~/exDir$ ./replicating_start
+   yottadbuser@santiago:~/exDir$ ./replicating_start
    Wed Jan  24 00:31:44 2018 : Initiating START of source server for secondary instance [dummy]
-   gtmuser@santiago:~/exDir$
+   yottadbuser@santiago:~/exDir$
 
 Notice that Paris now reports no backlog:
 
@@ -2178,36 +2175,36 @@ Start the program as a background process from the shell: mumps -run XYZ </dev/n
 Notice that the journal files are growing, indicating that the program is running:
 
 .. parsed-literal::
-   gtmuser@paris:~/exDir$ ls -l \*.mjl
-   -rw-rw-rw- 1 gtmuser gtmuser 81920 Jan  23 17:52 aA.mjl
-   -rw-rw-rw- 1 gtmuser gtmuser 81920 Jan  23 17:52 others.mjl
-   gtmuser@paris:~/exDir$ ls -l \*.mjl
-   -rw-rw-rw- 1 gtmuser gtmuser 86016 Jan  23 17:52 aA.mjl
-   -rw-rw-rw- 1 gtmuser gtmuser 90112 Jan  23 17:52 others.mjl
-   gtmuser@paris:~/exDir$ ls -l \*.mjl
-   -rw-rw-rw- 1 gtmuser gtmuser 94208 Jan  23 17:53 aA.mjl
-   -rw-rw-rw- 1 gtmuser gtmuser 98304 Jan  23 17:53 others.mjl
-   gtmuser@paris:~/exDir$ 
+   yottadbuser@paris:~/exDir$ ls -l \*.mjl
+   -rw-rw-rw- 1 yottadbuser yottadbuser 81920 Jan  23 17:52 aA.mjl
+   -rw-rw-rw- 1 yottadbuser yottadbuser 81920 Jan  23 17:52 others.mjl
+   yottadbuser@paris:~/exDir$ ls -l \*.mjl
+   -rw-rw-rw- 1 yottadbuser yottadbuser 86016 Jan  23 17:52 aA.mjl
+   -rw-rw-rw- 1 yottadbuser yottadbuser 90112 Jan  23 17:52 others.mjl
+   yottadbuser@paris:~/exDir$ ls -l \*.mjl
+   -rw-rw-rw- 1 yottadbuser yottadbuser 94208 Jan  23 17:53 aA.mjl
+   -rw-rw-rw- 1 yottadbuser yottadbuser 98304 Jan  23 17:53 others.mjl
+   yottadbuser@paris:~/exDir$ 
 
 Take a backup of the entire database (a "comprehensive backup"):
 
 .. parsed-literal::
-   gtmuser@paris:~/exDir$ mupip backup -nojournal "*" backup/
-   %GTM-I-FILERENAME, File /home/gtmuser/exDir/aA.mjl is renamed to /home/gtmuser/exDir/aA.mjl_2018336175401
-   %GTM-I-JNLCREATE, Journal file /home/gtmuser/exDir/aA.mjl created for region A with BEFORE_IMAGES
-   %GTM-I-FILERENAME, File /home/gtmuser/exDir/others.mjl is renamed to /home/gtmuser/exDir/others.mjl_2018336175401
-   %GTM-I-JNLCREATE, Journal file /home/gtmuser/exDir/others.mjl created for region DEFAULT with BEFORE_IMAGES
+   yottadbuser@paris:~/exDir$ mupip backup -nojournal "*" backup/
+   %GTM-I-FILERENAME, File /home/yottadbuser/exDir/aA.mjl is renamed to /home/yottadbuser/exDir/aA.mjl_2018336175401
+   %GTM-I-JNLCREATE, Journal file /home/yottadbuser/exDir/aA.mjl created for region A with BEFORE_IMAGES
+   %GTM-I-FILERENAME, File /home/yottadbuser/exDir/others.mjl is renamed to /home/yottadbuser/exDir/others.mjl_2018336175401
+   %GTM-I-JNLCREATE, Journal file /home/yottadbuser/exDir/others.mjl created for region DEFAULT with BEFORE_IMAGES
    %GTM-I-JNLSTATE, Journaling state for database file backup//aA.dat is now DISABLED
    %GTM-I-JNLSTATE, Journaling state for database file backup//others.dat is now DISABLED
-   DB file /home/gtmuser/exDir/aA.dat backed up in file backup//aA.dat
+   DB file /home/yottadbuser/exDir/aA.dat backed up in file backup//aA.dat
    Transactions up to 0x00000000000001E7 are backed up.
-   DB file /home/gtmuser/exDir/others.dat backed up in file backup//others.dat
+   DB file /home/yottadbuser/exDir/others.dat backed up in file backup//others.dat
    Transactions up to 0x00000000000001ED are backed up.
 
 
    BACKUP COMPLETED.
 
-   gtmuser@paris:~/exDir$
+   yottadbuser@paris:~/exDir$
 
 Take a backup of the part of the database that has changed (a "bytestream" backup). Note that
 
@@ -2216,116 +2213,116 @@ Take a backup of the part of the database that has changed (a "bytestream" backu
 - The fact that the backup files for others.dat have the name gtm*.bck – YottaDB/GT.M does not care what you name the files, but maps the targets in the alphabetic order of region name.
 
 .. parsed-literal::
-   gtmuser@paris:~/exDir$ mupip backup -bytestream -since=database "*" backup/aA`date +%Y%m%d%H%M%S`.bck,backup/gtm`date +%Y%m%d%H%M%S`.bck
-   %GTM-I-FILERENAME, File /home/gtmuser/exDir/aA.mjl is renamed to /home/gtmuser/exDir/aA.mjl_2018336175445
-   %GTM-I-JNLCREATE, Journal file /home/gtmuser/exDir/aA.mjl created for region A with BEFORE_IMAGES
-   %GTM-I-FILERENAME, File /home/gtmuser/exDir/others.mjl is renamed to /home/gtmuser/exDir/others.mjl_2018336175445
-   %GTM-I-JNLCREATE, Journal file /home/gtmuser/exDir/others.mjl created for region DEFAULT with BEFORE_IMAGES
-   MUPIP backup of database file /home/gtmuser/exDir/aA.dat to backup/aA20181202175445.bck
-   DB file /home/gtmuser/exDir/aA.dat incrementally backed up in file backup/aA20181202175445.bck
+   yottadbuser@paris:~/exDir$ mupip backup -bytestream -since=database "*" backup/aA`date +%Y%m%d%H%M%S`.bck,backup/gtm`date +%Y%m%d%H%M%S`.bck
+   %GTM-I-FILERENAME, File /home/yottadbuser/exDir/aA.mjl is renamed to /home/yottadbuser/exDir/aA.mjl_2018336175445
+   %GTM-I-JNLCREATE, Journal file /home/yottadbuser/exDir/aA.mjl created for region A with BEFORE_IMAGES
+   %GTM-I-FILERENAME, File /home/yottadbuser/exDir/others.mjl is renamed to /home/yottadbuser/exDir/others.mjl_2018336175445
+   %GTM-I-JNLCREATE, Journal file /home/yottadbuser/exDir/others.mjl created for region DEFAULT with BEFORE_IMAGES
+   MUPIP backup of database file /home/yottadbuser/exDir/aA.dat to backup/aA20181202175445.bck
+   DB file /home/yottadbuser/exDir/aA.dat incrementally backed up in file backup/aA20181202175445.bck
    13 blocks saved.
    Transactions from 0x00000000000001E7 to 0x00000000000002B7 are backed up.
-   MUPIP backup of database file /home/gtmuser/exDir/others.dat to backup/gtm20181202175445.bck
-   DB file /home/gtmuser/exDir/others.dat incrementally backed up in file backup/gtm20181202175445.bck
+   MUPIP backup of database file /home/yottadbuser/exDir/others.dat to backup/gtm20181202175445.bck
+   DB file /home/yottadbuser/exDir/others.dat incrementally backed up in file backup/gtm20181202175445.bck
    13 blocks saved.
    Transactions from 0x00000000000001ED to 0x00000000000002BD are backed up.
 
 
    BACKUP COMPLETED.
 
-   gtmuser@paris:~/exDir$ ls -l backup/
+   yottadbuser@paris:~/exDir$ ls -l backup/
    total 2704
-   -rw-rw-rw- 1 gtmuser gtmuser   324608 Jan  23 17:54 aA20181202175445.bck
-   -rw-rw-rw- 1 gtmuser gtmuser 20783616 Jan  23 17:54 aA.dat
-   -rw-rw-rw- 1 gtmuser gtmuser   324608 Jan  23 17:54 gtm20181202175445.bck
-   -rw-rw-rw- 1 gtmuser gtmuser 20783616 Jan  23 17:54 others.dat
-   gtmuser@paris:~/exDir$
+   -rw-rw-rw- 1 yottadbuser yottadbuser   324608 Jan  23 17:54 aA20181202175445.bck
+   -rw-rw-rw- 1 yottadbuser yottadbuser 20783616 Jan  23 17:54 aA.dat
+   -rw-rw-rw- 1 yottadbuser yottadbuser   324608 Jan  23 17:54 gtm20181202175445.bck
+   -rw-rw-rw- 1 yottadbuser yottadbuser 20783616 Jan  23 17:54 others.dat
+   yottadbuser@paris:~/exDir$
 
 Take further bytestream backups of that part of the database that has changed – as many as desired (note the use of the -since=bytestream qualifier to backup only those blocks that have changed since the last bytestream backup):
 
 .. parsed-literal::
-   gtmuser@paris:~/exDir$ mupip backup -bytestream -since=bytestream "*" backup/aA`date +%Y%m%d%H%M%S`.bck,backup/gtm`date +%Y%m%d%H%M%S`.bck
-   %GTM-I-FILERENAME, File /home/gtmuser/exDir/aA.mjl is renamed to /home/gtmuser/exDir/aA.mjl_2018336175610
-   %GTM-I-JNLCREATE, Journal file /home/gtmuser/exDir/aA.mjl created for region A with BEFORE_IMAGES
-   %GTM-I-FILERENAME, File /home/gtmuser/exDir/others.mjl is renamed to /home/gtmuser/exDir/others.mjl_2018336175610
-   %GTM-I-JNLCREATE, Journal file /home/gtmuser/exDir/others.mjl created for region DEFAULT with BEFORE_IMAGES
-   MUPIP backup of database file /home/gtmuser/exDir/aA.dat to backup/aA20181202175610.bck
-   DB file /home/gtmuser/exDir/aA.dat incrementally backed up in file backup/aA20181202175610.bck
+   yottadbuser@paris:~/exDir$ mupip backup -bytestream -since=bytestream "*" backup/aA`date +%Y%m%d%H%M%S`.bck,backup/gtm`date +%Y%m%d%H%M%S`.bck
+   %GTM-I-FILERENAME, File /home/yottadbuser/exDir/aA.mjl is renamed to /home/yottadbuser/exDir/aA.mjl_2018336175610
+   %GTM-I-JNLCREATE, Journal file /home/yottadbuser/exDir/aA.mjl created for region A with BEFORE_IMAGES
+   %GTM-I-FILERENAME, File /home/yottadbuser/exDir/others.mjl is renamed to /home/yottadbuser/exDir/others.mjl_2018336175610
+   %GTM-I-JNLCREATE, Journal file /home/yottadbuser/exDir/others.mjl created for region DEFAULT with BEFORE_IMAGES
+   MUPIP backup of database file /home/yottadbuser/exDir/aA.dat to backup/aA20181202175610.bck
+   DB file /home/yottadbuser/exDir/aA.dat incrementally backed up in file backup/aA20181202175610.bck
    13 blocks saved.
    Transactions from 0x00000000000002B7 to 0x0000000000000439 are backed up.
-   MUPIP backup of database file /home/gtmuser/exDir/others.dat to backup/gtm20181202175610.bck
-   DB file /home/gtmuser/exDir/others.dat incrementally backed up in file backup/gtm20181202175610.bck
+   MUPIP backup of database file /home/yottadbuser/exDir/others.dat to backup/gtm20181202175610.bck
+   DB file /home/yottadbuser/exDir/others.dat incrementally backed up in file backup/gtm20181202175610.bck
    13 blocks saved.
    Transactions from 0x00000000000002BD to 0x000000000000043F are backed up.
 
 
    BACKUP COMPLETED.
 
-   gtmuser@paris:~/exDir$
+   yottadbuser@paris:~/exDir$
 
 Take as many additional bytestream backups as you want, in each case specifying that the updates since the preceding bytestream backup should be backed up.
 
 .. parsed-literal::
-   gtmuser@paris:~/exDir$ mupip backup -bytestream -since=bytestream "*" backup/aA`date +%Y%m%d%H%M%S`.bck,backup/gtm`date +%Y%m%d%H%M%S`.bck
-   %GTM-I-FILERENAME, File /home/gtmuser/exDir/aA.mjl is renamed to /home/gtmuser/exDir/aA.mjl_2018336175650
-   %GTM-I-JNLCREATE, Journal file /home/gtmuser/exDir/aA.mjl created for region A with BEFORE_IMAGES
-   %GTM-I-FILERENAME, File /home/gtmuser/exDir/others.mjl is renamed to /home/gtmuser/exDir/others.mjl_2018336175650
-   %GTM-I-JNLCREATE, Journal file /home/gtmuser/exDir/others.mjl created for region DEFAULT with BEFORE_IMAGES
-   MUPIP backup of database file /home/gtmuser/exDir/aA.dat to backup/aA20181202175650.bck
-   DB file /home/gtmuser/exDir/aA.dat incrementally backed up in file backup/aA20181202175650.bck
+   yottadbuser@paris:~/exDir$ mupip backup -bytestream -since=bytestream "*" backup/aA`date +%Y%m%d%H%M%S`.bck,backup/gtm`date +%Y%m%d%H%M%S`.bck
+   %GTM-I-FILERENAME, File /home/yottadbuser/exDir/aA.mjl is renamed to /home/yottadbuser/exDir/aA.mjl_2018336175650
+   %GTM-I-JNLCREATE, Journal file /home/yottadbuser/exDir/aA.mjl created for region A with BEFORE_IMAGES
+   %GTM-I-FILERENAME, File /home/yottadbuser/exDir/others.mjl is renamed to /home/yottadbuser/exDir/others.mjl_2018336175650
+   %GTM-I-JNLCREATE, Journal file /home/yottadbuser/exDir/others.mjl created for region DEFAULT with BEFORE_IMAGES
+   MUPIP backup of database file /home/yottadbuser/exDir/aA.dat to backup/aA20181202175650.bck
+   DB file /home/yottadbuser/exDir/aA.dat incrementally backed up in file backup/aA20181202175650.bck
    15 blocks saved.
    Transactions from 0x0000000000000439 to 0x00000000000004F3 are backed up.
-   MUPIP backup of database file /home/gtmuser/exDir/others.dat to backup/gtm20181202175650.bck
-   DB file /home/gtmuser/exDir/others.dat incrementally backed up in file backup/gtm20181202175650.bck
+   MUPIP backup of database file /home/yottadbuser/exDir/others.dat to backup/gtm20181202175650.bck
+   DB file /home/yottadbuser/exDir/others.dat incrementally backed up in file backup/gtm20181202175650.bck
    15 blocks saved.
    Transactions from 0x000000000000043F to 0x00000000000004F9 are backed up.
 
 
    BACKUP COMPLETED.
 
-   gtmuser@paris:~/exDir$
+   yottadbuser@paris:~/exDir$
 
 When you are satisfied, terminate the mumps process updating the database:
 
 .. parsed-literal::
-   gtmuser@paris:~/exDir$ ps -ef | grep mumps | grep -v grep
-   gtmuser   1080   988  0 17:52 pts/0    00:00:02 /usr/lib/fis-gtm/V6.2-000_x86_64/mumps -run XYZ
-   gtmuser@paris:~/exDir$ mupip stop 1080
+   yottadbuser@paris:~/exDir$ ps -ef | grep mumps | grep -v grep
+   yottadbuser   1080   988  0 17:52 pts/0    00:00:02 /usr/lib/fis-gtm/V6.2-000_x86_64/mumps -run XYZ
+   yottadbuser@paris:~/exDir$ mupip stop 1080
    STOP issued to process 1080
-   gtmuser@paris:~/exDir$
+   yottadbuser@paris:~/exDir$
 
 Take a final backup, and note the values of the final nodes ^a and ^b (and verify that they still sum to zero). After the final restore, we will verify that the values restored from the backup is the same as these values.
 
 .. parsed-literal::
-   gtmuser@paris:~/exDir$ mupip backup -bytestream -since=bytestream "*" backup/aA`date +%Y%m%d%H%M%S`.bck,backup/gtm`date +%Y%m%d%H%M%S`.bck
-   %GTM-I-FILERENAME, File /home/gtmuser/exDir/aA.mjl is renamed to /home/gtmuser/exDir/aA.mjl_2018336175946
-   %GTM-I-JNLCREATE, Journal file /home/gtmuser/exDir/aA.mjl created for region A with BEFORE_IMAGES
-   %GTM-I-FILERENAME, File /home/gtmuser/exDir/others.mjl is renamed to /home/gtmuser/exDir/others.mjl_2018336175946
-   %GTM-I-JNLCREATE, Journal file /home/gtmuser/exDir/others.mjl created for region DEFAULT with BEFORE_IMAGES
-   MUPIP backup of database file /home/gtmuser/exDir/aA.dat to backup/aA20181202175946.bck
-   DB file /home/gtmuser/exDir/aA.dat incrementally backed up in file backup/aA20181202175946.bck
+   yottadbuser@paris:~/exDir$ mupip backup -bytestream -since=bytestream "*" backup/aA`date +%Y%m%d%H%M%S`.bck,backup/gtm`date +%Y%m%d%H%M%S`.bck
+   %GTM-I-FILERENAME, File /home/yottadbuser/exDir/aA.mjl is renamed to /home/yottadbuser/exDir/aA.mjl_2018336175946
+   %GTM-I-JNLCREATE, Journal file /home/yottadbuser/exDir/aA.mjl created for region A with BEFORE_IMAGES
+   %GTM-I-FILERENAME, File /home/yottadbuser/exDir/others.mjl is renamed to /home/yottadbuser/exDir/others.mjl_2018336175946
+   %GTM-I-JNLCREATE, Journal file /home/yottadbuser/exDir/others.mjl created for region DEFAULT with BEFORE_IMAGES
+   MUPIP backup of database file /home/yottadbuser/exDir/aA.dat to backup/aA20181202175946.bck
+   DB file /home/yottadbuser/exDir/aA.dat incrementally backed up in file backup/aA20181202175946.bck
    13 blocks saved.
    Transactions from 0x00000000000004F3 to 0x0000000000000745 are backed up.
-   MUPIP backup of database file /home/gtmuser/exDir/others.dat to backup/gtm20181202175946.bck
-   DB file /home/gtmuser/exDir/others.dat incrementally backed up in file backup/gtm20181202175946.bck
+   MUPIP backup of database file /home/yottadbuser/exDir/others.dat to backup/gtm20181202175946.bck
+   DB file /home/yottadbuser/exDir/others.dat incrementally backed up in file backup/gtm20181202175946.bck
    13 blocks saved.
    Transactions from 0x00000000000004F9 to 0x000000000000074B are backed up
 
 
    BACKUP COMPLETED.
 
-   gtmuser@paris:~/exDir$ mumps -run %XCMD 'set x=$order(^a(""),-1) write x," ",^a(x)," ",^b(x)," ",^a(x)+^b(x),!'
+   yottadbuser@paris:~/exDir$ mumps -run %XCMD 'set x=$order(^a(""),-1) write x," ",^a(x)," ",^b(x)," ",^a(x)+^b(x),!'
    63523,64737 -778521900 778521900 0
-   gtmuser@paris:~/exDir$
+   yottadbuser@paris:~/exDir$
 
 Now it's time to work on restoring the backup. The first backup (the database backup) provides a complete, ready-to-run database. The subsequent bytestream backups can be applied to the database backup using the mupip restore command.
 
 Create an environment to restore the backup. It may be easiest if you simply use the backup directory you created, and working in a new shell session, copy exDir/env and exDir/gtm.gld to the backup directory and edit them to reflect their new locations. (Note that since global directories are used only to create databases, there is no reason to change the default journal file names in the regions of the global directory file in backup. Nevertheless, it is good practice to keep global directories correct, since that global directory may be used at a future time to create new database files.]
 
 .. parsed-literal::
-   gtmuser@paris:~/exDir$ cp gtmenv gtm.gld backup/
-   gtmuser@paris:~/exDir$ cd backup; jed backup/gtmenv # edit to point to backup directory
-   gtmuser@paris:~/exDir/backup$ cat gtmenv
+   yottadbuser@paris:~/exDir$ cp gtmenv gtm.gld backup/
+   yottadbuser@paris:~/exDir$ cd backup; jed backup/gtmenv # edit to point to backup directory
+   yottadbuser@paris:~/exDir/backup$ cat gtmenv
    export gtm_dist=/usr/local/lib/yottadb/r110
    export gtmgbldir=$HOME/exDir/backup/gtm.gld
    export gtm_log=/tmp/fis-gtm/V6.2-000_x86_64
@@ -2337,9 +2334,9 @@ Create an environment to restore the backup. It may be easiest if you simply use
    mkdir -p $gtm_tmp
    alias mumps=$gtm_dist/mumps
    alias mupip=$gtm_dist/mupip
-   gtmuser@paris:~/exDir/backup$ source gtmenv
-   gtmuser@paris:~/exDir/backup$ mumps -run GDE
-   %GDE-I-LOADGD, Loading Global Directory file /home/gtmuser/exDir/backup/gtm.gld
+   yottadbuser@paris:~/exDir/backup$ source gtmenv
+   yottadbuser@paris:~/exDir/backup$ mumps -run GDE
+   %GDE-I-LOADGD, Loading Global Directory file /home/yottadbuser/exDir/backup/gtm.gld
    %GDE-I-VERIFY, Verification OK
 
    GDE> show -segment
@@ -2411,84 +2408,84 @@ Create an environment to restore the backup. It may be easiest if you simply use
    GDE> exit
    %GDE-I-VERIFY, Verification OK
 
-   %GDE-I-GDUPDATE, Updating Global Directory file /home/gtmuser/exDir/backup/gtm.gld
-   gtmuser@paris:~/exDir/backup$
+   %GDE-I-GDUPDATE, Updating Global Directory file /home/yottadbuser/exDir/backup/gtm.gld
+   yottadbuser@paris:~/exDir/backup$
 
 Confirm the values of the last global nodes of ^a and ^b are equal and opposite (demonstrating the value of transaction processing):
 
 .. parsed-literal::
-   gtmuser@paris:~$ mumps -run %XCMD 'set x=$order(^a(""),-1) write x," ",^a(x)," ",^b(x)," ",^a(x)+^b(x),!'
+   yottadbuser@paris:~$ mumps -run %XCMD 'set x=$order(^a(""),-1) write x," ",^a(x)," ",^b(x)," ",^a(x)+^b(x),!'
    63523,64441 -910877047 910877047 0
-   gtmuser@paris:~/exDir/backup$
+   yottadbuser@paris:~/exDir/backup$
 
 Notice the file names of the bytestream backups that we will restore one by one.
  
 .. parsed-literal::
-   gtmuser@paris:~/exDir/backup$ ls -l backup/\*.bck
-   -rw-rw-rw- 1 gtmuser gtmuser 324608 Jan  23 17:54 aA20181202175445.bck
-   -rw-rw-rw- 1 gtmuser gtmuser 324608 Jan  23 17:56 aA20181202175610.bck
-   -rw-rw-rw- 1 gtmuser gtmuser 332800 Jan  23 17:56 aA20181202175650.bck
-   -rw-rw-rw- 1 gtmuser gtmuser 320512 Jan  23 17:59 aA20181202175946.bck
-   -rw-rw-rw- 1 gtmuser gtmuser 324608 Jan  23 17:54 gtm20181202175445.bck
-   -rw-rw-rw- 1 gtmuser gtmuser 324608 Jan  23 17:56 gtm20181202175610.bck
-   -rw-rw-rw- 1 gtmuser gtmuser 332800 Jan  23 17:56 gtm20181202175650.bck
-   -rw-rw-rw- 1 gtmuser gtmuser 320512 Jan  23 17:59 gtm20181202175946.bck
-   gtmuser@paris:~/exDir/backup$
+   yottadbuser@paris:~/exDir/backup$ ls -l backup/\*.bck
+   -rw-rw-rw- 1 yottadbuser yottadbuser 324608 Jan  23 17:54 aA20181202175445.bck
+   -rw-rw-rw- 1 yottadbuser yottadbuser 324608 Jan  23 17:56 aA20181202175610.bck
+   -rw-rw-rw- 1 yottadbuser yottadbuser 332800 Jan  23 17:56 aA20181202175650.bck
+   -rw-rw-rw- 1 yottadbuser yottadbuser 320512 Jan  23 17:59 aA20181202175946.bck
+   -rw-rw-rw- 1 yottadbuser yottadbuser 324608 Jan  23 17:54 gtm20181202175445.bck
+   -rw-rw-rw- 1 yottadbuser yottadbuser 324608 Jan  23 17:56 gtm20181202175610.bck
+   -rw-rw-rw- 1 yottadbuser yottadbuser 332800 Jan  23 17:56 gtm20181202175650.bck
+   -rw-rw-rw- 1 yottadbuser yottadbuser 320512 Jan  23 17:59 gtm20181202175946.bck
+   yottadbuser@paris:~/exDir/backup$
 
 Restore the first bytestream backup (with the since=database qualifier), and check the values of ^a and ^b:
 
 .. parsed-literal::
-   gtmuser@paris:~/exDir/backup$ mupip restore aA.dat aA20181202175445.bck 
+   yottadbuser@paris:~/exDir/backup$ mupip restore aA.dat aA20181202175445.bck 
 
    RESTORE COMPLETED
    14 blocks restored
-   gtmuser@paris:~/exDir/backup$ mupip restore others.dat gtm20181202175445.bck 
+   yottadbuser@paris:~/exDir/backup$ mupip restore others.dat gtm20181202175445.bck 
 
    RESTORE COMPLETED
    14 blocks restored
-   gtmuser@paris:~/exDir/backup$ 
+   yottadbuser@paris:~/exDir/backup$ 
 
 Confirm new values for ^a and ^b. Notice that the time stamp is later than that of the database before the first bytestream backup (with a since=database qualifier) was restored and the values of the nodes in ^a and ^b still add up to zero.
 
 .. parsed-literal::
-   gtmuser@paris:~/exDir/backup$ mumps -run %XCMD 'set x=$order(^a(""),-1) write x," ",^a(x)," ",^b(x)," ",^a(x)+^b(x),!'
+   yottadbuser@paris:~/exDir/backup$ mumps -run %XCMD 'set x=$order(^a(""),-1) write x," ",^a(x)," ",^b(x)," ",^a(x)+^b(x),!'
    63523,64485 -1612950378 1612950378 0
-   gtmuser@paris:~/exDir/backup$
+   yottadbuser@paris:~/exDir/backup$
 
 Restore the second bytestream backup (the first with a since=bytestream qualifier), and check the values. Repeat for any additional bytestream backups. Notice that the final values are the same as the final values in exDir.
 
 .. parsed-literal::
-   gtmuser@paris:~/exDir/backup$ mupip restore aA.dat aA20181202175610.bck 
+   yottadbuser@paris:~/exDir/backup$ mupip restore aA.dat aA20181202175610.bck 
 
    RESTORE COMPLETED
    14 blocks restored
-   gtmuser@paris:~/exDir/backup$ mupip restore others.dat gtm20181202175610.bck 
+   yottadbuser@paris:~/exDir/backup$ mupip restore others.dat gtm20181202175610.bck 
 
    RESTORE COMPLETED
    14 blocks restored
-   gtmuser@paris:~/exDir/backup$ mumps -run %XCMD 'set x=$order(^a(""),-1) write x," ",^a(x)," ",^b(x)," ",^a(x)+^b(x),!'
+   yottadbuser@paris:~/exDir/backup$ mumps -run %XCMD 'set x=$order(^a(""),-1) write x," ",^a(x)," ",^b(x)," ",^a(x)+^b(x),!'
    63523,64570 -1558529283 1558529283 0
-   gtmuser@paris:~/exDir/backup$ mupip restore aA.dat aA20181202175650.bck 
+   yottadbuser@paris:~/exDir/backup$ mupip restore aA.dat aA20181202175650.bck 
 
    RESTORE COMPLETED
    16 blocks restored
-   gtmuser@paris:~/exDir/backup$ mupip restore others.dat gtm20181202175650.bck 
+   yottadbuser@paris:~/exDir/backup$ mupip restore others.dat gtm20181202175650.bck 
 
    RESTORE COMPLETED
    16 blocks restored
-   gtmuser@paris:~/exDir/backup$ mumps -run %XCMD 'set x=$order(^a(""),-1) write x," ",^a(x)," ",^b(x)," ",^a(x)+^b(x),!'
+   yottadbuser@paris:~/exDir/backup$ mumps -run %XCMD 'set x=$order(^a(""),-1) write x," ",^a(x)," ",^b(x)," ",^a(x)+^b(x),!'
    63523,64610 -2074012206 2074012206 0
-   gtmuser@paris:~/exDir/backup$ mupip restore aA.dat aA20181202175946.bck 
+   yottadbuser@paris:~/exDir/backup$ mupip restore aA.dat aA20181202175946.bck 
 
    RESTORE COMPLETED
    13 blocks restored
-   gtmuser@paris:~/exDir/backup$ mupip restore others.dat gtm20181202175946.bck 
+   yottadbuser@paris:~/exDir/backup$ mupip restore others.dat gtm20181202175946.bck 
 
    RESTORE COMPLETED
    13 blocks restored
-   gtmuser@paris:~$ mumps -run %XCMD 'set x=$order(^a(""),-1) write x," ",^a(x)," ",^b(x)," ",^a(x)+^b(x),!'
+   yottadbuser@paris:~$ mumps -run %XCMD 'set x=$order(^a(""),-1) write x," ",^a(x)," ",^b(x)," ",^a(x)+^b(x),!'
    63523,64737 -778521900 778521900 0
-   gtmuser@paris:~$
+   yottadbuser@paris:~$
 
 Note that ending values of ^a and ^b in the environment with the restored backups is exactly the same as in the original database. Also, the values of ^a and ^b always add to zero even though the global variables reside in different databases, demonstrating transaction processing.
 
@@ -2497,7 +2494,7 @@ Note that ending values of ^a and ^b in the environment with the restored backup
 We have been ignoring Santiago and Melbourne during the backup exercise, and we have created quite a backlog. Here is the backlog report in the exDir environment in Paris. (If you are using the same shell session to restore backups, you will need to source exDir/gtmenv to get the environment variables for the original environment, and restart Source Servers if they are not running.)
 
 .. parsed-literal::
-   gtmuser@paris:~/exDir$ mupip replicate -source -showbacklog
+   yottadbuser@paris:~/exDir$ mupip replicate -source -showbacklog
    Fri Jan  26 04:50:18 2018 : Initiating SHOWBACKLOG operation on source server pid [1068] for secondary instance [Santiago]
    1860 : backlog number of transactions written to journal pool and yet to be sent by the source server
    1866 : sequence number of last transaction written to journal pool
@@ -2506,30 +2503,30 @@ We have been ignoring Santiago and Melbourne during the backup exercise, and we 
    1860 : backlog number of transactions written to journal pool and yet to be sent by the source server
    1866 : sequence number of last transaction written to journal pool
    6 : sequence number of last transaction sent by source server
-   gtmuser@paris:~/exDir$
+   yottadbuser@paris:~/exDir$
 
 Boot Melbourne and check the state of the database with respect to ^a and ^b – notice the error because no node of ^a is defined. 
 
 .. parsed-literal::
-   gtmuser@melbourne:~/exDir$ source gtmenv
-   gtmuser@melbourne:~/exDir$ mumps -run %XCMD 'set x=$order(^a(""),-1) write x," ",^a(x)," ",^b(x)," ",^a(x)+^b(x),!'
+   yottadbuser@melbourne:~/exDir$ source gtmenv
+   yottadbuser@melbourne:~/exDir$ mumps -run %XCMD 'set x=$order(^a(""),-1) write x," ",^a(x)," ",^b(x)," ",^a(x)+^b(x),!'
    %GTM-E-NULSUBSC, Null subscripts are not allowed for region: A
    %GTM-I-GVIS,            Global variable: ^a("")
-   gtmuser@melbourne:~/exDir$
+   yottadbuser@melbourne:~/exDir$
 
 Then execute the exDir/replicating_start script and notice that Melbourne catches up.
 
 .. parsed-literal::
-   gtmuser@melbourne:~/exDir$ ./replicating_start 
+   yottadbuser@melbourne:~/exDir$ ./replicating_start 
    Fri Jan 26 07:12:07 2018 : Initiating START of source server for secondary instance [dummy]
-   gtmuser@melbourne:~/exDir$ mumps -run %XCMD 'set x=$order(^a(""),-1) write x," ",^a(x)," ",^b(x)," ",^a(x)+^b(x),!'
+   yottadbuser@melbourne:~/exDir$ mumps -run %XCMD 'set x=$order(^a(""),-1) write x," ",^a(x)," ",^b(x)," ",^a(x)+^b(x),!'
    63523,64737 -778521900 778521900 0
-   gtmuser@melbourne:~/exDir$
+   yottadbuser@melbourne:~/exDir$
 
 Notice that Paris now shows a zero backlog for Melbourne, but still has a large backlog for Santiago.
 
 .. parsed-literal::
-   gtmuser@paris:~/exDir$ mupip replicate -source -showbacklog
+   yottadbuser@paris:~/exDir$ mupip replicate -source -showbacklog
    Fri Jan  26 05:05:04 2018 : Initiating SHOWBACKLOG operation on source server pid [1068] for secondary instance [Santiago]
    1860 : backlog number of transactions written to journal pool and yet to be sent by the source server
    1866 : sequence number of last transaction written to journal pool
@@ -2538,7 +2535,7 @@ Notice that Paris now shows a zero backlog for Melbourne, but still has a large 
    0 : backlog number of transactions written to journal pool and yet to be sent by the source server
    1866 : sequence number of last transaction written to journal pool
    1866 : sequence number of last transaction sent by source server
-   gtmuser@paris:~/exDir$
+   yottadbuser@paris:~/exDir$
 
 If you like, you can similarly boot Santiago and show that it also clears the backlog automatically. Shut down the instances when you are done.
 
@@ -2565,7 +2562,7 @@ For a process to operate in UTF-8 mode requires:
 The locale command provides a list of available locales; the locale-gen command generates additional locales. In the example below, the locale command is used to list available locales, and the locale-gen command is used to generate the fr_BE.utf8 locale for French as used in Belgium:
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ locale -a
+   yottadbuser@yottadbworkshop:~$ locale -a
    C
    C.UTF-8
    en_AG
@@ -2590,20 +2587,20 @@ The locale command provides a list of available locales; the locale-gen command 
    en_ZM.utf8
    en_ZW.utf8
    POSIX
-   gtmuser@gtmworkshop:~$ sudo locale-gen fr_BE.utf8
+   yottadbuser@yottadbworkshop:~$ sudo locale-gen fr_BE.utf8
    Generating locales...
      fr_BE.UTF-8... done
    Generation complete.
-   gtmuser@gtmworkshop:~$ locale -a | grep fr_BE.utf8
+   yottadbuser@yottadbworkshop:~$ locale -a | grep fr_BE.utf8
    fr_BE.utf8
-   gtmuser@gtmworkshop:~$
+   yottadbuser@yottadbworkshop:~$
 
 For interactive usage, the terminal emulator must be configured to display characters in UTF-8 mode; otherwise you will become very confused.
 
 This exercise uses two sessions, one with a mumps process in UTF-8 mode and the other using a mumps process in M mode. Create a utf8demo directory and two environment files within it, gtmenv_m and gtmenv_utf8 as follows:
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~/utf8demo$ cd utf8demo; jed gtmenv_m ; cat gtmenv_m
+   yottadbuser@yottadbworkshop:~/utf8demo$ cd utf8demo; jed gtmenv_m ; cat gtmenv_m
    export gtm_dist=/usr/local/lib/yottadb/r110
    export gtmgbldir=$HOME/utf8demo/gtm.gld
    export gtm_log=/tmp/fis-gtm/V6.2-000_x86_64
@@ -2615,7 +2612,7 @@ This exercise uses two sessions, one with a mumps process in UTF-8 mode and the 
    mkdir -p $gtm_tmp
    alias mumps=$gtm_dist/mumps
    alias mupip=$gtm_dist/mupip
-   gtmuser@gtmworkshop:~/utf8demo$ cp gtmenv_m gtmenv_utf8 ; jed gtmenv_utf8 ; cat gtmenv_utf8 
+   yottadbuser@yottadbworkshop:~/utf8demo$ cp gtmenv_m gtmenv_utf8 ; jed gtmenv_utf8 ; cat gtmenv_utf8 
    export gtm_dist=/usr/local/lib/yottadb/r110/utf8
    export gtmgbldir=$HOME/utf8demo/gtm.gld
    export gtm_log=/tmp/fis-gtm/V6.2-000_x86_64
@@ -2631,15 +2628,15 @@ This exercise uses two sessions, one with a mumps process in UTF-8 mode and the 
    mkdir -p $gtm_tmp
    alias mumps=$gtm_dist/mumps
    alias mupip=$gtm_dist/mupip
-   gtmuser@gtmworkshop:~/utf8demo$
+   yottadbuser@yottadbworkshop:~/utf8demo$
 
 Create a global directory and database file, as you did before. Only now, do this in the UTF-8 session to so that you can see that the operation of the GDE utility program is the same.
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~/utf8demo$ source gtmenv_UTF8
-   gtmuser@gtmworkshop:~/utf8demo$ mumps -run GDE
+   yottadbuser@yottadbworkshop:~/utf8demo$ source gtmenv_UTF8
+   yottadbuser@yottadbworkshop:~/utf8demo$ mumps -run GDE
    %GDE-I-GDUSEDEFS, Using defaults for Global Directory 
-           /home/gtmuser/utf8demo/gtm.gld
+           /home/yottadbuser/utf8demo/gtm.gld
 
    GDE> @/usr/lib/fis-gtm/V6.2-000_x86_64/utf8/gdedefaults
    %GDE-I-EXECOM, Executing command file /usr/lib/fis-gtm/V6.2-000_x86_64/utf8/gdedefaults
@@ -2672,15 +2669,15 @@ Create a global directory and database file, as you did before. Only now, do thi
    %GDE-I-VERIFY, Verification OK
 
    %GDE-I-GDCREATE, Creating Global Directory file 
-           /home/gtmuser/utf8demo/gtm.gld
-   gtmuser@gtmworkshop:~/utf8demo$ mupip create
-   Created file /home/gtmuser/utf8demo/gtm.dat
-   gtmuser@gtmworkshop:~/utf8demo$
+           /home/yottadbuser/utf8demo/gtm.gld
+   yottadbuser@yottadbworkshop:~/utf8demo$ mupip create
+   Created file /home/yottadbuser/utf8demo/gtm.dat
+   yottadbuser@yottadbworkshop:~/utf8demo$
 
 We use the gtm_prompt environment variable to avoid confusion as to which mode a direct mode prompt is in.
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~/utf8demo$ mumps -dir
+   yottadbuser@yottadbworkshop:~/utf8demo$ mumps -dir
 
    UTF8>write $zchset
    UTF-8
@@ -2709,12 +2706,12 @@ We use the gtm_prompt environment variable to avoid confusion as to which mode a
    ð : ñ : ò : ó : ô : õ : ö : ÷ : ø : ù : ú : û : ü : ý : þ : ÿ :
 
    UTF8>halt
-   gtmuser@gtmworkshop:~/utf8demo$ 
+   yottadbuser@yottadbworkshop:~/utf8demo$ 
 
 Start a shell in M mode and display in M mode the characters that you just set in UTF-8 mode (remember to set your terminal emulator to a single-byte encoding such as ISO-8859-1, or use a different terminal emulator, otherwise you will get confused):
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~/utf8demo$ mumps -dir
+   yottadbuser@yottadbworkshop:~/utf8demo$ mumps -dir
 
    YDB>write $zchset
    M
@@ -2853,10 +2850,10 @@ The creation of keys requires a considerable amount of entropy (randomness). Thi
 Note that owing to available functionality with GPG, since the reference plug-in uses RSA exclusively as an asymmetric cipher, the asymmetric keys have to be generated in two steps. First Mary.
 
 .. parsed-literal::
-   gtmuser@paris:~$ export GNUPGHOME=~/.marygnupg
-   gtmuser@paris:~$ mkdir $GNUPGHOME
-   gtmuser@paris:~$ chmod go-rwx $GNUPGHOME
-   gtmuser@paris:~$ gpg --gen-key
+   yottadbuser@paris:~$ export GNUPGHOME=~/.marygnupg
+   yottadbuser@paris:~$ mkdir $GNUPGHOME
+   yottadbuser@paris:~$ chmod go-rwx $GNUPGHOME
+   yottadbuser@paris:~$ gpg --gen-key
    gpg (GnuPG) 1.4.16; Copyright (C) 2013 Free Software Foundation, Inc.
    This is free software: you are free to change and redistribute it.
    There is NO WARRANTY, to the extent permitted by law.
@@ -2900,7 +2897,7 @@ Note that owing to available functionality with GPG, since the reference plug-in
    Not enough random bytes available.  Please do some other work to give the OS a chance to collect more entropy! (Need 280 more bytes)
    ......+++++
    ..+++++
-   gpg: /home/gtmuser/.marygnupg/trustdb.gpg: trustdb created
+   gpg: /home/yottadbuser/.marygnupg/trustdb.gpg: trustdb created
    gpg: key A863791B marked as ultimately trusted
    public and secret key created and signed.
 
@@ -2912,7 +2909,7 @@ Note that owing to available functionality with GPG, since the reference plug-in
    uid                  Mary Keymaster (Demo for Acculturation) <mary.keymaster@yottadb>
 
    Note that this key cannot be used for encryption.  You may want to use the command "--edit-key" to generate a subkey for this purpose.
-   gtmuser@paris:~$ gpg --edit-key mary.keymaster@yottadb
+   yottadbuser@paris:~$ gpg --edit-key mary.keymaster@yottadb
    gpg (GnuPG) 1.4.16; Copyright (C) 2013 Free Software Foundation, Inc.
    This is free software: you are free to change and redistribute it.
    There is NO WARRANTY, to the extent permitted by law.
@@ -2959,22 +2956,22 @@ Note that owing to available functionality with GPG, since the reference plug-in
   [ultimate] (1). Mary Keymaster (Demo for Acculturation) <mary.keymaster@yottadb>
 
   gpg> save
-  gtmuser@paris:~$
+  yottadbuser@paris:~$
 
 The Mary keyring now has RSA keys for both encryption and signing. And now for the Ken keyring.
 
 .. parsed-literal::
 
-   gtmuser@paris:~$ export GNUPGHOME=~/.kengnupg
-   gtmuser@paris:~$ mkdir $GNUPGHOME
-   gtmuser@paris:~$ chmod go-rwx $GNUPGHOME
-   gtmuser@paris:~$ gpg --gen-key
+   yottadbuser@paris:~$ export GNUPGHOME=~/.kengnupg
+   yottadbuser@paris:~$ mkdir $GNUPGHOME
+   yottadbuser@paris:~$ chmod go-rwx $GNUPGHOME
+   yottadbuser@paris:~$ gpg --gen-key
    gpg (GnuPG) 1.4.16; Copyright (C) 2013 Free Software Foundation, Inc.
    This is free software: you are free to change and redistribute it.
    There is NO WARRANTY, to the extent permitted by law.
 
-   gpg: keyring '/home/gtmuser/.kengnupg/secring.gpg' created
-   gpg: keyring '/home/gtmuser/.kengnupg/pubring.gpg' created
+   gpg: keyring '/home/yottadbuser/.kengnupg/secring.gpg' created
+   gpg: keyring '/home/yottadbuser/.kengnupg/pubring.gpg' created
    Please select what kind of key you want:
     (1) RSA and RSA (default)
     (2) DSA and Elgamal
@@ -3014,7 +3011,7 @@ The Mary keyring now has RSA keys for both encryption and signing. And now for t
   ..........+++++
   ..+++++
 
-  gpg: /home/gtmuser/.kengnupg/trustdb.gpg: trustdb created
+  gpg: /home/yottadbuser/.kengnupg/trustdb.gpg: trustdb created
   gpg: key BDA0E521 marked as ultimately trusted
   public and secret key created and signed.
 
@@ -3028,7 +3025,7 @@ The Mary keyring now has RSA keys for both encryption and signing. And now for t
 
   Note that this key cannot be used for encryption.  You may want to use
   the command "--edit-key" to generate a subkey for this purpose.
-  gtmuser@paris:~$ gpg --edit-key ken.keyuser@yottadb
+  yottadbuser@paris:~$ gpg --edit-key ken.keyuser@yottadb
   gpg (GnuPG) 1.4.16; Copyright (C) 2013 Free Software Foundation, Inc.
   This is free software: you are free to change and redistribute it.
   There is NO WARRANTY, to the extent permitted by law.
@@ -3076,48 +3073,48 @@ The Mary keyring now has RSA keys for both encryption and signing. And now for t
   [ultimate] (1). Ken Keyuser (Demo for Acculturation) <ken.keyuser@yottadb>
 
   gpg> save
-  gtmuser@paris:~$
+  yottadbuser@paris:~$
 
 Export the Mary public key. In practice, you would need to export it and transfer it to Ken.
 
 .. parsed-literal::
-   gtmuser@paris:~$ gpg --armor --output mary.publickey.txt --export mary.keymaster@yottadb
-   gtmuser@paris:~$ ls -l mary.publickey.txt 
-   -rw-rw-r-- 1 gtmuser gtmuser 1743 Jan 22 15:25 mary.publickey.txt
-   gtmuser@paris:~$
+   yottadbuser@paris:~$ gpg --armor --output mary.publickey.txt --export mary.keymaster@yottadb
+   yottadbuser@paris:~$ ls -l mary.publickey.txt 
+   -rw-rw-r-- 1 yottadbuser yottadbuser 1743 Jan 22 15:25 mary.publickey.txt
+   yottadbuser@paris:~$
 
 Ken should similarly export his public key.
 
 .. parsed-literal::
-   gtmuser@paris:~$ gpg --armor --output ken.publickey.txt --export ken.keyuser@yottadb
-   gtmuser@paris:~$ ls -l ken.publickey.txt 
-   -rw-rw-r-- 1 gtmuser gtmuser 1735 Jan  22 15:30 ken.publickey.txt
-   gtmuser@paris:~$
+   yottadbuser@paris:~$ gpg --armor --output ken.publickey.txt --export ken.keyuser@yottadb
+   yottadbuser@paris:~$ ls -l ken.publickey.txt 
+   -rw-rw-r-- 1 yottadbuser yottadbuser 1735 Jan  22 15:30 ken.publickey.txt
+   yottadbuser@paris:~$
 
 Mary should import Ken's public key.
 
 .. parsed-literal::
-   gtmuser@paris:~$ gpg --import ken.publickey.txt 
+   yottadbuser@paris:~$ gpg --import ken.publickey.txt 
    gpg: key BDA0E521: public key "Ken Keyuser (Demo for Acculturation) <ken.keyuser@yottadb>" imported
    gpg: Total number processed: 1
    gpg:               imported: 1  (RSA: 1)
-   gtmuser@paris:~$ 
+   yottadbuser@paris:~$ 
 
 And Ken should likewise import Mary's public key.
 
 .. parsed-literal::
-   gtmuser@paris:~$ gpg --import mary.publickey.txt 
+   yottadbuser@paris:~$ gpg --import mary.publickey.txt 
    gpg: key A863791B: public key "Mary Keymaster (Demo for Acculturation) <mary.keymaster@yottadb>" imported
    gpg: Total number processed: 1
    gpg:               imported: 1  (RSA: 1)
-   gtmuser@paris:~$
+   yottadbuser@paris:~$
 
 This completes the key exchange required for Mary to later securely transmit to Ken the key to the symmetric cipher. Alternatively, Mary and Ken may both also upload their public keys to a keyserver such as pgp.mit.edu for anyone who might need their public keys. They should directly exchange their public key fingerprints over a different channel, such as a fax or phone call, in order to protect themselves against “man in the middle” attacks.
 
 Mary can now manually generate a 32-byte key for the symmetric cipher, but it is better to use a truly random key using GPG or other tool (for example, http://www.random.org). If you have not installed the haveged package, you may want to use gpg -gen-random 1 32 instead to avoid depleting the entropy in your system. This key is then encrypted with the Ken public key and signed with the Mary private key. Then push the key to the guest.
 
 .. parsed-literal::
-   gtmuser@paris:~$ gpg --gen-random 2 32 | gpg --encrypt --recipient ken.keyuser@yottadb --sign --armor >gtm_workshop_key.txt
+   yottadbuser@paris:~$ gpg --gen-random 2 32 | gpg --encrypt --recipient ken.keyuser@yottadb --sign --armor >gtm_workshop_key.txt
 
    You need a passphrase to unlock the secret key for
    user: "Mary Keymaster (Demo for Acculturation) <mary.keymaster@yottadb>"
@@ -3134,14 +3131,14 @@ Mary can now manually generate a 32-byte key for the symmetric cipher, but it is
    It is NOT certain that the key belongs to the person named in the user ID.  If you *really* know what you are doing, you may answer the next question with yes.
 
    Use this key anyway? (y/N) y
-   gtmuser@paris:~$ 
+   yottadbuser@paris:~$ 
 
 As the Ken user, create a directory enc, with a gtmenv file to set the environment. You can copy the gtmenv file from a directory such as exDir. Also, create a master key file for the environment variable gtm_dbkeys to point to. Note that libconfig file syntax needs to be just right.
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ mkdir enc
-   gtmuser@gtmworkshop:~$ fte enc/env
-   gtmuser@gtmworkshop:~$ cat enc/env
+   yottadbuser@yottadbworkshop:~$ mkdir enc
+   yottadbuser@yottadbworkshop:~$ fte enc/env
+   yottadbuser@yottadbworkshop:~$ cat enc/env
    export gtm_dist=/usr/local/lib/yottadb/r110
    export gtmgbldir=$HOME/enc/gtm.gld
    export gtm_log=/tmp/fis-gtm/V6.2-000_x86_64
@@ -3154,23 +3151,23 @@ As the Ken user, create a directory enc, with a gtmenv file to set the environme
    mkdir -p $gtm_tmp
    alias mumps=$gtm_dist/mumps
    alias mupip=$gtm_dist/mupipexport gtm_dist=/usr/lib/fis-gtm/V6.2-000_x86_64
-   gtmuser@paris:~/enc$ source gtmenv
-   gtmuser@paris:~/enc$ jed $gtmcrypt_config # create file to link database files to encryption keys
-   gtmuser@paris:~/enc$ cat $gtmcrypt_config
+   yottadbuser@paris:~/enc$ source gtmenv
+   yottadbuser@paris:~/enc$ jed $gtmcrypt_config # create file to link database files to encryption keys
+   yottadbuser@paris:~/enc$ cat $gtmcrypt_config
    database: {
        keys:   (
                  {
-                  dat: "/home/gtmuser/enc/gtm.dat" ;
-                  key: "/home/gtmuser/enc/gtm.key" ;
+                  dat: "/home/yottadbuser/enc/gtm.dat" ;
+                  key: "/home/yottadbuser/enc/gtm.key" ;
                  }
                );
              }
-   gtmuser@paris:~/enc$
+   yottadbuser@paris:~/enc$
 
 Create the database key file from the gtm_workshop_key.txt file from Mary.
   
 .. parsed-literal::
-   gtmuser@paris:~/enc$ gpg --decrypt <../gtm_workshop_key.txt | gpg --encrypt --armor --default-recipient-self --output gtm.key 
+   yottadbuser@paris:~/enc$ gpg --decrypt <../gtm_workshop_key.txt | gpg --encrypt --armor --default-recipient-self --output gtm.key 
    You need a passphrase to unlock the secret key for
    user: "Ken Keyuser (Demo for Acculturation) <ken.keyuser@yottadb>"
    2048-bit RSA key, ID 6403B065, created 2018-01-22 (main key ID BDA0E521)
@@ -3182,7 +3179,7 @@ Create the database key file from the gtm_workshop_key.txt file from Mary.
    gpg: WARNING: This key is not certified with a trusted signature!
    gpg:          There is no indication that the signature belongs to the owner.
    Primary key fingerprint: 983C C19C 26F4 4188 FDEB  F20B DD6A 26FA A863 791B
-   gtmuser@paris:~/enc$ cat gtm.key
+   yottadbuser@paris:~/enc$ cat gtm.key
    -----BEGIN PGP MESSAGE-----
    Version: GnuPG v1
 
@@ -3196,14 +3193,14 @@ Create the database key file from the gtm_workshop_key.txt file from Mary.
    IV5Pg3eIpJdkM/PjDvxx1umob8N+Rr6CsfbDYuUG5w==
    =uGve
    -----END PGP MESSAGE-----
-   gtmuser@paris:~/enc$
+   yottadbuser@paris:~/enc$
 
 Now create a global directory that specifies that the database file is encrypted.
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~/enc$ mumps -run GDE
+   yottadbuser@yottadbworkshop:~/enc$ mumps -run GDE
    %GDE-I-GDUSEDEFS, Using defaults for Global Directory
-           /home/gtmuser/enc/gtm.gld
+           /home/yottadbuser/enc/gtm.gld
 
    GDE> change -segment default -encryption -file=$HOME/enc/gtm.dat
    GDE> show -segment
@@ -3234,31 +3231,31 @@ Now create a global directory that specifies that the database file is encrypted
    %GDE-I-VERIFY, Verification OK
 
    %GDE-I-GDCREATE, Creating Global Directory file 
-           /home/gtmuser/enc/gtm.gld
-   gtmuser@paris:~/enc$
+           /home/yottadbuser/enc/gtm.gld
+   yottadbuser@paris:~/enc$
 
 Now create the database file. Notice that in order to supply mupip create with the obfuscated GPG keyring password in the environment, we have to invoke mupip through an intermediary mumps process that prompts for the password and places and obfuscated password in the environment.
 
 .. parsed-literal::
-   gtmuser@paris:~/enc$ gtm_passwd="" mumps -dir
+   yottadbuser@paris:~/enc$ gtm_passwd="" mumps -dir
    Enter Passphrase: 
    YDB>zsystem "$gtm_dist/mupip create"
-   Created file /home/gtmuser/enc/gtm.dat
+   Created file /home/yottadbuser/enc/gtm.dat
 
    YDB>halt
-   gtmuser@paris:~/enc$
+   yottadbuser@paris:~/enc$
 
 You can use DSE to verify that the file is encrypted. Note the warning from DSE which means that it can only access unencrypted parts of the database file, 
 
 .. parsed-literal::
-   gtmuser@paris:~/enc$ $gtm_dist/dse dump -fileheader
-   %GTM-W-CRYPTINIT, Could not initialize encryption library while opening encrypted file /home/gtmuser/enc/gtm.dat. Environment variable gtm_passwd not set
+   yottadbuser@paris:~/enc$ $gtm_dist/dse dump -fileheader
+   %GTM-W-CRYPTINIT, Could not initialize encryption library while opening encrypted file /home/yottadbuser/enc/gtm.dat. Environment variable gtm_passwd not set
 
-   File    /home/gtmuser/enc/gtm.dat
+   File    /home/yottadbuser/enc/gtm.dat
    Region  DEFAULT
 
 
-   File            /home/gtmuser/enc/gtm.dat
+   File            /home/yottadbuser/enc/gtm.dat
    Region          DEFAULT
    Date/Time       23-JAN-2018 20:55:40 [$H = 63526,75340]
 
@@ -3285,7 +3282,7 @@ You can use DSE to verify that the file is encrypted. Note the warning from DSE 
    Journal Buffer Size                  2308  Journal Alignsize             4096
    Journal AutoSwitchLimit           8386560  Journal Epoch Interval         300
    Journal Yield Limit                     8  Journal Sync IO              FALSE
-   Journal File: /home/gtmuser/enc/gtm.mjl
+   Journal File: /home/yottadbuser/enc/gtm.mjl
    Mutex Hard Spin Count                 128  Mutex Sleep Spin Count         128
    Mutex Queue Slots                    1024  KILLs in progress                0
    Replication State                     OFF  Region Seqno    0x0000000000000001
@@ -3294,53 +3291,53 @@ You can use DSE to verify that the file is encrypted. Note the warning from DSE 
    Database file encrypted              TRUE  Inst Freeze on Error         FALSE
    Spanning Node Absent                 TRUE  Maximum Key Size Assured      TRUE
 
-   gtmuser@paris:~/enc$ 
+   yottadbuser@paris:~/enc$ 
 
 Now turn on journaling, and attempt to make some updates without setting the gtm_passed environment variable. This fails. Now, invoke YottaDB/GT.M with the environment variable set, and make an update.
 
 .. parsed-literal::
-   gtmuser@paris:~/enc$ mupip set -journal="before,on" -region "*"
-   %GTM-W-CRYPTINIT, Could not initialize encryption library while opening encrypted file /home/gtmuser/enc/gtm.dat. Environment variable gtm_passwd not set
-   %GTM-I-JNLCREATE, Journal file /home/gtmuser/enc/gtm.mjl created for region DEFAULT with BEFORE_IMAGES
-   gtmuser@paris:~/enc$ mumps -dir
+   yottadbuser@paris:~/enc$ mupip set -journal="before,on" -region "*"
+   %GTM-W-CRYPTINIT, Could not initialize encryption library while opening encrypted file /home/yottadbuser/enc/gtm.dat. Environment variable gtm_passwd not set
+   %GTM-I-JNLCREATE, Journal file /home/yottadbuser/enc/gtm.mjl created for region DEFAULT with BEFORE_IMAGES
+   yottadbuser@paris:~/enc$ mumps -dir
 
    YDB>set ^X="The quick brown fox"
-   %GTM-E-CRYPTINIT, Could not initialize encryption library while opening encrypted file /home/gtmuser/enc/gtm.dat. Environment variable gtm_passwd not set
+   %GTM-E-CRYPTINIT, Could not initialize encryption library while opening encrypted file /home/yottadbuser/enc/gtm.dat. Environment variable gtm_passwd not set
 
    YDB>halt
-   gtmuser@paris:~/enc$ gtm_passwd="" mumps -dir
+   yottadbuser@paris:~/enc$ gtm_passwd="" mumps -dir
    Enter Passphrase: 
    YDB>set ^X="This string should be encrypted in the database"
 
    YDB>halt
-   gtmuser@paris:~/enc$
+   yottadbuser@paris:~/enc$
 
 Confirm that the data is indeed visible in neither the database file nor the journal file.
 
 .. parsed-literal::
-   gtmuser@paris:~/enc$ strings gtm.dat
+   yottadbuser@paris:~/enc$ strings gtm.dat
    GDSDYNUNX03
-   /home/gtmuser/enc/gtm.mjl
+   /home/yottadbuser/enc/gtm.mjl
    TUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
    4y(q.
-   gtmuser@paris:~/enc$ strings gtm.mjl
+   yottadbuser@paris:~/enc$ strings gtm.mjl
    GDSJNL24
    paris
-   gtmuser
-   gtmuser
+   yottadbuser
+   yottadbuser
    paris
-   gtmuser
-   gtmuser
-   /home/gtmuser/enc/gtm.dat
+   yottadbuser
+   yottadbuser
+   /home/yottadbuser/enc/gtm.dat
    paris
-   gtmuser
-   gtmuser
+   yottadbuser
+   yottadbuser
    TO4<
    paris
-   gtmuser
-   gtmuser
+   yottadbuser
+   yottadbuser
    @UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
-   gtmuser@paris:~/enc$
+   yottadbuser@paris:~/enc$
 
 --------------------
 Pulling It Together
@@ -3363,10 +3360,10 @@ The Acculturation Workshop uses the `WorldVistA EHR® <http://worldvista.org/Wor
 To get VistA, you will need to download two archive files : routines and global variables. First, create a directory to store the archive files, then download the files into that directory.
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ sudo mkdir -p /Distrib/VistA
-   [sudo] password for gtmuser:
-   gtmuser@gtmworkshop:~$ sudo chown gtmuser.gtmuser /Distrib/VistA/
-   gtmuser@gtmworkshop:~$ wget -P /Distrib/VistA/ http://tinyurl.com/WVEHRVOE10Routines
+   yottadbuser@yottadbworkshop:~$ sudo mkdir -p /Distrib/VistA
+   [sudo] password for yottadbuser:
+   yottadbuser@yottadbworkshop:~$ sudo chown yottadbuser.yottadbuser /Distrib/VistA/
+   yottadbuser@yottadbworkshop:~$ wget -P /Distrib/VistA/ http://tinyurl.com/WVEHRVOE10Routines
 
    …
 
@@ -3377,7 +3374,7 @@ To get VistA, you will need to download two archive files : routines and global 
 
    2018-01-25 15:05:10 (895 KB/s) - ‘/Distrib/VistA/WVEHRVOE10Routines’ saved [33432464/33432464]
 
-   gtmuser@gtmworkshop:~$ wget -P /Distrib/VistA/ http://tinyurl.com/WVEHRVOE10Globals
+   yottadbuser@yottadbworkshop:~$ wget -P /Distrib/VistA/ http://tinyurl.com/WVEHRVOE10Globals
 
    …
 
@@ -3388,7 +3385,7 @@ To get VistA, you will need to download two archive files : routines and global 
 
    2018-01-25 15:10:08 (813 KB/s) - ‘/Distrib/VistA/WVEHRVOE10Globals’ saved [140631465/140631465]
 
-   gtmuser@gtmworkshop:~$
+   yottadbuser@yottadbworkshop:~$
 
 **Simple Environment**
 
@@ -3399,8 +3396,8 @@ The first step up from the simplest environment is to have separate sub-director
 Create a VistA directory. Use a g subdirectory for global variables, an o subdirectory for object files and an r subdirectory for routines. Create a file to source to set up environment variables. Create a global directory and a database file into which to load the global variables. We will not set gtm_principal_editing since VistA has a mode where it manages its own screen cursors (Screenman) which requires VistA application code to receive terminal escape sequences.
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ mkdir -p VistA/{g,o,r}
-   gtmuser@gtmworkshop:~$ nano VistA/gtmenv ; cat VistA/gtmenv
+   yottadbuser@yottadbworkshop:~$ mkdir -p VistA/{g,o,r}
+   yottadbuser@yottadbworkshop:~$ nano VistA/gtmenv ; cat VistA/gtmenv
    export gtm_dist=/usr/local/lib/yottadb/r110
    export gtmgbldir=$HOME/VistA/g/gtm.gld
    export gtm_log=/tmp/fis-gtm/V6.2-000_x86_64
@@ -3411,10 +3408,10 @@ Create a VistA directory. Use a g subdirectory for global variables, an o subdir
    mkdir -p $gtm_tmp
    alias mumps=$gtm_dist/mumps
    alias mupip=$gtm_dist/mupip
-   gtmuser@gtmworkshop:~$ source VistA/gtmenv
-   gtmuser@gtmworkshop:~$ mumps -run GDE
+   yottadbuser@yottadbworkshop:~$ source VistA/gtmenv
+   yottadbuser@yottadbworkshop:~$ mumps -run GDE
    %GDE-I-GDUSEDEFS, Using defaults for Global Directory 
-           /home/gtmuser/VistA/g/gtm.gld
+           /home/yottadbuser/VistA/g/gtm.gld
 
    GDE> @/usr/lib/fis-gtm/V6.2-000_x86_64/gdedefaults
    %GDE-I-EXECOM, Executing command file /usr/lib/fis-gtm/V6.2-000_x86_64/gdedefaults
@@ -3449,16 +3446,16 @@ Create a VistA directory. Use a g subdirectory for global variables, an o subdir
    %GDE-I-VERIFY, Verification OK
 
    %GDE-I-GDCREATE, Creating Global Directory file 
-           /home/gtmuser/VistA/g/gtm.gld
-   gtmuser@gtmworkshop:~$ mupip create
-   Created file /home/gtmuser/VistA/g/gtm.dat
-   gtmuser@gtmworkshop:~$
+           /home/yottadbuser/VistA/g/gtm.gld
+   yottadbuser@yottadbworkshop:~$ mupip create
+   Created file /home/yottadbuser/VistA/g/gtm.dat
+   yottadbuser@yottadbworkshop:~$
 
 
 Load the global variables into the database.
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ gzip -d </Distrib/VistA/WVEHRVOE10Globals | mupip load -stdin
+   yottadbuser@yottadbworkshop:~$ gzip -d </Distrib/VistA/WVEHRVOE10Globals | mupip load -stdin
    GT.M MUPIP EXTRACT
    26-JAN-2018  14:38:37 ZWR
    Beginning LOAD at record number: 3
@@ -3466,51 +3463,51 @@ Load the global variables into the database.
    LOAD TOTAL              Key Cnt: 20337342  Max Subsc Len: 223  Max Data Len: 834
    Last LOAD record number: 20337344
 
-   gtmuser@gtmworkshop:~$ ls -lhR VistA/
+   yottadbuser@yottadbworkshop:~$ ls -lhR VistA/
    VistA/:
    total 4.0K
-   drwxrwxr-x 2 gtmuser gtmuser  34 Jan 26 15:33 g
-   -rw-rw-r-- 1 gtmuser gtmuser 384 Jan 26 15:25 gtmenv
-   drwxrwxr-x 2 gtmuser gtmuser   6 Jan 26 15:17 o
-   drwxrwxr-x 2 gtmuser gtmuser   6 Jan 26 15:17 r
+   drwxrwxr-x 2 yottadbuser yottadbuser  34 Jan 26 15:33 g
+   -rw-rw-r-- 1 yottadbuser yottadbuser 384 Jan 26 15:25 gtmenv
+   drwxrwxr-x 2 yottadbuser yottadbuser   6 Jan 26 15:17 o
+   drwxrwxr-x 2 yottadbuser yottadbuser   6 Jan 26 15:17 r
 
    VistA/g:
    total 421M
-   -rw-rw-rw- 1 gtmuser gtmuser 451M Jan 26 15:39 gtm.dat
-   -rw-rw-r-- 1 gtmuser gtmuser 1.5K Jan 26 15:33 gtm.gld
+   -rw-rw-rw- 1 yottadbuser yottadbuser 451M Jan 26 15:39 gtm.dat
+   -rw-rw-r-- 1 yottadbuser yottadbuser 1.5K Jan 26 15:33 gtm.gld
 
    VistA/o:
    total 0
 
    VistA/r:
    total 0
-   gtmuser@gtmworkshop:~$
+   yottadbuser@yottadbworkshop:~$
 
 Notice that the database is 451MiB and contains 20,337,342 global variable nodes. Now, we can unpack the routines into the r directory.
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ tar zxf /Distrib/VistA/WVEHRVOE10Routines -C VistA/
-   gtmuser@gtmworkshop:~$ ls VistA/r | wc
+   yottadbuser@yottadbworkshop:~$ tar zxf /Distrib/VistA/WVEHRVOE10Routines -C VistA/
+   yottadbuser@yottadbworkshop:~$ ls VistA/r | wc
    25163 25163 251422
-   gtmuser@gtmworkshop:~$
+   yottadbuser@yottadbworkshop:~$
 
 This tells us that WorldVistA EHR has 25,163 source code modules. Now that the globals are loaded into the newly created database, we can turn on journaling so that we can recover the database in the event the system crashes. This is handy even for development environments – developers don't like to be kept waiting to recover environments and disk is inexpensive!
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ mupip set -journal="before,on" -region DEFAULT
-   %GTM-I-JNLCREATE, Journal file /home/gtmuser/VistA/g/gtm.mjl created for region DEFAULT with BEFORE_IMAGES
+   yottadbuser@yottadbworkshop:~$ mupip set -journal="before,on" -region DEFAULT
+   %GTM-I-JNLCREATE, Journal file /home/yottadbuser/VistA/g/gtm.mjl created for region DEFAULT with BEFORE_IMAGES
    %GTM-I-JNLSTATE, Journaling state for region DEFAULT is now ON
-   gtmuser@gtmworkshop:~$ ls -l VistA/g
+   yottadbuser@yottadbworkshop:~$ ls -l VistA/g
    total 430948
-   -rw-rw-rw- 1 gtmuser gtmuser 472228352 Jan 26 15:51 gtm.dat
-   -rw-rw-r-- 1 gtmuser gtmuser      1536 Jan 26 15:33 gtm.gld
-   -rw-rw-rw- 1 gtmuser gtmuser     69632 Jan 26 15:51 gtm.mjl
-   gtmuser@gtmworkshop:~$
+   -rw-rw-rw- 1 yottadbuser yottadbuser 472228352 Jan 26 15:51 gtm.dat
+   -rw-rw-r-- 1 yottadbuser yottadbuser      1536 Jan 26 15:33 gtm.gld
+   -rw-rw-rw- 1 yottadbuser yottadbuser     69632 Jan 26 15:51 gtm.mjl
+   yottadbuser@yottadbworkshop:~$
 
 You can now run VistA – just enough to convince yourself that it is working, then exit.
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ mumps -dir
+   yottadbuser@yottadbworkshop:~$ mumps -dir
 
    YDB>set DUZ=1 do P^DI
 
@@ -3520,56 +3517,56 @@ You can now run VistA – just enough to convince yourself that it is working, t
 
    Select OPTION: ^
    YDB>halt
-   gtmuser@gtmworkshop:~$
+   yottadbuser@yottadbworkshop:~$
 
 Note that YottaDB/GT.M has dynamically compiled modules as needed.
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ ls -l VistA/o
+   yottadbuser@yottadbworkshop:~$ ls -l VistA/o
    total 456
-   -rw-rw-r-- 1 gtmuser gtmuser 25752 Jan 26 15:53 DIALOG.o
-   -rw-rw-r-- 1 gtmuser gtmuser 11784 Jan 26 15:53 DIARB.o
-   -rw-rw-r-- 1 gtmuser gtmuser 22520 Jan 26 15:53 DIB.o
-   -rw-rw-r-- 1 gtmuser gtmuser 21528 Jan 26 15:53 DIC0.o
-   -rw-rw-r-- 1 gtmuser gtmuser 13496 Jan 26 15:53 DIC11.o
-   -rw-rw-r-- 1 gtmuser gtmuser 33160 Jan 26 15:53 DIC1.o
-   -rw-rw-r-- 1 gtmuser gtmuser 22520 Jan 26 15:53 DIC2.o
-   -rw-rw-r-- 1 gtmuser gtmuser 21176 Jan 26 15:53 DICATT2.o
-   -rw-rw-r-- 1 gtmuser gtmuser 14616 Jan 26 15:53 DICL.o
-   -rw-rw-r-- 1 gtmuser gtmuser 28808 Jan 26 15:53 DIC.o
-   -rw-rw-r-- 1 gtmuser gtmuser 18552 Jan 26 15:53 DICRW.o
-   -rw-rw-r-- 1 gtmuser gtmuser 15800 Jan 26 15:53 DICUIX1.o
-   -rw-rw-r-- 1 gtmuser gtmuser 20520 Jan 26 15:53 DICUIX2.o
-   -rw-rw-r-- 1 gtmuser gtmuser 19336 Jan 26 15:53 DICUIX.o
-   -rw-rw-r-- 1 gtmuser gtmuser 22472 Jan 26 15:53 DII.o
-   -rw-rw-r-- 1 gtmuser gtmuser 10424 Jan 26 15:53 DILF.o
-   -rw-rw-r-- 1 gtmuser gtmuser 29848 Jan 26 15:53 DILIBF.o
-   -rw-rw-r-- 1 gtmuser gtmuser  2904 Jan 26 15:53 DI.o
-   -rw-rw-r-- 1 gtmuser gtmuser 14104 Jan 26 15:53 DIQGU.o
-   -rw-rw-r-- 1 gtmuser gtmuser 27240 Jan 26 15:53 _DTC.o
-   -rw-rw-r-- 1 gtmuser gtmuser 23176 Jan 26 15:53 _ZOSV.o
-   gtmuser@gtmworkshop:~$
+   -rw-rw-r-- 1 yottadbuser yottadbuser 25752 Jan 26 15:53 DIALOG.o
+   -rw-rw-r-- 1 yottadbuser yottadbuser 11784 Jan 26 15:53 DIARB.o
+   -rw-rw-r-- 1 yottadbuser yottadbuser 22520 Jan 26 15:53 DIB.o
+   -rw-rw-r-- 1 yottadbuser yottadbuser 21528 Jan 26 15:53 DIC0.o
+   -rw-rw-r-- 1 yottadbuser yottadbuser 13496 Jan 26 15:53 DIC11.o
+   -rw-rw-r-- 1 yottadbuser yottadbuser 33160 Jan 26 15:53 DIC1.o
+   -rw-rw-r-- 1 yottadbuser yottadbuser 22520 Jan 26 15:53 DIC2.o
+   -rw-rw-r-- 1 yottadbuser yottadbuser 21176 Jan 26 15:53 DICATT2.o
+   -rw-rw-r-- 1 yottadbuser yottadbuser 14616 Jan 26 15:53 DICL.o
+   -rw-rw-r-- 1 yottadbuser yottadbuser 28808 Jan 26 15:53 DIC.o
+   -rw-rw-r-- 1 yottadbuser yottadbuser 18552 Jan 26 15:53 DICRW.o
+   -rw-rw-r-- 1 yottadbuser yottadbuser 15800 Jan 26 15:53 DICUIX1.o
+   -rw-rw-r-- 1 yottadbuser yottadbuser 20520 Jan 26 15:53 DICUIX2.o
+   -rw-rw-r-- 1 yottadbuser yottadbuser 19336 Jan 26 15:53 DICUIX.o
+   -rw-rw-r-- 1 yottadbuser yottadbuser 22472 Jan 26 15:53 DII.o
+   -rw-rw-r-- 1 yottadbuser yottadbuser 10424 Jan 26 15:53 DILF.o
+   -rw-rw-r-- 1 yottadbuser yottadbuser 29848 Jan 26 15:53 DILIBF.o
+   -rw-rw-r-- 1 yottadbuser yottadbuser  2904 Jan 26 15:53 DI.o
+   -rw-rw-r-- 1 yottadbuser yottadbuser 14104 Jan 26 15:53 DIQGU.o
+   -rw-rw-r-- 1 yottadbuser yottadbuser 27240 Jan 26 15:53 _DTC.o
+   -rw-rw-r-- 1 yottadbuser yottadbuser 23176 Jan 26 15:53 _ZOSV.o
+   yottadbuser@yottadbworkshop:~$
 
 **Pre-compiled Routines**
 
 VistA is written to be portable across different MUMPS implementations. This means that it is guaranteed to contain code that is syntactically incorrect for every MUMPS implementation. As modules are dynamically compiled, they will generate compilation errors that are sent to STDERR. Since you may find these disconcerting, you can prevent them by dynamically compiling all the modules.
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ cd VistA/o
-   gtmuser@gtmworkshop:~/VistA/o$ find ../r -name \*.m -print -exec $gtm_dist/mumps {} \;
+   yottadbuser@yottadbworkshop:~$ cd VistA/o
+   yottadbuser@yottadbworkshop:~/VistA/o$ find ../r -name \*.m -print -exec $gtm_dist/mumps {} \;
 
    …
 
-   gtmuser@gtmworkshop:~/VistA/o$
+   yottadbuser@yottadbworkshop:~/VistA/o$
 
 Ideally, we would simply compile with a mumps \*.m command, but 25,163 routines would make for a command line longer than the shell can handle. So, we use the find command; you can also compile using the xargs command. You should also confirm that all routines were compiled by counting the number of source modules and the number of object modules.
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~/VistA/o$ ls | wc
+   yottadbuser@yottadbworkshop:~/VistA/o$ ls | wc
      25163   25163  251422
-   gtmuser@gtmworkshop:~/VistA/o$ ls ../r|wc
+   yottadbuser@yottadbworkshop:~/VistA/o$ ls ../r|wc
      25163   25163  251422
-   gtmuser@gtmworkshop:~/VistA/o$
+   yottadbuser@yottadbworkshop:~/VistA/o$
 
 Make sure you can start and run VistA after recompiling the modules.
 
@@ -3578,23 +3575,23 @@ Make sure you can start and run VistA after recompiling the modules.
 YottaDB/GT.M object files are specific to each release of YottaDB/GT.M – so r1.10 cannot use object files generated by r1.00, for example. Although the database format is more stable, a database file can only be concurrently open only by processes of one YottaDB/GT.M. The same source code, however, can be used by an unlimited number of YottaDB/GT.M releases. Also, even within a single YottaDB/GT.M release, the same source code can be used by processes running in M mode and UTF-8 mode – but the object files are different. The directory tree structure implemented in the simple environment allows only processes of only one YottaDB/GT.M release operating in only one mode to use a set of YottaDB/GT.M source modules.
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ tree -d VistA/
+   yottadbuser@yottadbworkshop:~$ tree -d VistA/
    VistA/
    ├── g
    ├── o
    └── r
 
    3 directories
-   gtmuser@gtmworkshop:~$
+   yottadbuser@yottadbworkshop:~$
 
 By creating another layer in the directory structure, the same VistA routines can be made to work in multiple YottaDB/GT.M releases, for example, if we had:
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ mkdir VistA/V6.2-000_x86_64
-   gtmuser@gtmworkshop:~$ mupip set -journal=disable -region DEFAULT
+   yottadbuser@yottadbworkshop:~$ mkdir VistA/V6.2-000_x86_64
+   yottadbuser@yottadbworkshop:~$ mupip set -journal=disable -region DEFAULT
    %GTM-I-JNLSTATE, Journaling state for region DEFAULT is now DISABLED
-   gtmuser@gtmworkshop:~$ mv VistA/{g,o} VistA/V6.2-000_x86_64/
-   gtmuser@gtmworkshop:~$ tree -d VistA/
+   yottadbuser@yottadbworkshop:~$ mv VistA/{g,o} VistA/V6.2-000_x86_64/
+   yottadbuser@yottadbworkshop:~$ tree -d VistA/
    VistA/
    ├── r
    └── V6.2-000_x86_64
@@ -3602,7 +3599,7 @@ By creating another layer in the directory structure, the same VistA routines ca
         └── o
 
    4 directories
-   gtmuser@gtmworkshop:~$
+   yottadbuser@yottadbworkshop:~$
 
 Notice that we simply moved the object, journal, global directory and database files from one location to another, after disabling journaling. Here are some rules for when you move files:
 
@@ -3619,8 +3616,8 @@ Notice that we simply moved the object, journal, global directory and database f
 Fixing the above (starting with the environment file, since it points to the global directory, and then the global directory, since it points to the database file):
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ mv VistA/gtmenv VistA/V6.2-000_x86_64/
-   gtmuser@gtmworkshop:~$ nano VistA/V6.2-000_x86_64/gtmenv ;  cat VistA/V6.2-000_x86_64/gtmenv
+   yottadbuser@yottadbworkshop:~$ mv VistA/gtmenv VistA/V6.2-000_x86_64/
+   yottadbuser@yottadbworkshop:~$ nano VistA/V6.2-000_x86_64/gtmenv ;  cat VistA/V6.2-000_x86_64/gtmenv
    export gtmdir=$HOME/VistA
    export gtmver=V6.2-000_x86_64
    export gtm_dist=/usr/lib/fis-gtm/$gtmver
@@ -3633,15 +3630,15 @@ Fixing the above (starting with the environment file, since it points to the glo
    mkdir -p $gtm_tmp
    alias mumps=$gtm_dist/mumps
    alias mupip=$gtm_dist/mupip
-   gtmuser@gtmworkshop:~$ 
+   yottadbuser@yottadbworkshop:~$ 
 
-Notice that since the YottaDB/GT.M version occurs in multiple locations, it has been abstracted to the environment variable $gtmver. Also, /home/gtmuser/VistA can be abstracted into an environment variable $gtmdir. By modifying the global directory to use the environment variables, the global directory becomes more portable.
+Notice that since the YottaDB/GT.M version occurs in multiple locations, it has been abstracted to the environment variable $gtmver. Also, /home/yottadbuser/VistA can be abstracted into an environment variable $gtmdir. By modifying the global directory to use the environment variables, the global directory becomes more portable.
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ source VistA/V6.2-000_x86_64/gtmenv
-   gtmuser@gtmworkshop:~$ mumps -run GDE
+   yottadbuser@yottadbworkshop:~$ source VistA/V6.2-000_x86_64/gtmenv
+   yottadbuser@yottadbworkshop:~$ mumps -run GDE
    %GDE-I-LOADGD, Loading Global Directory file
-           /home/gtmuser/VistA/V6.2-000_x86_64/g/gtm.gld
+           /home/yottadbuser/VistA/V6.2-000_x86_64/g/gtm.gld
    %GDE-I-VERIFY, Verification OK
    
    GDE> change -segment DEFAULT -file=$gtmdir/$gtmver/g/gtm.dat
@@ -3673,23 +3670,23 @@ Notice that since the YottaDB/GT.M version occurs in multiple locations, it has 
    %GDE-I-VERIFY, Verification OK
 
    %GDE-I-GDUPDATE, Updating Global Directory file 
-           /home/gtmuser/VistA/V6.2-000_x86_64/g/gtm.gld
-   gtmuser@gtmworkshop:~$
+           /home/yottadbuser/VistA/V6.2-000_x86_64/g/gtm.gld
+   yottadbuser@yottadbworkshop:~$
 
 Now re-enable journaling so that the database and journal pointers are correct. You will need to delete the prior journal file, because the database file does not have a pointer to it, and YottaDB/GT.M will refuse to create a new journal file where a file already exists that is not pointed to by the database file.
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ rm /home/gtmuser/VistA/V6.2-000_x86_64/g/gtm.mjl
-   gtmuser@gtmworkshop:~$ mupip set -journal="enable,on,before,file=$gtmdir/$gtmver/g/gtm.mjl" -region DEFAULT
-   %GTM-I-JNLCREATE, Journal file /home/gtmuser/VistA/V6.2-000_x86_64/g/gtm.mjl created for region DEFAULT with BEFORE_IMAGES
+   yottadbuser@yottadbworkshop:~$ rm /home/yottadbuser/VistA/V6.2-000_x86_64/g/gtm.mjl
+   yottadbuser@yottadbworkshop:~$ mupip set -journal="enable,on,before,file=$gtmdir/$gtmver/g/gtm.mjl" -region DEFAULT
+   %GTM-I-JNLCREATE, Journal file /home/yottadbuser/VistA/V6.2-000_x86_64/g/gtm.mjl created for region DEFAULT with BEFORE_IMAGES
    %GTM-W-JNLBUFFREGUPD, Journal file buffer size for region DEFAULT has been adjusted from 2308 to 2312.
    %GTM-I-JNLSTATE, Journaling state for region DEFAULT is now ON
-   gtmuser@gtmworkshop:~$
+   yottadbuser@yottadbworkshop:~$
 
 And now VistA is again ready for use with the new directory structure:
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ mumps -dir
+   yottadbuser@yottadbworkshop:~$ mumps -dir
 
    YDB>set DUZ=1 do P^DI
 
@@ -3699,13 +3696,13 @@ And now VistA is again ready for use with the new directory structure:
 
    Select OPTION: ^
    YDB>halt
-   gtmuser@gtmworkshop:~$ 
+   yottadbuser@yottadbworkshop:~$ 
 
 We can add additional directories for other versions of YottaDB/GT.M. e.g.,
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ mkdir -p VistA/V6.2-001_x86_64/{g,o}
-   gtmuser@gtmworkshop:~$ tree -d VistA
+   yottadbuser@yottadbworkshop:~$ mkdir -p VistA/V6.2-001_x86_64/{g,o}
+   yottadbuser@yottadbworkshop:~$ tree -d VistA
    VistA
    ├── r
    ├── V6.2-000_x86_64
@@ -3716,7 +3713,7 @@ We can add additional directories for other versions of YottaDB/GT.M. e.g.,
        └── o
 
    7 directories
-   gtmuser@gtmworkshop:~$
+   yottadbuser@yottadbworkshop:~$
  
 This facilitates simple upgrades. For example, if you wanted to migrate from r1.10 to (an as yet unreleased as of this writing) r1.20, you could effect a rolling upgrade using replicating between the r1.10 and r1.20 sub-directories within the same directory.
 
@@ -3725,8 +3722,8 @@ This facilitates simple upgrades. For example, if you wanted to migrate from r1.
 In general, program source code is independent of the YottaDB/GT.M version. On occasion, you may want to take advantage of an enhancement in a YottaDB/GT.M version, with modified source code. You can augment the g and o subdirectories with an r subdirectory for such version specific source code modules. Of course, unless the env file is updated accordingly, YottaDB/GT.M will never find the version specific routines.
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ for i in VistA/V* ; do mkdir $i/r ; done
-   gtmuser@gtmworkshop:~$ tree -d VistA/
+   yottadbuser@yottadbworkshop:~$ for i in VistA/V* ; do mkdir $i/r ; done
+   yottadbuser@yottadbworkshop:~$ tree -d VistA/
    VistA
    ├── r
    ├── V6.2-000_x86_64
@@ -3739,8 +3736,8 @@ In general, program source code is independent of the YottaDB/GT.M version. On o
        └── r
 
     9 directories
-    gtmuser@gtmworkshop:~$ fte VistA/V6.2-000_x86_64/env
-    gtmuser@gtmworkshop:~$ cat VistA/V6.2-000_x86_64/env
+    yottadbuser@yottadbworkshop:~$ fte VistA/V6.2-000_x86_64/env
+    yottadbuser@yottadbworkshop:~$ cat VistA/V6.2-000_x86_64/env
     export gtmdir=$HOME/VistA
     export gtmver=V6.2-000_x86_64
     export gtm_dist=/usr/lib/fis-gtm/$gtmver
@@ -3753,22 +3750,22 @@ In general, program source code is independent of the YottaDB/GT.M version. On o
     mkdir -p $gtm_tmp
     alias mumps=$gtm_dist/mumps
     alias mupip=$gtm_dist/mupip
-    gtmuser@gtmworkshop:~$ source VistA/V6.2-000_x86_64/gtmenv
-    gtmuser@gtmworkshop:~$ mumps -dir
+    yottadbuser@yottadbworkshop:~$ source VistA/V6.2-000_x86_64/gtmenv
+    yottadbuser@yottadbworkshop:~$ mumps -dir
 
     YDB>write $zroutines
-    /home/gtmuser/VistA/V6.2-000_x86_64/o*(/home/gtmuser/VistA/V6.2-000_x86_64/r /home/gtmuser/VistA/r) /usr/lib/fis-gtm/V6.2-000\_x86_64/libgtmutil.so
+    /home/yottadbuser/VistA/V6.2-000_x86_64/o*(/home/yottadbuser/VistA/V6.2-000_x86_64/r /home/yottadbuser/VistA/r) /usr/lib/fis-gtm/V6.2-000\_x86_64/libgtmutil.so
     YDB>halt
-    gtmuser@gtmworkshop:~$
+    yottadbuser@yottadbworkshop:~$
 
 **Segregating Local Modifications**
 
 Installations of large applications often have local or modifications. In such cases, it is important to be able to segregate the local patches from the standard application distribution. This can be effected by placing these routines in p subdirectories, and placing the p subdirectories ahead of the r subdirectories where the standard routines remain untouched.
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ for i in VistA/V* ; do mkdir $i/p ; done
-   gtmuser@gtmworkshop:~$ mkdir $gtmdir/p
-   gtmuser@gtmworkshop:~$ tree -d VistA\
+   yottadbuser@yottadbworkshop:~$ for i in VistA/V* ; do mkdir $i/p ; done
+   yottadbuser@yottadbworkshop:~$ mkdir $gtmdir/p
+   yottadbuser@yottadbworkshop:~$ tree -d VistA\
    VistA
    ├── p
    ├── r
@@ -3784,7 +3781,7 @@ Installations of large applications often have local or modifications. In such c
        └── r
 
     12 directories
-    gtmuser@gtmworkshop:~$ nano VistA/V6.2-000_x86_64/gtmenv ;  cat VistA/V6.2-000_x86_64/gtmenv
+    yottadbuser@yottadbworkshop:~$ nano VistA/V6.2-000_x86_64/gtmenv ;  cat VistA/V6.2-000_x86_64/gtmenv
     export gtmdir=$HOME/VistA
     export gtmver=V6.2-000_x86_64
     export gtm_dist=/usr/lib/fis-gtm/$gtmver
@@ -3797,14 +3794,14 @@ Installations of large applications often have local or modifications. In such c
     mkdir -p $gtm_tmp
     alias mumps=$gtm_dist/mumps
     alias mupip=$gtm_dist/mupip
-    gtmuser@gtmworkshop:~$
+    yottadbuser@yottadbworkshop:~$
 
-Now you can look at this in operation by applying some modifications to VistA that allow it to operate better with YottaDB/GT.M to the /home/gtmuser/VistA/p directory. Download the file KSBVistAPatches.zip from `YottaDB on Github <https://github.com/YottaDB/YottaDBdoc/tree/master/AcculturationGuide>`_, and put it in the /Distrib/VistA directory. Then unpack it to /home/gtmuser/VistA/p directory.
+Now you can look at this in operation by applying some modifications to VistA that allow it to operate better with YottaDB/GT.M to the /home/yottadbuser/VistA/p directory. Download the file KSBVistAPatches.zip from `YottaDB on Github <https://github.com/YottaDB/YottaDBdoc/tree/master/AcculturationGuide>`_, and put it in the /Distrib/VistA directory. Then unpack it to /home/yottadbuser/VistA/p directory.
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ ls -l /Distrib/VistA/KSBVistAPatches.zip
-   -rw-r--r-- 1 gtmuser gtmuser 20530 Jan 15 17:49 /Distrib/VistA/KSBVistAPatches.zip
-   gtmuser@gtmworkshop:~$ unzip -d VistA/p /Distrib/VistA/KSBVistAPatches.zip
+   yottadbuser@yottadbworkshop:~$ ls -l /Distrib/VistA/KSBVistAPatches.zip
+   -rw-r--r-- 1 yottadbuser yottadbuser 20530 Jan 15 17:49 /Distrib/VistA/KSBVistAPatches.zip
+   yottadbuser@yottadbworkshop:~$ unzip -d VistA/p /Distrib/VistA/KSBVistAPatches.zip
    Archive:  /Distrib/VistA/KSBVistAPatches.zip
    inflating: VistA/p/XPDR.m          
    inflating: VistA/p/XWBTCPM.m       
@@ -3813,21 +3810,21 @@ Now you can look at this in operation by applying some modifications to VistA th
    inflating: VistA/p/ZOSVGUX.m       
    inflating: VistA/p/_ZOSV.m         
    inflating: VistA/p/ZTMGRSET.m 
-   gtmuser@gtmworkshop:~$
+   yottadbuser@yottadbworkshop:~$
 
 Then compile it with the object files in the VistA/V6.2-000_x86_64/o directory
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ cd VistA/V6.2-000_x86_64/o
-   gtmuser@gtmworkshop:~/VistA/V6.2-000_x86_64/o$ mumps ../../p/\*.m
-   gtmuser@gtmworkshop:~/VistA/V6.2-000_x86_64/o$
+   yottadbuser@yottadbworkshop:~$ cd VistA/V6.2-000_x86_64/o
+   yottadbuser@yottadbworkshop:~/VistA/V6.2-000_x86_64/o$ mumps ../../p/\*.m
+   yottadbuser@yottadbworkshop:~/VistA/V6.2-000_x86_64/o$
 
 Now, you can run VistA with the local modifications. In this case, one of the modifications is a fix to a minor bug in VistA: it treats spaces separating source directories in a parenthesized list as part of the directory name, rather than as a separator. With the change, when you run a function - for example, to apply a patch - it correctly puts the new routine in the first source directory even if it is within a parenthesized list of directories. In this example, you will run the ^ZTMGRTSET function. Notice that the VistA/V6.2-000/p directory is initially empty, but has some tens of files afterwards.
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ ls -l VistA/V6.2-000_x86_64/p
+   yottadbuser@yottadbworkshop:~$ ls -l VistA/V6.2-000_x86_64/p
    total 0
-   gtmuser@gtmworkshop:~$ mumps -dir
+   yottadbuser@yottadbworkshop:~$ mumps -dir
 
    YDB>do ^ZTMGRSET
 
@@ -3925,9 +3922,9 @@ Now, you can run VistA with the local modifications. In this case, one of the mo
    Now, I will check your % globals...........
    ALL DONE
    YDB>halt
-   gtmuser@gtmworkshop:~$ ls -l VistA/V6.2-000_x86_64/p|wc
+   yottadbuser@yottadbworkshop:~$ ls -l VistA/V6.2-000_x86_64/p|wc
         57     506    3132
-   gtmuser@gtmworkshop:~$
+   yottadbuser@yottadbworkshop:~$
 
 **Creating a Development Environment**
 
@@ -3936,47 +3933,47 @@ When you work on an application, either to enhance it or to fix a bug, you typic
 Delete the V6.2-001_x86_64 subdirectory, and obtain the files inc and install for the VistA environment, and make install executable.
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ ls -l VistA/
+   yottadbuser@yottadbworkshop:~$ ls -l VistA/
    total 872
-   -rw-r--r-- 1 gtmuser gtmuser    894 Jan 16 13:20 inc
-   -rwxr-xr-x 1 gtmuser gtmuser   4416 Jan 16 13:20 install
-   drwxrwxr-x 2 gtmuser gtmuser    114 Jan 15 17:54 p
-   drwxr-x--- 2 gtmuser gtmuser 606208 Feb  6  2009 r
-   drwxrwxr-x 6 gtmuser gtmuser    108 Jan 16 13:20 V6.2-000_x86_64
-   gtmuser@gtmworkshop:~$
+   -rw-r--r-- 1 yottadbuser yottadbuser    894 Jan 16 13:20 inc
+   -rwxr-xr-x 1 yottadbuser yottadbuser   4416 Jan 16 13:20 install
+   drwxrwxr-x 2 yottadbuser yottadbuser    114 Jan 15 17:54 p
+   drwxr-x--- 2 yottadbuser yottadbuser 606208 Feb  6  2009 r
+   drwxrwxr-x 6 yottadbuser yottadbuser    108 Jan 16 13:20 V6.2-000_x86_64
+   yottadbuser@yottadbworkshop:~$
 
 Similarly, to VistA/V6.2-000_x86_64 copy the files wvehrstop, wvehrstart, run, newjnls and gtmenv (yes, the latter overwrites the gtmenv file you already have there). Make wvehrstop, wvehrstart, run and newjnls executable. Also, replace the env in VistA/V6.2-000_x86_64 with the new env file. Create a symbolic link called gtm to /usr/lib/fis-gtm/V6.2-000_x86_64.
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ ls -l VistA/V6.2-000_x86_64/
+   yottadbuser@yottadbworkshop:~$ ls -l VistA/V6.2-000_x86_64/
    total 896
-   drwxrwxr-x 2 gtmuser gtmuser     48 Jan 15 16:47 g
-   lrwxrwxrwx 1 gtmuser gtmuser     32 Jan 16 13:24 gtm -> /usr/lib/fis-gtm/V6.2-000_x86_64
-   -rw-rw-r-- 1 gtmuser gtmuser    735 Jan 16 13:20 gtmenv
-   -rwxr-xr-x 1 gtmuser gtmuser    181 Jan 16 13:20 newjnls
-   drwxrwxr-x 2 gtmuser gtmuser 610304 Jan 16 11:57 o
-   drwxrwxr-x 2 gtmuser gtmuser   4096 Jan 16 12:01 p
-   drwxrwxr-x 2 gtmuser gtmuser   4096 Jan 16 11:59 r
-   -rwxr-xr-x 1 gtmuser gtmuser    340 Jan 16 13:20 run
-   -rwxr-xr-x 1 gtmuser gtmuser    277 Jan 16 13:20 wvehrstart
-   -rwxr-xr-x 1 gtmuser gtmuser    161 Jan 16 13:20 wvehrstop
-   gtmuser@gtmworkshop:~$
+   drwxrwxr-x 2 yottadbuser yottadbuser     48 Jan 15 16:47 g
+   lrwxrwxrwx 1 yottadbuser yottadbuser     32 Jan 16 13:24 gtm -> /usr/lib/fis-gtm/V6.2-000_x86_64
+   -rw-rw-r-- 1 yottadbuser yottadbuser    735 Jan 16 13:20 gtmenv
+   -rwxr-xr-x 1 yottadbuser yottadbuser    181 Jan 16 13:20 newjnls
+   drwxrwxr-x 2 yottadbuser yottadbuser 610304 Jan 16 11:57 o
+   drwxrwxr-x 2 yottadbuser yottadbuser   4096 Jan 16 12:01 p
+   drwxrwxr-x 2 yottadbuser yottadbuser   4096 Jan 16 11:59 r
+   -rwxr-xr-x 1 yottadbuser yottadbuser    340 Jan 16 13:20 run
+   -rwxr-xr-x 1 yottadbuser yottadbuser    277 Jan 16 13:20 wvehrstart
+   -rwxr-xr-x 1 yottadbuser yottadbuser    161 Jan 16 13:20 wvehrstop
+   yottadbuser@yottadbworkshop:~$
 
 Starting with a clean environment (no gtm* environment variables defined), create a child environment of VistA called dev using the install script.
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ VistA/install dev
-   Creating environment in dev as child of environment in /home/gtmuser/VistA
+   yottadbuser@yottadbworkshop:~$ VistA/install dev
+   Creating environment in dev as child of environment in /home/yottadbuser/VistA
    Default permission for development environment is for all to read and group to write - please alter as needed
-   gtmuser@gtmworkshop:~$ ls -lR dev
+   yottadbuser@yottadbworkshop:~$ ls -lR dev
    dev:
    total 16
-   -r--r--r-- 1 gtmuser gtmuser  894 2010-09-14 17:33 inc
-   -r-xr-x--x 1 gtmuser gtmuser 4416 2010-09-14 17:33 install
-   drwxrwxr-x 2 gtmuser gtmuser    1 2010-09-14 17:33 p
-   lrwxrwxrwx 1 gtmuser gtmuser   19 2010-09-14 17:33 parent -> /home/gtmuser/VistA
-   drwxrwxr-x 2 gtmuser gtmuser    1 2010-09-14 17:33 r
-   drwxrwxr-x 7 gtmuser gtmuser   88 2010-09-14 17:33 V6.2-000_x86_64
+   -r--r--r-- 1 yottadbuser yottadbuser  894 2010-09-14 17:33 inc
+   -r-xr-x--x 1 yottadbuser yottadbuser 4416 2010-09-14 17:33 install
+   drwxrwxr-x 2 yottadbuser yottadbuser    1 2010-09-14 17:33 p
+   lrwxrwxrwx 1 yottadbuser yottadbuser   19 2010-09-14 17:33 parent -> /home/yottadbuser/VistA
+   drwxrwxr-x 2 yottadbuser yottadbuser    1 2010-09-14 17:33 r
+   drwxrwxr-x 7 yottadbuser yottadbuser   88 2010-09-14 17:33 V6.2-000_x86_64
 
    dev/p:
    total 0
@@ -3986,21 +3983,21 @@ Starting with a clean environment (no gtm* environment variables defined), creat
 
    dev/V6.2-000_x86_64:
    total 20
-   -r--r--r-- 1 gtmuser gtmuser 731 2010-09-14 17:33 env
-   drwxrwxr-x 2 gtmuser gtmuser   8 2010-09-14 17:33 g
-   lrwxrwxrwx 1 gtmuser gtmuser  36 2010-09-14 17:33 gtm -> /home/gtmuser/VistA/V6.2-000_x86_64/gtm
-   -r-xr-xr-x 1 gtmuser gtmuser 181 2010-09-14 17:33 newjnls
-   drwxrwxr-x 2 gtmuser gtmuser   1 2010-09-14 17:33 o
-   drwxrwxr-x 2 gtmuser gtmuser   1 2010-09-14 17:33 p
-   drwxrwxr-x 2 gtmuser gtmuser   1 2010-09-14 17:33 r
-   -r-xr-x--x 1 gtmuser gtmuser 343 2010-09-14 17:33 run
-   drwxrwxr-x 2 gtmuser gtmuser   1 2010-09-14 17:33 tmp
-   -r-xr-xr-x 1 gtmuser gtmuser 277 2010-09-14 17:33 wvehrstart
-   -r-xr-xr-x 1 gtmuser gtmuser 161 2010-09-14 17:33 wvehrstop
+   -r--r--r-- 1 yottadbuser yottadbuser 731 2010-09-14 17:33 env
+   drwxrwxr-x 2 yottadbuser yottadbuser   8 2010-09-14 17:33 g
+   lrwxrwxrwx 1 yottadbuser yottadbuser  36 2010-09-14 17:33 gtm -> /home/yottadbuser/VistA/V6.2-000_x86_64/gtm
+   -r-xr-xr-x 1 yottadbuser yottadbuser 181 2010-09-14 17:33 newjnls
+   drwxrwxr-x 2 yottadbuser yottadbuser   1 2010-09-14 17:33 o
+   drwxrwxr-x 2 yottadbuser yottadbuser   1 2010-09-14 17:33 p
+   drwxrwxr-x 2 yottadbuser yottadbuser   1 2010-09-14 17:33 r
+   -r-xr-x--x 1 yottadbuser yottadbuser 343 2010-09-14 17:33 run
+   drwxrwxr-x 2 yottadbuser yottadbuser   1 2010-09-14 17:33 tmp
+   -r-xr-xr-x 1 yottadbuser yottadbuser 277 2010-09-14 17:33 wvehrstart
+   -r-xr-xr-x 1 yottadbuser yottadbuser 161 2010-09-14 17:33 wvehrstop
 
    dev/V6.2-000_x86_64/g:
    total 4
-   -r--r--r-- 1 gtmuser gtmuser 1536 2010-09-13 18:22 gtm.gld
+   -r--r--r-- 1 yottadbuser yottadbuser 1536 2010-09-13 18:22 gtm.gld
 
    dev/V6.2-000_x86_64/o:
    total 0
@@ -4013,27 +4010,27 @@ Starting with a clean environment (no gtm* environment variables defined), creat
 
    dev/V6.2-000_x86_64/tmp:
    total 0
-   gtmuser@gtmworkshop:~$
+   yottadbuser@yottadbworkshop:~$
 
 Now run the dev environment and notice the values of the environment variables. In particular notice how the database used is that of the parent.
 
 .. parsed-literal::
-   gtmuser@gtmworkshop:~$ dev/V6.2-000_x86_64/run
+   yottadbuser@yottadbworkshop:~$ dev/V6.2-000_x86_64/run
 
    YDB>write $zgbldir
-   /home/gtmuser/dev/V6.2-000_x86_64/g/gtm.gld
+   /home/yottadbuser/dev/V6.2-000_x86_64/g/gtm.gld
    YDB>write $zroutines
-   /home/gtmuser/dev/V6.2-000_x86_64/o(/home/gtmuser/dev/V6.2-000_x86_64/p /home/gtmuser/dev/V6.2-000_x86_64/r /home/gtmuser/dev/p /home/gtmuser/dev/r) /home/gtmuser/dev/parent/V6.2-000_x86_64/o(/home/gtmuser/dev/parent/V6.2-000_x86_64/p /home/gtmuser/dev/parent/V6.2-000_x86_64/r /home/gtmuser/dev/parent/p /home/gtmuser/dev/parent/r) /home/gtmuser/dev/V6.2-000_x86_64/gtm/libgtmutil.so
+   /home/yottadbuser/dev/V6.2-000_x86_64/o(/home/yottadbuser/dev/V6.2-000_x86_64/p /home/yottadbuser/dev/V6.2-000_x86_64/r /home/yottadbuser/dev/p /home/yottadbuser/dev/r) /home/yottadbuser/dev/parent/V6.2-000_x86_64/o(/home/yottadbuser/dev/parent/V6.2-000_x86_64/p /home/yottadbuser/dev/parent/V6.2-000_x86_64/r /home/yottadbuser/dev/parent/p /home/yottadbuser/dev/parent/r) /home/yottadbuser/dev/V6.2-000_x86_64/gtm/libgtmutil.so
    YDB>zsystem "env | grep ^gtm"
-   gtm_repl_instance=/home/gtmuser/dev/parent/V6.2-000_x86_64/g/gtm.repl
+   gtm_repl_instance=/home/yottadbuser/dev/parent/V6.2-000_x86_64/g/gtm.repl
    gtm_log=/tmp/fis-gtm/V6.2-000_x86_64
    gtm_prompt=YDB>
    gtm_retention=42
    gtmver=V6.2-000_x86_64
    gtm_icu_version=5.2
-   gtmgbldir=/home/gtmuser/dev/V6.2-000_x86_64/g/gtm.gld
-   gtmroutines=/home/gtmuser/dev/V6.2-000_x86_64/o*(/home/gtmuser/dev/V6.2-000_x86_64/p /home/gtmuser/dev/V6.2-000_x86_64/r /home/gtmuser/dev/p /home/gtmuser/dev/r) /home/gtmuser/dev/parent/V6.2-000_x86_64/o*(/home/gtmuser/dev/parent/V6.2-000_x86_64/p /home/gtmuser/dev/parent/V6.2-000_x86_64/r /home/gtmuser/dev/parent/p /home/gtmuser/dev/parent/r) /home/gtmuser/dev/V6.2-000_x86_64/gtm/libgtmutil.so
-   gtmdir=/home/gtmuser/dev/parent
+   gtmgbldir=/home/yottadbuser/dev/V6.2-000_x86_64/g/gtm.gld
+   gtmroutines=/home/yottadbuser/dev/V6.2-000_x86_64/o*(/home/yottadbuser/dev/V6.2-000_x86_64/p /home/yottadbuser/dev/V6.2-000_x86_64/r /home/yottadbuser/dev/p /home/yottadbuser/dev/r) /home/yottadbuser/dev/parent/V6.2-000_x86_64/o*(/home/yottadbuser/dev/parent/V6.2-000_x86_64/p /home/yottadbuser/dev/parent/V6.2-000_x86_64/r /home/yottadbuser/dev/parent/p /home/yottadbuser/dev/parent/r) /home/yottadbuser/dev/V6.2-000_x86_64/gtm/libgtmutil.so
+   gtmdir=/home/yottadbuser/dev/parent
    gtm_etrap=Write:(0=$STACK) "Error occurred: ",$ZStatus,!
    gtm_principal_editing=EDITING
    gtm_tmp=/tmp/fis-gtm/V6.2-000_x86_64
@@ -4041,7 +4038,7 @@ Now run the dev environment and notice the values of the environment variables. 
 
    YDB>do ^GDE
    %GDE-I-LOADGD, Loading Global Directory file
-           /home/gtmuser/dev/V6.2-000_x86_64/g/gtm.gld
+           /home/yottadbuser/dev/V6.2-000_x86_64/g/gtm.gld
    %GDE-I-VERIFY, Verification OK
 
    GDE> show -segment
@@ -4056,10 +4053,10 @@ Now run the dev environment and notice the values of the environment variables. 
                                                                                     MSLT=1024
 
    GDE> quit
-   %GDE-I-NOACTION, Not updating Global Directory /home/gtmuser/dev/V6.2-000_x86_64/g/gtm.gld
+   %GDE-I-NOACTION, Not updating Global Directory /home/yottadbuser/dev/V6.2-000_x86_64/g/gtm.gld
 
    YDB>halt
-   gtmuser@gtmworkshop:~$
+   yottadbuser@yottadbworkshop:~$
 
 
 **Further Investigation on your own**
