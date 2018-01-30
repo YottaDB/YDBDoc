@@ -1,7 +1,3 @@
-.. toctree::
- :glob:
-
-.. index:: LICENSE
 
 ========
 LICENSE
