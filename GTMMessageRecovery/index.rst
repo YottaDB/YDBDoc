@@ -10,7 +10,6 @@ Welcome to the Messages and Recovery Procedures Reference Manual!
    :maxdepth: 2
 
    Main YottaDB Documentation Page <https://yottadb.com/resources/documentation>
-   title
    about
    errors
    errormsgref

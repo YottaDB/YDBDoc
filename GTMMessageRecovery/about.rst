@@ -8,7 +8,7 @@ About This Manual
 .. contents::
     :depth: 2
 
-The YottaDB/GT.M Message and Recovery Procedures Reference Manual describes the meaning of messages issued by YottaDB and GT.M components, including the M compiler, the run-time system, and utility programs. It serves OpenVMS and UNIX versions of YottaDB/GT.M.
+The YottaDB Message and Recovery Procedures Reference Manual describes the meaning of messages issued by YottaDB components, including the M compiler, the run-time system, and utility programs.
 
 This manual is organized alphabetically according to the message identifier. The meaning of each message is provided as well as suggestions for locating and addressing the cause of error-type messages.
 
@@ -16,25 +16,25 @@ This manual is organized alphabetically according to the message identifier. The
 Intended Audience
 ------------------
 
-This manual is for programmers and system managers who use YottaDB or GT.M.
+This manual is for programmers and system managers who use YottaDB.
 
 ---------------------
 Purpose of the Manual
 ---------------------
 
-The YottaDB/GT.M Message and Recovery Procedures Reference Manual helps you understand and act on YottaDB and GT.M messages. This manual complements the other YottaDB/GT.M manuals.
+The YottaDB Message and Recovery Procedures Reference Manual helps you understand and act on YottaDB messages. This manual complements the other YottaDB manuals.
 
 -----------------------
 How to Use This Manual
 -----------------------
 
-The YottaDB/GT.M Message and Recovery Procedures Reference Manual is intended to be used primarily to determine the nature of a message and interpret its meaning. Therefore, messages are listed in alphabetical order, according to the mnemonic that precedes them. Cross references to additional information are provided in individual entries, as appropriate. The manual does not include a table of contents or index.
+The YottaDB Message and Recovery Procedures Reference Manual is intended to be used primarily to determine the nature of a message and interpret its meaning. Therefore, messages are listed in alphabetical order, according to the mnemonic that precedes them. Cross references to additional information are provided in individual entries, as appropriate. 
 
 -------------------------------
 Conventions Used in this Manual
 -------------------------------
 
-YottaDB/GT.M messages are identified by a signature of the form GTM-s-abcdef where -s- is a severity indicator and abcdef is an identifier. The severity indicators are: -I- for informational messages, -W- for warnings, -E- for errors and -F- for events that cause a YottaDB/GT.M process to terminate abnormally. For more information on monitoring YottaDB/GT.M messages, refer to "Appendix B: Monitoring YottaDB/GT.M Messages" in the Administration and Operations Guide.
+YottaDB messages are identified by a signature of the form GTM-s-abcdef where -s- is a severity indicator and abcdef is an identifier. The severity indicators are: -I- for informational messages, -W- for warnings, -E- for errors and -F- for events that cause a YottaDB process to terminate abnormally. For more information on monitoring YottaDB messages, refer to `"Appendix B: Monitoring YottaDB Messages" in the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/monitoring.html>`_.
 
 Each entry in this manual is presented in the following format as illustrated by the NOPRINCIO message.
 
@@ -45,51 +45,25 @@ Each entry in this manual is presented in the following format as illustrated by
    4. Action: To redirect all I/O to the terminal, note the current device or save it in a temporary variable and USE $P. If you decide to resume program execution, restore the current device with a USE command.
 
 where
- 1 indicates the unique mnemonic preceding the error message and is the component by which the entry is alphabetized.
- 2 indicates the mnemonic and the actual message that accompanies it.
- 3 indicates the GT.M component that generates the message, its severity, and a short description of its implication(s).
- 4 suggests action(s) to take when the message appears.
 
-This manual can be used with YottaDB/GT.M on any of its supported platforms. However, because in some instances the suggested actions are more useful when platform-specific information is provided, the following conventions are used, as necessary.
+* 1 indicates the unique mnemonic preceding the error message and is the component by which the entry is alphabetized.
+* 2 indicates the mnemonic and the actual message that accompanies it.
+* 3 indicates the YottaDB component that generates the message, its severity, and a short description of its implication(s).
+* 4 suggests action(s) to take when the message appears.
 
-UNIX: The term UNIX is used here in the general sense of all platforms for which GT.M uses a POSIX API. As of this date, this includes: AIX; HP-UX on IA64 and PA-RISC; GNU/Linux on IA64, x86 and x86_64; Solaris on SPARC; z/OS.
+This manual can be used with YottaDB on any of its supported platforms. However, because in some instances the suggested actions are more useful when platform-specific information is provided, the following conventions are used, as necessary.
 
-Platform Identifier: If an entire statement is either UNIX- or OpenVMS- specific, it is preceded by the phrase "In UNIX," or "In OpenVMS,". The following example illustrates this convention. Action: In OpenVMS, relink your image to include the missing routine. In UNIX, relink your external call descriptor image to include the missing routine.
+Although the terms "host shell command" and "file-specification" have some platform-specification connotations, they are used in their most generic sense throughout this manual. The former describes commands that originate from the host operating system, rather than from YottaDB. The latter may refer to a simple file name or a full directory path to that file.
 
-If a phrase or word is either UNIX- or OpenVMS- specific, it is suffixed by "(UNIX)" or "(VMS)". The following examples illustrates this convention.
-
-    Run Time Error: Strings longer than 32,767 (UNIX) or 65,535 (OpenVMS) bytes have been used with alternative collation and only gtm_ac_xform and gtm_ac_xback are defined in the collation library.
-    Compile Time Error: This indicates that translation of the indicated environment variable (UNIX) or logical name (OpenVMS) failed. Examine the accompanying message to find out the failure type and the reason of the error.
-
-Although the terms "host shell command" and "file-specification" have some platform-specification connotations, they are used in their most generic sense throughout this manual. The former describes commands that originate from the host operating system, rather than from YottaDB/GT.M. The latter may refer to a simple file name or a full directory path to that file.
-
-Henceforth, the term "originating instance" is used where previously "primary instance" or "originating primary instance" were used, and the term "replicating instance" is used where previously "secondary instance" and "originating secondary instance" were used. Since it is easier to change documentation than it is to change software, and given our tradition of maintaining compatibility especially for existing programs and scripts, the former terms will remain in the software for a long time to come, even as they are supplemented with the new terms in the code, and replaced in the documentation.
-
-We have changed the terminology because "initiating" and "replicating" describe roles that currently exist and will continue to exist as GT.M evolves, while "primary" and "secondary" are both more and less precise and will become less useful as we add capabilities to YottaDB/GT.M. An "initiating instance" is always the instance that first records a transaction (including non-TP mini-transactions). A "replicating instance" is always following the action of an "originating instance", previously called "root primary". We have called secondaries that replicate propagating primaries, but they are not originating instances.
-
-The circle-shaped icon with the "+" sign denotes messages that newly introduced in or since the last major release.
-
-.. image:: plus.png
-
-The octagon-shaped icon with the "-" sign denotes deprecated messages.
-
-.. image:: deprecated.png
-
-The square-shaped icon with the delta symbol denotes messages revised in or since the last major release.
-
-.. image:: revised.png
-
-At a major release, square-shaped and circle-shaped icons of and since the preceding major release are removed.
+An "initiating instance" is always the instance that first records a transaction (including non-TP mini-transactions). A "replicating instance" is always following the action of an "originating instance", previously called "root primary". We have called secondaries that replicate propagating primaries, but they are not originating instances.
 
 ---------------------------------
 Following Up on Suggested Actions
 ---------------------------------
 
-When the suggested action is to "Report the error to the group responsible for database integrity at your operation," you may also refer to the Maintaining Database Integrity chapter in the Administration and Operations Guide.
+When the suggested action is to "Report the error to the group responsible for database integrity at your operation," you may also refer to the `Maintaining Database Integrity chapter in the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/integrity.html>`_.
 
-For information about utility-generated messages, refer to the chapter that describes that utility in the Administration and Operations Guide.
-
-The OpenVMS edition of YottaDB/GT.M uses the OpenVMS standard message facility as well as other OpenVMS system components. Therefore, some errors issued by YottaDB/GT.M originate in OpenVMS and are described in this manual.
+For information about utility-generated messages, refer to the chapter that describes that utility in the `Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/index.html>`_.
 
 -----------------
 MUPIP LOAD Errors
@@ -101,17 +75,17 @@ If the input file is FORMAT=GO or ZWR, the database should contain the correct c
 
 If the input file is FORMAT=BIN, the database is probably corrupt. Fix the database intergrity issues and EXTRACT the file again.
 
-For more information on LOAD and EXTRACT, refer to the General Database Management chapter in the Administration and Operations Guide.
+For more information on LOAD and EXTRACT, refer to the `General Database Management chapter in the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html>`_.
 
-For information on salvaging damaged extracts, refer to the Maintaining Database Integrity chapter in the Administration and Operations Guide.
+For information on salvaging damaged extracts, refer to the `Maintaining Database Integrity chapter in the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/integrity.html>`_.
 
-For details on the internals of spanning nodes, refer to the YottaDB/GT.M Database Structure (GDS) chapter in the Administration and Operations Guide.
+For details on the internals of spanning nodes, refer to the `YottaDB Database Structure (GDS) chapter in the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/gds.html>`_.
 
 --------------
 Plug-In Errors
 --------------
 
-The plug-in architecture of YottaDB and GT.M allows you to choose your preferred encryption software. Some plugin errors that you may encounter are as follows:
+The plug-in architecture of YottaDB allows you to choose your preferred encryption software. Some plugin errors that you may encounter are as follows:
 
 **Database file <path> not found**
 
@@ -123,7 +97,7 @@ Action: Verify that the database file exists, the corresponding entry in the mas
 
 Plugin error: The plugin detected an internal error.
 
-Action: This error indicates that there is a communication error between GT.M and the gtmcrypt plug-in. Replace the process with undamaged one. Report the entire incident context to your YottaDB or GT.M support channel.
+Action: This error indicates that there is a communication error between YottaDB and the gtmcrypt plug-in. Replace the process with undamaged one. Report the entire incident context to your YottaDB support channel.
 
 **Encryption key file <path> not found**
 
@@ -139,7 +113,7 @@ Action: Call gtmcrypt_init() before calling any other encryption functions.
 
 For more information on the plug-in errors and their fixes, see the documentation of your preferred encryption software.
 
-**Appendix B: Reference Implementation Error messages** lists some errors that the YottaDB and GT.M team encountered while testing YottaDB/GT.M's plug-in architecture with `GNU Privacy Guard <http://gnupg.org/>`_, the widely available implementation of Pretty Good Privacy (see "PGP: Pretty Good Privacy" by Simson Garfinkel).
+`Appendix B: Reference Implementation Error messages <https://docs.yottadb.com/MessageRecovery/referrormsg.html>`_ lists some errors that the YottaDB team encountered while testing YottaDB's plug-in architecture with `GNU Privacy Guard <http://gnupg.org/>`_, the widely available implementation of Pretty Good Privacy (see "PGP: Pretty Good Privacy" by Simson Garfinkel).
 
 ------------------
 MUPIP Integ Errors
@@ -219,7 +193,7 @@ The following table outlines the MUPIP INTEG error messages with their severity 
 +-------------------+-------------------------------+-----------------------------+---------------------------------+
 | DBINCLVL          | Block at incorrect level      |  D                          |    O1                           |
 +-------------------+-------------------------------+-----------------------------+---------------------------------+
-| DBINCRVER         | Incorrect version of GT.M     |  A                          |    I2                           |
+| DBINCRVER         | Incorrect version of YottaDB  |  A                          |    I2                           |
 |                   | database                      |                             |                                 |
 +-------------------+-------------------------------+-----------------------------+---------------------------------+
 | DBINVGBL          | Invalid mixing of global names|  D                          |    K3                           |
@@ -333,6 +307,6 @@ The following table outlines the MUPIP INTEG error messages with their severity 
 
 
 .. note::
-   Section * refers to the specified section in *Managing Database Integrity* chapter of Administration and Operations Guide. The section details a description along with the action item to be taken on encountering the error message.
+   Section * refers to the specified section in `Managing Database Integrity chapter of Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/integrity.html>`_. The section details a description along with the action item to be taken on encountering the error message.
 
 
