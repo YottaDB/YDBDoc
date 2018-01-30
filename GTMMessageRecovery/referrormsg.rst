@@ -62,7 +62,7 @@ Encryption handle corrupted
 
 Plugin error: The plugin detected an internal error.
 
-Action: This error indicates that there is a communication error between GT.M and the gtmcrypt plug-in. Replace the process with undamaged one. Report the entire incident context to your YottaDB/GT.M support channel.
+Action: This error indicates that there is a communication error between YottaDB and the gtmcrypt plug-in. Replace the process with undamaged one. Report the entire incident context to your YottaDB support channel.
 
 -------------------------------------
 Encryption key file <path> not found
