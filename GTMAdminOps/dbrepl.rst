@@ -13,7 +13,7 @@
 Introduction
 ------------------------
 
-YottaDB/GT.M replication provides logical equivalence between multiple databases. It facilitates continuous application availability, real-time decision support, warehousing, analytics, and auditing. There are two types of replication:
+YottaDB replication provides logical equivalence between multiple databases. It facilitates continuous application availability, real-time decision support, warehousing, analytics, and auditing. There are two types of replication:
 
 1. Business Continuity (BC) replication
 
@@ -29,7 +29,7 @@ In the following illustration, A is the originating primary instance and B and C
 
 BC replication is intended for mission-critical applications that must be available 24 hours a day, 365 days a year, in the face of both unplanned events (such as system crashes) as well as planned events (such as system and software upgrades).
 
-With BC replication, you can create a logical multi-site (LMS) replication configuration for mission critical applications that must always be available not only in face of unplanned events (such as system or data center failures) but also in the face of planned events such as computing platform upgrades, OS upgrades, YottaDB/GT.M upgrades and even application upgrades. Deploying a BC replication configuration should take into account available network capacities, operational preferences, risk assessments, and business continuity requirements.
+With BC replication, you can create a logical multi-site (LMS) replication configuration for mission critical applications that must always be available not only in face of unplanned events (such as system or data center failures) but also in the face of planned events such as computing platform upgrades, OS upgrades, YottaDB upgrades and even application upgrades. Deploying a BC replication configuration should take into account available network capacities, operational preferences, risk assessments, and business continuity requirements.
 
 SI replication allows replication from an instance A to another originating primary instance P. P can execute its own business logic to compute and commit its own updates to its database, while receiving a replication stream. In turn, P can have its own replicating secondary instance Q, and A can have its own replicating instance B. In such an SI replication configuration, only originating primary instances A and P can execute business logic and compute database updates. Replicating secondary instances B and Q are only permitted to receive and apply replication streams from their originating primary instances. The following diagram illustrates this configuration.
 
@@ -42,17 +42,17 @@ SI replication is a general purpose mechanism whose utility includes application
 .. note::
    In this book, instances {A, B, C...} denote systems of record (BC replication) and instances {P, Q, R...} denote instances that are not systems of record and which include the results of supplementary business logic.
 
-YottaDB/GT.M replication is asynchronous, which in turn means that the source and receiver ends of a replication connection are at an identical state when there is no activity underway. To maintain consistency, and to restore it when restarting a replication connection, instances maintain a common, mutually coherent, instance-wide serial number called a journal sequence number. Each journal sequence number is tagged with two fields that identify the source of the update- a stream # that can take on values 0 through 15 and a stream sequence number (the journal sequence number of the update on the originating instance). Because replication deals with an entire global variable namespace, regardless of the mapping of global variables to database files, all updates participate in this numbering, even when modifying different database files. Each transaction (all updates bracketed by a pair TSTART/TCOMMIT commands) has a journal sequence number, as does each update outside a transaction (so-called mini-transactions).
+YottaDB replication is asynchronous, which in turn means that the source and receiver ends of a replication connection are at an identical state when there is no activity underway. To maintain consistency, and to restore it when restarting a replication connection, instances maintain a common, mutually coherent, instance-wide serial number called a journal sequence number. Each journal sequence number is tagged with two fields that identify the source of the update- a stream # that can take on values 0 through 15 and a stream sequence number (the journal sequence number of the update on the originating instance). Because replication deals with an entire global variable namespace, regardless of the mapping of global variables to database files, all updates participate in this numbering, even when modifying different database files. Each transaction (all updates bracketed by a pair TSTART/TCOMMIT commands) has a journal sequence number, as does each update outside a transaction (so-called mini-transactions).
 
 On instances that do not include updates from supplementary logic, the journal sequence number and the stream sequence number are the same.
 
 Suppose sequence numbers in P are 100, 101, and 102. If the first and third transactions are locally generated and the second is replicated, the tagged journal sequence numbers might be something like {100,0,10}, {101,1,18}, {102,0,11}. The 0 stream # for 100 and 102 indicates those transactions are generated locally on P whereas stream # 1 indicates those transactions were generated in A. If P needs to roll {101,1,18} off its database in order to resychronize replication with A, database update serialization also requires it to roll {102,0,11} off as well, and both will appear in the Unreplicated Transaction Log (also known as Lost Transaction File).
 
-The journal sequence number on A becomes the stream sequence number on P for transactions replicated from A to P. In the example, the transaction that has the P sequence number of 101 has the sequence number 18 on A and B. The replication instance file in P contains information that allows YottaDB/GT.M to determine this mapping, so that when P rolls {101,1,18} off its database, A knows that P has rolled off its transaction 18, and can include that when catching P up.
+The journal sequence number on A becomes the stream sequence number on P for transactions replicated from A to P. In the example, the transaction that has the P sequence number of 101 has the sequence number 18 on A and B. The replication instance file in P contains information that allows YottaDB to determine this mapping, so that when P rolls {101,1,18} off its database, A knows that P has rolled off its transaction 18, and can include that when catching P up.
 
 If P in turn implements BC replication to another instance Q, the tagging is propagated to Q, such that if A and P both go down (e.g., if they are co-located in a data center that loses electricity), B and C can take over the functions of A and P respectively, and Q can perform any synchronization needed in order to start accepting a replication stream from B as being a continuation of the updates generated by A, and B in turn accepts Q as the successor to P.
 
-An LMS Group is a set of one or more instances that receive updates from the same originating primary instance and represent the same logical state. YottaDB/GT.M implicitly forms an LMS Group by storing the identification of the originating primary instance in the replication instance file of each replicating instance. There are two types of LMS Groups:
+An LMS Group is a set of one or more instances that receive updates from the same originating primary instance and represent the same logical state. YottaDB implicitly forms an LMS Group by storing the identification of the originating primary instance in the replication instance file of each replicating instance. There are two types of LMS Groups:
 
 1. BC Group: An LMS Group whose originating primary instance is a BC instance. A BC Group can have BC and SI instances as members.
 
@@ -82,16 +82,16 @@ The following example illustrates a replication configuration where instance A f
 .. note::
    In this replication configuration, instance B can also replicate to instance Q. However, instance P cannot replicate to an instance in Q's group because it is an SI member of A's BC group.
 
-YottaDB/GT.M imposes no distance limits between instances. You can place instances 20,000 kilometers apart (the circumference of Planet Earth is 40,000 kilometers) or locally within the same data center.
+YottaDB imposes no distance limits between instances. You can place instances 20,000 kilometers apart (the circumference of Planet Earth is 40,000 kilometers) or locally within the same data center.
 
-Using TCP connections, YottaDB/GT.M replicates between instances with heterogeneous stacks of hardware, operating system, endian architecture and even GT.M releases. A YottaDB/GT.M instance can source a BC replication stream to, or receive a BC replication stream from, YottaDB/GT.M V5.1-000 or later. However, SI replication requires both source and receive side must be YottaDB/GT.M V5.5-000 or later. YottaDB/GT.M replication can even be used in configurations with different application software versions, including many cases where the application software versions have different database schema. This also means that a number of inexpensive systems - such as GNU/Linux commodity servers - can be placed in locations throughout an organization. Replicating instances can be used for decision support, reporting, and analytics. Because YottaDB/GT.M databases can be encrypted, these commodity servers are potentially usable in environments outside secure data centers as long as their operating systems and software are secured.
+Using TCP connections, YottaDB replicates between instances with heterogeneous stacks of hardware, operating system, endian architecture and even YottaDB releases. YottaDB replication can even be used in configurations with different application software versions, including many cases where the application software versions have different database schema. This also means that a number of inexpensive systems - such as GNU/Linux commodity servers - can be placed in locations throughout an organization. Replicating instances can be used for decision support, reporting, and analytics. Because YottaDB databases can be encrypted, these commodity servers are potentially usable in environments outside secure data centers as long as their operating systems and software are secured.
 
-YottaDB/GT.M replication requires journaling to be enabled and turned on for replicated regions. Unreplicated regions (for example, global variables containing information that is meaningful only on one instance and only as long as the instance is operating - such as process ids, temporary working files, and so on) need not be replicated or journaled.
+YottaDB replication requires journaling to be enabled and turned on for replicated regions. Unreplicated regions (for example, global variables containing information that is meaningful only on one instance and only as long as the instance is operating - such as process ids, temporary working files, and so on) need not be replicated or journaled.
 
-YottaDB/GT.M replication mechanism is designed in such a way that a network failure between instances will not stop an application from being available, which is a limitation of techniques such as high availability clustering (see note). There are mechanisms in place for edge cases like processing "in flight" transactions and common cases like handling backlog of updates after recovery from a network failure. While it is not possible to provide absolute continuity of business in our imperfect universe, an LMS configuration gives you the flexibility to choose application configurations that match your investment to a risk level that best meets the business needs of your organization.
+The YottaDB replication mechanism is designed in such a way that a network failure between instances will not stop an application from being available, which is a limitation of techniques such as high availability clustering (see note). There are mechanisms in place for edge cases like processing "in flight" transactions and common cases like handling backlog of updates after recovery from a network failure. While it is not possible to provide absolute continuity of business in our imperfect universe, an LMS configuration gives you the flexibility to choose application configurations that match your investment to a risk level that best meets the business needs of your organization.
 
 .. note::
-   YottaDB/GT.M database replication is compatible with clustering - each instance can be a "hot-warm" cluster where if one node fails, another node can recover the database and continue operation. Since YottaDB/GT.M LMS application configurations provide better business continuity in the face of a greater range of eventualities than clusters, if you wish to use clusters, consider their use in conjunction with, rather than instead of, YottaDB/GT.M LMS configurations.
+   YottaDB database replication is compatible with clustering - each instance can be a "hot-warm" cluster where if one node fails, another node can recover the database and continue operation. Since YottaDB LMS application configurations provide better business continuity in the face of a greater range of eventualities than clusters, if you wish to use clusters, consider their use in conjunction with, rather than instead of, YottaDB LMS configurations.
 
 ++++++++++++++++++++++++++++
 Database Transaction Number
@@ -109,7 +109,7 @@ Note that database transaction numbers are updated in memory and only periodical
 Journal Sequence Number
 +++++++++++++++++++++++++++++++
 
-While the database transaction number is specific to a database file, replication imposes a serialization of transactions across all replicated regions. As each transaction is placed in the Journal Pool it is assigned the next journal sequence number. When a database file in a replicated instance is updated, the Region Seqno field in the file header records the journal sequence number for that transaction. The journal sequence number for an instance is the maximum Region Seqno of any database file in that instance. While it uses them in processing, YottaDB/GT.M stores journal sequence numbers only in journal files. In database file headers, Zqgblmod Seqno and Zqgblmod Trans are journal sequence numbers.
+While the database transaction number is specific to a database file, replication imposes a serialization of transactions across all replicated regions. As each transaction is placed in the Journal Pool it is assigned the next journal sequence number. When a database file in a replicated instance is updated, the Region Seqno field in the file header records the journal sequence number for that transaction. The journal sequence number for an instance is the maximum Region Seqno of any database file in that instance. While it uses them in processing, YottaDB stores journal sequence numbers only in journal files. In database file headers, Zqgblmod Seqno and Zqgblmod Trans are journal sequence numbers.
 
 Except for transactions in Unreplicated Transaction Logs, the journal sequence number of a transaction uniquely identifies that transaction on the originating primary instance and on all replicating secondary instances. When replicated via SI replication, the journal sequence number becomes a stream sequence number (see below) and propagated downstream, thus maintaining the unique identity of each transaction.
 
@@ -258,14 +258,14 @@ Whereas in the last example Malvern was not ahead when starting SI replication f
 
 .. [b] In scripting for automating operations, there is no need to explicitly test whether BrynMawr is behind Malvern - if it is behind, the Source Server will fail to connect and report an error, which automated shell scripting can detect and effect a rollback on Malvern followed by a reconnection attempt by BrynMawr. On the other hand, there is no harm in Malvern routinely performing a rollback before having BrynMawr connect - if it is not ahead, the rollback will be a no-op. This characteristic of replication is unchanged from releases prior to V5.5-000.
 
-.. [c] YottaDB/GT.M's responsibility for them ends once it places them in the Unreplicated Transaction Log.
+.. [c] YottaDB's responsibility for them ends once it places them in the Unreplicated Transaction Log.
 
-.. [d] Ultimately, business logic must determine whether the rolled off transactions can simply be reapplied or whether other reprocessing is required. YottaDB/GT.M's $ZQGBLMOD() function can assist application code in determining whether conflicting updates may have occurred.
+.. [d] Ultimately, business logic must determine whether the rolled off transactions can simply be reapplied or whether other reprocessing is required. YottaDB's $ZQGBLMOD() function can assist application code in determining whether conflicting updates may have occurred.
 
 
 **Rollback not Desired or Required by Application Design**
 
-In the example above, for Malvern to start accepting SI replication from BrynMawr with consistency requires it to rollback its database because it is ahead of BrynMawr. There may be applications where the design of the application is such that this rollback neither required nor desired. YottaDB/GT.M provides a way for SI replication to start in this situation without rolling transactions off into an Unreplicated Transaction File.
+In the example above, for Malvern to start accepting SI replication from BrynMawr with consistency requires it to rollback its database because it is ahead of BrynMawr. There may be applications where the design of the application is such that this rollback neither required nor desired. YottaDB provides a way for SI replication to start in this situation without rolling transactions off into an Unreplicated Transaction File.
 
 +----------------------------------------+-----------------------------------------+-------------------------------------------+-------------------------------------------------------------------------------------------+
 | Ardmore                                | Bryn Mawr                               | Malvern                                   | Comments                                                                                  |
@@ -356,7 +356,7 @@ Consider the following example where Ardmore rolls back its database in state sp
 Limitations- SI Replication
 ++++++++++++++++++++++++++++++++++++++++++++
 
-starting V5.5-000, YottaDB/GT.M does not support replication between platforms with YottaDB/GT.M releases prior to V5.1-000. To upgrade to YottaDB/GT.M V5.5-000, first upgrade to YottaDB/GT.M V5.1-000 or later as an intermediate step.
+starting V5.5-000, YottaDB does not support replication between platforms with YottaDB releases prior to V5.1-000. To upgrade to YottaDB V5.5-000, first upgrade to YottaDB V5.1-000 or later as an intermediate step.
 
 Although a receiver of SI replication can source a BC replication stream for downstream propagation, it cannot source an SI replication stream. So, in the example above, while Malvern can receive SI replication from Ardmore or BrynMawr, and it can source a BC replication stream to Newtown, which can in turn source a BC replication stream to Oxford. Thus, none of Malvern, Newtown or Oxford can source an SI replication stream.
 
@@ -372,7 +372,7 @@ The following diagram illustrates a BC replication configuration deployed as B�
 
 .. image:: repl_anim.gif
 
-When a process commits a transaction on White, YottaDB/GT.M provides Durability by writing and "hardening" an update record to the journal file and then the database file. The same process also writes the update records to an area of shared memory called a Journal Pool as part of committing the transaction, but does not wait for Rose and Yellow to commit the transaction (this means that a failure of the network between instances does not stop application operation on White). Two Source Server processes, one for Rose and one for Yellow, read journal update records from the Journal Pool and stream updates over TCP connections to Receiver Server processes on the replicating instances they serve.
+When a process commits a transaction on White, YottaDB provides Durability by writing and "hardening" an update record to the journal file and then the database file. The same process also writes the update records to an area of shared memory called a Journal Pool as part of committing the transaction, but does not wait for Rose and Yellow to commit the transaction (this means that a failure of the network between instances does not stop application operation on White). Two Source Server processes, one for Rose and one for Yellow, read journal update records from the Journal Pool and stream updates over TCP connections to Receiver Server processes on the replicating instances they serve.
 
 Under normal conditions, White Source Servers stream update records from the Journal Pool to the Rose and Yellow Receiver Servers. The Journal Pool is a shared memory segment that does not expand after its initial creation. If updates for the database state to which the replicating instance needs to catch up are no longer in the Journal Pool, the Source Server finds the updates in journal files, until the replicating instance catches up to the point where the remaining required updates can again come from the Journal Pool. The diagram represents this with the curved lines from the journal file to the Source Server processes.
 
@@ -385,7 +385,7 @@ In active mode, a Source Server connects to the Receiver Server on its replicati
 
 In passive mode, a Source Server is in a stand-by state. In the diagram, the Rose and Yellow Source Servers are in passive mode. When a passive Source Server receives a command to switch to active mode, it attempts to establish a connection with the specified Receiver Server on its replicating instance.
 
-Under typical operating conditions, with no system or network bottlenecks, YottaDB/GT.M moves a transaction off the originating instance and into the care of the network moving towards its replicating instance in sub-millisecond time frames. Network transit times then determine how long the transaction message takes to reach the replicating instance. Because it uses a change- or delta-based protocol, YottaDB/GT.M Replication uses network bandwidth efficiently. Furthermore, the Source Server can compress the byte stream which the Receiver Server then decompresses; alternatively network routers can perform the compression and decompression. You can use standard techniques at the stack or router for encrypting TCP connections to secure replication.
+Under typical operating conditions, with no system or network bottlenecks, YottaDB moves a transaction off the originating instance and into the care of the network moving towards its replicating instance in sub-millisecond time frames. Network transit times then determine how long the transaction message takes to reach the replicating instance. Because it uses a change- or delta-based protocol, YottaDB Replication uses network bandwidth efficiently. Furthermore, the Source Server can compress the byte stream which the Receiver Server then decompresses; alternatively network routers can perform the compression and decompression. You can use standard techniques at the stack or router for encrypting TCP connections to secure replication.
 
 On Rose and Yellow instances, a Receiver Server receives update records sent by the White Source Server and puts them in the Receive Pool, which is in a shared memory segment. Source and Receiver Server processes implement flow control to ensure that the Receive Pool does not overflow. The Update Process picks these update records and writes them to the journal file, the database file, and the Journal Pool. The Update Process on a replicating instance performs operations analogous to "Application Logic" on the originating instance.
 
@@ -393,7 +393,7 @@ On Rose and Yellow instances, a Receiver Server receives update records sent by 
 
 Helper processes accelerate the rate at which an Update Process can apply an incoming replication stream to the database on a replicating instance. They increase replication throughput, decrease backlog, and improve manageability.
 
-The YottaDB/GT.M database engine performs best when multiple processes concurrently access the database, cooperating with one another to manage it. Therefore, it is possible for the tens, hundreds or thousands of application processes executing on an originating instance to outperform a replicating instance with only a single Update Process. Helper processes enable the update process to apply database updates faster and thereby keep up.
+The YottaDB database engine performs best when multiple processes concurrently access the database, cooperating with one another to manage it. Therefore, it is possible for the tens, hundreds or thousands of application processes executing on an originating instance to outperform a replicating instance with only a single Update Process. Helper processes enable the update process to apply database updates faster and thereby keep up.
 
 There are two types of helper processes:
 
@@ -407,9 +407,9 @@ A certain number of each type of helper process maximizes throughput. As a pract
 
 **Filters**
 
-A Filter is a conversion program that transforms a replication stream to a desired schema. It operates as a traditional UNIX filter, reading from STDIN and writing to STDOUT. Both input and output use the YottaDB/GT.M journal extract format. A filter can operate on an originating instance or a replicating instance. When the originating instance is an older application version, a filter can change the update records from the old schema to the new schema. When the originating instance is the newer application version, a filter can change the update records from the new schema to the old schema. Once you have logic for converting records in the old schema to the new schema, the per record code serves as the basis for the filter by replacing the scanning logic with logic to read the extract format and extract the update and completing the filter by reassembling the revised record(s) into the YottaDB/GT.M extract format.
+A Filter is a conversion program that transforms a replication stream to a desired schema. It operates as a traditional UNIX filter, reading from STDIN and writing to STDOUT. Both input and output use the YottaDB journal extract format. A filter can operate on an originating instance or a replicating instance. When the originating instance is an older application version, a filter can change the update records from the old schema to the new schema. When the originating instance is the newer application version, a filter can change the update records from the new schema to the old schema. Once you have logic for converting records in the old schema to the new schema, the per record code serves as the basis for the filter by replacing the scanning logic with logic to read the extract format and extract the update and completing the filter by reassembling the revised record(s) into the YottaDB extract format.
 
-For complete redundancy during rolling upgrades, you must also have a filter that changes transactions from the new schema to the old schema. The principal restriction in creating schema change filters is that the filter must not change the number of transactions in the replication stream, since YottaDB/GT.M uses the journal sequence numbers for checking and restoring the logical equivalence of instances.
+For complete redundancy during rolling upgrades, you must also have a filter that changes transactions from the new schema to the old schema. The principal restriction in creating schema change filters is that the filter must not change the number of transactions in the replication stream, since YottaDB uses the journal sequence numbers for checking and restoring the logical equivalence of instances.
 
 This means:
 
@@ -452,14 +452,14 @@ This history is crucial for determining the journal sequence numbers through whi
 Implementing Replication and Recovery
 --------------------------------------
 
-A transaction processing application makes a series of database updates. YottaDB/GT.M executes these updates online or from data-driven logic, commonly called "batch." 
+A transaction processing application makes a series of database updates. YottaDB executes these updates online or from data-driven logic, commonly called "batch." 
 
-1. Online Update: An online update arrives at YottaDB/GT.M as a message from a client.
+1. Online Update: An online update arrives at YottaDB as a message from a client.
 2. Driven by internal information, such as balances in end-of day, or external information, such as a list of checks from a clearinghouse.
 
 The processing model in each case is a transaction or a unit of work initiated by client input such as a request to transfer funds from one account to another, or as the next logical unit of work such as posting interest on the next account. This general model holds both for applications where users login directly to a host (perhaps using terminal emulation from a workstation) and those where a client communicates with a host server process. This section lists key considerations for a transaction processing application to:
 
-* reliably perform online and batch updates on YottaDB/GT.M
+* reliably perform online and batch updates on YottaDB
 * implement an LMS configuration in a tiered environment and
 * facilitate recovery in a switchover event
 
@@ -467,9 +467,9 @@ The processing model in each case is a transaction or a unit of work initiated b
 Application Architecture
 ++++++++++++++++++++++++
 
-YottaDB/FIS recommends you plan upfront for database consistency while designing the architecture of an LMS application. Some of the planning parameters for application's architecture may include:
+YottaDB recommends you plan upfront for database consistency while designing the architecture of an LMS application. Some of the planning parameters for application's architecture may include:
 
-* Always package all database updates into transactions that are consistent at the level of the application logic using the TSTART and TCOMMIT commands. For information on commands, refer to the "Commands" chapter in the Programmer's Guide. For any updates not so packaged, ensure that the database is logically consistent at the end of every M statement that updates the database; or that there is application logic to check, and restore application-level consistency when the database recovers after a crash.
+* Always package all database updates into transactions that are consistent at the level of the application logic using the TSTART and TCOMMIT commands. For information on commands, refer to the `"Commands" chapter in the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/commands.html>`_. For any updates not so packaged, ensure that the database is logically consistent at the end of every M statement that updates the database; or that there is application logic to check, and restore application-level consistency when the database recovers after a crash.
 
 * Ensure that internally driven batch operations store enough information in the database to enable an interrupted batch operation to resume from the last committed transaction. In case an originating instance fails in the middle of a batch process, a new originating instance (previously a replicating instance) typically must resume and complete the batch process.
 
@@ -477,13 +477,13 @@ YottaDB/FIS recommends you plan upfront for database consistency while designing
 
 * Ensure that externally driven batch processing also has the ability to resume. The external file driving the batch operation must be available on the replicating instance before starting the batch operation on the originating instance. This is required to handle originating instance failure during the batch process.
 
-* YottaDB/GT.M produces an error for updates outside the set of database files defined by the instance file. External references are not prohibited as such. In other words, there can be global directory and instance configurations where an external reference update falls within the instance and works correctly. Read references outside an instance are permitted because they currently do not engage replication.
+* YottaDB produces an error for updates outside the set of database files defined by the instance file. External references are not prohibited as such. In other words, there can be global directory and instance configurations where an external reference update falls within the instance and works correctly. Read references outside an instance are permitted because they currently do not engage replication.
 
 .. image:: applarch.png
 
 This diagram illustrates an application architecture that can reliably perform batch and online updates in a tiered environment. It addresses the online updates via the Message Transport (which has to be able to reroute communications to the current originating instance after a switchover) and batch updates via an external file (which has to be made available to the current originating instance after a switchover).
 
-An application server is a YottaDB/GT.M process that accepts, processes, and responds to messages provided through the Message Transport. They may exist as a bunch of application servers in a "cloud" of size determined by the size of the node and the needs of the application. On the originating instance, an application server process receives messages and processes application transactions. The application logic issues the TSTART command and a series of SET (also KILL and MERGE) commands that [potentially/provisionally] update the database, then a TCOMMIT command to finalize the transaction. The process may directly WRITE a reply, but another process may act as an agent that takes that reply from a database record and sends it to the originator.
+An application server is a YottaDB process that accepts, processes, and responds to messages provided through the Message Transport. They may exist as a bunch of application servers in a "cloud" of size determined by the size of the node and the needs of the application. On the originating instance, an application server process receives messages and processes application transactions. The application logic issues the TSTART command and a series of SET (also KILL and MERGE) commands that [potentially/provisionally] update the database, then a TCOMMIT command to finalize the transaction. The process may directly WRITE a reply, but another process may act as an agent that takes that reply from a database record and sends it to the originator.
 
 **Implement a Message Delivery System**
 
@@ -499,7 +499,7 @@ If the originating instance crashes after committing the transaction and the swi
 
 * The database shows that the transaction corresponding to the MSGID in the message was processed. The server could then reply that this transaction was processed. A more sophisticated approach computes the response to the client within the transaction, and to stores it in the database as part of the transaction commit. Upon receipt of a message identified as a retry of a previously processed message, the server returns the stored response from the database to the client.
 
-* The database shows the transaction as unprocessed. In this case, the new originating instance processes the transaction. At this time, it is unknown whether the former originating instance processed the transaction before going down. If it was not processed, there is no issue. If it was processed but not replicated, YottaDB/GT.M rollback logic rolls it back when the former originating instance comes up as a replicating instance, and it must be reconciled either manually or automatically, from the rollback report (since the result of processing the first time may be different from the result of processing the second time).
+* The database shows the transaction as unprocessed. In this case, the new originating instance processes the transaction. At this time, it is unknown whether the former originating instance processed the transaction before going down. If it was not processed, there is no issue. If it was processed but not replicated, YottaDB rollback logic rolls it back when the former originating instance comes up as a replicating instance, and it must be reconciled either manually or automatically, from the rollback report (since the result of processing the first time may be different from the result of processing the second time).
 
 +++++++++++++++++++++++++++++++
 System Requirements
@@ -509,7 +509,7 @@ This section describes the system requirements that are necessary to implement a
 
 **Root Primary Status Identification**
 
-YottaDB/GT.M does not make any decisions regarding originating or replicating operations of an instance. You must explicitly specify -ROOTPRIMARY to identify an instance as current originating instance during application startup.
+YottaDB does not make any decisions regarding originating or replicating operations of an instance. You must explicitly specify -ROOTPRIMARY to identify an instance as current originating instance during application startup.
 
 To implement a robust, continuously available application, each application instance must come up in the correct state. In particular, there must be exactly one originating instance (-ROOTPRIMARY) at any given time. All database update operations on replicated databases must take place on the originating instance. LMS prohibits independent logical database updates on instances other than the originating instance.
 
@@ -522,7 +522,7 @@ Switchover
 
 Switchover is the process of reconfiguring an LMS application so that a replicating instance takes over as the current originating instance. This might be a planned activity, such as bringing down the originating instance for hardware maintenance, or it may be unplanned such as maintaining application availability when the originating instance or the network to the originating instance goes down.
 
-Implementing and managing switchover is outside the scope of YottaDB/GT.M. YottaDB/FIS recommends you to adhere to the following rules while designing switchover:
+Implementing and managing switchover is outside the scope of YottaDB. YottaDB recommends you to adhere to the following rules while designing switchover:
 
 1. Always ensure that there is only one originating instance at any given time where all database updates occur. If there is no originating instance, the LMS application is also not available.
 2. Ensure that messages received from clients during a switchover are either rejected, so the clients timeout and retry, or are buffered and sent to the new originating instance. 
@@ -530,19 +530,19 @@ Implementing and managing switchover is outside the scope of YottaDB/GT.M. Yotta
 4. Failing to follow these rules may result in the loss of database consistency between an originating instance and its replicating instances.
 
 .. note::
-   A switchover is a wholesome practice for maximizing business continuity. YottaDB/FIS strongly recommends setting up a switchover mechanism to keep a YottaDB/GT.M application up in the face of disruptions that arise due to errors in the underlying platform. In environments where a switchover is not a feasible due to operational constraints, consider setting up an Instance Freeze mechanism for your application. For more information, refer to “Instance Freeze”.
+   A switchover is a wholesome practice for maximizing business continuity. YottaDB strongly recommends setting up a switchover mechanism to keep a YottaDB application up in the face of disruptions that arise due to errors in the underlying platform. In environments where a switchover is not a feasible due to operational constraints, consider setting up an Instance Freeze mechanism for your application. For more information, refer to “Instance Freeze”.
 
 +++++++++++++++++++++++++
 Instance Freeze
 +++++++++++++++++++++++++
 
-In the event of run-time conditions such as no disk space, I/O problems, or disk structure damage, some operational policies favor deferring maintenance to a convenient time as long as it does not jeopardize the functioning of the YottaDB/GT.M application. For example, if the journal file system runs out of disk space, YottaDB/GT.M continues operations with journaling turned off and moves to the replication WAS_ON state until journaling is restored. If there is a problem with one database file or journal file, processes that update other database regions continue normal operation.
+In the event of run-time conditions such as no disk space, I/O problems, or disk structure damage, some operational policies favor deferring maintenance to a convenient time as long as it does not jeopardize the functioning of the YottaDB application. For example, if the journal file system runs out of disk space, YottaDB continues operations with journaling turned off and moves to the replication WAS_ON state until journaling is restored. If there is a problem with one database file or journal file, processes that update other database regions continue normal operation.
 
-Some operational policies prefer stopping the YottaDB/GT.M application in such events to promptly perform maintenance. For such environments, YottaDB/GT.M has a mechanism called "Instance Freeze".
+Some operational policies prefer stopping the YottaDB application in such events to promptly perform maintenance. For such environments, YottaDB has a mechanism called "Instance Freeze".
 
 The Instance Freeze mechanism provides an option to stop all updates on the region(s) of an instance as soon as a process encounters an error while writing to a journal or database file. This mechanism safeguards application data from a possible system crash after such an error.
 
-The environment variable gtm_custom_errors specifies the complete path to the file that contains a list of errors that should automatically stop all updates on the region(s) of an instance. The error list comprises of error mnemonics (one per line and in capital letters) from the Message and Recovery Guide. The YottaDB/GT.M distribution kits include a custom_errors_sample.txt file which can be used as a target for the gtm_custom_errors environment variable.
+The environment variable gtm_custom_errors specifies the complete path to the file that contains a list of errors that should automatically stop all updates on the region(s) of an instance. The error list comprises of error mnemonics (one per line and in capital letters) from the Message and Recovery Guide. The YottaDB distribution kits include a custom_errors_sample.txt file which can be used as a target for the gtm_custom_errors environment variable.
 
 MUPIP REPLIC -SOURCE -JNLPOOL -SHOW displays whether the custom errors file is loaded.
 
@@ -555,7 +555,7 @@ MUPIP SET -[NO]INST[_FREEZE_ON_ERROR] [-REGION|-FILE] enables custom errors in r
 
 A process that is not in a replicated environment ignores $gtm_custom_errors. The errors in the custom errors file must have a context in one of the replicated regions and the process recognizing the error must have the replication Journal Pool open. For example, an error like UNDEF cannot cause an Instance Freeze because it is not related to the instance. It also means that, for example, standalone MUPIP operations can neither cause nor honor an Instance Freeze because they do not have access to the replication Journal Pool. A process with access to the replication Journal Pool must honor an Instance Freeze even if does not have a custom error file and therefore cannot initiate an Instance Freeze.
 
-Depending on the error, removing an Instance Freeze is operator driven or automatic. YottaDB/GT.M automatically removes Instance Freezes that are placed because of no disk space; for all other errors, Instance Freeze must be cleared manually by operator intervention. For example, YottaDB/GT.M automatically places an Instance Freeze when it detects a DSKNOSPCAVAIL message in the operator log. It automatically clears the Instance Freeze when an operator intervention clears the no disk space condition. During an Instance Freeze, YottaDB/GT.M modifies the NOSPACEEXT message from error (-E-) to warning (-W-) to indicate it is performing the extension even though the available space is less than the specified extension amount. The following errors are listed in the custom_errors_sample.txt file. Note that YottaDB/GT.M automatically clears the Instance Freeze set with DSKNOSPCAVAIL when disk space becomes available. All other errors require operator intervention.
+Depending on the error, removing an Instance Freeze is operator driven or automatic. YottaDB automatically removes Instance Freezes that are placed because of no disk space; for all other errors, Instance Freeze must be cleared manually by operator intervention. For example, YottaDB automatically places an Instance Freeze when it detects a DSKNOSPCAVAIL message in the operator log. It automatically clears the Instance Freeze when an operator intervention clears the no disk space condition. During an Instance Freeze, YottaDB modifies the NOSPACEEXT message from error (-E-) to warning (-W-) to indicate it is performing the extension even though the available space is less than the specified extension amount. The following errors are listed in the custom_errors_sample.txt file. Note that YottaDB automatically clears the Instance Freeze set with DSKNOSPCAVAIL when disk space becomes available. All other errors require operator intervention.
 
 * Errors associated with database files caused by either I/O problems or suspected structural damage: DBBMLCORRUPT, DBDANGER, DBFSYNCERR, DSKNOSPCAVAIL, GBLOFLOW, GVDATAFAIL, GVDATAGETFAIL, GVGETFAIL, GVINCRFAIL, GVKILLFAIL, GVORDERFAIL, GVPUTFAIL, GVQUERYFAIL, GVQUERYGETFAIL, GVZTRIGFAIL, OUTOFSPACE, TRIGDEFBAD.
 
@@ -564,16 +564,16 @@ Depending on the error, removing an Instance Freeze is operator driven or automa
 During an Instance Freeze, attempts to update the database and journal files hang but operations like journal file extract which do not require updating the database file(s) continue normally. When an Instance Freeze is cleared, processes automatically continue with no auxiliary operational or programmatic intervention. The Instance Freeze mechanism records both the freeze and the unfreeze in the operator log.
 
 .. note::
-   Because there are a large number of errors that YottaDB/GT.M can recognize and because YottaDB/GT.M has several operational states, the YottaDB/GT.M team has tested the errors in the custom_errors_sample.txt which are consistent with what we expect to be common usage. If you experience problems trying to add other errors or have concerns about plans to add other errors, please consult your YottaDB/GT.M support channel.
+   Because there are a large number of errors that YottaDB can recognize and because YottaDB has several operational states, the YottaDB team has tested the errors in the custom_errors_sample.txt which are consistent with what we expect to be common usage. If you experience problems trying to add other errors or have concerns about plans to add other errors, please consult your YottaDB support channel.
 
 +++++++++++++++++++++++
 TLS/SSL Replication
 +++++++++++++++++++++++
 
-YottaDB/GT.M includes a plugin reference implementation that provides the functionality to secure the replication connection between instances using Transport Layer Security (TLS; previously known as SSL). Just as database encryption helps protect against unauthorized access to a database by an unauthorized process that is able to access disk files (data at rest), the plugin reference implementation secures the replication connection between instances and helps prevent unauthorized access to data in transit. YottaDB/FIS has tested YottaDB/GT.M's replication operations of the TLS plugin reference implementation using OpenSSL (http://www.openssl.org). A future YottaDB/GT.M release may include support for popular and widely available TLS implementations / cryptography packages other than OpenSSL. Note that a plug-in architecture allows you to choose a TLS implementation and a cryptography package. YottaDB/FIS neither recommends nor supports any specific TLS implementation or cryptography package and you should ensure that you have confidence in and support for whichever package that you intend to use in production.
+YottaDB includes a plugin reference implementation that provides the functionality to secure the replication connection between instances using Transport Layer Security (TLS; previously known as SSL). Just as database encryption helps protect against unauthorized access to a database by an unauthorized process that is able to access disk files (data at rest), the plugin reference implementation secures the replication connection between instances and helps prevent unauthorized access to data in transit. YottaDB has tested YottaDB's replication operations of the TLS plugin reference implementation using OpenSSL (http://www.openssl.org). A future YottaDB release may include support for popular and widely available TLS implementations / cryptography packages other than OpenSSL. Note that a plug-in architecture allows you to choose a TLS implementation and a cryptography package. YottaDB neither recommends nor supports any specific TLS implementation or cryptography package and you should ensure that you have confidence in and support for whichever package that you intend to use in production.
 
 .. note::
-   Database encryption and TLS/SSL replication are just two of many components of a comprehensive security plan. The use of database encryption and TLS replication should follow from a good security plan. This section discusses encrypted YottaDB/GT.M replicating instances and securing the replication connection between them using TLS/SSL; it does not discuss security plans. You can setup TLS replication between instances without using YottaDB/GT.M Database Encryption. YottaDB/GT.M Database Encryption is not a prerequisite to using TLS replication.
+   Database encryption and TLS/SSL replication are just two of many components of a comprehensive security plan. The use of database encryption and TLS replication should follow from a good security plan. This section discusses encrypted YottaDB replicating instances and securing the replication connection between them using TLS/SSL; it does not discuss security plans. You can setup TLS replication between instances without using YottaDB Database Encryption. YottaDB Database Encryption is not a prerequisite to using TLS replication.
 
 The general procedure of creating a TLS replication setup includes the following tasks:
 
@@ -589,7 +589,7 @@ The general procedure of creating a TLS replication setup includes the following
 
 **Creating a root-level certification authority**
 
-To use TLS, the communicating parties need to authenticate each other. If the authentication succeeds, the parties encrypt the subsequent communication. TLS authentication uses certificates signed by Certificate Authorities (CAs). Certificate Authorities' certificates themselves are signed (and trusted) by other CAs eventually leading to a Root CA, which self-signs its own certificate. Although the topic of certificates, and the use of software such as OpenSSL is well beyond the scope of YottaDB/GT.M documentation, the steps below illustrate the quick-start creation of a test environment using Source and Receiver certifications with a self-signed Root CA certificate.
+To use TLS, the communicating parties need to authenticate each other. If the authentication succeeds, the parties encrypt the subsequent communication. TLS authentication uses certificates signed by Certificate Authorities (CAs). Certificate Authorities' certificates themselves are signed (and trusted) by other CAs eventually leading to a Root CA, which self-signs its own certificate. Although the topic of certificates, and the use of software such as OpenSSL is well beyond the scope of YottaDB documentation, the steps below illustrate the quick-start creation of a test environment using Source and Receiver certifications with a self-signed Root CA certificate.
 
 Creating a root certificate authority involves three steps:
 
@@ -619,7 +619,7 @@ Creating a root certificate authority involves three steps:
 
 **Creating Leaf-level certificates**
 
-The root certificate is used to sign regular, leaf-level certificates. Below are steps showing the creation of a certificate to be used to authenticate a YottaDB/GT.M Source Server with a YottaDB/GT.M Receiver Server (and vice-versa).
+The root certificate is used to sign regular, leaf-level certificates. Below are steps showing the creation of a certificate to be used to authenticate a YottaDB Source Server with a YottaDB Receiver Server (and vice-versa).
 
 1. Generate a private key. This is identical to step 1 of root certificate generation.
 
@@ -666,7 +666,7 @@ The output of this command looks like the following:
       State or Province Name (full name) [Philadelphia]:Illinois
       City (e.g., Malvern) [Malvern]:Chicago"
       Organization Name (eg, company) [FIS]:FIS
-      Organizational Unit Name (eg, section) [GT.M]:GT.M
+      Organizational Unit Name (eg, section) [YottaDB]:YottaDB
       Common Name (e.g. server FQDN or YOUR name) [localhost]:fisglobal.com
       Ename Address (e.g. helen@gt.m) []:root@gt.m
       Please enter the following 'extra' attributes
@@ -686,7 +686,7 @@ The output of this command looks like the following:
        countryName = US
        stateOrProvinceName = Illinois
        organizationName = FIS
-       organizationalUnitName = GT.M
+       organizationalUnitName = YottaDB
        commonName = fisglobal.com
        emailAddress = helen@gt.m
        X509v3 extensions:
@@ -728,7 +728,7 @@ After creating a leaf-level certificate that is signed by a self-signed root cer
 
 where tls specifies the TLSID that is used to start the Source/Receiver Server, CAfile specifies the path to the root certification authority, cert specifies the the path to leaf-level certificate and key specifies the path to the private key file.
 
-Set the gtmcrypt_config environment variable to point to the path for the configuration file. The environment variable gtmtls_passwd_<tlsid> must specify an obfuscated version of the password for the client's private key. Use the maskpass utility provided with your YottaDB/GT.M distribution to create an obfuscated password.
+Set the gtmcrypt_config environment variable to point to the path for the configuration file. The environment variable gtmtls_passwd_<tlsid> must specify an obfuscated version of the password for the client's private key. Use the maskpass utility provided with your YottaDB distribution to create an obfuscated password.
 
 Here is a sample configuration file:
 
@@ -788,14 +788,14 @@ Here is a sample configuration file:
                                                    
       /* List of certificate/key pairs specified by identifiers. \*/
       PRODUCTION: {
-                   /* Format of the certificate and private key pair. Currently, the YottaDB/GT.M TLS plug-in only supports PEM format. \*/
+                   /* Format of the certificate and private key pair. Currently, the YottaDB TLS plug-in only supports PEM format. \*/
                    format: "PEM";
                    /* Path to the certificate. \*/
                    cert: "/home/jdoe/current/tls/certs/Malvern.crt";
                    /* Path to the private key. If the private key is protected by a passphrase, an obfuscated version of the password
                    * should be specified in the environment variable which takes the form gtmtls_passwd_<identifier>. For instance,
                    * for the below key, the environment variable should be 'gtmtls_passwd_PRODUCTION'.
-                   * Currently, the YottaDB/GT.M TLS plug-in only supports RSA private keys.
+                   * Currently, the YottaDB TLS plug-in only supports RSA private keys.
                    \*/
                    key: "/home/jdoe/current/tls/certs/Malvern.key";
                  };
@@ -808,13 +808,13 @@ Here is a sample configuration file:
 
    };
 
-If you are using the environment variable gtm_dbkeys to point to the master key file for database encryption, please convert that file to the libconfig configuration file format as pointed to by the $gtmcrypt_config environment variable at your earliest convenience. Effective V6.1-000, the gtm_dbkeys environment variable and the master key file it points to are deprecated in favor of the gtmencrypt_config environment variable. Although V6.1-000 supports the use of $gtm_dbkeys for database encryption, YottaDB/FIS plans to discontinue support for it in the very near future. To convert master key files to libconfig format configuration files, please download CONVDBKEYS.m from http://tinco.pair.com/bhaskar/gtm/doc/articles/downloadables/CONVDBKEYS.m and follow instructions in the comments near the top of the program file.
+If you are using the environment variable gtm_dbkeys to point to the master key file for database encryption, please convert that file to the libconfig configuration file format as pointed to by the $gtmcrypt_config environment variable at your earliest convenience. In the latest version, the gtm_dbkeys environment variable and the master key file it points to are deprecated in favor of the gtmencrypt_config environment variable. Although the latest version supports the use of $gtm_dbkeys for database encryption, YottaDB plans to discontinue support for it in the very near future. To convert master key files to libconfig format configuration files, please download CONVDBKEYS.m from http://tinco.pair.com/bhaskar/gtm/doc/articles/downloadables/CONVDBKEYS.m and follow instructions in the comments near the top of the program file.
 
 +++++++++++++++++++++++++++++
 Network Link Between Systems
 +++++++++++++++++++++++++++++
 
-YottaDB/GT.M replication requires a durable network link between all instances. The database replication servers must be able to use the network link via simple TCP/IP connections. The underlying transport may enhance message delivery, (for example, provide guaranteed delivery, automatic switchover and recovery, and message splitting and re-assembly capabilities); however, these features are transparent to the replication servers, which simply depend on message delivery and message receipt.
+YottaDB replication requires a durable network link between all instances. The database replication servers must be able to use the network link via simple TCP/IP connections. The underlying transport may enhance message delivery, (for example, provide guaranteed delivery, automatic switchover and recovery, and message splitting and re-assembly capabilities); however, these features are transparent to the replication servers, which simply depend on message delivery and message receipt.
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++
 Choosing Betweeen BEFORE_IMAGE and NOBEFORE_IMAGE 
@@ -828,7 +828,7 @@ Between BEFORE_IMAGE journaling and NOBEFORE_IMAGE journaling, there is no diffe
 
 **Recovery**
 
-When an instance goes down, its recovery consists of (at least) two steps: recovery of the instance itself: hardware, OS, file systems, and so on - say tsys; tsys is almost completely independent of the type of YottaDB/GT.M journaling.
+When an instance goes down, its recovery consists of (at least) two steps: recovery of the instance itself: hardware, OS, file systems, and so on - say tsys; tsys is almost completely independent of the type of YottaDB journaling.
 
 .. note::
    The reason for the "almost completely" qualification is that the time to recover some older file systems can depend on the amount of space used.
@@ -856,33 +856,33 @@ Because tbck is less than tfwd, tsys+tbck is less than tsys+tfwd. In very round 
 
 +---------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Cost                | The cost of using an LMS configuration is at least one extra instance plus network bandwidth for replication. There are trade-offs: with two instances, it may be appropriate to use |
-|                     | less expensive servers and storage without materially compromising enterprise application availability. In fact, since YottaDB/GT.M allows replication to as many as sixteen         |
+|                     | less expensive servers and storage without materially compromising enterprise application availability. In fact, since YottaDB allows replication to as many as sixteen              |
 |                     | instances, it is not unreasonable to use commodity hardware [1]_ and still save total cost.                                                                                          |
 +---------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Storage             | Each extra instance of course requires its own storage for databases and journal files. Nobefore journal files are smaller than the journal files produced by before image journaling|
 |                     | , with the savings potentially offset if a decision is made to retain an online copy of the last backup (whether this nets out to a saving or a cost depends on the behavior of the  |
 |                     | application and on operational requirements for journal file retention).                                                                                                             |
 +---------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| Performance         | IO bandwidth requirements of nobefore journaling are less than those of before image journaling, because YottaDB/GT.M does not write before image journal records or flush the       |
+| Performance         | IO bandwidth requirements of nobefore journaling are less than those of before image journaling, because YottaDB does not write before image journal records or flush the            |
 |                     | database.                                                                                                                                                                            |
 |                     |                                                                                                                                                                                      |
-|                     | \* With before image journaling, the first time a database block is updated after an epoch, YottaDB/GT.M writes a before image journal record. This means that immediately after an  |
+|                     | \* With before image journaling, the first time a database block is updated after an epoch, YottaDB writes a before image journal record. This means that immediately after an       |
 |                     | epoch, given a steady rate of updates, there is an increase in before image records (because every update changes at least one database block and generates at least one before image|
 |                     | journal record). As the epoch proceeds, the frequency of writing before image records falls back to the steady level [2]_ - until the next epoch. Before image journal records are   |
 |                     | larger than journal records that describe updates.                                                                                                                                   |
 |                     |                                                                                                                                                                                      |
 |                     | \* At epochs, both before image journaling and nobefore journaling flush journal blocks and perform an fsync() on journal files [3]_ . When using before image journaling, YottaDB/  |
-|                     | GT.M ensures all dirty database blocks have been written and does an fsync() [4]_ , but does not take these steps.                                                                   |
+|                     | ensures all dirty database blocks have been written and does an fsync() [4]_ , but does not take these steps.                                                                        |
 |                     |                                                                                                                                                                                      |
 |                     | Because IO subsystems are often sized to accommodate peak IO rates, choosing NOBEFORE_IMAGE journaling may allow more economical hardware without compromising application throughput|
 |                     | or responsiveness.                                                                                                                                                                   |
 +---------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
-.. [1] YottaDB/GT.M absolutely requires the underlying computer system to perform correctly at all times. So, the use of error correcting RAM, and mirrored disks is advised for production instances. But, it may well be cost effective to use servers without redundant power supplies or hot-swappable components, to use RAID rather than SAN for storage, and so on.
+.. [1] YottaDB absolutely requires the underlying computer system to perform correctly at all times. So, the use of error correcting RAM, and mirrored disks is advised for production instances. But, it may well be cost effective to use servers without redundant power supplies or hot-swappable components, to use RAID rather than SAN for storage, and so on.
 
 .. [2] How much the steady level is lower depends on the application and workload. 
 
-.. [3] Even flushing as many as 20,000 journal buffers, which is more than most applications use, is only 10MB of data. Furthermore, when YottaDB/GT.M's SYNC_IO journal flag is specified, the fsync() operation requires no physical IO.
+.. [3] Even flushing as many as 20,000 journal buffers, which is more than most applications use, is only 10MB of data. Furthermore, when YottaDB's SYNC_IO journal flag is specified, the fsync() operation requires no physical IO.
 
 .. [4] The volume of dirty database blocks to be flushed can be large. For example, 80% of 40,000 4KB database blocks being dirty would require 128MB of data to be written and flushed.
 
@@ -898,14 +898,14 @@ A system crash can, and often will, damage a database file, leaving it structura
 .. note::
    Misuse of UNIX commands, such as kill-9 and ipcrm, by processes running as root can cause database damage.
 
-Considering the high level at which replication operates, the logical dual-site nature of YottaDB/GT.M database replication makes it virtually impossible for related database damage to occur on both originating and replicating instances.
+Considering the high level at which replication operates, the logical dual-site nature of YottaDB database replication makes it virtually impossible for related database damage to occur on both originating and replicating instances.
 
 To maintain application consistency, do not use DSE to repair or change the logical content of a replicated region on an originating instance.
 
 .. note::
-   Before attempting manual database repair, YottaDB/FIS strongly recommends backing up the entire database (all regions).
+   Before attempting manual database repair, YottaDB strongly recommends backing up the entire database (all regions).
 
-After repairing the database, bring up the replicating instance and backup the database with new journal files. MUPIP backup online allows replicating to continue during the backup. As stated in the Journaling chapter, the journal files prior to the backup are not useful for normal recovery.
+After repairing the database, bring up the replicating instance and backup the database with new journal files. MUPIP backup online allows replicating to continue during the backup. As stated in the `Journaling chapter <https://docs.yottadb.com/AdminOpsGuide/ydbjournal.html>`_, the journal files prior to the backup are not useful for normal recovery.
 
 ------------------------
 Procedures
@@ -915,7 +915,7 @@ Procedures
 Download Replication Examples
 ++++++++++++++++++++++++++++++
 
-repl_procedures.tar.gz contains a set of replication example scripts. Each script contains a combination of YottaDB/GT.M commands that accomplish a specific task. All examples in the Procedures section use these replication scripts but each example uses different script sequence and script arguments. Always run all replication examples in a test system from a new directory as they create sub-directories and database files in the current directory. No claim of copyright is made with regard to these examples. These example scripts are for explanatory purposes and are not intended for production use. YOU MUST UNDERSTAND, AND APPROPRIATELY ADJUST THE COMMANDS GIVEN IN THESE SCRIPTS BEFORE USING IN A PRODUCTION ENVIRONMENT. Typically, you would set replication between instances on different systems/data centers and create your own set of scripts with appropriate debugging and error handling to manage replication between them.
+repl_procedures.tar.gz contains a set of replication example scripts. Each script contains a combination of YottaDB commands that accomplish a specific task. All examples in the Procedures section use these replication scripts but each example uses different script sequence and script arguments. Always run all replication examples in a test system from a new directory as they create sub-directories and database files in the current directory. No claim of copyright is made with regard to these examples. These example scripts are for explanatory purposes and are not intended for production use. YOU MUST UNDERSTAND, AND APPROPRIATELY ADJUST THE COMMANDS GIVEN IN THESE SCRIPTS BEFORE USING IN A PRODUCTION ENVIRONMENT. Typically, you would set replication between instances on different systems/data centers and create your own set of scripts with appropriate debugging and error handling to manage replication between them.
 
 Go to http://tinco.pair.com/bhaskar/gtm/doc/books/ao/UNIX_manual/downloadables/repl_procedures.tar.gz to download repl_procedures.tar.gz on a test system. 
 
@@ -923,10 +923,10 @@ repl_procedures.tar.gz includes the following scripts:
 
 **gtmenv**
 
-Sets a default environment for YottaDB/GT.M replication. It takes two arguments: 
+Sets a default environment for YottaDB replication. It takes two arguments: 
 
 * The name of the instance/database directory
-* The YottaDB/GT.M version
+* The YottaDB version
 
 Example: source ./env A V6.3-000A_x86_64
 
@@ -943,7 +943,7 @@ Here is the code:
    # Here is an example of setting the gtmroutines environment variable:
    # if [ -e  "$gtm_dist/libgtmutil.so" ] ; then export gtmroutines="$PWD/$gtm_repl_instname $gtm_dist/libgtmutil.so"
    else export gtmroutines="$PWD/$gtm_repl_instname* $gtm_dist" ; fi
-   # For more examples on setting GT.M related environment variables to reasonable values on POSIX shells, refer to the gtmprofile script.
+   # For more examples on setting YottaDB related environment variables to reasonable values on POSIX shells, refer to the gtmprofile script.
    #export LD_LIBRARY_PATH=/usr/local/lib
    #export gtmcrypt_config=$PWD/$gtm_repl_instname/config_file
    #echo -n "Enter Password for gtmtls_passwd_${gtm_repl_instname}: ";export gtmtls_passwd_${gtm_repl_instname}="`$gtm_dist/plugin/gtmcrypt/maskpass|tail -n 1|cut -f 3 -d " "`"
@@ -952,7 +952,7 @@ Modify the env script according to your test environment.
 
 **db_create**
 
-Creates a new sub-directory in the current directory, a global directory file with settings from gdemsr, and the GT.M database file.
+Creates a new sub-directory in the current directory, a global directory file with settings from gdemsr, and the YottaDB database file.
 
 Here is the code:
 
@@ -1426,7 +1426,7 @@ In an A→B replication configuration, follow these steps:
 
 On A:
 
-* Shut down the Source Server with an appropriate timeout. The timeout should be long enough to replicate pending transactions to the replicating instance but not too long to cause clients to conclude that the application is not available. The YottaDB/GT.M default Source Server wait period is up to 120 seconds. In most cases, the default wait period is sufficient.
+* Shut down the Source Server with an appropriate timeout. The timeout should be long enough to replicate pending transactions to the replicating instance but not too long to cause clients to conclude that the application is not available. The YottaDB default Source Server wait period is up to 120 seconds. In most cases, the default wait period is sufficient.
 
 On B:
 
@@ -1592,7 +1592,7 @@ The following demonstrates a switchover scenario from B←A→P to A←B→P whe
 
 
 .. note::
-    As the rollback for P to accept replication from B is more complex, may involve more data than the regular LMS rollback, and may involve reading journal records sequentially; it may take longer. In scripting for automating operations, there is no need to explicitly test whether B is behind P - if it is behind, the Source Server will fail to connect and report an error, which automated shell scripting can detect and effect a rollback on P followed by a reconnection attempt by B. On the other hand, there is no harm in P routinely performing a rollback before having B connect - if it is not ahead, the rollback will be a no-op. This characteristic of replication is unchanged from releases prior to V5.5-000. YottaDB/GT.M's responsibility for the rolled off transactions ends once it places them in the Unreplicated Transaction Log. Ultimately, business logic must determine whether the rolled off transactions can simply be reapplied or whether other reprocessing is required. YottaDB/GT.M's $ZQGBLMOD() function can assist application code in determining whether conflicting updates may have occurred.
+    As the rollback for P to accept replication from B is more complex, may involve more data than the regular LMS rollback, and may involve reading journal records sequentially; it may take longer. In scripting for automating operations, there is no need to explicitly test whether B is behind P - if it is behind, the Source Server will fail to connect and report an error, which automated shell scripting can detect and effect a rollback on P followed by a reconnection attempt by B. On the other hand, there is no harm in P routinely performing a rollback before having B connect - if it is not ahead, the rollback will be a no-op. This characteristic of replication is unchanged from releases prior to V5.5-000. YottaDB's responsibility for the rolled off transactions ends once it places them in the Unreplicated Transaction Log. Ultimately, business logic must determine whether the rolled off transactions can simply be reapplied or whether other reprocessing is required. YottaDB's $ZQGBLMOD() function can assist application code in determining whether conflicting updates may have occurred.
 
 The following example creates this scenario.
 
@@ -2015,7 +2015,7 @@ Rolling Software Upgrade
 
 A rolling software upgrade is the procedure of upgrading an instance in a way that there is minimal impact on the application uptime. An upgrade may consist of changing the underlying database schema, region(s), global directory, database version, application version, triggers, and so on. There are two approaches for a rolling upgrade. The first approach is to upgrade the replicating instance and then upgrade the originating instance. The second approach is to upgrade the originating instance first while its replicating (standby) instance acts as an originating instance.
 
-The following two procedures demonstrate these rolling software upgrade approaches for upgrading an A→B replication configuration running an application using YottaDB/GT.M V6.1-000_x86_64 to YottaDB/GT.M V6.2-001_x86_64 with minimal (a few seconds) impact on the application downtime. 
+The following two procedures demonstrate these rolling software upgrade approaches for upgrading an A→B replication configuration running an application using YottaDB V6.1-000_x86_64 to YottaDB V6.2-001_x86_64 with minimal (a few seconds) impact on the application downtime. 
 
 **Upgrade the replicating instance first  (A→B)**
 
@@ -2062,7 +2062,7 @@ On A:
 3. Perform a MUPIP RUNDOWN and make a backup copy of the database.
 4. Perform a switchover to make B the originating instance. This ensure application availability during the upgrade of A. 
 5. Open DSE, run DUMP -FILEHEADER for each region (FIND -REGION=<Region_Name>) and note down the largest Region Seqno. 
-6. Upgrade the instance. An upgrade may include include adding triggers, adding/removing regions, changing GDE mapping, upgrading the YottaDB/GT.M version, and so on.
+6. Upgrade the instance. An upgrade may include include adding triggers, adding/removing regions, changing GDE mapping, upgrading the YottaDB version, and so on.
 7. Open DSE again, run DSE DUMP -FILEHEADER for each region (FIND -REGION=<Region_Name>) and note down the largest Region Seqno. If the largest Region Seqno noted in step 5 and largest Region Seqno noted in this step are the same, proceed to step 8. Otherwise, execute DSE CHANGE -FILEHEADER -REG_SEQNO=<Largest_Region_Seqno_from_step_5> for the region having the largest Region Seqno. 
 8. Cut the back links to the prior generation journal files with a command like: 
    
@@ -2150,8 +2150,8 @@ Shutting down an instance
 
 To shutdown an originating instance:
 
-* Shut down all YottaDB/GT.M and mupip processes that might be attached to the Journal Pool.
-* In case the originating instance is also a supplementary instance, shutdown the Receiver Server(s) (there might be more than one Receiver Server in future YottaDB/GT.M versions).
+* Shut down all YottaDB and mupip processes that might be attached to the Journal Pool.
+* In case the originating instance is also a supplementary instance, shutdown the Receiver Server(s) (there might be more than one Receiver Server in future YottaDB versions).
 * Shut down all active and/or passive Source Servers.
 * Execute mupip rundown -region to ensure that the database, Journal Pool, and Receiver Pool shared memory is rundown properly.
 
@@ -2159,14 +2159,14 @@ To shutdown a propagating instance:
 
 * Shut down all replicating instance servers (Receiver Server, Update Process and its Helper processes).
 * Shutdown the originating instance servers (all active and/or passive Source Servers).
-* On its replicating instances, ensure that there are no YottaDB/GT.M or MUPIP processes attached to the Journal Pool as updates are disabled (they are enabled only on the originating instance).
+* On its replicating instances, ensure that there are no YottaDB or MUPIP processes attached to the Journal Pool as updates are disabled (they are enabled only on the originating instance).
 * Execute mupip rundown -region to ensure that the database, Journal Pool, and Receiver Pool shared memory is rundown properly.
 
 ++++++++++++++++++++++++++++++++++++++++++
 Creating a new Replication Instance File
 ++++++++++++++++++++++++++++++++++++++++++
 
-You do not need to create a new replication instance file except when you upgrade from a YottaDB/GT.M version prior to V5.5-000. Unless stated in the release notes of your YottaDB/GT.M version, you instance file does not need to be upgraded. If you are creating a new replication instance file for any administration purpose, remember that doing do so will remove history records which may prevent it from resuming replication with other instances. To create a new replication instance file, follow these steps:
+You do not need to create a new replication instance file except when you upgrade from a very old YottaDB version. Unless stated in the release notes of your YottaDB version, you instance file does not need to be upgraded. If you are creating a new replication instance file for any administration purpose, remember that doing so will remove history records which may prevent it from resuming replication with other instances. To create a new replication instance file, follow these steps:
 
 * Shut down all mumps, MUPIP and DSE processes except Source and Receiver Server processes; then shut down the Receiver Server (and with it, the Update Process) and all Source Server processes. Use MUPIP RUNDOWN to confirm that all database files of the instance are closed and there are no processes accessing them.
 
@@ -2190,7 +2190,7 @@ You do not need to create a new replication instance file except when you upgrad
 * Prepare it to accept a replication stream:
 
   * Start a passive Source Server. If this is an SI replicating instance, use the -updok flag to start the passive Source Server.
-  * Start the Receiver Server using the updateresync. For versions prior to V5.5-000 use the -updateresync qualifier and for YottaDB/GT.M versions V5.4-000 or newer use -updateresync=<repl_inst>.For example, mupip replicate -receiver -start -updateresync=<repl_inst> where repl_inst is the prior replication file if the source is V5.5-000 or newer and no -updateresync if it is an older YottaDB/GT.M release.
+  * Start the Receiver Server using the updateresync. For versions prior to V5.5-000 use the -updateresync qualifier and for YottaDB versions V5.4-000 or newer use -updateresync=<repl_inst>.For example, mupip replicate -receiver -start -updateresync=<repl_inst> where repl_inst is the prior replication file if the source is V5.5-000 or newer and no -updateresync if it is an older YottaDB release.
 
 * Start a Source Server on a root or propagating primary instance to replicate to this instance. Verify that updates on the source instance are successfully replicated to the receiver instance.
 
@@ -2231,7 +2231,7 @@ The following example creates two instances (Alice and Bob) and a basic framewor
    .. parsed-literal::
       $ source ./env Alice V6.2-001_x86_64
 
-This creates a YottaDB/GT.M environment for replication instance name Alice. When prompted, enter a password for gtmtls_passwd_Alice. 
+This creates a YottaDB environment for replication instance name Alice. When prompted, enter a password for gtmtls_passwd_Alice. 
 
 3. Create a certificate directory setup in the current directory and a self-signed root certification authority. 
 
@@ -2260,7 +2260,7 @@ The output of this script is the following:
       State or Province Name (full name) [Bobadelphia]:Bobadelphia
       City (e.g., Malvern) [Malvern]:Malvern
       Organization Name (eg, company) [FIS]:FIS
-      Organizational Unit Name (eg, section) [GT.M]:GT.M
+      Organizational Unit Name (eg, section) [YottaDB]:YottaDB
       Common Name (e.g. server FQDN or YOUR name) [localhost]:fis-gtm.com
       Email Address (e.g. Alice@gt.m) []:root@gt.m
 
@@ -2296,7 +2296,7 @@ The output of this script is like the following:
       State or Province Name (full name) [Bobadelphia]:Illinois
       City (e.g., Malvern) [Malvern]:Chicago
       Organization Name (eg, company) [FIS]:FIS
-      Organizational Unit Name (eg, section) [GT.M]:GT.M
+      Organizational Unit Name (eg, section) [YottaDB]:YottaDB
       Common Name (e.g. server FQDN or YOUR name) [localhost]:fisglobal.com
       Ename Address (e.g. Alice@gt.m) []:Alice@gt.m
       Please enter the following 'extra' attributes
@@ -2316,7 +2316,7 @@ The output of this script is like the following:
        countryName = US
        stateOrProvinceName = Illinois
        organizationName = FIS
-       organizationalUnitName = GT.M
+       organizationalUnitName = YottaDB
        commonName = fisglobal.com
        emailAddress = Alice@gt.m
        X509v3 extensions:
@@ -2357,7 +2357,7 @@ On instance Bob:
    .. parsed-literal::
       $ source ./env Bob V6.2-001_x86_64
 
-This creates a YottaDB/GT.M environment for replication instance name Bob. When prompted, enter a password for gtmtls_passwd_Bob.
+This creates a YottaDB environment for replication instance name Bob. When prompted, enter a password for gtmtls_passwd_Bob.
 
 2. Create the global directory and the database for instance Bob.
 
@@ -2399,7 +2399,7 @@ Schema Change Filters
 
 Filters between the originating and replicating systems perform rolling upgrades that involve database schema changes. The filters manipulate the data under the different schemas when the software revision levels on the systems differ.
 
-YottaDB/GT.M provides the ability to invoke a filter; however, an application developer must write the filters specifically as part of each application release upgrade when schema changes are involved.
+YottaDB provides the ability to invoke a filter; however, an application developer must write the filters specifically as part of each application release upgrade when schema changes are involved.
 
 Filters should reside on the upgraded system and use logical database updates to update the schema before applying those updates to the database. The filters must invoke the replication Source Server (new schema to old) or the database replication Receiver Server (old schema to new), depending on the system's status as either originatig or replicating. For more information on Filters, refer to “Filters”. 
 
@@ -2407,7 +2407,7 @@ Filters should reside on the upgraded system and use logical database updates to
 Recovering from the replication WAS_ON State
 +++++++++++++++++++++++++++++++++++++++++++++
 
-If you notice the replication WAS_ON state, correct the cause that made YottaDB/GT.M turn journaling off and then execute MUPIP SET -REPLICATION=ON.
+If you notice the replication WAS_ON state, correct the cause that made YottaDB turn journaling off and then execute MUPIP SET -REPLICATION=ON.
 
 To make storage space available, first consider moving unwanted non-journaled and temporary data. Then consider moving the journal files that predate the last backup. Moving the currently linked journal files is a very last resort because it disrupts the back links and a rollback or recover will not be able to get back past this discontinuity unless you are able to return them to their original location.
 
@@ -2454,19 +2454,13 @@ Setting up a new replicating instance of an originating instance (A→B, P→Q, 
 
 To set up a new replicating instance of an originating instance for the first time or to replace a replicating instance if database and instance file get deleted, you need to create the replicating instance from a backup of the originating instance, or one of its replicating instances.
 
-If you are running YottaDB/GT.M V5.5-000 or higher:
+If you are running a recent version of YottaDB:
 
 - Take a backup of the database and the replication instance file of the originating instance together at the same time with BACKUP -REPLINSTANCE and transfer them to the location of the replicating instance. If the originator's replicating instance file was newly created, take its backup while the Source Server is running to ensure that the backup contains at least one history record.
 
 - Use MUPIP REPLICATE -EDITINST -NAME=<secondary-instname> to change the replicating instance's name.
 
 - Start the replicating instance without -udpateresync.
-
-If you are running YottaDB/GT.M pre-V5.5-000:
-
-- Create a new replication instance file on the replicating instance.
-
-- Start the replicating instance with this new replication instance file with the -updateresync qualifier (no value specified).
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Replacing the replication instance file of a replicating instance (A→B and P→Q)
@@ -2476,17 +2470,12 @@ In this case, it is possible that the replicating instance's database files are 
 
 To replace the existing replicating instance file with a new replication instance file, follow these steps:
 
-If you are running YottaDB/GT.M V5.5-000 or higher:
+If you are running a recent version of YottaDB:
 
 - Take a backup of just the replication instance file (no database files with BACKUP -REPLINST=</path/to/bkup-orig-repl-inst-file>) and transfer it to the site of the replicating instance.
 - Start the replicating instance with -updateresync=</path/to/bkup-orig-repl-inst-file>. 
 
 In this case, the Receiver Server determines the current instance's journal sequence number by taking a maximum of the Region Sequence Numbers in the database file headers on the replicating instance and uses use the input instance file to locate the history record corresponding to this journal sequence number, and exchanges this history information with the Source Server.
-
-If you are running YottaDB/GT.M pre-V5.5-000:
-
-- Create a new replication instance file on the replicating instance.
-- Start the replicating instance with this new instance file with the -updateresync qualifier (no value specified).
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Replacing the replication instance file of a replicating instance (A→P)
@@ -2518,7 +2507,7 @@ On P:
 
 - Start the Receiver Server on P with the -UPDATERESYNC=</path/to/bkup-orig-repl-inst-file> qualifier and -INITIALIZE. The -INITIALIZE indicates this is the first time A and P are replicating.
 
-In this case, the Receiver Server uses the current journal sequence number in the </path/to/bkup-orig-repl-inst-file> as the point where A starts sending journal records. YottaDB/GT.M updates the stream sequence number of Stream # 1 in the instance file on P to reflect this value. From this point, YottaDB/GT.M maps the journal sequence number on A to a stream journal sequence number (for example, stream # 1) on P.
+In this case, the Receiver Server uses the current journal sequence number in the </path/to/bkup-orig-repl-inst-file> as the point where A starts sending journal records. YottaDB updates the stream sequence number of Stream # 1 in the instance file on P to reflect this value. From this point, YottaDB maps the journal sequence number on A to a stream journal sequence number (for example, stream # 1) on P.
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Setting up an A→P for the first time if P is an existing instance (having its own set of updates)
@@ -2541,14 +2530,14 @@ On P:
 
 - Start the Receiver Server with the -UPDATERESYNC=</path/to/bkup-orig-repl-inst-file> qualifier and -INITIALIZE. The -INITIALIZE indicates this is the first time A and P are replicating.
 
-The Receiver Server uses the current journal sequence number in the </path/to/bkup-orig-repl-inst-file> as the point where A starts sending journal records. YottaDB/GT.M updates the stream sequence number (for example, of Stream # 1) in the instance file on P to reflect this value. Going forward, the journal sequence number on A will always map to a stream journal sequence number (for example, of stream # 1) on P.
+The Receiver Server uses the current journal sequence number in the </path/to/bkup-orig-repl-inst-file> as the point where A starts sending journal records. YottaDB updates the stream sequence number (for example, of Stream # 1) in the instance file on P to reflect this value. Going forward, the journal sequence number on A will always map to a stream journal sequence number (for example, of stream # 1) on P.
 
 
 --------------------------------------------
 Commands and Qualifiers
 --------------------------------------------
 
-The following MUPIP commands and qualifiers control database replication in a YottaDB/GT.M environment.
+The following MUPIP commands and qualifiers control database replication in a YottaDB environment.
 
 ++++++++++++++++++++++++++++
 Turning Replication On/Off
@@ -2563,11 +2552,11 @@ Command Syntax:
 
 *-file* and *-region*
 
-Use these qualifiers in the same manner that you would use them for a MUPIP SET. For more information refer to Chapter 5: “General Database Management”.
+Use these qualifiers in the same manner that you would use them for a MUPIP SET. For more information refer to `Chapter 5: “General Database Management” <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html>`_.
 
 *-replication=replication-state*
 
-Switches the YottaDB/GT.M replication subsystem ON/OFF and possibly modify the current journaling [no-]before image field (which is stored in the database file header).
+Switches the YottaDB replication subsystem ON/OFF and possibly modify the current journaling [no-]before image field (which is stored in the database file header).
 
 replication-state is either of the following keywords:
 
@@ -2576,19 +2565,19 @@ replication-state is either of the following keywords:
 Disable replication of the database file(s) or region(s). Even if you turn off replication, journaling continues to operate as before.
 
 .. note::
-   YottaDB/GT.M creates a new set of journal files and cuts the back link to the previous journal files if the replication-state is OFF and then turned ON again. The database cannot rollback to a state prior to ON. Therefore, ensure that replication-state remains ON throughout the span of database replication. Turn replication-state OFF only if database replication is no longer needed or the instance is about to be refreshed from the backup of the originating instance.
+   YottaDB creates a new set of journal files and cuts the back link to the previous journal files if the replication-state is OFF and then turned ON again. The database cannot rollback to a state prior to ON. Therefore, ensure that replication-state remains ON throughout the span of database replication. Turn replication-state OFF only if database replication is no longer needed or the instance is about to be refreshed from the backup of the originating instance.
 
 *ON*
 
-Enables replication for the selected database file(s) or region(s). When the JOURNAL qualifier is not specified, this action turns BEFORE_IMAGE journaling on. Specify -JOURNAL=NOBEFORE_IMAGE to enable replication with no-before-image journaling. In both cases, YottaDB/GT.M creates a new journal file for each database file or region, and switches the current journal file. YottaDB/FIS recommends you to specify the desired journaling characteristics (MUPIP SET -JOURNAL=BEFORE_IMAGE or MUPIP SET -JOURNAL=NOBEFORE_IMAGE).
+Enables replication for the selected database file(s) or region(s). When the JOURNAL qualifier is not specified, this action turns BEFORE_IMAGE journaling on. Specify -JOURNAL=NOBEFORE_IMAGE to enable replication with no-before-image journaling. In both cases, YottaDB creates a new journal file for each database file or region, and switches the current journal file. YottaDB recommends you to specify the desired journaling characteristics (MUPIP SET -JOURNAL=BEFORE_IMAGE or MUPIP SET -JOURNAL=NOBEFORE_IMAGE).
 
-When replication is ON, a MUPIP SET REPLICATION=ON command with no JOURNAL qualifier assumes the current journaling characteristics (which are stored in the database file header). By default GT.M sets journal operation to BEFORE_IMAGE if this command changes the replication state from OFF to ON and JOURNAL=NOBEFORE_IMAGE is not specified. Therefore, conservative scripting should always specify the desired journaling characteristics using the JOURNAL qualifier of the MUPIP SET command.
+When replication is ON, a MUPIP SET REPLICATION=ON command with no JOURNAL qualifier assumes the current journaling characteristics (which are stored in the database file header). By default YottaDB sets journal operation to BEFORE_IMAGE if this command changes the replication state from OFF to ON and JOURNAL=NOBEFORE_IMAGE is not specified. Therefore, conservative scripting should always specify the desired journaling characteristics using the JOURNAL qualifier of the MUPIP SET command.
 
 The replication state ON in the file header denotes normal replication operation.
 
 *[WAS_ON] OFF*
 
-Denotes an implicit replication state when YottaDB/GT.M attempts to keep replication working even if run-time conditions such as no available disk space or no authorization for a process attempting to auto-switch a journal file cause YottaDB/GT.M to turn journaling off. Even with journaling turned off, the Source Server attempts to continue replication using the records available in the replication journal pool. In this state, replication can only continue as long as all the information it needs is in the replication journal pool. Events such as an operationally significant change on the replicating instance(s) or communication problems are likely to cause the Source Server to need information older than that in the replication journal pool and because it cannot look for that information in journal files, at that point the Source Server shuts down.
+Denotes an implicit replication state when YottaDB attempts to keep replication working even if run-time conditions such as no available disk space or no authorization for a process attempting to auto-switch a journal file cause YottaDB to turn journaling off. Even with journaling turned off, the Source Server attempts to continue replication using the records available in the replication journal pool. In this state, replication can only continue as long as all the information it needs is in the replication journal pool. Events such as an operationally significant change on the replicating instance(s) or communication problems are likely to cause the Source Server to need information older than that in the replication journal pool and because it cannot look for that information in journal files, at that point the Source Server shuts down.
 
 .. note::
    If the replication ON state is like a bicycle running smoothly on the road, replication WAS_ON is like a bicycle with a flat front tire being ridden like a unicycle - the system is operating outside its intended mode of use and is more subject to misfortune.
@@ -2629,11 +2618,11 @@ Command Syntax:
 
 Creates a replication instance file. mupip replicate -instance_create takes the file name of the replication instance file from the environment variable gtm_repl_instance.
 
-If an instance file already exists, YottaDB/GT.M renames it with a timestamp suffix, and creates a new replication instance file. This behavior is similar to the manner in which YottaDB/GT.M renames existing journal files while creating new journal files. Creating an instance file requires standalone access.
+If an instance file already exists, YottaDB renames it with a timestamp suffix, and creates a new replication instance file. This behavior is similar to the manner in which YottaDB renames existing journal files while creating new journal files. Creating an instance file requires standalone access.
 
 *-name*
 
-Specifies the instance name that uniquely identifies the instance and is immutable. The instance name can be from 1 to 16 characters. YottaDB/GT.M takes the instance name (not the same as instance file name) from the environment variable gtm_repl_instname. If gtm_repl_instname is not set and -name is not specified, YottaDB/GT.M produces an error.
+Specifies the instance name that uniquely identifies the instance and is immutable. The instance name can be from 1 to 16 characters. YottaDB takes the instance name (not the same as instance file name) from the environment variable gtm_repl_instname. If gtm_repl_instname is not set and -name is not specified, YottaDB produces an error.
 
 *-noreplace*
 
@@ -2647,12 +2636,12 @@ Prevents the renaming of an existing replication instance file.
 
 Permits more than 32,767 udpating processes to concurrently the replication instance file and database file(s). The default (-noqdbrundown) permits up to 32,767 concurrent updating processes to access a database file or a replication instance file.
 
-This permission is effected by the QDBRUNDOWN flags in database file headers and in replication instance files. When an open database file or replication instance file with QDBRUNDOWN set is first concurrently accessed by more than 32,767 processes, YottaDB/GT.M:
+This permission is effected by the QDBRUNDOWN flags in database file headers and in replication instance files. When an open database file or replication instance file with QDBRUNDOWN set is first concurrently accessed by more than 32,767 processes, YottaDB:
 
 * logs a NOMORESEMCNT message in the system log, and
-* stops counting the number of attached processes. This means that YottaDB/GT.M cannot recognize when the number of attached processes reaches zero (0) in order to release the corresponding shared resources, and therefore requires explicit manual clean up of resources for an orderly shutdown.
+* stops counting the number of attached processes. This means that YottaDB cannot recognize when the number of attached processes reaches zero (0) in order to release the corresponding shared resources, and therefore requires explicit manual clean up of resources for an orderly shutdown.
 
-Except in application configurations that require it, YottaDB/FIS recommends not setting QDBRUNDOWN. Not setting QDBRUNDOWN allows YottaDB/GT.M to clean up resources, instead of putting the burden on the operational procedures. Where YottaDB/GT.M cannot perform an orderly shutdown, an explicit, clean shutdown must be performed as follows:
+Except in application configurations that require it, YottaDB recommends not setting QDBRUNDOWN. Not setting QDBRUNDOWN allows YottaDB to clean up resources, instead of putting the burden on the operational procedures. Where YottaDB cannot perform an orderly shutdown, an explicit, clean shutdown must be performed as follows:
 
 * Replicated instances require a mupip journal -rollback -backward "*" executed after the mupip replicate -source -shutdown command (remember that even instances receiving a replication stream have one or more Source Servers).
 * Database files that are journaled but not part of a replication instance require a mupip journal -recover -backward command.
@@ -2692,7 +2681,7 @@ Displays or changes the attributes of Journal Pool. Always specify -source with 
 
  *-change*
 
-The CHANGE qualifier is intended only for use under the guidance of YottaDB/FIS and serves two purposes. When used with -editinstance -offset -size, it changes the contents of the replication instance file. When used with -jnlpool, it changes the contents of journal pool header. Although MUPIP does not enforce standalone access when using this feature on the instance file or the journal pool, doing so when replication is actively occurring can lead to catastrophic failures.
+The CHANGE qualifier is intended only for use under the guidance of YottaDB and serves two purposes. When used with -editinstance -offset -size, it changes the contents of the replication instance file. When used with -jnlpool, it changes the contents of journal pool header. Although MUPIP does not enforce standalone access when using this feature on the instance file or the journal pool, doing so when replication is actively occurring can lead to catastrophic failures.
 
 *-name=<new-name>*
 
@@ -2712,14 +2701,14 @@ Indicates the new size of the new value in bytes. The value of size can be eithe
 
 *-offset*
 
-Takes a hexadecimal value that is a multiple of -size. With no -offset specified, YottaDB/GT.M produces an error. YottaDB/GT.M also produces an error if the offset is greater than the size of the instance file or the journal pool header.
+Takes a hexadecimal value that is a multiple of -size. With no -offset specified, YottaDB produces an error. YottaDB also produces an error if the offset is greater than the size of the instance file or the journal pool header.
 
 *-value*
 
-Specifies the new hexadecimal value of the field having the specified -offset and -size. With no value specified, YottaDB/GT.M displays the current value at the specified offset and does not perform any change. Specifying -value=<new_value> makes the change and displays both the old and new values.
+Specifies the new hexadecimal value of the field having the specified -offset and -size. With no value specified, YottaDB displays the current value at the specified offset and does not perform any change. Specifying -value=<new_value> makes the change and displays both the old and new values.
 
 .. note::
-   Change the instance file or the journal pool only on explicit instructions from YottaDB/FIS.
+   Change the instance file or the journal pool only on explicit instructions from YottaDB.
 
 *-show*
 
@@ -2785,7 +2774,7 @@ Starts the Source Server.
 
 Identifies the replicating instance. <hostname:port> specifies an IPv4 or IPv6 address optionally encapsulated by square-brackets ([]) like "127.0.0.1", "::1", "[127.0.0.1]", or "[::1]" or a hostname that resolves to an IPv4 or IPv6 address and the port at which the Receiver Server is waiting for a connection.
 
-If, in your environment, the same hostname is used for both IPv4 and IPv6, YottaDB/GT.M defaults to IPv6. If you wish to use IPv4, perhaps because you have a Receiver Server running a pre-V6.0-003 version of YottaDB/GT.M that does not support IPv6, set the environment variable gtm_ipv4_only to "TRUE", "YES", or a non-zero integer in order to force YottaDB/GT.M to use IPv4.
+If, in your environment, the same hostname is used for both IPv4 and IPv6, YottaDB defaults to IPv6. If you wish to use IPv4, set the environment variable gtm_ipv4_only to "TRUE", "YES", or a non-zero integer in order to force YottaDB to use IPv4.
 
 *-passive*
 
@@ -2803,7 +2792,7 @@ Specifies the number of transactions for which the Source Server should wait bef
 
 *-buffsize=<Journal Pool size in bytes>*
 
-Specifies the size of the Journal Pool. The server rounds the size up or down to suit its needs. Any size less than 1 MiB is rounded up to 1 MiB. If you do not specify a qualifier, the size defaults to the YottaDB/GT.M default value of 64 MiB. Remember that you cannot exceed the system-provided maximum shared memory. For systems with high update rates, specify a larger buffer size to avoid the overflows and file I/O that occur when the Source Server reads journal records from journal files. The maximum value is 4294967288(4GiB-8).
+Specifies the size of the Journal Pool. The server rounds the size up or down to suit its needs. Any size less than 1 MiB is rounded up to 1 MiB. If you do not specify a qualifier, the size defaults to the YottaDB default value of 64 MiB. Remember that you cannot exceed the system-provided maximum shared memory. For systems with high update rates, specify a larger buffer size to avoid the overflows and file I/O that occur when the Source Server reads journal records from journal files. The maximum value is 4294967288(4GiB-8).
 
 *-filter=<filter command>*
 
@@ -2866,17 +2855,7 @@ Example:
      zshow "\*"
      halt
 
-This example reads logical database updates associated with a transaction from STDIN and writes them to log.out and STDOUT just like the UNIX tee command. It runs on GT.M V5.5-000 where it is no longer required to treat filter output as a transaction. To run this example on a pre-YottaDB/GT.M V5.5-000 version, replace the line:
-
-.. parsed-literal::
-   .. if rectype'=TSTART set filtrOut=extrRec_EOL
-
-with
-
-.. parsed-literal::
-   .. if rectype'=TSTART set filtrOut=TSTART_EOL_extrRec_EOL_TCOMMIT_EOL
-
-to wrap mini-transactions in 08 09.
+This example reads logical database updates associated with a transaction from STDIN and writes them to log.out and STDOUT just like the UNIX tee command. It runs on the latest version of YottaDB where it is no longer required to treat filter output as a transaction. 
 
 *-freeze[=on|off] -[no]comment[='"<string>"']*
 
@@ -2900,7 +2879,7 @@ Identifies the replicating instance to which the Source Server replicates data.
 
 With no -instsecondary specified, the Source Server uses the environment variable gtm_repl_instsecondary for the name of the replicating instance.
 
-With no -instsecondary specified and environment variable gtm_repl_instsecondary not set, mupip replicate -source -checkhealth looks at all the Source Servers (Active or Passive) that are alive and running and those that were abnormally shutdown (kill -9ed). Any Source Server that was kill -15ed or MUPIP STOPped is ignored because YottaDB/GT.M considers those Source Server shut down in the normal way. This command reports something only if it finds at least one Source Server that is alive and running or was abnormally shutdown (kill -9ed). Otherwise it returns a zero (0) status without anything to report even when the Journal Pool exists and YottaDB/GT.M processes (Update Process or Receiver Server on the replicating instance) are up and running.
+With no -instsecondary specified and environment variable gtm_repl_instsecondary not set, mupip replicate -source -checkhealth looks at all the Source Servers (Active or Passive) that are alive and running and those that were abnormally shutdown (kill -9ed). Any Source Server that was kill -15ed or MUPIP STOPped is ignored because YottaDB considers those Source Server shut down in the normal way. This command reports something only if it finds at least one Source Server that is alive and running or was abnormally shutdown (kill -9ed). Otherwise it returns a zero (0) status without anything to report even when the Journal Pool exists and YottaDB processes (Update Process or Receiver Server on the replicating instance) are up and running.
 
 You can start multiple Source Servers from the same originating instance as long as each of them specifies a different name for -instsecondary.
 
@@ -2931,7 +2910,7 @@ Use this optional qualifier to assign the current instance as a propagating inst
 
 Note that it is not possible to transition an originating instance to a propagating instance without bringing down the Journal Pool. However, it is possible to transition a propagating instance to an originating instance without bringing down the Journal Pool for an already running passive Source Server (start one with -propagateprimary if none is running).
 
-Both -rootprimary and -propagateprimary are optional and mutually exclusive. However, YottaDB/FIS recommends you to specify both -rootprimary and -propagateprimary explicitly in the script for clarity.
+Both -rootprimary and -propagateprimary are optional and mutually exclusive. However, YottaDB recommends you to specify both -rootprimary and -propagateprimary explicitly in the script for clarity.
 
 Example:
 
@@ -2940,7 +2919,7 @@ Example:
 
 This command transitions a propagating originating instance to an originating instance without bringing down the Journal Pool.
 
-With neither -rootprimary nor -propagateprimary specified, YottaDB/GT.M uses a default value of -propagateprimary for the passive Source Server startup command (mupip replic -source -start -passive) and the deactivate qualifier (mupip replicate -source -deactivate). YottaDB/GT.M uses a default value of -rootprimary for the mupip replicate -source -start -secondary=... and the mupip replic -source -activate commands. These default values make the replication script simpler for users who are planning to limit themselves to one originating instance and multiple replicating instance (without any further replicating instances downstream).
+With neither -rootprimary nor -propagateprimary specified, YottaDB uses a default value of -propagateprimary for the passive Source Server startup command (mupip replic -source -start -passive) and the deactivate qualifier (mupip replicate -source -deactivate). YottaDB uses a default value of -rootprimary for the mupip replicate -source -start -secondary=... and the mupip replic -source -activate commands. These default values make the replication script simpler for users who are planning to limit themselves to one originating instance and multiple replicating instance (without any further replicating instances downstream).
 
 .. parsed-literal::
    $ export gtm_repl_instance=multisite.repl
@@ -2948,13 +2927,13 @@ With neither -rootprimary nor -propagateprimary specified, YottaDB/GT.M uses a d
    $ mupip replicate -instance_create -name=America
    $ mupip replicate -source -start -buffsize=$jnlpool_size -secondary=localhost:1234 -log=A2B.log -instsecondary=Brazil
 
-This example starts the Source Server at port 1234 for the replicating instance Brazil. The Source Server creates a Journal Pool. A GT.M Process writes the updated journal records to the Journal Pool. Then, the Source Server process transports each record from the Journal Pool to Brazil via a TCP/IP connection.
+This example starts the Source Server at port 1234 for the replicating instance Brazil. The Source Server creates a Journal Pool. A YottaDB Process writes the updated journal records to the Journal Pool. Then, the Source Server process transports each record from the Journal Pool to Brazil via a TCP/IP connection.
 
 .. note::
    Before starting replication, always remember to rundown every replicated database region then start the Source Server.
 
 .. note::
-   YottaB/GT.M updates to replicated regions are permitted only on the originating instance and disabled on ALL other replicating instances.
+   YottaB updates to replicated regions are permitted only on the originating instance and disabled on ALL other replicating instances.
 
 The Source Server records actions and errors in A2B.log. It also periodically record statistics such as the current backlog, the number of journal records sent since the last log, the rate of transmission, the starting and current JNL_SEQNO, and the path of the filter program, if any.
 
@@ -2968,14 +2947,14 @@ Specifies the desired compression level for the replication stream. n is a posit
 
 Alternatively, the environment variable gtm_zlib_cmp_level can specify the desired compression level (in the same value range as N above) and the source server can then be started without -cmplvl. This has the same effect as starting it with -cmplvl specified. An explicitly specified value on the command line overrides any value specified by the environment variable.
 
-Whenever the source and receiver server connect with each other, if the source server was started with a valid non-zero compression level, they first determine whether the receiver server is running a version of YottaDB/GT.M which handles compressed records and has been started with a non-zero compression level. Only if this is true, do they agree to use compressed journal records. They also verify with a test message that compression/decompression works correctly before sending any compressed journal data across. They automatically fall back to uncompressed mode of transmission if this test fails or if, at any point, either side detects that compression or decompression has failed. That is, any runtime error in the compression/decompression logic results in uncompressed replication (thereby reducing replication throughput) but never jeopardizes the functional health of replication.
+Whenever the source and receiver server connect with each other, if the source server was started with a valid non-zero compression level, they first determine whether the receiver server is running a version of YottaDB which handles compressed records and has been started with a non-zero compression level. Only if this is true, do they agree to use compressed journal records. They also verify with a test message that compression/decompression works correctly before sending any compressed journal data across. They automatically fall back to uncompressed mode of transmission if this test fails or if, at any point, either side detects that compression or decompression has failed. That is, any runtime error in the compression/decompression logic results in uncompressed replication (thereby reducing replication throughput) but never jeopardizes the functional health of replication.
 
 The Source and Receiver Servers log all compression related events and/or messages in their respective logs. The source server also logs the length of the compressed data (in addition to the uncompressed data length) in its logfile.
  
 .. note::
-   If you plan to use the optional compression facility for replication, you must provide the compression library. The YottaDB/GT.M interface for compression libraries accepts the zlib compression libraries without any need for adaptation. These libraries are included in many UNIX distributions and are downloadable from the zlib home page. YottaDB/GT.M supports the use of the IBM provided zlib library for AIX. If you prefer to use other compression libraries, you need to configure or adapt them to provide the same API provided by zlib. Simple instructions for compiling zlib on a number of platforms follow. Although YottaDB/GT.M uses zlib, zlib is not YottaDB/FIS software and YottaDB/FIS does not support zlib. These instructions are merely provided as a convenience to you.
+   If you plan to use the optional compression facility for replication, you must provide the compression library. The YottaDB interface for compression libraries accepts the zlib compression libraries without any need for adaptation. These libraries are included in many UNIX distributions and are downloadable from the zlib home page. YottaDB supports the use of the IBM provided zlib library for AIX. If you prefer to use other compression libraries, you need to configure or adapt them to provide the same API provided by zlib. Simple instructions for compiling zlib on a number of platforms follow. Although YottaDB uses zlib, zlib is not YottaDB software and YottaDB does not support zlib. These instructions are merely provided as a convenience to you.
 
-If a package for zlib is available with your operating system, YottaDB/FIS suggests that you use it rather than building your own.
+If a package for zlib is available with your operating system, YottaDB suggests that you use it rather than building your own.
 
 AIX/XL compiler:
 
@@ -3001,9 +2980,9 @@ Apply the following patch to the zlib 1.1.4 sources:
 
 ---------------------------------- zlib_1.1.4_zos.patch --------------------------------------------------diff -purN downloads/zlib/src.orig/configure downloads/zlib/src/configure--- downloads/zlib/src.orig/configure Tue Dec 16 14:09:57 2008+++ downloads/zlib/src/configure Mon Feb 9 14:30:49 2009@@ -116,6 +116,11 @@ else SFLAGS=${CFLAGS-"-Kconform_pic -O"} CFLAGS=${CFLAGS-"-O"} LDSHARED=${LDSHARED-"cc -G"};;+ OS/390*)+ CC=xlc+ SFLAGS=${CFLAGS-"-qascii -q64 -Wc,DLL,LP64,XPLINK,EXPORTALL -D_ALL_SOURCE_NOTHREADS"}+ CFLAGS=${CFLAGS-"-qascii -q64 -Wc,DLL,LP64,XPLINK,EXPORTALL -D_ALL_SOURCE_NOTHREADS"}+ LDSHARED=${LDSHARED-"xlc -qascii -q64 -Wl,dll,LP64,XPLINK "};; # send working options for other systems to support@gzip.org \*) SFLAGS=${CFLAGS-"-O"} CFLAGS=${CFLAGS-"-O"} 
 
-Build and install the zlib DLL, placing the xlc compilers in compatibility to mode by setting the environment variable C89_CCMODE to 1. When not in compatibility mode, xlc follows strict placement of command line options. Configure and build the zlib software with ./configure --shared && make. By default, the configure script places zlib in /usr/local/lib. Install the software with make install. To ensure that YottaDB/GT.M finds zlib, include /usr/local/lib in LIBPATH, the environment variable that provides a search path for processes to use when they link DLLs.
+Build and install the zlib DLL, placing the xlc compilers in compatibility to mode by setting the environment variable C89_CCMODE to 1. When not in compatibility mode, xlc follows strict placement of command line options. Configure and build the zlib software with ./configure --shared && make. By default, the configure script places zlib in /usr/local/lib. Install the software with make install. To ensure that YottaDB finds zlib, include /usr/local/lib in LIBPATH, the environment variable that provides a search path for processes to use when they link DLLs.
 
-By default, YottaDB/GT.M searches for the libz.so shared library in the standard system library directories (for example, /usr/lib, /usr/local/lib, /usr/local/lib64). If the shared library is installed in a non-standard location, before starting replication, you must ensure that the environment variable $LIBPATH (AIX and z/OS) or $LD_LIBRARY_PATH (other UNIX platforms) includes the directory containung the library. The Source and Receiver Server link the shared library at runtime. If this fails for any reason (such as file not found, or insufficient authorization), the replication logic logs a DLLNOOPEN error and continues with no compression.
+By default, YottaDB searches for the libz.so shared library in the standard system library directories (for example, /usr/lib, /usr/local/lib, /usr/local/lib64). If the shared library is installed in a non-standard location, before starting replication, you must ensure that the environment variable $LIBPATH (AIX and z/OS) or $LD_LIBRARY_PATH (other UNIX platforms) includes the directory containung the library. The Source and Receiver Server link the shared library at runtime. If this fails for any reason (such as file not found, or insufficient authorization), the replication logic logs a DLLNOOPEN error and continues with no compression.
 
 *-tlsid=<label>*
 
@@ -3011,11 +2990,11 @@ Instructs the Source or Receiver Server to use the TLS certificate and private k
 
 *-[NO]PLAINtextfallback*
 
-Specifies whether the replication server is permitted to fallback to plaintext communication. The default is -NOPLAINtextfallback. If NOPLAINTEXTFALLBACK is in effect, YottaDB/GT.M issues a REPLNOTLS error in the event it is unable to establish a TLS connection. [Note: YottaDB/GT.M versions prior to V6.1-000 did not support TLS for replication - if needed it could be implemented with an external application such as stunnel (http://stunnel.org).] If PLAINTEXTFALLBACK is in effect, in the event of a failure to establish a TLS connection, YottaDB/GT.M issues REPLNOTLS as a warning. Once a permitted plaintext replication connection is established for a connection session, YottaDB/GT.M never attempts to switch that connection session to TLS connection.
+Specifies whether the replication server is permitted to fallback to plaintext communication. The default is -NOPLAINtextfallback. If NOPLAINTEXTFALLBACK is in effect, YottaDB issues a REPLNOTLS error in the event it is unable to establish a TLS connection. [Note: YottaDB versions prior to V6.1-000 did not support TLS for replication - if needed it could be implemented with an external application such as stunnel (http://stunnel.org).] If PLAINTEXTFALLBACK is in effect, in the event of a failure to establish a TLS connection, YottaDB issues REPLNOTLS as a warning. Once a permitted plaintext replication connection is established for a connection session, YottaDB never attempts to switch that connection session to TLS connection.
 
 *-RENEGotiate_interval=<minutes >*
 
-Specifies the time in mintues to wait before attempting to perform a TLS renegotiation. The default -RENEGOTIATE_INTERVAL is a little over 120 minutes. A value of zero causes YottaDB/GT.M never to attempt a renegotiation. The MUPIP REPLIC -SOURCE -JNLPOOL -SHOW [-DETAIL] command shows the time at which the next TLS renegotiation is scheduled, and how many such renegotiations have occurred thus far for a given secondary instance connection. As renegotiation requires the replication pipeline to be temporarily flushed, followed by the actual renegotiation, TLS renegotiation can cause momentary spikes in replication backlog.
+Specifies the time in mintues to wait before attempting to perform a TLS renegotiation. The default -RENEGOTIATE_INTERVAL is a little over 120 minutes. A value of zero causes YottaDB never to attempt a renegotiation. The MUPIP REPLIC -SOURCE -JNLPOOL -SHOW [-DETAIL] command shows the time at which the next TLS renegotiation is scheduled, and how many such renegotiations have occurred thus far for a given secondary instance connection. As renegotiation requires the replication pipeline to be temporarily flushed, followed by the actual renegotiation, TLS renegotiation can cause momentary spikes in replication backlog.
 
 ++++++++++++++++++++++++++++++++++++++++++++++
 Shutting Down the Source Server
@@ -3065,7 +3044,7 @@ Command syntax:
 
 Activates a passive Source Server. Once activated, the Source Server reads journal records from the Journal Pool and transports them to the system specified by -secondary.
 
-Before activation, -activate sets the Source Server to ACTIVE_REQUESTED mode. On successful activation, YottaDB/GT.M sets the Source Server mode to ACTIVE. YottaDB/GT.M produces an error when there is an attempt to activate a Source Server in ACTIVE_REQUESTED mode.
+Before activation, -activate sets the Source Server to ACTIVE_REQUESTED mode. On successful activation, YottaDB sets the Source Server mode to ACTIVE. YottaDB produces an error when there is an attempt to activate a Source Server in ACTIVE_REQUESTED mode.
 
 *-instsecondary=<instance_name>*
 
@@ -3111,7 +3090,7 @@ Command Syntax:
 
 Makes an active Source Server passive. To change the replicating instance with which the Source Server is communicating, deactivate the Source Server and then activate it with a different replicating instance.
 
-Before deactivation, -deactivate sets the Source Server to PASSIVE_REQUESTED mode. On successful deactivation, YottaDB/GT.M sets the Source Server mode to PASSIVE. YottaDB/GT.M produces an error when there is an attempt to deactivate a Source Server in PASSIVE_REQUESTED mode.
+Before deactivation, -deactivate sets the Source Server to PASSIVE_REQUESTED mode. On successful deactivation, YottaDB sets the Source Server mode to PASSIVE. YottaDB produces an error when there is an attempt to deactivate a Source Server in PASSIVE_REQUESTED mode.
 
 *-instsecondary=<instance_name>*
 
@@ -3302,7 +3281,7 @@ Command Syntax:
 
 *-losttncomplete*
 
-Indicate to YottaDB/GT.M that all lost transaction processing using $ZQGBLMOD() is complete. Use this qualifier either explicitly or implicitly to prevent a future $ZQGBLMOD() on an instance from returning false positives when applying future lost transactions. This ensures accuracy of future $ZQGBLMOD() results.
+Indicate to YottaDB that all lost transaction processing using $ZQGBLMOD() is complete. Use this qualifier either explicitly or implicitly to prevent a future $ZQGBLMOD() on an instance from returning false positives when applying future lost transactions. This ensures accuracy of future $ZQGBLMOD() results.
 
 Always use this qualifier when an originating instance comes up as a replicating instance.
 
@@ -3402,23 +3381,21 @@ Starting the Receiver Server with -stopsourcefilter turns off any active filter 
 
 *-updateresync=</path/to/bkup-orig-repl-inst-file>*
 
--updateresync guarantees YottaDB/GT.M that the replicating instance was, or is, in sync with the originating instance and it is now safe to resume replication. Use -updateresync only in the following situations:
+-updateresync guarantees YottaDB that the replicating instance was, or is, in sync with the originating instance and it is now safe to resume replication. Use -updateresync only in the following situations:
 
-- To replace an existing replication instance files when an upgrade to a YottaDB/GT.M version changes the instance file format. Consult the release notes to determine whether this applies to your upgrade.
+- To replace an existing replication instance files when an upgrade to a YottaDB version changes the instance file format. Consult the release notes to determine whether this applies to your upgrade.
 - When an existing replication instance file is unusable because it was damaged or deleted, and is replaced by a new replication instance file.
 - Setting up an A→P configuration for the first time if P is an existing instance with existing updates that are not, and not expected to be, in the originating instance.
 - Setting up a new replicating instance from a backup of the originating instance (A->P only) or one of its replicating secondary instances.
-- If you are running a YottaDB/GT.M version prior to V5.5-000 and you have to set up a replicating instance from a backup of an originating instance.
+- If you are running an older YottaDB version and you have to set up a replicating instance from a backup of an originating instance.
 
 -updateresync uses the journal sequence number stored in the replicating instance's database and the history record available in the backup copy of the replication instance file of the originating instance (</path/to/bkup-orig-repl-inst-file>) to determine the journal sequence number at which to start replication.
 
-When replication resumes after a suspension (due to network or maintenance issues), YottaDB/GT.M compares the history records stored in the replication instance file of the replicating instance with the history records stored in the replication instance file of the originating instance to determine the point at which to resume replication. This mechanism ensures that two instances always remain in sync when a replication connection resumes after an interruption. -updateresync bypasses this mechanism by ignoring the replication history of the replicating instance and relying solely on the current journal sequence number and its history record in the originating instance's history to determine the point for resuming replication. As it overrides a safety check, use -updateresync only after careful consideration. You can check with your YottaDB/GT.M support channel as to whether -updateresync is appropriate in your situation.
+When replication resumes after a suspension (due to network or maintenance issues), YottaDB compares the history records stored in the replication instance file of the replicating instance with the history records stored in the replication instance file of the originating instance to determine the point at which to resume replication. This mechanism ensures that two instances always remain in sync when a replication connection resumes after an interruption. -updateresync bypasses this mechanism by ignoring the replication history of the replicating instance and relying solely on the current journal sequence number and its history record in the originating instance's history to determine the point for resuming replication. As it overrides a safety check, use -updateresync only after careful consideration. You can check with your YottaDB support channel as to whether -updateresync is appropriate in your situation.
 
 To perform an updateresync, the originating instance must have at least one history record. You need to take a backup (BACKUP -REPLINST) of the replication instance file of the originating instance while the Source Server is running. This ensures that the instance file has at least one history record. Even though it is safe to use a copy (for example, an scp) of the replication instance file of the originating instance taken after shutting down its Source Server, BACKUP -REPLINST is recommended because it does not require Source Server shutdown. You also need an empty instance file (-INSTANCE_CREATE) of the replicating instance to ensure that it bypasses the history information of the current and prior states.
 
-You also need use -updateresync to replace your existing replication instance files if a YottaDB/GT.M version upgrade changes the instance file format. The instance file format was changed in V5.5-000. Therefore, upgrading a replicating instance from a version prior to YottaDB/GT.M V5.5-000 up to V5.5-000 or higher requires replacing its instance file.
-
-Prior to V5.5-000, -updateresync did not require the argument (<bckup_orig_repl_inst_file>). The syntax for -updateresync depends on the YottaDB/GT.M version.
+You also need use -updateresync to replace your existing replication instance files if a YottaDB version upgrade changes the instance file format. 
 
 For information on the procedures that use -updateresync, refer to “Setting up a new replicating instance of an originating instance (A→B, P→Q, or A→P)”, “Replacing the replication instance file of a replicating instance (A→B and P→Q)”, “Replacing the replication instance file of a replicating instance (A→P)”, and “Setting up a new replicating instance from a backup of the originating instance (A→P)”.
 
@@ -3436,7 +3413,7 @@ Used when starting a Receiver Server of an SI replication stream with -updateres
 
 *-noresync*
 
-Instructs the Receiver Server to accept a SI replication stream even when the receiver is ahead of the source. In this case, the source and receiver servers exchange history records from the replication instance file to determine the common journal stream sequence number and replication resumes from that point onwards. Specifying -noresync on a BC replication stream is produces a NORESYNCSUPPLONLY error. Specifying -noresync on a SI replication stream receiver server where the receiving instance was started with -UPDNOTOK (updates are disabled) produces a NORESYNCUPDATERONLY error. Note also that the noresync qualifier is not the opposite of the resync qualifier of rollback (mupip journal -rollback -resync), which is intended for use under the direction of YottaDB/FIS support.
+Instructs the Receiver Server to accept a SI replication stream even when the receiver is ahead of the source. In this case, the source and receiver servers exchange history records from the replication instance file to determine the common journal stream sequence number and replication resumes from that point onwards. Specifying -noresync on a BC replication stream is produces a NORESYNCSUPPLONLY error. Specifying -noresync on a SI replication stream receiver server where the receiving instance was started with -UPDNOTOK (updates are disabled) produces a NORESYNCUPDATERONLY error. Note also that the noresync qualifier is not the opposite of the resync qualifier of rollback (mupip journal -rollback -resync), which is intended for use under the direction of YottaDB support.
 
 *-tlsid=<label>*
 
@@ -3466,11 +3443,11 @@ Starts additional processes to help improve the rate at which updates from an in
 - m is the total number of helper processes and n is the number of reader helper processes, in other words m>=n.
 - Helper processes can start only on a receiver server.
 - If helper processes are already running, specifying -helpers[=m[,n]] again starts additional helper processes. There can be a maximum of 128 helper processes for a receiver server.
-- If -helpers=0[,n] is specified, YottaDB/GT.M starts no helper processes.
-- With the HELPERS qualifier specified but neither m nor n specified, YottaDB/GT.M starts the default number of helper processes with the default proportion of roles. The default number of aggregate helper processes is 8, of which 5 are reader helpers and 3 writers.
+- If -helpers=0[,n] is specified, YottaDB starts no helper processes.
+- With the HELPERS qualifier specified but neither m nor n specified, YottaDB starts the default number of helper processes with the default proportion of roles. The default number of aggregate helper processes is 8, of which 5 are reader helpers and 3 writers.
 - With only m specified, helper processes are started of which floor(5*m/8) processes are reader helpers.
-- With both m and n specified, YottaDB/GT.M starts m helper processes of which n are reader helpers and m-n are writers. If m<n, mupip starts m readers, effectively reducing n to m and starting no writers.
-- YottaDB/GT.M reports helper processes (for example, by the ps command and in /proc/<pid>/cmdline on platforms that implement a /proc filesystem) as mupip replicate -updhelper -reader and mupip replicate -updhelper -writer.
+- With both m and n specified, YottaDB starts m helper processes of which n are reader helpers and m-n are writers. If m<n, mupip starts m readers, effectively reducing n to m and starting no writers.
+- YottaDB reports helper processes (for example, by the ps command and in /proc/<pid>/cmdline on platforms that implement a /proc filesystem) as mupip replicate -updhelper -reader and mupip replicate -updhelper -writer.
 
 Example:
 
@@ -3610,7 +3587,7 @@ Use this qualifier to rollback the database. If you do not use the -fetchresync 
 The <port number> is the communication port number that the rollback command uses when fetching the reference point. Always use the same <port number> on the originating instance for rollback as the one used by the Receiver Server.
 
 .. note::
-   YottaDB/FIS recommends you to unconditionally script the mupip journal -rollback -fetchresync command prior to starting any Source Server on the replicating instance to avoid a possible out-of-sync situation.
+   YottaDB recommends you to unconditionally script the mupip journal -rollback -fetchresync command prior to starting any Source Server on the replicating instance to avoid a possible out-of-sync situation.
 
 The reference point sent by the originating instance is the RESYNC_SEQNO (explained later) that the originating instance once maintained. The database/journal files are rolled back to the earlier RESYNC_SEQNO (that is, the one received from originating instance or the one maintained locally). If you do not use -fetchresync, the database rolls back to the last consistent replicating instance state.
 
@@ -3646,6 +3623,6 @@ The system stores extracted lost transactions in the file <extract file> specifi
 
 *-rsync_strm=<strm_num>*
 
-Used when starting a rollback command with the -resync qualifier. The command mupip journal -rollback -resync=<sequence_num> -rsync_strm=<strm_num> instructs rollback to roll back the database to a sequence number specified with the -resync=<sequence_num> qualifier but that <sequence_num> is a journal stream sequence number (not a journal sequence number) corresponding to the stream number <strm_num> which can be any value from 0 to 15. Note that like the -resync qualifier, the -rsync_strm qualifier is also intended for use under the direction of your YottaDB/GT.M support channel.
+Used when starting a rollback command with the -resync qualifier. The command mupip journal -rollback -resync=<sequence_num> -rsync_strm=<strm_num> instructs rollback to roll back the database to a sequence number specified with the -resync=<sequence_num> qualifier but that <sequence_num> is a journal stream sequence number (not a journal sequence number) corresponding to the stream number <strm_num> which can be any value from 0 to 15. Note that like the -resync qualifier, the -rsync_strm qualifier is also intended for use under the direction of your YottaDB support channel.
 
 
