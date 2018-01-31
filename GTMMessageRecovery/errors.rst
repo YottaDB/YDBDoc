@@ -515,16 +515,6 @@ MUPIP Error: Any MUPIP SET command with JOURNAL=ON must specify either BEFORE_IM
 
 Action: Add the argument and select either BEFORE_IMAGE or NOBEFORE_IMAGE journaling for the database in question.
 
---------
-BIGNOACL
---------
-
-BIGNOACL, Existing file found when BIGRECORD specified with UDF format but no YottaDB ACE, perhaps lost during COPY
-
-Run Time Error: An existing file with an RMS record format of undefined (UDF) was opened by an OPEN command with a BIGRECORD parameter but no Access Control Entry containing information YottaDB needs to access the file. The ACE may have been lost when copying such a file with the OpenVMS DCL COPY command.
-
-Action: BIGRECORD format files should always be copied using the OpenVMS DCL BACKUP command which preserves the Access Control Entries on files. If the record format (VARIABLE or FIXED) and RECORDSIZE specified when creating the file are known, the ACE can be restored using the following OpenVMS DCL command: SET SECURITY <filename.ext> /ACL=(APPLICATION,SIZE=20,FLAGS=%X0A01,ACCESS=%X00F60001,DATA=%X424D5447,<format>,<recordsize>) Replacing "<filename.ext>" by the name of the file, "<format>" by "2" if the format is VARIABLE or "1" if FIXED, and "<recordsize>" by the RECORDSIZE originally specified.
-
 ------
 BINHDR
 ------
@@ -1606,7 +1596,7 @@ CTLMNEMAXLEN
 
 CTLMNEMAXLEN, The maximum length of a control mnemonic has been exceeded
 
-Run Time Error: This indicates that YottaDB encountered a controlmnemonic that exceeds the supported maximum length.
+Run Time Error: This indicates that YottaDB encountered a control mnemonic that exceeds the supported maximum length.
 
 Action: Modify the control mnemonic so that it does not exceed the permitted length.
 
@@ -1645,9 +1635,9 @@ CTRLY
 
 CTRLY, User interrupt encountered
 
-Run Time Information: This indicates that the principal device encountered a <CTRL>-Y in its input stream, and YottaDB gave control to the OpenVMS CLI. The normal CLI is DCL.
+Run Time Information: This indicates that the principal device encountered a <CTRL>-Y in its input stream. The normal CLI is DCL.
 
-Action: You can resume operation with a CONTINUE command if your actions do not invoke other images. For more information on commands that invoke images, refer to the OpenVMS DCL Dictionary.
+Action: You can resume operation with a CONTINUE command if your actions do not invoke other images.
 
 ---------------
 CURRSOCKOFR 
@@ -4045,16 +4035,6 @@ MUPIP Error: This indicates that EXTRACT encountered an error when opening its o
 Action: Review the accompanying message(s) for additional information.
 
 ---------------------
-EXTRCLOSEERR
----------------------
-
-EXTRCLOSEERR, Error closing extract file xxxx
-
-MUPIP Error: OpenVMS or RMS error closing the specified xtract output file, during the MUPIP EXTRACT.
-
-Action: Refer to the accompanying message(s) for details and take appropriate action.
-
----------------------
 EXTRFAIL 
 ---------------------
 
@@ -4062,7 +4042,7 @@ EXTRFAIL, Extract failed for the global gggg. MUPIP INTEG should be run.
 
 MUPIP Error: A MUPIP EXTRACT operation on the global gggg failed because of database consistency issues.
 
-Action: Run the MUPIP INTEG command to identify the database consistency issues. See `verify_database_integrity_11.html <http://tinco.pair.com/bhaskar/gtm/doc/books/mr/books/ao/UNIX_manual/verfiy_database_integrity_11.html>`_ for more information.
+Action: Run the MUPIP INTEG command to identify the database consistency issues.
 
 -------------------------
 EXTRFILEXISTS
@@ -4093,16 +4073,6 @@ EXTRINTEGRITY, Database ffff potentially contains spanning nodes or data encrypt
 MUPIP Error: MUPIP EXTRACT cannot run because the database file ffff might contain spanning nodes or be partially encrypted with a particular key. Proceeding on a live database in such situation could result in data corruption.
 
 Action: Reformat the data to contain no spanning nodes, let MUPIP REORG -ENCRYPT complete (re)encryption of the database, or reissue the MUPIP EXTRACT command with a -FREEZE qualifier to acquire stand-alone access for the duration of the procedure. As a final resort, use an -OVERRIDE qualifier to proceed on a live database that either contains spanning nodes or is undergoing (re)encryption. YottaDB highly discourages using the -OVERRIDE qualifier unless the database is quiescent.
-
-------------------------
-EXTRIOERR 
-------------------------
-
-EXTRIOERR, Error writing extract file xxxx
-
-MUPIP Error: OpenVMS or RMS errors writing to the specified extract output file, during the MUPIP EXTRACT.
-
-Action: Refer to the accompanying message(s) for details and take appropriate action.
 
 -------------------------
 EXTSRCLIN
@@ -4858,17 +4828,6 @@ GTMEISDIR, dddd : Is a directory
 Run Time Error: The file dddd opened for reading is a directory. Directories cannot be opened for reading.
 
 Action: Check the argument to the OPEN for the appropriate file and its path.
-
-
--------------------
-GTMERREXIT 
--------------------
-
-GTMERREXIT, YottaDB image has exited with errors
-
-Run Time Error: Seen when YottaDB on VMS is exiting due to a FATAL error (previously displayed) but wishes to exit with error status and not generate a dump file (if SET PROC/DUMP were in effect).
-
-Action: See previous FATAL error.
 
 ------------------
 GTMSECSHR 
@@ -5650,16 +5609,6 @@ GDE Fatal: This indicates that GDE is aborting the session because integrity err
 
 Action: Review the accompanying message(s) for additional information. Verify whether the command specified the intended file. Something other than YottaDB and its utilities probably wrote to a Global Directory file or created a file with a name identical to the one specified by GTM$GBLDIR / gtmgbldir.
 
---------------------
-INSFFBCNT 
---------------------
-
-INSFFBCNT, Insufficient byte count quota left for requested operation
-
-Run Time Error: This indicates that an OPEN or JOB command could not establish a mailbox because it would exceed the process OpenVMS BYTLM.
-
-Action: Review the I/O flow of the program and make adjustments to minimize concurrently open buffered I/O devices, or talk to your system manager about increasing the user BYTLM.
-
 -------------------
 INSNOTJOINED 
 -------------------
@@ -6273,15 +6222,6 @@ Run Time Error: This indicates that a $ $ set^%GBLDEF or $ $ kill^%GBLDEF was at
 
 Action: Only $$get^%GBLDEF is supported for spanning globals. Specify a non-spanning global or change the set/kill to a get. For spanning globals, use the GDE ADD -GBLNAME command to set collation characteristics.
 
--------------------
-IVTIME 
--------------------
-
-IVTIME, Invalid time specification: xxxx
-
-Run Time Error: This indicates that a JOB command specified a SCHEDULE jobparameter with an invalid time xxxx.
-
-Action: Specify the time for the jobparameter according to the OpenVMS time format. YottaDB requires a space between the date and time; DCL commands require a colon (:). For more information about the OpenVMS time format, refer to the OpenVMS DCL Dictionary.
 
 ---------------------
 JIUNHNDINT 
@@ -7324,17 +7264,6 @@ Compile Time Error: This indicates that arguments to JOB cannot be passed by ref
 
 Action: Arguments to JOB must be passed by value.
 
-
---------------------
-JOBARGMISSING 
---------------------
-
-JOBARGMISSING, Missing job argument nnnn - can't skip non-trailing arguments to a JOB command in OpenVMS editions
-
-Run Time Error: Indicates a JOB command parameter list contains two adjacent commas (,,), which should show an intention to not supply an actuallist value for the corresponding formallist parameter. nnnn is the ordinal number of the first argument with this issue.
-
-Action: If the parameter was not intentionally skipped, correct the JOB command. If the parameter should be optional, reorder the lists so the parameter in question is at the end of the list where it can be omitted or establish a distinguished value, such as an empty string, to serve in place of an omitted value.
-
 ---------------------
 JOBEXAMDONE 
 ---------------------
@@ -7416,7 +7345,6 @@ Compile Time Error: This indicates that a JOB command specified a value for a jo
 
 Action: Modify the jobparameter or remove its argument.
 
-
 -----------------------
 JOBPARNUM 
 -----------------------
@@ -7436,7 +7364,6 @@ JOBPARSTR, The value of this job parameter must be a string
 Compile Time Error: This indicates that a JOB command specified a valid jobparameter but did not assign the jobparameter a string value as expected.
 
 Action: Ensure that the jobparameter has a string literal argument and not a variable or keyword argument.
-
 
 --------------------
 JOBPARTOOLONG 
@@ -8207,16 +8134,6 @@ MALLOCMAXUNIX, Exceeded maximum allocation defined by $gtm_max_storalloc.
 Run Time Error: This error accompanies a MEMORY error as a secondary error to indicate that the limit the process hit was not an OS limit but one artificially defined by the $gtm_max_storalloc environment variable.
 
 Action: Increase the value of, or unset, $gtm_max_storalloc, or identify the source of the memory consumption (for example, creating and keeping lots of local variables) and reduce it.
-
------------------
-MALLOCMAXVMS
------------------
-
-MALLOCMAXVMS, Exceeded maximum allocation defined by GTM_MAX_STORALLOC.
-
-Run Time Error: This error accompanies a MEMORY error as a secondary error to indicate that the limit the process hit was not an OS limit but one artificially defined by the GTM_MAX_STORALLOC logical.
-
-Action: Increase the value of or unset the GTM_MAX_STORALLOC logical or identify the source of the memory consumption (for example, creating and keeping lots of local variables) and reduce it.
 
 -------------------
 MAPBAD 
@@ -14711,16 +14628,6 @@ Run Time Error: This message is issued by Recovery/Rollback process when it is u
 Action: Look into the secondary error message and if necessary report the entire incident context to your YottaDB support channel for further analysis.
 
 
-----------------
-TRUNCATEFAIL 
-----------------
-
-TRUNCATEFAIL, Truncating xxxx from aaaan OpenVMS blocks to bbbb blocks failed
-
-MUPIP Error: This indicates that a MUPIP BACKUP copied a database that extended during the copy and the attempt to return it to the proper size failed.
-
-Action: Examine the subsequent message for more information. It maybe possible to make the copy usable by performing a MUPIP EXTEND to the actual (current) size take the GDS blocks from the extension size in the file header, and verify the same against the reported RMS blocks. You will need to rename the file since the file in this state will have a temporary file name rather than the expected name from the BACKUP.
-
 -----------------
 TSTRTPARM 
 -----------------
@@ -15122,26 +15029,6 @@ VIEWNOTFOUND, View parameter xxxx not valid
 Run Time Error: This indicates that the VIEW command or $VIEW() function has an invalid argument xxxx.
 
 Action: Modify the argument.
-
-------------------
-VMSMEMORY 
-------------------
-
-VMSMEMORY, Central memory exhausted - check page file quota and page file size
-
-Run Time Error: This indicates that programs are requesting more memory than the system can provide with the current PAGEFILE settings.
-
-Action: Adjusting the pagefile size and quota can increase memory efficiency.
-
-------------------
-VMSMEMORY2 
-------------------
-
-VMSMEMORY2, Central storage exhausted during allocation of dynamic file descriptor with !UL bytes - check page file quota and page file size
-
-Run Time Error: In OpenVMS, dynamic file descriptors used in external routine processing have their space allocated differently from other VMS memory. If one of these special allocations fails, this new version of the VMSMEMORY error is reported.
-
-Action: Adjusting the pagefile size and quota can increase memory efficiency.
 
 ------------------
 WAITDSKSPACE
@@ -15595,16 +15482,6 @@ Compile Time Error: This indicates that the program specified an unrecognized re
 
 Action: Review the external calls table documentation for valid return types.
 
------------------
-ZCSTATUS
------------------
-
-ZCSTATUS, External call: Unsuccessful return status
-
-Run Time Error: This indicates that an external call or $ZCALL() function failed because the status returned by the external routine indicates that the routine did not execute successfully.
-
-Action: Review the external routine and the arguments passed to it. Ensure that the routine is following the OpenVMS calling standard in returning the status.
-
 ---------------
 ZCSTATUSRET
 ---------------
@@ -15666,16 +15543,6 @@ ZCUNTYPE, Unknown type entered
 Run Time Error: This indicates that the program used an invalid external call parameter.
 
 Action: Refer to the `Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/index.html>`_ for valid external call parameters.
-
-------------------
-ZCUSRRTN 
-------------------
-
-ZCUSRRTN, External call: Run-time error in user routine
-
-Run Time Error: This indicates that an external call or $ZCALL() function failed because the external routine produced an OpenVMS error condition and terminated abnormally.
-
-Action: Review and debug the external routine.
 
 --------------------
 ZCVECTORINDX 
@@ -15870,16 +15737,6 @@ ZLINKFILE, Error while ZLINKing "xxxx"
 Run Time Error: This indicates that ZLINK command failed while trying to include routine xxxx in the image.
 
 Action: Use host shell commands to ensure that the file to be ZLINKed is in the proper directory and has the appropriate protection. Review the accompanying message(s) for additional information.
-
------------------
-ZLKIDBADARG
------------------
-
-ZLKIDBADARG, The tvexpr must be FALSE if last ZLKID not found
-
-Run Time Error: This indicates that a $ZLKID() function specified an argument that was TRUE when no active OpenVMS lock scan was in progress.
-
-Action: Ensure that $ZLKID() is initialized with a FALSE truth-valued expression. $ZLKID() cannot be invoked with a TRUE truth-valued expression unless the last $ZLKID() returned a lock. If the function has not been previously invoked, it must be first invoked with a FALSE truth-valued expression.
 
 ---------------
 ZLMODULE 
