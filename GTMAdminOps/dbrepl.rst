@@ -256,7 +256,7 @@ Whereas in the last example Malvern was not ahead when starting SI replication f
 
 .. [a] As this rollback is more complex, may involve more data than the regular LMS rollback, and may involve reading journal records sequentially; it may take longer.
 
-.. [b] In scripting for automating operations, there is no need to explicitly test whether BrynMawr is behind Malvern - if it is behind, the Source Server will fail to connect and report an error, which automated shell scripting can detect and effect a rollback on Malvern followed by a reconnection attempt by BrynMawr. On the other hand, there is no harm in Malvern routinely performing a rollback before having BrynMawr connect - if it is not ahead, the rollback will be a no-op. This characteristic of replication is unchanged from releases prior to V5.5-000.
+.. [b] In scripting for automating operations, there is no need to explicitly test whether BrynMawr is behind Malvern - if it is behind, the Source Server will fail to connect and report an error, which automated shell scripting can detect and effect a rollback on Malvern followed by a reconnection attempt by BrynMawr. On the other hand, there is no harm in Malvern routinely performing a rollback before having BrynMawr connect - if it is not ahead, the rollback will be a no-op.
 
 .. [c] YottaDB's responsibility for them ends once it places them in the Unreplicated Transaction Log.
 
@@ -356,8 +356,6 @@ Consider the following example where Ardmore rolls back its database in state sp
 Limitations- SI Replication
 ++++++++++++++++++++++++++++++++++++++++++++
 
-starting V5.5-000, YottaDB does not support replication between platforms with YottaDB releases prior to V5.1-000. To upgrade to YottaDB V5.5-000, first upgrade to YottaDB V5.1-000 or later as an intermediate step.
-
 Although a receiver of SI replication can source a BC replication stream for downstream propagation, it cannot source an SI replication stream. So, in the example above, while Malvern can receive SI replication from Ardmore or BrynMawr, and it can source a BC replication stream to Newtown, which can in turn source a BC replication stream to Oxford. Thus, none of Malvern, Newtown or Oxford can source an SI replication stream.
 
 Also an instance can only receive a single SI replication stream. Malvern cannot receive SI replication from an instance other than Ardmore (or an instance receiving BC replication from Ardmore, such as BrynMawr). Newtown or Oxford are replicating secondary instances and can receive no updates other than from Malvern.
@@ -403,7 +401,7 @@ There are two types of helper processes:
 A certain number of each type of helper process maximizes throughput. As a practical matter, as long as the file system bandwidth on a replicating instance is equal to or greater than that of the originating instance providing its replication stream, there need be little concern about having too many helper processes.
 
 .. note::
-   There may be other reasons for a replicating instance to lag behind its originating instance during replication. Helper processes cannot improve situations such as the following: There is a bottleneck in the network between the originating and replicating instances--increase the network bandwidth or use compression.The hardware of the replicating instance is not as capable as that of the hardware on the originating instance--upgrade the hardware of the replicating instance.
+   There may be other reasons for a replicating instance to lag behind its originating instance during replication. Helper processes cannot improve situations such as the following: There is a bottleneck in the network between the originating and replicating instances (increase the network bandwidth or use compression) or the hardware of the replicating instance is not as capable as that of the hardware on the originating instance (upgrade the hardware of the replicating instance).
 
 **Filters**
 
@@ -427,11 +425,15 @@ This means:
 
 A Replication Instance file maintains the current state of an instance. It also serves as a repository of the history of the journal sequence numbers that are generated locally or received from other instances.
 
-It includes 3 sections -- File Header, Source Server slots, and History Records.
+It includes three sections: 
 
-The File Header section records information about the current instance, such as semaphore and shared memory ids of the Journal and Receive Pool, journal sequence number of the current instance.
+* File Header
+* Source Server slots
+* History Records.
 
-The Source Server slots store information for each replicating instance for which a Source Server is started. A slot stores the name of the replicating instance, the last transmitted sequence number, and the sequence number when the Source Server was last connected to the originating instance (Connect Sequence Number).
+The **File Header** section records information about the current instance, such as semaphore and shared memory ids of the Journal and Receive Pool, journal sequence number of the current instance.
+
+The **Source Server slots** store information for each replicating instance for which a Source Server is started. A slot stores the name of the replicating instance, the last transmitted sequence number, and the sequence number when the Source Server was last connected to the originating instance (Connect Sequence Number).
 
 A Replication Instance file has 16 slots. Initially, all are unused. A Source Server replicating to a replicating instance for the first time utilizes an unused slot to store the information and any future Source Server process replicating to the same replicating instance updates this information.
 
@@ -439,14 +441,14 @@ If an unused slot is not available, the first time a Source Server is started to
 
 Preemption of slots does not occur if an instance connects to no more than 16 different replicating instances throughout its lifetime.
 
-In the History Records section, the history of on instance is maintained as a set of records. A new history records is added to the tail of the instance file whenever an instance changes from being an originating instance to replicating instance or vice versa --the only exception being when a history record is removed from the tail of the instance file when updates are rolled back from the database as part of a MUPIP JOURNAL -ROLLBACK. Every record identifies a range of journal sequence numbers and the name of the originating instance that generated those journal records. The first history record starts with the current journal sequence number of the instance.
+In the **History Records** section, the history of on instance is maintained as a set of records. A new history record is added to the tail of the instance file whenever an instance changes from being an originating instance to a replicating instance or vice versa - the only exception being when a history record is removed from the tail of the instance file when updates are rolled back from the database as part of a MUPIP JOURNAL -ROLLBACK. Every record identifies a range of journal sequence numbers and the name of the originating instance that generated those journal records. The first history record starts with the current journal sequence number of the instance.
 
-When an originating instance transmits a sequence number to a replicating instance, the originating instance name is recorded as "Root Primary Instance Name" in the replication instance file history of both the instances. The same rule applies when a replicating instance is acting as an originating instance for another replicating instance downstream.
+When an originating instance transmits a sequence number to a replicating instance, the originating instance name is recorded as the "Root Primary Instance Name" in the replication instance file history of both the instances. The same rule applies when a replicating instance is acting as an originating instance for another replicating instance downstream.
 
 This history is crucial for determining the journal sequence numbers through which both instances are synchronized when two instances attempt to connect. This journal sequence number is determined by going back in the history of both the instance files and finding the earliest shared journal sequence number that was generated by the same originating instance. If the shared journal sequence number matches the current journal sequence number of the replicating instance, the Receiver Server on the replicating instance continues with normal replication. Otherwise, a MUPIP JOURNAL -ROLLBACK -FETCHRESYNC must be performed on the replicating instance to rollback to a common synchronization point from which the originating instance can transmit updates to allow it to catch up.
 
 .. note::
-   It is necessary to take a backup of the Replication Instance file that is consistent with the snapshot of the database files in the backup. MUPIP BACKUP -REPLINSTANCE creates a backup of the Replication Instance file.  The source server for the instance must be started at least once before backing up the replication instance file. If the replication instance file is damaged or deleted, a new instance file must be created, and all replicating instance downstream must be recreated from backups. 
+   It is necessary to take a backup of the Replication Instance file that is consistent with the snapshot of the database files in the backup. MUPIP BACKUP -REPLINSTANCE creates a backup of the Replication Instance file.  The source server for the instance must be started at least once before backing up the replication instance file. If the replication instance file is damaged or deleted, a new instance file must be created, and all replicating instances downstream must be recreated from backups. 
 
 --------------------------------------
 Implementing Replication and Recovery
@@ -455,7 +457,7 @@ Implementing Replication and Recovery
 A transaction processing application makes a series of database updates. YottaDB executes these updates online or from data-driven logic, commonly called "batch." 
 
 1. Online Update: An online update arrives at YottaDB as a message from a client.
-2. Driven by internal information, such as balances in end-of day, or external information, such as a list of checks from a clearinghouse.
+2. Driven by internal information, such as balances at end-of day, or external information, such as a list of checks from a clearinghouse.
 
 The processing model in each case is a transaction or a unit of work initiated by client input such as a request to transfer funds from one account to another, or as the next logical unit of work such as posting interest on the next account. This general model holds both for applications where users login directly to a host (perhaps using terminal emulation from a workstation) and those where a client communicates with a host server process. This section lists key considerations for a transaction processing application to:
 
@@ -477,7 +479,7 @@ YottaDB recommends you plan upfront for database consistency while designing the
 
 * Ensure that externally driven batch processing also has the ability to resume. The external file driving the batch operation must be available on the replicating instance before starting the batch operation on the originating instance. This is required to handle originating instance failure during the batch process.
 
-* YottaDB produces an error for updates outside the set of database files defined by the instance file. External references are not prohibited as such. In other words, there can be global directory and instance configurations where an external reference update falls within the instance and works correctly. Read references outside an instance are permitted because they currently do not engage replication.
+* YottaDB produces an error for updates outside the set of database files defined by the instance file. External references are not prohibited as such. In other words, there can be a global directory and instance configurations where an external reference update falls within the instance and works correctly. Read references outside an instance are permitted because they currently do not engage replication.
 
 .. image:: applarch.png
 
@@ -495,9 +497,9 @@ Application logic typically responds to client messages with a reply generated i
 
 An LMS application can handle this situation by designing the message structure to have a unique message identifier (MSGID), and the application to include the MSGID in the database as part of the TCOMMIT.
 
-If the originating instance crashes after committing the transaction and the switchover logic makes the former replicating instance the new originating instance--This new originating instance, then, receives the retried message that has the same MSGID from the client. In this case, one of the following can occur:
+If the originating instance crashes after committing the transaction and the switchover logic makes the former replicating instance the new originating instance - This new originating instance, then, receives the retried message that has the same MSGID from the client. In this case, one of the following can occur:
 
-* The database shows that the transaction corresponding to the MSGID in the message was processed. The server could then reply that this transaction was processed. A more sophisticated approach computes the response to the client within the transaction, and to stores it in the database as part of the transaction commit. Upon receipt of a message identified as a retry of a previously processed message, the server returns the stored response from the database to the client.
+* The database shows that the transaction corresponding to the MSGID in the message was processed. The server could then reply that this transaction was processed. A more sophisticated approach computes the response to the client within the transaction, and stores it in the database as part of the transaction commit. Upon receipt of a message identified as a retry of a previously processed message, the server returns the stored response from the database to the client.
 
 * The database shows the transaction as unprocessed. In this case, the new originating instance processes the transaction. At this time, it is unknown whether the former originating instance processed the transaction before going down. If it was not processed, there is no issue. If it was processed but not replicated, YottaDB rollback logic rolls it back when the former originating instance comes up as a replicating instance, and it must be reconciled either manually or automatically, from the rollback report (since the result of processing the first time may be different from the result of processing the second time).
 
@@ -542,7 +544,7 @@ Some operational policies prefer stopping the YottaDB application in such events
 
 The Instance Freeze mechanism provides an option to stop all updates on the region(s) of an instance as soon as a process encounters an error while writing to a journal or database file. This mechanism safeguards application data from a possible system crash after such an error.
 
-The environment variable gtm_custom_errors specifies the complete path to the file that contains a list of errors that should automatically stop all updates on the region(s) of an instance. The error list comprises of error mnemonics (one per line and in capital letters) from the Message and Recovery Guide. The YottaDB distribution kits include a custom_errors_sample.txt file which can be used as a target for the gtm_custom_errors environment variable.
+The environment variable gtm_custom_errors specifies the complete path to the file that contains a list of errors that should automatically stop all updates on the region(s) of an instance. The error list comprises of error mnemonics (one per line and in capital letters) from the `Messages and Recovery Procedures Manual <https://docs.yottadb.com/MessageRecovery/index.html>`_.
 
 MUPIP REPLIC -SOURCE -JNLPOOL -SHOW displays whether the custom errors file is loaded.
 
@@ -564,7 +566,7 @@ Depending on the error, removing an Instance Freeze is operator driven or automa
 During an Instance Freeze, attempts to update the database and journal files hang but operations like journal file extract which do not require updating the database file(s) continue normally. When an Instance Freeze is cleared, processes automatically continue with no auxiliary operational or programmatic intervention. The Instance Freeze mechanism records both the freeze and the unfreeze in the operator log.
 
 .. note::
-   Because there are a large number of errors that YottaDB can recognize and because YottaDB has several operational states, the YottaDB team has tested the errors in the custom_errors_sample.txt which are consistent with what we expect to be common usage. If you experience problems trying to add other errors or have concerns about plans to add other errors, please consult your YottaDB support channel.
+   Because there are a large number of errors that YottaDB can recognize and because YottaDB has several operational states, the YottaDB team has tested errors consistent with what we expect to be common usage. If you experience problems trying to add other errors or have concerns about plans to add other errors, please consult your YottaDB support channel.
 
 +++++++++++++++++++++++
 TLS/SSL Replication
@@ -610,10 +612,10 @@ Creating a root certificate authority involves three steps:
      Country Name (2 letter code) [AU]:US
      State or Province Name (full name) [Some-State]:PA
      Locality Name (eg, city) []:Malvern
-     Organization Name (eg, company) [Internet Widgits Pty Ltd]:Example Pvt. Ltd
+     Organization Name (eg, company) [Internet Widgits Pty Ltd]:YottaDB
      Organizational Unit Name (eg, section) []:Certificate Authority
-     Common Name (e.g. server FQDN or YOUR name) []:www.example.com
-     Email Address []:example@example.com
+     Common Name (e.g. server FQDN or YOUR name) []:yottadb.com
+     Email Address []:info@yottadb.com
 
 3. At this point, ca.crt is a root certificate that can be used to sign other certificates (including intermediate certificate authorities). The private key of the root certificate must be protected from unauthorized access. 
 
@@ -638,13 +640,13 @@ The root certificate is used to sign regular, leaf-level certificates. Below are
       Country Name (2 letter code) [AU]:US
       State or Province Name (full name) [Some-State]:PA
       Locality Name (eg, city) []:Malvern
-      Organization Name (eg, company) [Internet Widgits Pty Ltd]:XYZQ International
+      Organization Name (eg, company) [Internet Widgits Pty Ltd]:YottaDB
       Organizational Unit Name (eg, section) []: OurSourceServer
-      Common Name (e.g. server FQDN or YOUR name) []:www.xyzq.com
-      Email Address []:xyzq@xyzq.com
+      Common Name (e.g. server FQDN or YOUR name) []:yottadb.com
+      Email Address []:xyzq@yottadb.com
       Please enter the following 'extra' attributes to be sent with your certificate request
       A challenge password []:challenge
-      An optional company name []:XYZQ Pvt. Ltd
+      An optional company name []:YottaDB
 
 Typically, organization that generates the certificate sign then sends it to a certificate authority (or a root certificate authority), which audits the request and signs the certificate with its private key, thereby establishing that the certificate authority trusts the company/organization that generated the certificate and requested its signing. In this example, we sign the certificate sign request with the root certificate generated above.
 
@@ -663,12 +665,12 @@ The output of this command looks like the following:
       For some fields there will be a default value,
       If you enter '.', the field will be left blank.
       Country Name (2 letter code) [US]: US
-      State or Province Name (full name) [Philadelphia]:Illinois
-      City (e.g., Malvern) [Malvern]:Chicago"
-      Organization Name (eg, company) [FIS]:FIS
+      State or Province Name (full name) [Philadelphia]:PA
+      City (e.g., Malvern) [Malvern]:Malvern
+      Organization Name (eg, company) [YottaDB]:YottaDB
       Organizational Unit Name (eg, section) [YottaDB]:YottaDB
-      Common Name (e.g. server FQDN or YOUR name) [localhost]:fisglobal.com
-      Ename Address (e.g. helen@gt.m) []:root@gt.m
+      Common Name (e.g. server FQDN or YOUR name) [localhost]:yottadb.com
+      Ename Address (e.g. mary@yottadb) []:root@yottadb
       Please enter the following 'extra' attributes
       to be sent with your certificate request
       A challenge password []:
@@ -684,11 +686,11 @@ The output of this command looks like the following:
        Not After : Jun 12 14:06:53 2014 GMT
        Subject:
        countryName = US
-       stateOrProvinceName = Illinois
-       organizationName = FIS
+       stateOrProvinceName = PA
+       organizationName = YottaDB
        organizationalUnitName = YottaDB
-       commonName = fisglobal.com
-       emailAddress = helen@gt.m
+       commonName = yottadb.com
+       emailAddress = mary@yottadb
        X509v3 extensions:
        X509v3 Basic Constraints:
        CA:FALSE
@@ -808,19 +810,19 @@ Here is a sample configuration file:
 
    };
 
-If you are using the environment variable gtm_dbkeys to point to the master key file for database encryption, please convert that file to the libconfig configuration file format as pointed to by the $gtmcrypt_config environment variable at your earliest convenience. In the latest version, the gtm_dbkeys environment variable and the master key file it points to are deprecated in favor of the gtmencrypt_config environment variable. Although the latest version supports the use of $gtm_dbkeys for database encryption, YottaDB plans to discontinue support for it in the very near future. To convert master key files to libconfig format configuration files, please download CONVDBKEYS.m from http://tinco.pair.com/bhaskar/gtm/doc/articles/downloadables/CONVDBKEYS.m and follow instructions in the comments near the top of the program file.
+If you are using the environment variable gtm_dbkeys to point to the master key file for database encryption, please convert that file to the libconfig configuration file format as pointed to by the $gtmcrypt_config environment variable at your earliest convenience. In the latest version, the gtm_dbkeys environment variable and the master key file it points to are deprecated in favor of the gtmencrypt_config environment variable. Although the latest version supports the use of $gtm_dbkeys for database encryption, YottaDB plans to discontinue support for it in the very near future. To convert master key files to libconfig format configuration files, please download CONVDBKEYS.m from `Github <https://github.com/YottaDB/YottaDBdoc/tree/master/GTMAdminOps>`_ and follow instructions in the comments near the top of the program file.
 
 +++++++++++++++++++++++++++++
 Network Link Between Systems
 +++++++++++++++++++++++++++++
 
-YottaDB replication requires a durable network link between all instances. The database replication servers must be able to use the network link via simple TCP/IP connections. The underlying transport may enhance message delivery, (for example, provide guaranteed delivery, automatic switchover and recovery, and message splitting and re-assembly capabilities); however, these features are transparent to the replication servers, which simply depend on message delivery and message receipt.
+YottaDB replication requires a durable network link between all instances. The database replication servers must be able to use the network link via simple TCP/IP connections. The underlying transport may enhance message delivery, (for example, provide guaranteed delivery, automatic switchover and recovery, and message splitting and re-assembly capabilities); however, these features are transparent to the replication servers, which simply depend on message delivery and message receipts.
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++
 Choosing Betweeen BEFORE_IMAGE and NOBEFORE_IMAGE 
 ++++++++++++++++++++++++++++++++++++++++++++++++++
 
-Between BEFORE_IMAGE journaling and NOBEFORE_IMAGE journaling, there is no difference in the final state of a database / instance recovered after a crash. The difference between before image and nobefore journaling is in:
+Between BEFORE_IMAGE journaling and NOBEFORE_IMAGE journaling, there is no difference in the final state of a database / instance recovered after a crash. The difference between before image and nobefore image journaling is in:
 
 * the sequence of steps to recover an instance and the time required to perform them.
 
@@ -835,22 +837,22 @@ When an instance goes down, its recovery consists of (at least) two steps: recov
 
 For database recovery:
 
-* With BEFORE_IMAGE journaling, the time is simply that is needed to execute a mupip journal recover backward "*" command or, when using replication, mupip journal recover -rollback. This uses before image records in the journal files to roll the database files back to their last epochs, and then forward to the most current updates. If this takes tbck, the total recovery time is tsys+tbck.
+* With BEFORE_IMAGE journaling, the time is simply what is needed to execute a mupip journal recover backward "*" command or, when using replication, mupip journal recover -rollback. This uses before image records in the journal files to roll the database files back to their last epochs, and then forward to the most current updates. If this takes tbck, the total recovery time is tsys+tbck.
 
 * With NOBEFORE_IMAGE journaling, the time is that required to restore the last backup, say, trest plus the time to perform a MUPIP JOURNAL -RECOVER -FORWARD "*" command, say tfwd, for a total recovery time of tsys+trest+tfwd. If the last backup is available online, so that "restoring the backup" is nothing more than setting the value of an environment variable, trest=0 and the recovery time is tsys+tfwd.
 
 Because tbck is less than tfwd, tsys+tbck is less than tsys+tfwd. In very round numbers, tsys may be minutes to tens of minutes, tfwd may be tens of minutes and tbck may be in tens of seconds to minutes. So, recovering the instance A might (to a crude first approximation) be a half order of magnitude faster with BEFORE_IMAGE journaling than with NOBEFORE_IMAGE journaling. Consider two deployment configurations.
 
-1. Where A is the sole production instance of an application, halving or quartering the recovery time of the instance is significant, because when the instance is down, the enterprise is not in business. The difference between a ten minute recovery time and a thirty minute recovery time is important. Thus, when running a sole production instance or a sole production instance backed up by an underpowered or not easily accessed, "disaster recovery site," before image journaling with backward recovery is the preferred configuration ofis the preferred configuration ofbetter suits a production deployment. Furthermore, in this situation, there is pressure to bring A back up soon, because the enterprise is not in business - pressure that increases the probability of human error.
+1. Where A is the sole production instance of an application, halving or quartering the recovery time of the instance is significant, because when the instance is down, the enterprise is not in business. The difference between a ten minute recovery time and a thirty minute recovery time is important. Thus, when running a sole production instance or a sole production instance backed up by an underpowered or not easily accessed, "disaster recovery site," before image journaling with backward recovery is the preferred configuration that better suits a production deployment. Furthermore, in this situation, there is pressure to bring A back up soon, because the enterprise is not in business - pressure that increases the probability of human error.
 
-2. With two equally functional and accessible instances, A and B, deployed in an LMS configuration at a point in time when A, running as the originating instance replicating to B, crashes, B can be switched from a replicating instance to an originating instance within seconds. An appropriately configured network can change the routing of incoming accesses from one instance to the other in seconds to tens of seconds. The enterprise is down only for the time required to ascertain that A is in fact down, and to make the decision to switch to B— perhaps a minute or two. Furthermore, B is in a "known good" state, therefore, a strategy of "if in doubt, switchover" is entirely appropriate. This time, tswch, is independent of whether A and B are running -BEFORE_IMAGE journaling or -NOBEFORE_IMAGE journaling. The difference between -BEFORE_IMAGE journaling and -NOBEFORE_IMAGE journaling is the difference in time taken subsequently to recover A, so that it can be brought up as a replicating instance to B. If -NOBEFORE_IMAGE journaling is used and the last backup is online, there is no need to first perform a forward recovery on A using its journal files. Once A has rebooted: 
+2. With two equally functional and accessible instances, A and B, deployed in an LMS configuration at a point in time when A, running as the originating instance replicating to B, crashes, B can be switched from a replicating instance to an originating instance within seconds. An appropriately configured network can change the routing of incoming accesses from one instance to the other in seconds to tens of seconds. The enterprise is down only for the time required to ascertain that A is in fact down, and to make the decision to switch to B — perhaps a minute or two. Furthermore, B is in a "known good" state, therefore, a strategy of "if in doubt, switchover" is entirely appropriate. This time, tswch, is independent of whether A and B are running -BEFORE_IMAGE journaling or -NOBEFORE_IMAGE journaling. The difference between -BEFORE_IMAGE journaling and -NOBEFORE_IMAGE journaling is the difference in time taken subsequently to recover A, so that it can be brought up as a replicating instance to B. If -NOBEFORE_IMAGE journaling is used and the last backup is online, there is no need to first perform a forward recovery on A using its journal files. Once A has rebooted: 
 
    * Extract the unreplicated transactions from the crashed environment
 
    * Connect the backup as a replicating instance to B and allow it to catch up.
 
 .. note::
-   Applications that can take advantage the forthcoming LMX capability will essentially make tswch zero when used with a suitable front-end network.
+   Applications that can take advantage of the forthcoming LMX capability will essentially make tswch zero when used with a suitable front-end network.
 
 **Comparison other than recovery**
 
@@ -890,7 +892,7 @@ Because tbck is less than tfwd, tsys+tbck is less than tsys+tfwd. In very round 
 Database Repair
 ++++++++++++++++++++++++
 
-A system crash can, and often will, damage a database file, leaving it structurally inconsistent. With before image journaling, normal MUPIP recovery/rollback repairs such damage automatically and restores the database to the logically consistent state as of the end of the last transaction committed to the database by the application. Certain benign errors may also occur (refer to the "Maintaining Database Integrity" chapter). These must be repaired on the (now) replicating instance at an appropriate time, and are not considered "damage" for the purpose of this discussion. Even without before image journaling, a replicating instance (particularly one that is multi-site) may have sufficient durability in the aggregate of its instances so that backups (or copies) from an undamaged instance can always repair a damaged instance.
+A system crash can, and often will, damage a database file, leaving it structurally inconsistent. With before image journaling, normal MUPIP recovery/rollback repairs such damage automatically and restores the database to the logically consistent state as of the end of the last transaction committed to the database by the application. Certain benign errors may also occur (refer to the `"Maintaining Database Integrity" chapter <https://docs.yottadb.com/AdminOpsGuide/integrity.html>`_). These must be repaired on the (now) replicating instance at an appropriate time, and are not considered "damage" for the purpose of this discussion. Even without before image journaling, a replicating instance (particularly one that is multi-site) may have sufficient durability in the aggregate of its instances so that backups (or copies) from an undamaged instance can always repair a damaged instance.
 
 .. note::
    If the magnetic media of the database and/or the journal file is damaged (e.g., a head crash on a disk that is not mirrored), automatic repair is problematic. For this reason, it is strongly recommended that organizations use hardware mirroring for magnetic media.
@@ -917,7 +919,7 @@ Download Replication Examples
 
 repl_procedures.tar.gz contains a set of replication example scripts. Each script contains a combination of YottaDB commands that accomplish a specific task. All examples in the Procedures section use these replication scripts but each example uses different script sequence and script arguments. Always run all replication examples in a test system from a new directory as they create sub-directories and database files in the current directory. No claim of copyright is made with regard to these examples. These example scripts are for explanatory purposes and are not intended for production use. YOU MUST UNDERSTAND, AND APPROPRIATELY ADJUST THE COMMANDS GIVEN IN THESE SCRIPTS BEFORE USING IN A PRODUCTION ENVIRONMENT. Typically, you would set replication between instances on different systems/data centers and create your own set of scripts with appropriate debugging and error handling to manage replication between them.
 
-Go to http://tinco.pair.com/bhaskar/gtm/doc/books/ao/UNIX_manual/downloadables/repl_procedures.tar.gz to download repl_procedures.tar.gz on a test system. 
+Go to `Github <https://github.com/YottaDB/YottaDBdoc/tree/master/GTMAdminOps>`_ to download repl_procedures.tar.gz on a test system. 
 
 repl_procedures.tar.gz includes the following scripts:
 
@@ -928,12 +930,12 @@ Sets a default environment for YottaDB replication. It takes two arguments:
 * The name of the instance/database directory
 * The YottaDB version
 
-Example: source ./env A V6.3-000A_x86_64
+Example: source ./env r1.10
 
 Here is the code:
 
 .. parsed-literal::
-   export gtm_dist=/usr/lib/fis-gtm/$2
+   export gtm_dist=/usr/local/lib/yottadb/$2
    export gtm_repl_instname=$1
    export gtm_repl_instance=$PWD/$gtm_repl_instname/gtm.repl
    export gtmgbldir=$PWD/$gtm_repl_instname/gtm.gld
@@ -1414,19 +1416,19 @@ A switchover is the procedure of switching the roles of an originating instance 
 
 In an A->B replication configuration, at any given point there can be two possibilities: 
 
-* A is ahead of B, that is A has updates which are not yet replicated to B. 
+* A is ahead of B, that is, A has updates which are not yet replicated to B. 
 
 * A and B are in sync. This happens where there are no new updates on A and all pending updates are replicated to B. 
 
 The steps described in this section perform a switchover (A->B becomes B->A) under both these possibilities. When A is ahead of B, these steps generate a lost transaction file which must be applied to the new originating instance as soon as possible. The lost transaction file contains transactions which are were not replicated to B. Apply the lost transactions on the new originating instance either manually or in a semi-automated fashion using the M-intrinsic function $ZQGBLMOD(). If you use $ZQGBLMOD(), perform two additional steps (mupip replicate -source -needrestart and mupip replicate -source -losttncomplete) as part of lost transaction processing. Failure to run these steps can cause $ZQGBLMOD() to return false negatives that in turn can result in application data consistency issues.
 
-First, choose a time when there are no database updates or the rate of updates are low to minimize the chances that your application may time out. There may be a need to hold database updates briefly during the switchover. For more information on holding database updates, refer to Instance Freeze section to configure an appropriate freezing mechanism suitable for your environment.
+First, choose a time when there are no database updates or the rate of updates are low to minimize the chances that your application may time out. There may be a need to hold database updates briefly during the switchover. For more information on holding database updates, refer to the `Instance Freeze section <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html#instance-freeze>`_ to configure an appropriate freezing mechanism suitable for your environment.
 
 In an A→B replication configuration, follow these steps:
 
 On A:
 
-* Shut down the Source Server with an appropriate timeout. The timeout should be long enough to replicate pending transactions to the replicating instance but not too long to cause clients to conclude that the application is not available. The YottaDB default Source Server wait period is up to 120 seconds. In most cases, the default wait period is sufficient.
+* Shut down the Source Server with an appropriate timeout. The timeout should be long enough to replicate pending transactions to the replicating instance but not too long so as to cause clients to conclude that the application is not available. The YottaDB default Source Server wait period is up to 120 seconds. In most cases, the default wait period is sufficient.
 
 On B:
 
@@ -1449,25 +1451,25 @@ On A:
 The following example runs a switchover in an A→B replication configuration.
 
 .. parsed-literal::
-   source ./gtmenv A V6.3-000A_x86_64 # creates a simple environment for instance A
+   source ./gtmenv A r1.10 # creates a simple environment for instance A
    ./db_create
    ./repl_setup # enables replication and creates the replication instance file
    ./originating_start A B 4001 # starts the active Source Server (A->B)
    $gtm_dist/mumps -r %XCMD 'for i=1:1:100 set ^A(i)=i'
    ./repl_status #-SHOWBACKLOG and -CHECKHEALTH report
-   source ./gtmenv B V6.3-000A_x86_64 # creates a simple environment for instance B
+   source ./gtmenv B r1.10 # creates a simple environment for instance B
    ./db_create
    ./repl_setup
    ./replicating_start B 4001 
    ./repl_status # -SHOWBACKLOG and -CHECKHEATH report 
    ./replicating_stop # Shutdown the Receiver Server and the Update Process 
-   source ./gtmenv A V6.3-000A_x86_64 # Creates an environment for A
+   source ./gtmenv A r1.10 # Creates an environment for A
    $gtm_dist/mumps -r %XCMD 'for i=1:1:50 set ^losttrans(i)=i' # perform some updates when replicating instance is not available. 
    sleep 2
    ./originating_stop # Stops the active Source Server 
-   source ./gtmenv B V6.3-000A_x86_64 # Create an environment for B
+   source ./gtmenv B r1.10 # Create an environment for B
    ./originating_start B A 4001 # Start the active Source Server (B->A)
-   source ./gtmenv A V6.3-000A_x86_64 # Create an environment for A
+   source ./gtmenv A r1.10 # Create an environment for A
    ./rollback 4001 backward
    ./replicating_start A 4001 # Start the replication Source Server 
    ./repl_status # To confirm whether the Receiver Server and the Update Process started correctly.
@@ -1476,9 +1478,9 @@ The following example runs a switchover in an A→B replication configuration.
 The shutdown sequence is as follows:
 
 .. parsed-literal::
-   source ./gtmenv A V6.3-000A_x86_64
+   source ./gtmenv A r1.10
    ./replicating_stop
-   source ./gtmenv B V6.3-000A_x86_64
+   source ./gtmenv B r1.10
    ./originating_stop
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1524,38 +1526,38 @@ The following scenario demonstrates a switchover from B←A→P to A←B→P whe
 The following example creates this switchover scenario:
 
 .. parsed-literal::
-   source ./gtmenv A V6.3-000A_x86_64
+   source ./gtmenv A r1.10
    $gtm_dist/mumps -r ^%XCMD 'set ^A(98)=99'
-   source ./gtmenv B V6.3-000A_x86_64
+   source ./gtmenv B r1.10
    ./replicating_stop
-   source ./gtmenv A V6.3-000A_x86_64
+   source ./gtmenv A r1.10
    $gtm_dist/mumps -r ^%XCMD 'set ^A(99)=100'
    ./originating_stop
-   source ./gtmenv B V6.3-000A_x86_64
+   source ./gtmenv B r1.10
    ./originating_start B A 4010
    ./originating_start B P 4011
    ./backup_repl startB
    $gtm_dist/mumps -r ^%XCMD 'set ^B(61)=0'
-   source ./gtmenv P V6.3-000A_x86_64
+   source ./gtmenv P r1.10
    ./suppl_setup M startB 4011 -updok
    $gtm_dist/mumps -r ^%XCMD 'for i=39:1:40 set ^P(i)=i'
-   source ./gtmenv B V6.3-000A_x86_64
+   source ./gtmenv B r1.10
    $gtm_dist/mumps -r ^%XCMD 'set ^B(62)=1,^B(63)=1'
-   source ./gtmenv A V6.3-000A_x86_64
+   source ./gtmenv A r1.10
    ./rollback 4010 backward
    ./replicating_start A 4010
-   source ./gtmenv B V6.3-000A_x86_64
+   source ./gtmenv B r1.10
    $gtm_dist/mumps -r ^%XCMD 'set ^B(64)=1,^B(65)=1'
    cat A/gtm.lost
 
 The shutdown sequence is as follows:
 
 .. parsed-literal::
-   source ./gtmenv B V6.3-000A_x86_64
+   source ./gtmenv B r1.10
    ./originating_stop
-   source ./gtmenv A V6.3-000A_x86_64 
+   source ./gtmenv A r1.10 
    ./replicating_stop
-   source ./gtmenv P V6.3-000A_x86_64
+   source ./gtmenv P r1.10
    ./replicating_stop
 
 **A and P require rollback**
@@ -1592,49 +1594,49 @@ The following demonstrates a switchover scenario from B←A→P to A←B→P whe
 
 
 .. note::
-    As the rollback for P to accept replication from B is more complex, may involve more data than the regular LMS rollback, and may involve reading journal records sequentially; it may take longer. In scripting for automating operations, there is no need to explicitly test whether B is behind P - if it is behind, the Source Server will fail to connect and report an error, which automated shell scripting can detect and effect a rollback on P followed by a reconnection attempt by B. On the other hand, there is no harm in P routinely performing a rollback before having B connect - if it is not ahead, the rollback will be a no-op. This characteristic of replication is unchanged from releases prior to V5.5-000. YottaDB's responsibility for the rolled off transactions ends once it places them in the Unreplicated Transaction Log. Ultimately, business logic must determine whether the rolled off transactions can simply be reapplied or whether other reprocessing is required. YottaDB's $ZQGBLMOD() function can assist application code in determining whether conflicting updates may have occurred.
+    As the rollback for P to accept replication from B is more complex, may involve more data than the regular LMS rollback, and may involve reading journal records sequentially; it may take longer. In scripting for automating operations, there is no need to explicitly test whether B is behind P - if it is behind, the Source Server will fail to connect and report an error, which automated shell scripting can detect and effect a rollback on P followed by a reconnection attempt by B. On the other hand, there is no harm in P routinely performing a rollback before having B connect - if it is not ahead, the rollback will be a no-op. YottaDB's responsibility for the rolled off transactions ends once it places them in the Unreplicated Transaction Log. Ultimately, business logic must determine whether the rolled off transactions can simply be reapplied or whether other reprocessing is required. YottaDB's $ZQGBLMOD() function can assist application code in determining whether conflicting updates may have occurred.
 
 The following example creates this scenario.
 
 
 .. parsed-literal::
-   source ./gtmenv A V6.3-000A_x86_64
+   source ./gtmenv A r1.10
    ./db_create
    ./repl_setup
    ./originating_start A B 4010
    ./originating_start A P 4011
    ./backup_repl startA
    $gtm_dist/mumps -r ^%XCMD 'for i=1:1:97 set ^A(i)=i'
-   source ./gtmenv B V6.3-000A_x86_64
+   source ./gtmenv B r1.10
    ./db_create
    ./repl_setup
    ./replicating_start B 4010
-   source ./gtmenv P V6.3-000A_x86_64
+   source ./gtmenv P r1.10
    ./db_create
    ./suppl_setup P startA 4011 -updok
    $gtm_dist/mumps -r ^%XCMD 'for i=1:1:40 set ^P(i)=i'
-   source ./gtmenv B V6.3-000A_x86_64 
+   source ./gtmenv B r1.10 
    ./replicating_stop
-   source ./gtmenv A V6.3-000A_x86_64
+   source ./gtmenv A r1.10
    $gtm_dist/mumps -r ^%XCMD 'set ^A(98)=99'
-   source ./gtmenv P V6.3-000A_x86_64
+   source ./gtmenv P r1.10
    ./replicating_stop 
-   source ./gtmenv A V6.3-000A_x86_64
+   source ./gtmenv A r1.10
    $gtm_dist/mumps -r ^%XCMD 'set ^A(99)=100'
    ./originating_stop
-   source ./gtmenv B V6.3-000A_x86_64
+   source ./gtmenv B r1.10
    ./originating_start B A 4010
    ./originating_start B P 4011
    ./backup_repl startB
    $gtm_dist/mumps -r ^%XCMD 'set ^B(61)=0,^B(62)=1'
-   source ./gtmenv P V6.3-000A_x86_64
+   source ./gtmenv P r1.10
    ./rollback 4011 backward
    ./suppl_setup P startB 4011 -updok
    $gtm_dist/mumps -r ^%XCMD 'for i=39:1:40 set ^P(i)=i'
-   source ./gtmenv A V6.3-000A_x86_64
+   source ./gtmenv A r1.10
    ./rollback 4010 backward
    ./replicating_start A 4010
-   source ./gtmenv B V6.3-000A_x86_64
+   source ./gtmenv B r1.10
    $gtm_dist/mumps -r ^%XCMD 'set ^B(64)=1,^B(65)=1'
    cat A/gtm.lost
    cat P/gtm.lost
@@ -1642,11 +1644,11 @@ The following example creates this scenario.
 The shutdown sequence is as follows:
 
 .. parsed-literal::
-   source ./gtmenv B V6.3-000A_x86_64
+   source ./gtmenv B r1.10
    ./originating_stop
-   source ./gtmenv A V6.3-000A_x86_64 
+   source ./gtmenv A r1.10 
    ./replicating_stop
-   source ./gtmenv P V6.3-000A_x86_64
+   source ./gtmenv P r1.10
    ./replicating_stop
 
 **Rollback not required by application design**
@@ -1676,52 +1678,52 @@ The following scenario demonstrates a switchover from B←A→P to A←B→P whe
 The following example creates this scenario.
 
 .. parsed-literal::
-   source ./gtmenv A V6.3-000A_x86_64
+   source ./gtmenv A r1.10
    ./db_create
    ./repl_setup
    ./originating_start A B 4010
    ./originating_start A P 4011
    ./backup_repl startA
    $gtm_dist/mumps -r ^%XCMD 'for i=1:1:97 set ^A(i)=i'
-   source ./gtmenv B V6.3-000A_x86_64
+   source ./gtmenv B r1.10
    ./db_create
    ./repl_setup
    ./replicating_start B 4010 
-   source ./gtmenv P V6.3-000A_x86_64
+   source ./gtmenv P r1.10
    ./db_create
    ./suppl_setup P startA 4011 -updok
    $gtm_dist/mumps -r ^%XCMD 'for i=1:1:40 set ^P(i)=i'
-   source ./gtmenv B V6.3-000A_x86_64 
+   source ./gtmenv B r1.10 
    ./replicating_stop
-   source ./gtmenv A V6.3-000A_x86_64
+   source ./gtmenv A r1.10
    $gtm_dist/mumps -r ^%XCMD 'set ^A(98)=99'
-   source ./gtmenv P V6.3-000A_x86_64
+   source ./gtmenv P r1.10
    ./replicating_stop 
-   source ./gtmenv A V6.3-000A_x86_64
+   source ./gtmenv A r1.10
    $gtm_dist/mumps -r ^%XCMD 'set ^A(99)=100'
    ./originating_stop
-   source ./gtmenv B V6.3-000A_x86_64
+   source ./gtmenv B r1.10
    ./originating_start B A 4010
    ./originating_start B P 4011
    #./backup_repl startB
    $gtm_dist/mumps -r ^%XCMD 'set ^B(61)=0,^B(62)=1'
-   source ./gtmenv P V6.3-000A_x86_64
+   source ./gtmenv P r1.10
    ./replicating_start_suppl_n P 4011 -updok -noresync
    $gtm_dist/mumps -r ^%XCMD 'for i=39:1:40 set ^P(i)=i'
-   source ./gtmenv A V6.3-000A_x86_64
+   source ./gtmenv A r1.10
    ./rollback 4010 backward
    ./replicating_start A 4010 
-   source ./gtmenv B V6.3-000A_x86_64
+   source ./gtmenv B r1.10
    $gtm_dist/mumps -r ^%XCMD 'set ^B(64)=1,^B(65)=1'
 
 The shutdown sequence is as follows:
 
 .. parsed-literal::
-   source ./gtmenv B V6.3-000A_x86_64
+   source ./gtmenv B r1.10
    ./originating_stop
-   source ./gtmenv A V6.3-000A_x86_64
+   source ./gtmenv A r1.10
    ./replicating_stop
-   source ./gtmenv P V6.3-000A_x86_64
+   source ./gtmenv P r1.10
    ./replicating_stop
 
 **Rollback Automatically**
@@ -1747,39 +1749,39 @@ This scenario demonstrates the use of the -autorollback qualifier which performs
 The following example runs this scenario.
 
 .. parsed-literal::
-   source ./gtmenv A V6.3-000A_x86_64
+   source ./gtmenv A r1.10
    ./db_create
    ./repl_setup
    ./originating_start A P 4000
    ./originating_start A B 4001
-   source ./gtmenv B V6.3-000A_x86_64
+   source ./gtmenv B r1.10
    ./db_create
    ./repl_setup
    ./replicating_start B 4001
-   source ./gtmenv A V6.3-000A_x86_64
+   source ./gtmenv A r1.10
    ./backup_repl startA 
-   source ./gtmenv P V6.3-000A_x86_64
+   source ./gtmenv P r1.10
    ./db_create
    ./suppl_setup P startA 4000 -updok
    $gtm_dist/mumps -r %XCMD 'for i=1:1:38 set ^P(i)=i'
-   source ./gtmenv A V6.3-000A_x86_64
+   source ./gtmenv A r1.10
    $gtm_dist/mumps -r %XCMD 'for i=1:1:97 set ^A(i)=i'
-   source ./gtmenv B V6.3-000A_x86_64
+   source ./gtmenv B r1.10
    ./replicating_stop
-   source ./gtmenv A V6.3-000A_x86_64
+   source ./gtmenv A r1.10
    $gtm_dist/mumps -r %XCMD 'set ^A(98)=50'
-   source ./gtmenv P V6.3-000A_x86_64
+   source ./gtmenv P r1.10
    $gtm_dist/mumps -r %XCMD 'for i=39:1:40 set ^P(i)=i'
    ./replicating_stop
-   source ./gtmenv A V6.3-000A_x86_64
+   source ./gtmenv A r1.10
    $gtm_dist/mumps -r %XCMD 'set ^A(99)=100'
    ./originating_stop
-   source ./gtmenv B V6.3-000A_x86_64
+   source ./gtmenv B r1.10
    ./originating_start B A 4001 
    ./originating_start B P 4000
-   source ./gtmenv A V6.3-000A_x86_64
+   source ./gtmenv A r1.10
    ./replicating_start A 4001 -autorollback
-   source ./gtmenv P V6.3-000A_x86_64
+   source ./gtmenv P r1.10
    #./rollback 4000 backward
    ./replicating_start_suppl_n P 4000 -updok -autorollback
    #./replicating_start_suppl_n P 4000 -updok 
@@ -1787,11 +1789,11 @@ The following example runs this scenario.
 The shutdown sequence is as follows:
 
 .. parsed-literal::
-   source ./gtmenv A V6.3-000A_x86_64
+   source ./gtmenv A r1.10
    ./replicating_stop
-   source ./gtmenv P V6.3-000A_x86_64
+   source ./gtmenv P r1.10
    ./replicating_stop
-   source ./gtmenv B V6.3-000A_x86_64
+   source ./gtmenv B r1.10
    ./originating_stop
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1836,63 +1838,63 @@ Consider a situation where A and P are located in one data center, with BC repli
 The following example runs this scenario.
 
 .. parsed-literal::
-   source ./gtmenv A V6.3-000A_x86_64
+   source ./gtmenv A r1.10
    ./db_create
    ./repl_setup
    ./originating_start A P 4000
    ./originating_start A B 4001
-   source ./gtmenv B V6.3-000A_x86_64
+   source ./gtmenv B r1.10
    ./db_create
    ./repl_setup
    ./replicating_start B 4001
-   source ./gtmenv A V6.3-000A_x86_64
+   source ./gtmenv A r1.10
    ./backup_repl startA 
-   source ./gtmenv P V6.3-000A_x86_64
+   source ./gtmenv P r1.10
    ./db_create
    ./suppl_setup P startA 4000 -updok
    ./backup_repl startP
    ./originating_start P Q 4005
-   source ./gtmenv Q V6.3-000A_x86_64
+   source ./gtmenv Q r1.10
    ./db_create
    ./suppl_setup Q startP 4005 -updnotok
-   source ./gtmenv A V6.3-000A_x86_64
+   source ./gtmenv A r1.10
    $gtm_dist/mumps -r ^%XCMD 'for i=1:1:96 set ^A(i)=i'
-   source ./gtmenv P V6.3-000A_x86_64
+   source ./gtmenv P r1.10
    $gtm_dist/mumps -r ^%XCMD 'for i=1:1:37 set ^P(i)=i'
-   source ./gtmenv Q V6.3-000A_x86_64
+   source ./gtmenv Q r1.10
    ./replicating_stop
-   source ./gtmenv P V6.3-000A_x86_64
+   source ./gtmenv P r1.10
    $gtm_dist/mumps -r ^%XCMD 'set ^P(38)=1000'
    ./replicating_stop
-   source ./gtmenv A V6.3-000A_x86_64 
+   source ./gtmenv A r1.10 
    $gtm_dist/mumps -r ^%XCMD 'set ^A(97)=1000,^A(98)=1000'
-   source ./gtmenv B V6.3-000A_x86_64
+   source ./gtmenv B r1.10
    ./replicating_stop
-   source ./gtmenv A V6.3-000A_x86_64 
+   source ./gtmenv A r1.10 
    $gtm_dist/mumps -r ^%XCMD 'set ^A(99)=1000'
    ./originating_stop 
-   source ./gtmenv B V6.3-000A_x86_64
+   source ./gtmenv B r1.10
    backup_repl startB
    ./originating_start B Q 4008
    $gtm_dist/mumps -r ^%XCMD 'for i=1:1:62 set ^B(i)=i'
-   source ./gtmenv Q V6.3-000A_x86_64
+   source ./gtmenv Q r1.10
    ./rollback 4008 backward
    ./suppl_setup Q startB 4008 -updok
    $gtm_dist/mumps -r ^%XCMD 'for i=1:1:74 set ^Q(i)=i'
-   source ./gtmenv B V6.3-000A_x86_64
+   source ./gtmenv B r1.10
    $gtm_dist/mumps -r ^%XCMD 'for i=63:1:64 set ^B(i)=i'
    ./originating_start B A 4004
-   source ./gtmenv A V6.3-000A_x86_64
+   source ./gtmenv A r1.10
    ./rollback 4004 backward
    ./replicating_start A 4004
-   source ./gtmenv Q V6.3-000A_x86_64
+   source ./gtmenv Q r1.10
    $gtm_dist/mumps -r ^%XCMD 'for i=75:1:76 set ^Q(i)=i'
    ./originating_start Q P 4007
    ./backup_repl startQ
-   source ./gtmenv P V6.3-000A_x86_64
+   source ./gtmenv P r1.10
    ./rollback 4007 backward
    ./replicating_start_suppl_n P 4007 -updnotok
-   source ./gtmenv Q V6.3-000A_x86_64
+   source ./gtmenv Q r1.10
    $gtm_dist/mumps -r ^%XCMD 'set ^Q(77)=1000'
    cat A/gtm.lost
    cat P/gtm.lost
@@ -1900,14 +1902,14 @@ The following example runs this scenario.
 The shutdown sequence is as follows:
 
 .. parsed-literal::
-   source ./gtmenv P V6.3-000A_x86_64
+   source ./gtmenv P r1.10
    ./replicating_stop
-   source ./gtmenv A V6.3-000A_x86_64
+   source ./gtmenv A r1.10
    ./replicating_stop
-   source ./gtmenv Q V6.3-000A_x86_64
+   source ./gtmenv Q r1.10
    ./replicating_stop
    ./originating_stop
-   source ./gtmenv B V6.3-000A_x86_64
+   source ./gtmenv B r1.10
    ./originating_stop
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1927,7 +1929,7 @@ On B:
 * Use the MERGE command to copy a global from the prior to the new location. Use extended references (to the prior global directory) to refer to global in the prior location. 
 * If the globals you are moving have triggers, apply the definitions saved with MUPIP TRIGGER -SELECT earlier.
 * Turn replication on for the region of the new global location. 
-* Make B the new originating instance. For more information, refer to “Switchover possibilities in an A→B replication configuration”.
+* Make B the new originating instance. For more information, refer to `“Switchover possibilities in an A→B replication configuration” <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html#switchover-possibilities-in-an-a-b-replication-configuration>`_.
 
 On A:
 
@@ -1961,18 +1963,18 @@ On A:
 This example adds the mapping for global ^A to a new database file A.dat in an A->B replication configuration. 
 
 .. parsed-literal::
-   source ./gtmenv A V6.3-000A_x86_64 
+   source ./gtmenv A r1.10 
    ./db_create
    ./repl_setup
    ./originating_start A B 4001
-   source ./gtmenv B V6.3-000A_x86_64
+   source ./gtmenv B r1.10
    ./db_create
    ./repl_setup
    ./replicating_start B 4001
-   source ./gtmenv A V6.3-000A_x86_64 
+   source ./gtmenv A r1.10 
    $gtm_dist/mumps -r %XCMD 'for i=1:1:10 set ^A(i)=i'
    ./repl_status
-   source ./gtmenv B V6.3-000A_x86_64
+   source ./gtmenv B r1.10
    ./replicating_stop
    cp B/gtm.gld B/prior.gld
    $gtm_dist/mumps -r ^GDE @updgld
@@ -1983,7 +1985,7 @@ This example adds the mapping for global ^A to a new database file A.dat in an A
    $gtm_dist/mumps -r %XCMD 'merge ^A=^|"B/prior.gld"\|A'
    $gtm_dist/mupip set -replication=on -region AREG
    ./originating_start B A 4001
-   source ./gtmenv A V6.3-000A_x86_64 
+   source ./gtmenv A r1.10 
    ./originating_stop
    ./rollback 4001 backward
    cat A/gtm.lost  #apply lost transaction file on A. 
@@ -2004,18 +2006,18 @@ This example adds the mapping for global ^A to a new database file A.dat in an A
 The shutdown sequence is as follows:
 
 .. parsed-literal::
-   source ./gtmenv A V6.3-000A_x86_64
+   source ./gtmenv A r1.10
    ./replicating_stop
-   source ./gtmenv B V6.3-000A_x86_64
+   source ./gtmenv B r1.10
    ./originating_stop
 
 ++++++++++++++++++++++++++++++++++++++
 Rolling Software Upgrade
 ++++++++++++++++++++++++++++++++++++++
 
-A rolling software upgrade is the procedure of upgrading an instance in a way that there is minimal impact on the application uptime. An upgrade may consist of changing the underlying database schema, region(s), global directory, database version, application version, triggers, and so on. There are two approaches for a rolling upgrade. The first approach is to upgrade the replicating instance and then upgrade the originating instance. The second approach is to upgrade the originating instance first while its replicating (standby) instance acts as an originating instance.
+A rolling software upgrade is the procedure of upgrading an instance in such a way that there is minimal impact on the application uptime. An upgrade may consist of changing the underlying database schema, region(s), global directory, database version, application version, triggers, and so on. There are two approaches for a rolling upgrade. The first approach is to upgrade the replicating instance and then upgrade the originating instance. The second approach is to upgrade the originating instance first while its replicating (standby) instance acts as an originating instance.
 
-The following two procedures demonstrate these rolling software upgrade approaches for upgrading an A→B replication configuration running an application using YottaDB V6.1-000_x86_64 to YottaDB V6.2-001_x86_64 with minimal (a few seconds) impact on the application downtime. 
+The following two procedures demonstrate these rolling software upgrade approaches for upgrading an A→B replication configuration running an application using YottaDB r1.00 to YottaDB r1.10 with minimal (a few seconds) impact on the application downtime. 
 
 **Upgrade the replicating instance first  (A→B)**
 
@@ -2094,38 +2096,38 @@ on B:
 .. parsed-literal::
    While adding triggers, bear in mind that triggers get replicated if you add them when replication is turned on. However, when you add triggers when replication is turned off, those triggers and the database updates resulting from the executing their trigger code do not get replicated.
 
-Here is an example to upgrade A and B deployed in an A→B replication configuration from V6.1-000_x86_64 to V6.2-001_x86_84. This example uses instructions from the “Upgrade the originating instance first (A→B)” procedure. 
+Here is an example to upgrade A and B deployed in an A→B replication configuration from r1.00 to r1.10. This example uses instructions from the “Upgrade the originating instance first (A→B)” procedure. 
 
 .. parsed-literal::
-   source ./env A V6.1-000_x86_64
+   source ./env A r1.00
    ./db_create
    ./repl_setup
    ./originating_start A B 4001
-   source ./env B V6.1-000_x86_64
+   source ./env B r1.00
    ./db_create
    ./repl_setup
    ./replicating_start B 4001
-   source ./env A V6.1-000_x86_64
+   source ./env A r1.00
    $gtm_dist/mumps -r %XCMD 'for i=1:1:100 set ^A(i)=i'
    ./status
-   source ./env B V6.1-000_x86_64
+   source ./env B r1.00
    ./replicating_stop
-   source ./env A V6.1-000_x86_64
+   source ./env A r1.00
    ./status
    ./originating_stop 
    $gtm_dist/mupip set -replication=off -region "DEFAULT"
    $gtm_dist/dse dump -f 2>&1| grep "Region Seqno"
    #Perform a switchover to make B the originating instance. 
-   source ./env A V6.2-001_x86_64
+   source ./env A r1.10
    $gtm_dist/mumps -r ^GDE exit
    $gtm_dist/mupip set -journal=on,before_images,filename=A/gtm.mjl -noprevjnlfile -region "DEFAULT"
    #Perform the upgrade 
    $gtm_dist/dse dump -fileheader 2>&1| grep "Region Seqno"
    #If Region Seqno is greater than the Region Seqno noted previously, run $gtm_dist/dse change -fileheader -req_seqno=<previously_noted_region_seqno>.
    ./repl_setup
-   #A is now upgraded to V6.2-001_x86_64 and is ready to resume the role of the originating instance. Shutdown B and reinstate A as the originating instance. 
+   #A is now upgraded to r1.10 and is ready to resume the role of the originating instance. Shutdown B and reinstate A as the originating instance. 
    ./originating_start A B 4001
-   source ./env B V6.2-001_x86_64
+   source ./env B r1.10
    $gtm_dist/mumps -r ^GDE exit
    $gtm_dist/mupip set -journal=on,before_images,filename=B/gtm.mjl -noprevjnlfile -region "DEFAULT"
    #Perform the upgrade 
@@ -2139,9 +2141,9 @@ Here is an example to upgrade A and B deployed in an A→B replication configura
 The shutdown sequence is as follows:
 
 .. parsed-literal::
-   source ./env B V6.2-001_x86_64
+   source ./env B r1.10
    ./replicating_stop
-   source ./env A V6.2-001_x86_64
+   source ./env A r1.10
    ./originating_stop
 
 ++++++++++++++++++++++++++++++
@@ -2190,11 +2192,11 @@ You do not need to create a new replication instance file except when you upgrad
 * Prepare it to accept a replication stream:
 
   * Start a passive Source Server. If this is an SI replicating instance, use the -updok flag to start the passive Source Server.
-  * Start the Receiver Server using the updateresync. For versions prior to V5.5-000 use the -updateresync qualifier and for YottaDB versions V5.4-000 or newer use -updateresync=<repl_inst>.For example, mupip replicate -receiver -start -updateresync=<repl_inst> where repl_inst is the prior replication file if the source is V5.5-000 or newer and no -updateresync if it is an older YottaDB release.
+  * Start the Receiver Server using the -updateresync=<repl_inst>. For example, mupip replicate -receiver -start -updateresync=<repl_inst> where repl_inst is the prior replication file.
 
 * Start a Source Server on a root or propagating primary instance to replicate to this instance. Verify that updates on the source instance are successfully replicated to the receiver instance.
 
-The -updateresync qualifier indicates that instead of negotiating a mutually agreed common starting point for synchronization the operator is guaranteeing the receiving instance has a valid state that matches the source instance currently or as some point in the past. Generally this means the receiving instance has just been updated with a backup copy from the source instance.
+The -updateresync qualifier indicates that instead of negotiating a mutually agreed upon common starting point for synchronization, the operator is guaranteeing that the receiving instance has a valid state that matches the source instance currently or has at some point in the past. Generally, this means that the receiving instance has just been updated with a backup copy from the source instance.
 
 On instances with the same endian-ness, follow these steps to create a replication instance file without using the -updateresync qualifier. 
 
@@ -2210,7 +2212,7 @@ On the receiving side:
 * Allow a Source Server to connect.
 
 .. note::
-   When the instances have different endian-ness, create a new replication instance file as described in “Creating the Replication Instance File”
+   When the instances have different endian-ness, create a new replication instance file as described in `“Creating a new Replication Instance File” <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html#creating-a-new-replication-instance-file>`_
 
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -2229,7 +2231,7 @@ The following example creates two instances (Alice and Bob) and a basic framewor
 2. Execute the env script as follows:
 
    .. parsed-literal::
-      $ source ./env Alice V6.2-001_x86_64
+      $ source ./env Alice r1.10
 
 This creates a YottaDB environment for replication instance name Alice. When prompted, enter a password for gtmtls_passwd_Alice. 
 
@@ -2257,12 +2259,12 @@ The output of this script is the following:
       For some fields there will be a default value,
       If you enter '.', the field will be left blank.
       Country Name (2 letter code) [US]:US
-      State or Province Name (full name) [Bobadelphia]:Bobadelphia
+      State or Province Name (full name) [Pennsylvania]:Pennsylvania
       City (e.g., Malvern) [Malvern]:Malvern
-      Organization Name (eg, company) [FIS]:FIS
+      Organization Name (eg, company) [YottaDB]:YottaDB
       Organizational Unit Name (eg, section) [YottaDB]:YottaDB
-      Common Name (e.g. server FQDN or YOUR name) [localhost]:fis-gtm.com
-      Email Address (e.g. Alice@gt.m) []:root@gt.m
+      Common Name (e.g. server FQDN or YOUR name) [localhost]:yottadb.com
+      Email Address (e.g. Alice@yottadb) []:root@yottadb
 
 
 4. Create the global directory and the database for instance Alice.
@@ -2293,12 +2295,12 @@ The output of this script is like the following:
       For some fields there will be a default value,
       If you enter '.', the field will be left blank.
       Country Name (2 letter code) [US]:
-      State or Province Name (full name) [Bobadelphia]:Illinois
-      City (e.g., Malvern) [Malvern]:Chicago
-      Organization Name (eg, company) [FIS]:FIS
+      State or Province Name (full name) [Pennsylvania]:Pennsylvania
+      City (e.g., Malvern) [Malvern]:Malvern
+      Organization Name (eg, company) [YottaDB]:YottaDB
       Organizational Unit Name (eg, section) [YottaDB]:YottaDB
-      Common Name (e.g. server FQDN or YOUR name) [localhost]:fisglobal.com
-      Ename Address (e.g. Alice@gt.m) []:Alice@gt.m
+      Common Name (e.g. server FQDN or YOUR name) [localhost]:yottadb.com
+      Ename Address (e.g. Alice@yottadb) []:Alice@yottadb
       Please enter the following 'extra' attributes
       to be sent with your certificate request
       A challenge password []:
@@ -2314,11 +2316,11 @@ The output of this script is like the following:
        Not After : Jun 12 14:06:53 2014 GMT
        Subject:
        countryName = US
-       stateOrProvinceName = Illinois
-       organizationName = FIS
+       stateOrProvinceName = Pennsylvania
+       organizationName = YottaDB
        organizationalUnitName = YottaDB
-       commonName = fisglobal.com
-       emailAddress = Alice@gt.m
+       commonName = yottadb.com
+       emailAddress = Alice@yottadb
        X509v3 extensions:
        X509v3 Basic Constraints:
        CA:FALSE
@@ -2355,7 +2357,7 @@ On instance Bob:
 1. Execute the env script as follows:
 
    .. parsed-literal::
-      $ source ./env Bob V6.2-001_x86_64
+      $ source ./env Bob r1.10
 
 This creates a YottaDB environment for replication instance name Bob. When prompted, enter a password for gtmtls_passwd_Bob.
 
@@ -2390,7 +2392,7 @@ Ensure that ca.key generated on Instance Alice is available on instance Bob.
 For subsequent environment setup, use the following commands:
 
 .. parsed-literal::
-   source ./env Bob V6.2-001_x86_64 or source ./env Alice V6.2-001_x86_64
+   source ./env Bob r1.10 or source ./env Alice r1.10
    ./replicating_start Bob 4001 -tlsid=Bob or ./originating_start Alice Bob 4001 -tlsid=Alice -reneg=2
 
 +++++++++++++++++++++++++++++++++++++++++++
@@ -2401,7 +2403,7 @@ Filters between the originating and replicating systems perform rolling upgrades
 
 YottaDB provides the ability to invoke a filter; however, an application developer must write the filters specifically as part of each application release upgrade when schema changes are involved.
 
-Filters should reside on the upgraded system and use logical database updates to update the schema before applying those updates to the database. The filters must invoke the replication Source Server (new schema to old) or the database replication Receiver Server (old schema to new), depending on the system's status as either originatig or replicating. For more information on Filters, refer to “Filters”. 
+Filters should reside on the upgraded system and use logical database updates to update the schema before applying those updates to the database. The filters must invoke the replication Source Server (new schema to old) or the database replication Receiver Server (old schema to new), depending on the system's status as either originating or replicating. For more information on Filters, refer to the `“Filters” section <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html/#replication-architecture>`_. 
 
 +++++++++++++++++++++++++++++++++++++++++++++
 Recovering from the replication WAS_ON State
@@ -2475,7 +2477,7 @@ If you are running a recent version of YottaDB:
 - Take a backup of just the replication instance file (no database files with BACKUP -REPLINST=</path/to/bkup-orig-repl-inst-file>) and transfer it to the site of the replicating instance.
 - Start the replicating instance with -updateresync=</path/to/bkup-orig-repl-inst-file>. 
 
-In this case, the Receiver Server determines the current instance's journal sequence number by taking a maximum of the Region Sequence Numbers in the database file headers on the replicating instance and uses use the input instance file to locate the history record corresponding to this journal sequence number, and exchanges this history information with the Source Server.
+In this case, the Receiver Server determines the current instance's journal sequence number by taking a maximum of the Region Sequence Numbers in the database file headers on the replicating instance and uses the input instance file to locate the history record corresponding to this journal sequence number, and exchanges this history information with the Source Server.
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Replacing the replication instance file of a replicating instance (A→P)
@@ -2584,7 +2586,7 @@ Denotes an implicit replication state when YottaDB attempts to keep replication 
 
 WAS_ON is an implicit replication state. At all times during the WAS_ON state, you can see the current backlog of transactions and the content of the Journal Pool (MUPIP REPLICATE -SOURCE -SHOWBACKLOG and MUPIP REPLICATE -SOURCE -JNLPOOL -SHOW). This information is not available in the replication OFF state.
 
-For more information on recovering originating and replicating instances from WAS_ON, refer to "Recovering from the replication WAS_ON state" .
+For more information on recovering originating and replicating instances from WAS_ON, refer to `"Recovering from the replication WAS_ON state" <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html#recovering-from-the-replication-was-on-state>`_.
 
 Example:
 
@@ -2716,7 +2718,7 @@ The SHOW qualifier serves two purposes. When used with -editinstance, it display
 
 *-[no]qdbrundown*
 
-Controls the setting of the "HDR Quick database rundown is active" field in a replication instance file. For more information about this setting, refer to “Creating the Replication Instance File”.
+Controls the setting of the "HDR Quick database rundown is active" field in a replication instance file. For more information about this setting, refer to `“Creating the Replication Instance File” <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html#creating-the-replication-instance-file>`_.
 
 Example:
 
@@ -2865,7 +2867,7 @@ Promptly sets or clears an Instance Freeze on an instance irrespective of whethe
 
 For more information on enabling a region to invoke an Instance Freeze on custom errors, refer to the -INST_FREEZE_ON_ERROR section of “SET”.
 
-For more information on Instance Freeze, refer to “Instance Freeze”.
+For more information on Instance Freeze, refer to `“Instance Freeze” <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html#instance-freeze>`_.
 
 *-connectparams=<hard tries>,<hard tries period>, <soft tries period>,<alert time>,<heartbeat period><max heartbeat wait>*
 
@@ -2971,14 +2973,10 @@ Linux/gcc:
 
 z/OS:
 
-Download the zlib 1.1.4 from the libpng project's download page on `SourceForge.com <http://tinco.pair.com/bhaskar/gtm/doc/books/ao/UNIX_manual/sourceforge.com>`_. Use a transfer mechanism that does not perform automatic conversion to download a source tarball. If pax cannot read the archive, it is a sign that the download mangled the archive. Use pax to unpack the tarball, converting files from ASCII to EBCDIC.
+Download the latest vrsion of zlib from the libpng project's download page on `SourceForge <https://sourceforge.net/projects/libpng/files/zlib/>`_. Use a transfer mechanism that does not perform automatic conversion to download a source tarball. If pax cannot read the archive, it is a sign that the download mangled the archive. Use pax to unpack the tarball, converting files from ASCII to EBCDIC.
 
 .. parsed-literal::
-   pax -r -o setfiletag -ofrom=ISO8859-1,to=IBM-1047 -f zlib-1.1.4.tar.gz
-
-Apply the following patch to the zlib 1.1.4 sources:
-
----------------------------------- zlib_1.1.4_zos.patch --------------------------------------------------diff -purN downloads/zlib/src.orig/configure downloads/zlib/src/configure--- downloads/zlib/src.orig/configure Tue Dec 16 14:09:57 2008+++ downloads/zlib/src/configure Mon Feb 9 14:30:49 2009@@ -116,6 +116,11 @@ else SFLAGS=${CFLAGS-"-Kconform_pic -O"} CFLAGS=${CFLAGS-"-O"} LDSHARED=${LDSHARED-"cc -G"};;+ OS/390*)+ CC=xlc+ SFLAGS=${CFLAGS-"-qascii -q64 -Wc,DLL,LP64,XPLINK,EXPORTALL -D_ALL_SOURCE_NOTHREADS"}+ CFLAGS=${CFLAGS-"-qascii -q64 -Wc,DLL,LP64,XPLINK,EXPORTALL -D_ALL_SOURCE_NOTHREADS"}+ LDSHARED=${LDSHARED-"xlc -qascii -q64 -Wl,dll,LP64,XPLINK "};; # send working options for other systems to support@gzip.org \*) SFLAGS=${CFLAGS-"-O"} CFLAGS=${CFLAGS-"-O"} 
+   pax -r -o setfiletag -ofrom=ISO8859-1,to=IBM-1047 -f zlib-1.2.11.tar.gz
 
 Build and install the zlib DLL, placing the xlc compilers in compatibility to mode by setting the environment variable C89_CCMODE to 1. When not in compatibility mode, xlc follows strict placement of command line options. Configure and build the zlib software with ./configure --shared && make. By default, the configure script places zlib in /usr/local/lib. Install the software with make install. To ensure that YottaDB finds zlib, include /usr/local/lib in LIBPATH, the environment variable that provides a search path for processes to use when they link DLLs.
 
@@ -2990,7 +2988,7 @@ Instructs the Source or Receiver Server to use the TLS certificate and private k
 
 *-[NO]PLAINtextfallback*
 
-Specifies whether the replication server is permitted to fallback to plaintext communication. The default is -NOPLAINtextfallback. If NOPLAINTEXTFALLBACK is in effect, YottaDB issues a REPLNOTLS error in the event it is unable to establish a TLS connection. [Note: YottaDB versions prior to V6.1-000 did not support TLS for replication - if needed it could be implemented with an external application such as stunnel (http://stunnel.org).] If PLAINTEXTFALLBACK is in effect, in the event of a failure to establish a TLS connection, YottaDB issues REPLNOTLS as a warning. Once a permitted plaintext replication connection is established for a connection session, YottaDB never attempts to switch that connection session to TLS connection.
+Specifies whether the replication server is permitted to fallback to plaintext communication. The default is -NOPLAINtextfallback. If NOPLAINTEXTFALLBACK is in effect, YottaDB issues a REPLNOTLS error in the event it is unable to establish a TLS connection. If PLAINTEXTFALLBACK is in effect, in the event of a failure to establish a TLS connection, YottaDB issues REPLNOTLS as a warning. Once a permitted plaintext replication connection is established for a connection session, YottaDB never attempts to switch that connection session to TLS connection.
 
 *-RENEGotiate_interval=<minutes >*
 
@@ -3292,7 +3290,7 @@ Always run MUPIP REPLICATE -SOURCE -LOSTTNCOMPLETE on each of the replicating in
 
 *-needrestart*
 
-Checks whether the originating instance ever communicated with the specified replicating instance (if the receiver server or a fetchresync rollback on the replicating instance communicated with the Source Server) since the originating instance was brought up. If so, this command displays the message SECONDARY INSTANCE xxxx DOES NOT NEED TO BE RESTARTED indicating that the replicating instance communicated with the originating instnace and hence does not need to be restarted. If not, this command displays the message SECONDARY INSTANCE xxxx NEEDS TO BE RESTARTED FIRST. In this case, bring up the specified instance as a replicating instance before the lost transactions from this instance are applied. Failure to do so before applying the corresponding lost transactions causes $ZQGBLMOD() to return false negatives which can result in application data inconsistencies.
+Checks whether the originating instance ever communicated with the specified replicating instance (if the receiver server or a fetchresync rollback on the replicating instance communicated with the Source Server) since the originating instance was brought up. If so, this command displays the message SECONDARY INSTANCE xxxx DOES NOT NEED TO BE RESTARTED indicating that the replicating instance communicated with the originating instance and hence does not need to be restarted. If not, this command displays the message SECONDARY INSTANCE xxxx NEEDS TO BE RESTARTED FIRST. In this case, bring up the specified instance as a replicating instance before the lost transactions from this instance are applied. Failure to do so before applying the corresponding lost transactions causes $ZQGBLMOD() to return false negatives which can result in application data inconsistencies.
 
 The mupip replic -source -needrestart command should be invoked once for each lost transaction file that needs to be applied. It should be invoked on the new originating instance before applying lost transactions. Specify -instsecondary to provide the instance name of the replicating instance where the lost transaction file was generated. If not, the environment variable gtm_repl_instsecondary is implicitly assumed to hold the name of the replicating instance.
 
@@ -3397,7 +3395,7 @@ To perform an updateresync, the originating instance must have at least one hist
 
 You also need use -updateresync to replace your existing replication instance files if a YottaDB version upgrade changes the instance file format. 
 
-For information on the procedures that use -updateresync, refer to “Setting up a new replicating instance of an originating instance (A→B, P→Q, or A→P)”, “Replacing the replication instance file of a replicating instance (A→B and P→Q)”, “Replacing the replication instance file of a replicating instance (A→P)”, and “Setting up a new replicating instance from a backup of the originating instance (A→P)”.
+For information on the procedures that use -updateresync, refer to `“Setting up a new replicating instance of an originating instance (A→B, P→Q, or A→P)” <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html#setting-up-a-new-replicating-instance-of-an-originating-instance-ab-pq-or-ap>`_, `“Replacing the replication instance file of a replicating instance (A→B and P→Q)” <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html#replacing-the-replication-instance-file-of-a-replicating-instance-ab-and-pq>`_, `“Replacing the replication instance file of a replicating instance (A→P)” <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html#replacing-the-replication-instance-file-of-a-replicating-instance-ap>`_, and `“Setting up a new replicating instance from a backup of the originating instance (A→P)” <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html#setting-up-a-new-replicating-instance-from-a-backup-of-the-originating-instance-ap>`_.
 
 *-initialize*
 
@@ -3619,7 +3617,7 @@ If failover occurs (that is, originating instance fails and replicating instance
 The system stores extracted lost transactions in the file <extract file> specified by this mandatory qualifier. The starting point for the search for lost transactions is the JNL_SEQNO obtained from the originating instance in the -fetchresync operation. If -fetchresync is not specified, <extract file> lists the post-consistent-state transactions that were undone by the rollback procedure to reach a consistent state.
 
 .. note::
-   The extracted lost transactions list may contain broken transactions due to system failures that occurred during processing. Do not resolve these transactions-they are not considered to be committed.
+   The extracted lost transactions list may contain broken transactions due to system failures that occurred during processing. Do not resolve these transactions - they are not considered to be committed.
 
 *-rsync_strm=<strm_num>*
 
