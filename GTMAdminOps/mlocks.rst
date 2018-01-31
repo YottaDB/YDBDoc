@@ -13,7 +13,7 @@
 Introduction
 -----------------------------
 
-The M Lock Utility (LKE) is a tool for examining and changing the YottaDB/GT.M LOCK environment. For a description of M LOCKs, refer to the LOCKs section in the General Language Features of M chapter and the description of the LOCK command in the Commands chapter of the Programmer's Guide.
+The M Lock Utility (LKE) is a tool for examining and changing the YottaDB LOCK environment. For a description of M LOCKs, refer to the LOCKs section in the `General Language Features of M <https://docs.yottadb.com/ProgrammersGuide/langfeat.html>`_ and the description of the `LOCK command in the Commands chapter of the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/commands.html#lock>`_.
 
 The two primary functions of the M Lock Utility (LKE) are:
 
@@ -33,13 +33,13 @@ When debugging an M application, you may use LKE to identify a possible deadlock
 Process 1 has A LOCKed and attempts to LOCK B. Process 2 has B LOCKed and attempts to LOCK A. Because these processes do not release their current LOCKs before adding additional LOCKs, nor do they provide a timeout to detect the problem, they are deadlocked. Neither process can proceed normally. You can use LKE to release one of the LOCKs so both processes may execute. However, because releasing a LOCK may cause the process to violate its design assumptions, terminating one process is generally a safer way to break the deadlock.
 
 .. note::
-   When a process leaves M, YottaDB/GT.M normally releases any LOCKs or ZALLOCATEs held by that process. If a YottaDB/GT.M process terminates abnormally, or if the system "crashes" while a YottaDB/GT.M process is active, YottaDB/GT.M cannot perform normal clean-up. However, as soon as any other process waits several seconds for a LOCK owned by a process that no longer exists, YottaDB/GT.M automatically clears the "orphaned" LOCK.
+   When a process leaves M, YottaDB normally releases any LOCKs or ZALLOCATEs held by that process. If a YottaDB process terminates abnormally, or if the system "crashes" while a YottaDB process is active, YottaDB cannot perform normal clean-up. However, as soon as any other process waits several seconds for a LOCK owned by a process that no longer exists, YottaDB automatically clears the "orphaned" LOCK.
 
 +++++++++++++++++++++++++++++
 To Invoke and Exit LKE
 +++++++++++++++++++++++++++++
 
-YottaDB/GT.M installation procedure places the LKE utility package in a directory specified by the environment variable gtm_dist.
+YottaDB installation procedure places the LKE utility package in a directory specified by the environment variable gtm_dist.
 
 LKE requires that the environment variable gtmgbldir be defined.
 
@@ -87,7 +87,7 @@ The general format of LKE commands is:
 .. parsed-literal::
    command [-qualifier[=qualifier-value]]
 
-LKE accepts command and qualifier abbreviations. The section describing each command provides the minimal abbreviation that can be used for that command, and the command qualifiers, if any. YottaDB/FIS recommends the use of a minimum of four characters for key words in scripts to ensure new keywords do not conflict with older scripts.
+LKE accepts command and qualifier abbreviations. The section describing each command provides the minimal abbreviation that can be used for that command, and the command qualifiers, if any. YottaDB recommends the use of a minimum of four characters for key words in scripts to ensure new keywords do not conflict with older scripts.
 
 +++++++++++++
 CLEAR
@@ -96,7 +96,7 @@ CLEAR
 Use the CLEAR command to remove active LOCKs.
 
 .. note::
-   YottaDB/FIS recommends restricting the use of the LKE CLEAR facility to debugging environments; removing LOCKs in a production environment typically violates application design assumptions and can cause aberrant process behavior. YottaDB/GT.M automatically removes abandoned LOCKs so it is typically safer to MUPIP STOP a process that is inappropriately hanging on to a LOCK.
+   YottaDB recommends restricting the use of the LKE CLEAR facility to debugging environments; removing LOCKs in a production environment typically violates application design assumptions and can cause aberrant process behavior. YottaDB automatically removes abandoned LOCKs so it is typically safer to MUPIP STOP a process that is inappropriately hanging on to a LOCK.
 
 The format of the CLEAR command is:
 
@@ -128,7 +128,7 @@ Specifies all current LOCKs.
 
 * If used, CLEAR and -REGION qualifier, -ALL removes all LOCKs in that region.
 
-* Issue a CLEAR - ALL only when there are no active YottaDB/GT.M processes using LOCKs, or when you can predict the effect on the application.
+* Issue a CLEAR - ALL only when there are no active YottaDB processes using LOCKs, or when you can predict the effect on the application.
 
 * By default, CLEAR -ALL operates interactively (-INTERACTIVE).
 
@@ -138,7 +138,7 @@ Specifies all current LOCKs.
 Allows LKE CLEAR to work even if another process is holding a critical section.
 
 .. note::
-   This can damage current LOCKs and the LOCK mechanism. It is intended for use only under the direction of YottaDB/FIS.
+   This can damage current LOCKs and the LOCK mechanism. It is intended for use only under the direction of YottaDB.
 
 By default LKE operates in CRIT mode and ensures a consistent view of LOCKs by using the database critical section(s).
 
@@ -198,7 +198,7 @@ Specifies the process identification number that holds a LOCK on a resource name
 .. parsed-literal::
    -R[EGION]=region-name
 
-region-namespecifies the region that holds the locked resource names.
+region-name specifies the region that holds the locked resource names.
 
 * REGION clears LOCKs mapped by the current global directory to a region specified by the region-name.
 
@@ -310,14 +310,14 @@ The optional qualifiers are:
 
 * A LOCK command which finds no room in LOCK_SPACE to queue a waiting LOCK, does a slow poll waiting for LOCK_SPACE to become available. If LOCK does not acquire the ownership of the named resource with the specified timeout, it returns control to the application with $TEST=0. If timeout is not specified, the LOCK command continues to do a slow poll till the space becomes available.
 
-* LOCK commands which find no available lock space send a LOCKSPACEFULL message to the operator log. To prevent flooding the operator log, GT.M suppresses further such messages until the lock space usage drops below 75% full.
+* LOCK commands which find no available lock space send a LOCKSPACEFULL message to the operator log. To prevent flooding the operator log, YottaDB suppresses further such messages until the lock space usage drops below 75% full.
 
 * The results of a SHOW may be immediately "outdated" by M LOCK activity.
 
-* If the LOCK is owned by a GT.CM server on behalf of a client GT.M process, then LKE SHOW displays the client NODENAME (limited to the first 15 characters) and clientPID. The client PID (CLNTPID) is a decimal value in UNIX
+* If the LOCK is owned by a GT.CM server on behalf of a client YottaDB process, then LKE SHOW displays the client NODENAME (limited to the first 15 characters) and clientPID. The client PID (CLNTPID) is a decimal value in UNIX
 
 .. note::
-   GT.CM is an RPC-like way of remotely accessing a YottaDB/GT.M database.
+   GT.CM is an RPC-like way of remotely accessing a YottaDB database.
 
 .. parsed-literal::
    -ALL
@@ -396,7 +396,7 @@ Displays the LOCK resource name and the process state information of all process
 
 * SHOW -ALL -WAIT displays both -ALL and -WAIT information.
 
-* When a process abandons a "wait" request, that request may continue to appear in LKE SHOW -WAIT displays. This appearance is harmless, and is automatically eliminated if the YottaDB/GT.M lock management requires the space which it occupies.
+* When a process abandons a "wait" request, that request may continue to appear in LKE SHOW -WAIT displays. This appearance is harmless, and is automatically eliminated if the YottaDB lock management requires the space which it occupies.
 
 Use the following procedure to display all LOCKs active in the database(s) defined by the current global directory.
 
@@ -539,46 +539,45 @@ LKE Exercises
 
 When using M Locks, you must use a well designed and defined locking protocol. Your locking protocol must specify guidelines for acquiring LOCKs, selecting and using timeout, releasing M Locks, defining a lock s
 trategy according the given situation, identifying potential deadlock situations, and providing ways to avoid or recover from them. This section contains two exercises. The first exercise reinforces the concepts
-of YottaDB/GT.M LOCKs previously explained in this chapter. The second exercise describes a deadlock situation and demonstrates how one can use LKE to identify and resolve it.
+of YottaDB LOCKs previously explained in this chapter. The second exercise describes a deadlock situation and demonstrates how one can use LKE to identify and resolve it.
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Exercise 1: Preventing concurrent updates using M Locks
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-Consider a situation when two users (John and Tom) have to exclusively update a global variable ^ABC.
+Consider a situation when two users (Mary and Ken) have to exclusively update a global variable ^ABC.
 
 .. note::
-   Transaction Processing may offer a more efficient and more easily managed solution to the issue of potentially conflicting updates. For more information, see General Language Features of M chapter of the Programmer's Guide.
+   Transaction Processing may offer a more efficient and more easily managed solution to the issue of potentially conflicting updates. For more information, see `General Language Features of M chapter of the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/langfeat.html>`_.
 
-At the prompt of John, execute the following commands:
+At the prompt of Mary, execute the following commands:
 
 .. parsed-literal::
-   GTM>lock +^ABC
+   YDB>lock +^ABC
 
-This command places a YottaDB/GT.M LOCK on "^ABC " (not the global variable^ABC). Note: LOCKs without the +/- always release all LOCKs held by the process, so they implicitly avoid dead locks. With LOCK +, a pro
-tocol must accumulate LOCKs in the same order ( to avoid deadlocks).
+This command places a YottaDB LOCK on "^ABC " (not the global variable^ABC). Note: LOCKs without the +/- always release all LOCKs held by the process, so they implicitly avoid dead locks. With LOCK +, a protocol must accumulate LOCKs in the same order ( to avoid deadlocks).
 
 Then execute the following command to display the status of the LOCK database.
 
 .. parsed-literal::
-   GTM>zsystem "lke show -all"
+   YDB>zsystem "lke show -all"
 
 This command produces an output like the following:
 
 .. parsed-literal::
    DEFAULT ^ABC Owned by PID= 3657 which is an existing process
 
-Now, without releasing lock^ABC, execute the following commands at the prompt of Tom.
+Now, without releasing lock^ABC, execute the following commands at the prompt of Ken.
 
 .. parsed-literal::
-   GTM>lock +^ABC
+   YDB>lock +^ABC
 
-This command wait for the lock on resource "^ABC " to be released. Note that that the LOCK command does not block global variable ^ABC in any way. This command queues the request for locking resource "^ABC" in the LOCK database. Note that you can still modify the value of global variable ^ABC even if it is locked by John.
+This command wait for the lock on resource "^ABC " to be released. Note that that the LOCK command does not block global variable ^ABC in any way. This command queues the request for locking resource "^ABC" in the LOCK database. Note that you can still modify the value of global variable ^ABC even if it is locked by Mary.
 
-Now, at the prompt of John, execute the following command:
+Now, at the prompt of Mary, execute the following command:
 
 .. parsed-literal::
-   GTM>zsystem "LKE -show -all -wait"
+   YDB>zsystem "LKE -show -all -wait"
 
 This command produces an output like the following:
 
@@ -586,18 +585,18 @@ This command produces an output like the following:
    DEFAULT ^ABC Owned by PID= 3657 which is an existing process 
    Request PID= 3685 which is an existing process
 
-This output shows that the process belonging to John with PID 3657 currently owns the lock for global variable ^ABC and PID of Tom has requested the ownership of that lock. You can use this mechanism to create an application logic that adhere to your concurrent access protocols.
+This output shows that the process belonging to Mary with PID 3657 currently owns the lock for global variable ^ABC and PID of Ken has requested the ownership of that lock. You can use this mechanism to create an application logic that adhere to your concurrent access protocols.
 
 ++++++++++++++++++++++++++++++++++++++++++++
 Exercise 2: Rectifying a deadlock situation
 ++++++++++++++++++++++++++++++++++++++++++++
 
-Now, consider another situation when both these users (John and Tom) have to update two text files. While an update is in progress, a YottaDB/GT.M LOCK should prevent the other user from LOCKing that file. In some cases, a deadlock occurs when both users cannot move forward because they do not release their current LOCKs before adding additional LOCKs.
+Now, consider another situation when both these users (Mary and Ken) have to update two text files. While an update is in progress, a YottaDB LOCK should prevent the other user from LOCKing that file. In some cases, a deadlock occurs when both users cannot move forward because they do not release their current LOCKs before adding additional LOCKs.
 
 A deadlock situation can occur in the following situation:
 
 .. parsed-literal::
-   John           Tom 
+   Mary           Ken 
    LOCK +file_1   LOCK +file_2 
    LOCK +file_2   LOCK +file_1
 
@@ -605,37 +604,37 @@ Here both the users are deadlocked and neither can move forward. Note that a dea
 
 Let us now create this situation.
 
-At the prompt of John, execute the following commands:
+At the prompt of Mary, execute the following commands:
 
 .. parsed-literal::
-   GTM>set file1="file_1.txt"
-   GTM>lock +file1
-   GTM>open file1:APPEND 
-   GTM>use file1 
-   GTM>write "John",!
-   GTM>close file1
+   YDB>set file1="file_1.txt"
+   YDB>lock +file1
+   YDB>open file1:APPEND 
+   YDB>use file1 
+   YDB>write "Mary",!
+   YDB>close file1
 
-Note that John has not released the LOCK on resource "file1".
+Note that Mary has not released the LOCK on resource "file1".
 
-At the prompt of Tom, execute the following commands:
-
-.. parsed-literal::
-   GTM> set file2="file_2.txt" 
-   GTM> lock +file2
-   GTM> open file2:APPEND 
-   GTM> use file2 
-   GTM>write "Tom",!
-   GTM>close file2
-
-Note that Tom has not released the LOCK on resource "file2".
-
-Now, at the prompt of John, execute the following commands.
+At the prompt of Ken, execute the following commands:
 
 .. parsed-literal::
-   GTM>set file2="file_2.txt" 
-   GTM>lock +file2
+   YDB> set file2="file_2.txt" 
+   YDB> lock +file2
+   YDB> open file2:APPEND 
+   YDB> use file2 
+   YDB>write "Ken",!
+   YDB>close file2
 
-The latter command attempts to acquire a lock on resource file2 that is already locked by Tom. Therefore, this results in a deadlock situation. Repeat the same process for Tom and attempt to lock resource file1.
+Note that Ken has not released the LOCK on resource "file2".
+
+Now, at the prompt of Mary, execute the following commands.
+
+.. parsed-literal::
+   YDB>set file2="file_2.txt" 
+   YDB>lock +file2
+
+The latter command attempts to acquire a lock on resource file2 that is already locked by Ken. Therefore, this results in a deadlock situation. Repeat the same process for Ken and attempt to lock resource file1.
 
 Execute the following command at LKE prompt to view this deadlock situation.
 
