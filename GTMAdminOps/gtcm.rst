@@ -13,18 +13,18 @@
 Introduction
 --------------------
 
-GT.CM is the network client/server database software for YottaDB/GT.M. GT.CM on UNIX allows access to YottaDB/GT.M databases residing on a server, by client processes running on multiple nodes on a network.
+GT.CM is the network client/server database software for YottaDB. GT.CM on UNIX allows access to YottaDB databases residing on a server, by client processes running on multiple nodes on a network.
 
-GT.CM consists of a Server and a Client. The Server is a network object that performs database operations on behalf of YottaDB/GT.M Client processes, running on other nodes of the network. GT.CM uses TCP task-to-task communication facilities for the link between a client YottaDB/GT.M process and a server. GT.CM on UNIX operates properly between supported platforms independent of the native byte ordering The GT.CM client is packaged within the YottaDB/GT.M run-time system.
+GT.CM consists of a Server and a Client. The Server is a network object that performs database operations on behalf of YottaDB Client processes, running on other nodes of the network. GT.CM uses TCP task-to-task communication facilities for the link between a client YottaDB process and a server. GT.CM on UNIX operates properly between supported platforms independent of the native byte ordering The GT.CM client is packaged within the YottaDB run-time system.
 
-When a YottaDB/GT.M process requires access to a database on another node, it sends a request across the network to a GT.CM Server process running on that node, and the Server accesses the database. The process requesting access to a database through GT.CM is referred to as a Client process. The node from which the data is requested is referred to as the Server node.
+When a YottaDB process requires access to a database on another node, it sends a request across the network to a GT.CM Server process running on that node, and the Server accesses the database. The process requesting access to a database through GT.CM is referred to as a Client process. The node from which the data is requested is referred to as the Server node.
 
-The use of GT.CM is largely transparent to the GT.M application code. The only visible change in the application.s environment is the addition of error messages delivered in case of problems in network operations.
+The use of GT.CM is largely transparent to the YottaDB application code. The only visible change in the application's environment is the addition of error messages delivered in case of problems in network operations.
 
 GT.CM can communicate between systems having different endian architectures.
 
 .. note::
-   YottaDB/GT.M transaction processing (TP) is not supported via GT.CM, and accessing GT.CM served databases within an M TRANSACTION may cause application level inconsistency in the data. GT.CM servers do not invoke triggers. This means that the client processes must restrict themselves to updates which don't require triggers, or explicitly call for the actions that triggers would otherwise perform. Because GT.CM bypasses triggers, it may provide a mechanism to bypass triggers for debugging or complex corrections to repair data placed in an inconsistent state by a bug in trigger logic.
+   YottaDB transaction processing (TP) is not supported via GT.CM, and accessing GT.CM served databases within an M TRANSACTION may cause application level inconsistency in the data. GT.CM servers do not invoke triggers. This means that the client processes must restrict themselves to updates which don't require triggers, or explicitly call for the actions that triggers would otherwise perform. Because GT.CM bypasses triggers, it may provide a mechanism to bypass triggers for debugging or complex corrections to repair data placed in an inconsistent state by a bug in trigger logic.
 
 In the event of recovery from system crashes, application level database consistency cannot be guaranteed for data residing in databases (M global variable namespaces) accessed via different GT.CM servers or distributed between GT.CM and local access. 
 
@@ -32,7 +32,7 @@ In the event of recovery from system crashes, application level database consist
 Overview
 ---------------------
 
-A YottaDB/GT.M program uses Global Directory to reference a global variable (gvn) or resource name for the object of a database lock operation (nref) residing on a remote node. When a file in the Global Directory specifies a remote node name that does not match the name of the node on which the process is running, YottaDB/GT.M maps the segment to a database file on the remote node using the GT.CM client. The two main components of GT.CM are:
+A YottaDB program uses Global Directory to reference a global variable (gvn) or resource name for the object of a database lock operation (nref) residing on a remote node. When a file in the Global Directory specifies a remote node name that does not match the name of the node on which the process is running, YottaDB maps the segment to a database file on the remote node using the GT.CM client. The two main components of GT.CM are:
 
 * GT.CM Server
 * GT.CM Client
@@ -69,7 +69,7 @@ A GT.CM server must be operating on every node of a network from which data is r
 
 The GT.CM server executable (gtcm_gnp_server) should be placed in the directory referenced by the environment variable $gtm_dist.
 
-A process starting the GT.CM server must have the environment variables required to run YottaDB/GT.M.
+A process starting the GT.CM server must have the environment variables required to run YottaDB.
 
 Here is an example on how to start a GT.CM server:
 
@@ -122,9 +122,9 @@ Errors can be classified into the following categories:
 * Protocol Errors
 * Session Establishment Errors
 
-Each type of valid operation may issue an error from any of the above categories in case of a failure. Database errors include application errors and database integrity errors; both types of errors are detected by the YottaDB/GT.M runtime system. The GT.CM server does not deal with database errors directly, but passes them back to the client requesting the operation that detected the error. YottaDB/GT.M handles any database errors delivered through the network by GT.CM in a way similar to the way it treats errors detected when GT.CM is not involved.
+Each type of valid operation may issue an error from any of the above categories in case of a failure. Database errors include application errors and database integrity errors; both types of errors are detected by the YottaDB runtime system. The GT.CM server does not deal with database errors directly, but passes them back to the client requesting the operation that detected the error. YottaDB handles any database errors delivered through the network by GT.CM in a way similar to the way it treats errors detected when GT.CM is not involved.
 
-When GT.CM is in use, YottaDB/GT.M may deliver errors resulting from network problems. Errors detected by the network interface are passed to the component accessing the interface at the time of error. In recovering from a network related error, GT.CM sacrifices all LOCKs owned by the client process that receives a network error. This should be taken into account if such a process attempts to resume operations involving a database served through the lost connection.
+When GT.CM is in use, YottaDB may deliver errors resulting from network problems. Errors detected by the network interface are passed to the component accessing the interface at the time of error. In recovering from a network related error, GT.CM sacrifices all LOCKs owned by the client process that receives a network error. This should be taken into account if such a process attempts to resume operations involving a database served through the lost connection.
 
 Examples of Database Errors:
 
@@ -145,28 +145,28 @@ Examples of Session Establishment Errors:
 Examples
 +++++++++++++++++++
 
-The following is an example illustrating the transparency of the GT.CM Client/Server Architecture while using YottaDB/GT.M.
+The following is an example illustrating the transparency of the GT.CM Client/Server Architecture while using YottaDB.
 
 **On NODE1**:
 
 Map the local segment to remote file.
 
-When the file specification in the Global Directory on the local node specifies a remote node name, YottaDB/GT.M maps the segment to a database on the remote node using GT.CM.
+When the file specification in the Global Directory on the local node specifies a remote node name, YottaDB maps the segment to a database on the remote node using GT.CM.
 
 To specify a node name in a Global Directory file specification, use the format on NODE1:
 
 .. parsed-literal::
    $ GDE
-   GDE> ch -seg DEFAULT -file=NODE2:/testarea/gtm/database/data.dat
+   GDE> ch -seg DEFAULT -file=NODE2:/testarea/yottadb/database/data.dat
    GDE> exit
 
-This example creates a local Global Directory, mapping all global names to the database file /testarea/gtm/database/data.dat. Note that some of the key-words have been truncated to permit the example to appear on a single line.
+This example creates a local Global Directory, mapping all global names to the database file /testarea/yottadb/database/data.dat. Note that some of the key-words have been truncated to permit the example to appear on a single line.
 
 **On NODE2**:
 
 Create a database file on server Node2:
 
-Change directory (cd) to the specified location (that is /testarea/gtm/database)
+Change directory (cd) to the specified location (that is /testarea/yottadb/database)
 
 Create a global directory
 
@@ -186,16 +186,16 @@ Note that the global directory created on the remote node in this example is onl
 
 **On NODE1**:
 
-On NODE1, invoke YottaDB/GT.M and perform the following operations:
+On NODE1, invoke YottaDB and perform the following operations:
 
 .. parsed-literal::
    $setenv GTCM_NODE2 6789
-   $GTM
-   GTM> s ^x=1
-   GTM> k ^x
-   GTM> s ^y=10
-   GTM> h
+   $ydb
+   YDB> s ^x=1
+   YDB> k ^x
+   YDB> s ^y=10
+   YDB> h
 
-All these updates should be reported in the NODE2:/testarea/gtm/database/data.dat file.
+All these updates should be reported in the NODE2:/testarea/yottadb/database/data.dat file.
 
 
