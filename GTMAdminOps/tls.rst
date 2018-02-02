@@ -13,7 +13,7 @@ Appendix H: Creating a TLS Configuration File
 Creating a TLS Configuration File
 ------------------------------------
 
-YottaDB/GT.M ships with a reference implementation of the encryption plugin which uses OpenSSL to perform various operation for TLS replication and/or TLS-enabled sockets.
+YottaDB ships with a reference implementation of the encryption plugin which uses OpenSSL to perform various operation for TLS replication and/or TLS-enabled sockets.
 
 OpenSSL options are controlled by a configuration file in libconfig format. This configuration file is pointed to by the gtmcrypt_config environment variable. The use of the gtmcrypt_config environment variable requires the libconfig library to be installed.
 
@@ -63,7 +63,7 @@ Here is a sample configuration file:
      };
 
 
-The environment variable gtmtls_passwd_<tlsid> must specify an obfuscated version of the password for the client's private key. Use the maskpass utility provided with your YottaDB/GT.M distribution to create an obfuscated password.
+The environment variable gtmtls_passwd_<tlsid> must specify an obfuscated version of the password for the client's private key. Use the maskpass utility provided with your YottaDB distribution to create an obfuscated password.
 
 The supported OpenSSL options are as follows:
 
@@ -96,7 +96,7 @@ Specifies that Diffie-Hellman parameters s used for key-exchange. Either none or
 
 **format**
 
-Format of the certificate and private key pair. Currently, the YottaDB/GT.M TLS plug-in only supports PEM format.
+Format of the certificate and private key pair. Currently, the YottaDB TLS plug-in only supports PEM format.
 
 **cert**
 
@@ -104,7 +104,7 @@ Path to the certificate.
 
 **key**
 
-Path to the private key. If the private key is protected by a passphrase, an obfuscated version of the password should be specified in the environment variable which takes the form gtmtls_passwd_<identifier>. Currently, the YottaDB/GT.M TLS plug-in only supports RSA private keys.
+Path to the private key. If the private key is protected by a passphrase, an obfuscated version of the password should be specified in the environment variable which takes the form gtmtls_passwd_<identifier>. Currently, the YottaDB TLS plug-in only supports RSA private keys.
 
 When placing the private key for a certificate at the beginning of the certificate file, you may omit the "key" item from the configuration file. The format of the combined file is:
 
@@ -120,7 +120,7 @@ When placing the private key for a certificate at the beginning of the certifica
 
 **session-id-hex**
 
-Takes a string value which is used to set the SSL session_id context for server sockets, which may be specified in the tlsid section of a config file or on WRITE /TLS("RENEGOTIATE",...). See the OpenSSL man page for SSL_set_session_id_context for usage details. The value should consist of hexadecimal digits representing the desired value. Application code can call the %UTF2HEX utility routine to translate a character string to the corresponding string of hexadecimal digits. If neither the command or the associated tlsid section in the configuration file specify a session-id-hex option when creating the socket, YottaDB/GT.M uses the current tlsid, translated into hexadecimal digits.
+Takes a string value which is used to set the SSL session_id context for server sockets, which may be specified in the tlsid section of a config file or on WRITE /TLS("RENEGOTIATE",...). See the OpenSSL man page for SSL_set_session_id_context for usage details. The value should consist of hexadecimal digits representing the desired value. Application code can call the %UTF2HEX utility routine to translate a character string to the corresponding string of hexadecimal digits. If neither the command or the associated tlsid section in the configuration file specify a session-id-hex option when creating the socket, YottaDB uses the current tlsid, translated into hexadecimal digits.
 
 **session-timeout**
 
