@@ -3,49 +3,49 @@
    IPC Resource Usage
 
 ================================================
-Appendix A : YottaDB/GT.M's IPC Resource Usage
+Appendix A : YottaDB's IPC Resource Usage
 ================================================
 
 .. contents::
    :depth: 2
 
-In YottaDB/GT.M's database engine, processes cooperate with one another to manage the database. To effect this cooperation, YottaDB/GT.M processes use UNIX Interprocess Communication (IPC) resources to coordinate and control access to the database and journal files, implement M LOCKs, and for database replication. This appendix helps you understand YottaDB/GT.M's IPC resource utilization.
+In YottaDB's database engine, processes cooperate with one another to manage the database. To effect this cooperation, YottaDB processes use UNIX Interprocess Communication (IPC) resources to coordinate and control access to the database and journal files, to implement M LOCKs, and for database replication. This appendix helps you understand YottaDB's IPC resource utilization.
 
 This appendix includes two sections.
 
-* The first section contains an exercise to identify "orphan" shared memory segments (those with no attached processes) in a multi-site replication configuration. Usually orphan segments appear due to certain abnormal terminations (for example, kill -KILL or a process crash situation) and create an out-of-design state for YottaDB/GT.M IPC resources where the last process may not be able to clean up the shared memory segment. If you know the IPC resources YottaDB/GT.M uses, then you can easily find the abnormal IPC resources when something does not seem right.
+* The first section contains an exercise to identify "orphan" shared memory segments (those with no attached processes) in a multi-site replication configuration. Usually orphan segments appear due to certain abnormal terminations (for example, kill -KILL or a process crash situation) and create an out-of-design state for YottaDB IPC resources where the last process may not be able to clean up the shared memory segment. If you know the IPC resources YottaDB uses, then you can easily find the abnormal IPC resources when something does not seem right.
 
-* The second section describes role of the gtmsecshr daemon process YottaDB/GT.M uses to manage M locks and clean up IPC resources. This section also includes guidelines to fine-tune gtmsecshr for smooth operation.
+* The second section describes the role of the gtmsecshr daemon process YottaDB uses to manage M locks and clean up IPC resources. This section also includes guidelines to fine-tune gtmsecshr for smooth operation.
 
 ---------------------------------------
-Examining YottaDB/GT.M's IPC Resources
+Examining YottaDB's IPC Resources
 ---------------------------------------
 
-YottaDB/GT.M uses UNIX IPC resources as follows:
+YottaDB uses UNIX IPC resources as follows:
 
-* For each database region, YottaDB/GT.M uses a shared memory segment (allocated with shmat()) for control structures and to implement M Locks. For journaled databases, the journal buffers reside in that shared memory segment. With the BG database access method, global buffers for the database also reside there. Note that use of the online help system by a process opens a database file with the BG access method. The first process to open a database file creates and initializes the shared memory segment, and the last process to exit normally cleans up and deletes the shared memory segment. However, under certain abnormal terminations of the last process (for example, if it is terminated with a kill -KILL), that last process may not be able to clean up the shared memory segment, resulting in "orphan" shared memory segments (those with no attached processes).
+* For each database region, YottaDB uses a shared memory segment (allocated with shmat()) for control structures and to implement M Locks. For journaled databases, the journal buffers reside in that shared memory segment. With the BG database access method, global buffers for the database also reside there. Note that use of the online help system by a process opens a database file with the BG access method. The first process to open a database file creates and initializes the shared memory segment, and the last process to exit normally cleans up and deletes the shared memory segment. However, under certain abnormal terminations of the last process (for example, if it is terminated with a kill -KILL), that last process may not be able to clean up the shared memory segment, resulting in "orphan" shared memory segments (those with no attached processes).
 
-* For database regions which use the MM access method, the file system manages an additional shared memory segment (allocated with mmap()) to memory map the database file. YottaDB/GT.M does not explicitly allocate this shared memory. Because UNIX allocates shared memory segment when YottaDB/GT.M opens a database file, and releases it when the process terminates, such shared memory segments allocated by mmap() are never orphaned.
+* For database regions which use the MM access method, the file system manages an additional shared memory segment (allocated with mmap()) to memory map the database file. YottaDB does not explicitly allocate this shared memory. Because UNIX allocates shared memory segment when YottaDB opens a database file, and releases it when the process terminates, such shared memory segments allocated by mmap() are never orphaned.
 
-* When replicating, YottaDB/GT.M implements the journal pool on the primary in a shared memory segment. On the secondary, YottaDB/GT.M uses a shared memory segment for the receive pool.
+* When replicating, YottaDB implements the journal pool on the primary in a shared memory segment. On the secondary, YottaDB uses a shared memory segment for the receive pool.
 
-* YottaDB/GT.M operations such as creating a shared memory segment for a given database file should be performed only by one process even if more than one process opens the database file at the same time. YottaDB/GT.M uses sets of public UNIX semaphores to insure these operations are single-threaded. YottaDB/GT.M uses other sets of public semaphores to setup and tear down shared memory segments allocated with shmat().
+* YottaDB operations such as creating a shared memory segment for a given database file should be performed only by one process even if more than one process opens the database file at the same time. YottaDB uses sets of public UNIX semaphores to ensure these operations are single-threaded. YottaDB uses other sets of public semaphores to setup and tear down shared memory segments allocated with shmat().
 
 * Public semaphore ids may be non-unique. Private semaphore ids are always unique for each database.
 
-* The semaphore with keys starting 0x2b and 0x2c are startup and rundown semaphores. A YottaDB/GT.M process uses them only while attaching to or detaching from a database.
+* The semaphore with keys starting 0x2b and 0x2c are startup and rundown semaphores. A YottaDB process uses them only while attaching to or detaching from a database.
 
-* The number of processes and the number of semaphore attached to an IPC resource may vary according to the state of your database. Some shared memory regions have 0 processes attached to them (the nattch column). If these correspond to YottaDB/GT.M database regions or to global directories, they are most likely from improper process termination of YottaDB/GT.M (YottaDB/GT.M processes show up as " mumps " in a ps command) and YottaDB/GT.M utility processes; source server, receiver server, or update processes (which appear as " mupip "); or other YottaDB/GT.M utilities (" mupip ", " dse ", or " lke ").
+* The number of processes and the number of semaphores attached to an IPC resource may vary according to the state of your database. Some shared memory regions have 0 processes attached to them (the nattch column). If these correspond to YottaDB database regions or to global directories, they are most likely from improper process termination of YottaDB (YottaDB processes show up as "mumps" in a ps command) and YottaDB utility processes; source server, receiver server, or update processes (which appear as "mupip"); or other YottaDB utilities ("mupip", "dse", or "lke").
 
 * An instance has one journal pool, and, if a replicating instance, one receiver pool too. Note that you might run multiple instances on the same computer system.
 
-* For simple YottaDB/GT.M operation (that is, no multisite replication), there is no journal pool or receive pool.
+* For simple YottaDB operation (that is, no multisite replication), there is no journal pool or receive pool.
 
-The following exercise demonstrates how YottaDB/GT.M utilizes IPC resources in a multisite database replication configuration. The task is to set up a replicated YottaDB/GT.M database configuration on two servers at two different locations.
+The following exercise demonstrates how YottaDB utilizes IPC resources in a multisite database replication configuration. The task is to set up a replicated YottaDB database configuration on two servers at two different locations.
 
-Create two databases - America and Brazil - on two different servers ( Server_A and Server_B) and deploy them in a multisite database replication configuration so that America is the primary site and Brazil is the secondary site. Ensure that no YottaDB/GT.M processes exist on either server.
+Create two databases - America and Brazil - on two different servers ( Server_A and Server_B) and deploy them in a multisite database replication configuration so that America is the primary site and Brazil is the secondary site. Ensure that no YottaDB processes exist on either server.
 
-In Server_A and in the directory holding database files for America give the following commands (note that because the default journal pool size is 64MB, a value of 1048576 bytes - YottaDB/GT.M's minimum size of 1MB for this exercise):
+In Server_A and in the directory holding database files for America, give the following commands (note that because the default journal pool size is 64MB, a value of 1048576 bytes - YottaDB's minimum size of 1MB for this exercise):
 
 .. parsed-literal::
    $ export gtm_repl_instance=multisite.repl 
@@ -64,7 +64,7 @@ This command produces the "public" (system generated) IPC Keys (essentially hash
    mumps.dat :: 721434869 [ 0x2b0038f5 ] 
    multisite.repl :: 721434871 [ 0x2b0038f7 ]
 
-The keys starting with 0x2b (Hexadecimal form) are the keys for the semaphores used by replication instance America with the high order hexadecimal 0x2b replaced by 0x2c for the replication instance file (YottaDB/GT.M's standard prefix for semaphores for journal pools is 0x2c and that for database files is0x2b). You can observe this with the ipcs command:
+The keys starting with 0x2b (Hexadecimal form) are the keys for the semaphores used by replication instance America with the high order hexadecimal 0x2b replaced by 0x2c for the replication instance file (YottaDB's standard prefix for semaphores for journal pools is 0x2c and that for database files is0x2b). You can observe this with the ipcs command:
 
 .. parsed-literal::
    ------ Semaphore Arrays --------
@@ -76,14 +76,14 @@ The keys starting with 0x2b (Hexadecimal form) are the keys for the semaphores u
    0x00000000 1081348 welsley 777 3
 
 .. note::
-   You can expect files in separate file systems to share the same public ftok. This is a normal behavior for large systems with multiple installations and does not affect YottaDB/GT.M operations in any way. This is because YottaDB/GT.M does not assume the semaphore has a one-to-one relationship with the resource and startup/shutdown operations are relatively rare, so the interference among resources have a minimal or no impact. However, the private semaphore (with the 0 key) is unique for a database and is used while a process is actively using the resource.
+   You can expect files in separate file systems to share the same public ftok. This is a normal behavior for large systems with multiple installations and does not affect YottaDB operations in any way. This is because YottaDB does not assume the semaphore has a one-to-one relationship with the resource and startup/shutdown operations are relatively rare, so the interference among resources have a minimal or no impact. However, the private semaphore (with the 0 key) is unique for a database and is used while a process is actively using the resource.
 
 Execute the following command and note down the shared memory id and private semaphore id on instance America.
 
 .. parsed-literal::
    $ mupip ftok mumps.dat
 
-This command identifies the "private" (YottaDB/GT.M generated) semaphores that a process uses for all "normal" access. The sample output of this command looks like the following:
+This command identifies the "private" (YottaDB generated) semaphores that a process uses for all "normal" access. The sample output of this command looks like the following:
 
 .. parsed-literal::
    File  ::   Semaphore Id   ::   Shared Memory Id  :: FileId
@@ -131,7 +131,7 @@ Now execute the command ipcs -a to view the current IPC resources. This command 
    ------ Message Queues --------
    key  msqid owner perms used-bytes messages
 
-Using the following formula, where n is the number of regions, to calculate YottaDB/GT.M's IPC resources in a multisite replication configuration:
+Using the following formula, where n is the number of regions, to calculate YottaDB's IPC resources in a multisite replication configuration:
 
 .. parsed-literal::
    IPCs = (n regions * (1 shm/region + 1 ftok sem/region + 1 private sem/region)) 
@@ -142,10 +142,10 @@ In this case, America has one region and no receiver-pool so:
 .. parsed-literal::
    1 region * 3 IPCs/region + 1 IPC/journal-pool = 4 IPCs
 
-Therefore, assuming that instance America has 1 region, the total IPC utilized by YottaDB/GT.M is: 4 [1 * 3 + 1 +0]. Note that there is no receiver pool for instance America.
+Therefore, assuming that instance America has 1 region, the total IPC utilized by YottaDB is: 4 [1 * 3 + 1 +0]. Note that there is no receiver pool for instance America.
 
 .. note::
-   For  MUPIP RECOVER operations the total number of IPC resources are 3n (As there is no Journal Pool or Receiver Pool) where  n is the number of regions.
+   For MUPIP RECOVER operations the total number of IPC resources are 3n (As there is no Journal Pool or Receiver Pool) where  n is the number of regions.
 
 Now connect to Server_B and give the following commands in the directory holding database files for Brazil:
 
@@ -174,7 +174,7 @@ Then, execute the following command and note down the shared memory id and priva
 .. parsed-literal::
    $ mupip ftok mumps.dat
 
-This command identifies the "private" (YottaDB/GT.M generated) semaphores that a process uses for all "normal" access. The sample output of this command looks like the following:
+This command identifies the "private" (YottaDB generated) semaphores that a process uses for all "normal" access. The sample output of this command looks like the following:
 
 .. parsed-literal::
    File :: Semaphore Id  :: Shared Memory Id :: FileId
@@ -216,31 +216,31 @@ This command produces a sample output like the following:
    ------ Message Queues --------
    key  msqid owner perms used-bytes messages 
 
-Brazil has 1 region and its receiver server is listening to America, therefore as per the formula for calculating YottaDB/GT.M IPC resources, the total IPCs utilized by YottaDB/GT.M is: 5 [1 * 3 + 1 + 1].
+Brazil has 1 region and its receiver server is listening to America, therefore as per the formula for calculating YottaDB IPC resources, the total IPCs utilized by YottaDB is: 5 [1 * 3 + 1 + 1].
 
 ---------------
 gtmsecshr
 ---------------
 
-The YottaDB/GT.M installation script installs gtmsecshr as owned by root and with the setuid bit on. gtmsecshr is a helper program that enables YottaDB/GT.M to manage interprocess communication and clean up interprocess resources. It resides in the $gtm_dist/gtmsecshrdir subdirectory which is readable and executable only by root. gtmsecshr is guarded by a wrapper program. The wrapper program protects gtmsecshr in the following ways:
+The YottaDB installation script installs gtmsecshr as owned by root and with the setuid bit on. gtmsecshr is a helper program that enables YottaDB to manage interprocess communication and clean up interprocess resources. It resides in the $gtm_dist/gtmsecshrdir subdirectory which is readable and executable only by root. gtmsecshr is guarded by a wrapper program. The wrapper program protects gtmsecshr in the following ways:
 
 * It restricts access to gtmsecshr in such a way that processes that do not operate as root cannot access it except though the mechanism used by the wrapper.
 * Environment variables are user-controlled input to gtmsecshr and setting them inappropriately can affect system operation and cause security vulnerabilities. While gtmsecshr itself guards against this, the wrapper program provides double protection by clearing the environment of all variables except gtm_dist, gtmdbglvl, gtm_log, and gtm_tmp and truncating those when they exceed the maximum allowed length for the platform.
-* gtmsecshr logs its messages in the system log. These messages can be identified with the GTMSECSHR facility name as part of the message. YottaDB/GT.M processes communicate with gtmsecshr through socket files in a directory specified by the environment variable gtm_tmp.
+* gtmsecshr logs its messages in the system log. These messages can be identified with the GTMSECSHR facility name as part of the message. YottaDB processes communicate with gtmsecshr through socket files in a directory specified by the environment variable gtm_tmp.
 
-gtmsecshr automatically shuts down after 60 minutes of inactivity. Normally, there is no need to shut it down, even when a system is making the transition between a secondary and a primary. The only occasions when gtmsecshr must be explicitly shut down are when a YottaDB/GT.M version is being removed - either a directory containing the YottaDB/GT.M version the running gtmsecshr process belongs to is being deleted, or when a new YottaDB/GT.M version is being installed in the same directory as an existing one.
-
-.. note::
-   YottaDB/FIS strongly recommends against installing a new YottaDB/GT.M version on top of an existing YottaDB/GT.M version.
-
-To terminate a gtmsecshr process, use a KILL-15 after shutting down all YottaDB/GT.M processes and running down all database regions in use by YottaDB/GT.M in that directory.
+gtmsecshr automatically shuts down after 60 minutes of inactivity. Normally, there is no need to shut it down, even when a system is making the transition between a secondary and a primary. The only occasions when gtmsecshr must be explicitly shut down are when a YottaDB version is being removed - either when a directory containing the YottaDB version the running gtmsecshr process belongs to is being deleted, or when a new YottaDB version is being installed in the same directory as an existing one.
 
 .. note::
-   YottaDB/FIS strongly recommends that all YottaDB/GT.M processes that use a given version of YottaDB/GT.M use the same settings for the gtm_log and gtm_tmp environment variables. gtmsecshr inherits these values from the YottaDB/GT.M process that starts it. Not having common values for gtm_tmp and gtm_log for all processes that use a given version of YottaDB/GT.M can have an adverse impact on performance.
+   YottaDB strongly recommends against installing a new YottaDB version on top of an existing YottaDB version.
 
-If there are multiple YottaDB/GT.M versions active on a system, YottaDB/FIS recommends different values of gtm_tmp and gtm_log be used for each version. This makes system administration easier.
+To terminate a gtmsecshr process, use a KILL-15 after shutting down all YottaDB processes and running down all database regions in use by YottaDB in that directory.
 
 .. note::
-   A given database file can only be open by processes of a single version of YottaDB/GT.M at any given time. Contemporary releases of YottaDB/GT.M protect against concurrent access to YottaDB/GT.M files by processes executing different versions of YottaDB/GT.M. Since historical versions of YottaDB/GT.M did not protect against this condition, YottaDB/FIS recommends procedural safeguards against inadvertent concurrent access by processes of multiple versions on systems on which old versions of YottaDB/GT.M are installed and active, since such concurrent usage can cause structural damage to the database.
+   YottaDB strongly recommends that all YottaDB processes that use a given version use the same settings for the gtm_log and gtm_tmp environment variables. gtmsecshr inherits these values from the YottaDB process that starts it. Not having common values for gtm_tmp and gtm_log for all processes that use a given version of YottaDB can have an adverse impact on performance.
+
+If there are multiple YottaDB versions active on a system, YottaDB recommends different values of gtm_tmp and gtm_log be used for each version. This makes system administration easier.
+
+.. note::
+   A given database file can only be opened by processes of a single version of YottaDB at any given time. Contemporary releases of YottaDB protect against concurrent access to YottaDB files by processes executing different versions of YottaDB. Since historical versions of YottaDB did not protect against this condition, YottaDB recommends procedural safeguards against inadvertent concurrent access by processes of multiple versions on systems on which old versions of YottaDB are installed and active, since such concurrent usage can cause structural damage to the database.
 
 
