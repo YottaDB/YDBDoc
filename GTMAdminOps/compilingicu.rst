@@ -3,7 +3,7 @@
    Compiling ICU on supported platforms
 
 ==============================================================
-Appendix C: Compiling ICU on YottaDB/GT.M Supported Platforms
+Appendix C: Compiling ICU on YottaDB Supported Platforms
 ==============================================================
 
 .. contents::
@@ -13,14 +13,9 @@ Appendix C: Compiling ICU on YottaDB/GT.M Supported Platforms
 Compiling ICU
 ------------------------
 
-YottaDB/FIS recommends using the ICU libraries provided by the OS vendor. This appendix includes sample instructions to download ICU, configure it not to use multi-threading, and compile it for various platforms. Note that download sites, versions of compilers, and milli and micro releases of ICU may have changed ICU since the embedded dates when these instructions were tested making them out-of-date. Therefore, these instructions must be considered examples, not a cookbook.
+YottaDB recommends using the ICU libraries provided by the OS vendor. This appendix includes sample instructions to download ICU, configure it not to use multi-threading, and compile it for various platforms. Note that download sites, versions of compilers, and milli and micro releases of ICU may have changed ICU since the embedded dates when these instructions were tested making them out-of-date. Therefore, these instructions must be considered examples, not a cookbook.
 
-Although YottaDB/GT.M uses ICU, ICU is not YottaDB/FIS software and YottaDB/FIS does not support ICU. The sample instructions for installing and configuring ICU are merely provided as a convenience to you.
-
-All YottaDB/GT.M versions prior to V5.3-004 require exactly ICU 3.6, however, V5.3-004 (or later) accept ICU 3.6 or later.
-
-.. note::
-   Please consult the Section : “Configuring and operating YottaDB/GT.M with Unicode™ support (optional) ” for more information regarding supported OS vendor provided ICU libraries.
+Although YottaDB uses ICU, ICU is not YottaDB software and YottaDB does not support ICU. The sample instructions for installing and configuring ICU are merely provided as a convenience. All examples below are on older versions of ICU, you will be able to find the latest version on http://site.icu-project.org/download
 
 +++++++++++++++++++++++++++++
 Compiling ICU 4.4 on AIX 6.1
