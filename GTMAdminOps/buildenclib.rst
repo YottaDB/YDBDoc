@@ -13,7 +13,7 @@ Appendix D: Building Encryption Libraries
 Building Encryption Libraries
 -----------------------------
 
-YottaDB/FIS neither encourages nor supports the use of any specific encryption library. In order to be helpful, here is how we created the libraries for testing YottaDB/GT.M in the development environment. 
+YottaDB neither encourages nor supports the use of any specific encryption library. In order to be helpful, here is how we created the libraries for testing YottaDB in the development environment. 
 
 ++++++++++++++++++++++++++++++++++
 Debian, Ubuntu, Redhat and Fedora
@@ -51,7 +51,7 @@ GPGME requires a source level fix to use the proper malloc() that requires an in
 
 **GNUPG**
 
-GPG on AIX requires the setuid bit to be set. This can be done via chmod u+s /path/to/gpg. Please see http://www.gnupg.org/documentation/faqs.en.html#q6.1 
+GPG on AIX requires the setuid bit to be set. This can be done via chmod u+s /path/to/gpg. Please see https://www.gnupg.org/faq/gnupg-faq.html 
 
 .. parsed-literal::
    ./configure CC="xlc -q64" --disable-asm ($OBJECT_MODE=64) or CC=cc CFLAGS=-q64 
