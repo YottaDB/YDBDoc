@@ -3,21 +3,21 @@
    Development Cycle
 
 =======================
-Development Cycle
+3. Development Cycle
 =======================
 
 .. contents::
    :depth: 2
 
-This chapter introduces program development in the YottaDB/GT.M environment. The YottaDB/GT.M environment differs from other M implementations in a number of ways. These differences, which include maintaining data and code in separate files and compiling rather than interpreting source code, allow greater programmer control over the development cycle.
+This chapter introduces program development in the YottaDB environment. The YottaDB environment differs from other M implementations in a number of ways. These differences, which include maintaining data and code in separate files and compiling rather than interpreting source code, allow greater programmer control over the development cycle.
 
-In contrast to M environments that interpret M code, YottaDB/GT.M compiles M code from source files into the target machine language. The YottaDB/GT.M compiler produces object files, which are dynamically linked into an image. Source files and object files may be managed independently, or placed together in a specific directory. YottaDB/GT.M permits access to source and object files in multiple directories.
+In contrast to M environments that interpret M code, YottaDB compiles M code from source files into the target machine language. The YottaDB compiler produces object files, which are dynamically linked into an image. Source files and object files may be managed independently, or placed together in a specific directory. YottaDB permits access to source and object files in multiple directories.
 
-YottaDB/GT.M databases are UNIX files identified by a small file called a Global Directory. Global Directories allow management of the database files to be independent of the placement of files containing M routines. By changing the Global Directory, you can use the same programs to access different databases.
+YottaDB databases are UNIX files identified by a small file called a Global Directory. Global Directories allow management of the database files to be independent of the placement of files containing M routines. By changing the Global Directory, you can use the same programs to access different databases.
 
-Program development may utilize both YottaDB/GT.M and UNIX development tools. The development methodology and environment chosen for a particular installation, and tailored by the individual user, determines the actual mix of tools. These tools may vary from entirely YottaDB/GT.M with little UNIX, to mostly UNIX with a modest use of YottaDB/GT.M.
+Program development may utilize both YottaDB and UNIX development tools. The development methodology and environment chosen for a particular installation, and tailored by the individual user, determines the actual mix of tools. These tools may vary from entirely YottaDB with little UNIX, to mostly UNIX with a modest use of YottaDB.
 
-Direct Mode serves as an interactive interface to the YottaDB/GT.M run-time environment and the compiler. In Direct Mode, the user enters M commands at the YottaDB/GT.M prompt, and YottaDB/GT.M compiles and executes the command. This feature provides immediate turnaround for rapid program development and maintenance.
+Direct Mode serves as an interactive interface to the YottaDB run-time environment and the compiler. In Direct Mode, the user enters M commands at the YottaDB prompt, and YottaDB compiles and executes the command. This feature provides immediate turnaround for rapid program development and maintenance.
 
 This chapter is based on the tasks that a programmer might perform while developing an application. It provides a "road map" for programmers of varying levels. Some steps may be unnecessary in your environment, so feel free to skip sections that do not apply to your situation.
 
@@ -25,14 +25,14 @@ This chapter is based on the tasks that a programmer might perform while develop
 Overview of the Program Development Cycle
 -----------------------------------------
 
-This section provides an overview of the steps involved in generating executable programs in YottaDB/GT.M.
+This section provides an overview of the steps involved in generating executable programs in YottaDB.
 
-The steps begin with your initial use of YottaDB/GT.M. The first two steps are part of your initial setup and will generally be performed only the first time you use YottaDB/GT.M. The remaining steps are those you will use regularly when generating your programs.
+The steps begin with your initial use of YottaDB. The first two steps are part of your initial setup and will generally be performed only the first time you use YottaDB. The remaining steps are those you will use regularly when generating your programs.
 
-Each of these remaining steps can be performed either from the YottaDB/GT.M prompt or the shell prompt. To clearly describe the two ways to perform each step, this section is set up in the format of a table with one column illustrating the YottaDB/GT.M method, and one column illustrating the shell method.
+Each of these remaining steps can be performed either from the YottaDB prompt or the shell prompt. To clearly describe the two ways to perform each step, this section is set up in the format of a table with one column illustrating the YottaDB method, and one column illustrating the shell method.
 
 +------------------------------------------------------+-----------------------------------------------+---------------------------------------------------+
-| Creating a YottaDB/GT.M Routine                                                                                                                          | 
+| Creating a YottaDB Routine                                                                                                                               | 
 +======================================================+===============================================+===================================================+
 | Define Environment Variables (shell)                 | define                                                                                            |
 |                                                      |                                                                                                   |
@@ -46,9 +46,9 @@ Each of these remaining steps can be performed either from the YottaDB/GT.M prom
 |                                                      |                                                                                                   |
 |                                                      | create database with MUPIP CREATE                                                                 |
 +------------------------------------------------------+-----------------------------------------------+---------------------------------------------------+
-| \-                                                   | SHELL                                         | YottaDB/GT.M                                      |
+| \-                                                   | SHELL                                         | YottaDB                                           |
 +------------------------------------------------------+-----------------------------------------------+---------------------------------------------------+
-| Create/Edit Routine                                  | Create file with UNIX editor; assign .m       | ZEDIT "routine" .m extension added by YottaDB/GT.M|
+| Create/Edit Routine                                  | Create file with UNIX editor; assign .m       | ZEDIT "routine" .m extension added by YottaDB     |
 |                                                      | extension                                     |                                                   |
 +------------------------------------------------------+-----------------------------------------------+---------------------------------------------------+
 | Compile Routine                                      | invoke mumps routine.m                        | ZLINK "routine"                                   |
@@ -78,30 +78,30 @@ Each of these remaining steps can be performed either from the YottaDB/GT.M prom
 |                                                      |                                               | compile and execute                               |
 +------------------------------------------------------+-----------------------------------------------+---------------------------------------------------+
 
-The table is presented as an overview of the YottaDB/GT.M routine generation process, and as a comparison of the available methods. More complete information on each of the steps can be found in the following parts of this manual set.
+The table is presented as an overview of the YottaDB routine generation process, and as a comparison of the available methods. More complete information on each of the steps can be found in the following parts of this manual set.
 
-* Debugging routines: Chapter 4: “Operating and Debugging in Direct Mode”.
-* Defining environment variables: “Defining Environment Variables”.
-* Defining/creating Global Directories: “Preparing the Database” and the Administration and Operations Guide, "Global Directory Editor" and "MUPIP" chapters.
-* Creating/editing routines: “Creating and Editing a Source Program”.
-* Compiling routines: “Compiling a Source Program”.
-* Executing routines: “Executing a Source Program”.
+* Debugging routines: `Chapter 4: “Operating and Debugging in Direct Mode” <https://docs.yottadb.com/ProgrammersGuide/opdebug.html>`_.
+* Defining environment variables: `“Defining Environment Variables” <https://docs.yottadb.com/ProgrammersGuide/devcycle.html#defining-environment-variables>`_.
+* Defining/creating Global Directories:`“Preparing the Database” <https://docs.yottadb.com/ProgrammersGuide/devcycle.html#preparing-the-database>`_ and the Administration and Operations Guide, `"Global Directory Editor" <https://docs.yottadb.com/AdminOpsGuide/gde.html>`_ and `"MUPIP" <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html>`_ chapters.
+* Creating/editing routines: `“Creating and Editing a Source Program” <https://docs.yottadb.com/ProgrammersGuide/devcycle.html#creating-and-editing-a-source-program>`_.
+* Compiling routines: `“Compiling a Source Program” <https://docs.yottadb.com/ProgrammersGuide/devcycle.html#compiling-a-source-program>`_.
+* Executing routines: `“Executing a Source Program” <https://docs.yottadb.com/ProgrammersGuide/devcycle.html#executing-a-source-program>`_.
 
 ---------------------------------
 Defining Environment Variables
 ---------------------------------
 
-YottaDB/GT.M requires the definition of certain environment variables as part of setting up the environment. These environment variables are used for the following purposes:
+YottaDB requires the definition of certain environment variables as part of setting up the environment. These environment variables are used for the following purposes:
 
-* To locate the files that YottaDB/FIS provides as part of YottaDB/GT.M
-* To hold some user-controlled information which YottaDB/GT.M uses for run-time operation
+* To locate the files that YottaDB provides
+* To hold some user-controlled information which YottaDB uses for run-time operation
 
-YottaDB/GT.M limits environment variables to 8192 bytes, but items they specify such as a path may have a lower limit.
+YottaDB limits environment variables to 8192 bytes, but items they specify such as a path may have a lower limit.
 
 The procedure below describes how to define an environment variable. Use this procedure to define an environment variable either at the shell prompt or in your shell startup file. If you define the variable at the shell prompt, it will be effective only until you logout. If you define it in your .profile file (.cshrc, if using a C shell variant), it will be in effect whenever you log in. Your system manager may have already defined some of these variables.
 
 .. note::
-   Each environment variable required by YottaDB/GT.M is described and illustrated in individual sections following the procedure. Only gtm_dist, and in some cases gtmgbldir, gtm_principal and gtmroutines, are required by users who do not perform programming activities.
+   Each environment variable required by YottaDB is described and illustrated in individual sections following the procedure. Only gtm_dist, and in some cases gtmgbldir, gtm_principal and gtmroutines, are required by users who do not perform programming activities.
 
 To define an environment variable type the following commands:
 
@@ -111,30 +111,30 @@ To define an environment variable type the following commands:
 
 The example above may differ from the syntax supported by some shells
 
-The following environment variables hold information that determines some details of YottaDB/GT.M run-time operation, over which the user has control.
+The following environment variables hold information that determines some details of YottaDB run-time operation, over which the user has control.
 
 +++++++++
 gtm_dist
 +++++++++
 
-gtm_dist is used to establish the location of the installed YottaDB/GT.M program and support files.
+gtm_dist is used to establish the location of the installed YottaDB program and support files.
 
 The syntax for gtm_dist is as follows:
 
 .. parsed-literal::
    $ gtm_dist=<distribution-directory>
 
-The standard installation places these files in /usr/lib/fis-gtm or /usr/lib/yottadb.
+The standard installation places these files in /usr/local/lib/yottadb.
 
 Example:
 
 .. parsed-literal::
-   $ gtm_dist=/usr/lib/fis-gtm/V6.0-002_x86_64
+   $ gtm_dist=/usr/local/lib/yottadb/r1.10
    $ export gtm_dist
 
-This identifies /usr/lib/fis-gtm/V6.0-002_x86_64 as the location of the installed YottaDB/GT.M files.
+This identifies /usr/local/lib/yottadb/r1.10 as the location of the installed YottaDB files.
 
-Add gtm_dist to your PATH environment variable to have UNIX search the YottaDB/GT.M installation directory (when processing a command to activate or run an image). This allows you to activate YottaDB/GT.M and the utilities without explicitly specifying a path.
+Add gtm_dist to your PATH environment variable to have UNIX search the YottaDB installation directory (when processing a command to activate or run an image). This allows you to activate YottaDB and the utilities without explicitly specifying a path.
 
 To add gtm_dist to your PATH type the following commands:
 
@@ -149,7 +149,7 @@ To add gtm_dist to your PATH type the following commands:
 gtmgbldir
 ++++++++++
 
-gtmgbldir defines the path to a Global Directory. A Global Directory maps global variables to physical database files, and is required to locate M global variables. gtmgbldir provides the initial value for $ZGBLDIR, the intrinsic special variable that connects the YottaDB/GT.M run-time system to the Global Directory. It also connects the Global Directory to the utilities requiring one.
+gtmgbldir defines the path to a Global Directory. A Global Directory maps global variables to physical database files, and is required to locate M global variables. gtmgbldir provides the initial value for $ZGBLDIR, the intrinsic special variable that connects the YottaDB run-time system to the Global Directory. It also connects the Global Directory to the utilities requiring one.
 
 If you maintain multiple global directories, define gtmgbldir to the Global Directory you currently want to use.
 
@@ -184,7 +184,7 @@ This specifies the /usr/filename as the principal $IO device, effective until ch
 gtmroutines
 +++++++++++++++
 
-The gtmroutines environment variable specifies a search list of possible locations for M routines. This value is used to initialize $ZROUTINES, (the intrinsic special variable that enables YottaDB/GT.M to find the routine (program) you want to run). gtmroutines is required for ZLINKing. gtmroutines is particularly helpful in calling percent utilities and the Global Directory Editor (GDE), which are in gtm_dist.
+The gtmroutines environment variable specifies a search list of possible locations for M routines. This value is used to initialize $ZROUTINES, (the intrinsic special variable that enables YottaDB to find the routine (program) you want to run). gtmroutines is required for ZLINKing. gtmroutines is particularly helpful in calling percent utilities and the Global Directory Editor (GDE), which are in gtm_dist.
 
 .. parsed-literal::
    $ gtmroutines="directories in search list"
@@ -197,9 +197,9 @@ The following is an example of gtmroutines definition:
    $ gtmroutines=". $gtm_dist"
    $ export gtmroutines
 
-This specifies that YottaDB/GT.M search for a routine first in the current directory (.), then in the distribution directory (which is identified by the environment variable gtm_dist). The distribution directory is included in the list because it contains the percent routines. You will probably want the search list to contain these two items at a minimum. In addition, you may want to add directories of your own.
+This specifies that YottaDB search for a routine first in the current directory (.), then in the distribution directory (which is identified by the environment variable gtm_dist). The distribution directory is included in the list because it contains the percent routines. You will probably want the search list to contain these two items at a minimum. In addition, you may want to add directories of your own.
 
-For additional information about how YottaDB/GT.M uses the routine search list, see “$ZROutines”.
+For additional information about how YottaDB uses the routine search list, see “$ZROutines”.
 
 ++++++++++++++++
 Editor
@@ -219,11 +219,11 @@ This defines the current text editor to vi.
 Preparing the Database
 --------------------------
 
-YottaDB/GT.M databases consist of one or more UNIX files. Most database files have a UNIX file structure externally and a YottaDB/GT.M Database Structure (GDS) internally. Management of the GDS files by the YottaDB/GT.M run-time system assures high performance and integrity. YottaDB/GT.M database files are coordinated by a Global Directory. The Global Directory identifies which global names belong in which files, and specifies the creation characteristics for each file. To specify access to a database, each M process must define the gtmgbldir environment variable to point to the associated Global Directory.
+YottaDB databases consist of one or more UNIX files. Most database files have a UNIX file structure externally and a YottaDB Database Structure (GDS) internally. Management of the GDS files by the YottaDB run-time system assures high performance and integrity. YottaDB database files are coordinated by a Global Directory. The Global Directory identifies which global names belong in which files, and specifies the creation characteristics for each file. To specify access to a database, each M process must define the gtmgbldir environment variable to point to the associated Global Directory.
 
 To define and maintain a Global Directory, use the Global Directory Editor (GDE) utility. The GDE utility automatically upgrades existing global directories to the current format. The MUPIP command CREATE uses the characteristics as defined in the Global Directory to create the associated database. In a production environment, the system manager typically maintains Global Directories.
 
-For more information on GDE and MUPIP refer to the "Global Directory Editor" and "MUPIP" chapters in the Administration and Operations Guide.
+For more information on GDE and MUPIP refer to the `"Global Directory Editor" <https://docs.yottadb.com/AdminOpsGuide/gde.html>`_ and `"MUPIP" <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html>`_ chapters in the Administration and Operations Guide.
 
 Example:
 
@@ -239,19 +239,19 @@ The ls command verifies that there are no existing files with the name payroll.g
    $ gtmgbldir=payroll.gld 
    $ export gtmgbldir
 
-This establishes the current value of the environment variable gtmgbldir as payroll.gld. YottaDB/GT.M uses gtmgbldir to identify the current Global Directory. When defined at the shell prompt, gtmgbldir maintains the defined value only for the current login session. The next time you log into UNIX, you must again define the value of gtmgbldir as payroll.gld to use it as the current Global Directory.
+This establishes the current value of the environment variable gtmgbldir as payroll.gld. YottaDB uses gtmgbldir to identify the current Global Directory. When defined at the shell prompt, gtmgbldir maintains the defined value only for the current login session. The next time you log into UNIX, you must again define the value of gtmgbldir as payroll.gld to use it as the current Global Directory.
 
-This example defines gtmgbldir without a full pathname. The environment variable points to the payroll.gld file in the current working directory. Therefore if the default directory changes, YottaDB/GT.M attempts to locate the Global Directory in the new default directory and cannot use the original file. If you intend for the Global Directory to consistently point to this file, even if the default directory changes, use a full file-specification for gtmgbldir.
+This example defines gtmgbldir without a full pathname. The environment variable points to the payroll.gld file in the current working directory. Therefore if the default directory changes, YottaDB attempts to locate the Global Directory in the new default directory and cannot use the original file. If you intend for the Global Directory to consistently point to this file, even if the default directory changes, use a full file-specification for gtmgbldir.
 
 .. parsed-literal::
    $ /usr/lib/fis-gtm/V6.0-0001_x86/gtm
-   GTM>do ^GDE
+   YDB>do ^GDE
    %GDE-I-LOADGD, Loading Global Directory file 
            /home/jdoe/.fis-gtm/V6.0-001_x86/g/payroll.gld
    %GDE-I-VERIFY, Verification OK
    GDE>
 
-This invokes the Global Directory Editor by entering GDE from the YottaDB/GT.M prompt and produces an informational message.
+This invokes the Global Directory Editor by entering GDE from the YottaDB prompt and produces an informational message.
 
 .. parsed-literal::
    GDE> show all
@@ -353,7 +353,7 @@ Example:
 
 .. parsed-literal::
    $ mupip load payroll.gld
-   GT.M MUPIP EXTRACT
+   MUPIP EXTRACT
    02-MAY-2013  22:21:37 ZWR
    Beginning LOAD at record number: 3
    LOAD TOTAL                Key Cnt: 279  Max Subsc Len: 28  Max Data Len: 222
@@ -361,86 +361,86 @@ Example:
 
 This uses the MUPIP LOAD command to load a sequential file into the database.
 
-Because MUPIP uses the environment variable gtmgbldir to locate a Global Directory, which identifies the database file(s), the LOAD command does not require any information about the target database. With few exceptions, the YottaDB/GT.M utilities work in the same way.
+Because MUPIP uses the environment variable gtmgbldir to locate a Global Directory, which identifies the database file(s), the LOAD command does not require any information about the target database. With few exceptions, the YottaDB utilities work in the same way.
 
 --------------------------------------
 Creating and Editing a Source Program
 --------------------------------------
 
-The first step in developing a YottaDB/GT.M program is to create a source file. In most cases, the user can create and modify YottaDB/GT.M source programs using UNIX text editors.
+The first step in developing a YottaDB program is to create a source file. In most cases, the user can create and modify YottaDB source programs using UNIX text editors.
 
 When the program is very simple (and its lines do not need revision after they are entered), you can use the cat command to direct input from your terminal to your source file.
 
 +++++++++++++++++++++++++
-Editing from YottaDB/GT.M
+Editing from YottaDB
 +++++++++++++++++++++++++
 
-If you focus on program development outside the YottaDB/GT.M environment, skip this section and continue with the section "Editing from the Shell".
+If you focus on program development outside the YottaDB environment, skip this section and continue with the section `"Editing from the Shell" <https://docs.yottadb.com/ProgrammersGuide/devcycle.html#editing-from-the-shell>`_.
 
 ZEDIT <filename>
 
-Invoke Direct Mode to create and edit a source program in YottaDB/GT.M. At the GTM> or YDB> prompt, invoke the editor by typing:
+Invoke Direct Mode to create and edit a source program in YottaDB. At the YDB> prompt, invoke the editor by typing:
 
 ZEDIT <filename>
 
 ZEDIT invokes the editor specified by the EDITOR environment variable, which creates a seperate file for each M source module.
 
-The YottaDB/GT.M environment works most efficiently if the file has the same name as the M routine it contains, and has an .m extension. Since ZEDIT automatically defaults the.m extension, it is not necessary to specify an extension unless you require a different one. If you use another extension, you must specify that extension with every reference to the file. Multiple character file extensions are permitted for M source file names.
+The YottaDB environment works most efficiently if the file has the same name as the M routine it contains, and has an .m extension. Since ZEDIT automatically defaults the.m extension, it is not necessary to specify an extension unless you require a different one. If you use another extension, you must specify that extension with every reference to the file. Multiple character file extensions are permitted for M source file names.
 
 Example:
 
 .. parsed-literal::
    $ /usr/lib/.fis-gtm/V5.4-002B_x86/gtm
-   GTM>ZEDIT "payroll"
+   YDB>ZEDIT "payroll"
 
-This syntax uses the gtm script to enter YottaDB/GT.M from the shell, and uses ZEDIT to initiate an editing session on payroll.m Because ZEDIT defaults the extension to .m, it is not necessary to provide an extension. If payroll.m does not already exist, YottaDB/GT.M creates it in the first source directory identified by $ZROUTINES. If $ZROUTINES is null, ZEDIT places the source file in the process's current working directory.
+This syntax uses the gtm script to enter YottaDB from the shell, and uses ZEDIT to initiate an editing session on payroll.m Because ZEDIT defaults the extension to .m, it is not necessary to provide an extension. If payroll.m does not already exist, YottaDB creates it in the first source directory identified by $ZROUTINES. If $ZROUTINES is null, ZEDIT places the source file in the process's current working directory.
 
-$ZROUTINES is a read-write special variable containing an ordered list of directories that certain YottaDB/GT.M functions use to locate source and object files. Generally, a system manager sets up the environment to define the environment variable gtmroutines. At image invocation, YottaDB/GT.M initializes $ZROUTINES to the value of gtmroutines. Once you are running M, you can SET and refer to $ZROUTINES using the format:
+$ZROUTINES is a read-write special variable containing an ordered list of directories that certain YottaDB functions use to locate source and object files. Generally, a system manager sets up the environment to define the environment variable gtmroutines. At image invocation, YottaDB initializes $ZROUTINES to the value of gtmroutines. Once you are running M, you can SET and refer to $ZROUTINES using the format:
 
 .. parsed-literal::
-   GTM>SET $ZROUTINES=expr
+   YDB>SET $ZROUTINES=expr
 
 Where:
 
 * The expression may contain a list of UNIX directories and/or file-specifications delimited by spaces.
 * The expression specifies one or more directories to search.
 * An element of the expression contains an environment variable evaluating to a directory specification.
-* If $ZROUTINES contains an environment variable that evaluates to a list, YottaDB/GT.M uses the first name in that list.
+* If $ZROUTINES contains an environment variable that evaluates to a list, YottaDB uses the first name in that list.
 
-For more information on $ZROUTINES, see Chapter 8: “Intrinsic Special Variables”.
+For more information on $ZROUTINES, see `Chapter 8: “Intrinsic Special Variables” <https://docs.yottadb.com/ProgrammersGuide/isv.html>`_.
 
 +++++++++++++++++++++++++
 Editing from the Shell
 +++++++++++++++++++++++++
 
-To create and edit a source program from the shell, invoke any text editor at the shell prompt and specify a UNIX file as the source. The YottaDB/GT.M environment works best when you give a file the name of the M routine that it contains, and an .m extension.
+To create and edit a source program from the shell, invoke any text editor at the shell prompt and specify a UNIX file as the source. The YottaDB environment works best when you give a file the name of the M routine that it contains, and an .m extension.
 
 Example:
 
 .. parsed-literal::
    $ vi payroll.m
 
-The vi command initiates an editing session for payroll.m from the shell prompt. If payroll.m does not already exist, vi creates it. Because this example uses UNIX rather than YottaDB/GT.M tools, we must specify the .m file extension.
+The vi command initiates an editing session for payroll.m from the shell prompt. If payroll.m does not already exist, vi creates it. Because this example uses UNIX rather than YottaDB tools, we must specify the .m file extension.
 
 ----------------------------
 Compiling a Source Program
 ----------------------------
 
-If you wish to focus on program development outside the YottaDB/GT.M environment, skip the next section and continue with the section "Compiling from the Shell".
+If you wish to focus on program development outside the YottaDB environment, skip the next section and continue with the section `"Compiling from the Shell" <https://docs.yottadb.com/ProgrammersGuide/devcycle.html#compiling-from-the-shell>`_.
 
-YottaDB/GT.M compiles M source code files and produces object files for complete integration into the UNIX enviroment. The object modules have the same name as the compiled M source file with an .o file extension, unless otherwise specified. The object files contain machine instructions and information necessary to connect the routine with other routines, and map it into memory. An M routine source file must be compiled after it is created or modified. You can compile explicitly with the ZLINK command or implicitly with auto-ZLINK. At the shell command line, compile by issuing the mumps command.
+YottaDB compiles M source code files and produces object files for complete integration into the UNIX enviroment. The object modules have the same name as the compiled M source file with an .o file extension, unless otherwise specified. The object files contain machine instructions and information necessary to connect the routine with other routines, and map it into memory. An M routine source file must be compiled after it is created or modified. You can compile explicitly with the ZLINK command or implicitly with auto-ZLINK. At the shell command line, compile by issuing the mumps command.
 
-The compiler checks M code for syntax errors and displays error messages on the terminal, when processing is complete. Each error message provides the source line in error with an indicator pointing to the place on the line where the error is occurring. For a list and description of the compiler error messages, refer to the Message and Recovery Procedures Reference Manual.
+The compiler checks M code for syntax errors and displays error messages on the terminal, when processing is complete. Each error message provides the source line in error with an indicator pointing to the place on the line where the error is occurring. For a list and description of the compiler error messages, refer to the `Messages and Recovery Procedures Reference Manual <https://docs.yottadb.com/MessageRecovery/index.html>`_.
 
-You can generate a listing file containing the compile results by including the -list qualifier as a modifier to the argument to the ZLINK command in Direct Mode. This can also be done by redirecting the compiler messages to a file by adding >filename 2>&1 to the mumps command when compiling a program from the shell. See “Compiling from the Shell” for an explanation of the M command describing -list, and other valid qualifiers for the M and ZLINK commands.
+You can generate a listing file containing the compile results by including the -list qualifier as a modifier to the argument to the ZLINK command in Direct Mode. This can also be done by redirecting the compiler messages to a file by adding >filename 2>&1 to the mumps command when compiling a program from the shell. See `“Compiling from the Shell” <https://docs.yottadb.com/ProgrammersGuide/devcycle.html#compiling-from-the-shell>`_ for an explanation of the M command describing -list, and other valid qualifiers for the M and ZLINK commands.
 
 The compiler stops processing a routine line when it detects an error on that line. Under most conditions the compiler continues processing the remaining routine lines. This allows the compiler to produce a more complete error analysis of the routine and to generate code that may have valid executable paths. The compiler does not report multiple syntax errors on the same line. When it detects more than 127 syntax errors in a source file, the compiler ceases to process the file.
 
 ++++++++++++++++++++++++++++
-Compiling from YottaDB/GT.M
+Compiling from YottaDB
 ++++++++++++++++++++++++++++
 
-In Direct Mode, YottaDB/GT.M provides access to the compiler explicitly through the ZLINK and ZCOMPILE commands, and implicitly through automatic invocation of ZLINK functionality (auto-ZLINK) to add required routines to the image. ZCOMPILE is a YottaDB/GT.M routine compilation command, it compiles the routine and creates a new object module. The primary task of ZLINK is to place the object code in memory and "connect" it with other routines. However, under certain circumstances, ZLINK may first use the YottaDB/GT.M compiler to create a new object module.
+In Direct Mode, YottaDB provides access to the compiler explicitly through the ZLINK and ZCOMPILE commands, and implicitly through automatic invocation of ZLINK functionality (auto-ZLINK) to add required routines to the image. ZCOMPILE is a YottaDB routine compilation command, it compiles the routine and creates a new object module. The primary task of ZLINK is to place the object code in memory and "connect" it with other routines. However, under certain circumstances, ZLINK may first use the YottaDB compiler to create a new object module.
 
 The difference between ZCOMPILE and ZLINK is that ZCOMPILE creates a new object module on compiling, whereas the ZLINK command links the object module with other routines and places the object code in memory.
 
@@ -452,39 +452,39 @@ ZLINK compiles under these circumstances:
 
 Auto-ZLINK compiles under the first two circumstances, but can never encounter the last one.
 
-When a command refers to an M routine that is not part of the current image, YottaDB/GT.M automatically attempts to ZLINK and, if necessary, compile that routine. In Direct Mode, the most common method to invoke the compiler through an auto-ZLINK is to enter DO ^routinename at the GTM> or YDB> prompt. When the current image does not contain the routine, YottaDB/GT.M does the following:
+When a command refers to an M routine that is not part of the current image, YottaDB automatically attempts to ZLINK and, if necessary, compile that routine. In Direct Mode, the most common method to invoke the compiler through an auto-ZLINK is to enter DO ^routinename at the YDB> prompt. When the current image does not contain the routine, YottaDB does the following:
 
 * Locates the source and object
 * Determines whether the source has been edited since it was last compiled
 * Compiles the routine, if appropriate
 * Adds the object to the image
 
-By using the DO command, you implicitly instruct YottaDB/GT.M to compile, link, and execute the program. With this method, you can test your routine interactively.
+By using the DO command, you implicitly instruct YottaDB to compile, link, and execute the program. With this method, you can test your routine interactively.
 
-For complete descriptions of ZLINK and auto-ZLINK, see Chapter 6: “Commands” .
+For complete descriptions of ZLINK and auto-ZLINK, see `Chapter 6: “Commands” <https://docs.yottadb.com/ProgrammersGuide/commands.html>`_ .
 
 Example:
 
 .. parsed-literal::
-   GTM>do ^payroll
-   GTM>do ^taxes
+   YDB>do ^payroll
+   YDB>do ^taxes
 
-This uses the M DO command to invoke the YottaDB/GT.M compiler implicitly from the YDB> or GTM> prompt if the routine requires new object code. When the compiler runs, it produces two object module files, payroll.o and taxes.o.
+This uses the M DO command to invoke the YottaDB compiler implicitly from the YDB> prompt if the routine requires new object code. When the compiler runs, it produces two object module files, payroll.o and taxes.o.
 
-If you receive error messages from the compilation, you may fix them immediately by returning to the editor and correcting the source. By default, the YottaDB/GT.M compiler operates in "compile-as-written" mode, and produces object code even when a routine contains syntax errors. This code includes all lines that are correct and all commands on a line with an error, up to the error. Therefore, you may decide to tailor the debugging cycle by running the program without removing the syntax errors.
+If you receive error messages from the compilation, you may fix them immediately by returning to the editor and correcting the source. By default, the YottaDB compiler operates in "compile-as-written" mode, and produces object code even when a routine contains syntax errors. This code includes all lines that are correct and all commands on a line with an error, up to the error. Therefore, you may decide to tailor the debugging cycle by running the program without removing the syntax errors.
 
 .. note::
-   The DO command does not add an edited routine to the current image if the image already includes a routine matching the DO argument routine name. When the image contains a routine, YottaDB/GT.M simply executes the routine without examining whether a more recent version of the module exists. If you have a routine in your image, and you wish to change it, you must explicitly ZLINK that routine.
+   The DO command does not add an edited routine to the current image if the image already includes a routine matching the DO argument routine name. When the image contains a routine, YottaDB simply executes the routine without examining whether a more recent version of the module exists. If you have a routine in your image, and you wish to change it, you must explicitly ZLINK that routine.
 
 Example:
 
 .. parsed-literal::
-   GTM>zlink "payroll"
-   GTM>zlink "taxes.m"
+   YDB>zlink "payroll"
+   YDB>zlink "taxes.m"
 
 The first ZLINK compiles payroll.m if it cannot locate payroll, or if it finds that payroll.m has a more recent date/time stamp than payroll.o. The second ZLINK always compiles taxes.m producing a new taxes.o.
 
-For more information on debugging in Direct Mode, see Chapter 4: “Operating and Debugging in Direct Mode”.
+For more information on debugging in Direct Mode, see `Chapter 4: “Operating and Debugging in Direct Mode” <https://docs.yottadb.com/ProgrammersGuide/opdebug.html>`_.
 
 +++++++++++++++++++++++++++++++++
 Compiling from the Shell
@@ -498,7 +498,7 @@ Example:
    $ mumps payroll.m
    $ mumps taxes.m
 
-This uses the mumps command to invoke the YottaDB/GT.M compiler from the shell prompt, and creates .o versions of these files.
+This uses the mumps command to invoke the YottaDB compiler from the shell prompt, and creates .o versions of these files.
 
 Use the mumps command at the shell prompt to:
 
@@ -517,7 +517,7 @@ The format for the MUMPS command is:
 * Each pathname identifies an M source program to compile.
 * Qualifiers determine characteristics of the compiler output.
 * Qualifiers must appear after the command, but before the file name to be properly applied.
-* YottaDB/GT.M allows the UNIX * and ? wildcards in a file name.
+* YottaDB allows the UNIX * and ? wildcards in a file name.
 * The MUMPS command returns a status of 1 after any error in compilation.
 
 The * wildcard accepts any legal combination of numbers and characters including a null, in the position the wildcard holds.
@@ -538,7 +538,7 @@ The mumps command allows qualifiers that customize the type and form of the comp
 
 **-di[rect_mode]**
 
-Invokes a small YottaDB/GT.M image that immediately initiates Direct Mode.
+Invokes a small YottaDB image that immediately initiates Direct Mode.
 
 -direct_mode does not invoke the M compiler.
 
@@ -553,11 +553,11 @@ Compiles certain data structures associated with literals used in the source cod
 * In some circumstances, increases application performance by making more memory available for file system buffers.
 * Increases the CPU and stack costs of local variable processing
 
-With no -DYNAMIC_LITERALS specified, these data structures continue to be generated when a routine is linked and stay in the private memory of each process. As the use of -DYNAMIC_LITERALS increases object code size, and as the dynamic loading and unloading only saves memory when the object code is in shared libraries, YottaDB/FIS recommends restricting the use of -DYNAMIC_LITERALS to only when compiling object code to be loaded into shared libraries or executed from an auto relink enabled directory.
+With no -DYNAMIC_LITERALS specified, these data structures continue to be generated when a routine is linked and stay in the private memory of each process. As the use of -DYNAMIC_LITERALS increases object code size, and as the dynamic loading and unloading only saves memory when the object code is in shared libraries, YottaDB recommends restricting the use of -DYNAMIC_LITERALS to only when compiling object code to be loaded into shared libraries or executed from an auto relink enabled directory.
 
 **-[no]embed_source**
 
-Instructs YottaDB/GT.M to embeds routine source code in the object code. The default is NOEMBED_SOURCE. Like other YottaDB/GT.M compilation qualifiers, this qualifier can be specified through the $ZCOMPILE intrinsic special variable and gtmcompile environment variable. EMBED_SOURCE provides $TEXT and ZPRINT access to the correct source code, even if the original M source file has been edited or removed. Where the source code is not embedded in the object code, YottaDB/GT.M attempts to locate the source code file. If it cannot find source code matching the object code, $TEXT() returns a null string. ZPRINT prints whatever source code found and also prints a TXTSRCMAT message in direct mode; if it cannot find a source file, ZPRINT issues a FILENOTFND error. 
+Instructs YottaDB to embeds routine source code in the object code. The default is NOEMBED_SOURCE. Like other YottaDB compilation qualifiers, this qualifier can be specified through the $ZCOMPILE intrinsic special variable and gtmcompile environment variable. EMBED_SOURCE provides $TEXT and ZPRINT access to the correct source code, even if the original M source file has been edited or removed. Where the source code is not embedded in the object code, YottaDB attempts to locate the source code file. If it cannot find source code matching the object code, $TEXT() returns a null string. ZPRINT prints whatever source code found and also prints a TXTSRCMAT message in direct mode; if it cannot find a source file, ZPRINT issues a FILENOTFND error. 
 
 **-[no]i[gnore]**
 
@@ -567,7 +567,7 @@ When used with the -noobject qualifier, the -ignore qualifier has no effect.
 
 Execution of a routine that compiles with errors produces run-time errors when the execution path encounters any of the compile time errors.
 
-This compile-as-written mode facilitates a flexible approach to debugging and expedites conversion to YottaDB/GT.M from an interpreted environment. Many M applications from an interpreted environment contain syntax abnormalities. This feature of compiling and later executing a routine provides the feel of developing in an interpreted environment.
+This compile-as-written mode facilitates a flexible approach to debugging and expedites conversion to YottaDB from an interpreted environment. Many M applications from an interpreted environment contain syntax abnormalities. This feature of compiling and later executing a routine provides the feel of developing in an interpreted environment.
 
 By default, the compiler operates in -ignore mode and produces an object module even when the source routine contains errors.
 
@@ -594,7 +594,7 @@ By default, the compiler operates -nolist and does not produce listings.
 Compiles routines to use library code in order to load literals instead of generating in-line code thereby reducing the routine size. At the cost of a small increase in CPU, the use of -NOINLINE_LITERAL may help counteract growth in object size due to -DYNAMIC_LITERALS.
 
 .. note::
-   Both -DYNAMIC_LITERALS and -NOINLINE_LITERALS help optimize performance and virtual memory usage for applications whose source code includes literals. As the scalability and performance from reduced per-process memory usage may or may not compensate for the incremental cost of dynamically loading and unloading the data structures, and as the performance of routines vs. inline code can be affected by the availability of routines in cache, YottaDB/FIS suggests benchmarking to determine the combination of qualifiers best suited to each workload. Note that applications can freely mix routines compiled with different combinations of qualifiers.
+   Both -DYNAMIC_LITERALS and -NOINLINE_LITERALS help optimize performance and virtual memory usage for applications whose source code includes literals. As the scalability and performance from reduced per-process memory usage may or may not compensate for the incremental cost of dynamically loading and unloading the data structures, and as the performance of routines vs. inline code can be affected by the availability of routines in cache, YottaDB suggests benchmarking to determine the combination of qualifiers best suited to each workload. Note that applications can freely mix routines compiled with different combinations of qualifiers.
 
 **-[no]o[bject][=filename]**
 
@@ -619,7 +619,7 @@ When used with the -list qualifier, the -nowarning qualifier does not affect err
 
 **-r[un]**
 
-Invokes YottaDB/GT.M in Autostart Mode.
+Invokes YottaDB in Autostart Mode.
 
 The next argument is taken to be an M entryref. That routine is immediately executed, bypassing Direct Mode. Depending on the shell, you may need to put the entryref in quotation marks (""). This qualifier does not invoke the M compiler and is not compatible with any other qualifier.
 
@@ -661,13 +661,13 @@ By default, listings use single spaced output (-space=1).
 Executing a Source Program
 -------------------------------
 
-M source programs can be executed either from the shell or from YottaDB/GT.M (Direct Mode).
+M source programs can be executed either from the shell or from YottaDB (Direct Mode).
 
 ++++++++++++++++++++++++++++
 Executing in the Direct Mode
 ++++++++++++++++++++++++++++
 
-As discussed in the section on compiling source programs, the GT.M command ZLINK compiles the source code into an object module and adds the object module to the current image.
+As discussed in the section on compiling source programs, the YottaDB command ZLINK compiles the source code into an object module and adds the object module to the current image.
 
 The run-time system also invokes auto-ZLINKing when an M command, in a program or in Direct Mode, refers to a routine that is not part of the current image.
 
@@ -680,7 +680,7 @@ M commands and functions that may initiate auto-ZLINKing are:
 * ZPRINT
 * $TEXT()
 
-YottaDB/GT.M auto-ZLINKs the routine only under these conditions:
+YottaDB auto-ZLINKs the routine only under these conditions:
 
 * The routine has the same name as the source file.
 * ZLINK can locate the routine file using $ZROUTINES, or the current directory if $ZROUTINES is null.
@@ -691,12 +691,12 @@ When the argument to a ZLINK command includes a pathname, $ZSOURCE maintains tha
 
 Once you use the ZEDIT or ZLINK commands, $ZSOURCE can contain a partial file specification. The partial file specification can be a directory path (full or relative), a file name, and a file extension. You can set $ZSOURCE with an M SET command. A ZLINK without an argument is equivalent to ZLINK $ZSOURCE.
 
-For additional information on $ZSOURCE and $ZROUTINES, refer to Chapter 8: “Intrinsic Special Variables”.
+For additional information on $ZSOURCE and $ZROUTINES, refer to `Chapter 8: “Intrinsic Special Variables” <https://docs.yottadb.com/ProgrammersGuide/isv.html>`_.
 
 Example:
 
 .. parsed-literal::
-   GTM>ZLINK "taxes"
+   YDB>ZLINK "taxes"
 
 If ZLINK finds taxes.m or taxes.o, the command adds the routine taxes to the current image. When ZLINK cannot locate taxes.o, or when it finds taxes.o is older than taxes.m, it compiles taxes.m, producing a new taxes.o. Then, it adds the contents of the new object file to the image.
 
@@ -710,14 +710,14 @@ When the file being linked includes an explicit directory, ZLINK and auto-ZLINK 
 
 A subsequent ZLINK searching for this object file will never find the object file in the specified directory unless the directory is added to the search path in $ZROUTINES, or the object file is moved to another directory already in the search path.
 
-ZLINK cannot change a currently active routine, (e.g., a routine displayed in a ZSHOW "S" of the stack). ZLINK a currently active routine by first removing it from the M stack, using ZGOTO, or one or more QUITs. For additional information on the functionality of ZGOTO and ZSHOW, see their entries in Chapter 6: “Commands”.
+ZLINK cannot change a currently active routine, (e.g., a routine displayed in a ZSHOW "S" of the stack). ZLINK a currently active routine by first removing it from the M stack, using ZGOTO, or one or more QUITs. For additional information on the functionality of ZGOTO and ZSHOW, see their entries in `Chapter 6: “Commands” <https://docs.yottadb.com/ProgrammersGuide/commands.html>`_.
 
-To maintain compatibility with other editions of YottaDB/GT.M that do not permit the percent sign (%) in a file name, YottaDB/GT.M uses an underscore (_) in place of the percent in the file name.
+To maintain compatibility with other editions of YottaDB that do not permit the percent sign (%) in a file name, YottaDB uses an underscore (_) in place of the percent in the file name.
 
 Example:
 
 .. parsed-literal::
-   GTM>zlink "_MGR"
+   YDB>zlink "_MGR"
 
 This ZLINK links the M routine %MGR into the current image.
 
@@ -756,7 +756,7 @@ Processing Errors from Direct Mode and Shell
 |                            |                                                                           | value of "Write:(0=$STACK) ""Error occurred: "",$ZStatus,!" which you   |
 |                            |                                                                           | can customize to suit your needs.                                       |
 +----------------------------+---------------------------------------------------------------------------+-------------------------------------------------------------------------+
-| stderr                     | YottaDB/GT.M processes send error messages to stderr only under the following conditions:                                                           |
+| stderr                     | YottaDB processes send error messages to stderr only under the following conditions:                                                                |
 |                            |                                                                                                                                                     |
 |                            | * The error is fatal which means that the process is about to terminate                                                                             |
 |                            | * During compilation except of indirection or XECUTE                                                                                                |
@@ -765,4 +765,4 @@ Processing Errors from Direct Mode and Shell
 |                            |                                                                                                                                                     |
 +----------------------------+---------------------------------------------------------------------------+-------------------------------------------------------------------------+
 
-For more information, see Chapter 13: “Error Processing”.
+For more information, see `Chapter 13: “Error Processing” <https://docs.yottadb.com/ProgrammersGuide/errproc.html>`_.
