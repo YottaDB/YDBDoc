@@ -2,16 +2,16 @@
 .. index::
    Language Features
 
-===============================
-General Language Features of M
-===============================
+==================================
+5. General Language Features of M
+==================================
 
 .. contents::
    :depth: 2
 
-This chapter describes general features of the M language, as well as general information about the operation of YottaDB/GT.M. Commands, Functions, and Intrinsic Special Variables are each described in separate chapters. This chapter contains information about exceptions, as well as information about general M features.
+This chapter describes general features of the M language, as well as general information about the operation of YottaDB. Commands, Functions, and Intrinsic Special Variables are each described in separate chapters. This chapter contains information about exceptions, as well as information about general M features.
 
-MUMPS is a general purpose language with an embedded database system. This section describes the features of the language that are not covered as Commands, Functions, or Intrinsic Special Variables chapters.
+MUMPS is a general purpose language with an embedded database system. This section describes the features of the language that are not covered in the `Commands <https://docs.yottadb.com/ProgrammersGuide/commands.html>`_, `Functions <https://docs.yottadb.com/ProgrammersGuide/functions.html>`_, or `Intrinsic Special Variables <https://docs.yottadb.com/ProgrammersGuide/isv.html>`_ chapters.
 
 ---------------------------
 Data Types
@@ -33,7 +33,7 @@ When M syntax specifies a numexpr, M evaluates the data as a sequence of ASCII c
 Numeric Accuracy
 +++++++++++++++++++
 
-YottaDB/GT.M provides 18 digits of accuracy, independent of the decimal point (.) placement, and a numeric range from 10**(-43) to (10**47). Numbers with three digits or fewer to the right of the decimal point are precise.
+YottaDB provides 18 digits of accuracy, independent of the decimal point (.) placement, and a numeric range from 10**(-43) to (10**47). Numbers with three digits or fewer to the right of the decimal point are precise.
 
 ++++++++++++++++++++
 Integer Expressions
@@ -59,10 +59,10 @@ M does not reserve any names. That is, M always distinguishes keywords by contex
 
 M names are case sensitive. That is, M treats ABC, Abc, ABc, AbC ABC, and abc as six different names.
 
-M does not restrict the length of names in the main body of the standard. However, the portability section of the standard recommends limiting names to a maximum of eight (8) characters. YottaDB/GT.M's limit of 31 characters applies to:
+M does not restrict the length of names in the main body of the standard. However, the portability section of the standard recommends limiting names to a maximum of eight (8) characters. YottaDB's limit of 31 characters applies to:
 
-* Local variables names
-* Global variables names
+* Local variable names
+* Global variable names
 * Routine names
 * Source and object file names (not including the extension)
 * Label names
@@ -94,15 +94,15 @@ The format for an M global or local variable is:
 * The name specifies a particular array.
 * The optional expressions specify the subscripts and must be enclosed in parentheses and separated by commas (,).
 
-The body of the M standard places no restrictions on variable names. However, the portability section of the standard does suggest limits on the length of an individual subscript expression, and on the total length of a variable name. The measurement for the length of names includes the length of the global variable name itself, the sum of the lengths of all the evaluated subscripts, and an allowance for an overhead of two (2) times the number of subscripts. The total must not exceed 237. For globals, YottaDB/GT.M permits this total to be modified with GDE up to 255. For locals, YottaDB/GT.M limits the length of individual subscripts to the maximum string length of 32,767. YottaDB/GT.M restricts the number of subscripts for local or global variables to 31.
+The body of the M standard places no restrictions on variable names. However, the portability section of the standard does suggest limits on the length of an individual subscript expression, and on the total length of a variable name. The measurement for the length of names includes the length of the global variable name itself, the sum of the lengths of all the evaluated subscripts, and an allowance for an overhead of two (2) times the number of subscripts. The total must not exceed 237. For globals, YottaDB permits this total to be modified with GDE up to 255. For locals, YottaDB limits the length of individual subscripts to the maximum string length of 32,767. YottaDB restricts the number of subscripts for local or global variables to 31.
 
 ++++++++++++++++++++++++++
 M Collation Sequences
 ++++++++++++++++++++++++++
 
-M collates all canonic numeric subscripts ahead of all string subscripts, including strings such as those with leading zeros that represent non-canonic numbers. Numeric subscripts collate from negative to positive in value order. String subscripts collate in ASCII sequence. In addition, YottaDB/GT.M allows the empty string subscript in most contexts, (the null, or empty, string collates ahead of all canonic numeric subscripts).
+M collates all canonic numeric subscripts ahead of all string subscripts, including strings such as those with leading zeros that represent non-canonic numbers. Numeric subscripts collate from negative to positive in value order. String subscripts collate in ASCII sequence. In addition, YottaDB allows the empty string subscript in most contexts (the null, or empty, string collates ahead of all canonic numeric subscripts).
 
-YottaDB/GT.M allows definition of alternative collation sequences. For complete information on enabling this functionality, See Chapter 12: “Internationalization”.
+YottaDB allows definition of alternative collation sequences. For complete information on enabling this functionality, See `Chapter 12: “Internationalization” <https://docs.yottadb.com/ProgrammersGuide/internatn.html>`_.
 
 +++++++++++++++++++++++++
 Local Variables
@@ -110,7 +110,7 @@ Local Variables
 
 A local variable in M refers to a variable used solely within the scope of a single process. Local variable names have no leading delimiter.
 
-M makes a local variable available and subject to modification by all routines executed within a process from the time that variable is first SET until it is KILLed, or until the process stops executing M. However, M "protects" a local variable after that variable appears as an argument to a NEW command, or after it appears as an element in a formalist used in parameter passing. When M protects a local variable, it saves a copy of the variable's value and makes that variable undefined. M restores the variable to its saved value during execution of the QUIT that terminates the process stack level associated with the "protecting" NEW or formalist. For more information on NEW and QUIT, see Chapter 6: “Commands”.
+M makes a local variable available and subject to modification by all routines executed within a process from the time that variable is first SET until it is KILLed, or until the process stops executing M. However, M "protects" a local variable after that variable appears as an argument to a NEW command, or after it appears as an element in a formallist used in parameter passing. When M protects a local variable, it saves a copy of the variable's value and makes that variable undefined. M restores the variable to its saved value during execution of the QUIT that terminates the process stack level associated with the "protecting" NEW or formallist. For more information on NEW and QUIT, see `Chapter 6: “Commands” <https://docs.yottadb.com/ProgrammersGuide/commands.html>`_.
 
 M restricts the following uses of variables to local variables:
 
@@ -150,18 +150,18 @@ The syntax for global variable names that include an environment specification i
 .. parsed-literal::
    ^|expr|name[(subscript[,...])]
 
-In YottaDB/GT.M, the expression identifies the Global Directory for mapping the global variable.
+In YottaDB, the expression identifies the Global Directory for mapping the global variable.
 
 Environment specifications permit easy access to global variables in alternative databases, including other "copies" of active variables in the current database. Environment specifications are sometimes referred to as extended global syntax or extended value syntax.
 
-YottaDB/GT.M also allows:
+YottaDB also allows:
 
 .. parsed-literal::
    ^|expr1,expr2|name[(subscript[,...])]
 
-Where the first expression identifies the Global Directory and the second expression is accepted but ignored by YottaDB/GT.M.
+Where the first expression identifies the Global Directory and the second expression is accepted but ignored by YottaDB.
 
-To improve compatibility with some other M implementations, YottaDB/GT.M also accepts another non-standard syntax. In this syntax, the leading and trailing up-bar (|) are respectively replaced by a left square-bracket ([) and a right square-bracket (]). This syntax also requires expratoms, rather than expressions. For additional information on expratoms, see “Expressions”.
+To improve compatibility with some other M implementations, YottaDB also accepts another non-standard syntax. In this syntax, the leading and trailing up-bar (|) are respectively replaced by a left square-bracket ([) and a right square-bracket (]). This syntax also requires expratoms, rather than expressions. For additional information on expratoms, see “Expressions”.
 
 The formats for this non-standard syntax are:
 
@@ -180,17 +180,17 @@ Example:
 .. parsed-literal::
    $ gtmgbldir=Test.GLD
    $ export gtmgbldir
-   $ GTM
+   $ YDB
      
-   GTM>WRITE $ZGBLDIR
+   YDB>WRITE $ZGBLDIR
    TEST.GLD
-   GTM>WRITE ^A
+   YDB>WRITE ^A
    THIS IS ^A IN DATABASE RED
-   GTM>WRITE ^|"M1.GLD"\|A
+   YDB>WRITE ^|"M1.GLD"\|A
    THIS IS ^A IN DATABASE WHITE
-   GTM>WRITE $ZGBLDIR
+   YDB>WRITE $ZGBLDIR
    TEST.GLD
-   GTM>HALT
+   YDB>HALT
   
    $ echo gtmgbldir
    TEST.GLD
@@ -200,11 +200,11 @@ The statement WRITE ^|"M1.GLD"\|A writes variable ^A using the Global Directory,
 Example:
 
 .. parsed-literal::
-   GTM>WRITE $ZGBLDIR
+   YDB>WRITE $ZGBLDIR
    M1.GLD
-   GTM>WRITE ^A
+   YDB>WRITE ^A
    THIS IS ^A IN DATABASE WHITE
-   GTM>WRITE ^|"M1.GLD"\|A
+   YDB>WRITE ^|"M1.GLD"\|A
    THIS IS ^A IN DATABASE WHITE
 
 The statement WRITE ^|"M1.GLD"\|A is equivalent to WRITE ^A.
@@ -214,13 +214,13 @@ Specifying separate Global Directories does not always translate to using separa
 Example:
 
 .. parsed-literal::
-   GTM>WRITE ^|"M1.GLD"\|A,!,^|"M2.GLD"\|A,!,^|"M3.GLD"
+   YDB>WRITE ^|"M1.GLD"\|A,!,^|"M2.GLD"\|A,!,^|"M3.GLD"
    \|A,!
    THIS IS ^A IN DATABASE WHITE
    THIS IS ^A IN DATABASE BLUE
    THIS IS ^A IN DATABASE WHITE
 
-In this example, the WRITE does not display ^A from three YottaDB/GT.M database files. Mapping specified by the Global Directory Editor (GDE) determines the database file to which a Global Directory points.
+In this example, the WRITE does not display ^A from three YottaDB database files. Mapping specified by the Global Directory Editor (GDE) determines the database file to which a Global Directory points.
 
 This result could have occurred under the following mapping:
 
@@ -229,13 +229,13 @@ This result could have occurred under the following mapping:
    ^|"M2.GLD"\|A --> REGIONA --> SEGMENT1 --> FILE2.DAT
    ^|"M3.GLD"\|A --> REGION3 --> SEGMENT3 --> FILE1.DAT
 
-For more information on Global Directories, refer to the "Global Directory Editor" chapter of the Administration and Operations Guide.
+For more information on Global Directories, refer to the `"Global Directory Editor" <https://docs.yottadb.com/AdminOpsGuide/gde.html>`_ chapter of the Administration and Operations Guide.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Optional YottaDB/GT.M Environment Translation Facility
+Optional YottaDB Environment Translation Facility
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-For users who wish to dynamically (at run-time) determine a global directory from non-global directory information (typically UCI and VOL) in the environment specification, YottaDB/GT.M provides an interface to add an appropriate translation.
+For users who wish to dynamically (at run-time) determine a global directory from non-global directory information (typically UCI and VOL) in the environment specification, YottaDB provides an interface to add an appropriate translation.
 
 Using this facility impacts the performance of every global access that uses environment specification. Make sure you use it only when static determination of the global directory is not feasible. When used, make every effort to keep the translation routines very efficient.
 
@@ -243,7 +243,7 @@ The use of this facility is enabled by the definition of the environment variabl
 
 **gtm_env_xlate**
 
-If the shared object is not accessible or the entry point is not accessible, YottaDB/GT.M reports an error.
+If the shared object is not accessible or the entry point is not accessible, YottaDB reports an error.
 
 The gtm_env_xlate() routine has the following C prototype:
 
@@ -260,19 +260,19 @@ where gtm_string_t is a structure defined in gtmxc_types.h as follows:
      char \*address;
    }gtm_string_t;
 
-The purpose of the function is to use its three input arguments to derive and return an output argument that can be used as an environment specification by YottaDB/GT.M. Note that the input values passed (in1, in2 and in3) are the result of M evaluation and must not be modified. The first two arguments are the expressions passed within the up-bars "| \|" or the square-brackets "[ ]", and the third argument is the current working directory as described by $ZDIRECTORY.
+The purpose of the function is to use its three input arguments to derive and return an output argument that can be used as an environment specification by YottaDB. Note that the input values passed (in1, in2 and in3) are the result of M evaluation and must not be modified. The first two arguments are the expressions passed within the up-bars "| \|" or the square-brackets "[ ]", and the third argument is the current working directory as described by $ZDIRECTORY.
 
-A return value other than zero (0) indicates an error in translation, and is reported by a YottaDB/GT.M error.
+A return value other than zero (0) indicates an error in translation, and is reported by a YottaDB error.
 
-If the length of the output argument is non-zero, YottaDB/GT.M appends a secondary message of GTM-I-TEXT, containing the text found at the address of the output structure.
+If the length of the output argument is non-zero, YottaDB appends a secondary message of GTM-I-TEXT, containing the text found at the address of the output structure.
 
-YottaDB/GT.M does not do any memory management related to the output argument - space for the output should be allocated by the external routine. The routine must place the returned environment specification at the address it has allocated and adjust the length accordingly. On a successful return, the return value should be zero. If the translation routine must communicate an error to YottaDB/GT.M, it must return a non-zero value, and if it is to communicate additional error information, place the error text at the address where the environment would normally go and adjust the length to match the length of the error text.
+YottaDB does not do any memory management related to the output argument - space for the output should be allocated by the external routine. The routine must place the returned environment specification at the address it has allocated and adjust the length accordingly. On a successful return, the return value should be zero. If the translation routine must communicate an error to YottaDB, it must return a non-zero value, and if it is to communicate additional error information, place the error text at the address where the environment would normally go and adjust the length to match the length of the error text.
 
-Length of the return value may range from 0-32767, otherwise YottaDB/GT.M reports an error.
+Length of the return value may range from 0-32767, otherwise YottaDB reports an error.
 
-A zero-length (empty) string specifies the current value of $ZGBLDIR. Non-zero lengths must represent the actual length of the file specification pointed to by the address, excluding any <NUL> terminator. If the address field of the output argument is NULL, YottaDB/GT.M issues an error.
+A zero-length (empty) string specifies the current value of $ZGBLDIR. Non-zero lengths must represent the actual length of the file specification pointed to by the address, excluding any <NUL> terminator. If the address field of the output argument is NULL, YottaDB issues an error.
 
-The file specification may be absolute or relative and may contain an environment variable. If the file specified is not accessible, or is not a valid global directory, YottaDB/GT.M reports errors in the same way it does for any invalid global directory.
+The file specification may be absolute or relative and may contain an environment variable. If the file specified is not accessible, or is not a valid global directory, YottaDB reports errors in the same way it does for any invalid global directory.
 
 It is possible to write this routine in M (as a call-in), however, global variables in such a routine would change the naked indicator, which environment references normally do not. Depending on the conventions of the application, there might be difficult name-space management issues such as protecting the local variables used by the M routine.
 
@@ -430,7 +430,7 @@ Example:
    day3 week2 b
    day4 week2 c.gld
 
-This example demonstrates the mechanism. A table is set up the first time for proper memory management, and for each reference, a table lookup is performed. Note that for the purpose of simplicity, no error checking is done, so table.dat is assumed to be in the correct format, and have exactly four entries. This routine should be built as a sharedlibrary, see Chapter 11: “Integrating External Routines” for information on building as a shared library. The function init_functable is necessary to set up the YottaDB/GT.M memory management functions.
+This example demonstrates the mechanism. A table is set up the first time for proper memory management, and for each reference, a table lookup is performed. Note that for the purpose of simplicity, no error checking is done, so table.dat is assumed to be in the correct format, and have exactly four entries. This routine should be built as a shared library, see `Chapter 11: “Integrating External Routines” <https://docs.yottadb.com/ProgrammersGuide/extrout.html>`_ for information on building as a shared library. The function init_functable is necessary to set up the YottaDB memory management functions.
 
 ----------------------------
 Literals
@@ -442,16 +442,16 @@ M has both string and numeric literals.
 String Literals
 +++++++++++++++++++++++++
 
-A string literal (strlit) is enclosed in quotation marks (" ") and can contain a sequence of ASCII and Unicode characters. While the standard indicates the characters must be graphic, YottaDB/GT.M accepts non-graphic characters and, at compile-time, gives a warning. Using $CHAR() and concatenate to represent non-graphic characters in strings not only avoids the warning but is less error prone and makes for easier understanding. M attempts to use character text that appears outside of quotation mark delimiters according to context, which generally means as a local variable name.
+A string literal (strlit) is enclosed in quotation marks (" ") and can contain a sequence of ASCII and Unicode characters. While the standard indicates the characters must be graphic, YottaDB accepts non-graphic characters and, at compile-time, gives a warning. Using $CHAR() and concatenate to represent non-graphic characters in strings not only avoids the warning but is less error prone and makes for easier understanding. M attempts to use character text that appears outside of quotation mark delimiters according to context, which generally means as a local variable name.
 
 To include a quotation mark (") within a strlit, use a set of two quotation marks ("" "").
 
 Example:
 
 .. parsed-literal::
-   GTM>write """"
+   YDB>write """"
    "
-   GTM>
+   YDB>
 
 The WRITE displays a single quotation mark because the first quotation mark delimits the beginning of the string literal, the next two quotation marks denote a single quote within the string, and the last quotation mark delimits the end of the string literal.
 
@@ -460,9 +460,9 @@ Use the $CHAR function and the concatenation operator to include control charact
 Example:
 
 .. parsed-literal::
-   GTM>WRITE "A"_$CHAR(9)_"B"
+   YDB>WRITE "A"_$CHAR(9)_"B"
    A B
-   GTM>
+   YDB>
 
 The WRITE displays an "A," followed by a tab (<HT>), followed by a "B" using $CHAR(), to introduce the non-graphic character.
 
@@ -475,9 +475,9 @@ In M, numeric literals (numlit) are entered without surrounding delimiters.
 Example:
 
 .. parsed-literal::
-   GTM>WRITE 1
+   YDB>WRITE 1
    1
-   GTM> WRITE 1.1
+   YDB> WRITE 1.1
    1.1
 
 These display numeric literals that are integer and decimal.
@@ -487,22 +487,22 @@ M also accepts numeric literals in the form of a mantissa and an exponent, separ
 Example:
 
 .. parsed-literal::
-   GTM>WRITE 8E6
+   YDB>WRITE 8E6
    8000000
-   GTM> WRITE 8E-6
+   YDB> WRITE 8E-6
    .000008
-   GTM>
+   YDB>
 
 .. note::
    The exponential numeric form may lead to ambiguities in the meaning of subscripts. Because numeric subscripts collate ahead of string subscripts, the string subscript "01E5" is not the same as the numeric subscript 01E5.
 
-YottaDB/GT.M handles numeric strings which are not canonical within the implementation as strings unless the application specifically requests they be treated as numbers. Any use in a context defined as numeric elicits numeric treatment; this includes operands of numeric operators, numeric literals, and some intrinsic function arguments. When the code creates a large number out of range , YottaDB/GT.M gives a NUMOFLOW error. When the code creates a small fractional number out of range YottaDB/GT.M treats it as zero (0). The YottaDB/GT.M number range is (to the limit of accuracy) 1E-43 to 1E47. When the application creates an in-range number that exceeds the YottaDB/GT.M numeric accuracy of 18 significant digits, YottaDB/GT.M silently retains the most significant digits. With standard collation, YottaDB/GT.M collates canonic numeric strings used as subscripts numerically, while it collates non-canonic numbers as strings. 
+YottaDB handles numeric strings which are not canonical within the implementation as strings unless the application specifically requests they be treated as numbers. Any use in a context defined as numeric elicits numeric treatment; this includes operands of numeric operators, numeric literals, and some intrinsic function arguments. When the code creates a large number out of range , YottaDB gives a NUMOFLOW error. When the code creates a small fractional number out of range YottaDB treats it as zero (0). The YottaDB number range is (to the limit of accuracy) 1E-43 to 1E47. When the application creates an in-range number that exceeds the YottaDB numeric accuracy of 18 significant digits, YottaDB silently retains the most significant digits. With standard collation, YottaDB collates canonic numeric strings used as subscripts numerically, while it collates non-canonic numbers as strings. 
 
 ----------------------------
 Expressions
 ----------------------------
 
-The following items are legal M expression atoms (expratom). An expression atom is a component of an M expression.
+The following items are legal M expression atoms (expratoms). An expression atom is a component of an M expression.
 
 * Local variables
 * Global variables
@@ -551,39 +551,39 @@ All arithmetic operators force M to evaluate the expressions to which they apply
 
 # binary operator for modulo, that is, causes M to produce the remainder from integer division of the first argument by the second.
 
-Because of the practice of using it to intentionally induce an error, YottaDB/GT.M does not produce a DIVZERO error at compile time, only at run time, for divide or integer divide by a literal expression that evaluates to zero (0).
+Because of the practice of using it to intentionally induce an error, YottaDB does not produce a DIVZERO error at compile time, only at run time, for divide or integer divide by a literal expression that evaluates to zero (0).
 
 Remember that precedence is left to right for all arithmetic operators.
 
 Example:
 
 .. parsed-literal::
-   GTM>WRITE 1+1
+   YDB>WRITE 1+1
    2
-   GTM>WRITE 2-1
+   YDB>WRITE 2-1
    1
-   GTM>WRITE 2*2
+   YDB>WRITE 2*2
    4
-   GTM>WRITE 3**2
+   YDB>WRITE 3**2
    9
-   GTM>WRITE 4/2
+   YDB>WRITE 4/2
    2
-   GTM>WRITE 7
+   YDB>WRITE 7
    2
-   GTM>WRITE 7#3
+   YDB>WRITE 7#3
    1
-   GTM>
+   YDB>
 
 This simple example demonstrates how each arithmetic binary operation uses numeric literals.
 
 Example:
 
 .. parsed-literal::
-   GTM>WRITE +"12ABC"
+   YDB>WRITE +"12ABC"
    12
-   GTM>WRITE --"-3-4"
+   YDB>WRITE --"-3-4"
    -3
-   GTM>
+   YDB>
 
 The first WRITE shows the unary plus sign (+) operation forcing the numeric evaluation of a string literal. The second WRITE demonstrates the unary minus sign (-). Note the second minus sign within the string literal does not cause subtraction, but rather, terminates the numeric evaluation with the result of negative three (-3). Each of the leading minus signs causes one negation and therefore, the result is negative three (-3).
 
@@ -604,44 +604,44 @@ Remember that precedence is always left to right, and that logical operators hav
 Example:
 
 .. parsed-literal::
-   GTM>WRITE '0
+   YDB>WRITE '0
    1
-   GTM>WRITE '1
+   YDB>WRITE '1
    0
-   GTM>WRITE '5689
+   YDB>WRITE '5689
    0
-   GTM>WRITE '-1
+   YDB>WRITE '-1
    0
-   GTM>WRITE '"ABC"
+   YDB>WRITE '"ABC"
    1
-   GTM>
+   YDB>
 
 The above example demonstrates the unary NOT operation. Note that any non-zero numeric value is true and has a false negation.
 
 Example:
 
 .. parsed-literal::
-   GTM>WRITE 0&0
+   YDB>WRITE 0&0
    0
-   GTM>WRITE 1&0
+   YDB>WRITE 1&0
    0
-   GTM>WRITE 0&1
+   YDB>WRITE 0&1
    0
-   GTM>WRITE 1&1
+   YDB>WRITE 1&1
    1
-   GTM>WRITE 2&1
+   YDB>WRITE 2&1
    1
-   GTM>WRITE 0!0
+   YDB>WRITE 0!0
    0
-   GTM>WRITE 1!0
+   YDB>WRITE 1!0
    1
-   GTM>WRITE 0!1
+   YDB>WRITE 0!1
    1
-   GTM>WRITE 1!1
+   YDB>WRITE 1!1
    1
-   GTM>WRITE 2!1
+   YDB>WRITE 2!1
    1
-   GTM>
+   YDB>
 
 The above example demonstrates all cases covered by the binary logical operators.
 
@@ -656,11 +656,11 @@ _ binary operator causes M to concatenate the second expression with the first e
 Example:
 
 .. parsed-literal::
-   GTM>WRITE "B"_"A"
+   YDB>WRITE "B"_"A"
    BA
-   GTM>WRITE "A"_1
+   YDB>WRITE "A"_1
    A1
-   GTM>
+   YDB>
 
 The above example demonstrates M concatenation.
 
@@ -691,22 +691,22 @@ Other numeric relations are formed using the logical NOT operator apostrophe (')
 Example:
 
 .. parsed-literal::
-   GTM>WRITE 1>2
+   YDB>WRITE 1>2
    0
-   GTM>WRITE 1<2
+   YDB>WRITE 1<2
    1
-   GTM>
+   YDB>
 
 The above example demonstrates the basic arithmetic relational operations.
 
 Example:
 
 .. parsed-literal::
-   GTM>WRITE 1'<2
+   YDB>WRITE 1'<2
    0
-   GTM>WRITE 2'<1
+   YDB>WRITE 2'<1
    1
-   GTM>
+   YDB>
 
 The above example demonstrates combinations of arithmetic, relational operators with the logical NOT operator.
 
@@ -739,21 +739,21 @@ Other string relations are formed using the logical NOT operator apostrophe (') 
 Example:
 
 .. parsed-literal::
-   GTM>WRITE "A"="B"
+   YDB>WRITE "A"="B"
    0
-   GTM>WRITE "C"="C"
+   YDB>WRITE "C"="C"
    1
-   GTM>WRITE "A"["B"
+   YDB>WRITE "A"["B"
    0
-   GTM>WRITE "ABC"["C"
+   YDB>WRITE "ABC"["C"
    1
-   GTM>WRITE "A"]"B"
+   YDB>WRITE "A"]"B"
    0
-   GTM>WRITE "B"]"A"
+   YDB>WRITE "B"]"A"
    1
-   GTM>WRITE "A"]]"B"
+   YDB>WRITE "A"]]"B"
    0
-   GTM>WRITE "B"]]"A"
+   YDB>WRITE "B"]]"A"
    1
 
 These examples demonstrate the string relational operators using string literals.
@@ -761,13 +761,13 @@ These examples demonstrate the string relational operators using string literals
 Example:
 
 .. parsed-literal::
-   GTM>WRITE 2]10
+   YDB>WRITE 2]10
    1
-   GTM>WRITE 2]]10
+   YDB>WRITE 2]]10
    0
-   GTM>WRITE 0]"$"
+   YDB>WRITE 0]"$"
    1
-   GTM>WRITE 0]]"$"
+   YDB>WRITE 0]]"$"
    0
 
 These examples illustrate that when using the primary ASCII character set, the main difference in the "follows" (]) operator and the "sorts-after" (]]) operator is the way they treat numbers.
@@ -775,30 +775,30 @@ These examples illustrate that when using the primary ASCII character set, the m
 Example:
 
 .. parsed-literal::
-   GTM>WRITE 1=1
+   YDB>WRITE 1=1
    1
-   GTM>WRITE 1=2
+   YDB>WRITE 1=2
    0
-   GTM>WRITE 1="1"
+   YDB>WRITE 1="1"
    1
-   GTM>WRITE 1=01
+   YDB>WRITE 1=01
    1
-   GTM>WRITE 1="01"
+   YDB>WRITE 1="01"
    0
-   GTM>WRITE 1=+"01"
+   YDB>WRITE 1=+"01"
    1
-   GTM>
+   YDB>
 
 These examples illustrate the dual nature of the equal sign operator. If both expressions are string or numeric, the results are straight forward. However, when the expressions are mixed, the native string data type prevails.
 
 Example:
 
 .. parsed-literal::
-   GTM>WRITE "a"'="A"
+   YDB>WRITE "a"'="A"
    1
-   GTM>WRITE "FRED"'["RED"
+   YDB>WRITE "FRED"'["RED"
    0
-   GTM>WRITE "ABC"']""
+   YDB>WRITE "ABC"']""
    0
 
 These examples demonstrate combinations of the string relational operators with the NOT operator.
@@ -834,17 +834,17 @@ The pattern codes are:
 
 **U** upper-case alphabetic characters, ASCII 65-90
 
-Pattern codes may be upper or lower case and may be replaced with a string literal. YottaDB/GT.M allows the M pattern match definition of patcodes A, C, N, U, L, and P to be extended or changed, (A can only be modified implicitly by modifying L or U) and new patcodes added. For detailed information on enabling this functionality, see Chapter 12: “Internationalization”.
+Pattern codes may be upper or lower case and may be replaced with a string literal. YottaDB allows the M pattern match definition of patcodes A, C, N, U, L, and P to be extended or changed, (A can only be modified implicitly by modifying L or U) and new patcodes added. For detailed information on enabling this functionality, see `Chapter 12: “Internationalization” <https://docs.yottadb.com/ProgrammersGuide/internatn.html>`_.
 
 .. note::
-   The YottaDB/GT.M compiler accepts pattern codes other than those explicitly defined above. If, at run-time, the pattern codes come into use and no pattern definitions are available, YottaDB/GT.M issues a run-time error (PATNOTFOUND). YottaDB/GT.M does not currently implement a mechanism for Y and Z patterns and continues to treat those as compile-time syntax errors.
+   The YottaDB compiler accepts pattern codes other than those explicitly defined above. If, at run-time, the pattern codes come into use and no pattern definitions are available, YottaDB issues a run-time error (PATNOTFOUND). YottaDB does not currently implement a mechanism for Y and Z patterns and continues to treat those as compile-time syntax errors.
 
 Example:
 
 .. parsed-literal::
-   GTM>WRITE "ABC"?3U
+   YDB>WRITE "ABC"?3U
    1
-   GTM>WRITE "123-45-6789"?3N1"-"2N1"-"4N
+   YDB>WRITE "123-45-6789"?3N1"-"2N1"-"4N
    1
 
 The first WRITE has a simple one-element pattern while the second has multiple elements including both codes and string literals. All the repetition counts are fixed.
@@ -864,7 +864,7 @@ Example:
 
 This example uses a pattern match with implicit minimums to determine that an "account number" is actually a name, and to trigger a look-up of the corresponding account number in the ^ACX cross index.
 
-The pattern match operator accepts the alteration syntax. Alteration consists of a repeat count followed by a comma-delimited list of patatoms enclosed in parentheses "()". The semantic is that the pattern matches if any of the listed patterns matches the operand string. For example, ?1(2N1"-"7N,3N1"-"2N1"-"4N).1U might be a way to match either a social security number or a taxpayer ID. Since alternation is defined as one of the ways of constructing a patatom, alternation can nest (be used recursively).
+The pattern match operator accepts the alteration syntax. Alteration consists of a repeat count followed by a comma-delimited list of patatoms enclosed in parentheses "()". This is to check if any of the listed patterns matches the operand string. For example, ?1(2N1"-"7N,3N1"-"2N1"-"4N).1U might be a way to match either a social security number or a taxpayer ID. Since alteration is defined as one of the ways of constructing a patatom, alteration can nest (be used recursively).
 
 .. note::
    Complex pattern matches may not be efficient to evaluate, so every effort should be made to simplify any commonly used pattern and to determine if more efficient alternative logic would be more appropriate.
@@ -883,11 +883,11 @@ M provides postconditionals as a tool for placing a condition on the execution o
 
 **Command Postconditionals**
 
-Command postconditionals appear immediately following a command and apply to all arguments for the command when it has multiple arguments. All commands except commands that themselves have a conditional aspect accept a command postconditional. Among the M standard commands, ELSE, FOR, and IF do not accept command postconditionals. All the YottaDB/GT.M command extensions accept command postconditionals. When a postconditional evaluates to a literal FALSE (0), YottaDB/GT.M discards the command and its arguments at compile time, which means it does not perform any validity checking on the arguments.
+Command postconditionals appear immediately following a command and apply to all arguments for the command when it has multiple arguments. All commands except commands that themselves have a conditional aspect accept a command postconditional. Among the M standard commands, ELSE, FOR, and IF do not accept command postconditionals. All the YottaDB command extensions accept command postconditionals. When a postconditional evaluates to a literal FALSE (0), YottaDB discards the command and its arguments at compile time, which means it does not perform any validity checking on the arguments.
 
 **Argument Postconditionals**
 
-Commands that affect the flow of control may accept postconditionals on individual command arguments. Because multiple arguments act as multiple commands, this is a straight-forward application of the same principal as command postconditional. The only M standard commands that accept argument postconditionals are DO, GOTO, and XECUTE. The YottaDB/GT.M command extensions that accept argument postconditionals are BREAK, ZGOTO, and ZSYSTEM.
+Commands that affect the flow of control may accept postconditionals on individual command arguments. Because multiple arguments act as multiple commands, this is a straight-forward application of the same principal as command postconditional. The only M standard commands that accept argument postconditionals are DO, GOTO, and XECUTE. The YottaDB command extensions that accept argument postconditionals are BREAK, ZGOTO, and ZSYSTEM.
 
 +++++++++++++++++
 Timeouts
@@ -895,7 +895,7 @@ Timeouts
 
 M provides timeouts as a tool to retain program control over commands of indefinite duration. A timeout consists of a colon (:) delimiter on an argument, followed by a numeric expression specifying the number of seconds to millisecond (three decimal place) precision for M to attempt to execute the command. When the timeout is zero (0), M makes a single attempt to complete the command.
 
-YottaDB/GT.M caps the maximum timeout to 999,999.999 seconds (about 11.5 days), and converts values greater than the maximum timeout to that cap. When a command has a timeout, M maintains the $TEST intrinsic special variable as the command completes. If the command completes successfully, M sets $TEST to TRUE (1). If the command times out before successful completion, M sets $TEST to FALSE (0). When a command argument does not specify a timeout, M does not maintain $TEST.
+YottaDB caps the maximum timeout to 999,999.999 seconds (about 11.5 days), and converts values greater than the maximum timeout to that cap. When a command has a timeout, M maintains the $TEST intrinsic special variable as the command completes. If the command completes successfully, M sets $TEST to TRUE (1). If the command times out before successful completion, M sets $TEST to FALSE (0). When a command argument does not specify a timeout, M does not maintain $TEST.
 
 The following commands accept timeouts:
 
@@ -915,15 +915,15 @@ The LOCK command reserves one or more resource names. Only one process at a time
 
 M LOCKs are hierarchical. If one process holds a LOCK on a resource, no other process can LOCK either an ancestor or a descendant resource. For example, a LOCK on ^A(1,2) blocks LOCKs on either ^A(1), or ^A(1,2,3), but not on, for example, ^A(2) or its descendants.
 
-A LOCK argument may contain any subscripted or unsubscripted M variable name including a name without a preceding caret symbol (^). As they have the appearance of local variable names, resource names with no preceding caret symbol (^) are commonly referred to as "local LOCKs" even though these LOCKs interact with other processes. For more information on the interaction between LOCKs and processes, refer to the LKE chapter in the Administration and Operations Guide.
+A LOCK argument may contain any subscripted or unsubscripted M variable name including a name without a preceding caret symbol (^). As they have the appearance of local variable names, resource names with no preceding caret symbol (^) are commonly referred to as "local LOCKs" even though these LOCKs interact with other processes. For more information on the interaction between LOCKs and processes, refer to the `LKE chapter in the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/mlocks.html>`_.
 
-The YottaDB/GT.M run-time system records LOCK information in memory associated with the region holding the global of the same name. However, YottaDB/GT.M does not place LOCKs in the database structures that hold the globals. Instead the LOCK manager sets up a "LOCK database" associated with each database region. Only the M commands LOCK, ZALLOCATE, and ZDEALLOCATE and the LKE utility access the information in the "LOCK database".
+The YottaDB run-time system records LOCK information in memory associated with the region holding the global of the same name. However, YottaDB does not place LOCKs in the database structures that hold the globals. Instead the LOCK manager sets up a "LOCK database" associated with each database region. Only the M commands LOCK, ZALLOCATE, and ZDEALLOCATE and the LKE utility access the information in the LOCK database.
 
-YottaDB/GT.M distributes the LOCK database within space associated with the database files identified by the Global Directory (GD). The Global Directory Editor (GDE) enables you to create and maintain global directories. YottaDB/GT.M associates LOCKs of resource names starting with a caret symbol (^) with the database region used to map variables with the same name. If the global directory maps the name ^A to file A.DAT, YottaDB/GT.M maps all LOCKs on resource name ^A to LOCK space implemented in shared memory control structures associated with A.DAT. YottaDB/GT.M maps LOCKs on names not starting with a caret symbol (^) to the region of the database specified with the GDE command LOCKS -REGION.
+YottaDB distributes the LOCK database within space associated with the database files identified by the Global Directory (GD). The Global Directory Editor (GDE) enables you to create and maintain global directories. YottaDB associates LOCKs of resource names starting with a caret symbol (^) with the database region used to map variables with the same name. If the global directory maps the name ^A to file A.DAT, YottaDB maps all LOCKs on resource name ^A to LOCK space implemented in shared memory control structures associated with A.DAT. YottaDB maps LOCKs on names not starting with a caret symbol (^) to the region of the database specified with the GDE command LOCKS -REGION.
 
 By default, GDE creates global directories mapping "local" LOCKs to the region DEFAULT.
 
-^LOCKS automatically intersect for all users of the same data in any database file, because YottaDB/GT.M associates the ^LOCKs with the same region as the global variables with the same name.
+^LOCKS automatically intersect for all users of the same data in any database file, because YottaDB associates the ^LOCKs with the same region as the global variables with the same name.
 
 "Local" LOCK intersections are dependent on the global directory, because users may access the database through different global directories. The "local" LOCKs of two processes interact with each other only when the same lock resource names map to the same database region.
 
@@ -931,13 +931,13 @@ By default, GDE creates global directories mapping "local" LOCKs to the region D
 Intrinsic Functions
 ----------------------------
 
-M Intrinsic Functions start with a single dollar sign ($) and have one or more arguments enclosed in parentheses () and separated by commas (,). These functions provide an expression result by performing actions that would be impossible or difficult to perform using M commands. It is now possible to invoke a C function in a package via the external call mechanism. For information on the functions, see Chapter 7: “Functions”.
+M Intrinsic Functions start with a single dollar sign ($) and have one or more arguments enclosed in parentheses () and separated by commas (,). These functions provide an expression result by performing actions that would be impossible or difficult to perform using M commands. It is now possible to invoke a C function in a package via the external call mechanism. For information on the functions, see `Chapter 7: “Functions” <https://docs.yottadb.com/ProgrammersGuide/functions.html>`_.
 
 ----------------------------
 Intrinsic Special Variables
 ----------------------------
 
-M Intrinsic Special Variables start with a single dollar sign ($). YottaDB/GT.M provides such variables for program examination. In some cases, the Intrinsic Special Variables may be SET to modify the corresponding part of the environment. For information, see Chapter 8: “Intrinsic Special Variables”.
+M Intrinsic Special Variables start with a single dollar sign ($). YottaDB provides such variables for program examination. In some cases, the Intrinsic Special Variables may be SET to modify the corresponding part of the environment. For information, see `Chapter 8: “Intrinsic Special Variables” <https://docs.yottadb.com/ProgrammersGuide/isv.html>`_.
 
 -------------------------
 Routines
@@ -945,7 +945,7 @@ Routines
 
 M routines have a name and consist of lines of code followed by a formfeed. M separates the name of a routine from the body of the routine with an end-of-line which is a line-feed. This form is mostly used for interchange with other M implementations and can be read and written by the %RI and %RO utility routines.
 
-YottaDB/GT.M stores routine sources in UNIX text files.
+YottaDB stores routine sources in UNIX text files.
 
 In M, a routine has no particular impact on variable management and may include code that is invoked at different times and has no logical intersection.
 
@@ -956,20 +956,20 @@ Lines
 A line of M code consists of the following elements in the following order:
 
 * An optional label.
-* A line-start delimiter. The standard defines the line-start delimiter as a space (<SP>) character. In order to enhance routine readability, YottaDB/GT.M extends M by accepting one or more tab (<HT>) characters as line-start delimiters.
-* Zero or more level indicators, which are periods (.). The level indicators show the level of nesting for argumentless DO commands: the more periods, the deeper the nesting. M ignores lines that contain level indicators unless they directly follow an argumentless DO command with a matching level of nesting. For more information on the DO command, see Chapter 6: “Commands”.
+* A line-start delimiter. The standard defines the line-start delimiter as a space (<SP>) character. In order to enhance routine readability, YottaDB extends M by accepting one or more tab (<HT>) characters as line-start delimiters.
+* Zero or more level indicators, which are periods (.). The level indicators show the level of nesting for argumentless DO commands: the more periods, the deeper the nesting. M ignores lines that contain level indicators unless they directly follow an argumentless DO command with a matching level of nesting. For more information on the DO command, see `Chapter 6: “Commands” <https://docs.yottadb.com/ProgrammersGuide/commands.html>`_.
 * Zero or more commands and their arguments. M accepts multiple commands on a line. The argument(s) of one command are separated from the next command by a command-start delimiter, consisting of one or more spaces (<SP>).
 * A terminating end-of-line, which is a line feed.
 
 **Labels**
 
-In addition to labels that follow the rules for M names, M accepts labels consisting only of digits. In a label consisting only of digits, leading zeros are considered significant. For example, labels 1 and 01 are different. Formalists may immediately follow a label. A Formalists consists of one or more names enclosed in parentheses (). Formalists identify local variables that "receive" passed values in M parameter passing. For more information, see “Parameter Passing”.
+In addition to labels that follow the rules for M names, M accepts labels consisting only of digits. In a label consisting only of digits, leading zeros are considered significant. For example, labels 1 and 01 are different. Formallists may immediately follow a label. A Formallist consists of one or more names enclosed in parentheses (). Formallists identify local variables that "receive" passed values in M parameter passing. For more information, see `“Parameter Passing” <https://docs.yottadb.com/ProgrammersGuide/langfeat.html#parameter-passing>`_.
 
-In YottaDB/GT.M, a colon (:) delimiter may be appended to the label, which causes the label to be treated as "local." Within the routine in which they appear, they perform exactly as they would without the trailing colon but they are available only during compilation and inaccessible to other routines and to indirection or XECUTE. Because references to local labels preceding their position in a routine produce a LABELUNKNOWN error at run-time, YottaDB/FIS recommends omitting the routinename from labelrefs to a local label. Using local labels reduces object size and linking overhead for both all types for dynamic linking except indirection and XECUTE. Use of local labels may either improve or impair performance; typically any difference is modest. The more likely they are to all be used within the code block at run-time, the more likely an improvement. In other words, conditional code paths which prevent all references to local variables appearing in the block may actually impair performance.
+In YottaDB, a colon (:) delimiter may be appended to the label, which causes the label to be treated as "local." Within the routine in which they appear, they perform exactly as they would without the trailing colon but they are available only during compilation and inaccessible to other routines and to indirection or XECUTE. Because references to local labels preceding their position in a routine produce a LABELUNKNOWN error at run-time, YottaDB recommends omitting the routinename from labelrefs to a local label. Using local labels reduces object size and linking overhead for both all types for dynamic linking except indirection and XECUTE. Use of local labels may either improve or impair performance; typically any difference is modest. The more likely they are to all be used within the code block at run-time, the more likely an improvement. In other words, conditional code paths which prevent all references to local variables appearing in the block may actually impair performance.
 
 **Comments**
 
-In addition to commands, a line may also contain a comment that starts with a leading semi-colon (;) delimiter. The scope of a comment is the remainder of the line. In other words, M ignores anything to the right of the comment delimiter. The standard defines the comment delimiter (;) as it would a command, and therefore requires that it always appear after a linestart. YottaDB/GT.M extends the standard to permit comments to start at the first character of a line or in an argument position.
+In addition to commands, a line may also contain a comment that starts with a leading semi-colon (;) delimiter. The scope of a comment is the remainder of the line. In other words, M ignores anything to the right of the comment delimiter. The standard defines the comment delimiter (;) as it would a command, and therefore requires that it always appear after a linestart. YottaDB extends the standard to permit comments to start at the first character of a line or in an argument position.
 
 +++++++++++++++++
 Entry References
@@ -1005,8 +1005,8 @@ Most commands accept indirection of their entire argument.
 Example:
 
 .. parsed-literal::
-   GTM>set x="^INDER"
-   GTM>do @x
+   YDB>set x="^INDER"
+   YDB>do @x
 
 This example is equivalent to do ^INDER.
 
@@ -1019,11 +1019,11 @@ Any expratom or any local or global variable name may be replaced by indirection
 Example:
 
 .. parsed-literal::
-   GTM>set x="HOOP",b="x"
-   GTM>set a="HULA "_@b
-   GTM>write a
+   YDB>set x="HOOP",b="x"
+   YDB>set a="HULA "_@b
+   YDB>write a
    HULA HOOP
-   GTM>
+   YDB>
 
 This example uses indirection within a concatenation operation.
 
@@ -1036,8 +1036,8 @@ Any element of an entryref may be replaced by indirection.
 Example:
 
 .. parsed-literal::
-   GTM>set lab="START",routine="PROG"
-   GTM>do @lab^@routine
+   YDB>set lab="START",routine="PROG"
+   YDB>do @lab^@routine
 
 This example is equivalent to do START^PROG.
 
@@ -1050,8 +1050,8 @@ A pattern code may be replaced by indirection.
 Example:
 
 .. parsed-literal::
-   GTM>FOR p="1U.20A1"",""1U.20A",5N IF x?@p QUIT
-   GTM>ELSE WRITE !,"Incorrect format" QUIT
+   YDB>FOR p="1U.20A1"",""1U.20A",5N IF x?@p QUIT
+   YDB>ELSE WRITE !,"Incorrect format" QUIT
 
 This example uses pattern code indirection to test x for either a name or a number.
 
@@ -1064,8 +1064,8 @@ Indirection may replace the prefix of a subscripted global or local variable nam
 Example:
 
 .. parsed-literal::
-   GTM>SET from="B",to="^A(15)",x=""
-   GTM>FOR SET x=$O(@from@(x)) Q:x="" S @to@(x)=@from@(x)
+   YDB>SET from="B",to="^A(15)",x=""
+   YDB>FOR SET x=$O(@from@(x)) Q:x="" S @to@(x)=@from@(x)
 
 This example uses name indirection to copy the level contents of a local array to a part of a global array. The example assumes that all existing first level nodes of variable B have data.
 
@@ -1077,7 +1077,7 @@ M indirection provides a very powerful tool for allowing program abstraction. Ho
 
 Because routines that use indirection in some ways do not contain adequate information for easy reading, such routines tend to be more difficult to debug and maintain.
 
-To improve run-time performance, YottaDB/GT.M tends to move work from run-time to compile-time. Indirection forces compiler actions to occur at run-time, which minimizes the benefits of compilation.
+To improve run-time performance, YottaDB tends to move work from run-time to compile-time. Indirection forces compiler actions to occur at run-time, which minimizes the benefits of compilation.
 
 M allows most forms of indirection to be recursive. However, in real applications, recursive indirection typically makes the code obscure and slow.
 
@@ -1100,7 +1100,7 @@ M uses parameter passing for:
 
 Parameter passing is optional on DO commands.
 
-Parameter passing uses two argument lists: the actuallist that specifies the parameters that M passes to an invoked routine, and the formalist that specifies the local variables to receive or associate with the parameters.
+Parameter passing uses two argument lists: the actuallist that specifies the parameters that M passes to an invoked routine, and the formallist that specifies the local variables to receive or associate with the parameters.
 
 ++++++++++++++
 Actuallists
@@ -1120,7 +1120,7 @@ An actuallist:
 Example:
 
 .. parsed-literal::
-   GTM>DO MULT(3,X,.RESULT)
+   YDB>DO MULT(3,X,.RESULT)
 
 This example illustrates a DO with parameters. The actuallist contains:
 
@@ -1192,7 +1192,7 @@ A QUIT command terminates execution of the invoked routine. At the time of the Q
 
 A QUIT from a DO does not take an argument, while a QUIT from an extrinsic must have an argument. This represents one of the two major differences between the DO command with parameters and the extrinsics. M returns the value of the QUIT command argument as the value of the extrinsic function or special variable. The other difference is that M stacks $TEST for extrinsics.
 
-For more information, see “Extrinsic Functions” and “Extrinsic Special Variables”.
+For more information, see `“Extrinsic Functions” <https://docs.yottadb.com/ProgrammersGuide/langfeat.html#extrinsic-functions>`_ and `“Extrinsic Special Variables” <https://docs.yottadb.com/ProgrammersGuide/langfeat.html#extrinsic-special-variables>`_.
 
 Example:
 
@@ -1274,7 +1274,7 @@ This example could be:
 * An invocation of the label specified by X with a parameter of 1.
 * An invocation of the label specified by X(1) with no parameter list.
 
-YottaDB/GT.M processes the latter interpretation as illustrated in the following example.
+YottaDB processes the latter interpretation as illustrated in the following example.
 
 Example:
 
@@ -1294,7 +1294,7 @@ Produces the result:
 .. parsed-literal::
    125
 
-YottaDB/GT.M follows analogous syntax for routine indirection:
+YottaDB follows analogous syntax for routine indirection:
 
 **DO ^@X(A)** invokes the routine specified by X(A).
 
@@ -1306,9 +1306,9 @@ YottaDB/GT.M follows analogous syntax for routine indirection:
 External Calls
 ---------------------------
 
-YottaDB/GT.M allows references to a YottaDB/GT.M database from programs written in other programming languages that run under UNIX.
+YottaDB allows references to a YottaDB database from programs written in other programming languages that run under UNIX.
 
-In YottaDB/GT.M, calls to C language routines may be made with the following syntax:
+In YottaDB, calls to C language routines may be made with the following syntax:
 
 .. parsed-literal::
    DO &[packagename.]name[^name][parameter-list]
@@ -1321,7 +1321,7 @@ or as an expression element,
 Where packagename, like the name elements is a valid M name. Because of the parsing conventions of M, the identifier between the ampersand (&) and the optional parameter-list has precisely constrained punctuation – a later section describes how to transform this into a more richly punctuated name should that be appropriate for the called function. While the intent of the syntax is to permit the name^name to match an M labelref, there is no semantic implication to any use of the caret (^).
 
 .. note::
-   For more information on external calls, see Chapter 11: “Integrating External Routines”.
+   For more information on external calls, see `Chapter 11: “Integrating External Routines” <https://docs.yottadb.com/ProgrammersGuide/extrout.html>`_.
 
 ---------------------------
 Extrinsic Functions
@@ -1351,12 +1351,12 @@ Example:
    IF X<0 SET X=-X,S=1
    FOR X=1:1:X S T=T*V
    QUIT $S(S:1/T,1:T)
-   GTM> WRITE $$^POWER(3,4)
+   YDB> WRITE $$^POWER(3,4)
    81
-   GTM>
+   YDB>
 
 .. note::
-   The POWER routine uses a formallist that is longer than the "expected" actuallist to protect local working variables. Such practice may be encouraged or discouraged by your institution's standards.
+   The POWER routine uses a formallist that is longer than the "expected" actuallist to protect local working variables. Such a practice may be encouraged or discouraged by your institution's standards.
 
 --------------------------------
 Extrinsic Special Variables
@@ -1378,11 +1378,11 @@ M requires that a routine that implements an extrinsic special variable terminat
 Example:
 
 .. parsed-literal::
-   GTM>ZPRINT ^DAYOWEEK
+   YDB>ZPRINT ^DAYOWEEK
    DAYOWEEK();extrinsic special variable to
    ;provide the day of the week
    QUIT $ZD($H,"DAY")
-   GTM>WRITE $$DAYOWEEK^DAYOWEEK
+   YDB>WRITE $$DAYOWEEK^DAYOWEEK
    MON
 
 --------------------------------
@@ -1409,31 +1409,31 @@ TP Characteristics
 
 Most transaction processing systems try to have transactions that meet the "ACID" test – Atomic, Consistent, Isolated, and Durable.
 
-To provide ACID transactions, YottaDB/GT.M uses a technique called optimistic concurrency control. Each block has a transaction number that YottaDB/GT.M sets to the current database transaction number when updating a block. Application logic, brackets transactions with TSTART and TCOMMIT commands. Once inside a transaction, a YottaDB/GT.M process tracks each database block that it reads (any database block containing existing data that it intends to update has to be read first) and in process private memory keeps a list of updates that it intends to apply - application logic within the process views the database with the updates; application logic in other processes does not see states internal to the transaction. At TCOMMIT time, the process checks whether any blocks have changed since it read them, and if none have changed, it commits the transaction, making its changes visible to other processes Atomically with Isolation and Consistency (Durability comes from the journal records written at COMMIT time). Optimistic concurrency attempts to exploit the odds that two processes need access to the same resource at the same time. If the chances are small, it permits many processes to work concurrently, particularly in a system with multiple CPUs. If the changes are not small the penalty is repeated execution of the same transaction logic.
+To provide ACID transactions, YottaDB uses a technique called optimistic concurrency control. Each block has a transaction number that YottaDB sets to the current database transaction number when updating a block. Application logic, brackets transactions with TSTART and TCOMMIT commands. Once inside a transaction, a YottaDB process tracks each database block that it reads (any database block containing existing data that it intends to update has to be read first) and in process private memory keeps a list of updates that it intends to apply - application logic within the process views the database with the updates; application logic in other processes does not see states internal to the transaction. At TCOMMIT time, the process checks whether any blocks have changed since it read them, and if none have changed, it commits the transaction, making its changes visible to other processes Atomically with Isolation and Consistency (Durability comes from the journal records written at COMMIT time). Optimistic concurrency attempts to exploit the odds that two processes need access to the same resource at the same time. If the chances are small, it permits many processes to work concurrently, particularly in a system with multiple CPUs. If the changes are not small the penalty is repeated execution of the same transaction logic.
 
 If one or more blocks have changed, the process reverts its state to the TSTART and re-executes the application code for the transaction. If it fails to commit the second time, it tries yet again. If it fails to commit on the third attempt, it locks other processes out of the database and executes the transaction as the sole process (that is, on the fourth attempt, it switches to a from an optimistic approach to a pessimistic one).
 
-This technique normally works very well and is one of the factors that allow YottaDB/GT.M to excel at transaction processing throughput.
+This technique normally works very well and is one of the factors that allow YottaDB to excel at transaction processing throughput.
 
 .. note::
-    YottaDB/GT.M uses implicit transaction processing when it needs to ensure complex operations, including spanning block actions, spanning region actions and trigger actions preserve Atomicity. Of these, triggers involve application code and therefore are most subject to the following discussion.
+    YottaDB uses implicit transaction processing when it needs to ensure complex operations, including spanning block actions, spanning region actions and trigger actions preserve Atomicity. Of these, triggers involve application code and therefore are most subject to the following discussion.
 
 Pathological cases occur when processes routinely modify blocks that other processes have read (called "collisions"), resulting in frequent transaction restarts. Collisions can be legitimate or accidental. Importantly, the longer that a transaction is "open" (the "collision window," when the application logic is between TSTART and TCOMMIT), the greater the probability that a collision will require a transaction restart.
 
 Legitimate collisions can result from normal business activity, for example, if two joint account holders make simultaneous ATM withdrawals from a joint account. When the time an application takes to process each transaction is a minuscule fraction of a second, the probability of a collision is very low, and in the rare case where one occurs, the restart mechanism handles it well. An example with a higher probability of collision comes from commercial accounts, where a large enterprise may have tens to hundreds of accounts, individual transactions may hit multiple accounts, and during the business day many people may execute transactions against those accounts. Again, the small collision window means that collisions remain rare and the restart mechanism handles them well when they occur.
 
-Legitimate (from a YottaDB/GT.M point of view) collisions can also occur as a consequence of application design. For example, if an application has an application level transaction journal that every process appends to then that design will likely result in high rates of collisions, creating a pathological case where every transaction fails three times and then commits on the fourth attempt with all other processes locked out. The way to avoid these is to adjust the application design, either to use M LOCKs to gate such "hot spots" or, better, to give each process its own update space which, at some event, a single process then consolidates.
+Legitimate (from a YottaDB point of view) collisions can also occur as a consequence of application design. For example, if an application has an application level transaction journal that every process appends to then that design will likely result in high rates of collisions, creating a pathological case where every transaction fails three times and then commits on the fourth attempt with all other processes locked out. The way to avoid these is to adjust the application design, either to use M LOCKs to gate such "hot spots" or, better, to give each process its own update space which, at some event, a single process then consolidates.
 
-Accidental collisions result when two processes access unrelated data that happens to reside on the same data block (for example, some global indexed by last name can result in an accidental collision if two account holders whose last names start with the same letter, the global data nodes may reside in the same block). Because the path to many data blocks typically pass though one index block, data additions cause changes in index blocks and can generate accidental collisions. While it is not possible to avoid accidental collisions (especially in blocks containing metadata such as index blocks), they are typically rare and the occasional collision is handled well by the restart mechanism. Because the application is rarely in a position to efficiently prevent accidental collisions, YottaDB/FIS strongly recommends using TCOMMIT forms that allow YottaDB/GT.M to use restarts and thus relieve the application logic of having to manage TRESTNOT errors. YottaDB/GT.M uses the database block as the granularity for concurrency control because it is generally an efficient and successful compromise between a more granular and expensive lock and a less granular but more likely to conflict lock. It also simplifies some things by aligning with the unit of transfer to non-volatile storage.
+Accidental collisions result when two processes access unrelated data that happens to reside on the same data block (for example, some globals indexed by last name can result in an accidental collision - for two account holders whose last names start with the same letter, the global data nodes may reside in the same block). Because the path to many data blocks typically pass though one index block, data additions cause changes in index blocks and can generate accidental collisions. While it is not possible to avoid accidental collisions (especially in blocks containing metadata such as index blocks), they are typically rare and the occasional collision is handled well by the restart mechanism. Because the application is rarely in a position to efficiently prevent accidental collisions, YottaDB strongly recommends using TCOMMIT forms that allow YottaDB to use restarts and thus relieve the application logic of having to manage TRESTNOT errors. YottaDB uses the database block as the granularity for concurrency control because it is generally an efficient and successful compromise between a more granular and expensive lock and a less granular but more likely to conflict lock. It also simplifies some things by aligning with the unit of transfer to non-volatile storage.
 
 Application design that keeps transactions open for long periods of time can cause pathological rates of accidental collision. When a process tries to run an entire report in a transaction, instead of the transaction taking a fraction of a second (remember that transactions are intended to be atomic), the report takes seconds or even minutes and effectively ensures collisions and restarts. Furthermore, since the probability of collisions is high, the probability of these long-running transactions executing the fourth retry (with other processes shut out) goes up, and when that happens, the system appears to respond erratically, or hang temporarily.
 
-Non-isolated actions are another consideration in the design of wholesome transactions. Because M permits all language features with a transaction, an application may use actions that interact with actors outside of the transaction; such actions violate the ACID principal of Isolation, which states to be wholesome a transaction must not interact with other agents or processes until it commits (see below for a more detailed discussion). While there may be reasons drawn from the larger application model that justify violations of Isolation, doing so carries risks. One problem is time, external interactions typically have a longer duration, and in the worst case may have an indefinite duration. The JOB, LOCK, OPEN, and READ commands have an optional timeout to place time limits on external interactions. In addition, BREAK, WRITE, ZSYSTEM and external calls also involve external interaction. Except for WRITE and external calls, In order to minimize potential the impact of non-ACID transactions, YottaDB/GT.M limits the duration of database locks for transactions that use these non-isolated commands, and records that limitation as a TPNOTACID message in the operator log. However, that time limit, managed with the gtm_tpnotacidtime environment variable, can be long enough, depending on its value, to permit noticeable processing disruptions. Further, processes denied a long lock may have trouble completing and consume system resources with repeated unsuccessful attempts. External calls are excluded from this protection because they are the domain of more sophisticated design and may actually remain isolated (see the tip below on Implementing Web Services). WRITE is currently excluded because most WRITE commands are non-blocking, but applications should avoid blocking WRITEs within a transaction. Beyond the issue of duration, because the application can repeat due to a restart or rollback because of an error or application logic, non-isolated actions require management to appropriately manage their external interactions; this is discussed in more detail below. In summary, put external interactions before or after transactions rather than within them. If the application requires a non-isolated action within a transaction, be aware of the risks, design, implement and test very carefully.
+Non-isolated actions are another consideration in the design of wholesome transactions. Because M permits all language features with a transaction, an application may use actions that interact with actors outside of the transaction. Such actions violate the ACID principal of Isolation, which states that to be wholesome, a transaction must not interact with other agents or processes until it commits (see below for a more detailed discussion). While there may be reasons drawn from the larger application model that justify violations of Isolation, doing so carries risks. One problem is time: external interactions typically have a longer duration, and in the worst case, may have an indefinite duration. The JOB, LOCK, OPEN, and READ commands have an optional timeout to place time limits on external interactions. In addition, BREAK, WRITE, ZSYSTEM and external calls also involve external interaction. Except for WRITE and external calls, in order to minimize the potential impact of non-ACID transactions, YottaDB limits the duration of database locks for transactions that use these non-isolated commands, and records that limitation as a TPNOTACID message in the operator log. However, that time limit, managed with the gtm_tpnotacidtime environment variable, can be long enough, depending on its value, to permit noticeable processing disruptions. Further, processes denied a long lock may have trouble completing and consume system resources with repeated unsuccessful attempts. External calls are excluded from this protection because they are the domain of more sophisticated design and may actually remain isolated (see the tip below on Implementing Web Services). WRITE is currently excluded because most WRITE commands are non-blocking, but applications should avoid blocking WRITEs within a transaction. Beyond the issue of duration, because the application can repeat due to a restart or rollback because of an error or application logic, non-isolated actions require management to appropriately manage their external interactions; this is discussed in more detail below. In summary, put external interactions before or after transactions rather than within them. If the application requires a non-isolated action within a transaction, be aware of the risks, design, implement and test very carefully.
 
-YottaDB/GT.M provides a transaction timeout feature that interrupts long-running transactions in order to limit their impact on the system, and the consequent user perception of system erratic response times and temporary hangs. Calls to an external library, say to access a web service, can subvert the timeout mechanism when the external library uses an uninterruptable system call. If such a web service uses an adjacent server that responds immediately, the web service is wholesome. But if the web service accesses a remote server without a guaranteed short response time, then collisions may be frequent, and if a process in the fourth retry waits for a web service that never responds, it brings the entire application to a standstill.
+YottaDB provides a transaction timeout feature that interrupts long-running transactions in order to limit their impact on the system, and the consequent user perception of system erratic response times and temporary hangs. Calls to an external library, say to access a web service, can subvert the timeout mechanism when the external library uses an uninterruptable system call. If such a web service uses an adjacent server that responds immediately, the web service is wholesome. But if the web service accesses a remote server without a guaranteed short response time, then collisions may be frequent, and if a process in the fourth retry waits for a web service that never responds, it brings the entire application to a standstill.
 
 .. note::
-   To safely implement web services inside a transaction, an application must implement a guaranteed upper bound on the time taken by the service. The story or use case for each circumstance determines the appropriate timeout for the corresponding transaction. For example, if the web service is to authorize a transaction, there might be a 500 millisecond timeout with the authorization refused if the approval service does not respond within that time. There are two approaches to implementing web services with a timeout.For applications that call out to C code, the C code guarantee a return within a time limit, using a wrapper if necessary. YottaDB/GT.M provides functions that external C code can use to implement timers. If the call is to an unknown library, or one without a way to guarantee a timeout, the external C code may need to create an intermediate proxy that can provide a timeout to YottaDB/GT.M. Because web services are usually implemented by a known protocol layered on TCP/IP and YottaDB/GT.M provides a SOCKET device for TCP/IP connections, implement the call out to the web service using a SOCKET device. YottaDB/GT.M can then enforce the TP timeout mechanism, which it cannot for an external call, especially one that calls via a library into an uninterruptible OS service.
+   To safely implement web services inside a transaction, an application must implement a guaranteed upper bound on the time taken by the service. The story or use case for each circumstance determines the appropriate timeout for the corresponding transaction. For example, if the web service is to authorize a transaction, there might be a 500 millisecond timeout with the authorization refused if the approval service does not respond within that time. There are two approaches to implementing web services with a timeout.For applications that call out to C code, the C code guarantee a return within a time limit, using a wrapper if necessary. YottaDB provides functions that external C code can use to implement timers. If the call is to an unknown library, or one without a way to guarantee a timeout, the external C code may need to create an intermediate proxy that can provide a timeout to YottaDB. Because web services are usually implemented by a known protocol layered on TCP/IP and YottaDB provides a SOCKET device for TCP/IP connections, implement the call out to the web service using a SOCKET device. YottaDB can then enforce the TP timeout mechanism, which it cannot for an external call, especially one that calls via a library into an uninterruptible OS service.
 
 To conform with the M approach of providing maximum flexibility and, when possible, backwards compatibility with older versions of the standard, M transaction processing requires the use of programming conventions that meet the ACID test.
 
@@ -1447,7 +1447,7 @@ Even when the "visible" commands appear within a transaction, an M application m
 
 A program using LOCKs to achieve serializability relies on properly designed and universally followed LOCKing conventions to achieve Isolation with respect to database operations. LOCKs placed outside the transaction (usually a LOCK immediately before the TSTART and an unlock immediately after the TCOMMIT) achieve serializability by actually serializing any approximately concurrent transaction. LOCKs placed inside the transaction (frequently a LOCK immediately after the TSTART and an unlock immediately before the TCOMMIT) signal M to ensure that no operations using the same LOCK resource(s) overlap. Within a transaction, an M implementation may defer both LOCKing and unlocking to achieve its goal of serializability. A program using TSTARTs with the SERIAL keyword replaces the convention with a guarantee from M that all the database activity of the transaction meets the test of Isolation with respect to database activity.
 
-In YottaDB/GT.M the Durability aspect of the ACID properties relies on the journaling feature. When journaling is on, every transaction is recorded in the journal file as well as in the database. The journal file constitutes a serial record of database actions and states. It is always written before the database updates and is designed to permit recovery of the database if the database should be damaged. By default, when a process commits a transaction, it does not return control to the application code until the transaction has reached the journal file. The exception to this is that when the TSTART specifies TRANSACTIONID="BATCH" the process resumes application execution without waiting for the file system to confirm the successful write of the journal record. The idea of the TRANSACTIONID="BATCH" has nothing inherently to do with "batch" processing - it is to permit maximum throughput for transactions where the application has its own check-pointing mechanism, or method of recreating the transaction in case of a failure. The real durability of transactions is a function of the durability of the journal files. Putting journal files on reliable devices (RAID with UPS protection) and eliminating common points of failure with the path to the database (separate drives, controllers cabling) improve durability. The use of the replication feature can also improve durability by moving the data to a separate site in real time.
+In YottaDB the Durability aspect of the ACID properties relies on the journaling feature. When journaling is on, every transaction is recorded in the journal file as well as in the database. The journal file constitutes a serial record of database actions and states. It is always written before the database updates and is designed to permit recovery of the database if the database should be damaged. By default, when a process commits a transaction, it does not return control to the application code until the transaction has reached the journal file. The exception to this is that when the TSTART specifies TRANSACTIONID="BATCH" the process resumes application execution without waiting for the file system to confirm the successful write of the journal record. The idea of the TRANSACTIONID="BATCH" has nothing inherently to do with "batch" processing - it is to permit maximum throughput for transactions where the application has its own check-pointing mechanism, or method of recreating the transaction in case of a failure. The real durability of transactions is a function of the durability of the journal files. Putting journal files on reliable devices (RAID with UPS protection) and eliminating common points of failure with the path to the database (separate drives, controllers cabling) improve durability. The use of the replication feature can also improve durability by moving the data to a separate site in real time.
 
 Attempting to QUIT (implicitly or explicitly) from code invoked by a DO, XECUTE, or extrinsic after that code issued a TSTART not yet matched by a TCOMMIT, produces an error. Although this is a consequence of the RESTART capability, it is true even when that capability is disabled. For example, this means that an XECUTE containing only a TSTART fails, while an XECUTE that performs a complete transaction succeeds.
 
@@ -1455,7 +1455,7 @@ Attempting to QUIT (implicitly or explicitly) from code invoked by a DO, XECUTE,
 TP Performance
 ++++++++++++++++++++++++++
 
-To achieve the best YottaDB/GT.M performance, transactions should:
+To achieve the best YottaDB performance, transactions should:
 
 * be as short as possible
 * consist, as much as possible, only of global updates
@@ -1471,7 +1471,7 @@ Example:
    SET ^M(ACCT)=PREC,^PN(NAM)=ACCT
    TCOMMIT
 
-This transaction encapsulates these two SETs. The first increments the tally of patients registered, storing the number in local variable ACCT for faster access in the current program, and in global variable ^M(0). The second SET stores a patient record by account number and the third cross-references the account number with the patient name. Placing the SETs within a single transaction ensures that the database always receive either all of the SETs or none of them, thus protecting database integrity against process or system failure. Similarly, another concurrent process, whether using transactions or not, never finds one of the SETs in place without also finding the other one.
+This transaction encapsulates these two SETs. The first increments the tally of patients registered, storing the number in local variable ACCT for faster access in the current program, and in global variable ^M(0). The second SET stores a patient record by account number and the third cross-references the account number with the patient name. Placing the SETs within a single transaction ensures that the database always receives either all of the SETs or none of them, thus protecting database integrity against process or system failure. Similarly, another concurrent process, whether using transactions or not, never finds one of the SETs in place without also finding the other one.
 
 Example:
 
@@ -1487,14 +1487,12 @@ Example:
 
 This transaction will automatically restart if it cannot serialize the SETs to the database, and will terminate with a TROLLBACK if more than 3 RESTARTs occur.
 
-YottaDB/GT.M provides a way to monitor transaction restarts by reporting them to the operator logging facility. If the environment variable gtm_tprestart_log_delta is defined, YottaDB/GT.M reports every Nth restart where N is the numeric evaluation of the value of gtm_tprestart_log_delta. If the environment variable gtm_tprestart_log_first is defined, the restart reporting begins after the number of restarts specified by the value of gtm_tprestart_log_first. For example, defining both the environment variable to the value 1, causes all TP restarts to be logged. When gtm_tprestart_log_delta is defined, leaving gtm_tprestart_log_first undefined is equivalent to giving it the value 1.
+YottaDB provides a way to monitor transaction restarts by reporting them to the operator logging facility. If the environment variable gtm_tprestart_log_delta is defined, YottaDB reports every Nth restart where N is the numeric evaluation of the value of gtm_tprestart_log_delta. If the environment variable gtm_tprestart_log_first is defined, the restart reporting begins after the number of restarts specified by the value of gtm_tprestart_log_first. For example, defining both the environment variable to the value 1, causes all TP restarts to be logged. When gtm_tprestart_log_delta is defined, leaving gtm_tprestart_log_first undefined is equivalent to giving it the value 1.
 
 Here is an example message:
 
 .. parsed-literal::
    %GTM-I-TPRESTART, Database /gbls/dtx/dtx.dat; code: L; blk: 0x00BA13DD in glbl: ^DTX; pvtmods: 0, blkmods: 1, blklvl: 1, type: 4, readset: 3, writeset: 1, local_tn: 0x00000000000002D0, zpos: LABEL+108^ROUTINENAME
-
-
 
 * pvtmods - Is always less than or equal to blkmods. This means it can be 1 only if "blkmods" is also 1. If it is 1, it means that process P1 was planning to UPDATE (not just READ) the block number (indicated as "blk: ..." in the TPRESTART message) as part of its TP transaction.
 
@@ -1502,16 +1500,16 @@ Here is an example message:
 
 * blklvl - Is the level in the GDS structure of the block ("blk: ..." field in the TPRESTART message) that caused the TP restart.
 
-* type - A value of 0,1,2,4 shows the restart occurred in the TP transaction BEFORE executing TCOMMIT; whether it is a 0 or 1 or 2 or 4 should not matter to the user. These values would typically be used for debugging by your YottaDB/GT.M support channel. A value of 3 shows the restart occurred at TCOMMIT time.
+* type - A value of 0,1,2,4 shows the restart occurred in the TP transaction BEFORE executing TCOMMIT; whether it is a 0 or 1 or 2 or 4 should not matter to the user. These values would typically be used for debugging by your YottaDB support channel. A value of 3 shows the restart occurred at TCOMMIT time.
 
-* readset - The number of GDS blocks that accessed as part of this TP transaction in the region containing the global ("glbl: ..." in the TPRESTART message).
+* readset - The number of GDS blocks that are accessed as part of this TP transaction in the region containing the global ("glbl: ..." in the TPRESTART message).
 
 * writeset - Out of the readset number, the number of GDS blocks this process was attempted to UPDATE as part of this TP transaction in the region containing the global ("glbl: ..." in the TPRESTART message).
 
 * local_tn - This is a never-decreasing counter (starting at 1 at process startup) incremented for every new TP transaction, TP restart, and TP rollback. Two TPRESTART messages by the same process should never have the same value of local_tn. The difference between the local_tn values of two messages from the same process indicates the number of TP transactions done by that process in the time interval between the two messages.
 
 .. note::
-   Use VIEW [NO]LOGT[PRESTART][=intexpr] to enable or disable the logging of TPRESTART messages. Note that you can use the gtm_tprestart_log_delta and gtm_tprestart_log_first environment variables to set the frequency of TPRESTART messages. Use VIEW [NO]LOGN[ONTP][=intexpr] to enable or disable the logging of NONTPRESTART messages. This facility is the analog of TPRESTART tracking, but for non-TP mini-transacstions. Note that you can use the gtm_nontprestart_log_delta and gtm_nontprestart_log_first environment variables to set the frequency of the NONTPRESTART messages.For more information, refer to “Key Words in VIEW Command” and the Environment Variables section of the Administration and Operations Guide.
+   Use VIEW [NO]LOGT[PRESTART][=intexpr] to enable or disable the logging of TPRESTART messages. Note that you can use the gtm_tprestart_log_delta and gtm_tprestart_log_first environment variables to set the frequency of TPRESTART messages. Use VIEW [NO]LOGN[ONTP][=intexpr] to enable or disable the logging of NONTPRESTART messages. This facility is the analog of TPRESTART tracking, but for non-TP mini-transacstions. Note that you can use the gtm_nontprestart_log_delta and gtm_nontprestart_log_first environment variables to set the frequency of the NONTPRESTART messages.For more information, refer to `“Key Words in VIEW Command” <https://docs.yottadb.com/ProgrammersGuide/commands.html#key-words-in-view-command>`_ and the `Environment Variables <https://docs.yottadb.com/AdminOpsGuide/basicops.html#environment-variables>`_ section of the Administration and Operations Guide.
 
 ++++++++++++++++++++++
 TP Example
