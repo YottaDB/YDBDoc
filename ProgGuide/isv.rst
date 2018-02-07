@@ -2,16 +2,16 @@
 .. index::
    Instrinsic Special Variables
 
-===========================
-Intrinsic Special Variables
-===========================
+==============================
+8. Intrinsic Special Variables
+==============================
 
 .. contents::
    :depth: 2
 
-This chapter describes the M Intrinsic Special Variables implemented in YottaDB/GT.M. All entries starting with the letter Z are YottaDB/GT.M additions to the ANSI standard Intrinsic Special Variables. None of the Intrinsic Special Variables are case sensitive.
+This chapter describes the M Intrinsic Special Variables implemented in YottaDB. All entries starting with the letter Z are YottaDB additions to the ANSI standard Intrinsic Special Variables. None of the Intrinsic Special Variables are case sensitive.
 
-M Intrinsic Special Variables start with a single dollar sign ($). YottaDB/GT.M provides such variables for program examination. In some cases, the Intrinsic Special Variables may be set to modify the corresponding part of the environment.
+M Intrinsic Special Variables start with a single dollar sign ($). YottaDB provides such variables for program examination. In some cases, the Intrinsic Special Variables may be set to modify the corresponding part of the environment.
 
 .. note::
    None of the Intrinsic Special Variables can be KILLed. SETting or NEWing is generally not allowed, but is specifically noted in the descriptions of those that do.
@@ -20,40 +20,40 @@ M Intrinsic Special Variables start with a single dollar sign ($). YottaDB/GT.M 
 $ZTrap
 --------------
 
-$ZT[RAP] contains a string value that YottaDB/GT.M XECUTEs when an error occurs during routine execution. 
+$ZT[RAP] contains a string value that YottaDB XECUTEs when an error occurs during routine execution. 
 
 .. note::
-   The following discussion assumes that $ETRAP error handling is simultaneously not in effect (that is, $ETRAP="").  See Chapter 13: “Error Processing” for more information on the interaction between $ETRAP and $ZTRAP.
+   The following discussion assumes that $ETRAP error handling is simultaneously not in effect (that is, $ETRAP="").  See `Chapter 13: “Error Processing” <https://docs.yottadb.com/ProgrammersGuide/errproc.html>`_ for more information on the interaction between $ETRAP and $ZTRAP.
 
-When the $ZTRAP variable is not null, YottaDB/GT.M executes $ZTRAP at the current level. The $ZTRAP variable has the initial value of "B," and puts the process in Direct Mode when an error condition occurs. If the value of $ZTRAP is null (""), an exception causes the image to run-down with the condition code associated with the exception. If $ZTRAP contains invalid source code, YottaDB/GT.M displays an error message and puts the process into Direct Mode.
+When the $ZTRAP variable is not null, YottaDB executes $ZTRAP at the current level. The $ZTRAP variable has the initial value of "B," and puts the process in Direct Mode when an error condition occurs. If the value of $ZTRAP is null (""), an exception causes the image to run-down with the condition code associated with the exception. If $ZTRAP contains invalid source code, YottaDB displays an error message and puts the process into Direct Mode.
 
 $ZTRAP is a read-write Intrinsic Special Variable, (that is, it can appear on the left side of the equal sign (=) in the argument to the SET command).
 
-$ZTRAP may also appear as an argument to an inclusive NEW command. NEW $ZTRAP causes YottaDB/GT.M to stack the current $ZTRAP value, and set its value to the empty string ($ZTRAP=""). The NEW command puts the $ZTRAP in control for error handling. When the program QUITs from the invocation level where the NEW occurred, YottaDB/GT.M restores the value previously stacked by the NEW. NEW $ZTRAP provides nesting of $ZTRAP. Because $ZTRAP="" terminates the image when an error occurs, SET $ZTRAP= generally follows immediately after NEW $ZTRAP. You may use this technique to construct error handling strategies corresponding to the nesting of your programs. If the environment variable gtm_ztrap_new evaluates to boolean TRUE (case insensitive string "TRUE", or case insensitive string "YES", or a non-zero number), $ZTRAP is NEWed when $ZTRAP is SET; otherwise $ZTRAP is not stacked when it is SET.
+$ZTRAP may also appear as an argument to an inclusive NEW command. NEW $ZTRAP causes YottaDB to stack the current $ZTRAP value, and set its value to the empty string ($ZTRAP=""). The NEW command puts the $ZTRAP in control for error handling. When the program QUITs from the invocation level where the NEW occurred, YottaDB restores the value previously stacked by the NEW. NEW $ZTRAP provides nesting of $ZTRAP. Because $ZTRAP="" terminates the image when an error occurs, SET $ZTRAP= generally follows immediately after NEW $ZTRAP. You may use this technique to construct error handling strategies corresponding to the nesting of your programs. If the environment variable gtm_ztrap_new evaluates to boolean TRUE (case insensitive string "TRUE", or case insensitive string "YES", or a non-zero number), $ZTRAP is NEWed when $ZTRAP is SET; otherwise $ZTRAP is not stacked when it is SET.
 
 .. note::
    QUIT from a $ZTRAP terminates the level at which the $ZTRAP was activated.
 
-Keep $ZTRAP simple and put complicated logic in another routine. If the action specified by $ZTRAP results in another run-time error before changing the value of $ZTRAP, YottaDB/GT.M invokes $ZTRAP until it exhausts the process stack space, terminating the image. Carefully debug exception handling.
+Keep $ZTRAP simple and put complicated logic in another routine. If the action specified by $ZTRAP results in another run-time error before changing the value of $ZTRAP, YottaDB invokes $ZTRAP until it exhausts the process stack space, terminating the image. Carefully debug exception handling.
 
 Example:
 
 .. parsed-literal::
-   GTM>S $ZTRAP="ZP @$ZPOS B"
+   YDB>S $ZTRAP="ZP @$ZPOS B"
 
-This example modifies $ZTRAP to display source code for the line where GT.M encounters an error before entering Direct Mode.
+This example modifies $ZTRAP to display source code for the line where YottaDB encounters an error before entering Direct Mode.
 
 There are four settings of $ZTRAP controlled by the UNIX environment variable gtm_ztrap_form.
 
 The four settings of gtm_ztrap_form are:
 
-*  code - If gtm_ztrap_form evaluates to "code" (or a value that is not one of the subsequently described values), then YottaDB/GT.M treats $ZTRAP as code and handles it as previously described in the documentation.
-* entryref - If gtm_ztrap_form evaluates to "entryref" then YottaDB/GT.M treats it as an entryref argument to an implicit GOTO command.
+*  code - If gtm_ztrap_form evaluates to "code" (or a value that is not one of the subsequently described values), then YottaDB treats $ZTRAP as code and handles it as previously described in the documentation.
+* entryref - If gtm_ztrap_form evaluates to "entryref" then YottaDB treats it as an entryref argument to an implicit GOTO command.
 * adaptive - If gtm_ztrap_form evaluates to "adaptive" then if $ZTRAP does not compile to valid M code, then $ZTRAP is treated as just described for "entryref." Since there is little ambiguity, code and entryref forms of $ZTRAP can be intermixed in the same application.
-* pope[ntryref] / popa[daptive] - If gtm_ztrap_form evaluates to "POPE[NTRYREF]" or "POPA[DAPTIVE]" (case insensitive) and $ZTRAP value is in the form of entryref, YottaDB/GT.M unwinds the M stack from the level at which an error occurred to (but not including) the level at which $ZTRAP was last SET. Then, YottaDB/GT.M transfers control to the entryref in $ZTRAP at the level where the $ZTRAP value was SET. If the UNIX environment variable gtm_zyerror is defined to a valid entryref, YottaDB/GT.M transfers control to the entryref specified by GTM_ZYERROR (with an implicit DO) after unwinding the stack and before transferring control to the entryref specified in $ZTRAP.
+* pope[ntryref] / popa[daptive] - If gtm_ztrap_form evaluates to "POPE[NTRYREF]" or "POPA[DAPTIVE]" (case insensitive) and $ZTRAP value is in the form of entryref, YottaDB unwinds the M stack from the level at which an error occurred to (but not including) the level at which $ZTRAP was last SET. Then, YottaDB transfers control to the entryref in $ZTRAP at the level where the $ZTRAP value was SET. If the UNIX environment variable gtm_zyerror is defined to a valid entryref, YottaDB transfers control to the entryref specified by GTM_ZYERROR (with an implicit DO) after unwinding the stack and before transferring control to the entryref specified in $ZTRAP.
 
 .. note::
-   YottaDB/GT.M attempts to compile $ZTRAP before evaluating $ZTRAP as an entryref. Because YottaDB/GT.M allows commands without arguments such as QUIT, ZGOTO, or HANG as valid labels, be careful not to use such keywords as labels for error handling code in "adaptive" mode.
+   YottaDB attempts to compile $ZTRAP before evaluating $ZTRAP as an entryref. Because YottaDB allows commands without arguments such as QUIT, ZGOTO, or HANG as valid labels, be careful not to use such keywords as labels for error handling code in "adaptive" mode.
 
 .. note::
    Like $ZTRAP values, invocation of device EXCEPTION values follow the pattern specified by the current gtm_ztrap_form setting except that there is never any implicit popping with EXCEPTION action.
@@ -85,11 +85,11 @@ $EC[ODE] contains a list of error codes for "active" errors -the error condition
 The value of $ECODE can be SET, and when it is set to a non-NULL value, error processing starts.
 
 .. note::
-   See Chapter 13: “Error Processing” to learn about $ECODE's role in error processing.
+   See `Chapter 13: “Error Processing” <https://docs.yottadb.com/ProgrammersGuide/errproc.html>`_ to learn about $ECODE's role in error processing.
 
-List of codes for $ECODE start with comma seperated by commas. A code starts with "M", "U", or "Z", with rest numeric. "M" codes are assigned by MDC (MUMPS Development Committee), "U" by application (programmers), and "Z" codes by MUMPS implementors (in this case YottaDB/GT.M).
+List of codes for $ECODE start with comma seperated by commas. A code starts with "M", "U", or "Z", with rest numeric. "M" codes are assigned by MDC (MUMPS Development Committee), "U" by application (programmers), and "Z" codes by MUMPS implementors (in this case YottaDB).
 
-An error always has a YottaDB/GT.M specified code and many errors also have an ANSI Standard code. The complete list of standardized error codes can be referenced from the Message and Recovery Procedures Reference Manual version 4.3 and onwards.
+An error always has a YottaDB specified code and many errors also have an ANSI Standard code. The complete list of standardized error codes can be referenced from the `Message and Recovery Procedures Reference Manual <https://docs.yottadb.com/MessageRecovery/index.html>`_ and onwards.
 
 .. parsed-literal::
    IF $ECODE[",M61," WRITE "Undefined local variable"
@@ -115,22 +115,22 @@ A NEW $ESTACK saves the value of current $ESTACK and then sets its value to zero
 $ESTACK maybe used as a flag to indicate error traps invoked in particular stack levels needed to perform some different action(s). $ESTACK can be most useful in setting up a layered error trapping mechanism.
 
 .. note::
-   YottaDB/GT.M does not permit $ESTACK to be SET, however $ESTACK can be NEWed.
+   YottaDB does not permit $ESTACK to be SET, however $ESTACK can be NEWed.
 
 --------------
 $ETRAP
 --------------
 
-$ET[RAP] contains a string value that YottaDB/GT.M invokes when an error occurs during routine execution. When a process is initiated, YottaDB/GT.M assigns $ETRAP the value of the gtm_etrap environment variable, if gtm_etrap is defined, and otherwise the empty string, in which case $ZTRAP="B" controls initial error handling.
+$ET[RAP] contains a string value that YottaDB invokes when an error occurs during routine execution. When a process is initiated, YottaDB assigns $ETRAP the value of the gtm_etrap environment variable, if gtm_etrap is defined, and otherwise the empty string, in which case $ZTRAP="B" controls initial error handling.
 
-The value of this variable is the M[UMPS] code that YottaDB/GT.M executes when it encounters an error.
+The value of this variable is the M[UMPS] code that YottaDB executes when it encounters an error.
 
 .. parsed-literal::
    SET $ETRAP="QUIT:$ESTACK GOTO LABEL^ROUTINE"
 
 The value of $ETRAP is changed with the SET command. Changing the value of $ETRAP with the SET command initiates a new trap; it does not save the old trap.
 
-$ETRAP may also appear as an argument to an inclusive NEW command. NEW $ETRAP causes YottaDB/GT.M to stack the active condition handler's ($ETRAP) old value. NEW leaves the $ETRAP unchanged regardless of the previously active condition handler. NEW $ETRAP command puts $ETRAP in control for error handling.
+$ETRAP may also appear as an argument to an inclusive NEW command. NEW $ETRAP causes YottaDB to stack the active condition handler's ($ETRAP) old value. NEW leaves the $ETRAP unchanged regardless of the previously active condition handler. NEW $ETRAP command puts $ETRAP in control for error handling.
 
 For more examples of the use of special variable $ETRAP, see the function $STACK().
 
@@ -138,12 +138,12 @@ For more examples of the use of special variable $ETRAP, see the function $STACK
 $HOROLOG
 ----------------
 
-$H[OROLOG] contains a string value specifying the number of days since "31 December, 1840," and the number of seconds since midnight of date in the time zone of the process, separated by a comma (,). At midnight, the piece of the string following the comma resets to zero (0), and the piece preceding the comma increments by one (1). YottaDB/GT.M does not permit the SET command to modify $HOROLOG. A process takes the system time from the system clock, but can adjust the time zone by appropriately setting the TZ environment variable before invoking YottaDB/GT.M.
+$H[OROLOG] contains a string value specifying the number of days since "31 December, 1840," and the number of seconds since midnight of date in the time zone of the process, separated by a comma (,). At midnight, the piece of the string following the comma resets to zero (0), and the piece preceding the comma increments by one (1). YottaDB does not permit the SET command to modify $HOROLOG. A process takes the system time from the system clock, but can adjust the time zone by appropriately setting the TZ environment variable before invoking YottaDB.
 
 Example:
 
 .. parsed-literal::
-   GTM>Write $HOROLOG
+   YDB>Write $HOROLOG
 
 Produces the result 58883,55555 at 3:25:55 pm on 20 March, 2002.
 
@@ -161,7 +161,7 @@ $JOB
 
 $J[OB] the current process identifier.
 
-YottaDB/GT.M uses the decimal representation of the current process identifier (PID) for the value of $JOB. $JOB is guaranteed to be unique for every concurrently operating process on a system. However, operating systems reuse PIDs over time. YottaDB/GT.M does not permit the SET command to modify $JOB.
+YottaDB uses the decimal representation of the current process identifier (PID) for the value of $JOB. $JOB is guaranteed to be unique for every concurrently operating process on a system. However, operating systems reuse PIDs over time. YottaDB does not permit the SET command to modify $JOB.
 
 Example:
 
@@ -181,7 +181,7 @@ The effect of a READ \*glvn on $KEY is unspecified.
 For terminals, $KEY and $ZB both have the terminator.
 
 .. note::
-   See the READ and WRITE commands in Chapter 6: “Commands”.
+   See the READ and WRITE commands in `Chapter 6: “Commands” <https://docs.yottadb.com/ProgrammersGuide/commands.html>`_.
 
 For SOCKET:
 
@@ -197,7 +197,7 @@ and for LOCAL sockets:
 .. parsed-literal::
    "LISTENING|<socket_handle>|<address>"
 
-After a successful OPEN or USE with the CONNECT device parameter or when GT.M was started with a socket as the $PRINCIPAL device, $KEY contains:
+After a successful OPEN or USE with the CONNECT device parameter or when YottaDB was started with a socket as the $PRINCIPAL device, $KEY contains:
 
 .. parsed-literal::
    "ESTABLISHED|<socket handle>|<address>"
@@ -237,7 +237,7 @@ A typical way of exiting from an error trap is:
    QUIT:$QUIT "" QUIT
 
 .. note::
-   YottaDB/GT.M does not permit $QUIT to be SET or NEWed.
+   YottaDB does not permit $QUIT to be SET or NEWed.
 
 --------------------
 $REFERENCE
@@ -264,7 +264,7 @@ When a process is initiated but before any command is executed, the value of $ST
 .. note::
    The difference between $STACK and $ESTACK is that $ESTACK may appear as an argument of the NEW command. NEWing $ESTACK resets its value to zero (0), and can be useful to set up a layered error trapping mechanism.
 
-The value of $STACK is "absolute" since the start of a YottaDB/GT.M. process, whereas the value of $ESTACK is "relative" to the most recent "anchoring point".
+The value of $STACK is "absolute" since the start of a YottaDB. process, whereas the value of $ESTACK is "relative" to the most recent "anchoring point".
 
 For examples on the use of special variable $STACK, see “$STack()”.
 
@@ -274,13 +274,13 @@ $STORAGE
 
 $S[TORAGE] contains an integer value specifying the number of free bytes of address space remaining between the memory currently under management by the process and the theoretical maximum available to the process.
 
-YottaDB/GT.M uses memory for code (instructions) and data. If the amount of virtual memory available to the process exceeds 2,147,483,647 bytes, it is reported as 2,147,483,647 bytes.
+YottaDB uses memory for code (instructions) and data. If the amount of virtual memory available to the process exceeds 2,147,483,647 bytes, it is reported as 2,147,483,647 bytes.
 
-Instruction space starts out with the original executable image. However, YottaDB/GT.M may expand instruction space by ZLINKing additional routines.
+Instruction space starts out with the original executable image. However, YottaDB may expand instruction space by ZLINKing additional routines.
 
-Data space starts out with stack space that never expands, and pool space which may expand. Operations such as opening a database or creating a local variable may cause an expansion in pool space. YottaDB/GT.M expands pool space in fairly large increments. Therefore, SETs of local variables may not affect $STORAGE at all or may cause an apparently disproportionate drop in its value.
+Data space starts out with stack space that never expands, and pool space which may expand. Operations such as opening a database or creating a local variable may cause an expansion in pool space. YottaDB expands pool space in fairly large increments. Therefore, SETs of local variables may not affect $STORAGE at all or may cause an apparently disproportionate drop in its value.
 
-Once a YottaDB/GT.M process adds either instruction or data space, it never releases that space. However, YottaDB/GT.M does reuse process space made available by actions such as KILLs of local variables. $STORAGE can neither be SET or NEWed.
+Once a YottaDB process adds either instruction or data space, it never releases that space. However, YottaDB does reuse process space made available by actions such as KILLs of local variables. $STORAGE can neither be SET or NEWed.
 
 ----------------
 $SYSTEM
@@ -288,7 +288,7 @@ $SYSTEM
 
 $SY[STEM] contains a string that identifies the executing M instance. The value of $SYSTEM is a string that starts with a unique numeric code that identifies the manufacturer. Codes are assigned by the MDC (MUMPS Development Committee).
 
-$SYSTEM in YottaDB/GT.M starts with "47" followed by a comma and the evaluation of the environment variable gtm_sysid. If the name has no evaluation, the value after the comma is gtm_sysid.
+$SYSTEM in YottaDB starts with "47" followed by a comma and the evaluation of the environment variable gtm_sysid. If the name has no evaluation, the value after the comma is gtm_sysid.
 
 ---------------
 $TEST
@@ -344,18 +344,18 @@ Example:
 .. parsed-literal::
    IF $TLEVEL TROLLBACK
 
-This example performs a TROLLBACK if a transaction is in progress. A statement like this should appear in any error handler used with transaction processing. For more information on transaction processing, see Chapter 5: “General Language Features of M”.
+This example performs a TROLLBACK if a transaction is in progress. A statement like this should appear in any error handler used with transaction processing. For more information on transaction processing, see `Chapter 5: “General Language Features of M” <https://docs.yottadb.com/ProgrammersGuide/langfeat.html>`_.
 
 ---------------
 $TRESTART
 ---------------
 
-$TR[ESTART] contains a count of the number of times the current TRANSACTION has been RESTARTed. A RESTART can be explicit (specified in M as a TRESTART) or implicit (initiated by YottaDB/GT.M as part of its internal concurrency control mechanism). $TRESTART can have values of 0 through 4. When there is no TRANSACTION in progress, $TRESTART is zero (0).
+$TR[ESTART] contains a count of the number of times the current TRANSACTION has been RESTARTed. A RESTART can be explicit (specified in M as a TRESTART) or implicit (initiated by YottaDB as part of its internal concurrency control mechanism). $TRESTART can have values of 0 through 4. When there is no TRANSACTION in progress, $TRESTART is zero (0).
 
 $TRESTART can be used by the application to limit the number of RESTARTs, or to cause a routine to perform different actions during a RESTART than during the initial execution.
 
 .. note::
-   YottaDB/GT.M does not permit the SET command to modify $TRESTART.
+   YottaDB does not permit the SET command to modify $TRESTART.
 
 Example:
 
@@ -373,11 +373,11 @@ $X contains an integer value ranging from 0 to 65,535, specifying the horizontal
 
 Every OPEN device has a $X. However, M only accesses $X of the current device. Therefore, exercise care in sequencing USE commands and references to $X.
 
-Generally, YottaDB/GT.M increments $X for every character written to and read from the current device. Usually, the increment is 1, but for a process in UTF-8 mode, the increment is the number of glyphs or codepoints (depends on the type of device). M format control characters, write filtering, and the device WIDTH also have an effect on $X.
+Generally, YottaDB increments $X for every character written to and read from the current device. Usually, the increment is 1, but for a process in UTF-8 mode, the increment is the number of glyphs or codepoints (depends on the type of device). M format control characters, write filtering, and the device WIDTH also have an effect on $X.
 
 $X never equals or exceeds the value of the device WIDTH. Whenever it reaches the value equal to the device WIDTH, it gets reset to zero (0).
 
-YottaDB/GT.M follows the MDC Type A recommendation and permits an M routine to SET $X. However, SET $X does not automatically issue device commands or escape sequences to reposition the physical cursor.
+YottaDB follows the MDC Type A recommendation and permits an M routine to SET $X. However, SET $X does not automatically issue device commands or escape sequences to reposition the physical cursor.
 
 For more information, refer to “$X”.
 
@@ -389,11 +389,11 @@ $Y contains an integer value ranging from 0 to 65,535 specifying the vertical po
 
 Every OPEN device has a $Y. However, M only accesses $Y of the current device. Therefore, exercise care in sequencing USE commands and references to $Y.
 
-When YottaDB/GT.M finishes the logical record in progress, it generally increments $Y. YottaDB/GT.M recognizes the end of a logical record when it processes certain M format control characters, or when the record reaches its maximum size, as determined by the device WIDTH, and the device is set to WRAP. The definition of "logical record" varies from device to device. For an exact definition, see the sections on each device type. Write filtering and the device LENGTH also have an effect on $Y.
+When YottaDB finishes the logical record in progress, it generally increments $Y. YottaDB recognizes the end of a logical record when it processes certain M format control characters, or when the record reaches its maximum size, as determined by the device WIDTH, and the device is set to WRAP. The definition of "logical record" varies from device to device. For an exact definition, see the sections on each device type. Write filtering and the device LENGTH also have an effect on $Y.
 
 $Y never equals or exceeds the value of the device LENGTH. Whenever it reaches the value equal to the device LENGTH, it gets reset to zero (0)
 
-YottaDB/GT.M permits an M routine to SET $Y. However, SET $Y does not automatically issue device commands or escape sequences to reposition the physical cursor.
+YottaDB permits an M routine to SET $Y. However, SET $Y does not automatically issue device commands or escape sequences to reposition the physical cursor.
 
 For more information, refer to “$Y”.
 
@@ -425,15 +425,15 @@ Decimal representing $JOB (identifier) of the process that wrote the last messag
 
 $ZA refers to the status of the current device. Therefore, exercise care in sequencing USE commands and references to $ZA.
 
-YottaDB/GT.M does not permit the SET command to modify $ZA.
+YottaDB does not permit the SET command to modify $ZA.
 
-For more information on $ZA, refer "Input/Output Processing".
+For more information on $ZA, refer `"Input/Output Processing" <https://docs.yottadb.com/ProgrammersGuide/ioproc.html>`_.
 
 -------------
 $ZALLOCSTOR
 -------------
 
-$ZALLOCSTOR contains the number of bytes that are (sub) allocated (including overhead) by YottaDB/GT.M for various activities. It provides one view (see also “$ZREalstor” and “$ZUSedstor”) of the process memory utilization and can help identify storage related problems. YottaDB/GT.M does not permit $ZALLOCSTOR to be SET or NEWed.
+$ZALLOCSTOR contains the number of bytes that are (sub) allocated (including overhead) by YottaDB for various activities. It provides one view (see also “$ZREalstor” and “$ZUSedstor”) of the process memory utilization and can help identify storage related problems. YottaDB does not permit $ZALLOCSTOR to be SET or NEWed.
 
 ----------
 $ZB
@@ -452,35 +452,35 @@ This displays the series of ASCII codes for the characters in $ZB.
 
 $ZB refers to the last READ terminator of the current device. Therefore, exercise care in sequencing USE commands and references to $ZB.
 
-YottaDB/GT.M does not permit the SET command to modify $ZB.
+YottaDB does not permit the SET command to modify $ZB.
 
-For more information on $ZB, refer to the "Input/Output Processing" chapter.
+For more information on $ZB, refer to the `"Input/Output Processing" chapter <https://docs.yottadb.com/ProgrammersGuide/ioproc.html>`_.
 
 --------------
 $ZCHSET
 --------------
 
-$ZCHSET is a read-only intrinsic special variable that takes its value from the environment variable gtm_chset. An application can obtain the character set used by a YottaDB/GT.M process by the value of $ZCHSET. $ZCHSET can have only two values --"M", or "UTF-8".
+$ZCHSET is a read-only intrinsic special variable that takes its value from the environment variable gtm_chset. An application can obtain the character set used by a YottaDB process by the value of $ZCHSET. $ZCHSET can have only two values --"M", or "UTF-8".
 
 .. note::
-   YottaDB/GT.M performs operations on literals at compile time and the character set may have an impact on such operations. Therefore, always compile with the same character set as that used at runtime.
+   YottaDB performs operations on literals at compile time and the character set may have an impact on such operations. Therefore, always compile with the same character set as that used at runtime.
 
 Example:
 
 .. parsed-literal::
   $ export gtm_chset=UTF-8
-  $ /usr/lib/fis-gtm/V6.0-001_x86/gtm
-  GTM>write $zchset
+  $ ydb
+  YDB>write $zchset
   UTF-8
-  GTM>
+  YDB>
 
 ------------
 $ZCMDLINE
 ------------
 
-$ZCM[DLINE] contains a string value specifying the "excess" portion of the command line that invoked the YottaDB/GT.M process. By "excess" is meant the portion of the command line that is left after YottaDB/GT.M has done all of its command line processing. For example, a command line mumps -direct extra1 extra2 causes YottaDB/GT.M to process the command line upto mumps -direct and place the "excess" of the command line, that is "extra1 extra2" in $ZCMDLINE. $ZCMDLINE gives the M routine access to the shell command line input.
+$ZCM[DLINE] contains a string value specifying the "excess" portion of the command line that invoked the YottaDB process. By "excess" is meant the portion of the command line that is left after YottaDB has done all of its command line processing. For example, a command line mumps -direct extra1 extra2 causes YottaDB to process the command line upto mumps -direct and place the "excess" of the command line, that is "extra1 extra2" in $ZCMDLINE. $ZCMDLINE gives the M routine access to the shell command line input.
 
-Note that the actual user input command line might have been transformed by the shell (for example, removing one level of quotes, filename, and wildcard substituion, and so on.), and it is this transformed command line that YottaDB/GT.M processes.
+Note that the actual user input command line might have been transformed by the shell (for example, removing one level of quotes, filename, and wildcard substituion, and so on.), and it is this transformed command line that YottaDB processes.
 
 Example:
 
@@ -506,7 +506,7 @@ Example:
    quit
    $ mumps -run foo 'BAR^FOOBAR("hello")'
 
-In this example, YottaDB/GT.M processes the shell command line up to foo and puts the rest in $ZCMDLINE. This mechanism allows mumps -run to invoke an arbitrary entryref with or without parameters. Note that this example encloses the command line argument with single quotes to prevent inappropriate expansion in Bourne-type shells. Always remember to use the escaping and quoting conventions of the shell and YottaDB/GT.M to prevent inappropriate expansion. 
+In this example, YottaDB processes the shell command line up to foo and puts the rest in $ZCMDLINE. This mechanism allows mumps -run to invoke an arbitrary entryref with or without parameters. Note that this example encloses the command line argument with single quotes to prevent inappropriate expansion in Bourne-type shells. Always remember to use the escaping and quoting conventions of the shell and YottaDB to prevent inappropriate expansion. 
 
 .. note::
    Use the ^%XCMD utility to XECUTEs code from the shell command line and return any error status (truncated to a single byte on UNIX) that the code generates. For more information, refer to “%XCMD”. 
@@ -515,32 +515,32 @@ In this example, YottaDB/GT.M processes the shell command line up to foo and put
 $ZCOMPILE
 -------------
 
-$ZCO[MPILE] contains a string value composed of one or more qualifiers that control the YottaDB/GT.M compiler. Explicit ZLINKs and auto-ZLINKs use these qualifiers as defaults for any compilations that they perform.
+$ZCO[MPILE] contains a string value composed of one or more qualifiers that control the YottaDB compiler. Explicit ZLINKs and auto-ZLINKs use these qualifiers as defaults for any compilations that they perform.
 
 $ZCOMPILE is a read-write ISV, that is, it can appear on the left side of the equal sign (=) in the argument to the SET command. A $ZCOMPILE value has the form of a list of M command qualifiers each separated by a space ( ).
 
-When the environment variable gtmcompile is defined, YottaDB/GT.M initializes $ZCOMPILE to the translation of gtmcompile. Otherwise YottaDB/GT.M initializes $ZCOMPILE to null. Changes to the value of $ZCOMPILE during a YottaDB/GT.M invocation only last for the current invocation and do not change the value of the environment variable gtmcompile.
+When the environment variable gtmcompile is defined, YottaDB initializes $ZCOMPILE to the translation of gtmcompile. Otherwise YottaDB initializes $ZCOMPILE to null. Changes to the value of $ZCOMPILE during a YottaDB invocation only last for the current invocation and do not change the value of the environment variable gtmcompile.
 
 ZCOMPILE returns a status of 1 after any error in compilation.
 
-When $ZCOMPILE is null, YottaDB/GT.M uses the default M command qualifiers -IGNORE, -LABEL=LOWER, -NOLIST, and -OBJECT. See Chapter 3: “Development Cycle” for detailed descriptions of the M command qualifiers.
+When $ZCOMPILE is null, YottaDB uses the default M command qualifiers -IGNORE, -LABEL=LOWER, -NOLIST, and -OBJECT. See `Chapter 3: “Development Cycle” <https://docs.yottadb.com/ProgrammersGuide/devcycle.html>`_ for detailed descriptions of the M command qualifiers.
 
 Example:
 
 .. parsed-literal::
    $ export gtmcompile="-LIST -LENGTH=56 -SPACE=2"
-   $ gtm
-   GTM>WRITE $ZCOMPILE
+   $ ydb
+   YDB>WRITE $ZCOMPILE
    -LIST -LENGTH=56 -SPACE=2
-   GTM>SET $ZCOMPILE="-LIST -NOIGNORE"
-   GTM>WRITE $ZCOMPILE
+   YDB>SET $ZCOMPILE="-LIST -NOIGNORE"
+   YDB>WRITE $ZCOMPILE
    -LIST -NOIGNORE
-   GTM>ZLINK "A.m"
-   GTM>HALT
+   YDB>ZLINK "A.m"
+   YDB>HALT
    $ echo $gtmcompile
    -LIST -LENGTH=56 -SPACE=2
 
-This example uses the environment variable gtmcompile to set up $ZCOMPILE. Then it modifies $ZCOMPILE with the SET command. The ZLINK argument specifies a file with a .m extension (type), which forces a compile. The compile produces a listing for routine A.m and does not produce an object module if A.m contains compilation errors. After YottaDB/GT.M terminates, the shell command echo $gtmcompile demonstrates that the SET command did not change the environment variable.
+This example uses the environment variable gtmcompile to set up $ZCOMPILE. Then it modifies $ZCOMPILE with the SET command. The ZLINK argument specifies a file with a .m extension (type), which forces a compile. The compile produces a listing for routine A.m and does not produce an object module if A.m contains compilation errors. After YottaDB terminates, the shell command echo $gtmcompile demonstrates that the SET command did not change the environment variable.
 
 -----------------
 $ZCSTATUS
@@ -548,7 +548,7 @@ $ZCSTATUS
 
 $ZC[STATUS] holds the value of the status code for the last compilation performed by a ZCOMPILE command.
 
-YottaDB/GT.M does not permit the SET command to modify $ZSTATUS.
+YottaDB does not permit the SET command to modify $ZSTATUS.
 
 --------------------
 $ZCLOSE
@@ -566,43 +566,43 @@ If positive, $ZCLOSE contains the exit status returned by the last co-process.
 $ZDATEFORM
 -----------------
 
-$ZDA[TEFORM] contains an integer value, specifying the output year format of $ZDATE(). $ZDATEFORM can be modified using the SET command. YottaDB/GT.M initializes $ZDATEFORM to the translation of the environment variable gtm_zdate_form. If gtm_zdate_form is not defined, YottaDB/GT.M initializes $ZDATEFORM to zero (0).
+$ZDA[TEFORM] contains an integer value, specifying the output year format of $ZDATE(). $ZDATEFORM can be modified using the SET command. YottaDB initializes $ZDATEFORM to the translation of the environment variable gtm_zdate_form. If gtm_zdate_form is not defined, YottaDB initializes $ZDATEFORM to zero (0).
 
-See “$ZDate()” for the usage of $ZDATEFORM. $ZDATEFORM also defines the behavior of some date and time utility routines; refer "M utility Routines".
+See “$ZDate()” for the usage of $ZDATEFORM. $ZDATEFORM also defines the behavior of some date and time utility routines; refer `"Utility Routines" <https://docs.yottadb.com/ProgrammersGuide/utility.html>`_.
 
 Example:
 
 .. parsed-literal::
-   GTM>WRITE $ZDATEFROM
+   YDB>WRITE $ZDATEFROM
    0
-   GTM>WRITE $ZDATE($H)
-   11/15/02
-   GTM>SET $ZDATEFORM=1
-   GTM>WRITE $ZDATE($H)
-   11/15/2002
+   YDB>WRITE $ZDATE($H)
+   11/15/18
+   YDB>SET $ZDATEFORM=1
+   YDB>WRITE $ZDATE($H)
+   11/15/2018
 
 ----------------
 $ZDIRECTORY
 ----------------
 
-$ZD[IRECTORY] contains the string value of the full path of the current directory. Initially $ZDIRECTORY contains the default/current directory from which the YottaDB/GT.M image/process was activated.
+$ZD[IRECTORY] contains the string value of the full path of the current directory. Initially $ZDIRECTORY contains the default/current directory from which the YottaDB image/process was activated.
 
-If the current directory does not exist at the time of YottaDB/GT.M process activation, YottaDB/GT.M errors out.
+If the current directory does not exist at the time of YottaDB process activation, YottaDB errors out.
 
 Example: 
 
 .. parsed-literal::
-   GTM>WRITE $ZDIR
+   YDB>WRITE $ZDIR
    /usr/tmp
-   GTM>SET $ZDIR=".."
-   GTM>WRITE $ZDIR
+   YDB>SET $ZDIR=".."
+   YDB>WRITE $ZDIR
    /usr
 
 This example displays the current working directory and changes $ZDIR to the parent directory.
 
-$ZDIRECTORY is a read-write Intrinsic Special Variable, that is, it can appear on the left side of the equal sign (=) in the argument to a SET command. If an attempt is made to set $ZDIRECTORY to a non-existent directory specification, YottaDB/GT.M issues an error and keeps the value of $ZDIRECTORY unchanged.
+$ZDIRECTORY is a read-write Intrinsic Special Variable, that is, it can appear on the left side of the equal sign (=) in the argument to a SET command. If an attempt is made to set $ZDIRECTORY to a non-existent directory specification, YottaDB issues an error and keeps the value of $ZDIRECTORY unchanged.
 
-At image exit, YottaDB/GT.M restores the current directory to the directory that was the current directory when YottaDB/GT.M was invoked even if that directory does not exist.
+At image exit, YottaDB restores the current directory to the directory that was the current directory when YottaDB was invoked even if that directory does not exist.
 
 -----------------
 $ZEDIT
@@ -610,7 +610,7 @@ $ZEDIT
 
 $ZED[IT] holds the value of the status code for the last edit session invoked by a ZEDIT command.
 
-YottaDB/GT.M does not permit the SET or NEW command to modify $ZEDIT.
+YottaDB does not permit the SET or NEW command to modify $ZEDIT.
 
 -----------------------
 $ZEOF
@@ -618,41 +618,41 @@ $ZEOF
 
 $ZEO[F] contains a truth-valued expression indicating whether the last READ operation reached the end-of-file. $ZEOF equals TRUE (1) at EOF and FALSE (0) at other positions.
 
-YottaDB/GT.M does not maintain $ZEOF for terminal devices.
+YottaDB does not maintain $ZEOF for terminal devices.
 
 $ZEOF refers to the end-of-file status of the current device. Therefore, exercise care in sequencing USE commands and references to $ZEOF.
 
-YottaDB/GT.M does not permit the SET or NEW command to modify $ZEOF.
+YottaDB does not permit the SET or NEW command to modify $ZEOF.
 
-For more information on $ZEOF, refer to the "Input/Output Processing" chapter.
+For more information on $ZEOF, refer to the `"Input/Output Processing" chapter <https://docs.yottadb.com/ProgrammersGuide/ioproc.html>`_.
 
 --------------------
 $ZERROR
 --------------------
 
-$ZE[RROR] is supposed to hold the application-specific error-code corresponding to the YottaDB/GT.M error-code stored in $ECODE/$ZSTATUS (see “$ECode” and “$ZStatus”).
+$ZE[RROR] is supposed to hold the application-specific error-code corresponding to the YottaDB error-code stored in $ECODE/$ZSTATUS (see “$ECode” and “$ZStatus”).
 
 $ZERROR contains a default value of "Unprocessed $ZERROR, see $ZSTATUS" at process startup.
 
 $ZERROR can be SET but not NEWed.
 
-The mapping of a YottaDB/GT.M error-code to the application-specific error-code is achieved as follows. Whenever YottaDB/GT.M encounters an error, $ECODE/$ZSTATUS gets set first. It then invokes the code that $ZYERROR points to if it is not null. It is intended that the code invoked by $ZYERROR use the value of $ZSTATUS to select or construct a value to which it SETs $ZERROR. If an error is encountered by the attempt to execute the code specified in $ZYERROR, YottaDB/GT.M sets $ZERROR to the error status encountered. If $ZYERROR is null, YottaDB/GT.M does not change the value of $ZERROR. In all cases, YottaDB/GT.M proceeds to return control to the code specified by $ETRAP/$ZTRAP or device EXCEPTION whichever is applicable. For details, see “$ZYERror”.
+The mapping of a YottaDB error-code to the application-specific error-code is achieved as follows. Whenever YottaDB encounters an error, $ECODE/$ZSTATUS gets set first. It then invokes the code that $ZYERROR points to if it is not null. It is intended that the code invoked by $ZYERROR use the value of $ZSTATUS to select or construct a value to which it SETs $ZERROR. If an error is encountered by the attempt to execute the code specified in $ZYERROR, YottaDB sets $ZERROR to the error status encountered. If $ZYERROR is null, YottaDB does not change the value of $ZERROR. In all cases, YottaDB proceeds to return control to the code specified by $ETRAP/$ZTRAP or device EXCEPTION whichever is applicable. For details, see “$ZYERror”.
 
 -------------------
 $ZGBLDIR
 -------------------
 
-$ZG[BLDIR] contains the value of the current Global Directory filename. When $ZGBLDIR specifies an invalid or inaccessible file, YottaDB/GT.M cannot successfully perform database operations.
+$ZG[BLDIR] contains the value of the current Global Directory filename. When $ZGBLDIR specifies an invalid or inaccessible file, YottaDB cannot successfully perform database operations.
 
-YottaDB/GT.M initializes $ZGBLDIR to the translation of the environment variable gtmgbldir. The value of the gtmgbldir environment variable may include a reference to another environment variable. If gtmgbldir is not defined, YottaDB/GT.M initializes $ZGBLDIR to null. When $ZGBLDIR is null, YottaDB/GT.M constructs a file name for the Global Directory using the name $gtmgbldir and the extension .gld in the current working directory.
+YottaDB initializes $ZGBLDIR to the translation of the environment variable gtmgbldir. The value of the gtmgbldir environment variable may include a reference to another environment variable. If gtmgbldir is not defined, YottaDB initializes $ZGBLDIR to null. When $ZGBLDIR is null, YottaDB constructs a file name for the Global Directory using the name $gtmgbldir and the extension .gld in the current working directory.
 
-$ZGBLDIR is a read-write Intrinsic Special Variable, (i.e., it can appear on the left side of the equal sign (=) in the argument to the SET command). SET $ZGBLDIR="" causes YottaDB/GT.M to assign $ZGBLDIR to the translation of gtmgbldir if that environment variable is defined. If it is not defined, then SET $ZGBLDIR="" causes YottaDB/GT.M to construct a file name using the name $gtmgbldir.gld in the current directory. YottaDB/GT.M permits $ZGBLDIR to be NEW'd. A $ZGBLDIR value may include an environment variable.
+$ZGBLDIR is a read-write Intrinsic Special Variable, (i.e., it can appear on the left side of the equal sign (=) in the argument to the SET command). SET $ZGBLDIR="" causes YottaDB to assign $ZGBLDIR to the translation of gtmgbldir if that environment variable is defined. If it is not defined, then SET $ZGBLDIR="" causes YottaDB to construct a file name using the name $gtmgbldir.gld in the current directory. YottaDB permits $ZGBLDIR to be NEW'd. A $ZGBLDIR value may include an environment variable.
 
-SETting $ZGBLDIR also causes YottaDB/GT.M to attempt to open the specified file. If the file name is invalid or the file is inaccessible, YottaDB/GT.M triggers an error without changing the value of $ZGBLDIR.
+SETting $ZGBLDIR also causes YottaDB to attempt to open the specified file. If the file name is invalid or the file is inaccessible, YottaDB triggers an error without changing the value of $ZGBLDIR.
 
-To establish a value for $ZGBLDIR outside of M, use the appropriate shell command to assign a translation to gtmgbldir. Defining gtmgbldir provides a convenient way to use the same Global Directory during a session where you repeatedly invoke and leave YottaDB/GT.M.
+To establish a value for $ZGBLDIR outside of M, use the appropriate shell command to assign a translation to gtmgbldir. Defining gtmgbldir provides a convenient way to use the same Global Directory during a session where you repeatedly invoke and leave YottaDB.
 
-Changes to the value of $ZGBLDIR during a YottaDB/GT.M invocation only last for the current invocation and do not change the value of gtmgbldir.
+Changes to the value of $ZGBLDIR during a YottaDB invocation only last for the current invocation and do not change the value of gtmgbldir.
 
 Example:
 
@@ -660,33 +660,33 @@ Example:
    $ gtmgbldir=test.gld
    $ export gtmgbldir
    $ gtm
-   GTM>WRITE $zgbldir
+   YDB>WRITE $zgbldir
    /usr/dev/test.gld
-   GTM>SET $zgbldir="mumps.gld"
-   GTM>WRITE $zgbldir
+   YDB>SET $zgbldir="mumps.gld"
+   YDB>WRITE $zgbldir
    mumps.gld
-   GTM>HALT
+   YDB>HALT
    $ echo $gtmgbldir
    test.gld
 
-This example defines the environment variable gtmgbldir. Upon entering YottaDB/GT.M Direct Mode, $ZGBLDIR has the value supplied by gtmgbldir. The SET command changes the value. After the YottaDB/GT.M image terminates, the echo command demonstrates that gtmgbldir was not modified by the M SET command.
+This example defines the environment variable gtmgbldir. Upon entering YottaDB Direct Mode, $ZGBLDIR has the value supplied by gtmgbldir. The SET command changes the value. After the YottaDB image terminates, the echo command demonstrates that gtmgbldir was not modified by the M SET command.
 
 .. parsed-literal::
    $ ls test.gld
    test.gld not found
-   $ gtm
-   GTM>WRITE $zgbldir
+   $ ydb
+   YDB>WRITE $zgbldir
    /usr/dev/mumps.gld
-   GTM>set $zgbldir="test.gld"
+   YDB>set $zgbldir="test.gld"
    %GTM-E-ZGBLDIRACC, Cannot access global directory
    "/usr/dev/test.gld". Retaining /usr/dev/mumps.gld"
    %SYSTEM-E-ENO2, No such file or directory
-   GTM>WRITE $zgbldir
+   YDB>WRITE $zgbldir
    /usr/dev/mumps.gld
-   GTM>halt
+   YDB>halt
    $
 
-The SET command attempts to change the value of $ZGBLDIR to test.gld. Because the file does not exist, YottaDB/GT.M reports an error and does not change the value of $ZGBLDIR.
+The SET command attempts to change the value of $ZGBLDIR to test.gld. Because the file does not exist, YottaDB reports an error and does not change the value of $ZGBLDIR.
 
 .. note::
    Attempting to restore an inaccessible initial Global Directory that has been NEW'd, can cause an error.
@@ -703,7 +703,7 @@ $ZH[OROLOG] returns 4 comma-separated pieces (for example, "63638,39194,258602,1
 Example:
 
 .. parsed-literal::
-   GTM>zprint ^zhoro
+   YDB>zprint ^zhoro
    zhoro(zone)
     set:'$data(zone) zone="Europe/London"
     new zutzh
@@ -730,11 +730,11 @@ Example:
     else  if zhsp<1 set zhfp=zhfp-1,zhsp=zhsp+86400
     write "Time in UTC ",$zdate(zhfp\_","_zhsp,"MON DD,YYYY 12:60:SS AM")
     quit
-   GTM>do ^zhoro
-   Time in Europe/London APR 10,2015 05:20:29 PM $ZUT=1428682829213711
+   YDB>do ^zhoro
+   Time in Europe/London APR 10,2018 05:20:29 PM $ZUT=1428682829213711
    1 Hour Ahead of UTC
-   Time in UTC APR 10,2015 04:20:29 PM
-   GTM>
+   Time in UTC APR 10,2018 04:20:29 PM
+   YDB>
 
 ---------------------
 $ZINTERRUPT
@@ -742,7 +742,7 @@ $ZINTERRUPT
 
 $ZINT[ERRUPT] specifies the code to be XECUTE'd when an interrupt (for example, through a MUPIP INTRPT) is processed. While a $ZINTERRUPT action is in process, any additional interrupt signals are discarded. When an interrupt handler is invoked, the current values of $REFERENCE is saved and restored when the interrupt handler returns. The current device ($IO) is neither saved nor restored.
 
-YottaDB/GT.M permits the SET command to modify the value of $ZINTERRUPT.
+YottaDB permits the SET command to modify the value of $ZINTERRUPT.
 
 If an interrupt handler changes the current IO device (via USE), it is the responsibility of the interrupt handler to restore the current IO device before returning. There are sufficient legitimate possibilities why an interrupt routine would want to change the current IO device (for example; daily log switching), that this part of the process context is not saved and restored automatically.
 
@@ -760,21 +760,21 @@ The IF statement executes the $ZJOBEXAM function but effectively discards the re
 Interrupt Handling
 +++++++++++++++++++++
 
-YottaDB/GT.M process execution is interruptible with the following events:
+YottaDB process execution is interruptible with the following events:
 
-* Typing CTRL+C or getting SIGINT (if CENABLE). YottaDB/GT.M ignores SIGINT (CTRL+C) if $PRINCIPAL is not a terminal. 
+* Typing CTRL+C or getting SIGINT (if CENABLE). YottaDB ignores SIGINT (CTRL+C) if $PRINCIPAL is not a terminal. 
 * Typing one of the CTRAP characters
 * Exceeding $ZMAXTPTIME in a transaction
 * Getting a MUPIP INTRPT (SIGUSR1)
 * +$ZTEXit evaluates to a truth value at the outermost TCOMMIT or TROLLBACK
 
-When YottaDB/GT.M detects any of these events, it transfers control to a vector that depends on the event. For CTRAP characters and ZMAXTPTIME, YottaDB/GT.M uses the $ETRAP or $ZTRAP vectors described in more detail in the Error Processing chapter. For INTRPT and $ZTEXit, it XECUTEs the interrupt handler code placed in $ZINTERRUPT. If $ZINTERRUPT is an empty string, nothing is done in response to a MUPIP INTRPT. The default value of $ZINTERRUPT is "IF $ZJOBEXAM()" which redirects a dump of ZSHOW "*" to a file and reports each such occasion to the operator log. For CTRL+C with CENABLE, it enters Direct Mode to give the programmer control.
+When YottaDB detects any of these events, it transfers control to a vector that depends on the event. For CTRAP characters and ZMAXTPTIME, YottaDB uses the $ETRAP or $ZTRAP vectors described in more detail in the Error Processing chapter. For INTRPT and $ZTEXit, it XECUTEs the interrupt handler code placed in $ZINTERRUPT. If $ZINTERRUPT is an empty string, nothing is done in response to a MUPIP INTRPT. The default value of $ZINTERRUPT is "IF $ZJOBEXAM()" which redirects a dump of ZSHOW "*" to a file and reports each such occasion to the operator log. For CTRL+C with CENABLE, it enters Direct Mode to give the programmer control.
 
-YottaDB/GT.M recognizes most of these events when they occur but transfers control to the interrupt vector at the start of each M line, at each iteration of a FOR LOOP, at certain points during the execution of commands which may take a "long" time. For example, ZWRITE, HANG, LOCK, MERGE, ZSHOW "V", OPENs of disk files and FIFOs, OPENs of SOCKETs with the CONNECT parameter (unless zero timeout,) WRITE /WAIT for SOCKETs, and READ for terminals, SOCKETs, FIFOs, and PIPEs. If +$ZTEXIT evaluates to a truth value at the outermost TCOMMIT or TROLLBACK, YottaDB/GT.M XECUTEs $ZINTERRUPT after completing the commit or rollback. CTRAP characters are recognized when they are typed on OpenVMS but when they are read on UNIX.
+YottaDB recognizes most of these events when they occur but transfers control to the interrupt vector at the start of each M line, at each iteration of a FOR LOOP, at certain points during the execution of commands which may take a "long" time. For example, ZWRITE, HANG, LOCK, MERGE, ZSHOW "V", OPENs of disk files and FIFOs, OPENs of SOCKETs with the CONNECT parameter (unless zero timeout,) WRITE /WAIT for SOCKETs, and READ for terminals, SOCKETs, FIFOs, and PIPEs. If +$ZTEXIT evaluates to a truth value at the outermost TCOMMIT or TROLLBACK, YottaDB XECUTEs $ZINTERRUPT after completing the commit or rollback. CTRAP characters are recognized when they are typed on OpenVMS but when they are read on UNIX.
 
-If an interrupt event occurs in a long running external call (for example, waiting in a message queue), YottaDB/GT.M recognizes the event but makes the vector transfer after the external call returns when it reaches the next appropriate execution boundary.
+If an interrupt event occurs in a long running external call (for example, waiting in a message queue), YottaDB recognizes the event but makes the vector transfer after the external call returns when it reaches the next appropriate execution boundary.
 
-When an interrupt handler is invoked, YottaDB/GT.M saves and restores the current values of $REFERENCE. However, the current device ($IO) is neither saved nor restored. If an interrupt handler changes $IO (via USE), ensure that the interrupt handler restores the current device before returning. To restore the device which was current when the interrupt handler began, specify USE without any deviceparameters. Any attempt to do IO on a device which was actively doing IO when the interrupt was recognized may result in a ZINTERCURSEIO error.
+When an interrupt handler is invoked, YottaDB saves and restores the current values of $REFERENCE. However, the current device ($IO) is neither saved nor restored. If an interrupt handler changes $IO (via USE), ensure that the interrupt handler restores the current device before returning. To restore the device which was current when the interrupt handler began, specify USE without any deviceparameters. Any attempt to do IO on a device which was actively doing IO when the interrupt was recognized may result in a ZINTERCURSEIO error.
 
 Example:
 
@@ -793,9 +793,9 @@ The use of the INTRPT facility may create a temporary hang or pause while the in
 
 During the execution of the interrupt handling code, $ZINTERRUPT evaluates to 1 (TRUE).
 
-If an error occurs while compiling the $ZINTERRUPT code, the error handler is not invoked (the error handler is invoked if an error occurs while executing the $ZINTERRUPT code), YottaDB/GT.M sends the GTM-ERRWZINTR message and the compiler error message to the operator log facility. If the YottaDB/GT.M process is at a direct mode prompt or is executing a direct mode command (for example, a FOR loop), YottaDB/GT.M sends also sends the GTM-ERRWZINTR error message to the user console along with the compilation error. In both cases, the interrupted process resumes execution without performing any action specified by the defective $ZINTERRUPT vector.
+If an error occurs while compiling the $ZINTERRUPT code, the error handler is not invoked (the error handler is invoked if an error occurs while executing the $ZINTERRUPT code), YottaDB sends the GTM-ERRWZINTR message and the compiler error message to the operator log facility. If the YottaDB process is at a direct mode prompt or is executing a direct mode command (for example, a FOR loop), YottaDB sends also sends the GTM-ERRWZINTR error message to the user console along with the compilation error. In both cases, the interrupted process resumes execution without performing any action specified by the defective $ZINTERRUPT vector.
 
-If YottaDB/GT.M encounters an error during creation of the interrupt handler's stack frame (before transferring control to the application code specified by the vector), that error is prefixed with a GTM-ERRWZINTR error. The error handler then executes normal error processing associated with the interrupted routine. Any other errors that occur in code called by the interrupt vector invoke error processing as described in Chapter 13: “Error Processing”.
+If YottaDB encounters an error during creation of the interrupt handler's stack frame (before transferring control to the application code specified by the vector), that error is prefixed with a GTM-ERRWZINTR error. The error handler then executes normal error processing associated with the interrupted routine. Any other errors that occur in code called by the interrupt vector invoke error processing as described in `Chapter 13: “Error Processing” <https://docs.yottadb.com/ProgrammersGuide/errproc.html>`_. 
 
 .. parsed-literal::
    The interrupt handler does not operate "outside" the current M environment but rather within the environment of the process.
@@ -808,7 +808,7 @@ $ZININTERRUPT
 
 $ZINI[NTERRUPT] evaluates to 1 (TRUE) when a process is executing code initiated by the interrupt mechanism, and otherwise 0 (FALSE).
 
-YottaDB/GT.M does not permit the SET or NEW commands to modify $ZININTERRUPT.
+YottaDB does not permit the SET or NEW commands to modify $ZININTERRUPT.
 
 ---------------
 $ZIO
@@ -816,7 +816,7 @@ $ZIO
 
 $ZIO contains the translated name of the current device, in contrast to $IO, which contains the name as specified by the USE command.
 
-YottaDB/GT.M does not permit the SET or NEW command to modify $ZIO.
+YottaDB does not permit the SET or NEW command to modify $ZIO.
 
 An example where $ZIO contains a value different from $IO is if the environment variable gtm_principal is defined.
 
@@ -825,9 +825,9 @@ Example:
 .. parsed-literal::
    $ gtm_principal="foo"
    $ export gtm_principal
-   GTM>WRITE $IO
+   YDB>WRITE $IO
    foo
-   GTM>WRITE $ZIO
+   YDB>WRITE $ZIO
    /dev/pts/8
 
 Notice that $ZIO contains the actual terminal device name while $IO contains the string pointed to by the environment variable gtm_principal.
@@ -838,9 +838,9 @@ $ZJOB
 
 $ZJ[OB] holds the pid of the process created by the last JOB command performed by the current process.
 
-YottaDB/GT.M initializes $ZJOB to zero (0) at process startup. If the JOB command fails to spawn a new job, YottaDB/GT.M sets $ZJOB to zero (0). Note that because of the left to right evaluation order of M, using $ZJOB in the jobparameter string results in using the value created by the last, rather than the current JOB command, which is not likely to match common coding practice.
+YottaDB initializes $ZJOB to zero (0) at process startup. If the JOB command fails to spawn a new job, YottaDB sets $ZJOB to zero (0). Note that because of the left to right evaluation order of M, using $ZJOB in the jobparameter string results in using the value created by the last, rather than the current JOB command, which is not likely to match common coding practice.
 
-YottaDB/GT.M does not permit the SET or NEW command to modify $ZJOB.
+YottaDB does not permit the SET or NEW command to modify $ZJOB.
 
 -----------------
 $ZKEY
@@ -848,7 +848,7 @@ $ZKEY
 
 For Socket devices:
 
-$ZKEY contains a list of sockets in the current SOCKET device which are ready for use. Its contents include both non selected but ready sockets from the prior WRITE /WAITs and any sockets with unread data in their YottaDB/GT.M buffer. $ZKEY can be used any time a SOCKET device is current. Once an incoming socket (that is, "LISTENING") has been accepted either by being selected by WRITE /WAIT or by USE socdev:socket="listeningsocket", it is removed from $ZKEY.
+$ZKEY contains a list of sockets in the current SOCKET device which are ready for use. Its contents include both non selected but ready sockets from the prior WRITE /WAITs and any sockets with unread data in their YottaDB buffer. $ZKEY can be used any time a SOCKET device is current. Once an incoming socket (that is, "LISTENING") has been accepted either by being selected by WRITE /WAIT or by USE socdev:socket="listeningsocket", it is removed from $ZKEY.
 
 $ZKEY contains any one of the following values:
 
@@ -881,7 +881,7 @@ Use $ZLEVEL in debugging or in an error-handling mechanism to capture a level fo
 Example:
 
 .. parsed-literal::
-   GTM>zprint ^zleve
+   YDB>zprint ^zleve
    zleve;
     do B
     write X,!
@@ -895,9 +895,9 @@ Example:
    D
     set X=$ZLEVEL
     quit
-   GTM>do ^zleve
+   YDB>do ^zleve
     4
-   GTM>
+   YDB>
 
 This program, executed from Direct Mode, produces a value of 4 for $ZLEVEL. If you run this program from the shell, the value of $ZLEVEL is three (3). 
 
@@ -905,13 +905,13 @@ This program, executed from Direct Mode, produces a value of 4 for $ZLEVEL. If y
 $ZMAXTPTIME
 ------------------
 
-$ZMAXTPTI[ME] contains an integer value indicating the time duration YottaDB/GT.M should wait for the completion of all activities fenced by the current transaction's outermost TSTART/TCOMMIT pair.
+$ZMAXTPTI[ME] contains an integer value indicating the time duration YottaDB should wait for the completion of all activities fenced by the current transaction's outermost TSTART/TCOMMIT pair.
 
 $ZMAXTPTIME can be SET but cannot be NEWed.
 
 $ZMAXTPTIME takes its value from the environment variable gtm_zmaxtptime. If gtm_zmaxtptime is not defined, the initial value of $ZMAXTPTIME is zero (0) seconds which indicates "no timeout" (unlimited time). The value of $ZMAXTPTIME when a transaction's outermost TSTART operation executes determines the timeout setting for that transaction.
 
-When a $ZMAXTPTIME expires, YottaDB/GT.M executes the $ETRAP/$ZTRAP exception handler currently in effect.
+When a $ZMAXTPTIME expires, YottaDB executes the $ETRAP/$ZTRAP exception handler currently in effect.
 
 .. note::
    Negative values of $ZMAXTPTIME are also treated as "no timeout". Timeouts apply only to the outermost transaction, that is, $ZMAXTPTIME has no effect when TSTART is nested within another transaction.
@@ -982,7 +982,7 @@ M routines cannot modify $ZMODE.
 Example:
 
 .. parsed-literal::
-   GTM>WRITE $ZMODE
+   YDB>WRITE $ZMODE
    INTERACTIVE
 
 This displays the process mode.
@@ -993,24 +993,24 @@ $ZONLNRLBK
 
 $ZONLNRLBK increments every time a process detects a concurrent MUPIP JOURNAL -ONLINE -ROLLBACK.
 
-YottaDB/GT.M initializes $ZONLNRLBK to zero (0) at process startup. YottaDB/GT.M does not permit the SET or NEW commands to modify $ZONLNRLBK.
+YottaDB initializes $ZONLNRLBK to zero (0) at process startup. YottaDB does not permit the SET or NEW commands to modify $ZONLNRLBK.
 
-For more information on online rollback, refer to the -ONLINE qualifier of -ROLLBACK in the Administration and Operations Guide.
+For more information on online rollback, refer to the -ONLINE qualifier of -ROLLBACK in the `Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/index.html>`_.
 
 -------------------
 $ZPATNUMERIC
 -------------------
 
-$ZPATN[UMERIC] is a read-only intrinsic special variable that determines how YottaDB/GT.M interprets the patcode "N" used in the pattern match operator.
+$ZPATN[UMERIC] is a read-only intrinsic special variable that determines how YottaDB interprets the patcode "N" used in the pattern match operator.
 
-With $ZPATNUMERIC="UTF-8", the patcode "N" matches any numeric character as defined by UTF-8 encoding. With $ZPATNUMERIC="M", YottaDB/GT.M restricts the patcode "N" to match only ASCII digits 0-9 (that is, ASCII 48-57). When a process starts in UTF-8 mode, intrinsic special variable $ZPATNUMERIC takes its value from the environment variable gtm_patnumeric. YottaDB/GT.M initializes the intrinsic special variable $ZPATNUMERIC to "UTF-8" if the environment variable gtm_patnumeric is defined to "UTF-8". If the environment variable gtm_patnumeric is not defined or set to a value other than "UTF-8", YottaDB/GT.M initializes $ZPATNUMERIC to "M".
+With $ZPATNUMERIC="UTF-8", the patcode "N" matches any numeric character as defined by UTF-8 encoding. With $ZPATNUMERIC="M", YottaDB restricts the patcode "N" to match only ASCII digits 0-9 (that is, ASCII 48-57). When a process starts in UTF-8 mode, intrinsic special variable $ZPATNUMERIC takes its value from the environment variable gtm_patnumeric. YottaDB initializes the intrinsic special variable $ZPATNUMERIC to "UTF-8" if the environment variable gtm_patnumeric is defined to "UTF-8". If the environment variable gtm_patnumeric is not defined or set to a value other than "UTF-8", YottaDB initializes $ZPATNUMERIC to "M".
 
-YottaDB/GT.M populates $ZPATNUMERIC at process initialization from the environment variable gtm_patnumeric and does not allow the process to change the value.
+YottaDB populates $ZPATNUMERIC at process initialization from the environment variable gtm_patnumeric and does not allow the process to change the value.
 
 .. note::
-   YottaDB/GT.M performs operations on literals at compile time and the pattern codes settings may have an impact on such operations. Therefore, always compile with the same pattern code settings as those used at runtime.
+   YottaDB performs operations on literals at compile time and the pattern codes settings may have an impact on such operations. Therefore, always compile with the same pattern code settings as those used at runtime.
 
-For characters in Unicode, YottaDB/GT.M assigns patcodes based on the default classification of the Unicode character set by the ICU library with three adjustments:
+For characters in Unicode, YottaDB assigns patcodes based on the default classification of the Unicode character set by the ICU library with three adjustments:
 
 * If $ZPATNUMERIC is not "UTF-8", non-ASCII decimal digits are classified as A.
 * Non-decimal numerics (Nl and No) are classified as A.
@@ -1050,13 +1050,13 @@ For a description of the Unicode general categories, refer to http://unicode.org
 Example:
 
 .. parsed-literal::
-   GTM>write $zpatnumeric
+   YDB>write $zpatnumeric
    UTF-8
-   GTM>Write $Char($$FUNC^%HD("D67"))?.N ; This is the Malayalam decimal digit 1                            
+   YDB>Write $Char($$FUNC^%HD("D67"))?.N ; This is the Malayalam decimal digit 1                            
    1
-   GTM>Write 1+$Char($$FUNC^%HD("D67"))
+   YDB>Write 1+$Char($$FUNC^%HD("D67"))
    1
-   GTM>Write 1+$Char($$FUNC^%HD("31")) ; This is the ASCII digit 1
+   YDB>Write 1+$Char($$FUNC^%HD("31")) ; This is the ASCII digit 1
    2
 
 ----------------
@@ -1121,12 +1121,12 @@ $ZPOSITION
 
 $ZPOS[ITION] contains a string value specifying the current entryref, where entryref is [label][+offset]^routine, and the offset is evaluated from the closest preceding label.
 
-YottaDB/GT.M does not permit the SET or NEW commands to modify $ZPOSITION.
+YottaDB does not permit the SET or NEW commands to modify $ZPOSITION.
 
 Example:
 
 .. parsed-literal::
-   GTM>WRITE !,$ZPOS,! ZPRINT @$ZPOS
+   YDB>WRITE !,$ZPOS,! ZPRINT @$ZPOS
 
 This example displays the current location followed by the source code for that line.
 
@@ -1134,33 +1134,33 @@ This example displays the current location followed by the source code for that 
 $ZPROMPT
 --------------
 
-$ZPROM[PT] contains a string value specifying the current Direct Mode prompt. By default, YDB> or GTM> is the Direct Mode prompt. M routines can modify $ZPROMPT by means of a SET command. $ZPROMPT cannot exceed 16 characters. If an attempt is made to assign $ZPROMPT to a longer string, only the first 16 characters will be taken.
+$ZPROM[PT] contains a string value specifying the current Direct Mode prompt. By default, YDB> or YDB> is the Direct Mode prompt. M routines can modify $ZPROMPT by means of a SET command. $ZPROMPT cannot exceed 16 characters. If an attempt is made to assign $ZPROMPT to a longer string, only the first 16 characters will be taken.
 
-In UTF-8 mode, if the 31st byte is not the end of a valid UTF-8 character, YottaDB/GT.M truncates the $ZPROMPT value at the end of last character that completely fits within the 31 byte limit.
+In UTF-8 mode, if the 31st byte is not the end of a valid UTF-8 character, YottaDB truncates the $ZPROMPT value at the end of last character that completely fits within the 31 byte limit.
 
 The environment gtm_prompt initializes $ZPROMPT at process startup.
 
 Example:
 
 .. parsed-literal::
-   GTM>set $zprompt="Test01">"
-   Test01>set $zprompt="GTM>"
+   YDB>set $zprompt="Test01">"
+   Test01>set $zprompt="YDB>"
 
-This example changes the YottaDB/GT.M prompt to Test01> and then back to GTM>.
+This example changes the YottaDB prompt to Test01> and then back to YDB>.
 
 ---------------
 $ZREALSTOR
 ---------------
 
-$ZREALSTOR contains the total memory (in bytes) allocated by the YottaDB/GT.M process, which may or may not actually be in use. It provides one view (see also “$ZALlocstor” and “$ZUSedstor”) of the process memory utilization and can help identify storage related problems. YottaDB/GT.M does not permit $ZREALSTOR to be SET or NEWed.
+$ZREALSTOR contains the total memory (in bytes) allocated by the YottaDB process, which may or may not actually be in use. It provides one view (see also “$ZALlocstor” and “$ZUSedstor”) of the process memory utilization and can help identify storage related problems. YottaDB does not permit $ZREALSTOR to be SET or NEWed.
 
 -----------------
 $ZROUTINES
 -----------------
 
-$ZRO[UTINES] contains a string value specifying a directory or list of directories containing object files. Each object directory may also have an associated directory, or list of directories, containing the corresponding source files. These directory lists are used by certain YottaDB/GT.M functions, primarily auto-ZLINK, to locate object and source files. The order in which directories appear in a given list determines the order in which they are searched for the appropriate item.
+$ZRO[UTINES] contains a string value specifying a directory or list of directories containing object files. Each object directory may also have an associated directory, or list of directories, containing the corresponding source files. These directory lists are used by certain YottaDB functions, primarily auto-ZLINK, to locate object and source files. The order in which directories appear in a given list determines the order in which they are searched for the appropriate item.
 
-Searches that use $ZROUTINES treat files as either object or source files. YottaDB/GT.M treats files with an extension of .o as object files and files with an extension of .m as source files.
+Searches that use $ZROUTINES treat files as either object or source files. YottaDB treats files with an extension of .o as object files and files with an extension of .m as source files.
 
 .. note::
    Paths used in $ZROUTINES to locate routines must not include embedded spaces, as $ZROUTINES uses spaces as delimiters.
@@ -1169,9 +1169,9 @@ Searches that use $ZROUTINES treat files as either object or source files. Yotta
 Establishing the value from $gtmroutines
 +++++++++++++++++++++++++++++++++++++++++
 
-When the environment variable gtmroutines is defined, YottaDB/GT.M initializes $ZROUTINES to the value of gtmroutines. Otherwise, YottaDB/GT.M initializes $ZROUTINES to ".". When $ZROUTINES is ".", YottaDB/GT.M attempts to locate all source and object files in the current working directory. $ZROUTINES="" is equivalent to $ZROUTINES=".".
+When the environment variable gtmroutines is defined, YottaDB initializes $ZROUTINES to the value of gtmroutines. Otherwise, YottaDB initializes $ZROUTINES to ".". When $ZROUTINES is ".", YottaDB attempts to locate all source and object files in the current working directory. $ZROUTINES="" is equivalent to $ZROUTINES=".".
 
-Commands or functions such as DO, GOTO, ZGOTO, ZBREAK, ZPRINT, and $TEXT may auto-ZLINK and thereby indirectly use $ZROUTINES. If their argument does not specify a directory, ZEDIT and explicit ZLINK use $ZROUTINES. ZPRINT and $TEXT use $ZROUTINES to locate a source file if YottaDB/GT.M cannot find the source file pointed to by the object file. For more information on ZLINK and auto-ZLINK, see the “Development Cycle” and “Commands” chapters.
+Commands or functions such as DO, GOTO, ZGOTO, ZBREAK, ZPRINT, and $TEXT may auto-ZLINK and thereby indirectly use $ZROUTINES. If their argument does not specify a directory, ZEDIT and explicit ZLINK use $ZROUTINES. ZPRINT and $TEXT use $ZROUTINES to locate a source file if YottaDB cannot find the source file pointed to by the object file. For more information on ZLINK and auto-ZLINK, see the `“Development Cycle” <https://docs.yottadb.com/ProgrammersGuide/devcycle.html>`_ and `“Commands” <https://docs.yottadb.com/ProgrammersGuide/commands.html>`_ chapters.
 
 +++++++++++++++++++++++++++++++
 Setting a Value for $ZROUTINES
@@ -1181,13 +1181,13 @@ $ZRO[UTINES] is a read-write Intrinsic Special Variable, so M can also SET the v
 
 By default, each directory entry in $ZROUTINES is assumed to contain both object and source files. However, each object directory may have an associated directory or list of directories to search for the corresponding source files. This is done by specifying the source directory list, in parentheses, following the object directory specification.
 
-If the command specifies more than one source directory for an object directory, the source directories must be separated by spaces, and the entire list must be enclosed in parentheses ( ) following the object directory-specification. If the object directory should also be searched for source, the name of that directory must be included in the parentheses, (usually as the first element in the list). Directory-specifications may also include empty parentheses, directing YottaDB/GT.M to proceed as if no source files exist for objects located in the qualified directory.
+If the command specifies more than one source directory for an object directory, the source directories must be separated by spaces, and the entire list must be enclosed in parentheses ( ) following the object directory-specification. If the object directory should also be searched for source, the name of that directory must be included in the parentheses, (usually as the first element in the list). Directory-specifications may also include empty parentheses, directing YottaDB to proceed as if no source files exist for objects located in the qualified directory.
 
 To set $ZROUTINES outside of M, use the appropriate shell command to set gtmroutines. Because gtmroutines is a list, enclose the value in quotation marks (" ").
 
-Changes to the value of $ZROUTINES during a YottaDB/GT.M invocation only last for the current invocation, and do not change the value of gtmroutines.
+Changes to the value of $ZROUTINES during a YottaDB invocation only last for the current invocation, and do not change the value of gtmroutines.
 
-Directory specifications may include an environment variable. When YottaDB/GT.M SETs $ZROUTINES, it translates all environment variables and verifies the syntax and the existence of all specified directories. If $ZROUTINES is set to an invalid value, YottaDB/GT.M generates a run-time error and does not change the value of $ZROUTINES. Because the environment variables are translated when $ZROUTINES is set, any changes to their definition have no effect until $ZROUTINES is set again.
+Directory specifications may include an environment variable. When YottaDB SETs $ZROUTINES, it translates all environment variables and verifies the syntax and the existence of all specified directories. If $ZROUTINES is set to an invalid value, YottaDB generates a run-time error and does not change the value of $ZROUTINES. Because the environment variables are translated when $ZROUTINES is set, any changes to their definition have no effect until $ZROUTINES is set again.
 
 ++++++++++++++++++++++++++++
 $ZROUTINES Examples
@@ -1196,69 +1196,69 @@ $ZROUTINES Examples
 Example:
 
 .. parsed-literal::
-   GTM>s $zroutines=".(../src) $gtm_dist"
+   YDB>s $zroutines=".(../src) $gtm_dist"
 
-This example directs YottaDB/GT.M to look for object modules first in your current directory, then in the distribution directory that contains the percent routines. YottaDB/GT.M locates sources for objects in your current directory in the sibling /src directory.
+This example directs YottaDB to look for object modules first in your current directory, then in the distribution directory that contains the percent routines. YottaDB locates sources for objects in your current directory in the sibling /src directory.
 
 Example:
 
 .. parsed-literal::
    $ gtmroutines="/usr/jones /usr/smith"
    $ export gtmroutines
-   $ gtm
-   GTM>write $zroutines
+   $ ydb
+   YDB>write $zroutines
    "/usr/jones /usr/smith"
-   GTM>set $zro="/usr/jones/utl /usr/smith/utl"
-   GTM>write $zroutines
+   YDB>set $zro="/usr/jones/utl /usr/smith/utl"
+   YDB>write $zroutines
    "/usr/jones/utl /usr/smith/utl"
-   GTM>halt
+   YDB>halt
    $ echo $gtmroutines
    /usr/jones /usr/smith
 
-This example defines the environment variable gtmroutines. Upon entering YottaDB/GT.M Direct Mode $zroutines has the value supplied by gtmroutines. The SET command changes the value. When the YottaDB/GT.M image terminates, the shell echo command demonstrates that gtmroutines has not been modified by the M SET command.
+This example defines the environment variable gtmroutines. Upon entering YottaDB Direct Mode $zroutines has the value supplied by gtmroutines. The SET command changes the value. When the YottaDB image terminates, the shell echo command demonstrates that gtmroutines has not been modified by the M SET command.
 
 Example:
 
 .. parsed-literal::
-   GTM>SET $ZRO=". /usr/smith"
+   YDB>SET $ZRO=". /usr/smith"
 
 This example sets $zroutines to a list containing two directories.
 
 Example:
 
 .. parsed-literal::
-   GTM>SET $ZRO=". /usr/smith"
+   YDB>SET $ZRO=". /usr/smith"
 
 This example sets $zroutines to a list containing two directories.
 
 Example:
 
 .. parsed-literal::
-   GTM>set $zro="/usr/smith(/usr/smith/tax /usr/smith/fica)"
+   YDB>set $zro="/usr/smith(/usr/smith/tax /usr/smith/fica)"
 
-This example specifies that YottaDB/GT.M should search the directory /usr/smith for object files, and the directories /usr/smith/tax and /usr/smith/fica for source files. Note that in this example. YottaDB/GT.M does not search /usr/smith for source files.
-
-Example:
-
-.. parsed-literal::
-   GTM>set $zro="/usr/smith(/usr/smith /usr/smith/tax /usr/smith/fica)"
-
-This example specifies that YottaDB/GT.M should search the directory /usr/smith for object files and the directories /usr/smith/tax and /usr/smith/fica for source files. Note that the difference between this example and the previous one is that YottaDB/GT.M searches /usr/smith for both object and source files.
+This example specifies that YottaDB should search the directory /usr/smith for object files, and the directories /usr/smith/tax and /usr/smith/fica for source files. Note that in this example. YottaDB does not search /usr/smith for source files.
 
 Example:
 
 .. parsed-literal::
-   GTM>set $zro="/usr/smith /usr/smith/tax() /usr/smith/fica"
+   YDB>set $zro="/usr/smith(/usr/smith /usr/smith/tax /usr/smith/fica)"
 
-This specifies that YottaDB/GT.M should search /usr/smith and /usr/smith/fica for object and source files. However, because the empty parentheses indicate directories searched only for object files, YottaDB/GT.M does not search /usr/smith/tax for source files.
+This example specifies that YottaDB should search the directory /usr/smith for object files and the directories /usr/smith/tax and /usr/smith/fica for source files. Note that the difference between this example and the previous one is that YottaDB searches /usr/smith for both object and source files.
 
-Omitting the parentheses indicates that YottaDB/GT.M can search the directory for both source and object files. $ZROUTINES=/usr/smith is equivalent to $ZROUTINES=/usr/smith(/usr/smith).
+Example:
+
+.. parsed-literal::
+   YDB>set $zro="/usr/smith /usr/smith/tax() /usr/smith/fica"
+
+This specifies that YottaDB should search /usr/smith and /usr/smith/fica for object and source files. However, because the empty parentheses indicate directories searched only for object files, YottaDB does not search /usr/smith/tax for source files.
+
+Omitting the parentheses indicates that YottaDB can search the directory for both source and object files. $ZROUTINES=/usr/smith is equivalent to $ZROUTINES=/usr/smith(/usr/smith).
 
 ++++++++++++++++++++++++++++
 $ZROUTINES Search Types
 ++++++++++++++++++++++++++++
 
-YottaDB/GT.M uses $ZRO[UTINES] to perform three types of searches:
+YottaDB uses $ZRO[UTINES] to perform three types of searches:
 
 * Object-only when the command or function using $ZROUTINES requires a .o file extension.
 * Source-only when the command or function using $ZROUTINES requires a file extension other than .o.
@@ -1266,13 +1266,13 @@ YottaDB/GT.M uses $ZRO[UTINES] to perform three types of searches:
 
 An explicit ZLINK that specifies a non .OBJ .o extension is considered as a function that has not specified a file extension for the above searching purposes.
 
-All searches proceed from left to right through $ZROUTINES. By default, YottaDB/GT.M searches directories for both source and object files. YottaDB/GT.M searches directories followed by empty parentheses ( ) for object files only. YottaDB/GT.M searches directories in parentheses only for source files.
+All searches proceed from left to right through $ZROUTINES. By default, YottaDB searches directories for both source and object files. YottaDB searches directories followed by empty parentheses ( ) for object files only. YottaDB searches directories in parentheses only for source files.
 
-Once an object-matching search locates an object file, the source search becomes limited. If the directory containing the object file has an attached parenthetical list of directories, YottaDB/GT.M only searches the directories in the attached list for matching source files. If the directory containing the object files does not have following parentheses, YottaDB/GT.M restricts the search for matching source files to the same directory. If the object module is in a directory qualified by empty parentheses, YottaDB/GT.M cannot perform any operation that refers to the source file.
+Once an object-matching search locates an object file, the source search becomes limited. If the directory containing the object file has an attached parenthetical list of directories, YottaDB only searches the directories in the attached list for matching source files. If the directory containing the object files does not have following parentheses, YottaDB restricts the search for matching source files to the same directory. If the object module is in a directory qualified by empty parentheses, YottaDB cannot perform any operation that refers to the source file.
 
-The following table shows YottaDB/GT.M commands and functions using $ZROUTINES and the search types they support.
+The following table shows YottaDB commands and functions using $ZROUTINES and the search types they support.
 
-**YottaDB/GT.M Commands and $ZROUTINES Search Types**
+**YottaDB Commands and $ZROUTINES Search Types**
 
 +---------------------------------------+-----------------------------------------+-------------------------------+--------------------------------+-------------------------------+
 | Search / Function                     | File Extension Specified                | Search Type                                                                                    |
@@ -1294,9 +1294,9 @@ The following table shows YottaDB/GT.M commands and functions using $ZROUTINES a
 | $TEXT                                 | None                                    |                               | X                              |                               |
 +---------------------------------------+-----------------------------------------+-------------------------------+--------------------------------+-------------------------------+
 
-If ZPRINT or $TEXT() require a source module for a routine that is not in the current image, YottaDB/GT.M first performs an auto-ZLINK with a matching search.
+If ZPRINT or $TEXT() require a source module for a routine that is not in the current image, YottaDB first performs an auto-ZLINK with a matching search.
 
-ZPRINT or $TEXT locate the source module using a file specification for the source file located in the object module. If YottaDB/GT.M finds the source module in the directory where it was when it was compiled, the run-time system does not use $ZROUTINES. If YottaDB/GT.M cannot find the source file in the indicated location, the run-time system uses $ZROUTINES.
+ZPRINT or $TEXT locate the source module using a file specification for the source file located in the object module. If YottaDB finds the source module in the directory where it was when it was compiled, the run-time system does not use $ZROUTINES. If YottaDB cannot find the source file in the indicated location, the run-time system uses $ZROUTINES.
 
 ++++++++++++++++++++++++++++++++
 $ZROUTINES Search Examples
@@ -1309,7 +1309,7 @@ You may think of $ZROUTINES as supplying a two dimensional matrix of places to l
 Example:
 
 .. parsed-literal::
-   GTM>s $zro=". /usr/smi/utl() /usr/jon/utl
+   YDB>s $zro=". /usr/smi/utl() /usr/jon/utl
    (/usr/jon/utl/so /usr/smi/utl)"
 
 The following table illustrates the matrix view of this $ZROUTINES.
@@ -1326,19 +1326,19 @@ The following table illustrates the matrix view of this $ZROUTINES.
 |                     |                            |                              | /usr/smi/utl             |
 +---------------------+----------------------------+------------------------------+--------------------------+
 
-To perform object-only searches, YottaDB/GT.M searches only the directories or object libraries in the top 'objects' row for each column starting at column one. If YottaDB/GT.M does not locate the object file in a directory or object library in the 'objects' row of a column, YottaDB/GT.M begins searching again in the next column. If YottaDB/GT.M cannot locate the file in any of the columns, it issues a run-time error.
+To perform object-only searches, YottaDB searches only the directories or object libraries in the top 'objects' row for each column starting at column one. If YottaDB does not locate the object file in a directory or object library in the 'objects' row of a column, YottaDB begins searching again in the next column. If YottaDB cannot locate the file in any of the columns, it issues a run-time error.
 
-As illustrated in the preceding table, YottaDB/GT.M searches for object files in the directories . ,/usr/smi/utl and /usr/jon/utl.
+As illustrated in the preceding table, YottaDB searches for object files in the directories . ,/usr/smi/utl and /usr/jon/utl.
 
-To perform source-only searches, YottaDB/GT.M looks down to the 'source' row at the bottom of each column, excluding columns headed by object-only directories (that is, those object directories, which consist of an empty list of source directories) or object libraries. If YottaDB/GT.M cannot locate the source file in the 'source' row of a column, it searches the next eligible column.
+To perform source-only searches, YottaDB looks down to the 'source' row at the bottom of each column, excluding columns headed by object-only directories (that is, those object directories, which consist of an empty list of source directories) or object libraries. If YottaDB cannot locate the source file in the 'source' row of a column, it searches the next eligible column.
 
-To perform object-source match searches, YottaDB/GT.M looks at each column starting at column one. YottaDB/GT.M does an object-only search in the 'objects' row of a column and a source-only search in the 'source' row(s) of a column. If YottaDB/GT.M locates either the object-file or the souce-file, the search is completed. Else, YottaDB/GT.M starts searching the next column. If YottaDB/GT.M cannot locate either the object file or the source file in any of the columns, it issues a run-time error.
+To perform object-source match searches, YottaDB looks at each column starting at column one. YottaDB does an object-only search in the 'objects' row of a column and a source-only search in the 'source' row(s) of a column. If YottaDB locates either the object-file or the souce-file, the search is completed. Else, YottaDB starts searching the next column. If YottaDB cannot locate either the object file or the source file in any of the columns, it issues a run-time error.
 
-As illustrated in the preceding table, YottaDB/GT.M searches for source-files in the directory "." in column one. If YottaDB/GT.M cannot locate the source file in ".", it omits column two because it is an object-only directory and instead searches column three. Since column three specifies /usr/jon/utl/so and /usr/smi/utl, YottaDB/GT.M searches for the source-file in these directories in column three and not in /usr/jon/utl. If YottaDB/GT.M cannot locate the source-file in column three, it terminates the search and issues a run-time error.
+As illustrated in the preceding table, YottaDB searches for source-files in the directory "." in column one. If YottaDB cannot locate the source file in ".", it omits column two because it is an object-only directory and instead searches column three. Since column three specifies /usr/jon/utl/so and /usr/smi/utl, YottaDB searches for the source-file in these directories in column three and not in /usr/jon/utl. If YottaDB cannot locate the source-file in column three, it terminates the search and issues a run-time error.
 
-Once the object-source match search is done, YottaDB/GT.M now has either the object-file or source-file or both available. YottaDB/GT.M then recompiles the source-file based on certain conditions, before linking the object-file into the current image. See “ZLink” for more information on those conditions.
+Once the object-source match search is done, YottaDB now has either the object-file or source-file or both available. YottaDB then recompiles the source-file based on certain conditions, before linking the object-file into the current image. See “ZLink” for more information on those conditions.
 
-If auto-ZLINK or ZLINK determines that the source file requires [re]compilation, YottaDB/GT.M places the object file in the above object directory in the same column as the source file. For example, if YottaDB/GT.M locates the source file in /usr/smi/utl in column three, YottaDB/GT.M places the resultant object file in /usr/jon/utl.
+If auto-ZLINK or ZLINK determines that the source file requires [re]compilation, YottaDB places the object file in the above object directory in the same column as the source file. For example, if YottaDB locates the source file in /usr/smi/utl in column three, YottaDB places the resultant object file in /usr/jon/utl.
 
 ++++++++++++++++++++++++++++++++++++++++++++++++
 Shared Library File Specification in $ZROUTINES
@@ -1346,7 +1346,7 @@ Shared Library File Specification in $ZROUTINES
 
 The $ZROUTINES ISV allows individual UNIX shared library file names to be specified in the search path. During a search for auto-ZLINK, when a shared library is encountered, it is probed for a given routine and, if found, that routine is linked/loaded into the image. During an explicit ZLINK, all shared libraries in $ZROUTINES are ignored and are not searched for a given routine.
 
-$ZROUTINES syntax contains a file-specification indicating shared library file path. YottaDB/GT.M does not require any designated extension for the shared library component of $ZROUTINES. Any file specification that does not name a directory is treated as shared library. However, it is recommended that the extension commonly used on a given platform for shared library files be given to any YottaDB/GT.M shared libraries. See “Linking YottaDB/GT.M Shared Images”. A shared library component cannot specify source directories. YottaDB/GT.M reports an error at an attempt to associate any source directory with a shared library in $ZROUTINES.
+$ZROUTINES syntax contains a file-specification indicating shared library file path. YottaDB does not require any designated extension for the shared library component of $ZROUTINES. Any file specification that does not name a directory is treated as shared library. However, it is recommended that the extension commonly used on a given platform for shared library files be given to any YottaDB shared libraries. See “Linking YottaDB Shared Images”. A shared library component cannot specify source directories. YottaDB reports an error at an attempt to associate any source directory with a shared library in $ZROUTINES.
 
 The following traits of $ZROUTINES help support shared libraries:
 
@@ -1355,27 +1355,27 @@ The following traits of $ZROUTINES help support shared libraries:
 * ZPRINT and $TEXT() of the routines in a shared library, read source file path from the header of the loaded routine. If the image does not contain the routine, an auto-ZLINK is initiated. If the source file path recorded in the routine header when the module was compiled cannot be located, ZPRINT and $TEXT() initiate a search from the beginning of $ZROUTINES, skipping over the shared library file specifications. If the located source does not match the code in image (checked via checksum), ZPRINT generates an object-source mismatch status and $TEXT() returns a null string.
 * ZEDIT, when searching $ZROUTINES, skips shared libraries like explicit ZLINK for the same reasons. $ZSOURCE ISV is implicitly set to the appropriate source file.
 
-For example, if libshare.so is built with foo.o compiled from ./shrsrc/foo.m, the following commands specify that YottaDB/GT.M should search the library ./libshare.so for symbol foo when do ^foo is encountered.
+For example, if libshare.so is built with foo.o compiled from ./shrsrc/foo.m, the following commands specify that YottaDB should search the library ./libshare.so for symbol foo when do ^foo is encountered.
 
 .. parsed-literal::
-   GTM>SET $ZROUTINES="./libshare.so ./obj(./shrsrc)"
-   GTM>DO ^foo;auto-ZLINK foo - shared
-   GTM>ZEDIT "foo";edit ./shrsrc/foo.m
-   GTM>W $ZSOURCE,!;prints foo
-   GTM>ZPRINT +0^foo;issues a source-object mismatch status TXTSRCMAT error message
-   GTM>ZLINK "foo";re-compile ./shrsrc/foo.m to generate ./obj/foo.o.
-   GTM>W $TEXT(+0^foo);prints foo
+   YDB>SET $ZROUTINES="./libshare.so ./obj(./shrsrc)"
+   YDB>DO ^foo;auto-ZLINK foo - shared
+   YDB>ZEDIT "foo";edit ./shrsrc/foo.m
+   YDB>W $ZSOURCE,!;prints foo
+   YDB>ZPRINT +0^foo;issues a source-object mismatch status TXTSRCMAT error message
+   YDB>ZLINK "foo";re-compile ./shrsrc/foo.m to generate ./obj/foo.o.
+   YDB>W $TEXT(+0^foo);prints foo
 
-Note that ZPRINT reports an error, as foo.m does not match the routine already linked into image. Also note that, to recompile and re-link the ZEDITed foo.m, its source directory needs to be attached to the object directory [./obj] in $ZROUTINES. The example assumes the shared library (libshare.so) has been built using shell commands. For the procedure to build a shared library from a list of YottaDB/GT.M generated object (.o) files, see “Linking YottaDB/GT.M Shared Images”.
+Note that ZPRINT reports an error, as foo.m does not match the routine already linked into image. Also note that, to recompile and re-link the ZEDITed foo.m, its source directory needs to be attached to the object directory [./obj] in $ZROUTINES. The example assumes the shared library (libshare.so) has been built using shell commands. For the procedure to build a shared library from a list of YottaDB generated object (.o) files, see “Linking YottaDB Shared Images”.
 
 
-**Linking YottaDB/GT.M Shared Images**
+**Linking YottaDB Shared Images**
 
-Following are the steps (UNIX system commands, and YottaDB/GT.M commands) that need to be taken to use YottaDB/GT.M shared image linking with $ZROUTINES.
+Following are the steps (UNIX system commands, and YottaDB commands) that need to be taken to use YottaDB shared image linking with $ZROUTINES.
 
 * *Compile source (.m) files to object (.o) files*
 
-In order to share M routines, YottaDB/GT.M generates objects (.o) with position independent code, a primary requirement for shared libraries, done automatically by YottaDB/GT.M V4.4-000 and later releases. No change to the compiling procedures is needed. However, any objects generated by a previous release must be recompiled.
+In order to share M routines, YottaDB generates objects (.o) with position independent code, a primary requirement for shared libraries, done automatically by YottaDB V4.4-000 and later releases. No change to the compiling procedures is needed. However, any objects generated by a previous release must be recompiled.
 
 * *Create a shared library from object (.o) files*
 
@@ -1385,17 +1385,17 @@ To create a shared library, use the following syntax:
    ld -brtl -G -bexpfull -bnoentry -b64 -o libshr.so file1.o file2.o (on AIX)
    ld -shared -o libshr.so file1.o file2.o (on Linux)
 
-Where libshr.so is replaced with name of the shared library one wishes to create. The file1.o and file2.o are replaced with one or more object files created by the YottaDB/GT.M compiler that the user wishes to put into the shared library. Note that the list of input files can also be put into a file and then specified on the command line with the -f option (AIX). Refer to the ld man page on specific platform for details on each option mentioned above.
+Where libshr.so is replaced with name of the shared library one wishes to create. The file1.o and file2.o are replaced with one or more object files created by the YottaDB compiler that the user wishes to put into the shared library. Note that the list of input files can also be put into a file and then specified on the command line with the -f option (AIX). Refer to the ld man page on specific platform for details on each option mentioned above.
 
 .. note::
-   Source directories cannot be specified with a shared library in $ZROUTINES, as YottaDB/GT.M does not support additions or modifications to active shared libraries. Searching for a routine in a shared library is a two step process: (1) Load the library and (2) Lookup the symbol corresponding to the M entryref. Since YottaDB/GT.M always performs the first step (even on platforms with no shared binary support), use shared libraries in $ZROUTINES with care to keep the process footprint minimal. On all platforms, it is strongly recommended not to include unused shared libraries in $ZROUTINES.
+   Source directories cannot be specified with a shared library in $ZROUTINES, as YottaDB does not support additions or modifications to active shared libraries. Searching for a routine in a shared library is a two step process: (1) Load the library and (2) Lookup the symbol corresponding to the M entryref. Since YottaDB always performs the first step (even on platforms with no shared binary support), use shared libraries in $ZROUTINES with care to keep the process footprint minimal. On all platforms, it is strongly recommended not to include unused shared libraries in $ZROUTINES.
 
 .. note::
    There are some tools on AIX that can aid in mitigating the problems of shared library allocation. The /usr/bin/genkld command on AIX lists all of the shared libraries currently loaded. This command requires root privileges on AIX 4.3.3 but seems to be a general user command on AIX 5. The /usr/sbin/slibclean command requires root privileges and will purge the shared library segment of unused shared libraries making room for new libraries to be loaded.
 
 * *Establish $ZROUTINES from gtmroutines*
 
-When the environment variable gtmroutines is defined, YottaDB/GT.M initializes $ZROUTINES to the value of gtmroutines. The $ZROUTINES ISV can also be modified using SET command.
+When the environment variable gtmroutines is defined, YottaDB initializes $ZROUTINES to the value of gtmroutines. The $ZROUTINES ISV can also be modified using SET command.
 
 Example:
 
@@ -1403,11 +1403,11 @@ Example:
    $ gtmroutines="./libabc.so ./obj(./src)"
    $ export gtmroutines
    $ mumps -direct
-   GTM>w $ZROUTINES,!;writes "./libabc.so ./obj(./src)"
-   GTM>do ^a;runs ^a from libabc.so
-   GTM>do ^b;runs ^b from libabc.so
-   GTM>do ^c;runs ^c from libabc.so
-   GTM>h
+   YDB>w $ZROUTINES,!;writes "./libabc.so ./obj(./src)"
+   YDB>do ^a;runs ^a from libabc.so
+   YDB>do ^b;runs ^b from libabc.so
+   YDB>do ^c;runs ^c from libabc.so
+   YDB>h
    $
 
 * *$ZROUTINES settings for auto-relink*
@@ -1415,10 +1415,10 @@ Example:
 By suffixing one or more directory names in $ZROUTINES with a single asterisk (*), processes can subscribe to updates of object files published in those directories. At the invocation of DO, GOTO, or ZGOTO, extrinsic functions, $TEXT(), or ZPRINT that specify an entryref which includes a routine name (vs. a label without a routine name), mumps processes (and mupip processes executing trigger logic) automatically relink ("auto-relink") and execute published new versions of routines.
 
 * Label references (that is, without a routine name), whether direct or through indirection, always refer to the current routine, and do not invoke auto-relink logic.
-* Use shell quoting rules when appending asterisks to directory names in the gtmroutines environment variable - asterisks must be passed in to YottaDB/GT.M, and not expanded by the shell.
-* YottaDB/GT.M accepts but ignores asterisk suffixes to directory names on 32-bit Linux on x86 platforms, where it does not provide auto-relinking.
+* Use shell quoting rules when appending asterisks to directory names in the gtmroutines environment variable - asterisks must be passed in to YottaDB, and not expanded by the shell.
+* YottaDB accepts but ignores asterisk suffixes to directory names on 32-bit Linux on x86 platforms, where it does not provide auto-relinking.
 * Changing $ZROUTINES causes all routines linked from auto-relink-enabled directories in the process to be re-linked.
-* Note that a relink does not automatically reload a routine every time. When YottaDB/GT.M initiates a relink and the object file (object hash) is the same as the existing one, YottaDB/GT.M bypasses the relink and uses the existing object file.
+* Note that a relink does not automatically reload a routine every time. When YottaDB initiates a relink and the object file (object hash) is the same as the existing one, YottaDB bypasses the relink and uses the existing object file.
 
 The ZRUPDATE command publishes of new versions of routines to subscribers. 
 
@@ -1434,45 +1434,45 @@ The file name may contain a file extension. If the extension is .m or .o, $ZSOUR
 
 If $ZSOURCE contains a file with an extension other than .m or .o, ZEDIT processes it but ZLINK returns an error message
 
-$ZSOURCE is a read-write Intrinsic Special Variable, (i.e., it can appear on the left side of the equal sign (=) in the argument to the SET command). A $ZSOURCE value may include an environment variable. YottaDB/GT.M handles logical names that translate to other logical names by performing iterative translations according to VMS conventions. If a logical name translates to a VMS search list, YottaDB/GT.M uses only the first name in the list.
+$ZSOURCE is a read-write Intrinsic Special Variable, (i.e., it can appear on the left side of the equal sign (=) in the argument to the SET command). A $ZSOURCE value may include an environment variable. YottaDB handles logical names that translate to other logical names by performing iterative translations according to VMS conventions. 
 
 Example:
 
 .. parsed-literal::
-   GTM>ZEDIT "subr.m"
+   YDB>ZEDIT "subr.m"
    .
    .
-   GTM>WRITE $ZSOURCE
+   YDB>WRITE $ZSOURCE
    subr
 
 Example:
 
 .. parsed-literal::
-   GTM>ZEDIT "test"
+   YDB>ZEDIT "test"
    .
    .
    .
-   GTM>WRITE $ZSOURCE
+   YDB>WRITE $ZSOURCE
    "test"
 
 Example:
 
 .. parsed-literal::
-   GTM>ZEDIT "/usr/smith/report.txt"
+   YDB>ZEDIT "/usr/smith/report.txt"
    .
    .
    .
-   GTM>WRITE $ZSOURCE
+   YDB>WRITE $ZSOURCE
    /usr/smith/report.txt
 
 Example:
 
 .. parsed-literal::
-   GTM>ZLINK "BASE.O"
+   YDB>ZLINK "BASE.O"
    .
    .
    .
-   GTM>WRITE $ZSOURCE
+   YDB>WRITE $ZSOURCE
    BASE
 
 -------------------
@@ -1481,7 +1481,7 @@ $ZSTATUS
 
 $ZS[TATUS] contains a string value specifying the error condition code and location of the last exception condition that occurred during routine execution.
 
-YottaDB/GT.M maintains $ZSTATUS as a string consisting of three or more substrings. The string consists of the following:
+YottaDB maintains $ZSTATUS as a string consisting of three or more substrings. The string consists of the following:
 
 * An error message number as the first substring.
 * The entryref of the line in error as the second substring; a comma (,) separates the first and second substrings.
@@ -1491,14 +1491,14 @@ YottaDB/GT.M maintains $ZSTATUS as a string consisting of three or more substrin
    Format: %<FAC>-<SEV>-<ID>, <TEXT>
    Example: %GTM-E-DIVZERO, Attempt to divide by zero
 
-YottaDB/GT.M sets $ZSTATUS when it encounters errors during program execution, but not when it encounters errors in a Direct Mode command.
+YottaDB sets $ZSTATUS when it encounters errors during program execution, but not when it encounters errors in a Direct Mode command.
 
-$ZSTATUS is a read-write Intrinsic Special Variable, (i.e., it can occur on the left side of the equal sign (=) in the argument to the SET command). While it will accept any string, YottaDB/FIS recommends setting it to null. M routines cannot modify $ZSTATUS with the NEW command.
+$ZSTATUS is a read-write Intrinsic Special Variable, (i.e., it can occur on the left side of the equal sign (=) in the argument to the SET command). While it will accept any string, YottaDB recommends setting it to null. M routines cannot modify $ZSTATUS with the NEW command.
 
 Example:
 
 .. parsed-literal::
-   GTM>WRITE $ZSTATUS
+   YDB>WRITE $ZSTATUS
    150373110,+1^MYFILE,%GTM-E-DIVZERO,
    Attempt to divide by zero
 
@@ -1515,16 +1515,16 @@ $ZSTEP initially contains the the value of the $gtm_zstep environment variable o
 Example:
 
 .. parsed-literal::
-   GTM>WRITE $ZSTEP
+   YDB>WRITE $ZSTEP
    B
-   GTM>
+   YDB>
 
 This example displays the current value of $ZSTEP, which is the default.
 
 Example:
 
 .. parsed-literal::
-   GTM>SET $ZSTEP="ZP @$ZPOS B"
+   YDB>SET $ZSTEP="ZP @$ZPOS B"
 
 This example sets $ZSTEP to code that displays the contents of the next line to execute, and then enters Direct Mode.
 
@@ -1538,16 +1538,16 @@ $ZSY[STEM] holds the value of the status code for the last subprocess invoked wi
 $ZTEXIT
 ---------------
 
-$ZTE[XIT] contains an expression that controls the YottaDB/GT.M interrupt facility at the transaction commit or rollback. At each outermost TCOMMIT or TROLLBACK, If +$ZTEXIT evaluates to non-zero (TRUE), then $ZINTERRUPT is XECUTEd after completing the commit or rollback.
+$ZTE[XIT] contains an expression that controls the YottaDB interrupt facility at the transaction commit or rollback. At each outermost TCOMMIT or TROLLBACK, If +$ZTEXIT evaluates to non-zero (TRUE), then $ZINTERRUPT is XECUTEd after completing the commit or rollback.
 
-$ZTEXIT is a read-write ISV, that is, it can appear on the left side of the equal sign (=) in the argument to the SET command. M routines cannot NEW $ZTEXIT. YottaDB/GT.M initializes $ZTEXIT to null at the process startup. Note that the changes to the value of $ZTEXIT during a YottaDB/GT.M invocation last for the entire duration of the process, so it is the application's responsibility to reset $ZTEXIT after $ZINTERRUPT is delivered in order to turn off redelivering the interrupt every subsequent transaction commit or rollback.
+$ZTEXIT is a read-write ISV, that is, it can appear on the left side of the equal sign (=) in the argument to the SET command. M routines cannot NEW $ZTEXIT. YottaDB initializes $ZTEXIT to null at the process startup. Note that the changes to the value of $ZTEXIT during a YottaDB invocation last for the entire duration of the process, so it is the application's responsibility to reset $ZTEXIT after $ZINTERRUPT is delivered in order to turn off redelivering the interrupt every subsequent transaction commit or rollback.
 
 Example:
 
 .. parsed-literal::
    $ export sigusrval=10
    $ /usr/lib/fis-gtm/V6.1-000_x86_64/gtm
-   GTM>zprint ^ztran
+   YDB>zprint ^ztran
    foo;
      set $ztexit=1
      set $zinterrupt="d ^throwint"
@@ -1575,35 +1575,35 @@ Example:
      write "End Transaction",!
      ;do ^srv
      quit
-   GTM>zprint ^throwint
+   YDB>zprint ^throwint
    throwint
      set $zinterrupt="write !,""interrupt occurred at : "",$stack($stack-1,""PLACE""),! set $ztexit=1"
      if '$zsigproc($job,$ztrnlnm("sigusrval")) write "interrupt sent to process"
      write "***************************************",!!
      quit
-   GTM>do foo^ztran
+   YDB>do foo^ztran
    interrupt sent to process
    interrupt occurred at : throwint+3^throwint
    ***************************************
    interrupt occurred at : foo+13^ztran
-   GTM>
+   YDB>
 
 In the above call to foo^ztran, the interrupt handler is a user-defined routine, throwint. The process is sent a signal (SIGUSR1), and $ZINTERRUPT is executed. At the outermost trollback, the interrupt is rethrown, causing $ZINTERRUPT to be executed again.
 
 Example:
 
 .. parsed-literal::
-   GTM>w $zinterrupt
+   YDB>w $zinterrupt
    "IF $ZJOBEXAM()"
-   GTM>zsystem "ls GTM*"
+   YDB>zsystem "ls GTM*"
    ls: No match.
-   GTM>do bar^ztran
+   YDB>do bar^ztran
    Begin Transaction
    interrupt sent...
    End Transaction
-   GTM>zsystem "ls GTM*"
+   YDB>zsystem "ls GTM*"
    GTM_JOBEXAM.ZSHOW_DMP_3951_1  GTM_JOBEXAM.ZSHOW_DMP_3951_2
-   GTM>
+   YDB>
 
 This uses the default value of $ZINTERRUPT to service interrupts issued to the process. The $ZJOBEXAM function executes a ZSHOW "*", and stores the output in each GTM_ZJOBEXAM_ZSHOW_DMP for the initial interrupt, and at tcommit when the interrupt is rethrown.
 
@@ -1611,7 +1611,7 @@ This uses the default value of $ZINTERRUPT to service interrupts issued to the p
 $ZUSEDSTOR
 -----------------
 
-$ZUSEDSTOR is the value in $ZALLOCSTOR minus storage management overhead and represents the actual memory, in bytes, requested by current activities. It provides one view (see also “$ZALlocstor” and “$ZREalstor”) of the process memory utilization and can help identify storage related problems. YottaDB/GT.M does not permit $ZUSEDSTOR to be SET or NEWed. 
+$ZUSEDSTOR is the value in $ZALLOCSTOR minus storage management overhead and represents the actual memory, in bytes, requested by current activities. It provides one view (see also “$ZALlocstor” and “$ZREalstor”) of the process memory utilization and can help identify storage related problems. YottaDB does not permit $ZUSEDSTOR to be SET or NEWed. 
 
 -----------------
 $ZUT
@@ -1623,52 +1623,54 @@ $ZUT (UNIX time or universal time) returns the number of microseconds since Janu
 $ZVERSION
 ---------------
 
-$ZV[ERSION] contains a string value specifying the currently installed YottaDB/GT.M. $ZV[ERSION] is a space-delimited string with four pieces as follows:
+$ZV[ERSION] contains a string value identifying the GT.M version on which this YottaDB release is built. $ZV[ERSION] is a space-delimited string with four pieces as follows:
 
 .. parsed-literal::
    <product> <release> <OS> <architecture> 
 
-<product> is always "YottaDB" or "GT.M".
+<product> is always "GT.M".
 
 <release> always begins with "V", and has the structure V<DB_Format>.<major_release>-<minor_release>[<bug_fix_level>] where:
 
-* <DB_Format> identifies the block format of YottaDB/GT.M database files compatible with the release. For example, V4, V5, and V6. The <DB_Format> piece in $ZVERSION does not change even when a MUPIP UPRGRADE or MUPIP DOWNGRADE changes the DB Format element in the database fileheader.
+* <DB_Format> identifies the block format of YottaDB database files compatible with the release. For example, V4, V5, and V6. The <DB_Format> piece in $ZVERSION does not change even when a MUPIP UPRGRADE or MUPIP DOWNGRADE changes the DB Format element in the database fileheader.
 * <major_release> identifies a release with major enhancements.
-* <minor_release> identifies minor enhancements to a major release. The classification of major and minor enhancements is at the discretion of YottaDB/FIS.
-* An optional <bug_fix_level> is an upper-case letter indicating bug fixes but no new enhancements. Note that YottaDB/GT.M is built monolithically and never patched. Even though a bug fix release has only bug fixes, it should be treated as a new YottaDB/GT.M release and installed in a separate directory.
+* <minor_release> identifies minor enhancements to a major release. The classification of major and minor enhancements is at the discretion of GT.M.
+* An optional <bug_fix_level> is an upper-case letter indicating bug fixes but no new enhancements. Note that GT.M is built monolithically and never patched. Even though a bug fix release has only bug fixes, it should be treated as a new GT.M release and installed in a separate directory.
 
 <OS> is the host operating system name.
 
-<architecture> is the hardware architecture for which the release of YottaDB/GT.M is compiled. Note that YottaDB/GT.M retains it original names for continuity even if vendor branding changes, for example, "RS6000".
+<architecture> is the hardware architecture for which the release of GT.M is compiled. Note that GT.M retains its original names for continuity even if vendor branding changes, for example, "RS6000".
 
 M routines cannot modify $ZVERSION.
 
 .. note::
-   YottaDB/GT.M treats $ZVERSION as a literal at compile time. Therefore, always compile with the same version as that used at runtime.
+   YottaDB treats $ZVERSION as a literal at compile time. Therefore, always compile with the same version as that used at runtime.
 
 Example:
 
 .. parsed-literal::
-   GTM>w $zversion
+   YDB>w $zversion
    GT.M V6.0-003 Linux x86_64
 
-This example displays the current version identifier for YottaDB/GT.M.
+This example displays the current version identifier for GT.M.
+
+See the $ZYRELEASE intrinsic special variable to identify the YottaDB release.
 
 -----------------
 $ZYERROR
 -----------------
 
-$ZYER[ROR] is a read/write ISV that contains a string value pointing to an entryref. After YottaDB/GT.M encounters an error, if $ZYERROR is set a non-null value, YottaDB/GT.M invokes the routine at the entryref specified by $ZYERROR with an implicit DO. It is intended that the code invoked by $ZYERROR use the value of $ZSTATUS to select or construct a value to which it SETs $ZERROR. If $ZYERROR is not a valid entryref or if an error occurs while executing the entryref specified by $ZYERROR, YottaDB/GT.M SETs $ZERROR to the error status encountered. YottaDB/GT.M then returns control to the M code specified by $ETRAP/$ZTRAP or device EXCEPTION.
+$ZYER[ROR] is a read/write ISV that contains a string value pointing to an entryref. After YottaDB encounters an error, if $ZYERROR is set a non-null value, YottaDB invokes the routine at the entryref specified by $ZYERROR with an implicit DO. It is intended that the code invoked by $ZYERROR use the value of $ZSTATUS to select or construct a value to which it SETs $ZERROR. If $ZYERROR is not a valid entryref or if an error occurs while executing the entryref specified by $ZYERROR, YottaDB SETs $ZERROR to the error status encountered. YottaDB then returns control to the M code specified by $ETRAP/$ZTRAP or device EXCEPTION.
 
-$ZYERROR is implicitly NEWed on entry to the routine specified by $ZYERROR. However, if YottaDB/GT.M fails to compile, YottaDB/GT.M does not transfer control to the entryref specified by $ZYERROR.
+$ZYERROR is implicitly NEWed on entry to the routine specified by $ZYERROR. However, if YottaDB fails to compile, YottaDB does not transfer control to the entryref specified by $ZYERROR.
 
-YottaDB/GT.M permits $ZYERROR to be modified by the SET and NEW commands.
+YottaDB permits $ZYERROR to be modified by the SET and NEW commands.
 
 ------------------
 Trigger ISVs
 ------------------
 
-YottaDB/GT.M provides nine ISVs (Intrinsic Special Variables) to facilitate trigger operations. With the exception of $ZTWORMHOLE, all numeric trigger-related ISVs return zero (0) outside of a trigger context; non-numeric ISVs return the empty string.
+YottaDB provides nine ISVs (Intrinsic Special Variables) to facilitate trigger operations. With the exception of $ZTWORMHOLE, all numeric trigger-related ISVs return zero (0) outside of a trigger context; non-numeric ISVs return the empty string.
 
 +++++++++++
 $ZTDATA
@@ -1724,9 +1726,9 @@ Example:
 This trigger gets invoked with a SET and displays the prior value (if it exists) of ^Acct(1,"ID").
 
 .. parsed-literal::
-   GTM>w ^Acct(1,"ID")       
+   YDB>w ^Acct(1,"ID")       
    1975
-   GTM>s ^Acct(1,"ID")=2011
+   YDB>s ^Acct(1,"ID")=2011
    The prior value of ^Acct(1,ID) was: 1975
 
 +++++++++++++++
@@ -1741,7 +1743,7 @@ $ZTSLATE
 
 $ZTSLATE allows you to specify a string that you want to make available in chained or nested triggers invoked for an outermost transaction (when a TSTART takes $TLEVEL from 0 to 1). You might use $ZTSLATE to accumulate transaction-related information, for example $ZTOLDVAL and $ZTVALUE, available within trigger context for use in a subsequent trigger later in the same transaction. For example, you can use $ZTSLATE to build up an application history or journal record to be written when a transaction is about to commit.
 
-You can SET $ZTSLATE only while a database trigger is active. YottaDB/GT.M clears $ZTSLATE for the outermost transaction or on a TRESTART. However, YottaDB/GT.M retains $ZTSLATE for all sub-transactions (where $TLEVEL>1).
+You can SET $ZTSLATE only while a database trigger is active. YottaDB clears $ZTSLATE for the outermost transaction or on a TRESTART. However, YottaDB retains $ZTSLATE for all sub-transactions (where $TLEVEL>1).
 
 Example:
 
@@ -1756,7 +1758,7 @@ Example:
 $ZTUPDATE
 ++++++++++++
 
-Within trigger context, for SET commands where the GT.M trigger specifies a piece separator, $ZTUPDATE provides a comma separated list of piece numbers of pieces that differ between the current values of $ZTOLDVAL and $ZTVALUE. If the trigger specifies a piece separator, but does not specify any pieces of interest, $ZTUPDATE identifies all changed pieces. $ZTUPDATE is 0 in all other cases (that is: for SET commands where the YottaDB/GT.M trigger does not specify a piece separator or for KILLs). Note that if an update matches more than one trigger, all matching triggers see the same $ZTOLDVAL at trigger entry but potentially different values of $ZTVALUE so $ZTUPDATE could change due to the actions of each matching trigger even though all matching triggers have identical -[z]delim and -piece specifications.
+Within trigger context, for SET commands where the YottaDB trigger specifies a piece separator, $ZTUPDATE provides a comma separated list of piece numbers of pieces that differ between the current values of $ZTOLDVAL and $ZTVALUE. If the trigger specifies a piece separator, but does not specify any pieces of interest, $ZTUPDATE identifies all changed pieces. $ZTUPDATE is 0 in all other cases (that is: for SET commands where the YottaDB trigger does not specify a piece separator or for KILLs). Note that if an update matches more than one trigger, all matching triggers see the same $ZTOLDVAL at trigger entry but potentially different values of $ZTVALUE so $ZTUPDATE could change due to the actions of each matching trigger even though all matching triggers have identical -[z]delim and -piece specifications.
 
 Example:
 
@@ -1766,9 +1768,9 @@ Example:
 In the above trigger definition entry, $ZTUPDATE displays a comma separated list of the changed piece numbers if on of the pieces of interest: 1,3,4,5,or 6 are modified by the update.
 
 .. parsed-literal::
-   GTM>write ^trigvn
+   YDB>write ^trigvn
    Window|Table|Chair|Curtain|Cushion|Air Conditioner
-   GTM>set ^trigvn="Window|Dining Table|Chair|Vignette|Pillow|Air Conditioner"
+   YDB>set ^trigvn="Window|Dining Table|Chair|Vignette|Pillow|Air Conditioner"
    4,5 
 
 Note that even though piece numbers 2,4 and 5 are changed, $ZTUPDATE displays only 4,5 because the trigger is not defined for updates for the second piece.
@@ -1777,17 +1779,17 @@ Note that even though piece numbers 2,4 and 5 are changed, $ZTUPDATE displays on
 $ZTVALUE
 +++++++++++++
 
-For SET, $ZTVALUE has the value assigned to the node by the explicit SET operation. Modifying $ZTVALUE within a trigger modifies the eventual value YottaDB/GT.M assigns to the node. Note that changing $ZTVALUE has a small performance impact because it causes an additional update operation on the node once all trigger code completes. If a node has multiple associated triggers each trigger receives the current value of $ZTVALUE, however, because the triggers run in arbitrary order, YottaDB/FIS strongly recommends no more than one trigger change any given element of application data, for example, a particular piece. For KILL and its variants, $ZTVALUE returns the empty string. While YottaDB/GT.M accepts updates to $ZTVALUE within the trigger code invoked for a KILL or any of its variants, it ultimately discards any such value. Outside trigger context, attempting to SET $ZTVALUE produces a SETINTRIGONLY error.
+For SET, $ZTVALUE has the value assigned to the node by the explicit SET operation. Modifying $ZTVALUE within a trigger modifies the eventual value YottaDB assigns to the node. Note that changing $ZTVALUE has a small performance impact because it causes an additional update operation on the node once all trigger code completes. If a node has multiple associated triggers each trigger receives the current value of $ZTVALUE, however, because the triggers run in arbitrary order, YottaDB strongly recommends no more than one trigger change any given element of application data, for example, a particular piece. For KILL and its variants, $ZTVALUE returns the empty string. While YottaDB accepts updates to $ZTVALUE within the trigger code invoked for a KILL or any of its variants, it ultimately discards any such value. Outside trigger context, attempting to SET $ZTVALUE produces a SETINTRIGONLY error.
 
 +++++++++++++
 $ZTWORMHOLE
 +++++++++++++
 
-$ZTWORMHOLE allows you to specify a string up to 128KB of information you want to make available during trigger execution. You can use $ZTWORMHOLE to supply an application-context or process context to your trigger logic. Because YottaDB/GT.M makes $ZTWORMHOLE available throughout the duration of the process, you can access or update $ZTWORMHOLE both from inside and outside a trigger.
+$ZTWORMHOLE allows you to specify a string up to 128KB of information you want to make available during trigger execution. You can use $ZTWORMHOLE to supply an application-context or process context to your trigger logic. Because YottaDB makes $ZTWORMHOLE available throughout the duration of the process, you can access or update $ZTWORMHOLE both from inside and outside a trigger.
 
-$ZTWORMHOLE provides a mechanism to access information from a process/application context that is otherwise unavailable in trigger context. YottaDB/GT.M records any non-empty string value of $ZTWORMHOLE in the YottaDB/GT.M database journal file as part of any update that invokes at least one trigger which references $ZTWORMHOLE. YottaDB/GT.M also transmits any non-NULL $ZTWORMHOLE value in the replication stream, thus providing the same context to triggers invoked by MUPIP processes (either as part of the replicating instance update process or as part of MUPIP journal recovery/rollback). Therefore, whenever you use $ZTWORMHOLE in a trigger, you create something like a wormhole for process context that is otherwise NEWed in the run-time or non-existent in MUPIP.
+$ZTWORMHOLE provides a mechanism to access information from a process/application context that is otherwise unavailable in trigger context. YottaDB records any non-empty string value of $ZTWORMHOLE in the YottaDB database journal file as part of any update that invokes at least one trigger which references $ZTWORMHOLE. YottaDB also transmits any non-NULL $ZTWORMHOLE value in the replication stream, thus providing the same context to triggers invoked by MUPIP processes (either as part of the replicating instance update process or as part of MUPIP journal recovery/rollback). Therefore, whenever you use $ZTWORMHOLE in a trigger, you create something like a wormhole for process context that is otherwise NEWed in the run-time or non-existent in MUPIP.
 
-Note that if trigger code does not reference $ZTMORMHOLE, YottaDB/GT.M does not make it available to MUPIP (via the journal files or replication stream). Therefore, if a replicating secondary has different trigger code than the initiating primary (an unusual configuration) and the triggers on the replicating node require information from $ZTWORMHOLE, the triggers on the initiating node must reference $ZTWORMHOLE to ensure YottaDB/GT.M maintains the data it contains for use by the update process on the replicating node. While you can change $ZTWORMHOLE within trigger code, because of the arbitrary ordering of triggers on the same node, such an approach requires careful design and implementation. YottaDB/GT.M allows $ZTWORMHOLE to be NEW'd. NEWing $ZTWORMHOLE is slightly different from NEWing other ISVs/variables in the sense that the former retains its original value whereas the latter does not. However, like other NEWs, YottaDB/GT.M restores $ZTWORMHOLE's value when the stack level pops.
+Note that if trigger code does not reference $ZTMORMHOLE, YottaDB does not make it available to MUPIP (via the journal files or replication stream). Therefore, if a replicating secondary has different trigger code than the initiating primary (an unusual configuration) and the triggers on the replicating node require information from $ZTWORMHOLE, the triggers on the initiating node must reference $ZTWORMHOLE to ensure YottaDB maintains the data it contains for use by the update process on the replicating node. While you can change $ZTWORMHOLE within trigger code, because of the arbitrary ordering of triggers on the same node, such an approach requires careful design and implementation. YottaDB allows $ZTWORMHOLE to be NEW'd. NEWing $ZTWORMHOLE is slightly different from NEWing other ISVs/variables in the sense that the former retains its original value whereas the latter does not. However, like other NEWs, YottaDB restores $ZTWORMHOLE's value when the stack level pops.
 
 The following table summarizes the read/write permissions assigned to all trigger-related ISVs within trigger context and outside trigger context.
 
