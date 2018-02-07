@@ -1544,7 +1544,7 @@ ydb_hiber_start()
 
 .. code-block:: C
 
-	void ydb_hiber_start(unsigned int sleep_nsec)
+	void ydb_hiber_start(unsigned long long sleep_nsec)
 
 The process sleeps for the time in nanoseconds specified by
 ``sleep_nsec``.
@@ -1555,7 +1555,7 @@ ydb_hiber_start_wait_any()
 
 .. code-block:: C
 
-	void ydb_hiber_start_wait_any(unsigned int sleep_nsec)
+	void ydb_hiber_start_wait_any(unsigned long long sleep_nsec)
 
 The process sleeps for the time in nanoseconds specified by
 ``sleep_nsec`` or until it receives a signal.
@@ -1626,7 +1626,7 @@ ydb_timer_start()
 		unsigned int handler_data_len,
 		char *handler_data);
 	void ydb_timer_start(unsigned int timer_id,
-		unsigned int limit_nsec,
+		unsigned long long limit_nsec,
 		handler_fun_ptr_t handler,
 		unsigned int handler_data_len
 		char *handler_data);
