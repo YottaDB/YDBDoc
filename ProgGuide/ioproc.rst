@@ -2,37 +2,37 @@
 .. index::
    Input/Output Processing
 
-========================
-Input/Output Processing
-========================
+===========================
+9. Input/Output Processing
+===========================
 
 .. contents::
    :depth: 2
 
 This chapter describes the following topics which relate to input and output processing:
 
-* Input/Output Intrinsic Special Variables, and their Maintenance : YottaDB/GT.M provides several intrinsic special variables that allow processes to examine, and in some cases change, certain aspects of the input/output (I/O) processing. The focus in this chapter is how YottaDB/GT.M handles the standard ones, such as $IO, $X, $Y, and those that are YottaDB/GT.M-specific (for example, $ZA, $ZB).
+* Input/Output Intrinsic Special Variables, and their Maintenance : YottaDB provides several intrinsic special variables that allow processes to examine, and in some cases change, certain aspects of the input/output (I/O) processing. The focus in this chapter is how YottaDB handles the standard ones, such as $IO, $X, $Y, and those that are YottaDB-specific (for example, $ZA, $ZB).
 
-* Input/Output Devices: Each device type supported by YottaDB/GT.M responds to a particular subset of deviceparameters, while ignoring others. Devices may be programmed in a device-specific manner, or in a device-independent manner. This chapter discusses each device type, and provides tables of their deviceparameters.
+* Input/Output Devices: Each device type supported by YottaDB responds to a particular subset of deviceparameters, while ignoring others. Devices may be programmed in a device-specific manner, or in a device-independent manner. This chapter discusses each device type, and provides tables of their deviceparameters.
 
-* Input/Output Commands and their Deviceparameters: YottaDB/GT.M bases its I/O processing on a simple character stream model. YottaDB/GT.M does not use any pre-declared formats. This chapter describes the YottaDB/GT.M I/O commands OPEN, USE, READ, WRITE, and CLOSE.
+* Input/Output Commands and their Deviceparameters: YottaDB bases its I/O processing on a simple character stream model. YottaDB does not use any pre-declared formats. This chapter describes the YottaDB I/O commands OPEN, USE, READ, WRITE, and CLOSE.
 
-OPEN, USE, and CLOSE commands accept deviceparameters, which are keywords that permit a YottaDB/GT.M program to control the device state. Some deviceparameters require arguments. The current ANSI standard for YottaDB/GT.M does not define the deviceparameters for all devices. This chapter includes descriptions of the YottaDB/GT.M deviceparameters in the sections describing each command.
+OPEN, USE, and CLOSE commands accept deviceparameters, which are keywords that permit a YottaDB program to control the device state. Some deviceparameters require arguments. The current ANSI standard for YottaDB does not define the deviceparameters for all devices. This chapter includes descriptions of the YottaDB deviceparameters in the sections describing each command.
 
 .. note::
-   The term "device" can refer to an entity manipulated by application code using Open, Use, Close, Read and Write commands as well as a device from the perspective of the operating system.  We endeavor herein to always make it clear from the context which meaning is intended.
+   The term "device" can refer to an entity manipulated by application code using Open, Use, Close, Read and Write commands as well as a device from the perspective of the operating system.  We endeavor to always make it clear from the context which meaning is intended.
 
 ----------------------------------
 I/O Intrinsic Special Variables
 ----------------------------------
 
-YottaDB/GT.M intrinsic special variables provide a mean for application code to communicate and manage the state of a device.
+YottaDB intrinsic special variables provide a means for application code to communicate and manage the state of a device.
 
 ++++++++++++++++++++++++
 Device Name Variables
 ++++++++++++++++++++++++
 
-YottaDB/GT.M provides three intrinsic special variables that identify devices.
+YottaDB provides three intrinsic special variables that identify devices.
 
 **$IO**
 
@@ -40,11 +40,11 @@ $I[O] contains the name of the current device specified by the last USE command.
 
 **$PRINCIPAL**
 
-A process inherits three open file descriptors from its parent - STDIN, STDOUT and STDERR - which can all map to different files or devices. YottaDB/GT.M provides no way for M application to access STDERR. Although STDIN and STDOUT may map to different devices, files, sockets, pipes, etc. in the operating system, M provides for only device $PRINCIPAL, to refers to both. At process startup, and when $PRINCIPAL is selected with a USE command, READ commands apply to STDIN and WRITE commands apply to STDOUT. The device type of the standard input determines which USE deviceparameters apply to $PRINCIPAL.
+A process inherits three open file descriptors from its parent - STDIN, STDOUT and STDERR - which can all map to different files or devices. YottaDB provides no way for M application to access STDERR. Although STDIN and STDOUT may map to different devices, files, sockets, pipes, etc. in the operating system, M provides for only device $PRINCIPAL, to refers to both. At process startup, and when $PRINCIPAL is selected with a USE command, READ commands apply to STDIN and WRITE commands apply to STDOUT. The device type of the standard input determines which USE deviceparameters apply to $PRINCIPAL.
 
-For an interactive process, $PRINCIPAL is the user's terminal. YottaDB/GT.M ignores a CLOSE of the principal device. YottaDB/GT.M does not permit a SET command to modify $PRINCIPAL.
+For an interactive process, $PRINCIPAL is the user's terminal. YottaDB ignores a CLOSE of the principal device. YottaDB does not permit a SET command to modify $PRINCIPAL.
 
-0 is an alternate for $PRINCIPAL (for example, USE 0). YottaDB/FIS recommends that application code use $PRINCIPAL. The environment variable gtm_principal can be used to set a string reported by YottaDB/GT.M for $PRINCIPAL and which can be used in lieu of $PRINCIPAL for the USE command.
+0 is an alternate for $PRINCIPAL (for example, USE 0). YottaDB recommends that application code use $PRINCIPAL. The environment variable gtm_principal can be used to set a string reported by YottaDB for $PRINCIPAL and which can be used in lieu of $PRINCIPAL for the USE command.
 
 **$ZIO**
 
@@ -54,15 +54,15 @@ $ZIO contains the translated name of the current device, in contrast to $IO, whi
 Cursor Position Variables
 ++++++++++++++++++++++++++
 
-YottaDB/GT.M provides two intrinsic special variables for determining the virtual cursor position. $X refers to the current column, while $Y refers to the current row.
+YottaDB provides two intrinsic special variables for determining the virtual cursor position. $X refers to the current column, while $Y refers to the current row.
 
 **$X**
 
 $X contains an integer value ranging from 0 to 65,535, specifying the horizontal position of a virtual cursor in the current output record. $X=0 represents the initial position on a new record or row.
 
-Every OPENed device has a $X. However, YottaDB/GT.M only has access to $X of the current device.
+Every OPENed device has a $X. However, YottaDB only has access to $X of the current device.
 
-Generally, in M mode YottaDB/GT.M increments $X for every character written to and read from the current device; see below for behavior of a UTF-8 mode device. YottaDB/GT.M format control characters, FILTER, and the device WIDTH and WRAP also have an effect on $X.
+Generally, in M mode YottaDB increments $X for every character written to and read from the current device; see below for behavior of a UTF-8 mode device. YottaDB format control characters, FILTER, and the device WIDTH and WRAP also have an effect on $X.
 
 As $X is only a counter to help a program track output, SET $X does not reposition the cursor or perform any other IO. Conversely, if a sequence of characters sent to a terminal or other device with a WRITE causes it to be repositioned except as described below, $X will not reflect this change.
 
@@ -70,9 +70,9 @@ As $X is only a counter to help a program track output, SET $X does not repositi
 
 $Y contains an integer value ranging from 0 to 65,535, specifying the vertical position of a virtual cursor in the current output record. $Y=0 represents the top row or line.
 
-Every OPEN device has a $Y. However, YottaDB/GT.M only accesses $Y of the current device.
+Every OPEN device has a $Y. However, YottaDB only accesses $Y of the current device.
 
-When YottaDB/GT.M finishes the logical record in progress, it generally increments $Y. YottaDB/GT.M recognizes the end of a logical record when it processes certain YottaDB/GT.M format control characters, or when the record reaches its maximum size, as determined by the device WIDTH, and the device is set to WRAP. The definition of "logical record" varies from device to device. For an exact definition, see the sections on each device type. FILTER and the device LENGTH also have an effect on $Y.
+When YottaDB finishes the logical record in progress, it generally increments $Y. YottaDB recognizes the end of a logical record when it processes certain YottaDB format control characters, or when the record reaches its maximum size, as determined by the device WIDTH, and the device is set to WRAP. The definition of "logical record" varies from device to device. For an exact definition, see the sections on each device type. FILTER and the device LENGTH also have an effect on $Y.
 
 As $Y is only a counter to help a program track output, SET $Y does not reposition the cursor or perform any other IO. Conversely, if a sequence of characters sent to a terminal or other device with a WRITE causes it to be repositioned except as described below, $Y will not reflect this change. 
 
@@ -82,17 +82,17 @@ The following factors affect the maintenance of the virtual cursor position ($X 
 
 * The bounds of the virtual "page"
 * Format control characters
-* YottaDB/GT.M character filtering
+* YottaDB character filtering
 
-Each device has a WIDTH and a LENGTH that define the virtual "page." The WIDTH determines the maximum size of a record for a device, while the LENGTH determines how many records fit on a page. YottaDB/GT.M starts a new record when the current record size ($X) reaches the maximum WIDTH and the device has WRAP enabled. When the current line ($Y) reaches the maximum LENGTH, YottaDB/GT.M starts a new page.
+Each device has a WIDTH and a LENGTH that define the virtual "page." The WIDTH determines the maximum size of a record for a device, while the LENGTH determines how many records fit on a page. YottaDB starts a new record when the current record size ($X) reaches the maximum WIDTH and the device has WRAP enabled. When the current line ($Y) reaches the maximum LENGTH, YottaDB starts a new page.
 
-YottaDB/GT.M has several format control characters (used in the context of a WRITE command) that allow the manipulation of the virtual cursor. For all I/O devices, the YottaDB/GT.M format control characters do the following:
+YottaDB has several format control characters (used in the context of a WRITE command) that allow the manipulation of the virtual cursor. For all I/O devices, the YottaDB format control characters do the following:
 
 * ! Sets $X to zero (0) and increments $Y, and terminates the logical record in progress. The definition of "logical record" varies from device to device, and is discussed in each device section.
 * # Sets $X and $Y to zero (0), and terminates the logical record in progress.
-* ?n If n is greater than $X, writes n-$X spaces to the device, bringing $X to n. If n is less than or equal to $X, ?n has no effect. When WRAP is enabled and n exceeds the WIDTH of the line, WRITE ?n increments $Y and sets $X equal to n#WIDTH, where # is the YottaDB/GT.M modulo operator.
+* ?n If n is greater than $X, writes n-$X spaces to the device, bringing $X to n. If n is less than or equal to $X, ?n has no effect. When WRAP is enabled and n exceeds the WIDTH of the line, WRITE ?n increments $Y and sets $X equal to n#WIDTH, where # is the YottaDB modulo operator.
 
-In UTF-8 mode, YottaDB/GT.M maintains $X in the following measurement units:
+In UTF-8 mode, YottaDB maintains $X in the following measurement units:
 
 +--------------------------------------------+--------------------------------------------------+---------------------------------------------------+
 | Devices                                    | Input                                            | Output                                            |
@@ -108,7 +108,7 @@ In UTF-8 mode, YottaDB/GT.M maintains $X in the following measurement units:
 | TRM                                        | display columns                                  | display columns                                   |
 +--------------------------------------------+--------------------------------------------------+---------------------------------------------------+
 
-YottaDB/GT.M provides two modes of character filtering. When filtering is enabled, certain <CTRL> characters and/or escape sequences have special effects on the cursor position (for example, <BS> (ASCII 8) may decrement $X, if $X is non-zero). For more information on write filtering, refer to “FILTER”.
+YottaDB provides two modes of character filtering. When filtering is enabled, certain <CTRL> characters and/or escape sequences have special effects on the cursor position (for example, <BS> (ASCII 8) may decrement $X, if $X is non-zero). For more information on write filtering, refer to “FILTER”.
 
 +++++++++++++++++++++++++++++++++
 Status Variables
@@ -206,7 +206,7 @@ $ZB refers to the last READ terminator of the current device. Therefore, be care
 
 **$ZEOF**
 
-$ZEOF contains a truth-valued expression indicating whether the last READ operation reached the end-of-file. $ZEOF is TRUE(1) at EOF and FALSE (0) at other positions. GT.M does not maintain $ZEOF for terminal devices.
+$ZEOF contains a truth-valued expression indicating whether the last READ operation reached the end-of-file. $ZEOF is TRUE(1) at EOF and FALSE (0) at other positions. YottaDB does not maintain $ZEOF for terminal devices.
 
 $ZEOF refers to the end-of-file status of the current device. Therefore, be careful when sequencing USE commands and references to $ZEOF.
 
@@ -218,15 +218,15 @@ When $PRINCIPAL has different input/output devices, the USE command recognizes i
 
 **$ZPOUT**
 
-When $PRINCIPAL has different input/output devices, the USE command recognizes intrinsic special variables $ZPOUT to apply appropriate deviceparameters to the output side of $PRINCIPAL. A USE with $ZPOUT sets $IO to $PRINCIPAL for READs and WRITEs from the input and output side of $PRINCIPAL. $ZSOCKET() also accepts $ZPOUT as its first argument and, ifthe device is a split SOCKET device, supplies information on the output SOCKET device. In any context other than USE or $ZSOCKET(), or if $PRINCIPAL is not a split device, $PRINCIPAL, $ZPIN and $ZPOUT are synonyms. In the case of a split $PRINCIPAL, $ZPOUT returns the value of $PRINCIPAL followed by the string "> /" Any attempt to OPEN $ZPOUT results in a DEVOPENFAIL error.
+When $PRINCIPAL has different input/output devices, the USE command recognizes intrinsic special variables $ZPOUT to apply appropriate deviceparameters to the output side of $PRINCIPAL. A USE with $ZPOUT sets $IO to $PRINCIPAL for READs and WRITEs from the input and output side of $PRINCIPAL. $ZSOCKET() also accepts $ZPOUT as its first argument and, if the device is a split SOCKET device, supplies information on the output SOCKET device. In any context other than USE or $ZSOCKET(), or if $PRINCIPAL is not a split device, $PRINCIPAL, $ZPIN and $ZPOUT are synonyms. In the case of a split $PRINCIPAL, $ZPOUT returns the value of $PRINCIPAL followed by the string "> /" Any attempt to OPEN $ZPOUT results in a DEVOPENFAIL error.
 
 -------------------
 I/O Devices
 -------------------
 
-Each device type supported by YottaDB/GT.M responds to a particular subset of deviceparameters, while ignoring others. Devices may be programmed in a device-specific manner, or in a device-independent manner. Device-specific I/O routines are intended for use with only one type of device. Device-independent I/O routines contain appropriate deviceparameters for all devices to be supported by the function, so the user can redirect to a different device output while using the same program.
+Each device type supported by YottaDB responds to a particular subset of deviceparameters, while ignoring others. Devices may be programmed in a device-specific manner, or in a device-independent manner. Device-specific I/O routines are intended for use with only one type of device. Device-independent I/O routines contain appropriate deviceparameters for all devices to be supported by the function, so the user can redirect to a different device output while using the same program.
 
-YottaDB/GT.M supports the following I/O device types:
+YottaDB supports the following I/O device types:
 
 * Terminals and Printers
 * Sequential Disk Files
@@ -239,14 +239,14 @@ YottaDB/GT.M supports the following I/O device types:
 I/O Device Recognition
 ++++++++++++++++++++++++
 
-YottaDB/GT.M OPEN, USE, and CLOSE commands have an argument expression specifying a device name.
+YottaDB OPEN, USE, and CLOSE commands have an argument expression specifying a device name.
 
-During an OPEN, YottaDB/GT.M attempts to resolve the specified device names to physical names. When YottaDB/GT.M successfully resolves a device name to a physical device, that device becomes the target of the OPEN. If the device name contains a dollar sign ($), YottaDB/GT.M attempts an environment variable translation; the result becomes the name of the device. If it does not find such an environment variable, it assumes that the dollar sign is a part of the filename, and opens a file by that name.
+During an OPEN, YottaDB attempts to resolve the specified device names to physical names. When YottaDB successfully resolves a device name to a physical device, that device becomes the target of the OPEN. If the device name contains a dollar sign ($), YottaDB attempts an environment variable translation; the result becomes the name of the device. If it does not find such an environment variable, it assumes that the dollar sign is a part of the filename, and opens a file by that name.
 
 .. note::
-   Note: YottaDB/GT.M resolves the device name argument for menemonicspace devices (SOCKET or PIPE) to a arbitrary handle instead of a physical name.
+   YottaDB resolves the device name argument for menemonicspace devices (SOCKET or PIPE) to a arbitrary handle instead of a physical name.
 
-Once a device is OPEN, YottaDB/GT.M establishes an internal correspondence between a name and the device or file. Therefore, while the device is OPEN, changing the translation of an environment variable in the device specification does not change the device.
+Once a device is OPEN, YottaDB establishes an internal correspondence between a name and the device or file. Therefore, while the device is OPEN, changing the translation of an environment variable in the device specification does not change the device.
 
 The following names identify the original $IO for the process:
 
@@ -257,18 +257,18 @@ The following names identify the original $IO for the process:
 Device Specification Defaults
 ++++++++++++++++++++++++++++++
 
-YottaDB/GT.M uses standard filenames for device specifiers.
+YottaDB uses standard filenames for device specifiers.
 
 The complete format for a filename is:
 
 .. parsed-literal::
    /directory/file
 
-If the expression specifying a device does not contain a complete filename, the expression may start with an environment variable that translates to one or more leading components of the filename. YottaDB/GT.M applies default values for the missing components.
+If the expression specifying a device does not contain a complete filename, the expression may start with an environment variable that translates to one or more leading components of the filename. YottaDB applies default values for the missing components.
 
 If the specified file is not found, it is created unless READONLY is specified.
 
-The YottaDB/GT.M filename defaults are the following:
+The YottaDB filename defaults are the following:
 
 Directory: Current working directory
 
@@ -280,13 +280,13 @@ Filetype: No default (user-defined filetype)
 How I/O Device Parameters Work
 +++++++++++++++++++++++++++++++
 
-I/O deviceparameters either perform actions that cause the device to do something (for example, CLEARSCREEN), or specify characteristics that modify the way the device subsequently behaves (for example, WIDTH). When an I/O command has multiple action deviceparameters, YottaDB/GT.M performs the actions in the order of the deviceparameters within the command argument. When a command has characteristic deviceparameters, the last occurrence of a repeated or conflicting deviceparameter determines the characteristic.
+I/O deviceparameters either perform actions that cause the device to do something (for example, CLEARSCREEN), or specify characteristics that modify the way the device subsequently behaves (for example, WIDTH). When an I/O command has multiple action deviceparameters, YottaDB performs the actions in the order of the deviceparameters within the command argument. When a command has characteristic deviceparameters, the last occurrence of a repeated or conflicting deviceparameter determines the characteristic.
 
-Deviceparameters often relate to a specific device type. YottaDB/GT.M ignores any deviceparameters that do not apply to the type of the device specified by the command argument. Specified device characteristics are in force for the duration of the YottaDB/GT.M image, or until modified by an OPEN, USE, or CLOSE command.
+Deviceparameters often relate to a specific device type. YottaDB ignores any deviceparameters that do not apply to the type of the device specified by the command argument. Specified device characteristics are in force for the duration of the YottaDB image, or until modified by an OPEN, USE, or CLOSE command.
 
-When reopening a device that it previously closed, a YottaDB/GT.M process restores all characteristics not specified on the OPEN to the values the device had when it was last CLOSEd. YottaDB/GT.M treats FIFO, PIPE, and SD differently and uses defaults for unspecified device characteristics on every OPEN (that is, YottaDB/GT.M does not retain devices characteristics on a CLOSE of SD, FIFO, and PIPE).
+When reopening a device that it previously closed, a YottaDB process restores all characteristics not specified on the OPEN to the values the device had when it was last CLOSEd. YottaDB treats FIFO, PIPE, and SD differently and uses defaults for unspecified device characteristics on every OPEN (that is, YottaDB does not retain devices characteristics on a CLOSE of SD, FIFO, and PIPE).
 
-The ZSHOW command with an argument of "D" displays the current characteristics for all devices OPENed by the process. ZSHOW can direct its output into a YottaDB/GT.M variable. For more information on ZSHOW, refer to “ZSHow”.
+The ZSHOW command with an argument of "D" displays the current characteristics for all devices OPENed by the process. ZSHOW can direct its output into a YottaDB variable. For more information on ZSHOW, refer to “ZSHow”.
 
 +++++++++++++++++++++++++++++++
 Abbreviating Device Parameters
@@ -295,9 +295,9 @@ Abbreviating Device Parameters
 .. note::
    Most Z* deviceparameters have the same functionality as their counterparts and are supported for compatibility reasons.
 
-YottaDB/GT.M deviceparameters do not have predefined abbreviations. YottaDB/GT.M recognizes deviceparameters using a minimum recognizable prefix technique. Most deviceparameters may be represented by four leading characters, except ERASELINE, all deviceparameters starting with WRITE, and Z* deviceparameters in a mnemonicspace (such as SOCKET). The four leading characters recognized do not include a leading NO for negation.
+YottaDB deviceparameters do not have predefined abbreviations. YottaDB recognizes deviceparameters using a minimum recognizable prefix technique. Most deviceparameters may be represented by four leading characters, except ERASELINE, all deviceparameters starting with WRITE, and Z* deviceparameters in a mnemonicspace (such as SOCKET). The four leading characters recognized do not include a leading NO for negation.
 
-For compatibility with previous versions, YottaDB/GT.M may recognize certain deviceparameters by abbreviations shorter than the minimum. While it is convenient in Direct Mode to use shorter abbreviations, YottaDB/FIS may add additional deviceparameters, and therefore, recommends all programs use at least four characters. Because YottaDB/GT.M compiles the code, spelling out deviceparameters completely has no performance penalty, except when used with indirection or XECUTEd arguments.
+For compatibility with previous versions, YottaDB may recognize certain deviceparameters by abbreviations shorter than the minimum. While it is convenient in Direct Mode to use shorter abbreviations, YottaDB may add additional deviceparameters, and therefore, recommends all programs use at least four characters. Because YottaDB compiles the code, spelling out deviceparameters completely has no performance penalty, except when used with indirection or XECUTEd arguments.
 
 +++++++++++++++++++++++++++
 Document Conventions
@@ -322,64 +322,64 @@ SOC(TCP): Valid for TCP sockets devices
 PIPE: Valid for PIPE devices
 
 .. note::
-   Lower case "pipe" refers to a UNIX pipe and the upper case "PIPE" to the YottaDB/GT.M device.
+   Lower case "pipe" refers to a UNIX pipe and the upper case "PIPE" to the YottaDB device.
 
-Some of the deviceparameter defaults shown are the basic operating system defaults, and may be subject to modification before the invocation of YottaDB/GT.M.
+Some of the deviceparameter defaults shown are the basic operating system defaults, and may be subject to modification before the invocation of YottaDB.
 
 +++++++++++++++++++++++++++++++
 Device-Independent Programming
 +++++++++++++++++++++++++++++++
 
-When a user may choose a device for I/O, YottaDB/GT.M routines can take one of two basic programming approaches.
+When a user may choose a device for I/O, YottaDB routines can take one of two basic programming approaches.
 
 * The user selection directs the program into different code branches, each of which handles a different device type.
 * The user selection identifies the device. There is a single code path written with a full complement of deviceparameters to handle all selectable device types.
 
-The latter approach is called device-independent programming. To permit device independent programming, YottaDB/GT.M uses the same deviceparameter for all devices that have an equivalent facility, and ignores deviceparameters applied to a device that does not support that facility.
+The latter approach is called device-independent programming. To permit device independent programming, YottaDB uses the same deviceparameter for all devices that have an equivalent facility, and ignores deviceparameters applied to a device that does not support that facility.
 
 Example:
 
 .. parsed-literal::
    OPEN dev:(EXCE=exc:REWIND:VARIABLE:WRITEONLY)
 
-This example OPENs a device with deviceparameters that affect different devices. The EXCEPTION has an effect for all device types. When dev is a terminal or a null device, YottaDB/GT.M ignores the other deviceparameters. When dev is a sequential file on disk, YottaDB/GT.M uses REWIND and VARIABLE. This command performs a valid OPEN for all the different device types.
+This example OPENs a device with deviceparameters that affect different devices. The EXCEPTION has an effect for all device types. When dev is a terminal or a null device, YottaDB ignores the other deviceparameters. When dev is a sequential file on disk, YottaDB uses REWIND and VARIABLE. This command performs a valid OPEN for all the different device types.
 
 ------------------------------
 Using Terminals
 ------------------------------
 
-A YottaDB/GT.M process assigns $PRINCIPAL to the UNIX standard input of the process (for READ) and standard output (for WRITE). For a local interactive process, $PRINCIPAL identifies the "terminal" from which the user is signed on.
+A YottaDB process assigns $PRINCIPAL to the UNIX standard input of the process (for READ) and standard output (for WRITE). For a local interactive process, $PRINCIPAL identifies the "terminal" from which the user is signed on.
 
 While all terminals support the CTRAP deviceparameter, only $PRINCIPAL supports CENABLE. While CTRAP allows terminal input to redirect program flow, CENABLE allows the terminal user to invoke the Direct Mode.
 
-Directly connected printers often appear to YottaDB/GT.M as a terminal (although printers generally do not provide input) regardless of whether the printer is connected to the computer with a high speed parallel interface, or an asynchronous terminal controller. 
+Directly connected printers often appear to YottaDB as a terminal (although printers generally do not provide input) regardless of whether the printer is connected to the computer with a high speed parallel interface, or an asynchronous terminal controller. 
 
 +++++++++++++++++++++++++++++++++
 Setting Terminal Characteristics
 +++++++++++++++++++++++++++++++++
 
-YottaDB/GT.M does not isolate its handling of terminal characteristics from the operating system environment at large. YottaDB/GT.M inherits the operating system terminal characteristics in effect at the time the YottaDB/GT.M image is invoked. When YottaDB/GT.M exits, the terminal characteristics known by the operating system are restored.
+YottaDB does not isolate its handling of terminal characteristics from the operating system environment at large. YottaDB inherits the operating system terminal characteristics in effect at the time the YottaDB image is invoked. When YottaDB exits, the terminal characteristics known by the operating system are restored.
 
-However, if the process temporarily leaves the YottaDB/GT.M environment with a ZSYSTEM command , YottaDB/GT.M does not recognize any changes to the terminal characteristics left by the external environment. This may cause disparities between the physical behavior of the terminal, and the perceived behavior by YottaDB/GT.M.
+However, if the process temporarily leaves the YottaDB environment with a ZSYSTEM command , YottaDB does not recognize any changes to the terminal characteristics left by the external environment. This may cause disparities between the physical behavior of the terminal, and the perceived behavior by YottaDB.
 
 UNIX enforces standard device security for explicit OPENs of terminals other than the sign-in terminal ($PRINCIPAL). If you are unable to OPEN a terminal, contact your system manager.
 
-USE of a terminal causes the device driver to flush the output buffer. This feature of the USE command provides routine control over the timing of output, which is occasionally required. However, it also means that redundant USE commands may induce an unnecessary performance penalty. Therefore, YottaDB/FIS recommends restricting USE commands to redirecting I/O, modifying deviceparameters, and initiating specifically required flushes.
+USE of a terminal causes the device driver to flush the output buffer. This feature of the USE command provides routine control over the timing of output, which is occasionally required. However, it also means that redundant USE commands may induce an unnecessary performance penalty. Therefore, YottaDB recommends restricting USE commands to redirecting I/O, modifying deviceparameters, and initiating specifically required flushes.
 
 The terminal input buffer size is fixed at 1024 on UNIX and a variable read terminates after 1023 characters. 
 
 **Setting the Environment Variable TERM**
 
-The environment variable $TERM must specify a terminfo entry that accurately matches the terminal (or terminal emulator) settings. Refer to the terminfo man pages for more information on the terminal settings of the platform where YottaDB/GT.M needs to run.
+The environment variable $TERM must specify a terminfo entry that accurately matches the terminal (or terminal emulator) settings. Refer to the terminfo man pages for more information on the terminal settings of the platform where YottaDB needs to run.
 
-Some terminfo entries may seem to work properly but fail to recognize function key sequences or position the cursor properly in response to escape sequences from YottaDB/GT.M. YottaDB/GT.M itself does not have any knowledge of specific terminal control characteristics. Therefore, it is important to specify the right terminfo entry to let YottaDB/GT.M communicate correctly with the terminal. You may need to add new terminfo entries depending on their specific platform and implementation. The terminal (emulator) vendor may also be able to help.
+Some terminfo entries may seem to work properly but fail to recognize function key sequences or position the cursor properly in response to escape sequences from YottaDB. YottaDB itself does not have any knowledge of specific terminal control characteristics. Therefore, it is important to specify the right terminfo entry to let YottaDB communicate correctly with the terminal. You may need to add new terminfo entries depending on their specific platform and implementation. The terminal (emulator) vendor may also be able to help.
 
-YottaDB/GT.M uses the following terminfo capabilities. The full variable name is followed by the capname in parenthesis:
+YottaDB uses the following terminfo capabilities. The full variable name is followed by the capname in parenthesis:
 
 .. parsed-literal::
    auto_right_margin(am), clr_eos(ed), clr_eol(el), columns(cols), cursor_address(cup), cursor_down(cud1),cursor_left(cub1), cursor_right(cuf1), cursor_up(cuu1), eat_newline_glitch(xenl), key_backspace(kbs), key_dc(kdch1),key_down(kcud1), key_left(kcub1), key_right(kcuf1), key_up(kcuu1), key_insert(kich1), keypad_local(rmkx),keypad_xmit(smkx), lines(lines). 
 
-YottaDB/GT.M sends keypad_xmit before terminal reads for direct mode and READs (other than READ \*) if EDITING is enabled. YottaDB/GT.M sends keypad_local after these terminal reads.
+YottaDB sends keypad_xmit before terminal reads for direct mode and READs (other than READ \*) if EDITING is enabled. YottaDB sends keypad_local after these terminal reads.
 
 ++++++++++++++++++++++++++++++
 Logical Records for Terminals
@@ -391,37 +391,37 @@ A logical record for a terminal equates to a line on the physical screen. The WI
 Read \* Command for Terminals
 +++++++++++++++++++++++++++++
 
-If the terminal has ESCAPE sequencing enabled, and the input contains a valid escape sequence or a terminator character, YottaDB/GT.M stores the entire sequence in $ZB and returns the ASCII representation of the first character.
+If the terminal has ESCAPE sequencing enabled, and the input contains a valid escape sequence or a terminator character, YottaDB stores the entire sequence in $ZB and returns the ASCII representation of the first character.
 
 Example:
 
 .. parsed-literal::
-   GTM>kill
-   GTM>use $principal:escape
-   GTM>read \*x set zb=$zb zwrite
+   YDB>kill
+   YDB>use $principal:escape
+   YDB>read \*x set zb=$zb zwrite
    (Press the F11 key on the VT220 terminal keyboard)
    x=27
    zb=$C(27)_"[23~"
 
-This enters an escape sequence in response to a READ \*. The READ * assigns the code for <ESC> to the variable X. YottaDB/GT.M places the entire escape sequence in $ZB. As some of the characters are not graphic, that is, visible on a terminal, the example transfers the contents of $ZB to the local variable ZB and uses a ZWRITE so that the non-graphic characters appear in $CHAR() format.
+This enters an escape sequence in response to a READ \*. The READ * assigns the code for <ESC> to the variable X. YottaDB places the entire escape sequence in $ZB. As some of the characters are not graphic, that is, visible on a terminal, the example transfers the contents of $ZB to the local variable ZB and uses a ZWRITE so that the non-graphic characters appear in $CHAR() format.
 
-When escape processing is disabled, READ \*x returns 27 in x for an <ESC>. If the escape introducer is also a TERMINATOR, $ZB has a string of length one (1), and a value of the $ASCII() representation of the escape introducer; otherwise, $ZB holds the empty string. YottaDB/GT.M stores the remaining characters of the escape sequence in the input stream. A READ command following a READ * command returns the remaining characters of the escape sequence.
+When escape processing is disabled, READ \*x returns 27 in x for an <ESC>. If the escape introducer is also a TERMINATOR, $ZB has a string of length one (1), and a value of the $ASCII() representation of the escape introducer; otherwise, $ZB holds the empty string. YottaDB stores the remaining characters of the escape sequence in the input stream. A READ command following a READ * command returns the remaining characters of the escape sequence.
 
 Example:
 
 .. parsed-literal::
-   GTM>kill
-   GTM>use $principal:(noescape:term=$char(13))
-   GTM>read \*x set zb=$zb read y:0 zwrite
+   YDB>kill
+   YDB>use $principal:(noescape:term=$char(13))
+   YDB>read \*x set zb=$zb read y:0 zwrite
    (Press the F11 key on the terminal keyboard)
    [23~x=27
    y="[23~"
    zb=""
-   GTM>use $principal:noecho read \*x set zb=$zb read y:0 use $principal:echo zwrite
+   YDB>use $principal:noecho read \*x set zb=$zb read y:0 use $principal:echo zwrite
    x=27
    y="[23~"
    zb=""
-   GTM>read \*x set zb=$zb use $principal:flush read y:0 zwrite
+   YDB>read \*x set zb=$zb use $principal:flush read y:0 zwrite
    x=27
    y=""
    zb=""
@@ -432,7 +432,7 @@ While the first READ Y:0 picks up the sequence after the first character, notice
 READ X#maxlen Command for Terminals
 ++++++++++++++++++++++++++++++++++++
 
-Generally, YottaDB/GT.M performs the same maintenance on $ZB for a READ X#maxlen as for a READ. However, if the READ X#maxlen terminates because the input has reached the maximum length, YottaDB/GT.M sets $ZB to null. When the terminal has ESCAPE sequencing enabled, and the input contains an escape sequence, YottaDB/GT.M sets $ZB to contain the escape sequence.
+Generally, YottaDB performs the same maintenance on $ZB for a READ X#maxlen as for a READ. However, if the READ X#maxlen terminates because the input has reached the maximum length, YottaDB sets $ZB to null. When the terminal has ESCAPE sequencing enabled, and the input contains an escape sequence, YottaDB sets $ZB to contain the escape sequence.
 
 +++++++++++++++++++++++++++++++++
 Terminal Deviceparameter Summary
@@ -453,7 +453,7 @@ The following tables provide a brief summary of deviceparameters for terminals, 
 +-------------------------------+--------------------------+---------------------------------------------------------------------------------------------------+
 | Device Parameter              | Command                  | Comment                                                                                           |
 +===============================+==========================+===================================================================================================+
-| [NO]CENABLE                   | U                        | Controls whether <CTRL-C> on $PRINCIPAL causes YottaDB/GT.M to go to direct mode.                 |
+| [NO]CENABLE                   | U                        | Controls whether <CTRL-C> on $PRINCIPAL causes YottaDB to go to direct mode.                      |
 +-------------------------------+--------------------------+---------------------------------------------------------------------------------------------------+
 | CTRAP=expr                    | U                        | Controls vectoring on trapped <CTRL> characters.                                                  |
 +-------------------------------+--------------------------+---------------------------------------------------------------------------------------------------+
@@ -528,7 +528,7 @@ The following tables provide a brief summary of deviceparameters for terminals, 
 Terminal Examples
 +++++++++++++++++++++
 
-This section contains examples of YottaDB/GT.M terminal handling.
+This section contains examples of YottaDB terminal handling.
 
 Example:
 
@@ -551,7 +551,7 @@ Example:
 
 This example disables ECHOing, enables automatic WRAPping, and sets the line width to 132 characters.
 
-Note that YottaDB/GT.M enables WRAP automatically when you specify the WIDTH deviceparameter.
+Note that YottaDB enables WRAP automatically when you specify the WIDTH deviceparameter.
 
 Example:
 
@@ -565,27 +565,27 @@ This example disables <CTRL-C>.
 Using Sequential Files
 --------------------------
 
-YottaDB/GT.M provides access to sequential files. These files allow linear access to records. Sequential files are used to create programs, store reports, and to communicate with facilities outside of YottaDB/GT.M.
+YottaDB provides access to sequential files. These files allow linear access to records. Sequential files are used to create programs, store reports, and to communicate with facilities outside of YottaDB.
 
 +++++++++++++++++++++++++++++++++++++++++
 Setting Sequential File Characteristics
 +++++++++++++++++++++++++++++++++++++++++
 
-The ANSI standard specifies that when a process CLOSEs and then reOPENs a device, YottaDB/GT.M restores any characteristics not explicitly specified with deviceparameters to the values they had prior to the last CLOSE. However, because it is difficult for a large menu-driven application to ensure the previous OPEN state, YottaDB/GT.M always sets unspecified sequential file characteristics to their default value on OPEN. This approach also reduces potential memory overhead imposed by OPENing and CLOSEing a large number of sequential files during the life of a process.
+The ANSI standard specifies that when a process CLOSEs and then reOPENs a device, YottaDB restores any characteristics not explicitly specified with deviceparameters to the values they had prior to the last CLOSE. However, because it is difficult for a large menu-driven application to ensure the previous OPEN state, YottaDB always sets unspecified sequential file characteristics to their default value on OPEN. This approach also reduces potential memory overhead imposed by OPENing and CLOSEing a large number of sequential files during the life of a process.
 
-YottaDB/GT.M does not restrict multiple OPEN commands. However, if a file is already open, YottaDB/GT.M ignores attempts to modify sequential file OPEN characteristics, except for RECORDSIZE and for deviceparameters that also exist for USE.
+YottaDB does not restrict multiple OPEN commands. However, if a file is already open, YottaDB ignores attempts to modify sequential file OPEN characteristics, except for RECORDSIZE and for deviceparameters that also exist for USE.
 
 Sequential files can be READONLY, or read/write (NOREADONLY).
 
 Sequential files can be composed of either FIXED or VARIABLE (NOFIXED) length records. By default, records have VARIABLE length.
 
-UNIX enforces its standard security when YottaDB/GT.M OPENs a sequential file. This includes any directory access required to locate or create the file. If you are unable to OPEN a file, contact your system manager.
+UNIX enforces its standard security when YottaDB OPENs a sequential file. This includes any directory access required to locate or create the file. If you are unable to OPEN a file, contact your system manager.
 
 ++++++++++++++++++++++++++++++
 Sequential File Pointers
 ++++++++++++++++++++++++++++++
 
-Sequential file I/O operations use a construct called a file pointer. The file pointer logically identifies the next record to read or write. OPEN commands position the file pointer at the beginning of the file (REWIND) or at the end-of-file (APPEND). APPEND cannot reposition a file currently open. Because the position of each record depends on the previous record, a WRITE destroys the ability to reliably position the file pointer to subsequent records in a file. Therefore, by default (NOTRUNCATE), YottaDB/GT.M permits WRITEs only when the file pointer is positioned at the end of the file.
+Sequential file I/O operations use a construct called a file pointer. The file pointer logically identifies the next record to read or write. OPEN commands position the file pointer at the beginning of the file (REWIND) or at the end-of-file (APPEND). APPEND cannot reposition a file currently open. Because the position of each record depends on the previous record, a WRITE destroys the ability to reliably position the file pointer to subsequent records in a file. Therefore, by default (NOTRUNCATE), YottaDB permits WRITEs only when the file pointer is positioned at the end of the file.
 
 A file that has been previously created and contains data that should be retained can also be opened with the device parameter APPEND.
 
@@ -650,9 +650,9 @@ The following table describes all READ and WRITE operations for STREAM, VARIABLE
 * In UTF-8 mode, all READ forms do not return trailing  PAD characters.
 * In UTF-8 mode, all characters returned by all forms of FIXED mode READ are from a single record. 
 * WRITE for a Sequential Disk (SD) device works at the current file position, whether attained with APPEND, REWIND or SEEK.
-* YottaDB/GT.M manages any BOM for UTF mode files by ensuring they are at the beginning of the file and produces a BOMMISMATCH error for an attempt to change the byte-ordering on OPEN for an existing file.
+* YottaDB manages any BOM for UTF mode files by ensuring they are at the beginning of the file and produces a BOMMISMATCH error for an attempt to change the byte-ordering on OPEN for an existing file.
 * An attempt to OPEN a non-zero length file WRITEONLY without either NEWVERSION or TRUNCATE in UTF mode produces an OPENDEVFAIL due to the fact that any existing BOM information cannot be verified.
-* Note that with YottaDB/GT.M SD encryption, because of the state information associated with encryption processing, encrypted files require the file to be WRITEn or READ from the beginning rather than from an arbitrary position. 
+* Note that with YottaDB SD encryption, because of the state information associated with encryption processing, encrypted files require the file to be WRITEn or READ from the beginning rather than from an arbitrary position. 
 
 
 ++++++++++++++++++++++++++++
@@ -667,7 +667,7 @@ To write a binary data file, open it with FIXED:WRAP:CHSET="M" and set $X to zer
 Example:
 
 .. parsed-literal::
-   bincpy(inname,outname); YottaDB/GT.M routine to do a binary copy from file named in argument 1 to file named in argument 2
+   bincpy(inname,outname); YottaDB routine to do a binary copy from file named in argument 1 to file named in argument 2
            ;
      new adj,nrec,rsize,x
      new $etrap
@@ -750,7 +750,7 @@ The following tables provide a brief summary of deviceparameters for sequential 
 +-----------------------------------+--------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
 | GROUP=expr                        | O/C                      | Specifies file permissions for other users in the owner's group.                                                                                     |
 +-----------------------------------+--------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
-| NEWVERSION                        | O                        | Specifies YottaDB/GT.M create a new version of file.                                                                                                 |
+| NEWVERSION                        | O                        | Specifies YottaDB create a new version of file.                                                                                                 |
 +-----------------------------------+--------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
 | OWNER=expr                        | O/C                      | Specifies file permissions for the owner of file.                                                                                                    |
 +-----------------------------------+--------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -777,12 +777,12 @@ C: Applies to the CLOSE command
 Sequential File Examples
 +++++++++++++++++++++++++++
 
-This section contains a few brief examples of YottaDB/GT.M sequential file handling.
+This section contains a few brief examples of YottaDB sequential file handling.
 
 Example:
 
 .. parsed-literal::
-   GTM>do ^FREAD
+   YDB>do ^FREAD
    FREAD;
     zprint ^FREAD 
     read "File > ",sd
@@ -818,7 +818,7 @@ This example asks for the name of the file and displays its contents. It OPENs t
 Example:
 
 .. parsed-literal::
-   GTM>do ^formatACCT
+   YDB>do ^formatACCT
    formatACCT;
     zprint ^formatACCT; 
     set sd="temp.dat",acct=""
@@ -872,7 +872,7 @@ The following table shows the result and the values of I/O status variables for 
 
 With WRITE:
 
-* The FIFO device does non-blocking writes. If a process tries to WRITE to a full FIFO and the WRITE would block, the device implicitly tries to complete the operation up to a default of 10 times. If the gtm_non_blocked_write_retries environment variable is defined, this overrides the default number of retries. If the retries do not succeed (remain blocked), the WRITE sets $DEVICE to "1,Resource temporarily unavailable", $ZA to 9, and produces an error. If the YottaDB/GT.M process has defined an EXCEPTION, $ETRAP or $ZTRAP, the error trap may choose to retry the WRITE after some action or delay that might remove data from the FIFO device.
+* The FIFO device does non-blocking writes. If a process tries to WRITE to a full FIFO and the WRITE would block, the device implicitly tries to complete the operation up to a default of 10 times. If the gtm_non_blocked_write_retries environment variable is defined, this overrides the default number of retries. If the retries do not succeed (remain blocked), the WRITE sets $DEVICE to "1,Resource temporarily unavailable", $ZA to 9, and produces an error. If the YottaDB process has defined an EXCEPTION, $ETRAP or $ZTRAP, the error trap may choose to retry the WRITE after some action or delay that might remove data from the FIFO device.
 * While it is hung, the process will not respond to <CTRL-C>.
 
 With CLOSE:
@@ -898,10 +898,10 @@ As you establish FIFOs for interprocess communication, consider whether, and how
 Error Handling for FIFOs
 +++++++++++++++++++++++++++++
 
-Deleting devices (or files) created by an OPEN which has an error has deeper implications when that device, especially a FIFO, serves as a means of communications between a two processes. If one process OPENs a FIFO device for WRITE, there is an interval during which another process can OPEN the same device for READ. During that interval the writer process can encounter an error (for example, an invalid parameter) causing YottaDB/GT.M to delete the device, but the reader process can complete its OPEN successfully. This sequence results in a process with an orphaned device open for READ. Any other process that OPENs the same device for WRITE creates a new instance of it, so the reader can never find data to READ from the orphaned device. Since YottaDB/GT.M has insufficient context to enforce process synchronization between reader and writer, the application must use appropriate communication protocols and error handling techniques to provide synchronization between processes using files and FIFOs for communication.
+Deleting devices (or files) created by an OPEN which has an error has deeper implications when that device, especially a FIFO, serves as a means of communications between a two processes. If one process OPENs a FIFO device for WRITE, there is an interval during which another process can OPEN the same device for READ. During that interval the writer process can encounter an error (for example, an invalid parameter) causing YottaDB to delete the device, but the reader process can complete its OPEN successfully. This sequence results in a process with an orphaned device open for READ. Any other process that OPENs the same device for WRITE creates a new instance of it, so the reader can never find data to READ from the orphaned device. Since YottaDB has insufficient context to enforce process synchronization between reader and writer, the application must use appropriate communication protocols and error handling techniques to provide synchronization between processes using files and FIFOs for communication.
 
 +++++++++++++++++++++++++++++++++
-YottaDB/GT.M Recognition of FIFOs
+YottaDB Recognition of FIFOs
 +++++++++++++++++++++++++++++++++
 
 Like a sequential file, the path of a FIFO is specified as an argument expression to the OPEN, USE, and CLOSE commands. A device OPENed with a FIFO deviceparameter becomes a FIFO unless another device of that name is already OPEN. In that case, OPENing a device that has previously been OPENed by another process as a FIFO causes the process (the process here is the process trying to open the FIFO) to attach to the existing FIFO.
@@ -993,7 +993,7 @@ Null devices comprise of a collection of system purpose devices that include /de
 * /dev/random and /dev/urandom return a random value on READ and set $ZEOF
 * /dev/zero returns 0's on READ and does not set $ZEOF
 
-A null device discards all output. YottaDB/GT.M maintains a virtual cursor position for null devices as it does for terminals on output. Use null devices for program testing and debugging, or for jobs that permit I/O to be discarded under certain circumstances. For example, JOB processes must have input and output devices associated with them, even though they do not use them. Null devices are low overhead never-fail alternatives for certain classes of I/O.
+A null device discards all output. YottaDB maintains a virtual cursor position for null devices as it does for terminals on output. Use null devices for program testing and debugging, or for jobs that permit I/O to be discarded under certain circumstances. For example, JOB processes must have input and output devices associated with them, even though they do not use them. Null devices are low overhead never-fail alternatives for certain classes of I/O.
 
 ++++++++++++++++++++++++++++
 NULL Deviceparameter Summary
@@ -1035,7 +1035,7 @@ This section contains examples of null device usage.
 Example:
 
 .. parsed-literal::
-   GTM>do ^runrep
+   YDB>do ^runrep
    runrep;
     zprint ^runrep
     set dev="/dev/null"
@@ -1056,20 +1056,20 @@ Example:
    job ^X:(in="/dev/null":out="/dev/null":err="error.log")
    JOB ^X:(IN="/dev/null":OUT="/dev/null":ERR="error.log") 
 
-This example issues a YottaDB/GT.M JOB command to execute the routine ^X in another process. This routine processes a large number of global variables and produces no output. In the example, the JOBbed process takes its input from a null device, and sends its output to a null device. If the JOBbed process encounters an error, it directs the error message to error.log.
+This example issues a YottaDB JOB command to execute the routine ^X in another process. This routine processes a large number of global variables and produces no output. In the example, the JOBbed process takes its input from a null device, and sends its output to a null device. If the JOBbed process encounters an error, it directs the error message to error.log.
 
 ---------------------------
 Using PIPE Devices
 ---------------------------
 
-A PIPE device is used to access and manipulate the input and/or output of a shell command as a YottaDB/GT.M I/O device. YottaDB/GT.M maintains I/O status variables for a PIPE device just as it does for other devices. An OPEN of the device starts a sub-process. Data written to the device by the M program is available to the process on its STDIN. The M program can read the STDOUT and STDERR of the sub-process. This facilitates output only applications, such as printing directly from a YottaDB/GT.M program to an lp command; input only applications, such as reading the output of a command such as ps; and co-processing applications, such as using iconv to convert data from one encoding to another.
+A PIPE device is used to access and manipulate the input and/or output of a shell command as a YottaDB I/O device. YottaDB maintains I/O status variables for a PIPE device just as it does for other devices. An OPEN of the device starts a sub-process. Data written to the device by the M program is available to the process on its STDIN. The M program can read the STDOUT and STDERR of the sub-process. This facilitates output only applications, such as printing directly from a YottaDB program to an lp command; input only applications, such as reading the output of a command such as ps; and co-processing applications, such as using iconv to convert data from one encoding to another.
 
-A PIPE is akin to a FIFO device. Both FIFO and PIPE map YottaDB/GT.M devices to UNIX pipes, the conceptual difference being that whereas a FIFO device specifies a named pipe, but does not specify the process on the other end of the pipe, a PIPE device specifies a process to communicate with, but the pipes are unnamed. Specifically, an OPEN of a PIPE creates a subprocess with which the YottaDB/GT.M process communicates.
+A PIPE is akin to a FIFO device. Both FIFO and PIPE map YottaDB devices to UNIX pipes, the conceptual difference being that whereas a FIFO device specifies a named pipe, but does not specify the process on the other end of the pipe, a PIPE device specifies a process to communicate with, but the pipes are unnamed. Specifically, an OPEN of a PIPE creates a subprocess with which the YottaDB process communicates.
 
 A PIPE device is specified with a "PIPE" value for mnemonicspace on an OPEN command. 
 
 .. note::
-   YottaDB/GT.M ignores the mnemonicspace specification on an OPEN of a previously OPEN device and leaves the existing device with its original characteristics.
+   YottaDB ignores the mnemonicspace specification on an OPEN of a previously OPEN device and leaves the existing device with its original characteristics.
 
 ++++++++++++++++++++++++
 Modes of PIPE Operation
@@ -1083,7 +1083,7 @@ Example:
    set p="Printer"
    open p:(command="lpr":writeonly)::"PIPE" 
 
-This shows the use of a PIPE device to spool data to the default printer by spooling to the lpr command, opened via the default shell (the shell specified by the SHELL environment variable, and the shell used to start YottaDB/GT.M if SHELL is unspecified). The WRITEONLY device parameter specifies that the YottaDB/GT.M process not read data back from the lpr command. Use WRITEONLY when no errors are expected from the application(s) in the pipe. WRITEONLY tends not to serve most applications well.
+This shows the use of a PIPE device to spool data to the default printer by spooling to the lpr command, opened via the default shell (the shell specified by the SHELL environment variable, and the shell used to start YottaDB if SHELL is unspecified). The WRITEONLY device parameter specifies that the YottaDB process not read data back from the lpr command. Use WRITEONLY when no errors are expected from the application(s) in the pipe. WRITEONLY tends not to serve most applications well.
 
 Example:
 
@@ -1091,7 +1091,7 @@ Example:
    set p="MyProcs"
    open p:(command="ps -ef|grep $USER":readonly)::"PIPE"
 
-This shows the use of a PIPE device to identify processes belonging to the current userid. The READONLY device parameter specifies that the YottaDB/GT.M process only read the output of the pipe, and not provide it with any input. This example illustrates the fact that the command can be any shell command, can include environment variables and pipes within the command.
+This shows the use of a PIPE device to identify processes belonging to the current userid. The READONLY device parameter specifies that the YottaDB process only read the output of the pipe, and not provide it with any input. This example illustrates the fact that the command can be any shell command, can include environment variables and pipes within the command.
 
 .. note::
    Flags to the ps command vary for different UNIX platforms. 
@@ -1102,7 +1102,7 @@ Example:
    set p="Convert"
    open p:(shell="/bin/csh":command="iconv -f ISO_8859-1 -t WINDOWS-1252")::"PIPE"
 
-This shows the use of a process to whose input the YottaDB/GT.M process writes to and whose output the YottaDB/GT.M process reads back in, in this example converting data from an ISO 8859-1 encoding to the Windows 1252 encoding. This example also shows the use of a different shell from the default. If the OPEN deviceparameters don't specify a SHELL, the PIPE device uses the shell specified by the environment variable SHELL; if it does not find a definition for SHELL, the device uses the system default /bin/sh.
+This shows the use of a process to whose input the YottaDB process writes to and whose output the YottaDB process reads back in, in this example converting data from an ISO 8859-1 encoding to the Windows 1252 encoding. This example also shows the use of a different shell from the default. If the OPEN deviceparameters don't specify a SHELL, the PIPE device uses the shell specified by the environment variable SHELL; if it does not find a definition for SHELL, the device uses the system default /bin/sh.
 
 
 Example:
@@ -1112,7 +1112,7 @@ Example:
    set e="Errors"
    open p:(command="find /var/log -type d -print":readonly:stderr=e)::"PIPE" 
 
-YottaDB/GT.M uses the standard system utility find to obtain a list of subdirectories of /var/log, which are read back via the device with handle "Files" with any errors (for example, "Permission denied" messages for sub-directories that the find command cannot process) read back via the device with handle "Errors".
+YottaDB uses the standard system utility find to obtain a list of subdirectories of /var/log, which are read back via the device with handle "Files" with any errors (for example, "Permission denied" messages for sub-directories that the find command cannot process) read back via the device with handle "Errors".
 
 +++++++++++++++++++++++++++++++
 PIPE Characteristics
@@ -1152,7 +1152,7 @@ The following table shows the result and values of I/O status variables for vari
 
 With WRITE:
 
-The PIPE device does non-blocking writes. If a process tries to WRITE to a full PIPE and the WRITE would block, the device implicitly tries to complete the operation up to a default of 10 times. If the gtm_non_blocked_write_retries environment variable is defined, this overrides the default number of retries. If the retries do not succeed (remain blocked), the WRITE sets $DEVICE to "1,Resource temporarily unavailable", $ZA to 9, and produces an error. If the YottaDB/GT.M process has defined an EXCEPTION, $ETRAP or $ZTRAP, the error trap may choose to retry the WRITE after some action or delay that might remove data from the PIPE device.
+The PIPE device does non-blocking writes. If a process tries to WRITE to a full PIPE and the WRITE would block, the device implicitly tries to complete the operation up to a default of 10 times. If the gtm_non_blocked_write_retries environment variable is defined, this overrides the default number of retries. If the retries do not succeed (remain blocked), the WRITE sets $DEVICE to "1,Resource temporarily unavailable", $ZA to 9, and produces an error. If the YottaDB process has defined an EXCEPTION, $ETRAP or $ZTRAP, the error trap may choose to retry the WRITE after some action or delay that might remove data from the PIPE device.
 
 With WRITE /EOF:
 
@@ -1185,7 +1185,7 @@ Example:
   close p1
   quit    
 
-This WRITEs 10 lines of output to the cat command and reads the cat output back into the local variable x. The YottaDB/GT.M process WRITEs each line READ from the PIPE to the principal device. This example works because "cat" is not a buffering command. The example above would not work for a command such as tr that buffers its input.
+This WRITEs 10 lines of output to the cat command and reads the cat output back into the local variable x. The YottaDB process WRITEs each line READ from the PIPE to the principal device. This example works because "cat" is not a buffering command. The example above would not work for a command such as tr that buffers its input.
 
 Example :
 
@@ -1204,7 +1204,7 @@ Example :
   close p1
   quit           
 
-This shows the use of tr (a buffering command) in the created process for the PIPE device. To see the buffering effect the YottaDB/GT.M process WRITEs 1000 lines to the PIPE device. Different operating systems may have different buffer sizes. Notice the use of the r x:0 and the check on $DEVICE in the loop. If $DEVICE is 0, WRITE x writes the data read to the principal device. No actual READs complete, however, until tr reaches its buffer size and writes to its stdout. The final few lines remain buffered by tr after the process finishes the first loop. The YottaDB/GT.M process then issues a WRITE /EOF to the PIPE causing tr to flush its buffered lines. In the final for loop the YottaDB/GT.M process uses the simple form of READ x from the PIPE followed by a WRITE of each line to the principal device until $zeof becomes TRUE.
+This shows the use of tr (a buffering command) in the created process for the PIPE device. To see the buffering effect the YottaDB process WRITEs 1000 lines to the PIPE device. Different operating systems may have different buffer sizes. Notice the use of the r x:0 and the check on $DEVICE in the loop. If $DEVICE is 0, WRITE x writes the data read to the principal device. No actual READs complete, however, until tr reaches its buffer size and writes to its stdout. The final few lines remain buffered by tr after the process finishes the first loop. The YottaDB process then issues a WRITE /EOF to the PIPE causing tr to flush its buffered lines. In the final for loop the YottaDB process uses the simple form of READ x from the PIPE followed by a WRITE of each line to the principal device until $zeof becomes TRUE.
 
 Example :
 
@@ -1232,7 +1232,7 @@ Example :
   close c
   quit      
 
-This demonstrates that the created process nestin keeps running as an INDEPENDENT process after the YottaDB/GT.M process CLOSEs the pipe. This YottaDB/GT.M process uses another PIPE device to return the process id of ntestin and READ it into pid so that it may be killed by this or another process, should that be appropriate.
+This demonstrates that the created process nestin keeps running as an INDEPENDENT process after the YottaDB process CLOSEs the pipe. This YottaDB process uses another PIPE device to return the process id of ntestin and READ it into pid so that it may be killed by this or another process, should that be appropriate.
 
 .. note::
    "nestin.c" is a program which reads from standard input and writes to standard output until it see and EOF.  It then loops for 300 1sec sleeps doing nothing.  The purpose of using independent is as a server process which continues until it receives some other signal for termination.
@@ -1240,8 +1240,8 @@ This demonstrates that the created process nestin keeps running as an INDEPENDEN
 Example:
 
 .. parsed-literal::
-   GTM>kill ^a
-   GTM>zprint ^indepserver
+   YDB>kill ^a
+   YDB>zprint ^indepserver
    indepserver;
      read x
      write "received = ",x,!
@@ -1249,27 +1249,27 @@ Example:
      for  do  quit:^quit
      . if $data(^a) write "^a = ",^a,!
      . Hang 5
-   GTM>set a="test"
-   GTM>open a:(command="mumps -run ^indepserver>indout":independent)::"pipe"
-   GTM>use a
-   GTM>write "instructions",!
-   GTM>close a
-   GTM>zsystem "cat indout"
+   YDB>set a="test"
+   YDB>open a:(command="mumps -run ^indepserver>indout":independent)::"pipe"
+   YDB>use a
+   YDB>write "instructions",!
+   YDB>close a
+   YDB>zsystem "cat indout"
    received = instructions
-   GTM>set ^a=1
-   GTM>zsystem "cat indout"
-   received = instructions
-   ^a = 1
-   ^a = 1
-   ^a = 1
-   GTM>s ^quit=1
-   GTM>zsystem "cat indout"
+   YDB>set ^a=1
+   YDB>zsystem "cat indout"
    received = instructions
    ^a = 1
    ^a = 1
    ^a = 1
+   YDB>s ^quit=1
+   YDB>zsystem "cat indout"
+   received = instructions
    ^a = 1
-   GTM>
+   ^a = 1
+   ^a = 1
+   ^a = 1
+   YDB>
 
 This is a simple example using a mumps process as a server.
 
@@ -1322,7 +1322,7 @@ Example:
    ...Failed to perform non-blocked writes... Retrying write # 78
        Writes completed
 
-This example demonstrates handling WRITE errors, like ENO11 or EAGAIN, that do not terminate the PIPE device. The PIPE device does non-blocking writes. If a process tries to WRITE to a full PIPE and the WRITE would block, the device implicitly tries to complete the operation up to a default of 10 times. YottaDB/GT.M sleeps 100 micro seconds between each retry. When dealing with programs that can take a while to process input, it's a good idea to either schedule a delay between WRITEs or come up with a mechanism to back off the WRITEs when the buffer fills up.
+This example demonstrates handling WRITE errors, like ENO11 or EAGAIN, that do not terminate the PIPE device. The PIPE device does non-blocking writes. If a process tries to WRITE to a full PIPE and the WRITE would block, the device implicitly tries to complete the operation up to a default of 10 times. YottaDB sleeps 100 micro seconds between each retry. When dealing with programs that can take a while to process input, it's a good idea to either schedule a delay between WRITEs or come up with a mechanism to back off the WRITEs when the buffer fills up.
 
 .. parsed-literal::
    sh> mumps -run pipexample induceEPIPE
@@ -1343,7 +1343,7 @@ This example demonstrates handling WRITE errors, like ENO11 or EAGAIN, that do n
    Try 2   pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$gtm_dist/mumps -run induceEPIPE^pipexample 2" STDERR="piperr" 
        Writes completed
       
-This example demonstrates how to create a separate STDERR pipe device from which to read the STDERR output of the program(s) inside the pipe. Reading the STDERR is important when dealing with failures from Unix programs. It is possible to read the errors without creating a STDERR pipe device, however the error messages are commingled with the output of the programs inside the pipe which could make diagnosis of the underlying problem harder. Notice that YottaDB/GT.M writes fatal errors, GTM-F types, to STDERR, but all others go to STDOUT.
+This example demonstrates how to create a separate STDERR pipe device from which to read the STDERR output of the program(s) inside the pipe. Reading the STDERR is important when dealing with failures from Unix programs. It is possible to read the errors without creating a STDERR pipe device, however the error messages are commingled with the output of the programs inside the pipe which could make diagnosis of the underlying problem harder. Notice that YottaDB writes fatal errors, GTM-F types, to STDERR, but all others go to STDOUT.
 
 Additionally, this example demonstrates handling errors that terminate the PIPE device. In this example, the PIPE device is terminated when a program inside the pipe terminates before reading all of the driving MUMPS program's output causing an EPIPE or ENO32, a broken pipe. In such a situation the MUMPS program must capture the error that caused the termination and respond accordingly. The program may need to call out to other programs to determine the status of a service it is using or to alert the operator of an error with an external program or service. To operate successfully, the program must recreate the pipe and retry the operation.
 
@@ -1476,20 +1476,20 @@ The following table summarizes the PIPE format deviceparameters.
 The following table summarizes PIPE access deviceparamters.
 
 +-------------------------+----+-------------------------------------------------------------------------------------------------------------------------------------------------------+
-| COMMAND=string          | o  | Specifies the command string to execute in a created process for the PIPE device. YottaDB/GT.M uses the default searching mechanism of the UNIX shell |
+| COMMAND=string          | o  | Specifies the command string to execute in a created process for the PIPE device. YottaDB uses the default searching mechanism of the UNIX shell      |
 |                         |    | for creating the process and initiating its command(s).                                                                                               |
 +-------------------------+----+-------------------------------------------------------------------------------------------------------------------------------------------------------+
 | SHELL=string            | o  | Specifies the path to a shell to be used instead of the default shell                                                                                 |
 +-------------------------+----+-------------------------------------------------------------------------------------------------------------------------------------------------------+
-| STDERR=string           | o  | Specifies a device handle for a return pipe to which the created process writes any standard error output. The YottaDB/GT.M process can USE, READ, and|
-|                         |    | CLOSE it, but cannot WRITE to it. When the YottaDB/GT.M process CLOSEs the PIPE device, the PIPE device CLOSEs STDERR, if still OPEN.                 |
+| STDERR=string           | o  | Specifies a device handle for a return pipe to which the created process writes any standard error output. The YottaDB process can USE, READ, and     |
+|                         |    | CLOSE it, but cannot WRITE to it. When the YottaDB process CLOSEs the PIPE device, the PIPE device CLOSEs STDERR, if still OPEN.                      |
 +-------------------------+----+-------------------------------------------------------------------------------------------------------------------------------------------------------+
-| WRITEONLY               | o  | Specifies that the YottaDB/GT.M process may only WRITE to the created process via the PIPE device.                                                    |
+| WRITEONLY               | o  | Specifies that the YottaDB process may only WRITE to the created process via the PIPE device.                                                         |
 +-------------------------+----+-------------------------------------------------------------------------------------------------------------------------------------------------------+
-| READONLY                | o  | Specifies that the YottaDB/GT.M process may only READ from the created process via the PIPE device. Output from both the standard output and the      |
+| READONLY                | o  | Specifies that the YottaDB process may only READ from the created process via the PIPE device. Output from both the standard output and the           |
 |                         |    | standard error output of the created process is available unless STDERR is specified.                                                                 |
 +-------------------------+----+-------------------------------------------------------------------------------------------------------------------------------------------------------+
-| PARSE                   | o  | Specifies that YottaDB/GT.M parse the COMMAND and issue an OPEN exception for any invalid command.                                                    |
+| PARSE                   | o  | Specifies that YottaDB parse the COMMAND and issue an OPEN exception for any invalid command.                                                         |
 +-------------------------+----+-------------------------------------------------------------------------------------------------------------------------------------------------------+
 | INDEPENDENT             | o  | Specifies that the created process continues to execute after the PIPE device is CLOSEd.                                                              |
 +-------------------------+----+-------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1498,14 +1498,14 @@ The following table summarizes PIPE access deviceparamters.
 Using Socket Devices
 -------------------------------
 
-SOCKET devices are used to access and manipulate sockets. A SOCKET device can have unlimited associated sockets. The default limit is 64. Set the environment variable gtm_max_sockets to the number of maximum associated sockets sockets that you wish to set for a YottaDB/GT.M process. $VIEW("MAX_SOCKETS")returns the current value of the maximum number of associated sockets.
+SOCKET devices are used to access and manipulate sockets. A SOCKET device can have unlimited associated sockets. The default limit is 64. Set the environment variable gtm_max_sockets to the number of maximum associated sockets sockets that you wish to set for a YottaDB process. $VIEW("MAX_SOCKETS")returns the current value of the maximum number of associated sockets.
 
 At any time, only one socket from the collection can be the current socket. If there is no current socket, an attempt to READ from, or WRITE to the device, generates an error.
 
 Sockets can be attached and detached from the collection of sockets associated with a device. Detached sockets belong to a pseudo-device called the "socketpool". A process can detach a socket from a device and later attach it to the same device or another device.
 
 .. note::
-   Currently, YottaDB/GT.M does not produce an error if a socket is attached to a device having a different CHSET.
+   Currently, YottaDB does not produce an error if a socket is attached to a device having a different CHSET.
    
 .. note::
    Exception handler (EXCEPTION) operates at the SOCKET device level and error trapping (IOERROR) operates the socket-level. So, one EXCEPTION operates on all sockets of a SOCKET device and IOEROR can be individually turned on or off for each socket.
@@ -1516,7 +1516,7 @@ Message Management
 
 From an application perspective, the transport layers used by a socket device are stream-oriented, with no provisions for implicit application messages. Therefore, the following are two common protocols used to segment application messages.
 
-1. One method is to use a, typically small, fixed length message containing the length of the next, variable length, message. In YottaDB/GT.M a simplistic writer might be:
+1. One method is to use a, typically small, fixed length message containing the length of the next, variable length, message. In YottaDB a simplistic writer might be:
 
    .. parsed-literal::
       Write $Justify($Length(x),4),x
@@ -1644,37 +1644,37 @@ where timeout is a numeric expression that specifies how long in seconds a serve
 .. parsed-literal::
    WRITE /PASS([targetpid],[timeout],handle[,handle]...)
 
-WRITE /PASS allows a YottaDB/GT.M process to send DETACHed TCP or LOCAL sockets (that is, sockets in the socket pool) to another YottaDB/GT.M process. The receiving process should execute WRITE /ACCEPT to receive the socket.
+WRITE /PASS allows a YottaDB process to send DETACHed TCP or LOCAL sockets (that is, sockets in the socket pool) to another YottaDB process. The receiving process should execute WRITE /ACCEPT to receive the socket.
 
-* If a numeric targetpid is specified, YottaDB/GT.M matches the value against the process id ($JOB) of the process receiving the sockets. YottaDB/GT.M uses a system service to perform this check on platforms that support it - currently: Linux and AIX. If the pids do not match, YottaDB/GT.M issues a PEERPIDMISMATCH error and does not transfer the sockets.
-* If a numeric timeout is specified, YottaDB/GT.M sets $TEST to 1 if the transfer completes within the specified time, and otherwise sets $TEST to 0 and does not transfer any of the sockets.
+* If a numeric targetpid is specified, YottaDB matches the value against the process id ($JOB) of the process receiving the sockets. YottaDB uses a system service to perform this check on platforms that support it - currently: Linux and AIX. If the pids do not match, YottaDB issues a PEERPIDMISMATCH error and does not transfer the sockets.
+* If a numeric timeout is specified, YottaDB sets $TEST to 1 if the transfer completes within the specified time, and otherwise sets $TEST to 0 and does not transfer any of the sockets.
 * Each handle specifies a socket in the socket pool.
-* On a successful transfer, YottaDB/GT.M eliminates access by the sending process to the specified and sent sockets. In any case where the transfer does not complete, YottaDB/GT.M retains all the sockets in the socket pool of the sender.
+* On a successful transfer, YottaDB eliminates access by the sending process to the specified and sent sockets. In any case where the transfer does not complete, YottaDB retains all the sockets in the socket pool of the sender.
 
 .. parsed-literal::
    WRITE /ACCEPT(.lvar,[sourcepid],[timeout][,[handle]]...)
 
-WRITE /ACCEPT allows a YottaDB/GT.M process to receive a DETACHed TCP or LOCAL sockets (that is, sockets in the socket pool) from another YottaDB/GT.M process . The sending process should execute WRITE /PASS to send the socket.
+WRITE /ACCEPT allows a YottaDB process to receive a DETACHed TCP or LOCAL sockets (that is, sockets in the socket pool) from another YottaDB process . The sending process should execute WRITE /PASS to send the socket.
 
-* lvar is an unsubscripted local variable name (lvn) which must be passed by reference indicated with a period (".") prefix. On successful completion, the specified unsubscripted lvn contains the handles of the received socket, in the order they were sent, delimited with a vertical bar ("|"). YottaDB/GT.M places the sockets in the socket pool, so the process can ATTACH them to an appropriate SOCKET device for subsequent use.
-* If a numeric sourcepid is specified, YottaDB/GT.M matches the value against the process id ($JOB) of the process sending the sockets. If the pids do not match, YottaDB/GT.M issues a PEERPIDMISMATCH error and does not transfer the sockets.
-* If a numeric timeout is specified, YottaDB/GT.M sets $TEST to 1 if the transfer completes within the specified time, and otherwise sets $TEST to 0 and does not transfer the sockets.
-* If any handles are specified, YottaDB/GT.M assigns the provided handles to the received sockets in the order in which they appear in the WRITE /PASS of the sending process; empty items in the comma delimited handle list act to preserve ordering. Where the list provides no handle, the socket retains the handle provided by the sender. In either case, if there is already a socket with the transfer handle in the socket pool, YottaDB/GT.M generates a new handle for the transfer socket. YottaDB/GT.M ignores excess handles specified beyond the number of incoming sockets.
+* lvar is an unsubscripted local variable name (lvn) which must be passed by reference indicated with a period (".") prefix. On successful completion, the specified unsubscripted lvn contains the handles of the received socket, in the order they were sent, delimited with a vertical bar ("|"). YottaDB places the sockets in the socket pool, so the process can ATTACH them to an appropriate SOCKET device for subsequent use.
+* If a numeric sourcepid is specified, YottaDB matches the value against the process id ($JOB) of the process sending the sockets. If the pids do not match, YottaDB issues a PEERPIDMISMATCH error and does not transfer the sockets.
+* If a numeric timeout is specified, YottaDB sets $TEST to 1 if the transfer completes within the specified time, and otherwise sets $TEST to 0 and does not transfer the sockets.
+* If any handles are specified, YottaDB assigns the provided handles to the received sockets in the order in which they appear in the WRITE /PASS of the sending process; empty items in the comma delimited handle list act to preserve ordering. Where the list provides no handle, the socket retains the handle provided by the sender. In either case, if there is already a socket with the transfer handle in the socket pool, YottaDB generates a new handle for the transfer socket. YottaDB ignores excess handles specified beyond the number of incoming sockets.
 
-Both WRITE /PASS and WRITE /ACCEPT require the current $IO to be a SOCKET device with a CONNECTed (not LISTENing) and LOCAL domain (not TCP) current socket. YottaDB/GT.M issues CONNSOCKREQ or LOCALSOCKREQ errors, respectively, when those conditions are not met.
+Both WRITE /PASS and WRITE /ACCEPT require the current $IO to be a SOCKET device with a CONNECTed (not LISTENing) and LOCAL domain (not TCP) current socket. YottaDB issues CONNSOCKREQ or LOCALSOCKREQ errors, respectively, when those conditions are not met.
 
 SOCKET devices do not support mixing other READs and WRITEs with socket passing on the same CONNECTED LOCAL socket and produce SOCKPASSDATAMIX errors. The application may perform multiple WRITE /PASS and WRITE /ACCEPT operations in either direction on the socket before issuing a CLOSE.
 
-Note that the receiving process must establish desired deviceparameters (e.g., DELIMITER) for a socket either by ATTACHing it to a SOCKET device that provides the characteristic for all its sockets, or by a subsequent USE that specifies the appropriate deviceparameter(s). GT.M transfers only the socket connection itself, the socket handle, and buffered socket data (if any).
+Note that the receiving process must establish desired deviceparameters (e.g., DELIMITER) for a socket either by ATTACHing it to a SOCKET device that provides the characteristic for all its sockets, or by a subsequent USE that specifies the appropriate deviceparameter(s). YottaDB transfers only the socket connection itself, the socket handle, and buffered socket data (if any).
 
 .. parsed-literal::
    WRITE /TLS(option[,[timeout][,tlsid[,cfg-file-options]])
 
-SOCKET devices support encrypted connections with TLS using an encryption plugin. YottaDB/GT.M ships with a reference implementation of the plugin which uses OpenSSL; the reference implementation also supports TLS for YottaDB/GT.M replication streams. OpenSSL options are controlled by a configuration file. The WRITE /TLS command activates this feature for connected sockets.
+SOCKET devices support encrypted connections with TLS using an encryption plugin. YottaDB ships with a reference implementation of the plugin which uses OpenSSL; the reference implementation also supports TLS for YottaDB replication streams. OpenSSL options are controlled by a configuration file. The WRITE /TLS command activates this feature for connected sockets.
 
-* option is "server", "client", or "renegotiate". "server" or "client" indicates which TLS role to assume. The server role requires a certificate specified in the configuration file section with the label matching tlsid. The client role may require a certificate depending on the OpenSSL options. If a timeout is specified for options "client" or "server", YottaDB/GT.M sets $TEST to 1 if the command successfully completed or to 0 if it timed out. $DEVICE provides status information in case of an error. ZSHOW "D" includes "TLS" in the second line of the output for an encrypted socket.
-* "renegotiate" applies only to a server socket. It allows applications to request a TLS renegotiation. Renegotiation requires the suspension of application communication and the application must read all pending data before initiating a renegotiation. This means that in the communication protocol used, both parties must be at a known state when renegotiating keys. For example, in YottaDB/GT.M replication, one party sends a renegotiation request and waits for an acknowledgement before initiating the renegotiation.
-* tlsid refers to the name of a section in the configuration file specified by the gtmcrypt_config environment variable. If tlsid is not specified with the "renegotiate" option and cfg-file-options are specified, YottaDB/GT.M creates a virtual section by appending "-RENEGOTIATE" to the tlsid used to enable TLS on the socket. For the renegotiate option, if no section named tlsid is present in the configuration file, YottaDB/GT.M creates a virtual section with that name for the life of the process.
+* option is "server", "client", or "renegotiate". "server" or "client" indicates which TLS role to assume. The server role requires a certificate specified in the configuration file section with the label matching tlsid. The client role may require a certificate depending on the OpenSSL options. If a timeout is specified for options "client" or "server", YottaDB sets $TEST to 1 if the command successfully completed or to 0 if it timed out. $DEVICE provides status information in case of an error. ZSHOW "D" includes "TLS" in the second line of the output for an encrypted socket.
+* "renegotiate" applies only to a server socket. It allows applications to request a TLS renegotiation. Renegotiation requires the suspension of application communication and the application must read all pending data before initiating a renegotiation. This means that in the communication protocol used, both parties must be at a known state when renegotiating keys. For example, in YottaDB replication, one party sends a renegotiation request and waits for an acknowledgement before initiating the renegotiation.
+* tlsid refers to the name of a section in the configuration file specified by the gtmcrypt_config environment variable. If tlsid is not specified with the "renegotiate" option and cfg-file-options are specified, YottaDB creates a virtual section by appending "-RENEGOTIATE" to the tlsid used to enable TLS on the socket. For the renegotiate option, if no section named tlsid is present in the configuration file, YottaDB creates a virtual section with that name for the life of the process.
 * cfg-file-options specifies configuration file options. Note cfg-file-options override those options if they are already specified in the configuration file except ssl-options and verify-level which are merged.
 * Supported cfg-file-options for the "renegotiate" command are (case-sensitive): verify-depth, verify-level, verify-mode, session-id-hex, and CAfile. WRITE /TLS ignores all other configuration file options whether given on the command or in the configuration file. For more information on the supported configuration options, refer to the Creating a Configuration File section of the Administration and Operations Guide.
 
@@ -1683,13 +1683,13 @@ SOCKET devices support encrypted connections with TLS using an encryption plugin
 
 The TLS plugin uses OpenSSL options in the configuration file specified under the tls: label as the default for all TLS connections and under the specific labels to override the defaults for corresponding connections.
 
-YottaDB/GT.M buffers WRITEs to TLS enabled sockets until a subsequent USE :FLUSH, WRITE !, WRITE #, or an internal 400 millisecond timer expires.
+YottaDB buffers WRITEs to TLS enabled sockets until a subsequent USE :FLUSH, WRITE !, WRITE #, or an internal 400 millisecond timer expires.
 
 .. note::
-   Because this functionality has a wide variety of user stories (use cases) and has substantial complexity, although the code appears robust, we are not confident that we have exercised a sufficient breadth of use cases in testing. Also we may make changes in future releases that are not entirely backwards compatible. We encourage you to use with this facility in development and testing, and to provide us with feedback. If you are an YottaDB/FIS customer and wish to use this in production, please contact us beforehand to discuss your use case(s).
+   Because this functionality has a wide variety of user stories (use cases) and has substantial complexity, although the code appears robust, we are not confident that we have exercised a sufficient breadth of use cases in testing. Also we may make changes in future releases that are not entirely backwards compatible. We encourage you to use with this facility in development and testing, and to provide us with feedback. If you are an YottaDB customer and wish to use this in production, please contact us beforehand to discuss your use case(s).
 
 .. note::
-   Owing to the range of OpenSSL versions in use across the breadth of platforms and versions supported by YottaDB/GT.M, on all platforms, but especially on non-Linux UNIX platforms, YottaDB/FIS recommends rebuilding the plugin from sources included with the YottaDB/GT.M binary distribution with the specific version of OpenSSL installed on your systems for any production or production staging environments that use TLS. For more information on recompiling the reference implementation, refer to the Installing YottaDB chapter of the Administration and Operations Guide.
+   Owing to the range of OpenSSL versions in use across the breadth of platforms and versions supported by YottaDB, on all platforms, but especially on non-Linux UNIX platforms, YottaDB recommends rebuilding the plugin from sources included with the YottaDB binary distribution with the specific version of OpenSSL installed on your systems for any production or production staging environments that use TLS. For more information on recompiling the reference implementation, refer to the `Installing YottaDB chapter of the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/installydb.html>`_.
 
 ++++++++++++++++++++++++++
 Socket Device Operation
@@ -1698,14 +1698,14 @@ Socket Device Operation
 Each socket may be in one of the following states (observable through $KEY):
 
 * CREATE-indicates that the socket exists.
-* ESTABLISHED-After a successful OPEN or USE with the CONNECT device parameter or when YottaDB/GT.M was started with a socket as the $PRINCIPAL device.
+* ESTABLISHED-After a successful OPEN or USE with the CONNECT device parameter or when YottaDB was started with a socket as the $PRINCIPAL device.
 * LISTENING-indicates that the OPEN or USE with the LISTEN deviceparameter was successful and a listen queue was established.
 
 A listening socket used for accepting new connections goes through these three states in one step with a single OPEN or USE. When a server does a WRITE /WAIT, a client can establish a connection which creates a new server socket. $KEY includes information about this new socket in the form of CONNECT|handle|<address> where <address> is the IP address for TCP sockets and path for LOCAL sockets.
 
 Each socket may have one or more sockets waiting for either an incoming connection or data available to READ (observable through $ZKEY). $ZKEY contains semi- colon (";") separated list of entries detailing any waiting sockets for a current SOCKET device.
 
-For more information on $KEY and $ZKEY, refer to “Intrinsic Special Variables”.
+For more information on $KEY and $ZKEY, refer to `“Intrinsic Special Variables” <https://docs.yottadb.com/ProgrammersGuide/isv.html>`_.
 
 +++++++++++++++++++++++++++++++
 Socket Deviceparameter Summary
@@ -1754,7 +1754,7 @@ The following table provides a brief summary of deviceparameters for socket devi
 +------------------------+--------------------------------+-------------------------------------------------------------------------------------------+
 | Deviceparameter        | Command                        | Comment                                                                                   |
 +========================+================================+===========================================================================================+
-| ZBFSIZE =intexpr       | O/U                            | Allocates a buffer used by YottaDB/GT.M when reading from a socket.                       |
+| ZBFSIZE =intexpr       | O/U                            | Allocates a buffer used by YottaDB when reading from a socket.                            |
 +------------------------+--------------------------------+-------------------------------------------------------------------------------------------+
 | ZIBFSIZE=intexpr       | O/U                            | Sets the buffer size used by the network software (setsockopt SO_RCVBUF).                 |
 +------------------------+--------------------------------+-------------------------------------------------------------------------------------------+
@@ -1765,9 +1765,9 @@ Socket Device Examples
 
 The sockexamplemulti31.m routine shows the use of $KEY and $ZKEY in a basic socket I/O setup. It's functionality is atypical in order to demonstrate a number of features. It launches two jobs: a server process which opens a listening socket and a client process which makes five connections to the server. The server sends a message to each connection socket. Even-numbered client sockets read the message partially but do not send a response back to the server. Odd-numbered client sockets receive the full message and respond to the server with the message "Ok.". The server reads two characters (but the client sends three) and $ZKEY shows sockets with unread characters.
 
-You can download sockexamplemulti31.m from http://tinco.pair.com/bhaskar/gtm/doc/books/pg/UNIX_manual/sockexamplemulti31.m and follow instructions in the comments near the top of the program file. 
+You can download sockexamplemulti31.m from https://github.com/YottaDB/YottaDBdoc/tree/master/ProgGuide and follow instructions in the comments near the top of the program file. 
 
-You can start a YottaDB/GT.M process in response to a connection request made using inetd/xinetd. The following example uses inetd/xinetd to implement a listener which responds to connections and messages just as the prior example.
+You can start a YottaDB process in response to a connection request made using inetd/xinetd. The following example uses inetd/xinetd to implement a listener which responds to connections and messages just as the prior example.
 
 In the configuration file for xinetd, define a new service called gtmserver. Set socket_type to "stream" and wait to "no" as in the following snippet:
 
@@ -1790,9 +1790,9 @@ If you are using inetd, add a line to /etc/inetd.conf with the sockettype "strea
 .. parsed-literal::
    gtmserver stream tcp nowait gtmuser /path/to/startgtm 
 
-In both of the above examples, "gtmuser" is the name of the user to own and run the gtmserver service, and "/path/to/startgtm" is the name of a script which defines some environment variables needed before invoking YottaDB/GT.M. Please check the man page for inetd.conf on your system as the details may be slightly different.
+In both of the above examples, "gtmuser" is the name of the user to own and run the gtmserver service, and "/path/to/startgtm" is the name of a script which defines some environment variables needed before invoking YottaDB. Please check the man page for inetd.conf on your system as the details may be slightly different.
 
-The minimum variables are: $gtm_dist, which specifies the directory containing the YottaDB/GT.M distribution, and $gtmroutines, which specifies the paths used to locate the YottaDB/GT.M routines. As an example: 
+The minimum variables are: $gtm_dist, which specifies the directory containing the YottaDB distribution, and $gtmroutines, which specifies the paths used to locate the YottaDB routines. As an example: 
 
 .. parsed-literal::
    #!/bin/bash 
@@ -1816,49 +1816,49 @@ The ZSHOW "D" command reports available information on both the local and remote
 I/O Commands
 ----------------------------
 
-This section describes the following YottaDB/GT.M I/O commands:
+This section describes the following YottaDB I/O commands:
 
-* OPEN establishes a connection from a YottaDB/GT.M process to a device.
+* OPEN establishes a connection from a YottaDB process to a device.
 * USE declares a device as the current source of input and destination for output.
 * READ accepts characters from the current device into a global or local variable.
 * WRITE sends characters to the current device.
-* CLOSE breaks the connection between a YottaDB/GT.M process and a device.
+* CLOSE breaks the connection between a YottaDB process and a device.
 
 +++++++++++++
 Open
 +++++++++++++
 
-The OPEN command establishes a connection from a YottaDB/GT.M process to a device.
+The OPEN command establishes a connection from a YottaDB process to a device.
 
 The format of the OPEN command is:
 
 .. parsed-literal::
   O[PEN][:tvexpr] expr[:[(keyword[=expr][:...])][:numexpr][:expr]][,...]
 
-* The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB/GT.M executes the command.
+* The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
 * The required expression specifies the device to OPEN.
 * The optional keywords specify deviceparameters that control device behavior; some deviceparameters take arguments delimited by an equal sign (=); if the argument only contains one deviceparameter, the surrounding parentheses are optional.
 * The optional numeric expression specifies a time in seconds after which the command should timeout if unsuccessful; 0 provides a single attempt to open the device.
 * When an OPEN command specifying a timeout contains no deviceparameters, double colons (::) separate the timeout numeric expression from the device expression.
-* The optional expression specifies a mnemonicspace that selects a device binding. The only mnemonicspaces that YottaDB/GT.M currently accepts are SOCKET and PIPE.
+* The optional expression specifies a mnemonicspace that selects a device binding. The only mnemonicspaces that YottaDB currently accepts are SOCKET and PIPE.
 * When an OPEN command specifies a mnemonicspace with no timeout, double colons separate the mnemonicspace string expression from the deviceparameters; if there are neither a timeout nor deviceparameters, triple colons separate the SOCKET mnemonicspace from the device expression.
 * A triple colon for the PIPE menemonicspace produces an error.
 * An indirection operator and an expression atom evaluating to a list of one or more OPEN arguments form a legal argument for an OPEN.
 * For sequential files, multiple processes can open the same file for reading with the OPEN command.
  
-By default, when a device is unavailable, YottaDB/GT.M retries the OPEN indefinitely at approximately one second intervals. A device is unavailable when another process is using it exclusively, or when the OPENing process does not have the resources left to open the device.
+By default, when a device is unavailable, YottaDB retries the OPEN indefinitely at approximately one second intervals. A device is unavailable when another process is using it exclusively, or when the OPENing process does not have the resources left to open the device.
 
-All other errors on OPEN raise an error condition and interrupt program flow. A timeout is a tool that lets a YottaDB/GT.M routine regain program control when a device remains unavailable. When the OPEN specifies a timeout, YottaDB/GT.M keeps retrying until either the OPEN succeeds or the timeout expires.
+All other errors on OPEN raise an error condition and interrupt program flow. A timeout is a tool that lets a YottaDB routine regain program control when a device remains unavailable. When the OPEN specifies a timeout, YottaDB keeps retrying until either the OPEN succeeds or the timeout expires.
 
-If OPEN establishes a connection with a device before the timeout expires, YottaDB/GT.M sets $TEST to TRUE (1). If the timeout expires, YottaDB/GT.M sets $TEST to FALSE (0). If an OPEN command does not specify a timeout, the execution of the command does not affect $TEST.
+If OPEN establishes a connection with a device before the timeout expires, YottaDB sets $TEST to TRUE (1). If the timeout expires, YottaDB sets $TEST to FALSE (0). If an OPEN command does not specify a timeout, the execution of the command does not affect $TEST.
 
-If a process has not previously OPENed a device, any deviceparameters not supplied on the OPEN take their default values. When reOPENing a device that it previously closed, a YottaDB/GT.M process restores all characteristics not specified on the OPEN to the values the device had when it was last CLOSEd, except with SD, FIFO, and PIPE. YottaDB/GT.M treats sequential disk files differently and uses defaults for unspecified sequential disk file characteristics on every OPEN; in other words, by default CLOSE of a sequential disk file acts as if DESTROY were specified and it requires an explicit NODESTROY to retain sequential disk file characteristics on a CLOSE.
+If a process has not previously OPENed a device, any deviceparameters not supplied on the OPEN take their default values. When reOPENing a device that it previously closed, a YottaDB process restores all characteristics not specified on the OPEN to the values the device had when it was last CLOSEd, except with SD, FIFO, and PIPE. YottaDB treats sequential disk files differently and uses defaults for unspecified sequential disk file characteristics on every OPEN; in other words, by default CLOSE of a sequential disk file acts as if DESTROY were specified and it requires an explicit NODESTROY to retain sequential disk file characteristics on a CLOSE.
 
 For a sequential disk device CLOSEd with the NODESTROY deviceparameter, a subsequent OPEN of the device with no deviceparameters restores the device state including its file position; or to the file position specified by a SEEK deviceparameter. Note that when $ZCHSET specifies a UTF character set in FIXED format, the device must have done at least one READ prior to its close. An OPEN with additional deviceparameters positions the device to the beginning of the file or to the end of file if APPEND is specified. Any SEEK specified as a deviceparameter is then applied.
 
 If you have a menu-driven application that OPENs and CLOSEs devices based on user selections, take care that every OPEN explicitly includes all deviceparameters important to the application.
 
-If a process OPENs an already OPEN device, YottaDB/GT.M modifies any characteristics that accept changes when a device is OPEN to reflect any new deviceparameter specifications.
+If a process OPENs an already OPEN device, YottaDB modifies any characteristics that accept changes when a device is OPEN to reflect any new deviceparameter specifications.
 
 In UTF-8 mode, the OPEN command recognizes ICHSET, OCHSET, and CHSET as three additional deviceparameters to determine the encoding of the the input / output devices.
 
@@ -1912,7 +1912,7 @@ Example:
 .. parsed-literal:: 
    open tcpdev:(ichset="M":connect=hostname\_":"_portno\_":TCP":attach="client"):timeout:"SOCKET"
 
-This example uses the ATTACH deviceparameter to specify "client" as the identifier of the newly created socket. Note that YottaDB/GT.M recognizes ICHSET only in UTF-8 mode. 
+This example uses the ATTACH deviceparameter to specify "client" as the identifier of the newly created socket. Note that YottaDB recognizes ICHSET only in UTF-8 mode. 
 
 **CHSET**
 
@@ -1932,12 +1932,12 @@ CONNECT=expr Applies to: SOC
 
 Creates a client connection with a server, which is located by the information provided by expr. A new socket is allocated for the client connection and is made the current socket for the device, if the operation is successful.
 
-expr specifies the protocol and the protocol-specific information. Currently, YottaDB/GT.M supports TCP/IP and LOCAL (also known as UNIX domain) socket protocols. For TCP/IP sockets, specify expr in the form of "<host>:<port>:TCP", where host is an IPv4 or IPv6 address optionally encapsulated by square-brackets ([]) like "127.0.0.1", "::1", "[127.0.0.1]", or "[::1]" or a IPv4 or IPv6 hostname like server.fis-gtm.com. When a hostname is specified, YottaDB/GT.M uses the IP version of the first address returned by DNS:
+expr specifies the protocol and the protocol-specific information. Currently, YottaDB supports TCP/IP and LOCAL (also known as UNIX domain) socket protocols. For TCP/IP sockets, specify expr in the form of "<host>:<port>:TCP", where host is an IPv4 or IPv6 address optionally encapsulated by square-brackets ([]) like "127.0.0.1", "::1", "[127.0.0.1]", or "[::1]" or a IPv4 or IPv6 hostname like server.fis-gtm.com. When a hostname is specified, YottaDB uses the IP version of the first address returned by DNS:
 
 * that is supported by the operating system, and
 * for which a network interface exists.
 
-For LOCAL sockets, specify expr in the form of "<pathname>:LOCAL", where <pathname> is the name of the file to be used for communication. <pathname> may contain a dollar sign ($) followed by the name of an environment variable which YottaDB/GT.M expands in the same way as the device name for a sequential file. The maximum allowed length of the expanded path name depends on the OS.
+For LOCAL sockets, specify expr in the form of "<pathname>:LOCAL", where <pathname> is the name of the file to be used for communication. <pathname> may contain a dollar sign ($) followed by the name of an environment variable which YottaDB expands in the same way as the device name for a sequential file. The maximum allowed length of the expanded path name depends on the OS.
 
 For LOCAL sockets, CONNECT attempts to open the specified file. If it doesn't exist or there is no listener, CONNECT retries until it succeeds or a specified timeout expires.
 
@@ -1978,14 +1978,14 @@ This command specifies $CHAR(13) as the delimiter for the socket tcpdev.
 
 EXCEPTION=expr Applies to: All devices
 
-Defines an error handler for an I/O device. The expression must contain a fragment of YottaDB/GT.M code (for example, GOTO ERRFILE) that YottaDB/GT.M XECUTEs when YottaDB/GT.M detects an error, or an entryref to which YottaDB/GT.M transfers control, as appropriate for the current gtm_ztrap_form, setting except that there is never any implicit popping with EXCEPTION action.
+Defines an error handler for an I/O device. The expression must contain a fragment of YottaDB code (for example, GOTO ERRFILE) that YottaDB XECUTEs when YottaDB detects an error, or an entryref to which YottaDB transfers control, as appropriate for the current gtm_ztrap_form, setting except that there is never any implicit popping with EXCEPTION action.
 
 A device EXCEPTION gets control after a non-fatal device error and $ETRAP/$ZTRAP get control after other non-fatal errors.
 
 Example:
 
 .. parsed-literal::
-   GTM>do ^FREAD
+   YDB>do ^FREAD
    FREAD;
     zprint ^FREAD 
     read "File > ",sd
@@ -2032,7 +2032,7 @@ The environment variable TERM must specify a terminfo entry that matches both wh
 
 FIFO Applies to: FIFO
 
-Specifies that the device for the OPEN is a FIFO name. YottaDB/GT.M creates the FIFO if it does not already exist and if the process has adequate privileges. However, in the event that the process does not have adequate privileges, the process generates a run-time error. A process does not require any special privileges to OPEN an existing FIFO. The FIFO needs to be readable (or writeable) just like any other file.
+Specifies that the device for the OPEN is a FIFO name. YottaDB creates the FIFO if it does not already exist and if the process has adequate privileges. However, in the event that the process does not have adequate privileges, the process generates a run-time error. A process does not require any special privileges to OPEN an existing FIFO. The FIFO needs to be readable (or writeable) just like any other file.
 
 Example:
 
@@ -2050,7 +2050,7 @@ NOFIXED specifies a variable-length record format for sequential disk files. NOF
 .. note::
    FIXED length records do not implicitly use embedded record terminators such as line feeds.
 
-In UTF-8 mode, YottaDB/GT.M I/O enforces a more record-oriented view of the file, treating each record as RECORDSIZE bytes long. Note that a Unicode code-point never splits across records. If a multi-byte character (when CHSET is UTF-8) or a surrogate pair (when CHSET is UTF-16) does not fit into the record (either logical as given by WIDTH or physical as given by RECORDSIZE), the WRITE command uses the byte values as specified by the PAD deviceparameter to fill the physical record. A combining character may end up in the subsequent record if it does not fit in the current record.
+In UTF-8 mode, YottaDB I/O enforces a more record-oriented view of the file, treating each record as RECORDSIZE bytes long. Note that a Unicode code-point never splits across records. If a multi-byte character (when CHSET is UTF-8) or a surrogate pair (when CHSET is UTF-16) does not fit into the record (either logical as given by WIDTH or physical as given by RECORDSIZE), the WRITE command uses the byte values as specified by the PAD deviceparameter to fill the physical record. A combining character may end up in the subsequent record if it does not fit in the current record.
 
 .. note::
    PAD is effective only for devices opened with a Unicode CHSET. In M mode PAD is always <SP>
@@ -2058,7 +2058,7 @@ In UTF-8 mode, YottaDB/GT.M I/O enforces a more record-oriented view of the file
 Example:
 
 .. parsed-literal::
-   GTM>do ^fixedex
+   YDB>do ^fixedex
    fixedex;
      zprint ^fixedex
      set file="fix.txt"
@@ -2094,13 +2094,13 @@ Example:
 Example:
 
 .. parsed-literal::
-   GTM>zprint ^gtmcp
-   gtmcp ; Copy a binary file using GT.M
+   YDB>zprint ^gtmcp
+   gtmcp ; Copy a binary file using YottaDB
      new dest,line,max,src
      if 2>$length($zcmdline," ") write "$gtm_dist/mumps -r source target",!
      set dest=$piece($zcmdline," ",2)
      set src=$piece($zcmdline," ",1)
-     set max=1024*1024 ; the maximum GT.M string size
+     set max=1024*1024 ; the maximum YottaDB string size
      open src:(readonly:FIXED:WRAP:CHSET="M") ;
      open dest:(newversion:FIXED:WRAP:CHSET="M") ; use FIXED format because it does not insert carriage control characters after $X reaches its maximum value.
      for  use src read line#max quit:$zeof  use dest write line
@@ -2110,7 +2110,7 @@ Example:
      close dest
      quit
 
-This example copies a binary file using YottaDB/GT.M. 
+This example copies a binary file using YottaDB. 
 
 **FOLLOW**
 
@@ -2128,7 +2128,7 @@ Specifies access permission on a UNIX file for other users in the file owner's g
 
 In order to modify file security, the user who issues the OPEN must have ownership.
 
-If none of GROUP, SYSTEM, OWNER, or WORLD are specified on OPEN, YottaDB/GT.M does not modify the permissions on an existing file and new files are created using the standard UNIX rules.
+If none of GROUP, SYSTEM, OWNER, or WORLD are specified on OPEN, YottaDB does not modify the permissions on an existing file and new files are created using the standard UNIX rules.
 
 Example:
 
@@ -2145,9 +2145,9 @@ Applies to: All devices
 
 Establishes the character encoding of an input device being OPENed and USEed in the UTF-8 mode. The value of the expression can be M, UTF-8, UTF-16, UTF-16LE, or UTF-16BE. In M mode, ICHSET has no effect.
 
-If ICHSET is not specified, YottaDB/GT.M assumes UTF-8 as the default character set for input from the device.
+If ICHSET is not specified, YottaDB assumes UTF-8 as the default character set for input from the device.
 
-If expr is set to a value other than M, UTF-8, UTF-16, UTF-16LE or UTF-16BE, YottaDB/GT.M produces a run-time error. UTF-16, UTF-LE, and UTF-16BE are not supported for $Principal and Terminal devices.
+If expr is set to a value other than M, UTF-8, UTF-16, UTF-16LE or UTF-16BE, YottaDB produces a run-time error. UTF-16, UTF-LE, and UTF-16BE are not supported for $Principal and Terminal devices.
 
 .. note::
    ICHSET is a deviceparameter of both the OPEN and USE commands. As ICHSET can change the character set of an already OPENed device, it can help deal with binary data intermixed with character data. 
@@ -2162,7 +2162,7 @@ The INDEPENDENT deviceparameter specifies that the newly created process will no
 
 Applies to: SD, PIPE, and FIFO
 
-IKEY allows the use of a seperate key for READ to a device; for example, when a YottaDB/GT.M process is an element of a UNIX pipe. The format of the IKEY deviceparameter is:
+IKEY allows the use of a seperate key for READ to a device; for example, when a YottaDB process is an element of a UNIX pipe. The format of the IKEY deviceparameter is:
 
 IKEY="key_name [IV]"
 
@@ -2198,14 +2198,14 @@ KEY="key_name [IV]"
 
 key_name is case-sensitive and must match a key name in the "files" section of the gtmcrypt_config file. The optional IV specifies an initialization vector to use for encryption and decryption.
 
-To perform encryption and description, YottaDB/GT.M calls an encryption plugin using the YottaDB/GT.M encryption API and can use any library that conforms to the API. The encryption plugin in turn can call user-selected cryptographic libraries for cryptographic functionality. The key name and IV are passed as binary sequences of bytes to the reference implementation plugin. Because YottaDB/GT.M only uses the first space in the deviceparameter to delimit the end of the key, the IV can include any content, including spaces. The YottaDB/GT.M runtime system uses the plugin to pass the IV to the cryptographic libraries used, which use the length of the IV, to determine whether an IV less than the required size it is zero padded, and whether an IV that is longer than the required length generates an error. YottaDB/FIS suggests using $ZCHAR() in preference to $CHAR() when building IV byte sequences, and to make sure that IV sequences are not unintentionally subjected to numeric conversion.
+To perform encryption and description, YottaDB calls an encryption plugin using the YottaDB encryption API and can use any library that conforms to the API. The encryption plugin in turn can call user-selected cryptographic libraries for cryptographic functionality. The key name and IV are passed as binary sequences of bytes to the reference implementation plugin. Because YottaDB only uses the first space in the deviceparameter to delimit the end of the key, the IV can include any content, including spaces. The YottaDB runtime system uses the plugin to pass the IV to the cryptographic libraries used, which use the length of the IV, to determine whether an IV less than the required size it is zero padded, and whether an IV that is longer than the required length generates an error. YottaDB suggests using $ZCHAR() in preference to $CHAR() when building IV byte sequences, and to make sure that IV sequences are not unintentionally subjected to numeric conversion.
 
 A USE command with a KEY/IKEY/OKEY deviceparameter that attempts to change the cipher key or IV, including disabling encryption (by specifying an empty key), only succeeds prior to the first WRITE or READ, or after the encryption or decryption state has been reset, such as after a REWIND (only for READ) or a TRUNCATE at the start of a file (for both READ and WRITE).
 
-Separate IKEY and OKEY deviceparameters allow different keys for READ from and WRITE to a device; for example, when a YottaDB/GT.M process is an element of a UNIX pipe. Because encryption ciphers use state machines (which are initialized with the IV at the beginning of the file), YottaDB/GT.M permits READ and WRITE operations only either starting at the beginning of a file, or at the position at which the last READ or WRITE operation completed. In particular, non-empty files cannot be opened in APPEND mode; the SEEK deviceparameter is prohibited; and the TRUNCATE is only permitted at the beginning of a file or at the end, the former deleting the contents, and the latter effectively a no-op.
+Separate IKEY and OKEY deviceparameters allow different keys for READ from and WRITE to a device; for example, when a YottaDB process is an element of a UNIX pipe. Because encryption ciphers use state machines (which are initialized with the IV at the beginning of the file), YottaDB permits READ and WRITE operations only either starting at the beginning of a file, or at the position at which the last READ or WRITE operation completed. In particular, non-empty files cannot be opened in APPEND mode; the SEEK deviceparameter is prohibited; and the TRUNCATE is only permitted at the beginning of a file or at the end, the former deleting the contents, and the latter effectively a no-op.
 
 .. parsed-literal::
-   Encrypted files must be written and read sequentially from the beginning (including the Byte Order Marker for UTF files); YottaDB/GT.M supports READ and WRITE operations at arbitrary locations in a file only for unencrypted files.
+   Encrypted files must be written and read sequentially from the beginning (including the Byte Order Marker for UTF files); YottaDB supports READ and WRITE operations at arbitrary locations in a file only for unencrypted files.
 
 Example:
 
@@ -2235,7 +2235,7 @@ The basic steps to use a key and IV to create an encrypted file and decrypt its 
     CustomerReportKey7: "Saturday.key";
    };
    $gtm_dist/mumps -dir
-   GTM>zprint ^encrfile
+   YDB>zprint ^encrfile
    encrfile
     set now=$horolog
     set timestamp=$zdate(now,"YYYYMMDDAM1260SS")
@@ -2246,19 +2246,19 @@ The basic steps to use a key and IV to create an encrypted file and decrypt its 
     write "Customer Report - Page 1",!
     close file
     write "IV : ",timestamp,!,"Key : CustomerReportKey"_dayofweek
-   GTM>do ^encrfile
+   YDB>do ^encrfile
    IV : 20140911AM042419
    Key : CustomerReportKey5
-   GTM>zprint ^readencrfile
+   YDB>zprint ^readencrfile
    readencrfile(key,iv)
     set file="Customers"_iv_".log"
     open file:(key=key\_" "_iv)
     use file
     for read data use $principal write data,! use file quit:$zeof
     close file
-   GTM>do ^readencrfile("CustomerReportKey5","20140911AM042419")
+   YDB>do ^readencrfile("CustomerReportKey5","20140911AM042419")
    Customer Report - Page 1
-   GTM>
+   YDB>
 
 In this example, the key name is CustomerReportKey followed by the number representing the day of the week, and IV is a timestamp, which is also a part of the file name. Although all reports start with the same string "Customer Report - Page 1", using a different IV for each file ensures that encrypted data begins with a different sequence of bytes, and making that IV a part of the file name ensures that the recipient of a report (who would have access to the key) can easily deduce the IV needed to decrypt the contents.
 
@@ -2268,14 +2268,14 @@ LISTEN=expr Applies to: SOC
 
 A new socket is allocated to listen for a connection. It is made the current socket for the device, if the operation is successful. Upon successful completion, $KEY is set to the format of "LISTENING|<socket_handle>|{<portnumber>|</path/to/LOCAL_socket>}" otherwise, $KEY is assigned the empty string.
 
-expr specifies the protocol and protocol specific information. Currently, YottaDB/GT.M supports TCP/IP and LOCAL (also known as UNIX domain) socket protocols. For TCP/IP sockets, specify expr in the form of "<port>:TCP".
+expr specifies the protocol and protocol specific information. Currently, YottaDB supports TCP/IP and LOCAL (also known as UNIX domain) socket protocols. For TCP/IP sockets, specify expr in the form of "<port>:TCP".
 
 If <port>=0 is specified, the system chooses the port for the TCP/IP socket.
 
 For LOCAL sockets:
 
-* Specify expr in the form of "<pathname>:LOCAL", where <pathname> is the name of the file to be used for communication. <pathname> may contain a dollar sign ($) followed by the name of an environment variable which YottaDB/GT.M expands in the same way as the device name for a sequential file. The maximum allowed length of the expanded path name depends on the OS.
-* LISTEN creates the file if it doesn't exist. If the OPEN command specifies the NEWVERSION deviceparameter, the file specified by the pathname exists, and is a socket file, that file is deleted and YottaDB/GT.M creates a new file.
+* Specify expr in the form of "<pathname>:LOCAL", where <pathname> is the name of the file to be used for communication. <pathname> may contain a dollar sign ($) followed by the name of an environment variable which YottaDB expands in the same way as the device name for a sequential file. The maximum allowed length of the expanded path name depends on the OS.
+* LISTEN creates the file if it doesn't exist. If the OPEN command specifies the NEWVERSION deviceparameter, the file specified by the pathname exists, and is a socket file, that file is deleted and YottaDB creates a new file.
 * LISTEN with an OPEN processes the GROUP, OWNER, SYSTEM, WORLD, UIC, and NEWVERSION deviceparameters the same as OPEN for sequential files.
 
 **MOREREADTIME**
@@ -2314,18 +2314,18 @@ By default, if any version of the file exists, OPEN accesses the current version
 Example:
 
 .. parsed-literal::
-   GTM>file1="foo.txt"
-   GTM>open file1:newversion:recordsize=5000 
-   GTM>
+   YDB>file1="foo.txt"
+   YDB>open file1:newversion:recordsize=5000 
+   YDB>
 
 This example creates a new version of sequential file foo.txtwith RECORDSIZE of 5000 bytes.
 
 Example:
 
 .. parsed-literal::
-   GTM>set delim=$c(13)
-   GTM>set tcpdev="server$"_$j,timeout=30
-   GTM>open tcpdev:(LISTEN="local.socket"_":LOCAL":delim=$c(13):attach="server":newversion):timeout:"SOCKET"
+   YDB>set delim=$c(13)
+   YDB>set tcpdev="server$"_$j,timeout=30
+   YDB>open tcpdev:(LISTEN="local.socket"_":LOCAL":delim=$c(13):attach="server":newversion):timeout:"SOCKET"
 
 This example deletes the old local.socket file (if it exists) and creates a new LISTENING local.socket file.
 
@@ -2335,9 +2335,9 @@ OCHSET=expr Applies to: All devices
 
 Establishes the character encoding of the output device OPENed and USEed in the UTF-8 mode. The value of the expression can be M, UTF-8, UTF-16, UTF-16LE, or UTF-16BE. In M mode, OCHSET has no effect.
 
-If \*CHSET is not specified, YottaDB/GT.M assumes UTF-8 as the default character set for all the input / output devices.
+If \*CHSET is not specified, YottaDB assumes UTF-8 as the default character set for all the input/output devices.
 
-If expr is set to a value other than M, UTF-8, UTF-16, UTF-16LE or UTF-16BE, YottaDB/GT.M produces a run-time error. UTF-16, UTF-LE, and UTF-16BE are not supported for $Principal and Terminal devices.
+If expr is set to a value other than M, UTF-8, UTF-16, UTF-16LE or UTF-16BE, YottaDB produces a run-time error. UTF-16, UTF-LE, and UTF-16BE are not supported for $Principal and Terminal devices.
 
 .. note::
    OCHSET is a deviceparameter of both the OPEN and USE commands. As OCHSET can change the character set of an already OPENed device, it can help deal with binary data intermixed with character data. 
@@ -2345,13 +2345,13 @@ If expr is set to a value other than M, UTF-8, UTF-16, UTF-16LE or UTF-16BE, Yot
 Example:
 
 .. parsed-literal::
-   GTM>SET file1="mydata.out" 
-   GTM>SET expr="UTF-16LE" 
-   GTM>OPEN file1:(ochset=expr) 
-   GTM>SET DS=$CHAR($$FUNC^%HD("0905"))_$CHAR($$FUNC^%HD("091A"))
-   GTM>SET DS=DS_$CHAR($$FUNC^%HD("094D"))_$CHAR($$FUNC^%HD("091B"))_$CHAR($$FUNC^%HD("0940"))
-   GTM>USE file1 WRITE DS,! 
-   GTM>CLOSE file1 
+   YDB>SET file1="mydata.out" 
+   YDB>SET expr="UTF-16LE" 
+   YDB>OPEN file1:(ochset=expr) 
+   YDB>SET DS=$CHAR($$FUNC^%HD("0905"))_$CHAR($$FUNC^%HD("091A"))
+   YDB>SET DS=DS_$CHAR($$FUNC^%HD("094D"))_$CHAR($$FUNC^%HD("091B"))_$CHAR($$FUNC^%HD("0940"))
+   YDB>USE file1 WRITE DS,! 
+   YDB>CLOSE file1 
 
 This example opens a new file called mydata.out and writes Devanagari characters in the UTF-16LE encoding.
 
@@ -2359,7 +2359,7 @@ This example opens a new file called mydata.out and writes Devanagari characters
 
 Applies to: SD, PIPE, and FIFO
 
-OKEY allows the use of a seperate key for WRITE to a device; for example, when a YottaDB/GT.M process is an element of a UNIX pipe. The format of the IKEY deviceparameter is:
+OKEY allows the use of a seperate key for WRITE to a device; for example, when a YottaDB process is an element of a UNIX pipe. The format of the IKEY deviceparameter is:
 
 OKEY="key_name [IV]"
 
@@ -2375,7 +2375,7 @@ Specifies access permission on a UNIX file for the owner of the file. The expres
 
 To modify file security, the user who issues the OPEN must have ownership.
 
-If none of GROUP, SYSTEM, OWNER, or WORLD are specified on OPEN, YottaDB/GT.M does not modify the permissions on an existing file and new files are created using the standard UNIX rules.
+If none of GROUP, SYSTEM, OWNER, or WORLD are specified on OPEN, YottaDB does not modify the permissions on an existing file and new files are created using the standard UNIX rules.
 
 Example:
 
@@ -2390,7 +2390,7 @@ PAD=expr Applies to: SD FIFO PIPE
 
 For FIXED format sequential files when the character set is not M, if a multi-byte character (when CHSET is UTF-8) or a surrogate pair (when CHSET is UTF-16) does not fit into the record (either logical as given by WIDTH or physical as given by RECORDSIZE) the WRITE command uses bytes with the value specified by the PAD deviceparameter to fill out the physical record. READ ignores the pad bytes when found at the end of the record. The value for PAD is given as an integer in the range 0-127 (the ASCII characters). PAD is always a byte value and the default is $ZCHAR(32) or [SPACE].
 
-In UTF-8 mode, there are three cases that cause YottaDB/GT.M to insert PAD characters when WRITEing. When READing YottaDB/GT.M attempts to strip any PAD characters. This stripping only works properly if the RECORDSIZE and PAD are the same for the READ as when the WRITEs occurred. WRITE inserts PAD characters when:
+In UTF-8 mode, there are three cases that cause YottaDB to insert PAD characters when WRITEing. When READing YottaDB attempts to strip any PAD characters. This stripping only works properly if the RECORDSIZE and PAD are the same for the READ as when the WRITEs occurred. WRITE inserts PAD characters when:
 
 * The file is closed and the last record is less than the RECORDSIZE. Records are padded (for FIXED) by WRITE ! as well as when the file is closed.
 * $X exceeds WIDTH before the RECORDSIZE is full.
@@ -2402,7 +2402,7 @@ In UTF-8 mode, there are three cases that cause YottaDB/GT.M to insert PAD chara
 Example:
 
 .. parsed-literal::
-   GTM>do ^padexample
+   YDB>do ^padexample
    padexample 
     zprint ^padexample
     set a="主要雨在西班牙停留在平原"
@@ -2468,18 +2468,18 @@ The following example fails:
 
 OPENs a device for reading only (READONLY) or reading and writing (NOREADONLY).
 
-To open a sequential file using the READONLY parameter, the file must exist on the disk. If it does not, YottaDB/GT.M issues a run-time error.
+To open a sequential file using the READONLY parameter, the file must exist on the disk. If it does not, YottaDB issues a run-time error.
 
-When YottaDB/GT.M encounters a WRITE directed to a file, OPENed READONLY, YottaDB/GT.M issues a run-time error.
+When YottaDB encounters a WRITE directed to a file, OPENed READONLY, YottaDB issues a run-time error.
 
 By default, OPEN accesses the device or file NOREADONLY (read-write).
 
 Example:
 
 .. parsed-literal::
-   GTM>set filename="foo.txt"
-   GTM>open filename:(readonly:recordsize=1048576) 
-   GTM>
+   YDB>set filename="foo.txt"
+   YDB>open filename:(readonly:recordsize=1048576) 
+   YDB>
 
 This example opens the file foo.txt with read permission.
 
@@ -2491,13 +2491,13 @@ Overrides the default record size for a disk.
 
 RECORDSIZE specifies an initial WIDTH. Note because RECORDSIZE is in bytes that in UTF-8 mode it produces a WIDTH that assumes one-byte characters.
 
-The RECORDSIZE of a fixed length record for a YottaDB/GT.M sequential disk device is always specified in bytes, rather than characters.
+The RECORDSIZE of a fixed length record for a YottaDB sequential disk device is always specified in bytes, rather than characters.
 
 For all UTF-16 CHSET values, RECORDSIZE must be even and PAD characters each occupy two bytes in the record.
 
-The maximum size of intexpr is 1,048,576 bytes. YottaDB/GT.M produces an error if you specify a value greater than 1,048,576.
+The maximum size of intexpr is 1,048,576 bytes. YottaDB produces an error if you specify a value greater than 1,048,576.
 
-When a Unicode CHSET is in use, YottaDB/GT.M treats RECORDSIZE as a byte limit at which to wrap or truncate output depending on [Z][NO]WRAP. For any Unicode character set, GT.M ignores RECORDSIZE for a device which is already open if any I/O has been done.
+When a Unicode CHSET is in use, YottaDB treats RECORDSIZE as a byte limit at which to wrap or truncate output depending on [Z][NO]WRAP. For any Unicode character set, YottaDB ignores RECORDSIZE for a device which is already open if any I/O has been done.
 
 If the character set is not UTF-16, UTF-16LE, UTF-16BE, the default RECORDSIZE is 32K-1bytes.
 
@@ -2534,7 +2534,7 @@ Positions the current file pointer to the location specified in strexpr. The for
 Example:
 
 .. parsed-literal::
-   GTM>zprint ^seekdemo
+   YDB>zprint ^seekdemo
    seekdemo
      new x,p
      set p="seekfixed"
@@ -2615,7 +2615,7 @@ Example:
                                                                                                                                                        
                                                                                                                                                        
                                                                                                                                                      
-   GTM>do ^seekdemo
+   YDB>do ^seekdemo
    x= 0 - [-05-\|-10-\|-15-\|-20-\|-25-\|-30-\|-35-\|-40-\|-45-\|-50-\|-55-\| $zkey= 1,0
    x= 1 - [-05-\|-10-\|-15-\|-20-\|-25-\|-30-\|-35-\|-40-\|-45-\|-50-\|-55-\| $zkey= 2,0
    x= 2 - [-05-\|-10-\|-15-\|-20-\|-25-\|-30-\|-35-\|-40-\|-45-\|-50-\|-55-\| $zkey= 3,0
@@ -2646,7 +2646,7 @@ Example:
    ** CLOSE NODESTROY and reOPEN with append:SEEK="-60" and read last 60 bytes
    x= 8 - [-05-\|-10-\|-15-\|-20-\|-25-\|-30-\|-35-\|-40-\|-45-\|-50-\|-55-\| $zkey= 540
                                                                                                                                                        
-   GTM>
+   YDB>
 
 This program demonstrates the use of the SEEK deviceparameter on OPEN and USE and reOPEN after CLOSE NODESTROY. This test is shown as an M program which may be executed, followed by the expected test output. First the test creates the file called "seekfixed" with 9, 60-byte records and then REWINDs and reads each record and outputs the record followed by $ZKEY which is a record,byte pair. Note that the records are numbered from 0 to match the SEEK record offset. Later in the test the same file is OPENed VARIABLE so $ZKEY will be a byte offset in that case. Details are given after the file output.
 
@@ -2734,18 +2734,18 @@ With STREAM, the same example produces the following output:
 
 SYSTEM=expr Applies to: SOC(LOCAL) SD FIFO
 
-This deviceparameter is a synonym for OWNER that is provided in the UNIX version of YottaDB/GT.M for compatibility with OpenVMS applications.
+This deviceparameter is a synonym for OWNER that is provided in the UNIX version of YottaDB for compatibility with OpenVMS applications.
 
 Example: 
 
 .. parsed-literal::
-   GTM> set perm="rwx" 
-   GTM>OPEN "test52.txt":(NEWVERSION:SYSTEM="r":GROUP=perm:WORLD=perm) 
-   GTM>ZSYSTEM "ls -la test52.txt"
+   YDB> set perm="rwx" 
+   YDB>OPEN "test52.txt":(NEWVERSION:SYSTEM="r":GROUP=perm:WORLD=perm) 
+   YDB>ZSYSTEM "ls -la test52.txt"
 
 .. parsed-literal::
    -r--rwxrwx 1 user group 0 Aug 20 18:36 test52.txt
-   GTM> 
+   YDB> 
 
 This example opens file test52.txt and sets read access for the owner, while others have complete access. 
 
@@ -2796,13 +2796,13 @@ This example opens file test51.txt and specifies Read Write permission for users
 
 [NO]WRAP Applies to: TRM SD NULL FIFO PIPE SOC
 
-Enables or disables automatic record termination. When the current record size ($X) reaches the maximum WIDTH and the device has WRAP enabled, YottaDB/GT.M starts a new record, as if the routine had issued a WRITE ! Command. When reading, WRAP only determines whether $X remains within the range of zero to WIDTH.
+Enables or disables automatic record termination. When the current record size ($X) reaches the maximum WIDTH and the device has WRAP enabled, YottaDB starts a new record, as if the routine had issued a WRITE ! Command. When reading, WRAP only determines whether $X remains within the range of zero to WIDTH.
 
 Note that WRAP is enabled by default for SD, NULL, FIFO, PIPE and SOCKET. For TRM, WRAP is enabled by default if the terminfo variable auto_right_margin (capname "am") is set.
 
-NOWRAP causes YottaDB/GT.M to require a WRITE ! to terminate the record. NOWRAP allows $X to become greater than the device WIDTH for terminals and null devices.
+NOWRAP causes YottaDB to require a WRITE ! to terminate the record. NOWRAP allows $X to become greater than the device WIDTH for terminals and null devices.
 
-The combination of STREAM and NOWRAP on disk files allows you to write data of arbitrary length without truncation. Without the STREAM option, the WRAP option determines the action taken when the record length exceeds the device WIDTH. NOWRAP causes YottaDB/GT.M to truncate the record, while WRAP causes YottaDB/GT.M to insert a format control character except for FIXED format.
+The combination of STREAM and NOWRAP on disk files allows you to write data of arbitrary length without truncation. Without the STREAM option, the WRAP option determines the action taken when the record length exceeds the device WIDTH. NOWRAP causes YottaDB to truncate the record, while WRAP causes YottaDB to insert a format control character except for FIXED format.
 
 NOTE: FIFO, SD and SOCKET devices opened as $PRINCIPAL (at process start-up) default to NOWRAP and for SD and FIFO devices, STREAM.
 
@@ -2816,7 +2816,7 @@ The WRITEONLY deviceparameter specifies that the PIPE acts only to send its outp
 
 ZBFSIZE Applies to: SOC
 
-Allocates a buffer used by YottaDB/GT.M when reading from a socket. The ZBFSIZE deviceparameter should be at least as big as the largest message expected.
+Allocates a buffer used by YottaDB when reading from a socket. The ZBFSIZE deviceparameter should be at least as big as the largest message expected.
 
 By default, the size of ZBFSIZE is 1024 and the maximum it can be is 1048576.
 
@@ -2839,7 +2839,7 @@ This example opens the socket device tcpdev and allocates a buffer size of 2048 
 
 Z[NO]FF=expr Applied to: SOC
 
-expr specifies a string of characters, typically in $CHAR() format to send to socket device, whenever a routine issues a WRITE #. When no string is specified or when ZFF="", then no characters are sent. The default in YottaDB/GT.M is ZNOFF.
+expr specifies a string of characters, typically in $CHAR() format to send to socket device, whenever a routine issues a WRITE #. When no string is specified or when ZFF="", then no characters are sent. The default in YottaDB is ZNOFF.
 
 **ZIBFSIZE**
 
@@ -2960,13 +2960,13 @@ The format of the USE command is:
 .. parsed-literal::
    U[SE][:tvexpr] expr[:(keyword[=expr][:...])][,...]
 
-* The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB/GT.M executes the command.
+* The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
 * The required expression specifies the device to make the current device.
 * A USE that selects a device not currently OPENed by the process causes a run-time error.
 * The optional keywords specify deviceparameters that control device behavior; some deviceparameters take arguments delimited by an equal sign (=). If there is only one deviceparameter, the surrounding parentheses are optional.
 * An indirection operator and an expression atom evaluating to a list of one or more USE arguments form a legal argument for a USE.
 
-The intrinsic special variable $IO identifies the current device, so GT.M directs all READs and WRITEs to $IO. When a YottaDB/GT.M image starts, $PRINCIPAL is implicitly OPENed and USEd. Once the YottaDB/GT.M image USEs a device, $IO holds the name of that device until the next USE command.
+The intrinsic special variable $IO identifies the current device, so YottaDB directs all READs and WRITEs to $IO. When a YottaDB image starts, $PRINCIPAL is implicitly OPENed and USEd. Once the YottaDB image USEs a device, $IO holds the name of that device until the next USE command.
 
 A USE command modifies the device in accordance with the deviceparameters that apply to the device type and ignores those that do not apply. Characteristics set with USE deviceparameters persist until another USE for the same device with the corresponding deviceparameter. Characteristics persist through USEs of other devices and, except for SD, FIFO, and PIPE, through a subsequent CLOSE and re-OPEN.
 
@@ -2987,10 +2987,10 @@ ATTACH=expr Applies to: SOC
 
 expr specifies the handle for a socket in the socketpool. ATTACH looks up expr in the socketpool's collection of sockets and brings the one found to the current SOCKET device. If an ATTACH operation is successful, the attached socket becomes the current socket for the device.
 
-ATTACH is not compatible with any other device parameters in the USE command.A socket can move from one device to another using DETACH/ATTACH.
+ATTACH is not compatible with any other device parameters in the USE command. A socket can move from one device to another using DETACH/ATTACH.
 
 .. note::
-   A socket does not carry [I|O]CHSET with it while being moved. Such a socket uses the [I|O]CHSET of the device it is ATTACHed to. If there is input still buffered, this may cause unintentional consequences in the application if [I|O]CHSET changes. YottaDB/GT.M does not detect (or report) a change in [I|O]CHSET due to DETACH/ATTACH.
+   A socket does not carry [I|O]CHSET with it while being moved. Such a socket uses the [I|O]CHSET of the device it is ATTACHed to. If there is input still buffered, this may cause unintentional consequences in the application if [I|O]CHSET changes. YottaDB does not detect (or report) a change in [I|O]CHSET due to DETACH/ATTACH.
 
 For information on using the ATTACH with OPEN, refer to “ATTACH” in the OPEN Deviceparameters section.
 
@@ -3006,7 +3006,7 @@ By default, canonical input is enabled (that is [NO]CANONICAL is the default).
 
 [NO]CENABLE Applies to: TRM
 
-Enables or disables the ability to force YottaDB/GT.M into Direct Mode by entering <CTRL-C> at $PRINCIPAL.
+Enables or disables the ability to force YottaDB into Direct Mode by entering <CTRL-C> at $PRINCIPAL.
 
 If CENABLE is set, <CTRL-C> interrupts process execution. For more information on interrupt handling, refer to “Interrupt Handling”.
 
@@ -3036,14 +3036,14 @@ CONNECT=expr Applies to: SOC
 
 Enables a client connection with a server, which is located by the information provided by expr. A new socket is allocated for the client connection and is made the current socket for the device, if the operation is successful.
 
-expr specifies the protocol and the protocol-specific information. Currently, YottaDB/GT.M supports TCP/IP and LOCAL (also known as UNIX domain) socket protocols.
+expr specifies the protocol and the protocol-specific information. Currently, YottaDB supports TCP/IP and LOCAL (also known as UNIX domain) socket protocols.
 
 For more information, refer to “CONNECT”.
 
 .. note::
    CONNECT is not compatible with LISTEN.
 
-Although CONNECT can be used with USE command, YottaDB/FIS recommends not to use it that way, because unlike the OPEN command, there is no way to specify a timeout to the USE command. CONNECT in the USE command take a default timeout value of 0.
+Although CONNECT can be used with USE command, YottaDB recommends not to use it that way, because unlike the OPEN command, there is no way to specify a timeout to the USE command. CONNECT in the USE command take a default timeout value of 0.
 
 Example:
 
@@ -3053,7 +3053,7 @@ Refer to the "CONNECT" examples in “Examples of OPEN”.
 
 [NO]CONVERT Applies to: TRM
 
-Enables or disables YottaDB/GT.M from converting lowercase input to uppercase during READs.
+Enables or disables YottaDB from converting lowercase input to uppercase during READs.
 
 By default, the terminal device driver operates NOCONVERT.
 
@@ -3069,7 +3069,7 @@ This example converts all lowercase to uppercase during READ X.
 
 CTRAP=expr Applies to: TRM
 
-Establishes the <CTRL> characters in the expression as trap characters for the current device. When YottaDB/GT.M receives a trap character in the input from a device, YottaDB/GT.M issues a run-time exception. The device does not have to be the current device, that is $IO.
+Establishes the <CTRL> characters in the expression as trap characters for the current device. When YottaDB receives a trap character in the input from a device, YottaDB issues a run-time exception. The device does not have to be the current device, that is $IO.
 
 The <CTRL> characters are ASCII 0 though 31.
 
@@ -3082,9 +3082,9 @@ A trap character enabled by CTRAP produces one of the following actions:
 * If an EXCEPTION deviceparameter has been issued for the device, the process executes the EXCEPTION argument.
 * Otherwise, if $ETRAP is not the empty string, execute $ETRAP.
 * Otherwise, if $ZTRAP is not the empty string, the process executes $ZTRAP.
-* Otherwise, the YottaDB/GT.M image terminates.
+* Otherwise, the YottaDB image terminates.
 
-For more information on error handling, refer to Chapter 13: “Error Processing”.
+For more information on error handling, refer to `Chapter 13: “Error Processing” <https://docs.yottadb.com/ProgrammersGuide/errproc.html>`_.
 
 When CTRAP includes <CTRL-C>, [NO]CENABLE has no effect. CTRAPping <CTRL-C> also takes precedence over CENABLE.
 
@@ -3110,26 +3110,26 @@ See "Socket (server.m)" example.
 
 DETACH=expr Applies to: SOC
 
-Removes the socket identified by expr from the current socket device, without affecting any existing connection of that socket. The removed socket is placed in the socketpool and may be attached to another socket device. If the socket being removed is the current socket, then YottaDB/GT.M does the following:
+Removes the socket identified by expr from the current socket device, without affecting any existing connection of that socket. The removed socket is placed in the socketpool and may be attached to another socket device. If the socket being removed is the current socket, then YottaDB does the following:
 
 * The socket ATTACHed prior to the removed socket, is made current, if one such exists.
 * The socket ATTACHed after the removed socket, is made current, if the removed one was the first socket.
 * $PRINCIPAL is made the current device ($IO), if the removed socket was the only one in the current socket device.
 
 .. note::
-   A socket can move from one device to another using DETACH/ATTACH. A socket does not carry [I|O]CHSET with it while being moved. Such a socket uses the [I|O]CHSET of the device it is ATTACHed to. If there is input still buffered, this may cause unintentional consequences in the application if [I|O]CHSET changes. YottaDB/GT.M does not detect (or report) a change in [I|O]CHSET due to DETACH/ATTACH.
+   A socket can move from one device to another using DETACH/ATTACH. A socket does not carry [I|O]CHSET with it while being moved. Such a socket uses the [I|O]CHSET of the device it is ATTACHed to. If there is input still buffered, this may cause unintentional consequences in the application if [I|O]CHSET changes. YottaDB does not detect (or report) a change in [I|O]CHSET due to DETACH/ATTACH.
 
 Example:
 
 .. parsed-literal::
-   GTM>set tcp="seerv" open tcp:(listen="6321:TCP":attach="serv")::"SOCKET"
-   GTM>zshow "D"
+   YDB>set tcp="seerv" open tcp:(listen="6321:TCP":attach="serv")::"SOCKET"
+   YDB>zshow "D"
    /dev/pts/9 OPEN TERMINAL NOPAST NOESCA NOREADS TYPE WIDTH=80 LENG=24
    seerv OPEN SOCKET TOTAL=1 CURRENT=0
        SOCKET[0]=serv DESC=3 LISTENING PASSIVE NOTRAP PORT=6321
                 ZDELAY ZBFSIZE=1024 ZIBFSIZE=87380 NODELIMITER
-   GTM>set tcp="seerv" o tcp:(listen="6322:TCP":attach="serv2")::"SOCKET"
-   GTM>zshow "D"
+   YDB>set tcp="seerv" o tcp:(listen="6322:TCP":attach="serv2")::"SOCKET"
+   YDB>zshow "D"
    /dev/pts/9 OPEN TERMINAL NOPAST NOESCA NOREADS TYPE WIDTH=80 LENG=24
    seerv OPEN SOCKET TOTAL=2 CURRENT=1
        SOCKET[0]=serv DESC=3 LISTENING PASSIVE NOTRAP PORT=6321
@@ -3142,8 +3142,8 @@ At this point, the socket device "seerv" has two sockets associated with it.
 The following command moves the "serv" socket to the "socketpool" device. 
 
 .. parsed-literal::
-   GTM>use tcp:detach="serv"
-   GTM>use 0 zshow "D"
+   YDB>use tcp:detach="serv"
+   YDB>use 0 zshow "D"
    /dev/pts/9 OPEN TERMINAL NOPAST NOESCA NOREADS TYPE WIDTH=80 LENG=24
    seerv OPEN SOCKET TOTAL=1 CURRENT=0
        SOCKET[0]=serv2 DESC=4 LISTENING PASSIVE NOTRAP PORT=6322
@@ -3155,12 +3155,12 @@ The following command moves the "serv" socket to the "socketpool" device.
 Notice how socket "serv" is now associated with the pseudo socket device "socketpool". Its only purpose is to hold detached sockets.
 
 .. parsed-literal::
-   GTM>set tcp2="s2" o tcp2:::"SOCKET"
+   YDB>set tcp2="s2" o tcp2:::"SOCKET"
 
 This creates a new socket device.
 
 .. parsed-literal::
-   GTM>zshow "D"
+   YDB>zshow "D"
    /dev/pts/9 OPEN TERMINAL NOPAST NOESCA NOREADS TYPE WIDTH=80 LENG=24
     s2 OPEN SOCKET TOTAL=0 CURRENT=0
     seerv OPEN SOCKET TOTAL=1 CURRENT=0
@@ -3173,8 +3173,8 @@ This creates a new socket device.
 The following command moves the serv socket from the socketpool to the tcp2 device.
 
 .. parsed-literal::
-   GTM>use tcp2:attach="serv"
-   GTM>use 0 zshow "D"
+   YDB>use tcp2:attach="serv"
+   YDB>use 0 zshow "D"
    /dev/pts/9 OPEN TERMINAL NOPAST NOESCA NOREADS TYPE WIDTH=80 LENG=24
    s2 OPEN SOCKET TOTAL=1 CURRENT=0
       SOCKET[0]=serv DESC=3 LISTENING PASSIVE NOTRAP PORT=6321
@@ -3209,9 +3209,9 @@ This example disables the echo of terminal input.
 
 [NO]EDITING Applies to: TRM
 
-Enables the EDITING mode for the $PRINCIPAL device. If you enable EDITING, YottaDB/GT.M allows the use of the left and right cursor movement keys and certain <CTRL> characters within the current input line. You can recall the last input line using the up or down arrow key. The editing functions are the same as during direct mode command input as described in the "Line Editing" section of the "Operating & Debugging in Direct Mode" chapter except that backspace is not treated the same as the erase character from terminfo which is usually delete (ASCII 127). NOECHO disables EDITING mode.
+Enables the EDITING mode for the $PRINCIPAL device. If you enable EDITING, YottaDB allows the use of the left and right cursor movement keys and certain <CTRL> characters within the current input line. You can recall the last input line using the up or down arrow key. The editing functions are the same as during direct mode command input as described in the "Line Editing" section of the "Operating & Debugging in Direct Mode" chapter except that backspace is not treated the same as the erase character from terminfo which is usually delete (ASCII 127). NOECHO disables EDITING mode.
 
-Set the environment variable gtm_principal_editing to specify the mode for EDITING. For example, gtm_principal_editing="EDITING" enables EDITING mode at YottaDB/GT.M startup. You can also specify the mode for INSERT. For example, gtm_principal_editing="NOINSERT:EDITING". If you specify both modes then separate them with a colon (":") and put them in any order.
+Set the environment variable gtm_principal_editing to specify the mode for EDITING. For example, gtm_principal_editing="EDITING" enables EDITING mode at YottaDB startup. You can also specify the mode for INSERT. For example, gtm_principal_editing="NOINSERT:EDITING". If you specify both modes then separate them with a colon (":") and put them in any order.
 
 By default, EDITING mode is disabled.
 
@@ -3244,7 +3244,7 @@ Clears the current line from the physical cursor position to the end of the line
 
 [NO]ESCAPE Applies to: TRM
 
-Enables or disables YottaDB/GT.M processing of escape sequences.
+Enables or disables YottaDB processing of escape sequences.
 
 The following events result when a terminal has ESCAPE sequence processing enabled. When an <ESC> or <CSI> arrives in the terminal input, the device driver verifies the sequence that follows as a valid ANSI escape sequence, terminates the READ, and sets $ZB to contain the entire escape sequence. In the case of a READ * when ESCAPE sequence processing is enabled and an escape introducer is read, the entire escape sequence is returned in $ZB and the ASCII representation of the first character is returned in the argument of the READ \*.
 
@@ -3265,9 +3265,9 @@ This example disables the escape sequence processing and set $c(13) as the line 
 
 EXCEPTION=expr Applies to: All devices
 
-Defines an error handler for an I/O device. The expression must contain a fragment of YottaDB/GT.M code (for example, GOTO ERRFILE) that YottaDB/GT.M XECUTEs when the driver for the device detects an error, or an entryref to which YottaDB/GT.M transfers control, as appropriate for the current gtm_ztrap_form.
+Defines an error handler for an I/O device. The expression must contain a fragment of YottaDB code (for example, GOTO ERRFILE) that YottaDB XECUTEs when the driver for the device detects an error, or an entryref to which YottaDB transfers control, as appropriate for the current gtm_ztrap_form.
 
-For more information on error handling, refer to Chapter 13: “Error Processing”.
+For more information on error handling, refer to `Chapter 13: “Error Processing” <https://docs.yottadb.com/ProgrammersGuide/errproc.html>`_.
 
 **FILTER**
 
@@ -3279,11 +3279,11 @@ Each FILTER deviceparameter can have only one argument. However, multiple FILTER
 
 The valid values for expr:
 
-* [NO]CHARACTERS enables or disables maintenance of $X and $Y according to the M ANSI standard for the characters <BS>, <LF>, <CR> and <FF>. CHARACTERS causes the device driver to examine all output for the above characters, and to adjust $X and $Y accordingly. By default, YottaDB/GT.M performs special maintenance on $X and $Y only for M format control characters, WRAPped records, and certain action deviceparameters.
+* [NO]CHARACTERS enables or disables maintenance of $X and $Y according to the M ANSI standard for the characters <BS>, <LF>, <CR> and <FF>. CHARACTERS causes the device driver to examine all output for the above characters, and to adjust $X and $Y accordingly. By default, YottaDB performs special maintenance on $X and $Y only for M format control characters, WRAPped records, and certain action deviceparameters.
 * In UTF-8 mode, the usual Unicode line terminators are recognized.
-* [NO]ESCAPE alters the effect of ANSI escape sequences on $X and $Y. ESCAPE causes YottaDB/GT.M to filter the output, searching for ANSI escape sequences and preventing them from updating $X and $Y. By default, YottaDB/GT.M does not screen output for escape sequences.
+* [NO]ESCAPE alters the effect of ANSI escape sequences on $X and $Y. ESCAPE causes YottaDB to filter the output, searching for ANSI escape sequences and preventing them from updating $X and $Y. By default, YottaDB does not screen output for escape sequences.
 
-By default, YottaDB/GT.M does not perform output filtering. For YottaDB/GT.M to maintain $X for non-graphic characters as described by the standard, FILTER="CHARACTERS" must be enabled. Output filtering adds additional overhead to I/O processing.
+By default, YottaDB does not perform output filtering. For YottaDB to maintain $X for non-graphic characters as described by the standard, FILTER="CHARACTERS" must be enabled. Output filtering adds additional overhead to I/O processing.
 
 Example: 
 
@@ -3312,7 +3312,7 @@ By default, HOSTSYNC is disabled.
 
 Applies to: SD, PIPE, and FIFO
 
-IKEY allows the use of a seperate key to READ from a device; for example, when a GT.M process is an element of a UNIX pipe. The format of the IKEY deviceparameter is:
+IKEY allows the use of a seperate key to READ from a device; for example, when a YottaDB process is an element of a UNIX pipe. The format of the IKEY deviceparameter is:
 
 IKEY="key_name [IV]"
 
@@ -3336,7 +3336,7 @@ Performs a SEEK on input when $PRINCIPAL identifies a device that supports SEEK.
 
 [NO]INSERT Applies to: TRM
 
-Enables or disables insert mode for the $PRINCIPAL device. If INSERT mode is enabled, YottaDB/GT.M inserts input characters at the logical position in the input stream designated by the virtual cursor as defined by $X and $Y, for example in the middle of the line/record. If INSERT mode is disabled, input characters overwrite the existing characters in the input stream at the logical position designated by the virtual cursor. You can toggle the insert mode within a direct mode line or if EDITING is enabled for a single READ argument's input using the terminal's INSERT key. The INSERT mode is reset to the default or what was last specified with USE at the beginning of each direct mode line or READ argument. 
+Enables or disables insert mode for the $PRINCIPAL device. If INSERT mode is enabled, YottaDB inserts input characters at the logical position in the input stream designated by the virtual cursor as defined by $X and $Y, for example in the middle of the line/record. If INSERT mode is disabled, input characters overwrite the existing characters in the input stream at the logical position designated by the virtual cursor. You can toggle the insert mode within a direct mode line or if EDITING is enabled for a single READ argument's input using the terminal's INSERT key. The INSERT mode is reset to the default or what was last specified with USE at the beginning of each direct mode line or READ argument. 
 
 **IOERROR**
 
@@ -3345,7 +3345,7 @@ IOERROR=expr Applies to: SOC
 Enables exception handling in socket devices. expr specifies the I/O error trapping mode. A value equal to "TRAP" specifies that I/O errors on a device raise error conditions. A value equal to "NOTRAP", or when IOERROR is not specified, indicates that an I/O error on a device does not raise error conditions.
 
 .. note::
-   YottaDB/GT.M currently handles exception handling at device level instead of socket level.
+   YottaDB currently handles exception handling at device level instead of socket level.
 
 Example:
 
@@ -3374,7 +3374,7 @@ For more information and an example, refer to the description of KEY deviceparam
 
 Sets the virtual page length for an I/O device to the integer expression. You can specify the virtual page length up to 1,048,576. The page length controls the point at which the device driver automatically resets $Y to 0.
 
-By default, for terminals, YottaDB/GT.M uses the terminfo variable lines (which may be from the terminal definition or from a stty command) as the initial value for LENGTH. The default length for null device and socket device is 66.
+By default, for terminals, YottaDB uses the terminfo variable lines (which may be from the terminal definition or from a stty command) as the initial value for LENGTH. The default length for null device and socket device is 66.
 
 Setting LENGTH to zero prevents resetting $Y to zero.
 
@@ -3386,9 +3386,9 @@ Example:
 This example sets the virtual page length to 24 for socket device sock. 
 
 .. parsed-literal::
-   GTM>set tcp="seerv" open tcp:(listen="6321:TCP":attach="serv")::"SOCKET"
-   GTM>use tcp:listen="6322:TCP"
-   GTM>use 0 zshow "D"
+   YDB>set tcp="seerv" open tcp:(listen="6321:TCP":attach="serv")::"SOCKET"
+   YDB>use tcp:listen="6322:TCP"
+   YDB>use 0 zshow "D"
    /dev/pts/9 OPEN TERMINAL NOPAST NOESCA NOREADS TYPE WIDTH=80 LENG=24
    seerv OPEN SOCKET TOTAL=2 CURRENT=1
    SOCKET[0]=serv DESC=3 LISTENING PASSIVE NOTRAP PORT=6321
@@ -3400,7 +3400,7 @@ This example sets the virtual page length to 24 for socket device sock.
 
 Applies to: SD, PIPE, and FIFO
 
-OKEY allows the use of a seperate key for WRITE to a device; for example, when a YottaDB/GT.M process is an element of a UNIX pipe. The format of the IKEY deviceparameter is:
+OKEY allows the use of a seperate key for WRITE to a device; for example, when a YottaDB process is an element of a UNIX pipe. The format of the IKEY deviceparameter is:
 
 OKEY="key_name [IV]"
 
@@ -3424,7 +3424,7 @@ Performs a SEEK on output when $PRINCIPAL identifies a device that supports SEEK
 
 [NO]PASTHRU Applies to: TRM
 
-Enables or disables interpretation of the ERASE character for a terminal. PASTHRU shifts management of handling and response to ERASE characters in the input stream from YottaDB/GT.M to the application code.
+Enables or disables interpretation of the ERASE character for a terminal. PASTHRU shifts management of handling and response to ERASE characters in the input stream from YottaDB to the application code.
 
 Exercise caution with PASTHRU in debugging, because using a PASTHRU terminal in Direct Mode is somewhat awkward.
 
@@ -3483,9 +3483,9 @@ When EDITING is enabled, the control characters used for editing are not treated
 
 You can define any control character as a terminator, but they are all single character.
 
-When the terminal is in UTF-8 mode (chset=utf8,) YottaDB/GT.M limits the terminator characters to the first 127 which are common between ASCII and Unicode. In M mode, any of the 256 characters may be specified a terminator.
+When the terminal is in UTF-8 mode (chset=utf8,) YottaDB limits the terminator characters to the first 127 which are common between ASCII and Unicode. In M mode, any of the 256 characters may be specified a terminator.
 
-In UTF-8 mode, if CR is in the terminator list (either by default or explicitly,) YottaDB/GT.M ignore the following LF to keep with the standard Unicode line terminator scheme.
+In UTF-8 mode, if CR is in the terminator list (either by default or explicitly,) YottaDB ignore the following LF to keep with the standard Unicode line terminator scheme.
 
 NOTERMINATOR eliminates all terminators. When a terminal has all terminators disabled, fixed length READ and READ * terminate on receipt of some number of characters, and a timed READ terminates on timeout, but any other READ only terminates when the input fills the terminal read buffer.
 
@@ -3494,7 +3494,7 @@ By default, terminals recognize <CR>, <LF>, and <ESC> as terminators (that is, T
 Example:
 
 .. parsed-literal::
-   GTM> USE $P:TERM=$C(26,13,11,7)
+   YDB> USE $P:TERM=$C(26,13,11,7)
 
 This example enables the ASCII characters <SUB>, <CR>, <VT> and <BEL> as READ terminators.
 
@@ -3502,7 +3502,7 @@ This example enables the ASCII characters <SUB>, <CR>, <VT> and <BEL> as READ te
 
 [NO]TRUNCATE Applies to: SD
 
-Enables or disables overwriting of existing data in sequential files. Because the position of each record depends on the prior record, a WRITE destroys the ability to reliably position to subsequent records in a file. Therefore, by default (NOTRUNCATE), YottaDB/GT.M permits WRITEs only when the file pointer is positioned at the end-of-file. When a device has TRUNCATE enabled, a WRITE issued when the file pointer is not at end-of-file truncates the file by destroying all data from the file pointer to the end-of-file.
+Enables or disables overwriting of existing data in sequential files. Because the position of each record depends on the prior record, a WRITE destroys the ability to reliably position to subsequent records in a file. Therefore, by default (NOTRUNCATE), YottaDB permits WRITEs only when the file pointer is positioned at the end-of-file. When a device has TRUNCATE enabled, a WRITE issued when the file pointer is not at end-of-file truncates the file by destroying all data from the file pointer to the end-of-file.
 
 By default, OPEN accesses files NOTRUNCATE, which does not allow overwriting of sequential files.
 
@@ -3542,7 +3542,7 @@ Sets the device's logical record size and enables WRAP. The default WIDTH for SO
 
 NOWRAP and WIDTH supersede each other. When WIDTH and NOWRAP appear together on the same USE command, the final one controls the device behavior. For a terminal, WIDTH=0 is equivalent to WIDTH=n:NOWRAP, where n is the default length of a logical record on that terminal.
 
-Terminals inherit their default WIDTH in YottaDB/GT.M from the invoking shell environment. The default WIDTH for null and socket device is 255.
+Terminals inherit their default WIDTH in YottaDB from the invoking shell environment. The default WIDTH for null and socket device is 255.
 
 For SD and SOC which support 1MB strings, you can specify WIDTH up to 1,048,576.
 
@@ -3550,9 +3550,9 @@ In UTF-8 mode and TRM, SOC, SD, and FIFO output, the WIDTH deviceparameter is in
 
 In UTF-8 mode and SOC, the WIDTH deviceparameter is in units of Unicode code points and is used with $X to control truncation and wrapping for output and maintenance of $X and $Y for input.
 
-In M mode if WIDTH is set to 0, YottaDB/GT.M uses the default WIDTH of the TRM and SOC devices. USE x:WIDTH=0 is equivalent to USE x:(WIDTH=<device-default>:NOWRAP. For SOC, SD and FIFO devices in M mode, the device default is the RECORDSIZE.
+In M mode if WIDTH is set to 0, YottaDB uses the default WIDTH of the TRM and SOC devices. USE x:WIDTH=0 is equivalent to USE x:(WIDTH=<device-default>:NOWRAP. For SOC, SD and FIFO devices in M mode, the device default is the RECORDSIZE.
 
-YottaDB/GT.M format control characters, FILTER, and the device WIDTH and WRAP also have an effect on $X.
+YottaDB format control characters, FILTER, and the device WIDTH and WRAP also have an effect on $X.
 
 In UTF-8 mode and SOC output, the WIDTH deviceparameter specifies the number of characters in Unicode.
 
@@ -3560,13 +3560,13 @@ In UTF-8 mode and SOC output, the WIDTH deviceparameter specifies the number of 
 
 [NO]WRAP Applies to: TRM SOC NULL SD FIFO PIPE
 
-Enables or disables automatic record termination. When the current record size ($X) reaches the maximum WIDTH and the device has WRAP enabled, YottaDB/GT.M starts a new record, as if the routine had issued a WRITE ! command. When reading, WRAP only determines whether $X remains within the range of zero to WIDTH.
+Enables or disables automatic record termination. When the current record size ($X) reaches the maximum WIDTH and the device has WRAP enabled, YottaDB starts a new record, as if the routine had issued a WRITE ! command. When reading, WRAP only determines whether $X remains within the range of zero to WIDTH.
 
 Note that WRAP is enabled by default for SD, NULL, FIFO, PIPE and SOCKET. For TRM, WRAP is enabled by default if the terminfo variable auto_right_margin (capname "am") is set.
 
-NOWRAP causes YottaDB/GT.M to require a WRITE ! to terminate the record. NOWRAP allows $X to become greater than the device WIDTH for terminals and null devices.
+NOWRAP causes YottaDB to require a WRITE ! to terminate the record. NOWRAP allows $X to become greater than the device WIDTH for terminals and null devices.
 
-The combination of STREAM and NOWRAP on disk files allows you to write data of arbitrary length without truncation. Without the STREAM option, the WRAP option determines the action taken when the record length exceeds the device WIDTH. NOWRAP causes YottaDB/GT.M to truncate the record, while WRAP causes YottaDB/GT.M to insert a format control character except for FIXED format.
+The combination of STREAM and NOWRAP on disk files allows you to write data of arbitrary length without truncation. Without the STREAM option, the WRAP option determines the action taken when the record length exceeds the device WIDTH. NOWRAP causes YottaDB to truncate the record, while WRAP causes YottaDB to insert a format control character except for FIXED format.
 
 Example:
 
@@ -3576,9 +3576,9 @@ See WRAP examples in the OPEN deviceparameters section.
 
 X=intexpr Applies to: TRM
 
-$X positions the cursor to a vertical column on the terminal. If NOWRAP is enabled or intexpr<WIDTH, YottaDB/GT.M sets $X=intexpr. If WRAP is enabled and intexpr>WIDTH, YottaDB/GT.M sets $X=intexpr#WIDTH, where # is the YottaDB/GT.M modulo operator. The resulting $X determines the actual physical position.
+$X positions the cursor to a vertical column on the terminal. If NOWRAP is enabled or intexpr<WIDTH, YottaDB sets $X=intexpr. If WRAP is enabled and intexpr>WIDTH, YottaDB sets $X=intexpr#WIDTH, where # is the YottaDB modulo operator. The resulting $X determines the actual physical position.
 
-To ensure that $Y and $X match what is occurring visually on the terminal, the YottaDB/GT.M deviceparameters and the device characteristics must match at all times.
+To ensure that $Y and $X match what is occurring visually on the terminal, the YottaDB deviceparameters and the device characteristics must match at all times.
 
 The terminal hardware may affect physical cursor positioning. The X deviceparameter does not change the cursor row or update $Y.
 
@@ -3588,9 +3588,9 @@ Y=intexpr Applies to: TRM
 
 Positions the cursor to a horizontal row on the terminal.
 
-YottaDB/GT.M sets $Y=intexpr#LENGTH, where # is the YottaDB/GT.M modulo operator. If intexpr<LENGTH, the resulting $Y determines the physical position. If intexpr>LENGTH, the cursor is positioned so that $Y=intexpr#LENGTH, where # is the YottaDB/GT.M module operator. The terminal hardware may affect physical cursor positioning.
+YottaDB sets $Y=intexpr#LENGTH, where # is the YottaDB modulo operator. If intexpr<LENGTH, the resulting $Y determines the physical position. If intexpr>LENGTH, the cursor is positioned so that $Y=intexpr#LENGTH, where # is the YottaDB module operator. The terminal hardware may affect physical cursor positioning.
 
-To ensure that $Y and $X match what is occurring visually on the terminal, the YottaDB/GT.M deviceparameters and the device characteristics must match at all times. For example, if a process initiates a subprocess that changes the terminal wrap setting from NOWRAP, previously set with the YottaDB/GT.M USE command to WRAP , YottaDB/GT.M does not reflect the change when the subprocess completes. Therefore, wraps on the terminal do not reflect in the values of $X and $Y.
+To ensure that $Y and $X match what is occurring visually on the terminal, the YottaDB deviceparameters and the device characteristics must match at all times. For example, if a process initiates a subprocess that changes the terminal wrap setting from NOWRAP, previously set with the YottaDB USE command to WRAP , YottaDB does not reflect the change when the subprocess completes. Therefore, wraps on the terminal do not reflect in the values of $X and $Y.
 
 The Y deviceparameter does not change the cursor column or update $X.
 
@@ -3598,7 +3598,7 @@ The Y deviceparameter does not change the cursor column or update $X.
 
 ZBFSIZE Applies to: SOC
 
-Allocates a buffer used by GT.M when reading from a socket. The ZBFSIZE deviceparameter should be at least as big as the largest message expected.
+Allocates a buffer used by YottaDB when reading from a socket. The ZBFSIZE deviceparameter should be at least as big as the largest message expected.
 
 By default, the size of ZBFSIZE is 1024 and the maximum it can be is 1048576.
 
@@ -3612,7 +3612,7 @@ Controls buffering of data packets by the system TCP stack using the TCP_NODELAY
 
 Z[NO]FF=expr Applies to: SOC
 
-expr specifies a string of characters, typically in $CHAR() format to send to socket device, whenever a routine issues a WRITE #. When no string is specified or when ZFF="", then no characters are sent. The default in YottaDB/GT.M is ZNOFF.
+expr specifies a string of characters, typically in $CHAR() format to send to socket device, whenever a routine issues a WRITE #. When no string is specified or when ZFF="", then no characters are sent. The default in YottaDB is ZNOFF.
 
 Example:
 
@@ -3752,18 +3752,18 @@ The format of the READ command is:
 .. parsed-literal::
    R[EAD][:tvexpr] glvn|*glvn|glvn#intexpr|strlit|fcc[,...]
 
-* The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB/GT.M executes the command.
+* The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
 * A subscripted or unsubscripted global or local variable name specifies a variable into which to store the input; the variable does not have to exist prior to the READ; if the variable does exist prior to the READ, the READ replaces its old value.
 * For fixed format files, READ X always read WIDTH characters.
 * For VARIABLE or STREAM format files, READ X reads up to WIDTH characters, stopping if a line terminator or end of file is found first.
 * When an asterisk (*) immediately precedes the variable name, READ accepts one character of input and places the ASCII code for that character in the variable.
-* When a number sign (#) and a non-zero integer expression immediately follow the variable name, the integer expression determines the maximum number of characters accepted as input to the read; such reads terminate when YottaDB/GT.M reads the number of characters specified by the integer expression or a terminator in the input stream, whichever occurs first.
-* To provide a concise means of issuing prompts, YottaDB/GT.M sends string literal and format control character (!,?intexpr,#) arguments of a READ to the current device as if they were arguments of a WRITE.
+* When a number sign (#) and a non-zero integer expression immediately follow the variable name, the integer expression determines the maximum number of characters accepted as input to the read; such reads terminate when YottaDB reads the number of characters specified by the integer expression or a terminator in the input stream, whichever occurs first.
+* To provide a concise means of issuing prompts, YottaDB sends string literal and format control character (!,?intexpr,#) arguments of a READ to the current device as if they were arguments of a WRITE.
 * An indirection operator and an expression atom evaluating to a list of one or more READ arguments form a legal argument for a READ.
 
-The maximum length of the input string is the smaller of the device buffer size limitation or the YottaDB/GT.M maximum string size (1,048,576 bytes). If a record is longer than the maximum record length, YottaDB/GT.M returns the record piece by piece during sequential reads, for devices that allow it.
+The maximum length of the input string is the smaller of the device buffer size limitation or the YottaDB maximum string size (1,048,576 bytes). If a record is longer than the maximum record length, YottaDB returns the record piece by piece during sequential reads, for devices that allow it.
 
-When a string literal appears as an argument to a READ, M writes the literal to the current device. String literals appear as READ arguments to serve as prompts for input. YottaDB/GT.M does not permit expression arguments on a READ to act as prompts. Variable prompts must appear as arguments to a WRITE. If a variable appears as an argument to a READ, YottaDB/GT.M always interprets it as input, never as output. This facility is used mostly with terminal I/O.
+When a string literal appears as an argument to a READ, M writes the literal to the current device. String literals appear as READ arguments to serve as prompts for input. YottaDB does not permit expression arguments on a READ to act as prompts. Variable prompts must appear as arguments to a WRITE. If a variable appears as an argument to a READ, YottaDB always interprets it as input, never as output. This facility is used mostly with terminal I/O.
 
 The READ commands adjust $X and $Y, based on the length of the input read.
 
@@ -3782,20 +3782,20 @@ The following example reads the value "A", and returns the decimal ASCII represe
 Example:
 
 .. parsed-literal::
-   GTM> READ \*X
+   YDB> READ \*X
    A
-   GTM> WRITE X
+   YDB> WRITE X
    65
 
-If a timeout occurs before YottaDB/GT.M reads a character, the READ * returns a negative one (-1) in the variable.
+If a timeout occurs before YottaDB reads a character, the READ * returns a negative one (-1) in the variable.
 
 .. parsed-literal::
-   GTM>Set filename="mydata.out"; assume that mydata.out contains "主要雨在西班牙停留在平原".
-   GTM>Open filename:(readonly:ichset="UTF-16LE")
-   GTM>Use filename
-   GTM>Read \*x
-   GTM>Close filename
-   GTM>Write $char(x)
+   YDB>Set filename="mydata.out"; assume that mydata.out contains "主要雨在西班牙停留在平原".
+   YDB>Open filename:(readonly:ichset="UTF-16LE")
+   YDB>Use filename
+   YDB>Read \*x
+   YDB>Close filename
+   YDB>Write $char(x)
    主
 
 In this example, the READ * command reads the first character of the file mydata.out according to the encoding specified by ICHSET. 
@@ -3825,20 +3825,20 @@ The format of the WRITE command is:
 .. parsed-literal::
    W[RITE][:tvexpr] expr|*intexpr|fcc[,...]
 
-* The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB/GT.M executes the command.
+* The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
 * An expression argument supplies the text of a WRITE.
 * When a WRITE argument consists of a leading asterisk (*) followed by an integer expression, WRITE outputs one character associated with the ASCII code specified by the integer evaluation of the expression.
 * WRITE also accepts format control characters as arguments; format control characters modify the position of a virtual cursor: an exclamation point (!) produces the device specific record terminator (for example, new line for a terminal), a number sign (#) produces device specific page terminator (for example, form feed for a terminal) and a question mark (?) followed by an expression moves the virtual cursor to the column specified by the integer evaluation of the expression if the virtual cursor is to the "left" of the specified column.
 * When directed to a device bound to a mnemonicspace, WRITE also accepts controlmnemonics, which are keywords specific to the binding – they are delimited by a slash (/) prefix and optionally followed by a parenthetical list of arguments. The parentheses "( )" are optional when there are no arguments, but must appear even if there is a single argument
 * An indirection operator and an expression atom evaluating to a list of one or more WRITE arguments form a legal argument for a WRITE.
 
-YottaDB/GT.M can write up to 1,048,576 bytes (the YottaDB/GT.M maximum string size) as a result of a single WRITE argument. YottaDB/GT.M buffers output into a "logical record" for all devices except sockets without DELIMITERs and sequential devices with STREAM enabled. The WRITE command appends a string to the current record of the current device. YottaDB/GT.M does not write to the output device until the buffer is full, a YottaDB/GT.M format control character forces a write, a USE command, a CLOSE command, or, for terminals, the buffer becomes stale .
+YottaDB can write up to 1,048,576 bytes (the YottaDB maximum string size) as a result of a single WRITE argument. YottaDB buffers output into a "logical record" for all devices except sockets without DELIMITERs and sequential devices with STREAM enabled. The WRITE command appends a string to the current record of the current device. YottaDB does not write to the output device until the buffer is full, a YottaDB format control character forces a write, a USE command, a CLOSE command, or, for terminals, the buffer becomes stale .
 
-Each device has a WIDTH and a LENGTH that define the virtual "page". The WIDTH determines the maximum size of a record for a device, while the LENGTH determines how many records fit on a page. When the current record size ($X) reaches the maximum WIDTH and the device has WRAP enabled, YottaDB/GT.M starts a new record. When the current line ($Y) reaches the maximum LENGTH, YottaDB/GT.M starts a new page.
+Each device has a WIDTH and a LENGTH that define the virtual "page". The WIDTH determines the maximum size of a record for a device, while the LENGTH determines how many records fit on a page. When the current record size ($X) reaches the maximum WIDTH and the device has WRAP enabled, YottaDB starts a new record. When the current line ($Y) reaches the maximum LENGTH, YottaDB starts a new page.
 
 For devices OPENed with a Unicode CHSET, WRITE * takes intexpr as a code-point and writes the associated Unicode character in the encoding specified by CHSET. For devices OPENed in M mode, WRITE * takes intexpr as an ASCII value and writes the associated ASCII character.
 
-The WRITE command also has several format control characters that allow the manipulation of the virtual cursor. For all I/O devices, the YottaDB/GT.M format control characters do the following:
+The WRITE command also has several format control characters that allow the manipulation of the virtual cursor. For all I/O devices, the YottaDB format control characters do the following:
 
 * WRITE !: Clears $X and increments $Y and terminates the logical record in progress. The definition of "logical record" varies from device to device, and is discussed in each device section.
 * WRITE #: Clears $X and $Y and terminates the logical record in progress.
@@ -3872,18 +3872,18 @@ The format of the CLOSE command is:
 .. parsed-literal::
    C[LOSE][:tvexpr] expr[:(keyword[=expr][:...])][,...]
 
-* The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB/GT.M executes the command.
+* The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
 * The required expression specifies the device to CLOSE.
 * The optional keywords specify deviceparameters that control device behavior; some deviceparameters take arguments delimited by an equal sign (=); if there is only one keyword, the surrounding parentheses are optional.
 * An indirection operator and an expression atom evaluating to a list of one or more CLOSE arguments form a legal argument for a CLOSE.
 
-When a CLOSE is issued, YottaDB/GT.M flushes all pending output to the device, and processes any deviceparameters. CLOSEing a device not currently OPEN has no effect.
+When a CLOSE is issued, YottaDB flushes all pending output to the device, and processes any deviceparameters. CLOSEing a device not currently OPEN has no effect.
 
 If a partial record has been output, a WRITE ! is done to complete it. To suppress this action, set $X to zero before the CLOSE.
 
-YottaDB/GT.M retains the characteristics of all device types, except a sequential file, for use in case of subsequent re-OPENs. If the device is a sequential file, characteristics controlled by deviceparameters are lost after the CLOSE.
+YottaDB retains the characteristics of all device types, except a sequential file, for use in case of subsequent re-OPENs. If the device is a sequential file, characteristics controlled by deviceparameters are lost after the CLOSE.
 
-If the device being CLOSEd is $IO, YottaDB/GT.M implicitly USEs $PRINCIPAL. YottaDB/GT.M ignores CLOSE $PRINCIPAL.
+If the device being CLOSEd is $IO, YottaDB implicitly USEs $PRINCIPAL. YottaDB ignores CLOSE $PRINCIPAL.
 
 Example:
 
@@ -3907,7 +3907,7 @@ CLOSE Deviceparameters
 
 DELETE Applies to: SD FIFO SOC(LOCAL)
 
-Instructs YottaDB/GT.M to delete the disk file after YottaDB/GT.M closes it.
+Instructs YottaDB to delete the disk file after YottaDB closes it.
 
 **DESTROY**
 
@@ -3921,11 +3921,11 @@ Because it forms a communication link with a process it creates, CLOSE of a PIPE
 
 EXCEPTION=expr Applies to: All devices
 
-Defines an error handler for an I/O device. The expression must contain a fragment of YottaDB/GT.M code (for example, GOTO ERRFILE) that YottaDB/GT.M XECUTEs when the driver for the device detects an error, or an entryref to which YottaDB/GT.M transfers control, as appropriate for the current gtm_ztrap_form.
+Defines an error handler for an I/O device. The expression must contain a fragment of YottaDB code (for example, GOTO ERRFILE) that YottaDB XECUTEs when the driver for the device detects an error, or an entryref to which YottaDB transfers control, as appropriate for the current gtm_ztrap_form.
 
-The expression must contain a fragment of YottaDB/GT.M code (for example, GOTO ERRFILE) that YottaDB/GT.M XECUTEs when the driver for the device detects an error, or an entryref to which YottaDB/GT.M transfers control, as appropriate for the current gtm_ztrap_form.
+The expression must contain a fragment of YottaDB code (for example, GOTO ERRFILE) that YottaDB XECUTEs when the driver for the device detects an error, or an entryref to which YottaDB transfers control, as appropriate for the current gtm_ztrap_form.
 
-For more information on error handling, refer to Chapter 13: “Error Processing”.
+For more information on error handling, refer to `Chapter 13: “Error Processing” <https://docs.yottadb.com/ProgrammersGuide/errproc.html>`_.
 
 **GROUP**
 
@@ -3951,7 +3951,7 @@ By default, CLOSE does not modify the permissions on an existing file.
 
 RENAME=expr Applies to: SD
 
-Changes the file name to the name contained in the argument string. When the expression omits part of the pathname, GT.M constructs the full pathname by applying the defaults discussed in the section on device specifications.
+Changes the file name to the name contained in the argument string. When the expression omits part of the pathname, YottaDB constructs the full pathname by applying the defaults discussed in the section on device specifications.
 
 If the process has sufficient access permissions, it may use RENAME to specify a different directory as well as file name. RENAME cannot move a file to a different filesystem.
 
