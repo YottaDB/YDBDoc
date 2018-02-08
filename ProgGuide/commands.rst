@@ -688,7 +688,7 @@ The KILL command deletes local or global variables and their descendant nodes.
 The format of the KILL command is:
 
 .. parsed-literal::
-   K[ILL][:tvexpr] [glvn | (glvn[,...]) | \*lname | \*lvn ]
+   K[ILL][:tvexpr] [glvn | (lvn[,...]) | \*lname | \*lvn ]
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
 * The optional global or local variable name specifies the variable to delete; KILL deletes not only the variable specified in the argument, but also all variables descended from that variable, that is, those starting with the identical key-prefix.
