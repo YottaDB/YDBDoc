@@ -2816,12 +2816,12 @@ The format of the ZLINK command is:
 * An indirection operator and an expression atom evaluating to a list of one or more ZLINK arguments form a legal argument for a ZLINK.
 * When ZLINK encounters a bad object file it produces an INVOBJFILE error that identifies the problem object file.
 
-When the ZLINK command specifies a file, YottaDB sets $ZSOURCE to that filename. By default, ZLINK and ZEDIT use $ZSOURCE for a filename when they have a missing or null argument. A subsequent ZLINK without an argument is equivalent to ZLINK $ZSOURCE. For more information on $ZSOURCE, see the appropriate section in Chapter 8: “Intrinsic Special Variables”.
+When the ZLINK command specifies a file, YottaDB sets $ZSOURCE to that filename. By default, ZLINK and ZEDIT use $ZSOURCE for a filename when they have a missing or null argument. A subsequent ZLINK without an argument is equivalent to ZLINK $ZSOURCE. For more information on $ZSOURCE, see the appropriate section in `Chapter 8: “Intrinsic Special Variables” <https://docs.yottadb.com/ProgrammersGuide/isv.html>`_.
 
 .. note::
    In order to ensure compatibility with YottaDB versions that do not permit the percent sign (%) in a file name, use an underscore (_) in place of the percent in the ZLINK file name for routines beginning with a percent sign.
 
-If the expression includes an explicit directory, ZLINK searches only that directory. Otherwise, if $ZROUTINES is not null, a ZLINK command uses $ZROUTINES to locate files. If $ZROUTINES is null, ZLINK uses the current directory. For more information on $ZROUTINES, see the appropriate section in Chapter 8: “Intrinsic Special Variables”.
+If the expression includes an explicit directory, ZLINK searches only that directory. Otherwise, if $ZROUTINES is not null, a ZLINK command uses $ZROUTINES to locate files. If $ZROUTINES is null, ZLINK uses the current directory. For more information on $ZROUTINES, see the appropriate section in `Chapter 8: “Intrinsic Special Variables” <https://docs.yottadb.com/ProgrammersGuide/isv.html>`_.
 
 If the filename contains an explicit file extension, ZLINK processes the file according to the extension, object (.o) or source (usually .m). If the file name does not specify a file extension, ZLINK attempts to find and match both the object and source for a routine.
 
@@ -2859,7 +2859,7 @@ ZLINK Compilation
 
 If ZLINK compiles a routine and the -OBJECT= qualifier does not redirect the output, it places the resulting object file in the directory indicated by the search criteria. ZLINK incorporates the new object file into the image, regardless of its directory placement.
 
-If the command does not specify compile qualifiers (with expr2) and $ZCOMPILE is null, YottaDB uses the default M command qualifiers, -ignore, -labels=lower, -nolist, and -object. For more information on $ZCOMPILE, refer to the appropriate section in Chapter 8: “Intrinsic Special Variables”. For detailed descriptions of the M command qualifiers, see Chapter 3: “Development Cycle”.
+If the command does not specify compile qualifiers (with expr2) and $ZCOMPILE is null, YottaDB uses the default M command qualifiers, -ignore, -labels=lower, -nolist, and -object. For more information on $ZCOMPILE, refer to the appropriate section in Chapter 8: “Intrinsic Special Variables”. For detailed descriptions of the M command qualifiers, see `Chapter 3: “Development Cycle” <https://docs.yottadb.com/ProgrammersGuide/isv.html>`_.
 
 For information on producing object files, but not adding them to the current image, see “ZCOMpile”.
 
@@ -2929,7 +2929,7 @@ If the path to a file is non-existent, the request is ignored except in the case
 
 For each auto-relink enabled directory which a YottaDB process accesses while searching through $ZROUTINES, YottaDB creates a small control file (Relinkctl) in the directory identified by $gtm_linktmpdir (defaulting to $gtm_tmp, which in turn defaults to /tmp, if unspecified). The names of these files are of the form gtm-relinkctl-<murmur> where <murmur> is a hash of the realpath() to an auto-relink directory; for example: /tmp/gtm-relinkctl-f0938d18ab001a7ef09c2bfba946f002). With each Relinkctl file, YottaDB creates and associates a block of shared memory that contains associated control structures. Among the structures is a cycle number corresponding to each routine found in the routine directory; a change in the cycle number informs a process that it may need to determine whether there is a new version of a routine. Although YottaDB only creates relinkctl records for routines that actually exist on disk, it may increment cycle numbers for existing relinkctl records even if they no longer exist on disk.
 
-YottaDB creates both the Relinkctl file and shared memory with permissions based on the logic described in the "IPC Permissions" column of the "Shared Resource Authorization Permissions" section in the Administration and Operations Guide, except that the object directory, rather than the database file, provides the base permissions.
+YottaDB creates both the Relinkctl file and shared memory with permissions based on the logic described in the "IPC Permissions" column of the "Shared Resource Authorization Permissions" section in the `Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/index.html>`_, except that the object directory, rather than the database file, provides the base permissions.
 
 The MUPIP RCTLDUMP command reports information related to relinkctl files and their associated shared memory segments.
 
@@ -2967,9 +2967,9 @@ The benefits of auto-relink are as follows:
 The use and setup of the auto-relink facility depends upon the requirements. Here is an example:
 
 .. parsed-literal::
-   $ /usr/lib/fis-gtm/V6.2-001_x86_64/gtm
+   $ ydb
    YDB>w $zroutines
-   /home/jdoe/.fis-gtm/V6.2-001_x86_64/o*(/home/jdoe/.fis-gtm/V6.2-001_x86_64/r /home/jdoe/.fis-gtm/r) /usr/lib/fis-gtm/V6.2-001_x86_64/plugin/o/_POSIX.so /usr/lib/fis-gtm/V6.2-001_x86_64/plugin/o(/usr/lib/fis-gtm/V6.2-001_x86_64/plugin/r) /usr/lib/fis-gtm/V6.2-001_x86_64/libgtmutil.so /usr/lib/fis-gtm/V6.2-001_x86_64
+   /home/jdoe/.fis-gtm/V6.2-001_x86_64/o*(/home/jdoe/.fis-gtm/V6.2-001_x86_64/r /home/jdoe/.fis-gtm/r) /usr/local/lib/yottadb/r1.10/plugin/o/_POSIX.so /usr/local/lib/yottadb/r1.10/plugin/o(/usr/local/lib/yottadb/r1.10/plugin/r) /usr/local/lib/yottadb/r1.10/libgtmutil.so /usr/local/lib/yottadb/r1.10
 
 In $ZROUTINES, the \*-suffix after the object directory enables the auto-relink facility. By default, the gtm/gtmprofile scripts that are available as part of YottaDB distribution on sourceforge.net have auto-relink enabled.
 
@@ -3164,7 +3164,7 @@ The format of the ZPRINT command is:
 
 Note that the routinename may only appear before the colon (:) delimiter. The integer expression offsets may be positive or negative, but they must always be delimited by a plus sign (+).
 
-For more information on entryrefs, refer to Chapter 5: “General Language Features of M”.
+For more information on entryrefs, refer to `Chapter 5: “General Language Features of M” <https://docs.yottadb.com/ProgGuide/langfeat.html>`_.
 
 ++++++++++++++++++++++++
 Examples of ZPRINT
@@ -3220,7 +3220,7 @@ Publishes the new versions of routines to subscribers. The format of the ZRUPDAT
 * ZRUPDATE rejects file-name arguments that are symbolic links or start with a percent-sign (%)
 * ZRUPDATE recognizes question-mark (?) as a single character wild-card
 * If the path to a file is non-existent, the request is ignored except in the case where one desires a currently shared object file (one that was accessed before it was deleted) to no longer be shared.
-* To effect auto-relink, YottaDB creates small temporary files in the directory referred to by $gtm_linktmpdir (defaulting to $gtm_tmp, which in turn defaults to /tmp, if unspecified). The names of these files are of the form gtm-relinkctl<md5sum> where <md5sum> is a hash of the realpath() to an auto-relink directory. The group and permissions match those for the directory as described in the section Shared Resources Authorization Permissions in Appendix E (YottaDB Security Philosophy) of the UNIX Administration and Operations Guide. YottaDB recommends that all processes that share a directory whose contents are subject to ZRUPDATE use the same value for $gtm_linktmpdir so that all processes see update notifications - with different values of $gtm_linktmpdir, a ZRUPDATE by a process with one value of $gtm_linktmpdir would not be observed by a process with a different value of that environment variable.
+* To effect auto-relink, YottaDB creates small temporary files in the directory referred to by $gtm_linktmpdir (defaulting to $gtm_tmp, which in turn defaults to /tmp, if unspecified). The names of these files are of the form gtm-relinkctl<md5sum> where <md5sum> is a hash of the realpath() to an auto-relink directory. The group and permissions match those for the directory as described in the section `Shared Resources Authorization Permissions in Appendix E (YottaDB Security Philosophy) <https://docs.yottadb.com/AdminOpsGuide/securityph.html#shared-resource-authorization-permissions>`_ of the Administration and Operations Guide. YottaDB recommends that all processes that share a directory whose contents are subject to ZRUPDATE use the same value for $gtm_linktmpdir so that all processes see update notifications - with different values of $gtm_linktmpdir, a ZRUPDATE by a process with one value of $gtm_linktmpdir would not be observed by a process with a different value of that environment variable.
 * ZRUPDATE always updates the existing shared memory relinkctl information for a file with an existing entry.
 
 -----------------------
@@ -3812,7 +3812,7 @@ The format of the ZTSTART command is:
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
 * Because ZTSTART has no argument, at least two (2) spaces must follow the command to separate it from the next command on the line.
 
-For more information on Journaling and transaction fencing, refer to the "YottaDB Journaling" chapter in the Administration and Operations Guide.
+For more information on Journaling and transaction fencing, refer to the `"YottaDB Journaling" chapter in the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/ydbjournal.html>`_.
 
 -------------------
 ZWIthdraw
