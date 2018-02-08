@@ -313,6 +313,8 @@ All values are case-independent. When gtm_autorelink_keeprtn is defined and TRUE
 .. note::
    In the latest versions, gtmsecshr logs its messages in the system log and the environment variable gtm_log is ignored.
 
+**gtm_lvnullsubs** specifies the initialization of [NEVER][NO]LVNULLSUBS at process startup. The value of the environment varable can be 0 which is equivalent to VIEW “NOLVNULLSUBS”, 1 (the default) which is equivalent to VIEW “LVNULLSUBS” or 2, which is equivalent to VIEW “NEVERLVNULLSUBS”. These settings disallow, partially disallow, or allow local arrays to have empty string subscripts. 
+
 **gtm_max_sockets** specifies the maximum number of client connections for socket devices. The default is 64. While it must be large enough to accommodate the actual need, each reservation requires some memory in socket structures, so setting this number unnecessarily high causes requires a bit of additional memory for no benefit.
 
 **gtm_memory_reserve** specifies the size in kilobytes of the reserve memory that YottaDB should use in handling and reporting an out-of-memory condition. The default is 64 (KiB). Setting this too low can impede investigations of memory issues, but YottaDB only uses this reserve when a process runs out of memory so it almost never requires actual memory, only address space.
@@ -343,7 +345,7 @@ gtm_obfuscation_key can be used as a mechanism to pass an obfuscated password be
 
 **gtm_principal** specifies the value for $PRINCIPAL, which designates an alternative name (synonym) for the principal $IO device.
 
-**gtm_principal_editing** specifies the initial settings for $PRINCIPAL of the following colon-delimited deviceparameters: [NO]EDITING [NO]EMPTERM and [NO]INSERT; in an active process the USE command can modify these device characteristics. gtm_max_sockets specifies the maximum number of client connections for socket devices. The default is 64. While it must be large enough to accommodate the need, each reservation requires some memory in the socket structures, so setting this number unnecessarily high requires additional memory for no benefit.
+**gtm_principal_editing** specifies the initial settings for $PRINCIPAL of the following colon-delimited deviceparameters: [NO]EDITING [NO]EMPTERM and [NO]INSERT; in an active process the USE command can modify these device characteristics.
 
 .. note::
    The YottaDB direct mode commands have a more extensive capability in this regard, independent of the value of this environment variable.
