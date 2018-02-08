@@ -2528,7 +2528,7 @@ The format of the ZCOMPILE command is:
    ZCOM[PILE][:tvexpr] expr[,...]
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
-* The expression argument specifies one or more filenames, which must include the .m extension. Wildcards are acceptable in the filename specification. The filename specification can be optionally prefixed by qualifiers valid for a mumps command.
+* The expression argument specifies one or more relative or absolute paths to filenames, which must include the .m extension. Wildcards are acceptable in the path specification. The specification can be optionally prefixed by qualifiers valid for a mumps command.
 
 The $ZCSTATUS intrinsic special variable holds the value of the status code for the compilation performed by a ZCOMPILE command.
 
