@@ -136,7 +136,7 @@ The format of the DO command is:
 
 An explicit or implicit QUIT within the scope of the DO, but not within the scope of any other DO, FOR, XECUTE, or extrinsic, returns execution to the instruction following the calling point. This point may be the next DO argument or another command. At the end of a routine, or the end of a nesting level created by an argumentless DO, YottaDB performs an implicit QUIT. Any line that reduces the current level of nesting by changing the number of leading periods (.) causes an implicit QUIT, even if that line only contains a comment. Terminating the image and execution of ZGOTO commands are the only ways to avoid eventually returning execution to the calling point.
 
-A DO command may optionally pass parameters to the invoked subroutine. For more information about entryrefs and parameter passing, refer to `Chapter 5: “General Language Features of M” <https://docs.yottadb.com/ProgrammersGuide/langfeat.html>`_.
+A DO command may optionally pass parameters to the invoked subroutine. For more information about entryrefs and parameter passing, refer to `Chapter 5: “General Language Features of M” <https://docs.yottadb.com/ProgrammersGuide/langfeat.html>`__.
 
 +++++++++++++++++++++
 Examples of DO
@@ -355,7 +355,7 @@ The format of the GOTO command is:
 
 A GOTO command within a line following a FOR command terminates that FOR command.
 
-For more information on entryrefs, refer to `Chapter 5: “General Language Features of M” <https://docs.yottadb.com/ProgrammersGuide/langfeat.html>`_.
+For more information on entryrefs, refer to `Chapter 5: “General Language Features of M” <https://docs.yottadb.com/ProgrammersGuide/langfeat.html>`__.
 
 ++++++++++++++++++++++++
 Examples of GOTO
@@ -469,7 +469,7 @@ Example:
 
 An IF with more than one argument behaves as if those arguments were logically "ANDed." However, execution of the line ceases with the evaluation of the first false argument. For IF argument expressions containing the "AND" operator (&), by default, execution still ceases with the evaluation of the first false argument, however any global references within the expression act in sequence to maintain the naked reference. The "FULL_BOOLEAN" and "SIDE_EFFECTS" compiler settings modify this behavior if you desire YottaDB to provide side effects it would otherwise bypass due to short-circiuting of Boolean expressions.
 
-Postconditionals perform a function similar to IF; however, their scope is limited to a single command or argument, and they do not modify $TEST. For more information on postconditionals, see `Chapter 5: “General Language Features of M” <https://docs.yottadb.com/ProgrammersGuide/langfeat.html>`_.
+Postconditionals perform a function similar to IF; however, their scope is limited to a single command or argument, and they do not modify $TEST. For more information on postconditionals, see `Chapter 5: “General Language Features of M” <https://docs.yottadb.com/ProgrammersGuide/langfeat.html>`__.
 
 ++++++++++++++++
 Examples of IF
@@ -835,7 +835,7 @@ If a process issues a LOCK command for a named resource already ZALLOCATEd by th
 
 Currently, LOCK of an argument within a parenthetical list where the argument includes an extrinsic function that performs LOCK, ZALLOCATE or ZDEALLOCATE actions produces a BADLOCKNEST error except where there is only one such argument, it is the first argument in the list and the LOCK'ng as a consequence of the extrinsic function(s) is simple. Note that this pattern may still produce some unintended outcomes, so YottaDB recommends against its use.
 
-For more information on troubleshooting locks with the Lock Utility (LKE), refer to the chapter on that utility in the `Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/mlocks.html>`_.
+For more information on troubleshooting locks with the Lock Utility (LKE), refer to the `chapter on that utility in the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/mlocks.html>`_.
 
 ---------------------------------
 Using Locks within Transactions
@@ -845,7 +845,7 @@ Within transactions, LOCKs are used by YottaDB to ensure the ability to serializ
 
 The LOCK command locks a specified resource name that controls a tree structured name space. Outside of transactions when one process in an environment acquires a LOCK or a ZALLOCATE on a named resource, no other YottaDB process in that environment can LOCK a resource with an "overlapping" name until the first process releases the LOCK that it holds.
 
-For information on the use of LOCKs within transactions, refer to `Chapter 5: “General Language Features of M” <https://docs.yottadb.com/ProgrammersGuide/langfeat.html>`_.
+For information on the use of LOCKs within transactions, refer to `Chapter 5: “General Language Features of M” <https://docs.yottadb.com/ProgrammersGuide/langfeat.html>`__.
 
 **Lock Command Operation Summary**
 
@@ -1411,7 +1411,7 @@ The format of the TCOMMIT command is:
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
 * Because TCOMMIT has no argument, at least two (2) spaces must follow the command to separate it from the next command on the line.
 
-For an example of the use of the TCOMMIT command, see `Chapter 5: “General Language Features of M” <https://docs.yottadb.com/ProgrammersGuide/langfeat.html>`_.
+For an example of the use of the TCOMMIT command, see `Chapter 5: “General Language Features of M” <https://docs.yottadb.com/ProgrammersGuide/langfeat.html>`__.
 
 -------------------
 TREstart
@@ -1445,7 +1445,7 @@ A TP RESTART, either implicit or explicit, while executing $ZINTERRUPT in respon
 
 They also restore any local variables named by one or more active TSTARTs to the values they had when they were first named.
 
-For an example of the use of the TRESTART command, see `Chapter 5: “General Language Features of M” <https://docs.yottadb.com/ProgrammersGuide/langfeat.html>`_.
+For an example of the use of the TRESTART command, see `Chapter 5: “General Language Features of M” <https://docs.yottadb.com/ProgrammersGuide/langfeat.html>`__.
 
 ----------------------
 TROllback
@@ -1466,7 +1466,7 @@ The format of the TROLLBACK command is:
 * A TROLLBACK does not cause a transfer of control but is typically associated with one such as a QUIT (or GOTO).
 * TROLLBACK to a $TLEVEL other than zero (0) leaves $REFERENCE empty. This behavior is same as a full TROLLBACK to $TEVEL=0.
 
-For an example of the use of the TROLLBACK command, see `Chapter 5: “General Language Features of M” <https://docs.yottadb.com/ProgrammersGuide/langfeat.html>`_.
+For an example of the use of the TROLLBACK command, see `Chapter 5: “General Language Features of M” <https://docs.yottadb.com/ProgrammersGuide/langfeat.html>`__.
 
 ------------------
 TStart
@@ -1497,7 +1497,7 @@ Sub-transactions cannot COMMIT independently from the transaction, nor can they 
 
 When journaling, a transaction with an initial TSTART that has an argument specifying TRANSACTIONID=expr, where expr is an expression that evaluates to the keyword (case insensitive) BA[TCH], does not wait for the journal update to be written before returning control to the application after a successful TCOMMIT. The goal of this feature is to permit application control over any performance impact of journaling on any subset of transactions that can be recreated or recovered by means other than journaling.
 
-For an example of the TSTART command, refer to `Chapter 5: “General Language Features of M” <https://docs.yottadb.com/ProgrammersGuide/langfeat.html>`_.
+For an example of the TSTART command, refer to `Chapter 5: “General Language Features of M” <https://docs.yottadb.com/ProgrammersGuide/langfeat.html>`__.
 
 The following keywords may appear in a TSTART argument:
 
@@ -2458,7 +2458,7 @@ The format of the ZBREAK command is:
 * An indirection operator and an expression atom evaluating to a list of one or more ZBREAK arguments form a legal argument for a ZBREAK.
 * If a concurrent process reloads a trigger in which a process has an active ZBREAK, YottaDB automatically removes the breakpoint and issues a TRIGZBRKREM warning message when it refreshes the trigger; the TRIGZBRKREM warning message respects a message mask of 8 as maintained by the VIEW "BREAKMSG" command.
 
-When YottaDB encounters the entryref, YottaDB suspends execution of the routine code and XECUTEs the breakpoint action before executing any of the commands on the line. For more information on entryrefs, see `Chapter 5: “General Language Features of M” <https://docs.yottadb.com/ProgrammersGuide/langfeat.html>`_.
+When YottaDB encounters the entryref, YottaDB suspends execution of the routine code and XECUTEs the breakpoint action before executing any of the commands on the line. For more information on entryrefs, see `Chapter 5: “General Language Features of M” <https://docs.yottadb.com/ProgrammersGuide/langfeat.html>`__.
 
 When the optional integer expression is used, YottaDB activates the breakpoint on the intexpr-th time the process encounters the breakpoint during routine execution. Once YottaDB activates the breakpoint, that breakpoint remains active for the process until explicitly replaced or removed, or until the process terminates.
 
@@ -2621,7 +2621,7 @@ The format of the ZEDIT command is:
 * YottaDB stores source code in files with standard operating system format; generally the file name is the same as the YottaDB routinename with a default extention or type of .m.
 * An indirection operator and an expression atom evaluating to a list of one or more ZEDIT arguments form a legal argument for a ZEDIT
 
-If the expression includes a directory, ZEDIT searches only that directory. If $ZROUTINES is not null, a ZEDIT command that does not specify a directory uses $ZROUTINES to locate files. If $ZROUTINES is equal to an empty string, ZEDIT edits a file in the current working directory. For more information on $ZROUTINES, see the `appropriate section in Chapter 8: “Intrinsic Special Variables” <https://docs.yottadb.com/ProgrammersGuide/isv.html#zroutines>`_.
+If the expression includes a directory, ZEDIT searches only that directory. If $ZROUTINES is not null, a ZEDIT command that does not specify a directory uses $ZROUTINES to locate files. If $ZROUTINES is equal to an empty string, ZEDIT edits a file in the current working directory. For more information on $ZROUTINES, see the appropriate `section in Chapter 8: “Intrinsic Special Variables” <https://docs.yottadb.com/ProgrammersGuide/isv.html#zroutines>`_.
 
 When the argument to a ZEDIT includes a file or path name, $ZSOURCE maintains that as a default for ZEDIT and ZLINK. For more information on $ZSOURCE see the `appropriate section in Chapter 8: “Intrinsic Special Variables” <https://docs.yottadb.com/ProgrammersGuide/isv.html#zsource>`_.
 
@@ -2673,7 +2673,7 @@ The format of the ZGOTO command is:
 * An indirection operator and an expression atom evaluating to a list of one or more ZGOTO arguments form a legal argument for a ZGOTO.
 * ZGOTO accepts a trigger entryref (with a trailing hash-sign (#)); if the trigger is not currently loaded (by some previous trigger action), YottaDB generates a ZLINKFILE error. Note that ZGOTO should be reserved for error handling and testing, as it is a very unstructured operation.
 
-A ZGOTO command with an entryref performs a similar function to the GOTO command, with the additional capability of reducing the YottaDB stack level. In a single operation, ZGOTO executes ($ZLEVEL - intexpr) implicit QUITs and a GOTO operation, transferring control to the named entryref. For more information on entryrefs, refer to `Chapter 5: “General Language Features of M” <https://docs.yottadb.com/ProgrammersGuide/langfeat.html>`_.
+A ZGOTO command with an entryref performs a similar function to the GOTO command, with the additional capability of reducing the YottaDB stack level. In a single operation, ZGOTO executes ($ZLEVEL - intexpr) implicit QUITs and a GOTO operation, transferring control to the named entryref. For more information on entryrefs, refer to `Chapter 5: “General Language Features of M” <https://docs.yottadb.com/ProgrammersGuide/langfeat.html>`__.
 
 The ZGOTO command leaves the invocation stack at the level specified by the integer expression. YottaDB implicitly terminates any intervening FOR loops and unstacks variables stacked with NEW commands as appropriate.
 
@@ -2859,7 +2859,7 @@ ZLINK Compilation
 
 If ZLINK compiles a routine and the -OBJECT= qualifier does not redirect the output, it places the resulting object file in the directory indicated by the search criteria. ZLINK incorporates the new object file into the image, regardless of its directory placement.
 
-If the command does not specify compile qualifiers (with expr2) and $ZCOMPILE is null, YottaDB uses the default M command qualifiers, -ignore, -labels=lower, -nolist, and -object. For more information on $ZCOMPILE, refer to the appropriate section in Chapter 8: “Intrinsic Special Variables”. For detailed descriptions of the M command qualifiers, see `Chapter 3: “Development Cycle” <https://docs.yottadb.com/ProgrammersGuide/isv.html>`_.
+If the command does not specify compile qualifiers (with expr2) and $ZCOMPILE is null, YottaDB uses the default M command qualifiers, -ignore, -labels=lower, -nolist, and -object. For more information on $ZCOMPILE, refer to the appropriate section in Chapter 8: “Intrinsic Special Variables”. For detailed descriptions of the M command qualifiers, see `Chapter 3: “Development Cycle” <https://docs.yottadb.com/ProgrammersGuide/devcycle.html>`_.
 
 For information on producing object files, but not adding them to the current image, see “ZCOMpile”.
 
@@ -3164,7 +3164,7 @@ The format of the ZPRINT command is:
 
 Note that the routinename may only appear before the colon (:) delimiter. The integer expression offsets may be positive or negative, but they must always be delimited by a plus sign (+).
 
-For more information on entryrefs, refer to `Chapter 5: “General Language Features of M” <https://docs.yottadb.com/ProgGuide/langfeat.html>`_.
+For more information on entryrefs, refer to `Chapter 5: “General Language Features of M” <https://docs.yottadb.com/ProgGuide/langfeat.html>`__.
 
 ++++++++++++++++++++++++
 Examples of ZPRINT
