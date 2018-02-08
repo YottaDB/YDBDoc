@@ -2,12 +2,12 @@
 .. index::
    M Coding Standards
 
-========================================
-A. M Coding Standards - Do's and Don'ts
-========================================
+=================================================
+Appendix A: M Coding Standards - Do's and Don'ts
+=================================================
 
 .. contents::
-   :depth:2
+   :depth: 3
 
 --------------------------------------
 M Coding Standards - Do's and Don'ts
@@ -32,9 +32,9 @@ Use VIEW "BADCHAR" in production environments.
 
 **Internationalization**
 
-Use standard M functions - $ASCII(), $CHAR(), $EXTRACT(), $FIND(), $JUSTIFY(), $LENGTH(), $PIECE(), and $TRANSLATE() - for character-oriented operations. Use analogous byte-oriented functions - $ZASCII(), $ZCHAR(), $ZEXTRACT() / $ZSUBSTR(), $ZFIND(), $ZJUSTIFY(), $ZLENGTH(), $ZPIECE(), and $ZTRANSLATE() when the logic calls for byte, rather than character operations. Use $ZSUBSTR() to ensure the byte-oriented operation produces a valid character result and $ZEXTRACT() when the operation is strictly byte-oriented, with no character implications.
+Use standard M functions - $ASCII(), $CHAR(), $EXTRACT(), $FIND(), $JUSTIFY(), $LENGTH(), $PIECE(), and $TRANSLATE() - for character-oriented operations. Use analogous byte-oriented functions - $ZASCII(), $ZCHAR(), $ZEXTRACT()/$ZSUBSTR(), $ZFIND(), $ZJUSTIFY(), $ZLENGTH(), $ZPIECE(), and $ZTRANSLATE() when the logic calls for byte, rather than character operations. Use $ZSUBSTR() to ensure the byte-oriented operation produces a valid character result and $ZEXTRACT() when the operation is strictly byte-oriented, with no character implications.
 
-Use $ZCONVERT() rather than $TRANSLATE() / $ZTRANSLATE() for case conversion.
+Use $ZCONVERT() rather than $TRANSLATE()/$ZTRANSLATE() for case conversion.
 
 **Alias Variables and Containers**
 
@@ -61,7 +61,7 @@ Use lines with multiple, related commands to improve readability as long as they
 Limit lines to no wider than 132 columns.
 
 .. note::
-   The line oriented nature of M means that sometimes a single long line can be more readable than a block of code.  Such occasional long lines are permissible where so justified.
+   The line oriented nature of M means that sometimes a single long line can be more readable than a block of code. Such occasional long lines are permissible where justified.
 
 **Error Handling**
 
@@ -127,7 +127,7 @@ To minimize run-time errors and prevent out-of-design user induced outcomes, ens
 
 **Else**
 
-Use ELSE with care. Because YottaDB/GT.M stacks $TEST only at the execution of an extrinsic or an argumentless DO command, any XECUTE or DO with an argument has the potential side effect of altering $TEST.
+Use ELSE with care. Because YottaDB stacks $TEST only at the execution of an extrinsic or an argumentless DO command, any XECUTE or DO with an argument has the potential side effect of altering $TEST.
 
 **Post Conditionals**
 
@@ -163,7 +163,7 @@ Use $ETRAP rather than $ZTRAP unless there are good reasons not to.
 
 **$KEY vs. $ZB**
 
-Use $KEY rather than $ZB, unless code must run on old versions of YottaDB/GT.M which do not maintain $KEY for the target device.
+Use $KEY rather than $ZB, unless code must run on old versions of YottaDB which do not maintain $KEY for the target device.
 
 **$STack vs. $ZLEVEL**
 
@@ -179,7 +179,7 @@ When a subroutine needs to return a single value or an an array of values, choos
 
 **Triggers**
 
-While YottaDB/GT.M does not restrict trigger code from performing I/O operations, avoid using OPEN, USE, READ, WRITE and CLOSE within trigger application code. Such operations may be useful for development and diagnostic purposes. Triggers implicitly run as TP transactions and I/O violates the ACID property of Isolation , as do JOB, LOCK, ZSYSTEM and external calls. ($&) .
+While YottaDB does not restrict trigger code from performing I/O operations, avoid using OPEN, USE, READ, WRITE and CLOSE within trigger application code. Such operations may be useful for development and diagnostic purposes. Triggers implicitly run as TP transactions and I/O violates the ACID property of Isolation , as do JOB, LOCK, ZSYSTEM and external calls.
 
 Use comprehensive and strong coding conventions for trigger code or rely on user-specified names in managing the deletion and replacement of triggers.
 
@@ -206,7 +206,7 @@ Don'ts
 
 Never change the name of an object file.
 
-When forming routine names, the compiler truncates object filenames to a maximum length of 31 characters. For example, for a source file called Adatabaseenginewithscalabilityproven.m the compiler generates an object file called Adatabaseenginewithscalabilityp.o. Never let YottaDB/GT.M routines file names exceed 31 characters.
+When forming routine names, the compiler truncates object filenames to a maximum length of 31 characters. For example, for a source file called Adatabaseenginewithscalabilityproven.m the compiler generates an object file called Adatabaseenginewithscalabilityp.o. Never let YottaDB routines file names exceed 31 characters.
 
 **kill -9**
 
@@ -216,19 +216,19 @@ Killing a process with kill -9 may cause database damage. Use MUPIP STOP or MUPI
 
 Never run a routine as root.
 
-Other than YottaDB/GT.M installation, never perform any YottaDB/GT.M operation as root.
+Other than YottaDB installation, never perform any YottaDB operation as root.
 
 **Triggers**
 
 Never use chained and nested triggers that potentially update the same piece of a global variable. You should always assess the significance of having chained triggers for a database update especially because of the arbitrary trigger execution order.
 
-Never access ^#t with DSE, except with guidance from your YottaDB/GT.M support channel. Manage trigger definitions with MUPIP TRIGGER and $ZTRIGGER().
+Never access ^#t with DSE, except with guidance from your YottaDB support channel. Manage trigger definitions with MUPIP TRIGGER and $ZTRIGGER().
 
 **Local Variables**
 
 Never use exponential numeric form in the subscripts. It may lead to ambiguities. Because numeric subscripts collate ahead of string subscripts, the string subscript "01E5" is not the same as the numeric subscript 01E5.
 
-Never SET $ZWRTACn "variables". They are used by YottaDB/GT.M to make ZWRITE output more useful but are not supported for any other purpose. They are only mentioned here because you may see them in the output of ZWRITE and ZSHOW "V".
+Never SET $ZWRTACn "variables". They are used by YottaDB to make ZWRITE output more useful but are not supported for any other purpose. They are only mentioned here because you may see them in the output of ZWRITE and ZSHOW "V".
 
 
 
