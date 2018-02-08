@@ -3,7 +3,7 @@
    Triggers
 
 ===================
-Triggers
+14. Triggers
 ===================
 
 .. contents::
@@ -13,14 +13,14 @@ Triggers
 Triggers
 --------------------
 
-YottaDB/GT.M allows you to set up a trigger mechanism that automatically executes a defined action in response to a database update operation on a matching global node. The trigger mechanism executes a fragment of M code (trigger code) "before" or "as part of" a database update. You can define the specifications of this mechanism in a Trigger Definition File. For a trigger on KILL (and ZKILL), YottaDB/GT.M executes trigger code "before" the KILL operation. For example, a trigger on KILL ^CIF(:,1) might clear old cross references. For a trigger on SET, YottaDB/GT.M executes trigger code "as part of" the SET operation. Within trigger logic, the ISV $ZTOLDVAL provides read access to the value of global node prior to the update and $ZTVALUE provides read/write access to the tentative SET value. This allows you to modify the tentative SET value before YottaDB/GT.M commits it to the database. The term "as part of" means that SET triggers execute intertwined with the SET operation. Although it is not yet committed the database, the tentative new value appears to the process as assigned but the process must SET $ZTVALUE to make any revision to the tentative value, because a SET of the global node would nest the trigger recursively - a pathological condition. YottaDB/GT.M executes SET triggers during a MERGE update where YottaDB/GT.M internally performs a series of SET operations and while performing a $INCREMENT() operation where YottaDB/GT.M internally performs a SET operation.For all triggers, YottaDB/GT.M handles the database update event and the triggered actions as an Atomic (all or nothing) transaction. Because triggers use application code and are always part of an implicit or explicit TP transaction, trigger code must conform to ACID conventions discussed in the TP documentation.
+YottaDB allows you to set up a trigger mechanism that automatically executes a defined action in response to a database update operation on a matching global node. The trigger mechanism executes a fragment of M code (trigger code) "before" or "as part of" a database update. You can define the specifications of this mechanism in a Trigger Definition File. For a trigger on KILL (and ZKILL), YottaDB executes trigger code "before" the KILL operation. For example, a trigger on KILL ^CIF(:,1) might clear old cross references. For a trigger on SET, YottaDB executes trigger code "as part of" the SET operation. Within trigger logic, the ISV $ZTOLDVAL provides read access to the value of global node prior to the update and $ZTVALUE provides read/write access to the tentative SET value. This allows you to modify the tentative SET value before YottaDB commits it to the database. The term "as part of" means that SET triggers execute intertwined with the SET operation. Although it is not yet committed the database, the tentative new value appears to the process as assigned but the process must SET $ZTVALUE to make any revision to the tentative value, because a SET of the global node would nest the trigger recursively - a pathological condition. YottaDB executes SET triggers during a MERGE update where YottaDB internally performs a series of SET operations and while performing a $INCREMENT() operation where YottaDB internally performs a SET operation. For all triggers, YottaDB handles the database update event and the triggered actions as an Atomic (all or nothing) transaction. Because triggers use application code and are always part of an implicit or explicit TP transaction, trigger code must conform to the ACID conventions discussed in the TP documentation.
 
 Triggers meet many application needs including (but not limited to) the following:
 
 * **Enforce schema-level consistency**: Since database schema created in a normal M application are implicit, M applications implement logic to maintain and enforce conformance with an application schema. Using triggers to enforce schema-level consistency ensures all processes invoke the code uniformly, and increases code modularity and maintainability.
 * **Allow an application to maintain one or more non-primary key indices**. For example, a trigger on updates to global nodes containing a customer id can maintain an index on the last name.
 * **Implement business logic**: For example, an update to an account could automatically trigger updates to related accounts.
-* **Reducing replication traffic**: Since the YottaDB/GT.M replication stream carries only the triggering updates, not the triggered updates, triggers reduce network traffic.
+* **Reducing replication traffic**: Since the YottaDB replication stream carries only the triggering updates, not the triggered updates, triggers reduce network traffic.
 * **Automate application defined logging or journaling of updates or maintaining historical records**. Triggers can be used to control these.
 * **Implement referential integrity**: For example, a trigger can prevent the posting of a bank transaction for an inactive account and display a rule violation message.
 * **Debugging**: Debugging an application with multiple concurrent accesses is hard. You can use triggers to establish "watch points" on global variable updates to trap incorrect accesses. For example, if an application is failing because certain global variable nodes either have incorrect values or when previously set values disappear. A trigger can be used to trap all such accesses.
@@ -32,34 +32,34 @@ Trigger Definition File
 
 A trigger definition file is a text file used for adding new triggers, modifying existing triggers, or removing obsolete triggers. A trigger definition file consists of one or more trigger definitions. A trigger definition includes the following information:
 
-* **Trigger signature**: A trigger signature consists of global variable, subscripts, value, command, and trigger code. YottaDB/GT.M uses a combination of global variable, subscripts, value, and command to find the matching trigger to invoke for a database update.
+* **Trigger signature**: A trigger signature consists of global variable, subscripts, value, command, and trigger code. YottaDB uses a combination of global variable, subscripts, value, and command to find the matching trigger to invoke for a database update.
 
   * Global Variable: The name of a specific global to which this trigger applies.
   * Subscripts: Subscripts for global variable nodes of the named global, specified using the same patterns as the ZWRITE command.
-  * Value: For commands that SET or update the value at a node, YottaDB/GT.M honors an optional pattern to screen for changes to delimited parts of the value. A value pattern includes a piece separator and a list of pieces of interest.
-  * Command: There are four commands: SET, KILL, ZTRIGGER, and ZKILL (ZWITHDRAW is identical to ZKILL) the shorter name for the command is used when specifying triggers. MERGE is logically treated as equivalent to a series of SET operations performed in a loop. YottaDB/GT.M handles $INCREMENT() of a global matching a SET trigger definition as a triggering update.
-  * Trigger code: A string containing M code that YottaDB/GT.M executes when application code updates, including deletions by KILL and like commands, a global node with a matching trigger. The specified code can invoke additional routines and subroutines.
+  * Value: For commands that SET or update the value at a node, YottaDB honors an optional pattern to screen for changes to delimited parts of the value. A value pattern includes a piece separator and a list of pieces of interest.
+  * Command: There are four commands: SET, KILL, ZTRIGGER, and ZKILL (ZWITHDRAW is identical to ZKILL) the shorter name for the command is used when specifying triggers. MERGE is logically treated as equivalent to a series of SET operations performed in a loop. YottaDB handles $INCREMENT() of a global matching a SET trigger definition as a triggering update.
+  * Trigger code: A string containing M code that YottaDB executes when application code updates, including deletions by KILL and like commands, a global node with a matching trigger. The specified code can invoke additional routines and subroutines.
 
 .. note::
-   While YottaDB/GT.M does not restrict trigger code from performing I/O operations, YottaDB/FIS recommends against using OPEN, USE, READ, WRITE and CLOSE within trigger application code. Such operations may be useful for development and diagnostic purposes. However, triggers implicitly run as TP transactions and I/O violates the ACID property of Isolation. In addition, MUPIP has somewhat different I/O handling characteristics than the main YottaDB/GT.M run-time, so I/O within triggers run by MUPIP may behave differently than within the originating application environment.
+   While YottaDB does not restrict trigger code from performing I/O operations, YottaDB recommends against using OPEN, USE, READ, WRITE and CLOSE within trigger application code. Such operations may be useful for development and diagnostic purposes. However, triggers implicitly run as TP transactions and I/O violates the ACID property of Isolation. In addition, MUPIP has somewhat different I/O handling characteristics than the main YottaDB run-time, so I/O within triggers run by MUPIP may behave differently than within the originating application environment.
 
-* **ACID property modifiers for triggered database updates**: Currently, YottaDB/GT.M merely performs a syntax check on this part of a trigger definition. YottaDB/GT.M ensures the triggering database update, and any updates generated by trigger logic executed with transaction semantics. With the VIEW "NOISOLATION" command, YottaDB/GT.M transaction processing has long provided a mechanism for an application to inform the YottaDB/GT.M runtime system that it need not enforce Isolation. In such a case, the application and schema design provides Isolation by ensuring only one process ever updates nodes in a particular global at any given time, say by using $JOB as a subscript. This property anticipates a time when a trigger specification can provide NOISOLATION for particular nodes, in contrast to entire globals, and for every update to that node, in contrast to by process use of a VIEW command. Currently, the YottaDB/GT.M runtime system enforces Consistency for application logic inside a transaction and for triggered updates. This property anticipates a time when a trigger specification permits an application to inform the runtime system the application and schema design ensures appropriate Consistency for a trigger and its logic, thus relieving the YottaDB/GT.M runtime system from that task.
+* **ACID property modifiers for triggered database updates**: Currently, YottaDB merely performs a syntax check on this part of a trigger definition. YottaDB ensures the triggering database update, and any updates generated by trigger logic executed with transaction semantics. With the VIEW "NOISOLATION" command, YottaDB transaction processing has long provided a mechanism for an application to inform the YottaDB runtime system that it need not enforce Isolation. In such a case, the application and schema design provides Isolation by ensuring only one process ever updates nodes in a particular global at any given time, say by using $JOB as a subscript. This property anticipates a time when a trigger specification can provide NOISOLATION for particular nodes, in contrast to entire globals, and for every update to that node, in contrast to by process use of a VIEW command. Currently, the YottaDB runtime system enforces Consistency for application logic inside a transaction and for triggered updates. This property anticipates a time when a trigger specification permits an application to inform the runtime system the application and schema design ensures appropriate Consistency for a trigger and its logic, thus relieving the YottaDB runtime system from that task.
 
-* **Trigger Name**: You can optionally specify a trigger name that uniquely identifies each trigger. YottaDB/GT.M uses a trigger name for error reporting and configuration management of triggers - for example, a ZSHOW "S" reports the name of each trigger on the stack. If you do not specify a trigger name, YottaDB/GT.M automatically generates one using the global name as a base. User-specified trigger names and automatically generated trigger names occupy different name space; both last for the life of the definition. A user-specified trigger name is an alphanumeric string of up to 28 characters. It must start with an alphabetic character or a percent sign (%). For a trigger name, YottaDB/GT.M uses the same naming convention as an M name. In other contexts, YottaDB/GT.M truncates M names at 31 characters. However, YottaDB/GT.M treats a trigger name of over 28 characters as an error. This is because a trigger name uniquely identifies a trigger and truncation may cause duplication.
+* **Trigger Name**: You can optionally specify a trigger name that uniquely identifies each trigger. YottaDB uses a trigger name for error reporting and configuration management of triggers - for example, a ZSHOW "S" reports the name of each trigger on the stack. If you do not specify a trigger name, YottaDB automatically generates one using the global name as a base. User-specified trigger names and automatically generated trigger names occupy different name space; both last for the life of the definition. A user-specified trigger name is an alphanumeric string of up to 28 characters. It must start with an alphabetic character or a percent sign (%). For a trigger name, YottaDB uses the same naming convention as an M name. In other contexts, YottaDB truncates M names at 31 characters. However, YottaDB treats a trigger name of over 28 characters as an error. This is because a trigger name uniquely identifies a trigger and truncation may cause duplication.
 
-An automatically generated trigger name is a string comprised of two parts. Using the global name as a base, YottaDB/GT.M takes the first part as an alphanumeric string of up to 21 characters starting with an alphabetic character or a percent sign (%). The trailing part consists of an automatically incremented number in the form of #n# where n is a whole number that monotonically increases from 1 to 999999 that uniquely identifies a trigger for the same update. For example, if no trigger names are specified in the trigger definition file, YottaDB/GT.M automatically generates trigger names Account#1#, Account#2#, and Account#3# for the first three triggers defined for global variable ^Account. An attempt to use automatic assignment for more than a million triggers produces an error. Once the numeric portion of the auto generated names reaches 999999, you must reload all triggers associated with the global variables that use the auto generated name space. At run-time YottaDB/GT.M generates a trailing suffix of a hash-sign (#) followed by up to two characters to ensure that every trigger has a unique designation, even when the environment is complex. The run-time suffix applies to both user-specified and automatically generated trigger names. It helps in differentiating triggers with the same name in different database files.
+An automatically generated trigger name is a string comprised of two parts. Using the global name as a base, YottaDB takes the first part as an alphanumeric string of up to 21 characters starting with an alphabetic character or a percent sign (%). The trailing part consists of an automatically incremented number in the form of #n# where n is a whole number that monotonically increases from 1 to 999999 that uniquely identifies a trigger for the same update. For example, if no trigger names are specified in the trigger definition file, YottaDB automatically generates trigger names Account#1#, Account#2#, and Account#3# for the first three triggers defined for global variable ^Account. An attempt to use automatic assignment for more than a million triggers produces an error. Once the numeric portion of the auto generated names reaches 999999, you must reload all triggers associated with the global variables that use the auto generated name space. At run-time YottaDB generates a trailing suffix of a hash-sign (#) followed by up to two characters to ensure that every trigger has a unique designation, even when the environment is complex. The run-time suffix applies to both user-specified and automatically generated trigger names. It helps in differentiating triggers with the same name in different database files.
 
 Suppose you want to set up a trigger called TrigAcct on every s ^Acct("ID") to invoke the routine ^OpenAccount. Your trigger definition file may have an entry like +^Acct("ID") -command=S -xecute="do ^OpenAccount" -name=TrigAcct. The following diagram identifies the different parts of this trigger definition:
 
 .. image:: accttrig.gif
 
-To apply this trigger definition file to YottaDB/GT.M, all you do is to load it using MUPIP TRIGGER -TRIGGERFILE or $ZTRIGGER(). YottaDB/GT.M would invoke trigger name TrigAcct on every SET operation on ^Acct("ID"). Internally, YottaDB/GT.M stores trigger TrigAcct in the same database file where ^Acct is stored. The syntax of an entry in a trigger definition file is:
+To apply this trigger definition file to YottaDB, all you do is to load it using MUPIP TRIGGER -TRIGGERFILE or $ZTRIGGER(). YottaDB would invoke trigger name TrigAcct on every SET operation on ^Acct("ID"). Internally, YottaDB stores trigger TrigAcct in the same database file where ^Acct is stored. The syntax of an entry in a trigger definition file is:
 
 {-triggername\|-triggername-prefix\*\|-\*\|{+|-}trigvn -commands=cmd[,...] -xecute=strlit1 [-[z]delim=expr][-pieces=[lvn=]int1[:int2][;...]] [-options={[no]i[solation]|[no]c[onsistencycheck]}...] [-name=strlit2]}
 
 **-triggername\|-trigger-name-prefix\*\|-\* .**
 
--triggername deletes a user-specified trigger name called triggername from the database. -triggername* deletes all those user-defined triggers whose starting name match triggername. -* deletes all triggers; if the MUPIP TRIGGER command does not specify -NOPROMPT , YottaDB/GT.M displays a warning and asks for user confirmation before deleting all triggers. If MUPIP TRIGGER command specifies -NOPROMPT and the definition file includes a -* line, YottaDB/GT.M deletes all the triggers without user confirmation. $ZTRIGGER() performs deletions -NOPROMPT.+triggername issues an error; to add a new user-specified trigger name, use -name=strlit2.
+-triggername deletes a user-specified trigger name called triggername from the database. -triggername* deletes all those user-defined triggers whose starting name match triggername. -* deletes all triggers; if the MUPIP TRIGGER command does not specify -NOPROMPT , YottaDB displays a warning and asks for user confirmation before deleting all triggers. If MUPIP TRIGGER command specifies -NOPROMPT and the definition file includes a -* line, YottaDB deletes all the triggers without user confirmation. $ZTRIGGER() performs deletions -NOPROMPT.+triggername issues an error; to add a new user-specified trigger name, use -name=strlit2.
 
 **\{\+\|-\}trigvn**
 
@@ -68,15 +68,15 @@ trigvn is a global node on which you set up a trigger.-trigvn deletes any trigge
 1. You can use patterns and ranges for subscripts.
 2. You can specify a semicolon (;) separated list for subscripts.
 3. You can specify a selection list that includes a mix of points, ranges and patterns, but a pattern cannot serve as either end of a range. For example, :,"a":"d";?1U is a valid specification but :,"a":?1A is not.
-4. You can specify a local variable name for each subscript. For example instead of ^X(1,:,:), you can specify ^X(1,lastname=:,firstname=:). This causes YottaDB/GT.M to define local variables lastname and firstname to the actual second and third level subscripts respectively from the global node invoking this trigger. The trigger code can then use these variables just like any other M local variable. As described in the Trigger Execution Environment section, trigger code executes in a clean environment - as if all code is preceded by an implicit NEW - the implicit assignments apply only within the scope of the trigger code and don't conflict or affect any run-time code or other triggers.
+4. You can specify a local variable name for each subscript. For example instead of ^X(1,:,:), you can specify ^X(1,lastname=:,firstname=:). This causes YottaDB to define local variables lastname and firstname to the actual second and third level subscripts respectively from the global node invoking this trigger. The trigger code can then use these variables just like any other M local variable. As described in the Trigger Execution Environment section, trigger code executes in a clean environment - as if all code is preceded by an implicit NEW - the implicit assignments apply only within the scope of the trigger code and don't conflict or affect any run-time code or other triggers.
 5. You cannot use the @ operator, unspecified subscripts (for example, ^A() or ^A(:,)) or local or global variable names as subscripts.
 6. You cannot use patterns and ranges for the global variable name. Therefore, you cannot set a single trigger for ^Acct*.
 
-In order to account for any non-standard collation, YottaDB/GT.M evaluates string subscript ranges using the global specific collation when an application update first invokes a trigger - as a consequence, it detects and reports range issues at run-time rather than from MUPIP TRIGGER or $ZTRIGGER(), so test appropriately. For example, YottaDB/GT.M reports a run-time error for an inverted subscript range such as (ASCII) C:A.
+In order to account for any non-standard collation, YottaDB evaluates string subscript ranges using the global specific collation when an application update first invokes a trigger - as a consequence, it detects and reports range issues at run-time rather than from MUPIP TRIGGER or $ZTRIGGER(), so test appropriately. For example, YottaDB reports a run-time error for an inverted subscript range such as (ASCII) C:A.
 
 **-command=cmd**
 
-cmd is the trigger invocation command. Currently, you can specify one or more of S[ET], K[ILL], ZTR[IGGER], or ZK[ILL]. A subsequent YottaDB/GT.M release may support ZTK[ILL] for triggering on descendent nodes of a KILLed ancestor, but, while current versions accept ZTK, they convert it into K. If cmd specifies multiple command values, YottaDB/GT.M treats each M command as a separate trigger. Note that even if you specify both SET and KILL, only one M command matches at any given time. Trigger code is not executed in the following conditions:
+cmd is the trigger invocation command. Currently, you can specify one or more of S[ET], K[ILL], ZTR[IGGER], or ZK[ILL]. A subsequent YottaDB release may support ZTK[ILL] for triggering on descendent nodes of a KILLed ancestor, but, while current versions accept ZTK, they convert it into K. If cmd specifies multiple command values, YottaDB treats each M command as a separate trigger. Note that even if you specify both SET and KILL, only one M command matches at any given time. Trigger code is not executed in the following conditions:
 
 * A KILL of a node that does not exist.
 * A KILL of a node that has a cmd=ZK trigger, but no cmd=K trigger.
@@ -87,7 +87,7 @@ cmd is the trigger invocation command. Currently, you can specify one or more of
 
 strlit1 specifies the trigger code that is executed when an update matches trigvn. If strlit1 is a single line, enclose it with quotes (") and make sure that the quotes inside strlit1 are doubled as in normal M syntax.
 
-If strlit1 is in multiple lines, mark the beginning with << which must immediately follow the = after the -xecute. A newline must immediately follow the <<. >> should mark the end of multiple-line strlit1 and must be at the beginning of a line. The lines in strlit1 follow the standard conventions of a YottaDB/GT.M program, that is, optional label, line start, and M code.
+If strlit1 is in multiple lines, mark the beginning with << which must immediately follow the = after the -xecute. A newline must immediately follow the <<. >> should mark the end of multiple-line strlit1 and must be at the beginning of a line. The lines in strlit1 follow the standard conventions of a YottaDB program, that is, optional label, line start, and M code.
 
 The maximum length of strlit1 (even if multi-line) is 1048576 (ASCII) characters or 4096 DB records, whichever is smaller.
 
@@ -97,7 +97,7 @@ To validate strlit1, MUPIP TRIGGER or $ZTRIGGER() compiles it before applying th
    Trigger compilation detects compilation errors, but not run-time errors. Therefore, you should always test your trigger code before applying trigger definitions to the database. 
 
 .. note::
-   As stated in the Trigger Definition File section, the text of trigger code is a part of the trigger signature. If you use two trigger signatures that have the same semantics (global variable, subscript, value, and command) but different text (for example: set foo=$ztoldval, s foo=$ztoldval, and set foo=$ztol), their signatures become different and YottaDB/GT.M treats them as different triggers. YottaDB/FIS recommends you to use comprehensive and strong coding conventions for trigger code or rely on user-specified names in managing the deletion and replacement of triggers.
+   As stated in the Trigger Definition File section, the text of trigger code is a part of the trigger signature. If you use two trigger signatures that have the same semantics (global variable, subscript, value, and command) but different text (for example: set foo=$ztoldval, s foo=$ztoldval, and set foo=$ztol), their signatures become different and YottaDB treats them as different triggers. YottaDB recommends you to use comprehensive and strong coding conventions for trigger code or rely on user-specified names in managing the deletion and replacement of triggers.
 
 Example:
 
@@ -113,8 +113,8 @@ f cmd is S[et], you can specify an optional piece list sequence where int2>int1 
 
 .. parsed-literal::
    +^trigvn -commands=S -pieces=3;4 -delim="|" -options=NOI,NOC -xecute="W ""3rd or 4th element updated."""
-   GTM>W ^trigvnWindow\|Chair\|Table\|Door\|
-   GTM>s $Piece(^trigvn,"|",3)="Dining Table"
+   YDB>W ^trigvnWindow\|Chair\|Table\|Door\|
+   YDB>s $Piece(^trigvn,"|",3)="Dining Table"
    3rd or 4th element updated.
 
 This trigger is not executed if you change the first element. For example:
@@ -123,15 +123,15 @@ S $Piece(^trigvn,"|",1)="Chandelier"
 
 does not invoke the trigger.
 
-You can also specify a range for your piece sequence. For example, 3:5;7;9:11 specifies a trigger on pieces 3 through 5,7 and 9 through 11. YottaDB/GT.M merges any overlapping values or ranges - for example, 3:6;7 is the same as 3:7.
+You can also specify a range for your piece sequence. For example, 3:5;7;9:11 specifies a trigger on pieces 3 through 5,7 and 9 through 11. YottaDB merges any overlapping values or ranges - for example, 3:6;7 is the same as 3:7.
 
 **[-[z]delim=expr]**
 
-If cmd is S[ET] , you can specify an optional piece delimiter using -[z]delim=expr where expr is a string literal or an expression (with very limited syntax) evaluating to a string separating the pieces (e.g., "|") in the values of nodes, and is interpreted as an ASCII or UTF-8 string based on the environment variable gtm_chset. To allow for unprintable delimiters in the delimiter expression, MUPIP TRIGGER only accepts $CHAR() and $ZCHAR() and string concatenation (_) as embellishments to the string literals. If zdelim specifies a delimiter, YottaDB/GT.M uses the equivalent of $ZPIECE() to match pieces and to identify changes in $ZTUPDATE() (refer to the ISV description for additional information); otherwise, if delim specifies a delimiter, YottaDB/GT.M uses the equivalent of $PIECE() for the current mode (M or UTF-8). Specifying a delimiter for cmd other than S[ET] or specifying both delim and zdelim for the same trigger each produce an error.
+If cmd is S[ET] , you can specify an optional piece delimiter using -[z]delim=expr where expr is a string literal or an expression (with very limited syntax) evaluating to a string separating the pieces (e.g., "|") in the values of nodes, and is interpreted as an ASCII or UTF-8 string based on the environment variable gtm_chset. To allow for unprintable delimiters in the delimiter expression, MUPIP TRIGGER only accepts $CHAR() and $ZCHAR() and string concatenation (_) as embellishments to the string literals. If zdelim specifies a delimiter, YottaDB uses the equivalent of $ZPIECE() to match pieces and to identify changes in $ZTUPDATE() (refer to the ISV description for additional information); otherwise, if delim specifies a delimiter, YottaDB uses the equivalent of $PIECE() for the current mode (M or UTF-8). Specifying a delimiter for cmd other than S[ET] or specifying both delim and zdelim for the same trigger each produce an error.
 
 **[-options= {no]i[solation]\|[[no]c[onsistencycheck]}...**
 
-You can specify [NO] ISOLATION or [NO]CONSISTENCYCHECK as a property of the triggered database updates. NOISOLATION is a facility for your application to instruct YottaDB/GT.M where the application logic and database schema take responsibility for ensuring the ACID property of ISOLATION, and that any apparent collisions are purely coincidental from multiple global nodes resident in the same physical block which serves as the YottaDB/GT.M level of granularity in conflict checking. In the current release this trigger designation is notational only - you must still implement NOISOLATION at the process level with the VIEW command, but you can use the trigger designation in planning to move to schema-based control of this facility. NOCONSISTENCYCHECK is a facility for your application to instruct YottaDB/GT.M that application logic and schema take responsibility for ensuring the ACID property of CONSISTENCY. The [NO]CONSISTENCYCHECK feature is not yet implemented and will be made available in a future YottaDB/GT.M release. For now, you can plan to move CONSISTENCY responsibility from your application to a trigger and implement it later when this feature becomes available. Note: -options are not part of the trigger signature and so can be modified without deleting an existing trigger.
+You can specify [NO] ISOLATION or [NO]CONSISTENCYCHECK as a property of the triggered database updates. NOISOLATION is a facility for your application to instruct YottaDB where the application logic and database schema take responsibility for ensuring the ACID property of ISOLATION, and that any apparent collisions are purely coincidental from multiple global nodes resident in the same physical block which serves as the YottaDB level of granularity in conflict checking. In the current release this trigger designation is notational only - you must still implement NOISOLATION at the process level with the VIEW command, but you can use the trigger designation in planning to move to schema-based control of this facility. NOCONSISTENCYCHECK is a facility for your application to instruct YottaDB that application logic and schema take responsibility for ensuring the ACID property of CONSISTENCY. The [NO]CONSISTENCYCHECK feature is not yet implemented and will be made available in a future YottaDB release. For now, you can plan to move CONSISTENCY responsibility from your application to a trigger and implement it later when this feature becomes available. Note: -options are not part of the trigger signature and so can be modified without deleting an existing trigger.
 
 **[-name=strlit2]**
 
@@ -165,17 +165,17 @@ The following table briefly describes all ISVs (Intrinsic Special Variables) ava
 |                       | takes $TLEVEL from 0 to 1).                                                                                                                               |
 +-----------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------+
 | $ZTVALUE              | For SET, $ZTVALUE has the value assigned to the node which triggered the update. Initially this is the value specified by the explicit (triggering) SET   |
-|                       | operation. Modifying $ZTVALUE within a trigger modifies the value YottaDB/GT.M eventually assigns to the node.                                            |
+|                       | operation. Modifying $ZTVALUE within a trigger modifies the value YottaDB eventually assigns to the node.                                                 |
 +-----------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------+
-| $ZTUPDATE             | For SET commands where the YottaDB/GT.M trigger specifies a piece separator, $ZTUPDATE provides a comma separated list of ordinal piece numbers of pieces |
+| $ZTUPDATE             | For SET commands where the YottaDB trigger specifies a piece separator, $ZTUPDATE provides a comma separated list of ordinal piece numbers of pieces      |
 |                       | that differ between the current values of $ZTOLDVAL and $ZTVALUE.                                                                                         |
 +-----------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------+
 | $ZTWORMHOLE           | $ZTWORMHOLE allows you to specify a string up to 128KB that you want to make available during trigger execution. You can use $ZTWORMHOLE to supply        |
 |                       | application context or process context to your trigger logic. Because $ZTWORMHOLE is retained throughout the duration of the process, you can read/write  |
-|                       | $ZTWORMHOLE both from inside and outside a trigger. Note that if trigger code does not reference $ZTWORMHOLE, YottaDB/GT.M does not make it available to  |
+|                       | $ZTWORMHOLE both from inside and outside a trigger. Note that if trigger code does not reference $ZTWORMHOLE, YottaDB does not make it available to       |
 |                       | MUPIP (via the journal files or replication stream). Therefore, if a replicating secondary has different trigger code than the initiating primary (an     |
 |                       | unusual configuration) and the triggers on the replicating node require information from $ZTWORMHOLE, the triggers on the initiating node must reference  |
-|                       | $ZTWORMHOLE to ensure YottaDB/GT.M maintains the data it contains for use by the update process on the replicating node. YottaDB/GT.M allows you to change|
+|                       | $ZTWORMHOLE to ensure YottaDB maintains the data it contains for use by the update process on the replicating node. YottaDB allows you to change          |
 |                       | $ZTWORMHOLE within trigger code so that a triggered update can trigger other updates but because of the arbitrary ordering of triggers matching the same  |
 |                       | node (refer to the discussion on trigger chaining below), such an approach requires careful design and implementation.                                    |
 +-----------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -186,16 +186,16 @@ The Trigger Execution Environment section describes the interactions of the foll
 Chained and Nested Triggers
 -----------------------------------
 
-Triggers are chained or nested when a database update sets off more than one trigger. A nested trigger is a trigger set off by another trigger. YottaDB/GT.M assigns a nesting level to each nested trigger to up to 127 levels. While nested triggers are always Atomic with their triggering update YottaDB/GT.M gives each nested trigger a new trigger context rather than a part of the triggering update. A chained trigger is an arbitrary sequence of matching triggers for the same database update. Consider the following trigger definition entries:
+Triggers are chained or nested when a database update sets off more than one trigger. A nested trigger is a trigger set off by another trigger. YottaDB assigns a nesting level to each nested trigger to up to 127 levels. While nested triggers are always Atomic with their triggering update YottaDB gives each nested trigger a new trigger context rather than a part of the triggering update. A chained trigger is an arbitrary sequence of matching triggers for the same database update. Consider the following trigger definition entries:
 
 .. parsed-literal::
    +^Acct("ID") -commands=Set -xecute="Set ^Acct(1)=$ZTVALUE+1"
    +^Acct(sub=:) -command=Set -xecute="Set ^X($ZTVALUE)=sub"
 
-This example sets off a chained sequence of two triggers and one nested trigger. On Set ^Acct("ID")=10, YottaDB/GT.M chains together an arbitrary sequence of triggers for ^Acct("ID") and ^Acct(sub:). It is possible for either the ^Acct(sub=:) trigger or the ^Acct("ID") trigger to execute first and the other to follow because the trigger execution sequence is arbitrary. Whenever YottaDB/GT.M invokes the trigger for ^Acct("ID"), the Set ^Acct(1)=$ZTVALUE+1 code sets off the trigger for ^Acct(sub=:) as a nested trigger.
+This example sets off a chained sequence of two triggers and one nested trigger. On Set ^Acct("ID")=10, YottaDB chains together an arbitrary sequence of triggers for ^Acct("ID") and ^Acct(sub:). It is possible for either the ^Acct(sub=:) trigger or the ^Acct("ID") trigger to execute first and the other to follow because the trigger execution sequence is arbitrary. Whenever YottaDB invokes the trigger for ^Acct("ID"), the Set ^Acct(1)=$ZTVALUE+1 code sets off the trigger for ^Acct(sub=:) as a nested trigger.
 
 .. note::
-   YottaDB/FIS recommends against using chained and nested triggers that potentially update the same piece of a global variable. You should always assess the significance of having chained triggers for a database update especially because of the arbitrary trigger execution order. The following table shows the stacking behavior of some Intrinsic Special Variables in chained and nested triggers.
+   YottaDB recommends against using chained and nested triggers that potentially update the same piece of a global variable. You should always assess the significance of having chained triggers for a database update especially because of the arbitrary trigger execution order. The following table shows the stacking behavior of some Intrinsic Special Variables in chained and nested triggers.
 
 +----------------------------+------------------------------------+------------------------------------------+
 | ISV                        | Chained Triggers                   | Nested Triggers                          |
@@ -234,7 +234,7 @@ Note that a trigger that is both nested and chained has the characteristics from
 A Simple Example
 --------------------------------
 
-This section contains a simple example showing how a YottaDB/GT.M trigger can automatically maintain cross references in response to a SET or KILL operation on ^CIF(ACN,1). It also reinforces the basic trigger concepts explained above. Global nodes in ^CIF(ACN,1) have a structure ^CIF(ACN,1)=NAM|XNAME| where the vertical-bars are delimiters and XNAME is a customer's canonical name (e.g., "Doe, Johnny"). The application schema has one cross reference index, ^XALPHA("A",XNAME,ACN)="". A YottaDB/GT.M trigger specified for ^CIF(:,1) nodes can automatically maintain the cross references.
+This section contains a simple example showing how a YottaDB trigger can automatically maintain cross references in response to a SET or KILL operation on ^CIF(ACN,1). It also reinforces the basic trigger concepts explained above. Global nodes in ^CIF(ACN,1) have a structure ^CIF(ACN,1)=NAM|XNAME| where the vertical-bars are delimiters and XNAME is a customer's canonical name (e.g., "Doe, Johnny"). The application schema has one cross reference index, ^XALPHA("A",XNAME,ACN)="". A YottaDB trigger specified for ^CIF(:,1) nodes can automatically maintain the cross references.
 
 Using your editor, create a trigger definition file called triggers.trg with the following entry:
 
@@ -244,12 +244,12 @@ In this definition:
 
 * ^CIF - specifies the global variable to which the trigger applies.
 * acn=: - in ZWRITE syntax, ":" specifies any value for the first subscript.
-* acn= prefix requests YottaDB/GT.M assign the value of the first subscript (ACN) to the local variable acn before invoking the trigger logic.
+* acn= prefix requests YottaDB assign the value of the first subscript (ACN) to the local variable acn before invoking the trigger logic.
 * 1 - specifies that the trigger matches only if the second subscript is 1 (one).
-* -delim="|" - specifies that YottaDB/GT.M use "\|" as the piece separator when checking the value of the node to see whether to invoke the trigger. The use of the keyword delim tells YottaDB/GT.M to use $PIECE() semantics for the value at the node; zdelim, instead, would instruct YottaDB/GT.M to use $ZPIECE() semantics.
-* -pieces=2 - specifies that YottaDB/GT.M should only invoke the trigger when the update changes the second piece (XNAME) not for a change to the first piece (NAM), or any other piece without a change to XNAME.
-* -commands=SET,KILL - specifies that YottaDB/GT.M invoke the trigger for SET and KILL updates (but not a ZKILL/ZWITHDRAW command).
-* -xecute="Do ^XNAMEinCIF" - provides code for YottaDB/GT.M to invoke to perform the trigger logic.
+* -delim="|" - specifies that YottaDB use "\|" as the piece separator when checking the value of the node to see whether to invoke the trigger. The use of the keyword delim tells YottaDB to use $PIECE() semantics for the value at the node; zdelim, instead, would instruct YottaDB to use $ZPIECE() semantics.
+* -pieces=2 - specifies that YottaDB should only invoke the trigger when the update changes the second piece (XNAME) not for a change to the first piece (NAM), or any other piece without a change to XNAME.
+* -commands=SET,KILL - specifies that YottaDB invoke the trigger for SET and KILL updates (but not a ZKILL/ZWITHDRAW command).
+* -xecute="Do ^XNAMEinCIF" - provides code for YottaDB to invoke to perform the trigger logic.
 
 Execute a command like the following:
 
@@ -281,16 +281,16 @@ Using your editor, create an M routine called XNAMEinCIF.m with the following co
        . Set^XALPHA("A",xname,acn)=""                                                                                                         ; create new xref
        ;
 
-When the XNAME piece of a ^CIF(:,1) node is SET to a new value or KILLed, after obtaining the values, an unconditional KILL command deletes the previous cross reference index, if it exists. The deletion can be unconditional, because if the node did not previously exist, then the KILL is a no-op. Then, only if a SET invoked the trigger (determined from the ISV $ZTRIGGEROP), the trigger invoked routine creates a new cross reference index node. Note that because YottaDB/GT.M implicitly creates a new context for the trigger logic we do not have to worry about our choice of names or explicitly NEW any variables.
+When the XNAME piece of a ^CIF(:,1) node is SET to a new value or KILLed, after obtaining the values, an unconditional KILL command deletes the previous cross reference index, if it exists. The deletion can be unconditional, because if the node did not previously exist, then the KILL is a no-op. Then, only if a SET invoked the trigger (determined from the ISV $ZTRIGGEROP), the trigger invoked routine creates a new cross reference index node. Note that because YottaDB implicitly creates a new context for the trigger logic we do not have to worry about our choice of names or explicitly NEW any variables.
 
-After obtaining the values, an unconditional KILL command deletes the previous cross reference index, if it exists. Then, only if a SET invoked the trigger (determined from the ISV $ZTRIGGEROP), the trigger invoked routine creates a new cross reference index node. Note that because YottaDB/GT.M implicitly creates a new context for the trigger logic we do not have to worry about out choice of names or explicitly NEW any variables.
+After obtaining the values, an unconditional KILL command deletes the previous cross reference index, if it exists. Then, only if a SET invoked the trigger (determined from the ISV $ZTRIGGEROP), the trigger invoked routine creates a new cross reference index node. Note that because YottaDB implicitly creates a new context for the trigger logic we do not have to worry about out choice of names or explicitly NEW any variables.
 
 The following illustration shows the flow of control when the trigger is executed for Set ^CIN(ACN,1)="Paul|John, Doe, Johnny|". The initial value of ^CIN(ACN,1) is "Paul|Doe, John|" and ACN is set to "NY". 
 
 .. image:: setcin.gif
 
 .. note::
-   Within trigger context, if you modify the value of $ZTVALUE, YottaDB/GT.M now commits it to the database. YottaDB/GT.M executes all steps as an Atomic (all or nothing) transactional unit.
+   Within trigger context, if you modify the value of $ZTVALUE, YottaDB now commits it to the database. YottaDB executes all steps as an Atomic (all or nothing) transactional unit.
 
 The following illustration shows the flow of control when the trigger is executed for Kill ^CIN(ACN,1).
 
@@ -300,97 +300,97 @@ The following illustration shows the flow of control when the trigger is execute
 Trigger Definition Storage
 -----------------------------
 
-YottaDB/GT.M stores trigger definitions as nodes of a global-like structure (^#t) within the same database as the nodes with which they're associated. You can manage the trigger definitions with MUPIP TRIGGER and $ZTRIGGER() but you cannot directly access ^#t (except with DSE, which YottaDB/FIS recommends against under normal circumstances). The block size, key size, and record size for a database must be sufficient to hold its associated trigger definition. In addition, YottaDB/GT.M stores cross-region name resolution information in the DEFAULT region, so the DEFAULT region in a global directory used to update triggers must have sufficient block size, key size, and record size to hold that trigger-related data.
+YottaDB stores trigger definitions as nodes of a global-like structure (^#t) within the same database as the nodes with which they're associated. You can manage the trigger definitions with MUPIP TRIGGER and $ZTRIGGER() but you cannot directly access ^#t (except with DSE, which YottaDB recommends against under normal circumstances). The block size, key size, and record size for a database must be sufficient to hold its associated trigger definition. In addition, YottaDB stores cross-region name resolution information in the DEFAULT region, so the DEFAULT region in a global directory used to update triggers must have sufficient block size, key size, and record size to hold that trigger-related data.
 
 
 --------------------------------------------
 Trigger Invocation and Execution Semantics
 --------------------------------------------
 
-YottaDB/GT.M stores Triggers for each global variable in the database file for that global variable. When a global directory maps a global variable to its database file, it also maps triggers for that global variable to the same database file. When an extended reference uses a different global directory to map a global variable to a database file, that global directory also maps triggers for that global variable to that same database file.
+YottaDB stores Triggers for each global variable in the database file for that global variable. When a global directory maps a global variable to its database file, it also maps triggers for that global variable to the same database file. When an extended reference uses a different global directory to map a global variable to a database file, that global directory also maps triggers for that global variable to that same database file.
 
 Although triggers for SET and KILL / ZKILL commands can be specified together, the command invoking a trigger is always unique. The ISV $ZTRIGGEROP provides the trigger code which matched the triggering command.
 
-Whenever a command updates a global variable, the YottaDB/GT.M runtime system first determines whether there are any triggers for that global variable. If there are any triggers, it scans the signatures for subscripts and node values to identify matching triggers. If multiple triggers match, YottaDB/GT.M invokes them in an arbitrary order. Since a future version of YottaDB/GT.M, potentially multi-threaded, may well choose to execute multiple triggers in parallel, you should ensure that when a node has multiple triggers, they are coded so that correct application behavior does not rely on the order in which they execute.
+Whenever a command updates a global variable, the YottaDB runtime system first determines whether there are any triggers for that global variable. If there are any triggers, it scans the signatures for subscripts and node values to identify matching triggers. If multiple triggers match, YottaDB invokes them in an arbitrary order. Since a future version of YottaDB, potentially multi-threaded, may well choose to execute multiple triggers in parallel, you should ensure that when a node has multiple triggers, they are coded so that correct application behavior does not rely on the order in which they execute.
 
-When a process executes a KILL, ZKILL or SET command, the target is the global variable node specified by the command argument for modification. With SET and ZKILL, the target is a single node. In the case of KILL, the target may represent an entire sub-tree of nodes. YottaDB/GT.M only matches the trigger against the target node, and only invokes the trigger once for each KILL command. YottaDB/GT.M does not check nodes in sub-trees to see whether they have matching triggers.
+When a process executes a KILL, ZKILL or SET command, the target is the global variable node specified by the command argument for modification. With SET and ZKILL, the target is a single node. In the case of KILL, the target may represent an entire sub-tree of nodes. YottaDB only matches the trigger against the target node, and only invokes the trigger once for each KILL command. YottaDB does not check nodes in sub-trees to see whether they have matching triggers.
 
 ++++++++++++
 Kill/ZKill
 ++++++++++++
 
-If KILL or ZKILL updates a global node matching a trigger definition, YottaDB/GT.M executes the trigger code when a database state change has been computed but before it has been applied in the process space or the database. This means that the node to be KILLed and descendants (if any) remain visible to the trigger code. Note that a KILL trigger ignores $ZTVALUE.
+If KILL or ZKILL updates a global node matching a trigger definition, YottaDB executes the trigger code when a database state change has been computed but before it has been applied in the process space or the database. This means that the node to be KILLed and descendants (if any) remain visible to the trigger code. Note that a KILL trigger ignores $ZTVALUE.
 
 +++++++++
 Set
 +++++++++
 
-If a SET updates a global node matching a trigger definition, YottaDB/GT.M executes the trigger code after the node has been updated in the process address space, but before it is applied to the database. When the trigger execution completes, the trigger logic commits the value of a node from the process address space only if $ZTVALUE is not set. if $ZTVALUE is set during trigger execution, the trigger logic commits the value of a node from the value of $ZTVALUE.
+If a SET updates a global node matching a trigger definition, YottaDB executes the trigger code after the node has been updated in the process address space, but before it is applied to the database. When the trigger execution completes, the trigger logic commits the value of a node from the process address space only if $ZTVALUE is not set. if $ZTVALUE is set during trigger execution, the trigger logic commits the value of a node from the value of $ZTVALUE.
 
 Consider the following example:
 
 .. parsed-literal::
-   GTM>set c=$ztrigger("S")
+   YDB>set c=$ztrigger("S")
    ;trigger name: A#1#  cycle: 1
    +^A -commands=S -xecute="set ^B=200"
    ;trigger name: B#1#  cycle: 1
    +^B -commands=S -xecute="set $ztval=$ztval+1 " 
-   GTM>set ^A=100,^B=100 
-   GTM>write ^A
+   YDB>set ^A=100,^B=100 
+   YDB>write ^A
    100
-   GTM>write ^B
+   YDB>write ^B
    201 
 
-SET ^A=100 invokes trigger A#1. When the trigger execution begins, YottaDB/GT.M sets ^A to 100 in the process address space, but does not apply it to the database. Therefore, the trigger logic sees ^A as set to 100. Other process accessing the database, however, see the prior value of ^A. When the trigger execution completes, the trigger logic commits the value of a node from the process address space only if $ZTVALUE is not set. The trigger logic commits the value of a node from the $ZTVALUE only if $ZTVALUE is set during trigger execution. Because $ZTVALUE is not set in A#1, YottaDB/GT.M commits the value of ^A from the process address space to the database. Therefore, YottaDB/GT.M commits ^A=100 to the database. SET ^B=200 invokes trigger B#2. $ZTVALUE is set during trigger execution, therefore YottaDB/GT.M commits the value of $ZTVALUE to ^B at the end of trigger execution.
+SET ^A=100 invokes trigger A#1. When the trigger execution begins, YottaDB sets ^A to 100 in the process address space, but does not apply it to the database. Therefore, the trigger logic sees ^A as set to 100. Other process accessing the database, however, see the prior value of ^A. When the trigger execution completes, the trigger logic commits the value of a node from the process address space only if $ZTVALUE is not set. The trigger logic commits the value of a node from the $ZTVALUE only if $ZTVALUE is set during trigger execution. Because $ZTVALUE is not set in A#1, YottaDB commits the value of ^A from the process address space to the database. Therefore, YottaDB commits ^A=100 to the database. SET ^B=200 invokes trigger B#2. $ZTVALUE is set during trigger execution, therefore YottaDB commits the value of $ZTVALUE to ^B at the end of trigger execution.
 
 .. note::
-   Within trigger code, any SET operation on ^B recursively invokes trigger B#1. Therefore, always set $ZTVALUE to change the value node during trigger execution. YottaDB/GT.M executes the triggering update and all associated triggers within the same transaction, whether or not the original command is inside a transaction. This means that although the trigger logic sees the updated value of the node, it is not visible to other processes until the outermost transaction commits to the database. If there is a conflicting update by another process, YottaDB/GT.M RESTARTs the explicit or implicit transaction to resolve the conflict.
+   Within trigger code, any SET operation on ^B recursively invokes trigger B#1. Therefore, always set $ZTVALUE to change the value node during trigger execution. YottaDB executes the triggering update and all associated triggers within the same transaction, whether or not the original command is inside a transaction. This means that although the trigger logic sees the updated value of the node, it is not visible to other processes until the outermost transaction commits to the database. If there is a conflicting update by another process, YottaDB RESTARTs the explicit or implicit transaction to resolve the conflict.
 
 A trigger may need to update the node whose SET initiated the trigger. Situations where this may occur include:
 
 * a log or journal entry may need to be stored in a different piece of the same node as the update, or
 * the node being updated may need its data to be stored in a canonical form (such as all-caps, or with standardized punctuation, regardless of how it was actually entered), or have its value limited to a range.
 
-In such cases, the trigger logic should make the changes to the ISV $ZTVALUE instead of the global node. At the end of the trigger invocation, YottaDB/GT.M applies the value in $ZTVALUE to the node. Before the first matching trigger executes, YottaDB/GT.M sets $ZTVALUE. Since a command inside one trigger's logic can invoke another nested trigger, if already in a trigger, YottaDB/GT.M stacks the value of $ZTVALUE for the prior update before modifying it for the nested trigger initiation.
+In such cases, the trigger logic should make the changes to the ISV $ZTVALUE instead of the global node. At the end of the trigger invocation, YottaDB applies the value in $ZTVALUE to the node. Before the first matching trigger executes, YottaDB sets $ZTVALUE. Since a command inside one trigger's logic can invoke another nested trigger, if already in a trigger, YottaDB stacks the value of $ZTVALUE for the prior update before modifying it for the nested trigger initiation.
 
-YottaDB/GT.M treats a MERGE command as a series of SET commands performed in collation order of the data source. YottaDB/GT.M checks each global node updated by the MERGE for matching triggers. If YottaDB/GT.M finds one or more matches, it invokes all the matching trigger(s) before the next command or the next set argument to the same SET command.
+YottaDB treats a MERGE command as a series of SET commands performed in collation order of the data source. YottaDB checks each global node updated by the MERGE for matching triggers. If YottaDB finds one or more matches, it invokes all the matching trigger(s) before the next command or the next set argument to the same SET command.
 
-YottaDB/GT.M treats the $INCREMENT() function as a SET command. Since the result of a $INCREMENT() operation must be numeric, if the trigger code modifies $ZTVALUE, at the end of the trigger, YottaDB/GT.M applies the value of +$ZTVALUE (that is, $ZTVALUE coerced to a number) to the target node.
+YottaDB treats the $INCREMENT() function as a SET command. Since the result of a $INCREMENT() operation must be numeric, if the trigger code modifies $ZTVALUE, at the end of the trigger, YottaDB applies the value of +$ZTVALUE (that is, $ZTVALUE coerced to a number) to the target node.
 
 +++++++++++++++++++++++++++++++++++
 Trigger Execution Environment
 +++++++++++++++++++++++++++++++++++
 
-As noted above, if there are multiple matching triggers, the YottaDB/GT.M process makes a list of matching triggers and executes them in an arbitrary order with no guarantee of predictability.
+As noted above, if there are multiple matching triggers, the YottaDB process makes a list of matching triggers and executes them in an arbitrary order with no guarantee of predictability.
 
 For each matching trigger:
 
-1. The YottaDB/GT.M process implicitly stacks the naked reference, $REFERENCE, $TEST, $ZTOLDVAL, $ZTDATA, $ZTRIGGEROP, $ZTUPDATE and NEWs all local variables. At the beginning of trigger code execution, $REFERENCE, $TEST and the naked indicator initially retain the values they had just prior to being stacked (in the case of KILL/ZKILL, to the reference of the KILL/ZKILL command, even though the trigger executes prior to the removal of any nodes). If an update directly initiates multiple (chained) triggers, all start with identical values of the naked reference, $REFERENCE, $TEST, $ZTDATA, $ZTLEVEL, $ZTOLDVAL, and $ZTRIGGEROP. This facilitates triggers that are independent of the order in which they run. Application logic inside triggers can use $REFERENCE, the read-only intrinsic special variables $ZTDATA, $ZTLEVEL, $ZTOLDVAL, $ZTRIGGEROP & $ZTUPDATE, and the read-write intrinsic special variables $ZTVALUE, and $ZTWORMHOLE.
+1. The YottaDB process implicitly stacks the naked reference, $REFERENCE, $TEST, $ZTOLDVAL, $ZTDATA, $ZTRIGGEROP, $ZTUPDATE and NEWs all local variables. At the beginning of trigger code execution, $REFERENCE, $TEST and the naked indicator initially retain the values they had just prior to being stacked (in the case of KILL/ZKILL, to the reference of the KILL/ZKILL command, even though the trigger executes prior to the removal of any nodes). If an update directly initiates multiple (chained) triggers, all start with identical values of the naked reference, $REFERENCE, $TEST, $ZTDATA, $ZTLEVEL, $ZTOLDVAL, and $ZTRIGGEROP. This facilitates triggers that are independent of the order in which they run. Application logic inside triggers can use $REFERENCE, the read-only intrinsic special variables $ZTDATA, $ZTLEVEL, $ZTOLDVAL, $ZTRIGGEROP & $ZTUPDATE, and the read-write intrinsic special variables $ZTVALUE, and $ZTWORMHOLE.
 
-2. YottaDB/GT.M executes the trigger code. Note that in the course of executing this YottaDB/GT.M trigger, if the same trigger matches again for the same or a different target, YottaDB/GT.M reinvokes the trigger recursively. In other words, the same trigger can be invoked more than once for the same command. Note that such a recursive invocation is probably a pathological condition that will eventually cause a STACKCRIT error. Triggers may nest up to 127 levels, after which an additional attempt to nest produces a MAXTRGRNEST error.
+2. YottaDB executes the trigger code. Note that in the course of executing this YottaDB trigger, if the same trigger matches again for the same or a different target, YottaDB reinvokes the trigger recursively. In other words, the same trigger can be invoked more than once for the same command. Note that such a recursive invocation is probably a pathological condition that will eventually cause a STACKCRIT error. Triggers may nest up to 127 levels, after which an additional attempt to nest produces a MAXTRGRNEST error.
 
-3. When the code completes, YottaDB/GT.M clears local variables, restores what was stacked, except $ZTVALUE (refer to the ISV definitions for comments on modifying $ZTVALUE) to the values they had at the start of the trigger, and if there is any remaining trigger matching the original update, adjusts $ZTUPDATE and executes that next action. $ZTVALUE always holds the current target value for the node for which the application update initially invoked the trigger(s). Note that because multiple triggers for the same node execute in an arbitrary order, having more than one trigger change $ZTVALUE requires careful design and implementation.
+3. When the code completes, YottaDB clears local variables, restores what was stacked, except $ZTVALUE (refer to the ISV definitions for comments on modifying $ZTVALUE) to the values they had at the start of the trigger, and if there is any remaining trigger matching the original update, adjusts $ZTUPDATE and executes that next action. $ZTVALUE always holds the current target value for the node for which the application update initially invoked the trigger(s). Note that because multiple triggers for the same node execute in an arbitrary order, having more than one trigger change $ZTVALUE requires careful design and implementation.
 
-After executing all triggers, YottaDB/GT.M commits the operation initiating the trigger as well as the trigger updates and continues execution with the next command (or, in the case of multiple nodes being updated by the same command, with the next node). Note that if the operation initiating the trigger is itself within a transaction, other processes will not see the database state changes till the TCOMMIT of the outermost transaction.
+After executing all triggers, YottaDB commits the operation initiating the trigger as well as the trigger updates and continues execution with the next command (or, in the case of multiple nodes being updated by the same command, with the next node). Note that if the operation initiating the trigger is itself within a transaction, other processes will not see the database state changes till the TCOMMIT of the outermost transaction.
 
-To ensure trigger actions are Atomic with respect to the update that invokes them, YottaDB/GT.M always executes trigger logic and the triggering update within a transaction. If the triggering update is not within an application transaction, YottaDB/GT.M implicitly starts a restartable "Batch" transaction to wrap the original update and any triggers generated by the update. In other words, when 0=$TLEVEL YottaDB/GT.M behaves as if implicit TStart \*:Transactionid="BATCH" and TCommit commands bracket the upddate and its triggers. Therefore, the trigger code and/or its error trap always operate inside a Transaction and can use the TRESTART command even if the main application code never uses TSTART. $ETRAP code for use in triggers may include TROLLBACK logic.
+To ensure trigger actions are Atomic with respect to the update that invokes them, YottaDB always executes trigger logic and the triggering update within a transaction. If the triggering update is not within an application transaction, YottaDB implicitly starts a restartable "Batch" transaction to wrap the original update and any triggers generated by the update. In other words, when 0=$TLEVEL YottaDB behaves as if implicit TStart \*:Transactionid="BATCH" and TCommit commands bracket the upddate and its triggers. Therefore, the trigger code and/or its error trap always operate inside a Transaction and can use the TRESTART command even if the main application code never uses TSTART. $ETRAP code for use in triggers may include TROLLBACK logic.
 
-The deprecated ZTSTART/ZTCOMMIT transactions are not compatible with triggers. If a ZTSTART transaction is already active when an update to a global that has any trigger defined occurs, YottaDB/GT.M issues a runtime error. Likewise YottaDB/GT.M treats any attempt to issue a ZTSTART within a trigger context as an error.
+The deprecated ZTSTART/ZTCOMMIT transactions are not compatible with triggers. If a ZTSTART transaction is already active when an update to a global that has any trigger defined occurs, YottaDB issues a runtime error. Likewise, YottaDB treats any attempt to issue a ZTSTART within a trigger context as an error.
 
 ++++++++++++++++++++++++++++++++++++++++
 Error Handling during Trigger Execution
 ++++++++++++++++++++++++++++++++++++++++
 
-YottaDB/GT.M uses the $ETRAP mechanism to handle errors during trigger execution. If an error occurs during a trigger, YottaDB/GT.M executes the M code in $ETRAP. If $ETRAP does not clear $ECODE, YottaDB/GT.M does not commit the database updates within the trigger and passes control to the environment of the trigger update. If the $ETRAP action or the logic it invokes clears $ECODE, YottaDB/GT.M can continue processing the trigger logic.
+YottaDB uses the $ETRAP mechanism to handle errors during trigger execution. If an error occurs during a trigger, YottaDB executes the M code in $ETRAP. If $ETRAP does not clear $ECODE, YottaDB does not commit the database updates within the trigger and passes control to the environment of the trigger update. If the $ETRAP action or the logic it invokes clears $ECODE, YottaDB can continue processing the trigger logic.
 
 Consider the following trivial example:
 
 .. parsed-literal::
    ^Acct(id=:,disc=:) -commands=Set -xecute="Set msg=""Trigger Failed"",$ETrap=""If $Increment(^count) Write msg,!"" Set $ZTVAlue=x/disc" 
 
-During trigger execution if disc (the second subscript of the triggering update) evaluates to zero, resulting in a DIVZERO (Attempt to divide by zero) error, YottaDB/GT.M displays the message "Trigger Failed". Since the $ETRAP does not clear $ECODE, after printing the message, YottaDB/GT.M leaves the trigger context and invokes the error handler outside the trigger, if any. In a DIVZERO case, the process neither assigns a new value to ^Acct(id,disc) nor commits the incremented value of ^count to the database.
+During trigger execution if disc (the second subscript of the triggering update) evaluates to zero, resulting in a DIVZERO (Attempt to divide by zero) error, YottaDB displays the message "Trigger Failed". Since the $ETRAP does not clear $ECODE, after printing the message, YottaDB leaves the trigger context and invokes the error handler outside the trigger, if any. In a DIVZERO case, the process neither assigns a new value to ^Acct(id,disc) nor commits the incremented value of ^count to the database.
 
-An application process can use a broad range of corrective actions to handle run-time errors within triggers. However, these corrective actions may not be available during MUPIP replication. As described in the Trigger Environment section, YottaDB/GT.M replicates only the trigger definitions, but not the triggered updates, which are executed by triggers when a replicating instance replays them. If a trigger is invoked in a replicating instance, it means that trigger was successfully invoked on the originating instance. For normal application requirements, you should ensure that the trigger produces the same results on a correctly configured replicating instance. Therefore your $ETRAP code on MUPIP should deal with the following cases where:
+An application process can use a broad range of corrective actions to handle run-time errors within triggers. However, these corrective actions may not be available during MUPIP replication. As described in the Trigger Environment section, YottaDB replicates only the trigger definitions, but not the triggered updates, which are executed by triggers when a replicating instance replays them. If a trigger is invoked in a replicating instance, it means that trigger was successfully invoked on the originating instance. For normal application requirements, you should ensure that the trigger produces the same results on a correctly configured replicating instance. Therefore your $ETRAP code on MUPIP should deal with the following cases where:
 
 * The run-time $ETRAP code modified the trigger logic to achieve the desired result
 * The replicating configuration is different from the initiating configuration
@@ -401,7 +401,7 @@ In the later two cases there are probably basically two possibilities for the mi
 * Intended and the $ETRAP mechanism is an integral part of managing the difference
 * Unintended and the $ETRAP mechanism should help notify the operational team to correct the difference and restart replication
 
-The trigger facility includes an environment variable called gtm_trigger_etrap. It provides the initial value for $ETRAP in trigger context and can be used to set error traps for trigger operations in both mumps and MUPIP processes. The code can, of course, also SET $ETRAP within the trigger context. During a run-time trigger operation if you do not specify the value of gtm_trigger_etrap and a trigger fails, YottaDB/GT.M uses the current trap handler. In a mumps process, if the trap handler was $ZTRAP at the time of the triggering update and gtm_trigger_etrap isn't defined, the error trap is implicitly replaced by $ETRAP="" which exits out of both the trigger logic and the triggering action before the $ZTRAP unstacks and takes effect. In a MUPIP process, if you do not specify the value of gtm_trigger_etrap and a trigger fails, YottaDB/GT.M implicitly performs a SET $ETRAP="If $ZJOBEXAM()" and terminates the MUPIP process. $ZOBEXAM() records diagnostic information (equivalent to ZSHOW "*") to a file that provides a basis for analysis of the failure.
+The trigger facility includes an environment variable called gtm_trigger_etrap. It provides the initial value for $ETRAP in trigger context and can be used to set error traps for trigger operations in both mumps and MUPIP processes. The code can, of course, also SET $ETRAP within the trigger context. During a run-time trigger operation if you do not specify the value of gtm_trigger_etrap and a trigger fails, YottaDB uses the current trap handler. In a mumps process, if the trap handler was $ZTRAP at the time of the triggering update and gtm_trigger_etrap isn't defined, the error trap is implicitly replaced by $ETRAP="" which exits out of both the trigger logic and the triggering action before the $ZTRAP unstacks and takes effect. In a MUPIP process, if you do not specify the value of gtm_trigger_etrap and a trigger fails, YottaDB implicitly performs a SET $ETRAP="If $ZJOBEXAM()" and terminates the MUPIP process. $ZOBEXAM() records diagnostic information (equivalent to ZSHOW "*") to a file that provides a basis for analysis of the failure.
 
 .. note::
    $ZJOBEXAM() dumps the context of a process at the time the function executes and the output may well contain sensitive information such as identification numbers, credit card numbers, and so on. You should secure the location of files produced by the MUPIP error handler or set up appropriate security characteristics for operating MUPIP. Alternatively, if you do not want MUPIP to create a $ZJOBEXAM() file, explicitly set the gtm_trigger_etrap environment variable to a handler such as "Write !,$ZSTATUS,!,$ZPOSITION,! Halt".
@@ -409,18 +409,18 @@ The trigger facility includes an environment variable called gtm_trigger_etrap. 
 Other key aspects of error handling during trigger execution are as follows:
 
 * Any attempt to use the $ZTRAP error handling mechanism for triggers results in a NOZTRAPINTRIGR error.
-* If the trigger initiating update occurs outside any transaction ($TLEVEL=0), YottaDB/GT.M implicitly starts a transaction to wrap the initiating update and the triggered updates. Consequently if a TROLLBACK or TCOMMIT within the trigger context causes the code to come back to complete the initiating update with a different $TLEVEL than when the trigger started (including any implicit TSTART), YottaDB/GT.M issues a TRIGTCOMMIT error and does not commit the original update.
+* If the trigger initiating update occurs outside any transaction ($TLEVEL=0), YottaDB implicitly starts a transaction to wrap the initiating update and the triggered updates. Consequently if a TROLLBACK or TCOMMIT within the trigger context causes the code to come back to complete the initiating update with a different $TLEVEL than when the trigger started (including any implicit TSTART), YottaDB issues a TRIGTCOMMIT error and does not commit the original update.
 * Any TCOMMIT that takes $TLEVEL below what it was when at trigger initiation, causes a TRIGTLVLCHNG error. This behavior applies to any trigger, whether chained, nested or singular.
-* It may appear that YottaDB/GT.M executes trigger code as an argument for an XECUTE. However, for performance reasons, YottaDB/GT.M internally converts trigger code into a pseudo routine and executes it as if it is a routine. Although this invisible for the most part, the trigger name can appear in places like error messages and $STACK() return values.
-* Triggers are associated with a region and a process can use one or more global directories to access multiple regions, therefore, there is a possibility for triggers to have name conflicts. To avoid a potential name conflict with other resources, YottaDB/GT.M attempts to add a two character suffix, delimited by a "#" character to the user-supplied or automatically generated trigger name. If this attempt to make the name unique fails, YottaDB/GT.M issues a TRIGNAMEUNIQ error.
-* Defining gtm_trigger_etrap to hold M code of any complexity exposes mismatches between the quoting conventions for M code and shell scripts. YottaDB/FIS suggests an approach of enclosing the entire value in single-quotes and only escaping the single-quote ('), exclamation-point (!) and back-slash (\) characters. For a comprehensive (but hopefully not very realistic) example:
+* It may appear that YottaDB executes trigger code as an argument for an XECUTE. However, for performance reasons, YottaDB internally converts trigger code into a pseudo routine and executes it as if it is a routine. Although this is invisible for the most part, the trigger name can appear in places like error messages and $STACK() return values.
+* Triggers are associated with a region and a process can use one or more global directories to access multiple regions, therefore, there is a possibility for triggers to have name conflicts. To avoid a potential name conflict with other resources, YottaDB attempts to add a two character suffix, delimited by a "#" character to the user-supplied or automatically generated trigger name. If this attempt to make the name unique fails, YottaDB issues a TRIGNAMEUNIQ error.
+* Defining gtm_trigger_etrap to hold M code of any complexity exposes mismatches between the quoting conventions for M code and shell scripts. YottaDB suggests an approach of enclosing the entire value in single-quotes and only escaping the single-quote ('), exclamation-point (!) and back-slash (\) characters. For a comprehensive (but hopefully not very realistic) example:
   
    .. parsed-literal::
       $ export gtm_trigger_etrap='write:1\'=2 $zstatus,\!,"5\\2=",5\\2,\! halt'
       $ echo $gtm_trigger_etrap
       write:1'=2 $zstatus,!,"5\2=",5\2,! halt 
-      GTM>set $etrap=$ztrnlnm("gtm_trigger_etrap")
-      GTM>xecute "write 1/0"
+      YDB>set $etrap=$ztrnlnm("gtm_trigger_etrap")
+      YDB>xecute "write 1/0"
       150373210,+1^GTM$DMOD,%GTM-E-DIVZERO, Attempt to divide by zero
       5\2=2
       $
@@ -431,16 +431,16 @@ ZGoto
 
 To maintain the transactional integrity of triggers and to avoid branching control to an inappropriate destination, ZGOTO behaves as follows:
 
-* YottaDB/GT.M does not support ZGOTO 1:<entryref> arguments in MUPIP because they form an attempt to replace the MUPIP context.
-* When a ZGOTO argument specifies an entryref at or below the level of the update that initiated the trigger, YottaDB/GT.M redirects the flow of control to the entryref without performing the triggering update. Alternatively if YottaDB/GT.M finds a non-null $ECODE, indicating an unhandled error when it goes to complete the trigger, it throws control to the current error handler rather than committing the original triggering update.
+* YottaDB does not support ZGOTO 1:<entryref> arguments in MUPIP because they form an attempt to replace the MUPIP context.
+* When a ZGOTO argument specifies an entryref at or below the level of the update that initiated the trigger, YottaDB redirects the flow of control to the entryref without performing the triggering update. Alternatively if YottaDB finds a non-null $ECODE, indicating an unhandled error when it goes to complete the trigger, it throws control to the current error handler rather than committing the original triggering update.
 * ZGOTO 0 terminates the process and ZGOTO 1 returns to the base stack frame, which has to be outside any trigger invocation.
-* ZGOTO from within a run-time trigger context cannot directly reach a subsequent M command on the line containing the command that invoked the trigger, because a ZGOTO with an argument specifying the level where the update originated but no entryref returns to the update itself (as would a QUIT) and, if $ECODE is null, YottaDB/GT.M continues processing with any additional triggers and the triggering update before resuming the line.
+* ZGOTO from within a run-time trigger context cannot directly reach a subsequent M command on the line containing the command that invoked the trigger, because a ZGOTO with an argument specifying the level where the update originated but no entryref returns to the update itself (as would a QUIT) and, if $ECODE is null, YottaDB continues processing with any additional triggers and the triggering update before resuming the line.
 
 ++++++++++++++++++++++++++++++++++++++
 Accessing Trigger Xecute Source Code
 ++++++++++++++++++++++++++++++++++++++
 
-ZPRINT/$TEXT()/ZBREAK recognize both a runtime-disambiguator, delimited with a hash-sign (#), and a region-disambiguator, delimited by a slash(/). ZPRINT and ZBREAK treat a trigger-not-found case as a TRIGNAMENF error, while $TEXT() returns the empty string. When their argument contains a region-disambiguator, these features ignore a null runtime-disambiguator. When their argument does not contain a region-disambiguator, these features act as if runtime-disambiguator is specified, even if it has an empty value. When an argument specifies both runtime-disambiguator and region-disambiguator and the runtime-disambiguator identifies a trigger loaded from a region different from the specified region, or the region-disambiguator identifies a region which holds a trigger that is not mapped by $ZGBLDIR, these features treat the trigger as not found.
+ZPRINT/$TEXT()/ZBREAK recognize both a runtime-disambiguator, delimited with a hash-sign (#), and a region-disambiguator, delimited by a slash(/). ZPRINT and ZBREAK treat a trigger-not-found case as a TRIGNAMENF error, while $TEXT() returns the empty string. When their argument contains a region-disambiguator, these features ignore a null runtime-disambiguator. When their argument does not contain a region-disambiguator, these features act as if runtime-disambiguator is specified, even if it has an empty value. When an argument specifies both the runtime-disambiguator and the region-disambiguator, and the runtime-disambiguator identifies a trigger loaded from a region different from the specified region, or the region-disambiguator identifies a region which holds a trigger that is not mapped by $ZGBLDIR, these features treat the trigger as not found.
 
 ZPRINT or $TEXT() of trigger code may be out-of-date if the process previously loaded the code, but a $ZTRIGGER() or MUPIP TRIGGER has since changed the code. In other words, execution of a trigger (not $TEXT()) ensures that trigger code returned with $TEXT() is current.
 
@@ -454,15 +454,15 @@ GT.CM servers do not invoke triggers. This means that the client processes must 
 Other Utilities
 ++++++++++++++++
 
-During MUPIP INTEG, REORG and BACKUP (including -BYTESTREAM), YottaDB/GT.M treats trigger definitions just as it treats any normal global node.
+During MUPIP INTEG, REORG and BACKUP (including -BYTESTREAM), YottaDB treats trigger definitions just as it treats any normal global node.
 
-Because they are designed as state capture and [re]establishment facilities, MUPIP EXTRACT does not extract trigger definitions and MUPIP LOAD doesn't restore trigger definitions or invoke any triggers. While you can construct input for MUPIP LOAD which bypasses triggers, there is no way for M code itself to bypass an existing trigger, except by using a GT.CM configuration. The $ZTRIGGER() function permits M code to modify the triggers, add/delete/change, across all regions, excluding those served by GT.CM. However, those actions affect all processes updating the node associated with any trigger. Like MUPIP EXTRACT and LOAD, the ^%GI and ^%GO M utility programs do not extract and load YottaDB/GT.M trigger definitions. Unlike MUPIP LOAD, ^%GI invokes triggers just like any other M code, which may yield results other than those expected or intended.
+Because they are designed as state capture and [re]establishment facilities, MUPIP EXTRACT does not extract trigger definitions and MUPIP LOAD doesn't restore trigger definitions or invoke any triggers. While you can construct input for MUPIP LOAD which bypasses triggers, there is no way for M code itself to bypass an existing trigger, except by using a GT.CM configuration. The $ZTRIGGER() function permits M code to modify the triggers, add/delete/change, across all regions, excluding those served by GT.CM. However, those actions affect all processes updating the node associated with any trigger. Like MUPIP EXTRACT and LOAD, the ^%GI and ^%GO M utility programs do not extract and load YottaDB trigger definitions. Unlike MUPIP LOAD, ^%GI invokes triggers just like any other M code, which may yield results other than those expected or intended.
 
 ------------------------------------------------
 Triggers in Journaling and Database Replication
 ------------------------------------------------
 
-YottaDB/GT.M handles "trigger definitions" and "triggered updates" differently.
+YottaDB handles "trigger definitions" and "triggered updates" differently.
 
 * Trigger definition changes appear in both journal files and replication streams so the definitions propagate to recovered and replicated databases.
 * Triggered updates appear in the journal file, since MUPIP JOURNAL RECOVER/ROLLBACK to not invoke triggers. However, they do not appear in the replication stream since the Update Process on a replicating instance apply triggers and process their logic.
@@ -471,11 +471,11 @@ YottaDB/GT.M handles "trigger definitions" and "triggered updates" differently.
 Journaling
 +++++++++++
 
-When journaling is ON, YottaDB/GT.M generates journal records for database updates performed by trigger logic. For an explicit database update, a journal record specifies whether any triggers were invoked as part of that update. YottaDB/GT.M triggers have no effect on the generation and use of before image journal records, and the backward phase of rollback / recovery.
+When journaling is ON, YottaDB generates journal records for database updates performed by trigger logic. For an explicit database update, a journal record specifies whether any triggers were invoked as part of that update. YottaDB triggers have no effect on the generation and use of before image journal records, and the backward phase of rollback/recovery.
 
-A trigger associated with a global in a region that is journaled can perform updates in a region that is not journaled. However, if triggers in multiple regions update the same node in an unjournaled region concurrently, the replay order for recovery or rollback might differ from that of the original update and therefore produce a different result; therefore this practice requires careful analysis and implementation. Except when using triggers for debugging, YottaDB/FIS recommends journaling any region that uses triggers.
+A trigger associated with a global in a region that is journaled can perform updates in a region that is not journaled. However, if triggers in multiple regions update the same node in an unjournaled region concurrently, the replay order for recovery or rollback might differ from that of the original update and therefore produce a different result; therefore this practice requires careful analysis and implementation. Except when using triggers for debugging, YottaDB recommends journaling any region that uses triggers.
 
-The following sample journal extract shows how YottaDB/GT.M journals records updates to trigger definitions and information on $ZTWORMHOLE:
+The following sample journal extract shows how YottaDB journals records updates to trigger definitions and information on $ZTWORMHOLE:
 
 .. parsed-literal::
    GDSJEX04
@@ -553,9 +553,9 @@ The following sample journal extract shows how YottaDB/GT.M journals records upd
    02\61731,16555\13\5337\0
    03\61731,16555\13\5337\0\0 
 
-This journal extract output shows $ZTWORMHOLE information for each triggered update to ^trigvn. Notice how YottaDB/GT.M stored trigger definitions as a node of a global-like structure ^#t and how YottaDB/GT.M journals the trigger definition for ^trigvn and the triggered update for ^trgvn.
+This journal extract output shows $ZTWORMHOLE information for each triggered update to ^trigvn. Notice how YottaDB stored trigger definitions as a node of a global-like structure ^#t and how YottaDB journals the trigger definition for ^trigvn and the triggered update for ^trgvn.
 
-Note: YottaDB/GT.M implicitly wraps a trigger as an M transaction. Therefore, a journal extract file for a database that uses triggers has Type 8 and 9 (TSTART/TCOMMIT) records even if the triggers perform no updates (that is, are effectively No-ops).
+Note: YottaDB implicitly wraps a trigger as an M transaction. Therefore, a journal extract file for a database that uses triggers has Type 8 and 9 (TSTART/TCOMMIT) records even if the triggers perform no updates (that is, are effectively No-ops).
 
 **MUPIP JOURNAL -RECOVER / -ROLLBACK**
 
@@ -565,38 +565,38 @@ The lost and broken transaction files generated by MUPIP JOURNAL -RECOVER / -ROL
 Multisite Database Replication
 ++++++++++++++++++++++++++++++++
 
-During replication, YottaDB/GT.M replicates trigger definitions to ensure that when MUPIP TRIGGER updates triggers on an initiating instance, all replicating instances remain logically identical.
+During replication, YottaDB replicates trigger definitions to ensure that when MUPIP TRIGGER updates triggers on an initiating instance, all replicating instances remain logically identical.
 
-The replication stream has no records for updates generated by implicit YottaDB/GT.M trigger logic. If your trigger action invokes a routine, specify the value of the environment variable gtmroutines before invoking replication with MUPIP so the update process can locate any routines invoked as part of trigger actions.
+The replication stream has no records for updates generated by implicit YottaDB trigger logic. If your trigger action invokes a routine, specify the value of the environment variable gtmroutines before invoking replication with MUPIP so the update process can locate any routines invoked as part of trigger actions.
 
-To support upward compatibility, V5.4-000 allows your originating primary to replicate to:
+To support upward compatibility, YottaDB allows your originating primary to replicate to:
 
-* An instance with a different a trigger configuration.
-* An instance running a prior YottaDB/GT.M version (having no trigger capability), in which case it replicates any triggered updates.
+* An instance with a different trigger configuration.
+* An instance running a prior YottaDB version (having no trigger capability), in which case it replicates any triggered updates.
 
 When a replicating instance needs to serve as a possible future originating instance, you must carefully design your replication filters to handle missing triggers or trigger mismatch situations to maintain logical consistency with the originating primary.
 
 **Replicating to an instance with a different trigger configuration**
 
-During an event such as rolling upgrade, the replicating instance may have a new database schema (due to application upgrades) and in turn a new set of triggers. Therefore, YottaDB/GT.M replication allows you to have different-trigger configuration for originating (primary) and replicating (secondary) instances. When replication starts between the two instances, any update to triggers on the originating instance automatically flow (through the filters) to the replicating instance. For the duration of the rolling upgrade, your application must use replication filters to ensure trigger updates on the originating instance produce an appropriate action on the replicating instance. However, whenever you follow the practice of creating replicating instances from backups of other appropriate originating instances, you do not have to use additional replication filters, because the backups include YottaDB/GT.M trigger definitions, under normal conditions instances automatically have the same triggers.
+During an event such as rolling upgrade, the replicating instance may have a new database schema (due to application upgrades) and in turn a new set of triggers. Therefore, YottaDB replication allows you to have different trigger configurations for originating (primary) and replicating (secondary) instances. When replication starts between the two instances, any update to triggers on the originating instance automatically flow (through the filters) to the replicating instance. For the duration of the rolling upgrade, your application must use replication filters to ensure trigger updates on the originating instance produce an appropriate action on the replicating instance. However, whenever you follow the practice of creating replicating instances from backups of other appropriate originating instances, you do not have to use additional replication filters, because the backups include YottaDB trigger definitions - under normal conditions, instances automatically have the same triggers.
 
-Because the replication stream carries the native key format, having different collation for a replicated global on the replicating node from that on the initiating node is effectively a schema change and requires an appropriate filter to appropriately transform the subscripts from initiating form to replicating form. This is true even without triggers. However, with triggers a mismatch also potentially impacts appropriate trigger invocation.
+Because the replication stream carries the native key format, having a different collation for a replicated global on the replicating node, from that on the initiating node, is effectively a schema change and requires an appropriate filter to appropriately transform the subscripts from initiating form to replicating form. This is true even without triggers. However, with triggers a mismatch also potentially impacts appropriate trigger invocation.
 
-Because YottaDB/GT.M stores triggers in the database files as pseudo global variables, an application upgrade requiring a change to triggers is, in the worst case, no different than an application upgrade that changes the database schema, and can be handled under current rolling upgrade methods. Some changes to YottaDB/GT.M triggers may well be much simpler than a database schema change, and may not need a rolling upgrade.
+Because YottaDB stores triggers in the database files as pseudo global variables, an application upgrade requiring a change to triggers is, in the worst case, no different than an application upgrade that changes the database schema, and can be handled under current rolling upgrade methods. Some changes to YottaDB triggers may well be much simpler than a database schema change, and may not need a rolling upgrade.
 
 **Replicating to an instance that does not support triggers**
 
-At replication connection, if an originating primary detects a replicating instance that does not support triggers, the Source Server issues a warning to the operator log and the Source Server log. The Source Server also sends a warning message to the operator log and the Source Server log the first time it has to replicate an update associated with a trigger. In this configuration, internal filters in YottaDB/GT.M strip the replication stream of trigger-related information such as $ZTWORMHOLE data and trigger definition updates from MUPIP TRIGGER or $ZTRIGGER(). The Source Server does send updates done within trigger logic. Unless the application has replication filters that appropriately compensate for the trigger mismatch, this is a situation for concern, as the replicating instance may not maintain logical consistency with the originating primary. Note that filters that deal with $ZTWORMHOLE issues must reside on the originating instance.
+At replication connection, if an originating primary detects a replicating instance that does not support triggers, the Source Server issues a warning to the operator log and the Source Server log. The Source Server also sends a warning message to the operator log and the Source Server log the first time it has to replicate an update associated with a trigger. In this configuration, internal filters in YottaDB strip the replication stream of trigger-related information such as $ZTWORMHOLE data and trigger definition updates from MUPIP TRIGGER or $ZTRIGGER(). The Source Server does send updates done within trigger logic. Unless the application has replication filters that appropriately compensate for the trigger mismatch, this is a situation for concern, as the replicating instance may not maintain logical consistency with the originating primary. Note that filters that deal with $ZTWORMHOLE issues must reside on the originating instance.
 
 **Update & Helper Processes**
 
-For any replication stream record indicating triggers were invoked, the Update Process scans for matching YottaDB/GT.M triggers and unconditionally executes the implicit YottaDB/GT.M trigger logic.
+For any replication stream record indicating triggers were invoked, the Update Process scans for matching YottaDB triggers and unconditionally executes the implicit YottaDB trigger logic.
 
 -----------------------------
 MUPIP Trigger and $ZTRIGGER()
 -----------------------------
 
-MUPIP TRIGGER provides a facility to examine and update triggers. The $ZTRIGGER() function performs trigger maintenance actions analogous to those performed by MUPIP TRIGGER. $ZTRIGGER() returns the truth value expression depending on the success of the specified action. You choice of MUPIP TRIGGER or $ZTRIGGER() for trigger maintenance should depend on your current application development model and configuration management practices. Both MUPIP TRIGGER and $ZTRIGGER() use the same trigger definition syntax. You should familiarize yourself with the syntax of an entry in a trigger definition file before exploring MUPIP TRIGGER and $ZTRIGGER(). For more information and usage examples of MUPIP TRIGGER, refer to the Administration and Operations Guide. For more information and usage examples of $ZTRIGGER(), refer to “$ZTRIgger()”.
+MUPIP TRIGGER provides a facility to examine and update triggers. The $ZTRIGGER() function performs trigger maintenance actions analogous to those performed by MUPIP TRIGGER. $ZTRIGGER() returns the truth value expression depending on the success of the specified action. You choice of MUPIP TRIGGER or $ZTRIGGER() for trigger maintenance should depend on your current application development model and configuration management practices. Both MUPIP TRIGGER and $ZTRIGGER() use the same trigger definition syntax. You should familiarize yourself with the syntax of an entry in a trigger definition file before exploring MUPIP TRIGGER and $ZTRIGGER(). For more information and usage examples of MUPIP TRIGGER, refer to the `Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/index.html>`_. For more information and usage examples of $ZTRIGGER(), refer to “$ZTRIgger()”.
 
 
 

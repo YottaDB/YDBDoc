@@ -3,15 +3,15 @@
    Utility Routines
 
 ======================
-Utility Routines
+10. Utility Routines
 ======================
 
 .. contents::
    :depth: 2
 
-YottaDB/GT.M provides library utilities to perform frequently used tasks, and to access frequently used information. Most of the utilities are for YottaDB/GT.M programmers, but some provide tools for system administration and operation.
+YottaDB provides library utilities to perform frequently used tasks, and to access frequently used information. Most of the utilities are for YottaDB programmers, but some provide tools for system administration and operation.
 
-The YottaDB/GT.M utilities fall into the following general categories:
+The YottaDB utilities fall into the following general categories:
 
 * Date and time utilities
 * Conversion utilities
@@ -22,9 +22,9 @@ The YottaDB/GT.M utilities fall into the following general categories:
 * System Management utilities
 * Unicode Utility Routines
 
-The YottaDB/GT.M distribution includes the source files for these utilities. The default installation compiles them to produce object modules in the $gtm_dist distribution library.
+The YottaDB distribution includes the source files for these utilities. The default installation compiles them to produce object modules in the $gtm_dist distribution library.
 
-You may wish to examine the utilities and include some of them in your programs if the programs access the function frequently or you may want to modify the utilities to better fit your particular needs. If you modify a utility, store your copy in a directory that precedes gtm_dist in the search list $ZROUTINES to prevent a new release of YottaDB/GT.M from overwriting your copy.
+You may wish to examine the utilities and include some of them in your programs if the programs access the function frequently or you may want to modify the utilities to better fit your particular needs. If you modify a utility, store your copy in a directory that precedes gtm_dist in the search list $ZROUTINES to prevent a new release of YottaDB from overwriting your copy.
 
 -------------------------------
 Using the Utilities
@@ -38,20 +38,20 @@ You can either use a utility in Direct Mode or include it in a source applicatio
 
 Many utilities contain labels that invoke variations of the basic utility functionality. Some also provide the label FUNC to invoke an extrinsic function with optional or required parameters.
 
-YottaDB/GT.M passes input to non-extrinsic forms of the utilities interactively or by using "input" variables. YottaDB/GT.M passes output from non-extrinsic forms of the utilities using "output" variables. For extrinsic entry points, the utilities receive input as parameters and pass output as the returned result. For other entry points, YottaDB/GT.M uses predefined "input" and "output" variables to pass information. Some utilities interactively request user inputs and display their results. Each utility is described individually in this chapter where appropriate labels, input, and output variables are identified.
+YottaDB passes input to non-extrinsic forms of the utilities interactively or by using "input" variables. YottaDB passes output from non-extrinsic forms of the utilities using "output" variables. For extrinsic entry points, the utilities receive input as parameters and pass output as the returned result. For other entry points, YottaDB uses predefined "input" and "output" variables to pass information. Some utilities interactively request user inputs and display their results. Each utility is described individually in this chapter where appropriate labels, input, and output variables are identified.
 
-By convention, the utilities use upper-case variables for external input and output. Since M is case-sensitive, when an invocation uses a lower-case or misspelled variable name, the routine does not output the expected information. Instead it supplies a default value, if one exists, or produces an error message.
+By convention, the utilities use upper-case variables for external input and output. Since M is case-sensitive, when an invocation uses a lower-case or misspelled variable name, the routine does not output the expected information. Instead, it supplies a default value, if one exists, or produces an error message.
 
 Example:
 
 .. parsed-literal::
-   GTM>SET %ds="11/22/2010"
-   GTM>DO INT^%DATE
-   GTM>ZWRITE
+   YDB>SET %ds="11/22/2018"
+   YDB>DO INT^%DATE
+   YDB>ZWRITE
    %DN=62047
-   %ds="11/22/2010"
+   %ds="11/22/2018"
 
-This example sets the lowercase variable %ds to the date 11/22/2010. Since the %DATE routine expects the input to be provided in the uppercase %DS variable, it returns a default value in the output variable $DN. The default is the $HOROLOG format of the current date, which is 11/17/2010 in the example.
+This example sets the lowercase variable %ds to the date 11/22/2018. Since the %DATE routine expects the input to be provided in the uppercase %DS variable, it returns a default value in the output variable $DN. The default is the $HOROLOG format of the current date, which is 11/17/2018 in the example.
 
 .. note::
    Utility programs written in M (such as %GO) run within mumps processes and behave like any other code written in M. Encryption keys are required if the mumps process accesses encrypted databases. A process running a utility program written in M that does not access encrypted databases (such as %RSEL) does not need encryption keys just to run the utility program.
@@ -108,7 +108,7 @@ FUNC[()]: Invokes an extrinsic function returning today's date.
 
 **Output Variables**
 
-%DAT: Contains the current date..
+%DAT: Contains the current date.
 
 **Examples of %D**
 
@@ -117,25 +117,25 @@ For the following examples, $ZDATEFORM is assumed to be one (1).
 Example:
 
 .. parsed-literal::
-   GTM>DO ^%D
-   22-NOV-2010
+   YDB>DO ^%D
+   08-FEB-2018
 
 This example invokes %D in Direct Mode. Then %D displays the current date.
 
 Example:
 
 .. parsed-literal::
-   GTM>DO INT^%D
-   GTM>ZWRITE
-   %DAT="22-NOV-2010"
+   YDB>DO INT^%D
+   YDB>ZWRITE
+   %DAT="08-FEB-2018"
 
 This example invokes %D with the label INT (INT^%D). The variable %DAT contains the current date. ZWRITE displays the contents of the output variable.
 
 Example:
 
 .. parsed-literal::
-   GTM>WRITE $$FUNC^%D 
-   22-NOV-2010 
+   YDB>WRITE $$FUNC^%D 
+   08-FEB-2018 
 
 This example invokes %D as an extrinsic function with the label FUNC. $$FUNC^%D returns today's date.
 
@@ -201,18 +201,18 @@ Date: Interactively requests a date for conversion to $HOROLOG format.
 Example:
 
 .. parsed-literal::
-   GTM>DO ^%DATE
+   YDB>DO ^%DATE
    Date:
-   GTM>ZWRITE
+   YDB>ZWRITE
    %DN=62047
 
-This example invokes %DATE at the GTM> prompt. After pressing <RETURN> at the Date: prompt, %DATE converts today's date (for example, 11/22/2010) to the $HOROLOG format. ZWRITE displays the contents of the output variable.
+This example invokes %DATE at the YDB> prompt. After pressing <RETURN> at the Date: prompt, %DATE converts today's date (for example, 02/08/2018) to the $HOROLOG format. ZWRITE displays the contents of the output variable.
 
 Example:
 
 .. parsed-literal::
-   GTM>DO INT^%DATE
-   GTM>ZWRITE
+   YDB>DO INT^%DATE
+   YDB>ZWRITE
    %DN=59105
 
 This example invokes INT^%DATE, which converts the current date non-interactively into $HOROLOG format. ZWRITE displays the contents of the output variable.
@@ -220,18 +220,18 @@ This example invokes INT^%DATE, which converts the current date non-interactivel
 Example:
 
 .. parsed-literal::
-   GTM>SET %DS="10/20/2010"
-   GTM>DO INT^%DATE
-   GTM>ZWRITE
+   YDB>SET %DS="02/08/2018"
+   YDB>DO INT^%DATE
+   YDB>ZWRITE
    %DN=62019
-   %DS="10/20/2010"
+   %DS="02/08/2018"
 
 This example sets the input variable %DS prior to invoking INT^%DATE, which converts that date non-interactively to $HOROLOG format.
 
 Example:
 
 .. parsed-literal::
-   GTM>WRITE $$FUNC^%DATE("10/20/2010")
+   YDB>WRITE $$FUNC^%DATE("02/08/2018")
    62010 
 
 This example invokes %DATE with the label FUNC as an extrinsic function to convert an input date to $HOROLOG. If the invocation does not supply a date for $$FUNC^%DATE, FUNC converts the current date.
@@ -239,15 +239,15 @@ This example invokes %DATE with the label FUNC as an extrinsic function to conve
 Example:
 
 .. parsed-literal::
-   GTM>WRITE $ZDATEFORM
+   YDB>WRITE $ZDATEFORM
    1975
-   GTM>WRITE $$FUNC^%DATE("10/20/80")
+   YDB>WRITE $$FUNC^%DATE("10/20/80")
    51062
-   GTM>WRITE $ZDATE(51062)
+   YDB>WRITE $ZDATE(51062)
    10/20/1980
-   GTM>WRITE $$FUNC^%DATE("10/20/10")
+   YDB>WRITE $$FUNC^%DATE("10/20/10")
    62019
-   GTM>WRITE $ZDATE(62019)
+   YDB>WRITE $ZDATE(62019)
    10/20/2010
 
 This example shows the use of a year limit in $ZDATEFORM. Two digit years are interpreted to be in the interval (1975, 2074) since $ZDATEFORM is 1975; the input year "80" is interpreted as the year "1980" and "10" is interpreted as the year "2010". The example invokes FUNC^%DATE to convert the input date to $HOROLOG format. $ZDATE() is used to convert the $HOROLOG format date to mm/dd/yyyy format.
@@ -293,8 +293,8 @@ CTN(tm): Extrinsic entry that converts the argument to $HOROLOG format.
 Example:
 
 .. parsed-literal::
-   GTM>SET %DT=+$H DO %CDS^%H
-   GTM>ZWRITE
+   YDB>SET %DT=+$H DO %CDS^%H
+   YDB>ZWRITE
    %DAT="10/20/2010"
    %DT=62047
 
@@ -303,8 +303,8 @@ This example sets %DT to the current date in $HOROLOG format and converts it to 
 Example:
 
 .. parsed-literal::
-   GTM>SET %DT="10/20/2002" DO %CDN^%H
-   GTM>ZWRITE
+   YDB>SET %DT="10/20/2002" DO %CDN^%H
+   YDB>ZWRITE
    %DAT=59097
    %DT="10/20/2002"
 
@@ -313,8 +313,8 @@ This example sets the variable %DT to a date in mm/dd/yyyy format and invokes %H
 Example:
 
 .. parsed-literal::
-   GTM>SET %TM=$P($H,",",2) DO %CTS^%H
-   GTM>ZWRITE
+   YDB>SET %TM=$P($H,",",2) DO %CTS^%H
+   YDB>ZWRITE
    %TIM="17:41:18" 
    %TM=63678
 
@@ -323,8 +323,8 @@ This example sets the variable %TM to the current time in $HOROLOG format using 
 Example:
 
 .. parsed-literal::
-   GTM>SET %TM="17:41:18" DO %CTN^%H
-   GTM>ZWRITE
+   YDB>SET %TM="17:41:18" DO %CTN^%H
+   YDB>ZWRITE
    %TIM=63678
    %TM="17:41:18"
 
@@ -333,7 +333,7 @@ This example sets the variable %TM to a time in hh:mm:ss format, and invokes %H 
 Example:
 
 .. parsed-literal::
-   GTM>WRITE $$CDS^%H(62019)
+   YDB>WRITE $$CDS^%H(62019)
    11/17/2010 
 
 This invokes CDS^%H as an extrinsic function to convert the external argument to external date format.
@@ -341,15 +341,15 @@ This invokes CDS^%H as an extrinsic function to convert the external argument to
 Example:
 
 .. parsed-literal::
-   GTM>WRITE $ZDATEFORM
+   YDB>WRITE $ZDATEFORM
    1980
-   GTM>WRITE $$CDN^%H("10/20/02")
+   YDB>WRITE $$CDN^%H("10/20/02")
    59097
-   GTM>WRITE $ZDATE(59097)
+   YDB>WRITE $ZDATE(59097)
    10/20/2002
-   GTM>WRITE $$CDN^%H("10/20/92")
+   YDB>WRITE $$CDN^%H("10/20/92")
    55445
-   GTM>WRITE $ZDATE(55445)
+   YDB>WRITE $ZDATE(55445)
    10/20/1992 
 
 This example shows the use of a year limit in $ZDATEFORM. Two digit years are interpreted to be in the interval of 1980 - 2079; since $ZDATEFORM is 1980, the input year "02" is interpreted as "2002" and "92" is interpreted as "1992". This example invokes CDN^%H to convert the argument in mm/dd/yy format to $HOROLOG format. $ZDATE() is used to conver the $HOROLOG format date to mm/dd/yyyy format.
@@ -375,7 +375,7 @@ FUNC[()]: Invokes an extrinsic function returning the current time.
 Example:
 
 .. parsed-literal::
-   GTM>DO ^%T
+   YDB>DO ^%T
    8:30 AM
 
 This example invokes %T, which prints the current time and does not set %TIM.
@@ -383,8 +383,8 @@ This example invokes %T, which prints the current time and does not set %TIM.
 Example:
 
 .. parsed-literal::
-   GTM>DO INT^%T
-   GTM>ZWRITE
+   YDB>DO INT^%T
+   YDB>ZWRITE
    %TIM="8:30 AM"
 
 This example invokes INT^%T, which sets the variable %TIM to the current time. ZWRITE displays the contents of the variable.
@@ -392,7 +392,7 @@ This example invokes INT^%T, which sets the variable %TIM to the current time. Z
 Example:
 
 .. parsed-literal::
-   GTM>WRITE $$FUNC^%T
+   YDB>WRITE $$FUNC^%T
    8:30 AM 
 
 This example invokes FUNC as an extrinsic function, which returns the current time.
@@ -453,9 +453,9 @@ The following table summarizes input formats accepted by %TI.
 Example:
 
 .. parsed-literal::
-   GTM>DO ^%TI
+   YDB>DO ^%TI
    Time: 4:02 PM
-   GTM>ZWRITE
+   YDB>ZWRITE
    %TN=57720 
 
 This example invokes %TI, which prompts for an input time. Press <RETURN> to convert the current time. ZWRITE displays the contents of the output variable.
@@ -463,9 +463,9 @@ This example invokes %TI, which prompts for an input time. Press <RETURN> to con
 Example:
 
 .. parsed-literal::
-   GTM>ZWRITE
-   GTM>DO INT^%TI
-   GTM>ZWRITE
+   YDB>ZWRITE
+   YDB>DO INT^%TI
+   YDB>ZWRITE
    %TN=40954 
 
 This example invokes INT^%TI to convert the current time non-interactively. ZWRITE displays the contents of the output variable %TN.
@@ -473,9 +473,9 @@ This example invokes INT^%TI to convert the current time non-interactively. ZWRI
 Example:
 
 .. parsed-literal::
-   GTM>SET %TS="8:30AM"
-   GTM>DO INT^%TI
-   GTM>ZWRITE
+   YDB>SET %TS="8:30AM"
+   YDB>DO INT^%TI
+   YDB>ZWRITE
    %TN=30600
    %TS="8:30AM" 
 
@@ -484,7 +484,7 @@ This example sets the variable %TS prior to invoking INT^%TI. %TI uses %TS as th
 Example:
 
 .. parsed-literal::
-   GTM>WRITE $$FUNC^%TI("8:30AM")
+   YDB>WRITE $$FUNC^%TI("8:30AM")
    30600 
 
 This example invokes %TI as an extrinsic function to convert the supplied time to $HOROLOG format. If there is no argument (i.e., $$FUNC^%TI), %TI converts the current time.
@@ -512,8 +512,8 @@ INT: Converts non-interactively %TS, or if %TS is not defined the current time t
 Example:
 
 .. parsed-literal::
-   GTM>DO INT^%TI,^%TO 
-   GTM>ZWRITE
+   YDB>DO INT^%TI,^%TO 
+   YDB>ZWRITE
    %TN=62074
    %TS="5:14 PM"
 
@@ -543,13 +543,11 @@ The conversion utilities are:
 
 The conversion utilities can be invoked as extrinsic functions.
 
-The "%" sign has been removed from the topic headings below, intentionally.
-
 ++++++++++++++
 %DH
 ++++++++++++++
 
-The %DH utility converts numeric values from decimal to hexadecimal. %DH defaults the length of its output to eight digits. However the input variable %DL overrides the default and controls the length of the output. The routine has entry points for interactive or non-interactive use.
+The %DH utility converts numeric values from decimal to hexadecimal. %DH defaults the length of its output to eight digits. However, the input variable %DL overrides the default and controls the length of the output. The routine has entry points for interactive or non-interactive use.
 
 **Utility Labels**
 
@@ -578,10 +576,10 @@ Digits: Requests the length of the output in digits; eight by default.
 Example:
 
 .. parsed-literal::
-   GTM>DO INT^%DH 
+   YDB>DO INT^%DH 
    Decimal: 12
    Digits: 1
-   GTM>ZWRITE 
+   YDB>ZWRITE 
    %DH="C" 
 
 This example invokes %DH interactively with INT^%DH. %DH prompts for a decimal number and output length, then returns the result in the variable %DH. ZWRITE displays the contents of the variables.
@@ -589,9 +587,9 @@ This example invokes %DH interactively with INT^%DH. %DH prompts for a decimal n
 Example:
 
 .. parsed-literal::
-   GTM>SET %DH=12
-   GTM>DO ^%DH
-   GTM>ZWRITE
+   YDB>SET %DH=12
+   YDB>DO ^%DH
+   YDB>ZWRITE
    %DH="0000000C"
    %DL=8 
 
@@ -600,7 +598,7 @@ This example sets the read-write variable %DH to 12 and invokes %DH to convert t
 Example:
 
 .. parsed-literal::
-   GTM>WRITE $$FUNC^%DH(12,4)
+   YDB>WRITE $$FUNC^%DH(12,4)
    000C
 
 This example invokes %DH as an extrinsic function using the FUNC label. The first argument specifies the input decimal number and the optional, second argument specifies the number of output digits. If the extrinsic does not have a second argument, the length of the output defaults to eight characters.
@@ -638,10 +636,10 @@ Digits: Requests the length of the output in digits; 12 by default.
 Example:
 
 .. parsed-literal::
-   GTM>DO INT^%DO 
+   YDB>DO INT^%DO 
    Decimal: 12
    Digits: 4
-   GTM>ZWRITE
+   YDB>ZWRITE
    %DO="0014"
 
 This example invokes %DO interactively with INT^%DO. %DO prompts for a decimal number and an output length. If the output value of %DO has leading zeros, the value is a string. ZWRITE displays the contents of the variables.
@@ -649,9 +647,9 @@ This example invokes %DO interactively with INT^%DO. %DO prompts for a decimal n
 Example:
 
 .. parsed-literal::
-   GTM>SET %DO=12 
-   GTM>DO ^%DO
-   GTM>ZWRITE
+   YDB>SET %DO=12 
+   YDB>DO ^%DO
+   YDB>ZWRITE
    %DO="000000000014"
 
 This example sets the read-write variable %DO to 12 and invokes %DO to convert the number non-interactively. Because the number of digits was not specified, %DO used the default of 12 digits. Set %DL to specify the number of output digits. ZWRITE displays the contents of the variables.
@@ -659,7 +657,7 @@ This example sets the read-write variable %DO to 12 and invokes %DO to convert t
 Example:
 
 .. parsed-literal::
-   GTM>WRITE $$FUNC^%DO(12,7)
+   YDB>WRITE $$FUNC^%DO(12,7)
    0000014 
 
 This example invokes %DO as an extrinsic function with the label FUNC. The first argument specifies the number to be converted and the optional, second argument specifies the number of output digits. If the second argument is not specified, %DO uses the default of 12 digits.
@@ -693,9 +691,9 @@ Hexadecimal: Requests a hexadecimal number for conversion to decimal.
 Example:
 
 .. parsed-literal::
-   GTM>DO INT^%HD
+   YDB>DO INT^%HD
    Hexadecimal:E
-   GTM>ZWRITE
+   YDB>ZWRITE
    %HD=14
 
 This example invokes %HD in interactive mode with INT^%HD. %HD prompts for a hexadecimal number, then returns the converted number in the variable %HD. ZWRITE displays the contents of the variable.
@@ -703,9 +701,9 @@ This example invokes %HD in interactive mode with INT^%HD. %HD prompts for a hex
 Example:
 
 .. parsed-literal::
-   GTM>SET %HD="E" 
-   GTM>DO ^%HD
-   GTM>ZWRITE
+   YDB>SET %HD="E" 
+   YDB>DO ^%HD
+   YDB>ZWRITE
    %HD=14
 
 This example sets the read-write variable %HD to "E" and invokes %HD to convert non-interactively the value of %HD to a decimal number. %HD places the converted value into the read-write variable %HD.
@@ -713,7 +711,7 @@ This example sets the read-write variable %HD to "E" and invokes %HD to convert 
 Example:
 
 .. parsed-literal::
-   GTM>WRITE $$FUNC^%HD("E")
+   YDB>WRITE $$FUNC^%HD("E")
    14
 
 This example invokes %HD as an extrinsic function with the label FUNC and writes the results.
@@ -747,9 +745,9 @@ Hexadecimal: Requests a hexadecimal number for conversion to octal.
 Example:
 
 .. parsed-literal::
-   GTM>DO INT^%HO
+   YDB>DO INT^%HO
    Hexadecimal:C3
-   GTM>ZWRITE
+   YDB>ZWRITE
    %HO=303
 
 This example invokes %HO in interactive mode using INT^%HO. %HO prompts for a hexadecimal number that it converts to an octal number. ZWRITE displays the contents of the variable.
@@ -757,9 +755,9 @@ This example invokes %HO in interactive mode using INT^%HO. %HO prompts for a he
 Example:
 
 .. parsed-literal::
-   GTM>SET %HO="C3"
-   GTM>DO ^%HO
-   GTM>ZWRITE
+   YDB>SET %HO="C3"
+   YDB>DO ^%HO
+   YDB>ZWRITE
    %HO=303 
 
 This example sets the read-write variable %HO to "C3" and invokes %HO to convert the value of %HO non-interactively. ZWRITE displays the contents of the variable.
@@ -767,7 +765,7 @@ This example sets the read-write variable %HO to "C3" and invokes %HO to convert
 Example:
 
 .. parsed-literal::
-   GTM>WRITE $$FUNC^%HO("C3")
+   YDB>WRITE $$FUNC^%HO("C3")
    303
 
 This example invokes %HO as an extrinsic function with the FUNC label.
@@ -801,7 +799,7 @@ String: Requests a string for conversion to lower case.
 Example:
 
 .. parsed-literal::
-   GTM>DO INT^%LCASE
+   YDB>DO INT^%LCASE
    String: LABEL
    Lower: label
 
@@ -810,9 +808,9 @@ This example invokes %LCASE in interactive mode using INT^%LCASE. %LCASE prompts
 Example:
 
 .. parsed-literal::
-   GTM>SET %S="Hello"
-   GTM>do ^%LCASE
-   GTM>zwrite
+   YDB>SET %S="Hello"
+   YDB>do ^%LCASE
+   YDB>zwrite
    %S="hello" 
 
 This example sets the variable %S to the string "Hello" and invokes %LCASE non-interactively to convert the string.
@@ -820,8 +818,8 @@ This example sets the variable %S to the string "Hello" and invokes %LCASE non-i
 Example:
 
 .. parsed-literal::
-   GTM>SET ^X="Hello"
-   GTM>WRITE $$FUNC^%LCASE(^X)
+   YDB>SET ^X="Hello"
+   YDB>WRITE $$FUNC^%LCASE(^X)
    hello 
 
 This example sets the variable ^X to the string "Hello" and invokes %LCASE as an extrinsic function that returns "hello" in lower case.
@@ -855,9 +853,9 @@ Octal: Requests an octal number for conversion to decimal.
 Example:
 
 .. parsed-literal::
-   GTM>DO INT^%OD
+   YDB>DO INT^%OD
    Octal:14
-   GTM>ZWRITE
+   YDB>ZWRITE
    %OD=12
 
 This example invokes INT^%OD to interactively convert the octal number entered. %OD prompts for an octal number that it converts to a decimal. %OD returns the converted value in the variable %OD.
@@ -865,9 +863,9 @@ This example invokes INT^%OD to interactively convert the octal number entered. 
 Example:
 
 .. parsed-literal::
-   GTM>SET %OD=14
-   GTM>DO ^%OD
-   GTM>ZWRITE
+   YDB>SET %OD=14
+   YDB>DO ^%OD
+   YDB>ZWRITE
    %OD=12
 
 This example sets the read-write variable %OD to 14 and invokes %OD to convert the number non-interactively. ZWRITE displays the contents of the variables.
@@ -875,7 +873,7 @@ This example sets the read-write variable %OD to 14 and invokes %OD to convert t
 Example:
 
 .. parsed-literal::
-   GTM>WRITE $$FUNC^%OD(14)
+   YDB>WRITE $$FUNC^%OD(14)
    12
 
 This example invokes %OD as an extrinsic function with the FUNC label. The argument specifies the number to be converted.
@@ -909,9 +907,9 @@ Octal:Requests an octal number for conversion to hexadecimal.
 Example:
 
 .. parsed-literal::
-   GTM>DO INT^%OH
+   YDB>DO INT^%OH
    Octal:16
-   GTM>ZWRITE
+   YDB>ZWRITE
    %OH="E"
 
 This example invokes %OH in interactive mode using INT^%OH. %OH prompts for an octal number that it converts to a hexadecimal number. ZWRITE displays the contents of the variable.
@@ -919,9 +917,9 @@ This example invokes %OH in interactive mode using INT^%OH. %OH prompts for an o
 Example:
 
 .. parsed-literal::
-   GTM>SET %OH=16
-   GTM>DO ^%OH
-   GTM>ZWRITE
+   YDB>SET %OH=16
+   YDB>DO ^%OH
+   YDB>ZWRITE
    %OH="E" 
 
 This example sets the read-write variable %OH to 16 and invokes %OH to convert the value of %OH non-interactively. ZWRITE displays the contents of the variable.
@@ -929,7 +927,7 @@ This example sets the read-write variable %OH to 16 and invokes %OH to convert t
 Example:
 
 .. parsed-literal::
-   GTM>WRITE $$FUNC^%OH(16)
+   YDB>WRITE $$FUNC^%OH(16)
    E
 
 This example invokes %OH as an extrinsic function with the FUNC label.
@@ -963,7 +961,7 @@ String: Requests a string for conversion to upper case.
 Example:
 
 .. parsed-literal::
-   GTM>DO INT^%UCASE
+   YDB>DO INT^%UCASE
    String: test
    Upper: TEST
 
@@ -972,8 +970,8 @@ This example invokes %UCASE in interactive mode using INT^%UCASE. %UCASE prompts
 Example:
 
 .. parsed-literal::
-   GTM>SET ^X="hello"
-   GTM>WRITE $$FUNC^%UCASE(^X)
+   YDB>SET ^X="hello"
+   YDB>WRITE $$FUNC^%UCASE(^X)
    HELLO
 
 This example sets the variable X to the string "hello" and invokes %UCASE as an extrinsic function that returns "HELLO" in upper case.
@@ -1025,7 +1023,7 @@ Number: Requests a base number to raise by the power.
 Example:
 
 .. parsed-literal::
-   GTM>DO INT^%EXP
+   YDB>DO INT^%EXP
    Power: 3
    Number: 12
    12 raised to 3 is 1728
@@ -1035,9 +1033,9 @@ This example invokes %EXP in interactive mode using INT^%EXP. %EXP prompts for a
 Example:
 
 .. parsed-literal::
-   GTM>SET %I=2,%J=9
-   GTM>DO ^%EXP
-   GTM>ZWRITE
+   YDB>SET %I=2,%J=9
+   YDB>DO ^%EXP
+   YDB>ZWRITE
    %I=512
    %J=9
 
@@ -1046,7 +1044,7 @@ This example sets the read-write variable %I to 2, variable %J to 9, and invokes
 Example:
 
 .. parsed-literal::
-   GTM>WRITE $$FUNC^%EXP(2,9)
+   YDB>WRITE $$FUNC^%EXP(2,9)
    512
 
 This example invokes %EXP as an extrinsic function with the label FUNC.
@@ -1080,9 +1078,9 @@ The square root of: Requests a number.
 Example:
 
 .. parsed-literal::
-   GTM>SET %X=81
-   GTM>DO ^%SQROOT
-   GTM>ZWRITE
+   YDB>SET %X=81
+   YDB>DO ^%SQROOT
+   YDB>ZWRITE
    %X=81
    %Y=9 
 
@@ -1091,17 +1089,17 @@ This example sets the variable %X to 81 and invokes %SQROOT to calculate the squ
 Example:
 
 .. parsed-literal::
-   GTM>DO INT^%SQROOT
+   YDB>DO INT^%SQROOT
    The square root of: 81 is: 9
    The square root of: <RETURN>
-   GTM> 
+   YDB> 
 
 This example invokes INT^%SQROOT interactively that prompts for a number. The square root of the number appears on the same line. %SQROOT then prompts for another number. Press <RETURN> to exit.
 
 Example:
 
 .. parsed-literal::
-   GTM>WRITE $$FUNC^%SQROOT(81)
+   YDB>WRITE $$FUNC^%SQROOT(81)
    9
 
 This example invokes %SQROOT as an extrinsic function with the label FUNC.
@@ -1137,7 +1135,7 @@ R(s): Returns a string after removing trailing whitespaces from the argument.
 Example:
 
 .. parsed-literal::
-   GTM>set strToTrim=$char(9,32)_"string with spaces and tabs"_$char(32,32,32) write $length(strToTrim) 36 GTM>write "strToTrim=",?24,"""",strToTrim,"""",!,"$$L^%TRIM(strToTrim)=",?24,"""",$$L^%TRIM(strToTrim),"""",!,"$$R^%TRIM(strToTrim)=",?24,"""",$$R^%TRIM(strToTrim),"""",!,"$$FUNC^%TRIM(strToTrim)=",?24,"""",$$FUNC^%TRIM(strToTrim),""""
+   YDB>set strToTrim=$char(9,32)_"string with spaces and tabs"_$char(32,32,32) write $length(strToTrim) 36 YDB>write "strToTrim=",?24,"""",strToTrim,"""",!,"$$L^%TRIM(strToTrim)=",?24,"""",$$L^%TRIM(strToTrim),"""",!,"$$R^%TRIM(strToTrim)=",?24,"""",$$R^%TRIM(strToTrim),"""",!,"$$FUNC^%TRIM(strToTrim)=",?24,"""",$$FUNC^%TRIM(strToTrim),""""
    strToTrim= " string with spaces and tabs "
    $$L^%TRIM(strToTrim)= "string with spaces and tabs "
    $$R^%TRIM(strToTrim)= " string with spaces and tabs"
@@ -1148,8 +1146,8 @@ This example invokes %TRIM as an extrinsic function and demonstrates the use of 
 Example:
 
 .. parsed-literal::
-   $ echo " GT.M Rocks! " | gtm -r %XCMD 'do ^%TRIM'
-   GT.M Rocks!
+   $ echo " YottaDB Rocks! " | gtm -r %XCMD 'do ^%TRIM'
+   YottaDB Rocks!
    $
 
 This example invokes %TRIM as a command line utility which reads STDIN and writes the trimmed output to STDOUT. 
@@ -1176,12 +1174,12 @@ $$SPLIT^%MPIECE(str,expr1): Invokes %MPIECE as an extrinsic function that return
 Example:
 
 .. parsed-literal::
-   GTM>set strToSplit=" please split this string into six"
-   GTM>set piecestring=$$^%MPIECE(strToSplit," ","|") zwrite strToSplit,piecestring write $length(piecestring,"|")
+   YDB>set strToSplit=" please split this string into six"
+   YDB>set piecestring=$$^%MPIECE(strToSplit," ","|") zwrite strToSplit,piecestring write $length(piecestring,"|")
    strToSplit=" please split this string into six"
    piecestring="please|split|this|string|into|six
    6
-   GTM>set \*fields=$$SPLIT^%MPIECE(strToSplit) zwrite fields
+   YDB>set \*fields=$$SPLIT^%MPIECE(strToSplit) zwrite fields
    fields(1)="please"
    fields(2)="split"
    fields(3)="this"
@@ -1205,17 +1203,15 @@ The Global utilities are:
 
 %GED: Provides full-screen editing capabilities for global variables and values.
 
-%GI: Loads global data from a sequential file into a GT.M database.
+%GI: Loads global data from a sequential file into a YottaDB database.
 
-%GO: Extracts global data from a GT.M database into a sequential file.
+%GO: Extracts global data from a YottaDB database into a sequential file.
 
 %GSE: Displays global variables and their values when the values contain a specified string or number.
 
 %GSEL: Selects globals.
 
 %ZSHOWVTOLCL: Restores ZSHOW "V":gvn data into its original local variables.
-
-The "%" sign has been removed from the topic headings below, intentionally.
 
 
 +++
@@ -1262,7 +1258,7 @@ Arguments for %G and %GED:
 Example:
 
 .. parsed-literal::
-   GTM>do ^%G
+   YDB>do ^%G
    Output Device: <terminal>: <RETURN>
    List ^C
    ^C="CLASS" 
@@ -1274,14 +1270,14 @@ Example:
    ^C(2)="JOHN"
    ^C(3)="PETER"
    List ^ <RETURN> 
-   GTM>
+   YDB>
 
 This example lists the nodes of global ^C. %G displays the global and its descendants and values, if the node exists.
 
 Example:
 
 .. parsed-literal::
-   GTM>do ^%G
+   YDB>do ^%G
    Output Device: <terminal>: <RETURN>
    List ^C(1)
    ^C(1)="MARY"
@@ -1291,7 +1287,7 @@ This example lists only the node entered and its value.
 Example:
 
 .. parsed-literal::
-   GTM>do ^%G
+   YDB>do ^%G
    Output Device: <terminal>: <RETURN> 
    List ^C(1,*)
    ^C(1)="MARY"
@@ -1300,14 +1296,14 @@ Example:
    ^C(1,3)="BIO" 
    ^C(1,3,1)=90
    List ^ <RETURN> 
-   GTM>
+   YDB>
 
 This example uses the asterisk (*) wildcard to list node ^C(1), its descendants and values.
 
 Example:
 
 .. parsed-literal::
-   GTM>do ^%G
+   YDB>do ^%G
    Output Device: <terminal>: <RETURN> 
    List ^?D
    Global Directory
@@ -1315,7 +1311,7 @@ Example:
    ^C ^D ^S ^Y ^a
    Total of 5 globals.
    List ^
-   GTM> 
+   YDB> 
 
 This example specifies "?D" as the global that invokes the %GD utility. %GD displays existing globals in the current global directory without displaying their values or descendants.
 
@@ -1340,7 +1336,7 @@ To global: ^Request a global variable name to receive the copy.
 Example:
 
 .. parsed-literal::
-   GTM>do ^%GC
+   YDB>do ^%GC
    Global copy
    Show copied nodes <Yes>? <RETURN>
    From global ^b
@@ -1350,7 +1346,7 @@ Example:
    ^g(3)=3
    Total 3 nodes copied.
    From global ^<RETURN> 
-   GTM>
+   YDB>
 
 This example makes a copy of the nodes and values of global ^b to global ^g.
 
@@ -1381,7 +1377,7 @@ Requests a destination device; defaults to the principal device.
 Example:
 
 .. parsed-literal::
-   GTM>DO ^%GCE
+   YDB>DO ^%GCE
    Global Change Every occurrence
    Global ^a:^b
    ^a ^b
@@ -1399,19 +1395,19 @@ Example:
    Now : good-bye Adam
    1 changes made in total 25 nodes.
    Global ^ <RETURN>
-   GTM>
+   YDB>
 
-This example searches a range of globals and its nodes for the old string value entered. GT.M searches each global and displays the changes and number of nodes changed and checked.
+This example searches a range of globals and its nodes for the old string value entered. YottaDB searches each global and displays the changes and number of nodes changed and checked.
 
 Example:
 
 .. parsed-literal::
-   GTM>set ^b(12)=12
-   GTM>set ^b(122)=122
-   GTM>set ^b(30)=656
-   GTM>set ^b(45)=344
-   GTM>set ^b(1212)=012212
-   GTM>DO ^%GCE
+   YDB>set ^b(12)=12
+   YDB>set ^b(122)=122
+   YDB>set ^b(30)=656
+   YDB>set ^b(45)=344
+   YDB>set ^b(1212)=012212
+   YDB>DO ^%GCE
    Global Change Every occurrence
    Global ^b
    Current total of 1 global.
@@ -1431,7 +1427,7 @@ Example:
    Now : 35235
    5 changes made in total 5 nodes
    Global ^ <RETURN> 
-   GTM>DO ^%G
+   YDB>DO ^%G
    Output device: <terminal>: <RETURN>
    List ^b
    ^b(12)=35
@@ -1469,38 +1465,38 @@ Global^: Requests (using %GSEL) a global name with optional wildcards or a range
 Example:
 
 .. parsed-literal::
-   GTM>DO ^%GD
+   YDB>DO ^%GD
    Global directory
    Global ^k
    ^k
    Total of 1 global.
    Global ^ <RETURN>
-   GTM>
+   YDB>
 
 This example verifies that ^k exists in the global directory.
 
 Example:
 
 .. parsed-literal::
-   GTM>DO ^%GD 
+   YDB>DO ^%GD 
    Global directory
    Global ^C:S
    ^C ^D ^S 
    Total of 3 globals
    Global ^ <RETURN>
-   GTM>
+   YDB>
 
 This example displays a range of globals that exist from ^C to ^S.
 
 Example:
 
 .. parsed-literal::
-   GTM>DO ^%GD Global directory 
+   YDB>DO ^%GD Global directory 
    Global ^*
    ^C ^D ^S ^Y ^a
    Total of 5 globals
    Global ^ <RETURN>
-   GTM> 
+   YDB> 
 
 The asterisk (*) wildcard at the Global ^ prompt displays all globals in the global directory.
 
@@ -1521,7 +1517,7 @@ Only one global can be edited at a time with %GED, see “ Prompts” for descri
 Example:
 
 .. parsed-literal::
-   GTM>DO ^%GED 
+   YDB>DO ^%GED 
    edit ^ b
    Beginning screen:
    ^b(1)="melons"
@@ -1547,7 +1543,7 @@ Example:
    added: 2
    killed: 1
    Edit ^ <RETURN>
-   GTM>
+   YDB>
 
 This example shows the use of the full-screen editor to change, add, and delete (kill) nodes. When you exit from the editor, %GED checks the syntax and reports any problems. By pressing <RETURN>, return to the full-screen editor to fix the error. At the end of the session, %GED reports how many nodes were selected, changed, killed, and added.
 
@@ -1555,9 +1551,9 @@ This example shows the use of the full-screen editor to change, add, and delete 
 %GI
 ++++
 
-%GI loads global variable names and their corresponding data values into a GT.M database from a sequential file. %GI uses the global directory to determine which database files to use. %GI may operate concurrently with normal GT.M database access. However, a %GI does not use M LOCKs and may produce application-level integrity problems if run concurrently with many applications.
+%GI loads global variable names and their corresponding data values into a YottaDB database from a sequential file. %GI uses the global directory to determine which database files to use. %GI may operate concurrently with normal YottaDB database access. However, a %GI does not use M LOCKs and may produce application-level integrity problems if run concurrently with many applications.
 
-In many ways, %GI is similar to MUPIP LOAD. The format of the input file (GO or ZWRITE) is automatically detected. Like MUPIP LOAD, %GI does not load YottaDB/GT.M trigger definitions. Unlike MUPIP LOAD, %GI invokes triggers just like any other M code, which may yield results other than those expected or intended.
+In many ways, %GI is similar to MUPIP LOAD. The format of the input file (GO or ZWRITE) is automatically detected. Like MUPIP LOAD, %GI does not load YottaDB trigger definitions. Unlike MUPIP LOAD, %GI invokes triggers just like any other M code, which may yield results other than those expected or intended.
 
 ^%GI loads records having up to 1MiB string length.
 
@@ -1565,7 +1561,7 @@ In many ways, %GI is similar to MUPIP LOAD. The format of the input file (GO or 
 
 Enter input file:
 
-Requests name of a file; file should be in standard Global Output (GO) format or Zwrite (ZWR) format .
+Requests name of a file; file should be in standard Global Output (GO) format or Zwrite (ZWR) format.
 
 OK <Yes>?: Asks for confirmation.
 
@@ -1574,24 +1570,24 @@ OK <Yes>?: Asks for confirmation.
 Example:
 
 .. parsed-literal::
-   GTM>DO ^%GI
+   YDB>DO ^%GI
    Global Input Utility
    Input device <terminal>: DATA.GBL
    Saved from user's development area
-   GT.M 07-MAY-2010 14:14:09
+   YottaDB 08-FEB-2018 14:14:09
    OK <Yes>? <RETURN>
    ^IB ^INFO
    Restored 10 nodes in 2 globals
-   GTM>
+   YDB>
 
 
 ++++
 %GO
 ++++
 
-%GO copies specified globals from the current database to a sequential output file in either GO or ZWR format. Use %GO to back up specific globals or when extracting data from the database for use by another system. %GO uses the global directory to determine which database files to use. %GO may operate concurrently with normal GT.M database access. To ensure that a %GO reflects a consistent application state, suspend database updates to all regions involved in the extract.
+%GO copies specified globals from the current database to a sequential output file in either GO or ZWR format. Use %GO to back up specific globals or when extracting data from the database for use by another system. %GO uses the global directory to determine which database files to use. %GO may operate concurrently with normal YottaDB database access. To ensure that a %GO reflects a consistent application state, suspend database updates to all regions involved in the extract.
 
-In many ways, the %GO utility is similar to MUPIP EXTRACT (-FORMAT=GO or -FORMAT=ZWR). Like MUPIP EXTRACT, %GO does not extract and load YottaDB/GT.M trigger definitions.
+In many ways, the %GO utility is similar to MUPIP EXTRACT (-FORMAT=GO or -FORMAT=ZWR). Like MUPIP EXTRACT, %GO does not extract and load YottaDB trigger definitions.
 
 **Prompts**
 
@@ -1612,7 +1608,7 @@ Requests destination device, which may be any legal filename.
 Example:
 
 .. parsed-literal::
-   GTM>DO ^%GO
+   YDB>DO ^%GO
    Global Output Utility
    Global ^A
    ^A
@@ -1623,7 +1619,7 @@ Example:
    Output device: /usr/dev/out.go
    ^A
    Total of 1 node in 1 global.
-   GTM>
+   YDB>
 
 +++++
 %GSE
@@ -1646,7 +1642,7 @@ String: Requests a search string.
 Example:
 
 .. parsed-literal::
-   GTM>do ^%GSE
+   YDB>do ^%GSE
    Global Search For Every Occurence
    Output device: <terminal>: Test.dat
    Global ^a <RETURN>
@@ -1658,7 +1654,7 @@ Example:
    ^a(10) Hello Adam
    Total 1 matches found in 25 nodes.
    Global ^ <RETURN>
-   GTM>
+   YDB>
 
 This example searches global ^a for the string "Hello" and displays all nodes that contain that string.
 
@@ -1691,7 +1687,7 @@ Global^: Requests a global name with optional wildcards or a range of names.
 Example:
 
 .. parsed-literal::
-   GTM>DO ^%GSEL
+   YDB>DO ^%GSEL
    Global ^C
    ^C
    Current total of 1 global
@@ -1708,38 +1704,38 @@ Example:
    ^C ^c ^class
    Current total of 3 globals
    Global ^ <RETURN>
-   GTM>ZWRITE 
+   YDB>ZWRITE 
    %ZG=3 
    %ZG("^C")=""
    %ZG("^c")=""
    %ZG("^class")=""
-   GTM> 
+   YDB> 
 
 This example adds and subtracts globals from the list of selected globals. "?D" displays all globals selected. ZWRITE displays the contents of the %ZG array.
 
 Example:
 
 .. parsed-literal::
-   GTM>DO ^%GSEL
+   YDB>DO ^%GSEL
    Global ^a
    ^a
    Current total of 1 global.
    Global ^<RETURN> 
-   GTM>ZWRITE
+   YDB>ZWRITE
    %ZG=1
    %ZG("^a")=""
-   GTM>DO CALL^%GSEL
+   YDB>DO CALL^%GSEL
    Global ^?d
    ^a
    Global ^iv
    ^iv
    Current total of 2 globals.
    Global ^<RETURN>
-   GTM>ZWRITE
+   YDB>ZWRITE
    %ZG=2
    %ZG("^a")=""
    %ZG("^iv")=""
-   GTM> 
+   YDB> 
 
 This example uses CALL^%GSEL to add to an existing %ZG array of selected globals.
 
@@ -1767,15 +1763,13 @@ The routine utilities are:
 
 %RD: Lists routine names available through $ZROUTINES.
 
-%RI: Loads routines from RO file to \*.m files in GT.M format.
+%RI: Loads routines from RO file to \*.m files in YottaDB format.
 
 %RO: Writes M source code for one or more routines to a sequential device such as a terminal, or a disk file.
 
 %RSE: Searches for every occurrence of a text string in a routine or a list of routines.
 
 %RSEL: Selects M routines and places their directories and names in a local array.
-
-The "%" sign has been removed from the topic headings below, intentionally.
 
 ++++
 %FL
@@ -1798,7 +1792,7 @@ Requests a destination device; defaults to the principal device.
 Example:
 
 .. parsed-literal::
-   GTM>DO ^%FL
+   YDB>DO ^%FL
    First Line Lister 
    Routine: %D
    %D
@@ -1814,17 +1808,17 @@ Example:
    Routine: <RETURN>
    Output Device: <RETURN>
    Routine First Line Lister Utility
-   GT.M 21-MAR-2002 16:44:09 
+   YottaDB 08-FEB-2018 16:44:09 
    %GSE
-   %GSE;GT.M %GSE utility - global search
+   %GSE;YottaDB %GSE utility - global search
    ;
    %GSEL;
-   %GSEL;GT.M %GSEL utility - global select into a local array
+   %GSEL;YottaDB %GSEL utility - global select into a local array
    ;
    ;invoke ^%GSEL to create %ZG - a local array of existing globals, interactively
    ;
    Total 5 lines in of 2 routines.
-   GTM>
+   YDB>
 
 This example selects %D, then selects %GSE and %GSEL and deselects %D. Because the example enters <RETURN> at the Output Device: <terminal>: prompt, the output goes to the principal device.
 
@@ -1898,7 +1892,7 @@ The following input variables are only applicable when invoking CALL^%RCE.
 Example:
 
 .. parsed-literal::
-   GTM>DO ^%RCE 
+   YDB>DO ^%RCE 
    Routine Change Every occurrence 
    Routine: BES*
    BEST BEST2 BEST3 BEST4
@@ -1926,14 +1920,14 @@ Example:
    /usr/smith/work/BEST4.m
    Total of 4 routines parsed.
    4 occurrences changed in 2 routines.
-   GTM>
+   YDB>
 
 This example selects a list of routines that change the string "^NAME" to the string "^STUDENT," and displays a trail of the changes.
 
 Example:
 
 .. parsed-literal::
-   GTM>DO ^%RCE
+   YDB>DO ^%RCE
    Routine Change Every occurrence
    Routine: BES*
    BEST BEST2 BEST3 BEST4
@@ -1950,7 +1944,7 @@ Example:
    BEST BEST2 BEST3 BEST4
    Total 4 routines parsed.
    4 occurrences changed in 2 routines.
-   GTM> 
+   YDB> 
 
 This example removes all occurrences of the <TAB> key from specified routines and suppresses the display trail of changes.
 
@@ -1985,7 +1979,7 @@ SRC: Lists the source modules accessible through the current $ZROUTINES (same as
 Example:
 
 .. parsed-literal::
-   GTM>DO ^%RD 
+   YDB>DO ^%RD 
    Routine directory
    Routine: TAXES
    TAXES
@@ -1994,43 +1988,43 @@ Example:
    EMP FICA PAYROLL TAXES YTD
    Total of 5 Routines
    Routine: <RETURN>
-   GTM>
+   YDB>
 
 This example invokes %RD that prompts for routine TAXES and the wildcard (*). %RD lists five routines accessible through the current $ZROUTINES.
 
 Example:
 
 .. parsed-literal::
-   GTM>DO OBJ^%RD 
+   YDB>DO OBJ^%RD 
    Routine directory
    Routine:*
    EMP FICA
    Total of 2 routines
    Routine: <RETURN>
-   GTM> 
+   YDB> 
 
 This example invokes %RD with the label OBJ that lists only object modules accessible through the current $ZROUTINES.
 
 Example:
 
 .. parsed-literal::
-   GTM>DO LIB^%RD 
+   YDB>DO LIB^%RD 
    Routine directory
    %D %DATE %DH %G %GD %GSEL 
-   GTM> 
+   YDB> 
 
 This example invokes %RD with the LIB label that lists all the % routines accessible through the current $ZROUTINES.
 
 Example:
 
 .. parsed-literal::
-   GTM>DO SRC^%RD 
+   YDB>DO SRC^%RD 
    Routine directory
    Routine:*
    DATACHG
    Total of 1 routines
    Routine: <RETURN>
-   GTM> 
+   YDB> 
 
 This example invokes %RD with the label SRC that lists only source modules accessible through the current $ZROUTINES.
 
@@ -2038,7 +2032,7 @@ This example invokes %RD with the label SRC that lists only source modules acces
 %RI
 +++
 
-%RI transforms M routines in the sequential format described in the ANSI standard into individual .m files in GT.M format. Use %RI to make M RO format accessible as GT.M routines.
+%RI transforms M routines in the sequential format described in the ANSI standard into individual .m files in YottaDB format. Use %RI to make M RO format accessible as YottaDB routines.
 
 **Prompts**
 
@@ -2059,16 +2053,16 @@ Requests name of directory to output M routines.
 Example:
 
 .. parsed-literal::
-   GTM>DO ^%RI
+   YDB>DO ^%RI
    Routine Input utility - Converts RO file to \*.m files
    Formfeed delimited <No>? <RETURN>
    Input device: <terminal>: file.ro
    Files saved from FILEMAN directory
-   GT.M 07-MAY-2002 15:17:54
+   YottaDB 07-MAY-2002 15:17:54
    Output directory: /usr/smith/work/
    DI DIA DIAO DIAI DIB DIBI
    Restored 753 lines in 6 routines.
-   GTM>
+   YDB>
 
 ++++
 %RO
@@ -2111,7 +2105,7 @@ The following input variables are only applicable when invoking CALL^%RO.
 Example:
 
 .. parsed-literal::
-   GTM>DO ^%RO
+   YDB>DO ^%RO
    Routine Output - Save selected routines into RO file.
    Routine: %D
    %D
@@ -2130,9 +2124,9 @@ Example:
    Strip comments <No>?:<RETURN>
    BEST BEST1 BEST2 
    Total of 53 lines in 3 routines
-   GTM>
+   YDB>
 
-This example adds and subtracts %D from the selection, then adds all routines starting with "BEST" and confirms the current selection. The example sends output to the designated output file output.txt. %RO displays the label at the beginning of the output file. The first record of the header label is the text entered at the prompt. The second record of the header label consists of the word "GT.M" and the current date and time.
+This example adds and subtracts %D from the selection, then adds all routines starting with "BEST" and confirms the current selection. The example sends output to the designated output file output.txt. %RO displays the label at the beginning of the output file. The first record of the header label is the text entered at the prompt. The second record of the header label consists of the word "YottaDB" and the current date and time.
 
 +++++++
 %RSE
@@ -2175,7 +2169,7 @@ The following input variables are only applicable when invoking CALL^%RSE.
 Example:
 
 .. parsed-literal::
-   GTM>DO ^%RSE
+   YDB>DO ^%RSE
    Routine Search for Every occurrence 
    Routine: BES*
    BEST BEST2 BEST3 BEST4
@@ -2195,14 +2189,14 @@ Example:
    /usr/smith/work/BEST4.m
    Total of 4 routines parsed.
    4 occurrences found in 2 routines.
-   GTM>
+   YDB>
 
 This example invokes %RSE that searches and finds a given string. The output device specifies a terminal display of all lines where the text string occurs.
 
 Example:
 
 .. parsed-literal::
-   GTM>DO ^%RSE
+   YDB>DO ^%RSE
    Routine Search for Every occurrence
    Routine: BEST
    BEST
@@ -2213,7 +2207,7 @@ Example:
    >^NAME<
    Output Device: out.lis
    BEST
-   GTM> 
+   YDB> 
 
 This example instructs ^%RSE to write all lines where the text string occurs to an output file, out.lis.
 
@@ -2221,7 +2215,7 @@ This example instructs ^%RSE to write all lines where the text string occurs to 
 %RSEL
 ++++++++++
 
-The %RSEL utility selects M routines. %RSEL selects routines using directories specified by the YottaDB/GT.M special variable $ZROUTINES. $ZROUTINES contains an ordered list of directories that certain YottaDB/GT.M functions use to locate source and object files. If $ZROUTINES is not defined, %RSEL searches only the current default directory. Other YottaDB/GT.M utilities call %RSEL.
+The %RSEL utility selects M routines. %RSEL selects routines using directories specified by the YottaDB special variable $ZROUTINES. $ZROUTINES contains an ordered list of directories that certain YottaDB functions use to locate source and object files. If $ZROUTINES is not defined, %RSEL searches only the current default directory. Other YottaDB utilities call %RSEL.
 
 %RSEL prompts for the name of a routine(s).
 
@@ -2269,16 +2263,16 @@ The following input variables are only valid when invoking CALL^%RSEL:
 Example:
 
 .. parsed-literal::
-   GTM>DO ^%RSEL
+   YDB>DO ^%RSEL
    Routine: TES*
    TEST2 TEST3
    Current total of 2 routines 
    Routine: <RETURN>
-   GTM>DO OBJ^%RSEL
+   YDB>DO OBJ^%RSEL
    Routine:TEST?
    Current total of 0 routines
    Routine: <RETURN>
-   GTM>ZWRITE
+   YDB>ZWRITE
    %ZR=0
 
 This example selects two source routines starting with "TES" as the first three characters. Then, the example invokes %RSEL at the OBJ label to select object modules only. OBJ^%RSEL returns a %ZR=0 because object modules for the TEST routines do not exist.
@@ -2286,7 +2280,7 @@ This example selects two source routines starting with "TES" as the first three 
 Example:
 
 .. parsed-literal::
-   GTM>DO ^%RSEL
+   YDB>DO ^%RSEL
    Routine: BES*
    BEST BEST2 BEST3 BEST4
    Current total of 4 routines
@@ -2301,11 +2295,11 @@ Example:
    Routine: ?D
    BEST3 BEST4
    Routine: <RETURN>
-   GTM>ZWRITE
+   YDB>ZWRITE
    %ZR=2
    %ZR("BEST3")="/usr/smith/work/"
    %ZR("BEST4")="/usr/smith/test/"
-   GTM>
+   YDB>
 
 This example selects the routines using the asterisk (*) wildcard and illustrates how to tailor your selection list. Note that %ZR contains two routines from different directories.
 
@@ -2314,12 +2308,12 @@ By default, %RSEL bases the contents of %ZR on source files that have a .m exten
 Example:
 
 .. parsed-literal::
-   GTM>DO ^%RSEL
+   YDB>DO ^%RSEL
    Routine:BEST*
    BEST2 BEST3
    Current total of 2 routines 
    Routine: <RETURN>
-   GTM>ZWRITE
+   YDB>ZWRITE
    %ZR=2
    %ZR("BEST2")="/usr/smith/test/"
    %ZR("BEST3")="/usr/smith/test/"
@@ -2329,35 +2323,35 @@ This example creates a %ZR array with BEST2 and BEST3.
 Example:
 
 .. parsed-literal::
-   GTM>DO ^%RSEL
+   YDB>DO ^%RSEL
    Routine:LOCK
    LOCK
    Current total of 1 routine
    Routine: <RETURN>
-   GTM>ZWRITE 
+   YDB>ZWRITE 
    %ZR=1
    %ZR("LOCK")="/usr/smith/work/"
-   GTM>DO CALL^%RSEL
+   YDB>DO CALL^%RSEL
    Routine:BEST*
    BEST2 BEST3
    Current total of 2 routines
    Routine: <RETURN>
-   GTM>ZWRITE
+   YDB>ZWRITE
    %ZR=3
    %ZR("BEST2")="/usr/smith/work/"
    %ZR("BEST3")="/usr/smith/work/"
    %ZR("LOCK")="/usr/smith/work/"
-   GTM>
+   YDB>
 
 This example creates a %ZR array with LOCK and adds to it using CALL%RSEL.
 
 Example:
 
 .. parsed-literal::
-   GTM>do SILENT^%RSEL("myroutine","OBJ")
+   YDB>do SILENT^%RSEL("myroutine","OBJ")
 
 .. parsed-literal::
-   GTM>ZWRITE
+   YDB>ZWRITE
    %ZR=1
    %ZR("myroutine")="/usr/smith/work"
 
@@ -2369,13 +2363,13 @@ Internationalization Utilities
 
 The internationalization utilities are:
 
-%GBLDEF: Manipulates the collation sequence assigned to a global. For more information and usage examples, refer to “Using the %GBLDEF Utility”.
+%GBLDEF: Manipulates the collation sequence assigned to a global. For more information and usage examples, refer to `“Using the %GBLDEF Utility” <https://docs.yottadb.com/ProgrammersGuide/internatn.html#using-the-gbldef-utility>`_.
 
-%LCLCOL: Manipulates the collation sequence assigned to local variables in an active process. For more information and usage examples, refer to “Establishing A Local Collation Sequence”.
+%LCLCOL: Manipulates the collation sequence assigned to local variables in an active process. For more information and usage examples, refer to `“Establishing A Local Collation Sequence” <https://docs.yottadb.com/ProgrammersGuide/internatn.html#establishing-a-local-collation-sequence>`_.
 
 %PATCODE: Loads pattern definition files for use within an active database.
 
-These utilities are an integral part of the YottaDB/GT.M functionality that permits you to customize your applications for use with other languages. For a description of these utilities, refer to Chapter 12: “Internationalization”.
+These utilities are an integral part of the YottaDB functionality that permits you to customize your applications for use with other languages. For a description of these utilities, refer to `Chapter 12: “Internationalization” <https://docs.yottadb.com/ProgrammersGuide/internatn.html>`_.
 
 ----------------------------
 System Management Utilities
@@ -2390,7 +2384,7 @@ The System Management utilities are:
 The %DSEWRAP utility provides a programmatic interface that drives DSE either through a PIPE device or through generated command files. The current implementation only provides access to dumping the database file header.
 
 .. note::
-   %DSEWRAP is deprecated. With GT.M V6.3-000 and later, please use the %PEEKBYNAME utility to programatically read database file header information. With V6.3-001 and later MUPIP DUMPFHEAD and/or the %DUMPFHEAD utility provide additional alternatives.
+   %DSEWRAP is currently deprecated. Please use the %PEEKBYNAME utility to programatically read database file header information. MUPIP DUMPFHEAD and/or the %DUMPFHEAD utility provide additional alternatives.
 
 **Utility Labels**
 
@@ -2402,7 +2396,7 @@ The second parameter is a required passed-by-reference variable that the caller 
 
 The third optional parameter defaults to DUMP -FILEHEADER. Using any other command dump command has not been tested.
 
-The fourth optional parameter indicates the level of detail, -ALL, for the DUMP -FILEHEADER command. Fore more information on other -FILEHEADER qualifiers, please refer to the DSE chapter in the Administration and Operations Guide.
+The fourth optional parameter indicates the level of detail, -ALL, for the DUMP -FILEHEADER command. Fore more information on other -FILEHEADER qualifiers, please refer to the `DSE chapter in the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/dse.html>`_.
 
 The format of the output array is fdump(<REGION NAME>,<FIELD NAME>). In the event of a field collision, dump^%DSEWRAP avoids overwriting existing data by creating number descendants.
 
@@ -2417,7 +2411,7 @@ Example:
 %DUMPFHEAD
 +++++++++++++
 
-The %DUMPFHEAD utility provides a programmatic interface to the functionality of MUPIP DUMPFHEAD. This routine reads the database file header directly, rather than opening it as a database and reading values mapped into memory. This means it is lighter weight in some seneses than ^%PEEKBYNAME, but it also means that the information it retrieves is more limited, and possibly less current.
+The %DUMPFHEAD utility provides a programmatic interface to the functionality of MUPIP DUMPFHEAD. This routine reads the database file header directly, rather than opening it as a database and reading values mapped into memory. This means it is lighter weight in some senses than ^%PEEKBYNAME, but it also means that the information it retrieves is more limited, and possibly less current.
 
 **Utility Labels**
 
@@ -2445,13 +2439,13 @@ The %FREECNT utility displays the number of free blocks in the database files as
 Example:
 
 .. parsed-literal::
-   GTM>DO ^%FREECNT
+   YDB>DO ^%FREECNT
    Region          Free     Total          Database file
    ------          ----     -----          -------------
    DEFAULT           81       100 ( 81.0%) /home/gtmuser1/.fis-gtm/V5.4-002B_x86/g/gtm.dat
-   GTM>
+   YDB>
 
-This example invokes %FREECNT at the GTM> prompt that displays the number of free blocks and percentage of free space available in the current global directory.
+This example invokes %FREECNT at the YDB> prompt that displays the number of free blocks and percentage of free space available in the current global directory.
 
 +++++++++++++++++
 %XCMD
@@ -2464,13 +2458,13 @@ The ^%XCMD utility XECUTEs input from the shell command line and returns any err
 .. parsed-literal::
    LOOP^%XCMD [--before=/<XECUTE_code>/] --xec=/<XECUTE_code>/ [--after=/<XECUTE_code>/]
 
-LOOP^%XCMD: XECUTEs the arguments specified in --xec=/arg1/ as GT.M code for each line of standard input that it reads. The currently read line is stored in the variable %l; its line number is stored in %NR (starts from 1). It returns any error status (truncated to a single byte on UNIX) generated by that code.
+LOOP^%XCMD: XECUTEs the arguments specified in --xec=/arg1/ as YottaDB code for each line of standard input that it reads. The currently read line is stored in the variable %l; its line number is stored in %NR (starts from 1). It returns any error status (truncated to a single byte on UNIX) generated by that code.
 
---before=/arg0/ specifies the YottaDB/GT.M code that LOOP^%XCMD must XECUTE before executing --xec.
+--before=/arg0/ specifies the YottaDB code that LOOP^%XCMD must XECUTE before executing --xec.
 
---after=/arg2/ specifies the YottaDB/GT.M code that LOOP^%XCMD must XECUTE after executing the last --xec.
+--after=/arg2/ specifies the YottaDB code that LOOP^%XCMD must XECUTE after executing the last --xec.
 
-For all qualifiers, always wrap YottaDB/GT.M code specified two forward slashes (/) to denote the start and end of the YottaDB/GT.M code. YottaDB/FIS strongly recommends enclosing the YottaDB/GT.M code within single quotation marks to prevent inappropriate expansion by the shell. LOOP^%XCMD's command line parser ignores these forward slashes.
+For all qualifiers, always wrap YottaDB code specified two forward slashes (/) to denote the start and end of the YottaDB code. YottaDB strongly recommends enclosing the code within single quotation marks to prevent inappropriate expansion by the shell. LOOP^%XCMD's command line parser ignores these forward slashes.
 
 Example:
 
@@ -2502,7 +2496,7 @@ Example:
 %PEEKBYNAME()
 ++++++++++++++++++
 
-%PEEKBYNAME() provides a stable interface to $ZPEEK() that uses control structure field names. $ZPEEK() provides a read-only mechanism to access selected fields in selected control structures in the address space of a process, including process private memory, database shared memory segments and Journal Pools. Although application code can call $ZPEEK() directly, such direct access must use numeric arguments that can vary from release to release. Access by name using %PEEKBYNAME makes application code more stable across YottaDB/GT.M releases. For more information, refer to “$ZPEEK()”. YottaDB/FIS intends to maintain the stability of a name from release to release where that name refers to the same data item; however we may add or obsolete names, or modify the type and size associated with existing names at our discretion, to reflect changes in the implementation. The format of the %PEEKBYNAME() function is:
+%PEEKBYNAME() provides a stable interface to $ZPEEK() that uses control structure field names. $ZPEEK() provides a read-only mechanism to access selected fields in selected control structures in the address space of a process, including process private memory, database shared memory segments and Journal Pools. Although application code can call $ZPEEK() directly, such direct access must use numeric arguments that can vary from release to release. Access by name using %PEEKBYNAME makes application code more stable across YottaDB releases. For more information, refer to “$ZPEEK()”. YottaDB intends to maintain the stability of a name from release to release where that name refers to the same data item; however we may add or obsolete names, or modify the type and size associated with existing names at our discretion, to reflect changes in the implementation. The format of the %PEEKBYNAME() function is:
 
 .. parsed-literal::
    %PEEKBYNAME(field[,regindex][,format])
@@ -2521,15 +2515,15 @@ Example:
 
 .. parsed-literal::
    ; Print the maximum key size for the DEFAULT region
-   GTM>write $$^%PEEKBYNAME("gd_region.max_key_size","DEFAULT")
+   YDB>write $$^%PEEKBYNAME("gd_region.max_key_size","DEFAULT")
    64
    ; Print the journaling state (non-zero value means it is on)
-   GTM>write $$^%PEEKBYNAME("gd_region.jnl_state","DEFAULT")
+   YDB>write $$^%PEEKBYNAME("gd_region.jnl_state","DEFAULT")
    0
    ; Save the base address of the database file header
-   GTM>set base=$$^%PEEKBYNAME("sgmnt_addrs.hdr","DEFAULT")
+   YDB>set base=$$^%PEEKBYNAME("sgmnt_addrs.hdr","DEFAULT")
    ; Print the file header label
-   GTM>write $$^%PEEKBYNAME("sgmnt_data.label",base)
+   YDB>write $$^%PEEKBYNAME("sgmnt_data.label",base)
    GDSDYNUNX03
 
 **LISTALL^%PEEKBYNAME**
@@ -2542,23 +2536,23 @@ Populates output variable with the type and size information indexed by the fiel
 
 **Labels for selected fields**
 
-Below are selected fields for which you may find %PEEKBYNAME to be a useful alternative to running a DSE or MUPIP command in a PIPE device, and parsing the output. If there is a field that you wish to access using %PEEKBYNAME, please send questions to your YottaDB/GT.M support channel. We will get you an answer, and if it seems to us to be of general interest, we will add it to the %PEEKBYNAME user documentation.
+Below are selected fields for which you may find %PEEKBYNAME to be a useful alternative to running a DSE or MUPIP command in a PIPE device, and parsing the output. If there is a field that you wish to access using %PEEKBYNAME, please send questions to your YottaDB support channel. We will get you an answer, and if it seems to us to be of general interest, we will add it to the %PEEKBYNAME user documentation.
 
 **Region Parameters**
 
 Calls to %PEEKBYNAME with the listed string as value of the first parameter, and the region name as the value of the second parameter, return the value. For example:
 
 .. parsed-literal::
-   GTM>write $$^%PEEKBYNAME("sgmnt_data.n_bts","DEFAULT") ; How many global buffers there are
+   YDB>write $$^%PEEKBYNAME("sgmnt_data.n_bts","DEFAULT") ; How many global buffers there are
    1000
-   GTM>write $$^%PEEKBYNAME("node_local.wcs_active_lvl","DEFAULT") ; How many of them are dirty
+   YDB>write $$^%PEEKBYNAME("node_local.wcs_active_lvl","DEFAULT") ; How many of them are dirty
    0
-   GTM>for i=1:1:10000 set ^x($$^%RANDSTR(8))=$$^%RANDSTR(64)
-   GTM>write $$^%PEEKBYNAME("node_local.wcs_active_lvl","DEFAULT") ; And now, how many of them are dirty
+   YDB>for i=1:1:10000 set ^x($$^%RANDSTR(8))=$$^%RANDSTR(64)
+   YDB>write $$^%PEEKBYNAME("node_local.wcs_active_lvl","DEFAULT") ; And now, how many of them are dirty
    377
-   GTM>
+   YDB>
 
-When using the following, remember to write code that allows for values other than those listed, e.g., if writing code to check whether before image journaling is in use, make sure it can deal with values other than 0 and 1, because a future release of YottaDB/GT.M can potentially introduce a new return value for a field.
+When using the following, remember to write code that allows for values other than those listed, e.g., if writing code to check whether before image journaling is in use, make sure it can deal with values other than 0 and 1, because a future release of YottaDB can potentially introduce a new return value for a field.
 
 +------------------------------+-----------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
 | Parameter                    | ^%PEEKBYNAME() Parameter                      | Value                                                                                                                       |
@@ -2623,13 +2617,13 @@ When using the following, remember to write code that allows for values other th
 | Region replication sequence  |  "sgmnt_data.reg_seqno"                       | Integer Count                                                                                                               |
 | number                       |                                               |                                                                                                                             |
 +------------------------------+-----------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
-| Spanning nodes absent        |  "sgmnt_data.span_node_absent"                | Integer - 1 means that no global variable nodes span multiple database blocks, 0 means YottaDB/GT.M does not know (in the   |
+| Spanning nodes absent        |  "sgmnt_data.span_node_absent"                | Integer - 1 means that no global variable nodes span multiple database blocks, 0 means YottaDB does not know (in the        |
 |                              |                                               | past, at least one global variable node spanned multiple blocks, but it may since have been overwritten or KILL'd)          |
 +------------------------------+-----------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
 | Write errors                 |  "sgmnt_data.wcs_wterror_invoked_cntr"        | Integer count of errors trying to write database blocks - barring problems with the storage subsystem, hitting an           |
 |                              |                                               | asynchronous write limit constitute the primary (probably only) cause                                                       |
 +------------------------------+-----------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
-| Writes in progress           |  "node_local.wcs_wip_lvl"                     | Integer count of of blocks for which YottaDB/GT.M has issued writes that have not yet been recognized as complete           |
+| Writes in progress           |  "node_local.wcs_wip_lvl"                     | Integer count of of blocks for which YottaDB has issued writes that have not yet been recognized as complete                |
 +------------------------------+-----------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
 
 **Replication Parameters**
@@ -2637,15 +2631,15 @@ When using the following, remember to write code that allows for values other th
 Calls to %PEEKBYNAME with the listed parameter as the first or only parameter return replication fields as described. For example:
 
 .. parsed-literal::
-   GTM>write $$^%PEEKBYNAME("repl_inst_hdr.inst_info.this_instname") ; Name of this instance
+   YDB>write $$^%PEEKBYNAME("repl_inst_hdr.inst_info.this_instname") ; Name of this instance
    Collegeville
-   GTM>write $$^%PEEKBYNAME("gtmsource_local_struct.secondary_instname",0) ; Name of instance in slot 0 of replication instance file
+   YDB>write $$^%PEEKBYNAME("gtmsource_local_struct.secondary_instname",0) ; Name of instance in slot 0 of replication instance file
    Malvern
-   GTM>set x=$$^%PEEKBYNAME("jnlpool_ctl_struct.jnl_seqno") ; Sequence number in Journal Pool of Collegeville
-   GTM>set y=$$^%PEEKBYNAME("gtmsource_local_struct.read_jnl_seqno",0) ; Next sequence number to send to Malvern
-   GTM>write x-y ; Current replication backlog from Collegeville to Malvern
+   YDB>set x=$$^%PEEKBYNAME("jnlpool_ctl_struct.jnl_seqno") ; Sequence number in Journal Pool of Collegeville
+   YDB>set y=$$^%PEEKBYNAME("gtmsource_local_struct.read_jnl_seqno",0) ; Next sequence number to send to Malvern
+   YDB>write x-y ; Current replication backlog from Collegeville to Malvern
    2
-   GTM>
+   YDB>
 
 +--------------------------------------+-----------------------------------------------------------+-------------------------------------------------------------+
 | Replication Parameter                | ^%PEEKBYNAME() Parameter                                  | Value                                                       |
@@ -2675,7 +2669,7 @@ Calls to %PEEKBYNAME with the listed parameter as the first or only parameter re
 %YGBLSTAT()
 ++++++++++++++++++++
 
-Labels in the ^%YGBLSTAT utility program gather and report statistics, offering both a high level API and a low level API. While we intend to preserve backward compatibility of the high level API in future YottaDB/GT.M releases, we may change the low level API if and, when, we change the underlying implementation. A call to a label in ^%YGBLSTAT does not in any way slow the execution of other processes. Because the gathering of statistics is not instantaneous, and processes concurrently open database files as well as close them on exit and may turn their participation in statistics monitoring on and off, statistics typically do not show a single moment in time, as they change during the short time interval over which they are gathered.
+Labels in the ^%YGBLSTAT utility program gather and report statistics, offering both a high level API and a low level API. While we intend to preserve backward compatibility of the high level API in future YottaDB releases, we may change the low level API if and, when, we change the underlying implementation. A call to a label in ^%YGBLSTAT does not in any way slow the execution of other processes. Because the gathering of statistics is not instantaneous, and processes concurrently open database files as well as close them on exit and may turn their participation in statistics monitoring on and off, statistics typically do not show a single moment in time, as they change during the short time interval over which they are gathered.
 
 In the following, an omitted response or argument is equivalent to "*".
 
@@ -2717,7 +2711,7 @@ $$ORDERPID^%YGBLSTAT(expr1[,expr2[,expr3]]) reports PIDs of processes that have 
 * expr1 coerced to an intexpr specifies a PID such that the function returns the next PID after expr1 of a process that has opted in to be monitored and which has recorded statistics in any region(s) specified by expr3 from the global directory specified by expr2, or the empty string if expr1 is the last PID. A value of the empty string ("") for expr1 returns the first monitored PID meeting the specifications in expr2 and expr3.
 * expr2 specifies a global directory file name (producing a ZGBLDIRACC error if such a global directory is not accessible); if unspecified or the empty string, the utility defaults this value to the $ZGBLDIR of the invoking process.
 * expr3 evaluates to the name of a region (producing a NOREGION error if no such region exists in the global directory specified by expr2); of expr3 is unspecified, or the string "*", the function returns the PID for the next process after expr1 for any region of the global directory specified by expr2.
-* Applications should not rely on YottaDB/GT.M returning the PIDs in a sorted or other predictable order: the order in which PIDs are returned is at the discretion of the implementation, and may change from release to release.
+* Applications should not rely on YottaDB returning the PIDs in a sorted or other predictable order: the order in which PIDs are returned is at the discretion of the implementation, and may change from release to release.
 
 The low level API implemented by $$SHOW^%YGBLSTAT(glvn[,strexp]) reports raw statistics of a process and has arguments as follows:
 
@@ -2731,15 +2725,15 @@ The low level API implemented by $$SHOW^%YGBLSTAT(glvn[,strexp]) reports raw sta
 
 * strexp specifies statistics to report with the same interpretation as the expr2 parameter of $$STAT^%YGBLSTAT.
  
-* $$SHOW^%YGBLSTAT() reports a zero value for any statistic whose name is unrecognized. This facilitates application code written for a version of YottaDB/GT.M that includes a statistic, but which also needs to run on an earlier version without that statistic
+* $$SHOW^%YGBLSTAT() reports a zero value for any statistic whose name is unrecognized. This facilitates application code written for a version of YottaDB that includes a statistic, but which also needs to run on an earlier version without that statistic.
 
 *  Because a process sharing statistics can exit, deleting its node, between the time a monitoring process decides to access its statistics, e.g., finding it using $$ORDERPID^%YGBLSTAT() or $ORDER(^%YGS()), and the time the monitoring process performs the database access, any direct access to ^%YGBLSTAT should be wrapped in $GET().
 
-*  As raw statistics are binary data, processes in UTF-8 mode that gather and monitor statistics should use code with appropriate BADCHAR handling. Note that processes sharing statistics and processes gathering statistics for monitoring and reporting need not run in the same UTF-8/M mode. Statistics sharing by processes is identical in M and UTF-8 modes. YottaDB/FIS suggests that processes gathering statistics run in M mode
+*  As raw statistics are binary data, processes in UTF-8 mode that gather and monitor statistics should use code with appropriate BADCHAR handling. Note that processes sharing statistics and processes gathering statistics for monitoring and reporting need not run in the same UTF-8/M mode. Statistics sharing by processes is identical in M and UTF-8 modes. YottaDB suggests that processes gathering statistics run in M mode
 
-YottaDB/FIS strongly recommends that except as documented here for sharing and gathering statistics, you not access statistics database files except under the direction of your YottaDB/GT.M support channel.
+YottaDB strongly recommends that except as documented here for sharing and gathering statistics, you not access statistics database files except under the direction of your YottaDB support channel.
 
-As they do for unshared statistics, shared statistics reflect all database actions for a TP transaction, including those during RESTARTs. Because the sharing of statistics is not a database operation that modifies the relative time stamps YottaDB/GT.M uses to maintain serialized operation preserving the Consistency and Isolation aspects of ACID operation, statistics generated by a sharing process inside a transaction (TSTART/TCOMMIT) do not cause transaction restarts as a consequence of updates to shared statistics by other processes.
+As they do for unshared statistics, shared statistics reflect all database actions for a TP transaction, including those during RESTARTs. Because the sharing of statistics is not a database operation that modifies the relative time stamps that YottaDB uses to maintain serialized operation preserving the Consistency and Isolation aspects of ACID operation, statistics generated by a sharing process inside a transaction (TSTART/TCOMMIT) do not cause transaction restarts as a consequence of updates to shared statistics by other processes.
 
 ---------------------------
 Unicode Utility Routines
@@ -2751,7 +2745,7 @@ The %UTF2HEX and %HEX2UTF M utility routines provide conversions between UTF-8 a
 %UTF2HEX
 ++++++++++++++++
 
-The YottaDB/GT.M %UTF2HEX utility returns the hexadecimal notation of the internal byte encoding of a UTF-8 encoded YottaDB/GT.M character string. This routine has entry points for both interactive and non-interactive use.
+The YottaDB %UTF2HEX utility returns the hexadecimal notation of the internal byte encoding of a UTF-8 encoded YottaDB character string. This routine has entry points for both interactive and non-interactive use.
 
 DO ^%UTF2HEX converts the string stored in %S to the hexadecimal byte notation and stores the result in %U.
 
@@ -2762,19 +2756,19 @@ $$FUNC^%UTF2HEX(s) returns the hexadecimal byte representation of the character 
 Example:
 
 .. parsed-literal::
-   GTM>write $zchset
+   YDB>write $zchset
    UTF-8
-   GTM>SET %S=$CHAR($$FUNC^%HD("0905"))_$CHAR($$FUNC^%HD("091A"))_$CHAR($$FUNC^%HD(
+   YDB>SET %S=$CHAR($$FUNC^%HD("0905"))_$CHAR($$FUNC^%HD("091A"))_$CHAR($$FUNC^%HD(
    "094D"))_$CHAR($$FUNC^%HD("091B"))_$CHAR($$FUNC^%HD("0940"))
-   GTM>zwrite
+   YDB>zwrite
    %S="अच्छी"
-   GTM>DO ^%UTF2HEX
-   GTM>zwrite
+   YDB>DO ^%UTF2HEX
+   YDB>zwrite
    %S="अच्छी"
    %U="E0A485E0A49AE0A58DE0A49BE0A580"
-   GTM>write $$FUNC^%UTF2HEX("ABC")
+   YDB>write $$FUNC^%UTF2HEX("ABC")
    414243
-   GTM>
+   YDB>
 
 Note that %UTF2HEX provides functionality similar to the UNIX binary dump utility (od -x).
 
@@ -2782,22 +2776,22 @@ Note that %UTF2HEX provides functionality similar to the UNIX binary dump utilit
 %HEX2UTF
 ++++++++++++++
 
-The YottaDB/GT.M %HEX2UTF utility returns the YottaDB/GT.M encoded character string from the given bytestream in hexadecimal notation. This routine has entry points for both interactive and non-interactive use.
+The YottaDB %HEX2UTF utility returns the YottaDB encoded character string from the given bytestream in hexadecimal notation. This routine has entry points for both interactive and non-interactive use.
 
-DO ^%HEX2UTF converts the hexadecimal byte stream stored in %U into a YottaDB/GT.M character string and stores the result in %S.
+DO ^%HEX2UTF converts the hexadecimal byte stream stored in %U into a YottaDB character string and stores the result in %S.
 
-DO INT^%HEX2UTF converts the interactively entered hexadecimal byte stream into a YottaDB/GT.M character string and stores the result in %S.
+DO INT^%HEX2UTF converts the interactively entered hexadecimal byte stream into a YottaDB character string and stores the result in %S.
 
-$$FUNC^%HEX2UTF(s) returns the YottaDB/GT.M character string specified by the hexadecimal character values in s (each character is specified by its Unicode code point).
+$$FUNC^%HEX2UTF(s) returns the YottaDB character string specified by the hexadecimal character values in s (each character is specified by its Unicode code point).
 
 Example:
 
 .. parsed-literal::
-   GTM>set u="E0A485" write $$FUNC^%HEX2UTF(u)
+   YDB>set u="E0A485" write $$FUNC^%HEX2UTF(u)
    अ
-   GTM>set u="40E0A485" write $$FUNC^%HEX2UTF(u)
+   YDB>set u="40E0A485" write $$FUNC^%HEX2UTF(u)
    @अ
-   GTM>
+   YDB>
 
 -------------------------------
 Utilities Summary Table
@@ -2844,7 +2838,7 @@ Utilities Summary Table
 +------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------+
 | %HD                          | Converts hexadecimal numbers to decimal.                                                                                                |
 +------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------+
-| %HEX2UTF                     | Converts the given bytestream in hexadecimal notation to YottaDB/GT.M encoded character string.                                         |
+| %HEX2UTF                     | Converts the given bytestream in hexadecimal notation to YottaDB encoded character string.                                              |
 +------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------+
 | %HO                          | Converts hexadecimal numbers to octal.                                                                                                  |
 +------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------+
@@ -2862,7 +2856,7 @@ Utilities Summary Table
 +------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------+
 | %RD                          | Lists routine names available through your $ZROUTINES search list.                                                                      |
 +------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------+
-| %RI                          | Transfers routines from ANSI sequential format into individual .m files in YottaDB/GT.M format.                                         |
+| %RI                          | Transfers routines from ANSI sequential format into individual .m files in YottaDB format.                                              |
 +------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------+
 | %RO                          | Writes M routines in ANSI transfer format.                                                                                              |
 +------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------+
@@ -2880,8 +2874,6 @@ Utilities Summary Table
 +------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------+
 | %UCASE                       | Converts a string to all upper case.                                                                                                    |
 +------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------+
-| %UTF2HEX                     | Converts UTF-8 encoded YottaDB/GT.M character string to bytestream in hexadecimal notation.                                             |
+| %UTF2HEX                     | Converts UTF-8 encoded YottaDB character string to bytestream in hexadecimal notation.                                                  |
 +------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------+
 
-
-   

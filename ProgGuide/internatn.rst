@@ -3,25 +3,25 @@
    Internationalization
 
 ============================
-Internationalization
+12. Internationalization
 ============================
 
 .. contents::
    :depth: 2
 
-This chapter describes YottaDB/GT.M facilities for applications using characters encoded in other than eight-bit bytes (octets). Before continuing with use of UTF-8 features, you will need to ensure that your system has installed and configured the needed infrastructure for languages you wish to support, including International Components for Unicode (ICU / libicu), UTF-8 locale(s), and terminal emulators with appropriate fonts. This chapter addresses the specific issues of defining alternative collation sequences, and defining unique patterns for use with the pattern match operator.
+This chapter describes YottaDB facilities for applications using characters encoded in other than eight-bit bytes (octets). Before continuing with use of UTF-8 features, you will need to ensure that your system has installed and configured the needed infrastructure for languages you wish to support, including International Components for Unicode (ICU/libicu), UTF-8 locale(s), and terminal emulators with appropriate fonts. This chapter addresses the specific issues of defining alternative collation sequences, and defining unique patterns for use with the pattern match operator.
 
-Alternative collation sequences (or an alternative ordering of strings) can be defined for global and local variable subscripts. They can be established for specified globals or for an entire database. The alternative sequences are defined by a series of routines in an executable file pointed to by an environment variable. As the collation sequence is implemented by a user-supplied program, virtually any collation policy may be implemented. Detailed information on establishing alternative collation sequences and defining the environment variable is provided in “Collation Sequence Definitions”.
+Alternative collation sequences (or an alternative ordering of strings) can be defined for global and local variable subscripts. They can be established for specified globals or for an entire database. The alternative sequences are defined by a series of routines in an executable file pointed to by an environment variable. As the collation sequence is implemented by a user-supplied program, virtually any collation policy may be implemented. Detailed information on establishing alternative collation sequences and defining the environment variable is provided in the “Collation Sequence Definitions” below.
 
-M has defined pattern classes that serve as arguments to the pattern match operator. YottaDB/GT.M supports user definition of additional pattern classes as well as redefinition of the standard pattern classes. Specific patterns are defined in a text file that is pointed to by an environment variable. Pattern classes may be re-defined dynamically. The details of defining these pattern classes and the environment variable are described in the section called “Matching Alternative Patterns”.
+M has defined pattern classes that serve as arguments to the pattern match operator. YottaDB supports user definition of additional pattern classes as well as redefinition of the standard pattern classes. Specific patterns are defined in a text file that is pointed to by an environment variable. Pattern classes may be re-defined dynamically. The details of defining these pattern classes and the environment variables are described in the section called “Matching Alternative Patterns”.
 
-For some languages (such as Chinese), the ordering of strings according to Unicode code-points (character values) may or may not be the linguistically or culturally correct ordering. Supporting applications in such languages requires development of collation modules - YottaDB/GT.M natively supports M collation, but does not include pre-built collation modules for any specific natural language. Therefore, applications that use characters in Unicode may need to implement their own collation functions. For more information on developing a collation module for Unicode, refer to “Implementing an Alternative Collation Sequence for Unicode”.
+For some languages (such as Chinese), the ordering of strings according to Unicode code-points (character values) may or may not be the linguistically or culturally correct ordering. Supporting applications in such languages requires development of collation modules - YottaDB natively supports M collation, but does not include pre-built collation modules for any specific natural language. Therefore, applications that use characters in Unicode may need to implement their own collation functions. For more information on developing a collation module for Unicode, refer to “Implementing an Alternative Collation Sequence for Unicode”.
 
 -----------------------------------
 Collation Sequence Definitions
 -----------------------------------
 
-Normally, YottaDB/GT.M orders data with numeric values first, followed by strings sequenced by ASCII values. To use an alternative collating sequence the following items must be provided at YottaDB/GT.M process intialization.
+Normally, YottaDB orders data with numeric values first, followed by strings sequenced by ASCII values. To use an alternative collating sequence the following items must be provided at YottaDB process intialization.
 
 * A shared library containing the routines for each alternative collation sequence
 * An environment variable of the form gtm_collate_n, specifying the shared library containing the routines for alternative collation sequence n.
@@ -37,17 +37,17 @@ A shared library for an alternative collation sequence must contain the followin
 * gtm_ac_version: Returns a numeric version identifier for the "currently active" set of collation routines.
 * gtm_ac_verify: Returns the success (odd) or failure (even) in matching a collation sequence with a given version number.
 
-YottaDB/GT.M searches the shared library for the gtm_ac_xform_1 and gtm_ac_xback_1 before searching for the gtm_ac_xform and gtm_ac_xback routines. If the shared library contains gtm_ac_xform_1, YottaDB/GT.M ignores gtm_ac_xform even if it is present. If YottaDB/GT.M finds gtm_ac_xform_1 but does not find gtm_ac_xback_1, it reports a GTM-E-COLLATIONUNDEF error with an additional mismatch warning GTM-E-COLLFNMISSING.
+YottaDB searches the shared library for the gtm_ac_xform_1 and gtm_ac_xback_1 before searching for the gtm_ac_xform and gtm_ac_xback routines. If the shared library contains gtm_ac_xform_1, YottaDB ignores gtm_ac_xform even if it is present. If YottaDB finds gtm_ac_xform_1 but does not find gtm_ac_xback_1, it reports a GTM-E-COLLATIONUNDEF error with an additional mismatch warning GTM-E-COLLFNMISSING.
 
-If the application does not use strings longer than 32,767 bytes, the alternative collation library need not contain the gtm_ac_xform_1 and gtm_ac_xback_1 routines. On the other hand, if the application passes strings greater than 32,767 bytes (but less than the maximum support string length) and does not provide gtm_xc_xform_1 and gtm_xc_xback_1, GT.M issues the run-time error GTM-E-COLLARGLONG.
+If the application does not use strings longer than 32,767 bytes, the alternative collation library need not contain the gtm_ac_xform_1 and gtm_ac_xback_1 routines. On the other hand, if the application passes strings greater than 32,767 bytes (but less than the maximum support string length) and does not provide gtm_xc_xform_1 and gtm_xc_xback_1, YottaDB issues the run-time error GTM-E-COLLARGLONG.
 
-Note that database key sizes are much more restricted by YottaDB/GT.M than local key sizes, and may be restricted further by user configuration.
+Note that database key sizes are much more restricted by YottaDB than local key sizes, and may be restricted further by user configuration.
 
 +++++++++++++++++++++++++++++++++++
 Defining the Environment Variable
 +++++++++++++++++++++++++++++++++++
 
-YottaDB/GT.M locates the alternative collation sequences through the environment variable gtm_collate_n where n is an integer from 1 to 255 that identifies the collation sequence, and pathname identifies the shared library containing the routines for that collation sequence, for example:
+YottaDB locates the alternative collation sequences through the environment variable gtm_collate_n where n is an integer from 1 to 255 that identifies the collation sequence, and pathname identifies the shared library containing the routines for that collation sequence, for example:
 
 .. parsed-literal::
    $ gtm_collate_1=/opt/fis-gtm/collation
@@ -57,7 +57,7 @@ Multiple alternative collation sequence definitions can co-exist.
 
 **Considerations in Establishing Alternative Collations**
 
-Alternative collation sequences for a global must be set when the global contains no data. When the global is defined the collation sequence is stored in the global. This ensures the future integrity of the global's collation. If it becomes necessary to change the collation sequence of a global containing data, you must copy the data to a temporary repository, delete the global, modify the variable's collation sequence by reinitializing the global either in a region that has the desired collation or with %GBLDEF, and restore the data from the temporary repository.
+Alternative collation sequences for a global must be set when the global contains no data. When the global is defined, the collation sequence is stored in the global. This ensures the future integrity of the global's collation. If it becomes necessary to change the collation sequence of a global containing data, you must copy the data to a temporary repository, delete the global, modify the variable's collation sequence by reinitializing the global either in a region that has the desired collation or with %GBLDEF, and restore the data from the temporary repository.
 
 Be careful when creating the transformation and inverse transformation routines. The transformation routine must unambiguously and reliably encode every possible input value. The inverse routine must faithfully return the original value in every case. Errors in these routines can produce delayed symptoms that could be hard to debug. These routines may not be written in M.
 
@@ -65,7 +65,7 @@ Be careful when creating the transformation and inverse transformation routines.
 Defining a Default Database Collation Method
 +++++++++++++++++++++++++++++++++++++++++++++
 
-YottaDB/GT.M lets you define an alternative collation sequence as the default when creating a new database. Subsequently, this default is applied when each new global is created.
+YottaDB lets you define an alternative collation sequence as the default when creating a new database. Subsequently, this default is applied when each new global is created.
 
 This default collation sequence is set as a GDE qualifier for the ADD, CHANGE, and TEMPLATE commands using the following example with CHANGE:
 
@@ -108,17 +108,17 @@ This piece of code illustrates $$set^LCLCOL used as an extrinsic. It would write
 
 set^%LCLCOL(n,ncol) determines the null collation type to be used with the collation type n. 
 
-* If the truth value of ncol is FALSE(0), local variables use the YottaDB/GT.M standard null collation.
+* If the truth value of ncol is FALSE(0), local variables use the YottaDB standard null collation.
 * If the truth value of ncol is TRUE(1), local variables use the M standard null collation.
 
-With set^%LCLCOL(,ncol), the null collation order can be changed while keeping the alternate collation order unchanged. If subscripted local variables exist, null collation order cannot be changed. In this case, YottaDB/GT.M issues GTM-E-COLLDATAEXISTS.
+With set^%LCLCOL(,ncol), the null collation order can be changed while keeping the alternate collation order unchanged. If subscripted local variables exist, null collation order cannot be changed. In this case, YottaDB issues GTM-E-COLLDATAEXISTS.
 
 get^%LCLCOL returns the current local type.
 
 Example:
 
 .. parsed-literal::
-   GTM>Write $$get^%LCLCOL
+   YDB>Write $$get^%LCLCOL
    0
 
 This example uses $$get^%LCLCOL as an extrinsic that returns 0, indicating that the effective local collation sequence is the standard M collation sequence.
@@ -135,7 +135,7 @@ Inaccessibility could be caused by a missing environment variable, a missing ima
 Creating the Alternate Collation Routines
 ------------------------------------------
 
-Each alternative collation sequence requires a set of four user-created routines--gtm_ac_xform_1 (or gtm_ac_xform), gtm_ac_xback_1 (or gtm_ac_xback), gtm_ac_version, and gtm_ac_verify. The original and transformed strings are passed between YottaDB/GT.M and the user-created routines using parameters of type gtm_descriptor or gtm32_descriptor. An "include file" gtm_descript.h, located in the YottaDB/GT.M distribution directory, defines gtm_descriptor (used with gtm_ac_xform and gtm_ac_xback) as:
+Each alternative collation sequence requires a set of four user-created routines--gtm_ac_xform_1 (or gtm_ac_xform), gtm_ac_xback_1 (or gtm_ac_xback), gtm_ac_version, and gtm_ac_verify. The original and transformed strings are passed between YottaDB and the user-created routines using parameters of type gtm_descriptor or gtm32_descriptor. An "include file" gtm_descript.h, located in the YottaDB distribution directory, defines gtm_descriptor (used with gtm_ac_xform and gtm_ac_xback) as:
 
 .. parsed-literal::
    typedef struct
@@ -166,7 +166,7 @@ The interface to each routine is described below.
 Transformation Routine (gtm_ac_xform_1 or gtm_ac_xform)
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-gtm_ac_xform_1 or gtm_ac_xform routines transforms subscripts to the alternative collation sequence.>
+gtm_ac_xform_1 or gtm_ac_xform routines transforms subscripts to the alternative collation sequence.
 
 If the application uses subscripted lvns longer than 32,767 bytes (but less than 1,048,576 bytes), the alternative collation library must contain the gtm_ac_xform_1 and gtm_ac_xback_1 routines. Otherwise, the alternative collation library can contain gtm_ac_xform and gtm_ac_xback.
 
@@ -272,7 +272,7 @@ The input and output values may contain <NUL> (hex code 00) characters.
 
 The collation transformation routine may concatenate a sentinel, such as <NUL>, followed by the original subscript on the end of the transformed key. If key length is not an issue, this permits the inverse transformation routine to simply retrieve the original subscript rather than calculating its value based on the transformed key.
 
-If there are reasons not to append the entire original subscript, YottaDB/GT.M allows you to concatenate a sentinel plus a predefined code so the original subscript can be easily retrieved by the inverse transformation routine, but still assures a reformatted key that is unique.
+If there are reasons not to append the entire original subscript, YottaDB allows you to concatenate a sentinel plus a predefined code so the original subscript can be easily retrieved by the inverse transformation routine, but still assures a reformatted key that is unique.
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Inverse Transformation Routine (gtm_ac_xback or gtm_ac_xback_1)
@@ -345,13 +345,13 @@ Version Control Routines (gtm_ac_version and gtm_ac_verify)
 
 Two user-defined version control routines provide a safety mechanism to guard against a collation routine being used on the wrong global, or an attempt being made to modify a collation routine for an existing global. Either of these situations could cause incorrect collation or damage to subscripts.
 
-When a global is assigned an alternative collation sequence, YottaDB/GT.M invokes a user-supplied routine that returns a numeric version identifier for the set of collation routines, which was stored with the global. The first time a process accesses the global, YottaDB/GT.M determines the assigned collation sequence, then invokes another user-supplied routine. The second routine matches the collation sequence and version identifier assigned to the global with those of the current set of collation routines.
+When a global is assigned an alternative collation sequence, YottaDB invokes a user-supplied routine that returns a numeric version identifier for the set of collation routines, which was stored with the global. The first time a process accesses the global, YottaDB determines the assigned collation sequence, then invokes another user-supplied routine. The second routine matches the collation sequence and version identifier assigned to the global with those of the current set of collation routines.
 
 When you write the code that matches the type and version, you can decide whether to modify the version identifier and whether to allow support of globals created using a previous version of the routine.
 
 **Version Identifier Routine (gtm_ac_version)**
 
-This routine returns an integer identifier between 0 and 255. This integer provides a mechanism to enforce compatibility as a collation sequence potentially evolves. When YottaDB/GT.M first uses an alternate collation sequence for a database or global, it captures the version and if it finds the version has changed it at some later startup, it generates an error. The syntax is:
+This routine returns an integer identifier between 0 and 255. This integer provides a mechanism to enforce compatibility as a collation sequence potentially evolves. When YottaDB first uses an alternate collation sequence for a database or global, it captures the version and if it finds the version has changed it at some later startup, it generates an error. The syntax is:
 
 .. parsed-literal::
    int gtm_ac_version()
@@ -416,10 +416,10 @@ where:
 Example:
 
 .. parsed-literal::
-   GTM>kill ^G
-   GTM>write $select($$set^%GBLDEF("^G",0,3):"ok",1:"failed")
+   YDB>kill ^G
+   YDB>write $select($$set^%GBLDEF("^G",0,3):"ok",1:"failed")
    ok
-   GTM>
+   YDB>
 
 This deletes the global variable ^G, then uses the $ $ set%GBLDEF as an extrinsic to set ^G to the collation sequence number 3 with numeric subscripts collating before strings. Using $$set%GBLDEF as an argument to $SELECT provides a return value as to whether or not the set was successful. $SELECT will return a "FAILED" message if the collation sequence requested is undefined.
 
@@ -444,7 +444,7 @@ This function returns the data associated with the global name as a comma delimi
 Example:
 
 .. parsed-literal::
-   GTM>Write $$get^%GBLDEF("^G")
+   YDB>Write $$get^%GBLDEF("^G")
    1,3,1
 
 This example returns the collation sequence information currently assigned to the global ^G.
@@ -481,9 +481,9 @@ This is in contrast to the standard M collation that orders them as:
 .. note::
    No claim of copyright is made with respect to the code used in this example. Please do not use the code as-is in a production environment.
 
-Please ensure that you have a correctly configured YottaDB/GT.M installation, correctly configured environment variables, with appropriate directories and files.
+Please ensure that you have a correctly configured YottaDB installation, correctly configured environment variables, with appropriate directories and files.
 
-Seasoned YottaDB/GT.M users may want download polish.c used in this example and proceed directly to the compiling and linking instructions. First time users may want to start from the beginning.
+Seasoned YottaDB users may want to download polish.c used in this example and proceed directly to the compiling and linking instructions. First time users may want to start from the beginning.
 
 Create a new file called polish.c and put the following code:
 
@@ -627,10 +627,10 @@ Create a new shared library or add the above routines to an existing one. The fo
 
 Set $gtm_collate_1 to point to the location of altcoll.so.
 
-At the GTM> prompt execute the following command:
+At the YDB> prompt execute the following command:
 
 .. parsed-literal::
-   GTM>Write $SELECT($$set^%GBLDEF("^G",0,1):"OK",1:"FAILED")
+   YDB>Write $SELECT($$set^%GBLDEF("^G",0,1):"OK",1:"FAILED")
          OK
 
 This deletes the global variable ^G, then sets ^G to the collation sequence number 1 with numeric subscripts collating before strings.
@@ -638,15 +638,15 @@ This deletes the global variable ^G, then sets ^G to the collation sequence numb
 Assign the following value to ^G.
 
 .. parsed-literal::
-   GTM>Set ^G("du Pont")=1
-   GTM>Set ^G("Friendly")=1
-   GTM>Set ^G("le Blanc")=1
-   GTM>Set ^G("Madrid")=1
+   YDB>Set ^G("du Pont")=1
+   YDB>Set ^G("Friendly")=1
+   YDB>Set ^G("le Blanc")=1
+   YDB>Set ^G("Madrid")=1
 
 See how the subscript of ^G order according to the alternative collation sequence:
 
 .. parsed-literal::
-   GTM>ZWRite ^G
+   YDB>ZWRite ^G
    ^G("du Pont")=1
    ^G("Friendly")=1
    ^G("le Blanc")=1
@@ -661,9 +661,9 @@ This example creates an alternate collation sequence that collates alphabets in 
 .. note::
    No claim of copyright is made with respect to the code used in this example. Please do not use the code as-is in a production environment.
 
-Please ensure that you have a correctly configured YottaDB/GT.M installation, correctly configured environment variables, with appropriate directories and files.
+Please ensure that you have a correctly configured YottaDB installation, correctly configured environment variables, with appropriate directories and files.
 
-Download col_reverse_32.c from http://tinco.pair.com/bhaskar/gtm/doc/books/pg/UNIX_manual/col_reverse_32.c. It contain code for transformation routine (gtm_ac_xform_1), reverse transformation routine (gtm_ac_xback_1) and version control routines (gtm_ac_version and gtm_ac_verify).
+Download col_reverse_32.c from `Github <https://github.com/YottaDB/YottaDBdoc/tree/master/ProgGuide/col_reverse_32.c>`_. It contain code for transformation routine (gtm_ac_xform_1), reverse transformation routine (gtm_ac_xback_1) and version control routines (gtm_ac_version and gtm_ac_verify).
 
 Save and compile col_reverse_32.c. On x86 GNU/Linux (64-bit Ubuntu 10.10), execute a command like the following:
 
@@ -683,21 +683,21 @@ Set the environment variable gtm_collate_2 to point to the location of revcol.so
 At the prompt, execute the following command:
 
 .. parsed-literal::
-   GTM>Write $SELECT($$set^%GBLDEF("^E",0,2):"OK",1:"FAILED")
+   YDB>Write $SELECT($$set^%GBLDEF("^E",0,2):"OK",1:"FAILED")
    OK
 
 Assign the following value to ^E.
 
 .. parsed-literal::
-   GTM>Set ^E("du Pont")=1
-   GTM>Set ^E("Friendly")=1
-   GTM>Set ^E("le Blanc")=1
-   GTM>Set ^E("Madrid")=1
+   YDB>Set ^E("du Pont")=1
+   YDB>Set ^E("Friendly")=1
+   YDB>Set ^E("le Blanc")=1
+   YDB>Set ^E("Madrid")=1
 
 Notice how the subscript of ^E sort in reverse order:
 
 .. parsed-literal::
-   GTM>zwrite ^E
+   YDB>zwrite ^E
    ^G("le Blanc")=1
    ^G("du Pont")=1
    ^G("Madrid")=1
@@ -707,26 +707,26 @@ Notice how the subscript of ^E sort in reverse order:
 Implementing an Alternative Collation Sequence for Unicode
 ----------------------------------------------------------------
 
-By default, YottaDB/GT.M sorts string subscripts in the default order of the Unicode numeric code-point ($ASCII()) values. Since this implied ordering may or may not be linguistically or culturally correct for a specific application, an implementation of an algorithm such as the Unicode Collation Algorithm (UCA) may be required. Note that implementation of collation in YottaDB/GT.M requires the implementation of two functions, f(x) and g(y). f(x) transforms each input sequence of bytes into an alternative sequence of bytes for storage. Within the YottaDB/GT.M database engine, M nodes are retrieved according to the byte order in which they are stored. For each y that can be generated by f(x), g(y) is an inverse function that provides the original sequence of bytes; in other words, g(f(x)) must be equal to x for all x that the application processes. For example, for the People's Republic of China, it may be appropriate to convert from UTF-8 to Guojia Biaozhun (国家标准), the GB18030 standard, for example, using the libiconv library. The following requirements are important:
+By default, YottaDB sorts string subscripts in the default order of the Unicode numeric code-point ($ASCII()) values. Since this implied ordering may or may not be linguistically or culturally correct for a specific application, an implementation of an algorithm such as the Unicode Collation Algorithm (UCA) may be required. Note that implementation of collation in YottaDB requires the implementation of two functions, f(x) and g(y). f(x) transforms each input sequence of bytes into an alternative sequence of bytes for storage. Within the YottaDB database engine, M nodes are retrieved according to the byte order in which they are stored. For each y that can be generated by f(x), g(y) is an inverse function that provides the original sequence of bytes; in other words, g(f(x)) must be equal to x for all x that the application processes. For example, for the People's Republic of China, it may be appropriate to convert from UTF-8 to Guojia Biaozhun (国家标准), the GB18030 standard, for example, using the libiconv library. The following requirements are important:
 
 * **Unambiguous transformation routines**: The transform and its inverse must convert each input string to a unique sequence of bytes for storage, and convert each sequence of bytes stored back to the original string.
-* **Collation sequence for all expected character sequences in subscripts**: YottaDB/GT.M does not validate the subscript strings passed to/from the collation routines. If the application design allows illegal UTF-8 character sequences to be stored in the database, the collation functions must appropriately transform, and inverse transform, these as well.
-* **Handle different string lengths for before and after transformation**: If the lengths of the input string and transformed string differ, and, for local variables, if the output buffer passed by YottaDB/GT.M is not sufficient, follow the procedure described below:
+* **Collation sequence for all expected character sequences in subscripts**: YottaDB does not validate the subscript strings passed to/from the collation routines. If the application design allows illegal UTF-8 character sequences to be stored in the database, the collation functions must appropriately transform, and inverse transform, these as well.
+* **Handle different string lengths for before and after transformation**: If the lengths of the input string and transformed string differ, and, for local variables, if the output buffer passed by YottaDB is not sufficient, follow the procedure described below:
   
-   * Global Collation Routines: The transformed key must not exceed the lesser of the maximum key size configuration or 1019 bytes, the maximum GDS key size. YottaDB/GT.M allocates a temporary buffer of size 1019 bytes in the output string descriptor (of type DSC_K_DTYPE_T) and passes it to the collation routine to return the transformed key.
-   * Local Collation Routines: YottaDB/GT.M allocates a temporary buffer in the output string descriptor based on the size of the input string. Both transformation and inverse transformation must check the buffer size, and if it is not sufficient, the transformation must allocate sufficient memory, set the output descriptor value (val field of the descriptor) to point to the new memory , and return the transformed key successfully. Since YottaDB/GT.M copies the key from the output descriptor into its internal structures, it is important that the memory allocated remain available even after the collation routines return. Collation routines are typically called throughout the process lifetime, therefore, YottaDB/GT.M expects the collation libraries to define a large static buffer sufficient to hold all key sizes in the application. Alternatively, the collation transform can use a large heap buffer (allocated by the system malloc() or YottaDB/GT.M gtm_malloc()). Application developers must choose the method best suited to their needs.
+   * Global Collation Routines: The transformed key must not exceed the lesser of the maximum key size configuration or 1019 bytes, the maximum GDS key size. YottaDB allocates a temporary buffer of size 1019 bytes in the output string descriptor (of type DSC_K_DTYPE_T) and passes it to the collation routine to return the transformed key.
+   * Local Collation Routines: YottaDB allocates a temporary buffer in the output string descriptor based on the size of the input string. Both transformation and inverse transformation must check the buffer size, and if it is not sufficient, the transformation must allocate sufficient memory, set the output descriptor value (val field of the descriptor) to point to the new memory , and return the transformed key successfully. Since YottaDB copies the key from the output descriptor into its internal structures, it is important that the memory allocated remain available even after the collation routines return. Collation routines are typically called throughout the process lifetime, therefore, YottaDB expects the collation libraries to define a large static buffer sufficient to hold all key sizes in the application. Alternatively, the collation transform can use a large heap buffer (allocated by the system malloc() or YottaDB gtm_malloc()). Application developers must choose the method best suited to their needs.
 
 ------------------------------------
 Matching Alternative Patterns
 ------------------------------------
 
-YottaDB/GT.M allows the definition of unique patterns for use with the pattern match operator, in place of, or in addition to, the standard C, N, U, L, and P. You can redefine existing pattern codes (patcodes), or add new ones. These codes are defined in a specification file. The format is described in the next section.
+YottaDB allows the definition of unique patterns for use with the pattern match operator, in place of, or in addition to, the standard C, N, U, L, and P. You can redefine existing pattern codes (patcodes), or add new ones. These codes are defined in a specification file. The format is described in the next section.
 
 +++++++++++++++++++++++++++++
 Pattern Code Definition
 +++++++++++++++++++++++++++++
 
-This section explains the requirements for specifying alternative pattern codes. These specifications are created as a table in a file which YottaDB/GT.M loads at run time.
+This section explains the requirements for specifying alternative pattern codes. These specifications are created as a table in a file which YottaDB loads at run time.
 
 Use the following keywords to construct your text file. Each keyword must:
 
@@ -760,10 +760,10 @@ Example:
 
 Be mindful of the following items as you define your patcode table. 
 
-* YottaDB/GT.M loads a table name can only be loaded once during an invocation of a process. Changes a loaded table do not apply to running processes that have already reference that table.
-* The table name "M" is a reserved designation for standard M, which is included in the YottaDB/GT.M run-time library.
+* YottaDB loads a table name can only be loaded once during an invocation of a process. Changes a loaded table do not apply to running processes that have already reference that table.
+* The table name "M" is a reserved designation for standard M, which is included in the YottaDB run-time library.
 * Standard patcodes A and E cannot be explicitly redefined. A is always the union of codes U and L; E always designates the set of all characters.
-* The C pattern code you define is used by YottaDB/GT.M to determine those characters which are to be treated as unprintable. All characters not defined as C are treated as printable.
+* The C pattern code you define is used by YottaDB to determine those characters which are to be treated as unprintable. All characters not defined as C are treated as printable.
 * In UTF-8 mode, M standard patcodes (A,C,L,U,N,P,E) work with Unicode characters. Application developers can neither change their default classification nor define the non-standard patcodes ((B,D,F-K,M,O,Q-T,V-X) beyond the ASCII subset. This means that the pattern tables cannot contain characters with codes greater than the maximum ASCII code 127.
 
 ++++++++++++++++++++++
@@ -785,9 +785,9 @@ where filename is the text file containing the patcode table definition, and
 where tablename is the name of the patcode table within the file pointed to by gtm_pattern_file. 
 
 .. note::
-   YottaDB/GT.M performs operations on literals at compile time and the pattern codes settings may have an impact on such operations. Therefore, it is safest to either always compile with the same pattern code settings as those used at runtime. If changes to pattern codes are required at run time, "hide" any patterns used on literal expressions from the compiler (which are uncommon) using XECUTE commands or indirection.
+   YottaDB performs operations on literals at compile time and the pattern codes settings may have an impact on such operations. Therefore, it is safest to either always compile with the same pattern code settings as those used at runtime. If changes to pattern codes are required at run time, "hide" any patterns used on literal expressions from the compiler (which are uncommon) using XECUTE commands or indirection.
 
-Within an active process, the patcode table is established using the M VIEW command and the %PATCODE utility. Before invoking the %PATCODE utility, you may use VIEW to load pattern definition files for YottaDB/GT.M. The required keyword and value are:
+Within an active process, the patcode table is established using the M VIEW command and the %PATCODE utility. Before invoking the %PATCODE utility, you may use VIEW to load pattern definition files for YottaDB. The required keyword and value are:
 
 .. parsed-literal::
    VIEW "PATLOAD":"pathname" 
@@ -809,7 +809,7 @@ sets the current patcode table to the one having the name specified by tn, in th
 Example:
 
 .. parsed-literal::
-   GTM>Write $$set^%PATCODE("NEWLANGUAGE")
+   YDB>Write $$set^%PATCODE("NEWLANGUAGE")
    1
 
 If there is no table with that name, the function returns a false (0) and does not modify the current patcode table.
@@ -822,7 +822,7 @@ returns the current patcode table name.
 Example:
 
 .. parsed-literal::
-   GTM>Write $$get^%PATCODE
+   YDB>Write $$get^%PATCODE
    NEWLANGUAGE 
 
 
