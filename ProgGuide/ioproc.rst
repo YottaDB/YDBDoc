@@ -1873,8 +1873,6 @@ TLS (Transport Layer Security) can be turned on for YottaDB using the following 
 
 * Start the server
 
-At this point, if you go to https://localhost:9081, you should be able to see the web pages via TLS. 
- 
 For more documentation on TLS, see `Appendix H: Creating a TLS Configuration File <https://docs.yottadb.com/AdminOpsGuide/tls.html>`_ in the Administration and Operations Guide.
 
 ----------------------------
