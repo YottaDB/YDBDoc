@@ -1812,6 +1812,71 @@ The ZSHOW "D" command reports available information on both the local and remote
    REMOTE=10.1.2.3@53731 LOCAL=10.2.3.4@7777 
    ZDELAY ZIBFSIZE=1024 ZIBFSIZE=0 
 
+
+++++++++++++++++++++
+TLS on YottaDB
+++++++++++++++++++++
+
+TLS (Transport Layer Security) can be turned on for YottaDB using the following steps:
+
+* As root, go to the following directory and extract source.tar:
+
+  .. parsed-literal::
+     cd $gtm_dist/plugin/gtmcrypt
+     tar x < source.tar
+
+* Make sure the openssl-dev, libconfig-dev, and gpgme-dev libraries are installed before the next step.
+  
+  .. parsed-literal::
+     gtm_dist=../.. make 
+     gtm_dist=../.. make install
+
+* In your application directory, make a directory for certificates.
+
+  .. parsed-literal::
+     mkdir certs
+
+* Create your certificate with a key that has a password.
+
+  .. parsed-literal::
+      openssl genrsa -aes128 -passout pass:ydbpass -out ./mycert.key 2048
+      openssl req -new -key ./mycert.key -passin pass:ydbpass -subj '/C=US/ST=Pennsylvania/L=Malvern/CN=www.yottadb.com' -out ./mycert.csr
+      openssl req -x509 -days 365 -sha256 -in ./mycert.csr -key .//mycert.key -passin pass:ydbpass -out ./mycert.pem
+      mv cert* certs/ 
+
+* Create a file called gtmcrypt_config.libconfig with the following contents.
+
+  .. parsed-literal::
+     tls: {
+       dev: {
+           format: "PEM";
+           cert: "/home/ydbuser/workspace/db/certs/mycert.pem";
+           key:  "/home/ydbuser/workspace/db/certs/mycert.key";
+             }
+          } 
+
+* Set the environment variable gtmcrypt_config to be the path to your config file:
+  
+  .. parsed-literal::
+     export gtmcrypt_config=$.../gtmcrypt_config.libconfig"  
+
+* Find out the hash of your key password using the maskpass utility. 
+
+  .. parsed-literal::
+     gtm_dist/plugin/gtmcrypt/maskpass <<< 'ydbpass' | cut -d ":" -f2 | tr -d '
+     7064420FDCAEE313B222 
+
+* In your environment file, set gtmtls_passwd_{section name} to be that hash.
+
+  .. parsed-literal::
+     export gtmtls_passwd_dev="7064420FDCAEE313B222" 
+
+* Start the server
+
+At this point, if you go to https://localhost:9081, you should be able to see the web pages via TLS. 
+ 
+For more documentation on TLS, see `Appendix H: Creating a TLS Configuration File <https://docs.yottadb.com/AdminOpsGuide/tls.html>`_ in the Administration and Operations Guide.
+
 ----------------------------
 I/O Commands
 ----------------------------
