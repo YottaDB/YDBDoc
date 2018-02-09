@@ -2438,7 +2438,7 @@ Specifies access permission on a UNIX file for the owner of the file. The expres
 
 To modify file security, the user who issues the OPEN must have ownership.
 
-If none of GROUP, SYSTEM, OWNER, or WORLD are specified on OPEN, YottaDB does not modify the permissions on an existing file and new files are created using the standard UNIX rules.
+If none of GROUP, OWNER, or WORLD are specified on OPEN, YottaDB does not modify the permissions on an existing file and new files are created using the standard UNIX rules.
 
 Example:
 
@@ -2793,25 +2793,6 @@ With STREAM, the same example produces the following output:
    4    ck brown fox jumped over the lazy dog 338 the quick brown fox jumped over the lazy dog 387 the quick
    5     brown fox jumped over the lazy dog 436 the quick brown fox jumped over the lazy dog 485
 
-**SYSTEM**
-
-SYSTEM=expr Applies to: SOC(LOCAL) SD FIFO
-
-This deviceparameter is a synonym for OWNER that is provided in the UNIX version of YottaDB for compatibility with OpenVMS applications.
-
-Example: 
-
-.. parsed-literal::
-   YDB> set perm="rwx" 
-   YDB>OPEN "test52.txt":(NEWVERSION:SYSTEM="r":GROUP=perm:WORLD=perm) 
-   YDB>ZSYSTEM "ls -la test52.txt"
-
-.. parsed-literal::
-   -r--rwxrwx 1 user group 0 Aug 20 18:36 test52.txt
-   YDB> 
-
-This example opens file test52.txt and sets read access for the owner, while others have complete access. 
-
 **TRUNCATE**
 
 [NO]TRUNCATE Applies to: SD
@@ -2976,8 +2957,6 @@ Note that LOCAL sockets ignore the ZIBFSIZE deviceparameter.
 | STDERR=expr                                         |          |            |         | X        |            |               |
 +-----------------------------------------------------+----------+------------+---------+----------+------------+---------------+
 | [NO]STREAM                                          |          | X          | X       | X        |            |               |
-+-----------------------------------------------------+----------+------------+---------+----------+------------+---------------+
-| SYSTEM=expr                                         |          | X          | X       |          |            |               |
 +-----------------------------------------------------+----------+------------+---------+----------+------------+---------------+
 | [NO]TRUNCATE                                        |          | X          | X       |          |            |               |
 +-----------------------------------------------------+----------+------------+---------+----------+------------+---------------+
@@ -4004,7 +3983,7 @@ By default, CLOSE does not modify the permissions on an existing file.
 
 OWNER=expr Applies to: SOC(LOCAL) SD FIFO
 
-Specifies access permission on a UNIX file for the owner of the file. The expression is a character string evaluating to null or to any combination of the letters RWX, indicating respectively Read, Write, and eXecute access. When any one of these deviceparameters appear on a CLOSE of an existing file, any user category (GROUP, SYSTEM, WORLD), that is not explicitly specified remains unchanged.
+Specifies access permission on a UNIX file for the owner of the file. The expression is a character string evaluating to null or to any combination of the letters RWX, indicating respectively Read, Write, and eXecute access. When any one of these deviceparameters appear on a CLOSE of an existing file, any user category (GROUP, WORLD), that is not explicitly specified remains unchanged.
 
 In order to modify file security, the user who issues the CLOSE must have ownership.
 
@@ -4023,14 +4002,6 @@ If the process has sufficient access permissions, it may use RENAME to specify a
 SOCKET=expr Applies to: SOC
 
 The socket specified in expr is closed. Specifying a socket that has not been previously OPENed generates an error. If no SOCKET deviceparameter is specified on a CLOSE for a socket device, the socket device and all sockets associated with it are closed.
-
-**SYSTEM**
-
-SYSTEM=expr Applies to: SOC(LOCAL) SD FIFO
-
-This deviceparameter is a synonym for OWNER that is maintained in UNIX for compatibility with VMS applications.
-
-By default, CLOSE does not modify the permissions on an existing file. 
 
 **TIMEOUT**
 
@@ -4078,8 +4049,6 @@ In order to modify file security, the user who issues the CLOSE must have owners
 | “REWIND”                           |                    | X                |            |              |
 +------------------------------------+--------------------+------------------+------------+--------------+
 | “SOCKET”                           |                    |                  |            | X            |
-+------------------------------------+--------------------+------------------+------------+--------------+
-| “SYSTEM”                           |                    | X                | X          |              |
 +------------------------------------+--------------------+------------------+------------+--------------+
 | “UIC”                              |                    | X                | X          |              |
 +------------------------------------+--------------------+------------------+------------+--------------+
@@ -4187,8 +4156,6 @@ The following table lists all of the deviceparameters and shows the commands to 
 | SPACE=intexpr                   |                     | X                   | X                   |
 +---------------------------------+---------------------+---------------------+---------------------+
 | [NO]STREAM                      | X                   |                     |                     |
-+---------------------------------+---------------------+---------------------+---------------------+
-| SYSTEM=expr                     | X                   |                     | X                   |
 +---------------------------------+---------------------+---------------------+---------------------+
 | TERMINATOR=expr                 |                     | X                   |                     |
 +---------------------------------+---------------------+---------------------+---------------------+
