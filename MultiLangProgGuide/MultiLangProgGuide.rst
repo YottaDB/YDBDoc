@@ -714,6 +714,10 @@ global variable name, add 1 for the caret.
 application can instruct libyottab to wait until the process is able
 to acquire locks it needs before timing out.
 
+``YDB_MAX_MESSAGE`` – The maximum size of the text of a
+message. Providing a buffer of ``YDB_MAX_MESSAGE`` to `ydb_message()`_
+ensures that it is large enough for the longest message.
+
 ``YDB_MAX_STR`` — The maximum length of a string (or blob) in
 bytes. A caller to ``ydb_get()`` that provides a buffer of
 ``YDB_MAX_STR`` will never get a ``YDB_ERR_INVSTRLEN``
@@ -776,75 +780,63 @@ pointer, and which returns an integer, defined thus:
 Macros
 ======
 
-``YDB_BUFFER_ALLOC_TO_STRING(ydbstring, ydbbuffer)`` — With
-``ydbstring`` a pointer to a ``ydb_string_t`` structure and
-``ydbbuffer`` a pointer to a ``ydb_buffer_t`` structure, set:
+``YDB_ASSERT(x)`` – Conditionally include this macro in code for
+debugging and testing purposes. If ``x`` is non-zero, it prints an
+error message on ``stderr`` and generates a core file by calling
+`ydb_fork_n_core()`_.
 
-- ``ydbstring->address=ydbbuffer->buf_addr``, and
-- ``ydb_string->length=ydbbuffer->len_alloc`` (i.e., no changes to
-  ``ydbbuffer``).
+``YDB_BUFFER_IS_SAME(buffer1, buffer2)`` – Use this macro to test
+whether the memory locations (strings) pointed to by two
+``ydb_buffer_t`` structures have the same content, returning ``FALSE``
+(0) if they differ and a non-zero value if the contents are identical.
 
-``YDB_BUFFER_FREE(ydbbuffer)`` — using `ydb_free()`_ free the memory
-at ``ydbbuffer->buf_addr`` and set ``ydbbuffer->buf_addr``,
-``ydbbuffer->len_alloc``, and ``ydbbuffer->len)used`` to zero.
+``YDB_COPY_BUFFER_TO_BUFFER(source, destination, done)`` – Use this
+macro to copy the memory locations (strings) pointed to by ``source``
+to the memory locations pointed to by ``destination`` and set:
 
-``YDB_BUFFER_NEW(ydbbuffer,size)`` — using `ydb_malloc()`_ allocate 
-memory of ``size`` bytes and set:
+- ``dest->len_used`` to ``source->len_used``; and
+- ``done`` to ``TRUE`` if ``dest->len_alloc`` ≥ ``source->len_used``
+  and the underlying ``memcpy()`` completed successfully, and
+  ``FALSE`` otherwise.
 
-- ``ydbbuffer->buf_addr`` to the address of the allocated memory,
-- ``ydbbuffer->len_alloc`` to ``size``, and
-- ``ydbbuffer->len_used`` to zero.
+``YDB_COPY_LITERAL_TO_BUFFER(literal, buffer, done)`` - Use this macro
+to copy a literal string to previously allocated memory referenced by
+a ``ydb_buffer_t`` structure (for example, to set an initial subscript
+to sequence through nodes). It sets:
 
-``YDB_BUFFER_USED_TO_STRING(ydbstring, ydbbuffer)`` — With
-``ydbstring`` a pointer to a ``ydb_string_t`` structure and
-``ydbbuffer`` a pointer to a ``ydb_buffer_t`` structure, set:
+- ``buffer->len_used`` to the size of the literal; and
+- ``done`` to ``TRUE`` if ``buffer->len_alloc`` ≥ the size of the
+  literal excluding its terminating null byte and the underlying
+  ``memcpy()`` completed successfully, and ``FALSE`` otherwise.
 
-- ``ydbstring->address=ydbbuffer->buf_addr``, and
-- ``ydb_string->length=ydbbuffer->len_used`` (i.e., no changes to
-  ``ydbbuffer``).
+ ``YDB_COPY_STRING_TO_BUFFER(string, buffer, done)`` – Use this macro
+ to copy a null-terminated string to previously allocated memory
+ referenced by a ``ydb_buffer_t`` structure. This macro requires the
+ code to also ``#include <string.h>``. It sets:
 
-``YDB_STRING_FREE(ydbstring)`` — using `ydb_free()`_ free the memory
-at ``ydbstring->address`` and set ``ydbstring->address``,
-``ydbstring->length`` to zero.
+ - ``buffer->len_used`` to the size of the copied string; and
+ - ``done`` to ``TRUE`` if ``buffer->len_alloc`` ≥ the size of the
+   string to be copied and the underlying ``memcpy()`` completed
+   successfully, and ``FALSE`` otherwise.
 
-``YDB_STRING_NEW(ydbstring,size)`` — using `ydb_malloc()`_ allocate 
-memory of ``size`` bytes and set:
+``YDB_LITERAL_TO_BUFFER(literal, buffer)`` – Use this macro to set a
+``ydb_buffer_t`` structure to refer to a literal (such as a variable
+name). With ``literal`` a string literal, and ``buffer`` a pointer to
+a ``ydb_buffer_t`` structure, set:
 
-- ``ydbstring->address`` to the address of the allocated memory, and
-- ``ydbstring->length`` to ``size``.
+- ``buffer->buf_addr`` to the address of ``literal``; and
+- ``buffer->len_used`` and ``buffer->len_alloc`` to the length of
+  ``literal`` excluding the terminating null byte.
 
-``YDB_STRING_TO_BUFFER(ydbbuffer, ydbstring, used)`` — With ``ydbbuffer``
-a pointer to a ``ydb_buffer_t`` structure, ``ydbstring`` a pointer to
-a ``ydb_string_t`` structure, and ``used`` an unsigned integer, set:
+``YDB_STRING_TO_BUFFER(string, buffer)`` – Use this macro to set a
+``ydb_buffer_t`` structure to refer to a null-terminated string
+referred to by a pointer. This macro requires the code to also
+``#include <string.h>``. With ``string`` pointing to a null terminated
+string, and ``buffer`` a pointer to a ``ydb_buffer_t`` structure, set:
 
-- ``ydbbuffer->buf_addr=ydbstring->address``,
-- ``ydbbuffer->len_alloc=ydbstring->used``, and
-- ``ydbbuffer->len_used=used`` (i.e., no changes to ``ydbstring``).
-
-``YDB_STRLIT_TO_BUFFER(ydbbuffer, strlit)`` — With ``ydbbuffer`` a
-pointer to a ``ydb_buffer_t`` structure, and ``strlit`` a string
-literal, set:
-
-- ``ydbbuffer->buf_addr`` to the address of ``strlit``, and
-- ``ydbbuffer->len_alloc`` and ``ydbbuffer->len_used`` to the length
-  of the string literal excluding its terminating null character.
-
-``YDB_STRLIT_TO_STRING(ydbstring,strlit)`` — With ``ydbstring`` a
-pointer to a ``ydb_string_t`` structure, and ``strlit`` a string
-literal, set
-
-- ``ydbstring->address`` to the address of ``strlit``, and
-- ``ydbstring->length`` to the length of the string literal excluding
-  its terminating null character.
-
-Note that the addresses of the ``strlit`` string literals set in
-``*ydbbuffer`` by invocations of ``YDB_STRLIT_TO_BUFFER()`` and
-``*ydbstring`` by invocations of ``YDB_STRLIT_TO_STRING()`` are almost
-certainly pointers to read-only sections of memory, and any subsequent
-attempt to modify the contents of ``ydbbuffer->buf_addr`` or
-``ydb_string->address`` will thus result in abnormal process
-termination with segmentation violation (SIG-11) that may be hard to
-troubleshoot.
+- ``buffer->buf_addr`` to ``string``; and
+- ``buffer->len_used`` and ``buffer->len_alloc`` to
+  ``strlen(string)``.
 
 ================
 Programming in C
@@ -1455,7 +1447,7 @@ ydb_file_id_free()
 
 .. code-block:: C
 
-	int ydb_file_id_free(void *fileid)
+	int ydb_file_id_free(ydb_fileid_ptr_t fileid)
 
 Releases the memory used by a ``fileid`` structure previously
 generated by `ydb_file_name_to_id()`_. Calling the function twice for
@@ -1469,7 +1461,8 @@ ydb_file_is_identical()
 
 .. code-block:: C
 
-	int ydb_file_is_identical(void *fileid1, void *fileid2)
+	int ydb_file_is_identical(ydb_fileid_ptr_t fileid1,
+		ydb_fileid_ptr_t fileid2)
 
 Given two pointers to ``fileid`` structures (see
 `ydb_file_name_to_id()`_), ``ydb_file_is_identical`` returns YDB_OK if
@@ -1482,7 +1475,7 @@ ydb_file_name_to_id()
 .. code-block:: C
 
 	int ydb_file_name_to_id(ydb_string_t *filename,
-		void *(*fileid))
+	ydb_fileid_ptr_t *fileid)
 
 As a file is in principal reachable through different paths, and
 application code may need to check whether two paths do indeed lead to
@@ -1586,16 +1579,16 @@ ydb_message()
 
 .. code-block:: C
 
-	int ydb_message(ydb_buffer_t *msgtext, int status)
+	int ydb_message(int status, ydb_buffer_t *msgtext)
 
-Set ``msgtext->buf_addr`` to a location that has the text for the
-condition corresponding to ``status``, and both ``msgtext->len_alloc`` and
-``msgtext->len_used`` to its length (with no trailing null
-character). Note: as ``msgtext->buf_addr`` points to an address in a
-read-only region of memory, any attempt to modify the message will
-result in a segmentation violation (SIGSEGV). ``ydb_message()``
-returns ``YDB_OK`` for a valid ``status`` and
-``YDB_ERR_UNKNOWN`` if ``status`` does not map to a known error.
+In the buffer defined by ``*msgtext`` returns the text for the
+condition corresponding to ``status``. If ``msgtext->len_alloc`` is
+too small for the message, ``ydb_message()`` silently truncates the
+message, instead of returning ``YDB_ERR_INVSTRLEN``.
+
+``ydb_message()`` returns ``YDB_OK`` for a valid ``status`` and
+``YDB_ERR_UNKNOWN`` if ``status`` does not map to a known error, or if
+it is ``YDB_ERR_UNKNOWN``.
 
 --------------------------
 ydb_stdout_stderr_adjust()
