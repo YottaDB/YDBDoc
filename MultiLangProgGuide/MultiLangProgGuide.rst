@@ -1775,6 +1775,17 @@ functionality (see `Utility Functions`_).
 As the M language subsystem uses SIGUSR1 for asynchronous interrupts,
 we strongly suggest that C applications use SIGUSR2 for this purpose.
 
+Forking
+=======
+
+As noted in the `Overview`_, the YottaDB database engine resides in
+the address space of the process. In order to ensure a clean
+separation between parent and child processes:
+
+- Before a process executes ``fork()``, it must execute ``fflush()``.
+- After a ``fork()``, the child process must immediately execute
+  `ydb_child_init()`_ .
+
 Threads
 =======
 
