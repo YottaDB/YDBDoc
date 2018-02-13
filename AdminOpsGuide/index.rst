@@ -29,7 +29,6 @@ Welcome to the Administration and Operations Guide!
    compilingicu
    buildenclib
    securityph
-   gtmpcat
    packaging
    tls
    glossary
