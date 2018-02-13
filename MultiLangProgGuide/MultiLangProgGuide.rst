@@ -1775,6 +1775,25 @@ functionality (see `Utility Functions`_).
 As the M language subsystem uses SIGUSR1 for asynchronous interrupts,
 we strongly suggest that C applications use SIGUSR2 for this purpose.
 
+Forking
+=======
+
+There are two considerations when executing ``fork()``.
+
+- Before a process that performs buffered IO executes ``fork()``, it
+  should execute ``fflush()``. Otherwise, the child process will
+  inherit unflushed buffers from the parent, which the child process
+  will flush when it executes an ``fflush()``. This is a general
+  programming admonition, not specific to YottaDB except to the extent
+  that M code within a parent process may have executed ``write``
+  commands which are still buffered when C code within the same
+  process calls ``fork()``.
+- After a ``fork()``, the child process must immediately execute
+  `ydb_child_init()`_ . Since the YottaDB database engine resides in
+  the address space of the process, as noted in the `Overview`_, this
+  is required to ensure a clean separation in the internal state of
+  the database engine between parent and child processes.
+
 Threads
 =======
 
