@@ -946,10 +946,10 @@ ydb_delete_excl_s()
 	int ydb_delete_excl_s(int namecount,
 		ydb_buffer_t *varnames);
 
-``ydb_delete_excl_s()`` deletes the trees of all local variables except
-those on the list. Subscripts cannot be specified, and it is an error
-for a ``*varname`` to specify a global or intrinsic special
-variable. Note that ``namecount`` must be greater than zero.
+``ydb_delete_excl_s()`` deletes the trees of all local variables
+except those in the ``*varnames`` array. It is an error for
+``*varnames`` to include a global or intrinsic special variable. Note
+that ``namecount`` must be greater than zero.
 
 If your application mixes M and non M code, and you wish to use
 ``ydb_delete_excl_s()`` to delete local variables that are aliases,
@@ -1360,12 +1360,12 @@ is not flagged as ``"BATCH"`` follows one or more transactions so
 flagged, Durability of the later transaction ensures Durability of the
 the earlier ``"BATCH"`` transaction(s).
 
-If ``namecount>0``, the ``*varnames`` parameter specifies a list of
+If ``namecount>0``, the ``*varnames`` parameter specifies an array of
 local variable names whose values are restored to their original
-values when a transaction is restarted. In the special case where
+values when the transaction is restarted. In the special case where
 ``namecount=1`` and the sole ``*varnames`` provides the value ``"*"``,
 all local variables are restored on a restart. It is an error for a
-``*varname`` to specify a global or intrinsic special variable.
+``*varnames`` to include a global or intrinsic special variable.
 
 A ``ydb_tp_s()`` that is not itself within a transaction returns
 ``YDB_OK``, ``YDB_TP_ROLLBACK``, or an `error return code`_ – a
