@@ -944,7 +944,7 @@ ydb_delete_excl_s()
 .. code-block:: C
 
 	int ydb_delete_excl_s(int namecount,
-		ydb_buffer_t *varname[, ...]);
+		ydb_buffer_t *varnames);
 
 ``ydb_delete_excl_s()`` deletes the trees of all local variables except
 those on the list. Subscripts cannot be specified, and it is an error
@@ -1325,8 +1325,8 @@ ydb_tp_s()
 	int ydb_tp_s(ydb_tpfnptr_t tpfn,
 		void *tpfnparm,
 		const char *transid,
-		int namecount[,
-		ydb_buffer_t *varname, ...]);
+		int namecount,
+		ydb_buffer_t *varnames);
 
 ``ydb_tp_s()`` calls the function pointed to by ``tpfn`` passing it
 ``tpfnparm`` as a parameter. As discussed under `Transaction
@@ -1360,13 +1360,12 @@ is not flagged as ``"BATCH"`` follows one or more transactions so
 flagged, Durability of the later transaction ensures Durability of the
 the earlier ``"BATCH"`` transaction(s).
 
-If ``namecount>0``, the ``*varname`` parameters specify a list of
+If ``namecount>0``, the ``*varnames`` parameter specifies a list of
 local variable names whose values are restored to their original
 values when a transaction is restarted. In the special case where
-``namecount=1`` and the sole ``*varname`` provides the value ``"*"``,
-all local variables are restored on a restart. Subscripts cannot be
-specified, and it is an error for a ``*varname`` to specify a global
-or intrinsic special variable.
+``namecount=1`` and the sole ``*varnames`` provides the value ``"*"``,
+all local variables are restored on a restart. It is an error for a
+``*varname`` to specify a global or intrinsic special variable.
 
 A ``ydb_tp_s()`` that is not itself within a transaction returns
 ``YDB_OK``, ``YDB_TP_ROLLBACK``, or an `error return code`_ – a
