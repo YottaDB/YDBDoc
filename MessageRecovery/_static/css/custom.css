@@ -1,0 +1,17 @@
+.wy-nav-content {
+	    max-width: 4000px;
+}
+.wy-side-nav-search {
+	background: #3b1a68;
+}
+.wy-nav-side {
+	background: #3b1a68;
+}
+.wy-side-scroll {
+	background: #3b1a68;
+}
+body {
+	background-color: #3b1a68;
+	width: 150%;
+}
+
