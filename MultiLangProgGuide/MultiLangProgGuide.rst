@@ -1593,6 +1593,24 @@ result in a segmentation violation (SIGSEGV). ``ydb_message()``
 returns ``YDB_OK`` for a valid ``status`` and
 ``YDB_ERR_UNKNOWN`` if ``status`` does not map to a known error.
 
+--------------------------
+ydb_stdout_stderr_adjust()
+--------------------------
+
+.. code-block:: C
+
+	int ydb_stdout_stderr_adjust(void)
+
+The function checks whether stdout (file descriptor 1) and stderr
+(file descriptor 2) are the same file, and if so, routes writes to
+stderr to stdout instead. This ensures that output appears in the
+order in which it was written; otherwise owing to IO buffering, output
+can appear in an order different from that in which it was
+written. Application code which mixes C and M code, and which
+redirects stdout or stderr (e.g., using ``dup2()``), should call this
+function as soon as possible after the
+redirection. ``ydb_stdout_stderr_adjust()`` returns ``YDB_OK``.
+
 --------------------
 ydb_thread_is_main()
 --------------------
