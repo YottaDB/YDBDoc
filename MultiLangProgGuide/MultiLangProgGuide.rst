@@ -679,7 +679,7 @@ node. [#]_
        renamed to be more meaningful.
 
 ``YDB_ERR_MAXNRSUBSCRIPTS`` — The number of subscripts specified in
-the call exceeds ``YDB_MAX_SUB``.
+the call exceeds ``YDB_MAX_SUBS``.
 
 ``YDB_ERR_NUMOFLOW`` — a `ydb_incr_s()`_ operation resulted in a
 numeric overflow.
@@ -687,6 +687,9 @@ numeric overflow.
 ``YDB_ERR_SVNOSET`` — the application inappropriately attempted to
 modify the value of an instrinsic special variable such as an attempt
 to increment ``$trestart`` using `ydb_incr_s()`_.
+
+``YDB_ERR_TIMEOUT2LONG`` – This return code indicates that a value
+greater than ``YDB_MAX_LOCKTIME`` was specified for a lock timeout.
 
 ``YDB_ERR_TPTMEOUT`` — This return code from `ydb_tp_s()`_ indicates
 that the transaction took too long to commit.
@@ -717,7 +720,7 @@ bytes. A caller to ``ydb_get()`` that provides a buffer of
 ``YDB_MAX_STR`` will never get a ``YDB_ERR_INVSTRLEN``
 error.
 
-``YDB_MAX_SUB`` — The maximum number of subscripts for a local or
+``YDB_MAX_SUBS`` — The maximum number of subscripts for a local or
 global variable.
 
 Other
@@ -888,7 +891,7 @@ an unpleasant bug that is difficult to troubleshoot. [#]_
 
 .. [#] Note for implementers: the implementation should attempt to
        limit the damage by not looking for more subscripts than are
-       permitted by ``YDB_MAX_SUB``.
+       permitted by ``YDB_MAX_SUBS``.
 
 Function names specific to the YottaDB Simple API end in ``_s``.
 
