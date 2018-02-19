@@ -29,6 +29,7 @@ Welcome to The M Programmer's Guide!
    appendix
    mreadediting
    uphelperproc
+   nullsubs
 
 
 Indices and tables
