@@ -27,6 +27,7 @@ Welcome to The M Programmer's Guide!
    errproc
    triggers
    appendix
+   mreadediting
 
 
 Indices and tables
