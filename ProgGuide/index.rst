@@ -28,6 +28,7 @@ Welcome to The M Programmer's Guide!
    triggers
    appendix
    mreadediting
+   uphelperproc
 
 
 Indices and tables
