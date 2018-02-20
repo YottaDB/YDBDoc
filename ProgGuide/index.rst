@@ -27,7 +27,6 @@ Welcome to The M Programmer's Guide!
    errproc
    triggers
    appendix
-   uphelperproc
    nullsubs
 
 
