@@ -1612,8 +1612,8 @@ stderr to stdout instead. This ensures that output appears in the
 order in which it was written; otherwise owing to IO buffering, output
 can appear in an order different from that in which it was
 written. Application code which mixes C and M code, and which
-redirects stdout or stderr (e.g., using ``dup2()``), should call this
-function as soon as possible after the
+explicitly redirects stdout or stderr (e.g., using ``dup2()``), should
+call this function as soon as possible after the
 redirection. ``ydb_stdout_stderr_adjust()`` returns ``YDB_OK``.
 
 --------------------
