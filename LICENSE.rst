@@ -6,8 +6,4 @@ All documentation in this package is part of YottaDB (http://yottadb.com) and co
 
 All software in this package is part of YottaDB (http://yottadb.com) each file of which contains notices from its copyright holders. YottaDB is provided to you under the terms of a license that you must comply with. If there is a COPYING file included in this package, it contains the terms of the license under which the package is provided to you.
 
-If there is not a *COPYING* file in the package, you must do one of the following:
-
-a. Ensure that there is a signed license under which the software is made available to you.
-
-#. Create a COPYING file by copying the contents of https://www.gnu.org/licenses/agpl.txt and use it as the license.
+If there is not a *COPYING* file in the package, you must create a COPYING file by copying the contents of https://www.gnu.org/licenses/agpl.txt and use it as the license.
