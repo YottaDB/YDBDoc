@@ -15,7 +15,6 @@ Welcome to the Multi-Language Programmer's Guide!
    
    Main YottaDB Documentation Page <https://yottadb.com/resources/documentation/>
    MultiLangProgGuide
-   README
    LICENSE
 
 Indices and tables
