@@ -32,6 +32,7 @@ Welcome to the Administration and Operations Guide!
    packaging
    tls
    glossary
+   LICENSE
 
 Indices and tables
 ==================

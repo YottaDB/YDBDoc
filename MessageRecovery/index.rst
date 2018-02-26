@@ -14,6 +14,7 @@ Welcome to the Messages and Recovery Procedures Reference Manual!
    errors
    errormsgref
    referrormsg
+   LICENSE
 
 
 Indices and tables
