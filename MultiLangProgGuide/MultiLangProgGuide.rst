@@ -691,7 +691,7 @@ to increment ``$trestart`` using `ydb_incr_s()`_.
 ``YDB_ERR_TIMEOUT2LONG`` – This return code indicates that a value
 greater than ``YDB_MAX_LOCKTIME`` was specified for a lock timeout.
 
-``YDB_ERR_TPTMEOUT`` — This return code from `ydb_tp_s()`_ indicates
+``YDB_ERR_TPTIMEOUT`` — This return code from `ydb_tp_s()`_ indicates
 that the transaction took too long to commit.
 
 ``YDB_ERR_UNIMPLOP`` — A `ydb_data_s()`_ or `ydb_incr_s()`_ was
@@ -1373,7 +1373,8 @@ all local variables are restored on a restart. It is an error for a
 ``*varnames`` to include a global or intrinsic special variable.
 
 A ``ydb_tp_s()`` that is not itself within a transaction returns
-``YDB_OK``, ``YDB_TP_ROLLBACK``, or an `error return code`_ – a
+``YDB_OK``, ``YDB_TP_ROLLBACK``, ``YDB_ERR_TPTIMEOUT`` (see
+`Transaction Processing`_), or an `error return code`_ – a
 ``ydb_tp_s()`` that is the top level transaction handles restarts and
 never returns a ``YDB_TP_RESTART``. A ``ydb_tp_s()`` call that is
 within another transaction can also return ``YDB_TP_RESTART`` to its
