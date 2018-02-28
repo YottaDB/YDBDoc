@@ -2,19 +2,7 @@
 
 {% block extrafooter %}
 <hr/>
-<p> Search through all YottaDB documentation: </p>
-<script>
-  (function() {
-    var cx = '015178586683968264206:yv69x_jrlac';
-    var gcse = document.createElement('script');
-    gcse.type = 'text/javascript';
-    gcse.async = true;
-    gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
-    var s = document.getElementsByTagName('script')[0];
-    s.parentNode.insertBefore(gcse, s);
-  })();
-</script>
-<gcse:search linktarget="_parent"></gcse:search>
+<iframe src="https://duckduckgo.com/search.html?width=600&site=https://docs.yottadb.com&prefill=Search documents with DuckDuckGo&kn=1" style="overflow:hidden;margin:0;padding:0;width:658px;height:40px;" frameborder="0"></iframe>
 {{ super() }}
 {% endblock %}
 
