@@ -24,7 +24,7 @@ permitted by the Supported language implementations.
 
 As C is the *lingua franca* of programming, the C API provides access
 the YottaDB engine from any language. As YottaDB adds standard APIs()
-for other languages, additional sections will be added to ths
+for other languages, additional sections will be added to the
 Programmers Guide.
 
 **Caveat:** This code does not exist yet. The user documentation is
@@ -51,7 +51,7 @@ Quick Start
   --verbose``
 
 2. Choose a directory for your default environment and initialize it:
-   ``export ydbdir=$HOME/.yottadb ; . /opt/yottadb/latest/yottadbprofile``
+   ``export ydb_dir=$HOME/.yottadb ; . /opt/yottadb/latest/yottadbprofile``
 #. ``#include`` the file ``/opt/yottadb/latest/libyottadb.h`` in your C
    program and compile it.
 #. Run your program, ensuring either that ``libyottadb.so`` is in the
@@ -280,7 +280,7 @@ for persistence. A *global directory file* provides a process with a
 mapping from the name of every possible global variable name to a
 *database file*. A *database* is a set of database files to which
 global variables are mapped by a global directory. Global directories
-are created and maintaind by a utility program called the Global
+are created and maintained by a utility program called the Global
 Directory Editor, which is discussed at length in the `YottaDB
 Administration and Operations Guide
 <https://docs.yottadb.com/AdminOpsGuide/>`_ and is outside the purview
@@ -324,13 +324,13 @@ Intrinsic Special Variables
 
 In addition to local and global variables, YottaDB also has a set of
 *Intrinsic Special Variables*. Just as global variables are
-distinguised by a "^" prefix, intrinsic special variables are
+distinguished by a "^" prefix, intrinsic special variables are
 distinguished by a "$" prefix.  Unlike local and global variable
 names, intrinsic special variable names are case-insensitive and so
 ``$zgbldir`` and ``$ZGblDir`` refer to the same intrinsic special
 variable. Intrinsic special variables have no subscripts.
 
-While the majority of intrinisic special variables as enumerated in
+While the majority of intrinsic special variables as enumerated in
 Chapter 8 (Intrinsic Special Variables) of `YottaDB M Programmers Guide
 <https://docs.yottadb.com/ProgrammersGuide/UNIX_manual/>`_ are
 useful to M application code, others are more generally useful and
@@ -356,7 +356,7 @@ Application code inside a transaction can read the intrinsic special
 variable ``$trestart`` to determine how many times a transaction has
 been restarted. Although YottaDB recommends against accessing external
 resources within a transaction, logic that needs to access an external
-resource (e.g., to read data in a file), or to aquire a lock, can use
+resource (e.g., to read data in a file), or to acquire a lock, can use
 ``$trestart`` to restrict that access or acquisition to the first time
 it executes (``$trestart=0``).
 
@@ -409,14 +409,14 @@ optimistic concurrency control:
 - The block header of each database block in a database file has the
   transaction number when that block was last updated.
 - When a process is inside a transaction, it keeps track of every
-  database block it has read, and the transaction numbner of that
+  database block it has read, and the transaction number of that
   block when read. Other processes are free to update the database
   during this time.
 - The process retains updates in its memory, without committing them
   to the database, so that it's own logic sees the updates, but no
   other process does. As every block that the process wishes to write
   must also be read, tracking the transaction numbers of blocks read
-  suffices to track them for blocks to be writen.
+  suffices to track them for blocks to be written.
 - To commit a transaction, a process checks whether any block it has
   read has been updated since it was read. If none has, the process
   commits the transaction to the database, incrementing the file
@@ -484,7 +484,7 @@ names. Features of YottaDB locks include:
   its count to 2. This simplifies application code logic: for example,
   a routine in application code that requires ``^Capital("Belgium")``
   can simply incrementally acquire that lock without needing to test
-  whether a higher level routine has already acqured it. More
+  whether a higher level routine has already acquired it. More
   importantly, when it completes its work, the routine can
   decrementally release the lock without concern for whether or not a
   higher level routine needs that lock. When the count goes from 1 to
@@ -546,7 +546,7 @@ following rules apply:
   or after the transaction is committed or abandoned.
 - As repeated acquisitions of the same lock during retries of a
   transaction will result in the lock count being incremented each
-  time, we recommend either matching lock acquition and releases
+  time, we recommend either matching lock acquisition and releases
   within a transaction, or, for locks acquired within a transaction but
   released after the transaction is committed or abandoned, to
   acquisition only on the first attempt, using the intrinsic special
@@ -685,7 +685,7 @@ the call exceeds ``YDB_MAX_SUBS``.
 numeric overflow.
 
 ``YDB_ERR_SVNOSET`` — the application inappropriately attempted to
-modify the value of an instrinsic special variable such as an attempt
+modify the value of an intrinsic special variable such as an attempt
 to increment ``$trestart`` using `ydb_incr_s()`_.
 
 ``YDB_ERR_TIMEOUT2LONG`` – This return code indicates that a value
@@ -1272,7 +1272,7 @@ ydb_subscript_next_s()
 ``ydb_subscript_next_s()`` provides a primitive for implementing
 breadth-first traversal of a tree by searching for the next subscript
 at the level specified by ``subs_used``, i.e., the next subscript
-after ``*subsarray[subsused].buf_addr``. A node need not exist at the
+after ``*subsarray[subs_used].buf_addr``. A node need not exist at the
 subscripted variable name provided as input to the function. If
 ``subsarray[subs_used].len_used`` is zero, ``ydb_subscript_next()``
 returns the first node at that level with a subscript that is not the
@@ -1302,7 +1302,7 @@ ydb_subscript_previous_s()
 ``ydb_subscript_previous_s()`` provides a primitive for implementing
 reverse breadth-first traversal of a tree by searching for the
 previous subscript at the level specified by ``subs_used``. i.e. the
-subscript preceding ``*subsarray[subsuser].buf_addr``. A node need not
+subscript preceding ``*subsarray[subs_used].buf_addr``. A node need not
 exist at the subscripted variable name provided as input to the
 function. ``ydb_subscript_previous_s()`` returns ``YDB_OK`` or an
 `error return code`_.
@@ -1489,7 +1489,7 @@ As a file is in principal reachable through different paths, and
 application code may need to check whether two paths do indeed lead to
 the same file, YottaDB provides a mechanism to do so. Provided with a
 path to a file, YottaDB creates an internal structure called a
-``fileid`` that uniquely identifies the file if such a struture does
+``fileid`` that uniquely identifies the file if such a structure does
 not already exist for that file, and provides the caller with a
 pointer to that structure. The layout and contents of the fileid
 structure are opaque to the caller, which **must not** modify the
@@ -1575,12 +1575,11 @@ ydb_malloc()
 
 With a signature matching that of the POSIX ``malloc()`` call,
 ``ydb_malloc()`` returns an address to a block of memory of the
-requested size, or NULL if it is unable to satisfy the request. As
+requested size, or NULL if it is unable to satisfy the request.
 ``ydb_malloc()`` uses a `buddy system
-<https://en.wikipedia.org/wiki/Buddy_memory_allocation>`_, it may be
-more efficient than the system ``malloc()``. Also, it provdes
-debugging functionality under the control of the environment variable
-``ydbdbglevel``.
+<https://en.wikipedia.org/wiki/Buddy_memory_allocation>`_, and
+provides debugging functionality under the control of the environment
+variable ``ydb_dbglevel``.
 
 -------------
 ydb_message()
@@ -1696,7 +1695,7 @@ Numeric Considerations
 
 To ensure the accuracy of financial calculations, [#]_ YottaDB internally
 stores numbers as, and performs arithmetic using, a scaled packed
-decimal representation with 18 signicant decimal digits, with
+decimal representation with 18 significant decimal digits, with
 optimizations for values within a certain subset of its full
 range. Consequently, any number that is exactly represented in YottaDB
 can be exactly represented as a string, with reasonably efficient
