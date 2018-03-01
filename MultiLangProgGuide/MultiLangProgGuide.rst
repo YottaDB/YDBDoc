@@ -356,9 +356,8 @@ Application code inside a transaction can read the intrinsic special
 variable ``$trestart`` to determine how many times a transaction has
 been restarted. Although YottaDB recommends against accessing external
 resources within a transaction, logic that needs to access an external
-resource (e.g., to read data in a file), or to acquire a lock, can use
-``$trestart`` to restrict that access or acquisition to the first time
-it executes (``$trestart=0``).
+resource (e.g., to read data in a file), can use ``$trestart`` to
+restrict that access to the first time it executes (``$trestart=0``).
 
 --------
 $zgbldir
