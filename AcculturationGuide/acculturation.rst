@@ -993,11 +993,11 @@ Verify that you can read from and write to your default database and change the 
 
 .. parsed-literal::
    yottadbuser@yottadbworkshop:~$ ls -l .fis-gtm/V6.2-000_x86_64/g/gtm.dat
-   -rw-rw-rw- 1 yottadbuser yottadbuser 20783616 Jan 22 13:56 .fis-gtm/V6.2-000_x86_64/g/gtm.dat
+   -rw-rw-rw- 1 yottadbuser gtmuser 20783616 Jan 22 13:56 .fis-gtm/V6.2-000_x86_64/g/gtm.dat
    yottadbuser@yottadbworkshop:~$ chmod o-rw,g-w .fis-gtm/V6.2-000_x86_64/g/gtm.dat
    yottadbuser@yottadbworkshop:~$ ls -l .fis-gtm/V6.2-000_x86_64/g/gtm.dat
-   -rw-r----- 1 yottadbuser yottadbuser 20783616 Jan 22 13:56 .fis-gtm/V6.2-000_x86_64/g/gtm.dat
-   yottadbuser@yottadbworkshop:~$ gtm
+   -rw-r----- 1 yottadbuser gtmuser 20783616 Jan 22 13:56 .fis-gtm/V6.2-000_x86_64/g/gtm.dat
+   yottadbuser@yottadbworkshop:~$ ydb
 
    YDB>set ^X=1
 
@@ -1006,10 +1006,10 @@ Verify that you can read from and write to your default database and change the 
 
    YDB>halt
 
-Create another user who is also a member of the group users. See that users user can read from the database owned by yottadbuser, but cannot update it.
+Create another user who is also a member of the group. See that the user can read from the database owned by yottadbuser, but cannot update it.
 
 .. parsed-literal::
-   yottadbuser@yottadbworkshop:~$ sudo useradd -g yottadbuser -m staffuser
+   yottadbuser@yottadbworkshop:~$ sudo useradd -g gtmuser -m staffuser
    yottadbuser@yottadbworkshop:~$ sudo su - staffuser
    staffuser@yottadbworkshop:~$ pwd
    /home/staffuser
@@ -1173,7 +1173,10 @@ How did the recovery happen? The answer is in the gtm script.
           echo "gtm -dir[ect] to enter direct mode (halt returns to shell)"
           echo "gtm -run <entryref> to start executing at an entryref"
           echo "gtm -help / gtm -h / gtm -? to display this text"
-       else                                                                                    $gtm_dist/mumps $\*                                                              fi                                                                                    ( cd `dirname $gtmgbldir` \\
+       else                                           
+       $gtm_dist/mumps $\* 
+       fi   
+       ( cd `dirname $gtmgbldir` \\
            $gtm_dist/mupip rundown -region "*" 2>$gtm_tmp/"$USER"_$timestamp"-"`date -u +%Y%m%d%H%M%S`"UTC_mupip_rundown" )
        find $gtm_tmp -name "$USER"_\\* -mtime +$gtm_retention -exec rm -f {} \\;
  fi
@@ -1198,7 +1201,7 @@ The mupip journal recover command performs the recovery. Review the output of th
    %GTM-I-JNLSTATE, Journaling state for region DEFAULT is now ON
    yottadbuser@yottadbworkshop:~$ 
 
-Look at the animation of journaling in action at the beginning of Chapter 6 (YottaDB/GT.M Journaling) in the Administration and Operations Guide.
+Look at the animation of journaling in action at the beginning of `Chapter 6: YottaDB Journaling <https://docs.yottadb.com/AdminOpsGuide/ydbjournal.html>`_ in the Administration and Operations Guide.
 
 **Note on File System Configuration**
 
@@ -1275,8 +1278,8 @@ Create the following shell scripts inside exDir and make them executable:
    $gtm_dist/mupip replicate -receive -shutdown -timeout=0
    $gtm_dist/mupip replicate -source -shutdown -timeout=0
    $gtm_dist/mupip rundown -region "*"
-   yottadbuser@yottadbworkshop:~$ chmod +x {originating_stop,replicating_*}
-   yottadbuser@yottadbworkshop:~$ ls -l {originating_stop,replicating_*}
+   yottadbuser@yottadbworkshop:~$ chmod +x {originating_stop*,replicating_*}
+   yottadbuser@yottadbworkshop:~$ ls -l {originating_stop*,replicating_*}
    -rwxrwxr-x 1 yottadbuser yottadbuser  81 Jan  23 10:17 originating_stop
    -rwxrwxr-x 1 yottadbuser yottadbuser 219 Jan  23 10:19 replicating_start
    -rwxrwxr-x 1 yottadbuser yottadbuser 127 Jan  23 10:16 replicating_stop
@@ -1285,7 +1288,7 @@ Create the following shell scripts inside exDir and make them executable:
 You can delete the prior generation journal files, just to keep the directory clean:
 
 .. parsed-literal::
-   yottadbuser\@yottadbworkshop:~$ rm * .mjl\_ *
+   yottadbuser\@yottadbworkshop:~$ rm \*.mjl\_ *
    yottadbuser\@yottadbworkshop:~$ 
 
 Shut down the Acculturation Workshop virtual machine and make three copies of the Acculturation Workshop called Paris.vmdk, Melbourne.vmdk and Santiago.vmdk. Alternatively, if your host system is short of disk space, make two copies and rename the original ubuntu-14.04_workshop.vmdk file.
