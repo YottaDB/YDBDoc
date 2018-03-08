@@ -27,16 +27,9 @@ the YottaDB engine from any language. As YottaDB adds standard APIs()
 for other languages, additional sections will be added to the
 Programmers Guide.
 
-**Caveat:** This code does not exist yet. The user documentation is
-being written ahead of the code, and will change in the event the code
-needs to differ from this document for a valid technical reason. Also,
-this document itself is incomplete and still evolving.
-
 ===========
 Quick Start
 ===========
-
-**The Quick Start section needs to be fleshed out.**
 
 1. Install YottaDB.
 
@@ -377,17 +370,13 @@ $zstatus
 
 ``$zstatus`` provides additional details of the last
 error. Application code can retrieve ``$zstatus`` using
-`ydb_get_s()`_. ``$zstatus`` typically consists of three
-comma-separated substrings.
+`ydb_get_s()`_. ``$zstatus`` consists of several comma-separated
+substrings.
 
-- The first is an error number. Application code can use the
-  `ydb_message()`_ function to get more detailed information.
-- C application code should ignore the second substring.
-- The third substring is more detailed information about the error.
-
-After retrieving ``$zstatus`` and acting on the error, application
-code should clear it (set it to the empty string using `ydb_set_s()`_)
-in preparation for any subsequent error.
+- The first is an error number.
+- The second is always ``"(SimpleAPI)"``.
+- The remainder is more detailed information about the error, and may
+  contain commas within.
 
 .. _transaction processing:
 
@@ -443,7 +432,9 @@ parameter, passing the function and its parameter as parameters to the
   the called function returns a ``YDB_TP_RESTART`` return code, it
   calls the function again.
 - If the function returns a ``YDB_TP_ROLLBACK``, `ydb_tp_s()`_ returns
-  to its caller with that return code.
+  to its caller with that return code after discarding the uncommitted
+  database updates and releasing any locks acquired within the
+  transaction.
 - To protect applications against poorly coded transactions, if a
   transaction takes longer than the number of seconds specified by
   the environment variable ``ydb_maxtptime``, YottaDB aborts the
@@ -540,22 +531,15 @@ following rules apply:
 
 - A lock that a process acquires prior to starting a transaction
   cannot be released inside the transaction - it can only be released
-  after the transaction is committed or abandoned. Locks acquired
+  after the transaction is committed or rolled back. Locks acquired
   inside a transaction can be released either inside the transaction,
-  or after the transaction is committed or abandoned.
-- As repeated acquisitions of the same lock during retries of a
-  transaction will result in the lock count being incremented each
-  time, we recommend either matching lock acquisition and releases
-  within a transaction, or, for locks acquired within a transaction but
-  released after the transaction is committed or abandoned, to
-  acquisition only on the first attempt, using the intrinsic special
-  variable `$trestart`_.
+  or after the transaction is committed or rolled back.
 
 ==================
 Symbolic Constants
 ==================
 
-The ``yottadb.h`` file defines several symbolic constants, which are
+The ``libyottadb.h`` file defines several symbolic constants, which are
 one of the following types:
 
 - Function Return Codes, which in turn are one of:
@@ -572,9 +556,9 @@ Symbolic constants all fit within the range of a C ``int``.
 Function Return Codes
 =====================
 
-Return codes from calls to YottaDB are of type
-``int``. Normal return codes are non-negative (greater than
-or equal to zero); error return codes are negative.
+Return codes from calls to YottaDB are usually of type ``int`` and
+occasionally ``void``. Normal return codes are non-negative (greater
+than or equal to zero); error return codes are negative.
 
 -------------------
 Normal Return Codes
@@ -592,18 +576,18 @@ successful execution.
 
 ``YDB_TP_RESTART`` — Code returned to YottaDB by an application
 function that packages a transaction to indicate that it wishes
-YottaDB to restart the transaction, or by a YottaDB function
-invoked within a transaction to its caller that the database engine
-has detected that it will be unable to commit the transaction and will
+YottaDB to restart the transaction, or by a YottaDB function invoked
+within a transaction to its caller that the database engine has
+detected that it will be unable to commit the transaction and will
 need to restart. Application code designed to be executed within a
 transaction should be written to recognize this return code and in
-turn return to the YottaDB `ydb_tp_s()`_ invocation from which it
-was called. See `Transaction Processing`_ for a discussion of
-restarts.
+turn perform any cleanup required and return to the YottaDB
+`ydb_tp_s()`_ invocation from which it was called. See `Transaction
+Processing`_ for a discussion of restarts.
 
 ``YDB_TP_ROLLBACK`` — Code returned to YottaDB by an application
 function that packages a transaction, and in turn returned to the
-caller indicating that the transaction should not be committed.
+caller indicating that the transaction was committed.
 
 .. _error return code:
 
@@ -614,32 +598,37 @@ Error Return Codes
 ------------------
 
 Symbolic constants for error codes returned by calls to YottaDB are
-prefixed with ``YDB_ERR_`` and are all less than zero. [#]_ The
-symbolic constants below are not a complete list of all error messages
-that Simple API functions can return — error return codes can indicate
-system errors and database errors, not just application errors. Also,
-some of the errors listed below can be raised in other circumstances
-as well. A full set of error messages is in the `YottaDB Messages and
-Recovery Procedures Manual
+prefixed with ``YDB_ERR_`` and are all less than zero. The symbolic
+constants below are not a complete list of all error messages that
+YottaDB functions can return — error return codes can indicate system
+errors and database errors, not just application errors. A process
+that receives a negative return code, including one not listed here,
+can call `ydb_get_s()`_ to get the value of `$zstatus`_.  Also, some
+of the errors listed below can be raised in other circumstances as
+well. A full set of error messages and numbers is in the `YottaDB
+Messages and Recovery Procedures Manual
 <https://docs.yottadb.com/MessageRecovery/>`_.
 
-The ``ydb_message()`` function provides a way to get more
-detailed information about any error code returned by a Simple API
-function, including error codes for return values without symbolic
-constants.
+``YDB_ERR_CALLINAFTEREXIT`` – A function was called after
+``ydb_exit()`` was called.
 
-.. [#] Note for implementers: the actual values are negated ZMESSAGE
-       error codes.
+``YDB_ERR_FATALERROR1`` – A fatal error occurred. The process is
+generating a core dump and terminating. As a process cannot receive a
+fatal error code, this error appears in the syslog.
+
+``YDB_ERR_FATALERROR2`` – A fatal error occurred. The process is
+terminating without generating a core dump. As a process cannot
+receive a fatal error code, this error appears in the syslog.
 
 ``YDB_ERR_GVUNDEF`` — No value exists at a requested global variable
 node.
 
+``YDB_ERR_INVNAMECOUNT`` – A ``namecount`` parameter has an invalid
+value.
+
 ``YDB_ERR_INSUFFSUBS`` — A call to ``ydb_node_next_s()`` or
 ``ydb_node_previous_s()`` did not provide enough parameters for the
-return values. [#]_
-
-.. [#] Note for implementers: this is a new error, not currently in
-       the code base.
+return values.
 
 .. _YDB_ERR_INVSTRLEN:
 
@@ -653,52 +642,62 @@ buffer. In this case the ``len_used`` field of a ``ydb_buffer_t``
 structure is greater than the ``len_alloc`` field, and the caller is
 responsible for correcting the ``xyz->len_used`` field.
 
-``YDB_ERR_INVSUB`` — A subscript provided by the caller is invalid. In
-the case of a name with multiple subscripts, the intrinsic special
-variable $zstatus acquired with a subsequent call to `ydb_get_s()`_
-provides details on which subscript had the invalid value.
-
 ``YDB_ERR_INVSVN`` — A special variable name provided by the caller
 is invalid.
 
 ``YDB_ERR_INVVARNAME`` — A variable name provided by the caller is
-invalid. In the case of a call with multiple variable names, such as
-`ydb_lock_s()`_, the intrinsic special variable $zstatus acquired with
-a subsequent call to `ydb_get_s()`_ provides details on which variable
-name was invalid.
+invalid.
 
 ``YDB_ERR_KEY2BIG`` — The length of a global variable name and
 subscripts exceeds the limit configured for the database region to
 which it is mapped.
 
 ``YDB_ERR_LVUNDEF`` — No value exists at a requested local variable
-node. [#]_
-
-.. [#] Note for implementers: under the covers, this is ``UNDEF`` but
-       renamed to be more meaningful.
+node.
 
 ``YDB_ERR_MAXNRSUBSCRIPTS`` — The number of subscripts specified in
 the call exceeds ``YDB_MAX_SUBS``.
 
+``YDB_ERR_MINNRSUBSCRIPTS`` – The number of subscripts cannot be
+negative.
+
+``YDB_ERR_MISSINGVARNAMES`` – At least one variable name must be
+specifed.
+
 ``YDB_ERR_NUMOFLOW`` — a `ydb_incr_s()`_ operation resulted in a
 numeric overflow.
 
+``YDB_ERR_PARAMINVALID`` — A parameter provided by the caller is
+invalid.
+
+``YDB_ERR_SIMPLEAPINEST`` – An attempt was made to nest Simple API
+calls, which cannot be nested.
+
+``YDB_ERR_SUBSARRAYNULL`` – The ``subs_used`` parameter of a function
+is greater than zero, but the ``subsarray`` parameter is a NULL
+pointer.
+
 ``YDB_ERR_SVNOSET`` — the application inappropriately attempted to
 modify the value of an intrinsic special variable such as an attempt
-to increment ``$trestart`` using `ydb_incr_s()`_.
+to modify ``$trestart`` using `ydb_set_s()`_.
 
 ``YDB_ERR_TIMEOUT2LONG`` – This return code indicates that a value
 greater than ``YDB_MAX_LOCKTIME`` was specified for a lock timeout.
 
+``YDB_ERR_TOOMANYVARNAMES`` – The number of variable names specified
+to `ydb_delete_excl_s()`_ or `ydb_tp_s()`_ exceeded the
+``YDB_MAX_NAMES``.
+
 ``YDB_ERR_TPTIMEOUT`` — This return code from `ydb_tp_s()`_ indicates
 that the transaction took too long to commit.
 
-``YDB_ERR_UNIMPLOP`` — A `ydb_data_s()`_ or `ydb_incr_s()`_ was
-attempted on an intrinsic special variable.
+``YDB_ERR_UNIMPLOP`` — An operation that is not supported for an
+intrinsic special variable – of the `Simple API`_ functions only
+`ydb_get_s()`_ and `ydb_set_s()`_ are supported – was attempted on an
+intrinsic special variable.
 
-``YDB_ERR_UNKNOWN`` — A call to `ydb_message()`_ specified an
-invalid message code.
-
+``YDB_ERR_VARNAME2LONG`` – A variable name length exceeds YottaDB's
+limit.
 
 Limits
 ======
@@ -714,17 +713,38 @@ global variable name, add 1 for the caret.
 application can instruct libyottab to wait until the process is able
 to acquire locks it needs before timing out.
 
-``YDB_MAX_MESSAGE`` – The maximum size of the text of a
-message. Providing a buffer of ``YDB_MAX_MESSAGE`` to `ydb_message()`_
-ensures that it is large enough for the longest message.
+``YDB_MAX_NAMES`` – The maximum number of variable names that can be
+passed to `ydb_delete_excl_s()`_ or `ydb_tp_s()`_.
 
-``YDB_MAX_STR`` — The maximum length of a string (or blob) in
-bytes. A caller to ``ydb_get()`` that provides a buffer of
-``YDB_MAX_STR`` will never get a ``YDB_ERR_INVSTRLEN``
+``YDB_MAX_STR`` — The maximum length of a string (or blob) in bytes. A
+caller to ``ydb_get_s()`` whose ``*ret_value`` parameter provides a
+buffer of ``YDB_MAX_STR`` will never get a ``YDB_ERR_INVSTRLEN``
 error.
 
 ``YDB_MAX_SUBS`` — The maximum number of subscripts for a local or
 global variable.
+
+Severity
+========
+
+Symbolic constants for the severities of message numbers in return
+codes and ``$zstatus`` are prefixed with ``YDB_SEVERITY_``.
+
+``YDB_SEVERITY_ERROR`` – The number corresponds to an error from which the
+process can recover.
+
+``YDB_SEVERITY_FATAL`` – The number corresponds to an error that terminated
+the process.
+
+``YDB_SEVERITY_INFORMATION`` – The number corresponds to an informational
+message.
+
+``YDB_SEVERITY_SUCCESS`` – The number corresponds to the successful
+completion of a requested opertion.
+
+``YDB_SEVERITY_WARNING`` – The number corresponds to a warning, i.e.,
+it indicates a possible problem.
+
 
 Other
 =====
@@ -732,13 +752,13 @@ Other
 Other symbolic constants have a prefix of ``YDB_``.
 
 ``YDB_DEL_NODE`` and ``YDB_DEL_TREE`` — As values of the ``deltype``
-parameter, these values indicate to ``ydb_delete_s()`` and
-``ydb_delete_multi_s()`` whether to delete an entire subtree or just
-the node at the root, leaving the subtree intact.
+parameter, these values indicate to ``ydb_delete_s()`` whether to
+delete an entire subtree or just the node at the root, leaving the
+subtree intact.
 
 ``YDB_NODE_END`` — In the event a call to ``ydb_node_next_s()`` or
 ``ydb_node_previous_s()`` wish to report that there no further nodes,
-the ``*ret_subs`` parameter is set to this value. Application code
+the ``*ret_subs_sed`` parameter is set to this value. Application code
 should make no assumption about this constant other than that it is
 negative (<0).
 
@@ -751,8 +771,13 @@ the following fields:
 
  - ``address`` — pointer to an ``unsigned char``, the starting
    address of a string.
- - ``len_alloc`` and ``len_used`` — fields of type ``unsigned int`` where
-   ``len_alloc`` ≥ ``len_used`` except when a `YDB_ERR_INVSTRLEN`_ occurs.
+ - ``len_alloc`` and ``len_used`` — fields of type ``unsigned int`` where:
+
+   - ``len_alloc`` is the number of bytes allocated to store the
+     string,
+   - ``len_used`` is the length of the currently stored string, and
+   - ``len_alloc`` ≥ ``len_used`` except when a `YDB_ERR_INVSTRLEN`_
+     occurs.
 
 .. [#] Strings in YottaDB are arbitrary sequences of bytes that are not
        null-terminated. Other languages may refer to them as binary
@@ -760,14 +785,11 @@ the following fields:
 
 ``ydb_string_t`` is a descriptor for a string provided for
 compatibility with existing code, and consists of the following
-fields: [#]_
+fields:
 
 - ``address`` — pointer to an ``unsigned char``, the starting
    address of a string.
 - ``length`` — the length of the string starting at the ``address`` field.
-
-.. [#] Note for implementers: ``ydb_string_t`` is the same structure
-       as ``gtm_string_t``.
 
 ``ydb_tpfnptr_t`` is a pointer to a function with one parameter, a
 pointer, and which returns an integer, defined thus:
@@ -819,6 +841,11 @@ to sequence through nodes). It sets:
    string to be copied and the underlying ``memcpy()`` completed
    successfully, and ``FALSE`` otherwise.
 
+``YDB_SEVERITY(msgnum, severity)`` – The `error return code`_ from a
+function indicates both the nature of an error as well as its
+severity. For message ``msgnum``, the variable ``severity`` is set to
+one of the ``YDB_SEVERITY_*`` symbolic constants.
+
 ``YDB_LITERAL_TO_BUFFER(literal, buffer)`` – Use this macro to set a
 ``ydb_buffer_t`` structure to refer to a literal (such as a variable
 name). With ``literal`` a string literal, and ``buffer`` a pointer to
@@ -856,8 +883,8 @@ YottaDB functions are divided into:
 Simple API
 ==========
 
-As all subscripts and node data passed to YottaDB using the Simple
-API are strings, use the ``printf()`` and ``scanf()`` family of
+As all subscripts and node data passed to YottaDB using the Simple API
+are strings, use the ``sprintf()`` and ``atoi()/strtoul()`` family of
 functions to convert between numeric values and strings which are
 `canonical numbers`_.
 
@@ -868,21 +895,18 @@ functions, parameters of the form:
 
 - ``ydb_buffer_t *varname`` refers to the name of a variable;
 - ``int subs_used`` and ``int *subs_used`` refer to an actual number
-  subscripts; and
+  of subscripts; and
 - ``ydb_buffer_t *subsarray`` refers to an array of ``ydb_buffer_t``
   structures used to pass subscripts whose actual number is defined by
   ``subs_used`` or ``*subs_used`` parameters.
 
-To pass an intrinsic special variable, ``subs_used`` should be zero
-and ``*subsarray`` should be NULL.
+To pass an intrinsic special variable, or unsubscripted local or
+global variable, ``subs_used`` should be zero and ``*subsarray``
+should be NULL.
 
 **Caveat:** Specifying a ``subs_used`` that exceeds the actual number
 of parameters passed in ``*subsarray`` will almost certainly result in
-an unpleasant bug that is difficult to troubleshoot. [#]_
-
-.. [#] Note for implementers: the implementation should attempt to
-       limit the damage by not looking for more subscripts than are
-       permitted by ``YDB_MAX_SUBS``.
+an unpleasant bug that is difficult to troubleshoot.
 
 Function names specific to the YottaDB Simple API end in ``_s``.
 
@@ -895,9 +919,9 @@ ydb_data_s()
 	int ydb_data_s(ydb_buffer_t *varname,
 		int subs_used,
 		ydb_buffer_t *subsarray,
-		unsigned int *value);
+		unsigned int *ret_value);
 
-In the location pointed to by ``value``, ``ydb_data_s()`` returns the
+In the location pointed to by ``ret_value``, ``ydb_data_s()`` returns the
 following information about the local or global variable node
 identified by ``*varname``, ``subs_used`` and ``*subsarray``.
 
@@ -927,11 +951,11 @@ specified. A value of ``YDB_DEL_NODE`` or ``YDB_DEL_TREE`` for
 leaving the (sub)tree intact, or to delete the node as well as the
 (sub)tree.
 
-In the special case where ``*varname`` is NULL, ``ydb_delete_s()``
-deletes all local variables. Intrinsic special variables cannot be
-deleted.
+Intrinsic special variables cannot be deleted.
 
-``ydb_delete_s()`` returns ``YDB_OK`` or an `error return code`_.
+``ydb_delete_s()`` returns ``YDB_OK``, a ``YDB_ERR_UNIMPLOP`` if
+``deltype`` is neither ``YDB_DEL_NODE`` nor ``YDB_DEL_TREE``, or
+another `error return code`_.
 
 -------------------
 ydb_delete_excl_s()
@@ -944,43 +968,21 @@ ydb_delete_excl_s()
 
 ``ydb_delete_excl_s()`` deletes the trees of all local variables
 except those in the ``*varnames`` array. It is an error for
-``*varnames`` to include a global or intrinsic special variable. Note
-that ``namecount`` must be greater than zero.
+``*varnames`` to include a global or intrinsic special variable.
+
+In the special case where ``namecount`` is zero,
+``ydb_delete_excl_s()`` deletes all local variables.
 
 If your application mixes M and non M code, and you wish to use
 ``ydb_delete_excl_s()`` to delete local variables that are aliases,
 formal parameters, or actual parameters passed by reference, make sure
-you understand what (sub)trees are being deleted. This does not apply
-to applications that do not include M code.
+you understand what (sub)trees are being deleted. This warning does
+not apply to applications that do not include M code.
 
-``ydb_delete_excl_s()`` returns ``YDB_OK`` or an `error return code`_.
-
---------------------
-ydb_delete_multi_s()
---------------------
-
-*This function is optional for the initial release of the Simple API,
-time permitting.*
-
-.. code-block:: C
-
-	int ydb_delete_multi_s(int deltype,
-		int namecount,
-		ydb_buffer_t *varname,
-		int subs_used,
-		ydb_buffer_t *subsarray[, ...]);
-
-``namecount`` (>0) is the number of nodes specified in the call.
-
-Deletes nodes in each of the local or global variable trees or
-subtrees specified.  A value of ``YDB_DEL_NODE`` or ``YDB_DEL_TREE``
-for ``deltype`` specifies whether to delete just the node at each
-root, leaving (sub)trees intact, or to delete nodes as well as
-(sub)trees.
-
-Intrinsic special variables cannot be deleted.
-
-``ydb_delete_s()`` returns ``YDB_OK`` or an `error return code`_.
+``ydb_delete_excl_s()`` returns ``YDB_OK``,
+``YDB_ERR_MISSINGVARNAMES`` if ``namecount``>0 and fewer variable
+names are specified ``*varnames``, ``YDB_ERR_TOOMANYVARNAMES`` if more
+than ``YDB_MAX_NAMES`` are specified, or another `error return code`_.
 
 -----------
 ydb_get_s()
@@ -1016,7 +1018,7 @@ Notes:
 - Outside a transaction, a global variable node can potentially be
   changed by another, concurrent, process between time that a process
   calls ``ydb_data_s()`` to ascertain the existence of the data and a
-  subsequent call to ``ydb_get()`` to get that data. A caller of
+  subsequent call to ``ydb_get_s()`` to get that data. A caller of
   ``ydb_get_s()`` to access a global variable node should code in
   anticipation of a potential ``YDB_ERR_GVUNDEF``.
 
@@ -1037,9 +1039,9 @@ ydb_incr_s()
 - converts the value in the specified node to a number if it is not
   one already, using a zero value if the node does not exist;
 - increments it by the value specified by ``*increment``, converting
-  the value to a number if it is not a canonical number, defaulting to
+  the value to a number if it is not a `canonical number`_, defaulting to
   1 if the parameter is NULL; and
-- storing the value as a `canonical number`_ in ``*ret_value``.
+- storing the value as a canonical number in ``*ret_value``.
 
 Return values:
 
@@ -1073,10 +1075,11 @@ ydb_lock_s()
 ``namecount`` is the number of variable names in the call.
 
 Release any locks held by the process, attempt to acquire all the
-requested locks. While the release is unconditional, on return, the
-function will have acquired all requested locks or none of them. If no
-locks are requested (``namecount`` is zero), the function releases all
-locks and returns ``YDB_OK``.
+requested locks. Except in the case of a ``YDB_ERR_INVNAMECOUNT`` or a
+``YDB_ERR_TIMEOUT2LONG`` error, the release is unconditional. On
+return, the function will have acquired all requested locks or none of
+them. If no locks are requested (``namecount`` is zero), the function
+releases all locks and returns ``YDB_OK``.
 
 ``timeout`` specifies a time in nanoseconds that the function waits
 to acquire the requested locks. If it is not able to acquire all
@@ -1211,27 +1214,6 @@ ydb_set_s()
 
 Copies the ``value->len_used`` bytes at ``value->buf_addr`` as the
 value of the specified node or intrinsic special variable specified,
-returning ``YDB_OK`` or an `error return code`_. A NULL ``value``
-parameter is treated as equivalent to one that points to a
-``ydb_buffer_t`` specifying an empty string.
-
------------------
-ydb_set_multi_s()
------------------
-
-*This function is optional for the initial release of the Simple API,
-time permitting.*
-
-.. code-block:: C
-
-	int ydb_set_multi_s(ydb_buffer_t *value,
-		int namecount,
-		ydb_buffer_t *varname,
-		int subs_used,
-		ydb_buffer_t *subsarray[, ...]);
-
-Copies the ``value->len_used`` bytes at ``value->buf_addr`` as the
-value of the specified nodes or intrinsic special variables specified,
 returning ``YDB_OK`` or an `error return code`_. A NULL ``value``
 parameter is treated as equivalent to one that points to a
 ``ydb_buffer_t`` specifying an empty string.
@@ -1441,6 +1423,19 @@ initial release of YottaDB ignores it, we recommend using
 NULL. ``ydb_child_init()`` returns ``YDB_OK`` or an `error return
 code`_.
 
+----------
+ydb_exit()
+----------
+
+.. code-block:: C
+
+	int ydb_exit(void)
+
+When a caller no longer wishes to use YottaDB, a call to
+``ydb_exit()`` cleans up the process connection/access to all
+databases and cleans up its data structures. Therafter, any attempt to
+call a YottaDB function produces a ``YDB_ERR_CALLINAFTEREXIT`` error.
+
 ------------------
 ydb_file_id_free()
 ------------------
@@ -1528,7 +1523,7 @@ ydb_free()
 
 .. code-block:: C
 
-	int ydb_free(void *ptr)
+	void ydb_free(void *ptr)
 
 Releases memory previously allocated by ``ydb_malloc()``. Passing
 ``ydb_free()`` a pointer not previously provided to the application by
@@ -1571,24 +1566,7 @@ requested size, or NULL if it is unable to satisfy the request.
 ``ydb_malloc()`` uses a `buddy system
 <https://en.wikipedia.org/wiki/Buddy_memory_allocation>`_, and
 provides debugging functionality under the control of the environment
-variable ``ydb_dbglevel``.
-
--------------
-ydb_message()
--------------
-
-.. code-block:: C
-
-	int ydb_message(int status, ydb_buffer_t *msgtext)
-
-In the buffer defined by ``*msgtext`` returns the text for the
-condition corresponding to ``status``. If ``msgtext->len_alloc`` is
-too small for the message, ``ydb_message()`` silently truncates the
-message, instead of returning ``YDB_ERR_INVSTRLEN``.
-
-``ydb_message()`` returns ``YDB_OK`` for a valid ``status`` and
-``YDB_ERR_UNKNOWN`` if ``status`` does not map to a known error, or if
-it is ``YDB_ERR_UNKNOWN``.
+variable ``ydb_dbglvl``.
 
 --------------------------
 ydb_stdout_stderr_adjust()
@@ -1781,10 +1759,20 @@ Signals
 =======
 
 As ``libyottadb.so`` includes a database engine that uses timers and
-signals, YottaDB uses signals, especially timers.  YottaDB strongly
+signals, YottaDB uses signals, especially timers. YottaDB strongly
 discourages the use of signals, especially SIGALARM, in application
 code functions. Use the exposed timer APIs for application timing
 functionality (see `Utility Functions`_).
+
+If a user-defined handler exists for SIGINT (commonly sent with
+Control-C), YottaDB leaves it unchanged, otherwise, YottaDB sets a
+handler to ignore the signal.
+
+As database operations such as `ydb_set_s()`_ set timers, subsequent
+system calls can terminate prematurely with an EINTR. Such system
+calls should be wrapped to restart them when this occurs. The file
+`eintr_wrappers.h<https://github.com/YottaDB/YottaDB/blob/master/sr_port/eintr_wrappers.h>`_
+demonstrates how YottaDB itself is coded to handle this situation.
 
 As the M language subsystem uses SIGUSR1 for asynchronous interrupts,
 we strongly suggest that C applications use SIGUSR2 for this purpose.
