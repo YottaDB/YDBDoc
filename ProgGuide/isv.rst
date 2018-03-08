@@ -16,48 +16,6 @@ M Intrinsic Special Variables start with a single dollar sign ($). YottaDB provi
 .. note::
    None of the Intrinsic Special Variables can be KILLed. SETting or NEWing is generally not allowed, but is specifically noted in the descriptions of those that do.
 
---------------
-$ZTrap
---------------
-
-$ZT[RAP] contains a string value that YottaDB XECUTEs when an error occurs during routine execution. 
-
-.. note::
-   The following discussion assumes that $ETRAP error handling is simultaneously not in effect (that is, $ETRAP="").  See `Chapter 13: “Error Processing” <https://docs.yottadb.com/ProgrammersGuide/errproc.html>`_ for more information on the interaction between $ETRAP and $ZTRAP.
-
-When the $ZTRAP variable is not null, YottaDB executes $ZTRAP at the current level. The $ZTRAP variable has the initial value of "B," and puts the process in Direct Mode when an error condition occurs. If the value of $ZTRAP is null (""), an exception causes the image to run-down with the condition code associated with the exception. If $ZTRAP contains invalid source code, YottaDB displays an error message and puts the process into Direct Mode.
-
-$ZTRAP is a read-write Intrinsic Special Variable, (that is, it can appear on the left side of the equal sign (=) in the argument to the SET command).
-
-$ZTRAP may also appear as an argument to an inclusive NEW command. NEW $ZTRAP causes YottaDB to stack the current $ZTRAP value, and set its value to the empty string ($ZTRAP=""). The NEW command puts the $ZTRAP in control for error handling. When the program QUITs from the invocation level where the NEW occurred, YottaDB restores the value previously stacked by the NEW. NEW $ZTRAP provides nesting of $ZTRAP. Because $ZTRAP="" terminates the image when an error occurs, SET $ZTRAP= generally follows immediately after NEW $ZTRAP. You may use this technique to construct error handling strategies corresponding to the nesting of your programs. If the environment variable gtm_ztrap_new evaluates to boolean TRUE (case insensitive string "TRUE", or case insensitive string "YES", or a non-zero number), $ZTRAP is NEWed when $ZTRAP is SET; otherwise $ZTRAP is not stacked when it is SET.
-
-.. note::
-   QUIT from a $ZTRAP terminates the level at which the $ZTRAP was activated.
-
-Keep $ZTRAP simple and put complicated logic in another routine. If the action specified by $ZTRAP results in another run-time error before changing the value of $ZTRAP, YottaDB invokes $ZTRAP until it exhausts the process stack space, terminating the image. Carefully debug exception handling.
-
-Example:
-
-.. parsed-literal::
-   YDB>S $ZTRAP="ZP @$ZPOS B"
-
-This example modifies $ZTRAP to display source code for the line where YottaDB encounters an error before entering Direct Mode.
-
-There are four settings of $ZTRAP controlled by the UNIX environment variable gtm_ztrap_form.
-
-The four settings of gtm_ztrap_form are:
-
-*  code - If gtm_ztrap_form evaluates to "code" (or a value that is not one of the subsequently described values), then YottaDB treats $ZTRAP as code and handles it as previously described in the documentation.
-* entryref - If gtm_ztrap_form evaluates to "entryref" then YottaDB treats it as an entryref argument to an implicit GOTO command.
-* adaptive - If gtm_ztrap_form evaluates to "adaptive" then if $ZTRAP does not compile to valid M code, then $ZTRAP is treated as just described for "entryref." Since there is little ambiguity, code and entryref forms of $ZTRAP can be intermixed in the same application.
-* pope[ntryref] / popa[daptive] - If gtm_ztrap_form evaluates to "POPE[NTRYREF]" or "POPA[DAPTIVE]" (case insensitive) and $ZTRAP value is in the form of entryref, YottaDB unwinds the M stack from the level at which an error occurred to (but not including) the level at which $ZTRAP was last SET. Then, YottaDB transfers control to the entryref in $ZTRAP at the level where the $ZTRAP value was SET. If the UNIX environment variable gtm_zyerror is defined to a valid entryref, YottaDB transfers control to the entryref specified by GTM_ZYERROR (with an implicit DO) after unwinding the stack and before transferring control to the entryref specified in $ZTRAP.
-
-.. note::
-   YottaDB attempts to compile $ZTRAP before evaluating $ZTRAP as an entryref. Because YottaDB allows commands without arguments such as QUIT, ZGOTO, or HANG as valid labels, be careful not to use such keywords as labels for error handling code in "adaptive" mode.
-
-.. note::
-   Like $ZTRAP values, invocation of device EXCEPTION values follow the pattern specified by the current gtm_ztrap_form setting except that there is never any implicit popping with EXCEPTION action.
-
 ---------------
 $DEVICE
 ---------------
@@ -474,6 +432,18 @@ Example:
   UTF-8
   YDB>
 
+--------------------
+$ZCLOSE
+--------------------
+
+Provides termination status of the last PIPE CLOSE as follows:
+
+* -99 when the check times out
+* -98 for unanticipated problems with the check
+* the negative of the signal value if a signal terminated the co-process.
+
+If positive, $ZCLOSE contains the exit status returned by the last co-process.
+
 ------------
 $ZCMDLINE
 ------------
@@ -549,18 +519,6 @@ $ZCSTATUS
 $ZC[STATUS] holds the value of the status code for the last compilation performed by a ZCOMPILE command.
 
 YottaDB does not permit the SET command to modify $ZSTATUS.
-
---------------------
-$ZCLOSE
---------------------
-
-Provides termination status of the last PIPE CLOSE as follows:
-
-* -99 when the check times out
-* -98 for unanticipated problems with the check
-* the negative of the signal value if a signal terminated the co-process.
-
-If positive, $ZCLOSE contains the exit status returned by the last co-process.
 
 -----------------
 $ZDATEFORM
@@ -736,6 +694,15 @@ Example:
    Time in UTC APR 10,2018 04:20:29 PM
    YDB>
 
+
+--------------------
+$ZININTERRUPT
+--------------------
+
+$ZINI[NTERRUPT] evaluates to 1 (TRUE) when a process is executing code initiated by the interrupt mechanism, and otherwise 0 (FALSE).
+
+YottaDB does not permit the SET or NEW commands to modify $ZININTERRUPT.
+
 ---------------------
 $ZINTERRUPT
 ---------------------
@@ -801,14 +768,6 @@ If YottaDB encounters an error during creation of the interrupt handler's stack 
    The interrupt handler does not operate "outside" the current M environment but rather within the environment of the process.
 
 TP transaction is in progress (0<$TLEVEL), updates to globals are not safe since a TP restart can be signaled at any time prior to the transaction being committed - even after the interrupt handler returns. A TP restart reverses all global updates and unwinds the M stack so it is as if the interrupt never occurred. The interrupt handler is not redriven as part of a transaction restart. Referencing (reading) globals inside an interrupt handler can trigger a TP restart if a transaction is active. When programming interrupt handling, either discard interrupts when 0<$TLEVEL (forcing the interrupting party to try again), or use local variables that are not restored by a TRESTART to defer the interrupt action until after the final TCOMMIT.
-
---------------------
-$ZININTERRUPT
---------------------
-
-$ZINI[NTERRUPT] evaluates to 1 (TRUE) when a process is executing code initiated by the interrupt mechanism, and otherwise 0 (FALSE).
-
-YottaDB does not permit the SET or NEW commands to modify $ZININTERRUPT.
 
 ---------------
 $ZIO
@@ -1068,6 +1027,21 @@ When $PRINCIPAL has different input/output devices, the USE command recognizes i
 For more information refer to “$Principal”, “$ZPOUT”, and “$ZSOCKET()”.
 
 -----------------
+$ZPOSITION
+-----------------
+
+$ZPOS[ITION] contains a string value specifying the current entryref, where entryref is [label][+offset]^routine, and the offset is evaluated from the closest preceding label.
+
+YottaDB does not permit the SET or NEW commands to modify $ZPOSITION.
+
+Example:
+
+.. parsed-literal::
+   YDB>WRITE !,$ZPOS,! ZPRINT @$ZPOS
+
+This example displays the current location followed by the source code for that line.
+
+-----------------
 $ZPOUT
 -----------------
 
@@ -1115,20 +1089,6 @@ Example:
      write x,!
      quit
 
------------------
-$ZPOSITION
------------------
-
-$ZPOS[ITION] contains a string value specifying the current entryref, where entryref is [label][+offset]^routine, and the offset is evaluated from the closest preceding label.
-
-YottaDB does not permit the SET or NEW commands to modify $ZPOSITION.
-
-Example:
-
-.. parsed-literal::
-   YDB>WRITE !,$ZPOS,! ZPRINT @$ZPOS
-
-This example displays the current location followed by the source code for that line.
 
 --------------
 $ZPROMPT
@@ -1606,6 +1566,48 @@ Example:
    YDB>
 
 This uses the default value of $ZINTERRUPT to service interrupts issued to the process. The $ZJOBEXAM function executes a ZSHOW "*", and stores the output in each GTM_ZJOBEXAM_ZSHOW_DMP for the initial interrupt, and at tcommit when the interrupt is rethrown.
+
+--------------
+$ZTrap
+--------------
+
+$ZT[RAP] contains a string value that YottaDB XECUTEs when an error occurs during routine execution.
+
+.. note::
+   The following discussion assumes that $ETRAP error handling is simultaneously not in effect (that is, $ETRAP="").  See `Chapter 13: “Error Processing” <https://docs.yottadb.com/ProgrammersGuide/errproc.html>`_ for more information on the interaction between $ETRAP and $ZTRAP.
+
+When the $ZTRAP variable is not null, YottaDB executes $ZTRAP at the current level. The $ZTRAP variable has the initial value of "B," and puts the process in Direct Mode when an error condition occurs. If the value of $ZTRAP is null (""), an exception causes the image to run-down with the condition code associated with the exception. If $ZTRAP contains invalid source code, YottaDB displays an error message and puts the process into Direct Mode.
+
+$ZTRAP is a read-write Intrinsic Special Variable, (that is, it can appear on the left side of the equal sign (=) in the argument to the SET command).
+
+$ZTRAP may also appear as an argument to an inclusive NEW command. NEW $ZTRAP causes YottaDB to stack the current $ZTRAP value, and set its value to the empty string ($ZTRAP=""). The NEW command puts the $ZTRAP in control for error handling. When the program QUITs from the invocation level where the NEW occurred, YottaDB restores the value previously stacked by the NEW. NEW $ZTRAP provides nesting of $ZTRAP. Because $ZTRAP="" terminates the image when an error occurs, SET $ZTRAP= generally follows immediately after NEW $ZTRAP. You may use this technique to construct error handling strategies corresponding to the nesting of your programs. If the environment variable gtm_ztrap_new evaluates to boolean TRUE (case insensitive string "TRUE", or case insensitive string "YES", or a non-zero number), $ZTRAP is NEWed when $ZTRAP is SET; otherwise $ZTRAP is not stacked when it is SET.
+
+.. note::
+   QUIT from a $ZTRAP terminates the level at which the $ZTRAP was activated.
+
+Keep $ZTRAP simple and put complicated logic in another routine. If the action specified by $ZTRAP results in another run-time error before changing the value of $ZTRAP, YottaDB invokes $ZTRAP until it exhausts the process stack space, terminating the image. Carefully debug exception handling.
+
+Example:
+
+.. parsed-literal::
+   YDB>S $ZTRAP="ZP @$ZPOS B"
+
+This example modifies $ZTRAP to display source code for the line where YottaDB encounters an error before entering Direct Mode.
+
+There are four settings of $ZTRAP controlled by the UNIX environment variable gtm_ztrap_form.
+
+The four settings of gtm_ztrap_form are:
+
+*  code - If gtm_ztrap_form evaluates to "code" (or a value that is not one of the subsequently described values), then YottaDB treats $ZTRAP as code and handles it as previously described in the documentation.
+  * entryref - If gtm_ztrap_form evaluates to "entryref" then YottaDB treats it as an entryref argument to an implicit GOTO command.
+    * adaptive - If gtm_ztrap_form evaluates to "adaptive" then if $ZTRAP does not compile to valid M code, then $ZTRAP is treated as just described for "entryref." Since there is little ambiguity, code and entryref forms of $ZTRAP can be intermixed in the same application.
+      * pope[ntryref] / popa[daptive] - If gtm_ztrap_form evaluates to "POPE[NTRYREF]" or "POPA[DAPTIVE]" (case insensitive) and $ZTRAP value is in the form of entryref, YottaDB unwinds the M stack from the level at which an error occurred to (but not including) the level at which $ZTRAP was last SET. Then, YottaDB transfers control to the entryref in $ZTRAP at the level where the $ZTRAP value was SET. If the UNIX environment variable gtm_zyerror is defined to a valid entryref, YottaDB transfers control to the entryref specified by GTM_ZYERROR (with an implicit DO) after unwinding the stack and before transferring control to the entryref specified in $ZTRAP.
+
+      .. note::
+         YottaDB attempts to compile $ZTRAP before evaluating $ZTRAP as an entryref. Because YottaDB allows commands without arguments such as QUIT, ZGOTO, or HANG as valid labels, be careful not to use such keywords as labels for error handling code in "adaptive" mode.
+
+      .. note::
+         Like $ZTRAP values, invocation of device EXCEPTION values follow the pattern specified by the current gtm_ztrap_form setting except that there is never any implicit popping with EXCEPTION action.
 
 -----------------
 $ZUSEDSTOR
