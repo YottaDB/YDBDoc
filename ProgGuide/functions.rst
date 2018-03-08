@@ -2777,6 +2777,66 @@ Example:
 
 This example illustrates the output produced for each of the possible values for the second argument.
 
+------------------
+$ZPEEK()
+------------------
+
+Provides a way to examine memory in the current process address space. Use of this function requires information about YottaDB internals, which may change from release to release. Contact YottaDB support for information on techniques for using $ZPEEK() in largely release independent ways.
+
+The $ZPEEK() function returns the contents of the memory requested as a string depending on the requested (or defaulted) formatting.
+
+The format of the $ZPEEK() function is:
+
+.. parsed-literal::
+   $ZPEEK("mnemonic[:argument]",offset,length[,format])
+
+mnemonic specifies the memory area $ZPEEK() is to access. Some mnemonics have arguments separated from the mnemonic by a colon (":"). The mnemonics are case independent. Possible mnemonics, their possible abbreviations and their arguments are:
+
+* CSA[REG] - returns a value from the sgmnt_addrs (process private) control block. Takes a case independent region name as an argument.
+* FH[REG] - returns a value from the sgmnt_data (shared file header) control block. Takes a case independent region name as an argument.
+* GDR[REG] - returns a value from the gd_region (process private) control block. Takes a case independent region name as an argument.
+* GLF[REPL] - returns a value from the jnlpool.gtmsrc_lcl_array[n] control block. Takes a numeric index (n) as an argument.
+* GRL[REPL] - returns a value from the recvpool.gtmrecv_local control block. No argument allowed. Only available when run on a non-primary instance.
+* GSL[REPL] - returns a value from the jnlpool.gtmsource_local_array[n] control block. Takes a numeric index (n) as an argument.
+* JBF[REG]:region[ -obtains fields in shared jnl_buffer structure.
+* JNL[REG]:region[ - obtains fields in the jnl_private_control structure.
+* JPC[REPL] - returns a value from the jnlpool.jnlpool_ctl control block. No argument allowed.
+* NL[REG] - returns a value from the node_local (shared) control block. Takes a case independent region name as an argument.
+* NLREPL - returns a value from the node_local (shared) control block associated with replication. No argument allowed.
+* PEEK - returns a value based on the supplied argument. Argument is the base address of the value to obtain in 0xhhhhhhh format where the h's are hex digits.
+* RIH[REPL] - returns a value from the jnlpool.repl_inst_filehdr control block. No argument allowed.
+* RPC[REPL] - returns a value from the recvpool.recvpool_ctl control block. No argument allowed. Only available when run on a non-primary instance.
+* UHC[REPL] - returns a value from the recvpool.upd_helper_ctl control block. No argument allowed. Only available when run on a non-primary instance.
+* UPL[REPL] - returns a value from the recvpool.upd_proc_local control block. No argument allowed. Only available when run on a non-primary instance.
+
+offset (first integer expression) is a numeric value that specifies the offset from the address supplied or implied by the the mnemonic and argument. Specifying a negative offset results in a BADZPEEKARG error. Specifying too large an offset such that unavailable memory is specified results in a BADZPEEKRANGE error.
+
+length (second integer expression) is a numeric value that specifies the length of the field to obtain. Specifying a negative length results in a BADZPEEKARG error. Specifying a length that exceeds the maximum string length results in a MAXSTRLEN error. Specifying too large a length such that unavailable memory is specified results in a BADZPEEKRANGE error.
+
+format is an optional single case independent character formatting code for the retrieved data. The formatting codes are:
+
+* C : returns a character representations of the memory locations; this is the DEFAULT if the fourth argument is not specified.
+* I : returns a signed integer value - negative values have a preceding minus sign (-); the length can be 1, 2, 4, or 8 bytes.
+* U : returns an unsigned integer value - all bits are part of the numeric value; the length can be 1, 2, 4, or 8 bytes.
+* S : returns a character representation of the memory locations and the first NULL character found terminates the returned string; that is: the specified length is a maximum.
+* T: Selects a $HOROLOG format for a field of 4 or 8 bytes which is intended for use on fields in UNIX time format (seconds since 01/01/1970)
+* X : returns a hexadecimal value as 0xXXXXXX where XXXXXX is twice the specified length in bytes, so requested length 1 returns 0xXX and length 4 returns 0xXXXXXXXX; the length can be 1, 2, 4, or 8 bytes.
+* Z : returns a hexadecimal representation of the memory locations as 'X' does, without regard to endianness, and with no length restriction other than max string length.
+* $ZPEEK() function generates an UNDEF error when VIEW UNDEF is not set and a format parameter is specified but is undefined.
+
+$ZPEEK() has no UTF-8 checking. It is possible for values returned by the 'C' and 'S' codes to have invalid UTF-8 values in them. Take care when processing values obtained by these codes to either use "VIEW NOBADCHAR" when dealing with such values and/or use the $Zxxx() flavors of functions like $ZPIECE(), $ZEXTRACT(),etc which also do not raise BADCHAR errors when encountering invalid UTF-8 encoded strings.
+
+Note that $ZPEEK() with 8 byte numeric formatting can return numeric string values that exceed YottaDB's current limit of 18 digits of precision. If the values are used as strings, the extra digits are preserved, but if used arithmetically, the lower precision digits can be lost.
+
+When values from replication structures are requested and the structures are not available due to replication not running or, in the case of the gtmrecv.* control block base options, if not running on a non-primary instance where the gtmrecv.* control are available, a ZPEEKNOREPLINFO error is raised.
+
+The JNL[REG] and JBL[REG] mnemonics and characteristics are defined by the running the GTMDefinedTypesInit.m utility, which produces a cross-index in the form:
+
+.. parsed-literal::
+   gtmtypfldindx(<structure-name>.<field-mnemonic>)=<n>
+
+where gtmtypes(<structure-name>,<n>,*) nodes contain the field characteristics.
+
 --------------------------
 $ZPIece()
 --------------------------
@@ -2843,66 +2903,6 @@ Example:
 
 This SETs the 25th piece of the variable x to null, with delimiter $ZCHAR(64). This produces a byte sequence of 24 at-signs (@) preceding the null.
 
-------------------
-$ZPEEK()
-------------------
-
-Provides a way to examine memory in the current process address space. Use of this function requires information about YottaDB internals, which may change from release to release. Contact YottaDB support for information on techniques for using $ZPEEK() in largely release independent ways.
-
-The $ZPEEK() function returns the contents of the memory requested as a string depending on the requested (or defaulted) formatting.
-
-The format of the $ZPEEK() function is:
-
-.. parsed-literal::
-   $ZPEEK("mnemonic[:argument]",offset,length[,format])
-
-mnemonic specifies the memory area $ZPEEK() is to access. Some mnemonics have arguments separated from the mnemonic by a colon (":"). The mnemonics are case independent. Possible mnemonics, their possible abbreviations and their arguments are:
-
-* CSA[REG] - returns a value from the sgmnt_addrs (process private) control block. Takes a case independent region name as an argument.
-* FH[REG] - returns a value from the sgmnt_data (shared file header) control block. Takes a case independent region name as an argument..
-* GDR[REG] - returns a value from the gd_region (process private) control block. Takes a case independent region name as an argument.
-* GLF[REPL] - returns a value from the jnlpool.gtmsrc_lcl_array[n] control block. Takes a numeric index (n) as an argument.
-* GRL[REPL] - returns a value from the recvpool.gtmrecv_local control block. No argument allowed. Only available when run on a non-primary instance.
-* GSL[REPL] - returns a value from the jnlpool.gtmsource_local_array[n] control block. Takes a numeric index (n) as an argument.
-* JBF[REG]:region[ -obtains fields in shared jnl_buffer structure.
-* JNL[REG]:region[ - obtains fields in the jnl_private_control structure.
-* JPC[REPL] - returns a value from the jnlpool.jnlpool_ctl control block. No argument allowed.
-* NL[REG] - returns a value from the node_local (shared) control block. Takes a case independent region name as an argument.
-* NLREPL - returns a value from the node_local (shared) control block associated with replication. No argument allowed.
-* PEEK - returns a value based on the supplied argument. Argument is the base address of the value to obtain in 0xhhhhhhh format where the h's are hex digits.
-* RIH[REPL] - returns a value from the jnlpool.repl_inst_filehdr control block. No argument allowed.
-* RPC[REPL] - returns a value from the recvpool.recvpool_ctl control block. No argument allowed. Only available when run on a non-primary instance.
-* UHC[REPL] - returns a value from the recvpool.upd_helper_ctl control block. No argument allowed. Only available when run on a non-primary instance.
-* UPL[REPL] - returns a value from the recvpool.upd_proc_local control block. No argument allowed. Only available when run on a non-primary instance.
-
-offset (first integer expression) is a numeric value that specifies the offset from the address supplied or implied by the the mnemonic and argument. Specifying a negative offset results in a BADZPEEKARG error. Specifying too large an offset such that unavailable memory is specified results in a BADZPEEKRANGE error.
-
-length (second integer expression) is a numeric value that specifies the length of the field to obtain. Specifying a negative legnth results in a BADZPEEKARG error. Specifying a length that exceeds the maximum string length results in a MAXSTRLEN error. Specifying too large a length such that unavailable memory is specified results in a BADZPEEKRANGE error.
-
-format is an optional single case independent character formatting code for the retrieved data. The formatting codes are:
-
-* C : returns a character representations of the memory locations; this is the DEFAULT if the fourth argument is not specified.
-* I : returns a signed integer value - negative values have a preceding minus sign (-); the length can be 1, 2, 4, or 8 bytes.
-* U : returns an unsigned integer value - all bits are part of the numeric value; the length can be 1, 2, 4, or 8 bytes.
-* S : returns a character representation of the memory locations and the first NULL character found terminates the returned string; that is: the specified length is a maximum.
-* T: Selects a $HOROLOG format for a field of 4 or 8 bytes which is intended for use on fields in UNIX time format (seconds since 01/01/1970)
-* X : returns a hexadecimal value as 0xXXXXXX where XXXXXX is twice the specified length in bytes, so requested length 1 returns 0xXX and length 4 returns 0xXXXXXXXX; the length can be 1, 2, 4, or 8 bytes.
-* Z : returns a hexadecimal representation of the memory locations as 'X' does, without regard to endianness, and with no length restriction other than max string length.
-* $ZPEEK() function generates an UNDEF error when VIEW UNDEF is not set and a format parameter is specified but is undefined.
-
-$ZPEEK() has no UTF-8 checking. It is possible for values returned by the 'C' and 'S' codes to have invalid UTF-8 values in them. Take care when processing values obtained by these codes to either use "VIEW NOBADCHAR" when dealing with such values and/or use the $Zxxx() flavors of functions like $ZPIECE(), $ZEXTRACT(),etc which also do not raise BADCHAR errors when encountering invalid UTF-8 encoded strings.
-
-Note that $ZPEEK() with 8 byte numeric formatting can return numeric string values that exceed YottaDB's current limit of 18 digits of precision. If the values are used as strings, the extra digits are preserved, but if used arithmetically, the lower precision digits can be lost.
-
-When values from replication structures are requested and the structures are not available due to replication not running or, in the case of the gtmrecv.* control block base options, if not running on a non-primary instance where the gtmrecv.* control are available, a ZPEEKNOREPLINFO error is raised.
-
-The JNL[REG] and JBL[REG] mnemonics and characteristics are defined by the running the GTMDefinedTypesInit.m utility, which produces a cross-index in the form:
-
-.. parsed-literal::
-   gtmtypfldindx(<structure-name>.<field-mnemonic>)=<n>
-
-where gtmtypes(<structure-name>,<n>,*) nodes contain the field characteristics
-
 ----------------------
 $ZPrevious()
 ----------------------
@@ -2921,6 +2921,130 @@ The format for the $ZPREVIOUS function is:
 * If the last subscript in the subscripted global or local variable name is null, $ZPREVIOUS() returns the last node at the specified level.
 
 $ZPREVIOUS() is equivalent to $ORDER() with a second argument of -1.
+
+---------------------
+$ZQGBLMOD()
+---------------------
+
+The $ZQGBLMOD function enables an application to determine whether it can safely apply a lost transaction to the database. A lost transaction is a transaction that must be rolled off a database to maintain logical multisite consistency. $ZQGBLMOD() always applies to data-level (level-0) nodes.
+
+The format for the $ZQGBLMOD function is:
+
+.. parsed-literal::
+   $ZQGBLMOD(gvn)
+
+* The subscripted or non-subscripted global variable name (gvn) specifies the target node.
+* A return value of zero (0) means the value of the global variable has not changed since the last synchronization of the originating and replicating instances.
+* A return value of one (1) means the value of the global variable may have changed since the last synchronization of the originating and replicating instance.
+
+$ZQGBLMOD function produces an error if you submit an argument that is not a global variable name.
+
+Internally, $ZQGBLMOD (gvn) compares the YottaDB transaction number in the database block in which the global variable name is (or would be) stored with the value in the Zqgblmod_Trans field stored in the database file header.
+
+For example, if x is the transaction number of the level-0 database block in which gvn resides, and y is the value of Zqgblmod_Trans of region reg containing gvn, then the following is true:
+
+* If x <= y, no transaction modified the level-0 database block z in which gvn resides since the originating and replicating instances synchronized with each other. $ZQGBLMOD() returns a zero (0).
+* If x > y, some transaction modified z, but not necessarily gvn, after the originating and replicating instances synchronized with each other. $ZQGBLMOD() returns a one (1).
+
+If a transaction is a lost transaction that has been rolled back and it is determined that for all the M globals set and killed in the transaction $ZQGBLMOD() is zero (0), it is probably safe to apply the updates automatically. However, this determination of safety can only be made by the application designer and not by YottaDB. If the $ZQGBLMOD() is one (1) for any set or kill in the transaction, it is not safe to apply the update.
+
+.. note::
+   The test of $ZQGBLMOD() and applying the updates must be encapsulated inside a YottaDB transaction.
+
+Another approach to handling lost transactions would be to store in the database the initial message sent by a client, as well as the outcome and the response, and to reprocess the message with normal business logic. If the outcome is the same, the transaction can be safely applied.
+
+.. note::
+   If restartable batch operations are implemented, lost batch transactions can be ignored since a subsequent batch restart will process them correctly.
+
+--------------------
+$ZSEARCH()
+--------------------
+
+The $ZSEARCH function attempts to locate a file matching the specified file name. If the file exists, it returns the file name; if the file does not exist, it returns the null string.
+
+The format for the $ZSEARCH function is:
+
+.. parsed-literal::
+   $ZSEARCH(expr[,intexpr])
+
+* The expression contains a file name, with or without wildcards, for which $ZSEARCH() attempts to locate a matching file. Repeating $ZSEARCH with the same filename uses the same context and return a sequence of matching files when they exist; when the sequence is exhausted, $ZSEARCH() returns an empty string (""). Any change to the file name starts a new context.
+* $ZSEARCH() uses the process current working directory, if the expression does not specify a directory.
+* The optional integer expression specifies a "stream" number from 0 to 255 for each search; streams provide a means of having up to 256 $ZSEARCH() contexts simultaneously in progress.
+* If a $ZSEARCH() stream has never been used or if the expression differs from the argument to the last $ZSEARCH() of the stream, the function resets the context and returns the first pathname matching the expression; otherwise, it returns the next matching file in collating sequence; if the last prior pathname returned for the same expression and same stream was the last one matching the argument, $ZSEARCH() returns a null string.
+
+$ZSEARCH() provides a tool for verifying that a file exists. For information to help determine the validity of a file name, see “$ZPARSE()”.
+
+.. note::
+   You can call the POSIX stat() function to access metadata. The optional YottaDB POSIX plug-in packages the stat() function for easy access from M application code.
+
++++++++++++++++++++++++
+Examples of $ZSEARCH()
++++++++++++++++++++++++
+
+Example:
+
+.. parsed-literal::
+   YDB>write $zsearch("data.dat")
+   /usr/staff/ccc/data.dat
+   YDB>
+
+This uses $ZSEARCH() to display the full file path name of "data.dat" in the process current default directory.
+
+Example:
+
+.. parsed-literal::
+   YDB>set x=$zsearch("\*.c")
+   YDB>for  set x=$zsearch("\*.m") quit:x=""  write !,$zparse(x,"NAME")
+
+This FOR loop uses $ZSEARCH() and $ZPARSE() to display M source file names in the process current working directory. To ensure that the search starts at the beginning, the example resets the context by first searching with a different argument.
+
+-------------------
+$ZSIGPROC()
+-------------------
+
+Sends a signal to a process. The format for the $ZSIGPROC function is:
+
+.. parsed-literal::
+   $ZSIGPROC(expr1,expr2)
+
+* The first expression is the pid of the process to which the signal is to be sent.
+* The second expression is the system signal number. Because a signal number of a signal name can be different for various platforms, YottaDB recommends using signal names to maintain code portability across different platforms. For example, the signal number for SIGUSR1 is 10 on Linux, 30 on AIX, and 16 for some other platforms. Use the $&gtmposix.signalval(signame,.sigval) function available in the gtmposix plugin to determine the signal number of a signal name.
+
+If the second expression is 0, $ZSIGPROC() checks the validity of the pid specified in the first expression.
+
+There are four possible return values from $ZSIGPROC():
+
++------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------+
+| Return Codes/ POSIX Error Definitions          | Description                                                                                                               |
++================================================+===========================================================================================================================+
+| 0                                              | The specified signal number was successfully sent to the specified pid. Any return value other than 0 indicates an error. |
++------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------+
+| EPERM                                          | The process has insufficient permissions to send the signal to the specified pid.                                         |
++------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------+
+| ESRCH                                          | The specified pid does not exist.                                                                                         |
++------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------+
+| EINVAL                                         | Invalid expression(s).                                                                                                    |
++------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------+
+
+.. note::
+   Although $ZSIGPROC() may work today as a way to invoke the asynchronous interrupt mechanism of YottaDB processes to XECUTE $ZINTERRUPT because the underlying mechanism uses the POSIX USR1 signal, YottaDB reserves the right to change the underlying mechanism to suit its convenience and sending a POSIX USR1 may cease to work as a way to invoke the asynchronous interrupt mechanism. Use MUPIP INTRPT as the supported and stable API to invoke the asynchronous interrupt mechanism.
+
+++++++++++++++++++++++++++
+Examples of $ZSIGPROC()
+++++++++++++++++++++++++++
+
+Example:
+
+.. parsed-literal:: 
+   YDB>job ^Somejob
+   YDB>set ret=$&gtmposix.signalval("SIGUSR1",.sigusr1) zwrite 
+       ret=0
+       sigusr1=10
+   YDB>write $zsigproc($zjob,sigusr1)
+       0
+   YDB>
+
+This example sends the SIGUSR1 signal to the pid specified by $zjob.
 
 ------------------------
 $ZSOCKET()
@@ -3026,140 +3150,6 @@ The following table describes the values for the fourth expression for the TLS k
 |                  | \|P:TLSv1.2|C:AES256-GCM-SHA384|O:0000000001020004,01|S:RENSEC:1,RENTOT:0,SESEXP:Mon Jun 22 23:58:09 2015                                     |
 +------------------+-----------------------------------------------------------------------------------------------------------------------------------------------+
 
-----------------------
-$ZSYSLOG()
-----------------------
-
-Sends its string parameter to the system log and always returns TRUE (1). The text appears in the syslog with the same format as any other YottaDB syslog message (that is, in the user.info log with GTM-MUMPS[pid]" or "GTM-MUPIP[pid]" prefix along with instance information where appropriate). The format of the $ZSYSLOG function is:
-
-.. parsed-literal::
-   $ZSYSLOG(expr)
-
----------------------
-$ZQGBLMOD()
----------------------
-
-The $ZQGBLMOD function enables an application to determine whether it can safely apply a lost transaction to the database. A lost transaction is a transaction that must be rolled off a database to maintain logical multisite consistency. $ZQGBLMOD() always applies to data-level (level-0) nodes.
-
-The format for the $ZQGBLMOD function is:
-
-.. parsed-literal::
-   $ZQGBLMOD(gvn)
-
-* The subscripted or non-subscripted global variable name (gvn) specifies the target node.
-* A return value of zero (0) means the value of the global variable has not changed since the last synchronization of the originating and replicating instances.
-* A return value of one (1) means the value of the global variable may have changed since the last synchronization of the originating and replicating instance.
-
-$ZQGBLMOD function produces an error if you submit an argument that is not a global variable name.
-
-Internally, $ZQGBLMOD (gvn) compares the YottaDB transaction number in the database block in which the global variable name is (or would be) stored with the value in the Zqgblmod_Trans field stored in the database file header.
-
-For example, if x is the transaction number of the level-0 database block in which gvn resides, and y is the value of Zqgblmod_Trans of region reg containing gvn, then the following is true:
-
-* If x <= y, no transaction modified the level-0 database block z in which gvn resides since the originating and replicating instances synchronized with each other. $ZQGBLMOD() returns a zero (0).
-* If x > y, some transaction modified z, but not necessarily gvn, after the originating and replicating instances synchronized with each other. $ZQGBLMOD() returns a one (1).
-
-
-If a transaction is a lost transaction that has been rolled back and it is determined that for all the M globals set and killed in the transaction $ZQGBLMOD() is zero (0), it is probably safe to apply the updates automatically. However, this determination of safety can only be made by the application designer and not by YottaDB. If the $ZQGBLMOD() is one (1) for any set or kill in the transaction, it is not safe to apply the update.
-
-.. note::
-   The test of $ZQGBLMOD() and applying the updates must be encapsulated inside a YottaDB transaction.
-
-Another approach to handling lost transactions would be to store in the database the initial message sent by a client, as well as the outcome and the response, and to reprocess the message with normal business logic. If the outcome is the same, the transaction can be safely applied.
-
-.. note::
-   If restartable batch operations are implemented, lost batch transactions can be ignored since a subsequent batch restart will process them correctly.
-
---------------------
-$ZSEARCH()
---------------------
-
-The $ZSEARCH function attempts to locate a file matching the specified file name. If the file exists, it returns the file name; if the file does not exist, it returns the null string.
-
-The format for the $ZSEARCH function is:
-
-.. parsed-literal::
-   $ZSEARCH(expr[,intexpr])
-
-* The expression contains a file name, with or without wildcards, for which $ZSEARCH() attempts to locate a matching file. Repeating $ZSEARCH with the same filename uses the same context and return a sequence of matching files when they exist; when the sequence is exhausted, $ZSEARCH() returns an empty string (""). Any change to the file name starts a new context.
-* $ZSEARCH() uses the process current working directory, if the expression does not specify a directory.
-* The optional integer expression specifies a "stream" number from 0 to 255 for each search; streams provide a means of having up to 256 $ZSEARCH() contexts simultaneously in progress.
-* If a $ZSEARCH() stream has never been used or if the expression differs from the argument to the last $ZSEARCH() of the stream, the function resets the context and returns the first pathname matching the expression; otherwise, it returns the next matching file in collating sequence; if the last prior pathname returned for the same expression and same stream was the last one matching the argument, $ZSEARCH() returns a null string.
-
-$ZSEARCH() provides a tool for verifying that a file exists. For information to help determine the validity of a file name, see “$ZPARSE()”.
-
-.. note::
-   You can call the POSIX stat() function to access metadata. The optional YottaDB POSIX plug-in packages the stat() function for easy access from M application code.
-
-+++++++++++++++++++++++
-Examples of $ZSEARCH()
-+++++++++++++++++++++++
-
-Example:
-
-.. parsed-literal::
-   YDB>write $zsearch("data.dat")
-   /usr/staff/ccc/data.dat
-   YDB>
-
-This uses $ZSEARCH() to display the full file path name of "data.dat" in the process current default directory.
-
-Example:
-
-.. parsed-literal::
-   YDB>set x=$zsearch("\*.c")
-   YDB>for  set x=$zsearch("\*.m") quit:x=""  write !,$zparse(x,"NAME")
-
-This FOR loop uses $ZSEARCH() and $ZPARSE() to display M source file names in the process current working directory. To ensure that the search starts at the beginning, the example resets the context by first searching with a different argument.
-
--------------------
-$ZSIGPROC()
--------------------
-
-Sends a signal to a process. The format for the $ZSIGPROC function is:
-
-.. parsed-literal::
-   $ZSIGPROC(expr1,expr2)
-
-* The first expression is the pid of the process to which the signal is to be sent.
-* The second expression is the system signal number. Because a signal number of a signal name can be different for various platforms, YottaDB recommends using signal names to maintain code portability across different platforms. For example, the signal number for SIGUSR1 is 10 on Linux, 30 on AIX, and 16 for some other platforms. Use the $&gtmposix.signalval(signame,.sigval) function available in the gtmposix plugin to determine the signal number of a signal name.
-
-If the second expression is 0, $ZSIGPROC() checks the validity of the pid specified in the first expression.
-
-There are four possible return values from $ZSIGPROC():
-
-+------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------+
-| Return Codes/ POSIX Error Definitions          | Description                                                                                                               |
-+================================================+===========================================================================================================================+
-| 0                                              | The specified signal number was successfully sent to the specified pid. Any return value other than 0 indicates an error. |
-+------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------+
-| EPERM                                          | The process has insufficient permissions to send the signal to the specified pid.                                         |
-+------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------+
-| ESRCH                                          | The specified pid does not exist.                                                                                         |
-+------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------+
-| EINVAL                                         | Invalid expression(s).                                                                                                    |
-+------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------+
-
-.. note::
-   Although $ZSIGPROC() may work today as a way to invoke the asynchronous interrupt mechanism of YottaDB processes to XECUTE $ZINTERRUPT because the underlying mechanism uses the POSIX USR1 signal, YottaDB reserves the right to change the underlying mechanism to suit its convenience and sending a POSIX USR1 may cease to work as a way to invoke the asynchronous interrupt mechanism. Use MUPIP INTRPT as the supported and stable API to invoke the asynchronous interrupt mechanism.
-
-++++++++++++++++++++++++++
-Examples of $ZSIGPROC()
-++++++++++++++++++++++++++
-
-Example:
-
-.. parsed-literal:: 
-   YDB>job ^Somejob
-   YDB>set ret=$&gtmposix.signalval("SIGUSR1",.sigusr1) zwrite 
-   ret=0
-   sigusr1=10
-   YDB>write $zsigproc($zjob,sigusr1)
-   0
-   YDB>
-
-This example sends the SIGUSR1 signal to the pid specified by $zjob.
-
 -------------------------
 $ZSUBstr()
 -------------------------
@@ -3215,6 +3205,15 @@ In many ways, the $ZSUBSTR() function is similar to the $ZEXTRACT() function. Fo
 * $EXTRACT() operates on characters, irrespective of byte length.
 * $ZEXTRACT() operates on bytes, irrespective of multi-byte character boundaries.
 * $ZSUBSTR() is the only way to extract as valid UTF-8 encoded characters from a byte string containing mixed UTF-8 and non UTF-8 data. It operates on characters in Unicode so that its result does not exceed the given byte length.
+
+----------------------
+$ZSYSLOG()
+----------------------
+
+Sends its string parameter to the system log and always returns TRUE (1). The text appears in the syslog with the same format as any other YottaDB syslog message (that is, in the user.info log with GTM-MUMPS[pid]" or "GTM-MUPIP[pid]" prefix along with instance information where appropriate). The format of the $ZSYSLOG function is:
+
+.. parsed-literal::
+   $ZSYSLOG(expr)
 
 -------------------------
 $ZTRanslate()
