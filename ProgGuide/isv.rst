@@ -1599,15 +1599,15 @@ There are four settings of $ZTRAP controlled by the UNIX environment variable gt
 The four settings of gtm_ztrap_form are:
 
 *  code - If gtm_ztrap_form evaluates to "code" (or a value that is not one of the subsequently described values), then YottaDB treats $ZTRAP as code and handles it as previously described in the documentation.
-  * entryref - If gtm_ztrap_form evaluates to "entryref" then YottaDB treats it as an entryref argument to an implicit GOTO command.
-    * adaptive - If gtm_ztrap_form evaluates to "adaptive" then if $ZTRAP does not compile to valid M code, then $ZTRAP is treated as just described for "entryref." Since there is little ambiguity, code and entryref forms of $ZTRAP can be intermixed in the same application.
-      * pope[ntryref] / popa[daptive] - If gtm_ztrap_form evaluates to "POPE[NTRYREF]" or "POPA[DAPTIVE]" (case insensitive) and $ZTRAP value is in the form of entryref, YottaDB unwinds the M stack from the level at which an error occurred to (but not including) the level at which $ZTRAP was last SET. Then, YottaDB transfers control to the entryref in $ZTRAP at the level where the $ZTRAP value was SET. If the UNIX environment variable gtm_zyerror is defined to a valid entryref, YottaDB transfers control to the entryref specified by GTM_ZYERROR (with an implicit DO) after unwinding the stack and before transferring control to the entryref specified in $ZTRAP.
+* entryref - If gtm_ztrap_form evaluates to "entryref" then YottaDB treats it as an entryref argument to an implicit GOTO command.
+* adaptive - If gtm_ztrap_form evaluates to "adaptive" then if $ZTRAP does not compile to valid M code, then $ZTRAP is treated as just described for "entryref." Since there is little ambiguity, code and entryref forms of $ZTRAP can be intermixed in the same application.
+* pope[ntryref] / popa[daptive] - If gtm_ztrap_form evaluates to "POPE[NTRYREF]" or "POPA[DAPTIVE]" (case insensitive) and $ZTRAP value is in the form of entryref, YottaDB unwinds the M stack from the level at which an error occurred to (but not including) the level at which $ZTRAP was last SET. Then, YottaDB transfers control to the entryref in $ZTRAP at the level where the $ZTRAP value was SET. If the UNIX environment variable gtm_zyerror is defined to a valid entryref, YottaDB transfers control to the entryref specified by GTM_ZYERROR (with an implicit DO) after unwinding the stack and before transferring control to the entryref specified in $ZTRAP.
 
-      .. note::
-         YottaDB attempts to compile $ZTRAP before evaluating $ZTRAP as an entryref. Because YottaDB allows commands without arguments such as QUIT, ZGOTO, or HANG as valid labels, be careful not to use such keywords as labels for error handling code in "adaptive" mode.
+.. note::
+   YottaDB attempts to compile $ZTRAP before evaluating $ZTRAP as an entryref. Because YottaDB allows commands without arguments such as QUIT, ZGOTO, or HANG as valid labels, be careful not to use such keywords as labels for error handling code in "adaptive" mode.
 
-      .. note::
-         Like $ZTRAP values, invocation of device EXCEPTION values follow the pattern specified by the current gtm_ztrap_form setting except that there is never any implicit popping with EXCEPTION action.
+.. note::
+   Like $ZTRAP values, invocation of device EXCEPTION values follow the pattern specified by the current gtm_ztrap_form setting except that there is never any implicit popping with EXCEPTION action.
 
 -----------------
 $ZUSEDSTOR
