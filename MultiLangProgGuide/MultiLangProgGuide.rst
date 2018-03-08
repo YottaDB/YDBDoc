@@ -364,6 +364,18 @@ reference, an application can set an intrinsic special variable
 process startup, YottaDB initializes ``$zgbldir`` from the environment
 variable value ``$ydb_gbldir``.
 
+-----------
+$zmaxtptime
+-----------
+
+``$zmaxtptime`` provides a limit in seconds for the time that a
+transaction can be open (see `Transaction
+Processing`_). ``$zmaxtptime`` is initialized at process startup from
+the environment variable ``ydb_maxtptime``, with values greater than
+60 seconds truncated to 60 seconds. In the unlikely event that an
+application legitimately needs a timeout greater than 60 seconds, use
+`ydb_set_s()`_ to set it.
+
 --------
 $zstatus
 --------
@@ -436,8 +448,8 @@ parameter, passing the function and its parameter as parameters to the
   database updates and releasing any locks acquired within the
   transaction.
 - To protect applications against poorly coded transactions, if a
-  transaction takes longer than the number of seconds specified by
-  the environment variable ``ydb_maxtptime``, YottaDB aborts the
+  transaction takes longer than the number of seconds specified by the
+  intrinsic special variable ``$zmaxtptime``, YottaDB aborts the
   transaction and the `ydb_tp_s()`_ function returns the
   ``YDB_ERR_TPTIMEOUT`` error.
 
@@ -681,8 +693,8 @@ pointer.
 modify the value of an intrinsic special variable such as an attempt
 to modify ``$trestart`` using `ydb_set_s()`_.
 
-``YDB_ERR_TIMEOUT2LONG`` – This return code indicates that a value
-greater than ``YDB_MAX_LOCKTIME`` was specified for a lock timeout.
+``YDB_ERR_TIME2LONG`` – This return code indicates that a value
+greater than ``YDB_MAX_DUR_NSEC`` was specified for a time duration.
 
 ``YDB_ERR_TOOMANYVARNAMES`` – The number of variable names specified
 to `ydb_delete_excl_s()`_ or `ydb_tp_s()`_ exceeded the
@@ -704,14 +716,15 @@ Limits
 
 Symbolic constants for limits are prefixed with ``YDB_MAX_``.
 
+``YDB_MAX_DUR_NSEC`` — The maximum value in nanoseconds that an
+application can instruct libyottab to wait, e.g., until the process is
+able to acquire locks it needs before timing out, or for
+`ydb_hiber_start()`_.
+
 ``YDB_MAX_IDENT`` — The maximum space in bytes required to store a
 complete variable name, not including the preceding caret for a global
 variable. Therefore, when allocating space for a string to hold a
 global variable name, add 1 for the caret.
-
-``YDB_MAX_LOCKTIME`` — The maximum value in nanoseconds that an
-application can instruct libyottab to wait until the process is able
-to acquire locks it needs before timing out.
 
 ``YDB_MAX_NAMES`` – The maximum number of variable names that can be
 passed to `ydb_delete_excl_s()`_ or `ydb_tp_s()`_.
@@ -1048,17 +1061,16 @@ Return values:
 - The normal return value is ``YDB_OK``.
 - If the atomic increment results in a numeric overflow, the function
   returns a ``YDB_ERR_NUMOFLOW`` error; in this case, the value in the
-  node and ``*ret_value`` is unreliable.
+  node is untouched and that in ``*ret_value`` is unreliable.
 - In the event the ``ydb_buffer_t`` structure pointed to by ``ret_value``
   is not large enough for the result, the function returns a
   ``YDB_ERR_INVSTRLEN`` error.
+- Other errors return the corresponding `error return code`_.
 
 Notes:
 
 - Intrinsic special variables cannot be atomically incremented, and an
   attempt to do so returns the ``YDB_ERR_UNIMPLOP`` error.
-- Since it changes the value of the node, ``ydb_incr_s()`` is a
-  function with a side effect.
 
 ------------
 ydb_lock_s()
@@ -1066,7 +1078,7 @@ ydb_lock_s()
 
 .. code-block:: C
 
-	int ydb_lock_s(unsigned long long timeout,
+	int ydb_lock_s(unsigned long long maxtime_nsec,
 		int namecount[,
 		[ydb_buffer_t *varname,
 		int subs_used,
@@ -1075,23 +1087,24 @@ ydb_lock_s()
 ``namecount`` is the number of variable names in the call.
 
 Release any locks held by the process, attempt to acquire all the
-requested locks. Except in the case of a ``YDB_ERR_INVNAMECOUNT`` or a
-``YDB_ERR_TIMEOUT2LONG`` error, the release is unconditional. On
+requested locks. Except in the case of an error or a
+``YDB_LOCK_TIMEOUT`` return value, the release is unconditional. On
 return, the function will have acquired all requested locks or none of
 them. If no locks are requested (``namecount`` is zero), the function
 releases all locks and returns ``YDB_OK``.
 
-``timeout`` specifies a time in nanoseconds that the function waits
+``maxtime_nsec`` specifies a time in nanoseconds that the function waits
 to acquire the requested locks. If it is not able to acquire all
 requested locks, it acquires no locks, returning with a
 ``YDB_LOCK_TIMEOUT`` return value.
 
-If ``timeout`` is zero, the function makes exactly one attempt to
+If ``maxtime_nsec`` is zero, the function makes exactly one attempt to
 acquire the locks, and if it is unable to, it returns
 ``YDB_LOCK_TIMEOUT``.
 
 If all requested locks are successfully acquired, the function returns
-``YDB_OK``.
+``YDB_OK``. In other cases, the function returns an `error return
+code`_.
 
 -----------------
 ydb_lock_decr_s()
@@ -1103,14 +1116,15 @@ ydb_lock_decr_s()
 		int subs_used,
 		ydb_buffer_t *subsarray);
 
-Decrements the count held by the process of the specified lock. As
+Decrements the count of the specified lock held by the process. As
 noted in the `Concepts`_ section, a lock whose count goes from 1 to 0
 is released. A lock whose name is specified, but which the process
 does not hold, is ignored.
 
 As releasing a lock cannot fail, the function returns ``YDB_OK``,
 unless there is an error such as an invalid name that results in the
-return of an error code such as ``YDB_ERR_INVVARNAME``.
+return of an error code such as ``YDB_ERR_INVVARNAME``. Errors
+result in an appropriate `error return code`_.
 
 -----------------
 ydb_lock_incr_s()
@@ -1118,7 +1132,7 @@ ydb_lock_incr_s()
 
 .. code-block:: C
 
-	int ydb_lock_incr_s(unsigned long long timeout,
+	int ydb_lock_incr_s(unsigned long long maxtime_nsec,
 		ydb_buffer_t *varname,
 		int subs_used,
 		ydb_buffer_t *subsarray);
@@ -1126,15 +1140,15 @@ ydb_lock_incr_s()
 Without releasing any locks held by the process, attempt to acquire
 the requested lock incrementing it if already held.
 
-``timeout`` specifies a time in nanoseconds that the function waits
+``maxtime_nsec`` specifies a time in nanoseconds that the function waits
 to acquire the requested lock. If it is not able to acquire the lock,
 it returns with a ``YDB_LOCK_TIMEOUT`` return value.
 
-If ``timeout`` is zero, the function makes exactly one attempt to
+If ``maxtime_nsec`` is zero, the function makes exactly one attempt to
 acquire the lock, and if unable to, it returns ``YDB_LOCK_TIMEOUT``.
 
 If the requested lock is successfully acquired, the function returns
-``YDB_OK``.
+``YDB_OK``. Errors result in an appropriate `error return code`_.
 
 -----------------
 ydb_node_next_s()
@@ -1164,9 +1178,9 @@ the input node of the call and the output node reported by the call
 Return values of ``ydb_node_next_s()`` are:
 
 - ``YDB_OK`` with the next node, if there is one, changing
-   ``*ret_subs_used`` and ``*ret_subsarray`` parameters to those of
-   the next node. If there is no next node (i.e., the input node is
-   the last), ``*ret_subs_used`` on output is ``YDB_NODE_END``.
+  ``*ret_subs_used`` and ``*ret_subsarray`` parameters to those of the
+  next node. If there is no next node (i.e., the input node is the
+  last), ``*ret_subs_used`` on output is ``YDB_NODE_END``.
 - ``YDB_ERR_INSUFFSUBS`` if ``*ret_subs_used`` specifies
   insufficient parameters to return the subscript. In this case
   ``*ret_subs_used`` reports the actual number of subscripts required.
@@ -1196,10 +1210,25 @@ facilitates reverse breadth-first traversal of a local or global
 variable tree, except that ``ydb_node_previous_s()`` searches for and
 reports the predecessor node. Unlike ``ydb_node_next_s()``,
 ``*ret_subs_used`` can be zero if an expected previous node is the
-unsubscripted root. However ``*subs_used`` must be greater than zero.
+unsubscripted root.
 
-``ydb_node_previous_s()`` returns ``YDB_OK``, ``YDB_ERR_INSUFFSUBS``,
-``YDB_ERR_INVSTRLEN``, or an `error return code`_.
+Return values of ``ydb_node_next_s()`` are:
+
+- ``YDB_OK`` with the previous node, if there is one, changing
+  ``*ret_subs_used`` and ``*ret_subsarray`` parameters to those of the
+  previous node. If there is no previous node (i.e., the input node is the
+  first), ``*ret_subs_used`` on output is ``YDB_NODE_END``.
+- ``YDB_ERR_INSUFFSUBS`` if ``*ret_subs_used`` specifies
+  insufficient parameters to return the subscript. In this case
+  ``*ret_subs_used`` reports the actual number of subscripts required.
+- ``YDB_ERR_INVSTRLEN`` if one of the ``ydb_buffer_t`` structures
+  pointed to by ``*ret_subsarray`` does not have enough space for the
+  subscript. In this case, ``*ret_subs_used`` is the index into the
+  ``*ret_subsarray`` array with the error, and the ``len_used`` field
+  of that structure specifies the size required.
+- Another `error return code`_, in which case the application should
+  consider the values of ``*ret_subs_used`` and the ``*ret_subsarray``
+  to be undefined.
 
 -----------
 ydb_set_s()
@@ -1213,10 +1242,13 @@ ydb_set_s()
 		ydb_buffer_t *value);
 
 Copies the ``value->len_used`` bytes at ``value->buf_addr`` as the
-value of the specified node or intrinsic special variable specified,
-returning ``YDB_OK`` or an `error return code`_. A NULL ``value``
-parameter is treated as equivalent to one that points to a
-``ydb_buffer_t`` specifying an empty string.
+value of the specified node or intrinsic special variable specified. A
+NULL ``value`` parameter is treated as equivalent to one that points
+to a ``ydb_buffer_t`` specifying an empty string. Return values are:
+
+- ``YDB_OK`` for a normal return;
+- ``YDB_ERR_INVSVN`` if no such intrinsic special variable exists; or
+- another applicable `error return code`_.
 
 ---------------
 ydb_str2zwr_s()
@@ -1228,8 +1260,13 @@ ydb_str2zwr_s()
 
 In the buffer referenced by ``*zwr``, ``ydb_str2zwr_s()`` provides the
 `zwrite formatted`_ version of the string pointed to by ``*str``,
-returning ``YDB_OK``, or the ``YDB_ERR_INVSTRLEN`` error if the
-``*zwr`` buffer is not long enough.
+returning:
+
+- ``YDB_OK``;
+- ``YDB_ERR_INVSTRLEN`` if the ``*zwr`` buffer is not long enough;
+- ``YDB_ERR_PARAMINVALID`` if eitger ``zwr`` or ``zwr->buf_addr`` is
+  null; or
+- another applicable `error return code`_.
 
 ----------------------
 ydb_subscript_next_s()
@@ -1245,20 +1282,20 @@ ydb_subscript_next_s()
 ``ydb_subscript_next_s()`` provides a primitive for implementing
 breadth-first traversal of a tree by searching for the next subscript
 at the level specified by ``subs_used``, i.e., the next subscript
-after ``*subsarray[subs_used].buf_addr``. A node need not exist at the
-subscripted variable name provided as input to the function. If
-``subsarray[subs_used].len_used`` is zero, ``ydb_subscript_next()``
-returns the first node at that level with a subscript that is not the
-empty string. ``ydb_subscript_next_s()`` returns ``YDB_OK`` or an
-`error return code`_.
+after the one referred to by ``subsarray[subs_used-1].buf_addr``. A
+node need not exist at the subscripted variable name provided as input
+to the function. If ``subsarray[subs_used-1].len_used`` is zero,
+``ret_value->buf_addr`` points to first node at that level with a
+subscript that is not the empty string. ``ydb_subscript_next_s()``
+returns ``YDB_OK`` or an `error return code`_.
 
 On return from ``ydb_subscript_next_s()`` with a ``YDB_OK``, if
-``ret_value->len_used`` is non-zero, ``*ret_value->buf_addr`` contains
-the value of the next subscript. If it is zero, it means that the
-input node was the last at that level.
+``ret_value->len_used`` is non-zero, ``ret_value->buf_addr`` points to
+the value of the next subscript. If it is zero, it means that there is
+no node greater than the input node at that level.
 
 In the special case where ``subs_used`` is zero,
-``ydb_subscript_next_s()`` returns the next local or global variable
+``ret_value->buf_addr`` points to the next local or global variable
 name.
 
 --------------------------
@@ -1275,24 +1312,28 @@ ydb_subscript_previous_s()
 ``ydb_subscript_previous_s()`` provides a primitive for implementing
 reverse breadth-first traversal of a tree by searching for the
 previous subscript at the level specified by ``subs_used``. i.e. the
-subscript preceding ``*subsarray[subs_used].buf_addr``. A node need not
-exist at the subscripted variable name provided as input to the
-function. ``ydb_subscript_previous_s()`` returns ``YDB_OK`` or an
+subscript preceding the one referred to by
+``subsarray[subs_used-1].buf_addr``. A node need not exist at the
+subscripted variable name provided as input to the function. If
+``subsarray[subs_used-1].len_used`` is zero, ``ret_value->buf_addr``
+points to last node at that level with a subscript that is not the
+empty string. ``ydb_subscript_previous_s()`` returns ``YDB_OK`` or an
 `error return code`_.
 
 On return from ``ydb_subscript_previous_s()``, if
-``ret_value->len_used`` is non-zero, ``*ret_value->buf_addr`` contains
-the value of the previous subscript. If it is zero, and the
-application does not use empty strings as subscripts, it means that
-the input node was the first at that level. If an application uses
-empty strings as subscripts, a subsequent call to ``ydb_data_s()`` is
-required to determine whether the first subscript has been reached or
-whether the first subscript is a node with the empty string as a
-subscript.
+``ret_value->len_used`` is non-zero, ``ret_value->buf_addr`` points to
+the value of the previous subscript. If it is zero, it means that
+there is no node less than the input node at that level.
 
-In the special case where ``subs_used`` is zero,
-``ydb_subscript_previous_s()`` returns the previous local or global
-variable name.
+Notes:
+
+- If an application uses empty strings as subscripts, a subsequent
+  call to ``ydb_data_s()`` is required to determine whether the first
+  subscript has been reached or whether the first subscript is a node
+  with the empty string as a subscript.
+- In the special case where ``subs_used`` is zero,
+  ``ret_value->buf_addr`` points to the previous local or global
+  variable name.
 
 ----------
 ydb_tp_s()
@@ -1310,8 +1351,8 @@ ydb_tp_s()
 ``tpfnparm`` as a parameter. As discussed under `Transaction
 Processing`_, the function should use the intrinsic special variable
 ``$trestart`` to manage any externally visible action (which YottaDB
-recommends against, but which may be unavoidable). The function should
-return one of the following:
+recommends against, but which may be unavoidable). The function
+pointed to by ``tpfn`` should return one of the following:
 
 - ``YDB_OK`` — application logic indicates that the transaction can
   be committed (the YottaDB engine may still decide that a restart is
@@ -1320,38 +1361,35 @@ return one of the following:
 - ``YDB_TP_RESTART``  — application logic indicates that the
   transaction should restart.
 - ``YDB_TP_ROLLBACK`` — application logic indicates that the
-  transaction should not be committed. Any return code from the
-  function pointed to by ``tpfn`` other than ``YDB_OK`` or
-  ``YDB_TP_RESTART`` results in ``ydb_tp_s()`` forthwith returning to
-  its caller with that return code. The symbolic constant
-  ``YDB_TP_ROLLBACK`` is provided to improve future code
-  maintainability, and should be used when the intent is to rollback
-  the transaction.
+  transaction should not be committed.
+- An `error return code`_ returned by a YottaDB function called by the
+  function pointed to by ``tpfn``.
 
-If not NULL or the empty string ``transid`` is case-insensitive
-``"BA"`` or ``"BATCH"`` to indicate that at transaction commit,
-YottaDB need not ensure Durability (it always ensures Atomicity,
-Consistency, and Isolation). Use of this flag may improve latency and
-throughput for those applications where an alternative mechanism (such
-as a checkpoint) provides acceptable durability. If a transaction that
-is not flagged as ``"BATCH"`` follows one or more transactions so
-flagged, Durability of the later transaction ensures Durability of the
-the earlier ``"BATCH"`` transaction(s).
+``transid`` is a string, up to the first 8 bytes of which are recorded
+in the commit record of journal files for database regions
+participating in the transaction. If not NULL or the empty string, a
+case-insensitive value of ``"BA"`` or ``"BATCH"`` indicates that at
+transaction commit, YottaDB need not ensure Durability (it always
+ensures Atomicity, Consistency, and Isolation). Use of this value may
+improve latency and throughput for those applications where an
+alternative mechanism (such as a checkpoint) provides acceptable
+durability. If a transaction that is not flagged as ``"BATCH"``
+follows one or more transactions so flagged, Durability of the later
+transaction ensures Durability of the the earlier ``"BATCH"``
+transaction(s).
 
-If ``namecount>0``, the ``*varnames`` parameter specifies an array of
+If ``namecount>0``, ``varnames[i]`` where ``0≤i<namecount`` specifies
 local variable names whose values are restored to their original
 values when the transaction is restarted. In the special case where
-``namecount=1`` and the sole ``*varnames`` provides the value ``"*"``,
-all local variables are restored on a restart. It is an error for a
-``*varnames`` to include a global or intrinsic special variable.
+``namecount=1`` and ``varnames[0]`` provides the value ``"*"``, all
+local variables are restored on a restart. It is an error for a
+``varnames`` to include a global or intrinsic special variable.
 
-A ``ydb_tp_s()`` that is not itself within a transaction returns
-``YDB_OK``, ``YDB_TP_ROLLBACK``, ``YDB_ERR_TPTIMEOUT`` (see
-`Transaction Processing`_), or an `error return code`_ – a
-``ydb_tp_s()`` that is the top level transaction handles restarts and
-never returns a ``YDB_TP_RESTART``. A ``ydb_tp_s()`` call that is
-within another transaction can also return ``YDB_TP_RESTART`` to its
-caller. [#]_
+A top level ``ydb_tp_s()`` can return ``YDB_OK``, ``YDB_TP_ROLLBACK``,
+``YDB_ERR_TPTIMEOUT`` (see `Transaction Processing`_), or an `error
+return code`_, including ``YDB_ERR_TOOMANYVARNAMES``. A ``ydb_tp_s()``
+call that is within another transaction can also return
+``YDB_TP_RESTART`` to its caller. [#]_
 
 .. [#] An enclosing transaction can result not just from another
        ``ydb_tp_s()`` higher in the stack, but also from an M
@@ -1391,29 +1429,23 @@ ydb_child_init()
 
 	int ydb_child_init(void *param)
 
-As noted in the `Overview`_, the YottaDB database engine resides in
-the address space of the process, and the data structures of the
-database engine include information such as the pid, which differs
-between parent and child processes.
+As the YottaDB engine resides in the address space of the process,
+child processes **must** call ``ydb_child_init()`` to re-initialize
+data structures after a ``fork()`` or equivalent in other languages
+(e.g., ``os.fork()`` in Python).
 
 Notes:
 
-- If a process has open database files, after a ``fork()``, the child
-  process **must** call ``ydb_child_init()`` in order to re-initialize
-  the data structures of the database engine. No action is needed on
-  the part of the parent process. *A child process that fails to call*
-  ``ydb_child_init()`` *after a* ``fork()`` *or equivalent, such as*
-  ``os.fork()`` *in Python, can cause structural damage to database
-  files.* As ``ydb_child_init)`` is effectively a no-op if there are
-  no open database files, a child process that is unsure whether there
-  are open database files can unconditionally call the function.
-- After a ``fork()`` or equivalent, a parent process should not exit
-  until the child process has executed ``ydb_child_init()``. An
-  efficient way to implement this would be for the parent to set a
-  node such as ``^Proc(ppid)=1`` where ``ppid`` is the parent's pid,
-  and for the child to set it to zero or to delete the node. A parent
-  process that wishes to ``fork()`` a number of child processes can
-  use ``ydb_incr_s()`` to increment a node such as ``^Proc(ppid)`` and
+- A child process that fails to call ``ydb_child_init()`` after a
+  ``fork()`` can cause structural damage to database files, as well as
+  other possible side-effects.
+- After a ``fork()``, a parent process should not exit until the child
+  process has executed ``ydb_child_init()``. One way to
+  implement this would be for the parent to set a node such as
+  ``^Proc(ppid)=1`` where ``ppid`` is the parent's pid, and for the
+  child to set it to zero or to delete the node. A parent process that
+  wishes to ``fork()`` a number of child processes can use
+  ``ydb_incr_s()`` to increment a node such as ``^Proc(ppid)`` and
   each child can decrement it after executing
   ``ydb_child_init()``. When the value at the node is zero, the parent
   process knows that it is safe for it to exit.
@@ -1510,12 +1542,11 @@ child process does essential cleanup (such as erasing encryption
 passphrases) and sends itself a signal to generate a core and
 terminate, while the parent process continues execution.
 
-The content, location, naming, and management of cores is managed by
-the operating system – see ``man 5 core`` for details. We recommend
-that you set ``kernel.core_uses_pid`` to 1 to make it easier to
-identify and track cores. As cores can contain protected confidential
-information, you *must* ensure appropriate configuration and
-management of cores.
+The content, location, and naming of cores is managed by the operating
+system – see ``man 5 core`` for details. We recommend that you set
+``kernel.core_uses_pid`` to 1 to make it easier to identify and track
+cores. As cores can contain protected confidential information, you
+*must* ensure appropriate configuration and management of cores.
 
 ----------
 ydb_free()
@@ -1536,10 +1567,13 @@ ydb_hiber_start()
 
 .. code-block:: C
 
-	void ydb_hiber_start(unsigned long long sleep_nsec)
+	int ydb_hiber_start(unsigned long long sleep_nsec)
 
 The process sleeps for the time in nanoseconds specified by
-``sleep_nsec``.
+``sleep_nsec``. If a value greater than ``YDB_MAX_DUR_NSEC`` is
+specified, ``ydb_hiber_start()`` immediately returns with a
+``YDB_ERR_TIME2LONG`` error; otherwise it returns ``YDB_OK`` after
+the elapsed time.
 
 --------------------------
 ydb_hiber_start_wait_any()
@@ -1547,10 +1581,14 @@ ydb_hiber_start_wait_any()
 
 .. code-block:: C
 
-	void ydb_hiber_start_wait_any(unsigned long long sleep_nsec)
+	int ydb_hiber_start_wait_any(unsigned long long sleep_nsec)
 
 The process sleeps for the time in nanoseconds specified by
-``sleep_nsec`` or until it receives a signal.
+``sleep_nsec`` or until it receives a signal. If a value greater than
+``YDB_MAX_DUR_NSEC`` is specified, ``ydb_hiber_start()`` immediately
+returns with a ``YDB_ERR_TIME2LONG`` error; otherwise it returns
+``YDB_OK`` after the elapsed time or when the wait is terminated by a
+signal.
 
 ------------
 ydb_malloc()
@@ -1566,7 +1604,9 @@ requested size, or NULL if it is unable to satisfy the request.
 ``ydb_malloc()`` uses a `buddy system
 <https://en.wikipedia.org/wiki/Buddy_memory_allocation>`_, and
 provides debugging functionality under the control of the environment
-variable ``ydb_dbglvl``.
+variable ``ydb_dbglvl`` whose values are a mask as described in
+`gtmdbglvl.h
+<https://github.com/YottaDB/YottaDB/blob/master/sr_port/gtmdbglvl.h>`_.
 
 --------------------------
 ydb_stdout_stderr_adjust()
@@ -1605,7 +1645,7 @@ ydb_timer_cancel()
 
 	void ydb_timer_cancel(int timer_id)
 
-Cancel a timer identifier by ``timer_id`` and previously started with
+Cancel a timer identified by ``timer_id`` and previously started with
 `ydb_timer_start()`_.
 
 -----------------
@@ -1614,12 +1654,12 @@ ydb_timer_start()
 
 .. code-block:: C
 
-	typedef void (*handler_fun_ptr_t)(unsigned int timer_id,
+	typedef void (*ydb_funcptr_retvoid_t)(int timer_id,
 		unsigned int handler_data_len,
 		char *handler_data);
-	void ydb_timer_start(unsigned int timer_id,
+	void ydb_timer_start(int timer_id,
 		unsigned long long limit_nsec,
-		handler_fun_ptr_t handler,
+		ydb_funcptr_retvoid_t handler,
 		unsigned int handler_data_len
 		char *handler_data);
 
@@ -1641,7 +1681,9 @@ expires.
 
 ``handler_data`` is a pointer to the data to be passed to ``handler``
 and ``handler_data_len`` is the length of the data at
-``*handler_data``.
+``*handler_data``. Note that the data it points to **must** be on the
+heap rather than on the stack, the stack frame may no longer be
+valid when the timer expires.
 
 ================
 Programming in M
@@ -1667,9 +1709,7 @@ To ensure the accuracy of financial calculations, [#]_ YottaDB internally
 stores numbers as, and performs arithmetic using, a scaled packed
 decimal representation with 18 significant decimal digits, with
 optimizations for values within a certain subset of its full
-range. Consequently, any number that is exactly represented in YottaDB
-can be exactly represented as a string, with reasonably efficient
-conversion back and forth.
+range. YottaDB efficiently converts between strings and numbers.
 
 .. [#] For example, since a number such as .01 is not exactly
        representable as a binary or hexadecimal floating point number
@@ -1771,7 +1811,7 @@ handler to ignore the signal.
 As database operations such as `ydb_set_s()`_ set timers, subsequent
 system calls can terminate prematurely with an EINTR. Such system
 calls should be wrapped to restart them when this occurs. The file
-`eintr_wrappers.h<https://github.com/YottaDB/YottaDB/blob/master/sr_port/eintr_wrappers.h>`_
+`eintr_wrappers.h <https://github.com/YottaDB/YottaDB/blob/master/sr_port/eintr_wrappers.h>`_
 demonstrates how YottaDB itself is coded to handle this situation.
 
 As the M language subsystem uses SIGUSR1 for asynchronous interrupts,
@@ -1791,10 +1831,7 @@ There are two considerations when executing ``fork()``.
   commands which are still buffered when C code within the same
   process calls ``fork()``.
 - After a ``fork()``, the child process must immediately execute
-  `ydb_child_init()`_ . Since the YottaDB database engine resides in
-  the address space of the process, as noted in the `Overview`_, this
-  is required to ensure a clean separation in the internal state of
-  the database engine between parent and child processes.
+  `ydb_child_init()`_ (see discussion at `ydb_child_init()`_).
 
 Threads
 =======
