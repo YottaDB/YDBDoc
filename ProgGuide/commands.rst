@@ -837,9 +837,9 @@ Currently, LOCK of an argument within a parenthetical list where the argument in
 
 For more information on troubleshooting locks with the Lock Utility (LKE), refer to the `chapter on that utility in the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/mlocks.html>`_.
 
----------------------------------
++++++++++++++++++++++++++++++++++
 Using Locks within Transactions
----------------------------------
++++++++++++++++++++++++++++++++++
 
 Within transactions, LOCKs are used by YottaDB to ensure the ability to serialize. There is no guarantee, however, that attempts by other processes to examine LOCKs held with a transaction will produce the same results as when LOCKs are outside of a transaction. In other words, LOCKs within transactions should never be used as simple semaphores.
 
@@ -2793,6 +2793,19 @@ Example:
 
 This lists the help for command ZSHOW.
 
+---------------------
+ZKill
+---------------------
+
+The ZKILL command KILLs the data value for a variable name without affecting the nodes descended from that node.
+
+The format of the ZKILL command is:
+
+.. parsed-literal::
+   ZK[ILL][:tvexpr] glvn
+
+The functionality of ZKILL is identical to ZWITHDRAW. For a comprehensive description of the format and usage, refer to “ZWIthdraw”.
+
 -------------------
 ZLink
 -------------------
@@ -3046,19 +3059,6 @@ In YottaDB, the name of the source file determines the name of the YottaDB routi
 
 .. note::
    Auto-ZLINK and ZLINK commands without a .m or .o file extension in their argument determine the need to recompile based on whether the object file was more recently modified than the source file using time in nanoseconds, as provided by the underlying system call. Note that, although the format of the file modification timestamps provides a nanosecond granularity, many supported OSs currently update the file timestamps with an accuracy of one second.
-
----------------------
-ZKill
----------------------
-
-The ZKILL command KILLs the data value for a variable name without affecting the nodes descended from that node.
-
-The format of the ZKILL command is:
-
-.. parsed-literal::
-   ZK[ILL][:tvexpr] glvn
-
-The functionality of ZKILL is identical to ZWITHDRAW. For a comprehensive description of the format and usage, refer to “ZWIthdraw”.
 
 ------------------
 ZMessage
