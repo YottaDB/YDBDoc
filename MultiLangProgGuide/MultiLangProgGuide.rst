@@ -605,10 +605,6 @@ restarts.
 function that packages a transaction, and in turn returned to the
 caller indicating that the transaction should not be committed.
 
-.. _error return code:
-
-.. _error return codes:
-
 ------------------
 Error Return Codes
 ------------------
@@ -908,7 +904,7 @@ identified by ``*varname``, ``subs_used`` and ``*subsarray``.
 
 It is an error to call ``ydb_data_s()`` on an intrinsic special
 variable; doing so results in the ``YDB_ERR_UNIMPLOP``
-error. ``ydb_data_s()`` returns ``YDB_OK`` or an `error return code`_.
+error. ``ydb_data_s()`` returns ``YDB_OK`` or one of the errors described in `Error Return Codes`_.
 
 --------------
 ydb_delete_s()
@@ -931,7 +927,7 @@ In the special case where ``*varname`` is NULL, ``ydb_delete_s()``
 deletes all local variables. Intrinsic special variables cannot be
 deleted.
 
-``ydb_delete_s()`` returns ``YDB_OK`` or an `error return code`_.
+``ydb_delete_s()`` returns ``YDB_OK`` or one of the errors described in `Error Return Codes`_.
 
 -------------------
 ydb_delete_excl_s()
@@ -953,7 +949,7 @@ formal parameters, or actual parameters passed by reference, make sure
 you understand what (sub)trees are being deleted. This does not apply
 to applications that do not include M code.
 
-``ydb_delete_excl_s()`` returns ``YDB_OK`` or an `error return code`_.
+``ydb_delete_excl_s()`` returns ``YDB_OK`` or one of the errors described in `Error Return Codes`_.
 
 --------------------
 ydb_delete_multi_s()
@@ -980,7 +976,7 @@ root, leaving (sub)trees intact, or to delete nodes as well as
 
 Intrinsic special variables cannot be deleted.
 
-``ydb_delete_s()`` returns ``YDB_OK`` or an `error return code`_.
+``ydb_delete_s()`` returns ``YDB_OK`` or one of the errors described in `Error Return Codes`_.
 
 -----------
 ydb_get_s()
@@ -1002,7 +998,7 @@ setting ``ret_value->len_used``. Return values are:
   appropriate if no such variable or node exists;
 - ``YDB_ERR_INVSTRLEN`` if ``ret_value->len_alloc`` is insufficient for
   the value at the node; or
-- another applicable `error return code`_.
+- another applicable `Error Return Codes`_.
 
 Notes:
 
@@ -1172,7 +1168,7 @@ Return values of ``ydb_node_next_s()`` are:
   subscript. In this case, ``*ret_subs_used`` is the index into the
   ``*ret_subsarray`` array with the error, and the ``len_used`` field
   of that structure specifies the size required.
-- Another `error return code`_, in which case the application should
+- Another `Error Return Codes`_, in which case the application should
   consider the values of ``*ret_subs_used`` and the ``*ret_subsarray``
   to be undefined.
 
@@ -1196,7 +1192,7 @@ reports the predecessor node. Unlike ``ydb_node_next_s()``,
 unsubscripted root. However ``*subs_used`` must be greater than zero.
 
 ``ydb_node_previous_s()`` returns ``YDB_OK``, ``YDB_ERR_INSUFFSUBS``,
-``YDB_ERR_INVSTRLEN``, or an `error return code`_.
+``YDB_ERR_INVSTRLEN``, or one of the errors described in `Error Return Codes`_.
 
 -----------
 ydb_set_s()
@@ -1211,7 +1207,7 @@ ydb_set_s()
 
 Copies the ``value->len_used`` bytes at ``value->buf_addr`` as the
 value of the specified node or intrinsic special variable specified,
-returning ``YDB_OK`` or an `error return code`_. A NULL ``value``
+returning ``YDB_OK`` or one of the errors described in `Error Return Codes`_. A NULL ``value``
 parameter is treated as equivalent to one that points to a
 ``ydb_buffer_t`` specifying an empty string.
 
@@ -1232,7 +1228,7 @@ time permitting.*
 
 Copies the ``value->len_used`` bytes at ``value->buf_addr`` as the
 value of the specified nodes or intrinsic special variables specified,
-returning ``YDB_OK`` or an `error return code`_. A NULL ``value``
+returning ``YDB_OK`` or one of the errors described in `Error Return Codes`_. A NULL ``value``
 parameter is treated as equivalent to one that points to a
 ``ydb_buffer_t`` specifying an empty string.
 
@@ -1245,7 +1241,7 @@ ydb_str2zwr_s()
 	int ydb_str2zwr_s(ydb_buffer_t *str, ydb_buffer_t *zwr);
 
 In the buffer referenced by ``*zwr``, ``ydb_str2zwr_s()`` provides the
-`zwrite formatted`_ version of the string pointed to by ``*str``,
+`Zwrite Format`_ version of the string pointed to by ``*str``,
 returning ``YDB_OK``, or the ``YDB_ERR_INVSTRLEN`` error if the
 ``*zwr`` buffer is not long enough.
 
@@ -1268,7 +1264,7 @@ subscripted variable name provided as input to the function. If
 ``subsarray[subs_used].len_used`` is zero, ``ydb_subscript_next()``
 returns the first node at that level with a subscript that is not the
 empty string. ``ydb_subscript_next_s()`` returns ``YDB_OK`` or an
-`error return code`_.
+`Error Return Codes`_.
 
 On return from ``ydb_subscript_next_s()`` with a ``YDB_OK``, if
 ``ret_value->len_used`` is non-zero, ``*ret_value->buf_addr`` contains
@@ -1296,7 +1292,7 @@ previous subscript at the level specified by ``subs_used``. i.e. the
 subscript preceding ``*subsarray[subs_used].buf_addr``. A node need not
 exist at the subscripted variable name provided as input to the
 function. ``ydb_subscript_previous_s()`` returns ``YDB_OK`` or an
-`error return code`_.
+`Error Return Codes`_.
 
 On return from ``ydb_subscript_previous_s()``, if
 ``ret_value->len_used`` is non-zero, ``*ret_value->buf_addr`` contains
@@ -1365,7 +1361,7 @@ all local variables are restored on a restart. It is an error for a
 
 A ``ydb_tp_s()`` that is not itself within a transaction returns
 ``YDB_OK``, ``YDB_TP_ROLLBACK``, ``YDB_ERR_TPTIMEOUT`` (see
-`Transaction Processing`_), or an `error return code`_ – a
+`Transaction Processing`_), or one of the errors described in `Error Return Codes`_ – a
 ``ydb_tp_s()`` that is the top level transaction handles restarts and
 never returns a ``YDB_TP_RESTART``. A ``ydb_tp_s()`` call that is
 within another transaction can also return ``YDB_TP_RESTART`` to its
@@ -1385,7 +1381,7 @@ ydb_zwr2str_s()
 	int ydb_zwr2str_s(ydb_buffer_t *zwr, ydb_buffer_t *str);
 
 In the buffer referenced by ``*str``, ``ydb_zwr2str_s()`` provides the
-string described by the `zwrite formatted`_ string pointed to by
+string described by the `Zwrite Format`_ string pointed to by
 ``*zwr``, returning ``YDB_OK`` (with ``str->len_used`` set to zero if
 the zwrite formatted string has an error), or the
 ``YDB_ERR_INVSTRLEN`` error if the ``*str`` buffer is not long enough.
@@ -1438,8 +1434,8 @@ Notes:
 
 The ``void *param`` is reserved for future enhancements. As the
 initial release of YottaDB ignores it, we recommend using
-NULL. ``ydb_child_init()`` returns ``YDB_OK`` or an `error return
-code`_.
+NULL. ``ydb_child_init()`` returns ``YDB_OK`` or one of the errors described in `Error Return
+Codes`_.
 
 ------------------
 ydb_file_id_free()
@@ -1491,8 +1487,8 @@ When the ``fileid`` structure for a file is no longer needed, an
 application should call `ydb_file_id_free()`_ to release the structure
 and avoid a memory leak.
 
-``ydb_file_name_to_id()`` returns ``YDB_OK`` or an `error return
-code`_.
+``ydb_file_name_to_id()`` returns ``YDB_OK`` or one of the errors described in `Error Return
+Codes`_.
 
 -----------------
 ydb_fork_n_core()
@@ -1761,10 +1757,6 @@ set that represents a decimal number in a standard, concise, form.
    followed by a canonical integer in the range -43 to 47 such
    that the magnitude of the resulting number is between 1E-43
    through.1E47.
-
-.. _zwrite format:
-
-.. _zwrite formatted:
 
 Zwrite Format
 =============
