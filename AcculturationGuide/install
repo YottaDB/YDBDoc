@@ -1,0 +1,123 @@
+#!/bin/sh
+#
+# install - create new VistA environment as child of an existing environment
+#
+# Usage:
+#
+# install [--separate-globals] [--encrypted] newdirectory
+#
+# Encrypted is meaningful only for separate globals.
+# Separate globals is implied if parent database is zipped extract.
+#
+# Limitations:
+#
+# 1. If the globals in the parent have a custom partitioning or a custom
+#    partitioning is desired for the child, don't use this script.
+# 2. There is no error handling.  Clean up by deleting the child manually.
+# 3. Parent and child must use the same versions of GT.M.
+# 4. 
+
+# Get functions and common definitions
+. `dirname $0`/inc
+
+# Symbolic constant(s)
+TRUE=0
+Usage='Usage: install [--separate-globals] [--encrypted] directory'
+
+# Process command line
+if [ 0 -eq "$#" ] ; then echo "Not enough information specified.  Exiting." ; exit 1 ; fi
+while [ 0 -ne "$#" ] ; do
+    case $1 in
+	--separate-globals) separate=$TRUE
+	    ;;
+	--encrypted) encrypt=$TRUE
+	    ;;
+	--*) echo "$Usage" ; exit 1
+	    ;;
+	*) child=$1
+	    ;;
+    esac
+    shift
+done
+if [ -z "$child" ] ; then echo "$Usage" ; exit 1 ; fi
+
+if [ -e $child ] ; then echo $child "exists already.  Exiting." ; exit 1 ; fi
+
+# tmp=`dirname $0 | cut -b 1`
+#if [ "/" = "$tmp" ] ; then parent=`dirname $0`
+#elif [ "." = "$tmp" ] ; then parent=$PWD/`dirname $0` ; fi
+#parent=${parent%"/."}
+
+parent=`fullpath`
+
+echo "Creating environment in" $child "as child of environment in" $parent
+
+# Create the directory structure for the child and link to parent
+mkdir -p "$child/r" "$child/p"
+ln -s "$parent" "$child/parent"
+
+# Copy files in this directory independent of GT.M version
+find "$parent"/ -maxdepth 1 -type f \! -name \*~ -exec cp {} "$child/" \;
+
+# Give the child the same GT.M version(s) as the parent
+for parentgtm in "$parent"/V* ; do
+
+    gtmver=`basename "$parentgtm"`
+    childgtm="$child"/"$gtmver"
+
+    # Create directory structure for this version of GT.M and copy basic files
+    mkdir -p "$childgtm"/g "$childgtm"/o "$childgtm"/r "$childgtm"/p "$childgtm"/tmp
+    ln -s "$parentgtm"/gtm "$childgtm"/gtm
+    find "$parentgtm"/ -maxdepth 1 -type f \! -name \*~ -exec cp {} "$childgtm"/ \;
+    cp -p "$parentgtm"/g/gtm.gld "$childgtm"/g/
+
+    # Set execute permissions executable in child; they may not be executable for the parent
+    chmod u+x "$childgtm"/run "$childgtm"/wvehrstart "$childgtm"/wvehrstop "$childgtm"/newjnls
+    find "$childgtm" -maxdepth 1 \( -name run -o -name wvehrstart -o -name -wvehrstop -o -name newjnls \) -perm -4 -exec chmod o+x {} \;
+    find "$childgtm" -maxdepth 1 \( -name run -o -name wvehrstart -o -name -wvehrstop -o -name newjnls \) -perm -40 -exec chmod g+x {} \;
+
+    # Several cases to consider with respect to the database for the child:
+    # 1. Parent is zipped database extract: Child always gets new database
+    # 2. --separate-globals is specified: child gets copy of database from parent
+    # 3. --separate-globals is not specified: Child shares database with parent; nothing to copy
+
+    if [ -e "$parentgtm"/g/gtm.zwr.gz ] ; then      # case 1 above
+	echo "Unzipping from parent to create initial database "$childgtm"/g/gtm.dat"
+	gtmdir="$child" ; export gtmdir
+	. "$childgtm"/gtm/gtmprofile 1>/dev/null 2>/dev/null
+	$gtm_dist/mupip set -journal=disable -region DEFAULT 1>/dev/null 2>/dev/null
+	rm -f "$childgtm"/g/gtm.mjl
+	tmp=`mktemp -d`
+	mkfifo $tmp/$$.fifo
+	gzip -d <"$parentgtm"/g/gtm.zwr.gz >$tmp/$$.fifo &
+	$gtm_dist/mupip load $tmp/$$.fifo
+	rm -rf $tmp
+
+    elif [ $separate ] ; then                    # case 2 above
+	echo "Backing up copy of parent "$parentgtm"/g/gtm.dat to "$childgtm"/g/gtm.dat"
+	gtmdir="$parent" ; export gtmdir
+	. "$parentgtm"/gtm/gtmprofile 1>/dev/null 2>/dev/null
+	pushd "$parentgtm"
+	. ./env
+	popd
+	$gtm_dist/mupip backup -nojournal DEFAULT "$childgtm"/g
+
+    fi
+
+    # Set up journaling for child
+    if [ -e "$childgtm"/g/gtm.dat ] ; then
+	gtmdir="child"
+	pushd "$childgtm"
+	. ./env
+	$gtm_dist/mupip set -journal="enable,on,before,file=g/gtm.mjl" -region DEFAULT
+	popd
+	chmod o+r,o-w,g+w "$childgtm"/g/gtm.dat "$childgtm"/g/gtm.mjl
+    fi
+
+done
+
+# Make files except database files, journal files & directories read-only
+find "$child" -type f \! -name \*.dat \! -name \*mjl -exec chmod a-w {} \;
+find "$child" -type d -exec chmod 775 {} \;
+
+echo "Default permission for development environment is for all to read and group to write - please alter as needed"

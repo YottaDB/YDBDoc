@@ -1,0 +1,34 @@
+# Common functions - scripts source this file
+# Get temporary directory to work in
+myvistatmpdir=`mktemp -d`
+
+# Functions
+fullpath ()  # Absolute path to directory of run command
+{
+    local tmp1 tmp2
+    tmp1=`dirname $0 | cut -b 1`
+    if [ "/" = "$tmp1" ] ; then tmp2=`dirname $0`
+    else tmp2=$PWD/`dirname $0` ; fi
+    echo ${tmp2%"/."}
+    return 0
+}
+
+pushd ()  # Change to new directory pushing current directory onto a stack
+{
+    if [ -d "$1" ] ; then
+	echo $PWD >>$myvistatmpdir/dirs
+	cd $1 ; return 0
+    else echo "$1 is not a directory, or does not exist" ; return 1
+    fi
+}
+
+popd ()  # Return to last directory on directory stack
+{
+    if [ -s $myvistatmpdir/dirs ] ; then
+	head --lines=-1 $myvistatmpdir/dirs >$myvistatmpdir/tmp
+	cd `tail -1 $myvistatmpdir/dirs`
+	mv $myvistatmpdir/tmp $myvistatmpdir/dirs
+	return 0
+    else echo "Directory stack is empty" ; return 1
+    fi
+}
