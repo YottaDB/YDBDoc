@@ -67,10 +67,4 @@ Build Steps
    .. parsed-literal::
       docker run --rm -it yottadb/yottadb:latest
 
-++++++++++++
-FAQ
-++++++++++++
 
-* The CMake build fails with the following message followed by one or more cases. 
-
-  **CMake Error: The following variables are used in this project, but they are set to NOTFOUND. Please set them or make sure they are set and tested correctly in the CMake files**: This indicates that required libraries are not found. Please consult the list of libraries and check your distributions package manager.
