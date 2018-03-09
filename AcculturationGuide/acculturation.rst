@@ -231,7 +231,7 @@ The operation of YottaDB/GT.M is controlled by a number of environment variables
    gtm_etrap=Write:(0=$STACK) "Error occurred: ",$ZStatus,!
    gtm_principal_editing=EDITING
    gtm_tmp=/tmp/fis-gtm/V6.2-000_x86_64
-   gtm_dist=/usr/local/lib/yottadb/r110
+   gtm_dist=/usr/lib/fis-gtm/V6.2-000_x86_64/
    yottadbuser@yottadbworkshop:~$ 
 
 YottaDB/GT.M databases can also be configured so that they can be recovered after a system crash. Simulate a crash right now by either clicking on the “X” in the top right corner of your virtual machine console window to instantly “power down” your virtual machine, or, if you started it headless, perform a hard power-down using a command on the host (in the case of virtualization using qemu/kvm on Linux, a kill -9 of the virtual machine process). Then reboot the virtual machine, run ydb and use a zwrite ^Disney command to confirm that the data in the database is still intact.
@@ -967,7 +967,7 @@ Here are the environment variables set by the default gtmprofile file (which the
    gtm_etrap=Write:(0=$STACK) "Error occurred: ",$ZStatus,!
    gtm_principal_editing=EDITING
    gtm_tmp=/tmp/fis-gtm/V6.2-000_x86_64
-   gtm_dist=/usr/local/lib/yottadb/r110
+   gtm_dist=/usr/lib/fis-gtm/V6.2-000_x86_64/
    yottadbuser@yottadbworkshop:~$ 
 
 While gtmprofile and ydb are good resources when you initially start with YottaDB/GT.M, once you get to a certain level of expertise, you may prefer to create your own scripting.
@@ -1013,7 +1013,7 @@ Create another user who is also a member of the group. See that the user can rea
    yottadbuser@yottadbworkshop:~$ sudo su - staffuser
    staffuser@yottadbworkshop:~$ pwd
    /home/staffuser
-   staffuser@yottadbworkshop:~$ export gtm_dist=/usr/local/lib/yottadb/r110
+   staffuser@yottadbworkshop:~$ export gtm_dist=/usr/lib/fis-gtm/V6.2-000_x86_64/
    staffuser@yottadbworkshop:~$ export gtmver=V6.2-000_x86_64
    staffuser@yottadbworkshop:~$ export gtmdir=/home/yottadbuser/.fis-gtm
    staffuser@yottadbworkshop:~$ export gtmgbldir=$gtmdir/$gtmver/g/gtm.gld
@@ -1332,7 +1332,7 @@ In each machine. Edit exDir/env in each instance and change the line export gtm_
 
 .. parsed-literal::
    yottadbuser@santiago:~/exDir$ cat gtmenv 
-   export gtm_dist=/usr/local/lib/yottadb/r110
+   export gtm_dist=/usr/lib/fis-gtm/V6.2-000_x86_64/
    export gtmgbldir=$HOME/exDir/gtm.gld
    export gtm_log=/tmp/fis-gtm/V6.2-000_x86_64
    export gtm_tmp=$gtm_log
@@ -2326,7 +2326,7 @@ Create an environment to restore the backup. It may be easiest if you simply use
    yottadbuser\@paris:~/exDir$ cp gtmenv gtm.gld backup/
    yottadbuser\@paris:~/exDir$ cd backup; jed backup/gtmenv # edit to point to backup directory
    yottadbuser\@paris:~/exDir/backup$ cat gtmenv
-   export gtm_dist=/usr/local/lib/yottadb/r110
+   export gtm_dist=/usr/lib/fis-gtm/V6.2-000_x86_64/
    export gtmgbldir=$HOME/exDir/backup/gtm.gld
    export gtm_log=/tmp/fis-gtm/V6.2-000_x86_64
    export gtm_tmp=$gtm_log
@@ -2604,7 +2604,7 @@ This exercise uses two sessions, one with a mumps process in UTF-8 mode and the 
 
 .. parsed-literal::
    yottadbuser@yottadbworkshop:~/utf8demo$ cd utf8demo; jed gtmenv_m ; cat gtmenv_m
-   export gtm_dist=/usr/local/lib/yottadb/r110
+   export gtm_dist=/usr/lib/fis-gtm/V6.2-000_x86_64/
    export gtmgbldir=$HOME/utf8demo/gtm.gld
    export gtm_log=/tmp/fis-gtm/V6.2-000_x86_64
    export gtm_tmp=$gtm_log
@@ -3142,7 +3142,7 @@ As the Ken user, create a directory enc, with a gtmenv file to set the environme
    yottadbuser@yottadbworkshop:~$ mkdir enc
    yottadbuser@yottadbworkshop:~$ fte enc/env
    yottadbuser@yottadbworkshop:~$ cat enc/env
-   export gtm_dist=/usr/local/lib/yottadb/r110
+   export gtm_dist=/usr/lib/fis-gtm/V6.2-000_x86_64/
    export gtmgbldir=$HOME/enc/gtm.gld
    export gtm_log=/tmp/fis-gtm/V6.2-000_x86_64
    export gtm_tmp=$gtm_log
@@ -3365,7 +3365,7 @@ To get VistA, you will need to download two archive files : routines and global 
 .. parsed-literal::
    yottadbuser@yottadbworkshop:~$ sudo mkdir -p /Distrib/VistA
    [sudo] password for yottadbuser:
-   yottadbuser@yottadbworkshop:~$ sudo chown yottadbuser.yottadbuser /Distrib/VistA/
+   yottadbuser@yottadbworkshop:~$ sudo chown yottadbuser.gtmuser /Distrib/VistA/
    yottadbuser@yottadbworkshop:~$ wget -P /Distrib/VistA/ http://tinyurl.com/WVEHRVOE10Routines
 
    …
@@ -3401,7 +3401,7 @@ Create a VistA directory. Use a g subdirectory for global variables, an o subdir
 .. parsed-literal::
    yottadbuser\@yottadbworkshop:~$ mkdir -p VistA/{g,o,r}
    yottadbuser\@yottadbworkshop:~$ nano VistA/gtmenv ; cat VistA/gtmenv
-   export gtm_dist=/usr/local/lib/yottadb/r110
+   export gtm_dist=/usr/lib/fis-gtm/V6.2-000_x86_64/
    export gtmgbldir=$HOME/VistA/g/gtm.gld
    export gtm_log=/tmp/fis-gtm/V6.2-000_x86_64
    export gtm_tmp=$gtm_log
@@ -3432,7 +3432,7 @@ Create a VistA directory. Use a g subdirectory for global variables, an o subdir
                                                                            ENCR=OFF
                                                                            MSLT=1024
 
-   GDE> change -region DEFAULT -journal=(before,file="$HOME/VistA/g//gtm.mjl")
+   GDE> change -region DEFAULT -journal=(before,file="$HOME/VistA/g/gtm.mjl")
    GDE> show -region
 
                     *** REGIONS ***
@@ -3469,15 +3469,15 @@ Load the global variables into the database.
    yottadbuser@yottadbworkshop:~$ ls -lhR VistA/
    VistA/:
    total 4.0K
-   drwxrwxr-x 2 yottadbuser yottadbuser  34 Jan 26 15:33 g
-   -rw-rw-r-- 1 yottadbuser yottadbuser 384 Jan 26 15:25 gtmenv
-   drwxrwxr-x 2 yottadbuser yottadbuser   6 Jan 26 15:17 o
-   drwxrwxr-x 2 yottadbuser yottadbuser   6 Jan 26 15:17 r
+   drwxrwxr-x 2 yottadbuser gtmuser  34 Jan 26 15:33 g
+   -rw-rw-r-- 1 yottadbuser gtmuser 384 Jan 26 15:25 gtmenv
+   drwxrwxr-x 2 yottadbuser gtmuser   6 Jan 26 15:17 o
+   drwxrwxr-x 2 yottadbuser gtmuser   6 Jan 26 15:17 r
 
    VistA/g:
    total 421M
-   -rw-rw-rw- 1 yottadbuser yottadbuser 451M Jan 26 15:39 gtm.dat
-   -rw-rw-r-- 1 yottadbuser yottadbuser 1.5K Jan 26 15:33 gtm.gld
+   -rw-rw-rw- 1 yottadbuser gtmuser 451M Jan 26 15:39 gtm.dat
+   -rw-rw-r-- 1 yottadbuser gtmuser 1.5K Jan 26 15:33 gtm.gld
 
    VistA/o:
    total 0
@@ -3502,9 +3502,9 @@ This tells us that WorldVistA EHR has 25,163 source code modules. Now that the g
    %GTM-I-JNLSTATE, Journaling state for region DEFAULT is now ON
    yottadbuser@yottadbworkshop:~$ ls -l VistA/g
    total 430948
-   -rw-rw-rw- 1 yottadbuser yottadbuser 472228352 Jan 26 15:51 gtm.dat
-   -rw-rw-r-- 1 yottadbuser yottadbuser      1536 Jan 26 15:33 gtm.gld
-   -rw-rw-rw- 1 yottadbuser yottadbuser     69632 Jan 26 15:51 gtm.mjl
+   -rw-rw-rw- 1 yottadbuser gtmuser 472228352 Jan 26 15:51 gtm.dat
+   -rw-rw-r-- 1 yottadbuser gtmuser      1536 Jan 26 15:33 gtm.gld
+   -rw-rw-rw- 1 yottadbuser gtmuser     69632 Jan 26 15:51 gtm.mjl
    yottadbuser@yottadbworkshop:~$
 
 You can now run VistA – just enough to convince yourself that it is working, then exit.
@@ -3527,27 +3527,27 @@ Note that YottaDB/GT.M has dynamically compiled modules as needed.
 .. parsed-literal::
    yottadbuser@yottadbworkshop:~$ ls -l VistA/o
    total 456
-   -rw-rw-r-- 1 yottadbuser yottadbuser 25752 Jan 26 15:53 DIALOG.o
-   -rw-rw-r-- 1 yottadbuser yottadbuser 11784 Jan 26 15:53 DIARB.o
-   -rw-rw-r-- 1 yottadbuser yottadbuser 22520 Jan 26 15:53 DIB.o
-   -rw-rw-r-- 1 yottadbuser yottadbuser 21528 Jan 26 15:53 DIC0.o
-   -rw-rw-r-- 1 yottadbuser yottadbuser 13496 Jan 26 15:53 DIC11.o
-   -rw-rw-r-- 1 yottadbuser yottadbuser 33160 Jan 26 15:53 DIC1.o
-   -rw-rw-r-- 1 yottadbuser yottadbuser 22520 Jan 26 15:53 DIC2.o
-   -rw-rw-r-- 1 yottadbuser yottadbuser 21176 Jan 26 15:53 DICATT2.o
-   -rw-rw-r-- 1 yottadbuser yottadbuser 14616 Jan 26 15:53 DICL.o
-   -rw-rw-r-- 1 yottadbuser yottadbuser 28808 Jan 26 15:53 DIC.o
-   -rw-rw-r-- 1 yottadbuser yottadbuser 18552 Jan 26 15:53 DICRW.o
-   -rw-rw-r-- 1 yottadbuser yottadbuser 15800 Jan 26 15:53 DICUIX1.o
-   -rw-rw-r-- 1 yottadbuser yottadbuser 20520 Jan 26 15:53 DICUIX2.o
-   -rw-rw-r-- 1 yottadbuser yottadbuser 19336 Jan 26 15:53 DICUIX.o
-   -rw-rw-r-- 1 yottadbuser yottadbuser 22472 Jan 26 15:53 DII.o
-   -rw-rw-r-- 1 yottadbuser yottadbuser 10424 Jan 26 15:53 DILF.o
-   -rw-rw-r-- 1 yottadbuser yottadbuser 29848 Jan 26 15:53 DILIBF.o
-   -rw-rw-r-- 1 yottadbuser yottadbuser  2904 Jan 26 15:53 DI.o
-   -rw-rw-r-- 1 yottadbuser yottadbuser 14104 Jan 26 15:53 DIQGU.o
-   -rw-rw-r-- 1 yottadbuser yottadbuser 27240 Jan 26 15:53 _DTC.o
-   -rw-rw-r-- 1 yottadbuser yottadbuser 23176 Jan 26 15:53 _ZOSV.o
+   -rw-rw-r-- 1 yottadbuser gtmuser 25752 Jan 26 15:53 DIALOG.o
+   -rw-rw-r-- 1 yottadbuser gtmuser 11784 Jan 26 15:53 DIARB.o
+   -rw-rw-r-- 1 yottadbuser gtmuser 22520 Jan 26 15:53 DIB.o
+   -rw-rw-r-- 1 yottadbuser gtmuser 21528 Jan 26 15:53 DIC0.o
+   -rw-rw-r-- 1 yottadbuser gtmuser 13496 Jan 26 15:53 DIC11.o
+   -rw-rw-r-- 1 yottadbuser gtmuser 33160 Jan 26 15:53 DIC1.o
+   -rw-rw-r-- 1 yottadbuser gtmuser 22520 Jan 26 15:53 DIC2.o
+   -rw-rw-r-- 1 yottadbuser gtmuser 21176 Jan 26 15:53 DICATT2.o
+   -rw-rw-r-- 1 yottadbuser gtmuser 14616 Jan 26 15:53 DICL.o
+   -rw-rw-r-- 1 yottadbuser gtmuser 28808 Jan 26 15:53 DIC.o
+   -rw-rw-r-- 1 yottadbuser gtmuser 18552 Jan 26 15:53 DICRW.o
+   -rw-rw-r-- 1 yottadbuser gtmuser 15800 Jan 26 15:53 DICUIX1.o
+   -rw-rw-r-- 1 yottadbuser gtmuser 20520 Jan 26 15:53 DICUIX2.o
+   -rw-rw-r-- 1 yottadbuser gtmuser 19336 Jan 26 15:53 DICUIX.o
+   -rw-rw-r-- 1 yottadbuser gtmuser 22472 Jan 26 15:53 DII.o
+   -rw-rw-r-- 1 yottadbuser gtmuser 10424 Jan 26 15:53 DILF.o
+   -rw-rw-r-- 1 yottadbuser gtmuser 29848 Jan 26 15:53 DILIBF.o
+   -rw-rw-r-- 1 yottadbuser gtmuser  2904 Jan 26 15:53 DI.o
+   -rw-rw-r-- 1 yottadbuser gtmuser 14104 Jan 26 15:53 DIQGU.o
+   -rw-rw-r-- 1 yottadbuser gtmuser 27240 Jan 26 15:53 _DTC.o
+   -rw-rw-r-- 1 yottadbuser gtmuser 23176 Jan 26 15:53 _ZOSV.o
    yottadbuser@yottadbworkshop:~$
 
 **Pre-compiled Routines**
@@ -3933,7 +3933,7 @@ Now, you can run VistA with the local modifications. In this case, one of the mo
 
 When you work on an application, either to enhance it or to fix a bug, you typically modify only a small part of the application. With YottaDB/GT.M, you do not need to make a copy of an entire application environment to work on your project. Nor do you need to work in the same environment as other developers, with the risk of stepping on one another's toes. All you need is to to set up your processes so that their $ZROUTINES search path finds your development routines before finding the main application routines. If your work involves changes to global variables, you can set up your own copy of the database – or, even, if it makes sense, a part of the database with the remaining globals mapped to the parent environment. Of course, in a large project, your environment's parent may itself have a parent.
 
-Delete the V6.2-001_x86_64 subdirectory, and obtain the files inc and install for the VistA environment, and make install executable.
+Delete the V6.2-001_x86_64 subdirectory, and obtain the files inc and install from `here <https://github.com/YottaDB/YottaDBdoc/tree/master/AcculturationGuide>`_, and make install executable.
 
 .. parsed-literal::
    yottadbuser@yottadbworkshop:~$ ls -l VistA/
