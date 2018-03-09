@@ -1822,7 +1822,7 @@ very least, it has enclosing quotes).
 Signals
 =======
 
-As :code:`libyottadb.so` includes a database engine that uses timers and
+As YottaDB includes a database engine that uses timers and
 signals, YottaDB uses signals, especially timers. YottaDB strongly
 discourages the use of signals, especially SIGALARM, in application
 code functions. Use the exposed timer APIs for application timing
