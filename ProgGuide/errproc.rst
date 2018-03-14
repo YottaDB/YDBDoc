@@ -446,7 +446,7 @@ Example:
            ;N $ZT S $ZT="W !,"CAN'T TAKE RECIPROCAL OF 0"",*7"
            USE $P:(EXCEPTION="D BYE":CTRAP=$C(3))
            WRITE !,"TYPE <CTRL-C> TO STOP"
-   LOOP    FOR DO
+   LOOP    FOR  DO
            . READ !,"TYPE A NUMBER: ",X
            . WRITE ?20,"HAS RECIPROCAL OF: ",1/X
            . QUIT
