@@ -48,3 +48,23 @@ echo ""
 echo " --> Step 2 complete"
 echo ""
 
+echo '#Step 3 : Make the following changes to the theme.css file:'
+echo '#'
+echo '# Change the colors on the admonition and fonts '
+
+set filelist = `ls -1 _build/html/_static/css/theme.css`
+set from1 = '.admonition-todo\{background:#e7f2fa\}'
+set to1 = '.admonition-todo\{background:#3b1a68\}'
+perl -p -i -e "s/$from/$to1/g" $filelist
+set from2 = '.admonition-title\{background:#6ab0de\}'
+set to2 = '.admonition-title\{background:#3b1a68\}'
+perl -p -i -e "s/$from2/$to2/g" $filelist
+set from3 = 'e7f2fa'
+set to3 = 'e0d1f3'
+perl -p -i -e "s/$from3/$to3/g" $filelist
+
+echo ""
+echo "--> Step 3 complete"
+echo ""
+
+
