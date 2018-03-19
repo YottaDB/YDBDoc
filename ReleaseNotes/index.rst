@@ -11,6 +11,7 @@ Welcome to the YottaDB Release Notes!
    
    Main YottaDB Documentation Page <https://yottadb.com/resources/documentation/>
    ydbr110
+   ydbr120
    LICENSE
 
 Indices and tables
