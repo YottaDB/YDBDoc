@@ -489,16 +489,16 @@ because drivers by convention stop when their light is red and drive
 when it is green.
 
 YottaDB locks are more akin to traffic lights than door locks. Each
-lock has a name: as lock names have the same syntax local or global
+lock has a name: as lock names have the same syntax as local or global
 variable names, :code:`Population`, :code:`^Capital`, and
 :code:`^Capital("Thailand",1350,1767)` are all valid lock
 names. Features of YottaDB locks include:
 
-- Locks are exclusive: one and only process can acquire a lock with the
-  resource name. For example, if process P1 acquires lock :code:`Population("USA")`,
-  process P2 cannot simultaneously acquire that lock. However, P2 can acquire
-  lock :code:`Population("Canada")` at the same time that process P1 acquires
-  :code:`Population("USA")`.
+- Locks are exclusive: one and only one process can acquire a lock
+  with the resource name. For example, if process P1 acquires lock
+  :code:`Population("USA")`, process P2 cannot simultaneously acquire
+  that lock. However, P2 can acquire lock :code:`Population("Canada")`
+  at the same time that process P1 acquires :code:`Population("USA")`.
 - Locks are hierarchical: a process that has a lock at a higher level
   blocks locks at lower levels and vice versa. For example, if a
   process P0 must wait for processes P1, P2, … to complete, each of
@@ -533,7 +533,7 @@ variable called :code:`^Population`. [#]_
        lock. So, it would be reasonable to use a lock :code:`Population`
        to restrict access to the global variable :code:`^Population`.
 
-Since YottaDB locks acquisitions are always timed for languages other
+Since YottaDB lock acquisitions are always timed for languages other
 than M, it is not in principle possible for applications to `deadlock
 <https://en.wikipedia.org/wiki/Deadlock>`_ on YottaDB
 locks. Consequently defensive application code must always validate
@@ -593,8 +593,8 @@ Function Return Codes
 =====================
 
 Return codes from calls to YottaDB are usually of type :code:`int` and
-occasionally :code:`void`. Normal return codes are non-negative (greater
-than or equal to zero); error return codes are negative.
+occasionally other types. Normal return codes are non-negative
+(greater than or equal to zero); error return codes are negative.
 
 -------------------
 Normal Return Codes
@@ -605,13 +605,13 @@ other than :CODE:`YDB_ERR_`.
 
 :CODE:`YDB_LOCK_TIMEOUT` — This return code from lock acquisition
 functions indicates that the specified timeout was reached without
-requested locks being acquired.
+the requested locks being acquired.
 
 :CODE:`YDB_OK` — This the standard return code of all functions following
 successful execution.
 
-:CODE:`YDB_TP_RESTART` — Code returned to YottaDB by an application
-function that packages a transaction to indicate that it wishes
+:CODE:`YDB_TP_RESTART` — Return code to YottaDB from an application
+function that implements a transaction to indicate that it wishes
 YottaDB to restart the transaction, or by a YottaDB function invoked
 within a transaction to its caller that the database engine has
 detected that it will be unable to commit the transaction and will
@@ -621,9 +621,9 @@ turn perform any cleanup required and return to the YottaDB
 `ydb_tp_s()`_ invocation from which it was called. See `Transaction
 Processing`_ for a discussion of restarts.
 
-:CODE:`YDB_TP_ROLLBACK` — Code returned to YottaDB by an application
-function that packages a transaction, and in turn returned to the
-caller indicating that the transaction was committed.
+:CODE:`YDB_TP_ROLLBACK` — Return code to YottaDB from an application
+function that implements a transaction, and in turn returned to the
+caller indicating that the transaction was not committed.
 
 .. _error return code:
 
@@ -718,7 +718,7 @@ modify the value of an intrinsic special variable such as an attempt
 to modify :code:`$trestart` using `ydb_set_s()`_.
 
 :CODE:`YDB_ERR_TIME2LONG` – This return code indicates that a value
-greater than :CODE:`YDB_MAX_DUR_NSEC` was specified for a time duration.
+greater than :CODE:`YDB_MAX_TIME_NSEC` was specified for a time duration.
 
 :CODE:`YDB_ERR_TOOMANYVARNAMES` – The number of variable names specified
 to `ydb_delete_excl_s()`_ or `ydb_tp_s()`_ exceeded the
@@ -740,11 +740,6 @@ Limits
 
 Symbolic constants for limits are prefixed with :CODE:`YDB_MAX_`.
 
-:CODE:`YDB_MAX_DUR_NSEC` — The maximum value in nanoseconds that an
-application can instruct libyottab to wait, e.g., until the process is
-able to acquire locks it needs before timing out, or for
-`ydb_hiber_start()`_.
-
 :CODE:`YDB_MAX_IDENT` — The maximum space in bytes required to store a
 complete variable name, not including the preceding caret for a global
 variable. Therefore, when allocating space for a string to hold a
@@ -760,6 +755,11 @@ error.
 
 :CODE:`YDB_MAX_SUBS` — The maximum number of subscripts for a local or
 global variable.
+
+:CODE:`YDB_MAX_TIME_NSEC` — The maximum value in nanoseconds that an
+application can instruct libyottab to wait, e.g., until the process is
+able to acquire locks it needs before timing out, or for
+`ydb_hiber_start()`_.
 
 Severity
 ========
@@ -878,11 +878,6 @@ to sequence through nodes). It sets:
    string to be copied and the underlying :code:`memcpy()` completed
    successfully, and :CODE:`FALSE` otherwise.
 
-:code:`YDB_SEVERITY(msgnum, severity)` – The `error return code`_ from a
-function indicates both the nature of an error as well as its
-severity. For message :code:`msgnum`, the variable :code:`severity` is set to
-one of the :CODE:`YDB_SEVERITY_*` symbolic constants.
-
 :code:`YDB_LITERAL_TO_BUFFER(literal, buffer)` – Use this macro to set a
 :code:`ydb_buffer_t` structure to refer to a literal (such as a variable
 name). With :code:`literal` a string literal, and :code:`buffer` a pointer to
@@ -891,6 +886,11 @@ a :code:`ydb_buffer_t` structure, set:
 - :code:`buffer->buf_addr` to the address of :code:`literal`; and
 - :code:`buffer->len_used` and :code:`buffer->len_alloc` to the length of
   :code:`literal` excluding the terminating null byte.
+
+:code:`YDB_SEVERITY(msgnum, severity)` – The `error return code`_ from a
+function indicates both the nature of an error as well as its
+severity. For message :code:`msgnum`, the variable :code:`severity` is set to
+one of the :CODE:`YDB_SEVERITY_*` symbolic constants.
 
 :code:`YDB_STRING_TO_BUFFER(string, buffer)` – Use this macro to set a
 :code:`ydb_buffer_t` structure to refer to a null-terminated string
@@ -1034,7 +1034,8 @@ ydb_get_s()
 
 To the location pointed to by :code:`ret_value->buf_addr`, :code:`ydb_get_s()`
 copies the value of the specified node or intrinsic special variable,
-setting :code:`ret_value->len_used`. Return values are:
+setting :code:`ret_value->len_used` on both normal and error returns
+(the latter case as long as the data exists). Return values are:
 
 - :CODE:`YDB_OK` for a normal return;
 - :CODE:`YDB_ERR_GVUNDEF`, :CODE:`YDB_ERR_INVSVN`, or :CODE:`YDB_ERR_LVUNDEF` as
@@ -1048,7 +1049,9 @@ Notes:
 - In the unlikely event an application wishes to know the length of
   the value at a node, but not access the data, it can call
   :code:`ydb_get_s()` and provide an output buffer
-  (:code:`retvalue->len_alloc`) with a length of zero.
+  (:code:`retvalue->len_alloc`) with a length of zero, since even in
+  the case of a :CODE:`YDB_ERR_INVSTRLEN` error,
+  :code:`retvalue->len_alloc` is set.
 - Within a transaction implemented by `ydb_tp_s()`_ application
   code observes stable data at global variable nodes because YottaDB
   `transaction processing`_ ensures ACID properties.
@@ -1086,9 +1089,9 @@ Return values:
 - If the atomic increment results in a numeric overflow, the function
   returns a :CODE:`YDB_ERR_NUMOFLOW` error; in this case, the value in the
   node is untouched and that in :code:`*ret_value` is unreliable.
-- In the event the :code:`ydb_buffer_t` structure pointed to by :code:`ret_value`
-  is not large enough for the result, the function returns a
-  :CODE:`YDB_ERR_INVSTRLEN` error.
+- :CODE:`YDB_ERR_INVSTRLEN` if :code:`ret_value->len_alloc` is
+  insufficient for the result. As with `ydb_get_s()`_, in this case
+  :CODE:`ret_value->len_used` is set to the required length.
 - Other errors return the corresponding `error return code`_.
 
 Notes:
@@ -1102,7 +1105,7 @@ ydb_lock_s()
 
 .. code-block:: C
 
-	int ydb_lock_s(unsigned long long maxtime_nsec,
+	int ydb_lock_s(unsigned long long timeout_nsec,
 		int namecount[,
 		[ydb_buffer_t *varname,
 		int subs_used,
@@ -1117,12 +1120,12 @@ return, the function will have acquired all requested locks or none of
 them. If no locks are requested (:code:`namecount` is zero), the function
 releases all locks and returns :CODE:`YDB_OK`.
 
-:code:`maxtime_nsec` specifies a time in nanoseconds that the function waits
+:code:`timeout_nsec` specifies a time in nanoseconds that the function waits
 to acquire the requested locks. If it is not able to acquire all
 requested locks, it acquires no locks, returning with a
 :CODE:`YDB_LOCK_TIMEOUT` return value.
 
-If :code:`maxtime_nsec` is zero, the function makes exactly one attempt to
+If :code:`timeout_nsec` is zero, the function makes exactly one attempt to
 acquire the locks, and if it is unable to, it returns
 :CODE:`YDB_LOCK_TIMEOUT`.
 
@@ -1156,7 +1159,7 @@ ydb_lock_incr_s()
 
 .. code-block:: C
 
-	int ydb_lock_incr_s(unsigned long long maxtime_nsec,
+	int ydb_lock_incr_s(unsigned long long timeout_nsec,
 		ydb_buffer_t *varname,
 		int subs_used,
 		ydb_buffer_t *subsarray);
@@ -1164,11 +1167,11 @@ ydb_lock_incr_s()
 Without releasing any locks held by the process, attempt to acquire
 the requested lock incrementing it if already held.
 
-:code:`maxtime_nsec` specifies a time in nanoseconds that the function waits
+:code:`timeout_nsec` specifies a time in nanoseconds that the function waits
 to acquire the requested lock. If it is not able to acquire the lock,
 it returns with a :CODE:`YDB_LOCK_TIMEOUT` return value.
 
-If :code:`maxtime_nsec` is zero, the function makes exactly one attempt to
+If :code:`timeout_nsec` is zero, the function makes exactly one attempt to
 acquire the lock, and if unable to, it returns :CODE:`YDB_LOCK_TIMEOUT`.
 
 If the requested lock is successfully acquired, the function returns
@@ -1193,11 +1196,10 @@ the input node of the call and the output node reported by the call
 
 - On input, :code:`*ret_subs_used` specifies the number of elements
   allocated for returning the subscripts of the next node.
-- On output, :code:`*ret_subs_used` contains the actual number of
-  subscripts returned or is :CODE:`YDB_NODE_END`. If the actual number of
-  subscripts to be returned exceeds the input value specified by
-  :code:`*ret_subs_used`, the function returns the :CODE:`YDB_ERR_INSUFFSUBS`
-  error (see below).
+- On normal output (:CODE:`YDB_OK` return code),
+  :code:`*ret_subs_used` contains the actual number of subscripts
+  returned or is :CODE:`YDB_NODE_END`. See below for error return
+  codes.
 
 Return values of :code:`ydb_node_next_s()` are:
 
@@ -1236,7 +1238,7 @@ reports the predecessor node. Unlike :code:`ydb_node_next_s()`,
 :code:`*ret_subs_used` can be zero if an expected previous node is the
 unsubscripted root.
 
-Return values of :code:`ydb_node_next_s()` are:
+Return values of :code:`ydb_node_previous_s()` are:
 
 - :CODE:`YDB_OK` with the previous node, if there is one, changing
   :code:`*ret_subs_used` and :code:`*ret_subsarray` parameters to those of the
@@ -1288,7 +1290,7 @@ returning:
 
 - :CODE:`YDB_OK`;
 - :CODE:`YDB_ERR_INVSTRLEN` if the :code:`*zwr` buffer is not long enough;
-- :CODE:`YDB_ERR_PARAMINVALID` if eitger :code:`zwr` or :code:`zwr->buf_addr` is
+- :CODE:`YDB_ERR_PARAMINVALID` if either :code:`zwr` or :code:`zwr->buf_addr` is
   null; or
 - another applicable `error return code`_.
 
@@ -1553,18 +1555,14 @@ ydb_fork_n_core()
 
 	void ydb_fork_n_core(void)
 
-The core of a process can help debug application code, for example to
-troubleshoot an out-of-design condition. However, generating a core
-terminates the process, and furthermore, if the process is last
-process with a database file open, that file can be left in an
-“unclean” state, even if a state that is easily recovered; and
-cleaning up open database files before generating the core perturbs
-the process state to be debugged.
-
-When a process executes :code:`ydb_fork_n_core()`, the process forks. The
-child process does essential cleanup (such as erasing encryption
-passphrases) and sends itself a signal to generate a core and
-terminate, while the parent process continues execution.
+A core is a snapshot of a process, to help debug application code, for
+example to troubleshoot an out-of-design condition.  When a process
+executes :code:`ydb_fork_n_core()`, it forks. The child process does
+essential cleanup (such as erasing encryption passphrases) and sends
+itself a signal to generate a core and terminate. On termination of
+the child process, the parent process continues execution. Note that
+depending on the nature of the condition necessitating a core, an exit
+may well be the right action for the parent process.
 
 The content, location, and naming of cores is managed by the operating
 system – see :code:`man 5 core` for details. We recommend that you set
@@ -1594,7 +1592,7 @@ ydb_hiber_start()
 	int ydb_hiber_start(unsigned long long sleep_nsec)
 
 The process sleeps for the time in nanoseconds specified by
-:code:`sleep_nsec`. If a value greater than :CODE:`YDB_MAX_DUR_NSEC` is
+:code:`sleep_nsec`. If a value greater than :CODE:`YDB_MAX_TIME_NSEC` is
 specified, :code:`ydb_hiber_start()` immediately returns with a
 :CODE:`YDB_ERR_TIME2LONG` error; otherwise it returns :CODE:`YDB_OK` after
 the elapsed time.
@@ -1609,7 +1607,7 @@ ydb_hiber_start_wait_any()
 
 The process sleeps for the time in nanoseconds specified by
 :code:`sleep_nsec` or until it receives a signal. If a value greater than
-:CODE:`YDB_MAX_DUR_NSEC` is specified, :code:`ydb_hiber_start()` immediately
+:CODE:`YDB_MAX_TIME_NSEC` is specified, :code:`ydb_hiber_start()` immediately
 returns with a :CODE:`YDB_ERR_TIME2LONG` error; otherwise it returns
 :CODE:`YDB_OK` after the elapsed time or when the wait is terminated by a
 signal.
@@ -1667,7 +1665,7 @@ ydb_timer_cancel()
 
 .. code-block:: C
 
-	void ydb_timer_cancel(int timer_id)
+	void ydb_timer_cancel(intptr_t timer_id)
 
 Cancel a timer identified by :code:`timer_id` and previously started with
 `ydb_timer_start()`_.
@@ -1678,15 +1676,14 @@ ydb_timer_start()
 
 .. code-block:: C
 
-	typedef void (*ydb_funcptr_retvoid_t)(int timer_id,
+	typedef void (*ydb_funcptr_retvoid_t)(intptr_t timer_id,
 		unsigned int handler_data_len,
 		char *handler_data);
-	void ydb_timer_start(int timer_id,
+	void ydb_timer_start(intptr_t timer_id,
 		unsigned long long limit_nsec,
 		ydb_funcptr_retvoid_t handler,
 		unsigned int handler_data_len
 		char *handler_data);
-
 
 Starts a timer. Unless canceled, when the timer expires,
 :code:`ydb_timer_start()` invokes a handler function, providing that
