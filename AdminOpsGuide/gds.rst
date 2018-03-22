@@ -48,12 +48,16 @@ The file header data elements are listed as follows in alphabetical order for ea
 | Data Elements                      | Description                                                                                                                                                   |
 +====================================+===============================================================================================================================================================+
 | Access method                      | The buffering strategy of the database. Access Method can have 2 values - BG or MM. The default value is BG.                                                  |
+|                                    |                                                                                                                                                               |
 |                                    | Buffered Global (BG) manages the buffers (the OS/file system may also buffer "in series"); MM - the OS/file system manages all the buffering.                 |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Async IO                           | Whether the database file uses Asynchronous or Synchronous I/O. For additional information, see Chapter 4: Global Directory Editor.                           |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| Block size (in bytes)              | The size (in bytes) of a GDS block. Block size can have values that are multiples of 512. The default value is 1024. Block size should be a multiple of the   |
-|                                    | native block size for the OS file system chosen to accommodate all but outlying large records. For additional information, see Ch 4: Global Directory Editor. |
+| Block size (in bytes)              | The size (in bytes) of a GDS block. Block size can have values that are multiples of 512. The default value is 1024.                                          |
+|                                    |                                                                                                                                                               |
+|                                    | Block size should be a multiple of the native block size for the OS file system chosen to accommodate all but outlying large records.                         |
+|                                    |                                                                                                                                                               |
+|                                    | For additional information, see Ch 4: Global Directory Editor.                                                                                                |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Blocks to Upgrade                  | The count of the blocks in the database that are still in prior major version format. YottaDB uses this element during incremental upgrades.                  |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -66,6 +70,7 @@ The file header data elements are listed as follows in alphabetical order for ea
 | Collation Version                  | The version of the collation sequence definition assigned to this database. DSE only reports this if an external collation algorithm is specified.            |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Commit Wait Spin Count             | COMMITWAIT_SPIN_COUNT specifies the number of times a YottaDB process waiting for control of a block to complete an update should spin before yielding        |
+|                                    |                                                                                                                                                               |
 |                                    | the CPU when YottaDB runs on SMP machines.                                                                                                                    |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Current transaction                | The 64-bit hexadecimal number of the most recent database transaction.                                                                                        |
@@ -76,27 +81,40 @@ The file header data elements are listed as follows in alphabetical order for ea
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Default Collation                  | The collation sequence currently defined for this database. DSE only reports this if an external collation algorithm is defined.                              |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| Desired DB Format                  | The desired version format of database blocks. Desired DB Format can have 2 possible values- the major version for the current running YottaDB                |
-|                                    | distribution or the last prior major version. Newly created databases and converted databases have the current major version.                                 |
+| Desired DB Format                  | The desired version format of database blocks. Desired DB Format can have 2 possible values-                                                                  |
+|                                    |                                                                                                                                                               |
+|                                    | the major version for the current running YottaDB distribution or the last prior major version. Newly created databases and converted databases have the      |
+|                                    |                                                                                                                                                               |
+|                                    | current major version.                                                                                                                                        |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Endian Format                      | The Endian byte ordering of the platform.                                                                                                                     |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| Extension Count                    | The number of GDS blocks by which the database file extends when it becomes full. The default value is 100 and the maximum is 65535. In production, typically |
-|                                    | this value should reflect the amount of new space needed in a relatively long period (say a week or a month). UNIX file systems use lazy allocations so this  |
-|                                    | value controls the frequency at which YottaDB checks the actual available space for database expansion in order to warn when space is low.                    |
+| Extension Count                    | The number of GDS blocks by which the database file extends when it becomes full. The default value is 100 and the maximum is 65535.                          |
+|                                    |                                                                                                                                                               |
+|                                    | In production, typically this value should reflect the amount of new space needed in a relatively long period (say a week or a month).                        |
+|                                    |                                                                                                                                                               |
+|                                    | UNIX file systems use lazy allocations so this value controls the frequency at which YottaDB checks the actual available space for database expansion in      |
+|                                    |                                                                                                                                                               |
+|                                    | order to warn when space is low.                                                                                                                              |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| Flush timer                        | Indicates the time between completion of a database update and initiation of a timed flush of modified buffers. The default value is 1 second and the maximum |
-|                                    | value is 1 hour.                                                                                                                                              |
+| Flush timer                        | Indicates the time between completion of a database update and initiation of a timed flush of modified buffers.                                               |
+|                                    |                                                                                                                                                               |
+|                                    | The default value is 1 second and the maximum value is 1 hour.                                                                                                |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| Flush trigger                      | The total number of modified buffers that trigger an updating process to initiate a flush. The maximum and default value is 93.75% of the global buffers; the |
-|                                    | minimum is 25% of the global buffers. For large numbers of global buffers, consider setting the value towards or at the minimum.                              |
+| Flush trigger                      | The total number of modified buffers that trigger an updating process to initiate a flush.                                                                    |
+|                                    |                                                                                                                                                               |
+|                                    | The maximum and default value is 93.75% of the global buffers; the minimum is 25% of the global buffers. For large numbers of global buffers, consider setting|
+|                                    |                                                                                                                                                               |
+|                                    | the value towards or at the minimum.                                                                                                                          |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| Free blocks                        | The number of GDS blocks in the data portion of the file that are not currently part of the indexed database (that is, not in use). MUPIP INTEG -NOONLINE     | 
-|                                    | (including -FAST) can rectify this value if it is incorrect.                                                                                                  |
+| Free blocks                        | The number of GDS blocks in the data portion of the file that are not currently part of the indexed database (that is, not in use).                           |
+|                                    |                                                                                                                                                               |
+|                                    | MUPIP INTEG -NOONLINE (including -FAST) can rectify this value if it is incorrect.                                                                            |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Free space                         | The number of currently unused blocks in the fileheader (for use by enhancements).                                                                            |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| Global Buffers                     | The number of BG buffers for the region. It can have values that are multiples of 512 (in bytes). The minimum value is 64 and the maximum is 2147483647       | 
+| Global Buffers                     | The number of BG buffers for the region. It can have values that are multiples of 512 (in bytes). The minimum value is 64 and the maximum is 2147483647.      |
+|                                    |                                                                                                                                                               |
 |                                    | (may vary depending on your platform). The default value is 1024. In a production system, this value should typically be higher.                              |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | In critical section                | The process identification number (PID) of the process in the write-critical section, or zero if no process holds the critical section.                       |
@@ -112,35 +130,46 @@ The file header data elements are listed as follows in alphabetical order for ea
 | Journal Allocation                 | The number of blocks at which YottaDB starts testing the disk space remaining to support journal file extensions. DSE only reports this field if              |
 |                                    | journaling is ENABLED or ON.                                                                                                                                  |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| Journal AutoSwitchLimit            | The number of blocks after which YottaDB automatically performs an implicit online switch to a new journal file. DSE only reports this field if               |
-|                                    | journaling is ENABLED or ON.                                                                                                                                  |
+| Journal AutoSwitchLimit            | The number of blocks after which YottaDB automatically performs an implicit online switch to a new journal file.                                              |
 |                                    |                                                                                                                                                               |
-|                                    | The default value for Journal AutoSwitchLimit is 8386560 & the maximum value is 8388607 blocks (4GB-512 bytes). The minimum value is 16384. If the difference |
-|                                    | between the Journal AutoSwitchLimit and the allocation value is not a multiple of the extension value, YottaDB rounds-down the value to make it a             |
-|                                    | multiple of the extension value and displays an informational message.                                                                                        |
+|                                    | DSE only reports this field if journaling is ENABLED or ON.                                                                                                   |
+|                                    |                                                                                                                                                               |
+|                                    | The default value for Journal AutoSwitchLimit is 8386560 & the maximum value is 8388607 blocks (4GB-512 bytes). The minimum value is 16384.                   |
+|                                    |                                                                                                                                                               |
+|                                    | If the difference between the Journal AutoSwitchLimit and the allocation value is not a multiple of the extension value, YottaDB rounds-down the value        |
+|                                    |                                                                                                                                                               |
+|                                    | to make it a multiple of the extension value and displays an informational message.                                                                           |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Journal Before imaging             | Indicates whether or not before image journaling is allowed; DSE only reports this field if journaling is ENABLED or ON.                                      |
 |                                    |                                                                                                                                                               |
 |                                    | Journal Before imaging can either be TRUE or FALSE.                                                                                                           |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Journal Buffer Size                | The amount of memory allotted to buffer journal file updates. The default value is 2308. The minimum is 2307 and the maximum is 32K blocks which means that   |
+|                                    |                                                                                                                                                               |
 |                                    | the maximum buffer you can set for your journal file output is 16MB. Larger journal buffers can improve run-time performance, but they also increase the      |
+|                                    |                                                                                                                                                               |
 |                                    | amount of information at risk in failure. Journal Buffer size must be large enough to hold the largest transaction.                                           |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Journal Epoch Interval             | The elapsed time interval between two successive EPOCHs in seconds. An EPOCH is a checkpoint, at which all updates to a database file are committed to disk.  |
+|                                    |                                                                                                                                                               |
 |                                    | All journal files contain epoch records. DSE only reports this field if journaling is ENABLED or ON.                                                          |
 |                                    |                                                                                                                                                               |
 |                                    | The default value is 300 seconds (5 minutes). The minimum is 1 second and the maximum value is 32,767 (one less than 32K) seconds, or approximately 9.1 hours.|
+|                                    |                                                                                                                                                               |
 |                                    | Longer Epoch Intervals can increase run-time performance, but they can also cause longer recovery times.                                                      |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| Journal Extension                  | The number of blocks used by YottaDB to determine whether sufficient space remains to support continuing journal file growth. DSE only reports this field     | 
+| Journal Extension                  | The number of blocks used by YottaDB to determine whether sufficient space remains to support continuing journal file growth. DSE only reports this field     |
+|                                    |                                                                                                                                                               |
 |                                    | if journaling is ENABLED or ON.                                                                                                                               |
 |                                    |                                                                                                                                                               |
 |                                    | The default value is 2048 blocks. The minimum is zero (0) blocks and the maximum is 1073741823 (one less than 1 giga) blocks. In production, this value should|
+|                                    |                                                                                                                                                               |
 |                                    | typically be either zero (0) to disable journal extensions and rely entirely on the Journal Allocation, or it should be large. In UNIX, this value serves     |
+|                                    |                                                                                                                                                               |
 |                                    | largely to allow you to monitor the rate of journal file growth.                                                                                              |
 |                                    |                                                                                                                                                               |
 |                                    | UNIX file systems use lazy allocations so this value controls the frequency at which YottaDB checks the actual available space for journal file expansion     |
+|                                    |                                                                                                                                                               |
 |                                    | in order to warn when space is low.                                                                                                                           |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Journal File                       | The name of the journal file. DSE only reports this field if journaling is ENABLED or ON.                                                                     |
@@ -151,15 +180,18 @@ The file header data elements are listed as follows in alphabetical order for ea
 |                                    | (or ON).                                                                                                                                                      |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Journal Yield Limit                | The number of times a process needing to flush journal buffer contents to disk yields its timeslice and waits for additional journal buffer content to be     |
+|                                    |                                                                                                                                                               |
 |                                    | filled-in by concurrently active processes, before initiating a less than optimal I/O operation.                                                              |
 |                                    |                                                                                                                                                               |
 |                                    | The minimum Journal Yield Limit is 0, the maximum Journal Yield Limit is 2048.                                                                                |
 |                                    |                                                                                                                                                               |
 |                                    | The default value for Journal Yield Limit is 8. On a lightly loaded system, a small value can improve run-time performance, but on actively updating systems a|
+|                                    |                                                                                                                                                               |
 |                                    | higher level typically provides the best performance.                                                                                                         |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| KILLs in progress                  | The sum of the number of processes currently cleaning up after multi-block KILLs and the number of Abandoned KILLs. Abandoned KILLs are associated with blocks|
-|                                    | incorrectly marked busy errors.                                                                                                                               |
+| KILLs in progress                  | The sum of the number of processes currently cleaning up after multi-block KILLs and the number of Abandoned KILLs. Abandoned KILLs are associated with       |
+|                                    |                                                                                                                                                               |
+|                                    | blocks incorrectly marked busy errors.                                                                                                                        |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Last Bytestream Backup             | The transaction number of the last transaction backed up with the MUPIP BACKUP -BYTESTREAM command.                                                           |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -171,20 +203,24 @@ The file header data elements are listed as follows in alphabetical order for ea
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Lock space                         | A hexadecimal number indicating the 512 byte pages of space dedicated to LOCK information.                                                                    |
 |                                    |                                                                                                                                                               |
-|                                    | The minimum Lock space is 10 pages and the maximum is 65,536 pages. The default is 40 pages. In production with an application that makes heavy use of LOCKs, |
-|                                    | this value should be higher.                                                                                                                                  |
+|                                    | The minimum Lock space is 10 pages and the maximum is 65,536 pages. The default is 40 pages. In production with an application that makes heavy use of        |
+|                                    |                                                                                                                                                               |
+|                                    | LOCKS, this value should be higher.                                                                                                                           |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Master Bitmap Size                 | The size of the Master Bitmap. The current Master Bitmap Size of the database is 496 (512 byte blocks).                                                       |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Maximum key size                   | The minimum key size is 3 bytes and the maximum key size is 1019 bytes. For information on setting the maximum key size for your application design, refer to |
+|                                    |                                                                                                                                                               |
 |                                    | Global Directory Editor.                                                                                                                                      |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Maximum record size                | The minimum record size is zero. A record size of zero only allows a global variable node that does not have a value. The maximum is 1,048,576 bytes (1MiB).  |
+|                                    |                                                                                                                                                               |
 |                                    | The default value is 256 bytes.                                                                                                                               |
 |                                    |                                                                                                                                                               |
 |                                    | An error occurs if you decrease and then make an attempt to update nodes with existing longer records.                                                        |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Maximum TN                         | The maximum number of TNs that the current database can hold. For a database in the most recent format, the default value of Maximum TN is                    |
+|                                    |                                                                                                                                                               |
 |                                    | 18,446,744,071,629,176,83 or 0xFFFFFFFF83FFFFFF.                                                                                                              |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Maximum TN Warn                    | The transaction number after which YottaDB generates a warning and update it to a new value. The default value of Maximum TN Warn is 0xFFFFFFFD93FFFFFF.      |
@@ -208,14 +244,17 @@ The file header data elements are listed as follows in alphabetical order for ea
 | Reference count                    | The number of YottaDB processes and utilities currently accessing that segment on a given node.                                                               |
 |                                    |                                                                                                                                                               |
 |                                    | Note: YottaDB does not rely on this field. A database segment initially has a reference count of zero. When a YottaDB process or utility accesses a           |
+|                                    |                                                                                                                                                               |
 |                                    | segment, YottaDB increments the reference count. YottaDB decrements the reference count upon termination.                                                     |
 |                                    |                                                                                                                                                               |
 |                                    | YottaDB counts DSE as a process. When examining this field with DSE, the reference count is always greater than zero. When DSE is the only process using      |
+|                                    |                                                                                                                                                               |
 |                                    | a region, the reference count should be one.                                                                                                                  |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Region Seqno                       | The current replication relative time stamp for a region.                                                                                                     |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Replication State                  | Either On or OFF. [WAS ON] OFF means that replication is still working, but a problem with journaling has caused YottaDB to turn it off, so YottaDB           |
+|                                    |                                                                                                                                                               |
 |                                    | is still replicating, but will turn replication OFF if it ever has to turn to the journal because the pool has lost data needed for replication.              |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Reserved Bytes                     | Number of bytes reserved in database blocks.                                                                                                                  |
@@ -229,8 +268,11 @@ The file header data elements are listed as follows in alphabetical order for ea
 | WIP queue cache blocks             | The number of blocks for which YottaDB has issued writes that have not yet complete.                                                                          |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Wait Disk                          | Seconds that YottaDB waits for disk space to become available before it ceases trying to flush a GDS block's content to disk. During the wait, it sends       |
+|                                    |                                                                                                                                                               |
 |                                    | eight (8) approximately evenly spaced operator log messages before finally issuing a GTM-E-WAITDSKSPACE error. For example, if Wait Disk is 80 seconds and    |
+|                                    |                                                                                                                                                               |
 |                                    | YottaDB finds no disk space to flush a GDS block, it sends a GTM-E-WAITDSKSPACE syslog message about every 10 seconds, and after the eighth message           |
+|                                    |                                                                                                                                                               |
 |                                    | issues a WAITDSKSPACE error. This field is only used in UNIX because of its reliance on lazy disk space allocation.                                           |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Zqgblmod Seqno                     | The replication sequence number associated with the $Zqgblmod() Transaction number.                                                                           |
@@ -238,18 +280,25 @@ The file header data elements are listed as follows in alphabetical order for ea
 | Zqgblmod Trans                     | Transaction number used by the $ZQGBLMOD() function in testing whether a block was modified by overlapping transactions during a replication switchover.      |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Average Blocks Read per 100 Records| Acts as a clue for replication update helper processes as to how aggressively they should attempt to prefetch blocks. It's an estimate of the number of       |
+|                                    |                                                                                                                                                               |
 |                                    | database blocks that YottaDB reads for every 100 update records. The default value is 200. For very large databases, you can increase the value up to 400     |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| Update Process Reserved Area       | An approximate percentage (integer value 0 to 100) of the number of global buffers reserved for the update process. The reader helper processes leaves at     | 
+| Update Process Reserved Area       | An approximate percentage (integer value 0 to 100) of the number of global buffers reserved for the update process. The reader helper processes leaves at     |
+|                                    |                                                                                                                                                               |
 |                                    | least this percentage of the global buffers for the update process. It can have any integer value between 0 to 100. The default value is 50.                  |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Pre read trigger factor            | The percentage of Update Process reserved area after which the update process processes signals the reader helper processes to resume processing journal      |
+|                                    |                                                                                                                                                               |
 |                                    | records and reading global variables into the global buffer cache. It can have any integer value between 0 to 100. The default value is 50.                   |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Update writer trigger factor       | One of the parameters used by YottaDB to manage the database is the flush trigger. One of several conditions that triggers normal YottaDB processes           |
+|                                    |                                                                                                                                                               |
 |                                    | to initiate flushing dirty buffers from the database global buffer cache is when the number of dirty buffers crosses the flush trigger. In an attempt to never|
+|                                    |                                                                                                                                                               |
 |                                    | require the update process itself to flush dirty buffers, when the number of dirty global buffers crosses the update writer trigger factor percentage of the  |
+|                                    |                                                                                                                                                               |
 |                                    | flush trigger value, writer helper processes start flushing dirty buffers to disk. It can have any integer value between 0 to 100. The default value is 33,   |
+|                                    |                                                                                                                                                               |
 |                                    | that is, 33%.                                                                                                                                                 |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
