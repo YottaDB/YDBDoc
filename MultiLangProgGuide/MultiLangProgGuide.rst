@@ -23,7 +23,7 @@ languages can call one another to the extent that such calling is
 permitted by the Supported language implementations.
 
 As C is the *lingua franca* of programming, the C API provides access
-the YottaDB engine from any language. As YottaDB adds standard APIs()
+the YottaDB engine from any language. As YottaDB adds standard APIs
 for other languages, additional sections will be added to the
 Programmers Guide.
 
@@ -37,19 +37,44 @@ Local Installation
 1. Install YottaDB.
 
 - Create a temporary directory and change to it, e.g.: :code:`mkdir /tmp/tmp ; cd /tmp/tmp`
-- Get the YottaDB installer: :code:`wget https://raw.githubusercontent.com/YottaDB/YottaDB/master/sr_unix/ydbinstall.sh`
+- Get the YottaDB installer: :code:`wget
+  https://raw.githubusercontent.com/YottaDB/YottaDB/master/sr_unix/ydbinstall.sh`
 - Make it executable: :code:`chmod +x ydbinstall.sh`
 - Run it with your choice of directory where you want it installed
-  (omit the ``--verbose`` option for less output): :code:`sudo  ./ydbinstall.sh --installdir /opt/yottadb/ --utf8 default --verbose`
+  (omit the :code:`--verbose` option for less output): :code:`sudo
+  ./ydbinstall.sh --installdir /opt/yottadb/latest --utf8 default
+  --verbose`
+  If you do not specify an installation directory with
+  :code:`--installdir`, the script installs YottaDB in
+  :code:`/usr/local/lib/yottadb/r#.##` where :code:`r#.##` is
+  the release, e.g., :code:`r1.20`.
 
 2. Choose a directory for your default environment and initialize it:
    :code:`export ydb_dir=$HOME/.yottadb ; . /opt/yottadb/latest/yottadbprofile`
-#. :code:`#include` the file :code:`/opt/yottadb/latest/libyottadb.h` in your C
-   program and compile it.
-#. Run your program, ensuring either that :code:`libyottadb.so` is in the
-   load path of your program (e.g., using :code:`ldcache` or the
-   :CODE:`LD_LIBRARY_PATH` environment variable), or that it is
-   preloaded using :CODE:`LD_PRELOAD`.
+#. Put your C program in the :code:`$ydb_dir` directory,
+   :code:`#include` the file :code:`/opt/yottadb/latest/libyottadb.h`
+   in your C program and compile it. As a sample program, you can
+   download the `wordfreq.c
+   <https://raw.githubusercontent.com/nars1/YottaDBtest/simpleapi/simpleapi/inref/wordfreq.c>`_
+   program, with a `reference input file
+   <https://raw.githubusercontent.com/nars1/YottaDBtest/simpleapi/simpleapi/outref/wordfreq_input.txt>`_
+   and `corresponding reference output file
+   <https://raw.githubusercontent.com/nars1/YottaDBtest/simpleapi/simpleapi/outref/wordfreq_output.txt>`_
+   and compile it with :code:`gcc -I $ydb_dist -L
+   $ydb_dist -lyottadb -o wordfreq wordfreq.c`.
+
+#. Run your program and verify that the output matches the reference output. For example:
+
+.. code-block:: bash
+
+	$ cd $ydb_dir
+	$ gcc -I $ydb_dist -L $ydb_dist -lyottadb -o wordfreq wordfreq.c
+	$ ./wordfreq <wordfreq_input.txt >wordfreq_output.tmp
+	$ diff wordfreq_output.tmp wordfreq_output.txt 
+	$
+
+Note that the :code:`wordfreq.c` program randomly uses local or
+global variables (see `Local and Global Variables`_).
 
 Docker Container
 ================
@@ -65,14 +90,15 @@ To run a pre-built image: :code:`docker run --rm -it yottadb/yottadb`
 to run the image but not persist any changes you make, and
 :code:`docker run -it yottadb/yottadb` for persistent changes.
 
-Volumes are supported by mounting the :code:`/data` directory. To mount
-the local directory :code:`ydb-data` into the container to save your
-database and routines locally and use them in the container, add the
-following command line parameter before the yottadb/yottadb argument:
-:code:`docker run -it -v \`pwd\`/ydb-data:/data yottadb/yottadb`
+Volumes are supported by mounting the :code:`/data` directory. To
+mount the local directory :code:`ydb-data` into the container to save
+your database and routines locally and use them in the container, add
+an appropriate command line parameter before the yottadb/yottadb
+argument, e.g., :code:`docker run -it -v \`pwd\`/ydb-data:/data
+yottadb/yottadb`
 
 This creates a :code:`ydb-data` directory in your current working
-directory. After the container is shutdown/removed, delete the
+directory. After the container is shutdown and removed, delete the
 directory if you want to remove all data created in the YottaDB
 container (such as your database and routines).
 
@@ -95,7 +121,7 @@ tuples*. For example, the following is a set of key value tuples:
 Note that data in YottaDB is *always* ordered. [#]_ Even if you input
 data out of order, YottaDB always stores them in order. In the
 discussion below, data is therefore always shown in order. For
-example, in the example below, data may well be loaded by country.
+example, the data below may well have been loaded by country.
 
 .. [#] The terms "collate", "order", and "sort" are equivalent.
 
@@ -174,9 +200,8 @@ follows:
     …
     Population("USA",20100401)=308745538
 
-Note that the trees are displayed in breadth-first order. YottaDB has
-functions for applications to traverse trees in both breadth-first and
-depth-first order.
+YottaDB has functions for applications to traverse trees in both
+breadth-first and depth-first order.
 
 If the application designers now wish to enhance the application to
 add historical dates for capitals, the :code:`Capital("Thailand")` subtree
@@ -282,11 +307,11 @@ processes and are persistent.
 Even though they may appear superficially similar, a local variable is
 distinct from a global variable of the same name. Thus :code:`^X` can have
 the value 1 and :code:`X` can at the same time have the value :code:`"The quick
-brown fox jumps over the lazy dog."` For maintainability **YottaDB
+brown fox jumps over the lazy dog."` For maintainability *YottaDB
 strongly recommends that applications use different names for local
 and global variables, except in the special case where a local
 variable is an in-process cached copy of a corresponding global
-variable.**
+variable.*
 
 Global Directories
 ==================
@@ -294,14 +319,13 @@ Global Directories
 To application software, files in a file system provide
 persistence. This means that global variables must be stored in files
 for persistence. A *global directory file* provides a process with a
-mapping from the name of every possible global variable name to a
-*database file*. A *database* is a set of database files to which
-global variables are mapped by a global directory. Global directories
-are created and maintained by a utility program called the Global
-Directory Editor, which is discussed at length in the `YottaDB
-Administration and Operations Guide
-<https://docs.yottadb.com/AdminOpsGuide/>`_ and is outside the purview
-of this document.
+mapping from the name of every possible global variable name to one or
+more *regions*. A *database* is a set of regions, which in turn map to
+*database files*. Global directories are created and maintained by a
+utility program, which is discussed at length in `Chapter 4 Global
+Directory Editor of the YottaDB Administration and Operations Guide
+<https://docs.yottadb.com/AdminOpsGuide/gde.html>`_ and is outside the
+purview of this document.
 
 The name of the global directory file required to access a global
 variable such as :code:`^Capital`, is provided to the process at startup
@@ -313,17 +337,18 @@ application that wishes to provide an option to display names in other
 languages while defaulting to English. This can be accomplished by
 having different versions of the global variable :code:`^Capital` for
 different languages, and having a global directory for each
-language. A global variable such as :code:`^Population` would be mapped to
-the same database file for all languages, but a global variable such
-as :code:`^Capital` would be mapped to a database file with
-language-specific entries. So a default global directory
-:code:`Default.gld` mapping a :code:`^Capital` to a database file with English
-names can be specified in the environment variable :code:`ydb_gbldir` but
-a different global directory file, e.g., :code:`ThaiNames.gld` can have
-the same mapping for a global variable such as :code:`^Population` but a
-different database file for :code:`^Capital`. The intrinsic special
-variable :code:`$zgbldir` can be set to a global directory name to change
-the mapping from one global directory to another.
+language. A global variable such as :code:`^Population` would be
+mapped to the same database file for all languages, but a global
+variable such as :code:`^Capital` would be mapped to a database file
+with language-specific entries. So a default global directory
+:code:`Default.gld` mapping a :code:`^Capital` to a database file with
+English names can be specified in the environment variable
+:code:`ydb_gbldir` but a different global directory file, e.g.,
+:code:`ThaiNames.gld` can have the same mapping for a global variable
+such as :code:`^Population` but a different database file for
+:code:`^Capital`. The `intrinsic special variable`_ :code:`$zgbldir`
+can be set to a global directory name to change the mapping from one
+global directory to another.
 
 Thus, we can have:
 
@@ -335,6 +360,31 @@ Thus, we can have:
    ^Capital("Thailand",1350,1767)="อยุธยา"
    ^Capital("Thailand",1767,1782)="ธนบุรี"
    ^Capital("Thailand",1782)="กรุ่งเทพฯ"
+
+-----------------------
+Client/Server Operation
+-----------------------
+
+In common usage, database files reside on the same computer system as
+that running application code. However, as described in `Chapter 13
+GT.CM Client/Server of the Administration and Operations Guide
+<https://docs.yottadb.com/AdminOpsGuide/gtcm.html>`_, database files
+can reside on a computer system different from that running
+application code. This mapping of global variables to regions that map
+to remote files is also performed using global directories, and is
+transparent to application code except that YottaDB client/server
+operation does not support `transaction processing`_. This means that
+within a `ydb_tp_s()`_ call, application code on a client machine is
+not permitted to access a database region that resides in a file on a
+remote server. Furthermore, there are configurations that impliticly
+invoke transaction processing logic, such as distributing a global
+variable over multiple database regions, or a trigger invocation (see
+`Chapter 14 Triggers of the YottaDB M Programmers Guide
+<https://docs.yottadb.com/ProgrammersGuide/triggers.html>`_). Operations
+that invoke implicit transaction processing are not supported for
+remote database files.
+
+.. _intrinsic special variable:
 
 Intrinsic Special Variables
 ===========================
@@ -348,8 +398,8 @@ names, intrinsic special variable names are case-insensitive and so
 variable. Intrinsic special variables have no subscripts.
 
 While the majority of intrinsic special variables as enumerated in
-Chapter 8 (Intrinsic Special Variables) of `YottaDB M Programmers Guide
-<https://docs.yottadb.com/ProgrammersGuide/UNIX_manual/>`_ are
+`Chapter 8 (Intrinsic Special Variables) of the YottaDB M Programmers
+Guide <https://docs.yottadb.com/ProgrammersGuide/isv.html>`_ are
 useful to M application code, others are more generally useful and
 documented here.
 
@@ -382,11 +432,11 @@ $zgbldir
 
 :code:`$zgbldir` is the name of the current global directory file; any
 global variable reference that does not explicitly specify a global
-directory uses $zgbldir. For example, instead of using an extended
-reference, an application can set an intrinsic special variable
-:code:`$zgbldir="ThaiNames.gld"` to use the :code:`ThaiNames.gld` mapping. At
-process startup, YottaDB initializes :code:`$zgbldir` from the environment
-variable value :code:`$ydb_gbldir`.
+directory uses $zgbldir. For example, an application can set an
+intrinsic special variable :code:`$zgbldir="ThaiNames.gld"` to use the
+:code:`ThaiNames.gld` mapping. At process startup, YottaDB initializes
+:code:`$zgbldir` from the environment variable value
+:code:`$ydb_gbldir`.
 
 -----------
 $zmaxtptime
@@ -645,7 +695,7 @@ well. A full set of error messages and numbers is in the `YottaDB
 Messages and Recovery Procedures Manual
 <https://docs.yottadb.com/MessageRecovery/>`_.
 
-:CODE:`YDB_ERR_CALLINAFTEREXIT` – A function was called after
+:CODE:`YDB_ERR_CALLINAFTEREXIT` – A YottaDB function was called after
 :code:`ydb_exit()` was called.
 
 :CODE:`YDB_ERR_FATALERROR1` – A fatal error occurred. The process is
@@ -795,7 +845,7 @@ subtree intact.
 
 :CODE:`YDB_NODE_END` — In the event a call to :code:`ydb_node_next_s()` or
 :code:`ydb_node_previous_s()` wish to report that there no further nodes,
-the :code:`*ret_subs_sed` parameter is set to this value. Application code
+the :code:`*ret_subs_used` parameter is set to this value. Application code
 should make no assumption about this constant other than that it is
 negative (<0).
 
@@ -806,15 +856,16 @@ Data Structures & Type Definitions
 :code:`ydb_buffer_t` is a descriptor for a string [#]_ value, and consists of
 the following fields:
 
- - :code:`address` — pointer to an :code:`unsigned char`, the starting
-   address of a string.
- - :code:`len_alloc` and :code:`len_used` — fields of type :code:`unsigned int` where:
+- :code:`buf_addr` — pointer to an :code:`unsigned char`, the starting
+  address of a string.
+- :code:`len_alloc` and :code:`len_used` — fields of type :code:`unsigned int` where:
 
-   - :code:`len_alloc` is the number of bytes allocated to store the
-     string,
-   - :code:`len_used` is the length of the currently stored string, and
-   - :code:`len_alloc` ≥ :code:`len_used` except when a `YDB_ERR_INVSTRLEN`_
-     occurs.
+  - :code:`len_alloc` is the number of bytes allocated to store the
+    string,
+  - :code:`len_used` is the length in bytes of the currently stored
+    string, and
+  - :code:`len_alloc` ≥ :code:`len_used` except when a `YDB_ERR_INVSTRLEN`_
+    occurs.
 
 .. [#] Strings in YottaDB are arbitrary sequences of bytes that are not
        null-terminated. Other languages may refer to them as binary
@@ -825,7 +876,7 @@ compatibility with existing code, and consists of the following
 fields:
 
 - :code:`address` — pointer to an :code:`unsigned char`, the starting
-   address of a string.
+  address of a string.
 - :code:`length` — the length of the string starting at the :code:`address` field.
 
 :code:`ydb_tpfnptr_t` is a pointer to a function with one parameter, a
@@ -853,10 +904,10 @@ whether the memory locations (strings) pointed to by two
 macro to copy the memory locations (strings) pointed to by :code:`source`
 to the memory locations pointed to by :code:`destination` and set:
 
-- :code:`dest->len_used` to :code:`source->len_used`; and
-- :code:`done` to :CODE:`TRUE` if :code:`dest->len_alloc` ≥ :code:`source->len_used`
-  and the underlying :code:`memcpy()` completed successfully, and
-  :CODE:`FALSE` otherwise.
+- :code:`destination->len_used` to :code:`source->len_used`; and
+- :code:`done` to :CODE:`TRUE` if :code:`destination->len_alloc` ≥
+  :code:`source->len_used` and the underlying :code:`memcpy()`
+  completed successfully, and :CODE:`FALSE` otherwise.
 
 :code:`YDB_COPY_LITERAL_TO_BUFFER(literal, buffer, done)` - Use this macro
 to copy a literal string to previously allocated memory referenced by
@@ -868,20 +919,21 @@ to sequence through nodes). It sets:
   literal excluding its terminating null byte and the underlying
   :code:`memcpy()` completed successfully, and :CODE:`FALSE` otherwise.
 
- :code:`YDB_COPY_STRING_TO_BUFFER(string, buffer, done)` – Use this macro
- to copy a null-terminated string to previously allocated memory
- referenced by a :code:`ydb_buffer_t` structure. This macro requires the
- code to also :code:`#include <string.h>`. It sets:
+:code:`YDB_COPY_STRING_TO_BUFFER(string, buffer, done)` – Use this
+macro to copy a null-terminated string to previously allocated memory
+referenced by a :code:`ydb_buffer_t` structure. This macro requires
+the code to also :code:`#include <string.h>`. It sets:
 
- - :code:`buffer->len_used` to the size of the copied string; and
- - :code:`done` to :CODE:`TRUE` if :code:`buffer->len_alloc` ≥ the size of the
-   string to be copied and the underlying :code:`memcpy()` completed
-   successfully, and :CODE:`FALSE` otherwise.
+- :code:`buffer->len_used` to the size of the copied string; and
+- :code:`done` to :CODE:`TRUE` if :code:`buffer->len_alloc` ≥ the size
+  of the string to be copied and the underlying :code:`memcpy()`
+  completed successfully, and :CODE:`FALSE` otherwise.
 
-:code:`YDB_LITERAL_TO_BUFFER(literal, buffer)` – Use this macro to set a
-:code:`ydb_buffer_t` structure to refer to a literal (such as a variable
-name). With :code:`literal` a string literal, and :code:`buffer` a pointer to
-a :code:`ydb_buffer_t` structure, set:
+:code:`YDB_LITERAL_TO_BUFFER(literal, buffer)` – Use this macro to set
+:code:a `ydb_buffer_t` structure to refer to a literal (such as a
+:code:variable name). With :code:`literal` a string literal, and
+:code::code:`buffer` a pointer to a :code:`ydb_buffer_t` structure,
+:code:set:
 
 - :code:`buffer->buf_addr` to the address of :code:`literal`; and
 - :code:`buffer->len_used` and :code:`buffer->len_alloc` to the length of
@@ -1018,7 +1070,7 @@ not apply to applications that do not include M code.
 
 :code:`ydb_delete_excl_s()` returns :CODE:`YDB_OK`,
 :CODE:`YDB_ERR_MISSINGVARNAMES` if :code:`namecount`>0 and fewer variable
-names are specified :code:`*varnames`, :CODE:`YDB_ERR_TOOMANYVARNAMES` if more
+names are specified in :code:`*varnames`, :CODE:`YDB_ERR_TOOMANYVARNAMES` if more
 than :CODE:`YDB_MAX_NAMES` are specified, or another `error return code`_.
 
 -----------
@@ -1056,7 +1108,7 @@ Notes:
   code observes stable data at global variable nodes because YottaDB
   `transaction processing`_ ensures ACID properties.
 - Outside a transaction, a global variable node can potentially be
-  changed by another, concurrent, process between time that a process
+  changed by another, concurrent, process between the time that a process
   calls :code:`ydb_data_s()` to ascertain the existence of the data and a
   subsequent call to :code:`ydb_get_s()` to get that data. A caller of
   :code:`ydb_get_s()` to access a global variable node should code in
@@ -1113,7 +1165,7 @@ ydb_lock_s()
 
 :code:`namecount` is the number of variable names in the call.
 
-Release any locks held by the process, attempt to acquire all the
+Release any locks held by the process, and attempt to acquire all the
 requested locks. Except in the case of an error or a
 :CODE:`YDB_LOCK_TIMEOUT` return value, the release is unconditional. On
 return, the function will have acquired all requested locks or none of
@@ -1399,7 +1451,7 @@ transaction commit, YottaDB need not ensure Durability (it always
 ensures Atomicity, Consistency, and Isolation). Use of this value may
 improve latency and throughput for those applications where an
 alternative mechanism (such as a checkpoint) provides acceptable
-durability. If a transaction that is not flagged as :CODE:`"BATCH"`
+Durability. If a transaction that is not flagged as :CODE:`"BATCH"`
 follows one or more transactions so flagged, Durability of the later
 transaction ensures Durability of the the earlier :CODE:`"BATCH"`
 transaction(s).
@@ -1492,7 +1544,12 @@ ydb_exit()
 When a caller no longer wishes to use YottaDB, a call to
 :code:`ydb_exit()` cleans up the process connection/access to all
 databases and cleans up its data structures. Therafter, any attempt to
-call a YottaDB function produces a :CODE:`YDB_ERR_CALLINAFTEREXIT` error.
+call a YottaDB function produces a :CODE:`YDB_ERR_CALLINAFTEREXIT`
+error.
+
+Note that a typical application should not need to call
+:code:`ydb_exit()`, but should instead just terminate with a call to
+:code:`exit()` which will perform any cleanup needed by YottaDB.
 
 ------------------
 ydb_file_id_free()
@@ -1530,7 +1587,7 @@ ydb_file_name_to_id()
 	int ydb_file_name_to_id(ydb_string_t *filename,
 	ydb_fileid_ptr_t *fileid)
 
-As a file is in principal reachable through different paths, and
+As a file is in principle reachable through different paths, and
 application code may need to check whether two paths do indeed lead to
 the same file, YottaDB provides a mechanism to do so. Provided with a
 path to a file, YottaDB creates an internal structure called a
@@ -1556,19 +1613,21 @@ ydb_fork_n_core()
 	void ydb_fork_n_core(void)
 
 A core is a snapshot of a process, to help debug application code, for
-example to troubleshoot an out-of-design condition.  When a process
-executes :code:`ydb_fork_n_core()`, it forks. The child process does
-essential cleanup (such as erasing encryption passphrases) and sends
+example to troubleshoot an out-of-design condition. When a process
+executes :code:`ydb_fork_n_core()`, it forks. The child process sends
 itself a signal to generate a core and terminate. On termination of
 the child process, the parent process continues execution. Note that
-depending on the nature of the condition necessitating a core, an exit
-may well be the right action for the parent process.
+depending on the nature of the condition necessitating a core, an
+:code:`exit()` may well be the right action for the parent process. An
+:code:`exit()` call will drive YottaDB exit handlers to perform clean
+shutdown of databases and devices the process has open.
 
 The content, location, and naming of cores is managed by the operating
 system – see :code:`man 5 core` for details. We recommend that you set
-:code:`kernel.core_uses_pid` to 1 to make it easier to identify and track
-cores. As cores can contain protected confidential information, you
-*must* ensure appropriate configuration and management of cores.
+:code:`kernel.core_uses_pid` to 1 to make it easier to identify and
+track cores. As cores will likely contain protected confidential
+information, you *must* ensure appropriate configuration and
+management of cores.
 
 ----------
 ydb_free()
@@ -1703,21 +1762,20 @@ expires.
 :code:`handler_data` is a pointer to the data to be passed to :code:`handler`
 and :code:`handler_data_len` is the length of the data at
 :code:`*handler_data`. Note that the data it points to **must** be on the
-heap rather than on the stack, the stack frame may no longer be
+heap rather than on the stack, as the stack frame may no longer be
 valid when the timer expires.
 
 ================
 Programming in M
 ================
 
-As YottaDB is built on `FIS GT.M <http://fis-gtm.com>`_ , it includes
-a complete implementation of the `M
+YottaDB includes a complete implementation of the `M
 <https://en.wikipedia.org/wiki/MUMPS>`_ programming language (also
 known as MUMPS) that mostly conforms to `ISO/IEC 11756:1999
 <http://www.iso.ch/iso/en/CatalogueDetailPage.CatalogueDetail?CSNUMBER=29268&ICS1=35&ICS2=60&ICS3=&scopelist>`_.
 The `YottaDB M Programmers Guide
-<https://docs.yottadb.com/ProgrammersGuide/UNIX_manual/>`_ documents programming
-YottaDB in M and is not duplicated here.
+<https://docs.yottadb.com/ProgrammersGuide/UNIX_manual/>`_ documents
+programming YottaDB in M and is not duplicated here.
 
 =================
 Programming Notes
@@ -1799,7 +1857,7 @@ set that represents a decimal number in a standard, concise, form.
 #. Any of the above two forms followed by "E" (upper case only)
    followed by a canonical integer in the range -43 to 47 such
    that the magnitude of the resulting number is between 1E-43
-   through.1E47.
+   through .1E47.
 
 .. _zwrite format:
 
@@ -1811,7 +1869,7 @@ Zwrite Format
 Strings used as subscripts and as values can include unprintable
 bytes, for example control characters or binary data. YottaDB's zwrite
 format is an encoding in printable ASCII of any sequence of
-bytes. Unlike formats such as Base64, The zwrite format attempts to
+bytes. Unlike formats such as Base64, the zwrite format attempts to
 preserve readability of printable ASCII characters. Note that a zwrite
 formatted string is always longer than the original string (at the
 very least, it has enclosing quotes).
@@ -1880,3 +1938,27 @@ resolutions (microseconds or milliseconds). Furthermore, even with a
 microsecond or millisecond resolution, the accuracy is always
 determined by the underlying hardware and operating system, as well as
 factors such as system load.
+
+Memory Allocation
+=================
+
+Memory allocated by `ydb_malloc()`_ must be explicitly freed by
+`ydb_free()`_. `ydb_exit()`_ does not free memory, and any
+memory allocated but not freed prior to `ydb_exit()`_ is released
+only on process exit.
+
+Syslog
+======
+
+Issues that pertain to the application and on which application code
+can take reasonable action are reported to the application
+(:code:`YDB_ERR_GVUNDEF` being an example) and issues that pertain to
+operations and which application code cannot take reasonable action
+but which operations staff can (like running low on filesystem space,
+which are not discussed here, as this is a Programmers Guide) are
+reported to the syslog. In the event that a syslog does not exist
+(e.g., in default Docker containers), a process' syslog messages go to
+its stderr.
+
+YottaDB uses the existence of :code:`/dev/log` as an indicator of the
+existence of a syslog.
