@@ -382,7 +382,7 @@ variable over multiple database regions, or a trigger invocation (see
 `Chapter 14 Triggers of the YottaDB M Programmers Guide
 <https://docs.yottadb.com/ProgrammersGuide/triggers.html>`_). Operations
 that invoke implicit transaction processing are not supported for
-remote database files.
+global variables that reside on remote database files.
 
 .. _intrinsic special variable:
 
@@ -747,8 +747,9 @@ the call exceeds :CODE:`YDB_MAX_SUBS`.
 :CODE:`YDB_ERR_MINNRSUBSCRIPTS` – The number of subscripts cannot be
 negative.
 
-:CODE:`YDB_ERR_MISSINGVARNAMES` – At least one variable name must be
-specifed.
+:CODE:`YDB_ERR_NAMECOUNT2HI` – The number of variable names specified
+to `ydb_delete_excl_s()`_ or `ydb_tp_s()`_ exceeded the
+:CODE:`YDB_MAX_NAMES`.
 
 :CODE:`YDB_ERR_NUMOFLOW` — a `ydb_incr_s()`_ operation resulted in a
 numeric overflow.
@@ -769,10 +770,6 @@ to modify :code:`$trestart` using `ydb_set_s()`_.
 
 :CODE:`YDB_ERR_TIME2LONG` – This return code indicates that a value
 greater than :CODE:`YDB_MAX_TIME_NSEC` was specified for a time duration.
-
-:CODE:`YDB_ERR_TOOMANYVARNAMES` – The number of variable names specified
-to `ydb_delete_excl_s()`_ or `ydb_tp_s()`_ exceeded the
-:CODE:`YDB_MAX_NAMES`.
 
 :CODE:`YDB_ERR_TPTIMEOUT` — This return code from `ydb_tp_s()`_ indicates
 that the transaction took too long to commit.
@@ -1069,9 +1066,13 @@ you understand what (sub)trees are being deleted. This warning does
 not apply to applications that do not include M code.
 
 :code:`ydb_delete_excl_s()` returns :CODE:`YDB_OK`,
-:CODE:`YDB_ERR_MISSINGVARNAMES` if :code:`namecount`>0 and fewer variable
-names are specified in :code:`*varnames`, :CODE:`YDB_ERR_TOOMANYVARNAMES` if more
-than :CODE:`YDB_MAX_NAMES` are specified, or another `error return code`_.
+:CODE:`YDB_ERR_NAMECOUNT2HI` if more
+than :CODE:`YDB_MAX_NAMES` are specified, or another `error return
+code`_.
+
+Note that specifying a larger value for :code:`namecount` than the
+number of variable names actually provided in :code:`*varnames`
+can result in a buffer overflow.
 
 -----------
 ydb_get_s()
@@ -1182,8 +1183,10 @@ acquire the locks, and if it is unable to, it returns
 :CODE:`YDB_LOCK_TIMEOUT`.
 
 If all requested locks are successfully acquired, the function returns
-:CODE:`YDB_OK`. In other cases, the function returns an `error return
-code`_.
+:CODE:`YDB_OK`. If the requested :code:`timeout_nsec` exceeds
+:code:`YDB_MAX_TIME_NSEC`, the function immediately returns
+:code:`YDB_ERR_TIME2LONG`. In other cases, the function returns an
+`error return code`_.
 
 -----------------
 ydb_lock_decr_s()
@@ -1227,7 +1230,10 @@ If :code:`timeout_nsec` is zero, the function makes exactly one attempt to
 acquire the lock, and if unable to, it returns :CODE:`YDB_LOCK_TIMEOUT`.
 
 If the requested lock is successfully acquired, the function returns
-:CODE:`YDB_OK`. Errors result in an appropriate `error return code`_.
+:CODE:`YDB_OK`.  If the requested :code:`timeout_nsec` exceeds
+:code:`YDB_MAX_TIME_NSEC`, the function immediately returns
+:code:`YDB_ERR_TIME2LONG`. Errors result in an appropriate `error
+return code`_.
 
 -----------------
 ydb_node_next_s()
@@ -1465,7 +1471,7 @@ local variables are restored on a restart. It is an error for a
 
 A top level :code:`ydb_tp_s()` can return :CODE:`YDB_OK`, :CODE:`YDB_TP_ROLLBACK`,
 :CODE:`YDB_ERR_TPTIMEOUT` (see `Transaction Processing`_), or an `error
-return code`_, including :CODE:`YDB_ERR_TOOMANYVARNAMES`. A :code:`ydb_tp_s()`
+return code`_, including :CODE:`YDB_ERR_NAMECOUNT2HI`. A :code:`ydb_tp_s()`
 call that is within another transaction can also return
 :CODE:`YDB_TP_RESTART` to its caller. [#]_
 
@@ -1671,6 +1677,20 @@ returns with a :CODE:`YDB_ERR_TIME2LONG` error; otherwise it returns
 :CODE:`YDB_OK` after the elapsed time or when the wait is terminated by a
 signal.
 
+----------
+ydb_init()
+----------
+
+.. code-block:: C
+
+	int ydb_init(void)
+
+:code:`ydb_init()` initializes the YottaDB runtime environment. As YottaDB
+automatically initializes the runtime on the first call to its API or
+first M code invocation, there is usually no need to explicitly call
+:code:`ydb_init()`. The exception is when an application wishes to set
+its own signal handlers (see `Signals`_).
+
 ------------
 ydb_malloc()
 ------------
@@ -1738,7 +1758,7 @@ ydb_timer_start()
 	typedef void (*ydb_funcptr_retvoid_t)(intptr_t timer_id,
 		unsigned int handler_data_len,
 		char *handler_data);
-	void ydb_timer_start(intptr_t timer_id,
+	int ydb_timer_start(intptr_t timer_id,
 		unsigned long long limit_nsec,
 		ydb_funcptr_retvoid_t handler,
 		unsigned int handler_data_len
@@ -1765,13 +1785,20 @@ and :code:`handler_data_len` is the length of the data at
 heap rather than on the stack, as the stack frame may no longer be
 valid when the timer expires.
 
+If the requested :code:`timeout_nsec` exceeds
+:code:`YDB_MAX_TIME_NSEC`, the function returns
+:code:`YDB_ERR_TIME2LONG`; otherwise it returns :code:`YDB_OK`.
+
 ================
 Programming in M
 ================
 
 YottaDB includes a complete implementation of the `M
 <https://en.wikipedia.org/wiki/MUMPS>`_ programming language (also
-known as MUMPS) that mostly conforms to `ISO/IEC 11756:1999
+known as MUMPS - see `The Heritage and Legacy of M (MUMPS) – and the
+Future of YottaDB
+<https://yottadb.com/heritage-legacy-m-mumps-future-yottadb/>`_ ))
+that mostly conforms to `ISO/IEC 11756:1999
 <http://www.iso.ch/iso/en/CatalogueDetailPage.CatalogueDetail?CSNUMBER=29268&ICS1=35&ICS2=60&ICS3=&scopelist>`_.
 The `YottaDB M Programmers Guide
 <https://docs.yottadb.com/ProgrammersGuide/UNIX_manual/>`_ documents
@@ -1877,15 +1904,75 @@ very least, it has enclosing quotes).
 Signals
 =======
 
-As YottaDB includes a database engine that uses timers and
-signals, YottaDB uses signals, especially timers. YottaDB strongly
-discourages the use of signals, especially SIGALARM, in application
-code functions. Use the exposed timer APIs for application timing
-functionality (see `Utility Functions`_).
+As YottaDB includes a real-time database engine that resides within
+the address space of a process, applications that use signals *must*
+not interfere with database operation.
 
-If a user-defined handler exists for SIGINT (commonly sent with
-Control-C), YottaDB leaves it unchanged, otherwise, YottaDB sets a
-handler to ignore the signal.
+When the YottaDB database engine initializes on the first call into
+the API, it initializes signal handling as follows:
+
+- :code:`SIGALRM` – YottaDB uses this signal extensively and sets its
+  own signal handler for :code:`SIGALRM`. Application code should *not*
+  use :code:`SIGALRM`, and must *never* replace YottaDB's
+  handler. YottaDB provides an API for applications that need timing
+  functionality (see `Utility Functions`_).
+- :code:`SIGCHLD` (formerly :code:`SIGCLD`) – Set to :code:`SIG_DFL` for the
+  default action.
+- :code:`SIGTSTP`, :code:`SIGTTIN`, and :code:`SIGTTOU` – As
+  suspending a real-time database engine at an inopportune moment is
+  undesirable, YottaDB sets a signal handler for these signals that
+  defers process suspension until the engine is in a state where it is
+  safe to suspend.
+- :code:`SIGCONT` - YottaDB sets a handler that continues a suspended
+  process, and nothing if the process is not suspended.
+- :code:`SIGINT` – If the top level invocation of the process is the
+  :code:`mumps` executable, the handler is the YottaDB Ctrl-C handler
+  for M. Otherwise, if the handler is :code:`SIG_DFL`, it is replaced
+  by the YottaDB Ctrl-C handler for M, and if it is something else,
+  YottaDB does not change it.
+- :code:`SIGUSR1` – As YottaDB uses this signal to asynchronously
+  execute the M code in the `$zinterrupt intrinsic special variable
+  <https://docs.yottadb.com/ProgrammersGuide/isv.html#zinterrupt>`_,
+  it sets an appropriate handler. If non-M code is currently active
+  when the process receives a :code:`SIGUSR1`, the handler defers the
+  signal till such time as M code is active. If an application uses no
+  M code whatsoever, and does not intend to, it can change the
+  :code:`SIGUSR1` handler after the first call to YottaDB. If an
+  application has, or in the future may have, M code, it is best to
+  leave the YottaDB handler in place.
+- :code:`SIGUSR2` – As YottaDB processes other than the servers for
+  client/server operation do not use :code:`SIGUSR2`, YottaDB sets a
+  :code:`SIG_IGN` handler. :code:`SIGUSR2` is available for
+  applications to use. To do so, set a handler after the first call to
+  YottaDB.
+- :code:`SIGQUIT` – YottaDB sets a handler to terminate the process
+  without generating a core dump.
+- :code:`SIGABRT`, :code:`SIGBUS`, :code:`SIGFPE`, :code:`SIGILL`,
+  :code:`SIGIOT`, :code:`SIGSEGV`, :code:`SIGTERM`, and
+  :code:`SIGTRAP` – These signals are fatal, and the YottaDB handler
+  terminates the process with a core dump. See the discussion about core
+  dumps in the description of `ydb_fork_n_core()`_. Although YottaDB
+  normally cleans up processes' interaction with databases on exit,
+  these signals can indicate that the process is in a bad state and that
+  its code and data cannot be trusted. The process therefore does
+  not attempt to clean up before exit. After a fatal signal, *no*
+  YottaDB functions can be called except `ydb_exit()`_.  In the
+  event an application *must* use its own handler for one of
+  these signals, it must either save YottaDB's handler, and drive
+  it before process termination or call `ydb_exit()`_ prior to
+  process exit. [#]_
+- Handlers for all signals other than those mentioned above are set to
+  :code:`SIG_IGN`. If an application sets a signal hander for anther
+  signal, it *must* ensure that :code:`ydb_exit()` is explicitly
+  called prior to process exit. An application can set its own signal
+  handler after the first YottaDB API call.
+
+.. [#] Other YottaDB processes will attempt to automatically clean up
+       after a process terminates abnormally. However, this is not
+       guaranteed. Also, if the abnormally terminating process is the
+       last process accessing a database file, there are no remaining
+       processes to attempt a cleanup. Avoid using these signals to
+       terminate processes unless you know what you are doing.
 
 As database operations such as `ydb_set_s()`_ set timers, subsequent
 system calls can terminate prematurely with an EINTR. Such system
@@ -1893,8 +1980,15 @@ calls should be wrapped to restart them when this occurs. The file
 `eintr_wrappers.h <https://github.com/YottaDB/YottaDB/blob/master/sr_port/eintr_wrappers.h>`_
 demonstrates how YottaDB itself is coded to handle this situation.
 
-As the M language subsystem uses SIGUSR1 for asynchronous interrupts,
-we strongly suggest that C applications use SIGUSR2 for this purpose.
+If YottaDB is used within a process with other code that cannot
+co-exist, or be made to co-exist, with YottaDB, for example, by safely
+saving and restoring handlers, separate the logic into multiple
+processes or use a client/server database configuration to place
+application logic and the database engine in separate processes (see
+`Client/Server Operation`_).
+
+To reiterate because of its importance: **never** replace YottaDB's
+:code:`SIGALRM` handler.
 
 Forking
 =======
