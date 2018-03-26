@@ -786,9 +786,9 @@ Action: Review the accompanying message(s) for additional information. Include t
 CALLINAFTERXIT 
 ------------------
 
-CALLINAFTERXIT, After a gtm_exit, a process can never create a valid YottaDB context
+CALLINAFTERXIT, After a ydb_exit, a process can never create a valid YottaDB context
 
-Run Time Error: Once a call-in has done a call to gtm_exit(), a process can no longer do YottaDB call-ins
+Run Time Error: Once a call-in has done a call to ydb_exit(), a process can no longer do YottaDB call-ins
 
 Action: Either move or remove the inappropriate call-ins or move the gtm_exit call to a later point.
 
@@ -5806,16 +5806,6 @@ MUPIP Error: This indicates a syntax error in GLOBAL qualifier value yyyy at off
 
 Action: Specify correct value for GLOBAL.
 
---------------------
-INVGTMEXIT 
---------------------
-
-INVGTMEXIT, Inappropriate invocation of gtm_exit. gtm_exit cannot be invoked from external calls.
-
-Call in/Run Time Error: This indicates that the call-in shut-down function gtm_exit() has been called from an external call C function. Since the YottaDB run-time system must be operational even after the external call function returns, gtm_exit() is meant to be called only once during a process lifetime, and only from the base C/C++ program when YottaDB functions are no longer required by the program.
-
-Action: Remove all invocations of gtm_exit() from external call functions.
-
 -------------------
 INVICUVER 
 -------------------
@@ -6071,6 +6061,15 @@ MUPIP Error: This indicates that an invalid value was assigned to the -TRANSACTI
 
 Action: Specify appropriate value to the -TRANSACTION qualifier.
 
+--------------------
+INVYDBEXIT 
+--------------------
+
+INVYDBEXIT, Inappropriate invocation of ydb_exit. ydb_exit cannot be invoked from external calls.
+
+Call in/Run Time Error: This indicates that the call-in shut-down function ydb_exit() has been called from an external call C function. Since the YottaDB run-time system must be operational even after the external call function returns, ydb_exit() is meant to be called only once during a process lifetime, and only from the base C/C++ program when YottaDB functions are no longer required by the program.
+
+Action: Remove all invocations of ydb_exit() from external call functions.
 
 --------------------
 INVZBREAK 
@@ -8124,6 +8123,16 @@ LVSTARALON, The * name cannot be deleted or renamed
 GDE Error: This indicates that a DELETE or RENAME command attempted to delete or rename the * namespace. The * namespace is protected because it is associated with namespaces that are not explicitly mapped.
 
 Action: None.
+
+-----------------
+LVUNDEF
+-----------------
+
+LVUNDEF, Undefined local variable: xxxx
+
+Run Time Error: This indicates that an expression referenced a local variable xxxx, that was not defined.
+
+Action: Ensure that all variables are assigned values before they are referenced; use $GET(), or change the image or process to NOUNDEF mode.
 
 ----------------
 MALLOCMAXUNIX 
@@ -14293,7 +14302,7 @@ Action: Review accompanying message(s) for more information about what caused th
 TPTOODEEP 
 --------------------
 
-TPTOODEEP, $TLEVEL cannot exceed 127
+TPTOODEEP, $TLEVEL cannot exceed 126
 
 Run Time Error: This indicates that a TSTART attempted to initiate more concurrent subtransactions than YottaDB permits.
 
@@ -14717,16 +14726,6 @@ UIDSND, Unidentified sender PID
 Run Time Error: This indicates that the process was performing a JOB command and received a message from an unidentified source while attempting to communicate with the JOBbed process.
 
 Action: Look for indiscriminate mailbox use by other processes.
-
------------------
-UNDEF
------------------
-
-UNDEF, Undefined local variable: xxxx
-
-Run Time Error: This indicates that an expression referenced a local variable xxxx, that was not defined.
-
-Action: Ensure that all variables are assigned values before they are referenced; use $GET(), or change the image or process to NOUNDEF mode.
 
 ---------------
 UNIMPLOP 
