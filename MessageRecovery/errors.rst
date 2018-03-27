@@ -213,7 +213,7 @@ ASYNCIONOMM, Database file ffffssss cannot cccc
 
 MUPIP Error: This indicates that database file has current state ssss (" has ASYNCIO enabled;" or: " has MM access method;") and therefore cannot change to assume change cccc ("enable MM" or "enable ASYNCIO"). MUPIP SET can also issue the same message with the text: "; cannot enable MM and ASYNCIO at the same time".
 
-Action: Address the blocking state - ASYNIO by disabling it, or MM access method by change it to BG before repeating the MUPIP command that produced this error.
+Action: Address the blocking state - ASYNCIO by disabling it, or disable MM access method by changing it to BG before repeating the MUPIP command that produced this error.
 
 
 -----------
@@ -224,7 +224,7 @@ ASYNCIONOV4, rrrr database has ssss; cannot cccc
 
 MUPIP Error: This indicates that region rrrr has current state ssss (ASYNCIO enabled) and therefore cannot change to assume change cccc (enable ASYNCIO).
 
-Action: Address the blocking state - ASYNCIO by disabling it,  by completing an upgrade before repeating the MUPIP command that produced this error.
+Action: Address the blocking state - ASYNCIO by disabling it, by completing an upgrade before repeating the MUPIP command that produced this error.
 
 
 -------------
@@ -1146,7 +1146,7 @@ COLLARGLONG
 
 COLLARGLONG, Collation sequence nnn does not contain routines for long strings
 
-Run Time Error: Strings longer than 32,767  bytes have been used with alternative collation and only gtm_ac_xform and gtm_ac_xback are defined in the collation library.
+Run Time Error: Strings longer than 32,767 bytes have been used with alternative collation and only gtm_ac_xform and gtm_ac_xback are defined in the collation library.
 
 Action: Define gtm_ac_xfrom_1 and gtm_ac_xback_1 routines in the collation library.
 
@@ -1544,7 +1544,7 @@ CRYPTNOPSWDINTP
 
 CRYPTNOPSWDINTP, Cannot prompt for password inside a TP transaction.
 
-Run Time Error: This error occurs if the process used an external call to set the gtm_passwd environment variable to null string after startup and then accessed an encrypted database file for the first time within a TP transaction.
+Run Time Error: This error occurs if the process used an external call to set the gtm_passwd environment variable to a null string after startup and then accessed an encrypted database file for the first time within a TP transaction.
 
 Action: If possible, set the gtm_passwd environment variable to the obfuscated password. Otherwise, revise the logic to touch a global mapped to each encrypted database, for example, $DATA(myglobal), to ensure the prompting happens before entering any TP transaction.
 
@@ -2189,7 +2189,7 @@ DBCRERR8
 
 DBCRERR8, Database file xxxx, or location yyyy blk = zzzz error: aaaa was bbbb, expecting cccc -- called from module yyy at line xxx
 
-Run Time Error: This message is the same as a DBCRERR message except that bbbb and cccc are 8-byte quantities (as opposed to 4-byte quantitites in DBCRERR). See Error description for message DBCRERR.
+Run Time Error: This message is the same as a DBCRERR message except that bbbb and cccc are 8-byte quantities (as opposed to 4-byte quantitites in DBCRERR). See Error description for message DBCRERR above.
 
 Action: YottaDB often fixes this error unless there is a more serious problem causing this error. If there is a more serious problem, accompanying messages identify the cause.
 
@@ -3049,7 +3049,7 @@ DBREMOTE
 
 DBREMOTE, Database region xxxx is remote; perform maintenance on the server node
 
-DSE/MUPIP/LKE Error: This indicatest that a database maintenance operation was attempted on region xxxx. This node does not maintain the region directly; instead, it uses GT.CM to access the node as a client. This error is also reported by ^%GBLDEF if the target global is mapped to another node and served by GT.CM.
+DSE/MUPIP/LKE Error: This indicates that a database maintenance operation was attempted on region xxxx. This node does not maintain the region directly; instead, it uses GT.CM to access the node as a client. This error is also reported by ^%GBLDEF if the target global is mapped to another node and served by GT.CM.
 
 Action: Perform database maintenance on the server node.
 
@@ -4142,7 +4142,7 @@ FILECREERR, Error OOOO for file DDDD during DB creation
 
 Run Time/MUPIP Error: While creating a database file, some IO operation OOOO failed; this error is followed by the error that occurred.
 
-Action: Addess the error and retry.
+Action: Address the error and retry.
 
 ----------------
 FILEDEL
@@ -4860,7 +4860,7 @@ GTMSECSHR Error: The UNIX gtmsecshr process, which assists other process with cr
 Action: Verify that the environment provides the desired dddd, that dddd exists and that it is a directory.
 
 .. note::
-   the permissions on dddd should not matter (as long as it is a directory) since GTMSECSHR runs as root.
+   The permissions on dddd should not matter (as long as it is a directory) since GTMSECSHR runs as root.
 
 
 -----------------------
@@ -4938,7 +4938,7 @@ Action: Refer to the associated message(s) for more information.
 GTMSECSHRNOARG0
 ------------------
 
-GTMSECSHRNOARG0, GTMSECSHRNOARG0gtmsecshr cannot identify its origin - argv[0] is null
+GTMSECSHRNOARG0, gtmsecshr cannot identify its origin - argv[0] is null
 
 Run Time Error: This message occurs when gtmsecshr is called in an inappropriate manner by facilities other those allowed by design (like the gtmsecshr wrapper).
 
@@ -5221,7 +5221,7 @@ Action: Report this database error to the group responsible for database integri
 GVINCRFAIL
 -------------------
 
-GVINCRFAIL, <Global variable $INCR failed. Failure code: xxxx>
+GVINCRFAIL, Global variable $INCR failed. Failure code: xxxx
 
 Run Time Error: This indicates that a $INCREMENT command encountered a database problem when it attempted to update a global variable. xxxx contains the failure codes for the four attempts. It is very likely that the database may have structural damage or that the process-private data structures are corrupted.
 
@@ -5231,7 +5231,7 @@ Action: Report this database error to the group responsible for database integri
 GVINCRISOLATION 
 ---------------------
 
-GVINCRISOLATION, <$INCREMENT cannot be performed on global xxxx as it has NOISOLATION turned ON>
+GVINCRISOLATION, $INCREMENT cannot be performed on global xxxx as it has NOISOLATION turned ON
 
 Run Time Error: Global xxxx has NOISOLATION turned ON (through a VIEW "NOISOLATION" command). $INCREMENT is currently not supported for such globals.
 
@@ -5594,7 +5594,7 @@ INITORRESUME
 
 INITORRESUME, UPDATERESYNC on a Supplementary Instance must additionally specify INITIALIZE or RESUME
 
-Receiver Server log/MUPIP Error: Issued by a Receiver Server when started with -UPDATERESYNC on a Supplementary Instance which allows local updates, but started without specifying either -INITIALIZE or -RESUME.
+Receiver Server Log / MUPIP Error: Issued by a Receiver Server when started with -UPDATERESYNC on a Supplementary Instance which allows local updates, but started without specifying either -INITIALIZE or -RESUME.
 
 Action: Additionally specify -INITIALIZE if this is the first time this supplementary instance is connecting to the source side OR if the receiver side databases have been refreshed from a backup of the source side. If on the other hand, the receiving instance had already been replicating from the source before and only had its instance file recreated in between, -RESUME might be appropriate with the -UPDATERESYNC. Check -RESUME documentation for more details.
 
@@ -5735,9 +5735,9 @@ INVCTLMNE
 
 INVCTLMNE, Invalid control mnemonics
 
-Run Time Error: The current device does not support the specified controlmnemonic.
+Run Time Error: The current device does not support the specified control mnemonic.
 
-Action: Check the spelling of the controlmnemonic, and be sure the mnemonicspace (if any) for the current device supports the requested usage of the controlmnemonic.
+Action: Check the spelling of the control mnemonic, and be sure the mnemonicspace (if any) for the current device supports the requested usage of the control mnemonic.
 
 ------------------
 INVDLRCVAL 
@@ -5764,7 +5764,7 @@ INVECODEVAL, Invalid value for $ECODE (xxxx).
 
 Run Time Error: This indicates that an attempt was made to assign $ECODE an invalid value. Such an action modifies $ECODE to have a valid value indicating this error, which triggers an error trap.
 
-Action: Revise the SET $ECODE value complies with the required specification of the error codes of the format ,Mnnn,Zxxx,Uxxx,. The error codes in the form of ,Mnnn,, ,Zxxx, and ,Uxxx, represent ANSI standard codes, implementation-specific codes and end-user defined codes respectively.
+Action: Revise the SET $ECODE value complies with the required specification of the error codes of the format ,Mnnn,Zxxx,Uxxx,. The error codes in the form of ,Mnnn, ,Zxxx, and ,Uxxx, represent ANSI standard codes, implementation-specific codes and end-user defined codes respectively.
 
 -------------------------
 INVERRORLIM 
@@ -7340,9 +7340,9 @@ JOBPARNOVAL
 ----------------------
 JOBPARNOVAL, This job parameter cannot take a value
 
-Compile Time Error: This indicates that a JOB command specified a value for a jobparameter that does not accept a value.
+Compile Time Error: This indicates that a JOB command specified a value for a job parameter that does not accept a value.
 
-Action: Modify the jobparameter or remove its argument.
+Action: Modify the job parameter or remove its argument.
 
 -----------------------
 JOBPARNUM 
@@ -7350,9 +7350,9 @@ JOBPARNUM
 
 JOBPARNUM, The value of this job parameter must be an integer
 
-Compile Time Error: This indicates that a JOB command specified a valid jobparameter but it did not assign an integer value, which is required.
+Compile Time Error: This indicates that a JOB command specified a valid job parameter but it did not assign an integer value, which is required.
 
-Action: Verify that the jobparameter has an integer literal argument and not a string or variable argument.
+Action: Verify that the job parameter has an integer literal argument and not a string or variable argument.
 
 ------------------------
 JOBPARSTR 
@@ -7360,9 +7360,9 @@ JOBPARSTR
 
 JOBPARSTR, The value of this job parameter must be a string
 
-Compile Time Error: This indicates that a JOB command specified a valid jobparameter but did not assign the jobparameter a string value as expected.
+Compile Time Error: This indicates that a JOB command specified a valid job parameter but did not assign the job parameter a string value as expected.
 
-Action: Ensure that the jobparameter has a string literal argument and not a variable or keyword argument.
+Action: Ensure that the job parameter has a string literal argument and not a variable or keyword argument.
 
 --------------------
 JOBPARTOOLONG 
@@ -7370,7 +7370,7 @@ JOBPARTOOLONG
 
 JOBPARTOOLONG, JOBPARTOOLONG Total parameter length is too long for job command
 
-Run Time Error: This indicates that the total length of jobparameters that must be passed to the created job exceeded the size of the buffer that was available to handle them.
+Run Time Error: This indicates that the total length of job parameters that must be passed to the created job exceeded the size of the buffer that was available to handle them.
 
 Action: Use fewer and/or shorter items in parameter passing; consider passing information in a global.
 
@@ -7391,9 +7391,9 @@ JOBPARVALREQ
 
 JOBPARVALREQ, A value is required for this job parameter
 
-Compile Time Error: This indicates that a JOB command specified a valid jobparameter but did not assign the jobparameter a value, which is required.
+Compile Time Error: This indicates that a JOB command specified a valid job parameter but did not assign the jobparameter a value, which is required.
 
-Action: Review the jobparameters for proper assignments.
+Action: Review the job parameters for proper assignments.
 
 --------------------
 JOBSETUP 
@@ -7561,7 +7561,7 @@ Action: Preserve the core (dump) files and report the entire incident context to
 KRNLKILL 
 --------------------
 
-KRNLKILL, Process was terminated by SIGDANGER signal from the system --System swap space is too low --Report to System Administrator
+KRNLKILL, Process was terminated by SIGDANGER signal from the system - System swap space is too low - Report to System Administrator
 
 Run Time Error: This indicates that a YottaDB process received the SIGDANGER signal from AIX, which means that virtual memory is critically low. This message is sent to the user and the system log, notifying that the YottaDB process is terminating.
 
