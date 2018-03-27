@@ -916,7 +916,7 @@ Make sure a valid M label reference is bound to the C call-name specified for th
 CIMAXLEVELS 
 --------------------
 
-CIMAXLEVELS, Too many nested Call-ins. Nested resources exhaused at level !UL.>/error/fao=1!/ansi=0
+CIMAXLEVELS, Too many nested Call-ins. Nested resources exhaused at level xxxx.
 
 Call in/Run Time Error: This indicates that YottaDB runs out of its internal condition handlers stack due to too many levels of nested call-ins.
 
@@ -6015,7 +6015,7 @@ INVSTRLEN
 
 INVSTRLEN, Invalid string length xxxx: max yyyy
 
-Run Time Error: This indicates that YottaDB encountered a string with a length of xxxx that exceeds the maximum acceptable length yyyy in this context.
+Run Time Error: This indicates that YottaDB encountered a string with a length of xxxx that exceeds the maximum acceptable length yyyy in this context. If the caller is a SimpleAPI function, this indicates that a buffer provided by the caller is not long enough for a string to be returned, or the length of a string passed as a parameter exceeds YDB_MAX_STR. In the event the return code is YDB_ERR_INVSTRLEN and if \*xyz is a ydb_buffer_t structure whose xyz->len_alloc indicates insufficient space, then xyz->len_used is set to the size required of a sufficiently large buffer. In this case the len_used field of a ydb_buffer_t structure is greater than the len_alloc field, and the caller is responsible for correcting the xyz->len_used field.
 
 Action: Modify the string to an acceptable length.
 
