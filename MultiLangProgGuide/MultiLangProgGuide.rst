@@ -689,11 +689,19 @@ constants below are not a complete list of all error messages that
 YottaDB functions can return — error return codes can indicate system
 errors and database errors, not just application errors. A process
 that receives a negative return code, including one not listed here,
-can call `ydb_get_s()`_ to get the value of `$zstatus`_.  Also, some
-of the errors listed below can be raised in other circumstances as
-well. A full set of error messages and numbers is in the `YottaDB
-Messages and Recovery Procedures Manual
-<https://docs.yottadb.com/MessageRecovery/>`_.
+can call `ydb_get_s()`_ to get the value of `$zstatus`_.
+
+Error messages can be raised by the YottaDB runtime system or by the
+underlying operating system.
+
+- A full set of YottaDB error messages and numbers is in the `YottaDB
+  Messages and Recovery Procedures Manual
+  <https://docs.yottadb.com/MessageRecovery/>`_.
+- Linux error messages are described in Linux documentation,
+  e.g. `errno <https://linux.die.net/man/3/errno>`_. 
+
+Remember that the error codes returned by YottaDB functions are the
+negated numeric values of the error codes above.
 
 :CODE:`YDB_ERR_CALLINAFTEREXIT` – A YottaDB function was called after
 :code:`ydb_exit()` was called.
@@ -751,7 +759,10 @@ negative.
 to `ydb_delete_excl_s()`_ or `ydb_tp_s()`_ exceeded the
 :CODE:`YDB_MAX_NAMES`.
 
-:CODE:`YDB_ERR_NUMOFLOW` — a `ydb_incr_s()`_ operation resulted in a
+:code:`YDB_NOTOK` – `ydb_file_name_to_id()`_ was called with a NULL
+pointer to a filename.
+
+:CODE:`YDB_ERR_NUMOFLOW` — A `ydb_incr_s()`_ operation resulted in a
 numeric overflow.
 
 :CODE:`YDB_ERR_PARAMINVALID` — A parameter provided by the caller is
@@ -785,7 +796,8 @@ limit.
 Limits
 ======
 
-Symbolic constants for limits are prefixed with :CODE:`YDB_MAX_`.
+Symbolic constants for limits are prefixed with :CODE:`YDB_MAX_` or
+:code:`YDB_MIN_`.
 
 :CODE:`YDB_MAX_IDENT` — The maximum space in bytes required to store a
 complete variable name, not including the preceding caret for a global
@@ -807,6 +819,18 @@ global variable.
 application can instruct libyottab to wait, e.g., until the process is
 able to acquire locks it needs before timing out, or for
 `ydb_hiber_start()`_.
+
+:code:`YDB_MAX_YDBERR` – The absolute (positive) value of any YottaDB
+function error return code. If the absolute value of an error return
+code is greater than :code:`YDB_MAX_YDBERR`, then it is an error code
+from elsewhere, e.g., e.g. `errno
+<https://linux.die.net/man/3/errno>`_. Also, see :code:`YDB_IS_YDBERR()`.
+
+:code:`YDB_MIN_YDBERR` - The absolute (positive) value of any YottaDB
+function error return code. If the absolute value of an error return
+code is less than :code:`YDB_MIN_YDBERR`, then it is an error code
+from elsewhere, e.g., e.g. `errno
+<https://linux.die.net/man/3/errno>`_. Also, see :code:`YDB_IS_YDBERR()`.
 
 Severity
 ========
@@ -936,10 +960,17 @@ the code to also :code:`#include <string.h>`. It sets:
 - :code:`buffer->len_used` and :code:`buffer->len_alloc` to the length of
   :code:`literal` excluding the terminating null byte.
 
+:code:`YDB_IS_YDBERR(msgnum)` – returns TRUE if the absolute value of
+:code:`msgnum` lies between :code:`YDB_MIN_YDBERR` and
+:code:`YDB_MAX_YDBERR`.
+
 :code:`YDB_SEVERITY(msgnum, severity)` – The `error return code`_ from a
 function indicates both the nature of an error as well as its
 severity. For message :code:`msgnum`, the variable :code:`severity` is set to
-one of the :CODE:`YDB_SEVERITY_*` symbolic constants.
+one of the :CODE:`YDB_SEVERITY_*` symbolic
+constants. :code:`YDB_SEVERITY()` is only meaningful for `error return
+codes`_ and not other numbers. Use  :code:`YDB_IS_YDBERR()` to
+determine whether a return code is a YottaDB `error return code`_.
 
 :code:`YDB_STRING_TO_BUFFER(string, buffer)` – Use this macro to set a
 :code:`ydb_buffer_t` structure to refer to a null-terminated string
@@ -1607,8 +1638,8 @@ When the :code:`fileid` structure for a file is no longer needed, an
 application should call `ydb_file_id_free()`_ to release the structure
 and avoid a memory leak.
 
-:code:`ydb_file_name_to_id()` returns :CODE:`YDB_OK` or an `error return
-code`_.
+:code:`ydb_file_name_to_id()` returns :CODE:`YDB_OK`, `YDB_NOTOK` if
+:code:the :code:`filename` is NULL, or an `error return code`_.
 
 -----------------
 ydb_fork_n_core()
@@ -2056,3 +2087,15 @@ its stderr.
 
 YottaDB uses the existence of :code:`/dev/log` as an indicator of the
 existence of a syslog.
+
+IO
+==
+
+Although YottaDB does not prohibit it, we recommend against performing
+IO to the same device from M and non-M code in a process unless you
+know exactly what you are doing and have the expertise to debug
+unexpected behavior. Owing to differences in buffering, and in the
+case of interactive sessions, setting terminal characteristics,
+performing IO to the same device from both M and non-M code will
+likely result in hard to troubleshoot race conditions and other
+behavior.
