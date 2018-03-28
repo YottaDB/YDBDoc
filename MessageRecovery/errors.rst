@@ -7728,9 +7728,9 @@ Action: Relink the image using the current version of YottaDB. If the previous v
 LISTENPASSBND 
 ---------------------
 
-LISTENPASSBND, Controlmnemonic LISTEN can be applied to PASSIVE socket which is in the state BOUND ONLY
+LISTENPASSBND, Control mnemonic LISTEN can be applied to PASSIVE socket which is in the state BOUND ONLY
 
-Run Time Error: This indicates that the LISTEN controlmnemonic can only be applied to passive sockets in a bound state.
+Run Time Error: This indicates that the LISTEN control mnemonic can only be applied to passive sockets in a bound state.
 
 Action: Use ZSHOW to verify that the command syntax is correct. Use the USE command to bind the socket.
 
@@ -7740,7 +7740,7 @@ LITNONGRAPH
 
 LITNONGRAPH, standard requires graphics in string literals; found non-printable: $ZCHAR(cccc)
 
-Compile Time Warning: flags a standard violation. The generated code will accept the string, even though it contains cccc, which is not a visible character.
+Compile Time Warning: Flags a standard violation. The generated code will accept the string, even though it contains cccc, which is not a visible character.
 
 Action: Consider revising the literal to use $[Z]CHAR() and possibly concatenation to make the code more maintainable.
 
@@ -8258,9 +8258,9 @@ Action: Modify the routine so it uses shorter strings.
 MAXTRACEHEIGHT
 -------------------
 
-MAXTRACEHEIGHT, <The maximum trace tree height (xxxx) has been exceeded. The trace information will be incomplete>
+MAXTRACEHEIGHT, The maximum trace tree height (xxxx) has been exceeded. The trace information will be incomplete
 
-Run Time Information: The internal YottaDB data structure used to gather information during M Profiling can not hold all the information.
+Run Time Information: The internal YottaDB data structure used to gather information during M Profiling cannot hold all the information.
 
 Action: Not all lines executed will be reported in the global specified by VIEW "TRACE". There is no impact on the actual execution of the user program. Report the entire incident context with all information necessary to reproduce this error to your YottaDB support channel.
 
@@ -8292,7 +8292,7 @@ MBXRDONLY, Mailbox is read only, cannot write to it
 
 Run Time Error: This indicates that a WRITE command attempted to access a mailbox that was opened read-only.
 
-Action: Verify that the routine is using the right mailbox and that the mailbox was opened with the appropriate deviceparameter.
+Action: Verify that the routine is using the right mailbox and that the mailbox was opened with the appropriate device parameter.
 
 --------------------
 MBXWRTONLY
@@ -8302,7 +8302,7 @@ MBXWRTONLY, Mailbox is write only, cannot read from it
 
 Run Time Error: This indicates that a READ command attempted to access a mailbox that was opened write-only.
 
-Action: Verify that the routine is using the correct mailbox and that the mailbox was opened with the appropriate deviceparameter.
+Action: Verify that the routine is using the correct mailbox and that the mailbox was opened with the appropriate device parameter.
 
 --------------------
 MEMORY 
@@ -8718,7 +8718,7 @@ Action: None necessary.
 MUINFOUINT6 
 ------------------
 
-MUINFOUINT6, <tttt : vvvv [0x!hhhh] ; $H=dddddd,tttttt
+MUINFOUINT6, tttt : vvvv [0x!hhhh] ; $H=dddddd,tttttt
 
 MUPIP Information: This is secondary information message that provides additional context for some other MUPIP message; tttt is explanatory text, vvvv is a numeric value, hhhh is the hexadecimal equivalent of vvvv, dddddd and tttttt are a date and time in $HOROLOG format.
 
@@ -9149,7 +9149,7 @@ MURNDWNOVRD
 
 MURNDWNOVRD, OVERRIDE qualifier used with MUPIP RUNDOWN on database file dddd
 
-MUPIP Information: This message records use of the OVERRIDE qualifier with a MUPIP RUNDOWN command to bypass an an error, which would normally suggest a more appropriate action.
+MUPIP Information: This message records use of the OVERRIDE qualifier with a MUPIP RUNDOWN command to bypass an error, which would normally suggest a more appropriate action.
 
 Action: No action required. This message serves primarily to facilitate analysis of database crashes and recovery procedures.
 
@@ -9263,9 +9263,9 @@ Run Time Error: This warning indicates that a process could not obtain a critica
 
 YottaDB produces this warning when:
 
-- A process owning a critical section dies (most likely because of a kill -9) and the OS gives its PID to another process. To reclaim the inappropriately held critical section, YottaDB first checks whether the process is alive and whether it holds hold the critical section. On finding that the process is alive but does not hold the critical section, YottaDB concludes that it is not safe to free the critical section and alerts the operator with this message.
+- A process owning a critical section dies (most likely because of a kill -9) and the OS gives its PID to another process. To reclaim the inappropriately held critical section, YottaDB first checks whether the process is alive and whether it holds the critical section. On finding that the process is alive but does not hold the critical section, YottaDB concludes that it is not safe to free the critical section and alerts the operator with this message.
 
-- The process holding the critical section is using a non-Isolated command such as ZSYSTEM, BREAK or a timed command in a way that creates a deadlock or a live-lock. YottaDB attempts to limit this by limiting the time a process using one of these commands can hold a critical section, but your use of non-Isolated commands and your settings for $ZMAXTPTIM and / or the environment variable $gtm_tpnotacidtime may be such that you set get MUTEXLCKALERT messages. Revise your settings for $gtm_tpnotacidtime and $ZMAXTPTIM appropriately.
+- The process holding the critical section is using a non-Isolated command such as ZSYSTEM, BREAK or a timed command in a way that creates a deadlock or a live-lock. YottaDB attempts to limit this by limiting the time a process using one of these commands can hold a critical section, but the use of non-Isolated commands and the settings for $ZMAXTPTIM and / or the environment variable $gtm_tpnotacidtime may be such that MUTEXLCKALERT messages are generated. Revise your settings for $gtm_tpnotacidtime and $ZMAXTPTIM appropriately.
 
 - There is an IO bottleneck that caused YottaDB to slow down: YottaDB detects that process pppp is currently using the critical section lock.
 
@@ -9686,9 +9686,9 @@ NESTFORMP
 
 NESTFORMP, Formal parameter list cannot be combined with nested line
 
-Compile Time Error: This indicates that a line included both a formallist and a nesting level-indicator (.).
+Compile Time Error: This indicates that a line included both a formal list and a nesting level-indicator (.).
 
-Action: Parameter passing is incompatible with argumentless DO commands. Remove the formallist or the level-indicator and reorganize the routine, if appropriate.
+Action: Parameter passing is incompatible with argumentless DO commands. Remove the formal list or the level-indicator and reorganize the routine, if appropriate.
 
 -----------------------
 NETDBOPNERR 
@@ -9778,7 +9778,7 @@ NOCANONICNAME, Value is not a canonic name (xxxx).
 
 Run Time Error: This indicates that the argument supplied to $QLENGTH, or the first argument to $QSUBSCRIPT is not a valid glvn.
 
-Action: Pass valid argument to $QLENGHT/$QSUBSCRIPT
+Action: Pass valid argument to $QLENGTH/$QSUBSCRIPT
 
 --------------
 NOCCPPID 
@@ -9838,7 +9838,7 @@ NOEDITOR, Can't find an executable editor: eeee
 
 Run Time Error: The ZEDIT command cannot find an executable editor.
 
-Action: Ensure that the EDITOR environment variable points to an editor that is executable by the user..
+Action: Ensure that the EDITOR environment variable points to an editor that is executable by the user.
 
 --------------------
 NOENDIANCVT
@@ -9938,7 +9938,7 @@ NOLOCKMATCH, No matching locks were found in rrrr
 
 LKE Information: SHOW or CLEAR, found that no LOCKs match the specified criteria in region rrrr; note that specifying no search criteria acts like a wildcard, checking all LOCKs in the region.
 
-Action: If this is not the expected result, check the search criteria and / or research the LOCK protocol to validate its correct operation.
+Action: If this is not the expected result, check the search criteria and/or research the LOCK protocol to validate its correct operation.
 
 ----------------------
 NOLOG 
@@ -9986,7 +9986,7 @@ NONTPRESTART
 
 NONTPRESTART, Database dddd; code: cccc; blk: bbbb in glbl: ^gggg; blklvl: llll, type: tttt, zpos: pppp
 
-Run Time Information: This is an informational message for non-TP transaction messages. The frequency of this message can be set by $gtm_nontprestart_log_delta and $gtm_nontprestart_log_first environment variables. dddd is the database the restart occurred; cccc is the code described in the `Maintaining Database Integrity chapter of the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/integrity.html>`_; bbbb is the block where YottaDB detected a concurrency conflict that caused the restart; gggg shows the global reference within that block; llll is the level of that block; tttt indicates the type of activity that detected the conflict; pppp is the source line where restart ocurred on.
+Run Time Information: This is an informational message for non-TP transaction messages. The frequency of this message can be set by $gtm_nontprestart_log_delta and $gtm_nontprestart_log_first environment variables. dddd is the database where the restart occurred; cccc is the code described in the `Maintaining Database Integrity chapter of the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/integrity.html>`_; bbbb is the block where YottaDB detected a concurrency conflict that caused the restart; gggg shows the global reference within that block; llll is the level of that block; tttt indicates the type of activity that detected the conflict; pppp is the source line where restart ocurred on.
 
 Action: None required in most cases. If the messages are too frequent either investigate the processes that reference to that particular global and its block, or reduce the number of messages by tweaking $gtm_nontprestart_log_delta and $gtm_nontprestart_log_first environment variables.
 
@@ -10284,7 +10284,7 @@ NOTGBL, Expected a global variable name starting with an up-arrow (^): xxxx
 
 Run Time/MUPIP Error: This indicates that the VIEW argument expression for tracing specifies xxxx which is not a valid global name. In case of MUPIP error, it indicates that LOAD aborted because it encountered xxxx in its input stream, which is not a valid global name.
 
-Action: Correct the argument of the VIEW command to point to a valid global name. For MUPIP error, refer to the topic MUPIP LOAD Errors in About This Manual section of this manual. 
+Action: Correct the argument of the VIEW command to point to a valid global name. For MUPIP error, refer to the topic MUPIP LOAD Errors in the `About This Manual section of this manual <https://docs.yottadb.com/MessageRecovery/about.html>`_. 
 
 ------------------
 NOTPOSITIVE 
@@ -10434,7 +10434,7 @@ NUMUNXEOR, xxxx unexpected end of record in numeric subscript
 
 MUPIP Error: This indicates that LOAD aborted because it encountered an improperly formatted numeric subscript xxxx in its input stream.
 
-Action: Refer to the topic MUPIP LOAD Errors in About This Manual section in this manual.
+Action: Refer to the topic MUPIP LOAD Errors in the `About This Manual section in this manual <https://docs.yottadb.com/MessageRecovery/about.html>`_.
 
 
 ---------------------
@@ -10555,7 +10555,7 @@ OFRZNOTHELD, Online Freeze had been automatically released for at least one regi
 
 MUPIP Warning: A MUPIP FREEZE -OFF command encountered at least one region which previously had an Online Freeze, but a process had AutoReleased it.
 
-Action: The command cleaned up the region with the AutoReleased Online Freeze, and database operations are back to normal. However, any database file snapshots or copies made after the Online Freeze should be discarded, as processes likely will have written to the file since the AutoRelease. An OFRZAUTOREL message in the operator log will report which process performed the AutoRelease.
+Action: The command cleaned up the region with the AutoReleased Online Freeze, and database operations are back to normal. However, any database file snapshots or copies made after the Online Freeze should be discarded, as processes would likely have written to the file since the AutoRelease. An OFRZAUTOREL message in the operator log will report which process performed the AutoRelease.
 
 ------------------
 OLDBINEXTRACT
@@ -10996,7 +10996,7 @@ PREMATEOF, Premature end of file detected
 
 MUPIP Error: LOAD detected an end-of-file when it was expecting additional records.
 
-Action: Refer to the About this Manual section on MUPIP LOAD errors earlier in this manual.
+Action: Refer to the `About this Manual <https://docs.yottadb.com/MessageRecovery/about.html>`_ section on MUPIP LOAD errors earlier in this manual.
 
 ------------------
 PREVJNLLINKCUT 
@@ -11495,7 +11495,7 @@ REPLBRKNTRANS, Replication subsystem found transaction xxxx broken or missing in
 
 MUPIP Error: This indicates that while attempting to read the transaction with journal sequence number xxxx from journal files, the source server could not find all (or any) journal records belonging to that transaction.
 
-Action: Restore the journal generation links, and/or the journal files. Deactivate and activate the source server (or shutdown and restart the source server). If the journal files that are needed are no longer available, follow the procedure Restoring secondary from backup of Primary detailed in the `Replication chapter of Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html>`_.
+Action: Restore the journal generation links, and/or the journal files. Deactivate and activate the source server (or shutdown and restart the source server). If the journal files that are needed are no longer available, follow the procedure for restoring the secondary from the backup of the primary detailed in the `Replication chapter of Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html>`_.
 
 -----------------------
 REPLCOMM 
@@ -12483,7 +12483,7 @@ RPARENREQD, xxxx Right parenthesis expected
 
 MUPIP Error: This indicates that LOAD failed because it encountered xxxx in its input stream when it expected to find a right parenthesis.
 
-Action: Refer to the topic MUPIP LOAD Errors in About This Manual section in this manual.
+Action: Refer to the topic MUPIP LOAD Errors in the `About This Manual section in this manual <https://docs.yottadb.com/MessageRecovery/about.html>`_.
 
 ----------------
 RSVDBYTE2HIGH
@@ -13665,7 +13665,7 @@ STATSDBERR
 
 STATSDBERR, Error in/at LLLL attempting to use a statistics database: SSSS
 
-Run Time Error: Indicates an error occurred while attempting to open a statistics database. This error is followed by one or more additional error messages describing the actualy condition that occured. The LLLL is an entryref or module name where the error occurred.
+Run Time Error: Indicates an error occurred while attempting to open a statistics database. This error is followed by one or more additional error messages describing the actual condition that occured. The LLLL is an entryref or module name where the error occurred.
 
 Action: Address the condition(s) causing the error and retry.
 
@@ -13795,7 +13795,7 @@ STRMNUMMISMTCH2
 
 STRMNUMMISMTCH2, Stream nnnn exists on the source instance file but is unknown on the receiver instance
 
-MUPIP Error: Issued by a Source Server on a supplementary instance when it detects a non-Supplementary stream number nnnn (which can be any value from 1 through 15) exists on the source instance but not on the receiving instance. This indicates the two instances are not in sync at least with respect to stream nnnn and so replication cannot proceed.
+MUPIP Error: Issued by a Source Server on a supplementary instance when it detects a non-supplementary stream number nnnn (which can be any value from 1 through 15) exists on the source instance but not on the receiving instance. This indicates the two instances are not in sync at least with respect to stream nnnn and so replication cannot proceed.
 
 Action: Reinitialize the receiving instance from a backup of the source instance and restart replication between the two instances.
 
@@ -14023,7 +14023,7 @@ Action: Review the following TEXT message from the plug-in for additional diagno
 TLSCONVSOCK 
 -------------------
 
-TLSCONVSOCK, Failed to convert UNIX TCP/IP socket to TLS/SSL aware socket>/error
+TLSCONVSOCK, Failed to convert UNIX TCP/IP socket to TLS/SSL aware socket
 
 Run Time/MUPIP Error: This indicates that an attempt to establish TLS/SSL connection failed.
 
