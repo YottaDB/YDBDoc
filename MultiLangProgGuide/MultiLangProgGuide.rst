@@ -55,11 +55,11 @@ Local Installation
    :code:`#include` the file :code:`/opt/yottadb/latest/libyottadb.h`
    in your C program and compile it. As a sample program, you can
    download the `wordfreq.c
-   <https://raw.githubusercontent.com/nars1/YottaDBtest/simpleapi/simpleapi/inref/wordfreq.c>`_
+   <https://raw.githubusercontent.com/YottaDB/YottaDBtest/master/simpleapi/inref/wordfreq.c>`_
    program, with a `reference input file
-   <https://raw.githubusercontent.com/nars1/YottaDBtest/simpleapi/simpleapi/outref/wordfreq_input.txt>`_
+   <https://raw.githubusercontent.com/YottaDB/YottaDBtest/master/simpleapi/outref/wordfreq_input.txt>`_
    and `corresponding reference output file
-   <https://raw.githubusercontent.com/nars1/YottaDBtest/simpleapi/simpleapi/outref/wordfreq_output.txt>`_
+   <https://raw.githubusercontent.com/YottaDB/YottaDBtest/master/simpleapi/outref/wordfreq_output.txt>`_
    and compile it with :code:`gcc -I $ydb_dist -L
    $ydb_dist -lyottadb -o wordfreq wordfreq.c`.
 
