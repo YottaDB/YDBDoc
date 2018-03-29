@@ -59,9 +59,32 @@ r1.20
 Overview
 +++++++++++++
 
-YottaDB r1.20 is a major release. The ydbinstall.sh script automatically downloads and installs the current YottaDB release. As always, there as other enhancements and fixes, as noted below.
+YottaDB r1.20 is the most significant release to date from the YottaDB team. With the ability to call the data management engine directly from C, and eliminating the need for any application code to be written in M (by separating the M language from the database without compromising either in any way), YottaDB r1.20 represents a historic milestone for the YottaDB/GT.M code base.
 
-YottaDB r1.20 is built on (and except as noted, upward compatible with) both `YottaDB r1.10 <https://github.com/YottaDB/YottaDB/releases/tag/r1.10>`_ and `GT.M V6.3-003 <http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V6.3-003_Release_Notes.html>`_.
+YottaDB r1.20 is built on (and except where explicitly noted, upward compatible with) both `YottaDB r1.10 <https://github.com/YottaDB/YottaDB/releases/tag/r1.10>`_ and `GT.M V6.3-003A <http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V6.3-003_Release_Notes.html>`_. Highlights of enhancements and fixes made by the YottaDB team include:
+
+* The C API mentioned above to call the database management engine directly (link to Issue 59 in the release notes): As C is the *lingua franca* of computer languages, this makes the engine accessible from other languages that can call C APIs. In the future, we anticipate creating standard wrappers to the engine from other languages, and we invite members of the community to do so as well.
+
+* An all-new manual, the `Multi-Language Programmers Guide to access the C API <https://docs.yottadb.com/MultiLangProgGuide/>`_.
+
+* At US $5 in retail quantities, a new Supported platform, the `Raspberry Pi Zero <https://www.raspberrypi.org/products/raspberry-pi-zero/>`_ is the lowest cost platform ever for the code base. This and the halving of the storage footprint of the database engine itself (14-15MB) (link to Issue 33 in release notes), makes YottaDB attractive for Internet of Things applications. Our blog post `Edge Computing and YottaDB Everywhere <https://yottadb.com/edge-computing-and-yottadb-everywhere/>`_ touches on the benefits of YottaDB on low cost computing platforms.
+
+* `Docker containers <https://www.docker.com/what-container>`_ make it easy to get up and running with YottaDB for experimentation, DevOps and Microservices.
+
+* Performance improvements (up to two orders of magnitude in specific test cases) in large local arrays (link to Issue 80 in release notes) and garbage collection in applications with large numbers of strings that change often (link to Issue 85 in release notes).
+
+* The READ command supports a buffer of the same number of prior inputs that direct mode does. (link to Issue 83 in release notes)
+
+Highlights from the upstream  V6.3-003A code base, thanks to the GT.M team include:
+
+* Performance improvements when there are a large number of concurrent locks (link to GTM-8680 in release notes).
+
+* Introduced as field test grade functionality in a production release, the ability for a process to associated itself with different instances at run-time (link to GTM-8182 in release notes).
+
+As is the case in every release, YottaDB r1.20 brings other enhancements, e.g., callin when an applicaiton is already inside a transaction processing fence (link to Issue 188 in release notes), and sending syslog messages to stderr when there is no syslog (link to Issue 189 in release notes), as well as fixes to issues as detailed below.
+
+As always, there as other enhancements and fixes, as noted below. See our `Get Started <https://yottadb.com/product/get-started/>`_ page to use YottaDB.
+
 
 ++++++++++++++++++++++
 Platforms
@@ -81,25 +104,20 @@ A platform is a combination of a CPU architecture and an operating system. A pla
 |                                                         |                                                    | Please contact info@yottadb.com if you want a specific combination of OS and CPU    |
 |                                                         |                                                    | microarchitecture to be Supported.                                                  |
 +---------------------------------------------------------+----------------------------------------------------+-------------------------------------------------------------------------------------+
+| Raspberry Pi Zero                                       | Raspbian GNU/Linux 9.1                             | While YottaDB r1.20 is Supportable on other ARMv6 CPUs, owing to variations in the  |
+|                                                         |                                                    | implementations of ARM microarchitectures, we recommend that you ensure the software|
+|                                                         |                                                    | runs correctly before committing to any specific hardware other than those Supported|
+|                                                         |                                                    | Please contact info@yottadb.com if you want a specific combination of OS and CPU    |
+|                                                         |                                                    | microarchitecture to be Supported.                                                  |
++---------------------------------------------------------+----------------------------------------------------+-------------------------------------------------------------------------------------+
 
 Recent releases of major GNU/Linux distributions with contemporary kernels, glibc and ncurses are Supportable. Running on Arch Linux requires the ncurses5-compat-libs package to be installed.
 
-+++++++++++++++++++
-Installation
-+++++++++++++++++++
++++++++++++++++
+Getting Started
++++++++++++++++
 
-The simplest way to install the current release of YottaDB for your platform is the `ydbinstall.sh <https://github.com/YottaDB/YottaDB/blob/master/sr_unix/ydbinstall.sh>`_ script.
-Download it, make the file executable, and execute it:
-
-* sudo ./ydbinstall.sh downloads and installs the current YottaDB release with a reasonable set of defaults.
-
-* sudo ./ydbinstall.sh --utf8 default downloads and installs the current YottaDB release with UTF-8 support, using the default ICU version on the operating system.
-
-* ./ydbinstall.sh --help prints a list of command line options.
-
-* sudo ./ydbinstall.sh --verbose outputs information as it executes, for troubleshooting purposes (for example if Internet access is stalled by a proxy server, the script will print the wget command it is trying to execute and hang).
-
-You can also download the YottaDB binary distribution tarball for your platform from the `release notes for the latest release <https://github.com/YottaDB/YottaDB/releases/latest>`_, unpack it, change to the directory with the unpacked files, and (a) run the ydbinstall therein or (b) install the historical way per the instructions for installing GT.M in the Installation Procedure section of Chapter 2 (Installing GT.M) in the `GT.M Administration and Operations Guide <http://tinco.pair.com/bhaskar/gtm/doc/books/ao/UNIX_manual/index.html>`_.
+See our `Get Started <https://yottadb.com/product/get-started/>`_ page to use YottaDB.
 
 We **strongly recommend** that you install YottaDB r1.20 in a newly created directory, different from those of YottaDB r1.10 and any GT.M versions you may have installed on the system.
 
@@ -107,21 +125,21 @@ We **strongly recommend** that you install YottaDB r1.20 in a newly created dire
 Removing an installed YottaDB release
 +++++++++++++++++++++++++++++++++++++
 
-Assuming $gtm_dist points to the directory where YottaDB is installed:
+Assuming $ydb_dist points to the directory where YottaDB is installed:
 
 * Cleanly shut down all application processes using that release.
 * Execute mupip rundown && mupip rundown -relinkctl.
 * Ensure that there are nogtcm* or gtmsecshr processes active.
-* Use sudo lsof | grep $gtm_dist to ensure there are no open files.
-* Delete the directory with sudo rm -rf $gtm_dist.
+* Use sudo lsof | grep $ydb_dist to ensure there are no open files.
+* Delete the directory with sudo rm -rf $ydb_dist.
 
 ----------------------------
 Upgrading to YottaDB r1.20
 ----------------------------
 
-As YottaDB r1.20 is upward compatible from both YottaDB r1.10 and GT.M V6.3-003, the minimal upgrade steps are:
+As YottaDB r1.20 is upward compatible from both YottaDB r1.10 and GT.M V6.3-003/-003A, the minimal upgrade steps are:
 
-* Install YottaDB r1.10.
+* Install YottaDB r1.20.
 * Recompile any object code, and recreate shared libraries where appropriate.
 * If you are using encryption, compile and install the reference implementation plugin or your customized plugin.
 * Cleanly shut down the application and ensure that the database files are shut down using mupip rundown from the prior release.
