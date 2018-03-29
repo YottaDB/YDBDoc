@@ -63,25 +63,25 @@ YottaDB r1.20 is the most significant release to date from the YottaDB team. Wit
 
 YottaDB r1.20 is built on (and except where explicitly noted, upward compatible with) both `YottaDB r1.10 <https://github.com/YottaDB/YottaDB/releases/tag/r1.10>`_ and `GT.M V6.3-003A <http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V6.3-003_Release_Notes.html>`_. Highlights of enhancements and fixes made by the YottaDB team include:
 
-* The C API mentioned above to call the database management engine directly (link to Issue 59 in the release notes): As C is the *lingua franca* of computer languages, this makes the engine accessible from other languages that can call C APIs. In the future, we anticipate creating standard wrappers to the engine from other languages, and we invite members of the community to do so as well.
+* The C API mentioned above to call the database management engine directly (`#59 <https://github.com/YottaDB/YottaDB/issues/59>`_): As C is the *lingua franca* of computer languages, this makes the engine accessible from other languages that can call C APIs. In the future, we anticipate creating standard wrappers to the engine from other languages, and we invite members of the community to do so as well.
 
 * An all-new manual, the `Multi-Language Programmers Guide to access the C API <https://docs.yottadb.com/MultiLangProgGuide/>`_.
 
-* At US $5 in retail quantities, a new Supported platform, the `Raspberry Pi Zero <https://www.raspberrypi.org/products/raspberry-pi-zero/>`_ is the lowest cost platform ever for the code base. This and the halving of the storage footprint of the database engine itself (14-15MB) (link to Issue 33 in release notes), makes YottaDB attractive for Internet of Things applications. Our blog post `Edge Computing and YottaDB Everywhere <https://yottadb.com/edge-computing-and-yottadb-everywhere/>`_ touches on the benefits of YottaDB on low cost computing platforms.
+* At US $5 in retail quantities, a new Supported platform, the `Raspberry Pi Zero <https://www.raspberrypi.org/products/raspberry-pi-zero/>`_ is the lowest cost platform ever for the code base. This and the halving of the storage footprint of the database engine itself (14-15MB) (`#33 <https://github.com/YottaDB/YottaDB/issues/33>`_), makes YottaDB attractive for Internet of Things applications. Our blog post `Edge Computing and YottaDB Everywhere <https://yottadb.com/edge-computing-and-yottadb-everywhere/>`_ touches on the benefits of YottaDB on low cost computing platforms.
 
 * `Docker containers <https://www.docker.com/what-container>`_ make it easy to get up and running with YottaDB for experimentation, DevOps and Microservices.
 
-* Performance improvements (up to two orders of magnitude in specific test cases) in large local arrays (link to Issue 80 in release notes) and garbage collection in applications with large numbers of strings that change often (link to Issue 85 in release notes).
+* Performance improvements (up to two orders of magnitude in specific test cases) in large local arrays (`80 <https://github.com/YottaDB/YottaDB/issues/80>`_) and garbage collection in applications with large numbers of strings that change often (`#85 <https://github.com/YottaDB/YottaDB/issues/85>`_).
 
-* The READ command supports a buffer of the same number of prior inputs that direct mode does. (link to Issue 83 in release notes)
+* The READ command supports a buffer of the same number of prior inputs that direct mode does. (`#83 <https://github.com/YottaDB/YottaDB/issues/83>`_)
 
 Highlights from the upstream  V6.3-003A code base, thanks to the GT.M team include:
 
-* Performance improvements when there are a large number of concurrent locks (link to GTM-8680 in release notes).
+* Performance improvements when there are a large number of concurrent locks (`GTM-8680 <http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V6.3-003_Release_Notes.html#GTM-8680>`_ ).
 
-* Introduced as field test grade functionality in a production release, the ability for a process to associated itself with different instances at run-time (link to GTM-8182 in release notes).
+* Introduced as field test grade functionality in a production release, the ability for a process to associated itself with different instances at run-time (`GTM-8182 <http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V6.3-003_Release_Notes.html#GTM-8182>`_).
 
-As is the case in every release, YottaDB r1.20 brings other enhancements, e.g., callin when an applicaiton is already inside a transaction processing fence (link to Issue 188 in release notes), and sending syslog messages to stderr when there is no syslog (link to Issue 189 in release notes), as well as fixes to issues as detailed below.
+As is the case in every release, YottaDB r1.20 brings other enhancements, e.g., callin when an applicaiton is already inside a transaction processing fence (`#188 <https://github.com/YottaDB/YottaDB/issues/188>`_), and sending syslog messages to stderr when there is no syslog (`#189 <https://github.com/YottaDB/YottaDB/issues/189>`_), as well as fixes to issues as detailed below.
 
 As always, there as other enhancements and fixes, as noted below. See our `Get Started <https://yottadb.com/product/get-started/>`_ page to use YottaDB.
 
