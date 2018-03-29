@@ -59,7 +59,7 @@ r1.20
 Overview
 +++++++++++++
 
-YottaDB r1.20 is the most significant release to date from the YottaDB team. With the ability to call the data management engine directly from C, and eliminating the need for any application code to be written in M (by separating the M language from the database without compromising either in any way), YottaDB r1.20 represents a historic milestonefor the YottaDB/GT.M code base.
+YottaDB r1.20 is the most significant release to date from the YottaDB team. With the ability to call the data management engine directly from C, and eliminating the need for any application code to be written in M (by separating the M language from the database without compromising either in any way), YottaDB r1.20 represents a historic milestone for the YottaDB/GT.M code base.
 
 YottaDB r1.20 is built on (and except where explicitly noted, upward compatible with) both `YottaDB r1.10 <https://github.com/YottaDB/YottaDB/releases/tag/r1.10>`_ and `GT.M V6.3-003A <http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V6.3-003_Release_Notes.html>`_. Highlights of enhancements and fixes made by the YottaDB team include:
 
