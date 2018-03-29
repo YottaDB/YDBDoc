@@ -151,24 +151,24 @@ YottaDB r1.20 includes the following changes from `YottaDB r1.10 <https://github
 +-------------------------------------------------------------------------------------------------------+-------------------------------------+--------------------------------------------------------------------------------+
 | ID                                                                                                    | Category                            | Summary                                                                        |
 +=======================================================================================================+=====================================+================================================================================+
-| `#23 <https://github.com/YottaDB/YottaDB/issues/23>`_                                                 | Language                            | Change references to GT.M into references to YottaDB - shared libraries        |
+| `#23 <https://github.com/YottaDB/YottaDB/issues/23>`_                                                 | Admin                               | Change references to GT.M into references to YottaDB - shared libraries        |
 +-------------------------------------------------------------------------------------------------------+-------------------------------------+--------------------------------------------------------------------------------+
 | `#33 <https://github.com/YottaDB/YottaDB/issues/33>`_                                                 | Other                               | Reduce footprint of engine                                                     |
 +-------------------------------------------------------------------------------------------------------+-------------------------------------+--------------------------------------------------------------------------------+
-| `#59 <https://github.com/YottaDB/YottaDB/issues/59>`_                                                 | Other                               | Directly access YottaDB data from C                                            |
+| `#59 <https://github.com/YottaDB/YottaDB/issues/59>`_                                                 | Data                                | Directly access YottaDB data from C                                            |
 +-------------------------------------------------------------------------------------------------------+-------------------------------------+--------------------------------------------------------------------------------+
 | `#77 <https://github.com/YottaDB/YottaDB/issues/77>`_                                                 | Other                               | Fix reporting glitch in Indirection cache hit ratio when cache hits are greater|
 |                                                                                                       |                                     | than 43 million                                                                |
 +-------------------------------------------------------------------------------------------------------+-------------------------------------+--------------------------------------------------------------------------------+
 | `#80 <https://github.com/YottaDB/YottaDB/issues/80>`_                                                 | Data                                | Improve performance of large local arrays                                      |
 +-------------------------------------------------------------------------------------------------------+-------------------------------------+--------------------------------------------------------------------------------+
-| `#83 <https://github.com/YottaDB/YottaDB/issues/83>`_                                                 | Language                            | Recall history for read command to match direct mode                           |
+| `#83 <https://github.com/YottaDB/YottaDB/issues/83>`_                                                 | Language                            | Recall history for READ command to match direct mode                           |
 +-------------------------------------------------------------------------------------------------------+-------------------------------------+--------------------------------------------------------------------------------+
 | `#85 <https://github.com/YottaDB/YottaDB/issues/85>`_                                                 | Data                                | Stringpool garbage collector performance enhancements                          |
 +-------------------------------------------------------------------------------------------------------+-------------------------------------+--------------------------------------------------------------------------------+
 | `#90 <https://github.com/YottaDB/YottaDB/issues/90>`_                                                 | Language                            | YottaDB correctly runs M programs which had PATNOTFOUND errors at compile time |
 +-------------------------------------------------------------------------------------------------------+-------------------------------------+--------------------------------------------------------------------------------+
-| `#94 <https://github.com/YottaDB/YottaDB/issues/94>`_                                                 | Other                               | Ignore gtm_dist environment variable                                           |
+| `#94 <https://github.com/YottaDB/YottaDB/issues/94>`_                                                 | Admin                               | Ignore gtm_dist environment variable                                           |
 +-------------------------------------------------------------------------------------------------------+-------------------------------------+--------------------------------------------------------------------------------+
 | `#97 <https://github.com/YottaDB/YottaDB/issues/97>`_                                                 | Admin                               | Customize YottaDB message prefix                                               |
 +-------------------------------------------------------------------------------------------------------+-------------------------------------+--------------------------------------------------------------------------------+
@@ -179,7 +179,7 @@ YottaDB r1.20 includes the following changes from `YottaDB r1.10 <https://github
 | `#109 <https://github.com/YottaDB/YottaDB/issues/109>`_                                               | Admin                               | ydb_repl_filter_timeout environment variable to control replication filter     |
 |                                                                                                       |                                     | timeout                                                                        |
 +-------------------------------------------------------------------------------------------------------+-------------------------------------+--------------------------------------------------------------------------------+
-| `#115 <https://github.com/YottaDB/YottaDB/issues/115>`_                                               | Other                               | Environment variables ydb_dbglvl, ydb_gbldir, ydb_maxtptime are initialized    |
+| `#115 <https://github.com/YottaDB/YottaDB/issues/115>`_                                               | Admin                               | Environment variables ydb_dbglvl, ydb_gbldir, ydb_maxtptime are initialized    |
 +-------------------------------------------------------------------------------------------------------+-------------------------------------+--------------------------------------------------------------------------------+
 | `#118 <https://github.com/YottaDB/YottaDB/issues/118>`_                                               | Admin                               | MUPIP SET JOURNAL issues JNLCRESTATUS error when unable to rename current      |
 |                                                                                                       |                                     | journal file                                                                   |
@@ -228,8 +228,11 @@ YottaDB r1.20 includes the following changes from `YottaDB r1.10 <https://github
 Admin
 ~~~~~~~~~~
 
+* The file libyottadb.so contains the runtime logic that was previously in libgtmshr.so, which is now a relative symbolic link to libyottadb.so. Similarly, libyottadbutil.so contains the object code for utility routines, and libgtmutil.so is a relative symbolic link to libyottadbutil.so. If UTF-8 support is installed, a similar change also occurs in the utf8 subdirectory. There should be no change to the behavior of any application program or scripting that does not explicitly check the nature of libgtmshr.so and libgtmutil.so. [`#23 <https://github.com/YottaDB/YottaDB/issues/23>`_]
+* YottaDB ignores the environment variable gtm_dist, deriving any needed information from within the running process. Previously, it required $gtm_dist to contain the name of the directory from which it ran. [`#94 <https://github.com/YottaDB/YottaDB/issues/94>`_]
 * The environment variable ydb_msgprefix specifies a prefix for YottaDB messages generated by a process, with the prefix defaulting to "YDB", e.g., YDB-I-DBFILEXT. Previously, the prefix was always "GTM". A value of "GTM" retains the previous format. [`#97 <https://github.com/YottaDB/YottaDB/issues/97>`_]
 * An integer value in seconds for the environment variable ydb_repl_filter_timeout sets a limit for the Source Server to await a response from an external filter program. The default value is 64 seconds; a value less than 32 is treated as 32 seconds; and a value greater than 131072 (2**17) is treated as 131,072 seconds. Set a value for ydb_repl_filter_timeout if, for example, your filter program is functionally correct, but needs more time to respond. Previously, the value was always 64 seconds. [`#109 <https://github.com/YottaDB/YottaDB/issues/109>`_]
+* At process startup, YottaDB initializes the following intrinsic special variables: (1) $zgbldir to the global directory file pointed to by $ydb_gbldir. If ydb_gbldir is not defined, YottaDB uses the gtmgbldir environment variable instead. (2) $zmaxtptime to the number of seconds specified by $ydb_maxtptime. If ydb_maxtptime is not defined, YottaDB uses the gtm_zmaxtptime environment variable instead, defaulting to 0 seconds (infinite timeout).To facilitate debugging application memory allocation bugs, the environment variable ydb_dbglvl optionally provides debugging flags as specified in the file gtmdbglvl.h. If ydb_dbglvl is not defined, YottaDB uses the gtmdbglvl environment variable instead. If neither is defined, no memory allocation debugging is turned on. Previously YottaDB ignored the ydb_dbglvl, ydb_gbldir, and ydb_maxtptime environment variables. [`#115 <https://github.com/YottaDB/YottaDB/issues/115>`_]
 * MUPIP SET JOURNAL issues a JNLCRESTATUS error in case it is not able to rename the current journal file (for example, because of read-only permissions on the directory containing the journal file) before creating the new journal file. In YottaDB r1.10, the MUPIP command used to abnormally terminate with a SIG-11. <`#118 <https://github.com/YottaDB/YottaDB/issues/118>`_]
 * MUPIP JOURNAL ROLLBACK works correctly in case a process updating multiple regions in a TP transaction terminates abnormally (e.g., kill -9). In YottaDB r1.10 (and GT.M V6.3-002), it was possible for the rollback to fail with a DUPTOKEN error in rare cases, depending on where in the transaction commit logic the process was killed. The workaround was to rerun the MUPIP JOURNAL ROLLBACK with a non-zero ERROR_LIMIT qualifier value to allow DUPTOKEN errors. In addition, NULL records are placed in the correct file (journal extract file, broken transaction file, lost transaction file). Previously, they could be incorrectly placed in the lost transaction file instead of the broken transaction file. Finally, the NULL records are extracted in the correct order (journal sequence number) in the extract file (or broken transaction or lost transaction file). Previously, the extract file would be sorted in terms of journal sequence number except for the NULL type of journal records (00 record type in the first column of the extract file) which could be placed in arbitrary order. Note that such a transaction remains Atomic, because the process termination means the transaction was never committed. Note also that YottaDB recommends terminating processes with MUPIP STOP and not kill -9. [`#122 <https://github.com/YottaDB/YottaDB/issues/122>`_]
 * Initiating replication connections between Source and Receiver Servers is more efficient. Previously, in rare cases, the Source Server unnecessarily disconnect the connection and reconnected. [`#136 <https://github.com/YottaDB/YottaDB/issues/136>`_]
@@ -240,6 +243,7 @@ Admin
 Data
 ~~~~~~~~~~~~~
 
+* The YottaDB engine is directly accessible using a C-callable API. See https://docs.yottadb.com/MultiLangProgGuide/index.html for user documentation. [`#59 <https://github.com/YottaDB/YottaDB/issues/59>`_]
 * Local arrays with large number of subscripts scale much better. When the number of nodes in a local array is in the millions, node creation time is now noticeably faster [`#80 <https://github.com/YottaDB/YottaDB/issues/80>`_]
 * Applications with large numbers of strings, which can occur with large numbers of local variables, local variables with many nodes, or both, and whose performance is limited by garbage collection, i.e. applications where the strings change frequently, run much faster. In one test case, the improvement was two orders of magnitude. [`#85 <https://github.com/YottaDB/YottaDB/issues/85>`_]
 * Nested database triggers (i.e. database triggers that invoke code to update global variables, which in turn invoke other triggers) work correctly. Previously, it was possible in rare cases involving multiple processes loading triggers at the same time for the processes to abnormally terminate with fatal SIGABRT (SIG-6) errors. [`#169 <https://github.com/YottaDB/YottaDB/issues/169>`_]
@@ -248,7 +252,6 @@ Data
 Language
 ~~~~~~~~~~~~
 
-* The file libyottadb.so contains the runtime logic that was previously in libgtmshr.so, which is now a relative symbolic link to libyottadb.so. Similarly, libyottadbutil.so contains the object code for utility routines, and libgtmutil.so is a relative symbolic link to libyottadbutil.so. If UTF-8 support is installed, a similar change also occurs in the utf8 subdirectory. There should be no change to the behavior of any application program or scripting that does not explicitly check the nature of libgtmshr.so and libgtmutil.so. [`#23 <https://github.com/YottaDB/YottaDB/issues/23>`_]
 * With the [NO]EDITING deviceparameter set to EDITING, the number of previous inputs to the READ command from a terminal device that can be recalled is a circular buffer of 99 entries, matching the size of the RECALL command buffer for direct mode. READ X#, READ \*X, and READ X all share the same history. Empty inputs are excluded from the buffer, and multiple consecutive occurrences of the same input are stored once. The up-arrow key goes back in history, and the down-arrow key goes forward, towards more recent inputs. Previously the READ buffer was limited to just the previous line. [`#83 <https://github.com/YottaDB/YottaDB/issues/83>`_]
 * YottaDB correctly runs M programs which had PATNOTFOUND errors at compile time. Previously, in r1.10 it was possible for mumps processes to terminate abnormally with a SIG-11 as a consequence of a defect in the GT.M V6.3-002 code base.[`#90 <https://github.com/YottaDB/YottaDB/issues/90>`_]
 * Timeouts in JOB, LOCK, OPEN, READ, WRITE /WAIT, WRITE /LISTEN, WRITE /ACCEPT, and WRITE /TLS commands with more than three digits after the decimal point time out shortly after the requested time has elapsed. Previously, in r1.10, timeouts with more than three digits after the decimal point would be treated as 2Gi msec (≃24.8 days), owing to a defective enhancement to allow fractional timeouts introduced in the GT.M V6.3-002 code base (`GTM-5250 <http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V6.3-002_Release_Notes.html#GTM-5250>`_) [`#100 <https://github.com/YottaDB/YottaDB/issues/100>`_]
@@ -264,16 +267,13 @@ Other
 ~~~~~~~~~~~
 
 * The YottaDB install directory size is 14-15Mb (down from 34Mb in prior versions). [`#33 <https://github.com/YottaDB/YottaDB/issues/33>`_]
-* The YottaDB engine is directly accessible using a C-callable API. See https://docs.yottadb.com/MultiLangProgGuide/index.html for user documentation. [`#59 <https://github.com/YottaDB/YottaDB/issues/59>`_]
 * When run with ydb_dbglvl / gtmdbglvl set as described in [`#115 <https://github.com/YottaDB/YottaDB/issues/115>`_], YottaDB reports correct ratios when the number of indirection cache hits exceeds 43 million. Previously, it could report a negative number. Note that ydb_dbglvl / gtmdgblvl is not part of the published and supported API whose stability we strive to maintain, and exists to assist YottaDB in supporting customers. [`#77 <https://github.com/YottaDB/YottaDB/issues/77>`_]
-* YottaDB ignores the environment variable gtm_dist, deriving any needed information from within the running process. Previously, it required $gtm_dist to contain the name of the directory from which it ran. [`#94 <https://github.com/YottaDB/YottaDB/issues/94>`_]
-* When asked to install GT.M using the gtm qualifier, the ydbinstall.sh script reports "GT.M" on a successful install. Previously, it reported "YottaDB" unconditionally, whether it installed YottaDB or GT.M. <`#99 <https://github.com/YottaDB/YottaDB/issues/99>`_]
-* At process startup, YottaDB initializes the following intrinsic special variables: (1) $zgbldir to the global directory file pointed to by $ydb_gbldir. If ydb_gbldir is not defined, YottaDB uses the gtmgbldir environment variable instead. (2) $zmaxtptime to the number of seconds specified by $ydb_maxtptime. If ydb_maxtptime is not defined, YottaDB uses the gtm_zmaxtptimeenvironment variable instead, defaulting to 0 seconds (infinite timeout).To facilitate debugging application memory allocation bugs, the environment variable ydb_dbglvl optionally provides debugging flags as specified in the file gtmdbglvl.h. If ydb_dbglvl is not defined, YottaDB uses the gtmdbglvl environment variable instead. If neither is defined, no memory allocation debugging is turned on. Previously YottaDB ignored the ydb_dbglvl, ydb_gbldir, and ydb_maxtptime environment variables. [`#115 <https://github.com/YottaDB/YottaDB/issues/115>`_]
-* For "out of the box" use of YottaDB, ydb_env_set is a file you can source with a POSIX or compatible shell to configure an environment with a default structure and required environment variables, creating a default environment if one does not exist.  At this time, support has not been implemented in YottaDB for all ydb\_ prefixed environment varables, but each release will increase that set. So as to not require changes as future YottaDB releases add YottaDB counterparts to GT.M environment variables, sourcing ydb_env_set sets both sets of environment variables to appropriate values, which are usually, but not always, the same. Sourcing ydb_env_unset unsets the above environment variables, unsets the aliases, and removes any occurrence of $ydb_dist in $LD_LIBRARY_PATH. More information: [`#126 <https://github.com/YottaDB/YottaDB/issues/126>`_]
+* When asked to install GT.M using the gtm qualifier, the ydbinstall.sh script reports "GT.M" on a successful install. Previously, it reported "YottaDB" unconditionally, whether it installed YottaDB or GT.M. [`#99 <https://github.com/YottaDB/YottaDB/issues/99>`_]
+* For "out of the box" use of YottaDB, ydb_env_set is a file you can source with a POSIX or compatible shell to configure an environment with a default structure and required environment variables, creating a default environment if one does not exist.  At this time, support has not been implemented in YottaDB for all ydb\_ prefixed environment varables, but each release will increase that set. So as to not require changes as future YottaDB releases add YottaDB counterparts to GT.M environment variables, sourcing ydb_env_set sets both sets of environment variables to appropriate values, which are usually, but not always, the same. Sourcing ydb_env_unset unsets the above environment variables, unsets the aliases, and removes any occurrence of $ydb_dist in $LD_LIBRARY_PATH. For more information, see Issue [`#126 <https://github.com/YottaDB/YottaDB/issues/126>`_]
 * Installing YottaDB with UTF8 support builds $gtm_dist/utf8/libyottadbutil.so (previously named libgtmutil.so) on the Linux/ARM platform. In r1.10, libgtmutil.so was built only in the $gtm_dist (non-utf8) directory. [`#143 <https://github.com/YottaDB/YottaDB/issues/143>`_]
 * When installing YottaDB, gtm is created as a symbolic link to ydb, and gtmprofile is a symbolic link to ydb_env_set. The default names for global directory, database files, and journal files are changed, but if current files exist, their environment setting is done with an M program rather than with shell commands. [`#160 <https://github.com/YottaDB/YottaDB/pull/160>`_]
 * The YDB_SOURCE_DIR cmake variable is used to get the path to ydbmerrors.h instead of a hardcoded relative path [`#161 <https://github.com/YottaDB/YottaDB/pull/161>`_]
-* A Docker image to build and deploy a YottaDB runtime environment was created. [`#162 <https://github.com/YottaDB/YottaDB/pull/162>`_]
+* A Docker image to build and deploy a YottaDB runtime environment is available. [`#162 <https://github.com/YottaDB/YottaDB/pull/162>`_]
 
 
 +++++++++++++++
@@ -418,98 +418,17 @@ Messages
 From YottaDB
 +++++++++++++
 
+**CALLINTCOMMIT**, TCOMMIT at call-in-level=xxxx not allowed as corresponding TSTART was done at lower call-in-level=yyyy.
 
-**QUERY2**, Invalid second argument to $QUERY. Must be -1 or 1.
+Run Time Error: This indicates that at least one call-in invocation happened in between when the TP transaction started (either through a ydb_tp_s() call in C or a TSTART command in M) and when the corresponding transaction commit is attempted (through a TCOMMIT command in M).
 
-Run Time Error: This indicates that there is an invalid second argument passed to the function $QUERY. It must be either -1 or 1.
+Action: If a TP transaction is started using SimpleAPI, and the user function driven by ydb_tp_s() does a call-in invocation, care should be taken to ensure the call-in code does not do a TCOMMIT.
 
-Action: Refer to `$QUERY in the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/functions.html#query>`_ for correct usage.
+**CALLINTROLLBACK**, TROLLBACK at call-in-level=xxxx not allowed as corresponding TSTART was done at lower call-in-level=yyyy
 
-**MIXIMAGE**, Cannot load more than one base image function on a process.
+Run Time Error: This indicates that at least one call-in invocation happened in between when the TP transaction started (either through a ydb_tp_s() call in C or a TSTART command in M) and when the corresponding transaction rollback is attempted (through a TROLLBACK command in M).
 
-Run Time Error: This indicates that a C function tries to invoke more than one base image function included in libyottadb.so (e.g. gtm_main, dse_main, mupip_main etc.). Only one base image function can be invoked and only once for the lifetime of the process.
-
-Action: Make sure only one base image function is invoked for the lifetime of one process.
-
-**LIBYOTTAMISMTCH**, $ydb_dist/libyottadb.so does not match the shared library path.
-
-Runtime Error: This indicates that the full path of the currently running libyottadb.so shared library does not match the path described by $ydb_dist. This is possible for example if a C program tries to directly invoke a base image function (e.g. gtm_main, dse_main, mupip_main etc.) for more than one build/release of YottaDB in the same process.
-
-Action:  Make sure a C program invokes a base image function of only one libyottadb.so executable.
-
-**READONLYNOSTATS**, Read-only and Statistics sharing cannot both be enabled on database.
-
-Run Time Error: This error is issued if if one tries to enable the Read-only mode on a database that has Statistics sharing turned on OR if one tries to enable Statistics sharing on a database that has Read-only mode turned on OR if one tries to enable both at the same time.
-
-Action: Make sure at most one of Read-only or Statistics sharing is turned on in the database at any point in time.
-
-**READONLYLKFAIL**, Failed to get a lock on READ_ONLY database file.
-
-Run Time Error: This error is issued by a MUPIP command that requires standalone access (e.g. MUPIP SET -NOREAD_ONLY) to a database file (which has Read-only mode turned on) if other processes are still accessing the database OR by any process that tries to open a database file (which again has Read-only mode turned on) while a MUPIP command that has standalone access on the same database file is concurrently running.
-
-Action: If the error is from the MUPIP command which requires standalone access, ensure all processes which have the database file open are shut down and reattempt the command. If the error is from a process trying to open the database file, wait for the concurrent MUPIP command requiring standalone access to finish and reattempt to open the database.
-
-**INVVARNAME**, Invalid local/global/ISV variable name supplied to API call.
-
-Run Time Error: This indicates that a SimpleAPI call received an invalid variable name. The invalidity can be one of the following types:
-
-       a) The ydb_buffer_t structure corresponding to the variable name has a "len_used" field greater than "alloc_len" OR
-       b) The ydb_buffer_t structure corresponding to the variable name has a zero value of "len_used" OR
-       c) The ydb_buffer_t structure corresponding to the variable name has a non-zero value of "len_used" but a NULL value of "buf_addr" OR
-       d) The variable name starts with a ^ (i.e. is a global variable name), but the second character is not a % or an alpha character (lower or upper case) or at least one of the following characters is not an alphanumeric character (lower or upper case alphabet or a decimal digit) OR
-       e) The variable name starts with a $ (i.e. is an intrinsic special variable name), but is not followed by any other character (i.e. "len_used" has a value of 1) OR
-       f) The variable name starts with a character other than a % or an alpha character (lower or upper case) OR
-       g) The variable name starts with a % or alpha character (lower or upper case) but at least one of the following characters is not an alphanumeric character (lower or upper case alphabet or a decimal digit)
-
-Action: Determine which of the described failures scenarios is the issue and accordingly fix the variable name passed in to the SimpleAPI call
-
-**PARAMINVALID**, Invalid parameter specified in an API call.
-
-Run Time Error: This indicates that a parameter in a SimpleAPI call was not properly specified. The function name (e.g. ydb_set_s()) and the name of the invalid parameter (e.g. subsarray) along with the type of the invalidity is identified in the error message text. If the parameter is an array, the index of the element where the invalidity is detected is also identified. If the parameter is an input parameter of type ydb_buffer_t it is invalid if "len_used" is greater than "alloc_len" OR if it has a "len_used value of 0 but a NULL value of "buf_addr". If the parameter is an output parameter, it is invalid if the ydb_buffer_t pointer is NULL or if the "buf_addr" field in the ydb_buffer_t structure is NULL. Note that no error checks are done if an input ydb_buffer_t typed pointer parameter is NULL (the process would get a SIG-11 and dump core in that case).
-
-Action: Fix the cause of the invalidity and pass in a valid parameter to the SimpleAPI call.
-
-**INSUFFSUBS**, Return subscript array for an API call too small.
-
-Run Time Error: This indicates that the return subscript array needs more entries for the ydb_node_next_s() or ydb_node_previous_s() SimpleAPI call than is currently allocated (specified by the input/output parameter \*ret_subs_used). In this case \*ret_subs_used is set to the needed entries.
-
-Action: Ensure the return subscript array ("ret_subsarray" parameter of ydb_node_next_s() or ydb_node_previous_s()) is allocated with at least \*ret_subs_used entries and retry the ydb_node_next_s() or ydb_node_previous_s() call.
-
-**MINNRSUBSCRIPTS**, Number of subscripts cannot be a negative number.
-
-Run Time Error: This indicates that the number of subscripts in an input array (usually the "subs_used" parameter in various SimpleAPI calls) is a negative number.
-
-Action: Redo the SimpleAPI call with a subscript count that is greater than or equal to zero.
-
-**SUBSARRAYNULL**, Non-zero number of subscripts xxxx specified but subscript array parameter is NULL in API call.
-
-Run Time Error: This indicates that the value of the subscript array parameter is NULL, meaning there are no subscripts specified, but the parameter specifying the number of subscripts (usually the "subs_used" parameter) has a non-zero value.
-
-Action: Redo the SimpleAPI call with a non-NULL subscript array parameter or with a zero value for the parameter specifying the number of subscripts.
-
-**NAMECOUNT2HI**, Number of varnames specified exceeds maximum xxxx allowed.
-
-Runtime Error: This indicates that the number of variable names specified in a SimpleAPI call (identified in the message text) exceeds the maximum number of allowed variable names (also identified in the message text).
-
-Action: Redo the SimpleAPI call with a fewer number of variable names specified.
-
-**INVNAMECOUNT**, Number of varnames cannot be less than zero.
-
-Runtime Error: This indicates that the number of variable names specified in a SimpleAPI call (identified in the message text) is less than zero.
-
-Action: Redo the SimpleAPI call with a number of variable names that is greater than or equal to zero.
-
-**TIME2LONG**, Specified time value exceeds supported maximum limit xxxx allowed.
-
-Run Time Error: This indicates that a timer value specified in a SimpleAPI call (e.g. ydb_lock_s(), ydb_lock_incr_s() etc.) exceeded the maximum allowed limit. Both the specified time value and the maximum allowed limit are indicated in the message text.
-
-Action: Specify a time value below the maximum limit and retry the SimpleAPI call.
-
-**VARNAME2LONG**, Variable name length exceeds maximum allowed length xxxx.
-
-Run Time Error: This indicates that the length of a variable name specified in a SimpleAPI call exceeded the maximum limit. The maximum value is identified in the message text.
-
-Action: Specify the variable name within the maximum length limit and retry the SimpleAPI call.
+Action: If a TP transaction is started using SimpleAPI, and the user function driven by ydb_tp_s() does a call-in invocation, care should be taken to ensure the call-in code does not do a TROLLBACK.
 
 **FATALERROR1**, Fatal error raised. Generating core and terminating process. Error: <error>.
 
@@ -523,23 +442,102 @@ Run Time Error: This indicates that there was a fatal error in a SimpleAPI call 
 
 Action: Look up the error indicated in the secondary message text in the documentation to correct the cause of the fatal error.
 
-**SIMPLEAPINEST**, Attempt to nest a SimpleAPI call with another SimpleAPI call.
+**INSUFFSUBS**, Return subscript array for an API call too small.
+
+Run Time Error: This indicates that the return subscript array needs more entries for the ydb_node_next_s() or ydb_node_previous_s() SimpleAPI call than is currently allocated (specified by the input/output parameter \*ret_subs_used). In this case \*ret_subs_used is set to the needed entries.
+
+Action: Ensure the return subscript array ("ret_subsarray" parameter of ydb_node_next_s() or ydb_node_previous_s()) is allocated with at least \*ret_subs_used entries and retry the ydb_node_next_s() or ydb_node_previous_s() call.
+
+**INVNAMECOUNT**, Number of varnames (namecount parameter in a rrrr call) cannot be less than zero.
+
+Runtime Error: This indicates that the number of variable names specified in a SimpleAPI call (identified in the message text) is less than zero.
+
+Action: Redo the SimpleAPI call with a number of variable names that is greater than or equal to zero.
+
+**INVVARNAME**, Invalid local/global/ISV variable name supplied to API call.
+
+Run Time Error: This indicates that a SimpleAPI call received an invalid variable name. The invalidity can be one of the following types:
+
+a) The ydb_buffer_t structure corresponding to the variable name has a "len_used" field greater than "alloc_len" OR
+b) The ydb_buffer_t structure corresponding to the variable name has a zero value of "len_used" OR
+c) The ydb_buffer_t structure corresponding to the variable name has a non-zero value of "len_used" but a NULL value of "buf_addr" OR
+d) The variable name starts with a ^ (i.e. is a global variable name), but the second character is not a % or an alpha character (lower or upper case) or at least one of the following characters is not an alphanumeric character (lower or upper case alphabet or a decimal digit) OR
+e) The variable name starts with a $ (i.e. is an intrinsic special variable name), but is not followed by any other character (i.e. "len_used" has a value of 1) OR
+f) The variable name starts with a character other than a % or an alpha character (lower or upper case) OR
+g) The variable name starts with a % or alpha character (lower or upper case) but at least one of the following characters is not an alphanumeric character (lower or upper case alphabet or a decimal digit)
+
+Action: Determine which of the described failures scenarios is the issue and accordingly fix the variable name passed in to the SimpleAPI call
+
+**LIBYOTTAMISMTCH**, $ydb_dist/libyottadb.so does not match the shared library path.
+
+Runtime Error: This indicates that the full path of the currently running libyottadb.so shared library does not match the path described by $ydb_dist. This is possible for example if a C program tries to directly invoke a base image function (e.g. gtm_main, dse_main, mupip_main etc.) for more than one build/release of YottaDB in the same process.
+
+Action:  Make sure a C program invokes a base image function of only one libyottadb.so executable.
+
+**MINNRSUBSCRIPTS**, Number of subscripts cannot be a negative number.
+
+Run Time Error: This indicates that the number of subscripts in an input array (usually the "subs_used" parameter in various SimpleAPI calls) is a negative number.
+
+Action: Redo the SimpleAPI call with a subscript count that is greater than or equal to zero.
+
+**MIXIMAGE**, Cannot load more than one base image function on a process.
+
+Run Time Error: This indicates that a C function tries to invoke more than one base image function included in libyottadb.so (e.g. gtm_main, dse_main, mupip_main etc.). Only one base image function can be invoked and only once for the lifetime of the process.
+
+Action: Make sure only one base image function is invoked for the lifetime of one process.
+
+**NAMECOUNT2HI**, Number of varnames specified (namecount parameter in a rrrr call)  exceeds maximum cccc allowed.
+
+Runtime Error: This indicates that the number of variable names specified in a SimpleAPI call (identified in the message text) exceeds the maximum number of allowed variable names (also identified in the message text).
+
+Action: Redo the SimpleAPI call with a fewer number of variable names specified.
+
+**PARAMINVALID**, Invalid parameter dddd specified in an API (rrrr) call.
+
+Run Time Error: This indicates that a parameter in a SimpleAPI call was not properly specified. The function name (e.g. ydb_set_s()) and the name of the invalid parameter (e.g. subsarray) along with the type of the invalidity is identified in the error message text. If the parameter is an array, the index of the element where the invalidity is detected is also identified. If the parameter is an input parameter of type ydb_buffer_t it is invalid if "len_used" is greater than "alloc_len" OR if it has a "len_used value of 0 but a NULL value of "buf_addr". If the parameter is an output parameter, it is invalid if the ydb_buffer_t pointer is NULL or if the "buf_addr" field in the ydb_buffer_t structure is NULL. Note that no error checks are done if an input ydb_buffer_t typed pointer parameter is NULL (the process would get a SIG-11 and dump core in that case).
+
+Action: Fix the cause of the invalidity and pass in a valid parameter to the SimpleAPI call.
+
+**QUERY2**, Invalid second argument to $QUERY. Must be -1 or 1.
+
+Run Time Error: This indicates that there is an invalid second argument passed to the function $QUERY. It must be either -1 or 1.
+
+Action: Refer to `$QUERY in the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/functions.html#query>`_ for correct usage.
+
+**READONLYLKFAIL**, Failed to get a lock on READ_ONLY database file.
+
+Run Time Error: This error is issued by a MUPIP command that requires standalone access (e.g. MUPIP SET -NOREAD_ONLY) to a database file (which has Read-only mode turned on) if other processes are still accessing the database OR by any process that tries to open a database file (which again has Read-only mode turned on) while a MUPIP command that has standalone access on the same database file is concurrently running.
+
+Action: If the error is from the MUPIP command which requires standalone access, ensure all processes which have the database file open are shut down and reattempt the command. If the error is from a process trying to open the database file, wait for the concurrent MUPIP command requiring standalone access to finish and reattempt to open the database.
+
+**READONLYNOSTATS**, Read-only and Statistics sharing cannot both be enabled on database.
+
+Run Time Error: This error is issued if if one tries to enable the Read-only mode on a database that has Statistics sharing turned on OR if one tries to enable Statistics sharing on a database that has Read-only mode turned on OR if one tries to enable both at the same time.
+
+Action: Make sure at most one of Read-only or Statistics sharing is turned on in the database at any point in time.
+
+**SIMPLEAPINEST**, Attempt to nest a SimpleAPI call (rrrr) with another SimpleAPI call (RRRR) - - nesting calls is not permitted in simpleAPI.
 
 Run Time Error: This indicates that a SimpleAPI call (function name identified in the message text) was attempted while another SimpleAPI call (whose function name is also identified in the message text) is still running (possible for example through a call-in or trigger invocation). Nesting of such SimpleAPI calls is not currently permitted.
 
 Action: Avoid nesting SimpleAPI calls. Finish one SimpleAPI call before attempting another.
 
-**CALLINTCOMMIT**, TCOMMIT at call-in-level=xxxx not allowed as corresponding TSTART was done at lower call-in-level=yyyy.
+**SUBSARRAYNULL**, Non-zero number of subscripts xxxx specified but subscript array parameter is NULL in API call.
 
-Run Time Error: This indicates that at least one call-in invocation happened in between when the TP transaction started (either through a ydb_tp_s() call in C or a TSTART command in M) and when the corresponding transaction commit is attempted (through a TCOMMIT command in M).
+Run Time Error: This indicates that the value of the subscript array parameter is NULL, meaning there are no subscripts specified, but the parameter specifying the number of subscripts (usually the "subs_used" parameter) has a non-zero value.
 
-Action: If a TP transaction is started using SimpleAPI, and the user function driven by ydb_tp_s() does a call-in invocation, care should be taken to ensure the call-in code does not do a TCOMMIT.
+Action: Redo the SimpleAPI call with a non-NULL subscript array parameter or with a zero value for the parameter specifying the number of subscripts.
 
-**CALLINTROLLBACK**, TROLLBACK at call-in-level=xxxx not allowed as corresponding TSTART was done at lower call-in-level=yyyy
+**TIME2LONG**, Specified time value exceeds supported maximum limit xxxx allowed.
+Run Time Error: This indicates that a timer value specified in a SimpleAPI call (e.g. ydb_lock_s(), ydb_lock_incr_s() etc.) exceeded the maximum allowed limit. Both the specified time value and the maximum allowed limit are indicated in the message text.
 
-Run Time Error: This indicates that at least one call-in invocation happened in between when the TP transaction started (either through a ydb_tp_s() call in C or a TSTART command in M) and when the corresponding transaction rollback is attempted (through a TROLLBACK command in M).
+Action: Specify a time value below the maximum limit and retry the SimpleAPI call.
 
-Action: If a TP transaction is started using SimpleAPI, and the user function driven by ydb_tp_s() does a call-in invocation, care should be taken to ensure the call-in code does not do a TROLLBACK.
+**VARNAME2LONG**, Variable name length exceeds maximum allowed length xxxx.
+
+Run Time Error: This indicates that the length of a variable name specified in a SimpleAPI call exceeded the maximum limit. The maximum value is identified in the message text.
+
+Action: Specify the variable name within the maximum length limit and retry the SimpleAPI call.
 
 +++++++++++++++
 From GT.M
@@ -645,12 +643,25 @@ Action: Investigate whether the process memory usage is appropriate, and if so, 
 Tarball hashes
 ----------------------------
 
++----------------------------------------------------------------------------+--------------------------------------------------+
+| sha256sum                                                                  | File                                             |
++============================================================================+==================================================+
+| cd26897549405b33e63966df52aefb8ad581afd1633db1cb2723ff2c12acce25           | yottadb_r120_linux_armv6l_pro.tgz                |
++----------------------------------------------------------------------------+--------------------------------------------------+
+| 8993fbb7300cb732da06e90bc7cb1334e9ab5318da7d0b7427900be8919aa640           | yottadb_r120_linux_armv7l_pro.tgz                |
++----------------------------------------------------------------------------+--------------------------------------------------+
+| 6e7bf4c1fa0b12e29fa2b0e1629bfdaaeebd0541c458eaf561d5676d1f0fc5e6           | yottadb_r120_linux_x8664_pro.tgz                 |
++----------------------------------------------------------------------------+--------------------------------------------------+
+| e32dc5ffbdd1e8fd17d4ed2f1df97145f05d5748489f2b5d8322ad9ee33008ce           | yottadb_r120_rhel7_x8664_pro.tgz                 |
++----------------------------------------------------------------------------+--------------------------------------------------+
+| f4310725ff72ff6bd5da41fc0b3eaf5ab918978ce33d08878ed717c1d1cf04c4           | yottadb_r120_src.tgz                             |
++----------------------------------------------------------------------------+--------------------------------------------------+
 
 -----------------------
 Legal Stuff
 -----------------------
 
-Copyright © 2017 YottaDB LLC
+Copyright © 2018 YottaDB LLC
 
 Permission is granted to copy, distribute and/or modify this document under the terms of the `GNU Free Documentation License, Version 1.3 <http://www.gnu.org/licenses/fdl.txt>`_ or any later version published by the Free Software Foundation; with no Invariant Sections, no Front-Cover Texts and no Back-Cover Texts.
 
@@ -659,10 +670,3 @@ GT.M™ is a trademark of Fidelity National Information Services, Inc.
 Other trademarks belong to their respective owners.
 
 This document contains a description of YottaDB and the operating instructions pertaining to the various functions that comprise the software. This document does not contain any commitment of YottaDB LLC. YottaDB LLC believes the information in this publication is accurate as of its publication date; such information is subject to change without notice. YottaDB LLC is not responsible for any errors or defects.
-
-
-----------------------------
-Downloads
-----------------------------
-
-
