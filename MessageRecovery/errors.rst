@@ -792,6 +792,26 @@ Run Time Error: Once a call-in has done a call to ydb_exit(), a process can no l
 
 Action: Either move or remove the inappropriate call-ins or move the gtm_exit call to a later point.
 
+----------------
+CALLINTCOMMIT
+----------------
+
+CALLINTCOMMIT, TCOMMIT at call-in-level=xxxx not allowed as corresponding TSTART was done at lower call-in-level=yyyy.
+
+Run Time Error: This indicates that at least one call-in invocation happened in between when the TP transaction started (either through a ydb_tp_s() call in C or a TSTART command in M) and when the corresponding transaction commit is attempted (through a TCOMMIT command in M).
+
+Action: If a TP transaction is started using SimpleAPI, and the user function driven by ydb_tp_s() does a call-in invocation, care should be taken to ensure the call-in code does not do a TCOMMIT.
+
+----------------
+CALLINTROLLBACK
+----------------
+
+CALLINTROLLBACK, TROLLBACK at call-in-level=xxxx not allowed as corresponding TSTART was done at lower call-in-level=yyyy
+
+Run Time Error: This indicates that at least one call-in invocation happened in between when the TP transaction started (either through a ydb_tp_s() call in C or a TSTART command in M) and when the corresponding transaction rollback is attempted (through a TROLLBACK command in M).
+
+Action: If a TP transaction is started using SimpleAPI, and the user function driven by ydb_tp_s() does a call-in invocation, care should be taken to ensure the call-in code does not do a TROLLBACK.
+
 -------------
 CANTBITMAP
 -------------
@@ -872,7 +892,7 @@ Action: None Required
 CHNGTPRSLVTM 
 ------------------
 
-CHNGTPRSLVTM, Mupip will change tp_resolve_time from xxxx to yyyy because expected EPOCH or EOF record was not found in Journal File zzzz.
+CHNGTPRSLVTM, MUPIP will change tp_resolve_time from xxxx to yyyy because expected EPOCH or EOF record was not found in Journal File zzzz.
 
 MUPIP Information: At startup, backward recovery/rollback internally computes a time called the tp_resolve_time which is until when backward processing will be performed across journal files of all regions. During backward processing it is possible in very rare cases that recovery does not see an EPOCH record or an EOF record as the last record in the journal file of those regions that had not been updated for quite a long time. In such cases recovery reduces the tp_resolve_time further by taking into account the timestamp of the last journal record. This effectively causes further backward processing but is necessary for a clean recovery. A CHNGTPRSLVTM message is printed whenever such journal files are encountered by backward recovery.
 
@@ -4104,6 +4124,26 @@ Run Time Error: This error indicates that M code reached a label with a formalli
 
 Action: Revisit your code to ensure that all invocations of labels with a formallist occur using a DO command or extrinsic function ($$).
 
+------------
+FATALERROR1
+------------
+
+FATALERROR1, Fatal error raised. Generating core and terminating process. Error: <error>.
+
+Run Time Error: This indicates that there was a fatal error in a SimpleAPI call that resulted in the termination of the running process and the generation of a core file. Appears in the system log.
+
+Action: Look up the error indicated in the secondary message text in the documentation to correct the cause of the fatal error.
+
+------------
+FATALERROR2
+------------
+
+FATALERROR2, Fatal error raised. Bypassing core generation and terminating process. Error: <error>
+
+Run Time Error: This indicates that there was a fatal error in a SimpleAPI call that resulted in the termination of the running process, and no core file was generated as a result of this. Appears in the system log.
+
+Action: Look up the error indicated in the secondary message text in the documentation to correct the cause of the fatal error.
+
 --------------------
 FCHARMAXARGS 
 --------------------
@@ -5639,6 +5679,16 @@ Run Time Information: eeee error encountered on region rrrrr triggered the Insta
 
 Action: None necessary.
 
+---------------------
+INSUFFSUBS
+---------------------
+
+INSUFFSUBS, Return subscript array for an API call too small.
+
+Run Time Error: This indicates that the return subscript array needs more entries for the ydb_node_next_s() or ydb_node_previous_s() SimpleAPI call than is currently allocated (specified by the input/output parameter \*ret_subs_used). In this case \*ret_subs_used is set to the needed entries.
+
+Action: Ensure the return subscript array ("ret_subsarray" parameter of ydb_node_next_s() or ydb_node_previous_s()) is allocated with at least \*ret_subs_used entries and retry the ydb_node_next_s() or ydb_node_previous_s() call.
+
 -----------------------
 INSUNKNOWN 
 -----------------------
@@ -5890,6 +5940,15 @@ MUPIP Error: This indicates that the LOAD command with the qualifier FORMAT=GOQ 
 
 Action: Determine how the file was created and use the proper specification for the FORMAT= qualifier.
 
+-------------------
+INVNAMECOUNT
+-------------------
+
+INVNAMECOUNT, Number of varnames cannot be less than zero.
+
+Runtime Error: This indicates that the number of variable names specified in a SimpleAPI call (identified in the message text) is less than zero.
+
+Action: Retry the SimpleAPI call with a number of variable names that is greater than or equal to zero.
 
 -----------------------
 INVNETFILNM 
@@ -6060,6 +6119,23 @@ INVTRNSQUAL, Invalid TRANSACTION qualifier. Specify only one of TRANSACTION=[NO]
 MUPIP Error: This indicates that an invalid value was assigned to the -TRANSACTION qualifier.
 
 Action: Specify appropriate value to the -TRANSACTION qualifier.
+
+-----------
+INVVARNAME
+-----------
+INVVARNAME, Invalid local/global/ISV variable name supplied to API call.
+
+Run Time Error: This indicates that a SimpleAPI call received an invalid variable name. The invalidity can be one of the following types:
+
+a) The ydb_buffer_t structure corresponding to the variable name has a "len_used" field greater than "alloc_len" OR
+b) The ydb_buffer_t structure corresponding to the variable name has a zero value of "len_used" OR
+c) The ydb_buffer_t structure corresponding to the variable name has a non-zero value of "len_used" but a NULL value of "buf_addr" OR
+d) The variable name starts with a ^ (i.e. is a global variable name), but the second character is not a % or an alpha character (lower or upper case) or at least one of the following characters is not an alphanumeric character (lower or upper case alphabet or a decimal digit) OR
+e) The variable name starts with a $ (i.e. is an intrinsic special variable name), but is not followed by any other character (i.e. "len_used" has a value of 1) OR
+f) The variable name starts with a character other than a % or an alpha character (lower or upper case) OR
+g) The variable name starts with a % or alpha character (lower or upper case) but at least one of the following characters is not an alphanumeric character (lower or upper case alphabet or a decimal digit)
+
+Action: Determine which of the described failures scenarios is the issue and accordingly fix the variable name passed in to the SimpleAPI call.
 
 --------------------
 INVYDBEXIT 
@@ -7714,6 +7790,16 @@ MUPIP Error: This error indicates that MUPIP LOAD encountered an issue with a sp
 
 Action: Refer to the LDSPANGLOINCMP Errors section in the `Maintaining Database Integrity chapter of the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/integrity.html>`_.
 
+----------------------
+LIBYOTTAMISMTCH
+----------------------
+
+LIBYOTTAMISMTCH, $ydb_dist/libyottadb.so does not match the shared library path.
+
+Runtime Error: This indicates that the full path of the currently running libyottadb.so shared library does not match the path described by $ydb_dist. This is possible for example if a C program tries to directly invoke a base image function (e.g. gtm_main, dse_main, mupip_main etc.) for more than one build/release of YottaDB in the same process.
+
+Action:  Make sure a C program invokes a base image function of only one libyottadb.so executable.
+
 -----------------------
 LINKVERSION 
 -----------------------
@@ -7912,7 +7998,7 @@ LOADINVCHSET, Extract file CHSET xxx is incompatible with gtm_chset.
 
 MUPIP Information: This indicates that a MUPIP LOAD operation did not take place because the value of the environment variable gtm_chset at the time of creating the extract file was not the same as the current value of gtm_chset.
 
-Action: Determine whether to change the current character set or redo the EXTRACT with a different character set. Alternatively, you can edit the extract file so the EXTRACT file header matches the gtm_chset environment variable. This enables an M mode MUPIP LOAD to treat the input as a byte stream or a UTF-8 mode MUPIP LOAD, which either detects BADCHAR errors or not, depending on the setting of the gtm_badchar environment variable..
+Action: Determine whether to change the current character set or retry the EXTRACT with a different character set. Alternatively, you can edit the extract file so the EXTRACT file header matches the gtm_chset environment variable. This enables an M mode MUPIP LOAD to treat the input as a byte stream or a UTF-8 mode MUPIP LOAD, which either detects BADCHAR errors or not, depending on the setting of the gtm_badchar environment variable..
 
 -------------------
 LOADRUNNING
@@ -8344,6 +8430,16 @@ Run Time Error: This indicates that YottaDB was not able to complete MERGE opera
 
 Action: Review the accompanying message(s) for additional information.
 
+--------------------
+MINNRSUBSCRIPTS
+--------------------
+
+MINNRSUBSCRIPTS, Number of subscripts cannot be a negative number.
+
+Run Time Error: This indicates that the number of subscripts in an input array (usually the "subs_used" parameter in various SimpleAPI calls) is a negative number.
+
+Action: Retry the SimpleAPI call with a subscript count that is greater than or equal to zero.
+
 ----------------------
 MISSINGDELIM 
 ----------------------
@@ -8353,6 +8449,16 @@ MISSINGDELIM, Delimiter dddd expected before qqqq vvvv
 GDE Error: This indicates that the delimiter dddd (usually dash character) is expected just before vvvv is specified. vvvv is a GDE object or qualifier indicated by qqqq.
 
 Action: Specify the delimiter as indicated.
+
+-------------------
+MIXIMAGE
+-------------------
+
+MIXIMAGE, Cannot load more than one base image function on a process.
+
+Run Time Error: This indicates that a C function tries to invoke more than one base image function included in libyottadb.so (e.g. gtm_main, dse_main, mupip_main etc.). Only one base image function can be invoked and only once for the lifetime of the process.
+
+Action: Make sure only one base image function is invoked for the lifetime of one process.
 
 ----------------------
 MMBEFOREJNL
@@ -9447,6 +9553,16 @@ MUUSERLBK, Abnormal shutdown of replication-enabled database dddd detected
 Run Time Error: This error is issued when attempting a MUPIP RUNDOWN on a previously crashed replication-enabled (with BEFORE IMAGE journaling) database dddd.
 
 Action: Use MUPIP ROLLBACK to restore the normal state of the database.
+
+---------------------
+NAMECOUNT2HI
+---------------------
+
+NAMECOUNT2HI, Number of varnames specified exceeds maximum xxxx allowed.
+
+Runtime Error: This indicates that the number of variable names specified in a SimpleAPI call (identified in the message text) exceeds the maximum number of allowed variable names (also identified in the message text).
+
+Action: Retry the SimpleAPI call with a fewer number of variable names specified.
 
 ---------------------
 NAMEEXPECTED 
@@ -10719,6 +10835,16 @@ Run Time Error: The PAD deviceparameter (valid only for Sequential Disk files) s
 Action: Specify a value within the allowed range.
 
 ------------------
+PARAMINVALID
+------------------
+
+PARAMINVALID, Invalid parameter specified in an API call.
+
+Run Time Error: This indicates that a parameter in a SimpleAPI call was not properly specified. The function name (e.g. ydb_set_s()) and the name of the invalid parameter (e.g. subsarray) along with the type of the invalidity is identified in the error message text. If the parameter is an array, the index of the element where the invalidity is detected is also identified. If the parameter is an input parameter of type ydb_buffer_t it is invalid if "len_used" is greater than "alloc_len" OR if it has a "len_used value of 0 but a NULL value of "buf_addr". If the parameter is an output parameter, it is invalid if the ydb_buffer_t pointer is NULL or if the "buf_addr" field in the ydb_buffer_t structure is NULL. Note that no error checks are done if an input ydb_buffer_t typed pointer parameter is NULL (the process would get a SIG-11 and dump core in that case).
+
+Action: Fix the cause of the invalidity and pass in a valid parameter to the SimpleAPI call.
+
+------------------
 PARBUFSM 
 ------------------
 
@@ -11123,6 +11249,16 @@ Run Time Error: This indicates that a $ZROUTINES function did not specify a valu
 
 Action: The SRC qualifier requires a value.
 
+---------------
+QUERY2
+---------------
+
+QUERY2, Invalid second argument to $QUERY. Must be -1 or 1.
+
+Run Time Error: This indicates that there is an invalid second argument passed to the function $QUERY. It must be either -1 or 1.
+
+Action: Refer to $QUERY in the Programmer's Guide for correct usage.
+
 ------------------
 QUITALSINV 
 ------------------
@@ -11236,6 +11372,16 @@ Run Time Error: This indicates that a READ fixed length (#) specified a value of
 Action: Change the length (i.e., the portion of the READ argument that appears after the delimiter (#)) to a valid value, or add a postconditional to the READ command to suppress the length when it is less than or equal to zero.
 
 -------------------------
+READONLYLKFAIL
+-------------------------
+
+READONLYLKFAIL, Failed to get a lock on READ_ONLY database file.
+
+Run Time Error: This error is issued by a MUPIP command that requires standalone access (e.g. MUPIP SET -NOREAD_ONLY) to a database file (which has Read-only mode turned on) if other processes are still accessing the database OR by any process that tries to open a database file (which again has Read-only mode turned on) while a MUPIP command that has standalone access on the same database file is concurrently running.
+
+Action: If the error is from the MUPIP command which requires standalone access, ensure all processes which have the database file open are shut down and reattempt the command. If the error is from a process trying to open the database file, wait for the concurrent MUPIP command requiring standalone access to finish and reattempt to open the database.
+
+-------------------------
 READONLYNOBG
 -------------------------
 
@@ -11244,6 +11390,16 @@ READONLYNOBG, Read-only cannot be enabled on non-MM databases
 MUPIP Error: This indicates an attempt to change a BG database to -READ_ONLY or to change a -READ_ONLY to MM access method; -READ_ONLY only compatible with the MM access mode.
 
 Action: Verify whether the database should not be read only and adjust, if appropriate. Alternatively, set the database to MM access mode then mark it as read-only.
+
+-------------------------
+READONLYNOSTATS
+-------------------------
+
+READONLYNOSTATS, Read-only and Statistics sharing cannot both be enabled on database.
+
+Run Time Error: This error is issued if if one tries to enable the Read-only mode on a database that has Statistics sharing turned on OR if one tries to enable Statistics sharing on a database that has Read-only mode turned on OR if one tries to enable both at the same time.
+
+Action: Make sure at most one of Read-only or Statistics sharing is turned on in the database at any point in time.
 
 -------------------------
 REC2BIG
@@ -13196,6 +13352,16 @@ Run Time Error: This message is an auxiliary message and is preceeded with a pri
 
 Action: Refer to the accompanying message(s) and take appropriate action. Refer to the user documentation. If necessary, report the entire incident context to your YottaDB support channel for further analysis.
 
+-----------------
+SIMPLEAPINEST
+-----------------
+
+SIMPLEAPINEST, Attempt to nest a SimpleAPI call with another SimpleAPI call.
+
+Run Time Error: This indicates that a SimpleAPI call (function name identified in the message text) was attempted while another SimpleAPI call (whose function name is also identified in the message text) is still running (possible for example through a call-in or trigger invocation). Nesting of such SimpleAPI calls is not currently permitted.
+
+Action: Avoid nesting SimpleAPI calls. Finish one SimpleAPI call before attempting another.
+
 ------------------
 SIZENOTVALID4 
 ------------------
@@ -13849,6 +14015,16 @@ MUPIP Error: This indicates that INTEG encountered a subscript that is too long 
 
 Action: Examine the subscript with DSE DUMP, and take action to eliminate the subscript if it is invalid.
 
+------------------
+SUBSARRAYNULL
+------------------
+
+SUBSARRAYNULL, Non-zero number of subscripts xxxx specified but subscript array parameter is NULL in API call.
+
+Run Time Error: This indicates that the value of the subscript array parameter is NULL, meaning there are no subscripts specified, but the parameter specifying the number of subscripts (usually the "subs_used" parameter) has a non-zero value.
+
+Action: Retry the SimpleAPI call with a non-NULL subscript array parameter or with a zero value for the parameter specifying the number of subscripts.
+
 -------------------
 SUPRCVRNEEDSSUPSRC
 -------------------
@@ -13978,6 +14154,16 @@ TEXTARG, Invalid argument to $TEXT function
 Compile Time Error: This indicates that a $TEXT function specified an invalid argument.
 
 Action: Modify the $TEXT() argument so it is in the format of an entryref.
+
+------------------
+TIME2LONG
+------------------
+
+TIME2LONG, Specified time value exceeds supported maximum limit xxxx allowed.
+
+Run Time Error: This indicates that a timer value specified in a SimpleAPI call (e.g. ydb_lock_s(), ydb_lock_incr_s() etc.) exceeded the maximum allowed limit. Both the specified time value and the maximum allowed limit are indicated in the message text.
+
+Action: Specify a time value below the maximum limit and retry the SimpleAPI call.
 
 ---------------------
 TIMERHANDLER 
@@ -14916,6 +15102,16 @@ VAREXPECTED, Variable expected in this context
 Compile Time Error: This indicates that YottaDB expected a variable but encountered an invalid one.
 
 Action: Look for proper variable names. This error is reported by commands and functions that require a variable argument such as SET and KILL and $DATA() and $QUERY().
+
+-------------------
+VARNAME2LONG
+-------------------
+
+VARNAME2LONG, Variable name length exceeds maximum allowed length xxxx.
+
+Run Time Error: This indicates that the length of a variable name specified in a SimpleAPI call exceeded the maximum limit. The maximum value is identified in the message text.
+
+Action: Specify the variable name within the maximum length limit and retry the SimpleAPI call.
 
 ------------------
 VARRECBLKSZ 
