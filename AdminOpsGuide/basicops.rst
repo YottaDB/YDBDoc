@@ -223,6 +223,62 @@ A comprehensive list of environment variables that are directly or indirectly us
 
 **gtmcrypt_FIPS** specifies whether the plugin reference implementation should attempt to use either OpenSSL or Libgcrypt to provide database encryption that complies with FIPS 140-2. When the environment variable $gtmcrypt_FIPS is set to 1 (or evaluates to a non-zero integer, or any case-independent string or leading substring of "TRUE" or "YES"), the plugin reference implementation attempts to use libgcrypt (from GnuPG) and libcrypto (OpenSSL) in "FIPS mode." Note that to comply with FIPS 140-2 you should be knowledgeable with that standard and take many steps beyond setting this environment variable. By default YottaDB does not enforce "FIPS mode."
 
+**gtmdbglvl** specifies the YottaDB debug levels. The defined values can be added together to turn on multiple features at the same time. Note that the cumulative value specified in the logical or environment variable must currently be specified in decimal.
+
++------------------------------+--------------------------------------------+--------------------------------------------------------------------------------------------+
+| Level                        | Value                                      | Notes                                                                                      |
++==============================+============================================+============================================================================================+
+| GDL_None                     | 0x00000000                                 | No debugging                                                                               |
++------------------------------+--------------------------------------------+--------------------------------------------------------------------------------------------+
+| GDL_Simple                   | 0x00000001                                 | Regular assert checking, no special checks                                                 |
++------------------------------+--------------------------------------------+--------------------------------------------------------------------------------------------+
+| GDL_SmStats                  | 0x00000002                                 | Print usage statistics at end of process                                                   |
++------------------------------+--------------------------------------------+--------------------------------------------------------------------------------------------+
+| GDL_SmTrace                  | 0x00000004                                 | Trace each malloc/free (output to stderr)                                                  |
++------------------------------+--------------------------------------------+--------------------------------------------------------------------------------------------+
+| GDL_SmDumpTrace              | 0x00000008                                 | Dump malloc/free trace information on exit                                                 |
++------------------------------+--------------------------------------------+--------------------------------------------------------------------------------------------+
+| GDL_SmAllocVerf              | 0x00000010                                 | Perform verification of allocated storage chain for each call                              |
++------------------------------+--------------------------------------------+--------------------------------------------------------------------------------------------+
+| GDL_SmFreeVerf               | 0x00000020                                 | Perform simple verification of free storage chain for each call                            |
++------------------------------+--------------------------------------------+--------------------------------------------------------------------------------------------+
+| GDL_SmBackfill               | 0x00000040                                 | Backfill unused storage (cause exceptions if released storage is used)                     |
++------------------------------+--------------------------------------------+--------------------------------------------------------------------------------------------+
+| GDL_SmChkAllocBackfill       | 0x00000080                                 | Verify backfilled storage in GDL_AllocVerf while verifying each individual queue entry     |
++------------------------------+--------------------------------------------+--------------------------------------------------------------------------------------------+
+| GDL_SmChkFreeBackfill        | 0x00000100                                 | Verify backfilled storage in GDL_FreeVerf while verifying each individual queue entry      |
++------------------------------+--------------------------------------------+--------------------------------------------------------------------------------------------+
+| GDL_SmStorHog                | 0x00000200                                 | Each piece of storage allocated is allocated in an element twice the desired size to       |
+|                              |                                            | provide glorious amounts of backfill for overrun checking.                                 |
++------------------------------+--------------------------------------------+--------------------------------------------------------------------------------------------+
+| GDL_DumpOnStackOFlow         | 0x00000400                                 | When get a stack overflow or out-of-memory error, generate a core                          |
++------------------------------+--------------------------------------------+--------------------------------------------------------------------------------------------+
+| GDL_ZSHOWDumpOnSignal        | 0x00000800                                 | Don't supress YDB_FATAL file creation when get a signal                                    |
++------------------------------+--------------------------------------------+--------------------------------------------------------------------------------------------+
+| GDL_PrintIndCacheStats       | 0x00001000                                 | Print indirect cacheing stats                                                              |
++------------------------------+--------------------------------------------+--------------------------------------------------------------------------------------------+
+| GDL_PrintCacheStats          | 0x00002000                                 | Print stats on $Piece and UTF8 cacheing (debug only)                                       |
++------------------------------+--------------------------------------------+--------------------------------------------------------------------------------------------+
+| GDL_DebugCompiler            | 0x00004000                                 | Turn on compiler debugging                                                                 |
++------------------------------+--------------------------------------------+--------------------------------------------------------------------------------------------+
+| GDL_SmDump                   | 0x00008000                                 | Do full blown storage dump -- only useful in debug mode                                    |
++------------------------------+--------------------------------------------+--------------------------------------------------------------------------------------------+
+| GDL_PrintEntryPoints         | 0x00010000                                 | Print address of entry points when they are loaded/resolved                                |
++------------------------------+--------------------------------------------+--------------------------------------------------------------------------------------------+
+| GDL_PrintSockIntStats        | 0x00020000                                 | Print Socket interrupt stats on exit                                                       |
++------------------------------+--------------------------------------------+--------------------------------------------------------------------------------------------+
+| GDL_SmInitAlloc              | 0x00040000                                 | Initialize all storage allocated or deallocated with 0xdeadbeef                            |
++------------------------------+--------------------------------------------+--------------------------------------------------------------------------------------------+
+| GDL_PrintPipeIntStats        | 0x00080000                                 | Print Pipe/Fifo(rm) interrupt stats on exit                                                |
++------------------------------+--------------------------------------------+--------------------------------------------------------------------------------------------+
+| GDL_IgnoreAvailSpace         | 0x00100000                                 | Allow gdsfilext/mu_cre_file (UNIX) to ignore available space                               |
++------------------------------+--------------------------------------------+--------------------------------------------------------------------------------------------+
+| GDL_PrintPMAPStats           | 0x00200000                                 | Print process memory map on exit (using pmap or procmap utility)                           |
++------------------------------+--------------------------------------------+--------------------------------------------------------------------------------------------+
+| GDL_AllowLargeMemcpy         | 0x00400000                                 | Bypass the 1GB sanity check in gtm_memcpy_validate_and_execute()                           |
++------------------------------+--------------------------------------------+--------------------------------------------------------------------------------------------+
+
+
 **gtmgbldir** specifies the initial value of the $ZGBLDIR ISV. $ZGBLDIR identifies the global directory. A global directory maps global variables to physical database files, and is required to access M global variables. Users who maintain multiple global directories use this environment variable to conveniently choose one to use from the time of process startup. To automate this definition, define gtmgbldir in the user's login file. The SET command can alter the value of $ZGBLDIR in an active process.
 
 **gtmroutines** specifies the initial value of the $ZROutines ISV, which specifies where to find object and source code. The SET command can alter the value of $ZROUTINES in an active process.
