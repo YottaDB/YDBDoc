@@ -39,14 +39,14 @@ Process 1 has A LOCKed and attempts to LOCK B. Process 2 has B LOCKed and attemp
 To Invoke and Exit LKE
 +++++++++++++++++++++++++++++
 
-YottaDB installation procedure places the LKE utility package in a directory specified by the environment variable gtm_dist.
+YottaDB installation procedure places the LKE utility package in a directory specified by the environment variable ydb_dist.
 
-LKE requires that the environment variable gtmgbldir be defined.
+LKE requires that the environment variable ydb_gbldir be defined.
 
 Invoke LKE using the following command at the shell prompt. If this does not work, consult your system manager to investigate setup and file access issues.
 
 .. parsed-literal::
-   $gtm_dist/lke LKE>
+   $ydb_dist/lke LKE>
 
 .. note::
    Always run LKE on the node where the lock is held.
@@ -56,15 +56,15 @@ When LKE is ready to accept commands, it displays the LKE> prompt. To leave LKE,
 When additional information is entered on the command line after the LKE command, LKE processes the additional information as its command.
 
 .. parsed-literal::
-   $gtm_dist/lke show -all
+   $ydb_dist/lke show -all
 
 This command displays all current LOCKs and then returns to the shell prompt.
 
 If your LKE argument contains quotes, precede each quote in the argument by a back-slash (\) or enclose the entire argument in a set of quotes (matching single or double). Apply this convention only for those LKE commands that you run from the shell.
 
 .. parsed-literal::
-   $gtm_dist/lke show -lock="^Account(\"Name\")"
-   $gtm_dist/lke show -lock='^Account("Name")'
+   $ydb_dist/lke show -lock="^Account(\"Name\")"
+   $ydb_dist/lke show -lock='^Account("Name")'
 
 Both these commands display the status of LOCK ^Account("Name") in the default region.
 
@@ -72,11 +72,11 @@ Both these commands display the status of LOCK ^Account("Name") in the default r
 To Establish a Global Directory
 ++++++++++++++++++++++++++++++++++
 
-LKE uses the environment variable gtmgbldir to identify the active global directory. gtmgbldir should be defined by individual users in their login files.
+LKE uses the environment variable ydb_gbldir to identify the active global directory. ydb_gbldir should be defined by individual users in their login files.
 
 .. parsed-literal::
-   $ gtmgbldir=prod.gld 
-   $ export gtmgbldir
+   $ ydb_gbldir=prod.gld 
+   $ export ydb_gbldir
 
 ------------------------------------
 LKE Commands and Qualifiers

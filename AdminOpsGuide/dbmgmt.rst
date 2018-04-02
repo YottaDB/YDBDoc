@@ -24,12 +24,12 @@ For MUPIP commands pertaining to multisite database replication, refer to `Chapt
 .. note::
    Two MUPIP operations - INTRPT and STOP - perform process management functions. All other MUPIP operations relate to the operation of the database.
 
-The YottaDB installation procedure places the MUPIP utility program in a directory specified by $gtm_dist.
+The YottaDB installation procedure places the MUPIP utility program in a directory specified by $ydb_dist.
 
-Invoke MUPIP by executing the mupip program at the shell prompt. If this does not work, consult your system manager (MUPIP requires that the $gtm_dist point to the directory containing the MUPIP executable image).
+Invoke MUPIP by executing the mupip program at the shell prompt. If this does not work, consult your system manager (MUPIP requires that the $ydb_dist point to the directory containing the MUPIP executable image).
 
 .. parsed-literal::
-   $gtm_dist/mupip
+   $ydb_dist/mupip
    MUPIP>
 
 MUPIP asks for commands, with the MUPIP> prompt. Enter the EXIT command at the MUPIP> prompt to stop the utility. MUPIP performs one operation at a time, and automatically terminates after most operations.
@@ -37,7 +37,7 @@ MUPIP asks for commands, with the MUPIP> prompt. Enter the EXIT command at the M
 When additional information appears on the command line after the mupip program name, MUPIP processes the additional information as its command, for example:
 
 .. parsed-literal::
-   $gtm_dist/mupip stop 1158 
+   $ydb_dist/mupip stop 1158 
 
 This starts MUPIP and stops the process with Process ID (PID) 1158.
 

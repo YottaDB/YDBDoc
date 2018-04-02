@@ -46,11 +46,11 @@ After initialization common to all users of a system, a login shell sources the 
    trap "" int quit        # terminate on SIGINT and SIGQUIT
    stty susp \000         # prevent <CTRL-Z> from sending SIGSUSP
    # set environment variables needed by YottaDB and by application, for example
-   export gtm_dist=...
-   export gtmgbldir=...
-   export gtmroutines=...
+   export ydb_dist=...
+   export ydb_gbldir=...
+   export ydb_routines=...
    export gtm_repl_instance=...
-   export gtm_tmp=...
+   export ydb_tmp=...
    # disable mumps ^C until application code sets up handler
    export gtm_nocenable=1
    # override default of $ZTRAP="B"
@@ -62,7 +62,7 @@ After initialization common to all users of a system, a login shell sources the 
    export PATH=/usr/bin:/bin    # only the minimum needed by application
    export SHELL=/bin/false     # disable ZSYSTEM from command prompt
    # execute captive application starting with entryref ABC^DEF then exit
-   exec $gtm_dist/mumps -run ABC^DEF
+   exec $ydb_dist/mumps -run ABC^DEF
 
 Note the use of exec to run the application - this terminates the shell and disconnects users from the system when they exit the YottaDB application.
 
@@ -81,7 +81,7 @@ To compile and run the monthstarting.zip example, perform the following steps:
 
 Download monthstarting.zip.
 
-monthstarting.zip contains monthstarting.m, month_starting.c, and monthstarting.ci. To download monthstarting.zip, go to `Github <https://github.com/YottaDB/YottaDBdoc/tree/master/GTMAdminOps>`_.
+monthstarting.zip contains monthstarting.m, month_starting.c, and monthstarting.ci. To download monthstarting.zip, go to `Github <https://github.com/YottaDB/YottaDBdoc/tree/master/AdminOpsGuide/monthstarting.zip>`_.
 
 Run the monthstarting.m program that lists months starting with the specified day of the week and year range.
 
@@ -101,8 +101,8 @@ This step is optional as there is no need to explicitly compile monthstarting.m 
 On x86 GNU/Linux (64-bit Ubuntu 12.04), execute the following command to compile month_starting.c and create an executable called friday. 
 
 .. parsed-literal::
-   $ gcc -c month_starting.c -I$gtm_dist
-   $ gcc month_starting.o -o friday -L $gtm_dist -Wl,-rpath=$gtm_dist -lgtmshr
+   $ gcc -c month_starting.c -I$ydb_dist
+   $ gcc month_starting.o -o friday -L $ydb_dist -Wl,-rpath=$ydb_dist -lgtmshr
 
 For compiling the month_starting.c program on other platforms, refer to the `Integrating External Routines chapter of the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/extrout.html>`_.
 
@@ -135,19 +135,19 @@ The month_starting.c program accomplishes this by calling the same YottaDB entry
    /* Initialize and call calcprint^monthstarting() \*/
    if ( 0 == gtm_init() ) gtm_ci("calcprint", &status, argv[0], argc>1 ? argv[1] : "", argc>2 ? argv[2] : "");
 
-Prior to calling the YottaDB entryref, the C program also needs to set environment variables if they are not set: gtm_dist to point to the directory where YottaDB is installed, gtmroutines to enable YottaDB to find the monthstarting M routine as well as YottaDB's %DATE utility program, and GTMCI to point to the call-in table:
+Prior to calling the YottaDB entryref, the C program also needs to set environment variables if they are not set: ydb_dist to point to the directory where YottaDB is installed, ydb_routines to enable YottaDB to find the monthstarting M routine as well as YottaDB's %DATE utility program, and GTMCI to point to the call-in table:
 
 .. parsed-literal::
    /* Define environment variables if not already defined \*/
-           setenv( "gtm_dist", "/usr/local/lib/yottadb/r1.10", 0 );
-           if (NULL == getenv( "gtmroutines" ))
+           setenv( "ydb_dist", "/usr/local/lib/yottadb/r1.10", 0 );
+           if (NULL == getenv( "ydb_routines" ))
            {
              tmp1 = strlen( getenv( "PWD" ));
              strncpy( strbuf, getenv( "PWD"), tmp1 );
              strcpy( strbuf+tmp1, " " );
              tmp2 = tmp1+1;
-             tmp1 = strlen( getenv( "gtm_dist" ));
-             strncpy( strbuf+tmp2, getenv( "gtm_dist" ), tmp1 );
+             tmp1 = strlen( getenv( "ydb_dist" ));
+             strncpy( strbuf+tmp2, getenv( "ydb_dist" ), tmp1 );
              tmp2 += tmp1;
              if ( 8 == sizeof( char * ))
              {
@@ -156,14 +156,14 @@ Prior to calling the YottaDB entryref, the C program also needs to set environme
                tmp2 += tmp1;
              }
              strcpy( strbuf+tmp2, "" );
-            setenv( "gtmroutines", strbuf, 1 );
+            setenv( "ydb_routines", strbuf, 1 );
             }
             setenv( "GTMCI", "monthstarting.ci", 0 );
             if ( 0 == gtm_init() ) gtm_ci("calcprint", &status, argv[0], argc>1 ? argv[1] : "", argc>2 ? argv[2] : "");
             gtm_exit(); /* Discard status from gtm_exit and return status from function call \*/
 
 
-Note that on 32-bit platforms, the last element of gtmroutines is $gtm_dist, whereas on 64-bit platforms, it is $gtm_dist/libgtmutil.so. If you are creating a wrapper to ensure that environment variables are set correctly because their values cannot be trusted, you should also review and set the environment variables discussed in “Setting up a Captive User Application with YottaDB” above.
+Note that on 32-bit platforms, the last element of ydb_routines is $ydb_dist, whereas on 64-bit platforms, it is $ydb_dist/libgtmutil.so. If you are creating a wrapper to ensure that environment variables are set correctly because their values cannot be trusted, you should also review and set the environment variables discussed in “Setting up a Captive User Application with YottaDB” above.
 
 All the C program needs to do is to set environment variables and call a YottaDB entryref. A call-in table is a text file that maps C names and parameters to M names and parameters. In this case, the call-in table is just a single line to map the C function calcprint() to the YottaDB entryref calcprint^monthstarting():
 
