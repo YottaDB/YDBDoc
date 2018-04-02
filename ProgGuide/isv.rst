@@ -1489,6 +1489,12 @@ Example:
 This example sets $ZSTEP to code that displays the contents of the next line to execute, and then enters Direct Mode.
 
 -----------------
+$ZSTRPllim
+-----------------
+
+$ZSTRP[LLIM] provides a way for a process to limit its process private memory used for local variable and scratch storage. When the value is 0 or negative, the default, there is no limit. A positive value specifies a byte limit. When a request for additional memory exceeds the limit, YottaDB does the expansion and then produces an STPCRIT error. By default, a later request for memory produces an STPOFLOW, unless subsequent to STPCRIT , $ZSTRPLLIM has been set to the same or higher limit. Note that YottaDB allocates memory in large blocks so the interaction of $ZSTRPLLIM with memory growth is not exact. When the gtm_string_pool_limit environment variable specifies a positive value, YottaDB uses it for the initial value of $ZSTRPLLIM. 
+
+-----------------
 $ZSYSTEM
 -----------------
 
