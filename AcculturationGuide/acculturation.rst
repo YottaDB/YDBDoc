@@ -118,7 +118,14 @@ Refer to the user documentation for your virtualization software to set up virtu
 
 .. parsed-literal::
 
-    kvm -enable-kvm -cpu host -m 256 -display none -net nic -net user,hostfwd=tcp::2222-:22 -hda ubuntu-16.04_workshop.vmdk &
+    kvm -enable-kvm -cpu host -m 256 -display none -net nic -net user,hostfwd=tcp::2222-:22 -hda ubuntu-16.04_yottadbworkshop10.vmdk
+
+
+Using qemu-system-x86_64 on a Linux host, the following boots the vmdk image with port 2222 on the host forwarded to port 22 on the guest for ssh sessions.
+
+.. parsed-literal::
+   
+   $qemu-system-x86_64 -enable-kvm -cpu host -m 256 -net nic -net user,hostfwd=tcp::2222-:22 -hda ubuntu-16.04_yottadbworkshop10.vmdk
 
 +++++++++++
 Legal Stuff
