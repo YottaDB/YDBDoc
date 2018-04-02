@@ -43,7 +43,7 @@ Volumes are also supported by mounting to the /data directory. If you want to mo
 This creates a ydb-data directory in your current working directory. This can be deleted after the container is shutdown/removed if you want to remove all data created in the YottaDB container (such as your database and routines).
 
 .. note::
-   You may need to enable Docker by giving it the appropriate permissions. An ls -la on /var/run/docker.sock will show you what group can access the socket. Make sure to add your user to that group.
+   You may need to enable Docker by giving it the appropriate permissions. An ls -la on /var/run/docker.sock will show you what group can access the socket. Make sure to add your user to that group. Otherwise, depending on the permissions of the docker socket, you may need to use ``sudo docker`` instead of ``docker``.
 
 ++++++++++++++++++++++++++
 Running a pre-built image
