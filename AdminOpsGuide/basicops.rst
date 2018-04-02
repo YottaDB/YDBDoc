@@ -279,7 +279,7 @@ A comprehensive list of environment variables that are directly or indirectly us
 +------------------------------+--------------------------------------------+--------------------------------------------------------------------------------------------+
 
 
-**gtmgbldir** specifies the initial value of the $ZGBLDIR ISV. $ZGBLDIR identifies the global directory. A global directory maps global variables to physical database files, and is required to access M global variables. Users who maintain multiple global directories use this environment variable to conveniently choose one to use from the time of process startup. To automate this definition, define gtmgbldir in the user's login file. The SET command can alter the value of $ZGBLDIR in an active process.
+**ydb_gbldir** (gtmgbldir) specifies the initial value of the $ZGBLDIR ISV. $ZGBLDIR identifies the global directory. A global directory maps global variables to physical database files, and is required to access M global variables. Users who maintain multiple global directories use this environment variable to conveniently choose one to use from the time of process startup. To automate this definition, define ydb_gbldir in the user's login file. The SET command can alter the value of $ZGBLDIR in an active process.
 
 **gtmroutines** specifies the initial value of the $ZROutines ISV, which specifies where to find object and source code. The SET command can alter the value of $ZROUTINES in an active process.
 
@@ -471,7 +471,7 @@ Each invocation generates an operator log message and if the invocation fails, a
 
 **gtm_zlib_cmp_level** specifies the zlib compression level used in the replication stream by the source and receiver servers. By default, replication does not use compression.
 
-**gtm_zmaxtptime** specifies the initial value of the $ZMAXTPTIME Intrinsic Special Variable, which controls whether and when YottaDB issues a TPTIMEOUT error for a TP transaction that runs too long. gtm_zmaxtptime specifies time in seconds and the default is 0, which indicates "no timeout" (unlimited time). The maximum value of gtm_zmaxtptime is 60 seconds and the minimum is 0; YottaDB ignores gtm_zmaxtptime if it contains a value outside of this recognized range. This range check does not apply to SET $ZMAXTPTIME.
+**ydb_maxtptime** (gtm_zmaxtptime) specifies the initial value of the $ZMAXTPTIME Intrinsic Special Variable, which controls whether and when YottaDB issues a TPTIMEOUT error for a TP transaction that runs too long. ydb_maxtptime specifies time in seconds and the default is 0, which indicates "no timeout" (unlimited time). The maximum value of ydb_maxtptime is 60 seconds and the minimum is 0; YottaDB ignores ydb_maxtptime if it contains a value outside of this recognized range. This range check does not apply to SET $ZMAXTPTIME.
 
 **gtm_zquit_anyway** specifies whether the code of the form QUIT <expr> execute as if it were SET <tmp>=<expr> QUIT:$QUIT tmp QUIT, where <tmp> is a temporary local variable in the YottaDB runtime system that is not visible to application code. This setting is a run-time setting, rather than a compiler-time setting. If gtm_zquit_anyway is defined and evaluates to 1 or any case-independent string or leading substrings of "TRUE" or "YES", code of the form QUIT <expr> executes as if it were SET <tmp>=<expr> QUIT:$QUIT tmp QUIT. If gtm_zquit_anyway is not defined or evaluates to 0 or any case-independent string or leading substrings of "FALSE" or "NO", YottaDB executes QUIT <expr> as specified by the standard.
 
