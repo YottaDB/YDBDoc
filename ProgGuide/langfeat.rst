@@ -512,8 +512,8 @@ Where expratom1 identifies the Global Directory and expratom2 is a dummy variabl
 Example:
 
 .. parsed-literal::
-   $ gtmgbldir=Test.GLD
-   $ export gtmgbldir
+   $ ydb_gbldir=Test.GLD
+   $ export ydb_gbldir
    $ YDB
      
    YDB>WRITE $ZGBLDIR
@@ -526,7 +526,7 @@ Example:
    TEST.GLD
    YDB>HALT
   
-   $ echo gtmgbldir
+   $ echo ydb_gbldir
    TEST.GLD
 
 The statement WRITE ^|"M1.GLD"\|A writes variable ^A using the Global Directory, M1.GLD, but does not change the current Global Directory.
@@ -785,7 +785,7 @@ Example:
 .. parsed-literal::
    YDB>write """"
    "
-   YDB>
+   \YDB>
 
 The WRITE displays a single quotation mark because the first quotation mark delimits the beginning of the string literal, the next two quotation marks denote a single quote within the string, and the last quotation mark delimits the end of the string literal.
 

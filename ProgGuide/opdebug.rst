@@ -29,13 +29,13 @@ This section provides an overview of the following basic operational issues in D
 Entering Direct Mode
 +++++++++++++++++++++
 
-To enter Direct Mode, type $gtm_dist/mumps -direct at the shell prompt.
+To enter Direct Mode, type $ydb_dist/mumps -direct at the shell prompt.
 
 .. parsed-literal::
-   $ $gtm_dist/mumps -direct
+   $ $ydb_dist/mumps -direct
    YDB>
 
-This shows using $gtm_dist/mumps -direct at the prompt to enter Direct Mode.
+This shows using $ydb_dist/mumps -direct at the prompt to enter Direct Mode.
 
 To create a ydb alias in your shell startup file (in the example below the startup file is assumed to be a .profile file):
 
@@ -47,7 +47,7 @@ To create a ydb alias in your shell startup file (in the example below the start
 2. Add a function to the file to define your gtm alias:
 
    .. parsed-literal::
-      ydb(){ $gtm_dist/mumps -direct}
+      ydb(){ $ydb_dist/mumps -direct}
 
 3. Save the file.
 
@@ -563,7 +563,7 @@ Example:
    $ZPROCESS=""
    $ZPROMPT="YDB>"
                                         
-   $ZROUTINES=". /usr/library/gtm_dist"
+   $ZROUTINES=". /usr/library/ydb_dist"
                                             
    $ZSOURCE=""
                                               

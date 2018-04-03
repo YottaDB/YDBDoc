@@ -47,7 +47,7 @@ Chapter 8: `“Intrinsic Special Variables” <https://docs.yottadb.com/Programm
 
 Chapter 9: `“Input/Output Processing” <https://docs.yottadb.com/ProgrammersGuide/ioproc.html>`_ describes input/output facilities available in YottaDB.
 
-Chapter 10: `“Utility Routines” <https://docs.yottadb.com/ProgrammersGuide/utility.html>` describes library utilities provided with YottaDB for performing frequently used M tasks.
+Chapter 10: `“Utility Routines” <https://docs.yottadb.com/ProgrammersGuide/utility.html>`_ describes library utilities provided with YottaDB for performing frequently used M tasks.
 
 Chapter 11: `“Integrating External Routines” <https://docs.yottadb.com/ProgrammersGuide/extrout.html>`_ describes how to call YottaDB routines from routines created in other programming languages and how to call out of YottaDB routines to these external programs.
 

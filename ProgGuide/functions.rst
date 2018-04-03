@@ -3347,11 +3347,11 @@ Examples of $ZTRNLNM()
 Example:
 
 .. parsed-literal::
-   YDB>write $ztrnlnm("gtm_dist")
+   YDB>write $ztrnlnm("ydb_dist")
    /usr/local/lib/yottadb/r1.10
    YDB>
 
-This uses $ZTRNLNM() to display the translation value for gtm_dist.
+This uses $ZTRNLNM() to display the translation value for ydb_dist.
 
 -----------------------
 $ZWidth()

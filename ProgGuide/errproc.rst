@@ -146,7 +146,7 @@ If YottaDB encounters an error outside of code entered in Direct Mode, YottaDB e
 The $ETRAP and $ZTRAP special variables specify an action that YottaDB should perform when an error occurs during routine execution. $ETRAP and $ZTRAP can establish one or more error handling "actions". 
 
 .. note::
-   The environment variable gtm_etrap specifies an initial value of $ETRAP to override the default value of "B" for $ZTRAP as the base level error handler. The gtmprofile script sets gtm_etrap to "Write:(0=$STACK) ""Error occurred: "",$ZStatus,!" which you can customize to suit your needs. For more information, refer to “Processing Errors from Direct Mode and Shell”.
+   The environment variable gtm_etrap specifies an initial value of $ETRAP to override the default value of "B" for $ZTRAP as the base level error handler. The ydbprofile script sets gtm_etrap to "Write:(0=$STACK) ""Error occurred: "",$ZStatus,!" which you can customize to suit your needs. For more information, refer to “Processing Errors from Direct Mode and Shell”.
 
 ------------------------------
 Program Handling of Errors
