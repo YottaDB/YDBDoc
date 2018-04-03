@@ -76,7 +76,7 @@ Here is an example on how to start a GT.CM server:
 .. parsed-literal::
    $ydb_dist/gtcm_gnp_server -log=GTCM.log -service=6789
 
-This starts the GT.CM server in the background so that it listens at port 6789 for requests from GT.CM clients. The detailed log information of the server is written in the GTCM.log file. If -log is not specified, log information is written in $gtm_log/gtcm_gnp_server.log file. On nodes with multiple IP addresses issue the following command to configure the GT.CM server to listen at a port specific to an IP address:
+This starts the GT.CM server in the background so that it listens at port 6789 for requests from GT.CM clients. The detailed log information of the server is written in the GTCM.log file. If -log is not specified, log information is written in $ydb_log/gtcm_gnp_server.log file. On nodes with multiple IP addresses issue the following command to configure the GT.CM server to listen at a port specific to an IP address:
 
 .. parsed-literal::
    -service=192.160.105.212:6789

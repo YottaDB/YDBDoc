@@ -162,7 +162,7 @@ YottaDB allows updating globals belonging to a different source instance using e
 
 An EHR application uses a BC replication configuration (A->B) to provide continuous availability. There are two data warehouses for billing information and medical history. For research purposes, the data in these medical history warehouses is cleansed of patient identifiers. Two SI replication instances (Q->R) are setup for the two data warehouses.
 
-The primary global directory (specified via the environment variable gtmgbldir) includes the regions needed for the application proper. It may have the instance file as specified in the global directory or via the environment variable gtm_repl_instance. Each warehouse instance would have its own global directory (e.g. q.gld and r.gld). These global directories have an instance file specified with GDE CHANGE -INSTANCE -FILE_NAME=<replication_instance_file>.
+The primary global directory (specified via the environment variable ydb_gbldir) includes the regions needed for the application proper. It may have the instance file as specified in the global directory or via the environment variable gtm_repl_instance. Each warehouse instance would have its own global directory (e.g. q.gld and r.gld). These global directories have an instance file specified with GDE CHANGE -INSTANCE -FILE_NAME=<replication_instance_file>.
 
 Such a replication setup may benefit from this facility in the following ways:
 
@@ -935,20 +935,20 @@ Example: source ./env r1.10
 Here is the code:
 
 .. parsed-literal::
-   export gtm_dist=/usr/local/lib/yottadb/$2
+   export ydb_dist=/usr/local/lib/yottadb/$2
    export gtm_repl_instname=$1
    export gtm_repl_instance=$PWD/$gtm_repl_instname/gtm.repl
-   export gtmgbldir=$PWD/$gtm_repl_instname/gtm.gld
+   export ydb_gbldir=$PWD/$gtm_repl_instname/gtm.gld
    export gtm_principal_editing=EDITING
-   export gtmroutines="$PWD/$gtm_repl_instname $gtm_dist"
-   #export gtmroutines="$PWD/$gtm_repl_instname $gtm_dist/libgtmutil.so"
-   # Here is an example of setting the gtmroutines environment variable:
-   # if [ -e  "$gtm_dist/libgtmutil.so" ] ; then export gtmroutines="$PWD/$gtm_repl_instname $gtm_dist/libgtmutil.so"
-   else export gtmroutines="$PWD/$gtm_repl_instname* $gtm_dist" ; fi
+   export ydb_routines="$PWD/$gtm_repl_instname $ydb_dist"
+   #export ydb_routines="$PWD/$gtm_repl_instname $ydb_dist/libgtmutil.so"
+   # Here is an example of setting the ydb_routines environment variable:
+   # if [ -e  "$ydb_dist/libgtmutil.so" ] ; then export ydb_routines="$PWD/$gtm_repl_instname $ydb_dist/libgtmutil.so"
+   else export ydb_routines="$PWD/$gtm_repl_instname* $ydb_dist" ; fi
    # For more examples on setting YottaDB related environment variables to reasonable values on POSIX shells, refer to the gtmprofile script.
    #export LD_LIBRARY_PATH=/usr/local/lib
    #export gtmcrypt_config=$PWD/$gtm_repl_instname/config_file
-   #echo -n "Enter Password for gtmtls_passwd_${gtm_repl_instname}: ";export gtmtls_passwd_${gtm_repl_instname}="`$gtm_dist/plugin/gtmcrypt/maskpass|tail -n 1|cut -f 3 -d " "`"
+   #echo -n "Enter Password for gtmtls_passwd_${gtm_repl_instname}: ";export gtmtls_passwd_${gtm_repl_instname}="`$ydb_dist/plugin/gtmcrypt/maskpass|tail -n 1|cut -f 3 -d " "`"
 
 Modify the env script according to your test environment. 
 
@@ -960,8 +960,8 @@ Here is the code:
 
 .. parsed-literal::
    mkdir -p $PWD/$gtm_repl_instname/
-   $gtm_dist/mumps -r ^GDE @gdemsr
-   $gtm_dist/mupip create
+   $ydb_dist/mumps -r ^GDE @gdemsr
+   $ydb_dist/mupip create
 
 gdemsr contains:
 
@@ -976,7 +976,7 @@ Creates a backup of the replication instance file. The first argument specifies 
 Here is the code:
 
 .. parsed-literal::
-   $gtm_dist/mupip backup -replinst=$1
+   $ydb_dist/mupip backup -replinst=$1
 
 **repl_setup**
 
@@ -985,8 +985,8 @@ Turns on replication for all regions and create the replication instance file wi
 Here is the code:
 
 .. parsed-literal::
-   $gtm_dist/mupip set -replication=on -region "*"
-   $gtm_dist/mupip replicate -instance_create -noreplace
+   $ydb_dist/mupip set -replication=on -region "*"
+   $ydb_dist/mupip replicate -instance_create -noreplace
 
 **originating_start**
 
@@ -1001,9 +1001,9 @@ Starts the Source Server of the originating instance in a BC replication configu
 Here is the code:
 
 .. parsed-literal::
-   $gtm_dist/mupip replicate -source -start -instsecondary=$2 -secondary=localhost:$3 -buffsize=1048576 -log=$PWD/$1/$1_$2.log $4 $5
+   $ydb_dist/mupip replicate -source -start -instsecondary=$2 -secondary=localhost:$3 -buffsize=1048576 -log=$PWD/$1/$1_$2.log $4 $5
    tail -30 $PWD/$1/$1_$2.log
-   $gtm_dist/mupip replicate -source -checkhealth
+   $ydb_dist/mupip replicate -source -checkhealth
 
 **replicating_start**
 
@@ -1017,10 +1017,10 @@ Starts the passive Source Server and the Receiver Server in a BC replication con
 Here is the code:
 
 .. parsed-literal::
-   $gtm_dist/mupip replicate -source -start -passive -instsecondary=dummy -buffsize=1048576 -log=$PWD/$1/source$1_dummy.log # creates the Journal Pool
-   $gtm_dist/mupip replicate -receive -start -listenport=$2 -buffsize=1048576 -log=$PWD/$1/receive.log $3 $4 # starts the Receiver Server
+   $ydb_dist/mupip replicate -source -start -passive -instsecondary=dummy -buffsize=1048576 -log=$PWD/$1/source$1_dummy.log # creates the Journal Pool
+   $ydb_dist/mupip replicate -receive -start -listenport=$2 -buffsize=1048576 -log=$PWD/$1/receive.log $3 $4 # starts the Receiver Server
    tail -20 $PWD/$1/receive.log
-   $gtm_dist/mupip replicate -receive -checkhealth
+   $ydb_dist/mupip replicate -receive -checkhealth
 
 **suppl_setup**
 
@@ -1037,12 +1037,12 @@ Example: ./suppl_setup P startA 4011 -updok
 Here is the code:
 
 .. parsed-literal::
-   $gtm_dist/mupip set -replication=on -region "*"
-   $gtm_dist/mupip replicate -instance_create -supplementary -noreplace
-   $gtm_dist/mupip replicate -source -start -passive -buf=1048576 -log=$PWD/$gtm_repl_instname/$1_dummy.log -instsecondary=dummy $4
-   $gtm_dist/mupip replicate -receive -start -listenport=$3 -buffsize=1048576 -log=$PWD/$gtm_repl_instname/$1.log -updateresync=$2 -initialize $5
+   $ydb_dist/mupip set -replication=on -region "*"
+   $ydb_dist/mupip replicate -instance_create -supplementary -noreplace
+   $ydb_dist/mupip replicate -source -start -passive -buf=1048576 -log=$PWD/$gtm_repl_instname/$1_dummy.log -instsecondary=dummy $4
+   $ydb_dist/mupip replicate -receive -start -listenport=$3 -buffsize=1048576 -log=$PWD/$gtm_repl_instname/$1.log -updateresync=$2 -initialize $5
    tail -30 $PWD/$1/$1.log
-   $gtm_dist/mupip replicate -receive -checkhealth
+   $ydb_dist/mupip replicate -receive -checkhealth
 
 
 **repl_status**
@@ -1055,13 +1055,13 @@ Here is the code:
    echo "-----------------------------------------------------------------"
    echo "Source Server $gtm_repl_instname: "
    echo "-----------------------------------------------------------------"
-   $gtm_dist/mupip replicate -source -check
-   $gtm_dist/mupip replicate -source -showbacklog
+   $ydb_dist/mupip replicate -source -check
+   $ydb_dist/mupip replicate -source -showbacklog
    echo "-----------------------------------------------------------------"
    echo "Receiver Server $gtm_repl_instname: "
    echo "-----------------------------------------------------------------"
-   $gtm_dist/mupip replicate -receive -check
-   $gtm_dist/mupip replicate -rece -showbacklog
+   $ydb_dist/mupip replicate -receive -check
+   $ydb_dist/mupip replicate -rece -showbacklog
 
 **rollback**
 
@@ -1076,7 +1076,7 @@ Example: ./rollback 4001 backward
 Here is the code:
 
 .. parsed-literal::
-   $gtm_dist/mupip journal -rollback -fetchresync=$1 -$2 "*"
+   $ydb_dist/mupip journal -rollback -fetchresync=$1 -$2 "*"
 
 **originating_stop**
 
@@ -1087,8 +1087,8 @@ The first argument specifies additional qualifiers for the Source Server shutdow
 Here is the code:
 
 .. parsed-literal::
-   $gtm_dist/mupip replicate -source -shutdown -timeout=2 $1 #Shut down the originating Source Server
-   $gtm_dist/mupip rundown -region "*" #Perform database rundown
+   $ydb_dist/mupip replicate -source -shutdown -timeout=2 $1 #Shut down the originating Source Server
+   $ydb_dist/mupip rundown -region "*" #Perform database rundown
 
 **replicating_stop**
 
@@ -1097,8 +1097,8 @@ Shuts down the Receiver Server with a two seconds timeout and then shuts down th
 Here is the code:
 
 .. parsed-literal::
-   $gtm_dist/mupip replicate -receiver -shutdown -timeout=2 #Shut down the Receiver Server
-   $gtm_dist/mupip replicate -source -shutdown -timeout=2 #Shut down the passive Source Server
+   $ydb_dist/mupip replicate -receiver -shutdown -timeout=2 #Shut down the Receiver Server
+   $ydb_dist/mupip replicate -source -shutdown -timeout=2 #Shut down the passive Source Server
 
 **replicating_start_suppl_n**
 
@@ -1115,10 +1115,10 @@ Example:./replicating_start_suppl_n P 4011 -updok -noresync
 Here is the code:
 
 .. parsed-literal::
-   $gtm_dist/mupip replicate -source -start -passive -instsecondary=dummy -buffsize=1048576 -log=$PWD/$gtm_repl_instname/$12dummy.log $3 # creates the Journal Pool
-   $gtm_dist/mupip replicate -receive -start -listenport=$2 -buffsize=1048576 $4 $5 -log=$PWD/$gtm_repl_instname/$1.log # starts the Receiver Server and the Update Process
+   $ydb_dist/mupip replicate -source -start -passive -instsecondary=dummy -buffsize=1048576 -log=$PWD/$gtm_repl_instname/$12dummy.log $3 # creates the Journal Pool
+   $ydb_dist/mupip replicate -receive -start -listenport=$2 -buffsize=1048576 $4 $5 -log=$PWD/$gtm_repl_instname/$1.log # starts the Receiver Server and the Update Process
    tail -30 $PWD/$1/$1.log
-   $gtm_dist/mupip replicate -receiver -checkhealth # Checks the health of the Receiver Server and the Update Process
+   $ydb_dist/mupip replicate -receiver -checkhealth # Checks the health of the Receiver Server and the Update Process
 
 **gen_gc**
 
@@ -1132,7 +1132,7 @@ Here is the code:
 
 .. parsed-literal::
    #Creates the libconfig format configuration file
-   #$gtm_dist/mumps -r CONVDBKEYS $gtmcrypt_config
+   #$ydb_dist/mumps -r CONVDBKEYS $gtmcrypt_config
    echo "tls: {">$gtmcrypt_config
    echo " verify-depth: 7;" >> $gtmcrypt_config
    echo "    CAfile: "$PWD/certs/ca.crt";" >> $gtmcrypt_config
@@ -1364,14 +1364,14 @@ The following example demonstrates starting a replicating instance from the back
    ./repl_setup
    ./originating_start A backupA 4001
    ./backup_repl startingA   #Preserve the backup of the replicating instance file that represents the state at the time of starting the instance. 
-   $gtm_dist/mumps -r %XCMD 'for i=1:1:10 set ^A(i)=i'
+   $ydb_dist/mumps -r %XCMD 'for i=1:1:10 set ^A(i)=i'
    mkdir backupA   
-   $gtm_dist/mupip backup -replinst=currentstateA -newjnlfile=noprevlink -bkupdbjnl=disable DEFAULT backupA
+   $ydb_dist/mupip backup -replinst=currentstateA -newjnlfile=noprevlink -bkupdbjnl=disable DEFAULT backupA
    source ./gtmenv backupA V6.3-000A_x86_64
    ./db_create
    ./repl_setup
    cp currentstateA backupA/gtm.repl
-   $gtm_dist/mupip replicate -editinstance -name=backupA backupA/gtm.repl 
+   $ydb_dist/mupip replicate -editinstance -name=backupA backupA/gtm.repl 
    ./replicating_start backupA 4001 
    ./repl_status
 
@@ -1391,10 +1391,10 @@ The following example demonstrates starting a replicating instance from the back
    ./repl_setup
    ./originating_start A backupA 4011
    ./backup_repl startingA   
-   $gtm_dist/mumps -r %XCMD 'for i=1:1:10 set ^A(i)=i'
+   $ydb_dist/mumps -r %XCMD 'for i=1:1:10 set ^A(i)=i'
    ./backup_repl currentstateA
    mkdir backupA
-   $gtm_dist/mupip backup -newjnlfile=noprevlink -bkupdbjnl=disable DEFAULT backupA
+   $ydb_dist/mupip backup -newjnlfile=noprevlink -bkupdbjnl=disable DEFAULT backupA
    source ./gtmenv backupA V6.3-000A_x86_64
    ./db_create
    ./suppl_setup backupA currentstateA 4011 -updok
@@ -1455,7 +1455,7 @@ The following example runs a switchover in an A→B replication configuration.
    ./db_create
    ./repl_setup # enables replication and creates the replication instance file
    ./originating_start A B 4001 # starts the active Source Server (A->B)
-   $gtm_dist/mumps -r %XCMD 'for i=1:1:100 set ^A(i)=i'
+   $ydb_dist/mumps -r %XCMD 'for i=1:1:100 set ^A(i)=i'
    ./repl_status #-SHOWBACKLOG and -CHECKHEALTH report
    source ./gtmenv B r1.10 # creates a simple environment for instance B
    ./db_create
@@ -1464,7 +1464,7 @@ The following example runs a switchover in an A→B replication configuration.
    ./repl_status # -SHOWBACKLOG and -CHECKHEATH report 
    ./replicating_stop # Shutdown the Receiver Server and the Update Process 
    source ./gtmenv A r1.10 # Creates an environment for A
-   $gtm_dist/mumps -r %XCMD 'for i=1:1:50 set ^losttrans(i)=i' # perform some updates when replicating instance is not available. 
+   $ydb_dist/mumps -r %XCMD 'for i=1:1:50 set ^losttrans(i)=i' # perform some updates when replicating instance is not available. 
    sleep 2
    ./originating_stop # Stops the active Source Server 
    source ./gtmenv B r1.10 # Create an environment for B
@@ -1527,27 +1527,27 @@ The following example creates this switchover scenario:
 
 .. parsed-literal::
    source ./gtmenv A r1.10
-   $gtm_dist/mumps -r ^%XCMD 'set ^A(98)=99'
+   $ydb_dist/mumps -r ^%XCMD 'set ^A(98)=99'
    source ./gtmenv B r1.10
    ./replicating_stop
    source ./gtmenv A r1.10
-   $gtm_dist/mumps -r ^%XCMD 'set ^A(99)=100'
+   $ydb_dist/mumps -r ^%XCMD 'set ^A(99)=100'
    ./originating_stop
    source ./gtmenv B r1.10
    ./originating_start B A 4010
    ./originating_start B P 4011
    ./backup_repl startB
-   $gtm_dist/mumps -r ^%XCMD 'set ^B(61)=0'
+   $ydb_dist/mumps -r ^%XCMD 'set ^B(61)=0'
    source ./gtmenv P r1.10
    ./suppl_setup M startB 4011 -updok
-   $gtm_dist/mumps -r ^%XCMD 'for i=39:1:40 set ^P(i)=i'
+   $ydb_dist/mumps -r ^%XCMD 'for i=39:1:40 set ^P(i)=i'
    source ./gtmenv B r1.10
-   $gtm_dist/mumps -r ^%XCMD 'set ^B(62)=1,^B(63)=1'
+   $ydb_dist/mumps -r ^%XCMD 'set ^B(62)=1,^B(63)=1'
    source ./gtmenv A r1.10
    ./rollback 4010 backward
    ./replicating_start A 4010
    source ./gtmenv B r1.10
-   $gtm_dist/mumps -r ^%XCMD 'set ^B(64)=1,^B(65)=1'
+   $ydb_dist/mumps -r ^%XCMD 'set ^B(64)=1,^B(65)=1'
    cat A/gtm.lost
 
 The shutdown sequence is as follows:
@@ -1606,7 +1606,7 @@ The following example creates this scenario.
    ./originating_start A B 4010
    ./originating_start A P 4011
    ./backup_repl startA
-   $gtm_dist/mumps -r ^%XCMD 'for i=1:1:97 set ^A(i)=i'
+   $ydb_dist/mumps -r ^%XCMD 'for i=1:1:97 set ^A(i)=i'
    source ./gtmenv B r1.10
    ./db_create
    ./repl_setup
@@ -1614,30 +1614,30 @@ The following example creates this scenario.
    source ./gtmenv P r1.10
    ./db_create
    ./suppl_setup P startA 4011 -updok
-   $gtm_dist/mumps -r ^%XCMD 'for i=1:1:40 set ^P(i)=i'
+   $ydb_dist/mumps -r ^%XCMD 'for i=1:1:40 set ^P(i)=i'
    source ./gtmenv B r1.10 
    ./replicating_stop
    source ./gtmenv A r1.10
-   $gtm_dist/mumps -r ^%XCMD 'set ^A(98)=99'
+   $ydb_dist/mumps -r ^%XCMD 'set ^A(98)=99'
    source ./gtmenv P r1.10
    ./replicating_stop 
    source ./gtmenv A r1.10
-   $gtm_dist/mumps -r ^%XCMD 'set ^A(99)=100'
+   $ydb_dist/mumps -r ^%XCMD 'set ^A(99)=100'
    ./originating_stop
    source ./gtmenv B r1.10
    ./originating_start B A 4010
    ./originating_start B P 4011
    ./backup_repl startB
-   $gtm_dist/mumps -r ^%XCMD 'set ^B(61)=0,^B(62)=1'
+   $ydb_dist/mumps -r ^%XCMD 'set ^B(61)=0,^B(62)=1'
    source ./gtmenv P r1.10
    ./rollback 4011 backward
    ./suppl_setup P startB 4011 -updok
-   $gtm_dist/mumps -r ^%XCMD 'for i=39:1:40 set ^P(i)=i'
+   $ydb_dist/mumps -r ^%XCMD 'for i=39:1:40 set ^P(i)=i'
    source ./gtmenv A r1.10
    ./rollback 4010 backward
    ./replicating_start A 4010
    source ./gtmenv B r1.10
-   $gtm_dist/mumps -r ^%XCMD 'set ^B(64)=1,^B(65)=1'
+   $ydb_dist/mumps -r ^%XCMD 'set ^B(64)=1,^B(65)=1'
    cat A/gtm.lost
    cat P/gtm.lost
 
@@ -1684,7 +1684,7 @@ The following example creates this scenario.
    ./originating_start A B 4010
    ./originating_start A P 4011
    ./backup_repl startA
-   $gtm_dist/mumps -r ^%XCMD 'for i=1:1:97 set ^A(i)=i'
+   $ydb_dist/mumps -r ^%XCMD 'for i=1:1:97 set ^A(i)=i'
    source ./gtmenv B r1.10
    ./db_create
    ./repl_setup
@@ -1692,29 +1692,29 @@ The following example creates this scenario.
    source ./gtmenv P r1.10
    ./db_create
    ./suppl_setup P startA 4011 -updok
-   $gtm_dist/mumps -r ^%XCMD 'for i=1:1:40 set ^P(i)=i'
+   $ydb_dist/mumps -r ^%XCMD 'for i=1:1:40 set ^P(i)=i'
    source ./gtmenv B r1.10 
    ./replicating_stop
    source ./gtmenv A r1.10
-   $gtm_dist/mumps -r ^%XCMD 'set ^A(98)=99'
+   $ydb_dist/mumps -r ^%XCMD 'set ^A(98)=99'
    source ./gtmenv P r1.10
    ./replicating_stop 
    source ./gtmenv A r1.10
-   $gtm_dist/mumps -r ^%XCMD 'set ^A(99)=100'
+   $ydb_dist/mumps -r ^%XCMD 'set ^A(99)=100'
    ./originating_stop
    source ./gtmenv B r1.10
    ./originating_start B A 4010
    ./originating_start B P 4011
    #./backup_repl startB
-   $gtm_dist/mumps -r ^%XCMD 'set ^B(61)=0,^B(62)=1'
+   $ydb_dist/mumps -r ^%XCMD 'set ^B(61)=0,^B(62)=1'
    source ./gtmenv P r1.10
    ./replicating_start_suppl_n P 4011 -updok -noresync
-   $gtm_dist/mumps -r ^%XCMD 'for i=39:1:40 set ^P(i)=i'
+   $ydb_dist/mumps -r ^%XCMD 'for i=39:1:40 set ^P(i)=i'
    source ./gtmenv A r1.10
    ./rollback 4010 backward
    ./replicating_start A 4010 
    source ./gtmenv B r1.10
-   $gtm_dist/mumps -r ^%XCMD 'set ^B(64)=1,^B(65)=1'
+   $ydb_dist/mumps -r ^%XCMD 'set ^B(64)=1,^B(65)=1'
 
 The shutdown sequence is as follows:
 
@@ -1763,18 +1763,18 @@ The following example runs this scenario.
    source ./gtmenv P r1.10
    ./db_create
    ./suppl_setup P startA 4000 -updok
-   $gtm_dist/mumps -r %XCMD 'for i=1:1:38 set ^P(i)=i'
+   $ydb_dist/mumps -r %XCMD 'for i=1:1:38 set ^P(i)=i'
    source ./gtmenv A r1.10
-   $gtm_dist/mumps -r %XCMD 'for i=1:1:97 set ^A(i)=i'
+   $ydb_dist/mumps -r %XCMD 'for i=1:1:97 set ^A(i)=i'
    source ./gtmenv B r1.10
    ./replicating_stop
    source ./gtmenv A r1.10
-   $gtm_dist/mumps -r %XCMD 'set ^A(98)=50'
+   $ydb_dist/mumps -r %XCMD 'set ^A(98)=50'
    source ./gtmenv P r1.10
-   $gtm_dist/mumps -r %XCMD 'for i=39:1:40 set ^P(i)=i'
+   $ydb_dist/mumps -r %XCMD 'for i=39:1:40 set ^P(i)=i'
    ./replicating_stop
    source ./gtmenv A r1.10
-   $gtm_dist/mumps -r %XCMD 'set ^A(99)=100'
+   $ydb_dist/mumps -r %XCMD 'set ^A(99)=100'
    ./originating_stop
    source ./gtmenv B r1.10
    ./originating_start B A 4001 
@@ -1858,44 +1858,44 @@ The following example runs this scenario.
    ./db_create
    ./suppl_setup Q startP 4005 -updnotok
    source ./gtmenv A r1.10
-   $gtm_dist/mumps -r ^%XCMD 'for i=1:1:96 set ^A(i)=i'
+   $ydb_dist/mumps -r ^%XCMD 'for i=1:1:96 set ^A(i)=i'
    source ./gtmenv P r1.10
-   $gtm_dist/mumps -r ^%XCMD 'for i=1:1:37 set ^P(i)=i'
+   $ydb_dist/mumps -r ^%XCMD 'for i=1:1:37 set ^P(i)=i'
    source ./gtmenv Q r1.10
    ./replicating_stop
    source ./gtmenv P r1.10
-   $gtm_dist/mumps -r ^%XCMD 'set ^P(38)=1000'
+   $ydb_dist/mumps -r ^%XCMD 'set ^P(38)=1000'
    ./replicating_stop
    source ./gtmenv A r1.10 
-   $gtm_dist/mumps -r ^%XCMD 'set ^A(97)=1000,^A(98)=1000'
+   $ydb_dist/mumps -r ^%XCMD 'set ^A(97)=1000,^A(98)=1000'
    source ./gtmenv B r1.10
    ./replicating_stop
    source ./gtmenv A r1.10 
-   $gtm_dist/mumps -r ^%XCMD 'set ^A(99)=1000'
+   $ydb_dist/mumps -r ^%XCMD 'set ^A(99)=1000'
    ./originating_stop 
    source ./gtmenv B r1.10
    backup_repl startB
    ./originating_start B Q 4008
-   $gtm_dist/mumps -r ^%XCMD 'for i=1:1:62 set ^B(i)=i'
+   $ydb_dist/mumps -r ^%XCMD 'for i=1:1:62 set ^B(i)=i'
    source ./gtmenv Q r1.10
    ./rollback 4008 backward
    ./suppl_setup Q startB 4008 -updok
-   $gtm_dist/mumps -r ^%XCMD 'for i=1:1:74 set ^Q(i)=i'
+   $ydb_dist/mumps -r ^%XCMD 'for i=1:1:74 set ^Q(i)=i'
    source ./gtmenv B r1.10
-   $gtm_dist/mumps -r ^%XCMD 'for i=63:1:64 set ^B(i)=i'
+   $ydb_dist/mumps -r ^%XCMD 'for i=63:1:64 set ^B(i)=i'
    ./originating_start B A 4004
    source ./gtmenv A r1.10
    ./rollback 4004 backward
    ./replicating_start A 4004
    source ./gtmenv Q r1.10
-   $gtm_dist/mumps -r ^%XCMD 'for i=75:1:76 set ^Q(i)=i'
+   $ydb_dist/mumps -r ^%XCMD 'for i=75:1:76 set ^Q(i)=i'
    ./originating_start Q P 4007
    ./backup_repl startQ
    source ./gtmenv P r1.10
    ./rollback 4007 backward
    ./replicating_start_suppl_n P 4007 -updnotok
    source ./gtmenv Q r1.10
-   $gtm_dist/mumps -r ^%XCMD 'set ^Q(77)=1000'
+   $ydb_dist/mumps -r ^%XCMD 'set ^Q(77)=1000'
    cat A/gtm.lost
    cat P/gtm.lost
 
@@ -1972,18 +1972,18 @@ This example adds the mapping for global ^A to a new database file A.dat in an A
    ./repl_setup
    ./replicating_start B 4001
    source ./gtmenv A r1.10 
-   $gtm_dist/mumps -r %XCMD 'for i=1:1:10 set ^A(i)=i'
+   $ydb_dist/mumps -r %XCMD 'for i=1:1:10 set ^A(i)=i'
    ./repl_status
    source ./gtmenv B r1.10
    ./replicating_stop
    cp B/gtm.gld B/prior.gld
-   $gtm_dist/mumps -r ^GDE @updgld
+   $ydb_dist/mumps -r ^GDE @updgld
    ./db_create
    mkdir backup_B
-   $gtm_dist/mupip backup "*" backup_B  -replinst=backup_B/gtm.repl
-   $gtm_dist/mupip set -journal=on,before_images,filename=B/gtm.mjl -noprevjnlfile -region "DEFAULT"
-   $gtm_dist/mumps -r %XCMD 'merge ^A=^|"B/prior.gld"\|A'
-   $gtm_dist/mupip set -replication=on -region AREG
+   $ydb_dist/mupip backup "*" backup_B  -replinst=backup_B/gtm.repl
+   $ydb_dist/mupip set -journal=on,before_images,filename=B/gtm.mjl -noprevjnlfile -region "DEFAULT"
+   $ydb_dist/mumps -r %XCMD 'merge ^A=^|"B/prior.gld"\|A'
+   $ydb_dist/mupip set -replication=on -region AREG
    ./originating_start B A 4001
    source ./gtmenv A r1.10 
    ./originating_stop
@@ -1992,13 +1992,13 @@ This example adds the mapping for global ^A to a new database file A.dat in an A
    ./replicating_start A 4001
    ./replicating_stop 
    cp A/gtm.gld A/prior.gld
-   $gtm_dist/mumps -r ^GDE @updgld
+   $ydb_dist/mumps -r ^GDE @updgld
    ./db_create
    mkdir backup_A
-   $gtm_dist/mupip backup "*" backup_A -replinst=backup_A/gtm.repl
-   $gtm_dist/mupip set -journal=on,before_images,filename=A/gtm.mjl -noprevjnlfile -region "DEFAULT"
-   $gtm_dist/mumps -r %XCMD 'merge ^A=^|"A/prior.gld"\|A'
-   $gtm_dist/mupip set -replication=on -region AREG
+   $ydb_dist/mupip backup "*" backup_A -replinst=backup_A/gtm.repl
+   $ydb_dist/mupip set -journal=on,before_images,filename=A/gtm.mjl -noprevjnlfile -region "DEFAULT"
+   $ydb_dist/mumps -r %XCMD 'merge ^A=^|"A/prior.gld"\|A'
+   $ydb_dist/mupip set -replication=on -region AREG
    ./replicating_start A 4001
    ./repl_status
    #Perform a switchover to return to the A->B configuration. Remove the global in the prior location to release space with a command like Kill ^A=^|"A/prior.gld"\|A'.
@@ -2032,7 +2032,7 @@ On B:
 7. Cut the back links to the prior generation journal files with a command like: 
 
    .. parsed-literal::
-      $gtm_dist/mupip set -journal=on,before_images,filename=B/gtm.mjl -noprevjnlfile -region "DEFAULT"
+      $ydb_dist/mupip set -journal=on,before_images,filename=B/gtm.mjl -noprevjnlfile -region "DEFAULT"
 
 8. Turn on replication. 
 9. If the use of replication filters apply to your situation, bring up the replicating instance with the new-to-old filter on the Source Server of A, and the old-to-new filter on the Receiver Server of B. Otherwise, bring up the replicating instance on B. 
@@ -2050,7 +2050,7 @@ On A:
 8. Cut the back links to the prior generation journal files with a command like: 
 
    .. parsed-literal::
-      $gtm_dist/mupip set -journal=on,before_images,filename=A/gtm.mjl -noprevjnlfile -region DEFAULT
+      $ydb_dist/mupip set -journal=on,before_images,filename=A/gtm.mjl -noprevjnlfile -region DEFAULT
 
 9. Turn on replication. 
 10. Start the Receiver Server of A. 
@@ -2069,7 +2069,7 @@ On A:
 8. Cut the back links to the prior generation journal files with a command like: 
    
    .. parsed-literal::
-      $gtm_dist/mupip set -journal=on,before_images,filename=A/gtm.mjl -noprevjnlfile -region DEFAULT
+      $ydb_dist/mupip set -journal=on,before_images,filename=A/gtm.mjl -noprevjnlfile -region DEFAULT
 
 9. Turn on replication. 
 10. If the use of replication filters apply to your situation, bring up the Receiver Server with the old-to-new filter. Otherwise bring up the Receiver Server. 
@@ -2087,7 +2087,7 @@ on B:
 8. Cut the back links to the prior generation journal files with a command like: 
 
    .. parsed-literal::
-      $gtm_dist/mupip set -journal=on,before_images,filename=B/gtm.mjl -noprevjnlfile -region DEFAULT
+      $ydb_dist/mupip set -journal=on,before_images,filename=B/gtm.mjl -noprevjnlfile -region DEFAULT
 
 9. Turn on replication. 
 10. Start the Receiver Server of B. 
@@ -2108,33 +2108,33 @@ Here is an example to upgrade A and B deployed in an A→B replication configura
    ./repl_setup
    ./replicating_start B 4001
    source ./env A r1.00
-   $gtm_dist/mumps -r %XCMD 'for i=1:1:100 set ^A(i)=i'
+   $ydb_dist/mumps -r %XCMD 'for i=1:1:100 set ^A(i)=i'
    ./status
    source ./env B r1.00
    ./replicating_stop
    source ./env A r1.00
    ./status
    ./originating_stop 
-   $gtm_dist/mupip set -replication=off -region "DEFAULT"
-   $gtm_dist/dse dump -f 2>&1| grep "Region Seqno"
+   $ydb_dist/mupip set -replication=off -region "DEFAULT"
+   $ydb_dist/dse dump -f 2>&1| grep "Region Seqno"
    #Perform a switchover to make B the originating instance. 
    source ./env A r1.10
-   $gtm_dist/mumps -r ^GDE exit
-   $gtm_dist/mupip set -journal=on,before_images,filename=A/gtm.mjl -noprevjnlfile -region "DEFAULT"
+   $ydb_dist/mumps -r ^GDE exit
+   $ydb_dist/mupip set -journal=on,before_images,filename=A/gtm.mjl -noprevjnlfile -region "DEFAULT"
    #Perform the upgrade 
-   $gtm_dist/dse dump -fileheader 2>&1| grep "Region Seqno"
-   #If Region Seqno is greater than the Region Seqno noted previously, run $gtm_dist/dse change -fileheader -req_seqno=<previously_noted_region_seqno>.
+   $ydb_dist/dse dump -fileheader 2>&1| grep "Region Seqno"
+   #If Region Seqno is greater than the Region Seqno noted previously, run $ydb_dist/dse change -fileheader -req_seqno=<previously_noted_region_seqno>.
    ./repl_setup
    #A is now upgraded to r1.10 and is ready to resume the role of the originating instance. Shutdown B and reinstate A as the originating instance. 
    ./originating_start A B 4001
    source ./env B r1.10
-   $gtm_dist/mumps -r ^GDE exit
-   $gtm_dist/mupip set -journal=on,before_images,filename=B/gtm.mjl -noprevjnlfile -region "DEFAULT"
+   $ydb_dist/mumps -r ^GDE exit
+   $ydb_dist/mupip set -journal=on,before_images,filename=B/gtm.mjl -noprevjnlfile -region "DEFAULT"
    #Perform the upgrade 
-   $gtm_dist/dse dump -fileheader 2>&1| grep "Region Seqno"
-   #If Region Seqno is different, run $gtm_dist/dse change -fileheader -req_seqno=<previously_noted_region_seqno>.
-   $gtm_dist/dse dump -f 2>&1| grep "Region Seqno"
-   #If Region Seqno is greater than the Region Seqno noted previously, run $gtm_dist/dse change -fileheader -req_seqno=<previously_noted_region_seqno>.
+   $ydb_dist/dse dump -fileheader 2>&1| grep "Region Seqno"
+   #If Region Seqno is different, run $ydb_dist/dse change -fileheader -req_seqno=<previously_noted_region_seqno>.
+   $ydb_dist/dse dump -f 2>&1| grep "Region Seqno"
+   #If Region Seqno is greater than the Region Seqno noted previously, run $ydb_dist/dse change -fileheader -req_seqno=<previously_noted_region_seqno>.
    ./repl_setup
    ./replicating_start B 4001
 
@@ -2226,7 +2226,7 @@ The following example creates two instances (Alice and Bob) and a basic framewor
    .. parsed-literal::
       export LD_LIBRARY_PATH=/usr/local/lib
       export gtmcrypt_config=$PWD/$gtm_repl_instname/config_file
-      echo -n "Enter Password for gtmtls_passwd_${gtm_repl_instname}: ";export gtmtls_passwd_${gtm_repl_instname}="`$gtm_dist/plugin/gtmcrypt/maskpass|tail -n 1|cut -f 3 -d " "`"
+      echo -n "Enter Password for gtmtls_passwd_${gtm_repl_instname}: ";export gtmtls_passwd_${gtm_repl_instname}="`$ydb_dist/plugin/gtmcrypt/maskpass|tail -n 1|cut -f 3 -d " "`"
 
 2. Execute the env script as follows:
 
@@ -2801,7 +2801,7 @@ Specifies the size of the Journal Pool. The server rounds the size up or down to
 Specifies the complete path of the filter program and any associated arguments. If you specify arguments, then enclose the command string in quotation marks. If a filter is active, the Source Server passes the entire output stream to the filter as input. Then, the output from the filter stream passes to the replicating instance. If the filter program is an M program with entry-ref OLD2NEW^FILTER, specify the following path:
 
 .. parsed-literal::
-   filter='"$gtm_dist/mumps -run OLD2NEW^FILTER"'
+   filter='"$ydb_dist/mumps -run OLD2NEW^FILTER"'
 
 Write the filter as a UNIX process that takes its input from STDIN and writes its output to STDOUT.
 
