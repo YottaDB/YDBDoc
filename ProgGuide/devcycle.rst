@@ -751,7 +751,7 @@ Processing Errors from Direct Mode and Shell
 |                            | code is treated as not entered at the Direct Mode prompt.                 | environment variable gtm_etrap which overrides the default $ZTRAP="B".  |
 |                            |                                                                           |                                                                         |
 |                            | The default $ZTRAP="B" brings a process to the Direct Mode for debugging. | If needed, error handlers can include appropriate error notification to |
-|                            |                                                                           | $PRINCIPAL. For example, the gtmprofile script sets a default $ETRAP    |
+|                            |                                                                           | $PRINCIPAL. For example, the ydb_env_set script sets a default $ETRAP   |
 |                            |                                                                           | value of "Write:(0=$STACK) ""Error occurred: "",$ZStatus,!" which you   |
 |                            |                                                                           | can customize to suit your needs.                                       |
 +----------------------------+---------------------------------------------------------------------------+-------------------------------------------------------------------------+

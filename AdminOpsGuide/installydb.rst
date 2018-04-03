@@ -98,7 +98,7 @@ ydbinstall is a stand-alone YottaDB installation script that installs YottaDB us
 +=======================================================+====+========================================================================================================================+
 | --build-type buildtype                                | \* | Type of YottaDB build, default is pro                                                                                  |
 +-------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
-| --copyenv dirname                                     |    | Copy ydbprofile and gtmcshrc files to dirname; incompatible with linkenv                                               |
+| --copyenv dirname                                     |    | Copy ydb_env_set and gtmcshrc files to dirname; incompatible with linkenv                                              |
 +-------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
 | --copyexec dirname                                    |    | Copy gtm script to dirname; incompatible with linkexec                                                                 |
 +-------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
@@ -120,7 +120,7 @@ ydbinstall is a stand-alone YottaDB installation script that installs YottaDB us
 +-------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
 | --keep-obj                                            |    | Keep .o files of M routines (normally deleted on platforms with YottaDB support for routines in shared libraries);     |
 +-------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
-| --linkenv dirname                                     |    | Create link in dirname to ydbprofile and gtmcshrc files; incompatible with copyenv                                     |
+| --linkenv dirname                                     |    | Create link in dirname to ydb_env_set and gtmcshrc files; incompatible with copyenv                                    |
 +-------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
 | --linkexec dirname                                    |    | Create link in dirname to ydb script; incompatible with copyexec                                                       |
 +-------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
