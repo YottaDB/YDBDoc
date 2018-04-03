@@ -938,7 +938,7 @@ ZMessage Codes
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150374594 | DIRONLY, Directories only are allowed in file specs: xxxx                                                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150377682 | DISTPATHMAX, $gtm_dist path is greater than maximum (xxxx)                                                                                                             |
+| 150377682 | DISTPATHMAX, $ydb_dist path is greater than maximum (xxxx)                                                                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150373210 | DIVZERO, Attempt to divide by zero                                                                                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1196,9 +1196,9 @@ ZMessage Codes
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150372900 | GTMCHECK, Internal YottaDB error. Report to YottaDB Support.                                                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150377714 | GTMDISTUNDEF, Environmental variable $gtm_dist is not defined                                                                                                          |
+| 150377714 | GTMDISTUNDEF, Environmental variable $ydb_dist is not defined                                                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150383442 | GTMDISTUNVERIF, Environment variable $gtm_dist (dddd) could not be verified against the executables path (pppp)                                                        |
+| 150383442 | GTMDISTUNVERIF, Environment variable $ydb_dist (dddd) could not be verified against the executables path (pppp)                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150382866 | GTMEISDIR, dddd : Is a directory                                                                                                                                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1206,7 +1206,7 @@ ZMessage Codes
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150376938 | GTMSECSHR, xxxx Error during GTMSECSHR operation                                                                                                                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150382794 | GTMSECSHRBADDIR, gtmsecshr is not running from $gtm_dist/gtmsecshrdir or $gtm_dist cannot be determined                                                                |
+| 150382794 | GTMSECSHRBADDIR, gtmsecshr is not running from $ydb_dist/gtmsecshrdir or $ydb_dist cannot be determined                                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150381986 | GTMSECSHRCHDIRF, gtmsecshr unable to chdir to its temporary directory (dddd). GTMSECSHR process error: GTMSECSHR is not able to change directory to its temporary      |
 |           | directory, dddd                                                                                                                                                        |
@@ -1223,7 +1223,7 @@ ZMessage Codes
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150378040 | GTMSECSHROPCMP, GTMSECSHR operation may be compromised                                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150377706 | GTMSECSHRPERM, The GTMSECSHR module in $gtm_dist does not have the correct permission and UID                                                                          |
+| 150377706 | GTMSECSHRPERM, The GTMSECSHR module in $ydb_dist does not have the correct permission and UID                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150378018 | GTMSECSHRRECVF, GTMSECSHR receive on server socket failed                                                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1321,10 +1321,10 @@ ZMessage Codes
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150382050 | ICUERROR, ICU returned status ssss which is either unrecognized or inconsistent with the operating context                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150381514 | ICUSYMNOTFOUND, Symbol xxxxx not found in ICU libraries. ICU needs to be built with symbol-renaming disabled or gtm_icu_version environment variable needs to be       |
+| 150381514 | ICUSYMNOTFOUND, Symbol xxxxx not found in ICU libraries. ICU needs to be built with symbol-renaming disabled or ydb_icu_version environment variable needs to be       |
 |           | specified                                                                                                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150381506 | ICUVERLT36, Type 1 - $gtm_icu_version is aaa.bbb. ICU version greater than or equal to 3.6 should be used. Type 2 - libicuio has version aaa.bbb. ICU version greater  |
+| 150381506 | ICUVERLT36, Type 1 - $ydb_icu_version is aaa.bbb. ICU version greater than or equal to 3.6 should be used. Type 2 - libicuio has version aaa.bbb. ICU version greater  |
 |           | than or equal to 3.6 should be used                                                                                                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150374802 | IFBADPARM, External Interface Bad Parameter                                                                                                                            |
