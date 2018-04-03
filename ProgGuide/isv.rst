@@ -418,7 +418,7 @@ For more information on $ZB, refer to the `"Input/Output Processing" chapter <ht
 $ZCHSET
 --------------
 
-$ZCHSET is a read-only intrinsic special variable that takes its value from the environment variable gtm_chset. An application can obtain the character set used by a YottaDB process by the value of $ZCHSET. $ZCHSET can have only two values --"M", or "UTF-8".
+$ZCHSET is a read-only intrinsic special variable that takes its value from the environment variable ydb_chset. An application can obtain the character set used by a YottaDB process by the value of $ZCHSET. $ZCHSET can have only two values --"M", or "UTF-8".
 
 .. note::
    YottaDB performs operations on literals at compile time and the character set may have an impact on such operations. Therefore, always compile with the same character set as that used at runtime.
@@ -426,7 +426,7 @@ $ZCHSET is a read-only intrinsic special variable that takes its value from the 
 Example:
 
 .. parsed-literal::
-  $ export gtm_chset=UTF-8
+  $ export ydb_chset=UTF-8
   $ ydb
   YDB>write $zchset
   UTF-8
@@ -669,7 +669,7 @@ Example:
     do displaytzdetails(zutzh,zone)
     quit
    getzutzh(zone)
-    set shcommand="TZ="_zone_" $gtm_dist/mumps -run %XCMD 'write $zut,"" "",$zhorolog,"" "",$zdate($horolog,""MON DD,YYYY 12:60:SS AM""),!'"
+    set shcommand="TZ="_zone_" $ydb_dist/mumps -run %XCMD 'write $zut,"" "",$zhorolog,"" "",$zdate($horolog,""MON DD,YYYY 12:60:SS AM""),!'"
     set descname="tzpipe"
     open descname:(shell="/bin/sh":command=shcommand:readonly)::"pipe"
     use descname read dateline use $principal close descname
@@ -868,7 +868,7 @@ $ZMAXTPTI[ME] contains an integer value indicating the time duration YottaDB sho
 
 $ZMAXTPTIME can be SET but cannot be NEWed.
 
-$ZMAXTPTIME takes its value from the environment variable gtm_zmaxtptime. If gtm_zmaxtptime is not defined, the initial value of $ZMAXTPTIME is zero (0) seconds which indicates "no timeout" (unlimited time). The value of $ZMAXTPTIME when a transaction's outermost TSTART operation executes determines the timeout setting for that transaction.
+$ZMAXTPTIME takes its value from the environment variable ydb_maxtptime. If ydb_maxtptime is not defined, the initial value of $ZMAXTPTIME is zero (0) seconds which indicates "no timeout" (unlimited time). The value of $ZMAXTPTIME when a transaction's outermost TSTART operation executes determines the timeout setting for that transaction.
 
 When a $ZMAXTPTIME expires, YottaDB executes the $ETRAP/$ZTRAP exception handler currently in effect.
 
@@ -1126,10 +1126,10 @@ Searches that use $ZROUTINES treat files as either object or source files. Yotta
    Paths used in $ZROUTINES to locate routines must not include embedded spaces, as $ZROUTINES uses spaces as delimiters.
 
 +++++++++++++++++++++++++++++++++++++++++
-Establishing the value from $gtmroutines
+Establishing the value from $ydb_routines
 +++++++++++++++++++++++++++++++++++++++++
 
-When the environment variable gtmroutines is defined, YottaDB initializes $ZROUTINES to the value of gtmroutines. Otherwise, YottaDB initializes $ZROUTINES to ".". When $ZROUTINES is ".", YottaDB attempts to locate all source and object files in the current working directory. $ZROUTINES="" is equivalent to $ZROUTINES=".".
+When the environment variable ydb_routines is defined, YottaDB initializes $ZROUTINES to the value of ydb_routines. Otherwise, YottaDB initializes $ZROUTINES to ".". When $ZROUTINES is ".", YottaDB attempts to locate all source and object files in the current working directory. $ZROUTINES="" is equivalent to $ZROUTINES=".".
 
 Commands or functions such as DO, GOTO, ZGOTO, ZBREAK, ZPRINT, and $TEXT may auto-ZLINK and thereby indirectly use $ZROUTINES. If their argument does not specify a directory, ZEDIT and explicit ZLINK use $ZROUTINES. ZPRINT and $TEXT use $ZROUTINES to locate a source file if YottaDB cannot find the source file pointed to by the object file. For more information on ZLINK and auto-ZLINK, see the `“Development Cycle” <https://docs.yottadb.com/ProgrammersGuide/devcycle.html>`_ and `“Commands” <https://docs.yottadb.com/ProgrammersGuide/commands.html>`_ chapters.
 
@@ -1143,9 +1143,9 @@ By default, each directory entry in $ZROUTINES is assumed to contain both object
 
 If the command specifies more than one source directory for an object directory, the source directories must be separated by spaces, and the entire list must be enclosed in parentheses ( ) following the object directory-specification. If the object directory should also be searched for source, the name of that directory must be included in the parentheses, (usually as the first element in the list). Directory-specifications may also include empty parentheses, directing YottaDB to proceed as if no source files exist for objects located in the qualified directory.
 
-To set $ZROUTINES outside of M, use the appropriate shell command to set gtmroutines. Because gtmroutines is a list, enclose the value in quotation marks (" ").
+To set $ZROUTINES outside of M, use the appropriate shell command to set ydb_routines. Because ydb_routines is a list, enclose the value in quotation marks (" ").
 
-Changes to the value of $ZROUTINES during a YottaDB invocation only last for the current invocation, and do not change the value of gtmroutines.
+Changes to the value of $ZROUTINES during a YottaDB invocation only last for the current invocation, and do not change the value of ydb_routines.
 
 Directory specifications may include an environment variable. When YottaDB SETs $ZROUTINES, it translates all environment variables and verifies the syntax and the existence of all specified directories. If $ZROUTINES is set to an invalid value, YottaDB generates a run-time error and does not change the value of $ZROUTINES. Because the environment variables are translated when $ZROUTINES is set, any changes to their definition have no effect until $ZROUTINES is set again.
 
@@ -1156,15 +1156,15 @@ $ZROUTINES Examples
 Example:
 
 .. parsed-literal::
-   YDB>s $zroutines=".(../src) $gtm_dist"
+   YDB>s $zroutines=".(../src) $ydb_dist"
 
 This example directs YottaDB to look for object modules first in your current directory, then in the distribution directory that contains the percent routines. YottaDB locates sources for objects in your current directory in the sibling /src directory.
 
 Example:
 
 .. parsed-literal::
-   $ gtmroutines="/usr/jones /usr/smith"
-   $ export gtmroutines
+   $ ydb_routines="/usr/jones /usr/smith"
+   $ export ydb_routines
    $ ydb
    YDB>write $zroutines
    "/usr/jones /usr/smith"
@@ -1172,10 +1172,10 @@ Example:
    YDB>write $zroutines
    "/usr/jones/utl /usr/smith/utl"
    YDB>halt
-   $ echo $gtmroutines
+   $ echo $ydb_routines
    /usr/jones /usr/smith
 
-This example defines the environment variable gtmroutines. Upon entering YottaDB Direct Mode $zroutines has the value supplied by gtmroutines. The SET command changes the value. When the YottaDB image terminates, the shell echo command demonstrates that gtmroutines has not been modified by the M SET command.
+This example defines the environment variable ydb_routines. Upon entering YottaDB Direct Mode $zroutines has the value supplied by ydb_routines. The SET command changes the value. When the YottaDB image terminates, the shell echo command demonstrates that ydb_routines has not been modified by the M SET command.
 
 Example:
 
@@ -1353,15 +1353,15 @@ Where libshr.so is replaced with name of the shared library one wishes to create
 .. note::
    There are some tools on AIX that can aid in mitigating the problems of shared library allocation. The /usr/bin/genkld command on AIX lists all of the shared libraries currently loaded. This command requires root privileges on AIX 4.3.3 but seems to be a general user command on AIX 5. The /usr/sbin/slibclean command requires root privileges and will purge the shared library segment of unused shared libraries making room for new libraries to be loaded.
 
-* *Establish $ZROUTINES from gtmroutines*
+* *Establish $ZROUTINES from ydb_routines*
 
-When the environment variable gtmroutines is defined, YottaDB initializes $ZROUTINES to the value of gtmroutines. The $ZROUTINES ISV can also be modified using SET command.
+When the environment variable ydb_routines is defined, YottaDB initializes $ZROUTINES to the value of ydb_routines. The $ZROUTINES ISV can also be modified using SET command.
 
 Example:
 
 .. parsed-literal::
-   $ gtmroutines="./libabc.so ./obj(./src)"
-   $ export gtmroutines
+   $ ydb_routines="./libabc.so ./obj(./src)"
+   $ export ydb_routines
    $ mumps -direct
    YDB>w $ZROUTINES,!;writes "./libabc.so ./obj(./src)"
    YDB>do ^a;runs ^a from libabc.so
@@ -1375,7 +1375,7 @@ Example:
 By suffixing one or more directory names in $ZROUTINES with a single asterisk (*), processes can subscribe to updates of object files published in those directories. At the invocation of DO, GOTO, or ZGOTO, extrinsic functions, $TEXT(), or ZPRINT that specify an entryref which includes a routine name (vs. a label without a routine name), mumps processes (and mupip processes executing trigger logic) automatically relink ("auto-relink") and execute published new versions of routines.
 
 * Label references (that is, without a routine name), whether direct or through indirection, always refer to the current routine, and do not invoke auto-relink logic.
-* Use shell quoting rules when appending asterisks to directory names in the gtmroutines environment variable - asterisks must be passed in to YottaDB, and not expanded by the shell.
+* Use shell quoting rules when appending asterisks to directory names in the ydb_routines environment variable - asterisks must be passed in to YottaDB, and not expanded by the shell.
 * YottaDB accepts but ignores asterisk suffixes to directory names on 32-bit Linux on x86 platforms, where it does not provide auto-relinking.
 * Changing $ZROUTINES causes all routines linked from auto-relink-enabled directories in the process to be re-linked.
 * Note that a relink does not automatically reload a routine every time. When YottaDB initiates a relink and the object file (object hash) is the same as the existing one, YottaDB bypasses the relink and uses the existing object file.
@@ -1512,7 +1512,7 @@ Example:
 
 .. parsed-literal::
    $ export sigusrval=10
-   $ /usr/lib/fis-gtm/V6.1-000_x86_64/gtm
+   $ ydb
    YDB>zprint ^ztran
    foo;
      set $ztexit=1
@@ -1673,6 +1673,32 @@ $ZYER[ROR] is a read/write ISV that contains a string value pointing to an entry
 $ZYERROR is implicitly NEWed on entry to the routine specified by $ZYERROR. However, if YottaDB fails to compile, YottaDB does not transfer control to the entryref specified by $ZYERROR.
 
 YottaDB permits $ZYERROR to be modified by the SET and NEW commands.
+
+------------------
+$ZYRELEASE
+------------------
+
+The $ZYRE[LEASE] intrinsic special variable contains a string value that application code can use to determine the YottaDB release it is running on. $ZYRELEASE is a space delimited string with four pieces as follows:
+
+.. parsed-literal::
+   <product><release><os><architecture>
+
+<product> is always "YottaDB".
+
+<release> always begins with an "r" and is a number structured as follows:
+
+* The number before the decimal point (".") is the major release number.
+* A decimal point.
+* The first digit after the decimal point is a minor release number.
+* The second (and last) digit after the decimal point is a bug fix level (so "r3.21" would the first bug fix level of the "r3.20" release).
+
+<os> is the operating system, e.g., "Linux"
+
+<architecture> is the underlying CPU architecture, e.g., "x86_64"
+
+.. note::
+   $zyrelease is a read-only intrinsic special variable. As the code generator treats $zyrelease as a string constant known at compile time, and optimizes accordingly, ensure that you run object code only on the same YottaDB release on which you compiled it.
+
 
 ------------------
 Trigger ISVs
