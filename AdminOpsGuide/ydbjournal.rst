@@ -33,7 +33,7 @@ HH             2-digit-hour in 24 hr format                    such as 14
 MM             2-digit minute                                  such as 40 
 SS             2-digit seconds                                 such as 30
 
-The following animation describes how YottaDB uses journal files to record information pertaining to database updates on gtm.dat (the default database file created by gtmprofile).
+The following animation describes how YottaDB uses journal files to record information pertaining to database updates on gtm.dat (the default database file created by ydbprofile).
 
 .. image:: dbupdate.gif
 
@@ -96,7 +96,7 @@ YottaDB adds a prefix rolled_bak\_ to the journal file whose entire contents are
  Journal Files Access Authorization
 ++++++++++++++++++++++++++++++++++++
 
-YottaDB propagates access restrictions to the journal files, backup, and snapshot temporary files. Therefore, generally, journal files should have the same access authorization characteristics as their corresponding database files. In the rare case where database access is restricted but the owner is not a member of either the database group nor the group associated with the $gtm_dist directory, you should provide world read-write access to the journal files. As long as the operating system permits the access, YottaDB allows access to database files and journals in cases where the system has no user or group information available for the file. Such an unusual situation can arise, for example, when the user and group are provided via NIS, but if NIS is not currently operational the owner and group cannot be determined; or perhaps a user id is deleted while the YottaDB process is active.
+YottaDB propagates access restrictions to the journal files, backup, and snapshot temporary files. Therefore, generally, journal files should have the same access authorization characteristics as their corresponding database files. In the rare case where database access is restricted but the owner is not a member of either the database group nor the group associated with the $ydb_dist directory, you should provide world read-write access to the journal files. As long as the operating system permits the access, YottaDB allows access to database files and journals in cases where the system has no user or group information available for the file. Such an unusual situation can arise, for example, when the user and group are provided via NIS, but if NIS is not currently operational the owner and group cannot be determined; or perhaps a user id is deleted while the YottaDB process is active.
 
 ++++++++++++++++++++++++++++++
  Triggers in Journal Files
@@ -1336,7 +1336,7 @@ JOURNAL EXTRACT FORMATS
 
 Journal EXTRACT files always start with a label. For the current release of YottaDB, the label is GDSJEX07 for a simple journal extract file. This label is necessary to identify the format of the file.
 
-If the environment variable gtm_chset is set of UTF-8, then file format label is followed by another label called "UTF-8" to indicate UTF-8 mode.
+If the environment variable ydb_chset is set of UTF-8, then file format label is followed by another label called "UTF-8" to indicate UTF-8 mode.
 
 After this label, the journal record extracts follow. These journal record extracts include fields or pieces delimited by a back slash (\).
 

@@ -63,10 +63,10 @@ In addition to messages in the system log, and apart from database files and fil
 
 While journal files automatically switch to new files when the limit is reached, log files can grow unchecked. You should periodically check the sizes of log files and switch them when they get large - or simply switch them on a regular schedule.
 
-1. gtmsecshr log file - gtm_secshr_log in the directory $gtm_log (send a SIGHUP to the gtmsecshr process to create a new log file).
+1. gtmsecshr log file - gtm_secshr_log in the directory $ydb_log (send a SIGHUP to the gtmsecshr process to create a new log file).
 
    .. note::
-      In the latest version, YottaDB logs gtmsecshr messages in the system log and ignores the environment variable gtm_log. 
+      In the latest version, YottaDB logs gtmsecshr messages in the system log and ignores the environment variable ydb_log. 
 
 2. Source Server, Receive Server, and Update Process log files.
 

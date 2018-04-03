@@ -28,10 +28,10 @@ Before you begin installing YottaDB, perform the following tasks:
 
 * Determine whether or not YottaDB access is restricted to a specific group. Keep the group name handy as you will have to enter it during the installation process.
 
-* Set the environment variable gtm_log to a directory where YottaDB should create log files. If you do not set gtm_log, YottaDB creates log files in a directory in /tmp (AIX, GNU/Linux). However, this is not recommended because it makes YottaDB log files vulnerable to the retention policy of a temporary directory.
+* Set the environment variable ydb_log to a directory where YottaDB should create log files. If you do not set ydb_log, YottaDB creates log files in a directory in /tmp (AIX, GNU/Linux). However, this is not recommended because it makes YottaDB log files vulnerable to the retention policy of a temporary directory.
 
 .. note::
-   In the latest version, gtmsecshr logs its messages in the system log and the environment variable gtm_log is ignored.
+   In the latest version, gtmsecshr logs its messages in the system log and the environment variable ydb_log is ignored.
 
 * If you need to perform Unicode™-related operations in YottaDB, you must have at least ICU version 3.6 installed. YottaDB uses ICU 3.6 (or above) to provide support for Unicode. YottaDB generates the distribution for Unicode only if ICU 3.6 (or above) is installed on your system. By default, YottaDB uses the most current version of ICU. YottaDB expects ICU to have been built with symbol renaming disabled and issues an error at startup if the currently installed version of ICU has been built with symbol renaming enabled. If you intend to use a version of ICU built with symbol renaming enabled or any version other than the default, keep the MAJOR VERSION and MINOR VERSION numbers ready as you will have to enter it as MajorVersion.MinorVersion (for example "3.6" to denote ICU-3.6) during the installation process.
 
@@ -69,23 +69,23 @@ Compile the reference implementation plugin as follows:
 
 The package names vary by distribution / version.
 
-* Unpack $gtm_dist/plugin/gtmcrypt/source.tar to a temporary directory, for example: 
+* Unpack $ydb_dist/plugin/gtmcrypt/source.tar to a temporary directory, for example: 
 
  .. parsed-literal::
    mkdir /tmp/plugin-build
    cd /tmp/plugin-build
-   cp $gtm_dist/plugin/gtmcrypt/source.tar .
+   cp $ydb_dist/plugin/gtmcrypt/source.tar .
    tar -xvf source.tar
 
 * Follow the instructions in the README.
 
   * Open Makefile with your editor; review and edit the common header (IFLAGS) and library paths (LIBFLAGS) in the Makefile to reflect those on your system.
   
-  * Define the gtm_dist environment variable to point to the absolute path for the directory where YottaDB is installed
+  * Define the ydb_dist environment variable to point to the absolute path for the directory where YottaDB is installed
   
   * Copy and paste the commands from the README to compile and install the encryption plugin with the permissions defined at install time
 
-* Compare the permissions of $gtm_dist/libgtmshr.so to the newly installed shared libraries in $gtm_dist/plugin. Adjust the permission of the newly installed libraries as necessary.
+* Compare the permissions of $ydb_dist/libgtmshr.so to the newly installed shared libraries in $ydb_dist/plugin. Adjust the permission of the newly installed libraries as necessary.
 
 ---------------------
 ydbinstall Script
@@ -98,7 +98,7 @@ ydbinstall is a stand-alone YottaDB installation script that installs YottaDB us
 +=======================================================+====+========================================================================================================================+
 | --build-type buildtype                                | \* | Type of YottaDB build, default is pro                                                                                  |
 +-------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
-| --copyenv dirname                                     |    | Copy gtmprofile and gtmcshrc files to dirname; incompatible with linkenv                                               |
+| --copyenv dirname                                     |    | Copy ydbprofile and gtmcshrc files to dirname; incompatible with linkenv                                               |
 +-------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
 | --copyexec dirname                                    |    | Copy gtm script to dirname; incompatible with linkexec                                                                 |
 +-------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
@@ -120,9 +120,9 @@ ydbinstall is a stand-alone YottaDB installation script that installs YottaDB us
 +-------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
 | --keep-obj                                            |    | Keep .o files of M routines (normally deleted on platforms with YottaDB support for routines in shared libraries);     |
 +-------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
-| --linkenv dirname                                     |    | Create link in dirname to gtmprofile and gtmcshrc files; incompatible with copyenv                                     |
+| --linkenv dirname                                     |    | Create link in dirname to ydbprofile and gtmcshrc files; incompatible with copyenv                                     |
 +-------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
-| --linkexec dirname                                    |    | Create link in dirname to gtm script; incompatible with copyexec                                                       |
+| --linkexec dirname                                    |    | Create link in dirname to ydb script; incompatible with copyexec                                                       |
 +-------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
 | --overwrite-existing                                  |    | Install into an existing directory, overwriting contents; defaults to requiring new directory                          |
 +-------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
