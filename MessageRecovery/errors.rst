@@ -263,7 +263,7 @@ BADACCMTHD
 
 BADACCMTHD, Invalid access method was specified, file not created
 
-MUPIP Warning: This indicates that CREATE encountered an invalid access method for the dynamic segment in the current Global Directory, which is defined by the logical name GTM$GBLDIR / environment variable gtmgbldir.
+MUPIP Warning: This indicates that CREATE encountered an invalid access method for the dynamic segment in the current Global Directory, which is defined by the logical name GTM$GBLDIR / environment variable ydb_gbldir.
 
 Action: Use the Global Directory Editor (GDE) to verify the access method for the Global Directory. Look for the use of YottaDB components with different version numbers.
 
@@ -1049,7 +1049,7 @@ CIUNTYPE, Unknown parameter type encountered
 
 Syntax/Call in Error: This indicates that missing or invalid parameter type specified for the entry displayed by the previous messages EXTSRCLIN and EXTSRCLOC.
 
-Action: Make sure one of the valid parameter types is specified for the parameter in the entry displayed. Refer to the `External Calls chapter in Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/langfeat.html#external-calls>`.
+Action: Make sure one of the valid parameter types is specified for the parameter in the entry displayed. Refer to the `External Calls chapter in Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/langfeat.html#external-calls>`_.
 
 
 -----------------
@@ -1564,9 +1564,9 @@ CRYPTNOPSWDINTP
 
 CRYPTNOPSWDINTP, Cannot prompt for password inside a TP transaction.
 
-Run Time Error: This error occurs if the process used an external call to set the gtm_passwd environment variable to a null string after startup and then accessed an encrypted database file for the first time within a TP transaction.
+Run Time Error: This error occurs if the process used an external call to set the ydb_passwd environment variable to a null string after startup and then accessed an encrypted database file for the first time within a TP transaction.
 
-Action: If possible, set the gtm_passwd environment variable to the obfuscated password. Otherwise, revise the logic to touch a global mapped to each encrypted database, for example, $DATA(myglobal), to ensure the prompting happens before entering any TP transaction.
+Action: If possible, set the ydb_passwd environment variable to the obfuscated password. Otherwise, revise the logic to touch a global mapped to each encrypted database, for example, $DATA(myglobal), to ensure the prompting happens before entering any TP transaction.
 
 
 ---------------------
@@ -1999,7 +1999,7 @@ DBCCMDFAIL, Executed command failed with return code xxxx yyyy which executed yy
 
 DBCERTIFY Error: During processing, the DBCERTIFY attempts to execute certain DSE and/or MUPIP commands in temporary command scripts that DBCERTIFY creates. The specified command failed to execute.
 
-Action: The action to take depends on the code returned by the attempt and if any associated messages were created on either the console or the operator log. Some common causes of problems could be that $gtm_dist (UNIX) is not properly pointing to the current YottaDB version or DBCERTIFY has no access or access to the wrong global directory for which it is executing commands.
+Action: The action to take depends on the code returned by the attempt and if any associated messages were created on either the console or the operator log. Some common causes of problems could be that $ydb_dist (UNIX) is not properly pointing to the current YottaDB version or DBCERTIFY has no access or access to the wrong global directory for which it is executing commands.
 
 ---------------------------
 DBCDBCERTIFIED 
@@ -2099,7 +2099,7 @@ DBCNOEXTND, Unable to extend database xxx
 
 DBCERTIFY Error: DBCERTIFY attempted to use MUPIP EXTEND to extend the database but the attempt failed.
 
-Action: Examine the accompanying messages from the MUPIP EXTEND attempt to see why the extend failed. A common cause for this is that $gtm_dist did not properly point to the currently installed distribution, or there was insufficient disk space to perform the expansion.
+Action: Examine the accompanying messages from the MUPIP EXTEND attempt to see why the extend failed. A common cause for this is that $ydb_dist did not properly point to the currently installed distribution, or there was insufficient disk space to perform the expansion.
 
 ------------------
 DBCNOFINISH
@@ -3508,9 +3508,9 @@ Action: Look for missing parenthesis or brackets.
 DISTPATHMAX
 ------------------
 
-DISTPATHMAX, $gtm_dist path is greater than maximum (xxxx)
+DISTPATHMAX, $ydb_dist path is greater than maximum (xxxx)
 
-Run Time Error: This indicates that the path specified by the gtm_dist environment variable has exceeded the indicated maximum limit of 1024 bytes.
+Run Time Error: This indicates that the path specified by the ydb_dist environment variable has exceeded the indicated maximum limit of 1024 bytes.
 
 Action: Move the directory or use a link to shorten the path.
 
@@ -4715,7 +4715,7 @@ GDUNKNFMT, xxxx is not formatted as a global directory
 
 GDE Information: This indicates that GDE could not load the specified file xxxx because it is not a valid Global Directory file. GDE aborts the load after it issues this message.
 
-Action: Verify that the file is valid and look for typographical errors. Something other than YottaDB or its utilities may have written to the Global Directory file or created a file with a name that coincides with the one specified by GTM$GBLDIR / gtmgbldir.
+Action: Verify that the file is valid and look for typographical errors. Something other than YottaDB or its utilities may have written to the Global Directory file or created a file with a name that coincides with the one specified by GTM$GBLDIR / ydb_gbldir.
 
 --------------
 GDUPDATE 
@@ -4734,7 +4734,7 @@ GDUSEDEFS
 
 GDUSEDEFS, Using defaults for Global Directory xxxx
 
-GDE Information: This indicates that GDE did not find an existing Global Directory using the logical name GTM$GBLDIR / gtmgbldir. As a result, it is starting the session with default values.
+GDE Information: This indicates that GDE did not find an existing Global Directory using the logical name GTM$GBLDIR / ydb_gbldir. As a result, it is starting the session with default values.
 
 Action: -
 
@@ -4833,9 +4833,9 @@ Action: Preserve the core (dump) files and report the entire incident context to
 GTMDISTUNDEF
 -----------------
 
-GTMDISTUNDEF, Environmental variable $gtm_dist is not defined
+GTMDISTUNDEF, Environmental variable $ydb_dist is not defined
 
-DSE/Run Time/MUPIP/LKE Error: This indicates that the environment variable gtm_dist, is not defined for all processes attempting to use (a particular version of) YottaDB.
+DSE/Run Time/MUPIP/LKE Error: This indicates that the environment variable ydb_dist, is not defined for all processes attempting to use (a particular version of) YottaDB.
 
 Action: Define the environment variable.
 
@@ -4843,11 +4843,11 @@ Action: Define the environment variable.
 GTMDISTUNVERIF 
 --------------------
 
-GTMDISTUNVERIF, Environment variable $gtm_dist (dddd) could not be verified against the executables path (pppp)
+GTMDISTUNVERIF, Environment variable $ydb_dist (dddd) could not be verified against the executables path (pppp)
 
-MUPIP/LKE/GT.CM/DSE/Run Time Error: This indicates that the executable pppp does not resides in the path pointed to by environment variable gtm_dist, dddd.
+MUPIP/LKE/GT.CM/DSE/Run Time Error: This indicates that the executable pppp does not resides in the path pointed to by environment variable ydb_dist, dddd.
 
-Action: Ensure that the setting for $gtm_dist matches that of the executable.
+Action: Ensure that the setting for $ydb_dist matches that of the executable.
 
 -------------------
 GTMDUMPFAIL
@@ -4883,7 +4883,7 @@ Action: Verify that SECSHR is properly installed and review user privileges in t
 GTMSECSHRBADDIR
 ----------------
 
-GTMSECSHRBADDIR, gtmsecshr is not running from $gtm_dist/gtmsecshrdir or $gtm_dist cannot be determined
+GTMSECSHRBADDIR, gtmsecshr is not running from $ydb_dist/gtmsecshrdir or $ydb_dist cannot be determined
 
 Run Time Error: This message indicates an inappropriate gtmsecshr invocation. Either gtmsecshr is improperly installed or an inappropriate access attempt is underway.
 
@@ -4907,11 +4907,11 @@ Action: Verify that the environment provides the desired dddd, that dddd exists 
 GTMSECSHRDEFLOG 
 -----------------------
 
-GTMSECSHRDEFLOG, $gtm_log is either undefined or not defined to an absolute path, so gtm_log is set the default xxxx
+GTMSECSHRDEFLOG, $ydb_log is either undefined or not defined to an absolute path, so ydb_log is set the default xxxx
 
 Run Time Information: This indicates that GTMSECSHR has selected the default log file described in the message because the environment variable was not defined or had an unsuitable definition.
 
-Action: When specifying the log file, be sure to select a full path and define the environment variable gtm_log properly.
+Action: When specifying the log file, be sure to select a full path and define the environment variable ydb_log properly.
 
 ------------------------
 GTMSECSHRDMNSTARTED
@@ -4961,7 +4961,7 @@ GTMSECSHRLOGF, XXXX - YYYY; Error while creating GTMSECSHR log file
 
 Run Time Warning: This indicates that the [UNIX] GTMSECSHR daemon was not able to create its log file.
 
-Action: Check the accompanying message(s) for additional information. Check gtm_log environment variable.
+Action: Check the accompanying message(s) for additional information. Check ydb_log environment variable.
 
 ----------------------
 GTMSECSHRLOGSWH
@@ -4998,7 +4998,7 @@ Action: If this is the proper mode of operation, ignore the warning. Normally GT
 GTMSECSHRPERM 
 -------------------
 
-GTMSECSHRPERM, The GTMSECSHR module in $gtm_dist does not have the correct permission and UID
+GTMSECSHRPERM, The GTMSECSHR module in $ydb_dist does not have the correct permission and UID
 
 Run Time Warning: This indicates that a client did not start a GTMSECSHR because the executable was not owned by root and did not have setuid permission.
 
@@ -5133,7 +5133,7 @@ GTMSECSHRSRVF, Client - yyyy; Attempt to service request failed (retry = zzzz)
 
 Run Time Error: This indicates that a YottaDB process with PID yyyy was unable to communicate with gtmsecshr after zzzz attempts (a maximum of four retries).
 
-Action: This message is displayed when a process that needs service from gtmsecshr, cannot communicate with gtmsechsr, or cannot start one. While the most likely cause is a mismatch in the value of the gtm_tmp environment variable between the YottaDB process and the gtmsecshr process, examples of other causes include removal of socket files used for communication between YottaDB and gtmsecshr processes. Check for a following associated message in syslog or in the stderr of the YottaDB process.
+Action: This message is displayed when a process that needs service from gtmsecshr, cannot communicate with gtmsechsr, or cannot start one. While the most likely cause is a mismatch in the value of the ydb_tmp environment variable between the YottaDB process and the gtmsecshr process, examples of other causes include removal of socket files used for communication between YottaDB and gtmsecshr processes. Check for a following associated message in syslog or in the stderr of the YottaDB process.
 
 -----------------
 GTMSECSHRSRVFID
@@ -5202,9 +5202,9 @@ GTMSECSHRTMPPATH
 
 GTMSECSHRTMPPATH, gtmsecshr path is pppp
 
-Information: YottaDB displays this message when different users of an instance of YottaDB connect using a socket or a semaphore and when gtmsecshr is started and it detects an existing gtmsecshr. pppp indicates the gtm_tmp path set in the clients. Gtmsecshr inherits the path from the first YottaDB process that uses its services.
+Information: YottaDB displays this message when different users of an instance of YottaDB connect using a socket or a semaphore and when gtmsecshr is started and it detects an existing gtmsecshr. pppp indicates the ydb_tmp path set in the clients. Gtmsecshr inherits the path from the first YottaDB process that uses its services.
 
-Action: If different clients of the same instance of YottaDB are using different gtmsecshr paths, then set a common value for the environment variable gtm_tmp for all users of an instance of YottaDB, then stop and restart the processes that were using incorrect paths. If gtmsecshr itself has the incorrect path, all processes that are using that incorrect path must be stopped first - then stop gtmsecshr with a kill command.
+Action: If different clients of the same instance of YottaDB are using different gtmsecshr paths, then set a common value for the environment variable ydb_tmp for all users of an instance of YottaDB, then stop and restart the processes that were using incorrect paths. If gtmsecshr itself has the incorrect path, all processes that are using that incorrect path must be stopped first - then stop gtmsecshr with a kill command.
 
 --------------------
 GTMSECSHRUPDDBHDR
@@ -5455,7 +5455,7 @@ HLPPROC, Helper Process error
 
 MUPIP Error: YottaDB replication was not able to start a helper process.
 
-Action: Ensure that the gtm_dist environment variable points to a valid YottaDB distribution that is executable by the user.
+Action: Ensure that the ydb_dist environment variable points to a valid YottaDB distribution that is executable by the user.
 
 -------------------
 HOSTCONFLICT
@@ -5512,17 +5512,17 @@ Action: Consult the ICU documentation and / or refresh the ICU library with a kn
 ICUSYMNOTFOUND 
 --------------------
 
-ICUSYMNOTFOUND, Symbol xxxxx not found in ICU libraries. ICU needs to be built with symbol-renaming disabled or gtm_icu_version environment variable needs to be specified
+ICUSYMNOTFOUND, Symbol xxxxx not found in ICU libraries. ICU needs to be built with symbol-renaming disabled or ydb_icu_version environment variable needs to be specified
 
-Run Time Error: ICU version installed on the machine is built with symbol renaming and gtm_icu_version has not been defined
+Run Time Error: ICU version installed on the machine is built with symbol renaming and ydb_icu_version has not been defined
 
-Action: Build ICU without symbol renaming or set gtm_icu_version environment variable to point to an appropriate ICU version.
+Action: Build ICU without symbol renaming or set ydb_icu_version environment variable to point to an appropriate ICU version.
 
 -------------------
 ICUVERLT36 
 -------------------
 
-ICUVERLT36, Type 1 - $gtm_icu_version is aaa.bbb. ICU version greater than or equal to 3.6 should be used. Type 2 - libicuio has version aaa.bbb. ICU version greater than or equal to 3.6 should be used.
+ICUVERLT36, Type 1 - $ydb_icu_version is aaa.bbb. ICU version greater than or equal to 3.6 should be used. Type 2 - libicuio has version aaa.bbb. ICU version greater than or equal to 3.6 should be used.
 
 Run Time Error: This message indicates an attempt to use an ICU version less than 3.6 with YottaDB or utilities like MUPIP or DSE.
 
@@ -5647,7 +5647,7 @@ INPINTEG, Input integrity error -- aborting load
 
 GDE Fatal: This indicates that GDE is aborting the session because integrity errors prevented it from loading the specified Global Directory. GDE usually displays this message with other error messages. GDE aborts the load after issuing this message.
 
-Action: Review the accompanying message(s) for additional information. Verify whether the command specified the intended file. Something other than YottaDB and its utilities probably wrote to a Global Directory file or created a file with a name identical to the one specified by GTM$GBLDIR / gtmgbldir.
+Action: Review the accompanying message(s) for additional information. Verify whether the command specified the intended file. Something other than YottaDB and its utilities probably wrote to a Global Directory file or created a file with a name identical to the one specified by GTM$GBLDIR / ydb_gbldir.
 
 -------------------
 INSNOTJOINED 
@@ -5842,7 +5842,7 @@ INVGBLDIR
 
 INVGBLDIR, Invalid Global Directory spec: xxxx. Continuing with yyyy.
 
-GDE Information: This indicates that the Global Directory xxxx specified by GTM$GBLDIR / gtmgbldir or by SETGD and the qualifier FILE= is not a valid file-specification.
+GDE Information: This indicates that the Global Directory xxxx specified by GTM$GBLDIR / ydb_gbldir or by SETGD and the qualifier FILE= is not a valid file-specification.
 
 Action: When this error occurs, GDE uses the default specification of the current process default directory. Continue with the default and rename the result after leaving GDE, or change the specification with a SETGD command and the FILE= qualifier.
 
@@ -5896,7 +5896,7 @@ INVLINKTMPDIR, Value for $gtm_linktmpdir is either not found or not a directory:
 
 Run Time Error: Indicates the process cannot access directory dddd, which it needs in order to do auto-relink as specified by its $ZROUTINES; the directory may not exist as a directory or the process lacks authorization to the directory.
 
-Action: The directory specification comes from $gtm_linktmpdir if it is defined, otherwise from $gtm_tmp if that is defined; otherwise it defaults to the system temporary directory, typically /tmp. Either correct the environment variable definition or ensure directory dddd is appropriately set up. Note that all users of auto-relink for a directory normally need to use the same temporary directory for their relink control files.
+Action: The directory specification comes from $gtm_linktmpdir if it is defined, otherwise from $ydb_tmp if that is defined; otherwise it defaults to the system temporary directory, typically /tmp. Either correct the environment variable definition or ensure directory dddd is appropriately set up. Note that all users of auto-relink for a directory normally need to use the same temporary directory for their relink control files.
 
 
 ------------------------
@@ -6097,7 +6097,7 @@ INVTMPDIR, Value for $gtm_tmpdir is either not found or not a directory: dddd - 
 
 Error: Indicates the process cannot access directory dddd, which it may need for a number of actions; the directory may not exist as a directory or the process lacks authorization to locate the directory.
 
-Action: The directory specification comes from $gtm_tmp if it is defined, otherwise it defaults to the system temporary directory, typically /var/tmp on Solaris and /tmp in other environments. Either correct the environment variable definition or ensure directory dddd is appropriately set up. Note that all users of a particular YottaDB instance normally need to use the same temporary directory to ensure proper interprocess communication.
+Action: The directory specification comes from $ydb_tmp if it is defined, otherwise it defaults to the system temporary directory, typically /var/tmp on Solaris and /tmp in other environments. Either correct the environment variable definition or ensure directory dddd is appropriately set up. Note that all users of a particular YottaDB instance normally need to use the same temporary directory to ensure proper interprocess communication.
 
 ------------------
 INVTRCGRP 
@@ -9057,7 +9057,7 @@ MUPGDERR, Command aborted due to global directory errors
 
 MUPIP Error: This indicates that a MUPIP command failed because it required a Global Directory and that file was inaccessible or damaged.
 
-Action: Verify that GTM$GBLDIR / $gtmgbldir identifies the proper file and that the file is accessible to the process. Use GDE to recreate the Global Directory, if necessary.
+Action: Verify that GTM$GBLDIR / $ydb_gbldir identifies the proper file and that the file is accessible to the process. Use GDE to recreate the Global Directory, if necessary.
 
 --------------------
 MUPGRDSUCC 
@@ -10042,7 +10042,7 @@ NOLBRSRC
 
 NOLBRSRC, Object libraries cannot have SRC paths associated
 
-Run Time Error: This indicates that GTM$ROUTINES / gtmroutines or a SET $ZROUTINES attempted to place a source specification (SRC qualifier / source directory path) on an object library.
+Run Time Error: This indicates that GTM$ROUTINES / ydb_routines or a SET $ZROUTINES attempted to place a source specification (SRC qualifier / source directory path) on an object library.
 
 Action: Remove the source specification. YottaDB does not use the qualifier SRC= or source directories on object libraries. If you must provide access to sources corresponding to objects in the shared library, attach the source directory to an existing object directory entry. Since YottaDB does not support automatic recompilations into libraries, care must be taken when providing access to sources of library routines.
 
@@ -10230,7 +10230,7 @@ NOSELECT, None of the selected variables exist, halting
 
 MUPIP Information: This indicates that a MUPIP EXTRACT or REORG operation did not occur because the global variables specified by the SELECT= qualifier do not exist.
 
-Action: Look for an inappropriate definition for GTM$GBLDIR / gtmgbldir or typographical errors in the specified variables.
+Action: Look for an inappropriate definition for GTM$GBLDIR / ydb_gbldir or typographical errors in the specified variables.
 
 -------------------
 NOSOCKETINDEV 
@@ -12351,7 +12351,7 @@ RESTRICTEDOP
 
 RESTRICTEDOP, Attempt to perform a restricted operation: xxxx
 
-All YottaDB Components Error: The attempted operation, xxxx, was prevented based on the policy specified by the $gtm_dist/restrict.txt file.
+All YottaDB Components Error: The attempted operation, xxxx, was prevented based on the policy specified by the $ydb_dist/restrict.txt file.
 
 Action: Check the permissions and contents of the restrict.txt file against the permissions of the user performing the operation.
 
@@ -12361,7 +12361,7 @@ RESTRICTSYNTAX
 
 RESTRICTSYNTAX, Syntax error in file ffff at line number nnnn. All facilities restricted for process.
 
-All YottaDB Components Error: The file ffff, or $gtm_dist/restrict.txt, contains a syntax error at line nnnn. All facilities which may be specified in a restrict.txt file will be considered restricted, and restricted operations will result in RESTRICTEDOP errors or operations being ignored.
+All YottaDB Components Error: The file ffff, or $ydb_dist/restrict.txt, contains a syntax error at line nnnn. All facilities which may be specified in a restrict.txt file will be considered restricted, and restricted operations will result in RESTRICTEDOP errors or operations being ignored.
 
 Action: Edit the restrict.txt file to remove the syntax error, and verify the permissions of the file reflect the desired access.
 
@@ -12805,41 +12805,41 @@ Action: Ensure that GTMSECSHR executables and their parent directories have corr
 SECSHRGTMDBGLVL2LONG 
 ----------------------
 
-SECSHRGTMDBGLVL2LONG, gtmdbglvl env var too long. gtmsecshr will not be started
+SECSHRGTMDBGLVL2LONG, ydb_dbglvl env var too long. gtmsecshr will not be started
 
-Run Time Error: This error indicates that the value of the gtmdbglvl environment variable is too long.
+Run Time Error: This error indicates that the value of the ydb_dbglvl environment variable is too long.
 
-Action: Verify that gtmdbglvl contains a proper integer in the decimal or hexadecimal format.
+Action: Verify that ydb_dbglvl contains a proper integer in the decimal or hexadecimal format.
 
 --------------------
 SECSHRGTMDIST2LONG 
 --------------------
 
-SECSHRGTMDIST2LONG, gtm_dist env var too long. gtmsecshr will not be started
+SECSHRGTMDIST2LONG, ydb_dist env var too long. gtmsecshr will not be started
 
-Run Time Error: This error indicates that the value of the gtm_dist environment variable is too long.
+Run Time Error: This error indicates that the value of the ydb_dist environment variable is too long.
 
-Action: Verify that gtm_dist contains a proper path to the YottaDB installation directory.
+Action: Verify that ydb_dist contains a proper path to the YottaDB installation directory.
 
 ----------------------
 SECSHRGTMTMP2LONG 
 ----------------------
 
-SECSHRGTMTMP2LONG, gtm_tmp env var too long. gtmsecshr will not be started
+SECSHRGTMTMP2LONG, ydb_tmp env var too long. gtmsecshr will not be started
 
-Run Time Error: This error indicates that the value of the gtm_tmp environment variable is too long.
+Run Time Error: This error indicates that the value of the ydb_tmp environment variable is too long.
 
-Action: Verify that gtm_tmp contains a proper path to the directory for YottaDB/GTMSECSHR socket communication.
+Action: Verify that ydb_tmp contains a proper path to the directory for YottaDB/GTMSECSHR socket communication.
 
 --------------------
 SECSHRNOGTMDIST 
 --------------------
 
-SECSHRNOGTMDIST, gtm_dist env var does not exist. gtmsecshr will not be started
+SECSHRNOGTMDIST, ydb_dist env var does not exist. gtmsecshr will not be started
 
-Run Time Error: This error indicates that the gtm_dist environment variable is not set.
+Run Time Error: This error indicates that the ydb_dist environment variable is not set.
 
-Action: Ensure that gtm_dist is set and points to the YottaDB installation directory.
+Action: Ensure that ydb_dist is set and points to the YottaDB installation directory.
 
 ----------------------
 SECSHRNOTOWNEDBYROOT 
@@ -12875,9 +12875,9 @@ Action: Ensure that GTMSECSHR executables and their parent directories have corr
 SECSHRSETGTMDISTFAILED 
 -----------------------
 
-SECSHRSETGTMDISTFAILED, setenv for gtm_dist failed. gtmsecshr will not be started
+SECSHRSETGTMDISTFAILED, setenv for ydb_dist failed. gtmsecshr will not be started
 
-Run Time Error: This error indicates that the GTMSECSHR process failed to adjust gtm_dist environment variable.
+Run Time Error: This error indicates that the GTMSECSHR process failed to adjust ydb_dist environment variable.
 
 Action: Ensure that the root user is configured with adequate space for environment variables.
 
@@ -12885,9 +12885,9 @@ Action: Ensure that the root user is configured with adequate space for environm
 SECSHRSETGTMTMPFAILED 
 -----------------------
 
-SECSHRSETGTMTMPFAILED, setenv for gtm_tmp failed. gtmsecshr will not be started
+SECSHRSETGTMTMPFAILED, setenv for ydb_tmp failed. gtmsecshr will not be started
 
-Run Time Error: This error indicates that the GTMSECSHR process failed to adjust gtm_tmp environment variable.
+Run Time Error: This error indicates that the GTMSECSHR process failed to adjust ydb_tmp environment variable.
 
 Action: Ensure that the root user is configured with adequate space for environment variables.
 
@@ -14991,7 +14991,7 @@ UPDPROC, Update Process error
 
 MUPIP Error: YottaDB replication was not able to start the update process.
 
-Action: Ensure that the gtm_dist environment variable points to a valid YottaDB distribution that is executable by the user.
+Action: Ensure that the ydb_dist environment variable points to a valid YottaDB distribution that is executable by the user.
 
 ------------------
 UPDREPLSTATEOFF 
@@ -16021,7 +16021,7 @@ ZROSYNTAX, $ZROUTINES syntax error: xxxx
 
 Syntax/Run Time Error: This indicates that a $ZROUTINES related action encountered syntax error xxxx.
 
-Action: Modify the UNIX environment variable gtmroutines or the expression being SET into $ZROUTINES.
+Action: Modify the UNIX environment variable ydb_routines or the expression being SET into $ZROUTINES.
 
 ----------------------
 ZSHOWBADFUNC 

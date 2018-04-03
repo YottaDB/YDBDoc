@@ -22,7 +22,7 @@ Cannot find MUMPS executable in <path>
 
 Plugin error: The plugin cannot find the MUMPS executable.
 
-Action: Set the $gtm_dist environment variable to the directory containing MUMPS executable. Verify proper permissions for directory path and file.
+Action: Set the $ydb_dist environment variable to the directory containing MUMPS executable. Verify proper permissions for directory path and file.
 
 ------------------------------------
 Cannot open DB keys file - <path>
@@ -106,12 +106,12 @@ Plugin error: The plugin was unable to locate the master key file.
 Action: Place the master key file in the users home directory or point the gtm_dbkeys environment variable to the master key file. 
 
 --------------------------------------------------------------------------------------------------
-Environment variable gtm_passwd set to empty string. Password prompting not allowed for utilities
+Environment variable ydb_passwd set to empty string. Password prompting not allowed for utilities
 --------------------------------------------------------------------------------------------------
 
-Plugin error: The plugin detected that it needed the obfuscated password but the $gtm_passwd environment variable was set to the empty string.
+Plugin error: The plugin detected that it needed the obfuscated password but the $ydb_passwd environment variable was set to the empty string.
 
-Action: Use maskpass to set $gtm_passwd to the obfuscated password prior to invoking MUPIP or DSE, or wrap the utility invocation with a MUMPS process which will prompt for the password and set the obfuscated password. 
+Action: Use maskpass to set $ydb_passwd to the obfuscated password prior to invoking MUPIP or DSE, or wrap the utility invocation with a MUMPS process which will prompt for the password and set the obfuscated password. 
 
 ------------------------------------------------------------------------------------
 Error initializing GpgME: <reason_for_error>/<specific_Gpg_ME_error>
