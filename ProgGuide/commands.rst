@@ -2984,7 +2984,7 @@ The use and setup of the auto-relink facility depends upon the requirements. Her
    YDB>w $zroutines
    /home/jdoe/.fis-gtm/V6.2-001_x86_64/o*(/home/jdoe/.fis-gtm/V6.2-001_x86_64/r /home/jdoe/.fis-gtm/r) /usr/local/lib/yottadb/r1.10/plugin/o/_POSIX.so /usr/local/lib/yottadb/r1.10/plugin/o(/usr/local/lib/yottadb/r1.10/plugin/r) /usr/local/lib/yottadb/r1.10/libgtmutil.so /usr/local/lib/yottadb/r1.10
 
-In $ZROUTINES, the \*-suffix after the object directory enables the auto-relink facility. By default, the gtm/gtmprofile scripts that are available as part of YottaDB distribution on sourceforge.net have auto-relink enabled.
+In $ZROUTINES, the \*-suffix after the object directory enables the auto-relink facility. By default, the ydb/ydb_env_set scripts that are available as part of YottaDB distribution on sourceforge.net have auto-relink enabled.
 
 With auto-relink enabled, YottaDB loads an object file from an object directory into Rtnobj shared memory segment on an explicit ZLINK, implicit ZLINK (DO, GOTO, ZPRINT, $TEXT()), and extrinsic function invocations ($$) enabling the routines to be accessed by other concurrent/future processes.
 
@@ -3008,7 +3008,7 @@ ZEDIT puts a new file into the first source directory in $ZROUTINES, that is, in
 
 The first invocation of an implicit ZLINK (DO, GOTO ZGOTO, ZPRINT, $TEXT() or function/extrinsic invocation) or an explicit ZLINK "myprogram.m" or ZRUPDATE "/home/jdoe/.fis-gtm/V6.2-001_x86_64/myprogram.o" creates a Relinkctl file if one does not already exist and the associated shared memory. The relinkctl file has a name associated with the hash of the directory to provide a pointer in the form of segment ids to shared memory so that processes can locate routines.
 
-As the gtm_linktmpdir environment variable is not set by default in the gtm/gtmprofile scripts, YottaDB stores the Relinkctl file in the directory pointed to by the ydb_tmp environment variable.
+As the gtm_linktmpdir environment variable is not set by default in the ydb/ydb_env_set scripts, YottaDB stores the Relinkctl file in the directory pointed to by the ydb_tmp environment variable.
 
 .. parsed-literal::
    YDB>zshow "A"

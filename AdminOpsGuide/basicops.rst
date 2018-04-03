@@ -17,52 +17,52 @@ Several environment variables control the operation of YottaDB. Some of them mus
 Your YottaDB distribution comes with many scripts that set up a default YottaDB environment for the shell of your choice. These scripts are as follows: 
 
 
-**ydbprofile** (gtmprofile): uses reasonable defaults to set up a system and YottaDB application development environment for POSIX shells. The ydbprofile script sets default values for environment variables ydb_dist, ydb_gbldir, gtm_icu_version, ydb_log, ydb_principal_editing, gtm_prompt, gtm_retention, ydb_routines, ydb_tmp, and gtmver. When you source the ydbprofile script, it creates a default execution environment (global directory and a default database file with BEFORE_IMAGE journaling) if none exists.
+**ydb_env_set** (gtmprofile): uses reasonable defaults to set up a system and YottaDB application development environment for POSIX shells. The ydb_env_set script sets default values for environment variables ydb_dist, ydb_gbldir, gtm_icu_version, ydb_log, ydb_principal_editing, gtm_prompt, gtm_retention, ydb_routines, ydb_tmp, and gtmver. When you source the ydb_env_set script, it creates a default execution environment (global directory and a default database file with BEFORE_IMAGE journaling) if none exists.
 
 * **gtmcshrc**: sets up a default YottaDB environment for C-shell compatible shells. It sets up default values for ydb_dist, ydb_gbldir, ydb_chset and ydb_routines. It also creates aliases so you can execute YottaDB and its utilities without typing the full path.
 
-* **gtmbase**: detects the shell type and adds ydbprofile to .profile or gtmchsrc to .cshrc so the shell automatically sources ydbprofile or gtmschrc on a subsequent login operation. YottaDB does not recommend using gtmbase as is - use it as an example of a script for you to develop suitable for your systems. It is not as actively maintained as the ydbprofile script.
+* **gtmbase**: detects the shell type and adds ydb_env_set to .profile or gtmchsrc to .cshrc so the shell automatically sources ydb_env_set or gtmschrc on a subsequent login operation. YottaDB does not recommend using gtmbase as is - use it as an example of a script for you to develop suitable for your systems. It is not as actively maintained as the ydb_env_set script.
 
-* **ydb** (gtm): starts YottaDB in direct mode on POSIX shells. The ydb script sources ydbprofile. It also deletes prior generation journal and temporary files older than the number of days specified by the environment variable gtm_retention. It attempts to automatically recover the database when it runs and as such is suitable for "out of the box" usage of YottaDB. Although it will work for large multi-user environments, you may want to modify or replace it with more efficient scripting.
+* **ydb** (gtm): starts YottaDB in direct mode on POSIX shells. The ydb script sources ydb_env_set. It also deletes prior generation journal and temporary files older than the number of days specified by the environment variable gtm_retention. It attempts to automatically recover the database when it runs and as such is suitable for "out of the box" usage of YottaDB. Although it will work for large multi-user environments, you may want to modify or replace it with more efficient scripting.
 
 * **gdedefaults**: a GDE command file that specifies the default values for database characteristics defined by GDE.
 
 These scripts are designed to give you a friendly out-of-the-box YottaDB experience. Even though you can set up an environment for normal YottaDB operation without using these scripts, it is important to go through these scripts to understand how to configure environments. 
 
 
-++++++++++
-ydbprofile
-++++++++++
+++++++++++++
+ydb_env_set
+++++++++++++
 
-On POSIX shells, ydbprofile helps you set an environment for single-user, non-replicated use of YottaDB.
+On POSIX shells, ydb_env_set helps you set an environment for single-user, non-replicated use of YottaDB.
 
-ydbprofile sets reasonable defaults for the following environment variables for normal YottaDB operation:
+ydb_env_set sets reasonable defaults for the following environment variables for normal YottaDB operation:
 
 .. parsed-literal::
    ydb_dir, ydb_dist, gtm_etrap, ydb_gbldir, gtm_icu_version, ydb_log, ydb_principal_editing, gtm_prompt, gtm_repl_instance, gtm_retention, ydb_routines, ydb_tmp, gtmver 
 
-You can set the following environment variables before sourcing ydbprofile or running the ydb script;
+You can set the following environment variables before sourcing ydb_env_set or running the ydb script;
 
 
-* **ydb_chset** (gtm_chset) - set this to "UTF-8" to run YottaDB in UTF-8 mode; it defaults to M mode. As UTF-8 mode requires a UTF-8 locale to be set in LC_CTYPE or LC_ALL, if a locale is not specified, ydbprofile also attempts to set a UTF-8 locale. Since YottaDB in UTF-8 mode often requires gtm_icu_version to be set, if it is not set, ydbprofile attempts to determine the ICU version on the system and set it. This requires the icu-config program to be installed and executable by ydbprofile.
+* **ydb_chset** (gtm_chset) - set this to "UTF-8" to run YottaDB in UTF-8 mode; it defaults to M mode. As UTF-8 mode requires a UTF-8 locale to be set in LC_CTYPE or LC_ALL, if a locale is not specified, ydb_env_set also attempts to set a UTF-8 locale. Since YottaDB in UTF-8 mode often requires gtm_icu_version to be set, if it is not set, ydb_env_set attempts to determine the ICU version on the system and set it. This requires the icu-config program to be installed and executable by ydb_env_set.
 
-* **ydb_dir** (gtmdir) - set this to define a directory for the environment set by ydbprofile.
+* **ydb_dir** (gtmdir) - set this to define a directory for the environment set by ydb_env_set.
 
 The following shell variables are used by the script and left unset at its completion: 
 
 .. parsed-literal::
    old_ydb_dist, old_gtmroutines, old_gtmver, tmp_gtm_tmp, tmp_passwd. 
 
-The $ydb_routines value set by the ydbprofile script enables auto-relink by default for object files in the $ydb_dir/$gtmver/o directory in M mode and $ydb_dir/$gtmver/o/utf8 in UTF-8 mode. Auto-relink requires shared memory resources and limits beyond those for database operation. If your system has inadequate shared memory configured, YottaDB displays messages along the lines of:
+The $ydb_routines value set by the ydb_env_set script enables auto-relink by default for object files in the $ydb_dir/$gtmver/o directory in M mode and $ydb_dir/$gtmver/o/utf8 in UTF-8 mode. Auto-relink requires shared memory resources and limits beyond those for database operation. If your system has inadequate shared memory configured, YottaDB displays messages along the lines of:
 
 .. parsed-literal::
    %GTM-E-SYSCALL, Error received from system call shmget() failed
 
 Refer to your OS documentation to configure shared memory limits (for example, on common Linux systems, the kernel.shmmax parameter in /etc/sysctl.conf).
 
-The ydbprofile (and gtm) scripts, by design, are idempotent so that calling them repeatedly is safe. The YottaDB installation process ensures that ydbprofile always sets ydb_dist correctly. Idempotency is implemented by checking the value of $ydb_dist and skipping all changes to environment variables if ydb_dist is already defined.
+The ydb_env_set (and gtm) scripts, by design, are idempotent so that calling them repeatedly is safe. The YottaDB installation process ensures that ydb_env_set always sets ydb_dist correctly. Idempotency is implemented by checking the value of $ydb_dist and skipping all changes to environment variables if ydb_dist is already defined.
 
-When gtm sources ydbprofile, it provides a default execution environment (global directory and a default database (with BEFORE_IMAGE journaling) if none exists. By default, it creates the database in $HOME/.fis-gtm with a structure like the following; note that this directory structure has different locations for YottaDB routines (r), object files (o), and database-related files (g):
+When gtm sources ydb_env_set, it provides a default execution environment (global directory and a default database (with BEFORE_IMAGE journaling) if none exists. By default, it creates the database in $HOME/.fis-gtm with a structure like the following; note that this directory structure has different locations for YottaDB routines (r), object files (o), and database-related files (g):
 
 .. parsed-literal::
 
@@ -88,7 +88,7 @@ When gtm sources ydbprofile, it provides a default execution environment (global
 
 where r1.10 represents the current release and platform information and r1.00 represents a previously used YottaDB release.
 
-On 64-bit platforms in M mode, ydbprofile sets the environment variable ydb_routines to something like the following (where $ydb_dist and $gtmver are as discussed above):
+On 64-bit platforms in M mode, ydb_env_set sets the environment variable ydb_routines to something like the following (where $ydb_dist and $gtmver are as discussed above):
 
 .. parsed-literal::
    $ydb_dir/$gtmver/o*($ydb_dir/$gtmver/r $ydb_dir/r) $ydb_dist/plugin/o($ydb_dist/plugin/r) $ydb_dist/libgtmutil.so $ydb_dist
@@ -97,20 +97,20 @@ $ydb_dir/$gtmver/o*($ydb_dir/$gtmver/r $ydb_dir/r) specifies that YottaDB search
 
 For a comprehensive discussion of YottaDB source and object file management, refer to the $ZROUTINES section in the Programmer's Guide.
 
-When $ydb_chset is set to UTF-8, ydbprofile sets ydb_routines to something like this:
+When $ydb_chset is set to UTF-8, ydb_env_set sets ydb_routines to something like this:
 
 .. parsed-literal::
    $ydb_dir/$gtmver/o/utf8*($ydb_dir/$gtmver/r $ydb_dir/r) $ydb_dist/plugin/o/utf8($ydb_dist/plugin/r) $ydb_dist/libgtmutil.so $ydb_dist
 
-Note that ydbprofile sets $ydb_dist in UTF-8 mode to the utf8 subdirectory of the YottaDB installation directory. If you have installed any plugins that include shared libraries, the ydbprofile script includes those. For example, with the POSIX and ZLIB plugins installed on a 64-bit platform, ydb_dir set to /home/jdoe1 and YottaDB installed in /opt/yottadb/r1.10, ydbprofile would set ydb_routines to:
+Note that ydb_env_set sets $ydb_dist in UTF-8 mode to the utf8 subdirectory of the YottaDB installation directory. If you have installed any plugins that include shared libraries, the ydb_env_set script includes those. For example, with the POSIX and ZLIB plugins installed on a 64-bit platform, ydb_dir set to /home/jdoe1 and YottaDB installed in /opt/yottadb/r1.10, ydb_env_set would set ydb_routines to:
 
 .. parsed-literal::
    /home/jdoe1/.yottadb/r1.10/o*(/home/jdoe1/.yottadb/r1.10/r /home/jdoe1/.yottadb/r) /usr/lib/yottadb/r1.10/plugin/o/_POSIX.so /usr/lib/yottadb/r1.10/plugin/o/_ZLIB.so /usr/lib/yottadb/r1.10/plugin/o(/usr/lib/yottadb/r1.10/plugin/r) /usr/lib/yottadb/r1.10/libgtmutil.so /usr/lib/yottadb/r1.10
 
 .. note::
-   This scenario of sourcing ydbprofile is only for the sake of example. Consult your system administrator before implementing ydbprofile for a multi-user environment.
+   This scenario of sourcing ydb_env_set is only for the sake of example. Consult your system administrator before implementing ydb_env_set for a multi-user environment.
 
-ydbprofile creates the following aliases:
+ydb_env_set creates the following aliases:
 
 .. parsed-literal::
    alias dse="$ydb_dist/dse"
@@ -119,7 +119,7 @@ ydbprofile creates the following aliases:
    alias lke="$ydb_dist/lke"
    alias mupip="$ydb_dist/mupip"
 
-If /var/log/yottadb/$gtmver directory exists, ydbprofile sets it as the value for $ydb_log. If ydbprofile does not find /var/log/yottadb/$gtmver, it uses $ydb_tmp to set the value of $ydb_log.
+If /var/log/yottadb/$gtmver directory exists, ydb_env_set sets it as the value for $ydb_log. If ydb_env_set does not find /var/log/yottadb/$gtmver, it uses $ydb_tmp to set the value of $ydb_log.
 
 ++++++++++
 gtmscshrc
@@ -154,7 +154,7 @@ Adds the following line to .profile or .cshrc file depending on the shell.
 In the POSIX shell, gtmbase adds the following line to .profile:
 
 .. parsed-literal::
-   . <ydb_dist pathname>/ydbprofile
+   . <ydb_dist pathname>/ydb_env_set
    
 In the C shell, adds the following line to .cshrc:
 
@@ -171,7 +171,7 @@ Specifies default or template values for database characteristics defined by GDE
 ydb
 +++
 
-The ydb script starts with #!/bin/sh so it can run with any shell. Also, you can use it to both run a program and run in direct mode. It sources ydbprofile and sets up default YottaDB database files with BEFORE_IMAGE journaling. It automatically recovers the database on startup. This script sets up everything you need to run YottaDB for a simple out-of-box experience.
+The ydb script starts with #!/bin/sh so it can run with any shell. Also, you can use it to both run a program and run in direct mode. It sources ydb_env_set and sets up default YottaDB database files with BEFORE_IMAGE journaling. It automatically recovers the database on startup. This script sets up everything you need to run YottaDB for a simple out-of-box experience.
 
 For multi-user multi-environment systems, you should modify or replace the ydb script for your configuration.
 
@@ -225,7 +225,7 @@ A comprehensive list of environment variables that are directly or indirectly us
 
 **gtmtls_passwd_<label>** specifies the obfuscated password of the encrypted private key pair. You can obfuscate passwords using the 'maskpass' utility provided along with the encryption plugin. If you choose to use unencrypted private keys, set the gtmtls_passwd_<label> environment variable to a non-null dummy value; this prevents inappropriate prompting for a password.
 
-**gtmver** (not used by YottaDB directly) - The current YottaDB version. The ydbprofile script uses $gtmver to set other environment variables.
+**gtmver** (not used by YottaDB directly) - The current YottaDB version. The ydb_env_set script uses $gtmver to set other environment variables.
 
 **gtm_aio_nr_events**: For Linux x86_64, the gtm_aio_nr_events environment variable controls the number of structures a process has per global directory to manage asynchronous writes, and therefore determines the number of concurrent writes a process can manage across all regions within a global directory. If not specified, the value controlled by gtm_aio_nr_events defaults to 128. If a process encounters a situation where it needs to perform an asynchronous write, but has no available slots with which to manage an additional one, it either falls back to synchronous writing if the write is blocking other actions, and otherwise defers the write until a slot becomes available as other writes complete. Linux allocates the structures on a system-wide basis with the setting of /proc/sys/fs/aio-max-nr. Therefore, you should configure this parameter to account for the needs (as determined by gtm_aio_nr_events or the default) of all processes using asynchronous I/O. When processes use multiple global directories with asynchronous I/O, their need for system resources increases accordingly. For example, if an environment runs 10,000 processes, each of which open two global directories and /proc/sys/fs/aio-max-nr is set to a value of 200,000 then gtm_aio_nr_events needs to be set to a value <= 200,000 / (10,000 * 2) = 10. Conversely if gtm_aio_nr_events is set to a value of 20, then aio-max-nr needs to be bumped up to (10,000 * 2 * 20) = 400,000. YottaDB captures the number of errors encountered when attempting to write database blocks for a region, and, barring problems with the storage subsystem, hitting an asynchronous write limit would constitute primary (probably only) contribution to that value, which you can access with $$^%PEEKBYNAME("sgmnt_data.wcs_wterror_invoked_cntr",<region>)
 
@@ -277,7 +277,7 @@ All values are case-independent. When gtm_autorelink_keeprtn is defined and TRUE
 
 **gtm_error_on_jnl_file_lost** causes a runtime error when set to 1 in case of problems with journaling (disk space issues etc.). Setting this environment variable to 0 (or having it undefined) is the default behavior which is to turn off journaling in case of problems.
 
-**gtm_etrap** specifies an initial value of $ETRAP to override the default value of "B" for $ZTRAP as the base level error handler. The ydbprofile script sets gtm_etrap to "Write:(0=$STACK) ""Error occurred: "",$ZStatus,!" which you can customize to suit your needs.
+**gtm_etrap** specifies an initial value of $ETRAP to override the default value of "B" for $ZTRAP as the base level error handler. The ydb_env_set script sets gtm_etrap to "Write:(0=$STACK) ""Error occurred: "",$ZStatus,!" which you can customize to suit your needs.
 
 **gtm_extract_nocol** specifies whether a MUPIP JOURNAL -EXTRACT (when used without -RECOVER or -ROLLBACK) on a database with custom collation should use the default collation if it is not able to read the database file. In a situation where the database file is inaccessible or the replication instance is frozen with a critical section required for the access held by another process and the environment variable gtm_extract_nocol is defined and evaluates to a non-zero integer or any case-independent string or leading substrings of "TRUE" or "YES", MUPIP JOURNAL -EXTRACT issues the DBCOLLREQ warning and proceeds with the extract using the default collation. If gtm_extract_nocol is not set or evaluates to a value other than a positive integer or any case-independent string or leading substrings of "FALSE" or "NO", MUPIP JOURNAL -EXTRACT exits with the SETEXTRENV error.
 
@@ -413,15 +413,15 @@ Each invocation generates an operator log message and if the invocation fails, a
 
 **gtm_ztrap_new** specifies whether a SET $ZTRAP also implicitly performs a NEW $ZTRAP before the SET.
 
-**old_gtm_dist** (not used by YottaDB directly) - The path of the prior YottaDB distribution. The ydbprofile script uses this value to set other environment variables.
+**old_gtm_dist** (not used by YottaDB directly) - The path of the prior YottaDB distribution. The ydb_env_set script uses this value to set other environment variables.
 
-**old_gtmroutines** (not used by YottaDB directly) - The prior routine search path. The ydbprofile script uses this value to set other environment variables.
+**old_gtmroutines** (not used by YottaDB directly) - The prior routine search path. The ydb_env_set script uses this value to set other environment variables.
 
-**old_gtmver** (not used by YottaDB directly) - The value of gtmver that was set when the ydbprofile script was last sourced. The ydbprofile script uses this value to set other environment variables.
+**old_gtmver** (not used by YottaDB directly) - The value of gtmver that was set when the ydb_env_set script was last sourced. The ydb_env_set script uses this value to set other environment variables.
 
-**tmp_gtm_tmp** (not used by YottaDB directly) - It is used by the ydbprofile script in maintaining ydb_tmp.
+**tmp_gtm_tmp** (not used by YottaDB directly) - It is used by the ydb_env_set script in maintaining ydb_tmp.
 
-**tmp_passw** (not used by YottaDB directly) - It is used by the ydbprofile script in maintaining ydb_passwd.
+**tmp_passw** (not used by YottaDB directly) - It is used by the ydb_env_set script in maintaining ydb_passwd.
 
 **ydb_chset** (gtm_chset) determines the mode in which YottaDB compiles and operates. If it has a value of "UTF-8", YottaDB assumes that strings are encoded in UTF-8. In response to a value of "M" (or indeed anything other than "UTF-8"), YottaDB treats all 256 combinations of the 8 bits in a byte as a single character.
 
@@ -480,7 +480,7 @@ Each invocation generates an operator log message and if the invocation fails, a
 | GDL_AllowLargeMemcpy         | 0x00400000                                 | Bypass the 1GB sanity check in gtm_memcpy_validate_and_execute()                           |
 +------------------------------+--------------------------------------------+--------------------------------------------------------------------------------------------+
 
-**ydb_dist** specifies the path to the directory containing the YottaDB system distribution. ydb_dist must be defined for each user. If you are not using the ydb script or sourcing ydbprofile, consider defining ydb_dist in the login file or as part of the default system environment. In UTF-8 mode, the ydb_dist environment variable specifies the path to the directory containing the YottaDB system distribution for Unicode. The distribution for Unicode is located in subdirectory utf8 under the YottaDB distribution directory. For example, if the YottaDB distribution is in /usr/local/lib/yottadb/r110, set ydb_dist to point to /usr/local/lib/yottadb/r110/utf8 for UTF-8 mode. Correct operation of YottaDB executable programs requires ydb_dist to be set correctly.
+**ydb_dist** specifies the path to the directory containing the YottaDB system distribution. ydb_dist must be defined for each user. If you are not using the ydb script or sourcing ydb_env_set, consider defining ydb_dist in the login file or as part of the default system environment. In UTF-8 mode, the ydb_dist environment variable specifies the path to the directory containing the YottaDB system distribution for Unicode. The distribution for Unicode is located in subdirectory utf8 under the YottaDB distribution directory. For example, if the YottaDB distribution is in /usr/local/lib/yottadb/r110, set ydb_dist to point to /usr/local/lib/yottadb/r110/utf8 for UTF-8 mode. Correct operation of YottaDB executable programs requires ydb_dist to be set correctly.
 
 **ydb_gbldir** (gtmgbldir) specifies the initial value of the $ZGBLDIR ISV. $ZGBLDIR identifies the global directory. A global directory maps global variables to physical database files, and is required to access M global variables. Users who maintain multiple global directories use this environment variable to conveniently choose one to use from the time of process startup. To automate this definition, define ydb_gbldir in the user's login file. The SET command can alter the value of $ZGBLDIR in an active process.
 
@@ -508,44 +508,44 @@ Each invocation generates an operator log message and if the invocation fails, a
 
 **ydb_tmp** (gtm_tmp) specifies a directory where socket files used for communication between gtmsecshr and YottaDB processes are stored. All processes using the same YottaDB should have the same $ydb_tmp.
 
-The ydbprofile and gtmschrc scripts sets the following environment variables. YottaDB recommends using the ydbprofile script (or the ydb script which sources ydbprofile) to set up an environment for YottaDB.
+The ydb_env_set and gtmschrc scripts sets the following environment variables. YottaDB recommends using the ydb_env_set script (or the ydb script which sources ydb_env_set) to set up an environment for YottaDB.
 
 +------------------------------------------------+--------------------------------------------------------+
 | Environment Variables                          | Set up by YottaDB shell scripts                        |
 +================================================+========================================================+
-| LC_CTYPE                                       | ydbprofile                                             |
+| LC_CTYPE                                       | ydb_env_set                                            |
 +------------------------------------------------+--------------------------------------------------------+
-| ydb_gbldir*                                    | ydbprofile, gtmcshrc                                   |
+| ydb_gbldir*                                    | ydb_env_set, gtmcshrc                                  |
 +------------------------------------------------+--------------------------------------------------------+
-| ydb_routines*                                  | ydbprofile, gtmcshrc                                   |
+| ydb_routines*                                  | ydb_env_set, gtmcshrc                                  |
 +------------------------------------------------+--------------------------------------------------------+
-| gtmver                                         | ydbprofile                                             |
+| gtmver                                         | ydb_env_set                                            |
 +------------------------------------------------+--------------------------------------------------------+
-| ydb_dist*                                      | ydbprofile, gtmschrc                                   |
+| ydb_dist*                                      | ydb_env_set, gtmschrc                                  |
 +------------------------------------------------+--------------------------------------------------------+
-| gtm_icu_version                                | ydbprofile                                             |
+| gtm_icu_version                                | ydb_env_set                                            |
 +------------------------------------------------+--------------------------------------------------------+
-| ydb_log*                                       | ydbprofile                                             |
+| ydb_log*                                       | ydb_env_set                                            |
 +------------------------------------------------+--------------------------------------------------------+
-| ydb_principal_editing                          | ydbprofile                                             |
+| ydb_principal_editing                          | ydb_env_set                                            |
 +------------------------------------------------+--------------------------------------------------------+
-| gtm_prompt                                     | ydbprofile                                             |
+| gtm_prompt                                     | ydb_env_set                                            |
 +------------------------------------------------+--------------------------------------------------------+
-| gtm_repl_instance                              | ydbprofile                                             |
+| gtm_repl_instance                              | ydb_env_set                                            |
 +------------------------------------------------+--------------------------------------------------------+
-| gtm_retention                                  | ydbprofile                                             |
+| gtm_retention                                  | ydb_env_set                                            |
 +------------------------------------------------+--------------------------------------------------------+
-| ydb_tmp                                        | ydbprofile                                             |
+| ydb_tmp                                        | ydb_env_set                                            |
 +------------------------------------------------+--------------------------------------------------------+
-| old_gtmroutines                                | ydbprofile                                             |
+| old_gtmroutines                                | ydb_env_set                                            |
 +------------------------------------------------+--------------------------------------------------------+
-| old_gtm_dist                                   | ydbprofile                                             |
+| old_gtm_dist                                   | ydb_env_set                                            |
 +------------------------------------------------+--------------------------------------------------------+
-| old_gtmver                                     | ydbprofile                                             |
+| old_gtmver                                     | ydb_env_set                                            |
 +------------------------------------------------+--------------------------------------------------------+
-| tmp_gtm_tmp                                    | ydbprofile                                             |
+| tmp_gtm_tmp                                    | ydb_env_set                                            |
 +------------------------------------------------+--------------------------------------------------------+
-| tmp_passw                                      | ydbprofile                                             |
+| tmp_passw                                      | ydb_env_set                                            |
 +------------------------------------------------+--------------------------------------------------------+
 
 \* denotes environment variables that must be defined for normal YottaDB operation.
@@ -556,7 +556,7 @@ While creating an environment for multiple processes accessing the same version 
 
 * In conformance with the Filesystem Hierarchy Standard, YottaDB recommends /var/log/yottadb/$gtmver as the value for $ydb_log. Note that $gtmver can be in the form of the current YottaDB release and platform information.
 
-* YottaDB recommends setting $ydb_tmp to a temporary directory /tmp (AIX, GNU/Linux). The ydbprofile script sets $ydb_tmp to /tmp/yottadb/$gtmver.
+* YottaDB recommends setting $ydb_tmp to a temporary directory /tmp (AIX, GNU/Linux). The ydb_env_set script sets $ydb_tmp to /tmp/yottadb/$gtmver.
 
 * If you do not set $ydb_log, YottaDB creates log files in a directory in /tmp (AIX, GNU/Linux). However, this is not recommended because it makes YottaDB log files vulnerable to the retention policy of a temporary directory. 
 
@@ -585,7 +585,7 @@ In addition to $ydb_chset, recent versions use $ydb_icu_version to choose an ICU
 $ydb_icu_version specifies the ICU version that YottaDB should use for Unicode operations. It is in the form of MajorVersion.MinorVersion where MajorVersion and MinorVersion specify the desired major verison and minor version of ICU. For example, 3.6 refers to ICU version 3.6. If $ydb_icu_version is defined, YottaDB works regardless of whether or not symbols are renamed in ICU. If $ydb_icu_version is not defined or does not evaluate to an installed ICU version, YottaDB look for non-renamed symbols in the default ICU version. Note that display widths for a few characters are different starting in ICU 4.0. 
 
 .. note::
-   The ydbprofile script defines $ydb_icu_version as necessary.
+   The ydb_env_set script defines $ydb_icu_version as necessary.
 
 +++++++++++++++++
 Compiling ICU
@@ -720,7 +720,7 @@ Run the ydb alias to start YottaDB in direct mode.
     UTF-8 ; the output confirms UTF-8 mode. 
 
 .. note::
-    If you are configuring a YottaDB environment without using the ydbprofile script (or the ydb script which sources ydbprofile), bear in mind the following recommendation: All YottaDB processes should use the same settings for ydb_log and ydb_tmp, especially for production environments. This is because gtmsecshr inherits these values from whichever YottaDB process first uses its services. If there are multiple YottaDB versions active on a system, YottaDB recommends different sets of ydb_log and ydb_tmp values for each version as using the same values for different distributions can cause significant performance issues. 
+    If you are configuring a YottaDB environment without using the ydb_env_set script (or the ydb script which sources ydb_env_set), bear in mind the following recommendation: All YottaDB processes should use the same settings for ydb_log and ydb_tmp, especially for production environments. This is because gtmsecshr inherits these values from whichever YottaDB process first uses its services. If there are multiple YottaDB versions active on a system, YottaDB recommends different sets of ydb_log and ydb_tmp values for each version as using the same values for different distributions can cause significant performance issues. 
      
 YottaDB has three invocation modes: compiler, direct, and auto-start. To invoke YottaDB in these modes, provide the following arguments to the ydb script or the mumps command.
 
