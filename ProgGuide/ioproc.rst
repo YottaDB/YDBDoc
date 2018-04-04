@@ -142,8 +142,6 @@ For PIPE:
 
 $KEY contains the UNIX process id of the created process shell which executes the command connected to the PIPE.
 
-For more information, refer to “$Key”.
-
 **$ZA**
 
 $ZA contains the status of the last read on the device. The value is a decimal integer with a meaning as follows:
@@ -662,22 +660,22 @@ PASTHRU supersedes line editing.
 Environment Variable
 ~~~~~~~~~~~~~~~~~~~~~
 
-By defining the environment variable "gtm_principal_editing", the defaults for EDITING and INSERT modes can be changed for the $PRINCIPAL device when it is a terminal. The value of the variable can be [NO]EDITING and/or [NO]INSERT. If both modes are specified they should be separated by a colon (i.e. “:”) and can be in any order.
+By defining the environment variable "ydb_principal_editing", the defaults for EDITING and INSERT modes can be changed for the $PRINCIPAL device when it is a terminal. The value of the variable can be [NO]EDITING and/or [NO]INSERT. If both modes are specified they should be separated by a colon (i.e. “:”) and can be in any order.
 
 Examples:
 
 .. parsed-literal::
-   gtm_principal_editing=”NOINSERT:EDITING”
-   export gtm_principal_editing
+   ydb_principal_editing=”NOINSERT:EDITING”
+   export ydb_principal_editing
 
-   gtm_principal_editing=”EDITING”
-   export gtm_principal_editing
+   ydb_principal_editing=”EDITING”
+   export ydb_principal_editing
 
 ~~~~~~~~~~~~~~~~~~~~~
 Direct Mode Editing
 ~~~~~~~~~~~~~~~~~~~~~
 
-When entering commands at the direct mode prompt, the insert mode can be toggled for that line by using the insert key. When YottaDB starts, insert mode is enabled unless the value of the gtm_principal_editing environment variable includes the string NOINSERT. If insert mode is disabled or enabled for the $PRINCIPAL device by a USE statement before returning to direct mode, it will remain disabled or enabled at direct mode. The insert mode can be toggled within a direct mode line using the terminal’s INSERT key.
+When entering commands at the direct mode prompt, the insert mode can be toggled for that line by using the insert key. When YottaDB starts, insert mode is enabled unless the value of the ydb_principal_editing environment variable includes the string NOINSERT. If insert mode is disabled or enabled for the $PRINCIPAL device by a USE statement before returning to direct mode, it will remain disabled or enabled at direct mode. The insert mode can be toggled within a direct mode line using the terminal’s INSERT key.
 
 ~~~~~~~~~~~~~~~~~~~~
 ZSHOW "D"
@@ -1442,11 +1440,11 @@ Example:
 
 .. parsed-literal::
    sh> mumps -run pipexample induceEAGAIN
-   The active device is pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$gtm_dist/mumps -run induceEAGAIN^pipexample" STDERR="piperr" 
+   The active device is pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/mumps -run induceEAGAIN^pipexample" STDERR="piperr" 
    $ZSTATUS="11,pipexample+9^pipexample,%SYSTEM-E-ENO11, Resource temporarily unavailable"
         
    sh> mumps -run retry^pipexample induceEAGAIN
-   Try 0   pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$gtm_dist/mumps -run induceEAGAIN^pipexample 0" STDERR="piperr"
+   Try 0   pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/mumps -run induceEAGAIN^pipexample 0" STDERR="piperr"
    ...Failed to perform non-blocked writes... Retrying write # 54
    ...Failed to perform non-blocked writes... Retrying write # 63
    ...Failed to perform non-blocked writes... Retrying write # 69
@@ -1457,21 +1455,21 @@ This example demonstrates handling WRITE errors, like ENO11 or EAGAIN, that do n
 
 .. parsed-literal::
    sh> mumps -run pipexample induceEPIPE
-   The active device is pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$gtm_dist/mumps -run induceEPIPE^pipexample" STDERR="piperr" 
+   The active device is pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/mumps -run induceEPIPE^pipexample" STDERR="piperr" 
        stdout:My PID is 12808
        stderr:%GTM-F-FORCEDHALT, Image HALTed by MUPIP STOP
    $ZSTATUS="32,pipexample+9^pipexample,%SYSTEM-E-ENO32, Broken pipe"
         
    sh> mumps -run retry^pipexample induceEPIPE
-   Try 0   pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$gtm_dist/mumps -run induceEPIPE^pipexample 0" STDERR="piperr" 
+   Try 0   pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/mumps -run induceEPIPE^pipexample 0" STDERR="piperr" 
    ...Caught on try 0, write 49... 32,retry+13^pipexample,%SYSTEM-E-ENO32, Broken pipe
        stdout:My PID is 16252
        stderr:%GTM-F-FORCEDHALT, Image HALTed by MUPIP STOP
-   Try 1   pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$gtm_dist/mumps -run induceEPIPE^pipexample 1" STDERR="piperr" 
+   Try 1   pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/mumps -run induceEPIPE^pipexample 1" STDERR="piperr" 
    ...Caught on try 1, write 697... 32,retry+13^pipexample,%SYSTEM-E-ENO32, Broken pipe
        stdout:My PID is 16403
        stdout:$ZSTATUS="150373210,induceEPIPE+5^pipexample,%GTM-E-DIVZERO, Attempt to divide by zero"
-   Try 2   pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$gtm_dist/mumps -run induceEPIPE^pipexample 2" STDERR="piperr" 
+   Try 2   pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/mumps -run induceEPIPE^pipexample 2" STDERR="piperr" 
        Writes completed
       
 This example demonstrates how to create a separate STDERR pipe device from which to read the STDERR output of the program(s) inside the pipe. Reading the STDERR is important when dealing with failures from Unix programs. It is possible to read the errors without creating a STDERR pipe device, however the error messages are commingled with the output of the programs inside the pipe which could make diagnosis of the underlying problem harder. Notice that YottaDB writes fatal errors, GTM-F types, to STDERR, but all others go to STDOUT.
@@ -1489,7 +1487,7 @@ Example:
      set piperr="piperr"
      set writesize=1024
      set cmd=$piece($zcmdline," ") set:'$length(cmd) cmd="induceEPIPE"
-     open pipe:(shell="/bin/bash":command="$gtm_dist/mumps -run "_cmd_"^pipexample":stderr=piperr)::"pipe"
+     open pipe:(shell="/bin/bash":command="$ydb_dist/mumps -run "_cmd_"^pipexample":stderr=piperr)::"pipe"
      zshow "D":devicelist write "The active device is ",devicelist("D",2),!
      use pipe
      for i=1:1:1024 write $tr($justify(i,writesize)," ","X"),!
@@ -1501,7 +1499,7 @@ Example:
      set pipe="pipe"
      set writesize=1024
      set cmd=$piece($zcmdline," ",2) set:'$length(cmd) cmd="induceEAGAIN"
-     open pipe:(shell="/bin/bash":command="$gtm_dist/mumps -run "_cmd_"^pipexample")::"pipe"
+     open pipe:(shell="/bin/bash":command="$ydb_dist/mumps -run "_cmd_"^pipexample")::"pipe"
      zshow "D":devicelist write "The active device is ",devicelist("D",2),!
      write !,!
      use pipe
@@ -1555,7 +1553,7 @@ Example:
      set cmd=$piece($zcmdline," ") set:'$length(cmd) cmd="induceEPIPE"
      for try=0:1  do  quit:$get(readcomplete,0)
      . new $etrap set $etrap="goto retryEPIPE"
-     . open pipe:(shell="/bin/bash":command="$gtm_dist/mumps -run "_cmd_"^pipexample "_try:stderr=piperr)::"pipe"
+     . open pipe:(shell="/bin/bash":command="$ydb_dist/mumps -run "_cmd_"^pipexample "_try:stderr=piperr)::"pipe"
      . zshow "D":devicelist write "Try ",try,$char(9),devicelist("D",2),!
      . use pipe
      . for i=1:1:1024 do
@@ -1740,7 +1738,7 @@ The READ command may be used to obtain data from a socket. A READ operation term
 | Fixed Length Met                    | String of fixed length                                                                             | Empty String     | Empty String        |
 +-------------------------------------+----------------------------------------------------------------------------------------------------+------------------+---------------------+
 | Buffer Emptied                      | One (1) to as many characters as happen to be provided by the transport interface                  | Empty String     | Empty String        |
-+-------------------------------------+----------------------------------------------------------------------------------------------------+----------------------------------------+
++-------------------------------------+----------------------------------------------------------------------------------------------------+------------------+---------------------+
 
 A non-fixed-length read, with no timeout and no delimiters requires a complex implementation of sequence of READs to ensure a predictable result. This is because the transport layer stream fragments delivered to the reader has only accidental correspondence with the operations performed by the writer. For example, the following:
 
@@ -1777,7 +1775,7 @@ where timeout is a numeric expression that specifies how long in seconds a serve
 
 WRITE /PASS allows a YottaDB process to send DETACHed TCP or LOCAL sockets (that is, sockets in the socket pool) to another YottaDB process. The receiving process should execute WRITE /ACCEPT to receive the socket.
 
-* If a numeric targetpid is specified, YottaDB matches the value against the process id ($JOB) of the process receiving the sockets. YottaDB uses a system service to perform this check on platforms that support it - currently: Linux and AIX. If the pids do not match, YottaDB issues a PEERPIDMISMATCH error and does not transfer the sockets.
+* If a numeric target pid is specified, YottaDB matches the value against the process id ($JOB) of the process receiving the sockets. YottaDB uses a system service to perform this check on platforms that support it - currently: Linux and AIX. If the pids do not match, YottaDB issues a PEERPIDMISMATCH error and does not transfer the sockets.
 * If a numeric timeout is specified, YottaDB sets $TEST to 1 if the transfer completes within the specified time, and otherwise sets $TEST to 0 and does not transfer any of the sockets.
 * Each handle specifies a socket in the socket pool.
 * On a successful transfer, YottaDB eliminates access by the sending process to the specified and sent sockets. In any case where the transfer does not complete, YottaDB retains all the sockets in the socket pool of the sender.
@@ -1807,7 +1805,7 @@ SOCKET devices support encrypted connections with TLS using an encryption plugin
 * "renegotiate" applies only to a server socket. It allows applications to request a TLS renegotiation. Renegotiation requires the suspension of application communication and the application must read all pending data before initiating a renegotiation. This means that in the communication protocol used, both parties must be at a known state when renegotiating keys. For example, in YottaDB replication, one party sends a renegotiation request and waits for an acknowledgement before initiating the renegotiation.
 * tlsid refers to the name of a section in the configuration file specified by the gtmcrypt_config environment variable. If tlsid is not specified with the "renegotiate" option and cfg-file-options are specified, YottaDB creates a virtual section by appending "-RENEGOTIATE" to the tlsid used to enable TLS on the socket. For the renegotiate option, if no section named tlsid is present in the configuration file, YottaDB creates a virtual section with that name for the life of the process.
 * cfg-file-options specifies configuration file options. Note cfg-file-options override those options if they are already specified in the configuration file except ssl-options and verify-level which are merged.
-* Supported cfg-file-options for the "renegotiate" command are (case-sensitive): verify-depth, verify-level, verify-mode, session-id-hex, and CAfile. WRITE /TLS ignores all other configuration file options whether given on the command or in the configuration file. For more information on the supported configuration options, refer to the Creating a Configuration File section of the Administration and Operations Guide.
+* Supported cfg-file-options for the "renegotiate" command are (case-sensitive): verify-depth, verify-level, verify-mode, session-id-hex, and CAfile. WRITE /TLS ignores all other configuration file options whether given on the command or in the configuration file. For more information on the supported configuration options, refer to `Creating a TLS Configuration File <https://docs.yottadb.com/AdminOpsGuide/tls.html>`_ in the Administration and Operations Guide.
 
 .. note::
    Note that SOCKET device actions may produce the following errors: TLSDLLOPEN, TLSINIT, TLSCONVSOCK, TLSHANDSHAKE, TLSCONNINFO, TLSIOERROR, and TLSRENEGOTIATE.
@@ -1923,15 +1921,15 @@ If you are using inetd, add a line to /etc/inetd.conf with the sockettype "strea
 
 In both of the above examples, "gtmuser" is the name of the user to own and run the gtmserver service, and "/path/to/startgtm" is the name of a script which defines some environment variables needed before invoking YottaDB. Please check the man page for inetd.conf on your system as the details may be slightly different.
 
-The minimum variables are: $gtm_dist, which specifies the directory containing the YottaDB distribution, and $gtmroutines, which specifies the paths used to locate the YottaDB routines. As an example: 
+The minimum variables are: $ydb_dist, which specifies the directory containing the YottaDB distribution, and $ydb_routines, which specifies the paths used to locate the YottaDB routines. As an example: 
 
 .. parsed-literal::
    #!/bin/bash 
    cd /path/to/workarea 
-   export gtm_dist=/usr/local/gtm 
-   export gtmroutines="/var/myApp/o(/var/myApp/r) $gtm_dist" 
-   export gtmgbldir=/var/myApp/g/mumps.dat 
-   $gtm_dist/mumps -r start^server 
+   export ydb_dist=/usr/local/ydb 
+   export ydb_routines="/var/myApp/o(/var/myApp/r) $ydb_dist" 
+   export ydb_gbldir=/var/myApp/g/mumps.dat 
+   $ydb_dist/mumps -r start^server 
 
 When start^server begins, the $PRINCIPAL device is the current device connected a socket and $KEY contains "ESTABLISHED|socket_handle| remote_ip_address". In most cases, a USE command near the beginning of the routine sets various device parameters such as delimiters.
 
@@ -1953,14 +1951,14 @@ TLS (Transport Layer Security) can be turned on for YottaDB using the following 
 * As root, go to the following directory and extract source.tar:
 
   .. parsed-literal::
-     cd $gtm_dist/plugin/gtmcrypt
+     cd $ydb_dist/plugin/gtmcrypt
      tar x < source.tar
 
 * Make sure the openssl-dev, libconfig-dev, and gpgme-dev libraries are installed before the next step.
   
   .. parsed-literal::
-     gtm_dist=../.. make 
-     gtm_dist=../.. make install
+     ydb_dist=../.. make 
+     ydb_dist=../.. make install
 
 * In your application directory, make a directory for certificates.
 
@@ -1994,7 +1992,7 @@ TLS (Transport Layer Security) can be turned on for YottaDB using the following 
 * Find out the hash of your key password using the maskpass utility. 
 
   .. parsed-literal::
-     gtm_dist/plugin/gtmcrypt/maskpass <<< 'ydbpass' | cut -d ":" -f2 | tr -d '
+     ydb_dist/plugin/gtmcrypt/maskpass <<< 'ydbpass' | cut -d ":" -f2 | tr -d '
      7064420FDCAEE313B222 
 
 * In your environment file, set gtmtls_passwd_{section name} to be that hash.
@@ -2216,7 +2214,7 @@ This example asks for the name of the file and displays its contents. It OPENs t
 
 [NO]EMPT[ERM] Applies to: TRM
 
-Allows an "Erase" character on an empty input line to terminate a READ or READ # command. The default is NOEMPTERM. The gtm_principal_editing environment variable specifies the initial setting of [NO]EMPTERM. The TERMINFO specified by the current value of the TERM environment variable defines capnames values "kbs" and/or "kdch1" with character sequences for "Erase." If "kbs" or "kdch1" are multi-character values, you must also specify the ESCAPE or EDIT deviceparameters for EMPTERM recognition.
+Allows an "Erase" character on an empty input line to terminate a READ or READ # command. The default is NOEMPTERM. The ydb_principal_editing environment variable specifies the initial setting of [NO]EMPTERM. The TERMINFO specified by the current value of the TERM environment variable defines capnames values "kbs" and/or "kdch1" with character sequences for "Erase." If "kbs" or "kdch1" are multi-character values, you must also specify the ESCAPE or EDIT deviceparameters for EMPTERM recognition.
 
 The erase character as set and shown by stty also terminates a READ command with an empty input line. You can set this erase character to various values using the stty shell command. Typical values of an erase character are <CTRL-H> and <CTRL-?>. Characters set and shown with stty setting must match what the terminal emulator sends.
 
@@ -2291,7 +2289,7 @@ Example:
    YDB>zprint ^gtmcp
    gtmcp ; Copy a binary file using YottaDB
      new dest,line,max,src
-     if 2>$length($zcmdline," ") write "$gtm_dist/mumps -r source target",!
+     if 2>$length($zcmdline," ") write "$ydb_dist/mumps -r source target",!
      set dest=$piece($zcmdline," ",2)
      set src=$piece($zcmdline," ",1)
      set max=1024*1024 ; the maximum YottaDB string size
@@ -2408,15 +2406,15 @@ The basic steps to use a key and IV to create an encrypted file and decrypt its 
 .. parsed-literal::
    export LD_LIBRARY_PATH=/usr/local/lib
    export GNUPGHOME=$PWD/mygnupg
-   $gtm_dist/plugin/gtmcrypt/gen_keypair.sh mykeypair@gtm Keymaster
-   $gtm_dist/plugin/gtmcrypt/gen_sym_key.sh 0 Sunday.key
-   $gtm_dist/plugin/gtmcrypt/gen_sym_key.sh 0 Monday.key
-   $gtm_dist/plugin/gtmcrypt/gen_sym_key.sh 0 Tuesday.key
-   $gtm_dist/plugin/gtmcrypt/gen_sym_key.sh 0 Wednesday.key
-   $gtm_dist/plugin/gtmcrypt/gen_sym_key.sh 0 Thursday.key
-   $gtm_dist/plugin/gtmcrypt/gen_sym_key.sh 0 Friday.key
-   $gtm_dist/plugin/gtmcrypt/gen_sym_key.sh 0 Saturday.key
-   echo -n "Enter password for gtm_passwd";export gtm_passwd="`$gtm_dist/plugin/gtmcrypt/maskpass|cut -f 3 -d " "`"
+   $ydb_dist/plugin/gtmcrypt/gen_keypair.sh mykeypair@gtm Keymaster
+   $ydb_dist/plugin/gtmcrypt/gen_sym_key.sh 0 Sunday.key
+   $ydb_dist/plugin/gtmcrypt/gen_sym_key.sh 0 Monday.key
+   $ydb_dist/plugin/gtmcrypt/gen_sym_key.sh 0 Tuesday.key
+   $ydb_dist/plugin/gtmcrypt/gen_sym_key.sh 0 Wednesday.key
+   $ydb_dist/plugin/gtmcrypt/gen_sym_key.sh 0 Thursday.key
+   $ydb_dist/plugin/gtmcrypt/gen_sym_key.sh 0 Friday.key
+   $ydb_dist/plugin/gtmcrypt/gen_sym_key.sh 0 Saturday.key
+   echo -n "Enter password for gtm_passwd";export gtm_passwd="`$ydb_dist/plugin/gtmcrypt/maskpass|cut -f 3 -d " "`"
    export gtmcrypt_config=mygtmcryptfile
    cat mygtmcryptfile
     files: {
@@ -2428,7 +2426,7 @@ The basic steps to use a key and IV to create an encrypted file and decrypt its 
     CustomerReportKey6: "Friday.key";
     CustomerReportKey7: "Saturday.key";
    };
-   $gtm_dist/mumps -dir
+   $ydb_dist/mumps -dir
    YDB>zprint ^encrfile
    encrfile
     set now=$horolog
@@ -2625,10 +2623,10 @@ PARSE Applies to: PIPE
 
 The PARSE deviceparameter invokes preliminary validation of the COMMAND value. When debugging, PARSE provides more accessible diagnosis for COMMAND values. By default, OPEN does not validate command values before passing them to the newly created process. PARSE has certain limitations, which may, or may not map to, those of the shell.
 
-* PARSE searches for the command in the environment variables PATH and gtm_dist and produces an error if it is not found.
+* PARSE searches for the command in the environment variables PATH and ydb_dist and produces an error if it is not found.
 * PARSE does not resolve aliases, so they produce an error.
-* PARSE does not resolve environment variables, except $gtm_dist (as mentioned above), so they trigger an error.
-* PARSE does not recognize built-in commands other than nohup and cd unless $PATH or $gtm_dist contain a version with the same name (as the built-in). In the case of nohup, PARSE looks for the next token in $PATH and $gtm_dist. "When PARSE encounters cd it ignores what follows until the next "|" token (if one appears later in the COMMAND value).
+* PARSE does not resolve environment variables, except $ydb_dist (as mentioned above), so they trigger an error.
+* PARSE does not recognize built-in commands other than nohup and cd unless $PATH or $ydb_dist contain a version with the same name (as the built-in). In the case of nohup, PARSE looks for the next token in $PATH and $ydb_dist. "When PARSE encounters cd it ignores what follows until the next "|" token (if one appears later in the COMMAND value).
 * PARSE rejects parentheses around commands.
 
 The following example fails:
@@ -2653,7 +2651,7 @@ The following example fails:
      OPEN a:(COMM="tr e j | echoback":STDERR=e:exception="g BADOPEN":PARSE)::"PIPE"
      OPEN a:(SHELL="/usr/local/bin/tcsh":COMM="/bin/cat \|& nl":PARSE)::"PIPE"
      OPEN a:(COMM="mupip integ -file mumps.dat":PARSE)::"PIPE"
-     OPEN a:(COMM="$gtm_dist/mupip integ -file mumps.dat":PARSE)::"PIPE"
+     OPEN a:(COMM="$ydb_dist/mupip integ -file mumps.dat":PARSE)::"PIPE"
      OPEN a:(COMM="nohup cat":PARSE)::"PIPE" 
 
 **READONLY**
@@ -3384,7 +3382,7 @@ This example disables the echo of terminal input.
 
 Enables the EDITING mode for the $PRINCIPAL device. If you enable EDITING, YottaDB allows the use of the left and right cursor movement keys and certain <CTRL> characters within the current input line. You can recall the last input line using the up or down arrow key. The editing functions are the same as during direct mode command input as described in the "Line Editing" section of the "Operating & Debugging in Direct Mode" chapter except that backspace is not treated the same as the erase character from terminfo which is usually delete (ASCII 127). NOECHO disables EDITING mode.
 
-Set the environment variable gtm_principal_editing to specify the mode for EDITING. For example, gtm_principal_editing="EDITING" enables EDITING mode at YottaDB startup. You can also specify the mode for INSERT. For example, gtm_principal_editing="NOINSERT:EDITING". If you specify both modes then separate them with a colon (":") and put them in any order.
+Set the environment variable ydb_principal_editing to specify the mode for EDITING. For example, ydb_principal_editing="EDITING" enables EDITING mode at YottaDB startup. You can also specify the mode for INSERT. For example, ydb_principal_editing="NOINSERT:EDITING". If you specify both modes then separate them with a colon (":") and put them in any order.
 
 By default, EDITING mode is disabled.
 
@@ -3401,7 +3399,7 @@ If any of the EDITING <CTRL> characters are in the CTRAP list, their editing fun
 
 [NO]EMPT[ERM] Applies to: TRM
 
-Allows an "Erase" character on an empty input line to terminate a READ or READ # command. The default is NOEMPTERM. The gtm_principal_editing environment variable specifies the initial setting of [NO]EMPTERM. The TERMINFO specified by the current value of the TERM environment variable defines capnames values "kbs" and/or "kdch1" with character sequences for "Erase." If "kbs" or "kdch1" are multi-character values, you must also specify the ESCAPE or EDIT deviceparameters for EMPTERM recognition.
+Allows an "Erase" character on an empty input line to terminate a READ or READ # command. The default is NOEMPTERM. The ydb_principal_editing environment variable specifies the initial setting of [NO]EMPTERM. The TERMINFO specified by the current value of the TERM environment variable defines capnames values "kbs" and/or "kdch1" with character sequences for "Erase." If "kbs" or "kdch1" are multi-character values, you must also specify the ESCAPE or EDIT deviceparameters for EMPTERM recognition.
 
 The erase character as set and shown by stty also terminates a READ command with an empty input line. You can set this erase character to various values using the stty shell command. Typical values of an erase character are <CTRL-H> and <CTRL-?>. Characters set and shown with stty setting must match what the terminal emulator sends.
 
@@ -3637,12 +3635,12 @@ SEEK on redirected input for $PRINCIPAL is the same as INSEEK.
 
 SOCKET=expr Applies to: SOC
 
-Makes the socket specified by the handle named in expr the current socket for the Socket device . If the named socket is a listening socket, it checks for an incoming connection request and if one is available, it accepts the request and creates a new connected socket in which case $KEY provides information on the new socket Specifying a socket handle not contained in the Socket device generates an error.
+Makes the socket specified by the handle named in expr the current socket for the Socket device . If the named socket is a listening socket, it checks for an incoming connection request and if one is available, it accepts the request and creates a new connected socket in which case $KEY provides information on the new socket. Specifying a socket handle not contained in the Socket device generates an error.
 
 .. note::
    SOCKET is compatible with DELIMITER only.
 
-For a usage example, refer to the socketexamplemulti2.m in the Section : “Socket Device Examples”. 
+For a usage example, refer to the socketexamplemulti2.m in the Section : `“Socket Device Examples” <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#socket-device-examples>`_. 
 
 **TERMINATOR**
 

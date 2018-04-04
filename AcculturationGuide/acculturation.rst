@@ -180,7 +180,7 @@ Run YottaDB/GT.M
 YottaDB/GT.M needs several environment variables to be set up. YottaDB/GT.M provides a script that sets up reasonable defaults and allows you to start using YottaDB/GT.M immediately. When you set up environments in YottaDB/GT.M, you should set up your own scripting, but the default is a good place to start. You can source the ydb_env_set file in the directory in which you have installed YottaDB/GT.M (e.g, /usr/local/lib/yottadb/r110/ydb_env_set or /usr/lib/fis gtm/V6.2 000_x86_64/ydb_env_set) to set up reasonable defaults or simply execute the script gtm to execute YottaDB/GT.M. A default environment is created only if it does not exist already.
 
 .. parsed-literal::
-   yottadbuser@yottadbworkshop:~$ source /usr/local/lib/yottadb/r110/ydb_env_set
+   yottadbuser@yottadbworkshop:~$ source /usr/local/lib/yottadb/r120/ydb_env_set
    %GDE-I-GDUSEDEFS, Using defaults for Global Directory 
            /home/yottadbuser/fis-gtm/V6.2-000_x86_64/g/gtm.gld
 
@@ -199,7 +199,7 @@ YottaDB/GT.M needs several environment variables to be set up. YottaDB/GT.M prov
 Also define ydb as an alias to the script that runs YottaDB/GT.M.
 
 .. parsed-literal::
-   yottadbuser@yottadbworkshop:~$ alias ydb='/usr/local/lib/yottadb/r110/gtm'
+   yottadbuser@yottadbworkshop:~$ alias ydb='/usr/local/lib/yottadb/r120/ydb'
    yottadbuser@yottadbworkshop:~$ ydb
    YDB>
 

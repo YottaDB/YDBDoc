@@ -27,13 +27,17 @@ Journal Files
 
 YottaDB journaling uses journal files to record information pertaining to database updates. A journal file has a default extension of mjl. If the new journal filename (the one specified in the FILENAME option or the default) already exists, YottaDB renames the existing journal file by appending a string that denotes the time of creation of the journal file in the form of "_YYYYJJJHHMMSS" where: 
 
-YYYY           4-digit-year                                    such as 2018 
-JJJ            3-digit-Julian-day (between 1 and 366)          such as 199 
-HH             2-digit-hour in 24 hr format                    such as 14 
-MM             2-digit minute                                  such as 40 
-SS             2-digit seconds                                 such as 30
+YYYY     -      4-digit-year                   -                 such as 2018 
 
-The following animation describes how YottaDB uses journal files to record information pertaining to database updates on gtm.dat (the default database file created by ydbprofile).
+JJJ      -      3-digit-Julian-day (between 1 and 366)    -      such as 199 
+
+HH       -      2-digit-hour in 24 hr format          -          such as 14 
+
+MM       -      2-digit minute                  -                such as 40 
+
+SS       -      2-digit seconds                 -                such as 30
+
+The following animation describes how YottaDB uses journal files to record information pertaining to database updates on gtm.dat (the default database file created by ydb_env_set).
 
 .. image:: dbupdate.gif
 
@@ -520,7 +524,7 @@ YottaDB treats the filename as having two components - basename and extension. T
 
 The convention of the default value for the FILENAME is as follows:
 
-* YottaDB takes the basename of the database filename as the basename for the journal file with an extension of mjl if the database has a dat extension. For example, database name mumps.dat results in a default name mumps.mjl. If the database filename does not have a dat extension, YottaDB replaces all occurrences of periods (.) with underscores (_) with an extension of mjl and takes the full database filename. For example, database name mumps.acn results in a default name mumps_acn.mjl. Therefore, by default, a journal file has an extension of mjl unless you explicitly specify a different extension with the FILENAME journal option. If the new journal filename (the one specified in the FILENAME option or the default) already exists, YottaDB renames the existing file with the string "_YYYYJJJHHMMSS" appended to the existing file extension where the string denotes the time of creation of the existing journal file in the following format:
+* YottaDB takes the basename of the database filename as the basename for the journal file with an extension of mjl if the database has a dat extension. For example, database name gtm.dat results in a default name mumps.mjl. If the database filename does not have a dat extension, YottaDB replaces all occurrences of periods (.) with underscores (_) with an extension of mjl and takes the full database filename. For example, database name mumps.acn results in a default name mumps_acn.mjl. Therefore, by default, a journal file has an extension of mjl unless you explicitly specify a different extension with the FILENAME journal option. If the new journal filename (the one specified in the FILENAME option or the default) already exists, YottaDB renames the existing file with the string "_YYYYJJJHHMMSS" appended to the existing file extension where the string denotes the time of creation of the existing journal file in the following format:
 
  .. parsed-literal::
     YYYY      4-digit-year                              such as 2011 
@@ -600,9 +604,9 @@ Examples for MUPIP SET
 ++++++++++++++++++++++++++++++++++++
 
 .. parsed-literal::
-   $ mupip set -journal="enable,nobefore" -file mumps.dat
+   $ mupip set -journal="enable,nobefore" -file ydb.dat
 
-This example enables NOBEFORE_IMAGE journaling on mumps.dat. If journaling is already enabled, this command switches the current journal file.
+This example enables NOBEFORE_IMAGE journaling on ydb.dat. If journaling is already enabled, this command switches the current journal file.
 
 Example:
 
@@ -631,9 +635,9 @@ Example:
 This example declares journaling active with BEFORE_IMAGES for the regions areg and breg of the current Global Directory.
 
 .. parsed-literal::
-   $ mupip set -file -nojournal mumps.dat
+   $ mupip set -file -nojournal ydb.dat
 
-This example disables journaling on the database file mumps.dat.
+This example disables journaling on the database file ydb.dat.
 
 Example:
 
@@ -653,7 +657,7 @@ This example sets MM (Memory Mapped) as the access method or the YottaDB bufferi
 Example:
 
 .. parsed-literal::
-   $ mupip set -journal=before,noprevjnlfile,file=newmumps.mjl -file mumps.dat
+   $ mupip set -journal=before,noprevjnlfile,file=newmumps.mjl -file ydb.dat
 
 The above command cuts the back link of the newly created journal file newmumps.mjl.
 

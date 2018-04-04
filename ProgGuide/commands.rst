@@ -584,11 +584,11 @@ By default, JOB constructs the error file from the routinename using a file exte
 
 **GBL[DIR]=strlit**
 
-The string literal specifies a value for the environment variable gtmgbldir.
+The string literal specifies a value for the environment variable ydb_gbldir.
 
 The maximum string length is 255 characters.
 
-By default, the job uses the same specification for gtmgbldir as that defined in $ZGBLDIR for the process using the JOB command.
+By default, the job uses the same specification for ydb_gbldir as that defined in $ZGBLDIR for the process using the JOB command.
 
 **IN[PUT]=strlit**
 
@@ -639,9 +639,9 @@ The processparameters are summarized in the following table.
 +---------------------------+--------------------------+---------------------------------+------------------------------------+
 | ERR[OR]=strlit            | ./routinename.mje        | none                            | 255 characters                     |
 +---------------------------+--------------------------+---------------------------------+------------------------------------+
-| GBL[DIR]                  | Same as gtmgbldir for the| none                            | 255 characters                     |
-|                           | process issuing the JOB  |                                 |                                    |
-|                           | command                  |                                 |                                    |
+| GBL[DIR]                  | Same as ydb_gbldir for   | none                            | 255 characters                     |
+|                           | the process issuing the  |                                 |                                    |
+|                           | JOB command              |                                 |                                    |
 +---------------------------+--------------------------+---------------------------------+------------------------------------+
 | IN[PUT]=strlit            | Null device              | none                            | 255 characters                     |
 +---------------------------+--------------------------+---------------------------------+------------------------------------+
@@ -2934,7 +2934,7 @@ Auto ZLINK Setup
 This section describes the procedure to setup the auto-relink functionality. YottaDB loads an object file linked from an object directory (in $ZROUTINES) with a \*-suffix (i.e. auto-relink-enabled) into a shared memory segment (referred to henceforth as a Rtnobj shared memory segment). At the invocation of DO, GOTO, or ZGOTO, extrinsic functions, ZBREAK, ZPRINT or $TEXT() that specify an entryref which includes a routine name (in contrast to a label without a routine name), YottaDB processes (and MUPIP processes executing trigger logic) automatically relink ("auto-relink") and execute published new versions of routines.
 
 .. note::
-   Label references (that is, without a routine name), whether direct or through indirection, always refer to the current routine, and do not invoke auto-relink logic. Use shell quoting rules when appending asterisks to directory names in the gtmroutines environment variable - asterisks must be passed in to YottaDB, and not expanded by the shell. YottaDB accepts but ignores asterisk suffixes to directory names on 32-bit Linux on x86 platforms, where it does not provide auto-relinking.
+   Label references (that is, without a routine name), whether direct or through indirection, always refer to the current routine, and do not invoke auto-relink logic. Use shell quoting rules when appending asterisks to directory names in the ydb_routines environment variable - asterisks must be passed in to YottaDB, and not expanded by the shell. YottaDB accepts but ignores asterisk suffixes to directory names on 32-bit Linux on x86 platforms, where it does not provide auto-relinking.
 
 The ZRUPDATE command publishes of new versions of routines to subscribers. To remove routines, delete the object files and publish the names of the deleted object files. Removal requires file names to be explicitly specified, because patterns with wildcards cannot match deleted files.
 

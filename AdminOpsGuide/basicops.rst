@@ -17,7 +17,7 @@ Several environment variables control the operation of YottaDB. Some of them mus
 Your YottaDB distribution comes with many scripts that set up a default YottaDB environment for the shell of your choice. These scripts are as follows: 
 
 
-**ydb_env_set** (gtmprofile): uses reasonable defaults to set up a system and YottaDB application development environment for POSIX shells. The ydb_env_set script sets default values for environment variables ydb_dist, ydb_gbldir, gtm_icu_version, ydb_log, ydb_principal_editing, gtm_prompt, gtm_retention, ydb_routines, ydb_tmp, and gtmver. When you source the ydb_env_set script, it creates a default execution environment (global directory and a default database file with BEFORE_IMAGE journaling) if none exists.
+**ydb_env_set** (gtmprofile): uses reasonable defaults to set up a system and YottaDB application development environment for POSIX shells. The ydb_env_set script sets default values for environment variables ydb_dist, ydb_gbldir, ydb_icu_version, ydb_log, ydb_principal_editing, gtm_prompt, gtm_retention, ydb_routines, ydb_tmp, and gtmver. When you source the ydb_env_set script, it creates a default execution environment (global directory and a default database file with BEFORE_IMAGE journaling) if none exists.
 
 * **gtmcshrc**: sets up a default YottaDB environment for C-shell compatible shells. It sets up default values for ydb_dist, ydb_gbldir, ydb_chset and ydb_routines. It also creates aliases so you can execute YottaDB and its utilities without typing the full path.
 
@@ -39,12 +39,12 @@ On POSIX shells, ydb_env_set helps you set an environment for single-user, non-r
 ydb_env_set sets reasonable defaults for the following environment variables for normal YottaDB operation:
 
 .. parsed-literal::
-   ydb_dir, ydb_dist, gtm_etrap, ydb_gbldir, gtm_icu_version, ydb_log, ydb_principal_editing, gtm_prompt, gtm_repl_instance, gtm_retention, ydb_routines, ydb_tmp, gtmver 
+   ydb_dir, ydb_dist, gtm_etrap, ydb_gbldir, ydb_icu_version, ydb_log, ydb_principal_editing, gtm_prompt, gtm_repl_instance, gtm_retention, ydb_routines, ydb_tmp, gtmver 
 
 You can set the following environment variables before sourcing ydb_env_set or running the ydb script;
 
 
-* **ydb_chset** (gtm_chset) - set this to "UTF-8" to run YottaDB in UTF-8 mode; it defaults to M mode. As UTF-8 mode requires a UTF-8 locale to be set in LC_CTYPE or LC_ALL, if a locale is not specified, ydb_env_set also attempts to set a UTF-8 locale. Since YottaDB in UTF-8 mode often requires gtm_icu_version to be set, if it is not set, ydb_env_set attempts to determine the ICU version on the system and set it. This requires the icu-config program to be installed and executable by ydb_env_set.
+* **ydb_chset** (gtm_chset) - set this to "UTF-8" to run YottaDB in UTF-8 mode; it defaults to M mode. As UTF-8 mode requires a UTF-8 locale to be set in LC_CTYPE or LC_ALL, if a locale is not specified, ydb_env_set also attempts to set a UTF-8 locale. Since YottaDB in UTF-8 mode often requires ydb_icu_version to be set, if it is not set, ydb_env_set attempts to determine the ICU version on the system and set it. This requires the icu-config program to be installed and executable by ydb_env_set.
 
 * **ydb_dir** (gtmdir) - set this to define a directory for the environment set by ydb_env_set.
 
@@ -60,7 +60,7 @@ The $ydb_routines value set by the ydb_env_set script enables auto-relink by def
 
 Refer to your OS documentation to configure shared memory limits (for example, on common Linux systems, the kernel.shmmax parameter in /etc/sysctl.conf).
 
-The ydb_env_set (and gtm) scripts, by design, are idempotent so that calling them repeatedly is safe. The YottaDB installation process ensures that ydb_env_set always sets ydb_dist correctly. Idempotency is implemented by checking the value of $ydb_dist and skipping all changes to environment variables if ydb_dist is already defined.
+The ydb_env_set (and ydb) scripts, by design, are idempotent so that calling them repeatedly is safe. The YottaDB installation process ensures that ydb_env_set always sets ydb_dist correctly. Idempotency is implemented by checking the value of $ydb_dist and skipping all changes to environment variables if ydb_dist is already defined.
 
 When gtm sources ydb_env_set, it provides a default execution environment (global directory and a default database (with BEFORE_IMAGE journaling) if none exists. By default, it creates the database in $HOME/.fis-gtm with a structure like the following; note that this directory structure has different locations for YottaDB routines (r), object files (o), and database-related files (g):
 
@@ -143,7 +143,7 @@ gtmcshrc also creates the following aliases.
    alias gde '$ydb_dist/mumps -r ^GDE'
    alias dse '$ydb_dist/dse'
 
-Now you run can YottaDB and its utilities without specifying a full path to the directory in which YottaDB was installed.
+Now you can run YottaDB and its utilities without specifying a full path to the directory in which YottaDB was installed.
 
 ++++++++++++++++
  gtmbase 
@@ -334,7 +334,7 @@ gtm_obfuscation_key can be used as a mechanism to pass an obfuscated password be
 
 **gtm_patnumeric** specifies the value of the read-only ISV $ZPATNUMERIC that determines how YottaDB interprets the patcode "N" used in the pattern match operator. The SET command can alter the value of $ZPATNUMERIC in an active process.
 
-**gtm_pattern_file** and **gtm_pattern_table** specify alternative patterns for the pattern (?) syntax. Refer to the Internationalization chapter in the Programmer's Guide for additional information.
+**gtm_pattern_file** and **gtm_pattern_table** specify alternative patterns for the pattern (?) syntax. Refer to the `Internationalization chapter in the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/internatn.html>`_ for additional information.
 
 **gtm_poollimit** restricts the number of global buffers a process uses in order to limit the potential impact on other processes. It is intended for use by a relatively small subset of processes when those processes have the potential to "churn" global buffers; the value is of the form n[%] when it ends with a per-cent sign (%), the number is taken as an as a percentage of the configured global buffers and otherwise as an ordinal number of preferred buffers; standard M parsing and integer conversions apply. Note that this environment variable applies to all regions accessed by a process; the VIEW command for this feature allows finer grained control. MUPIP REORG uses this facility to limit its buffers with a default of 64 if gtm_poollimit is not specified. Note that this may slightly slow a standalone REORG but can be overridden by defining gtm_poollimit as 0 or "100%".
 
@@ -409,7 +409,7 @@ Each invocation generates an operator log message and if the invocation fails, a
 
 **gtm_zstep** specifies the initial value of $ZSTEP, which defines the ZSTEP action; if gtm_zstep is not defined, $ZSTEP defaults to "B".
 
-**gtm_ztrap_form** and **gtm_zyerror** specify the behavior of error handling specified by $ZTRAP as described in the Error Processing chapter of the Programmer's Guide.
+**gtm_ztrap_form** and **gtm_zyerror** specify the behavior of error handling specified by $ZTRAP as described in the `Error Processing chapter of the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/errproc.html>`_.
 
 **gtm_ztrap_new** specifies whether a SET $ZTRAP also implicitly performs a NEW $ZTRAP before the SET.
 
@@ -523,7 +523,7 @@ The ydb_env_set and gtmschrc scripts sets the following environment variables. Y
 +------------------------------------------------+--------------------------------------------------------+
 | ydb_dist*                                      | ydb_env_set, gtmschrc                                  |
 +------------------------------------------------+--------------------------------------------------------+
-| gtm_icu_version                                | ydb_env_set                                            |
+| ydb_icu_version                                | ydb_env_set                                            |
 +------------------------------------------------+--------------------------------------------------------+
 | ydb_log*                                       | ydb_env_set                                            |
 +------------------------------------------------+--------------------------------------------------------+
@@ -807,7 +807,7 @@ To use huge pages for shared memory (journal buffers, replication journal pool a
 
 * Set the environment variable HUGETLB_SHM for each process to "yes". 
 
-**Using huge pages for YottaDB process private memory**
+**Using huge pages for YottaDB process working space**
 
 To use huge pages for process working space and dynamically linked code:
 

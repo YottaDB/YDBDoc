@@ -3364,7 +3364,7 @@ Returns the numbers of columns required to display a given string on the screen 
 
 * The expression is the string which $ZWIDTH() evaluates for display length. If the expression contains a code-point value that is not a valid character in Unicode, $ZWIDTH() generates a run-time error.
 * If the expression contains any non-graphic characters, the $ZWIDTH() function does count not those characters.
-* If the string contains any escape sequences containing graphical characters (which they typically do), $ZWIDTH() includes those characters in calculating its result, as it does not do escape processing. In such a case, the result many be larger than the actual display width
+* If the string contains any escape sequences containing graphical characters (which they typically do), $ZWIDTH() includes those characters in calculating its result, as it does not do escape processing. In such a case, the result many be larger than the actual display width.
 
 .. note::
    When in "NOBADCHAR" mode, $ZWIDTH() returns give any bad characters a length of zero (0), which may or may not match the behavior of any device used to display the string.

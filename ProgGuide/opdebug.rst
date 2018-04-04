@@ -594,7 +594,7 @@ This example uses the asterisk (*) argument to show all information that ZSHOW o
 
 Context information that does not exist in this example includes M LOCKs of this process (ZSHOW "L").
 
-In addition to directing its output to the current device, ZSHOW can place its output in a local or global variable array. For more information, see the command description “ZSHow”.
+In addition to directing its output to the current device, ZSHOW can place its output in a local or global variable array. For more information, see the command description `“ZSHow” <https://docs.yottadb.com/ProgrammersGuide/commands.html#zshow>`_.
 
 .. note::
    ZSHOW "V" produces the same output as ZWRITE with no arguments, but ZSHOW "V" can be directed to a variable as well as a device.
@@ -641,7 +641,7 @@ Example:
    YDB>ZEDIT "dmex"
    dmex;dmex - Direct Mode example
    ;
-   begfor read !,"Name: ",name do name q:name="Q"
+   beg for read !,"Name: ",name do name q:name="Q"
    quit
    nameset ln=$l(name)
    if ln,$e("QUIT",1,ln)=$tr(name,"quit","QUIT") d q
@@ -672,7 +672,7 @@ Example:
 
 .. parsed-literal::
    YDB>ZLINK
-    Cannot ZLINK an active routine
+   Cannot ZLINK an active routine
 
 This illustrates a YottaDB error report caused by an attempt to ZLINK a routine that is part of the current invocation stack.
 
