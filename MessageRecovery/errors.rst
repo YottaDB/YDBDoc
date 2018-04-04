@@ -2890,7 +2890,7 @@ DBNOREGION, None of the database regions accessible
 
 DSE/MUPIP Error: MUPIP INTEG or DSE can report this error. This indicates that none of the database files specified in the Global Directory could be opened (or they do not exist).
 
-Action: Ensure the proper assignment for the environment variable, gtmglbdir/logical name GTM$GBLDIR. Verify that the database files specified in the Global Directory exist and that their protection allows access. Also, refer to the 'MUPIP INTEG Error Messages' table in the `Chapter 11 - Maintaining Database Integrity of the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/integrity.html>`_.
+Action: Ensure the proper assignment for the environment variable, ydb_gbldir/logical name GTM$GBLDIR. Verify that the database files specified in the Global Directory exist and that their protection allows access. Also, refer to the 'MUPIP INTEG Error Messages' table in the `Chapter 11 - Maintaining Database Integrity of the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/integrity.html>`_.
 
 -------------------
 DBNOTDB
@@ -7994,11 +7994,11 @@ Action: -
 LOADINVCHSET 
 ---------------------
 
-LOADINVCHSET, Extract file CHSET xxx is incompatible with gtm_chset.
+LOADINVCHSET, Extract file CHSET xxx is incompatible with ydb_chset.
 
-MUPIP Information: This indicates that a MUPIP LOAD operation did not take place because the value of the environment variable gtm_chset at the time of creating the extract file was not the same as the current value of gtm_chset.
+MUPIP Information: This indicates that a MUPIP LOAD operation did not take place because the value of the environment variable ydb_chset at the time of creating the extract file was not the same as the current value of ydb_chset.
 
-Action: Determine whether to change the current character set or retry the EXTRACT with a different character set. Alternatively, you can edit the extract file so the EXTRACT file header matches the gtm_chset environment variable. This enables an M mode MUPIP LOAD to treat the input as a byte stream or a UTF-8 mode MUPIP LOAD, which either detects BADCHAR errors or not, depending on the setting of the gtm_badchar environment variable..
+Action: Determine whether to change the current character set or retry the EXTRACT with a different character set. Alternatively, you can edit the extract file so the EXTRACT file header matches the ydb_chset environment variable. This enables an M mode MUPIP LOAD to treat the input as a byte stream or a UTF-8 mode MUPIP LOAD, which either detects BADCHAR errors or not, depending on the setting of the gtm_badchar environment variable..
 
 -------------------
 LOADRUNNING
@@ -10112,7 +10112,7 @@ NONUTF8LOCALE
 
 NONUTF8LOCALE, Locale has character encoding (cccc) which is not compatible with UTF-8 character set
 
-Run Time Error: This error is reported by YottaDB when it recognizes that the LC_CTYPE locale category cccc (as shown by the UNIX locale command) does not use UTF-8 character encoding when gtm_chset is "UTF-8".
+Run Time Error: This error is reported by YottaDB when it recognizes that the LC_CTYPE locale category cccc (as shown by the UNIX locale command) does not use UTF-8 character encoding when ydb_chset is "UTF-8".
 
 Action: Set the environment variable LC_CTYPE to a Unicode locale name with UTF-8 character encoding. Note that LC_ALL, if defined, overrides LC_CTYPE. The name of the locale varies between different UNIX platforms, but mostly in the form of <lang>_<country>.<charset>, where each element (without the angular brackets) has the form shown below:
 

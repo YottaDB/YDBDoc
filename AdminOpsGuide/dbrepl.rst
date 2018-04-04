@@ -2681,7 +2681,7 @@ Displays or changes the attributes of the specified instance-file. Use -editinst
 
 Displays or changes the attributes of Journal Pool. Always specify -source with -jnlpool. Use -jnlpool in combination with SHOW or CHANGE qualifiers.
 
- *-change*
+*-change*
 
 The CHANGE qualifier is intended only for use under the guidance of YottaDB and serves two purposes. When used with -editinstance -offset -size, it changes the contents of the replication instance file. When used with -jnlpool, it changes the contents of journal pool header. Although MUPIP does not enforce standalone access when using this feature on the instance file or the journal pool, doing so when replication is actively occurring can lead to catastrophic failures.
 

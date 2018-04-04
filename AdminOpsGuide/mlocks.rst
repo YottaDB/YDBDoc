@@ -46,7 +46,8 @@ LKE requires that the environment variable ydb_gbldir be defined.
 Invoke LKE using the following command at the shell prompt. If this does not work, consult your system manager to investigate setup and file access issues.
 
 .. parsed-literal::
-   $ydb_dist/lke LKE>
+   $ydb_dist/lke
+   LKE>
 
 .. note::
    Always run LKE on the node where the lock is held.
@@ -226,8 +227,8 @@ This command presents all LOCKs held by the process with PID equal to 2325. You 
 This command produces an output like the following:
 
 .. parsed-literal::
-   AREG ^a Owned by PID= 2083 which is an existing
-   process Clear lock ?
+   AREG ^a Owned by PID= 2083 which is an existing process
+   Clear lock ?
 
 Type Yes or Y in response to the prompt.
 

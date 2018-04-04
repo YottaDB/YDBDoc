@@ -391,7 +391,7 @@ Pass By Reference
 YottaDB's underlying implementation of pass-by-reference and alias variables is the same. As illustrated by the program "killalias" above, ZWRITE displays variables joined though pass-by-reference using alias conventions. Pass-by-reference is distinguished from alias variables by its implicit creation and elimination. Note the interaction between pass by reference and alias variables when the association of a formallist parameter in a subprogram is changed:
 
 .. parsed-literal::
-   $ /usr/lib/fis-gtm/V5.4-002B/gtm -run ^switchalias
+   $ /usr/local/lib/yottadb/r120/ydb -run ^switchalias
    switchalias ; Demonstrate Set * on formalist parameter
      zprint ; Print this program
      set A=1,B=2
@@ -510,7 +510,7 @@ KILL on the other hand, removes data in the array (and possibly the array itself
 Example:
 
 .. parsed-literal::
-   $ /usr/lib/fis-gtm/V5.4-002B_x86/gtm -run ^killalias
+   $ /usr/local/lib/yottadb/r120/ydb -run ^killalias
    killalias ; Demonstrate Kill * of pass-by-reference
           ZPrint ; Print this program
           Set A=1,C=3
@@ -573,7 +573,7 @@ Annotated Alias Examples
 Example:
 
 .. parsed-literal::
-   $ /usr/lib/fis-gtm/V5.4-002B/gtm -run ^tprestart
+   $ /usr/local/lib/yottadb/r120/ydb -run ^tprestart
    tprestart ; Transaction restart variable association also restored on restart
      zprint ; Print this program
      set A="Malvern",C="Pennsylvania",E="USA"
@@ -629,7 +629,7 @@ Example:
 Note that TROLLBACK does not restore alias variables:
 
 .. parsed-literal::
-   /usr/lib/fis-gtm/V5.4-002B_x86/gtm -run ^tprollback
+   /usr/local/lib/yottadb/r120/ydb -run ^tprollback
    tprollback ;
      zprint ; Print this program
      set A(1)=1,A(2)=2,A(3)=3
@@ -692,7 +692,7 @@ Note that TROLLBACK does not restore alias variables:
 Example:
 
 .. parsed-literal::
-   $ /usr/lib/fis-gtm/V5.4-002B_x86/gtm -run ^aliasexample; Extended annotated alias example
+   $ /usr/local/lib/yottadb/r120/ydb -run ^aliasexample; Extended annotated alias example
        zprint
        write "------------",!
        set x="name level",x(1)=1,x(1,2)="1,2",x("foo")="bar"

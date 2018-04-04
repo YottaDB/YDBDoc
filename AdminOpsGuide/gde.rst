@@ -15,19 +15,19 @@ Global Directory
 
 A global directory is analogous to a telephone directory. Just as a telephone directory helps you find the phone number (and the address) given a person's name, a global directory helps YottaDB processes find the database file of an M global variable node. But because its life is independent of the databases it maps, a global directory has a second purpose in addition to holding key mappings, which is to hold database characteristics for MUPIP CREATE. While changes to the mappings take effect as soon as a process loads a new global directory, MUPIP CREATE transfers the other characteristics to the database file. Other YottaDB processes never use the global directory defined characteristics, so they always use those in the database file.
 
-YottaDB manages routines in files and libraries separately from globals. For more information on routine management, refer to the Development Cycle chapter in the Programmer's Guide.
+YottaDB manages routines in files and libraries separately from globals. For more information on routine management, refer to the `Development Cycle chapter in the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/devcycle.html>`_.
 
 A set of M global variables (Names or Name spaces) and / or their subscripts map to Regions that define common sets of properties such as the maximum record length and whether null subscripts collate in conformance to the M standard. Each Region maps to a Segment that defines the properties relating to the file system such as the file name, the initial allocation, and number of global buffers. These properties and mapping rules are stored in a binary file called global directory. By default, a global directory file has an extension of .gld. You can specify any filename and extension of your choice for a global directory as long as it is valid on your operating system; the documentation always uses the default extension.
 
 The location of the global directory is pointed to by the Intrinsic Special Variable $ZGBLDIR. YottaDB processes initialize $ZBGLDIR at process startup from the environment variable ydb_gbldir and can modify it during execution. For example, with a simple SET $ZGBLDIR command, a process can switch back and forth between development and testing databases.
 
-Consider a global variable ^TMP that holds only temporary data that is no longer meaningful when a system is rebooted. A global directory can map ^TMP to region TEMP that maps to a database file called scratch.dat, with all other globals mapped to gtm.dat. A global directory allows the separation of persistent data (gtm.dat) from non-persistent data(scratch.dat), so that each database file may get appropriately configured for operations — for example, the database administrator may choose to exclude scratch.dat from backup/archival procedures or periodically delete and recreate scratch.dat using MUPIP CREATE.
+Consider a global variable ^TMP that holds only temporary data that is no longer meaningful when a system is rebooted. A global directory can map ^TMP to region TEMP that maps to a database file called scratch.dat, with all other globals mapped to mumps.dat. A global directory allows the separation of persistent data (mumps.dat) from non-persistent data(scratch.dat), so that each database file may get appropriately configured for operations — for example, the database administrator may choose to exclude scratch.dat from backup/archival procedures or periodically delete and recreate scratch.dat using MUPIP CREATE.
 
 Consider the following illustration: 
 
 .. image:: globaldir.png
 
-There are four M global variables--^Horse, ^Crab, ^Platypus, and ^Lobster. ^Horse and ^Platypus map to region MAMMALS that maps to database file linnaeus.dat and ^Crab and ^Lobster map to region CRUSTACEANS that maps to database file brunnich.dat. The default namespace * maps to a region called DEFAULT that maps to database file gtm.dat. * denotes all globals other than the explicitly named ^Horse, ^Platypus, ^Crab, and ^Lobster. All globals store data in their respective database files. Each database file has a single active journal file. To enforce access restrictions on globals so that only mammalogists have access to ^Horse and ^Platypus and only carcinologists have access to ^Crab and ^Lobster, one just needs to assign appropriate read / write permissions to linnaeus.dat and brunnich.dat.
+There are four M global variables--^Horse, ^Crab, ^Platypus, and ^Lobster. ^Horse and ^Platypus map to region MAMMALS that maps to database file linnaeus.dat and ^Crab and ^Lobster map to region CRUSTACEANS that maps to database file brunnich.dat. The default namespace * maps to a region called DEFAULT that maps to database file mumps.dat. * denotes all globals other than the explicitly named ^Horse, ^Platypus, ^Crab, and ^Lobster. All globals store data in their respective database files. Each database file has a single active journal file. To enforce access restrictions on globals so that only mammalogists have access to ^Horse and ^Platypus and only carcinologists have access to ^Crab and ^Lobster, one just needs to assign appropriate read / write permissions to linnaeus.dat and brunnich.dat.
 
 .. note::
    Each database file can have a single active journal file. A journal can be linked to its predecessor journal file to form a chain of journal files. 
@@ -241,7 +241,7 @@ This section of the Global Directory lists the current mapping of names to regio
 Global Directory Abbreviations
 +++++++++++++++++++++++++++++++
 
-GDE uses the following abbreviations to display the output of a global directory. The following list show global directory abbreviations with the associated qualifiers. For a description of the function of individual qualifiers, see "GDE Command Summary". 
+GDE uses the following abbreviations to display the output of a global directory. The following list show global directory abbreviations with the associated qualifiers. For a description of the function of individual qualifiers, see `"GDE Command Summary" <https://docs.yottadb.com/AdminOpsGuide/gde.html#gde-command-summary>`_. 
 
 +-----------------------------------------+----------------------------------------+
 | Abbreviation                            | Full Form                              |
@@ -319,7 +319,7 @@ If you select the -JOURNAL option when you ADD or CHANGE a region in a Global Di
    --------------------------------------------------------------------------------------------------------
    DEFAULT                $ydb_dir/$gtmver/g/gtm.mjl          Y         2308    2048     2048    8386560
 
-For more information about journaling, see the section on the JOURNAL qualifier in this chapter and Chapter 6: “YottaDB Journaling”.
+For more information about journaling, see the section on the JOURNAL qualifier in this chapter and `Chapter 6: “YottaDB Journaling” <https://docs.yottadb.com/AdminOpsGuide/ydbjournal.html>`_.
 
 -----------------------
 Using GDE
@@ -999,7 +999,7 @@ This displays only the TEMPLATES section of the Global Directory.
    ADD -REGION USSMZREG -DYNAMIC_SEGMENT=USSMZSEG
    !
    ADD -SEGMENT AUSSEG -FILE_NAME="AUS.dat"
-   ADD -SEGMENT DEFAULT -FILE_NAME="gtm.dat"
+   ADD -SEGMENT DEFAULT -FILE_NAME="mumps.dat"
    ADD -SEGMENT FRSEG -FILE_NAME="France.dat"
    ADD -SEGMENT POSEG -FILE_NAME="Poland.dat"
    ADD -SEGMENT UKSEG -FILE_NAME="UK.dat"
