@@ -177,10 +177,10 @@ Run YottaDB/GT.M
 
 **Default Environment**
 
-YottaDB/GT.M needs several environment variables to be set up. YottaDB/GT.M provides a script that sets up reasonable defaults and allows you to start using YottaDB/GT.M immediately. When you set up environments in YottaDB/GT.M, you should set up your own scripting, but the default is a good place to start. You can source the gtmprofile file in the directory in which you have installed YottaDB/GT.M (e.g, /usr/local/lib/yottadb/r110/gtmprofile or /usr/lib/fis gtm/V6.2 000_x86_64/gtmprofile) to set up reasonable defaults or simply execute the script gtm to execute YottaDB/GT.M. A default environment is created only if it does not exist already.
+YottaDB/GT.M needs several environment variables to be set up. YottaDB/GT.M provides a script that sets up reasonable defaults and allows you to start using YottaDB/GT.M immediately. When you set up environments in YottaDB/GT.M, you should set up your own scripting, but the default is a good place to start. You can source the ydb_env_set file in the directory in which you have installed YottaDB/GT.M (e.g, /usr/local/lib/yottadb/r110/ydb_env_set or /usr/lib/fis gtm/V6.2 000_x86_64/ydb_env_set) to set up reasonable defaults or simply execute the script gtm to execute YottaDB/GT.M. A default environment is created only if it does not exist already.
 
 .. parsed-literal::
-   yottadbuser@yottadbworkshop:~$ source /usr/local/lib/yottadb/r110/gtmprofile
+   yottadbuser@yottadbworkshop:~$ source /usr/local/lib/yottadb/r110/ydb_env_set
    %GDE-I-GDUSEDEFS, Using defaults for Global Directory 
            /home/yottadbuser/fis-gtm/V6.2-000_x86_64/g/gtm.gld
 
@@ -222,7 +222,7 @@ The commands perform database updates, which are shared between processes. You c
    YDB>halt
    yottadbuser@yottadbworkshop:~$
 
-The operation of YottaDB/GT.M is controlled by a number of environment variables. In our exercise, the gtmprofile script automatically sets a number of environment variables:
+The operation of YottaDB/GT.M is controlled by a number of environment variables. In our exercise, the ydb_env_set script automatically sets a number of environment variables:
 
 .. parsed-literal::
    yottadbuser@yottadbworkshop:~$ env | grep ^gtm
@@ -272,7 +272,7 @@ With YottaDB/GT.M, you can write applications that implement international chara
 
 .. parsed-literal::
    yottadbuser@yottadbworkshop:~$ export gtm_chset=UTF-8 LC_CTYPE=en_US.utf8
-   yottadbuser@yottadbworkshop:~$ source /usr/lib/fis-gtm/V6.2-000_x86_64/gtmprofile
+   yottadbuser@yottadbworkshop:~$ source /usr/lib/fis-gtm/V6.2-000_x86_64/ydb_env_set
    yottadbuser@yottadbworkshop:~$ ydb
    YDB>write $zchset
    UTF-8
@@ -472,7 +472,7 @@ The ZEDIT command always puts new routines in the first source directory in the 
 
 YottaDB/GT.M also provides a mechanism for processes to indicate that instead of explicitly relinking newer versions of routines, they would like to “subscribe” to and automatically execute the latest updated (“published”) object code of routines. Processes indicate this interest by appending an asterisk (“*”) to each directory name from which they wish to execute the latest object code.
 
-Start a new session of YottaDB/GT.M (so that you don't have any routines linked the old way), and modify $zroutines to append an asterisk to the object directory from which your routines are executed. If you are using a version of GT.M newer than V6.2-000, or a YottaDB version, the gtmprofile script may already have appended the requisite asterisk. Then execute the “greeting” program to make the process link the object code:
+Start a new session of YottaDB/GT.M (so that you don't have any routines linked the old way), and modify $zroutines to append an asterisk to the object directory from which your routines are executed. If you are using a version of GT.M newer than V6.2-000, or a YottaDB version, the ydb_env_set script may already have appended the requisite asterisk. Then execute the “greeting” program to make the process link the object code:
 
 
 .. parsed-literal::
@@ -900,21 +900,21 @@ Upon bringing the system back up, if the system crashes, or is forcibly brought 
 Environment Variables
 --------------------------
 
-The operation of YottaDB/GT.M is controlled by a number of environment variables. The most important ones are gtm_dist, gtmroutines and gtmgbldir, which are discussed above. The file gtmprofile (for sh type shells) that is supplied with YottaDB/GT.M, and which must be sourced rather than executed, attempts to provide reasonable default values. By setting environment variables either before sourcing it or after (the former is preferred, because gtmprofile can attempt to deal with interactions), you can provide your own values instead of using the defaults.
+The operation of YottaDB/GT.M is controlled by a number of environment variables. The most important ones are gtm_dist, gtmroutines and gtmgbldir, which are discussed above. The file ydb_env_set (for sh type shells) that is supplied with YottaDB/GT.M, and which must be sourced rather than executed, attempts to provide reasonable default values. By setting environment variables either before sourcing it or after (the former is preferred, because ydb_env_set can attempt to deal with interactions), you can provide your own values instead of using the defaults.
 
-Review the file /usr/lib/fis-gtm/V6.2-000_x86_64/gtmprofile to see how the environment variables are set. Study the order in which they are set and see if you can understand why.
+Review the file /usr/lib/fis-gtm/V6.2-000_x86_64/ydb_env_set to see how the environment variables are set. Study the order in which they are set and see if you can understand why.
 
-The following environment variable is explicitly set by gtmprofile:
+The following environment variable is explicitly set by ydb_env_set:
 
 - **gtm_dist** - points to the directory where YottaDB/GT.M is installed.
 
-The following must be set before gtmprofile is sourced if you want to run YottaDB/GT.M in UTF-8 mode:
+The following must be set before ydb_env_set is sourced if you want to run YottaDB/GT.M in UTF-8 mode:
 
 - **gtm-chset** - when it has the value "UTF-8", YottaDB/GT.M  operates in UTF-8 mode,
 
-When possible, gtmprofile provides reasonable defaults for any of the following that are not set:
+When possible, ydb_env_set provides reasonable defaults for any of the following that are not set:
 
-- **gtmdir** (not used by YottaDB/GT.M directly) – part of a default YottaDB/GT.M environment set by gtmprofile. gtmprofile uses this to create a default directory structure underneath, and sets other environment variables relative to $gtmdir and assuming a default directory structure underneath.
+- **gtmdir** (not used by YottaDB/GT.M directly) – part of a default YottaDB/GT.M environment set by ydb_env_set. ydb_env_set uses this to create a default directory structure underneath, and sets other environment variables relative to $gtmdir and assuming a default directory structure underneath.
 
 - **gtmgbldir** - points to the global directory.
 
@@ -934,11 +934,11 @@ When possible, gtmprofile provides reasonable defaults for any of the following 
 
 - **gtm_tmp** - socket files used for communication between gtmsecshr and YottaDB/GT.M processes go here. All processes that use an installation of YottaDB/GT.M should have the same value of this environment variable. We suggest /tmp/fis-gtm/$gtmver or /var/tmp/fis-gtm/$gtmver depending on your operating system and your local standards.
 
-- **gtmver** (not used by YottaDB/GT.M directly) – part of a default YottaDB/GT.M environment set by gtmprofile.
+- **gtmver** (not used by YottaDB/GT.M directly) – part of a default YottaDB/GT.M environment set by ydb_env_set.
 
 - **LC_CTYPE** - a standard system environment variable used to specify a locale. When $gtm_chset has the value "UTF-8", $LC_CTYPE must specify a UTF-8 locale (e.g., "en_US.utf8").
 
-YottaDB/GT.M directly or indirectly uses a number of other environment variables that are not touched by gtmprofile (they can be set before or after gtmprofile is sourced). These are documented in the Administration and Operations Guide. Some worth noting are:
+YottaDB/GT.M directly or indirectly uses a number of other environment variables that are not touched by ydb_env_set (they can be set before or after ydb_env_set is sourced). These are documented in the Administration and Operations Guide. Some worth noting are:
 
 - **gtm_badchar** is used to initialize the setting of the VIEW command that determines whether YottaDB/GT.M should raise an error when it encounters an illegal UTF-8 character sequence.
 
@@ -956,11 +956,11 @@ YottaDB/GT.M directly or indirectly uses a number of other environment variables
 
 - **TZ** - a standard system environment variable that specifies the timezone to be used by YottaDB/GT.M processes, if they are not to use the default system timezone (YottaDB/GT.M assumes the system clock is set to UTC).
 
-Here are the environment variables set by the default gtmprofile file (which the gtm script sources).
+Here are the environment variables set by the default ydb_env_set file (which the gtm script sources).
 
 .. parsed-literal::
    yottadbuser@yottadbworkshop:~$ env | grep ^gtm # No gtm environment variables defined initially
-   yottadbuser@yottadbworkshop:~$ source /usr/lib/fis-gtm/V6.2-000_x86_64/gtmprofile
+   yottadbuser@yottadbworkshop:~$ source /usr/lib/fis-gtm/V6.2-000_x86_64/ydb_env_set
    yottadbuser@yottadbworkshop:~$ env | grep ^gtm
    gtm_repl_instance=/home/yottadbuser/.fis-gtm/V6.2-000_x86_64/g/gtm.repl
    gtm_log=/tmp/fis-gtm/V6.2-000_x86_64
@@ -977,7 +977,7 @@ Here are the environment variables set by the default gtmprofile file (which the
    gtm_dist=/usr/lib/fis-gtm/V6.2-000_x86_64/
    yottadbuser@yottadbworkshop:~$ 
 
-While gtmprofile and ydb are good resources when you initially start with YottaDB/GT.M, once you get to a certain level of expertise, you may prefer to create your own scripting.
+While ydb_env_set and ydb are good resources when you initially start with YottaDB/GT.M, once you get to a certain level of expertise, you may prefer to create your own scripting.
 
 --------
 Security
@@ -1090,7 +1090,7 @@ First, clean out old journal files. Verify that there are no shared memory segme
 Now kill the virtual machine by clicking on the “X” of the console window, or with a kill -9 of the virtual machine process, and then reboot it. Go back into YottaDB/GT.M and verify that the data is still there. Instead of running the ydb script (which performs an automatic recovery), run mumps and try to access the database. Note: you should not run the ydb script for this exercise, since it performs a recovery as part of its operation.
 
 .. parsed-literal::
-   yottadbuser@yottadbworkshop:~$ source /usr/lib/fis-gtm/V6.2-000_x86_64/gtmprofile
+   yottadbuser@yottadbworkshop:~$ source /usr/lib/fis-gtm/V6.2-000_x86_64/ydb_env_set
    yottadbuser@yottadbworkshop:~$ mumps -dir
 
    YDB>zwrite ^X
@@ -1166,9 +1166,9 @@ How did the recovery happen? The answer is in the gtm script.
    #                                                               #
    #################################################################
 
-   if [ ! -f "/usr/lib/fis-gtm/V6.2-000_x86_64"/gtmprofile ] ; then echo Cannot find file "/usr/lib/fis-gtm/V6.2-000_x86_64"/gtmprofile to source
+   if [ ! -f "/usr/lib/fis-gtm/V6.2-000_x86_64"/ydb_env_set ] ; then echo Cannot find file "/usr/lib/fis-gtm/V6.2-000_x86_64"/ydb_env_set to source
    else
-       . "/usr/lib/fis-gtm/V6.2-000_x86_64"/gtmprofile
+       . "/usr/lib/fis-gtm/V6.2-000_x86_64"/ydb_env_set
        timestamp=`date -u +%Y%m%d%H%M%S`"UTC"
        ( cd `dirname $gtmgbldir` ; \\
           $gtm_dist/mupip journal -recover -backward "*" 2>$gtm_tmp/"$USER"_$timestamp"_mupip_recover" && \\
@@ -1220,9 +1220,9 @@ Robust operation of YottaDB/GT.M recovery after a crash requires robust recovery
 
 Hints:
 
-- Start with an environment that does not have YottaDB/GT.M environment variables already defined, e.g., from sourcing the gtmprofile file. You can always logout and login to get a fresh session
+- Start with an environment that does not have YottaDB/GT.M environment variables already defined, e.g., from sourcing the ydb_env_set file. You can always logout and login to get a fresh session
 
-- Create an gtmenv file in the directory to set up the environment variables. You can then source it with a command such as source ./gtmenv to set up the environment. Set up the environment variables yourself and do not source /usr/lib/fis-gtm/V6.2-000_x86_64/gtmprofile because it will recover the database when you source it and you will miss the point of the exercise. At a minimum, the env file should specify values for the following environment variables: gtm_dist (set to /usr/local/lib/yottadb/r110), gtmgbldir (set to $HOME/exDir/gtm.gld), gtm_log and gtm_tmp (set to /tmp/yottadb/r110; make sure it exists), gtm_principal_editing (set to EDITING), gtmroutines (set to "$HOME/exDir* $gtm_dist/libgtmutil.so"). Make sure the directory /tmp/yottadb/r110 exists by creating it in the gtmenv file with a mkdir -p command. It may be convenient to alias mumps to $gtm_dist/mumps and mupip to $gtm_dist/mupip. [Hint: if you read a little further, you may find a gtmenv file that you can copy and paste into an editor.]
+- Create an gtmenv file in the directory to set up the environment variables. You can then source it with a command such as source ./gtmenv to set up the environment. Set up the environment variables yourself and do not source /usr/lib/fis-gtm/V6.2-000_x86_64/ydb_env_set because it will recover the database when you source it and you will miss the point of the exercise. At a minimum, the env file should specify values for the following environment variables: gtm_dist (set to /usr/local/lib/yottadb/r110), gtmgbldir (set to $HOME/exDir/gtm.gld), gtm_log and gtm_tmp (set to /tmp/yottadb/r110; make sure it exists), gtm_principal_editing (set to EDITING), gtmroutines (set to "$HOME/exDir* $gtm_dist/libgtmutil.so"). Make sure the directory /tmp/yottadb/r110 exists by creating it in the gtmenv file with a mkdir -p command. It may be convenient to alias mumps to $gtm_dist/mumps and mupip to $gtm_dist/mupip. [Hint: if you read a little further, you may find a gtmenv file that you can copy and paste into an editor.]
 
 - In GDE, source the commands in the file /usr/lib/fis-gtm/V6.2-000_x86_64/gdedefaults to set reasonable defaults for the global directory and then change the database file names in the segment and the journal file names in the region to place the database and journal files in /home/yottadbuser/exDir.
 
@@ -2565,7 +2565,7 @@ The mode of a process is controlled by the environment variable gtm_chset. If it
 
 For a process to operate in UTF-8 mode requires:
 
-- ICU with a level of 3.6 or higher packaged as libicu. YottaDB/GT.M may also require the environment variable gtm_icu_version to be defined (the gtmprofile script attempts to detect and set it, if it is not set, but is not guaranteed to succeed).
+- ICU with a level of 3.6 or higher packaged as libicu. YottaDB/GT.M may also require the environment variable gtm_icu_version to be defined (the ydb_env_set script attempts to detect and set it, if it is not set, but is not guaranteed to succeed).
 
 - The environment variable LC_CTYPE (or the environment variable LC_ALL) to specify a UTF-8 locale available on the system.
 
