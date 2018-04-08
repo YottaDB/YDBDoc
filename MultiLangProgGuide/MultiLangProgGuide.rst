@@ -60,15 +60,14 @@ Local Installation
    <https://raw.githubusercontent.com/YottaDB/YottaDBtest/master/simpleapi/outref/wordfreq_input.txt>`_
    and `corresponding reference output file
    <https://raw.githubusercontent.com/YottaDB/YottaDBtest/master/simpleapi/outref/wordfreq_output.txt>`_
-   and compile it with :code:`gcc -I $ydb_dist -L
-   $ydb_dist -lyottadb -o wordfreq wordfreq.c`.
+   and compile it with :code:`gcc -I $ydb_dist -L $ydb_dist -o wordfreq wordfreq.c -lyottadb`.
 
 #. Run your program and verify that the output matches the reference output. For example:
 
 .. code-block:: bash
 
 	$ cd $ydb_dir
-	$ gcc -I $ydb_dist -L $ydb_dist -lyottadb -o wordfreq wordfreq.c
+	$ gcc -I $ydb_dist -L $ydb_dist -o wordfreq wordfreq.c -lyottadb
 	$ ./wordfreq <wordfreq_input.txt >wordfreq_output.tmp
 	$ diff wordfreq_output.tmp wordfreq_output.txt 
 	$
