@@ -427,6 +427,9 @@ Each invocation generates an operator log message and if the invocation fails, a
 
 **ydb_dbglvl** (gtmdbglvl) specifies the YottaDB debug levels. The defined values can be added together to turn on multiple features at the same time. Note that the cumulative value specified in the logical or environment variable must currently be specified in decimal.
 
+.. note::
+   Use of ydb_dbglvl is intended for debugging under the guidance of your YottaDB support channel. If you set ydb_dbglvl to a non-zero value, be aware that there will be a performance impact. We do not recommend its use in production.
+
 +------------------------------+--------------------------------------------+--------------------------------------------------------------------------------------------+
 | Level                        | Value                                      | Notes                                                                                      |
 +==============================+============================================+============================================================================================+
