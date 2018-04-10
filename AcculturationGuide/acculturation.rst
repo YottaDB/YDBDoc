@@ -8,13 +8,13 @@ Acculturation Workshop
 
 Welcome to the YottaDB Acculturation Workshop!
 
-Copyright © 2014 Fidelity National Information Services, Inc. and/or its subsidiaries. All Rights Reserved.
-
 Copyright © 2017 YottaDB LLC and/or its subsidiaries. All Rights Reserved.
 
 Permission is granted to copy, distribute and/or modify this document under the terms of the `GNU Free Documentation License <http://www.gnu.org/licenses/fdl.txt>`_, Version 1.3 or any later version published by the Free Software Foundation; with no Invariant Sections, no Front-Cover Texts and no Back-Cover Texts.
 
-GT.M™ is a trademark of Fidelity National Information Services, Inc. YottaDB™ is a trademark of YottaDB LLC. Other trademarks are the property of their respective owners.
+Copyright © 2014 Fidelity National Information Services, Inc. and/or its subsidiaries. All Rights Reserved.
+
+YottaDB™ is a trademark of YottaDB LLC. GT.M™ is a trademark of Fidelity National Information Services, Inc. Other trademarks are the property of their respective owners.
 
 .. contents:: Navigation
 
@@ -39,7 +39,7 @@ YottaDB
 YottaDB is architected with the following objectives:
 
 - Without compromise, the robustness, security and integrity of the information entrusted to it.
--  Open architecture, with easy, standards-based access to the information in the database.
+- Open architecture, with easy, standards-based access to the information in the database.
 - Continuity of business – YottaDB has unique functionality for the deployment of mission-critical applications that must be available 24 hours a day, 365 days a year, with no down time even for planned events.
 - Throughput, performance and scalability to meet the needs of the largest institutions in the world.
 
@@ -48,8 +48,8 @@ Free support for YottaDB is available from the community on various mailing list
 YottaDB provides:
 
 - Full `ACID (Atomic, Consistent, Isolated, Durable) <https://en.wikipedia.org/wiki/ACID>`_ transaction semantics
-- throughput that scales to the needs of enterprise-wide applications
-- unique functionality for creating logical multi-site configurations for mission critical applications that must always be available, including doing upgrades, and upgrades involving changes to the database schema.
+- Throughput that scales to the needs of enterprise-wide applications
+- Unique functionality for creating logical multi-site configurations for mission critical applications that must always be available, including doing upgrades, and upgrades involving changes to the database schema.
 
 With the exception of Structured System Variable Names (SSVNs), YottaDB mostly implements ISO standard M (ISO/IEC 11756:1999), including a full implementation of transaction processing (TP) that provides ACID (Atomic, Consistent, Isolated, Durable) transactions. As with any M implementation, there are extensions. IO parameters are implementation specific, as are parameters of the VIEW command, and commands & variables starting with the letter Z.
 
@@ -61,7 +61,7 @@ This Acculturation Workshop is largely based on YottaDB r1.20, but any more rece
 Packaging
 ---------
 
-The exercises are carried out by booting guest virtual machines (also called software appliances) on your host computer. Think of a virtual machine as a “computer within a computer”. A guest virtual machine can run a different operating system from that of the host computer. The host computer might itself run Linux, Windows, OS X, or any other operating system and the guest can run Linux with YottaDB as well as other applications. "Emulation" or "virtualization" software helps you set up a guest system on a host computer. On the host computer, the disk images of the Acculturation Workshop guide look like ordinary files in the file system.
+**The exercises in this workshop are carried out by booting guest virtual machines (also called software appliances) on your host computer**. Think of a virtual machine as a “computer within a computer”. A guest virtual machine can run a different operating system from that of the host computer. The host computer might itself run Linux, Windows, OS X, or any other operating system and the guest can run Linux with YottaDB as well as other applications. "Emulation" or "virtualization" software helps you set up a guest system on a host computer. On the host computer, the disk images of the Acculturation Workshop guide look like ordinary files in the file system.
 
 +++++
 Linux
@@ -81,7 +81,7 @@ Control of the Keyboard & Mouse
 
 When you boot a guest virtual machine, booting it “headless” (i.e., without a console - no keyboard and mouse attached), means that the host (you) always has control of the keyboard and mouse. If it is not headless, ownership of the keyboard or mouse may need to toggle between the host and guest. The software you use for virtualization determines how to transfer control.
 
-With kvm / QEMU virtual machines, use the Ctrl-Alt key combination to toggle ownership of the mouse and keyboard between host and guest. Even if the host owns the keyboard, you can type into the guest console when it has focus, but not the other way around. Mouse clicks are visible to only the machine, host or guest, that owns the mouse.
+With QEMU/kvm virtual machines, use the Ctrl-Alt key combination to toggle ownership of the mouse and keyboard between host and guest. Even if the host owns the keyboard, you can type into the guest console when it has focus, but not the other way around. Mouse clicks are visible to only the machine, host or guest, that owns the mouse.
 
 ++++++++++++++++++
 Terminal Emulation
@@ -103,7 +103,13 @@ You are at liberty to use a Linux host, or any Linux virtual machine of your cho
 Disk Formats
 ++++++++++++
 
-The Acculturation Workshop is distributed as a `vmdk format <https://en.wikipedia.org/wiki/VMDK>`_ disk image file  (`ubuntu-16.04_yottadbworkshop10.vmdk <https://docs.yottadb.com/ubuntu-16.04_yottadbworkshop10.zip>`_) that should work with most virtualization software, both FOSS and proprietary.
+The Acculturation Workshop is distributed as a `vmdk format <https://en.wikipedia.org/wiki/VMDK>`_ disk image file that should work with most virtualization software, both FOSS and proprietary.
+
++++++++++++++++++++++++++++
+Virtual Machine Download
++++++++++++++++++++++++++++
+
+Download: (`ubuntu-16.04_yottadbworkshop10.vmdk <https://docs.yottadb.com/ubuntu-16.04_yottadbworkshop10.zip>`_) 
 
 
 +++++++++++++++++++++++++++++
@@ -114,12 +120,7 @@ Virtualization software configures virtual machines either with their own IP add
 
 You will need to configure your virtual machine for outbound and inbound network access. While outbound access should require no configuration to work with either type of virtual machine network connection, inbound network access in a NAT'd environment will require a TCP port on the host to be forwarded to the virtual machine for each port at which a service on the virtual machine needs to respond. For example, each virtual machine has a secure shell (ssh) server listening at port 22 for incoming connections, and you might choose to forward port 2222 on the host to port 22 on your virtual machine.
 
-Refer to the user documentation for your virtualization software to set up virtual machine networking. For example, using kvm on a Linux host, the following command boots the vmdk image with port 2222 on the host forwarded to port 22 on the guest for ssh sessions:
-
-.. parsed-literal::
-
-    kvm -enable-kvm -cpu host -m 256 -display none -net nic -net user,hostfwd=tcp::2222-:22 -hda ubuntu-16.04_yottadbworkshop10.vmdk
-
+Refer to the user documentation for your virtualization software to set up virtual machine networking.
 
 Using qemu-system-x86_64 on a Linux host, the following boots the vmdk image with port 2222 on the host forwarded to port 22 on the guest for ssh sessions.
 
@@ -127,6 +128,13 @@ Using qemu-system-x86_64 on a Linux host, the following boots the vmdk image wit
    
    qemu-system-x86_64 -enable-kvm -cpu host -m 256 -net nic -net user,hostfwd=tcp::2222-:22 -hda ubuntu-16.04_yottadbworkshop10.vmdk
 
+Using kvm on a Linux host, the following command boots the vmdk image with port 2222 on the host forwarded to port 22 on the guest for ssh sessions:
+
+.. parsed-literal::
+
+    kvm -enable-kvm -cpu host -m 256 -display none -net nic -net user,hostfwd=tcp::2222-:22 -hda ubuntu-16.04_yottadbworkshop10.vmdk
+
+   
 +++++++++++
 Legal Stuff
 +++++++++++
@@ -163,7 +171,7 @@ With a terminal emulator, initiate an ssh connection to port 2222 on localhost a
 Install YottaDB
 ++++++++++++++++
 
-- Get the YottaDB installer: wget https://raw.githubusercontent.com/YottaDB/YottaDB/master/sr_unix/ydbinstall.sh
+- Get the YottaDB install script: wget https://raw.githubusercontent.com/YottaDB/YottaDB/master/sr_unix/ydbinstall.sh
 - Make it executable: chmod +x ydbinstall.sh
 - Run it where you want it installed (omit the --verbose option for less output): The below command installs YottaDB in /usr/local/lib/ 
   
@@ -181,10 +189,10 @@ Run YottaDB
 
 **Default Environment**
 
-YottaDB needs several environment variables to be set up. YottaDB provides a script that sets up reasonable defaults and allows you to start using YottaDB immediately. When you set up environments in YottaDB, you should set up your own scripting, but the default is a good place to start. You can source the ydb_env_set file in the directory in which you have installed YottaDB (e.g, /usr/local/lib/yottadb/r110/ydb_env_set) to set up reasonable defaults or simply execute the script ydb to execute YottaDB. A default environment is created only if it does not exist already.
+YottaDB needs several environment variables to be set up. YottaDB provides a script that sets up reasonable defaults and allows you to start using YottaDB immediately. When you set up environments in YottaDB, you should set up your own scripting, but the default is a good place to start. You can source the ydb_env_set file in the directory in which you have installed YottaDB (e.g, /usr/local/lib/yottadb/r1.20_x86_64/ydb_env_set) to set up reasonable defaults or simply execute the script ydb to execute YottaDB. A default environment is created only if it does not exist already.
 
 .. parsed-literal::
-   yottadbuser@yottadbworkshop:~$ source /usr/local/lib/yottadb/r120/ydb_env_set
+   yottadbuser@yottadbworkshop:~$ source /usr/local/lib/yottadb/r1.20_x86_64/ydb_env_set
 
 You can run the script that runs YottaDB as follows:
 
@@ -220,13 +228,13 @@ The operation of YottaDB is controlled by a number of environment variables. In 
    ydb_etrap=Write:(0=$STACK) "Error occurred: ",$ZStatus,!
    ydb_dir=/home/yottadbuser/.yottadb
    ydb_rel=r1.20_x86_64
-   ydb_routines=/home/yottadbuser/.yottadb/r1.20_x86_64/o*(/home/yottadbuser/.yottadb/r1.20_x86_64/r /home/yottadbuser/.yottadb/r) /usr/local/lib/yottadb/r120/libyottadbutil.so
+   ydb_routines=/home/yottadbuser/.yottadb/r1.20_x86_64/o*(/home/yottadbuser/.yottadb/r1.20_x86_64/r /home/yottadbuser/.yottadb/r) /usr/local/lib/yottadb/r1.20_x86_64/libyottadbutil.so
    ydb_repl_instance=/home/yottadbuser/.yottadb/r1.20_x86_64/g/yottadb.repl
    ydb_tmp=/tmp/yottadb/r1.20_x86_64
    ydb_dist=/usr/local/lib/yottadb/r1.20_x86_64/
    yottadbuser@yottadbworkshop:~$ 
 
-YottaDB databases can also be configured so that they can be recovered after a system crash. Simulate a crash right now by either clicking on the “X” in the top right corner of your virtual machine console window to instantly “power down” your virtual machine, or, if you started it headless, perform a hard power-down using a command on the host (in the case of virtualization using qemu/kvm on Linux, a kill -9 of the virtual machine process). Then reboot the virtual machine, run ydb and use a zwrite ^Disney command to confirm that the data in the database is still intact.
+YottaDB databases can also be configured so that they can be recovered after a system crash. Simulate a crash by either clicking on the “X” in the top right corner of your virtual machine console window to instantly “power down” your virtual machine, or, if you started it headless, perform a hard power-down using a command on the host (in the case of virtualization using qemu/kvm on Linux, a kill -9 of the virtual machine process). Then reboot the virtual machine, run ydb and use a zwrite ^Disney command to confirm that the data in the database is still intact.
 
 The tree program shows the default environment YottaDB creates in your home directory. 
 
@@ -256,8 +264,8 @@ Note that you may have to install the program 'tree' before running the above co
 With YottaDB, you can write applications that implement international character sets using Unicode or ISO/IEC-10646 (the two standards track each other). Connect to the virtual machine with your terminal emulator configured to support the UTF-8 character set. In a fresh terminal session execute the following (the non-printable characters may look different on your session from the screen here, depending on how your terminal emulator renders them):
 
 .. parsed-literal::
-   yottadbuser@yottadbworkshop:~$ export gtm_chset=UTF-8 LC_CTYPE=en_US.utf8
-   yottadbuser@yottadbworkshop:~$ source /usr/local/lib/yottadb/r120/ydb_env_set
+   yottadbuser@yottadbworkshop:~$ export ydb_chset=UTF-8 LC_CTYPE=en_US.utf8
+   yottadbuser@yottadbworkshop:~$ source /usr/local/lib/yottadb/r1.20_x86_64/ydb_env_set
    yottadbuser@yottadbworkshop:~$ ydb
    YDB>write $zchset
    UTF-8
@@ -292,7 +300,7 @@ YottaDB user documentation is organized into Manuals and Release Notes. Current 
 
 **Routines in the File System**
 
-Routines in YottaDB are simply files in the file system; they do not reside in databases. You can edit routines from the YDB> prompt. Start ydb and at the YDB> prompt, type zedit "greeting" and hit ENTER. This starts the vi editor editing the source routine for ^greeting, /home/yottadbuser/.yottadb/r1.20_x86_64/r/greeting.m. Use the five key-sequence ESCAPE : q ! ENTER to exit vi without changing the file.
+Routines in YottaDB are simply files in the file system; they do not reside in databases. You can edit routines from the YDB> prompt. Start ydb and at the YDB> prompt, type zedit "greeting" and hit ENTER. This starts the vi editor editing the source routine for ^greeting, /home/yottadbuser/.yottadb/r1.20_x86_64/r/greeting.m. Use the five key-sequence ESCAPE:q!ENTER to exit vi without changing the file.
 
 .. note::
   although vi always puts a newline at the end of your file; other editors may not. A YottaDB program file should always end with a newline.
@@ -422,7 +430,7 @@ The $zroutines ISV tells YottaDB where to find routines:
 
 .. parsed-literal::
    YDB>write $zroutines
-   /home/yottadbuser/.yottadb/r1.20_x86_64/o*(/home/yottadbuser/.yottadb/r1.20_x86_64/r /home/yottadbuser/.yottadb/r) usr/local/lib/yottadb/r120/libyottadbutil.so 
+   /home/yottadbuser/.yottadb/r1.20_x86_64/o*(/home/yottadbuser/.yottadb/r1.20_x86_64/r /home/yottadbuser/.yottadb/r) usr/local/lib/yottadb/r1.20_x86_64/libyottadbutil.so 
    YDB>
 
 At process startup, $zroutines is initialized from the environment variable $ydb_routines, but it can be altered from within the YottaDB process.
@@ -431,9 +439,9 @@ At process startup, $zroutines is initialized from the environment variable $ydb
    YDB>set $zroutines=". "_$ztrnlnm("ydb_dist")
 
    YDB>write $zroutines
-   . /usr/local/lib/yottadb/r120
+   . /usr/local/lib/yottadb/r1.20_x86_64
    YDB>write $ztrnlnm("ydb_routines")
-   /home/yottadbuser/.yottadb/r1.20_x86_64/o*(/home/yottadbuser/.yottadb/r1.20_x86_64/r /home/yottadbuser/.yottadb/r) /usr/local/lib/yottadb/r120/libyottadbutil.so
+   /home/yottadbuser/.yottadb/r1.20_x86_64/o*(/home/yottadbuser/.yottadb/r1.20_x86_64/r /home/yottadbuser/.yottadb/r) /usr/local/lib/yottadb/r1.20_x86_64/libyottadbutil.so
    YDB>
 
 The ZEDIT command always puts new routines in the first source directory in the search path. Use it to create a new routine to print the current date and time at the Universal Time Coordinate. After the change to $zroutines above, notice how a newly created program and object file are created in the current directory (.).
@@ -462,7 +470,7 @@ The ydb_env_set script would have already appended the requisite asterisk to $zr
    yottadbuser@yottadbworkshop:~$ ydb
 
    YDB>write $zroutines
-   /home/yottadbuser/.yottadb/r1.20_x86_64/o*(/home/yottadbuser/.yottadb/r1.20_x86_64/r /home/yottadbuser/.yottadb/r) /usr/local/lib/yottadb/r120/libyottadbutil.so 
+   /home/yottadbuser/.yottadb/r1.20_x86_64/o*(/home/yottadbuser/.yottadb/r1.20_x86_64/r /home/yottadbuser/.yottadb/r) /usr/local/lib/yottadb/r1.20_x86_64/libyottadbutil.so 
 
    YDB>
 
@@ -938,7 +946,7 @@ Here are the environment variables set by the default ydb_env_set file (which th
    ydb_etrap=Write:(0=$STACK) "Error occurred: ",$ZStatus,!
    ydb_dir=/home/yottadbuser/.yottadb
    ydb_rel=r1.20_x86_64
-   ydb_routines=/home/yottadbuser/.yottadb/r1.20_x86_64/o*(/home/yottadbuser/.yottadb/r1.20_x86_64/r /home/yottadbuser/.yottadb/r) /usr/local/lib/yottadb/r120/libyottadbutil.so
+   ydb_routines=/home/yottadbuser/.yottadb/r1.20_x86_64/o*(/home/yottadbuser/.yottadb/r1.20_x86_64/r /home/yottadbuser/.yottadb/r) /usr/local/lib/yottadb/r1.20_x86_64/libyottadbutil.so
    ydb_repl_instance=/home/yottadbuser/.yottadb/r1.20_x86_64/g/yottadb.repl
    ydb_tmp=/tmp/yottadb/r1.20_x86_64
    ydb_dist=/usr/local/lib/yottadb/r1.20_x86_64/
@@ -1011,7 +1019,7 @@ It is extremely straightforward to create a userid that can only login, run an a
 
 **Exercise - Simulated ASP Environment with Isolation**
 
-For this exercise look at the instructions for the `WorldVistA EHR Four Slice Toaster MSC Fileman 1034 edition <http://tinyurl.com/yjgub6f>`_ (you may need to download the file and open it in your browser). Alternatively go to the `WorldVistA project at Source Forge <http://sourceforge.net/projects/worldvista>`_. Click on “View all files”, open WorldVistA EHR VOE _ 1.0 and then open 2008-06 Four Slice Toaster MSC FM 1034 and download the file WVEHRVOE10Release6-08Toaster4SliceMSCFM1034Readme.html. Also, download the file WVEHRVOE10Release6-08Toaster4SliceMSCFM1034.zip, unzip it and open it according to the instructions in the Readme.
+For this exercise look at the instructions for the `WorldVistA EHR Four Slice Toaster MSC Fileman 1034 edition <http://tinyurl.com/yjgub6f>`_ (you may need to download the file and open it in your browser). Alternatively go to the `WorldVistA project at Source Forge <http://sourceforge.net/projects/worldvista>`_. Click on “View all files”, open WorldVistA EHR VOE_1.0 and then open 2008-06 Four Slice Toaster MSC FM 1034 and download the file WVEHRVOE10Release6-08Toaster4SliceMSCFM1034Readme.html. Also, download the file WVEHRVOE10Release6-08Toaster4SliceMSCFM1034.zip, unzip it and open it according to the instructions in the Readme.
 
 Login as *vistaadmin / vistaadmin* for administrator access. Note how Clinic P users are members of the gtm group and also members of the clinicp group and Clinic Q users are members of the gtm group and the clinicq group and neither has access to the databases of the other.
 
@@ -1193,7 +1201,7 @@ Hints:
 
 - Start with an environment that does not have YottaDB environment variables already defined, e.g., from sourcing the ydb_env_set file. You can always logout and login to get a fresh session
 
-- Create an gtmenv file in the directory to set up the environment variables. You can then source it with a command such as source ./gtmenv to set up the environment. Set up the environment variables yourself and do not source /usr/local/lib/yottadb/r1.20_x86_64/ydb_env_set because it will recover the database when you source it and you will miss the point of the exercise. At a minimum, the env file should specify values for the following environment variables: ydb_dist (set to /usr/local/lib/yottadb/r120), ydb_gbldir (set to $HOME/exDir/yottadb.gld), ydb_log and ydb_tmp (set to /tmp/yottadb/r120; make sure it exists), ydb_principal_editing (set to EDITING), ydb_routines (set to "$HOME/exDir* $ydb_dist/libyottadbutil.so"). Make sure the directory /tmp/yottadb/r120 exists by creating it in the gtmenv file with a mkdir -p command. It may be convenient to alias mumps to $ydb_dist/mumps and mupip to $ydb_dist/mupip. [Hint: if you read a little further, you may find a gtmenv file that you can copy and paste into an editor.]
+- Create an ydbenv file in the directory to set up the environment variables. You can then source it with a command such as source ./ydbenv to set up the environment. Set up the environment variables yourself and do not source /usr/local/lib/yottadb/r1.20_x86_64/ydb_env_set because it will recover the database when you source it and you will miss the point of the exercise. At a minimum, the env file should specify values for the following environment variables: ydb_dist (set to /usr/local/lib/yottadb/r1.20_x86_64), ydb_gbldir (set to $HOME/exDir/yottadb.gld), ydb_log and ydb_tmp (set to /tmp/yottadb/r1.20_x86_64; make sure it exists), ydb_principal_editing (set to EDITING), ydb_routines (set to "$HOME/exDir* $ydb_dist/libyottadbutil.so"). Make sure the directory /tmp/yottadb/r120 exists by creating it in the ydbenv file with a mkdir -p command. It may be convenient to alias mumps to $ydb_dist/mumps and mupip to $ydb_dist/mupip. [Hint: if you read a little further, you may find a ydbenv file that you can copy and paste into an editor.]
 
 - In GDE, source the commands in the file /usr/local/lib/yottadb/r1.20_x86_64/gdedefaults to set reasonable defaults for the global directory and then change the database file names in the segment and the journal file names in the region to place the database and journal files in /home/yottadbuser/exDir.
 
@@ -1209,11 +1217,11 @@ When an application must have the best possible continuity of business, use data
 
 **Exercise - Replication**
 
-Because replication builds on journaling, use the directory exDir created above. Enhance the shell script gtmenv to assign values to two more environment variables, ydb_repl_instance and gtm_repl_instname. ydb_repl_instance is the name of a replication instance file where a replicated instance stores information about the state of replication and ydb_repl_instance is the name of an instance – in this case, dummy, but we will change it as we create copies of the instances.
+Because replication builds on journaling, use the directory exDir created above. Enhance the shell script ydbenv to assign values to two more environment variables, ydb_repl_instance and gtm_repl_instname. ydb_repl_instance is the name of a replication instance file where a replicated instance stores information about the state of replication and ydb_repl_instance is the name of an instance – in this case, dummy, but we will change it as we create copies of the instances.
 
 .. parsed-literal::
-   yottadbuser@yottadbworkshop:~$ cd exDir ; cat gtmenv
-   export ydb_dist=/usr/local/lib/yottadb/r120
+   yottadbuser@yottadbworkshop:~$ cd exDir ; cat ydbenv
+   export ydb_dist=/usr/local/lib/yottadb/r1.20_x86_64
    export ydb_gbldir=$HOME/exDir/gtm.gld
    export ydb_log=/tmp/yottadb/r1.20_x86_64
    export ydb_tmp=$ydb_log
@@ -1225,7 +1233,7 @@ Because replication builds on journaling, use the directory exDir created above.
    alias mumps=$ydb_dist/mumps
    alias mupip=$ydb_dist/mupip
 
-Turn on replication and journaling (remember to source gtmenv to set the environment variables first)
+Turn on replication and journaling (remember to source ydbenv to set the environment variables first)
 
 .. parsed-literal::
    yottadbuser@yottadbworkshop:~$ mupip set -replication=on -region "*"
@@ -1273,7 +1281,7 @@ You can delete the prior generation journal files, just to keep the directory cl
    yottadbuser\@yottadbworkshop:~$ rm \*.mjl\_ *
    yottadbuser\@yottadbworkshop:~$ 
 
-Shut down the Acculturation Workshop virtual machine and make three copies of the Acculturation Workshop called Paris.vmdk, Melbourne.vmdk and Santiago.vmdk. Alternatively, if your host system is short of disk space, make two copies and rename the original ubuntu-16.04_workshop10.vmdk file.
+Shut down the Acculturation Workshop virtual machine and make three copies of the Acculturation Workshop called Paris.vmdk, Melbourne.vmdk and Santiago.vmdk. Alternatively, if your host system is short of disk space, make two copies and rename the original ubuntu-16.04_yottadbworkshop10.vmdk file.
 
 If you are using qcow2 or vmdk disk images with QEMU/kvm on Linux, you can use a feature that allows a disk image to be created off a base image so that the base image does not change and all changes go to the new disk image. Check with your virtualization software to determine whether it supports this feature. Execute commands such as the following on the host (with the guest shut down) – depending on the version of QEMU/kvm on your PC, the exact command may vary.
 
@@ -1313,7 +1321,7 @@ To make it more realistic (and to reduce the probability of operator error) on e
 In each machine. Edit exDir/env in each instance and change the line export gtm_repl_instname=dummy and the line export ydb_repl_instance=/home/yottadbuser/exDir/yottadb.repl to an instance file name for that instance. For example, on the Santiago instance:
 
 .. parsed-literal::
-   yottadbuser@santiago:~/exDir$ cat gtmenv 
+   yottadbuser@santiago:~/exDir$ cat ydbenv 
    export ydb_dist=/usr/local/lib/yottadb/r1.20_x86_64/
    export ydb_gbldir=$HOME/exDir/yottadb.gld
    export ydb_log=/tmp/yottadb/r1.20_x86_64
@@ -1332,7 +1340,7 @@ Then on each instance, create a replication instance file.
 .. parsed-literal::
    yottadbuser\@santiago:~/exDir$ ls -l \*.repl
    ls: cannot access exDir/\*.repl: No such file or directory
-   yottadbuser\@santiago:~/exDir$ source gtmenv 
+   yottadbuser\@santiago:~/exDir$ source ydbenv 
    yottadbuser\@santiago:~/exDir$ mupip replicate -instance_create
    yottadbuser\@santiago:~/exDir$ ls -l \*.repl
    -rw-rw-r-- 1 yottadbuser yottadbuser 1536 2011-11-10 00:47 exDir/santiago.repl
@@ -1433,7 +1441,7 @@ Restart Melbourne as a replicating instance and notice that it catches up with u
 
    YDB>
 
-Now, simulate an unplanned outage of Paris by clicking on the “X” of the virtual machine console window, kill -9 of the process on the host, or otherwise powering down the virtual machine. Make Melbourne the new originating instance and Santiago its replicating instance. (In a controlled switchover / planned outage, bringing down the originating primary first helps to ensure that you do not have two concurrently operating originating primary instances.)
+Now, simulate an unplanned outage of Paris by clicking on the “X” of the virtual machine console window, kill -9 of the process on the host, or otherwise powering down the virtual machine. Make Melbourne the new originating instance and Santiago its replicating instance. (In a controlled switchover/planned outage, bringing down the originating primary first helps to ensure that you do not have two concurrently operating originating primary instances.)
 
 Bring down Melbourne as a replicating instance and bring it up as the originating instance. Notice that you can bring up the Source Server process to replicate to Paris – it will make the connection when Paris comes up.
 
@@ -1471,6 +1479,7 @@ Both Santiago and Paris should perform a rollback fetchresync before they become
    Tue Jan  23 21:31:44 2018 : Journal pool semaphore removed
    %YDB-I-MUFILRNDWNSUC, File /home/yottadbuser/exDir/aA.dat successfully rundown
    %YDB-I-MUFILRNDWNSUC, File /home/yottadbuser/exDir/others.dat successfully rundown
+
    yottadbuser@santiago:~/exDir$ mupip journal -rollback -backward -fetchresync=3000 -losttrans=/home/yottadbuser/exDir/Unreplic_Trans_Report_`date +%Y%m%d%H%M%S`.txt "*"
    %YDB-I-MUJNLSTAT, Initial processing started at Tue Jan  23 21:32:10 2018
    %YDB-I-MUJNLSTAT, FETCHRESYNC processing started at Tue Jan  23 21:32:10 2018
@@ -1500,6 +1509,7 @@ Both Santiago and Paris should perform a rollback fetchresync before they become
    %YDB-S-JNLSUCCESS, Verify successful
    %YDB-S-JNLSUCCESS, Rollback successful
    %YDB-I-MUJNLSTAT, End processing at Tue Jan  23 21:32:11 2018
+
    yottadbuser@santiago:~/exDir$ ./replicating_start
    Tue Jan  23 21:33:22 2018 : Initiating START of source server for secondary instance [dummy]
    yottadbuser@santiago:~/exDir$
@@ -1545,6 +1555,7 @@ Now reboot Paris to simulate its recovery. When the system comes up (before perf
    %YDB-S-JNLSUCCESS, Verify successful
    %YDB-S-JNLSUCCESS, Rollback successful
    %YDB-I-MUJNLSTAT, End processing at Tue Jan  23 14:35:57 2018
+
    yottadbuser@paris:~/exDir$ ./replicating_start
    Tue Jan  23 14:37:14 2018 : Initiating START of source server for secondary instance [dummy]
    yottadbuser@paris:~/exDir$
@@ -1609,7 +1620,7 @@ In order to provide continuity of business, when an originating primary instance
 | Repaired and brought back up |        P:120 (processing has moved it ahead)                                                             |
 +------------------------------+----------------------------------------------------------------------------------------------------------+
 
-This situation needs to be remedied, because updates (transactions) 96-100 on Santiago are different from updates 96-100 on Melbourne. This has a YottaDB part and an application software part. The YottaDB part is to rollback the transactions on the former originating primary instance with the mupip journal -rollback -fetchresync command. These rolled back updates (“unreplicated” or “lost” transactions) are placed in a file and must be transmitted to the new originating instance for reprocessing / reconciliation by application logic.
+This situation needs to be remedied, because updates (transactions) 96-100 on Santiago are different from updates 96-100 on Melbourne. This has a YottaDB part and an application software part. The YottaDB part is to rollback the transactions on the former originating primary instance with the mupip journal -rollback -fetchresync command. These rolled back updates (“unreplicated” or “lost” transactions) are placed in a file and must be transmitted to the new originating instance for reprocessing/reconciliation by application logic.
 
 +---------------------------------------------------------------------------------+-------------------------------------------------------------------+
 | Santiago                                                                        |      Melbourne                                                    |
@@ -1636,6 +1647,7 @@ Start Santiago as the originating instance:
 .. parsed-literal::
    yottadbuser@santiago:~/exDir$ mupip replicate -source -start -instsecondary=Paris -secondary=10.0.2.2:5000 -buffsize=1048576 -log=/home/yottadbuser/exDir/source_Paris.log
    Tue Jan  2 23:42:32 2018 : Initiating START of source server for secondary instance [Paris]
+
    yottadbuser@santiago:~/exDir$ mupip replicate -source -start -instsecondary=Melbourne -secondary=10.0.2.2:6000 -buffsize=1048576 -log=/home/yottadbuser/exDir/source_Melbourne.log
    Tue Jan  2 23:43:02 2018 : Initiating START of source server for secondary instance [Melbourne]
    yottadbuser@santiago:~/exDir$
@@ -1672,18 +1684,21 @@ At Paris (and also in Melbourne) perform the fetchresync operation and then star
    %YDB-S-JNLSUCCESS, Verify successful
    %YDB-S-JNLSUCCESS, Rollback successful
    %YDB-I-MUJNLSTAT, End processing at Tue Jan  23 16:43:41 2018
+
    yottadbuser@paris:~/exDir$ ./replicating_start
    Tue Jan  23 16:47:50 2018 : Initiating START of source server for secondary instance [dummy]
+
    yottadbuser@paris:~/exDir$ mupip replicate -receiver -checkhealth
    PID 1040 Receiver server is alive
    PID 1041 Update process is alive
+
    yottadbuser@paris:~/exDir$ mupip replicate -receiver -showbacklog
    0 : number of backlog transactions received by receiver server and yet to be processed by update process
    3 : sequence number of last transaction received from Source Server and written to receive pool
    3 : sequence number of last transaction processed by update process
    yottadbuser@paris:~/exDir$
 
-You can also check replication health and the backlog on the originating instance, Santiago. Notice that if you do not specify which replication connection you want details for, you get information on all.
+You can also check replication health and the backlog on the originating instance, Santiago. Notice that if you do not specify which replication connection you want details for, you get information on all of them.
 
 .. parsed-literal::
    yottadbuser@santiago:~/exDir$ mupip replicate -source -checkhealth
@@ -1691,6 +1706,7 @@ You can also check replication health and the backlog on the originating instanc
    PID 1063 Source server is alive in ACTIVE mode
    Tue Jan  23 23:51:20 2018 : Initiating CHECKHEALTH operation on source server pid [1065] for secondary instance name [Melbourne]
    PID 1065 Source server is alive in ACTIVE mode
+
    yottadbuser@santiago:~/exDir$ mupip replicate -source -showbacklog
    Tue Jan  23 23:51:35 2018 : Initiating SHOWBACKLOG operation on source server pid [1063] for secondary instance [Paris]
    0 : backlog number of transactions written to journal pool and yet to be sent by the source server
@@ -2056,7 +2072,7 @@ Perform an update in Paris and verify that there is a backlog to Santiago (the a
 Now boot the Santiago machine and perform a fetchresync:
 
 .. parsed-literal::
-   yottadbuser\@santiago:~/exDir$ source gtmenv
+   yottadbuser\@santiago:~/exDir$ source ydbenv
    yottadbuser\@santiago:~/exDir$ mupip journal -rollback -backward -fetchresync=3000 -losttrans=/home/yottadbuser/exDir/Unreplic_Trans_Report_`date +%Y%m%d%H%M%S`.txt "*"
    %YDB-I-MUJNLSTAT, Initial processing started at Wed Jan  3 00:27:54 2018
    %YDB-I-MUJNLSTAT, FETCHRESYNC processing started at Wed Jan  3 00:27:54 2018
@@ -2186,7 +2202,6 @@ Take a backup of the entire database (a "comprehensive backup"):
    DB file /home/yottadbuser/exDir/others.dat backed up in file backup//others.dat
    Transactions up to 0x00000000000001ED are backed up.
 
-
    BACKUP COMPLETED.
 
    yottadbuser@paris:~/exDir$
@@ -2195,10 +2210,10 @@ Take a backup of the part of the database that has changed (a "bytestream" backu
 
 - The use of the -since=database qualifier to only backup those database blocks that have changed since the last backup of the entire database).
 
-- The fact that the backup files for others.dat have the name gtm*.bck – YottaDB does not care what you name the files, but maps the targets in the alphabetic order of region name.
+- The fact that the backup files for others.dat have the name yottadb*.bck – YottaDB does not care what you name the files, but maps the targets in the alphabetic order of region name.
 
 .. parsed-literal::
-   yottadbuser@paris:~/exDir$ mupip backup -bytestream -since=database "*" backup/aA`date +%Y%m%d%H%M%S`.bck,backup/gtm`date +%Y%m%d%H%M%S`.bck
+   yottadbuser@paris:~/exDir$ mupip backup -bytestream -since=database "*" backup/aA`date +%Y%m%d%H%M%S`.bck,backup/yottadb`date +%Y%m%d%H%M%S`.bck
    %YDB-I-FILERENAME, File /home/yottadbuser/exDir/aA.mjl is renamed to /home/yottadbuser/exDir/aA.mjl_2018336175445
    %YDB-I-JNLCREATE, Journal file /home/yottadbuser/exDir/aA.mjl created for region A with BEFORE_IMAGES
    %YDB-I-FILERENAME, File /home/yottadbuser/exDir/others.mjl is renamed to /home/yottadbuser/exDir/others.mjl_2018336175445
@@ -2207,11 +2222,10 @@ Take a backup of the part of the database that has changed (a "bytestream" backu
    DB file /home/yottadbuser/exDir/aA.dat incrementally backed up in file backup/aA20181202175445.bck
    13 blocks saved.
    Transactions from 0x00000000000001E7 to 0x00000000000002B7 are backed up.
-   MUPIP backup of database file /home/yottadbuser/exDir/others.dat to backup/gtm20181202175445.bck
+   MUPIP backup of database file /home/yottadbuser/exDir/others.dat to backup/yottadb20181202175445.bck
    DB file /home/yottadbuser/exDir/others.dat incrementally backed up in file backup/yottadb20181202175445.bck
    13 blocks saved.
    Transactions from 0x00000000000001ED to 0x00000000000002BD are backed up.
-
 
    BACKUP COMPLETED.
 
@@ -2240,7 +2254,6 @@ Take further bytestream backups of that part of the database that has changed �
    13 blocks saved.
    Transactions from 0x00000000000002BD to 0x000000000000043F are backed up.
 
-
    BACKUP COMPLETED.
 
    yottadbuser@paris:~/exDir$
@@ -2261,7 +2274,6 @@ Take as many additional bytestream backups as you want, in each case specifying 
    DB file /home/yottadbuser/exDir/others.dat incrementally backed up in file backup/yottadb20181202175650.bck
    15 blocks saved.
    Transactions from 0x000000000000043F to 0x00000000000004F9 are backed up.
-
 
    BACKUP COMPLETED.
 
@@ -2302,31 +2314,31 @@ Take a final backup, and note the values of the final nodes ^a and ^b (and verif
 
 Now it's time to work on restoring the backup. The first backup (the database backup) provides a complete, ready-to-run database. The subsequent bytestream backups can be applied to the database backup using the mupip restore command.
 
-Create an environment to restore the backup. It may be easiest if you simply use the backup directory you created, and working in a new shell session, copy exDir/env and exDir/yottadb.gld to the backup directory and edit them to reflect their new locations. (Note that since global directories are used only to create databases, there is no reason to change the default journal file names in the regions of the global directory file in backup. Nevertheless, it is good practice to keep global directories correct, since that global directory may be used at a future time to create new database files.]
+Create an environment to restore the backup. It may be easiest if you simply use the backup directory you created, and working in a new shell session, copy exDir/env and exDir/yottadb.gld to the backup directory and edit them to reflect their new locations. (Note that since global directories are used only to create databases, there is no reason to change the default journal file names in the regions of the global directory file in backup. Nevertheless, it is good practice to keep global directories correct, since that global directory may be used at a future time to create new database files.)
 
 .. parsed-literal::
-   yottadbuser\@paris:~/exDir$ cp gtmenv yottadb.gld backup/
-   yottadbuser\@paris:~/exDir$ cd backup; vim backup/gtmenv # edit to point to backup directory
-   yottadbuser\@paris:~/exDir/backup$ cat gtmenv
+   yottadbuser\@paris:~/exDir$ cp ydbenv yottadb.gld backup/
+   yottadbuser\@paris:~/exDir$ cd backup; vim backup/ydbenv # edit to point to backup directory
+   yottadbuser\@paris:~/exDir/backup$ cat ydbenv
    export ydb_dist=/usr/local/lib/yottadb/r1.20_x86_64/
    export ydb_gbldir=$HOME/exDir/backup/yottadb.gld
    export ydb_log=/tmp/yottadb/r1.20_x86_64
    export ydb_tmp=$ydb_log
    export ydb_principal_editing=EDITING
    export ydb_repl_instance=$HOME/exDir/backup/yottadb.repl
-   export ydb_repl_instname=Paris
+   export gtm_repl_instname=Paris
    export ydb_routines="$HOME/exDir/backup* $ydb_dist/libyottadbutil.so"
    mkdir -p $ydb_tmp
    alias mumps=$ydb_dist/mumps
    alias mupip=$ydb_dist/mupip
-   yottadbuser\@paris:~/exDir/backup$ source gtmenv
+   yottadbuser\@paris:~/exDir/backup$ source ydbenv
    yottadbuser\@paris:~/exDir/backup$ mumps -run GDE
    %GDE-I-LOADGD, Loading Global Directory file /home/yottadbuser/exDir/backup/yottadb.gld
    %GDE-I-VERIFY, Verification OK
 
    GDE> show -segment
 
-                     *** SEGMENTS ***
+                     \*\*\* SEGMENTS \*\*\*
     Segment           File( def ext: .dat)   Acc Typ Block       Alloc Exten  Options
     ----------------------------------------------------------------------------------
     A                $HOME/exDir/aA.dat       BG DYN 4096        5000  10000  GLOB=1000
@@ -2344,7 +2356,7 @@ Create an environment to restore the backup. It may be easiest if you simply use
    GDE> change -segment DEFAULT -file=$HOME/exDir/backup/others.dat
    GDE> show -segment
 
-                         *** SEGMENTS ***
+                         \*\*\* SEGMENTS \*\*\*
     Segment              File( def ext:.dat)       Acc Typ Block       Alloc Exten  Options
     ---------------------------------------------------------------------------------------
     A                    $HOME/exDir/backup/aA.dat BG  DYN  4096       5000  10000  GLOB=1000
@@ -2362,13 +2374,13 @@ Create an environment to restore the backup. It may be easiest if you simply use
 
    GDE> show -region
 
-                           *** REGIONS ***
+                           \*\*\* REGIONS \*\*\*
     Region       Dynamic Segment    Def Coll Rec Size  Key Size  Null Subs   Std Null Coll  Jnl  Inst Freeze on Error Qdb Rundown
    ------------------------------------------------------------------------------------------------------------------------------
     A                 A                0      4080      255       NEVER            Y         Y     DISABLED            DISABLED
     DEFAULT          DEFAULT           0      4080      255       NEVER            Y         Y     DISABLED            DISABLED
 
-                         ***JOURNALING INFORMATION***
+                         \*\*\*JOURNALING INFORMATION\*\*\*
     Region       Jnl file (def ext:.mjl)   Before  Buff  Alloc  Exten  Autoswitch
     ------------------------------------------------------------------------------
     A             $HOME/exDir/aA.mjl         Y    2308   2048   2048    8386560
@@ -2378,13 +2390,13 @@ Create an environment to restore the backup. It may be easiest if you simply use
    GDE> change -region DEFAULT -journal=file=$HOME/exDir/backup/others.mjl
    GDE> show -region
    
-                         ***  REGIONS ***
+                         \*\*\*  REGIONS \*\*\*
     Region       Dynamic Segment   Def Coll  Rec Size  Key Size  Null Subs  Std Null Coll  Jnl  Inst Freeze on Error  Qdb Rundown
     ------------------------------------------------------------------------------------------------------------------------------
     A                 A               0        4080     255       NEVER           Y         Y         DISABLED         DISABLED
     DEFAULT        DEFAULT            0        4080     255       NEVER           Y         Y         DISABLED         DISABLED
 
-                         *** JOURNALING INFORMATION ***
+                         \*\*\* JOURNALING INFORMATION \*\*\*
     Region        Jnl file (def ext:.mjl)        Before  Buff  Alloc   Exten  Autoswitch
     ------------------------------------------------------------------------------------
     A             $HOME/exDir/backup/aA.mjl        Y     2308   2048   2048    8386560
@@ -2476,7 +2488,7 @@ Note that ending values of ^a and ^b in the environment with the restored backup
 
 **Replication Briefly Revisited**
 
-We have been ignoring Santiago and Melbourne during the backup exercise, and we have created quite a backlog. Here is the backlog report in the exDir environment in Paris. (If you are using the same shell session to restore backups, you will need to source exDir/gtmenv to get the environment variables for the original environment, and restart Source Servers if they are not running.)
+We have been ignoring Santiago and Melbourne during the backup exercise, and we have created quite a backlog. Here is the backlog report in the exDir environment in Paris. (If you are using the same shell session to restore backups, you will need to source exDir/ydbenv to get the environment variables for the original environment, and restart Source Servers if they are not running.)
 
 .. parsed-literal::
    yottadbuser@paris:~/exDir$ mupip replicate -source -showbacklog
@@ -2493,7 +2505,7 @@ We have been ignoring Santiago and Melbourne during the backup exercise, and we 
 Boot Melbourne and check the state of the database with respect to ^a and ^b – notice the error because no node of ^a is defined. 
 
 .. parsed-literal::
-   yottadbuser@melbourne:~/exDir$ source gtmenv
+   yottadbuser@melbourne:~/exDir$ source ydbenv
    yottadbuser@melbourne:~/exDir$ mumps -run %XCMD 'set x=$order(^a(""),-1) write x," ",^a(x)," ",^b(x)," ",^a(x)+^b(x),!'
    %YDB-E-NULSUBSC, Null subscripts are not allowed for region: A
    %YDB-I-GVIS,            Global variable: ^a("")
@@ -2530,11 +2542,11 @@ Unicode (ISO/IEC-10646)
 
 YottaDB supports international character sets using Unicode. A mumps process can operate in one of two modes: M mode and UTF-8 mode, which is specified by the environment variable ydb_chset at process startup and which is immutable for the life of the process.
 
-In M mode, the process interprets strings as single byte characters with characters from $Char(0) through $Char(127) encoded as ASCII (M mode). A YottaDB process in M mode places no interpretation on characters $Char(128) through $Char (255) – the application is free to use any interpretation it chooses, and ISO-8859 variants are commonly used. There is no distinction between a string of bytes and a string of characters and all bytes are valid characters – the concept of an illegal or a non-canonical character is a non-sequitur in M mode.
+In M mode, the process interprets strings as single byte characters with characters from $Char(0) through $Char(127) encoded as ASCII (M mode). A YottaDB process in M mode places no interpretation on characters $Char(128) through $Char(255) – the application is free to use any interpretation it chooses, and ISO-8859 variants are commonly used. There is no distinction between a string of bytes and a string of characters and all bytes are valid characters – the concept of an illegal or a non-canonical character is a non-sequitur in M mode.
 
 In UTF-8 mode, the process by default interprets strings as multi-byte characters encoded using UTF-8 (UTF-8 mode). Some sequences of bytes are not defined by the standard, and are considered illegal characters – for example $char(55296), U+D800, is an illegal character. The process can also interpret a string as a sequence of bytes, and the same string can have different properties (such as its length) when it is considered a sequence of bytes than as a sequence of characters.
 
-Except when triggers are used, this interpretation is at the level of the process: the database treats strings as binary data and does not care how they are encoded. So, it is possible for the same database to be concurrently accessed by mumps processes operating in both M mode and UTF-8 mode. Mupip and other processes are not concerned with this distinction. If the database has triggers, since triggers are compiled code, all proceses that use a database must have the same mode.
+Except when triggers are used, this interpretation is at the level of the process: the database treats strings as binary data and does not care how they are encoded. So, it is possible for the same database to be concurrently accessed by mumps processes operating in both M mode and UTF-8 mode. Mupip and other processes are not concerned with this distinction. If the database has triggers, since triggers are compiled code, all processes that use a database must have the same mode.
 
 The mode of a process is controlled by the environment variable ydb_chset. If it is not set, or has a value other than "UTF-8", the process operates in M mode. Within a process the ISV $ZCHset can be used to test the mode.
 
@@ -2582,10 +2594,10 @@ The locale command provides a list of available locales; the locale-gen command 
 
 For interactive usage, the terminal emulator must be configured to display characters in UTF-8 mode; otherwise you will become very confused.
 
-This exercise uses two sessions, one with a mumps process in UTF-8 mode and the other using a mumps process in M mode. Create a utf8demo directory and two environment files within it, gtmenv_m and gtmenv_utf8 as follows:
+This exercise uses two sessions, one with a mumps process in UTF-8 mode and the other using a mumps process in M mode. Create a utf8demo directory and two environment files within it, ydbenv_m and ydbenv_utf8 as follows:
 
 .. parsed-literal::
-   yottadbuser@yottadbworkshop:~/utf8demo$ cd utf8demo; vim gtmenv_m ; cat gtmenv_m
+   yottadbuser@yottadbworkshop:~/utf8demo$ cd utf8demo; vim ydbenv_m ; cat ydbenv_m
    export ydb_dist=/usr/local/lib/yottadb/r1.20_x86_64/
    export ydb_gbldir=$HOME/utf8demo/yottadb.gld
    export ydb_log=/tmp/yottadb/r1.20_x86_64
@@ -2597,7 +2609,7 @@ This exercise uses two sessions, one with a mumps process in UTF-8 mode and the 
    mkdir -p $ydb_tmp
    alias mumps=$ydb_dist/mumps
    alias mupip=$ydb_dist/mupip
-   yottadbuser@yottadbworkshop:~/utf8demo$ cp gtmenv_m gtmenv_utf8 ; vim gtmenv_utf8 ; cat gtmenv_utf8 
+   yottadbuser@yottadbworkshop:~/utf8demo$ cp ydbenv_m ydbenv_utf8 ; vim ydbenv_utf8 ; cat ydbenv_utf8 
    export ydb_dist=/usr/local/lib/yottadb/r1.20/utf8
    export ydb_gbldir=$HOME/utf8demo/yottadb.gld
    export ydb_log=/tmp/yottadb/r1.20_x86_64
@@ -2618,7 +2630,7 @@ This exercise uses two sessions, one with a mumps process in UTF-8 mode and the 
 Create a global directory and database file, as you did before. Only now, do this in the UTF-8 session to so that you can see that the operation of the GDE utility program is the same.
 
 .. parsed-literal::
-   yottadbuser\@yottadbworkshop:~/utf8demo$ source gtmenv_UTF8
+   yottadbuser\@yottadbworkshop:~/utf8demo$ source ydbenv_UTF8
    yottadbuser\@yottadbworkshop:~/utf8demo$ mumps -run GDE
    %GDE-I-GDUSEDEFS, Using defaults for Global Directory 
            /home/yottadbuser/utf8demo/yottadb.gld
@@ -3118,7 +3130,7 @@ Mary can now manually generate a 32-byte key for the symmetric cipher, but it is
    Use this key anyway? (y/N) y
    yottadbuser\@paris:~$ 
 
-As the Ken user, create a directory enc, with a gtmenv file to set the environment. You can copy the gtmenv file from a directory such as exDir. Also, create a master key file for the environment variable gtm_dbkeys to point to. Note that libconfig file syntax needs to be just right.
+As the Ken user, create a directory enc, with a ydbenv file to set the environment. You can copy the ydbenv file from a directory such as exDir. Also, create a master key file for the environment variable gtm_dbkeys to point to. Note that libconfig file syntax needs to be just right.
 
 .. parsed-literal::
    yottadbuser@yottadbworkshop:~$ mkdir enc
@@ -3136,7 +3148,7 @@ As the Ken user, create a directory enc, with a gtmenv file to set the environme
    mkdir -p $ydb_tmp
    alias mumps=$ydb_dist/mumps
    alias mupip=$ydb_dist/mupipexport ydb_dist=/usr/local/lib/yottadb/r1.20_x86_64
-   yottadbuser@paris:~/enc$ source gtmenv
+   yottadbuser@paris:~/enc$ source ydbenv
    yottadbuser@paris:~/enc$ vim $gtmcrypt_config # create file to link database files to encryption keys
    yottadbuser@paris:~/enc$ cat $gtmcrypt_config
    database: {
@@ -3219,7 +3231,7 @@ Now create a global directory that specifies that the database file is encrypted
            /home/yottadbuser/enc/yottadb.gld
    yottadbuser\@paris:~/enc$
 
-Now create the database file. Notice that in order to supply mupip create with the obfuscated GPG keyring password in the environment, we have to invoke mupip through an intermediary mumps process that prompts for the password and places and obfuscated password in the environment.
+Now create the database file. Notice that in order to supply mupip create with the obfuscated GPG keyring password in the environment, we have to invoke mupip through an intermediary mumps process that prompts for the password and places an obfuscated password in the environment.
 
 .. parsed-literal::
    yottadbuser@paris:~/enc$ ydb_passwd="" mumps -dir
@@ -3382,7 +3394,7 @@ Create a VistA directory. Use a g subdirectory for global variables, an o subdir
 
 .. parsed-literal::
    yottadbuser\@yottadbworkshop:~$ mkdir -p VistA/{g,o,r}
-   yottadbuser\@yottadbworkshop:~$ vim VistA/gtmenv ; cat VistA/gtmenv
+   yottadbuser\@yottadbworkshop:~$ vim VistA/ydbenv ; cat VistA/ydbenv
    export ydb_dist=/usr/local/lib/yottadb/r1.20_x86_64/
    export ydb_gbldir=$HOME/VistA/g/yottadb.gld
    export ydb_log=/tmp/yottadb/r1.20_x86_64
@@ -3393,13 +3405,13 @@ Create a VistA directory. Use a g subdirectory for global variables, an o subdir
    mkdir -p $ydb_tmp
    alias mumps=$ydb_dist/mumps
    alias mupip=$ydb_dist/mupip
-   yottadbuser\@yottadbworkshop:~$ source VistA/gtmenv
+   yottadbuser\@yottadbworkshop:~$ source VistA/ydbenv
    yottadbuser\@yottadbworkshop:~$ mumps -run GDE
    %GDE-I-GDUSEDEFS, Using defaults for Global Directory 
            /home/yottadbuser/VistA/g/yottadb.gld
 
-   GDE> @/usr/local/lib/yottadb/r120/gdedefaults
-   %GDE-I-EXECOM, Executing command file /usr/local/lib/yottadb/r120/gdedefaults
+   GDE> @/usr/local/lib/yottadb/r1.20_x86_64/gdedefaults
+   %GDE-I-EXECOM, Executing command file /usr/local/lib/yottadb/r1.20_x86_64/gdedefaults
 
    GDE> change -segment DEFAULT -file=$HOME/VistA/g/yottadb.dat
    GDE> show -segment
@@ -3452,7 +3464,7 @@ Load the global variables into the database.
    VistA/:
    total 4.0K
    drwxrwxr-x 2 yottadbuser gtmuser  34 Jan 26 15:33 g
-   -rw-rw-r-- 1 yottadbuser gtmuser 384 Jan 26 15:25 gtmenv
+   -rw-rw-r-- 1 yottadbuser gtmuser 384 Jan 26 15:25 ydbenv
    drwxrwxr-x 2 yottadbuser gtmuser   6 Jan 26 15:17 o
    drwxrwxr-x 2 yottadbuser gtmuser   6 Jan 26 15:17 r
 
@@ -3601,10 +3613,10 @@ Notice that we simply moved the object, journal, global directory and database f
 Fixing the above (starting with the environment file, since it points to the global directory, and then the global directory, since it points to the database file):
 
 .. parsed-literal::
-   yottadbuser@yottadbworkshop:~$ mv VistA/gtmenv VistA/r1.20/
-   yottadbuser@yottadbworkshop:~$ vim VistA/r1.20/gtmenv ;  cat VistA/r1.20/gtmenv
+   yottadbuser@yottadbworkshop:~$ mv VistA/ydbenv VistA/r1.20/
+   yottadbuser@yottadbworkshop:~$ vim VistA/r1.20/ydbenv ;  cat VistA/r1.20/ydbenv
    export ydb_dir=$HOME/VistA
-   export ydb_rel=r120
+   export ydb_rel=r1.20_x86_64
    export ydb_dist=/usr/local/lib/yottadb/$ydb_rel
    export ydb_gbldir=$ydb_dir/$ydb_rel/g/yottadb.gld
    export ydb_log=/tmp/yottadb/$ydb_rel
@@ -3620,7 +3632,7 @@ Fixing the above (starting with the environment file, since it points to the glo
 Notice that since the YottaDB version occurs in multiple locations, it has been abstracted to the environment variable $ydb_rel. Also, /home/yottadbuser/VistA can be abstracted into an environment variable $ydb_dir. By modifying the global directory to use the environment variables, the global directory becomes more portable.
 
 .. parsed-literal::
-   yottadbuser\@yottadbworkshop:~$ source VistA/r1.20/gtmenv
+   yottadbuser\@yottadbworkshop:~$ source VistA/r1.20/ydbenv
    yottadbuser\@yottadbworkshop:~$ mumps -run GDE
    %GDE-I-LOADGD, Loading Global Directory file
            /home/yottadbuser/VistA/r1.20/g/yottadb.gld
@@ -3724,7 +3736,7 @@ In general, program source code is independent of the YottaDB version. On occasi
     yottadbuser\@yottadbworkshop:~$ vim VistA/r1.20/env
     yottadbuser\@yottadbworkshop:~$ cat VistA/r1.20/env
     export ydb_dir=$HOME/VistA
-    export ydb_rel=r120
+    export ydb_rel=r1.20_x86_64
     export ydb_dist=/usr/local/lib/yottadb/$ydb_rel
     export ydb_gbldir=$ydb_dir/$ydb_rel/g/yottadb.gld
     export ydb_log=/tmp/yottadb/$ydb_rel
@@ -3735,11 +3747,11 @@ In general, program source code is independent of the YottaDB version. On occasi
     mkdir -p $ydb_tmp
     alias mumps=$ydb_dist/mumps
     alias mupip=$ydb_dist/mupip
-    yottadbuser\@yottadbworkshop:~$ source VistA/r1.20/gtmenv
+    yottadbuser\@yottadbworkshop:~$ source VistA/r1.20/ydbenv
     yottadbuser\@yottadbworkshop:~$ mumps -dir
 
     YDB>write $zroutines
-    /home/yottadbuser/VistA/r120/o*(/home/yottadbuser/VistA/r120/r /home/yottadbuser/VistA/r) /usr/local/lib/yottadb/r120/libyottadbutil.so
+    /home/yottadbuser/VistA/r1.20_x86_64/o*(/home/yottadbuser/VistA/r1.20_x86_64/r /home/yottadbuser/VistA/r) /usr/local/lib/yottadb/r1.20_x86_64/libyottadbutil.so
     YDB>halt
     yottadbuser\@yottadbworkshop:~$
 
@@ -3766,9 +3778,9 @@ Installations of large applications often have local or modifications. In such c
        └── r
 
     12 directories
-    yottadbuser\@yottadbworkshop:~$ vim VistA/r1.20/gtmenv ;  cat VistA/r1.20/gtmenv
+    yottadbuser\@yottadbworkshop:~$ vim VistA/r1.20/ydbenv ;  cat VistA/r1.20/ydbenv
     export ydb_dir=$HOME/VistA
-    export ydb_rel=r120
+    export ydb_rel=r1.20_x86_64
     export ydb_dist=/usr/local/lib/yottadb/$ydb_rel
     export ydb_gbldir=$ydb_dir/$ydb_rel/g/yottadb.gld
     export ydb_log=/tmp/yottadb/$ydb_rel
@@ -3927,14 +3939,14 @@ Delete the r1.20 subdirectory, and obtain the files inc and install from `here <
    drwxrwxr-x 6 yottadbuser yottadbuser    108 Jan 16 13:20 r1.10
    yottadbuser@yottadbworkshop:~$
 
-Similarly, to VistA/r1.10 copy the files wvehrstop, wvehrstart, run, newjnls and gtmenv (yes, the latter overwrites the gtmenv file you already have there). Make wvehrstop, wvehrstart, run and newjnls executable. Also, replace the env in VistA/r1.10 with the new env file. Create a symbolic link called ydb to /usr/local/lib/yottadb/r1.10.
+Similarly, to VistA/r1.10 copy the files wvehrstop, wvehrstart, run, newjnls and ydbenv (yes, the latter overwrites the ydbenv file you already have there). Make wvehrstop, wvehrstart, run and newjnls executable. Also, replace the env in VistA/r1.10 with the new env file. Create a symbolic link called ydb to /usr/local/lib/yottadb/r1.10.
 
 .. parsed-literal::
    yottadbuser@yottadbworkshop:~$ ls -l VistA/r1.10/
    total 896
    drwxrwxr-x 2 yottadbuser yottadbuser     48 Jan 15 16:47 g
    lrwxrwxrwx 1 yottadbuser yottadbuser     32 Jan 16 13:24 ydb -> /usr/local/lib/yottadb/r1.10
-   -rw-rw-r-- 1 yottadbuser yottadbuser    735 Jan 16 13:20 gtmenv
+   -rw-rw-r-- 1 yottadbuser yottadbuser    735 Jan 16 13:20 ydbenv
    -rwxr-xr-x 1 yottadbuser yottadbuser    181 Jan 16 13:20 newjnls
    drwxrwxr-x 2 yottadbuser yottadbuser 610304 Jan 16 11:57 o
    drwxrwxr-x 2 yottadbuser yottadbuser   4096 Jan 16 12:01 p
