@@ -973,9 +973,9 @@ The show-option-list includes (these are not case-sensitive):
         TZTRI          0
         UZTRI          0
         TRUNC          0
-        %GTM-S-JNLSUCCESS, Show successful
-        %GTM-S-JNLSUCCESS, Verify successful
-        %GTM-I-MUJNLSTAT, End processing at Mon  Jan  29 17:42:21 2018
+        %YDB-S-JNLSUCCESS, Show successful
+        %YDB-S-JNLSUCCESS, Verify successful
+        %YDB-I-MUJNLSTAT, End processing at Mon  Jan  29 17:42:21 2018
 
 
 The following example displays the cryptographic hash of the symmetric key stored in the journal file header (the output is one long line). 
@@ -1373,7 +1373,7 @@ where:
 
 02 record indicates a process/image dropped interest (PFIN) in the current journal file.
 
-03 record indicates all YottaDB/GT.M images dropped interest in this journal file and the journal file was closed normally.
+03 record indicates all YottaDB images dropped interest in this journal file and the journal file was closed normally.
 
 04 record indicates a database update caused by a KILL command.
 
@@ -1399,7 +1399,7 @@ Journal extracts contain NULL records only in a multisite replication configurat
 
 * An external filter on an instance transforms a SET record to a NULL record that has a different schema.
 
-* If the source side has triggers enabled and its receiver side  runs on a platform where triggers are not supported, trigger definition journal records from the source side are transformed to NULL records on the receiver side.
+* If the source side has triggers enabled and its receiver side runs on a platform where triggers are not supported, trigger definition journal records from the source side are transformed to NULL records on the receiver side.
 
 .. note::
    A NULL record does not have global information. Therefore, it resides in the alphabetically last replicated region of the global directory.

@@ -244,7 +244,7 @@ In order to enable the Job command, the password for the key ring on disk exists
 
 $ydb_passwd is the only way for a child process to receive a password from a parent. In the event that the parent process does not pass $ydb_passwd to the child, or passes an incorrect password, there is little a child without access to an input device can do except log an error and terminate.
 
-An obfuscated password in the environment is the only way that other YottaDB processes (MUPIP and DSE) can be provided with a password. If they encounter an encrypted database or journal file, and do not have an obfuscated password to the key ring on disk in the environment, they terminate with the error message "GTM-E-CRYPTINIT, Error initializing encryption library. Environment variable ydb_passwd set to empty string. Password prompting not allowed for utilities". There are (at least) two ways to provide MUPIP and DSE processes with obfuscated passwords in $ydb_passwd: 
+An obfuscated password in the environment is the only way that other YottaDB processes (MUPIP and DSE) can be provided with a password. If they encounter an encrypted database or journal file, and do not have an obfuscated password to the key ring on disk in the environment, they terminate with the error message "YDB-E-CRYPTINIT, Error initializing encryption library. Environment variable ydb_passwd set to empty string. Password prompting not allowed for utilities". There are (at least) two ways to provide MUPIP and DSE processes with obfuscated passwords in $ydb_passwd: 
 
 1. maskpass is a stand-alone program that prompts the user for the password to the key ring on disk, and returns an obfuscated password to which $ydb_passwd can be set. The environment variable $ydb_passwd should be not set, set to a null value, or set to a value produced by maskpass. Setting $ydb_passwd to an incorrect non-null value without using maskpass could result in undefined behavior of the encryption library. You can use maskpass in shell scripts. For example:
 
@@ -279,7 +279,7 @@ The following schematic illustrates acquisition of the password for the key ring
 
 The reference implementation uses a master key file for each user to obtain the symmetric keys for each database or journal file. The environment variable $gtmcrypt_config specifies the master key configuration file used for database encryption and TLS. The configuration file leverages the popular libconfig library (http://www.hyperrealm.com/libconfig). Please refer to the section called “Creating a configuration file” for instructions on creating the configuration file.
 
-The functions look for a key file ~/.gtm_dbkeys (i.e., in the home directory of the process' userid). The master key file contains sections as follows:
+The functions look for a key file ~/.ydb_dbkeys (i.e., in the home directory of the process' userid). The master key file contains sections as follows:
 
 .. parsed-literal::
    dat database_filename
@@ -453,34 +453,34 @@ Then she encrypts the symmetric cipher key with Phil's public key, signs it, and
    gpg: depth: 1 valid: 1 signed: 0 trust: 1-, 0q, 0n, 0m, 0f, 0u
    helen$ 
 
-Phil adds the key in phil_cust_dat.txt to his master key file $HOME/.gtm_dbkeys:
+Phil adds the key in phil_cust_dat.txt to his master key file $HOME/.ydb_dbkeys:
 
 .. parsed-literal::
-   phil$ export gtm_dbkeys=$HOME/.gtm_dbkeysphil$ $ydb_dist/plugin/gtmcrypt/add_db_key.sh $PWD/gtm.dat 
-   phil_cust_dat.txt $gtm_dbkeys
+   phil$ export ydb_dbkeys=$HOME/.ydb_dbkeysphil$ $ydb_dist/plugin/gtmcrypt/add_db_key.sh $PWD/ydb.dat 
+   phil_cust_dat.txt $ydb_dbkeys
    phil$ 
 
 Phil creates a global directory, where he changes the configuration parameter for the database file cust.dat specifying that it be encrypted the next time it is created. (Remember that except for mapping from global variable names to database file names, configuration parameters in the global directory are used only when MUPIP creates new database files.) He then creates the database file, runs a DSE dump fileheader to extract the hash (highlighted in the output), and sends it to Helen for verification (notice that MUPIP CREATE generates an error for the mumps.dat file that exists already, but creates a new encrypted cust.dat file): 
 
 .. parsed-literal::
-   phil$ export gtmgbldir=gtm.gld
+   phil$ export ydb_gbldir=yottadb.gld
    phil$ export ydb_passwd=""
    phil$ $ydb_dist/mumps -dir
    Enter Passphrase:
    YDB>zsystem "$ydb_dist/mumps -run GDE"
    %GDE-I-LOADGD, Loading Global Directory file
-   /var/myApp/databases/gtm.gld
+   /var/myApp/databases/ydb.gld
    %GDE-I-VERIFY, Verification OK
    GDE> change -segment DEFAULT -encryption
    GDE> exit
    %GDE-I-VERIFY, Verification OK
    %GDE-I-GDUPDATE, Updating Global Directory file
-   /var/myApp/databases/gtm.gld
+   /var/myApp/databases/yottadb.gld
    YDB>zsystem "$ydb_dist/mupip create"
-   Created file /var/myApp/databases/gtm.dat
+   Created file /var/myApp/databases/yottadb.dat
    Error opening file /var/myMpp/databases/mumps.dat
    : File exists
-   %GTM-F-DBNOCRE, Not all specified database files, or their associated journal files were created
+   %YDB-F-DBNOCRE, Not all specified database files, or their associated journal files were created
     
    YDB>zsystem "dse"
  

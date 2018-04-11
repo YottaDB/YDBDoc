@@ -810,7 +810,7 @@ Here is a sample configuration file:
 
    };
 
-If you are using the environment variable gtm_dbkeys to point to the master key file for database encryption, please convert that file to the libconfig configuration file format as pointed to by the $gtmcrypt_config environment variable at your earliest convenience. In the latest version, the gtm_dbkeys environment variable and the master key file it points to are deprecated in favor of the gtmencrypt_config environment variable. Although the latest version supports the use of $gtm_dbkeys for database encryption, YottaDB plans to discontinue support for it in the very near future. To convert master key files to libconfig format configuration files, please download CONVDBKEYS.m from `Github <https://github.com/YottaDB/YottaDBdoc/tree/master/GTMAdminOps>`_ and follow instructions in the comments near the top of the program file.
+If you are using the environment variable gtm_dbkeys to point to the master key file for database encryption, please convert that file to the libconfig configuration file format as pointed to by the $gtmcrypt_config environment variable at your earliest convenience. In the latest version, the gtm_dbkeys environment variable and the master key file it points to are deprecated in favor of the gtmencrypt_config environment variable. Although the latest version supports the use of $gtm_dbkeys for database encryption, YottaDB plans to discontinue support for it in the very near future. To convert master key files to libconfig format configuration files, please download CONVDBKEYS.m from `Github <https://github.com/YottaDB/YottaDBdoc/tree/master/AdminOpsGuide>`_ and follow instructions in the comments near the top of the program file.
 
 +++++++++++++++++++++++++++++
 Network Link Between Systems
@@ -919,7 +919,7 @@ Download Replication Examples
 
 repl_procedures.tar.gz contains a set of replication example scripts. Each script contains a combination of YottaDB commands that accomplish a specific task. All examples in the Procedures section use these replication scripts but each example uses different script sequence and script arguments. Always run all replication examples in a test system from a new directory as they create sub-directories and database files in the current directory. No claim of copyright is made with regard to these examples. These example scripts are for explanatory purposes and are not intended for production use. YOU MUST UNDERSTAND, AND APPROPRIATELY ADJUST THE COMMANDS GIVEN IN THESE SCRIPTS BEFORE USING IN A PRODUCTION ENVIRONMENT. Typically, you would set replication between instances on different systems/data centers and create your own set of scripts with appropriate debugging and error handling to manage replication between them.
 
-Go to `Github <https://github.com/YottaDB/YottaDBdoc/tree/master/GTMAdminOps>`_ to download repl_procedures.tar.gz on a test system. 
+Go to `Github <https://github.com/YottaDB/YottaDBdoc/tree/master/AdminOpsGuide>`_ to download repl_procedures.tar.gz on a test system. 
 
 repl_procedures.tar.gz includes the following scripts:
 
@@ -937,8 +937,8 @@ Here is the code:
 .. parsed-literal::
    export ydb_dist=/usr/local/lib/yottadb/$2
    export gtm_repl_instname=$1
-   export gtm_repl_instance=$PWD/$gtm_repl_instname/gtm.repl
-   export ydb_gbldir=$PWD/$gtm_repl_instname/gtm.gld
+   export gtm_repl_instance=$PWD/$gtm_repl_instname/yottadb.repl
+   export ydb_gbldir=$PWD/$gtm_repl_instname/yottadb.gld
    export gtm_principal_editing=EDITING
    export ydb_routines="$PWD/$gtm_repl_instname $ydb_dist"
    #export ydb_routines="$PWD/$gtm_repl_instname $ydb_dist/libgtmutil.so"
@@ -966,7 +966,7 @@ Here is the code:
 gdemsr contains:
 
 .. parsed-literal::
-   change -segment DEFAULT -file_name=$PWD/$gtm_repl_instname/gtm.dat
+   change -segment DEFAULT -file_name=$PWD/$gtm_repl_instname/yottadb.dat
    exit
 
 **backup_repl**
@@ -1980,7 +1980,7 @@ This example adds the mapping for global ^A to a new database file A.dat in an A
    $ydb_dist/mumps -r ^GDE @updgld
    ./db_create
    mkdir backup_B
-   $ydb_dist/mupip backup "*" backup_B  -replinst=backup_B/gtm.repl
+   $ydb_dist/mupip backup "*" backup_B  -replinst=backup_B/ydb.repl
    $ydb_dist/mupip set -journal=on,before_images,filename=B/gtm.mjl -noprevjnlfile -region "DEFAULT"
    $ydb_dist/mumps -r %XCMD 'merge ^A=^|"B/prior.gld"\|A'
    $ydb_dist/mupip set -replication=on -region AREG
@@ -1995,7 +1995,7 @@ This example adds the mapping for global ^A to a new database file A.dat in an A
    $ydb_dist/mumps -r ^GDE @updgld
    ./db_create
    mkdir backup_A
-   $ydb_dist/mupip backup "*" backup_A -replinst=backup_A/gtm.repl
+   $ydb_dist/mupip backup "*" backup_A -replinst=backup_A/ydb.repl
    $ydb_dist/mupip set -journal=on,before_images,filename=A/gtm.mjl -noprevjnlfile -region "DEFAULT"
    $ydb_dist/mumps -r %XCMD 'merge ^A=^|"A/prior.gld"\|A'
    $ydb_dist/mupip set -replication=on -region AREG
@@ -3155,7 +3155,7 @@ Example:
    Fri May 21 15:29:52 2010 : Initiating CHECKHEALTH operation on source server pid [0] for secondary 
    instance name [INSTB]
    PID 0 Source server is NOT alive
-   %GTM-E-SRCSRVNOTEXIST, Source server for secondary instance INSTB is not alive
+   %YDB-E-SRCSRVNOTEXIST, Source server for secondary instance INSTB is not alive
 
 +++++++++++++++++++++++++++
 Changing the Log File
@@ -3258,7 +3258,7 @@ Example:
    101 : backlog number of transactions written to journal pool and yet to be sent by the source server
    102 : sequence number of last transaction written to journal pool
    1 : sequence number of last transaction sent by source server
-   %GTM-E-SRCSRVNOTEXIST, Source server for secondary instance INSTB is not alive
+   %YDB-E-SRCSRVNOTEXIST, Source server for secondary instance INSTB is not alive
 
 ++++++++++++++++++++++++++++++++++++++
 Processing Lost Transactions File
@@ -3455,17 +3455,17 @@ Example:
 This command starts the Receiver Server with Helper Processes. The following sample output from the ps command shows that there are 5 reader processes and 3 writer processes.
 
 .. parsed-literal::
-   gtmuser1 11943 1     0 06:42 ? 00:00:00 /usr/library/GTM/mupip replicate -receiver -start 
+   gtmuser1 11943 1     0 06:42 ? 00:00:00 /usr/library/YDB/mupip replicate -receiver -start 
    -listenport=1234 -helpers -log=B2C.log -buff=$rec_pool_size
-   gtmuser1 11944 11943 0 06:42 ? 00:00:00 /usr/library/GTM/mupip replicate -updateproc
-   gtmuser1 11945 11943 0 06:42 ? 00:00:00 /usr/library/GTM/mupip replicate -updhelper -reader
-   gtmuser1 11946 11943 0 06:42 ? 00:00:00 /usr/library/GTM/mupip replicate -updhelper -reader
-   gtmuser1 11947 11943 0 06:42 ? 00:00:00 /usr/library/GTM/mupip replicate -updhelper -reader
-   gtmuser1 11948 11943 0 06:42 ? 00:00:00 /usr/library/GTM/mupip replicate -updhelper -reader
-   gtmuser1 11949 11943 0 06:42 ? 00:00:00 /usr/library/GTM/mupip replicate -updhelper -reader
-   gtmuser1 11950 11943 0 06:42 ? 00:00:00 /usr/library/GTM/mupip replicate -updhelper -writer
-   gtmuser1 11951 11943 0 06:42 ? 00:00:00 /usr/library/GTM/mupip replicate -updhelper -writer
-   gtmuser1 11952 11943 0 06:42 ? 00:00:00 /usr/library/GTM/mupip replicate -updhelper -writer
+   gtmuser1 11944 11943 0 06:42 ? 00:00:00 /usr/library/YDB/mupip replicate -updateproc
+   gtmuser1 11945 11943 0 06:42 ? 00:00:00 /usr/library/YDB/mupip replicate -updhelper -reader
+   gtmuser1 11946 11943 0 06:42 ? 00:00:00 /usr/library/YDB/mupip replicate -updhelper -reader
+   gtmuser1 11947 11943 0 06:42 ? 00:00:00 /usr/library/YDB/mupip replicate -updhelper -reader
+   gtmuser1 11948 11943 0 06:42 ? 00:00:00 /usr/library/YDB/mupip replicate -updhelper -reader
+   gtmuser1 11949 11943 0 06:42 ? 00:00:00 /usr/library/YDB/mupip replicate -updhelper -reader
+   gtmuser1 11950 11943 0 06:42 ? 00:00:00 /usr/library/YDB/mupip replicate -updhelper -writer
+   gtmuser1 11951 11943 0 06:42 ? 00:00:00 /usr/library/YDB/mupip replicate -updhelper -writer
+   gtmuser1 11952 11943 0 06:42 ? 00:00:00 /usr/library/YDB/mupip replicate -updhelper -writer
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Stopping the Update Process and/or the Receiver Server

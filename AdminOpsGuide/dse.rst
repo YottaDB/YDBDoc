@@ -638,7 +638,7 @@ Indicates whether or not a region completed a successful recovery with the MUPIP
 Changing this flag does not correct or cause database damage. When CORRUPT_FILE is set to TRUE, the DSE DUMP command displays a message like the following:
 
 .. parsed-literal::
-   %GTM-W-DBFLCORRP, /home/gtmnode1/mumps.dat Header indicates database file is corrupt
+   %YDB-W-DBFLCORRP, /home/gtmnode1/mumps.dat Header indicates database file is corrupt
 
 .. note::
    After a CHANGE -FILEHEADER -CORRUPT=TRUE, the file is unavailable to future YottaDB access other than DSE. Under normal conditions, there should never be a need to change this flag manually. A MUPIP SET -PARTIAL_BYPASS_RECOV sets this flag to false.
@@ -1285,9 +1285,9 @@ Example:
 This command displays an output like the following: 
 
 .. parsed-literal::
-   File    /home/jdoe/.fis-gtm/V6.1-000_x86_64/g/gtm.dat
+   File    /home/jdoe/.yottadb/r1.20_x86_64/g/yottadb.dat
    Region  DEFAULT
-   File            /home/jdoe/.fis-gtm/V6.1-000_x86_64/g/gtm.dat
+   File            /home/jdoe/.yottadb/r1.20_x86_64/g/yottadb.dat
    Region          DEFAULT
    Date/Time       27-JAN-2014 03:13:40 [$H = 63214,11620]
      Access method                          MM  Global Buffers                1024

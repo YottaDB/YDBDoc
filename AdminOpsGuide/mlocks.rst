@@ -235,7 +235,7 @@ Type Yes or Y in response to the prompt.
 LKE responds with an informational message:
 
 .. parsed-literal::
-   %GTM-S-LCKGONE, Lock removed : ^a
+   %YDB-S-LCKGONE, Lock removed : ^a
 
 Type Yes or N or No or N until all LOCKs are displayed and acted upon.
 
@@ -307,7 +307,7 @@ The optional qualifiers are:
 
 * The SHOW command reports active LOCKs. Information includes the LOCK resource name and the process identification (PID) of the LOCK owner.
 
-* LKE SHOW displays lock space usage with a message in the form of: "%GTM-I-LOCKSPACEUSE, Estimated free lock space: xxx% of pppp pages." If the lock space is full, it also displays a LOCKSPACEFULL error.
+* LKE SHOW displays lock space usage with a message in the form of: "%YDB-I-LOCKSPACEUSE, Estimated free lock space: xxx% of pppp pages." If the lock space is full, it also displays a LOCKSPACEFULL error.
 
 * A LOCK command which finds no room in LOCK_SPACE to queue a waiting LOCK, does a slow poll waiting for LOCK_SPACE to become available. If LOCK does not acquire the ownership of the named resource with the specified timeout, it returns control to the application with $TEST=0. If timeout is not specified, the LOCK command continues to do a slow poll till the space becomes available.
 
@@ -425,7 +425,7 @@ This command displays all LOCKs mapped to all regions of the current global dire
    DEFAULT
    ^A Owned by PID= 5052 which is an existing process
    ^B Owned by PID= 5052 which is an existing process
-   %GTM-I-LOCKSPACEUSE, Estimated free lock space: 99% of 40 pages
+   %YDB-I-LOCKSPACEUSE, Estimated free lock space: 99% of 40 pages
 
 Example:
 
@@ -465,7 +465,7 @@ This command displays the lock on ^A in the region DEFAULT. It produces an outpu
 .. parsed-literal::
    DEFAULT
    ^A Owned by PID= 5052 which is an existing process
-   %GTM-I-LOCKSPACEUSE, Estimated free lock space: 99% of 40 pages
+   %YDB-I-LOCKSPACEUSE, Estimated free lock space: 99% of 40 pages
 
 +++++++++
 EXIT
