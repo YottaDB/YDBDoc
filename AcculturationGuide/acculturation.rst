@@ -202,19 +202,19 @@ You can run the script that runs YottaDB as follows:
 Now you are in the “direct mode” where you can execute commands interactively. For example:
 
 .. parsed-literal::
-   YDB>set ^Disney("Mulan")="China"
+   YDB>set ^Animal("Mammal")="Bear"
 
-   YDB>set ^Disney("Moana")="Polynesia"
+   YDB>set ^Animal("Bird")="Eagle"
 
-   YDB>set ^Disney("Jungle Book")="India"
+   YDB>set ^Animal("Insect")="Butterfly"
 
-The commands perform database updates, which are shared between processes. You can see this if you start a new terminal session, start a new YottaDB process and ask it to dump the “global variable” (a key-value association) ^Disney. The halt command takes you back to the Linux shell.
+The commands perform database updates, which are shared between processes. You can see this if you start a new terminal session, start a new YottaDB process and ask it to dump the “global variable” (a key-value association) ^Animal. The halt command takes you back to the Linux shell.
 
 .. parsed-literal::
-   YDB>zwrite ^Disney
-   ^Disney("Mulan")="China"
-   ^Disney("Moana")="Polynesia"
-   ^Disney("Jungle Book")="India"
+   YDB>zwrite ^Animal
+   ^Animal("Mammal")="Bear"
+   ^Animal("Bird")="Eagle"
+   ^Animal("Insect")="Butterfly"
    YDB>halt
    yottadbuser@yottadbworkshop:~$
 
@@ -234,7 +234,7 @@ The operation of YottaDB is controlled by a number of environment variables. In 
    ydb_dist=/usr/local/lib/yottadb/r1.20_x86_64/
    yottadbuser@yottadbworkshop:~$ 
 
-YottaDB databases can also be configured so that they can be recovered after a system crash. Simulate a crash by either clicking on the “X” in the top right corner of your virtual machine console window to instantly “power down” your virtual machine, or, if you started it headless, perform a hard power-down using a command on the host (in the case of virtualization using qemu/kvm on Linux, a kill -9 of the virtual machine process). Then reboot the virtual machine, run ydb and use a zwrite ^Disney command to confirm that the data in the database is still intact.
+YottaDB databases can also be configured so that they can be recovered after a system crash. Simulate a crash by either clicking on the “X” in the top right corner of your virtual machine console window to instantly “power down” your virtual machine, or, if you started it headless, perform a hard power-down using a command on the host (in the case of virtualization using qemu/kvm on Linux, a kill -9 of the virtual machine process). Then reboot the virtual machine, run ydb and use a zwrite ^Animal command to confirm that the data in the database is still intact.
 
 The tree program shows the default environment YottaDB creates in your home directory. 
 
@@ -264,7 +264,7 @@ Note that you may have to install the program 'tree' before running the above co
 With YottaDB, you can write applications that implement international character sets using Unicode or ISO/IEC-10646 (the two standards track each other). Connect to the virtual machine with your terminal emulator configured to support the UTF-8 character set. In a fresh terminal session execute the following (the non-printable characters may look different on your session from the screen here, depending on how your terminal emulator renders them):
 
 .. parsed-literal::
-   yottadbuser@yottadbworkshop:~$ export ydb_chset=UTF-8 LC_CTYPE=en_US.utf8
+   yottadbuser@yottadbworkshop:~$ export gtm_chset=UTF-8 LC_CTYPE=en_US.utf8
    yottadbuser@yottadbworkshop:~$ source /usr/local/lib/yottadb/r1.20_x86_64/ydb_env_set
    yottadbuser@yottadbworkshop:~$ ydb
    YDB>write $zchset
@@ -888,7 +888,7 @@ The following environment variable is explicitly set by ydb_env_set:
 
 The following must be set before ydb_env_set is sourced if you want to run YottaDB in UTF-8 mode:
 
-- **ydb_chset** - when it has the value "UTF-8", YottaDB  operates in UTF-8 mode,
+- **gtm_chset** - when it has the value "UTF-8", YottaDB  operates in UTF-8 mode,
 
 When possible, ydb_env_set provides reasonable defaults for any of the following that are not set:
 
@@ -896,7 +896,7 @@ When possible, ydb_env_set provides reasonable defaults for any of the following
 
 - **ydb_gbldir** - points to the global directory.
 
-- **ydb_icu_version** - this is meaningful only when $ydb_chset is "UTF-8". YottaDB requires libicu version 3.6 or higher. If libicu has been compiled with symbol renaming enabled (as is the case with Ubuntu Linux), YottaDB requires ydb_icu_version to be explicitly set (see the release notes for your YottaDB release). Note that ICU changed its version numbering system so that the version after 4.8 was 49. As YottaDB retains the old numbering scheme, for ICU versions after 4.8, please set ydb_icu_version using the old scheme, e.g., if your Linux system has ICU version 52, set ydb_icu_version to 5.2.
+- **ydb_icu_version** - this is meaningful only when $gtm_chset is "UTF-8". YottaDB requires libicu version 3.6 or higher. If libicu has been compiled with symbol renaming enabled (as is the case with Ubuntu Linux), YottaDB requires ydb_icu_version to be explicitly set (see the release notes for your YottaDB release). Note that ICU changed its version numbering system so that the version after 4.8 was 49. As YottaDB retains the old numbering scheme, for ICU versions after 4.8, please set ydb_icu_version using the old scheme, e.g., if your Linux system has ICU version 52, set ydb_icu_version to 5.2.
 
 - **ydb_log** - this is where the gtmsecshr process creates log files and all processes that use an installation of YottaDB (from one directory) should have the same value of this environment variable. In conformance with the `Filesystem Hierarchy Standard <http://www.pathname.com/fhs/>`_ /var/log/yottadb/$ydb_rel is suggested (unless the same version of YottaDB is installed in multiple directories).
 
@@ -914,7 +914,7 @@ When possible, ydb_env_set provides reasonable defaults for any of the following
 
 - **ydb_rel** (not used by YottaDB directly) – part of a default YottaDB environment set by ydb_env_set.
 
-- **LC_CTYPE** - a standard system environment variable used to specify a locale. When $ydb_chset has the value "UTF-8", $LC_CTYPE must specify a UTF-8 locale (e.g., "en_US.utf8").
+- **LC_CTYPE** - a standard system environment variable used to specify a locale. When $gtm_chset has the value "UTF-8", $LC_CTYPE must specify a UTF-8 locale (e.g., "en_US.utf8").
 
 YottaDB directly or indirectly uses a number of other environment variables that are not touched by ydb_env_set (they can be set before or after ydb_env_set is sourced). These are documented in the `Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/index.html>`_. Some worth noting are:
 
@@ -2206,7 +2206,7 @@ Take a backup of the entire database (a "comprehensive backup"):
 
    yottadbuser@paris:~/exDir$
 
-Take a backup of the part of the database that has changed (a "bytestream" backup). Note that
+Take a backup of the part of the database that has changed (a "bytestream" backup). Note:
 
 - The use of the -since=database qualifier to only backup those database blocks that have changed since the last backup of the entire database).
 
@@ -2540,7 +2540,7 @@ If you like, you can similarly boot Santiago and show that it also clears the ba
 Unicode (ISO/IEC-10646)
 -----------------------
 
-YottaDB supports international character sets using Unicode. A mumps process can operate in one of two modes: M mode and UTF-8 mode, which is specified by the environment variable ydb_chset at process startup and which is immutable for the life of the process.
+YottaDB supports international character sets using Unicode. A mumps process can operate in one of two modes: M mode and UTF-8 mode, which is specified by the environment variable gtm_chset at process startup and which is immutable for the life of the process.
 
 In M mode, the process interprets strings as single byte characters with characters from $Char(0) through $Char(127) encoded as ASCII (M mode). A YottaDB process in M mode places no interpretation on characters $Char(128) through $Char(255) – the application is free to use any interpretation it chooses, and ISO-8859 variants are commonly used. There is no distinction between a string of bytes and a string of characters and all bytes are valid characters – the concept of an illegal or a non-canonical character is a non-sequitur in M mode.
 
@@ -2548,7 +2548,7 @@ In UTF-8 mode, the process by default interprets strings as multi-byte character
 
 Except when triggers are used, this interpretation is at the level of the process: the database treats strings as binary data and does not care how they are encoded. So, it is possible for the same database to be concurrently accessed by mumps processes operating in both M mode and UTF-8 mode. Mupip and other processes are not concerned with this distinction. If the database has triggers, since triggers are compiled code, all processes that use a database must have the same mode.
 
-The mode of a process is controlled by the environment variable ydb_chset. If it is not set, or has a value other than "UTF-8", the process operates in M mode. Within a process the ISV $ZCHset can be used to test the mode.
+The mode of a process is controlled by the environment variable gtm_chset. If it is not set, or has a value other than "UTF-8", the process operates in M mode. Within a process the ISV $ZCHset can be used to test the mode.
 
 For a process to operate in UTF-8 mode requires:
 
@@ -2618,7 +2618,7 @@ This exercise uses two sessions, one with a mumps process in UTF-8 mode and the 
    export ydb_repl_instance=$HOME/utf8demo/yottadb.repl
    export gtm_repl_instname=dummy
    export ydb_routines="$HOME/utf8demo* $ydb_dist/libyottadbutil.so"
-   export ydb_chset=UTF-8
+   export gtm_chset=UTF-8
    export LC_CTYPE=en_US.utf8 # or other UTF-8 locale
    export ydb_icu_version=5.2 # or other version that you are using
    export gtm_prompt="UTF8>"
