@@ -269,9 +269,9 @@ The file header data elements are listed as follows in alphabetical order for ea
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Wait Disk                          | Seconds that YottaDB waits for disk space to become available before it ceases trying to flush a GDS block's content to disk. During the wait, it sends       |
 |                                    |                                                                                                                                                               |
-|                                    | eight (8) approximately evenly spaced operator log messages before finally issuing a GTM-E-WAITDSKSPACE error. For example, if Wait Disk is 80 seconds and    |
+|                                    | eight (8) approximately evenly spaced operator log messages before finally issuing a YDB-E-WAITDSKSPACE error. For example, if Wait Disk is 80 seconds and    |
 |                                    |                                                                                                                                                               |
-|                                    | YottaDB finds no disk space to flush a GDS block, it sends a GTM-E-WAITDSKSPACE syslog message about every 10 seconds, and after the eighth message           |
+|                                    | YottaDB finds no disk space to flush a GDS block, it sends a YDB-E-WAITDSKSPACE syslog message about every 10 seconds, and after the eighth message           |
 |                                    |                                                                                                                                                               |
 |                                    | issues a WAITDSKSPACE error. This field is only used in UNIX because of its reliance on lazy disk space allocation.                                           |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -404,7 +404,7 @@ GDS Blocks
 Index and data blocks consist of a block header followed by a series of records. The block header has four fields that contain information. The first field, of two bytes, specifies the block version. The second field, of two bytes, specifies the number of bytes currently in use in the block. The third field, of one byte, specifies the block level. The last field of eight bytes represents the transaction number at which the block was last changed. An interpreted form of a block header looks like the following:
 
 .. parsed-literal::
-   File      /home/jdoe/.fis-gtm/V6.0-000_x86_64/g/gtm.dat
+   File      /home/jdoe/.yottadb/r1.20_x86_64/g/yottadb.dat
    Region    DEFAULT
     
    Block 3   Size 262   Level 0   TN 3845EE V6

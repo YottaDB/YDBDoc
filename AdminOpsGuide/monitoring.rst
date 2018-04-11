@@ -23,7 +23,7 @@ This section covers information on monitoring YottaDB messages. There are severa
 
 A system management tool will help you automate monitoring messages.
 
-YottaDB sends messages to the system log at the LOG_INFO level of the LOG_USER facility. YottaDB messages are identified by a signature of the form GTM-s-abcdef where -s- is a severity indicator and abcdef is an identifier. 
+YottaDB sends messages to the system log at the LOG_INFO level of the LOG_USER facility. YottaDB messages are identified by a signature of the form YDB-s-abcdef where -s- is a severity indicator and abcdef is an identifier. 
 
 The severity indicators are:
 * -I- for informational messages
@@ -80,7 +80,7 @@ After a MUPIP JOURNAL -ROLLBACK (non replicated application configuration) or MU
 
 In a replicated environment, frequently (at least hourly; more often is suggested, since checking takes virtually no system resources), check the state of replication and the backlog with MUPIP REPLICATE -CHECKHEALTH and -SHOWBACKLOG. Establish a baseline for the backlog, and take action if the backlog exceeds a threshold.
 
-When a YottaDB process terminates abnormally, it attempts to create a GTM_FATAL_ERROR.ZSHOW_DMP_*.txt file containing a dump of the M execution context and a core file containing a dump of the native process execution context. The M execution context dump is created in the current working directory of the process. Your operating system may offer a means to control the naming and placement of core files; by default they are created the current working directory of the process with a name of core.*. The process context information may be useful to you in understanding the circumstances under which the problem occurred and/or how to deal with the consequences of the failure on the application state. The core files are likely to be useful primarily to your YottaDB support channel. If you experience process failures but do not find the expected files, check file permissions and quotas. You can simulate an abnormal process termination by sending the process a SIGILL (with kill -ILL or kill -4 on most UNIX/Linux systems).
+When a YottaDB process terminates abnormally, it attempts to create a YDB_FATAL_ERROR.ZSHOW_DMP_*.txt file containing a dump of the M execution context and a core file containing a dump of the native process execution context. The M execution context dump is created in the current working directory of the process. Your operating system may offer a means to control the naming and placement of core files; by default they are created the current working directory of the process with a name of core.*. The process context information may be useful to you in understanding the circumstances under which the problem occurred and/or how to deal with the consequences of the failure on the application state. The core files are likely to be useful primarily to your YottaDB support channel. If you experience process failures but do not find the expected files, check file permissions and quotas. You can simulate an abnormal process termination by sending the process a SIGILL (with kill -ILL or kill -4 on most UNIX/Linux systems).
 
 .. note::
    Dumps of process state files are likely to contain confidential information, including database encryption keys. Please ensure that you have appropriate confidentiality procedures as mandated by applicable law and corporate policy.
@@ -102,7 +102,7 @@ The shell script or command pointed to by gtm_procstuckexec can send an alert, t
 Managing Core Dumps
 -----------------------------------
 
-When an out-of-design situation or a fatal error causes a YottaDB process to terminate abnormally, YottaDB attempts to create a GTM_FATAL_ERROR.ZSHOW_DMP_*.txt file containing a dump of the M execution context. On encountering an unexpected process termination, YottaDB instructs the operating system to generate a core dump on its behalf at the location determined from the core generation settings of the operating system. GTM_FATAL_ERROR*.txt and core dump files may help YottaDB developers diagnose and debug the condition which resulted in an unexpected process termination, and help you get back up and running quickly from an application disruption. In addition to containing information having diagnostic value, a core dump file may also contain non-public information (NPI) such as passwords, local variables and global variables that may hold sensitive customer data, and so on. If you are an organization dealing with non-public information, you should take additional care about managing and sharing GTM_FATAL_ERROR.ZSHOW_DMP_*.txt and core dump files.
+When an out-of-design situation or a fatal error causes a YottaDB process to terminate abnormally, YottaDB attempts to create a YDB_FATAL_ERROR.ZSHOW_DMP_*.txt file containing a dump of the M execution context. On encountering an unexpected process termination, YottaDB instructs the operating system to generate a core dump on its behalf at the location determined from the core generation settings of the operating system. YDB_FATAL_ERROR*.txt and core dump files may help YottaDB developers diagnose and debug the condition which resulted in an unexpected process termination, and help you get back up and running quickly from an application disruption. In addition to containing information having diagnostic value, a core dump file may also contain non-public information (NPI) such as passwords, local variables and global variables that may hold sensitive customer data, and so on. If you are an organization dealing with non-public information, you should take additional care about managing and sharing YDB_FATAL_ERROR.ZSHOW_DMP_*.txt and core dump files.
 
 As core dump files may contain non-public information, you might choose to disable core dump generation. In the absence of a core dump file, you may be asked to provide detailed information about your hardware, YottaDB version, application state, system state, and possibly a reproducible scenario of the unexpected process termination. Note that unexpected process terminations are not always reproducible. You are likely to spend a lot more time in providing post-mortem information during a YottaDB support engagement than what you'd spend when a core dump file is available.
 
@@ -114,17 +114,17 @@ Core file generation and configuration are functions of your operating system. E
 The following suggestions may help with configuring core dump files:
 
 * Always put cores in a directory having adequate protection and away from normal processing. For example, the core file directory may have write-only permissions for protection for almost all users.
-* Set up procedures to remove core dumps and GTM_FATAL_ERROR.ZSHOW_DMP_*.txt when they are no longer needed.
+* Set up procedures to remove core dumps and YDB_FATAL_ERROR.ZSHOW_DMP_*.txt when they are no longer needed.
 * Always configure core file generation in a way that each core gets a distinct name so that new cores do not overwrite old cores. YottaDB never overwrites an existing core file even when /proc/sys/kernel/core_uses_pid is set to 0 and /proc/sys/kernel/core_pattern is set to core. If there is a file named core in the target core directory, YottaDB renames it to core1 and creates a new core dump file called core. Likewise, if core(n) already exists, YottaDB renames the existing core to core(n+1) and creates a new core dump file called core.
-* Here are the possible steps to check core file generation on Ubuntu_x86 running YottaDB r1.10:
+* Here are the possible steps to check core file generation on Ubuntu_x86 running YottaDB r1.20:
 
   .. parsed-literal::
      $ ulimit -c unlimited
-     $ /usr/local/lib/yottadb/r1.10/ydb
+     $ /usr/local/lib/yottadb/r1.20/ydb
      YDB>zsystem "kill -SIGSEGV "_$j
-     $GTM-F-KILLBYSIGUINFO, YottaDB process 24570 has been killed by a signal 11 from process 24572 with userid number 1000
+     $YDB-F-KILLBYSIGUINFO, YottaDB process 24570 has been killed by a signal 11 from process 24572 with userid number 1000
      $ ls -l core*
-     -rw------- 1 gtmnode jdoe 3506176 Aug 18 14:59 core.24573
+     -rw------- 1 ydbnode jdoe 3506176 Aug 18 14:59 core.24573
 
 * In order to test your core generation environment, you can also generate a core dump at the YottaDB prompt with a ZMESSAGE 150377788 command. 
 * If you do not find the expected dump files and have already enabled core generation on your operating system, check file permissions and quotas settings.

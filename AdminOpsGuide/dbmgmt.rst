@@ -421,7 +421,7 @@ Example:
 
 .. parsed-literal::
    $ mupip backup -database -noonline "*" bkup
-   DB file /home/gtmnode1/gtmuser1/mumps.dat backed up in file bkup/mumps.dat
+   DB file /home/ydbnode1/yottadbuser1/mumps.dat backed up in file bkup/mumps.dat
    Transactions up to 0x00000000000F42C3 are backed up.
    BACKUP COMPLETED.
 
@@ -445,7 +445,7 @@ Example:
 
 .. parsed-literal::
    $ mupip backup -online DEFAULT bkup
-   DB file /gtmnode1/gtmuser1/mumps.dat backed up in file bkup/mumps.dat
+   DB file /ydbnode1/yottadbuser1/mumps.dat backed up in file bkup/mumps.dat
    Transactions up to 0x00000000483F807C are backed up.
    BACKUP COMPLETED.
 
@@ -481,8 +481,8 @@ Example:
 
 .. parsed-literal::
    $ mupip backup -bytestream -transaction=1 DEFAULT bkup_dir
-   MUPIP backup of database file /gtmnode1/gtmuser1/mumps.dat to bkup_dir/mumps.dat
-   DB file /gtmnode1/gtmuser1/mumps.dat incrementally backed up in file bkup/mumps.dat
+   MUPIP backup of database file /ydbnode1/yottadbuser1/mumps.dat to bkup_dir/mumps.dat
+   DB file /ydbnode1/yottadbuser1/mumps.dat incrementally backed up in file bkup/mumps.dat
    5 blocks saved.
    Transactions from 0x0000000000000001 to 0x0000000000000003 are backed up.
    BACKUP COMPLETED.
@@ -1771,7 +1771,7 @@ Example:
 .. parsed-literal::
    $ mupip rctldump .
    Object Directory         : /tmp
-   Relinkctl filename       : /tmp/fis-gtm/V6.2-001_x86_64/gtm-relinkctl-61f9eb418212a24a75327f53106c1656
+   Relinkctl filename       : /tmp/yottadb/r1.20_x86_64/gtm-relinkctl-61f9eb418212a24a75327f53106c1656
    # of routines            : 1
    # of attached processes  : 2
    Relinkctl shared memory  : shmid: 11534344 shmlen: 0x57c6000

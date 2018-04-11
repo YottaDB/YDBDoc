@@ -350,7 +350,7 @@ Here is an example for repairing an error in a binary extract.
 Assume that during the load of a binary extract, you get the following error:
 
 .. parsed-literal::
-   %GTM-E-LDSPANGLOINCMP, Incomplete spanning node found during load
+   %YDB-E-LDSPANGLOINCMP, Incomplete spanning node found during load
            at File offset : [0x0000027E]
            Expected Spanning Global variable : ^mypoem
            Global variable from record: ^mypoem(#SPAN32)
@@ -367,7 +367,7 @@ Assume that during the load of a binary extract, you get the following error:
    Flashed all their sabres bare, Flashed as they turned in air Sabring the gunners there, Charging an army while All the world wondered:
    Plunged in the battery-smoke Right thro the line they broke; Cossack and Russian Reeled from the sabre-stroke Shattered and sundered.
    Then they rode back, but no"
-   %GTM-E-LDSPANGLOINCMP, Incomplete spanning node found during load
+   %YDB-E-LDSPANGLOINCMP, Incomplete spanning node found during load
            at File offset : [0x00000470]
            Global variable from record: ^mypoem(#SPAN4)
            Not expecting a spanning node chunk but found chunk : 4
@@ -1277,17 +1277,17 @@ Run MUPIP INTEG to find the location of the damaged spanning node. A MUPIP INTEG
 .. parsed-literal::
    Integ of region DEFAULT
    Block:Offset Level
-   %GTM-E-DBSPANGLOINCMP, 
+   %YDB-E-DBSPANGLOINCMP, 
           7:10     0  Spanning node is missing. Block no 3 of spanning node is missing
                       Directory Path:  1:10, 2:10
                       Path:  4:31, 7:10
                       Spanning Node ^mypoem(#SPAN1) is suspect.
-    %GTM-E-DBKEYGTIND, 
+    %YDB-E-DBKEYGTIND, 
           7:10     0  Key greater than index key
                       Directory Path:  1:10, 2:10
                       Path:  4:31, 7:10
                       Keys from ^mypoem(#SPAN48) to ^mypoem(#SPAN3*) are suspect.
-    %GTM-E-DBSPANCHUNKORD, 
+    %YDB-E-DBSPANCHUNKORD, 
           3:10     0  Chunk of 1 blocks is out of order
                       Directory Path:  1:10, 2:10
                       Path:  4:3D, 3:10
@@ -1300,7 +1300,7 @@ Run MUPIP INTEG to find the location of the damaged spanning node. A MUPIP INTEG
     Free               93              NA              NA            NA
     Total             100              11              NA             5
     [Spanning Nodes:2 ; Blocks:3]
-    %GTM-E-INTEGERRS, Database integrity errors
+    %YDB-E-INTEGERRS, Database integrity errors
 
 Notice the lines that contain: "Block no 3 of spanning node is missing", "Key greater than index key", and ^mypoem(#SPAN48) and there is an extra chunk that is not connected to ^mypoem(#SPAN4). 
 
@@ -1399,7 +1399,7 @@ Kill the existing global:
 .. parsed-literal::
    YDB>kill ^mypoem
    YDB>write ^mypoem
-   %GTM-E-GVUNDEF, Global variable undefined: ^mypoem
+   %YDB-E-GVUNDEF, Global variable undefined: ^mypoem
 
 Load the salvaged global:
 

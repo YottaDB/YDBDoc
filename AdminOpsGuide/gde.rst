@@ -317,7 +317,7 @@ If you select the -JOURNAL option when you ADD or CHANGE a region in a Global Di
                                             \*\*\* JOURNALING INFORMATION \*\*\*
    Region               Journal File (def extL .mjl)        Before     Buff    Alloc   Exten   Autoswitch
    --------------------------------------------------------------------------------------------------------
-   DEFAULT                $ydb_dir/$gtmver/g/gtm.mjl          Y         2308    2048     2048    8386560
+   DEFAULT           $ydb_dir/$ydb_rel/g/yottadb.mjl         Y         2308    2048     2048    8386560
 
 For more information about journaling, see the section on the JOURNAL qualifier in this chapter and `Chapter 6: “YottaDB Journaling” <https://docs.yottadb.com/AdminOpsGuide/ydbjournal.html>`_.
 
