@@ -1080,7 +1080,7 @@ CLOSEFAIL, Error while closing file descriptor dddd
 
 Run Time Error: YottaDB records this error in the syslog whenever it attempts to close an open file descriptor dddd and the close returns with an error. After recording this error, the YottaDB process resumes normal operation.
 
-Action: Report the above error message along with the accompanying GTM-I-CALLERID message to your YottaDB support channel, as it may be a symptom of out-of-design operation.
+Action: Report the above error message along with the accompanying YDB-I-CALLERID message to your YottaDB support channel, as it may be a symptom of out-of-design operation.
 
 
 ---------------
@@ -12180,7 +12180,7 @@ REPLSTATEERR
 
 REPLSTATEERR, Replication state cannot be changed to the specified value for database file <xxx>.
 
-MUPIP Error: This MUPIP BACKUP error indicates that the specified change in the replication state cannot be done due to the reason described in a following GTM-E-TEXT message.
+MUPIP Error: This MUPIP BACKUP error indicates that the specified change in the replication state cannot be done due to the reason described in a following YDB-E-TEXT message.
 
 Action: If the message indicates "Standalone access required", try to enable the replication in the standalone mode using MUPIP SET REPLICATION. If the message suggests switching journal file, specify the backup qualifier NEWJNL in the command line.
 
@@ -12393,7 +12393,7 @@ REUSEINSTNAME, Error with instance name specified in REUSE qualifier
 
 MUPIP Error: Issued by a Receiver Server when started with the -REUSE qualifier in case of either inappropriate use of this qualifier or an inappropriate instance name specified as a value to this qualifier.
 
-Action: An accompanying GTM-I-TEXT message describes the particular error situation. Take appropriate corrective action based on that.
+Action: An accompanying YDB-I-TEXT message describes the particular error situation. Take appropriate corrective action based on that.
 
 ----------------------
 RHMISSING 
@@ -14043,7 +14043,7 @@ SUSPENDING, Suspending processing on user request or attempt to do terminal I/O 
 
 Run Time Information: The message signifies that a YottaDB process is suspended on user initiated ^Z (or key stroke that is set to shell "susp"). It is also displayed if the process attempts to do terminal I/O while running in the background. Before suspending itself, the process logs the SUSPENDING message to the operator facility. Suspended processes may be automatically released from that state if they hold a shared resource that blocks other processes.
 
-Action: Because YottaDB uses shared resources, suspending a YottaDB process can lock those resources and prevent other processes from working. Disable process suspension from <CTRL-Z> by appropriately configuring the shell. If you find a GTM-I-SUSPENDING in the syslog, match it with a GTM-I-REQ2RESUME to ensure that the process went back to work and released any resources it had. Identify the cause of the suspension and take action to prevent a recurrence. If there is no resume, check the process listing to confirm that there is a shell associated with the process and request the user to unsuspend the process. If there is no shell associated with process, it is likely that the process was backgrounded before the shell was terminated. Kill this process with MUPIP STOP.
+Action: Because YottaDB uses shared resources, suspending a YottaDB process can lock those resources and prevent other processes from working. Disable process suspension from <CTRL-Z> by appropriately configuring the shell. If you find a YDB-I-SUSPENDING in the syslog, match it with a YDB-I-REQ2RESUME to ensure that the process went back to work and released any resources it had. Identify the cause of the suspension and take action to prevent a recurrence. If there is no resume, check the process listing to confirm that there is a shell associated with the process and request the user to unsuspend the process. If there is no shell associated with process, it is likely that the process was backgrounded before the shell was terminated. Kill this process with MUPIP STOP.
 
 -------------------
 SVNEXPECTED
@@ -15021,7 +15021,7 @@ UPDSYNCINSTFILE, Error with instance file name specified in UPDATERESYNC qualifi
 
 Receiver Server log/MUPIP Error: Issued by a Receiver Server when started with the -UPDATERESYNC qualifier in case of any error while processing the instance file specified as a value to this qualifier.
 
-Action: An accompanying message, usually a GTM-I-TEXT message, describes the particular error situation. Take appropriate corrective action based on that.
+Action: An accompanying message, usually a YDB-I-TEXT message, describes the particular error situation. Take appropriate corrective action based on that.
 
 -------------------
 USRIOINIT
@@ -15798,7 +15798,7 @@ ZDIROUTOFSYNC, $ZDIRECTORY xxxx is not the same as its cached value yyyy
 Run Time Warning: For performance purposes, YottaDB caches the value of $ZDIRECTORY when it is modified using SET command. This cached value is passed to external environment translation routine. YottaDB issues ZDIROUTOFSYNC error when $ZDIRECTORY is referenced and its cached value differs from the current working directory. This might happen if an external routine called from YottaDB modifies the current working directory and the application does not modify $ZDIRECTORY to the modified directory.
 
 .. note::
-   ZSHOW of intrinsic special variables appends ->%GTM-W-ZDIROUTOFSYNC error to the text corresponding to the $ZDIRECTORY if the out of sync condition is detected. 
+   ZSHOW of intrinsic special variables appends ->%YDB-W-ZDIROUTOFSYNC error to the text corresponding to the $ZDIRECTORY if the out of sync condition is detected. 
 
 Action: Avoid changing the current working directory except with SET $ZDIRECTORY, or ensure that SET $ZDIRECTORY is used along with the other mechanisms.
 

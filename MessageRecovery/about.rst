@@ -34,7 +34,7 @@ The YottaDB Message and Recovery Procedures Reference Manual is intended to be u
 Conventions Used in this Manual
 -------------------------------
 
-YottaDB messages are identified by a signature of the form GTM-s-abcdef where -s- is a severity indicator and abcdef is an identifier. The severity indicators are: -I- for informational messages, -W- for warnings, -E- for errors and -F- for events that cause a YottaDB process to terminate abnormally. For more information on monitoring YottaDB messages, refer to `"Appendix B: Monitoring YottaDB Messages" in the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/monitoring.html>`_.
+YottaDB messages are identified by a signature of the form YDB-s-abcdef where -s- is a severity indicator and abcdef is an identifier. The severity indicators are: -I- for informational messages, -W- for warnings, -E- for errors and -F- for events that cause a YottaDB process to terminate abnormally. For more information on monitoring YottaDB messages, refer to `"Appendix B: Monitoring YottaDB Messages" in the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/monitoring.html>`_.
 
 Each entry in this manual is presented in the following format as illustrated by the NOPRINCIO message.
 
