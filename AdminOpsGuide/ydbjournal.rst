@@ -710,7 +710,7 @@ Also ensure that you adhere to the following rules:
 
 7. -DETAIL is compatible only with -EXTRACT.
 
-8. -FETCHRESYNC is only compatible with the -ROLLBACK action in the -FORWARD direction and is incompatible with RESYNC.
+8. -FETCHRESYNC is only compatible with the -ROLLBACK action in the -BACKWARD direction and is incompatible with RESYNC.
 
 9. -FORWARD is incompatible with -BACKWARD, -FETCHRESYNC, -LOOKBACK_LIMIT, -ONLINE and -SINCE.
 
