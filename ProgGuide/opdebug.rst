@@ -37,21 +37,7 @@ To enter Direct Mode, type $ydb_dist/mumps -direct at the shell prompt.
 
 This shows using $ydb_dist/mumps -direct at the prompt to enter Direct Mode.
 
-To create a ydb alias in your shell startup file (in the example below the startup file is assumed to be a .profile file):
-
-1. Open an edition session for your .profile file by typing:
-
-   .. parsed-literal::
-      $vi .profile
-
-2. Add a function to the file to define your gtm alias:
-
-   .. parsed-literal::
-      ydb(){ $ydb_dist/mumps -direct}
-
-3. Save the file.
-
-Now, when you want to enter Direct Mode for an editing or debugging session, simply type ydb at the shell prompt.
+Another way to enter Direct Mode for an editing or debugging session is by simply typing ydb at the shell prompt.
 
 Example:
 
@@ -59,7 +45,6 @@ Example:
    $ ydb
    YDB>
 
-This shows that the ydb alias typed at the shell prompt also takes you to the Direct Mode.
 
 +++++++++++++++++++++++++++++++++++++++++++
 Functionality Available in Direct Mode
@@ -88,7 +73,7 @@ Example:
 
 .. parsed-literal::
    YDB>write $zgbldir 
-   /usr/lib/fis-gtm/V5.4-002B_x86/mumps.gld
+   /usr/lib/yottadb/r1.20_x86/mumps.gld
    YDB>set $zgbldir="test.gld"
    YDB>set a=10
    YDB>set b=a
@@ -154,7 +139,7 @@ The Direct Mode line editing keys are as follows:
 * **<CTRL-U>**: Deletes the entire line
 
 .. note::
-   When entering commands at the direct mode prompt, the insert mode can be toggled for that line by using the insert key. When YottaDB starts, insert mode is enabled unless the value of the gtm_principal_editing environment variable includes the string NOINSERT. If insert mode is disabled or enabled for the $PRINCIPAL device by an USE statement before returning to direct mode, it will remain disabled or enabled at direct mode. The insert mode can be toggled within a direct mode line using the terminal's INSERT key.
+   When entering commands at the direct mode prompt, the insert mode can be toggled for that line by using the insert key. When YottaDB starts, insert mode is enabled unless the value of the ydb_principal_editing environment variable includes the string NOINSERT. If insert mode is disabled or enabled for the $PRINCIPAL device by an USE statement before returning to direct mode, it will remain disabled or enabled at direct mode. The insert mode can be toggled within a direct mode line using the terminal's INSERT key.
 
 YottaDB deletes the character under the cursor when you press the key on the keyboard that sends the escape sequence which maps to the kdch1 capability in your current terminfo entry (by convention, the Delete key). If the current terminfo entry is missing the kdch1 capability, YottaDB uses a default value derived from members of the DEC VT terminal family, as it does for selected other missing terminfo capabilities. If you wish the Backspace and Delete keys to behave the same, the simplest way is to configure your terminal emulator to send the same character sequences for the Delete key that it does for the Backspace key. You can alternatively modify your terminfo setting: for example, create an editable version of your terminfo entry in a temporary file with a command such as: infocmp > /tmp/$$_$TERM and edit the temporary file to replace the entry for the kbs capability with the one in the kdch1 capability. Save your changes, and compile the edited file into a usable terminfo entry, for example:
 
@@ -264,7 +249,7 @@ Example:
 .. parsed-literal::
    YDB>DO ^dmex
    Name: Revere, Paul
-   %GTM-E-UNDEF, Undefined local variable: bame
+   %YDB-E-UNDEF, Undefined local variable: bame
    At M source location name+3^dmex
    YDB>
 
@@ -291,7 +276,7 @@ Example:
 
 .. parsed-literal::
    YDB>WRITE $ZS
-   150373850,name+3^dmex,%GTM-E-UNDEF, Undefined
+   150373850,name+3^dmex,%YDB-E-UNDEF, Undefined
    local variable: bame
 
 This example uses a WRITE command to display $ZSTATUS. Note that the $ZSTATUS code is the same as the "Z" code in $ECODE.
@@ -302,7 +287,7 @@ Example:
 
 .. parsed-literal::
    YDB>WRITE $ZM(150373850)
-   %GTM-E-UNDEF, Undefined local variable: !AD
+   %YDB-E-UNDEF, Undefined local variable: !AD
 
 This example uses a WRITE command and the $ZMESSAGE function to display the error message generated in the previous example. $ZMESSAGE() is useful when you have a routine that produces several error messages that you may want to examine later. The error message reprinted using $ZMESSAGE() is generic; therefore, the code !AD appears instead of the specific undefined local variable displayed with the original message.
 
@@ -318,7 +303,7 @@ Example:
 
 .. parsed-literal::
    YDB>ZPRINT, name+3
-   %GTM-E-SPOREOL, Either a space or an end-of-line was expected but not found
+   %YDB-E-SPOREOL, Either a space or an end-of-line was expected but not found
    ZP, name+3
    ^_____ 
    YDB>
@@ -385,7 +370,7 @@ Example:
    YDB>ZSTEP OUTOF
    Paul Revere
    Name: Q
-   %GTM-I-BREAKZST, Break instruction encountered during ZSTEP action
+   %YDB-I-BREAKZST, Break instruction encountered during ZSTEP action
    At M source location name^dmex
    YDB>ZSTEP OVER
    Break instruction encountered during ZSTEP action
@@ -424,7 +409,7 @@ Press <CTRL-C> to interrupt execution, and return to the YottaDB prompt to conti
 Example:
 
 .. parsed-literal::
-   %GTM-I-CTRLC, CTRLC_C encountered.
+   %YDB-I-CTRLC, CTRLC_C encountered.
    YDB>
 
 This invokes direct mode with a <CTRL-C>.
@@ -567,7 +552,7 @@ Example:
                                             
    $ZSOURCE=""
                                               
-   $ZSTATUS="150373850,name+3^dmex, %GTM-E-UNDEF, Undefined local variable: bame"
+   $ZSTATUS="150373850,name+3^dmex, %YDB-E-UNDEF, Undefined local variable: bame"
                                                     
    $ZSYSTEM=0
    $ZTRAP="B"

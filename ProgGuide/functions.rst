@@ -444,7 +444,7 @@ The format of the $INCREMENT function is:
 * Since it performs an arithmetic operation, $INCREMENT() treats glvn as numeric value. $INCREMENT treats glvn as if it were the first argument of an implicit $GET() before the increment. If the value of glvn is undefined $INCREMENT treats it as having empty string , which means it treats it as a numeric zero (0) (even if glvn is a global variable that resides on a remote node and is accessed through a GT.CM GNP server).
 * If $INCREMENT() occurs inside a transaction ($TLevel is non-zero), or if glvn refers to a local variable, it is equivalent to SET glvn=$GET(glvn)+numexpr.
 * If $INCREMENT() occurs outside a transaction ($TLevel is zero) and glvn refers to a global variable, the function acts as a SET glvn=$GET(glvn)+numexpr performed as an Atomic, Consistent and Isolated operation. Note that $INCREMENT() performs the evaluation of numexpr before it starts the Atomic, Consistent, Isolated incrementing of the glvn. If the region containing the glvn is journaled, then the $INCREMENT() is also Durable. Only BG, MM and GT.CM GNP access methods are supported for the region containing the global variable (glvn). GT.CM OMI and GT.CM DDP access methods do not support this operation and there are no current plans to add such support.
-* $INCREMENT() does not support global variables that have NOISOLATION turned ON (through the VIEW "NOISOLATION" command), and a $INCREMENT() on such a variable, triggers at GTM-E-GVINCRISOLATION run-time error.
+* $INCREMENT() does not support global variables that have NOISOLATION turned ON (through the VIEW "NOISOLATION" command), and a $INCREMENT() on such a variable, triggers at YDB-E-GVINCRISOLATION run-time error.
 * The naked reference is affected by the usage of global variables (with or without indirection) in the glvn and/or numexpr components. The evaluation of "numexpr" ahead of "glvn" determines the value of the naked reference after the $INCREMENT. If neither glvn or numexpr contain indirection, then $INCREMENT sets the naked reference as follows:
   
   * glvn, if glvn is a global, or
@@ -1129,7 +1129,7 @@ Example:
    Watson
    come
    here
-   %GTM-E-SELECTFALSE, No argument to $SELECT was true
+   %YDB-E-SELECTFALSE, No argument to $SELECT was true
    YDB>
 
 This loop uses $SELECT() to WRITE a series of strings. Because there is no true argument on the fourth iteration, when i=0, $SELECT() produces an error.
@@ -1250,7 +1250,7 @@ Example:
    0    ecode
         place     +1^GTM$DMOD
         mcode
-   %GTM-E-SETECODE, Non-empty value assigned to $ECODE (user-defined error trap)
+   %YDB-E-SETECODE, Non-empty value assigned to $ECODE (user-defined error trap)
    YDB>do ^dstacktst(1)
    $stack(-1):1
    1    ecode     ,U2,
@@ -1259,7 +1259,7 @@ Example:
    0    ecode
         place     +1^GTM$DMOD
         mcode
-   %GTM-E-SETECODE, Non-empty value assigned to $ECODE (user-defined error trap)
+   %YDB-E-SETECODE, Non-empty value assigned to $ECODE (user-defined error trap)
    YDB>set $ecode=""
    YDB>do ^dstacktst(1)
    $stack(-1):2
@@ -1272,7 +1272,7 @@ Example:
    0    ecode
         place     +1^GTM$DMOD
         mcode
-   %GTM-E-SETECODE, Non-empty value assigned to $ECODE (user-defined error trap)
+   %YDB-E-SETECODE, Non-empty value assigned to $ECODE (user-defined error trap)
    YDB>
 
 This example shows how SETing $ECODE=.. makes $STACK() reports current information. Notice how ^do dstacktst(0) and ^dostacktst(1) without clearing $ECODE in between displays information frozen at the time of the first error (else condition).
@@ -2163,7 +2163,7 @@ Example:
    YDB>write $ZCHSET
    M
    YDB>Write $zconvert("HAPPY NEW YEAR","T")
-   %GTM-E-BADCASECODE, T is not a valid case conversion code
+   %YDB-E-BADCASECODE, T is not a valid case conversion code
 
 Example:
 
@@ -2173,7 +2173,7 @@ Example:
    12
    YDB>Set T16=$zconvert(T8,"UTF-8","UTF-16LE")
    YDB>Write $length(T16)
-   %GTM-E-BADCHAR, $ZCHAR(129,137,232,150) is not a valid character in the UTF-8 encoding form
+   %YDB-E-BADCHAR, $ZCHAR(129,137,232,150) is not a valid character in the UTF-8 encoding form
    YDB>Set T16=$ZCOnvert(T16,"UTF-16LE","UTF-8")
    YDB>Write $length(T16)
    9
@@ -2677,7 +2677,7 @@ Example:
 
 .. parsed-literal::
    YDB>write $zmessage(150373210)
-   %GTM-E-DIVZERO, Attempt to divide by zero
+   %YDB-E-DIVZERO, Attempt to divide by zero
    YDB>
 
 This uses $ZMESSAGE() to display the message string corresponding to code 150373210.
@@ -3210,7 +3210,7 @@ In many ways, the $ZSUBSTR() function is similar to the $ZEXTRACT() function. Fo
 $ZSYSLOG()
 ----------------------
 
-Sends its string parameter to the system log and always returns TRUE (1). The text appears in the syslog with the same format as any other YottaDB syslog message (that is, in the user.info log with GTM-MUMPS[pid]" or "GTM-MUPIP[pid]" prefix along with instance information where appropriate). The format of the $ZSYSLOG function is:
+Sends its string parameter to the system log and always returns TRUE (1). The text appears in the syslog with the same format as any other YottaDB syslog message (that is, in the user.info log with YDB-MUMPS[pid]" or "YDB-MUPIP[pid]" prefix along with instance information where appropriate). The format of the $ZSYSLOG function is:
 
 .. parsed-literal::
    $ZSYSLOG(expr)
@@ -3363,7 +3363,7 @@ Returns the numbers of columns required to display a given string on the screen 
    $ZW[IDTH] (expr)
 
 * The expression is the string which $ZWIDTH() evaluates for display length. If the expression contains a code-point value that is not a valid character in Unicode, $ZWIDTH() generates a run-time error.
-* If the expression contains any non-graphic characters, the $ZWIDTH() function does count not those characters.
+* If the expression contains any non-graphic characters, the $ZWIDTH() function does not count those characters.
 * If the string contains any escape sequences containing graphical characters (which they typically do), $ZWIDTH() includes those characters in calculating its result, as it does not do escape processing. In such a case, the result many be larger than the actual display width.
 
 .. note::

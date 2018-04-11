@@ -20,10 +20,10 @@ M Intrinsic Special Variables start with a single dollar sign ($). YottaDB provi
 $DEVICE
 ---------------
 
-$D[EVICE] reflects the status of the current device. If the status of the device does not reflect any error-condition, the value of $DEVICE, when interpreted as a truth-value is 0 (FALSE). If the status of the device reflect any error-condition, the value of $DEVICE, when interpreted as a truth-value is 1 (TRUE).
+$D[EVICE] reflects the status of the current device. If the status of the device does not reflect an error-condition, the value of $DEVICE, when interpreted as a truth-value is 0 (FALSE). If the status of the device reflects an error condition, the value of $DEVICE, when interpreted as a truth-value is 1 (TRUE).
 
 .. parsed-literal::
-   The initial value of $DEVICE is implementation dependant. However, if the initial value of $IO is the empty string, then the initial value of $DEVICE is also empty string.
+   The initial value of $DEVICE is implementation dependent. However, if the initial value of $IO is an empty string, then the initial value of $DEVICE is also an empty string.
 
 $DEVICE gives status code and meaning, in one access:
 
@@ -38,14 +38,14 @@ The above message is displayed on the server side when the socket device is clos
 $ECODE
 ------------------
 
-$EC[ODE] contains a list of error codes for "active" errors -the error conditions which are not yet resolved. If there are no active errors, $ECODE contains the empty string. Whenever an error occurs, a code for that error is appended to the value of $ECODE in such a way that the value of $ECODE always starts and ends with a comma.
+$EC[ODE] contains a list of error codes for "active" errors - error conditions which are not yet resolved. If there are no active errors, $ECODE contains the empty string. Whenever an error occurs, a code for that error is appended to the value of $ECODE in such a way that the value of $ECODE always starts and ends with a comma.
 
 The value of $ECODE can be SET, and when it is set to a non-NULL value, error processing starts.
 
 .. note::
    See `Chapter 13: “Error Processing” <https://docs.yottadb.com/ProgrammersGuide/errproc.html>`_ to learn about $ECODE's role in error processing.
 
-List of codes for $ECODE start with comma seperated by commas. A code starts with "M", "U", or "Z", with rest numeric. "M" codes are assigned by MDC (MUMPS Development Committee), "U" by application (programmers), and "Z" codes by MUMPS implementors (in this case YottaDB).
+The list of codes in $ECODE start with a comma, and are seperated by commas. A code starts with "M", "U", or "Z", with the rest of it being numeric. "M" codes are assigned by MDC (MUMPS Development Committee), "U" by application (programmers), and "Z" codes by MUMPS implementors (in this case YottaDB).
 
 An error always has a YottaDB specified code and many errors also have an ANSI Standard code. The complete list of standardized error codes can be referenced from the `Message and Recovery Procedures Reference Manual <https://docs.yottadb.com/MessageRecovery/index.html>`_ and onwards.
 
@@ -53,7 +53,7 @@ An error always has a YottaDB specified code and many errors also have an ANSI S
    IF $ECODE[",M61," WRITE "Undefined local variable"
 
 .. note::
-   The leftmost character of the value of $ECODE is always a comma. This means that every error code that is stored in $ECODE is surrounded by commas. If $ECODE was to contains the error code without the commas (that is, "M61"), the variable would check for subset "M6" as well. Thus, it is recommended that you include the commas in the value to check. For example; check whether $ECODE contains ",M61,".
+   The leftmost character of the value of $ECODE is always a comma. This means that every error code that is stored in $ECODE is surrounded by commas. If $ECODE was to contain an error code without commas around it(that is, "M61"), the variable would check for the subset "M6" as well. Thus, it is recommended that you include the commas in the value to check. For example; check whether $ECODE contains ",M61,".
 
 $ECODE can be SET but not NEW'd. When $ECODE is set to the empty string (" "), error handling becomes "inactive" and therefore QUIT does not trigger additional error handling.
 
@@ -160,12 +160,12 @@ After a successful OPEN or USE with the CONNECT device parameter or when YottaDB
 .. parsed-literal::
    "ESTABLISHED|<socket handle>|<address>"
 
-When WRITE /WAIT selects an incoming connection, $KEY contains:
+When WRITE/WAIT selects an incoming connection, $KEY contains:
 
 .. parsed-literal::
    "CONNECT|<socket_handle>|<address>"
 
-When WRITE /WAIT selects a socket with data available for reading, $KEY contains:
+When WRITE/WAIT selects a socket with data available for reading, $KEY contains:
 
 .. parsed-literal::
    "READ|<socket_handle>|<address>"
@@ -174,7 +174,7 @@ For TCP sockets, <address> is the numeric IP address for the remote end of the c
 
 For TCP LISTENING sockets, <portnumber> is the local port on which socket_handle is listening for incoming connections. For LOCAL LISTENING sockets, it is the path of the socket.
 
-If the WRITE /WAIT was timed, $KEY returns an empty value if the wait timed out or there was no established connection. $KEY only has the selected handle, if any, immediately after a WRITE /WAIT. $KEY is also used by other socket I/O commands such as READ which sets it to the delimiter or bad Unicode character, if any, which terminated the read.
+If the WRITE/WAIT was timed, $KEY returns an empty value if the wait timed out or there was no established connection. $KEY only has the selected handle, if any, immediately after a WRITE /WAIT. $KEY is also used by other socket I/O commands such as READ which sets it to the delimiter or bad Unicode character, if any, which terminated the read.
 
 ---------------
 $QUIT
@@ -222,7 +222,7 @@ When a process is initiated but before any command is executed, the value of $ST
 .. note::
    The difference between $STACK and $ESTACK is that $ESTACK may appear as an argument of the NEW command. NEWing $ESTACK resets its value to zero (0), and can be useful to set up a layered error trapping mechanism.
 
-The value of $STACK is "absolute" since the start of a YottaDB. process, whereas the value of $ESTACK is "relative" to the most recent "anchoring point".
+The value of $STACK is "absolute" since the start of a YottaDB process, whereas the value of $ESTACK is "relative" to the most recent "anchoring point".
 
 For examples on the use of special variable $STACK, see “$STack()”.
 
@@ -632,7 +632,7 @@ This example defines the environment variable ydb_gbldir. Upon entering YottaDB 
    YDB>WRITE $zgbldir
    /usr/dev/mumps.gld
    YDB>set $zgbldir="test.gld"
-   %GTM-E-ZGBLDIRACC, Cannot access global directory
+   %YDB-E-ZGBLDIRACC, Cannot access global directory
    "/usr/dev/test.gld". Retaining /usr/dev/mumps.gld"
    %SYSTEM-E-ENO2, No such file or directory
    YDB>WRITE $zgbldir
@@ -756,9 +756,9 @@ The use of the INTRPT facility may create a temporary hang or pause while the in
 
 During the execution of the interrupt handling code, $ZINTERRUPT evaluates to 1 (TRUE).
 
-If an error occurs while compiling the $ZINTERRUPT code, the error handler is not invoked (the error handler is invoked if an error occurs while executing the $ZINTERRUPT code), YottaDB sends the GTM-ERRWZINTR message and the compiler error message to the operator log facility. If the YottaDB process is at a direct mode prompt or is executing a direct mode command (for example, a FOR loop), YottaDB sends also sends the GTM-ERRWZINTR error message to the user console along with the compilation error. In both cases, the interrupted process resumes execution without performing any action specified by the defective $ZINTERRUPT vector.
+If an error occurs while compiling the $ZINTERRUPT code, the error handler is not invoked (the error handler is invoked if an error occurs while executing the $ZINTERRUPT code), YottaDB sends the YDB-ERRWZINTR message and the compiler error message to the operator log facility. If the YottaDB process is at a direct mode prompt or is executing a direct mode command (for example, a FOR loop), YottaDB sends also sends the YDB-ERRWZINTR error message to the user console along with the compilation error. In both cases, the interrupted process resumes execution without performing any action specified by the defective $ZINTERRUPT vector.
 
-If YottaDB encounters an error during creation of the interrupt handler's stack frame (before transferring control to the application code specified by the vector), that error is prefixed with a GTM-ERRWZINTR error. The error handler then executes normal error processing associated with the interrupted routine. Any other errors that occur in code called by the interrupt vector invoke error processing as described in `Chapter 13: “Error Processing” <https://docs.yottadb.com/ProgrammersGuide/errproc.html>`_. 
+If YottaDB encounters an error during creation of the interrupt handler's stack frame (before transferring control to the application code specified by the vector), that error is prefixed with a YDB-ERRWZINTR error. The error handler then executes normal error processing associated with the interrupted routine. Any other errors that occur in code called by the interrupt vector invoke error processing as described in `Chapter 13: “Error Processing” <https://docs.yottadb.com/ProgrammersGuide/errproc.html>`_. 
 
 .. parsed-literal::
    The interrupt handler does not operate "outside" the current M environment but rather within the environment of the process.
@@ -915,10 +915,10 @@ Results:
    ^X=2,will set ^Y to 5 in 5 seconds...^Y=5...committed.
    ^X=3,will set ^Y to 7 in 7 seconds...
    In $ETRAP handler. Error was:
-   150377322,longtran+7^tptime,%GTM-E-TPTIMEOUT, Transaction timeoutRolled back transaction.
+   150377322,longtran+7^tptime,%YDB-E-TPTIMEOUT, Transaction timeoutRolled back transaction.
    ^X=3,will set ^Y to 9 in 9 seconds...
    In $ETRAP handler. Error was:
-   150377322,longtran+7^tptime,%GTM-E-TPTIMEOUT, Transaction timeoutRolled back transaction.
+   150377322,longtran+7^tptime,%YDB-E-TPTIMEOUT, Transaction timeoutRolled back transaction.
    Done TP Timeout test.
 
 --------------
@@ -1445,7 +1445,7 @@ YottaDB maintains $ZSTATUS as a string consisting of three or more substrings. T
 
 .. parsed-literal::
    Format: %<FAC>-<SEV>-<ID>, <TEXT>
-   Example: %GTM-E-DIVZERO, Attempt to divide by zero
+   Example: %YDB-E-DIVZERO, Attempt to divide by zero
 
 YottaDB sets $ZSTATUS when it encounters errors during program execution, but not when it encounters errors in a Direct Mode command.
 
@@ -1455,7 +1455,7 @@ Example:
 
 .. parsed-literal::
    YDB>WRITE $ZSTATUS
-   150373110,+1^MYFILE,%GTM-E-DIVZERO,
+   150373110,+1^MYFILE,%YDB-E-DIVZERO,
    Attempt to divide by zero
 
 This example displays the status generated by a divide by zero (0).

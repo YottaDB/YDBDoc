@@ -73,19 +73,19 @@ Example:
    YDB>DO ^br
    Iteration 1    x=<UNDEF>
    Iteration 2    x=0
-   %GTM-I-BREAK, Break instruction encountered
+   %YDB-I-BREAK, Break instruction encountered
         At M source location break+2^br
    YDB>ZCONTINUE
         Wrong again
-   %GTM-I-BREAK, Break instruction encountered
+   %YDB-I-BREAK, Break instruction encountered
         At M source location break+2^br
    YDB>ZCONTINUE
    Iteration 3    x=1
         OK
-   %GTM-I-BREAK, Break instruction encountered
+   %YDB-I-BREAK, Break instruction encountered
         At M source location break+2^br
    YDB>ZCONTINUE
-   %GTM-I-BREAK, Break instruction encountered
+   %YDB-I-BREAK, Break instruction encountered
         At M source location break+2^br
    YDB>ZCONTINUE
    YDB>
@@ -2229,9 +2229,9 @@ Example 2:
 
 .. parsed-literal::
    YDB>ZLink "NOSENSE"
-   %GTM-E-LABELMISSING Label referenced but
+   %YDB-E-LABELMISSING Label referenced but
    not defined:lab
-   %GTM-I-SRCNAM in source module /home/gtmuser1/.fis-gtm/V5.4-002B_x86/r/
+   %YDB-I-SRCNAM in source module /home/gtmuser1/.fis-gtm/V5.4-002B_x86/r/
    NOSENSE.m
    YDB>ZPrint ^NOSENSE
    NOSENSE;
@@ -2289,7 +2289,7 @@ Because XECUTE causes run-time compilation in YottaDB, and because it tends to o
 
 YottaDB compiles XECUTE <literal> at compile time when the literal is valid YottaDB code that has minimal impact on the M virtual machine. An XECUTE literal containing GOTO, NEW, QUIT, (nested) XECUTE and indirection can't be precompiled because of the interaction of those features with the stack architecture of the M virtual machine. Precompiled XECUTE literals do not show up in $STATCK() as having a separate stack level, but rather "disappear" into the stack level of the original XECUTE. Please observe the following cautions: 
 
-* ensure you compile with the same YottaDB version, $ydb_chset, $gtm_local_collate, $gtm_patnumeric, $gtm_pattern_file and $gtm_pattern_table values (or lack thereof) as those used to run your application.
+* ensure you compile with the same YottaDB version, $gtm_chset, $gtm_local_collate, $gtm_patnumeric, $gtm_pattern_file and $gtm_pattern_table values (or lack thereof) as those used to run your application.
 * If the application changes the run time values controlled by those environment variables, use variable operands or indirection, rather than literals for operands with pattern match (?) or sorts-after (]]).
 
 Note that indirection almost always performs better than an XECUTE that can't be precompiled. Note also that adding a QUIT at the end of an XECUTE that does not contain a FOR will leave it for run time compilation.
@@ -2479,7 +2479,7 @@ Example:
         Quit
    YDB>ZBREAK SUB^ZBTEST
    YDB>Do ^ZBTEST
-   %GTM-I-BREAKZBA, Break instruction encountered during ZBREAK action
+   %YDB-I-BREAKZBA, Break instruction encountered during ZBREAK action
    At M source location SUB^ZBTEST
    YDB>ZSHOW "B"
    SUB^ZBTEST
@@ -2898,7 +2898,7 @@ Example:
 
 .. parsed-literal::
    YDB>zlink "sockexamplemulti2"
-   %GTM-E-LOADRUNNING, Cannot ZLINK an active routine sockexamplemulti2
+   %YDB-E-LOADRUNNING, Cannot ZLINK an active routine sockexamplemulti2
    YDB>zshow "S"
    sockexamplemulti2+12^sockexamplemulti2    (Direct mode)
    YDB>view "LINK":"RECURSIVE"
@@ -2991,7 +2991,7 @@ With auto-relink enabled, YottaDB loads an object file from an object directory 
 With auto-relink, YottaDB creates an initial Rtnobj shared memory segment of 1 MiB (2 MiB or more if hugepages is configured) and allocates 92MiB of shared memory segment for managing the auto-relink facility. Therefore, always ensure that your system has adequate shared memory configured; if not, YottaDB displays messages along the lines of: 
 
 .. parsed-literal::
-   %GTM-E-SYSCALL, Error received from system call shmget() failed
+   %YDB-E-SYSCALL, Error received from system call shmget() failed
 
 Refer to your OS documentation to configure shared memory limits (for example, on common Linux systems, the kernel.shmmax parameter in /etc/sysctl.conf).
 
@@ -3123,7 +3123,7 @@ Example:
 
 .. parsed-literal::
    YDB>ZMESSAGE 150372994
-   %GTM-E-GVUNDEF, Global Variable undefined:
+   %YDB-E-GVUNDEF, Global Variable undefined:
 
 The message specified by this ZMESSAGE command includes a substitution directive but the command does not supply any text.
 
@@ -3131,7 +3131,7 @@ Example:
 
 .. parsed-literal::
    YDB>ZMESSAGE 150373850:"x"
-   %GTM-E-GVUNDEF, Undefined local variable: x
+   %YDB-E-GVUNDEF, Undefined local variable: x
 
 This ZMESSAGE command supplies the substitution text for the message.
 

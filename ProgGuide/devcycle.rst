@@ -244,10 +244,10 @@ This establishes the current value of the environment variable ydb_gbldir as pay
 This example defines ydb_gbldir without a full pathname. The environment variable points to the payroll.gld file in the current working directory. Therefore if the default directory changes, YottaDB attempts to locate the Global Directory in the new default directory and cannot use the original file. If you intend for the Global Directory to consistently point to this file, even if the default directory changes, use a full file-specification for ydb_gbldir.
 
 .. parsed-literal::
-   $ /usr/lib/fis-gtm/V6.0-0001_x86/gtm
+   $ /usr/local/lib/yottadb/r1.20_x86/ydb
    YDB>do ^GDE
    %GDE-I-LOADGD, Loading Global Directory file 
-           /home/jdoe/.fis-gtm/V6.0-001_x86/g/payroll.gld
+           /home/jdoe/.yottadb/r1.20_x86/g/payroll.gld
    %GDE-I-VERIFY, Verification OK
    GDE>
 
@@ -291,13 +291,13 @@ This invokes the Global Directory Editor by entering GDE from the YottaDB prompt
                                 \*\*\* Journaling Information \*\*\*
     Region                          Jnl File (def ext: .mjl)     Before   Buff   Alloc   Exten
     ------------------------------------------------------------------------------------------------------
-    DEFAULT                     $ydb_dir/$gtmver/g/payroll.mjl    Y        128    2048     2048
+    DEFAULT                   $ydb_dir/$ydb_rel/g/payroll.mjl    Y        128    2048     2048
 
                                  
                                  \*\*\* Segments \*\*\*
     Segment                      File (def ext: .dat)           Acc  Typ  Block   Alloc  Exten   Options
     ---------------------------------------------------------------------------------------------------------
-    DEFAULT                      $ydb_dir/$gtmver/g/payroll.dat  BG   DYN  4096    5000   10000   GLOB=1000
+    DEFAULT                    $ydb_dir/$ydb_rel/g/payroll.dat  BG   DYN  4096    5000   10000   GLOB=1000
                                                                                                  LOCK=40
                                                                                                  RES=0
                                                                                                  ENCR=OFF
@@ -309,11 +309,11 @@ This invokes the Global Directory Editor by entering GDE from the YottaDB prompt
     ---------------------------------------------------------------------------------------
     %                 ...                REG = DEFAULT
                                          SEG = DEFAULT
-                                         FILE = $ydb_dir/$gtmver/g/payroll.dat
+                                         FILE = $ydb_dir/$ydb_rel/g/payroll.dat
 
     LOCAL LOCKS                          REG = DEFAULT
                                          SEG = DEFAULT
-                                         FILE = $ydb_dir/$gtmver/g/payroll.dat
+                                         FILE = $ydb_dir/$ydb_rel/g/payroll.dat
 
 
 The GDE SHOW command displays the default Global Directory.
@@ -326,7 +326,7 @@ The GDE CHANGE command sets the database file name to payroll.dat, and specifies
 .. parsed-literal::
    GDE>exit
    %GDE-I-VERIFY, Verification OK
-   %GDE-I-GDCREATE, Creating Global Directory file /usr/lib/fis-gtm/V6.0-001_x86/payroll.gld
+   %GDE-I-GDCREATE, Creating Global Directory file /usr/lib/yottadb/r1.20_x86/payroll.gld
    %GDE-I-GDEIS, Global Directory
 
 The GDE EXIT command terminates GDE. The Global Directory Editor creates a default Global Directory and displays a confirmation message.

@@ -421,7 +421,7 @@ Other key aspects of error handling during trigger execution are as follows:
       write:1'=2 $zstatus,!,"5\2=",5\2,! halt 
       YDB>set $etrap=$ztrnlnm("gtm_trigger_etrap")
       YDB>xecute "write 1/0"
-      150373210,+1^GTM$DMOD,%GTM-E-DIVZERO, Attempt to divide by zero
+      150373210,+1^GTM$DMOD,%YDB-E-DIVZERO, Attempt to divide by zero
       5\2=2
       $
 

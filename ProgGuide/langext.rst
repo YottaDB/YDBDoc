@@ -544,7 +544,7 @@ Example:
    C=3 ;*
    \*D=C
    ------------
-   After Kill *B, A & B are different but C & D remain associated:
+   After Kill \*B, A & B are different but C & D remain associated:
    A=1
    B=2
    C=4 ;*
@@ -761,11 +761,11 @@ Extensions for Unicode™ Support
 
 To represent and process strings that use international characters, YottaDB processes can use Unicode.
 
-If the environment variable ydb_chset has a value of UTF-8 and either LC_ALL or LC_CTYPE is set to a locale with UTF-8 support (for example, zh_CN.utf8), a YottaDB process interprets strings as containing characters encoded in the UTF-8 representation. In the UTF-8 mode, YottaDB no longer assumes that one character is one byte, or that the glyph display width of a character is one. Depending on how ICU is built on a computer system, in order to operate in UTF-8 mode, a YottaDB process may well also need a third environment variable, ydb_icu_version set appropriately.
+If the environment variable gtm_chset has a value of UTF-8 and either LC_ALL or LC_CTYPE is set to a locale with UTF-8 support (for example, zh_CN.utf8), a YottaDB process interprets strings as containing characters encoded in the UTF-8 representation. In the UTF-8 mode, YottaDB no longer assumes that one character is one byte, or that the glyph display width of a character is one. Depending on how ICU is built on a computer system, in order to operate in UTF-8 mode, a YottaDB process may well also need a third environment variable, ydb_icu_version set appropriately.
 
-If the environment variable ydb_chset has no value, the string "M", or any value other than "UTF-8", YottaDB treats each 8-bit byte as a character, which suffices for English, and many single-language applications.
+If the environment variable gtm_chset has no value, the string "M", or any value other than "UTF-8", YottaDB treats each 8-bit byte as a character, which suffices for English, and many single-language applications.
 
-All YottaDB components related to M mode reside in the top level directory in which a YottaDB release is installed and the environment variable ydb_dist should point to that directory for M mode processes. All Unicode-related components reside in the utf8 subdirectory and the environment variable ydb_dist should point to that subdirectory for UTF-8 mode processes. So, in addition to the values of the environment variables ydb_chset and LC_ALL/LC_CTYPE, ydb_dist for a UTF-8 process should also point to the utf8 subdirectory.
+All YottaDB components related to M mode reside in the top level directory in which a YottaDB release is installed and the environment variable ydb_dist should point to that directory for M mode processes. All Unicode-related components reside in the utf8 subdirectory and the environment variable ydb_dist should point to that subdirectory for UTF-8 mode processes. So, in addition to the values of the environment variables gtm_chset and LC_ALL/LC_CTYPE, ydb_dist for a UTF-8 process should also point to the utf8 subdirectory.
 
 M mode and UTF-8 mode are set for the process, not for the database. As a subset of Unicode, ASCII characters ($CHAR() values 0 through 127) are interpreted identically by processes in M and UTF-8 modes. The indices and values in the database are simply sequences of bytes and therefore it is possible for one process to interpret a global node as encoded in UTF-8 and for another to interpret the same node as bytecodes. Note that such an application configuration would be extremely unusual, except perhaps during a transition phase or in connection with data import/export.
 
@@ -805,7 +805,7 @@ The following table summarizes YottaDB Unicode support.
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | $ZASCII()                   | The $ZASCII() function returns the numeric byte value (0 through 255) of a given sequence of octets (8-bit bytes). For more information and usage examples, refer to “$ZAscii()”.          |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| $ZCHset                     | The read-only intrinsic special variable $ZCHSET takes its value from the environment variable ydb_chset. An application can obtain the character set used by a YottaDB process by the     |
+| $ZCHset                     | The read-only intrinsic special variable $ZCHSET takes its value from the environment variable gtm_chset. An application can obtain the character set used by a YottaDB process by the     |
 |                             | value of $ZCHSET. $ZCHSET can have only two values –"M", or "UTF-8" and it cannot appear on the left of an equal sign in the SET command. For more information and usage examples, refer to|
 |                             | “$ZCHset”.                                                                                                                                                                                 |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -883,8 +883,8 @@ The following table summarizes YottaDB Unicode support.
 |                             |                                                                                                                                                                                            |
 |                             | MUPIP LOAD                                                                                                                                                                                 |
 |                             |                                                                                                                                                                                            |
-|                             | MUPIP LOAD command considers a sequential file as encoded in UTF-8 if the environment variable ydb_chset is set to UTF-8. Ensure that MUPIP EXTRACT commands and corresponding MUPIP LOAD  |
-|                             | commands execute with the same setting for the environment variable ydb_chset. The M utility programs %GO and %GI have the same requirement for mode matching. For more information on     |
+|                             | MUPIP LOAD command considers a sequential file as encoded in UTF-8 if the environment variable gtm_chset is set to UTF-8. Ensure that MUPIP EXTRACT commands and corresponding MUPIP LOAD  |
+|                             | commands execute with the same setting for the environment variable gtm_chset. The M utility programs %GO and %GI have the same requirement for mode matching. For more information on     |
 |                             | MUPIP EXTRACT and MUPIP LOAD, refer to the General Database Management chapter in the Administration and Operations Guide.                                                                 |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Open                        | In UTF-8 mode, the OPEN command recognizes ICHSET, OCHSET, and CHSET as three additional deviceparameters to determine the encoding of the input / output devices. For more information and|
@@ -1026,7 +1026,7 @@ ICU
 ICU is a widely used, defacto standard package (see http://icu-project.org for more information) that YottaDB relies on for most operations that require knowledge of the Unicode character sets, such as text boundary detection, character string conversion between UTF-8 and UTF-16, and calculating glyph display widths.
 
 .. note::
-   Unless Unicode support is sought for a process (that is, unless the environment variable ydb_chset is UTF8"), YottaDB processes do not need ICU. In other words, existing, non-Unicode, applications continue to work on supported platforms without ICU.
+   Unless Unicode support is sought for a process (that is, unless the environment variable gtm_chset is UTF8"), YottaDB processes do not need ICU. In other words, existing, non-Unicode, applications continue to work on supported platforms without ICU.
 
 An ICU version number is of the form major.minor.milli.micro where major, minor, milli and micro are integers. Two versions that have different major and/or minor version numbers can differ in functionality and API compatibility is not guaranteed. Differences in milli or micro versions are maintenance releases that preserve functionality and API compatibility. ICU reference releases are defined by major and minor version numbers. Note that display widths for some characters changed in ICU 4.0 and may change again in the future, as both languages and ICU evolve.
 
@@ -1095,7 +1095,7 @@ With the use of "UTF-8" as YottaDB's internal character encoding, the additional
 
 **Characters in arguments exchanged with external routines must be validated by the external routines**
 
-YottaDB does not check for illegal characters in a string before passing it to an external routine or in a returned value before assigning it to a YottaDB variable. This is because such checks add parameter-processing overhead. The application must ensure that the strings are in the encoding form expected by the respective routines. More robustly, external routines must interpret passed strings based on the value of the intrinsic variable $ZCHSET or the environment variable ydb_chset. The external routines can perform validation if needed. 
+YottaDB does not check for illegal characters in a string before passing it to an external routine or in a returned value before assigning it to a YottaDB variable. This is because such checks add parameter-processing overhead. The application must ensure that the strings are in the encoding form expected by the respective routines. More robustly, external routines must interpret passed strings based on the value of the intrinsic variable $ZCHSET or the environment variable gtm_chset. The external routines can perform validation if needed. 
 
 ~~~~~~~~~~~~~~~~~~
 Maximums

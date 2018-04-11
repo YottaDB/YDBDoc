@@ -87,7 +87,7 @@ When you try to execute this program, the last statement causes an error since t
 
 .. parsed-literal::
    $ mumps -run printsum
-   %GTM-E-UNDEF, Undefined local variable: C
+   %YDB-E-UNDEF, Undefined local variable: C
    At MUMPS source location GO+1^printsum
    YDB>
 
@@ -132,7 +132,7 @@ Example:
    YDB>ZW
    ZW
    ^_____
-   %GTM-E-INVCMD, Invalid command keyword encountered
+   %YDB-E-INVCMD, Invalid command keyword encountered
    YDB>   
 
 In Direct Mode, YottaDB provides access to the RECALL command. RECALL allows you to retrieve a Direct Mode command line with a minimum of typing. The YottaDB line editor allows you to make quick changes or corrections to the command line. For more information on RECALL and the line editor, see `Chapter 4: “Operating and Debugging in Direct Mode” <https://docs.yottadb.com/ProgrammersGuide/opdebug.html>`_.
@@ -468,7 +468,7 @@ Example:
    CAN'T TAKE RECIPROCAL OF 0
    TYPE A NUMBER:
    YOU TYPED <CTRL-C> YOU MUST BE DONE!
-   $ZSTATUS=150372498,LOOP+1^EP12,%GTM-E-CTRAP,Character trap $C(3) encountered
+   $ZSTATUS=150372498,LOOP+1^EP12,%YDB-E-CTRAP,Character trap $C(3) encountered
    YDB>
 
 
@@ -499,7 +499,7 @@ Example:
           QUIT 
                          
    YDB>do ^EP1
-   THIS IS EP1%GTM-E-UNDEF, Undefined local variable: A
+   THIS IS EP1%YDB-E-UNDEF, Undefined local variable: A
    At M source location BAD^EP1
    YDB>ZSHOW
    BAD^EP1    ($ZTRAP)
@@ -569,7 +569,7 @@ Example:
    LEVEL: 3   PLACE: BAD^EP2      MCODE: BAD     WRITE A  ECODE: ,M6,Z150373850,
    LEVEL: 2   PLACE: SUB1+1^EP2   MCODE:         DO SUB2  ECODE: 
    LEVEL: 1   PLACE: EP2+4^EP2    MCODE:         DO SUB1  ECODE: 
-   150373850,BAD^EP2,%GTM-E-UNDEF, Undefined local variable: A
+   150373850,BAD^EP2,%YDB-E-UNDEF, Undefined local variable: A
    ET+12^EP2
    SUB1+1^EP2
    EP2+4^EP2
@@ -675,7 +675,7 @@ Example:
    LEVEL: 3   PLACE: SUB1+2^EP4   MCODE:         DO SUB2  ECODE: 
    LEVEL: 2   PLACE: MAIN+4^EP4   MCODE:         DO SUB1  ECODE: 
    LEVEL: 1   PLACE: EP4+2^EP4    MCODE:         DO MAIN  ECODE: 
-   150373850,BAD^EP4,%GTM-E-UNDEF, Undefined local variable: A
+   150373850,BAD^EP4,%YDB-E-UNDEF, Undefined local variable: A
    ET+12^EP4
    EP4+2^EP4
    +1^GTM$DMOD    (Direct mode) 
@@ -829,8 +829,8 @@ Example:
                                             
    YDB>do ^EP7
    THIS IS EP7
-   %GTM-E-UNDEF, Undefined local variable: A
-   %GTM-I-RTSLOC, At M source location BAD^EP7
+   %YDB-E-UNDEF, Undefined local variable: A
+   %YDB-I-RTSLOC, At M source location BAD^EP7
    $
 
 YottaDB issues a message describing the M error and releases control to the shell.
@@ -852,8 +852,8 @@ Example:
                                            
    YDB>DO ^EP8
    THIS IS EP8
-   %GTM-E-STACKCRIT, Stack space critical
-   %GTM-E-ERRWZTRAP, Error while processing $ZTRAP
+   %YDB-E-STACKCRIT, Stack space critical
+   %YDB-E-ERRWZTRAP, Error while processing $ZTRAP
    YDB>
 
 When the routine encounters an error at label BAD, YottaDB transfers control to label ET. When the routine encounters an error at label ET, it recursively does ET until a stack overflow condition terminates the YottaDB image.
@@ -881,7 +881,7 @@ A set $ZTRAP="" command as soon as the program enters an error-handling routine 
    BAD^EP8A    ($ZTRAP)
    +1^GTM$DMOD    (Direct mode) 
    HERE COMES AN ERROR IN THE TRAP CODE
-   %GTM-E-DIVZERO, Attempt to divide by zero
+   %YDB-E-DIVZERO, Attempt to divide by zero
    YDB>
 
 This demonstrates how $ETRAP behavior in this circumstance is more appropriate. Note that the $ZTRAP="" at the lowest level, prevents exection from returning to Direct Mode when the initial value of $ZTRAP ("B") is unstacked; this step takes $ZTRAP out of the equation and should be part of initialization when the intention is to use $ETRAP exclusively.
@@ -906,8 +906,8 @@ Example:
    THIS IS EP9
    THIS IS THE ERROR TRAP
    HERE COMES AN ERROR IN THE ERROR TRAP
-   %GTM-E-DIVZERO, Attempt to divide by zero
-   %GTM-I-RTSLOC,                 At M source location ERROR+1^EP9
+   %YDB-E-DIVZERO, Attempt to divide by zero
+   %YDB-I-RTSLOC,                 At M source location ERROR+1^EP9
    $
 
 This routine sets the value of $ZTRAP to null as soon as the program enters the error handler. This insures program termination when an error occurs in the error handler. 
@@ -1191,8 +1191,8 @@ Example:
    LEVEL: 1  PLACE:NODB+3^EP13   MCODE: DO SUB1      ECODE:
    YOU HAVE ENCOUNTERED AN ERROR
    PLEASE NOTIFY JOAN Q SUPPORT PERSON
-   %GTM-E-DIVZERO, Attempt to divide by zero
-   %GTM-I-RTSLOC,                 At M source location FATAL+1^ERR
+   %YDB-E-DIVZERO, Attempt to divide by zero
+   %YDB-I-RTSLOC,                 At M source location FATAL+1^ERR
 
 
 Example EP13 uses the error recording routine by setting $ZTRAP="GOTO ^ERR". When the routine encounters an error at label BAD, YottaDB transfers control to routine ERR. Afterwards the .ERR file would have contents like:
@@ -1261,7 +1261,7 @@ Example EP13 uses the error recording routine by setting $ZTRAP="GOTO ^ERR". Whe
              /o(/home/jdoe/.fis-gtm/V5.4-002B_x86/r /home/jdoe/.fis-gtm/r) /usr/l
              ib/fis-gtm/V5.4-002B_x86"""
    ^ERR(4806,"62364,27842","I",47)="$ZSOURCE="""""
-   ^ERR(4806,"62364,27842","I",48)="$ZSTATUS=""150373210,BAD+2^EP13,%GTM-E-DIVZERO,
+   ^ERR(4806,"62364,27842","I",48)="$ZSTATUS=""150373210,BAD+2^EP13,%YDB-E-DIVZERO,
               Attempt to divide by zero"""
    ^ERR(4806,"62364,27842","I",49)="$ZSTEP=""B"""
    ^ERR(4806,"62364,27842","I",50)="$ZSYSTEM=0"

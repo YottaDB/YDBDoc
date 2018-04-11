@@ -573,7 +573,7 @@ gtm_hiber_start() always sleeps until the time expires; gtm_hiber_start_wait_any
 
 **Call-In table**
 
-The Call-In table file is a text file that contains the signatures of all M label references that get called from C. In order to pass the typed C arguments to the type-less M formallist, the enviroment variable GTMCI must be defined to point to the Call-In table file path. Each signature must be specified separately in a single line. YottaDB reads this file and interprets each line according to the following convention (specifications within box brackets "[]", are optional):
+The Call-In table file is a text file that contains the signatures of all M label references that get called from C. In order to pass the typed C arguments to the type-less M formallist, the environment variable GTMCI must be defined to point to the Call-In table file path. Each signature must be specified separately in a single line. YottaDB reads this file and interprets each line according to the following convention (specifications within box brackets "[]", are optional):
 
 .. parsed-literal::
    <c-call-name> : <ret-type> <label-ref> ([<direction>:<param-type>,...])
@@ -723,7 +723,7 @@ gtm_exit() can be used to shut down all databases and exit from the YottaDB envi
 
 Note that gtm_init() creates various YottaDB resources and keeps them open across multiple invocations of gtm_ci() until gtm_exit() is called to close all such resources. On successful exit, gtm_exit() returns zero (0), else it returns the $ZSTATUS error code.
 
-gtm_exit() cannot be called from an external call function. YottaDB reports the error GTM-E-INVGTMEXIT if an external call function invokes gtm_exit(). Since the YottaDB run-time system must be operational even after the external call function returns, gtm_exit() is meant to be called only once during a process lifetime, and only from the base C/C++ program when YottaDB functions are no longer required by the program.
+gtm_exit() cannot be called from an external call function. YottaDB reports the error YDB-E-INVGTMEXIT if an external call function invokes gtm_exit(). Since the YottaDB run-time system must be operational even after the external call function returns, gtm_exit() is meant to be called only once during a process lifetime, and only from the base C/C++ program when YottaDB functions are no longer required by the program.
 
 +++++++++++++++++++++++++++++
 Building Standalone Programs
@@ -752,7 +752,7 @@ Nested Call-Ins
 
 Call-ins can be nested by making an external call function in-turn call back into YottaDB. Each gtm_ci() called from an External Call library creates a call-in base frame at $ZLEVEL 1 and executes the M routine at $ZLEVEL 2. The nested call-in stack unwinds automatically when the External Call function returns to YottaDB.
 
-YottaDB currently allows up to 10 levels of nesting, if TP is not used, and less than 10 if YottaDB supports call-ins from a transaction (see “Rules to Follow in Call-Ins”). YottaDB reports the error GTM-E-CIMAXLEVELS when the nesting reaches its limit.
+YottaDB currently allows up to 10 levels of nesting, if TP is not used, and less than 10 if YottaDB supports call-ins from a transaction (see “Rules to Follow in Call-Ins”). YottaDB reports the error YDB-E-CIMAXLEVELS when the nesting reaches its limit.
 
 Following are the YottaDB commands, Intrinsic Special Variables, and functions whose behavior changes in the context of every new nested call-in environment.
 
@@ -775,7 +775,7 @@ $ECODE/$STACK() initialized to null at level one (1) in GTM$CI frame.
 Rules to Follow in Call-Ins
 ++++++++++++++++++++++++++++++++++++
 
-1. External calls must not be fenced with TSTART/TCOMMIT if the external routine calls back into mumps using call-in mechanism. YottaDB reports the error GTM-E-CITPNESTED if nested call-ins are invoked within a TP fence since YottaDB currently does not handle TP support across multiple call-in invocations.
+1. External calls must not be fenced with TSTART/TCOMMIT if the external routine calls back into mumps using call-in mechanism. YottaDB reports the error YDB-E-CITPNESTED if nested call-ins are invoked within a TP fence since YottaDB currently does not handle TP support across multiple call-in invocations.
 2. The external application should never call exit() unless it has called gtm_exit() previously. YottaDB internally installs an exit handler that should never be bypassed.
 3. The external application should never use any signals when YottaDB is active since YottaDB reserves them for its internal use. YottaDB provides the ability to handle SIGUSR1 within M (see “$ZINTerrupt” for more information). An interface is provided by YottaDB for timers. Although not required, YottaDB recommends the use of gtm_malloc() and gtm_free() for memory management by C code that executes in a YottaDB process space for enhanced performance and improved debugging.
 4. YottaDB performs device input using the read() system service. UNIX documentation recommends against mixing this type of input with buffered input services in the fgets() family and ignoring this recommendation is likely to cause loss of input that is difficult to diagnose and understand.
