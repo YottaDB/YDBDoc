@@ -164,7 +164,7 @@ To establish a default collation version for local variables within the process,
 * If the truth value of ncol is TRUE(1), local variables use the M standard null collation.
 * If ncol is not supplied, there is no change to the already established null collation method.
 
-Also using set^%LCLCOL(,ncol), the null collation order can be changed while keeping the alternate collation order unchanged. If subscripted local variables exist, null collation order cannot be changed. In this case, YottaDB issues GTM-E-COLLDATAEXISTS.
+Also using set^%LCLCOL(,ncol), the null collation order can be changed while keeping the alternate collation order unchanged. If subscripted local variables exist, null collation order cannot be changed. In this case, YottaDB issues YDB-E-COLLDATAEXISTS.
 
 ~~~~~~
 GDE
@@ -434,7 +434,7 @@ MUPIP Binary Extract and Load
 Replication
 ~~~~~~~~~~~~~~~~~~
 
-In a replicated environment, all databases belonging to an instance should have the same null collation order. If this condition is not met, the source server issues the GTM-E-NULLCOLLDIFF error message on the primary. On the secondary, the update process issues the same error message if the condition is not satisfied.
+In a replicated environment, all databases belonging to an instance should have the same null collation order. If this condition is not met, the source server issues the YDB-E-NULLCOLLDIFF error message on the primary. On the secondary, the update process issues the same error message if the condition is not satisfied.
 
 Although all databases belonging to an instance must have the same collation method, YottaDB allows the primary and secondary to use different null collation methods. Any needed conversion is handled internally and transparently.
                                                                                                                                                                                                                                              
@@ -598,7 +598,7 @@ The purpose of the function is to use its three input arguments to derive and re
 
 A return value other than zero (0) indicates an error in translation, and is reported by a YottaDB error.
 
-If the length of the output argument is non-zero, YottaDB appends a secondary message of GTM-I-TEXT, containing the text found at the address of the output structure.
+If the length of the output argument is non-zero, YottaDB appends a secondary message of YDB-I-TEXT, containing the text found at the address of the output structure.
 
 YottaDB does not do any memory management related to the output argument - space for the output should be allocated by the external routine. The routine must place the returned environment specification at the address it has allocated and adjust the length accordingly. On a successful return, the return value should be zero. If the translation routine must communicate an error to YottaDB, it must return a non-zero value, and if it is to communicate additional error information, place the error text at the address where the environment would normally go and adjust the length to match the length of the error text.
 
@@ -1826,7 +1826,7 @@ YottaDB provides a way to monitor transaction restarts by reporting them to the 
 Here is an example message:
 
 .. parsed-literal::
-   %GTM-I-TPRESTART, Database /gbls/dtx/dtx.dat; code: L; blk: 0x00BA13DD in glbl: ^DTX; pvtmods: 0, blkmods: 1, blklvl: 1, type: 4, readset: 3, writeset: 1, local_tn: 0x00000000000002D0, zpos: LABEL+108^ROUTINENAME
+   %YDB-I-TPRESTART, Database /gbls/dtx/dtx.dat; code: L; blk: 0x00BA13DD in glbl: ^DTX; pvtmods: 0, blkmods: 1, blklvl: 1, type: 4, readset: 3, writeset: 1, local_tn: 0x00000000000002D0, zpos: LABEL+108^ROUTINENAME
 
 * pvtmods - Is always less than or equal to blkmods. This means it can be 1 only if "blkmods" is also 1. If it is 1, it means that process P1 was planning to UPDATE (not just READ) the block number (indicated as "blk: ..." in the TPRESTART message) as part of its TP transaction.
 

@@ -37,9 +37,9 @@ A shared library for an alternative collation sequence must contain the followin
 * gtm_ac_version: Returns a numeric version identifier for the "currently active" set of collation routines.
 * gtm_ac_verify: Returns the success (odd) or failure (even) in matching a collation sequence with a given version number.
 
-YottaDB searches the shared library for the gtm_ac_xform_1 and gtm_ac_xback_1 before searching for the gtm_ac_xform and gtm_ac_xback routines. If the shared library contains gtm_ac_xform_1, YottaDB ignores gtm_ac_xform even if it is present. If YottaDB finds gtm_ac_xform_1 but does not find gtm_ac_xback_1, it reports a GTM-E-COLLATIONUNDEF error with an additional mismatch warning GTM-E-COLLFNMISSING.
+YottaDB searches the shared library for the gtm_ac_xform_1 and gtm_ac_xback_1 before searching for the gtm_ac_xform and gtm_ac_xback routines. If the shared library contains gtm_ac_xform_1, YottaDB ignores gtm_ac_xform even if it is present. If YottaDB finds gtm_ac_xform_1 but does not find gtm_ac_xback_1, it reports a YDB-E-COLLATIONUNDEF error with an additional mismatch warning YDB-E-COLLFNMISSING.
 
-If the application does not use strings longer than 32,767 bytes, the alternative collation library need not contain the gtm_ac_xform_1 and gtm_ac_xback_1 routines. On the other hand, if the application passes strings greater than 32,767 bytes (but less than the maximum support string length) and does not provide gtm_xc_xform_1 and gtm_xc_xback_1, YottaDB issues the run-time error GTM-E-COLLARGLONG.
+If the application does not use strings longer than 32,767 bytes, the alternative collation library need not contain the gtm_ac_xform_1 and gtm_ac_xback_1 routines. On the other hand, if the application passes strings greater than 32,767 bytes (but less than the maximum support string length) and does not provide gtm_xc_xform_1 and gtm_xc_xback_1, YottaDB issues the run-time error YDB-E-COLLARGLONG.
 
 Note that database key sizes are much more restricted by YottaDB than local key sizes, and may be restricted further by user configuration.
 
@@ -50,7 +50,7 @@ Defining the Environment Variable
 YottaDB locates the alternative collation sequences through the environment variable gtm_collate_n where n is an integer from 1 to 255 that identifies the collation sequence, and pathname identifies the shared library containing the routines for that collation sequence, for example:
 
 .. parsed-literal::
-   $ gtm_collate_1=/opt/fis-gtm/collation
+   $ gtm_collate_1=/opt/yottadb/collation
    $ export gtm_collate_1
 
 Multiple alternative collation sequence definitions can co-exist.
@@ -111,7 +111,7 @@ set^%LCLCOL(n,ncol) determines the null collation type to be used with the colla
 * If the truth value of ncol is FALSE(0), local variables use the YottaDB standard null collation.
 * If the truth value of ncol is TRUE(1), local variables use the M standard null collation.
 
-With set^%LCLCOL(,ncol), the null collation order can be changed while keeping the alternate collation order unchanged. If subscripted local variables exist, null collation order cannot be changed. In this case, YottaDB issues GTM-E-COLLDATAEXISTS.
+With set^%LCLCOL(,ncol), the null collation order can be changed while keeping the alternate collation order unchanged. If subscripted local variables exist, null collation order cannot be changed. In this case, YottaDB issues YDB-E-COLLDATAEXISTS.
 
 get^%LCLCOL returns the current local type.
 
@@ -615,10 +615,10 @@ Add code for the version identifier routine (gtm_ac_version) or the verification
 Save and compile polish.c. On x86 GNU/Linux (64-bit Ubuntu 10.10), execute a command like the following:
 
 .. parsed-literal::
-   gcc -c polish.c -I$gtm_dist
+   gcc -c polish.c -I$ydb_dist
 
 .. note::
-   The -I$gtm_dist option includes gtmxc_types.h.
+   The -I$ydb_dist option includes gtmxc_types.h.
 
 Create a new shared library or add the above routines to an existing one. The following command adds these alternative sequence routines to a shared library called altcoll.so on x86 GNU/Linux (64-bit Ubuntu 10.10).
 
@@ -668,10 +668,10 @@ Download col_reverse_32.c from `Github <https://github.com/YottaDB/YottaDBdoc/tr
 Save and compile col_reverse_32.c. On x86 GNU/Linux (64-bit Ubuntu 10.10), execute a command like the following:
 
 .. parsed-literal::
-   gcc -c col_reverse_32.c -I$gtm_dist
+   gcc -c col_reverse_32.c -I$ydb_dist
 
 .. note::
-   The -I$gtm_dist option includes gtmxc_types.h.
+   The -I$ydb_dist option includes gtmxc_types.h.
 
 Create a new shared library or add the routines to an existing one. The following command adds these alternative sequence routines to a shared library called altcoll.so on x86 GNU/Linux (64-bit Ubuntu 10.10).
 
