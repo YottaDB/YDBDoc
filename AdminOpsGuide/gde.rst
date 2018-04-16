@@ -19,7 +19,7 @@ YottaDB manages routines in files and libraries separately from globals. For mor
 
 A set of M global variables (Names or Name spaces) and / or their subscripts map to Regions that define common sets of properties such as the maximum record length and whether null subscripts collate in conformance to the M standard. Each Region maps to a Segment that defines the properties relating to the file system such as the file name, the initial allocation, and number of global buffers. These properties and mapping rules are stored in a binary file called global directory. By default, a global directory file has an extension of .gld. You can specify any filename and extension of your choice for a global directory as long as it is valid on your operating system; the documentation always uses the default extension.
 
-The location of the global directory is pointed to by the Intrinsic Special Variable $ZGBLDIR. YottaDB processes initialize $ZBGLDIR at process startup from the environment variable ydb_gbldir and can modify it during execution. For example, with a simple SET $ZGBLDIR command, a process can switch back and forth between development and testing databases.
+The location of the global directory is pointed to by the Intrinsic Special Variable $ZGBLDIR. YottaDB processes initialize $ZBGLDIR at process startup from the environment variable gtmgbldir and can modify it during execution. For example, with a simple SET $ZGBLDIR command, a process can switch back and forth between development and testing databases.
 
 Consider a global variable ^TMP that holds only temporary data that is no longer meaningful when a system is rebooted. A global directory can map ^TMP to region TEMP that maps to a database file called scratch.dat, with all other globals mapped to mumps.dat. A global directory allows the separation of persistent data (mumps.dat) from non-persistent data(scratch.dat), so that each database file may get appropriately configured for operations — for example, the database administrator may choose to exclude scratch.dat from backup/archival procedures or periodically delete and recreate scratch.dat using MUPIP CREATE.
 
@@ -55,9 +55,9 @@ In a nutshell, the database attributes and mapping rules defined in a global dir
 GDE Overview
 -----------------------
 
-The Global Directory Editor (GDE) is a utility for creating, examining, and modifying a global directory. GDE is a program written in M and you can invoke it from the shell with $ydb_dist/mumps -run ^GDE. If you invoke it from the shell, GDE returns a status indicating success (0) or an issue (non-zero).
+The Global Directory Editor (GDE) is a utility for creating, examining, and modifying a global directory. GDE is a program written in M and you can invoke it from the shell with $gtm_dist/mumps -run ^GDE. If you invoke it from the shell, GDE returns a status indicating success (0) or an issue (non-zero).
 
-Because GDE is an M program, you can also invoke GDE from a YottaDB process with DO ^GDE. If you invoke GDE with a DO and modify the map of global directly currently opened by that process, you must HALT and restart the process for the process to pick up the revised mapping. YottaDB expects users normally run GDE from the shell --$ydb_dist/mumps -run GDE.
+Because GDE is an M program, you can also invoke GDE from a YottaDB process with DO ^GDE. If you invoke GDE with a DO and modify the map of global directly currently opened by that process, you must HALT and restart the process for the process to pick up the revised mapping. YottaDB expects users normally run GDE from the shell --$gtm_dist/mumps -run GDE.
 
 The input to GDE can be a command file. In a production environment, YottaDB recommends using command files to define database configurations and putting them under version control.
 
@@ -68,40 +68,40 @@ The input to GDE can be a command file. In a production environment, YottaDB rec
 Identifying the Current Global Directory
 +++++++++++++++++++++++++++++++++++++++++
 
-At process startup, the environment variable ydb_gbldir identifies the global directory to the process. M application code can access and change the global directory through the $ZGBLDIR intrinsic special variable, which is initialized from $ydb_gbldir at process startup. M application code can also use extended global references with the || or {} syntax.
+At process startup, the environment variable gtmgbldir identifies the global directory to the process. M application code can access and change the global directory through the $ZGBLDIR intrinsic special variable, which is initialized from $gtmgbldir at process startup. M application code can also use extended global references with the || or {} syntax.
 
-Note that $ydb_gbldir / $ZGBLDIR are pathnames. If they do not start with a "/", then the pathname is relative and YottaDB searches for the global directory starting in the current working directory.
+Note that $gtmgbldir / $ZGBLDIR are pathnames. If they do not start with a "/", then the pathname is relative and YottaDB searches for the global directory starting in the current working directory.
 
-To change the Global Directory used by processes, specify a new value for ydb_gbldir.
+To change the Global Directory used by processes, specify a new value for gtmgbldir.
 
 Example:
 
 .. parsed-literal::
-   $ export ydb_gbldir=/home/jdoe/node1/prod.gld
+   $ export gtmgbldir=/home/jdoe/node1/prod.gld
 
-When you invoke GDE and no Global Directory exists for ydb_gbldir, GDE creates a minimal default Global Directory that is a starting point or template for building global directories for your specific needs.
+When you invoke GDE and no Global Directory exists for gtmgbldir, GDE creates a minimal default Global Directory that is a starting point or template for building global directories for your specific needs.
 
 To retain the default Global Directory, exit GDE without making any changes.
 
 Example:
 
 .. parsed-literal::
-   $ export ydb_gbldir=/home/jdoe/node1/prod.gld
+   $ export gtmgbldir=/home/jdoe/node1/prod.gld
 
 ++++++++++++++++++++++++++++++++++++
 Creating a Default Global Directory
 ++++++++++++++++++++++++++++++++++++
 
-When you invoke GDE and no Global Directory exists for ydb_gbldir, GDE produces a default Global Directory that contains a minimal set of required components and values for database characteristics. It can be used for purposes such as development and testing work. A default Global Directory also serves as a starting point or template for building custom global directories.
+When you invoke GDE and no Global Directory exists for gtmgbldir, GDE produces a default Global Directory that contains a minimal set of required components and values for database characteristics. It can be used for purposes such as development and testing work. A default Global Directory also serves as a starting point or template for building custom global directories.
 
 To retain the default Global Directory, quit GDE without making any changes.
 
 Example:
 
 .. parsed-literal::
-   $ ydb_gbldir=/usr/accntg/jones/mumps.gld
-   $ export ydb_gbldir
-   $ $ydb_dist/mumps -dir
+   $ gtmgbldir=/usr/accntg/jones/mumps.gld
+   $ export gtmgbldir
+   $ $gtm_dist/mumps -dir
    YDB>do ^GDE
    %GDE-I-GDUSEDEFS, Using defaults for Global Directory
    /usr/accntg/jones/mumps.gld
@@ -317,7 +317,7 @@ If you select the -JOURNAL option when you ADD or CHANGE a region in a Global Di
                                             \*\*\* JOURNALING INFORMATION \*\*\*
    Region               Journal File (def extL .mjl)        Before     Buff    Alloc   Exten   Autoswitch
    --------------------------------------------------------------------------------------------------------
-   DEFAULT           $ydb_dir/$ydb_rel/g/yottadb.mjl         Y         2308    2048     2048    8386560
+   DEFAULT           $gtmdir/$ydb_rel/g/yottadb.mjl         Y         2308    2048     2048    8386560
 
 For more information about journaling, see the section on the JOURNAL qualifier in this chapter and `Chapter 6: “YottaDB Journaling” <https://docs.yottadb.com/AdminOpsGuide/ydbjournal.html>`_.
 
@@ -325,7 +325,7 @@ For more information about journaling, see the section on the JOURNAL qualifier 
 Using GDE
 -----------------------
 
-The default installation procedure places the GDE utility into a directory assigned to the environment variable ydb_dist.
+The default installation procedure places the GDE utility into a directory assigned to the environment variable gtm_dist.
 
 To invoke GDE:
 
@@ -349,7 +349,7 @@ GDE displays informational messages like the following, and then the GDE> prompt
 If this does not work, contact your system manager to investigate setup and file access issues.
 
 .. note::
-   Even when invoked from within YottaDB, GDE always uses the ydb_gbldir environment variable to identify its target.
+   Even when invoked from within YottaDB, GDE always uses the gtmgbldir environment variable to identify its target.
 
 To leave GDE:
 

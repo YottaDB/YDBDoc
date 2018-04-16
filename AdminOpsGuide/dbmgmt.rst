@@ -24,12 +24,12 @@ For MUPIP commands pertaining to multisite database replication, refer to `Chapt
 .. note::
    Two MUPIP operations - INTRPT and STOP - perform process management functions. All other MUPIP operations relate to the operation of the database.
 
-The YottaDB installation procedure places the MUPIP utility program in a directory specified by $ydb_dist.
+The YottaDB installation procedure places the MUPIP utility program in a directory specified by $gtm_dist.
 
-Invoke MUPIP by executing the mupip program at the shell prompt. If this does not work, consult your system manager (MUPIP requires that the $ydb_dist point to the directory containing the MUPIP executable image).
+Invoke MUPIP by executing the mupip program at the shell prompt. If this does not work, consult your system manager (MUPIP requires that the $gtm_dist point to the directory containing the MUPIP executable image).
 
 .. parsed-literal::
-   $ydb_dist/mupip
+   $gtm_dist/mupip
    MUPIP>
 
 MUPIP asks for commands, with the MUPIP> prompt. Enter the EXIT command at the MUPIP> prompt to stop the utility. MUPIP performs one operation at a time, and automatically terminates after most operations.
@@ -37,15 +37,15 @@ MUPIP asks for commands, with the MUPIP> prompt. Enter the EXIT command at the M
 When additional information appears on the command line after the mupip program name, MUPIP processes the additional information as its command, for example:
 
 .. parsed-literal::
-   $ydb_dist/mupip stop 1158 
+   $gtm_dist/mupip stop 1158 
 
 This starts MUPIP and stops the process with Process ID (PID) 1158.
 
 Some MUPIP commands require information contained in the global directory. Therefore, a process must have access to a valid global directory before using any MUPIP commands other than EXIT, INTRPT, JOURNAL, RESTORE, STOP and the -file option of any command that has that option.
 
-The environment variable ydb_gbldir specifies the active global directory.
+The environment variable gtmgbldir specifies the active global directory.
 
-A ydb_gbldir value of mumps.gld tells MUPIP to look for a global directory file mumps.gld in the current directory. For more information on the global directory, refer to `“Global Directory Editor” <https://docs.yottadb.com/AdminOpsGuide/gde.html>`_.
+A gtmgbldir value of mumps.gld tells MUPIP to look for a global directory file mumps.gld in the current directory. For more information on the global directory, refer to `“Global Directory Editor” <https://docs.yottadb.com/AdminOpsGuide/gde.html>`_.
 
 .. note::
    YottaDB recommends against running YottaDB components as root. When run as root, YottaDB components use the owner and group of the database file as the owner and group of newly created journal files, backup files, snapshot files, shared memory, and semaphores. In addition, they set the permissions on the resulting files, shared memory, and semaphores, as if running as the owner of the database file and as a member of the database file group.
@@ -399,7 +399,7 @@ Example:
 .. parsed-literal::
    $ mupip backup -bytestream MAMMALS,CRUSTACEANS bkup
 
-Suppose that the environment variable ydb_gbldir has regions MAMMALS and CRUSTACEANS that map to files called LINNAEUS.DAT and BRUNNICH.DAT (no matter which directory or directories the files reside in). Then the above example creates bytestream backup files MAMMALS.DAT and CRUSTACEANS.DAT in the bkup directory since the last DATABASE backup.
+Suppose that the environment variable gtmgbldir has regions MAMMALS and CRUSTACEANS that map to files called LINNAEUS.DAT and BRUNNICH.DAT (no matter which directory or directories the files reside in). Then the above example creates bytestream backup files MAMMALS.DAT and CRUSTACEANS.DAT in the bkup directory since the last DATABASE backup.
 
 Example:
 
@@ -583,7 +583,7 @@ Specifies that the INTEG parameter identifies one or more regions rather than a 
 
 * The region-list identifies the target of DUMPFHEAD. region-list may specify more than one region of the current global directory in a list. Regions are case-insensitive, separated by a comma, and wildcards can be used to specify them. Any region-name may include the wildcard characters * and ? (remember to escape them to protect them from inappropriate expansion by the shell). Any region name expansion occurs in M (ASCII) collation order.
 
-* The region-list argument may specify more than one region of the current Global Directory in a list separated with commas. DUMPFHEAD -REGION requires the environment variable ydb_gbldir to specify a valid Global Directory. For more information on defining ydb_gbldir, refer to `Chapter 4: “Global Directory Editor” <https://docs.yottadb.com/AdminOpsGuide/gde.html>`_.
+* The region-list argument may specify more than one region of the current Global Directory in a list separated with commas. DUMPFHEAD -REGION requires the environment variable gtmgbldir to specify a valid Global Directory. For more information on defining gtmgbldir, refer to `Chapter 4: “Global Directory Editor” <https://docs.yottadb.com/AdminOpsGuide/gde.html>`_.
 
 * The -REGION qualifier is incompatible with the -FILE qualifier.
 
@@ -599,7 +599,7 @@ This command lists information about the database file mumps.dat in the current 
 .. parsed-literal::
    $ mupip dumpfhead -region "*"
 
-This command lists information about all the database files mapped by the global directory specified by $ydb_gbldir.
+This command lists information about all the database files mapped by the global directory specified by $gtmgbldir.
 
 +++++++++++++++
 ENDIANCVT
@@ -735,7 +735,7 @@ Backs up certain globals or extracts data from the database for use by another s
 
 * EXTRACT places its output in the file defined by the file-name. EXTRACT may output to a UNIX file on any device that supports such files, including magnetic tapes.
 
-* In UTF-8 mode, MUPIP EXTRACT writes a sequential output file in the UTF-8 character encoding. Ensure that the MUPIP EXTRACT commands and corresponding MUPIP LOAD commands execute with the same setting for the environment variable ydb_chset.
+* In UTF-8 mode, MUPIP EXTRACT writes a sequential output file in the UTF-8 character encoding. Ensure that the MUPIP EXTRACT commands and corresponding MUPIP LOAD commands execute with the same setting for the environment variable gtm_chset.
 
 * The GO format is not supported for UTF-8 mode. Use BINARY or ZWR formats in UTF-8 mode. 
 
@@ -1361,7 +1361,7 @@ Specifies that the INTEG parameter identifies one or more regions rather than a 
 
 * The region-list identifies the target of INTEG. region-list may specify more than one region of the current global directory in a list. Regions are case-insensitive, separated by a comma, and wildcards can be used to specify them. Any region-name may include the wildcard characters * and ? (remember to escape them to protect them from inappropriate expansion by the shell). Any region name expansion occurs in M (ASCII) collation order.
 
-* The region-list argument may specify more than one region of the current Global Directory in a list separated with commas. INTEG -REGION requires the environment variable ydb_gbldir to specify a valid Global Directory. For more information on defining ydb_gbldir, refer to `Chapter 4: “Global Directory Editor” <https://docs.yottadb.com/AdminOpsGuide/gde.html>`_
+* The region-list argument may specify more than one region of the current Global Directory in a list separated with commas. INTEG -REGION requires the environment variable gtmgbldir to specify a valid Global Directory. For more information on defining gtmgbldir, refer to `Chapter 4: “Global Directory Editor” <https://docs.yottadb.com/AdminOpsGuide/gde.html>`_
 
 * Because a KILL may briefly defer marking the blocks it releases "free" in the bit maps, INTEG -REGION may report spurious "block incorrectly marked busy" errors. These errors are benign. If these errors occur in conjunction with a "Kill in progress" error, resolve the errors after the "Kill in progress" error is no longer present.
 
@@ -1601,7 +1601,7 @@ The format of the LOAD command is:
 
 * LOAD accepts files with DOS style termination.
 
-* MUPIP LOAD command considers a sequential file as encoded in UTF-8 if the environment variable ydb_chset is set to UTF-8. Ensure that MUPIP EXTRACT commands and the corresponding MUPIP LOAD commands execute with the same setting for the environment variable ydb_chset.
+* MUPIP LOAD command considers a sequential file as encoded in UTF-8 if the environment variable gtm_chset is set to UTF-8. Ensure that MUPIP EXTRACT commands and the corresponding MUPIP LOAD commands execute with the same setting for the environment variable gtm_chset.
 
 * For information on loading with an M "percent utility," refer to the `%GI section of the "M Utility Routines" chapter in the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/utility.html#gi>`_. LOAD is typically faster, but the %GI utility can be customized.
 
@@ -1758,7 +1758,7 @@ Reports information related to relinkctl files and their associated shared memor
 .. parsed-literal::
    MUPIP RCTLDUMP [dir1]
 
-If the optional parameter dir1 is not specified, MUPIP RCTLDUMP dumps information on all its active auto-relink-enabled directories (those with with a \*-suffix) identified by $ydb_routines. With a directory path specified for dir1, MUPIP RCTLDUMP reports information on the one directory. An example output follows. It lists the full path of the Object directory; its corresponding relinkctl file name; the number of routines currently loaded in this relinkctl file; the number of processes including the reporting MUPIP process that have this relinkctl file open; the shared memory id and length of the relinkctl shared memory segment; one or more rtnobj shared memory segment(s); and a listing of all the routine names loaded in this file (lines starting with rec#...).
+If the optional parameter dir1 is not specified, MUPIP RCTLDUMP dumps information on all its active auto-relink-enabled directories (those with with a \*-suffix) identified by $gtmroutines. With a directory path specified for dir1, MUPIP RCTLDUMP reports information on the one directory. An example output follows. It lists the full path of the Object directory; its corresponding relinkctl file name; the number of routines currently loaded in this relinkctl file; the number of processes including the reporting MUPIP process that have this relinkctl file open; the shared memory id and length of the relinkctl shared memory segment; one or more rtnobj shared memory segment(s); and a listing of all the routine names loaded in this file (lines starting with rec#...).
 
 * The Rtnobj shared memory line : All the length fields are displayed in hexadecimal. shmlen is the length of the allocated shared memory segment in bytes. shmused is the length that is currently used. shmfree is the length available for use. objlen is the total length of all the objects currently loaded in this shared memory. As YottaDB allocates blocks of memory with sizes rounded-up to an integer power of two bytes, shmused is always greater than objlen; for example with an objlen of 0x1c0, the shmused is 0x200.
 
@@ -2278,7 +2278,7 @@ When MUPIP RUNDOWN has no qualifier, it performs rundown on all inactive databas
 
 Cleans up orphaned Relinkctl files. YottaDB strongly recommends avoiding actions that tend to make such cleanup necessary - for example, kill -9 of YottaDB processes or ipcrm -m of active Relinkctl and/or Rtnobj shared memory segments.
 
-If the optional dir1 is not specified, MUPIP RUNDOWN -RELINKCTL examines the environment variable $ydb_routines, attempts to verify and correct their attach counts and runs down all its inactive auto-relink-enabled directories (those with with a \*-suffix). Alternatively, one can specify a directory path for the parameter dir1 and MUPIP RUNDOWN -RELINKCTL treats it as an auto-relink-enabled directory and runs down the resources associated with this one directory. It prints a RLNKCTLRNDWNSUC message on a successful rundown and a RLNKCTLRNDWNFL message on a failure (usually because live processes are still accessing the Relinkctl file).
+If the optional dir1 is not specified, MUPIP RUNDOWN -RELINKCTL examines the environment variable $gtmroutines, attempts to verify and correct their attach counts and runs down all its inactive auto-relink-enabled directories (those with with a \*-suffix). Alternatively, one can specify a directory path for the parameter dir1 and MUPIP RUNDOWN -RELINKCTL treats it as an auto-relink-enabled directory and runs down the resources associated with this one directory. It prints a RLNKCTLRNDWNSUC message on a successful rundown and a RLNKCTLRNDWNFL message on a failure (usually because live processes are still accessing the Relinkctl file).
 
 +++++++
 SET
@@ -2756,7 +2756,7 @@ Examines or loads trigger definitions. The format of the MUPIP TRIGGER command i
 
 Before you run the MUPIP TRIGGER command:
 
-* Set the value of the environment variable ydb_gbldir: to specify the value of a current global directory.
+* Set the value of the environment variable gtmgbldir: to specify the value of a current global directory.
 
 * Ensure that the key size, record size, block size of your database is sufficient for storing all planned trigger definitions. You may have to set the key and record sizes larger than the database content would otherwise require.
 
@@ -2777,7 +2777,7 @@ Loads a trigger definition file to the database. The format of the TRIGGERFILE q
 
 * MUPIP TRIGGER compiles the XECUTE action string and rejects the load if the compilation has errors.
 
-* Always specify the same value for the environment variable ydb_chset during loading and executing triggers. If you specify different values of ydb_chset during loading and executing triggers, MUPIP TRIGGER generates a run-time error (TRIGINVCHSET). YottaDB does not prevent a process from updating different nodes with triggers using a different character set, however, YottaDB prevents a process from updating the same triggering node with different character sets. Your coding practice, for all database updates, should be to ensure that you provide the same value for ydb_chset during load compilation and run-time compilation.
+* Always specify the same value for the environment variable gtm_chset during loading and executing triggers. If you specify different values of gtm_chset during loading and executing triggers, MUPIP TRIGGER generates a run-time error (TRIGINVCHSET). YottaDB does not prevent a process from updating different nodes with triggers using a different character set, however, YottaDB prevents a process from updating the same triggering node with different character sets. Your coding practice, for all database updates, should be to ensure that you provide the same value for gtm_chset during load compilation and run-time compilation.
 
 * MUPIP TRIGGER replicate trigger definitions as logical actions from an originating/primary instance to a replicating/secondary instance based on LGTRIG journal records. This permits the instances to have different sets of triggers and differing database layouts (for example, different # of regions, different block sizes, different maximum-record-size, and so on).
 
@@ -2825,7 +2825,7 @@ If YottaDB encounters an old trigger definition it produces a NEEDTRIGUPGRD mess
 
 **Examples for MUPIP TRIGGER**
 
-This section provides step-by-step instructions for creating, modifying, and deleting triggers. Triggers affect all processes updating a database unlike, for example, environment variables such as $ydb_routines which work on a per process basis. Therefore, YottaDB recommends that you should always have carefully planned procedures for changing triggers in your production environment.
+This section provides step-by-step instructions for creating, modifying, and deleting triggers. Triggers affect all processes updating a database unlike, for example, environment variables such as $gtmroutines which work on a per process basis. Therefore, YottaDB recommends that you should always have carefully planned procedures for changing triggers in your production environment.
 
 *To create a new trigger for global node ^Acct("ID")*:
 

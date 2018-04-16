@@ -17,14 +17,14 @@ The Database Structure Editor, DSE, is primarily a tool for authorized YottaDB c
 
 DSE gives all possible control over a database and therefore, it may cause irreparable damage when used without knowing the consequences. Therefore, you unless you have extensive experience, you should always get guidance from YottaDB or an equivalently knowledgeable support resource before running any DSE command that changes any attribute of any production database or other database you value. However, you can use those DSE commands that let you see the attributes of your database for collecting database metrics and monitoring status.
 
-YottaDB installation procedure places the DSE utility program in a directory specified by the environment variable ydb_dist.
+YottaDB installation procedure places the DSE utility program in a directory specified by the environment variable gtm_dist.
 
 Invoke DSE using the "dse" command at the shell prompt. If this does not work, consult your system manager to investigate setup and file access issues.
 
 Example:
 
 .. parsed-literal::
-   $ydb_dist/dse
+   $gtm_dist/dse
    File/usr/name/mumps.dat
    Region  DEFAULT
    DSE>
@@ -40,7 +40,7 @@ You may also specify a command when entering DSE.
 Example:
 
 .. parsed-literal::
-   $ydb_dist/dse dump -fileheader     
+   $gtm_dist/dse dump -fileheader     
 
 This command displays the fileheader of the region that stands first in the list of regions arranged in alphabetical order and then returns to the shell prompt. To look at other regions, at the DSE prompt you must first issue a FIND -REGION=<desired-region> command.
 
