@@ -1627,7 +1627,7 @@ The following table summarizes PIPE access deviceparamters.
 Using Socket Devices
 -------------------------------
 
-SOCKET devices are used to access and manipulate sockets. A SOCKET device can have unlimited associated sockets. The default limit is 64. Set the environment variable gtm_max_sockets to the number of maximum associated sockets sockets that you wish to set for a YottaDB process. $VIEW("MAX_SOCKETS")returns the current value of the maximum number of associated sockets.
+SOCKET devices are used to access and manipulate sockets. A SOCKET device can have unlimited associated sockets. The default limit is 64. Set the environment variable gtm_max_sockets to the number of maximum associated sockets sockets that you wish to set for a YottaDB process. $VIEW("MAX_SOCKETS") returns the current value of the maximum number of associated sockets.
 
 At any time, only one socket from the collection can be the current socket. If there is no current socket, an attempt to READ from, or WRITE to the device, generates an error.
 
@@ -1637,7 +1637,7 @@ Sockets can be attached and detached from the collection of sockets associated w
    Currently, YottaDB does not produce an error if a socket is attached to a device having a different CHSET.
    
 .. note::
-   Exception handler (EXCEPTION) operates at the SOCKET device level and error trapping (IOERROR) operates the socket-level. So, one EXCEPTION operates on all sockets of a SOCKET device and IOEROR can be individually turned on or off for each socket.
+   Exception handler (EXCEPTION) operates at the SOCKET device level and error trapping (IOERROR) operates at the socket-level. So, one EXCEPTION operates on all sockets of a SOCKET device and IOEROR can be individually turned on or off for each socket.
 
 +++++++++++++++++++++++++++++
 Message Management
@@ -1760,7 +1760,7 @@ The WRITE command for SOCKET devices accepts the following control mnemonics:
 .. parsed-literal::
    /L[ISTEN][(numexpr)]
 
-where numexpr is in the range 1-5 and specifies the listen queue depth for a listening socket. By default, an OPEN or USE with LISTEN immediately sets the listen queue size to 1.
+where numexpr specifies the listen queue depth for a listening socket. The value will be between 1 and the system-enforced maximum. By default, an OPEN or USE with LISTEN immediately sets the listen queue size to 1. The listen queue depth specified for a listening socket is limited only by the limit imposed by the OS (previously, an artificial limit of 5 was enforced).
 
 .. parsed-literal::
    /W[AIT][(timeout)]
@@ -1815,7 +1815,7 @@ The TLS plugin uses OpenSSL options in the configuration file specified under th
 YottaDB buffers WRITEs to TLS enabled sockets until a subsequent USE :FLUSH, WRITE !, WRITE #, or an internal 400 millisecond timer expires.
 
 .. note::
-   Because this functionality has a wide variety of user stories (use cases) and has substantial complexity, although the code appears robust, we are not confident that we have exercised a sufficient breadth of use cases in testing. Also we may make changes in future releases that are not entirely backwards compatible. We encourage you to use with this facility in development and testing, and to provide us with feedback. If you are an YottaDB customer and wish to use this in production, please contact us beforehand to discuss your use case(s).
+   Because this functionality has a wide variety of user stories (use cases) and has substantial complexity, although the code appears robust, we are not confident that we have exercised a sufficient breadth of use cases in testing. Also we may make changes in future releases that are not entirely backwards compatible. We encourage you to use with this facility in development and testing, and to provide us with feedback. If you are a YottaDB customer and wish to use this in production, please contact us beforehand to discuss your use case(s).
 
 .. note::
    Owing to the range of OpenSSL versions in use across the breadth of platforms and versions supported by YottaDB, on all platforms, but especially on non-Linux UNIX platforms, YottaDB recommends rebuilding the plugin from sources included with the YottaDB binary distribution with the specific version of OpenSSL installed on your systems for any production or production staging environments that use TLS. For more information on recompiling the reference implementation, refer to the `Installing YottaDB chapter of the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/installydb.html>`_.
@@ -1894,7 +1894,7 @@ Socket Device Examples
 
 The sockexamplemulti31.m routine shows the use of $KEY and $ZKEY in a basic socket I/O setup. It's functionality is atypical in order to demonstrate a number of features. It launches two jobs: a server process which opens a listening socket and a client process which makes five connections to the server. The server sends a message to each connection socket. Even-numbered client sockets read the message partially but do not send a response back to the server. Odd-numbered client sockets receive the full message and respond to the server with the message "Ok.". The server reads two characters (but the client sends three) and $ZKEY shows sockets with unread characters.
 
-You can download sockexamplemulti31.m from `here <https://github.com/YottaDB/YottaDBdoc/tree/master/ProgGuide>`_ and follow the instructions in the comments near the top of the program file. 
+You can download sockexamplemulti31.m from `https://github.com/YottaDB/YottaDBdoc/blob/master/ProgGuide/sockexamplemulti31.m>`_ and follow the instructions in the comments near the top of the program file. 
 
 You can start a YottaDB process in response to a connection request made using inetd/xinetd. The following example uses inetd/xinetd to implement a listener which responds to connections and messages just as the prior example.
 
