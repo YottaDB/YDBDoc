@@ -67,16 +67,16 @@ A GT.CM server must be operating on every node of a network from which data is r
 * By explicitly starting the GT.CM server to listen to a specified port number, or by defaulting the port number.
 * Invoking the GT.CM server to listen at a standard port number assigned to the GNP protocol (e.g., in /etc/services file).
 
-The GT.CM server executable (gtcm_gnp_server) should be placed in the directory referenced by the environment variable $ydb_dist.
+The GT.CM server executable (gtcm_gnp_server) should be placed in the directory referenced by the environment variable $gtm_dist.
 
 A process starting the GT.CM server must have the environment variables required to run YottaDB.
 
 Here is an example on how to start a GT.CM server:
 
 .. parsed-literal::
-   $ydb_dist/gtcm_gnp_server -log=GTCM.log -service=6789
+   $gtm_dist/gtcm_gnp_server -log=GTCM.log -service=6789
 
-This starts the GT.CM server in the background so that it listens at port 6789 for requests from GT.CM clients. The detailed log information of the server is written in the GTCM.log file. If -log is not specified, log information is written in $ydb_log/gtcm_gnp_server.log file. On nodes with multiple IP addresses issue the following command to configure the GT.CM server to listen at a port specific to an IP address:
+This starts the GT.CM server in the background so that it listens at port 6789 for requests from GT.CM clients. The detailed log information of the server is written in the GTCM.log file. If -log is not specified, log information is written in $gtm_log/gtcm_gnp_server.log file. On nodes with multiple IP addresses issue the following command to configure the GT.CM server to listen at a port specific to an IP address:
 
 .. parsed-literal::
    -service=192.160.105.212:6789
@@ -86,7 +86,7 @@ This starts the GT.CM server in the background so that it listens at port 6789 f
 To shutdown the GT.CM server, identify the process id of the GT.CM server to be shutdown and issue the following command:
 
 .. parsed-literal::
-   $ydb_dist/mupip stop <GT.CM server PID>
+   $gtm_dist/mupip stop <GT.CM server PID>
 
 This causes the GT.CM server to shutdown normally.
 
