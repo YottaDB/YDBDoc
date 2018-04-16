@@ -414,7 +414,7 @@ For more information on $ZB, refer to the `"Input/Output Processing" chapter <ht
 $ZCHSET
 --------------
 
-$ZCHSET is a read-only intrinsic special variable that takes its value from the environment variable ydb_chset. An application can obtain the character set used by a YottaDB process by the value of $ZCHSET. $ZCHSET can have only two values --"M", or "UTF-8".
+$ZCHSET is a read-only intrinsic special variable that takes its value from the environment variable gtm_chset. An application can obtain the character set used by a YottaDB process by the value of $ZCHSET. $ZCHSET can have only two values --"M", or "UTF-8".
 
 .. note::
    YottaDB performs operations on literals at compile time and the character set may have an impact on such operations. Therefore, always compile with the same character set as that used at runtime.
@@ -422,7 +422,7 @@ $ZCHSET is a read-only intrinsic special variable that takes its value from the 
 Example:
 
 .. parsed-literal::
-  $ export ydb_chset=UTF-8
+  $ export gtm_chset=UTF-8
   $ ydb
   YDB>write $zchset
   UTF-8
@@ -598,21 +598,21 @@ $ZGBLDIR
 
 $ZG[BLDIR] contains the value of the current Global Directory filename. When $ZGBLDIR specifies an invalid or inaccessible file, YottaDB cannot successfully perform database operations.
 
-YottaDB initializes $ZGBLDIR to the translation of the environment variable ydb_gbldir. The value of the ydb_gbldir environment variable may include a reference to another environment variable. If ydb_gbldir is not defined, YottaDB initializes $ZGBLDIR to null. When $ZGBLDIR is null, YottaDB constructs a file name for the Global Directory using the name $ydb_gbldir and the extension .gld in the current working directory.
+YottaDB initializes $ZGBLDIR to the translation of the environment variable gtmgbldir. The value of the gtmgbldir environment variable may include a reference to another environment variable. If gtmgbldir is not defined, YottaDB initializes $ZGBLDIR to null. When $ZGBLDIR is null, YottaDB constructs a file name for the Global Directory using the name $gtmgbldir and the extension .gld in the current working directory.
 
-$ZGBLDIR is a read-write Intrinsic Special Variable, (i.e., it can appear on the left side of the equal sign (=) in the argument to the SET command). SET $ZGBLDIR="" causes YottaDB to assign $ZGBLDIR to the translation of ydb_gbldir if that environment variable is defined. If it is not defined, then SET $ZGBLDIR="" causes YottaDB to construct a file name using the name $ydb_gbldir.gld in the current directory. YottaDB permits $ZGBLDIR to be NEW'd. A $ZGBLDIR value may include an environment variable.
+$ZGBLDIR is a read-write Intrinsic Special Variable, (i.e., it can appear on the left side of the equal sign (=) in the argument to the SET command). SET $ZGBLDIR="" causes YottaDB to assign $ZGBLDIR to the translation of gtmgbldir if that environment variable is defined. If it is not defined, then SET $ZGBLDIR="" causes YottaDB to construct a file name using the name $gtmgbldir.gld in the current directory. YottaDB permits $ZGBLDIR to be NEW'd. A $ZGBLDIR value may include an environment variable.
 
 SETting $ZGBLDIR also causes YottaDB to attempt to open the specified file. If the file name is invalid or the file is inaccessible, YottaDB triggers an error without changing the value of $ZGBLDIR.
 
-To establish a value for $ZGBLDIR outside of M, use the appropriate shell command to assign a translation to ydb_gbldir. Defining ydb_gbldir provides a convenient way to use the same Global Directory during a session where you repeatedly invoke and leave YottaDB.
+To establish a value for $ZGBLDIR outside of M, use the appropriate shell command to assign a translation to gtmgbldir. Defining gtmgbldir provides a convenient way to use the same Global Directory during a session where you repeatedly invoke and leave YottaDB.
 
-Changes to the value of $ZGBLDIR during a YottaDB invocation only last for the current invocation and do not change the value of ydb_gbldir.
+Changes to the value of $ZGBLDIR during a YottaDB invocation only last for the current invocation and do not change the value of gtmgbldir.
 
 Example:
 
 .. parsed-literal::
-   $ ydb_gbldir=test.gld
-   $ export ydb_gbldir
+   $ gtmgbldir=test.gld
+   $ export gtmgbldir
    $ gtm
    YDB>WRITE $zgbldir
    /usr/dev/test.gld
@@ -620,10 +620,10 @@ Example:
    YDB>WRITE $zgbldir
    mumps.gld
    YDB>HALT
-   $ echo $ydb_gbldir
+   $ echo $gtmgbldir
    test.gld
 
-This example defines the environment variable ydb_gbldir. Upon entering YottaDB Direct Mode, $ZGBLDIR has the value supplied by ydb_gbldir. The SET command changes the value. After the YottaDB image terminates, the echo command demonstrates that ydb_gbldir was not modified by the M SET command.
+This example defines the environment variable gtmgbldir. Upon entering YottaDB Direct Mode, $ZGBLDIR has the value supplied by gtmgbldir. The SET command changes the value. After the YottaDB image terminates, the echo command demonstrates that gtmgbldir was not modified by the M SET command.
 
 .. parsed-literal::
    $ ls test.gld
@@ -665,7 +665,7 @@ Example:
     do displaytzdetails(zutzh,zone)
     quit
    getzutzh(zone)
-    set shcommand="TZ="_zone_" $ydb_dist/mumps -run %XCMD 'write $zut,"" "",$zhorolog,"" "",$zdate($horolog,""MON DD,YYYY 12:60:SS AM""),!'"
+    set shcommand="TZ="_zone_" $gtm_dist/mumps -run %XCMD 'write $zut,"" "",$zhorolog,"" "",$zdate($horolog,""MON DD,YYYY 12:60:SS AM""),!'"
     set descname="tzpipe"
     open descname:(shell="/bin/sh":command=shcommand:readonly)::"pipe"
     use descname read dateline use $principal close descname
@@ -1122,10 +1122,10 @@ Searches that use $ZROUTINES treat files as either object or source files. Yotta
    Paths used in $ZROUTINES to locate routines must not include embedded spaces, as $ZROUTINES uses spaces as delimiters.
 
 +++++++++++++++++++++++++++++++++++++++++
-Establishing the value from $ydb_routines
+Establishing the value from $gtmroutines
 +++++++++++++++++++++++++++++++++++++++++
 
-When the environment variable ydb_routines is defined, YottaDB initializes $ZROUTINES to the value of ydb_routines. Otherwise, YottaDB initializes $ZROUTINES to ".". When $ZROUTINES is ".", YottaDB attempts to locate all source and object files in the current working directory. $ZROUTINES="" is equivalent to $ZROUTINES=".".
+When the environment variable gtmroutines is defined, YottaDB initializes $ZROUTINES to the value of gtmroutines. Otherwise, YottaDB initializes $ZROUTINES to ".". When $ZROUTINES is ".", YottaDB attempts to locate all source and object files in the current working directory. $ZROUTINES="" is equivalent to $ZROUTINES=".".
 
 Commands or functions such as DO, GOTO, ZGOTO, ZBREAK, ZPRINT, and $TEXT may auto-ZLINK and thereby indirectly use $ZROUTINES. If their argument does not specify a directory, ZEDIT and explicit ZLINK use $ZROUTINES. ZPRINT and $TEXT use $ZROUTINES to locate a source file if YottaDB cannot find the source file pointed to by the object file. For more information on ZLINK and auto-ZLINK, see the `“Development Cycle” <https://docs.yottadb.com/ProgrammersGuide/devcycle.html>`_ and `“Commands” <https://docs.yottadb.com/ProgrammersGuide/commands.html>`_ chapters.
 
@@ -1139,9 +1139,9 @@ By default, each directory entry in $ZROUTINES is assumed to contain both object
 
 If the command specifies more than one source directory for an object directory, the source directories must be separated by spaces, and the entire list must be enclosed in parentheses ( ) following the object directory-specification. If the object directory should also be searched for source, the name of that directory must be included in the parentheses, (usually as the first element in the list). Directory-specifications may also include empty parentheses, directing YottaDB to proceed as if no source files exist for objects located in the qualified directory.
 
-To set $ZROUTINES outside of M, use the appropriate shell command to set ydb_routines. Because ydb_routines is a list, enclose the value in quotation marks (" ").
+To set $ZROUTINES outside of M, use the appropriate shell command to set gtmroutines. Because gtmroutines is a list, enclose the value in quotation marks (" ").
 
-Changes to the value of $ZROUTINES during a YottaDB invocation only last for the current invocation, and do not change the value of ydb_routines.
+Changes to the value of $ZROUTINES during a YottaDB invocation only last for the current invocation, and do not change the value of gtmroutines.
 
 Directory specifications may include an environment variable. When YottaDB SETs $ZROUTINES, it translates all environment variables and verifies the syntax and the existence of all specified directories. If $ZROUTINES is set to an invalid value, YottaDB generates a run-time error and does not change the value of $ZROUTINES. Because the environment variables are translated when $ZROUTINES is set, any changes to their definition have no effect until $ZROUTINES is set again.
 
@@ -1152,15 +1152,15 @@ $ZROUTINES Examples
 Example:
 
 .. parsed-literal::
-   YDB>s $zroutines=".(../src) $ydb_dist"
+   YDB>s $zroutines=".(../src) $gtm_dist"
 
 This example directs YottaDB to look for object modules first in your current directory, then in the distribution directory that contains the percent routines. YottaDB locates sources for objects in your current directory in the sibling /src directory.
 
 Example:
 
 .. parsed-literal::
-   $ ydb_routines="/usr/jones /usr/smith"
-   $ export ydb_routines
+   $ gtmroutines="/usr/jones /usr/smith"
+   $ export gtmroutines
    $ ydb
    YDB>write $zroutines
    "/usr/jones /usr/smith"
@@ -1168,10 +1168,10 @@ Example:
    YDB>write $zroutines
    "/usr/jones/utl /usr/smith/utl"
    YDB>halt
-   $ echo $ydb_routines
+   $ echo $gtmroutines
    /usr/jones /usr/smith
 
-This example defines the environment variable ydb_routines. Upon entering YottaDB Direct Mode $zroutines has the value supplied by ydb_routines. The SET command changes the value. When the YottaDB image terminates, the shell echo command demonstrates that ydb_routines has not been modified by the M SET command.
+This example defines the environment variable gtmroutines. Upon entering YottaDB Direct Mode $zroutines has the value supplied by gtmroutines. The SET command changes the value. When the YottaDB image terminates, the shell echo command demonstrates that gtmroutines has not been modified by the M SET command.
 
 Example:
 
@@ -1349,15 +1349,15 @@ Where libshr.so is replaced with name of the shared library one wishes to create
 .. note::
    There are some tools on AIX that can aid in mitigating the problems of shared library allocation. The /usr/bin/genkld command on AIX lists all of the shared libraries currently loaded. This command requires root privileges on AIX 4.3.3 but seems to be a general user command on AIX 5. The /usr/sbin/slibclean command requires root privileges and will purge the shared library segment of unused shared libraries making room for new libraries to be loaded.
 
-* *Establish $ZROUTINES from ydb_routines*
+* *Establish $ZROUTINES from gtmroutines*
 
-When the environment variable ydb_routines is defined, YottaDB initializes $ZROUTINES to the value of ydb_routines. The $ZROUTINES ISV can also be modified using SET command.
+When the environment variable gtmroutines is defined, YottaDB initializes $ZROUTINES to the value of gtmroutines. The $ZROUTINES ISV can also be modified using SET command.
 
 Example:
 
 .. parsed-literal::
-   $ ydb_routines="./libabc.so ./obj(./src)"
-   $ export ydb_routines
+   $ gtmroutines="./libabc.so ./obj(./src)"
+   $ export gtmroutines
    $ mumps -direct
    YDB>w $ZROUTINES,!;writes "./libabc.so ./obj(./src)"
    YDB>do ^a;runs ^a from libabc.so
@@ -1371,7 +1371,7 @@ Example:
 By suffixing one or more directory names in $ZROUTINES with a single asterisk (*), processes can subscribe to updates of object files published in those directories. At the invocation of DO, GOTO, or ZGOTO, extrinsic functions, $TEXT(), or ZPRINT that specify an entryref which includes a routine name (vs. a label without a routine name), mumps processes (and mupip processes executing trigger logic) automatically relink ("auto-relink") and execute published new versions of routines.
 
 * Label references (that is, without a routine name), whether direct or through indirection, always refer to the current routine, and do not invoke auto-relink logic.
-* Use shell quoting rules when appending asterisks to directory names in the ydb_routines environment variable - asterisks must be passed in to YottaDB, and not expanded by the shell.
+* Use shell quoting rules when appending asterisks to directory names in the gtmroutines environment variable - asterisks must be passed in to YottaDB, and not expanded by the shell.
 * YottaDB accepts but ignores asterisk suffixes to directory names on 32-bit Linux on x86 platforms, where it does not provide auto-relinking.
 * Changing $ZROUTINES causes all routines linked from auto-relink-enabled directories in the process to be re-linked.
 * Note that a relink does not automatically reload a routine every time. When YottaDB initiates a relink and the object file (object hash) is the same as the existing one, YottaDB bypasses the relink and uses the existing object file.

@@ -512,8 +512,8 @@ Where expratom1 identifies the Global Directory and expratom2 is a dummy variabl
 Example:
 
 .. parsed-literal::
-   $ ydb_gbldir=Test.GLD
-   $ export ydb_gbldir
+   $ gtmgbldir=Test.GLD
+   $ export gtmgbldir
    $ YDB
      
    YDB>WRITE $ZGBLDIR
@@ -526,7 +526,7 @@ Example:
    TEST.GLD
    YDB>HALT
   
-   $ echo ydb_gbldir
+   $ echo gtmgbldir
    TEST.GLD
 
 The statement WRITE ^|"M1.GLD"\|A writes variable ^A using the Global Directory, M1.GLD, but does not change the current Global Directory.

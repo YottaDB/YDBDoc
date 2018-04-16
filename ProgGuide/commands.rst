@@ -584,11 +584,11 @@ By default, JOB constructs the error file from the routinename using a file exte
 
 **GBL[DIR]=strlit**
 
-The string literal specifies a value for the environment variable ydb_gbldir.
+The string literal specifies a value for the environment variable gtmgbldir.
 
 The maximum string length is 255 characters.
 
-By default, the job uses the same specification for ydb_gbldir as that defined in $ZGBLDIR for the process using the JOB command.
+By default, the job uses the same specification for gtmgbldir as that defined in $ZGBLDIR for the process using the JOB command.
 
 **IN[PUT]=strlit**
 
@@ -639,7 +639,7 @@ The processparameters are summarized in the following table.
 +---------------------------+--------------------------+---------------------------------+------------------------------------+
 | ERR[OR]=strlit            | ./routinename.mje        | none                            | 255 characters                     |
 +---------------------------+--------------------------+---------------------------------+------------------------------------+
-| GBL[DIR]                  | Same as ydb_gbldir for   | none                            | 255 characters                     |
+| GBL[DIR]                  | Same as gtmgbldir for    | none                            | 255 characters                     |
 |                           | the process issuing the  |                                 |                                    |
 |                           | JOB command              |                                 |                                    |
 +---------------------------+--------------------------+---------------------------------+------------------------------------+
@@ -2691,7 +2691,7 @@ ZGOTO resembles HALT (and not QUIT) in that it causes an exit regardless of the 
 
 ZGOTO $ZLEVEL:LABEL^ROUTINE produces identical results to GOTO LABEL^ROUTINE. ZGOTO $ZLEVEL-1 responds like a QUIT (followed by ZCONTINUE, if in Direct Mode). If the integer expression evaluates to a value greater than the current value of $ZLEVEL or less than zero (0), YottaDB issues a run-time error.
 
-If ZGOTO has no entryref, it performs some number of implicit QUITs and transfers control to the next command at the specified level. If ZGOTO has no argument, it behaves like ZGOTO 1, which resumes operation of the lowest level YottaDB routine as displayed by ZSHOW "S". In the image invoked by $ydb_dist mumps -direct, a ZGOTO without arguments returns the process to Direct Mode.
+If ZGOTO has no entryref, it performs some number of implicit QUITs and transfers control to the next command at the specified level. If ZGOTO has no argument, it behaves like ZGOTO 1, which resumes operation of the lowest level YottaDB routine as displayed by ZSHOW "S". In the image invoked by $gtm_dist mumps -direct, a ZGOTO without arguments returns the process to Direct Mode.
 
 ZGOTO provides a useful debugging tool in Direct Mode. However, because ZGOTO is not conducive to structured coding, it is best to restrict its use in production programs to error handling. For more information on YottaDB error handling, refer to `Chapter 13: “Error Processing” <https://docs.yottadb.com/ProgrammersGuide/errproc.html>`_.
 
@@ -2765,7 +2765,7 @@ The format of the ZHELP command is:
 * The optional first expression specifies the help topic.
 * If ZHELP has no argument or expr1="", ZHELP invokes base level help; at least two (2) spaces must follow a ZHELP command with no argument to separate it from the next command on the line.
 * The optional second expression specifies the name of a Global Directory containing ^HELP.
-* If ZHELP does not specify the second expression, the Global Directory defaults to $ydb_dist/gtmhelp.gld.
+* If ZHELP does not specify the second expression, the Global Directory defaults to $gtm_dist/gtmhelp.gld.
 * An indirection operator and an expression atom evaluating to a list of one or more ZHELP arguments form a legal argument for a ZHELP
 
 ++++++++++++++++++
@@ -2934,13 +2934,13 @@ Auto ZLINK Setup
 This section describes the procedure to setup the auto-relink functionality. YottaDB loads an object file linked from an object directory (in $ZROUTINES) with a \*-suffix (i.e. auto-relink-enabled) into a shared memory segment (referred to henceforth as a Rtnobj shared memory segment). At the invocation of DO, GOTO, or ZGOTO, extrinsic functions, ZBREAK, ZPRINT or $TEXT() that specify an entryref which includes a routine name (in contrast to a label without a routine name), YottaDB processes (and MUPIP processes executing trigger logic) automatically relink ("auto-relink") and execute published new versions of routines.
 
 .. note::
-   Label references (that is, without a routine name), whether direct or through indirection, always refer to the current routine, and do not invoke auto-relink logic. Use shell quoting rules when appending asterisks to directory names in the ydb_routines environment variable - asterisks must be passed in to YottaDB, and not expanded by the shell. YottaDB accepts but ignores asterisk suffixes to directory names on 32-bit Linux on x86 platforms, where it does not provide auto-relinking.
+   Label references (that is, without a routine name), whether direct or through indirection, always refer to the current routine, and do not invoke auto-relink logic. Use shell quoting rules when appending asterisks to directory names in the gtmroutines environment variable - asterisks must be passed in to YottaDB, and not expanded by the shell. YottaDB accepts but ignores asterisk suffixes to directory names on 32-bit Linux on x86 platforms, where it does not provide auto-relinking.
 
 The ZRUPDATE command publishes of new versions of routines to subscribers. To remove routines, delete the object files and publish the names of the deleted object files. Removal requires file names to be explicitly specified, because patterns with wildcards cannot match deleted files.
 
 If the path to a file is non-existent, the request is ignored except in the case where one desires a currently shared object file (one that was accessed before it was deleted) to no longer be shared.
 
-For each auto-relink enabled directory which a YottaDB process accesses while searching through $ZROUTINES, YottaDB creates a small control file (Relinkctl) in the directory identified by $gtm_linktmpdir (defaulting to $ydb_tmp, which in turn defaults to /tmp, if unspecified). The names of these files are of the form gtm-relinkctl-<murmur> where <murmur> is a hash of the realpath() to an auto-relink directory; for example: /tmp/gtm-relinkctl-f0938d18ab001a7ef09c2bfba946f002). With each Relinkctl file, YottaDB creates and associates a block of shared memory that contains associated control structures. Among the structures is a cycle number corresponding to each routine found in the routine directory; a change in the cycle number informs a process that it may need to determine whether there is a new version of a routine. Although YottaDB only creates relinkctl records for routines that actually exist on disk, it may increment cycle numbers for existing relinkctl records even if they no longer exist on disk.
+For each auto-relink enabled directory which a YottaDB process accesses while searching through $ZROUTINES, YottaDB creates a small control file (Relinkctl) in the directory identified by $gtm_linktmpdir (defaulting to $gtm_tmp, which in turn defaults to /tmp, if unspecified). The names of these files are of the form gtm-relinkctl-<murmur> where <murmur> is a hash of the realpath() to an auto-relink directory; for example: /tmp/gtm-relinkctl-f0938d18ab001a7ef09c2bfba946f002). With each Relinkctl file, YottaDB creates and associates a block of shared memory that contains associated control structures. Among the structures is a cycle number corresponding to each routine found in the routine directory; a change in the cycle number informs a process that it may need to determine whether there is a new version of a routine. Although YottaDB only creates relinkctl records for routines that actually exist on disk, it may increment cycle numbers for existing relinkctl records even if they no longer exist on disk.
 
 YottaDB creates both the Relinkctl file and shared memory with permissions based on the logic described in the "IPC Permissions" column of the "Shared Resource Authorization Permissions" section in the `Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/index.html>`_, except that the object directory, rather than the database file, provides the base permissions.
 
@@ -3008,7 +3008,7 @@ ZEDIT puts a new file into the first source directory in $ZROUTINES, that is, in
 
 The first invocation of an implicit ZLINK (DO, GOTO ZGOTO, ZPRINT, $TEXT() or function/extrinsic invocation) or an explicit ZLINK "myprogram.m" or ZRUPDATE "/home/jdoe/.fis-gtm/V6.2-001_x86_64/myprogram.o" creates a Relinkctl file if one does not already exist and the associated shared memory. The relinkctl file has a name associated with the hash of the directory to provide a pointer in the form of segment ids to shared memory so that processes can locate routines.
 
-As the gtm_linktmpdir environment variable is not set by default in the ydb/ydb_env_set scripts, YottaDB stores the Relinkctl file in the directory pointed to by the ydb_tmp environment variable.
+As the gtm_linktmpdir environment variable is not set by default in the ydb/ydb_env_set scripts, YottaDB stores the Relinkctl file in the directory pointed to by the gtm_tmp environment variable.
 
 .. parsed-literal::
    YDB>zshow "A"
@@ -3220,7 +3220,7 @@ Publishes the new versions of routines to subscribers. The format of the ZRUPDAT
 * ZRUPDATE rejects file-name arguments that are symbolic links or start with a percent-sign (%)
 * ZRUPDATE recognizes question-mark (?) as a single character wild-card
 * If the path to a file is non-existent, the request is ignored except in the case where one desires a currently shared object file (one that was accessed before it was deleted) to no longer be shared.
-* To effect auto-relink, YottaDB creates small temporary files in the directory referred to by $gtm_linktmpdir (defaulting to $ydb_tmp, which in turn defaults to /tmp, if unspecified). The names of these files are of the form gtm-relinkctl<md5sum> where <md5sum> is a hash of the realpath() to an auto-relink directory. The group and permissions match those for the directory as described in the section `Shared Resources Authorization Permissions in Appendix E (YottaDB Security Philosophy) <https://docs.yottadb.com/AdminOpsGuide/securityph.html#shared-resource-authorization-permissions>`_ of the Administration and Operations Guide. YottaDB recommends that all processes that share a directory whose contents are subject to ZRUPDATE use the same value for $gtm_linktmpdir so that all processes see update notifications - with different values of $gtm_linktmpdir, a ZRUPDATE by a process with one value of $gtm_linktmpdir would not be observed by a process with a different value of that environment variable.
+* To effect auto-relink, YottaDB creates small temporary files in the directory referred to by $gtm_linktmpdir (defaulting to $gtm_tmp, which in turn defaults to /tmp, if unspecified). The names of these files are of the form gtm-relinkctl<md5sum> where <md5sum> is a hash of the realpath() to an auto-relink directory. The group and permissions match those for the directory as described in the section `Shared Resources Authorization Permissions in Appendix E (YottaDB Security Philosophy) <https://docs.yottadb.com/AdminOpsGuide/securityph.html#shared-resource-authorization-permissions>`_ of the Administration and Operations Guide. YottaDB recommends that all processes that share a directory whose contents are subject to ZRUPDATE use the same value for $gtm_linktmpdir so that all processes see update notifications - with different values of $gtm_linktmpdir, a ZRUPDATE by a process with one value of $gtm_linktmpdir would not be observed by a process with a different value of that environment variable.
 * ZRUPDATE always updates the existing shared memory relinkctl information for a file with an existing entry.
 
 -----------------------

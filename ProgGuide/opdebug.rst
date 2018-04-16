@@ -29,13 +29,13 @@ This section provides an overview of the following basic operational issues in D
 Entering Direct Mode
 +++++++++++++++++++++
 
-To enter Direct Mode, type $ydb_dist/mumps -direct at the shell prompt.
+To enter Direct Mode, type $gtm_dist/mumps -direct at the shell prompt.
 
 .. parsed-literal::
-   $ $ydb_dist/mumps -direct
+   $ $gtm_dist/mumps -direct
    YDB>
 
-This shows using $ydb_dist/mumps -direct at the prompt to enter Direct Mode.
+This shows using $gtm_dist/mumps -direct at the prompt to enter Direct Mode.
 
 Another way to enter Direct Mode for an editing or debugging session is by simply typing ydb at the shell prompt.
 
@@ -139,7 +139,7 @@ The Direct Mode line editing keys are as follows:
 * **<CTRL-U>**: Deletes the entire line
 
 .. note::
-   When entering commands at the direct mode prompt, the insert mode can be toggled for that line by using the insert key. When YottaDB starts, insert mode is enabled unless the value of the ydb_principal_editing environment variable includes the string NOINSERT. If insert mode is disabled or enabled for the $PRINCIPAL device by an USE statement before returning to direct mode, it will remain disabled or enabled at direct mode. The insert mode can be toggled within a direct mode line using the terminal's INSERT key.
+   When entering commands at the direct mode prompt, the insert mode can be toggled for that line by using the insert key. When YottaDB starts, insert mode is enabled unless the value of the gtm_principal_editing environment variable includes the string NOINSERT. If insert mode is disabled or enabled for the $PRINCIPAL device by an USE statement before returning to direct mode, it will remain disabled or enabled at direct mode. The insert mode can be toggled within a direct mode line using the terminal's INSERT key.
 
 YottaDB deletes the character under the cursor when you press the key on the keyboard that sends the escape sequence which maps to the kdch1 capability in your current terminfo entry (by convention, the Delete key). If the current terminfo entry is missing the kdch1 capability, YottaDB uses a default value derived from members of the DEC VT terminal family, as it does for selected other missing terminfo capabilities. If you wish the Backspace and Delete keys to behave the same, the simplest way is to configure your terminal emulator to send the same character sequences for the Delete key that it does for the Backspace key. You can alternatively modify your terminfo setting: for example, create an editable version of your terminfo entry in a temporary file with a command such as: infocmp > /tmp/$$_$TERM and edit the temporary file to replace the entry for the kbs capability with the one in the kdch1 capability. Save your changes, and compile the edited file into a usable terminfo entry, for example:
 
@@ -548,7 +548,7 @@ Example:
    $ZPROCESS=""
    $ZPROMPT="YDB>"
                                         
-   $ZROUTINES=". /usr/library/ydb_dist"
+   $ZROUTINES=". /usr/library/gtm_dist"
                                             
    $ZSOURCE=""
                                               
