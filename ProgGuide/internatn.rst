@@ -615,10 +615,10 @@ Add code for the version identifier routine (gtm_ac_version) or the verification
 Save and compile polish.c. On x86 GNU/Linux (64-bit Ubuntu 10.10), execute a command like the following:
 
 .. parsed-literal::
-   gcc -c polish.c -I$ydb_dist
+   gcc -c polish.c -I$gtm_dist
 
 .. note::
-   The -I$ydb_dist option includes gtmxc_types.h.
+   The -I$gtm_dist option includes gtmxc_types.h.
 
 Create a new shared library or add the above routines to an existing one. The following command adds these alternative sequence routines to a shared library called altcoll.so on x86 GNU/Linux (64-bit Ubuntu 10.10).
 
@@ -668,10 +668,10 @@ Download col_reverse_32.c from `Github <https://github.com/YottaDB/YottaDBdoc/tr
 Save and compile col_reverse_32.c. On x86 GNU/Linux (64-bit Ubuntu 10.10), execute a command like the following:
 
 .. parsed-literal::
-   gcc -c col_reverse_32.c -I$ydb_dist
+   gcc -c col_reverse_32.c -I$gtm_dist
 
 .. note::
-   The -I$ydb_dist option includes gtmxc_types.h.
+   The -I$gtm_dist option includes gtmxc_types.h.
 
 Create a new shared library or add the routines to an existing one. The following command adds these alternative sequence routines to a shared library called altcoll.so on x86 GNU/Linux (64-bit Ubuntu 10.10).
 

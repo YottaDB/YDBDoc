@@ -22,9 +22,9 @@ The YottaDB utilities fall into the following general categories:
 * System Management utilities
 * Unicode Utility Routines
 
-The YottaDB distribution includes the source files for these utilities. The default installation compiles them to produce object modules in the $ydb_dist distribution library.
+The YottaDB distribution includes the source files for these utilities. The default installation compiles them to produce object modules in the $gtm_dist distribution library.
 
-You may wish to examine the utilities and include some of them in your programs if the programs access the function frequently or you may want to modify the utilities to better fit your particular needs. If you modify a utility, store your copy in a directory that precedes ydb_dist in the search list $ZROUTINES to prevent a new release of YottaDB from overwriting your copy.
+You may wish to examine the utilities and include some of them in your programs if the programs access the function frequently or you may want to modify the utilities to better fit your particular needs. If you modify a utility, store your copy in a directory that precedes gtm_dist in the search list $ZROUTINES to prevent a new release of YottaDB from overwriting your copy.
 
 -------------------------------
 Using the Utilities
@@ -2702,7 +2702,7 @@ When invoked from a shell, the command line is:
 where
 
 * pidlist is a single pid, or "*" (quoted to protect it from expansion by the shell) for all processes currently sharing statistics.
-* reglist is a single region name in the global directory specified by $ydb_gbldir, or "*" to report statistics summed across all regions.
+* reglist is a single region name in the global directory specified by $gtmgbldir, or "*" to report statistics summed across all regions.
 * statlist is one or more comma separated statistics, or "*".
 * When statlist specifies a list of statistics, %YGBLSTAT reports them in the same order in which ZSHOW "G" reports those statistics, rather than in the order in which they appear within the specifying argument.
 

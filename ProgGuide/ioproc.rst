@@ -1440,11 +1440,11 @@ Example:
 
 .. parsed-literal::
    sh> mumps -run pipexample induceEAGAIN
-   The active device is pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/mumps -run induceEAGAIN^pipexample" STDERR="piperr" 
+   The active device is pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$gtm_dist/mumps -run induceEAGAIN^pipexample" STDERR="piperr" 
    $ZSTATUS="11,pipexample+9^pipexample,%SYSTEM-E-ENO11, Resource temporarily unavailable"
         
    sh> mumps -run retry^pipexample induceEAGAIN
-   Try 0   pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/mumps -run induceEAGAIN^pipexample 0" STDERR="piperr"
+   Try 0   pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$gtm_dist/mumps -run induceEAGAIN^pipexample 0" STDERR="piperr"
    ...Failed to perform non-blocked writes... Retrying write # 54
    ...Failed to perform non-blocked writes... Retrying write # 63
    ...Failed to perform non-blocked writes... Retrying write # 69
@@ -1455,21 +1455,21 @@ This example demonstrates handling WRITE errors, like ENO11 or EAGAIN, that do n
 
 .. parsed-literal::
    sh> mumps -run pipexample induceEPIPE
-   The active device is pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/mumps -run induceEPIPE^pipexample" STDERR="piperr" 
+   The active device is pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$gtm_dist/mumps -run induceEPIPE^pipexample" STDERR="piperr" 
        stdout:My PID is 12808
        stderr:%YDB-F-FORCEDHALT, Image HALTed by MUPIP STOP
    $ZSTATUS="32,pipexample+9^pipexample,%SYSTEM-E-ENO32, Broken pipe"
         
    sh> mumps -run retry^pipexample induceEPIPE
-   Try 0   pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/mumps -run induceEPIPE^pipexample 0" STDERR="piperr" 
+   Try 0   pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$gtm_dist/mumps -run induceEPIPE^pipexample 0" STDERR="piperr" 
    ...Caught on try 0, write 49... 32,retry+13^pipexample,%SYSTEM-E-ENO32, Broken pipe
        stdout:My PID is 16252
        stderr:%YDB-F-FORCEDHALT, Image HALTed by MUPIP STOP
-   Try 1   pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/mumps -run induceEPIPE^pipexample 1" STDERR="piperr" 
+   Try 1   pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$gtm_dist/mumps -run induceEPIPE^pipexample 1" STDERR="piperr" 
    ...Caught on try 1, write 697... 32,retry+13^pipexample,%SYSTEM-E-ENO32, Broken pipe
        stdout:My PID is 16403
        stdout:$ZSTATUS="150373210,induceEPIPE+5^pipexample,%YDB-E-DIVZERO, Attempt to divide by zero"
-   Try 2   pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/mumps -run induceEPIPE^pipexample 2" STDERR="piperr" 
+   Try 2   pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$gtm_dist/mumps -run induceEPIPE^pipexample 2" STDERR="piperr" 
        Writes completed
       
 This example demonstrates how to create a separate STDERR pipe device from which to read the STDERR output of the program(s) inside the pipe. Reading the STDERR is important when dealing with failures from Unix programs. It is possible to read the errors without creating a STDERR pipe device, however the error messages are commingled with the output of the programs inside the pipe which could make diagnosis of the underlying problem harder. Notice that YottaDB writes fatal errors, YDB-F types, to STDERR, but all others go to STDOUT.
@@ -1487,7 +1487,7 @@ Example:
      set piperr="piperr"
      set writesize=1024
      set cmd=$piece($zcmdline," ") set:'$length(cmd) cmd="induceEPIPE"
-     open pipe:(shell="/bin/bash":command="$ydb_dist/mumps -run "_cmd_"^pipexample":stderr=piperr)::"pipe"
+     open pipe:(shell="/bin/bash":command="$gtm_dist/mumps -run "_cmd_"^pipexample":stderr=piperr)::"pipe"
      zshow "D":devicelist write "The active device is ",devicelist("D",2),!
      use pipe
      for i=1:1:1024 write $tr($justify(i,writesize)," ","X"),!
@@ -1499,7 +1499,7 @@ Example:
      set pipe="pipe"
      set writesize=1024
      set cmd=$piece($zcmdline," ",2) set:'$length(cmd) cmd="induceEAGAIN"
-     open pipe:(shell="/bin/bash":command="$ydb_dist/mumps -run "_cmd_"^pipexample")::"pipe"
+     open pipe:(shell="/bin/bash":command="$gtm_dist/mumps -run "_cmd_"^pipexample")::"pipe"
      zshow "D":devicelist write "The active device is ",devicelist("D",2),!
      write !,!
      use pipe
@@ -1553,7 +1553,7 @@ Example:
      set cmd=$piece($zcmdline," ") set:'$length(cmd) cmd="induceEPIPE"
      for try=0:1  do  quit:$get(readcomplete,0)
      . new $etrap set $etrap="goto retryEPIPE"
-     . open pipe:(shell="/bin/bash":command="$ydb_dist/mumps -run "_cmd_"^pipexample "_try:stderr=piperr)::"pipe"
+     . open pipe:(shell="/bin/bash":command="$gtm_dist/mumps -run "_cmd_"^pipexample "_try:stderr=piperr)::"pipe"
      . zshow "D":devicelist write "Try ",try,$char(9),devicelist("D",2),!
      . use pipe
      . for i=1:1:1024 do
@@ -1894,7 +1894,7 @@ Socket Device Examples
 
 The sockexamplemulti31.m routine shows the use of $KEY and $ZKEY in a basic socket I/O setup. It's functionality is atypical in order to demonstrate a number of features. It launches two jobs: a server process which opens a listening socket and a client process which makes five connections to the server. The server sends a message to each connection socket. Even-numbered client sockets read the message partially but do not send a response back to the server. Odd-numbered client sockets receive the full message and respond to the server with the message "Ok.". The server reads two characters (but the client sends three) and $ZKEY shows sockets with unread characters.
 
-You can download sockexamplemulti31.m from `https://github.com/YottaDB/YottaDBdoc/blob/master/ProgGuide/sockexamplemulti31.m>`_ and follow the instructions in the comments near the top of the program file. 
+You can download sockexamplemulti31.m from `here <http://github.com/YottaDB/YottaDBdoc/blob/master/ProgGuide/sockexamplemulti31.m>`_ and follow the instructions in the comments near the top of the program file. 
 
 You can start a YottaDB process in response to a connection request made using inetd/xinetd. The following example uses inetd/xinetd to implement a listener which responds to connections and messages just as the prior example.
 
@@ -1921,15 +1921,15 @@ If you are using inetd, add a line to /etc/inetd.conf with the sockettype "strea
 
 In both of the above examples, "gtmuser" is the name of the user to own and run the gtmserver service, and "/path/to/startgtm" is the name of a script which defines some environment variables needed before invoking YottaDB. Please check the man page for inetd.conf on your system as the details may be slightly different.
 
-The minimum variables are: $ydb_dist, which specifies the directory containing the YottaDB distribution, and $ydb_routines, which specifies the paths used to locate the YottaDB routines. As an example: 
+The minimum variables are: $gtm_dist, which specifies the directory containing the YottaDB distribution, and $gtmroutines, which specifies the paths used to locate the YottaDB routines. As an example: 
 
 .. parsed-literal::
    #!/bin/bash 
    cd /path/to/workarea 
-   export ydb_dist=/usr/local/ydb 
-   export ydb_routines="/var/myApp/o(/var/myApp/r) $ydb_dist" 
-   export ydb_gbldir=/var/myApp/g/mumps.dat 
-   $ydb_dist/mumps -r start^server 
+   export gtm_dist=/usr/local/ydb 
+   export gtmroutines="/var/myApp/o(/var/myApp/r) $gtm_dist" 
+   export gtmgbldir=/var/myApp/g/mumps.dat 
+   $gtm_dist/mumps -r start^server 
 
 When start^server begins, the $PRINCIPAL device is the current device connected a socket and $KEY contains "ESTABLISHED|socket_handle| remote_ip_address". In most cases, a USE command near the beginning of the routine sets various device parameters such as delimiters.
 
@@ -1951,14 +1951,14 @@ TLS (Transport Layer Security) can be turned on for YottaDB using the following 
 * As root, go to the following directory and extract source.tar:
 
   .. parsed-literal::
-     cd $ydb_dist/plugin/gtmcrypt
+     cd $gtm_dist/plugin/gtmcrypt
      tar x < source.tar
 
 * Make sure the openssl-dev, libconfig-dev, and gpgme-dev libraries are installed before the next step.
   
   .. parsed-literal::
-     ydb_dist=../.. make 
-     ydb_dist=../.. make install
+     gtm_dist=../.. make 
+     gtm_dist=../.. make install
 
 * In your application directory, make a directory for certificates.
 
@@ -1992,7 +1992,7 @@ TLS (Transport Layer Security) can be turned on for YottaDB using the following 
 * Find out the hash of your key password using the maskpass utility. 
 
   .. parsed-literal::
-     ydb_dist/plugin/gtmcrypt/maskpass <<< 'ydbpass' | cut -d ":" -f2 | tr -d '
+     gtm_dist/plugin/gtmcrypt/maskpass <<< 'ydbpass' | cut -d ":" -f2 | tr -d '
      7064420FDCAEE313B222 
 
 * In your environment file, set gtmtls_passwd_{section name} to be that hash.
@@ -2289,7 +2289,7 @@ Example:
    YDB>zprint ^gtmcp
    gtmcp ; Copy a binary file using YottaDB
      new dest,line,max,src
-     if 2>$length($zcmdline," ") write "$ydb_dist/mumps -r source target",!
+     if 2>$length($zcmdline," ") write "$gtm_dist/mumps -r source target",!
      set dest=$piece($zcmdline," ",2)
      set src=$piece($zcmdline," ",1)
      set max=1024*1024 ; the maximum YottaDB string size
@@ -2406,15 +2406,15 @@ The basic steps to use a key and IV to create an encrypted file and decrypt its 
 .. parsed-literal::
    export LD_LIBRARY_PATH=/usr/local/lib
    export GNUPGHOME=$PWD/mygnupg
-   $ydb_dist/plugin/gtmcrypt/gen_keypair.sh mykeypair@gtm Keymaster
-   $ydb_dist/plugin/gtmcrypt/gen_sym_key.sh 0 Sunday.key
-   $ydb_dist/plugin/gtmcrypt/gen_sym_key.sh 0 Monday.key
-   $ydb_dist/plugin/gtmcrypt/gen_sym_key.sh 0 Tuesday.key
-   $ydb_dist/plugin/gtmcrypt/gen_sym_key.sh 0 Wednesday.key
-   $ydb_dist/plugin/gtmcrypt/gen_sym_key.sh 0 Thursday.key
-   $ydb_dist/plugin/gtmcrypt/gen_sym_key.sh 0 Friday.key
-   $ydb_dist/plugin/gtmcrypt/gen_sym_key.sh 0 Saturday.key
-   echo -n "Enter password for gtm_passwd";export gtm_passwd="`$ydb_dist/plugin/gtmcrypt/maskpass|cut -f 3 -d " "`"
+   $gtm_dist/plugin/gtmcrypt/gen_keypair.sh mykeypair@gtm Keymaster
+   $gtm_dist/plugin/gtmcrypt/gen_sym_key.sh 0 Sunday.key
+   $gtm_dist/plugin/gtmcrypt/gen_sym_key.sh 0 Monday.key
+   $gtm_dist/plugin/gtmcrypt/gen_sym_key.sh 0 Tuesday.key
+   $gtm_dist/plugin/gtmcrypt/gen_sym_key.sh 0 Wednesday.key
+   $gtm_dist/plugin/gtmcrypt/gen_sym_key.sh 0 Thursday.key
+   $gtm_dist/plugin/gtmcrypt/gen_sym_key.sh 0 Friday.key
+   $gtm_dist/plugin/gtmcrypt/gen_sym_key.sh 0 Saturday.key
+   echo -n "Enter password for gtm_passwd";export gtm_passwd="`$gtm_dist/plugin/gtmcrypt/maskpass|cut -f 3 -d " "`"
    export gtmcrypt_config=mygtmcryptfile
    cat mygtmcryptfile
     files: {
@@ -2426,7 +2426,7 @@ The basic steps to use a key and IV to create an encrypted file and decrypt its 
     CustomerReportKey6: "Friday.key";
     CustomerReportKey7: "Saturday.key";
    };
-   $ydb_dist/mumps -dir
+   $gtm_dist/mumps -dir
    YDB>zprint ^encrfile
    encrfile
     set now=$horolog
@@ -2623,10 +2623,10 @@ PARSE Applies to: PIPE
 
 The PARSE deviceparameter invokes preliminary validation of the COMMAND value. When debugging, PARSE provides more accessible diagnosis for COMMAND values. By default, OPEN does not validate command values before passing them to the newly created process. PARSE has certain limitations, which may, or may not map to, those of the shell.
 
-* PARSE searches for the command in the environment variables PATH and ydb_dist and produces an error if it is not found.
+* PARSE searches for the command in the environment variables PATH and gtm_dist and produces an error if it is not found.
 * PARSE does not resolve aliases, so they produce an error.
-* PARSE does not resolve environment variables, except $ydb_dist (as mentioned above), so they trigger an error.
-* PARSE does not recognize built-in commands other than nohup and cd unless $PATH or $ydb_dist contain a version with the same name (as the built-in). In the case of nohup, PARSE looks for the next token in $PATH and $ydb_dist. "When PARSE encounters cd it ignores what follows until the next "|" token (if one appears later in the COMMAND value).
+* PARSE does not resolve environment variables, except $gtm_dist (as mentioned above), so they trigger an error.
+* PARSE does not recognize built-in commands other than nohup and cd unless $PATH or $gtm_dist contain a version with the same name (as the built-in). In the case of nohup, PARSE looks for the next token in $PATH and $gtm_dist. "When PARSE encounters cd it ignores what follows until the next "|" token (if one appears later in the COMMAND value).
 * PARSE rejects parentheses around commands.
 
 The following example fails:
@@ -2651,7 +2651,7 @@ The following example fails:
      OPEN a:(COMM="tr e j | echoback":STDERR=e:exception="g BADOPEN":PARSE)::"PIPE"
      OPEN a:(SHELL="/usr/local/bin/tcsh":COMM="/bin/cat \|& nl":PARSE)::"PIPE"
      OPEN a:(COMM="mupip integ -file mumps.dat":PARSE)::"PIPE"
-     OPEN a:(COMM="$ydb_dist/mupip integ -file mumps.dat":PARSE)::"PIPE"
+     OPEN a:(COMM="$gtm_dist/mupip integ -file mumps.dat":PARSE)::"PIPE"
      OPEN a:(COMM="nohup cat":PARSE)::"PIPE" 
 
 **READONLY**
