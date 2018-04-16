@@ -425,10 +425,10 @@ Each invocation generates an operator log message and if the invocation fails, a
 
 **tmp_passw** (not used by YottaDB directly) - It is used by the ydb_env_set script in maintaining ydb_passwd.
 
-**ydb_dbglvl** (gtmdbglvl) specifies the YottaDB debug levels. The defined values can be added together to turn on multiple features at the same time. Note that the cumulative value specified in the logical or environment variable must currently be specified in decimal.
+**gtmdbglvl** specifies the YottaDB debug levels. The defined values can be added together to turn on multiple features at the same time. Note that the cumulative value specified in the logical or environment variable must currently be specified in decimal.
 
 .. note::
-   Use of ydb_dbglvl is intended for debugging under the guidance of your YottaDB support channel. If you set ydb_dbglvl to a non-zero value, be aware that there will be a performance impact. We do not recommend its use in production.
+   Use of gtmdbglvl is intended for debugging under the guidance of your YottaDB support channel. If you set gtmdbglvl to a non-zero value, be aware that there will be a performance impact. We do not recommend its use in production.
 
 +------------------------------+--------------------------------------------+--------------------------------------------------------------------------------------------+
 | Level                        | Value                                      | Notes                                                                                      |
@@ -481,6 +481,8 @@ Each invocation generates an operator log message and if the invocation fails, a
 | GDL_PrintPMAPStats           | 0x00200000                                 | Print process memory map on exit (using pmap or procmap utility)                           |
 +------------------------------+--------------------------------------------+--------------------------------------------------------------------------------------------+
 | GDL_AllowLargeMemcpy         | 0x00400000                                 | Bypass the 1GB sanity check in gtm_memcpy_validate_and_execute()                           |
++------------------------------+--------------------------------------------+--------------------------------------------------------------------------------------------+
+| define GDL_UseSystemMalloc   | 0x80000000                                 | Use the system's malloc(), disabling all the above GDL_Sm options                          |
 +------------------------------+--------------------------------------------+--------------------------------------------------------------------------------------------+
 
 **ydb_dist** specifies the path to the directory containing the YottaDB system distribution. ydb_dist must be defined for each user. If you are not using the ydb script or sourcing ydb_env_set, consider defining ydb_dist in the login file or as part of the default system environment. In UTF-8 mode, the ydb_dist environment variable specifies the path to the directory containing the YottaDB system distribution for Unicode. The distribution for Unicode is located in subdirectory utf8 under the YottaDB distribution directory. For example, if the YottaDB distribution is in /usr/local/lib/yottadb/r110, set ydb_dist to point to /usr/local/lib/yottadb/r110/utf8 for UTF-8 mode. Correct operation of YottaDB executable programs requires ydb_dist to be set correctly.
