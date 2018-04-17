@@ -548,7 +548,10 @@ If YottaDB cannot create the process because of something that is unlikely to ch
 The JOB Environment
 +++++++++++++++++++++++++++++
 
-When the JOB is forked, UNIX creates the environment for the new process by copying the environment of the process issuing the JOB command and making a few minor modifications. By default, the standard input is assigned to the null device, the standard output is assigned to routinename.mjo, and the standard error is assigned to routinename.mje.
+When the JOB is forked, UNIX creates the environment for the new process by copying the environment of the process issuing the JOB command and making a few minor modifications. By default, the standard input is assigned to the null device, the standard output is assigned to routinename.mjo, and the standard error is assigned to routinename.mje. 
+
+.. note::
+   If the content of the $gtmroutines variable is different from the $ZROUTINES ISV, a jobbed off process will inherit $gtmroutines and not $ZROUTINES. If the M entryref (LABEL^PROGRAM) that is being jobbed off can be found only through $ZROUTINES, the jobbed off process will encounter a ZLINKFILE error (due to not being able to find the M program through $gtmroutines) whereas the program would be found in the jobbing process.
 
 **JOB Implications for Directories**
 
