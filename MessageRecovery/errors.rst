@@ -15929,7 +15929,7 @@ ZLINKFILE
 
 ZLINKFILE, Error while ZLINKing "xxxx"
 
-Run Time Error: This indicates that ZLINK command failed while trying to include routine xxxx in the image.
+Run Time Error: This indicates that ZLINK command failed while trying to include routine xxxx in the image. A jobbed off process will encounter a ZLINKFILE error if $ZROUTINES and $gtmroutines differ, and if it can be found only through $ZROUTINES, since it only inherits $gtmroutines.
 
 Action: Use host shell commands to ensure that the file to be ZLINKed is in the proper directory and has the appropriate protection. Review the accompanying message(s) for additional information.
 
