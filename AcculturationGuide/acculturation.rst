@@ -3147,7 +3147,7 @@ As the Ken user, create a directory enc, with a ydbenv file to set the environme
    export gtmcrypt_config=$HOME/enc/gtmcrypt.cfg
    mkdir -p $gtm_tmp
    alias mumps=$gtm_dist/mumps
-   alias mupip=$gtm_dist/mupipexport gtm_dist=/usr/local/lib/yottadb/r1.20_x86_64
+   alias mupip=$gtm_dist/mupip
    yottadbuser@paris:~/enc$ source ydbenv
    yottadbuser@paris:~/enc$ vim $gtmcrypt_config # create file to link database files to encryption keys
    yottadbuser@paris:~/enc$ cat $gtmcrypt_config
