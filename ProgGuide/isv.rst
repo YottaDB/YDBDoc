@@ -79,7 +79,7 @@ $ESTACK maybe used as a flag to indicate error traps invoked in particular stack
 $ETRAP
 --------------
 
-$ET[RAP] contains a string value that YottaDB invokes when an error occurs during routine execution. When a process is initiated, YottaDB assigns $ETRAP the value of the gtm_etrap environment variable, if gtm_etrap is defined, and otherwise the empty string, in which case $ZTRAP="B" controls initial error handling.
+$ET[RAP] contains a string value that YottaDB invokes when an error occurs during routine execution. When a process is initiated, YottaDB assigns $ETRAP the value of the ydb_etrap environment variable, if ydb_etrap is defined, and otherwise the empty string, in which case $ZTRAP="B" controls initial error handling.
 
 The value of this variable is the M[UMPS] code that YottaDB executes when it encounters an error.
 
@@ -246,7 +246,7 @@ $SYSTEM
 
 $SY[STEM] contains a string that identifies the executing M instance. The value of $SYSTEM is a string that starts with a unique numeric code that identifies the manufacturer. Codes are assigned by the MDC (MUMPS Development Committee).
 
-$SYSTEM in YottaDB starts with "47" followed by a comma and the evaluation of the environment variable gtm_sysid. If the name has no evaluation, the value after the comma is gtm_sysid.
+$SYSTEM in YottaDB starts with "47" followed by a comma and the evaluation of the environment variable ydb_sysid. If the name has no evaluation, the value after the comma is ydb_sysid.
 
 ---------------
 $TEST
@@ -414,7 +414,7 @@ For more information on $ZB, refer to the `"Input/Output Processing" chapter <ht
 $ZCHSET
 --------------
 
-$ZCHSET is a read-only intrinsic special variable that takes its value from the environment variable gtm_chset. An application can obtain the character set used by a YottaDB process by the value of $ZCHSET. $ZCHSET can have only two values --"M", or "UTF-8".
+$ZCHSET is a read-only intrinsic special variable that takes its value from the environment variable ydb_chset. An application can obtain the character set used by a YottaDB process by the value of $ZCHSET. $ZCHSET can have only two values --"M", or "UTF-8".
 
 .. note::
    YottaDB performs operations on literals at compile time and the character set may have an impact on such operations. Therefore, always compile with the same character set as that used at runtime.
@@ -422,7 +422,7 @@ $ZCHSET is a read-only intrinsic special variable that takes its value from the 
 Example:
 
 .. parsed-literal::
-  $ export gtm_chset=UTF-8
+  $ export ydb_chset=UTF-8
   $ ydb
   YDB>write $zchset
   UTF-8
@@ -485,7 +485,7 @@ $ZCO[MPILE] contains a string value composed of one or more qualifiers that cont
 
 $ZCOMPILE is a read-write ISV, that is, it can appear on the left side of the equal sign (=) in the argument to the SET command. A $ZCOMPILE value has the form of a list of M command qualifiers each separated by a space ( ).
 
-When the environment variable gtmcompile is defined, YottaDB initializes $ZCOMPILE to the translation of gtmcompile. Otherwise YottaDB initializes $ZCOMPILE to null. Changes to the value of $ZCOMPILE during a YottaDB invocation only last for the current invocation and do not change the value of the environment variable gtmcompile.
+When the environment variable ydb_compile is defined, YottaDB initializes $ZCOMPILE to the translation of ydb_compile. Otherwise YottaDB initializes $ZCOMPILE to null. Changes to the value of $ZCOMPILE during a YottaDB invocation only last for the current invocation and do not change the value of the environment variable ydb_compile.
 
 ZCOMPILE returns a status of 1 after any error in compilation.
 
@@ -494,7 +494,7 @@ When $ZCOMPILE is null, YottaDB uses the default M command qualifiers -IGNORE, -
 Example:
 
 .. parsed-literal::
-   $ export gtmcompile="-LIST -LENGTH=56 -SPACE=2"
+   $ export ydb_compile="-LIST -LENGTH=56 -SPACE=2"
    $ ydb
    YDB>WRITE $ZCOMPILE
    -LIST -LENGTH=56 -SPACE=2
@@ -503,10 +503,10 @@ Example:
    -LIST -NOIGNORE
    YDB>ZLINK "A.m"
    YDB>HALT
-   $ echo $gtmcompile
+   $ echo $ydb_compile
    -LIST -LENGTH=56 -SPACE=2
 
-This example uses the environment variable gtmcompile to set up $ZCOMPILE. Then it modifies $ZCOMPILE with the SET command. The ZLINK argument specifies a file with a .m extension (type), which forces a compile. The compile produces a listing for routine A.m and does not produce an object module if A.m contains compilation errors. After YottaDB terminates, the shell command echo $gtmcompile demonstrates that the SET command did not change the environment variable.
+This example uses the environment variable ydb_compile to set up $ZCOMPILE. Then it modifies $ZCOMPILE with the SET command. The ZLINK argument specifies a file with a .m extension (type), which forces a compile. The compile produces a listing for routine A.m and does not produce an object module if A.m contains compilation errors. After YottaDB terminates, the shell command echo $ydb_compile demonstrates that the SET command did not change the environment variable.
 
 -----------------
 $ZCSTATUS
@@ -520,7 +520,7 @@ YottaDB does not permit the SET command to modify $ZSTATUS.
 $ZDATEFORM
 -----------------
 
-$ZDA[TEFORM] contains an integer value, specifying the output year format of $ZDATE(). $ZDATEFORM can be modified using the SET command. YottaDB initializes $ZDATEFORM to the translation of the environment variable gtm_zdate_form. If gtm_zdate_form is not defined, YottaDB initializes $ZDATEFORM to zero (0).
+$ZDA[TEFORM] contains an integer value, specifying the output year format of $ZDATE(). $ZDATEFORM can be modified using the SET command. YottaDB initializes $ZDATEFORM to the translation of the environment variable ydb_zdate_form. If ydb_zdate_form is not defined, YottaDB initializes $ZDATEFORM to zero (0).
 
 See “$ZDate()” for the usage of $ZDATEFORM. $ZDATEFORM also defines the behavior of some date and time utility routines; refer `"Utility Routines" <https://docs.yottadb.com/ProgrammersGuide/utility.html>`_.
 
@@ -598,32 +598,32 @@ $ZGBLDIR
 
 $ZG[BLDIR] contains the value of the current Global Directory filename. When $ZGBLDIR specifies an invalid or inaccessible file, YottaDB cannot successfully perform database operations.
 
-YottaDB initializes $ZGBLDIR to the translation of the environment variable gtmgbldir. The value of the gtmgbldir environment variable may include a reference to another environment variable. If gtmgbldir is not defined, YottaDB initializes $ZGBLDIR to null. When $ZGBLDIR is null, YottaDB constructs a file name for the Global Directory using the name $gtmgbldir and the extension .gld in the current working directory.
+YottaDB initializes $ZGBLDIR to the translation of the environment variable ydb_gbldir. The value of the ydb_gbldir environment variable may include a reference to another environment variable. If ydb_gbldir is not defined, YottaDB initializes $ZGBLDIR to null. When $ZGBLDIR is null, YottaDB constructs a file name for the Global Directory using the name $ydb_gbldir and the extension .gld in the current working directory.
 
-$ZGBLDIR is a read-write Intrinsic Special Variable, (i.e., it can appear on the left side of the equal sign (=) in the argument to the SET command). SET $ZGBLDIR="" causes YottaDB to assign $ZGBLDIR to the translation of gtmgbldir if that environment variable is defined. If it is not defined, then SET $ZGBLDIR="" causes YottaDB to construct a file name using the name $gtmgbldir.gld in the current directory. YottaDB permits $ZGBLDIR to be NEW'd. A $ZGBLDIR value may include an environment variable.
+$ZGBLDIR is a read-write Intrinsic Special Variable, (i.e., it can appear on the left side of the equal sign (=) in the argument to the SET command). SET $ZGBLDIR="" causes YottaDB to assign $ZGBLDIR to the translation of ydb_gbldir if that environment variable is defined. If it is not defined, then SET $ZGBLDIR="" causes YottaDB to construct a file name using the name $ydb_gbldir.gld in the current directory. YottaDB permits $ZGBLDIR to be NEW'd. A $ZGBLDIR value may include an environment variable.
 
 SETting $ZGBLDIR also causes YottaDB to attempt to open the specified file. If the file name is invalid or the file is inaccessible, YottaDB triggers an error without changing the value of $ZGBLDIR.
 
-To establish a value for $ZGBLDIR outside of M, use the appropriate shell command to assign a translation to gtmgbldir. Defining gtmgbldir provides a convenient way to use the same Global Directory during a session where you repeatedly invoke and leave YottaDB.
+To establish a value for $ZGBLDIR outside of M, use the appropriate shell command to assign a translation to ydb_gbldir. Defining ydb_gbldir provides a convenient way to use the same Global Directory during a session where you repeatedly invoke and leave YottaDB.
 
-Changes to the value of $ZGBLDIR during a YottaDB invocation only last for the current invocation and do not change the value of gtmgbldir.
+Changes to the value of $ZGBLDIR during a YottaDB invocation only last for the current invocation and do not change the value of ydb_gbldir.
 
 Example:
 
 .. parsed-literal::
-   $ gtmgbldir=test.gld
-   $ export gtmgbldir
-   $ gtm
+   $ ydb_gbldir=test.gld
+   $ export ydb_gbldir
+   $ ydb
    YDB>WRITE $zgbldir
    /usr/dev/test.gld
    YDB>SET $zgbldir="mumps.gld"
    YDB>WRITE $zgbldir
    mumps.gld
    YDB>HALT
-   $ echo $gtmgbldir
+   $ echo $ydb_gbldir
    test.gld
 
-This example defines the environment variable gtmgbldir. Upon entering YottaDB Direct Mode, $ZGBLDIR has the value supplied by gtmgbldir. The SET command changes the value. After the YottaDB image terminates, the echo command demonstrates that gtmgbldir was not modified by the M SET command.
+This example defines the environment variable ydb_gbldir. Upon entering YottaDB Direct Mode, $ZGBLDIR has the value supplied by ydb_gbldir. The SET command changes the value. After the YottaDB image terminates, the echo command demonstrates that ydb_gbldir was not modified by the M SET command.
 
 .. parsed-literal::
    $ ls test.gld
@@ -665,7 +665,7 @@ Example:
     do displaytzdetails(zutzh,zone)
     quit
    getzutzh(zone)
-    set shcommand="TZ="_zone_" $gtm_dist/mumps -run %XCMD 'write $zut,"" "",$zhorolog,"" "",$zdate($horolog,""MON DD,YYYY 12:60:SS AM""),!'"
+    set shcommand="TZ="_zone_" $ydb_dist/mumps -run %XCMD 'write $zut,"" "",$zhorolog,"" "",$zdate($horolog,""MON DD,YYYY 12:60:SS AM""),!'"
     set descname="tzpipe"
     open descname:(shell="/bin/sh":command=shcommand:readonly)::"pipe"
     use descname read dateline use $principal close descname
@@ -709,7 +709,7 @@ YottaDB permits the SET command to modify the value of $ZINTERRUPT.
 
 If an interrupt handler changes the current IO device (via USE), it is the responsibility of the interrupt handler to restore the current IO device before returning. There are sufficient legitimate possibilities why an interrupt routine would want to change the current IO device (for example; daily log switching), that this part of the process context is not saved and restored automatically.
 
-The initial value for $ZINTERRUPT is taken from the UNIX environment variable gtm_zinterrupt if it is specified, otherwise it defaults to the following string:
+The initial value for $ZINTERRUPT is taken from the UNIX environment variable ydb_zinterrupt if it is specified, otherwise it defaults to the following string:
 
 .. parsed-literal::
    IF $ZJOBEXAM()
@@ -773,19 +773,19 @@ $ZIO contains the translated name of the current device, in contrast to $IO, whi
 
 YottaDB does not permit the SET or NEW command to modify $ZIO.
 
-An example where $ZIO contains a value different from $IO is if the environment variable gtm_principal is defined.
+An example where $ZIO contains a value different from $IO is if the environment variable ydb_principal is defined.
 
 Example:
 
 .. parsed-literal::
-   $ gtm_principal="foo"
-   $ export gtm_principal
+   $ ydb_principal="foo"
+   $ export ydb_principal
    YDB>WRITE $IO
    foo
    YDB>WRITE $ZIO
    /dev/pts/8
 
-Notice that $ZIO contains the actual terminal device name while $IO contains the string pointed to by the environment variable gtm_principal.
+Notice that $ZIO contains the actual terminal device name while $IO contains the string pointed to by the environment variable ydb_principal.
 
 ----------------
 $ZJOB
@@ -958,9 +958,9 @@ $ZPATNUMERIC
 
 $ZPATN[UMERIC] is a read-only intrinsic special variable that determines how YottaDB interprets the patcode "N" used in the pattern match operator.
 
-With $ZPATNUMERIC="UTF-8", the patcode "N" matches any numeric character as defined by UTF-8 encoding. With $ZPATNUMERIC="M", YottaDB restricts the patcode "N" to match only ASCII digits 0-9 (that is, ASCII 48-57). When a process starts in UTF-8 mode, intrinsic special variable $ZPATNUMERIC takes its value from the environment variable gtm_patnumeric. YottaDB initializes the intrinsic special variable $ZPATNUMERIC to "UTF-8" if the environment variable gtm_patnumeric is defined to "UTF-8". If the environment variable gtm_patnumeric is not defined or set to a value other than "UTF-8", YottaDB initializes $ZPATNUMERIC to "M".
+With $ZPATNUMERIC="UTF-8", the patcode "N" matches any numeric character as defined by UTF-8 encoding. With $ZPATNUMERIC="M", YottaDB restricts the patcode "N" to match only ASCII digits 0-9 (that is, ASCII 48-57). When a process starts in UTF-8 mode, intrinsic special variable $ZPATNUMERIC takes its value from the environment variable ydb_patnumeric. YottaDB initializes the intrinsic special variable $ZPATNUMERIC to "UTF-8" if the environment variable ydb_patnumeric is defined to "UTF-8". If the environment variable ydb_patnumeric is not defined or set to a value other than "UTF-8", YottaDB initializes $ZPATNUMERIC to "M".
 
-YottaDB populates $ZPATNUMERIC at process initialization from the environment variable gtm_patnumeric and does not allow the process to change the value.
+YottaDB populates $ZPATNUMERIC at process initialization from the environment variable ydb_patnumeric and does not allow the process to change the value.
 
 .. note::
    YottaDB performs operations on literals at compile time and the pattern codes settings may have an impact on such operations. Therefore, always compile with the same pattern code settings as those used at runtime.
@@ -1094,7 +1094,7 @@ $ZPROM[PT] contains a string value specifying the current Direct Mode prompt. By
 
 In UTF-8 mode, if the 31st byte is not the end of a valid UTF-8 character, YottaDB truncates the $ZPROMPT value at the end of last character that completely fits within the 31 byte limit.
 
-The environment gtm_prompt initializes $ZPROMPT at process startup.
+The environment variable ydb_prompt initializes $ZPROMPT at process startup.
 
 Example:
 
@@ -1121,11 +1121,11 @@ Searches that use $ZROUTINES treat files as either object or source files. Yotta
 .. note::
    Paths used in $ZROUTINES to locate routines must not include embedded spaces, as $ZROUTINES uses spaces as delimiters.
 
-+++++++++++++++++++++++++++++++++++++++++
-Establishing the value from $gtmroutines
-+++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++
+Establishing the value from $ydb_routines
+++++++++++++++++++++++++++++++++++++++++++
 
-When the environment variable gtmroutines is defined, YottaDB initializes $ZROUTINES to the value of gtmroutines. Otherwise, YottaDB initializes $ZROUTINES to ".". When $ZROUTINES is ".", YottaDB attempts to locate all source and object files in the current working directory. $ZROUTINES="" is equivalent to $ZROUTINES=".".
+When the environment variable ydb_routines is defined, YottaDB initializes $ZROUTINES to the value of ydb_routines. Otherwise, YottaDB initializes $ZROUTINES to ".". When $ZROUTINES is ".", YottaDB attempts to locate all source and object files in the current working directory. $ZROUTINES="" is equivalent to $ZROUTINES=".".
 
 Commands or functions such as DO, GOTO, ZGOTO, ZBREAK, ZPRINT, and $TEXT may auto-ZLINK and thereby indirectly use $ZROUTINES. If their argument does not specify a directory, ZEDIT and explicit ZLINK use $ZROUTINES. ZPRINT and $TEXT use $ZROUTINES to locate a source file if YottaDB cannot find the source file pointed to by the object file. For more information on ZLINK and auto-ZLINK, see the `“Development Cycle” <https://docs.yottadb.com/ProgrammersGuide/devcycle.html>`_ and `“Commands” <https://docs.yottadb.com/ProgrammersGuide/commands.html>`_ chapters.
 
@@ -1139,9 +1139,9 @@ By default, each directory entry in $ZROUTINES is assumed to contain both object
 
 If the command specifies more than one source directory for an object directory, the source directories must be separated by spaces, and the entire list must be enclosed in parentheses ( ) following the object directory-specification. If the object directory should also be searched for source, the name of that directory must be included in the parentheses, (usually as the first element in the list). Directory-specifications may also include empty parentheses, directing YottaDB to proceed as if no source files exist for objects located in the qualified directory.
 
-To set $ZROUTINES outside of M, use the appropriate shell command to set gtmroutines. Because gtmroutines is a list, enclose the value in quotation marks (" ").
+To set $ZROUTINES outside of M, use the appropriate shell command to set ydb_routines. Because ydb_routines is a list, enclose the value in quotation marks (" ").
 
-Changes to the value of $ZROUTINES during a YottaDB invocation only last for the current invocation, and do not change the value of gtmroutines.
+Changes to the value of $ZROUTINES during a YottaDB invocation only last for the current invocation, and do not change the value of ydb_routines.
 
 Directory specifications may include an environment variable. When YottaDB SETs $ZROUTINES, it translates all environment variables and verifies the syntax and the existence of all specified directories. If $ZROUTINES is set to an invalid value, YottaDB generates a run-time error and does not change the value of $ZROUTINES. Because the environment variables are translated when $ZROUTINES is set, any changes to their definition have no effect until $ZROUTINES is set again.
 
@@ -1152,15 +1152,15 @@ $ZROUTINES Examples
 Example:
 
 .. parsed-literal::
-   YDB>s $zroutines=".(../src) $gtm_dist"
+   YDB>s $zroutines=".(../src) $ydb_dist"
 
 This example directs YottaDB to look for object modules first in your current directory, then in the distribution directory that contains the percent routines. YottaDB locates sources for objects in your current directory in the sibling /src directory.
 
 Example:
 
 .. parsed-literal::
-   $ gtmroutines="/usr/jones /usr/smith"
-   $ export gtmroutines
+   $ ydb_routines="/usr/jones /usr/smith"
+   $ export ydb_routines
    $ ydb
    YDB>write $zroutines
    "/usr/jones /usr/smith"
@@ -1168,10 +1168,10 @@ Example:
    YDB>write $zroutines
    "/usr/jones/utl /usr/smith/utl"
    YDB>halt
-   $ echo $gtmroutines
+   $ echo $ydb_routines
    /usr/jones /usr/smith
 
-This example defines the environment variable gtmroutines. Upon entering YottaDB Direct Mode $zroutines has the value supplied by gtmroutines. The SET command changes the value. When the YottaDB image terminates, the shell echo command demonstrates that gtmroutines has not been modified by the M SET command.
+This example defines the environment variable ydb_routines. Upon entering YottaDB Direct Mode $zroutines has the value supplied by ydb_routines. The SET command changes the value. When the YottaDB image terminates, the shell echo command demonstrates that ydb_routines has not been modified by the M SET command.
 
 Example:
 
@@ -1349,15 +1349,15 @@ Where libshr.so is replaced with name of the shared library one wishes to create
 .. note::
    There are some tools on AIX that can aid in mitigating the problems of shared library allocation. The /usr/bin/genkld command on AIX lists all of the shared libraries currently loaded. This command requires root privileges on AIX 4.3.3 but seems to be a general user command on AIX 5. The /usr/sbin/slibclean command requires root privileges and will purge the shared library segment of unused shared libraries making room for new libraries to be loaded.
 
-* *Establish $ZROUTINES from gtmroutines*
+* *Establish $ZROUTINES from ydb_routines*
 
-When the environment variable gtmroutines is defined, YottaDB initializes $ZROUTINES to the value of gtmroutines. The $ZROUTINES ISV can also be modified using SET command.
+When the environment variable ydb_routines is defined, YottaDB initializes $ZROUTINES to the value of ydb_routines. The $ZROUTINES ISV can also be modified using SET command.
 
 Example:
 
 .. parsed-literal::
-   $ gtmroutines="./libabc.so ./obj(./src)"
-   $ export gtmroutines
+   $ ydb_routines="./libabc.so ./obj(./src)"
+   $ export ydb_routines
    $ mumps -direct
    YDB>w $ZROUTINES,!;writes "./libabc.so ./obj(./src)"
    YDB>do ^a;runs ^a from libabc.so
@@ -1371,7 +1371,7 @@ Example:
 By suffixing one or more directory names in $ZROUTINES with a single asterisk (*), processes can subscribe to updates of object files published in those directories. At the invocation of DO, GOTO, or ZGOTO, extrinsic functions, $TEXT(), or ZPRINT that specify an entryref which includes a routine name (vs. a label without a routine name), mumps processes (and mupip processes executing trigger logic) automatically relink ("auto-relink") and execute published new versions of routines.
 
 * Label references (that is, without a routine name), whether direct or through indirection, always refer to the current routine, and do not invoke auto-relink logic.
-* Use shell quoting rules when appending asterisks to directory names in the gtmroutines environment variable - asterisks must be passed in to YottaDB, and not expanded by the shell.
+* Use shell quoting rules when appending asterisks to directory names in the ydb_routines environment variable - asterisks must be passed in to YottaDB, and not expanded by the shell.
 * YottaDB accepts but ignores asterisk suffixes to directory names on 32-bit Linux on x86 platforms, where it does not provide auto-relinking.
 * Changing $ZROUTINES causes all routines linked from auto-relink-enabled directories in the process to be re-linked.
 * Note that a relink does not automatically reload a routine every time. When YottaDB initiates a relink and the object file (object hash) is the same as the existing one, YottaDB bypasses the relink and uses the existing object file.
@@ -1466,7 +1466,7 @@ $ZSTEP
 
 $ZST[EP] contains a string value specifying the default action for the ZSTEP command. $ZSTEP provides the ZSTEP action only when the ZSTEP command does not specify an action.
 
-$ZSTEP initially contains the the value of the $gtm_zstep environment variable or string "B" if $gtm_zstep is not defined; note that the default "B" causes the process to enter direct mode. $ZSTEP is a read-write Intrinsic Special Variable, (that is, it can appear on the left side of the equal sign (=) in the argument to the SET command).
+$ZSTEP initially contains the the value of the $ydb_zstep environment variable or string "B" if $ydb_zstep is not defined; note that the default "B" causes the process to enter direct mode. $ZSTEP is a read-write Intrinsic Special Variable, (that is, it can appear on the left side of the equal sign (=) in the argument to the SET command).
 
 Example:
 
@@ -1488,7 +1488,7 @@ This example sets $ZSTEP to code that displays the contents of the next line to 
 $ZSTRPllim
 -----------------
 
-$ZSTRP[LLIM] provides a way for a process to limit its process private memory used for local variable and scratch storage. When the value is 0 or negative, the default, there is no limit. A positive value specifies a byte limit. When a request for additional memory exceeds the limit, YottaDB does the expansion and then produces an STPCRIT error. By default, a later request for memory produces an STPOFLOW, unless subsequent to STPCRIT , $ZSTRPLLIM has been set to the same or higher limit. Note that YottaDB allocates memory in large blocks so the interaction of $ZSTRPLLIM with memory growth is not exact. When the gtm_string_pool_limit environment variable specifies a positive value, YottaDB uses it for the initial value of $ZSTRPLLIM. 
+$ZSTRP[LLIM] provides a way for a process to limit its process private memory used for local variable and scratch storage. When the value is 0 or negative, the default, there is no limit. A positive value specifies a byte limit. When a request for additional memory exceeds the limit, YottaDB does the expansion and then produces an STPCRIT error. By default, a later request for memory produces an STPOFLOW, unless subsequent to STPCRIT , $ZSTRPLLIM has been set to the same or higher limit. Note that YottaDB allocates memory in large blocks so the interaction of $ZSTRPLLIM with memory growth is not exact. When the ydb_string_pool_limit environment variable specifies a positive value, YottaDB uses it for the initial value of $ZSTRPLLIM. 
 
 -----------------
 $ZSYSTEM
@@ -1582,7 +1582,7 @@ When the $ZTRAP variable is not null, YottaDB executes $ZTRAP at the current lev
 
 $ZTRAP is a read-write Intrinsic Special Variable, (that is, it can appear on the left side of the equal sign (=) in the argument to the SET command).
 
-$ZTRAP may also appear as an argument to an inclusive NEW command. NEW $ZTRAP causes YottaDB to stack the current $ZTRAP value, and set its value to the empty string ($ZTRAP=""). The NEW command puts the $ZTRAP in control for error handling. When the program QUITs from the invocation level where the NEW occurred, YottaDB restores the value previously stacked by the NEW. NEW $ZTRAP provides nesting of $ZTRAP. Because $ZTRAP="" terminates the image when an error occurs, SET $ZTRAP= generally follows immediately after NEW $ZTRAP. You may use this technique to construct error handling strategies corresponding to the nesting of your programs. If the environment variable gtm_ztrap_new evaluates to boolean TRUE (case insensitive string "TRUE", or case insensitive string "YES", or a non-zero number), $ZTRAP is NEWed when $ZTRAP is SET; otherwise $ZTRAP is not stacked when it is SET.
+$ZTRAP may also appear as an argument to an inclusive NEW command. NEW $ZTRAP causes YottaDB to stack the current $ZTRAP value, and set its value to the empty string ($ZTRAP=""). The NEW command puts the $ZTRAP in control for error handling. When the program QUITs from the invocation level where the NEW occurred, YottaDB restores the value previously stacked by the NEW. NEW $ZTRAP provides nesting of $ZTRAP. Because $ZTRAP="" terminates the image when an error occurs, SET $ZTRAP= generally follows immediately after NEW $ZTRAP. You may use this technique to construct error handling strategies corresponding to the nesting of your programs. If the environment variable ydb_ztrap_new evaluates to boolean TRUE (case insensitive string "TRUE", or case insensitive string "YES", or a non-zero number), $ZTRAP is NEWed when $ZTRAP is SET; otherwise $ZTRAP is not stacked when it is SET.
 
 .. note::
    QUIT from a $ZTRAP terminates the level at which the $ZTRAP was activated.
@@ -1596,20 +1596,20 @@ Example:
 
 This example modifies $ZTRAP to display source code for the line where YottaDB encounters an error before entering Direct Mode.
 
-There are four settings of $ZTRAP controlled by the UNIX environment variable gtm_ztrap_form.
+There are four settings of $ZTRAP controlled by the UNIX environment variable ydb_ztrap_form.
 
-The four settings of gtm_ztrap_form are:
+The four settings of ydb_ztrap_form are:
 
-*  code - If gtm_ztrap_form evaluates to "code" (or a value that is not one of the subsequently described values), then YottaDB treats $ZTRAP as code and handles it as previously described in the documentation.
-* entryref - If gtm_ztrap_form evaluates to "entryref" then YottaDB treats it as an entryref argument to an implicit GOTO command.
-* adaptive - If gtm_ztrap_form evaluates to "adaptive" then if $ZTRAP does not compile to valid M code, then $ZTRAP is treated as just described for "entryref." Since there is little ambiguity, code and entryref forms of $ZTRAP can be intermixed in the same application.
-* pope[ntryref] / popa[daptive] - If gtm_ztrap_form evaluates to "POPE[NTRYREF]" or "POPA[DAPTIVE]" (case insensitive) and $ZTRAP value is in the form of entryref, YottaDB unwinds the M stack from the level at which an error occurred to (but not including) the level at which $ZTRAP was last SET. Then, YottaDB transfers control to the entryref in $ZTRAP at the level where the $ZTRAP value was SET. If the UNIX environment variable gtm_zyerror is defined to a valid entryref, YottaDB transfers control to the entryref specified by GTM_ZYERROR (with an implicit DO) after unwinding the stack and before transferring control to the entryref specified in $ZTRAP.
+*  code - If ydb_ztrap_form evaluates to "code" (or a value that is not one of the subsequently described values), then YottaDB treats $ZTRAP as code and handles it as previously described in the documentation.
+* entryref - If ydb_ztrap_form evaluates to "entryref" then YottaDB treats it as an entryref argument to an implicit GOTO command.
+* adaptive - If ydb_ztrap_form evaluates to "adaptive" then if $ZTRAP does not compile to valid M code, then $ZTRAP is treated as just described for "entryref." Since there is little ambiguity, code and entryref forms of $ZTRAP can be intermixed in the same application.
+* pope[ntryref] / popa[daptive] - If ydb_ztrap_form evaluates to "POPE[NTRYREF]" or "POPA[DAPTIVE]" (case insensitive) and $ZTRAP value is in the form of entryref, YottaDB unwinds the M stack from the level at which an error occurred to (but not including) the level at which $ZTRAP was last SET. Then, YottaDB transfers control to the entryref in $ZTRAP at the level where the $ZTRAP value was SET. If the UNIX environment variable ydb_zyerror is defined to a valid entryref, YottaDB transfers control to the entryref specified by GTM_ZYERROR (with an implicit DO) after unwinding the stack and before transferring control to the entryref specified in $ZTRAP.
 
 .. note::
    YottaDB attempts to compile $ZTRAP before evaluating $ZTRAP as an entryref. Because YottaDB allows commands without arguments such as QUIT, ZGOTO, or HANG as valid labels, be careful not to use such keywords as labels for error handling code in "adaptive" mode.
 
 .. note::
-   Like $ZTRAP values, invocation of device EXCEPTION values follow the pattern specified by the current gtm_ztrap_form setting except that there is never any implicit popping with EXCEPTION action.
+   Like $ZTRAP values, invocation of device EXCEPTION values follow the pattern specified by the current ydb_ztrap_form setting except that there is never any implicit popping with EXCEPTION action.
 
 -----------------
 $ZUSEDSTOR
@@ -1826,7 +1826,7 @@ The following table summarizes the read/write permissions assigned to all trigge
 +------------------------------+----------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Intrinsic Special Variable   | Within Trigger Context           | Notes                                                                                                                                                 |
 +==============================+==================================+=======================================================================================================================================================+
-| $ETRAP                       | Read/Write                       | Set to gtm_trigger_etrap or the empty string when entering trigger context. For more information on using the $ETRAP mechanism for handling errors    |
+| $ETRAP                       | Read/Write                       | Set to ydb_trigger_etrap or the empty string when entering trigger context. For more information on using the $ETRAP mechanism for handling errors    |
 |                              |                                  | during trigger execution, refer to “Error Handling during Trigger Execution”.                                                                         |
 +------------------------------+----------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------+
 | $REFERENCE                   | Read Only                        | Restored at the completion of a trigger.                                                                                                              |

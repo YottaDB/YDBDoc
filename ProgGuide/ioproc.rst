@@ -44,7 +44,7 @@ A process inherits three open file descriptors from its parent - STDIN, STDOUT a
 
 For an interactive process, $PRINCIPAL is the user's terminal. YottaDB ignores a CLOSE of the principal device. YottaDB does not permit a SET command to modify $PRINCIPAL.
 
-0 is an alternate for $PRINCIPAL (for example, USE 0). YottaDB recommends that application code use $PRINCIPAL. The environment variable gtm_principal can be used to set a string reported by YottaDB for $PRINCIPAL and which can be used in lieu of $PRINCIPAL for the USE command.
+0 is an alternate for $PRINCIPAL (for example, USE 0). YottaDB recommends that application code use $PRINCIPAL. The environment variable ydb_principal can be used to set a string reported by YottaDB for $PRINCIPAL and which can be used in lieu of $PRINCIPAL for the USE command.
 
 **$ZIO**
 
@@ -1001,7 +1001,7 @@ The following table shows the result and the values of I/O status variables for 
 
 With WRITE:
 
-* The FIFO device does non-blocking writes. If a process tries to WRITE to a full FIFO and the WRITE would block, the device implicitly tries to complete the operation up to a default of 10 times. If the gtm_non_blocked_write_retries environment variable is defined, this overrides the default number of retries. If the retries do not succeed (remain blocked), the WRITE sets $DEVICE to "1,Resource temporarily unavailable", $ZA to 9, and produces an error. If the YottaDB process has defined an EXCEPTION, $ETRAP or $ZTRAP, the error trap may choose to retry the WRITE after some action or delay that might remove data from the FIFO device.
+* The FIFO device does non-blocking writes. If a process tries to WRITE to a full FIFO and the WRITE would block, the device implicitly tries to complete the operation up to a default of 10 times. If the ydb_non_blocked_write_retries environment variable is defined, this overrides the default number of retries. If the retries do not succeed (remain blocked), the WRITE sets $DEVICE to "1,Resource temporarily unavailable", $ZA to 9, and produces an error. If the YottaDB process has defined an EXCEPTION, $ETRAP or $ZTRAP, the error trap may choose to retry the WRITE after some action or delay that might remove data from the FIFO device.
 * While it is hung, the process will not respond to <CTRL-C>.
 
 With CLOSE:
@@ -1281,7 +1281,7 @@ The following table shows the result and values of I/O status variables for vari
 
 With WRITE:
 
-The PIPE device does non-blocking writes. If a process tries to WRITE to a full PIPE and the WRITE would block, the device implicitly tries to complete the operation up to a default of 10 times. If the gtm_non_blocked_write_retries environment variable is defined, this overrides the default number of retries. If the retries do not succeed (remain blocked), the WRITE sets $DEVICE to "1,Resource temporarily unavailable", $ZA to 9, and produces an error. If the YottaDB process has defined an EXCEPTION, $ETRAP or $ZTRAP, the error trap may choose to retry the WRITE after some action or delay that might remove data from the PIPE device.
+The PIPE device does non-blocking writes. If a process tries to WRITE to a full PIPE and the WRITE would block, the device implicitly tries to complete the operation up to a default of 10 times. If the ydb_non_blocked_write_retries environment variable is defined, this overrides the default number of retries. If the retries do not succeed (remain blocked), the WRITE sets $DEVICE to "1,Resource temporarily unavailable", $ZA to 9, and produces an error. If the YottaDB process has defined an EXCEPTION, $ETRAP or $ZTRAP, the error trap may choose to retry the WRITE after some action or delay that might remove data from the PIPE device.
 
 With WRITE /EOF:
 
@@ -1440,11 +1440,11 @@ Example:
 
 .. parsed-literal::
    sh> mumps -run pipexample induceEAGAIN
-   The active device is pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$gtm_dist/mumps -run induceEAGAIN^pipexample" STDERR="piperr" 
+   The active device is pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/mumps -run induceEAGAIN^pipexample" STDERR="piperr" 
    $ZSTATUS="11,pipexample+9^pipexample,%SYSTEM-E-ENO11, Resource temporarily unavailable"
         
    sh> mumps -run retry^pipexample induceEAGAIN
-   Try 0   pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$gtm_dist/mumps -run induceEAGAIN^pipexample 0" STDERR="piperr"
+   Try 0   pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/mumps -run induceEAGAIN^pipexample 0" STDERR="piperr"
    ...Failed to perform non-blocked writes... Retrying write # 54
    ...Failed to perform non-blocked writes... Retrying write # 63
    ...Failed to perform non-blocked writes... Retrying write # 69
@@ -1455,21 +1455,21 @@ This example demonstrates handling WRITE errors, like ENO11 or EAGAIN, that do n
 
 .. parsed-literal::
    sh> mumps -run pipexample induceEPIPE
-   The active device is pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$gtm_dist/mumps -run induceEPIPE^pipexample" STDERR="piperr" 
+   The active device is pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/mumps -run induceEPIPE^pipexample" STDERR="piperr" 
        stdout:My PID is 12808
        stderr:%YDB-F-FORCEDHALT, Image HALTed by MUPIP STOP
    $ZSTATUS="32,pipexample+9^pipexample,%SYSTEM-E-ENO32, Broken pipe"
         
    sh> mumps -run retry^pipexample induceEPIPE
-   Try 0   pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$gtm_dist/mumps -run induceEPIPE^pipexample 0" STDERR="piperr" 
+   Try 0   pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/mumps -run induceEPIPE^pipexample 0" STDERR="piperr" 
    ...Caught on try 0, write 49... 32,retry+13^pipexample,%SYSTEM-E-ENO32, Broken pipe
        stdout:My PID is 16252
        stderr:%YDB-F-FORCEDHALT, Image HALTed by MUPIP STOP
-   Try 1   pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$gtm_dist/mumps -run induceEPIPE^pipexample 1" STDERR="piperr" 
+   Try 1   pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/mumps -run induceEPIPE^pipexample 1" STDERR="piperr" 
    ...Caught on try 1, write 697... 32,retry+13^pipexample,%SYSTEM-E-ENO32, Broken pipe
        stdout:My PID is 16403
        stdout:$ZSTATUS="150373210,induceEPIPE+5^pipexample,%YDB-E-DIVZERO, Attempt to divide by zero"
-   Try 2   pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$gtm_dist/mumps -run induceEPIPE^pipexample 2" STDERR="piperr" 
+   Try 2   pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/mumps -run induceEPIPE^pipexample 2" STDERR="piperr" 
        Writes completed
       
 This example demonstrates how to create a separate STDERR pipe device from which to read the STDERR output of the program(s) inside the pipe. Reading the STDERR is important when dealing with failures from Unix programs. It is possible to read the errors without creating a STDERR pipe device, however the error messages are commingled with the output of the programs inside the pipe which could make diagnosis of the underlying problem harder. Notice that YottaDB writes fatal errors, YDB-F types, to STDERR, but all others go to STDOUT.
@@ -1487,7 +1487,7 @@ Example:
      set piperr="piperr"
      set writesize=1024
      set cmd=$piece($zcmdline," ") set:'$length(cmd) cmd="induceEPIPE"
-     open pipe:(shell="/bin/bash":command="$gtm_dist/mumps -run "_cmd_"^pipexample":stderr=piperr)::"pipe"
+     open pipe:(shell="/bin/bash":command="$ydb_dist/mumps -run "_cmd_"^pipexample":stderr=piperr)::"pipe"
      zshow "D":devicelist write "The active device is ",devicelist("D",2),!
      use pipe
      for i=1:1:1024 write $tr($justify(i,writesize)," ","X"),!
@@ -1499,7 +1499,7 @@ Example:
      set pipe="pipe"
      set writesize=1024
      set cmd=$piece($zcmdline," ",2) set:'$length(cmd) cmd="induceEAGAIN"
-     open pipe:(shell="/bin/bash":command="$gtm_dist/mumps -run "_cmd_"^pipexample")::"pipe"
+     open pipe:(shell="/bin/bash":command="$ydb_dist/mumps -run "_cmd_"^pipexample")::"pipe"
      zshow "D":devicelist write "The active device is ",devicelist("D",2),!
      write !,!
      use pipe
@@ -1553,7 +1553,7 @@ Example:
      set cmd=$piece($zcmdline," ") set:'$length(cmd) cmd="induceEPIPE"
      for try=0:1  do  quit:$get(readcomplete,0)
      . new $etrap set $etrap="goto retryEPIPE"
-     . open pipe:(shell="/bin/bash":command="$gtm_dist/mumps -run "_cmd_"^pipexample "_try:stderr=piperr)::"pipe"
+     . open pipe:(shell="/bin/bash":command="$ydb_dist/mumps -run "_cmd_"^pipexample "_try:stderr=piperr)::"pipe"
      . zshow "D":devicelist write "Try ",try,$char(9),devicelist("D",2),!
      . use pipe
      . for i=1:1:1024 do
@@ -1627,7 +1627,7 @@ The following table summarizes PIPE access deviceparamters.
 Using Socket Devices
 -------------------------------
 
-SOCKET devices are used to access and manipulate sockets. A SOCKET device can have unlimited associated sockets. The default limit is 64. Set the environment variable gtm_max_sockets to the number of maximum associated sockets sockets that you wish to set for a YottaDB process. $VIEW("MAX_SOCKETS") returns the current value of the maximum number of associated sockets.
+SOCKET devices are used to access and manipulate sockets. A SOCKET device can have unlimited associated sockets. The default limit is 64. Set the environment variable ydb_max_sockets to the number of maximum associated sockets sockets that you wish to set for a YottaDB process. $VIEW("MAX_SOCKETS") returns the current value of the maximum number of associated sockets.
 
 At any time, only one socket from the collection can be the current socket. If there is no current socket, an attempt to READ from, or WRITE to the device, generates an error.
 
@@ -1803,7 +1803,7 @@ SOCKET devices support encrypted connections with TLS using an encryption plugin
 
 * option is "server", "client", or "renegotiate". "server" or "client" indicates which TLS role to assume. The server role requires a certificate specified in the configuration file section with the label matching tlsid. The client role may require a certificate depending on the OpenSSL options. If a timeout is specified for options "client" or "server", YottaDB sets $TEST to 1 if the command successfully completed or to 0 if it timed out. $DEVICE provides status information in case of an error. ZSHOW "D" includes "TLS" in the second line of the output for an encrypted socket.
 * "renegotiate" applies only to a server socket. It allows applications to request a TLS renegotiation. Renegotiation requires the suspension of application communication and the application must read all pending data before initiating a renegotiation. This means that in the communication protocol used, both parties must be at a known state when renegotiating keys. For example, in YottaDB replication, one party sends a renegotiation request and waits for an acknowledgement before initiating the renegotiation.
-* tlsid refers to the name of a section in the configuration file specified by the gtmcrypt_config environment variable. If tlsid is not specified with the "renegotiate" option and cfg-file-options are specified, YottaDB creates a virtual section by appending "-RENEGOTIATE" to the tlsid used to enable TLS on the socket. For the renegotiate option, if no section named tlsid is present in the configuration file, YottaDB creates a virtual section with that name for the life of the process.
+* tlsid refers to the name of a section in the configuration file specified by the ydb_crypt_config environment variable. If tlsid is not specified with the "renegotiate" option and cfg-file-options are specified, YottaDB creates a virtual section by appending "-RENEGOTIATE" to the tlsid used to enable TLS on the socket. For the renegotiate option, if no section named tlsid is present in the configuration file, YottaDB creates a virtual section with that name for the life of the process.
 * cfg-file-options specifies configuration file options. Note cfg-file-options override those options if they are already specified in the configuration file except ssl-options and verify-level which are merged.
 * Supported cfg-file-options for the "renegotiate" command are (case-sensitive): verify-depth, verify-level, verify-mode, session-id-hex, and CAfile. WRITE /TLS ignores all other configuration file options whether given on the command or in the configuration file. For more information on the supported configuration options, refer to `Creating a TLS Configuration File <https://docs.yottadb.com/AdminOpsGuide/tls.html>`_ in the Administration and Operations Guide.
 
@@ -1921,15 +1921,15 @@ If you are using inetd, add a line to /etc/inetd.conf with the sockettype "strea
 
 In both of the above examples, "gtmuser" is the name of the user to own and run the gtmserver service, and "/path/to/startgtm" is the name of a script which defines some environment variables needed before invoking YottaDB. Please check the man page for inetd.conf on your system as the details may be slightly different.
 
-The minimum variables are: $gtm_dist, which specifies the directory containing the YottaDB distribution, and $gtmroutines, which specifies the paths used to locate the YottaDB routines. As an example: 
+The minimum variables are: $ydb_dist, which specifies the directory containing the YottaDB distribution, and $ydb_routines, which specifies the paths used to locate the YottaDB routines. As an example: 
 
 .. parsed-literal::
    #!/bin/bash 
    cd /path/to/workarea 
-   export gtm_dist=/usr/local/ydb 
-   export gtmroutines="/var/myApp/o(/var/myApp/r) $gtm_dist" 
-   export gtmgbldir=/var/myApp/g/mumps.dat 
-   $gtm_dist/mumps -r start^server 
+   export ydb_dist=/usr/local/ydb 
+   export ydb_routines="/var/myApp/o(/var/myApp/r) $ydb_dist" 
+   export ydb_gbldir=/var/myApp/g/mumps.dat 
+   $ydb_dist/mumps -r start^server 
 
 When start^server begins, the $PRINCIPAL device is the current device connected a socket and $KEY contains "ESTABLISHED|socket_handle| remote_ip_address". In most cases, a USE command near the beginning of the routine sets various device parameters such as delimiters.
 
@@ -1951,14 +1951,14 @@ TLS (Transport Layer Security) can be turned on for YottaDB using the following 
 * As root, go to the following directory and extract source.tar:
 
   .. parsed-literal::
-     cd $gtm_dist/plugin/gtmcrypt
+     cd $ydb_dist/plugin/gtmcrypt
      tar x < source.tar
 
 * Make sure the openssl-dev, libconfig-dev, and gpgme-dev libraries are installed before the next step.
   
   .. parsed-literal::
-     gtm_dist=../.. make 
-     gtm_dist=../.. make install
+     ydb_dist=../.. make 
+     ydb_dist=../.. make install
 
 * In your application directory, make a directory for certificates.
 
@@ -1973,7 +1973,7 @@ TLS (Transport Layer Security) can be turned on for YottaDB using the following 
       openssl req -x509 -days 365 -sha256 -in ./mycert.csr -key .//mycert.key -passin pass:ydbpass -out ./mycert.pem
       mv cert* certs/ 
 
-* Create a file called gtmcrypt_config.libconfig with the following contents.
+* Create a file called ydb_crypt_config.libconfig with the following contents.
 
   .. parsed-literal::
      tls: {
@@ -1984,21 +1984,21 @@ TLS (Transport Layer Security) can be turned on for YottaDB using the following 
              }
           } 
 
-* Set the environment variable gtmcrypt_config to be the path to your config file:
+* Set the environment variable ydb_crypt_config to be the path to your config file:
   
   .. parsed-literal::
-     export gtmcrypt_config=$.../gtmcrypt_config.libconfig"  
+     export ydb_crypt_config=$.../ydb_crypt_config.libconfig"  
 
 * Find out the hash of your key password using the maskpass utility. 
 
   .. parsed-literal::
-     gtm_dist/plugin/gtmcrypt/maskpass <<< 'ydbpass' | cut -d ":" -f2 | tr -d '
+     ydb_dist/plugin/gtmcrypt/maskpass <<< 'ydbpass' | cut -d ":" -f2 | tr -d '
      7064420FDCAEE313B222 
 
-* In your environment file, set gtmtls_passwd_{section name} to be that hash.
+* In your environment file, set ydb_tls_passwd_{section name} to be that hash.
 
   .. parsed-literal::
-     export gtmtls_passwd_dev="7064420FDCAEE313B222" 
+     export ydb_tls_passwd_dev="7064420FDCAEE313B222" 
 
 * Start the server
 
@@ -2124,7 +2124,7 @@ CONNECT=expr Applies to: SOC
 
 Creates a client connection with a server, which is located by the information provided by expr. A new socket is allocated for the client connection and is made the current socket for the device, if the operation is successful.
 
-expr specifies the protocol and the protocol-specific information. Currently, YottaDB supports TCP/IP and LOCAL (also known as UNIX domain) socket protocols. For TCP/IP sockets, specify expr in the form of "<host>:<port>:TCP", where host is an IPv4 or IPv6 address optionally encapsulated by square-brackets ([]) like "127.0.0.1", "::1", "[127.0.0.1]", or "[::1]" or a IPv4 or IPv6 hostname like server.fis-gtm.com. When a hostname is specified, YottaDB uses the IP version of the first address returned by DNS:
+expr specifies the protocol and the protocol-specific information. Currently, YottaDB supports TCP/IP and LOCAL (also known as UNIX domain) socket protocols. For TCP/IP sockets, specify expr in the form of "<host>:<port>:TCP", where host is an IPv4 or IPv6 address optionally encapsulated by square-brackets ([]) like "127.0.0.1", "::1", "[127.0.0.1]", or "[::1]" or a IPv4 or IPv6 hostname like server.yottadb.com. When a hostname is specified, YottaDB uses the IP version of the first address returned by DNS:
 
 * that is supported by the operating system, and
 * for which a network interface exists.
@@ -2170,7 +2170,7 @@ This command specifies $CHAR(13) as the delimiter for the socket tcpdev.
 
 EXCEPTION=expr Applies to: All devices
 
-Defines an error handler for an I/O device. The expression must contain a fragment of YottaDB code (for example, GOTO ERRFILE) that YottaDB XECUTEs when YottaDB detects an error, or an entryref to which YottaDB transfers control, as appropriate for the current gtm_ztrap_form, setting except that there is never any implicit popping with EXCEPTION action.
+Defines an error handler for an I/O device. The expression must contain a fragment of YottaDB code (for example, GOTO ERRFILE) that YottaDB XECUTEs when YottaDB detects an error, or an entryref to which YottaDB transfers control, as appropriate for the current ydb_ztrap_form, setting except that there is never any implicit popping with EXCEPTION action.
 
 A device EXCEPTION gets control after a non-fatal device error and $ETRAP/$ZTRAP get control after other non-fatal errors.
 
@@ -2289,7 +2289,7 @@ Example:
    YDB>zprint ^gtmcp
    gtmcp ; Copy a binary file using YottaDB
      new dest,line,max,src
-     if 2>$length($zcmdline," ") write "$gtm_dist/mumps -r source target",!
+     if 2>$length($zcmdline," ") write "$ydb_dist/mumps -r source target",!
      set dest=$piece($zcmdline," ",2)
      set src=$piece($zcmdline," ",1)
      set max=1024*1024 ; the maximum YottaDB string size
@@ -2358,7 +2358,7 @@ IKEY allows the use of a seperate key for READ to a device; for example, when a 
 
 IKEY="key_name [IV]"
 
-key_name is case-sensitive and must match a key name in the "files" section of the gtmcrypt_config file. The optional IV specifies an initialization vector to use for encryption and decryption.
+key_name is case-sensitive and must match a key name in the "files" section of the ydb_crypt_config file. The optional IV specifies an initialization vector to use for encryption and decryption.
 
 For more information, refer to the description of KEY deviceparameter of OPEN or USE.
 
@@ -2388,7 +2388,7 @@ Specifies information about the key file to use for reading and writing encrypte
 
 KEY="key_name [IV]"
 
-key_name is case-sensitive and must match a key name in the "files" section of the gtmcrypt_config file. The optional IV specifies an initialization vector to use for encryption and decryption.
+key_name is case-sensitive and must match a key name in the "files" section of the ydb_crypt_config file. The optional IV specifies an initialization vector to use for encryption and decryption.
 
 To perform encryption and description, YottaDB calls an encryption plugin using the YottaDB encryption API and can use any library that conforms to the API. The encryption plugin in turn can call user-selected cryptographic libraries for cryptographic functionality. The key name and IV are passed as binary sequences of bytes to the reference implementation plugin. Because YottaDB only uses the first space in the deviceparameter to delimit the end of the key, the IV can include any content, including spaces. The YottaDB runtime system uses the plugin to pass the IV to the cryptographic libraries used, which use the length of the IV, to determine whether an IV less than the required size it is zero padded, and whether an IV that is longer than the required length generates an error. YottaDB suggests using $ZCHAR() in preference to $CHAR() when building IV byte sequences, and to make sure that IV sequences are not unintentionally subjected to numeric conversion.
 
@@ -2406,16 +2406,16 @@ The basic steps to use a key and IV to create an encrypted file and decrypt its 
 .. parsed-literal::
    export LD_LIBRARY_PATH=/usr/local/lib
    export GNUPGHOME=$PWD/mygnupg
-   $gtm_dist/plugin/gtmcrypt/gen_keypair.sh mykeypair@gtm Keymaster
-   $gtm_dist/plugin/gtmcrypt/gen_sym_key.sh 0 Sunday.key
-   $gtm_dist/plugin/gtmcrypt/gen_sym_key.sh 0 Monday.key
-   $gtm_dist/plugin/gtmcrypt/gen_sym_key.sh 0 Tuesday.key
-   $gtm_dist/plugin/gtmcrypt/gen_sym_key.sh 0 Wednesday.key
-   $gtm_dist/plugin/gtmcrypt/gen_sym_key.sh 0 Thursday.key
-   $gtm_dist/plugin/gtmcrypt/gen_sym_key.sh 0 Friday.key
-   $gtm_dist/plugin/gtmcrypt/gen_sym_key.sh 0 Saturday.key
-   echo -n "Enter password for gtm_passwd";export gtm_passwd="`$gtm_dist/plugin/gtmcrypt/maskpass|cut -f 3 -d " "`"
-   export gtmcrypt_config=mygtmcryptfile
+   $ydb_dist/plugin/gtmcrypt/gen_keypair.sh mykeypair@gtm Keymaster
+   $ydb_dist/plugin/gtmcrypt/gen_sym_key.sh 0 Sunday.key
+   $ydb_dist/plugin/gtmcrypt/gen_sym_key.sh 0 Monday.key
+   $ydb_dist/plugin/gtmcrypt/gen_sym_key.sh 0 Tuesday.key
+   $ydb_dist/plugin/gtmcrypt/gen_sym_key.sh 0 Wednesday.key
+   $ydb_dist/plugin/gtmcrypt/gen_sym_key.sh 0 Thursday.key
+   $ydb_dist/plugin/gtmcrypt/gen_sym_key.sh 0 Friday.key
+   $ydb_dist/plugin/gtmcrypt/gen_sym_key.sh 0 Saturday.key
+   echo -n "Enter password for ydb_passwd";export ydb_passwd="`$ydb_dist/plugin/gtmcrypt/maskpass|cut -f 3 -d " "`"
+   export ydb_crypt_config=mygtmcryptfile
    cat mygtmcryptfile
     files: {
     CustomerReportKey1: "Sunday.key";
@@ -2426,7 +2426,7 @@ The basic steps to use a key and IV to create an encrypted file and decrypt its 
     CustomerReportKey6: "Friday.key";
     CustomerReportKey7: "Saturday.key";
    };
-   $gtm_dist/mumps -dir
+   $ydb_dist/mumps -dir
    YDB>zprint ^encrfile
    encrfile
     set now=$horolog
@@ -2555,7 +2555,7 @@ OKEY allows the use of a seperate key for WRITE to a device; for example, when a
 
 OKEY="key_name [IV]"
 
-key_name is case-sensitive and must match a key name in the "files" section of the gtmcrypt_config file. The optional IV specifies an initialization vector to use for encryption and decryption.
+key_name is case-sensitive and must match a key name in the "files" section of the ydb_crypt_config file. The optional IV specifies an initialization vector to use for encryption and decryption.
 
 For more information, refer to the description of KEY deviceparameter of OPEN or USE.
    
@@ -2623,10 +2623,10 @@ PARSE Applies to: PIPE
 
 The PARSE deviceparameter invokes preliminary validation of the COMMAND value. When debugging, PARSE provides more accessible diagnosis for COMMAND values. By default, OPEN does not validate command values before passing them to the newly created process. PARSE has certain limitations, which may, or may not map to, those of the shell.
 
-* PARSE searches for the command in the environment variables PATH and gtm_dist and produces an error if it is not found.
+* PARSE searches for the command in the environment variables PATH and ydb_dist and produces an error if it is not found.
 * PARSE does not resolve aliases, so they produce an error.
-* PARSE does not resolve environment variables, except $gtm_dist (as mentioned above), so they trigger an error.
-* PARSE does not recognize built-in commands other than nohup and cd unless $PATH or $gtm_dist contain a version with the same name (as the built-in). In the case of nohup, PARSE looks for the next token in $PATH and $gtm_dist. "When PARSE encounters cd it ignores what follows until the next "|" token (if one appears later in the COMMAND value).
+* PARSE does not resolve environment variables, except $ydb_dist (as mentioned above), so they trigger an error.
+* PARSE does not recognize built-in commands other than nohup and cd unless $PATH or $ydb_dist contain a version with the same name (as the built-in). In the case of nohup, PARSE looks for the next token in $PATH and $ydb_dist. "When PARSE encounters cd it ignores what follows until the next "|" token (if one appears later in the COMMAND value).
 * PARSE rejects parentheses around commands.
 
 The following example fails:
@@ -2651,7 +2651,7 @@ The following example fails:
      OPEN a:(COMM="tr e j | echoback":STDERR=e:exception="g BADOPEN":PARSE)::"PIPE"
      OPEN a:(SHELL="/usr/local/bin/tcsh":COMM="/bin/cat \|& nl":PARSE)::"PIPE"
      OPEN a:(COMM="mupip integ -file mumps.dat":PARSE)::"PIPE"
-     OPEN a:(COMM="$gtm_dist/mupip integ -file mumps.dat":PARSE)::"PIPE"
+     OPEN a:(COMM="$ydb_dist/mupip integ -file mumps.dat":PARSE)::"PIPE"
      OPEN a:(COMM="nohup cat":PARSE)::"PIPE" 
 
 **READONLY**
@@ -3436,7 +3436,7 @@ This example disables the escape sequence processing and set $c(13) as the line 
 
 EXCEPTION=expr Applies to: All devices
 
-Defines an error handler for an I/O device. The expression must contain a fragment of YottaDB code (for example, GOTO ERRFILE) that YottaDB XECUTEs when the driver for the device detects an error, or an entryref to which YottaDB transfers control, as appropriate for the current gtm_ztrap_form.
+Defines an error handler for an I/O device. The expression must contain a fragment of YottaDB code (for example, GOTO ERRFILE) that YottaDB XECUTEs when the driver for the device detects an error, or an entryref to which YottaDB transfers control, as appropriate for the current ydb_ztrap_form.
 
 For more information on error handling, refer to `Chapter 13: “Error Processing” <https://docs.yottadb.com/ProgrammersGuide/errproc.html>`_.
 
@@ -3487,7 +3487,7 @@ IKEY allows the use of a seperate key to READ from a device; for example, when a
 
 IKEY="key_name [IV]"
 
-key_name is case-sensitive and must match a key name in the "files" section of the gtmcrypt_config file. The optional IV specifies an initialization vector to use for encryption and decryption.
+key_name is case-sensitive and must match a key name in the "files" section of the ydb_crypt_config file. The optional IV specifies an initialization vector to use for encryption and decryption.
 
 For more information, refer to the description of KEY deviceparameter of OPEN.
 
@@ -3535,7 +3535,7 @@ Specifies information about the key file to use for reading and writing encrypte
 
 KEY="key_name [IV]"
 
-key_name is case-sensitive and must match a key name in the "files" section of the gtmcrypt_config file. The optional IV specifies an initialization vector to use for encryption and decryption.
+key_name is case-sensitive and must match a key name in the "files" section of the ydb_crypt_config file. The optional IV specifies an initialization vector to use for encryption and decryption.
 
 For more information and an example, refer to the description of KEY deviceparameter of OPEN.
 
@@ -3575,7 +3575,7 @@ OKEY allows the use of a seperate key for WRITE to a device; for example, when a
 
 OKEY="key_name [IV]"
 
-key_name is case-sensitive and must match a key name in the "files" section of the gtmcrypt_config file. The optional IV specifies an initialization vector to use for encryption and decryption.
+key_name is case-sensitive and must match a key name in the "files" section of the ydb_crypt_config file. The optional IV specifies an initialization vector to use for encryption and decryption.
 
 For more information, refer to the description of KEY deviceparameter of OPEN. 
 
@@ -4092,9 +4092,9 @@ Because it forms a communication link with a process it creates, CLOSE of a PIPE
 
 EXCEPTION=expr Applies to: All devices
 
-Defines an error handler for an I/O device. The expression must contain a fragment of YottaDB code (for example, GOTO ERRFILE) that YottaDB XECUTEs when the driver for the device detects an error, or an entryref to which YottaDB transfers control, as appropriate for the current gtm_ztrap_form.
+Defines an error handler for an I/O device. The expression must contain a fragment of YottaDB code (for example, GOTO ERRFILE) that YottaDB XECUTEs when the driver for the device detects an error, or an entryref to which YottaDB transfers control, as appropriate for the current ydb_ztrap_form.
 
-The expression must contain a fragment of YottaDB code (for example, GOTO ERRFILE) that YottaDB XECUTEs when the driver for the device detects an error, or an entryref to which YottaDB transfers control, as appropriate for the current gtm_ztrap_form.
+The expression must contain a fragment of YottaDB code (for example, GOTO ERRFILE) that YottaDB XECUTEs when the driver for the device detects an error, or an entryref to which YottaDB transfers control, as appropriate for the current ydb_ztrap_form.
 
 For more information on error handling, refer to `Chapter 13: “Error Processing” <https://docs.yottadb.com/ProgrammersGuide/errproc.html>`_.
 

@@ -101,7 +101,7 @@ Lost keys make your data indistinguishable from random ones and zeros. While Yot
 
 At some point in the process invocation chain, the reference implementation requires a human being to provide a password that is placed (in obfuscated form) in the process environment where child processes can inherit it. If you want to be able to access encrypted databases without any human interaction, you must modify the reference implementation, or create your own implementation.
 
-For example, if you have a YottaDB based application server process that is started by xinetd in response to an incoming connection request from a client, you may want to consider an approach where the client sends in a key that is used to extract an encrypted password for the master key ring from the local disk, obfuscates it, and places it in the environment of the server process started by xinetd. If the application protocol cannot be modified to allow the client to provide an additional password, xinetd can be started with the $gtm_passwd obfuscated password in its environment, and the xinetd passenv parameter used to pass $gtm_passwd from the xinetd process to the spawned server process. 
+For example, if you have a YottaDB based application server process that is started by xinetd in response to an incoming connection request from a client, you may want to consider an approach where the client sends in a key that is used to extract an encrypted password for the master key ring from the local disk, obfuscates it, and places it in the environment of the server process started by xinetd. If the application protocol cannot be modified to allow the client to provide an additional password, xinetd can be started with the $ydb_passwd obfuscated password in its environment, and the xinetd passenv parameter used to pass $ydb_passwd from the xinetd process to the spawned server process. 
 
 **MM Databases**
 
@@ -133,7 +133,7 @@ When a GT.CM server has a key for an encrypted database, any client connecting t
 FIPS Mode
 ++++++++++++++
 
-For database encryption, the plugin reference implementation also provides an option to use libgcrypt (from GnuPG) and libcrypto (OpenSSL) in "FIPS mode" removing a need to modify the plugin for sites that require certification for compliance with FIPS 140-2. When the environment variable $gtmcrypt_FIPS is set to 1 (or evaluates to a non-zero integer, or any case-independent string or leading substring of "TRUE" or "YES"), the plugin reference implementation attempts to use either OpenSSL or Libgcrypt to provide database encryption that complies with FIPS 140-2. The supported platforms are as follows:
+For database encryption, the plugin reference implementation also provides an option to use libgcrypt (from GnuPG) and libcrypto (OpenSSL) in "FIPS mode" removing a need to modify the plugin for sites that require certification for compliance with FIPS 140-2. When the environment variable $ydb_crypt_fips is set to 1 (or evaluates to a non-zero integer, or any case-independent string or leading substring of "TRUE" or "YES"), the plugin reference implementation attempts to use either OpenSSL or Libgcrypt to provide database encryption that complies with FIPS 140-2. The supported platforms are as follows:
 
 +-------------------+---------------------------+------------------------------+--------------------------+
 | Platform          | Libgcrypt                 | OpenSSL                      | OpenSSL FIPS             |
@@ -234,22 +234,22 @@ For performance, a symmetric cipher is used to encrypt and decrypt data records.
 
 In the reference implementation, a password protected key ring on disk contains the private key of the asymmetric cipher. A password is required to access the key ring on disk and obtain the private key. Password acquisition happens in one of three ways: 
 
-1. When the environment variable $gtm_passwd is not set, before a YottaDB MUMPS process needs to open an encrypted database file, the application calls a program such as GETPASS.m to prompt for and obtain a password for the key ring on disk. 
-2. When the environment variable $gtm_passwd is set to the null string, at process startup, YottaDB implicitly calls the program GETPASS.m to prompt for and obtain a password. The environment variable, $gtm_passwd is then set to an obfuscated version of the password required to unlock the key ring on disk.
-3. The environment variable $gtm_passwd contains an obfuscated version of the password required to unlock the key ring on disk to obtain the private key. The environment variable can be passed in to YottaDB, or it can be prompted for and set, as described below.
+1. When the environment variable $ydb_passwd is not set, before a YottaDB MUMPS process needs to open an encrypted database file, the application calls a program such as GETPASS.m to prompt for and obtain a password for the key ring on disk. 
+2. When the environment variable $ydb_passwd is set to the null string, at process startup, YottaDB implicitly calls the program GETPASS.m to prompt for and obtain a password. The environment variable, $ydb_passwd is then set to an obfuscated version of the password required to unlock the key ring on disk.
+3. The environment variable $ydb_passwd contains an obfuscated version of the password required to unlock the key ring on disk to obtain the private key. The environment variable can be passed in to YottaDB, or it can be prompted for and set, as described below.
 
 Some graphical user interfaces, e.g., GNOME or KDE, may detect when you are being prompted for the GPG keyring password and use a graphical interface instead of the terminal interface. You may be able to disable this behavior if you unset the $DISPLAY environment variable, or use an ssh connection to localhost that disables X forwarding. Consult your Graphical User Interface documentation.
 
-In order to enable the Job command, the password for the key ring on disk exists in the environment of the process in environment variable $gtm_passwd where it can be passed from a parent process to a child. In order to prevent inadvertent disclosure of the password, for example, in a dump of the environment submitted to YottaDB for product support purposes, the password in the environment is obfuscated using information available to processes on the system on which the process is running, but not available on other systems.
+In order to enable the Job command, the password for the key ring on disk exists in the environment of the process in environment variable $ydb_passwd where it can be passed from a parent process to a child. In order to prevent inadvertent disclosure of the password, for example, in a dump of the environment submitted to YottaDB for product support purposes, the password in the environment is obfuscated using information available to processes on the system on which the process is running, but not available on other systems.
 
-$gtm_passwd is the only way for a child process to receive a password from a parent. In the event that the parent process does not pass $gtm_passwd to the child, or passes an incorrect password, there is little a child without access to an input device can do except log an error and terminate.
+$ydb_passwd is the only way for a child process to receive a password from a parent. In the event that the parent process does not pass $ydb_passwd to the child, or passes an incorrect password, there is little a child without access to an input device can do except log an error and terminate.
 
-An obfuscated password in the environment is the only way that other YottaDB processes (MUPIP and DSE) can be provided with a password. If they encounter an encrypted database or journal file, and do not have an obfuscated password to the key ring on disk in the environment, they terminate with the error message "YDB-E-CRYPTINIT, Error initializing encryption library. Environment variable gtm_passwd set to empty string. Password prompting not allowed for utilities". There are (at least) two ways to provide MUPIP and DSE processes with obfuscated passwords in $gtm_passwd: 
+An obfuscated password in the environment is the only way that other YottaDB processes (MUPIP and DSE) can be provided with a password. If they encounter an encrypted database or journal file, and do not have an obfuscated password to the key ring on disk in the environment, they terminate with the error message "YDB-E-CRYPTINIT, Error initializing encryption library. Environment variable ydb_passwd set to empty string. Password prompting not allowed for utilities". There are (at least) two ways to provide MUPIP and DSE processes with obfuscated passwords in $ydb_passwd: 
 
-1. maskpass is a stand-alone program that prompts the user for the password to the key ring on disk, and returns an obfuscated password to which $gtm_passwd can be set. The environment variable $gtm_passwd should be not set, set to a null value, or set to a value produced by maskpass. Setting $gtm_passwd to an incorrect non-null value without using maskpass could result in undefined behavior of the encryption library. You can use maskpass in shell scripts. For example:
+1. maskpass is a stand-alone program that prompts the user for the password to the key ring on disk, and returns an obfuscated password to which $ydb_passwd can be set. The environment variable $ydb_passwd should be not set, set to a null value, or set to a value produced by maskpass. Setting $ydb_passwd to an incorrect non-null value without using maskpass could result in undefined behavior of the encryption library. You can use maskpass in shell scripts. For example:
 
    .. parsed-literal::
-      $ echo -n "Enter Password: ";export gtm_passwd=`$gtm_dist/plugin/gtmcrypt/maskpass|cut -f 3 -d " "`
+      $ echo -n "Enter Password: ";export ydb_passwd=`$ydb_dist/plugin/gtmcrypt/maskpass|cut -f 3 -d " "`
       Enter Password: 
       $ 
 
@@ -261,11 +261,11 @@ An obfuscated password in the environment is the only way that other YottaDB pro
 and use it invoke the MUPIP or DSE command. For example: 
 
    .. parsed-literal::
-      $ gtm_passwd="" mumps -run zcmd mupip backup -region \"\*\" 
+      $ ydb_passwd="" mumps -run zcmd mupip backup -region \"\*\" 
 
-The empty string value of $gtm_passwd causes the MUMPS process to prompt for and set an obfuscated password in its environment which it then passes to the MUPIP program. Shell quote processing requires the use of escapes to pass the quotes from the ZSYstem command to the shell.
+The empty string value of $ydb_passwd causes the MUMPS process to prompt for and set an obfuscated password in its environment which it then passes to the MUPIP program. Shell quote processing requires the use of escapes to pass the quotes from the ZSYstem command to the shell.
 
-The environment variable $gtm_passwd should be one of the following:
+The environment variable $ydb_passwd should be one of the following:
 
 * not set
 * set to a null value
@@ -358,7 +358,7 @@ Helen creates a new GPG keyring with a public and private key pair:
 
 .. parsed-literal::
    helen$ export GNUPGHOME=$PWD/.helengnupg
-   helen$ $gtm_dist/plugin/gtmcrypt/gen_keypair.sh helen@yottadb Helen Keymaster
+   helen$ $ydb_dist/plugin/gtmcrypt/gen_keypair.sh helen@yottadb Helen Keymaster
    Passphrase for new keyring:
    Verify passphrase:
    Key ring will be created in /home/helen/.helengnupg
@@ -379,7 +379,7 @@ Phil creates a new GPG keyring with a public and private key pair:
 
 .. parsed-literal::
    phil$ export GNUPGHOME=$PWD/.philgnupg
-   phil$ $gtm_dist/plugin/gtmcrypt/gen_keypair.sh phil@yottadb Phil Keyuser
+   phil$ $ydb_dist/plugin/gtmcrypt/gen_keypair.sh phil@yottadb Phil Keyuser
    Passphrase for new keyring:
    Verify passphrase:
    Key ring will be created in /home/phil/.philgnupg
@@ -401,7 +401,7 @@ Then Helen sends Phil the file helen@yottadb_pubkey.txt and Phil sends Helen the
 Helen imports Phil's public key into her keyring, verifying the fingerprint when she imports it, and signing it to confirm that she has verified the fingerprint: 
 
 .. parsed-literal::
-   helen$ $gtm_dist/plugin/gtmcrypt/import_and_sign_key.sh phil@yottadb_pubkey.txt phil@yottadb
+   helen$ $ydb_dist/plugin/gtmcrypt/import_and_sign_key.sh phil@yottadb_pubkey.txt phil@yottadb
    gpg: key A5719A99: public key "Phil Keyuser <phil@yottadb>" imported
    gpg: Total number processed: 1
    gpg: imported: 1
@@ -419,7 +419,7 @@ Helen imports Phil's public key into her keyring, verifying the fingerprint when
 Phil likewise imports, verifies and sign's Helen's public key: 
 
 .. parsed-literal::
-   phil$ $gtm_dist/plugin/gtmcrypt/import_and_sign_key.sh helen@yottadb_pubkey.txt helen@yottadb
+   phil$ $ydb_dist/plugin/gtmcrypt/import_and_sign_key.sh helen@yottadb_pubkey.txt helen@yottadb
    gpg: key BC4D0739: public key "Helen Keymaster <helen@yottadb>" imported
    gpg: Total number processed: 1
    gpg: imported: 1
@@ -439,13 +439,13 @@ Helen and Phil can now securely exchange information.
 Helen generates a symmetric cipher key for the new database file cust.dat: 
 
 .. parsed-literal::
-   helen$ $gtm_dist/plugin/gtmcrypt/gen_sym_key.sh 2 helen_cust_dat.txt
+   helen$ $ydb_dist/plugin/gtmcrypt/gen_sym_key.sh 2 helen_cust_dat.txt
    helen$ 
 
 Then she encrypts the symmetric cipher key with Phil's public key, signs it, and produces a file phil_cust_dat.txt that she can send Phil: 
 
 .. parsed-literal::
-   helen$ $gtm_dist/plugin/gtmcrypt/encrypt_sign_db_key.sh helen_cust_dat.txt phil_cust_dat.txt phil@yottadb
+   helen$ $ydb_dist/plugin/gtmcrypt/encrypt_sign_db_key.sh helen_cust_dat.txt phil_cust_dat.txt phil@yottadb
    Passphrase for keyring:
    gpg: checking the trustdb
    gpg: 3 marginal(s) needed, 1 complete(s) needed, PGP trust model
@@ -456,18 +456,18 @@ Then she encrypts the symmetric cipher key with Phil's public key, signs it, and
 Phil adds the key in phil_cust_dat.txt to his master key file $HOME/.ydb_dbkeys:
 
 .. parsed-literal::
-   phil$ export ydb_dbkeys=$HOME/.ydb_dbkeysphil$ $gtm_dist/plugin/gtmcrypt/add_db_key.sh $PWD/ydb.dat 
+   phil$ export ydb_dbkeys=$HOME/.ydb_dbkeysphil$ $ydb_dist/plugin/gtmcrypt/add_db_key.sh $PWD/ydb.dat 
    phil_cust_dat.txt $ydb_dbkeys
    phil$ 
 
 Phil creates a global directory, where he changes the configuration parameter for the database file cust.dat specifying that it be encrypted the next time it is created. (Remember that except for mapping from global variable names to database file names, configuration parameters in the global directory are used only when MUPIP creates new database files.) He then creates the database file, runs a DSE dump fileheader to extract the hash (highlighted in the output), and sends it to Helen for verification (notice that MUPIP CREATE generates an error for the mumps.dat file that exists already, but creates a new encrypted cust.dat file): 
 
 .. parsed-literal::
-   phil$ export gtmgbldir=yottadb.gld
-   phil$ export gtm_passwd=""
-   phil$ $gtm_dist/mumps -dir
+   phil$ export ydb_gbldir=yottadb.gld
+   phil$ export ydb_passwd=""
+   phil$ $ydb_dist/mumps -dir
    Enter Passphrase:
-   YDB>zsystem "$gtm_dist/mumps -run GDE"
+   YDB>zsystem "$ydb_dist/mumps -run GDE"
    %GDE-I-LOADGD, Loading Global Directory file
    /var/myApp/databases/ydb.gld
    %GDE-I-VERIFY, Verification OK
@@ -476,7 +476,7 @@ Phil creates a global directory, where he changes the configuration parameter fo
    %GDE-I-VERIFY, Verification OK
    %GDE-I-GDUPDATE, Updating Global Directory file
    /var/myApp/databases/yottadb.gld
-   YDB>zsystem "$gtm_dist/mupip create"
+   YDB>zsystem "$ydb_dist/mupip create"
    Created file /var/myApp/databases/yottadb.dat
    Error opening file /var/myMpp/databases/mumps.dat
    : File exists
@@ -579,7 +579,7 @@ Phil creates a global directory, where he changes the configuration parameter fo
 Phil calls Helen with the hash, texts her phone, or sends her an e-mail. Helen ensures that the hash of the key she generated matches the hash of the database file created by Phil, and communicates her approval to Phil. Phil can now use the database. Either Phil or Helen can provide the key to other users who are authorized to access the database and with whom they have securely exchanged keys.
 
 .. parsed-literal::
-   helen$ $gtm_dist/plugin/gtmcrypt/gen_sym_hash.sh helen_cust_dat.txt
+   helen$ $ydb_dist/plugin/gtmcrypt/gen_sym_hash.sh helen_cust_dat.txt
    Passphrase for keyring:gpg: encrypted with 2048-bit RSA key, ID A2E8A8E8, created 2010-05-07"
    Helen Keymaster <helen@yottadb>"178E55E32DAD6BFF761BF917412EF31904C...
    helen$
@@ -627,7 +627,7 @@ The reference implementation uses:
 * To provide error messages for GPG: libgpg-error.
 * For symmetric encryption: AES256CFB implemented by libgcrypt on all platforms.
 
-When a YottaDB process first opens a shared library providing an encryption plugin, it ensures that the library resides in $gtm_dist/plugin or a subdirectory thereof. This ensures that any library implementing an encryption plugin requires the same permissions to install, and is protected by the same access controls, as the YottaDB installation itself.
+When a YottaDB process first opens a shared library providing an encryption plugin, it ensures that the library resides in $ydb_dist/plugin or a subdirectory thereof. This ensures that any library implementing an encryption plugin requires the same permissions to install, and is protected by the same access controls, as the YottaDB installation itself.
 
 On all platforms on which YottaDB supports encryption, compiling the source reference implementation produces the shared library plugins, libgtmcrypt_gcrypt_AES256CFB.so and libgtmcrypt_openssl_AES256CFB.so. On installation, platforms other than AIX, libgtmcrypt.so is a symbolic link to libgtmcrypt_gcrypt_AES256CFB.so; on AIX symbolic link is to libgtmcrypt_openssl_AESCFB.so.
 
@@ -635,7 +635,7 @@ On all platforms on which YottaDB supports encryption, compiling the source refe
    Encrypted database files are compatible between different endian platforms as long as they use the same key and the same cipher. The sample shell scripts in the reference implementation use the standard shell (/bin/sh). 
 
 .. note::
-   YottaDB V6.3-001 dropped support for the Blowfish encryption plugin. To migrate databases from Blowfish CFB to AES CFB requires that the data be extracted and loaded into newly created database files. To minimize the time your application is unavailable, you can deploy your application in a Logical Multi-Site (LMS) configuration, and migrate using a rolling upgrade technique Refer to the `Chapter 7: “Database Replication” <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html>`_ for more complete documentation.
+   YottaDB dropped support for the Blowfish encryption plugin. To migrate databases from Blowfish CFB to AES CFB requires that the data be extracted and loaded into newly created database files. To minimize the time your application is unavailable, you can deploy your application in a Logical Multi-Site (LMS) configuration, and migrate using a rolling upgrade technique Refer to the `Chapter 7: “Database Replication” <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html>`_ for more complete documentation.
 
 --------------------------------------------
 Special Note - GNU Privacy Guard and Agents
@@ -673,11 +673,11 @@ YottaDB scripts must define GPG_TTY or the (GPG 2.1 and up) pinentry program may
 Set up the encryption keys using the gen_keypair.sh script. This script creates a file gpg-agent.conf in the GnuPG directory (specified by the environment variable $GNUPGHOME) with the following line directing GPG to invoke the reference implementation's custom pinentry program.
 
 .. parsed-literal::
-   pinentry-program <path to $gtm_dist>/plugin/gtmcrypt/pinetry-gtm.sh
+   pinentry-program <path to $ydb_dist>/plugin/gtmcrypt/pinetry-gtm.sh
 
-When pinetry-gtm.sh finds the environment variable $gtm_passwd defined and an executable YottaDB, it runs the pinentry.m program which provides GnuPG with the keyring password from the obfuscated password. Otherwise, it calls /usr/bin/pinentry.
+When pinetry-gtm.sh finds the environment variable $ydb_passwd defined and an executable YottaDB, it runs the pinentry.m program which provides GnuPG with the keyring password from the obfuscated password. Otherwise, it calls /usr/bin/pinentry.
 
-The custom pinentry program uses a YottaDB external call. Each YottaDB application that uses encryption must define the environment variable GTMXC_gpgagent to point to the location of gpgagent.tab. By default, the reference implementation places gpgagent.tab in the $gtm_dist/plugin/ directory. gpgagent.tab is an external call table that pinentry.m uses to create a a YottaDB pinentry function.
+The custom pinentry program uses a YottaDB external call. Each YottaDB application that uses encryption must define the environment variable GTMXC_gpgagent to point to the location of gpgagent.tab. By default, the reference implementation places gpgagent.tab in the $ydb_dist/plugin/ directory. gpgagent.tab is an external call table that pinentry.m uses to create a a YottaDB pinentry function.
 
 Direct the gpg-agent to use it's standard Unix domain socket file, $GNUPGHOME/S.agent, when listening for password requests. Enabling the standard socket simplifies the gpg-agent configuration. Enable the standard socket by adding the following configuration option to $GNUPGHOME/gpg-agent.conf.
 
@@ -693,7 +693,7 @@ When using GPG 2.1.12 and up, enable loopback pinentry mode by adding the follow
    The YottaDB pinentry function should not be used while changing the keyring passphrase, e.g., the passwd subcommand of the gpg --edit-key command. Depending upon the gpg version ("man gpg" to confirm) you can override the agent configuration. Otherwise, you will need to temporarily comment out the pinentry-program line in gpg-agent.conf by placing a "#" in front of the line, e.g.:
 
 .. parsed-literal::
-   #pinentry-program <path to $gtm_dist>/plugin/gtmcrypt/pinetry-gtm.sh
+   #pinentry-program <path to $ydb_dist>/plugin/gtmcrypt/pinetry-gtm.sh
 
 
 ----------------------
@@ -706,7 +706,7 @@ If the encryption libraries are not part of the automatic search path on your sy
 
 You must also implement appropriate key management, including ensuring that users have appropriate values for $gtmcrypt_config.
 
-The structure of the $gtm_dist/plugin directory on Linux x86 after plugin compilation is as follows: 
+The structure of the $ydb_dist/plugin directory on Linux x86 after plugin compilation is as follows: 
 
  .. parsed-literal::
    plugin/
@@ -785,7 +785,7 @@ If you inadvertently upgrade a global directory to the new format and wish to re
 MUPIP
 ~~~~~
 
-Except for the following commands where it does not need encryption keys to operate on encrypted databases, MUPIP needs access to encryption keys to operate on encrypted databases: BACKUP -BYTESTREAM, EXIT, EXTEND, FTOK, HELP, INTRPT, REPLICATE, RUNDOWN, STOP. MUPIP looks for the password for the key ring on disk in the environment variable $gtm_passwd, terminating with an error if it is unable to get a matching key for any database, journal, backup or extract file that contains encrypted data. 
+Except for the following commands where it does not need encryption keys to operate on encrypted databases, MUPIP needs access to encryption keys to operate on encrypted databases: BACKUP -BYTESTREAM, EXIT, EXTEND, FTOK, HELP, INTRPT, REPLICATE, RUNDOWN, STOP. MUPIP looks for the password for the key ring on disk in the environment variable $ydb_passwd, terminating with an error if it is unable to get a matching key for any database, journal, backup or extract file that contains encrypted data. 
 
 .. note::
    MUPIP JOURNAL operations that only operate on the journal file without requiring access to the database - EXTRACT and SHOW - require only the key for the journal file, not the current database file key. MUPIP SET operations that require stand-alone access to the database do not need encryption keys; any command that can operate with concurrent access to the database requires encryption keys. All other MUPIP operations require access to database encryption keys. MUPIP EXTRACT -FORMAT=ZWRITE or -FORMAT=GLO and MUPIP JOURNAL -EXTRACT are intended to produce readable database content, and produce cleartext output even when database and journal files are encrypted. Since a MUPIP EXTRACT -FORMAT=BINARY extract file can contain encrypted data from multiple database files, the extract file contains the hashes for all database files from which extracted data was obtained.
@@ -811,7 +811,7 @@ Since an extract may contain the cryptographic hashes of multiple database files
 DSE
 ~~~
 
-Unless you are acting under the specific instructions of YottaDB support, please provide DSE with access to encryption keys by setting the value of $gtm_passwd in the environment.
+Unless you are acting under the specific instructions of YottaDB support, please provide DSE with access to encryption keys by setting the value of $ydb_passwd in the environment.
 
 DSE operations that operate on the file header (such as CHANGE -FILEHEADER) do not need access to database encryption keys, whereas DSE operations that access data blocks (such as DUMP -BLOCK) usually require access to encryption keys. However, all DSE operations potentially require access to encryption keys because if DSE is the last process to exit a database, it will need to flush dirty global buffers, for which it will need the encryption keys. DSE does not encrypt block dumps. There is a current misfeature, that access to the database key is needed to look at block 0 (a bitmap). In practical usage this is not a severe restriction since typically when a bitmap is examined data records are also examined (which require the key anyway).
 
@@ -880,11 +880,11 @@ This section discusses the architecture of and interface between YottaDB and the
 Packaging
 +++++++++++++++++++
 
-The reference implementation source code by default resides in $gtm_dist/plugin/gtmcrypt/source.tar.
+The reference implementation source code by default resides in $ydb_dist/plugin/gtmcrypt/source.tar.
 
 The reference implementation includes: 
 
-A $gtm_dist/plugin/gtmcrypt/source.tar archive with all source files and scripts. The archive includes a Makefile to build/install the plugins and "helper" scripts, for example, add_db_key.sh. A brief description of these scripts is as follows: 
+A $ydb_dist/plugin/gtmcrypt/source.tar archive with all source files and scripts. The archive includes a Makefile to build/install the plugins and "helper" scripts, for example, add_db_key.sh. A brief description of these scripts is as follows: 
 
 +--------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | show_install_config.sh         | Reports the cryptographic library and cipher that a YottaDB process would use, from $gtm_crypt_plugin, if it has a value and otherwise from the name of the library linked to by libgtmcrypt.so.     |
@@ -907,7 +907,7 @@ A Makefile to build and install each of the encryption plugin libraries. The Mak
 The reference plugins are:
 
 +------------------------------------+------------------------------------------------------------------------------------------------+
-| gpgagent.tab                       | Call-out interface table to let MUMPS programs unobfuscate $gtm_passwd                         |
+| gpgagent.tab                       | Call-out interface table to let MUMPS programs unobfuscate $ydb_passwd                         |
 +------------------------------------+------------------------------------------------------------------------------------------------+
 | libgtmcrypt.so                     | A symlink to the default encryption library                                                    |
 +------------------------------------+------------------------------------------------------------------------------------------------+
@@ -922,7 +922,7 @@ The reference plugins are:
 | libgtmtls.so                       | The reference plugin that leverages OpenSSL for transport encryption features for the MUMPS    |
 |                                    | language                                                                                       |
 +------------------------------------+------------------------------------------------------------------------------------------------+
-| gtmpcrypt/maskpass                 | Program to mask the password stored in $gtm_passwd                                             |
+| gtmpcrypt/maskpass                 | Program to mask the password stored in $ydb_passwd                                             |
 +------------------------------------+------------------------------------------------------------------------------------------------+
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -961,7 +961,7 @@ A YottaDB database consists of multiple database files, each of which has its ow
 
 The core plugin interface functions, all of which return a value of type xc_status_t are:
 
-* gtmcrypt_init() performs initialization. If the environment variable $gtm_passwd exists and has an empty string value, YottaDB calls gtmcrypt_init() before the first M program is loaded; otherwise it calls gtmcrypt_init() when it attempts the first operation on an encrypted database file.
+* gtmcrypt_init() performs initialization. If the environment variable $ydb_passwd exists and has an empty string value, YottaDB calls gtmcrypt_init() before the first M program is loaded; otherwise it calls gtmcrypt_init() when it attempts the first operation on an encrypted database file.
 
 * Generally, gtmcrypt_getkey_by_hash or, for MUPIP CREATE, gtmcrypt_getkey_by_name perform key acquisition, and place the keys where gtmcrypt_decrypt() and gtmcrypt_encrypt() can find them when they are called.
 

@@ -29,13 +29,13 @@ This section provides an overview of the following basic operational issues in D
 Entering Direct Mode
 +++++++++++++++++++++
 
-To enter Direct Mode, type $gtm_dist/mumps -direct at the shell prompt.
+To enter Direct Mode, type $ydb_dist/mumps -direct at the shell prompt.
 
 .. parsed-literal::
-   $ $gtm_dist/mumps -direct
+   $ $ydb_dist/mumps -direct
    YDB>
 
-This shows using $gtm_dist/mumps -direct at the prompt to enter Direct Mode.
+This shows using $ydb_dist/mumps -direct at the prompt to enter Direct Mode.
 
 Another way to enter Direct Mode for an editing or debugging session is by simply typing ydb at the shell prompt.
 
@@ -139,7 +139,7 @@ The Direct Mode line editing keys are as follows:
 * **<CTRL-U>**: Deletes the entire line
 
 .. note::
-   When entering commands at the direct mode prompt, the insert mode can be toggled for that line by using the insert key. When YottaDB starts, insert mode is enabled unless the value of the gtm_principal_editing environment variable includes the string NOINSERT. If insert mode is disabled or enabled for the $PRINCIPAL device by an USE statement before returning to direct mode, it will remain disabled or enabled at direct mode. The insert mode can be toggled within a direct mode line using the terminal's INSERT key.
+   When entering commands at the direct mode prompt, the insert mode can be toggled for that line by using the insert key. When YottaDB starts, insert mode is enabled unless the value of the ydb_principal_editing environment variable includes the string NOINSERT. If insert mode is disabled or enabled for the $PRINCIPAL device by an USE statement before returning to direct mode, it will remain disabled or enabled at direct mode. The insert mode can be toggled within a direct mode line using the terminal's INSERT key.
 
 YottaDB deletes the character under the cursor when you press the key on the keyboard that sends the escape sequence which maps to the kdch1 capability in your current terminfo entry (by convention, the Delete key). If the current terminfo entry is missing the kdch1 capability, YottaDB uses a default value derived from members of the DEC VT terminal family, as it does for selected other missing terminfo capabilities. If you wish the Backspace and Delete keys to behave the same, the simplest way is to configure your terminal emulator to send the same character sequences for the Delete key that it does for the Backspace key. You can alternatively modify your terminfo setting: for example, create an editable version of your terminfo entry in a temporary file with a command such as: infocmp > /tmp/$$_$TERM and edit the temporary file to replace the entry for the kbs capability with the one in the kdch1 capability. Save your changes, and compile the edited file into a usable terminfo entry, for example:
 
@@ -189,7 +189,7 @@ To begin a debugging session on a specific routine, type the following command a
 
 You can also begin a debugging session by pressing <CTRL-C> after running an M application at the shell. To invoke Direct Mode by pressing <CTRL-C>, process must have the Principal Device in the CENABLE state and not have the device set to CTRAP=$C(3).
 
-When YottaDB receives a <CTRL-C> command from the principal device, it invokes Direct Mode at the next opportunity, (usually at a point corresponding to the beginning of the next source line). YottaDB can also interrupt at a FOR loop iteration or during a command of indeterminate duration such as LOCK, OPEN or READ. The YottaDB USE command enables/disables the <CTRL-C> interrupt with the [NO]CENABLE deviceparameter. By default, YottaDB starts <CTRL-C> enabled. The default setting for <CTRL-C> is controlled by $gtm_nocenable which controls whether <CTRL-C> is enabled at process startup. If $gtm_nocenable has a value of 1, "TRUE" or "YES" (case-insensitive), and the process principal device is a terminal, $PRINCIPAL is initialized to a NOCENABLE state where the process does not recognize <CTRL-C> as a signal to enter direct mode. No value, or other values of $gtm_nocenable initialize $PRINCIPAL with the CENABLE state. The [NO]CENABLE deviceparameter on a USE command can still control this characteristic from within the process.
+When YottaDB receives a <CTRL-C> command from the principal device, it invokes Direct Mode at the next opportunity, (usually at a point corresponding to the beginning of the next source line). YottaDB can also interrupt at a FOR loop iteration or during a command of indeterminate duration such as LOCK, OPEN or READ. The YottaDB USE command enables/disables the <CTRL-C> interrupt with the [NO]CENABLE deviceparameter. By default, YottaDB starts <CTRL-C> enabled. The default setting for <CTRL-C> is controlled by $ydb_nocenable which controls whether <CTRL-C> is enabled at process startup. If $ydb_nocenable has a value of 1, "TRUE" or "YES" (case-insensitive), and the process principal device is a terminal, $PRINCIPAL is initialized to a NOCENABLE state where the process does not recognize <CTRL-C> as a signal to enter direct mode. No value, or other values of $ydb_nocenable initialize $PRINCIPAL with the CENABLE state. The [NO]CENABLE deviceparameter on a USE command can still control this characteristic from within the process.
 
 YottaDB displays the YDB> prompt on the principal device. Direct Mode accepts commands from, and reports errors to, the principal device. YottaDB uses the current device for all other I/O. If the current device does not match the principal device when YottaDB enters Direct Mode, YottaDB issues a warning message on the principal device. A USE command changes the current device. For more information on the USE command, see `Chapter 9: “Input/Output Processing” <https://docs.yottadb.com/ProgrammersGuide/ioproc.html>`_.
 
@@ -548,7 +548,7 @@ Example:
    $ZPROCESS=""
    $ZPROMPT="YDB>"
                                         
-   $ZROUTINES=". /usr/library/gtm_dist"
+   $ZROUTINES=". /usr/library/ydb_dist"
                                             
    $ZSOURCE=""
                                               
@@ -710,7 +710,7 @@ Example:
    $ ps
    PID TTY TIME COMMAND
    7946 ttyp0 0:01 sh
-   7953 ttyp0 0:00 gtm
+   7953 ttyp0 0:00 ydb
    7955 ttyp0 0:00 ps
    $ exit
    YDB>

@@ -195,7 +195,7 @@ Use gtm \*t types defined in gtmxc_types.h be used instead of the native types (
 
 Either auto-relink-enable or auto-relink-disable the directory in the $zroutines for the life of the process.
 
-Use the same value of $gtm_linktmpdir for all processes. All processes that share a directory whose contents are subject to ZRUPDATE use the same value for $gtm_linktmpdir so that all processes see update notifications - with different values of $gtm_linktmpdir, a ZRUPDATE by a process with one value of $gtm_linktmpdir would not be observed by a process with a different value of that environment variable.
+Use the same value of $ydb_linktmpdir for all processes. All processes that share a directory whose contents are subject to ZRUPDATE use the same value for $ydb_linktmpdir so that all processes see update notifications - with different values of $ydb_linktmpdir, a ZRUPDATE by a process with one value of $ydb_linktmpdir would not be observed by a process with a different value of that environment variable.
 
 +++++++++++++++++
 Don'ts

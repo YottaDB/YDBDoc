@@ -24,7 +24,7 @@ Collation Sequence Definitions
 Normally, YottaDB orders data with numeric values first, followed by strings sequenced by ASCII values. To use an alternative collating sequence the following items must be provided at YottaDB process intialization.
 
 * A shared library containing the routines for each alternative collation sequence
-* An environment variable of the form gtm_collate_n, specifying the shared library containing the routines for alternative collation sequence n.
+* An environment variable of the form ydb_collate_n, specifying the shared library containing the routines for alternative collation sequence n.
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Creating the Shared Library Holding the Alternative Sequencing Routines
@@ -47,11 +47,11 @@ Note that database key sizes are much more restricted by YottaDB than local key 
 Defining the Environment Variable
 +++++++++++++++++++++++++++++++++++
 
-YottaDB locates the alternative collation sequences through the environment variable gtm_collate_n where n is an integer from 1 to 255 that identifies the collation sequence, and pathname identifies the shared library containing the routines for that collation sequence, for example:
+YottaDB locates the alternative collation sequences through the environment variable ydb_collate_n where n is an integer from 1 to 255 that identifies the collation sequence, and pathname identifies the shared library containing the routines for that collation sequence, for example:
 
 .. parsed-literal::
-   $ gtm_collate_1=/opt/yottadb/collation
-   $ export gtm_collate_1
+   $ ydb_collate_1=/opt/yottadb/collation
+   $ export ydb_collate_1
 
 Multiple alternative collation sequence definitions can co-exist.
 
@@ -84,13 +84,13 @@ Establishing A Local Collation Sequence
 
 All subscripted local variables for a process must use the same collation sequence. The collation sequence used by local variables can be established as a default or in the current process. The local collation sequence can only be changed when a process has no subscripted local variables defined.
 
-To establish a default local collation sequence provide a numeric value to the environment variable gtm_local_collate to select one of the collation tables, for example:
+To establish a default local collation sequence provide a numeric value to the environment variable ydb_local_collate to select one of the collation tables, for example:
 
 .. parsed-literal::
-   $ gtm_local_collate=n
-   $ export gtm_local_collate
+   $ ydb_local_collate=n
+   $ export ydb_local_collate
 
-where n is the number of a collation sequence that matches a valid collation number defined by an environment variable in the form gtm_collate_n.
+where n is the number of a collation sequence that matches a valid collation number defined by an environment variable in the form ydb_collate_n.
 
 An active process can use the %LCLCOL utility to define the collation sequence for subscripts of local variables. %LCLCOL has these extrinsic entry points:
 
@@ -123,7 +123,7 @@ Example:
 
 This example uses $$get^%LCLCOL as an extrinsic that returns 0, indicating that the effective local collation sequence is the standard M collation sequence.
 
-If set^%LCLCOL is not specified and gtm_local_collate is not defined, or is invalid, the process uses M standard collation. The following would be considered invalid values:
+If set^%LCLCOL is not specified and ydb_local_collate is not defined, or is invalid, the process uses M standard collation. The following would be considered invalid values:
 
 * A value less than 0
 * A value greater than 255
@@ -615,17 +615,17 @@ Add code for the version identifier routine (gtm_ac_version) or the verification
 Save and compile polish.c. On x86 GNU/Linux (64-bit Ubuntu 10.10), execute a command like the following:
 
 .. parsed-literal::
-   gcc -c polish.c -I$gtm_dist
+   gcc -c polish.c -I$ydb_dist
 
 .. note::
-   The -I$gtm_dist option includes gtmxc_types.h.
+   The -I$ydb_dist option includes gtmxc_types.h.
 
 Create a new shared library or add the above routines to an existing one. The following command adds these alternative sequence routines to a shared library called altcoll.so on x86 GNU/Linux (64-bit Ubuntu 10.10).
 
 .. parsed-literal::
    gcc -o altcoll.so -shared polish.o
 
-Set $gtm_collate_1 to point to the location of altcoll.so.
+Set $ydb_collate_1 to point to the location of altcoll.so.
 
 At the YDB> prompt execute the following command:
 
@@ -668,17 +668,17 @@ Download col_reverse_32.c from `Github <https://github.com/YottaDB/YottaDBdoc/tr
 Save and compile col_reverse_32.c. On x86 GNU/Linux (64-bit Ubuntu 10.10), execute a command like the following:
 
 .. parsed-literal::
-   gcc -c col_reverse_32.c -I$gtm_dist
+   gcc -c col_reverse_32.c -I$ydb_dist
 
 .. note::
-   The -I$gtm_dist option includes gtmxc_types.h.
+   The -I$ydb_dist option includes gtmxc_types.h.
 
 Create a new shared library or add the routines to an existing one. The following command adds these alternative sequence routines to a shared library called altcoll.so on x86 GNU/Linux (64-bit Ubuntu 10.10).
 
 .. parsed-literal::
    gcc -o revcol.so -shared col_reverse_32.o
 
-Set the environment variable gtm_collate_2 to point to the location of revcol.so. To set the local variable collation to this alternative collation sequence, set the environment variable gtm_local_collate to 2.
+Set the environment variable ydb_collate_2 to point to the location of revcol.so. To set the local variable collation to this alternative collation sequence, set the environment variable ydb_local_collate to 2.
 
 At the prompt, execute the following command:
 
@@ -773,16 +773,16 @@ Pattern Code Selection
 To establish a default patcode table for a database define the environment variable:
 
 .. parsed-literal::
-   $ gtm_pattern_file=pathname
-   $ export gtm_pattern_file
+   $ ydb_pattern_file=pathname
+   $ export ydb_pattern_file
 
 where filename is the text file containing the patcode table definition, and 
 
 .. parsed-literal::
-   $ gtm_pattern_table=tablename
-   $ export gtm_pattern_table
+   $ ydb_pattern_table=tablename
+   $ export ydb_pattern_table
 
-where tablename is the name of the patcode table within the file pointed to by gtm_pattern_file. 
+where tablename is the name of the patcode table within the file pointed to by ydb_pattern_file. 
 
 .. note::
    YottaDB performs operations on literals at compile time and the pattern codes settings may have an impact on such operations. Therefore, it is safest to either always compile with the same pattern code settings as those used at runtime. If changes to pattern codes are required at run time, "hide" any patterns used on literal expressions from the compiler (which are uncommon) using XECUTE commands or indirection.

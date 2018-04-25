@@ -155,7 +155,7 @@ To establish the null collation method for a specified database, GDE supports a 
 
 For M local variables, the null collation can be established either at startup or during run time. Since the same local collation method is established for all locals in a process, changing the null collation within the process is allowed only if there are no local variables defined at that time. At process startup, YottaDB uses the following:
 
-* The M standard null collation if an environment variable gtm_lct_stdnull is defined to either TRUE or YES (or a case-insensitive leading substring thereof) or a non-zero integer.
+* The M standard null collation if an environment variable ydb_lct_stdnull is defined to either TRUE or YES (or a case-insensitive leading substring thereof) or a non-zero integer.
 * The YottaDB standard null collation if the environment variable or the logical name is not defined or defined to any other value.
 
 To establish a default collation version for local variables within the process, the percent utility %LCLCOL supports establishing the null collation method as well. set^%LCLCOL(col,ncol) accepts an optional parameter ncol that determines the null collation type to be used with the collation type col.
@@ -512,8 +512,8 @@ Where expratom1 identifies the Global Directory and expratom2 is a dummy variabl
 Example:
 
 .. parsed-literal::
-   $ gtmgbldir=Test.GLD
-   $ export gtmgbldir
+   $ ydb_gbldir=Test.GLD
+   $ export ydb_gbldir
    $ YDB
      
    YDB>WRITE $ZGBLDIR
@@ -526,7 +526,7 @@ Example:
    TEST.GLD
    YDB>HALT
   
-   $ echo gtmgbldir
+   $ echo ydb_gbldir
    TEST.GLD
 
 The statement WRITE ^|"M1.GLD"\|A writes variable ^A using the Global Directory, M1.GLD, but does not change the current Global Directory.
@@ -573,7 +573,7 @@ For users who wish to dynamically (at run-time) determine a global directory fro
 
 Using this facility impacts the performance of every global access that uses environment specification. Make sure you use it only when static determination of the global directory is not feasible. When used, make every effort to keep the translation routines very efficient.
 
-The use of this facility is enabled by the definition of the environment variable gtm_env_translate, which contains the path of a shared library with the following entry point:
+The use of this facility is enabled by the definition of the environment variable ydb_env_translate, which contains the path of a shared library with the following entry point:
 
 **gtm_env_xlate**
 
@@ -619,7 +619,7 @@ The routine may have to deal with a case where one or both of the inputs have ze
 Example:
 
 .. parsed-literal::
-   $ cat gtm_env_translate.c
+   $ cat ydb_env_translate.c
    #include <stdio.h>
    #include <string.h>
    #include "gtmxc_types.h"
@@ -1762,7 +1762,7 @@ Accidental collisions result when two processes access unrelated data that happe
 
 Application design that keeps transactions open for long periods of time can cause pathological rates of accidental collision. When a process tries to run an entire report in a transaction, instead of the transaction taking a fraction of a second (remember that transactions are intended to be atomic), the report takes seconds or even minutes and effectively ensures collisions and restarts. Furthermore, since the probability of collisions is high, the probability of these long-running transactions executing the fourth retry (with other processes shut out) goes up, and when that happens, the system appears to respond erratically, or hang temporarily.
 
-Non-isolated actions are another consideration in the design of wholesome transactions. Because M permits all language features with a transaction, an application may use actions that interact with actors outside of the transaction. Such actions violate the ACID principal of Isolation, which states that to be wholesome, a transaction must not interact with other agents or processes until it commits (see below for a more detailed discussion). While there may be reasons drawn from the larger application model that justify violations of Isolation, doing so carries risks. One problem is time: external interactions typically have a longer duration, and in the worst case, may have an indefinite duration. The JOB, LOCK, OPEN, and READ commands have an optional timeout to place time limits on external interactions. In addition, BREAK, WRITE, ZSYSTEM and external calls also involve external interaction. Except for WRITE and external calls, in order to minimize the potential impact of non-ACID transactions, YottaDB limits the duration of database locks for transactions that use these non-isolated commands, and records that limitation as a TPNOTACID message in the operator log. However, that time limit, managed with the gtm_tpnotacidtime environment variable, can be long enough, depending on its value, to permit noticeable processing disruptions. Further, processes denied a long lock may have trouble completing and consume system resources with repeated unsuccessful attempts. External calls are excluded from this protection because they are the domain of more sophisticated design and may actually remain isolated (see the tip below on Implementing Web Services). WRITE is currently excluded because most WRITE commands are non-blocking, but applications should avoid blocking WRITEs within a transaction. Beyond the issue of duration, because the application can repeat due to a restart or rollback because of an error or application logic, non-isolated actions require management to appropriately manage their external interactions; this is discussed in more detail below. In summary, put external interactions before or after transactions rather than within them. If the application requires a non-isolated action within a transaction, be aware of the risks, design, implement and test very carefully.
+Non-isolated actions are another consideration in the design of wholesome transactions. Because M permits all language features with a transaction, an application may use actions that interact with actors outside of the transaction. Such actions violate the ACID principal of Isolation, which states that to be wholesome, a transaction must not interact with other agents or processes until it commits (see below for a more detailed discussion). While there may be reasons drawn from the larger application model that justify violations of Isolation, doing so carries risks. One problem is time: external interactions typically have a longer duration, and in the worst case, may have an indefinite duration. The JOB, LOCK, OPEN, and READ commands have an optional timeout to place time limits on external interactions. In addition, BREAK, WRITE, ZSYSTEM and external calls also involve external interaction. Except for WRITE and external calls, in order to minimize the potential impact of non-ACID transactions, YottaDB limits the duration of database locks for transactions that use these non-isolated commands, and records that limitation as a TPNOTACID message in the operator log. However, that time limit, managed with the ydb_tpnotacidtime environment variable, can be long enough, depending on its value, to permit noticeable processing disruptions. Further, processes denied a long lock may have trouble completing and consume system resources with repeated unsuccessful attempts. External calls are excluded from this protection because they are the domain of more sophisticated design and may actually remain isolated (see the tip below on Implementing Web Services). WRITE is currently excluded because most WRITE commands are non-blocking, but applications should avoid blocking WRITEs within a transaction. Beyond the issue of duration, because the application can repeat due to a restart or rollback because of an error or application logic, non-isolated actions require management to appropriately manage their external interactions; this is discussed in more detail below. In summary, put external interactions before or after transactions rather than within them. If the application requires a non-isolated action within a transaction, be aware of the risks, design, implement and test very carefully.
 
 YottaDB provides a transaction timeout feature that interrupts long-running transactions in order to limit their impact on the system, and the consequent user perception of system erratic response times and temporary hangs. Calls to an external library, say to access a web service, can subvert the timeout mechanism when the external library uses an uninterruptable system call. If such a web service uses an adjacent server that responds immediately, the web service is wholesome. But if the web service accesses a remote server without a guaranteed short response time, then collisions may be frequent, and if a process in the fourth retry waits for a web service that never responds, it brings the entire application to a standstill.
 
@@ -1821,7 +1821,7 @@ Example:
 
 This transaction will automatically restart if it cannot serialize the SETs to the database, and will terminate with a TROLLBACK if more than 3 RESTARTs occur.
 
-YottaDB provides a way to monitor transaction restarts by reporting them to the operator logging facility. If the environment variable gtm_tprestart_log_delta is defined, YottaDB reports every Nth restart where N is the numeric evaluation of the value of gtm_tprestart_log_delta. If the environment variable gtm_tprestart_log_first is defined, the restart reporting begins after the number of restarts specified by the value of gtm_tprestart_log_first. For example, defining both the environment variable to the value 1, causes all TP restarts to be logged. When gtm_tprestart_log_delta is defined, leaving gtm_tprestart_log_first undefined is equivalent to giving it the value 1.
+YottaDB provides a way to monitor transaction restarts by reporting them to the operator logging facility. If the environment variable ydb_tprestart_log_delta is defined, YottaDB reports every Nth restart where N is the numeric evaluation of the value of ydb_tprestart_log_delta. If the environment variable ydb_tprestart_log_first is defined, the restart reporting begins after the number of restarts specified by the value of ydb_tprestart_log_first. For example, defining both the environment variable to the value 1, causes all TP restarts to be logged. When ydb_tprestart_log_delta is defined, leaving ydb_tprestart_log_first undefined is equivalent to giving it the value 1.
 
 Here is an example message:
 
@@ -1843,7 +1843,7 @@ Here is an example message:
 * local_tn - This is a never-decreasing counter (starting at 1 at process startup) incremented for every new TP transaction, TP restart, and TP rollback. Two TPRESTART messages by the same process should never have the same value of local_tn. The difference between the local_tn values of two messages from the same process indicates the number of TP transactions done by that process in the time interval between the two messages.
 
 .. note::
-   Use VIEW [NO]LOGT[PRESTART][=intexpr] to enable or disable the logging of TPRESTART messages. Note that you can use the gtm_tprestart_log_delta and gtm_tprestart_log_first environment variables to set the frequency of TPRESTART messages. Use VIEW [NO]LOGN[ONTP][=intexpr] to enable or disable the logging of NONTPRESTART messages. This facility is the analog of TPRESTART tracking, but for non-TP mini-transacstions. Note that you can use the gtm_nontprestart_log_delta and gtm_nontprestart_log_first environment variables to set the frequency of the NONTPRESTART messages.For more information, refer to `“Key Words in VIEW Command” <https://docs.yottadb.com/ProgrammersGuide/commands.html#key-words-in-view-command>`_ and the `Environment Variables <https://docs.yottadb.com/AdminOpsGuide/basicops.html#environment-variables>`_ section of the Administration and Operations Guide.
+   Use VIEW [NO]LOGT[PRESTART][=intexpr] to enable or disable the logging of TPRESTART messages. Note that you can use the ydb_tprestart_log_delta and ydb_tprestart_log_first environment variables to set the frequency of TPRESTART messages. Use VIEW [NO]LOGN[ONTP][=intexpr] to enable or disable the logging of NONTPRESTART messages. This facility is the analog of TPRESTART tracking, but for non-TP mini-transacstions. Note that you can use the ydb_nontprestart_log_delta and ydb_nontprestart_log_first environment variables to set the frequency of the NONTPRESTART messages.For more information, refer to `“Key Words in VIEW Command” <https://docs.yottadb.com/ProgrammersGuide/commands.html#key-words-in-view-command>`_ and the `Environment Variables <https://docs.yottadb.com/AdminOpsGuide/basicops.html#environment-variables>`_ section of the Administration and Operations Guide.
 
 ++++++++++++++++++++++
 TP Example

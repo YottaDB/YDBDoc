@@ -1188,7 +1188,7 @@ Examples of $STACK()
 Example:
 
 .. parsed-literal::
-   /usr/lib/fis-gtm/V5.4-002B_x86/gtm -run ^dstackex
+   /usr/local/lib/yottadb/r120/ydb -run ^dstackex
    dstackex;
      zprint ^dstackex
      write !,$STACK
@@ -1414,7 +1414,7 @@ $VIEW() provides a means to access YottaDB environmental information. When Yotta
 | "FREEZE"      | region           | Process-id of a process that has frozen the database associated with the region specified (using DSE or MUPIP). If the region is currently not frozen, returns zero.|
 +---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | "FULL_BOOLEAN"| none             | Returns a string describing the current compiler setting. The default is "YottaDB Boolean short-circuit". $VIEW("FULL_BOOLEAN") reports "Standard Boolean           |
-|               |                  | evaluation side effects" when it is not explicitly set, but that mode of operation is required by the setting of gtm_side_effects, and "Standard Boolean side-effect|
+|               |                  | evaluation side effects" when it is not explicitly set, but that mode of operation is required by the setting of ydb_side_effects, and "Standard Boolean side-effect|
 |               |                  | warning" when warnings have been specified.                                                                                                                         |
 +---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | "GDSCERT"     | none             | Truth Value indicating whether Database block certification is currently enabled or disabled. To enable or disable Database block certification, use the VIEW       |
@@ -1517,7 +1517,7 @@ $VIEW() provides a means to access YottaDB environmental information. When Yotta
 +---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | "UNDEF"       | none             | Truth value showing whether undefined variables should be treated as having a null value (1 for "UNDEF"; 0 for "NOUNDEF"); YottaDB defaults to 0.                   |
 +---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| "ZDATE_FORM"  | none             | Integer value showing whether four digit year code is active for $ZDATE(); YottaDB defaults to 0 (for "YY" format). Use the environment variable gtm_zdate_form     |
+| "ZDATE_FORM"  | none             | Integer value showing whether four digit year code is active for $ZDATE(); YottaDB defaults to 0 (for "YY" format). Use the environment variable ydb_zdate_form     |
 |               |                  | to set the initial value of this factor. For usage examples, refer to “$ZDate()”.                                                                                   |
 +---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
@@ -1621,7 +1621,7 @@ Example:
 Since YottaDB does not provide a way for a function to return an array or alias variable as its result, the uniqueness of $ZAHandle() can be exploited to effect this capability, by placing the result in a local variable with an agreed prefix (e.g., "%") and its $ZAHANDLE() as a suffix. The handle can be returned as the value.
 
 .. parsed-literal::
-   $ /usr/lib/fis-gtm/V5.4-002B_x86/gtm -run retval
+   $ /usr/local/lib/yottadb/r120/ydb -run retval
    retval        ; Return an array / object from a function
       ;;Data for the object array
       ;;Albert Einstein,14-March-1879
@@ -2750,7 +2750,7 @@ Example:
 
 .. parsed-literal::
    $ cd /usr/work/me
-   $ $gtm
+   $ ydb
    YDB>write $zparse("test","","x.list","y.c")/usr/work/me/test.lis
    YDB>write $zparse("test","","/usr/work/","/dev/y.c")/usr/work/test.c
    YDB>write $zparse("test","","/usr/work","/dev/y.c")/usr/test.c
@@ -2766,7 +2766,7 @@ Example:
 
 .. parsed-literal::
    $ cd /usr/work/me
-   $ /usr/lib/fis-gtm/V5.4-002B_x86/gtm
+   $ /usr/local/lib/yottadb/r120/ydb
    YDB>For i="DIRECTORY","NAME","TYPE","" Write $ZPARSE("test.m",i),!
    /usr/work/me/
    test
@@ -3347,11 +3347,11 @@ Examples of $ZTRNLNM()
 Example:
 
 .. parsed-literal::
-   YDB>write $ztrnlnm("gtm_dist")
-   /usr/local/lib/yottadb/r1.10
+   YDB>write $ztrnlnm("ydb_dist")
+   /usr/local/lib/yottadb/r120
    YDB>
 
-This uses $ZTRNLNM() to display the translation value for gtm_dist.
+This uses $ZTRNLNM() to display the translation value for ydb_dist.
 
 -----------------------
 $ZWidth()
