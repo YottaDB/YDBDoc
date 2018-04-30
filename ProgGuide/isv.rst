@@ -245,8 +245,8 @@ $SYSTEM
 ----------------
 
 $SY[STEM] contains a string that identifies the executing M instance. The value of $SYSTEM is a string that starts with a unique numeric code that identifies the manufacturer. Codes are assigned by the MDC (MUMPS Development Committee).
-
-$SYSTEM in YottaDB starts with "47" followed by a comma and the evaluation of the environment variable ydb_sysid. If the name has no evaluation, the value after the comma is ydb_sysid.
+       
+$SYSTEM in YottaDB starts with "47" followed by a comma and the evaluation of the environment variable ydb_sysid or gtm_sysid. If neither of the names have any evaluation (i.e. both are undefined), the value after the comma is gtm_sysid.
 
 ---------------
 $TEST
