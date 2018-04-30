@@ -5512,9 +5512,9 @@ Action: Consult the ICU documentation and / or refresh the ICU library with a kn
 ICUSYMNOTFOUND 
 --------------------
 
-ICUSYMNOTFOUND, Symbol xxxxx not found in ICU libraries. ICU needs to be built with symbol-renaming disabled or ydb_icu_version environment variable needs to be specified
+ICUSYMNOTFOUND, Symbol xxxxx not found in ICU libraries. ICU needs to be built with symbol-renaming disabled or xxxxx environment variable needs to be specified
 
-Run Time Error: ICU version installed on the machine is built with symbol renaming and ydb_icu_version has not been defined
+Run Time Error: ICU version installed on the machine is built with symbol renaming and neither ydb_icu_version nor gtm_icu_version has been defined.
 
 Action: Build ICU without symbol renaming or set ydb_icu_version environment variable to point to an appropriate ICU version.
 
@@ -5522,7 +5522,7 @@ Action: Build ICU without symbol renaming or set ydb_icu_version environment var
 ICUVERLT36 
 -------------------
 
-ICUVERLT36, Type 1 - $ydb_icu_version is aaa.bbb. ICU version greater than or equal to 3.6 should be used. Type 2 - libicuio has version aaa.bbb. ICU version greater than or equal to 3.6 should be used.
+ICUVERLT36, Type 1 - $ydb_icu_version/$gtm_icu_version is aaa.bbb. ICU version greater than or equal to 3.6 should be used. Type 2 - libicuio has version aaa.bbb. ICU version greater than or equal to 3.6 should be used.
 
 Run Time Error: This message indicates an attempt to use an ICU version less than 3.6 with YottaDB or utilities like MUPIP or DSE.
 
