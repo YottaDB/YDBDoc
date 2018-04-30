@@ -925,7 +925,7 @@ CIENTNAME
 
 CIENTNAME, No label reference found for this entry in call-in table
 
-Syntax/Call in Error: This indicates that a label reference to the M routine is missing or syntactically invalid for an entry in the call-in table (specified by GTMCI environment variable)
+Syntax/Call in Error: This indicates that a label reference to the M routine is missing or syntactically invalid for an entry in the call-in table (specified by ydb_ci environment variable)
 
 Action: Correct the syntax errors in the call-in table entry, at the location pointed to by the two previous messages (EXTSRCLIN and EXTSRCLOC), displaying the line and the column number respectively.
 
@@ -949,7 +949,7 @@ CIMAXPARAM
 
 CIMAXPARAM, Exceeded maximum number of parameters in the call-in table entry. An M routine cannot accept more than 32 parameters.
 
-Call in/Run Time Error: This indicates that the call-in table specified by $GTMCI contains more than 32 parameters. Since an M formallist can only accept up-to 32 parameters, user cannot pass more than 32 arguments to gtm_ci(), excluding <c-call-name> and <ret-type>.
+Call in/Run Time Error: This indicates that the call-in table specified by $ydb_ci contains more than 32 parameters. Since an M formallist can only accept up-to 32 parameters, user cannot pass more than 32 arguments to gtm_ci(), excluding <c-call-name> and <ret-type>.
 
 Action: Reduce the number of parameters to be less than 32, in the call-in table as well in the M routine.
 
@@ -959,7 +959,7 @@ CINOENTRY
 
 CINOENTRY, No entry specified for xxxx in the call-in table
 
-Run Time Error: This indicates that the call-name invoked by the C program does not have a corresponding entry in the call-in table specified by GTMCI environment variable.
+Run Time Error: This indicates that the call-name invoked by the C program does not have a corresponding entry in the call-in table specified by ydb_ci environment variable.
 
 Action: Add an entry to the call-in table for the call-name. Refer to the `External Calls chapter in the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/langfeat.html#external-calls>`_.
 
@@ -1014,9 +1014,9 @@ CITABENV
 
 CITABENV, Environment variable for call-in table xxxx not set
 
-Call in/Run Time Error: This indicates that the environment variable GTMCI is not defined when an external C routine is about to call an M routine through the YottaDB call-in mechanism.
+Call in/Run Time Error: This indicates that the environment variable ydb_ci is not defined when an external C routine is about to call an M routine through the YottaDB call-in mechanism.
 
-Action: Check if GTMCI is defined to a valid file path to a call-in table. The call-in table file should contain a list of entries, each entry describing the parameter types, their passing convention of each M routine and its binding to a C routine.
+Action: Check if ydb_ci is defined to a valid file path to a call-in table. The call-in table file should contain a list of entries, each entry describing the parameter types, their passing convention of each M routine and its binding to a C routine.
 
 
 ------------
@@ -1025,9 +1025,9 @@ CITABOPN
 
 CITABOPN, Unable to open call-in table: xxxx
 
-Call in/Run Time Error: This indicates that the call-in table defined by the environment variable GTMCI could not be opened.
+Call in/Run Time Error: This indicates that the call-in table defined by the environment variable ydb_ci could not be opened.
 
-Action: Check if the file path specified by GTMCI is correct and has at least read permissions for the user running YottaDB. Check for secondary message(s) accompanying this error.
+Action: Check if the file path specified by ydb_ci is correct and has at least read permissions for the user running YottaDB. Check for secondary message(s) accompanying this error.
 
 
 -----------
@@ -15503,9 +15503,9 @@ ZCCTENV
 
 ZCCTENV, Environmental variable for external package xxxx not set
 
-Compile Time Error: This indicates that the program made an external call, but could not find the external call table as specified in the UNIX environmental variable GTMXC.
+Compile Time Error: This indicates that the program made an external call, but could not find the external call table as specified in the UNIX environmental variable ydb_xc.
 
-Action: If this calls the default external call table, locate the external call table and specify the correct path in the UNIX environmental variable GTMXC. Otherwise, you can point to the package table in the environmental variable or specify the package name in the program GTMXC_[PACKAGE_NAME].
+Action: If this calls the default external call table, locate the external call table and specify the correct path in the UNIX environmental variable ydb_xc. Otherwise, you can point to the package table in the environmental variable or specify the package name in the program ydb_xc_[PACKAGE_NAME].
 
 ------------------
 ZCCTNULLF 

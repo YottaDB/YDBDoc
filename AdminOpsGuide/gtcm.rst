@@ -49,10 +49,10 @@ GT.CM Client
 
 The GT.CM client sends messages containing the operation type (SET, KILL, $ORDER, etc), and operation specific data (eg. gvn to be SET, or KILLed) to the GT.CM server through a communication channel over a network. The client generally waits for response from the server and initiates error processing based on the status contained in the response. The format of the messages exchanged between the server and client is as defined by the YottaDB/FIS-developed GNP protocol.
 
-The Global Directory of the client specifies a GT.CM database segment by prefixing its file with an alphanumeric <node-name>, followed by a colon (":"). Client processes using this database must have an environment variable of the form "GTCM_<node-name>" to locate the server. This environment variable may contain either a port number alone, or a host name or address and a port number in the form "<host-name-or-address>:<port-number>" or the form "[<host-name-or-address>]:<port-number>", where the square-brackets ([])are part of the text. If the port number is specified alone, GT.CM uses the <node-name> as the host name; otherwise, it uses the <node-name> solely as an identifier to match the segment in the Global Directory, and it obtains the host name or address from the contents of the environment variable. If a host name is specified, and the server host has multiple addresses, GT.CM uses the system default.
+The Global Directory of the client specifies a GT.CM database segment by prefixing its file with an alphanumeric <node-name>, followed by a colon (":"). Client processes using this database must have an environment variable of the form "ydb_cm_<node-name>" to locate the server. This environment variable may contain either a port number alone, or a host name or address and a port number in the form "<host-name-or-address>:<port-number>" or the form "[<host-name-or-address>]:<port-number>", where the square-brackets ([])are part of the text. If the port number is specified alone, GT.CM uses the <node-name> as the host name; otherwise, it uses the <node-name> solely as an identifier to match the segment in the Global Directory, and it obtains the host name or address from the contents of the environment variable. If a host name is specified, and the server host has multiple addresses, GT.CM uses the system default.
 
 .. note::
-   Because the <node-name> is strictly alphanumeric, it cannot represent an IP address or qualified host name due to the need for a dot (".") separator. If you need to specify an IP address or qualified host name, select an alphanumeric <node-name> and specify the <host-name-or-address> in the GTCM_<node-name> variable. Use the "[<host-name-or-address>]:<port-number>" form to specify an IPv6 address.
+   Because the <node-name> is strictly alphanumeric, it cannot represent an IP address or qualified host name due to the need for a dot (".") separator. If you need to specify an IP address or qualified host name, select an alphanumeric <node-name> and specify the <host-name-or-address> in the ydb_cm_<node-name> variable. Use the "[<host-name-or-address>]:<port-number>" form to specify an IPv6 address.
 
 ++++++++++++++++++++++++++++++++++
 GT.CM Server Startup and Shutdown
@@ -67,16 +67,16 @@ A GT.CM server must be operating on every node of a network from which data is r
 * By explicitly starting the GT.CM server to listen to a specified port number, or by defaulting the port number.
 * Invoking the GT.CM server to listen at a standard port number assigned to the GNP protocol (e.g., in /etc/services file).
 
-The GT.CM server executable (gtcm_gnp_server) should be placed in the directory referenced by the environment variable $gtm_dist.
+The GT.CM server executable (gtcm_gnp_server) should be placed in the directory referenced by the environment variable $ydb_dist.
 
 A process starting the GT.CM server must have the environment variables required to run YottaDB.
 
 Here is an example on how to start a GT.CM server:
 
 .. parsed-literal::
-   $gtm_dist/gtcm_gnp_server -log=GTCM.log -service=6789
+   $ydb_dist/gtcm_gnp_server -log=GTCM.log -service=6789
 
-This starts the GT.CM server in the background so that it listens at port 6789 for requests from GT.CM clients. The detailed log information of the server is written in the GTCM.log file. If -log is not specified, log information is written in $gtm_log/gtcm_gnp_server.log file. On nodes with multiple IP addresses issue the following command to configure the GT.CM server to listen at a port specific to an IP address:
+This starts the GT.CM server in the background so that it listens at port 6789 for requests from GT.CM clients. The detailed log information of the server is written in the GTCM.log file. If -log is not specified, log information is written in $ydb_log/gtcm_gnp_server.log file. On nodes with multiple IP addresses issue the following command to configure the GT.CM server to listen at a port specific to an IP address:
 
 .. parsed-literal::
    -service=192.160.105.212:6789
@@ -86,7 +86,7 @@ This starts the GT.CM server in the background so that it listens at port 6789 f
 To shutdown the GT.CM server, identify the process id of the GT.CM server to be shutdown and issue the following command:
 
 .. parsed-literal::
-   $gtm_dist/mupip stop <GT.CM server PID>
+   $ydb_dist/mupip stop <GT.CM server PID>
 
 This causes the GT.CM server to shutdown normally.
 
@@ -189,7 +189,7 @@ Note that the global directory created on the remote node in this example is onl
 On NODE1, invoke YottaDB and perform the following operations:
 
 .. parsed-literal::
-   $setenv GTCM_NODE2 6789
+   $setenv ydb_cm_NODE2 6789
    $ydb
    YDB> s ^x=1
    YDB> k ^x

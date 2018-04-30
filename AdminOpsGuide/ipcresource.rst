@@ -48,7 +48,7 @@ Create two databases - America and Brazil - on two different servers ( Server_A 
 In Server_A and in the directory holding database files for America, give the following commands (note that because the default journal pool size is 64MB, a value of 1048576 bytes - YottaDB's minimum size of 1MB for this exercise):
 
 .. parsed-literal::
-   $ export gtm_repl_instance=multisite.repl 
+   $ export ydb_repl_instance=multisite.repl 
    $ mupip replicate -instance_create -name=America 
    $ mupip set -replication=on -region "*" 
    $ mupip replicate -source -start -buf=1048576 -secondary=Server_B:1234 -log=A2B.log -instsecondary=Brazil
@@ -56,7 +56,7 @@ In Server_A and in the directory holding database files for America, give the fo
 Now execute the following command:
 
 .. parsed-literal::
-   $ gtm_dist/ftok mumps.dat multisite.repl
+   $ ydb_dist/ftok mumps.dat multisite.repl
 
 This command produces the "public" (system generated) IPC Keys (essentially hash values) for mumps.dat and its replication instance multisite.repl. It produces a sample output like the following:
 
@@ -150,7 +150,7 @@ Therefore, assuming that instance America has 1 region, the total IPC utilized b
 Now connect to Server_B and give the following commands in the directory holding database files for Brazil:
 
 .. parsed-literal::
-   $ export gtm_repl_instance=multisite1.repl 
+   $ export ydb_repl_instance=multisite1.repl 
    $ mupip replicate -instance_create -name=Brazil $ mupip rundown -region "*"
    $ mupip set -journal="enable,before,on" -replication=on -region "*"
    $ mupip replicate -source -start -passive -buf=1048576 -log=B2dummy.log -inst=dummy 
@@ -159,7 +159,7 @@ Now connect to Server_B and give the following commands in the directory holding
 Now execute the command:
 
 .. parsed-literal::
-   $gtm_dist/ftok mumps.dat multisite1.repl
+   $ydb_dist/ftok mumps.dat multisite1.repl
 
 This command produces the "public" (system generated) IPC Key of mumps.dat and its replication instance multisite1.repl. It produces a sample output like the following:
 
@@ -222,11 +222,11 @@ Brazil has 1 region and its receiver server is listening to America, therefore a
 gtmsecshr
 ---------------
 
-The YottaDB installation script installs gtmsecshr as owned by root and with the setuid bit on. gtmsecshr is a helper program that enables YottaDB to manage interprocess communication and clean up interprocess resources. It resides in the $gtm_dist/gtmsecshrdir subdirectory which is readable and executable only by root. gtmsecshr is guarded by a wrapper program. The wrapper program protects gtmsecshr in the following ways:
+The YottaDB installation script installs gtmsecshr as owned by root and with the setuid bit on. gtmsecshr is a helper program that enables YottaDB to manage interprocess communication and clean up interprocess resources. It resides in the $ydb_dist/gtmsecshrdir subdirectory which is readable and executable only by root. gtmsecshr is guarded by a wrapper program. The wrapper program protects gtmsecshr in the following ways:
 
 * It restricts access to gtmsecshr in such a way that processes that do not operate as root cannot access it except though the mechanism used by the wrapper.
-* Environment variables are user-controlled input to gtmsecshr and setting them inappropriately can affect system operation and cause security vulnerabilities. While gtmsecshr itself guards against this, the wrapper program provides double protection by clearing the environment of all variables except gtm_dist, gtmdbglvl, gtm_log, and gtm_tmp and truncating those when they exceed the maximum allowed length for the platform.
-* gtmsecshr logs its messages in the system log. These messages can be identified with the GTMSECSHR facility name as part of the message. YottaDB processes communicate with gtmsecshr through socket files in a directory specified by the environment variable gtm_tmp.
+* Environment variables are user-controlled input to gtmsecshr and setting them inappropriately can affect system operation and cause security vulnerabilities. While gtmsecshr itself guards against this, the wrapper program provides double protection by clearing the environment of all variables except ydb_dist, ydb_dbglvl, ydb_log, and ydb_tmp and truncating those when they exceed the maximum allowed length for the platform.
+* gtmsecshr logs its messages in the system log. These messages can be identified with the GTMSECSHR facility name as part of the message. YottaDB processes communicate with gtmsecshr through socket files in a directory specified by the environment variable ydb_tmp.
 
 gtmsecshr automatically shuts down after 60 minutes of inactivity. Normally, there is no need to shut it down, even when a system is making the transition between a secondary and a primary. The only occasions when gtmsecshr must be explicitly shut down are when a YottaDB version is being removed - either when a directory containing the YottaDB version the running gtmsecshr process belongs to is being deleted, or when a new YottaDB version is being installed in the same directory as an existing one.
 
@@ -236,9 +236,9 @@ gtmsecshr automatically shuts down after 60 minutes of inactivity. Normally, the
 To terminate a gtmsecshr process, use a KILL-15 after shutting down all YottaDB processes and running down all database regions in use by YottaDB in that directory.
 
 .. note::
-   YottaDB strongly recommends that all YottaDB processes that use a given version use the same settings for the gtm_log and gtm_tmp environment variables. gtmsecshr inherits these values from the YottaDB process that starts it. Not having common values for gtm_tmp and gtm_log for all processes that use a given version of YottaDB can have an adverse impact on performance.
+   YottaDB strongly recommends that all YottaDB processes that use a given version use the same settings for the ydb_log and ydb_tmp environment variables. gtmsecshr inherits these values from the YottaDB process that starts it. Not having common values for ydb_tmp and ydb_log for all processes that use a given version of YottaDB can have an adverse impact on performance.
 
-If there are multiple YottaDB versions active on a system, YottaDB recommends different values of gtm_tmp and gtm_log be used for each version. This makes system administration easier.
+If there are multiple YottaDB versions active on a system, YottaDB recommends different values of ydb_tmp and ydb_log be used for each version. This makes system administration easier.
 
 .. note::
    A given database file can only be opened by processes of a single version of YottaDB at any given time. Contemporary releases of YottaDB protect against concurrent access to YottaDB files by processes executing different versions of YottaDB. Since historical versions of YottaDB did not protect against this condition, YottaDB recommends procedural safeguards against inadvertent concurrent access by processes of multiple versions on systems on which old versions of YottaDB are installed and active, since such concurrent usage can cause structural damage to the database.

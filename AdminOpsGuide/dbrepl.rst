@@ -137,8 +137,8 @@ YottaDB allows updating globals belonging to a different source instance using e
 
 * Use one of two ways to identify the current instance as specified by a replication instance file:
 
-  * A global directory can define a mapping to a replication instance file as specified with a GDE CHANGE -INSTANCE -FILE_NAME=<replication_instance_file> command. When a global directory is use, if it has a mapping of an instance file, that mapping overrides any setting of the gtm_repl_instance environment variable. GDE CHANGE -INSTANCE -FILE_NAME="" removes any global directory mapping for an instance file. 
-  * The gtm_repl_instance environment variable specifies a replication instance file for utilities, and, as the default, whenever a user processes relies on a global directory with no instance file specification.
+  * A global directory can define a mapping to a replication instance file as specified with a GDE CHANGE -INSTANCE -FILE_NAME=<replication_instance_file> command. When a global directory is use, if it has a mapping of an instance file, that mapping overrides any setting of the ydb_repl_instance environment variable. GDE CHANGE -INSTANCE -FILE_NAME="" removes any global directory mapping for an instance file. 
+  * The ydb_repl_instance environment variable specifies a replication instance file for utilities, and, as the default, whenever a user processes relies on a global directory with no instance file specification.
 
 * In order to use multiple instances, at least one global directory must have an instance mapping.
 
@@ -152,7 +152,7 @@ YottaDB allows updating globals belonging to a different source instance using e
 
 * Like other mapping specified by a global directory, a process determines any instance mapping by a global directory at the time a process first uses uses the global directory. Processes other than MUPIP CREATE ignore other (non-mapping) global directory database characteristics, except for collation, which interacts with mapping.
 
-* When Instance Freeze is enabled  (gtm_custom_errors is appropriately defined), a process attaches a region to an instance at the first access to the region; the access may be a read or a VIEW/$VIEW(). Otherwise, the process attaches to a region at the first update to that region. When the mappings are correct, this difference does not matter.
+* When Instance Freeze is enabled  (ydb_custom_errors is appropriately defined), a process attaches a region to an instance at the first access to the region; the access may be a read or a VIEW/$VIEW(). Otherwise, the process attaches to a region at the first update to that region. When the mappings are correct, this difference does not matter.
 
 * A process can always update globals that are not in a replicated region.
 
@@ -162,7 +162,7 @@ YottaDB allows updating globals belonging to a different source instance using e
 
 An EHR application uses a BC replication configuration (A->B) to provide continuous availability. There are two data warehouses for billing information and medical history. For research purposes, the data in these medical history warehouses is cleansed of patient identifiers. Two SI replication instances (Q->R) are setup for the two data warehouses.
 
-The primary global directory (specified via the environment variable gtmgbldir) includes the regions needed for the application proper. It may have the instance file as specified in the global directory or via the environment variable gtm_repl_instance. Each warehouse instance would have its own global directory (e.g. q.gld and r.gld). These global directories have an instance file specified with GDE CHANGE -INSTANCE -FILE_NAME=<replication_instance_file>.
+The primary global directory (specified via the environment variable ydb_gbldir) includes the regions needed for the application proper. It may have the instance file as specified in the global directory or via the environment variable ydb_repl_instance. Each warehouse instance would have its own global directory (e.g. q.gld and r.gld). These global directories have an instance file specified with GDE CHANGE -INSTANCE -FILE_NAME=<replication_instance_file>.
 
 Such a replication setup may benefit from this facility in the following ways:
 
@@ -544,18 +544,18 @@ Some operational policies prefer stopping the YottaDB application in such events
 
 The Instance Freeze mechanism provides an option to stop all updates on the region(s) of an instance as soon as a process encounters an error while writing to a journal or database file. This mechanism safeguards application data from a possible system crash after such an error.
 
-The environment variable gtm_custom_errors specifies the complete path to the file that contains a list of errors that should automatically stop all updates on the region(s) of an instance. The error list comprises of error mnemonics (one per line and in capital letters) from the `Messages and Recovery Procedures Manual <https://docs.yottadb.com/MessageRecovery/index.html>`_.
+The environment variable ydb_custom_errors specifies the complete path to the file that contains a list of errors that should automatically stop all updates on the region(s) of an instance. The error list comprises of error mnemonics (one per line and in capital letters) from the `Messages and Recovery Procedures Manual <https://docs.yottadb.com/MessageRecovery/index.html>`_.
 
 MUPIP REPLIC -SOURCE -JNLPOOL -SHOW displays whether the custom errors file is loaded.
 
 .. note::
-   When a processes that is part of an instance configured for instance freeze behavior encounters an error with journaling, it freezes the instance and invokes its own error trap even if it does not have the gtm_custom_errors environment variable set.
+   When a processes that is part of an instance configured for instance freeze behavior encounters an error with journaling, it freezes the instance and invokes its own error trap even if it does not have the ydb_custom_errors environment variable set.
 
 You can enable the Instance Freeze mechanism selectively on any region(s) of an instance. For example, a region that represents a patient or financial record may qualify for an Instance Freeze whereas a region with an easily rebuilt cross reference index may not. You can also promptly freeze an instance irrespective of whether any region is enabled for Instance Freeze.
 
 MUPIP SET -[NO]INST[_FREEZE_ON_ERROR] [-REGION|-FILE] enables custom errors in region to automatically cause an Instance Freeze. MUPIP REPLICATE -SOURCE -FREEZE={ON|OFF} -[NO]COMMENT[='"string"'] promptly sets or clears an Instance Freeze on an instance irrespective of whether any region is enabled for Instance Freeze (with MUPIP SET -INST_FREEZE_ON_ERROR).
 
-A process that is not in a replicated environment ignores $gtm_custom_errors. The errors in the custom errors file must have a context in one of the replicated regions and the process recognizing the error must have the replication Journal Pool open. For example, an error like UNDEF cannot cause an Instance Freeze because it is not related to the instance. It also means that, for example, standalone MUPIP operations can neither cause nor honor an Instance Freeze because they do not have access to the replication Journal Pool. A process with access to the replication Journal Pool must honor an Instance Freeze even if does not have a custom error file and therefore cannot initiate an Instance Freeze.
+A process that is not in a replicated environment ignores $ydb_custom_errors. The errors in the custom errors file must have a context in one of the replicated regions and the process recognizing the error must have the replication Journal Pool open. For example, an error like UNDEF cannot cause an Instance Freeze because it is not related to the instance. It also means that, for example, standalone MUPIP operations can neither cause nor honor an Instance Freeze because they do not have access to the replication Journal Pool. A process with access to the replication Journal Pool must honor an Instance Freeze even if does not have a custom error file and therefore cannot initiate an Instance Freeze.
 
 Depending on the error, removing an Instance Freeze is operator driven or automatic. YottaDB automatically removes Instance Freezes that are placed because of no disk space; for all other errors, Instance Freeze must be cleared manually by operator intervention. For example, YottaDB automatically places an Instance Freeze when it detects a DSKNOSPCAVAIL message in the operator log. It automatically clears the Instance Freeze when an operator intervention clears the no disk space condition. During an Instance Freeze, YottaDB modifies the NOSPACEEXT message from error (-E-) to warning (-W-) to indicate it is performing the extension even though the available space is less than the specified extension amount. The following errors are listed in the custom_errors_sample.txt file. Note that YottaDB automatically clears the Instance Freeze set with DSKNOSPCAVAIL when disk space becomes available. All other errors require operator intervention.
 
@@ -713,7 +713,7 @@ Please refer to OpenSSL documentation http://www.openssl.org/docs/ for informati
 
 **Creating a configuration file**
 
-The configuration file is divided into two sections - Database encryption section and the TLS section. The database encryption section contains the list of database files and their corresponding key files and the TLS section contains a TLSID label that identifies the location of root certification authority certificate in PEM format and leaf-level certificates with their corresponding private key files. Note that the use of the gtmcrypt_config environment variable requires prior installation of the libconfig library.
+The configuration file is divided into two sections - Database encryption section and the TLS section. The database encryption section contains the list of database files and their corresponding key files and the TLS section contains a TLSID label that identifies the location of root certification authority certificate in PEM format and leaf-level certificates with their corresponding private key files. Note that the use of the ydb_crypt_config environment variable requires prior installation of the libconfig library.
 
 After creating a leaf-level certificate that is signed by a self-signed root certificate, create a configuration file (one for Source and the other for Receiver Server) with the following format:
 
@@ -730,7 +730,7 @@ After creating a leaf-level certificate that is signed by a self-signed root cer
 
 where tls specifies the TLSID that is used to start the Source/Receiver Server, CAfile specifies the path to the root certification authority, cert specifies the the path to leaf-level certificate and key specifies the path to the private key file.
 
-Set the gtmcrypt_config environment variable to point to the path for the configuration file. The environment variable gtmtls_passwd_<tlsid> must specify an obfuscated version of the password for the client's private key. Use the maskpass utility provided with your YottaDB distribution to create an obfuscated password.
+Set the ydb_crypt_config environment variable to point to the path for the configuration file. The environment variable ydb_tls_passwd_<tlsid> must specify an obfuscated version of the password for the client's private key. Use the maskpass utility provided with your YottaDB distribution to create an obfuscated password.
 
 Here is a sample configuration file:
 
@@ -795,8 +795,8 @@ Here is a sample configuration file:
                    /* Path to the certificate. \*/
                    cert: "/home/jdoe/current/tls/certs/Malvern.crt";
                    /* Path to the private key. If the private key is protected by a passphrase, an obfuscated version of the password
-                   * should be specified in the environment variable which takes the form gtmtls_passwd_<identifier>. For instance,
-                   * for the below key, the environment variable should be 'gtmtls_passwd_PRODUCTION'.
+                   * should be specified in the environment variable which takes the form ydb_tls_passwd_<identifier>. For instance,
+                   * for the below key, the environment variable should be 'ydb_tls_passwd_PRODUCTION'.
                    * Currently, the YottaDB TLS plug-in only supports RSA private keys.
                    \*/
                    key: "/home/jdoe/current/tls/certs/Malvern.key";
@@ -810,7 +810,7 @@ Here is a sample configuration file:
 
    };
 
-If you are using the environment variable gtm_dbkeys to point to the master key file for database encryption, please convert that file to the libconfig configuration file format as pointed to by the $gtmcrypt_config environment variable at your earliest convenience. In the latest version, the gtm_dbkeys environment variable and the master key file it points to are deprecated in favor of the gtmencrypt_config environment variable. Although the latest version supports the use of $gtm_dbkeys for database encryption, YottaDB plans to discontinue support for it in the very near future. To convert master key files to libconfig format configuration files, please download CONVDBKEYS.m from `Github <https://github.com/YottaDB/YottaDBdoc/tree/master/AdminOpsGuide>`_ and follow instructions in the comments near the top of the program file.
+If you are using the environment variable gtm_dbkeys to point to the master key file for database encryption, please convert that file to the libconfig configuration file format as pointed to by the $ydb_crypt_config environment variable at your earliest convenience. In the latest version, the gtm_dbkeys environment variable and the master key file it points to are deprecated in favor of the ydb_crypt_config environment variable. Although the latest version supports the use of $gtm_dbkeys for database encryption, YottaDB plans to discontinue support for it in the very near future. To convert master key files to libconfig format configuration files, please download CONVDBKEYS.m from `Github <https://github.com/YottaDB/YottaDBdoc/tree/master/AdminOpsGuide>`_ and follow instructions in the comments near the top of the program file.
 
 +++++++++++++++++++++++++++++
 Network Link Between Systems
@@ -923,32 +923,32 @@ Go to `Github <https://github.com/YottaDB/YottaDBdoc/tree/master/AdminOpsGuide>`
 
 repl_procedures.tar.gz includes the following scripts:
 
-**gtmenv**
+**ydbenv**
 
 Sets a default environment for YottaDB replication. It takes two arguments: 
 
 * The name of the instance/database directory
 * The YottaDB version
 
-Example: source ./env r1.10
+Example: source ./env r1.20
 
 Here is the code:
 
 .. parsed-literal::
-   export gtm_dist=/usr/local/lib/yottadb/$2
-   export gtm_repl_instname=$1
-   export gtm_repl_instance=$PWD/$gtm_repl_instname/yottadb.repl
-   export gtmgbldir=$PWD/$gtm_repl_instname/yottadb.gld
-   export gtm_principal_editing=EDITING
-   export gtmroutines="$PWD/$gtm_repl_instname $gtm_dist"
-   #export gtmroutines="$PWD/$gtm_repl_instname $gtm_dist/libgtmutil.so"
-   # Here is an example of setting the gtmroutines environment variable:
-   # if [ -e  "$gtm_dist/libgtmutil.so" ] ; then export gtmroutines="$PWD/$gtm_repl_instname $gtm_dist/libgtmutil.so"
-   else export gtmroutines="$PWD/$gtm_repl_instname* $gtm_dist" ; fi
-   # For more examples on setting YottaDB related environment variables to reasonable values on POSIX shells, refer to the gtmprofile script.
+   export ydb_dist=/usr/local/lib/yottadb/$2
+   export ydb_repl_instname=$1
+   export ydb_repl_instance=$PWD/$ydb_repl_instname/yottadb.repl
+   export ydb_gbldir=$PWD/$ydb_repl_instname/yottadb.gld
+   export ydb_principal_editing=EDITING
+   export ydb_routines="$PWD/$ydb_repl_instname $ydb_dist"
+   #export ydb_routines="$PWD/$ydb_repl_instname $ydb_dist/libgtmutil.so"
+   # Here is an example of setting the ydb_routines environment variable:
+   # if [ -e  "$ydb_dist/libgtmutil.so" ] ; then export ydb_routines="$PWD/$ydb_repl_instname $ydb_dist/libgtmutil.so"
+   else export ydb_routines="$PWD/$ydb_repl_instname* $ydb_dist" ; fi
+   # For more examples on setting YottaDB related environment variables to reasonable values on POSIX shells, refer to the ydb_set_env script.
    #export LD_LIBRARY_PATH=/usr/local/lib
-   #export gtmcrypt_config=$PWD/$gtm_repl_instname/config_file
-   #echo -n "Enter Password for gtmtls_passwd_${gtm_repl_instname}: ";export gtmtls_passwd_${gtm_repl_instname}="`$gtm_dist/plugin/gtmcrypt/maskpass|tail -n 1|cut -f 3 -d " "`"
+   #export ydb_crypt_config=$PWD/$ydb_repl_instname/config_file
+   #echo -n "Enter Password for ydb_tls_passwd_${ydb_repl_instname}: ";export ydb_tls_passwd_${ydb_repl_instname}="`$ydb_dist/plugin/gtmcrypt/maskpass|tail -n 1|cut -f 3 -d " "`"
 
 Modify the env script according to your test environment. 
 
@@ -959,14 +959,14 @@ Creates a new sub-directory in the current directory, a global directory file wi
 Here is the code:
 
 .. parsed-literal::
-   mkdir -p $PWD/$gtm_repl_instname/
-   $gtm_dist/mumps -r ^GDE @gdemsr
-   $gtm_dist/mupip create
+   mkdir -p $PWD/$ydb_repl_instname/
+   $ydb_dist/mumps -r ^GDE @gdemsr
+   $ydb_dist/mupip create
 
 gdemsr contains:
 
 .. parsed-literal::
-   change -segment DEFAULT -file_name=$PWD/$gtm_repl_instname/yottadb.dat
+   change -segment DEFAULT -file_name=$PWD/$ydb_repl_instname/yottadb.dat
    exit
 
 **backup_repl**
@@ -976,7 +976,7 @@ Creates a backup of the replication instance file. The first argument specifies 
 Here is the code:
 
 .. parsed-literal::
-   $gtm_dist/mupip backup -replinst=$1
+   $ydb_dist/mupip backup -replinst=$1
 
 **repl_setup**
 
@@ -985,8 +985,8 @@ Turns on replication for all regions and create the replication instance file wi
 Here is the code:
 
 .. parsed-literal::
-   $gtm_dist/mupip set -replication=on -region "*"
-   $gtm_dist/mupip replicate -instance_create -noreplace
+   $ydb_dist/mupip set -replication=on -region "*"
+   $ydb_dist/mupip replicate -instance_create -noreplace
 
 **originating_start**
 
@@ -1001,9 +1001,9 @@ Starts the Source Server of the originating instance in a BC replication configu
 Here is the code:
 
 .. parsed-literal::
-   $gtm_dist/mupip replicate -source -start -instsecondary=$2 -secondary=localhost:$3 -buffsize=1048576 -log=$PWD/$1/$1_$2.log $4 $5
+   $ydb_dist/mupip replicate -source -start -instsecondary=$2 -secondary=localhost:$3 -buffsize=1048576 -log=$PWD/$1/$1_$2.log $4 $5
    tail -30 $PWD/$1/$1_$2.log
-   $gtm_dist/mupip replicate -source -checkhealth
+   $ydb_dist/mupip replicate -source -checkhealth
 
 **replicating_start**
 
@@ -1017,10 +1017,10 @@ Starts the passive Source Server and the Receiver Server in a BC replication con
 Here is the code:
 
 .. parsed-literal::
-   $gtm_dist/mupip replicate -source -start -passive -instsecondary=dummy -buffsize=1048576 -log=$PWD/$1/source$1_dummy.log # creates the Journal Pool
-   $gtm_dist/mupip replicate -receive -start -listenport=$2 -buffsize=1048576 -log=$PWD/$1/receive.log $3 $4 # starts the Receiver Server
+   $ydb_dist/mupip replicate -source -start -passive -instsecondary=dummy -buffsize=1048576 -log=$PWD/$1/source$1_dummy.log # creates the Journal Pool
+   $ydb_dist/mupip replicate -receive -start -listenport=$2 -buffsize=1048576 -log=$PWD/$1/receive.log $3 $4 # starts the Receiver Server
    tail -20 $PWD/$1/receive.log
-   $gtm_dist/mupip replicate -receive -checkhealth
+   $ydb_dist/mupip replicate -receive -checkhealth
 
 **suppl_setup**
 
@@ -1037,12 +1037,12 @@ Example: ./suppl_setup P startA 4011 -updok
 Here is the code:
 
 .. parsed-literal::
-   $gtm_dist/mupip set -replication=on -region "*"
-   $gtm_dist/mupip replicate -instance_create -supplementary -noreplace
-   $gtm_dist/mupip replicate -source -start -passive -buf=1048576 -log=$PWD/$gtm_repl_instname/$1_dummy.log -instsecondary=dummy $4
-   $gtm_dist/mupip replicate -receive -start -listenport=$3 -buffsize=1048576 -log=$PWD/$gtm_repl_instname/$1.log -updateresync=$2 -initialize $5
+   $ydb_dist/mupip set -replication=on -region "*"
+   $ydb_dist/mupip replicate -instance_create -supplementary -noreplace
+   $ydb_dist/mupip replicate -source -start -passive -buf=1048576 -log=$PWD/$ydb_repl_instname/$1_dummy.log -instsecondary=dummy $4
+   $ydb_dist/mupip replicate -receive -start -listenport=$3 -buffsize=1048576 -log=$PWD/$ydb_repl_instname/$1.log -updateresync=$2 -initialize $5
    tail -30 $PWD/$1/$1.log
-   $gtm_dist/mupip replicate -receive -checkhealth
+   $ydb_dist/mupip replicate -receive -checkhealth
 
 
 **repl_status**
@@ -1053,15 +1053,15 @@ Here is the code:
 
 .. parsed-literal::
    echo "-----------------------------------------------------------------"
-   echo "Source Server $gtm_repl_instname: "
+   echo "Source Server $ydb_repl_instname: "
    echo "-----------------------------------------------------------------"
-   $gtm_dist/mupip replicate -source -check
-   $gtm_dist/mupip replicate -source -showbacklog
+   $ydb_dist/mupip replicate -source -check
+   $ydb_dist/mupip replicate -source -showbacklog
    echo "-----------------------------------------------------------------"
-   echo "Receiver Server $gtm_repl_instname: "
+   echo "Receiver Server $ydb_repl_instname: "
    echo "-----------------------------------------------------------------"
-   $gtm_dist/mupip replicate -receive -check
-   $gtm_dist/mupip replicate -rece -showbacklog
+   $ydb_dist/mupip replicate -receive -check
+   $ydb_dist/mupip replicate -rece -showbacklog
 
 **rollback**
 
@@ -1076,7 +1076,7 @@ Example: ./rollback 4001 backward
 Here is the code:
 
 .. parsed-literal::
-   $gtm_dist/mupip journal -rollback -fetchresync=$1 -$2 "*"
+   $ydb_dist/mupip journal -rollback -fetchresync=$1 -$2 "*"
 
 **originating_stop**
 
@@ -1087,8 +1087,8 @@ The first argument specifies additional qualifiers for the Source Server shutdow
 Here is the code:
 
 .. parsed-literal::
-   $gtm_dist/mupip replicate -source -shutdown -timeout=2 $1 #Shut down the originating Source Server
-   $gtm_dist/mupip rundown -region "*" #Perform database rundown
+   $ydb_dist/mupip replicate -source -shutdown -timeout=2 $1 #Shut down the originating Source Server
+   $ydb_dist/mupip rundown -region "*" #Perform database rundown
 
 **replicating_stop**
 
@@ -1097,8 +1097,8 @@ Shuts down the Receiver Server with a two seconds timeout and then shuts down th
 Here is the code:
 
 .. parsed-literal::
-   $gtm_dist/mupip replicate -receiver -shutdown -timeout=2 #Shut down the Receiver Server
-   $gtm_dist/mupip replicate -source -shutdown -timeout=2 #Shut down the passive Source Server
+   $ydb_dist/mupip replicate -receiver -shutdown -timeout=2 #Shut down the Receiver Server
+   $ydb_dist/mupip replicate -source -shutdown -timeout=2 #Shut down the passive Source Server
 
 **replicating_start_suppl_n**
 
@@ -1115,10 +1115,10 @@ Example:./replicating_start_suppl_n P 4011 -updok -noresync
 Here is the code:
 
 .. parsed-literal::
-   $gtm_dist/mupip replicate -source -start -passive -instsecondary=dummy -buffsize=1048576 -log=$PWD/$gtm_repl_instname/$12dummy.log $3 # creates the Journal Pool
-   $gtm_dist/mupip replicate -receive -start -listenport=$2 -buffsize=1048576 $4 $5 -log=$PWD/$gtm_repl_instname/$1.log # starts the Receiver Server and the Update Process
+   $ydb_dist/mupip replicate -source -start -passive -instsecondary=dummy -buffsize=1048576 -log=$PWD/$ydb_repl_instname/$12dummy.log $3 # creates the Journal Pool
+   $ydb_dist/mupip replicate -receive -start -listenport=$2 -buffsize=1048576 $4 $5 -log=$PWD/$ydb_repl_instname/$1.log # starts the Receiver Server and the Update Process
    tail -30 $PWD/$1/$1.log
-   $gtm_dist/mupip replicate -receiver -checkhealth # Checks the health of the Receiver Server and the Update Process
+   $ydb_dist/mupip replicate -receiver -checkhealth # Checks the health of the Receiver Server and the Update Process
 
 **gen_gc**
 
@@ -1132,21 +1132,21 @@ Here is the code:
 
 .. parsed-literal::
    #Creates the libconfig format configuration file
-   #$gtm_dist/mumps -r CONVDBKEYS $gtmcrypt_config
-   echo "tls: {">$gtmcrypt_config
-   echo " verify-depth: 7;" >> $gtmcrypt_config
-   echo "    CAfile: "$PWD/certs/ca.crt";" >> $gtmcrypt_config
-   echo "     $1: {" >> $gtmcrypt_config
-   echo "           format: "PEM";" >> $gtmcrypt_config
-   echo "           cert: "$PWD/certs/$1.crt";" >> $gtmcrypt_config
-   echo "           key: "$PWD/certs/$1.key";" >> $gtmcrypt_config
-   echo "     };" >> $gtmcrypt_config
-   echo "     $2: {" >> $gtmcrypt_config
-   echo "           format: "PEM";" >> $gtmcrypt_config
-   echo "           cert: "$PWD/certs/$2.crt";" >> $gtmcrypt_config
-   echo "           key: "$PWD/certs/$2.key";" >> $gtmcrypt_config
-   echo "     };" >> $gtmcrypt_config
-   echo "};" >> $gtmcrypt_config
+   #$ydb_dist/mumps -r CONVDBKEYS $ydb_crypt_config
+   echo "tls: {">$ydb_crypt_config
+   echo " verify-depth: 7;" >> $ydb_crypt_config
+   echo "    CAfile: "$PWD/certs/ca.crt";" >> $ydb_crypt_config
+   echo "     $1: {" >> $ydb_crypt_config
+   echo "           format: "PEM";" >> $ydb_crypt_config
+   echo "           cert: "$PWD/certs/$1.crt";" >> $ydb_crypt_config
+   echo "           key: "$PWD/certs/$1.key";" >> $ydb_crypt_config
+   echo "     };" >> $ydb_crypt_config
+   echo "     $2: {" >> $ydb_crypt_config
+   echo "           format: "PEM";" >> $ydb_crypt_config
+   echo "           cert: "$PWD/certs/$2.crt";" >> $ydb_crypt_config
+   echo "           key: "$PWD/certs/$2.key";" >> $ydb_crypt_config
+   echo "     };" >> $ydb_crypt_config
+   echo "};" >> $ydb_crypt_config
 
 **cert_setup**
 
@@ -1183,10 +1183,10 @@ Here is the code:
 
 .. parsed-literal::
    #Generates leaf-level certificates in $PWD/certs
-   openssl genrsa -des3 -out $PWD/certs/$1${gtm_repl_instname}.key
-   openssl req -new -key $PWD/certs/$1${gtm_repl_instname}.key -out $PWD/certs/$gtm_repl_instname.csr
-   openssl ca -config $PWD/openssl.cnf -in $PWD/certs/$gtm_repl_instname.csr -out $PWD/certs/$1$gtm_repl_instname.crt
-   openssl x509 -in $PWD/certs/$1$gtm_repl_instname.crt -dates -issuer -subject -noout
+   openssl genrsa -des3 -out $PWD/certs/$1${ydb_repl_instname}.key
+   openssl req -new -key $PWD/certs/$1${ydb_repl_instname}.key -out $PWD/certs/$ydb_repl_instname.csr
+   openssl ca -config $PWD/openssl.cnf -in $PWD/certs/$ydb_repl_instname.csr -out $PWD/certs/$1$ydb_repl_instname.crt
+   openssl x509 -in $PWD/certs/$1$ydb_repl_instname.crt -dates -issuer -subject -noout
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Setting up an A -> B Replication Configuration with Empty Databases
@@ -1208,11 +1208,11 @@ On B:
 Example:
 
 .. parsed-literal::
-   source ./gtmenv A V6.3-000A_x86_64 
+   source ./ydbenv A V6.3-000A_x86_64 
    ./db_create
    ./repl_setup
    ./originating_start A B 4001
-   source ./gtmenv B V6.3-000A_x86_64
+   source ./ydbenv B V6.3-000A_x86_64
    ./db_create
    ./repl_setup
    ./replicating_start B 4001
@@ -1221,7 +1221,7 @@ Example:
 The shutdown sequence is as follows:
 
 .. parsed-literal::
-   source ./gtmenv B V6.3-000A_x86_64
+   source ./ydbenv B V6.3-000A_x86_64
    ./replicating_stop
    source ./env A V6.3-000A_x86_64
    ./originating_stop
@@ -1254,16 +1254,16 @@ On C:
 Example:
 
 .. parsed-literal::
-   source ./gtmenv A V6.3-000A_x86_64 
+   source ./ydbenv A V6.3-000A_x86_64 
    ./db_create
    ./repl_setup
    ./originating_start A B 4001
-   source ./gtmenv B V6.3-000A_x86_64
+   source ./ydbenv B V6.3-000A_x86_64
    ./db_create
    ./repl_setup
    ./replicating_start B 4001
    ./originating_start B C 4002 -propagateprimary
-   source ./gtmenv C V6.3-000A_x86_64
+   source ./ydbenv C V6.3-000A_x86_64
    ./db_create
    ./repl_setup
    ./replicating_start C 4002
@@ -1272,12 +1272,12 @@ Example:
 The shutdown sequence is as follows:
 
 .. parsed-literal::
-   source ./gtmenv C V6.3-000A_x86_64
+   source ./ydbenv C V6.3-000A_x86_64
    ./replicating_stop
-   source ./gtmenv B V6.3-000A_x86_64
+   source ./ydbenv B V6.3-000A_x86_64
    ./replicating_stop
    ./originating_stop
-   source ./gtmenv A V6.3-000A_x86_64
+   source ./ydbenv A V6.3-000A_x86_64
    ./originating_stop
 
 
@@ -1306,12 +1306,12 @@ On P:
 Example:
 
 .. parsed-literal::
-   source ./gtmenv A V6.3-000A_x86_64
+   source ./ydbenv A V6.3-000A_x86_64
    ./db_create
    ./repl_setup
    ./originating_start A P 4000
    ./backup_repl startA
-   source ./gtmenv P V6.3-000A_x86_64
+   source ./ydbenv P V6.3-000A_x86_64
    ./db_create
    ./suppl_setup P startA 4000 -updok
    ./repl_status
@@ -1324,9 +1324,9 @@ Example:
 The shutdown sequence is as follows:
 
 .. parsed-literal::
-   source ./gtmenv P V6.3-000A_x86_64
+   source ./ydbenv P V6.3-000A_x86_64
    ./replicating_stop
-   source ./gtmenv A V6.3-000A_x86_64
+   source ./ydbenv A V6.3-000A_x86_64
    ./originating_stop
 
 
@@ -1359,43 +1359,43 @@ Example:
 The following example demonstrates starting a replicating instance from the backup of an originating instance in an A→B replication configuration. Note that you do not need to perform an -updateresync when starting a BC replicating instance for the first time. 
 
 .. parsed-literal::
-   source ./gtmenv A V6.3-000A_x86_64
+   source ./ydbenv A V6.3-000A_x86_64
    ./db_create
    ./repl_setup
    ./originating_start A backupA 4001
    ./backup_repl startingA   #Preserve the backup of the replicating instance file that represents the state at the time of starting the instance. 
-   $gtm_dist/mumps -r %XCMD 'for i=1:1:10 set ^A(i)=i'
+   $ydb_dist/mumps -r %XCMD 'for i=1:1:10 set ^A(i)=i'
    mkdir backupA   
-   $gtm_dist/mupip backup -replinst=currentstateA -newjnlfile=noprevlink -bkupdbjnl=disable DEFAULT backupA
-   source ./gtmenv backupA V6.3-000A_x86_64
+   $ydb_dist/mupip backup -replinst=currentstateA -newjnlfile=noprevlink -bkupdbjnl=disable DEFAULT backupA
+   source ./ydbenv backupA V6.3-000A_x86_64
    ./db_create
    ./repl_setup
    cp currentstateA backupA/gtm.repl
-   $gtm_dist/mupip replicate -editinstance -name=backupA backupA/gtm.repl 
+   $ydb_dist/mupip replicate -editinstance -name=backupA backupA/gtm.repl 
    ./replicating_start backupA 4001 
    ./repl_status
 
 The shutdown sequence is as follows:
 
 .. parsed-literal::
-   source ./gtmenv backupA V6.3-000A_x86_64
+   source ./ydbenv backupA V6.3-000A_x86_64
    ./replicating_stop
-   source ./gtmenv A V6.3-000A_x86_64
+   source ./ydbenv A V6.3-000A_x86_64
    ./originating_stop
 
 The following example demonstrates starting a replicating instance from the backup of an originating instance in an A→P replication configuration. Note that you need to perform an -updateresync to start a supplementary instance for the first time. 
 
 .. parsed-literal::
-   source ./gtmenv A V6.3-000A_x86_64
+   source ./ydbenv A V6.3-000A_x86_64
    ./db_create
    ./repl_setup
    ./originating_start A backupA 4011
    ./backup_repl startingA   
-   $gtm_dist/mumps -r %XCMD 'for i=1:1:10 set ^A(i)=i'
+   $ydb_dist/mumps -r %XCMD 'for i=1:1:10 set ^A(i)=i'
    ./backup_repl currentstateA
    mkdir backupA
-   $gtm_dist/mupip backup -newjnlfile=noprevlink -bkupdbjnl=disable DEFAULT backupA
-   source ./gtmenv backupA V6.3-000A_x86_64
+   $ydb_dist/mupip backup -newjnlfile=noprevlink -bkupdbjnl=disable DEFAULT backupA
+   source ./ydbenv backupA V6.3-000A_x86_64
    ./db_create
    ./suppl_setup backupA currentstateA 4011 -updok
    ./repl_status
@@ -1403,9 +1403,9 @@ The following example demonstrates starting a replicating instance from the back
 The shutdown sequence is as follows:
 
 .. parsed-literal::
-   source ./gtmenv backupA V6.3-000A_x86_64
+   source ./ydbenv backupA V6.3-000A_x86_64
    ./replicating_stop
-   source ./gtmenv A V6.3-000A_x86_64
+   source ./ydbenv A V6.3-000A_x86_64
    ./originating_stop
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1451,25 +1451,25 @@ On A:
 The following example runs a switchover in an A→B replication configuration.
 
 .. parsed-literal::
-   source ./gtmenv A r1.10 # creates a simple environment for instance A
+   source ./ydbenv A r1.10 # creates a simple environment for instance A
    ./db_create
    ./repl_setup # enables replication and creates the replication instance file
    ./originating_start A B 4001 # starts the active Source Server (A->B)
-   $gtm_dist/mumps -r %XCMD 'for i=1:1:100 set ^A(i)=i'
+   $ydb_dist/mumps -r %XCMD 'for i=1:1:100 set ^A(i)=i'
    ./repl_status #-SHOWBACKLOG and -CHECKHEALTH report
-   source ./gtmenv B r1.10 # creates a simple environment for instance B
+   source ./ydbenv B r1.10 # creates a simple environment for instance B
    ./db_create
    ./repl_setup
    ./replicating_start B 4001 
    ./repl_status # -SHOWBACKLOG and -CHECKHEATH report 
    ./replicating_stop # Shutdown the Receiver Server and the Update Process 
-   source ./gtmenv A r1.10 # Creates an environment for A
-   $gtm_dist/mumps -r %XCMD 'for i=1:1:50 set ^losttrans(i)=i' # perform some updates when replicating instance is not available. 
+   source ./ydbenv A r1.10 # Creates an environment for A
+   $ydb_dist/mumps -r %XCMD 'for i=1:1:50 set ^losttrans(i)=i' # perform some updates when replicating instance is not available. 
    sleep 2
    ./originating_stop # Stops the active Source Server 
-   source ./gtmenv B r1.10 # Create an environment for B
+   source ./ydbenv B r1.10 # Create an environment for B
    ./originating_start B A 4001 # Start the active Source Server (B->A)
-   source ./gtmenv A r1.10 # Create an environment for A
+   source ./ydbenv A r1.10 # Create an environment for A
    ./rollback 4001 backward
    ./replicating_start A 4001 # Start the replication Source Server 
    ./repl_status # To confirm whether the Receiver Server and the Update Process started correctly.
@@ -1478,9 +1478,9 @@ The following example runs a switchover in an A→B replication configuration.
 The shutdown sequence is as follows:
 
 .. parsed-literal::
-   source ./gtmenv A r1.10
+   source ./ydbenv A r1.10
    ./replicating_stop
-   source ./gtmenv B r1.10
+   source ./ydbenv B r1.10
    ./originating_stop
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1526,38 +1526,38 @@ The following scenario demonstrates a switchover from B←A→P to A←B→P whe
 The following example creates this switchover scenario:
 
 .. parsed-literal::
-   source ./gtmenv A r1.10
-   $gtm_dist/mumps -r ^%XCMD 'set ^A(98)=99'
-   source ./gtmenv B r1.10
+   source ./ydbenv A r1.10
+   $ydb_dist/mumps -r ^%XCMD 'set ^A(98)=99'
+   source ./ydbenv B r1.10
    ./replicating_stop
-   source ./gtmenv A r1.10
-   $gtm_dist/mumps -r ^%XCMD 'set ^A(99)=100'
+   source ./ydbenv A r1.10
+   $ydb_dist/mumps -r ^%XCMD 'set ^A(99)=100'
    ./originating_stop
-   source ./gtmenv B r1.10
+   source ./ydbenv B r1.10
    ./originating_start B A 4010
    ./originating_start B P 4011
    ./backup_repl startB
-   $gtm_dist/mumps -r ^%XCMD 'set ^B(61)=0'
-   source ./gtmenv P r1.10
+   $ydb_dist/mumps -r ^%XCMD 'set ^B(61)=0'
+   source ./ydbenv P r1.10
    ./suppl_setup M startB 4011 -updok
-   $gtm_dist/mumps -r ^%XCMD 'for i=39:1:40 set ^P(i)=i'
-   source ./gtmenv B r1.10
-   $gtm_dist/mumps -r ^%XCMD 'set ^B(62)=1,^B(63)=1'
-   source ./gtmenv A r1.10
+   $ydb_dist/mumps -r ^%XCMD 'for i=39:1:40 set ^P(i)=i'
+   source ./ydbenv B r1.10
+   $ydb_dist/mumps -r ^%XCMD 'set ^B(62)=1,^B(63)=1'
+   source ./ydbenv A r1.10
    ./rollback 4010 backward
    ./replicating_start A 4010
-   source ./gtmenv B r1.10
-   $gtm_dist/mumps -r ^%XCMD 'set ^B(64)=1,^B(65)=1'
+   source ./ydbenv B r1.10
+   $ydb_dist/mumps -r ^%XCMD 'set ^B(64)=1,^B(65)=1'
    cat A/gtm.lost
 
 The shutdown sequence is as follows:
 
 .. parsed-literal::
-   source ./gtmenv B r1.10
+   source ./ydbenv B r1.10
    ./originating_stop
-   source ./gtmenv A r1.10 
+   source ./ydbenv A r1.10 
    ./replicating_stop
-   source ./gtmenv P r1.10
+   source ./ydbenv P r1.10
    ./replicating_stop
 
 **A and P require rollback**
@@ -1600,55 +1600,55 @@ The following example creates this scenario.
 
 
 .. parsed-literal::
-   source ./gtmenv A r1.10
+   source ./ydbenv A r1.10
    ./db_create
    ./repl_setup
    ./originating_start A B 4010
    ./originating_start A P 4011
    ./backup_repl startA
-   $gtm_dist/mumps -r ^%XCMD 'for i=1:1:97 set ^A(i)=i'
-   source ./gtmenv B r1.10
+   $ydb_dist/mumps -r ^%XCMD 'for i=1:1:97 set ^A(i)=i'
+   source ./ydbenv B r1.10
    ./db_create
    ./repl_setup
    ./replicating_start B 4010
-   source ./gtmenv P r1.10
+   source ./ydbenv P r1.10
    ./db_create
    ./suppl_setup P startA 4011 -updok
-   $gtm_dist/mumps -r ^%XCMD 'for i=1:1:40 set ^P(i)=i'
-   source ./gtmenv B r1.10 
+   $ydb_dist/mumps -r ^%XCMD 'for i=1:1:40 set ^P(i)=i'
+   source ./ydbenv B r1.10 
    ./replicating_stop
-   source ./gtmenv A r1.10
-   $gtm_dist/mumps -r ^%XCMD 'set ^A(98)=99'
-   source ./gtmenv P r1.10
+   source ./ydbenv A r1.10
+   $ydb_dist/mumps -r ^%XCMD 'set ^A(98)=99'
+   source ./ydbenv P r1.10
    ./replicating_stop 
-   source ./gtmenv A r1.10
-   $gtm_dist/mumps -r ^%XCMD 'set ^A(99)=100'
+   source ./ydbenv A r1.10
+   $ydb_dist/mumps -r ^%XCMD 'set ^A(99)=100'
    ./originating_stop
-   source ./gtmenv B r1.10
+   source ./ydbenv B r1.10
    ./originating_start B A 4010
    ./originating_start B P 4011
    ./backup_repl startB
-   $gtm_dist/mumps -r ^%XCMD 'set ^B(61)=0,^B(62)=1'
-   source ./gtmenv P r1.10
+   $ydb_dist/mumps -r ^%XCMD 'set ^B(61)=0,^B(62)=1'
+   source ./ydbenv P r1.10
    ./rollback 4011 backward
    ./suppl_setup P startB 4011 -updok
-   $gtm_dist/mumps -r ^%XCMD 'for i=39:1:40 set ^P(i)=i'
-   source ./gtmenv A r1.10
+   $ydb_dist/mumps -r ^%XCMD 'for i=39:1:40 set ^P(i)=i'
+   source ./ydbenv A r1.10
    ./rollback 4010 backward
    ./replicating_start A 4010
-   source ./gtmenv B r1.10
-   $gtm_dist/mumps -r ^%XCMD 'set ^B(64)=1,^B(65)=1'
+   source ./ydbenv B r1.10
+   $ydb_dist/mumps -r ^%XCMD 'set ^B(64)=1,^B(65)=1'
    cat A/gtm.lost
    cat P/gtm.lost
 
 The shutdown sequence is as follows:
 
 .. parsed-literal::
-   source ./gtmenv B r1.10
+   source ./ydbenv B r1.10
    ./originating_stop
-   source ./gtmenv A r1.10 
+   source ./ydbenv A r1.10 
    ./replicating_stop
-   source ./gtmenv P r1.10
+   source ./ydbenv P r1.10
    ./replicating_stop
 
 **Rollback not required by application design**
@@ -1678,52 +1678,52 @@ The following scenario demonstrates a switchover from B←A→P to A←B→P whe
 The following example creates this scenario.
 
 .. parsed-literal::
-   source ./gtmenv A r1.10
+   source ./ydbenv A r1.10
    ./db_create
    ./repl_setup
    ./originating_start A B 4010
    ./originating_start A P 4011
    ./backup_repl startA
-   $gtm_dist/mumps -r ^%XCMD 'for i=1:1:97 set ^A(i)=i'
-   source ./gtmenv B r1.10
+   $ydb_dist/mumps -r ^%XCMD 'for i=1:1:97 set ^A(i)=i'
+   source ./ydbenv B r1.10
    ./db_create
    ./repl_setup
    ./replicating_start B 4010 
-   source ./gtmenv P r1.10
+   source ./ydbenv P r1.10
    ./db_create
    ./suppl_setup P startA 4011 -updok
-   $gtm_dist/mumps -r ^%XCMD 'for i=1:1:40 set ^P(i)=i'
-   source ./gtmenv B r1.10 
+   $ydb_dist/mumps -r ^%XCMD 'for i=1:1:40 set ^P(i)=i'
+   source ./ydbenv B r1.10 
    ./replicating_stop
-   source ./gtmenv A r1.10
-   $gtm_dist/mumps -r ^%XCMD 'set ^A(98)=99'
-   source ./gtmenv P r1.10
+   source ./ydbenv A r1.10
+   $ydb_dist/mumps -r ^%XCMD 'set ^A(98)=99'
+   source ./ydbenv P r1.10
    ./replicating_stop 
-   source ./gtmenv A r1.10
-   $gtm_dist/mumps -r ^%XCMD 'set ^A(99)=100'
+   source ./ydbenv A r1.10
+   $ydb_dist/mumps -r ^%XCMD 'set ^A(99)=100'
    ./originating_stop
-   source ./gtmenv B r1.10
+   source ./ydbenv B r1.10
    ./originating_start B A 4010
    ./originating_start B P 4011
    #./backup_repl startB
-   $gtm_dist/mumps -r ^%XCMD 'set ^B(61)=0,^B(62)=1'
-   source ./gtmenv P r1.10
+   $ydb_dist/mumps -r ^%XCMD 'set ^B(61)=0,^B(62)=1'
+   source ./ydbenv P r1.10
    ./replicating_start_suppl_n P 4011 -updok -noresync
-   $gtm_dist/mumps -r ^%XCMD 'for i=39:1:40 set ^P(i)=i'
-   source ./gtmenv A r1.10
+   $ydb_dist/mumps -r ^%XCMD 'for i=39:1:40 set ^P(i)=i'
+   source ./ydbenv A r1.10
    ./rollback 4010 backward
    ./replicating_start A 4010 
-   source ./gtmenv B r1.10
-   $gtm_dist/mumps -r ^%XCMD 'set ^B(64)=1,^B(65)=1'
+   source ./ydbenv B r1.10
+   $ydb_dist/mumps -r ^%XCMD 'set ^B(64)=1,^B(65)=1'
 
 The shutdown sequence is as follows:
 
 .. parsed-literal::
-   source ./gtmenv B r1.10
+   source ./ydbenv B r1.10
    ./originating_stop
-   source ./gtmenv A r1.10
+   source ./ydbenv A r1.10
    ./replicating_stop
-   source ./gtmenv P r1.10
+   source ./ydbenv P r1.10
    ./replicating_stop
 
 **Rollback Automatically**
@@ -1749,39 +1749,39 @@ This scenario demonstrates the use of the -autorollback qualifier which performs
 The following example runs this scenario.
 
 .. parsed-literal::
-   source ./gtmenv A r1.10
+   source ./ydbenv A r1.10
    ./db_create
    ./repl_setup
    ./originating_start A P 4000
    ./originating_start A B 4001
-   source ./gtmenv B r1.10
+   source ./ydbenv B r1.10
    ./db_create
    ./repl_setup
    ./replicating_start B 4001
-   source ./gtmenv A r1.10
+   source ./ydbenv A r1.10
    ./backup_repl startA 
-   source ./gtmenv P r1.10
+   source ./ydbenv P r1.10
    ./db_create
    ./suppl_setup P startA 4000 -updok
-   $gtm_dist/mumps -r %XCMD 'for i=1:1:38 set ^P(i)=i'
-   source ./gtmenv A r1.10
-   $gtm_dist/mumps -r %XCMD 'for i=1:1:97 set ^A(i)=i'
-   source ./gtmenv B r1.10
+   $ydb_dist/mumps -r %XCMD 'for i=1:1:38 set ^P(i)=i'
+   source ./ydbenv A r1.10
+   $ydb_dist/mumps -r %XCMD 'for i=1:1:97 set ^A(i)=i'
+   source ./ydbenv B r1.10
    ./replicating_stop
-   source ./gtmenv A r1.10
-   $gtm_dist/mumps -r %XCMD 'set ^A(98)=50'
-   source ./gtmenv P r1.10
-   $gtm_dist/mumps -r %XCMD 'for i=39:1:40 set ^P(i)=i'
+   source ./ydbenv A r1.10
+   $ydb_dist/mumps -r %XCMD 'set ^A(98)=50'
+   source ./ydbenv P r1.10
+   $ydb_dist/mumps -r %XCMD 'for i=39:1:40 set ^P(i)=i'
    ./replicating_stop
-   source ./gtmenv A r1.10
-   $gtm_dist/mumps -r %XCMD 'set ^A(99)=100'
+   source ./ydbenv A r1.10
+   $ydb_dist/mumps -r %XCMD 'set ^A(99)=100'
    ./originating_stop
-   source ./gtmenv B r1.10
+   source ./ydbenv B r1.10
    ./originating_start B A 4001 
    ./originating_start B P 4000
-   source ./gtmenv A r1.10
+   source ./ydbenv A r1.10
    ./replicating_start A 4001 -autorollback
-   source ./gtmenv P r1.10
+   source ./ydbenv P r1.10
    #./rollback 4000 backward
    ./replicating_start_suppl_n P 4000 -updok -autorollback
    #./replicating_start_suppl_n P 4000 -updok 
@@ -1789,11 +1789,11 @@ The following example runs this scenario.
 The shutdown sequence is as follows:
 
 .. parsed-literal::
-   source ./gtmenv A r1.10
+   source ./ydbenv A r1.10
    ./replicating_stop
-   source ./gtmenv P r1.10
+   source ./ydbenv P r1.10
    ./replicating_stop
-   source ./gtmenv B r1.10
+   source ./ydbenv B r1.10
    ./originating_stop
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1838,78 +1838,78 @@ Consider a situation where A and P are located in one data center, with BC repli
 The following example runs this scenario.
 
 .. parsed-literal::
-   source ./gtmenv A r1.10
+   source ./ydbenv A r1.10
    ./db_create
    ./repl_setup
    ./originating_start A P 4000
    ./originating_start A B 4001
-   source ./gtmenv B r1.10
+   source ./ydbenv B r1.10
    ./db_create
    ./repl_setup
    ./replicating_start B 4001
-   source ./gtmenv A r1.10
+   source ./ydbenv A r1.10
    ./backup_repl startA 
-   source ./gtmenv P r1.10
+   source ./ydbenv P r1.10
    ./db_create
    ./suppl_setup P startA 4000 -updok
    ./backup_repl startP
    ./originating_start P Q 4005
-   source ./gtmenv Q r1.10
+   source ./ydbenv Q r1.10
    ./db_create
    ./suppl_setup Q startP 4005 -updnotok
-   source ./gtmenv A r1.10
-   $gtm_dist/mumps -r ^%XCMD 'for i=1:1:96 set ^A(i)=i'
-   source ./gtmenv P r1.10
-   $gtm_dist/mumps -r ^%XCMD 'for i=1:1:37 set ^P(i)=i'
-   source ./gtmenv Q r1.10
+   source ./ydbenv A r1.10
+   $ydb_dist/mumps -r ^%XCMD 'for i=1:1:96 set ^A(i)=i'
+   source ./ydbenv P r1.10
+   $ydb_dist/mumps -r ^%XCMD 'for i=1:1:37 set ^P(i)=i'
+   source ./ydbenv Q r1.10
    ./replicating_stop
-   source ./gtmenv P r1.10
-   $gtm_dist/mumps -r ^%XCMD 'set ^P(38)=1000'
+   source ./ydbenv P r1.10
+   $ydb_dist/mumps -r ^%XCMD 'set ^P(38)=1000'
    ./replicating_stop
-   source ./gtmenv A r1.10 
-   $gtm_dist/mumps -r ^%XCMD 'set ^A(97)=1000,^A(98)=1000'
-   source ./gtmenv B r1.10
+   source ./ydbenv A r1.10 
+   $ydb_dist/mumps -r ^%XCMD 'set ^A(97)=1000,^A(98)=1000'
+   source ./ydbenv B r1.10
    ./replicating_stop
-   source ./gtmenv A r1.10 
-   $gtm_dist/mumps -r ^%XCMD 'set ^A(99)=1000'
+   source ./ydbenv A r1.10 
+   $ydb_dist/mumps -r ^%XCMD 'set ^A(99)=1000'
    ./originating_stop 
-   source ./gtmenv B r1.10
+   source ./ydbenv B r1.10
    backup_repl startB
    ./originating_start B Q 4008
-   $gtm_dist/mumps -r ^%XCMD 'for i=1:1:62 set ^B(i)=i'
-   source ./gtmenv Q r1.10
+   $ydb_dist/mumps -r ^%XCMD 'for i=1:1:62 set ^B(i)=i'
+   source ./ydbenv Q r1.10
    ./rollback 4008 backward
    ./suppl_setup Q startB 4008 -updok
-   $gtm_dist/mumps -r ^%XCMD 'for i=1:1:74 set ^Q(i)=i'
-   source ./gtmenv B r1.10
-   $gtm_dist/mumps -r ^%XCMD 'for i=63:1:64 set ^B(i)=i'
+   $ydb_dist/mumps -r ^%XCMD 'for i=1:1:74 set ^Q(i)=i'
+   source ./ydbenv B r1.10
+   $ydb_dist/mumps -r ^%XCMD 'for i=63:1:64 set ^B(i)=i'
    ./originating_start B A 4004
-   source ./gtmenv A r1.10
+   source ./ydbenv A r1.10
    ./rollback 4004 backward
    ./replicating_start A 4004
-   source ./gtmenv Q r1.10
-   $gtm_dist/mumps -r ^%XCMD 'for i=75:1:76 set ^Q(i)=i'
+   source ./ydbenv Q r1.10
+   $ydb_dist/mumps -r ^%XCMD 'for i=75:1:76 set ^Q(i)=i'
    ./originating_start Q P 4007
    ./backup_repl startQ
-   source ./gtmenv P r1.10
+   source ./ydbenv P r1.10
    ./rollback 4007 backward
    ./replicating_start_suppl_n P 4007 -updnotok
-   source ./gtmenv Q r1.10
-   $gtm_dist/mumps -r ^%XCMD 'set ^Q(77)=1000'
+   source ./ydbenv Q r1.10
+   $ydb_dist/mumps -r ^%XCMD 'set ^Q(77)=1000'
    cat A/gtm.lost
    cat P/gtm.lost
 
 The shutdown sequence is as follows:
 
 .. parsed-literal::
-   source ./gtmenv P r1.10
+   source ./ydbenv P r1.10
    ./replicating_stop
-   source ./gtmenv A r1.10
+   source ./ydbenv A r1.10
    ./replicating_stop
-   source ./gtmenv Q r1.10
+   source ./ydbenv Q r1.10
    ./replicating_stop
    ./originating_stop
-   source ./gtmenv B r1.10
+   source ./ydbenv B r1.10
    ./originating_stop
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1963,42 +1963,42 @@ On A:
 This example adds the mapping for global ^A to a new database file A.dat in an A->B replication configuration. 
 
 .. parsed-literal::
-   source ./gtmenv A r1.10 
+   source ./ydbenv A r1.10 
    ./db_create
    ./repl_setup
    ./originating_start A B 4001
-   source ./gtmenv B r1.10
+   source ./ydbenv B r1.10
    ./db_create
    ./repl_setup
    ./replicating_start B 4001
-   source ./gtmenv A r1.10 
-   $gtm_dist/mumps -r %XCMD 'for i=1:1:10 set ^A(i)=i'
+   source ./ydbenv A r1.10 
+   $ydb_dist/mumps -r %XCMD 'for i=1:1:10 set ^A(i)=i'
    ./repl_status
-   source ./gtmenv B r1.10
+   source ./ydbenv B r1.10
    ./replicating_stop
    cp B/gtm.gld B/prior.gld
-   $gtm_dist/mumps -r ^GDE @updgld
+   $ydb_dist/mumps -r ^GDE @updgld
    ./db_create
    mkdir backup_B
-   $gtm_dist/mupip backup "*" backup_B  -replinst=backup_B/ydb.repl
-   $gtm_dist/mupip set -journal=on,before_images,filename=B/gtm.mjl -noprevjnlfile -region "DEFAULT"
-   $gtm_dist/mumps -r %XCMD 'merge ^A=^|"B/prior.gld"\|A'
-   $gtm_dist/mupip set -replication=on -region AREG
+   $ydb_dist/mupip backup "*" backup_B  -replinst=backup_B/ydb.repl
+   $ydb_dist/mupip set -journal=on,before_images,filename=B/gtm.mjl -noprevjnlfile -region "DEFAULT"
+   $ydb_dist/mumps -r %XCMD 'merge ^A=^|"B/prior.gld"\|A'
+   $ydb_dist/mupip set -replication=on -region AREG
    ./originating_start B A 4001
-   source ./gtmenv A r1.10 
+   source ./ydbenv A r1.10 
    ./originating_stop
    ./rollback 4001 backward
    cat A/gtm.lost  #apply lost transaction file on A. 
    ./replicating_start A 4001
    ./replicating_stop 
    cp A/gtm.gld A/prior.gld
-   $gtm_dist/mumps -r ^GDE @updgld
+   $ydb_dist/mumps -r ^GDE @updgld
    ./db_create
    mkdir backup_A
-   $gtm_dist/mupip backup "*" backup_A -replinst=backup_A/ydb.repl
-   $gtm_dist/mupip set -journal=on,before_images,filename=A/gtm.mjl -noprevjnlfile -region "DEFAULT"
-   $gtm_dist/mumps -r %XCMD 'merge ^A=^|"A/prior.gld"\|A'
-   $gtm_dist/mupip set -replication=on -region AREG
+   $ydb_dist/mupip backup "*" backup_A -replinst=backup_A/ydb.repl
+   $ydb_dist/mupip set -journal=on,before_images,filename=A/gtm.mjl -noprevjnlfile -region "DEFAULT"
+   $ydb_dist/mumps -r %XCMD 'merge ^A=^|"A/prior.gld"\|A'
+   $ydb_dist/mupip set -replication=on -region AREG
    ./replicating_start A 4001
    ./repl_status
    #Perform a switchover to return to the A->B configuration. Remove the global in the prior location to release space with a command like Kill ^A=^|"A/prior.gld"\|A'.
@@ -2006,9 +2006,9 @@ This example adds the mapping for global ^A to a new database file A.dat in an A
 The shutdown sequence is as follows:
 
 .. parsed-literal::
-   source ./gtmenv A r1.10
+   source ./ydbenv A r1.10
    ./replicating_stop
-   source ./gtmenv B r1.10
+   source ./ydbenv B r1.10
    ./originating_stop
 
 ++++++++++++++++++++++++++++++++++++++
@@ -2032,7 +2032,7 @@ On B:
 7. Cut the back links to the prior generation journal files with a command like: 
 
    .. parsed-literal::
-      $gtm_dist/mupip set -journal=on,before_images,filename=B/gtm.mjl -noprevjnlfile -region "DEFAULT"
+      $ydb_dist/mupip set -journal=on,before_images,filename=B/gtm.mjl -noprevjnlfile -region "DEFAULT"
 
 8. Turn on replication. 
 9. If the use of replication filters apply to your situation, bring up the replicating instance with the new-to-old filter on the Source Server of A, and the old-to-new filter on the Receiver Server of B. Otherwise, bring up the replicating instance on B. 
@@ -2050,7 +2050,7 @@ On A:
 8. Cut the back links to the prior generation journal files with a command like: 
 
    .. parsed-literal::
-      $gtm_dist/mupip set -journal=on,before_images,filename=A/gtm.mjl -noprevjnlfile -region DEFAULT
+      $ydb_dist/mupip set -journal=on,before_images,filename=A/gtm.mjl -noprevjnlfile -region DEFAULT
 
 9. Turn on replication. 
 10. Start the Receiver Server of A. 
@@ -2069,7 +2069,7 @@ On A:
 8. Cut the back links to the prior generation journal files with a command like: 
    
    .. parsed-literal::
-      $gtm_dist/mupip set -journal=on,before_images,filename=A/gtm.mjl -noprevjnlfile -region DEFAULT
+      $ydb_dist/mupip set -journal=on,before_images,filename=A/gtm.mjl -noprevjnlfile -region DEFAULT
 
 9. Turn on replication. 
 10. If the use of replication filters apply to your situation, bring up the Receiver Server with the old-to-new filter. Otherwise bring up the Receiver Server. 
@@ -2087,7 +2087,7 @@ on B:
 8. Cut the back links to the prior generation journal files with a command like: 
 
    .. parsed-literal::
-      $gtm_dist/mupip set -journal=on,before_images,filename=B/gtm.mjl -noprevjnlfile -region DEFAULT
+      $ydb_dist/mupip set -journal=on,before_images,filename=B/gtm.mjl -noprevjnlfile -region DEFAULT
 
 9. Turn on replication. 
 10. Start the Receiver Server of B. 
@@ -2108,33 +2108,33 @@ Here is an example to upgrade A and B deployed in an A→B replication configura
    ./repl_setup
    ./replicating_start B 4001
    source ./env A r1.00
-   $gtm_dist/mumps -r %XCMD 'for i=1:1:100 set ^A(i)=i'
+   $ydb_dist/mumps -r %XCMD 'for i=1:1:100 set ^A(i)=i'
    ./status
    source ./env B r1.00
    ./replicating_stop
    source ./env A r1.00
    ./status
    ./originating_stop 
-   $gtm_dist/mupip set -replication=off -region "DEFAULT"
-   $gtm_dist/dse dump -f 2>&1| grep "Region Seqno"
+   $ydb_dist/mupip set -replication=off -region "DEFAULT"
+   $ydb_dist/dse dump -f 2>&1| grep "Region Seqno"
    #Perform a switchover to make B the originating instance. 
    source ./env A r1.10
-   $gtm_dist/mumps -r ^GDE exit
-   $gtm_dist/mupip set -journal=on,before_images,filename=A/gtm.mjl -noprevjnlfile -region "DEFAULT"
+   $ydb_dist/mumps -r ^GDE exit
+   $ydb_dist/mupip set -journal=on,before_images,filename=A/gtm.mjl -noprevjnlfile -region "DEFAULT"
    #Perform the upgrade 
-   $gtm_dist/dse dump -fileheader 2>&1| grep "Region Seqno"
-   #If Region Seqno is greater than the Region Seqno noted previously, run $gtm_dist/dse change -fileheader -req_seqno=<previously_noted_region_seqno>.
+   $ydb_dist/dse dump -fileheader 2>&1| grep "Region Seqno"
+   #If Region Seqno is greater than the Region Seqno noted previously, run $ydb_dist/dse change -fileheader -req_seqno=<previously_noted_region_seqno>.
    ./repl_setup
    #A is now upgraded to r1.10 and is ready to resume the role of the originating instance. Shutdown B and reinstate A as the originating instance. 
    ./originating_start A B 4001
    source ./env B r1.10
-   $gtm_dist/mumps -r ^GDE exit
-   $gtm_dist/mupip set -journal=on,before_images,filename=B/gtm.mjl -noprevjnlfile -region "DEFAULT"
+   $ydb_dist/mumps -r ^GDE exit
+   $ydb_dist/mupip set -journal=on,before_images,filename=B/gtm.mjl -noprevjnlfile -region "DEFAULT"
    #Perform the upgrade 
-   $gtm_dist/dse dump -fileheader 2>&1| grep "Region Seqno"
-   #If Region Seqno is different, run $gtm_dist/dse change -fileheader -req_seqno=<previously_noted_region_seqno>.
-   $gtm_dist/dse dump -f 2>&1| grep "Region Seqno"
-   #If Region Seqno is greater than the Region Seqno noted previously, run $gtm_dist/dse change -fileheader -req_seqno=<previously_noted_region_seqno>.
+   $ydb_dist/dse dump -fileheader 2>&1| grep "Region Seqno"
+   #If Region Seqno is different, run $ydb_dist/dse change -fileheader -req_seqno=<previously_noted_region_seqno>.
+   $ydb_dist/dse dump -f 2>&1| grep "Region Seqno"
+   #If Region Seqno is greater than the Region Seqno noted previously, run $ydb_dist/dse change -fileheader -req_seqno=<previously_noted_region_seqno>.
    ./repl_setup
    ./replicating_start B 4001
 
@@ -2225,15 +2225,15 @@ The following example creates two instances (Alice and Bob) and a basic framewor
 
    .. parsed-literal::
       export LD_LIBRARY_PATH=/usr/local/lib
-      export gtmcrypt_config=$PWD/$gtm_repl_instname/config_file
-      echo -n "Enter Password for gtmtls_passwd_${gtm_repl_instname}: ";export gtmtls_passwd_${gtm_repl_instname}="`$gtm_dist/plugin/gtmcrypt/maskpass|tail -n 1|cut -f 3 -d " "`"
+      export ydb_crypt_config=$PWD/$ydb_repl_instname/config_file
+      echo -n "Enter Password for ydb_tls_passwd_${ydb_repl_instname}: ";export ydb_tls_passwd_${ydb_repl_instname}="`$ydb_dist/plugin/gtmcrypt/maskpass|tail -n 1|cut -f 3 -d " "`"
 
 2. Execute the env script as follows:
 
    .. parsed-literal::
       $ source ./env Alice r1.10
 
-This creates a YottaDB environment for replication instance name Alice. When prompted, enter a password for gtmtls_passwd_Alice. 
+This creates a YottaDB environment for replication instance name Alice. When prompted, enter a password for ydb_tls_passwd_Alice. 
 
 3. Create a certificate directory setup in the current directory and a self-signed root certification authority. 
 
@@ -2285,7 +2285,7 @@ The output of this script is like the following:
       .++++++++++++
       .......++++++++++++
       e is 65537 (0x10001)
-      Enter pass phrase for /home/jdoe/certs/Alice.key: [Specify the password that you entered for gtmtls_passwd_Alice]
+      Enter pass phrase for /home/jdoe/certs/Alice.key: [Specify the password that you entered for ydb_tls_passwd_Alice]
       Verifying - Enter pass phrase for /home/jdoe/certs/Alice.key:
       Enter pass phrase for /home/jdoe/certs/Alice.key:
       You are about to be asked to enter information that will be incorporated
@@ -2337,7 +2337,7 @@ The output of this script is like the following:
       Data Base Updated
 
 
-5. Create the $gtmcrypt_config file. Specify the names of all participating instances. 
+5. Create the $ydb_crypt_config file. Specify the names of all participating instances. 
 
    .. parsed-literal::
       ./gen_gc Alice Bob
@@ -2359,7 +2359,7 @@ On instance Bob:
    .. parsed-literal::
       $ source ./env Bob r1.10
 
-This creates a YottaDB environment for replication instance name Bob. When prompted, enter a password for gtmtls_passwd_Bob.
+This creates a YottaDB environment for replication instance name Bob. When prompted, enter a password for ydb_tls_passwd_Bob.
 
 2. Create the global directory and the database for instance Bob.
 
@@ -2372,7 +2372,7 @@ This creates a YottaDB environment for replication instance name Bob. When promp
 
 This also creates a leaf-level certificate for Bob. The openssl.conf used to create this example in available in the download for your reference. Ensure that your openssl.cnf file is configured according to your environment and security requirements.
 
-3. Create the $gtmcrypt_config file. Specify the names of all participating instances. 
+3. Create the $ydb_crypt_config file. Specify the names of all participating instances. 
 
    .. parsed-literal::
       ./gen_gc Alice Bob
@@ -2618,13 +2618,13 @@ Command Syntax:
 
 *-instance_create*
 
-Creates a replication instance file. mupip replicate -instance_create takes the file name of the replication instance file from the environment variable gtm_repl_instance.
+Creates a replication instance file. mupip replicate -instance_create takes the file name of the replication instance file from the environment variable ydb_repl_instance.
 
 If an instance file already exists, YottaDB renames it with a timestamp suffix, and creates a new replication instance file. This behavior is similar to the manner in which YottaDB renames existing journal files while creating new journal files. Creating an instance file requires standalone access.
 
 *-name*
 
-Specifies the instance name that uniquely identifies the instance and is immutable. The instance name can be from 1 to 16 characters. YottaDB takes the instance name (not the same as instance file name) from the environment variable gtm_repl_instname. If gtm_repl_instname is not set and -name is not specified, YottaDB produces an error.
+Specifies the instance name that uniquely identifies the instance and is immutable. The instance name can be from 1 to 16 characters. YottaDB takes the instance name (not the same as instance file name) from the environment variable ydb_repl_instname. If ydb_repl_instname is not set and -name is not specified, YottaDB produces an error.
 
 *-noreplace*
 
@@ -2652,11 +2652,11 @@ Except in application configurations that require it, YottaDB recommends not set
 Example:
 
 .. parsed-literal::
-   $ export gtm_repl_instance=mutisite.repl
-   $ export gtm_repl_instname=America
+   $ export ydb_repl_instance=mutisite.repl
+   $ export ydb_repl_instname=America
    $ mupip replicate -instance_create
 
-This example creates a replication instance file called multisite.repl specified by gtm_repl_instance with an instance name America specified by environment variable gtm_repl_instname. 
+This example creates a replication instance file called multisite.repl specified by ydb_repl_instance with an instance name America specified by environment variable ydb_repl_instname. 
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Displaying/ Changing the attributes of Replication Instance File and Journal Pool
@@ -2776,7 +2776,7 @@ Starts the Source Server.
 
 Identifies the replicating instance. <hostname:port> specifies an IPv4 or IPv6 address optionally encapsulated by square-brackets ([]) like "127.0.0.1", "::1", "[127.0.0.1]", or "[::1]" or a hostname that resolves to an IPv4 or IPv6 address and the port at which the Receiver Server is waiting for a connection.
 
-If, in your environment, the same hostname is used for both IPv4 and IPv6, YottaDB defaults to IPv6. If you wish to use IPv4, set the environment variable gtm_ipv4_only to "TRUE", "YES", or a non-zero integer in order to force YottaDB to use IPv4.
+If, in your environment, the same hostname is used for both IPv4 and IPv6, YottaDB defaults to IPv6. If you wish to use IPv4, set the environment variable ydb_ipv4_only to "TRUE", "YES", or a non-zero integer in order to force YottaDB to use IPv4.
 
 *-passive*
 
@@ -2801,7 +2801,7 @@ Specifies the size of the Journal Pool. The server rounds the size up or down to
 Specifies the complete path of the filter program and any associated arguments. If you specify arguments, then enclose the command string in quotation marks. If a filter is active, the Source Server passes the entire output stream to the filter as input. Then, the output from the filter stream passes to the replicating instance. If the filter program is an M program with entry-ref OLD2NEW^FILTER, specify the following path:
 
 .. parsed-literal::
-   filter='"$gtm_dist/mumps -run OLD2NEW^FILTER"'
+   filter='"$ydb_dist/mumps -run OLD2NEW^FILTER"'
 
 Write the filter as a UNIX process that takes its input from STDIN and writes its output to STDOUT.
 
@@ -2879,13 +2879,13 @@ First, the Source Server makes the number of reconnection attempts specified by 
 
 Identifies the replicating instance to which the Source Server replicates data.
 
-With no -instsecondary specified, the Source Server uses the environment variable gtm_repl_instsecondary for the name of the replicating instance.
+With no -instsecondary specified, the Source Server uses the environment variable ydb_repl_instsecondary for the name of the replicating instance.
 
-With no -instsecondary specified and environment variable gtm_repl_instsecondary not set, mupip replicate -source -checkhealth looks at all the Source Servers (Active or Passive) that are alive and running and those that were abnormally shutdown (kill -9ed). Any Source Server that was kill -15ed or MUPIP STOPped is ignored because YottaDB considers those Source Server shut down in the normal way. This command reports something only if it finds at least one Source Server that is alive and running or was abnormally shutdown (kill -9ed). Otherwise it returns a zero (0) status without anything to report even when the Journal Pool exists and YottaDB processes (Update Process or Receiver Server on the replicating instance) are up and running.
+With no -instsecondary specified and environment variable ydb_repl_instsecondary not set, mupip replicate -source -checkhealth looks at all the Source Servers (Active or Passive) that are alive and running and those that were abnormally shutdown (kill -9ed). Any Source Server that was kill -15ed or MUPIP STOPped is ignored because YottaDB considers those Source Server shut down in the normal way. This command reports something only if it finds at least one Source Server that is alive and running or was abnormally shutdown (kill -9ed). Otherwise it returns a zero (0) status without anything to report even when the Journal Pool exists and YottaDB processes (Update Process or Receiver Server on the replicating instance) are up and running.
 
 You can start multiple Source Servers from the same originating instance as long as each of them specifies a different name for -instsecondary.
 
-Specify -instsecondary explicitly (by providing a value) or implicitly (through the environment variable gtm_repl_instsecondary) even for starting a Passive Source Server. Whenever it activates, a Passive Source Server connects to this replicating instance.
+Specify -instsecondary explicitly (by providing a value) or implicitly (through the environment variable ydb_repl_instsecondary) even for starting a Passive Source Server. Whenever it activates, a Passive Source Server connects to this replicating instance.
 
 Example:
 
@@ -2924,7 +2924,7 @@ This command transitions a propagating originating instance to an originating in
 With neither -rootprimary nor -propagateprimary specified, YottaDB uses a default value of -propagateprimary for the passive Source Server startup command (mupip replic -source -start -passive) and the deactivate qualifier (mupip replicate -source -deactivate). YottaDB uses a default value of -rootprimary for the mupip replicate -source -start -secondary=... and the mupip replic -source -activate commands. These default values make the replication script simpler for users who are planning to limit themselves to one originating instance and multiple replicating instance (without any further replicating instances downstream).
 
 .. parsed-literal::
-   $ export gtm_repl_instance=multisite.repl
+   $ export ydb_repl_instance=multisite.repl
    $ mupip set -journal="enable,before,on" -replication=on -region "*"
    $ mupip replicate -instance_create -name=America
    $ mupip replicate -source -start -buffsize=$jnlpool_size -secondary=localhost:1234 -log=A2B.log -instsecondary=Brazil
@@ -2947,7 +2947,7 @@ Instructs the Source Server to not allow local updates on this instance. This is
 
 Specifies the desired compression level for the replication stream. n is a positive integer value indicating the level of compression desired. Level 0 offers no compression. Level 1 offers the least compression while Level 9 (as of version 1.2.3.3 of the zlib library) offers the most compression (at the cost of the most CPU usage). Specifying -cmplvl without an accompanying -start produces an error. In the case of the source server, if N specifies any value outside of the range accepted by the zlib library or if -cmplvl is not specified, the compression level defaults to zero (0). In the case of the receiver server, as long as N is non-zero the decompression feature is enabled; since the source server setting determines the actual level, any legal non-zero value enables compressed operation at the receiver.
 
-Alternatively, the environment variable gtm_zlib_cmp_level can specify the desired compression level (in the same value range as N above) and the source server can then be started without -cmplvl. This has the same effect as starting it with -cmplvl specified. An explicitly specified value on the command line overrides any value specified by the environment variable.
+Alternatively, the environment variable ydb_zlib_cmp_level can specify the desired compression level (in the same value range as N above) and the source server can then be started without -cmplvl. This has the same effect as starting it with -cmplvl specified. An explicitly specified value on the command line overrides any value specified by the environment variable.
 
 Whenever the source and receiver server connect with each other, if the source server was started with a valid non-zero compression level, they first determine whether the receiver server is running a version of YottaDB which handles compressed records and has been started with a non-zero compression level. Only if this is true, do they agree to use compressed journal records. They also verify with a test message that compression/decompression works correctly before sending any compressed journal data across. They automatically fall back to uncompressed mode of transmission if this test fails or if, at any point, either side detects that compression or decompression has failed. That is, any runtime error in the compression/decompression logic results in uncompressed replication (thereby reducing replication throughput) but never jeopardizes the functional health of replication.
 
@@ -2984,7 +2984,7 @@ By default, YottaDB searches for the libz.so shared library in the standard syst
 
 *-tlsid=<label>*
 
-Instructs the Source or Receiver Server to use the TLS certificate and private key pairs having <label> as the TLSID in the configuration file pointed to by the gtmcrypt_config environment variable. TLSID is a required parameter if TLS/SSL is to be used to secure replication connection between instances. If private keys are encrypted, an environment variable of the form gtmtls_passwd_<label> specifies their obfuscated password. You can obfuscate passwords using the 'maskpass' utility provided along with the encryption plugin. If you use unencrypted private keys, set the gtmtls_passwd_<label> environment variable to a non-null dummy value; this prevents inappropriate prompting for a password.
+Instructs the Source or Receiver Server to use the TLS certificate and private key pairs having <label> as the TLSID in the configuration file pointed to by the ydb_crypt_config environment variable. TLSID is a required parameter if TLS/SSL is to be used to secure replication connection between instances. If private keys are encrypted, an environment variable of the form ydb_tls_passwd_<label> specifies their obfuscated password. You can obfuscate passwords using the 'maskpass' utility provided along with the encryption plugin. If you use unencrypted private keys, set the ydb_tls_passwd_<label> environment variable to a non-null dummy value; this prevents inappropriate prompting for a password.
 
 *-[NO]PLAINtextfallback*
 
@@ -3048,7 +3048,7 @@ Before activation, -activate sets the Source Server to ACTIVE_REQUESTED mode. On
 
 Identifies the replicating instance to which the passive Source Server connects after activation.
 
-With no -instsecondary specified, the passive Source Server uses the environment variable gtm_repl_instsecondary as the value of -instsecondary.
+With no -instsecondary specified, the passive Source Server uses the environment variable ydb_repl_instsecondary as the value of -instsecondary.
 
 *-rootprimary*
 
@@ -3094,7 +3094,7 @@ Before deactivation, -deactivate sets the Source Server to PASSIVE_REQUESTED mod
 
 Identifies the active Source Server to transition to the passive (standby) state.
 
-With no -instsecondary specified, $gtm_repl_instsecondary determines the active Source Server.
+With no -instsecondary specified, $ydb_repl_instsecondary determines the active Source Server.
 
 *-rootprimary*
 
@@ -3292,7 +3292,7 @@ Always run MUPIP REPLICATE -SOURCE -LOSTTNCOMPLETE on each of the replicating in
 
 Checks whether the originating instance ever communicated with the specified replicating instance (if the receiver server or a fetchresync rollback on the replicating instance communicated with the Source Server) since the originating instance was brought up. If so, this command displays the message SECONDARY INSTANCE xxxx DOES NOT NEED TO BE RESTARTED indicating that the replicating instance communicated with the originating instance and hence does not need to be restarted. If not, this command displays the message SECONDARY INSTANCE xxxx NEEDS TO BE RESTARTED FIRST. In this case, bring up the specified instance as a replicating instance before the lost transactions from this instance are applied. Failure to do so before applying the corresponding lost transactions causes $ZQGBLMOD() to return false negatives which can result in application data inconsistencies.
 
-The mupip replic -source -needrestart command should be invoked once for each lost transaction file that needs to be applied. It should be invoked on the new originating instance before applying lost transactions. Specify -instsecondary to provide the instance name of the replicating instance where the lost transaction file was generated. If not, the environment variable gtm_repl_instsecondary is implicitly assumed to hold the name of the replicating instance.
+The mupip replic -source -needrestart command should be invoked once for each lost transaction file that needs to be applied. It should be invoked on the new originating instance before applying lost transactions. Specify -instsecondary to provide the instance name of the replicating instance where the lost transaction file was generated. If not, the environment variable ydb_repl_instsecondary is implicitly assumed to hold the name of the replicating instance.
 
 If the lost transaction file was generated from the same instance to which it is to be applied, a mupip replicate -source -needrestart command is not required.
 
@@ -3415,7 +3415,7 @@ Instructs the Receiver Server to accept a SI replication stream even when the re
 
 *-tlsid=<label>*
 
-Instructs the Source or Receiver Server to use the TLS certificate and private key pairs having <label> as the TLSID in the configuration file pointed to by the gtmcrypt_config environment variable. TLSID is a required parameter if TLS/SSL is to be used to secure replication connection between instances. If private keys are encrypted, an environment variable of the form gtmtls_passwd_<label> specifies their obfuscated password. You can obfuscate passwords using the 'maskpass' utility provided along with the encryption plugin. If you use unencrypted private keys, set the gtmtls_passwd_<label> environment variable to a non-null dummy value; this prevents inappropriate prompting for a password.
+Instructs the Source or Receiver Server to use the TLS certificate and private key pairs having <label> as the TLSID in the configuration file pointed to by the ydb_crypt_config environment variable. TLSID is a required parameter if TLS/SSL is to be used to secure replication connection between instances. If private keys are encrypted, an environment variable of the form ydb_tls_passwd_<label> specifies their obfuscated password. You can obfuscate passwords using the 'maskpass' utility provided along with the encryption plugin. If you use unencrypted private keys, set the ydb_tls_passwd_<label> environment variable to a non-null dummy value; this prevents inappropriate prompting for a password.
 
 +++++++++++++++++++++++++++++++++
 Starting the Update Process

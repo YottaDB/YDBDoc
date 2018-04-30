@@ -277,7 +277,7 @@ The following schematic illustrates acquisition of the password for the key ring
 
 **Master Key File and Key Files**
 
-The reference implementation uses a master key file for each user to obtain the symmetric keys for each database or journal file. The environment variable $gtmcrypt_config specifies the master key configuration file used for database encryption and TLS. The configuration file leverages the popular libconfig library (http://www.hyperrealm.com/libconfig). Please refer to the section called “Creating a configuration file” for instructions on creating the configuration file.
+The reference implementation uses a master key file for each user to obtain the symmetric keys for each database or journal file. The environment variable $ydb_crypt_config specifies the master key configuration file used for database encryption and TLS. The configuration file leverages the popular libconfig library (http://www.hyperrealm.com/libconfig). Please refer to the section called “Creating a configuration file” for instructions on creating the configuration file.
 
 The functions look for a key file ~/.ydb_dbkeys (i.e., in the home directory of the process' userid). The master key file contains sections as follows:
 
@@ -704,7 +704,7 @@ The normal YottaDB installation script does not automatically install YottaDB wi
 
 If the encryption libraries are not part of the automatic search path on your system, you will need to take action specific to your operating system and directory structure to make them accessible. For example, you may need to set one of the environment variables $LD_LIBRARY_PATH or $LIBPATH, for example: export LIBPATH="/lib:/usr/lib:/usr/local/lib" and/or run the ldconfig command.
 
-You must also implement appropriate key management, including ensuring that users have appropriate values for $gtmcrypt_config.
+You must also implement appropriate key management, including ensuring that users have appropriate values for $ydb_crypt_config.
 
 The structure of the $ydb_dist/plugin directory on Linux x86 after plugin compilation is as follows: 
 
@@ -887,7 +887,7 @@ The reference implementation includes:
 A $ydb_dist/plugin/gtmcrypt/source.tar archive with all source files and scripts. The archive includes a Makefile to build/install the plugins and "helper" scripts, for example, add_db_key.sh. A brief description of these scripts is as follows: 
 
 +--------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| show_install_config.sh         | Reports the cryptographic library and cipher that a YottaDB process would use, from $gtm_crypt_plugin, if it has a value and otherwise from the name of the library linked to by libgtmcrypt.so.     |
+| show_install_config.sh         | Reports the cryptographic library and cipher that a YottaDB process would use, from $ydb_crypt_plugin, if it has a value and otherwise from the name of the library linked to by libgtmcrypt.so.     |
 +--------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | gen_sym_hash.sh                | Uses show_install_config.sh to identify the currently installed encryption configuration so that it can generate the appropriate cryptographic hash for the provided symmetric key.                  |
 +--------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+

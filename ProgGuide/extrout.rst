@@ -573,7 +573,7 @@ gtm_hiber_start() always sleeps until the time expires; gtm_hiber_start_wait_any
 
 **Call-In table**
 
-The Call-In table file is a text file that contains the signatures of all M label references that get called from C. In order to pass the typed C arguments to the type-less M formallist, the environment variable GTMCI must be defined to point to the Call-In table file path. Each signature must be specified separately in a single line. YottaDB reads this file and interprets each line according to the following convention (specifications within box brackets "[]", are optional):
+The Call-In table file is a text file that contains the signatures of all M label references that get called from C. In order to pass the typed C arguments to the type-less M formallist, the environment variable ydb_ci must be defined to point to the Call-In table file path. Each signature must be specified separately in a single line. YottaDB reads this file and interprets each line according to the following convention (specifications within box brackets "[]", are optional):
 
 .. parsed-literal::
    <c-call-name> : <ret-type> <label-ref> ([<direction>:<param-type>,...])
