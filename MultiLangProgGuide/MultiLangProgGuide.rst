@@ -1134,7 +1134,7 @@ Notes:
   :code:`ydb_get_s()` and provide an output buffer
   (:code:`retvalue->len_alloc`) with a length of zero, since even in
   the case of a :CODE:`YDB_ERR_INVSTRLEN` error,
-  :code:`retvalue->len_alloc` is set.
+  :code:`retvalue->len_used` is set.
 - Within a transaction implemented by `ydb_tp_s()`_ application
   code observes stable data at global variable nodes because YottaDB
   `transaction processing`_ ensures ACID properties.
