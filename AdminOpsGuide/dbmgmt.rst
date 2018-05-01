@@ -539,7 +539,7 @@ The MUPIP DOWNGRADE command changes the file header format to a previous version
    D[OWNGRADE] -V[ERSION]={r1.0\|r1.10} file-name
 
 .. note::
-   You must perform a database integrity check using the -noonline parameter prior to downgrading a database. The integrity check verifies and clears database header fields required for an orderly downgrade. If an integrity check is not possible due to time constraints, please rely on a rolling upgrade scheme using replication and / or take a backup prior to upgrading the database.
+   You must perform a database integrity check using the -noonline parameter prior to downgrading a database. The integrity check verifies and clears database header fields required for an orderly downgrade. If an integrity check is not possible due to time constraints, please rely on a rolling upgrade scheme using replication and/or take a backup prior to upgrading the database.
 
 **-VERSION={version}**
 
@@ -936,7 +936,7 @@ The format of the MUPIP FREEZE command is:
 
 * After MUPIP FREEZE -ON -NOONLINE, processes that are attempting updates "hang" until the FREEZE is removed by the MUPIP FREEZE -OFF command or DSE. Make sure that procedures for using MUPIP FREEZE, whether manual or automated, include provisions for removing the FREEZE in all appropriate cases, including when errors disrupt the normal flow.
 
-* A -RECOVER/-ROLLBACK for a database reverts to a prior database update state. Therefore, a -RECOVER/-ROLLBACK immediately after a MUPIP FREEZE -ON removes the freeze. However, -RECOVER/-ROLLBACK does not succeed if there are processes attached (for example when a process attempt a database update immediately after a MUPP FREEZE -ON) to the database.
+* A -RECOVER/-ROLLBACK for a database reverts to a prior database update state. Therefore, a -RECOVER/-ROLLBACK immediately after a MUPIP FREEZE -ON removes the freeze. However, -RECOVER/-ROLLBACK does not succeed if there are processes attached (for example when a process attempt a database update immediately after a MUPIP FREEZE -ON) to the database.
 
 FREEZE must include one of the qualifiers:
 
@@ -1133,7 +1133,7 @@ The format of the MUPIP HASH command is:
 INTEG
 ++++++++++++
 
-Performs an integrity check on a YottaDB database file. You can perform structural integrity checks on one or more regions in the current Global Directory without bringing down (suspending database updates) your application. However, a MUPIP INTEG on a single file database requires standalone access but does not need a Global Directory. The order in which the MUPIP INTEG command selects database regions is a function of file system layout and may vary as files are moved or created. Execute MUPIP INTEG operations one database file at a time to generate an report where the output always lists database files in a predictable sequence. For example, to compare output with a reference file, run INTEG on one file at a time.
+Performs an integrity check on a YottaDB database file. You can perform structural integrity checks on one or more regions in the current Global Directory without bringing down (suspending database updates) your application. However, a MUPIP INTEG on a single file database requires standalone access but does not need a Global Directory. The order in which the MUPIP INTEG command selects database regions is a function of the file system layout and may vary as files are moved or created. Execute MUPIP INTEG operations one database file at a time to generate an report where the output always lists database files in a predictable sequence. For example, to compare output with a reference file, run INTEG on one file at a time.
 
 Always use MUPIP INTEG in the following conditions:
 
@@ -1427,7 +1427,7 @@ Specifies the maximum number of block transaction-number-too-large errors that M
 
 * -NOTRANSACTION does not accept assignment of an argument.
 
-* A system crash may generate many "block transaction number too large" errors. These errors can cause problems for BACKUP -INCREMENTAL and for transaction processing. Normally, the automatic increment of 1000 blocks that YottaDB adds when a database is reopened averts these errors. If a problem still exists after the database is reopened, users can use a value in the DSE CHANGE -FILEHEADER -CURRENT_TN= command to quickly fix "block transaction number too large number" errors.
+* A system crash may generate many "block transaction number too large" errors. These errors can cause problems for BACKUP -INCREMENTAL and for transaction processing. Normally, the automatic increment of 1000 blocks that YottaDB adds when a database is reopened averts these errors. If a problem still exists after the database is reopened, users can use a value in the DSE CHANGE -FILEHEADER -CURRENT_TN= command to quickly fix "block transaction number too large" errors.
 
 * By default, INTEG reports a maximum of 10 block transaction errors (-TRANSACTION=10).
 
@@ -1530,7 +1530,7 @@ Example:
 .. parsed-literal::
    $ mupip integ -map=20 -transaction=2 mumps.dat
 
-This command performs a MUPIP INTEG operation and restricts the maximum number of "block transaction- number-too-large errors" to 2.
+This command performs a MUPIP INTEG operation and restricts the maximum number of "block transaction number too large" errors to 2.
 
 .. parsed-literal::
    $ mupip integ -file mumps.dat -tn_reset
