@@ -5634,7 +5634,7 @@ INITORRESUME
 
 INITORRESUME, UPDATERESYNC on a Supplementary Instance must additionally specify INITIALIZE or RESUME
 
-Receiver Server Log / MUPIP Error: Issued by a Receiver Server when started with -UPDATERESYNC on a Supplementary Instance which allows local updates, but started without specifying either -INITIALIZE or -RESUME.
+Receiver Server Log/MUPIP Error: Issued by a Receiver Server when started with -UPDATERESYNC on a Supplementary Instance which allows local updates, but started without specifying either -INITIALIZE or -RESUME.
 
 Action: Additionally specify -INITIALIZE if this is the first time this supplementary instance is connecting to the source side OR if the receiver side databases have been refreshed from a backup of the source side. If on the other hand, the receiving instance had already been replicating from the source before and only had its instance file recreated in between, -RESUME might be appropriate with the -UPDATERESYNC. Check -RESUME documentation for more details.
 
@@ -6545,7 +6545,7 @@ JNLDBSEQNOMATCH, Journal file ffff has beginning region sequence number jjjj but
 
 MUPIP Error: MUPIP JOURNAL ROLLBACK FORWARD has found that journal file ffff has beginning region sequence number jjjj, but the corresponding database file dddd has region sequence number ssss. This condition may arise due to missing or incorrect journal files, for example due to a -NOCHAIN specification.
 
-Action: Use "*" and / or do not use -NOCHAIN to specify the list of journal files. If specifying explicit list of journal file names verify you are specifying the exact set of needed journal file names.
+Action: Use "*" and/or do not use -NOCHAIN to specify the list of journal files. If you are specifying an explicit list of journal file names, verify that you are specifying the exact set of needed journal file names.
 
 ---------------------
 JNLDBTNNOMATCH 
@@ -6908,7 +6908,7 @@ JNLOPNERR, Error opening journal file xxxx for region yyyy
 
 Run Time/MUPIP Error: This indicates that YottaDB could not open the journal file xxxx.
 
-Action: Review and trouble shoot accompanying messages.
+Action: Review and troubleshoot accompanying messages.
 
 ---------------
 JNLORDBFLU 
@@ -7048,7 +7048,7 @@ JNLREADBOF
 
 JNLREADBOF, Beginning of journal file encountered for xxxx
 
-MUPIP Error: This indicates that MUPIP JOURNAL command reached the beginning of journal file xxxx, while processing backward, and is not able to process backward anymore. This maybe due to the time qualifiers used to control the length of the backward processing.
+MUPIP Error: This indicates that MUPIP JOURNAL command reached the beginning of journal file xxxx, while processing backward, and is not able to process backward anymore. This may be due to the time qualifiers used to control the length of the backward processing.
 
 Action: Verify that the time qualifiers specified are as intended.
 
@@ -7414,6 +7414,7 @@ Action: Check for appropriate permissions for the parent and child job environme
 ----------------------
 JOBPARNOVAL
 ----------------------
+
 JOBPARNOVAL, This job parameter cannot take a value
 
 Compile Time Error: This indicates that a JOB command specified a value for a job parameter that does not accept a value.
@@ -7579,9 +7580,9 @@ KILLABANDONED
 
 KILLABANDONED, Abandoned kills counter is greater than zero for file ffff, tttt
 
-Run Time Error: This indicates a process terminated during KILL cleanup in database file ffff; tttt is text waring of the implications. Generally, this leaves a database with block incorrectly marked busy errors. Such errors are benign in that they only cause blocks to be inappropriately unavailable. Nonetheless they should be addressed promptly to avoid operators becoming desensitized to errors in INTEGs.
+Run Time Error: This indicates a process terminated during KILL cleanup in database file ffff; tttt is text warning of the implications. Generally, this leaves a database with "block incorrectly marked busy" errors. Such errors are benign in that they only cause blocks to be inappropriately unavailable. Nonetheless they should be addressed promptly to avoid operators becoming desensitized to errors in INTEGs.
 
-Action: Use DSE MAP to carefully FREE individual incorrectly marked busy block. If there are many blocks, you can edit the output of the integ (run with NOMAP) to create a script for driving repeated DSE MAP FREE. Alternatively, if you can get standalone access, to the database you may use DSE MAP RESTORE - never use MAP RESTORE on an active database.
+Action: Use DSE MAP to carefully FREE individual incorrectly marked busy block. If there are many blocks, you can edit the output of the integ (run with NOMAP) to create a script for driving repeated DSE MAP FREE. Alternatively, if you can get standalone access to the database you may use DSE MAP RESTORE - never use MAP RESTORE on an active database.
 
 -------------------
 KILLBYSIG 
@@ -7672,7 +7673,7 @@ LABELNOTFND, GOTO referenced a label that does not exist
 
 Run Time Error: A GOTO referenced a label with neither a routine nor an offset but that label does not currently exist in the current routine. The location that accompanies this message is the last line in the routine.
 
-Action: Check the errors from the compilation, as they provide the name of the missing label. As appropriate add the label or a routine, or better yet refactor to remove the GOTO.
+Action: Check the errors from the compilation, as they provide the name of the missing label. As appropriate, add the label or a routine, or better yet - refactor to remove the GOTO.
 
 ---------------------
 LABELONLY 
@@ -7778,7 +7779,7 @@ Action: Ensure that the proper tape is mounted and review how it was created. Us
 LDSPANGLOINCMP 
 ------------------
 
-LDSPANGLOINCMP, Incomplete spanning node found during load!/!_!_at File offset : oooo
+LDSPANGLOINCMP, Incomplete spanning node found during load at File offset : oooo
 
 MUPIP Error: This error indicates that MUPIP LOAD encountered an issue with a spanning node in the input file at offset oooo. MUPIP LOAD produces the following LDSPANGLOINCMP errors:
 
@@ -7954,7 +7955,7 @@ Action: Reduce the size of the parameter value and retry.
 LOADEOF 
 -----------------
 
-LOADEOF, Load error: EOF reached prior to BEGIN record xxxx No records loaded
+LOADEOF, Load error: EOF reached prior to BEGIN record xxxx. No records loaded.
 
 MUPIP Error: This indicates that LOAD did not transfer any records to the database because its input steam reached the end-of-file before the record specified by the qualifier BEGIN=xxxx.
 
@@ -8048,13 +8049,13 @@ LOCKSPACEFULL, No more room for LOCK slots on database file ffff
 
 Run Time Error: This indicates that the environment attempted more concurrent M LOCKs than the configured LOCK_SPACE for file ffff can support.
 
-Action: Analyze the LOCK protocol for efficiency. Use mupip set -file -lock_space=size ffff to increase the lock space for region xxx. To avoid the same problem the next time you recreate the database, use GDE to make the analogous change to lock_space for the segment mapped to the ffff file in the global directory used to MUPIP CREATE this region
+Action: Analyze the LOCK protocol for efficiency. Use mupip set -file -lock_space=size ffff to increase the lock space for region xxx. To avoid the same problem the next time you recreate the database, use GDE to make the analogous change to lock_space for the segment mapped to the ffff file in the global directory used to MUPIP CREATE this region.
 
 -------------------
 LOCKSPACEINFO 
 -------------------
 
-LOCKSPACEINFO, Region: rrrr: processes on queue: pppp/qqqq; LOCK slots in use: llll/kkkk; name space not full
+LOCKSPACEINFO, Region: rrrr: processes on queue: pppp/qqqq; LOCK slots in use: llll/kkkk; name space not full.
 
 Run Time Error: This indicates that the environment attempted more concurrent M LOCKs than the configured LOCK_SPACE for region rrrr can support. pppp processes are waiting on a lock. llll locks are in use. qqqq and kkkk indicate maximum number of process queue entries, and maximum number of locks respectively.
 
@@ -8256,7 +8257,7 @@ MAXACTARG
 
 MAXACTARG, Maximum number of actual arguments exceeded
 
-Compile Time Error: This indicates that a DO or extrinsic function supplied an actuallist with more than 32 elements.
+Compile Time Error: This indicates that a DO or extrinsic function supplied an actual list with more than 32 elements.
 
 Action: Modify the routine so that it passes fewer parameters explicitly.
 
@@ -8266,9 +8267,9 @@ MAXARGCNT
 
 MAXARGCNT, Maximum number of arguments xxxx exceeded
 
-Compile Time/Run Time Error: If this error occurs during compilation, it indicates that a command or function specified more than xxxx arguments. If this error occurs during run-time execution, it indicates that a SET of a $ZROUTINES has more than the allowed number of elements in an array. The maximum number of arguments is xxxx.
+Compile Time/Run Time Error: If this error occurs during compilation, it indicates that a command or function specified more than xxxx arguments. If this error occurs during run-time execution, it indicates that a SET of $ZROUTINES has more than the allowed number of elements in an array. The maximum number of arguments is xxxx.
 
-Action: If this error occurs during compilation, it indicates that a command or function specified more than xxxx arguments. If this error occurs during run-time execution, it indicates that a SET of a $ZROUTINES has more than the allowed number of elements in an array. The maximum number of arguments is xxxx.
+Action: If this error occurs during compilation, it indicates that a command or function specified more than xxxx arguments. If this error occurs during run-time execution, it indicates that a SET of $ZROUTINES has more than the allowed number of elements in an array. The maximum number of arguments is xxxx.
 
 ---------------
 MAXBTLEVEL 
@@ -8276,7 +8277,7 @@ MAXBTLEVEL
 
 MAXBTLEVEL, Global ^gggg in region rrrr reached maximum level
 
-Run Time/MUPIP Error: This indicates that the global-variable-tree for global xxxx reached the maximum level permissible. Very likely, MUPIP REORG was specified with a fill-factor much less than 100. Small fill-factors can cause REORG to revise existing GDS-blocks (in order to accommodate the fill-factor requirement), in turn causing block-splits, which might lead to an increase of the tree height. Alternatively a SET or MERGE has made the global really too large for the current block size, which is most likely to happen with large (spanning) database nodes. Note that if this message does not specify the global name, it means the directory tree for the region hit the limit - YottaDB believes the directory tree full condition is almost impossible to create in practice.
+Run Time/MUPIP Error: This indicates that the global-variable-tree for global xxxx reached the maximum level permissible. Very likely, MUPIP REORG was specified with a fill-factor much less than 100. Small fill-factors can cause REORG to revise existing GDS-blocks (in order to accommodate the fill-factor requirement), in turn causing block-splits, which might lead to an increase of the tree height. Alternatively, a SET or MERGE has made the global too large for the current block size, which is most likely to happen with large (spanning) database nodes. Note that if this message does not specify the global name, it means that the directory tree for the region hit the limit - YottaDB believes that the "directory tree full" condition is almost impossible to create in practice.
 
 Action: If MUPIP reorg was specified with a small fill-factor, try higher number (close to 100) to reduce tree-height. Other techniques include increasing GDS-block-size, reducing reserved bytes, killing unwanted portions of the tree or moving some nodes in the global to a different database region.
 
@@ -8316,7 +8317,7 @@ MAXSEMGETRETRY
 
 MAXSEMGETRETRY, Failed to get ftok semaphore after tttt tries because it is being continually deleted
 
-Run Time Error: A process was unable to open a database file because on every one of tttt tries it found something kept deleting the IPC semaphore that gates access to the file.
+Run Time Error: A process was unable to open a database file because on every one of tttt tries, it found that something kept deleting the IPC semaphore that gates access to the file.
 
 Action: Check for one or more rogue processes disrupting IPC semaphore, or for damage to the Operating System semaphore services.
 
@@ -8416,7 +8417,7 @@ MERGEDESC
 
 MERGEDESC, Merge operation not possible. xxxx is descendent of yyyy.
 
-Run Time Error: This indicates that YottaDB was not able to MERGE xxxx into yyyy or vice versa, because xxxx is a descendent of yyyy. When merging global variables specifications included extended references, the MERGE command issues a MERGDESC error if any part of the source or target tree, as mapped, is a descendant of the other. In MERGE ^|"x.gld"| a(1)=^|"mumps.gld"| ^a there is no error if mumps.gld maps ^a to different database files than those to which x.gld maps ^a(1). A MERGDESC error occurs if any part of ^a as mapped by mumps.gld overlaps any part of ^a(1) as mapped by x.gld.
+Run Time Error: This indicates that YottaDB was not able to MERGE xxxx into yyyy or vice versa, because xxxx is a descendent of yyyy. When merging global variables, specifications included extended references - the MERGE command issues a MERGDESC error if any part of the source or target tree, as mapped, is a descendant of the other. In MERGE ^|"x.gld"| a(1)=^|"mumps.gld"| ^a there is no error if mumps.gld maps ^a to different database files than those to which x.gld maps ^a(1). A MERGDESC error occurs if any part of ^a as mapped by mumps.gld overlaps any part of ^a(1) as mapped by x.gld.
 
 Action: Modify the routine to avoid MERGE operation between two variables where one is the descendant of the other.
 
@@ -8426,7 +8427,7 @@ MERGEINCOMPL
 
 MERGEINCOMPL, Error encountered during MERGE; operation may be incomplete
 
-Run Time Error: This indicates that YottaDB was not able to complete MERGE operation.
+Run Time Error: This indicates that YottaDB was not able to complete the MERGE operation.
 
 Action: Review the accompanying message(s) for additional information.
 
@@ -8496,7 +8497,7 @@ MMNOBFORRPL
 
 MMNOBFORRPL, Replication cannot be used in database file ffff which uses MM access method and NOBEFORE image journaling
 
-MUPIP Error: You can't turn on replcation for MM access method database file ffff.
+MUPIP Error: You can't turn on replication for MM access method database file ffff.
 
 Action: Forgo replication for the file or change the access method to BG.
 
@@ -8506,7 +8507,7 @@ MMNODYNDWNGRD
 
 MMNODYNDWNGRD, Unable to use dynamic downgrade with MM access method for region xxx. Use BG access method for downgrade
 
-Run Time/MUPIP Error: An attempt was made to use MM mode on a database that has not completed being downgraded. MM mode is only supported on fully downgraded or fully upgraded databases.
+Run Time/MUPIP Error: An attempt was made to use the MM mode on a database that has not completed being downgraded. MM mode is only supported on fully downgraded or fully upgraded databases.
 
 Action: Use MUPIP SET FILE or MUPIP SET REGION with the ACCESS_METHOD parameter to set the access mode to BG. Then complete the file downgrade using MUPIP REORG DOWNGRADE or file upgrade using MUPIP REORG UPGRADE. And finally set the access mode back to MM using the MUPIP SET FILE or MUPIP SET REGION command again.
 
@@ -8516,7 +8517,7 @@ MMNODYNUPGRD
 
 MMNODYNUPGRD, Unable to use MM access method for region yyy until all database blocks are upgraded
 
-Run Time/MUPIP Error: An attempt was made to use MM mode on a database that has not completed being upgraded. MM mode is only supported on fully upgraded databases.
+Run Time/MUPIP Error: An attempt was made to use MM mode on a database that has not completed being upgraded. MM mode is only supported on fully upgraded or fully downgraded databases.
 
 Action: Use MUPIP SET FILE or MUPIP SET REGION with the ACCESS_METHOD parameter to set the access mode to BG. Then complete the file upgrade using MUPIP REORG UPGRADE. And finally set the access mode back to MM using the MUPIP SET FILE or MUPIP SET REGION command again.
 
@@ -8788,7 +8789,7 @@ MUFILRNDWNFL2, Database section (id = dddd) belonging to database file ffff rund
 
 MUPIP Error: This error indicates that an argumentless MUPIP RUNDOWN failed for database ffff and could not safely remove the shared memory with ID dddd from the system.
 
-Action: Refer to accompanying for more detail on why the argumentless MUPIP RUNDOWN failed.
+Action: Refer to accompanying messages for more detail on why the argumentless MUPIP RUNDOWN failed.
 
 ------------------------
 MUFILRNDWNSUC 
@@ -8826,7 +8827,7 @@ MUINFOUINT6
 
 MUINFOUINT6, tttt : vvvv [0x!hhhh] ; $H=dddddd,tttttt
 
-MUPIP Information: This is secondary information message that provides additional context for some other MUPIP message; tttt is explanatory text, vvvv is a numeric value, hhhh is the hexadecimal equivalent of vvvv, dddddd and tttttt are a date and time in $HOROLOG format.
+MUPIP Information: This is secondary information message that provides additional context for some other MUPIP message; tttt is explanatory text, vvvv is a numeric value, hhhh is the hexadecimal equivalent of vvvv, dddddd and tttttt are date and time in $HOROLOG format.
 
 Action: Refer to the preceding message.
 
@@ -8846,7 +8847,7 @@ MUINSTFROZEN
 
 MUINSTFROZEN, tttt : Instance iiii is frozen. Waiting for instance to be unfrozen before proceeding with writes to database file ffff
 
-Run Time/MUPIP Information: This indicates the process attempting a write to database file ffff finds the instance iiii frozen (due to either a manual or an anticipatory freeze action). All writes suspend until the instance is unfrozen.
+Run Time/MUPIP Information: This indicates the process attempting a write to database file ffff finds the instance iiii frozen (due to either a manual or an anticipatory freeze action). All writes are suspended until the instance is unfrozen.
 
 Action: Examine the cause of the Instance Freeze and take necessary actions to unfreeze the instance.
 
@@ -9166,7 +9167,7 @@ MUREENCRYPTEND
 
 MUREENCRYPTEND, Database ffff : MUPIP REORG ENCRYPT finished by pid pppp at transaction number 0xtttt
 
-MUPIP Information: The MUPIP REORG -ENCRYPTinitiated by process pppp completed an encyption change for database file ffff at transaction number 0xtttt
+MUPIP Information: The MUPIP REORG -ENCRYPT initiated by process pppp completed an encyption change for database file ffff at transaction number 0xtttt
 
 Action: None required.
 
@@ -9694,7 +9695,7 @@ NAMSTARSUBSMIX, Name specification nnnn cannot contain * and subscripts at the s
 
 GDE Error: This indicates that the name nnnn contains both * and subscripts which is not allowed.
 
-Action: Specify a wildcard (*) or subscripts, but not both.
+Action: Specify either a wildcard (*) or subscripts, but not both.
 
 -------------------
 NAMSTARTBAD
@@ -10032,7 +10033,7 @@ NOJNLPOOL
 
 NOJNLPOOL, No journal pool info found in the replication instance of xxxx
 
-Run Time/MUPIP Error: This indicates that YottaDB / MUPIP did not get replication information from the instance file specified. Replication instance file was not initialized because replication did not start, or some other process reset the replication instance file.
+Run Time/MUPIP Error: This indicates that YottaDB/MUPIP did not get replication information from the instance file specified. Replication instance file was not initialized because replication did not start, or some other process reset the replication instance file.
 
 Action: Start the source server if it was not started. If the source server was running, stop the server and perform MUPIP RUNDOWN (if MUPIP RUNDOWN fails, try MUPIP RUNDOWN region * ).
 
@@ -10042,7 +10043,7 @@ NOLBRSRC
 
 NOLBRSRC, Object libraries cannot have SRC paths associated
 
-Run Time Error: This indicates that GTM$ROUTINES / gtmroutines or a SET $ZROUTINES attempted to place a source specification (SRC qualifier / source directory path) on an object library.
+Run Time Error: This indicates that GTM$ROUTINES / gtmroutines or a SET $ZROUTINES attempted to place a source specification (SRC qualifier/source directory path) on an object library.
 
 Action: Remove the source specification. YottaDB does not use the qualifier SRC= or source directories on object libraries. If you must provide access to sources corresponding to objects in the shared library, attach the source directory to an existing object directory entry. Since YottaDB does not support automatic recompilations into libraries, care must be taken when providing access to sources of library routines.
 
@@ -10178,7 +10179,7 @@ NORECVPOOL
 
 NORECVPOOL, No receiver pool info found in the replication instance of xxxx
 
-Run Time/MUPIP Error: This indicates that YottaDB / MUPIP did not get replication information from the instance file specified. Replication instance file was not initialized because receiver server did not start or, some other process reset the replication instance file.
+Run Time/MUPIP Error: This indicates that YottaDB/MUPIP did not get replication information from the instance file specified. Replication instance file was not initialized because receiver server did not start or, some other process reset the replication instance file.
 
 Action: Start the receiver server if the server was not started. If the receiver server was running, stop the server and perform MUPIP RUNDOWN (if MUPIP RUNDOWN fails, try MUPIP RUNDOWN region * ).
 
@@ -10761,7 +10762,7 @@ ORLBKFRZPROG, tttt : waiting for FREEZE on region rrrr (dddd) to clear
 
 MUPIP Information: Issued by MUPIP ROLLBACK -ONLINE when it encounters a region rrrr mapped to dabase file dddd which is frozen; tttt is the time it encountered the condition.
 
-Action: ROLLBACK waits for a period determined the the gtm_db_startup_max_wait environment variable, after which it clears the FREEZE and proceeds. The ROLLBACK is inappropriate due to the conditions that lead to the FREEZE, cancel the ROLLBACK, otherwise cancel the FREEZE or wait for ROLLBACK to clear it automatically.
+Action: ROLLBACK waits for a period determined the the gtm_db_startup_max_wait environment variable, after which it clears the FREEZE and proceeds. If the ROLLBACK is inappropriate due to the conditions that lead to the FREEZE, cancel the ROLLBACK, otherwise cancel the FREEZE or wait for ROLLBACK to clear it automatically.
 
 --------------------
 ORLBKINPROG
@@ -10769,7 +10770,7 @@ ORLBKINPROG
 
 ORLBKINPROG, Online ROLLBACK in progress by PID pppp in region rrrr
 
-Run Time Information: This message in the operator log indicates an online rollback has been in progress by process pppp on region rrrr for more than 30 seconds.
+Run Time Information: This message in the operator log indicates that an online rollback has been in progress by process pppp on region rrrr for more than 30 seconds.
 
 Action: None Required.
 
@@ -10840,7 +10841,7 @@ PARAMINVALID
 
 PARAMINVALID, Invalid parameter specified in an API call.
 
-Run Time Error: This indicates that a parameter in a SimpleAPI call was not properly specified. The function name (e.g. ydb_set_s()) and the name of the invalid parameter (e.g. subsarray) along with the type of the invalidity is identified in the error message text. If the parameter is an array, the index of the element where the invalidity is detected is also identified. If the parameter is an input parameter of type ydb_buffer_t it is invalid if "len_used" is greater than "alloc_len" OR if it has a "len_used value of 0 but a NULL value of "buf_addr". If the parameter is an output parameter, it is invalid if the ydb_buffer_t pointer is NULL or if the "buf_addr" field in the ydb_buffer_t structure is NULL. Note that no error checks are done if an input ydb_buffer_t typed pointer parameter is NULL (the process would get a SIG-11 and dump core in that case).
+Run Time Error: This indicates that a parameter in a SimpleAPI call was not properly specified. The function name (e.g. ydb_set_s()) and the name of the invalid parameter (e.g. subsarray) along with the type of the invalidity is identified in the error message text. If the parameter is an array, the index of the element where the invalidity is detected is also identified. If the parameter is an input parameter of type ydb_buffer_t, it is invalid if "len_used" is greater than "alloc_len" OR if it has a "len_used value of 0 but a NULL value of "buf_addr". If the parameter is an output parameter, it is invalid if the ydb_buffer_t pointer is NULL or if the "buf_addr" field in the ydb_buffer_t structure is NULL. Note that no error checks are done if an input ydb_buffer_t typed pointer parameter is NULL (the process would get a SIG-11 and dump core in that case).
 
 Action: Fix the cause of the invalidity and pass in a valid parameter to the SimpleAPI call.
 
@@ -10852,7 +10853,7 @@ PARBUFSM, Parse buffer too small
 
 Run Time Error: This indicates that an attempt to parse a file-specification exceeded the maximum length for file-specifications.
 
-Action: Review the file-specification for valid syntax; if it is a logical name / environment variable, confirm its definition.
+Action: Review the file-specification for valid syntax; if it is a logical name/environment variable, confirm its definition.
 
 --------------------
 PARFILSPC 
@@ -10940,7 +10941,7 @@ PATTABNOTFND
 
 PATTABNOTFND, Pattern table xxxx not found
 
-Run Time Error: This indicates that an attempt to load a pattern table failed because it was not found in the file described by the logical name / environment variable gtm_pattern_file or loaded by the VIEW "PATLOAD" command.
+Run Time Error: This indicates that an attempt to load a pattern table failed because it was not found in the file described by the logical name/environment variable gtm_pattern_file or loaded by the VIEW "PATLOAD" command.
 
 Action: Use host shell commands to examine the file and modify either the file or the VIEW command that performs the load.
 
@@ -10978,7 +10979,7 @@ Action: Check the field name. Verify the field exists and its specification has 
 PBNNOFIELD 
 ------------------
 
-PBNNOFIELD, %ZPEEKBYNAME() requires a field.item as its first parameter
+PBNNOFIELD, %ZPEEKBYNAME() requires a field. item as its first parameter.
 
 Utility Error: The first argument of %ZPEEKBYNAME() may be missing, empty, contain an unsupported field or be missing an item.
 
@@ -11257,7 +11258,7 @@ QUERY2, Invalid second argument to $QUERY. Must be -1 or 1.
 
 Run Time Error: This indicates that there is an invalid second argument passed to the function $QUERY. It must be either -1 or 1.
 
-Action: Refer to $QUERY in the Programmer's Guide for correct usage.
+Action: Refer to `$QUERY in the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/functions.html#query>`_ for correct usage.
 
 ------------------
 QUITALSINV 
@@ -11639,7 +11640,7 @@ REPLACCSEM
 
 REPLACCSEM, Error with replication access semaphore (id = xxxx) for instance file aaaa
 
-MUPIP Error: This indicates problem with the semaphore xxxx associated with the instance designated by aaaa.
+MUPIP Error: This indicates a problem with the semaphore xxxx associated with the instance designated by aaaa.
 
 Action: Review the accompanying message(s) for details.
 
@@ -11869,7 +11870,7 @@ REPLINSTNOHIST
 
 REPLINSTNOHIST, REPLINSTNOHIST History record for xxxx not found in replication instance file yyyy
 
-MUPIP Error: The source server or receiver server issue this message as an error while mupip rollback issues this message as a warning when they scan the replication instance file looking for a history record corresponding to a journal sequence number that is lesser than the earliest sequence number or greater than the latest sequence number stored in the instance file. This means that the replication instance files on the primary and secondary have differing level of history detail (possible if the instance file was later recreated in one instance) and that it is no longer possible to determine the sync point (resync seqno) between the two instances.
+MUPIP Error: The source server or receiver server issues this message as an error while mupip rollback issues this message as a warning when they scan the replication instance file looking for a history record corresponding to a journal sequence number that is lesser than the earliest sequence number or greater than the latest sequence number stored in the instance file. This means that the replication instance files on the primary and secondary have differing levels of history detail (possible if the instance file was later recreated in one instance) and that it is no longer possible to determine the sync point (resync seqno) between the two instances.
 
 Action: If mupip rollback issues this error, it truncates the replication instance file history. This means that if this instance is a secondary, it should be brought up with the -updateresync qualifier. If the source or receiver server issue this error, this error needs to be handled by ensuring the primary and secondary databases are in sync (by shipping a copy of the database from the primary to the secondary if not already done), recreating the instance file on the secondary (if not already done) and start the receiver server on the secondary with the -updateresync qualifier.
 
@@ -11907,7 +11908,7 @@ Action: Look at the accompanying error detail. Possible causes are file permissi
 REPLINSTSECLEN 
 --------------------
 
-REPLINSTSECLEN, REPLINSTSECLEN Secondary replication instance name xxxx should be 1 to 15 characters long
+REPLINSTSECLEN, Secondary replication instance name xxxx should be 1 to 15 characters long
 
 MUPIP Error: This error is issued by any mupip replic -source command that specifies a secondary instance name. This error is issued if the secondary instance name was specified either through the -instsecondary qualifier or through the environment variable gtm_repl_instsecondary and if the name was longer than 15 characters or was the empty string.
 
@@ -11917,7 +11918,7 @@ Action: Specify a valid secondary instance name that is 1 to 15 characters long.
 REPLINSTSECMTCH 
 ----------------------
 
-REPLINSTSECMTCH, REPLINSTSECMTCH Secondary replication instance name xxxx sent by receiver does not match yyyy specified at source server startup
+REPLINSTSECMTCH, Secondary replication instance name xxxx sent by receiver does not match yyyy specified at source server startup
 
 Source Server log/MUPIP Error: This error is issued by a source server that connects to a receiver server on the secondary and finds that the secondary instance name sent by the receiver does not match the secondary instance name specified (INSTSECONDARY qualifier) when the source server was started. The source server terminates after issuing this error.
 
@@ -11937,7 +11938,7 @@ Action: Make sure the replicating instance name is correct. If it is, make sure 
 REPLINSTSECUNDF 
 ------------------
 
-REPLINSTSECUNDF, REPLINSTSECUNDF Secondary replication instance name not defined
+REPLINSTSECUNDF, Secondary replication instance name not defined
 
 MUPIP Error: This error is issued by any mupip replic -source command that requires a secondary instance name to be specified. The source server commands that require this qualifier are those that have any of -activate, changelog, deactivate, needrestart, start, statslog or stopsourcefilter specified. The secondary name can be specified either through the INSTSECONDARY qualifier or through the environment variable gtm_repl_instsecondary. If neither of them is specified, this error is issued.
 
@@ -11947,9 +11948,9 @@ Action: Specify the secondary instance name using the INSTSECONDARY qualifier.
 REPLINSTSEQORD 
 ------------------
 
-REPLINSTSEQORD, REPLINSTSEQORD ssss has seqno xxxx which is less than last record seqno yyyy in replication instance file zzzz
+REPLINSTSEQORD, ssss has seqno xxxx which is less than last record seqno yyyy in replication instance file zzzz
 
-MUPIP Error: This error is issued in one of two scenarios. The instance file consists of a sequence of history records that should correspond to an increasing range of sequence numbers. They need to hence have their starting sequence number in increasing order. If an attempt is made to append a history record with a starting sequence number that is lesser than the last history record currently existing in the instance file, the source or receiver server issues this error. In this case ssss would be the string New history record. This error is also issued if at journal pool creation time, the source server notices that the instance file header has a value of the current seqno that is lesser than the starting seqno of the last history record in the instance file. In this case ssss would be the string Instance file header.
+MUPIP Error: This error is issued in one of two scenarios. The instance file consists of a sequence of history records that should correspond to an increasing range of sequence numbers. They need to hence have their starting sequence number in increasing order. If an attempt is made to append a history record with a starting sequence number that is lower than the last history record currently existing in the instance file, the source or receiver server issues this error. In this case, ssss would be the string new history record. This error is also issued if at journal pool creation time, the source server notices that the instance file header has a value of the current seqno that is lower than the starting seqno of the last history record in the instance file. In this case ssss would be the string instance file header.
 
 Action: If this instance is not the root primary, this error can be handled by restoring both the database and the instance file from a previous backup (consistent backup of the instance file AND database files taken together at the same time) and restarting the instance. Subsequent to such a restore, all transactions since the last backup will be sent across from this instance's primary. Alternatively, this can be handled by shipping a copy of the database from any other instance (either the primary or any other secondary/tertiary), recreating the instance file and starting this instance as a secondary with the UPDATERESYNC qualifier. In either case, this procedure has to be repeated on all tertiary instances etc. that descend from this instance ensuring that for every primary-secondary instance pair, the secondary is not ahead of the primary in terms of journal seqno. If this instance is the root primary, restoring from a prior backup may not be viable as it may mean loss of transactions that occurred after the backup. The alternative way to handle this error is to recreate the instance file on the root primary, ship a copy of the database from the primary and recreate instance files on ALL secondaries (tertiaries etc.) and restart the secondaries with the UPDATERESYNC qualifier. In addition, report the entire incident to your YottaDB support channel.
 
@@ -11957,7 +11958,7 @@ Action: If this instance is not the root primary, this error can be handled by r
 REPLINSTSTNDALN 
 --------------------
 
-REPLINSTSTNDALN, REPLINSTSTNDALN Could not get exclusive access to replication instance file xxxx
+REPLINSTSTNDALN, Could not get exclusive access to replication instance file xxxx
 
 MUPIP Error: This error is issued by MUPIP REPLIC INSTANCE_CREATE if it finds that the replication instance file it is attempting to create already exists and is being used (the journal pool for that instance exists) by YottaDB and/or MUPIP process(es).
 
@@ -12221,7 +12222,7 @@ REPLUPGRADESEC
 
 REPLUPGRADESEC, Attempted operation requires secondary instance xxxx to support multi-site replication
 
-MUPIP Error: This error is issued in three cases. 1) If a source server is currently connected to a dual-site secondary (i.e. a secondary running on a version of YottaDB that does not support multi-site functionality), starting additional source servers will issue this error. 2) If a source server finds more than one source server (active or passive) running on the same instance at the time it connects to a dual-site secondary it will issue this error. 3) On a propagating primary instance, a source server that connects to a dual-site tertiary instance will issue a this error at connection time.
+MUPIP Error: This error is issued in three cases. 1) If a source server is currently connected to a dual-site secondary (i.e. a secondary running on a version of YottaDB that does not support multi-site functionality), starting additional source servers will issue this error. 2) If a source server finds more than one source server (active or passive) running on the same instance at the time it connects to a dual-site secondary it will issue this error. 3) On a propagating primary instance, a source server that connects to a dual-site tertiary instance will issue this error at connection time.
 
 Action: Upgrade the secondary instance identified in the message to the version of YottaDB that supports multi-site replication functionality and then start multiple source servers.
 
@@ -12263,7 +12264,7 @@ REQDVIEWPARM, Required View parameter is missing
 
 Run Time Error: This indicates that the failed program attempted to use the VIEW function without specifying a keyword argument or with an invalid keyword argument.
 
-Action: Programmer's should consult the `Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/index.html>`_ for the correct syntax.
+Action: Programmers should consult the `Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/index.html>`_ for the correct syntax.
 
 ---------------------------
 REQRECOV
@@ -13893,7 +13894,7 @@ STPCRIT, String pool space critical
 
 Run Time Error: This indicates that the process has exceeded the heap (string pool) limit specified in the $ZSTRPLLIM ISV. If you do not take prompt action to reduce the process memory requirements, at the next heap expansion, YottaDB produces an STPOFLOW error, which terminates the process.
 
-Action: Investigate whether the process memory usage is appropriate, and if so, increase or remove the limit. Otherwise correct the cause(s) of the excessive memory consumption. Please see the documentation for $ZSTRPLLIM for additional information.
+Action: Investigate whether the process memory usage is appropriate, and if so, increase or remove the limit. Otherwise correct the cause(s) of the excessive memory consumption. Please see the documentation for `$ZSTRPLLIM <https://docs.yottadb.com/ProgrammersGuide/isv.html#zstrpllim>`_ for additional information.
 
 ----------------
 STPEXPFAIL 
@@ -15643,7 +15644,7 @@ ZCRCALLNAME
 
 ZCRCALLNAME, Routine name expected but not found
 
-Run Time Error: This indicates that the compiler encountered an open parenthesis ( indicating that parameters are listed, but found no function, which the parameters could modify.
+Run Time Error: This indicates that the compiler encountered an open parenthesis (indicating that parameters are listed, but found no function, which the parameters could modify).
 
 Action: Check that the function name has been specified correctly. The function may not have been created, or the program uses an incorrect function name, or the function name may be missing.
 
@@ -15818,7 +15819,7 @@ ZFF2MANY
 
 ZFF2MANY, Number of characters specified for ZFF deviceparameter (xxxx) is more than the allowed (yyyy)
 
-Run Time Error: This indicates that the number of characters specified for ZFF deviceparameter for the socked device being OPENd (or USEd) exceeds the maximum allowed.
+Run Time Error: This indicates that the number of characters specified for ZFF deviceparameter for the socked device being OPENed (or USEd) exceeds the maximum allowed.
 
 Action: Modify the string specified for ZFF to have a length of at most the maximum allowed.
 

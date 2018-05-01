@@ -472,7 +472,7 @@ The non-compressed part of the record key immediately follows the record header.
 Use of Keys
 +++++++++++++++++++
 
-YottaDB locates records by finding the first key in a block lexically greater than, or equal to, the current key. If the block has a level of zero (0), the location is either that of the record in question, or, if the record in question does not exist, that of the (lexically) next record. If the block has a level greater than zero (0), the record contains a pointer to the next level to search.
+YottaDB locates records by finding the first key in a block lexically greater than or equal to the current key. If the block has a level of zero (0), the location is either that of the record in question or if the record in question does not exist, that of the (lexically) next record. If the block has a level greater than zero (0), the record contains a pointer to the next level to search.
 
 YottaDB does not require that the key in an index block correspond to an actual existing key at the next level.
 
