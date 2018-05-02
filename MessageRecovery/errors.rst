@@ -6093,7 +6093,7 @@ Action: Look for typographical errors, an improper special variable name abbrevi
 INVTMPDIR
 -------------------
 
-INVTMPDIR, Value for $ydb_tmpdir is either not found or not a directory: dddd - Reverting to default value
+INVTMPDIR, Value for $ydb_tmp is either not found or not a directory: dddd - Reverting to default value
 
 Error: Indicates the process cannot access directory dddd, which it may need for a number of actions; the directory may not exist as a directory or the process lacks authorization to locate the directory.
 
