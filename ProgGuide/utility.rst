@@ -2442,7 +2442,7 @@ Example:
    YDB>DO ^%FREECNT
    Region          Free     Total          Database file
    ------          ----     -----          -------------
-   DEFAULT           81       100 ( 81.0%) /home/gtmuser1/.fis-gtm/V5.4-002B_x86/g/gtm.dat
+   DEFAULT           81       100 ( 81.0%) /home/gtmuser1/.yottadb/r1.20_x86/g/mumps.dat
    YDB>
 
 This example invokes %FREECNT at the YDB> prompt that displays the number of free blocks and percentage of free space available in the current global directory.
@@ -2469,7 +2469,7 @@ For all qualifiers, always wrap YottaDB code specified two forward slashes (/) t
 Example:
 
 .. parsed-literal::
-   /usr/lib/fis-gtm/V5.4-002B_x86/gtm -run %XCMD 'write "hello world",!' 
+   /usr/local/lib/yottadb/r120/ydb -run %XCMD 'write "hello world",!' 
 
 produces the following output:
 

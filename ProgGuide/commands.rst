@@ -1104,7 +1104,7 @@ Produces the results:
 Example:
 
 .. parsed-literal::
-   /usr/lib/fis-gtm/V5.4-002B_x86/gtm -run ^stackalias   
+   /usr/local/lib/yottadb/r120/ydb -run ^stackalias   
    stackalias ; Demonstrate New with alias
      ZPrint ; Print this program
      Set A=1,*B=A,*C(2)=A ; Create some aliases
@@ -1149,7 +1149,7 @@ Example:
 The following is essentially the same as the prior example but using an exclusive NEW:
 
 .. parsed-literal::
-   $ /usr/lib/fis-gtm/V5.4-002B_x86/gtm -run ^stackalias1
+   $ /usr/local/lib/yottadb/r120/ydb -run ^stackalias1
    stackalias1 ; Demonstrate New with alias
      ZPrint ; Print this program
      Set A=1,*B=A,*C(2)=A ; Create some aliases
@@ -2234,7 +2234,7 @@ Example 2:
    YDB>ZLink "NOSENSE"
    %YDB-E-LABELMISSING Label referenced but
    not defined:lab
-   %YDB-I-SRCNAM in source module /home/gtmuser1/.fis-gtm/V5.4-002B_x86/r/
+   %YDB-I-SRCNAM in source module /home/gtmuser1/.yottadb/r1.20_x86/r/
    NOSENSE.m
    YDB>ZPrint ^NOSENSE
    NOSENSE;
@@ -2985,7 +2985,7 @@ The use and setup of the auto-relink facility depends upon the requirements. Her
 .. parsed-literal::
    $ ydb
    YDB>w $zroutines
-   /home/jdoe/.fis-gtm/V6.2-001_x86_64/o*(/home/jdoe/.fis-gtm/V6.2-001_x86_64/r /home/jdoe/.fis-gtm/r) /usr/local/lib/yottadb/r1.10/plugin/o/_POSIX.so /usr/local/lib/yottadb/r1.10/plugin/o(/usr/local/lib/yottadb/r1.10/plugin/r) /usr/local/lib/yottadb/r1.10/libgtmutil.so /usr/local/lib/yottadb/r1.10
+   /home/jdoe/.yottadb/r1.20_x86_64/o*(/home/jdoe/.yottadb/r1.20_x86_64/r /home/jdoe/.yottadb/r) /usr/local/lib/yottadb/r1.20/plugin/o/_POSIX.so /usr/local/lib/yottadb/r1.20/plugin/o(/usr/local/lib/yottadb/r1.20/plugin/r) /usr/local/lib/yottadb/r1.20/libgtmutil.so /usr/local/lib/yottadb/r1.20
 
 In $ZROUTINES, the \*-suffix after the object directory enables the auto-relink facility. By default, the ydb/ydb_env_set scripts that are available as part of YottaDB distribution on sourceforge.net have auto-relink enabled.
 
@@ -3004,19 +3004,19 @@ If your routines require more MiB shared memory, set the environment variable $g
    YDB>zedit "myprogram.m"
    YDB>
 
-ZEDIT puts a new file into the first source directory in $ZROUTINES, that is, in the /home/jdoe/.fis-gtm/V6.2-001_x86_64/r directory.
+ZEDIT puts a new file into the first source directory in $ZROUTINES, that is, in the /home/jdoe/.yottadb/r1.20_x86_64/r directory.
 
 .. parsed-literal::
    YDB>do ^myprogram
 
-The first invocation of an implicit ZLINK (DO, GOTO ZGOTO, ZPRINT, $TEXT() or function/extrinsic invocation) or an explicit ZLINK "myprogram.m" or ZRUPDATE "/home/jdoe/.fis-gtm/V6.2-001_x86_64/myprogram.o" creates a Relinkctl file if one does not already exist and the associated shared memory. The relinkctl file has a name associated with the hash of the directory to provide a pointer in the form of segment ids to shared memory so that processes can locate routines.
+The first invocation of an implicit ZLINK (DO, GOTO ZGOTO, ZPRINT, $TEXT() or function/extrinsic invocation) or an explicit ZLINK "myprogram.m" or ZRUPDATE "/home/jdoe/.yottadb/r1.20_x86_64/myprogram.o" creates a Relinkctl file if one does not already exist and the associated shared memory. The relinkctl file has a name associated with the hash of the directory to provide a pointer in the form of segment ids to shared memory so that processes can locate routines.
 
 As the gtm_linktmpdir environment variable is not set by default in the ydb/ydb_env_set scripts, YottaDB stores the Relinkctl file in the directory pointed to by the gtm_tmp environment variable.
 
 .. parsed-literal::
    YDB>zshow "A"
-   Object Directory : /home/jdoe/.fis-gtm/V6.2-001_x86_64/o
-   Relinkctl filename : /tmp/fis-gtm/V6.2-001_x86_64/gtm-relinkctl-43b26ca8384ddbf74b94d90a830c0bc9
+   Object Directory : /home/jdoe/.yottadb/r1.20_x86_64/o
+   Relinkctl filename : /tmp/yottadb/r1.20_x86_64/gtm-relinkctl-43b26ca8384ddbf74b94d90a830c0bc9
    # of routines : 1
    # of attached processes : 1
    Relinkctl shared memory : shmid: 375586821 shmlen: 0x5800000
@@ -3028,10 +3028,10 @@ ZSHOW "A" command displays information related to relinkctl file and the routine
 .. parsed-literal::
    YDB>zedit "myprogram2.m"
 
-ZEDIT puts a new file into the first source directory in $ZROUTINES, that is, in the /home/jdoe/.fis-gtm/V6.2-001_x86_64/r directory.
+ZEDIT puts a new file into the first source directory in $ZROUTINES, that is, in the /home/jdoe/.yottadb/r1.20_x86_64/r directory.
 
 .. parsed-literal::
-   YDB> zrupdate "/home/jdoe/.fis-gtm/V6.2-001_x86_64/o/\*.o"
+   YDB> zrupdate "/home/jdoe/.yottadb/r1.20_x86_64/o/\*.o"
 
 The ZRUPDATE command increments the cycle counter of those routine records whose object hash is different than the one last loaded in the Rtnobj shared memory. In this case, it would be rec#2, that is, myprogram.o. ZRUPDATE does not recompile/relink the routines. Instead, it instructs all current and future processes that the object code is out-of-date and must be auto-relinked (if required) on the next invocation. An explicit ZLINK or an auto-relink (whichever happens first) checks the hash of an object and its replacement and initiates recompile/relink on finding that are they not identical.
 
@@ -3461,7 +3461,7 @@ For process that has access to two database files produces results like the foll
    NTW:203,NTR:4,NBW:212,NBR:414,NR0:0,NR1:0,NR2:0,NR3:0,TTW:1,TTR:0,TRB:0,TBW:2,TBR:6,
    TR0:0,TR1:0,TR2:0,TR3:0,TR4:0,TC0:0,TC1:0,TC2:0,TC3:0,TC4:0,ZTR:0,DFL:0,DFS:0,JFL:0,JFS:0,JBB:0,JFB:0,JFW:0,JRL:0,JRP:0,
    JRE:0,JRI:0,JRO:0,JEX:0,DEX:0,CAT:4,CFE:0,CFS:0,CFT:0,CQS:0,CQT:0,CYS:0,CYT:0,BTD:0
-   GLD:/home/gtmuser1/.fis-gtm/V5.4-002B_x86/g/mumps.gld,REG:DEFAULT,SET:205,KIL:0,GET:1,
+   GLD:/home/gtmuser1/.yottadb/r1.20_x86/g/mumps.gld,REG:DEFAULT,SET:205,KIL:0,GET:1,
    DTA:0,ORD:0,ZPR:0,QRY:0,LKS:0,LKF:0,CTN:411,DRD:9,DWT:15,NTW:2
    03,NTR:4,NBW:212,NBR:414,NR0:0,NR1:0,NR2:0,NR3:0,TTW:1,TTR:0,TRB:0,TBW:2,TBR:6,TR0:0,
    TR1:0,TR2:0,TR3:0,TR4:0,TC0:0,TC1:0,TC2:0,TC3:0,TC4:0
