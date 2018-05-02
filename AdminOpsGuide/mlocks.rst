@@ -13,7 +13,7 @@
 Introduction
 -----------------------------
 
-The M Lock Utility (LKE) is a tool for examining and changing the YottaDB LOCK environment. For a description of M LOCKs, refer to the LOCKs section in the `General Language Features of M <https://docs.yottadb.com/ProgrammersGuide/langfeat.html>`_ and the description of the `LOCK command in the Commands chapter of the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/commands.html#lock>`_.
+The M Lock Utility (LKE) is a tool for examining and changing the YottaDB LOCK environment. For a description of M LOCKs, refer to the `LOCKs section in the General Language Features of M <https://docs.yottadb.com/ProgrammersGuide/langfeat.html#m-locks>`_ and the description of the `LOCK command in the Commands chapter of the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/commands.html#lock>`_.
 
 The two primary functions of the M Lock Utility (LKE) are:
 
@@ -237,7 +237,7 @@ LKE responds with an informational message:
 .. parsed-literal::
    %YDB-S-LCKGONE, Lock removed : ^a
 
-Type Yes or N or No or N until all LOCKs are displayed and acted upon.
+Type Yes or Y or No or N until all LOCKs are displayed and acted upon.
 
 .. parsed-literal::
     LKE> clear -pid=4208 -nointeractive
@@ -309,9 +309,9 @@ The optional qualifiers are:
 
 * LKE SHOW displays lock space usage with a message in the form of: "%YDB-I-LOCKSPACEUSE, Estimated free lock space: xxx% of pppp pages." If the lock space is full, it also displays a LOCKSPACEFULL error.
 
-* A LOCK command which finds no room in LOCK_SPACE to queue a waiting LOCK, does a slow poll waiting for LOCK_SPACE to become available. If LOCK does not acquire the ownership of the named resource with the specified timeout, it returns control to the application with $TEST=0. If timeout is not specified, the LOCK command continues to do a slow poll till the space becomes available.
+* A LOCK command that finds no room in LOCK_SPACE to queue a waiting LOCK, does a slow poll waiting for LOCK_SPACE to become available. If LOCK does not acquire the ownership of the named resource with the specified timeout, it returns control to the application with $TEST=0. If timeout is not specified, the LOCK command continues to do a slow poll till the space becomes available.
 
-* LOCK commands which find no available lock space send a LOCKSPACEFULL message to the operator log. To prevent flooding the operator log, YottaDB suppresses further such messages until the lock space usage drops below 75% full.
+* LOCK commands that find no available lock space send a LOCKSPACEFULL message to the operator log. To prevent flooding the operator log, YottaDB suppresses further such messages until the lock space usage drops below 75% full.
 
 * The results of a SHOW may be immediately "outdated" by M LOCK activity.
 
@@ -538,9 +538,7 @@ Summary
 LKE Exercises
 -------------------------------
 
-When using M Locks, you must use a well designed and defined locking protocol. Your locking protocol must specify guidelines for acquiring LOCKs, selecting and using timeout, releasing M Locks, defining a lock s
-trategy according the given situation, identifying potential deadlock situations, and providing ways to avoid or recover from them. This section contains two exercises. The first exercise reinforces the concepts
-of YottaDB LOCKs previously explained in this chapter. The second exercise describes a deadlock situation and demonstrates how one can use LKE to identify and resolve it.
+When using M Locks, you must use a well designed and defined locking protocol. Your locking protocol must specify guidelines for acquiring LOCKs, selecting and using timeout, releasing M Locks, defining a lock strategy according to the given situation, identifying potential deadlock situations, and providing ways to avoid or recover from them. This section contains two exercises. The first exercise reinforces the concepts of YottaDB LOCKs previously explained in this chapter. The second exercise describes a deadlock situation and demonstrates how one can use LKE to identify and resolve it.
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Exercise 1: Preventing concurrent updates using M Locks
@@ -551,12 +549,12 @@ Consider a situation when two users (Mary and Ken) have to exclusively update a 
 .. note::
    Transaction Processing may offer a more efficient and more easily managed solution to the issue of potentially conflicting updates. For more information, see `General Language Features of M chapter of the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/langfeat.html>`_.
 
-At the prompt of Mary, execute the following commands:
+At Mary's prompt, execute the following commands:
 
 .. parsed-literal::
    YDB>lock +^ABC
 
-This command places a YottaDB LOCK on "^ABC " (not the global variable^ABC). Note: LOCKs without the +/- always release all LOCKs held by the process, so they implicitly avoid dead locks. With LOCK +, a protocol must accumulate LOCKs in the same order ( to avoid deadlocks).
+This command places a YottaDB LOCK on "^ABC " (not the global variable^ABC). Note: LOCKs without the +/- always release all LOCKs held by the process, so they implicitly avoid dead locks. With LOCK +, a protocol must accumulate LOCKs in the same order (to avoid deadlocks).
 
 Then execute the following command to display the status of the LOCK database.
 
@@ -575,24 +573,24 @@ Now, without releasing lock^ABC, execute the following commands at the prompt of
 
 This command wait for the lock on resource "^ABC " to be released. Note that that the LOCK command does not block global variable ^ABC in any way. This command queues the request for locking resource "^ABC" in the LOCK database. Note that you can still modify the value of global variable ^ABC even if it is locked by Mary.
 
-Now, at the prompt of Mary, execute the following command:
+Now, at Mary's prompt, execute the following command:
 
 .. parsed-literal::
    YDB>zsystem "LKE -show -all -wait"
 
-This command produces an output like the following:
+This command produces output like the following:
 
 .. parsed-literal::
-   DEFAULT ^ABC Owned by PID= 3657 which is an existing process 
-   Request PID= 3685 which is an existing process
+   DEFAULT ^ABC Owned by PID=3657 which is an existing process 
+   Request PID=3685 which is an existing process
 
-This output shows that the process belonging to Mary with PID 3657 currently owns the lock for global variable ^ABC and PID of Ken has requested the ownership of that lock. You can use this mechanism to create an application logic that adhere to your concurrent access protocols.
+This output shows that the process belonging to Mary with PID 3657 currently owns the lock for global variable ^ABC and Ken's PID has requested the ownership of that lock. You can use this mechanism to create application logic that adhere to your concurrent access protocols.
 
 ++++++++++++++++++++++++++++++++++++++++++++
 Exercise 2: Rectifying a deadlock situation
 ++++++++++++++++++++++++++++++++++++++++++++
 
-Now, consider another situation when both these users (Mary and Ken) have to update two text files. While an update is in progress, a YottaDB LOCK should prevent the other user from LOCKing that file. In some cases, a deadlock occurs when both users cannot move forward because they do not release their current LOCKs before adding additional LOCKs.
+Now, consider another situation where both these users (Mary and Ken) have to update two text files. While an update is in progress, a YottaDB LOCK should prevent the other user from LOCKing that file. In some cases, a deadlock occurs when both users cannot move forward because they do not release their current LOCKs before adding additional LOCKs.
 
 A deadlock situation can occur in the following situation:
 
@@ -605,7 +603,7 @@ Here both the users are deadlocked and neither can move forward. Note that a dea
 
 Let us now create this situation.
 
-At the prompt of Mary, execute the following commands:
+At Mary's prompt, execute the following commands:
 
 .. parsed-literal::
    YDB>set file1="file_1.txt"
@@ -617,7 +615,7 @@ At the prompt of Mary, execute the following commands:
 
 Note that Mary has not released the LOCK on resource "file1".
 
-At the prompt of Ken, execute the following commands:
+At Ken's prompt, execute the following commands:
 
 .. parsed-literal::
    YDB> set file2="file_2.txt" 
@@ -629,7 +627,7 @@ At the prompt of Ken, execute the following commands:
 
 Note that Ken has not released the LOCK on resource "file2".
 
-Now, at the prompt of Mary, execute the following commands.
+Now, at Mary's prompt, execute the following commands.
 
 .. parsed-literal::
    YDB>set file2="file_2.txt" 
@@ -641,17 +639,13 @@ Execute the following command at LKE prompt to view this deadlock situation.
 
 .. parsed-literal::
    LKE>show -all -wait 
-   file1 Owned by PID= 2080 which is an existing process 
-   Request PID= 2089 which is an existing process 
-   file2 Owned by PID= 2089 which is an existing process 
+   file1 Owned by PID=2080 which is an existing process 
+   Request PID=2089 which is an existing process 
+   file2 Owned by PID=2089 which is an existing process 
    Request PID=2080 which is an existing process
 
 This shows a deadlock situation where neither user can proceed forward because it is waiting for the other user to release the lock. You can resolve this situation by clearing the locks using the LKE CLEAR -PID command.
 
 .. note::
-   Avoid using the  LKE CLEAR command to clear a deadlock in a production environment as it may lead to unpredictable application behavior. Always use the  MUPIP STOP command to clear a deadlock situation in your production environment. However, in a debugging environment, you can use LKE to debug LOCKs, analyze the status of the LOCK database and even experiment with LKE CLEAR.
-
-
-
-
+   Avoid using the LKE CLEAR command to clear a deadlock in a production environment as it may lead to unpredictable application behavior. Always use the  MUPIP STOP command to clear a deadlock situation in your production environment. However, in a debugging environment, you can use LKE to debug LOCKs, analyze the status of the LOCK database and even experiment with LKE CLEAR.
 
