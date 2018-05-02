@@ -36,13 +36,11 @@ Before you begin installing YottaDB, perform the following tasks:
 * If you need to perform Unicode™-related operations in YottaDB, you must have at least ICU version 3.6 installed. YottaDB uses ICU 3.6 (or above) to provide support for Unicode. YottaDB generates the distribution for Unicode only if ICU 3.6 (or above) is installed on your system. By default, YottaDB uses the most current version of ICU. YottaDB expects ICU to have been built with symbol renaming disabled and issues an error at startup if the currently installed version of ICU has been built with symbol renaming enabled. If you intend to use a version of ICU built with symbol renaming enabled or any version other than the default, keep the MAJOR VERSION and MINOR VERSION numbers ready as you will have to enter it as MajorVersion.MinorVersion (for example "3.6" to denote ICU-3.6) during the installation process.
 
 .. note::
-  Installing YottaDB on an NFS mounted directory is not recommended. Several NFS characteristics violate YottaDB database design assumptions which may manifest themselves as hard to diagnose problems. If you still choose to install and operate YoottaDB from an NFS mounted directory, there are chances that at some point you will face significant problems with performance and response time. While you should never operate the YottaDB database and journal files from an NFS mounted directory you can safely, except on Linux, use an NFS mounted directory for keeping source and object code modules and performing sequential file IO. While NFS mounted files may work for you, historically they have not provided sufficient support for file locking over NFS to prevent intermittent errors when you have  significant concurrent file activity.
+  Installing YottaDB on an NFS mounted directory is not recommended. Several NFS characteristics violate YottaDB database design assumptions which may manifest themselves as hard to diagnose problems. If you still choose to install and operate YottaDB from an NFS mounted directory, there is a chance that at some point you will face significant problems with performance and response time. While you should never operate the YottaDB database and journal files from an NFS mounted directory you can safely, except on Linux, use an NFS mounted directory for keeping source and object code modules and performing sequential file IO. While NFS mounted files may work for you, historically they have not provided sufficient support for file locking over NFS to prevent intermittent errors when you have significant concurrent file activity.
 
 -------------------------
 Installation Procedure
 -------------------------
-
-
 
 * Create a temporary directory and change to it, e.g.: mkdir /tmp/tmp ; cd /tmp/tmp
 
@@ -62,12 +60,12 @@ Compiling the Reference Implementation Plugin
 
 Compile the reference implementation plugin as follows:
 
-* Install the development headers and libraries for libgcrypt, libgpgme, libconfig, and libssl. On Linux, the package names of development libraries usually have a suffix such as -dev or -devel and are available through the package manager. For example, on Ubuntu_x86_64 a command like the following installs the required development libraries:
+* Install the development headers and libraries for libgcrypt, libgpgme, libconfig, and libssl. On Linux, the package names of development libraries usually have a suffix such as -dev or -devel and are available through the package manager. For example, on Ubuntu_x86_64, the following command installs the required development libraries:
 
 .. parsed-literal::
    sudo apt-get install libgcrypt11-dev libgpgme11-dev libconfig-dev libssl-dev
 
-The package names vary by distribution / version.
+The package names vary by distribution/version.
 
 * Unpack $gtm_dist/plugin/gtmcrypt/source.tar to a temporary directory, for example: 
 
@@ -91,7 +89,7 @@ The package names vary by distribution / version.
 ydbinstall Script
 ---------------------
 
-ydbinstall is a stand-alone YottaDB installation script that installs YottaDB using reasonable defaults. ydbinstall is a part of the YottaDB binary distribution and you can also use it to install YottaDB from the temporary directory in which you unpack the YottaDB distribution. It allows considerable customization using the following command line switches:
+ydbinstall is a stand-alone YottaDB installation script that installs YottaDB using reasonable defaults. ydbinstall is a part of the YottaDB binary distribution and you can use it to install YottaDB from the temporary directory in which you unpack the YottaDB distribution. It allows considerable customization using the following command line switches:
 
 +-------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
 | Command Line Switches                                 | \* | Description                                                                                                            |
@@ -155,7 +153,7 @@ To run the ydbinstall script, run it as root.
 .. parsed-literal::
    sudo ./ydbinstall.sh
 
-This example installs the latest YottaDB release at /usr/local/lib/yottadb/version.
+This example installs the latest YottaDB release at /usr/local/lib/yottadb/version/
 
 .. parsed-literal::
    sudo ./ydbinstall.sh --utf8 default --verbose
@@ -163,14 +161,14 @@ This example installs the latest YottaDB release at /usr/local/lib/yottadb/versi
 This example installs the latest YottaDB release with added support for UTF-8 and outputs diagnostic information as the script executes.
 
 .. parsed-literal::
-   sudo ./ydbinstall.sh --installdir /r110 r1.10
+   sudo ./ydbinstall.sh --installdir /r120 r1.20
 
-This example installs YottaDB release r1.10 in the r110 directory.
+This example installs YottaDB release r1.20 in the r120 directory.
 
 .. parsed-literal::
    sudo ./ydbinstall.sh --gtm
 
-This example installs the latest GT.M version at /usr/local/lib/yottadb/version.
+This example installs the latest GT.M version at /usr/local/lib/yottadb/version/
 
 
 

@@ -29,7 +29,7 @@ In the following illustration, A is the originating primary instance and B and C
 
 BC replication is intended for mission-critical applications that must be available 24 hours a day, 365 days a year, in the face of both unplanned events (such as system crashes) as well as planned events (such as system and software upgrades).
 
-With BC replication, you can create a logical multi-site (LMS) replication configuration for mission critical applications that must always be available not only in face of unplanned events (such as system or data center failures) but also in the face of planned events such as computing platform upgrades, OS upgrades, YottaDB upgrades and even application upgrades. Deploying a BC replication configuration should take into account available network capacities, operational preferences, risk assessments, and business continuity requirements.
+With BC replication, you can create a logical multi-site (LMS) replication configuration for mission critical applications that must always be available not only in the face of unplanned events (such as system or data center failures) but also in the face of planned events such as computing platform upgrades, OS upgrades, YottaDB upgrades and even application upgrades. Deploying a BC replication configuration should take into account available network capacities, operational preferences, risk assessments, and business continuity requirements.
 
 SI replication allows replication from an instance A to another originating primary instance P. P can execute its own business logic to compute and commit its own updates to its database, while receiving a replication stream. In turn, P can have its own replicating secondary instance Q, and A can have its own replicating instance B. In such an SI replication configuration, only originating primary instances A and P can execute business logic and compute database updates. Replicating secondary instances B and Q are only permitted to receive and apply replication streams from their originating primary instances. The following diagram illustrates this configuration.
 
@@ -42,7 +42,7 @@ SI replication is a general purpose mechanism whose utility includes application
 .. note::
    In this book, instances {A, B, C...} denote systems of record (BC replication) and instances {P, Q, R...} denote instances that are not systems of record and which include the results of supplementary business logic.
 
-YottaDB replication is asynchronous, which in turn means that the source and receiver ends of a replication connection are at an identical state when there is no activity underway. To maintain consistency, and to restore it when restarting a replication connection, instances maintain a common, mutually coherent, instance-wide serial number called a journal sequence number. Each journal sequence number is tagged with two fields that identify the source of the update- a stream # that can take on values 0 through 15 and a stream sequence number (the journal sequence number of the update on the originating instance). Because replication deals with an entire global variable namespace, regardless of the mapping of global variables to database files, all updates participate in this numbering, even when modifying different database files. Each transaction (all updates bracketed by a pair TSTART/TCOMMIT commands) has a journal sequence number, as does each update outside a transaction (so-called mini-transactions).
+YottaDB replication is asynchronous, which in turn means that the source and receiver ends of a replication connection are at an identical state when there is no activity underway. To maintain consistency, and to restore it when restarting a replication connection, instances maintain a common, mutually coherent, instance-wide serial number called a journal sequence number. Each journal sequence number is tagged with two fields that identify the source of the update - a stream # that can take on values 0 through 15 and a stream sequence number (the journal sequence number of the update on the originating instance). Because replication deals with an entire global variable namespace, regardless of the mapping of global variables to database files, all updates participate in this numbering, even when modifying different database files. Each transaction (all updates bracketed by a pair TSTART/TCOMMIT commands) has a journal sequence number, as does each update outside a transaction (so-called mini-transactions).
 
 On instances that do not include updates from supplementary logic, the journal sequence number and the stream sequence number are the same.
 
@@ -61,7 +61,7 @@ An LMS Group is a set of one or more instances that receive updates from the sam
 BC members of a BC Group can replicate downstream to other BC and SI groups whereas an SI Group cannot replicate downstream to other groups.
 
 .. note::
-   Instances can change their roles within an LMS group but they cannot move between groups, however data from one instance / group can be loaded into another group.
+   Instances can change their roles within an LMS group but they cannot move between groups, however data from one instance/group can be loaded into another group.
 
 The following example illustrates a replication configuration where instance A from A's BC Group replicates to instance Q in Q's SI Group.
 
@@ -86,9 +86,9 @@ YottaDB imposes no distance limits between instances. You can place instances 20
 
 Using TCP connections, YottaDB replicates between instances with heterogeneous stacks of hardware, operating system, endian architecture and even YottaDB releases. YottaDB replication can even be used in configurations with different application software versions, including many cases where the application software versions have different database schema. This also means that a number of inexpensive systems - such as GNU/Linux commodity servers - can be placed in locations throughout an organization. Replicating instances can be used for decision support, reporting, and analytics. Because YottaDB databases can be encrypted, these commodity servers are potentially usable in environments outside secure data centers as long as their operating systems and software are secured.
 
-YottaDB replication requires journaling to be enabled and turned on for replicated regions. Unreplicated regions (for example, global variables containing information that is meaningful only on one instance and only as long as the instance is operating - such as process ids, temporary working files, and so on) need not be replicated or journaled.
+YottaDB replication requires journaling to be enabled and turned on for replicated regions. Unreplicated regions (for example, global variables containing information that is meaningful only in one instance and only as long as the instance is operating - such as process ids, temporary working files, and so on) need not be replicated or journaled.
 
-The YottaDB replication mechanism is designed in such a way that a network failure between instances will not stop an application from being available, which is a limitation of techniques such as high availability clustering (see note). There are mechanisms in place for edge cases like processing "in flight" transactions and common cases like handling backlog of updates after recovery from a network failure. While it is not possible to provide absolute continuity of business in our imperfect universe, an LMS configuration gives you the flexibility to choose application configurations that match your investment to a risk level that best meets the business needs of your organization.
+The YottaDB replication mechanism is designed in such a way that a network failure between instances will not stop an application from being available, which is a limitation of techniques such as high availability clustering (see note). There are mechanisms in place for edge cases like processing "in flight" transactions and common cases like handling a backlog of updates after recovery from a network failure. While it is not possible to provide absolute continuity of business in our imperfect universe, an LMS configuration gives you the flexibility to choose application configurations that match your investment to a risk level that best meets the business needs of your organization.
 
 .. note::
    YottaDB database replication is compatible with clustering - each instance can be a "hot-warm" cluster where if one node fails, another node can recover the database and continue operation. Since YottaDB LMS application configurations provide better business continuity in the face of a greater range of eventualities than clusters, if you wish to use clusters, consider their use in conjunction with, rather than instead of, YottaDB LMS configurations.
@@ -265,7 +265,7 @@ Whereas in the last example Malvern was not ahead when starting SI replication f
 
 **Rollback not Desired or Required by Application Design**
 
-In the example above, for Malvern to start accepting SI replication from BrynMawr with consistency requires it to rollback its database because it is ahead of BrynMawr. There may be applications where the design of the application is such that this rollback neither required nor desired. YottaDB provides a way for SI replication to start in this situation without rolling transactions off into an Unreplicated Transaction File.
+In the example above, for Malvern to start accepting SI replication from BrynMawr with consistency requires it to rollback its database because it is ahead of BrynMawr. There may be applications where the design of the application is such that this rollback is neither required nor desired. YottaDB provides a way for SI replication to start in this situation without rolling transactions off into an Unreplicated Transaction File.
 
 +----------------------------------------+-----------------------------------------+-------------------------------------------+-------------------------------------------------------------------------------------------+
 | Ardmore                                | Bryn Mawr                               | Malvern                                   | Comments                                                                                  |
@@ -493,11 +493,11 @@ This section describes how a well-designed messaging system makes an application
 
 As noted in the previous section, application servers on the originating instance respond to messages from clients delivered over a network for online operations in a tiered environment. Each client message results in zero (inquiry) or one update transaction on the server. The network delivering messages must be robust. This means each message must either be delivered exactly once to an application server on the originating instance, or result in client notification of the delivery failure. The messaging system must handle situations such as failure on the originating instance after the client transmits the message but before the originating instance receives it. Integration of the message delivery system with the logic determining whether an instance is an originating instance or replicating instance at any time reduces risk and switch over time.
 
-Application logic typically responds to client messages with a reply generated immediately after the TCOMMIT for a transaction. The application and the message architecture must handle the scenario in which the originating system fails after the TCOMMIT, but before the system generates a reply and transmits it to the client. In such a scenario, the client waits for a response and eventually timesout and retries the message.
+Application logic typically responds to client messages with a reply generated immediately after the TCOMMIT for a transaction. The application and the message architecture must handle the scenario in which the originating system fails after the TCOMMIT, but before the system generates a reply and transmits it to the client. In such a scenario, the client waits for a response and eventually times out and retries the message.
 
 An LMS application can handle this situation by designing the message structure to have a unique message identifier (MSGID), and the application to include the MSGID in the database as part of the TCOMMIT.
 
-If the originating instance crashes after committing the transaction and the switchover logic makes the former replicating instance the new originating instance - This new originating instance, then, receives the retried message that has the same MSGID from the client. In this case, one of the following can occur:
+If the originating instance crashes after committing the transaction and the switchover logic makes the former replicating instance the new originating instance - The new originating instance receives the retried message that has the same MSGID from the client. In this case, one of the following can occur:
 
 * The database shows that the transaction corresponding to the MSGID in the message was processed. The server could then reply that this transaction was processed. A more sophisticated approach computes the response to the client within the transaction, and stores it in the database as part of the transaction commit. Upon receipt of a message identified as a retry of a previously processed message, the server returns the stored response from the database to the client.
 
@@ -532,7 +532,7 @@ Implementing and managing switchover is outside the scope of YottaDB. YottaDB re
 4. Failing to follow these rules may result in the loss of database consistency between an originating instance and its replicating instances.
 
 .. note::
-   A switchover is a wholesome practice for maximizing business continuity. YottaDB strongly recommends setting up a switchover mechanism to keep a YottaDB application up in the face of disruptions that arise due to errors in the underlying platform. In environments where a switchover is not a feasible due to operational constraints, consider setting up an Instance Freeze mechanism for your application. For more information, refer to “Instance Freeze”.
+   A switchover is a wholesome practice for maximizing business continuity. YottaDB strongly recommends setting up a switchover mechanism to keep a YottaDB application up in the face of disruptions that arise due to errors in the underlying platform. In environments where a switchover is not a feasible due to operational constraints, consider setting up an Instance Freeze mechanism for your application. For more information, refer to “Instance Freeze” below.
 
 +++++++++++++++++++++++++
 Instance Freeze
@@ -572,7 +572,7 @@ During an Instance Freeze, attempts to update the database and journal files han
 TLS/SSL Replication
 +++++++++++++++++++++++
 
-YottaDB includes a plugin reference implementation that provides the functionality to secure the replication connection between instances using Transport Layer Security (TLS; previously known as SSL). Just as database encryption helps protect against unauthorized access to a database by an unauthorized process that is able to access disk files (data at rest), the plugin reference implementation secures the replication connection between instances and helps prevent unauthorized access to data in transit. YottaDB has tested YottaDB's replication operations of the TLS plugin reference implementation using OpenSSL (http://www.openssl.org). A future YottaDB release may include support for popular and widely available TLS implementations / cryptography packages other than OpenSSL. Note that a plug-in architecture allows you to choose a TLS implementation and a cryptography package. YottaDB neither recommends nor supports any specific TLS implementation or cryptography package and you should ensure that you have confidence in and support for whichever package that you intend to use in production.
+YottaDB includes a plugin reference implementation that provides the functionality to secure the replication connection between instances using Transport Layer Security (TLS; previously known as SSL). Just as database encryption helps protect against unauthorized access to a database by an unauthorized process that is able to access disk files (data at rest), the plugin reference implementation secures the replication connection between instances and helps prevent unauthorized access to data in transit. YottaDB has tested YottaDB's replication operations of the TLS plugin reference implementation using OpenSSL (http://www.openssl.org). A future YottaDB release may include support for popular and widely available TLS implementations/cryptography packages other than OpenSSL. Note that a plug-in architecture allows you to choose a TLS implementation and a cryptography package. YottaDB neither recommends nor supports any specific TLS implementation or cryptography package and you should ensure that you have confidence in and support for whichever package that you intend to use in production.
 
 .. note::
    Database encryption and TLS/SSL replication are just two of many components of a comprehensive security plan. The use of database encryption and TLS replication should follow from a good security plan. This section discusses encrypted YottaDB replicating instances and securing the replication connection between them using TLS/SSL; it does not discuss security plans. You can setup TLS replication between instances without using YottaDB Database Encryption. YottaDB Database Encryption is not a prerequisite to using TLS replication.
@@ -822,7 +822,7 @@ YottaDB replication requires a durable network link between all instances. The d
 Choosing Betweeen BEFORE_IMAGE and NOBEFORE_IMAGE 
 ++++++++++++++++++++++++++++++++++++++++++++++++++
 
-Between BEFORE_IMAGE journaling and NOBEFORE_IMAGE journaling, there is no difference in the final state of a database / instance recovered after a crash. The difference between before image and nobefore image journaling is in:
+Between BEFORE_IMAGE journaling and NOBEFORE_IMAGE journaling, there is no difference in the final state of a database/instance recovered after a crash. The difference between before image and nobefore image journaling is in:
 
 * the sequence of steps to recover an instance and the time required to perform them.
 
@@ -917,7 +917,7 @@ Procedures
 Download Replication Examples
 ++++++++++++++++++++++++++++++
 
-repl_procedures.tar.gz contains a set of replication example scripts. Each script contains a combination of YottaDB commands that accomplish a specific task. All examples in the Procedures section use these replication scripts but each example uses different script sequence and script arguments. Always run all replication examples in a test system from a new directory as they create sub-directories and database files in the current directory. No claim of copyright is made with regard to these examples. These example scripts are for explanatory purposes and are not intended for production use. YOU MUST UNDERSTAND, AND APPROPRIATELY ADJUST THE COMMANDS GIVEN IN THESE SCRIPTS BEFORE USING IN A PRODUCTION ENVIRONMENT. Typically, you would set replication between instances on different systems/data centers and create your own set of scripts with appropriate debugging and error handling to manage replication between them.
+repl_procedures.tar.gz contains a set of replication example scripts. Each script contains a combination of YottaDB commands that accomplish a specific task. All examples in the Procedures section use these replication scripts but each example uses different script sequence and script arguments. Always run all replication examples in a test system from a new directory as they create sub-directories and database files in the current directory. No claim of copyright is made with regard to these examples. These example scripts are for explanatory purposes and are not intended for production use. YOU MUST UNDERSTAND, AND APPROPRIATELY ADJUST THE COMMANDS GIVEN IN THESE SCRIPTS BEFORE USING THEM IN A PRODUCTION ENVIRONMENT. Typically, you would set replication between instances on different systems/data centers and create your own set of scripts with appropriate debugging and error handling to manage replication between them.
 
 Go to `Github <https://github.com/YottaDB/YottaDBdoc/tree/master/AdminOpsGuide>`_ to download repl_procedures.tar.gz on a test system. 
 
@@ -930,7 +930,7 @@ Sets a default environment for YottaDB replication. It takes two arguments:
 * The name of the instance/database directory
 * The YottaDB version
 
-Example: source ./env r1.10
+Example: source ./env r1.20
 
 Here is the code:
 
@@ -1290,7 +1290,7 @@ On A:
 * Turn on replication.
 * Create a new replication instance file.
 * Start the Source Server.
-* Immediately, after starting the Source Server but before making any updates, take a backup of the replication instance file. The instance file has the journal sequence number that corresponds to the database state at the time of starting the instance. This backup instance helps when you need to start a new Supplementary Instance without taking a backup of the Originating Instance. Retain the backup copy of the Originating Instance as you may need it in future as a checkpoint from where its supplementary instance may resume to receive updates. 
+* Immediately after starting the Source Server but before making any updates, take a backup of the replication instance file. The instance file has the journal sequence number that corresponds to the database state at the time of starting the instance. This backup instance helps when you need to start a new Supplementary Instance without taking a backup of the Originating Instance. Retain the backup copy of the Originating Instance as you may need it in future as a checkpoint from where its supplementary instance may resume to receive updates. 
 
 .. note::
    While a backed up instance file helps start replication on the P side of A→P, it does not prevent the need for taking a backup of the database on A. You need to do a database backup/restore or an extract/load from A to P to ensure P has all of the data as on A at startup.
@@ -1570,7 +1570,7 @@ The following demonstrates a switchover scenario from B←A→P to A←B→P whe
 | O: ... A95, A96, A97, A98, A99       | R: ... A95, A96, A97                         | S: ... P34, A95, P35, P36, A96, A97,      | A as an originating primary instance at transaction number A99, replicates to B as a BC     |
 |                                      |                                              | P37, P38, A98, P39, P40                   | replicating secondary instance at transaction number A97 and P as a SI that includes        |
 |                                      |                                              |                                           | transaction number A98, interspersed with locally generated updates. Updates are recorded   |
-|                                      |                                              |                                           | in each instance"s journal files using before-image journaling.                             |
+|                                      |                                              |                                           | in each instance's journal files using before-image journaling.                             |
 +--------------------------------------+----------------------------------------------+-------------------------------------------+---------------------------------------------------------------------------------------------+
 | Crashes                              | O: ... A95, A96, A97                         | ... P34, A95, P35, P36, A96, A97, P37,    | When an event disables A, B becomes the new originating primary, with A97 the latest        |
 |                                      |                                              | P38, A98, P39, P40                        | transaction in its database. P cannot immediately start replicating from B because the      |
@@ -2168,13 +2168,13 @@ To shutdown a propagating instance:
 Creating a new Replication Instance File
 ++++++++++++++++++++++++++++++++++++++++++
 
-You do not need to create a new replication instance file except when you upgrade from a very old YottaDB version. Unless stated in the release notes of your YottaDB version, you instance file does not need to be upgraded. If you are creating a new replication instance file for any administration purpose, remember that doing so will remove history records which may prevent it from resuming replication with other instances. To create a new replication instance file, follow these steps:
+You do not need to create a new replication instance file except when you upgrade from a very old YottaDB version. Unless stated in the release notes of your YottaDB version, your instance file does not need to be upgraded. If you are creating a new replication instance file for any administration purpose, remember that doing so will remove history records which may prevent it from resuming replication with other instances. To create a new replication instance file, follow these steps:
 
 * Shut down all mumps, MUPIP and DSE processes except Source and Receiver Server processes; then shut down the Receiver Server (and with it, the Update Process) and all Source Server processes. Use MUPIP RUNDOWN to confirm that all database files of the instance are closed and there are no processes accessing them.
 
 * Create a new replication instance file (you need to provide the instance name and instance file name, either with command line options or in environment variables, as described in other examples of this section):
 
-  * If this is instance is to receive SI replication or to receive BC replication from an instance that receives SI replication, use the command:
+  * If this instance is to receive SI replication or to receive BC replication from an instance that receives SI replication, use the command:
 
     .. parsed-literal::
         mupip replicate -instance_create -supplementary
@@ -2187,7 +2187,7 @@ You do not need to create a new replication instance file except when you upgrad
        mupip replicate -instance_create
 
 .
-   * If a replication instance file already exists, these commands will create a backup copy of the replicating instance and then create a new replication instance file. If you want to prevent accidental overwriting your existing replication instance file, use the -noreplace qualifier with these commands.
+   * If a replication instance file already exists, these commands will create a backup copy of the replicating instance and then create a new replication instance file. If you want to prevent accidentally overwriting your existing replication instance file, use the -noreplace qualifier with these commands.
 
 * Prepare it to accept a replication stream:
 
@@ -2411,7 +2411,7 @@ Recovering from the replication WAS_ON State
 
 If you notice the replication WAS_ON state, correct the cause that made YottaDB turn journaling off and then execute MUPIP SET -REPLICATION=ON.
 
-To make storage space available, first consider moving unwanted non-journaled and temporary data. Then consider moving the journal files that predate the last backup. Moving the currently linked journal files is a very last resort because it disrupts the back links and a rollback or recover will not be able to get back past this discontinuity unless you are able to return them to their original location.
+To make storage space available, first consider moving unwanted non-journaled and temporary data. Then consider moving the journal files that predate the last backup. Moving the currently linked journal files is the very last resort because it disrupts the back links and a rollback or recover will not be able to get back past this discontinuity unless you are able to return them to their original location.
 
 If the replication WAS_ON state occurs on the originating side:
 
@@ -2921,7 +2921,7 @@ Example:
 
 This command transitions a propagating originating instance to an originating instance without bringing down the Journal Pool.
 
-With neither -rootprimary nor -propagateprimary specified, YottaDB uses a default value of -propagateprimary for the passive Source Server startup command (mupip replic -source -start -passive) and the deactivate qualifier (mupip replicate -source -deactivate). YottaDB uses a default value of -rootprimary for the mupip replicate -source -start -secondary=... and the mupip replic -source -activate commands. These default values make the replication script simpler for users who are planning to limit themselves to one originating instance and multiple replicating instance (without any further replicating instances downstream).
+With neither -rootprimary nor -propagateprimary specified, YottaDB uses a default value of -propagateprimary for the passive Source Server startup command (mupip replic -source -start -passive) and the deactivate qualifier (mupip replicate -source -deactivate). YottaDB uses a default value of -rootprimary for the mupip replicate -source -start -secondary=... and the mupip replic -source -activate commands. These default values make the replication script simpler for users who are planning to limit themselves to one originating instance and multiple replicating instances (without any further replicating instances downstream).
 
 .. parsed-literal::
    $ export gtm_repl_instance=multisite.repl
@@ -3358,7 +3358,7 @@ Specifies the TCP port number the Receiver Server will listen to for incoming co
 
 *-autorollback[=verbose]*
 
-Allows the receiving instance of SI or BC replication to roll back as required when the source instance rolls back with a mupip journal -rollback -backward command. The optional value keyword VERBOSE allows roll back to provide more diagnostic information. 
+Allows the receiving instance of SI or BC replication to roll back as required when the source instance rolls back with a mupip journal -rollback -backward command. The optional value keyword VERBOSE allows rollback to provide more diagnostic information. 
 
 .. note::
    As autorollback uses mupip online rollback under the covers, it should be considered field test grade functionality as long as that function is considered field test grade functionality.
@@ -3488,7 +3488,7 @@ Shuts down only the Helper Processes and leaves the Receiver Server and Update P
 
 *-timeout*
 
-Specifies the period of time (in seconds) the shutdown command should wait before signaling the Receiver Server, Update Process, and/or helper processes to shut down.If you do not specify -timeout, the default timeout period is 30 seconds. If you specify -timeout=0, shutdown occurs immediately.
+Specifies the period of time (in seconds) the shutdown command should wait before signaling the Receiver Server, Update Process, and/or helper processes to shut down. If you do not specify -timeout, the default timeout period is 30 seconds. If you specify -timeout=0, shutdown occurs immediately.
 
 *-updateonly*
 
