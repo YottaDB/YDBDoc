@@ -62,7 +62,7 @@ Refer to your OS documentation to configure shared memory limits (for example, o
 
 The ydb_env_set (and ydb) scripts, by design, are idempotent so that calling them repeatedly is safe. The YottaDB installation process ensures that ydb_env_set always sets gtm_dist correctly. Idempotency is implemented by checking the value of $gtm_dist and skipping all changes to environment variables if gtm_dist is already defined.
 
-When gtm sources ydb_env_set, it provides a default execution environment (global directory and a default database (with BEFORE_IMAGE journaling) if none exists. By default, it creates the database in $HOME/.fis-gtm with a structure like the following; note that this directory structure has different locations for YottaDB routines (r), object files (o), and database-related files (g):
+When ydb sources ydb_env_set, it provides a default execution environment (global directory and a default database (with BEFORE_IMAGE journaling) if none exists. By default, it creates the database in $HOME/.yottadb with a structure like the following; note that this directory structure has different locations for YottaDB routines (r), object files (o), and database-related files (g):
 
 .. parsed-literal::
 
@@ -761,7 +761,7 @@ Consider the following example of a memory map report of a Source Server process
 
 .. parsed-literal::
    $ pmap -d 18839
-   18839: /usr/lib/fis-gtm/V6.2-000_x86_64/mupip replicate -source -start -buffsize=1048576 -secondary=melbourne:1235 -log=/var/log/.fis-gtm/mal2mel.log -instsecondary=melbourne
+   18839: /usr/local/lib/yottadb/r1.20_x86_64/mupip replicate -source -start -buffsize=1048576 -secondary=melbourne:1235 -log=/var/log/.yottadb/mal2mel.log -instsecondary=melbourne
    Address   Kbytes Mode Offset   Device Mapping
    --- lines removed for brevity -----
    mapped: 61604K writeable/private: 3592K shared: 33532K

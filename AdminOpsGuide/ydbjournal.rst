@@ -888,12 +888,12 @@ The show-option-list includes (these are not case-sensitive):
 
  .. parsed-literal::
    -----------------------------------------------------------------------------
-   SHOW output for journal file /home/jdoe/.fis-gtm/V6.3-002_x86/g/gtm.mjl
+   SHOW output for journal file /home/jdoe/.yottadb/r1.20_x86/g/mumps.mjl
    -----------------------------------------------------------------------------
-   Journal file name       /home/jdoe/.fis-gtm/V6.3-002_x86/g/gtm.mjl
+   Journal file name       /home/jdoe/.yottadb/r1.20_x86/g/mumps.mjl
    Journal file label      GDSJNL23
-   Database file name      /home/jdoe/.fis-gtm/V6.3-002_x86/g/gtm.dat
-   Prev journal file name /home/jdoe/.fis-gtm/V6.3-002_x86/g/gtm.mjl_2018310190106
+   Database file name      /home/jdoe/.yottadb/r1.20_x86/g/mumps.dat
+   Prev journal file name /home/jdoe/.yottadb/r1.20_x86/g/mumps.mjl_2018310190106
    Next journal file name 
    Before-image journal                      ENABLED
    Journal file header size                    65536 [0x00010000]
@@ -937,7 +937,7 @@ The show-option-list includes (these are not case-sensitive):
 
   .. parsed-literal::
      -------------------------------------------------------------------------------
-     SHOW output for journal file /home/jdoe/.fis-gtm/V6.3-002_x86/g/gtm.mjl
+     SHOW output for journal file /home/jdoe/.yottadb/r1.20_x86/g/mumps.mjl
      -------------------------------------------------------------------------------
      Record type    Count
      ----------------------

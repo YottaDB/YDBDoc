@@ -1188,7 +1188,7 @@ Examples of $STACK()
 Example:
 
 .. parsed-literal::
-   /usr/lib/fis-gtm/V5.4-002B_x86/gtm -run ^dstackex
+   /usr/local/lib/yottadb/r120/ydb -run ^dstackex
    dstackex;
      zprint ^dstackex
      write !,$STACK
@@ -1621,7 +1621,7 @@ Example:
 Since YottaDB does not provide a way for a function to return an array or alias variable as its result, the uniqueness of $ZAHandle() can be exploited to effect this capability, by placing the result in a local variable with an agreed prefix (e.g., "%") and its $ZAHANDLE() as a suffix. The handle can be returned as the value.
 
 .. parsed-literal::
-   $ /usr/lib/fis-gtm/V5.4-002B_x86/gtm -run retval
+   $ /usr/local/lib/yottadb/r120/ydb -run retval
    retval        ; Return an array / object from a function
       ;;Data for the object array
       ;;Albert Einstein,14-March-1879
@@ -2766,7 +2766,7 @@ Example:
 
 .. parsed-literal::
    $ cd /usr/work/me
-   $ /usr/lib/fis-gtm/V5.4-002B_x86/gtm
+   $ /usr/local/lib/yottadb/r120/ydb
    YDB>For i="DIRECTORY","NAME","TYPE","" Write $ZPARSE("test.m",i),!
    /usr/work/me/
    test

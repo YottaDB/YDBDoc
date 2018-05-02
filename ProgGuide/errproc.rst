@@ -1205,7 +1205,7 @@ Example EP13 uses the error recording routine by setting $ZTRAP="GOTO ^ERR". Whe
              ,QRY:0,LKS:0,LKF:0,CTN:0,DRD:3,DWT:0,NTW:68,NTR:6,NBW:71,NBR:154,NR0:0
              ,NR1:0,NR2:0,NR3:0,TTW:0,TTR:0,TRB:0,TBW:0,TBR:0,TR0:0,TR1:0,TR2:0,TR3
              :0,TR4:0,TC0:0,TC1:0,TC2:0,TC3:0,TC4:0,ZTR:0"
-   ^ERR(4806,"62364,27842","G",1)="GLD:/home/jdoe/.fis-gtm/V5.4-002B_x86/g/gtm.gld
+   ^ERR(4806,"62364,27842","G",1)="GLD:/home/jdoe/.yottadb/r1.20_x86/g/gtm.gld
              ,REG:DEFAULT,SET:69,KIL:4,GET:0,DTA:0,ORD:0,ZPR:0,QRY:0,LKS:0,LKF:0,CT
               N:69,DRD:3,DWT:0,NTW:69,NTR:7,NBW:72,NBR:160,NR0:0,NR1:0,NR2:0,NR3:0,T
               TW:0,TTR:0,TRB:0,TBW:0,TBR:0,TR0:0,TR1:0,TR2:0,TR3:0,TR4:0,TC0:0,TC1:0
@@ -1242,7 +1242,7 @@ Example EP13 uses the error recording routine by setting $ZTRAP="GOTO ^ERR". Whe
    ^ERR(4806,"62364,27842","I",29)="$ZEDITOR=0"
    ^ERR(4806,"62364,27842","I",30)="$ZEOF=0"
    ^ERR(4806,"62364,27842","I",31)="$ZERROR=""Unprocessed $ZERROR, see $ZSTATUS"""
-   ^ERR(4806,"62364,27842","I",32)="$ZGBLDIR=""/home/jdoe/.fis-gtm/V5.4-002B_x86/g
+   ^ERR(4806,"62364,27842","I",32)="$ZGBLDIR=""/home/jdoe/.yottadb/r1.20_x86/g
              /gtm.gld"""
    ^ERR(4806,"62364,27842","I",33)="$ZININTERRUPT=0"
    ^ERR(4806,"62364,27842","I",34)="$ZINTERRUPT=""IF $ZJOBEXAM()"""
@@ -1257,9 +1257,9 @@ Example EP13 uses the error recording routine by setting $ZTRAP="GOTO ^ERR". Whe
    ^ERR(4806,"62364,27842","I",43)="$ZPROMPT=""YDB>"""
    ^ERR(4806,"62364,27842","I",44)="$ZQUIT=0"
    ^ERR(4806,"62364,27842","I",45)="$ZREALSTOR=898568"
-   ^ERR(4806,"62364,27842","I",46)="$ZROUTINES=""/home/jdoe/.fis-gtm/V5.4-002B_x86
-             /o(/home/jdoe/.fis-gtm/V5.4-002B_x86/r /home/jdoe/.fis-gtm/r) /usr/l
-             ib/fis-gtm/V5.4-002B_x86"""
+   ^ERR(4806,"62364,27842","I",46)="$ZROUTINES=""/home/jdoe/.yottadb/r1.20_x86
+             /o(/home/jdoe/.yottadb/r1.20_x86/r /home/jdoe/.yottadb/r) /usr/l
+             ib/yottadb/r1.20_x86"""
    ^ERR(4806,"62364,27842","I",47)="$ZSOURCE="""""
    ^ERR(4806,"62364,27842","I",48)="$ZSTATUS=""150373210,BAD+2^EP13,%YDB-E-DIVZERO,
               Attempt to divide by zero"""
@@ -1320,7 +1320,7 @@ Example EP13 uses the error recording routine by setting $ZTRAP="GOTO ^ERR". Whe
    $ZEDITOR=0
    $ZEOF=1
    $ZERROR="Unprocessed $ZERROR, see $ZSTATUS"
-   $ZGBLDIR="/home/jdoe/.fis-gtm/V5.4-002B_x86/g/gtm.gld"
+   $ZGBLDIR="/home/jdoe/.yottadb/r1.20_x86/g/gtm.gld"
    $ZININTERRUPT=0
    $ZINTERRUPT="IF $ZJOBEXAM()"
    $ZIO="20110930074402_4806.ERR"

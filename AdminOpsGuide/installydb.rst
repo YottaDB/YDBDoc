@@ -170,7 +170,7 @@ This example installs YottaDB release r1.10 in the r110 directory.
 .. parsed-literal::
    sudo ./ydbinstall.sh --gtm
 
-This example installs the latest GT.M version at /usr/local/lib/fis-gtm/version.
+This example installs the latest GT.M version at /usr/local/lib/yottadb/version.
 
 
 

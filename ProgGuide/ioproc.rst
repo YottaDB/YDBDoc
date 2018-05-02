@@ -2124,7 +2124,7 @@ CONNECT=expr Applies to: SOC
 
 Creates a client connection with a server, which is located by the information provided by expr. A new socket is allocated for the client connection and is made the current socket for the device, if the operation is successful.
 
-expr specifies the protocol and the protocol-specific information. Currently, YottaDB supports TCP/IP and LOCAL (also known as UNIX domain) socket protocols. For TCP/IP sockets, specify expr in the form of "<host>:<port>:TCP", where host is an IPv4 or IPv6 address optionally encapsulated by square-brackets ([]) like "127.0.0.1", "::1", "[127.0.0.1]", or "[::1]" or a IPv4 or IPv6 hostname like server.fis-gtm.com. When a hostname is specified, YottaDB uses the IP version of the first address returned by DNS:
+expr specifies the protocol and the protocol-specific information. Currently, YottaDB supports TCP/IP and LOCAL (also known as UNIX domain) socket protocols. For TCP/IP sockets, specify expr in the form of "<host>:<port>:TCP", where host is an IPv4 or IPv6 address optionally encapsulated by square-brackets ([]) like "127.0.0.1", "::1", "[127.0.0.1]", or "[::1]" or a IPv4 or IPv6 hostname like server.yottadb.com. When a hostname is specified, YottaDB uses the IP version of the first address returned by DNS:
 
 * that is supported by the operating system, and
 * for which a network interface exists.
