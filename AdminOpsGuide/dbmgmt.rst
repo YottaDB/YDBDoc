@@ -1764,14 +1764,14 @@ If the optional parameter dir1 is not specified, MUPIP RCTLDUMP dumps informatio
 
 * Lines of the form rec#... indicate the record number in the relinkctl file. Each relinkctl file can store a maximum of 1,000,000 records, i.e., the maximum number of routines in a directory with auto-relink enabled is one million. Each record stores a routine name (rtnname:), the current cycle for this object file record entry (cycle:) which gets bumped on every ZLINK or ZRUPDATE command, the hash of the object file last loaded for this routine name (objhash:), the number of different versions of object files loaded in the Rtnobj shared memory segments with this routine name (numvers:), the total byte-length of the one or more versions of object files currently loaded with this routine name (objlen:), the total length used up in shared memory for these object files where YottaDB allocates each object file a rounded-up perfect 2-power block of memory (shmlen:).
 
-Given a relinkctl file name, one can find the corresponding directory path using the Unix "strings" command on the Relinkctl file. For example, "strings /tmp/gtm-relinkctl-f0938d18ab001a7ef09c2bfba946f002", corresponding to the above MUPIP RCTLDUMP output example, would output "/obj" the corresponding directory name.
+Given a relinkctl file name, one can find the corresponding directory path using the Unix "strings" command on the Relinkctl file. For example, "strings /tmp/ydb-relinkctl-f0938d18ab001a7ef09c2bfba946f002", corresponding to the above MUPIP RCTLDUMP output example, would output "/obj" the corresponding directory name.
 
 Example:
 
 .. parsed-literal::
    $ mupip rctldump .
    Object Directory         : /tmp
-   Relinkctl filename       : /tmp/yottadb/r1.20_x86_64/gtm-relinkctl-61f9eb418212a24a75327f53106c1656
+   Relinkctl filename       : /tmp/yottadb/r1.20_x86_64/ydb-relinkctl-61f9eb418212a24a75327f53106c1656
    # of routines            : 1
    # of attached processes  : 2
    Relinkctl shared memory  : shmid: 11534344 shmlen: 0x57c6000
