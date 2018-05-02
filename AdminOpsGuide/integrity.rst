@@ -175,7 +175,7 @@ Locating Structures with DSE
 
 DSE provides the FIND command and the RANGE command for locating information.
 
-FIND -REGION=redirects DSE actions to a specified region.
+FIND -REGION= redirects DSE actions to a specified region.
 
 FIND -BLOCK= locates a block by using the key in the first record of the block to try to look up that block through the B-tree index. If the block is not part of the tree, or the indexing of the block is damaged, DSE reports that the search failed.
 
@@ -379,7 +379,7 @@ Assume that during the load of a binary extract, you get the following error:
    When can their glory fade? O the wild charge they made! All the world wondered. 
    Honour the charge they made! Honour the Light Brigade, Noble six hundred!"
 
-Because the only issue in this case is that one of the chunk's keys has been damaged, put the value back together from the partial value and the contents of the errant chunks.
+Because the only issue in this case is that one of the chunks' keys has been damaged, put the value back together from the partial value and the contents of the errant chunks.
 
 Execute:
 

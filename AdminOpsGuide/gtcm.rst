@@ -15,7 +15,7 @@ Introduction
 
 GT.CM is the network client/server database software for YottaDB. GT.CM on UNIX allows access to YottaDB databases residing on a server, by client processes running on multiple nodes on a network.
 
-GT.CM consists of a Server and a Client. The Server is a network object that performs database operations on behalf of YottaDB Client processes, running on other nodes of the network. GT.CM uses TCP task-to-task communication facilities for the link between a client YottaDB process and a server. GT.CM on UNIX operates properly between supported platforms independent of the native byte ordering The GT.CM client is packaged within the YottaDB run-time system.
+GT.CM consists of a Server and a Client. The Server is a network object that performs database operations on behalf of YottaDB client processes running on other nodes of the network. GT.CM uses TCP task-to-task communication facilities for the link between a client YottaDB process and a server. GT.CM on UNIX operates properly between supported platforms independent of native byte ordering. The GT.CM client is packaged with the YottaDB run-time system.
 
 When a YottaDB process requires access to a database on another node, it sends a request across the network to a GT.CM Server process running on that node, and the Server accesses the database. The process requesting access to a database through GT.CM is referred to as a Client process. The node from which the data is requested is referred to as the Server node.
 
@@ -41,7 +41,7 @@ A YottaDB program uses Global Directory to reference a global variable (gvn) or 
 GT.CM Server
 +++++++++++++
 
-The GT.CM server accepts requests from GT.CM clients, processes the operation requested by the clients on the server database and sends messages back to the clients with a status and if appropriate, along with the results of the requested operation.
+The GT.CM server accepts requests from GT.CM clients, processes the operation requested by the clients on the server database and sends messages back to the clients with a status and if appropriate, the results of the requested operation.
 
 +++++++++++++
 GT.CM Client
