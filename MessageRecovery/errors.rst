@@ -1452,7 +1452,7 @@ CRYPTJNLMISMATCH
 
 CRYPTJNLMISMATCH, Encryption settings mismatch between journal file jjjj and corresponding database file dddd
 
-All YottaDB Components Error: Encryption settings in the header of database file dddd do not match those stored in the header of journal file jjjj. This is most likely caused by inappropriate operator action such as replacing the current journal file with an older journal file.
+All Components Error: Encryption settings in the header of database file dddd do not match those stored in the header of journal file jjjj. The most likely cause is inappropriate operator action such as replacing the current journal file with an older journal file.
 
 Action: Correct the error that caused the incorrect journal file to be pointed to by the database file. If the correct journal file has been inadvertently deleted, create new journal files with the -noprevjnl switch. Take a backup as soon as possible thereafter. Depending on your situation, you may need to refresh secondary instances.
 
@@ -3855,6 +3855,16 @@ MUPIP Error: MUPIP cannot perform REORG -ENCRYPT and EXTRACT -FORMAT=BIN on file
 Action: Reschedule the just started operation or terminate the conflicting operation to allow the just started operation to run immediately.
 
 -------------------
+ENCRYPTCONFLT2
+-------------------
+
+ENCRYPTCONFLT2, Message: A concurrent MUPIP REORG -ENCRYPT changed the encryption key for RRRR before the process could initialize it
+
+Run Time Warning: Due to a concurrent MUPIP REORG -ENCRYPT, a process was forced to defer encryption key initialization for region RRRR.
+
+Action: None. This information message is only important when followed by other encryption errors.
+
+-------------------
 ENDIANCVT 
 -------------------
 
@@ -6035,6 +6045,15 @@ Run Time Error: This indicates that the application is attempting to ROLLBACK to
 
 Action: Review the logic and code path that led to the error and modify the code appropriately.
 
+----------------
+INVSEQNOQUAL
+----------------
+
+INVSEQNOQUAL, Invalid SEQNO qualifier value xxxx
+
+MUPIP Error: This error indicates that MUPIP JOURNAL -EXTRACT -SEQNO command could not extract a journal file because an invalid SEQNO format was specified.
+
+Action: Enter a comma separated list of valid sequence numbers (‘0’ or positive integers) as value for the SEQNO qualifier. The format of the -SEQNO qualifier is -SEQNO=seqno1[,seqno2,seqno3…..] where seqno is the region sequence number in decimal format.
 
 ---------------------
 INVSPECREC 
@@ -6323,11 +6342,11 @@ Action: Examine the text and address the described error condition.
 JNLACCESS
 ------------------
 
-JNLACCESS, Error accessing journal file xxxx
+JNLACCESS, Error accessing journal file jjjj
 
-Run Time Error: YottaDB sends this message to the system log followed by other messages detailing the failure. xxxx is the file-specification for the inaccessible journal. In most situations, this error occurs when the journal file storage runs out of disk space or there are permission issues.
+Run Time Error: YottaDB sends this message to the system log followed by other messages detailing the failure. jjjj is the file-specification for the inaccessible journal. In most situations, this error occurs when the journal file storage runs out of disk space or there are permission issues.
 
-Action: Review the accompanying message(s) for additional information. This usually means an error while trying to write to the journal file.
+Action: Review the accompanying message(s) for additional information. This means an error while trying to write to the journal file.
 
 ------------------
 JNLACTINCMPLT 
@@ -6386,9 +6405,9 @@ Action: If a command specification caused this error, determine whether the comm
 JNLBADRECFMT 
 ---------------------
 
-JNLBADRECFMT, Journal Record Format Error encountered for file xxxx at disk address yyyy
+JNLBADRECFMT, Journal Record Format Error encountered for file jjjj at disk address yyyy
 
-MUPIP Error: This indicates that MUPIP has found an error in the journal file.
+MUPIP/Run Time Error: This indicates that an attempt to open a journal file encountered an invalid record.
 
 Action: Report the entire incident context to your YottaDB support channel.
 
@@ -6521,9 +6540,9 @@ Action: Review the accompanying messages and take appropriate action.
 JNLCYCLE 
 --------------------
 
-JNLCYCLE, Journal file xxxx causes cycle in the journal file generations of database file yyyy
+JNLCYCLE, Journal file jjjj causes cycle in the journal file generations of database file dddd
 
-MUPIP Error: This indicates that MUPIP encountered journal file xxxx causing cycle in the journal file generations of database file yyyy. (this is not explanatory, at least to me.)
+MUPIP Error: This indicates that MUPIP encountered journal file jjjj causing cycle in the journal file generations of database file dddd; i.e. following the back-pointers in the journal files can wind up repeatedly finding the same journal file.
 
 Action: Contact your YottaDB support channel with appropriate log messages.
 
@@ -6531,9 +6550,9 @@ Action: Contact your YottaDB support channel with appropriate log messages.
 JNLDBERR 
 ------------------
 
-JNLDBERR, Journal file xxxx does not correspond to database yyyy
+JNLDBERR, Journal file jjjj does not correspond to database dddd
 
-Run Time Error: This indicates that YottaDB could not open journal file xxxx for database file yyyy because the journal file header identifies itself as belonging to a different database file that does not exist in the system.
+Run Time Error: This indicates that YottaDB could not open journal file jjjj for database file dddd because the journal file header identifies itself as belonging to a different database file that does not exist in the system.
 
 Action: Use a MUPIP SET command with the qualifier JOURNAL to create a journal file that matches the database.
 
@@ -6561,11 +6580,11 @@ Action: Verify that the correct journal file names were specified. If appropriat
 JNLDISABLE 
 --------------------
 
-JNLDISABLE, Specified journal option(s) cannot take effect as journaling is DISABLED on database file xxxx
+JNLDISABLE, Specified journal option(s) cannot take effect as journaling is DISABLED on database file dddd
 
-MUPIP Warning: This indicates that none of the specified journal option(s) in MUPIP SET -JOURNAL or MUPIP BACKUP command took effect, because journaling was found DISABLED on database file xxxx.
+MUPIP Warning: This indicates that none of the specified journal option(s) in MUPIP SET -JOURNAL or MUPIP BACKUP command took effect, because journaling was found DISABLED on database file dddd.
 
-Action: -
+Action: Revise the selection qualification to exclude the DISABLED region(s) or, if appropriate, enable journaling on those regions.
 
 --------------------
 JNLDSKALIGN 
@@ -6611,9 +6630,9 @@ Action: Check the integrity of the journal file by doing a MUPIP JOURNAL -FORWAR
 JNLEXTEND 
 ----------------------------
 
-JNLEXTEND, Journal file extension error for file xxxx.
+JNLEXTEND, Journal file extension error for file jjjj.
 
-Run Time Error: Journal file xxxx failed to extend. If the environment is not configured for instance freeze, this causes journaling to be turned off for the region.
+Run Time Error: Journal file jjjj failed to extend. If the environment is not configured for instance freeze, this causes journaling to be turned off for the region.
 
 Action: Review the accompanying message(s) and take appropriate action. If the environment is not configured for instance freeze, perfrom a MUPIP BACKUP, that turns journaling on again, to reestablish durability.
 
@@ -6628,6 +6647,15 @@ MUPIP Error: This indicates that an error was encountered while trying to write 
 
 Action: Review the accompanying message(s) for additional information.
 
+--------------------------
+JNLEXTRSEQNO
+--------------------------
+
+JNLEXTRCTSEQNO, Journal Extracts based on sequence numbers are restricted to a single region when replication is OFF
+
+MUPIP Error: When replication is enabled YottaDB applies a uniform set of sequence numbers across regions, but when it is not in use each region has its own se of sequence numbers, and, in that case, MUPIP only works on a region at a time.
+
+Action: If you need cross region sequence numbers, start replication with at least a passive Source Server; otherwise use one MUPIP JOURNAL -EXTRACT command for each region when using the -SEQNO qualifier.
 
 ----------------------
 JNLFILECLOSERR 
@@ -6686,9 +6714,9 @@ Action: Review accompanying message(s) for additional information.
 JNLFILOPN 
 ----------------------------
 
-JNLFILOPN, Error opening journal file xxxx for database file yyyy
+JNLFILOPN, Error opening journal file jjjj for database file dddd
 
-Run Time Error: This indicates that YottaDB was unable to open journal file xxxx for the specified database file. The Source Server exits with a JNLFILOPN message after six failed attempts to open journal files.
+Run Time Error: This indicates that YottaDB was unable to open journal file jjjj for the specified database file dddd. The Source Server exits with a JNLFILOPN message after six failed attempts to open journal files.
 
 Action: Review the accompanying message(s) for additional information.
 
@@ -6717,11 +6745,11 @@ Action: Review the accompanying message(s) for additional information.
 JNLFLUSHNOPROG 
 --------------------------
 
-JNLFLUSHNOPROG, No progress while attempting to flush journal file xxxx
+JNLFLUSHNOPROG, No progress while attempting to flush journal file jjjj
 
-Run Time Warning: This warning message is logged to the operator facility. This indicates that a YottaDB process waited for about 2 minutes for journal file xxxx to be flushed to disk from database shared memory. The accompanying TEXT message gives more details. The JNLFLUSHNOPROG message is preceded by JNLFLUSH messages.
+Run Time Warning: Indicates processes needing space in the journal buffers were unable to write journal jjjj because even though multiple processes have controlled the resource, this process has not been able to flush records. JNLPROCSTUCK means one process is hogging, while this message means more than one process has tried but none have succeeded. Might indicate a clogged disk subsystem on which journal file JJJJ resides.
 
-Action: Indicative of a clogged disk subsystem on which journal file xxxx resides. Consider balancing disk subsystem load.
+Action: Check the log file for other journaling related messages. Consider balancing disk subsystem load.
 
 
 ---------------------------
@@ -6750,19 +6778,19 @@ Action: Review the accompanying messages for cause of the failure.
 JNLFSYNCLSTCK 
 --------------------
 
-JNLFSYNCLSTCK,
+JNLFSYNCLSTCK, Journaling fsync lock is stuck in journal file jjjj
 
-Run Time Error:
+Run Time Error: A resource controlling journal file actions has remained unavailable for a long period.
 
-Action: -
+Action: Check on the condition of the process identified in the associated messages.
 
 ---------------------
 JNLINVALID 
 ---------------------
 
-JNLINVALID, xxxx is not a valid journal file Region: yyyy
+JNLINVALID, jjjj is not a valid journal file Region: rrrr
 
-Run Time Error: This indicates that YottaDB could not open journal file xxxx, due to an error that is detailed in the accompanying previous message(s). While trying to create a new journal file for the same region it encountered errors. yyyy is the region name associated with the journal.
+Run Time Error: This indicates that YottaDB could not open journal file jjjj, due to an error that is detailed in the accompanying previous message(s). While trying to create a new journal file for the same region it encountered errors. rrrr is the region name associated with the journal.
 
 Action: Review the accompanying error message(s) to determine the cause of the failure of the new journal file creation. After the cause is resolved, to reestablish durability perform a MUPIP BACKUP that turns journaling back on.
 
@@ -6833,9 +6861,9 @@ Action: Use MUPIP SET to specify the correct journal file location.
 JNLNAMLEN 
 ---------------------
 
-JNLNAMLEN, Journal file xxxx: for database file yyyy exceeds maximum of zzzz
+JNLNAMLEN, Journal file jjjj: for database file dddd exceeds maximum of MMMM
 
-MUPIP Error: This indicates that the file-specification xxxx of the journal for database file yyyy exceeds the maximum supported length of zzzz.
+MUPIP Error: This indicates that the file-specification jjjj of the journal for database file dddd exceeds the maximum supported length of MMMM.
 
 Action: Modify the journal file-specification to adhere to the file length restrictions.
 
@@ -6873,9 +6901,9 @@ Action: Ensure before image journaling is enabled prior to the usage of BACKWARD
 JNLNOCREATE 
 -------------------
 
-JNLNOCREATE, Journal file xxxx not created
+JNLNOCREATE, Journal file jjjj not created
 
-MUPIP Error: This indicates that MUPIP could not create journal file xxxx.
+MUPIP/Run Time Error: This indicates that MUPIP could not create journal file jjjj.
 
 Action: Review the accompanying message(s) for additional information.
 
@@ -7056,11 +7084,11 @@ Action: Verify that the time qualifiers specified are as intended.
 JNLREADEOF 
 ----------------
 
-JNLREADEOF, End of journal file encountered for xxxx
+JNLREADEOF, End of journal file encountered for jjjj
 
-MUPIP Error: This indicates that MUPIP JOURNAL encountered the end-of-file for the journal file xxxx, before it completed processing.
+MUPIP/Run Time Error: This indicates that MUPIP JOURNAL or a run-time journal operation encountered the end-of-file for the journal file jjjj, before it completed processing.
 
-Action: This error indicates an improperly closed journal file.
+Action: This error indicates an improperly closed journal file. Restart journaling with a MUPIP BACKUP -NEWJNLFILES or a MUPIP SET -JOURNAL and report all available circumstance to those responsible for supporting your database operations.
 
 -----------------
 JNLRECFMT
@@ -7068,7 +7096,7 @@ JNLRECFMT
 
 JNLRECFMT, Journal file record format error encountered
 
-Run Time/MUPIP Error: This indicates that MUPIP JOURNAL encountered an invalid record in the journal file.
+MUPIP Error: This indicates that MUPIP JOURNAL encountered an invalid record in the journal file.
 
 Action: In the event of YottaDB issuing this error message, use MUPIP BACKUP to ensure durability by creating a fresh set of journals consistent with the database. Else, to resume operation, restore the database from the last backup and play forward the updates using the appropriate MUPIP JOURNAL command. As soon as possible, report the entire incident context with information from the operator log and any other relevant information to your YottaDB support channel.
 
@@ -7116,11 +7144,11 @@ Action: Until the secondary is upgraded to the newer version of YottaDB, the app
 JNLSPACELOW 
 ---------------
 
-JNLSPACELOW, Journal file xxxx nearing maximum size, aaaa blocks to go
+JNLSPACELOW, Journal file jjjj nearing maximum size, nnnn blocks to go
 
-Run Time Information: This indicates that the journal file xxxx is approaching the maximum size specified for it. The system creates a new journal file when the limit is reached. Typically none, unless operational practice uses this as a trigger to intervene in journal file management.
+Run Time Information: This indicates that the journal file jjjj is approaching the maximum size specified for it. The system creates a new journal file when the limit is reached.
 
-Action: -
+Action: None required except as part of monitoring journaling space requirements or when operational practice uses this as a trigger to intervene in journal file management.
 
 -----------------
 JNLSTATE
@@ -7179,16 +7207,16 @@ JNLSWITCHSZCHG
 
 JNLSWITCHSZCHG, Journal AUTOSWITCHLIMIT [aaaa blocks] is rounded down to [bbbb blocks] to equal the sum of journal ALLOCATION
 
-Run Time Information: This indicates that the specified AUTOSWITCHLIMIT value was rounded down as little as possible to make it aligned to the ALLOCATION + a multiple of EXTENSION. The new journal file created (if any) will use this value for AUTOSWITCHLIMIT.
+MUPIP Information: This indicates that the specified AUTOSWITCHLIMIT value was rounded down as little as possible to make it aligned to the ALLOCATION + a multiple of EXTENSION. Any subsequently created journal file will use this value for AUTOSWITCHLIMIT.
 
-Action: -
+Action: If the rounded value is inappropriate examine the alignsize, allocation and extension values and choose a more suitable value.
 
 
 --------------------
 JNLSWITCHTOOSM 
 --------------------
 
-JNLSWITCHTOOSM, Journal AUTOSWITCHLIMIT [aaaa blocks] is less than journal ALLOCATION [bbbb blocks] for database file xxxx
+JNLSWITCHTOOSM, Journal AUTOSWITCHLIMIT [aaaa blocks] is less than journal ALLOCATION [bbbb blocks] for database file dddd
 
 Run Time Error: This indicates that the value of AUTOSWITCHLIMIT specified in a MUPIP SET JOURNAL command is less than the default or specified value of ALLOCATION. This error also indicates that the AUTOSWITCHLIMIT value specified was greater or equal to the ALLOCATION but in turn got rounded down, and this rounded down value is lesser than the ALLOCATION.
 
@@ -7312,9 +7340,9 @@ Action: Run time system creates and switches to a new journal file and continues
 JNLWRERR 
 ----------------------
 
-JNLWRERR, Error writing journal file xxxx. Undable to update header Region: yyyy
+JNLWRERR, Error writing journal file jjjj. Unable to update header Region: yyyy
 
-Run Time Error: This indicates that YottaDB encountered an error while updating the journal file header as part of trying to open the journal file.
+Run Time/MUPIP Error: This indicates that YottaDB encountered an error while updating the journal file header as part of trying to open the journal file.
 
 Action: Review the accompanying message(s) for detail on the cause of the error. YottaDB automatically closes the current journal file and creates a new one. To reestablish durability, perform MUPIP BACKUP to create a fresh set of journals consistent with the database.
 
@@ -8549,6 +8577,16 @@ MRTMAXEXCEEDED, Maximum value of xxxx for SOCKET deviceparameter MOREREADTIME ex
 Compile Time/Run Time Error: YottaDB triggers this error when MOREREADTIME exceeds its maximum value of 999ms.
 
 Action: Specify a value between 1 and 999. Never set MOREREADTIME to 0 as it may cause a CPU to "spin". See `"Input/Output Processing" Chapter of the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/ioproc.html>`_ for more information.
+
+---------------------
+MSTACKSZNA
+---------------------
+
+MSTACKSZNA, User-specified M stack size of SSSS KiB not appropriate; must be between LLLL KiB and MMMM KiB; reverting to VVVV KiB
+
+Run Time Information: The gtm_mstack environment variable species an M stack size outside the range YottaDB supports, where LLLL and MMMM are the lower and upper bounds respectively; VVVV is the value actually used.
+
+Action: None required immediately as the process operates with the reported size M stack, however it would be preferable to eliminate such messages by setting gtm_mstack to a value in the supported range.
 
 ----------------------
 MTANSIFOR 
@@ -11120,9 +11158,9 @@ PREMATEOF
 
 PREMATEOF, Premature end of file detected
 
-MUPIP Error: LOAD detected an end-of-file when it was expecting additional records.
+MUPIP/Run Time Error: A file read or write detected an end-of-file when it was expecting additional records.
 
-Action: Refer to the `About this Manual <https://docs.yottadb.com/MessageRecovery/about.html>`_ section on MUPIP LOAD errors earlier in this manual.
+Action: Analyze accompanying messages for the type of file on which the operation failed. If the operation was a MUPIP LOAD, refer to the `About this Manual section on MUPIP LOAD errors <https://docs.yottadb.com/MessageRecovery/about.html#mupip-load-errors>`_. If the circumstances warrant, group responsible for database integrity at your operation with all the diagnostic context you can gather.
 
 ------------------
 PREVJNLLINKCUT 
@@ -14084,6 +14122,16 @@ SYSCALL, Error received from system call xxxx -- called from module yyyy at line
 Run Time Error: This indicates that system call failed due to some unusual error condition.
 
 Action: Report to system administrator and if necessary report the entire incident context to your YottaDB support channel for further analysis.
+
+--------------------
+SYSUTILCONF
+--------------------
+
+SYSUTILCONF, Error determining the path for system utility. tttt
+
+Run Time Error: tttt represents text describing details of an issue finding a POSIX function that it needed.
+
+Action: Check for aliases or environment variables related to paths that might be interfering with YottaDB’s ability to invoke functions.
 
 --------------
 TCGETATTR
