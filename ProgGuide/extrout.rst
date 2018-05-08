@@ -32,7 +32,7 @@ or as an expression element,
 .. parsed-literal::
    $&[packagename.]name[^name][parameter-list]
 
-Where packagename, like the name elements is a valid M name. Because of the parsing conventions of M, the identifier between the ampersand (&) and the optional parameter-list has precisely constrained punctuation - a later section describes how to transform this into a more richly punctuated name, should that be appropriate for the called function. While the intent of the syntax is to permit the name^name to match an M labelref, there is no semantic implication to any use of the up-arrow (^). For more information on M names, labelrefs and parameter-lists, refer to `Chapter 5: “General Language Features of M” <https://docs.yottadb.com/ProgrammersGuide/langfeat.html>`_.
+Where packagename, like the name elements, is a valid M name. Because of the parsing conventions of M, the identifier between the ampersand (&) and the optional parameter-list has precisely constrained punctuation - a later section describes how to transform this into a more richly punctuated name, should that be appropriate for the called function. While the intent of the syntax is to permit the name^name to match an M labelref, there is no semantic implication to any use of the up-arrow (^). For more information on M names, labelrefs and parameter-lists, refer to `Chapter 5: “General Language Features of M” <https://docs.yottadb.com/ProgrammersGuide/langfeat.html>`_.
 
 Example:
 
@@ -176,7 +176,7 @@ gtm_hiber_start() always sleeps until the time expires; gtm_hiber_start_wait_any
    YottaDB continues to support xc_* equivalent types of gtm_* for upward compatibility. gtmxc_types.h explicitly marks the xc_* equivalent types as deprecated.
 
 * Parameter-types that interface YottaDB with non-M code using C calling conventions must match the data-types on their target platforms. Note that most addresses on 64-bit platforms are 8 bytes long and require 8 byte alignment in structures whereas all addresses on 32-bit platforms are 4 bytes long and require 4-byte alignment in structures.
-* Though strings with embedded zeroes are sent as input to external routines, embedded zeroes in output (or return value) strings of type gtm_char_t may cause string truncation because they are treated as terminator.
+* Though strings with embedded zeroes are sent as input to external routines, embedded zeroes in output (or return value) strings of type gtm_char_t may cause string truncation because they are treated as terminators.
 * If your interface uses gtm_long_t or gtm_ulong_t types but your interface code uses int or signed int types, failure to revise the types so they match on a 64-bit platform will cause the code to fail in unpleasant, potentially dangerous and hard to diagnose ways.
 
 The first parameter of each called routine is an int (for example, int argc in decrement.c and increment.c) that specifies the number of parameters passed. This parameter is implicit and only appears in the called routine. It does not appear in the call table specification, or in the M invocation. If there are no explicit parameters, the call table specification will have a zero (0) value because this value does not include itself in the count. If there are fewer actual parameters than formal parameters, the call is determined from the parameters specified by the values supplied by the M program. The remaining parameters are undefined. If there are more actual parameters than formal parameters, YottaDB reports an error.
@@ -207,7 +207,7 @@ Although not required to be used by a customized plugin implementation, YottaDB 
 * xc_status_t gtm_is_file_identical(xc_fileid_ptr_t fileid1, xc_fileid_ptr_t fileid2) - function that determines whether two file ids map to the same file.
 * gtm_xcfileid_free(xc_fileid_ptr_t fileid) - function to release a file id structure.
 
-Mumps, MUPIP and DSE processes dynamically link to the plugin interface functions that reside in the shared library. The functions serve as software "shims" to interface with an encryption library such as libmcrypt or libgpgme / libgcrypt.
+Mumps, MUPIP and DSE processes dynamically link to the plugin interface functions that reside in the shared library. The functions serve as software "shims" to interface with an encryption library such as libmcrypt or libgpgme/libgcrypt.
 
 The plugin interface functions are:
 
@@ -593,7 +593,7 @@ where,
 
 <param-type>: is a valid parameter type. Empty parentheses must be specified if no argument is passed to <label-ref>
 
-The <direction> indicates the type of operation that YottaDB performs on the parameter read-only (I), write-only (O), or read-write (IO). All O and IO parameters must be passed by reference, that is as pointers since YottaDB writes to these locations. All pointers that are being passed to YottaDB must be pre-allocated. The following table details valid type specifications for each direction.
+The <direction> indicates the type of operation that YottaDB performs on the parameter read-only (I), write-only (O), or read-write (IO). All O and IO parameters must be passed by reference, that is, as pointers since YottaDB writes to these locations. All pointers that are being passed to YottaDB must be pre-allocated. The following table details valid type specifications for each direction.
 
 +-------------------+---------------------------------------------------------------------------------------------------------------------------------------------+
 | Directions        | Allowed Parameter Types                                                                                                                     |
@@ -614,7 +614,7 @@ Here is an example of Call-In table (calltab.ci) for piece.m (see “Example: Ca
    piece     :gtm_double_t*   pow^piece(I:gtm_double_t, I:gtm_long_t)
 
 .. note::
-   The same entryref can be called by different C call names (for example, pow, and piece). However, if there are multiple lines with the same call name, only the first entry will be used by YottaDB. YottaDB ignores all subsequent entries using a call name. Also, note that the second and third entries, although shown here as wrapped across lines, must be specified as a single line in the file.
+   The same entryref can be called by different C call names (for example, pow, and piece). However, if there are multiple lines with the same call name, only the first entry will be used by YottaDB. YottaDB ignores all subsequent entries using a call name.
 
 ++++++++++++++++++++++++
 Call-In Interface
@@ -775,10 +775,10 @@ $ECODE/$STACK() initialized to null at level one (1) in GTM$CI frame.
 Rules to Follow in Call-Ins
 ++++++++++++++++++++++++++++++++++++
 
-1. External calls must not be fenced with TSTART/TCOMMIT if the external routine calls back into mumps using call-in mechanism. YottaDB reports the error YDB-E-CITPNESTED if nested call-ins are invoked within a TP fence since YottaDB currently does not handle TP support across multiple call-in invocations.
+1. External calls must not be fenced with TSTART/TCOMMIT if the external routine calls back into mumps using the call-in mechanism. YottaDB reports the error YDB-E-CITPNESTED if nested call-ins are invoked within a TP fence since YottaDB currently does not handle TP support across multiple call-in invocations.
 2. The external application should never call exit() unless it has called gtm_exit() previously. YottaDB internally installs an exit handler that should never be bypassed.
 3. The external application should never use any signals when YottaDB is active since YottaDB reserves them for its internal use. YottaDB provides the ability to handle SIGUSR1 within M (see “$ZINTerrupt” for more information). An interface is provided by YottaDB for timers. Although not required, YottaDB recommends the use of gtm_malloc() and gtm_free() for memory management by C code that executes in a YottaDB process space for enhanced performance and improved debugging.
-4. YottaDB performs device input using the read() system service. UNIX documentation recommends against mixing this type of input with buffered input services in the fgets() family and ignoring this recommendation is likely to cause loss of input that is difficult to diagnose and understand.
+4. YottaDB performs device input using the read() system service. UNIX documentation recommends against mixing this type of input with buffered input services in the fgets() family and ignoring this recommendation is likely to cause a loss of input that is difficult to diagnose and understand.
 
 --------------------------------------
 Type Limits for Call-Ins and Call-Outs
