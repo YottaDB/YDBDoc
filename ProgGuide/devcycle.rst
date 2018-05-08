@@ -412,7 +412,7 @@ For more information on $ZROUTINES, see `Chapter 8: “Intrinsic Special Variabl
 Editing from the Shell
 +++++++++++++++++++++++++
 
-To create and edit a source program from the shell, invoke any text editor at the shell prompt and specify a UNIX file as the source. The YottaDB environment works best when you give a file the name of the M routine that it contains, and an .m extension.
+To create and edit a source program from the shell, invoke any text editor at the shell prompt and specify a UNIX file as the source. The YottaDB environment works best when you give a file the name of the M routine that it contains, and a .m extension.
 
 Example:
 
@@ -556,7 +556,7 @@ With no -DYNAMIC_LITERALS specified, these data structures continue to be genera
 
 **-[no]embed_source**
 
-Instructs YottaDB to embeds routine source code in the object code. The default is NOEMBED_SOURCE. Like other YottaDB compilation qualifiers, this qualifier can be specified through the $ZCOMPILE intrinsic special variable and gtmcompile environment variable. EMBED_SOURCE provides $TEXT and ZPRINT access to the correct source code, even if the original M source file has been edited or removed. Where the source code is not embedded in the object code, YottaDB attempts to locate the source code file. If it cannot find source code matching the object code, $TEXT() returns a null string. ZPRINT prints whatever source code found and also prints a TXTSRCMAT message in direct mode; if it cannot find a source file, ZPRINT issues a FILENOTFND error. 
+Instructs YottaDB to embed routine source code in the object code. The default is NOEMBED_SOURCE. Like other YottaDB compilation qualifiers, this qualifier can be specified through the $ZCOMPILE intrinsic special variable and gtmcompile environment variable. EMBED_SOURCE provides $TEXT and ZPRINT access to the correct source code, even if the original M source file has been edited or removed. Where the source code is not embedded in the object code, YottaDB attempts to locate the source code file. If it cannot find source code matching the object code, $TEXT() returns a null string. ZPRINT prints whatever source code found and also prints a TXTSRCMAT message in direct mode; if it cannot find a source file, ZPRINT issues a FILENOTFND error. 
 
 **-[no]i[gnore]**
 

@@ -126,7 +126,7 @@ The format for the $DATA function is:
 * If the variable has a value but no descendants, $DATA() returns 1.
 * If the variable has descendants but no value, $DATA() returns 10.
 * If the variable has a value and descendants, $DATA() returns 11.
-* $ZDATA() extends $DATA() to reflects the current alias state of the lvn or name argument to identify alias and alias container variables. For more information, refer to “$ZDATA()”.
+* $ZDATA() extends $DATA() to reflect the current alias state of the lvn or name argument to identify alias and alias container variables. For more information, refer to “$ZDATA()”.
 
 The following table summarizes $DATA() return values.
 
@@ -142,7 +142,7 @@ The following table summarizes $DATA() return values.
 | YES           | 1                                                        | 11                                                           |
 +---------------+----------------------------------------------------------+--------------------------------------------------------------+
 
-$DATA() return values can also be understood as a pair of truth-values where the left describes descendants and the right describes data 1 and where M suppresses any leading zero (representing no descendants).
+$DATA() return values can also be understood as a pair of truth-values where the left describes descendants and the right describes data and where M suppresses any leading zero (representing no descendants).
 
 +++++++++++++++++++++
 Examples for $DATA()
@@ -680,7 +680,7 @@ The format for the $ORDER function is:
 * YottaDB extends the M standard to allow unsubscripted names. In this case, $ORDER() returns the next or previous unsubscripted name.
 * If $ORDER() finds no node (or name) at the specified level after (or before) the specified global or local variable, it returns an empty string (" ").
 * If the last subscript in the subscripted global or local variable name is null and the corresponding subscripted global or local variable has a matching null subscript, $ORDER() returns the next node after that with the null subscript at the specified level.
-* If the last subscript in the subscripted global or local variable name is null and the corresponding subscripted global or local variable has no matching null subscript , $ORDER() returns first node at the specified level. If the last subscript in the subscripted global or local variable name is null and second argument is -1, $ORDER() always returns the last node at the specified level regardless of the existence a null subscript at the specified level. However when a global or local variable level includes a null subscript and $ORDER(glvn,-1) returns an empty string result, users must test separately for the existence of the node with the null subscript.
+* If the last subscript in the subscripted global or local variable name is null and the corresponding subscripted global or local variable has no matching null subscript , $ORDER() returns first node at the specified level. If the last subscript in the subscripted global or local variable name is null and second argument is -1, $ORDER() always returns the last node at the specified level regardless of the existence of a null subscript at the specified level. However, when a global or local variable level includes a null subscript and $ORDER(glvn,-1) returns an empty string result, users must test separately for the existence of the node with the null subscript.
 * $ORDER() can be used as a tool for retrieving data from M sparse arrays in an ordered fashion, independent of the order in which it was entered. In M, routines generally sort by SETting data into an array with appropriate subscripts and then retrieving the information with $ORDER().
 * $ORDER() returns subscripts, not data values, and does not discriminate between nodes that have data values and nodes that have descendants. Once $ORDER() provides the subscript, the routine must use the subscript to access the data value, if appropriate. Using $ORDER() maintains the naked reference indicator, even if $ORDER() returns a null.
 * YottaDB optionally permits the use of null subscripts. This feature is enabled via the VIEW command for local variables and a REGION qualifier in GDE for global variables. When an application uses null subscripts, they are "invisible" in a $ORDER() loop so the application must test for them as a special case, perhaps using $DATA().
@@ -1708,7 +1708,7 @@ Returns the transformed representation of the first argument expr in a normalize
 
 * The expression specifies the string to transform.
 * The intexpr specifies the ID of the alternative transform to use.
-* The optional third argument specifies whether the transform is to normalized form, by default or if zero (0), or, if one (1), the reverse transform from the normalized to the native form..
+* The optional third argument specifies whether the transform is to normalized form, by default or if zero (0), or, if one (1), the reverse transform from the normalized to the native form.
 * The optional forth argument specifes whether to use standard M collation of numbers before strings, the default or zero (0), or to sort all values as strings (1).
 
 Please see the section on $ZCOLLATE() for a similar alternative.
@@ -1991,7 +1991,7 @@ This example sets the value of expression BITSTR to 6 bit with all bits set to 1
 $ZBITXOR()
 +++++++++++++++
 
-Performs a bitwise exclusive OR on two bit strings, and returns a bit string equal in length to the shorter of the two arguments (containing set bits in those position where either but not both of the input strings have set bits). Positions that correspond to positions where neither or both input string has a set bit have cleared bits in the resulting string.
+Performs a bitwise exclusive OR on two bit strings, and returns a bit string equal in length to the shorter of the two arguments (containing set bits in those positions where either (but not both) of the input strings have set bits). Positions that correspond to positions where neither or both input strings have a set bit have cleared bits in the resulting string.
 
 The format for the $ZBITXOR function is:
 
@@ -2113,7 +2113,7 @@ Example:
    ^A("foo")
    YDB>
 
-The first WRITE in this example shows the readable form or the value produced by the $ZCOLLATE() revealing the details of how YottaDB internally represents this key using default (M) collation. The second WRITE shows how the combination of the transform and reverse transform restores the value to the original representation.
+The first WRITE in this example shows the readable form or the value produced by the $ZCOLLATE(), revealing the details of how YottaDB internally represents this key using default (M) collation. The second WRITE shows how the combination of the transform and reverse transform restores the value to the original representation.
 
 -------------------
 $ZCOnvert()
@@ -2184,7 +2184,7 @@ In the above example, $LENGTH() function triggers an error because it takes only
 $ZDATA()
 -------------------
 
-Extends $DATA() to reflects the current alias state of the lvn or name argument to identify alias and alias container variables. It treats variables joined through pass-by-reference as well as TP RESTART variables within a transaction as alias variables. However, it does not distinguish nodes having alias containers among their descendants.
+Extends $DATA() to reflect the current alias state of the lvn or name argument to identify alias and alias container variables. It treats variables joined through pass-by-reference as well as TP RESTART variables within a transaction as alias variables. However, it does not distinguish nodes having alias containers among their descendants.
 
 In addition to the four standard M results from $DATA(), $ZDATA() returns:
 
@@ -2443,7 +2443,7 @@ The format of the $ZFIND function is:
 * The optional integer expression identifies the starting byte position for the $ZFIND() search. If this argument is missing, zero (0), or negative, $ZFIND() begins to search from the first position of the sequence of octets (8-bite bytes).
 * If $ZFIND() locates the byte sequence, it returns the position after its last byte. If the end of the byte sequence coincides with the end of the the sequence of octets (expr1), it returns an integer equal to the byte length of the expr1 plus one ($L(expr1)+1).
 * If $ZFIND() does not locate the byte sequence, it returns zero (0).
-* $ZFIND() provides a tool to locate byte sequences. The ( [ ) operator and the two-argument $ZLENGTH() are other tools that provide related functionality.
+* $ZFIND() provides a tool to locate byte sequences. The ([) operator and the two-argument $ZLENGTH() are other tools that provide related functionality.
 
 +++++++++++++++++++++++
 Examples of $ZFIND()
@@ -2578,7 +2578,7 @@ The format for the $ZJUSTIFY() function is:
 
 * The expression specifies the sequence of octets formatted by $ZJUSTIFY().
 * The first integer expression (second argument) specifies the minimum size of the resulting byte sequence.
-* If the first integer expression is larger than the length of the expression, $ZJUSTIFY() right justifies the expression to a byte sequence of the specified length by adding leading spaces. Otherwise, $ZJUSTIFY() returns the expression unmodified unless specified by the second integer argument.
+* If the first integer expression is larger than the length of the expression, $ZJUSTIFY() right-justifies the expression to a byte sequence of the specified length by adding leading spaces. Otherwise, $ZJUSTIFY() returns the expression unmodified unless specified by the second integer argument.
 * The behavior of the optional second expression (third argument) for $ZJUSTIFY() is the same at $JUSTIFY(). For more information, refer to “$Justify()”.
 * When the second argument is specified and the first argument evaluates to a fraction between -1 and 1, $ZJUSTIFY() returns a number with a leading zero (0) before the decimal point (.).
 * $ZJUSTIFY() fills a sequence of octets to create a fixed length byte sequence. However, if the length of the specified expression exceeds the specified byte size, $ZJUSTIFY() does not truncate the result (although it may still round based on the third argument). When required, $ZEXTRACT() performs truncation.
@@ -2756,9 +2756,9 @@ Example:
    YDB>write $zparse("test","","/usr/work","/dev/y.c")/usr/test.c
    YDB>
 
-This example illustratest the use of the third and fourth arguments to $ZPARSE(). In the first statement, the first argument has no directory or extension field, so $ZPARSE() substitutes the extension field from the third argument. Since neither the third nor fourth argument specifies a directory, and because the fourth argument does not contain any fields that are not present in the third argument, the fourth argument is not used.
+This example illustrates the use of the third and fourth arguments to $ZPARSE(). In the first statement, the first argument has no directory or extension field, so $ZPARSE() substitutes the extension field from the third argument. Since neither the third nor fourth argument specifies a directory, and because the fourth argument does not contain any fields that are not present in the third argument, the fourth argument is not used.
 
-In the second statement, the first argument to $ZPARSE() is again missing both the directory and extension. In this instance, $ZPARSE() uses the directory specified in the third argument and, becuase neither the first nor third argument specifies a file extension, $ZPARSE() uses the file extension from the fourth argument.
+In the second statement, the first argument to $ZPARSE() is again missing both the directory and extension. In this instance, $ZPARSE() uses the directory specified in the third argument and, because neither the first nor third argument specifies a file extension, $ZPARSE() uses the file extension from the fourth argument.
 
 In the third statement, because "/usr/work" does not end with a backward slash (/), $ZPARSE() interprets the substring "work" as a file name. Then, $ZPARSE() substitutes "/usr/" for the directory missing in the first argument and substitutes ".c" from the fourth argument for the extension missing from both the first and third arguments.
 

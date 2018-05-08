@@ -587,7 +587,7 @@ If you install YottaDB with Unicode™ support, all YottaDB components related t
 
 In addition to $gtm_chset, recent versions use $gtm_icu_version to choose an ICU library version other than the default. For ICU libraries built with symbol renaming enabled, $gtm_icu_version becomes a required setting.
 
-$gtm_icu_version specifies the ICU version that YottaDB should use for Unicode operations. It is in the form of MajorVersion.MinorVersion where MajorVersion and MinorVersion specify the desired major verison and minor version of ICU. For example, 3.6 refers to ICU version 3.6. If $gtm_icu_version is defined, YottaDB works regardless of whether or not symbols are renamed in ICU. If $gtm_icu_version is not defined or does not evaluate to an installed ICU version, YottaDB look for non-renamed symbols in the default ICU version. Note that display widths for a few characters are different starting in ICU 4.0. 
+$gtm_icu_version specifies the ICU version that YottaDB should use for Unicode operations. It is in the form of MajorVersion.MinorVersion where MajorVersion and MinorVersion specify the desired major version and minor version of ICU. For example, 3.6 refers to ICU version 3.6. If $gtm_icu_version is defined, YottaDB works regardless of whether or not symbols are renamed in ICU. If $gtm_icu_version is not defined or does not evaluate to an installed ICU version, YottaDB looks for non-renamed symbols in the default ICU version. Note that display widths for a few characters are different starting in ICU 4.0. 
 
 .. note::
    The ydb_env_set script defines $gtm_icu_version as necessary.
