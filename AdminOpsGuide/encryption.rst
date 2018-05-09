@@ -635,7 +635,7 @@ On all platforms on which YottaDB supports encryption, compiling the source refe
    Encrypted database files are compatible between different endian platforms as long as they use the same key and the same cipher. The sample shell scripts in the reference implementation use the standard shell (/bin/sh). 
 
 .. note::
-   YottaDB dropped support for the Blowfish encryption plugin. To migrate databases from Blowfish CFB to AES CFB requires that the data be extracted and loaded into newly created database files. To minimize the time your application is unavailable, you can deploy your application in a Logical Multi-Site (LMS) configuration, and migrate using a rolling upgrade technique Refer to the `Chapter 7: “Database Replication” <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html>`_ for more complete documentation.
+   YottaDB dropped support for the Blowfish encryption plugin. To migrate databases from Blowfish CFB to AES CFB requires that the data be extracted and loaded into newly created database files. To minimize the time your application is unavailable, you can deploy your application in a Logical Multi-Site (LMS) configuration, and migrate using a rolling upgrade technique. Refer to the `Chapter 7: “Database Replication” <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html>`_ for more complete documentation.
 
 --------------------------------------------
 Special Note - GNU Privacy Guard and Agents
@@ -741,7 +741,6 @@ The structure of the $gtm_dist/plugin directory on Linux x86 after plugin compil
    |   ` -- source.tar
    | -- libgtmcrypt_gcrypt_AES256CFB.so
    | -- libgtmcrypt_openssl_AES256CFB.so
-   | -- libgtmcrypt_openssl_BLOWFISHCFB.so
    | -- libgtmcrypt.so -> ./libgtmcrypt_gcrypt_AES256CFB.so
    | -- o
    ` -- r
@@ -914,8 +913,6 @@ The reference plugins are:
 | libgtmcrypt_gcrypt_AES256CFB.so    | The reference plugin that leverages GPG for encryption using the AES256CFB algorithm           |
 +------------------------------------+------------------------------------------------------------------------------------------------+
 | libgtmcrypt_openssl_AES256CFB      | The reference plugin that leverages OpenSSL for encryption using the AES256CFB algorithm       |
-+------------------------------------+------------------------------------------------------------------------------------------------+
-| libgtmcrypt_openssl_BLOWFISHCFB.so | The reference plugin that leverages OpenSSL for encryption using the BLOWFISHCFB algorithm     |
 +------------------------------------+------------------------------------------------------------------------------------------------+
 | libgtmcryptutil.so                 | A reference plugin support library                                                             |
 +------------------------------------+------------------------------------------------------------------------------------------------+
