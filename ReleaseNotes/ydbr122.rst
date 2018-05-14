@@ -422,12 +422,6 @@ More Information
 Messages
 -----------------------
 
-++++++++++++++
-From YottaDB
-++++++++++++++
-
-
-
 +++++++++++++++
 From GT.M
 +++++++++++++++
@@ -655,5 +649,7 @@ Permission is granted to copy, distribute and/or modify this document under the 
 YottaDB™ is a trademark of YottaDB LLC.
 GT.M™ is a trademark of Fidelity National Information Services, Inc.
 Other trademarks belong to their respective owners.
+
+This document contains a description of YottaDB and the operating instructions pertaining to the various functions that comprise the software. This document does not contain any commitment of YottaDB LLC. YottaDB LLC believes the information in this publication is accurate as of its publication date; such information is subject to change without notice. YottaDB LLC is not responsible for any errors or defects.
 
 
