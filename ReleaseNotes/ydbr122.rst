@@ -504,7 +504,7 @@ Action: Review the accompanying message(s) for additional information.
 
 **JNLEXTRCTSEQNO**, Journal Extracts based on sequence numbers are restricted to a single region when replication is OFF
 
-MUPIP Error: When replication is enabled YottaDB applies a uniform set of sequence numbers across regions, but when it is not in use each region has its own se of sequence numbers, and, in that case, MUPIP only works on a region at a time.
+MUPIP Error: When replication is enabled YottaDB applies a uniform set of sequence numbers across regions, but when it is not in use each region has its own set of sequence numbers, and, in that case, MUPIP only works on a region at a time.
 
 Action: If you need cross region sequence numbers, start replication with at least a passive Source Server; otherwise use one MUPIP JOURNAL -EXTRACT command for each region when using the -SEQNO qualifier.
 
@@ -637,6 +637,19 @@ Action: Check for aliases or environment variables related to paths that might b
 Tarball Hashes
 ------------------
 
++--------------------------------------------------------------------+----------------------------------------------------+
+| sha256sum                                                          | File                                               |
++====================================================================+====================================================+
+| 9fc33f08c0081961131a98ae919528e0340a31932e6996aa7445ca708f7e1cc1   |  yottadb_r122_linux_armv6l_pro.tgz                 |
++--------------------------------------------------------------------+----------------------------------------------------+
+| 099f62afa506b99875df999fd1251c591778c6fa0b809433d6f53dd25120d5dd   |  yottadb_r122_linux_armv7l_pro.tgz                 |
++--------------------------------------------------------------------+----------------------------------------------------+
+| 80b7896e391f7f5c1b5652dc23481587be4b9d53f25051a63d4b8ac1adad9555   |  yottadb_r122_linux_x8664_pro.tgz                  |
++--------------------------------------------------------------------+----------------------------------------------------+
+| 99c7ca7c363c18b3aff756ad0276f6a318c265f6aee8091cad1ca947ed5d503b   |  yottadb_r122_rhel7_x8664_pro.tgz                  |
++--------------------------------------------------------------------+----------------------------------------------------+
+| fde5f1bc65d45804d6b294a502c5e183acfc6e402b63800eb319960abe3d758c   |  yottadb_r122_src.tgz                              |
++--------------------------------------------------------------------+----------------------------------------------------+
 
 -----------------
 Legal Stuff
