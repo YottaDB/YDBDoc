@@ -15,7 +15,7 @@ Creating a TLS Configuration File
 
 YottaDB ships with a reference implementation of the encryption plugin which uses OpenSSL to perform various operation for TLS replication and/or TLS-enabled sockets.
 
-OpenSSL options are controlled by a configuration file in libconfig format. This configuration file is pointed to by the gtmcrypt_config environment variable. The use of the gtmcrypt_config environment variable requires the libconfig library to be installed.
+OpenSSL options are controlled by a configuration file in libconfig format. This configuration file is pointed to by the ydb_crypt_config environment variable. The use of the ydb_crypt_config environment variable requires the libconfig library to be installed.
 
 A configuration file is divided into two sections: database encryption section and TLS section. The database encryption section contains a list of database files and their corresponding key files. You do not need a database encryption section if you are not using an encrypted database, or a TLS section if you are not using TLS for replication or sockets. The TLS section contains information needed for OpenSSL such as the location of root certification authority certificates and leaf-level certificates with their corresponding private keys.
 
@@ -63,7 +63,7 @@ Here is a sample configuration file:
      };
 
 
-The environment variable gtmtls_passwd_<tlsid> must specify an obfuscated version of the password for the client's private key. Use the maskpass utility provided with your YottaDB distribution to create an obfuscated password.
+The environment variable ydb_tls_passwd_<tlsid> must specify an obfuscated version of the password for the client's private key. Use the maskpass utility provided with your YottaDB distribution to create an obfuscated password.
 
 The supported OpenSSL options are as follows:
 
@@ -104,7 +104,7 @@ Path to the certificate.
 
 **key**
 
-Path to the private key. If the private key is protected by a passphrase, an obfuscated version of the password should be specified in the environment variable which takes the form gtmtls_passwd_<identifier>. Currently, the YottaDB TLS plug-in only supports RSA private keys.
+Path to the private key. If the private key is protected by a passphrase, an obfuscated version of the password should be specified in the environment variable which takes the form ydb_tls_passwd_<identifier>. Currently, the YottaDB TLS plug-in only supports RSA private keys.
 
 When placing the private key for a certificate at the beginning of the certificate file, you may omit the "key" item from the configuration file. The format of the combined file is:
 

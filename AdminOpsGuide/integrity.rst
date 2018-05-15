@@ -165,7 +165,7 @@ Using the proper database file
 
 Because DSE lets you perform arbitrary actions without imposing any logical constraints, you must ensure that they are applied to the proper file.
 
-First, verify that gtmgbldir names an appropriate Global Directory. Check the definition with the printenv command. You may create or use Global Directories that differ from the "normal" Global Directory. For instance, you might create a Global Directory that mapped all global names except a normally unused name to a file with integrity problems, and map that unused name to a new file. Then you could use MUPIP to CREATE the new file and use DSE to SAVE blocks from the damaged file and RESTORE them to the new file for later analysis.
+First, verify that ydb_gbldir names an appropriate Global Directory. Check the definition with the printenv command. You may create or use Global Directories that differ from the "normal" Global Directory. For instance, you might create a Global Directory that mapped all global names except a normally unused name to a file with integrity problems, and map that unused name to a new file. Then you could use MUPIP to CREATE the new file and use DSE to SAVE blocks from the damaged file and RESTORE them to the new file for later analysis.
 
 When you initiate DSE, it operates on the default region specified by the Global Directory. Once DSE is invoked, use FIND -REGION to determine the available regions, and then to select the appropriate region. The technique of creating a temporary Global Directory, with the target region for the repair as the default region, prevents accidental changes to the wrong region.
 
@@ -384,7 +384,7 @@ Because the only issue in this case is that one of the chunks' keys has been dam
 Execute:
 
 .. parsed-literal::
-   $ $gtm_dist/mumps -direct
+   $ $ydb_dist/mumps -direct
 
 From the first error message pick :
 
@@ -998,7 +998,7 @@ I5 - More Database Access Problems
 
 These error messages reflect failures to find, open, or access a database file. Examine any secondary error messages to obtain additional information about the problem.
 
-Use printenv to check gtmgbldir or use the M command WRITE $ZGBLDIR to verify that the "pointer" identifies the proper Global Directory. If the pointer is not appropriate, reset gtmgbldir or use the M command SET $ZGBLDIR= to name the proper file.
+Use printenv to check ydb_gbldir or use the M command WRITE $ZGBLDIR to verify that the "pointer" identifies the proper Global Directory. If the pointer is not appropriate, reset ydb_gbldir or use the M command SET $ZGBLDIR= to name the proper file.
 
 Examine the Global Directory using GDE. If the Global Directory is not appropriate, correct or recreate it with GDE. For more information on the use of GDE, refer to the `"Global Directory Editor" <https://docs.yottadb.com/AdminOpsGuide/gde.html>`_ chapter.
 
@@ -1264,7 +1264,7 @@ Example:
     write prefix,blk,state,!
    quit
 
-This routine provides a basic example of automating the technique described in this section. It must be run from an appropriate directory with a properly defined gtmgbldir, but can be extended to be more user friendly.
+This routine provides a basic example of automating the technique described in this section. It must be run from an appropriate directory with a properly defined ydb_gbldir, but can be extended to be more user friendly.
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
 O5 - Salvage of a Damaged Spanning Node

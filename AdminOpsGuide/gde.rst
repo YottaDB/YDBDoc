@@ -19,7 +19,7 @@ YottaDB manages routines in files and libraries separately from globals. For mor
 
 A set of M global variables (Names or Name spaces) and / or their subscripts map to Regions that define common sets of properties such as the maximum record length and whether null subscripts collate in conformance to the M standard. Each Region maps to a Segment that defines the properties relating to the file system such as the file name, the initial allocation, and number of global buffers. These properties and mapping rules are stored in a binary file called global directory. By default, a global directory file has an extension of .gld. You can specify any filename and extension of your choice for a global directory as long as it is valid on your operating system; the documentation always uses the default extension.
 
-The location of the global directory is pointed to by the Intrinsic Special Variable $ZGBLDIR. YottaDB processes initialize $ZBGLDIR at process startup from the environment variable gtmgbldir and can modify it during execution. For example, with a simple SET $ZGBLDIR command, a process can switch back and forth between development and testing databases.
+The location of the global directory is pointed to by the Intrinsic Special Variable $ZGBLDIR. YottaDB processes initialize $ZBGLDIR at process startup from the environment variable ydb_gbldir and can modify it during execution. For example, with a simple SET $ZGBLDIR command, a process can switch back and forth between development and testing databases.
 
 Consider a global variable ^TMP that holds only temporary data that is no longer meaningful when a system is rebooted. A global directory can map ^TMP to region TEMP that maps to a database file called scratch.dat, with all other globals mapped to mumps.dat. A global directory allows the separation of persistent data (mumps.dat) from non-persistent data(scratch.dat), so that each database file may get appropriately configured for operations — for example, the database administrator may choose to exclude scratch.dat from backup/archival procedures or periodically delete and recreate scratch.dat using MUPIP CREATE.
 
@@ -55,9 +55,9 @@ In a nutshell, the database attributes and mapping rules defined in a global dir
 GDE Overview
 -----------------------
 
-The Global Directory Editor (GDE) is a utility for creating, examining, and modifying a global directory. GDE is a program written in M and you can invoke it from the shell with $gtm_dist/mumps -run ^GDE. If you invoke it from the shell, GDE returns a status indicating success (0) or an issue (non-zero).
+The Global Directory Editor (GDE) is a utility for creating, examining, and modifying a global directory. GDE is a program written in M and you can invoke it from the shell with $ydb_dist/mumps -run ^GDE. If you invoke it from the shell, GDE returns a status indicating success (0) or an issue (non-zero).
 
-Because GDE is an M program, you can also invoke GDE from a YottaDB process with DO ^GDE. If you invoke GDE with a DO and modify the map of global directly currently opened by that process, you must HALT and restart the process for the process to pick up the revised mapping. YottaDB expects users normally run GDE from the shell --$gtm_dist/mumps -run GDE.
+Because GDE is an M program, you can also invoke GDE from a YottaDB process with DO ^GDE. If you invoke GDE with a DO and modify the map of global directly currently opened by that process, you must HALT and restart the process for the process to pick up the revised mapping. YottaDB expects users normally run GDE from the shell --$ydb_dist/mumps -run GDE.
 
 The input to GDE can be a command file. In a production environment, YottaDB recommends using command files to define database configurations and putting them under version control.
 
@@ -68,40 +68,40 @@ The input to GDE can be a command file. In a production environment, YottaDB rec
 Identifying the Current Global Directory
 +++++++++++++++++++++++++++++++++++++++++
 
-At process startup, the environment variable gtmgbldir identifies the global directory to the process. M application code can access and change the global directory through the $ZGBLDIR intrinsic special variable, which is initialized from $gtmgbldir at process startup. M application code can also use extended global references with the || or {} syntax.
+At process startup, the environment variable ydb_gbldir identifies the global directory to the process. M application code can access and change the global directory through the $ZGBLDIR intrinsic special variable, which is initialized from $ydb_gbldir at process startup. M application code can also use extended global references with the || or {} syntax.
 
-Note that $gtmgbldir / $ZGBLDIR are pathnames. If they do not start with a "/", then the pathname is relative and YottaDB searches for the global directory starting in the current working directory.
+Note that $ydb_gbldir / $ZGBLDIR are pathnames. If they do not start with a "/", then the pathname is relative and YottaDB searches for the global directory starting in the current working directory.
 
-To change the Global Directory used by processes, specify a new value for gtmgbldir.
+To change the Global Directory used by processes, specify a new value for ydb_gbldir.
 
 Example:
 
 .. parsed-literal::
-   $ export gtmgbldir=/home/jdoe/node1/prod.gld
+   $ export ydb_gbldir=/home/jdoe/node1/prod.gld
 
-When you invoke GDE and no Global Directory exists for gtmgbldir, GDE creates a minimal default Global Directory that is a starting point or template for building global directories for your specific needs.
+When you invoke GDE and no Global Directory exists for ydb_gbldir, GDE creates a minimal default Global Directory that is a starting point or template for building global directories for your specific needs.
 
 To retain the default Global Directory, exit GDE without making any changes.
 
 Example:
 
 .. parsed-literal::
-   $ export gtmgbldir=/home/jdoe/node1/prod.gld
+   $ export ydb_gbldir=/home/jdoe/node1/prod.gld
 
 ++++++++++++++++++++++++++++++++++++
 Creating a Default Global Directory
 ++++++++++++++++++++++++++++++++++++
 
-When you invoke GDE and no Global Directory exists for gtmgbldir, GDE produces a default Global Directory that contains a minimal set of required components and values for database characteristics. It can be used for purposes such as development and testing work. A default Global Directory also serves as a starting point or template for building custom global directories.
+When you invoke GDE and no Global Directory exists for ydb_gbldir, GDE produces a default Global Directory that contains a minimal set of required components and values for database characteristics. It can be used for purposes such as development and testing work. A default Global Directory also serves as a starting point or template for building custom global directories.
 
 To retain the default Global Directory, quit GDE without making any changes.
 
 Example:
 
 .. parsed-literal::
-   $ gtmgbldir=/usr/accntg/jones/mumps.gld
-   $ export gtmgbldir
-   $ $gtm_dist/mumps -dir
+   $ ydb_gbldir=/usr/accntg/jones/mumps.gld
+   $ export ydb_gbldir
+   $ $ydb_dist/mumps -dir
    YDB>do ^GDE
    %GDE-I-GDUSEDEFS, Using defaults for Global Directory
    /usr/accntg/jones/mumps.gld
@@ -325,7 +325,7 @@ For more information about journaling, see the section on the JOURNAL qualifier 
 Using GDE
 -----------------------
 
-The default installation procedure places the GDE utility into a directory assigned to the environment variable gtm_dist.
+The default installation procedure places the GDE utility into a directory assigned to the environment variable ydb_dist.
 
 To invoke GDE:
 
@@ -349,7 +349,7 @@ GDE displays informational messages like the following, and then the GDE> prompt
 If this does not work, contact your system manager to investigate setup and file access issues.
 
 .. note::
-   Even when invoked from within YottaDB, GDE always uses the gtmgbldir environment variable to identify its target.
+   Even when invoked from within YottaDB, GDE always uses the ydb_gbldir environment variable to identify its target.
 
 To leave GDE:
 
@@ -1124,7 +1124,7 @@ The default is NOAUTODB.
 
 **-C[OLLATION_DEFAULT]=number**
 
-Specifies the number of the collation sequence definition to be used as the default for this database file. The number can be any integer from 0 to 255. The number you assign as a value must match the number of a defined collation sequence that resides in the shared library pointed to by the environment variable gtm_collate_n. For information on defining this environment variable and creating an alternate collation sequence, refer to the "Internationalization" chapter in the Programmer's Guide.
+Specifies the number of the collation sequence definition to be used as the default for this database file. The number can be any integer from 0 to 255. The number you assign as a value must match the number of a defined collation sequence that resides in the shared library pointed to by the environment variable ydb_collate_n. For information on defining this environment variable and creating an alternate collation sequence, refer to the `"Internationalization" chapter in the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/internatn.html>`_.
 
 The minimum COLLATION_DEFAULT number is zero, which is the standard M collation sequence.
 
@@ -1281,7 +1281,7 @@ Specifies whether YottaDB should permit processes to share their database access
 
 By default, GDE uses STATS.
 
-For more information, refer to VIEW "[NO]STATSHARE" and ^%YGBLSTAT in the Programmer's Guide and gtm_statshare and gtm_statsdir in “Environment Variables”.
+For more information, refer to VIEW "[NO]STATSHARE" and ^%YGBLSTAT in the Programmer's Guide and ydb_statshare and ydb_statsdir in “Environment Variables”.
 
 **-[NO]STD[NULLCOLL]**
 
@@ -1380,7 +1380,7 @@ The performance characteristics of asynchronous IO are likely to be quite differ
 
 * On AIX, consider mounting file systems with the CIO mount option. The CIO mount option drops support for the file buffer cache (unused by asynchronous IO), and also eliminates a lock that is a potential bottleneck to YottaDB performance on the AIX jfs2 filesystem.
 
-* For Linux x86_64, the gtm_aio_nr_events environment variable controls the number of structures a process has per global directory to manage asynchronous writes, and therefore determines the number of concurrent writes a process can manage across all regions within a global directory. If not specified, the value controlled by gtm_aio_nr_events defaults to 128. If a process encounters a situation where it needs to perform an asynchronous write, but has no available slots with which to manage an additional one, it either falls back to synchronous writing if the write is blocking other actions, and otherwise defers the write until a slot becomes available as other writes complete. Linux allocates the structures on a system-wide basis with the setting of /proc/sys/fs/aio-max-nr. Therefore you should configure this parameter to account for the needs (as determined by gtm_aio_nr_events or the default) of all processes using asynchronous I/O. When processes use multiple global directories with asynchronous I/O, their need for the system resources increases accordingly. For example, if an environment runs 10,000 processes each of which open two global directories and /proc/sys/fs/aio-max-nr is set to a value of 200,000 then gtm_aio_nr_events needs to be set to a value <= 200,000 / (10,000 * 2) = 10. Conversely if gtm_aio_nr_events is set to a value of 20, then aio-max-nr needs to be bumped up to (10,000 * 2 * 20) = 400,000. YottaDB captures the number of errors encountered when attempting to write database blocks for a region, and, barring problems with the storage subsystem, hitting an asynchronous write limit would constitute primary (probably only) contribution to that value, which you can access with the following: 
+* For Linux x86_64, the ydb_aio_nr_events environment variable controls the number of structures a process has per global directory to manage asynchronous writes, and therefore determines the number of concurrent writes a process can manage across all regions within a global directory. If not specified, the value controlled by ydb_aio_nr_events defaults to 128. If a process encounters a situation where it needs to perform an asynchronous write, but has no available slots with which to manage an additional one, it either falls back to synchronous writing if the write is blocking other actions, and otherwise defers the write until a slot becomes available as other writes complete. Linux allocates the structures on a system-wide basis with the setting of /proc/sys/fs/aio-max-nr. Therefore you should configure this parameter to account for the needs (as determined by ydb_aio_nr_events or the default) of all processes using asynchronous I/O. When processes use multiple global directories with asynchronous I/O, their need for the system resources increases accordingly. For example, if an environment runs 10,000 processes each of which open two global directories and /proc/sys/fs/aio-max-nr is set to a value of 200,000 then ydb_aio_nr_events needs to be set to a value <= 200,000 / (10,000 * 2) = 10. Conversely if ydb_aio_nr_events is set to a value of 20, then aio-max-nr needs to be bumped up to (10,000 * 2 * 20) = 400,000. YottaDB captures the number of errors encountered when attempting to write database blocks for a region, and, barring problems with the storage subsystem, hitting an asynchronous write limit would constitute primary (probably only) contribution to that value, which you can access with the following: 
  
   .. parsed-literal::
      $$^%PEEKBYNAME("sgmnt_data.wcs_wterror_invoked_cntr",<region>)
@@ -1588,7 +1588,7 @@ The following -INSTANCE qualifier is used with the CHANGE command.
 
 * -FILE_NAME=repl_inst_filename maps a replication instance file with the global directory. -FILE_NAME="" removes the mapping of a global directory with a replication instance file. 
 
-* When a global directory is use, the mapping set with CHANGE -INSTANCE FILE_NAME=repl_inst_filename overrides any setting of the gtm_repl_instance environment variable. However, other utilities (MUPIP, LKE, and DSE) use the setting of the gtm_repl_instance environment variable. 
+* When a global directory is use, the mapping set with CHANGE -INSTANCE FILE_NAME=repl_inst_filename overrides any setting of the ydb_repl_instance environment variable. However, other utilities (MUPIP, LKE, and DSE) use the setting of the ydb_repl_instance environment variable. 
 
 
 -------------------------------------

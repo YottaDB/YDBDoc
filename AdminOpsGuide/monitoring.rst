@@ -63,10 +63,10 @@ In addition to messages in the system log, and apart from database files and fil
 
 While journal files automatically switch to new files when the limit is reached, log files can grow unchecked. You should periodically check the sizes of log files and switch them when they get large - or simply switch them on a regular schedule.
 
-1. gtmsecshr log file - gtm_secshr_log in the directory $gtm_log (send a SIGHUP to the gtmsecshr process to create a new log file).
+1. gtmsecshr log file - gtm_secshr_log in the directory $ydb_log (send a SIGHUP to the gtmsecshr process to create a new log file).
 
    .. note::
-      In the latest version, YottaDB logs gtmsecshr messages in the system log and ignores the environment variable gtm_log. 
+      In the latest version, YottaDB logs gtmsecshr messages in the system log and ignores the environment variable ydb_log. 
 
 2. Source Server, Receive Server, and Update Process log files.
 
@@ -87,13 +87,13 @@ When a YottaDB process terminates abnormally, it attempts to create a YDB_FATAL_
 
 YottaDB processes issued with the JOB command create .mje and .mjo files for their STDERR and STDOUT respectively. Analyze non-empty .mje files. Design your application and/or operational processes to remove or archive .mjo files once they are no longer needed.
 
-Use the environment variable gtm_procstuckexec to trigger monitoring for processes holding a resource for an unexpectedly long time. $gtm_procstuckexec specifies a shell command or a script to execute when any of the following conditions occur:
+Use the environment variable ydb_procstuckexec to trigger monitoring for processes holding a resource for an unexpectedly long time. $ydb_procstuckexec specifies a shell command or a script to execute when any of the following conditions occur:
 
 * An explicit MUPIP FREEZE or an implicit freeze, such as for a BACKUP or INTEG -ONLINE that lasts longer than one minute.
 * MUPIP actions find kill_in_prog (KILLs in progress) to be non-zero after a one minute wait on a region.
 * BUFOWNERSTUCK, INTERLOCK_FAIL, JNLPROCSTUCK, SHUTDOWN, WRITERSTUCK, MAXJNLQIOLOCKWAIT, MUTEXLCKALERT, SEMWT2LONG, and COMMITWAITPID operator messages are being logged.
 
-The shell script or command pointed to by gtm_procstuckexec can send an alert, take corrective actions, and log information.
+The shell script or command pointed to by ydb_procstuckexec can send an alert, take corrective actions, and log information.
 
 .. note::
    Make sure user processes have sufficient space and permissions to run the shell command/script. For example, for the script to invoke the debugger, the process must be of the same group or have a way to elevate privileges.

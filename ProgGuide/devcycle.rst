@@ -36,11 +36,11 @@ Each of these remaining steps can be performed either from the YottaDB prompt or
 +======================================================+===============================================+===================================================+
 | Define Environment Variables (shell)                 | define:                                                                                           |
 |                                                      |                                                                                                   |
-|                                                      | * gtm_dist                                                                                        |
+|                                                      | * ydb_dist                                                                                        |
 |                                                      |                                                                                                   |
-|                                                      | * gtmgbldir                                                                                       |
+|                                                      | * ydb_gbldir                                                                                      |
 |                                                      |                                                                                                   |
-|                                                      | * gtmroutines                                                                                     |
+|                                                      | * ydb_routines                                                                                    |
 +------------------------------------------------------+-----------------------------------------------+---------------------------------------------------+
 | Prepare database                                     | define Global Directory with GDE                                                                  |
 |                                                      |                                                                                                   |
@@ -101,7 +101,7 @@ YottaDB limits environment variables to 8192 bytes, but items they specify such 
 The procedure below describes how to define an environment variable. Use this procedure to define an environment variable either at the shell prompt or in your shell startup file. If you define the variable at the shell prompt, it will be effective only until you logout. If you define it in your .profile file (.cshrc, if using a C shell variant), it will be in effect whenever you log in. Your system manager may have already defined some of these variables.
 
 .. note::
-   Each environment variable required by YottaDB is described and illustrated in individual sections following the procedure. Only gtm_dist, and in some cases gtmgbldir, gtm_principal and gtmroutines, are required by users who do not perform programming activities.
+   Each environment variable required by YottaDB is described and illustrated in individual sections following the procedure. Only ydb_dist, and in some cases ydb_gbldir, ydb_principal and ydb_routines, are required by users who do not perform programming activities.
 
 To define an environment variable type the following commands:
 
@@ -114,90 +114,90 @@ The example above may differ from the syntax supported by some shells.
 The following environment variables hold information that determines some details of YottaDB run-time operation, over which the user has control.
 
 +++++++++
-gtm_dist
+ydb_dist
 +++++++++
 
-gtm_dist is used to establish the location of the installed YottaDB program and support files.
+ydb_dist is used to establish the location of the installed YottaDB program and support files.
 
-The syntax for gtm_dist is as follows:
+The syntax for ydb_dist is as follows:
 
 .. parsed-literal::
-   $ gtm_dist=<distribution-directory>
+   $ ydb_dist=<distribution-directory>
 
 The standard installation places these files in /usr/local/lib/yottadb.
 
 Example:
 
 .. parsed-literal::
-   $ gtm_dist=/usr/local/lib/yottadb/r1.10
-   $ export gtm_dist
+   $ ydb_dist=/usr/local/lib/yottadb/r1.10
+   $ export ydb_dist
 
 This identifies /usr/local/lib/yottadb/r1.10 as the location of the installed YottaDB files.
 
-Add gtm_dist to your PATH environment variable to have UNIX search the YottaDB installation directory (when processing a command to activate or run an image). This allows you to activate YottaDB and the utilities without explicitly specifying a path.
+Add ydb_dist to your PATH environment variable to have UNIX search the YottaDB installation directory (when processing a command to activate or run an image). This allows you to activate YottaDB and the utilities without explicitly specifying a path.
 
-To add gtm_dist to your PATH type the following commands:
+To add ydb_dist to your PATH type the following commands:
 
 .. parsed-literal::
-   $ PATH=$PATH:$gtm_dist
+   $ PATH=$PATH:$ydb_dist
    $ export PATH
 
 .. note::
-   Most of the examples in this manual assume that you have added gtm_dist to your PATH.
+   Most of the examples in this manual assume that you have added ydb_dist to your PATH.
 
 ++++++++++
-gtmgbldir
+ydb_gbldir
 ++++++++++
 
-gtmgbldir defines the path to a Global Directory. A Global Directory maps global variables to physical database files, and is required to locate M global variables. gtmgbldir provides the initial value for $ZGBLDIR, the intrinsic special variable that connects the YottaDB run-time system to the Global Directory. It also connects the Global Directory to the utilities requiring one.
+ydb_gbldir defines the path to a Global Directory. A Global Directory maps global variables to physical database files, and is required to locate M global variables. ydb_gbldir provides the initial value for $ZGBLDIR, the intrinsic special variable that connects the YottaDB run-time system to the Global Directory. It also connects the Global Directory to the utilities requiring one.
 
-If you maintain multiple global directories, define gtmgbldir to the Global Directory you currently want to use.
+If you maintain multiple global directories, define ydb_gbldir to the Global Directory you currently want to use.
 
-The syntax of a gtmgbldir definition is:
+The syntax of a ydb_gbldir definition is:
 
 .. parsed-literal::
-   $ gtmgbldir=/directory/filename.gld
+   $ ydb_gbldir=/directory/filename.gld
 
 Example:
 
 .. parsed-literal::
-   $ gtmgbldir=/usr/staff/mumps.gld
-   $ export gtmgbldir
+   $ ydb_gbldir=/usr/staff/mumps.gld
+   $ export ydb_gbldir
 
 This specifies /usr/staff as the directory containing the Global Directory file named mumps.gld.
 
 +++++++++++++++
-gtm_principal
+ydb_principal
 +++++++++++++++
 
-The gtm_principal environment variable specifies the value for $principal, which designates the absolute pathname of the principal $IO device. This is an MDC Type A enhancement to standard M.
+The ydb_principal environment variable specifies the value for $principal, which designates the absolute pathname of the principal $IO device. This is an MDC Type A enhancement to standard M.
 
-The following is an example of gtm_principal definition:
+The following is an example of ydb_principal definition:
 
 .. parsed-literal::
-   $ gtm_principal=/usr/filename
-   $ export gtm_principal
+   $ ydb_principal=/usr/filename
+   $ export ydb_principal
 
 This specifies the /usr/filename as the principal $IO device, effective until changed further or until you logout of the particular session.
 
 +++++++++++++++
-gtmroutines
+ydb_routines
 +++++++++++++++
 
-The gtmroutines environment variable specifies a search list of possible locations for M routines. This value is used to initialize $ZROUTINES, (the intrinsic special variable that enables YottaDB to find the routine (program) you want to run). gtmroutines is required for ZLINKing. gtmroutines is particularly helpful in calling percent utilities and the Global Directory Editor (GDE), which are in gtm_dist.
+The ydb_routines environment variable specifies a search list of possible locations for M routines. This value is used to initialize $ZROUTINES, (the intrinsic special variable that enables YottaDB to find the routine (program) you want to run). ydb_routines is required for ZLINKing. ydb_routines is particularly helpful in calling percent utilities and the Global Directory Editor (GDE), which are in ydb_dist.
 
 .. parsed-literal::
-   $ gtmroutines="directories in search list"
+   $ ydb_routines="directories in search list"
 
 The directories in the search list must be separated by a space and enclosed in quotation marks (" "). Environment variables are accepted in the search list.
 
-The following is an example of gtmroutines definition:
+The following is an example of ydb_routines definition:
 
 .. parsed-literal::
-   $ gtmroutines=". $gtm_dist"
-   $ export gtmroutines
+   $ ydb_routines=". $ydb_dist"
+   $ export ydb_routines
 
-This specifies that YottaDB search for a routine first in the current directory (.), then in the distribution directory (which is identified by the environment variable gtm_dist). The distribution directory is included in the list because it contains the percent routines. You will probably want the search list to contain these two items at a minimum. In addition, you may want to add directories of your own.
+This specifies that YottaDB search for a routine first in the current directory (.), then in the distribution directory (which is identified by the environment variable ydb_dist). The distribution directory is included in the list because it contains the percent routines. You will probably want the search list to contain these two items at a minimum. In addition, you may want to add directories of your own.
 
 For additional information about how YottaDB uses the routine search list, see `“$ZROutines” <https://docs.yottadb.com/ProgrammersGuide/isv.html#zroutines>`_.
 
@@ -219,7 +219,7 @@ This defines the current text editor to vi.
 Preparing the Database
 --------------------------
 
-YottaDB databases consist of one or more UNIX files. Most database files have a UNIX file structure externally and a YottaDB Database Structure (GDS) internally. Management of the GDS files by the YottaDB run-time system assures high performance and integrity. YottaDB database files are coordinated by a Global Directory. The Global Directory identifies which global names belong in which files, and specifies the creation characteristics for each file. To specify access to a database, each M process must define the gtmgbldir environment variable to point to the associated Global Directory.
+YottaDB databases consist of one or more UNIX files. Most database files have a UNIX file structure externally and a YottaDB Database Structure (GDS) internally. Management of the GDS files by the YottaDB run-time system assures high performance and integrity. YottaDB database files are coordinated by a Global Directory. The Global Directory identifies which global names belong in which files, and specifies the creation characteristics for each file. To specify access to a database, each M process must define the ydb_gbldir environment variable to point to the associated Global Directory.
 
 To define and maintain a Global Directory, use the Global Directory Editor (GDE) utility. The GDE utility automatically upgrades existing global directories to the current format. The MUPIP command CREATE uses the characteristics as defined in the Global Directory to create the associated database. In a production environment, the system manager typically maintains Global Directories.
 
@@ -236,12 +236,12 @@ This example is a sequence of events that illustrate steps you might typically p
 The ls command verifies that there are no existing files with the name payroll.gld.
 
 .. parsed-literal::
-   $ gtmgbldir=payroll.gld 
-   $ export gtmgbldir
+   $ ydb_gbldir=payroll.gld 
+   $ export ydb_gbldir
 
-This establishes the current value of the environment variable gtmgbldir as payroll.gld. YottaDB uses gtmgbldir to identify the current Global Directory. When defined at the shell prompt, gtmgbldir maintains the defined value only for the current login session. The next time you log into UNIX, you must again define the value of gtmgbldir as payroll.gld to use it as the current Global Directory.
+This establishes the current value of the environment variable ydb_gbldir as payroll.gld. YottaDB uses ydb_gbldir to identify the current Global Directory. When defined at the shell prompt, ydb_gbldir maintains the defined value only for the current login session. The next time you log into UNIX, you must again define the value of ydb_gbldir as payroll.gld to use it as the current Global Directory.
 
-This example defines gtmgbldir without a full pathname. The environment variable points to the payroll.gld file in the current working directory. Therefore if the default directory changes, YottaDB attempts to locate the Global Directory in the new default directory and cannot use the original file. If you intend for the Global Directory to consistently point to this file, even if the default directory changes, use a full file-specification for gtmgbldir.
+This example defines ydb_gbldir without a full pathname. The environment variable points to the payroll.gld file in the current working directory. Therefore if the default directory changes, YottaDB attempts to locate the Global Directory in the new default directory and cannot use the original file. If you intend for the Global Directory to consistently point to this file, even if the default directory changes, use a full file-specification for ydb_gbldir.
 
 .. parsed-literal::
    $ /usr/local/lib/yottadb/r1.20_x86/ydb
@@ -347,7 +347,7 @@ Example:
    $ mupip create
    Created file payroll.dat
 
-The MUPIP CREATE command generates the database file. Notice that the MUPIP CREATE syntax does not include the file name. MUPIP uses the environment variable gtmgbldir to find the Global Directory payroll.dat and obtains the file name from that Global Directory. MUPIP then checks to make sure that payroll.dat does not already exist and creates payroll.dat with the characteristics described in payroll.dat.
+The MUPIP CREATE command generates the database file. Notice that the MUPIP CREATE syntax does not include the file name. MUPIP uses the environment variable ydb_gbldir to find the Global Directory payroll.dat and obtains the file name from that Global Directory. MUPIP then checks to make sure that payroll.dat does not already exist and creates payroll.dat with the characteristics described in payroll.dat.
 
 Example:
 
@@ -361,7 +361,7 @@ Example:
 
 This uses the MUPIP LOAD command to load a sequential file into the database.
 
-Because MUPIP uses the environment variable gtmgbldir to locate a Global Directory, which identifies the database file(s), the LOAD command does not require any information about the target database. With few exceptions, the YottaDB utilities work in the same way.
+Because MUPIP uses the environment variable ydb_gbldir to locate a Global Directory, which identifies the database file(s), the LOAD command does not require any information about the target database. With few exceptions, the YottaDB utilities work in the same way.
 
 --------------------------------------
 Creating and Editing a Source Program
@@ -394,7 +394,7 @@ Example:
 
 This syntax uses the ydb script to enter YottaDB from the shell, and uses ZEDIT to initiate an editing session on payroll.m Because ZEDIT defaults the extension to .m, it is not necessary to provide an extension. If payroll.m does not already exist, YottaDB creates it in the first source directory identified by $ZROUTINES. If $ZROUTINES is null, ZEDIT places the source file in the process's current working directory.
 
-$ZROUTINES is a read-write special variable containing an ordered list of directories that certain YottaDB functions use to locate source and object files. Generally, a system manager sets up the environment to define the environment variable gtmroutines. At image invocation, YottaDB initializes $ZROUTINES to the value of gtmroutines. Once you are running M, you can SET and refer to $ZROUTINES using the format:
+$ZROUTINES is a read-write special variable containing an ordered list of directories that certain YottaDB functions use to locate source and object files. Generally, a system manager sets up the environment to define the environment variable ydb_routines. At image invocation, YottaDB initializes $ZROUTINES to the value of ydb_routines. Once you are running M, you can SET and refer to $ZROUTINES using the format:
 
 .. parsed-literal::
    YDB>SET $ZROUTINES=expr
@@ -556,7 +556,8 @@ With no -DYNAMIC_LITERALS specified, these data structures continue to be genera
 
 **-[no]embed_source**
 
-Instructs YottaDB to embed routine source code in the object code. The default is NOEMBED_SOURCE. Like other YottaDB compilation qualifiers, this qualifier can be specified through the $ZCOMPILE intrinsic special variable and gtmcompile environment variable. EMBED_SOURCE provides $TEXT and ZPRINT access to the correct source code, even if the original M source file has been edited or removed. Where the source code is not embedded in the object code, YottaDB attempts to locate the source code file. If it cannot find source code matching the object code, $TEXT() returns a null string. ZPRINT prints whatever source code found and also prints a TXTSRCMAT message in direct mode; if it cannot find a source file, ZPRINT issues a FILENOTFND error. 
+Instructs YottaDB to embeds routine source code in the object code. The default is NOEMBED_SOURCE. Like other YottaDB compilation qualifiers, this qualifier can be specified through the $ZCOMPILE intrinsic special variable and ydb_compile environment variable. EMBED_SOURCE provides $TEXT and ZPRINT access to the correct source code, even if the original M source file has been edited or removed. Where the source code is not embedded in the object code, YottaDB attempts to locate the source code file. If it cannot find source code matching the object code, $TEXT() returns a null string. ZPRINT prints whatever source code found and also prints a TXTSRCMAT message in direct mode; if it cannot find a source file, ZPRINT issues a FILENOTFND error. 
+
 
 **-[no]i[gnore]**
 
@@ -703,7 +704,7 @@ If ZLINK finds taxes.m or taxes.o, the command adds the routine taxes to the cur
 Locating the Source File Directory
 ++++++++++++++++++++++++++++++++++++
 
-A ZLINK command that does not specify a directory uses $ZROUTINES to locate files. When $ZROUTINES is null, ZLINK uses the current directory. $ZROUTINES is initialized to the value of the gtmroutines environment variable.
+A ZLINK command that does not specify a directory uses $ZROUTINES to locate files. When $ZROUTINES is null, ZLINK uses the current directory. $ZROUTINES is initialized to the value of the ydb_routines environment variable.
 
 When the file being linked includes an explicit directory, ZLINK and auto-ZLINK searches only that directory for both the object and the source files. If compilation is required, ZLINK places the new object file in the named directory.
 
@@ -729,7 +730,7 @@ You can run a program from the shell prompt using the following command:
 .. parsed-literal::
    $ mumps -run ^filename
 
-The mumps command searches the directories specified by the environment variable gtmroutines to locate the specified file name.
+The mumps command searches the directories specified by the environment variable ydb_routines to locate the specified file name.
 
 Example:
 
@@ -748,7 +749,7 @@ Processing Errors from Direct Mode and Shell
 | Usage                      | Suitable for Development and Debugging                                    | Suitable for production                                                 |
 +----------------------------+---------------------------------------------------------------------------+-------------------------------------------------------------------------+
 | Error Handling             | Not invoked for code entered at the direct mode prompt; Note that XECUTE  | Errors are suppressed and cause a silent process exit. Set the          |
-|                            | code is treated as not entered at the Direct Mode prompt.                 | environment variable gtm_etrap which overrides the default $ZTRAP="B".  |
+|                            | code is treated as not entered at the Direct Mode prompt.                 | environment variable ydb_etrap which overrides the default $ZTRAP="B".  |
 |                            |                                                                           |                                                                         |
 |                            | The default $ZTRAP="B" brings a process to the Direct Mode for debugging. | If needed, error handlers can include appropriate error notification to |
 |                            |                                                                           | $PRINCIPAL. For example, the ydb_env_set script sets a default $ETRAP   |

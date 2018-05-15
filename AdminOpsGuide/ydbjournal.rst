@@ -37,15 +37,15 @@ MM       -      2-digit minute                  -                such as 40
 
 SS       -      2-digit seconds                 -                such as 30
 
-The following animation describes how YottaDB uses journal files to record information pertaining to database updates on gtm.dat (the default database file created by ydb_env_set).
+The following animation describes how YottaDB uses journal files to record information pertaining to database updates on yottadb.dat (the default database file created by ydb_env_set).
 
 .. image:: dbupdate.gif
 
-At any given time the database file (gtm.dat) has a single active journal file (gtm.mjl) with links to predecessor ("previous generation") journal files. The black arrow between the journal files demonstrate how a journal file is back-linked to its predecessor with a file name in the form of gtm.mjl_YYYYJJJHHMMSS to form a chain of journal files. When a switch of journal files occurs, either implicitly (for example, when AUTOSWITCHLIMIT is reached) or explicitly (for example, on a backup event or MUPIP SET -JOURNAL=ON), YottaDB renames the existing journal file with the timestamp of its last modification. YottaDB creates a new journal file with the name of the journal file for that database, and specifies the previous generation journal file name (after the rename), in the newly created journal file's header. YottaDB journaling provides mechanisms for durable recovery/extract from the journal files: replaying database updates to an active database, reverting the database state to a previous consistent state for when replication is in use, and so on. YottaDB automatically turns off journaling on encountering run-time conditions such as no available disk space or no authorization for a process attempting to auto-switch a journal file. In such a case, YottaDB also logs an appropriate message to the operator log to alert the operational staff. If YottaDB detects that the rename-logic yields a filename that already exists (a condition when journal files are switched in the same second), the string "_N[N[N[N...]]]" is appended to the renamed filename where "N[N[N...]]" denotes a sequence of numbers as follows:
+At any given time the database file (yottadb.dat) has a single active journal file (yottadb.mjl) with links to predecessor ("previous generation") journal files. The black arrow between the journal files demonstrate how a journal file is back-linked to its predecessor with a file name in the form of yottadb.mjl_YYYYJJJHHMMSS to form a chain of journal files. When a switch of journal files occurs, either implicitly (for example, when AUTOSWITCHLIMIT is reached) or explicitly (for example, on a backup event or MUPIP SET -JOURNAL=ON), YottaDB renames the existing journal file with the timestamp of its last modification. YottaDB creates a new journal file with the name of the journal file for that database, and specifies the previous generation journal file name (after the rename), in the newly created journal file's header. YottaDB journaling provides mechanisms for durable recovery/extract from the journal files: replaying database updates to an active database, reverting the database state to a previous consistent state for when replication is in use, and so on. YottaDB automatically turns off journaling on encountering run-time conditions such as no available disk space or no authorization for a process attempting to auto-switch a journal file. In such a case, YottaDB also logs an appropriate message to the operator log to alert the operational staff. If YottaDB detects that the rename-logic yields a filename that already exists (a condition when journal files are switched in the same second), the string "_N[N[N[N...]]]" is appended to the renamed filename where "N[N[N...]]" denotes a sequence of numbers as follows:
 
 0,1,2,3,4,5,6,7,8,9,90,91,92,93,94,95,96,97,98,99,990,991,...
 
-YottaDB tries all numbers from the order in the above sequence until it finds a non-existing rename-filename. In the above illustration, if gtm.mjl_2010227 082618 is switched in the same second and gtm.mjl_2010227 082618_0 already exists, the renamed journal file would be gtm.mjl_2010227 082618_1. If the existing file renaming scheme or the default journal file naming scheme discussed above results in a filename longer than 255 characters (due to the suffix creation rules), YottaDB produces an error and turns off journaling.
+YottaDB tries all numbers from the order in the above sequence until it finds a non-existing rename-filename. In the above illustration, if yottadb.mjl_2010227 082618 is switched in the same second and yottadb.mjl_2010227 082618_0 already exists, the renamed journal file would be yottadb.mjl_2010227 082618_1. If the existing file renaming scheme or the default journal file naming scheme discussed above results in a filename longer than 255 characters (due to the suffix creation rules), YottaDB produces an error and turns off journaling.
 
 .. note::
    In a very short time window just before switching a journal file, YottaDB creates a temporary file with an .mjl_new extension and attempts to write a few initialization journal records. After performing an initial verification, YottaDB renames the .mjl_new file to the current .mjl file. In rare cases, you might see an .mjl_new file if the journal file creation process was interrupted midway (possibly due to permission or disk space issues). If a subsequent MUPIP process detects an .mjl_new file and no .mjl file, it automatically deletes it and creates a new .mjl file.
@@ -73,7 +73,7 @@ Suppose a system crash occurred at 08:50 hrs and a backup of the database was ta
 
 .. image:: fwdrecov.gif
 
-A command like mupip journal -recover -forward -before="--8:50" gtm.mjl performs this operation. From the current journal file, forward recovery moves back to the point where the begin transaction number of a journal file matches the current transaction number of the active database (the point when the backup was taken) and begins forward processing. Since a journal file is back-linked to its predecessor, YottaDB facilitates forward processing by activating temporary forward links between journal files that appear only during recovery. These forward links are temporary because they are expensive to maintain as new journal files are created. Note: Forward recovery, by design, begins from a journal file whose "Begin Transaction" matches the "Current Transaction" of the active database. This condition occurs only when a new journal file is created (switched) immediately after a backup. If a database is backed up with MUPIP BACKUP -NONEWJNLFILES (a backup option where journal files are not switched), forward recovery cannot find a journal file whose Begin Transaction matches the Current Transaction and therefore cannot proceed with forward recovery. Always use a backup option that switches a journal file or journal files explicitly after a backup. Also, once a database has been recovered using forward recovery, you can no longer use it for a future recovery unless you restore the database again from the backup.
+A command like mupip journal -recover -forward -before="--8:50" yottadb.mjl performs this operation. From the current journal file, forward recovery moves back to the point where the begin transaction number of a journal file matches the current transaction number of the active database (the point when the backup was taken) and begins forward processing. Since a journal file is back-linked to its predecessor, YottaDB facilitates forward processing by activating temporary forward links between journal files that appear only during recovery. These forward links are temporary because they are expensive to maintain as new journal files are created. Note: Forward recovery, by design, begins from a journal file whose "Begin Transaction" matches the "Current Transaction" of the active database. This condition occurs only when a new journal file is created (switched) immediately after a backup. If a database is backed up with MUPIP BACKUP -NONEWJNLFILES (a backup option where journal files are not switched), forward recovery cannot find a journal file whose Begin Transaction matches the Current Transaction and therefore cannot proceed with forward recovery. Always use a backup option that switches a journal file or journal files explicitly after a backup. Also, once a database has been recovered using forward recovery, you can no longer use it for a future recovery unless you restore the database again from the backup.
 
 **Backward Recovery**
 
@@ -100,7 +100,7 @@ YottaDB adds a prefix rolled_bak\_ to the journal file whose entire contents are
  Journal Files Access Authorization
 ++++++++++++++++++++++++++++++++++++
 
-YottaDB propagates access restrictions to the journal files, backup, and snapshot temporary files. Therefore, generally, journal files should have the same access authorization characteristics as their corresponding database files. In the rare case where database access is restricted but the owner is not a member of either the database group nor the group associated with the $gtm_dist directory, you should provide world read-write access to the journal files. As long as the operating system permits the access, YottaDB allows access to database files and journals in cases where the system has no user or group information available for the file. Such an unusual situation can arise, for example, when the user and group are provided via NIS, but if NIS is not currently operational the owner and group cannot be determined; or perhaps a user id is deleted while the YottaDB process is active.
+YottaDB propagates access restrictions to the journal files, backup, and snapshot temporary files. Therefore, generally, journal files should have the same access authorization characteristics as their corresponding database files. In the rare case where database access is restricted but the owner is not a member of either the database group nor the group associated with the $ydb_dist directory, you should provide world read-write access to the journal files. As long as the operating system permits the access, YottaDB allows access to database files and journals in cases where the system has no user or group information available for the file. Such an unusual situation can arise, for example, when the user and group are provided via NIS, but if NIS is not currently operational the owner and group cannot be determined; or perhaps a user id is deleted while the YottaDB process is active.
 
 ++++++++++++++++++++++++++++++
  Triggers in Journal Files
@@ -524,7 +524,7 @@ YottaDB treats the filename as having two components - basename and extension. T
 
 The convention of the default value for the FILENAME is as follows:
 
-* YottaDB takes the basename of the database filename as the basename for the journal file with an extension of mjl if the database has a dat extension. For example, database name gtm.dat results in a default name mumps.mjl. If the database filename does not have a dat extension, YottaDB replaces all occurrences of periods (.) with underscores (_) with an extension of mjl and takes the full database filename. For example, database name mumps.acn results in a default name mumps_acn.mjl. Therefore, by default, a journal file has an extension of mjl unless you explicitly specify a different extension with the FILENAME journal option. If the new journal filename (the one specified in the FILENAME option or the default) already exists, YottaDB renames the existing file with the string "_YYYYJJJHHMMSS" appended to the existing file extension where the string denotes the time of creation of the existing journal file in the following format:
+* YottaDB takes the basename of the database filename as the basename for the journal file with an extension of mjl if the database has a dat extension. For example, database name yottadb.dat results in a default name mumps.mjl. If the database filename does not have a dat extension, YottaDB replaces all occurrences of periods (.) with underscores (_) with an extension of mjl and takes the full database filename. For example, database name mumps.acn results in a default name mumps_acn.mjl. Therefore, by default, a journal file has an extension of mjl unless you explicitly specify a different extension with the FILENAME journal option. If the new journal filename (the one specified in the FILENAME option or the default) already exists, YottaDB renames the existing file with the string "_YYYYJJJHHMMSS" appended to the existing file extension where the string denotes the time of creation of the existing journal file in the following format:
 
  .. parsed-literal::
     YYYY      4-digit-year                              such as 2011 
@@ -766,7 +766,7 @@ With no arguments, MUPIP JOURNAL derives the output file specification of the ex
 
 When used independent of -RECOVER (or -ROLLBACK), -EXTRACT option can produce a result even though the database file does not exist, although it does try to access the database if it is available.
 
-If a database having custom collation is inaccessible or the replication instance is frozen with a critical section required for the access held by another process and the environment variable gtm_extract_nocol is defined and evaluates to a non-zero integer or any case-independent string or leading substrings of "TRUE" or "YES", MUPIP JOURNAL -EXTRACT issues the DBCOLLREQ warning and proceeds with the extract using the default collation. If gtm_extract_nocol is not set or evaluates to a value other than a positive integer or any case-independent string or leading substrings of "FALSE" or "NO", MUPIP JOURNAL -EXTRACT exits with the SETEXTRENV error if it encounters such a situation. Note that if default collation is used for a database with custom collation, the subscripts reported by MUPIP JOURNAL -EXTRACT are those stored in the database, which may differ from those read and written by application programs.
+If a database having custom collation is inaccessible or the replication instance is frozen with a critical section required for the access held by another process and the environment variable ydb_extract_nocol is defined and evaluates to a non-zero integer or any case-independent string or leading substrings of "TRUE" or "YES", MUPIP JOURNAL -EXTRACT issues the DBCOLLREQ warning and proceeds with the extract using the default collation. If ydb_extract_nocol is not set or evaluates to a value other than a positive integer or any case-independent string or leading substrings of "FALSE" or "NO", MUPIP JOURNAL -EXTRACT exits with the SETEXTRENV error if it encounters such a situation. Note that if default collation is used for a database with custom collation, the subscripts reported by MUPIP JOURNAL -EXTRACT are those stored in the database, which may differ from those read and written by application programs.
 
 Note that, a broken transaction, if found, is extracted to a broken transaction file (refer to `“Journal Control Qualifiers” <https://docs.yottadb.com/AdminOpsGuide/ydbjournal.html#journal-control-qualifiers>`_ for details), and all future complete transactions are considered as lost transactions, and are extracted to a lost transaction file (refer to `“Journal Control Qualifiers” <https://docs.yottadb.com/AdminOpsGuide/ydbjournal.html#journal-control-qualifiers>`_ for details).
 
@@ -780,7 +780,7 @@ Omitting the qualifier or specifying a value of one (1) defaults to a single pro
 
 A value greater than one (1) specifies the maximum number of concurrent threads or processes MUPIP should use, although it never uses more than one per region. If the number of regions exceeds the specified value, MUPIP allocates one thread or processes in an order determined by timestamps in the journal records.
 
-The environment variable gtm_mupjnl_parallel provides a value when the MUPIP JOURNAL command has no explicit -PARALLEL qualifier; when defined with no value gtm_mupjnl_parallel acts like -PARALLEL with no value. When the -PARALLEL qualifier (or the gtm_mupjnl_parallel environment variable) specifies the use of parallel processes in the forward phase of a MUPIP JOURNAL command, MUPIP may create temporary shared memory segments and/or extract files (corresponding to -extract or -losttrans or -brokentrans qualifiers) and clean these up at the end of the command; however an abnormal termination such as a kill -9 might cause these to be orphaned. Journal extract files (created by specifying one of -extract or -brokentrans or -losttrans to a MUPIP JOURNAL command) contain journal records sorted in the exact order their corresponding updates happened in time.
+The environment variable ydb_mupjnl_parallel provides a value when the MUPIP JOURNAL command has no explicit -PARALLEL qualifier; when defined with no value ydb_mupjnl_parallel acts like -PARALLEL with no value. When the -PARALLEL qualifier (or the ydb_mupjnl_parallel environment variable) specifies the use of parallel processes in the forward phase of a MUPIP JOURNAL command, MUPIP may create temporary shared memory segments and/or extract files (corresponding to -extract or -losttrans or -brokentrans qualifiers) and clean these up at the end of the command; however an abnormal termination such as a kill -9 might cause these to be orphaned. Journal extract files (created by specifying one of -extract or -brokentrans or -losttrans to a MUPIP JOURNAL command) contain journal records sorted in the exact order their corresponding updates happened in time.
 
 **-RECover**
 
@@ -849,7 +849,7 @@ Specifies that ROLLBACK requires exclusive access to the database and the replic
 
 Specifies that ROLLBACK can run without requiring exclusive access to the database and the replication instance file.
 
-Any utility/command attempted while MUPIP JOURNAL -ONLINE -ROLLBACK operates waits for ROLLBACK to complete; the $gtm_db_startup_max_wait environment variable configures the wait period. For more information on $gtm_db_startup_max_wait, refer to `“Environment Variables” <https://docs.yottadb.com/AdminOpsGuide/basicops.html#environment-variables>`_.
+Any utility/command attempted while MUPIP JOURNAL -ONLINE -ROLLBACK operates waits for ROLLBACK to complete; the $ydb_db_startup_max_wait environment variable configures the wait period. For more information on $ydb_db_startup_max_wait, refer to `“Environment Variables” <https://docs.yottadb.com/AdminOpsGuide/basicops.html#environment-variables>`_.
 
 .. note::
    Because MUPIP ROLLBACK -ONLINE can take a database backwards in state space, please make sure that you understand what you intend it to do when you invoke it. YottaDB developed it as a step towards a much larger project and anticipates that it will not be broadly useful in its current form.
@@ -888,12 +888,12 @@ The show-option-list includes (these are not case-sensitive):
 
  .. parsed-literal::
    -----------------------------------------------------------------------------
-   SHOW output for journal file /home/jdoe/.yottadb/r1.20_x86/g/mumps.mjl
+   SHOW output for journal file /home/jdoe/.yottadb/r1.20_x86_64/g/yottadb.mjl
    -----------------------------------------------------------------------------
-   Journal file name       /home/jdoe/.yottadb/r1.20_x86/g/mumps.mjl
+   Journal file name       /home/jdoe/.yottadb/r120/g/yottadb.mjl
    Journal file label      GDSJNL23
-   Database file name      /home/jdoe/.yottadb/r1.20_x86/g/mumps.dat
-   Prev journal file name /home/jdoe/.yottadb/r1.20_x86/g/mumps.mjl_2018310190106
+   Database file name      /home/jdoe/.yottadb/r120/g/yottadb.dat
+   Prev journal file name /home/jdoe/.yottadb/r120/g/yottadb.mjl_2018310190106
    Next journal file name 
    Before-image journal                      ENABLED
    Journal file header size                    65536 [0x00010000]
@@ -937,7 +937,7 @@ The show-option-list includes (these are not case-sensitive):
 
   .. parsed-literal::
      -------------------------------------------------------------------------------
-     SHOW output for journal file /home/jdoe/.yottadb/r1.20_x86/g/mumps.mjl
+     SHOW output for journal file /home/jdoe/.yottadb/r120/g/yottadb.mjl
      -------------------------------------------------------------------------------
      Record type    Count
      ----------------------
@@ -1340,7 +1340,7 @@ JOURNAL EXTRACT FORMATS
 
 Journal EXTRACT files always start with a label. For the current release of YottaDB, the label is GDSJEX07 for a simple journal extract file. This label is necessary to identify the format of the file.
 
-If the environment variable gtm_chset is set of UTF-8, then file format label is followed by another label called "UTF-8" to indicate UTF-8 mode.
+If the environment variable ydb_chset is set of UTF-8, then file format label is followed by another label called "UTF-8" to indicate UTF-8 mode.
 
 After this label, the journal record extracts follow. These journal record extracts include fields or pieces delimited by a back slash (\).
 

@@ -263,7 +263,7 @@ BADACCMTHD
 
 BADACCMTHD, Invalid access method was specified, file not created
 
-MUPIP Warning: This indicates that CREATE encountered an invalid access method for the dynamic segment in the current Global Directory, which is defined by the logical name GTM$GBLDIR / environment variable gtmgbldir.
+MUPIP Warning: This indicates that CREATE encountered an invalid access method for the dynamic segment in the current Global Directory, which is defined by the logical name GTM$GBLDIR / environment variable ydb_gbldir.
 
 Action: Use the Global Directory Editor (GDE) to verify the access method for the Global Directory. Look for the use of YottaDB components with different version numbers.
 
@@ -646,7 +646,7 @@ BOOLSIDEFFECT, Extrinsic ($$), External call ($&) or $INCREMENT() with potential
 
 Compile Time Warning: This optional message, accompanied by a line and column pointing to the issue, indicates a Boolean expression that contains a side effect in a term other than its first. By default, YottaDB may skip evaluating such terms.
 
-Action: Revise the code to your standards and use the VIEW (arguments [NO]FULL_BOOLEAN or FULLBOOL_WARN) command and / or the environment variable (gtm_boolean) to select the appropriate setting for YottaDB handling of this construct.
+Action: Revise the code to your standards and use the VIEW (arguments [NO]FULL_BOOLEAN or FULLBOOL_WARN) command and / or the environment variable (ydb_boolean) to select the appropriate setting for YottaDB handling of this construct.
 
 -------------
 BOVTMGTEOVTM
@@ -925,7 +925,7 @@ CIENTNAME
 
 CIENTNAME, No label reference found for this entry in call-in table
 
-Syntax/Call in Error: This indicates that a label reference to the M routine is missing or syntactically invalid for an entry in the call-in table (specified by GTMCI environment variable)
+Syntax/Call in Error: This indicates that a label reference to the M routine is missing or syntactically invalid for an entry in the call-in table (specified by ydb_ci environment variable)
 
 Action: Correct the syntax errors in the call-in table entry, at the location pointed to by the two previous messages (EXTSRCLIN and EXTSRCLOC), displaying the line and the column number respectively.
 
@@ -949,7 +949,7 @@ CIMAXPARAM
 
 CIMAXPARAM, Exceeded maximum number of parameters in the call-in table entry. An M routine cannot accept more than 32 parameters.
 
-Call in/Run Time Error: This indicates that the call-in table specified by $GTMCI contains more than 32 parameters. Since an M formallist can only accept up-to 32 parameters, user cannot pass more than 32 arguments to gtm_ci(), excluding <c-call-name> and <ret-type>.
+Call in/Run Time Error: This indicates that the call-in table specified by $ydb_ci contains more than 32 parameters. Since an M formallist can only accept up-to 32 parameters, user cannot pass more than 32 arguments to gtm_ci(), excluding <c-call-name> and <ret-type>.
 
 Action: Reduce the number of parameters to be less than 32, in the call-in table as well in the M routine.
 
@@ -959,7 +959,7 @@ CINOENTRY
 
 CINOENTRY, No entry specified for xxxx in the call-in table
 
-Run Time Error: This indicates that the call-name invoked by the C program does not have a corresponding entry in the call-in table specified by GTMCI environment variable.
+Run Time Error: This indicates that the call-name invoked by the C program does not have a corresponding entry in the call-in table specified by ydb_ci environment variable.
 
 Action: Add an entry to the call-in table for the call-name. Refer to the `External Calls chapter in the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/langfeat.html#external-calls>`_.
 
@@ -1014,9 +1014,9 @@ CITABENV
 
 CITABENV, Environment variable for call-in table xxxx not set
 
-Call in/Run Time Error: This indicates that the environment variable GTMCI is not defined when an external C routine is about to call an M routine through the YottaDB call-in mechanism.
+Call in/Run Time Error: This indicates that the environment variable ydb_ci is not defined when an external C routine is about to call an M routine through the YottaDB call-in mechanism.
 
-Action: Check if GTMCI is defined to a valid file path to a call-in table. The call-in table file should contain a list of entries, each entry describing the parameter types, their passing convention of each M routine and its binding to a C routine.
+Action: Check if ydb_ci is defined to a valid file path to a call-in table. The call-in table file should contain a list of entries, each entry describing the parameter types, their passing convention of each M routine and its binding to a C routine.
 
 
 ------------
@@ -1025,9 +1025,9 @@ CITABOPN
 
 CITABOPN, Unable to open call-in table: xxxx
 
-Call in/Run Time Error: This indicates that the call-in table defined by the environment variable GTMCI could not be opened.
+Call in/Run Time Error: This indicates that the call-in table defined by the environment variable ydb_ci could not be opened.
 
-Action: Check if the file path specified by GTMCI is correct and has at least read permissions for the user running YottaDB. Check for secondary message(s) accompanying this error.
+Action: Check if the file path specified by ydb_ci is correct and has at least read permissions for the user running YottaDB. Check for secondary message(s) accompanying this error.
 
 
 -----------
@@ -1271,7 +1271,7 @@ COMMITWAITPID
 
 COMMITWAITPID, Pid wwww waited tttt minute(s) for pid pppp to finish commits in database file dddd
 
-Run Time Warning: This warning message in the operator log indicates the total amount of time that the process wwww waited for another process pppp to finish database transaction commit. If the $gtm_procstuckexec mechanism is enabled, this message invokes it. If a process waits for more than one process to finish database transaction commits, it issues this message for each one it encounters.
+Run Time Warning: This warning message in the operator log indicates the total amount of time that the process wwww waited for another process pppp to finish database transaction commit. If the $ydb_procstuckexec mechanism is enabled, this message invokes it. If a process waits for more than one process to finish database transaction commits, it issues this message for each one it encounters.
 
 Action: If the process pppp is still running, get a C-stack trace of the process (using a debugger) and report to your YottaDB support channel with system log and operator log information.
 
@@ -1452,7 +1452,7 @@ CRYPTJNLMISMATCH
 
 CRYPTJNLMISMATCH, Encryption settings mismatch between journal file jjjj and corresponding database file dddd
 
-All YottaDB Components Error: Encryption settings in the header of database file dddd do not match those stored in the header of journal file jjjj. This is most likely caused by inappropriate operator action such as replacing the current journal file with an older journal file.
+All Components Error: Encryption settings in the header of database file dddd do not match those stored in the header of journal file jjjj. The most likely cause is inappropriate operator action such as replacing the current journal file with an older journal file.
 
 Action: Correct the error that caused the incorrect journal file to be pointed to by the database file. If the correct journal file has been inadvertently deleted, create new journal files with the -noprevjnl switch. Take a backup as soon as possible thereafter. Depending on your situation, you may need to refresh secondary instances.
 
@@ -1564,9 +1564,9 @@ CRYPTNOPSWDINTP
 
 CRYPTNOPSWDINTP, Cannot prompt for password inside a TP transaction.
 
-Run Time Error: This error occurs if the process used an external call to set the gtm_passwd environment variable to a null string after startup and then accessed an encrypted database file for the first time within a TP transaction.
+Run Time Error: This error occurs if the process used an external call to set the ydb_passwd environment variable to a null string after startup and then accessed an encrypted database file for the first time within a TP transaction.
 
-Action: If possible, set the gtm_passwd environment variable to the obfuscated password. Otherwise, revise the logic to touch a global mapped to each encrypted database, for example, $DATA(myglobal), to ensure the prompting happens before entering any TP transaction.
+Action: If possible, set the ydb_passwd environment variable to the obfuscated password. Otherwise, revise the logic to touch a global mapped to each encrypted database, for example, $DATA(myglobal), to ensure the prompting happens before entering any TP transaction.
 
 
 ---------------------
@@ -1675,9 +1675,9 @@ CUSTERRNOTFND
 
 CUSTERRNOTFND, Error mnemonic eeee specified in custom errors file is not valid for this version of YottaDB
 
-Run Time Error: This error indicates that the YottaDB runtime did not recognize the error mnemonic eeee in the file referenced by $gtm_custom_errors.
+Run Time Error: This error indicates that the YottaDB runtime did not recognize the error mnemonic eeee in the file referenced by $ydb_custom_errors.
 
-Action: Modify the file so that it no longer contains the invalid mnemonic or set the gtm_custom_errors environment variable to point to an appropriate file.
+Action: Modify the file so that it no longer contains the invalid mnemonic or set the ydb_custom_errors environment variable to point to an appropriate file.
 
 ---------------
 CUSTERRSYNTAX 
@@ -1687,7 +1687,7 @@ CUSTERRSYNTAX, Syntax error in file ffff at line number nnnn
 
 Run Time Error: This error indicates that the custom errors file ffff contains an inappropriate syntax on line nnnn.
 
-Action: Modify the file ffff so that it contains a single valid error mnemonic on line nnnn or set the gtm_custom_errors environment variable to point to an appropriate file.
+Action: Modify the file ffff so that it contains a single valid error mnemonic on line nnnn or set the ydb_custom_errors environment variable to point to an appropriate file.
 
 ---------------
 CUSTOMFILOPERR
@@ -1697,7 +1697,7 @@ CUSTOMFILOPERR, Error while doing oooo operation on file ffff
 
 Run Time Error: This indicates that the operating system reported an error while performing operation oooo on custom errors file ffff.
 
-Action: Check that ffff is a proper path to the custom errors file. If it is incorrect, set the gtm_custom_errors environment variable to point to the correct file. If the file path is correct, verify that the user has access to the file and correct any permissions issues.
+Action: Check that ffff is a proper path to the custom errors file. If it is incorrect, set the ydb_custom_errors environment variable to point to the correct file. If the file path is correct, verify that the user has access to the file and correct any permissions issues.
 
 -----------------
 DBADDRALIGN 
@@ -1999,7 +1999,7 @@ DBCCMDFAIL, Executed command failed with return code xxxx yyyy which executed yy
 
 DBCERTIFY Error: During processing, the DBCERTIFY attempts to execute certain DSE and/or MUPIP commands in temporary command scripts that DBCERTIFY creates. The specified command failed to execute.
 
-Action: The action to take depends on the code returned by the attempt and if any associated messages were created on either the console or the operator log. Some common causes of problems could be that $gtm_dist (UNIX) is not properly pointing to the current YottaDB version or DBCERTIFY has no access or access to the wrong global directory for which it is executing commands.
+Action: The action to take depends on the code returned by the attempt and if any associated messages were created on either the console or the operator log. Some common causes of problems could be that $ydb_dist (UNIX) is not properly pointing to the current YottaDB version or DBCERTIFY has no access or access to the wrong global directory for which it is executing commands.
 
 ---------------------------
 DBCDBCERTIFIED 
@@ -2099,7 +2099,7 @@ DBCNOEXTND, Unable to extend database xxx
 
 DBCERTIFY Error: DBCERTIFY attempted to use MUPIP EXTEND to extend the database but the attempt failed.
 
-Action: Examine the accompanying messages from the MUPIP EXTEND attempt to see why the extend failed. A common cause for this is that $gtm_dist did not properly point to the currently installed distribution, or there was insufficient disk space to perform the expansion.
+Action: Examine the accompanying messages from the MUPIP EXTEND attempt to see why the extend failed. A common cause for this is that $ydb_dist did not properly point to the currently installed distribution, or there was insufficient disk space to perform the expansion.
 
 ------------------
 DBCNOFINISH
@@ -2890,7 +2890,7 @@ DBNOREGION, None of the database regions accessible
 
 DSE/MUPIP Error: MUPIP INTEG or DSE can report this error. This indicates that none of the database files specified in the Global Directory could be opened (or they do not exist).
 
-Action: Ensure the proper assignment for the environment variable, gtmgbldir/logical name GTM$GBLDIR. Verify that the database files specified in the Global Directory exist and that their protection allows access. Also, refer to the 'MUPIP INTEG Error Messages' table in the `Chapter 11 - Maintaining Database Integrity of the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/integrity.html>`_.
+Action: Ensure the proper assignment for the environment variable, ydb_gbldir/logical name GTM$GBLDIR. Verify that the database files specified in the Global Directory exist and that their protection allows access. Also, refer to the 'MUPIP INTEG Error Messages' table in the `Chapter 11 - Maintaining Database Integrity of the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/integrity.html>`_.
 
 -------------------
 DBNOTDB
@@ -3508,9 +3508,9 @@ Action: Look for missing parenthesis or brackets.
 DISTPATHMAX
 ------------------
 
-DISTPATHMAX, $gtm_dist path is greater than maximum (xxxx)
+DISTPATHMAX, $ydb_dist path is greater than maximum (xxxx)
 
-Run Time Error: This indicates that the path specified by the gtm_dist environment variable has exceeded the indicated maximum limit of 1024 bytes.
+Run Time Error: This indicates that the path specified by the ydb_dist environment variable has exceeded the indicated maximum limit of 1024 bytes.
 
 Action: Move the directory or use a link to shorten the path.
 
@@ -3853,6 +3853,16 @@ ENCRYPTCONFLT, MUPIP REORG -ENCRYPT and MUPIP EXTRACT -FORMAT=BIN cannot run con
 MUPIP Error: MUPIP cannot perform REORG -ENCRYPT and EXTRACT -FORMAT=BIN on file ffff at the same time; rrrr is the region that mapped the file; oooo is the just started operation.
 
 Action: Reschedule the just started operation or terminate the conflicting operation to allow the just started operation to run immediately.
+
+-------------------
+ENCRYPTCONFLT2
+-------------------
+
+ENCRYPTCONFLT2, Message: A concurrent MUPIP REORG -ENCRYPT changed the encryption key for RRRR before the process could initialize it
+
+Run Time Warning: Due to a concurrent MUPIP REORG -ENCRYPT, a process was forced to defer encryption key initialization for region RRRR.
+
+Action: None. This information message is only important when followed by other encryption errors.
 
 -------------------
 ENDIANCVT 
@@ -4564,7 +4574,7 @@ GBLNAMCOLLUNDEF, Error opening shared library of collation sequence #nnnn for GB
 
 GDE Error: This indicates that there was an error opening the shared library for collation sequence nnnn.
 
-Action: Define the environment variable gtm_collate_<nnnn> to point to the shared library for collation sequence nnnn. Also ensure the path to the library is readable and the library is usable on that platform.
+Action: Define the environment variable ydb_collate_<nnnn> to point to the shared library for collation sequence nnnn. Also ensure the path to the library is readable and the library is usable on that platform.
 
 ---------------
 GBLNAMCOLLVER
@@ -4715,7 +4725,7 @@ GDUNKNFMT, xxxx is not formatted as a global directory
 
 GDE Information: This indicates that GDE could not load the specified file xxxx because it is not a valid Global Directory file. GDE aborts the load after it issues this message.
 
-Action: Verify that the file is valid and look for typographical errors. Something other than YottaDB or its utilities may have written to the Global Directory file or created a file with a name that coincides with the one specified by GTM$GBLDIR / gtmgbldir.
+Action: Verify that the file is valid and look for typographical errors. Something other than YottaDB or its utilities may have written to the Global Directory file or created a file with a name that coincides with the one specified by GTM$GBLDIR / ydb_gbldir.
 
 --------------
 GDUPDATE 
@@ -4734,7 +4744,7 @@ GDUSEDEFS
 
 GDUSEDEFS, Using defaults for Global Directory xxxx
 
-GDE Information: This indicates that GDE did not find an existing Global Directory using the logical name GTM$GBLDIR / gtmgbldir. As a result, it is starting the session with default values.
+GDE Information: This indicates that GDE did not find an existing Global Directory using the logical name GTM$GBLDIR / ydb_gbldir. As a result, it is starting the session with default values.
 
 Action: -
 
@@ -4833,9 +4843,9 @@ Action: Preserve the core (dump) files and report the entire incident context to
 GTMDISTUNDEF
 -----------------
 
-GTMDISTUNDEF, Environmental variable $gtm_dist is not defined
+GTMDISTUNDEF, Environmental variable $ydb_dist is not defined
 
-DSE/Run Time/MUPIP/LKE Error: This indicates that the environment variable gtm_dist, is not defined for all processes attempting to use (a particular version of) YottaDB.
+DSE/Run Time/MUPIP/LKE Error: This indicates that the environment variable ydb_dist, is not defined for all processes attempting to use (a particular version of) YottaDB.
 
 Action: Define the environment variable.
 
@@ -4843,11 +4853,11 @@ Action: Define the environment variable.
 GTMDISTUNVERIF 
 --------------------
 
-GTMDISTUNVERIF, Environment variable $gtm_dist (dddd) could not be verified against the executables path (pppp)
+GTMDISTUNVERIF, Environment variable $ydb_dist (dddd) could not be verified against the executables path (pppp)
 
-MUPIP/LKE/GT.CM/DSE/Run Time Error: This indicates that the executable pppp does not resides in the path pointed to by environment variable gtm_dist, dddd.
+MUPIP/LKE/GT.CM/DSE/Run Time Error: This indicates that the executable pppp does not resides in the path pointed to by environment variable ydb_dist, dddd.
 
-Action: Ensure that the setting for $gtm_dist matches that of the executable.
+Action: Ensure that the setting for $ydb_dist matches that of the executable.
 
 -------------------
 GTMDUMPFAIL
@@ -4883,7 +4893,7 @@ Action: Verify that SECSHR is properly installed and review user privileges in t
 GTMSECSHRBADDIR
 ----------------
 
-GTMSECSHRBADDIR, gtmsecshr is not running from $gtm_dist/gtmsecshrdir or $gtm_dist cannot be determined
+GTMSECSHRBADDIR, gtmsecshr is not running from $ydb_dist/gtmsecshrdir or $ydb_dist cannot be determined
 
 Run Time Error: This message indicates an inappropriate gtmsecshr invocation. Either gtmsecshr is improperly installed or an inappropriate access attempt is underway.
 
@@ -4907,11 +4917,11 @@ Action: Verify that the environment provides the desired dddd, that dddd exists 
 GTMSECSHRDEFLOG 
 -----------------------
 
-GTMSECSHRDEFLOG, $gtm_log is either undefined or not defined to an absolute path, so gtm_log is set the default xxxx
+GTMSECSHRDEFLOG, $ydb_log is either undefined or not defined to an absolute path, so ydb_log is set the default xxxx
 
 Run Time Information: This indicates that GTMSECSHR has selected the default log file described in the message because the environment variable was not defined or had an unsuitable definition.
 
-Action: When specifying the log file, be sure to select a full path and define the environment variable gtm_log properly.
+Action: When specifying the log file, be sure to select a full path and define the environment variable ydb_log properly.
 
 ------------------------
 GTMSECSHRDMNSTARTED
@@ -4947,7 +4957,7 @@ Action: The IPC resources that GTMSECSHR uses should be unique to YottaDB, and t
 GTMSECSHRISNOT
 ---------------------
 
-GTMSECSHRISNOT, GTMSECSHRISNOTgtmsecshr is not running as gtmsecshr but xxxxx - must be gtmsecshr
+GTMSECSHRISNOT, gtmsecshr is not running as gtmsecshr but xxxxx - must be gtmsecshr
 
 Run Time Error: gtmsecshr is running with a name other than the one it is allowed to run by design.
 
@@ -4961,7 +4971,7 @@ GTMSECSHRLOGF, XXXX - YYYY; Error while creating GTMSECSHR log file
 
 Run Time Warning: This indicates that the [UNIX] GTMSECSHR daemon was not able to create its log file.
 
-Action: Check the accompanying message(s) for additional information. Check gtm_log environment variable.
+Action: Check the accompanying message(s) for additional information. Check ydb_log environment variable.
 
 ----------------------
 GTMSECSHRLOGSWH
@@ -4998,7 +5008,7 @@ Action: If this is the proper mode of operation, ignore the warning. Normally GT
 GTMSECSHRPERM 
 -------------------
 
-GTMSECSHRPERM, The GTMSECSHR module in $gtm_dist does not have the correct permission and UID
+GTMSECSHRPERM, The GTMSECSHR module in $ydb_dist does not have the correct permission and UID
 
 Run Time Warning: This indicates that a client did not start a GTMSECSHR because the executable was not owned by root and did not have setuid permission.
 
@@ -5133,7 +5143,7 @@ GTMSECSHRSRVF, Client - yyyy; Attempt to service request failed (retry = zzzz)
 
 Run Time Error: This indicates that a YottaDB process with PID yyyy was unable to communicate with gtmsecshr after zzzz attempts (a maximum of four retries).
 
-Action: This message is displayed when a process that needs service from gtmsecshr, cannot communicate with gtmsechsr, or cannot start one. While the most likely cause is a mismatch in the value of the gtm_tmp environment variable between the YottaDB process and the gtmsecshr process, examples of other causes include removal of socket files used for communication between YottaDB and gtmsecshr processes. Check for a following associated message in syslog or in the stderr of the YottaDB process.
+Action: This message is displayed when a process that needs service from gtmsecshr, cannot communicate with gtmsechsr, or cannot start one. While the most likely cause is a mismatch in the value of the ydb_tmp environment variable between the YottaDB process and the gtmsecshr process, examples of other causes include removal of socket files used for communication between YottaDB and gtmsecshr processes. Check for a following associated message in syslog or in the stderr of the YottaDB process.
 
 -----------------
 GTMSECSHRSRVFID
@@ -5202,9 +5212,9 @@ GTMSECSHRTMPPATH
 
 GTMSECSHRTMPPATH, gtmsecshr path is pppp
 
-Information: YottaDB displays this message when different users of an instance of YottaDB connect using a socket or a semaphore and when gtmsecshr is started and it detects an existing gtmsecshr. pppp indicates the gtm_tmp path set in the clients. Gtmsecshr inherits the path from the first YottaDB process that uses its services.
+Information: YottaDB displays this message when different users of an instance of YottaDB connect using a socket or a semaphore and when gtmsecshr is started and it detects an existing gtmsecshr. pppp indicates the ydb_tmp path set in the clients. Gtmsecshr inherits the path from the first YottaDB process that uses its services.
 
-Action: If different clients of the same instance of YottaDB are using different gtmsecshr paths, then set a common value for the environment variable gtm_tmp for all users of an instance of YottaDB, then stop and restart the processes that were using incorrect paths. If gtmsecshr itself has the incorrect path, all processes that are using that incorrect path must be stopped first - then stop gtmsecshr with a kill command.
+Action: If different clients of the same instance of YottaDB are using different gtmsecshr paths, then set a common value for the environment variable ydb_tmp for all users of an instance of YottaDB, then stop and restart the processes that were using incorrect paths. If gtmsecshr itself has the incorrect path, all processes that are using that incorrect path must be stopped first - then stop gtmsecshr with a kill command.
 
 --------------------
 GTMSECSHRUPDDBHDR
@@ -5455,7 +5465,7 @@ HLPPROC, Helper Process error
 
 MUPIP Error: YottaDB replication was not able to start a helper process.
 
-Action: Ensure that the gtm_dist environment variable points to a valid YottaDB distribution that is executable by the user.
+Action: Ensure that the ydb_dist environment variable points to a valid YottaDB distribution that is executable by the user.
 
 -------------------
 HOSTCONFLICT
@@ -5512,17 +5522,17 @@ Action: Consult the ICU documentation and / or refresh the ICU library with a kn
 ICUSYMNOTFOUND 
 --------------------
 
-ICUSYMNOTFOUND, Symbol xxxxx not found in ICU libraries. ICU needs to be built with symbol-renaming disabled or gtm_icu_version environment variable needs to be specified
+ICUSYMNOTFOUND, Symbol xxxxx not found in ICU libraries. ICU needs to be built with symbol-renaming disabled or xxxxx environment variable needs to be specified
 
-Run Time Error: ICU version installed on the machine is built with symbol renaming and gtm_icu_version has not been defined
+Run Time Error: ICU version installed on the machine is built with symbol renaming and neither ydb_icu_version nor gtm_icu_version has been defined.
 
-Action: Build ICU without symbol renaming or set gtm_icu_version environment variable to point to an appropriate ICU version.
+Action: Build ICU without symbol renaming or set ydb_icu_version environment variable to point to an appropriate ICU version.
 
 -------------------
 ICUVERLT36 
 -------------------
 
-ICUVERLT36, Type 1 - $gtm_icu_version is aaa.bbb. ICU version greater than or equal to 3.6 should be used. Type 2 - libicuio has version aaa.bbb. ICU version greater than or equal to 3.6 should be used.
+ICUVERLT36, Type 1 - $ydb_icu_version/$gtm_icu_version is aaa.bbb. ICU version greater than or equal to 3.6 should be used. Type 2 - libicuio has version aaa.bbb. ICU version greater than or equal to 3.6 should be used.
 
 Run Time Error: This message indicates an attempt to use an ICU version less than 3.6 with YottaDB or utilities like MUPIP or DSE.
 
@@ -5647,7 +5657,7 @@ INPINTEG, Input integrity error -- aborting load
 
 GDE Fatal: This indicates that GDE is aborting the session because integrity errors prevented it from loading the specified Global Directory. GDE usually displays this message with other error messages. GDE aborts the load after issuing this message.
 
-Action: Review the accompanying message(s) for additional information. Verify whether the command specified the intended file. Something other than YottaDB and its utilities probably wrote to a Global Directory file or created a file with a name identical to the one specified by GTM$GBLDIR / gtmgbldir.
+Action: Review the accompanying message(s) for additional information. Verify whether the command specified the intended file. Something other than YottaDB and its utilities probably wrote to a Global Directory file or created a file with a name identical to the one specified by GTM$GBLDIR / ydb_gbldir.
 
 -------------------
 INSNOTJOINED 
@@ -5842,7 +5852,7 @@ INVGBLDIR
 
 INVGBLDIR, Invalid Global Directory spec: xxxx. Continuing with yyyy.
 
-GDE Information: This indicates that the Global Directory xxxx specified by GTM$GBLDIR / gtmgbldir or by SETGD and the qualifier FILE= is not a valid file-specification.
+GDE Information: This indicates that the Global Directory xxxx specified by GTM$GBLDIR / ydb_gbldir or by SETGD and the qualifier FILE= is not a valid file-specification.
 
 Action: When this error occurs, GDE uses the default specification of the current process default directory. Continue with the default and rename the result after leaving GDE, or change the specification with a SETGD command and the FILE= qualifier.
 
@@ -5892,20 +5902,20 @@ Action: Check the DECnet error logs and other network components.
 INVLINKTMPDIR
 -------------------
 
-INVLINKTMPDIR, Value for $gtm_linktmpdir is either not found or not a directory: dddd
+INVLINKTMPDIR, Value for $ydb_linktmpdir is either not found or not a directory: dddd
 
 Run Time Error: Indicates the process cannot access directory dddd, which it needs in order to do auto-relink as specified by its $ZROUTINES; the directory may not exist as a directory or the process lacks authorization to the directory.
 
-Action: The directory specification comes from $gtm_linktmpdir if it is defined, otherwise from $gtm_tmp if that is defined; otherwise it defaults to the system temporary directory, typically /tmp. Either correct the environment variable definition or ensure directory dddd is appropriately set up. Note that all users of auto-relink for a directory normally need to use the same temporary directory for their relink control files.
+Action: The directory specification comes from $ydb_linktmpdir if it is defined, otherwise from $ydb_tmp if that is defined; otherwise it defaults to the system temporary directory, typically /tmp. Either correct the environment variable definition or ensure directory dddd is appropriately set up. Note that all users of auto-relink for a directory normally need to use the same temporary directory for their relink control files.
 
 
 ------------------------
 INVLOCALE 
 ------------------------
 
-INVLOCALE, Attempt to reset locale to supplied value of $gtm_locale xxxx failed
+INVLOCALE, Attempt to reset locale to supplied value of $ydb_locale xxxx failed
 
-All YottaDB Components Error: YottaDB found the value of $gtm_locale xxxx did not specify a valid currently supported local
+All YottaDB Components Error: YottaDB found the value of $ydb_locale xxxx did not specify a valid currently supported local
 
 Action: Correct the locale setup and restart the process.
 
@@ -5917,7 +5927,7 @@ INVMEMRESRV, Could not allocate YottaDB memory reserve (xxxx)
 
 Images Warning: YottaDB could not allocate xxxx KiB of reserve memory for handling and reporting out-of-memory conditions. Examine the subsequent messages for more information on why the memory reserve allocation failed.
 
-Action: If $gtm_memory_reserve is too high, specify a lower value and retry. If the value is reasonable, determine what else is preventing the allocation (process or system limits or usage by other system components). Note that YottaDB uses this reserve only when a process runs out of memory so it mostly requires address space and almost never requires actual memory.
+Action: If $ydb_memory_reserve is too high, specify a lower value and retry. If the value is reasonable, determine what else is preventing the allocation (process or system limits or usage by other system components). Note that YottaDB uses this reserve only when a process runs out of memory so it mostly requires address space and almost never requires actual memory.
 
 
 -------------------
@@ -6035,6 +6045,15 @@ Run Time Error: This indicates that the application is attempting to ROLLBACK to
 
 Action: Review the logic and code path that led to the error and modify the code appropriately.
 
+----------------
+INVSEQNOQUAL
+----------------
+
+INVSEQNOQUAL, Invalid SEQNO qualifier value xxxx
+
+MUPIP Error: This error indicates that MUPIP JOURNAL -EXTRACT -SEQNO command could not extract a journal file because an invalid SEQNO format was specified.
+
+Action: Enter a comma separated list of valid sequence numbers (‘0’ or positive integers) as value for the SEQNO qualifier. The format of the -SEQNO qualifier is -SEQNO=seqno1[,seqno2,seqno3…..] where seqno is the region sequence number in decimal format.
 
 ---------------------
 INVSPECREC 
@@ -6093,17 +6112,17 @@ Action: Look for typographical errors, an improper special variable name abbrevi
 INVTMPDIR
 -------------------
 
-INVTMPDIR, Value for $gtm_tmpdir is either not found or not a directory: dddd - Reverting to default value
+INVTMPDIR, Value for $ydb_tmp is either not found or not a directory: dddd - Reverting to default value
 
 Error: Indicates the process cannot access directory dddd, which it may need for a number of actions; the directory may not exist as a directory or the process lacks authorization to locate the directory.
 
-Action: The directory specification comes from $gtm_tmp if it is defined, otherwise it defaults to the system temporary directory, typically /var/tmp on Solaris and /tmp in other environments. Either correct the environment variable definition or ensure directory dddd is appropriately set up. Note that all users of a particular YottaDB instance normally need to use the same temporary directory to ensure proper interprocess communication.
+Action: The directory specification comes from $ydb_tmp if it is defined, otherwise it defaults to the system temporary directory, typically /var/tmp on Solaris and /tmp in other environments. Either correct the environment variable definition or ensure directory dddd is appropriately set up. Note that all users of a particular YottaDB instance normally need to use the same temporary directory to ensure proper interprocess communication.
 
 ------------------
 INVTRCGRP 
 ------------------
 
-INVTRCGRP, Invalid trace group specified in $gtm_trace_groups: gggg
+INVTRCGRP, Invalid trace group specified in $ydb_trace_groups: gggg
 
 Run Time Error: The process startup environment attempted to activate a diagnostic tracing facility but specified a group name of gggg and there is currently no such group.
 
@@ -6323,11 +6342,11 @@ Action: Examine the text and address the described error condition.
 JNLACCESS
 ------------------
 
-JNLACCESS, Error accessing journal file xxxx
+JNLACCESS, Error accessing journal file jjjj
 
-Run Time Error: YottaDB sends this message to the system log followed by other messages detailing the failure. xxxx is the file-specification for the inaccessible journal. In most situations, this error occurs when the journal file storage runs out of disk space or there are permission issues.
+Run Time Error: YottaDB sends this message to the system log followed by other messages detailing the failure. jjjj is the file-specification for the inaccessible journal. In most situations, this error occurs when the journal file storage runs out of disk space or there are permission issues.
 
-Action: Review the accompanying message(s) for additional information. This usually means an error while trying to write to the journal file.
+Action: Review the accompanying message(s) for additional information. This means an error while trying to write to the journal file.
 
 ------------------
 JNLACTINCMPLT 
@@ -6386,9 +6405,9 @@ Action: If a command specification caused this error, determine whether the comm
 JNLBADRECFMT 
 ---------------------
 
-JNLBADRECFMT, Journal Record Format Error encountered for file xxxx at disk address yyyy
+JNLBADRECFMT, Journal Record Format Error encountered for file jjjj at disk address yyyy
 
-MUPIP Error: This indicates that MUPIP has found an error in the journal file.
+MUPIP/Run Time Error: This indicates that an attempt to open a journal file encountered an invalid record.
 
 Action: Report the entire incident context to your YottaDB support channel.
 
@@ -6521,9 +6540,9 @@ Action: Review the accompanying messages and take appropriate action.
 JNLCYCLE 
 --------------------
 
-JNLCYCLE, Journal file xxxx causes cycle in the journal file generations of database file yyyy
+JNLCYCLE, Journal file jjjj causes cycle in the journal file generations of database file dddd
 
-MUPIP Error: This indicates that MUPIP encountered journal file xxxx causing cycle in the journal file generations of database file yyyy. (this is not explanatory, at least to me.)
+MUPIP Error: This indicates that MUPIP encountered journal file jjjj causing cycle in the journal file generations of database file dddd; i.e. following the back-pointers in the journal files can wind up repeatedly finding the same journal file.
 
 Action: Contact your YottaDB support channel with appropriate log messages.
 
@@ -6531,9 +6550,9 @@ Action: Contact your YottaDB support channel with appropriate log messages.
 JNLDBERR 
 ------------------
 
-JNLDBERR, Journal file xxxx does not correspond to database yyyy
+JNLDBERR, Journal file jjjj does not correspond to database dddd
 
-Run Time Error: This indicates that YottaDB could not open journal file xxxx for database file yyyy because the journal file header identifies itself as belonging to a different database file that does not exist in the system.
+Run Time Error: This indicates that YottaDB could not open journal file jjjj for database file dddd because the journal file header identifies itself as belonging to a different database file that does not exist in the system.
 
 Action: Use a MUPIP SET command with the qualifier JOURNAL to create a journal file that matches the database.
 
@@ -6561,11 +6580,11 @@ Action: Verify that the correct journal file names were specified. If appropriat
 JNLDISABLE 
 --------------------
 
-JNLDISABLE, Specified journal option(s) cannot take effect as journaling is DISABLED on database file xxxx
+JNLDISABLE, Specified journal option(s) cannot take effect as journaling is DISABLED on database file dddd
 
-MUPIP Warning: This indicates that none of the specified journal option(s) in MUPIP SET -JOURNAL or MUPIP BACKUP command took effect, because journaling was found DISABLED on database file xxxx.
+MUPIP Warning: This indicates that none of the specified journal option(s) in MUPIP SET -JOURNAL or MUPIP BACKUP command took effect, because journaling was found DISABLED on database file dddd.
 
-Action: -
+Action: Revise the selection qualification to exclude the DISABLED region(s) or, if appropriate, enable journaling on those regions.
 
 --------------------
 JNLDSKALIGN 
@@ -6611,9 +6630,9 @@ Action: Check the integrity of the journal file by doing a MUPIP JOURNAL -FORWAR
 JNLEXTEND 
 ----------------------------
 
-JNLEXTEND, Journal file extension error for file xxxx.
+JNLEXTEND, Journal file extension error for file jjjj.
 
-Run Time Error: Journal file xxxx failed to extend. If the environment is not configured for instance freeze, this causes journaling to be turned off for the region.
+Run Time Error: Journal file jjjj failed to extend. If the environment is not configured for instance freeze, this causes journaling to be turned off for the region.
 
 Action: Review the accompanying message(s) and take appropriate action. If the environment is not configured for instance freeze, perfrom a MUPIP BACKUP, that turns journaling on again, to reestablish durability.
 
@@ -6628,6 +6647,15 @@ MUPIP Error: This indicates that an error was encountered while trying to write 
 
 Action: Review the accompanying message(s) for additional information.
 
+--------------------------
+JNLEXTRSEQNO
+--------------------------
+
+JNLEXTRCTSEQNO, Journal Extracts based on sequence numbers are restricted to a single region when replication is OFF
+
+MUPIP Error: When replication is enabled YottaDB applies a uniform set of sequence numbers across regions, but when it is not in use each region has its own se of sequence numbers, and, in that case, MUPIP only works on a region at a time.
+
+Action: If you need cross region sequence numbers, start replication with at least a passive Source Server; otherwise use one MUPIP JOURNAL -EXTRACT command for each region when using the -SEQNO qualifier.
 
 ----------------------
 JNLFILECLOSERR 
@@ -6686,9 +6714,9 @@ Action: Review accompanying message(s) for additional information.
 JNLFILOPN 
 ----------------------------
 
-JNLFILOPN, Error opening journal file xxxx for database file yyyy
+JNLFILOPN, Error opening journal file jjjj for database file dddd
 
-Run Time Error: This indicates that YottaDB was unable to open journal file xxxx for the specified database file. The Source Server exits with a JNLFILOPN message after six failed attempts to open journal files.
+Run Time Error: This indicates that YottaDB was unable to open journal file jjjj for the specified database file dddd. The Source Server exits with a JNLFILOPN message after six failed attempts to open journal files.
 
 Action: Review the accompanying message(s) for additional information.
 
@@ -6717,11 +6745,11 @@ Action: Review the accompanying message(s) for additional information.
 JNLFLUSHNOPROG 
 --------------------------
 
-JNLFLUSHNOPROG, No progress while attempting to flush journal file xxxx
+JNLFLUSHNOPROG, No progress while attempting to flush journal file jjjj
 
-Run Time Warning: This warning message is logged to the operator facility. This indicates that a YottaDB process waited for about 2 minutes for journal file xxxx to be flushed to disk from database shared memory. The accompanying TEXT message gives more details. The JNLFLUSHNOPROG message is preceded by JNLFLUSH messages.
+Run Time Warning: Indicates processes needing space in the journal buffers were unable to write journal jjjj because even though multiple processes have controlled the resource, this process has not been able to flush records. JNLPROCSTUCK means one process is hogging, while this message means more than one process has tried but none have succeeded. Might indicate a clogged disk subsystem on which journal file JJJJ resides.
 
-Action: Indicative of a clogged disk subsystem on which journal file xxxx resides. Consider balancing disk subsystem load.
+Action: Check the log file for other journaling related messages. Consider balancing disk subsystem load.
 
 
 ---------------------------
@@ -6750,19 +6778,19 @@ Action: Review the accompanying messages for cause of the failure.
 JNLFSYNCLSTCK 
 --------------------
 
-JNLFSYNCLSTCK,
+JNLFSYNCLSTCK, Journaling fsync lock is stuck in journal file jjjj
 
-Run Time Error:
+Run Time Error: A resource controlling journal file actions has remained unavailable for a long period.
 
-Action: -
+Action: Check on the condition of the process identified in the associated messages.
 
 ---------------------
 JNLINVALID 
 ---------------------
 
-JNLINVALID, xxxx is not a valid journal file Region: yyyy
+JNLINVALID, jjjj is not a valid journal file Region: rrrr
 
-Run Time Error: This indicates that YottaDB could not open journal file xxxx, due to an error that is detailed in the accompanying previous message(s). While trying to create a new journal file for the same region it encountered errors. yyyy is the region name associated with the journal.
+Run Time Error: This indicates that YottaDB could not open journal file jjjj, due to an error that is detailed in the accompanying previous message(s). While trying to create a new journal file for the same region it encountered errors. rrrr is the region name associated with the journal.
 
 Action: Review the accompanying error message(s) to determine the cause of the failure of the new journal file creation. After the cause is resolved, to reestablish durability perform a MUPIP BACKUP that turns journaling back on.
 
@@ -6833,9 +6861,9 @@ Action: Use MUPIP SET to specify the correct journal file location.
 JNLNAMLEN 
 ---------------------
 
-JNLNAMLEN, Journal file xxxx: for database file yyyy exceeds maximum of zzzz
+JNLNAMLEN, Journal file jjjj: for database file dddd exceeds maximum of MMMM
 
-MUPIP Error: This indicates that the file-specification xxxx of the journal for database file yyyy exceeds the maximum supported length of zzzz.
+MUPIP Error: This indicates that the file-specification jjjj of the journal for database file dddd exceeds the maximum supported length of MMMM.
 
 Action: Modify the journal file-specification to adhere to the file length restrictions.
 
@@ -6873,9 +6901,9 @@ Action: Ensure before image journaling is enabled prior to the usage of BACKWARD
 JNLNOCREATE 
 -------------------
 
-JNLNOCREATE, Journal file xxxx not created
+JNLNOCREATE, Journal file jjjj not created
 
-MUPIP Error: This indicates that MUPIP could not create journal file xxxx.
+MUPIP/Run Time Error: This indicates that MUPIP could not create journal file jjjj.
 
 Action: Review the accompanying message(s) for additional information.
 
@@ -7056,11 +7084,11 @@ Action: Verify that the time qualifiers specified are as intended.
 JNLREADEOF 
 ----------------
 
-JNLREADEOF, End of journal file encountered for xxxx
+JNLREADEOF, End of journal file encountered for jjjj
 
-MUPIP Error: This indicates that MUPIP JOURNAL encountered the end-of-file for the journal file xxxx, before it completed processing.
+MUPIP/Run Time Error: This indicates that MUPIP JOURNAL or a run-time journal operation encountered the end-of-file for the journal file jjjj, before it completed processing.
 
-Action: This error indicates an improperly closed journal file.
+Action: This error indicates an improperly closed journal file. Restart journaling with a MUPIP BACKUP -NEWJNLFILES or a MUPIP SET -JOURNAL and report all available circumstance to those responsible for supporting your database operations.
 
 -----------------
 JNLRECFMT
@@ -7068,7 +7096,7 @@ JNLRECFMT
 
 JNLRECFMT, Journal file record format error encountered
 
-Run Time/MUPIP Error: This indicates that MUPIP JOURNAL encountered an invalid record in the journal file.
+MUPIP Error: This indicates that MUPIP JOURNAL encountered an invalid record in the journal file.
 
 Action: In the event of YottaDB issuing this error message, use MUPIP BACKUP to ensure durability by creating a fresh set of journals consistent with the database. Else, to resume operation, restore the database from the last backup and play forward the updates using the appropriate MUPIP JOURNAL command. As soon as possible, report the entire incident context with information from the operator log and any other relevant information to your YottaDB support channel.
 
@@ -7116,11 +7144,11 @@ Action: Until the secondary is upgraded to the newer version of YottaDB, the app
 JNLSPACELOW 
 ---------------
 
-JNLSPACELOW, Journal file xxxx nearing maximum size, aaaa blocks to go
+JNLSPACELOW, Journal file jjjj nearing maximum size, nnnn blocks to go
 
-Run Time Information: This indicates that the journal file xxxx is approaching the maximum size specified for it. The system creates a new journal file when the limit is reached. Typically none, unless operational practice uses this as a trigger to intervene in journal file management.
+Run Time Information: This indicates that the journal file jjjj is approaching the maximum size specified for it. The system creates a new journal file when the limit is reached.
 
-Action: -
+Action: None required except as part of monitoring journaling space requirements or when operational practice uses this as a trigger to intervene in journal file management.
 
 -----------------
 JNLSTATE
@@ -7179,16 +7207,16 @@ JNLSWITCHSZCHG
 
 JNLSWITCHSZCHG, Journal AUTOSWITCHLIMIT [aaaa blocks] is rounded down to [bbbb blocks] to equal the sum of journal ALLOCATION
 
-Run Time Information: This indicates that the specified AUTOSWITCHLIMIT value was rounded down as little as possible to make it aligned to the ALLOCATION + a multiple of EXTENSION. The new journal file created (if any) will use this value for AUTOSWITCHLIMIT.
+MUPIP Information: This indicates that the specified AUTOSWITCHLIMIT value was rounded down as little as possible to make it aligned to the ALLOCATION + a multiple of EXTENSION. Any subsequently created journal file will use this value for AUTOSWITCHLIMIT.
 
-Action: -
+Action: If the rounded value is inappropriate examine the alignsize, allocation and extension values and choose a more suitable value.
 
 
 --------------------
 JNLSWITCHTOOSM 
 --------------------
 
-JNLSWITCHTOOSM, Journal AUTOSWITCHLIMIT [aaaa blocks] is less than journal ALLOCATION [bbbb blocks] for database file xxxx
+JNLSWITCHTOOSM, Journal AUTOSWITCHLIMIT [aaaa blocks] is less than journal ALLOCATION [bbbb blocks] for database file dddd
 
 Run Time Error: This indicates that the value of AUTOSWITCHLIMIT specified in a MUPIP SET JOURNAL command is less than the default or specified value of ALLOCATION. This error also indicates that the AUTOSWITCHLIMIT value specified was greater or equal to the ALLOCATION but in turn got rounded down, and this rounded down value is lesser than the ALLOCATION.
 
@@ -7312,9 +7340,9 @@ Action: Run time system creates and switches to a new journal file and continues
 JNLWRERR 
 ----------------------
 
-JNLWRERR, Error writing journal file xxxx. Undable to update header Region: yyyy
+JNLWRERR, Error writing journal file jjjj. Unable to update header Region: yyyy
 
-Run Time Error: This indicates that YottaDB encountered an error while updating the journal file header as part of trying to open the journal file.
+Run Time/MUPIP Error: This indicates that YottaDB encountered an error while updating the journal file header as part of trying to open the journal file.
 
 Action: Review the accompanying message(s) for detail on the cause of the error. YottaDB automatically closes the current journal file and creates a new one. To reestablish durability, perform MUPIP BACKUP to create a fresh set of journals consistent with the database.
 
@@ -7795,9 +7823,9 @@ Action: Refer to the LDSPANGLOINCMP Errors section in the `Maintaining Database 
 LIBYOTTAMISMTCH
 ----------------------
 
-LIBYOTTAMISMTCH, $gtm_dist/libyottadb.so does not match the shared library path.
+LIBYOTTAMISMTCH, $ydb_dist/libyottadb.so does not match the shared library path.
 
-Runtime Error: This indicates that the full path of the currently running libyottadb.so shared library does not match the path described by $gtm_dist. This is possible for example if a C program tries to directly invoke a base image function (e.g. gtm_main, dse_main, mupip_main etc.) for more than one build/release of YottaDB in the same process.
+Runtime Error: This indicates that the full path of the currently running libyottadb.so shared library does not match the path described by $ydb_dist. This is possible for example if a C program tries to directly invoke a base image function (e.g. gtm_main, dse_main, mupip_main etc.) for more than one build/release of YottaDB in the same process.
 
 Action:  Make sure a C program invokes a base image function of only one libyottadb.so executable.
 
@@ -7995,11 +8023,11 @@ Action: -
 LOADINVCHSET 
 ---------------------
 
-LOADINVCHSET, Extract file CHSET xxx is incompatible with gtm_chset.
+LOADINVCHSET, Extract file CHSET xxx is incompatible with ydb_chset.
 
-MUPIP Information: This indicates that a MUPIP LOAD operation did not take place because the value of the environment variable gtm_chset at the time of creating the extract file was not the same as the current value of gtm_chset.
+MUPIP Information: This indicates that a MUPIP LOAD operation did not take place because the value of the environment variable ydb_chset at the time of creating the extract file was not the same as the current value of ydb_chset.
 
-Action: Determine whether to change the current character set or retry the EXTRACT with a different character set. Alternatively, you can edit the extract file so the EXTRACT file header matches the gtm_chset environment variable. This enables an M mode MUPIP LOAD to treat the input as a byte stream or a UTF-8 mode MUPIP LOAD, which either detects BADCHAR errors or not, depending on the setting of the gtm_badchar environment variable..
+Action: Determine whether to change the current character set or retry the EXTRACT with a different character set. Alternatively, you can edit the extract file so the EXTRACT file header matches the ydb_chset environment variable. This enables an M mode MUPIP LOAD to treat the input as a byte stream or a UTF-8 mode MUPIP LOAD, which either detects BADCHAR errors or not, depending on the setting of the ydb_badchar environment variable.
 
 -------------------
 LOADRUNNING
@@ -8225,11 +8253,11 @@ Action: Ensure that all variables are assigned values before they are referenced
 MALLOCMAXUNIX 
 ----------------
 
-MALLOCMAXUNIX, Exceeded maximum allocation defined by $gtm_max_storalloc.
+MALLOCMAXUNIX, Exceeded maximum allocation defined by $ydb_max_storalloc.
 
-Run Time Error: This error accompanies a MEMORY error as a secondary error to indicate that the limit the process hit was not an OS limit but one artificially defined by the $gtm_max_storalloc environment variable.
+Run Time Error: This error accompanies a MEMORY error as a secondary error to indicate that the limit the process hit was not an OS limit but one artificially defined by the $ydb_max_storalloc environment variable.
 
-Action: Increase the value of, or unset, $gtm_max_storalloc, or identify the source of the memory consumption (for example, creating and keeping lots of local variables) and reduce it.
+Action: Increase the value of, or unset, $ydb_max_storalloc, or identify the source of the memory consumption (for example, creating and keeping lots of local variables) and reduce it.
 
 -------------------
 MAPBAD 
@@ -8550,6 +8578,16 @@ MRTMAXEXCEEDED, Maximum value of xxxx for SOCKET deviceparameter MOREREADTIME ex
 Compile Time/Run Time Error: YottaDB triggers this error when MOREREADTIME exceeds its maximum value of 999ms.
 
 Action: Specify a value between 1 and 999. Never set MOREREADTIME to 0 as it may cause a CPU to "spin". See `"Input/Output Processing" Chapter of the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/ioproc.html>`_ for more information.
+
+---------------------
+MSTACKSZNA
+---------------------
+
+MSTACKSZNA, User-specified M stack size of SSSS KiB not appropriate; must be between LLLL KiB and MMMM KiB; reverting to VVVV KiB
+
+Run Time Information: The gtm_mstack environment variable species an M stack size outside the range YottaDB supports, where LLLL and MMMM are the lower and upper bounds respectively; VVVV is the value actually used.
+
+Action: None required immediately as the process operates with the reported size M stack, however it would be preferable to eliminate such messages by setting gtm_mstack to a value in the supported range.
 
 ----------------------
 MTANSIFOR 
@@ -9058,7 +9096,7 @@ MUPGDERR, Command aborted due to global directory errors
 
 MUPIP Error: This indicates that a MUPIP command failed because it required a Global Directory and that file was inaccessible or damaged.
 
-Action: Verify that GTM$GBLDIR / $gtmgbldir identifies the proper file and that the file is accessible to the process. Use GDE to recreate the Global Directory, if necessary.
+Action: Verify that GTM$GBLDIR / $ydb_gbldir identifies the proper file and that the file is accessible to the process. Use GDE to recreate the Global Directory, if necessary.
 
 --------------------
 MUPGRDSUCC 
@@ -9372,13 +9410,13 @@ YottaDB produces this warning when:
 
 - A process owning a critical section dies (most likely because of a kill -9) and the OS gives its PID to another process. To reclaim the inappropriately held critical section, YottaDB first checks whether the process is alive and whether it holds the critical section. On finding that the process is alive but does not hold the critical section, YottaDB concludes that it is not safe to free the critical section and alerts the operator with this message.
 
-- The process holding the critical section is using a non-Isolated command such as ZSYSTEM, BREAK or a timed command in a way that creates a deadlock or a live-lock. YottaDB attempts to limit this by limiting the time a process using one of these commands can hold a critical section, but the use of non-Isolated commands and the settings for $ZMAXTPTIM and / or the environment variable $gtm_tpnotacidtime may be such that MUTEXLCKALERT messages are generated. Revise your settings for $gtm_tpnotacidtime and $ZMAXTPTIM appropriately.
+- The process holding the critical section is using a non-Isolated command such as ZSYSTEM, BREAK or a timed command in a way that creates a deadlock or a live-lock. YottaDB attempts to limit this by limiting the time a process using one of these commands can hold a critical section, but the use of non-Isolated commands and the settings for $ZMAXTPTIM and / or the environment variable $ydb_tpnotacidtime may be such that MUTEXLCKALERT messages are generated. Revise your settings for $ydb_tpnotacidtime and $ZMAXTPTIM appropriately.
 
 - There is an IO bottleneck that caused YottaDB to slow down: YottaDB detects that process pppp is currently using the critical section lock.
 
 Action: Monitor the system to determine whether there is a process with process id pppp and whether that process is a YottaDB process.
 
-Implement a script to get a stack trace for process pppp or take other appropriate action and use the $gtm_procstuckexec environment variable to activate it before the block process sends the MUTEXLCKALERT message.
+Implement a script to get a stack trace for process pppp or take other appropriate action and use the $ydb_procstuckexec environment variable to activate it before the block process sends the MUTEXLCKALERT message.
 
 Identify and terminate process pppp to release control of that resource. If the process is a YottaDB process, use a MUPIP STOP to terminate it. If a process of another application, use an appropriate mechanism to stop it.
 
@@ -10043,7 +10081,7 @@ NOLBRSRC
 
 NOLBRSRC, Object libraries cannot have SRC paths associated
 
-Run Time Error: This indicates that GTM$ROUTINES / gtmroutines or a SET $ZROUTINES attempted to place a source specification (SRC qualifier/source directory path) on an object library.
+Run Time Error: This indicates that GTM$ROUTINES / ydb_routines or a SET $ZROUTINES attempted to place a source specification (SRC qualifier / source directory path) on an object library.
 
 Action: Remove the source specification. YottaDB does not use the qualifier SRC= or source directories on object libraries. If you must provide access to sources corresponding to objects in the shared library, attach the source directory to an existing object directory entry. Since YottaDB does not support automatic recompilations into libraries, care must be taken when providing access to sources of library routines.
 
@@ -10103,9 +10141,9 @@ NONTPRESTART
 
 NONTPRESTART, Database dddd; code: cccc; blk: bbbb in glbl: ^gggg; blklvl: llll, type: tttt, zpos: pppp
 
-Run Time Information: This is an informational message for non-TP transaction messages. The frequency of this message can be set by $gtm_nontprestart_log_delta and $gtm_nontprestart_log_first environment variables. dddd is the database where the restart occurred; cccc is the code described in the `Maintaining Database Integrity chapter of the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/integrity.html>`_; bbbb is the block where YottaDB detected a concurrency conflict that caused the restart; gggg shows the global reference within that block; llll is the level of that block; tttt indicates the type of activity that detected the conflict; pppp is the source line where restart ocurred on.
+Run Time Information: This is an informational message for non-TP transaction messages. The frequency of this message can be set by $ydb_nontprestart_log_delta and $ydb_nontprestart_log_first environment variables. dddd is the database where the restart occurred; cccc is the code described in the `Maintaining Database Integrity chapter of the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/integrity.html>`_; bbbb is the block where YottaDB detected a concurrency conflict that caused the restart; gggg shows the global reference within that block; llll is the level of that block; tttt indicates the type of activity that detected the conflict; pppp is the source line where restart ocurred on.
 
-Action: None required in most cases. If the messages are too frequent either investigate the processes that reference to that particular global and its block, or reduce the number of messages by tweaking $gtm_nontprestart_log_delta and $gtm_nontprestart_log_first environment variables.
+Action: None required in most cases. If the messages are too frequent either investigate the processes that reference to that particular global and its block, or reduce the number of messages by tweaking $ydb_nontprestart_log_delta and $ydb_nontprestart_log_first environment variables.
 
 --------------------
 NONUTF8LOCALE
@@ -10113,7 +10151,7 @@ NONUTF8LOCALE
 
 NONUTF8LOCALE, Locale has character encoding (cccc) which is not compatible with UTF-8 character set
 
-Run Time Error: This error is reported by YottaDB when it recognizes that the LC_CTYPE locale category cccc (as shown by the UNIX locale command) does not use UTF-8 character encoding when gtm_chset is "UTF-8".
+Run Time Error: This error is reported by YottaDB when it recognizes that the LC_CTYPE locale category cccc (as shown by the UNIX locale command) does not use UTF-8 character encoding when ydb_chset is "UTF-8".
 
 Action: Set the environment variable LC_CTYPE to a Unicode locale name with UTF-8 character encoding. Note that LC_ALL, if defined, overrides LC_CTYPE. The name of the locale varies between different UNIX platforms, but mostly in the form of <lang>_<country>.<charset>, where each element (without the angular brackets) has the form shown below:
 
@@ -10231,7 +10269,7 @@ NOSELECT, None of the selected variables exist, halting
 
 MUPIP Information: This indicates that a MUPIP EXTRACT or REORG operation did not occur because the global variables specified by the SELECT= qualifier do not exist.
 
-Action: Look for an inappropriate definition for GTM$GBLDIR / gtmgbldir or typographical errors in the specified variables.
+Action: Look for an inappropriate definition for GTM$GBLDIR / ydb_gbldir or typographical errors in the specified variables.
 
 -------------------
 NOSOCKETINDEV 
@@ -10762,7 +10800,8 @@ ORLBKFRZPROG, tttt : waiting for FREEZE on region rrrr (dddd) to clear
 
 MUPIP Information: Issued by MUPIP ROLLBACK -ONLINE when it encounters a region rrrr mapped to dabase file dddd which is frozen; tttt is the time it encountered the condition.
 
-Action: ROLLBACK waits for a period determined the the gtm_db_startup_max_wait environment variable, after which it clears the FREEZE and proceeds. If the ROLLBACK is inappropriate due to the conditions that lead to the FREEZE, cancel the ROLLBACK, otherwise cancel the FREEZE or wait for ROLLBACK to clear it automatically.
+Action: ROLLBACK waits for a period determined the the ydb_db_startup_max_wait environment variable, after which it clears the FREEZE and proceeds. The ROLLBACK is inappropriate due to the conditions that lead to the FREEZE, cancel the ROLLBACK, otherwise cancel the FREEZE or wait for ROLLBACK to clear it automatically.
+
 
 --------------------
 ORLBKINPROG
@@ -10941,7 +10980,7 @@ PATTABNOTFND
 
 PATTABNOTFND, Pattern table xxxx not found
 
-Run Time Error: This indicates that an attempt to load a pattern table failed because it was not found in the file described by the logical name/environment variable gtm_pattern_file or loaded by the VIEW "PATLOAD" command.
+Run Time Error: This indicates that an attempt to load a pattern table failed because it was not found in the file described by the logical name/environment variable ydb_pattern_file or loaded by the VIEW "PATLOAD" command.
 
 Action: Use host shell commands to examine the file and modify either the file or the VIEW command that performs the load.
 
@@ -11121,9 +11160,9 @@ PREMATEOF
 
 PREMATEOF, Premature end of file detected
 
-MUPIP Error: LOAD detected an end-of-file when it was expecting additional records.
+MUPIP/Run Time Error: A file read or write detected an end-of-file when it was expecting additional records.
 
-Action: Refer to the `About this Manual <https://docs.yottadb.com/MessageRecovery/about.html>`_ section on MUPIP LOAD errors earlier in this manual.
+Action: Analyze accompanying messages for the type of file on which the operation failed. If the operation was a MUPIP LOAD, refer to the `About this Manual section on MUPIP LOAD errors <https://docs.yottadb.com/MessageRecovery/about.html#mupip-load-errors>`_. If the circumstances warrant, group responsible for database integrity at your operation with all the diagnostic context you can gather.
 
 ------------------
 PREVJNLLINKCUT 
@@ -11560,7 +11599,7 @@ RELINKCTLERR
 
 RELINKCTLERR, Error with relink control structure for $ZROUTINES directory dddd
 
-Run Time Error: Indicates a problem accessing a relink control file in the temporary directory typically specified by the gtm_linktmpdir environment variable.
+Run Time Error: Indicates a problem accessing a relink control file in the temporary directory typically specified by the ydb_linktmpdir environment variable.
 
 Action: Use the accompanying message(s) for a detailed error status to diagnose and address the access issue.
 
@@ -11741,7 +11780,7 @@ REPLINSTACC
 
 REPLINSTACC, Error accessing replication instance file xxxx
 
-Run Time/MUPIP Error: This indicates that some errors were encountered while accessing the specified replication instance file defined by $gtm_repl_instance or the relevant global directory.
+Run Time/MUPIP Error: This indicates that some errors were encountered while accessing the specified replication instance file defined by $ydb_repl_instance or the relevant global directory.
 
 Action: Refer to the accompanying message(s) for additional information.
 
@@ -11832,7 +11871,7 @@ REPLINSTMISMTCH, Process has replication instance file ffff (jnlpool shmid = sss
 
 Run Time Error: The process attempted an update on the replicated database dddd associated with the replication instance file ffff and journal pool shared memory id ssss; however, the process has already associated the database with a different replication instance file gggg or journal pool shmid tttt.
 
-Action: A replicated database can only accept updates by processes that have the same replication instance file (defined by the environment variable gtm_repl_instance or in the global directory) open for that database. Ensure the same replication instance file is used for all processes that update the same replicated database file. This error can also occur if the replication instance file was recreated (while processes were still accessing the replication instance). In this case, the name ffff and gggg would be the same but the corresponding journal pool shared memory ids would be different. To recover from this situation, shut down all processes accessing the instance from before and after the instance file recreate. Run an argumentless MUPIP RUNDOWN to clean up the older journal pool tttt and restart the instance. The Source Server (which is the first process to start on a replicated instance) only binds replicated databases from its global directory to the journal pool that it creates. No other replicated database file can be bound with this journal pool.
+Action: A replicated database can only accept updates by processes that have the same replication instance file (defined by the environment variable ydb_repl_instance or in the global directory) open for that database. Ensure the same replication instance file is used for all processes that update the same replicated database file. This error can also occur if the replication instance file was recreated (while processes were still accessing the replication instance). In this case, the name ffff and gggg would be the same but the corresponding journal pool shared memory ids would be different. To recover from this situation, shut down all processes accessing the instance from before and after the instance file recreate. Run an argumentless MUPIP RUNDOWN to clean up the older journal pool tttt and restart the instance. The Source Server (which is the first process to start on a replicated instance) only binds replicated databases from its global directory to the journal pool that it creates. No other replicated database file can be bound with this journal pool.
 
 --------------------
 REPLINSTNMLEN 
@@ -11840,7 +11879,7 @@ REPLINSTNMLEN
 
 REPLINSTNMLEN, Replication instance name xxxx should be 1 to 15 characters long
 
-MUPIP Error: This error is issued by the mupip replic instance_create command if the instance name was specified either through the name qualifier or through the environment variable gtm_repl_instname and if name was longer than 15 characters or was the empty string.
+MUPIP Error: This error is issued by the mupip replic instance_create command if the instance name was specified either through the name qualifier or through the environment variable ydb_repl_instname and if name was longer than 15 characters or was the empty string.
 
 Action: Specify a valid instance name that is 1 to 15 characters long.
 
@@ -11860,7 +11899,7 @@ REPLINSTNMUNDEF
 
 REPLINSTNMUNDEF, Replication instance name not defined
 
-MUPIP Error: This error is issued by the mupip replic -instance_create command if the -name qualifier was not specified and if the environment variable gtm_repl_instname is not defined either.
+MUPIP Error: This error is issued by the mupip replic -instance_create command if the -name qualifier was not specified and if the environment variable ydb_repl_instname is not defined either.
 
 Action: Specify the instance name using the -name qualifier.
 
@@ -11910,7 +11949,7 @@ REPLINSTSECLEN
 
 REPLINSTSECLEN, Secondary replication instance name xxxx should be 1 to 15 characters long
 
-MUPIP Error: This error is issued by any mupip replic -source command that specifies a secondary instance name. This error is issued if the secondary instance name was specified either through the -instsecondary qualifier or through the environment variable gtm_repl_instsecondary and if the name was longer than 15 characters or was the empty string.
+MUPIP Error: This error is issued by any mupip replic -source command that specifies a secondary instance name. This error is issued if the secondary instance name was specified either through the -instsecondary qualifier or through the environment variable ydb_repl_instsecondary and if the name was longer than 15 characters or was the empty string.
 
 Action: Specify a valid secondary instance name that is 1 to 15 characters long.
 
@@ -11940,7 +11979,7 @@ REPLINSTSECUNDF
 
 REPLINSTSECUNDF, Secondary replication instance name not defined
 
-MUPIP Error: This error is issued by any mupip replic -source command that requires a secondary instance name to be specified. The source server commands that require this qualifier are those that have any of -activate, changelog, deactivate, needrestart, start, statslog or stopsourcefilter specified. The secondary name can be specified either through the INSTSECONDARY qualifier or through the environment variable gtm_repl_instsecondary. If neither of them is specified, this error is issued.
+MUPIP Error: This error is issued by any mupip replic -source command that requires a secondary instance name to be specified. The source server commands that require this qualifier are those that have any of -activate, changelog, deactivate, needrestart, start, statslog or stopsourcefilter specified. The secondary name can be specified either through the INSTSECONDARY qualifier or through the environment variable ydb_repl_instsecondary. If neither of them is specified, this error is issued.
 
 Action: Specify the secondary instance name using the INSTSECONDARY qualifier.
 
@@ -11968,9 +12007,9 @@ Action: Shutdown all YottaDB and/or MUPIP processes that are using the replicati
 REPLINSTUNDEF 
 -------------------
 
-REPLINSTUNDEF, Replication instance environment variable $gtm_repl_instance is undefined
+REPLINSTUNDEF, Replication instance environment variable $ydb_repl_instance is undefined
 
-Run Time/MUPIP Error: This indicates that the replication instance environment variable $gtm_repl_instance is undefined.
+Run Time/MUPIP Error: This indicates that the replication instance environment variable $ydb_repl_instance is undefined.
 
 Action: Define the environment variable to the appropriate instance file.
 
@@ -12352,7 +12391,7 @@ RESTRICTEDOP
 
 RESTRICTEDOP, Attempt to perform a restricted operation: xxxx
 
-All YottaDB Components Error: The attempted operation, xxxx, was prevented based on the policy specified by the $gtm_dist/restrict.txt file.
+All YottaDB Components Error: The attempted operation, xxxx, was prevented based on the policy specified by the $ydb_dist/restrict.txt file.
 
 Action: Check the permissions and contents of the restrict.txt file against the permissions of the user performing the operation.
 
@@ -12362,7 +12401,7 @@ RESTRICTSYNTAX
 
 RESTRICTSYNTAX, Syntax error in file ffff at line number nnnn. All facilities restricted for process.
 
-All YottaDB Components Error: The file ffff, or $gtm_dist/restrict.txt, contains a syntax error at line nnnn. All facilities which may be specified in a restrict.txt file will be considered restricted, and restricted operations will result in RESTRICTEDOP errors or operations being ignored.
+All YottaDB Components Error: The file ffff, or $ydb_dist/restrict.txt, contains a syntax error at line nnnn. All facilities which may be specified in a restrict.txt file will be considered restricted, and restricted operations will result in RESTRICTEDOP errors or operations being ignored.
 
 Action: Edit the restrict.txt file to remove the syntax error, and verify the permissions of the file reflect the desired access.
 
@@ -12806,41 +12845,41 @@ Action: Ensure that GTMSECSHR executables and their parent directories have corr
 SECSHRGTMDBGLVL2LONG 
 ----------------------
 
-SECSHRGTMDBGLVL2LONG, gtmdbglvl env var too long. gtmsecshr will not be started
+SECSHRGTMDBGLVL2LONG, ydb_dbglvl env var too long. gtmsecshr will not be started
 
-Run Time Error: This error indicates that the value of the gtmdbglvl environment variable is too long.
+Run Time Error: This error indicates that the value of the ydb_dbglvl environment variable is too long.
 
-Action: Verify that gtmdbglvl contains a proper integer in the decimal or hexadecimal format.
+Action: Verify that ydb_dbglvl contains a proper integer in the decimal or hexadecimal format.
 
 --------------------
 SECSHRGTMDIST2LONG 
 --------------------
 
-SECSHRGTMDIST2LONG, gtm_dist env var too long. gtmsecshr will not be started
+SECSHRGTMDIST2LONG, ydb_dist env var too long. gtmsecshr will not be started
 
-Run Time Error: This error indicates that the value of the gtm_dist environment variable is too long.
+Run Time Error: This error indicates that the value of the ydb_dist environment variable is too long.
 
-Action: Verify that gtm_dist contains a proper path to the YottaDB installation directory.
+Action: Verify that ydb_dist contains a proper path to the YottaDB installation directory.
 
 ----------------------
 SECSHRGTMTMP2LONG 
 ----------------------
 
-SECSHRGTMTMP2LONG, gtm_tmp env var too long. gtmsecshr will not be started
+SECSHRGTMTMP2LONG, ydb_tmp env var too long. gtmsecshr will not be started
 
-Run Time Error: This error indicates that the value of the gtm_tmp environment variable is too long.
+Run Time Error: This error indicates that the value of the ydb_tmp environment variable is too long.
 
-Action: Verify that gtm_tmp contains a proper path to the directory for YottaDB/GTMSECSHR socket communication.
+Action: Verify that ydb_tmp contains a proper path to the directory for YottaDB/GTMSECSHR socket communication.
 
 --------------------
 SECSHRNOGTMDIST 
 --------------------
 
-SECSHRNOGTMDIST, gtm_dist env var does not exist. gtmsecshr will not be started
+SECSHRNOGTMDIST, ydb_dist env var does not exist. gtmsecshr will not be started
 
-Run Time Error: This error indicates that the gtm_dist environment variable is not set.
+Run Time Error: This error indicates that the ydb_dist environment variable is not set.
 
-Action: Ensure that gtm_dist is set and points to the YottaDB installation directory.
+Action: Ensure that ydb_dist is set and points to the YottaDB installation directory.
 
 ----------------------
 SECSHRNOTOWNEDBYROOT 
@@ -12876,9 +12915,9 @@ Action: Ensure that GTMSECSHR executables and their parent directories have corr
 SECSHRSETGTMDISTFAILED 
 -----------------------
 
-SECSHRSETGTMDISTFAILED, setenv for gtm_dist failed. gtmsecshr will not be started
+SECSHRSETGTMDISTFAILED, setenv for ydb_dist failed. gtmsecshr will not be started
 
-Run Time Error: This error indicates that the GTMSECSHR process failed to adjust gtm_dist environment variable.
+Run Time Error: This error indicates that the GTMSECSHR process failed to adjust ydb_dist environment variable.
 
 Action: Ensure that the root user is configured with adequate space for environment variables.
 
@@ -12886,9 +12925,9 @@ Action: Ensure that the root user is configured with adequate space for environm
 SECSHRSETGTMTMPFAILED 
 -----------------------
 
-SECSHRSETGTMTMPFAILED, setenv for gtm_tmp failed. gtmsecshr will not be started
+SECSHRSETGTMTMPFAILED, setenv for ydb_tmp failed. gtmsecshr will not be started
 
-Run Time Error: This error indicates that the GTMSECSHR process failed to adjust gtm_tmp environment variable.
+Run Time Error: This error indicates that the GTMSECSHR process failed to adjust ydb_tmp environment variable.
 
 Action: Ensure that the root user is configured with adequate space for environment variables.
 
@@ -12928,9 +12967,9 @@ SEFCTNEEDSFULLB
 
 SEFCTNEEDSFULLB, Current side effect setting does not permit full Boolean to be turned off
 
-Run Time Error: A VIEW "NOFULL_BOOLEAN" cannot enable YottaDB short-circuit Boolean compilation for a process running with a gtm_side_effects setting of 1 or 2.
+Run Time Error: A VIEW "NOFULL_BOOLEAN" cannot enable YottaDB short-circuit Boolean compilation for a process running with a ydb_side_effects setting of 1 or 2.
 
-Action: Keeping in mind that gtm_boolean and gtm_side_effects affect compilation behavior, and that gtm_boolean must be 1 or 2 (Standard Boolean mode) for gtm_side_effects setting 1 or 2 (Standard side effects), choose appropriate compilation modes. Note that once you choose the modes for your application you would typically not change them except to get warnings and modify the application to be somewhat more efficient.
+Action: Keeping in mind that ydb_boolean and ydb_side_effects affect compilation behavior, and that ydb_boolean must be 1 or 2 (Standard Boolean mode) for ydb_side_effects setting 1 or 2 (Standard side effects), choose appropriate compilation modes. Note that once you choose the modes for your application you would typically not change them except to get warnings and modify the application to be somewhat more efficient.
 
 ---------------------
 SEGIS 
@@ -13037,11 +13076,11 @@ Action: Make sure that either $ETRAP or $ZTRAP is set to the valid value, if the
 SETEXTRENV 
 -------------------
 
-SETEXTRENV, Database files are missing or Instance is frozen; supply the database files, wait for the freeze to lift or define gtm_extract_nocol to extract possibly incorrect collation
+SETEXTRENV, Database files are missing or Instance is frozen; supply the database files, wait for the freeze to lift or define ydb_extract_nocol to extract possibly incorrect collation
 
-MUPIP Error: It indicates that gtm_extract_nocol environment variable needs to be defined to run MUPIP JOURNAL EXTRACT completion if Instance is Frozen or Database files are missing.
+MUPIP Error: It indicates that ydb_extract_nocol environment variable needs to be defined to run MUPIP JOURNAL EXTRACT completion if Instance is Frozen or Database files are missing.
 
-Action: If the you know there are no variables with alternate collation or if the EXTRACT is for analysis rather than a LOAD, define gtm_extract_nocol to a positive value and reissue the command. Otherwise correct the condition before reissuing the EXTRACT.
+Action: If the you know there are no variables with alternate collation or if the EXTRACT is for analysis rather than a LOAD, define ydb_extract_nocol to a positive value and reissue the command. Otherwise correct the condition before reissuing the EXTRACT.
 
 ----------------------
 SETINSETTRIGONLY 
@@ -13149,9 +13188,9 @@ SIDEEFFECTEVAL
 
 SIDEEFFECTEVAL, Extrinsic ($$), External call ($&) or $INCREMENT() with potential side effects in actuallist, function arguments, non-Boolean binary operands or subscripts
 
-Compile Time Warning: A side effect expression appeared to the right of a global or local variable (glvn) in an order within an outer expression where the side effect might modify the glvn. Setting the gtm_side_effects environment variable to 2 (two) activates this check.
+Compile Time Warning: A side effect expression appeared to the right of a global or local variable (glvn) in an order within an outer expression where the side effect might modify the glvn. Setting the ydb_side_effects environment variable to 2 (two) activates this check.
 
-Action: Analyze the effect(s) of the side effect expressions, which are $INCREMENT(). extrinsics ($$), external calls ($& or $ZCALL()) as to whether they modify a glvn earlier in the expression. If they do, the setting of gtm_side_effects modifies the behavior and you either need to modify the code to eliminate the side effect interaction or be sure to select the behavior you desire.
+Action: Analyze the effect(s) of the side effect expressions, which are $INCREMENT(). extrinsics ($$), external calls ($& or $ZCALL()) as to whether they modify a glvn earlier in the expression. If they do, the setting of ydb_side_effects modifies the behavior and you either need to modify the code to eliminate the side effect interaction or be sure to select the behavior you desire.
 
 ----------------------
 SIGACCERR
@@ -13485,7 +13524,7 @@ SOCKMAX, Attempt to exceed maximum sockets xxx for the SOCKET device
 
 Run Time Error: Attempting to connect more than the maximum number of sockets defined for the process triggers this error. xxx is the maximum for the current process.
 
-Action: Reduce the number of connections or use a process that has a higher maximum number of sockets defined by the gtm_max_sockets environment variable. 
+Action: Reduce the number of connections or use a process that has a higher maximum number of sockets defined by the ydb_max_sockets environment variable. 
 
 ------------------
 SOCKNOTFND
@@ -14002,7 +14041,7 @@ STUCKACT
 
 STUCKACT, Process stuck script invoked: rrrr : pppp
 
-Run Time Information: This message shows the success or failure status return rrrr of the operation of invoking the script pppp pointed to by the environment variable $gtm_procstuckexec
+Run Time Information: This message shows the success or failure status return rrrr of the operation of invoking the script pppp pointed to by the environment variable $ydb_procstuckexec
 
 Action: If the result is a success, analyze the output of the script. If the result is a failure, check the script and any output it produced up to the point of failure and rework the script or adjust the environment appropriately.
 
@@ -14085,6 +14124,16 @@ SYSCALL, Error received from system call xxxx -- called from module yyyy at line
 Run Time Error: This indicates that system call failed due to some unusual error condition.
 
 Action: Report to system administrator and if necessary report the entire incident context to your YottaDB support channel for further analysis.
+
+--------------------
+SYSUTILCONF
+--------------------
+
+SYSUTILCONF, Error determining the path for system utility. tttt
+
+Run Time Error: tttt represents text describing details of an issue finding a POSIX function that it needed.
+
+Action: Check for aliases or environment variables related to paths that might be interfering with YottaDB’s ability to invoke functions.
 
 --------------
 TCGETATTR
@@ -14419,7 +14468,7 @@ Run Time Information: YottaDB issues this message if it is executing a TP TRANSA
 2. Entering direct mode (e.g. due to a BREAK command) or 
 3. a long running command (those which accept timeout specifications) encountered potentially indefinite restarts. The xxxx indicates the $ZPOSITION where the transfer of control occurred and the condition that caused this is identified in tttt. 
 
-Action: Review your code to determine whether the non-Isolated commands can be moved outside of transaction encapsulation. Alternatively, ensure that they are minimally disruptive by using $ZMAXTPTIME to prevent transactions from running unreasonably long times and setting gtm_tpnotacidtime to specify the wait period for long running commands before YottaDB logs a TPNOTACID message.
+Action: Review your code to determine whether the non-Isolated commands can be moved outside of transaction encapsulation. Alternatively, ensure that they are minimally disruptive by using $ZMAXTPTIME to prevent transactions from running unreasonably long times and setting ydb_tpnotacidtime to specify the wait period for long running commands before YottaDB logs a TPNOTACID message.
 
 .. note::
    Because a process that gives a TPNOTACID message is in an indefinite restart, it might fail to produce an error indicating database damage should it encounter such an unlikely eventuality. In this case, indefinite restarts do not cause any additional damage. 
@@ -14992,7 +15041,7 @@ UPDPROC, Update Process error
 
 MUPIP Error: YottaDB replication was not able to start the update process.
 
-Action: Ensure that the gtm_dist environment variable points to a valid YottaDB distribution that is executable by the user.
+Action: Ensure that the ydb_dist environment variable points to a valid YottaDB distribution that is executable by the user.
 
 ------------------
 UPDREPLSTATEOFF 
@@ -15335,7 +15384,7 @@ WRITEWAITPID, PID wwww waited mmmm minute(s) for PID hhhh to finish writing bloc
 
 Run Time Warning: This operator log message indicates process wwww needed access to block bbbb in database file ffff, but had waited mmmm minutes for process hhhh to finish with that block. mmmm exceeds the expected design criteria for the processing by hhhh.
 
-Action: Investigate the state and activities of process hhhh (possibly using the gtm_procstuckexec facility); try to identify any coincident operating system, file system or storage sub-system issues that might contribute to this unexpected behavior.
+Action: Investigate the state and activities of process hhhh (possibly using the ydb_procstuckexec facility); try to identify any coincident operating system, file system or storage sub-system issues that might contribute to this unexpected behavior.
 
 ------------------
 XCVOIDRET 
@@ -15383,9 +15432,9 @@ XTRNTRANSDLL
 
 XTRNTRANSDLL, Error during extended reference environment translation. Please check the above message.
 
-Run Time Error: This indicates that the external object (dynamically linked library in UNIX), which holds the global variable name environment translation routine, or the entry point gtm_env_translate in this object, is not accessible.
+Run Time Error: This indicates that the external object (dynamically linked library in UNIX), which holds the global variable name environment translation routine, or the entry point ydb_env_translate in this object, is not accessible.
 
-Action: Check if the value of the gtm_env_translate points to a valid dll object, which has the entry point gtm_env_translate.
+Action: Check if the value of the ydb_env_translate points to a valid dll object, which has the entry point ydb_env_translate.
 
 -------------------
 XTRNTRANSERR 
@@ -15504,9 +15553,9 @@ ZCCTENV
 
 ZCCTENV, Environmental variable for external package xxxx not set
 
-Compile Time Error: This indicates that the program made an external call, but could not find the external call table as specified in the UNIX environmental variable GTMXC.
+Compile Time Error: This indicates that the program made an external call, but could not find the external call table as specified in the UNIX environmental variable ydb_xc.
 
-Action: If this calls the default external call table, locate the external call table and specify the correct path in the UNIX environmental variable GTMXC. Otherwise, you can point to the package table in the environmental variable or specify the package name in the program GTMXC_[PACKAGE_NAME].
+Action: If this calls the default external call table, locate the external call table and specify the correct path in the UNIX environmental variable ydb_xc. Otherwise, you can point to the package table in the environmental variable or specify the package name in the program ydb_xc_[PACKAGE_NAME].
 
 ------------------
 ZCCTNULLF 
@@ -15930,7 +15979,7 @@ ZLINKFILE
 
 ZLINKFILE, Error while ZLINKing "xxxx"
 
-Run Time Error: This indicates that ZLINK command failed while trying to include routine xxxx in the image. Note that a jobbed off process could encounter a ZLINKFILE error if the $ZROUTINES ISV and the $gtmroutines environment variable differ, and the routine xxxx can only be found through $ZROUTINES, but not through $gtmroutines (since the jobbed off process only inherits $gtmroutines).
+Run Time Error: This indicates that ZLINK command failed while trying to include routine xxxx in the image. Note that a jobbed off process could encounter a ZLINKFILE error if the $ZROUTINES ISV and the $ydb_routines environment variable differ, and the routine xxxx can only be found through $ZROUTINES, but not through $ydb_routines (since the jobbed off process only inherits $ydb_routines).
 
 Action: Use host shell commands to ensure that the file to be ZLINKed is in the proper directory and has the appropriate protection. Review the accompanying message(s) for additional information.
 
@@ -16022,7 +16071,7 @@ ZROSYNTAX, $ZROUTINES syntax error: xxxx
 
 Syntax/Run Time Error: This indicates that a $ZROUTINES related action encountered syntax error xxxx.
 
-Action: Modify the UNIX environment variable gtmroutines or the expression being SET into $ZROUTINES.
+Action: Modify the UNIX environment variable ydb_routines or the expression being SET into $ZROUTINES.
 
 ----------------------
 ZSHOWBADFUNC 

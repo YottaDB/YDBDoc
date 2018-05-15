@@ -78,7 +78,7 @@ On IBM pSeries AIX:
 Example:
 
 .. parsed-literal::
-   $ cc -c -I$gtm_dist increment.c decrement.c
+   $ cc -c -I$ydb_dist increment.c decrement.c
    $ ld -o libcrement.so increment.o decrement.o -G -bexpall -bnoentry -bh:4 -lc
 
 .. note::
@@ -89,7 +89,7 @@ On Linux x86:
 Example:
 
 .. parsed-literal::
-   % gcc -c -fPIC -I$gtm_dist increment.c decrement.c
+   % gcc -c -fPIC -I$ydb_dist increment.c decrement.c
    % gcc -o libcrement.so -shared increment.o decrement.o
 
 --------------------------
@@ -112,7 +112,7 @@ where [num] indicates a pre-allocation value explained later in this chapter.
 
 Legal directions are I, O, or IO for input, output, or input/output, respectively.
 
-The following table describes the legal types defined in the C header file $gtm_dist/gtmxc_types.h:
+The following table describes the legal types defined in the C header file $ydb_dist/gtmxc_types.h:
 
 **Type: Usage**
 
@@ -187,14 +187,14 @@ There may be only a single occurrence of the type gtm_status_t for each entryref
 Database Encryption Extensions to the YottaDB External Interface
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-To support Database Encryption, YottaDB provides a reference implementation which resides in $gtm_dist/plugin/gtmcrypt.
+To support Database Encryption, YottaDB provides a reference implementation which resides in $ydb_dist/plugin/gtmcrypt.
 
 The reference implementation includes:
 
-* A $gtm_dist/plugin/gtmcrypt sub-directory with all source files and scripts. The scripts include those needed to build/install libgtmcrypt.so and "helper" scripts, for example, add_db_key.sh (see below).
+* A $ydb_dist/plugin/gtmcrypt sub-directory with all source files and scripts. The scripts include those needed to build/install libgtmcrypt.so and "helper" scripts, for example, add_db_key.sh (see below).
 * The plugin interface that YottaDB expects is defined in gtmcrypt_interface.h. Never modify this file - it defines the interface that the plugin must provide.
-* $gtm_dist/plugin/libgtmcrypt.so is the shared library containing the executables which is dynamically linked by YottaDB and which in turn calls the encryption packages. If the $gtm_dist/utf8 directory exists, then it should contain a symbolic link to ../plugin.
-* Source code is provided in the file $gtm_dist/plugin/gtmcrypt/source.tar which includes build.sh and install.sh scripts to respectively compile and install libgtmcrypt.so from the source code.
+* $ydb_dist/plugin/libgtmcrypt.so is the shared library containing the executables which is dynamically linked by YottaDB and which in turn calls the encryption packages. If the $ydb_dist/utf8 directory exists, then it should contain a symbolic link to ../plugin.
+* Source code is provided in the file $ydb_dist/plugin/gtmcrypt/source.tar which includes build.sh and install.sh scripts to respectively compile and install libgtmcrypt.so from the source code.
 
 To support the implementation of a reference implementation, YottaDB provides additional C structure types (in the gtmxc_types.h file):
 
@@ -224,7 +224,7 @@ A YottaDB database consists of multiple database files, each of which has its ow
 
 The core plugin interface functions, all of which return a value of type gtm_status_t are:
 
-* gtmcrypt_init() performs initialization. If the environment variable $gtm_passwd exists and has an empty string value, YottaDB calls gtmcrypt_init() before the first M program is loaded; otherwise it calls gtmcrypt_init() when it attempts the first operation on an encrypted database file.
+* gtmcrypt_init() performs initialization. If the environment variable $ydb_passwd exists and has an empty string value, YottaDB calls gtmcrypt_init() before the first M program is loaded; otherwise it calls gtmcrypt_init() when it attempts the first operation on an encrypted database file.
 * Generally, gtmcrypt_getkey_by_hash or, for MUPIP CREATE, gtmcrypt_getkey_by_name perform key acquisition, and place the keys where gtmcrypt_decode() and gtmcrypt_encode() can find them when they are called.
 * Whenever YottaDB needs to decode a block of bytes, it calls gtmcrypt_decode() to decode the encrypted data. At the level at which YottaDB database encryption operates, it does not matter what the data is - numeric data, string data whether in M or UTF-8 mode and whether or not modified by a collation algorithm. Encryption and decryption simply operate on a series of bytes.
 * Whenever YottaDB needs to encode a block of bytes, it calls gtmcrypt_encode() to encode the data.
@@ -495,7 +495,7 @@ Call-In is a framework supported by YottaDB that allows a C/C++ program to invok
 Relevant Files for Call-Ins
 +++++++++++++++++++++++++++
 
-To facilitate Call-Ins to M routines, the YottaDB distribution directory ($gtm_dist) contains the following files:
+To facilitate Call-Ins to M routines, the YottaDB distribution directory ($ydb_dist) contains the following files:
 
 * libgtmshr.so - A shared library that implements the YottaDB run-time system, including the Call-In API. If Call-Ins are used from a standalone C/C++ program, this library needs to be explicitly linked into the program. See “Building Standalone Programs”, which describes the necessary linker options on each supported platforms.
 * mumps - The YottaDB startup program that dynamically links with libgtmshr.so.
@@ -573,7 +573,7 @@ gtm_hiber_start() always sleeps until the time expires; gtm_hiber_start_wait_any
 
 **Call-In table**
 
-The Call-In table file is a text file that contains the signatures of all M label references that get called from C. In order to pass the typed C arguments to the type-less M formallist, the environment variable GTMCI must be defined to point to the Call-In table file path. Each signature must be specified separately in a single line. YottaDB reads this file and interprets each line according to the following convention (specifications within box brackets "[]", are optional):
+The Call-In table file is a text file that contains the signatures of all M label references that get called from C. In order to pass the typed C arguments to the type-less M formallist, the environment variable ydb_ci must be defined to point to the Call-In table file path. Each signature must be specified separately in a single line. YottaDB reads this file and interprets each line according to the following convention (specifications within box brackets "[]", are optional):
 
 .. parsed-literal::
    <c-call-name> : <ret-type> <label-ref> ([<direction>:<param-type>,...])
@@ -737,14 +737,14 @@ The following sections describe compiler and linker options that must be used on
 
 **IBM pSeries (RS/6000) AIX**
 
-* Compiler: -I$gtm_dist
-* Linker: -L$gtm_dist -lgtmshr
+* Compiler: -I$ydb_dist
+* Linker: -L$ydb_dist -lgtmshr
 
 **X86 GNU/Linux**
 
-* Compiler: -I$gtm_dist
-* Linker: -L$gtm_dist -lgtmshr -rpath $gtm_dist
-* YottaDB advises that the C/C++ compiler front-end be used as the Linker to avoid specifying the system startup routines on the ld command. The compile can pass linker options to ld using -W option (for example, cc -W1, -R, $gtm_dist). For more details on these options, refer to the appropriate system's manual on the respective platforms.
+* Compiler: -I$ydb_dist
+* Linker: -L$ydb_dist -lgtmshr -rpath $ydb_dist
+* YottaDB advises that the C/C++ compiler front-end be used as the Linker to avoid specifying the system startup routines on the ld command. The compile can pass linker options to ld using -W option (for example, cc -W1, -R, $ydb_dist). For more details on these options, refer to the appropriate system's manual on the respective platforms.
 
 ++++++++++++++++++++++++++++++
 Nested Call-Ins

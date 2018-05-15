@@ -146,7 +146,7 @@ If YottaDB encounters an error outside of code entered in Direct Mode, YottaDB e
 The $ETRAP and $ZTRAP special variables specify an action that YottaDB should perform when an error occurs during routine execution. $ETRAP and $ZTRAP can establish one or more error handling "actions". 
 
 .. note::
-   The environment variable gtm_etrap specifies an initial value of $ETRAP to override the default value of "B" for $ZTRAP as the base level error handler. The ydb_env_set script sets gtm_etrap to "Write:(0=$STACK) ""Error occurred: "",$ZStatus,!" which you can customize to suit your needs. For more information, refer to “Processing Errors from Direct Mode and Shell”.
+   The environment variable ydb_etrap specifies an initial value of $ETRAP to override the default value of "B" for $ZTRAP as the base level error handler. The ydb_env_set script sets ydb_etrap to "Write:(0=$STACK) ""Error occurred: "",$ZStatus,!" which you can customize to suit your needs. For more information, refer to “Processing Errors from Direct Mode and Shell”.
 
 ------------------------------
 Program Handling of Errors
@@ -289,12 +289,12 @@ $ZTRAP Behavior
 
 If, at the time of any error, the value of $ZTRAP is non-empty, YottaDB uses the $ZTRAP contents to direct execution of the next action. Refer to the $ZTRAP section in `Chapter 8: “Intrinsic Special Variables” <https://docs.yottadb.com/ProgrammersGuide/isv.html>`_.
 
-By default, execution proceeds as if the next instruction to be executed were the first one on "the next line", and the code on that next line would be the same as the text in the value of $ZTRAP. Unless $ZTRAP or any code it invokes issues a GOTO or ZGOTO, after YottaDB has executed the code in $ZTRAP, YottaDB attempts to execute the line with the error again. When a value is assigned to $ZTRAP, the new value replaces the previous value. If the value of $ETRAP is a non-empty one, $ETRAP is implicitly NEWed, and the value of $ETRAP becomes equal to the empty string; this ensures that at most one of $ETRAP and $ZTRAP is not the empty string. If the environment variable gtm_ztrap_new evaluates to Boolean TRUE (case insensitive string "TRUE", or case insensitive string "YES", or a non-zero number), $ZTRAP is NEWed when $ZTRAP is SET; otherwise $ZTRAP is not stacked when it is SET.
+By default, execution proceeds as if the next instruction to be executed were the first one on "the next line", and the code on that next line would be the same as the text in the value of $ZTRAP. Unless $ZTRAP or any code it invokes issues a GOTO or ZGOTO, after YottaDB has executed the code in $ZTRAP, YottaDB attempts to execute the line with the error again. When a value is assigned to $ZTRAP, the new value replaces the previous value. If the value of $ETRAP is a non-empty one, $ETRAP is implicitly NEWed, and the value of $ETRAP becomes equal to the empty string; this ensures that at most one of $ETRAP and $ZTRAP is not the empty string. If the environment variable ydb_ztrap_new evaluates to Boolean TRUE (case insensitive string "TRUE", or case insensitive string "YES", or a non-zero number), $ZTRAP is NEWed when $ZTRAP is SET; otherwise $ZTRAP is not stacked when it is SET.
 
-Other than the default behavior, $ZTRAP settings are controlled by the environment variable gtm_ztrap_form as described in the following table.
+Other than the default behavior, $ZTRAP settings are controlled by the environment variable ydb_ztrap_form as described in the following table.
 
 +------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| gtm_ztrap_form         | $ZTRAP and EXCEPTION Behavior                                                                                                                                                     |
+| ydb_ztrap_form         | $ZTRAP and EXCEPTION Behavior                                                                                                                                                     |
 +========================+===================================================================================================================================================================================+
 | code                   | Content is code executed after the error; in the absence of GOTO, ZGOTO, or QUIT, execution resumes at the beginning of the line containing the error - note that the default     |
 |                        | behavior tends to create an indefinite loop.                                                                                                                                      |
@@ -309,10 +309,10 @@ Other than the default behavior, $ZTRAP settings are controlled by the environme
 | popadaptive            | If content is valid code treat it as described for code, otherwise attempt to treat it as an entryref used as described for popentryref                                           |
 +------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
-Although the "adaptive" and "popadaptive" behaviors permit mixing of two behaviors based on the current value of $ZTRAP, the $ZTRAP behavior type is selected at process startup from gtm_ztrap_form and cannot be modified during the life of the process.
+Although the "adaptive" and "popadaptive" behaviors permit mixing of two behaviors based on the current value of $ZTRAP, the $ZTRAP behavior type is selected at process startup from ydb_ztrap_form and cannot be modified during the life of the process.
 
 .. note::
-   Like $ZTRAP values, invocation of device EXCEPTION values, with the exception noted, follow the pattern specified by the current gtm_ztrap_form setting.
+   Like $ZTRAP values, invocation of device EXCEPTION values, with the exception noted, follow the pattern specified by the current ydb_ztrap_form setting.
 
 ++++++++++++++++++++++++++++++++++++++++++++++
 Differences between $ETRAP and $ZTRAP
@@ -425,7 +425,7 @@ $ETRAP is recursively invoked if it invokes a GOTO or a ZGOTO and the error cond
 Input/Output Errors
 +++++++++++++++++++++++++++++++
 
-When YottaDB encounters an error in the operation of an I/O device, YottaDB executes the EXCEPTION deviceparameter for the OPEN/USE/CLOSE commands. An EXCEPTION deviceparameter specifies an action to take when an error occurs in the operation of an I/O device. The form of the EXCEPTION action is subject to the gtm_ztrap_form setting described for $ZTRAP, except that there is never any implicit popping with EXCEPTION actions. If a device has no current EXCEPTION, YottaDB uses $ETRAP or $ZTRAP to handle an error from that device.
+When YottaDB encounters an error in the operation of an I/O device, YottaDB executes the EXCEPTION deviceparameter for the OPEN/USE/CLOSE commands. An EXCEPTION deviceparameter specifies an action to take when an error occurs in the operation of an I/O device. The form of the EXCEPTION action is subject to the ydb_ztrap_form setting described for $ZTRAP, except that there is never any implicit popping with EXCEPTION actions. If a device has no current EXCEPTION, YottaDB uses $ETRAP or $ZTRAP to handle an error from that device.
 
 YottaDB provides the option to:
 
@@ -1205,7 +1205,7 @@ Example EP13 uses the error recording routine by setting $ZTRAP="GOTO ^ERR". Whe
              ,QRY:0,LKS:0,LKF:0,CTN:0,DRD:3,DWT:0,NTW:68,NTR:6,NBW:71,NBR:154,NR0:0
              ,NR1:0,NR2:0,NR3:0,TTW:0,TTR:0,TRB:0,TBW:0,TBR:0,TR0:0,TR1:0,TR2:0,TR3
              :0,TR4:0,TC0:0,TC1:0,TC2:0,TC3:0,TC4:0,ZTR:0"
-   ^ERR(4806,"62364,27842","G",1)="GLD:/home/jdoe/.yottadb/r1.20_x86/g/gtm.gld
+   ^ERR(4806,"62364,27842","G",1)="GLD:/home/jdoe/.yottadb/r120/g/gtm.gld
              ,REG:DEFAULT,SET:69,KIL:4,GET:0,DTA:0,ORD:0,ZPR:0,QRY:0,LKS:0,LKF:0,CT
               N:69,DRD:3,DWT:0,NTW:69,NTR:7,NBW:72,NBR:160,NR0:0,NR1:0,NR2:0,NR3:0,T
               TW:0,TTR:0,TRB:0,TBW:0,TBR:0,TR0:0,TR1:0,TR2:0,TR3:0,TR4:0,TC0:0,TC1:0
@@ -1242,7 +1242,7 @@ Example EP13 uses the error recording routine by setting $ZTRAP="GOTO ^ERR". Whe
    ^ERR(4806,"62364,27842","I",29)="$ZEDITOR=0"
    ^ERR(4806,"62364,27842","I",30)="$ZEOF=0"
    ^ERR(4806,"62364,27842","I",31)="$ZERROR=""Unprocessed $ZERROR, see $ZSTATUS"""
-   ^ERR(4806,"62364,27842","I",32)="$ZGBLDIR=""/home/jdoe/.yottadb/r1.20_x86/g
+   ^ERR(4806,"62364,27842","I",32)="$ZGBLDIR=""/home/jdoe/.yottadb/r120/g
              /gtm.gld"""
    ^ERR(4806,"62364,27842","I",33)="$ZININTERRUPT=0"
    ^ERR(4806,"62364,27842","I",34)="$ZINTERRUPT=""IF $ZJOBEXAM()"""
@@ -1257,9 +1257,9 @@ Example EP13 uses the error recording routine by setting $ZTRAP="GOTO ^ERR". Whe
    ^ERR(4806,"62364,27842","I",43)="$ZPROMPT=""YDB>"""
    ^ERR(4806,"62364,27842","I",44)="$ZQUIT=0"
    ^ERR(4806,"62364,27842","I",45)="$ZREALSTOR=898568"
-   ^ERR(4806,"62364,27842","I",46)="$ZROUTINES=""/home/jdoe/.yottadb/r1.20_x86
-             /o(/home/jdoe/.yottadb/r1.20_x86/r /home/jdoe/.yottadb/r) /usr/l
-             ib/yottadb/r1.20_x86"""
+   ^ERR(4806,"62364,27842","I",46)="$ZROUTINES=""/home/jdoe/.yottadb/r120
+             /o(/home/jdoe/.yottadb/r120/r /home/jdoe/.yottadb/r) /usr/l
+             ib/yottadb/r120"""
    ^ERR(4806,"62364,27842","I",47)="$ZSOURCE="""""
    ^ERR(4806,"62364,27842","I",48)="$ZSTATUS=""150373210,BAD+2^EP13,%YDB-E-DIVZERO,
               Attempt to divide by zero"""
@@ -1320,7 +1320,7 @@ Example EP13 uses the error recording routine by setting $ZTRAP="GOTO ^ERR". Whe
    $ZEDITOR=0
    $ZEOF=1
    $ZERROR="Unprocessed $ZERROR, see $ZSTATUS"
-   $ZGBLDIR="/home/jdoe/.yottadb/r1.20_x86/g/gtm.gld"
+   $ZGBLDIR="/home/jdoe/.yottadb/r120/g/gtm.gld"
    $ZININTERRUPT=0
    $ZINTERRUPT="IF $ZJOBEXAM()"
    $ZIO="20110930074402_4806.ERR"

@@ -551,7 +551,7 @@ The JOB Environment
 YottaDB creates the environment for a new jobbed off process by copying the environment of the process issuing the JOB command and making a few minor modifications. By default, the standard input is assigned to the null device, the standard output is assigned to routinename.mjo, and the standard error is assigned to routinename.mje. 
 
 .. note::
-   If the content of the $gtmroutines environment variable is different from the $ZROUTINES ISV, a jobbed off process will inherit $gtmroutines and not $ZROUTINES. If the M entryref (LABEL^PROGRAM) that is being jobbed off can be found only through $ZROUTINES, the jobbed off process will encounter a ZLINKFILE error (due to not being able to find the M program through $gtmroutines) whereas the program would be found in the jobbing process.
+   If the content of the $ydb_routines environment variable is different from the $ZROUTINES ISV, a jobbed off process will inherit $ydb_routines and not $ZROUTINES. If the M entryref (LABEL^PROGRAM) that is being jobbed off can be found only through $ZROUTINES, the jobbed off process will encounter a ZLINKFILE error (due to not being able to find the M program through $ydb_routines) whereas the program would be found in the jobbing process.
 
 **JOB Implications for Directories**
 
@@ -587,11 +587,11 @@ By default, JOB constructs the error file from the routinename using a file exte
 
 **GBL[DIR]=strlit**
 
-The string literal specifies a value for the environment variable gtmgbldir.
+The string literal specifies a value for the environment variable ydb_gbldir.
 
 The maximum string length is 255 characters.
 
-By default, the job uses the same specification for gtmgbldir as that defined in $ZGBLDIR for the process using the JOB command.
+By default, the job uses the same specification for ydb_gbldir as that defined in $ZGBLDIR for the process using the JOB command.
 
 **IN[PUT]=strlit**
 
@@ -642,7 +642,7 @@ The processparameters are summarized in the following table.
 +---------------------------+--------------------------+---------------------------------+------------------------------------+
 | ERR[OR]=strlit            | ./routinename.mje        | none                            | 255 characters                     |
 +---------------------------+--------------------------+---------------------------------+------------------------------------+
-| GBL[DIR]                  | Same as gtmgbldir for    | none                            | 255 characters                     |
+| GBL[DIR]                  | Same as ydb_gbldir for   | none                            | 255 characters                     |
 |                           | the process issuing the  |                                 |                                    |
 |                           | JOB command              |                                 |                                    |
 +---------------------------+--------------------------+---------------------------------+------------------------------------+
@@ -698,7 +698,7 @@ The format of the KILL command is:
 * KILLing a variable that does not currently exist has no effect.
 * The KILL command without an argument deletes all currently existing local variables; in this case, at least two (2) spaces must follow the KILL to separate it from the next command on the line.
 * When a KILL argument consists of local variable names enclosed in parentheses, that "exclusive" KILL deletes all local variables except those listed in the argument.
-* KILL does not affect copies of local variables that have been "stacked" by NEW or parameter passing with the possible exception of the following: For KILL arguments enclosed in parentheses, the environment variable gtm_stdxkill enables the standard-compliant behavior to kill local variables in the exclusion list if they had an explicit or implicit (pass-by-reference) alias not in the exclusion list. By default, this behavior is disabled. If gtm_stdxkill is set to 1,"TRUE", or "YES", KILL deletes a local variable unless all its names are in the parenthesized list. If gtm_stdxkill is not defined or set to 0 KILL operations exclude the data associated with an item if any one of its names appears in the parenthesized list. While non-standard, the default behavior decouples call-by-reference functions or functions using aliases from needing knowledge of the caller's parameters.
+* KILL does not affect copies of local variables that have been "stacked" by NEW or parameter passing with the possible exception of the following: For KILL arguments enclosed in parentheses, the environment variable ydb_stdxkill enables the standard-compliant behavior to kill local variables in the exclusion list if they had an explicit or implicit (pass-by-reference) alias not in the exclusion list. By default, this behavior is disabled. If ydb_stdxkill is set to 1,"TRUE", or "YES", KILL deletes a local variable unless all its names are in the parenthesized list. If ydb_stdxkill is not defined or set to 0 KILL operations exclude the data associated with an item if any one of its names appears in the parenthesized list. While non-standard, the default behavior decouples call-by-reference functions or functions using aliases from needing knowledge of the caller's parameters.
 * In conformance with the M standard, KILL of a variable joined by pass-by-reference to a formallist variable always KILLs the formalist variable when the actuallist variable is KILL'd even if the formallist variable is specified as protected by an exclusive KILL.
 * KILL * removes the association between its argument and any associated arrays. The arguments are left undefined, just as with a standard KILL. If the array has no remaining associations after the KILL \*, YottaDB can reuse the memory it occupied. If there are no array(s) or association(s) the KILL * happily and silently does nothing.
 * KILL * of an alias container variable is just like a KILL of an alias variable, and deletes the association between the lvn and the array.
@@ -736,7 +736,7 @@ Example:
 
 .. parsed-literal::
    kill *
-   write !,"gtm_stdxkill=",+$ztrnlnm("gtm_stdxkill"),!
+   write !,"ydb_stdxkill=",+$ztrnlnm("ydb_stdxkill"),!
    set (A,B,C,E)="input"
    do X(.A,.B)
    zwrite
@@ -760,7 +760,7 @@ Example:
 Produces the following output:
 
 .. parsed-literal::
-   gtm_stdxkill=0
+   ydb_stdxkill=0
    A="output"
    B="output"
    C="input"
@@ -800,7 +800,7 @@ The format of the LOCK command is:
 * YottaDB allows the "process interest" lock counter on a named resource to increment up to 511.
 * The optional numeric expression specifies a time in seconds after which the command should timeout if unsuccessful; 0 provides a single attempt; timed LOCK commands maintain $TEST: 1 for a successful LOCK action, 0 for an unsuccessful (within the specified time) LOCK action. Note that untimed LOCK commands do not change $TEST.
 * A LOCK operation that finds no room in LOCK_SPACE to queue a waiting LOCK so another process releasing a blocking LOCK can wake it, does a slow poll waiting for LOCK_SPACE to become available. If LOCK does not acquire the ownership of the named resource with the specified timeout, it returns control to the application with $TEST=0. If timeout is not specified, LOCK continues slow poll till space becomes available.
-* If a LOCK command in a TP transaction specifies no timeout or a timeout that exceeds the limit specified by $gtm_tpnotacidtime when 2 is less than $TRESTART, the process releases the database critical sections and generates TPNOACID messages, which may live-lock the process, possibly until the transaction terminates because it reaches $ZMAXTPTIME. While such a process may have an impact on system performance this behavior moderates the impact of potential deadlocks on other database operations.
+* If a LOCK command in a TP transaction specifies no timeout or a timeout that exceeds the limit specified by $ydb_tpnotacidtime when 2 is less than $TRESTART, the process releases the database critical sections and generates TPNOACID messages, which may live-lock the process, possibly until the transaction terminates because it reaches $ZMAXTPTIME. While such a process may have an impact on system performance this behavior moderates the impact of potential deadlocks on other database operations.
 * An indirection operator and an expression atom evaluating to a list of one or more LOCK arguments form a legal argument for a LOCK.
 
 YottaDB records LOCK and ZALLOCATE information in the "lock database." YottaDB distributes the lock database in space associated with the database identified by the current Global Directory. However, the lock database does not overlap or coincide with the body of the database files holding the global data. Only the LOCK, ZALLOCATE and ZDEALLOCATE commands, and the LKE utility program access the lock database.
@@ -1586,7 +1586,7 @@ In this example the BREAKMSG value is 5, representing the sum of 1 and 4. This e
 
 Enables or disable the gneration of an error when character-oriented functions encounter malformed byte sequences (illegal characters).
 
-At process startup, YottaDB initializes BADCHAR from the environment variable gtm_badchar. Set the environment variable $gtm_badchar to a non-zero number or "YES" (or "Y") to enable VIEW "BADCHAR". Set the environment variable $gtm_badchar to 0 or "NO" or "FALSE" (or "N" or "F") to enable VIEW "NOBADCHAR". By default, YottaDB enables VIEW "BADCHAR".
+At process startup, YottaDB initializes BADCHAR from the environment variable ydb_badchar. Set the environment variable $ydb_badchar to a non-zero number or "YES" (or "Y") to enable VIEW "BADCHAR". Set the environment variable $ydb_badchar to 0 or "NO" or "FALSE" (or "N" or "F") to enable VIEW "NOBADCHAR". By default, YottaDB enables VIEW "BADCHAR".
 
 With VIEW "BADCHAR", YottaDB functions generate the BADCHAR error when they encounter malformed byte sequences. With this setting, YottaDB detects and clearly reports potential application program logic errors as soon as they appear. As an illegal UTF-8 character in the argument of a character-oriented function likely indicates a logic issue, YottaDB recommends using VIEW "BADCHAR" in production environments.
 
@@ -1603,7 +1603,7 @@ Performs a file system hardening sync - fsync() - operation on the database file
 
 **[NO]DMTERM**
 
-Provides a mechanism to retain default line terminators for direct mode user interaction (including the BREAK command) independent of any TERMINATOR deviceparameter changes for $PRINCIPAL. With VIEW "NODMTERM", TERMINATOR deviceparameter apply to both READs from $PRINCIPAL and direct mode interactions. A case-insensitive value of the environment variable gtm_dmterm is "1", "yes", or "true" establishes a DMTERM state at process initiation; all other values, including no value, result in the default VIEW "NODMTERM" behavior. $VIEW("DMTERM") returns 1 for DMTERM mode or 0 for NODMTERM mode. 
+Provides a mechanism to retain default line terminators for direct mode user interaction (including the BREAK command) independent of any TERMINATOR deviceparameter changes for $PRINCIPAL. With VIEW "NODMTERM", TERMINATOR deviceparameter apply to both READs from $PRINCIPAL and direct mode interactions. A case-insensitive value of the environment variable ydb_dmterm is "1", "yes", or "true" establishes a DMTERM state at process initiation; all other values, including no value, result in the default VIEW "NODMTERM" behavior. $VIEW("DMTERM") returns 1 for DMTERM mode or 0 for NODMTERM mode. 
 
 **"EPOCH"[:REGION]**
 
@@ -1623,11 +1623,11 @@ With VIEW "FULL_BOOLEAN", YottaDB ensures that all side effect expression atoms,
 
 With VIEW "FULL_BOOLWARN", YottaDB not only evaluates Boolean expressions like "FULL_BOOLEAN" but produces a BOOLSIDEFFECT warning when it encounters Boolean expressions that may induce side-effects; that is: expressions with side effects after the first Boolean operator - extrinsic functions, external calls and $INCREMENT().
 
-YottaDB picks up the value of [NO]FULL_BOOL[EAN][WARN] from the environment variable gtm_boolean. If gtm_boolean is undefined or evaluates to an integer zero (0), the initial setting the default "NOFULL_BOOLEAN", if it evaluates to an integer one (1), the initial setting is "FULL_BOOLEAN" and if it evaluates to integer two (2) the initial setting is "FULL_BOOLWARN".
+YottaDB picks up the value of [NO]FULL_BOOL[EAN][WARN] from the environment variable ydb_boolean. If ydb_boolean is undefined or evaluates to an integer zero (0), the initial setting the default "NOFULL_BOOLEAN", if it evaluates to an integer one (1), the initial setting is "FULL_BOOLEAN" and if it evaluates to integer two (2) the initial setting is "FULL_BOOLWARN".
 
 VIEW "[NO]FULL_BOOL[EAN][WARN]" takes effect immediately for indirection and XECUTE.
 
-VIEW "NOFULLBOOLEAN" produces an error when gtm_side_effects is on. For more information on the gtm_side_effects environment variable, refer to the `Environment Variables section in the Basic Operations chapter <https://docs.yottadb.com/AdminOpsGuide/basicops.html#environment-variables>`_ of the Administration and Operations Guide.
+VIEW "NOFULLBOOLEAN" produces an error when ydb_side_effects is on. For more information on the ydb_side_effects environment variable, refer to the `Environment Variables section in the Basic Operations chapter <https://docs.yottadb.com/AdminOpsGuide/basicops.html#environment-variables>`_ of the Administration and Operations Guide.
 
 **"GDSCERT":value**
 
@@ -1679,23 +1679,23 @@ The default is VIEW "LINK":"NORECURSIVE".
 
 **[NO]LOGN[ONTP][=intexpr]**
 
-Allows a process to dynamically change the logging of NONTPRESTART messages to the operator log established at process startup by the environment variables gtm_nontprestart_log_delta and gtm_nontprestart_log_first.
+Allows a process to dynamically change the logging of NONTPRESTART messages to the operator log established at process startup by the environment variables ydb_nontprestart_log_delta and ydb_nontprestart_log_first.
 
 VIEW "NOLOGNONTP" turns off the logging of NONTPRESTART messages to the operator log.
 
-VIEW "LOGNONTP"[=intexpr] turns on logging of NONTPRESTART messages to the operator log. If no intexpr is specified, YottaDB uses the value of environment variable gtm_nontprestart_log_delta, if it is defined, and one otherwise (that is, every transaction restart will be logged). A negative value of intexpr turns off the logging of NONTPRESTART messages.
+VIEW "LOGNONTP"[=intexpr] turns on logging of NONTPRESTART messages to the operator log. If no intexpr is specified, YottaDB uses the value of environment variable ydb_nontprestart_log_delta, if it is defined, and one otherwise (that is, every transaction restart will be logged). A negative value of intexpr turns off the logging of NONTPRESTART messages.
 
-Note that it is not possible to perform the operations of gtm_nontprestart_log_first with VIEW "LOGNONTP"[=intexpr].
+Note that it is not possible to perform the operations of ydb_nontprestart_log_first with VIEW "LOGNONTP"[=intexpr].
 
 **[NO]LOGT[PRESTART][=intexpr]**
 
-Allows a process to dynamically change the logging of TPRESTART messages to the operator log established at process startup by the environment variables gtm_tprestart_log_delta and gtm_tprestart_log_first.
+Allows a process to dynamically change the logging of TPRESTART messages to the operator log established at process startup by the environment variables ydb_tprestart_log_delta and ydb_tprestart_log_first.
 
 VIEW "NOLOGTPRESTART" turns off the logging of TPRESTART messages to the operator log.
 
-VIEW "LOGTPRESTART"[=intexpr] turns on logging of TPRESTART messages to the operator log. If no intexpr is specified, YottaDB uses the value of environment variable gtm_tprestart_log_delta, if it is defined, and one otherwise (that is, every transaction restart will be logged). A negative value of intexpr turns off the logging of TPRESTART messages.
+VIEW "LOGTPRESTART"[=intexpr] turns on logging of TPRESTART messages to the operator log. If no intexpr is specified, YottaDB uses the value of environment variable ydb_tprestart_log_delta, if it is defined, and one otherwise (that is, every transaction restart will be logged). A negative value of intexpr turns off the logging of TPRESTART messages.
 
-Note that it is not possible to perform the operations of gtm_tprestart_log_first with VIEW "LOGTPRESTART"[=intexpr].
+Note that it is not possible to perform the operations of ydb_tprestart_log_first with VIEW "LOGTPRESTART"[=intexpr].
 
 **LV_GCCOL**
 
@@ -1721,7 +1721,7 @@ NEVERLVNULLSUBS disallows any variant of SET or KILL ($DATA(),$GET(),$ORDER(), a
 
 LVNULLSUBS allows local arrays to have empty string subscripts.
 
-At process startup, YottaDB initializes [NEVER][NO]LVNULLSUBS from $gtm_lvnullsubs. Set the environment variable $gtm_lvnullsubsv to:
+At process startup, YottaDB initializes [NEVER][NO]LVNULLSUBS from $ydb_lvnullsubs. Set the environment variable $ydb_lvnullsubsv to:
 
 * 0 - equivalent to VIEW "NOLVNULLSUBS"
 * 1 (the default) - equivalent to VIEW "LVNULLSUBS" or
@@ -1759,7 +1759,7 @@ Identifies the file containing definitions of unique patterns for use with the "
 
 **"POOLLIMIT":<region>:expr**
 
-VIEW "POOLLIMIT":<region>:expr, where expr is of the form n[%] provides a mechanism for a process that has the potential to "churn" global buffers to limit the potential impact on other processes by restricting the number of global buffers it uses. If the expression ends with a per-cent sign (%), the number is taken as an as a percentage of the configured global buffers and otherwise as an ordinal number of preferred buffers; standard M parsing and integer conversions apply. Preferred buffer values are limited to between 32 and one less than half the buffer pool inclusive; with the exception of zero (0) or 100 per cent, which turn off the limitation; specifications exceeding those limits provide the value of the nearer limit. If the argument specifies "*" for the region, the command applies to all regions. $VIEW("POOLLIMIT",<region>) returns the current value for the region as an ordinal number - zero (0) when there is no limit in place. Note that this facility is designed for use by a relatively small subset of processes. In addition, MUPIP REORG uses this facility to limit its buffers to a value established by the environment variable gtm_poollimit using the syntax described for VIEW "POOLLIMIT" with a default of 64 if gtm_poollimit is not specified. Note that this may slightly slow a standalone REORG but can be overridden by defining gtm_poollimit as 0 or "100%". 
+VIEW "POOLLIMIT":<region>:expr, where expr is of the form n[%] provides a mechanism for a process that has the potential to "churn" global buffers to limit the potential impact on other processes by restricting the number of global buffers it uses. If the expression ends with a per-cent sign (%), the number is taken as an as a percentage of the configured global buffers and otherwise as an ordinal number of preferred buffers; standard M parsing and integer conversions apply. Preferred buffer values are limited to between 32 and one less than half the buffer pool inclusive; with the exception of zero (0) or 100 per cent, which turn off the limitation; specifications exceeding those limits provide the value of the nearer limit. If the argument specifies "*" for the region, the command applies to all regions. $VIEW("POOLLIMIT",<region>) returns the current value for the region as an ordinal number - zero (0) when there is no limit in place. Note that this facility is designed for use by a relatively small subset of processes. In addition, MUPIP REORG uses this facility to limit its buffers to a value established by the environment variable ydb_poollimit using the syntax described for VIEW "POOLLIMIT" with a default of 64 if ydb_poollimit is not specified. Note that this may slightly slow a standalone REORG but can be overridden by defining ydb_poollimit as 0 or "100%". 
 
 **RCTLDUMP**
 
@@ -1776,9 +1776,9 @@ Resets all the process-private global access statistics to 0. This is particular
 
 Opt in or out of sharing process statistics for monitoring by other processes.
 
-YottaDB provides a fast and efficient mechanism for processes to share their database access statistics for other processes to monitor. Processes opt in or out with the VIEW "[NO]STATSHARE" command, defaulting to VIEW "NOSTATSHARE". At process startup, a value of 1, or any case-independent string or leading substrings of "TRUE" or "YES" in the environment variable gtm_statshare provides an initial setting of VIEW "STATSHARE". When a process changes whether it is opting in or out, there is no change to the output of a ZSHOW "G" within that process. YottaDB does not permit this form of the VIEW command within a TP transaction. Monitoring the statistics of other processes does not require opting-in.
+YottaDB provides a fast and efficient mechanism for processes to share their database access statistics for other processes to monitor. Processes opt in or out with the VIEW "[NO]STATSHARE" command, defaulting to VIEW "NOSTATSHARE". At process startup, a value of 1, or any case-independent string or leading substrings of "TRUE" or "YES" in the environment variable ydb_statshare provides an initial setting of VIEW "STATSHARE". When a process changes whether it is opting in or out, there is no change to the output of a ZSHOW "G" within that process. YottaDB does not permit this form of the VIEW command within a TP transaction. Monitoring the statistics of other processes does not require opting-in.
 
-Processes opted-in place their statistics as binary data in database files located in the directory specified by the gtm_statsdir environment variable. All processes that share statistics MUST use the same value for $gtm_statsdir. The ^%YGBLSTAT utility program gathers and reports statistics. 
+Processes opted-in place their statistics as binary data in database files located in the directory specified by the ydb_statsdir environment variable. All processes that share statistics MUST use the same value for $ydb_statsdir. The ^%YGBLSTAT utility program gathers and reports statistics. 
 
 **STP_GCOL**
 
@@ -1791,7 +1791,7 @@ Starts a string-pool garbage collection, which normally happens automatically at
 
 Enables or disables handling of undefined variables as errors. With UNDEF, YottaDB handles all references to undefined local or global variables as errors. With NOUNDEF, YottaDB handles all references to undefined local or global variables as if the variable had a value of the empty string. In other words, YottaDB treats all variables appearing in expressions as if they were the argument of an implicit $GET(). UNDEF is the default.
 
-The environment variable $gtm_noundef specifies the initial value value of [NO]UNDEF at process startup. If it is defined, and evaluates to a non-zero integer or any case-independent string or leading substring of "TRUE" or "YES", then YottaDB treats undefined variables as having an implicit value of an empty string. 
+The environment variable $ydb_noundef specifies the initial value value of [NO]UNDEF at process startup. If it is defined, and evaluates to a non-zero integer or any case-independent string or leading substring of "TRUE" or "YES", then YottaDB treats undefined variables as having an implicit value of an empty string. 
 
 .. note::
    NOUNDEF does not apply to an undefined FOR control variable. This prevents an increment (or decrement) of an undefined FOR control variable from getting into an unintended infinite loop. For example, FOR A=1:1:10 KILL A gives an UNDEF error on the increment from 1 to 2 even with VIEW "NOUNDEF". 
@@ -1804,7 +1804,7 @@ The feature turns on (value=1) or turns off (value=0) M-profiling. This expressi
 
 The expression is optional when turning M-profiling off, if it exists, it overrides the global variable set when M-profiling was turned on.
 
-gtm_trace_gbl_name enables YottaDB tracing at process startup. Setting gtm_trace_gbl_name to a valid global variable name instructs YottaDB to report the data in the specified global when a VIEW command disables the tracing, or implicitly at process termination. This setting behaves as if the process issued a VIEW "TRACE" command at process startup. However, gtm_trace_gbl_name has a capability not available with the VIEW command, such that if the environment variable is defined but evaluates to zero (0) or, only on UNIX, to the empty string, YottaDB collects the M-profiling data in memory and discards it when the process terminates (this feature is mainly used for in-house testing). Note that having this feature activated for process that otherwise do not open a database file (such as GDE) can cause them to encounter an error.
+ydb_trace_gbl_name enables YottaDB tracing at process startup. Setting ydb_trace_gbl_name to a valid global variable name instructs YottaDB to report the data in the specified global when a VIEW command disables the tracing, or implicitly at process termination. This setting behaves as if the process issued a VIEW "TRACE" command at process startup. However, ydb_trace_gbl_name has a capability not available with the VIEW command, such that if the environment variable is defined but evaluates to zero (0) or, only on UNIX, to the empty string, YottaDB collects the M-profiling data in memory and discards it when the process terminates (this feature is mainly used for in-house testing). Note that having this feature activated for process that otherwise do not open a database file (such as GDE) can cause them to encounter an error.
 
 In addition, if a process issues a malformed VIEW command that attempts to turn tracing off, YottaDB issues an error but retains all accumulated profiling data and continues tracing. If the tracing is still enabled at the process shutdown and the trace start specified a reporting location, YottaDB attempts to place the trace data there. Note that if there is a problem updating the specified trace-reporting global variable, YottaDB issues an error at process termination.
 
@@ -2210,7 +2210,7 @@ On executing fortypes, the output looks something like the following:
 
 Determines whether four digit year code is active for $ZDATE() function. YottaDB defaults to zero (0), that is, two digit output. For more usage information, refer to `“$ZDate()” <https://docs.yottadb.com/ProgrammersGuide/functions.html#zdate>`_.
 
-If no value is given with the VIEW command, it turns four digit code on. It is equivalent to the intrinsic special variable $ZDATEFORM. Use $ZDATEFORM to set this VIEW keyword. Also, logical name environment variable gtm_zdate_form may be used to set the initial value to this factor.
+If no value is given with the VIEW command, it turns four digit code on. It is equivalent to the intrinsic special variable $ZDATEFORM. Use $ZDATEFORM to set this VIEW keyword. Also, logical name environment variable ydb_zdate_form may be used to set the initial value to this factor.
 
 ++++++++++++++++++++++++
 Examples of VIEW
@@ -2234,7 +2234,7 @@ Example 2:
    YDB>ZLink "NOSENSE"
    %YDB-E-LABELMISSING Label referenced but
    not defined:lab
-   %YDB-I-SRCNAM in source module /home/gtmuser1/.yottadb/r1.20_x86/r/
+   %YDB-I-SRCNAM in source module /home/gtmuser1/.yottadb/V5.4-002B_x86/r/
    NOSENSE.m
    YDB>ZPrint ^NOSENSE
    NOSENSE;
@@ -2292,7 +2292,7 @@ Because XECUTE causes run-time compilation in YottaDB, and because it tends to o
 
 YottaDB compiles XECUTE <literal> at compile time when the literal is valid YottaDB code that has minimal impact on the M virtual machine. An XECUTE literal containing GOTO, NEW, QUIT, (nested) XECUTE and indirection can't be precompiled because of the interaction of those features with the stack architecture of the M virtual machine. Precompiled XECUTE literals do not show up in $STATCK() as having a separate stack level, but rather "disappear" into the stack level of the original XECUTE. Please observe the following cautions: 
 
-* ensure you compile with the same YottaDB version, $gtm_chset, $gtm_local_collate, $gtm_patnumeric, $gtm_pattern_file and $gtm_pattern_table values (or lack thereof) as those used to run your application.
+* ensure you compile with the same YottaDB version, $ydb_chset, $ydb_local_collate, $ydb_patnumeric, $ydb_pattern_file and $ydb_pattern_table values (or lack thereof) as those used to run your application.
 * If the application changes the run time values controlled by those environment variables, use variable operands or indirection, rather than literals for operands with pattern match (?) or sorts-after (]]).
 
 Note that indirection almost always performs better than an XECUTE that can't be precompiled. Note also that adding a QUIT at the end of an XECUTE that does not contain a FOR will leave it for run time compilation.
@@ -2694,7 +2694,7 @@ ZGOTO resembles HALT (and not QUIT) in that it causes an exit regardless of the 
 
 ZGOTO $ZLEVEL:LABEL^ROUTINE produces identical results to GOTO LABEL^ROUTINE. ZGOTO $ZLEVEL-1 responds like a QUIT (followed by ZCONTINUE, if in Direct Mode). If the integer expression evaluates to a value greater than the current value of $ZLEVEL or less than zero (0), YottaDB issues a run-time error.
 
-If ZGOTO has no entryref, it performs some number of implicit QUITs and transfers control to the next command at the specified level. If ZGOTO has no argument, it behaves like ZGOTO 1, which resumes operation of the lowest level YottaDB routine as displayed by ZSHOW "S". In the image invoked by $gtm_dist mumps -direct, a ZGOTO without arguments returns the process to Direct Mode.
+If ZGOTO has no entryref, it performs some number of implicit QUITs and transfers control to the next command at the specified level. If ZGOTO has no argument, it behaves like ZGOTO 1, which resumes operation of the lowest level YottaDB routine as displayed by ZSHOW "S". In the image invoked by $ydb_dist mumps -direct, a ZGOTO without arguments returns the process to Direct Mode.
 
 ZGOTO provides a useful debugging tool in Direct Mode. However, because ZGOTO is not conducive to structured coding, it is best to restrict its use in production programs to error handling. For more information on YottaDB error handling, refer to `Chapter 13: “Error Processing” <https://docs.yottadb.com/ProgrammersGuide/errproc.html>`_.
 
@@ -2768,7 +2768,7 @@ The format of the ZHELP command is:
 * The optional first expression specifies the help topic.
 * If ZHELP has no argument or expr1="", ZHELP invokes base level help; at least two (2) spaces must follow a ZHELP command with no argument to separate it from the next command on the line.
 * The optional second expression specifies the name of a Global Directory containing ^HELP.
-* If ZHELP does not specify the second expression, the Global Directory defaults to $gtm_dist/gtmhelp.gld.
+* If ZHELP does not specify the second expression, the Global Directory defaults to $ydb_dist/gtmhelp.gld.
 * An indirection operator and an expression atom evaluating to a list of one or more ZHELP arguments form a legal argument for a ZHELP
 
 ++++++++++++++++++
@@ -2815,7 +2815,7 @@ ZLink
 
 The ZLINK command adds an executable YottaDB routine to the current process if the current process does not contain a copy of a routine. If the current process contains a copy of a routine and the routine is not active, the ZLINK command replaces the current routine process with a "new" version. If necessary, the ZLINK command compiles the routine prior to integrating it with the process.
 
-With VIEW "LINK":"RECURSIVE" specified or by starting the process with the environment variable gtm_link set to "RECURSIVE", the ZLINK command adds an executable routine even when a routine with the same name is active and available in the current stack. When a process links a routine with the same name as an existing routine, future calls use the new routine. Prior versions of that routine referenced by the stack remain tied to the stack until they QUIT, at which point they become inaccessible. This provides a mechanism to patch long-running processes.
+With VIEW "LINK":"RECURSIVE" specified or by starting the process with the environment variable ydb_link set to "RECURSIVE", the ZLINK command adds an executable routine even when a routine with the same name is active and available in the current stack. When a process links a routine with the same name as an existing routine, future calls use the new routine. Prior versions of that routine referenced by the stack remain tied to the stack until they QUIT, at which point they become inaccessible. This provides a mechanism to patch long-running processes.
 
 .. note::
    An active routine is displayed with $STACK() or ZSHOW "S" of the M virtual stack. By default, an attempt to replace an active routine results in a run-time error . To replace an active routine with a new version, either use VIEW "LINK":"RECURSIVE" or  remove the active routine from the stack using ZGOTO or the appropriate number of QUITs and then execute the ZLINK command.
@@ -2937,19 +2937,19 @@ Auto ZLINK Setup
 This section describes the procedure to setup the auto-relink functionality. YottaDB loads an object file linked from an object directory (in $ZROUTINES) with a \*-suffix (i.e. auto-relink-enabled) into a shared memory segment (referred to henceforth as a Rtnobj shared memory segment). At the invocation of DO, GOTO, or ZGOTO, extrinsic functions, ZBREAK, ZPRINT or $TEXT() that specify an entryref which includes a routine name (in contrast to a label without a routine name), YottaDB processes (and MUPIP processes executing trigger logic) automatically relink ("auto-relink") and execute published new versions of routines.
 
 .. note::
-   Label references (that is, without a routine name), whether direct or through indirection, always refer to the current routine, and do not invoke auto-relink logic. Use shell quoting rules when appending asterisks to directory names in the gtmroutines environment variable - asterisks must be passed in to YottaDB, and not expanded by the shell. YottaDB accepts but ignores asterisk suffixes to directory names on 32-bit Linux on x86 platforms, where it does not provide auto-relinking.
+   Label references (that is, without a routine name), whether direct or through indirection, always refer to the current routine, and do not invoke auto-relink logic. Use shell quoting rules when appending asterisks to directory names in the ydb_routines environment variable - asterisks must be passed in to YottaDB, and not expanded by the shell. YottaDB accepts but ignores asterisk suffixes to directory names on 32-bit Linux on x86 platforms, where it does not provide auto-relinking.
 
 The ZRUPDATE command publishes of new versions of routines to subscribers. To remove routines, delete the object files and publish the names of the deleted object files. Removal requires file names to be explicitly specified, because patterns with wildcards cannot match deleted files.
 
 If the path to a file is non-existent, the request is ignored except in the case where one desires a currently shared object file (one that was accessed before it was deleted) to no longer be shared.
 
-For each auto-relink enabled directory which a YottaDB process accesses while searching through $ZROUTINES, YottaDB creates a small control file (Relinkctl) in the directory identified by $gtm_linktmpdir (defaulting to $gtm_tmp, which in turn defaults to /tmp, if unspecified). The names of these files are of the form gtm-relinkctl-<murmur> where <murmur> is a hash of the realpath() to an auto-relink directory; for example: /tmp/gtm-relinkctl-f0938d18ab001a7ef09c2bfba946f002). With each Relinkctl file, YottaDB creates and associates a block of shared memory that contains associated control structures. Among the structures is a cycle number corresponding to each routine found in the routine directory; a change in the cycle number informs a process that it may need to determine whether there is a new version of a routine. Although YottaDB only creates relinkctl records for routines that actually exist on disk, it may increment cycle numbers for existing relinkctl records even if they no longer exist on disk.
+For each auto-relink enabled directory which a YottaDB process accesses while searching through $ZROUTINES, YottaDB creates a small control file (Relinkctl) in the directory identified by $ydb_linktmpdir (defaulting to $ydb_tmp, which in turn defaults to /tmp, if unspecified). The names of these files are of the form ydb-relinkctl-<murmur> where <murmur> is a hash of the realpath() to an auto-relink directory; for example: /tmp/ydb-relinkctl-f0938d18ab001a7ef09c2bfba946f002). With each Relinkctl file, YottaDB creates and associates a block of shared memory that contains associated control structures. Among the structures is a cycle number corresponding to each routine found in the routine directory; a change in the cycle number informs a process that it may need to determine whether there is a new version of a routine. Although YottaDB only creates relinkctl records for routines that actually exist on disk, it may increment cycle numbers for existing relinkctl records even if they no longer exist on disk.
 
 YottaDB creates both the Relinkctl file and shared memory with permissions based on the logic described in the "IPC Permissions" column of the "Shared Resource Authorization Permissions" section in the `Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/index.html>`_, except that the object directory, rather than the database file, provides the base permissions.
 
 The MUPIP RCTLDUMP command reports information related to relinkctl files and their associated shared memory segments.
 
-The environment variable gtm_autorelink_keeprtn if set to 1, t[rue], or y[es] causes exiting processes to leave auto-relinked object code in the shared memory repositories, while if undefined, 0, f[alse] or n[o] causes exiting processes to purge any routines currently use by no processes. All values are case-independent. When gtm_autorelink_keeprtn is defined and TRUE:
+The environment variable ydb_autorelink_keeprtn if set to 1, t[rue], or y[es] causes exiting processes to leave auto-relinked object code in the shared memory repositories, while if undefined, 0, f[alse] or n[o] causes exiting processes to purge any routines currently use by no processes. All values are case-independent. When ydb_autorelink_keeprtn is defined and TRUE:
 
 * Process exit is simplified, with the performance gain - faster process termination - likely to be observable only when a large number of processes exit concurrently.
 * Where routines are likely to be repeatedly used by other processes, such as in a production environment, leaving a routine in shared memory even when no longer used by existing processes, results in slightly faster linking of that routine by future processes, although the effect may not be observable except when an application frequently uses short-lived processes, such as YottaDB routines invoked by web servers using a CGI interface.
@@ -2978,14 +2978,14 @@ The benefits of auto-relink are as follows:
 * Auto-relink provides the convenience of automatically running the current routine under most conditions. When combined with VIEW "LINK":"RECURSIVE", auto-relink automatically relinks routines even when they are active and available in the current stack. While it is possible to run auto-relink without VIEW "LINK":"RECURSIVE", routines currently active in a stack do not auto-relink and, if explicitly ZLINK'd, induce a LOADRUNNING error until they complete or are removed from the stack.
 * Use of auto-relink loads routine object files into the shared memory. Therefore, the use of a given routine by multiple processes results in significant memory savings (one copy per system instead of one copy per user). This is analogous to the memory sharing from using shared object libraries, but allows dynamic updates, where shared libraries do not.
 * When combined with routines explicitly compiled with the -embed_source option or auto-compiled with $ZCOMPILE set to "-embed_source", auto-relink may improve the performance of $TEXT() and ZPRINT as they access source code from shared memory instead of the disk.
-* When $gtm_autorelink_keeprtn is defined and TRUE, applications that frequently invoke YottaDB routines in short running processes (such as those over interfaces like CGI) may give better performance because it keeps routines in shared memory so that they can be reused when short running processes need them.
+* When $ydb_autorelink_keeprtn is defined and TRUE, applications that frequently invoke YottaDB routines in short running processes (such as those over interfaces like CGI) may give better performance because it keeps routines in shared memory so that they can be reused when short running processes need them.
 
 The use and setup of the auto-relink facility depends upon the requirements. Here is an example:
 
 .. parsed-literal::
    $ ydb
    YDB>w $zroutines
-   /home/jdoe/.yottadb/r1.20_x86_64/o*(/home/jdoe/.yottadb/r1.20_x86_64/r /home/jdoe/.yottadb/r) /usr/local/lib/yottadb/r1.20/plugin/o/_POSIX.so /usr/local/lib/yottadb/r1.20/plugin/o(/usr/local/lib/yottadb/r1.20/plugin/r) /usr/local/lib/yottadb/r1.20/libgtmutil.so /usr/local/lib/yottadb/r1.20
+   /home/jdoe/.yottadb/r1.20_x86_64/o*(/home/jdoe/.yottadb/r1.20_x86_64/r /home/jdoe/.yottadb/r) /usr/local/lib/yottadb/r1.20_x86_64/plugin/o/_POSIX.so /usr/local/lib/yottadb/r1.20_x86_64/plugin/o(/usr/local/lib/yottadb/r1.20_x86_64/plugin/r) /usr/local/lib/yottadb/r1.20_x86_64/libyottadbutil.so /usr/local/lib/yottadb/r1.20
 
 In $ZROUTINES, the \*-suffix after the object directory enables the auto-relink facility. By default, the ydb/ydb_env_set scripts that are available as part of YottaDB distribution on sourceforge.net have auto-relink enabled.
 
@@ -2998,7 +2998,7 @@ With auto-relink, YottaDB creates an initial Rtnobj shared memory segment of 1 M
 
 Refer to your OS documentation to configure shared memory limits (for example, on common Linux systems, the kernel.shmmax parameter in /etc/sysctl.conf).
 
-If your routines require more MiB shared memory, set the environment variable $gtm_autorelink_shm to an integer value (in powers of two). When auto-relink needs more shared memory for storing routines, YottaDB automatically allocates twice the size of $gtm_autorelink_shm MiB for auto-relink operations.
+If your routines require more MiB shared memory, set the environment variable $ydb_autorelink_shm to an integer value (in powers of two). When auto-relink needs more shared memory for storing routines, YottaDB automatically allocates twice the size of $ydb_autorelink_shm MiB for auto-relink operations.
 
 .. parsed-literal::
    YDB>zedit "myprogram.m"
@@ -3011,12 +3011,12 @@ ZEDIT puts a new file into the first source directory in $ZROUTINES, that is, in
 
 The first invocation of an implicit ZLINK (DO, GOTO ZGOTO, ZPRINT, $TEXT() or function/extrinsic invocation) or an explicit ZLINK "myprogram.m" or ZRUPDATE "/home/jdoe/.yottadb/r1.20_x86_64/myprogram.o" creates a Relinkctl file if one does not already exist and the associated shared memory. The relinkctl file has a name associated with the hash of the directory to provide a pointer in the form of segment ids to shared memory so that processes can locate routines.
 
-As the gtm_linktmpdir environment variable is not set by default in the ydb/ydb_env_set scripts, YottaDB stores the Relinkctl file in the directory pointed to by the gtm_tmp environment variable.
+As the ydb_linktmpdir environment variable is not set by default in the ydb/ydb_env_set scripts, YottaDB stores the Relinkctl file in the directory pointed to by the ydb_tmp environment variable.
 
 .. parsed-literal::
    YDB>zshow "A"
-   Object Directory : /home/jdoe/.yottadb/r1.20_x86_64/o
-   Relinkctl filename : /tmp/yottadb/r1.20_x86_64/gtm-relinkctl-43b26ca8384ddbf74b94d90a830c0bc9
+   Object Directory : /home/jdoe/.yottadb/r120/o
+   Relinkctl filename : /tmp/yottadb/r120/ydb-relinkctl-43b26ca8384ddbf74b94d90a830c0bc9
    # of routines : 1
    # of attached processes : 1
    Relinkctl shared memory : shmid: 375586821 shmlen: 0x5800000
@@ -3223,7 +3223,7 @@ Publishes the new versions of routines to subscribers. The format of the ZRUPDAT
 * ZRUPDATE rejects file-name arguments that are symbolic links or start with a percent-sign (%)
 * ZRUPDATE recognizes question-mark (?) as a single character wild-card
 * If the path to a file is non-existent, the request is ignored except in the case where one desires a currently shared object file (one that was accessed before it was deleted) to no longer be shared.
-* To effect auto-relink, YottaDB creates small temporary files in the directory referred to by $gtm_linktmpdir (defaulting to $gtm_tmp, which in turn defaults to /tmp, if unspecified). The names of these files are of the form gtm-relinkctl<md5sum> where <md5sum> is a hash of the realpath() to an auto-relink directory. The group and permissions match those for the directory as described in the section `Shared Resources Authorization Permissions in Appendix E (YottaDB Security Philosophy) <https://docs.yottadb.com/AdminOpsGuide/securityph.html#shared-resource-authorization-permissions>`_ of the Administration and Operations Guide. YottaDB recommends that all processes that share a directory whose contents are subject to ZRUPDATE use the same value for $gtm_linktmpdir so that all processes see update notifications - with different values of $gtm_linktmpdir, a ZRUPDATE by a process with one value of $gtm_linktmpdir would not be observed by a process with a different value of that environment variable.
+* To effect auto-relink, YottaDB creates small temporary files in the directory referred to by $ydb_linktmpdir (defaulting to $ydb_tmp, which in turn defaults to /tmp, if unspecified). The names of these files are of the form ydb-relinkctl<md5sum> where <md5sum> is a hash of the realpath() to an auto-relink directory. The group and permissions match those for the directory as described in the section `Shared Resources Authorization Permissions in Appendix E (YottaDB Security Philosophy) <https://docs.yottadb.com/AdminOpsGuide/securityph.html#shared-resource-authorization-permissions>`_ of the Administration and Operations Guide. YottaDB recommends that all processes that share a directory whose contents are subject to ZRUPDATE use the same value for $ydb_linktmpdir so that all processes see update notifications - with different values of $ydb_linktmpdir, a ZRUPDATE by a process with one value of $ydb_linktmpdir would not be observed by a process with a different value of that environment variable.
 * ZRUPDATE always updates the existing shared memory relinkctl information for a file with an existing entry.
 
 -----------------------
@@ -3461,7 +3461,7 @@ For process that has access to two database files produces results like the foll
    NTW:203,NTR:4,NBW:212,NBR:414,NR0:0,NR1:0,NR2:0,NR3:0,TTW:1,TTR:0,TRB:0,TBW:2,TBR:6,
    TR0:0,TR1:0,TR2:0,TR3:0,TR4:0,TC0:0,TC1:0,TC2:0,TC3:0,TC4:0,ZTR:0,DFL:0,DFS:0,JFL:0,JFS:0,JBB:0,JFB:0,JFW:0,JRL:0,JRP:0,
    JRE:0,JRI:0,JRO:0,JEX:0,DEX:0,CAT:4,CFE:0,CFS:0,CFT:0,CQS:0,CQT:0,CYS:0,CYT:0,BTD:0
-   GLD:/home/gtmuser1/.yottadb/r1.20_x86/g/mumps.gld,REG:DEFAULT,SET:205,KIL:0,GET:1,
+   GLD:/home/gtmuser1/.yottadb/r120/g/mumps.gld,REG:DEFAULT,SET:205,KIL:0,GET:1,
    DTA:0,ORD:0,ZPR:0,QRY:0,LKS:0,LKF:0,CTN:411,DRD:9,DWT:15,NTW:2
    03,NTR:4,NBW:212,NBR:414,NR0:0,NR1:0,NR2:0,NR3:0,TTW:1,TTR:0,TRB:0,TBW:2,TBR:6,TR0:0,
    TR1:0,TR2:0,TR3:0,TR4:0,TC0:0,TC1:0,TC2:0,TC3:0,TC4:0
