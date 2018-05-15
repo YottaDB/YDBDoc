@@ -192,7 +192,7 @@ Run YottaDB
 YottaDB needs several environment variables to be set up. YottaDB provides a script that sets up reasonable defaults and allows you to start using YottaDB immediately. When you set up environments in YottaDB, you should set up your own scripting, but the default is a good place to start. You can source the ydb_env_set file in the directory in which you have installed YottaDB (e.g, /usr/local/lib/yottadb/r1.20_x86_64/ydb_env_set) to set up reasonable defaults or simply execute the script ydb to execute YottaDB. A default environment is created only if it does not exist already.
 
 .. parsed-literal::
-   yottadbuser@yottadbworkshop:~$ source /usr/local/lib/yottadb/r1.20_x86_64/ydb_env_set
+   yottadbuser@yottadbworkshop:~$ source /usr/local/lib/yottadb/r120/ydb_env_set
 
 You can run the script that runs YottaDB as follows:
 
@@ -265,7 +265,7 @@ With YottaDB, you can write applications that implement international character 
 
 .. parsed-literal::
    yottadbuser@yottadbworkshop:~$ export ydb_chset=UTF-8 LC_CTYPE=en_US.utf8
-   yottadbuser@yottadbworkshop:~$ source /usr/local/lib/yottadb/r1.20_x86_64/ydb_env_set
+   yottadbuser@yottadbworkshop:~$ source /usr/local/lib/yottadb/r120/ydb_env_set
    yottadbuser@yottadbworkshop:~$ ydb
    YDB>write $zchset
    UTF-8
@@ -880,7 +880,7 @@ Environment Variables
 
 The operation of YottaDB is controlled by a number of environment variables. The most important ones are ydb_dist, ydb_routines and ydb_gbldir, which are discussed above. The file ydb_env_set that is supplied with YottaDB, and which must be sourced rather than executed, attempts to provide reasonable default values. By setting environment variables either before sourcing it or after (the former is preferred, because ydb_env_set can attempt to deal with interactions), you can provide your own values instead of using the defaults.
 
-Review the file /usr/local/lib/yottadb/r1.20_x86_64/ydb_env_set to see how the environment variables are set. Study the order in which they are set and see if you can understand why.
+Review the file /usr/local/lib/yottadb/r120/ydb_env_set to see how the environment variables are set. Study the order in which they are set and see if you can understand why.
 
 The following environment variable is explicitly set by ydb_env_set:
 
@@ -938,7 +938,7 @@ Here are the environment variables set by the default ydb_env_set file (which th
 
 .. parsed-literal::
    yottadbuser@yottadbworkshop:~$ env | grep ^ydb # No ydb environment variables defined initially
-   yottadbuser@yottadbworkshop:~$ source /usr/local/lib/yottadb/r1.20_x86_64/ydb_env_set
+   yottadbuser@yottadbworkshop:~$ source /usr/local/lib/yottadb/r120/ydb_env_set
    yottadbuser@yottadbworkshop:~$ env | grep ^ydb
    ydb_retention=42
    ydb_log=/tmp/yottadb/r1.20_x86_64
@@ -995,7 +995,7 @@ Create another user who is also a member of the group. See that the user can rea
    yottadbuser@yottadbworkshop:~$ sudo su - staffuser
    staffuser@yottadbworkshop:~$ pwd
    /home/staffuser
-   staffuser@yottadbworkshop:~$ export ydb_dist=/usr/local/lib/yottadb/r1.20_x86_64/
+   staffuser@yottadbworkshop:~$ export ydb_dist=/usr/local/lib/yottadb/r120/
    staffuser@yottadbworkshop:~$ export ydb_rel=r1.20_x86_64
    staffuser@yottadbworkshop:~$ export gtmdir=/home/yottadbuser/.yottadb
    staffuser@yottadbworkshop:~$ export ydb_gbldir=$gtmdir/$ydb_rel/g/yottadb.gld
@@ -1145,9 +1145,9 @@ How did the recovery happen? The answer is in the ydb script.
    #                                                               #
    #################################################################
 
-   if [ ! -f "/usr/local/lib/yottadb/r1.20_x86_64"/ydb_env_set ] ; then echo Cannot find file "/usr/local/lib/yottadb/r1.20_x86_64"/ydb_env_set to source
+   if [ ! -f "/usr/local/lib/yottadb/r120"/ydb_env_set ] ; then echo Cannot find file "/usr/local/lib/yottadb/r120"/ydb_env_set to source
    else
-       . "/usr/local/lib/yottadb/r1.20_x86_64"/ydb_env_set
+       . "/usr/local/lib/yottadb/r120"/ydb_env_set
        timestamp=`date -u +%Y%m%d%H%M%S`"UTC"
        ( cd `dirname $ydb_gbldir` ; \\
           $ydb_dist/mupip journal -recover -backward "*" 2>$ydb_tmp/"$USER"_$timestamp"_mupip_recover" && \\
@@ -1203,7 +1203,7 @@ Hints:
 
 - Create an ydbenv file in the directory to set up the environment variables. You can then source it with a command such as source ./ydbenv to set up the environment. Set up the environment variables yourself and do not source /usr/local/lib/yottadb/r1.20_x86_64/ydb_env_set because it will recover the database when you source it and you will miss the point of the exercise. At a minimum, the env file should specify values for the following environment variables: ydb_dist (set to /usr/local/lib/yottadb/r1.20_x86_64), ydb_gbldir (set to $HOME/exDir/yottadb.gld), ydb_log and ydb_tmp (set to /tmp/yottadb/r1.20_x86_64; make sure it exists), ydb_principal_editing (set to EDITING), ydb_routines (set to "$HOME/exDir* $ydb_dist/libyottadbutil.so"). Make sure the directory /tmp/yottadb/r120 exists by creating it in the ydbenv file with a mkdir -p command. It may be convenient to alias mumps to $ydb_dist/mumps and mupip to $ydb_dist/mupip. [Hint: if you read a little further, you may find a ydbenv file that you can copy and paste into an editor.]
 
-- In GDE, source the commands in the file /usr/local/lib/yottadb/r1.20_x86_64/gdedefaults to set reasonable defaults for the global directory and then change the database file names in the segment and the journal file names in the region to place the database and journal files in /home/yottadbuser/exDir.
+- In GDE, source the commands in the file /usr/local/lib/yottadb/r120/gdedefaults to set reasonable defaults for the global directory and then change the database file names in the segment and the journal file names in the region to place the database and journal files in /home/yottadbuser/exDir.
 
 - Look at the example with mammalogists and carcinologists for commands to set up journaling.
 
@@ -1221,7 +1221,7 @@ Because replication builds on journaling, use the directory exDir created above.
 
 .. parsed-literal::
    yottadbuser@yottadbworkshop:~$ cd exDir ; cat ydbenv
-   export ydb_dist=/usr/local/lib/yottadb/r1.20_x86_64
+   export ydb_dist=/usr/local/lib/yottadb/r120
    export ydb_gbldir=$HOME/exDir/gtm.gld
    export ydb_log=/tmp/yottadb/r1.20_x86_64
    export ydb_tmp=$ydb_log
@@ -2598,7 +2598,7 @@ This exercise uses two sessions, one with a mumps process in UTF-8 mode and the 
 
 .. parsed-literal::
    yottadbuser@yottadbworkshop:~/utf8demo$ cd utf8demo; vim ydbenv_m ; cat ydbenv_m
-   export ydb_dist=/usr/local/lib/yottadb/r1.20_x86_64/
+   export ydb_dist=/usr/local/lib/yottadb/r120/
    export ydb_gbldir=$HOME/utf8demo/yottadb.gld
    export ydb_log=/tmp/yottadb/r1.20_x86_64
    export ydb_tmp=$ydb_log
@@ -2635,8 +2635,8 @@ Create a global directory and database file, as you did before. Only now, do thi
    %GDE-I-GDUSEDEFS, Using defaults for Global Directory 
            /home/yottadbuser/utf8demo/yottadb.gld
 
-   GDE> @/usr/local/lib/yottadb/r1.20_x86_64/utf8/gdedefaults
-   %GDE-I-EXECOM, Executing command file /usr/local/lib/yottadb/r1.20_x86_64/utf8/gdedefaults
+   GDE> @/usr/local/lib/yottadb/r120/utf8/gdedefaults
+   %GDE-I-EXECOM, Executing command file /usr/local/lib/yottadb/r120/utf8/gdedefaults
 
    GDE> show -segment
 
@@ -2882,9 +2882,9 @@ Create a VistA directory. Use a g subdirectory for global variables, an o subdir
 .. parsed-literal::
    yottadbuser\@yottadbworkshop:~$ mkdir -p VistA/{g,o,r}
    yottadbuser\@yottadbworkshop:~$ vim VistA/ydbenv ; cat VistA/ydbenv
-   export ydb_dist=/usr/local/lib/yottadb/r1.20_x86_64/
+   export ydb_dist=/usr/local/lib/yottadb/r120/
    export ydb_gbldir=$HOME/VistA/g/yottadb.gld
-   export ydb_log=/tmp/yottadb/r1.20_x86_64
+   export ydb_log=/tmp/yottadb/r120
    export ydb_tmp=$ydb_log
    export ydb_repl_instance=$HOME/VistA/g/yottadb.repl
    export ydb_repl_instname=dummy
@@ -2897,8 +2897,8 @@ Create a VistA directory. Use a g subdirectory for global variables, an o subdir
    %GDE-I-GDUSEDEFS, Using defaults for Global Directory 
            /home/yottadbuser/VistA/g/yottadb.gld
 
-   GDE> @/usr/local/lib/yottadb/r1.20_x86_64/gdedefaults
-   %GDE-I-EXECOM, Executing command file /usr/local/lib/yottadb/r1.20_x86_64/gdedefaults
+   GDE> @/usr/local/lib/yottadb/r120/gdedefaults
+   %GDE-I-EXECOM, Executing command file /usr/local/lib/yottadb/r120/gdedefaults
 
    GDE> change -segment DEFAULT -file=$HOME/VistA/g/yottadb.dat
    GDE> show -segment

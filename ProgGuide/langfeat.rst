@@ -361,11 +361,11 @@ With the same data and YottaDB null collation, the output of ZWR will be as foll
 
 **$ORDER()**:
 
-If the last subscript in the subscripted global or local variable name passed as a parameter to $Order() is null and a subscripted global or local variable with a null subscript exists, $ORDER() returns the next node at the specified level.
+If the last subscript in the subscripted global or local variable name passed as a parameter to $ORDER() is null and a subscripted global or local variable with a null subscript exists, $ORDER() returns the next node at the specified level.
 
-If the last subscript in the subscripted global or local variable name passed as a parameter to $Order() is null and a subscripted global or local variable with a null subscript does not exist, $ORDER() returns first node at the specified level.
+If the last subscript in the subscripted global or local variable name passed as a parameter to $ORDER() is null and a subscripted global or local variable with a null subscript does not exist, $ORDER() returns the first node at the specified level.
 
-If the last subscript in the subscripted global or local variable name is null and second argument of $ORDER() is -1, $ORDER() will always return the last node at the specified level regardless of the existence of subscripted global or local variable (with null subscript). This allows the user to traverse all the nodes in a specified level starting from the last.
+If the last subscript in the subscripted global or local variable name is null and second argument of $ORDER() is -1, $ORDER() will always return the last node at the specified level regardless of the existence of a subscripted global or local variable (with null subscript). This allows the user to traverse all the nodes in a specified level starting from the last.
 
 .. parsed-literal::
    YDB>ZWRITE
@@ -631,7 +631,7 @@ Example:
    static line_entry table[5], \*line, linetmp;
    /* Since these errors may occur before setup is complete, they are statics \*/
    static char \*errorstring1 ="Error in function initialization, environment variable GTM_CALLIN_START not defined. Environment translation failed.";
-   static char \*errorstring2 ="Error in function initialization, function pointers could not be determined. Envrironment translation failed.";
+   static char \*errorstring2 ="Error in function initialization, function pointers could not be determined. Environment translation failed.";
    #define ENV_VAR"GTM_CALLIN_START"
    typedef int(\*int_fptr)();
    int_fptr GTM_MALLOC;
@@ -830,7 +830,7 @@ Example:
 .. note::
    The exponential numeric form may lead to ambiguities in the meaning of subscripts. Because numeric subscripts collate ahead of string subscripts, the string subscript "01E5" is not the same as the numeric subscript 01E5.
 
-YottaDB handles numeric strings which are not canonical within the implementation as strings unless the application specifically requests they be treated as numbers. Any use in a context defined as numeric elicits numeric treatment; this includes operands of numeric operators, numeric literals, and some intrinsic function arguments. When the code creates a large number out of range , YottaDB gives a NUMOFLOW error. When the code creates a small fractional number out of range YottaDB treats it as zero (0). The YottaDB number range is (to the limit of accuracy) 1E-43 to 1E47. When the application creates an in-range number that exceeds the YottaDB numeric accuracy of 18 significant digits, YottaDB silently retains the most significant digits. With standard collation, YottaDB collates canonic numeric strings used as subscripts numerically, while it collates non-canonic numbers as strings. 
+YottaDB handles numeric strings which are not canonical within the implementation as strings unless the application specifically requests they be treated as numbers. Any use in a context defined as numeric elicits numeric treatment; this includes operands of numeric operators, numeric literals, and some intrinsic function arguments. When the code creates a large number out of range, YottaDB gives a NUMOFLOW error. When the code creates a small fractional number out of range YottaDB treats it as zero (0). The YottaDB number range is (to the limit of accuracy) 1E-43 to 1E47. When the application creates an in-range number that exceeds the YottaDB numeric accuracy of 18 significant digits, YottaDB silently retains the most significant digits. With standard collation, YottaDB collates canonic numeric strings used as subscripts numerically, while it collates non-canonic numbers as strings. 
 
 ----------------------------
 Expressions
@@ -1299,7 +1299,7 @@ A line of M code consists of the following elements in the following order:
 
 In addition to labels that follow the rules for M names, M accepts labels consisting only of digits. In a label consisting only of digits, leading zeros are considered significant. For example, labels 1 and 01 are different. Formallists may immediately follow a label. A Formallist consists of one or more names enclosed in parentheses (). Formallists identify local variables that "receive" passed values in M parameter passing. For more information, see `“Parameter Passing” <https://docs.yottadb.com/ProgrammersGuide/langfeat.html#parameter-passing>`_.
 
-In YottaDB, a colon (:) delimiter may be appended to the label, which causes the label to be treated as "local." Within the routine in which they appear, they perform exactly as they would without the trailing colon but they are available only during compilation and inaccessible to other routines and to indirection or XECUTE. Because references to local labels preceding their position in a routine produce a LABELUNKNOWN error at run-time, YottaDB recommends omitting the routinename from labelrefs to a local label. Using local labels reduces object size and linking overhead for both all types for dynamic linking except indirection and XECUTE. Use of local labels may either improve or impair performance; typically any difference is modest. The more likely they are to all be used within the code block at run-time, the more likely an improvement. In other words, conditional code paths which prevent all references to local variables appearing in the block may actually impair performance.
+In YottaDB, a colon (:) delimiter may be appended to the label, which causes the label to be treated as "local." Within the routine in which they appear, they perform exactly as they would without the trailing colon but they are available only during compilation and inaccessible to other routines and to indirection or XECUTE. Because references to local labels preceding their position in a routine produce a LABELUNKNOWN error at run-time, YottaDB recommends omitting the routinename from labelrefs to a local label. Using local labels reduces object size and linking overhead for all types of dynamic linking except indirection and XECUTE. Use of local labels may either improve or impair performance; typically any difference is modest. The more likely they are to all be used within the code block at run-time, the more likely an improvement. In other words, conditional code paths which prevent all references to local variables appearing in the block may actually impair performance.
 
 **Comments**
 
@@ -1844,6 +1844,7 @@ Here is an example message:
 
 .. note::
    Use VIEW [NO]LOGT[PRESTART][=intexpr] to enable or disable the logging of TPRESTART messages. Note that you can use the ydb_tprestart_log_delta and ydb_tprestart_log_first environment variables to set the frequency of TPRESTART messages. Use VIEW [NO]LOGN[ONTP][=intexpr] to enable or disable the logging of NONTPRESTART messages. This facility is the analog of TPRESTART tracking, but for non-TP mini-transacstions. Note that you can use the ydb_nontprestart_log_delta and ydb_nontprestart_log_first environment variables to set the frequency of the NONTPRESTART messages.For more information, refer to `“Key Words in VIEW Command” <https://docs.yottadb.com/ProgrammersGuide/commands.html#key-words-in-view-command>`_ and the `Environment Variables <https://docs.yottadb.com/AdminOpsGuide/basicops.html#environment-variables>`_ section of the Administration and Operations Guide.
+
 
 ++++++++++++++++++++++
 TP Example

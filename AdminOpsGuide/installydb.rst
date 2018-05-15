@@ -38,10 +38,10 @@ Before you begin installing YottaDB, perform the following tasks:
 .. note::
   Installing YottaDB on an NFS mounted directory is not recommended. Several NFS characteristics violate YottaDB database design assumptions which may manifest themselves as hard to diagnose problems. If you still choose to install and operate YottaDB from an NFS mounted directory, there are chances that at some point you will face significant problems with performance and response time. While you should never operate the YottaDB database and journal files from an NFS mounted directory you can safely, except on Linux, use an NFS mounted directory for keeping source and object code modules and performing sequential file IO. While NFS mounted files may work for you, historically they have not provided sufficient support for file locking over NFS to prevent intermittent errors when you have  significant concurrent file activity.
 
+
 -------------------------
 Installation Procedure
 -------------------------
-
 
 * Create a temporary directory and change to it, e.g.: mkdir /tmp/tmp ; cd /tmp/tmp
 
@@ -61,7 +61,7 @@ Compiling the Reference Implementation Plugin
 
 Compile the reference implementation plugin as follows:
 
-* Install the development headers and libraries for libgcrypt, libgpgme, libconfig, and libssl. On Linux, the package names of development libraries usually have a suffix such as -dev or -devel and are available through the package manager. For example, on Ubuntu_x86_64 a command like the following installs the required development libraries:
+* Install the development headers and libraries for libgcrypt, libgpgme, libconfig, and libssl. On Linux, the package names of development libraries usually have a suffix such as -dev or -devel and are available through the package manager. For example, on Ubuntu_x86_64, the following command installs the required development libraries:
 
 .. parsed-literal::
    sudo apt-get install libgcrypt11-dev libgpgme11-dev libconfig-dev libssl-dev
@@ -90,7 +90,7 @@ The package names vary by distribution/version.
 ydbinstall Script
 ---------------------
 
-ydbinstall is a stand-alone YottaDB installation script that installs YottaDB using reasonable defaults. ydbinstall is a part of the YottaDB binary distribution and you can also use it to install YottaDB from the temporary directory in which you unpack the YottaDB distribution. It allows considerable customization using the following command line switches:
+ydbinstall is a stand-alone YottaDB installation script that installs YottaDB using reasonable defaults. ydbinstall is a part of the YottaDB binary distribution and you can use it to install YottaDB from the temporary directory in which you unpack the YottaDB distribution. It allows considerable customization using the following command line switches:
 
 +-------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
 | Command Line Switches                                 | \* | Description                                                                                                            |
@@ -154,7 +154,7 @@ To run the ydbinstall script, run it as root.
 .. parsed-literal::
    sudo ./ydbinstall.sh
 
-This example installs the latest YottaDB release at /usr/local/lib/yottadb/version.
+This example installs the latest YottaDB release at /usr/local/lib/yottadb/version/
 
 .. parsed-literal::
    sudo ./ydbinstall.sh --utf8 default --verbose
@@ -169,7 +169,7 @@ This example installs YottaDB release r1.20 in the r120 directory.
 .. parsed-literal::
    sudo ./ydbinstall.sh --gtm
 
-This example installs the latest GT.M version at /usr/local/lib/fis-gtm/version.
+This example installs the latest GT.M version at /usr/local/lib/yottadb/version/
 
 
 

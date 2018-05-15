@@ -193,7 +193,7 @@ DONE: QUIT ; or HALT or ZHALT, as appropriate
 
 5. Setting the PATH environment explicitly to only those directories that contain executable files that the mumps process will need to execute, with a ZSYSTEM command or a PIPE device.
 
-6. Because some text editors include functionality to run a shell in an edit buffer, setting the EDITOR variable to an editor which does not have such functionality is a way to block shell access in the event the application uses the ZEDIT command to edit a text file. Note that if an application allows users to edit text files, they can also edit YottaDB program source files, and application configuration should ensure that such program files cannot be accessed by the $ZROUTINES of the process unless that is the desired behavior.
+6. Because some text editors include functionality to run a shell in an edit buffer, setting the EDITOR variable to an editor which does not have such functionality is a way to block shell access in the event that the application uses the ZEDIT command to edit a text file. Note that if an application allows users to edit text files, they can also edit YottaDB program source files, and application configuration should ensure that such program files cannot be accessed by the $ZROUTINES of the process unless that is the desired behavior.
 
 ---------------------------------
 Other

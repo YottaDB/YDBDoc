@@ -76,11 +76,11 @@ When used in the tls level (or tlsid level if not provided at the tls level,) po
    ... (CA certificate in base64 encoding) ...
    -----END CERTIFICATE-----
 
-When specified for a server connection either in a tlsid level configuration file section or with a WRITE /TLS command, allows the server to inform the client of acceptable certificate authorities via the OpenSSL function SSL_set_client_CA_list(). The determinant definition for the acceptable list of certificate authorities sent to the client comes in descending order of priority from the one specified by the WRITE /TLS("renegotiate",...) command, the one specified by the CAfile value in the tlsid section used to establish the TLS connection, and finally that specified at the tls level.
+When specified for a server connection either in a tlsid level configuration file section or with a WRITE/TLS command, allows the server to inform the client of acceptable certificate authorities via the OpenSSL function SSL_set_client_CA_list(). The determinant definition for the acceptable list of certificate authorities sent to the client comes in descending order of priority from the one specified by the WRITE /TLS("renegotiate",...) command, the one specified by the CAfile value in the tlsid section used to establish the TLS connection, and finally that specified at the tls level.
 
 **CApath**
 
-Points to a directory containing CA certificates in PEM format. The files each contain one CA certificate. The files are looked up by the CA subject name hash value, which must hence be available. If more than once certificate with the same name hash value exists, the extension must be different (e.g. 9d66eef0.0, 9d66eef0.1 etc). The directory is typically created by the OpenSSL tool 'c_rehash'.
+Points to a directory containing CA certificates in PEM format. The files each contain one CA certificate. The files are looked up by the CA subject name hash value, which must hence be available. If more than one certificate with the same name hash value exists, the extension must be different (e.g. 9d66eef0.0, 9d66eef0.1 etc). The directory is typically created by the OpenSSL tool 'c_rehash'.
 
 **cipher-list**
 
@@ -92,7 +92,7 @@ Points to a file containing list of revoked certificates. This file is created b
 
 **dh512 and dh1024**
 
-Specifies that Diffie-Hellman parameters s used for key-exchange. Either none or both have to be specified. If neither is specified, then then the data is encrypted with the same keys that are used for authentication.
+Specifies that Diffie-Hellman parameters are used for key-exchange. Either none or both have to be specified. If neither is specified, then then the data is encrypted with the same keys that are used for authentication.
 
 **format**
 
@@ -120,7 +120,7 @@ When placing the private key for a certificate at the beginning of the certifica
 
 **session-id-hex**
 
-Takes a string value which is used to set the SSL session_id context for server sockets, which may be specified in the tlsid section of a config file or on WRITE /TLS("RENEGOTIATE",...). See the OpenSSL man page for SSL_set_session_id_context for usage details. The value should consist of hexadecimal digits representing the desired value. Application code can call the %UTF2HEX utility routine to translate a character string to the corresponding string of hexadecimal digits. If neither the command or the associated tlsid section in the configuration file specify a session-id-hex option when creating the socket, YottaDB uses the current tlsid, translated into hexadecimal digits.
+Takes a string value which is used to set the SSL session_id context for server sockets, which may be specified in the tlsid section of a config file or on WRITE/TLS("RENEGOTIATE",...). See the OpenSSL man page for SSL_set_session_id_context for usage details. The value should consist of hexadecimal digits representing the desired value. Application code can call the %UTF2HEX utility routine to translate a character string to the corresponding string of hexadecimal digits. If neither the command or the associated tlsid section in the configuration file specify a session-id-hex option when creating the socket, YottaDB uses the current tlsid, translated into hexadecimal digits.
 
 **session-timeout**
 

@@ -287,8 +287,8 @@ Compatible with: -A[LL]
 
 Freezes or prevents updates all regions of the current global directory.
 
-* The FREEZE qualifier freezes all GDS regions except those previously frozen by another process . Regions frozen by a particular process are associated with that process .
-* A frozen region may be unfrozen for updates in one of two ways: The process which froze the region may unfreeze it with the -NOFREEZE qualifier; or another process may override the freeze in conjunction with the -OVERRIDE qualifier.For more information on a preferred method of manipulating FREEZE, refer to “FREEZE ”.
+* The FREEZE qualifier freezes all GDS regions except those previously frozen by another process. Regions frozen by a particular process are associated with that process.
+* A frozen region may be unfrozen for updates in one of two ways: The process which froze the region may unfreeze it with the -NOFREEZE qualifier; or another process may override the freeze in conjunction with the -OVERRIDE qualifier. For more information on a preferred method of manipulating FREEZE, refer to “FREEZE ”.
 * By default, the -NOFREEZE qualifier unfreezes only those GDS regions that were previously frozen by a process. Once a region is unfrozen, it may be updated by any process. To unfreeze all GDS regions of the Global Directory, use the -OVERRIDE qualifier.
 * DSE releases any FREEZE it holds when it exits, therefore, use the same DSE invocation or SPAWN to perform operations after executing the ALL -FREEZE command.
 
@@ -621,7 +621,7 @@ Use only with: -FILEHEADER
 
 *-B[YTESTREAM]=transaction_number*
 
-Changes the transaction number in the file header of the last incremental backup to the value specified. Use this qualifier only in conjunction with the -FILEHEADER qualifier. For compatibility issues with priot versions, this can still be specified as -B_COMPREHENSIVE.
+Changes the transaction number in the file header of the last incremental backup to the value specified. Use this qualifier only in conjunction with the -FILEHEADER qualifier. For compatibility issues with prior versions, this can still be specified as -B_COMPREHENSIVE.
 
 *-D[ATABASE]=transaction_number*
 
@@ -629,7 +629,7 @@ Changes the hexidecimal transaction number in the file header of the last compre
 
 *-B_R[ECORD]=transaction_number*
 
-Changes the hexidecimal transaction number in the file header field that maintains this information about the last -RECORD backup.
+Changes the hexadecimal transaction number in the file header field that maintains this information about the last -RECORD backup.
 
 *-CO[RRUPT_FILE]=boolean*
 
@@ -647,7 +647,7 @@ Use only with: -FILEHEADER
 
 *-COM[MITWAIT_SPIN_COUNT]=value*
 
-Specifies the decimal number of times a YottaDB process waiting for control of a block to complete a block update should spin before yielding the CPU when YottaDB runs on SMP machines. When run on a uniprocessor system, YottaDB ignores this parameter. On SMP systems, when a process needs a critical section that another process has, if critical sections are short (as they are by design in YottaDB), spinning a little with the expectation that the process with the critical section will release it shortly provides a way to enhance performance at the cost of increased CPU usage. Eventually, a process awaiting a critical section yields the CPU if spinning for a little does not get it the needed critical section. Note that on heavily loaded systems, increasing COMMITWAIT_SPIN_COUNT may not trade off CPU for throughput, but may instead degrade both. If you set the COMMITWAIT_SPIN_COUNT to 0, the waiting process performs a sequence of small sleeps instead of the spins or yields.
+Specifies the decimal number of times a YottaDB process waiting for control of a block to complete a block update should spin before yielding the CPU when YottaDB runs on SMP machines. When run on a uniprocessor system, YottaDB ignores this parameter. On SMP systems, when a process needs a critical section that another process has, and critical sections are short (as they are by design in YottaDB), spinning a little with the expectation that the process with the critical section will release it shortly provides a way to enhance performance at the cost of increased CPU usage. Eventually, a process awaiting a critical section yields the CPU if a little spinning does not get it the needed critical section. Note that on heavily loaded systems, increasing COMMITWAIT_SPIN_COUNT may not trade off CPU for throughput, but may instead degrade both. If you set the COMMITWAIT_SPIN_COUNT to 0, the waiting process performs a sequence of small sleeps instead of the spins or yields.
 
 The default value is 16.
 
@@ -746,7 +746,7 @@ Use only with: -FILEHEADER
 
 Controls whether YottaDB accepts null subscripts in database keys.
 
-* value can either be T[RUE], F[ALSE], ALWAYS, NEVER, or EXISTING. See GDE chapter for more information on these values of null_subscript.
+* value can either be T[RUE], F[ALSE], ALWAYS, NEVER, or EXISTING. See the `GDE chapter <https://docs.yottadb.com/AdminOpsGuide/gde.html>`_ for more information on these values of null_subscript.
 * Prohibiting null subscripts can restrict access to existing data and cause YottaDB to report errors.
 * The default value is never.
 * DSE cannot change the null subscript collation order. Instead, use GDE to change the null subscript collation order, MUPIP EXTRACT the current content, MUPIP CREATE the database file(s) with the updated collation and MUPIP LOAD the content.
@@ -1174,7 +1174,7 @@ Example:
 .. parsed-literal::
    DSE> critical -OWNER Write critical section owner is process id 4220
 
-This command displays the ID of the process holding the critical section. Note that on catching a process ID on a lightly loaded (or unloaded) system (for example, text environment) is like catching lightening in a bottle. Therefore, you can artificially hold a critical section using the DSE CRIT -SEIZE command in one session and view the owner using a different session. 
+This command displays the ID of the process holding the critical section. Note that catching a process ID on a lightly loaded (or unloaded) system (for example, text environment) is like catching lightening in a bottle. Therefore, you can artificially hold a critical section using the DSE CRIT -SEIZE command in one session and view the owner using a different session. 
 
 +++++++++++
 DUMP
@@ -1561,7 +1561,7 @@ This command operates like FIND -BLOCK; however it reports the numbers of the bl
 
 .. parsed-literal::
    Left sibling    Current block   Right sibling
-           0x0000000F      0x00000010      0x00000011
+    0x0000000F      0x00000010      0x00000011
 
 +++++++++
 HELP

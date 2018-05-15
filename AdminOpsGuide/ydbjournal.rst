@@ -67,7 +67,7 @@ The following two procedures enable recovery of a database from a journal file:
 
 **Forward Recovery**
 
-Forward recovery "replays" all database updates in forward direction until the specified point in the journal file. Forward recovery on a backup database starts from when the backup was taken and continues till the specified point in the journal files. Forward recovery on an empty database starts from the beginning of the journal files.
+Forward recovery "replays" all database updates in the forward direction until the specified point in the journal file. Forward recovery on a backup database starts from when the backup was taken and continues till the specified point in the journal files. Forward recovery on an empty database starts from the beginning of the journal files.
 
 Suppose a system crash occurred at 08:50 hrs and a backup of the database was taken at 08:26 hrs. Using forward recovery, you can replay the database updates between 08:26 hrs to 8:50 hrs (in blue) on the backup copy of the database and restore the database to a state prior to the crash. In the process you can also identify unfinished or broken transactions that might have occurred at the time of the crash. In the following illustration, X denotes the crash time and the blue updates denote forward processing. 
 
@@ -125,13 +125,13 @@ BEFORE_IMAGE is a form of Journaling that creates "mini-backups" preceding each 
 NOBEFORE_IMAGE Journaling
 ++++++++++++++++++++++++++
 
-"NOBEFORE_IMAGE" is a form of M-level Journaling that sequentially stores each database update in a journal file. A forward recovery operation restore the database by replaying these database updates."NOBEFORE_IMAGE" consumes less I/O bandwidth in normal use and helps obtain more throughput from the available servers. 
+"NOBEFORE_IMAGE" is a form of M-level Journaling that sequentially stores each database update in a journal file. A forward recovery operation restore the database by replaying these database updates. "NOBEFORE_IMAGE" consumes less I/O bandwidth in normal use and helps obtain more throughput from the available servers. 
 
 +++++++++++++++++++++++++++++++++++++++++++++++++
 Choosing between BEFORE_IMAGE and NOBEFORE_IMAGE
 +++++++++++++++++++++++++++++++++++++++++++++++++
 
-The choice between BEFORE_IMAGE journaling and NOBEFORE_IMAGE journaling is important especially in a logical multi-site database replication deployment. If an application pushes the I/O bandwidth of the servers on which it runs, NOBEFORE_IMAGE journaling may help obtain more throughput from available servers. BEFORE_IMAGE journaling could be the likely choice if an application requires quicker recovery in the unlikely event of a crash. For a comprehensive discussion on the choosing the type of Journaling, refer to “Choosing between BEFORE_IMAGE and NOBEFORE_IMAGE journaling” in the  `"Implementing Replication and Recovery" section of the Database Replication chapter <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html#implementing-replication-and-recovery>`.
+The choice between BEFORE_IMAGE journaling and NOBEFORE_IMAGE journaling is important especially in a logical multi-site database replication deployment. If an application pushes the I/O bandwidth of the servers on which it runs, NOBEFORE_IMAGE journaling may help obtain more throughput from available servers. BEFORE_IMAGE journaling could be the likely choice if an application requires quicker recovery in the unlikely event of a crash. For a comprehensive discussion on choosing the type of Journaling, refer to “Choosing between BEFORE_IMAGE and NOBEFORE_IMAGE journaling” in the  `"Implementing Replication and Recovery" section of the Database Replication chapter <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html#implementing-replication-and-recovery>`.
 
 +++++++++++++++++++++++++++++
 Broken Transaction File
@@ -888,7 +888,7 @@ The show-option-list includes (these are not case-sensitive):
 
  .. parsed-literal::
    -----------------------------------------------------------------------------
-   SHOW output for journal file /home/jdoe/.yottadb/r120/g/yottadb.mjl
+   SHOW output for journal file /home/jdoe/.yottadb/r1.20_x86_64/g/yottadb.mjl
    -----------------------------------------------------------------------------
    Journal file name       /home/jdoe/.yottadb/r120/g/yottadb.mjl
    Journal file label      GDSJNL23
@@ -1020,7 +1020,7 @@ Specifies that MUPIP JOURNAL processing should proceed from the end of the journ
 
 Specifies that MUPIP JOURNAL processing for the specified action qualifier should proceed from the beginning of the given journal file. When processing a -RECOVER action qualifier, in certain cases, MUPIP JOURNAL may need to go before the first record of the specified journal file, that is, it can start from a previous generation journal file(refer to “-RECover ” for details).
 
-If multiple journal files are specified in the command line, -FORWARD sorts the journal files within each region based on creation time and processes them starting from the earliest journal file. Unless the -NOCHECKTN qualifier is specified, -FORWARD performs checks on journal files corresponding to each region to ensure they are contiguous, both in terms of time span, as well as, transaction number span. -FORWARD errors out if it detects a discontinuity.
+If multiple journal files are specified in the command line, -FORWARD sorts the journal files within each region based on creation time and processes them starting from the earliest journal file. Unless the -NOCHECKTN qualifier is specified, -FORWARD performs checks on journal files corresponding to each region to ensure they are contiguous, both in terms of time span, as well as the transaction number span. -FORWARD errors out if it detects a discontinuity.
 
 .. note::
   -FORWARD is incompatible with -BACKWARD and -ROLLBACK.
