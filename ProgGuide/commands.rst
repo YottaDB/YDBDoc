@@ -9,7 +9,7 @@
 .. contents::
    :depth: 2
 
-This chapter describes M language commands implemented in YottaDB. All commands starting with the letter Z are YottaDB additions to the ANSI standard command set. The M standard specifies standard abbreviations for commands and rejects any non-standard abbreviation. Behavior of I/O commands including OPEN, USE, READ, WRITE, and CLOSE is described in `Chapter 9: “Input/Output Processing” <https://docs.yottadb.com/ProgrammersGuide/ioproc.html>`_.
+This chapter describes M language commands implemented in YottaDB. All commands starting with the letter Z are YottaDB additions to the ANSI standard command set. The M standard specifies standard abbreviations for commands and rejects any non-standard abbreviation. The behavior of I/O commands including OPEN, USE, READ, WRITE, and CLOSE is described in `Chapter 9: “Input/Output Processing” <https://docs.yottadb.com/ProgrammersGuide/ioproc.html>`_.
 
 ------------
 Break
@@ -268,7 +268,7 @@ The format of the FOR command is:
 
 * When the FOR has multiple arguments, each one affects the loop control variable in sequence. For an argument to gain control, no prior argument to the FOR can have an increment without a limit.
 
-Increments and limits may be positive, negative, an integer, or a fraction. YottaDB never increments a FOR control variable "beyond" a limit. Other commands may alter a control variable within the extended scope of a FOR that it controls. When the argument includes a limit, such modification can cause the FOR argument to yield control at the start of the next iteration, or, less desirably loop indefinitely.
+Increments and limits may be positive, negative, an integer, or a fraction. YottaDB never increments a FOR control variable "beyond" a limit. Other commands may alter a control variable within the extended scope of a FOR that it controls. When the argument includes a limit, such modification can cause the FOR argument to yield control at the start of the next iteration, or, less desirably, loop indefinitely.
 
 NOUNDEF does not apply to an undefined FOR control variable. This prevents an increment of an undefined FOR control variable from getting into an unintended infinite loop. For example, FOR A=1:1:10 KILL A gives an UNDEF error on the increment from 1 to 2 even with VIEW "NOUNDEF".
 
@@ -373,7 +373,7 @@ Example:
 .. parsed-literal::
    GOTO A:x<0,^A:x=0,A^B
 
-This GOTO command transfers control to label A in the current routine, if x is less than zero (0), to routine ^A if x is equal to zero (0), and otherwise to label A in routine ^B. Once any of the transfers occurs, the rest of the arguments have no effect.
+This GOTO command transfers control to label A in the current routine, if x is less than zero (0), to routine ^A if x is equal to zero (0), and otherwise to label A in routine ^B. Once any of the transfers occur, the rest of the arguments have no effect.
 
 --------------------------
 Halt
@@ -389,7 +389,7 @@ The format of the HALT command is:
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether YottaDB executes the command.
 * Because the HALT command has no argument, at least two (2) spaces must follow the command to separate it from the next command on the line. Note that additional commands do not serve any purpose unless the HALT has a postconditional.
 
-A HALT releases all shared resources held by the process, such as devices OPENed in YottaDB, databases, and YottaDB LOCKs. If the the process has an active M transaction (the value of $TLEVEL is greater than zero (0)), YottaDB performs a ROLLBACK prior to terminating.
+A HALT releases all shared resources held by the process, such as devices OPENed in YottaDB, databases, and YottaDB LOCKs. If the process has an active M transaction (the value of $TLEVEL is greater than zero (0)), YottaDB performs a ROLLBACK prior to terminating.
 
 Because HALT and HANG share the same abbreviation (H), YottaDB differentiates them based on whether an argument follows the command.
 
@@ -557,7 +557,7 @@ YottaDB creates the environment for a new jobbed off process by copying the envi
 
 By default, YottaDB uses the current working directory of the parent process for the working directory of the initiated process.
 
-If the files specified by processparameters, do not exist, and YottaDB does not have permission to create them, the JOBed process terminates. When the corresponding files are in the current working directory, the OUTPUT, INPUT, and ERROR processparameters do not require a full pathname.
+If the files specified by processparameters do not exist, and YottaDB does not have permission to create them, the JOBbed process terminates. When the corresponding files are in the current working directory, the OUTPUT, INPUT, and ERROR processparameters do not require a full pathname.
 
 +++++++++++++++++++++++++
 JOB processparameters
@@ -567,7 +567,7 @@ The following sections describe the processparameters available for the JOB comm
 
 **CMD[LINE]="strlit"**
 
-The string literal specifies the $ZCMDLINE of the JOB'd process.
+The string literal specifies the $ZCMDLINE of the JOBbed process.
 
 **DEF[AULT]=strlit**
 
@@ -619,15 +619,15 @@ By default, JOB constructs the output file pathname from the routinename using a
 
 **PASS[CURLVN]**
 
-With the PASSCURLVN jobparameter, the JOB'd process inherits the current collation, local variables, aliases, and alias containers from the current stack level of the parent process. Therefore, a ZWRITE in the JOB'd process has the same output, except for any out of scope aliases, as a ZWRITE in the context of the JOB command. If the JOB command finds a ZWRITE representation of any lvn, consisting of its full name, its subscripts, corresponding value, quotes and the equal-sign (=), exceeding 1MiB, it produces a JOBLVN2LONG error in the parent process, and a JOBLVNDETAIL error in the error output stream of the JOB'd process. If a JOB command does not specify PASSCURLVN, the JOB'd process(es) inherits no local variables from the parent, although it can receive values passed as parameters to an actuallist entryref. While not an inexpensive command, you can use the "exclusive" NEW command to control the context passed to the JOB'd process; for example, adding "NEW (LOCALA,LOCALB)" before the JOB command would pass only LOCALA and LOCALB.
+With the PASSCURLVN jobparameter, the JOBbed process inherits the current collation, local variables, aliases, and alias containers from the current stack level of the parent process. Therefore, a ZWRITE in the JOBbed process has the same output, except for any out of scope aliases, as a ZWRITE in the context of the JOB command. If the JOB command finds a ZWRITE representation of any lvn, consisting of its full name, its subscripts, corresponding value, quotes and the equal-sign (=) exceeding 1MiB, it produces a JOBLVN2LONG error in the parent process, and a JOBLVNDETAIL error in the error output stream of the JOBbed process. If a JOB command does not specify PASSCURLVN, the JOBbed process(es) inherits no local variables from the parent, although it can receive values passed as parameters to an actuallist entryref. While not an inexpensive command, you can use the "exclusive" NEW command to control the context passed to the JOBbed process; for example, adding "NEW (LOCALA,LOCALB)" before the JOB command would pass only LOCALA and LOCALB.
 
-If a parameter in the formal list of JOB'ed entryref shares the same name with a local in the parent process, the parameter passing facility applies the actuallist in the JOB command argument to the formallist at the invoked label superseding any local variable passed from the parent process by the PASSCURLVN option.
+If a parameter in the formal list of JOBbed entryref shares the same name with a local in the parent process, the parameter passing facility applies the actuallist in the JOB command argument to the formallist at the invoked label superseding any local variable passed from the parent process by the PASSCURLVN option.
 
 **STA[RTUP]="/path/to/shell/script"**
 
 Specifies the location of the shell script that executes before running the named routine.
 
-The JOBbed process spawns a shell session to execute the shell script. If the shell script fails, the JOB'd process terminates without running the named routine. Because STARTUP executes in a separate shell, it has no impact on the environment of the JOB'd process, which is inherited from the parent. STARTUP is useful for actions such as creating directories. Use PIPE devices instead of the JOB command to control the environment of a spawned process.
+The JOBbed process spawns a shell session to execute the shell script. If the shell script fails, the JOBbed process terminates without running the named routine. Because STARTUP executes in a separate shell, it has no impact on the environment of the JOBbed process, which is inherited from the parent. STARTUP is useful for actions such as creating directories. Use PIPE devices instead of the JOB command to control the environment of a spawned process.
 
 **JOB Processparameter Summary Table**
 
@@ -699,7 +699,7 @@ The format of the KILL command is:
 * The KILL command without an argument deletes all currently existing local variables; in this case, at least two (2) spaces must follow the KILL to separate it from the next command on the line.
 * When a KILL argument consists of local variable names enclosed in parentheses, that "exclusive" KILL deletes all local variables except those listed in the argument.
 * KILL does not affect copies of local variables that have been "stacked" by NEW or parameter passing with the possible exception of the following: For KILL arguments enclosed in parentheses, the environment variable ydb_stdxkill enables the standard-compliant behavior to kill local variables in the exclusion list if they had an explicit or implicit (pass-by-reference) alias not in the exclusion list. By default, this behavior is disabled. If ydb_stdxkill is set to 1,"TRUE", or "YES", KILL deletes a local variable unless all its names are in the parenthesized list. If ydb_stdxkill is not defined or set to 0 KILL operations exclude the data associated with an item if any one of its names appears in the parenthesized list. While non-standard, the default behavior decouples call-by-reference functions or functions using aliases from needing knowledge of the caller's parameters.
-* In conformance with the M standard, KILL of a variable joined by pass-by-reference to a formallist variable always KILLs the formalist variable when the actuallist variable is KILL'd even if the formallist variable is specified as protected by an exclusive KILL.
+* In conformance with the M standard, KILL of a variable joined by pass-by-reference to a formallist variable always KILLs the formallist variable when the actuallist variable is KILL'd even if the formallist variable is specified as protected by an exclusive KILL.
 * KILL * removes the association between its argument and any associated arrays. The arguments are left undefined, just as with a standard KILL. If the array has no remaining associations after the KILL \*, YottaDB can reuse the memory it occupied. If there are no array(s) or association(s) the KILL * happily and silently does nothing.
 * KILL * of an alias container variable is just like a KILL of an alias variable, and deletes the association between the lvn and the array.
 * KILL * treats an alias formed though pass-by-reference the same as any alias variable by removing the alias association.
@@ -1030,7 +1030,7 @@ The format of the NEW command is:
 * For the scope of the NEW, a NEW of a name suspends its alias association. The association is restored when the scope of the New ends. The array remains in existence - it can be modified through other alias variables with which it is associated and which remain in scope. If none of its alias variables is in scope, the array remains intact and again becomes visible when the scope is restored.
 * When a NEW argument is enclosed in parentheses, that NEW is considered "exclusive". An exclusive NEW creates a fresh data environment and effectively aliases the excluded variables with their original copies. This technique tends to improve performance and meets the M standard. However, it has two implications: The alias operation KILL \*, with no arguments, or naming an exclusively NEW'd variable, acts as a KILL in the current scope (has the same effect as a non-alias KILL), and ZWRITE, ZSHOW "V", $ZDATA() report any exclusively NEW'd variable as an alias. Refer to the section on the KILL command for a description of alternative behaviors for the interaction of KILL and exclusive NEW. 
 * When the flow of execution terminates the scope of an argumentless or an exclusive NEW, YottaDB restores all stacked variables to their previous values, and deletes all other local variables.
-* The intrinsic special variables $ESTACK, $ETRAP, $ZGBLDIR, and $ZYERROR can be an explicit argument of a NEW.For more information, refer to `Chapter 8: “Intrinsic Special Variables” <https://docs.yottadb.com/ProgrammersGuide/isv.html>`_.
+* The intrinsic special variables $ESTACK, $ETRAP, $ZGBLDIR, and $ZYERROR can be an explicit argument of a NEW. For more information, refer to `Chapter 8: “Intrinsic Special Variables” <https://docs.yottadb.com/ProgrammersGuide/isv.html>`_.
 * The intrinsic special variable $ZTRAP can also be an explicit argument of a NEW; this stacks the current value of $ZTRAP and assigns $ZTRAP a null value ($ZTRAP="").
 * An indirection operator and an expression atom evaluating to a list of one or more NEW arguments form a legal argument for a NEW.
 
@@ -1207,7 +1207,7 @@ The format of the OPEN command is:
 * The optional numeric expression specifies a time in seconds after which the command should timeout if unsuccessful; choosing 0 results in a single attempt to open the device.
 * When an OPEN command specifying a timeout contains no deviceparameters, double colons (::) separate the timeout numeric expression from the device expression.
 * An indirection operator and an expression atom evaluating to a list of one or more OPEN arguments form a legal argument for an OPEN.
-* In UTF-8 mode, the OPEN command recognizes the ICHSET, OCHSET, and CHSET deviceparameters to determine the encoding of the the input / output devices.
+* In UTF-8 mode, the OPEN command recognizes the ICHSET, OCHSET, and CHSET deviceparameters to determine the encoding of the the input/output devices.
 * OPEN on a directory produces a GTMEISDIR error in both READONLY and NOREADONLY modes along with the directory name which failed to open. UNIX directories contain metadata that is only available to the file system. Note that you can use the ZSEARCH() function to identify files in a directory, and you can call the POSIX stat() function to access metadata. The optional YottaDB POSIX plug-in packages the stat() function for easy access from M application code.
 
 ---------------------
@@ -1422,7 +1422,7 @@ TREstart
 
 The TRESTART command attempts to RESTART the current transaction. A RESTART transfers control back to the initial TSTART and restores much of the process state to what it was when that TSTART was originally executed. A TRESTART issued when no transaction is in progress ($TLEVEL=0) or when the transaction does not have RESTART enabled produces an error.
 
-A TRESTART command causes the TP transaction to RESTART in the same way that YottaDB uses to implicitly restart the transaction in case of resource conflicts. All restarts increment the internal transaction retry count to a maximum of three (3), at which point, YottaDB performs the entire TP transaction within a critical section on all databases referenced in the transaction.
+A TRESTART command causes the TP transaction to RESTART in the same way that YottaDB uses to implicitly restart the transaction in case of resource conflicts. All restarts increment the internal transaction retry count to a maximum of three (3), at which point YottaDB performs the entire TP transaction within a critical section on all databases referenced in the transaction.
 
 YottaDB issues a TRESTMAX runtime error when application code attempts a TRESTART more than once during a transaction while $TRESTART=4 (note: in order to be wholesome, TRESTART usage in application code should always be conditional). In the final retry, YottaDB holds the critical section lock on all databases involved in the transaction. Since a TRESTART cancels all the work done in the current transaction and transfers control back to the TSTART, limiting the number of times this can be done in the final retry limits the time a process can (by virtue of holding a critical section lock on the databases) prevent other processes from updating the database.
 
@@ -1584,7 +1584,7 @@ In this example the BREAKMSG value is 5, representing the sum of 1 and 4. This e
 
 **[NO]BADCHAR**
 
-Enables or disable the gneration of an error when character-oriented functions encounter malformed byte sequences (illegal characters).
+Enables or disables the generation of an error when character-oriented functions encounter malformed byte sequences (illegal characters).
 
 At process startup, YottaDB initializes BADCHAR from the environment variable ydb_badchar. Set the environment variable $ydb_badchar to a non-zero number or "YES" (or "Y") to enable VIEW "BADCHAR". Set the environment variable $ydb_badchar to 0 or "NO" or "FALSE" (or "N" or "F") to enable VIEW "NOBADCHAR". By default, YottaDB enables VIEW "BADCHAR".
 

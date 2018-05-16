@@ -13,11 +13,11 @@ Appendix A: M Coding Standards - Do's and Don'ts
 M Coding Standards - Do's and Don'ts
 --------------------------------------
 
-M coding standards help:
+M coding standards:
 
 * Improve quality and maintainability by producing uniform standardized code.
 * Aid in readability and comprehension of developed source code by providing an unambiguous, easy to read standard to follow.
-* Avoid common errors that would not be picked up by a compiler by using these as a framework for good coding practices.
+* Help avoid common errors that would not be picked up by a compiler by using these as a framework for good coding practices.
 * Provide an objective reference point for the code authors, maintainers, and reviewers.
 
 +++++
@@ -183,17 +183,17 @@ While YottaDB does not restrict trigger code from performing I/O operations, avo
 
 Use comprehensive and strong coding conventions for trigger code or rely on user-specified names in managing the deletion and replacement of triggers.
 
-Except when using triggers for debugging, use journaling any region that uses triggers.
+Except when using triggers for debugging, use journaling on any region that uses triggers.
 
 **Call-in/Call-outs**
 
 Use gtm_malloc/gtm_free in the external functions for enhanced performance and better debugging capability in case memory management problems occur with external calls.
 
-Use gtm \*t types defined in gtmxc_types.h be used instead of the native types (int, float, char, etc) to avoid potential size mismatches with the parameter types.
+Use gtm \*t types defined in gtmxc_types.h instead of the native types (int, float, char, etc) to avoid potential size mismatches with the parameter types.
 
 **Autorelink**
 
-Either auto-relink-enable or auto-relink-disable the directory in the $zroutines for the life of the process.
+Either auto-relink-enable or auto-relink-disable the directory in $zroutines for the life of the process.
 
 Use the same value of $ydb_linktmpdir for all processes. All processes that share a directory whose contents are subject to ZRUPDATE use the same value for $ydb_linktmpdir so that all processes see update notifications - with different values of $ydb_linktmpdir, a ZRUPDATE by a process with one value of $ydb_linktmpdir would not be observed by a process with a different value of that environment variable.
 

@@ -63,17 +63,17 @@ The format of the RECALL command is:
 .. parsed-literal::
    REC[ALL] [intlit|strlit]
 
-* The optional integer literal specifies a previously entered command by the counting back from the present.
+* The optional integer literal specifies a previously entered command by counting back from the present.
 * The optional string literal specifies the most recently entered command line that starts with characters matching the (case-sensitive) literal.
-* When the RECALL command has no argument, it displays up to a maximum of 99 available past Direct Mode entries.
+* When the RECALL command has no argument, it displays up to a maximum of 99 available previous Direct Mode entries.
 
-If the Direct Mode session has just started, you may not have entered 99 lines for YottaDB to save and therefore you will not have 99 lines to look at. The most recently entered YottaDB command line has the number one (1), older lines have higher numbers. YottaDB does not include the RECALL command in the listing. If the RECALL command is issued from a location other than the Direct Mode prompt, YottaDB issues a run-time error.
+If the session in Direct Mode has just started, you may not have entered 99 lines for YottaDB to save and therefore you will not have 99 lines to look at. The most recently entered YottaDB command line has the number one (1), older lines have higher numbers. YottaDB does not include the RECALL command in the listing. If the RECALL command is issued from a location other than the Direct Mode prompt, YottaDB issues a run-time error.
 
 Example:
 
 .. parsed-literal::
    YDB>write $zgbldir 
-   /usr/lib/yottadb/r1.20_x86/mumps.gld
+   /usr/lib/yottadb/r120/mumps.gld
    YDB>set $zgbldir="test.gld"
    YDB>set a=10
    YDB>set b=a
@@ -139,9 +139,9 @@ The Direct Mode line editing keys are as follows:
 * **<CTRL-U>**: Deletes the entire line
 
 .. note::
-   When entering commands at the direct mode prompt, the insert mode can be toggled for that line by using the insert key. When YottaDB starts, insert mode is enabled unless the value of the ydb_principal_editing environment variable includes the string NOINSERT. If insert mode is disabled or enabled for the $PRINCIPAL device by an USE statement before returning to direct mode, it will remain disabled or enabled at direct mode. The insert mode can be toggled within a direct mode line using the terminal's INSERT key.
+   When entering commands at the direct mode prompt, the insert mode can be toggled for that line by using the insert key. When YottaDB starts, insert mode is enabled unless the value of the ydb_principal_editing environment variable includes the string NOINSERT. If insert mode is disabled or enabled for the $PRINCIPAL device by a USE statement before returning to Direct Mode, it will remain disabled or enabled in Direct Mode. The insert mode can be toggled within a Direct Mode line using the terminal's INSERT key.
 
-YottaDB deletes the character under the cursor when you press the key on the keyboard that sends the escape sequence which maps to the kdch1 capability in your current terminfo entry (by convention, the Delete key). If the current terminfo entry is missing the kdch1 capability, YottaDB uses a default value derived from members of the DEC VT terminal family, as it does for selected other missing terminfo capabilities. If you wish the Backspace and Delete keys to behave the same, the simplest way is to configure your terminal emulator to send the same character sequences for the Delete key that it does for the Backspace key. You can alternatively modify your terminfo setting: for example, create an editable version of your terminfo entry in a temporary file with a command such as: infocmp > /tmp/$$_$TERM and edit the temporary file to replace the entry for the kbs capability with the one in the kdch1 capability. Save your changes, and compile the edited file into a usable terminfo entry, for example:
+YottaDB deletes the character under the cursor when you press the key on the keyboard that sends the escape sequence which maps to the kdch1 capability in your current terminfo entry (by convention, the Delete key). If the current terminfo entry is missing the kdch1 capability, YottaDB uses a default value derived from members of the DEC VT terminal family, as it does for selected other missing terminfo capabilities. If you wish the Backspace and Delete keys to have the same behavior, the simplest way is to configure your terminal emulator to send the same character sequences for the Delete key that it does for the Backspace key. You can alternatively modify your terminfo setting: for example, create an editable version of your terminfo entry in a temporary file with a command such as: infocmp > /tmp/$$_$TERM and edit the temporary file to replace the entry for the kbs capability with the one in the kdch1 capability. Save your changes, and compile the edited file into a usable terminfo entry, for example:
 
 .. parsed-literal::
    export TERMINFO=$HOME/.terminfo # You may need to add this to your login profile
@@ -340,7 +340,7 @@ Correcting Errors
 
 Use the ZBREAK command to establish a temporary breakpoint and specify an action. ZBREAK sets or clears routine-transparent breakpoints during debugging. This command simplifies debugging by interrupting execution at a specific point to examine variables, execute commands, or to start using ZSTEP to execute the routine line by line.
 
-YottaDB suspends execution during execution when the entry reference specified by ZBREAK is encountered. If the ZBREAK does not specify an expression "action", the process uses the default, BREAK, and puts YottaDB into Direct Mode. If the ZBREAK does specify an expression "action", the process XECUTEs the value of "action", and does not enter Direct Mode unless the action includes a BREAK. The action serves as a "trace-point". The trace-point is silent unless the action specifies terminal output.
+YottaDB suspends execution during execution when the entry reference specified by ZBREAK is encountered. If the ZBREAK does not specify an expression "action", the process uses the default (BREAK) and puts YottaDB into Direct Mode. If the ZBREAK does specify an expression "action", the process XECUTEs the value of "action", and does not enter Direct Mode unless the action includes a BREAK. The action serves as a "trace-point". The trace-point is silent unless the action specifies terminal output.
 
 Example:
 
@@ -357,7 +357,7 @@ The ZSTEP command provides a powerful tool to direct YottaDB execution. When you
 
 The optional keyword portion of the argument specifies the class of lines where ZSTEP pauses its execution, and XECUTEs the ZSTEP action specified by the optional action portion of the ZSTEP argument. If the action is specified, it must be an expression that evaluates to valid YottaDB code. If no action is specified, ZSTEP XECUTEs the code specified by the $ZSTEP intrinsic special variable; by default $ZSTEP has the value "B", which causes YottaDB to enter Direct Mode.
 
-ZSTEP actions, that include commands followed by a BREAK, perform the specified action, then enter Direct Mode. ZSTEP actions that do not include a BREAK perform the command action and continue execution. Use ZSTEP actions that issue conditional BREAKs and subsequent ZSTEPs to perform tasks such as test for changes in the value of a variable.
+ZSTEP actions, that include commands followed by a BREAK, perform the specified action, then enter Direct Mode. ZSTEP actions that do not include a BREAK perform the command action and continue execution. Use ZSTEP actions that issue conditional BREAKs and subsequent ZSTEPs to perform tasks such as testing for changes in the value of a variable.
 
 Use ZSTEP to incrementally execute a routine or a series of routines. Execute any YottaDB command from Direct Mode at any ZSTEP pause. To resume normal execution, use ZCONTINUE. Note that ZSTEP arguments are keywords rather than expressions, and they do not allow indirection.
 
@@ -376,7 +376,7 @@ Example:
    Break instruction encountered during ZSTEP action
    At M source location name+1^dmex
 
-This example shows using the ZSTEP command to step through the routine dmex, starting where execution was interrupted by the undefined variable error. The ZSTEP INTO command executes line name+3 and interrupts execution at the beginning of line print.
+This example shows using the ZSTEP command to step through the routine dmex, starting where the execution was interrupted by the undefined variable error. The ZSTEP INTO command executes line name+3 and interrupts execution at the beginning of line print.
 
 The ZSTEP OUTOF continues execution until line name. The ZSTEP OVER, which is the default, executes until it encounters the next line at this level on the M invocation stack. In this case, the next line is name+1. The ZSTEP OVER could be replaced with a ZSTEP with no argument because they do the same thing.
 
@@ -418,7 +418,7 @@ This invokes direct mode with a <CTRL-C>.
 Using the Invocation Stack in Debugging
 ++++++++++++++++++++++++++++++++++++++++
 
-M DOs, XECUTEs, and extrinsics add a level to the invocation stack. Matching QUITs take a level off the stack. When YottaDB executes either of these commands, an extrinsic function, or an extrinsic special variable, it "pushes" information about the new environment on the stack. When YottaDB executes the QUIT, it "pops" the information about the discarded environment off the stack. It then reinstates the invoking routine information using the entries that have now arrived at the active end of the stack.
+M DOs, XECUTEs, and extrinsics add a level to the invocation stack. Matching QUITs take a level off the stack. When YottaDB executes either of these commands, an extrinsic function or an extrinsic special variable, it "pushes" information about the new environment on the stack. When YottaDB executes the QUIT, it "pops" the information about the discarded environment off the stack. It then reinstates the invoking routine information using the entries that have now arrived at the active end of the stack.
 
 .. note::
    In the M stack model, a FOR command does not add a stack frame, and a QUIT that terminates a FOR loop does not remove a stack frame.
@@ -557,7 +557,7 @@ Example:
    $ZSYSTEM=0
    $ZTRAP="B"
                                                     
-   $ZVERSION="YottaDB r1.10 AIX RS6000"
+   $ZVERSION="YottaDB r1.20 AIX RS6000"
                                                           
    $ZYERROR=""
            bame="?"
@@ -774,7 +774,7 @@ For more information on syntax and run-time errors during Direct Mode, see `Chap
 +--------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------+
 | $ZROutines               | Contains a string specifying a directory list containing the object, and optionally the source, files.                                             |
 +--------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------+
-| $ZSOurce                 | Contains name of the M source program most recently ZLINKed or ZEDITed; default name for next ZEDIT or ZLINK.                                      |
+| $ZSOurce                 | Contains the name of the M source program most recently ZLINKed or ZEDITed; default name for next ZEDIT or ZLINK.                                  |
 +--------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------+
 | $ZStatus                 | Contains error condition code and location of the last exception condition occurring during routine execution.                                     |
 +--------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------+
