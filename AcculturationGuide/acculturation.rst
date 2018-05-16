@@ -1286,8 +1286,8 @@ Shut down the Acculturation Workshop virtual machine and make three copies of th
 If you are using qcow2 or vmdk disk images with QEMU/kvm on Linux, you can use a feature that allows a disk image to be created off a base image so that the base image does not change and all changes go to the new disk image. Check with your virtualization software to determine whether it supports this feature. Execute commands such as the following on the host (with the guest shut down) – depending on the version of QEMU/kvm on your PC, the exact command may vary.
 
 .. parsed-literal::
-   $ qemu-img create -f vmdk -o zeroed_grain,backing_file=ubuntu-14.04_workshop.vmdk Paris.vmdk
-   Formatting ' Paris.vmdk', fmt=vmdk size=10737418240 backing_file='ubuntu-14.04_workshop.vmdk' compat6=off zeroed_grain=on
+   $ qemu-img create -f vmdk -o zeroed_grain,backing_file=ubuntu-16.04_yottadbworkshop10.vmdk Paris.vmdk
+   Formatting ' Paris.vmdk', fmt=vmdk size=10737418240 backing_file='ubuntu-16.04_yottadbworkshop10.vmdk' compat6=off zeroed_grain=on
    $
 
 Now boot the three virtual machines. Each virtual machine will need two ports to be forwarded from the host, one for ssh access forwarded to port 22 on each virtual machine and one for replication forwarded to port 3000 on each virtual machine (i.e., a total of six ports on the host for the three instances). The examples here use host ports 2221 & 4000 for Santiago, 2222 & 5000 for Paris, and 2223 & 6000 for Melbourne. The commands given here use kvm on Linux – use the commands appropriate to virtualization on your host).
