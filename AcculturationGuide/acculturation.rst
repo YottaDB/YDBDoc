@@ -439,7 +439,7 @@ At process startup, $zroutines is initialized from the environment variable $ydb
    YDB>set $zroutines=". "_$ztrnlnm("ydb_dist")
 
    YDB>write $zroutines
-   . /usr/local/lib/yottadb/r1.20_x86_64
+   . /usr/local/lib/yottadb/r120
    YDB>write $ztrnlnm("ydb_routines")
    /home/yottadbuser/.yottadb/r1.20_x86_64/o*(/home/yottadbuser/.yottadb/r1.20_x86_64/r /home/yottadbuser/.yottadb/r) /usr/local/lib/yottadb/r1.20_x86_64/libyottadbutil.so
    YDB>
@@ -949,7 +949,7 @@ Here are the environment variables set by the default ydb_env_set file (which th
    ydb_routines=/home/yottadbuser/.yottadb/r1.20_x86_64/o*(/home/yottadbuser/.yottadb/r1.20_x86_64/r /home/yottadbuser/.yottadb/r) /usr/local/lib/yottadb/r1.20_x86_64/libyottadbutil.so
    ydb_repl_instance=/home/yottadbuser/.yottadb/r1.20_x86_64/g/yottadb.repl
    ydb_tmp=/tmp/yottadb/r1.20_x86_64
-   ydb_dist=/usr/local/lib/yottadb/r1.20_x86_64/
+   ydb_dist=/usr/local/lib/yottadb/r120/
    yottadbuser@yottadbworkshop:~$ 
 
 While ydb_env_set and ydb are good resources when you initially start with YottaDB, once you get to a certain level of expertise, you may prefer to create your own scripting.
@@ -1065,7 +1065,7 @@ First, clean out old journal files. Verify that there are no shared memory segme
 Now kill the virtual machine by clicking on the “X” of the console window, or with a kill -9 of the virtual machine process, and then reboot it. Go back into YottaDB and verify that the data is still there. Instead of running the ydb script (which performs an automatic recovery), run mumps and try to access the database. Note: you should not run the ydb script for this exercise, since it performs a recovery as part of its operation.
 
 .. parsed-literal::
-   yottadbuser@yottadbworkshop:~$ source /usr/local/lib/yottadb/r1.20_x86_64/ydb_env_set
+   yottadbuser@yottadbworkshop:~$ source /usr/local/lib/yottadb/r120/ydb_env_set
    yottadbuser@yottadbworkshop:~$ mumps -dir
 
    YDB>zwrite ^X
@@ -1223,7 +1223,7 @@ Because replication builds on journaling, use the directory exDir created above.
    yottadbuser@yottadbworkshop:~$ cd exDir ; cat ydbenv
    export ydb_dist=/usr/local/lib/yottadb/r120
    export ydb_gbldir=$HOME/exDir/gtm.gld
-   export ydb_log=/tmp/yottadb/r1.20_x86_64
+   export ydb_log=/tmp/yottadb/r120
    export ydb_tmp=$ydb_log
    export ydb_principal_editing=EDITING
    export ydb_repl_instance=$HOME/exDir/yottadb.repl
@@ -1322,9 +1322,9 @@ In each machine. Edit exDir/env in each instance and change the line export ydb_
 
 .. parsed-literal::
    yottadbuser@santiago:~/exDir$ cat ydbenv 
-   export ydb_dist=/usr/local/lib/yottadb/r1.20_x86_64/
+   export ydb_dist=/usr/local/lib/yottadb/r120
    export ydb_gbldir=$HOME/exDir/yottadb.gld
-   export ydb_log=/tmp/yottadb/r1.20_x86_64
+   export ydb_log=/tmp/yottadb/r120
    export ydb_tmp=$ydb_log
    export ydb_principal_editing=EDITING
    export ydb_repl_instance=$HOME/exDir/yottadb.repl
@@ -2598,9 +2598,9 @@ This exercise uses two sessions, one with a mumps process in UTF-8 mode and the 
 
 .. parsed-literal::
    yottadbuser@yottadbworkshop:~/utf8demo$ cd utf8demo; vim ydbenv_m ; cat ydbenv_m
-   export ydb_dist=/usr/local/lib/yottadb/r120/
+   export ydb_dist=/usr/local/lib/yottadb/r120
    export ydb_gbldir=$HOME/utf8demo/yottadb.gld
-   export ydb_log=/tmp/yottadb/r1.20_x86_64
+   export ydb_log=/tmp/yottadb/r120
    export ydb_tmp=$ydb_log
    export ydb_principal_editing=EDITING
    export ydb_repl_instance=$HOME/utf8demo/yottadb.repl
@@ -2610,9 +2610,9 @@ This exercise uses two sessions, one with a mumps process in UTF-8 mode and the 
    alias mumps=$ydb_dist/mumps
    alias mupip=$ydb_dist/mupip
    yottadbuser@yottadbworkshop:~/utf8demo$ cp ydbenv_m ydbenv_utf8 ; vim ydbenv_utf8 ; cat ydbenv_utf8 
-   export ydb_dist=/usr/local/lib/yottadb/r1.20/utf8
+   export ydb_dist=/usr/local/lib/yottadb/r120/utf8
    export ydb_gbldir=$HOME/utf8demo/yottadb.gld
-   export ydb_log=/tmp/yottadb/r1.20_x86_64
+   export ydb_log=/tmp/yottadb/r120
    export ydb_tmp=$ydb_log
    export ydb_principal_editing=EDITING
    export ydb_repl_instance=$HOME/utf8demo/yottadb.repl
