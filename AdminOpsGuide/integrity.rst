@@ -1225,7 +1225,7 @@ Once you have corrected all errors except bitmap errors, SPAWN and use MUPIP INT
 
 salvage.m is a utility that removes all incorrectly marked busy blocks from the specified region. During execution it displays the DSE commands that it will execute and aborts execution when it encounters an error. It dumps the zwrite formatted content of blocks incorrectly marked busy to a file called <region>_db.zwr. Upon completion, it sets the abandoned_kills and kill_in_prog flags in the database fileheader to false.
 
-You can download salvage.m from Github.
+You can download salvage.m from `Github <https://github.com/YottaDB/YottaDBdoc/blob/master/AdminOpsGuide/salvage.m>`_.
 
 Steps to run the salvage utility are as follows:
 
