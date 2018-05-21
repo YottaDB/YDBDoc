@@ -25,6 +25,8 @@ Packages were installed from standard repositories using the package manager.
 IBM AIX 7.1 (pSeries) 
 +++++++++++++++++++++++++
 
+Dependencies: Building the encryption libraries on AIX requires GNU Make and IBM's xlc compiler toolchain.
+
 **GPG-ERROR**
 
 ./configure CC=cc CFLAGS=-q64 ($OBJECT_MODE=64) 

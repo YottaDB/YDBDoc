@@ -83,8 +83,6 @@ Most MUPIP operations require write access to the database files with which they
 |                                                                   |                                       | -GLOBAL_BUFFERS, -MUTEX_SLOTS, -LOCK_SPACE or -NOJOURNAL, or if any of the -JOURNAL |
 |                                                                   |                                       | options ENABLE, DISABLE, or BUFFER_SIZE are specified.                              |
 +-------------------------------------------------------------------+---------------------------------------+-------------------------------------------------------------------------------------+
-| Backup database files                                             | MUPIP BACKUP                          | Concurrent Access                                                                   |
-+-------------------------------------------------------------------+---------------------------------------+-------------------------------------------------------------------------------------+
 | Grow the size of BG database files                                | MUPIP EXTEND                          | Concurrent Access                                                                   |
 +-------------------------------------------------------------------+---------------------------------------+-------------------------------------------------------------------------------------+
 | Export data from database files into sequential (flat) or binary  | MUPIP EXTRACT                         | Although MUPIP EXTRACT command works with concurrent access, it implicitly freezes  |
@@ -211,7 +209,7 @@ Perform the following tasks before you begin a database backup.
 
 confirms that ydb.dat is backed up correctly and is ready for archival.
 
-* Determine an appropriate frequency, timing, and backup method (-BYTESTREAM or -COMPREHENSIVE) based on the situation. 
+* Determine an appropriate frequency, timing, and backup method (-BYTESTREAM or -DATABASE) based on the situation. 
 
 * Ensure the user issuing backup commands has appropriate permissions before starting the backup. Backup files have the ownership of the user running MUPIP BACKUP. 
 
@@ -509,7 +507,7 @@ The format of the CREATE command is:
 
 The single optional -REGION qualifier specifies a region for which to create a database file.
 
-Note that one YottaDB database file grows to a maximum size of 224M (234,881,024) blocks. This means, for example, that with an 8KB block size, the maximum single database file size is 1,792GB (8KB*224M). Note that this is the size of one database file -- a logical database (an M global variable namespace) can consist of an arbitrary number of database files. 
+Note that one YottaDB database file grows to a maximum size of 1,040,187,392(992Mi) blocks. This means, for example, that with an 8KB block size, the maximum single database file size is 1,792GB (8KB*224M). Note that this is the size of one database file -- a logical database (an M global variable namespace) can consist of an arbitrary number of database files. 
 
 **-Region**
 
@@ -825,6 +823,15 @@ Creates an encrypted binary extract with null IVs from a database with non-null 
 .. parsed-literal::
    -[N]ULL_IV
 
+* Older versions of YottaDB used empty (all zeros or "NULL_IV") initialization vectors(IVs) to encrypt or decrypt -FORMAT="BINARY" extracts.
+
+* The current and later versions use non-zero IVs.
+
+* Use the NULL_IV qualifier only on encrypted databases to create an encrypted binary extract in GDS BINARY EXTRACT LEVEL 8 format. This format can load data on any encrypted YottaDB database created with an older version.
+
+* The default is -NONULL_IV which produces a binary extract in GDS BINARY EXTRACT LEVEL 9 format.
+
+
 **-REGION**
 
 Restricts MUPIP EXTRACT to a set of regions. The format of the REGION qualifier is:
@@ -847,11 +854,10 @@ Specifies globals for a MUPIP EXTRACT operation. The format of the SELECT qualif
 
 The global-specification can be:
 
-* A parenthetical list, such as (a,B,C). In this case, MUPIP EXTRACT selects all globals except ^a, ^B, and ^C.
 * A global name, such as MEF. In this case, MUPIP EXTRACT selects only global ^MEF.
 * A range of global names, such as A7:B6. In this case, MUPIP EXTRACT selects all global names between ^A7 and ^B6, inclusive.
 * A list, such as A,B,C. In this case, MUPIP EXTRACT selects globals ^A, ^B, and ^C.
-* Global names with the same prefix, such as PIGEON*. In this case, EXTRACT selects all global names from ^PIGEON through ^PIGEONzzzzz. 
+* A suffix with a global name. For example, PIGEON* selects all global names from ^PIGEON through ^PIGEONzzzzz. You can use suffixes with a global name or a list. 
   
 .. note::
    If the rules for selection are complex, it may be easier to construct an ad hoc Global Directory that maps the global variables to be extracted to the database file. This may not be permissible if the database file is part of a replicated instance. If this is the case, work with a backup of the database.
@@ -935,6 +941,8 @@ The format of the MUPIP FREEZE command is:
 * A FREEZE specifying -ONLINE -AUTORELEASE allows updates to continue immediately when YottaDB needs to update the database file.
 
 * After MUPIP FREEZE -ON -NOONLINE, processes that are attempting updates "hang" until the FREEZE is removed by the MUPIP FREEZE -OFF command or DSE. Make sure that procedures for using MUPIP FREEZE, whether manual or automated, include provisions for removing the FREEZE in all appropriate cases, including when errors disrupt the normal flow.
+
+* MUPIP FREEZE sends a DBFREEZEON/DBFREEZEOFF message to the system log for each region whose freeze state is changed.
 
 * A -RECOVER/-ROLLBACK for a database reverts to a prior database update state. Therefore, a -RECOVER/-ROLLBACK immediately after a MUPIP FREEZE -ON removes the freeze. However, -RECOVER/-ROLLBACK does not succeed if there are processes attached (for example when a process attempt a database update immediately after a MUPIP FREEZE -ON) to the database.
 
@@ -1922,7 +1930,7 @@ MUPIP REORG -ENCR[YPT] can encrypt an unencrypted database only if the following
 
 has previously marked the database "encryptable".
 
-The command requires standalone access to the database. Just as encrypted databases use global buffers in pairs (for encrypted and unencrypted versions of blocks), a database marked as encryptable has global buffers allocated in pairs (i.e., the actual number of global buffers is twice the number reported by DSE DUMP -FILEHEADER) and requires correspondingly larger shared memory segments. To revert unencrypted but encryptable databases back to "unencryptable" state, use the command:
+The command requires standalone access to the database.  It performs some basic encryption setup checks and requires the ydb_passwd environment variable to be defined and the GNUPGHOME environment variable to point to a valid directory in the environment. Just as encrypted databases use global buffers in pairs (for encrypted and unencrypted versions of blocks), a database marked as encryptable has global buffers allocated in pairs (i.e., the actual number of global buffers is twice the number reported by DSE DUMP -FILEHEADER) and requires correspondingly larger shared memory segments. To revert unencrypted but encryptable databases back to "unencryptable" state, use the command:
 
 .. parsed-literal::
    MUPIP SET -NOENCRYPTABLE -REGION <region-list>
@@ -2123,6 +2131,81 @@ If the forecasted growth of a global is 5% per month from relatively uniformly d
 .. parsed-literal::
    $ mupip reorg -fill_factor=80 
 
+Example:
+
+The following example uses recorg -encrypt to encrypt a database "on the fly". This is a simple example created for demonstration purposes. It is NOT recommended for production use. Consult your YottaDB support channel for specific instructions on encrypting an unencrypted database.
+
+Create an empty default unencrypted database. 
+
+.. parsed-literal::
+   $ydb_dist/mumps -r ^GDE exit
+   $ydb_dist/mupip create
+
+Setup the GNUPG home directory.
+
+.. parsed-literal::
+   export GNUPGHOME=$PWD/.helengnupg3    
+   mkdir $GNUPGHOME # Ensure that you protect this directory with appropriate permissions.  
+   chmod go-rwx $GNUPGHOME
+
+Create a new key. Enter demo values. Accept default values. Choose a strong passphrase.
+
+.. parsed-literal::
+   gpg --gen-key  
+
+Edit the key to add a new sub-key:
+
+.. parsed-literal::
+   gpg --edit-key helen.keymaster@yottadb
+
+Type addkey, select option 6 RSA (encrypt only), and accept default values and execute the following commands:
+
+.. parsed-literal::
+   gpg --gen-random 2 32 | gpg --encrypt --default-recipient-self --sign --armor > ydb_workshop_key.txt
+   gpg --decrypt < ./ydb_workshop_key.txt | gpg --encrypt --armor --default-recipient-self --output ydb.key
+
+Refer to the 'man gpg; a description on the qualifiers for gpg.
+
+Create a gtmcrypt_config file as following:
+
+.. parsed-literal::
+   $ cat config
+     database: {
+        keys:   (
+                  {
+                   dat: "/path/to/mumps.dat" ;
+                   key: "/path/to/ydb.key" ;
+                  }
+               );
+  }
+
+Set the environment variable gtmcrypt_config to point to this config file.
+
+.. parsed-literal::
+   export gtmcrypt_config=$PWD/config 
+
+Set the enviroment varible ydb_passwd. 
+
+.. parsed-literal::
+   echo -n "Enter passphrase for ydb.key: " ; export ydb_passwd=`$ydb_dist/plugin/gtmcrypt/maskpass|cut -f 3 -d " "`
+
+Execute the following commands:
+
+.. parsed-literal::
+   $ mupip set -encryptable -region DEFAULT
+   $ mupip reorg -encrypt="ydb.key" -region DEFAULT
+   mupip reorg -encrypt="ydb.key" -region DEFAULT
+   Region DEFAULT : MUPIP REORG ENCRYPT started
+   Region DEFAULT : Database is now FULLY ENCRYPTED with the following key: ydb.key
+   Region DEFAULT : MUPIP REORG ENCRYPT finished
+
+Execute the following command when encryption completes. 
+
+.. parsed-literal::
+   $ mupip set -encryptioncomplete -region DEFAULT
+   Database file /home/gtc_twinata/staff/nitin/tr11/mumps.dat now has encryption marked complete
+
+Always keep the keys in a secured location. Always set gtmcrypt_config and ydb_passwd to access the encrypted database.
 
 +++++++++++++++++++
 USER_DEFINED_REORG
@@ -2297,22 +2380,26 @@ The format of the SET command is:
     -E[XTENSION_COUNT]=integer(no of blocks)
     -F[LUSH_TIME]=integer
     -G[LOBAL_BUFFERS]=integer
+    -H[ARD_SPIN_COUNT]=integer
     -[NO]INST[_FREEZE_ON_ERROR]
     -JN[LFILE]journal-file-name
     -K[EY_SIZE]=bytes
     -L[OCK_SPACE]=integer
     -M[UTEX_SLOTS]=integer
+    -N[ULL_SUBSCRIPTS]=value
     -[NO]LCK_SHARES_DB_CRIT
     -PA[RTIAL_RECOV_BYPASS]
     -[NO]Q[DBRUNDOWN]
+    -[NO]REA[D_ONLY]
     -REC[ORD_SIZE]=bytes
     -REG[ION] region-list
     -REP[LICATION]={ON|OFF}
     -RES[ERVED_BYTES]=integer]
     -SL[EEP_SPIN_COUNT]=integer
-    -SP[IN_SLEEP_LIMIT]=nanoseconds
+    -SPIN_SLEEP_M[ASK]=hex_mask
     -STAN[DALONENOT]
     -[NO]STAT[S]
+    -NO]STD[NULLCOLL]
     -V[ERSION]={V4|V6}
     -W[AIT_DISK]=integer 
 
@@ -2363,7 +2450,7 @@ Incompatible with: -FILE, -JNLFILE and -REGION
 
 The following sections describe the action qualifiers of the MUPIP SET command exclusive of the details related to journaling and replication, which are described in `Chapter 6: “YottaDB Journaling” <https://docs.yottadb.com/AdminOpsGuide/ydbjournal.html>`_ and `Chapter 7: “Database Replication” <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html>`_. All of these qualifiers are incompatible with the -JNLFILE and -REPLICATION qualifiers.
 
-**-ACCESSMETHOD**
+**-ACCESS_METHOD**
 
 Specifies the access method (YottaDB buffering strategy) for storing and retrieving data from the global database file. The format of the ACCESS_METHOD qualifier is:
 
@@ -2433,6 +2520,15 @@ The minimum is 64 buffers and the maximum is 65536 buffers. By default, MUPIP CR
 
 On many UNIX systems, default kernel parameters may be inadequate for YottaDB global buffers, and may need to be adjusted by a system administrator.
 
+**-HARD_SPIN_COUNT**
+
+The mutex hard spin count specifies the number of attempts to grab the mutex lock before initiating a less CPU-intensive wait period. The format of -HARD_SPIN_COUNT is:
+
+.. parsed-literal::
+   -HARD_SPIN_COUNT=integer
+
+The default value is 128. Except on the advice of your YottaDB support channel, YottaDB recommends leaving the default values unchanged in production environments, until and unless, you have data from testing and benchmarking that demonstrates a benefit from a change.
+
 **-INST_FREEZE_ON_ERROR**
 
 Enables or disables custom errors in a region to automatically cause an Instance Freeze. This flag modifies the "Inst Freeze on Error" file header flag. The format of the INST_FREEZE_ON_ERROR qualifier is:
@@ -2479,7 +2575,7 @@ Specifies the number of pages allocated to the management of M locks associated 
 .. parsed-literal::
    -L[OCK]_SPACE=integer
 
-* The maximum LOCK_SPACE is 65,536 pages.
+* The maximum LOCK_SPACE is 262144 pages.
 
 * The minimum LOCK_SPACE is 10 pages.
 
@@ -2497,6 +2593,21 @@ The minimum value is 64 and the maximum value is 32768. The default value is 102
 
 .. parsed-literal::
    -M[UTEX_SLOTS]=integer
+
+**-NULL_SUBSCRIPTS**
+
+Controls whether YottaDB accepts null subscripts in database keys.
+
+Usage:
+
+.. parsed-literal::
+   -N[ULL_SUBSCRIPTS]=value
+
+* value can either be T[RUE], F[ALSE], ALWAYS, NEVER, or EXISTING. See GDE chapter for more information on these values of null_subscript.
+
+* Prohibiting null subscripts can restrict access to existing data and cause YottaDB to report errors.
+
+* The default value is never.
 
 **-LCK_SHARES_DB_CRIT**
 
@@ -2530,6 +2641,16 @@ Sets the CORRUPT_FILE flag in the database file header to FALSE. The CORRUPT_FIL
    -PA[RTIAL_RECOV_BYPASS]
 
 For more information, refer to the CORRUPT_FILE qualifier in “CHANGE -FIleheader Qualifiers”. 
+
+**-READ_ONLY**
+
+Indicates whether YottaDB should treat an MM access method segment as read only for all users, including root. This designation augments UNIX authorizations and prevents any state updates that normally might require an operational action for a database with no current accessing (attached) processes. MUPIP emits an error on attempts to set -READ_ONLY on databases with the BG access method, or to set the access method to BG on databases with -READ_ONLY set. The YottaDB help databases have -READ_ONLY set by default. The format of the READ_ONLY qualifier is:
+
+.. parsed-literal::
+   -[NO]REA[D_ONLY]
+
+.. note::
+   When the first process connects to a database, it creates a access-control semaphore as part of management of the shared resource. However, when a process connects to a -READ_ONLY database , each create a private copy of the in-memory structures for the database and thus a private semaphore. 
 
 **-RECORD_SIZE**
 
@@ -2565,14 +2686,14 @@ Specifies the number of times a processes suspends its activity while waiting to
 
 * Except on the advice of your YottaDB support channel, YottaDB recommends leaving the default values unchanged in production environments, until and unless, you have data from testing and benchmarking that demonstrates a benefit from a change.
 
-**-SPIN_SLEEP_LIMIT**
+**-SPIN_SLEEP_MASK**
 
-Specifies the maximum number nanoseconds for processes to sleep while waiting to obtain critical sections for shared resources, principally those involving databases. The format of the -SPIN_SLEEP_LIMIT qualifier is:
+Specifies the maximum number nanoseconds for processes to sleep while waiting to obtain critical sections for shared resources, principally those involving databases. The format of the -SPIN_SLEEP_MASK qualifier is:
 
 .. parsed-literal::
-   -SPIN_SLEEP_LIMIT=nanoseconds
+   -SPIN_SLEEP_MASK=hex_mask
 
-* nanoseconds is the maximum number of nanoseconds (in decimal form) rounded up to the nearest power of two. Internally, YottaDB converts it to a hexadecimal mask.
+* hex_mask is a hexidecimal mask that controls the maximum time (in nanoseconds) the process sleeps on a sleep spin.
 
 * The default is zero (0) which causes the process to return control to the UNIX kernel to be rescheduled with no explicit delay. When the value is non-zero, the process waits for a random value between zero (0) and the maximum value permitted by the mask.
 
@@ -2584,6 +2705,15 @@ Specifies specifies whether YottaDB should permit statistics sharing for this re
 
 .. parsed-literal::
    -[NO]STAT[S]
+
+At database creation, GDE controls this characteristic, which, by default it specifies as STATS (on). When on, this characteristic causes YottaDB to create a small MM database for the associated region to hold the shared statistics.
+
+**-STDnullcoll**
+
+Specifies whether YottaDB uses standard MUMPS collation or YottaDB collation for null-subscripted keys. YottaDB strongly recommends that you use STDNULLCOLL and against using this non-standard null collation, which is the default for historical reasons. The format of the STDNULLCOLL qualifier is:
+
+.. parsed-literal::
+   -[NO]STD[NULLCOLL]
 
 **-VERSION**
 
@@ -3091,7 +3221,6 @@ MUPIP Command Summary
 |                                      |                                             | * -R[ECEIVER]                                                                            |
 |                                      |                                             | * -S[OURCE]                                                                              |
 |                                      |                                             | * -UPDA[TEPROC]                                                                          |
-|                                      |                                             | * -UPDH[ELPER]                                                                           |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+
 | RE[STORE]                            | file-name or file-list                      | * -[NO]E[XTEND]                                                                          |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+
