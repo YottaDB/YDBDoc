@@ -536,10 +536,10 @@ The ADD command inserts a new name, region, or segment into the Global Directory
 The format of the ADD command is one of the following: 
 
 .. parsed-literal::
+   A[DD] -G[BLNAME] global-name [-GBLNAME-qualifier ...]
    A[DD] -N[AME] namespace -R[EGION]=region-name
    A[DD] -R[EGION] region-name -D[YNAMIC]=segment-name [-REGION-qualifier...]
-   A[DD] -S[EGMENT] segment-name [-SEGMENT-qualifier...] -F[ILE_NAME]=file-name
-   A[DD] -G[BLNAME] global-name [-GBLNAME-qualifier ...] 
+   A[DD] -S[EGMENT] segment-name [-SEGMENT-qualifier...] -F[ILE_NAME]=file-name 
 
 The ADD command requires specification of an object-type and object-name. GDE supplies default values from the templates for qualifiers not explicitly supplied in the command.
 
@@ -683,10 +683,11 @@ The CHANGE command alters the name-to-region or region-to-segment mapping and /o
 The format of the CHANGE command is: 
 
 .. parsed-literal::
-   C[HANGE]-N[AME] namespace -R[EGION]=new-region
-   C[HANGE]-R[EGION] region-name [-REGION-qualifier...]
-   C[HANGE]-S[EGMENT] segment-name [-SEGMENT-qualifier...]
    C[HANGE] -G[BLNAME] -C[OLLATION]=collation_number
+   C[HANGE] -I[INSTANCE] -F[ILE_NAME=[repl_inst_filename|""]
+   C[HANGE] -N[AME] namespace -R[EGION]=new-region
+   C[HANGE] -R[EGION] region-name [-REGION-qualifier...]
+   C[HANGE] -S[EGMENT] segment-name [-SEGMENT-qualifier...]
 
 The CHANGE command requires specification of an object-type and object-name.
 
@@ -708,10 +709,10 @@ The DELETE command removes a name, region, or segment from the Global Directory.
 The format of the DELETE command is: 
 
 .. parsed-literal::
+   D[ELETE] -G[BLNAME] global-name
    D[ELETE] -N[AME] namespace
    D[ELETE] -R[EGION] region-name
    D[ELETE] -S[EGMENT] segment-name
-   D[ELETE] -G[BLNAME] global-name
 
 The DELETE command requires specification of an object-type and object-name.
 
@@ -829,10 +830,10 @@ The RENAME command allows you to change a namespace, the name of a region, or th
 The format of the RENAME command is:
 
 .. parsed-literal::
+   R[ENAME] -G[BLNAME] old-global-name new-global-name
    R[ENAME] -N[AME] old-name new-name
    R[ENAME] -R[EGION] old-region-name new-region-name
    R[ENAME] -S[EGMENT] old-segment-name new-segment-name
-   R[ENAME] -G[BLNAME] old-global-name new-global-name
 
 The RENAME command requires specification of an object-type and two object-names.
 
@@ -878,14 +879,16 @@ The SHOW command displays information contained in the Global Directory about na
 The format of the SHOW command is:
 
 .. parsed-literal::
+   SH[OW]
+   SH[OW] -A[LL]
    SH[OW] -C[OMMAND] -F[ILE]=[gde-command-file]
+   SH[OW] -G[BLNAME]
+   SH[OW] -I[NSTANCE]
+   SH[OW] -M[AP] [-R[EGION]=region-name]
    SH[OW] -N[AME] [namespace]
    SH[OW] -R[EGION] [region-name]
    SH[OW] -S[EGMENT] [segment-name]
-   SH[OW] -M[AP] [-R[EGION]=region-name]
-   SH[OW] -T[EMPLATE] 
-   SH[OW] -G[BLNAME]
-   SH[OW] -A[LL]
+   SH[OW] -T[EMPLATE]
 
 -COMMAND: Displays GDE commands that recreate the current Global Directory state.
 
@@ -898,21 +901,26 @@ SHOW -COMMAND displays the GDE commands for creating names, regions, and segment
 .. note::
    When GDE encounters an error while executing the @command-file command, it stops processing the command file and returns to the operator prompt, which gives the operator the option of compensating for the error. If you subsequently issue @command-file command again in the same session for the same command-file, GDE resumes processing it at the line after the last error.
 
--NAME, -REGION, -SEGMENT, -GBLNAME, -MAP, -TEMPLATE, and -ALL are qualifiers that cause GDE to display selected portions of the Global Directory as follows:
+-ALL: Displays the entire Global Directory. This qualifier corresponds to displaying "all" sections of the SHOW report: 
 
+.. parsed-literal::
+   ***TEMPLATES***, ***NAMES***, ***REGIONS***, ***SEGMENTS***, ***MAP***, ***INSTANCE***.
+
+By default, SHOW displays -ALL.
+
+-GBLNAME, -INSTANCE, -MAP, -NAME, -REGION, -SEGMENT, and -TEMPLATE are qualifiers that cause GDE to display selected portions of the Global Directory as follows:
+
+- INSTANCE: Displays the current Instance Mapping, if any. This qualifier corresponds to the section of the SHOW report titled:
+
+.. parsed-literal::
+   ***INSTANCE***
+  
 -MAP: Displays the current mapping of all names, regions, segments, and files. This qualifier corresponds to the section of the SHOW report titled \*\*\*MAP\*\*\*. The output of a SHOW -MAP may be restricted to a particular region by specifying a -REGION qualifier with a region name argument.
 
 -TEMPLATE: Displays the current region and segment templates. This qualifier corresponds to the section of the SHOW report titled: 
 
 .. parsed-literal::
   \*\*\* TEMPLATES \*\*\*
-
--ALL: Displays the entire Global Directory. This qualifier corresponds to displaying "all" sections of the SHOW report: 
-
-.. parsed-literal::
-   \*\*\*TEMPLATES\*\*\*, \*\*\*NAMES\*\*\*, \*\*\*REGIONS\*\*\*, \*\*\*SEGMENTS\*\*\*,  \*\*\*MAP\*\*\*.
-
-By default, SHOW displays -ALL.
 
 If you want to print the Global Directory, create a log file by executing LOG -ON= before executing the SHOW command. The -LOG command captures all the commands entered and output. You can print the log file if you want a hard copy record.
 
@@ -1052,13 +1060,13 @@ The format of the VERIFY command is:
 
 .. parsed-literal::
    V[ERIFY]
+   V[ERIFY] -A[LL]
+   V[ERIFY] -G[BLNAME]
+   V[ERIFY] -M[AP]
    V[ERIFY] -N[AME] [namespace]
    V[ERIFY] -R[EGION] [region-name]
    V[ERIFY] -S[EGMENT] [segment-name]
-   V[ERIFY] -M[AP]
-   V[ERIFY] -G[BLNAME]
    V[ERIFY] -T[EMPLATE]
-   V[ERIFY] -A[LL]
 
 The object-type is optional. -MAP, -TEMPLATE, and -ALL are special qualifiers used as follows:
 
@@ -1277,7 +1285,7 @@ By default, GDE uses a RECORD_SIZE of 256 bytes.
 
 **-[NO][STA[TS]**
 
-Specifies whether YottaDB should permit processes to share their database access statistics for other processes to monitor. There may be operational or security reasons to prohibit sharing of statistics. 
+Specifies whether YottaDB should permit processes to share their database access statistics for other processes to monitor. When on, this characteristic causes YottaDB to create a small MM database for the associated region to hold the shared statistics. There may be operational or security reasons to prohibit sharing of statistics. For example, YottaDB does not share statistics on database files that exist solely to support YottaDB features. 
 
 By default, GDE uses STATS.
 
@@ -1391,10 +1399,6 @@ In YottaDB development, we have not benchmarked asynchronous IO on the types of 
 
 By default GDE uses NOASYNCIO. On segments with an access method of MM, YottaDB ignores this setting.
 
-**-[NO]ENcryption**
-
-Specifies whether or not the database file for a segment is flagged for encryption. Note that MUPIP CREATE acquires an encryption key for this file and puts a cryptographic hash of the key in the database file header.
-
 **-BL[OCK_SIZE]=size**
 
 Specifies the size, in bytes, of each database block in the file system. The BLOCK_SIZE must be a multiple of 512. If the BLOCK_SIZE is not a multiple of 512, GDE rounds up the BLOCK_SIZE to the next highest multiple of 512 and issues a warning message.
@@ -1484,7 +1488,7 @@ As YottaDB runs out of space to store LOCK control information, LOCKs become pro
 
 The minimum LOCK_SPACE is 10 pages.
 
-The maximum LOCK_SPACE is 65,536 pages.
+The maximum LOCK_SPACE is 262144 pages.
 
 By default, GDE uses a LOCK_SPACE of 40 pages.
 
@@ -1602,7 +1606,10 @@ The following table summarizes GDE commands, abbreviations, object types, requir
 +=============================+==================================================+=================================================================+
 | \@                          | N/A                                              | file-name                                                       |
 +-----------------------------+--------------------------------------------------+-----------------------------------------------------------------+
-| A[DD]                       |  -N[AME]                                         | namespace                                                       |
+| A[DD]                       |  -G[BLNAME]                                      | global-name                                                     |
+|                             |                                                  | -C[OLLATION]=collation                                          |
++-----------------------------+--------------------------------------------------+-----------------------------------------------------------------+
+| \-                          |  -N[AME]                                         | namespace                                                       |
 |                             |                                                  | -R[EGION]=region-name                                           |
 +-----------------------------+--------------------------------------------------+-----------------------------------------------------------------+
 | \-                          | -R[EGION]                                        | region-name                                                     |
@@ -1611,10 +1618,13 @@ The following table summarizes GDE commands, abbreviations, object types, requir
 | \-                          |  -S[EGMENT]                                      | segment-name                                                    |
 |                             |                                                  | -F[ILE_NAME]=file-name [-SEGMENT-qualifier...]                  |
 +-----------------------------+--------------------------------------------------+-----------------------------------------------------------------+
-| \-                          |  -G[BLNAME]                                      | global-name                                                     |
+| C[HANGE]                    |  -G[BLNAME]                                      | global-name                                                     |
 |                             |                                                  | -C[OLLATION]=collation                                          |
 +-----------------------------+--------------------------------------------------+-----------------------------------------------------------------+
-| C[HANGE]                    |  -N[AME]                                         | namespace                                                       |
+| \-                          | -I[NSTANCE]                                      | replication-instance                                            |
+|                             |                                                  | -F[ILE_NAME]=replication_instance_file                          |
++-----------------------------+--------------------------------------------------+-----------------------------------------------------------------+
+| \-                          |  -N[AME]                                         | namespace                                                       |
 |                             |                                                  | -R[EGION]=new-region                                            |
 +-----------------------------+--------------------------------------------------+-----------------------------------------------------------------+
 | \-                          |  -R[EGION]                                       | region-name                                                     |
@@ -1623,17 +1633,14 @@ The following table summarizes GDE commands, abbreviations, object types, requir
 | \-                          |  -S[EGMENT]                                      | segment-name                                                    |
 |                             |                                                  | [-SEGMENT-qualifier]                                            |
 +-----------------------------+--------------------------------------------------+-----------------------------------------------------------------+
-| \-                          |  -G[BLNAME]                                      | global-name                                                     |
+| D[ELETE]                    |  -G[BLNAME]                                      | global-name                                                     |
 |                             |                                                  | -C[OLLATION]=collation                                          |
 +-----------------------------+--------------------------------------------------+-----------------------------------------------------------------+
-| D[ELETE]                    |  -N[AME]                                         | namespace                                                       |
+| \-                          |  -N[AME]                                         | namespace                                                       |
 +-----------------------------+--------------------------------------------------+-----------------------------------------------------------------+
 | \-                          |  -R[EGION]                                       | region-name                                                     |
 +-----------------------------+--------------------------------------------------+-----------------------------------------------------------------+
 | \-                          |  -S[EGMENT]                                      | segment-name                                                    |
-+-----------------------------+--------------------------------------------------+-----------------------------------------------------------------+
-| \-                          |  -G[BLNAME]                                      | global-name                                                     |
-|                             |                                                  | -C[OLLATION]=collation                                          |
 +-----------------------------+--------------------------------------------------+-----------------------------------------------------------------+
 | E[XIT]                      | N/A                                              | N/A                                                             |
 +-----------------------------+--------------------------------------------------+-----------------------------------------------------------------+
@@ -1657,40 +1664,44 @@ The following table summarizes GDE commands, abbreviations, object types, requir
 +-----------------------------+--------------------------------------------------+-----------------------------------------------------------------+
 | SE[TGD]                     | N/A                                              | -F[ILE]=file-name [-Q[UIT]]                                     |
 +-----------------------------+--------------------------------------------------+-----------------------------------------------------------------+
-| SH[OW]                      |  -N[AME]                                         | [namespace]                                                     |
+| SH[OW]                      |  -A[LL]\*                                        | N/A                                                             |
++-----------------------------+--------------------------------------------------+-----------------------------------------------------------------+
+| \-                          |  -G[BLNAME]                                      | global-name                                                     |
+|                             |                                                  | -C[OLLATION]=collation                                          |
++-----------------------------+--------------------------------------------------+-----------------------------------------------------------------+
+| \-                          | -I[NSTANCE]                                      | replication-instance                                            |
+|                             |                                                  |  -F[ILE_NAME]=replication_instance_file                         |
++-----------------------------+--------------------------------------------------+-----------------------------------------------------------------+
+| \-                          |  -M[AP]                                          | [R[EGION]=region-name]                                          |
++-----------------------------+--------------------------------------------------+-----------------------------------------------------------------+
+| \-                          |  -N[AME]                                         | [namespace]                                                     |
 +-----------------------------+--------------------------------------------------+-----------------------------------------------------------------+
 | \-                          |  -R[EGION]                                       | [region-name]                                                   |
 +-----------------------------+--------------------------------------------------+-----------------------------------------------------------------+
 | \-                          |  -S[EGMENT]                                      | [segment-name]                                                  |
 +-----------------------------+--------------------------------------------------+-----------------------------------------------------------------+
-| \-                          |  -G[BLNAME]                                      | global-name                                                     |
-|                             |                                                  | -C[OLLATION]=collation                                          |
-+-----------------------------+--------------------------------------------------+-----------------------------------------------------------------+
-| \-                          |  -M[AP]                                          | [R[EGION]=region-name]                                          |
-+-----------------------------+--------------------------------------------------+-----------------------------------------------------------------+
 | \-                          | T[EMPLATE]                                       | N/A                                                             |
-+-----------------------------+--------------------------------------------------+-----------------------------------------------------------------+
-| \-                          |  -A[LL]\*                                        | N/A                                                             |
 +-----------------------------+--------------------------------------------------+-----------------------------------------------------------------+
 | T[EMPLATE]                  |  -R[EGION]                                       | [-REGION-qualifier...]                                          |
 +-----------------------------+--------------------------------------------------+-----------------------------------------------------------------+
 | \-                          |  -S[EGMENT]                                      | [ -SEGMENT-qualifier...]                                        |
 +-----------------------------+--------------------------------------------------+-----------------------------------------------------------------+
-| V[ERIFY]                    |  -N[AME]                                         | [namespace]                                                     |
+| V[ERIFY]                    | -A[LL]*                                          | N/A                                                             |
++-----------------------------+--------------------------------------------------+-----------------------------------------------------------------+
+| \-                          | -G[BLNAME]                                       | global-name                                                     |
+|                             |                                                  | -C[OLLATION]=collation                                          |
++-----------------------------+--------------------------------------------------+-----------------------------------------------------------------+
+| \-                          |  -N[AME]                                         | [namespace]                                                     |
 +-----------------------------+--------------------------------------------------+-----------------------------------------------------------------+
 | \-                          | -R[EGION]                                        | [region-name]                                                   |
 +-----------------------------+--------------------------------------------------+-----------------------------------------------------------------+
 | \-                          |  -S[EGMENT]                                      | [segment-name]                                                  |
 +-----------------------------+--------------------------------------------------+-----------------------------------------------------------------+
-| \-                          |  -G[BLNAME]                                      | global-name                                                     |
-|                             |                                                  | -C[OLLATION]=collation                                          |
-+-----------------------------+--------------------------------------------------+-----------------------------------------------------------------+
 | \-                          |  -M[AP]                                          | N/A                                                             |
 +-----------------------------+--------------------------------------------------+-----------------------------------------------------------------+
 | \-                          |  -T[EMPLATE]                                     | N/A                                                             |
 +-----------------------------+--------------------------------------------------+-----------------------------------------------------------------+
-| \-                          | -A[LL]*                                          | N/A                                                             |
-+-----------------------------+--------------------------------------------------+-----------------------------------------------------------------+
+
 
 **\*-ALL is the default for the SHOW and VERIFY Commands.**
 

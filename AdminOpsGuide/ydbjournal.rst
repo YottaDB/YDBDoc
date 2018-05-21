@@ -1104,7 +1104,21 @@ By default, -SINCE= time is 0 00:00:00 which denotes the time at the end of the 
 Journal Sequence Number Qualifiers
 ++++++++++++++++++++++++++++++++++
 
-These qualifiers are compatible only with -ROLLBACK.
+These qualifiers are compatible only with -EXTRACT.
+
+.. parsed-literal::
+   -S[EQNO]=<sequence_number_list>
+
+Specifies a list of sequence numbers to include or exclude in the journal extract. <sequence_number_list> is a comma separated list of sequence number(s) in decimal form. When a sequence number has a (~) prefix, -SEQNO excludes it from the journal extract. For replicated regions, EXTRACT -SEQNO uses replication sequence numbers, which may select records from multiple regions. For unreplicated regions, EXTRACT uses journal sequence numbers, but specifying sequence number selection with more than one regions produces a JNLEXTRCTSEQNO error. When the sequence number list contains a sequence number involved in a TP transaction, EXTRACT reports it in a broken transaction file when the result does not contain all regions, which is commonly the case without replication, and may be the case with replication when not all regions are available to the utility.
+
+Example:
+
+.. parsed-literal::
+   mupip journal -extract -seqno="~1,2,3,4,~5" -forward -broken=trans.broken -lost=trans.lost "*"
+
+This example produces a journal extract containing journal sequence numbers 2,3,and 4. 1 and 5 are not part of the journal extract as they have the (~) prefix.
+
+The following qualifiers are compatible only with -ROLLBACK.
 
 .. parsed-literal::
    -FET[CHRESYNC]=<port number>

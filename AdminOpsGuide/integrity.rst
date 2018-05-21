@@ -1221,50 +1221,25 @@ This strategy works well when the missing indices are level one (1). However, th
 
 Once you have corrected all errors except bitmap errors, SPAWN and use MUPIP INTEG FAST REGION NOMAP to get a list of all remaining bitmap errors. If the report includes any "Blocks incorrectly marked free", MAP them BUSY. Then use DUMP HEADER BLOCK= to examine each "Block incorrectly marked busy." If the level is one (1), DUMP the block ZWR. In any case, MAP it FREE. Once all blocks have been collected in a sequential file in this fashion, use MUPIP LOAD to reclaim the data from the sequential file.
 
-Example:
+**Download salvage.m**
 
-.. parsed-literal::
-   salvage;
-    read !,"SET REGION to <DEFAULT>: ",r s:r="" r="DEFAULT"
-    write !
-    set in="db_integ.log",x="mupip integ -fast -nomap -region"
-    set teg="/bin/csh -c """_x_" "_r_" >& "_in_""""
-    zsystem teg
-    set out="db_drive",skip=$char(32,10,13)
-    set prefix="map -bl=",old="",lenold=0,blk=0
-    open in:(read:exc="goto done"),out:newv
-    se out
-    write "dse <<yz",!,"find -region=",r,!,"open -file=","db.zwr",!
-    use in
-    for read x if x["marked" use out do out use in
-    ; CAUTION: in the above line, "marked" MUST be in lower-case
-    ;
-   done
-    use out
-    write "close",!,"change -fileheader -abandoned_kills=0",!
-    write "change -fileheader -kill_in_progress=0",!,"exit",!
-    write "yz",!
-    ;write "mupip load db.zwr",!
-    ; uncomment the line above if you do not wish to examine
-    ; db.zwr and to initiate the load separately
-    close in,out
-    zsystem "/usr/local/bin/tcsh -c ""source db_drive"""
-    quit
-   out
-    for j=1:1:$length(x) quit:skip'[$extract(x,j)
-    set blk=$piece($piece($extract(x,j,999)," ",1),":",1)
-    set state=$select($extract(x,42)="f":" -busy",1:" -free")
-    ; CAUTION: in the above line, "f" MUST be in lower-case
-    if state=" -free" write "dump -zwr -bl=",blk,!
-    ; CAUTION: in the above line " -free" MUST match the
-    ; case in the $select above
-    ; comment out the above line (starting with "i state")
-    ; if you wish to eliminate, rather than save,
-    ; the contents of loose busy blocks
-    write prefix,blk,state,!
-   quit
+salvage.m is a utility that removes all incorrectly marked busy blocks from the specified region. During execution it displays the DSE commands that it will execute and aborts execution when it encounters an error. It dumps the zwrite formatted content of blocks incorrectly marked busy to a file called <region>_db.zwr. Upon completion, it sets the abandoned_kills and kill_in_prog flags in the database fileheader to false.
 
-This routine provides a basic example of automating the technique described in this section. It must be run from an appropriate directory with a properly defined ydb_gbldir, but can be extended to be more user friendly.
+You can download salvage.m from Github.
+
+Steps to run the salvage utility are as follows:
+
+* Perform an argumentless MUPIP RUNDOWN before running this utility.
+
+* Ensure that there are no INTEG errors other than the incorrectly marked busy block errors.
+
+* Run $gtm_dist/mumps -r ^salvage.
+
+* Specify the region name. If no region is specified, the utility assumes DEFAULT.
+
+If the utility reports a DSE error, fix that error and run the salvage utility again.
+
+After completing repairs with the salvage utility, open the <REGION>_db.zwr file and examine its contents. If there is a need to recover the data from the incorrectly marked busy blocks, perform a MUPIP LOAD <REGION>_db.zwr to load that data back to the database.
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
 O5 - Salvage of a Damaged Spanning Node

@@ -13,7 +13,7 @@ Appendix E : YottaDB Security Philosophy
 Philosophy
 -------------------------
 
-The general YottaDB philosophy is to use the security of the underlying operating system, and to neither subvert it nor extend it. The purpose of this document is to discuss the implications of, exceptions to, and limitations of this philosophy (the "security model").
+The general YottaDB philosophy is to use the security of the underlying operating system, and to neither subvert it nor extend it. When YottaDB invokes the POSIX system() interace, it ensures that alias and path settings do not interfere with the intentions of the actions it takes. The purpose of this document is to discuss the implications of, exceptions to, and limitations of this philosophy (the "security model").
 
 .. note::
     YottaDB is not intended to operate robustly on a machine that is potentially subject to direct attack, such as a firewall, or a machine operating in a "DMZ" (when external-facing services are exposed to an untrusted network).
@@ -79,6 +79,7 @@ Based on the security model, the following are recommended best practices for se
 
 * Secure the machine on which YottaDB operates behind layers of defenses that permit only legitimate accesses.
 * Restrict access to a system on which YottaDB runs to those who legitimately need it.
+* Post installation, a system administrator can optionally add a restrict.txt file in $ydb_dist to restrict the use of certain YottaDB facilities to a group-name. The owner and group for $ydb_dist/restrict.txt can be different from those used to install YottaDB. For more information, refer to `“Configuring the Restriction facility” <https://docs.yottadb.com/AdminOpsGuide/basicops.html#configuring-the-restriction-facility>`_.
 * If not all users who have access to a system require the ability to run YottaDB, limit access to YottaDB to a group to which all users who need access belong, and remove world access to YottaDB. (The YottaDB installation script presents an option to restrict access to YottaDB to members of a group). If such a group is called yottadbusers, the following command executed as root will accomplish this, if access was not restricted when YottaDB was installed: 
   
   .. parsed-literal::
