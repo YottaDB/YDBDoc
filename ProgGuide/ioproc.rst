@@ -116,23 +116,13 @@ Status Variables
 
 **$DEVICE**
 
-If the last commanded resulted in no error-condition, the value of $DEVICE, when interpreted as a truth-value is 0 (FALSE). If the status of the device reflect any error-condition, the value of $DEVICE, when interpreted as a truth-value is 1 (TRUE).
+If the last commanded resulted in no error-condition, the value of $DEVICE, when interpreted as a truth-value is 0 (FALSE). If the status of the device reflects an error-condition, the value of $DEVICE, when interpreted as a truth-value is 1 (TRUE). When $DEVICE starts with 1, it is followed by a comma (,) and then by the text that would be in $ZSTATUS at the time of the error. 
 
-For PIPE :
+Examples:
 
-0 indicates for READ with a zero (0) timeout that available data has been read.
+0 indicates for READ with a zero (0) timeout that the available data has been read.
 
-"1,Resource temporarily unavailable" indicates no input available for a READ with a zero (0) timeout.
-
-"1,<error signature>" indicates a read error.
-
-0 indicates for a WRITE that it was successful.
-
-"1,Resource temporarily unavailable" indicates a failure of a WRITE where the pipe is full and the WRITE would block.
-
-This condition also causes an exception.
-
-"1,<error signature>" indicates a write error 
+"1 , Device detected EOF" indicates the device reached an end-of-file condition. 
 
 **$KEY**
 
@@ -1439,46 +1429,6 @@ This demonstrates how to deal with write blocking of a PIPE device. The loop doi
 Example:
 
 .. parsed-literal::
-   sh> mumps -run pipexample induceEAGAIN
-   The active device is pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/mumps -run induceEAGAIN^pipexample" STDERR="piperr" 
-   $ZSTATUS="11,pipexample+9^pipexample,%SYSTEM-E-ENO11, Resource temporarily unavailable"
-        
-   sh> mumps -run retry^pipexample induceEAGAIN
-   Try 0   pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/mumps -run induceEAGAIN^pipexample 0" STDERR="piperr"
-   ...Failed to perform non-blocked writes... Retrying write # 54
-   ...Failed to perform non-blocked writes... Retrying write # 63
-   ...Failed to perform non-blocked writes... Retrying write # 69
-   ...Failed to perform non-blocked writes... Retrying write # 78
-       Writes completed
-
-This example demonstrates handling WRITE errors, like ENO11 or EAGAIN, that do not terminate the PIPE device. The PIPE device does non-blocking writes. If a process tries to WRITE to a full PIPE and the WRITE would block, the device implicitly tries to complete the operation up to a default of 10 times. YottaDB sleeps 100 micro seconds between each retry. When dealing with programs that can take a while to process input, it's a good idea to either schedule a delay between WRITEs or come up with a mechanism to back off the WRITEs when the buffer fills up.
-
-.. parsed-literal::
-   sh> mumps -run pipexample induceEPIPE
-   The active device is pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/mumps -run induceEPIPE^pipexample" STDERR="piperr" 
-       stdout:My PID is 12808
-       stderr:%YDB-F-FORCEDHALT, Image HALTed by MUPIP STOP
-   $ZSTATUS="32,pipexample+9^pipexample,%SYSTEM-E-ENO32, Broken pipe"
-        
-   sh> mumps -run retry^pipexample induceEPIPE
-   Try 0   pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/mumps -run induceEPIPE^pipexample 0" STDERR="piperr" 
-   ...Caught on try 0, write 49... 32,retry+13^pipexample,%SYSTEM-E-ENO32, Broken pipe
-       stdout:My PID is 16252
-       stderr:%YDB-F-FORCEDHALT, Image HALTed by MUPIP STOP
-   Try 1   pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/mumps -run induceEPIPE^pipexample 1" STDERR="piperr" 
-   ...Caught on try 1, write 697... 32,retry+13^pipexample,%SYSTEM-E-ENO32, Broken pipe
-       stdout:My PID is 16403
-       stdout:$ZSTATUS="150373210,induceEPIPE+5^pipexample,%YDB-E-DIVZERO, Attempt to divide by zero"
-   Try 2   pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/mumps -run induceEPIPE^pipexample 2" STDERR="piperr" 
-       Writes completed
-      
-This example demonstrates how to create a separate STDERR pipe device from which to read the STDERR output of the program(s) inside the pipe. Reading the STDERR is important when dealing with failures from Unix programs. It is possible to read the errors without creating a STDERR pipe device, however the error messages are commingled with the output of the programs inside the pipe which could make diagnosis of the underlying problem harder. Notice that YottaDB writes fatal errors, YDB-F types, to STDERR, but all others go to STDOUT.
-
-Additionally, this example demonstrates handling errors that terminate the PIPE device. In this example, the PIPE device is terminated when a program inside the pipe terminates before reading all of the driving MUMPS program's output causing an EPIPE or ENO32, a broken pipe. In such a situation the MUMPS program must capture the error that caused the termination and respond accordingly. The program may need to call out to other programs to determine the status of a service it is using or to alert the operator of an error with an external program or service. To operate successfully, the program must recreate the pipe and retry the operation.
-
-Example: 
-
-.. parsed-literal::
    ; Example program that starts another program in a pipe and traps the errors. The called
    ; programs intentionally induce errors
    pipexample
@@ -1564,7 +1514,7 @@ Example:
      use $p
      write ?4,"Writes completed",!
      quit
-   retryEPIPE
+     retryEPIPE
      quit:$zstatus'["ENO32"
      use $p
      write "...Caught on try ",try,", write ",i,"... ",$zstatus,!
@@ -1581,6 +1531,47 @@ Example:
      quit
 
 This example demonstrates how to handle PIPE device errors, whether with the device itself or from programs inside the PIPE device.
+
+Example:
+
+.. parsed-literal::
+   sh> mumps -run pipexample induceEAGAIN
+   The active device is pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/mumps -run induceEAGAIN^pipexample" STDERR="piperr" 
+   $ZSTATUS="11,pipexample+9^pipexample,%SYSTEM-E-ENO11, Resource temporarily unavailable"
+        
+   sh> mumps -run retry^pipexample induceEAGAIN
+   Try 0   pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/mumps -run induceEAGAIN^pipexample 0" STDERR="piperr"
+   ...Failed to perform non-blocked writes... Retrying write # 54
+   ...Failed to perform non-blocked writes... Retrying write # 63
+   ...Failed to perform non-blocked writes... Retrying write # 69
+   ...Failed to perform non-blocked writes... Retrying write # 78
+       Writes completed
+
+This example demonstrates handling WRITE errors, like ENO11 or EAGAIN, that do not terminate the PIPE device. The PIPE device does non-blocking writes. If a process tries to WRITE to a full PIPE and the WRITE would block, the device implicitly tries to complete the operation up to a default of 10 times. YottaDB sleeps 100 micro seconds between each retry. When dealing with programs that can take a while to process input, it's a good idea to either schedule a delay between WRITEs or come up with a mechanism to back off the WRITEs when the buffer fills up.
+
+.. parsed-literal::
+   sh> mumps -run pipexample induceEPIPE
+   The active device is pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/mumps -run induceEPIPE^pipexample" STDERR="piperr" 
+       stdout:My PID is 12808
+       stderr:%YDB-F-FORCEDHALT, Image HALTed by MUPIP STOP
+   $ZSTATUS="32,pipexample+9^pipexample,%SYSTEM-E-ENO32, Broken pipe"
+        
+   sh> mumps -run retry^pipexample induceEPIPE
+   Try 0   pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/mumps -run induceEPIPE^pipexample 0" STDERR="piperr" 
+   ...Caught on try 0, write 49... 32,retry+13^pipexample,%SYSTEM-E-ENO32, Broken pipe
+       stdout:My PID is 16252
+       stderr:%YDB-F-FORCEDHALT, Image HALTed by MUPIP STOP
+   Try 1   pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/mumps -run induceEPIPE^pipexample 1" STDERR="piperr" 
+   ...Caught on try 1, write 697... 32,retry+13^pipexample,%SYSTEM-E-ENO32, Broken pipe
+       stdout:My PID is 16403
+       stdout:$ZSTATUS="150373210,induceEPIPE+5^pipexample,%YDB-E-DIVZERO, Attempt to divide by zero"
+   Try 2   pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/mumps -run induceEPIPE^pipexample 2" STDERR="piperr" 
+       Writes completed
+      
+This example demonstrates how to create a separate STDERR pipe device from which to read the STDERR output of the program(s) inside the pipe. Reading the STDERR is important when dealing with failures from Unix programs. It is possible to read the errors without creating a STDERR pipe device, however the error messages are commingled with the output of the programs inside the pipe which could make diagnosis of the underlying problem harder. Notice that YottaDB writes fatal errors, YDB-F types, to STDERR, but all others go to STDOUT.
+
+Additionally, this example demonstrates handling errors that terminate the PIPE device. In this example, the PIPE device is terminated when a program inside the pipe terminates before reading all of the driving MUMPS program's output causing an EPIPE or ENO32, a broken pipe. In such a situation the MUMPS program must capture the error that caused the termination and respond accordingly. The program may need to call out to other programs to determine the status of a service it is using or to alert the operator of an error with an external program or service. To operate successfully, the program must recreate the pipe and retry the operation.
+
 
 ++++++++++++++++++++++++++++
 PIPE Deviceparameter Summary
@@ -1760,7 +1751,7 @@ The WRITE command for SOCKET devices accepts the following control mnemonics:
 .. parsed-literal::
    /L[ISTEN][(numexpr)]
 
-where numexpr specifies the listen queue depth for a listening socket. The value will be between 1 and the system-enforced maximum. By default, an OPEN or USE with LISTEN immediately sets the listen queue size to 1. The listen queue depth specified for a listening socket is limited only by the limit imposed by the OS (previously, an artificial limit of 5 was enforced).
+where numexpr specifies the listen queue depth for a listening socket. The value will be between 1 and the system-enforced maximum. By default, an OPEN or USE with LISTEN immediately sets the listen queue size to 1. For vendor-specific information on how to change your system's maximum queue length, refer to the listen manpage..
 
 .. parsed-literal::
    /W[AIT][(timeout)]
@@ -1854,6 +1845,36 @@ The following table provides a brief summary of deviceparameters for socket devi
 |                        |                                | If $LENGTH(strexpr)&("Tt"[$EXTRACT(strexpr)) then Error Trapping is enabled; otherwise   |
 |                        |                                | the application must check $DEVICE for errors.                                           |
 +------------------------+--------------------------------+------------------------------------------------------------------------------------------+
+
+**Socket Management Deviceparameters**
+
++------------------------+--------------------------------+-------------------------------------------------------------------------------------------+
+| Deviceparameter        | Command                        | Comment                                                                                   |
++========================+================================+===========================================================================================+
+| ATTACH=strexpr         | O/U                            | With OPEN, ATTACH assigns expr as the handle name to the newly created socket             |
+|                        |                                |                                                                                           |
+|                        |                                | With USE, expr specifies the handle of a socket in the socketpool.                        |
++------------------------+--------------------------------+-------------------------------------------------------------------------------------------+
+| CONNECT                | O/U                            | Creates a client connection with a server, which is located by the information provided   |
+|                        |                                | by expr.                                                                                  |
++------------------------+--------------------------------+-------------------------------------------------------------------------------------------+
+| [NO]DELIMITER[=strexpr]| O/U                            | Establishes or replaces the list of delimiters used by the newly created socket.          |
++------------------------+--------------------------------+-------------------------------------------------------------------------------------------+
+| DETACH                 | U                              | Removes the socket identified by expr from the current socket device, without affecting   |
+|                        |                                | any existing connection of that socket, and places it in the socketpool.                  |
++------------------------+--------------------------------+-------------------------------------------------------------------------------------------+
+| LISTEN=expr            | O/U                            | Allocate a new socket to listen for a connection.                                         |
++------------------------+--------------------------------+-------------------------------------------------------------------------------------------+
+| MOREREADTIME=intexpr   | O/U                            | The polling interval (in milliseconds) that a SOCKET device uses to check for arriving    |
+|                        |                                | packets                                                                                   |
++------------------------+--------------------------------+-------------------------------------------------------------------------------------------+
+| SOCKET=expr            | U                              | Makes the socket specified by the handle named in expr the current socket for the Socket  |
+|                        |                                | device.                                                                                   |
++------------------------+--------------------------------+-------------------------------------------------------------------------------------------+
+| Z[NO]DELAY             | U                              | Controls buffering of data packets by the system TCP stack using the TCP_NODELAY option   |
+|                        |                                | to the setsockopt system call. ZNODELAY must be fully spelled out.                        |
++------------------------+--------------------------------+-------------------------------------------------------------------------------------------+
+
 
 **Format Deviceparameters**
 
@@ -2378,7 +2399,11 @@ Example:
 
 This example opens a socket connection and specifies that I/O errors on the device raises error conditions.
 
-If $LENGTH(strexpr)&("Tt"[$EXTRACT(strexpr)) then Error Trapping is enabled; otherwise the application must check $DEVICE for errors.
+If $LENGTH(strexpr)&("Tt"[$EXTRACT(strexpr)) then Error Trapping is enabled; otherwise the application must check $DEVICE and other ISVs for errors.
+
+Note that an OPEN command does not change the current device. Therefore, $DEVICE does not have the status information when an error occurs on OPEN. An application should check $TEST and other ISVs for errors on OPEN.
+
+$DEVICE holds status information only after a socket is successfully ATTACHed to a socket device. To properly trap IOERRORs related to connection handling, it is best to create an empty SOCKET device (with something like open tcpdev::timeout:"SOCKET") before opening a socket connection with the OPEN (with LISTEN or CONNECT deviceparameters) command. Then, use ATTACH to bring it to the current SOCKET device. This method ensures that a device exists that would update $DEVICE with status information.
 
 **KEY**
 
@@ -2855,6 +2880,8 @@ The SHELL deviceparameter specifies the shell for the new process. By default th
 STDERR Applies to: PIPE
 
 The STDERR deviceparameter specifies that the stderr output from the created process goes to a PIPE device with the name of the STDERR value. This PIPE device acts as a restricted device that can appear only as the argument to USE, READ and CLOSE commands. It is implicitly READONLY and an attempt to WRITE to it triggers an error. If it has not previously acted as the argument to an explicit CLOSE command, the CLOSE of the PIPE device implicitly closes the the STDERR device.
+
+If the OPEN command does not specify STDERR, YottaDB redirects the stderr output of the co-process created by the COMMAND to the standard output of the co-process. Specify STDERR when there is a need to read the standard error of the COMMAND seperately. 
 
 **STREAM**
 

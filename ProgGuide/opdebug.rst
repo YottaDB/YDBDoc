@@ -500,20 +500,14 @@ Example:
    $ESTACK=2
    $ETRAP=""
    $HOROLOG="59149,36200"
-       
    $IO="/dev/pts/17"
    $JOB=310051
-    
    $KEY=""
-    
    $PRINCIPAL="/dev/pts/17"
-          
    $QUIT=0
    $REFERENCE=""
    $STACK=2
-          
    $STORAGE=1072300032
-               
    $SYSTEM="47,gtm_sysid"
    $TEST=1
    $TLEVEL=0
@@ -525,52 +519,33 @@ Example:
    $ZCMDLINE=""
    $ZCOMPILE=""
    $ZCSTATUS=0
-                
    $ZDIRECTORY="/ext1/home/"
-                     
    $ZEDITOR=0
    $ZEOF=0
    $ZERROR="Unprocessed $ZERROR, see $ZSTATUS"
-                     
-   $ZGBLDIR="/ext1/home/mumps.gld"
-                            
    $ZININTERRUPT=0
    $ZINTERRUPT="IF $ZJOBEXAM()"
-                            
    $ZIO="/dev/pts/17"
-                                  
    $ZJOB=0
    $ZLEVEL=3
    $ZMODE="INTERACTIVE"
-                                  
-   $ZPOSITION="name+3^dmex"
-                       
+   $ZPOSITION="name+3^dmex"                    
    $ZPROCESS=""
-   $ZPROMPT="YDB>"
-                                        
-   $ZROUTINES=". /usr/library/ydb_dist"
-                                            
-   $ZSOURCE=""
-                                              
-   $ZSTATUS="150373850,name+3^dmex, %YDB-E-UNDEF, Undefined local variable: bame"
-                                                    
+   $ZPROMPT="YDB>"             
+   $ZROUTINES=". /usr/library/ydb_dist"                          
+   $ZSOURCE=""       
+   $ZSTATUS="150373850,name+3^dmex, %YDB-E-UNDEF, Undefined local variable: bame"                                      
    $ZSYSTEM=0
    $ZTRAP="B"
-                                                    
-   $ZVERSION="YottaDB r1.20 AIX RS6000"
-                                                          
+   $ZVERSION="YottaDB r1.20 AIX RS6000"                                             
    $ZYERROR=""
            bame="?"
            ln=12
-           name=""
-                                                      
+           name=""               
    /dev/pts/17 OPEN TERMINAL NOPAST NOESCA NOREADS TYPE WIDTH=80 LENG=24
-   name+3^dmex($ZTRAP)
-                                                               
-   (Direct mode)
-                                                                    
-            beg^dmex
-                                                                          
+   name+3^dmex($ZTRAP)                                             
+   (Direct mode)                                              
+            beg^dmex                                                          
    ^GTM$DMOD(Direct mode)
    YDB>
 

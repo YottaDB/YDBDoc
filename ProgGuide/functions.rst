@@ -1430,8 +1430,8 @@ $VIEW() provides a means to access YottaDB environmental information. When Yotta
 | "GVNEXT"      | region           | Name of the next database region after the given one in alphabetical order (or M collation sequence); "" for region starts with the first region. A return value of |
 |               |                  | "" means that the global directory defines no additional regions.                                                                                                   |
 +---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| "GVSTAT"      | region           | When read-only processes are the active in a database, they cannot update the database including the file header where GVSTATS are stored. Therefore their counts   |
-|               |                  | are only stored in associated shared memory and must be flushed to the file header by a process with write access, which might be a MUPIP RUNDOWN.                  |
+| "GVSTAT"      | region           | A read-only process cannot update the database including the database file header where GVSTATS are stored. Another process with write access to a database, such as|
+|               |                  | MUPIP RUNDOWN, can flush its read statistics from the associated shared memory to GVSTATS.                                                                          |
 +---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | "ICHITS"      | none             | Number of indirection cache hits since YottaDB process startup. Indirection cache is a pool of compiled expressions that YottaDB maintains for indirection          |
 |               |                  | and XECUTE.                                                                                                                                                         |
@@ -1507,6 +1507,9 @@ $VIEW() provides a means to access YottaDB environmental information. When Yotta
 |               |                  | and YottaDB automatically expands the stringpool as needed by the application program; Number of bytes currently used by the process; Number of bytes reserved:     |
 |               |                  | The reserved space is used to reduce the active memory usage, for example, when a process uses a large amount of memory then subsequently uses a significantly      |
 |               |                  | reduced amount.                                                                                                                                                     |
++---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| "STATSHARE"   | region           | Returns TRUE (1) if the process is currently sharing database statistics for the region and FALSE (0) if it is not. For the process to be sharing, the database must|
+|               |                  | be enabled for sharing and the process must have opted in to share. $VIEW("STATSHARE") with no region argument indicates the process has enabled sharing.           |
 +---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | "STKSIZ"      | none             | Returns the YottaDB stack size in bytes.                                                                                                                            |
 +---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+

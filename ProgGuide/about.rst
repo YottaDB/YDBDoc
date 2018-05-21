@@ -48,7 +48,7 @@ For more information regarding database utilities, refer to the `"Global Directo
 Managing Source Code
 ++++++++++++++++++++++
 
-In the YottaDB programming environment, source routines are generated and stored as standard UNIX files. They are created and edited with standard UNIX text editors. YottaDB accepts source lines of up to 8192 characters; this limit applies to XECUTE command arguments and Direct Mode input as well.
+In the YottaDB programming environment, source routines are generated and stored as standard UNIX files. They are created and edited with standard UNIX text editors. YottaDB accepts source lines of up to 8192 bytes. When YottaDB encounters a line with a length greater than 8192 bytes in a source file, it emits a %YDB-W-LSEXPECTED warning. This warning identifies cases where a line greater than 8192 bytes is split into multiple lines, which causes statements beyond the character prior to the limit to execute irrespective of any starting IF, ELSE or FOR commands. The 8192 byte limit applies to XECUTE command arguments and Direct Mode input as well.
 
 YottaDB is designed to work with the operating system utilities and enhances them when beneficial. The following sections describe the process of programming and debugging with YottaDB and from the operating system.
 

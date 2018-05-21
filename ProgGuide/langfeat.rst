@@ -1171,7 +1171,7 @@ The pattern codes are:
 Pattern codes may be upper or lower case and may be replaced with a string literal. YottaDB allows the M pattern match definition of patcodes A, C, N, U, L, and P to be extended or changed, (A can only be modified implicitly by modifying L or U) and new patcodes added. For detailed information on enabling this functionality, see `Chapter 12: “Internationalization” <https://docs.yottadb.com/ProgrammersGuide/internatn.html>`_.
 
 .. note::
-   The YottaDB compiler accepts pattern codes other than those explicitly defined above. If, at run-time, the pattern codes come into use and no pattern definitions are available, YottaDB issues a run-time error (PATNOTFOUND). YottaDB does not currently implement a mechanism for Y and Z patterns and continues to treat those as compile-time syntax errors.
+   The YottaDB compiler accepts pattern codes other than those explicitly defined above. If, at run-time, the pattern codes come into use and no pattern definitions are available, YottaDB issues a run-time error (PATNOTFOUND). YottaDB does not currently implement a mechanism for Y and Z patterns and continues to treat those as compile-time syntax errors. YottaDB defers literal optimizations involving patterns within an XECUTE as well as evaluations that encounter issues with the pattern table.
 
 Example:
 
@@ -1314,7 +1314,7 @@ M entryrefs provide a generalized target for referring to a line within a routin
 M permits every element in an entryref to have the form of an indirection operator, followed by an element that evaluates to a legitimate occurrence of that portion of the entryref.
 
 .. note::
-   While most commands and functions that use entryrefs permit argument indirection, M does not accept indirection that resolves to a combination of label and offset or offset and routine name.
+   YottaDB accepts an offset without a label (for example +3^RTN) for an entryref argument to DO, GOTO and ZGOTO but prohibits the same during parameter passing with the JOB command. 
 
 Offsets provide an extremely useful tool for debugging. However, avoid their use in production code because they generally produce maintenance problems.
 

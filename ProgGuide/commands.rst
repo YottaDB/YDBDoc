@@ -107,6 +107,7 @@ The format of the CLOSE command is:
 * The required expression specifies the device to CLOSE.
 * The optional keywords specify device parameters that control device behavior; some device parameters take arguments delimited by an equal sign (=). If there is only one keyword, the surrounding parentheses are optional.
 * An indirection operator and an expression atom evaluating to a list of one or more CLOSE arguments form a legal argument for a CLOSE.
+* CLOSE of the current device ($IO), implicitly uses $PRINCIPAL.
 
 ----------------
 Do
@@ -1548,7 +1549,7 @@ The format of the VIEW command is:
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
 * The keyword specifies the environmental factor to change.
-* The optional expression following the keyword specifies the nature of the change to the environmental factor.
+* The optional expression following the keyword specifies the nature of the change to the environmental factor. When this expression is a region list (a comma delimited list of regions), YottaDB sorts the regions in an internal order eliminating any duplicates from the list for deadlock prevention. When region list is not specified, VIEW operates on all regions under the current global directory. 
 * An indirection operator and an expression atom evaluating to a list of one or more VIEW arguments form a legal argument for a VIEW
 
 +++++++++++++++++++++++++
@@ -1772,13 +1773,16 @@ Displays the created relinkctl files and the routines looked for in their relate
 
 Resets all the process-private global access statistics to 0. This is particularly useful for long running processes which would periodically like to restart the counting without requiring a shut down and restart.
 
-**[NO]STATSHARE**
+**[NO]STATSHARE[:<region-list>]**
 
-Opt in or out of sharing process statistics for monitoring by other processes.
+VIEW "[NO]STATSHARE"[:<region-list>] enables or disables database statistics sharing for listed regions which permit such sharing. Without the region-list, the command acts on all regions enabled for sharing. When a targeted region has sharing disabled, STATSHARE has no immediate effect, but may cause the process to start sharing if and when a MUPIP SET -STATS enables sharing for that region.
 
-YottaDB provides a fast and efficient mechanism for processes to share their database access statistics for other processes to monitor. Processes opt in or out with the VIEW "[NO]STATSHARE" command, defaulting to VIEW "NOSTATSHARE". At process startup, a value of 1, or any case-independent string or leading substrings of "TRUE" or "YES" in the environment variable ydb_statshare provides an initial setting of VIEW "STATSHARE". When a process changes whether it is opting in or out, there is no change to the output of a ZSHOW "G" within that process. YottaDB does not permit this form of the VIEW command within a TP transaction. Monitoring the statistics of other processes does not require opting-in.
+This provides a fast and efficient mechanism for processes to share their database access statistics for other processes to monitor. Processes opt in or out with the VIEW "[NO]STATSHARE"[:<region-list>] command, defaulting to VIEW "NOSTATSHARE". At process startup, a value of 1, or any case-independent string or leading substrings of "TRUE" or "YES" in the environment variable ydb_statshare provides an initial setting of VIEW "STATSHARE". When a process changes whether it is opting in or out, there is no change to the output of a ZSHOW "G" within that process. YottaDB does not permit this form of the VIEW command within a TP transaction. Monitoring the statistics of other processes does not require opting-in.
 
-Processes opted-in place their statistics as binary data in database files located in the directory specified by the ydb_statsdir environment variable. All processes that share statistics MUST use the same value for $ydb_statsdir. The ^%YGBLSTAT utility program gathers and reports statistics. 
+The processes which opt-in for STATSHARE place their statistics as binary data in database files located in the directory specified by the ydb_statsdir environment variable. All processes that share statistics MUST use the same value for $ydb_statsdir. The ^%YGBLSTAT utility program gathers and reports statistics. 
+
+.. note::
+   A VIEW "[NO]STATSHARE" with no region sub-argument opens any unopened mapped regions and any enabled associated statsDB regions; the $ydb_statshare environment variable applies to databases as the application first uses them. When the last VIEW "[NO]STATSHARE" had no region sub-argument, regions implicitly share when the process first references them, but after a VIEW specifies selective sharing, regions don't implicitly share as they open. 
 
 **STP_GCOL**
 
@@ -3260,7 +3264,7 @@ C: provides the list of loaded external call packages and their routines. ZSHOW 
 
 D: displays device information
 
-G: displays the access statistics for global variables and access to database file since process startup
+G: displays the access statistics for global variables and access to database file since process startup. When the process does not have access to the current shared statistics, ZSHOW "G" return a question-mark (?) at the end of the output strings. 
 
 I: displays the current values of all intrinsic special variables
 
@@ -3269,6 +3273,8 @@ L: displays LOCKs and ZALLOCATEs held by the process
 R: displays the invocation stack and a hash based on the MurmurHash3 algorithm of M source code for each routine on the stack.
 
 S: displays the invocation stack
+
+T: displays the cross-region summary (total) lines associated with G and L codes. Lines associated with G end with a question-mark (?) when the process does not have access to the current shared statistics.
 
 V: displays local and alias variables
 
