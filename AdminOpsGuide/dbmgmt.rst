@@ -2086,7 +2086,7 @@ Example:
    Blocks extended     : 0 
    
    Global: HIST (region HIST)
-   %GTM-I-FILERENAME, File /var/myApp/prod/journals/hist.mjl is renamed to /var/myApp/prod/journals/hist.mjl_2015289165050
+   %YDB-I-FILERENAME, File /var/myApp/prod/journals/hist.mjl is renamed to /var/myApp/prod/journals/hist.mjl_2015289165050
    Blocks processed    : 337069 
    Blocks coalesced    : 12888 
    Blocks split        : 0 
@@ -2376,7 +2376,8 @@ The format of the SET command is:
     -AC[CESS_METHOD]={BG|MM}
     -[NO]AS[YNCIO]
     -[NO]DE[FER_TIME][=seconds]
-    -[NO]DEFER_ALLOCATE 
+    -[NO]DEFER_ALLOCATE
+    -EPOCHTAPER 
     -E[XTENSION_COUNT]=integer(no of blocks)
     -F[LUSH_TIME]=integer
     -G[LOBAL_BUFFERS]=integer
@@ -2693,11 +2694,11 @@ Specifies the maximum number nanoseconds for processes to sleep while waiting to
 .. parsed-literal::
    -SPIN_SLEEP_MASK=hex_mask
 
-* hex_mask is a hexidecimal mask that controls the maximum time (in nanoseconds) the process sleeps on a sleep spin.
+* hex_mask is a hexadecimal mask that controls the maximum time (in nanoseconds) the process sleeps on a sleep spin.
 
 * The default is zero (0) which causes the process to return control to the UNIX kernel to be rescheduled with no explicit delay. When the value is non-zero, the process waits for a random value between zero (0) and the maximum value permitted by the mask.
 
-* Except on the advice of your YottaDB support channel, YottaDB recommends leaving the default values unchanged in production environments, until and unless, you have data from testing and benchmarking that demonstrates a benefit from a change.
+* Except on the advice of your YottaDB support channel, YottaDB recommends leaving the default values unchanged in production environments, until and unless you have data from testing and benchmarking that demonstrates a benefit from a change.
 
 **-STATS**
 
