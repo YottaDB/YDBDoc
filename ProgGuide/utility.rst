@@ -1356,6 +1356,8 @@ This example makes a copy of the nodes and values of global ^b to global ^g.
 
 The %GCE utility changes every occurrence of a string within the data of selected global nodes to a replacement string. ^%GCE changes the string in each place it occurs, even if it forms part of a longer string. For example, changing the string 12 to 55 changes 312 to 355.
 
+%GCE displays the name of each global as it is processed. You can suppress the output of the names of globals in which no changes are made by using the QUIET utility label.
+
 **Prompts**
 
 Global^: Requests (using %GSEL) the name(s) of the globals to change; <RETURN> ends selection.
@@ -1371,6 +1373,8 @@ Asks whether to display the before and after versions of modified nodes on the c
 Output Device: <terminal>:
 
 Requests a destination device; defaults to the principal device.
+
+QUIET: Only displays the names of globals in which changes are made.
 
 **Examples of %GCE**
 
@@ -1627,6 +1631,8 @@ Example:
 
 The %GSE utility finds occurrences of a string within the data values for selected global nodes and displays the variable name and data on a specified output device.
 
+%GSE displays the name of each global as it is processed. You can suppress the output of the names of globals in which the search string is not found by using the QUIET utility label.
+
 **Prompts**
 
 Output Device: <terminal>:
@@ -1851,7 +1857,7 @@ The %RCE utility replaces every occurrence of a text string with another text st
 
 %RCE prompts for a text string to replace and its replacement. %RCE searches for text strings in a case-sensitive manner. %RCE issues a warning message if you specify a control character such as a <TAB> in the text string or its replacement. %RCE confirms your selection by displaying the text string and its replacement between a left and right arrow. The arrows highlight any blank spaces that you might have included in the text string or its replacement.
 
-Regardless of whether you select a display of every change, %RCE displays the name of each routine as it is processed and completes processing with a count of replacements and routines changed.
+Regardless of whether you select a display of every change, %RCE displays the name of each routine as it is processed. You can suppress the output of the names of routines in which no changes are made by using the QUIET and QCALL utility labels. %RCE completes processing with a count of replacements and routines changed.
 
 **Prompts**
 
@@ -2137,6 +2143,8 @@ The %RSE utility searches for every occurrence of a text string in a routine or 
 %RSE uses %RSEL to select routines. For more information, see “ %RSEL”.
 
 %RSE searches for text strings are case-sensitive. %RSE issues a warning message if you specify a control character such as a <TAB> in the text string. %RSE confirms your selection by displaying the text string between a left and right arrow. The arrows display any blank spaces included in the text string.
+
+%RSE displays the name of each routine as it is processed. You can suppress the output of the names of routines in which the search string is not found by using the QUIET and QCALL utility labels.
 
 %RSE completes processing with a count of occurrences found.
 
@@ -2666,6 +2674,9 @@ Calls to %PEEKBYNAME with the listed parameter as the first or only parameter re
 | Updates disabled                     |  "jnlpool_ctl_struct.upd_disabled"                        | Integer - 1 means updates disabled; 0 means updates         |
 |                                      |                                                           | permitted                                                   |
 +--------------------------------------+-----------------------------------------------------------+-------------------------------------------------------------+
+
+.. note::
+   %PEEKBYNAME opens the -READ_ONLY help database as part of its operation, and in so doing causes each process using it to create a private semaphore. In addition, the first process to access a database creates an ftok related semaphore, which in the case of a -READ_ONLY database remains until deleted by a MUPIP RUNDOWN.
 
 ++++++++++++++++++++
 %YGBLSTAT()

@@ -300,8 +300,9 @@ The following illustration shows the flow of control when the trigger is execute
 Trigger Definition Storage
 -----------------------------
 
-YottaDB stores trigger definitions as nodes of a global-like structure (^#t) within the same database as the nodes with which they're associated. You can manage the trigger definitions with MUPIP TRIGGER and $ZTRIGGER() but you cannot directly access ^#t (except with DSE, which YottaDB recommends against under normal circumstances). The block size, key size, and record size for a database must be sufficient to hold its associated trigger definition. In addition, YottaDB stores cross-region name resolution information in the DEFAULT region, so the DEFAULT region in a global directory used to update triggers must have sufficient block size, key size, and record size to hold that trigger-related data.
+YottaDB stores trigger definitions as nodes of a global-like structure (^#t). YottaDB stores these structures in each region where triggers are mapped. You can manage the trigger definitions with MUPIP TRIGGER and $ZTRIGGER() but you cannot directly access ^#t (except with DSE, which YottaDB recommends against under normal circumstances).
 
+Database key and record size do not constrain the global like ^#t structure. YottaDB automatically sets the key size of ^#t nodes to 1019 bytes which allows YottaDB to store triggers more compactly in cases where regions have a small record size limit. YottaDB can automatically span ^#t nodes as needed to accommodate records that exceed block size.
 
 --------------------------------------------
 Trigger Invocation and Execution Semantics
@@ -433,7 +434,8 @@ To maintain the transactional integrity of triggers and to avoid branching contr
 
 * YottaDB does not support ZGOTO 1:<entryref> arguments in MUPIP because they form an attempt to replace the MUPIP context.
 * When a ZGOTO argument specifies an entryref at or below the level of the update that initiated the trigger, YottaDB redirects the flow of control to the entryref without performing the triggering update. Alternatively if YottaDB finds a non-null $ECODE, indicating an unhandled error when it goes to complete the trigger, it throws control to the current error handler rather than committing the original triggering update.
-* ZGOTO 0 terminates the process and ZGOTO 1 returns to the base stack frame, which has to be outside any trigger invocation.
+* ZGOTO 1 returns to the base stack frame, which has to be outside any trigger invocation.
+* ZGOTO 0 terminates the process; when ""=$ZTRAP and ""!=$ECODE, ZGOTO 0 returns a non-zero status, derived from the error code in $ZSTATUS, to the shell.
 * ZGOTO from within a run-time trigger context cannot directly reach a subsequent M command on the line containing the command that invoked the trigger, because a ZGOTO with an argument specifying the level where the update originated but no entryref returns to the update itself (as would a QUIT) and, if $ECODE is null, YottaDB continues processing with any additional triggers and the triggering update before resuming the line.
 
 ++++++++++++++++++++++++++++++++++++++

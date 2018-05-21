@@ -120,6 +120,8 @@ After the action, if any, invoked by $ETRAP, $ZTRAP or EXCEPTION:
 * otherwise, if $ETRAP'="" YottaDB performs a QUIT$QUIT "" QUIT and reissues the error at the new stack level.
 * otherwise, $ZTRAP must contain code and YottaDB retries the line of M on which the error occurred.
 
+YottaDB checks the syntax of code assigned to $ETRAP, $ZSTEP, $ZTRAP, and EXCEPTION at the time they are specified. Note that $ZTRAP and EXCEPTION are subject to ydb_ztrap_form, and, if that specifies entryref or adaptive, YottaDB does not check the syntax. Also, the environment variables $ydb_etrap, $ydb_trigger_etrap, and $ydb_zstep provide ways of setting some of the ISVs, so their values are verified at process initiation. Further, a SET $ETRAP uses a temporary default value of "IF $ZJOBEXAM" when shifting from $ZTRAP to $ETRAP in case the specified value has compilation errors. 
+
 +++++++++++++++++++++++++++++++
 Run-Time Errors in Direct Mode
 +++++++++++++++++++++++++++++++
