@@ -22,4 +22,13 @@ input.gsc-search-button-v2 {
         padding: 5px 26px !important;
         width: 68px !important;
 }
+.wy-table-responsive table td, .wy-table-responsive table th {
+        white-space: normal;
+}
+
+.wy-table-responsive {
+        margin-bottom: 24px;
+        max-width: 100%;
+        overflow: visible;
+}
 

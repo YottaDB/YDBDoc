@@ -823,7 +823,7 @@ In the following table, the YottaDB->C limit applies to 1 and the C->YottaDB lim
 +----------------------------------------------------------------------------------+--------------------+----------------------------------------------+----------------------------+-----------------------------------------+
 
 .. note::
-   gtm_char_t ** is not supported for call-ins but they are included for IO and O direction usage with call-outs. For call-out use of gtm_char_t * and gtm_string_t \*, the specification in the interface definition for preallocation sets the range for IO and O, with a maximum of 1MiB.
+   gtm_char_t ** is not supported for call-ins but they are included for IO and O direction usage with call-outs. For call-out use of gtm_char_t \* and gtm_string_t \*, the specification in the interface definition for preallocation sets the range for IO and O, with a maximum of 1MiB.
 
 
 
