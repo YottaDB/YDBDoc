@@ -1458,6 +1458,12 @@ $VIEW() provides a means to access YottaDB environmental information. When Yotta
 | "LINK"        | none             | Returns the current relink recursive setting of ZLINK.                                                                                                              |
 +---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | "LV_CREF"     | local variable   | returns the total number of references to the data-space associated with an unsubscripted local variable name specified as a second expr (for example a quoted      |
+|               | name (lvn)       | string). it returns a zero for a variable without any associated alias container.                                                                                   |
++---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| "LV_GCOL"     | none             | returns the number of data-spaces recovered during a local variable data-space garbage collection it triggers; such collections normally happen automatically at    |
+|               |                  | appropriate times.                                                                                                                                                  |
++---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| "LV_REF"      | local variable   | returns the total number of references to the data-space associated with an unsubscripted local variable name specified as a second expr (for example a quoted      |
 |               | name (lvn)       | string).                                                                                                                                                            |
 +---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | "LVNULLSUBS"  | none             | Truth value showing whether null subscripts are permitted in local arrays (1 for "LVNULLSUBS") or not (0 for "NOLVNULLSUBS"); YottaDB defaults to 1.                |
