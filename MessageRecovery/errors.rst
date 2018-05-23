@@ -105,9 +105,9 @@ Action: Examine the value and shorten the length of the address value.
 AIMGBLKFAIL
 -----------
 
-AIMGBLKFAIL, AIMGBLKFAIL, After image build for block bbbb in region rrrr failed in DSE or MUPIP
+AIMGBLKFAIL, After image build for block bbbb in region rrrr failed in DSE or MUPIP
 
-GT.CM/DSE/MUPIP Error: MUPIP/DSE/GT.CM Error: DSE creates after images of blocks as a result of its physical manipulation of blocks and in MUPIP processes them in the course of RECOVER or ROLLBACK. This error indicates that such a manipulation failed on the block and region indicated.
+MUPIP/DSE/GT.CM Error: DSE creates after images of blocks as a result of its physical manipulation of blocks and in MUPIP processes them in the course of RECOVER or ROLLBACK. This error indicates that such a manipulation failed on the block and region indicated.
 
 Action: If you get this error from DSE, you may be working with a block with a damaged state that your DSE action does not sufficiently address - analyze the situation and consider other approaches. If you get this error from MUPIP, it may mean your journal or replication has damage, in which case you should investigate the state of block bbbb.
 
@@ -115,7 +115,7 @@ Action: If you get this error from DSE, you may be working with a block with a d
 AIOBUFSTUCK
 -----------
 
-AIOBUFSTUCK, AIOBUFSTUCK, Waited mmmm minutes for PID: pppp to finish AIO disk write of block: bbbb
+AIOBUFSTUCK, Waited mmmm minutes for PID: pppp to finish AIO disk write of block: bbbb
 
 All YottaDB Components Warning: PID pppp did not receive a response from the I/O system after waiting for mmmm minutes. Block bbbb cannot accept further updates until the I/O completes.
 
@@ -192,7 +192,7 @@ ARROWNTDSP, Unable to display ^----- due to length of source line
 
 Compile Time Error: Displayed instead of the arrow indicating where compilation error occurred due to a long line source line.
 
-Action: Refer to the source code. the line number and column number in the associated messages identify the position of the problem. Consider shortening the line, at least until the error is found and corrected.
+Action: Refer to the source code. The line number and column number in the associated messages identify the position of the problem. Consider shortening the line, at least until the error is found and corrected.
 
 ------
 ASSERT
@@ -233,7 +233,7 @@ AUTODBCREFAIL
 
 AUTODBCREFAIL, Automatic creation of database file DDDD associated with region RRRR failed; see associated messages for details
 
-All YottaDB Components Error: Error occurs during the runtime creation of a database with the AUTODB flag set so it is automatcially created on open. This includes automatically defined statistics databases. The message is followed with the reason for the failure.
+All YottaDB Components Error: Error occurs during the runtime creation of a database with the AUTODB flag set so it is automatically created on open. This includes automatically defined statistics databases. The message is followed with the reason for the failure.
 
 Action: Fix the reason for the failure and retry.
 
@@ -263,7 +263,7 @@ BADACCMTHD
 
 BADACCMTHD, Invalid access method was specified, file not created
 
-MUPIP Warning: This indicates that CREATE encountered an invalid access method for the dynamic segment in the current Global Directory, which is defined by the logical name GTM$GBLDIR / environment variable ydb_gbldir.
+MUPIP Warning: This indicates that CREATE encountered an invalid access method for the dynamic segment in the current Global Directory, which is defined by the logical name GTM$GBLDIR/environment variable ydb_gbldir.
 
 Action: Use the Global Directory Editor (GDE) to verify the access method for the Global Directory. Look for the use of YottaDB components with different version numbers.
 
@@ -646,7 +646,7 @@ BOOLSIDEFFECT, Extrinsic ($$), External call ($&) or $INCREMENT() with potential
 
 Compile Time Warning: This optional message, accompanied by a line and column pointing to the issue, indicates a Boolean expression that contains a side effect in a term other than its first. By default, YottaDB may skip evaluating such terms.
 
-Action: Revise the code to your standards and use the VIEW (arguments [NO]FULL_BOOLEAN or FULLBOOL_WARN) command and / or the environment variable (ydb_boolean) to select the appropriate setting for YottaDB handling of this construct.
+Action: Revise the code to your standards and use the VIEW (arguments [NO]FULL_BOOLEAN or FULLBOOL_WARN) command and/or the environment variable (ydb_boolean) to select the appropriate setting for YottaDB handling of this construct.
 
 -------------
 BOVTMGTEOVTM
@@ -790,7 +790,7 @@ CALLINAFTERXIT, After a ydb_exit, a process can never create a valid YottaDB con
 
 Run Time Error: Once a call-in has done a call to ydb_exit(), a process can no longer do YottaDB call-ins
 
-Action: Either move or remove the inappropriate call-ins or move the gtm_exit call to a later point.
+Action: Either move or remove the inappropriate call-ins or move the ydb_exit call to a later point.
 
 ----------------
 CALLINTCOMMIT
@@ -816,7 +816,7 @@ Action: If a TP transaction is started using SimpleAPI, and the user function dr
 CANTBITMAP
 -------------
 
-CANTBITMAP, CANTBITMAP, Can't perform this operation on a bit map (block at a 200 hexadecimal boundary)
+CANTBITMAP, Can't perform this operation on a bit map (block at a 200 hexadecimal boundary)
 
 DSE Error: The selected DSE operation does not apply to bit maps (blocks divisible by 0x200).
 
@@ -862,7 +862,7 @@ CETOOMANY
 
 CETOOMANY, Too many compiler escape substitutions in a single statement
 
-Compile Time/Run Time Error: This indicates that the program being compiled contained more nested substitutions than allowed; that is 1024.
+Compile Time/Run Time Error: This indicates that the program being compiled contained more nested substitutions than allowed; that is, 1024.
 
 Action: Reduce the number of substitutions to less than 1024.
 
@@ -903,7 +903,7 @@ Action: None necessary
 CHSETALREADY
 ------------------
 
-CHSETALREADY, CHSETALREADY, Socket device already contains sockets with iCHSET=xxxx, oCHSET=xxxx
+CHSETALREADY, Socket device already contains sockets with iCHSET=xxxx, oCHSET=xxxx
 
 Run Time Error: The code tried to create a new socket, specifying a CHSET different than the CHSET previously assigned to the SOCKET device.
 
@@ -1226,7 +1226,7 @@ Action: Look for a $SELECT() function that does not have a colon separating the 
 COLTRANSSTR2LONG
 ----------------
 
-COLTRANSSTR2LONG, COLTRANSSTR2LONG,Output string after collation transformation is too long
+COLTRANSSTR2LONG, Output string after collation transformation is too long
 
 Run Time Error: an alternative collation transform or reverse transform attempted to use more bytes than the configuration permits.
 
@@ -1300,7 +1300,7 @@ Action: Review the qualifiers in the ZLINK sub-argument or those being SET into 
 CONNSOCKREQ 
 ---------------
 
-CONNSOCKREQ, CONNSOCKREQ, Socket not connected
+CONNSOCKREQ, Socket not connected
 
 Run Time Error: The operation attempted requires a socket in the CONNECTED state, and the provided socket was not connected.
 
@@ -1350,7 +1350,7 @@ Action: Check the block size. Move or create the record in a different location.
 CREDNOTPASSED
 ---------------------------
 
-CREDNOTPASSED, CREDNOTPASSED, Socket message contained no passed credentials
+CREDNOTPASSED, Socket message contained no passed credentials
 
 Run Time Error: WRITE /PASS or WRITE /ACCEPT was given a process id to verify, but YottaDB was unable to obtain the peerprocess id.
 
@@ -1384,13 +1384,13 @@ CRYPTBADCONFIG, Could not retrieve data from encrypted file ffff due to bad encr
 
 Run Time Error: The error occurs when a YottaDB utility program starts with a bad encryption configuration (like a bad password) and attempts to read a block corresponding to file ffff (either from memory or disk).
 
-Action: Look at accompanying message (or prior messages related to encryption) for more details on what encryption configuration parameter is incorrect.
+Action: Look at the accompanying messages (or prior messages related to encryption) for more details on what encryption configuration parameter is incorrect.
 
 -------------------
 CRYPTBADWRTPOS
 -------------------
 
-CRYPTBADWRTPOS, CRYPTBADWRTPOS, Encrypted WRITE disallowed from a position different than where the last WRITE completed
+CRYPTBADWRTPOS, Encrypted WRITE disallowed from a position different than where the last WRITE completed
 
 Run Time Error: A WRITE attempt to an encrypted device violates the integrity of the produced ciphertext. This is the case, for example, when trying to WRITE to a previously encrypted and CLOSEd file. Because encryption ciphers rely on state machine algorithms, YottaDB prohibits WRITEs performed in non-sequential fashion or when they threaten to overlay already encrypted data.
 
@@ -1463,7 +1463,7 @@ CRYPTJNLWRONGHASH
 
 CRYPTJNLWRONGHASH, Encryption key hash mismatch between journal file jjjj and corresponding database file dddd
 
-Run Time Error: gtmcrypt plug-in reports the hash of the key in the header of database file dddd does not match the hash stored in the header of journal file jjjj. This is most likely caused by inappropriate operator action such as replacing the current journal file with an older journal file.
+Run Time Error: gtmcrypt plug-in reports that the hash of the key in the header of database file dddd does not match the hash stored in the header of journal file jjjj. This is most likely caused by inappropriate operator action such as replacing the current journal file with an older journal file.
 
 Action: Correct the error that caused the incorrect journal file to be pointed to by the database file. If the correct journal file has been inadvertently deleted, create new journal files with the -noprevjnl switch. Take a backup as soon as possible thereafter. Depending on your situation, you may need to refresh secondary instances.
 
@@ -1501,7 +1501,7 @@ Action: Examine message eeee from the plug-in and take the needed action: for ex
 CRYPTKEYTOOBIG
 -----------------------
 
-CRYPTKEYTOOBIG, CRYPTKEYTOOBIG, Specified key has length xxxx, which is greater than the maximum allowed key length yyyy
+CRYPTKEYTOOBIG, Specified key has length xxxx, which is greater than the maximum allowed key length yyyy
 
 Run Time Error: A key name value specified with the [I|O]KEY deviceparameter on an OPEN or USE command is too long.
 
@@ -1512,7 +1512,7 @@ Action: Verify that the key name portion of the [I|O]KEY deviceparameter's value
 CRYPTNOAPPEND
 -------------------
 
-CRYPTNOAPPEND, CRYPTNOAPPEND, APPEND disallowed on the encrypted file xxxx
+CRYPTNOAPPEND, APPEND disallowed on the encrypted file xxxx
 
 Run Time Error: An OPEN command specifies both an APPEND deviceparameter and a non-empty value for the [I|O]KEY deviceparameter.
 
@@ -1593,7 +1593,7 @@ Action: When using encryption, because encryption algorithms maintain state as t
 CRYPTNOV4 
 -------------------
 
-CRYPTNOV4, ffff is an encrypted database. Cannot downgrade with Encryption option enabled.>/error/fao=2!/ansi=0
+CRYPTNOV4, ffff is an encrypted database. Cannot downgrade with Encryption option enabled
 
 MUPIP Error: An attempt to downgrade ffff which is an encrypted database to the previous format failed because it does not support encrypted database files.
 
@@ -1665,7 +1665,7 @@ CURRSOCKOFR
 
 CURRSOCKOFR, Current socket of index xxxx is out of range. There are only yyyy sockets.
 
-Run Time Error: This indicates that an OPEN, USE , READ or WRITE attempted to select a socket outside the range of available sockets.
+Run Time Error: This indicates that an OPEN, USE, READ or WRITE attempted to select a socket outside the range of available sockets.
 
 Action: Review the socket management logic and revise to use only available sockets.
 
@@ -2269,7 +2269,7 @@ DBDUPNULCOL
 
 DBDUPNULCOL, Discarding kkkk=vvvv key due to duplicate null collation record
 
-MUPIP Error: This idicates that MUPIP LOAD discarded a key-value pair from a binary EXTRACT because it contained conflicting empty string subscripts. This can only happen is someone changes the "Null" subscript representation used by a database while it contains such subscripts. YottaDB recommends against such a change.
+MUPIP Error: This indicates that MUPIP LOAD discarded a key-value pair from a binary EXTRACT because it contained conflicting empty string subscripts. This can only happen if someone changes the "Null" subscript representation used by a database while it contains such subscripts. YottaDB recommends against such a change.
 
 Action: Determine whether the described data has value and restore it, typically with a SET command, appropriately.
 
@@ -2309,7 +2309,7 @@ Action: The system automatically attempts to correct the problem. If this error 
 DBFHEADERR4 
 -------------------------
 
-DBFHEADERR4, DBFHEADERR4:Database file ffff: control problem: aaaa was xxxx expecting yyyy
+DBFHEADERR4, Database file ffff: control problem: aaaa was xxxx expecting yyyy
 
 Run Time Error: This indicates that database cache recovery was triggered due to some abnormal event, and the recovery routine detected damage to the control structures in the database global buffer cache.
 
@@ -2319,7 +2319,7 @@ Action: The system automatically attempts to correct the problem. If this error 
 DBFHEADERR8 
 ----------------------
 
-DBFHEADERR8, DBFHEADERR8: Database file ffff: control problem: aaaa was xxxx expecting yyyy
+DBFHEADERR8, Database file ffff: control problem: aaaa was xxxx expecting yyyy
 
 Run Time Error: This indicates that database cache recovery was triggered due to some abnormal event, and the recovery routine detected damage to the control structures in the database global buffer cache.
 
@@ -3582,7 +3582,7 @@ DLLNORTN, Failed to look up the location of the symbol xxxx
 
 Run Time Error: This indicates that the process was unable to find the routine it needed in the dynamically linked library.
 
-Action: Ensure that the environment variable for dynamic library path is defined and correctly locates the shared library file, as well as any other dependent shared libraries. Also ensure that the sumbol xxxx is defined in one of the libraries.
+Action: Ensure that the environment variable for dynamic library path is defined and correctly locates the shared library file, as well as any other dependent shared libraries. Also ensure that the symbol xxxx is defined in one of the libraries.
 
 ------------------------
 DLLVERSION 
@@ -3740,7 +3740,7 @@ DSKSPACEFLOW
 
 DSKSPACEFLOW, Disk space for file xxxx nearing maximum size. YYYY blocks available.
 
-Run Time Warning: This indicates that disk space for the specified file system, on which the database / journal files are located, is almost full.
+Run Time Warning: This indicates that disk space for the specified file system, on which the database/journal files are located, is almost full.
 
 Action: Review and make disk space.
 
@@ -4260,7 +4260,7 @@ FILENOTCREATE
 
 FILENOTCREATE, AAAA file xxxx not created
 
-MUPIP Information: This indicates that the file xxxx was not created due to AAAA; where AAAA is lost transaction, or broken transaction, or Journal Extract file.
+MUPIP Information: This indicates that the file xxxx was not created due to AAAA; where AAAA is a lost transaction, or broken transaction, or Journal Extract file.
 
 Action: Review accompanying messages for any further information. If there are no accompanying messages, it indicates that MUPIP did not find any lost or broken transactions for the corresponding extract file to be created.
 
@@ -4433,7 +4433,7 @@ FORCTRLINDX, Using a FOR with an indexed control variable that's assigned values
 
 Compile Time/Run Time Error: YottaDB currently has trouble managing the interaction between a subscripted FOR control variable and expressions for its maintenance that have side effects that might change the array holding the control variable. Such elements include extrinsics ($$), external calls ($&) and $INCREMENT(). To avoid possible process context corruption, the compiler issues this error when it encounters the threatening circumstances. Note that the error can also appear at run-time without the accompanying indications of line and column if the construct appears in an XECUTE, the control variable is specified with indirection or the compiler warning is ignored.
 
-Action: Chose an unsubscripted FOR control variable and / or evaluate the side-effect element(s) before setting up the FOR.
+Action: Chose an unsubscripted FOR control variable and/or evaluate the side-effect element(s) before setting up the FOR.
 
 -------------------------
 FOROFLOW
@@ -4622,7 +4622,7 @@ GBLNOMAPTOREG
 
 GBLNOMAPTOREG, Global gggg does not map to region rrrr in current global directory
 
-Run Time Error: Run Time Error: This indicates that a VIEW "YDIRTREE" or $VIEW("YDIRTREE") was done with global gggg and region rrrr as parameters but the global does not map to that region in the current global directory.
+Run Time Error: This indicates that a VIEW "YDIRTREE" or $VIEW("YDIRTREE") was done with global gggg and region rrrr as parameters but the global does not map to that region in the current global directory.
 
 Action: VIEW "YDIRTREE" or $VIEW("YDIRTREE") is an undocumented feature and so should NOT be used directly. $$get^%GBLDEF is the only tool that uses this but internally catches the GBLNOMAPTOREG error. This means the GBLNOMAPTOREG error message will never be visible to the end-user.
 
@@ -4725,7 +4725,7 @@ GDUNKNFMT, xxxx is not formatted as a global directory
 
 GDE Information: This indicates that GDE could not load the specified file xxxx because it is not a valid Global Directory file. GDE aborts the load after it issues this message.
 
-Action: Verify that the file is valid and look for typographical errors. Something other than YottaDB or its utilities may have written to the Global Directory file or created a file with a name that coincides with the one specified by GTM$GBLDIR / ydb_gbldir.
+Action: Verify that the file is valid and look for typographical errors. Something other than YottaDB or its utilities may have written to the Global Directory file or created a file with a name that coincides with the one specified by GTM$GBLDIR/ydb_gbldir.
 
 --------------
 GDUPDATE 
@@ -4744,7 +4744,7 @@ GDUSEDEFS
 
 GDUSEDEFS, Using defaults for Global Directory xxxx
 
-GDE Information: This indicates that GDE did not find an existing Global Directory using the logical name GTM$GBLDIR / ydb_gbldir. As a result, it is starting the session with default values.
+GDE Information: This indicates that GDE did not find an existing Global Directory using the logical name GTM$GBLDIR/ydb_gbldir. As a result, it is starting the session with default values.
 
 Action: -
 
@@ -4782,7 +4782,7 @@ Action: See associated TEXT message for more details. Report the error to your Y
 GETSOCKNAMERR
 ------------------
 
-GETSOCKNAMERR, Getting the socket name failed from getsockname(): (errno==aaaa) xxxx
+GETSOCKNAMERR, Getting the socket name failed from getsockname(): (errno == aaaa) xxxx
 
 Run Time Error: This indicates getsockname() system call, which retrieves the locally bound address of the specified socket, failed.
 
@@ -4855,7 +4855,7 @@ GTMDISTUNVERIF
 
 GTMDISTUNVERIF, Environment variable $ydb_dist (dddd) could not be verified against the executables path (pppp)
 
-MUPIP/LKE/GT.CM/DSE/Run Time Error: This indicates that the executable pppp does not resides in the path pointed to by environment variable ydb_dist, dddd.
+MUPIP/LKE/GT.CM/DSE/Run Time Error: This indicates that the executable pppp does not reside in the path pointed to by the environment variable ydb_dist, dddd.
 
 Action: Ensure that the setting for $ydb_dist matches that of the executable.
 
@@ -4903,7 +4903,7 @@ Action: Verify that YottaDB (and gtmsecshr) are correctly installed following do
 GTMSECSHRCHDIRF 
 --------------------
 
-GTMSECSHRCHDIRF, gtmsecshr unable to chdir to its temporary directory (dddd). GTMSECSHR process error: GTMSECSHR is not able to change directory to its temporary directory, dddd.
+GTMSECSHRCHDIRF, GTMSECSHR process error: GTMSECSHR is not able to change directory to its temporary directory, dddd.
 
 GTMSECSHR Error: The UNIX gtmsecshr process, which assists other process with cross-user signaling and similar things, uses a temporary directory determined by the operating system defined temporary directory (typically /tmp or /var/tmp) when it needs to save a core file, but it was unable to find that directory.
 
@@ -5385,7 +5385,7 @@ GVQUERYGETFAIL, Global variable QUERY and GET failed. Failure code: xxxx.
 
 Run Time Error: This indicates that database query and Lookup in the same atomic transaction encountered a problem. xxxx contains the failure codes for the four attempts.
 
-Action: Contact the system administrator and if needed report to your YottaDB support channel.
+Action: Contact the system administrator and if needed, report to your YottaDB support channel.
 
 -------------------
 GVREPLERR 
@@ -5421,7 +5421,7 @@ Action: Ensure that the subscript is correct. Then, use DSE DUMP and the FILEHEA
 GVSUBSERR
 ------------------
 
-GVSUBSERR, GVSUBSERR, Invalid subscripted global name specification in $VIEW() function
+GVSUBSERR, Invalid subscripted global name specification in $VIEW() function
 
 Run Time Error: This indicates that an invalid subscripted global name was specified as the second parameter in a $VIEW("REGION",namevalue) function call.
 
@@ -5483,7 +5483,7 @@ HTEXPFAIL
 
 HTEXPFAIL, Hash table expansion failed for lack of memory
 
-Run Time/MUPIP Error: The hash table, an internally expanding data structure maintained by YottaDB, has exceeded its maximum capacity. In YottaDB, each unique local variable name uses up some hash table space. In MUPIP, it is backward recovery (or rollback) that might encounter this error. Here each TP transaction that is encountered in the backward processing phase of recovery uses up some hash table space. In either case, it is more likely that a process will run out of virtual memory much before it reaches the maximum hashtable capacity.
+Run Time/MUPIP Error: The hash table, an internally expanding data structure maintained by YottaDB, has exceeded its maximum capacity. In YottaDB, each unique local variable name uses up some hash table space. In MUPIP, it is backward recovery (or rollback) that might encounter this error. Here, each TP transaction that is encountered in the backward processing phase of recovery uses up some hash table space. In either case, it is more likely that a process will run out of virtual memory much before it reaches the maximum hashtable capacity.
 
 Action: Increase process memory quotas to increase available process virtual memory. Reduce the number of unique local variable names referenced by the YottaDB process. For MUPIP backward recovery/rollback, reduce the number of TP transactions encountered in the backward processing phase by using a later timestamp in the SINCE_TIME qualifier or higher RESYNC_SEQNO for rollback.
 
@@ -5503,7 +5503,7 @@ HTSHRINKFAIL
 
 HTSHRINKFAIL, Hash table compaction failed to allocate new smaller table due to lack of memory
 
-Run Time Error: YottaDB found an internal hash table over-allocated but was unable to reduce its size because the process memory was too large to allocate a new smaller table; YottaDB must allocated the new table before it can release the old table because it must copy the contents out of the "too-large" table into the smaller one. After this warning, the process continues running with the larger table.
+Run Time Error: YottaDB found an internal hash table over-allocated but was unable to reduce its size because the process memory was too large to allocate a new smaller table; YottaDB must allocate the new table before it can release the old table because it must copy the contents out of the "too-large" table into the smaller one. After this warning, the process continues running with the larger table.
 
 Action: Investigate whether the process size can be reduced, or the available memory increased.
 
@@ -5515,7 +5515,7 @@ ICUERROR, ICU returned status ssss which is either unrecognized or inconsistent 
 
 Run Time Error: The open-source ICU module which YottaDB uses for some Unicode processing return an error code ssss that YottaDB did not recognize as valid for the current context.
 
-Action: Consult the ICU documentation and / or refresh the ICU library with a known correct version.
+Action: Consult the ICU documentation and/or refresh the ICU library with a known correct version.
 
 
 --------------------
@@ -5524,7 +5524,7 @@ ICUSYMNOTFOUND
 
 ICUSYMNOTFOUND, Symbol xxxxx not found in ICU libraries. ICU needs to be built with symbol-renaming disabled or xxxxx environment variable needs to be specified
 
-Run Time Error: ICU version installed on the machine is built with symbol renaming and neither ydb_icu_version nor gtm_icu_version has been defined.
+Run Time Error: The ICU version installed on the machine is built with symbol renaming and neither ydb_icu_version nor gtm_icu_version has been defined.
 
 Action: Build ICU without symbol renaming or set ydb_icu_version environment variable to point to an appropriate ICU version.
 
@@ -5626,7 +5626,7 @@ INDRCOMPFAIL, Compilation of indirection failed
 
 Run Time Error: This indicates that an indirection or XECUTE command failed due to syntax errors.
 
-Action: Review the the code and make sure the indirection or XECUTE string has valid syntax and contains no non-graphic characters. Consider using $ZWRITE to identify any such characters.
+Action: Review the code and make sure the indirection or XECUTE string has valid syntax and contains no non-graphic characters. Consider using $ZWRITE to identify any such characters.
 
 --------------------
 INDRMAXLEN 
@@ -5657,7 +5657,7 @@ INPINTEG, Input integrity error -- aborting load
 
 GDE Fatal: This indicates that GDE is aborting the session because integrity errors prevented it from loading the specified Global Directory. GDE usually displays this message with other error messages. GDE aborts the load after issuing this message.
 
-Action: Review the accompanying message(s) for additional information. Verify whether the command specified the intended file. Something other than YottaDB and its utilities probably wrote to a Global Directory file or created a file with a name identical to the one specified by GTM$GBLDIR / ydb_gbldir.
+Action: Review the accompanying message(s) for additional information. Verify whether the command specified the intended file. Something other than YottaDB and its utilities probably wrote to a Global Directory file or created a file with a name identical to the one specified by GTM$GBLDIR/ydb_gbldir.
 
 -------------------
 INSNOTJOINED 
@@ -5685,7 +5685,7 @@ INSTFRZDEFER
 
 INSTFRZDEFER, Instance Freeze initiated by eeee error on region rrrrr deferred due to critical resource conflict.
 
-Run Time Information: eeee error encountered on region rrrrr triggered the Instance Freeze mechanism in an attempt to set the freeze, but couldn't do complete the freeze due to a critical resource conflict. Any process subsequently attempting an update will reattempt the freeze later until one succeeds or the error subsides.
+Run Time Information: eeee error encountered on region rrrrr triggered the Instance Freeze mechanism in an attempt to set the freeze, but couldn't complete the freeze due to a critical resource conflict. Any process subsequently attempting an update will reattempt the freeze later until one succeeds or the error subsides.
 
 Action: None necessary.
 
@@ -5813,7 +5813,7 @@ Run Time Error: The $CHAR() function triggers this error if its arguments contai
 
 - The "non-character" code-points that are always guaranteed to be not assigned to any valid characters. This set consists of [U+FDD0, U+FDEF] and all U+nFFFE and U+nFFFF (for each n from 0x0 to 0x10).
 
-Action: Specify argument in the range of valid Unicode code-points.
+Action: Specify the argument in the range of valid Unicode code-points.
 
 
 ----------------------
@@ -5852,7 +5852,7 @@ INVGBLDIR
 
 INVGBLDIR, Invalid Global Directory spec: xxxx. Continuing with yyyy.
 
-GDE Information: This indicates that the Global Directory xxxx specified by GTM$GBLDIR / ydb_gbldir or by SETGD and the qualifier FILE= is not a valid file-specification.
+GDE Information: This indicates that the Global Directory xxxx specified by GTM$GBLDIR/ydb_gbldir or by SETGD and the qualifier FILE= is not a valid file-specification.
 
 Action: When this error occurs, GDE uses the default specification of the current process default directory. Continue with the default and rename the result after leaving GDE, or change the specification with a SETGD command and the FILE= qualifier.
 
@@ -6229,7 +6229,7 @@ IOEOF, Attempt to read past an end-of-file
 
 Run Time/MUPIP Error: This indicates that a READ command for a run-time system or a MUPIP command attempted to move past an end-of-file.
 
-Action: Verify that the $ZEOF special variable is tested by the function betwee READs or that an EXCEPTION code string is assigned to handle EOFs. Alternatively, have your $ETRAP (or $ZTRAP) error handling deal with this error. The USE command has a REWIND deviceparameter that allows you to read from the beginning of the file without having to CLOSE and OPEN again, which may facilitate recovery from this error. Attempting to READ from a non-existent file not opened READONLY also causes this error. In the event of a MUPIP error, make sure the file being read is not corrupted.
+Action: Verify that the $ZEOF special variable is tested by the function between READs or that an EXCEPTION code string is assigned to handle EOFs. Alternatively, have your $ETRAP (or $ZTRAP) error handling deal with this error. The USE command has a REWIND deviceparameter that allows you to read from the beginning of the file without having to CLOSE and OPEN again, which may facilitate recovery from this error. Attempting to READ from a non-existent file not opened READONLY also causes this error. In the event of a MUPIP error, make sure the file being read is not corrupted.
 
 ----------------
 IOERROR 
@@ -6697,7 +6697,7 @@ JNLFILEXTERR, Error during extension of journal file xxxx
 
 Run Time Error: This indicates that an error was encountered during the course of journal file extension, while trying to determine the available space on the file system housing the journal file xxxx. This causes the journaling to be turned off.
 
-Action: Locate appropriate disk space and adjust the journal file path. To reestablish durability, perform a MUPIP BACKUP that turns back journaling on again.
+Action: Locate appropriate disk space and adjust the journal file path. To reestablish durability, perform a MUPIP BACKUP that turns journaling back on again.
 
 ----------------------------
 JNLFILNOTCHG 
@@ -11011,7 +11011,7 @@ PBNINVALID, ssss does not have a field named ffff
 
 Utility Error: This message comes from %PEEKBYNAME() when a valid struct but an invalid field name is given as the first argument. A struct, ssss, does not have a field named ffff.
 
-Action: Check the field name. Verify the field exists and its specification has no typo.
+Action: Check the field name. Verify the field exists and its specification has no typographical error.
 
 ------------------
 PBNNOFIELD 
@@ -14676,7 +14676,7 @@ TRIGDEFBAD, Trigger initialization failed for global ^gggg. Error while processi
 
 Trigger/MUPIP Error: Missing or corrupted trigger metadata causes this error.
 
-Action: Delete and replace defective triggers. If possible analyze the cause of the trigger damage and report the incident to your YottaDB support channel.
+Action: Delete and replace defective triggers. If possible, analyze the cause of the trigger damage and report the incident to your YottaDB support channel.
 
 -----------------
 TRIGDEFNOSYNC 
@@ -14746,7 +14746,7 @@ TRIGNAMBAD
 
 TRIGNAMBAD, Trigger initialization failed. Error while processing ^#t(tttt,cccc)
 
-Run Time/MUPIP Error: A trigger operation encountered a trigger definition for trigger with an apparent internal inconsistency while looking for characteristic cccc of type tttt.
+Run Time/MUPIP Error: A trigger operation encountered a trigger definition for a trigger with an apparent internal inconsistency while looking for characteristic cccc of type tttt.
 
 Action: Delete and redefine the trigger in question. Consult with the group responsible for database integrity at your operation to discuss what actions might have led to this error.
 
@@ -14756,7 +14756,7 @@ TRIGNAMENF
 
 TRIGNAMENF, Trigger name nnnn not found with the current default global directory
 
-Run Time/MUPIP Error: This message indicates a trigger lookup by name failed. YottaDB has a name cross reference in the default region of the current global directory. If you use multiple global directories with different default regions, trigger lookups by name, such as $ZTRIGGER(), ZBREAK and ZPRINT, only work when they use the same default region as the one in use at the time of the trigger definition.
+Run Time/MUPIP Error: This message indicates that a trigger lookup by name failed. YottaDB has a name cross reference in the default region of the current global directory. If you use multiple global directories with different default regions, trigger lookups by name, such as $ZTRIGGER(), ZBREAK and ZPRINT, only work when they use the same default region as the one in use at the time of the trigger definition.
 
 Action: Consider using a SET $ZGBLDIR to change to an appropriate global directory when using name lookup. Also consider restructuring your global directories so they share a common default region.
 
@@ -14846,7 +14846,7 @@ TRNLOGFAIL
 
 TRNLOGFAIL, Translation of environmental variable xxxx failed
 
-Compile Time Error: This indicates that translation of the indicated environment variable failed. The message is accompanied with another message describing the failure type and the reason behind it. Most probable cause of the failure could be resource limitation.
+Compile Time Error: This indicates that the translation of the indicated environment variable failed. The message is accompanied with another message describing the failure type and the reason behind it. Most probable cause of the failure could be resource limitation.
 
 Action: Report the error to your system administrator.
 
@@ -15030,7 +15030,7 @@ UPDATEFILEOPEN, Update file open error
 
 Run Time Error: This indicates that file permissions were either set incorrectly or replication was turned off.
 
-Action: Review accompanying message(s) for addition information. Correcting accompanying messages should correct this message.
+Action: Review accompanying message(s) for additional information. Correcting accompanying messages should correct this message.
 
 ----------------
 UPDPROC 
@@ -15262,7 +15262,7 @@ VIEWLVN, Invalid local variable name used with VIEW or $VIEW(): vvvv
 
 Run Time Error: This indicates the argument for a VIEW command or $VIEW() function required a local variable name, but it (vvvv) was either missing or invalid.
 
-Action: Correct the code in or investigate the logic to determine why the local variable in question is not in the expected state.
+Action: Correct the code or investigate the logic to determine why the local variable in question is not in the expected state.
 
 -----------------
 VIEWNOTFOUND 
@@ -15290,7 +15290,7 @@ WCBLOCKED
 
 WCBLOCKED, Field xxxx is set by process yyyy at transaction number aaaa for database file zzzz
 
-MUPIP Warning: This indicates that the current state of the global buffer cache necessitates the need for cache recovery. The next process to attempt obtaining the critical lock on the database will perform the recovery.
+MUPIP Warning: This indicates that the current state of the global buffer cache necessitates the need for cache recovery. The next process to attempt to obtain the critical lock on the database will perform the recovery.
 
 Action: Refer to the accompanying message(s).
 
@@ -15331,7 +15331,7 @@ WEIRDSYSTIME
 
 WEIRDSYSTIME, Time reported by the system clock is outside the acceptable range. Please check and correct the system clock.
 
-Run Time Error: Time reported by the system clock is outside the acceptable range. Please check and correct the system clock
+Run Time Error: Time reported by the system clock is outside the acceptable range. Please check and correct the system clock.
 
 Action: YottaDB requires the system time be set between January 1, 1970 00:00:00 UTC (the UNIX epoch) and September 27, 33658 01:46:40 UTC
 
@@ -15413,7 +15413,7 @@ XTRNRETSTR, Return string from extended reference translation algorithm is NULL.
 
 Run Time Error: This indicates that NULL was returned instead of a string from the user specified global variable name environment translation routine.
 
-Action: Correct the user environment translation algorithm to return a string (which can be emtpy). Restart YottaDB for the changes to become effective.
+Action: Correct the user environment translation algorithm to return a string (which can be empty). Restart YottaDB for the changes to become effective.
 
 ----------------
 XTRNRETVAL
@@ -15844,7 +15844,7 @@ ZDIROUTOFSYNC
 
 ZDIROUTOFSYNC, $ZDIRECTORY xxxx is not the same as its cached value yyyy
 
-Run Time Warning: For performance purposes, YottaDB caches the value of $ZDIRECTORY when it is modified using SET command. This cached value is passed to external environment translation routine. YottaDB issues ZDIROUTOFSYNC error when $ZDIRECTORY is referenced and its cached value differs from the current working directory. This might happen if an external routine called from YottaDB modifies the current working directory and the application does not modify $ZDIRECTORY to the modified directory.
+Run Time Warning: For performance purposes, YottaDB caches the value of $ZDIRECTORY when it is modified using the SET command. This cached value is passed to an external environment translation routine. YottaDB issues ZDIROUTOFSYNC error when $ZDIRECTORY is referenced and its cached value differs from the current working directory. This might happen if an external routine called from YottaDB modifies the current working directory and the application does not modify $ZDIRECTORY to the modified directory.
 
 .. note::
    ZSHOW of intrinsic special variables appends ->%YDB-W-ZDIROUTOFSYNC error to the text corresponding to the $ZDIRECTORY if the out of sync condition is detected. 
@@ -15927,7 +15927,7 @@ ZGOTOINVLVL
 
 ZGOTOINVLVL, ZGOTO in a trigger running in mmmm cannot ZGOTO level LLLL
 
-MUPIP Error: A ZGOTO command in trigger logic attempted to specify an inappropriate destination. Currently that is a ZGOTO in a trigger context with a target level of one (1) and an entryref. YottaDB does not support such ZGOTO arguments in MUPIP because there is no context outside that of the trigger.
+MUPIP Error: A ZGOTO command in the trigger logic attempted to specify an inappropriate destination. Currently, that is a ZGOTO in a trigger context with a target level of one (1) and an entryref. YottaDB does not support such ZGOTO arguments in MUPIP because there is no context outside that of the trigger.
 
 Action: Revise the trigger logic to only use ZGOTO with an entryref within the trigger context of trigger logic. Note that you can ZGOTO out of a trigger, but doing so in MUPIP terminates the MUPIP process. YottaDB recommends limiting the use of ZGOTO to debugging, error handling and testing. Use of ZGOTO in production code, even for error processing, should always be thoroughly tested.
 
