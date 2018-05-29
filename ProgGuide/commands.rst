@@ -468,7 +468,7 @@ Example:
    is equivalent to
    IF A IF B
 
-An IF with more than one argument behaves as if those arguments were logically "ANDed." However, execution of the line ceases with the evaluation of the first false argument. For IF argument expressions containing the "AND" operator (&), by default, execution still ceases with the evaluation of the first false argument, however any global references within the expression act in sequence to maintain the naked reference. The "FULL_BOOLEAN" and "SIDE_EFFECTS" compiler settings modify this behavior if you desire YottaDB to provide side effects it would otherwise bypass due to short-circiuting of Boolean expressions.
+An IF with more than one argument behaves as if those arguments were logically "ANDed." However, execution of the line ceases with the evaluation of the first false argument. For IF argument expressions containing the "AND" operator (&), by default, execution still ceases with the evaluation of the first false argument, however any global references within the expression act in sequence to maintain the naked reference. The "FULL_BOOLEAN" and "SIDE_EFFECTS" compiler settings modify this behavior if you desire YottaDB to provide side effects it would otherwise bypass due to short-circuiting of Boolean expressions.
 
 Postconditionals perform a function similar to IF; however, their scope is limited to a single command or argument, and they do not modify $TEST. For more information on postconditionals, see `Chapter 5: “General Language Features of M” <https://docs.yottadb.com/ProgrammersGuide/langfeat.html>`__.
 
