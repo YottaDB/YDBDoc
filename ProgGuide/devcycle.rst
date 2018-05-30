@@ -129,10 +129,10 @@ The standard installation places these files in /usr/local/lib/yottadb.
 Example:
 
 .. parsed-literal::
-   $ ydb_dist=/usr/local/lib/yottadb/r1.10
+   $ ydb_dist=/usr/local/lib/yottadb/r120
    $ export ydb_dist
 
-This identifies /usr/local/lib/yottadb/r1.10 as the location of the installed YottaDB files.
+This identifies /usr/local/lib/yottadb/r120 as the location of the installed YottaDB files.
 
 Add ydb_dist to your PATH environment variable to have UNIX search the YottaDB installation directory (when processing a command to activate or run an image). This allows you to activate YottaDB and the utilities without explicitly specifying a path.
 
@@ -244,7 +244,7 @@ This establishes the current value of the environment variable ydb_gbldir as pay
 This example defines ydb_gbldir without a full pathname. The environment variable points to the payroll.gld file in the current working directory. Therefore if the default directory changes, YottaDB attempts to locate the Global Directory in the new default directory and cannot use the original file. If you intend for the Global Directory to consistently point to this file, even if the default directory changes, use a full file-specification for ydb_gbldir.
 
 .. parsed-literal::
-   $ /usr/local/lib/yottadb/r1.20_x86/ydb
+   $ /usr/local/lib/yottadb/r120/ydb
    YDB>do ^GDE
    %GDE-I-LOADGD, Loading Global Directory file 
            /home/jdoe/.yottadb/r1.20_x86/g/payroll.gld
@@ -326,7 +326,7 @@ The GDE CHANGE command sets the database file name to payroll.dat, and specifies
 .. parsed-literal::
    GDE>exit
    %GDE-I-VERIFY, Verification OK
-   %GDE-I-GDCREATE, Creating Global Directory file /usr/lib/yottadb/r1.20_x86/payroll.gld
+   %GDE-I-GDCREATE, Creating Global Directory file /usr/lib/yottadb/r120/payroll.gld
    %GDE-I-GDEIS, Global Directory
 
 The GDE EXIT command terminates GDE. The Global Directory Editor creates a default Global Directory and displays a confirmation message.
