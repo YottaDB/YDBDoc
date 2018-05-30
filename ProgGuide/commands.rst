@@ -135,9 +135,9 @@ The format of the DO command is:
 * The optional truth-valued expression following the parameter list, or the entryref if the argument contains no parameter list, specifies the argument postconditional and controls whether YottaDB performs a DO using that argument.
 * An indirection operator and an expression atom evaluating to a list of one or more DO arguments form a legal argument for a DO.
 
-An explicit or implicit QUIT within the scope of the DO, but not within the scope of any other DO, FOR, XECUTE, or extrinsic, returns execution to the instruction following the calling point. This point may be the next DO argument or another command. At the end of a routine, or the end of a nesting level created by an argumentless DO, YottaDB performs an implicit QUIT. Any line that reduces the current level of nesting by changing the number of leading periods (.) causes an implicit QUIT, even if that line only contains a comment. Terminating the image and execution of ZGOTO commands are the only ways to avoid eventually returning execution to the calling point.
+An explicit or implicit QUIT within the scope of the DO, but not within the scope of any other DO, FOR, XECUTE, or extrinsic, returns execution to the instruction following the calling point. This point may be the next DO argument or another command. At the end of a routine, or at the end of a nesting level created by an argumentless DO, YottaDB performs an implicit QUIT. Any line that reduces the current level of nesting by changing the number of leading periods (.) causes an implicit QUIT, even if that line only contains a comment. Terminating the image and execution of ZGOTO commands are the only ways to avoid eventually returning execution to the calling point.
 
-A DO command may optionally pass parameters to the invoked subroutine. For more information about entryrefs and parameter passing, refer to `Chapter 5: “General Language Features of M” <https://docs.yottadb.com/ProgrammersGuide/langfeat.html>`__.
+A DO command may optionally pass parameters to the invoked subroutine. For more information about entryrefs and parameter passing, refer to `Chapter 5: “General Language Features of M” <https://docs.yottadb.com/ProgrammersGuide/langfeat.html>`_.
 
 +++++++++++++++++++++
 Examples of DO
@@ -292,7 +292,7 @@ Example:
    5
    YDB>
 
-This FOR loop has a control variable, i, which has the value one (1) on the first iteration, then the value two (2), and so on, until in the last iteration i has the value five (5). The FOR terminates because incrementing i would cause it to exceed the limit. Notice that i is not incremented beyond the limit.
+This FOR loop has a control variable, i, which has the value one (1) on the first iteration, then the value two (2), and so on until in the last iteration, i has the value five (5). The FOR terminates because incrementing i would cause it to exceed the limit. Notice that i is not incremented beyond the limit.
 
 Example:
 
@@ -313,7 +313,7 @@ Example:
    x=0
    YDB>
 
-Because the argument has an increment, the FOR initializes the control variable x to the numeric evaluation of "hello" (0). Then, YottaDB never executes the remainder of the line because the increment is positive, and the value of the control variable (0) initializes to greater than the limiting value (-1).
+Because the argument has an increment, the FOR initializes the control variable x to the numeric evaluation of "hello" (0). YottaDB never executes the remainder of the line because the increment is positive, and the value of the control variable (0) initializes to greater than the limiting value (-1).
 
 Example:
 
@@ -380,7 +380,7 @@ This GOTO command transfers control to label A in the current routine, if x is l
 Halt
 --------------------------
 
-The HALT command stops the program execution and causes YottaDB to return control to the operating system environment that invoked the YottaDB image.
+The HALT command stops program execution and causes YottaDB to return control to the operating system environment that invoked the YottaDB image.
 
 The format of the HALT command is:
 
@@ -454,7 +454,7 @@ The format of the IF command is:
 
 * Because IF is a conditional command, it does not support a command postconditional.
 * The scope of the IF is the remainder of the line. The scope of an IF can be extended with DO (or XECUTE) commands.
-* The action of IF is controlled by the value of the expression and by $TEST, if there is no expression.
+* The action of the IF is controlled by the value of the expression and by $TEST, if there is no expression.
 * IF with no argument acts on the existing value of $TEST (which it does not change); in this case, at least two (2) spaces must follow the IF to separate it from the next command on the line.
 * An indirection operator, and an expression atom evaluating to a list of one or more IF arguments form a legal argument to IF.
 
@@ -468,7 +468,7 @@ Example:
    is equivalent to
    IF A IF B
 
-An IF with more than one argument behaves as if those arguments were logically "ANDed." However, execution of the line ceases with the evaluation of the first false argument. For IF argument expressions containing the "AND" operator (&), by default, execution still ceases with the evaluation of the first false argument, however any global references within the expression act in sequence to maintain the naked reference. The "FULL_BOOLEAN" and "SIDE_EFFECTS" compiler settings modify this behavior if you desire YottaDB to provide side effects it would otherwise bypass due to short-circuiting of Boolean expressions.
+An IF with more than one argument behaves as if those arguments were logically "ANDed." However, execution of the line ceases with the evaluation of the first false argument. For IF argument expressions containing the "AND" operator (&), execution still ceases with the evaluation of the first false argument by default - however, any global references within the expression act in sequence to maintain the naked reference. The "FULL_BOOLEAN" and "SIDE_EFFECTS" compiler settings modify this behavior, if you desire YottaDB to provide side effects that it would otherwise bypass due to short-circuiting of Boolean expressions.
 
 Postconditionals perform a function similar to IF; however, their scope is limited to a single command or argument, and they do not modify $TEST. For more information on postconditionals, see `Chapter 5: “General Language Features of M” <https://docs.yottadb.com/ProgrammersGuide/langfeat.html>`__.
 
@@ -539,11 +539,11 @@ The format of the JOB command is:
 * If the parent process is operating in UTF-8 mode, the JOB'd process also operates in UTF-8 mode.
 * If your background process must have a different mode from its parent, then create a shell script to alter the environment as needed, and spawn it with a ZSYstem command using ZSYstem "/path/to/shell/script &".
 
-The operating system deletes the resultant process when execution of its YottaDB process is complete. The resultant process executes asynchronously with the current process. Once YottaDB starts the resultant process, the current process continues.
+The operating system deletes the resultant process when the execution of its YottaDB process is complete. The resultant process executes asynchronously with the current process. Once YottaDB starts the resultant process, the current process continues.
 
 If a JOB command specifies a timeout, and YottaDB creates the resultant process before the timeout elapses, JOB sets $TEST to true (1). If YottaDB cannot create the process within the specified timeout, JOB sets $TEST to false (0). If a JOB command does not specify a timeout, the execution of the command does not affect $TEST.
 
-If YottaDB cannot create the process because of something that is unlikely to change during the timeout interval, such as invalid DEFAULT directory specification, or the parameter list is too long, the JOB command generates a run-time error. If the command does not specify a timeout and the environment does not provide adequate resources, the process waits until resources become available to create the resultant process.
+If YottaDB cannot create the process because of something that is unlikely to change during the timeout interval, such as an invalid DEFAULT directory specification, or the parameter list being too long, the JOB command generates a run-time error. If the command does not specify a timeout and the environment does not provide adequate resources, the process waits until resources become available to create the resultant process.
 
 +++++++++++++++++++++++++++++
 The JOB Environment
@@ -609,7 +609,7 @@ By default, the job takes its input from the null device.
 
 **OUT[PUT]=strlit**
 
-strlit specifies the stdout of the JOBbed process. strlit can either be a file or a DETACHed socket (that is, a socket from the socket pool). To pass a DETACHed socket as the stdout of the job, specify strlit in the form of "SOCKET:<handle>" where <handle> is the socket handle. On successful completion of the JOB command, the passed socket is closed and is no longer available to the parent process.
+strlit specifies the stdout of the JOBbed process. strlit can either be a file or a DETACHed socket (that is, a socket from the socket pool). To pass a DETACHed socket as the stdout of the JOBbed process, specify strlit in the form of "SOCKET:<handle>" where <handle> is the socket handle. On successful completion of the JOB command, the passed socket is closed and is no longer available to the parent process.
 
 .. note::
    Specify a DETACHed socket in both INPUT and OUTPUT parameters to pass it as the $PRINCIPAL of the JOBbed process.
@@ -620,9 +620,9 @@ By default, JOB constructs the output file pathname from the routinename using a
 
 **PASS[CURLVN]**
 
-With the PASSCURLVN jobparameter, the JOBbed process inherits the current collation, local variables, aliases, and alias containers from the current stack level of the parent process. Therefore, a ZWRITE in the JOBbed process has the same output, except for any out of scope aliases, as a ZWRITE in the context of the JOB command. If the JOB command finds a ZWRITE representation of any lvn, consisting of its full name, its subscripts, corresponding value, quotes and the equal-sign (=) exceeding 1MiB, it produces a JOBLVN2LONG error in the parent process, and a JOBLVNDETAIL error in the error output stream of the JOBbed process. If a JOB command does not specify PASSCURLVN, the JOBbed process(es) inherits no local variables from the parent, although it can receive values passed as parameters to an actuallist entryref. While not an inexpensive command, you can use the "exclusive" NEW command to control the context passed to the JOBbed process; for example, adding "NEW (LOCALA,LOCALB)" before the JOB command would pass only LOCALA and LOCALB.
+With the PASSCURLVN jobparameter, the JOBbed process inherits the current collation, local variables, aliases, and alias containers from the current stack level of the parent process. Therefore, a ZWRITE in the JOBbed process has the same output, except for any out of scope aliases, as a ZWRITE in the context of the JOB command. If the JOB command finds a ZWRITE representation of any lvn - consisting of its full name, subscripts, corresponding value, quotes and the equal-sign (=) exceeding 1MiB - it produces a JOBLVN2LONG error in the parent process, and a JOBLVNDETAIL error in the error output stream of the JOBbed process. If a JOB command does not specify PASSCURLVN, the JOBbed process(es) inherits no local variables from the parent, although it can receive values passed as parameters to an actuallist entryref. While not an inexpensive command, you can use the "exclusive" NEW command to control the context passed to the JOBbed process; for example, adding "NEW (LOCALA,LOCALB)" before the JOB command would pass only LOCALA and LOCALB.
 
-If a parameter in the formal list of JOBbed entryref shares the same name with a local in the parent process, the parameter passing facility applies the actuallist in the JOB command argument to the formallist at the invoked label superseding any local variable passed from the parent process by the PASSCURLVN option.
+If a parameter in the formal list of a JOBbed entryref shares the same name with a local in the parent process, the parameter passing facility applies the actuallist in the JOB command argument to the formallist at the invoked label, superseding any local variable passed from the parent process by the PASSCURLVN option.
 
 **STA[RTUP]="/path/to/shell/script"**
 
@@ -699,11 +699,11 @@ The format of the KILL command is:
 * KILLing a variable that does not currently exist has no effect.
 * The KILL command without an argument deletes all currently existing local variables; in this case, at least two (2) spaces must follow the KILL to separate it from the next command on the line.
 * When a KILL argument consists of local variable names enclosed in parentheses, that "exclusive" KILL deletes all local variables except those listed in the argument.
-* KILL does not affect copies of local variables that have been "stacked" by NEW or parameter passing with the possible exception of the following: For KILL arguments enclosed in parentheses, the environment variable ydb_stdxkill enables the standard-compliant behavior to kill local variables in the exclusion list if they had an explicit or implicit (pass-by-reference) alias not in the exclusion list. By default, this behavior is disabled. If ydb_stdxkill is set to 1,"TRUE", or "YES", KILL deletes a local variable unless all its names are in the parenthesized list. If ydb_stdxkill is not defined or set to 0 KILL operations exclude the data associated with an item if any one of its names appears in the parenthesized list. While non-standard, the default behavior decouples call-by-reference functions or functions using aliases from needing knowledge of the caller's parameters.
+* KILL does not affect copies of local variables that have been "stacked" by NEW or parameter passing with the possible exception of the following: For KILL arguments enclosed in parentheses, the environment variable ydb_stdxkill enables the standard-compliant behavior to kill local variables in the exclusion list if they had an explicit or implicit (pass-by-reference) alias not in the exclusion list. By default, this behavior is disabled. If ydb_stdxkill is set to 1,"TRUE", or "YES", KILL deletes a local variable unless all its names are in the parenthesized list. If ydb_stdxkill is not defined or set to 0, KILL operations exclude the data associated with an item if any one of its names appears in the parenthesized list. While non-standard, the default behavior decouples call-by-reference functions or functions using aliases from needing knowledge of the caller's parameters.
 * In conformance with the M standard, KILL of a variable joined by pass-by-reference to a formallist variable always KILLs the formallist variable when the actuallist variable is KILL'd even if the formallist variable is specified as protected by an exclusive KILL.
 * KILL * removes the association between its argument and any associated arrays. The arguments are left undefined, just as with a standard KILL. If the array has no remaining associations after the KILL \*, YottaDB can reuse the memory it occupied. If there are no array(s) or association(s) the KILL * happily and silently does nothing.
 * KILL * of an alias container variable is just like a KILL of an alias variable, and deletes the association between the lvn and the array.
-* KILL * treats an alias formed though pass-by-reference the same as any alias variable by removing the alias association.
+* KILL * treats an alias formed though pass-by-reference the same as any alias variable - by removing the alias association.
 * KILL * with no arguments removes all aliases and alias containers connections.
 * You can intermix KILL and KILL * in an argument list. For example, KILL \*A,B
 * Kill * is not permitted inside a parenthesized list of exclusions, e.g.: KILL (\*A) is an error.
@@ -724,7 +724,7 @@ Example:
    a=0
    YDB>
 
-This uses an argumentless KILL to get a "fresh start" by deleting all existing local variables. After SETting a, a(1), and a(1,1), the KILL deletes a(1) and its descendants. The ZWRITE shows only a remaining.
+This uses an argumentless KILL to get a "fresh start" by deleting all existing local variables. After SETting a, a(1), and a(1,1), the KILL deletes a(1) and its descendants. The ZWRITE shows that only a remains.
 
 Example:
 
@@ -800,15 +800,15 @@ The format of the LOCK command is:
 * A LOCK argument with a leading minus sign (-) "counts down" the process interest in a named resource; if the count on a particular lock reaches zero (0), YottaDB releases the lock without releasing any other currently held locks; a LOCK that releases a named resource not currently owned by the process has no effect.
 * YottaDB allows the "process interest" lock counter on a named resource to increment up to 511.
 * The optional numeric expression specifies a time in seconds after which the command should timeout if unsuccessful; 0 provides a single attempt; timed LOCK commands maintain $TEST: 1 for a successful LOCK action, 0 for an unsuccessful (within the specified time) LOCK action. Note that untimed LOCK commands do not change $TEST.
-* A LOCK operation that finds no room in LOCK_SPACE to queue a waiting LOCK so another process releasing a blocking LOCK can wake it, does a slow poll waiting for LOCK_SPACE to become available. If LOCK does not acquire the ownership of the named resource with the specified timeout, it returns control to the application with $TEST=0. If timeout is not specified, LOCK continues slow poll till space becomes available.
+* A LOCK operation that finds no room in LOCK_SPACE to queue a waiting LOCK so that another process releasing a blocking LOCK can wake it, does a slow poll waiting for LOCK_SPACE to become available. If the LOCK does not acquire the ownership of the named resource within the specified timeout, it returns control to the application with $TEST=0. If the timeout is not specified, LOCK continues the slow poll until space becomes available.
 * If a LOCK command in a TP transaction specifies no timeout or a timeout that exceeds the limit specified by $ydb_tpnotacidtime when 2 is less than $TRESTART, the process releases the database critical sections and generates TPNOACID messages, which may live-lock the process, possibly until the transaction terminates because it reaches $ZMAXTPTIME. While such a process may have an impact on system performance this behavior moderates the impact of potential deadlocks on other database operations.
 * An indirection operator and an expression atom evaluating to a list of one or more LOCK arguments form a legal argument for a LOCK.
 
-YottaDB records LOCK and ZALLOCATE information in the "lock database." YottaDB distributes the lock database in space associated with the database identified by the current Global Directory. However, the lock database does not overlap or coincide with the body of the database files holding the global data. Only the LOCK, ZALLOCATE and ZDEALLOCATE commands, and the LKE utility program access the lock database.
+YottaDB records LOCK and ZALLOCATE information in the "lock database." YottaDB distributes the lock database in the space associated with the database identified by the current Global Directory. However, the lock database does not overlap or coincide with the body of the database files holding the global data. Only the LOCK, ZALLOCATE and ZDEALLOCATE commands, and the LKE utility program access the lock database.
 
 YottaDB maps reservations of names starting with ^ to the database file used to map global variables of the same name. If the Global Directory maps the name A to file A.DAT, YottaDB maps all reservations on ^A to file space associated with A.DAT.
 
-YottaDB maps reservations on names not starting with ^ to the region of the database specified with the GDE command LOCK -REGION=. By default, when GDE creates a Global Directory any reservations of local names are mapped to the region DEFAULT.
+YottaDB maps reservations on names not starting with ^ to the region of the database specified with the GDE command LOCK -REGION=. By default, when GDE creates a Global Directory, any reservations of local names are mapped to the region DEFAULT.
 
 These two factors effect the following result in the programming environment:
 
@@ -831,13 +831,13 @@ LOCK with a leading plus (+) or minus (-) sign (incremental LOCKing) allows the 
 | L +B                             | L +A                               |
 +----------------------------------+------------------------------------+
 
-To avoid deadlocks, use LOCK without a leading + or - sign on its arguments because such a command releases all previously LOCKed resources, or uniformly implement well designed LOCK accumulation orders and/or use a timeout with the LOCK command.
+To avoid deadlocks, use LOCK without a leading + or - sign on its arguments (because such a command releases all previously LOCKed resources), or uniformly implement well designed LOCK accumulation orders and/or use a timeout with the LOCK command.
 
 If a LOCK command specifies a timeout, and YottaDB acquires ownership of the named resource before the timeout elapses, LOCK sets $TEST to TRUE (1). If YottaDB cannot acquire ownership of the named resource within the specified timeout, LOCK sets $TEST to FALSE (0). If a LOCK command does not specify a timeout, the execution of the command does not affect $TEST. If a LOCK with an argument having a leading minus sign (-) specifies a timeout, the command always sets $TEST to TRUE (1).
 
 If a process issues a LOCK command for a named resource already ZALLOCATEd by that process, the resource is both ZALLOCATEd and LOCKed. LOCK does not release ZALLOCATEd resources. To release such a named resource, the process must both ZDEALLOCATE and unLOCK the resource. For more information, refer to “ZAllocate”.
 
-Currently, LOCK of an argument within a parenthetical list where the argument includes an extrinsic function that performs LOCK, ZALLOCATE or ZDEALLOCATE actions produces a BADLOCKNEST error except where there is only one such argument, it is the first argument in the list and the LOCK'ng as a consequence of the extrinsic function(s) is simple. Note that this pattern may still produce some unintended outcomes, so YottaDB recommends against its use.
+Currently, the LOCK of an argument within a parenthetical list where the argument includes an extrinsic function that performs LOCK, ZALLOCATE or ZDEALLOCATE actions produces a BADLOCKNEST error except where there is only one such argument. It is the first argument in the list and the LOCK'ng as a consequence of the extrinsic function(s) is simple. Note that this pattern may still produce some unintended outcomes, so YottaDB recommends against its use.
 
 For more information on troubleshooting locks with the Lock Utility (LKE), refer to the `chapter on that utility in the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/mlocks.html>`_.
 
@@ -845,11 +845,11 @@ For more information on troubleshooting locks with the Lock Utility (LKE), refer
 Using Locks within Transactions
 +++++++++++++++++++++++++++++++++
 
-Within transactions, LOCKs are used by YottaDB to ensure the ability to serialize. There is no guarantee, however, that attempts by other processes to examine LOCKs held with a transaction will produce the same results as when LOCKs are outside of a transaction. In other words, LOCKs within transactions should never be used as simple semaphores.
+Within transactions, LOCKs are used by YottaDB to ensure the ability to serialize. There is no guarantee, however, that attempts by other processes to examine LOCKs held within a transaction will produce the same results as when LOCKs are outside of a transaction. In other words, LOCKs within transactions should never be used as simple semaphores.
 
-The LOCK command locks a specified resource name that controls a tree structured name space. Outside of transactions when one process in an environment acquires a LOCK or a ZALLOCATE on a named resource, no other YottaDB process in that environment can LOCK a resource with an "overlapping" name until the first process releases the LOCK that it holds.
+The LOCK command locks a specified resource name that controls a tree structured name space. Outside of transactions, when one process in an environment acquires a LOCK or a ZALLOCATE on a named resource, no other YottaDB process in that environment can LOCK a resource with an "overlapping" name until the first process releases the LOCK that it holds.
 
-For information on the use of LOCKs within transactions, refer to `Chapter 5: “General Language Features of M” <https://docs.yottadb.com/ProgrammersGuide/langfeat.html>`__.
+For information on the use of LOCKs within transactions, refer to `Chapter 5: “General Language Features of M” <https://docs.yottadb.com/ProgrammersGuide/langfeat.html>`_.
 
 **Lock Command Operation Summary**
 
@@ -1026,9 +1026,9 @@ The format of the NEW command is:
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
 * NEW arguments are unsubscripted local variable names; NEW affects not only the variable specified in the argument, but also all variables descended from that variable.
-* When an undefined variable is NEWed, the fact that it is undefined is "stacked", and when leaving the current scope, it returns to being undefined, that is, the variable is implicitly KILLed during transfer of control.
-* Without an argument YottaDB NEWs all currently existing local variables; in this case, at least two (2) spaces must follow the NEW to separate it from the next command on the line.
-* For the scope of the NEW, a NEW of a name suspends its alias association. The association is restored when the scope of the New ends. The array remains in existence - it can be modified through other alias variables with which it is associated and which remain in scope. If none of its alias variables is in scope, the array remains intact and again becomes visible when the scope is restored.
+* When an undefined variable is NEWed, the fact that it is undefined is "stacked", and when leaving the current scope, it returns to being undefined, i.e. the variable is implicitly KILLed during transfer of control.
+* Without an argument, YottaDB NEWs all currently existing local variables; in this case, at least two (2) spaces must follow the NEW to separate it from the next command on the line.
+* For the scope of the NEW, a NEW of a name suspends its alias association. The association is restored when the scope of the NEW ends. The array remains in existence - it can be modified through other alias variables with which it is associated and which remain in scope. If none of its alias variables is in scope, the array remains intact and again becomes visible when the scope is restored.
 * When a NEW argument is enclosed in parentheses, that NEW is considered "exclusive". An exclusive NEW creates a fresh data environment and effectively aliases the excluded variables with their original copies. This technique tends to improve performance and meets the M standard. However, it has two implications: The alias operation KILL \*, with no arguments, or naming an exclusively NEW'd variable, acts as a KILL in the current scope (has the same effect as a non-alias KILL), and ZWRITE, ZSHOW "V", $ZDATA() report any exclusively NEW'd variable as an alias. Refer to the section on the KILL command for a description of alternative behaviors for the interaction of KILL and exclusive NEW. 
 * When the flow of execution terminates the scope of an argumentless or an exclusive NEW, YottaDB restores all stacked variables to their previous values, and deletes all other local variables.
 * The intrinsic special variables $ESTACK, $ETRAP, $ZGBLDIR, and $ZYERROR can be an explicit argument of a NEW. For more information, refer to `Chapter 8: “Intrinsic Special Variables” <https://docs.yottadb.com/ProgrammersGuide/isv.html>`_.
@@ -1206,9 +1206,9 @@ The format of the OPEN command is:
 * The required expression specifies the device to OPEN.
 * The optional keywords specify deviceparameters that control device behavior; some deviceparameters take arguments delimited by an equal sign (=); if the argument only contains one deviceparameter, the surrounding parentheses are optional.
 * The optional numeric expression specifies a time in seconds after which the command should timeout if unsuccessful; choosing 0 results in a single attempt to open the device.
-* When an OPEN command specifying a timeout contains no deviceparameters, double colons (::) separate the timeout numeric expression from the device expression.
+* When an OPEN command specifying a timeout contains no deviceparameters, a double colon (::) separates the timeout numeric expression from the device expression.
 * An indirection operator and an expression atom evaluating to a list of one or more OPEN arguments form a legal argument for an OPEN.
-* In UTF-8 mode, the OPEN command recognizes the ICHSET, OCHSET, and CHSET deviceparameters to determine the encoding of the the input/output devices.
+* In UTF-8 mode, the OPEN command recognizes the ICHSET, OCHSET, and CHSET deviceparameters to determine the encoding of the input/output devices.
 * OPEN on a directory produces a GTMEISDIR error in both READONLY and NOREADONLY modes along with the directory name which failed to open. UNIX directories contain metadata that is only available to the file system. Note that you can use the ZSEARCH() function to identify files in a directory, and you can call the POSIX stat() function to access metadata. The optional YottaDB POSIX plug-in packages the stat() function for easy access from M application code.
 
 ---------------------
@@ -1230,7 +1230,7 @@ The format of the QUIT command is:
 * When QUIT * terminates an extrinsic function or an extrinsic special variable, it always returns an alias container. If lvn is an lname that is not an alias, QUIT * creates an alias container. 
 * The QUIT performs two similar, but different, functions depending on its context. Because FORs do not add levels to the YottaDB invocation stack, QUITs inside FOR loops simply terminate the loop. QUITs that terminate DOs, XECUTEs and extrinsics remove a YottaDB invocation stack level and therefore may adjust the local variable environment resulting from previous NEWs or parameter passing. A QUIT from an extrinsic or a frame created by an argumentless DO restores $TEST to its stacked value.
 * An indirection operator and an expression atom evaluating QUIT arguments forms a legal argument for a QUIT other than from a FOR.
-* Attempting to QUIT (implicitly or explicitly) from code invoked by a DO, XECUTE or extrinsic after that code issued a TSTART not yet matched by a TCOMMIT, produces an error.
+* Attempting to QUIT (implicitly or explicitly) from code invoked by a DO, XECUTE or extrinsic after that code issued a TSTART not yet matched by a TCOMMIT produces an error.
 
 ++++++++++++++++++++++
 Examples of Quit
@@ -1312,7 +1312,7 @@ and
 * When the portion of the argument to the left of the equal sign is in the form of a $EXTRACT function, SET replaces the specified character or characters of the variable (specified as the first argument to the $EXTRACT() form) with the value of the expression on the right side of the equal-sign; if the variable did not exist prior to the SET or does not contain the characters identified by the optional second and third arguments to the $EXTRACT() form, SET adds sufficient leading spaces to make the assignment fit the $EXTRACT() form. Note that if the third argument exceeds the second argument, SET does not modify the target glvn or change the naked indicator .
 * isv on the left-hand side of the equal-sign specifies an Intrinsic Special Variable. Not all ISVs permit SET updates by the application - see the description of the individual ISV.
 * When the portion of the argument to the left of the equal-sign is in the form of a list of setlefts enclosed in parentheses, SET assigns the value of the expression on the right of the equal sign to all the destinations.
-* If a SET updates a global node matching a trigger definition, YottaDB executes the trigger code after the node has been updated in the process address space, but before it is applied to the database. When the trigger execution completes, the trigger logic commits the value of a node from the process address space only if $ZTVALUE is not set. if $ZTVALUE is set during trigger execution, the trigger logic commits the value of a node from the value of $ZTVALUE. For more information on using SET in Triggers, refer to `“Set” section in the Triggers chapter <https://docs.yottadb.com/ProgrammersGuide/triggers.html#set>`_.
+* If a SET updates a global node matching a trigger definition, YottaDB executes the trigger code after the node has been updated in the process address space, but before it is applied to the database. When the trigger execution completes, the trigger logic commits the value of a node from the process address space only if $ZTVALUE is not set. if $ZTVALUE is set during trigger execution, the trigger logic commits the value of a node from the value of $ZTVALUE. For more information on using SET in Triggers, refer to the `“Set” section in the Triggers chapter <https://docs.yottadb.com/ProgrammersGuide/triggers.html#set>`_.
 * A SET * command explicitly makes the lvn on the left-hand side of the equal-sign an alias if it is an unsubscripted lvn (the root of an array) or an alias container if it is a subscripted lvn. If the portion of the argument on the right-hand side of the equal-sign is other than an lname (the root of an array), it must evaluate to an alias or alias container. Extrinsic functions and extrinsic special variables return an alias container if they terminate with a QUIT \*. For more information on Alias Variables, refer to “Alias Variables Extensions”.
 * In a SET * command, any previous array associated with the lvn on the left-hand side of the equal-sign ceases to be associated with it, and if lvn was the only lvn associated with that (old) array in any scope, YottaDB may reclaim the space it occupied. Alias assignment does not require that any data set exist for a name on the right-hand side of the equal-sign - the assignment simply creates an association.
 * SET * left-hand side arguments cannot be parenthetically enclosed lists such as SET (a,*b)=c or SET (\*a,\*b)=c.
@@ -1449,7 +1449,7 @@ A TP RESTART, either implicit or explicit, while executing $ZINTERRUPT in respon
 
 They also restore any local variables named by one or more active TSTARTs to the values they had when they were first named.
 
-For an example of the use of the TRESTART command, see `Chapter 5: “General Language Features of M” <https://docs.yottadb.com/ProgrammersGuide/langfeat.html>`__.
+For an example of the use of the TRESTART command, see `Chapter 5: “General Language Features of M” <https://docs.yottadb.com/ProgrammersGuide/langfeat.html>`_.
 
 ----------------------
 TROllback
@@ -1463,12 +1463,12 @@ The format of the TROLLBACK command is:
    TRO[LLBACK][:tvexpr] [intexpr]
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
-* The optional integer expression indicates an argument specifying incremental rollback. If the value of the argument expression is greater than zero, it specifies the value of $TLEVEL to be achieved by the rollback. If the value of the expression is less than zero, the result is the number of levels to rollback. For example; -1 means rollback one level. If the argument expression is zero, the effect is same as not specifying the argument, that is, the entire YottaDB transaction is rolled back.
+* The optional integer expression indicates an argument specifying incremental rollback. If the value of the argument expression is greater than zero, it specifies the value of $TLEVEL to be achieved by the rollback. If the value of the expression is less than zero, the result is the number of levels to rollback. For example; -1 means rollback one level. If the argument expression is zero, the effect is the same as not specifying the argument, i.e. the entire YottaDB transaction is rolled back.
 * Attempting to rollback more than $TLEVEL levels (the outermost transaction) generates an error.
 * When the TROLLBACK has no argument, at least two (2) spaces must follow the command to separate it from the next command on the line.
 * In order to allow for error recovery and/or access to the global context of the error, errors do not initiate implicit ROLLBACKs. Therefore, the code for handling errors during transactions should generally include a TROLLBACK. Because the TROLLBACK releases resources held by the transaction, it should appear as early as possible in the error handling code.
 * A TROLLBACK does not cause a transfer of control but is typically associated with one such as a QUIT (or GOTO).
-* TROLLBACK to a $TLEVEL other than zero (0) leaves $REFERENCE empty. This behavior is same as a full TROLLBACK to $TEVEL=0.
+* TROLLBACK to a $TLEVEL other than zero (0) leaves $REFERENCE empty. This behavior is the same as a full TROLLBACK to $TEVEL=0.
 
 For an example of the use of the TROLLBACK command, see `Chapter 5: “General Language Features of M” <https://docs.yottadb.com/ProgrammersGuide/langfeat.html>`__.
 
@@ -1624,7 +1624,7 @@ With VIEW "FULL_BOOLEAN", YottaDB ensures that all side effect expression atoms,
 
 With VIEW "FULL_BOOLWARN", YottaDB not only evaluates Boolean expressions like "FULL_BOOLEAN" but produces a BOOLSIDEFFECT warning when it encounters Boolean expressions that may induce side-effects; that is: expressions with side effects after the first Boolean operator - extrinsic functions, external calls and $INCREMENT().
 
-YottaDB picks up the value of [NO]FULL_BOOL[EAN][WARN] from the environment variable ydb_boolean. If ydb_boolean is undefined or evaluates to an integer zero (0), the initial setting the default "NOFULL_BOOLEAN", if it evaluates to an integer one (1), the initial setting is "FULL_BOOLEAN" and if it evaluates to integer two (2) the initial setting is "FULL_BOOLWARN".
+YottaDB picks up the value of [NO]FULL_BOOL[EAN][WARN] from the environment variable ydb_boolean. If ydb_boolean is undefined or evaluates to an integer zero (0), the initial setting is the default "NOFULL_BOOLEAN", if it evaluates to integer one (1), the initial setting is "FULL_BOOLEAN" and if it evaluates to integer two (2) the initial setting is "FULL_BOOLWARN".
 
 VIEW "[NO]FULL_BOOL[EAN][WARN]" takes effect immediately for indirection and XECUTE.
 
@@ -1638,7 +1638,7 @@ Database block certification causes YottaDB to check the internal integrity of e
 
 **"GVSRESET":"<region>"**
 
-Resets the process-specific fields that are part of the ZSHOW "G" result and database file header fields holding records reported by: GVSTAT, BG trace, buffer pool accounting and the TP block modification details. Note a VIEW "GVSRESET" performed by a process with read-only database access changes only the process-specific information and has no effect on the database file header. DSE CHANGE -FILEHEADER -GVSTATSRESET clears the same database file header fields as VIEW "GVRESET"; 
+Resets the process-specific fields that are part of the ZSHOW "G" result and database file header fields holding records reported by: GVSTAT, BG trace, buffer pool accounting and the TP block modification details. Note that a VIEW "GVSRESET" performed by a process with read-only database access changes only the process-specific information and has no effect on the database file header. DSE CHANGE -FILEHEADER -GVSTATSRESET clears the same database file header fields as VIEW "GVRESET"; 
 
 **"GVDUPSETNOOP":value**
 
@@ -1698,7 +1698,7 @@ VIEW "LOGTPRESTART"[=intexpr] turns on logging of TPRESTART messages to the oper
 
 Note that it is not possible to perform the operations of ydb_tprestart_log_first with VIEW "LOGTPRESTART"[=intexpr].
 
-**LV_GCCOL**
+**LV_GCOL**
 
 Starts a data-space garbage collection, which normally happens automatically at appropriate times.
 
@@ -1748,7 +1748,7 @@ Note that if an application incorrectly specifies a global to be NOISOLATED, sev
 
 YottaDB ignores attempts to turn on (or off) the feature for globals that already have the feature turned on (or off). It is an error to modify the isolation-status of a global variable within a transaction across different references (either reads or writes) of that global variable. The VIEW command by itself is not considered to be a reference of the global variable. While not recommended programming practice, this means that a process can change a global's isolation-status within a transaction as long as it hasn't referenced it yet.
 
-Any reads on a NOISOLATION global are validated at the time of the read and not re-validated at TCOMMIT time. This means that if the value that was read changed after the read but before the TCOMMIT, the transaction would still be committed. Therefore it is important that any reads on a NOISOLATED global (if any) should be of data insensitive to change with time (unchanging or where consistency with other data accessed by the transaction doesn't matter). 
+Any reads on a NOISOLATION global are validated at the time of the read and not re-validated at TCOMMIT time. This means that if the value that was read changed after the read but before the TCOMMIT, the transaction would still be committed. Therefore it is important that any reads on a NOISOLATED global (if any) should be data insensitive to change with time (unchanging or where consistency with other data accessed by the transaction doesn't matter). 
 
 **"PATCODE":"tablename"**
 
@@ -1756,11 +1756,11 @@ Identifies the alternative table of unique patterns for use with the "?" operato
 
 **"PATLOAD":"file-specification"**
 
-Identifies the file containing definitions of unique patterns for use with the "?" operator. These pattern definitions can be used in place of, or in addition to, the standard C, N, U, L, and P. For more information on creating the file-specification, refer to `Chapter 12: “Internationalization” <https://docs.yottadb.com/ProgrammersGuide/internatn.html>`_.
+Identifies the file containing definitions of unique patterns for use with the "?" operator. These pattern definitions can be used in place of, or in addition to the standard C, N, U, L, and P. For more information on creating the file-specification, refer to `Chapter 12: “Internationalization” <https://docs.yottadb.com/ProgrammersGuide/internatn.html>`_.
 
 **"POOLLIMIT":<region>:expr**
 
-VIEW "POOLLIMIT":<region>:expr, where expr is of the form n[%] provides a mechanism for a process that has the potential to "churn" global buffers to limit the potential impact on other processes by restricting the number of global buffers it uses. If the expression ends with a per-cent sign (%), the number is taken as an as a percentage of the configured global buffers and otherwise as an ordinal number of preferred buffers; standard M parsing and integer conversions apply. Preferred buffer values are limited to between 32 and one less than half the buffer pool inclusive; with the exception of zero (0) or 100 per cent, which turn off the limitation; specifications exceeding those limits provide the value of the nearer limit. If the argument specifies "*" for the region, the command applies to all regions. $VIEW("POOLLIMIT",<region>) returns the current value for the region as an ordinal number - zero (0) when there is no limit in place. Note that this facility is designed for use by a relatively small subset of processes. In addition, MUPIP REORG uses this facility to limit its buffers to a value established by the environment variable ydb_poollimit using the syntax described for VIEW "POOLLIMIT" with a default of 64 if ydb_poollimit is not specified. Note that this may slightly slow a standalone REORG but can be overridden by defining ydb_poollimit as 0 or "100%". 
+VIEW "POOLLIMIT":<region>:expr, where expr is of the form n[%] provides a mechanism for a process that has the potential to "churn" global buffers to limit the potential impact on other processes by restricting the number of global buffers it uses. If the expression ends with a per-cent sign (%), the number is taken as a percentage of the configured global buffers and otherwise as an ordinal number of preferred buffers; standard M parsing and integer conversions apply. Preferred buffer values are limited to between 32 and one less than half the buffer pool inclusive; with the exception of zero (0) or 100 per cent, which turn off the limitation; specifications exceeding those limits provide the value of the nearer limit. If the argument specifies "*" for the region, the command applies to all regions. $VIEW("POOLLIMIT",<region>) returns the current value for the region as an ordinal number - zero (0) when there is no limit in place. Note that this facility is designed for use by a relatively small subset of processes. In addition, MUPIP REORG uses this facility to limit its buffers to a value established by the environment variable ydb_poollimit using the syntax described for VIEW "POOLLIMIT" with a default of 64 if ydb_poollimit is not specified. Note that this may slightly slow a standalone REORG but can be overridden by defining ydb_poollimit as 0 or "100%". 
 
 **RCTLDUMP**
 
@@ -1795,7 +1795,7 @@ Starts a string-pool garbage collection, which normally happens automatically at
 
 Enables or disables handling of undefined variables as errors. With UNDEF, YottaDB handles all references to undefined local or global variables as errors. With NOUNDEF, YottaDB handles all references to undefined local or global variables as if the variable had a value of the empty string. In other words, YottaDB treats all variables appearing in expressions as if they were the argument of an implicit $GET(). UNDEF is the default.
 
-The environment variable $ydb_noundef specifies the initial value value of [NO]UNDEF at process startup. If it is defined, and evaluates to a non-zero integer or any case-independent string or leading substring of "TRUE" or "YES", then YottaDB treats undefined variables as having an implicit value of an empty string. 
+The environment variable $ydb_noundef specifies the initial value of [NO]UNDEF at process startup. If it is defined, and evaluates to a non-zero integer or any case-independent string or leading substring of "TRUE" or "YES", then YottaDB treats undefined variables as having an implicit value of an empty string. 
 
 .. note::
    NOUNDEF does not apply to an undefined FOR control variable. This prevents an increment (or decrement) of an undefined FOR control variable from getting into an unintended infinite loop. For example, FOR A=1:1:10 KILL A gives an UNDEF error on the increment from 1 to 2 even with VIEW "NOUNDEF". 
@@ -1821,7 +1821,7 @@ VIEW "TRACE" also reports details of child processes using two aggregate entries
 
 Instead of modifying the generated code as done by common profiling tools, such as gprof, M-profiling operates entirely within the YottaDB run-time system; therefore, this feature does not require a special compilation, has no effect on code size and minimizes run-time overhead.
 
-When M-profiling is activated, it gathers profiling information for each line and YottaDB function invocation. The reported time for a YottaDB line is the time spent in generated code for that line, and does not include time spent in entreyrefs called from that line. When M-profiling is deactivated, the accumulated statistics are loaded into a YottaDB global. YottaDB profiling accumulates and provides the data; the user chooses tools and techniques to analyze the data.
+When M-profiling is activated, it gathers profiling information for each line and YottaDB function invocation. The reported time for a YottaDB line is the time spent in generated code for that line, and does not include time spent in entryrefs called from that line. When M-profiling is deactivated, the accumulated statistics are loaded into a YottaDB global. YottaDB profiling accumulates and provides the data; the user chooses tools and techniques to analyze the data.
 
 The M-profiling information is stored in the variable in the following format:
 
@@ -2294,7 +2294,7 @@ An explicit or implicit QUIT within the scope of the XECUTE, but not within the 
 
 Because XECUTE causes run-time compilation in YottaDB, and because it tends to obscure code, use XECUTE only when other approaches clearly do not meet your particular requirement.
 
-YottaDB compiles XECUTE <literal> at compile time when the literal is valid YottaDB code that has minimal impact on the M virtual machine. An XECUTE literal containing GOTO, NEW, QUIT, (nested) XECUTE and indirection can't be precompiled because of the interaction of those features with the stack architecture of the M virtual machine. Precompiled XECUTE literals do not show up in $STATCK() as having a separate stack level, but rather "disappear" into the stack level of the original XECUTE. Please observe the following cautions: 
+YottaDB compiles XECUTE <literal> at compile time when the literal is valid YottaDB code that has minimal impact on the M virtual machine. An XECUTE literal containing GOTO, NEW, QUIT, (nested) XECUTE and indirection can't be precompiled because of the interaction of those features with the stack architecture of the M virtual machine. Precompiled XECUTE literals do not show up in $STACK() as having a separate stack level, but rather "disappear" into the stack level of the original XECUTE. Please observe the following cautions: 
 
 * ensure you compile with the same YottaDB version, $ydb_chset, $ydb_local_collate, $ydb_patnumeric, $ydb_pattern_file and $ydb_pattern_table values (or lack thereof) as those used to run your application.
 * If the application changes the run time values controlled by those environment variables, use variable operands or indirection, rather than literals for operands with pattern match (?) or sorts-after (]]).
@@ -2327,7 +2327,7 @@ ZAllocate
 
 The ZALLOCATE command reserves the specified name without releasing previously reserved names. Other YottaDB processes cannot reserve the ZALLOCATEd name with a ZALLOCATE or LOCK command.
 
-The ZALLOCATE command provides compatibility with some other YottaDB implementations. The M Development Committee chose to add the + and - delimiters to the LOCK command (incremental locking) rather than adopt the ZALLOCATE and ZDEALLOCATE approach. Therefore, when a design requires an incremental lock mechanism, LOCK +/- has the advantage over ZALLOCATE / ZDEALLOCATE of being part of the M standard. LOCK +/- also has the advantage of working symmetrically when routines using LOCKs are nested. That is, a ZALLOCATE command issued by a process for a named resource already ZALLOCATEd by that process results in no change of state. This means that routines that do ZALLOCATE followed by a ZDEALLOCATE on a named resource that is already ZALLOCATEd by the same process (at routine entry time), will end up ZDEALLOCATEing the named resource (which might not be desired). On the other hand, a LOCK + command issued by a process for a named resource already LOCKed by that process causes the LEVEL of the LOCK to be incremented (as seen in a ZSHOW "L" output). Every LOCK - command on that named resource causes the LEVEL to be decremented. When the LEVEL becomes 0, the named resource is no longer LOCKed.
+The ZALLOCATE command provides compatibility with some other YottaDB implementations. The M Development Committee chose to add the + and - delimiters to the LOCK command (incremental locking) rather than adopt the ZALLOCATE and ZDEALLOCATE approach. Therefore, when a design requires an incremental lock mechanism, LOCK +/- has the advantage over ZALLOCATE/ZDEALLOCATE of being part of the M standard. LOCK +/- also has the advantage of working symmetrically when routines using LOCKs are nested. That is, a ZALLOCATE command issued by a process for a named resource already ZALLOCATEd by that process results in no change of state. This means that routines that do ZALLOCATE followed by a ZDEALLOCATE on a named resource that is already ZALLOCATEd by the same process (at routine entry time), will end up ZDEALLOCATEing the named resource (which might not be desired). On the other hand, a LOCK + command issued by a process for a named resource already LOCKed by that process causes the LEVEL of the LOCK to be incremented (as seen in a ZSHOW "L" output). Every LOCK - command on that named resource causes the LEVEL to be decremented. When the LEVEL becomes 0, the named resource is no longer LOCKed.
 
 For more information on troubleshooting LOCKs with the M Lock Utility (LKE), refer to the `appropriate chapter of the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/mlocks.html>`_.
 
