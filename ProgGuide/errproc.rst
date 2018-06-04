@@ -222,7 +222,7 @@ Example (setting $ECODE):
    SET $PIECE($ECODE,",",2)="Z3," ;insert a non-ANSI error code
    SET $PIECE($ECODE,",",$LENGTH($ECODE,",")+1)="An..," ;append
 
-Standard Error processing affects the flow of control in the following manner. Detection of an error causes GOTO implicit sub-routine. When $ECODE="", the implicit subroutine is $ETRAP and QUIT:$QUIT "" QUIT. Otherwise the implicit subroutine is $ETRAP followed by TROLLBACK:$TLEVEL and then QUIT:$QUIT "" QUIT.
+Standard Error processing affects the flow of control in the following manner. Detection of an error causes GOTO implicit sub-routine. When $ECODE="", the implicit subroutine is $ETRAP and QUIT:$QUIT "" QUIT. Otherwise, the implicit subroutine is $ETRAP followed by TROLLBACK:$TLEVEL and then QUIT:$QUIT "" QUIT.
 
 The QUIT command behaves in a special fashion while the value of $ECODE is non-empty. If a QUIT command is executed that returns control to a less nested level than the one where the error occurred, and the value of $ECODE is still non-empty, first all normal activity related to the QUIT command occurs (especially the unstacking of NEWed variables) and then the current value of $ETRAP is executed. Note that, if $ETRAP had been NEWed at the current or intervening level, the unstacked value of $ETRAP is executed.
 
@@ -809,7 +809,7 @@ Example:
    RETRY="BAD^EP6A"
    YDB> 
 
-This routine is an example of how $ETRAP handling can be coded to perform the same kind of resumtion of the original execution stream that occurs by default with $ZTRAP when there is no unconditional transfer of control.
+This routine is an example of how $ETRAP handling can be coded to perform the same kind of resumption of the original execution stream that occurs by default with $ZTRAP when there is no unconditional transfer of control.
 
 +++++++++++++++++++++++++++++++++
 Terminating Execution on an Error
@@ -953,7 +953,7 @@ This routine sets $ETRAP or $ZTRAP to the QUIT command. When the routine encount
 
 The HALT command terminates routine execution and returns control to the shell level. Setting $ETRAP="HALT" or $ZTRAP="HALT" is similar to setting the ISV to the empty string except that the "HALT" code does not pass the error condition code back to the shell. After a HALT, $? contains zero (0).
 
-ZHALT acts like HALT but takes and argument, which YottaDB passes back to the OS shell. Note that UNIX shells typically limit return codes to a byte, so they may truncate the value of the ZHALT argument.
+ZHALT acts like HALT but takes an argument, which YottaDB passes back to the OS shell. Note that UNIX shells typically limit return codes to a byte, so they may truncate the value of the ZHALT argument.
 
 Example:
 
@@ -1133,11 +1133,11 @@ To simplify record keeping, an application may set $ZTRAP to an error-handling r
    FATAL   SET $ZTRAP=""
            ZM +$P($ST($ST(-1),"ECODE"),"Z",2)
 
-The routine sets $ZTRAP to a sequence of values so that, in the event of an error various fallback actions are taken. If a STACKCRIT error occurs, YottaDB makes a small amount of space for error handling. However, if the error handler uses up significant amounts of space by nesting routines or manupulating local variables, the error handler may cause another STACKCRIT error. In this case, it is possible for the error handling to loop endlessly, therefore this routine changes $ZTRAP so that each error moves the routine closer to completion.
+The routine sets $ZTRAP to a sequence of values so that in the event of an error, various fallback actions are taken. If a STACKCRIT error occurs, YottaDB makes a small amount of space for error handling. However, if the error handler uses up significant amounts of space by nesting routines or manipulating local variables, the error handler may cause another STACKCRIT error. In this case, it is possible for the error handling to loop endlessly - therefore this routine changes $ZTRAP so that each error moves the routine closer to completion.
 
 First it attempts to store the context information in the global ^ERR. The LOOPV-LOOPT code records the invocation levels using the ZSHOW command. This technique addresses the situation where the application program defines or NEWs local variables for each level. The code executes a pass through the loop for each instance where the value of $ZLEVEL is greater than one (1). For each pass, ERR.M decrements the value of $ZLEVEL with the ZGOTO. When the value of $ZLEVEL reaches one (1), the code at, and following, the STACK label stores the error context available in the $STACK() function.
 
-If there is a problem with storing any of this information, ^ERR attempts to store the context information in a file in the current default working directory. If it uses a file, in order to (at the label OPEN), record information about I/O operations, on the current device at the time of the error, the error handler SETs local variables to the values of the device specific I/O special variables $IO, $ZA, $ZB and $ZEOF before opening the log file.
+If there is a problem with storing any of this information, ^ERR attempts to store the context information in a file in the current default working directory. If it uses a file, in order to (at the label OPEN) record information about I/O operations on the current device at the time of the error, the error handler SETs local variables to the values of the device specific I/O special variables $IO, $ZA, $ZB and $ZEOF before opening the log file.
 
 The routine OPENs the log file with a name made up of the date and $JOB of the process. The NEWVERSION deviceparameter instructs YottaDB to create a new version of the file. The LOOPF-LOOPU code records the invocation levels using the ZWRITE command in a manner analogous to that described above. If an error occurs trying to write to the file, $ZTRAP USEs the principal device and transfers control to the STAC label in an attempt to provide a minimal error context on the user terminal. The code at and following the STAC label records the error context available in the $STACK() function.
 

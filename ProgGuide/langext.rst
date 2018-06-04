@@ -315,7 +315,7 @@ The following table summarizes Alias Variables extensions.
 | View and $View()     | VIEW provides LV_GCOL, LV_REHASH, and STP_GCOL to perform garbage collection and local variable lookup table reorganization operations which normally happen             |
 |                      | automatically at appropriate times. For more information on the keywords of the VIEW command, refer to “Key Words in VIEW Command”.                                      |
 |                      |                                                                                                                                                                          |
-|                      | $VIEW() provides LV_CREF, LV_GCOL, and LV_REF. YottaDB/FIS uses the LC_CREF, LV_GCOL, LV_REF keywords in testing and is documenting them to ensure completeness in       |
+|                      | $VIEW() provides LV_CREF, LV_GCOL, and LV_REF. YottaDB uses the LC_CREF, LV_GCOL, LV_REF keywords in testing and is documenting them to ensure completeness in           |
 |                      | product documentation. They may (or may not) be useful during application development for debugging or performance testing implementation alternatives. For more         |
 |                      | information the keywords of $VIEW(), refer to “Argument Keywords of $VIEW()”.                                                                                            |
 +----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -333,7 +333,7 @@ Alias Variables provide access to an array through multiple names. Conceptually 
 
 * All alias variables associated with the same array are equivalent in their access to its nodes - for example, a SET of a node in an array via one name is no different than a SET to that node using any other name of which it is an alias. Nothing about the order of their creation or association has any significance.
 * Once an array becomes accessible via only a single unsubscripted name, YottaDB treats that name as a traditional local variable.
-* YottaDB treats variables joined through pass-by-reference as a special variant of an alias variable. Pass-by-reference relates to the M stack model with aliasing implicit as a side effect of invocation with DO or $$ and unaliasing implicit as a side effect of QUIT. In the broader alias case, program commands directly alias and unalias names without any binding to the M stack.
+* YottaDB treats variables joined through pass-by-reference as a special variant of an alias variable. Pass-by-reference relates to the M stack model with implicit aliasing as a side effect of invocation with DO or $$ and implicit unaliasing as a side effect of QUIT. In the broader alias case, the program directly commands aliased and unaliased names without any binding to the M stack.
 * YottaDB treats the state of a TP (Transaction Processing) RESTART variable as an internal alias, which it only exposes if the transaction creating it RESTARTs.
 * YottaDB treats variables hidden by exclusive NEW as a type of alias.
 * Owing to their implicit behavior, under certain circumstances, pass-by-reference aliases, RESTART variable and exclusive NEW aliases are not entirely symmetrical with respect to explicitly created alias variables (that is, they may come and go at different times, whereas alias variables come and go under application program control).
@@ -379,16 +379,16 @@ ZWRITE/ZSHOW "V" Format
 
 ZWRITE as applied to local variables and ZSHOW "V" are conceptually similar, with two differences:
 
-* ZWRITE allows the use of patterns to specify variables and subscripts to display whereas ZSHOW "V" applies to all local variables. 
+* ZWRITE allows the use of patterns to specify the variables and subscripts to display, whereas ZSHOW "V" applies to all local variables. 
 * ZSHOW "V" optionally allows the output to be directed to a global or local variable, whereas ZWRITE always directs its output to the current output device.
 
-For more information on the ZWRITE / ZSHOW "V" format for alias variables, refer to “ZWRITE Format for Alias Variables”.
+For more information on the ZWRITE/ZSHOW "V" format for alias variables, refer to “ZWRITE Format for Alias Variables”.
 
 ++++++++++++++++++++++++
 Pass By Reference
 ++++++++++++++++++++++++
 
-YottaDB's underlying implementation of pass-by-reference and alias variables is the same. As illustrated by the program "killalias" above, ZWRITE displays variables joined though pass-by-reference using alias conventions. Pass-by-reference is distinguished from alias variables by its implicit creation and elimination. Note the interaction between pass by reference and alias variables when the association of a formallist parameter in a subprogram is changed:
+YottaDB's underlying implementation of pass-by-reference and alias variables is the same. As illustrated by the program "killalias" previously, ZWRITE displays variables joined though pass-by-reference using alias conventions. Pass-by-reference is distinguished from alias variables by its implicit creation and elimination. Note the interaction between pass-by-reference and alias variables when the association of a formallist parameter in a subprogram is changed:
 
 .. parsed-literal::
    $ /usr/local/lib/yottadb/r120/ydb -run ^switchalias
@@ -790,7 +790,7 @@ The following table summarizes YottaDB Unicode support.
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | $Find()                     | The $FIND() function returns an integer character position that locates the occurrence of a substring within a string. For more information and usage examples, refer to “$Find()”.        |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| $Justify()                  | The $JUSTIFY function returns a formatted string. For more information and usage examples, refer to “$Justify()”.                                                                          |
+| $Justify()                  | The $JUSTIFY() function returns a formatted string. For more information and usage examples, refer to “$Justify()”.                                                                        |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | $Length()                   | The $LENGTH() function returns the length of a string measured in characters, or in "pieces" separated by a delimiter specified by its optional second argument. For more information and  |
 |                             | usage examples, refer to “$Length()”.                                                                                                                                                      |
@@ -887,7 +887,7 @@ The following table summarizes YottaDB Unicode support.
 |                             | commands execute with the same setting for the environment variable ydb_chset. The M utility programs %GO and %GI have the same requirement for mode matching. For more information on     |
 |                             | MUPIP EXTRACT and MUPIP LOAD, refer to the General Database Management chapter in the Administration and Operations Guide.                                                                 |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| Open                        | In UTF-8 mode, the OPEN command recognizes ICHSET, OCHSET, and CHSET as three additional deviceparameters to determine the encoding of the input / output devices. For more information and|
+| Open                        | In UTF-8 mode, the OPEN command recognizes ICHSET, OCHSET, and CHSET as three additional deviceparameters to determine the encoding of the input/output devices. For more information and  |
 |                             | usage examples, refer to “Open”.                                                                                                                                                           |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Pattern Match Operator (?)  | YottaDB allows the pattern string literals to contain the characters in Unicode. Additionally, YottaDB extends the M standard pattern codes (patcodes) A, C, N, U, L, P and E to           |
@@ -925,12 +925,12 @@ The following table summarizes YottaDB Unicode support.
 |                             | If the output character set for a device is UTF-16 (but not UTF-16BE or UTF-16LE,) YottaDB writes a BOM before the initial output. The application code does not need to explicitly        |
 |                             | write the BOM.                                                                                                                                                                             |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| WIDTH=intexpr (USE)         | In UTF-8 mode and TRM and SD output, the WIDTH deviceparameter specifies the display-columns and is used with $X to control truncation and WRAPing of the visual representation of the     |
+| WIDTH=intexpr (USE)         | In UTF-8 mode and TRM and SD output, the WIDTH deviceparameter specifies the display-columns and is used with $X to control the truncation and WRAPping of the visual representation of the|
 |                             | stream. For more information and usage examples, refer to “WIDTH”.                                                                                                                         |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Write                       | In UTF-8 mode, the WRITE command uses the character set specified on the device OPEN as the character encoding of the output device. If character set specifies "M" or "UTF-8",            |
 |                             | YottaDB WRITEs the data with no transformation. If character set specifies "UTF-16", "UTF-16LE" or "UTF-16BE", the data is assumed to be encoded in UTF-8 and WRITE transforms it to       |
-|                             | the character encoding specified by character set device parameter. For more information and usage examples, refer to “Write”.                                                             |
+|                             | the character encoding specified by the character set device parameter. For more information and usage examples, refer to “Write”.                                                         |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Write *                     | When the argument of a WRITE command consists of a leading asterisk (*) followed by an integer expression, the WRITE command outputs the character represented by the code-point value of  |
 |                             | that integer expression. For more information and usage examples, refer to “Write”.                                                                                                        |
@@ -965,9 +965,9 @@ The YottaDB design philosophy is to keep things simple, but no simpler than they
 
 1. A sequence of bytes is never illegal when considered as binary data, but can be illegal when treated as a Unicode string. The detection and handling of illegal Unicode strings adds complexity, especially when binary and Unicode data reside in different pieces of the same string.
 
-2. Since binary data may not map to graphic characters in Unicode, the ZWRite format must represent such characters differently. A sequence of bytes that is output by a process interpreting it as Unicode may require processing to form correctly input to a process that is interpreting that sequence as binary, and vice versa. Therefore, when performing IO operations, including MUPIP EXTRACT and MUPIP LOAD operations in ZWR format, ensure that processes have the compatible environment variables and /or logic to generate the desired output and correctly read and process the input.
+2. Since binary data may not map to graphic characters in Unicode, the ZWRite format must represent such characters differently. A sequence of bytes that is output by a process interpreting it as Unicode may require processing to form correctly input to a process that is interpreting that sequence as binary, and vice versa. Therefore, when performing IO operations, including MUPIP EXTRACT and MUPIP LOAD operations in ZWR format, ensure that processes have the compatible environment variables and/or logic to generate the desired output and correctly read and process the input.
 
-3. Application logic managing input / output that interacts with human beings or non-YottaDB applications requires even closer scrutiny. For example, fixed length records in files are always defined in terms of bytes. In Unicode-related operation, an application may output data such that a character would cross a record boundary (for example, a record may have two bytes of space left, and the next UTF-8 character may be three bytes long), in which case YottaDB fills the record with one or more pad bytes. When a padded record is read as UTF-8, trailing pad bytes are stripped by YottaDB and not provided to the application code.
+3. Application logic managing input/output that interacts with human beings or non-YottaDB applications requires even closer scrutiny. For example, fixed length records in files are always defined in terms of bytes. In Unicode-related operations, an application may output data such that a character would cross a record boundary (for example, a record may have two bytes of space left, and the next UTF-8 character may be three bytes long), in which case YottaDB fills the record with one or more pad bytes. When a padded record is read as UTF-8, trailing pad bytes are stripped by YottaDB and not provided to the application code.
 
 For some languages (such as Chinese), the ordering of strings according to Unicode code-points (character values) may not be the linguistically or culturally correct ordering. Supporting applications in such languages requires development of collation modules - YottaDB natively supports M collation, but does not include pre-built collation modules for any specific natural language.
 
@@ -1026,9 +1026,9 @@ ICU
 ICU is a widely used, defacto standard package (see http://icu-project.org for more information) that YottaDB relies on for most operations that require knowledge of the Unicode character sets, such as text boundary detection, character string conversion between UTF-8 and UTF-16, and calculating glyph display widths.
 
 .. note::
-   Unless Unicode support is sought for a process (that is, unless the environment variable ydb_chset is UTF8"), YottaDB processes do not need ICU. In other words, existing, non-Unicode, applications continue to work on supported platforms without ICU.
+   Unless Unicode support is sought for a process (that is, unless the environment variable ydb_chset is UTF8), YottaDB processes do not need ICU. In other words, existing, non-Unicode, applications continue to work on supported platforms without ICU.
 
-An ICU version number is of the form major.minor.milli.micro where major, minor, milli and micro are integers. Two versions that have different major and/or minor version numbers can differ in functionality and API compatibility is not guaranteed. Differences in milli or micro versions are maintenance releases that preserve functionality and API compatibility. ICU reference releases are defined by major and minor version numbers. Note that display widths for some characters changed in ICU 4.0 and may change again in the future, as both languages and ICU evolve.
+An ICU version number is of the form major.minor.milli.micro where major, minor, milli and micro are integers. Two versions that have different major and/or minor version numbers can differ in functionality, and API compatibility is not guaranteed. The differences in milli or micro versions are maintenance releases that preserve functionality and API compatibility. ICU reference releases are defined by major and minor version numbers. Note that display widths for some characters changed in ICU 4.0 and may change again in the future, as both languages and ICU evolve.
 
 An operating system's distribution generally includes an ICU library tailored to the OS and hardware, therefore, YottaDB does not provide any ICU libraries. In order to support Unicode functionality, YottaDB requires an appropriate version of ICU to be installed on the system - check the release notes for your YottaDB release for supported ICU versions.
 
@@ -1073,11 +1073,11 @@ Although the M standard patcodes (A,C,L,U,N,P,E) are extended to work with Unico
 
 **String Normalization**
 
-In YottaDB, strings are not implicitly normalized. Unicode normalization is a method of computing canonical representation of the character strings. Normalization is required if the strings contain combination characters (such as accented characters consisting of a base character followed by an accent character) as well as precomposed characters. The Unicode™ standard assigned code-points to such precomposed characters for backward compatibility with legacy code sets. For the applications containing both versions of the same character (or combining characters), Unicode recommends one of the normal forms. Because YottaDB does not normalize strings, the application developers must develop the functionality of normalizing the strings, as needed, in order for string matching and string collation to behave in a conventional and wholesome fashion. In such a case, edit checks can be used that only accept a single representation when multiple representations are possible. 
+In YottaDB, strings are not implicitly normalized. Unicode normalization is a method of computing canonical representation of the character strings. Normalization is required if the strings contain combination characters (such as accented characters consisting of a base character followed by an accent character) as well as precomposed characters. The Unicode™ standard has assigned code-points to such precomposed characters for backward compatibility with legacy code sets. For the applications containing both versions of the same character (or combining characters), Unicode recommends one of the normal forms. Because YottaDB does not normalize strings, the application developers must develop the functionality of normalizing the strings, as needed, in order for string matching and string collation to behave in a conventional and wholesome fashion. In such a case, edit checks can be used that only accept a single representation when multiple representations are possible. 
 
 **UTF-16 is not supported for $PRINCIPAL Device**
 
-In YottaDB does not support UTF-16, UTF-16LE and UTF-16BE encodings for $PRINCIPAL I/O devices (including Terminal, Sequential and Socket devices). In order to perform Unicode™-related I/O with the $PRINCIPAL device, application developers must use "UTF-8" for the ICHSET or OCHSET deviceparameters.
+YottaDB does not support UTF-16, UTF-16LE and UTF-16BE encodings for $PRINCIPAL I/O devices (including Terminal, Sequential and Socket devices). In order to perform Unicode™-related I/O with the $PRINCIPAL device, application developers must use "UTF-8" for the ICHSET or OCHSET deviceparameters.
 
 **UTF-16 is not supported for Terminal Devices**
 
@@ -1101,7 +1101,7 @@ YottaDB does not check for illegal characters in a string before passing it to a
 Maximums
 ~~~~~~~~~~~~~~~~~~
 
-In the prior versions of YottaDB, the restrictions on certain objects were put in place with the assumption that a character is represented by a single byte. With support for Unicode enabled in YottaDB, the following restrictions are in terms of bytes- not characters.
+In prior versions of YottaDB, the restrictions on certain objects were put in place with the assumption that a character is represented by a single byte. With support for Unicode enabled in YottaDB, the following restrictions are in terms of bytes- not characters.
 
 **M Name Length**
 
@@ -1117,7 +1117,7 @@ The maximum length of a program or indirect source line is restricted to 2,048 b
 
 **Database Key and Record Sizes**
 
-The maximum allowed size for database keys (both global and nref keys) is 255 bytes, and for database records is 32K bytes. Application developers must be aware that the keys or data containing multi-byte characters in Unicode are limited at a smaller number of characters than the number of available bytes.
+The maximum allowed size for database keys (both global and nref keys) is 255 bytes, and for database records is 32K bytes. Application developers must be aware that keys or data containing multi-byte characters in Unicode are limited at a smaller number of characters than the number of available bytes.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 Golden Rules

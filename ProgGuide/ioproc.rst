@@ -2607,7 +2607,7 @@ PAD=expr Applies to: SD FIFO PIPE
 
 For FIXED format sequential files when the character set is not M, if a multi-byte character (when CHSET is UTF-8) or a surrogate pair (when CHSET is UTF-16) does not fit into the record (either logical as given by WIDTH or physical as given by RECORDSIZE) the WRITE command uses bytes with the value specified by the PAD deviceparameter to fill out the physical record. READ ignores the pad bytes when found at the end of the record. The value for PAD is given as an integer in the range 0-127 (the ASCII characters). PAD is always a byte value and the default is $ZCHAR(32) or [SPACE].
 
-In UTF-8 mode, there are three cases that cause YottaDB to insert PAD characters when WRITEing. When READing YottaDB attempts to strip any PAD characters. This stripping only works properly if the RECORDSIZE and PAD are the same for the READ as when the WRITEs occurred. WRITE inserts PAD characters when:
+In UTF-8 mode, there are three cases that cause YottaDB to insert PAD characters when WRITEing. When READing, YottaDB attempts to strip any PAD characters. This stripping only works properly if the RECORDSIZE and PAD are the same for the READ as when the WRITEs occurred. WRITE inserts PAD characters when:
 
 * The file is closed and the last record is less than the RECORDSIZE. Records are padded (for FIXED) by WRITE ! as well as when the file is closed.
 * $X exceeds WIDTH before the RECORDSIZE is full.
@@ -2881,7 +2881,7 @@ STDERR Applies to: PIPE
 
 The STDERR deviceparameter specifies that the stderr output from the created process goes to a PIPE device with the name of the STDERR value. This PIPE device acts as a restricted device that can appear only as the argument to USE, READ and CLOSE commands. It is implicitly READONLY and an attempt to WRITE to it triggers an error. If it has not previously acted as the argument to an explicit CLOSE command, the CLOSE of the PIPE device implicitly closes the the STDERR device.
 
-If the OPEN command does not specify STDERR, YottaDB redirects the stderr output of the co-process created by the COMMAND to the standard output of the co-process. Specify STDERR when there is a need to read the standard error of the COMMAND seperately. 
+If the OPEN command does not specify STDERR, YottaDB redirects the stderr output of the co-process created by the COMMAND to the standard output of the co-process. Specify STDERR when there is a need to read the standard error of the COMMAND separately. 
 
 **STREAM**
 
@@ -2889,7 +2889,7 @@ If the OPEN command does not specify STDERR, YottaDB redirects the stderr output
 
 STREAM and VARIABLE are semantically equivalent unless WRAP is disabled. As long as records do not exceed the WIDTH, they are also equivalent.
 
-When WRAP is disabled and a WRITE exceeds the WIDTH, VARIABLE format truncates the line at the WIDTH, however in STREAM format, each WRITE argument is output without truncation or line terminator and the total record can be of arbitrary length.
+When WRAP is disabled and a WRITE exceeds the WIDTH, VARIABLE format truncates the line at the WIDTH, however in STREAM format, each WRITE argument is output without truncation or line termination and the total record can be of arbitrary length.
 
 For STREAM or VARIABLE record format files, a READ returns when it encounters an EOL, or has read #length characters for a READ #(fixed length READ), or WIDTH characters if #length is not specified, whichever occurs first.
 
@@ -3196,7 +3196,7 @@ For information on using the ATTACH with OPEN, refer to “ATTACH” in the OPEN
 
 [NO]CANONICAL Applies to: TRM
 
-Enables or disables canonical input as controlled by the ICANON terminal attribute. See the documentation on your platform for details, but in general this would be erase and kill edit functions, and lines delimited by NL (usually <LF>), EOF (usually ^D), and EOL (usually not defined).
+Enables or disables canonical input as controlled by the ICANON terminal attribute. See the documentation on your platform for details, but in general, this would be the erase and kill edit functions, and lines delimited by NL (usually <LF>), EOF (usually ^D), and EOL (usually not defined).
 
 By default, canonical input is enabled (that is [NO]CANONICAL is the default).
 
@@ -3744,7 +3744,7 @@ Terminals inherit their default WIDTH in YottaDB from the invoking shell environ
 
 For SD and SOC which support 1MB strings, you can specify WIDTH up to 1,048,576.
 
-In UTF-8 mode and TRM, SOC, SD, and FIFO output, the WIDTH deviceparameter is in units of display-columns and is used with $X to control truncation and WRAPing for output and maintenance of $X and $Y for input.
+In UTF-8 mode and TRM, SOC, SD, and FIFO output, the WIDTH deviceparameter is in units of display-columns and is used with $X to control truncation and WRAPping for output and maintenance of $X and $Y for input.
 
 In UTF-8 mode and SOC, the WIDTH deviceparameter is in units of Unicode code points and is used with $X to control truncation and wrapping for output and maintenance of $X and $Y for input.
 
