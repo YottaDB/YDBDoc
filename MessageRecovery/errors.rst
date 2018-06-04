@@ -2384,7 +2384,7 @@ Action: -
 DBFILOPERR 
 ----------------------
 
-DBFILOPERR, Error doing database I/O to region xxxx
+DBFILOPERR, Error doing database I/O to database file xxxx
 
 Run Time Error: This indicates that the database manager portion of the run-time system encountered an error when it attempted to open, read, write, or close a database file.
 
