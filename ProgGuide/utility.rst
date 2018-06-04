@@ -147,7 +147,7 @@ The %DATE utility converts an input date to the $HOROLOG format. The $HOROLOG fo
 
 **Utility Labels**
 
-INT: Converts %DS input non-interactively, if defined, otherwise the current date.
+INT: Converts %DS input non-interactively (if defined), otherwise the current date.
 
 FUNC(t): Invokes an extrinsic function returning $HOROLOG format of the argument.
 
@@ -284,9 +284,9 @@ CTN(tm): Extrinsic entry that converts the argument to $HOROLOG format.
 
 **Output Variables**
 
-%DAT: Contains converted output date,
+%DAT: Contains converted output date
 
-%TIM: Contains converted output time,
+%TIM: Contains converted output time
 
 **Examples of %H**
 
@@ -352,7 +352,7 @@ Example:
    YDB>WRITE $ZDATE(55445)
    10/20/1992 
 
-This example shows the use of a year limit in $ZDATEFORM. Two digit years are interpreted to be in the interval of 1980 - 2079; since $ZDATEFORM is 1980, the input year "02" is interpreted as "2002" and "92" is interpreted as "1992". This example invokes CDN^%H to convert the argument in mm/dd/yy format to $HOROLOG format. $ZDATE() is used to conver the $HOROLOG format date to mm/dd/yyyy format.
+This example shows the use of a year limit in $ZDATEFORM. Two digit years are interpreted to be in the interval of 1980 - 2079; since $ZDATEFORM is 1980, the input year "02" is interpreted as "2002" and "92" is interpreted as "1992". This example invokes CDN^%H to convert the argument in mm/dd/yy format to $HOROLOG format. $ZDATE() is used to convert the $HOROLOG format date to mm/dd/yyyy format.
 
 ++++
 %T
@@ -405,9 +405,9 @@ The %TI utility converts time to $HOROLOG format. The $HOROLOG format represents
 
 **Utility Labels**
 
-INTNon-interactively converts %TS to $HOROLOG format; if %TS is not defined, then current time is converted.
+INT Non-interactively converts %TS to $HOROLOG format; if %TS is not defined, then current time is converted.
 
-FUNC[(ts)]Invokes an extrinsic function returning $HOROLOG format of the argument, or if no argument, the $HOROLOG format of the current time.
+FUNC[(ts)] Invokes an extrinsic function returning $HOROLOG format of the argument, or if no argument, the $HOROLOG format of the current time.
 
 **Prompts**
 
@@ -497,7 +497,7 @@ The %TO utility converts the input time from $HOROLOG format to [h]h:mm AM/PM fo
 
 **Utility Labels**
 
-INT: Converts non-interactively %TS, or if %TS is not defined the current time to [h]h:mm AM/PM format.
+INT: Converts non-interactively %TS or if %TS is not defined, the current time to [h]h:mm AM/PM format.
 
 **Input Variables**
 
@@ -892,7 +892,7 @@ FUNC(oct): Invokes %OH as an extrinsic function returning the hexadecimal equiva
 
 **Prompts**
 
-Octal:Requests an octal number for conversion to hexadecimal.
+Octal: Requests an octal number for conversion to hexadecimal.
 
 **Input Variables**
 
@@ -987,8 +987,6 @@ The mathematic utilities are:
 %SQROOT: Calculates the square root of a number.
 
 The mathematic utilities can be invoked as extrinsic functions.
-
-The "%" sign has been removed from the topic headings below, intentionally.
 
 ++++++++
 %EXP
@@ -2419,7 +2417,7 @@ Example:
 %DUMPFHEAD
 +++++++++++++
 
-The %DUMPFHEAD utility provides a programmatic interface to the functionality of MUPIP DUMPFHEAD. This routine reads the database file header directly, rather than opening it as a database and reading values mapped into memory. This means it is lighter weight in some senses than ^%PEEKBYNAME, but it also means that the information it retrieves is more limited, and possibly less current.
+The %DUMPFHEAD utility provides a programmatic interface to the functionality of MUPIP DUMPFHEAD. This routine reads the database file header directly, rather than opening it as a database and reading values mapped into memory. This means that it is lighter weight in some senses than ^%PEEKBYNAME, but it also means that the information it retrieves is more limited, and possibly less current.
 
 **Utility Labels**
 
@@ -2506,7 +2504,7 @@ Example:
 %PEEKBYNAME()
 ++++++++++++++++++
 
-%PEEKBYNAME() provides a stable interface to $ZPEEK() that uses control structure field names. $ZPEEK() provides a read-only mechanism to access selected fields in selected control structures in the address space of a process, including process private memory, database shared memory segments and Journal Pools. Although application code can call $ZPEEK() directly, such direct access must use numeric arguments that can vary from release to release. Access by name using %PEEKBYNAME makes application code more stable across YottaDB releases. For more information, refer to “$ZPEEK()”. YottaDB intends to maintain the stability of a name from release to release where that name refers to the same data item; however we may add or obsolete names, or modify the type and size associated with existing names at our discretion, to reflect changes in the implementation. The format of the %PEEKBYNAME() function is:
+%PEEKBYNAME() provides a stable interface to $ZPEEK() that uses control structure field names. $ZPEEK() provides a read-only mechanism to access selected fields in selected control structures in the address space of a process, including process private memory, database shared memory segments and Journal Pools. Although application code can call $ZPEEK() directly, such direct access must use numeric arguments that can vary from release to release. Access by name using %PEEKBYNAME makes application code more stable across YottaDB releases. For more information, refer to “$ZPEEK()”. YottaDB intends to maintain the stability of a name from release to release where that name refers to the same data item; however, we may add or obsolete names, or modify the type and size associated with existing names at our discretion, to reflect changes in the implementation. The format of the %PEEKBYNAME() function is:
 
 .. parsed-literal::
    %PEEKBYNAME(field[,regindex][,format])
@@ -2752,7 +2750,7 @@ As they do for unshared statistics, shared statistics reflect all database actio
 Unicode Utility Routines
 ---------------------------
 
-The %UTF2HEX and %HEX2UTF M utility routines provide conversions between UTF-8 and hexadecimal code-point representations. Both these utilities run in only in UTF-8 mode; in M mode, they both trigger a run-time error.
+The %UTF2HEX and %HEX2UTF M utility routines provide conversions between UTF-8 and hexadecimal code-point representations. Both these utilities run only in UTF-8 mode; in M mode, they both trigger a run-time error.
 
 ++++++++++++++++
 %UTF2HEX
@@ -2795,7 +2793,7 @@ DO ^%HEX2UTF converts the hexadecimal byte stream stored in %U into a YottaDB ch
 
 DO INT^%HEX2UTF converts the interactively entered hexadecimal byte stream into a YottaDB character string and stores the result in %S.
 
-$$FUNC^%HEX2UTF(s) returns the YottaDB character string specified by the hexadecimal character values in s (each character is specified by its Unicode code point).
+$$FUNC^%HEX2UTF(s) returns the YottaDB character string specified by the hexadecimal character values in s (each character is specified by its Unicode code-point).
 
 Example:
 
