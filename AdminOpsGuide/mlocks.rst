@@ -141,12 +141,12 @@ Allows LKE CLEAR to work even if another process is holding a critical section.
 .. note::
    This can damage current LOCKs and the LOCK mechanism. It is intended for use only under the direction of YottaDB.
 
-By default LKE operates in CRIT mode and ensures a consistent view of LOCKs by using the database critical section(s).
+By default, LKE operates in CRIT mode and ensures a consistent view of LOCKs by using the database critical section(s).
 
 .. parsed-literal::
    -[NO]EXACT
 
-Limits the CLEAR command to the exact resource name specified with -LOCK=resource_name. NOEXACT (the default) treats the specified resource name as a prefix and works not only on it, but also on any of its descendants, since their existence effectively LOCK their parent tree.
+Limits the CLEAR command to the exact resource name specified with -LOCK=resource_name. NOEXACT (the default) treats the specified resource name as a prefix and works not only on it, but also on any of its descendants, since their existence effectively LOCKs their parent tree.
 
 .. parsed-literal::
    -L[OCK]=""resource_name""
@@ -157,7 +157,7 @@ Unless used with -EXACT, specifies the leading prefix for an implicit wild card 
 
 * When used with CLEAR, -LOCK removes the locks that start with resource_name.
 
-*  When used with SHOW,-LOCK provides a precise way to examine the specified lock.
+* When used with SHOW,-LOCK provides a precise way to examine the specified lock.
 
 .. parsed-literal::
    -[NO]I[NTERACTIVE]
@@ -349,7 +349,7 @@ resource_name specifies a single lock.
 
 Allows the SHOW command to work even if another process is holding a critical section.
 
-* By default LKE operates in CRIT mode and ensures a consistent view of LOCKs by using the database critical section(s).
+* By default, LKE operates in CRIT mode and ensures a consistent view of LOCKs by using the database critical section(s).
 
 * Use NOCRIT with SHOW only when normal operation is unsuccessful, as NOCRIT may cause LKE to report incomplete or inconsistent information.
 
@@ -362,7 +362,7 @@ Directs the reporting of all specified LOCKs to a file.
 
 * The -OUTPUT qualifier is compatible with all other qualifiers.
 
-* By default, the SHOW command send output messages to stdout.
+* By default, the SHOW command sends output messages to stdout.
 
 .. parsed-literal::
    -P[ID]=pid
@@ -547,7 +547,7 @@ Exercise 1: Preventing concurrent updates using M Locks
 Consider a situation when two users (Mary and Ken) have to exclusively update a global variable ^ABC.
 
 .. note::
-   Transaction Processing may offer a more efficient and more easily managed solution to the issue of potentially conflicting updates. For more information, see `General Language Features of M chapter of the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/langfeat.html>`_.
+   Transaction Processing may offer a more efficient and more easily managed solution to the issue of potentially conflicting updates. For more information, see the `General Language Features of M chapter of the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/langfeat.html>`_.
 
 At Mary's prompt, execute the following commands:
 
@@ -564,14 +564,14 @@ Then execute the following command to display the status of the LOCK database.
 This command produces an output like the following:
 
 .. parsed-literal::
-   DEFAULT ^ABC Owned by PID= 3657 which is an existing process
+   DEFAULT ^ABC Owned by PID=3657 which is an existing process
 
-Now, without releasing lock^ABC, execute the following commands at the prompt of Ken.
+Now, without releasing lock^ABC, execute the following commands at Ken's prompt.
 
 .. parsed-literal::
    YDB>lock +^ABC
 
-This command wait for the lock on resource "^ABC " to be released. Note that that the LOCK command does not block global variable ^ABC in any way. This command queues the request for locking resource "^ABC" in the LOCK database. Note that you can still modify the value of global variable ^ABC even if it is locked by Mary.
+This command waits for the lock on resource "^ABC" to be released. Note that the LOCK command does not block global variable ^ABC in any way. This command queues the request for locking resource "^ABC" in the LOCK database. Note that you can still modify the value of global variable ^ABC even if it is locked by Mary.
 
 Now, at Mary's prompt, execute the following command:
 
@@ -644,8 +644,8 @@ Execute the following command at LKE prompt to view this deadlock situation.
    file2 Owned by PID=2089 which is an existing process 
    Request PID=2080 which is an existing process
 
-This shows a deadlock situation where neither user can proceed forward because it is waiting for the other user to release the lock. You can resolve this situation by clearing the locks using the LKE CLEAR -PID command.
+This shows a deadlock situation where neither user can proceed because it is waiting for the other user to release the lock. You can resolve this situation by clearing the locks using the LKE CLEAR -PID command.
 
 .. note::
-   Avoid using the LKE CLEAR command to clear a deadlock in a production environment as it may lead to unpredictable application behavior. Always use the  MUPIP STOP command to clear a deadlock situation in your production environment. However, in a debugging environment, you can use LKE to debug LOCKs, analyze the status of the LOCK database and even experiment with LKE CLEAR.
+   Avoid using the LKE CLEAR command to clear a deadlock in a production environment, as it may lead to unpredictable application behavior. Always use the MUPIP STOP command to clear a deadlock situation in your production environment. However, in a debugging environment, you can use LKE to debug LOCKs, analyze the status of the LOCK database and even experiment with LKE CLEAR.
 
