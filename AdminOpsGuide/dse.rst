@@ -17,7 +17,7 @@ The Database Structure Editor, DSE, is primarily a tool for authorized YottaDB c
 
 DSE gives all possible control over a database and therefore, it may cause irreparable damage when used without knowing the consequences. Therefore, you unless you have extensive experience, you should always get guidance from YottaDB or an equivalently knowledgeable support resource before running any DSE command that changes any attribute of any production database or other database you value. However, you can use those DSE commands that let you see the attributes of your database for collecting database metrics and monitoring status.
 
-YottaDB installation procedure places the DSE utility program in a directory specified by the environment variable ydb_dist.
+The YottaDB installation procedure places the DSE utility program in a directory specified by the environment variable ydb_dist.
 
 Invoke DSE using the "dse" command at the shell prompt. If this does not work, consult your system manager to investigate setup and file access issues.
 
@@ -46,7 +46,7 @@ This command displays the fileheader of the region that stands first in the list
 
 As previously mentioned, DSE provides control over most of the attributes of your database. With DSE, it is possible to examine them and, with a few exceptions, change them.
 
-All DSE commands are divided into two categories - Change commands and Inquiry commands. Change commands allow you to modify the attribute of your database, in most cases without any warning or error. As the low level tool of last resort, Change commands allow you to take certain actions that can cause extensive damage when undertaken without an extensive understanding of the underlying data structures on disk and in memory and with an imperfect understanding of the commands issued. Do not use Change commands unless you know exactly what you are doing and have taken steps to protect yourself against mistakes, both inadvertent and resulting from an incomplete understanding of the commands you issue. Change commands are not required for normal operation, and are usually only used under the direction of YottaDB support to recover from the unanticipated consequences of failures not adequately planned for (for example, you should configure YottaDB applications such that you never need a Change command to recover from a system crash).
+All DSE commands are divided into two categories - Change commands and Inquiry commands. Change commands allow you to modify the attributes of your database, in most cases without any warning or error. As the low level tool of last resort, Change commands allow you to take certain actions that can cause extensive damage when undertaken without an extensive understanding of the underlying data structures on disk and in memory and with an imperfect understanding of the commands issued. Do not use Change commands unless you know exactly what you are doing and have taken steps to protect yourself against mistakes, both inadvertent and resulting from an incomplete understanding of the commands you issue. Change commands are not required for normal operation, and are usually only used under the direction of YottaDB support to recover from the unanticipated consequences of failures not adequately planned for (for example, you should configure YottaDB applications such that you never need a Change command to recover from a system crash).
 
 Inquiry commands let you see the attributes of your database. You may frequently use the inquiry commands for collecting your database metrics and status reporting.
 
@@ -151,7 +151,7 @@ Incompatible with: -RECORD, -STAR
 
 *-P[OINTER]=pointer*
 
-Specifies the block pointer field for records added to an index block. The -POINTER qualifier cannot be used at level 0. Note this means that to add pointers at level 0 of the Directory Tree you must specify a string of bytes or temporarily change the block level.
+Specifies the block pointer field for records added to an index block. The -POINTER qualifier cannot be used at level 0. Note that this means that to add pointers at level 0 of the Directory Tree, you must specify a string of bytes or temporarily change the block level.
 
 Incompatible with: -DATA
 
@@ -186,7 +186,7 @@ Example:
 .. parsed-literal::
    DSE>add -block=3 -record=4 -key="^Fruits(4)" -data="Grapes"
 
-Suppose your database has 3 global nodes -- ^Fruits(1)="Apple", ^Fruits(2)="Banana", and ^Fruits(3)="Cherry", then the above command adds a new node ^Fruits(4)="Grapes" at record 4. Note that this command is applicable to level 0 blocks only. The interpreted output as a result of the above command looks like the following:
+Suppose your database has 3 global nodes -- ^Fruits(1)="Apple", ^Fruits(2)="Banana", and ^Fruits(3)="Cherry". The above command adds a new node -- ^Fruits(4)="Grapes" at record 4. Note that this command is applicable to level 0 blocks only. The interpreted output as a result of the above command looks like the following:
 
 .. parsed-literal::
    Block 3   Size 4B   Level 0   TN 4 V6
@@ -285,7 +285,7 @@ Compatible with: -A[LL]
 
 *-[NO]F[REEZE]*
 
-Freezes or prevents updates all regions of the current global directory.
+Freezes or prevents updates on all regions of the current global directory.
 
 * The FREEZE qualifier freezes all GDS regions except those previously frozen by another process. Regions frozen by a particular process are associated with that process.
 * A frozen region may be unfrozen for updates in one of two ways: The process which froze the region may unfreeze it with the -NOFREEZE qualifier; or another process may override the freeze in conjunction with the -OVERRIDE qualifier. For more information on a preferred method of manipulating FREEZE, refer to “FREEZE ”.
@@ -300,7 +300,7 @@ Overrides the ALL -FREEZE or ALL -NOFREEZE operation.
 
 When used with -NOFREEZE, -OVERRIDE unfreezes all GDS regions, including those frozen by other users.
 
-When used with -FREEZE, -OVERRIDE freezes all GDS regions, including those frozen by other processes associating all such freezes with the current process. The current process must then use -NOFREEZE to unfreeze the database; any other process attempting a -NOFREEZE should also have to include the -OVERRIDE qualifier.
+When used with -FREEZE, -OVERRIDE freezes all GDS regions, including those frozen by other processes, associating all such freezes with the current process. The current process must then use -NOFREEZE to unfreeze the database; any other process attempting a -NOFREEZE should also have to include the -OVERRIDE qualifier.
 
 Meaningful only with: [NO]FREEZE 
 
@@ -325,7 +325,7 @@ Reinitializes the critical sections (-CRITICAL) and buffers (-WCINIT), resets re
 
 * -RENEW requires confirmation.
 * The RENEW action will cause all current accessors of the affected database regions to receive a fatal error on their next access attempt.
-* This operation is dangerous, drastic, and a last resort if multiple database have hangs that have not yielded to other resolution attempts; there is almost never a good reason to use this option.
+* This operation is dangerous, drastic, and is a last resort if multiple databases have hangs that have not yielded to other resolution attempts; there is almost never a good reason to use this option.
 
 *-S[EIZE]*
 
@@ -519,7 +519,7 @@ The following qualifiers operate on a block header.
 Changes the block size field of the specified block.
 
 * block_size is in hexadecimal form.
-* Decreasing the block size can result in loss of existing data.
+* Decreasing the block size can result in the loss of existing data.
 
 .. note::
    The block size must always be less than or equal to the block size in the file header.
@@ -538,7 +538,7 @@ Use only with: -BLOCK, -BSIZ, -TN
 Example:
 
 .. parsed-literal::
-   DSE >change -level=FF
+   DSE> change -level=FF
 
 *-TN[=transaction_number]*
 
@@ -607,13 +607,13 @@ Use only with: -FILEHEADER
 Changes the decimal block size field of the current file.
 
 * DSE does not allow you to change the block size to any arbitrary value. It always rounds the block size to the next higher multiple of 512.
-* Use the CHANGE -BLK_SIZE qualifier only upon receiving instructions from YottaDB and only in conjunction with the -FILEHEADER qualifier. This DSE command cannot change the working block size of a database and is useful only under very limited and extrordinary circumstances. If you need to change the block size on a database file, unload the data with MUPIP EXTRACT (or an appropriate alternative), change the global directory with GDE to specify the new block size, recreate the database with MUPIP CREATE and reload the data with MUPIP LOAD (or appropriate alternative).
+* Use the CHANGE -BLK_SIZE qualifier only upon receiving instructions from YottaDB and only in conjunction with the -FILEHEADER qualifier. This DSE command cannot change the working block size of a database and is useful only under very limited and extrordinary circumstances. If you need to change the block size on a database file, unload the data with MUPIP EXTRACT (or an appropriate alternative), change the global directory with GDE to specify the new block size, recreate the database with MUPIP CREATE and reload the data with MUPIP LOAD (or an appropriate alternative).
 
 Use only with: -FILEHEADER
 
 *-BLO[CKS_FREE]=free blocks*
 
-Changes the hexidecimal free blocks field of the current file.
+Changes the hexadecimal free blocks field of the current file.
 
 Use this to correct a value that MUPIP INTEG reports as needing a correction, but note that the "correct" value reported by INTEG may go out-of-date with the next update. It may be necessary to calculate a delta value from the INTEG report, FREEZE the region with DSE, DUMP the current -FILEHEADER value, then apply the delta and CHANGE the -BLOCKS_FREE, and finally turn -OFF the FREEZE.
 
@@ -625,7 +625,7 @@ Changes the transaction number in the file header of the last incremental backup
 
 *-D[ATABASE]=transaction_number*
 
-Changes the hexidecimal transaction number in the file header of the last comprehensive backup to the value specified. Use this qualifier only in conjunction with the -FILEHEADER qualifier. For compatibility issues with prior versions, this can still be specified as -B_COMPREHENSIVE.
+Changes the hexadecimal transaction number in the file header of the last comprehensive backup to the value specified. Use this qualifier only in conjunction with the -FILEHEADER qualifier. For compatibility issues with prior versions, this can still be specified as -B_COMPREHENSIVE.
 
 *-B_R[ECORD]=transaction_number*
 
@@ -655,7 +655,7 @@ Use only with: -FILEHEADER
 
 *-CU[RRENT_TN]=transaction_number*
 
-Changes the hexidecimal current transaction number for the current region.
+Changes the hexadecimal current transaction number for the current region.
 
 * Raising the -CURRENT_TN can correct "block transaction number too large" errors
 * This qualifier has implications for MUPIP BACKUP -INCREMENTAL and -ONLINE.
@@ -696,11 +696,11 @@ Use only with: -FILEHEADER
 
 *-FR[EEZE]=value*
 
-Sets availability of the region for update. Possible values are: T[RUE] or F[ALSE]. Use to "freeze" (disable database writes) or "unfreeze" the database.
+Sets the availability of the region for updates. Possible values are: T[RUE] or F[ALSE]. Use to "freeze" (disable database writes) or "unfreeze" the database.
 
 Use only with: -FILEHEADER
 
-For information about a preferred method of manipulating FREEZE, refer to `“FREEZE ” of the General Database Management chapter <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#freeze>`_.
+For information about a preferred method of manipulating FREEZE, refer to `“FREEZE ” in the General Database Management chapter <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#freeze>`_.
 
 DSE releases -FREEZE when it EXITs. To hold the database(s), CHANGE -FILEHEADER -FREEZE=TRUE and then SPAWN to perform other operations.
 
@@ -746,7 +746,7 @@ Use only with: -FILEHEADER
 
 Controls whether YottaDB accepts null subscripts in database keys.
 
-* value can either be T[RUE], F[ALSE], ALWAYS, NEVER, or EXISTING. See the `GDE chapter <https://docs.yottadb.com/AdminOpsGuide/gde.html>`_ for more information on these values of null_subscript.
+* value can either be T[RUE], F[ALSE], ALWAYS, NEVER, or EXISTING. See the `GDE chapter <https://docs.yottadb.com/AdminOpsGuide/gde.html>`_ for more information on these values of null_subscripts.
 * Prohibiting null subscripts can restrict access to existing data and cause YottaDB to report errors.
 * The default value is never.
 * DSE cannot change the null subscript collation order. Instead, use GDE to change the null subscript collation order, MUPIP EXTRACT the current content, MUPIP CREATE the database file(s) with the updated collation and MUPIP LOAD the content.
@@ -781,15 +781,15 @@ In an LMS environment, this sets the "Region Seqno" field. For more information,
 
 *-RESYNC_S[EQNO]=sequence-number*
 
-In an LMS environment, this sets the hexidecimal value of the "Resync Seqno" field. For more information, refer to `Chapter 7: “Database Replication” <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html>`_.
+In an LMS environment, this sets the hexadecimal value of the "Resync Seqno" field. For more information, refer to `Chapter 7: “Database Replication” <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html>`_.
 
 *-RESYNC_T[N]=sequence-number*
 
-In an LMS environment, this sets the hexidecimal value ofthe "Resync transaction" field. For more information, refer to `Chapter 7: “Database Replication” <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html>`_.
+In an LMS environment, this sets the hexadecimal value ofthe "Resync transaction" field. For more information, refer to `Chapter 7: “Database Replication” <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html>`_.
 
 *-S[PIN_SLEEP_MASK]=hexadecimal-mask*
 
-Changes the hexadecimal Spin sleep time mask that controls the maximum time in nanoseconds the process sleeps on a sleep spin; zero (0), the default causes the process to just yield to the OS scheduler.
+Changes the hexadecimal Spin sleep time mask that controls the maximum time (in nanoseconds) the process sleeps on a sleep spin; zero (0), the default causes the process to just yield to the OS scheduler.
 
 Use only with: -FILEHEADER
 
@@ -834,7 +834,7 @@ Use the CHANGE -TRIGGER_FLUSH qualifier only upon receiving instructions from Yo
 
 *-WR[ITES_PER_FLUSH]=writes_per_flush*
 
-Set the decimal number of block to write in each flush. The default value is 7.
+Sets the decimal number of block to write in each flush. The default value is 7.
 
 Use only with -FILEHEADER
 
@@ -852,7 +852,7 @@ Example:
 .. parsed-literal::
    DSE> change -block=4 -tn=10000
 
-This command changes sets the transaction number to 65536 (Hex: 10000) for block 4.
+This command sets the transaction number to 65536 (Hex: 10000) for block 4.
 
 Example:
 
@@ -885,14 +885,14 @@ Example:
 .. parsed-literal::
    DSE> change -fileheader -blk_siz=2048
 
-This command changes the block size field of the fileheader to 2048 bytes. The block field must always be a multiples of 512 bytes.
+This command changes the block size field of the fileheader to 2048 bytes. The block field must always be a multiple of 512 bytes.
 
 Example:
 
 .. parsed-literal::
    DSE> change -fileheader -blocks_free=5B
 
-This command changes the blocks free fields of the file header to 91 (Hex: 5B). Example:
+This command changes the blocks-free fields of the file header to 91 (Hex: 5B). Example:
 
 Example:
 
@@ -1174,7 +1174,7 @@ Example:
 .. parsed-literal::
    DSE> critical -OWNER Write critical section owner is process id 4220
 
-This command displays the ID of the process holding the critical section. Note that catching a process ID on a lightly loaded (or unloaded) system (for example, text environment) is like catching lightening in a bottle. Therefore, you can artificially hold a critical section using the DSE CRIT -SEIZE command in one session and view the owner using a different session. 
+This command displays the ID of the process holding the critical section. Note that catching a process ID on a lightly loaded (or unloaded) system (for example, text environment) is like catching lightning in a bottle. Therefore, you can artificially hold a critical section using the DSE CRIT -SEIZE command in one session and view the owner using a different session. 
 
 +++++++++++
 DUMP
@@ -1207,7 +1207,7 @@ Use the error messages reported by MUPIP INTEG to determine what to DUMP and exa
 
 *-A[LL]*
 
-When used with -FILEHEADER, the -A[LL] qualifier displays additional information on the database most of which is useful for YottaDB in diagnosing issues. A complete description of all the elements that show up with the DSE DUMP -FILEHEADER -ALL command are beyond the scope of this book.
+When used with -FILEHEADER, the -A[LL] qualifier displays additional information on the database most of which is useful to YottaDB in diagnosing issues. A complete description of all the elements that show up with the DSE DUMP -FILEHEADER -ALL command are beyond the scope of this book.
 
 Meaningful only with: -FILEHEADER
 
@@ -1323,7 +1323,7 @@ This command displays an output like the following:
      LOCK shares DB critical section     FALSE
 
 
-Note that the certain fileheader elements appear depending on the current state of database. For example, if Journaling is not enabled in the database, DSE does not display Journal data element fields.
+Note that certain fileheader elements appear depending on the current state of database. For example, if Journaling is not enabled in the database, DSE does not display Journal data element fields.
 
 Example: 
 
@@ -1519,7 +1519,7 @@ Example:
    Path--blk:off
    6:51 1A4:249 180
 
-This command locates block 180 by looking through the B-tree index for any pointer to the block. This command finds even those blocks that are connected to the tree but the first key in the block does not match the index path.
+This command locates block 180 by looking through the B-tree index for any pointer to the block. This command even finds blocks that are connected to the tree but the first key in the block does not match the index path.
 
 Example:
 
@@ -1543,7 +1543,7 @@ Example:
 .. parsed-literal::
    DSE> find -freeblock -hint=232
 
-This commands starts to search for free block after block 232.
+This command starts to search for free block after block 232.
 
 Example:
 
@@ -1557,7 +1557,7 @@ Example:
 .. parsed-literal::
    DSE> find -sibling -block=10
 
-This command operates like FIND -BLOCK; however it reports the numbers of the blocks that logically fall before and after block 180 on the same level. This command produces an output like the following:
+This command operates like FIND -BLOCK; however, it reports the numbers of the blocks that logically fall before and after block 180 on the same level. This command produces an output like the following:
 
 .. parsed-literal::
    Left sibling    Current block   Right sibling
@@ -1775,7 +1775,7 @@ Directs DSE to OVERWRITE a specific block. If no block number is specified, the 
 
 *-D[ATA]=string*
 
-Specifies the data to be written. Use quotation marks around the string and escape codes of the form \a or \ab, where "a" and "b" are hexadecimal digits representing non-printing characters. \\ translates to a single backslash.
+Specifies the data to be written. Use quotation marks around the string and escape codes of the form \a or \ab, where "a" and "b" are hexadecimal digits representing non-printing characters. \\\\ translates to a single backslash.
 
 *-O[FFSET]=offset*
 
@@ -1829,13 +1829,13 @@ The format of the RANGE command is:
 
 *-F[ROM]=block_number*
 
-Specifies a starting block number for the range search. DSE RANGE accept bit maps as starting or ending points.
+Specifies a starting block number for the range search. DSE RANGE accepts bit maps as starting or ending points.
 
 By default, RANGE starts processing at the beginning of the file.
 
 *-T[O]=block-number*
 
-Specifies an ending block number for the range search. DSE RANGE accept bit maps as starting or ending points. By default, RANGE stops processing at the end of the file.
+Specifies an ending block number for the range search. DSE RANGE accepts bit maps as starting or ending points. By default, RANGE stops processing at the end of the file.
 
 *-I[NDEX]*
 
@@ -1908,7 +1908,7 @@ Example:
    Block: 0000000F Level: 0
    Found 6 blocks
 
-This command search for keys between ^Fruits(15) and ^Fruits(877). 
+This command searches for keys between ^Fruits(15) and ^Fruits(877). 
 
 ++++++++++
 REMOVE
@@ -1938,7 +1938,7 @@ Specifies the block associated with the record or buffer being deleted.
 
 On commands with no -BLOCK= qualifier, DSE uses the last block handled by a DSE operation. When no block has been accessed, that is, on the first block-oriented command, DSE uses block one (1).
 
-BLOCK accepts blocks higher than the current database size because they deal with set of saved block copies rather than the database and there are situations where a saved block may be outside the current database size (for example, due to a concurrent MUPIP REORG -TRUNCATE).
+BLOCK accepts blocks higher than the current database size because they deal with a set of saved block copies rather than the database and there are situations where a saved block may be outside the current database size (for example, due to a concurrent MUPIP REORG -TRUNCATE).
 
 *-C[OUNT]=count*
 
@@ -1950,19 +1950,19 @@ Incompatible with: -VERSION
 
 *-O[FFSET]=offset*
 
-Specifies the offset (in bytes) of the record to be removed. If the offset does not point to the beginning of a record, DSE rounds down to the beginning of the record containing the offset (for example, REMOVE -OFF=10 starts at OFF=A if that was the last prior record boundry).
+Specifies the offset (in bytes) of the record to be removed. If the offset does not point to the beginning of a record, DSE rounds down to the beginning of the record containing the offset (for example, REMOVE -OFF=10 starts at OFF=A if that was the last prior record boundary).
 
 Incompatible with: -VERSION, -RECORD
 
 *-R[ECORD]=record_number*
 
-Specifies the number that identifies the record to remove. The -RECORD qualifier is incompatible with the -OFFSET and -VERSION qualifiers.
+Specifies the number that identifies the record to be removed. The -RECORD qualifier is incompatible with the -OFFSET and -VERSION qualifiers.
 
 Incompatible with: -VERSION, -OFFSET
 
 *-V[ERSION]=version_number*
 
-Specifies the version number, in decimal, of the save buffer to remove. If there are more than one version of a block, -VERSION is required; otherwise REMOVE works on that sole version. -VERSION is incompatible with all qualifiers except -BLOCK.
+Specifies the version number, in decimal, of the save buffer to be removed. If there is more than one version of a block, -VERSION is required; otherwise REMOVE works on that sole version. -VERSION is incompatible with all qualifiers except -BLOCK.
 
 If there is only one version of the specified -BLOCK= block in the current region, DSE REMOVE defaults to that version.
 
@@ -1993,7 +1993,7 @@ Specifies the block to restore.
 
 For commands with no -BLOCK= qualifier, DSE uses the last block handled by a DSE operation. When no block has been accessed, (i.e., on the first block-oriented command), DSE uses block one (1).
 
-BLOCK accepts blocks higher than the current database size because it deal with set of saved block copies rather than the database and there are situations where a saved block may be outside the current database size (for example, due to a concurrent MUPIP REORG -TRUNCATE).
+BLOCK accepts blocks higher than the current database size because it deals with a set of saved block copies rather than the database and there are situations where a saved block may be outside the current database size (for example, due to a concurrent MUPIP REORG -TRUNCATE).
 
 *-F[ROM]=block_number*
 
@@ -2052,7 +2052,7 @@ Lists saved versions of specified blocks. The -LIST qualifier is incompatible wi
 
 By default, SAVE -LIST provides a directory of all SAVEd blocks.
 
-LIST may display blocks higher than the current database size because it deals with set of saved block copies rather than the database and there are situations where a saved block may be outside the current database size (for example, due to a concurrent MUPIP REORG -TRUNCATE);
+LIST may display blocks higher than the current database size because it deals with a set of saved block copies rather than the database and there are situations where a saved block may be outside the current database size (for example, due to a concurrent MUPIP REORG -TRUNCATE);
 
 Incompatible with: -COMMENT
 
@@ -2075,7 +2075,7 @@ Use the SHIFT command to shift data in a block, filling the block with zeros, or
    -O[FFSET]=offset
    ]
 
-b_shift must always be less than or equal to offset. This means that DSE SHIFT in the backward direction is restricted to the maximum of OFFSET number of bytes. This ensures that the shift does not cross block boundaries, either intentionally or unintentionally.
+b_shift must always be less than or equal to offset. This means that DSE SHIFT in the backward direction is restricted to a maximum of OFFSET number of bytes. This ensures that the shift does not cross block boundaries, either intentionally or unintentionally.
 
 **Qualifiers of SHIFT**
 
@@ -2117,10 +2117,6 @@ The format of the SPAWN command is:
 * The SPAWN command has no qualifiers.
 
 * DSE SPAWN works with an argument. If the argument contains spaces, enclose it with quotes.
-
-The SPAWN command has no qualifiers.
-
-DSE SPAWN works with an argument. If the argument contains spaces, enclose it with quotes.
 
 **Examples of SPAWN**
 

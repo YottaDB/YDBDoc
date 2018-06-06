@@ -136,14 +136,14 @@ The file header data elements are listed as follows in alphabetical order for ea
 |                                    | The default value is 2048 blocks. The minimum is zero (0) blocks and the maximum is 1073741823 (one less than 1 giga) blocks. In production, this value should|
 |                                    | typically be either zero (0) to disable journal extensions and rely entirely on the Journal Allocation, or it should be large. In UNIX, this value serves     |
 |                                    | largely to allow you to monitor the rate of journal file growth.                                                                                              |
-|                                    | UNIX file systems use lazy allocations so this value controls the frequency at which YottaDB checks the actual available space for journal file expansion     |
+|                                    | UNIX file systems use lazy allocation so this value controls the frequency at which YottaDB checks the actual available space for journal file expansion      |
 |                                    | in order to warn when space is low.                                                                                                                           |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Journal File                       | The name of the journal file. DSE only reports this field if journaling is ENABLED or ON.                                                                     |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Journal State                      | Indicates whether journaling is ON, OFF, or DISABLED (not allowed).                                                                                           |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| Journal Sync IO                    | Indicates whether WRITE operation to a journal file commits directly to disk. The default value is FALSE.DSE only reports this field if journaling is ENABLED |
+| Journal Sync IO                    | Indicates whether WRITE operation to a journal file commits directly to disk. The default value is FALSE. DSE only reports this field if journaling is ENABLED|
 |                                    | (or ON).                                                                                                                                                      |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Journal Yield Limit                | The number of times a process needing to flush journal buffer contents to disk yields its timeslice and waits for additional journal buffer content to be     |
@@ -153,7 +153,7 @@ The file header data elements are listed as follows in alphabetical order for ea
 |                                    | higher level typically provides the best performance.                                                                                                         |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | KILLs in progress                  | The sum of the number of processes currently cleaning up after multi-block KILLs and the number of Abandoned KILLs. Abandoned KILLs are associated with       |
-|                                    | blocks incorrectly marked busy errors.                                                                                                                        |
+|                                    | block-incorrectly-marked-busy errors.                                                                                                                         |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Last Bytestream Backup             | The transaction number of the last transaction backed up with the MUPIP BACKUP -BYTESTREAM command.                                                           |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -233,7 +233,7 @@ The file header data elements are listed as follows in alphabetical order for ea
 | Update Process Reserved Area       | An approximate percentage (integer value 0 to 100) of the number of global buffers reserved for the update process. The reader helper processes leaves at     |
 |                                    | least this percentage of the global buffers for the update process. It can have any integer value between 0 to 100. The default value is 50.                  |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| Pre read trigger factor            | The percentage of Update Process reserved area after which the update process processes signals the reader helper processes to resume processing journal      |
+| Pre read trigger factor            | The percentage of Update Process reserved area, after which the update process processes signal the reader helper processes to resume processing journal      |
 |                                    | records and reading global variables into the global buffer cache. It can have any integer value between 0 to 100. The default value is 50.                   |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Update writer trigger factor       | One of the parameters used by YottaDB to manage the database is the flush trigger. One of several conditions that triggers normal YottaDB processes           |
@@ -295,7 +295,7 @@ The interpreted form of the local bitmap is like the following: >
 .. note::
    The first block described by the bitmap is itself and is, therefore, always marked busy. 
 
-If bitmaps marked as "?", they denote that they are corrupted (not currently in a legal combination) bitmaps. The consequences of corrupted bitmaps are:
+If bitmaps are marked as "?", they denote that they are corrupted (not currently in a legal combination) bitmaps. The consequences of corrupted bitmaps are:
 
 Possible loss of data when YottaDB overwrites a block that is incorrectly marked as free (malignant).
 
@@ -307,9 +307,9 @@ Master Bitmap
 
 Using bitmaps, YottaDB efficiently locates free space in the database. A master bitmap has one bit per local bitmap which indicates whether the corresponding local bitmap is full or has free space. When there is no free space in a group of 512 blocks, YottaDB clears the associated bit in the master map to show whether the local bitmap is completely busy. Otherwise, YottaDB maintains the bit set.
 
-There is only one Master Bitmap per database. You can neither see the contents of the master bitmap directly or can change the size of the master bitmap. The maximum size of a single YottaDB database file is 992 Mi blocks. A logical database consists of an arbitrarily large number of database files.
+There is only one Master Bitmap per database. You can neither see the contents of the master bitmap directly nor change the size of the master bitmap. The maximum size of a single YottaDB database file is 992 Mi blocks. A logical database consists of an arbitrarily large number of database files.
 
-The size of the master bitmap constrains the size of the database. The size of the master maps reflects current expectations for the maximum operational size of a single database file. Note: In addition to the limit imposed by the size of the master map, YottaDB currently limits a tree to a maximum number of 7 levels. This means if a database holds only one global, depending on the density and size of the data, it might reach the level limit before the master map limit. 
+The size of the master bitmap constrains the size of the database. The size of the master map reflects current expectations for the maximum operational size of a single database file. Note: In addition to the limit imposed by the size of the master map, YottaDB currently limits a tree to a maximum number of 7 levels. This means that if a database holds only one global, depending on the density and size of the data, it might reach the level limit before the master map limit. 
 
 ------------------------
 Database Structure
@@ -321,7 +321,7 @@ The YottaDB database structure is hierarchical, based on a form of balanced tree
 Tree Organization
 ++++++++++++++++++
 
-GDS structures the data into multiple B*-trees. YottaDB creates a new B*-tree, called a Global Variable Tree (GVT), each time the application defines a new named global variable. Each GVT stores the data for one named global, that is all global variables (gvn) that share the same unsubscripted global name. For example, global ^A, ^A(1), ^A(2), ^A("A"), and ^A("B") are stored in the same GVT. Note that each of these globals share the same unsubscripted global name, that is, ^A. A GVT contains both index and data blocks and can span several levels. The data blocks contain actual global variable values, while the index blocks point to the next level of block.
+GDS structures data into multiple B*-trees. YottaDB creates a new B*-tree, called a Global Variable Tree (GVT), each time the application defines a new named global variable. Each GVT stores the data for one named global, i.e., all global variables (gvn) that share the same unsubscripted global name. For example, global ^A, ^A(1), ^A(2), ^A("A"), and ^A("B") are stored in the same GVT. Note that each of these globals share the same unsubscripted global name, that is, ^A. A GVT contains both index and data blocks and can span several levels. The data blocks contain actual global variable values, while the index blocks point to the next level of block.
 
 At the root of the B*-tree structure is a special GDS tree called a Directory Tree (DT). DT contains pointers to the GVT. A data block in the DT contains an unsubscripted global variable name and a pointer to the root block of that global variable's GVT.
 
@@ -512,7 +512,7 @@ Mantissa
 
 * If number has an odd number of digits, appends zero (0) to mantissa.
 
-* Adds one (1) to each byte in mantissa.
+* Adds one (1) to each byte in the mantissa.
 
 Exponent
 
@@ -526,7 +526,7 @@ Sign
 
 * Sets exponent sign bit <7> in preparation for sign handling.
 
-* If mantissa is negative: converts each byte of the subscript (including the exponent) to its one's-complement and appends a byte containing hexadecimal FF to the mantissa.
+* If the mantissa is negative: converts each byte of the subscript (including the exponent) to its one's-complement and appends a byte containing hexadecimal FF to the mantissa.
 
 For example, the interpreted representation of the global ^NAME(.12,0,"STR",-34.56) looks like the following: 
 
@@ -549,8 +549,5 @@ Similarly, the interpreted representation of ^NAME(.12,0,"STR",-34.567) looks li
               |  .  .  .  .  .  .  2                                       |
 
 Note that since there is an odd number of digits, YottaDB appends zero (0) to the mantissa and one (1) to each byte in the mantissa. 
-
-
-
 
 
