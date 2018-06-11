@@ -2356,9 +2356,9 @@ Action: If ROLLBACK (either -NOONLINE or -ONLINE) terminates abnormally (say bec
 DBFREEZEOFF
 ------------------
 
-DBFREEZEOFF, Region rrrr is UNFROZEN ([NO]OVERRIDE [NO]AUTOREL)
+DBFREEZEOFF, Database file ffff is UNFROZEN ([NO]OVERRIDE [NO]AUTOREL)
 
-Operator log/MUPIP Information: The database region rrrr is no longer frozen, most likely due to a MUPIP FREEZE -OFF, with the selected options. [NO]AUTOREL indicates whether an autorelease of the region occurred prior to the MUPIP FREEZE -OFF command.
+Operator log/MUPIP Information: The database file ffff is no longer frozen, most likely due to a MUPIP FREEZE -OFF, with the selected options. [NO]AUTOREL indicates whether an autorelease of the region occurred prior to the MUPIP FREEZE -OFF command.
 
 Action: Confirm that this was the desired action.
 
@@ -2366,9 +2366,9 @@ Action: Confirm that this was the desired action.
 DBFREEZEON
 ------------------
 
-DBFREEZEON, Region rrrr is FROZEN ([NO]OVERRIDE [NO]ONLINE [NO]AUTOREL)
+DBFREEZEON, Database file ffff is FROZEN ([NO]OVERRIDE [NO]ONLINE [NO]AUTOREL)
 
-Operator log/MUPIP Information: The database region rrrr is frozen, most likely due to a MUPIP FREEZE -ON, with the reported options.
+Operator log/MUPIP Information: The database file ffff is frozen, most likely due to a MUPIP FREEZE -ON, with the reported options.
 
 Action: Confirm that this was the desired action.
 
