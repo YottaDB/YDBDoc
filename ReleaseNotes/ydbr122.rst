@@ -217,7 +217,7 @@ Language
 System Administration
 ++++++++++++++++++++++
 
-* Replication Source Server startup errors always appear in the Source Server log file. Previously, in GT.M V6.3-004 (but not in any YottaDB release), if the Source Server was started from the terminal, and the Source Server startup command failed or the Source Server successfully started but later failed, some errors (NULLCOLLDIFF, REPLOFFJNLON, REPLINSTNOHIST, etc.) showed up neither on the terminal nor in the Source Server log file. (`#210 <https://github.com/YottaDB/YottaDB/issues/210>`_)
+* Replication Source Server startup errors always appear in the Source Server log file. In previous versions of YottaDB, if the Source Server was started from the terminal, and the Source Server startup command failed or the Source Server successfully started but later failed (e.g. with errors like NULLCOLLDIFF, REPLOFFJNLON, REPLINSTNOHIST, SECNOTSUPPLEMENTARY etc.) this error message did not show up in the Source Server log file or on the terminal where it was started (assuming that terminal still exists at the time of the error). The release notes of GT.M V6.3-004 mention that this issue has been fixed by GTM-8576 but we found the issue exists even in GT.M V6.3-004. (`#210 <https://github.com/YottaDB/YottaDB/issues/210>`_)
 
 * Ctrl-Z (the suspend signal) is honored by YottaDB processes in all cases. Previously, if the signal was delivered while the process was executing a section of code where it was not safe to suspend it, the signal was ignored and the user had to retry the Ctrl-Z. Note that as handling the signal is deferred when the process is in sensitive areas of code, it is possible for the response to be momentarily delayed. (`#215 <https://github.com/YottaDB/YottaDB/issues/215>`_)
 
