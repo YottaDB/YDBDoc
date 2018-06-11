@@ -1555,17 +1555,17 @@ Example:
 .. parsed-literal::
    YDB>w $zinterrupt
    "IF $ZJOBEXAM()"
-   YDB>zsystem "ls GTM*"
+   YDB>zsystem "ls YDB_JOBEXAM*"
    ls: No match.
    YDB>do bar^ztran
    Begin Transaction
    interrupt sent...
    End Transaction
-   YDB>zsystem "ls GTM*"
-   GTM_JOBEXAM.ZSHOW_DMP_3951_1  GTM_JOBEXAM.ZSHOW_DMP_3951_2
+   YDB>zsystem "ls YDB_JOBEXAM*"
+   YDB_JOBEXAM.ZSHOW_DMP_3951_1  YDB_JOBEXAM.ZSHOW_DMP_3951_2
    YDB>
 
-This uses the default value of $ZINTERRUPT to service interrupts issued to the process. The $ZJOBEXAM function executes a ZSHOW "*", and stores the output in each GTM_ZJOBEXAM_ZSHOW_DMP for the initial interrupt, and at tcommit when the interrupt is rethrown.
+This uses the default value of $ZINTERRUPT to service interrupts issued to the process. The $ZJOBEXAM function executes a ZSHOW "*", and stores the output in each YDB_ZJOBEXAM_ZSHOW_DMP for the initial interrupt, and at tcommit when the interrupt is rethrown.
 
 --------------
 $ZTrap
