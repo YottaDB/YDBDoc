@@ -17,7 +17,6 @@ Obtaining YottaDB Distribution Media
 
 YottaDB LLC prefers to distribute YottaDB online via the Internet. YottaDB for selected platforms, including GNU/Linux on the popular x86 architecture and Raspberry Pi hardware, can be downloaded under the terms of the Affero GNU General Public License (AGPL) version 3, from Github (https://raw.githubusercontent.com/YottaDB/YottaDB/master/sr_unix/ydbinstall.sh). Contact YottaDB Support (info@yottadb.com) to obtain a copy of a YottaDB distribution for other platforms or on physical media. 
 
-
 ---------------------------
 Before You Begin
 ---------------------------
@@ -101,7 +100,7 @@ ydbinstall is a stand-alone YottaDB installation script that installs YottaDB us
 +-------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
 | --copyexec dirname                                    |    | Copy ydb script to dirname; incompatible with linkexec                                                                 |
 +-------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
-| --debug                                               | \* | Turn on  debugging option with set -x                                                                                  |
+| --debug                                               | \* | Turn on debugging option with set -x                                                                                   |
 +-------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
 | --distrib dirname or URL                              |    | Source directory for YottaDB distribution tarball, local or remote                                                     |
 +-------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
@@ -135,7 +134,6 @@ ydbinstall is a stand-alone YottaDB installation script that installs YottaDB us
 +-------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
 | --verbose                                             | \* | Output diagnostic information as the script executes; default is to run quietly                                        |
 +-------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
-
 
 
 * Options that take a value (e.g, --group) can be specified as either --option=value or --option value
