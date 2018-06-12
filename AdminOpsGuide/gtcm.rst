@@ -26,7 +26,7 @@ GT.CM can communicate between systems having different endian architectures.
 .. note::
    YottaDB transaction processing (TP) is not supported via GT.CM, and accessing GT.CM served databases within an M TRANSACTION may cause application level inconsistency in the data. GT.CM servers do not invoke triggers. This means that the client processes must restrict themselves to updates which don't require triggers, or explicitly call for the actions that triggers would otherwise perform. Because GT.CM bypasses triggers, it may provide a mechanism to bypass triggers for debugging or complex corrections to repair data placed in an inconsistent state by a bug in trigger logic.
 
-In the event of recovery from system crashes, application level database consistency cannot be guaranteed for data residing in databases (M global variable namespaces) accessed via different GT.CM servers or distributed between GT.CM and local access. 
+In the event of recovery from system crashes, application-level database consistency cannot be guaranteed for data residing in databases (M global variable namespaces) accessed via different GT.CM servers or distributed between GT.CM and local access. 
 
 ---------------------
 Overview
@@ -47,7 +47,7 @@ The GT.CM server accepts requests from GT.CM clients, processes the operation re
 GT.CM Client
 +++++++++++++
 
-The GT.CM client sends messages containing the operation type (SET, KILL, $ORDER, etc), and operation specific data (eg. gvn to be SET, or KILLed) to the GT.CM server through a communication channel over a network. The client generally waits for response from the server and initiates error processing based on the status contained in the response. The format of the messages exchanged between the server and client is as defined by the YottaDB/FIS-developed GNP protocol.
+The GT.CM client sends messages containing the operation type (SET, KILL, $ORDER, etc), and operation specific data (eg. gvn to be SET, or KILLed) to the GT.CM server through a communication channel over a network. The client generally waits for a response from the server and initiates error processing based on the status contained in the response. The format of the messages exchanged between the server and the client is as defined by the YottaDB developed GNP protocol.
 
 The Global Directory of the client specifies a GT.CM database segment by prefixing its file with an alphanumeric <node-name>, followed by a colon (":"). Client processes using this database must have an environment variable of the form "ydb_cm_<node-name>" to locate the server. This environment variable may contain either a port number alone, or a host name or address and a port number in the form "<host-name-or-address>:<port-number>" or the form "[<host-name-or-address>]:<port-number>", where the square-brackets ([])are part of the text. If the port number is specified alone, GT.CM uses the <node-name> as the host name; otherwise, it uses the <node-name> solely as an identifier to match the segment in the Global Directory, and it obtains the host name or address from the contents of the environment variable. If a host name is specified, and the server host has multiple addresses, GT.CM uses the system default.
 
@@ -58,11 +58,11 @@ The Global Directory of the client specifies a GT.CM database segment by prefixi
 GT.CM Server Startup and Shutdown
 ++++++++++++++++++++++++++++++++++
 
-This section describes the starting up and shutting down procedure of GT.CM server.
+This section describes the starting up and shutting down procedure of a GT.CM server.
 
 **GT.CM Server Startup**
 
-A GT.CM server must be operating on every node of a network from which data is requested during distributed database operation, including server nodes and nodes with both client and server processes. There are two ways by which the GT.CM server can be invoked.
+A GT.CM server must be operating on every node of the network from which data is requested during distributed database operation, including server nodes and nodes with both client and server processes. There are two ways by which the GT.CM server can be invoked.
 
 * By explicitly starting the GT.CM server to listen to a specified port number, or by defaulting the port number.
 * Invoking the GT.CM server to listen at a standard port number assigned to the GNP protocol (e.g., in /etc/services file).
@@ -76,7 +76,7 @@ Here is an example on how to start a GT.CM server:
 .. parsed-literal::
    $ydb_dist/gtcm_gnp_server -log=GTCM.log -service=6789
 
-This starts the GT.CM server in the background so that it listens at port 6789 for requests from GT.CM clients. The detailed log information of the server is written in the GTCM.log file. If -log is not specified, log information is written in $ydb_log/gtcm_gnp_server.log file. On nodes with multiple IP addresses issue the following command to configure the GT.CM server to listen at a port specific to an IP address:
+This starts the GT.CM server in the background so that it listens at port 6789 for requests from GT.CM clients. The detailed log information of the server is written in the GTCM.log file. If -log is not specified, log information is written in $ydb_log/gtcm_gnp_server.log file. On nodes with multiple IP addresses, issue the following command to configure the GT.CM server to listen at a port specific to an IP address:
 
 .. parsed-literal::
    -service=192.160.105.212:6789
@@ -122,7 +122,7 @@ Errors can be classified into the following categories:
 * Protocol Errors
 * Session Establishment Errors
 
-Each type of valid operation may issue an error from any of the above categories in case of a failure. Database errors include application errors and database integrity errors; both types of errors are detected by the YottaDB runtime system. The GT.CM server does not deal with database errors directly, but passes them back to the client requesting the operation that detected the error. YottaDB handles any database errors delivered through the network by GT.CM in a way similar to the way it treats errors detected when GT.CM is not involved.
+Each type of valid operation may issue an error from any of the above categories in case of a failure. Database errors include application errors and database integrity errors; both types of errors are detected by the YottaDB runtime system. The GT.CM server does not deal with database errors directly, but passes them back to the client requesting the operation that detected the error. YottaDB handles any database errors delivered through the network by GT.CM in a way similar to the way it treats errors that are detected when GT.CM is not involved.
 
 When GT.CM is in use, YottaDB may deliver errors resulting from network problems. Errors detected by the network interface are passed to the component accessing the interface at the time of error. In recovering from a network related error, GT.CM sacrifices all LOCKs owned by the client process that receives a network error. This should be taken into account if such a process attempts to resume operations involving a database served through the lost connection.
 
@@ -160,15 +160,15 @@ To specify a node name in a Global Directory file specification, use the format 
    GDE> ch -seg DEFAULT -file=NODE2:/testarea/yottadb/database/data.dat
    GDE> exit
 
-This example creates a local Global Directory, mapping all global names to the database file /testarea/yottadb/database/data.dat. Note that some of the key-words have been truncated to permit the example to appear on a single line.
+This example creates a local Global Directory, mapping all global names to the database file /testarea/yottadb/database/data.dat. Note that some of the key-words have been truncated.
 
 **On NODE2**:
 
 Create a database file on server Node2:
 
-Change directory (cd) to the specified location (that is /testarea/yottadb/database)
+Change directory (cd) to the specified location (that is /testarea/yottadb/database).
 
-Create a global directory
+Create a global directory.
 
 .. parsed-literal:: 
    $ GDE
