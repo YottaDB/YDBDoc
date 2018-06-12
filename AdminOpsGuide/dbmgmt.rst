@@ -65,7 +65,7 @@ Most MUPIP operations require write access to the database files with which they
 | Operations                                                        | MUPIP Command                         | Database Access Requirements                                                        |
 +===================================================================+=======================================+=====================================================================================+
 | Backup database files                                             | MUPIP BACKUP                          | Backup never requires standalone access and concurrent write access is controlled by|
-|                                                                   |                                       |  -[NO]ONLINE.                                                                       |
+|                                                                   |                                       | -[NO]ONLINE.                                                                        |
 +-------------------------------------------------------------------+---------------------------------------+-------------------------------------------------------------------------------------+
 | Create and initialize database files                              | MUPIP CREATE                          | Standalone Access                                                                   |
 +-------------------------------------------------------------------+---------------------------------------+-------------------------------------------------------------------------------------+
