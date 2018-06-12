@@ -3230,7 +3230,7 @@ MUPIP Command Summary
 |                                      |                                             | * -OVERRIDE                                                                              |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+
 | SE[T]                                | file-name or region-name                    | * SE[T] {-FI[LE] file-name|-JN[LFILE] journal-file-name|-REG[ION] region-list|-          |
-|                                      |                                             |    REP[LICATION]={ON|OFF}}                                                               |
+|                                      |                                             | REP[LICATION]={ON|OFF}}                                                                  |
 |                                      |                                             | * -AC[CESS_METHOD]={BG|MM}                                                               |
 |                                      |                                             | * -[NO]AS[YNCIO]                                                                         |
 |                                      |                                             | * -[NO]DE[FER_TIME][=seconds]                                                            |
