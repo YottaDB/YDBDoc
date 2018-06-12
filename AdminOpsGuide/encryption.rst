@@ -17,11 +17,11 @@ Introduction
 Overview
 ++++++++++++++++++
 
-YottaDB on selected platforms can encrypt data in database and journal files. Encryption protects data at rest (DAR), that is, it protects against unauthorized access to data by an unauthorized process that is able to access disk files.
+YottaDB can encrypt data in database and journal files on selected platforms. Encryption protects data at rest (DAR), i.e., it protects against unauthorized access to data by an unauthorized process that is able to access disk files.
 
 A plug-in architecture allows you to use your choice of encryption package. The characteristics of encryption are entirely determined by the package you choose - for example, YottaDB implements no "back doors" or "key recovery", and if you want such functionality, you need to choose or construct an encryption package that provides the features you want.
 
-YottaDB distributes only the source code for the reference implementation of a plug-in that uses popular, widely available, encryption libraries. If the reference implementation plug-in meets your needs, you are welcome to compile and use it as distributed, but please read and understand the section “Disclaimer” below. You can also use it as a base to implement your own plug-in.
+YottaDB distributes only the source code for the reference implementation of a plug-in that uses popular, widely available, encryption libraries. If the reference implementation plug-in meets your needs, you are welcome to compile and use it as distributed, but please read and understand the “Disclaimer” section below. You can also use it as a base to implement your own plug-in.
 
 In the reference implementation, YottaDB uses a symmetric cipher to encrypt data. The reference implementation encrypts the key for the symmetric cipher with an asymmetric cipher using public and private keys. The private keys are stored in a key ring on disk locked with a password (or passphrase - the terms are used interchangeably). 
 
@@ -35,7 +35,7 @@ Proper security protocol never places an unencrypted password, even in obfuscate
 
 Our expertise is in YottaDB, not in encryption. Encryption needs vary. Furthermore, the use of encryption may be restricted - or required - by regulations applicable to your location and circumstances. Therefore, our approach is to create a plug-in architecture where you can choose your preferred encryption software. In the course of development, we tested it primarily with `GNU Privacy Guard <http://gnupg.org/>`_, the widely available implementation of Pretty Good Privacy. Ensure that you have confidence in (and confidence in the support for) whichever encryption software you choose, because failure of the encryption software is likely to leave your data unrecoverable. YottaDB itself performs no encryption, and encryption is performed exclusively by software that you install and configure. **YottaDB neither endorses nor supports any specific encryption algorithm or library.**
 
-Furthermore, just as YottaDB allows for the use of your choice of encryption libraries, encryption libraries in turn require keys that must be managed. In its simplest form, key management requires both that only those who need a key have that key, and also that keys are not lost. Key management is two steps removed from YottaDB's implementation of database encryption, but is important to the successful use of encrypted databases. It must be part of your operations policies and procedures. **YottaDB strongly recommends that you understand in detail how to implement the infrastructure for whichever specific encryption you choose.**
+Furthermore, just as YottaDB allows for the use of your choice of encryption libraries, encryption libraries in turn require keys that must be managed. In its simplest form, key management requires both that only those who need a key have that key, and also that keys are not lost. Key management is two steps removed from YottaDB's implementation of database encryption, but is important to the successful use of encrypted databases. It must be part of your operations, policies and procedures. **YottaDB strongly recommends that you understand in detail how to implement the infrastructure for whichever specific encryption you choose.**
 
 +++++++++++++++++++++++++++++++++++++++++++++++++
 Limitations of YottaDB Database Encryption
@@ -111,7 +111,7 @@ YottaDB database encryption is only supported for the Buffered Global (BG) acces
 Alternatives to Database Encryption
 ++++++++++++++++++++++++++++++++++++
 
-On some platforms, you may be able to use disk drives with built-in encryption, or encrypted file systems to protect data at rest. These may or may not be as secure as YottaDB database encryption: for example, once an encrypted file system is mounted, the files can be accessed by any process that has appropriate permissions; with YottaDB database encryption each process accessing a database file must individually have access to the keys for that database file. 
+On some platforms, you may be able to use disk drives with built-in encryption, or encrypted file systems to protect data at rest. These may or may not be as secure as YottaDB database encryption: for example, once an encrypted file system is mounted, the files can be accessed by any process that has the appropriate permissions; with YottaDB database encryption, each process accessing a database file must individually have access to the keys for that database file. 
 
 +++++++++++++++
 Device IO
@@ -165,7 +165,7 @@ Definition of Terms
 +========================================+=================================================================================================================================================================================+
 | Cipher                                 | An encryption algorithm or the implementation of an encryption algorithm, for example, the symmetric cipher AES 256 CFB.                                                        |
 +----------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| Hash (or Fingerprint)                  | A signature algorithmically derived from an object which is certain to a very impressive probability that uniquely identifies an object within a set of similar objects.        |
+| Hash (or Fingerprint)                  | A signature algorithmically derived from an object which has a certain to a very impressive probability that it uniquely identifies an object within a set of similar objects.  |
 +----------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Key length                             | The number of bits comprising a key. Longer key lengths may result in stronger encryption (more difficult to break) but require more computation.                               |
 +----------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -187,11 +187,11 @@ Definition of Terms
 | Password (or Passphrase)               | A secret word or phrase used in the reference implementation to protect a private key on disk (a password should never be on disk in the clear, which is the electronic         |
 |                                        | equivalent of taping it to your monitor with a sticky note).                                                                                                                    |
 +----------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| Public key / Private key               | A pair of keys used so what one key encrypts the other can decrypt. The private key is sometimes referred to as the "secret" key (because it is not shared as opposed to the    |
-| (or Asymmetric keys)                   | public key which is; the private key should never be on disk in the clear). In the reference implementation, asymmetric keys are used to encrypt the symmetric database key.    |
+| Public key/Private key                 | A pair of keys used so that what one key encrypts the other can decrypt. The private key is sometimes referred to as the "secret" key (because it is not shared as opposed to   |
+| (or Asymmetric keys)                   | the public key which is; the private key should never be on disk in the clear). In the reference implementation, asymmetric keys are used to encrypt the symmetric database key.|
 |                                        | This allows a master to encrypt a symmetric database key with a user's public key (so only the user can decrypt it with their private key).                                     |
 |                                        |                                                                                                                                                                                 |
-|                                        | Encryption using a public key / private key pair is referred to as "public key encryption". The reference implementation uses GNU Privacy Guard with associated libraries       |
+|                                        | Encryption using a public key/private key pair is referred to as "public key encryption". The reference implementation uses GNU Privacy Guard with associated libraries         |
 |                                        | libgpgme and libgpg-error for asymmetric key encryption.                                                                                                                        |
 +----------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Symmetric key                          | The same key used to both encrypt and decrypt. Symmetric ciphers are faster than asymmetric ciphers. Encryption using a symmetric key is referred to as "symmetric key          |
@@ -232,7 +232,7 @@ For performance, a symmetric cipher is used to encrypt and decrypt data records.
 
 **Key Ring on Disk**
 
-In the reference implementation, a password protected key ring on disk contains the private key of the asymmetric cipher. A password is required to access the key ring on disk and obtain the private key. Password acquisition happens in one of three ways: 
+In the reference implementation, a password-protected key ring on disk contains the private key of the asymmetric cipher. A password is required to access the key ring on disk and obtain the private key. Password acquisition happens in one of three ways: 
 
 1. When the environment variable $ydb_passwd is not set, before a YottaDB MUMPS process needs to open an encrypted database file, the application calls a program such as GETPASS.m to prompt for and obtain a password for the key ring on disk. 
 2. When the environment variable $ydb_passwd is set to the null string, at process startup, YottaDB implicitly calls the program GETPASS.m to prompt for and obtain a password. The environment variable, $ydb_passwd is then set to an obfuscated version of the password required to unlock the key ring on disk.
@@ -240,7 +240,7 @@ In the reference implementation, a password protected key ring on disk contains 
 
 Some graphical user interfaces, e.g., GNOME or KDE, may detect when you are being prompted for the GPG keyring password and use a graphical interface instead of the terminal interface. You may be able to disable this behavior if you unset the $DISPLAY environment variable, or use an ssh connection to localhost that disables X forwarding. Consult your Graphical User Interface documentation.
 
-In order to enable the Job command, the password for the key ring on disk exists in the environment of the process in environment variable $ydb_passwd where it can be passed from a parent process to a child. In order to prevent inadvertent disclosure of the password, for example, in a dump of the environment submitted to YottaDB for product support purposes, the password in the environment is obfuscated using information available to processes on the system on which the process is running, but not available on other systems.
+In order to enable the Job command, the password for the key ring on disk exists in the environment of the process, in the environment variable $ydb_passwd, where it can be passed from a parent process to a child. In order to prevent inadvertent disclosure of the password, for example, in a dump of the environment submitted to YottaDB for product support purposes, the password in the environment is obfuscated using information available to processes on the system on which the process is running, but not available on other systems.
 
 $ydb_passwd is the only way for a child process to receive a password from a parent. In the event that the parent process does not pass $ydb_passwd to the child, or passes an incorrect password, there is little a child without access to an input device can do except log an error and terminate.
 
@@ -271,7 +271,7 @@ The environment variable $ydb_passwd should be one of the following:
 * set to a null value
 * set to a value corresponding to an obfuscated password (e.g., produced by maskpass)
 
-The following schematic illustrates acquisition of the password for the key ring on disk. Note that an error (for example from the entry of an incorrect password) may not be triggered immediately - for example, DSE does not need an encryption key until you attempt to access data (since the file header is not encrypted, access to it does not require a key).
+The following schematic illustrates the acquisition of the password for the key ring on disk. Note that an error (for example from the entry of an incorrect password) may not be triggered immediately - for example, DSE does not need an encryption key until you attempt to access data (since the file header is not encrypted, access to it does not require a key).
 
 .. image:: key_ring_disk.png
 
@@ -309,7 +309,7 @@ As discussed earlier, a process uses the key in its memory key ring whose hash m
 
 On disk, database and journal files are always encrypted - YottaDB never writes unencrypted data to an encrypted database or journal file. YottaDB uses decryption when reading data records from disk, and encryption when it writes data records to disk.
 
-With encrypted databases, the number of global buffers allocated is automatically doubled, for example, if the database file header specifies 2000 global buffers, when the file is opened, YottaDB automatically allocates 4000 global buffers. Global buffers are used in pairs: one global buffer has a copy of the encrypted database block as it exists on disk and the other has a copy of the unencrypted version. There is no change to the size of the control structures (including lock space and journal buffers) in shared memory. So, when using encrypted databases, you need to adjust your calculations of memory and shared memory usage accordingly: for each open database file, the shared memory usage will increase by the number of global buffers times the block size. For example, if the block size of a database file is 4KB, with 2048 global buffers, and the shared memory segment for that database file occupies 9MB when unencrypted, it occupies 17MB when the file is encrypted. Depending on your operating system you may need to change system configuration and tuning parameters. Other than global buffers, there is no change to memory usage with encryption.
+With encrypted databases, the number of global buffers allocated is automatically doubled. For example - if the database file header specifies 2000 global buffers, YottaDB automatically allocates 4000 global buffers when the file is opened. Global buffers are used in pairs: one global buffer has a copy of the encrypted database block as it exists on disk and the other has a copy of the unencrypted version. There is no change to the size of the control structures (including lock space and journal buffers) in shared memory. So when using encrypted databases, you need to adjust your calculations of memory and shared memory usage accordingly: for each open database file, the shared memory usage will increase by the number of global buffers times the block size. For example, if the block size of a database file is 4KB, with 2048 global buffers, and the shared memory segment for that database file occupies 9MB when unencrypted, it occupies 17MB when the file is encrypted. Depending on your operating system you may need to change system configuration and tuning parameters. Other than global buffers, there is no change to memory usage with encryption.
 
 Encrypted databases consume additional CPU resources for encryption and decryption. Without detailed knowledge of the chosen algorithms, the application patterns and hardware configuration, it is not possible to predict whether this will be appreciable, and whether application throughput will be affected. As far as possible, YottaDB has attempted to engineer YottaDB database encryption so that the additional CPU resources are consumed outside software critical sections. The intention is to minimize the impact of encryption on application throughput, at least on computer systems that are not starved of CPU resources. You should determine the actual impact of encryption on your application when it runs on your system, preferably using a test environment that exactly reflects your production environment. 
 
@@ -329,20 +329,20 @@ Helen Keymaster (helen@yottadb) is the master of keys, and provides a database k
 
 The workflow is as follows: 
 
-Helen and Phil each create a new GPG keyring and a new public-private key pair (This step can be omitted if they already have GPG keyrings and public and private keys. However, see the section below on operation with Gnu Privacy Guard version 2.). In the gen_keypair.sh script GPG generates the key pair [see note], putting public and private keys in the key ring; the latter locked with a passphrase. The public key is also exported to a text file, and its fingerprint is displayed in the terminal session. Each of them e-mails (or otherwise sends) her/his public key text file to the other. One alternative to direct sending of of public keys is to upload them to a keyserver, such as the MIT PGP Public Key Server at http://pgp.mit.edu . This is illustrated below; first Helen, then Phil (if the GNUPGHOME environment variable is not set, it will default to $HOME/.gnupg).
+Helen and Phil each create a new GPG keyring and a new public-private key pair (This step can be omitted if they already have GPG keyrings and public and private keys. However, see the section below on operation with Gnu Privacy Guard version 2.). In the gen_keypair.sh script GPG generates the key pair [see note], putting public and private keys in the key ring; the latter locked with a passphrase. The public key is also exported to a text file, and its fingerprint is displayed in the terminal session. Each of them e-mails (or otherwise sends) her/his public key text file to the other. One alternative to the direct sending of public keys is to upload them to a keyserver, such as the MIT PGP Public Key Server at http://pgp.mit.edu . This is illustrated below; first Helen, then Phil (if the GNUPGHOME environment variable is not set, it will default to $HOME/.gnupg).
 
 .. note::
    Generating a public-private keypair can consume a significant amount of the entropy in a computer system. Running out of entropy can cause the operation to stall until sufficient entropy becomes available. You may need to consider external entropy sources or entropy gathering daemons for computer systems on which key generation will occur frequently. For encrypted databases on virtual machines, you may need to generate public-private keypairs on host computers and then ship the keyrings to the virtual guests.
 
 .. image:: gen_keypair.png
 
-Helen e-mails helen@yottadb_pubkey.txt the file containing her exported public key to Phil, and Phil sends phil@yottadb_pubkey.txt, his exported public key to Helen. To protect against "man in the middle" attacks, they speak on the phone to exchange key fingerprints, or send each other the fingerprints by text message, or facsimile - a different communication channel than that used to exchange the keys. They use the import_and_sign_key.sh shell script. After importing and signing each other's public keys, Phil and Helen can communicate securely with each other, even in the presence of eavesdroppers. Helen's keyring with Phil's imported key is shown below:
+Helen e-mails helen@yottadb_pubkey.txt, the file containing her exported public key to Phil, and Phil sends phil@yottadb_pubkey.txt, his exported public key to Helen. To protect against "man in the middle" attacks, they speak on the phone to exchange key fingerprints, or send each other the fingerprints by text message, or facsimile - a different communication channel than that used to exchange the keys. They use the import_and_sign_key.sh shell script. After importing and signing each other's public keys, Phil and Helen can communicate securely with each other, even in the presence of eavesdroppers. Helen's keyring with Phil's imported key is shown below:
 
 .. image:: import_sign_key.png
 
-Using the gen_sym_key.sh script, Helen generates a symmetric cipher key for Phil to use in encrypting a new database file cust.dat. With a key strength of 2, a symmetric key is suitable for use in production and in the example is stored in file helen_cust_dat.txt encrypted with Helen's public key so that only she can decrypt it. The gen_sym_key.sh script never displays the symmetric cipher key; the key in the text file on disk can only be decrypted with Helen's private key.
+Using the gen_sym_key.sh script, Helen generates a symmetric cipher key for Phil to use in encrypting a new database file cust.dat. With a key strength of 2, a symmetric key is suitable for use in production and, in the example, is stored in file helen_cust_dat.txt encrypted with Helen's public key so that only she can decrypt it. The gen_sym_key.sh script never displays the symmetric cipher key; the key in the text file on disk can only be decrypted with Helen's private key.
 
-With the encrypt_sign_db_key.sh script, Helen uses her private key to decrypt the symmetric cipher key in helen_cust_dat.txt, encrypts it with Phil's public key, and signs it with her private key, creating a file called phil_cust_dat.txt. She sends this file to Phil, either as an e-mail attachment, or putting it in a mutually agreed upon location on disk. As before, even though the key is on disk, it can be decrypted only with Phil's private key. Note that from this point on, even if Helen is hit by a truck, or resigns, Phil has access to the key and can use the same encrypt_sign_db_key.sh script to provide the key to, say, Xavier, Helen's successor. Helen preparing the key for Phil is shown below.
+With the encrypt_sign_db_key.sh script, Helen uses her private key to decrypt the symmetric cipher key in helen_cust_dat.txt, encrypts it with Phil's public key, and signs it with her private key, creating a file called phil_cust_dat.txt. She sends this file to Phil, either as an e-mail attachment, or putting it in a mutually agreed upon location on disk. As before, even though the key is on disk, it can be decrypted only with Phil's private key. Note that from this point on, even if Helen is hit by a truck or resigns, Phil has access to the key and can use the same encrypt_sign_db_key.sh script to provide the key to, say, Xavier, Helen's successor. Helen preparing the key for Phil is shown below.
 
 .. image:: gen_sym_key.png
 
@@ -396,7 +396,7 @@ Phil creates a new GPG keyring with a public and private key pair:
    Key pair created and public key exported in ASCII to phil@yottadb_pubkey.txt
    phil$
 
-Then Helen sends Phil the file helen@yottadb_pubkey.txt and Phil sends Helen the file phil@yottadb_pubkey.txt.
+Helen sends Phil the file helen@yottadb_pubkey.txt and Phil sends Helen the file phil@yottadb_pubkey.txt.
 
 Helen imports Phil's public key into her keyring, verifying the fingerprint when she imports it, and signing it to confirm that she has verified the fingerprint: 
 
@@ -594,7 +594,7 @@ The following command sequence diagram illustrates how Helen and Phil operate wi
 Tested Reference Implementations
 ------------------------------------
 
-YottaDB database encryption comes with a source reference implementation that should compile "out of the box" with selected encryption packages. You can use this for your initial development and testing with YottaDB database encryption. There are many encryption packages. As discussed earlier, YottaDB neither endorses nor supports any specific cipher or package. For your production use, you take responsibility for choosing, implementing and procuring support for your preferred package. Please remember that a malfunction in your chosen encryption package may result in unrecoverable data and YottaDB will be unable to help you.
+YottaDB database encryption comes with a source reference implementation that should compile "out of the box" with selected encryption packages. You can use this for initial development and testing with YottaDB database encryption. There are many encryption packages. As discussed earlier, YottaDB neither endorses nor supports any specific cipher or package. For production use, you take responsibility for choosing, implementing and procuring support for your preferred package. Please remember that a malfunction in your chosen encryption package may result in unrecoverable data and YottaDB will be unable to help you.
 
 The Plugin Architecture and Interface section below details the reference implementation, which is provided with full source code that you can freely modify for your own use.
 
@@ -627,15 +627,15 @@ The reference implementation uses:
 * To provide error messages for GPG: libgpg-error.
 * For symmetric encryption: AES256CFB implemented by libgcrypt on all platforms.
 
-When a YottaDB process first opens a shared library providing an encryption plugin, it ensures that the library resides in $ydb_dist/plugin or a subdirectory thereof. This ensures that any library implementing an encryption plugin requires the same permissions to install, and is protected by the same access controls, as the YottaDB installation itself.
+When a YottaDB process first opens a shared library providing an encryption plugin, it ensures that the library resides in $ydb_dist/plugin or a subdirectory thereof. This ensures that any library implementing an encryption plugin requires the same permissions to install, and is protected by the same access controls as the YottaDB installation itself.
 
-On all platforms on which YottaDB supports encryption, compiling the source reference implementation produces the shared library plugins, libgtmcrypt_gcrypt_AES256CFB.so and libgtmcrypt_openssl_AES256CFB.so. On installation, platforms other than AIX, libgtmcrypt.so is a symbolic link to libgtmcrypt_gcrypt_AES256CFB.so; on AIX symbolic link is to libgtmcrypt_openssl_AESCFB.so.
+On all platforms on which YottaDB supports encryption, compiling the source reference implementation produces the shared library plugins, libgtmcrypt_gcrypt_AES256CFB.so and libgtmcrypt_openssl_AES256CFB.so. On installation on platforms other than AIX, libgtmcrypt.so is a symbolic link to libgtmcrypt_gcrypt_AES256CFB.so; on AIX, the symbolic link is to libgtmcrypt_openssl_AESCFB.so.
 
 .. note::
    Encrypted database files are compatible between different endian platforms as long as they use the same key and the same cipher. The sample shell scripts in the reference implementation use the standard shell (/bin/sh). 
 
 .. note::
-   YottaDB dropped support for the Blowfish encryption plugin. To migrate databases from Blowfish CFB to AES CFB requires that the data be extracted and loaded into newly created database files. To minimize the time your application is unavailable, you can deploy your application in a Logical Multi-Site (LMS) configuration, and migrate using a rolling upgrade technique Refer to the `Chapter 7: “Database Replication” <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html>`_ for more complete documentation.
+   YottaDB dropped support for the Blowfish encryption plugin. To migrate databases from Blowfish CFB to AES CFB requires that the data be extracted and loaded into newly created database files. To minimize the time your application is unavailable, you can deploy your application in a Logical Multi-Site (LMS) configuration, and migrate using a rolling upgrade technique. Refer to the `Chapter 7: “Database Replication” <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html>`_ for more complete documentation.
 
 --------------------------------------------
 Special Note - GNU Privacy Guard and Agents
@@ -667,9 +667,9 @@ For Redhat systems use 'yum search pinentry' to search for the available pinentr
 
 For Debian and Ubuntu systems use 'apt search pinentry' to search for the available pinentry programs for the "curses" version.
 
-YottaDB scripts must undefine GPG_AGENT_INFO.
+The YottaDB scripts must undefine GPG_AGENT_INFO.
 
-YottaDB scripts must define GPG_TTY or the (GPG 2.1 and up) pinentry program may not work. e.g.: 
+The YottaDB scripts must define GPG_TTY or the (GPG 2.1 and up) pinentry program may not work. e.g.: 
 
 .. parsed-literal::
    export GPG_TTY=$tty
@@ -681,7 +681,7 @@ Set up the encryption keys using the gen_keypair.sh script. This script creates 
 
 When pinetry-gtm.sh finds the environment variable $ydb_passwd defined and an executable YottaDB, it runs the pinentry.m program which provides GnuPG with the keyring password from the obfuscated password. Otherwise, it calls /usr/bin/pinentry.
 
-The custom pinentry program uses a YottaDB external call. Each YottaDB application that uses encryption must define the environment variable GTMXC_gpgagent to point to the location of gpgagent.tab. By default, the reference implementation places gpgagent.tab in the $ydb_dist/plugin/ directory. gpgagent.tab is an external call table that pinentry.m uses to create a a YottaDB pinentry function.
+The custom pinentry program uses a YottaDB external call. Each YottaDB application that uses encryption must define the environment variable GTMXC_gpgagent to point to the location of gpgagent.tab. By default, the reference implementation places gpgagent.tab in the $ydb_dist/plugin/directory. gpgagent.tab is an external call table that pinentry.m uses to create a YottaDB pinentry function.
 
 Direct the gpg-agent to use its standard Unix domain socket file, $GNUPGHOME/S.agent, when listening for password requests. Enabling the standard socket simplifies the gpg-agent configuration. Enable the standard socket by adding the following configuration option to $GNUPGHOME/gpg-agent.conf.
 
@@ -707,7 +707,6 @@ When using GPG 2.2.24 and up use the option to increase the configurable backlog
 
 .. parsed-literal::
    echo "--listen-backlog 128" >> $GNUPGHOME/gpg-agent.conf
-
 
 
 .. note::
@@ -774,7 +773,7 @@ Utility programs written in M (such as %GO) run within mumps processes and behav
 
 Utility programs not written in M (e.g., MUPIP) that need access to encryption keys do not prompt for the password to the key ring on disk. They require the obfuscated password to be available in the environment. You can use the maskpass program to set the password in the environment or a mumps wrapper process as discussed earlier to set the obfuscated password in the environment. In some cases, if a required key is not supplied, or if an incorrect key is specified, the utility program defers reporting the error at process start up in case subsequent actions don't require access to encrypted data, and instead reports it when first attempting an encryption or decryption operation.
 
-Since they do not access application data at rest, the GDE and LKE uitlities do not need access to encryption keys to operate with encrypted databases.
+Since they do not access application data at rest, the GDE and LKE utilities do not need access to encryption keys to operate with encrypted databases.
 
 MUPIP and DSE use the same plug-in architecture as mumps processes - gtmcrypt_init() to acquire keys, gtmcrypt_encrypt() to encrypt, etc. 
 
@@ -846,7 +845,7 @@ The DSE DUMP -FILEHEADER -ALL command shows the database file header, including 
 
 **Changing the hash in the database file header**
 
-Under normal operating conditions, you should not need to change the cryptographic hash of the symmetric key. However, since there are theoretical attacks against hashes, and because a new cryptographic hash standard (SHA-3) is under development as of this date, DSE provides the ability to change the hash of the password stored in the database file header if and when you change the hash library.
+Under normal operating conditions, you should not need to change the cryptographic hash of the symmetric key. However, since there are theoretical attacks against hashes, and because there exists a new cryptographic hash standard (SHA-3) as of this date, DSE provides the ability to change the hash of the password stored in the database file header if and when you change the hash library.
 
 The DSE CHANGE -FILEHEADER -ENCRYPTION_HASH function hashes the symmetric key in the key file and replaces the hash in the database file header with this new value. The procedure to change the hash is: 
 
@@ -874,7 +873,7 @@ The only way to change the encryption key of a database file is to extract the d
 
 * At a convenient time, switchover. Now application logic executes on B and A is the replicating instance. 
 
-* Bring down instance A and change the database keys with either EXTRACT / LOAD or using a backup from B. Then bring it back up and let it catch up. 
+* Bring down instance A and change the database keys with either EXTRACT/LOAD or using a backup from B. Then bring it back up and let it catch up. 
 
 * To restore the original operating configuration, switchover at a convenient time. Now A again executes application logic which is replicated to B. 
 
@@ -890,9 +889,9 @@ Just as there is no way to change the encryption key of a database file, it is n
 Plugin Architecture and Interface
 -------------------------------------
 
-As noted in the Tested Reference Implementations, YottaDB includes the source code to a reference implementation that uses widely available encryption packages. It is your choice: you can decide to use the packages that YottaDB was tested against, or you can choose to interface YottaDB to another package of your choice. As noted earlier, YottaDB neither recommends nor supports any specific package (not even those that we test against) and you should ensure that you have confidence in and support for whichever package you intend to use in production. The reference implementation is provided compiled as ready to compile source code that you can customize to meet your needs.
+As noted in the Tested Reference Implementations, YottaDB includes the source code to a reference implementation that uses widely available encryption packages. It is your choice: you can decide to use the packages that YottaDB was tested against, or you can choose to interface YottaDB to any other package of your choice. As noted earlier, YottaDB neither recommends nor supports any specific package (not even those that we test against) and you should ensure that you have confidence in and support for whichever package you intend to use in production. The reference implementation is provided, compiled as ready-to-compile source code that you can customize to meet your needs.
 
-Building the reference implementation from source code requires standard development tools for your platform, including C compiler, make, ld, standard header files, header files for encryption libraries, etc.
+Building the reference implementation from source code requires the standard development tools for your platform, including the C compiler, make, ld, standard header files, header files for encryption libraries, etc.
 
 This section discusses the architecture of and interface between YottaDB and the plugin. You must ensure that any plugin you provide presents the same interface to YottaDB as the reference implementation.
 
@@ -915,7 +914,7 @@ A $ydb_dist/plugin/gtmcrypt/source.tar archive with all source files and scripts
 +--------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | gen_sym_key.sh                 | Generates a symmetric cipher key for others to use in encrypting a database file.                                                                                                                    |
 +--------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| encrypt_sign_db_key.sh         | Uses a private key to decrypt the symmetric cipher key , encrypts it with other's public key, and signs it with the private key.                                                                     |
+| encrypt_sign_db_key.sh         | Uses a private key to decrypt the symmetric cipher key, encrypts it with the other's public key, and signs it with the private key.                                                                  |
 +--------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | add_db_key.sh                  | Adds a key to the master key file.                                                                                                                                                                   |
 +--------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -949,7 +948,7 @@ Extensions to the YottaDB External Interface
 
 YottaDB provides additional C structure types (in the gtmxc_types.h file):
 
-* gtmcrypt_key_t - a datatype that is a handle to a key. The YottaDB database engine itself does not manipulate keys. The plug-in keeps the keys, and provides handles to keys that the YottaDB database engine uses to refer to keys.
+* gtmcrypt_key_t - a datatype that is a handle to a key. The YottaDB database engine itself does not manipulate keys. The plug-in keeps the keys, and provides the handles to keys that the YottaDB database engine uses to refer to keys.
 * xc_fileid_ptr_t - a pointer to a structure maintained by YottaDB to uniquely identify a file. Note that a file may have multiple names - not only as a consequence of absolute and relative path names, but also because of symbolic links and also because a file system can be mounted at more than one place in the file name hierarchy. YottaDB needs to be able to uniquely identify files.
 
 Although not required to be used by a customized plugin implementation, YottaDB provides (and the reference implementation uses) the following functions for uniquely identifying files: 
@@ -962,7 +961,7 @@ Although not required to be used by a customized plugin implementation, YottaDB 
 Operation
 +++++++++++++++++
 
-Mumps, MUPIP and DSE processes dynamically link to the plugin interface functions that reside in the shared library. The functions serve as software "shims" to interface with an encryption library such as libmcrypt or libgpgme / libgcrypt.
+Mumps, MUPIP and DSE processes dynamically link to the plugin interface functions that reside in the shared library. The functions serve as software "shims" to interface with an encryption library such as libmcrypt or libgpgme/libgcrypt.
 
 The plugin interface functions are: 
 
@@ -981,25 +980,25 @@ The core plugin interface functions, all of which return a value of type xc_stat
 
 * gtmcrypt_init() performs initialization. If the environment variable $ydb_passwd exists and has an empty string value, YottaDB calls gtmcrypt_init() before the first M program is loaded; otherwise it calls gtmcrypt_init() when it attempts the first operation on an encrypted database file.
 
-* Generally, gtmcrypt_getkey_by_hash or, for MUPIP CREATE, gtmcrypt_getkey_by_name perform key acquisition, and place the keys where gtmcrypt_decrypt() and gtmcrypt_encrypt() can find them when they are called.
+* Generally, gtmcrypt_getkey_by_hash or for MUPIP CREATE, gtmcrypt_getkey_by_name performs key acquisition, and places the keys where gtmcrypt_decrypt() and gtmcrypt_encrypt() can find them when they are called.
 
 * Whenever YottaDB needs to decode a block of bytes, it calls gtmcrypt_decrypt() to decode the encrypted data. At the level at which YottaDB database encryption operates, it does not matter what the data is - numeric data, string data whether in M or UTF-8 mode and whether or not modified by a collation algorithm. Encryption and decryption simply operate on a series of bytes.
 
 * Whenever YottaDB needs to encrypt a block of bytes, it calls gtmcrypt_encrypt() to encrypt the data.
 
-* If encryption has been used (if gtmcrypt_init() was previously called and returned success), YottaDB calls gtmcrypt_close() at process exit and before generating a core file. gtmcrypt_close() must erase keys in memory to ensure that no cleartext keys are visible in the core file.
+* If encryption has been used (if gtmcrypt_init() was previously called and it returned success), YottaDB calls gtmcrypt_close() at process exit and before generating a core file. gtmcrypt_close() must erase keys in memory to ensure that no cleartext keys are visible in the core file.
 
 More detailed descriptions follow. 
 
-* gtmcrypt_key_t \*gtmcrypt_getkey_by_name(xc_string_t \*filename) - MUPIP CREATE uses this function to get the key for a database file. This function searches for the given filename in the memory key ring and returns a handle to its symmetric cipher key. If there is more than one entry for the given filename , the reference implementation returns the entry matching the last occurrence of that filename in the master key file.
+* gtmcrypt_key_t \*gtmcrypt_getkey_by_name(xc_string_t \*filename) - MUPIP CREATE uses this function to get the key for a database file. This function searches for the given filename in the memory key ring and returns a handle to its symmetric cipher key. If there is more than one entry for the given filename, the reference implementation returns the entry that matches the last occurrence of that filename in the master key file.
 
-* xc_status_t gtmcrypt_hash_gen(gtmcrypt_key_t \*key, xc_string_t \*hash) - MUPIP CREATE uses this function to generate a hash from the key then copies that hash into the database file header. The first parameter is a handle to the key and the second parameter points to 256 byte buffer. In the event the hash algorithm used provides hashes smaller than 256 bytes, gtmcrypt_hash_gen() must fill any unused space in the 256 byte buffer with zeros.
+* xc_status_t gtmcrypt_hash_gen(gtmcrypt_key_t \*key, xc_string_t \*hash) - MUPIP CREATE uses this function to generate a hash from the key then copies that hash into the database file header. The first parameter is a handle to the key and the second parameter points to 256 byte buffer. In the event that the hashing algorithm provides hashes smaller than 256 bytes, gtmcrypt_hash_gen() must fill any unused space in the 256 byte buffer with zeros.
 
-* gtmcrypt_key_t \*gtmcrypt_getkey_by_hash(xc_string_t \*hash) - YottaDB uses this function at database file open time to obtain the correct key using its hash from the database file header. This function searches for the given hash in the memory key ring and returns a handle to the matching symmetric cipher key. MUPIP LOAD, MUPIP RESTORE, MUPIP EXTRACT, MUPIP JOURNAL and MUPIP BACKUP -BYTESTREAM all use this to find keys corresponding to the current or prior databases from which the files they use for input were derived.
+* gtmcrypt_key_t \*gtmcrypt_getkey_by_hash(xc_string_t \*hash) - YottaDB uses this function when opening the database file to obtain the correct key using its hash from the database file header. This function searches for the given hash in the memory key ring and returns a handle to the matching symmetric cipher key. MUPIP LOAD, MUPIP RESTORE, MUPIP EXTRACT, MUPIP JOURNAL and MUPIP BACKUP -BYTESTREAM all use this to find keys corresponding to the current or prior databases from which the files they use for input were derived.
 
 * xc_status_t gtmcrypt_encrypt(gtmcrypt_key_t \*key, xc_string_t \*inbuf, xc_string_t \*outbuf) and xc_status_t gtmcrypt_decrypt(gtmcrypt_key_t \*key, xc_string_t \*inbuf, xc_string_t \*outbuf)- YottaDB uses these functions to encrypt and decrypt data. The first parameter is a handle to the symmetric cipher key, the second a pointer to the block of data to encrypt or decrypt, and the third a pointer to the resulting block of encrypted or decrypted data. Using the appropriate key (same key for a symmetric cipher), gtmcrypt_decrypt() must be able to decrypt any data buffer encrypted by gtmcrypt_encrypt(), otherwise the encrypted data is rendered unrecoverable. (Such a failure in the cipher will likely appear to YottaDB as a damaged database.). As discussed earlier, YottaDB requires the encrypted and cleartext versions of a string to have the same length.
 
-* char \*gtmcrypt_strerror() - YottaDB uses this function to retrieve addtional error context from the plug-in after the plug-in returns an error status. This function returns a pointer to additional text related to the last error that occurred. YottaDB displays this text as part of an error report. In a case where an error has no additional context or description, this function returns a null string.
+* char \*gtmcrypt_strerror() - YottaDB uses this function to retrieve additional error context from the plug-in after the plug-in returns an error status. This function returns a pointer to additional text related to the last error that occurred. YottaDB displays this text as part of an error report. In the case where an error has no additional context or description, this function returns a null string.
 
 The complete source code for reference implementations of these functions is provided, licensed under the same terms as YottaDB. You are at liberty to modify them to suit your specific YottaDB database encryption needs. 
 
