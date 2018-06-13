@@ -19,9 +19,9 @@ YottaDB replication provides logical equivalence between multiple databases. It 
 
 2. Supplementary Instance (SI) replication
 
-BC replication provides business continuity for systems of record. Updates applied at an originating instance replicate in near real-time to a replicating instance. To help ensure this consistency, BC replication prohibits locally generated database updates on a replicating secondary instance. For example with instances named A and B, business logic processed on instance A can be streamed to instance B so that should A ever go down, B can immediately take over and provide continuity. In order to ensure that B produces results consistent with A, B can contain only material state information that is also in A.
+BC replication provides business continuity for systems of record. Updates applied at an originating instance replicate in near real-time to a replicating instance. To help ensure this consistency, BC replication prohibits locally generated database updates on a replicating secondary instance. For example, with instances named A and B, business logic processed on instance A can be streamed to instance B so that should A ever go down, B can immediately take over and provide continuity. In order to ensure that B produces results consistent with A, B can contain only material state information that is also in A.
 
-Updates applied at an originating instance replicate in near real-time to as many as sixteen replicating instances each of which can propagate further down to as many as sixteen replicating instances. Each replicating instance can further replicate to as many as sixteen replicating instances and so on. When an originating instance becomes unavailable, any downstream instance can become the replacement originating instance to keep the application available.
+Updates applied at an originating instance replicate in near real-time to as many as sixteen replicating instances, each of which can propagate further down to as many as sixteen replicating instances. Each replicating instance can further replicate to as many as sixteen replicating instances and so on. When an originating instance becomes unavailable, any downstream instance can become the replacement originating instance to keep the application available.
 
 In the following illustration, A is the originating primary instance and B and C are its replicating instances. C is also a propagating primary instance because it further replicates to D. This BC replication configuration can also be described as a B←A→C→D configuration.
 
@@ -29,7 +29,7 @@ In the following illustration, A is the originating primary instance and B and C
 
 BC replication is intended for mission-critical applications that must be available 24 hours a day, 365 days a year, in the face of both unplanned events (such as system crashes) as well as planned events (such as system and software upgrades).
 
-With BC replication, you can create a logical multi-site (LMS) replication configuration for mission critical applications that must always be available not only in the face of unplanned events (such as system or data center failures) but also in the face of planned events such as computing platform upgrades, OS upgrades, YottaDB upgrades and even application upgrades. Deploying a BC replication configuration should take into account available network capacities, operational preferences, risk assessments, and business continuity requirements.
+With BC replication, you can create a logical multi-site (LMS) replication configuration for mission critical applications that must always be available not only in the face of unplanned events (such as system or data center failures), but also in the face of planned events such as computing platform upgrades, OS upgrades, YottaDB upgrades and even application upgrades. Deploying a BC replication configuration should take into account available network capacities, operational preferences, risk assessments, and business continuity requirements.
 
 SI replication allows replication from an instance A to another originating primary instance P. P can execute its own business logic to compute and commit its own updates to its database, while receiving a replication stream. In turn, P can have its own replicating secondary instance Q, and A can have its own replicating instance B. In such an SI replication configuration, only originating primary instances A and P can execute business logic and compute database updates. Replicating secondary instances B and Q are only permitted to receive and apply replication streams from their originating primary instances. The following diagram illustrates this configuration.
 
@@ -42,11 +42,11 @@ SI replication is a general purpose mechanism whose utility includes application
 .. note::
    In this book, instances {A, B, C...} denote systems of record (BC replication) and instances {P, Q, R...} denote instances that are not systems of record and which include the results of supplementary business logic.
 
-YottaDB replication is asynchronous, which in turn means that the source and receiver ends of a replication connection are at an identical state when there is no activity underway. To maintain consistency, and to restore it when restarting a replication connection, instances maintain a common, mutually coherent, instance-wide serial number called a journal sequence number. Each journal sequence number is tagged with two fields that identify the source of the update - a stream # that can take on values 0 through 15 and a stream sequence number (the journal sequence number of the update on the originating instance). Because replication deals with an entire global variable namespace, regardless of the mapping of global variables to database files, all updates participate in this numbering, even when modifying different database files. Each transaction (all updates bracketed by a pair TSTART/TCOMMIT commands) has a journal sequence number, as does each update outside a transaction (so-called mini-transactions).
+YottaDB replication is asynchronous, which in turn, means that the source and receiver ends of a replication connection are at an identical state when there is no activity underway. To maintain consistency, and to restore it when restarting a replication connection, instances maintain a common, mutually coherent, instance-wide serial number called a journal sequence number. Each journal sequence number is tagged with two fields that identify the source of the update - a stream # that can take on values 0 through 15 and a stream sequence number (the journal sequence number of the update on the originating instance). Because replication deals with an entire global variable namespace, regardless of the mapping of global variables to database files, all updates participate in this numbering, even when modifying different database files. Each transaction (all updates bracketed by a pair of TSTART/TCOMMIT commands) has a journal sequence number, as does each update outside a transaction (so-called mini-transactions).
 
 On instances that do not include updates from supplementary logic, the journal sequence number and the stream sequence number are the same.
 
-Suppose sequence numbers in P are 100, 101, and 102. If the first and third transactions are locally generated and the second is replicated, the tagged journal sequence numbers might be something like {100,0,10}, {101,1,18}, {102,0,11}. The 0 stream # for 100 and 102 indicates those transactions are generated locally on P whereas stream # 1 indicates those transactions were generated in A. If P needs to roll {101,1,18} off its database in order to resychronize replication with A, database update serialization also requires it to roll {102,0,11} off as well, and both will appear in the Unreplicated Transaction Log (also known as Lost Transaction File).
+Suppose sequence numbers in P are 100, 101, and 102. If the first and third transactions are locally generated and the second is replicated, the tagged journal sequence numbers might be something like {100,0,10}, {101,1,18}, {102,0,11}. The 0 stream # for 100 and 102 indicates those transactions are generated locally on P whereas stream # 1 indicates those transactions were generated in A. If P needs to roll {101,1,18} off its database in order to resychronize replication with A, database update serialization also requires it to roll {102,0,11} off as well, and both will appear in the Unreplicated Transaction Log (also known as the Lost Transaction File).
 
 The journal sequence number on A becomes the stream sequence number on P for transactions replicated from A to P. In the example, the transaction that has the P sequence number of 101 has the sequence number 18 on A and B. The replication instance file in P contains information that allows YottaDB to determine this mapping, so that when P rolls {101,1,18} off its database, A knows that P has rolled off its transaction 18, and can include that when catching P up.
 
@@ -86,7 +86,7 @@ YottaDB imposes no distance limits between instances. You can place instances 20
 
 Using TCP connections, YottaDB replicates between instances with heterogeneous stacks of hardware, operating system, endian architecture and even YottaDB releases. YottaDB replication can even be used in configurations with different application software versions, including many cases where the application software versions have different database schema. This also means that a number of inexpensive systems - such as GNU/Linux commodity servers - can be placed in locations throughout an organization. Replicating instances can be used for decision support, reporting, and analytics. Because YottaDB databases can be encrypted, these commodity servers are potentially usable in environments outside secure data centers as long as their operating systems and software are secured.
 
-YottaDB replication requires journaling to be enabled and turned on for replicated regions. Unreplicated regions (for example, global variables containing information that is meaningful only in one instance and only as long as the instance is operating - such as process ids, temporary working files and so on) need not be replicated or journaled.
+YottaDB replication requires journaling to be enabled and turned on for replicated regions. Unreplicated regions (for example, global variables containing information that is meaningful only in one instance and only as long as the instance is operating - such as process IDs, temporary working files and so on) need not be replicated or journaled.
 
 The YottaDB replication mechanism is designed in such a way that a network failure between instances will not stop an application from being available, which is a limitation of techniques such as high availability clustering (see note). There are mechanisms in place for edge cases like processing "in flight" transactions and common cases like handling a backlog of updates after recovery from a network failure. While it is not possible to provide absolute continuity of business in our imperfect universe, an LMS configuration gives you the flexibility to choose application configurations that match your investment to a risk level that best meets the business needs of your organization.
 
@@ -207,8 +207,8 @@ The three systems initially operate in roles O (Originating primary instance), R
 |                                       |                                        |                                           | the common point between BrynMawr and Malvern                                           |
 +---------------------------------------+----------------------------------------+-------------------------------------------+-----------------------------------------------------------------------------------------+
 | ... A95, A96, A97, A98, A99           | O: ... A95, A96, A97, A98, B61, B62,   | S: ... M34, A95, M35, M36, A96, A97, M37, | Malvern, continuing as a supplementary instance to BrynMawr, replicates transactions    |
-|                                       | B63, B64                               | M38, A98, M39, B61, M40, B62, B63         | processed on BrynMawr, and also applies its own locally generated updates. Ardmore      |
-|                                       |                                        |                                           | meanwhile has been repaired and brought online. It has to roll transaction A99 off its  |
+|                                       | B63, B64                               | M38, A98, M39, B61, M40, B62, B63         | processed on BrynMawr, and also applies its own locally generated updates. Meanwhile,   |
+|                                       |                                        |                                           | Ardmore has been repaired and brought online. It has to roll transaction A99 off its    |
 |                                       |                                        |                                           | database into an Unreplicated Transaction Log before it can start operating as a        |
 |                                       |                                        |                                           | replicating secondary instance to BrynMawr.                                             |
 +---------------------------------------+----------------------------------------+-------------------------------------------+-----------------------------------------------------------------------------------------+
@@ -225,7 +225,7 @@ In the last example, Malvern was not ahead when starting SI replication from Bry
 +---------------------------------------+-----------------------------------------+------------------------------------------+------------------------------------------------------------------------------------------+
 | Ardmore                               | Bryn Mawr                               | Malvern                                  | Comments                                                                                 |
 +=======================================+=========================================+==========================================+==========================================================================================+
-| O: ... A95, A96, A97, A98, A99        | R: ... A95, A96, A97                    | S: ... M34, A95, M35, M36, A96, A97, M37,| Ardmore as an originating primary instance at transaction number A99, replicates to      |
+| O: ... A95, A96, A97, A98, A99        | R: ... A95, A96, A97                    | S: ... M34, A95, M35, M36, A96, A97, M37,| Ardmore, as an originating primary instance at transaction number A99, replicates to     |
 |                                       |                                         | M38, A98, M39, M40                       | BrynMawr as a BC replicating secondary instance at transaction number A97 and Malvern as |
 |                                       |                                         |                                          | an SI that includes transaction number A98, interspersed with locally generated updates. |
 |                                       |                                         |                                          | Updates are recorded in each instance's journal files using before-image journaling.     |
@@ -281,7 +281,7 @@ In the example above, for Malvern to start accepting SI replication from BrynMaw
 |                                        |                                         |                                           | replicating from BrynMawr even though BrynMawr does not have A98 in its database and      |
 |                                        |                                         |                                           | Malvern may have relied on A98 to compute M39 and M40.                                    |
 +----------------------------------------+-----------------------------------------+-------------------------------------------+-------------------------------------------------------------------------------------------+
-| \-                                     | O: ... A95, A96, A97, B61, B62          | S: ... M34, A95, M35, M36, A96, A97, M37, | With its Receiver Server started with the -noresync option, Malvern can receive a SI      |
+| \-                                     | O: ... A95, A96, A97, B61, B62          | S: ... M34, A95, M35, M36, A96, A97, M37, | With its Receiver Server started with the -noresync option, Malvern can receive an SI     |
 |                                        |                                         | M38, A98, M39, M40, B61, B62              | replication stream from BrynMawr, and replication starts from the last common transaction |
 |                                        |                                         |                                           | shared by BrynMawr and Malvern. Notice that on BrynMawr, no A98 precedes B61, whereas it  |
 |                                        |                                         |                                           | does on Malvern, i.e., Malvern was ahead of BrynMawr with respect to the updates generated|
@@ -290,7 +290,7 @@ In the example above, for Malvern to start accepting SI replication from BrynMaw
 
 **Two Originating Primary Failures**
 
-Now consider a situation where Ardmore and Malvern are located in one data center, with BC replication to BrynMawr and Newtown respectively, located in another data center. When the first data center fails, the SI replication from Ardmore to Malvern is replaced by SI replication from BrynMawr to Newtown.
+Now consider a situation where Ardmore and Malvern are located in one data center, with BC replication to BrynMawr and Newtown respectively, located in another data center. When the first data center fails, the SI replication from Ardmore to Malvern is replaced by the SI replication from BrynMawr to Newtown.
 
 +-----------------------------+-----------------------------------+--------------------------------+----------------------------+------------------------------------------------------------------------------------------+
 | Ardmore                     | Bryn Mawr                         | Malvern                        | Newtown                    | Comments                                                                                 |
@@ -327,14 +327,14 @@ Now consider a situation where Ardmore and Malvern are located in one data cente
 
 **Replication and Online Rollback**
 
-Consider the following example where Ardmore rolls back its database in state space while an application is in operation. using the MUPIP JOURNAL -ROLLBACK -BACKWARD -ONLINE feature. 
+Consider the following example where Ardmore rolls back its database in state space while an application is in operation, using the MUPIP JOURNAL -ROLLBACK -BACKWARD -ONLINE feature. 
 
 +----------------------------------------+--------------------------------------------+-----------------------------------------+------------------------------------------------------------------------------------------+
 | Ardmore                                | Bryn Mawr                                  | Malvern                                 | Comments                                                                                 |
 +========================================+============================================+=========================================+==========================================================================================+
-| O: ... A95, A96, A97, A98, A99         | R: ... A95, A96, A97                       | S: ... M34, A95, M35, M36, A96, A97,    | Ardmore as an originating primary instance at transaction number A99, replicates to      |
+| O: ... A95, A96, A97, A98, A99         | R: ... A95, A96, A97                       | S: ... M34, A95, M35, M36, A96, A97,    | Ardmore, as an originating primary instance at transaction number A99, replicates to     |
 |                                        |                                            | M37, M38, A98, M39, M40                 | BrynMawr as a BC replicating secondary instance at transaction number A97 and Malvern as |
-|                                        |                                            |                                         | a SI that includes transaction number A98, interspersed with locally generated updates.  |
+|                                        |                                            |                                         | an SI that includes transaction number A98, interspersed with locally generated updates. |
 |                                        |                                            |                                         | Updates are recorded in each instance's journal files using before-image journaling.     |
 +----------------------------------------+--------------------------------------------+-----------------------------------------+------------------------------------------------------------------------------------------+
 | Rolls back to A96 with A97 through A99 | Rolls back automatically to A96 (assume    | \-                                      | Instances receiving a replication stream from Ardmore can be configured to rollback      |
@@ -448,7 +448,7 @@ When an originating instance transmits a sequence number to a replicating instan
 This history serves to determine the journal sequence numbers through which both instances are synchronized when two instances attempt to connect. This journal sequence number is determined by going back in the history of both instance files to find the most recent shared journal sequence number generated by the Originating Instance. If the shared journal sequence number matches the current journal sequence number of the replicating instance, the Receiver Server on the replicating instance continues with normal replication. Otherwise, a synchronization requires a MUPIP JOURNAL -ROLLBACK -FETCHRESYNC on the Replicating Instance to rollback to a common synchronization point from which the originating instance can transmit updates to allow the Replicating Instance to catch up.
 
 .. note::
-   Proper operation requires the Replication Instance file be consistent with the snapshot of the database files in a backup. MUPIP BACKUP -REPLINSTANCE creates a backup of the Replication Instance file. Before backing up the replication instance file, you must start the Source Server for the instance at least once . If the replication instance file is damaged or deleted, you must create a new instance file, and recreate all downstream Replicating Instances from backups. 
+   Proper operation requires the Replication Instance file be consistent with the snapshot of the database files in a backup. MUPIP BACKUP -REPLINSTANCE creates a backup of the Replication Instance file. Before backing up the replication instance file, you must start the Source Server for the instance at least once. If the replication instance file is damaged or deleted, you must create a new instance file, and recreate all downstream Replicating Instances from backups. 
 
 --------------------------------------
 Implementing Replication and Recovery
@@ -555,7 +555,7 @@ You can enable the Instance Freeze mechanism selectively on any region(s) of an 
 
 MUPIP SET -[NO]INST[_FREEZE_ON_ERROR] [-REGION|-FILE] enables custom errors in region to automatically cause an Instance Freeze. MUPIP REPLICATE -SOURCE -FREEZE={ON|OFF} -[NO]COMMENT[='"string"'] promptly sets or clears an Instance Freeze on an instance irrespective of whether any region is enabled for Instance Freeze (with MUPIP SET -INST_FREEZE_ON_ERROR).
 
-A process that is not in a replicated environment ignores $ydb_custom_errors. The errors in the custom errors file must have a context in one of the replicated regions and the process recognizing the error must have the replication Journal Pool open. For example, an error like UNDEF cannot cause an Instance Freeze because it is not related to the instance. It also means that, for example, standalone MUPIP operations can neither cause nor honor an Instance Freeze because they do not have access to the replication Journal Pool. A process with access to the replication Journal Pool must honor an Instance Freeze even if does not have a custom error file and therefore cannot initiate an Instance Freeze.
+A process that is not in a replicated environment ignores $ydb_custom_errors. The errors in the custom errors file must have a context in one of the replicated regions and the process recognizing the error must have the replication Journal Pool open. For example, an error like UNDEF cannot cause an Instance Freeze because it is not related to the instance. It also means that, for example, standalone MUPIP operations can neither cause nor honor an Instance Freeze because they do not have access to the replication Journal Pool. A process with access to the replication Journal Pool must honor an Instance Freeze even if it does not have a custom error file and therefore cannot initiate an Instance Freeze.
 
 Depending on the error, removing an Instance Freeze is operator driven or automatic. YottaDB automatically removes Instance Freezes that are placed because of no disk space; for all other errors, Instance Freeze must be cleared manually by operator intervention. For example, YottaDB automatically places an Instance Freeze when it detects a DSKNOSPCAVAIL message in the operator log. It automatically clears the Instance Freeze when an operator intervention clears the no disk space condition. During an Instance Freeze, YottaDB modifies the NOSPACEEXT message from error (-E-) to warning (-W-) to indicate it is performing the extension even though the available space is less than the specified extension amount. The following errors are listed in the custom_errors_sample.txt file. Note that YottaDB automatically clears the Instance Freeze set with DSKNOSPCAVAIL when disk space becomes available. All other errors require operator intervention.
 
@@ -839,13 +839,13 @@ For database recovery:
 
 * With BEFORE_IMAGE journaling, the time is simply what is needed to execute a mupip journal recover backward "*" command or, when using replication, mupip journal recover -rollback. This uses before image records in the journal files to roll the database files back to their last epochs, and then forward to the most current updates. If this takes tbck, the total recovery time is tsys+tbck.
 
-* With NOBEFORE_IMAGE journaling, the time is that required to restore the last backup, say, trest plus the time to perform a MUPIP JOURNAL -RECOVER -FORWARD "*" command, say tfwd, for a total recovery time of tsys+trest+tfwd. If the last backup is available online, so that "restoring the backup" is nothing more than setting the value of an environment variable, trest=0 and the recovery time is tsys+tfwd.
+* With NOBEFORE_IMAGE journaling, the time is that required to restore the last backup, say trest, plus the time to perform a MUPIP JOURNAL -RECOVER -FORWARD "*" command, say tfwd, for a total recovery time of tsys+trest+tfwd. If the last backup is available online, so that "restoring the backup" is nothing more than setting the value of an environment variable, trest=0 and the recovery time is tsys+tfwd.
 
 Because tbck is less than tfwd, tsys+tbck is less than tsys+tfwd. In very round numbers, tsys may be minutes to tens of minutes, tfwd may be tens of minutes and tbck may be in tens of seconds to minutes. So, recovering the instance A might (to a crude first approximation) be a half order of magnitude faster with BEFORE_IMAGE journaling than with NOBEFORE_IMAGE journaling. Consider two deployment configurations.
 
-1. Where A is the sole production instance of an application, halving or quartering the recovery time of the instance is significant, because when the instance is down, the enterprise is not in business. The difference between a ten minute recovery time and a thirty minute recovery time is important. Thus, when running a sole production instance or a sole production instance backed up by an underpowered or not easily accessed, "disaster recovery site," before image journaling with backward recovery is the preferred configuration that better suits a production deployment. Furthermore, in this situation, there is pressure to bring A back up soon, because the enterprise is not in business - pressure that increases the probability of human error.
+1. When A is the sole production instance of an application, halving or quartering the recovery time of the instance is significant, because when the instance is down, the enterprise is not in business. The difference between a ten minute recovery time and a thirty minute recovery time is important. Thus, when running a sole production instance or a sole production instance backed up by an underpowered or not easily accessed "disaster recovery site", before image journaling with backward recovery is the preferred configuration that better suits the production deployment. Furthermore, in this situation, there is pressure to bring A back up soon, because the enterprise is not in business - pressure that increases the probability of human error.
 
-2. With two equally functional and accessible instances, A and B, deployed in an LMS configuration at a point in time when A, running as the originating instance replicating to B, crashes, B can be switched from a replicating instance to an originating instance within seconds. An appropriately configured network can change the routing of incoming accesses from one instance to the other in seconds to tens of seconds. The enterprise is down only for the time required to ascertain that A is in fact down, and to make the decision to switch to B — perhaps a minute or two. Furthermore, B is in a "known good" state, therefore, a strategy of "if in doubt, switchover" is entirely appropriate. This time, tswch, is independent of whether A and B are running -BEFORE_IMAGE journaling or -NOBEFORE_IMAGE journaling. The difference between -BEFORE_IMAGE journaling and -NOBEFORE_IMAGE journaling is the difference in time taken subsequently to recover A, so that it can be brought up as a replicating instance to B. If -NOBEFORE_IMAGE journaling is used and the last backup is online, there is no need to first perform a forward recovery on A using its journal files. Once A has rebooted: 
+2. Consider two equally functional and accessible instances, A and B, deployed in an LMS configuration at a point in time. When A, running as the originating instance replicating to B, crashes, B can be switched from a replicating instance to an originating instance within seconds. An appropriately configured network can change the routing of incoming accesses from one instance to the other in seconds to tens of seconds. The enterprise is down only for the time required to ascertain that A is in fact down, and to make the decision to switch to B — perhaps a minute or two. Furthermore, B is in a "known good" state, therefore, a strategy of "if in doubt, switchover" is entirely appropriate. This time, tswch is independent of whether A and B are running -BEFORE_IMAGE journaling or -NOBEFORE_IMAGE journaling. The difference between -BEFORE_IMAGE journaling and -NOBEFORE_IMAGE journaling is the difference in time taken to subsequently recover A, so that it can be brought up as a replicating instance to B. If -NOBEFORE_IMAGE journaling is used and the last backup is online, there is no need to first perform a forward recovery on A using its journal files. Once A has rebooted: 
 
    * Extract the unreplicated transactions from the crashed environment
 
@@ -861,19 +861,19 @@ Because tbck is less than tfwd, tsys+tbck is less than tsys+tfwd. In very round 
 |                     | less expensive servers and storage without materially compromising enterprise application availability. In fact, since YottaDB allows replication to as many as sixteen              |
 |                     | instances, it is not unreasonable to use commodity hardware [1]_ and still save total cost.                                                                                          |
 +---------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| Storage             | Each extra instance of course requires its own storage for databases and journal files. Nobefore journal files are smaller than the journal files produced by before image journaling|
-|                     | , with the savings potentially offset if a decision is made to retain an online copy of the last backup (whether this nets out to a saving or a cost depends on the behavior of the  |
-|                     | application and on operational requirements for journal file retention).                                                                                                             |
+| Storage             | Of course, each extra instance requires its own storage for databases and journal files. Nobefore journal files are smaller than the journal files produced by before-image          |
+|                     | journaling, with the savings potentially offset if a decision is made to retain an online copy of the last backup (whether this nets out to a saving or a cost depends on the        |
+|                     | behavior of the application and on the operational requirements for journal file retention).                                                                                         |
 +---------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Performance         | IO bandwidth requirements of nobefore journaling are less than those of before image journaling, because YottaDB does not write before image journal records or flush the            |
 |                     | database.                                                                                                                                                                            |
 |                     |                                                                                                                                                                                      |
 |                     | \* With before image journaling, the first time a database block is updated after an epoch, YottaDB writes a before image journal record. This means that immediately after an       |
 |                     | epoch, given a steady rate of updates, there is an increase in before image records (because every update changes at least one database block and generates at least one before image|
-|                     | journal record). As the epoch proceeds, the frequency of writing before image records falls back to the steady level [2]_ - until the next epoch. Before image journal records are   |
+|                     | journal record). As the epoch proceeds, the frequency of writing before image records falls back to a steady level [2]_ - until the next epoch. Before image journal records are     |
 |                     | larger than journal records that describe updates.                                                                                                                                   |
 |                     |                                                                                                                                                                                      |
-|                     | \* At epochs, both before image journaling and nobefore journaling flush journal blocks and perform an fsync() on journal files [3]_ . When using before image journaling, YottaDB/  |
+|                     | \* At epochs, both before image journaling and nobefore journaling flush journal blocks and perform an fsync() on journal files [3]_ . When using before image journaling, YottaDB   |
 |                     | ensures all dirty database blocks have been written and does an fsync() [4]_ , but does not take these steps.                                                                        |
 |                     |                                                                                                                                                                                      |
 |                     | Because IO subsystems are often sized to accommodate peak IO rates, choosing NOBEFORE_IMAGE journaling may allow more economical hardware without compromising application throughput|
@@ -917,7 +917,7 @@ Procedures
 Download Replication Examples
 ++++++++++++++++++++++++++++++
 
-repl_procedures.tar.gz contains a set of replication example scripts. Each script contains a combination of YottaDB commands that accomplish a specific task. All examples in the Procedures section use these replication scripts but each example uses different script sequence and script arguments. Always run all replication examples in a test system from a new directory as they create sub-directories and database files in the current directory. No claim of copyright is made with regard to these examples. These example scripts are for explanatory purposes and are not intended for production use. YOU MUST UNDERSTAND, AND APPROPRIATELY ADJUST THE COMMANDS GIVEN IN THESE SCRIPTS BEFORE USING THEM IN A PRODUCTION ENVIRONMENT. Typically, you would set replication between instances on different systems/data centers and create your own set of scripts with appropriate debugging and error handling to manage replication between them.
+repl_procedures.tar.gz contains a set of replication example scripts. Each script contains a combination of YottaDB commands that accomplish a specific task. All examples in the Procedures section use these replication scripts but each example uses a different script sequence and diferent script arguments. Always run all replication examples in a test system from a new directory as they create sub-directories and database files in the current directory. No claim of copyright is made with regard to these examples. These example scripts are for explanatory purposes and are not intended for production use. YOU MUST UNDERSTAND AND APPROPRIATELY ADJUST THE COMMANDS GIVEN IN THESE SCRIPTS BEFORE USING THEM IN A PRODUCTION ENVIRONMENT. Typically, you would set replication between instances on different systems/data centers and create your own set of scripts with appropriate debugging and error handling to manage replication between them.
 
 Go to `Github <https://github.com/YottaDB/YottaDBdoc/blob/master/AdminOpsGuide/repl_procedures.tar.gz>`_ to download repl_procedures.tar.gz on a test system. 
 
@@ -994,7 +994,7 @@ Starts the Source Server of the originating instance in a BC replication configu
 
 * The first argument is the name of the originating instance. This argument is also used in the name of the Source Server log file.
 * The second argument is the name of the BC replicating instance. This argument is also used in the name of the Source Server log file.
-* The third argument is port number of localhost at which the Receiver Server is waiting for a connection.
+* The third argument is the port number of localhost at which the Receiver Server is waiting for a connection.
 * The optional fourth and fifth argument specify the -tlsid and -reneg qualifiers used to set up a TLS/SSL connection.
 * Example:./originating_start A B 4001
 
@@ -1010,7 +1010,7 @@ Here is the code:
 Starts the passive Source Server and the Receiver Server in a BC replication configuration. It takes four arguments:
 
 * The first argument is the name of the replicating instance. This argument is also used in the name of the passive Source Server and Receiver Server log file name. 
-* The second argument is port number of localhost at which the Source Server is sending the replication stream for the replicating instance. 
+* The second argument is the port number of localhost at which the Source Server is sending the replication stream for the replicating instance. 
 * The optional third and fourth arguments are used to specify additional qualifiers for the Receiver Server startup command. 
 * Example:./replicating_start B 4001 
 
@@ -1024,7 +1024,7 @@ Here is the code:
 
 **suppl_setup**
 
-Turns on replication for all regions, create the supplementary replication instance file with the -noreplace qualifier, starts the passive Source Server, starts the Receiver Server of an SI replicating instance, and displays the health status of the Receiver Server and Update Process. Use this to start an SI replicating instance for the first time. It takes four arguments:
+Turns on replication for all regions, creates the supplementary replication instance file with the -noreplace qualifier, starts the passive Source Server, starts the Receiver Server of an SI replicating instance, and displays the health status of the Receiver Server and the Update Process. Use this to start an SI replicating instance for the first time. It takes four arguments:
 
 * The first argument is the name of the supplementary instance. This argument is also used in the name of the passive Source Server and Receiver Server log files. 
 * The second argument is the path to the backed up replication instance file of the originating instance. 
@@ -1043,7 +1043,6 @@ Here is the code:
    $ydb_dist/mupip replicate -receive -start -listenport=$3 -buffsize=1048576 -log=$PWD/$ydb_repl_instname/$1.log -updateresync=$2 -initialize $5
    tail -30 $PWD/$1/$1.log
    $ydb_dist/mupip replicate -receive -checkhealth
-
 
 **repl_status**
 
@@ -1080,7 +1079,7 @@ Here is the code:
 
 **originating_stop**
 
-Shuts down the Source Server with a two second timeout and perform a MUPIP RUNDOWN operation.
+Shuts down the Source Server with a two second timeout and performs a MUPIP RUNDOWN operation.
 
 The first argument specifies additional qualifiers for the Source Server shutdown command.
 
@@ -1105,7 +1104,7 @@ Here is the code:
 Starts the passive Source Server and the Receiver Server of the supplementary instance for all startups except the first. It takes three arguments:
 
 * The first argument is the name of the supplementary instance. It is also used in the names of the passive Source Server and the Receiver Server log files. 
-* The second argument is port number of localhost at which the Receiver Server is waiting for a connection. 
+* The second argument is the port number of localhost at which the Receiver Server is waiting for a connection. 
 * The optional third argument is an additional qualifier for the passive Source Server startup command. In the examples, the third argument is either -updok or -updnotok.
 * The optional fourth argument is an additional qualifier for the Receiver Server startup command. In the examples, the fourth argument is either -autorollback or -noresync.
 * The optional fifth argument is -tlsid which is used to set up a TLS/SSL replication connection.
@@ -1177,7 +1176,7 @@ Here is the code:
 
 **gen_leaf**
 
-Creates the leaf-level certificate and gets it signed from the root certification authority for use with the TLS example.
+Creates the leaf-level certificate and gets it signed by the root certification authority for use with the TLS example.
 
 Here is the code:
 
@@ -1208,11 +1207,11 @@ On B:
 Example:
 
 .. parsed-literal::
-   source ./ydbenv A V6.3-000A_x86_64 
+   source ./ydbenv A r1.20_x86_64 
    ./db_create
    ./repl_setup
    ./originating_start A B 4001
-   source ./ydbenv B V6.3-000A_x86_64
+   source ./ydbenv B r1.20_x86_64
    ./db_create
    ./repl_setup
    ./replicating_start B 4001
@@ -1221,9 +1220,9 @@ Example:
 The shutdown sequence is as follows:
 
 .. parsed-literal::
-   source ./ydbenv B V6.3-000A_x86_64
+   source ./ydbenv B r1.20_x86_64
    ./replicating_stop
-   source ./env A V6.3-000A_x86_64
+   source ./env A r1.20_x86_64
    ./originating_stop
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1254,16 +1253,16 @@ On C:
 Example:
 
 .. parsed-literal::
-   source ./ydbenv A V6.3-000A_x86_64 
+   source ./ydbenv A r1.20_x86_64 
    ./db_create
    ./repl_setup
    ./originating_start A B 4001
-   source ./ydbenv B V6.3-000A_x86_64
+   source ./ydbenv B r1.20_x86_64
    ./db_create
    ./repl_setup
    ./replicating_start B 4001
    ./originating_start B C 4002 -propagateprimary
-   source ./ydbenv C V6.3-000A_x86_64
+   source ./ydbenv C r1.20_x86_64
    ./db_create
    ./repl_setup
    ./replicating_start C 4002
@@ -1272,12 +1271,12 @@ Example:
 The shutdown sequence is as follows:
 
 .. parsed-literal::
-   source ./ydbenv C V6.3-000A_x86_64
+   source ./ydbenv C r1.20_x86_64
    ./replicating_stop
-   source ./ydbenv B V6.3-000A_x86_64
+   source ./ydbenv B r1.20_x86_64
    ./replicating_stop
    ./originating_stop
-   source ./ydbenv A V6.3-000A_x86_64
+   source ./ydbenv A r1.20_x86_64
    ./originating_stop
 
 
@@ -1306,12 +1305,12 @@ On P:
 Example:
 
 .. parsed-literal::
-   source ./ydbenv A V6.3-000A_x86_64
+   source ./ydbenv A r1.20_x86_64
    ./db_create
    ./repl_setup
    ./originating_start A P 4000
    ./backup_repl startA
-   source ./ydbenv P V6.3-000A_x86_64
+   source ./ydbenv P r1.20_x86_64
    ./db_create
    ./suppl_setup P startA 4000 -updok
    ./repl_status
@@ -1324,9 +1323,9 @@ Example:
 The shutdown sequence is as follows:
 
 .. parsed-literal::
-   source ./ydbenv P V6.3-000A_x86_64
+   source ./ydbenv P r1.20_x86_64
    ./replicating_stop
-   source ./ydbenv A V6.3-000A_x86_64
+   source ./ydbenv A r1.20_x86_64
    ./originating_stop
 
 
@@ -1334,7 +1333,7 @@ The shutdown sequence is as follows:
 Replicating Instance Starts from Backup of Originating Instance (A -> B and A -> P)
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-The more common scenario for bringing up a replicating instance is to take a backup of the originating instance and bring it up as a replicating instance. If the backup is a comprehensive backup, the file headers store the journal sequence numbers.
+The most common scenario for bringing up a replicating instance is to take a backup of the originating instance and bring it up as a replicating instance. If the backup is a comprehensive backup, the file headers store the journal sequence numbers.
 
 On A:
 
@@ -1350,14 +1349,14 @@ On the backed up instance:
 
 * Run MUPIP REPLICATE -EDITINSTANCE command to change the name of the backed up replication instance file.
 
-* Start the Receiver Server for the BC replicating instance. Do not use the -UPDATERESYNC qualifier to start the receiver server of a BC replicating instance. -UPDATERESYNC is necessary when you start the Receiver Server of an SI replicating instance for the first time. Without -UDPATERESYNC, the SI replicating instance may refuse to start replication because the journal sequence number in the replicating instance may be higher than what the originating instance expects.
+* Start the Receiver Server for the BC replicating instance. Do not use the -UPDATERESYNC qualifier to start the receiver server of a BC replicating instance. -UPDATERESYNC is necessary when you start the Receiver Server of an SI replicating instance for the first time. Without -UDPATERESYNC, the SI replicating instance may refuse to start replication because the journal sequence number in the replicating instance may be higher than the originating instance expects.
 
 Example:
 
 The following example demonstrates starting a replicating instance from the backup of an originating instance in an A→B replication configuration. Note that you do not need to perform an -updateresync when starting a BC replicating instance for the first time. 
 
 .. parsed-literal::
-   source ./ydbenv A V6.3-000A_x86_64
+   source ./ydbenv A r1.20_x86_64
    ./db_create
    ./repl_setup
    ./originating_start A backupA 4001
@@ -1365,7 +1364,7 @@ The following example demonstrates starting a replicating instance from the back
    $ydb_dist/mumps -r %XCMD 'for i=1:1:10 set ^A(i)=i'
    mkdir backupA   
    $ydb_dist/mupip backup -replinst=currentstateA -newjnlfile=noprevlink -bkupdbjnl=disable DEFAULT backupA
-   source ./ydbenv backupA V6.3-000A_x86_64
+   source ./ydbenv backupA r1.20_x86_64
    ./db_create
    ./repl_setup
    cp currentstateA backupA/gtm.repl
@@ -1376,15 +1375,15 @@ The following example demonstrates starting a replicating instance from the back
 The shutdown sequence is as follows:
 
 .. parsed-literal::
-   source ./ydbenv backupA V6.3-000A_x86_64
+   source ./ydbenv backupA r1.20_x86_64
    ./replicating_stop
-   source ./ydbenv A V6.3-000A_x86_64
+   source ./ydbenv A r1.20_x86_64
    ./originating_stop
 
 The following example demonstrates starting a replicating instance from the backup of an originating instance in an A→P replication configuration. Note that you need to perform an -updateresync to start a supplementary instance for the first time. 
 
 .. parsed-literal::
-   source ./ydbenv A V6.3-000A_x86_64
+   source ./ydbenv A r1.20_x86_64
    ./db_create
    ./repl_setup
    ./originating_start A backupA 4011
@@ -1393,7 +1392,7 @@ The following example demonstrates starting a replicating instance from the back
    ./backup_repl currentstateA
    mkdir backupA
    $ydb_dist/mupip backup -newjnlfile=noprevlink -bkupdbjnl=disable DEFAULT backupA
-   source ./ydbenv backupA V6.3-000A_x86_64
+   source ./ydbenv backupA r1.20_x86_64
    ./db_create
    ./suppl_setup backupA currentstateA 4011 -updok
    ./repl_status
@@ -1401,9 +1400,9 @@ The following example demonstrates starting a replicating instance from the back
 The shutdown sequence is as follows:
 
 .. parsed-literal::
-   source ./ydbenv backupA V6.3-000A_x86_64
+   source ./ydbenv backupA r1.20_x86_64
    ./replicating_stop
-   source ./ydbenv A V6.3-000A_x86_64
+   source ./ydbenv A r1.20_x86_64
    ./originating_stop
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
