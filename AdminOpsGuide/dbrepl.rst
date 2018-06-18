@@ -919,7 +919,7 @@ Download Replication Examples
 
 repl_procedures.tar.gz contains a set of replication example scripts. Each script contains a combination of YottaDB commands that accomplish a specific task. All examples in the Procedures section use these replication scripts but each example uses a different script sequence and diferent script arguments. Always run all replication examples in a test system from a new directory as they create sub-directories and database files in the current directory. No claim of copyright is made with regard to these examples. These example scripts are for explanatory purposes and are not intended for production use. YOU MUST UNDERSTAND AND APPROPRIATELY ADJUST THE COMMANDS GIVEN IN THESE SCRIPTS BEFORE USING THEM IN A PRODUCTION ENVIRONMENT. Typically, you would set replication between instances on different systems/data centers and create your own set of scripts with appropriate debugging and error handling to manage replication between them.
 
-Go to `Github <https://github.com/YottaDB/YottaDBdoc/blob/master/AdminOpsGuide/repl_procedures.tar.gz>`_ to download repl_procedures.tar.gz on a test system. 
+Go to the `Github page <https://github.com/YottaDB/YottaDBdoc/blob/master/AdminOpsGuide/repl_procedures.tar.gz>`_ to download repl_procedures.tar.gz on a test system. 
 
 repl_procedures.tar.gz includes the following scripts:
 
@@ -1413,11 +1413,11 @@ A switchover is the procedure of switching the roles of an originating instance 
 
 In an A->B replication configuration, at any given point there can be two possibilities: 
 
-* A is ahead of B, that is, A has updates which are not yet replicated to B. 
+* A is ahead of B, i.e. A has updates which are not yet replicated to B. 
 
 * A and B are in sync. This happens where there are no new updates on A and all pending updates are replicated to B. 
 
-The steps described in this section perform a switchover (A->B becomes B->A) under both these possibilities. When A is ahead of B, these steps generate a lost transaction file which must be applied to the new originating instance as soon as possible. The lost transaction file contains transactions which are were not replicated to B. Apply the lost transactions on the new originating instance either manually or in a semi-automated fashion using the M-intrinsic function $ZQGBLMOD(). If you use $ZQGBLMOD(), perform two additional steps (mupip replicate -source -needrestart and mupip replicate -source -losttncomplete) as part of lost transaction processing. Failure to run these steps can cause $ZQGBLMOD() to return false negatives that in turn can result in application data consistency issues.
+The steps described in this section perform a switchover (A->B becomes B->A) under both these possibilities. When A is ahead of B, these steps generate a lost transaction file which must be applied to the new originating instance as soon as possible. The lost transaction file contains transactions which were not replicated to B. Apply the lost transactions on the new originating instance either manually or in a semi-automated fashion using the M-intrinsic function $ZQGBLMOD(). If you use $ZQGBLMOD(), perform two additional steps (mupip replicate -source -needrestart and mupip replicate -source -losttncomplete) as part of lost transaction processing. Failure to run these steps can cause $ZQGBLMOD() to return false negatives that in turn can result in application data consistency issues.
 
 First, choose a time when there are no database updates or the rate of updates are low to minimize the chances that your application may time out. There may be a need to hold database updates briefly during the switchover. For more information on holding database updates, refer to the `Instance Freeze section <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html#instance-freeze>`_ to configure an appropriate freezing mechanism suitable for your environment.
 
@@ -1431,7 +1431,7 @@ On B:
 
 * Shut down the Receiver Server and the Update Process.
 
-* Shut down the passive Source Server to bring down the journal pool. Ensure that you shut down the Receiver Server and Update Process first before shutting down the passive Source Server.
+* Shut down the passive Source Server to bring down the journal pool. Ensure that you first shut down the Receiver Server and Update Process before shutting down the passive Source Server.
 
 * Start B as the new originating instance.
 
@@ -1448,25 +1448,25 @@ On A:
 The following example runs a switchover in an A→B replication configuration.
 
 .. parsed-literal::
-   source ./ydbenv A r1.20 # creates a simple environment for instance A
+   source ./ydbenv A r1.20_x86_64 # creates a simple environment for instance A
    ./db_create
    ./repl_setup # enables replication and creates the replication instance file
    ./originating_start A B 4001 # starts the active Source Server (A->B)
    $ydb_dist/mumps -r %XCMD 'for i=1:1:100 set ^A(i)=i'
    ./repl_status #-SHOWBACKLOG and -CHECKHEALTH report
-   source ./ydbenv B r1.20 # creates a simple environment for instance B
+   source ./ydbenv B r1.20_x86_64 # creates a simple environment for instance B
    ./db_create
    ./repl_setup
    ./replicating_start B 4001 
    ./repl_status # -SHOWBACKLOG and -CHECKHEATH report 
    ./replicating_stop # Shutdown the Receiver Server and the Update Process 
-   source ./ydbenv A r1.20 # Creates an environment for A
+   source ./ydbenv A r1.20_x86_64 # Creates an environment for A
    $ydb_dist/mumps -r %XCMD 'for i=1:1:50 set ^losttrans(i)=i' # perform some updates when replicating instance is not available. 
    sleep 2
    ./originating_stop # Stops the active Source Server 
-   source ./ydbenv B r1.20 # Create an environment for B
+   source ./ydbenv B r1.20_x86_64 # Create an environment for B
    ./originating_start B A 4001 # Start the active Source Server (B->A)
-   source ./ydbenv A r1.20 # Create an environment for A
+   source ./ydbenv A r1.20_x86_64 # Create an environment for A
    ./rollback 4001 backward
    ./replicating_start A 4001 # Start the replication Source Server 
    ./repl_status # To confirm whether the Receiver Server and the Update Process started correctly.
@@ -1475,9 +1475,9 @@ The following example runs a switchover in an A→B replication configuration.
 The shutdown sequence is as follows:
 
 .. parsed-literal::
-   source ./ydbenv A r1.20
+   source ./ydbenv A r1.20_x86_64
    ./replicating_stop
-   source ./ydbenv B r1.20
+   source ./ydbenv B r1.20_x86_64
    ./originating_stop
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1492,7 +1492,7 @@ The following scenario demonstrates a switchover from B←A→P to A←B→P whe
 | A                                           | B                                    | P                                      | Comments                                                                            |
 +=============================================+======================================+========================================+=====================================================================================+
 | O: ... A95, A96, A97, A98, A99              | R: ... A95, A96, A97, A98            | S: ... P34, A95, P35, P36, A96, A97,   | A as an originating primary instance at transaction number A99, replicates to B as  |
-|                                             |                                      | P37, P38                               | a BC replicating secondary instance at transaction number A98 and P as a SI that    |
+|                                             |                                      | P37, P38                               | a BC replicating secondary instance at transaction number A98 and P as an SI that   |
 |                                             |                                      |                                        | includes transaction number A97, interspersed with locally generated updates.       |
 |                                             |                                      |                                        | Updates are recorded in each instance's journal files using before-image journaling.|
 +---------------------------------------------+--------------------------------------+----------------------------------------+-------------------------------------------------------------------------------------+
@@ -1523,38 +1523,38 @@ The following scenario demonstrates a switchover from B←A→P to A←B→P whe
 The following example creates this switchover scenario:
 
 .. parsed-literal::
-   source ./ydbenv A r1.20
+   source ./ydbenv A r1.20_x86_64
    $ydb_dist/mumps -r ^%XCMD 'set ^A(98)=99'
-   source ./ydbenv B r1.20
+   source ./ydbenv B r1.20_x86_64
    ./replicating_stop
-   source ./ydbenv A r1.20
+   source ./ydbenv A r1.20_x86_64
    $ydb_dist/mumps -r ^%XCMD 'set ^A(99)=100'
    ./originating_stop
-   source ./ydbenv B r1.20
+   source ./ydbenv B r1.20_x86_64
    ./originating_start B A 4010
    ./originating_start B P 4011
    ./backup_repl startB
    $ydb_dist/mumps -r ^%XCMD 'set ^B(61)=0'
-   source ./ydbenv P r1.20
+   source ./ydbenv P r1.20_x86_64
    ./suppl_setup M startB 4011 -updok
    $ydb_dist/mumps -r ^%XCMD 'for i=39:1:40 set ^P(i)=i'
-   source ./ydbenv B r1.20
+   source ./ydbenv B r1.20_x86_64
    $ydb_dist/mumps -r ^%XCMD 'set ^B(62)=1,^B(63)=1'
-   source ./ydbenv A r1.20
+   source ./ydbenv A r1.20_x86_64
    ./rollback 4010 backward
    ./replicating_start A 4010
-   source ./ydbenv B r1.20
+   source ./ydbenv B r1.20_x86_64
    $ydb_dist/mumps -r ^%XCMD 'set ^B(64)=1,^B(65)=1'
    cat A/gtm.lost
 
 The shutdown sequence is as follows:
 
 .. parsed-literal::
-   source ./ydbenv B r1.20
+   source ./ydbenv B r1.20_x86_64
    ./originating_stop
-   source ./ydbenv A r1.20 
+   source ./ydbenv A r1.20 _x86_64
    ./replicating_stop
-   source ./ydbenv P r1.20
+   source ./ydbenv P r1.20_x86_64
    ./replicating_stop
 
 **A and P require rollback**
@@ -1565,7 +1565,7 @@ The following demonstrates a switchover scenario from B←A→P to A←B→P whe
 | A                                    | B                                            | P                                         | Comments                                                                                    |
 +======================================+==============================================+===========================================+=============================================================================================+
 | O: ... A95, A96, A97, A98, A99       | R: ... A95, A96, A97                         | S: ... P34, A95, P35, P36, A96, A97,      | A, as an originating primary instance at transaction number A99, replicates to B as a BC    |
-|                                      |                                              | P37, P38, A98, P39, P40                   | replicating secondary instance at transaction number A97 and P as a SI that includes        |
+|                                      |                                              | P37, P38, A98, P39, P40                   | replicating secondary instance at transaction number A97 and P as an SI that includes       |
 |                                      |                                              |                                           | transaction number A98, interspersed with locally generated updates. Updates are recorded   |
 |                                      |                                              |                                           | in each instance's journal files using before-image journaling.                             |
 +--------------------------------------+----------------------------------------------+-------------------------------------------+---------------------------------------------------------------------------------------------+
@@ -1577,8 +1577,8 @@ The following demonstrates a switchover scenario from B←A→P to A←B→P whe
 +--------------------------------------+----------------------------------------------+-------------------------------------------+---------------------------------------------------------------------------------------------+
 | \-                                   | O: ... A95, A96, A97, B61, B62               | S: ... P34, A95, P35, P36, A96, A97, P37, | For P to accept replication from B, it must roll off transactions generated by A, (in this  |
 |                                      |                                              | P38, B61                                  | case A98) that B does not have in its database, as well as any additional transactions      |
-|                                      |                                              |                                           | generated and applied locally since transaction number A98 from A.  This rollback is        |
-|                                      |                                              |                                           | accomplished with a MUPIP JOURNAL -ROLLBACK -FETCHRESYNC operation on P.  These rolled      |
+|                                      |                                              |                                           | generated and applied locally since transaction number A98 from A. This rollback is         |
+|                                      |                                              |                                           | accomplished with a MUPIP JOURNAL -ROLLBACK -FETCHRESYNC operation on P. These rolled       |
 |                                      |                                              |                                           | off transactions (A98, P39, P40) go into the Unreplicated Transaction Log and can be        |
 |                                      |                                              |                                           | subsequently reprocessed by application code.  Once the rollback is completed, P can        |
 |                                      |                                              |                                           | start accepting replication from B.  B in its Originating Primary role processes            |
@@ -1591,49 +1591,49 @@ The following demonstrates a switchover scenario from B←A→P to A←B→P whe
 
 
 .. note::
-    As the rollback for P to accept replication from B is more complex, may involve more data than the regular LMS rollback, and may involve reading journal records sequentially; it may take longer. In scripting for automating operations, there is no need to explicitly test whether B is behind P - if it is behind, the Source Server will fail to connect and report an error, which automated shell scripting can detect and effect a rollback on P followed by a reconnection attempt by B. On the other hand, there is no harm in P routinely performing a rollback before having B connect - if it is not ahead, the rollback will be a no-op. YottaDB's responsibility for the rolled off transactions ends once it places them in the Unreplicated Transaction Log. Ultimately, business logic must determine whether the rolled off transactions can simply be reapplied or whether other reprocessing is required. YottaDB's $ZQGBLMOD() function can assist application code in determining whether conflicting updates may have occurred.
+    As the rollback for P to accept replication from B is more complex, may involve more data than the regular LMS rollback, and may involve reading journal records sequentially - it may take longer. In scripting for automating operations, there is no need to explicitly test whether B is behind P - if it is behind, the Source Server will fail to connect and report an error which automated shell scripting can detect, and effect a rollback on P followed by a reconnection attempt by B. On the other hand, there is no harm in P routinely performing a rollback before having B connect - if it is not ahead, the rollback will be a no-op. YottaDB's responsibility for the rolled off transactions ends once it places them in the Unreplicated Transaction Log. Ultimately, business logic must determine whether the rolled off transactions can simply be reapplied or whether other reprocessing is required. YottaDB's $ZQGBLMOD() function can assist application code in determining whether conflicting updates may have occurred.
 
 The following example creates this scenario.
 
 
 .. parsed-literal::
-   source ./ydbenv A r1.20
+   source ./ydbenv A r1.20_x86_64
    ./db_create
    ./repl_setup
    ./originating_start A B 4010
    ./originating_start A P 4011
    ./backup_repl startA
    $ydb_dist/mumps -r ^%XCMD 'for i=1:1:97 set ^A(i)=i'
-   source ./ydbenv B r1.20
+   source ./ydbenv B r1.20_x86_64
    ./db_create
    ./repl_setup
    ./replicating_start B 4010
-   source ./ydbenv P r1.20
+   source ./ydbenv P r1.20_x86_64
    ./db_create
    ./suppl_setup P startA 4011 -updok
    $ydb_dist/mumps -r ^%XCMD 'for i=1:1:40 set ^P(i)=i'
-   source ./ydbenv B r1.20 
+   source ./ydbenv B r1.20_x86_64 
    ./replicating_stop
-   source ./ydbenv A r1.20
+   source ./ydbenv A r1.20_x86_64
    $ydb_dist/mumps -r ^%XCMD 'set ^A(98)=99'
-   source ./ydbenv P r1.20
+   source ./ydbenv P r1.20_x86_64
    ./replicating_stop 
-   source ./ydbenv A r1.20
+   source ./ydbenv A r1.20_x86_64
    $ydb_dist/mumps -r ^%XCMD 'set ^A(99)=100'
    ./originating_stop
-   source ./ydbenv B r1.20
+   source ./ydbenv B r1.20_x86_64
    ./originating_start B A 4010
    ./originating_start B P 4011
    ./backup_repl startB
    $ydb_dist/mumps -r ^%XCMD 'set ^B(61)=0,^B(62)=1'
-   source ./ydbenv P r1.20
+   source ./ydbenv P r1.20_x86_64
    ./rollback 4011 backward
    ./suppl_setup P startB 4011 -updok
    $ydb_dist/mumps -r ^%XCMD 'for i=39:1:40 set ^P(i)=i'
-   source ./ydbenv A r1.20
+   source ./ydbenv A r1.20_x86_64
    ./rollback 4010 backward
    ./replicating_start A 4010
-   source ./ydbenv B r1.20
+   source ./ydbenv B r1.20_x86_64
    $ydb_dist/mumps -r ^%XCMD 'set ^B(64)=1,^B(65)=1'
    cat A/gtm.lost
    cat P/gtm.lost
@@ -1641,11 +1641,11 @@ The following example creates this scenario.
 The shutdown sequence is as follows:
 
 .. parsed-literal::
-   source ./ydbenv B r1.20
+   source ./ydbenv B r1.20_x86_64
    ./originating_stop
-   source ./ydbenv A r1.20 
+   source ./ydbenv A r1.20_x86_64 
    ./replicating_stop
-   source ./ydbenv P r1.20
+   source ./ydbenv P r1.20_x86_64
    ./replicating_stop
 
 **Rollback not required by application design**
@@ -1656,8 +1656,8 @@ The following scenario demonstrates a switchover from B←A→P to A←B→P whe
 | A                                  | B                                              | P                                            | Comments                                                                           |
 +====================================+================================================+==============================================+====================================================================================+
 | O: ... A95, A96, A97, A98, A99     | R: ... A95, A96, A97                           | S: ... P34, A95, P35, P36, A96, A97, P37,    | A as an originating primary instance at transaction number A99, replicates to B    |
-|                                    |                                                | P38, A98, P39, P40                           | as a BC replicating secondary instance at transaction number A97 and P as a SI that|
-|                                    |                                                |                                              | includes transaction number A98, interspersed with locally generated updates.      |
+|                                    |                                                | P38, A98, P39, P40                           | as a BC replicating secondary instance at transaction number A97 and P as an SI    |
+|                                    |                                                |                                              | that includes transaction number A98, interspersed with locally generated updates. |
 |                                    |                                                |                                              | Updates are recorded in each instance's journal files using before-image journaling|
 +------------------------------------+------------------------------------------------+----------------------------------------------+------------------------------------------------------------------------------------+
 | Crashes                            | O: ... A95, A96, A97, B61, B62                 | ... P34, A95, P35, P36, A96, A97, P37, P38,  | When an event disables A, B becomes the new originating primary, with A97 the      |
@@ -1666,61 +1666,61 @@ The following scenario demonstrates a switchover from B←A→P to A←B→P whe
 |                                    |                                                |                                              | start replicating from B even though B does not have A98 in its database and P may |
 |                                    |                                                |                                              | have relied on A98 to compute P39 and P40.                                         |
 +------------------------------------+------------------------------------------------+----------------------------------------------+------------------------------------------------------------------------------------+
-| \-                                 | O: ... A95, A96, A97, B61, B62                 | S: ... P34, A95, P35, P36, A96, A97, P37,    | With its Receiver Server started with the -noresync option, P can receive a SI     |
+| \-                                 | O: ... A95, A96, A97, B61, B62                 | S: ... P34, A95, P35, P36, A96, A97, P37,    | With its Receiver Server started with the -noresync option, P can receive an SI    |
 |                                    |                                                | P38, A98, P39, P40, B61, B62                 | replication stream from B, and replication starts from the last common transaction |
 |                                    |                                                |                                              | shared by B and P. Notice that on B no A98 precedes B61, whereas it does on P,     |
-|                                    |                                                |                                              | i.e., P was ahead of B with respect to the updates generated by A.                 |
+|                                    |                                                |                                              | i.e. P was ahead of B with respect to the updates generated by A.                  |
 +------------------------------------+------------------------------------------------+----------------------------------------------+------------------------------------------------------------------------------------+
 
 The following example creates this scenario.
 
 .. parsed-literal::
-   source ./ydbenv A r1.20
+   source ./ydbenv A r1.20_x86_64
    ./db_create
    ./repl_setup
    ./originating_start A B 4010
    ./originating_start A P 4011
    ./backup_repl startA
    $ydb_dist/mumps -r ^%XCMD 'for i=1:1:97 set ^A(i)=i'
-   source ./ydbenv B r1.20
+   source ./ydbenv B r1.20_x86_64
    ./db_create
    ./repl_setup
    ./replicating_start B 4010 
-   source ./ydbenv P r1.20
+   source ./ydbenv P r1.20_x86_64
    ./db_create
    ./suppl_setup P startA 4011 -updok
    $ydb_dist/mumps -r ^%XCMD 'for i=1:1:40 set ^P(i)=i'
-   source ./ydbenv B r1.20 
+   source ./ydbenv B r1.20_x86_64 
    ./replicating_stop
-   source ./ydbenv A r1.20
+   source ./ydbenv A r1.20_x86_64
    $ydb_dist/mumps -r ^%XCMD 'set ^A(98)=99'
-   source ./ydbenv P r1.20
+   source ./ydbenv P r1.20_x86_64
    ./replicating_stop 
-   source ./ydbenv A r1.20
+   source ./ydbenv A r1.20_x86_64
    $ydb_dist/mumps -r ^%XCMD 'set ^A(99)=100'
    ./originating_stop
-   source ./ydbenv B r1.20
+   source ./ydbenv B r1.20_x86_64
    ./originating_start B A 4010
    ./originating_start B P 4011
    #./backup_repl startB
    $ydb_dist/mumps -r ^%XCMD 'set ^B(61)=0,^B(62)=1'
-   source ./ydbenv P r1.20
+   source ./ydbenv P r1.20_x86_64
    ./replicating_start_suppl_n P 4011 -updok -noresync
    $ydb_dist/mumps -r ^%XCMD 'for i=39:1:40 set ^P(i)=i'
-   source ./ydbenv A r1.20
+   source ./ydbenv A r1.20_x86_64
    ./rollback 4010 backward
    ./replicating_start A 4010 
-   source ./ydbenv B r1.20
+   source ./ydbenv B r1.20_x86_64
    $ydb_dist/mumps -r ^%XCMD 'set ^B(64)=1,^B(65)=1'
 
 The shutdown sequence is as follows:
 
 .. parsed-literal::
-   source ./ydbenv B r1.20
+   source ./ydbenv B r1.20_x86_64
    ./originating_stop
-   source ./ydbenv A r1.20
+   source ./ydbenv A r1.20_x86_64
    ./replicating_stop
-   source ./ydbenv P r1.20
+   source ./ydbenv P r1.20_x86_64
    ./replicating_stop
 
 **Rollback Automatically**
@@ -1731,9 +1731,9 @@ This scenario demonstrates the use of the -autorollback qualifier which performs
 | A                                                  | B                                          | P                                | Comments                                                                              |
 +====================================================+============================================+==================================+=======================================================================================+
 | O: ... A95, A96, A97, A98, A99                     | R: ... A95, A96, A97                       | S: ... P34, A95, P35, P36, A96,  | A as an originating primary instance at transaction number A99, replicates to B as a  |
-|                                                    |                                            | A97, P37, P38, A98, P39, P40     | BC replicating secondary instance at transaction number A97 and P as a SI that        |
+|                                                    |                                            | A97, P37, P38, A98, P39, P40     | BC replicating secondary instance at transaction number A97 and P as an SI that       |
 |                                                    |                                            |                                  | includes transaction number A98, interspersed with locally generated updates. Updates |
-|                                                    |                                            |                                  | are recorded in each instance"s journal files using before-image journaling.          |
+|                                                    |                                            |                                  | are recorded in each instance's journal files using before-image journaling.          |
 +----------------------------------------------------+--------------------------------------------+----------------------------------+---------------------------------------------------------------------------------------+
 | R: Rolls back to A97 with A98 and A99 in the       | O: A95, A96, A97                           | S: Rolls back A98, P38, and P40  | Instances receiving a replication stream from A can be configured to rollback         |
 | Unreplicated Transaction Log.                      |                                            |                                  | automatically when A performs an online rollback by starting the Receiver Server with |
@@ -1746,39 +1746,39 @@ This scenario demonstrates the use of the -autorollback qualifier which performs
 The following example runs this scenario.
 
 .. parsed-literal::
-   source ./ydbenv A r1.20
+   source ./ydbenv A r1.20_x86_64
    ./db_create
    ./repl_setup
    ./originating_start A P 4000
    ./originating_start A B 4001
-   source ./ydbenv B r1.20
+   source ./ydbenv B r1.20_x86_64
    ./db_create
    ./repl_setup
    ./replicating_start B 4001
-   source ./ydbenv A r1.20
+   source ./ydbenv A r1.20_x86_64
    ./backup_repl startA 
-   source ./ydbenv P r1.20
+   source ./ydbenv P r1.20_x86_64
    ./db_create
    ./suppl_setup P startA 4000 -updok
    $ydb_dist/mumps -r %XCMD 'for i=1:1:38 set ^P(i)=i'
-   source ./ydbenv A r1.20
+   source ./ydbenv A r1.20_x86_64
    $ydb_dist/mumps -r %XCMD 'for i=1:1:97 set ^A(i)=i'
-   source ./ydbenv B r1.20
+   source ./ydbenv B r1.20_x86_64
    ./replicating_stop
-   source ./ydbenv A r1.20
+   source ./ydbenv A r1.20_x86_64
    $ydb_dist/mumps -r %XCMD 'set ^A(98)=50'
-   source ./ydbenv P r1.20
+   source ./ydbenv P r1.20_x86_64
    $ydb_dist/mumps -r %XCMD 'for i=39:1:40 set ^P(i)=i'
    ./replicating_stop
-   source ./ydbenv A r1.20
+   source ./ydbenv A r1.20_x86_64
    $ydb_dist/mumps -r %XCMD 'set ^A(99)=100'
    ./originating_stop
-   source ./ydbenv B r1.20
+   source ./ydbenv B r1.20_x86_64
    ./originating_start B A 4001 
    ./originating_start B P 4000
-   source ./ydbenv A r1.20
+   source ./ydbenv A r1.20_x86_64
    ./replicating_start A 4001 -autorollback
-   source ./ydbenv P r1.20
+   source ./ydbenv P r1.20_x86_64
    #./rollback 4000 backward
    ./replicating_start_suppl_n P 4000 -updok -autorollback
    #./replicating_start_suppl_n P 4000 -updok 
@@ -1786,11 +1786,11 @@ The following example runs this scenario.
 The shutdown sequence is as follows:
 
 .. parsed-literal::
-   source ./ydbenv A r1.20
+   source ./ydbenv A r1.20_x86_64
    ./replicating_stop
-   source ./ydbenv P r1.20
+   source ./ydbenv P r1.20_x86_64
    ./replicating_stop
-   source ./ydbenv B r1.20
+   source ./ydbenv B r1.20_x86_64
    ./originating_stop
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1803,11 +1803,11 @@ Consider a situation where A and P are located in one data center, with BC repli
 | A                            | B                                | P                                | Q                              | Comments                                                                             |
 +==============================+==================================+==================================+================================+======================================================================================+
 | O: ... A95, A96, A97, A98,   | R: ... A95, A96, A97, A98        | S: ... P34, A95, P35, P36, A96,  | R: ... P34, A95, P35, P36, A96,| A as an originating primary instance at transaction number A99, replicates to B as a |
-| A99                          |                                  | P37, A97, P38                    | P37                            | BC replicating secondary instance at transaction number A98 and P as a SI that       |
+| A99                          |                                  | P37, A97, P38                    | P37                            | BC replicating secondary instance at transaction number A98 and P as an SI that      |
 |                              |                                  |                                  |                                | includes transaction number A97, interspersed with locally generated updates. P in   |
 |                              |                                  |                                  |                                | turn replicates to Q.                                                                |
 +------------------------------+----------------------------------+----------------------------------+--------------------------------+--------------------------------------------------------------------------------------+
-| Goes down with the data      | O: ... A95, A96, A97, A98, B61,  | Goes down with the data center   | ... P34, A95, P35, P36, A96,   | When a data center outage disables A, and P, B becomes the new originating primary,  |
+| Goes down with the data      | O: ... A95, A96, A97, A98, B61,  | Goes down with the data center   | ... P34, A95, P35, P36, A96,   | When a data center outage disables A and P, B becomes the new originating primary,   |
 | center                       | B62                              |                                  | P37                            | with A98 as the latest transaction in its database and starts processing application |
 |                              |                                  |                                  |                                | logic to maintain business continuity. Q can receive the SI replication stream from  |
 |                              |                                  |                                  |                                | B, without requiring a rollback since the receiver is not ahead of the source.       |
@@ -1816,7 +1816,7 @@ Consider a situation where A and P are located in one data center, with BC repli
 |                              | B62                              |                                  | P37, A97, A98, Q73, B61, Q74,  | Although A97 and A98 were originally generated on A, Q receives them from B. Q also  |
 |                              |                                  |                                  | B62                            | computes and applies locally generated updates                                       |
 +------------------------------+----------------------------------+----------------------------------+--------------------------------+--------------------------------------------------------------------------------------+
-| ... A95, A96, A97, A98, A99  | O: ... A95, A96, A97, A98, B61,  | ... P34, A95, P35, P36, A96, P37,| S: ... P34, A95, P35, P36, A96,| While B and Q, keep the enterprise in operation, the first data center is recovered. |
+| ... A95, A96, A97, A98, A99  | O: ... A95, A96, A97, A98, B61,  | ... P34, A95, P35, P36, A96, P37,| S: ... P34, A95, P35, P36, A96,| While B and Q keep the enterprise in operation, the first data center is recovered.  |
 |                              | B62, B63, B64                    | A97,A98, P38                     | P37, A97, A98, Q73, B61, Q74,  | Since A has transactions in its database that were not replicated to B when the      |
 |                              |                                  |                                  | B62, Q75, B63, Q76, B64        | latter started operating as the originating primary instance, and since P had        |
 |                              |                                  |                                  |                                | transactions that were not replicated to Q when the latter took over, A and P must   |
@@ -1835,63 +1835,63 @@ Consider a situation where A and P are located in one data center, with BC repli
 The following example runs this scenario.
 
 .. parsed-literal::
-   source ./ydbenv A r1.20
+   source ./ydbenv A r1.20_x86_64
    ./db_create
    ./repl_setup
    ./originating_start A P 4000
    ./originating_start A B 4001
-   source ./ydbenv B r1.20
+   source ./ydbenv B r1.20_x86_64
    ./db_create
    ./repl_setup
    ./replicating_start B 4001
-   source ./ydbenv A r1.20
+   source ./ydbenv A r1.20_x86_64
    ./backup_repl startA 
-   source ./ydbenv P r1.20
+   source ./ydbenv P r1.20_x86_64
    ./db_create
    ./suppl_setup P startA 4000 -updok
    ./backup_repl startP
    ./originating_start P Q 4005
-   source ./ydbenv Q r1.20
+   source ./ydbenv Q r1.20_x86_64
    ./db_create
    ./suppl_setup Q startP 4005 -updnotok
-   source ./ydbenv A r1.20
+   source ./ydbenv A r1.20_x86_64
    $ydb_dist/mumps -r ^%XCMD 'for i=1:1:96 set ^A(i)=i'
-   source ./ydbenv P r1.20
+   source ./ydbenv P r1.20_x86_64
    $ydb_dist/mumps -r ^%XCMD 'for i=1:1:37 set ^P(i)=i'
-   source ./ydbenv Q r1.20
+   source ./ydbenv Q r1.20_x86_64
    ./replicating_stop
-   source ./ydbenv P r1.20
+   source ./ydbenv P r1.20_x86_64
    $ydb_dist/mumps -r ^%XCMD 'set ^P(38)=1000'
    ./replicating_stop
-   source ./ydbenv A r1.20 
+   source ./ydbenv A r1.20_x86_64 
    $ydb_dist/mumps -r ^%XCMD 'set ^A(97)=1000,^A(98)=1000'
-   source ./ydbenv B r1.20
+   source ./ydbenv B r1.20_x86_64
    ./replicating_stop
-   source ./ydbenv A r1.20 
+   source ./ydbenv A r1.20_x86_64 
    $ydb_dist/mumps -r ^%XCMD 'set ^A(99)=1000'
    ./originating_stop 
-   source ./ydbenv B r1.20
+   source ./ydbenv B r1.20_x86_64
    backup_repl startB
    ./originating_start B Q 4008
    $ydb_dist/mumps -r ^%XCMD 'for i=1:1:62 set ^B(i)=i'
-   source ./ydbenv Q r1.20
+   source ./ydbenv Q r1.20_x86_64
    ./rollback 4008 backward
    ./suppl_setup Q startB 4008 -updok
    $ydb_dist/mumps -r ^%XCMD 'for i=1:1:74 set ^Q(i)=i'
-   source ./ydbenv B r1.20
+   source ./ydbenv B r1.20_x86_64
    $ydb_dist/mumps -r ^%XCMD 'for i=63:1:64 set ^B(i)=i'
    ./originating_start B A 4004
-   source ./ydbenv A r1.20
+   source ./ydbenv A r1.20_x86_64
    ./rollback 4004 backward
    ./replicating_start A 4004
-   source ./ydbenv Q r1.20
+   source ./ydbenv Q r1.20_x86_64
    $ydb_dist/mumps -r ^%XCMD 'for i=75:1:76 set ^Q(i)=i'
    ./originating_start Q P 4007
    ./backup_repl startQ
-   source ./ydbenv P r1.20
+   source ./ydbenv P r1.20_x86_64
    ./rollback 4007 backward
    ./replicating_start_suppl_n P 4007 -updnotok
-   source ./ydbenv Q r1.20
+   source ./ydbenv Q r1.20_x86_64
    $ydb_dist/mumps -r ^%XCMD 'set ^Q(77)=1000'
    cat A/gtm.lost
    cat P/gtm.lost
@@ -1899,14 +1899,14 @@ The following example runs this scenario.
 The shutdown sequence is as follows:
 
 .. parsed-literal::
-   source ./ydbenv P r1.20
+   source ./ydbenv P r1.20_x86_64
    ./replicating_stop
-   source ./ydbenv A r1.20
+   source ./ydbenv A r1.20_x86_64
    ./replicating_stop
-   source ./ydbenv Q r1.20
+   source ./ydbenv Q r1.20_x86_64
    ./replicating_stop
    ./originating_stop
-   source ./ydbenv B r1.20
+   source ./ydbenv B r1.20_x86_64
    ./originating_stop
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1960,18 +1960,18 @@ On A:
 This example adds the mapping for global ^A to a new database file A.dat in an A->B replication configuration. 
 
 .. parsed-literal::
-   source ./ydbenv A r1.20 
+   source ./ydbenv A r1.20_x86_64 
    ./db_create
    ./repl_setup
    ./originating_start A B 4001
-   source ./ydbenv B r1.20
+   source ./ydbenv B r1.20_x86_64
    ./db_create
    ./repl_setup
    ./replicating_start B 4001
-   source ./ydbenv A r1.20 
+   source ./ydbenv A r1.20_x86_64 
    $ydb_dist/mumps -r %XCMD 'for i=1:1:10 set ^A(i)=i'
    ./repl_status
-   source ./ydbenv B r1.20
+   source ./ydbenv B r1.20_x86_64
    ./replicating_stop
    cp B/gtm.gld B/prior.gld
    $ydb_dist/mumps -r ^GDE @updgld
@@ -1982,7 +1982,7 @@ This example adds the mapping for global ^A to a new database file A.dat in an A
    $ydb_dist/mumps -r %XCMD 'merge ^A=^|"B/prior.gld"\|A'
    $ydb_dist/mupip set -replication=on -region AREG
    ./originating_start B A 4001
-   source ./ydbenv A r1.20 
+   source ./ydbenv A r1.20_x86_64 
    ./originating_stop
    ./rollback 4001 backward
    cat A/gtm.lost  #apply lost transaction file on A. 
@@ -2003,9 +2003,9 @@ This example adds the mapping for global ^A to a new database file A.dat in an A
 The shutdown sequence is as follows:
 
 .. parsed-literal::
-   source ./ydbenv A r1.20
+   source ./ydbenv A r1.20_x86_64
    ./replicating_stop
-   source ./ydbenv B r1.20
+   source ./ydbenv B r1.20_x86_64
    ./originating_stop
 
 ++++++++++++++++++++++++++++++++++++++
@@ -2096,26 +2096,26 @@ on B:
 Here is an example to upgrade A and B deployed in an A→B replication configuration from r1.10 to r1.20. This example uses instructions from the “Upgrade the originating instance first (A→B)” procedure. 
 
 .. parsed-literal::
-   source ./env A r1.10
+   source ./env A r1.10_x86_64
    ./db_create
    ./repl_setup
    ./originating_start A B 4001
-   source ./env B r1.10
+   source ./env B r1.10_x86_64
    ./db_create
    ./repl_setup
    ./replicating_start B 4001
-   source ./env A r1.10
+   source ./env A r1.10_x86_64
    $ydb_dist/mumps -r %XCMD 'for i=1:1:100 set ^A(i)=i'
    ./status
-   source ./env B r1.10
+   source ./env B r1.10_x86_64
    ./replicating_stop
-   source ./env A r1.10
+   source ./env A r1.10_x86_64
    ./status
    ./originating_stop 
    $ydb_dist/mupip set -replication=off -region "DEFAULT"
    $ydb_dist/dse dump -f 2>&1| grep "Region Seqno"
    #Perform a switchover to make B the originating instance. 
-   source ./env A r1.20
+   source ./env A r1.20_x86_64
    $ydb_dist/mumps -r ^GDE exit
    $ydb_dist/mupip set -journal=on,before_images,filename=A/gtm.mjl -noprevjnlfile -region "DEFAULT"
    #Perform the upgrade 
@@ -2138,9 +2138,9 @@ Here is an example to upgrade A and B deployed in an A→B replication configura
 The shutdown sequence is as follows:
 
 .. parsed-literal::
-   source ./env B r1.20
+   source ./env B r1.20_x86_64
    ./replicating_stop
-   source ./env A r1.20
+   source ./env A r1.20_x86_64
    ./originating_stop
 
 ++++++++++++++++++++++++++++++
@@ -2216,7 +2216,7 @@ On the receiving side:
 Setting up a Secured TLS Replication Connection
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-The following example creates two instances (Alice and Bob) and a basic framework required for setting up a TLS replication connection between them. Alice and Bob are fictional characters from https://en.wikipedia.org/wiki/Alice_and_Bob and represent two instances who use certificates signed by the same root CA. This example is solely for the purpose of explaining the general steps required to encrypt replication data in motion. You must understand, and appropriately adjust, the scripts before using them in a production environment. Note that all certificates created in this example are for the sake of explaining their roles in a TLS replication environment. For practical applications, use certificates signed by a CA whose authority matches your use of TLS.
+The following example creates two instances (Alice and Bob) and a basic framework required for setting up a TLS replication connection between them. Alice and Bob are `fictional characters <https://en.wikipedia.org/wiki/Alice_and_Bob>`_ and represent two instances who use certificates signed by the same root CA. This example is solely for the purpose of explaining the general steps required to encrypt replication data in motion. You must understand, and appropriately adjust, the scripts before using them in a production environment. Note that all certificates created in this example are for the sake of explaining their roles in a TLS replication environment. For practical applications, use certificates signed by a CA whose authority matches your use of TLS.
 
 1. Remove the comment tags from the following lines in the env script:
 
@@ -2228,7 +2228,7 @@ The following example creates two instances (Alice and Bob) and a basic framewor
 2. Execute the env script as follows:
 
    .. parsed-literal::
-      $ source ./env Alice r1.20
+      $ source ./env Alice r1.20_x86_64
 
 This creates a YottaDB environment for replication instance name Alice. When prompted, enter a password for ydb_tls_passwd_Alice. 
 
@@ -2273,7 +2273,7 @@ The output of this script is the following:
    .. parsed-literal::
       ./gen_leaf
 
-This creates a leaf-level certificate for Alice. The openssl.conf used to create this example in available in the download for your reference. Ensure that your openssl.conf file is configured according to your environment and security requirements.
+This creates a leaf-level certificate for Alice. The openssl.conf used to create this example is available for your reference. Ensure that your openssl.conf file is configured according to your environment and security requirements.
 
 The output of this script is like the following:
 
@@ -2354,7 +2354,7 @@ On instance Bob:
 1. Execute the env script as follows:
 
    .. parsed-literal::
-      $ source ./env Bob r1.20
+      $ source ./env Bob r1.20_x86_64
 
 This creates a YottaDB environment for replication instance name Bob. When prompted, enter a password for ydb_tls_passwd_Bob.
 
@@ -2367,7 +2367,7 @@ This creates a YottaDB environment for replication instance name Bob. When promp
    .. parsed-literal::
       $ ./gen_leaf
 
-This also creates a leaf-level certificate for Bob. The openssl.conf used to create this example in available in the download for your reference. Ensure that your openssl.conf file is configured according to your environment and security requirements.
+This also creates a leaf-level certificate for Bob. The openssl.conf used to create this example is available for your reference. Ensure that your openssl.conf file is configured according to your environment and security requirements.
 
 3. Create the $ydb_crypt_config file. Specify the names of all participating instances. 
 
@@ -2389,7 +2389,7 @@ Ensure that ca.key generated on Instance Alice is available on instance Bob.
 For subsequent environment setup, use the following commands:
 
 .. parsed-literal::
-   source ./env Bob r1.20 or source ./env Alice r1.20
+   source ./env Bob r1.20_x86_64 or source ./env Alice r1.20_x86_64
    ./replicating_start Bob 4001 -tlsid=Bob or ./originating_start Alice Bob 4001 -tlsid=Alice -reneg=2
 
 +++++++++++++++++++++++++++++++++++++++++++
@@ -2450,9 +2450,9 @@ If replication does not resume properly (due to errors in the Receiver Server or
 Rollback data from crashed (idle) regions
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-When a rollback operations fails with CHNGTPRSLVTM, NOPREVLINK, and JNLFILEOPENERR messages, evaluate whether you have a crashed region in your global directory that is seldom used for making updates (idle). The updates in an idle region's current generation journal file may have timestamps and sequence numbers that no longer exist in the prior generation journal file chains of more frequently updated regions because of periodic pruning of existing journal files as part of routine maintenance. MUPIP SET and BACKUP commands can also remove previous generation journal file links.
+When a rollback operation fails with CHNGTPRSLVTM, NOPREVLINK, and JNLFILEOPENERR messages, evaluate whether you have a crashed region in your global directory that is seldom used for making updates (idle). The updates in an idle region's current generation journal file may have timestamps and sequence numbers that no longer exist in the prior generation journal file chains of more frequently updated regions because of periodic pruning of existing journal files as part of routine maintenance. MUPIP SET and BACKUP commands can also remove previous generation journal file links.
 
-Terminating a process accessing an idle region abnormally (say with kill -9 or some other catastrophic event) may leave its journal files improperly closed. In such an case, the discrepancy may go unnoticed until the next database update or rollback. Performing a rollback including such an idle region may then resolve the unified rollback starting time, (reported with a CHNGTPRSLVTM message), to a point in time that does not exist in the journal file chain for the other regions, thus causing the rollback to fail.
+Terminating a process accessing an idle region abnormally (say with kill -9 or some other catastrophic event) may leave its journal files improperly closed. In such an case, the discrepancy may go unnoticed until the next database update or rollback. Performing a rollback including such an idle region may then resolve the unified rollback starting time (reported with a CHNGTPRSLVTM message) to a point in time that does not exist in the journal file chain for the other regions, thus causing the rollback to fail.
 
 In this rare but possible condition, first perform a rollback selectively for the idle region(s). Here are the steps:
 
@@ -2473,7 +2473,7 @@ YottaDB recommends rotating journal files with MUPIP SET when removing old journ
 Setting up a new replicating instance of an originating instance (A→B, P→Q, or A→P)
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-To set up a new replicating instance of an originating instance for the first time or to replace a replicating instance if database and instance file get deleted, you need to create the replicating instance from a backup of the originating instance, or one of its replicating instances.
+To set up a new replicating instance of an originating instance for the first time or to replace a replicating instance if database and instance file get deleted, you need to create the replicating instance from a backup of the originating instance or one of its replicating instances.
 
 If you are running a recent version of YottaDB:
 
@@ -2504,9 +2504,9 @@ Replacing the replication instance file of a replicating instance (A→P)
 
 On P:
 
-- Use the -SUPPLEMENTARY qualifier with the MUPIP REPLICATE -INSTANCE_CREATE command to indicate this is a supplementary instance file.
+- Use the -SUPPLEMENTARY qualifier with the MUPIP REPLICATE -INSTANCE_CREATE command to indicate that this is a supplementary instance file.
 
-- Start a Source Server on P with -UPDOK to indicate local updates are enabled on P.
+- Start a Source Server on P with -UPDOK to indicate that local updates are enabled on P.
 
 - Start the Receiver Server on P with the -UPDATERESYNC=</path/to/bkup-orig-repl-inst-file> qualifier and -RESUME. -RESUME indicates that A and P had been replicating before. The Receiver Server looks at the local (stream #0) sequence numbers in the database file headers on P and takes the maximum value to determine the journal sequence number of the new stream on P. It then uses this as the instance journal sequence number on A to resume replication.
 
@@ -2549,7 +2549,7 @@ On P:
 
 - Start the Source Server with -UPDOK to indicate that local updates are enabled on P.
 
-- Start the Receiver Server with the -UPDATERESYNC=</path/to/bkup-orig-repl-inst-file> qualifier and -INITIALIZE. The -INITIALIZE indicates this is the first time A and P are replicating.
+- Start the Receiver Server with the -UPDATERESYNC=</path/to/bkup-orig-repl-inst-file> qualifier and -INITIALIZE. The -INITIALIZE indicates that this is the first time A and P are replicating.
 
 The Receiver Server uses the current journal sequence number in the </path/to/bkup-orig-repl-inst-file> as the point where A starts sending journal records. YottaDB updates the stream sequence number (for example, of Stream # 1) in the instance file on P to reflect this value. Going forward, the journal sequence number on A will always map to a stream journal sequence number (for example, of stream # 1) on P.
 
@@ -2590,15 +2590,15 @@ Disable replication of the database file(s) or region(s). Even if you turn off r
 
 *ON*
 
-Enables replication for the selected database file(s) or region(s). When the JOURNAL qualifier is not specified, this action turns BEFORE_IMAGE journaling on. Specify -JOURNAL=NOBEFORE_IMAGE to enable replication with no-before-image journaling. In both cases, YottaDB creates a new journal file for each database file or region, and switches the current journal file. YottaDB recommends you specify the desired journaling characteristics (MUPIP SET -JOURNAL=BEFORE_IMAGE or MUPIP SET -JOURNAL=NOBEFORE_IMAGE).
+Enables replication for the selected database file(s) or region(s). When the JOURNAL qualifier is not specified, this action turns BEFORE_IMAGE journaling on. Specify -JOURNAL=NOBEFORE_IMAGE to enable replication with no-before-image journaling. In both cases, YottaDB creates a new journal file for each database file or region, and switches the current journal file. YottaDB recommends that you specify the desired journaling characteristics (MUPIP SET -JOURNAL=BEFORE_IMAGE or MUPIP SET -JOURNAL=NOBEFORE_IMAGE).
 
-When replication is ON, a MUPIP SET REPLICATION=ON command with no JOURNAL qualifier assumes the current journaling characteristics (which are stored in the database file header). By default YottaDB sets journal operation to BEFORE_IMAGE if this command changes the replication state from OFF to ON and JOURNAL=NOBEFORE_IMAGE is not specified. Therefore, conservative scripting should always specify the desired journaling characteristics using the JOURNAL qualifier of the MUPIP SET command.
+When replication is ON, a MUPIP SET REPLICATION=ON command with no JOURNAL qualifier assumes the current journaling characteristics (which are stored in the database file header). By default, YottaDB sets journal operation to BEFORE_IMAGE if this command changes the replication state from OFF to ON and JOURNAL=NOBEFORE_IMAGE is not specified. Therefore, conservative scripting should always specify the desired journaling characteristics using the JOURNAL qualifier of the MUPIP SET command.
 
 The replication state ON in the file header denotes normal replication operation.
 
 *[WAS_ON] OFF*
 
-Denotes an implicit replication state when YottaDB attempts to keep replication working even if run-time conditions such as no available disk space or no authorization for a process attempting to auto-switch a journal file cause YottaDB to turn journaling off. Even with journaling turned off, the Source Server attempts to continue replication using the records available in the replication journal pool. In this state, replication can only continue as long as all the information it needs is in the replication journal pool. Events such as an operationally significant change on the replicating instance(s) or communication problems are likely to cause the Source Server to need information older than that in the replication journal pool and because it cannot look for that information in journal files, at that point the Source Server shuts down.
+Denotes an implicit replication state when YottaDB attempts to keep replication working even if run-time conditions such as no available disk space or no authorization for a process attempting to auto-switch a journal file cause YottaDB to turn journaling off. Even with journaling turned off, the Source Server attempts to continue replication using the records available in the replication journal pool. In this state, replication can only continue as long as all the information it needs is in the replication journal pool. Events such as an operationally significant change on the replicating instance(s) or communication problems are likely to cause the Source Server to need information older than that in the replication journal pool and because it cannot look for that information in journal files, the Source Server shuts down at that point.
 
 .. note::
    If the replication ON state is like a bicycle running smoothly on the road, replication WAS_ON is like a bicycle with a flat front tire being ridden like a unicycle - the system is operating outside its intended mode of use and is more subject to misfortune.
@@ -2698,7 +2698,7 @@ Displays or changes the attributes of the specified instance-file. Use -editinst
 
 *-jnlpool*
 
-Displays or changes the attributes of Journal Pool. Always specify -source with -jnlpool. Use -jnlpool in combination with SHOW or CHANGE qualifiers.
+Displays or changes the attributes of the Journal Pool. Always specify -source with -jnlpool. Use -jnlpool in combination with SHOW or CHANGE qualifiers.
 
 *-change*
 
@@ -2896,7 +2896,7 @@ Identifies the replicating instance to which the Source Server replicates data.
 
 With no -instsecondary specified, the Source Server uses the environment variable ydb_repl_instsecondary for the name of the replicating instance.
 
-With no -instsecondary specified and environment variable ydb_repl_instsecondary not set, mupip replicate -source -checkhealth looks at all the Source Servers (Active or Passive) that are alive and running and those that were abnormally shutdown (kill -9ed). Any Source Server that was kill -15ed or MUPIP STOPped is ignored because YottaDB considers those Source Server shut down in the normal way. This command reports something only if it finds at least one Source Server that is alive and running or was abnormally shutdown (kill -9ed). Otherwise it returns a zero (0) status without anything to report even when the Journal Pool exists and YottaDB processes (Update Process or Receiver Server on the replicating instance) are up and running.
+With no -instsecondary specified and environment variable ydb_repl_instsecondary not set, mupip replicate -source -checkhealth looks at all the Source Servers (Active or Passive) that are alive and running and those that were abnormally shutdown (kill -9ed). Any Source Server that was kill -15ed or MUPIP STOPped is ignored because YottaDB considers those Source Servers shut down in the normal way. This command reports something only if it finds at least one Source Server that is alive and running or was abnormally shutdown (kill -9ed). Otherwise it returns a zero (0) status without anything to report even when the Journal Pool exists and YottaDB processes (Update Process or Receiver Server on the replicating instance) are up and running.
 
 You can start multiple Source Servers from the same originating instance as long as each of them specifies a different name for -instsecondary.
 
@@ -2919,7 +2919,7 @@ Assign the current instance as the originating instance. You can specify -rootpr
 
 *-updok*
 
-Instructs the Source Server to allow local updates on this instance. This is a synonym for -rootprimary but is named so it better conveys its purpose.
+Instructs the Source Server to allow local updates on this instance. This is a synonym for -rootprimary but is named so that it better conveys its purpose.
 
 *-propagate[primary]*
 
@@ -2934,7 +2934,7 @@ Example:
 .. parsed-literal::
    $ mupip replicate -source -activate -rootprimary
 
-This command transitions a propagating originating instance to an originating instance without bringing down the Journal Pool.
+This command transitions a propagating instance to an originating instance without bringing down the Journal Pool.
 
 With neither -rootprimary nor -propagateprimary specified, YottaDB uses a default value of -propagateprimary for the passive Source Server startup command (mupip replic -source -start -passive) and the deactivate qualifier (mupip replicate -source -deactivate). YottaDB uses a default value of -rootprimary for the mupip replicate -source -start -secondary=... and the mupip replic -source -activate commands. These default values make the replication script simpler for users who are planning to limit themselves to one originating instance and multiple replicating instances (without any further replicating instances downstream).
 
@@ -2952,15 +2952,15 @@ This example starts the Source Server at port 1234 for the replicating instance 
 .. note::
    YottaB updates to replicated regions are permitted only on the originating instance and disabled on ALL other replicating instances.
 
-The Source Server records actions and errors in A2B.log. It also periodically record statistics such as the current backlog, the number of journal records sent since the last log, the rate of transmission, the starting and current JNL_SEQNO, and the path of the filter program, if any.
+The Source Server records actions and errors in A2B.log. It also periodically records statistics such as the current backlog, the number of journal records sent since the last log, the rate of transmission, the starting and current JNL_SEQNO, and the path of the filter program, if any.
 
 *-updnotok*
 
-Instructs the Source Server to not allow local updates on this instance. This is a synonym for -propagateprimary but is named so it better conveys its purpose.
+Instructs the Source Server not to allow local updates on this instance. This is a synonym for -propagateprimary but is named so that it better conveys its purpose.
 
 *-cmplvl=n*
 
-Specifies the desired compression level for the replication stream. n is a positive integer value indicating the level of compression desired. Level 0 offers no compression. Level 1 offers the least compression while Level 9 (as of version 1.2.3.3 of the zlib library) offers the most compression (at the cost of the most CPU usage). Specifying -cmplvl without an accompanying -start produces an error. In the case of the source server, if N specifies any value outside of the range accepted by the zlib library or if -cmplvl is not specified, the compression level defaults to zero (0). In the case of the receiver server, as long as N is non-zero the decompression feature is enabled; since the source server setting determines the actual level, any legal non-zero value enables compressed operation at the receiver.
+Specifies the desired compression level for the replication stream. n is a positive integer value indicating the level of compression desired. Level 0 offers no compression. Level 1 offers the least compression while Level 9 (as of version 1.2.3.3 of the zlib library) offers the most compression (at the cost of the most CPU usage). Specifying -cmplvl without an accompanying -start produces an error. For the Source Server, if N specifies any value outside of the range accepted by the zlib library or if -cmplvl is not specified, the compression level defaults to zero (0). For the Receiver Server, as long as N is non-zero, the decompression feature is enabled; since the Source Server setting determines the actual level, any legal non-zero value enables compressed operation at the receiver.
 
 Alternatively, the environment variable ydb_zlib_cmp_level can specify the desired compression level (in the same value range as N above) and the source server can then be started without -cmplvl. This has the same effect as starting it with -cmplvl specified. An explicitly specified value on the command line overrides any value specified by the environment variable.
 
@@ -3007,7 +3007,7 @@ Specifies whether the replication server is permitted to fallback to plaintext c
 
 *-RENEGotiate_interval=<minutes >*
 
-Specifies the time in minutes to wait before attempting to perform a TLS renegotiation. The default -RENEGOTIATE_INTERVAL is a little over 120 minutes. A value of zero causes YottaDB to never attempt a renegotiation. The MUPIP REPLIC -SOURCE -JNLPOOL -SHOW [-DETAIL] command shows the time at which the next TLS renegotiation is scheduled, and how many such renegotiations have occurred thus far for a given secondary instance connection. As renegotiation requires the replication pipeline to be temporarily flushed, followed by the actual renegotiation, TLS renegotiation can cause momentary spikes in replication backlog.
+Specifies the time in minutes to wait before attempting to perform a TLS renegotiation. The default -RENEGOTIATE_INTERVAL is a little over 120 minutes. A value of zero causes YottaDB to never attempt a renegotiation. The MUPIP REPLIC -SOURCE -JNLPOOL -SHOW [-DETAIL] command shows the time at which the next TLS renegotiation is scheduled, and how many such renegotiations have occurred thus far for a given secondary instance connection. As renegotiation requires the replication pipeline to be temporarily flushed, followed by the actual renegotiation, TLS renegotiation can cause momentary spikes in the replication backlog.
 
 ++++++++++++++++++++++++++++++++++++++++++++++
 Shutting Down the Source Server
@@ -3028,7 +3028,7 @@ Shuts down the Source Server.
 
 *-timeout=<timeout in seconds>*
 
-Specifies the time (in seconds) the shutdown command should wait before signaling the Source Server to shut down. If you do not specify -timeout, the default timeout period is 120 seconds. If you specify -timeout=0 , shutdown occurs immediately.
+Specifies the time (in seconds) that the shutdown command should wait before signaling the Source Server to shut down. If you do not specify -timeout, the default timeout period is 120 seconds. If you specify -timeout=0 , shutdown occurs immediately.
 
 *-zerobacklog*
 
@@ -3396,7 +3396,7 @@ Starting the Receiver Server with -stopsourcefilter turns off any active filter 
 
 -updateresync guarantees YottaDB that the replicating instance was, or is, in sync with the originating instance and it is now safe to resume replication. Use -updateresync only in the following situations:
 
-- To replace an existing replication instance files when an upgrade to a YottaDB version changes the instance file format. Consult the release notes to determine whether this applies to your upgrade.
+- To replace existing replication instance files when an upgrade to a YottaDB version changes the instance file format. Consult the release notes to determine whether this applies to your upgrade.
 - When an existing replication instance file is unusable because it was damaged or deleted, and is replaced by a new replication instance file.
 - Setting up an A→P configuration for the first time if P is an existing instance with existing updates that are not, and not expected to be, in the originating instance.
 - Setting up a new replicating instance from a backup of the originating instance (A->P only) or one of its replicating secondary instances.
@@ -3426,7 +3426,7 @@ Used when starting a Receiver Server of an SI replication stream with -updateres
 
 *-noresync*
 
-Instructs the Receiver Server to accept a SI replication stream even when the receiver is ahead of the source. In this case, the source and receiver servers exchange history records from the replication instance file to determine the common journal stream sequence number and replication resumes from that point onwards. Specifying -noresync on a BC replication stream is produces a NORESYNCSUPPLONLY error. Specifying -noresync on a SI replication stream receiver server where the receiving instance was started with -UPDNOTOK (updates are disabled) produces a NORESYNCUPDATERONLY error. Note also that the noresync qualifier is not the opposite of the resync qualifier of rollback (mupip journal -rollback -resync), which is intended for use under the direction of YottaDB support.
+Instructs the Receiver Server to accept an SI replication stream even when the receiver is ahead of the source. In this case, the source and receiver servers exchange history records from the replication instance file to determine the common journal stream sequence number and replication resumes from that point onwards. Specifying -noresync on a BC replication stream produces a NORESYNCSUPPLONLY error. Specifying -noresync on an SI replication stream receiver server where the receiving instance was started with -UPDNOTOK (updates are disabled) produces a NORESYNCUPDATERONLY error. Note also that the noresync qualifier is not the opposite of the resync qualifier of rollback (mupip journal -rollback -resync), which is intended for use under the direction of YottaDB support.
 
 *-tlsid=<label>*
 
@@ -3600,9 +3600,9 @@ Use this qualifier to rollback the database. If you do not use the -fetchresync 
 The <port number> is the communication port number that the rollback command uses when fetching the reference point. Always use the same <port number> on the originating instance for rollback as the one used by the Receiver Server.
 
 .. note::
-   YottaDB recommends you to unconditionally script the mupip journal -rollback -fetchresync command prior to starting any Source Server on the replicating instance to avoid a possible out-of-sync situation.
+   YottaDB recommends unconditionally scripting the mupip journal -rollback -fetchresync command prior to starting any Source Server on the replicating instance to avoid a possible out-of-sync situation.
 
-The reference point sent by the originating instance is the RESYNC_SEQNO (explained later) that the originating instance once maintained. The database/journal files are rolled back to the earlier RESYNC_SEQNO (that is, the one received from originating instance or the one maintained locally). If you do not use -fetchresync, the database rolls back to the last consistent replicating instance state.
+The reference point sent by the originating instance is the RESYNC_SEQNO (explained later) that the originating instance once maintained. The database/journal files are rolled back to the earlier RESYNC_SEQNO (that is, the one received from the originating instance or the one maintained locally). If you do not use -fetchresync, the database rolls back to the last consistent replicating instance state.
 
 A FETCHRESYNC ROLLBACK operation sends its current working directory to the Source Server log.
 
