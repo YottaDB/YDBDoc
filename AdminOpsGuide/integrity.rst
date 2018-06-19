@@ -11,7 +11,7 @@
 
 This chapter discusses YottaDB methods for maintaining data availability and integrity.
 
-A database that has GDS integrity may not be consistent from the application data point of view. That is, certain types of failures that do not damage the GDS database structures may cause logical transactions (consisting of multiple database updates within an application) to stop in an "illogical" state with some, but not all, of the updates in place. Transaction processing and database journaling are good methods for maintaining application data consistency. For more information on transaction processing, refer to the `"General Language Features of M"  <https://docs.yottadb.com/ProgrammersGuide/langfeat.html>`_ and "`Commands" <https://docs.yottadb.com/ProgrammersGuide/commands.html>`_ chapters of the Programmer's Guide. For more information on journaling, refer to the `"YottaDB Journaling" <https://docs.yottadb.com/AdminOpsGuide/ydbjournal.html>`_ chapter of this manual.
+A database with GDS integrity may not be consistent from an application data point of view. That is, certain types of failures that do not damage the GDS database structures may cause logical transactions (consisting of multiple database updates within an application) to stop in an "illogical" state with some, but not all, of the updates in place. Transaction processing and database journaling are good methods for maintaining application data consistency. For more information on transaction processing, refer to the `"General Language Features of M"  <https://docs.yottadb.com/ProgrammersGuide/langfeat.html>`_ and `"Commands" <https://docs.yottadb.com/ProgrammersGuide/commands.html>`_ chapters of the Programmer's Guide. For more information on journaling, refer to the `"YottaDB Journaling" <https://docs.yottadb.com/AdminOpsGuide/ydbjournal.html>`_ chapter of this manual.
 
 Maintaining database integrity is integral to YottaDB operation. You should seldom, if ever, need the material in this chapter, especially if you use journaling. However, databases can be corrupted by unusual events such as hardware failures, sudden loss of power, operating system failures, or improper operator actions. All such events should be followed with database integrity checks.
 
@@ -34,7 +34,7 @@ GTMASSERT sends an operator log message in addition to the usual user message. B
 Regularly Scheduled Verification
 +++++++++++++++++++++++++++++++++
 
-Schedule INTEGs at regular intervals to ensure that no unobserved or unreported events corrupt the database. These regular checks minimize the occurrence of damaged pointers, which may cause updates to incorrect places in the file, likely resulting in escalating damage.
+Schedule INTEGs at regular intervals to ensure that no unobserved or unreported events corrupt the database. These regular checks minimize the occurrence of damaged pointers, which may cause updates to incorrect places in the file, likely resulting in the escalation of damage.
 
 ++++++++++++++++++++++++++++++++
 Before or After Major Transfers
@@ -42,7 +42,7 @@ Before or After Major Transfers
 
 Because of the time they require, and their relative value to the total database organization, operations that move large amounts of information into or out of a database should be accompanied by an INTEG. INTEG should precede output operations such as MUPIP EXTRACT, and follow input operations such as MUPIP LOAD, RESTORE, and JOURNAL RECOVER.
 
-One consistent occurrence of large information transfers occurs during database backups. In many cases, successful recovery from catastrophic events depends on having a reliable backup copy of the database. Therefore, backup procedures should be designed to complement database integrity verification. When the backup is to disk, the fastest method may be to INTEG the backup copy immediately after making it. If the backup is not in GDS format, the INTEG should precede the backup.
+One consistent occurrence of large-information-transfers occurs during database backups. In many cases, successful recovery from catastrophic events depends on having a reliable backup copy of the database. Therefore, backup procedures should be designed to complement database integrity verification. When the backup is to disk, the fastest method may be to INTEG the backup copy immediately after making it. If the backup is not in GDS format, the INTEG should precede the backup.
 
 +++++++++++++++++++++++++++++++++++++++
 Immediately after Catastrophic Events
@@ -86,7 +86,7 @@ Restore from Backup
 
 Restoring the database from backup is the least technically sophisticated approach to handling integrity problems. This strategy is most beneficial when the data in the database is static or can be recomputed. In other cases, it requires operational controls to identify, and people to reenter, the work performed between the backup and the failure. For more information on MUPIP BACKUP, RESTORE, EXTRACT, and LOAD, refer to the `"MUPIP" chapter <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#mupip>`_. You may also use UNIX utilities such as tar, dump, and restore.
 
-Some database regions may be setup to hold only temporary data, typically only valid for the life of a process or even just during some operation performed by a process. Rather than restoring such a region, it is generally more appropriate to delete it and recreate it using MUPIP CREATE. 
+Some database regions may be set up to hold only temporary data, typically only valid for the life of a process or even just during some operation performed by a process. Rather than restoring such a region, it is generally more appropriate to delete it and recreate it using MUPIP CREATE. 
 
 ++++++++++++++++++++++++++
 Repair with DSE
@@ -94,7 +94,7 @@ Repair with DSE
 
 Database repair with DSE requires more skill, and potentially more time than the other approaches. Using DSE requires vigilant attention to, and a clear understanding of GDS. DSE can generally access and change almost any data in the database file. When using DSE, you assume the responsibility that YottaDB normally carries for ensuring the integrity of the database structure. Because DSE may be used concurrently with other processes, updates by concurrent processes may interfere with repair actions. When possible, prevent other users from accessing the region during repairs.
 
-If you elect to repair the database, you may want to seek assistance from an available source of expertise such as YottaDB or your YottaDB Value Added Reseller (VAR). If your organization plans to perform repairs beyond straightforward corrections to the file header, YottaDB strongly recommends that the responsible person(s) familiarize themselves with the material in the `INTEG section of the MUPIP chapter <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#integ>`_, the `GDS <https://docs.yottadb.com/AdminOpsGuide/gds.html>`_ and `DSE <https://docs.yottadb.com/AdminOpsGuide/dse.html>`_ chapters, and this chapter. YottaDB recommends using DSE on test files, in advance of any work on production files.
+If you elect to repair the database, you may want to seek assistance from an available source of expertise such as your YottaDB support channel. If your organization plans to perform repairs beyond straightforward corrections to the file header, YottaDB strongly recommends that the responsible person(s) familiarize themselves with the material in the `INTEG section of the MUPIP chapter <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#integ>`_, the `GDS <https://docs.yottadb.com/AdminOpsGuide/gds.html>`_ and `DSE <https://docs.yottadb.com/AdminOpsGuide/dse.html>`_ chapters, and this chapter. YottaDB recommends using DSE on test files, in advance of any work on production files.
 
 +++++++++++++++++++++++++
 Preventative Maintenance
@@ -122,7 +122,6 @@ The following questions may help you understand the type of information required
 * What were the circumstances under which the database became damaged or inaccessible?
 * How was the problem first recognized?
 
-
 Examine the accounting logs for information about recent process terminations. Capture information about what functions were in use. Look for any information which might be helpful in establishing patterns in case the problem is repetitive.
 
 * Has the system crashed recently? If so, what caused the crash?
@@ -133,11 +132,11 @@ Examine the accounting logs for information about recent process terminations. C
   * What do you see when you examine the database?
   * Are you comfortable with fixing the problem?
 
-* What version of YottaDB are you using? What version of UNIX? What UNIX platform are you running?
+* What version of YottaDB are you using? What version of UNIX and what UNIX platform are you running?
 
 **MUPIP Recovery**
 
-Bring down the damaged application using appropriate utilities, MUPIP RUNDOWN -REGION region or -FILE file-name naming the problem database. Restart the application. Consider writing programs or procedures to partially automate shutting down one or all applications; to reduce the chance of errors.
+Bring down the damaged application using appropriate utilities, MUPIP RUNDOWN -REGION region or -FILE file-name, naming the problem database. Restart the application. Consider writing programs or procedures to partially automate shutting down one or all applications to reduce the chance of errors.
 
 **Follow-up**
 
@@ -155,7 +154,7 @@ Repairing the Database with DSE
 
 When doing repairs with DSE, understanding the nature of the information in the database provides a significant advantage in choosing an appropriate and efficient repair design.
 
-For example, if you know that certain data is purged weekly, and you find damage in some of this type of data that is already five or six days old, you may be able to discard rather than repair it. Similarly, you might find damage to a small cross-index global and have a program that can quickly rebuild it.
+For example, if you know that certain data is purged weekly, and you find damage in some of this type of data that is already five or six days old, you may be able to discard it rather than repair it. Similarly, you might find damage to a small cross-index global and have a program that can quickly rebuild it.
 
 When you know what the data "looks" like, you are in a much better position to recognize anomalies and clues in both keys and data. For example, if you understand the format of a particular type of node, you might recognize a case where two pieces of data have been combined into a single GDS record. 
 
@@ -210,7 +209,7 @@ DSE is a powerful tool with few restrictions that places great responsibility on
 
   To save a copy of the block for further analysis, SAVE it, and then RESTORE it to an empty block. The best place to put such a copy, using RESTORE -REGION=, is in a special region created just to receive such blocks.
 
-  Alternatively, you can RESTORE it temporarily in a free block within the region, preferably near the end of the file. If you RESTORE the block to the original database, it may be overlaid when normal operation requires more blocks. You may prevent this overlay by using MAP -BUSY on the target block of the RESTORE. However this causes INTEG to report "incorrectly marked busy" errors.
+  Alternatively, you can RESTORE it temporarily in a free block within the region, preferably near the end of the file. If you RESTORE the block to the original database, it may be overlaid when normal operation requires more blocks. You may prevent this overlay by using MAP -BUSY on the target block of the RESTORE. However, this causes INTEG to report "incorrectly marked busy" errors.
 
 * After changing a block, always check the quality of the result by using the DSE INTEG command.
 
@@ -475,13 +474,13 @@ Your tools include:
 * Communication with users
 * The ps command and other UNIX system utilities
 
-*WHEN MANY PROCESSES ON A SYSTEM ARE HANGING*, determine if the hangs are confined to a particular application. If all applications are affected or if processes not using YottaDB databases are affected, the problem is not a database-specific problem, but something more general, such as a UNIX problem. Refer to `section H6 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#h6-unix-problems>`_.
+*WHEN MANY PROCESSES ON A SYSTEM ARE HANGING*, determine if the hangs are confined to a particular application. If all applications are affected or if processes not using YottaDB databases are affected, the problem is not a database-specific problem but something more general, such as a UNIX problem. Refer to `section H6 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#h6-unix-problems>`_.
 
 *WHEN ONLY ONE PROCESS IS HANGING*, find out whether that process is the only one using a particular YottaDB application. If it is the only process, start some appropriate second process and determine whether the second process is also affected.
 
 *IF A PROCESS HANGS WHILE OTHER PROCESSES ACCESSING THE SAME DATABASE CONTINUE TO PROCESS*, the problem is not a database problem. Refer to `section H8 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#h8-application-problems>`_.
 
-*WHEN ONLY YottaDB PROCESSES RUNNING A PARTICULAR APPLICATION HANG*,the problem may be a database problem.
+*WHEN ONLY YottaDB PROCESSES RUNNING A PARTICULAR APPLICATION HANG*, the problem may be a database problem.
 
 Is the system "hung?" If so, consider the following additional questions:
 
@@ -582,7 +581,7 @@ Example:
    . S @(reg(reg)_"="_reg(reg)) W "–OK"
    Q
 
-This routine provides a generalized approach to automating some of the tasks described in this section. It contains argumentless DO commands primarily for typesetting reasons. The routine issues a report if any region is frozen, but does not report which regions are in that state. It may hang reading or writing a database. However, unless the region(s) holding ^% and the next global after ^% has a problem, it displays the name of the region that it is about to try. If this routine runs to completion, the databases in the current Global Directory are completely accessible. The limitations of this routine can be overcome by writing custom shell scripts and/or M programs that include embedded information about one or more Global Directories.
+This routine provides a generalized approach to automating some of the tasks described in this section. It contains argumentless DO commands primarily for typesetting reasons. The routine issues a report if any region is frozen, but does not report which regions are in that state. It may hang while reading or writing a database. However, unless the region(s) holding ^% and the next global after ^% has a problem, it displays the name of the region that it is about to try. If this routine runs to completion, the databases in the current Global Directory are completely accessible. The limitations of this routine can be overcome by writing custom shell scripts and/or M programs that include embedded information about one or more Global Directories.
 
 .. note::
    If you have a Global Directory mapping globals to multiple files, you may create an alternative Global Directory using different mappings to those same files. Such a mapping prevents the test program(s) from touching the "real" data.
@@ -773,7 +772,7 @@ Requires Immediate Attention:
 * Block incorrectly marked free errors are very serious and lead to accelerating damage. They degenerate into block doubly-allocated errors, which are also very dangerous. A database with these errors should be closed immediately for repairs.
 * Any (structural) error in an index block is dangerous and should be repaired as soon as possible.
 
-Repairs for such errors should also be performed on a database that has been closed to normal activity. The need for both of these actions occurring quickly arises from the likelihood of the bad index being used. Only if your knowledge of the application allows you to predict that a damaged area is used exclusively by restricted functions which are not active (e.g., monthly processing or purges) should you defer repairs.
+Repairs for such errors should also be performed on a database that has been closed to normal activity. The need for both of these actions occurring quickly arises from the likelihood of the bad index being used. Defer repairs only if your knowledge of the application allows you to predict that a damaged area is used exclusively by restricted functions which are not active (e.g., monthly processing or purges).
 
 Can be Deferred:
 
@@ -985,7 +984,7 @@ I4 - File Size Errors
 
 File size errors can misdirect MUPIP, but do not cause the YottaDB run-time system to generate further errors. Auto-extend is the exception and may not function properly if there are file size errors. One possible symptom of an auto-extend problem would be incorrectly marked busy errors from a partial bitmap at the "old" end of the database which had previously been incorrectly initialized.
 
-These errors indicate that the total blocks count does not agree with the file size. Get the starting VBN and the block size for the file by using DSE DUMP FILEHEADER. Then calculate the correct total blocks value with the following formula:
+These errors indicate that the total block count does not agree with the file size. Get the starting VBN and the block size for the file by using DSE DUMP FILEHEADER. Then calculate the correct value of the total blocks with the following formula:
 
 .. parsed-literal::
    ((file size - starting VBN + 1) / (block size / 512))
@@ -1161,7 +1160,7 @@ Bitmap information is redundant (i.e., bitmaps can be recreated by scanning the 
 
 When INTEG encounters an error, it stops processing that leaf of the tree. When it subsequently compares its generated bitmaps to those in the database, it reports the blocks belonging in the tree that it could not find as "Block incorrectly marked busy." This error type can be viewed as a flag, marking the location of a block of lost data whose index is disrupted.
 
-INTEG reports each block that it concludes is incorrectly marked, and also the local map that holds the "bad" bits. Furthermore, if the local map "errors" affect whether the local map should be marked full or not full in the master map, INTEG also reports the (potential) problem with the master map. Therefore, a single error in a level one (1) index block will generate, in addition to itself, one or more "Block incorrectly marked busy", one or more "Local bitmap incorrect", and possibly one or more "Master bitmap shows..." Errors in higher level index blocks can induce very large numbers of bitmap error reports.
+INTEG reports each block that it concludes is incorrectly marked, and also the local map that holds the "bad" bits. Furthermore, if the local map "errors" affect whether the local map should be marked full or not full in the master map, INTEG also reports the (potential) problem with the master map. Therefore, a single error in a level one (1) index block will generate, in addition to itself, one or more "Block incorrectly marked busy", one or more "Local bitmap incorrect", and possibly one or more "Master bitmap shows...". Errors in higher level index blocks can induce very large numbers of bitmap error reports.
 
 Because bitmap errors are typically secondary to other errors, correcting the primary errors usually also cures the bitmap errors. For this reason and, more importantly, because bitmap errors tend to locate "lost" data, they should always be corrected at, or close to, the end of a repair session.
 
@@ -1219,11 +1218,11 @@ If the duplicate node problem poses a significant problem, you should probably n
 
 This strategy works well when the missing indices are level one (1). However, the time required increases dramatically as the level of the missing index increases. If you have a problem with a level four (4) or level five (5) index, and you have developed skill with DSE, you may wish to try the more technically demanding approach of repairing the indices.
 
-Once you have corrected all errors except bitmap errors, SPAWN and use MUPIP INTEG FAST REGION NOMAP to get a list of all remaining bitmap errors. If the report includes any "Blocks incorrectly marked free", MAP them BUSY. Then use DUMP HEADER BLOCK= to examine each "Block incorrectly marked busy." If the level is one (1), DUMP the block ZWR. In any case, MAP it FREE. Once all blocks have been collected in a sequential file in this fashion, use MUPIP LOAD to reclaim the data from the sequential file.
+Once you have corrected all errors except bitmap errors, SPAWN and use MUPIP INTEG FAST REGION NOMAP to get a list of all remaining bitmap errors. If the report includes any "Blocks incorrectly marked free", MAP them BUSY. Then use DUMP HEADER BLOCK= to examine each "Block incorrectly marked busy." If the level is one (1), DUMP the block ZWR. In any case, MAP it FREE. Once all the blocks have been collected in a sequential file in this fashion, use MUPIP LOAD to reclaim the data from the sequential file.
 
 **Download salvage.m**
 
-salvage.m is a utility that removes all incorrectly marked busy blocks from the specified region. During execution it displays the DSE commands that it will execute and aborts execution when it encounters an error. It dumps the zwrite formatted content of blocks incorrectly marked busy to a file called <region>_db.zwr. Upon completion, it sets the abandoned_kills and kill_in_prog flags in the database fileheader to false.
+salvage.m is a utility that removes all incorrectly-marked-busy blocks from the specified region. During execution it displays the DSE commands that it will execute and aborts execution when it encounters an error. It dumps the zwrite formatted content of blocks incorrectly-marked-busy to a file called <region>_db.zwr. Upon completion, it sets the abandoned_kills and kill_in_prog flags in the database fileheader to false.
 
 You can download salvage.m from `Github <https://github.com/YottaDB/YottaDBdoc/blob/master/AdminOpsGuide/salvage.m>`_.
 
@@ -1231,9 +1230,9 @@ Steps to run the salvage utility are as follows:
 
 * Perform an argumentless MUPIP RUNDOWN before running this utility.
 
-* Ensure that there are no INTEG errors other than the incorrectly marked busy block errors.
+* Ensure that there are no INTEG errors other than the incorrectly-marked-busy block errors.
 
-* Run $gtm_dist/mumps -r ^salvage.
+* Run $ydb_dist/mumps -r ^salvage.
 
 * Specify the region name. If no region is specified, the utility assumes DEFAULT.
 
@@ -1284,13 +1283,13 @@ Confirm whether you have determined the spanning range of the node:
 * Is ^mypoem(#SPAN48) the last node (block number 3)? 
 * Is ^mypoem(#SPAN4) the last node?
 
-Clearly, YottaDB did not find block 3 and ^mypoem(#SPAN4) terminated the spanning node, so ^mypoem(#SPAN4) might be the last node. So, the parts of a spanning node that contain the value are ^mypoem(#SPAN2) through ^mypoem(#SPAN4).
+Clearly, YottaDB did not find block 3 and ^mypoem(#SPAN4) terminated the spanning node, so ^mypoem(#SPAN4) might be the last node. So, the parts of the spanning node that contain the value are ^mypoem(#SPAN2) through ^mypoem(#SPAN4).
 
 Use DSE to find the spanned nodes:
 
 .. parsed-literal::
    DSE> find -key=^mypoem(#SPAN2)
-   Key found in block  6.
+   Key found in block 6.
        Directory path
        Path--blk:off
        1:10,    2:10,
@@ -1367,7 +1366,7 @@ Fix the starting position in the $ZEXTRACT statement:
    Plunged in the battery-smoke Right thro the line they broke; Cossack and Russian Reeled from the sabre-stroke
    Shattered and sundered.  Then they rode back, but no"
 
-Verify the value for correctness if you have the knowledge of the type of data in this global. This completes data recovery (whatever was possible). 
+Verify the value for correctness if you have knowledge of the type of data in this global. This completes data recovery (whatever was possible). 
 
 Kill the existing global:
 

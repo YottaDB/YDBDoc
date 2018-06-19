@@ -13,9 +13,9 @@ Appendix C: Compiling ICU on YottaDB Supported Platforms
 Compiling ICU
 ------------------------
 
-YottaDB recommends using the ICU libraries provided by the OS vendor. This appendix includes sample instructions to download ICU, configure it not to use multi-threading, and compile it for various platforms. Note that download sites, versions of compilers, and milli and micro releases of ICU may have changed ICU since the embedded dates when these instructions were tested making them out-of-date. Therefore, these instructions must be considered examples, not a cookbook.
+YottaDB recommends using the ICU libraries provided by the OS vendor. This appendix includes sample instructions to download ICU, configure it to not use multi-threading, and compile it for various platforms. Note that download sites, versions of compilers, and milli and micro releases of ICU may have changed ICU since the embedded dates when these instructions were tested, making them out-of-date. Therefore, these instructions must be considered examples, not a cookbook.
 
-Although YottaDB uses ICU, ICU is not YottaDB software and YottaDB does not support ICU. The sample instructions for installing and configuring ICU are merely provided as a convenience. All examples below are on older versions of ICU, you will be able to find the latest version on http://site.icu-project.org/download
+Although YottaDB uses ICU, ICU is not YottaDB software and YottaDB does not support ICU. The sample instructions for installing and configuring ICU are merely provided as a convenience. All examples below are on older versions of ICU. You will be able to find the latest version on http://site.icu-project.org/download
 
 +++++++++++++++++++++++++++++
 Compiling ICU 4.4 on AIX 6.1
@@ -31,7 +31,7 @@ Compilers: IBM XL C/C++ 10, GNU make 3.80
 
 **Installation Instructions**
 
-Ensure that system environment variable PATH includes the location of all the compilers mentioned above.
+Ensure that the system environment variable PATH includes the location of all the compilers mentioned above.
 
 Set the environment variable OBJECT_MODE to 64.
 
@@ -68,7 +68,7 @@ Compilers: IBM XL C/C++ 10, GNU make 3.80
 
 **Installation Instructions**
 
-Ensure that system environment variable PATH includes the location of all the compilers mentioned above.
+Ensure that the system environment variable PATH includes the location of all the compilers mentioned above.
 
 Set the environment variable OBJECT_MODE to 64.
 
@@ -105,7 +105,7 @@ Compilers: HP C/aC++ B3910B A.06.15, GNU make (3.81)
 
 **Installation Instructions**
 
-Ensure that system environment variable PATH includes the location of all the compilers mentioned above.
+Ensure that the system environment variable PATH includes the location of all the compilers mentioned above.
 
 Download the source code of ICU (in this example version 3.6 for C from http://icu.sourceforge.net/).
 
@@ -141,7 +141,7 @@ Compilers: HP C/aC++ B3910B A.06.15, GNU make (3.81)
 
 **Installation Instructions**
 
-Ensure that system environment variable PATH includes the location of all the compilers mentioned above.
+Ensure that the system environment variable PATH includes the location of all the compilers mentioned above.
 
 Download the source code of ICU (in this example version 3.6 for C from http://icu.sourceforge.net/download/3.6.html#ICU4C).
 
@@ -161,7 +161,7 @@ Set the environment variable LD_LIBRARY_PATH to point to the location of ICU. HP
 This installs ICU in the /usr/local directory.
 
 .. note::
-   By default, ICU is installed in the /usr/local directory.  If you install ICU in a different directory, type: runConfigureICU HP-UX/ACC --prefix=<install_path> --disable-threads . Then run the gmake commands, and set the environment variable LD_LIBRARY_PATH to point to the appropriate location.
+   By default, ICU is installed in the /usr/local directory. If you install ICU in a different directory, type: runConfigureICU HP-UX/ACC --prefix=<install_path> --disable-threads . Then run the gmake commands, and set the environment variable LD_LIBRARY_PATH to point to the appropriate location.
         
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Compiling ICU 4.2 on Red Hat Enterprise Linux 4 Update 2
@@ -177,7 +177,7 @@ Compilers: gcc 3.4.4, GNU make (3.77+), ANSI C compiler
 
 **Installation Instructions**
 
-Ensure that system environment variable PATH includes the location of all the compilers mentioned above.
+Ensure that the system environment variable PATH includes the location of all the compilers mentioned above.
 
 Download the source code of ICU version 4.2 for C from http://site.icu-project.org/download.
 
@@ -213,7 +213,7 @@ Compilers: gcc 3.4.4, GNU make (3.77+), ANSI C compiler
 
 **Installation Instructions**
 
-Ensure that system environment variable PATH includes the location of all the compilers mentioned above.
+Ensure that the system environment variable PATH includes the location of all the compilers mentioned above.
 
 Download the source code of ICU version 3.6 for C from http://icu.sourceforge.net/download/3.6.html#ICU4C
 
@@ -249,7 +249,7 @@ Compilers: Sun Studio 8 (Sun C++ 5.5), GNU make (3.77+), ANSI C compiler
 
 **Installation Instructions**
 
-Ensure that system environment variable PATH includes the location of all the compilers mentioned above.
+Ensure that the system environment variable PATH includes the location of all the compilers mentioned above.
 
 Download the source code of ICU version 4.2 for C from http://site.icu-project.org/download
 
@@ -290,7 +290,7 @@ Compilers: Sun Studio 8 (Sun C++ 5.5), GNU make (3.77+), ANSI C compiler
 
 **Installation Instructions**
 
-Ensure that system environment variable PATH includes the location of all the compilers mentioned above.
+Ensure that the system environment variable PATH includes the location of all the compilers mentioned above.
 
 Download the source code of ICU version 3.6 for C from http://icu.sourceforge.net/download/3.6.html#ICU4C>
 
