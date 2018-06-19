@@ -17,7 +17,7 @@ YottaDB is a high-end database application development platform offered by Yotta
 
 YottaDB's unique ability to create and deploy logical multi-site configurations of applications provides unrivaled continuity of business in the face of not just unplanned events, but also planned events, including planned events that include changes to application logic and schema.
 
-You can install and manage YottaDB using the utilities described in this manual and standard operating system tools. The first three chapters provide an overview of YottaDB, installation procedures, and YottaDB system environment. The remaining chapters describe YottaDB operational management.
+You can install and manage YottaDB using the utilities described in this manual and standard operating system tools. The first three chapters provide an overview of YottaDB, installation procedures, and the YottaDB system environment. The remaining chapters describe YottaDB operational management.
 
 -----------------
 Intended Audience
@@ -41,8 +41,6 @@ The presentation of information in each chapter is designed to be useful for eve
 
 We recommend that users read the chapters in a top-down manner. After becoming familiar with YottaDB, use the "Commands and Qualifiers" section of each chapter as a reference manual.
 
-The sidebar includes a search box for searching across the manual.
-
 --------
 Overview
 --------
@@ -63,7 +61,7 @@ This manual contains twelve chapters and an Appendix. Here is a brief overview o
 
 `Chapter 7: “Database Replication” <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html>`_ describes how to implement continuous application availability using multiple systems.
 
-`Chapter 8: “M Lock Utility (LKE)”  <https://docs.yottadb.com/AdminOpsGuide/mlocks.html>`_ describes how to use a utility called M Lock Utility (LKE) to examine and adjust M locks.
+`Chapter 8: “M Lock Utility (LKE)”  <https://docs.yottadb.com/AdminOpsGuide/mlocks.html>`_ describes how to use a utility called the M Lock Utility (LKE) to examine and adjust M locks.
 
 `Chapter 9: “YottaDB Database Structure(GDS)” <https://docs.yottadb.com/AdminOpsGuide/gds.html>`_ provides an overview of YottaDB Database Structure (GDS).
 
@@ -87,7 +85,7 @@ Use YottaDB with any UNIX shell as long as environment variables and scripts are
 
 We have made a conscientious effort to present intuitive examples and related error messages that appear if a user tries those examples. However, due to environment and shell differences, you may occasionally obtain different results (although the differences should be relatively minor). Therefore, it is suggested that you try the examples in a database environment that does not contain any valued information.
 
-In M examples, an effort was made to construct examples where command lines did not wrap, in many cases using the argumentless DO.
+With the M examples, an effort was made to construct examples where command lines did not wrap, in many cases using the argumentless DO.
 
-The examples make frequent use of literals in an attempt to focus attention on particular points. In normal usage arguments are far more frequently variables.
+The examples make frequent use of literals in an attempt to focus attention on particular points. In normal usage, arguments are far more frequently variables.
 
