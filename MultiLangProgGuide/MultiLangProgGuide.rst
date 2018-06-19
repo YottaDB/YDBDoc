@@ -620,7 +620,10 @@ following rules apply:
   inside a transaction can be released either inside the transaction,
   or after the transaction is committed or rolled back.
 
-==================
+================
+Programming in C
+================
+
 Symbolic Constants
 ==================
 
@@ -637,17 +640,17 @@ one of the following types:
 
 Symbolic constants all fit within the range of a C :code:`int`.
 
-
+------------------------
 Function Return Codes
-=====================
+------------------------
 
 Return codes from calls to YottaDB are usually of type :code:`int` and
 occasionally other types. Normal return codes are non-negative
 (greater than or equal to zero); error return codes are negative.
 
--------------------
++++++++++++++++++++
 Normal Return Codes
--------------------
++++++++++++++++++++
 
 Symbolic constants for normal return codes have :CODE:`YDB_` prefixes
 other than :CODE:`YDB_ERR_`.
@@ -678,9 +681,9 @@ caller indicating that the transaction was not committed.
 
 .. _error return codes:
 
-------------------
+++++++++++++++++++++
 Error Return Codes
-------------------
+++++++++++++++++++++
 
 Symbolic constants for error codes returned by calls to YottaDB are
 prefixed with :CODE:`YDB_ERR_` and are all less than zero. The symbolic
@@ -792,8 +795,9 @@ intrinsic special variable.
 :CODE:`YDB_ERR_VARNAME2LONG` – A variable name length exceeds YottaDB's
 limit.
 
+------
 Limits
-======
+------
 
 Symbolic constants for limits are prefixed with :CODE:`YDB_MAX_` or
 :code:`YDB_MIN_`.
@@ -831,8 +835,9 @@ code is less than :code:`YDB_MIN_YDBERR`, then it is an error code
 from elsewhere, e.g., e.g. `errno
 <https://linux.die.net/man/3/errno>`_. Also, see :code:`YDB_IS_YDBERR()`.
 
+---------
 Severity
-========
+---------
 
 Symbolic constants for the severities of message numbers in return
 codes and :code:`$zstatus` are prefixed with :CODE:`YDB_SEVERITY_`.
@@ -852,9 +857,9 @@ completion of a requested opertion.
 :CODE:`YDB_SEVERITY_WARNING` – The number corresponds to a warning, i.e.,
 it indicates a possible problem.
 
-
+------
 Other
-=====
+------
 
 Other symbolic constants have a prefix of :CODE:`YDB_`.
 
@@ -869,7 +874,7 @@ the :code:`*ret_subs_used` parameter is set to this value. Application code
 should make no assumption about this constant other than that it is
 negative (<0).
 
-==================================
+
 Data Structures & Type Definitions
 ==================================
 
@@ -906,7 +911,7 @@ pointer, and which returns an integer, defined thus:
 		
 	typedef int (*ydb_tpfnptr_t)(void *tpfnparm);
 
-======
+
 Macros
 ======
 
@@ -981,9 +986,6 @@ string, and :code:`buffer` a pointer to a :code:`ydb_buffer_t` structure, set:
 - :code:`buffer->len_used` and :code:`buffer->len_alloc` to
   :code:`strlen(string)`.
 
-================
-Programming in C
-================
 
 YottaDB functions are divided into:
 
