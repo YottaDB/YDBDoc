@@ -13,11 +13,11 @@ Appendix H: Creating a TLS Configuration File
 Creating a TLS Configuration File
 ------------------------------------
 
-YottaDB ships with a reference implementation of the encryption plugin which uses OpenSSL to perform various operation for TLS replication and/or TLS-enabled sockets.
+YottaDB ships with a reference implementation of the encryption plugin, which uses OpenSSL to perform various operations for TLS replication and/or TLS-enabled sockets.
 
 OpenSSL options are controlled by a configuration file in libconfig format. This configuration file is pointed to by the ydb_crypt_config environment variable. The use of the ydb_crypt_config environment variable requires the libconfig library to be installed.
 
-A configuration file is divided into two sections: database encryption section and TLS section. The database encryption section contains a list of database files and their corresponding key files. You do not need a database encryption section if you are not using an encrypted database, or a TLS section if you are not using TLS for replication or sockets. The TLS section contains information needed for OpenSSL such as the location of root certification authority certificates and leaf-level certificates with their corresponding private keys.
+A configuration file is divided into two sections: a database encryption section and a TLS section. The database encryption section contains a list of database files and their corresponding key files. You do not need a database encryption section if you are not using an encrypted database, nor a TLS section if you are not using TLS for replication or sockets. The TLS section contains information needed for OpenSSL, such as the location of root certification authority certificates and leaf-level certificates with their corresponding private keys.
 
 Here is a sample configuration file:
 
@@ -69,14 +69,14 @@ The supported OpenSSL options are as follows:
 
 **CAFile**
 
-When used in the tls level (or tlsid level if not provided at the tls level,) points to a file, in PEM format, describing the trusted CAs. The file can contain several CA certificates identified by sequences of:
+When used on the tls level (or the tlsid level if not provided at the tls level), it points to a file (in PEM format) describing the trusted CAs. The file can contain several CA certificates identified by sequences of:
 
 .. parsed-literal::
    -----BEGIN CERTIFICATE-----
    ... (CA certificate in base64 encoding) ...
    -----END CERTIFICATE-----
 
-When specified for a server connection either in a tlsid level configuration file section or with a WRITE/TLS command, allows the server to inform the client of acceptable certificate authorities via the OpenSSL function SSL_set_client_CA_list(). The determinant definition for the acceptable list of certificate authorities sent to the client comes in descending order of priority from the one specified by the WRITE /TLS("renegotiate",...) command, the one specified by the CAfile value in the tlsid section used to establish the TLS connection, and finally that specified at the tls level.
+When specified for a server connection either in a tlsid level configuration file section or with a WRITE/TLS command, allows the server to inform the client of acceptable certificate authorities via the OpenSSL function SSL_set_client_CA_list(). The determinant definition for the acceptable list of certificate authorities sent to the client comes in descending order of priority from the one specified by the WRITE /TLS("renegotiate",...) command, the one specified by the CAfile value in the tlsid section used to establish the TLS connection and finally, the one specified at the tls level.
 
 **CApath**
 
@@ -88,11 +88,11 @@ Specifies which cryptographic algorithms to use. The format of this option is de
 
 **crl**
 
-Points to a file containing list of revoked certificates. This file is created by the openssl utility.
+Points to a file containing a list of revoked certificates. This file is created by the openssl utility.
 
 **dh512 and dh1024**
 
-Specifies that Diffie-Hellman parameters are used for key-exchange. Either none or both have to be specified. If neither is specified, then then the data is encrypted with the same keys that are used for authentication.
+Specifies that Diffie-Hellman parameters are used for key-exchange. Either none or both have to be specified. If neither is specified, then the data is encrypted with the same keys that are used for authentication.
 
 **format**
 
@@ -140,7 +140,7 @@ The ssl_options, documented in the man page for SSL_set_options, modify the defa
 
 **verify-depth**
 
-Certificate Authority (CA) verify depth provides an upper limit on the number of CAs to look up for verifying a given certificate. The depth count is described as ''level 0:peer certificate'', ''level 1: CA certificate'', ''level 2: higher level CA certificate'', and so on. The default verification depth is 9.
+Certificate Authority (CA) verify depth provides an upper limit on the number of CAs to look up for verifying a given certificate. The depth count is described as "level 0:peer certificate", "level 1: CA certificate", "level 2: higher level CA certificate", and so on. The default verification depth is 9.
 
 A verify-depth option specified in a labeled section applies to connections associated with that section.
 
@@ -151,7 +151,4 @@ The verify-level option takes a string value to specify any additional certifica
 **verify-mode**
 
 The verify-mode option specifies how OpenSSL verifies certificates. If no verify-mode is specified, it defaults to SSL_VERIFY_PEER. See the man page for SSL_set_verify for details. SSL_VERIFY_PEER has two additional flags which modify verification only for the server role; when adding them to the option string, use the colon (:) delimiter.
-
-
-
 
