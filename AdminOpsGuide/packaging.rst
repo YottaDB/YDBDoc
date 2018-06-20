@@ -9,7 +9,7 @@ Appendix G : Packaging YottaDB Applications
 .. contents::
    :depth: 2
 
-YottaDB provides the mumps -run shell command to invoke application entryrefs directly from the shell. YottaDB recognizes a number of environment variables to determine the starting characteristics of a process; these are described in the documentation. In order to ensure that environment variables are set correctly, you should create a shell script that appropriately sets (and clears where needed) environment variables before invoking YottaDB. When users should not get to the shell prompt from the application (either for lack of skill or because they are not sufficiently trusted), or when the application needs more access to the shell command line than that provided by the $ZCMDLINE ISV, you may need to package a YottaDB application using techniques beyond, or in additional to, invocation from a shell script.
+YottaDB provides the mumps -run shell command to invoke application entryrefs directly from the shell. YottaDB recognizes a number of environment variables to determine the starting characteristics of a process; these are described in the documentation. In order to ensure that environment variables are set correctly, you should create a shell script that appropriately sets (and clears where needed) environment variables before invoking YottaDB. When users should not get to the shell prompt from the application (either for lack of skill or because they are not sufficiently trusted), or when the application needs more access to the shell command line than that provided by the $ZCMDLINE ISV, you may need to package a YottaDB application using techniques beyond, or in addition to, invocation from a shell script.
 
 Since YottaDB is designed to integrate with the underlying OS, you should consider the entire range of services provided by operating systems when packaging a YottaDB application. For example, you can use the host based access control provided by TCP wrappers, or various controls provided by xinetd (including per_source, cps, max_load protection, only_from, no_access, and access_times).
 
@@ -139,7 +139,7 @@ Prior to calling the YottaDB entryref, the C program also needs to set environme
 
 .. parsed-literal::
    /* Define environment variables if not already defined \*/
-           setenv( "ydb_dist", "/usr/local/lib/yottadb/r1.10", 0 );
+           setenv( "ydb_dist", "/usr/local/lib/yottadb/r120", 0 );
            if (NULL == getenv( "ydb_routines" ))
            {
              tmp1 = strlen( getenv( "PWD" ));
@@ -189,7 +189,7 @@ DONE: QUIT ; or HALT or ZHALT, as appropriate
 
 3. Providing a value to the ydb_zinterrupt environment to override the default of "IF $ZJOBEXAM()" which causes the process to create a text file of its state in response to a MUPIP INTRPT (or SIGUSR1 signal). Such a text file may contain confidential information that the process is actively computing. Note that a user can only send INTRPT signals as permitted by the configuration of system security for the user. If your application uses INTRPT signals, review the code they invoke carefully to ensure processes respond appropriately to the signal. If any response produces an output file, be sure they have write access to the destination; restrict read access to such files appropriately. The “Sample .profile” example does not illustrate an alternative value for ydb_interrupt.
 
-4. Setting the SHELL environment variable to /bin/false disables the ZSYSTEM command, which if executed without an argument takes the user to a shell prompt. While a correctly coded application might not have a ZSYSTEM without an argument, setting SHELL to a value such as /bin/false, as illustrated above, protects an added layer of defense against a possible application bug. Of course, if an application uses the ZSYSTEM command, then an executable SHELL is required. If your application uses ZSYSTEM to run a command, consider whether a PIPE device might provide a better alternative.
+4. Setting the SHELL environment variable to /bin/false disables the ZSYSTEM command, which if executed without an argument takes the user to a shell prompt. While a correctly coded application might not have a ZSYSTEM without an argument, setting SHELL to a value such as /bin/false, as illustrated above, adds a layer of defense against a possible application bug. Of course, if an application uses the ZSYSTEM command, then an executable SHELL is required. If your application uses ZSYSTEM to run a command, consider whether a PIPE device might provide a better alternative.
 
 5. Setting the PATH environment explicitly to only those directories that contain executable files that the mumps process will need to execute, with a ZSYSTEM command or a PIPE device.
 
@@ -201,7 +201,7 @@ Other
 
 Depending on application requirements, other packaging technologies for consideration include:
 
-* Choosing a restricted shell for login of a captive user, such as rbash, instead of /bin/sh (for example, see http://en.wikipedia.org/wiki/Restricted_shell).
+* Choosing a restricted shell for the login of a captive user, such as rbash, instead of /bin/sh (for example, see http://en.wikipedia.org/wiki/Restricted_shell).
 * Setting up a chroot environment for an application used by captive users (for example, see http://en.wikipedia.org/wiki/Chroot).
 * Using TCP wrappers to filter incoming requests (for example, see https://www.cyberciti.biz/faq/tcp-wrappers-hosts-allow-deny-tutorial/).
 * Configuring mandatory access controls, such as SELinux (for example, http://opensource.com/business/13/11/selinux-policy-guide).
