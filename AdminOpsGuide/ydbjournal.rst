@@ -417,9 +417,9 @@ The journal-option-list contains keywords separated with commas (,) enclosed in 
 
 * If you specify both -JOURNAL and -NOJOURNAL in the same command line, the latter takes effect.
 
-* Whenever MUPIP SET creates a new journal file, it uses all values for journal-file-options that the user explicitly specifies in the command line for the new journal file. If you do not specify a journal-file-option, MUPIP SET takes the characteristics of the existing journal file.
+* Whenever MUPIP SET creates a new journal file, it uses all the values for journal-file-options that the user explicitly specifies in the command line for the new journal file. If you do not specify a journal-file-option, MUPIP SET takes the characteristics of the existing journal file.
 
-* MUPIP SET supports qualifiers (like -ACCESS_METHOD, and so on) to change non-journaling characteristics of database file(s). If you specify these qualifiers -JOURNAL , MUPIP SET modifies the non-journaling characteristics first and then moves on to modify the journaling characteristics. Command execution stops when it encounters an error. If MUPIP SET encounters an error in processing the command line or the non-journaling characteristics, it makes no changes to any characteristics. However, if MUPIP SET encounters an error in processing the journaling characteristics, the non-journaling characteristics have already been successfully changed.
+* MUPIP SET supports qualifiers (like -ACCESS_METHOD, and so on) to change non-journaling characteristics of database file(s). If you specify these qualifiers, -JOURNAL MUPIP SET modifies the non-journaling characteristics first and then moves on to modify the journaling characteristics. Command execution stops when it encounters an error. If MUPIP SET encounters an error in processing the command line or the non-journaling characteristics, it makes no changes to any characteristics. However, if MUPIP SET encounters an error in processing the journaling characteristics, the non-journaling characteristics have already been successfully changed.
 
 * -NOJOURNAL is equivalent to -JOURNAL=DISABLE.
 
@@ -447,7 +447,7 @@ For details on the journal-option-list refer to “SET -JOURNAL Options ”.
 
 * The minimum ALIGNSIZE supported is always greater than or equal to the maximum journal record size, which in turn depends on the maximum database block size.
 
-* Note that a large value of ALIGNSIZE implies infrequent boundaries for recovery to use, and hence slows backward recovery down so drastically that for example, the maximum value of 4194304 causes backward recovery (in case of a crash) to take as much time as forward recovery using the same journal file(s). 
+* Note that a large value of ALIGNSIZE implies infrequent boundaries for recovery to use, and hence slows backward recovery down so drastically that, for example, the maximum value of 4194304 causes backward recovery (in case of a crash) to take as much time as forward recovery using the same journal file(s). 
 
 **ALL[OCATION]=blocks**
 
@@ -494,7 +494,7 @@ Equivalent to the -NOJOURNAL qualifier of MUPIP SET. It specifies that journalin
 
 **ENABLE**
 
-Makes the database file or region available for journaling. By default, ENABLE turns journaling ON unless OFF is specified in the same option list. A command that includes ENABLE must also specify BEFORE_IMAGES or NOBEFORE_IMAGES.
+Makes the database file or region available for journaling. By default, ENABLE turns journaling ON, unless OFF is specified in the same option list. A command that includes ENABLE must also specify BEFORE_IMAGES or NOBEFORE_IMAGES.
 
 **EP[OCH_INTERVAL]=seconds**
 
@@ -555,7 +555,7 @@ In all cases where journaling is ON both before and after a journal file switch,
 
 The previous generation journal filename is a back link from the current generation journal.
 
-YottaDB produces an error and makes no change to the journaling state of the database when the FILENAME is an existing file and is not the active journal file for that database. In this way, YottaDB prevents possible cycles in the back-links (such as, a3.mjl has a back-link to a2.mjl which in turn has a back-link to a1.mjl which in turn has a back-link to a3.mjl thereby creating a cycle). Cycles could prevent journal recovery. Also, note that cycles in back-links are possible only due to explicit FILENAME specifications and never due to an existing FILENAME characteristics from the database or by using the default FILENAME.
+YottaDB produces an error and makes no change to the journaling state of the database when the FILENAME is an existing file and is not the active journal file for that database. In this way, YottaDB prevents possible cycles in the back-links (such as, a3.mjl has a back-link to a2.mjl which in turn has a back-link to a1.mjl which in turn has a back-link to a3.mjl thereby creating a cycle). Cycles could prevent journal recovery. Also, note that cycles in back-links are possible only due to explicit FILENAME specifications and never due to existing FILENAME characteristics from the database or by using the default FILENAME.
 
 **NOPREVJNLFILE**
 
@@ -582,7 +582,7 @@ Records subsequent database updates in that journal file. MUPIP SET -JOURNAL=ON 
 .. note::
    The ON keyword works only on previously ENABLEd regions. YottaDB ignores ON if Journaling is DISABLEd. In other words, an ENable / DISable is like the power switch on the back of many television sets and ON/OFF is like the ON/OFF on the remote control. The ON/OFF on the remote control works only when the power switch on the back of the television set is enabled.
 
-If the current generation journal file is damaged/missing, MUPIP SET -JOURNAL=ON implicitly turns off journaling for the specified region, creates a new journal file with no back pointers to the prior generation journal file, and turns journaling back on. Further, if replication is enabled, MUPIP SET -JOURNAL=ON temporarily switches the replication WAS_ON state in the time window when MUPIP SET command turns off journaling and returns normal as long as it operates out of the journal pool buffer and doesn't need to reference the damaged journal file(s). During this operation, MUPIP SET -JOURNAL=ON also sends the PREJNLLINKCUT message for the region to the application and the operator log. While this operation ensures that journaling continues even if the current generation journal file is damaged/missing, creating a new journal file with no back pointers creates a discontinuity with the previous journal files. Therefore, YottaDB recommends taking a database backup at the earliest convenience because a MUPIP RECOVER/ROLLBACK will not be able to go back past this discontinuity. Also, consider switching the journal files on all regions in the instance (with REGION "*") to ensure the RECOVER/ROLLBACK for other regions remains unaffected.
+If the current generation journal file is damaged/missing, MUPIP SET -JOURNAL=ON implicitly turns off journaling for the specified region, creates a new journal file with no back pointers to the prior generation journal file, and turns journaling back on. Further, if replication is enabled, MUPIP SET -JOURNAL=ON temporarily switches the replication WAS_ON state in the time window when MUPIP SET command turns off journaling and returns normal as long as it operates out of the journal pool buffer and doesn't need to reference the damaged journal file(s). During this operation, MUPIP SET -JOURNAL=ON also sends the PREJNLLINKCUT message for the region to the application and the operator log. While this operation ensures that journaling continues even if the current generation journal file is damaged/missing, creating a new journal file with no back pointers creates a discontinuity with previous journal files. Therefore, YottaDB recommends taking a database backup at the earliest convenience because a MUPIP RECOVER/ROLLBACK will not be able to go back past this discontinuity. Also, consider switching the journal files on all regions in the instance (with REGION "*") to ensure the RECOVER/ROLLBACK for other regions remains unaffected.
 
 The default for SET -JOURNAL= is ON. 
 
@@ -666,7 +666,7 @@ The above command cuts the back link of the newly created journal file newmumps.
 JOURNAL
 --------------------------------
 
-MUPIP JOURNAL command analyzes, extracts from, reports on, and recovers journal files. The format for the MUPIP JOURNAL command is: 
+MUPIP JOURNAL command analyzes, extracts from, reports on and recovers journal files. The format for the MUPIP JOURNAL command is: 
 
 .. parsed-literal::
    MUPIP J[OURNAL] -qualifier[...] file-selection-argument
@@ -730,9 +730,9 @@ Also ensure that you adhere to the following rules:
 
 17. -USER is compatible only with -EXTRACT and -SHOW.
 
-18. file list must not be asterisk (*) for -REDIRECT.
+18. File list must not be asterisk (*) for -REDIRECT.
 
-19. file list must be asterisk (*) for -BACKWARD -ROLLBACK; -ROLLBACK -FORWARD accepts a list of journal file names.
+19. File list must be asterisk (*) for -BACKWARD -ROLLBACK; -ROLLBACK -FORWARD accepts a list of journal file names.
 
 20. Journal selection qualifiers are incompatible with -RECOVER, -ROLLBACK, and -VERIFY.
 
@@ -740,7 +740,7 @@ Also ensure that you adhere to the following rules:
 
 22. -FETCHRESYNC, -ONLINE, and -RSYNC_STRM qualifiers are not compatible with -ROLLBACK -FORWARD.
 
-For example, MUPIP JOURNAL -EXTRACT=ydb.mjf -FORWARD -DETAIL is a valid command which performs forward processing to extract detailed the journal records to ydb.mjf. However, MUPIP JOURNAL -EXTRACT -REDIRECT=ydb.dat=test/ydb.dat -FORWARD is an invalid command because -REDIRECT is not compatible with -EXTRACT.
+For example, MUPIP JOURNAL -EXTRACT=ydb.mjf -FORWARD -DETAIL is a valid command which performs forward processing to extract detailed journal records to ydb.mjf. However, MUPIP JOURNAL -EXTRACT -REDIRECT=ydb.dat=test/ydb.dat -FORWARD is an invalid command because -REDIRECT is not compatible with -EXTRACT.
 
 MUPIP JOURNAL manipulates an inactive journal file that is available for exclusive (standalone) use. You can transcribe Journal files to tape. However, you must always restore them to disk for processing by MUPIP JOURNAL.
 
@@ -768,7 +768,7 @@ When used independent of -RECOVER (or -ROLLBACK), -EXTRACT option can produce a 
 
 If a database having custom collation is inaccessible or the replication instance is frozen with a critical section required for the access held by another process and the environment variable ydb_extract_nocol is defined and evaluates to a non-zero integer or any case-independent string or leading substrings of "TRUE" or "YES", MUPIP JOURNAL -EXTRACT issues the DBCOLLREQ warning and proceeds with the extract using the default collation. If ydb_extract_nocol is not set or evaluates to a value other than a positive integer or any case-independent string or leading substrings of "FALSE" or "NO", MUPIP JOURNAL -EXTRACT exits with the SETEXTRENV error if it encounters such a situation. Note that if default collation is used for a database with custom collation, the subscripts reported by MUPIP JOURNAL -EXTRACT are those stored in the database, which may differ from those read and written by application programs.
 
-Note that, a broken transaction, if found, is extracted to a broken transaction file (refer to `“Journal Control Qualifiers” <https://docs.yottadb.com/AdminOpsGuide/ydbjournal.html#journal-control-qualifiers>`_ for details), and all future complete transactions are considered as lost transactions, and are extracted to a lost transaction file (refer to `“Journal Control Qualifiers” <https://docs.yottadb.com/AdminOpsGuide/ydbjournal.html#journal-control-qualifiers>`_ for details).
+Note that, a broken transaction, if found, is extracted to a broken transaction file (refer to `“Journal Control Qualifiers” <https://docs.yottadb.com/AdminOpsGuide/ydbjournal.html#journal-control-qualifiers>`_ for details), and all future complete transactions are considered to be lost transactions, and are extracted to a lost transaction file (refer to `“Journal Control Qualifiers” <https://docs.yottadb.com/AdminOpsGuide/ydbjournal.html#journal-control-qualifiers>`_ for details).
 
 To avoid broken transactions or lost transaction processing and instead extract all journal records into one file, use the control qualifier -FENCES=NONE. YottaDB strongly recommends against using -FENCES=NONE if -RECOVER/-ROLLBACK is also specified.
 
@@ -778,23 +778,23 @@ PARA[LLEL][=n] specifies the number of parallel threads (for backward processing
 
 Omitting the qualifier or specifying a value of one (1) defaults to a single process with no threads. Omitting the value or specifying a value of zero (0) specifies one thread or process per region.
 
-A value greater than one (1) specifies the maximum number of concurrent threads or processes MUPIP should use, although it never uses more than one per region. If the number of regions exceeds the specified value, MUPIP allocates one thread or processes in an order determined by timestamps in the journal records.
+A value greater than one (1) specifies the maximum number of concurrent threads or processes MUPIP should use, although it never uses more than one per region. If the number of regions exceeds the specified value, MUPIP allocates one thread or process in an order determined by timestamps in the journal records.
 
 The environment variable ydb_mupjnl_parallel provides a value when the MUPIP JOURNAL command has no explicit -PARALLEL qualifier; when defined with no value ydb_mupjnl_parallel acts like -PARALLEL with no value. When the -PARALLEL qualifier (or the ydb_mupjnl_parallel environment variable) specifies the use of parallel processes in the forward phase of a MUPIP JOURNAL command, MUPIP may create temporary shared memory segments and/or extract files (corresponding to -extract or -losttrans or -brokentrans qualifiers) and clean these up at the end of the command; however an abnormal termination such as a kill -9 might cause these to be orphaned. Journal extract files (created by specifying one of -extract or -brokentrans or -losttrans to a MUPIP JOURNAL command) contain journal records sorted in the exact order their corresponding updates happened in time.
 
 **-RECover**
 
-Instructs MUPIP JOURNAL to initiate database recovery. -RECOVER initiates the central JOURNAL operation for non-replicated database. From the list of JOURNAL action qualifiers, select RECOVER alone or with any other action qualifiers except -ROLLBACK.
+Instructs MUPIP JOURNAL to initiate database recovery. -RECOVER initiates the central JOURNAL operation for non-replicated databases. From the list of JOURNAL action qualifiers, select RECOVER alone or with any other action qualifiers except -ROLLBACK.
 
--RECOVER -FORWARD with time qualifiers initiates forward recovery. Forward recovery ignores the current journaling state of the target database file. It disables journaling of the target database file, (if currently ENABLE and ON), while playing forward the database updates. However, it restores the journaling state of the database at the end of a successful recovery (if necessary), except when journaling is ENABLE'd and ON before the recovery. In the latter case, the journaling state at the end of a successful recovery, is switched to ENABLE and OFF. No journaling is performed for the logical updates to the database for JOURNAL -RECOVER -FORWARD. If the target database's current transaction number is less than first transaction number to be processed in the specified journal file for that region, -RECOVER attempts to include previous generation journal file(s) in its processing, unless the -NOCHAIN qualifier is specified. Following the successive previous links of journal files -RECOVER tries to include previous generations of journal files until the transaction number when the journal file was created is less than, or equal to that of the target database. -RECOVER issues one or more informational messages when it includes previous generation journal files. If target database's current transaction number is not equal to the first transaction number of the earliest journal file to be processed for a region, -RECOVER exits with an error. If multiple journal files for a single region are specified with -RECOVER -FORWARD, it behaves as if -NOCHAIN was specified. If the journal files are not a complete set (for example mumps1.mjl and mumps3.mjl were specified, with mumps2.mjl missing from the command line), MUPIP JOURNAL produces an error because the journal files specified are discontinuous in terms of database transaction numbers. On the other hand, specifying just mumps3.mjl automatically includes mumps2.mjl and mumps1.mjl in the recovery.
+-RECOVER -FORWARD with time qualifiers initiates forward recovery. Forward recovery ignores the current journaling state of the target database file. It disables journaling of the target database file, (if currently ENABLE and ON), while playing forward the database updates. However, it restores the journaling state of the database at the end of a successful recovery (if necessary), except when journaling is ENABLE'd and ON before the recovery. In the latter case, the journaling state at the end of a successful recovery, is switched to ENABLE and OFF. No journaling is performed for the logical updates to the database for JOURNAL -RECOVER -FORWARD. If the target database's current transaction number is less than the first transaction number to be processed in the specified journal file for that region, -RECOVER attempts to include previous generation journal file(s) in its processing, unless the -NOCHAIN qualifier is specified. Following the successive previous links of journal files -RECOVER tries to include previous generations of journal files until the transaction number when the journal file was created is less than, or equal to that of the target database. -RECOVER issues one or more informational messages when it includes previous generation journal files. If target database's current transaction number is not equal to the first transaction number of the earliest journal file to be processed for a region, -RECOVER exits with an error. If multiple journal files for a single region are specified with -RECOVER -FORWARD, it behaves as if -NOCHAIN was specified. If the journal files are not a complete set (for example mumps1.mjl and mumps3.mjl were specified, with mumps2.mjl missing from the command line), MUPIP JOURNAL produces an error because the journal files specified are discontinuous in terms of database transaction numbers. On the other hand, specifying just mumps3.mjl automatically includes mumps2.mjl and mumps1.mjl in the recovery.
 
 -RECOVER -BACKWARD with time qualifiers initiates backward recovery. For backward recovery, the target database file should be the same as when YottaDB wrote the last complete transaction to the journal. Because the database may be in an indeterminate state due to a failure, exact checks for this match are not possible. If the target database has journaling DISABLE'd (or ENABLE, OFF), -RECOVER -BACKWARD exits with an error message.
 
-If the target database has journaling ENABLE, ON, but the journal file name in database file header does not match the latest generation journal file name specified for that region, -RECOVER exits with an error.
+If the target database has journaling ENABLE, ON, but the journal file name in the database file header does not match the latest generation journal file name specified for that region, -RECOVER exits with an error.
 
-During forward processing phase of JOURNAL -RECOVER -BACKWARD, MUPIP journals the logical updates to the database. It also creates before images. It is always required to have journaling ENABLEd and ON for -RECOVER -BACKWARD or -ROLLBACK.
+During forward processing phase of JOURNAL -RECOVER -BACKWARD, MUPIP journals the logical updates to the database. It also creates before-images. It is always required to have journaling ENABLEd and ON for -RECOVER -BACKWARD or -ROLLBACK.
 
-If a transaction is found with an incomplete fence, it is considered broken. During the forward phase of recovery, if a complete transaction (fenced or unfenced) is found after a broken transaction, -RECOVER increments the error count. If -ERRORLIMIT is reached, the complete transaction goes to the lost transaction file otherwise, it is applied to the database.
+If a transaction is found with an incomplete fence, it is considered broken. During the forward phase of recovery, if a complete transaction (fenced or unfenced) is found after a broken transaction, -RECOVER increments the error count. If -ERRORLIMIT is reached, the complete transaction goes to the lost transaction file. Otherwise, it is applied to the database.
 
 All broken and lost transactions are made available as the result of the -RECOVERY. They are written as journal extract format in two different text files. They are the broken transaction file and the lost transaction file. Refer to the sections on BROKENTRANS and LOSTTRANS in `“Journal Control Qualifiers” <https://docs.yottadb.com/AdminOpsGuide/ydbjournal.html#journal-control-qualifiers>`_.
 
@@ -806,7 +806,7 @@ If time qualifiers are not specified, -BACKWARD -RECOVER/-ROLLBACK performs opti
 
 When a database file is rolled back by -RECOVER -BACKWARD, the corresponding journal file is also rolled back so that the two are synchronized. -RECOVER -BACKWARD then creates a new journal file. If no forward play of journal records is neccessary, the newly created journal file stays empty and the database points to the new journal file. The values for journal allocation and extension in the new journal file, are copied over from the database. The autoswitchlimit value in the new journal file is the maximum of the autoswitchlimit values of all journal files from the latest generation journal file until the turnaround point journal file generation (turnaround point is the point in the journal file where backward processing stops and forward processing begins). The journal allocation/extension values in the new journal file are picked up from the earliest generation of the set of those journal files sharing the maximum autoswitchlimit value.
 
-YottaDB adds a prefix rolled_bak\_ to the journal file whose entire contents are eliminated (rolled back) by -RECOVER -BACKWARD. YottaDB does not use these files after a successful recovery therefore you might want to consider moving or deleting them. You should never use rolled_bak* files for any future database recovery. If there is a need to process rolled_bak* files, you should extract the journal records from rolled_back* files and process them using a M program.
+YottaDB adds a prefix rolled_bak\_ to the journal file whose entire contents are eliminated (rolled back) by -RECOVER -BACKWARD. YottaDB does not use these files after a successful recovery, therefore, you might want to consider moving or deleting them. You should never use rolled_bak* files for any future database recovery. If there is a need to process rolled_bak* files, you should extract the journal records from rolled_back* files and process them using a M program.
 
 **-ROLLBACK [{-ON[LINE]|-NOO[NLINE]}]**
 
@@ -836,7 +836,7 @@ If the -FETCHRESYNC or -RESYNC qualifiers are not specified, MUPIP does an optim
 -ROLLBACK -BACKWARD exits with an error message if a database does not have both journaling and replication either enabled or disabled.
 
 .. note::
-   If ROLLBACK (either -NOONLINE or -ONLINE) terminates abnormally (say because of a kill -9), it leaves the database in a potentially inconsistent state indicated by the FILE corrupt field in the database file header. When a ROLLBACK terminates leaving this field set, all other processes receive DBFLCORRP errors any time they attempt to interact with the database. You can clear this condition as following in descending order of risk: Rerun ROLLBACK to completion, MUPIP SET -FILE -PARTIAL_RECOV_BYPASS, DSE CHANGE -FILEHEADER -CORRUPT=FALSE -NOCRIT. However, the MUPIP and DSE actions do not ensure that the database has consistent state; check for database integrity with MUPIP INTEG.
+   If ROLLBACK (either -NOONLINE or -ONLINE) terminates abnormally (say because of a kill -9), it leaves the database in a potentially inconsistent state indicated by the FILE corrupt field in the database file header. When a ROLLBACK terminates leaving this field set, all other processes receive DBFLCORRP errors any time they attempt to interact with the database. You can clear this condition in descending order of risk: Rerun ROLLBACK to completion, MUPIP SET -FILE -PARTIAL_RECOV_BYPASS, DSE CHANGE -FILEHEADER -CORRUPT=FALSE -NOCRIT. However, the MUPIP and DSE actions do not ensure that the database has a consistent state; check for database integrity with MUPIP INTEG.
 
 
 -NOO[NLINE]
@@ -849,7 +849,7 @@ Specifies that ROLLBACK requires exclusive access to the database and the replic
 
 Specifies that ROLLBACK can run without requiring exclusive access to the database and the replication instance file.
 
-Any utility/command attempted while MUPIP JOURNAL -ONLINE -ROLLBACK operates waits for ROLLBACK to complete; the $ydb_db_startup_max_wait environment variable configures the wait period. For more information on $ydb_db_startup_max_wait, refer to `“Environment Variables” <https://docs.yottadb.com/AdminOpsGuide/basicops.html#environment-variables>`_.
+Any utility/command attempted while MUPIP JOURNAL -ONLINE -ROLLBACK operates, waits for ROLLBACK to complete; the $ydb_db_startup_max_wait environment variable configures the wait period. For more information on $ydb_db_startup_max_wait, refer to `“Environment Variables” <https://docs.yottadb.com/AdminOpsGuide/basicops.html#environment-variables>`_.
 
 .. note::
    Because MUPIP ROLLBACK -ONLINE can take a database backwards in state space, please make sure that you understand what you intend it to do when you invoke it. YottaDB developed it as a step towards a much larger project and anticipates that it will not be broadly useful in its current form.
@@ -878,7 +878,7 @@ Use -FORWARD with -SHOW together (but without -RECOVER ) to process the entire j
 
 The show-option-list includes (these are not case-sensitive): 
 
-* AL[L]: Displays all the available type of information about the journal file. ALL is the default if you omits the show-option-list.
+* AL[L]: Displays all the available types of information about the journal file. ALL is the default if you omit the show-option-list.
 
 * AC[TIVE_PROCESSES]: Displays all processes active at the end of the period specified implicitly or explicitly by the JOURNAL command time qualifiers.
 
@@ -993,13 +993,13 @@ Verifies journal files for integrity. This qualifier cannot have a value. -VERIF
 
 -NOVERIFY is the default for -RECOVER -FORWARD and -ROLLBACK -FORWARD. -VERIFY is the default for RECOVER -FORWARD -NOCHECKTN. -VERIFY is also the default for all other MUPIP JOURNAL commands (including -RECOVER -BACKWARD and -ROLLBACK -BACKWARD).
 
--VERIFY when specified along with -FORWARD verifies the entire journal file For -NOVERIFY -FORWARD, only the tail of a journal file is verified for cross region integrity. In both cases, if -RECOVER is also specified, the forward play of journal records is done in a separate pass only after the verification pass is complete and error-free.
+-VERIFY when specified along with -FORWARD verifies the entire journal file. For -NOVERIFY -FORWARD, only the tail of a journal file is verified for cross-region integrity. In both cases, if -RECOVER is also specified, the forward play of journal records is done in a separate pass only after the verification pass is complete and error-free.
 
--VERIFY along with -BACKWARD verifies all journal records from the end of the journal file till the turn around point. When -VERIFY -BACKWARD is specified along with -RECOVER or -ROLLBACK, backward processing involves two passes, the first pass to do the verification until the turn around point, and the second pass to apply before image (PBLK) records.
+-VERIFY along with -BACKWARD verifies all journal records from the end of the journal file until the turn around point. When -VERIFY -BACKWARD is specified along with -RECOVER or -ROLLBACK, backward processing involves two passes, the first pass to do the verification until the turn around point, and the second pass to apply before image (PBLK) records.
 
-When -NOVERIFY -BACKWARD is specified along with -RECOVER or -ROLLBACK, PBLKs are applied to the database in the same pass as the verification. This speeds up processing. But the disadvantage of this approach is that in the event of verification terminating in the middle of backward processing, there is no protection of cross-region integrity. YottaDB recommends the use of -VERIFY (the default) when -BACKWARD is used with -RECOVER or -ROLLBACK. For -FORWARD, unless there is reason to suspect that the journal files have sustained structural damage, YottaDB suggests the use of -NOVERIFY (the default).
+When -NOVERIFY -BACKWARD is specified along with -RECOVER or -ROLLBACK, PBLKs are applied to the database in the same pass as the verification. This speeds up processing. The disadvantage of this approach is that in the event of verification terminating in the middle of backward processing, there is no protection for cross-region integrity. YottaDB recommends the use of -VERIFY (the default) when -BACKWARD is used with -RECOVER or -ROLLBACK. For -FORWARD, unless there is reason to suspect that the journal files have sustained structural damage, YottaDB suggests the use of -NOVERIFY (the default).
 
-When used independent of -RECOVER (or -ROLLBACK), -[NO]VERIFY option does not need database access. In this case the default is -VERIFY.
+When used independent of -RECOVER (or -ROLLBACK), the -[NO]VERIFY option does not need database access. In this case, the default is -VERIFY.
 
 +++++++++++++++++++++++++++++
 Journal Direction Qualifiers
@@ -1029,7 +1029,7 @@ If multiple journal files are specified in the command line, -FORWARD sorts the 
 Journal Time Qualifiers
 ++++++++++++++++++++++++
 
-Journal qualifiers specifying time accept arguments in absolute or delta time format. Enclose time arguments in quotation marks (" ") . Include a back-slash (\) delimiter before both, the beginning and ending quotation marks to escape it from being processed by the UNIX shell.
+Journal qualifiers specifying time accept arguments in absolute or delta time format. Enclose time arguments in quotation marks (" "). Include a back-slash (\) delimiter before both the beginning and ending quotation marks to escape it from being processed by the UNIX shell.
 
 Absolute format is day-mon-yyyy hh:mm:ss, where day denotes the date of the month, mon indicates the abbreviated 3-letter month name (for example, Jan, Feb,..) and the year yyyy and hour hh are separated by a space. Absolute time may indicate today's date with "-- " before the hours.
 
@@ -1060,12 +1060,12 @@ If -BEFORE= time exceeds the last time recorded in journal files, JOURNAL proces
 
 When used with -ROLLBACK or -RECOVER, -BEFORE specifies the the time at which MUPIP stops applying updates to the database in its forward processing phase (i.e., no journal records with update times after the -BEFORE time are applied to the database).
 
-When both -FETCHRESYNC/-RESYNC and -BEFORE are used with -ROLLBACK -BACKWARD, the qualifier corresponding to an earlier database state or point in time prevails. For example, -BEFORE prevails when the update corresponding to the sequence number obtained through the -FETCHRESYNC command happened at a later time relative -BEFORE and vice versa. 
+When both -FETCHRESYNC/-RESYNC and -BEFORE are used with -ROLLBACK -BACKWARD, the qualifier corresponding to an earlier database state or point in time prevails. For example, -BEFORE prevails when the update corresponding to the sequence number obtained through the -FETCHRESYNC command happened at a later time relative to -BEFORE and vice versa. 
 
 .. parsed-literal::
    -[NO]LOO[KBACK_LIMIT][=lookback-option-list]
 
-Specifies how far JOURNAL -RECOVER -BACKWARD processes past the turnaround point (the explicit or implicit point in journal file up to which -RECOVER proceeds backward before it reverses and processes database in forward direction), while attempting to resolve open transaction fences. This option is applicable only for transactions fenced with ZTSTART and ZTCOMMIT. For transaction fenced with TSTART and TCOMMIT, -RECOVER always resolves open transaction fences.
+Specifies how far JOURNAL -RECOVER -BACKWARD processes past the turnaround point (the explicit or implicit point in the journal file up to which -RECOVER proceeds backward, before it reverses and processes the database in the forward direction), while attempting to resolve open transaction fences. This option is applicable only for transactions fenced with ZTSTART and ZTCOMMIT. For transaction fenced with TSTART and TCOMMIT, -RECOVER always resolves open transaction fences.
 
 -LOOKBACK_LIMIT=options, include time and transaction counts. -NOLOOKBACK_LIMIT specifies that JOURNAL -BACKWARD can process all the way to the beginning of the journal file, if necessary, to resolve open transaction fences. -LOOKBACK_LIMIT= is incompatible with -FORWARD.
 
@@ -1083,7 +1083,7 @@ For example:
 
 -lookback=\"time=0 00:00:30\"
 
-When -LOOKBACK_LIMIT= specifies both options, they must be separated by a comma (,), for example:
+When -LOOKBACK_LIMIT= specifies both options, they must be separated by a comma (,). For example:
 
 -lookback=\"time=0 00:00:30,operations=35\"
 
@@ -1094,9 +1094,9 @@ By default, MUPIP JOURNAL uses -LOOKBACK_LIMIT=\"TIME=0 00:05\" providing five m
 .. parsed-literal::
    -SI[NCE]=time
 
-The -SINCE time qualifier applies to MUPIP JOURNAL -BACKWARD. The -SINCE qualifier specifies how far back in time MUPIP JOURNAL should at least process (from the end of the journal file), before starting the forward processing. The actual turn-around point for -RECOVER and -ROLLBACK in each database region is an epoch in the journal files before or at the -SINCE time, but not after it.
+The -SINCE time qualifier applies to MUPIP JOURNAL -BACKWARD. The -SINCE qualifier specifies how far back in time MUPIP JOURNAL should at least process (from the end of the journal file), before starting the forward processing. The actual turn-around point for -RECOVER and -ROLLBACK in each database region is an epoch in the journal file before or at the -SINCE time, but not after it.
 
-The time specified references time stamps in the journal files. If there are open fenced transactions when JOURNAL -BACKWARD locates the -SINCE= time, it continues processing backward to resolve them, unless the command also specifies -FENCES=NONE. If -SINCE= time exceeds the last time recorded in the journal files or, follows any -BEFORE=time, JOURNAL processing effectively ignores the qualifier, and displays a warning message.
+The time specified references time stamps in the journal files. If there are open fenced transactions when JOURNAL -BACKWARD locates the -SINCE= time, it continues processing backward to resolve them, unless the command also specifies -FENCES=NONE. If -SINCE= time exceeds the last time recorded in the journal files or follows any -BEFORE=time, JOURNAL processing effectively ignores the qualifier, and displays a warning message.
 
 By default, -SINCE= time is 0 00:00:00 which denotes the time at the end of the journal file (the time when the last journal record was updated). 
 
@@ -1109,14 +1109,14 @@ These qualifiers are compatible only with -EXTRACT.
 .. parsed-literal::
    -S[EQNO]=<sequence_number_list>
 
-Specifies a list of sequence numbers to include or exclude in the journal extract. <sequence_number_list> is a comma separated list of sequence number(s) in decimal form. When a sequence number has a (~) prefix, -SEQNO excludes it from the journal extract. For replicated regions, EXTRACT -SEQNO uses replication sequence numbers, which may select records from multiple regions. For unreplicated regions, EXTRACT uses journal sequence numbers, but specifying sequence number selection with more than one regions produces a JNLEXTRCTSEQNO error. When the sequence number list contains a sequence number involved in a TP transaction, EXTRACT reports it in a broken transaction file when the result does not contain all regions, which is commonly the case without replication, and may be the case with replication when not all regions are available to the utility.
+Specifies a list of sequence numbers to include or exclude in the journal extract. <sequence_number_list> is a comma-separated list of sequence number(s) in decimal form. When a sequence number has a (~) prefix, -SEQNO excludes it from the journal extract. For replicated regions, EXTRACT -SEQNO uses replication sequence numbers, which may select records from multiple regions. For unreplicated regions, EXTRACT uses journal sequence numbers, but specifying sequence number selection with more than one region produces a JNLEXTRCTSEQNO error. When the sequence number list contains a sequence number involved in a TP transaction, EXTRACT reports it in a broken transaction file when the result does not contain all regions, which is commonly the case without replication, and may be the case with replication when not all regions are available to the utility.
 
 Example:
 
 .. parsed-literal::
    mupip journal -extract -seqno="~1,2,3,4,~5" -forward -broken=trans.broken -lost=trans.lost "*"
 
-This example produces a journal extract containing journal sequence numbers 2,3,and 4. 1 and 5 are not part of the journal extract as they have the (~) prefix.
+This example produces a journal extract containing journal sequence numbers 2, 3 and 4. 1 and 5 are not part of the journal extract as they have the (~) prefix.
 
 The following qualifiers are compatible only with -ROLLBACK.
 
@@ -1133,12 +1133,12 @@ The <port number> is the communication port number that the rollback command use
 .. note::
    YottaDB recommends unconditionally scripting the MUPIP JOURNAL -ROLLBACK -FETCHRESYNC command prior to starting any Source Server on the replicating instance to avoid a possible out-of-sync situation.
 
-The reference point sent by the originating instance is the RESYNC_SEQNO (explained later) that the originating instance once maintained. The database/journal files are rolled back to the earlier RESYNC_SEQNO (that is, the one received from originating instance or the one maintained locally). If you do not use -fetchresync, the database rolls back to the last consistent replicating instance state.
+The reference point sent by the originating instance is the RESYNC_SEQNO (explained later) that the originating instance once maintained. The database/journal files are rolled back to the earlier RESYNC_SEQNO (that is, the one received from the originating instance or the one maintained locally). If you do not use -fetchresync, the database rolls back to the last consistent replicating instance state.
 
-The system stores extracted lost transactions in the file <extract file> specified by this mandatory qualifier. The starting point for the search for lost transactions is the JNL_SEQNO obtained from the originating instance in the -fetchresync operation. If -fetchresync is not specified, <extract file> lists the post-consistent-state transactions that were undone by the rollback procedure to reach a consistent state.
+The system stores extracted lost transactions in the file <extract file> specified by this mandatory qualifier. The starting point of the search for lost transactions is the JNL_SEQNO obtained from the originating instance in the -fetchresync operation. If -fetchresync is not specified, <extract file> lists the post-consistent-state transactions that were undone by the rollback procedure to reach a consistent state.
 
 .. note::
-   The extracted lost transactions list may contain broken transactions due to system failures that occurred during processing. Do not resolve these transactions --they are not considered to be committed. The database header may get corrupted if you suspend an ongoing ROLLBACK -FETECHRESYNC operation or if the TCP connection between the two instances gets broken. The workaround is to restart the ROLLBACK -FETCHRESYNC operation or wait 60 seconds for the FETCHRESYNC operation to timeout.
+   The extracted lost transactions list may contain broken transactions due to system failures that occurred during processing. Do not resolve these transactions - they are not considered to be committed. The database header may get corrupted if you suspend an ongoing ROLLBACK -FETECHRESYNC operation or if the TCP connection between the two instances gets broken. The workaround is to restart the ROLLBACK -FETCHRESYNC operation or wait 60 seconds for the FETCHRESYNC operation to timeout.
 
 Example:
 
@@ -1182,7 +1182,7 @@ Note that, if selection qualifiers are specified, the broken transaction determi
 .. parsed-literal::
    -[NO]CHE[CKTN]
 
--CHECKTN specifies that JOURNAL -FORWARD must verify for each region that the begining transaction number of the earliest journal file to be processed for that region is same as the current transaction in the database file and that the ending transaction number of every journal file is equal to the begining transaction number of the next generation journal file for a given region. By default, -FORWARD uses -CHECKTN.
+-CHECKTN specifies that JOURNAL -FORWARD must verify for each region that the beginning transaction number of the earliest journal file to be processed for that region is the same as the current transaction in the database file and that the ending transaction number of every journal file is equal to the beginning transaction number of the next generation journal file for a given region. By default, -FORWARD uses -CHECKTN.
 
 -NOCHECKTN forces forward recovery by overriding inbuilt mechanisms for checking transaction integrity. MUPIP performs -VERIFY when -NOCHECKTN is specified. Use -NOCHECKTN with caution because it may lead to integrity issues in the recovered database and journal files.
 
@@ -1197,7 +1197,7 @@ Specifies the number of errors that MUPIP JOURNAL processing accepts. When the n
 
 Note that, -NOERROR_LIMIT is not the same as -ERROR_LIMIT=0.
 
-By default, MUPIP JOURNAL uses -ERROR_LIMIT=0, causing the first error to initiate the appropriate error action. In case of a crash there could be some incomplete journal records at the end of a journal file. MUPIP JOURNAL does not consider these as errors. In addition, fenced transactions that are broken are not considered as errors.
+By default, MUPIP JOURNAL uses -ERROR_LIMIT=0, causing the first error to initiate the appropriate error action. In case of a crash, there could be some incomplete journal records at the end of a journal file. MUPIP JOURNAL does not consider these to be errors. In addition, fenced transactions that are broken are not considered to be errors.
 
 During the forward phase of recovery, if journal processing finds a broken transaction, all the logical records processed afterwards are considered suspect. If a complete transaction is found after any broken transactions, MUPIP JOURNAL -RECOVER increments the error count and, if it is less than the error limit, it is applied to the database. Otherwise, it is treated as a lost transaction and extracted. If a complete transaction is found after any broken transactions, MUPIP JOURNAL -ROLLBACK treats it as a lost transaction and extracts it irrespective of the error limit.
 
@@ -1246,18 +1246,18 @@ This qualifier applies when the MUPIP command is entered from a terminal. The de
 
 -LOSTTRANS is an optional qualifier for -RECOVER, -ROLLBACK and -EXTRACT. If this is not specified and a lost transaction file creation is necessary, MUPIP JOURNAL creates one using the name of the current journal file being processed with a .lost extension.
 
-Journal processing treats any complete transactions after a broken transaction as a lost transaction, and writes such transactions into the lost transaction file. -RECOVER might consider it as good transaction and apply it to the database, if -ERROR_LIMIT qualifier allows it to do so.
+Journal processing treats any complete transaction after a broken transaction as a lost transaction, and writes such transactions into the lost transaction file. -RECOVER might consider it a good transaction and apply it to the database, if -ERROR_LIMIT qualifier allows it to do so.
 
 Note that, if selection qualifiers are specified, journal processing does the broken transaction determination (and therefore lost transaction determination as well) based on the journal file that is filtered by the selection qualifiers. This means that a transaction's journal records may be considered complete or broken or lost, depending on the nature of the selection qualifiers. Using -FENCES=NONE along with the selection qualifiers results in every journal record being considered complete and hence preventing broken or lost transaction processing.
 
-In the case of a replicated database, lost transaction can have an additional cause. If failover occurs (that is, the originating Source Server, A, fails and the replicating Source Server, B, assumes the originating instance's role), some transactions committed to A's database may not be reflected in B's database. Before the former originating instance becomes the new replicating instance, these transactions must be rolled back. These transactions are known as "lost transactions". Note that these are complete transactions and different from a broken transaction. MUPIP JOURNAL -ROLLBACK stores extracted lost transactions in the extract-file specified by this qualifier. The starting point for the search for lost transactions is the journal sequence number obtained from the originating Source Server in the -FETCHRESYNC operation.
+In a replicated database, lost transactions can have an additional cause. If failover occurs (i.e. the originating Source Server A fails, and the replicating Source Server B assumes the originating instance's role), some transactions committed to A's database may not be reflected in B's database. Before the former originating instance becomes the new replicating instance, these transactions must be rolled back. These transactions are known as "lost transactions". Note that these are complete transactions and different from a broken transaction. MUPIP JOURNAL -ROLLBACK stores extracted lost transactions in the extract-file specified by this qualifier. The starting point for the search for lost transactions is the journal sequence number obtained from the originating Source Server in the -FETCHRESYNC operation.
 
 .. parsed-literal::
    -RED[IRECT]=file-pair-list
 
 Replays the journal file to a database different than the one for which it was created. Use -REDIRECT to create or maintain databases for training or testing.
 
-This qualifier applies to -RECOVER action and -FORWARD direction qualifier only. JOURNAL rejects -REDIRECT unless it appears with -RECOVER.
+This qualifier applies to -RECOVER action and the -FORWARD direction qualifier only. JOURNAL rejects -REDIRECT unless it appears with -RECOVER.
 
 The file-pair-list consists of one or more pairs of file-names enclosed in parentheses () and separated by commas (,). The pairs are separated by an equal sign in the form:
 
@@ -1283,7 +1283,7 @@ Prints verbose output in the course of processing. It is not negatable and it is
 Journal Selection Qualifiers
 +++++++++++++++++++++++++++++
 
-Journal Selection Qualifiers are compatible with -EXTRACT and -SHOW operations only. This is because most applications are not constructed to safely remove a subset of transactions based on criteria that is exterior to the application design. To exclude transactions from a recovery based on some selection criteria, the methodology is to -EXTRACT the records, and then reapply them through application logic rather than by journal recovery. This approach permits the application logic to appropriately handle any interactions between the removed and the retained transactions. Note that, selection qualifiers might result in only a subset of a fenced transaction's journal records to be extracted (for example, a TSTART record may not be extracted because the first update in that transaction was filtered out by a selection qualifier, while the corresponding TCOMMIT record may get extracted). This can cause a fenced transaction to seem broken when actually it is not.
+Journal Selection Qualifiers are only compatible with the -EXTRACT and -SHOW operations. This is because most applications are not constructed to safely remove a subset of transactions based on criteria that is exterior to the application design. To exclude transactions from a recovery based on some selection criteria, the methodology is to -EXTRACT the records, and then reapply them through application logic rather than by journal recovery. This approach permits the application logic to appropriately handle any interactions between the removed and the retained transactions. Note that, selection qualifiers might result in only a subset of a fenced transaction's journal records to be extracted (for example, a TSTART record may not be extracted because the first update in that transaction was filtered out by a selection qualifier, while the corresponding TCOMMIT record may get extracted). This can cause a fenced transaction to seem broken when it is actually not.
 
 The following qualifiers control the selection criteria for journal processing.
 
@@ -1294,7 +1294,7 @@ Except for -TRANSACTION, all qualifiers allow for specifying a comma (,) seperat
 
 Specifies globals for MUPIP JOURNAL to include or exclude from processing. You might find this qualifier useful for extracting and analyzing specific data.
 
-The global-list contains one or more global-names (without subscripts) preceded by a caret symbol (^). To include more than one global use one of the following syntaxes.
+The global-list contains one or more global-names (without subscripts) preceded by a caret symbol (^). To include more than one global, use one of the following syntaxes.
 
 .. parsed-literal::
    $ mupip journal -forward -extract -global="^A*,^C" mumps.mjl 
@@ -1306,7 +1306,7 @@ or
 
 The names may include the asterisk (*) wildcard. That is, -GLOBAL="^A*" selects all global variables with names starting with A. The entire list or each name may optionally be preceded by a tilde (~), requiring JOURNAL to exclude database updates to the specified global(s). When the global-list with a MUPIP JOURNAL -GLOBAL does not start with a tilde sign (~), JOURNAL processes only the explicitly named globals. By default, JOURNAL processes all globals.
 
-To specify subscripts, using -GLOBAL="^A(1)" results in all keys under the ^A(1) tree to be included, that is, it is equivalent to using -GLOBAL="^A(1,*)". An asterisk (*) or a percent (%) anywhere in the global specification is permitted. Percent (%) matches any character, and asterisk (*) matches any string (possibly zero length too). The asterisk (*) or percent (%) specification can be used for -USER qualifier too.
+To specify subscripts, using -GLOBAL="^A(1)" results in all keys under the ^A(1) tree to be included, i.e. it is equivalent to using -GLOBAL="^A(1,*)". An asterisk (*) or a percent (%) anywhere in the global specification is permitted. Percent (%) matches any character, and asterisk (*) matches any string (possibly zero length too). The asterisk (*) or percent (%) specification can be used for -USER qualifier too.
 
 Example:
 
@@ -1343,8 +1343,7 @@ By default, JOURNAL processes transactions, regardless of its type.
 .. parsed-literal::
    -U[SER]=user-list
 
-Specifies that MUPIP JOURNAL processing include or exclude database updates generated by one or more users. You can use this qualifier to audit the actions of a particular user. The user-list contains names of one or more users. Indicate multiple users by separating the names with commas (,). The names may include the wildcard asterisk (*). The entire list or each name may optionally be preceded by a minus sign (-) or a tilde (~), requiring JOURNAL to exclude database updates initiated by the specified user(s). When the user-list with a JOURNAL -USER does not start with a tilde (~), JOURNAL processes only those database updates, which are generated by explicitly named users. The asterisk (*) or percent (%) specification can be used for -USER qualifier. Percent (%) matches any character, and asterisk (*) matches any string (possibly zero length too).
-
+Specifies that MUPIP JOURNAL processing include or exclude database updates generated by one or more users. You can use this qualifier to audit the actions of a particular user. The user-list contains names of one or more users. Indicate multiple users by separating the names with commas (,). The names may include the wildcard asterisk (*). The entire list or each name may optionally be preceded by a minus sign (-) or a tilde (~), requiring JOURNAL to exclude database updates initiated by the specified user(s). When the user-list with a JOURNAL -USER does not start with a tilde (~), JOURNAL processes only database updates that are generated by explicitly named users. The asterisk (*) or percent (%) specification can be used for -USER qualifier. Percent (%) matches any character, and asterisk (*) matches any string (possibly zero length too).
 
 By default, JOURNAL processes database updates regardless of the user who initiated them.
 
@@ -1360,7 +1359,7 @@ After this label, the journal record extracts follow. These journal record extra
 
 The first piece of an -EXTRACT output record contains a two-digit decimal transaction record type (for example, 01 for a process initialization record). The second piece contains the full date and time of the operation, represented in the $HOROLOG format. The third piece contains a YottaDB assigned number (database transaction number) which uniquely identifies the transaction within the time covered by the journal file. The fourth piece contains the process ID (PID) of the process that performed the operation, represented as a decimal number. The remainder of the record depends on the record type.
 
-Records of type SET, KILL, ZKILL, TSTART, and TCOMMIT include the token_seq as part of the output. It is the sixth field in the output of the journal record extract. When replication is in use, token_seq is a journal sequence number (jsnum) that uniquely identifies each transaction(for more information on journal sequence number refer to `Chapter 7: “Database Replication” <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html>`_). When replication is not in use and the transaction is a TP transaction, token_seq is an 8-byte token that uniquely identifies the entire TP transaction. For non-replicated, non-TP journal records, token_seq has a zero (0) value.
+Records of type SET, KILL, ZKILL, TSTART, and TCOMMIT include the token_seq as part of the output. It is the sixth field in the output of the journal record extract. When replication is in use, token_seq is a journal sequence number (jsnum) that uniquely identifies each transaction (for more information on journal sequence number refer to `Chapter 7: “Database Replication” <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html>`_). When replication is not in use and the transaction is a TP transaction, token_seq is an 8-byte token that uniquely identifies the entire TP transaction. For non-replicated, non-TP journal records, token_seq has a zero (0) value.
 
 The format of the plain journal extract is as follows:
 
@@ -1465,11 +1464,11 @@ AIMG records are unique to DSE action and exist because those actions do not hav
 
 EPOCH records are status records that record information related to check pointing of the journal.
 
-NCTN records are the transaction numbers of the sequence of critical sections in which the process and marked the database blocks of the globals as previously used but no longer in use in the bit maps.
+NCTN records are the transaction numbers of the sequence of critical sections in the process and mark the database blocks of the globals as previously used but no longer in use in the bit maps.
 
-PBLK records are the before image records of the bit maps.
+PBLK records are the before-image records of the bit maps.
 
-ALIGN records pad journal records so every alignsize boundary (set with MUPIP SET -JOURNAL and is visible in DSE DUMP -FILEHEADER output) in the journal file starts with a fresh journal record. The sole purpose of these records is to help speed up journal recovery.
+ALIGN records pad journal records so that every alignsize boundary (set with MUPIP SET -JOURNAL and is visible in DSE DUMP -FILEHEADER output) in the journal file starts with a fresh journal record. The sole purpose of these records is to help speed up journal recovery.
 
 Legend (All hexadecimal fields have a 0x prefix. All numeric fields otherwise are decimal):
 
