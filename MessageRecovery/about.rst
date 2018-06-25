@@ -8,9 +8,9 @@ About This Manual
 .. contents::
     :depth: 2
 
-The YottaDB Message and Recovery Procedures Reference Manual describes the meaning of messages issued by YottaDB components, including the M compiler, the run-time system, and utility programs.
+The YottaDB Message and Recovery Procedures Reference Manual describes the meaning of messages issued by YottaDB components, including the M compiler, the run-time system and utility programs.
 
-This manual is organized alphabetically according to the message identifier. The meaning of each message is provided as well as suggestions for locating and addressing the cause of error-type messages.
+This manual is organized alphabetically according to the message identifier. The meaning of each message is provided, as well as suggestions for locating and addressing the cause of error-type messages.
 
 ------------------
 Intended Audience
@@ -36,13 +36,13 @@ Conventions Used in this Manual
 
 YottaDB messages are identified by a signature of the form YDB-s-abcdef where -s- is a severity indicator and abcdef is an identifier. The severity indicators are: -I- for informational messages, -W- for warnings, -E- for errors and -F- for events that cause a YottaDB process to terminate abnormally. For more information on monitoring YottaDB messages, refer to `"Appendix B: Monitoring YottaDB Messages" in the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/monitoring.html>`_.
 
-Each entry in this manual is presented in the following format as illustrated by the NOPRINCIO message.
+Each entry in this manual is presented in the following format as illustrated by the NOTPRINCIO message.
 
 .. parsed-literal::
    1. NOTPRINCIO
    2. NOTPRINCIO, Output currently directed to device xxxx
-   3. Run Time Warning: This message displays the current device when the process enters Direct Mode and the current device xxxx is not the principal device.
-   4. Action: To redirect all I/O to the terminal, note the current device or save it in a temporary variable and USE $P. If you decide to resume program execution, restore the current device with a USE command.
+   3. Run Time Warning: This message displays the current device xxxx when it is not the principal device and the process enters Direct Mode.
+   4. Action: To redirect all I/O to the terminal, note the current device or save it in a temporary variable and USE $P. If you decide to resume program execution, remember to restore the current device with a USE command.
 
 where
 
@@ -51,11 +51,11 @@ where
 * 3 indicates the YottaDB component that generates the message, its severity, and a short description of its implication(s).
 * 4 suggests action(s) to take when the message appears.
 
-This manual can be used with YottaDB on any of its supported platforms. However, because in some instances the suggested actions are more useful when platform-specific information is provided, the following conventions are used, as necessary.
+This manual can be used with YottaDB on any of its supported platforms. However, because in some instances the suggested actions are more useful when platform-specific information is provided, the following conventions are used as necessary.
 
 Although the terms "host shell command" and "file-specification" have some platform-specification connotations, they are used in their most generic sense throughout this manual. The former describes commands that originate from the host operating system, rather than from YottaDB. The latter may refer to a simple file name or a full directory path to that file.
 
-An "initiating instance" is always the instance that first records a transaction (including non-TP mini-transactions). A "replicating instance" is always following the action of an "originating instance", previously called "root primary". We have called secondaries that replicate propagating primaries, but they are not originating instances.
+An "initiating instance" is always the instance that first records a transaction (including non-TP mini-transactions). A "replicating instance" is always the instance following the action of an "originating instance", previously called "root primary". We have called secondaries that replicate propagating primaries, but they are not originating instances.
 
 ---------------------------------
 Following Up on Suggested Actions
@@ -97,7 +97,7 @@ Action: Verify that the database file exists, the corresponding entry in the mas
 
 Plugin error: The plugin detected an internal error.
 
-Action: This error indicates that there is a communication error between YottaDB and the gtmcrypt plug-in. Replace the process with undamaged one. Report the entire incident context to your YottaDB support channel.
+Action: This error indicates that there is a communication error between YottaDB and the gtmcrypt plug-in. Replace the process with an undamaged one. Report the entire incident context to your YottaDB support channel.
 
 **Encryption key file <path> not found**
 
