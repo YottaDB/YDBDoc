@@ -22,7 +22,7 @@ Cannot find MUMPS executable in <path>
 
 Plugin error: The plugin cannot find the MUMPS executable.
 
-Action: Set the $ydb_dist environment variable to the directory containing MUMPS executable. Verify proper permissions for directory path and file.
+Action: Set the $ydb_dist environment variable to the directory containing the MUMPS executable. Verify proper permissions for directory path and file.
 
 ------------------------------------
 Cannot open DB keys file - <path>
@@ -30,7 +30,7 @@ Cannot open DB keys file - <path>
 
 Plugin error: The plugin cannot open the master key file.
 
-Action: Verify the master key file exists and there are appropriate authorizations on the directory path and master key file. 
+Action: Verify that the master key file exists and there are appropriate authorizations on the directory path and master key file. 
 
 ------------------------------------------
 DB keys file of unknown file type : <path>
@@ -46,7 +46,7 @@ Database file <path> missing in DB keys file or does not exist
 
 Plugin error: The plugin reports that the master key file does not contain a valid entry pointing to the database file.
 
-Action: Create an entry in the master key file for the specified database file, verify that the database file exists and appropriate authorizations exist on the directory and database file name. 
+Action: Create an entry in the master key file for the specified database file, verify that the database file exists and that appropriate authorizations exist on the directory and database file name. 
 
 ------------------------------------------------------
 Database file <path> not found
@@ -62,7 +62,7 @@ Encryption handle corrupted
 
 Plugin error: The plugin detected an internal error.
 
-Action: This error indicates that there is a communication error between YottaDB and the gtmcrypt plug-in. Replace the process with undamaged one. Report the entire incident context to your YottaDB support channel.
+Action: This error indicates that there is a communication error between YottaDB and the gtmcrypt plug-in. Replace the process with an undamaged one. Report the entire incident context to your YottaDB support channel.
 
 -------------------------------------
 Encryption key file <path> not found
@@ -78,7 +78,7 @@ Encryption library has not been initialized
 
 Plugin error: A gtmcrypt function was called before gtmcrypt_init().
 
-Action: Call gtmcrypt_init() before calling any other encryption functions.
+Action: Call gtmcrypt_init() before calling any other encryption function.
 
 ---------------------------------------------------
 Environment variable <environment_variable> not set
@@ -95,7 +95,6 @@ Environment variable gtm_dbkeys set to empty string
 Plugin error: The $gtm_dbkeys environment variable was set to the empty string.
 
 Recovery Action: Set $gtm_dbkeys to point to the master key file.
-
 
 -------------------------------------------------------------------------
 Environment variable gtm_dbkeys undefined. Cannot find <path>/.gtm_dbkeys
@@ -135,7 +134,7 @@ Error parsing database key file. At line <line_number>: <line_contents> does not
 
 Plugin error: The plugin detected that the master key file was not properly formatted.
 
-Action: Verify entries in the master key file start with "dat" or "key". 
+Action: Verify that the entries in the master key file start with "dat" or "key". 
 
 ------------------------------------------------------------------------------------------------------------
 Error parsing database key file. At line <line_number>: No matching 'key' entry found in <contents_of_line>
@@ -143,8 +142,7 @@ Error parsing database key file. At line <line_number>: No matching 'key' entry 
 
 Plugin error: The plugin was not able to find a "key" entry for a "dat" entry.
 
-Action: Verify the database file exists, that the corresponding entry in the master key file points to the database file, that appropriate authorizations exist on the directory path and the database file, and that each "dat" entry has a corresponding "key" entry.
-
+Action: Verify that the database file exists, that the corresponding entry in the master key file points to the database file, that appropriate authorizations exist on the directory path and the database file, and that each "dat" entry has a corresponding "key" entry.
 
 --------------------------------------------------------
 Incorrect password
@@ -160,7 +158,7 @@ libgcrypt version mismatch. Expected <expected_version>, found <found_version>
 
 Plugin error: The plugin could not locate an appropriate libgcrypt library version.
 
-Action: Verify the <expected_version> is installed and in the library search path. 
+Action: Verify that the <expected_version> is installed and in the library search path. 
 
 --------------------------------------------------------------
 Matching encryption key <hash> not found in database key file
