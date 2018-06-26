@@ -38,7 +38,7 @@ ACTCOLLMISMTCH, Global ^gggg inherits alternative collation sequence #nnnn from 
 
 Run Time Error: This indicates that the global gggg inherits collation nnnn from the global directory (globals that span multiple regions inherit collation 0 by default) but the directory tree in database file dddd contains a different collation sequence mmmm for this global.
 
-Action: If nnnn is the right collation sequence to use, fix the database file dddd by using a temporary global directory that maps all names to dddd, extract the global, KILL it, use $$set^%GBLDEF to fix the alternative collation for gggg from mmmm to nnnn, reload the global from the extract, switch back to the regular global directory. If mmmm is the right collation sequence to use, recreate the global directory and define GBLNAME gggg to have that collation instead.
+Action: If nnnn is the right collation sequence to use, fix the database file dddd by using a temporary global directory that maps all names to dddd, extract the global, KILL it, use $$set^%GBLDEF to fix the alternative collation for gggg from mmmm to nnnn, reload the global from the extract and switch back to the regular global directory. If mmmm is the right collation sequence to use, recreate the global directory and define GBLNAME gggg to have that collation instead.
 
 ------------
 ACTIVATEFAIL
@@ -48,7 +48,7 @@ ACTIVATEFAIL, Cannot activate passive source server on instance iiii while a rec
 
 MUPIP Error: MUPIP REPLIC -SOURCE -ACTIVATE -ROOTPRIMARY (or -UPDOK) issues this error when the command attempts to activate a passive source server (and switch the instance from being a replicating secondary instance to an originating primary) while a receiver server and/or update process is already running
 
-Action: Shutdown the receiver and/or update process and reissue the MUPIP REPLIC -SOURCE -ACTIVATE -ROOTPRIMARY (or -UPDOK) command. Note that any other YottaDB or MUPIP process that was running before the activation does not need to be shut down for the activation to succeed.
+Action: Shutdown the receiver serever and/or update process and reissue the MUPIP REPLIC -SOURCE -ACTIVATE -ROOTPRIMARY (or -UPDOK) command. Note that any other YottaDB or MUPIP process that was running before the activation does not need to be shut down for the activation to succeed.
 
 ---------
 ACTLSTEXP
@@ -58,8 +58,7 @@ ACTLSTEXP, Actuallist expected
 
 Run Time Error: This indicates that the DO command, without an actuallist of parameters, failed because its entryref argument specified a label that has a formallist of parameters.
 
-Action: Review the interface between the DO and the subroutine. Add the actuallist to the DO, remove the formallist from the label, or identify another subroutine to invoke, as appropriate.
-
+Action: Review the interface between the DO and the subroutine. Add the actuallist to the DO, remove the formallist from the label or identify another subroutine to invoke, as appropriate.
 
 --------------
 ACTLSTTOOLONG 
@@ -69,7 +68,7 @@ ACTLSTTOOLONG, More actual parameters than formal parameters: xxxx
 
 Compile Time/Run Time Error: This indicates that the label xxxx with a formallist; is invoked from within a routine with a longer actuallist (during compile-time). At run-time, a similar error can occur when a longer actuallist is supplied by an invocation from another routine.
 
-Action: Review the interface between the DO command and the subroutine. Modify the actuallist, formallist, and/or label, as appropriate.
+Action: Review the interface between the DO command and the subroutine. Modify the actuallist, formallist and/or label, as appropriate.
 
 ----------
 ACTOFFSET
@@ -77,7 +76,7 @@ ACTOFFSET
 
 ACTOFFSET, Actuallist not allowed with offset
 
-Compile Time Error: This indicates that a DO command or extrinsic specified an actuallist and an entryref that includes an offset.
+Compile Time Error: This indicates that a DO command or an extrinsic specified an actuallist and an entryref that includes an offset.
 
 Action: Look for an inappropriate offset.
 
@@ -107,9 +106,9 @@ AIMGBLKFAIL
 
 AIMGBLKFAIL, After image build for block bbbb in region rrrr failed in DSE or MUPIP
 
-MUPIP/DSE/GT.CM Error: DSE creates after images of blocks as a result of its physical manipulation of blocks and in MUPIP processes them in the course of RECOVER or ROLLBACK. This error indicates that such a manipulation failed on the block and region indicated.
+MUPIP/DSE/GT.CM Error: DSE creates after-images of blocks as a result of its physical manipulation of blocks and processes them in the course of RECOVER or ROLLBACK with MUPIP. This error indicates that such a manipulation failed on the block and region indicated.
 
-Action: If you get this error from DSE, you may be working with a block with a damaged state that your DSE action does not sufficiently address - analyze the situation and consider other approaches. If you get this error from MUPIP, it may mean your journal or replication has damage, in which case you should investigate the state of block bbbb.
+Action: If you get this error from DSE, you may be working with a block with a damaged state that your DSE action does not sufficiently address - analyze the situation and consider other approaches. If you get this error from MUPIP, it may mean your journal or replication is damaged, in which case you should investigate the state of block bbbb.
 
 -----------
 AIOBUFSTUCK
@@ -129,7 +128,7 @@ AIOCANCELTIMEOUT, Pid pppp timed out waiting for a pending asynchronous IO opera
 
 Run Time Error: Pid pppp timed out waiting for a pending asynchronous IO operation to complete/cancel in database file ffff.
 
-Action: While terminating its connection with file ffff, process pppp gave up after waiting approximately one minute without receiving notification that an asynchronous IO it had initiated had successfully completed or been canceled.
+Action: While terminating its connection with file ffff, process pppp gave up after waiting approximately one minute without receiving notification that an asynchronous IO it had initiated was successfully completed or canceled.
 
 -------------
 ALIASEXPECTED
@@ -139,8 +138,7 @@ ALIASEXPECTED, Alias or alias container variable expected in this context
 
 Compile Time/Run Time Error: This indicates the argument for a SET * or KILL * command used a non-alias local variable where the syntax requires an alias or alias container variable.
 
-Action: Correct the code in or investigate the logic to determine why the local variable in question is not in the expected state.
-
+Action: Correct the code or investigate the program logic to determine why the local variable in question is not in the expected state.
 
 -------------
 AMBISYIPARAM
@@ -151,7 +149,6 @@ AMBISYIPARAM, Parameter xxxx is ambiguous to $ZGETSYI()
 Run Time Error: This indicates that the argument xxxx is ambiguous to $ZGETSYI() because it does not have enough characters.
 
 Action: Add enough characters to make the argument unambiguous.
-
 
 ----------
 ANCOMPTINC
@@ -169,9 +166,9 @@ ARCTLMAXHIGH
 
 ARCTLMAXHIGH, The environment variable XXXX = YYYY is too high. Assuming the maximum acceptable value of ZZZZ
 
-Run Time Warning: The environment variable named XXXX that controls the maximum number of auto-relink routine entries is assigned a value (YYYY) that is too high. MUMPS will set maximum routine count to ZZZZ and continue normal operation.
+Run Time Warning: The environment variable named XXXX that controls the maximum number of auto-relink routine entries is assigned a value (YYYY) that is too high. MUMPS will set the maximum routine count to ZZZZ and continue normal operation.
 
-Action: Please set environment variable XXXX to a value between 1,000 and 16,000,000.
+Action: Please set the environment variable XXXX to a value between 1,000 and 16,000,000.
 
 ------------
 ARCTLMAXLOW
@@ -179,10 +176,9 @@ ARCTLMAXLOW
 
 ARCTLMAXLOW, The environment variable XXXX = YYYY is too low. Assuming the minimum acceptable value of ZZZZ
 
-Run Time Warning: The environment variable named XXXX that controls the maximum number of auto-relink routine entries is assigned a value (YYYY) that is too low. MUMPS will set maximum routine count to ZZZZ and continue normal operation.
+Run Time Warning: The environment variable named XXXX that controls the maximum number of auto-relink routine entries is assigned a value (YYYY) that is too low. MUMPS will set the maximum routine count to ZZZZ and continue normal operation.
 
-Action: Please set environment variable XXXX to a value between 1,000 and 16,000,000.
-
+Action: Please set the environment variable XXXX to a value between 1,000 and 16,000,000.
 
 ----------
 ARROWNTDSP
@@ -190,7 +186,7 @@ ARROWNTDSP
 
 ARROWNTDSP, Unable to display ^----- due to length of source line
 
-Compile Time Error: Displayed instead of the arrow indicating where compilation error occurred due to a long line source line.
+Compile Time Error: Displayed instead of the arrow indicating where the compilation error occurred due to a long source line.
 
 Action: Refer to the source code. The line number and column number in the associated messages identify the position of the problem. Consider shortening the line, at least until the error is found and corrected.
 
@@ -200,10 +196,9 @@ ASSERT
 
 ASSERT, Assert failed xxxx line yyyy
 
-Run Time Error: An internal YottaDB consistency check failed. This error occurs only in some special versions of YottaDB software.
+Run Time Error: An internal YottaDB consistency check failed. This error only occurs in some special versions of YottaDB software.
 
 Action: Report the entire incident context to your YottaDB support channel.
-
 
 -----------
 ASYNCIONOMM
@@ -211,10 +206,9 @@ ASYNCIONOMM
 
 ASYNCIONOMM, Database file ffffssss cannot cccc
 
-MUPIP Error: This indicates that database file has current state ssss (" has ASYNCIO enabled;" or: " has MM access method;") and therefore cannot change to assume change cccc ("enable MM" or "enable ASYNCIO"). MUPIP SET can also issue the same message with the text: "; cannot enable MM and ASYNCIO at the same time".
+MUPIP Error: This indicates that the database file has current state ssss ("has ASYNCIO enabled;" or: "has MM access method;") and therefore cannot change to assume change cccc ("enable MM" or "enable ASYNCIO"). MUPIP SET can also issue the same message with the text: "; cannot enable MM and ASYNCIO at the same time".
 
-Action: Address the blocking state - ASYNCIO by disabling it, or disable MM access method by changing it to BG before repeating the MUPIP command that produced this error.
-
+Action: Address the blocking state: ASYNCIO by disabling it, or disabling the MM access method by changing it to BG before repeating the MUPIP command that produced this error.
 
 -----------
 ASYNCIONOV4
@@ -224,8 +218,7 @@ ASYNCIONOV4, rrrr database has ssss; cannot cccc
 
 MUPIP Error: This indicates that region rrrr has current state ssss (ASYNCIO enabled) and therefore cannot change to assume change cccc (enable ASYNCIO).
 
-Action: Address the blocking state - ASYNCIO by disabling it, by completing an upgrade before repeating the MUPIP command that produced this error.
-
+Action: Address the blocking state: ASYNCIO by disabling it, or by completing an upgrade before repeating the MUPIP command that produced this error.
 
 -------------
 AUTODBCREFAIL
@@ -253,9 +246,9 @@ BACKUPKILLIP
 
 BACKUPKILLIP, Kill in progress indicator is set for file ffff, backup database could have incorrectly marked busy integrity errors
 
-MUPIP Warning: This indicates that one or more active process are performing KILL cleanup in database file ffff. Generally, BACKUP can wait for this to finish in order to get a consistent copy of the database. However, this indicates it waited several minute and is proceeding The resulting backup almost surely contains blocks incorrectly marked busy.
+MUPIP Warning: This indicates that one or more active process are performing a KILL cleanup in database file ffff. Generally, BACKUP can wait for this to finish in order to get a consistent copy of the database. However, this indicates that it waited several minutes and is now proceeding. The resulting backup will almost surely contain blocks incorrectly-marked-busy.
 
-Action: Wait and perform the BACKUP when there are no large KILL operations triggering extensive cleanup. If this is not desirable, fix the errors in the backup copy (reported by an INTEG NOMAP) with DSE MAP FREE. If there are many such blocks you can edit the INTEG output to create a script to drive the DSE operations. Alternatively, if you can get standalone access, to the database you may use DSE MAP RESTORE. Do not use MAP RESTORE on an active database.
+Action: Wait and perform the BACKUP when there are no large KILL operations triggering extensive cleanup. If this is not desirable, fix the errors in the backup copy (reported by an INTEG NOMAP) with DSE MAP FREE. If there are many such blocks, you can edit the INTEG output to create a script to drive the DSE operations. Alternatively, if you can get standalone access to the database, you may use DSE MAP RESTORE. Do not use MAP RESTORE on an active database.
 
 ----------
 BADACCMTHD
@@ -267,7 +260,6 @@ MUPIP Warning: This indicates that CREATE encountered an invalid access method f
 
 Action: Use the Global Directory Editor (GDE) to verify the access method for the Global Directory. Look for the use of YottaDB components with different version numbers.
 
-
 -----------
 BADCASECODE 
 -----------
@@ -278,7 +270,6 @@ Run Time Error: The two-argument form of $ZCONVERT() reports this error if the c
 
 Action: Choose a valid case designation code.
 
-
 -------
 BADCHAR
 -------
@@ -287,7 +278,7 @@ BADCHAR, XXX is not a valid character in the YYY encoding form.
 
 Run Time Error: YottaDB triggers this error when it encounters a byte sequence that is not legal according to the given character set of the current device.
 
-Action: Correct your application or its configuration to handle this situation. Depending on application requirements, the code may need handle the illegal byte sequence or disable the triggering of BADCHAR error by VIEW "NOBADCHAR" command. If the error is from a READ or WRITE command to a device other than $PRINCIPAL, the application can perform I/O in M-mode and then handle any needed conversion, correction, or other manipulation. For more information, refer to the `Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/index.html>`_.
+Action: Correct your application or its configuration to handle this situation. Depending on application requirements, the code may need to handle the illegal byte sequence or disable the triggering of the BADCHAR error using the VIEW "NOBADCHAR" command. If the error is from a READ or WRITE command to a device other than $PRINCIPAL, the application can perform I/O in M-mode and then handle any needed conversion, correction, or other manipulation. For more information, refer to the `Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/index.html>`_.
 
 --------
 BADCHSET
@@ -307,7 +298,7 @@ BADDBVER, Incorrect database version: xxxx
 
 Run Time Error: This indicates that the database version is not compatible with the current YottaDB version.
 
-Action: Upgrade the database. For more information, refer to the release notes for the current YottaDB version and any intervening versions back to the last prior version used.
+Action: Upgrade the database. For more information, refer to the release notes for the current YottaDB version and any intervening versions used until the prior version.
 
 -------------
 BADGBLSECVER 
@@ -315,9 +306,9 @@ BADGBLSECVER
 
 BADGBLSECVER, Global section xxxx does not match the current database version
 
-Run Time Error: In attempting to startup a database file, YottaDB encountered a shared memory section containing a database version older than the current database version.
+Run Time Error: In attempting to start up a database file, YottaDB encountered a shared memory section containing a database version older than the current database version.
 
-Action: Do not attempt to access the same database files simultaneously with different versions of YottaDB. Perform a MUPIP RUNDOWN with the prior version of database existing in the shared memory section. If needed, contact your system administrator for help.
+Action: Do not attempt to access the same database files simultaneously with different versions of YottaDB. Perform a MUPIP RUNDOWN with the prior version of the database existing in the shared memory section. If needed, contact your system administrator for help.
 
 ------------
 BADGTMNETMSG
@@ -325,7 +316,7 @@ BADGTMNETMSG
 
 BADGTMNETMSG, Invalid message sent to GT.CM server, type: xxxx
 
-GT.CM Error: The GT.CM Server received an invalid message. Possible causes include an undetected network error, a message originating from a process that is inappropriately intruding on the GT.CM environment, or a protocol failure in a legitimate process.
+GT.CM Error: The GT.CM Server received an invalid message. Possible causes are an undetected network error, a message originating from a process that is inappropriately intruding on the GT.CM environment, or a protocol failure in a legitimate process.
 
 Action: Retry the action that resulted in the error notification. If the problem persists, contact the group responsible for database operations on your network.
 
@@ -339,7 +330,6 @@ Run Time Error: This indicates that the argument xxxx is not a valid keyword for
 
 Action: Refer to the `Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/index.html>`_ for correct keyword usage.
 
-
 -------------
 BADLKIPARAM 
 -------------
@@ -349,7 +339,6 @@ BADLKIPARAM, xxxx is not a legal parameter for $ZGETLKI()
 Run Time Error: This indicates that the argument xxxx is not a valid keyword for $ZGETLKI().
 
 Action: Refer to the `Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/index.html>`_ for correct keyword usage.
-
 
 -----------
 BADLOCKNEST
@@ -403,17 +392,15 @@ Run Time Error: This indicates that the argument xxxx for $ZGETSYI() is not a va
 
 Action: Refer to the `Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/index.html>`_ for correct keyword usage.
 
-
 -------
 BADTAG
 -------
 
-BADTAG, BADTAG Unable to use file ffff (CCSID tttt) with CCSID uuuu
+BADTAG, Unable to use file ffff (CCSID tttt) with CCSID uuuu
 
-Run Time Error: This z/OS specific error indicates the device or file ffff had a tag tttt incompatible with the tag uuuu implied by chset associated with OPEN command.
+Run Time Error: This z/OS specific error indicates that the device or file ffff had a tag tttt incompatible with the tag uuuu implied by the chset associated with the OPEN command.
 
-Action: Change the [i/o]chset to match the device or file, or use iconv to convert the file to an appropriate character set, or possibly use chtag to [re]tag the file.
-
+Action: Change the [i/o]chset to match the device or file, use iconv to convert the file to an appropriate character set, or possibly use chtag to [re]tag the file.
 
 -----------
 BADTRNPARAM
@@ -435,7 +422,7 @@ Run Time Error: One of the parameters specified to $ZPEEK() is incorrect. Possib
 
 - mnemonic type - The mnemonic in the first argument is unknown.
 
-- mnemonic argument - An argument for the given mnemonic (specified after a ":" character) is expected and missing, is present and unexpected, or not in its proper form.
+- mnemonic argument - An argument for the given mnemonic (specified after a ":" character) is either expected and missing, present and unexpected, or not in its proper form.
 
 - mnemonic argument (region name) - Expected a region name argument which is either missing or not available.
 
@@ -443,14 +430,13 @@ Run Time Error: One of the parameters specified to $ZPEEK() is incorrect. Possib
 
 - mnemonic argument (peek base address) - Expected an address in the form 0xHHHHHHHH.. which is either missing or invalid.
 
-- offset - Expected non-negative numeric value which is either missing or invalid.
+- offset - Expected a non-negative numeric value which is either missing or invalid.
 
-- length - Expected non-negative numeric value which is either missing or invalid.
+- length - Expected a non-negative numeric value which is either missing or invalid.
 
 - format - Expected a single character format code which is either missing or invalid.
 
 Action: Review the invocation and correct the defective parameter.
-
 
 ------------
 BADZPEEKFMT
@@ -462,7 +448,6 @@ Run Time Error: The format code specified is not valid for the length specified.
 
 Action: Review the invocation and correct the defective length and/or format character.
 
-
 -------------
 BADZPEEKRANGE
 -------------
@@ -473,7 +458,6 @@ Run Time Error: Some combination of base address, offset, length and/or alignmen
 
 Action: Review the invocation and correct the defective parameter.
 
-
 ------------
 BCKUPBUFLUSH 
 ------------
@@ -483,7 +467,6 @@ BCKUPBUFLUSH, Unable to flush buffer for online backup
 MUPIP Error: This indicates that the online BACKUP was unable to flush the buffer data to disk. The most likely cause is that MUPIP does not have write access to the database file.
 
 Action: Run the BACKUP from a process with write authorization, or wait until other processes have completed the buffer flush. MUPIP sets the repair flag if there is a serious problem. Run a MUPIP INTEG using the FA[ST] qualifier to reset this flag. Report to your System Administrator.
-
 
 -------
 BEGINST
@@ -501,7 +484,7 @@ BEGSEQGTENDSEQ
 
 BEGSEQGTENDSEQ, Journal file xxxx has beginning sequence number aaaa greater than end sequence number bbbb
 
-MUPIP Error: This indicates that the beginning sequence number aaaa of the journal file xxxx is greater than end sequence number bbbb.
+MUPIP Error: This indicates that the beginning sequence number aaaa of the journal file xxxx is greater than the end sequence number bbbb.
 
 Action: Report the entire incident context with appropriate log messages to your YottaDB support channel.
 
@@ -521,7 +504,7 @@ BINHDR
 
 BINHDR, gggg Date: dddd TIME: tttt Extract Region Characteristics rrrr Blk Size: xxxx Rec Size: yyyy Key Size: kkkk
 
-MUPIP Information: This message displays header information for a binary format file. gggg is the global loaded. dddd is the date on which the region was extracted. tttt is the time when the region was extracted. rrrr is the region that contains the global. xxxx is the block size specified for the region. yyyy is the record size specified for the block. kkkk is the key size specified for the record.
+MUPIP Information: This message displays header information for a binary format file. gggg is the loaded global. dddd is the date on which the region was extracted. tttt is the time when the region was extracted. rrrr is the region that contains the global. xxxx is the block size specified for the region. yyyy is the record size specified for the block. kkkk is the key size specified for the record.
 
 Action: -
 
@@ -534,7 +517,6 @@ BITMAPSBAD, Database bit maps are incorrect
 Run Time Error: This indicates that a database operation encountered a corrupt bit map.
 
 Action: YottaDB uses bit maps in database files to determine whether a block is free or in use. Report this database structure error to the group responsible for database integrity at your operation.
-
 
 -----------
 BKUPRUNNING
@@ -552,9 +534,9 @@ BKUPTMPFILOPEN
 
 BKUPTMPFILOPEN, Open of backup temporary file aaaa failed
 
-Run Time Error: When an online backup is in progress, a YottaDB process doing updates to the database is saving away the pre-update images of the blocks it updates in a special backup area used to make sure the backups are consistent. Periodically, these blocks need to be flushed out to a temporary file and are flushed by the process needing the space to put its own changed blocks. This means every running process needs to have R/W access to the temporary file created by the backup. If the process cannot open the temporary file, this error is written to the operator log, the backup is flagged as having encountered an error and the process proceeds. So this error is only backup related. It is NOT an error in the process itself which proceeds as if backup were not running.
+Run Time Error: When an online backup is in progress, a YottaDB process doing updates to the database is saving away the pre-update images of the blocks it updates in a special backup area used to make sure the backups are consistent. Periodically, these blocks need to be flushed out to a temporary file and are flushed by the process needing the space to put its own changed blocks. This means every running process needs to have R/W access to the temporary file created by the backup. If the process cannot open the temporary file, this error is written to the operator log, the backup is flagged as having encountered an error and the process proceeds. Hence, this error is only backup related. It is NOT an error in the process itself, which proceeds as if backup were not running.
 
-Action: Determine cause of why process could not open temporary file, fix, and restart backup.
+Action: Determine the cause of why the process could not open the temporary file, fix it, and restart backup.
 
 ---------------
 BKUPTMPFILWRITE
@@ -562,10 +544,9 @@ BKUPTMPFILWRITE
 
 BKUPTMPFILWRITE, Write to backup temporary file aaaa failed
 
-Run Time Error: When an online backup is in progress, a YottaDB process doing updates to the database is saving away the pre-update images of the blocks it updates in a special backup area used to make sure the backups are consistent. Periodically, these blocks need to be flushed out to a temporary file and are flushed by the process needing the space to put its own changed blocks. This means every running process needs to have R/W access to the temporary file created by the backup. If the database write generates an error, the BKUPTFWFAIL error is written to the operator log, the backup is flagged as having encountered an error and the process proceeds. So this error is only backup related. It is NOT an error in the process itself which proceeds as if backup were not running.
+Run Time Error: When an online backup is in progress, a YottaDB process updating the database is saving away the pre-update images of the blocks it updates in a special backup area used to make sure the backups are consistent. Periodically, these blocks need to be flushed out to a temporary file, and are flushed by the process needing the space to put its own changed blocks. This means that every running process needs to have R/W access to the temporary file created by the backup. If the database write generates an error, the BKUPTFWFAIL error is written to the operator log, the backup is flagged as having encountered an error and the process proceeds. So this error is only backup related. It is NOT an error in the process itself which proceeds as if backup were not running.
 
-Action: Determine cause of why the write failed, fix, and restart backup.
-
+Action: Determine the cause of why the write failed, fix it, and restart backup.
 
 ------
 BLKCNT
@@ -573,10 +554,9 @@ BLKCNT
 
 BLKCNT, Last LOAD Block/RMS Record number: xxxx
 
-MUPIP Information: This indicates that a LOAD command with the FORMAT=BINARY qualifier completed at record number xxxx. Indicates the last block or record number successfully processed by MUPIP LOAD. This information may be useful for auditing the LOAD, or if a restart is required after a LOAD is stopped prematurely.
+MUPIP Information: This indicates that a LOAD command with the FORMAT=BINARY qualifier completed at record number xxxx. It indicates the last block or record number successfully processed by MUPIP LOAD. This information may be useful for auditing the LOAD, or if a restart is required after a LOAD is stopped prematurely.
 
 Action: -
-
 
 --------------
 BLKCNTEDITFAIL
@@ -584,7 +564,7 @@ BLKCNTEDITFAIL
 
 BLKCNTEDITFAIL, MUPIP recover or rollback failed to correct the block count field in the file header for file xxxx
 
-GDE/DSE Information: This indicates that rollback should correct the block count field in the file header. This message is an informational message issued by Recovery/Rollback process and no action is required. This error is benign.
+GDE/DSE Information: This indicates that rollback should correct the block count field in the file header. This message is an informational message issued by the Recovery/Rollback process and no action is required. This error is benign.
 
 Action: -
 
@@ -592,11 +572,11 @@ Action: -
 BLKINVALID
 ----------
 
-BLKINVALID, BLKINVALID, bbbb is not a valid block as database file ffff has nnnn total blocks
+BLKINVALID, bbbb is not a valid block as database file ffff has nnnn total blocks
 
-DSE Error: DSE Error: The block (bbbb) you selected is not currently a valid block in the database file (ffff) for the region in which you are working.
+DSE Error: The block (bbbb) you selected is not currently a valid block in the database file (ffff) for the region in which you are working.
 
-Action: Action: Select a block less than nnnn or move to a different region
+Action: Select a block less than nnnn or move to a different region
 
 ---------
 BLKSIZ512
@@ -604,7 +584,7 @@ BLKSIZ512
 
 BLKSIZ512, Block size xxxx rounds to yyyy
 
-GDE/DSE Information: This indicates that an ADD, CHANGE, or TEMPLATE command defined the BLOCKSIZE qualifier equal to xxxx, which is not divisible by 512. GDE adjusted the block size to yyyy, which is the next largest multiple of 512.
+GDE/DSE Information: This indicates that an ADD, CHANGE or TEMPLATE command defined the BLOCKSIZE qualifier to be equal to xxxx, which is not divisible by 512. GDE adjusted the block size to yyyy, which is the next largest multiple of 512.
 
 Action: If yyyy is not acceptable, modify the BLOCKSIZE qualifier value so that it is divisible by 512.
 
@@ -636,7 +616,7 @@ BOMMISMATCH, XXX Byte Order Marker found when YYY character set specified.
 
 Run Time Error: A Byte Order Marker (BOM) for character set XXX was found at the beginning of a file specified as containing data in character set YYY.
 
-Action: Specify the proper character set when opening the file.  For UTF-16 data, specifying CHSET="UTF-16" will use the BOM to determine whether the data is Little Endian or Big Endian.  If no BOM is found, YottaDB assumes Big Endian.
+Action: Specify the proper character set when opening the file. For UTF-16 data, specifying CHSET="UTF-16" will use the BOM to determine whether the data is Little Endian or Big Endian. If no BOM is found, YottaDB assumes Big Endian.
 
 --------------
 BOOLSIDEFFECT 
@@ -664,7 +644,7 @@ BOVTNGTEOVTN
 
 BOVTNGTEOVTN, Journal file xxxx has beginning transaction yyyy which is greater than end transaction zzzz
 
-MUPIP Error: This indicates that MUPIP JOURNAL command has found that journal file xxxx has beginning transaction yyyy which is greater than end transaction zzzz.
+MUPIP Error: This indicates that the MUPIP JOURNAL command has found that journal file xxxx has a beginning transaction yyyy which is greater than the end transaction zzzz.
 
 Action: Report the error with appropriate log messages to your YottaDB support channel.
 
@@ -676,7 +656,7 @@ BREAK, Break instruction encountered
 
 Run Time Information: This indicates that YottaDB encountered a BREAK command within a routine and entered Direct Mode.
 
-Action: All commands entered at the Direct Mode prompt are compiled and executed as they are entered. To continue program execution, enter the ZCONTINUE command. This message can be supressed using VIEW BREAKMSG value.
+Action: All commands entered at the Direct Mode prompt are compiled and executed as they are entered. To continue program execution, enter the ZCONTINUE command. This message can be supressed using the VIEW BREAKMSG value.
 
 --------------
 BREAKDEA 
@@ -686,7 +666,7 @@ BREAKDEA, Break instruction encountered during Device error action
 
 Run Time Information: This indicates that YottaDB encountered a BREAK command within a device EXCEPTION string and entered Direct Mode.
 
-Action: YottaDB activates EXCEPTION strings for deviceparameters when a device reports an exception condition. All commands entered at the Direct Mode prompt are compiled and executed as they are entered. To continue program execution, enter the ZCONTINUE command. It is important to ensure the EXCEPTIONS in production code are thoroughly debugged.
+Action: YottaDB activates EXCEPTION strings for deviceparameters when a device reports an exception condition. All commands entered at the Direct Mode prompt are compiled and executed as they are entered. To continue program execution, enter the ZCONTINUE command. It is important to ensure that the EXCEPTIONS in production code are thoroughly debugged.
 
 ----------
 BREAKZBA 
@@ -697,7 +677,6 @@ BREAKZBA, Break instruction encountered during ZBREAK action
 Run Time Information: This indicates that YottaDB encountered a BREAK command within a ZBREAK action string and entered Direct Mode. The ZBREAK command sets or clears breakpoints during debugging. All commands entered at the Direct Mode prompt are compiled and executed as they are entered.
 
 Action: To continue program execution, enter the ZCONTINUE command.
-
 
 -------------
 BREAKZST 
@@ -729,7 +708,6 @@ DSE/MUPIP Error: MUPIP or DSE (uuuu) could not flush the buffers for database fi
 
 Action: In the case of MUPIP, wait approximately 20 seconds and retry. In the case of DSE, try DSE CACHE RECOVER to fix the cache. If the error persists, report it to the group responsible for database integrity at your operation as soon as possible.
 
-
 ---------------
 BUFOWNERSTUCK
 ---------------
@@ -738,7 +716,7 @@ BUFOWNERSTUCK, PID xxxx waiting for PID yyyy to finish disk read of block zzzz. 
 
 Run Time Warning: Poor response time from the I/O subsystem could cause this error, or if the process performing the disk-read was suspended.
 
-Action: If the disk-reading process is found to be in a process-suspended state, un-suspend it. If it is not suspended, examine the I/O subsystem performance characteristics for behavior problems. Report the full error message, along with the operator log messages during the specific timeframe, to your YottaDB support channel.
+Action: If the disk-reading process is found to be in a process-suspended state, un-suspend it. If it is not suspended, examine the I/O subsystem performance characteristics for behavior problems. Report the full error message, along with the operator log messages during the specific timeframe to your YottaDB support channel.
 
 ---------------
 BUFRDTIMEOUT
@@ -746,10 +724,9 @@ BUFRDTIMEOUT
 
 BUFRDTIMEOUT, Pid xxxx timed out waiting for buffered read by process yyyy to complete in database file zzzz
 
-Run Time Information: This indicates that a process requiring buffer transfer began but did not complete. The system cancelled the process.
+Run Time Information: This indicates that a process requiring a buffer transfer began but did not complete. The system cancelled the process.
 
 Action: The failed process must be run again. Other errors may appear in the operators log with this one to indicate why the process failed.
-
 
 --------------
 BUFSIZIS
@@ -769,7 +746,7 @@ BUFTOOSMALL, But block size xxxx requires buffer size yyyy
 
 GDE Information: This indicates that an ADD, CHANGE, or TEMPLATE command specified an xxxx argument definition for the BUFFER_SIZE qualifier, which is incompatible with the definition of the BLOCKSIZE. yyyy specifies the minimum buffer size that can support this block size.
 
-Action: Modify the block size and/or buffer size so they are compatible. Review the accompanying message(s) for the buffer size.
+Action: Modify the block size and/or buffer size so that they are compatible. Review the accompanying message(s) for the buffer size.
 
 
 --------------
@@ -798,9 +775,9 @@ CALLINTCOMMIT
 
 CALLINTCOMMIT, TCOMMIT at call-in-level=xxxx not allowed as corresponding TSTART was done at lower call-in-level=yyyy.
 
-Run Time Error: This indicates that at least one call-in invocation happened in between when the TP transaction started (either through a ydb_tp_s() call in C or a TSTART command in M) and when the corresponding transaction commit is attempted (through a TCOMMIT command in M).
+Run Time Error: This indicates that at least one call-in invocation happened in between when the TP transaction started (either through a ydb_tp_s() call in C or a TSTART command in M), and when the corresponding transaction commit is attempted (through a TCOMMIT command in M).
 
-Action: If a TP transaction is started using SimpleAPI, and the user function driven by ydb_tp_s() does a call-in invocation, care should be taken to ensure the call-in code does not do a TCOMMIT.
+Action: If a TP transaction is started using SimpleAPI, and the user function driven by ydb_tp_s() does a call-in invocation, care should be taken to ensure that the call-in code does not do a TCOMMIT.
 
 ----------------
 CALLINTROLLBACK
@@ -810,7 +787,7 @@ CALLINTROLLBACK, TROLLBACK at call-in-level=xxxx not allowed as corresponding TS
 
 Run Time Error: This indicates that at least one call-in invocation happened in between when the TP transaction started (either through a ydb_tp_s() call in C or a TSTART command in M) and when the corresponding transaction rollback is attempted (through a TROLLBACK command in M).
 
-Action: If a TP transaction is started using SimpleAPI, and the user function driven by ydb_tp_s() does a call-in invocation, care should be taken to ensure the call-in code does not do a TROLLBACK.
+Action: If a TP transaction is started using SimpleAPI, and the user function driven by ydb_tp_s() does a call-in invocation, care should be taken to ensure that the call-in code does not do a TROLLBACK.
 
 -------------
 CANTBITMAP
@@ -821,7 +798,6 @@ CANTBITMAP, Can't perform this operation on a bit map (block at a 200 hexadecima
 DSE Error: The selected DSE operation does not apply to bit maps (blocks divisible by 0x200).
 
 Action: Select an appropriate block for the operation or an appropriate operation for a bit map.
-
 
 --------------
 CEBIGSKIP
@@ -844,7 +820,6 @@ Compile Time/Run Time Error: This indicates that YottaDB does not currently supp
 
 Action: -
 
-
 -------------
 CETOOLONG 
 -------------
@@ -854,7 +829,6 @@ CETOOLONG, Compiler escape substitution exceeds maximum line size
 Compile Time/Run Time Error: This indicates that the length of the substitution string exceeds the maximum line length.
 
 Action: Determine whether the input source file can be modified to have less source on the line in question. If this is not possible, modify the substitution mechanism design or implementation.
-
 
 --------------
 CETOOMANY
@@ -894,10 +868,9 @@ CHNGTPRSLVTM
 
 CHNGTPRSLVTM, MUPIP will change tp_resolve_time from xxxx to yyyy because expected EPOCH or EOF record was not found in Journal File zzzz.
 
-MUPIP Information: At startup, backward recovery/rollback internally computes a time called the tp_resolve_time which is until when backward processing will be performed across journal files of all regions. During backward processing it is possible in very rare cases that recovery does not see an EPOCH record or an EOF record as the last record in the journal file of those regions that had not been updated for quite a long time. In such cases recovery reduces the tp_resolve_time further by taking into account the timestamp of the last journal record. This effectively causes further backward processing but is necessary for a clean recovery. A CHNGTPRSLVTM message is printed whenever such journal files are encountered by backward recovery.
+MUPIP Information: At startup, backward recovery/rollback internally computes a time called the tp_resolve_time, which is until when backward processing will be performed across journal files of all regions. During backward processing, it is possible in very rare cases that recovery does not see an EPOCH record or an EOF record as the last record in the journal file of the regions that had not been updated for quite a long time. In such cases, recovery reduces the tp_resolve_time further by taking into account the timestamp of the last journal record. This effectively causes further backward processing but is necessary for a clean recovery. A CHNGTPRSLVTM message is printed whenever such journal files are encountered by backward recovery.
 
 Action: None necessary
-
 
 ------------------
 CHSETALREADY
@@ -907,14 +880,14 @@ CHSETALREADY, Socket device already contains sockets with iCHSET=xxxx, oCHSET=xx
 
 Run Time Error: The code tried to create a new socket, specifying a CHSET different than the CHSET previously assigned to the SOCKET device.
 
-Action: If different CHSETs are needed for different sockets, place them in different SOCKET devices. Also, if the CHSET of the SOCKET device needs to be changed, it can be done with OPEN/USE command which doesn't create a new socket.
+Action: If different CHSETs are needed for different sockets, place them in different SOCKET devices. Also, if the CHSET of the SOCKET device needs to be changed, it can be done with the OPEN/USE command which doesn't create a new socket.
 
 ----------------
 CIDIRECTIVE 
 ----------------
 CIDIRECTIVE, Invalid directive parameter passing. Expected I, O or IO.
 
-Syntax Error: This indicates that a missing directive or syntactically invalid directive found for the parameter, pointed to by the previous messages EXTSRCLIN and EXTSRCLOC.
+Syntax Error: This indicates that a missing directive or syntactically invalid directive was found for the parameter, pointed to by the previous messages EXTSRCLIN and EXTSRCLOC.
 
 Action: One of the directives I, O or IO should be specified for the parameter in the entry displayed.
 
@@ -927,10 +900,7 @@ CIENTNAME, No label reference found for this entry in call-in table
 
 Syntax/Call in Error: This indicates that a label reference to the M routine is missing or syntactically invalid for an entry in the call-in table (specified by ydb_ci environment variable)
 
-Action: Correct the syntax errors in the call-in table entry, at the location pointed to by the two previous messages (EXTSRCLIN and EXTSRCLOC), displaying the line and the column number respectively.
-
-Make sure a valid M label reference is bound to the C call-name specified for this entry.
-
+Action: Correct the syntax errors in the call-in table entry, at the location pointed to by the two previous messages (EXTSRCLIN and EXTSRCLOC), displaying the line and the column number respectively. Make sure a valid M label reference is bound to the C call-name specified for this entry.
 
 --------------------
 CIMAXLEVELS 
@@ -942,16 +912,15 @@ Call in/Run Time Error: This indicates that YottaDB runs out of its internal con
 
 Action: Ensure that the call-in application is not nested more than the limit (xxxx) that YottaDB supports. The number of nested call-ins can be reduced by not using call-ins, wherever possible, from external call functions.
 
-
 -----------------------
 CIMAXPARAM
 -----------------------
 
 CIMAXPARAM, Exceeded maximum number of parameters in the call-in table entry. An M routine cannot accept more than 32 parameters.
 
-Call in/Run Time Error: This indicates that the call-in table specified by $ydb_ci contains more than 32 parameters. Since an M formallist can only accept up-to 32 parameters, user cannot pass more than 32 arguments to gtm_ci(), excluding <c-call-name> and <ret-type>.
+Call in/Run Time Error: This indicates that the call-in table specified by $ydb_ci contains more than 32 parameters. Since an M formallist can only accept up to 32 parameters, the user cannot pass more than 32 arguments to gtm_ci(), excluding <c-call-name> and <ret-type>.
 
-Action: Reduce the number of parameters to be less than 32, in the call-in table as well in the M routine.
+Action: Reduce the number of parameters to be less than 32 in the call-in table as well as in the M routine.
 
 ----------------------
 CINOENTRY 
@@ -963,14 +932,13 @@ Run Time Error: This indicates that the call-name invoked by the C program does 
 
 Action: Add an entry to the call-in table for the call-name. Refer to the `External Calls chapter in the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/langfeat.html#external-calls>`_.
 
-
 -----------------------
 CIPARTYPE 
 -----------------------
 
 CIPARTYPE, Invalid type specification for O/IO directive - expected pointer type
 
-Syntax/Call in Error: This indicates that non-pointer types specified for the parameters to be passed by output-only (O) and input-output (IO) convention.
+Syntax/Call in Error: This indicates that non-pointer types were specified for the parameters to be passed by output-only (O) and input-output (IO) conventions.
 
 Action: Make sure one of the valid pointer types is specified for O and IO parameters. Refer to the `External Calls chapter in the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/langfeat.html#external-calls>`_.
 
@@ -984,7 +952,6 @@ CIRCALLNAME, Call-in routine name expected but not found
 Syntax/Call in Error: This indicates that a call-name, which is to be bound to an M routine, is either missing or syntactically invalid for an entry in the call-in table file.
 
 Action: Make sure a valid call-name is specified in the call-in table entry, at the location pointed to by the two previous messages: EXTSRCLIN and EXTSRCLOC, displaying the line and the column number respectively.
-
 
 -------------------
 CIRPARMNAME 
@@ -1016,8 +983,7 @@ CITABENV, Environment variable for call-in table xxxx not set
 
 Call in/Run Time Error: This indicates that the environment variable ydb_ci is not defined when an external C routine is about to call an M routine through the YottaDB call-in mechanism.
 
-Action: Check if ydb_ci is defined to a valid file path to a call-in table. The call-in table file should contain a list of entries, each entry describing the parameter types, their passing convention of each M routine and its binding to a C routine.
-
+Action: Check if ydb_ci is defined to be a valid file path to a call-in table. The call-in table file should contain a list of entries, each entry describing the parameter types, their passing convention of each M routine and its binding to a C routine.
 
 ------------
 CITABOPN 
@@ -1123,7 +1089,7 @@ CMICHECK
 
 CMICHECK, Internal CMI error. Report to YottaDB Support.
 
-GT.CM Error: This indicates that the GT.CM and DECNET cannot communicate properly. See GTMCHECK.
+GT.CM Error: This indicates that GT.CM and DECNET cannot communicate properly. See GTMCHECK.
 
 Action: Report the entire incident context to your YottaDB support channel.
 
@@ -1136,7 +1102,7 @@ CMINTQUE, Interlock failure accessing GT.CM server queue
 
 GT.CM Error: This indicates that interlock cannot move data onto the queue interlock bit.
 
-Action: Accompanying messages should indicate the hardware or software problem, which caused the interlock failure.
+Action: Accompanying messages should indicate the hardware or software problem that caused the interlock failure.
 
 
 ----------------
@@ -1230,7 +1196,7 @@ COLTRANSSTR2LONG, Output string after collation transformation is too long
 
 Run Time Error: an alternative collation transform or reverse transform attempted to use more bytes than the configuration permits.
 
-Action: Adjust the implementation of the collation transform to minimize key expansion; increase the maximum permitted key size if appropriate. Note the current supported maximum is 1019 bytes. If the key size is already maxed out and the transformation algorithm is optimal, you must modify the application to reduce the key size.
+Action: Adjust the implementation of the collation transform to minimize key expansion; increase the maximum permitted key size if appropriate. Note that the current supported maximum is 1019 bytes. If the key size is already maxed out and the transformation algorithm is optimal, you must modify the application to reduce the key size.
 
 
 ----------------
@@ -1252,7 +1218,7 @@ COMMAORRPAREXP, Comma or right parenthesis expected but not found
 
 Compile Time Error: This indicates that YottaDB did not encounter a comma or right parenthesis where expected.
 
-Action: Look for a list of improperly formatted subscripts, arguments, or parameters.
+Action: Look for a list of improperly formatted subscripts, arguments or parameters.
 
 
 ----------------
@@ -1271,7 +1237,7 @@ COMMITWAITPID
 
 COMMITWAITPID, Pid wwww waited tttt minute(s) for pid pppp to finish commits in database file dddd
 
-Run Time Warning: This warning message in the operator log indicates the total amount of time that the process wwww waited for another process pppp to finish database transaction commit. If the $ydb_procstuckexec mechanism is enabled, this message invokes it. If a process waits for more than one process to finish database transaction commits, it issues this message for each one it encounters.
+Run Time Warning: This warning message in the operator log indicates the total amount of time that the process wwww waited for another process pppp to finish a database transaction commit. If the $ydb_procstuckexec mechanism is enabled, this message invokes it. If a process waits for more than one process to finish database transaction commits, it issues this message for each one it encounters.
 
 Action: If the process pppp is still running, get a C-stack trace of the process (using a debugger) and report to your YottaDB support channel with system log and operator log information.
 
@@ -1282,9 +1248,9 @@ COMMITWAITSTUCK
 
 COMMITWAITSTUCK, Pid wwww timed out after waiting tttt minute(s) for nnnn concurrent YottaDB process(es) to finish commits in database file dddd
 
-Run Time Error: This error message indicates that a process could not finish database transaction commit and timed out waiting for other concurrent processes to finish.
+Run Time Error: This error message indicates that a process could not finish a database transaction commit and timed out waiting for other concurrent processes to finish.
 
-Action: Check the operator log for accompanying COMMITWAITPID messages. Every concurrent YottaDB processes reported with the COMMITWAITSTUCK messages would have accompanying COMMITWAITPID message(s). If so, review those messages. If not, report to your YottaDB support channel with system log and operator log information.
+Action: Check the operator log for accompanying COMMITWAITPID messages. Every concurrent YottaDB process reporting COMMITWAITSTUCK messages would have accompanying COMMITWAITPID message(s). If so, review those messages. If not, report to your YottaDB support channel with system log and operator log information.
 
 ----------------
 COMPILEQUALS 
@@ -1292,7 +1258,7 @@ COMPILEQUALS
 
 COMPILEQUALS, Error in compiler qualifiers: xxxx
 
-Compile Time/Run Time Error: This indicates that a run-time compilation specified an invalid qualifier (xxxx). Qualifiers for a run-time compilation can be specified with ZLINK or by setting $ZCOMPILE to a qualifier string that YottaDB uses for auto-ZLINKs with no qualifiers.
+Compile Time/Run Time Error: This indicates that a run-time compilation specified an invalid qualifier (xxxx). Qualifiers for run-time compilation can be specified with ZLINK or by setting $ZCOMPILE to a qualifier string that YottaDB uses for auto-ZLINKs with no qualifiers.
 
 Action: Review the qualifiers in the ZLINK sub-argument or those being SET into $ZCOMPILE.
 
@@ -1332,9 +1298,9 @@ CORRUPTNODE
 
 CORRUPTNODE, Corrupt input in Record # rrrr, Key #yyyy; resuming with next global node
 
-MUPIP Error: This message reports record rrrr with apparent key kkkk does not have a valid format for MUPIP LOAD.
+MUPIP Error: This message reports that record rrrr with apparent key kkkk does not have a valid format for MUPIP LOAD.
 
-Action: USE %GO or MUPIP EXTRACT to recapture the problematic node(s), or, use an editor to create valid copies of the nodes in an LOAD file.
+Action: USE %GO or MUPIP EXTRACT to recapture the problematic node(s) or use an editor to create valid copies of the nodes in an LOAD file.
 
 -----------------------------
 CPBEYALLOC 
@@ -1394,7 +1360,7 @@ CRYPTBADWRTPOS, Encrypted WRITE disallowed from a position different than where 
 
 Run Time Error: A WRITE attempt to an encrypted device violates the integrity of the produced ciphertext. This is the case, for example, when trying to WRITE to a previously encrypted and CLOSEd file. Because encryption ciphers rely on state machine algorithms, YottaDB prohibits WRITEs performed in non-sequential fashion or when they threaten to overlay already encrypted data.
 
-Action: Revise your M code to avoid illegal I/O operations with encryption. Note, in particular, that when using encryption non-empty files cannot be opened in APPEND mode; the SEEK deviceparameter is prohibited; and the TRUNCATE is only permitted at the beginning or end of a file.
+Action: Revise your M code to avoid illegal I/O operations with encryption. Note in particular, that when using encryption, non-empty files cannot be opened in APPEND mode; the SEEK deviceparameter is prohibited; and the TRUNCATE is only permitted at the beginning or end of a file.
 
 -----------------------
 CRYPTDLNOOPEN 
@@ -1404,7 +1370,7 @@ CRYPTDLNOOPEN, Failed to load encryption library while opening encrypted file ff
 
 Run Time Error: YottaDB failed to load the gtmcrypt plug-in or one of its related libraries.
 
-Action: Refer to the accompanying detail (eeee) and verify that the gtmcrypt plug-in and related libraries are properly installed and that $LD_LIBRARY_PATH and $LIBPATH are properly set.
+Action: Refer to the accompanying details (eeee) and verify that the gtmcrypt plug-in and related libraries are properly installed and that $LD_LIBRARY_PATH and $LIBPATH are properly set.
 
 ---------------------
 CRYPTDLNOOPEN2 
@@ -1414,7 +1380,7 @@ CRYPTDLNOOPEN2, Failed to load encryption library dddd. Eeee
 
 Run Time Error: YottaDB failed to load the gtmcrypt plug-in or one of its related libraries during startup.
 
-Action: Refer to the accompanying details (eeee). Verify that the gtmcrypt plug-in and related libraries are properly installed and the LD_LIBRARY_PATH and LIBPATH environment variables are properly set.
+Action: Refer to the accompanying details (eeee) and verify that the gtmcrypt plug-in and related libraries are properly installed and that $LD_LIBRARY_PATH and $LIBPATH are properly set.
 
 ------------------
 CRYPTHASHGENFAILED 
@@ -1422,7 +1388,7 @@ CRYPTHASHGENFAILED
 
 CRYPTHASHGENFAILED, Failed to generate cryptographic hash for symmetric key corresponding to file ffff. eeee
 
-Run Time Error: gtmcrypt plug-in reports there is problem with the hash function.
+Run Time Error: gtmcrypt plug-in reports that there is a problem with the hash function.
 
 Action: Examine the message (eeee) from the plug-in and take the appropriate action.
 
@@ -1432,7 +1398,7 @@ CRYPTINIT
 
 CRYPTINIT, Failed to initialize encryption library while opening encrypted file ffff. eeee
 
-Run Time Error: The gtmcrypt plug-in reports it is unable to initialize one or more of its related libraries.
+Run Time Error: The gtmcrypt plug-in reports that it is unable to initialize one or more of its related libraries.
 
 Action: Examine the detailed message (eeee) from the plug-in and take appropriate action.
 
@@ -1442,7 +1408,7 @@ CRYPTINIT2
 
 CRYPTINIT2, Failed to initialize encryption library during YottaDB startup. eeee
 
-Run Time Error: The gtmcrypt plug-in reports it is unable to initialize one or more of its related libraries during YottaDB startup.
+Run Time Error: The gtmcrypt plug-in reports that it is unable to initialize one or more of its related libraries during YottaDB startup.
 
 Action: Examine the detailed message (eeee) from the plug-in and take appropriate action.
 
@@ -1455,7 +1421,6 @@ CRYPTJNLMISMATCH, Encryption settings mismatch between journal file jjjj and cor
 All Components Error: Encryption settings in the header of database file dddd do not match those stored in the header of journal file jjjj. The most likely cause is inappropriate operator action such as replacing the current journal file with an older journal file.
 
 Action: Correct the error that caused the incorrect journal file to be pointed to by the database file. If the correct journal file has been inadvertently deleted, create new journal files with the -noprevjnl switch. Take a backup as soon as possible thereafter. Depending on your situation, you may need to refresh secondary instances.
-
 
 -----------------
 CRYPTJNLWRONGHASH
@@ -1475,7 +1440,7 @@ CRYPTKEYFETCHFAILED, Failed to retrieve encryption key corresponding to file fff
 
 Run Time Error: gtmcrypt plug-in reports it was unable to obtain an encryption key for file ffff.
 
-Action: Examine the message (eeee) from the plug-in and take the needed action: for example, verify encryption key for this file is pointed to by the database key file, verify proper permissions on the directory path and the file, and so on. Also, make sure that there is an appropriate maximum process limit because obtaining an encryption key may fork other processes.
+Action: Examine the message (eeee) from the plug-in and take the needed action: for example, verify that the encryption key for this file is pointed to by the database key file, verify proper permissions on the directory path and file and so on. Also, make sure that there is an appropriate maximum process limit because obtaining an encryption key may fork other processes.
 
 ---------------------
 CRYPTKEYFETCHFAILEDNF
@@ -1485,7 +1450,7 @@ CRYPTKEYFETCHFAILEDNF, Cannot obtain encryption key. xxxx
 
 Run Time Error: gtmcrypt plug-in reports it was unable to obtain an encryption key based upon matching the hash of an encryption key.
 
-Action: Examine the message (xxxx) from the plug-in and take the needed action: for example, verify encryption keys for all database files are pointed to by the database key file. For extracts and backups, verify all the keys from the databases that provided records are in the database key file.
+Action: Examine the message (xxxx) from the plug-in and take the needed action: for example, verify that the encryption keys for all database files are pointed to by the database key file. For extracts and backups, verify that all the keys from the databases that provided records are in the database key file.
 
 ---------------------
 CRYPTKEYRELEASEFAILED
@@ -1495,7 +1460,7 @@ CRYPTKEYRELEASEFAILED, Could not safely release encryption key corresponding to 
 
 All YottaDB Components Error: gtmcrypt plug-in reports that it is unable to release the memory pertaining to the encryption key associated with file ffff due to error eeee
 
-Action: Examine message eeee from the plug-in and take the needed action: for example, ensure that the memory is accessible, process has correct permissions, and so on.
+Action: Examine message eeee from the plug-in and take the needed action: for example, ensure that the memory is accessible, the process has correct permissions, and so on.
 
 -----------------------
 CRYPTKEYTOOBIG
@@ -1506,7 +1471,6 @@ CRYPTKEYTOOBIG, Specified key has length xxxx, which is greater than the maximum
 Run Time Error: A key name value specified with the [I|O]KEY deviceparameter on an OPEN or USE command is too long.
 
 Action: Verify that the key name portion of the [I|O]KEY deviceparameter's value (substring before the first space, if any) corresponds to an existing field name in the 'database.keys' or 'files' section of the configuration file and does not exceed yyyy characters in length.
-
 
 -------------------
 CRYPTNOAPPEND
@@ -1554,9 +1518,9 @@ CRYPTNOOVERRIDE
 
 CRYPTNOOVERRIDE, Cannot override IVEC and/or key without compromising integrity
 
-Run Time Error: An OPEN or USE command attempts to change the encryption attributes - that is: attempted to enable or disable encryption or change the key name, initialization vector (IV), or both, after a prior encrypted READ or WRITE.
+Run Time Error: An OPEN or USE command attempted to change the encryption attributes i.e. attempted to enable or disable encryption or change the key name, initialization vector (IV), or both, after a prior encrypted READ or WRITE.
 
-Action: Because encryption algorithms maintain state as they process text, changing encryption attributes of a device is prohibited if an encrypted READ or WRITE has already occurred, so revise your application code accordingly.
+Action: Because encryption algorithms maintain state as they process text, changing the encryption attributes of a device is prohibited if an encrypted READ or WRITE has already occurred, so revise your application code accordingly.
 
 ------------------
 CRYPTNOPSWDINTP
@@ -1566,8 +1530,7 @@ CRYPTNOPSWDINTP, Cannot prompt for password inside a TP transaction.
 
 Run Time Error: This error occurs if the process used an external call to set the ydb_passwd environment variable to a null string after startup and then accessed an encrypted database file for the first time within a TP transaction.
 
-Action: If possible, set the ydb_passwd environment variable to the obfuscated password. Otherwise, revise the logic to touch a global mapped to each encrypted database, for example, $DATA(myglobal), to ensure the prompting happens before entering any TP transaction.
-
+Action: If possible, set the ydb_passwd environment variable to the obfuscated password. Otherwise, revise the logic to touch a global mapped to each encrypted database - for example, $DATA(myglobal) - to ensure the prompting happens before entering any TP transaction.
 
 ---------------------
 CRYPTNOSEEK 
@@ -1605,10 +1568,9 @@ CRYPTOPFAILED
 
 CRYPTOPFAILED, Encrypt/Decrypt operation failed for file ffff. eeee
 
-Run Time Error: gtmcrypt plug-in reports there is problem with encryption or decryption.
+Run Time Error: gtmcrypt plug-in reports that there is a problem with encryption or decryption.
 
 Action: Examine the message (eeee) from the plug-in and take appropriate action.
-
 
 ------------------
 CTLMNEMAXLEN
@@ -1643,6 +1605,7 @@ Action: Determine why this character was defined as an error or why an EXCEPTION
 -------------------
 CTRLC
 -------------------
+
 CTRLC, CTRL_C encountered
 
 Run Time Information: This indicates that the principal device encountered a <CTRL>-C in its input stream and YottaDB put the process into Direct Mode.
@@ -1667,7 +1630,7 @@ CURRSOCKOFR, Current socket of index xxxx is out of range. There are only yyyy s
 
 Run Time Error: This indicates that an OPEN, USE, READ or WRITE attempted to select a socket outside the range of available sockets.
 
-Action: Review the socket management logic and revise to use only available sockets.
+Action: Review the socket management logic and revise to only use available sockets.
 
 --------------
 CUSTERRNOTFND
@@ -1697,7 +1660,7 @@ CUSTOMFILOPERR, Error while doing oooo operation on file ffff
 
 Run Time Error: This indicates that the operating system reported an error while performing operation oooo on custom errors file ffff.
 
-Action: Check that ffff is a proper path to the custom errors file. If it is incorrect, set the ydb_custom_errors environment variable to point to the correct file. If the file path is correct, verify that the user has access to the file and correct any permissions issues.
+Action: Check that ffff is a proper path to the custom errors file. If it is incorrect, set the ydb_custom_errors environment variable to point to the correct file. If the file path is correct, verify that the user has access to the file and correct any permission issues.
 
 -----------------
 DBADDRALIGN 
@@ -1707,7 +1670,7 @@ DBADDRALIGN, Database file xxxx, element location aaaa: blk = bbbb: [yyyy] contr
 
 Run Time Information: This indicates that a control structure in the database cache is damaged.
 
-Action: None needed. YottaDB fixes this error as part of cache recovery, which follows the cache verification. If this message shows up frequently or is reproducible, contact your YottaDB support channel.
+Action: None needed. YottaDB fixes this error as part of cache recovery, which follows cache verification. If this message shows up frequently or is reproducible, contact your YottaDB support channel.
 
 ------------------
 DBADDRANGE 
@@ -1857,7 +1820,7 @@ DBBMLCORRUPT, Database xxxx: Bitmap blk yyyy is corrupt (Size = aaaa, levl = bbb
 
 Run Time Error: This indicates that a local bitmap block was found corrupted in the global buffers. In the event that the message is followed by a GTMASSERT in the operator log, a dump-file/core may also be produced.
 
-Action: MUPIP RUNDOWN the indicated database and check for integrity errors, check for bitmap related errors and fix them before resuming operations on the database. Report to your YottaDB support channel with the operator log information and dump- cores/files, if any.
+Action: MUPIP RUNDOWN the indicated database and check for integrity errors and bitmap-related errors and fix them before resuming operations on the database. Report to your YottaDB support channel with the operator log information and dump- cores/files, if any.
 
 --------------------
 DBBMMSTR 
@@ -1926,7 +1889,7 @@ DBBSIZMN
 
 DBBSIZMN, xxxx Block too small
 
-Run Time Warning: This indicates that during block certification or DSE/MUPIP integrity check the size of block xxxx was found to be less than the minimum allowed.
+Run Time Warning: This indicates that during block certification or DSE/MUPIP Integrity Check, the size of block xxxx was found to be less than the minimum allowed.
 
 Action: Report this database structure error to the group responsible for database integrity at your operation.
 
@@ -1936,7 +1899,7 @@ DBBSIZMX
 
 DBBSIZMX, xxxx Block larger than file block size
 
-Run Time Warning: This indicates that during block certification or DSE/MUPIP integrity check the size of block xxxx was found to exceed the block size for the database region.
+Run Time Warning: This indicates that during block certification or DSE/MUPIP Integrity Check, the size of block xxxx was found to exceed the block size for the database region.
 
 Action: Report this database structure error to the group responsible for database integrity at your operation.
 
@@ -1968,7 +1931,7 @@ DBBTUWRNG, The blocks-to-upgrade file-header field is incorrect. Expected xxxx, 
 
 MUPIP Error: The "Blocks to Upgrade" counter was found to be incorrect by MUPIP INTEG (this is only checked for non-FAST integs).
 
-Action: If there are no other integrity errors, MUPIP INTEG will repair the counter. If there are other integrity errors, fix those errors first, then rerun MUPIP INTEG which will repair the counter if it is still found to be in error. Although this error is not indicative of any specific kind of database damage it does represent an out-of-design condition (except following a system crash in which before image journaling was not in use) that your YottaDB support channel would like to know about.
+Action: If there are no other integrity errors, MUPIP INTEG will repair the counter. If there are other integrity errors, fix those errors first, then rerun MUPIP INTEG which will repair the counter if it is still found to be in error. Although this error is not indicative of any specific kind of database damage it does represent an out-of-design condition (except following a system crash in which before-image journaling was not in use) that your YottaDB support channel would like to know about.
 
 ----------------------
 DBCBADFILE 
@@ -1999,7 +1962,7 @@ DBCCMDFAIL, Executed command failed with return code xxxx yyyy which executed yy
 
 DBCERTIFY Error: During processing, the DBCERTIFY attempts to execute certain DSE and/or MUPIP commands in temporary command scripts that DBCERTIFY creates. The specified command failed to execute.
 
-Action: The action to take depends on the code returned by the attempt and if any associated messages were created on either the console or the operator log. Some common causes of problems could be that $ydb_dist (UNIX) is not properly pointing to the current YottaDB version or DBCERTIFY has no access or access to the wrong global directory for which it is executing commands.
+Action: The action to take depends on the code returned by the attempt and if any associated messages were created on either the console or the operator log. Some common causes of problems could be that $ydb_dist is not properly pointing to the current YottaDB version or that DBCERTIFY has no access or access to the wrong global directory for which it is executing commands.
 
 ---------------------------
 DBCDBCERTIFIED 
@@ -2009,7 +1972,7 @@ DBCDBCERTIFIED, Database xxx has been certified for use with xxxx
 
 DBCERTIFY Information: DBCERTIFY CERTIFY has successfully completed and marked the database as certified for use by the specified YottaDB version.
 
-Action: Either keep running the current YottaDB version or proceed immediately to YottaDB MUPIP UPGRADE at user's discretion.
+Action: Either keep running the current YottaDB version or proceed immediately to YottaDB MUPIP UPGRADE at the user's discretion.
 
 ---------------------
 DBCDBNOCERTIFY
@@ -2057,7 +2020,7 @@ DBCMODBLK2BIG
 
 DBCMODBLK2BIG, Block 0xaaa has been modified since DCERTIFY SCAN but is still too large or has an earlier TN than in DCERTIFY SCAN - Rerun scan
 
-DBCERTIFY Error: DBCERTIFY reports this error when the block it is processing has a different TN than it did in the scan phase yet the block is still too large.
+DBCERTIFY Error: DBCERTIFY reports this error when the block it is processing has a different TN than it did in the scan phase, yet the block is still too large.
 
 Action: This condition indicates that something has been done to the database since the scan phase was run - either it was restored from an earlier backup or the reserved bytes value was (even temporarily) reduced. DBCERTIFY SCAN must be rerun.
 
@@ -2087,7 +2050,7 @@ DBCMPNZRO
 
 DBCMPNZRO, xxxx yyyy First record of block has nonzero compression count
 
-Run Time Warning: This indicates that during block certification or DSE/MUPIP integrity check the first record at offset yyyy of block xxxx was found to have a nonzero compression count.
+Run Time Warning: This indicates that during block certification or DSE/MUPIP integrity check, the first record at offset yyyy of block xxxx was found to have a nonzero compression count.
 
 Action: Report this database structure error to the group responsible for database integrity at your operation.
 
@@ -2137,9 +2100,9 @@ DBCOLLREQ
 
 DBCOLLREQ, JOURNAL EXTRACT proceeding without collation information for globals in database. eeee ffff .
 
-MUPIP Warning: This is MUPIP JOURNAL EXTRACT Warning. This indicates that MUPIP process uses the default collation as it is not able to read the database file ffff because of error eeee
+MUPIP Warning: This is MUPIP JOURNAL EXTRACT Warning. This indicates that the MUPIP process uses the default collation, as it is not able to read the database file ffff because of error eeee
 
-Action: Be aware that if the EXTRACT contains variables with alternative collation that this extract represents them as YottaDB stores them, rather than as they are used by the application. Attempting to LOAD such an EXTRACT will produce incorrect results.
+Action: Be aware that if the EXTRACT contains variables with alternative collation, that this extract represents them as YottaDB stores them, rather than as they are used by the application. Attempting to LOAD such an EXTRACT will produce incorrect results.
 
 ----------------
 DBCOMMITCLNUP 
@@ -2147,9 +2110,9 @@ DBCOMMITCLNUP
 
 DBCOMMITCLNUP, Pid dddd [hhhh] handled error (code = eeee) during commit of xxxx transaction in database file yyyy
 
-Success Information: This message is output to the operator log and indicates that there was an error in the midst of committing a xxxx (TP or non-TP) transaction that involved the database file yyyy, but the process (pid = dddd in decimal and hhhh in hexadecimal) handled the error and completed the commit. If non-zero, the error code eeee is what triggered the error in the first place. If zero, accompanying syslog messages will contain information on the cause.
+Success Information: This message is output to the operator log and indicates that there was an error in the midst of committing an xxxx (TP or non-TP) transaction that involved the database file yyyy, but the process (pid = dddd in decimal and hhhh in hexadecimal) handled the error and completed the commit. If non-zero, the error code eeee is what triggered the error in the first place. If zero, accompanying syslog messages will contain information on the cause.
 
-Action: In most cases the commit will be successfully completed. But in very rare cases, there might be errors that prevent the transaction from being successfully completed. To determine if there was any error, examine the following operator log messages. If there are more then 3 (three) DBCLNUPINFO messages for the same database file from the same process-id, then that particular database is suspect and an integrity check of that database needs to be done at the earliest. In addition, contact your YottaDB support channel with the operator log messages.
+Action: In most cases the commit will be successfully completed. But in very rare cases, there might be errors that prevent the transaction from completing successfully. To determine if there was an error, examine the following operator log messages. If there are more then 3 (three) DBCLNUPINFO messages for the same database file from the same process-id, then that particular database is suspect and an integrity check of that database needs to be done at the earliest. In addition, contact your YottaDB support channel with the operator log messages.
 
 -----------------
 DBCOMPTOOLRG
@@ -2169,7 +2132,7 @@ DBCREC2BIG, Record with key xxx is length yyy in block 0xaaa is greater than the
 
 DBCERTIFY Error: DBCERTIFY has identified a record with the given key in the given block with a length that exceeds the maximum length allowed in the given database.
 
-Action: This is typically due to the user reducing the maximum record length to meet the DBCERTIFY requirements but not verifying that no records exist that exceeds that length. The solution is to either delete or otherwise restructure the record or to MUPIP extract/load into a database with a larger blocksize.
+Action: This is typically due to the user reducing the maximum record length to meet the DBCERTIFY requirements but not verifying that no records exist that exceed that length. The solution is to either delete or otherwise restructure the record or to MUPIP extract/load into a database with a larger blocksize.
 
 ----------------
 DBCREC2BIGINBLK
@@ -2219,7 +2182,7 @@ DBCSCNNOTCMPLT
 
 DBCSCNNOTCMPLT, Specified DBCERTIFY SCAN output file is not complete - Rerun scan
 
-DBCERTIFY Error: DBCERTIFY CERTIFY has noted that the header of the scan phase output is not filled in indicating that the scan phase did not complete normally.
+DBCERTIFY Error: DBCERTIFY CERTIFY has noted that the header of the scan phase output is not filled in, indicating that the scan phase did not complete normally.
 
 Action: Rerun DBCERTIFY SCAN to produce a complete output file for the certify phase to process.
 
@@ -2247,9 +2210,9 @@ Action: N/A
 DBDIRTSUBSC
 -------------------
 
-DBDIRTSUBSC, <xxxx Directory tree block contains non name-level entries>
+DBDIRTSUBSC, xxxx Directory tree block contains non name-level entries
 
-DSE/Run Time Information: This indicates that the specified database block has an internal structural damage since it contains subscripts global variable names even though this block is part of the directory tree.
+DSE/Run Time Information: This indicates that the specified database block has internal structural damage, since it contains subscripts and global variable names even though this block is part of the directory tree.
 
 Action: Report this database structure error to the group responsible for database integrity at your operation.
 
@@ -2345,7 +2308,7 @@ DBFHEADLRU, Database file ffff LRU pointer: pppp is outside of range: bbbb to tt
 
 All YottaDB Components Error: An element used to manage global buffers is invalid, so YottaDB has reset it; this message should appear only if there is a hardware issue or an abnormal termination.
 
-Action: Not required, but YottaDB recommends an investigation to indentify a possible cause.
+Action: Not required, but YottaDB recommends an investigation to identify a possible cause.
 
 
 -------------------
@@ -2375,7 +2338,7 @@ DBFILEXT
 
 DBFILEXT, Database file xxxx extended from yyyy blocks to zzzz blocks at transaction aaaa
 
-Run Time/MUPIP Information: This operator log message indicates that the specified database file extended as described by the message.
+Run Time/MUPIP Information: This operator log message indicates that the specified database file was extended as described by the message.
 
 Action: -
 
@@ -2398,7 +2361,7 @@ DBFLCORRP, xxxx Header indicates database file is corrupt
 
 Run Time/MUPIP Error: This indicates that a database operation tried to activate database file xxxx, which was previously marked as damaged.
 
-Action: If ROLLBACK (either -NOONLINE or -ONLINE) terminates abnormally (say because of a kill -9), it leaves the database in a potentially inconsistent state indicated by the FILE corrupt field in the database file header. When an ROLLBACK terminates leaving this field set, all other processes receive DBFLCORRP errors any time they attempt to interact with the database. The best way to clear DBFLCORRP is by running another ROLLBACK. MUPIP SET -FILE -PARTIAL_RECOV_BYPASS and DSE CHANGE -FILE -CORRUPT=FALSE -NOCRIT can also clear this condition but these commands do not ensure that the database has consistent state so you should always run MUPIP INTEG after executing these commands.
+Action: If ROLLBACK (either -NOONLINE or -ONLINE) terminates abnormally (say because of a kill -9), it leaves the database in a potentially inconsistent state indicated by the FILE corrupt field in the database file header. When an ROLLBACK terminates leaving this field set, all other processes receive DBFLCORRP errors any time they attempt to interact with the database. The best way to clear DBFLCORRP is by running another ROLLBACK. MUPIP SET -FILE -PARTIAL_RECOV_BYPASS and DSE CHANGE -FILE -CORRUPT=FALSE -NOCRIT can also clear this condition, but these commands do not ensure that the database has a consistent state, so you should always run MUPIP INTEG after executing these commands.
 
 ------------------
 DBFREEZEOFF
@@ -2500,7 +2463,7 @@ DBIDMISMATCH
 
 DBIDMISMATCH, Database file xxxx ID (region yyyy) does not match file ID in shared memory (ID=zzzz). Ensure region is properly rundown.
 
-Run Time Error: When a YottaDB process attaches to a database and finds the corresponding shared memory structures initialized already, it performs integrity checks on the shared memory contents to ensure that they correspond back to the database file. When the shared memory copy of the database file ID does not match with the actual file ID of the database, the above error is issued.
+Run Time Error: When a YottaDB process attaches to a database and finds the corresponding shared memory structures initialized already, it performs integrity checks on the shared memory contents to ensure that they correspond to the database file. When the shared memory copy of the database file ID does not match with the actual file ID of the database, the above error is issued.
 
 Action: Perform a MUPIP RUNDOWN on that region. If it fails with the same DBIDMISMATCH error, then the shared memory contents are corrupt. Consult your YottaDB support channel before proceeding further.
 
@@ -2554,7 +2517,7 @@ DBJNLNOTMATCH, Database xxxx points to journal file name yyyy but the journal fi
 
 MUPIP Error: This indicates that there is a mismatch in the name of the database file xxxx and the name zzzz, saved in the journal file header yyyy.
 
-Action: Contact your YottaDB support channel if the cause of the error cannot be diagnosed. If appropriate change the database file name in the journal file using the command MUPIP SET /jnlfile /dbfilename=xxxx yyyy.
+Action: Contact your YottaDB support channel if the cause of the error cannot be diagnosed. If appropriate, change the database file name in the journal file using the command MUPIP SET /jnlfile /dbfilename=xxxx yyyy.
 
 ---------------
 DBKEYGTIND 
@@ -2592,7 +2555,7 @@ DBKEYORD
 
 DBKEYORD, xxxx Keys out of order
 
-DSE/Run Time/MUPIP Warning: This indicates that a DSE/MUPIP INTEG command determined that the block contains a record at offset yyyy whose key is not in proper M collating sequence. This error is also reported at run-time if block certification failes on a particular block. Block certification is active if GDSCERT is enabled by a VIEW command.
+DSE/Run Time/MUPIP Warning: This indicates that a DSE/MUPIP INTEG command determined that the block contains a record at offset yyyy whose key is not in proper M collating sequence. This error is also reported at run-time if block certification fails on a particular block. Block certification is active if GDSCERT is enabled by a VIEW command.
 
 Action: Report this database structure error to the group responsible for database integrity at your operation.
 
@@ -2704,7 +2667,7 @@ DBMBMINCFREFIXED
 
 DBMBMINCFREFIXED, Master bitmap incorrectly marks local bitmap 0xAAAA as free. Auto-corrected.
 
-Run Time Warning: The above error is issued when the runtime engine detects an integrity error with the master map that indicates that the local bitmap 0xAAAA is free when in actually it is not. The error is also auto-corrected by the runtime engine by marking the local bitmap as full in the master bitmap.
+Run Time Warning: The above error is issued when the runtime engine detects an integrity error with the master map that indicates that the local bitmap 0xAAAA is free when it is actually not. The error is also auto-corrected by the runtime engine by marking the local bitmap as full in the master bitmap.
 
 Action: This error is entirely benign, but because it should not occur, be sure to check your next MUPIP INTEG output thoroughly and also check your operator logs prior to this warning for other unusual events.
 
@@ -2878,9 +2841,9 @@ DBNONUMSUBS
 
 DBNONUMSUBS, kkkk key contains a numeric form of subscript in a global defined to collate all subscripts as strings
 
-Run Time/MUPIP Error: The record has a numeric subscript but the collation setting for the global or region indicates all subscripts are filed as strings. The leading context (XXXX) identifies the block and offest of the problematic record. This can arise if an operator uses DSE to force a change to a collation setting or to modify a key when the global already has content.
+Run Time/MUPIP Error: The record has a numeric subscript but the collation setting for the global or region indicates that all subscripts are filed as strings. The leading context (XXXX) identifies the block and offset of the problematic record. This can arise if an operator uses DSE to force a change to a collation setting or to modify a key when the global already has content.
 
-Action: If you can determine the cause of, and reason for, the change and you may choose to reverse it. If you need to change the collation, the appropriate procedure is to EXTRACT the data, KILL the global, or remove and recreate the database file, and them LOAD the extracted data.
+Action: If you can determine the cause of, and reason for, the change, you may choose to reverse it. If you need to change the collation, the appropriate procedure is to EXTRACT the data, KILL the global, or remove and recreate the database file, and then LOAD the extracted data.
 
 -----------------
 DBNOREGION
@@ -2928,9 +2891,9 @@ DBNULCOL
 
 DBNULCOL, NULL collation representation differs from the database file header settings
 
-DSE/MUPIP/Run Time Error: This indicates the database contains a record with an empty subscript ("Null" subscript) representation that is incompatible with the current setting database file header setting for such a representation. The leading context (XXXX) specifies the block number and offset of the problematic record. This can only arise if someone changes the setting for the database while it contains one or more such subscripts. YottaDB recommends against making such a change. This message can originate from MUPIP INTEG, DSE INTEG or from running with VIEW "GDSCERT".
+DSE/MUPIP/Run Time Error: This indicates that the database contains a record with an empty subscript ("Null" subscript) representation that is incompatible with the current database file header setting for such a representation. The leading context (XXXX) specifies the block number and the offset of the problematic record. This can only arise if someone changes the setting for the database while it contains one or more such subscripts. YottaDB recommends against making such a change. This message can originate from MUPIP INTEG, DSE INTEG or from running with VIEW "GDSCERT".
 
-Action: Use the record and block information to remove the problematic record with DSE and restore the data appropriately, typically with a SET command. Note that the record and block of the record many change due to ongoing updates, so this operation requires great care and familiarity with DSE.
+Action: Use the record and block information to remove the problematic record with DSE and restore the data appropriately, typically with a SET command. Note that the record and block of the record may change due to ongoing updates, so this operation requires great care and familiarity with DSE.
 
 ---------------
 DBOPNERR
@@ -2998,7 +2961,7 @@ DBQUELINK
 
 DBQUELINK, Database file xxxx, element location yyyy: blk = zzzz: control aaaa queue problem: was bbbb, expecting cccc
 
-Run Time Error: This indicates that database cache recovery was triggered due to some abnormal event and the recovery routine detected damage to an internal YottaDB queue control structure in the database global buffer cache.
+Run Time Error: This indicates that database cache recovery was triggered due to some abnormal event and that the recovery routine detected damage to an internal YottaDB queue control structure in the database global buffer cache.
 
 Action: The system automatically attempts to correct the problem. If this error continues to occur, attempt MUPIP RUNDOWN and if that fails too, restore database from backup and replay the journal files. Report the error to your YottaDB support channel if necessary.
 
@@ -3119,7 +3082,7 @@ DBROLLEDBACK
 
 DBROLLEDBACK, Concurrent ONLINE ROLLBACK detected on one or more regions. The current operation is no longer valid
 
-Run Time Error: This indicates a non-TP mini-transaction attempted to interact with the database and found that a concurrent online rollback had taken the database to a state earlier than the one at the end of the last mini-transaction by this process unless there has been an intervening TP transaction.
+Run Time Error: This indicates that a non-TP mini-transaction attempted to interact with the database and found that a concurrent online rollback had taken the database to a state earlier than the one at the end of the process' last mini-transaction, unless there has been an intervening TP transaction.
 
 Action: Application dependent - this error indicates a discontinuity in the database state that may cause inconsistent application data.
 
