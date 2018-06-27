@@ -3150,12 +3150,11 @@ Action: N/A
 DBSTARCMP 
 --------------------
 
-DBSTARCMP, DBSTARCMP xxxx Star record has nonzero compression count
+DBSTARCMP, xxxx Star record has nonzero compression count
 
 Run Time Warning: This indicates that a block certification or DSE integrity check failed on xxxx. Block xxxx contains a record at offset yyyy that should be a star key; however, it has a non-zero compression count.
 
 Action: Report this database structure error to the group responsible for database integrity at your operation.
-
 
 ----------------
 DBSTARSIZ
@@ -3293,7 +3292,7 @@ DBVERPERFWARN2
 
 DBVERPERFWARN2, Peformance warning: Database aaaa is not fully upgraded. Run MUPIP REORG UPGRADE for best overall performance.
 
-Run Time Warning: This is a performance warning message that indicates the database is not yet fully upgraded i.e. there are still blocks in the database file that need to be upgraded. Staying in this mode causes some inefficiencies which include (but are not limited to) reading blocks from disk.
+Run Time Warning: This is a performance warning message that indicates that the database is not yet fully upgraded i.e. there are still blocks in the database file that need to be upgraded. Staying in this mode causes some inefficiencies which include (but are not limited to) reading blocks from disk.
 
 Action: As the message indicates, run MUPIP REORG UPGRADE at the earliest. This command can be run without taking the database offline. Once that completes successfully, the database file is fully upgraded.
 
@@ -3313,7 +3312,7 @@ DBWCVERIFYSTART
 
 DBWCVERIFYSTART, Database file xxxx, write cache verification started by pid pppp [aaaa] at transaction number bbbb
 
-Run Time Information: This indicates that process-id pppp (aaaa in hexadecimal), has started a verification of the database cache for the database file xxxx.
+Run Time Information: This indicates that process-id pppp (aaaa in hexadecimal) has started a verification of the database cache for the database file xxxx.
 
 Action: -
 
@@ -3343,9 +3342,9 @@ DELIMWIDTH
 
 DELIMWIDTH, Delimiter length xxxx exceeds device width yyyy
 
-Run Time Information: This indicates that the length of the first delimiter string specified in the DELIMITER deviceparameter exceeds the WIDTH of the socket device being OPENd (or USEd).
+Run Time Information: This indicates that the length of the first delimiter string specified in the DELIMITER deviceparameter exceeds the WIDTH of the socket device being OPENed (or USEd).
 
-Action: Modify the first delimiter string to have a length of at most the WIDTH of the socket device.
+Action: Modify the first delimiter string to have a length of, at most, the WIDTH of the socket device.
 
 ----------------------
 DEVICEREADONLY
@@ -3355,7 +3354,7 @@ DEVICEREADONLY, Cannot write to a read-only device
 
 Run Time Error: The application made an attempt to WRITE to a read-only device.
 
-Action: Review code and context to see if the WRITE was intended for another device, and if so add the appropriate USE. If the WRITE is intended for this device, change the device OPEN to permit the WRITE.
+Action: Review code and context to see if the WRITE was intended for another device and if so, add the appropriate USE. If the WRITE is intended for this device, change the device OPEN to permit the WRITE.
 
 --------------------
 DEVICEWRITEONLY
@@ -3385,7 +3384,7 @@ DEVOPENFAIL, Error opening xxxx
 
 Run Time Error: This indicates that a YottaDB process encountered an error while opening the device xxxx. A supplementary TEXT message and a system message provide more details about the cause of the error.
 
-Action: Verify the device exists on the system where the OPEN is being attempted.
+Action: Verify that the device exists on the system where the OPEN is being attempted.
 
 -------------------
 DEVPARINAP 
@@ -3483,7 +3482,7 @@ DIVZERO
 
 DIVZERO, Attempt to divide by zero
 
-Run Time Error: This indicates that a divide or module operator had a zero for its divisor operand.
+Run Time Error: This indicates that a divide or modulo operator had a zero for its divisor operand.
 
 Action: Modify the routine to protect against zero division.
 
@@ -3503,7 +3502,7 @@ DLLCHSETM
 
 DLLCHSETM, Routine XXX in library YYY was compiled with CHSET=M which is different from $ZCHSET. Recompile with CHSET=UTF-8 and re-link.
 
-Run Time Error: This error is triggered when a UTF-8 mode process attempts to execute a shared library's routine that was complied in M-mode.
+Run Time Error: This error is triggered when a UTF-8 mode process attempts to execute a shared library's routine that was compiled in M-mode.
 
 Action: Recompile and relink the routine using UTF-8-mode settings or switch to M mode.
 
@@ -3513,7 +3512,7 @@ DLLCHSETUTF8
 
 DLLCHSETUTF8, Routine XXX in library YYY was compiled with CHSET=UTF-8 which is different from $ZCHSET. Recompile with CHSET=M and re-link.
 
-Run Time Error: This error is triggered when an M mode process attempts to execute a shared library's routine that was complied in UTF-8 mode.
+Run Time Error: This error is triggered when an M mode process attempts to execute a shared library's routine that was compiled in UTF-8 mode.
 
 Action: Recompile and relink the routine using M-mode settings or switch to UTF-8 mode.
 
@@ -3625,7 +3624,7 @@ DSEMAXBLKSAV, DSE cannot SAVE another block as it already has the maximum of mmm
 
 DSE Error: The current SAVE -BLOCK operation exceeds DSE's capacity to hold more than mmmm saved blocks
 
-Action: Delete some saved blocks, possibly after RESTORE'ng them to free blocks, or restart DSE if none of the currently saved blocks have value.
+Action: Delete some saved blocks, possibly after RESTOREing them to free blocks, or restart DSE if none of the currently saved blocks have value.
 
 ------------------------
 DSENOFINISH
@@ -3655,7 +3654,7 @@ DSEONLYBGMM, xxxx is supported only for BG/MM access methods
 
 DSE Warning: This indicates that the current region has an access method that is neither Buffered Globals nor Memory Mapped. DSE can not flush such a region.
 
-Action: Before starting DSE, make sure that the Global Directory contains regions that have an access method of Buffered Globals or Memory Mapped.
+Action: Before starting DSE, make sure that the Global Directory contains regions that have either Buffered Globals or Memory Mapped access methods.
 
 -------------------------
 DSEWCINITCON 
@@ -3663,7 +3662,7 @@ DSEWCINITCON
 
 DSEWCINITCON, No action taken, enter YES at CONFIRMATION prompt to initialize global buffers
 
-DSE Warning: This indicates that DSE did not yet perform the operation that was initiated by the WCINIT command or the ALL command with either the WCINIT or RENEW qualifier because the operator did not confirm it.
+DSE Warning: This indicates that DSE did not perform the operation that was initiated by the WCINIT command or the ALL command with either the WCINIT or RENEW qualifier yet, because the operator did not confirm it.
 
 Action: To perform these operations, enter YES at the CONFIRMATION prompt to verify your intention to perform this potentially disruptive operation. The DSE WCINIT command reinitializes shared memory structures for the current region.
 
@@ -3683,7 +3682,7 @@ DSKNOSPCAVAIL
 
 DSKNOSPCAVAIL, Attempted write to file FFFF failed due to lack of disk space. Retrying indefinitely.
 
-Run Time Error: This error indicates that YottaDB could not update file FFFF due to lack of disk space in the file system. If -INST_FREEZE_ON_ERROR is enabled, YottaDB automatically disables it (sending a DSKSPCAVAILABLE message to the operator log) when adequate disk space becomes available again.
+Run Time Error: This error indicates that YottaDB could not update file FFFF due to a lack of disk space in the file system. If -INST_FREEZE_ON_ERROR is enabled, YottaDB automatically disables it (sending a DSKSPCAVAILABLE message to the operator log) when adequate disk space becomes available again.
 
 Action: Make disk space available in the file system to allow updates to file FFFF.
 
@@ -3693,7 +3692,7 @@ DSKNOSPCBLOCKED
 
 DSKNOSPCBLOCKED, Retry of write to file FFFF suspended due to new instance freeze. Waiting for instance to be unfrozen.
 
-Run Time Error: This error indicates that a process waiting for space to write to file FFFF determined that another process froze the replication instance. The process will not make more attempts to write to the file until the replication instance is unfrozen.
+Run Time Error: This error indicates that a process waiting for space to write to file FFFF determined that another process froze the replication instance. The process will not make any more attempts to write to the file until the replication instance is unfrozen.
 
 Action: Check the system log for the most recent REPLINSTFROZEN message to determine the cause of the current freeze and resolve it.
 
@@ -3703,7 +3702,7 @@ DSKSPACEFLOW
 
 DSKSPACEFLOW, Disk space for file xxxx nearing maximum size. YYYY blocks available.
 
-Run Time Warning: This indicates that disk space for the specified file system, on which the database/journal files are located, is almost full.
+Run Time Warning: This indicates that the disk space for the specified file system on which the database/journal files are located is almost full.
 
 Action: Review and make disk space.
 
@@ -3713,7 +3712,7 @@ DSKSPCAVAILABLE
 
 DSKSPCAVAILABLE, Write to file FFFF succeeded after out-of-space condition cleared.
 
-Success Information: This indicates that the file system of file FFFF has enough space to allow further updates (previously not possible as indicated by a DSKNOSPCAVAIL error message).
+Success Information: This indicates that the file system of file FFFF has enough space to allow further updates (was previously not possible, as indicated by a DSKNOSPCAVAIL error message).
 
 Action: None Required.
 
@@ -3723,7 +3722,7 @@ DSKSPCCHK
 
 DSKSPCCHK, Error while checking for available disk space to create file DDDD
 
-All YottaDB Components Error: While checking if there was available space to create the database file some service failed. This error is followed by a description of what caused the failure.
+All YottaDB Components Error: While checking if there was available space to create the database file, some service failed. This error is followed by a description of what caused the failure.
 
 Action: Address the reason for the failure and retry.
 
@@ -3743,7 +3742,7 @@ DUPTOKEN
 
 DUPTOKEN, Token xxxx is duplicate in the journal file yyyy for database zzzz
 
-MUPIP Error: This indicates that two transactions (TP or ZTP) have the same token (xxxx), in the specified journal file yyyy, violating the uniqueness of the ID that distinguishes transactions from one another. The result is that both transactions are considered broken and reported in the broken transactions extract file.
+MUPIP Error: This indicates that two transactions (TP or ZTP) have the same token (xxxx) in the specified journal file yyyy, violating the uniqueness of the ID that distinguishes transactions from one another. The result is that both transactions are considered broken and reported in the broken transactions extract file.
 
 Action: Report the entire incident context to your YottaDB support channel.
 
@@ -3763,7 +3762,7 @@ DYNUPGRDFAIL
 
 DYNUPGRDFAIL, Unable to dynamically upgrade block 0xaaa in database yyy due to lack of free space in block
 
-DBCERTIFY/Run Time Error: There was not enough free space in the block to convert it in place to the current format during normal database access. This indicates that the DBCERTIFY database certification procedure was not properly carried out.
+DBCERTIFY/Run Time Error: There was not enough free space in the block to convert it (in place) to the current format during normal database access. This indicates that the DBCERTIFY database certification procedure was not properly carried out.
 
 Action: Either mark the block free (making appropriate index changes) or downgrade the database and re-run DBCERTIFY (both phases).
 
@@ -3783,7 +3782,7 @@ DZWRNOALIAS
 
 DZWRNOALIAS, $ZWRTAC cannot be aliased.
 
-Compile Time Error: This indicates the argument for a SET * command attempted to assign a $ZWRTAC* pseudo-variable as a alias.
+Compile Time Error: This indicates the argument for a SET * command attempted to assign a $ZWRTAC* pseudo-variable as an alias.
 
 Action: Correct the code in question - the $ZWRTAC* is only useful in restoring context from ZSHOW or ZWRITE output and has very narrow capabilities.
 
@@ -3803,7 +3802,7 @@ ECLOSTMID
 
 ECLOSTMID, $ECODE overflow, the first and last ecodes are retained, but some intervening ecodes have been lost
 
-Run Time Warning: If the $ECODE exceeds the maximum string length, references to it return only the codes for the earliest and latest errors separated by the code for ECLOSTMID, which indicates that suppression of intervening error codes has occurred to accommodate string length restrictions.
+Run Time Warning: If the $ECODE exceeds the maximum string length, references to it return only the codes for the earliest and latest errors separated by the code for ECLOSTMID, which indicates that a suppression of intervening error codes has occurred to accommodate string length restrictions.
 
 Action: Consider whether it would be appropriate to introduce code to SET $ECODE= . This error is encountered either when the $ETRAP error handling is recursing (and probably defective), or while using $ZTRAP error handling that was coded prior to the introduction of $ECODE.
 
@@ -3813,15 +3812,15 @@ ENCRYPTCONFLT
 
 ENCRYPTCONFLT, MUPIP REORG -ENCRYPT and MUPIP EXTRACT -FORMAT=BIN cannot run concurrently - skipping oooo on region: rrrr, file: ffff
 
-MUPIP Error: MUPIP cannot perform REORG -ENCRYPT and EXTRACT -FORMAT=BIN on file ffff at the same time; rrrr is the region that mapped the file; oooo is the just started operation.
+MUPIP Error: MUPIP cannot perform REORG -ENCRYPT and EXTRACT -FORMAT=BIN on file ffff at the same time; rrrr is the region that mapped the file; oooo is the operation that was just started.
 
-Action: Reschedule the just started operation or terminate the conflicting operation to allow the just started operation to run immediately.
+Action: Reschedule the just-started operation or terminate the conflicting operation to allow the just-started operation to run immediately.
 
 -------------------
 ENCRYPTCONFLT2
 -------------------
 
-ENCRYPTCONFLT2, Message: A concurrent MUPIP REORG -ENCRYPT changed the encryption key for RRRR before the process could initialize it
+ENCRYPTCONFLT2, A concurrent MUPIP REORG -ENCRYPT changed the encryption key for RRRR before the process could initialize it
 
 Run Time Warning: Due to a concurrent MUPIP REORG -ENCRYPT, a process was forced to defer encryption key initialization for region RRRR.
 
@@ -3833,7 +3832,7 @@ ENDIANCVT
 
 ENDIANCVT, Converted database file xxxx from yyyy endian to zzzz endian on a wwww endian system
 
-MUPIP Information: When MUPIP ENDIANCVT has successfully completed, it displays the conversion information. This information includes the database file, its previous endian format, the new endian format, and the endian format that is native to the current system.
+MUPIP Information: When MUPIP ENDIANCVT has successfully completed, it displays conversion information. This information includes the database file, its previous endian format, the new endian format, and the endian format that is native to the current system.
 
 Action: N/A
 
@@ -3853,7 +3852,7 @@ EORNOTFND
 
 EORNOTFND, xxxx End of record not found
 
-MUPIP Error: This indicates that LOAD encountered a database reference record containing an open parenthesis without a close parenthesis. xxxx is the record.
+MUPIP Error: This indicates that LOAD encountered a database reference record containing an open parenthesis without a closiing parenthesis. xxxx is the record.
 
 Action: Refer to the topic `MUPIP LOAD Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-load-errors>`_.
 
@@ -3863,9 +3862,9 @@ EPOCHTNHI
 
 EPOCHTNHI, At the EPOCH record at offset xxxx of yyyy transaction number [0xaaaa] is higher than database transaction number [0xbbbb]
 
-MUPIP Error: This indicates that during turnaround point from where mupip applies logical records, backward recover found that epoch's transaction number is greater than the current database transaction number.
+MUPIP Error: This indicates that at the turnaround point from where MUPIP applies logical records, Backward Recover found that the epoch's transaction number is greater than the current database transaction number.
 
-Action: Contact your system administrator and if necessary report the entire incident context to your YottaDB support channel.
+Action: Contact your system administrator and if necessary, report the entire incident context to your YottaDB support channel.
 
 -------------------------
 EQUAL 
@@ -3943,7 +3942,7 @@ ERRWZINTR
 
 ERRWZINTR, Error while processing $ZINTERRUPT
 
-Run Time Error: This indicates that a job interrupt had been signaled but that there was an error compiling the $ZINTERRUPT string. This message is sent to the operator log facility and if at the direct mode prompt or executing a direct mode command to the user console.
+Run Time Error: This indicates that a job interrupt was signaled but there was an error compiling the $ZINTERRUPT string. This message is sent to the operator log facility at the direct mode prompt or when executing a direct mode command to the user console.
 
 Action: Correct the $ZINTERRUPT to contain valid YottaDB commands.
 
@@ -4003,7 +4002,7 @@ EXTGBLDEL
 
 EXTGBLDEL, Invalid delimiter for extended global syntax
 
-Run Time Error: This indicates that the global reference started with a vertical bar (|) or left-bracket ([), indicating that it includes an environment specification (Global Directory). However, the environment specification did not terminate with either a vertical bar (|) or right-bracket (]), respectively.
+Run Time Error: This indicates that the global reference started with a vertical bar (|) or left-bracket ([), indicating that it includes an environment specification (Global Directory). However, the environment specification did not terminate with a vertical bar (|) or right-bracket (]) respectively.
 
 Action: Insert the appropriate trailing delimiter for the environment specification or remove the environment specification.
 
@@ -4063,9 +4062,9 @@ EXTRINTEGRITY
 
 EXTRINTEGRITY, Database ffff potentially contains spanning nodes or data encrypted with two different keys
 
-MUPIP Error: MUPIP EXTRACT cannot run because the database file ffff might contain spanning nodes or be partially encrypted with a particular key. Proceeding on a live database in such situation could result in data corruption.
+MUPIP Error: MUPIP EXTRACT cannot run because the database file ffff might contain spanning nodes or be partially encrypted with a particular key. Proceeding in such a situation on a live database could result in data corruption.
 
-Action: Reformat the data to contain no spanning nodes, let MUPIP REORG -ENCRYPT complete (re)encryption of the database, or reissue the MUPIP EXTRACT command with a -FREEZE qualifier to acquire stand-alone access for the duration of the procedure. As a final resort, use an -OVERRIDE qualifier to proceed on a live database that either contains spanning nodes or is undergoing (re)encryption. YottaDB highly discourages using the -OVERRIDE qualifier unless the database is quiescent.
+Action: Reformat the data to contain no spanning nodes, let MUPIP REORG -ENCRYPT complete the (re)encryption of the database, or reissue the MUPIP EXTRACT command with a -FREEZE qualifier to acquire stand-alone access for the duration of the procedure. As a final resort, use an -OVERRIDE qualifier to proceed on a live database that either contains spanning nodes or is undergoing (re)encryption. YottaDB highly discourages using the -OVERRIDE qualifier unless the database is quiescent.
 
 -------------------------
 EXTSRCLIN
@@ -4135,7 +4134,7 @@ FCNSVNEXPECTED, Function or special variable expected in this context
 
 Compile Time Error: This indicates that YottaDB encountered a dollar sign in an expression that was not followed by a valid function or special variable name.
 
-Action: Look for misspelled function and special variable names or a missing $ in an extrinsic.
+Action: Look for misspelled functions and special variable names or a missing $ in an extrinsic.
 
 --------------------
 FILECREATE 
@@ -4143,7 +4142,7 @@ FILECREATE
 
 FILECREATE, AAAA file xxxx created
 
-MUPIP Information: This indicates that a file xxxx was created due to AAAA, where AAAA is lost transaction, broken transaction, or Journal Extract file.
+MUPIP Information: This indicates that a file xxxx was created due to AAAA, where AAAA is a lost transaction, broken transaction, or a Journal Extract file.
 
 Action: Look for the xxxx file for further relevant data.
 
@@ -4163,7 +4162,7 @@ FILEDEL
 
 FILEDEL, File xxxx successfully deleted
 
-Run Time/MUPIP Information: This indicates that YottaDB or MUPIP has successfully deleted a file. This message is issued when a journal file in an inconsistent state found and deleted by the run-time system or MUPIP SET. This message is also issued by MUPIP JOURNAL RECOVER/ROLLBACK command when it deletes journal files that were created by a previously interrupted RECOVER/ROLLBACK command and are no longer necessary.
+Run Time/MUPIP Information: This indicates that YottaDB or MUPIP has successfully deleted a file. This message is issued when a journal file in an inconsistent state is found and deleted by the run-time system or MUPIP SET. This message is also issued by MUPIP JOURNAL RECOVER/ROLLBACK command when it deletes journal files that were created by a previously interrupted RECOVER/ROLLBACK command and are no longer necessary.
 
 Action: -
 
@@ -4183,7 +4182,7 @@ FILEEXISTS
 
 FILEEXISTS, File xxxx already exists
 
-MUPIP Error: This indicates that MUPIP discovered a file with the filename xxxx already existing and did not overwrite it while executing the specified command(s).
+MUPIP Error: This indicates that MUPIP discovered a file with the filename xxxx already existing, and did not overwrite it while executing the specified command(s).
 
 Action: Rename the already existing file xxxx and reissue the MUPIP command(s), or modify the MUPIP command to name (explicitly/implicitly) a file different from xxxx.
 
@@ -4223,7 +4222,7 @@ FILENOTCREATE
 
 FILENOTCREATE, AAAA file xxxx not created
 
-MUPIP Information: This indicates that the file xxxx was not created due to AAAA; where AAAA is a lost transaction, or broken transaction, or Journal Extract file.
+MUPIP Information: This indicates that the file xxxx was not created due to AAAA; where AAAA is a lost transaction, or broken transaction or Journal Extract file.
 
 Action: Review accompanying messages for any further information. If there are no accompanying messages, it indicates that MUPIP did not find any lost or broken transactions for the corresponding extract file to be created.
 
@@ -4245,7 +4244,7 @@ FILEOPENFAIL, Failed to open file ffff.
 
 MUPIP Error: This message indicates that the MUPIP LOAD failed to open input file ffff.
 
-Action: Please verify path and permission of input file ffff.
+Action: Please verify the path and permissions of input file ffff.
 
 ---------------------
 FILEPARSE
@@ -4255,7 +4254,7 @@ FILEPARSE, Error parsing file specification: xxxx
 
 Run Time Error: This indicates a problem with the specification of file xxxx, or the path to it. If the file is a source or object file, a ZLINK command or $ZROUTINES-related action encountered the error.
 
-Action: Look for, and correct any typographical errors in the file-specification.
+Action: Look for and correct any typographical errors in the file-specification.
 
 ---------------------
 FILERENAME 
@@ -4283,10 +4282,9 @@ FILTERCOMM
 
 FILTERCOMM, Error communicating transaction xxxx with the filter
 
-Run Time Error: This error is logged to the replication server log file. This indicates that the replication server encountered an error writing transaction with journal sequence number xxxx to the user supplied external filter's input. The accompanying system error message gives more details.
+Run Time Error: This error is logged to the replication server log file. This indicates that the replication server encountered an error writing a transaction with a journal sequence number xxxx to the user supplied external filter's input. The accompanying system error message gives more details.
 
 Action: Stop the filter and restart the replication server with the filter. Report the entire incident context to your YottaDB support channel.
-
 
 --------------------
 FILTERNOTALIVE
@@ -4294,7 +4292,7 @@ FILTERNOTALIVE
 
 FILTERNOTALIVE, Replication server detected that the filter is not alive while attempting to send transaction xxxx
 
-Run Time Error: This error is logged to the replication server log file. This indicates that the replication server detected abnormal termination of the user supplied external filter while attempting to write transaction with journal sequence number xxxx to the filter's input.
+Run Time Error: This error is logged to the replication server log file. This indicates that the replication server detected an abnormal termination of the user-supplied external filter while attempting to write a transaction with journal sequence number xxxx to the filter's input.
 
 Action: Determine the cause of the filter's abnormal termination. Fix the filter and restart the replication server with the fixed filter.
 
@@ -4304,9 +4302,9 @@ FILTERTIMEDOUT
 
 FILTERTIMEDOUT, Replication server timed out attempting to read seqno ssss from external filter
 
-MUPIP Error: This indicates that either a Source or Receiver Replication Server using an external filter took more than 30 sec to read a transaction with journal sequence number ssss from the user supplied external filter's output. The replication server reports this error in its log, stops the filter and terminates.
+MUPIP Error: This indicates that either a Source or Receiver Replication Server using an external filter took more than 30 secs to read a transaction with a journal sequence number ssss from the user supplied external filter's output. The replication server reports this error in its log, stops the filter and terminates.
 
-Action: Determine the cause for the filter's write delay. Fix the filter and restart the replication server with the fixed filter. If you cannot determine reason for delay, report the entire incident context to your YottaDB support channel.
+Action: Determine the cause for the filter's write delay. Fix the filter and restart the replication server with the fixed filter. If you cannot determine the reason for delay, report the entire incident context to your YottaDB support channel.
 
 ------------------
 FMLLSTMISSING
@@ -4354,7 +4352,7 @@ FNOTONSYS
 
 FNOTONSYS, Function or special variable is not supported by this operating system
 
-Compile Time Error: This indicates that YottaDB encountered a function or special variable it cannot process on the current operating system.
+Compile Time Error: This indicates that YottaDB encountered a function or special variable that it could not process on the current operating system.
 
 Action: Some functions are not appropriate to all operating environments. Contact your YottaDB support channel if you have questions about how to accomplish a particular task.
 
@@ -4394,7 +4392,7 @@ FORCTRLINDX
 
 FORCTRLINDX, Using a FOR with an indexed control variable that's assigned values calculated in extrinsics is not currently safe
 
-Compile Time/Run Time Error: YottaDB currently has trouble managing the interaction between a subscripted FOR control variable and expressions for its maintenance that have side effects that might change the array holding the control variable. Such elements include extrinsics ($$), external calls ($&) and $INCREMENT(). To avoid possible process context corruption, the compiler issues this error when it encounters the threatening circumstances. Note that the error can also appear at run-time without the accompanying indications of line and column if the construct appears in an XECUTE, the control variable is specified with indirection or the compiler warning is ignored.
+Compile Time/Run Time Error: YottaDB currently has trouble managing the interaction between a subscripted FOR control variable and expressions for its maintenance that have side effects that might change the array holding the control variable. Such elements include extrinsics ($$), external calls ($&) and $INCREMENT(). To avoid possible process context corruption, the compiler issues this error when it encounters the threatening circumstances. Note that the error can also appear at run-time without the accompanying indications of line and column. If the construct appears in an XECUTE, the control variable is specified with indirection or the compiler warning is ignored.
 
 Action: Chose an unsubscripted FOR control variable and/or evaluate the side-effect element(s) before setting up the FOR.
 
@@ -4458,7 +4456,6 @@ MUPIP Error: This indicates an unsuccessful database freeze or unfreeze (ffff) o
 
 Action: Look for accompanying text that explains the cause of the error and take appropriate action.
 
-
 -----------------------
 FSEXP
 -----------------------
@@ -4475,7 +4472,7 @@ FSYNCTIMOUT
 
 FSYNCTIMOUT, Timed out on fsync for journal file xxxx
 
-Run Time Error: This indicates that the process has been unable to get the journal flush lock on the journal file for nearly two minutes and has timed out. It is very likely that another process is holding the journal flush lock, wanting to do an fsync() on the journal file and has not released it so long, which would suggest an issue with disk subsystem response times.
+Run Time Error: This indicates that the process has been unable to get the journal flush lock on the journal file for nearly two minutes and has timed out. It is very likely that another process is holding the journal flush lock, wanting to do an fsync() on the journal file, and has not yet released the lock, which would suggest an issue with disk subsystem response times.
 
 Action: Check the disk subsystem for a software or hardware problem.
 
@@ -4537,7 +4534,7 @@ GBLNAMCOLLUNDEF, Error opening shared library of collation sequence #nnnn for GB
 
 GDE Error: This indicates that there was an error opening the shared library for collation sequence nnnn.
 
-Action: Define the environment variable ydb_collate_<nnnn> to point to the shared library for collation sequence nnnn. Also ensure the path to the library is readable and the library is usable on that platform.
+Action: Define the environment variable ydb_collate_<nnnn> to point to the shared library for collation sequence nnnn. Also ensure that the path to the library is readable and the library is usable on that platform.
 
 ---------------
 GBLNAMCOLLVER
@@ -4545,7 +4542,7 @@ GBLNAMCOLLVER
 
 GBLNAMCOLLVER, Global directory indicates GBLNAME gggg has collation sequence #nnnn with a version #vvvv but shared library reports different version #llll
 
-GDE Error: This indicates that the shared library for collation sequence nnnn reported the version as vvvv when collation properties for global name gggg were first added by GDE into the global directory and that this invocation of GDE noticed the shared library reporting an incompatible version llll.
+GDE Error: This indicates that the shared library for collation sequence nnnn reported the version as vvvv when the collation properties for global name gggg were first added by GDE into the global directory and that this invocation of GDE noticed the shared library reporting an incompatible version llll.
 
 Action: See Action section for `COLLTYPVERSION error in the Message and Recovery Procedures Manual <https://docs.yottadb.com/MessageRecovery/errors.html#colltypversion>`_.
 
@@ -4597,7 +4594,7 @@ GBLOFLOW, Database segment is full
 
 Run Time/MUPIP Error: This indicates that an error was encountered while extending the database file.
 
-Action: Examine the accompanying message(s) for the cause of the error. If the error is due to insufficient authorization, address that. If the error is due to TOTALBLKMAX (refer to the explaination of that message) or a lack of enough free space on the disk to fit the size of a database file, try performing a KILL of some nodes in the database to get free blocks in the existing allocated space (you may need to KILL several subscripted nodes before you can KILL a name node).
+Action: Examine the accompanying message(s) for the cause of the error. If the error is due to insufficient authorization, address that. If the error is due to TOTALBLKMAX (refer to the explanation of that message) or a lack of enough free space on the disk to fit the size of a database file, try performing a KILL on some nodes in the database to get free blocks in the existing allocated space (you may need to KILL several subscripted nodes before you can KILL a name node).
 
 ---------------
 GBLSECNOTGDS 
@@ -4625,9 +4622,9 @@ GDEASYNCIONOMM
 
 GDEASYNCIONOMM, ssss segment has ASYNCIO turned on. Cannot support MM access method
 
-GDE Error: This indicates that segement ssss has enabled ASYNCIO, which is not compatible with the MM access method.
+GDE Error: This indicates that segment ssss has enabled ASYNCIO, which is not compatible with the MM access method.
 
-Action: For MM do not use ASYNCIO; in order to choose ASYNCIO, use the BG access method. 
+Action: Do not use ASYNCIO for the MM access method; in order to choose ASYNCIO, use the BG access method. 
 
 -------------
 GDECHECK 
@@ -4727,9 +4724,9 @@ GETCWD
 
 GETCWD, Error getting current working directory for file xxxx
 
-Run Time/MUPIP Error: This indicates that YottaDB could not get the full path of current working directory.
+Run Time/MUPIP Error: This indicates that YottaDB could not get the full path of the current working directory.
 
-Action: Review up the accompanying message(s) for additional information.
+Action: Review the accompanying message(s) for additional information.
 
 -----------------
 GETNAMEINFO
@@ -4747,7 +4744,7 @@ GETSOCKNAMERR
 
 GETSOCKNAMERR, Getting the socket name failed from getsockname(): (errno == aaaa) xxxx
 
-Run Time Error: This indicates getsockname() system call, which retrieves the locally bound address of the specified socket, failed.
+Run Time Error: This indicates that the getsockname() system call, which retrieves the locally bound address of the specified socket, failed.
 
 Action: Review the accompanying messages and error code.
 
@@ -4759,7 +4756,7 @@ GETSOCKOPTERR, Getting the socket attribute xxxx failed: (errno == yyyy) zzzz
 
 Run Time Error: This indicates that an attempt to determine a socket's attributes failed.
 
-Action: Consider the OPEN or USE deviceparameters, and the error code.
+Action: Consider the OPEN or USE deviceparameters and the error code.
 
 -----------------
 GOQPREC 
@@ -4769,7 +4766,7 @@ GOQPREC, Numeric precision in key error: Blk #xxxx, Key #yyyy. Record not loaded
 
 MUPIP Information: This indicates that YottaDB was unable to precisely represent a key in the GOQ input file to a MUPIP LOAD.
 
-Action: Examine the key on the source system, modify it, and repeat the process, or manually enter the modified record into YottaDB.
+Action: Examine the key on the source system, modify it and repeat the process, or manually enter the modified record into YottaDB.
 
 
 -------------------
@@ -4788,7 +4785,7 @@ GTMASSERT2
 
 GTMASSERT2, YottaDB eeee - Assert failed LLLL for expression (eeee)
 
-Compile Time/Run Time Fatal: This indicates a design assumption failed at the location LLLL because the expression eeee was FALSE.
+Compile Time/Run Time Fatal: This indicates that a design assumption failed at the location LLLL because the expression eeee was FALSE.
 
 Action: Preserve the core (dump) files and report the entire incident context to your YottaDB support channel for further analysis. If appropriate, verify database integrity by using the -FAST qualifier.
 
@@ -4868,13 +4865,12 @@ GTMSECSHRCHDIRF
 
 GTMSECSHRCHDIRF, GTMSECSHR process error: GTMSECSHR is not able to change directory to its temporary directory, dddd.
 
-GTMSECSHR Error: The UNIX gtmsecshr process, which assists other process with cross-user signaling and similar things, uses a temporary directory determined by the operating system defined temporary directory (typically /tmp or /var/tmp) when it needs to save a core file, but it was unable to find that directory.
+GTMSECSHR Error: The UNIX gtmsecshr process, which assists other process with cross-user signaling and similar things, uses a temporary directory determined by the operating-system-defined temporary directory (typically /tmp or /var/tmp) when it needs to save a core file, but it was unable to find that directory.
 
 Action: Verify that the environment provides the desired dddd, that dddd exists and that it is a directory.
 
 .. note::
    The permissions on dddd should not matter (as long as it is a directory) since GTMSECSHR runs as root.
-
 
 -----------------------
 GTMSECSHRDEFLOG 
@@ -4946,7 +4942,6 @@ Run Time Error: This indicates that an operator attempt to start a new log file 
 
 Action: Refer to the associated message(s) for more information.
 
-
 ------------------
 GTMSECSHRNOARG0
 ------------------
@@ -5017,7 +5012,6 @@ GTMSECSHR Error: This error indicates that GTMSECSHR failed to remove a semaphor
 
 Action: The IPC resources that GTMSECSHR uses should be unique to YottaDB, and this message indicates an unexpected condition. Investigate whether other software is using IPC resources in a way that conflicts with YottaDB. If you can't find an explanation, report the entire incident context to your YottaDB support channel.
 
-
 ------------------
 GTMSECSHRREMSHM 
 ------------------
@@ -5044,7 +5038,7 @@ GTMSECSHRSEMGET
 
 GTMSECSHRSEMGET, semget error errno = xxxx
 
-GTMSECSHR Error: This error indicates that GTMSECSHR process failed to obtain a semaphore set identifier for a specific IPC key, and that the error code returned by semget() is xxxx.
+GTMSECSHR Error: This error indicates that the GTMSECSHR process failed to obtain a semaphore set identifier for a specific IPC key, and that the error code returned by semget() is xxxx.
 
 Action: Consult your system administrator to ensure semaphores are appropriately configured.
 
@@ -5106,7 +5100,7 @@ GTMSECSHRSRVF, Client - yyyy; Attempt to service request failed (retry = zzzz)
 
 Run Time Error: This indicates that a YottaDB process with PID yyyy was unable to communicate with gtmsecshr after zzzz attempts (a maximum of four retries).
 
-Action: This message is displayed when a process that needs service from gtmsecshr, cannot communicate with gtmsechsr, or cannot start one. While the most likely cause is a mismatch in the value of the ydb_tmp environment variable between the YottaDB process and the gtmsecshr process, examples of other causes include removal of socket files used for communication between YottaDB and gtmsecshr processes. Check for a following associated message in syslog or in the stderr of the YottaDB process.
+Action: This message is displayed when a process that needs service from gtmsecshr cannot communicate with gtmsechsr, or cannot start one. While the most likely cause is a mismatch in the value of the ydb_tmp environment variable between the YottaDB process and the gtmsecshr process, examples of other causes include the removal of socket files used for communication between YottaDB and gtmsecshr processes. Check for a following associated message in syslog or in the stderr of the YottaDB process.
 
 -----------------
 GTMSECSHRSRVFID
@@ -5114,7 +5108,7 @@ GTMSECSHRSRVFID
 
 GTMSECSHRSRVFID, xxxx: yyyy - Attempt to service request failed. Client ID: zzzz, mesg ID: aaaa, mesg code: bbbb
 
-Run Time Warning: This indicates that the GTMSECSHR was unable to complete the request of YottaDB client.
+Run Time Warning: This indicates that the GTMSECSHR was unable to complete the request of the YottaDB client.
 
 Action: Examine the information in the message to see whether the message is appropriate to the environment; examine the environment and correct any inappropriate set up (such as the privileges available for GTMSECSHR).
 
@@ -5218,7 +5212,7 @@ GVFAILCORE, A core file is being generated for later analysis if necessary
 
 Run Time Error: This is an operator log-only message, which indicates that a core (dump) is being generated for the immediately preceding xxxxFAIL error message.
 
-Action: Report this database error to the group responsible for database integrity at your operation. If the cause of the xxxxFAIL message is not otherwise known (for example, database damage due to recent system crash), the produced core will contain information that your YottaDB support channel can use to determine the source of failure (UNIX only).
+Action: Report this database error to the group responsible for database integrity at your operation. If the cause of the xxxxFAIL message is not otherwise known (for example, database damage due to recent system crash), the produced core will contain information that your YottaDB support channel can use to determine the source of failure.
 
 ------------------
 GVGETFAIL
@@ -5356,7 +5350,7 @@ GVREPLERR
 
 GVREPLERR, Error replicating global in region xxxx
 
-Run Time Error: This indicates that the database system successfully updated a global node on the primary copy of the database but it encountered an error making the same update in a replicated copy.
+Run Time Error: This indicates that the database system successfully updated a global node on the primary copy of the database but it encountered an error making the same update on a replicated copy.
 
 Action: Examine any secondary error. Investigate whether the problem is with the disk where the copy is located or with the communications system to the secondary copy, if it is remote. Correct the problem and resynchronize the copies.
 
@@ -5476,7 +5470,7 @@ ICUERROR
 
 ICUERROR, ICU returned status ssss which is either unrecognized or inconsistent with the operating context
 
-Run Time Error: The open-source ICU module which YottaDB uses for some Unicode processing return an error code ssss that YottaDB did not recognize as valid for the current context.
+Run Time Error: The open-source ICU module which YottaDB uses for some Unicode processing returned an error code ssss that YottaDB did not recognize as valid for the current context.
 
 Action: Consult the ICU documentation and/or refresh the ICU library with a known correct version.
 
@@ -5497,7 +5491,7 @@ ICUVERLT36
 
 ICUVERLT36, Type 1 - $ydb_icu_version/$gtm_icu_version is aaa.bbb. ICU version greater than or equal to 3.6 should be used. Type 2 - libicuio has version aaa.bbb. ICU version greater than or equal to 3.6 should be used.
 
-Run Time Error: This message indicates an attempt to use an ICU version less than 3.6 with YottaDB or utilities like MUPIP or DSE.
+Run Time Error: This message indicates an attempt to use an ICU version that is less than 3.6 with YottaDB or utilities like MUPIP or DSE.
 
 Action: Upgrade ICU version to at least 3.6.
 
@@ -5527,7 +5521,7 @@ IGNBMPMRKFREE
 
 IGNBMPMRKFREE, Ignoring bitmap free-up operation for region rrrr (dddd) due to concurrent ONLINE ROLLBACK
 
-Run Time Information: A multi-node KILL bit map cleanup operation detected a concurrent online rollback in region rrrr mapped to database file dddd, and abandoned the cleanup, possibly leaving incorrectly marked busy errors.
+Run Time Information: A multi-node KILL bit map cleanup operation detected a concurrent online rollback in region rrrr mapped to database file dddd and abandoned the cleanup, possibly leaving incorrectly marked busy errors.
 
 Action: If there are incorrectly marked busy errors, match them with this cause and clean them up using DSE.
 
@@ -5599,7 +5593,7 @@ INDRMAXLEN, Maximum length xxxxx of an indirection argument was exceeded
 
 Run Time Error: This indicates that an indirection or XECUTE used a value that exceeded the maximum length for a source code element.
 
-Action: Review the the code to shorten the length of the XECUTE or indirection string.
+Action: Review the code to shorten the length of the XECUTE or indirection string.
 
 --------------------
 INITORRESUME 
@@ -5609,7 +5603,7 @@ INITORRESUME, UPDATERESYNC on a Supplementary Instance must additionally specify
 
 Receiver Server Log/MUPIP Error: Issued by a Receiver Server when started with -UPDATERESYNC on a Supplementary Instance which allows local updates, but started without specifying either -INITIALIZE or -RESUME.
 
-Action: Additionally specify -INITIALIZE if this is the first time this supplementary instance is connecting to the source side OR if the receiver side databases have been refreshed from a backup of the source side. If on the other hand, the receiving instance had already been replicating from the source before and only had its instance file recreated in between, -RESUME might be appropriate with the -UPDATERESYNC. Check -RESUME documentation for more details.
+Action: Additionally specify -INITIALIZE if this is the first time this supplementary instance is connecting to the source side OR if the receiver side databases have been refreshed from a backup of the source side. If on the other hand, the receiving instance had already been replicating from the source before and only had its instance file recreated in between, -RESUME might be appropriate with the -UPDATERESYNC. Check the documentation on -RESUME for more details.
 
 
 -------------------
@@ -5630,7 +5624,7 @@ INSNOTJOINED, Replicating Instance RRRR is not a member of the same Group as Ins
 
 Receiver Server log/MUPIP Error: A Receiver Server or a MUPIP JOURNAL -ROLLBACK -FETCHRESYNC on instance RRRR produces this error when it attempts to establish a replication connection with an instance that belongs to a different replication configuration or Group. MUPIP performs this safety check at the time it establishes a replication connection between two instances.
 
-Action: Use the Remote IP Address in the Receiver / Source Server log files or the primary instance name field from MUPIP REPLICATE -JNLPOOL -SHOW command to identify the Source Server that may have inadvertently attempted to establish a replication connection with your Source Server. Shut down the Source Server if the Source Server does not belong to your replication configuration. If you are attempting to move a Source Server from a different Group, reinitialize the Source Server. Note that only supplementary instances started with -UPDOK can accept updates from a different Group.
+Action: Use the Remote IP Address in the Receiver/Source Server log files or the primary instance name field from MUPIP REPLICATE -JNLPOOL -SHOW command to identify the Source Server that may have inadvertently attempted to establish a replication connection with your Source Server. Shut down the Source Server if the Source Server does not belong to your replication configuration. If you are attempting to move a Source Server from a different Group, reinitialize the Source Server. Note that only supplementary instances started with -UPDOK can accept updates from a different Group.
 
 --------------------
 INSROLECHANGE 
@@ -5668,7 +5662,7 @@ INSUNKNOWN
 
 INSUNKNOWN, Supplementary Instance SSSS has no instance definition for non-Supplementary Instance IIII
 
-Receiver Server log/MUPIP Error: Issued by a Receiver Server or a MUPIP JOURNAL -ROLLBACK -FETCHRESYNC on Supplementary Instance SSSS, started with -UPDOK, attempted to connect to non-Supplementary Instance IIII, but found it has no matching instance information.
+Receiver Server log/MUPIP Error: Issued by a Receiver Server or a MUPIP JOURNAL -ROLLBACK -FETCHRESYNC on Supplementary Instance SSSS, that started with -UPDOK and attempted to connect to non-Supplementary Instance IIII, but found it has no matching instance information.
 
 Action: Take a backup of the database and replication instance file from a current instance on the non-Supplementary Group, load the backup data on the Supplementary Instance and start the Receiver Server on the supplementary instance using -UPDATERESYNC=<instbak.repl> where instbak.repl is the backup of the replication instance file taken along with the database backup.
 
@@ -5839,7 +5833,6 @@ Run Time Error: YottaDB triggers this error when it encounters an incompatible I
 
 Action: Install ICU version 3.6.x. 
 
-
 --------------------
 INVIDQUAL 
 --------------------
@@ -5867,10 +5860,9 @@ INVLINKTMPDIR
 
 INVLINKTMPDIR, Value for $ydb_linktmpdir is either not found or not a directory: dddd
 
-Run Time Error: Indicates the process cannot access directory dddd, which it needs in order to do auto-relink as specified by its $ZROUTINES; the directory may not exist as a directory or the process lacks authorization to the directory.
+Run Time Error: Indicates the process cannot access directory dddd, which it needs in order to auto-relink as specified by its $ZROUTINES; the directory may not exist as a directory or the process lacks authorization to the directory.
 
 Action: The directory specification comes from $ydb_linktmpdir if it is defined, otherwise from $ydb_tmp if that is defined; otherwise it defaults to the system temporary directory, typically /tmp. Either correct the environment variable definition or ensure directory dddd is appropriately set up. Note that all users of auto-relink for a directory normally need to use the same temporary directory for their relink control files.
-
 
 ------------------------
 INVLOCALE 
@@ -5891,7 +5883,6 @@ INVMEMRESRV, Could not allocate YottaDB memory reserve (xxxx)
 Images Warning: YottaDB could not allocate xxxx KiB of reserve memory for handling and reporting out-of-memory conditions. Examine the subsequent messages for more information on why the memory reserve allocation failed.
 
 Action: If $ydb_memory_reserve is too high, specify a lower value and retry. If the value is reasonable, determine what else is preventing the allocation (process or system limits or usage by other system components). Note that YottaDB uses this reserve only when a process runs out of memory so it mostly requires address space and almost never requires actual memory.
-
 
 -------------------
 INVMNEMCSPC 
@@ -5933,7 +5924,6 @@ GT.CM Error: This indicates that the GT.CM Server received a node name that does
 
 Action: Use GDE to check the Global Directory on the originating node for typographical errors in a remote node file-specification.
 
-
 -----------------------
 INVOBJ 
 -----------------------
@@ -5942,8 +5932,7 @@ INVOBJ, Cannot ZLINK object file due to unexpected format
 
 Run Time Error: This indicates that ZLINK encountered invalid records in the object file it was trying to integrate into the image.
 
-Action: Determine whether ZLINK has the intended argument. If the object file has been damaged, recreate it with a ZLINK that specifies the source file using an .M extension.
-
+Action: Determine whether ZLINK has the intended argument. If the object file has been damaged, recreate it with a ZLINK that specifies the source file using a .M extension.
 
 -------------------
 INVOBJFILE 
@@ -5953,7 +5942,7 @@ INVOBJFILE, Cannot ZLINK object file ffff due to unexpected format
 
 Run Time Error: This indicates that ZLINK encountered invalid records in the object file ffff it was trying to integrate into the image.
 
-Action: Determine whether ZLINK has the intended argument. If the object file has been damaged, recreate it with a ZLINK that specifies the source file using an .M extension, a ZCOMPILE or a mumps command at the shell.
+Action: Determine whether ZLINK has the intended argument. If the object file has been damaged, recreate it with a ZLINK that specifies the source file using a .M extension, a ZCOMPILE or a mumps command at the shell.
 
 
 ----------------------
@@ -5965,7 +5954,6 @@ INVPORTSPEC, Invalid port specification
 Run Time Error: This indicates that the OPEN command socket parameter contained an invalid port number.
 
 Action: Redefine the socket parameter to a value between 0 and 65535.
-
 
 -----------------------
 INVPROT 
@@ -5983,10 +5971,9 @@ INVQUALTIME
 
 INVQUALTIME, Invalid time qualifier value. Specify as xxxx=delta_or_absolute_time.
 
-MUPIP Error: This indicates that time qualifier value specified for xxxx is invalid.
+MUPIP Error: This indicates that the time qualifier value specified for xxxx is invalid.
 
 Action: Reissue the command with correct syntax.
-
 
 ---------------------
 INVREDIRQUAL 
@@ -6016,7 +6003,7 @@ INVSEQNOQUAL, Invalid SEQNO qualifier value xxxx
 
 MUPIP Error: This error indicates that MUPIP JOURNAL -EXTRACT -SEQNO command could not extract a journal file because an invalid SEQNO format was specified.
 
-Action: Enter a comma separated list of valid sequence numbers (‘0’ or positive integers) as value for the SEQNO qualifier. The format of the -SEQNO qualifier is -SEQNO=seqno1[,seqno2,seqno3…..] where seqno is the region sequence number in decimal format.
+Action: Enter a comma-separated list of valid sequence numbers (‘0’ or positive integers) as values for the SEQNO qualifier. The format of the -SEQNO qualifier is -SEQNO=seqno1[,seqno2,seqno3…..] where seqno is the region sequence number in decimal format.
 
 ---------------------
 INVSPECREC 
@@ -6028,7 +6015,6 @@ Run Time Error: This indicates that YottaDB could not access the header informat
 
 Action: Use the %gbldef utility routine to investigate the current state of the global header and correct it.
 
-
 --------------------
 INVSTACODE 
 --------------------
@@ -6039,14 +6025,13 @@ Run Time Error: This indicates that the intrinsic function $STACK received an un
 
 Action: Make sure the second argument is "MCODE", "ECODE" or "PLACE".
 
-
 ---------------------
 INVSTATSDB 
 ---------------------
 
 INVSTATSDB, Database file SSSS associated with statistics database region RRRR is not a valid statistics database
 
-Run Time Error: Indicates the file SSSS designated as a statistics database is either not a valid database at all, or is not a statistics database.
+Run Time Error: Indicates that the file SSSS designated as a statistics database is either not a valid database at all, or is not a statistics database.
 
 Action: Rename (if it might be a valid database) or delete (if its origin is unknown) the file in question as appropriate and retry.
 
@@ -6056,7 +6041,7 @@ INVSTRLEN
 
 INVSTRLEN, Invalid string length xxxx: max yyyy
 
-Run Time Error: This indicates that YottaDB encountered a string with a length of xxxx that exceeds the maximum acceptable length yyyy in this context. If the caller is a SimpleAPI function, this indicates that a buffer provided by the caller is not long enough for a string to be returned, or the length of a string passed as a parameter exceeds YDB_MAX_STR. In the event the return code is YDB_ERR_INVSTRLEN and if \*xyz is a ydb_buffer_t structure whose xyz->len_alloc indicates insufficient space, then xyz->len_used is set to the size required of a sufficiently large buffer. In this case the len_used field of a ydb_buffer_t structure is greater than the len_alloc field, and the caller is responsible for correcting the xyz->len_used field.
+Run Time Error: This indicates that YottaDB encountered a string with a length of xxxx that exceeds the maximum acceptable length yyyy in this context. If the caller is a SimpleAPI function, this indicates that a buffer provided by the caller is not long enough for a string to be returned, or the length of a string passed as a parameter exceeds YDB_MAX_STR. In the event the return code is YDB_ERR_INVSTRLEN and if \*xyz is a ydb_buffer_t structure whose xyz->len_alloc indicates insufficient space, then xyz->len_used is set to the size required of a sufficiently large buffer. In this case, the len_used field of a ydb_buffer_t structure is greater than the len_alloc field, and the caller is responsible for correcting the xyz->len_used field.
 
 Action: Modify the string to an acceptable length.
 
@@ -6069,7 +6054,6 @@ INVSVN, Invalid special variable name
 Compile Time Error: This indicates that a variable of the form "$name" did not match any valid special variable name.
 
 Action: Look for typographical errors, an improper special variable name abbreviation, or a missing $ in an extrinsic.
-
 
 -------------------
 INVTMPDIR
@@ -6090,7 +6074,6 @@ INVTRCGRP, Invalid trace group specified in $ydb_trace_groups: gggg
 Run Time Error: The process startup environment attempted to activate a diagnostic tracing facility but specified a group name of gggg and there is currently no such group.
 
 Action: Check with your YottaDB support channel for the currently available group names.
-
 
 -------------------
 INVTRNSQUAL
@@ -6139,7 +6122,6 @@ Run Time Error: GTM$DMOD is an embedded routine that provides direct mode and it
 
 Action: Issue ZBREAK only for application code
 
-
 --------------------
 INVZDIRFORM 
 --------------------
@@ -6157,10 +6139,9 @@ INVZROENT
 
 INVZROENT, xxxx is neither a directory nor an object library(DLL)
 
-Run Time Error: This indicates that an invalid entry (xxxx), neither an object directory, nor a shared library, has been specified in $ZROUTINES.
+Run Time Error: This indicates that an invalid entry (xxxx), which is neither an object directory nor a shared library, has been specified in $ZROUTINES.
 
 Action: Remove xxxx or replace it with a valid directory or a shared library.
-
 
 --------------------
 INVZSTEP
@@ -6171,7 +6152,6 @@ INVZSTEP, Invalid ZSTEP qualifier
 Run Time Error: This indicates that ZSTEP had an argument other than OVER, INTO, or OUTOF.
 
 Action: ZSTEP only accepts these three keyword arguments. It does not accept variables or indirection. Use one of the valid arguments. If you need additional control, consider using ZBREAK.
-
 
 ----------------------
 INVZWRITECHAR 
@@ -6192,7 +6172,7 @@ IOEOF, Attempt to read past an end-of-file
 
 Run Time/MUPIP Error: This indicates that a READ command for a run-time system or a MUPIP command attempted to move past an end-of-file.
 
-Action: Verify that the $ZEOF special variable is tested by the function between READs or that an EXCEPTION code string is assigned to handle EOFs. Alternatively, have your $ETRAP (or $ZTRAP) error handling deal with this error. The USE command has a REWIND deviceparameter that allows you to read from the beginning of the file without having to CLOSE and OPEN again, which may facilitate recovery from this error. Attempting to READ from a non-existent file not opened READONLY also causes this error. In the event of a MUPIP error, make sure the file being read is not corrupted.
+Action: Verify that the $ZEOF special variable is tested by the function between READs or that an EXCEPTION code string is assigned to handle EOFs. Alternatively, have your $ETRAP (or $ZTRAP) error handling deal with this error. The USE command has a REWIND deviceparameter that allows you to read from the beginning of the file without having to CLOSE and OPEN again, which may facilitate recovery from this error. Attempting to READ from a non-existent file that is not opened as READONLY also causes this error. In the event of a MUPIP error, make sure the file being read is not corrupted.
 
 ----------------
 IOERROR 
@@ -6200,10 +6180,9 @@ IOERROR
 
 IOERROR, Error occurred while doing aaaa in oooo operation -- called from module mmmm at line LLLL
 
-Run Time Error: On UNIX this indicates a system call used to manage the underlying O/S device for a FIFO, PIPE or Sequential Disk failed in a way that YottaDB did not anticipate.
+Run Time Error: On UNIX this indicates that a system call used to manage the underlying O/S device for a FIFO, PIPE or Sequential Disk failed in a way that YottaDB did not anticipate.
 
 Action: Use the OS documentation to investigate the failure.
-
 
 -----------------
 IONOTOPEN 
@@ -6236,7 +6215,6 @@ Run Time Error: This error message is sent to operator log when a queued write f
 
 Action: Appearance of this message usually indicates disk subsystem error condition. Check disk error logs, in addition to operator logs for accompanying messages.
 
-
 ---------------------
 IPADDRREQ
 ---------------------
@@ -6247,7 +6225,6 @@ Run Time Error: This indicates that an OPEN command specified a TCP mnemonicspac
 
 Action: Determine the type of connection desired and add a SOCKET=socket-id and/or a LISTEN deviceparameter.
 
-
 -----------------------
 IPCNOTDEL 
 -----------------------
@@ -6257,7 +6234,6 @@ IPCNOTDEL, xxxx : yyyy did not delete IPC resources for region zzzz
 MUPIP Information: This indicates that MUPIP did not delete the shared system resources of the region. The shared system resources may still be being in use by some other processes.
 
 Action: Find out if some other process was attached to the shared system resource. If appropriate, issue MUPIP RUNDOWN REG * to remove the shared resource.
-
 
 -----------------------
 ISOLATIONSTSCHN 
@@ -6296,10 +6272,9 @@ JNI
 
 JNI, xxxx
 
-Run Time Error: YottaDB uses this message with appropriate accompanying text, xxxx, to indicate an error condition with a Java call-out invocation.
+Run Time Error: YottaDB uses this message with appropriate accompanying text xxxx to indicate an error condition with a Java call-out invocation.
 
 Action: Examine the text and address the described error condition.
-
 
 ------------------
 JNLACCESS
@@ -6321,7 +6296,6 @@ MUPIP Warning: This indicates that MUPIP did not finish to completion successful
 
 Action: Review and analyze the accompanying message(s).
 
-
 ---------------------
 JNLALIGNSZCHG
 ---------------------
@@ -6331,7 +6305,6 @@ JNLALIGNSZCHG, Journal ALIGNSIZE is rounded up to xxxx blocks (closest next high
 Run Time Information: This indicates that the ALIGNSIZE specified in the MUPIP SET JOURNAL command was not a perfect power of two. It has been rounded up to the closest next higher power of two and the new journal file created (if any) will use this value for ALIGNSIZE.
 
 Action: -
-
 
 --------------------
 JNLALIGNTOOSM 
@@ -6363,7 +6336,6 @@ MUPIP Error: This indicates that the journal file indicated in the accompanying 
 
 Action: If a command specification caused this error, determine whether the command has the proper file-specification. Make sure the journal file was created by the current YottaDB version. Also ensure that a process is not using a journal file-specification for some other purpose.
 
-
 ---------------------
 JNLBADRECFMT 
 ---------------------
@@ -6380,7 +6352,7 @@ JNLBUFFDBUPD
 
 JNLBUFFDBUPD, Journal file buffer size for database file dddd has been adjusted from xxxx to yyyy
 
-MUPIP Warning: The journal buffer size specified by the user for the database file dddd or previously stored in the database file header fell outside the permissible range, and was automatically adjusted, up or down, from xxxx to a legitimate value of yyyy.
+MUPIP Warning: The journal buffer size specified by the user for the database file dddd or previously stored in the database file header fell outside the permissible range, and was automatically adjusted up or down from xxxx to a legitimate value of yyyy.
 
 Action: None Required.
 
@@ -6404,7 +6376,6 @@ MUPIP Warning: The journal buffer size specified by the user for the region rrrr
 
 Action: None Required.
 
-
 -----------------------
 JNLBUFFTOOLG 
 -----------------------
@@ -6414,7 +6385,6 @@ JNLBUFFTOOLG, Journal file buffer xxxx is greater than the maximum allowed size 
 MUPIP Warning: This indicates that a MUPIP SET command with the JOURNAL qualifier failed because BUFFER_SIZE=xxxx exceeded the maximum number of pages allowed. yyyy is the maximum buffer size permitted.
 
 Action: Reduce the BUFFER_SIZE= definition.
-
 
 -------------------
 JNLBUFFTOOSM 
@@ -6467,7 +6437,7 @@ JNLCNTRL, Journal control unsynchronized for ffff.
 
 Run Time Error: This indicates that there is a discrepancy between the journal file updates and the database updates. The system is not updating journal files.
 
-Action: Review the accompanying message(s) and take appropriate action. After the cause is resolved, to reestablish durability, perform a MUPIP BACKUP that turns journaling back on. Once the system is backup and running, contact your YottaDB support channel with operator log information and any additional information that you feel is relevant for further diagnosis.
+Action: Review the accompanying message(s) and take appropriate action. After the cause is resolved, to reestablish durability, perform a MUPIP BACKUP that turns journaling back on. Once the system is up and running, contact your YottaDB support channel with operator log information and any additional information that you feel is relevant for further diagnosis.
 
 ----------------------
 JNLCREATE 
@@ -6475,7 +6445,7 @@ JNLCREATE
 
 JNLCREATE, Journal file xxxx created for <database/region> yyyy with aaaa
 
-MUPIP Information: This indicates that a journal file xxxx is created for database/region yyyy with NOBEFORE_IMAGES or BEFORE_IMAGES journaling option (aaaa).
+MUPIP Information: This indicates that a journal file xxxx is created for database/region yyyy with the NOBEFORE_IMAGES or BEFORE_IMAGES journaling options (aaaa).
 
 Action: -
 
@@ -6495,7 +6465,7 @@ JNLCRESTATUS
 
 JNLCRESTATUS, xxxx at line aaaa for journal file yyyy, database file zzzz encountered error
 
-Run Time/MUPIP Warning: This indicates the creation of journal file yyyy for database file zzzz failed.
+Run Time/MUPIP Warning: This indicates that the creation of journal file yyyy for database file zzzz failed.
 
 Action: Review the accompanying messages and take appropriate action.
 
@@ -6505,7 +6475,7 @@ JNLCYCLE
 
 JNLCYCLE, Journal file jjjj causes cycle in the journal file generations of database file dddd
 
-MUPIP Error: This indicates that MUPIP encountered journal file jjjj causing cycle in the journal file generations of database file dddd; i.e. following the back-pointers in the journal files can wind up repeatedly finding the same journal file.
+MUPIP Error: This indicates that MUPIP encountered journal file jjjj causing a cycle in the journal file generations of database file dddd; i.e. following the back-pointers in the journal files can wind up repeatedly finding the same journal file.
 
 Action: Contact your YottaDB support channel with appropriate log messages.
 
@@ -6525,7 +6495,7 @@ JNLDBSEQNOMATCH
 
 JNLDBSEQNOMATCH, Journal file ffff has beginning region sequence number jjjj but database dddd has region sequence number ssss
 
-MUPIP Error: MUPIP JOURNAL ROLLBACK FORWARD has found that journal file ffff has beginning region sequence number jjjj, but the corresponding database file dddd has region sequence number ssss. This condition may arise due to missing or incorrect journal files, for example due to a -NOCHAIN specification.
+MUPIP Error: MUPIP JOURNAL ROLLBACK FORWARD has found that journal file ffff has a beginning region sequence number jjjj, but the corresponding database file dddd has a region sequence number ssss. This condition may arise due to missing or incorrect journal files, for example, due to a -NOCHAIN specification.
 
 Action: Use "*" and/or do not use -NOCHAIN to specify the list of journal files. If you are specifying an explicit list of journal file names, verify that you are specifying the exact set of needed journal file names.
 
@@ -6597,8 +6567,7 @@ JNLEXTEND, Journal file extension error for file jjjj.
 
 Run Time Error: Journal file jjjj failed to extend. If the environment is not configured for instance freeze, this causes journaling to be turned off for the region.
 
-Action: Review the accompanying message(s) and take appropriate action. If the environment is not configured for instance freeze, perfrom a MUPIP BACKUP, that turns journaling on again, to reestablish durability.
-
+Action: Review the accompanying message(s) and take appropriate action. If the environment is not configured for instance freeze, perform a MUPIP BACKUP that turns journaling on again to reestablish durability.
 
 ------------------------
 JNLEXTR 
@@ -6616,9 +6585,9 @@ JNLEXTRSEQNO
 
 JNLEXTRCTSEQNO, Journal Extracts based on sequence numbers are restricted to a single region when replication is OFF
 
-MUPIP Error: When replication is enabled YottaDB applies a uniform set of sequence numbers across regions, but when it is not in use each region has its own set of sequence numbers, and in that case, MUPIP only works on a region at a time.
+MUPIP Error: When replication is enabled YottaDB applies a uniform set of sequence numbers across regions, but when it is not in use each region has its own set of sequence numbers, and in that case, MUPIP only works on one region at a time.
 
-Action: If you need cross region sequence numbers, start replication with at least a passive Source Server; otherwise use one MUPIP JOURNAL -EXTRACT command for each region when using the -SEQNO qualifier.
+Action: If you need cross-region sequence numbers, start replication with at least a passive Source Server; otherwise use one MUPIP JOURNAL -EXTRACT command for each region when using the -SEQNO qualifier.
 
 ----------------------
 JNLFILECLOSERR 
@@ -6672,7 +6641,6 @@ MUPIP Error: This indicates that the MUPIP SET-JNLFILE command was unable to cha
 
 Action: Review accompanying message(s) for additional information.
 
-
 ----------------------------
 JNLFILOPN 
 ----------------------------
@@ -6682,7 +6650,6 @@ JNLFILOPN, Error opening journal file jjjj for database file dddd
 Run Time Error: This indicates that YottaDB was unable to open journal file jjjj for the specified database file dddd. The Source Server exits with a JNLFILOPN message after six failed attempts to open journal files.
 
 Action: Review the accompanying message(s) for additional information.
-
 
 ---------------------------
 JNLFILRDOPN
@@ -6710,10 +6677,9 @@ JNLFLUSHNOPROG
 
 JNLFLUSHNOPROG, No progress while attempting to flush journal file jjjj
 
-Run Time Warning: Indicates processes needing space in the journal buffers were unable to write journal jjjj because even though multiple processes have controlled the resource, this process has not been able to flush records. JNLPROCSTUCK means one process is hogging, while this message means more than one process has tried but none have succeeded. Might indicate a clogged disk subsystem on which journal file jjjj resides.
+Run Time Warning: Indicates that processes needing space in the journal buffers were unable to write to journal jjjj, because even though multiple processes have controlled the resource, this process has not been able to flush records. JNLPROCSTUCK means one process is hogging the reseource, while this message means that more than one process has tried but none have succeeded. Might indicate a clogged disk subsystem on which journal file jjjj resides.
 
 Action: Check the log file for other journaling related messages. Consider balancing disk subsystem load.
-
 
 ---------------------------
 JNLFNF 
@@ -6725,7 +6691,6 @@ MUPIP Information: This indicates that MUPIP did not find the specified journal 
 
 Action: -
 
-
 ----------------------
 JNLFSYNCERR 
 ----------------------
@@ -6734,8 +6699,7 @@ JNLFSYNCERR, Error synchronizing journal file xxxx to disk
 
 Run Time Error: This indicates that the fsync() function on the journal file xxxx failed. This is likely a disk subsystem related problem.
 
-Action: Review the accompanying messages for cause of the failure.
-
+Action: Review the accompanying messages for the cause of the failure.
 
 --------------------
 JNLFSYNCLSTCK 
@@ -6753,10 +6717,9 @@ JNLINVALID
 
 JNLINVALID, jjjj is not a valid journal file Region: rrrr
 
-Run Time Error: This indicates that YottaDB could not open journal file jjjj, due to an error that is detailed in the accompanying previous message(s). While trying to create a new journal file for the same region it encountered errors. rrrr is the region name associated with the journal.
+Run Time Error: This indicates that YottaDB could not open journal file jjjj, due to an error that is detailed in the accompanying previous message(s). While trying to create a new journal file for the same region, it encountered errors. rrrr is the region name associated with the journal.
 
-Action: Review the accompanying error message(s) to determine the cause of the failure of the new journal file creation. After the cause is resolved, to reestablish durability perform a MUPIP BACKUP that turns journaling back on.
-
+Action: Review the accompanying error message(s) to determine the cause of the failure of the new journal file creation. After the cause is resolved, to re-establish durability, perform a MUPIP BACKUP that turns journaling back on.
 
 -----------------
 JNLINVALLOC 
@@ -6796,7 +6759,7 @@ JNLMEMDSK, Journal file unsynchronized with the journal buffer. Journaling close
 
 Run Time Error: This indicates that the structures in the journal buffer reflect an out-of-design situation. As a result, YottaDB has shut down journaling for the xxxx region.
 
-Action: Review the accompanying message(s) and take appropriate action. After the cause is resolved, to reestablish durability, perform a MUPIP BACKUP that turns journaling back on. Once the system is backup and running, contact your YottaDB support channel with operator log information and any additional information that you feel is relevant for further diagnosis.
+Action: Review the accompanying message(s) and take appropriate action. After the cause is resolved, to re-establish durability, perform a MUPIP BACKUP that turns journaling back on. Once the system is backup and running, contact your YottaDB support channel with operator log information and any additional information that you feel is relevant for further diagnosis.
 
 -------------------
 JNLMINALIGN 
@@ -6856,9 +6819,9 @@ JNLNOBIJBACK
 
 JNLNOBIJBACK, MUPIP JOURNAL BACKWARD cannot continue as journal file xxxx does not have before image journaling
 
-MUPIP Error: This indicates that an attempt to use BACKWARD qualifier on xxxx journal file was made without enabling before image journaling on the file.
+MUPIP Error: This indicates that an attempt to use the BACKWARD qualifier on xxxx journal file was made without enabling before-image journaling on the file.
 
-Action: Ensure before image journaling is enabled prior to the usage of BACKWARD qualifier, alternatively use FORWARD qualifier for nobefore image journaling enabled files.
+Action: Ensure before-image journaling is enabled prior to the usage of BACKWARD qualifier, alternatively use FORWARD qualifier for nobefore image journaling enabled files.
 
 -------------------
 JNLNOCREATE 
@@ -6927,7 +6890,7 @@ JNLPOOLPHS2SALVAGE
 
 JNLPOOLPHS2SALVAGE, Salvaged journal records from process PPPP for replication instance file iiii at journal sequence number JJJJ with journal pool starting offset OOOO and length LLLL
 
-Run Time Information: Operator log message indicating clean up of replication information abandoned by an abnormally terminated process.
+Run Time Information: Operator log message indicating that the clean up of replication information was abandoned by an abnormally terminated process.
 
 Action: Investigate the cause of the process termination; report to your YottaDB support channel when coincident with other issues. 
 
@@ -6937,7 +6900,7 @@ JNLPOOLRECOVERY
 
 JNLPOOLRECOVERY, The size of the data written to the journal pool (xxxx) does not match the size of the data in the journal record (yyyy) for the replication instance file zzzz. The journal pool has been recovered.
 
-Run Time Error: An internal error was detected while writing to the journal pool associated with instance file zzzz, and the journal file has been recovered. Subsequent transactions will be written to the journal pool, but the source server will switch to reading from files until it reaches them. A core file may have been produced.
+Run Time Error: An internal error was detected while writing to the journal pool associated with the instance file zzzz, and the journal file has been recovered. Subsequent transactions will be written to the journal pool, but the source server will switch to reading from files until it reaches them. A core file may have been produced.
 
 Action: Report the entire incident context to your YottaDB support channel.
 
@@ -6970,7 +6933,6 @@ JNLPROCSTUCK, Journal file writes blocked by process xxxx
 Run Time Warning: This indicates that a YottaDB process waited for nearly one minute and is not able to flush the journal as the journal write mechanism seems to be blocked by process xxxx.
 
 Action: If the situation does not improve, kill the offending process xxxx. This may indicate an overloaded disk subsystem on which journal file xxxx resides. Consider balancing disk subsystem load. If necessary, report the entire incident context with operator log information to your YottaDB support channel.
-
 
 -------------------
 JNLPVTINFO 
@@ -7039,7 +7001,7 @@ JNLREADBOF
 
 JNLREADBOF, Beginning of journal file encountered for xxxx
 
-MUPIP Error: This indicates that MUPIP JOURNAL command reached the beginning of journal file xxxx, while processing backward, and is not able to process backward anymore. This may be due to the time qualifiers used to control the length of the backward processing.
+MUPIP Error: This indicates that the MUPIP JOURNAL command reached the beginning of journal file xxxx, while processing backward, and is not able to process backward anymore. This may be due to the time qualifiers used to control the length of the backward processing.
 
 Action: Verify that the time qualifiers specified are as intended.
 
@@ -7089,7 +7051,7 @@ JNLSENDOPER
 
 JNLSENDOPER, pid = aaaa : status = bbbb : jpc_status = cccc : jpc_status2 = dddd : iosb.cond = eeee
 
-Run Time Information: This message gives information on the process that encountered an error in YottaDB journaling and the error code encountered. This message is always followed by a YottaDB journaling error message that gives the error detail.
+Run Time Information: This message gives information on the process that encountered an error in YottaDB journaling and the error code encountered. This message is always followed by a YottaDB journaling error message that gives the details of the error.
 
 Action: Review the accompanying message(s) for additional information.
 
@@ -7151,7 +7113,7 @@ JNLSWITCHFAIL, Failed to switch journal file xxxx for database file yyyy
 
 All YttaDB Components Error: This indicates that YottaDB could not create a new generation of journal file xxxx, due to an error that is detailed in the accompanying previous message(s). yyyy is the database file associated with the journal.
 
-Action: Review the accompanying error message(s) to determine the cause of the failure of the new journal file creation. After the cause is resolved, to reestablish durability perform a MUPIP BACKUP that turns journaling back on.
+Action: Review the accompanying error message(s) to determine the cause of the failure of the new journal file creation. After the cause is resolved, to re-establish durability, perform a MUPIP BACKUP that turns journaling back on.
 
 
 --------------------
@@ -7181,10 +7143,9 @@ JNLSWITCHTOOSM
 
 JNLSWITCHTOOSM, Journal AUTOSWITCHLIMIT [aaaa blocks] is less than journal ALLOCATION [bbbb blocks] for database file dddd
 
-Run Time Error: This indicates that the value of AUTOSWITCHLIMIT specified in a MUPIP SET JOURNAL command is less than the default or specified value of ALLOCATION. This error also indicates that the AUTOSWITCHLIMIT value specified was greater or equal to the ALLOCATION but in turn got rounded down, and this rounded down value is lesser than the ALLOCATION.
+Run Time Error: This indicates that the value of AUTOSWITCHLIMIT specified in a MUPIP SET JOURNAL command is less than the default or specified value of ALLOCATION. This error also indicates that the AUTOSWITCHLIMIT value specified was greater than or equal to the ALLOCATION but in turn got rounded down, and this rounded down value is lesser than the ALLOCATION.
 
 Action: Specify a higher value of AUTOSWITCHLIMIT.
-
 
 ------------------
 JNLTMQUAL1 
@@ -7194,7 +7155,7 @@ JNLTMQUAL1, Time qualifier BEFORE_TIME=xxxx is less than SINCE_TIME=yyyy
 
 MUPIP Error: This indicates that the specified before time xxxx is earlier than the since time yyyy.
 
-Action: Specify correct values for time qualifiers and make sure that BEFORE_TIME is specified to be later than the SINCE_TIME.
+Action: Specify correct values for the time qualifiers and make sure that BEFORE_TIME is specified to be later than the SINCE_TIME.
 
 ------------------
 JNLTMQUAL2 
@@ -7215,7 +7176,7 @@ JNLTMQUAL3, Time qualifier BEFORE_TIME=xxxx is less than the journal file(s) min
 
 MUPIP Error: This error indicates that the -BEFORE_TIME xxxx is earlier than the earliest timestamp yyyy found in the journal file(s).
 
-Action: Issue the MUPIP command again with an appropriate value for -BEFORE_TIME. Note that journal files record time based on a UTC clock, which is time zone independent, while MUPIP interprets time-based input based your local clock and adjusts its actions accordingly. If you use a local clock (in UNIX, set by the TZ environment variable) that is subject to significant shifts, such as between standard time and daylight savings, when the time shifts back (for example, from daylight to standard), the time change may cause this error. One way to address this is to, possibly temporarily, switch your local time setting to UTC.
+Action: Issue the MUPIP command again with an appropriate value for -BEFORE_TIME. Note that journal files record time based on a UTC clock, which is time zone independent, while MUPIP interprets time-based input based on your local clock and adjusts its actions accordingly. If you use a local clock (in UNIX, set by the TZ environment variable) that is subject to significant shifts, such as between standard time and daylight savings, when the time shifts back (for example, from daylight to standard), the time change may cause this error. One way to address this is to, possibly temporarily, switch your local time setting to UTC.
 
 --------------------
 JNLTMQUAL4 
@@ -7235,7 +7196,7 @@ JNLTNOUTOFSEQ, End transaction aaaa of journal xxxx different from Begin transac
 
 MUPIP Error: MUPIP JOURNAL FORWARD command has found that the transaction numbers (aaaa and bbbb) of two consecutive generation journal files (xxxx and yyyy) are not in sequence. It is expected that the end transaction of a journal file is the same as the begin transaction of the immediately succeeding generation.
 
-Action: Ensure the specification of journal file names is as intended. Verify if the journal file xxxx and yyyy are really in sequence. Find out if any of the transactions are missing or duplicate using MUPIP JOURNAL SHOW=HEAD FORWARD NOVERIFY. If appropriate, force forward recovery using the NOTNCHECK qualifier.
+Action: Ensure that the specification of journal file names is as intended. Verify if the journal file xxxx and yyyy are really in sequence. Find out if any of the transactions are missing or duplicate using MUPIP JOURNAL SHOW=HEAD FORWARD NOVERIFY. If appropriate, force forward recovery using the NOTNCHECK qualifier.
 
 ------------------------
 JNLTPNEST
@@ -7247,7 +7208,6 @@ MUPIP Warning: MUPIP JOURNAL -RECOVER or ROLLBACK encountered a TSTART record fo
 
 Action: Extract the journal file(s) and use the context from the message to find the transactions in question and adjust for any lost or tangled transaction(s).
 
-
 ------------------------
 JNLTRANS2BIG 
 ------------------------
@@ -7257,7 +7217,6 @@ JNLTRANS2BIG, Transaction needs an estimated [aaaa blocks] in journal file xxxx 
 Run Time Error: This indicates that a database update transaction needs aaaa blocks of space in the journal file for its corresponding journal records and this exceeds the AUTOSWITCHLIMIT value of the current journal file.
 
 Action: Increase the AUTOSWITCHLIMIT, or if the transaction is a TP transaction decrease the number of updates done within one transaction thereby decreasing its journal file space requirement.
-
 
 -------------------------
 JNLTRANSGTR 
@@ -7295,7 +7254,7 @@ JNLVSIZE
 
 JNLVSIZE, Journal File xxxx has incorrect virtual_filesize aaaa Allocation is bbbb extension is cccc filesize is dddd file_system_block_size is eeee
 
-Run Time Error: This indicates that journal file xxxx has incorrect value in the Virtual file size file header field. Either it is less than the actual filesize or it is not the same as allocation + n * extension.
+Run Time Error: This indicates that journal file xxxx has incorrect value in the Virtual filesize file header field. Either it is less than the actual filesize or it is not the same as allocation + n * extension.
 
 Action: Run time system creates and switches to a new journal file and continues to run. Report to your YottaDB support channel with any accompanying message(s).
 
@@ -7370,7 +7329,6 @@ JOBLABOFF, Label and offset not found in created process
 Run Time Error: This indicates that a JOB command specified an entry reference that could not be located in the image used by the new job.
 
 Action: Verify that the image being JOBbed is properly linked. If the image has been changed since it was last LINKed, determine whether the new job has access to the files necessary to ZLINK the changes. You can also LINK the image to include the changes.
-
 
 ---------------------
 JOBLVN2LONG 
@@ -8009,7 +7967,7 @@ LOCALSOCKREQ, LOCAL socket required
 
 Run Time Error: The operation attempted requires a LOCAL socket, and a non-LOCAL (TCP) socket was specified.
 
-Action: Make sure the correct socket is being used and that the socket is OPENed with the ":LOCAL" suffix. ZSHOW "D"may provide useful details on the current socket state.
+Action: Make sure the correct socket is being used and that the socket is OPENed with the ":LOCAL" suffix. ZSHOW "D" may provide useful details on the current socket state.
 
 ------------------------
 LOCKINCR2HIGH 
@@ -8069,7 +8027,7 @@ LOCKSUB2LONG, Following subscript is xxxx bytes long which exceeds 255 byte limi
 
 Run Time Error: This indicates that one of the substrings of a lock is taking more than 255 bytes. Check the following message to see which substring caused this error.
 
-Action: Make sure none of the substrings are larger than 255 bytes. If UTF-8 is enabled, use the encoded byte length rather the character length for the key size.
+Action: Make sure none of the substrings are larger than 255 bytes. If UTF-8 is enabled, use the encoded byte length rather than the character length for the key size.
 
 ---------------------
 LOCKTIMINGINTP 
@@ -8167,7 +8125,7 @@ LSINSERTED
 
 LSINSERTED, Line YYYY, source module XXXX exceeds maximum source line length; line seperator inserted, terminating scope of any prior IF, ELSE, or FOR
 
-Compile Time Warning: Indicates that source XXXX line YYYY exceeded the maximum line length and YottaDB separated it into multiple lines to allow continued parsing. Internally, YottaDB represents the generated code as N lines for this source line, where N is the number of segments extracted from this source line. Be aware that as a result of this, source lines containing a command whose scope is rest of the line (IF, ELSE, FOR), are now split into multiple lines, each with a separate scope.
+Compile Time Warning: Indicates that source XXXX line YYYY exceeded the maximum line length and YottaDB separated it into multiple lines to allow continued parsing. Internally, YottaDB represents the generated code as N lines for this source line, where N is the number of segments extracted from this source line. Be aware that as a result of this, source lines containing a command whose scope is the rest of the line (IF, ELSE, FOR), are now split into multiple lines, each with a separate scope.
 
 Action: Consider refactoring code to avoid source line lengths in excess of 8192 characters.
 
@@ -8177,9 +8135,9 @@ LVNULLSUBS
 
 LVNULLSUBS, LVNULLSUBS Null subscripts not allowed in local variables
 
-Run Time Error: This indicates that an attempt was made to set a local variable with null subscript.
+Run Time Error: This indicates that an attempt was made to set a local variable with a null subscript.
 
-Action: Modify the subscript generation to avoid the null subscript or change the LVNULLSUBS parameter for this job or process. For information on changing LVNULLSUBS, refer to documentation on GTM$DEFAULTS and the VIEW command in the `Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/index.html>`_.
+Action: Modify the generation of subscripts to avoid the null subscript or change the LVNULLSUBS parameter for this job or process. For information on changing LVNULLSUBS, refer to documentation on GTM$DEFAULTS and the VIEW command in the `Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/index.html>`_.
 
 -----------------
 LVORDERARG 
@@ -8329,7 +8287,7 @@ MAXSTRLEN, Maximum string length exceeded
 
 Run Time Error: This indicates that a string exceeded the maximum limit of 1,048,576 bytes. In M mode, each byte holds a character, but in UTF-8 mode, a character may take between one and four bytes.
 
-Action: Modify the routine so it uses shorter strings.
+Action: Modify the routine so that it uses shorter strings.
 
 -------------------
 MAXTRACEHEIGHT
@@ -8347,7 +8305,7 @@ MAXTRACELEVEL
 
 MAXTRACELEVEL, The maximum traceable level of xxxx has been exceeded. The frame information will not be maintained.
 
-Run Time Information: This indicates that M profiling reached the maximum level ($ZLEVEL) it can manage. The information for frames will not be maintained from this point on. Line information is maintained and reported correctly and information gathered about frames upto this point will be reported. Further MAXTRACELEVEL errors will not be reported to the users.
+Run Time Information: This indicates that M profiling reached the maximum level ($ZLEVEL) it can manage. The information for frames will not be maintained from this point on. Line information is maintained and reported correctly and information gathered about frames up to this point will be reported. Further MAXTRACELEVEL errors will not be reported to the users.
 
 Action: Determine if the number of levels of execution is as intended, if not, correct the application.
 
@@ -8549,7 +8507,7 @@ MSTACKSZNA, User-specified M stack size of SSSS KiB not appropriate; must be bet
 
 Run Time Information: The ydb_mstack environment variable species an M stack size outside the range YottaDB supports, where LLLL and MMMM are the lower and upper bounds respectively; VVVV is the value actually used.
 
-Action: None required immediately as the process operates with the reported size M stack, however it would be preferable to eliminate such messages by setting ydb_mstack to a value in the supported range.
+Action: None required immediately as the process operates with the reported size M stack, however, it would be preferable to eliminate such messages by setting ydb_mstack to a value in the supported range.
 
 ----------------------
 MTANSIFOR 
