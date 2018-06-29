@@ -3021,7 +3021,7 @@ part of a stable API, out of an abundance of caution, the initial
 implementation of the YottaDB Go Wrapper is restricted to executing
 its logic in a single goroutine.
 
-In order to avoid restricting Go applications from calling the YottaDB
+In order to avoid restricting Go applications to calling the YottaDB
 API from a single goroutine (which would be unnatural to a Go
 programmer), the YottaDB Go wrapper includes logic that coerces the
 execution of the YottaDB runtime system to a single
