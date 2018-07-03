@@ -14032,9 +14032,9 @@ SYSCALL
 
 SYSCALL, Error received from system call xxxx -- called from module yyyy at line zzzz
 
-Run Time Error: This indicates that system call failed due to some unusual error condition.
+Run Time Error: This indicates that a system call failed due to some unusual error condition.
 
-Action: Report to system administrator and if necessary report the entire incident context to your YottaDB support channel for further analysis.
+Action: Report to the system administrator and if necessary report the entire incident context to your YottaDB support channel for further analysis.
 
 --------------------
 SYSUTILCONF
@@ -14062,7 +14062,7 @@ TCOMMITDISALLOW
 
 TCOMMITDISALLOW, TROLLBACK required after an unhandled error in trigger context
 
-Run Time Error: This transaction did an update that invoked a trigger which in turn encountered an error that was not handled by the application error trap inside the trigger context. Because of this, the exit from trigger context was abnormal. YottaDB does not commit such transactions since they would not preserve the atomicity of trigger updates (triggering update + triggered updates).
+Run Time Error: This transaction did an update that invoked a trigger which in turn encountered an error that was not handled by the application error trap inside the trigger context. Because of this, the exit from the trigger context was abnormal. YottaDB does not commit such transactions since they would not preserve the atomicity of trigger updates (triggering update + triggered updates).
 
 Action: Such transactions can only be rolled back. If this is a nested TSTART (subtransaction), it can optionally be rolled back incrementally, that is, only the nested TSTART needs to be rolled back while the parent TSTART can still be committed.
 
@@ -14222,7 +14222,7 @@ TLSPARAM
 
 TLSPARAM, TLS parameter pppp eeee
 
-Run Time Error: This indicates a problem with a parameter on a WRITE/TLS command. pppp identifies the parameter and eeee describes the problem.
+Run Time Error: This indicates a problem with a parameter on a WRITE /TLS command. pppp identifies the parameter and eeee describes the problem.
 
 Action: Address the reported problem described by eeee.
 
@@ -14326,14 +14326,13 @@ Run Time Error: This indicates that a LOCK or ZDEALLOCATE command attempted to r
 
 Action: Do not release the named resource until after the TCOMMIT, or LOCK/ZALLOCATE has reserved the resource after the TSTART has begun.
 
-
 ------------------
 TPLOCKRESTMAX 
 ------------------
 
 TPLOCKRESTMAX, Transaction restarts due to unavailability of locks not allowed in a final TP retry more than nnnn times
 
-Run Time Error: This indicated a timed LOCK within a transaction was consistently unavailable. In order to prevent the process from waiting for the LOCK while holding a database resource (critical section) the transaction has restarted nnnn times without success. This error limits the possibilities for this issue cascading into a live-lock (consuming resources trying to do something that is "not happening").
+Run Time Error: This indicated that a timed LOCK within a transaction was consistently unavailable. In order to prevent the process from waiting for the LOCK while holding a database resource (critical section) the transaction has restarted nnnn times without success. This error limits the possibilities for this issue cascading into a live-lock (consuming resources trying to do something that is "not happening").
 
 Action: Analyze the locking protocol for issues of deadlock or unexpected LOCK durations and rework appropriately. Note that YottaDB recommends against using LOCKs within transactions, as YottaDB protects the transaction integrity independent of LOCK protocols. If you wish to impose a conventional locking strategy for a transaction, place the LOCK and unlock around (outside) the transaction. While it is possible to use a LOCK within a transaction for signaling, that technique is typically problematic as it violates transactional Isolation and should likely be restricted to testing.
 
@@ -14423,7 +14422,6 @@ TPSTACKCRIT, TP Stack space critical
 Run Time Error: This indicates that a transaction has consumed almost all of the available stack space.
 
 Action: Look for missing TCOMMIT commands. Modify the code to reduce the total change content of the transaction; pay special attention to recursion and variable usage.
-
 
 ---------------
 TPSTACKOFLOW 
@@ -14610,7 +14608,6 @@ Trigger/Run Time Error: TRIGINVCHSET occurs when a process invokes a trigger on 
 
 Action: Ensure that the process invoking a trigger on a global uses the same $ZCHSET that was used to load the first trigger on that global. If your application requires triggers in both M and UTF-8 modes, use different globals to load M mode and UTF-8 mode triggers.
 
-
 -----------------
 TRIGIS 
 -----------------
@@ -14640,7 +14637,6 @@ TRIGMODINTP, Triggers for a given global cannot be both used and modified or rem
 Run Time Error: Once a transaction has used any trigger on any node associated with a given global name (the part of the variable designation between the up-arrow (^) and the left-parenthesis ("(") (or end if there's no subscript), you cannot use that same transaction to modify definitions for any trigger associated with that global name.
 
 Action: Rework the transaction and $ZTRIGGER() relationship to avoid this issue.
-
 
 ------------------
 TRIGMODREGNOTRW 
@@ -14698,7 +14694,7 @@ TRIGREPLSTATE
 
 TRIGREPLSTATE, Trigger cannot update replicated database file dddd since triggering update was not replicated
 
-Run Time Error: A process performed an update on a global in a database region which is not currently replicated, and that update invoked a trigger that, in turn, attempted an update on a global in a database region that is replicated. This would produce a journal state with insufficient information to properly recover the replicated region.
+Run Time Error: A process performed an update on a global in a database region which is not currently replicated, and that update invoked a trigger that in turn attempted an update on a global in a database region that is replicated. This would produce a journal state with insufficient information to properly recover the replicated region.
 
 Action: Investigate whether the global directories, journaling characteristics or trigger logic need revision.
 
@@ -14748,9 +14744,9 @@ TRIGZBREAKREM
 
 TRIGZBREAKREM, ZBREAK in trigger tttt removed due to trigger being reloaded
 
-Run Time Warning: This indicates your process had a ZBREAK defined within the XECUTE code for trigger tttt, but some action replaced the definition for trigger tttt so YottaDB removed the ZBREAK.
+Run Time Warning: This indicates that your process had a ZBREAK defined within the XECUTE code for trigger tttt, but some action replaced the definition for trigger tttt so YottaDB removed the ZBREAK.
 
-Action: If appropriate examine the trigger with ZPRINT and reestablish the ZBREAK. The message is tied to BREAKMSG mask 16 (See VIEW BREAKMSG). The default message mask is 31, which includes masks 1, 2, 4, 8, and 16. Using the VIEW command to set the BREAKMSG mask to 7 or any other pattern that excludes 16, disables this message.
+Action: If appropriate, examine the trigger with ZPRINT and reestablish the ZBREAK. The message is tied to BREAKMSG mask 16 (See VIEW BREAKMSG). The default message mask is 31, which includes masks 1, 2, 4, 8, and 16. Using the VIEW command to set the BREAKMSG mask to 7 or any other pattern that excludes 16 disables this message.
 
 -------------------
 TRNLOGFAIL
@@ -14768,10 +14764,9 @@ TROLLBK2DEEP
 
 TROLLBK2DEEP, Intended rollback (xxxx) deeper than the current $tlevel (yyyy)
 
-Run Time Error: This indicates that an attempt to TROLLBACK more levels (as indicated by $TLEVEL) of transaction nesting than are currently active.
+Run Time Error: This indicates an attempt to TROLLBACK more levels (as indicated by $TLEVEL) of transaction nesting than are currently active.
 
 Action: Review the logic and code path that led to the error and modify the code appropriately.
-
 
 -----------------
 TRUNCATE 
@@ -14779,7 +14774,7 @@ TRUNCATE
 
 TRUNCATE, Error while truncating jnl-file xxxx to length aaaa
 
-Run Time Error: This message is issued by Recovery/Rollback process when it is unable to truncate the journal file at the end of recovery. The journal file remains in the same state as it was before the processing and may contain incomplete data, in case of a YottaDB crash.
+Run Time Error: This message is issued by the Recovery/Rollback process when it is unable to truncate the journal file at the end of recovery. The journal file remains in the same state as it was before the processing and may contain incomplete data, in case of a YottaDB crash.
 
 Action: Look into the secondary error message and if necessary report the entire incident context to your YottaDB support channel for further analysis.
 
@@ -15206,7 +15201,6 @@ MUPIP Warning: This indicates that the current state of the global buffer cache 
 
 Action: Refer to the accompanying message(s).
 
-
 -----------------
 WCERRNOTCHG 
 -----------------
@@ -15245,7 +15239,7 @@ WEIRDSYSTIME, Time reported by the system clock is outside the acceptable range.
 
 Run Time Error: Time reported by the system clock is outside the acceptable range. Please check and correct the system clock.
 
-Action: YottaDB requires the system time be set between January 1, 1970 00:00:00 UTC (the UNIX epoch) and September 27, 33658 01:46:40 UTC
+Action: YottaDB requires that the system time be set to be between January 1, 1970 00:00:00 UTC (the UNIX epoch) and September 27, 33658 01:46:40 UTC
 
 ------------------
 WIDTHTOOSMALL 
@@ -15494,7 +15488,7 @@ ZCENTNAME
 
 ZCENTNAME, No entry found in external call table
 
-Run Time Error: This indicates that the entry point, which the program is trying to access cannot be found.
+Run Time Error: This indicates that the entry point the program is trying to access cannot be found.
 
 Action: Create a corresponding entry point and match that link with the interface found in the C library.
 
@@ -15648,7 +15642,6 @@ Run Time Error: This indicates that the called program may contain a logic error
 
 Action: Review accompanying messages for more information about the cause of this error.
 
-
 -----------------
 ZCUNAVAIL 
 -----------------
@@ -15658,7 +15651,6 @@ ZCUNAVAIL, Package, xxxx unavailable
 Run Time Error: This indicates that the shared library may not be specified in the external call table or the path may be specified incorrectly.
 
 Action: Verify that the external call table and the program point to the correct shared library and path.
-
 
 --------------------
 ZCUNKMECH 
@@ -16010,9 +16002,9 @@ ZSOCKETATTR
 
 ZSOCKETATTR, Attribute "xxxx" invalid for $ZSOCKET function msg name
 
-Run Time Error: This indicates the named attribute is not recognized for the $ZSOCKET function.
+Run Time Error: This indicates that the named attribute is not recognized for the $ZSOCKET function.
 
-Action: Check for spelling, review the documented list of available attributes and adjust the attribute argument.
+Action: Check the spelling, review the documented list of available attributes and adjust the attribute argument.
 
 -------------------
 ZSOCKETNOTSOCK 
