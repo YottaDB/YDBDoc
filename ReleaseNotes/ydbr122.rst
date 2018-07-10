@@ -310,8 +310,6 @@ GT.M V6.3-004
 | `GTM-8914 <http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V6.3-004_Release_Notes.html#GTM-8914>`_ | Language                           | $VIEW("GVSTATS"), ZSHOW "G" and ZSHOW "T" flag results that are  |
 |                                                                                                       |                                    | probably not current                                             |
 +-------------------------------------------------------------------------------------------------------+------------------------------------+------------------------------------------------------------------+
-| `GTM-8916 <http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V6.3-004_Release_Notes.html#GTM-8916>`_ | Admin                              | Prevent Receiver Server hang with glibc 2.25 or later            |
-+-------------------------------------------------------------------------------------------------------+------------------------------------+------------------------------------------------------------------+
 | `GTM-8919 <http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V6.3-004_Release_Notes.html#GTM-8919>`_ | DB                                 | MUPIP REORG -ENCRYPT does not induce CRYPTOPFAILED errors in     |
 |                                                                                                       |                                    | concurrent processes                                             |
 +-------------------------------------------------------------------------------------------------------+------------------------------------+------------------------------------------------------------------+
@@ -385,7 +383,6 @@ System Administration
 
 * MUPIP JOURNAL -ROLLBACK and -RECOVER handle large amounts of journal data; while there are still limits, previously when they attempted to handle around 55 million updates or more they inappropriately failed with a GTM-F-MEMORY error. (`GTM-8906 <http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V6.3-004_Release_Notes.html#GTM-8906>`_)
 
-* The Receiver Server process recovers after its Update Process dies. Previously, on Linux systems with glibc 2.25 or newer, the Receiver Server process could hang indefinitely, requiring manual cleanup of the process and shared memory. This issue was only observed in the development environment, and was never reported by a user. (`GTM-8916 <http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V6.3-004_Release_Notes.html#GTM-8916>`_)
 
 +++++++++++++
 Other
