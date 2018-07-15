@@ -2116,7 +2116,7 @@ Go BufferT GetLenUsed()
 
 .. code-block:: go
 
-    GetLenUsed() uint, int
+    GetLenUsed() (uint, int)
 
 Return the :code:`len_used` field of the :code:`C.ydb_buffer_t`
 structure referenced by :code:`cbuft` as the first (:code:`uint`)
@@ -2133,7 +2133,7 @@ Go BufferT GetValBAry()
 
 .. code-block:: go
 
-    GetValBAry() *[]byte, int
+    GetValBAry() (*[]byte, int)
 
 If the :code:`len_used` field of the :code:`C.ydb_buffer_t` structure
 referenced by :code:`cbuft` is greater than its :code:`len_alloc`
@@ -2152,7 +2152,7 @@ Go BufferT GetValStr()
 
 .. code-block:: go
 
-    GetValStr() *string, int
+    GetValStr() (*string, int)
 
 If the :code:`len_used` field of the :code:`C.ydb_buffer_t` structure
 referenced by :code:`cbuft` is greater than its :code:`len_alloc`
@@ -2164,6 +2164,30 @@ string, and a return code of :code:`C.YDB_ERR_INVSTRLEN`.
 Otherwise, return :code:`len_used` bytes of the buffer as a string (a
 zero length string if the structure has not yet been allocated, i.e.,
 :code:`cbuft` is :code:`nil`), and a return code of :code:`C.YDB_OK`.
+
+Go BufferT SetLenUsed()
+-----------------------
+
+.. code-block:: go
+
+    SetLenUsed(newLen uint) int
+
+Use this method to set the number of bytes in :code:`C.ydb_buffer_t`
+structure referenced by :code:`cbuft`, for example to change the
+length of a used substring of the contents of the buffer referenced by
+the :code:`buf_addr` field of the referenced :code:`C.ydb_buffer_t`.
+
+- If :code:`newLen` is greater than the :code:`len_alloc` field of the
+  referenced :code:`C.ydb_buffer_t`, make no changes and return with a
+  return code of :code:`C.YDB_ERR_INVSTRLEN`.
+- Otherwise, set the :code:`len_used` field of the referenced
+  :code:`C.ydb_buffer_t` to :code:`newLen` and return with a return code
+  of :code:`C.YDB_OK`.
+
+Note that even if :code:`newLen` is not greater than the value of
+:code:`len_alloc`, using a :code:`len_used` value greater than the
+number of valid bytes in the buffer will likely lead to hard-to-debug
+errors.
 
 Go BufferT SetValBAry()
 -----------------------
@@ -2195,7 +2219,23 @@ field of the :code:`C.ydb_buffer_t` structure referenced by
 
 Otherwise, copy the bytes of :code:`val` to the location referenced by
 the :code:`buf_addr` field of the :code:`C.ydbbuffer_t` structure, set
-the :code:`len_used` field to the length if :code:`val` and return
+the :code:`len_used` field to the length of :code:`val` and return
+with a return code of :code:`C.YDB_OK`.
+
+Go BufferT SetValStrLit()
+-------------------------
+
+.. code-block:: go
+
+    SetVarStrLit(val string) int
+
+If the length of :code:`val` is greater than the :code:`len_alloc`
+field of the :code:`C.ydb_buffer_t` structure referenced by
+:code:`cbuft`, make no changes and return :code:`C.YDB_ERR_INVSTRLEN`.
+
+Otherwise, copy the bytes of :code:`val` to the location referenced by
+the :code:`buf_addr` field of the :code:`C.ydbbuffer_t` structure, set
+the :code:`len_used` field to the length of :code:`val` and return
 with a return code of :code:`C.YDB_OK`.
 
 ----------------------------------
@@ -2286,7 +2326,7 @@ Go BufferTArray GetLenUsed()
 
 .. code-block:: go
 
-    GetLenUsed(idx uint) uint, int
+    GetLenUsed(idx uint) (uint, int)
 
 - If :code:`idx` is greater than the :code:`elemsAlloc` of the
   :code:`BufferTArray` structure, return with a return code of
@@ -2310,7 +2350,7 @@ Go BufferTArray GetValBAry()
 
 .. code-block:: go
 
-    GetValBAry(idx uint) *[]byte, int
+    GetValBAry(idx uint) (*[]byte, int)
 
 - If :code:`idx` is greater than :code:`elemsAlloc`, return a zero
   length byte array and a return code of :code:`C.YDB_ERR_INSUFFSUBS`.
@@ -2328,7 +2368,7 @@ Go BufferTArray GetValStr()
 
 .. code-block:: go
 
-    GetValStr(idx uint) *string, int
+    GetValStr(idx uint) (*string, int)
 
 - If :code:`idx` is greater than :code:`elemsAlloc`, return a zero
   length string and a return code of :code:`C.YDB_ERR_INSUFFSUBS`.
@@ -2527,7 +2567,7 @@ Go TpS()
 
 .. code-block:: go
 
-    TpS(tpfn unsafe pointer, tpfnparm unsafe.pointer, transid *string) int
+    TpS(tpfn unsafe.Pointer, tpfnparm unsafe.pointer, transid *string) int
 
 :code:`TpS()` wraps `ydb_tp_s()`_ to implement `Transaction
 Processing`_. :code:`tpfn` is a pointer to a C function with one
@@ -2581,7 +2621,7 @@ A special note: as the definition and implementation of Go protect
 against dangling pointers in pure Go code, Go application code may not
 be designed and coded with the same level of defensiveness against
 dangling pointers that C applications are. In the case of
-:code:`TpS()`, owing to the need to use :code:`unsafe pointer`
+:code:`TpS()`, owing to the need to use :code:`unsafe.Pointer`
 parameters, please take additional care in designing and coding your
 application to ensure the validity of the pointers passed to
 :code:`TpS()`.
@@ -2595,7 +2635,7 @@ Go DataS()
 
 .. code-block:: go
 
-    DataS() uint, int
+    DataS() (uint, int)
 
 :code:`DataS()` returns the result of `ydb_data_s()`_ with a return
 code of :code:`C.YDB_ERR_OK` or an `error return code`_ prefixed with
@@ -2915,7 +2955,7 @@ Go ForkExec()
 
 .. code-block:: go
 
-    yottadb.ForkExec(argv0 string, argv []string, attr *ProcAttr) int, int
+    yottadb.ForkExec(argv0 string, argv []string, attr *ProcAttr) (int, int)
 
 The function has the same signature as the `Go
 syscall.ForkExec() <https://golang.org/pkg/syscall/#ForkExec>`_, which
@@ -3051,7 +3091,7 @@ script `GenYDBGlueRoutine.sh`_ to generate glue routine functions. The
 :code:`handlerData` structure should be in memory allocated with `Go
 Malloc()`_ to protect it from Go garbage collection.
 
-Owing the need to use :code:`unsafe pointer` parameters, please take
+Owing the need to use :code:`unsafe.Pointer` parameters, please take
 additional care in designing and coding your application to ensure the
 validity of the pointers passed to :code:`TimerStart()`.
 
