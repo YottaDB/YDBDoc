@@ -2381,6 +2381,31 @@ Go BufferTArray GetValStr()
 - Otherwise, return a string containing the :code:`len_used` bytes at
   :code:`buf_addr` and a return code of :code:`C.YDB_OK`.
 
+Go BufferTArray SetLenUsed()
+----------------------------
+
+.. code-block:: go
+
+    SetLenUsed(idx, newLen uint) int
+
+Use this method to set the number of bytes in :code:`C.ydb_buffer_t`
+structure referenced by :code:`cbuft` of the array element specified
+by :code:`idx`, for example to change the length of a used substring
+of the contents of the buffer referenced by the :code:`buf_addr` field
+of the referenced :code:`C.ydb_buffer_t`.
+
+- If :code:`newLen` is greater than the :code:`len_alloc` field of the
+  referenced :code:`C.ydb_buffer_t`, make no changes and return with a
+  return code of :code:`C.YDB_ERR_INVSTRLEN`.
+- Otherwise, set the :code:`len_used` field of the referenced
+  :code:`C.ydb_buffer_t` to :code:`newLen` and return with a return code
+  of :code:`C.YDB_OK`.
+
+Note that even if :code:`newLen` is not greater than the value of
+:code:`len_alloc`, using a :code:`len_used` value greater than the
+number of valid bytes in the buffer will likely lead to hard-to-debug
+errors.
+
 Go BufferTArray SetUsed()
 -------------------------
 
