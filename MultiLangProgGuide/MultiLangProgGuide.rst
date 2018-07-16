@@ -47,12 +47,12 @@ Local Installation
   If you do not specify an installation directory with
   :code:`--installdir`, the script installs YottaDB in
   :code:`/usr/local/lib/yottadb/r#.##` where :code:`r#.##` is
-  the release, e.g., :code:`r1.20`.
+  the release, e.g., :code:`r1.22`.
 
 2. Choose a directory for your default environment and initialize it:
-   :code:`export ydb_dir=$HOME/.yottadb ; . /opt/yottadb/latest/yottadbprofile`
+   :code:`export ydb_dir=$HOME/.yottadb ; . /usr/local/lib/yottadb/r122/ydb_env_set`
 #. Put your C program in the :code:`$ydb_dir` directory,
-   :code:`#include` the file :code:`/opt/yottadb/latest/libyottadb.h`
+   :code:`#include` the file :code:`/usr/local/lib/yottadb/r122/libyottadb.h`
    in your C program and compile it. As a sample program, you can
    download the `wordfreq.c
    <https://raw.githubusercontent.com/YottaDB/YottaDBtest/master/simpleapi/inref/wordfreq.c>`_
