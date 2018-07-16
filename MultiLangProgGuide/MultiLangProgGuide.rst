@@ -2463,6 +2463,24 @@ Go BufferTArray SetValStr()
   structure referenced, set its :code:`len_used` field to the number
   of bytes copied and return :code:`C.YDB_OK`.
 
+Go BufferTArray SetValStrLit()
+------------------------------
+
+.. code-block:: go
+
+    SetVarStrLit(idx int, val string) int
+
+- If :code:`idx` is greater than :code:`elemsAlloc` make no changes
+  and return with a return code of :code:`C.YDB_ERR_INSUFFSUBS`.
+- If the length of :code:`val` is greater than the :code:`len_alloc`
+  field of the :code:`C.ydb_buffer_t` structure indexed by :code:`idx`
+  and referenced by :code:`cbuft`, make no changes and return
+  :code:`C.YDB_ERR_INVSTRLEN`.
+- Otherwise, copy the bytes of :code:`val` to the location referenced by
+  the :code:`buf_addr` field of the referenced :code:`C.ydbbuffer_t`
+  structure, set the :code:`len_used` field to the length of :code:`val`
+  and return with a return code of :code:`C.YDB_OK`.
+
 --------------------------
 Go Access Methods for KeyT
 --------------------------
