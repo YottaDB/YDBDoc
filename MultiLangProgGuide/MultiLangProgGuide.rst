@@ -42,8 +42,8 @@ Local Installation
 - Make it executable: :code:`chmod +x ydbinstall.sh`
 - Run it with your choice of directory where you want it installed
   (omit the :code:`--verbose` option for less output): :code:`sudo
-  ./ydbinstall.sh --installdir /opt/yottadb/latest --utf8 default
-  --verbose`
+  ./ydbinstall.sh --utf8 default
+  --verbose`. 
   If you do not specify an installation directory with
   :code:`--installdir`, the script installs YottaDB in
   :code:`/usr/local/lib/yottadb/r#.##` where :code:`r#.##` is
