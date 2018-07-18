@@ -919,18 +919,18 @@ Download Replication Examples
 
 repl_procedures.tar.gz contains a set of replication example scripts. Each script contains a combination of YottaDB commands that accomplish a specific task. All examples in the Procedures section use these replication scripts but each example uses a different script sequence and diferent script arguments. Always run all replication examples in a test system from a new directory as they create sub-directories and database files in the current directory. No claim of copyright is made with regard to these examples. These example scripts are for explanatory purposes and are not intended for production use. YOU MUST UNDERSTAND AND APPROPRIATELY ADJUST THE COMMANDS GIVEN IN THESE SCRIPTS BEFORE USING THEM IN A PRODUCTION ENVIRONMENT. Typically, you would set replication between instances on different systems/data centers and create your own set of scripts with appropriate debugging and error handling to manage replication between them.
 
-Go to the `Github page <https://github.com/YottaDB/YottaDBdoc/blob/master/AdminOpsGuide/repl_procedures.tar.gz>`_ to download repl_procedures.tar.gz on a test system. 
+Go to the `Github page <https://github.com/YottaDB/YottaDBdoc/raw/master/AdminOpsGuide/repl_procedures.tar.gz>`_ to download repl_procedures.tar.gz on a test system. 
 
 repl_procedures.tar.gz includes the following scripts:
 
-**env**
+**ydbenv**
 
 Sets a default environment for YottaDB replication. It takes two arguments: 
 
 * The name of the instance/database directory
 * The YottaDB version
 
-Example: source ./env r1.20
+Example: source ./ydbenv A r122
 
 Here is the code:
 
@@ -942,19 +942,21 @@ Here is the code:
    export ydb_principal_editing=EDITING
    export ydb_routines="$PWD/$ydb_repl_instname $ydb_dist"
    #export ydb_routines="$PWD/$ydb_repl_instname $ydb_dist/libgtmutil.so"
-   # Here is an example of setting the ydb_routines environment variable:
-   # if [ -e  "$ydb_dist/libgtmutil.so" ] ; then export ydb_routines="$PWD/$ydb_repl_instname $ydb_dist/libgtmutil.so"
-   else export ydb_routines="$PWD/$ydb_repl_instname* $ydb_dist" ; fi
-   # For more examples on setting YottaDB related environment variables to reasonable values on POSIX shells, refer to the ydb_set_env script.
    #export LD_LIBRARY_PATH=/usr/local/lib
    #export ydb_crypt_config=$PWD/$ydb_repl_instname/config_file
    #echo -n "Enter Password for ydb_tls_passwd_${ydb_repl_instname}: ";export ydb_tls_passwd_${ydb_repl_instname}="`$ydb_dist/plugin/gtmcrypt/maskpass|tail -n 1|cut -f 3 -d " "`"
 
-Modify the env script according to your test environment. 
+.. note::
+   Here is an example of setting the ydb_routines environment variable:
+   if [ -e  "$ydb_dist/libgtmutil.so" ] ; then export ydb_routines="$PWD/$ydb_repl_instname $ydb_dist/libgtmutil.so"
+   else export ydb_routines="$PWD/$ydb_repl_instname* $ydb_dist" ; fi . For more examples on setting YottaDB related environment variables to reasonable values on POSIX shells, refer to the ydb_set_env script.
+
+
+Modify the ydbenv script according to your test environment. 
 
 **db_create**
 
-Creates a new sub-directory in the current directory, a global directory file with settings from gdemsr, and the YottaDB database file.
+Creates a new sub-directory in the current directory, a global directory file with settings taken from gdemsr, and the YottaDB database file.
 
 Here is the code:
 
@@ -963,7 +965,7 @@ Here is the code:
    $ydb_dist/mumps -r ^GDE @gdemsr
    $ydb_dist/mupip create
 
-gdemsr contains:
+The file gdemsr contains:
 
 .. parsed-literal::
    change -segment DEFAULT -file_name=$PWD/$ydb_repl_instname/yottadb.dat
@@ -1191,92 +1193,229 @@ Here is the code:
 Setting up an A -> B Replication Configuration with Empty Databases
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-On A:
+**On A**:
 
-* Turn on replication.
-* Create the replication instance file.
+* Source the ydbenv environment file.
+
+.. parsed-literal::
+   source ./ydbenv A r122
+
+* Create the database and set up replication.
+
+.. parsed-literal::
+   $./db_create
+   %GDE-I-LOADGD, Loading Global Directory file
+        /home/A/yottadb.gld
+   %GDE-I-VERIFY, Verification OK
+
+   %GDE-I-EXECOM, Executing command file /home/A/gdemsr
+   %GDE-I-VERIFY, Verification OK
+
+   %GDE-I-GDUPDATE, Updating Global Directory file
+        /home/A/yottadb.gld
+   %YDB-I-DBFILECREATED, Database file /home/A/yottadb.dat created
+
+.. parsed-literal::
+   $./repl_setup
+   %YDB-I-JNLCREATE, Journal file /home/A/yottadb.mjl created for region DEFAULT with BEFORE_IMAGES
+   %YDB-I-JNLSTATE, Journaling state for region DEFAULT is now ON
+   %YDB-I-REPLSTATE, Replication state for region DEFAULT is now ON
+
 * Start the Source Server.
+
+.. parsed-literal::
+   ./originating_start A B 4001
+   Wed Jul 18 12:45:46 2018 : Initiating START of source server for secondary instance [B]
+   Wed Jul 18 12:45:46 2018 : Initiating CHECKHEALTH operation on source server pid [18498] for secondary instance name [B]
+   PID 18498 Source server is alive in ACTIVE mode
+   Wed Jul 18 12:45:46 2018 : /usr/local/lib/yottadb/r122/mupip replicate -source -start -instsecondary=B -secondary=localhost:4001 -buffsize=1048576 -log=/home/A/A_B.log
+   Wed Jul 18 12:45:46 2018 : %YDB-I-REPLINFO, GTM Replication Source Server with Pid [18498] started for Secondary Instance [B]
+   Wed Jul 18 12:45:46 2018 : Created jnlpool with shmid = [1353941014] and semid = [1447755780]
+   Wed Jul 18 12:45:46 2018 : %YDB-I-REPLINFO, GTM Replication Source Server now in ACTIVE mode using port 4001
+   Wed Jul 18 12:45:46 2018 : Connect hard tries count = 5, Connect hard tries period = 500
+   Wed Jul 18 12:45:46 2018 : 1 hard connection attempt failed : Connection refused
+
+Once B is brought up as replicating, check the log created. For example,
+
+.. parsed-literal::
+   $ tail -f A/A_B.log
+   Wed Jul 18 12:46:04 2018 : Waiting for REPL_INSTINFO message
+   Wed Jul 18 12:46:04 2018 : Received REPL_INSTINFO message
+   Wed Jul 18 12:46:04 2018 : Received secondary instance name is [B]
+   Wed Jul 18 12:46:04 2018 : Current Journal Seqno of the instance is 1 [0x1]
+   Wed Jul 18 12:46:04 2018 : Source server last sent seqno 1 [0x1]
+   Wed Jul 18 12:46:04 2018 : Source server will start sending from seqno 1 [0x1]
+   Wed Jul 18 12:46:04 2018 : Source server now reading from the journal POOL
+   Wed Jul 18 12:46:04 2018 : Sending REPL_WILL_RESTART_WITH_INFO message with seqno 1 [0x1]
+   Wed Jul 18 12:46:04 2018 : Sending REPL_HISTREC message with seqno 1 [0x1]
+   Wed Jul 18 12:46:04 2018 : New History Content : Start Seqno = 1 [0x1] : Stream Seqno = 0 [0x0] : Root Primary = [A] : Cycle = [1] : Creator pid = 18498 : Created time = 1531932346 [0x5b4f6eba] : History number = 0 : Prev History number = -1 : Stream # = 0 : History type = 1
 
 On B:
 
-* Turn on replication.
-* Create a new replication instance file.
+* Source the environment file.
+* Create the database and the replication instance file.
 * Start the passive Source Server.
 * Start the Receiver Server.
 
-Example:
+.. parsed-literal::
+   source ./ydbenv B r1.20_x86_64
+
+* Create the database and the replication instance file.
 
 .. parsed-literal::
-   source ./ydbenv A r1.20_x86_64 
-   ./db_create
-   ./repl_setup
-   ./originating_start A B 4001
-   source ./ydbenv B r1.20_x86_64
-   ./db_create
-   ./repl_setup
-   ./replicating_start B 4001
-   ./repl_status
+  ./db_create
+  ./repl_setup
+
+* Start the passive Source Server.
+* Start the Receiver Server.
+
+.. parsed-literal::
+   $./replicating_start B 4001
+   Wed Jul 18 12:46:01 2018 : Initiating START of source server for secondary instance [dummy]
+   PID 18531 Receiver server is alive
+   PID 18532 Update process is alive
+   Wed Jul 18 12:46:01 2018 : /usr/local/lib/yottadb/r122/mupip replicate -receive -start -listenport=4001 -buffsize=1048576 -log=/home/B/receive.log
+   Wed Jul 18 12:46:01 2018 : %YDB-I-REPLINFO, GTM Replication Receiver Server with Pid [18531] started on replication instance [B]
+   Wed Jul 18 12:46:01 2018 : Attached to existing jnlpool with shmid = [1354006561] and semid = [1447886856]
+   Wed Jul 18 12:46:01 2018 : Created recvpool with shmid = [1354072105] and semid = [1447985163]
+   Wed Jul 18 12:46:01 2018 : Update Process started. PID 18532 [0x4864]
+   Wed Jul 18 12:46:01 2018 : Waiting for a connection...
+
+.. parsed-literal::
+   $./repl_status
+   -----------------------------------------------------------------
+   Source Server B:
+   -----------------------------------------------------------------
+   Wed Jul 18 12:46:57 2018 : Initiating CHECKHEALTH operation on source server pid [18529] for secondary instance name [dummy]
+   PID 18529 Source server is alive in PASSIVE mode
+   Wed Jul 18 12:46:57 2018 : Initiating SHOWBACKLOG operation on source server pid [18529] for secondary instance [dummy]
+   0 : backlog number of transactions written to journal pool and yet to be sent by the source server
+   0 : sequence number of last transaction written to journal pool
+   0 : sequence number of last transaction sent by source server
+   WARNING - Source Server is in passive mode, transactions are not being replicated
+   -----------------------------------------------------------------
+   Receiver Server B:
+   -----------------------------------------------------------------
+   PID 18531 Receiver server is alive
+   PID 18532 Update process is alive
+   0 : number of backlog transactions received by receiver server and yet to be processed by update process
+   0 : sequence number of last transaction received from Source Server and written to receive pool
+   0 : sequence number of last transaction processed by update process
 
 The shutdown sequence is as follows:
 
+On B:
+
 .. parsed-literal::
-   source ./ydbenv B r1.20_x86_64
-   ./replicating_stop
-   source ./env A r1.20_x86_64
-   ./originating_stop
+   $./replicating_stop
+   Wed Jul 18 13:02:30 2018 : Waiting for 2 second(s) before forcing shutdown
+   Wed Jul 18 13:02:32 2018 : Initiating shut down
+   Wed Jul 18 13:02:33 2018 : Receive pool shared memory removed
+   Wed Jul 18 13:02:33 2018 : Receive pool semaphore removed
+   Wed Jul 18 13:02:33 2018 : Waiting for 2 second(s) before forcing shutdown
+   Wed Jul 18 13:02:35 2018 : Initiating SHUTDOWN operation on source server pid [18529] for secondary instance [dummy]
+   Wed Jul 18 13:02:35 2018 : Waiting for upto [120] seconds for the source server to shutdown
+   Wed Jul 18 13:02:36 2018 : Journal pool shared memory removed
+   Wed Jul 18 13:02:36 2018 : Journal pool semaphore removed
+
+On A:
+
+.. parsed-literal::
+   $./originating_stop
+   Wed Jul 18 13:02:59 2018 : Waiting for 2 second(s) before forcing shutdown
+   Wed Jul 18 13:03:01 2018 : Initiating SHUTDOWN operation on source server pid [18498] for secondary instance [B]
+   Wed Jul 18 13:03:01 2018 : Waiting for upto [120] seconds for the source server to shutdown
+   Wed Jul 18 13:03:02 2018 : Journal pool shared memory removed
+   Wed Jul 18 13:03:02 2018 : Journal pool semaphore removed
+   %YDB-I-MUFILRNDWNSUC, File /home/A/yottadb.dat successfully rundown
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Setting up an A -> B -> C Replication Configuration with Empty Databases
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-On A:
+**On A**:
 
-* Turn on replication.
+* Source the environment file.
+
+.. parsed-literal::
+   source ./ydbenv A r122
+
 * Create the replication instance file.
+
+.. parsed-literal::
+   ./db_create
+   ./repl_setup
+
 * Start the Source Server.
 
-On B:
+.. parsed-literal::
+   ./originating_start A B 4001
 
-* Turn on replication.
+**On B**:
+
+* Source the enironment variable.
+
+.. parsed-literal::
+   source .ydbenv B r122
+
 * Create a new replication instance file.
+
+.. parsed-literal::
+   ./db_create
+   ./repl_setup
+
 * Start the passive Source Server.
 * Start the Receiver Server.
+
+.. parsed-literal::
+   ./replicating_start B 4001
+
 * Start the Source Server with the -propagateprimary qualifier.
 
-On C:
+.. parsed-literal::
+   ./originating_start B C 4002 -propagateprimary
 
-* Turn on replication.
+**On C**:
+
+* Source the environment variable.
+
+.. parsed-literal::
+   source ./ydbenv C r122
+
 * Create a new replication instance file.
+
+.. parsed-literal::
+   ./db_create
+   ./repl_setup
+
 * Start the passive Source Server .
 * Start the Receiver Server.
 
-Example:
+.. parsed-literal::
+   ./replicating_start C 4002
+
+
+You can check status information using
 
 .. parsed-literal::
-   source ./ydbenv A r1.20_x86_64 
-   ./db_create
-   ./repl_setup
-   ./originating_start A B 4001
-   source ./ydbenv B r1.20_x86_64
-   ./db_create
-   ./repl_setup
-   ./replicating_start B 4001
-   ./originating_start B C 4002 -propagateprimary
-   source ./ydbenv C r1.20_x86_64
-   ./db_create
-   ./repl_setup
-   ./replicating_start C 4002
    ./repl_status
 
 The shutdown sequence is as follows:
 
+**On C**:
+
 .. parsed-literal::
-   source ./ydbenv C r1.20_x86_64
    ./replicating_stop
-   source ./ydbenv B r1.20_x86_64
+
+**On B**:
+
+.. parsed-literal::
    ./replicating_stop
    ./originating_stop
-   source ./ydbenv A r1.20_x86_64
+
+**On A**:
+
+.. parsed-literal::
    ./originating_stop
 
 
@@ -1284,48 +1423,82 @@ The shutdown sequence is as follows:
 Setting up an A -> P replication configuration with empty databases
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-On A:
+**On A**:
 
-* Turn on replication.
+* Source the environment file.
+
+.. parsed-literal::
+   source ./ydbenv A r122
+
 * Create a new replication instance file.
+
+.. parsed-literal::
+   ./db_create
+   ./repl_setup
+
 * Start the Source Server.
+
+.. parsed-literal::
+   ./originating_start A P 4000
+
 * Immediately after starting the Source Server but before making any updates, take a backup of the replication instance file. The instance file has the journal sequence number that corresponds to the database state at the time of starting the instance. This backup instance helps when you need to start a new Supplementary Instance without taking a backup of the Originating Instance. Retain the backup copy of the Originating Instance as you may need it in future as a checkpoint from where its supplementary instance may resume to receive updates. 
+
+.. parsed-literal::
+   $./backup_repl startA
+   Replication Instance file /home/A/yottadb.repl backed up in file startA
+   Journal Seqnos up to 0x0000000000000001 are backed up.
+
+   BACKUP COMPLETED.
 
 .. note::
    While a backed up instance file helps start replication on the P side of A→P, it does not prevent the need for taking a backup of the database on A. You need to do a database backup/restore or an extract/load from A to P to ensure P has all of the data as on A at startup.
 
-On P:
+**On P**:
 
-* Turn on replication.
+* Source the environment variable.
+
+.. parsed-literal::
+   source ./ydbenv P r122
+
 * Create a new replication instance file with the -supplementary qualifier.
+
+.. parsed-literal::
+   ./db_create
+   ./suppl_setup P startA 4000 -updok
+   i.e.
+    mupip replicate -instance_create -supplementary -name=P
+
 * Start the passive Source Server.
-* Start the Receiver Server and the Update Process with -updateresync="/path/to/bkup_orig_repl_inst_file" -initialize. Use the -updateresync -initialize qualifiers only once.
+* Start the Receiver Server and the Update Process with 
+
+.. parsed-literal::
+  -updateresync="/path/to/bkup_orig_repl_inst_file" -initialize. 
+
+**Use the -updateresync -initialize qualifiers only once.**
+
 * For subsequent Receiver Server and Update Process start ups, do not use -updateresync -initialize with qualifiers. Either use -autorollback with the Receiver Server startup command or perform an explicit -fetchresync -rollback before starting the Receiver Server. 
 
 Example:
 
 .. parsed-literal::
-   source ./ydbenv A r1.20_x86_64
-   ./db_create
-   ./repl_setup
-   ./originating_start A P 4000
-   ./backup_repl startA
-   source ./ydbenv P r1.20_x86_64
-   ./db_create
-   ./suppl_setup P startA 4000 -updok
-   ./repl_status
-   # For subsequent Receiver Server startup for P, use:
-   # ./replicating_start_suppl_n P 4000 -updok -autorollback
-   # or 
-   #./rollback 4000 backward
-   #./replicating_start_suppl_n P 4000 -updok
+   ./replicating_start_suppl_n P 4000 -updok -autorollback
+   
+or
+
+.. parsed-literal::
+   ./rollback 4000 backward
+   ./replicating_start_suppl_n P 4000 -updok
 
 The shutdown sequence is as follows:
 
+**On P**:
+
 .. parsed-literal::
-   source ./ydbenv P r1.20_x86_64
    ./replicating_stop
-   source ./ydbenv A r1.20_x86_64
+
+**On A**:
+
+.. parsed-literal::
    ./originating_stop
 
 
@@ -1335,55 +1508,68 @@ Replicating Instance Starts from Backup of Originating Instance (A -> B and A ->
 
 The most common scenario for bringing up a replicating instance is to take a backup of the originating instance and bring it up as a replicating instance. If the backup is a comprehensive backup, the file headers store the journal sequence numbers.
 
-On A:
+**On A**:
+
+* Source the environment file.
+
+.. parsed-literal::
+   source ./ydbenv A r122
 
 * Create a backup using -DATABASE, -REPLINST, -NEWJNLFILE=NOPREVLINK, and -BKUPDBJNL=DISABLE qualifiers. -DATABASE creates a comprehensive backup of the database file. -REPLINST backs up the replication instance file. -BKUPDBJNL=DISABLE scrubs all journal file information in the backup database file. As the backup of instance A is comprehensive, -NEWJNLFILE=NOPREVLINK cuts the back link to prior generation journal files of the database for which you are taking the backup. -NEWJNLFILE=NOPREVLINK is optional but simplifies journal file retention and aligns each database file with its backup. 
 
-* Copy the backup of the replication instance file to the location of the backed up instance. 
-
-* Start a new Source Server for the backed up replicating instance. 
-
-On the backed up instance:
-
-* Load/restore the database. If the replicating database is not from a comprehensive or database backup from the originating instance, set the journal sequence number from the originating instance at the instant of the backup for at least one replicated region on the replicating instance.
-
-* Run MUPIP REPLICATE -EDITINSTANCE command to change the name of the backed up replication instance file.
-
-* Start the Receiver Server for the BC replicating instance. Do not use the -UPDATERESYNC qualifier to start the receiver server of a BC replicating instance. -UPDATERESYNC is necessary when you start the Receiver Server of an SI replicating instance for the first time. Without -UDPATERESYNC, the SI replicating instance may refuse to start replication because the journal sequence number in the replicating instance may be higher than the originating instance expects.
-
-Example:
-
-The following example demonstrates starting a replicating instance from the backup of an originating instance in an A→B replication configuration. Note that you do not need to perform an -updateresync when starting a BC replicating instance for the first time. 
-
 .. parsed-literal::
-   source ./ydbenv A r1.20_x86_64
    ./db_create
    ./repl_setup
    ./originating_start A backupA 4001
+
+* Copy the backup of the replication instance file to the location of the backed up instance. 
+
+.. parsed-literal::
    ./backup_repl startingA   #Preserve the backup of the replicating instance file that represents the state at the time of starting the instance. 
    $ydb_dist/mumps -r %XCMD 'for i=1:1:10 set ^A(i)=i'
    mkdir backupA   
    $ydb_dist/mupip backup -replinst=currentstateA -newjnlfile=noprevlink -bkupdbjnl=disable DEFAULT backupA
-   source ./ydbenv backupA r1.20_x86_64
+
+* Start a new Source Server for the backed up replicating instance. 
+
+**On the backed up instance**:
+
+* Load/restore the database. If the replicating database is not from a comprehensive or database backup from the originating instance, set the journal sequence number from the originating instance at the instant of the backup for at least one replicated region on the replicating instance.
+
+.. parsed-literal::
+   source ./ydbenv backupA r122
    ./db_create
    ./repl_setup
-   cp currentstateA backupA/gtm.repl
-   $ydb_dist/mupip replicate -editinstance -name=backupA backupA/gtm.repl 
-   ./replicating_start backupA 4001 
-   ./repl_status
+   cp currentstateA backupA/yottadb.repl
+
+* Run MUPIP REPLICATE -EDITINSTANCE command to change the name of the backed up replication instance file.
+
+.. parsed-literal::
+   $ydb_dist/mupip replicate -editinstance -name=backupA backupA/yottadb.repl
+
+* Start the Receiver Server for the BC replicating instance. **Do not use the -UPDATERESYNC qualifier to start the receiver server of a BC replicating instance**. -UPDATERESYNC is necessary when you start the Receiver Server of an SI replicating instance for the first time. Without -UDPATERESYNC, the SI replicating instance may refuse to start replication because the journal sequence number in the replicating instance may be higher than the originating instance expects.
+
+.. parsed-literal::
+   ./replicating_start backupA 4001
 
 The shutdown sequence is as follows:
 
+**On backupA**:
+
 .. parsed-literal::
-   source ./ydbenv backupA r1.20_x86_64
    ./replicating_stop
-   source ./ydbenv A r1.20_x86_64
+
+**On A**:
+
+.. parsed-literal:: 
    ./originating_stop
 
-The following example demonstrates starting a replicating instance from the backup of an originating instance in an A→P replication configuration. Note that you need to perform an -updateresync to start a supplementary instance for the first time. 
+The following example demonstrates starting a replicating instance from the backup of an originating instance in an A→P replication configuration. Note that **you need to perform an -updateresync to start a supplementary instance** for the first time. 
+
+**On A**:
 
 .. parsed-literal::
-   source ./ydbenv A r1.20_x86_64
+   source ./ydbenv A r122
    ./db_create
    ./repl_setup
    ./originating_start A backupA 4011
@@ -1392,17 +1578,25 @@ The following example demonstrates starting a replicating instance from the back
    ./backup_repl currentstateA
    mkdir backupA
    $ydb_dist/mupip backup -newjnlfile=noprevlink -bkupdbjnl=disable DEFAULT backupA
-   source ./ydbenv backupA r1.20_x86_64
+
+**On backupA**:
+
+.. parsed-literal::
+   source ./ydbenv backupA r122
    ./db_create
    ./suppl_setup backupA currentstateA 4011 -updok
    ./repl_status
 
 The shutdown sequence is as follows:
 
+**On backupA**:
+
 .. parsed-literal::
-   source ./ydbenv backupA r1.20_x86_64
    ./replicating_stop
-   source ./ydbenv A r1.20_x86_64
+
+**On A**:
+
+.. parsed-literal::
    ./originating_stop
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1447,37 +1641,56 @@ On A:
 
 The following example runs a switchover in an A→B replication configuration.
 
+**On A**:
+
 .. parsed-literal::
-   source ./ydbenv A r1.20_x86_64 # creates a simple environment for instance A
+   source ./ydbenv A r122 # creates a simple environment for instance A
    ./db_create
    ./repl_setup # enables replication and creates the replication instance file
    ./originating_start A B 4001 # starts the active Source Server (A->B)
    $ydb_dist/mumps -r %XCMD 'for i=1:1:100 set ^A(i)=i'
    ./repl_status #-SHOWBACKLOG and -CHECKHEALTH report
-   source ./ydbenv B r1.20_x86_64 # creates a simple environment for instance B
+
+**On B**:
+
+.. parsed-literal::
+   source ./ydbenv B r122 # creates a simple environment for instance B
    ./db_create
    ./repl_setup
    ./replicating_start B 4001 
    ./repl_status # -SHOWBACKLOG and -CHECKHEATH report 
    ./replicating_stop # Shutdown the Receiver Server and the Update Process 
-   source ./ydbenv A r1.20_x86_64 # Creates an environment for A
+   
+**On A**:
+
+.. parsed-literal::
    $ydb_dist/mumps -r %XCMD 'for i=1:1:50 set ^losttrans(i)=i' # perform some updates when replicating instance is not available. 
    sleep 2
-   ./originating_stop # Stops the active Source Server 
-   source ./ydbenv B r1.20_x86_64 # Create an environment for B
+   ./originating_stop # Stops the active Source Server
+
+**On B**:
+
+.. parsed-literal::
    ./originating_start B A 4001 # Start the active Source Server (B->A)
-   source ./ydbenv A r1.20_x86_64 # Create an environment for A
+   
+**On A**:
+
+.. parsed-literal::
    ./rollback 4001 backward
    ./replicating_start A 4001 # Start the replication Source Server 
    ./repl_status # To confirm whether the Receiver Server and the Update Process started correctly.
-   cat A/gtm.lost 
+   cat A/yottadb.lost 
 
 The shutdown sequence is as follows:
 
+**On A**:
+
 .. parsed-literal::
-   source ./ydbenv A r1.20_x86_64
    ./replicating_stop
-   source ./ydbenv B r1.20_x86_64
+
+**On B**:
+
+.. parsed-literal::
    ./originating_stop
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1522,39 +1735,84 @@ The following scenario demonstrates a switchover from B←A→P to A←B→P whe
 
 The following example creates this switchover scenario:
 
+A has been the originating instance, and B was a BC replicating instance, P was an SI:
+
+**On A**:
+
+A is performing transactions.
+
 .. parsed-literal::
-   source ./ydbenv A r1.20_x86_64
    $ydb_dist/mumps -r ^%XCMD 'set ^A(98)=99'
-   source ./ydbenv B r1.20_x86_64
+
+**On B**:
+
+B stops replicating.
+
+.. parsed-literal::
    ./replicating_stop
-   source ./ydbenv A r1.20_x86_64
+   
+**On A**:
+
+Shut down the originating instance.
+
+.. parsed-literal::
    $ydb_dist/mumps -r ^%XCMD 'set ^A(99)=100'
    ./originating_stop
-   source ./ydbenv B r1.20_x86_64
+   
+**On B**:
+
+B becomes the new originating instance, and creates a backup of the replication instance file.
+
+.. parsed-literal::
    ./originating_start B A 4010
    ./originating_start B P 4011
    ./backup_repl startB
    $ydb_dist/mumps -r ^%XCMD 'set ^B(61)=0'
-   source ./ydbenv P r1.20_x86_64
+   
+**On P**:
+
+P creates the supplementary instance file based on B.
+
+.. parsed-literal::
    ./suppl_setup M startB 4011 -updok
    $ydb_dist/mumps -r ^%XCMD 'for i=39:1:40 set ^P(i)=i'
-   source ./ydbenv B r1.20_x86_64
+   
+**On B**:
+
+.. parsed-literal::
    $ydb_dist/mumps -r ^%XCMD 'set ^B(62)=1,^B(63)=1'
-   source ./ydbenv A r1.20_x86_64
+   
+**On A**:
+
+A performs a rollback and creates a lost transaction file, starts again as a replicating instance to B.
+
+.. parsed-literal::
    ./rollback 4010 backward
    ./replicating_start A 4010
-   source ./ydbenv B r1.20_x86_64
+   
+**On B**:
+
+Lost transaction file is processed.
+
+.. parsed-literal::
    $ydb_dist/mumps -r ^%XCMD 'set ^B(64)=1,^B(65)=1'
-   cat A/gtm.lost
+   cat A/yottadb.lost
 
 The shutdown sequence is as follows:
 
+**On B**:
+
 .. parsed-literal::
-   source ./ydbenv B r1.20_x86_64
    ./originating_stop
-   source ./ydbenv A r1.20 _x86_64
+
+**On A**:
+
+.. parsed-literal::
    ./replicating_stop
-   source ./ydbenv P r1.20_x86_64
+
+**On P**:
+
+.. parsed-literal::
    ./replicating_stop
 
 **A and P require rollback**
@@ -1595,6 +1853,9 @@ The following demonstrates a switchover scenario from B←A→P to A←B→P whe
 
 The following example creates this scenario.
 
+**On A**:
+
+A is an originating instance to both B and P.
 
 .. parsed-literal::
    source ./ydbenv A r1.20_x86_64
@@ -1604,48 +1865,109 @@ The following example creates this scenario.
    ./originating_start A P 4011
    ./backup_repl startA
    $ydb_dist/mumps -r ^%XCMD 'for i=1:1:97 set ^A(i)=i'
+   
+**On B**:
+
+B is a BC replicating instance.
+
+.. parsed-literal::
    source ./ydbenv B r1.20_x86_64
    ./db_create
    ./repl_setup
    ./replicating_start B 4010
+   
+**On P**:
+
+P is a supplementary instance, with its own transactions.
+
+.. parsed-literal::
    source ./ydbenv P r1.20_x86_64
    ./db_create
    ./suppl_setup P startA 4011 -updok
    $ydb_dist/mumps -r ^%XCMD 'for i=1:1:40 set ^P(i)=i'
-   source ./ydbenv B r1.20_x86_64 
+
+At switchover,
+
+**On B**:
+
+B stops replicating.
+
+.. parsed-literal::
    ./replicating_stop
-   source ./ydbenv A r1.20_x86_64
+   
+**On A**:
+
+A has more transactions.
+
+.. parsed-literal::
    $ydb_dist/mumps -r ^%XCMD 'set ^A(98)=99'
-   source ./ydbenv P r1.20_x86_64
-   ./replicating_stop 
-   source ./ydbenv A r1.20_x86_64
+   
+**On P**:
+
+P stops replicating.
+
+.. parsed-literal::
+   ./replicating_stop
+
+**On A**:
+
+A is shut down.
+
+.. parsed-literal::
    $ydb_dist/mumps -r ^%XCMD 'set ^A(99)=100'
    ./originating_stop
-   source ./ydbenv B r1.20_x86_64
+
+**On B**:
+
+B starts as the new originating instance.
+
+.. parsed-literal::
    ./originating_start B A 4010
    ./originating_start B P 4011
    ./backup_repl startB
    $ydb_dist/mumps -r ^%XCMD 'set ^B(61)=0,^B(62)=1'
-   source ./ydbenv P r1.20_x86_64
+  
+**On P**
+
+P has to roll back and become a supplementary instance to B.
+
+.. parsed-literal::
    ./rollback 4011 backward
    ./suppl_setup P startB 4011 -updok
    $ydb_dist/mumps -r ^%XCMD 'for i=39:1:40 set ^P(i)=i'
-   source ./ydbenv A r1.20_x86_64
+   
+**On A**:
+
+A has to roll back and start replicating from B.
+
+.. parsed-literal::
    ./rollback 4010 backward
    ./replicating_start A 4010
-   source ./ydbenv B r1.20_x86_64
+   
+**On B**:
+
+Processes lost transaction files from A and P.
+
+.. parsed-literal::
    $ydb_dist/mumps -r ^%XCMD 'set ^B(64)=1,^B(65)=1'
-   cat A/gtm.lost
-   cat P/gtm.lost
+   cat A/yottadb.lost
+   cat P/yottadb.lost
 
 The shutdown sequence is as follows:
 
+**On B**:
+
 .. parsed-literal::
-   source ./ydbenv B r1.20_x86_64
    ./originating_stop
-   source ./ydbenv A r1.20_x86_64 
+   
+**On A**:
+
+.. parsed-literal::
    ./replicating_stop
-   source ./ydbenv P r1.20_x86_64
+
+**On P**
+
+.. parsed-literal::
    ./replicating_stop
 
 **Rollback not required by application design**
@@ -1674,53 +1996,116 @@ The following scenario demonstrates a switchover from B←A→P to A←B→P whe
 
 The following example creates this scenario.
 
+**On A**:
+
+A is the originating instance to B and P.
+
 .. parsed-literal::
-   source ./ydbenv A r1.20_x86_64
+   source ./ydbenv A r122
    ./db_create
    ./repl_setup
    ./originating_start A B 4010
    ./originating_start A P 4011
    ./backup_repl startA
    $ydb_dist/mumps -r ^%XCMD 'for i=1:1:97 set ^A(i)=i'
-   source ./ydbenv B r1.20_x86_64
+
+**On B**:
+
+B is a BC replicating instance to A.
+
+.. parsed-literal::
+   source ./ydbenv B r122
    ./db_create
    ./repl_setup
    ./replicating_start B 4010 
-   source ./ydbenv P r1.20_x86_64
+   
+**On P**
+
+P is a supplementary instance of A.
+
+.. parsed-literal::
+   source ./ydbenv P r122
    ./db_create
    ./suppl_setup P startA 4011 -updok
    $ydb_dist/mumps -r ^%XCMD 'for i=1:1:40 set ^P(i)=i'
-   source ./ydbenv B r1.20_x86_64 
+
+At switchover,
+
+**On B**:
+
+B stops replicating.
+
+.. parsed-literal::
    ./replicating_stop
-   source ./ydbenv A r1.20_x86_64
+   
+**On A**:
+
+A has ongoing transactions.
+
+.. parsed-literal::
    $ydb_dist/mumps -r ^%XCMD 'set ^A(98)=99'
-   source ./ydbenv P r1.20_x86_64
+   
+**On P**:
+
+P stops replicating.
+
+.. parsed-literal::
    ./replicating_stop 
-   source ./ydbenv A r1.20_x86_64
+   
+**On A**:
+
+The originating instance is shut down.
+
+.. parsed-literal::
    $ydb_dist/mumps -r ^%XCMD 'set ^A(99)=100'
    ./originating_stop
-   source ./ydbenv B r1.20_x86_64
+   
+**On B**:
+
+B becomes the new originating instance to A and P.
+
+.. parsed-literal::
    ./originating_start B A 4010
    ./originating_start B P 4011
-   #./backup_repl startB
+   ./backup_repl startB
    $ydb_dist/mumps -r ^%XCMD 'set ^B(61)=0,^B(62)=1'
-   source ./ydbenv P r1.20_x86_64
+   
+**On P**:
+
+P does not need to roll back due to application design and switches to be a supplementary instance of B. Replication starts from the last common transaction.
+
+.. parsed-literal::
    ./replicating_start_suppl_n P 4011 -updok -noresync
    $ydb_dist/mumps -r ^%XCMD 'for i=39:1:40 set ^P(i)=i'
-   source ./ydbenv A r1.20_x86_64
+   
+**On A**:
+
+A has to roll back and then become a replicating instance.
+
+.. parsed-literal::
    ./rollback 4010 backward
    ./replicating_start A 4010 
-   source ./ydbenv B r1.20_x86_64
+   
+**On B**:
+
+.. parsed-literal::
    $ydb_dist/mumps -r ^%XCMD 'set ^B(64)=1,^B(65)=1'
 
 The shutdown sequence is as follows:
 
+**On B**:
+
 .. parsed-literal::
-   source ./ydbenv B r1.20_x86_64
    ./originating_stop
-   source ./ydbenv A r1.20_x86_64
+
+**On A**:
+
+.. parsed-literal::
    ./replicating_stop
-   source ./ydbenv P r1.20_x86_64
+   
+**On P**:
+
+.. parsed-literal::
    ./replicating_stop
 
 **Rollback Automatically**
@@ -1745,52 +2130,118 @@ This scenario demonstrates the use of the -autorollback qualifier which performs
 
 The following example runs this scenario.
 
+**On A**:
+
+A is an originating instance.
+
 .. parsed-literal::
-   source ./ydbenv A r1.20_x86_64
+   source ./ydbenv A r122
    ./db_create
    ./repl_setup
    ./originating_start A P 4000
    ./originating_start A B 4001
-   source ./ydbenv B r1.20_x86_64
+
+On B:
+
+B is a BC replicating instance of A.
+
+.. parsed-literal::
+   source ./ydbenv B r122
    ./db_create
    ./repl_setup
    ./replicating_start B 4001
-   source ./ydbenv A r1.20_x86_64
+   
+**On A**:
+
+.. parsed-literal::
    ./backup_repl startA 
-   source ./ydbenv P r1.20_x86_64
+   
+**On P**:
+
+P is a supplementary instance of A.
+
+.. parsed-literal::
+   source ./ydbenv P r122
    ./db_create
    ./suppl_setup P startA 4000 -updok
    $ydb_dist/mumps -r %XCMD 'for i=1:1:38 set ^P(i)=i'
-   source ./ydbenv A r1.20_x86_64
-   $ydb_dist/mumps -r %XCMD 'for i=1:1:97 set ^A(i)=i'
-   source ./ydbenv B r1.20_x86_64
-   ./replicating_stop
-   source ./ydbenv A r1.20_x86_64
-   $ydb_dist/mumps -r %XCMD 'set ^A(98)=50'
-   source ./ydbenv P r1.20_x86_64
-   $ydb_dist/mumps -r %XCMD 'for i=39:1:40 set ^P(i)=i'
-   ./replicating_stop
-   source ./ydbenv A r1.20_x86_64
-   $ydb_dist/mumps -r %XCMD 'set ^A(99)=100'
-   ./originating_stop
-   source ./ydbenv B r1.20_x86_64
-   ./originating_start B A 4001 
-   ./originating_start B P 4000
-   source ./ydbenv A r1.20_x86_64
-   ./replicating_start A 4001 -autorollback
-   source ./ydbenv P r1.20_x86_64
-   #./rollback 4000 backward
-   ./replicating_start_suppl_n P 4000 -updok -autorollback
-   #./replicating_start_suppl_n P 4000 -updok 
-
-The shutdown sequence is as follows:
+   
+**On A**:
 
 .. parsed-literal::
-   source ./ydbenv A r1.20_x86_64
+   $ydb_dist/mumps -r %XCMD 'for i=1:1:97 set ^A(i)=i'
+
+At switchover,
+
+**On B**:
+
+B stops replicating.
+
+.. parsed-literal::
    ./replicating_stop
-   source ./ydbenv P r1.20_x86_64
+   
+**On A**:
+
+A has ongoing transactions.
+
+.. parsed-literal::
+   $ydb_dist/mumps -r %XCMD 'set ^A(98)=50'
+   
+**On P**:
+
+P stops replicating A.
+
+.. parsed-literal::
+   $ydb_dist/mumps -r %XCMD 'for i=39:1:40 set ^P(i)=i'
    ./replicating_stop
-   source ./ydbenv B r1.20_x86_64
+   
+**On A**:
+
+The originating instance is shut down.
+
+.. parsed-literal::
+   $ydb_dist/mumps -r %XCMD 'set ^A(99)=100'
+   ./originating_stop
+   
+**On B**:
+
+B starts as the new originating instance.
+
+.. parsed-literal::
+   ./originating_start B A 4001 
+   ./originating_start B P 4000
+   
+**On A**:
+
+A becomes a replicating instance and does an auto-rollback.
+
+.. parsed-literal::
+   ./replicating_start A 4001 -autorollback
+   
+**On P**:
+
+P does a rollback.
+
+.. parsed-literal::
+   ./rollback 4000 backward
+   ./replicating_start_suppl_n P 4000 -updok -autorollback
+   ./replicating_start_suppl_n P 4000 -updok 
+
+The shutdown sequence is as follows:
+  
+**On A**:
+
+.. parsed-literal::
+   ./replicating_stop
+   
+**On P**:
+
+.. parsed-literal::
+   ./replicating_stop
+   
+**On B**:
+
+.. parsed-literal::
    ./originating_stop
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1834,79 +2285,178 @@ Consider a situation where A and P are located in one data center, with BC repli
 
 The following example runs this scenario.
 
+**On A**:
+
+A is the originating instance to B and P.
+
 .. parsed-literal::
-   source ./ydbenv A r1.20_x86_64
+   source ./ydbenv A r122
    ./db_create
    ./repl_setup
    ./originating_start A P 4000
    ./originating_start A B 4001
-   source ./ydbenv B r1.20_x86_64
+
+**On B**:
+
+B is a BC replicating instance of A.
+
+.. parsed-literal::
+   source ./ydbenv B r122
    ./db_create
    ./repl_setup
    ./replicating_start B 4001
-   source ./ydbenv A r1.20_x86_64
+   
+**On A**:
+
+.. parsed-literal::
    ./backup_repl startA 
-   source ./ydbenv P r1.20_x86_64
+   
+**On P**:
+
+P is a supplementary instance of A.
+
+.. parsed-literal::
+   source ./ydbenv P r122
    ./db_create
    ./suppl_setup P startA 4000 -updok
    ./backup_repl startP
    ./originating_start P Q 4005
-   source ./ydbenv Q r1.20_x86_64
+   
+**On Q**:
+
+Q is a BC replicating instance of P.
+
+.. parsed-literal::
+   source ./ydbenv Q r122
    ./db_create
    ./suppl_setup Q startP 4005 -updnotok
-   source ./ydbenv A r1.20_x86_64
+   
+**On A**:
+
+.. parsed-literal::
    $ydb_dist/mumps -r ^%XCMD 'for i=1:1:96 set ^A(i)=i'
-   source ./ydbenv P r1.20_x86_64
+   
+**On P**
+
+.. parsed-literal::
    $ydb_dist/mumps -r ^%XCMD 'for i=1:1:37 set ^P(i)=i'
-   source ./ydbenv Q r1.20_x86_64
+
+At switchover,
+
+**On Q**:
+
+Q stops replication.
+
+.. parsed-literal::
    ./replicating_stop
-   source ./ydbenv P r1.20_x86_64
+   
+**On P**:
+
+P stops replication.
+
+.. parsed-literal::
    $ydb_dist/mumps -r ^%XCMD 'set ^P(38)=1000'
    ./replicating_stop
-   source ./ydbenv A r1.20_x86_64 
+   
+**On A**:
+
+Ongoing transactions.
+
+.. parsed-literal:: 
    $ydb_dist/mumps -r ^%XCMD 'set ^A(97)=1000,^A(98)=1000'
-   source ./ydbenv B r1.20_x86_64
+   
+**On B**:
+
+B stops replication.
+
+.. parsed-literal::
    ./replicating_stop
-   source ./ydbenv A r1.20_x86_64 
+   
+**On A**:
+
+The originating instance is shut down.
+
+.. parsed-literal::
    $ydb_dist/mumps -r ^%XCMD 'set ^A(99)=1000'
    ./originating_stop 
-   source ./ydbenv B r1.20_x86_64
+   
+**On B**:
+
+B becomes the new originating instance to Q.
+
+.. parsed-literal::
    backup_repl startB
    ./originating_start B Q 4008
    $ydb_dist/mumps -r ^%XCMD 'for i=1:1:62 set ^B(i)=i'
-   source ./ydbenv Q r1.20_x86_64
+   
+**On Q**:
+
+Q does a rollback and becomes a supplementary instance to B.
+
+.. parsed-literal::
    ./rollback 4008 backward
    ./suppl_setup Q startB 4008 -updok
    $ydb_dist/mumps -r ^%XCMD 'for i=1:1:74 set ^Q(i)=i'
-   source ./ydbenv B r1.20_x86_64
+   
+**On B**:
+
+.. parsed-literal::
    $ydb_dist/mumps -r ^%XCMD 'for i=63:1:64 set ^B(i)=i'
    ./originating_start B A 4004
-   source ./ydbenv A r1.20_x86_64
+   
+**On A**:
+
+A does a rollback and becomes a BC replicating instance of B.
+
+.. parsed-literal::
    ./rollback 4004 backward
    ./replicating_start A 4004
-   source ./ydbenv Q r1.20_x86_64
+   
+**On Q**:
+
+.. parsed-literal::
    $ydb_dist/mumps -r ^%XCMD 'for i=75:1:76 set ^Q(i)=i'
    ./originating_start Q P 4007
    ./backup_repl startQ
-   source ./ydbenv P r1.20_x86_64
+   
+**On P**:
+
+P  does a rollback and becomes a BC replicating instance of Q.
+
+.. parsed-literal::
    ./rollback 4007 backward
    ./replicating_start_suppl_n P 4007 -updnotok
-   source ./ydbenv Q r1.20_x86_64
+   
+**On Q**:
+
+The lost transaction files are processed.
+
+.. parsed-literal::
    $ydb_dist/mumps -r ^%XCMD 'set ^Q(77)=1000'
    cat A/gtm.lost
    cat P/gtm.lost
 
 The shutdown sequence is as follows:
 
+**On P**:
+
 .. parsed-literal::
-   source ./ydbenv P r1.20_x86_64
    ./replicating_stop
-   source ./ydbenv A r1.20_x86_64
+
+**On A**:
+
+.. parsed-literal::
    ./replicating_stop
-   source ./ydbenv Q r1.20_x86_64
+   
+**On Q**
+
+.. parsed-literal::
    ./replicating_stop
    ./originating_stop
-   source ./ydbenv B r1.20_x86_64
+   
+**On B**:
+
+.. parsed-literal::
    ./originating_stop
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1960,40 +2510,40 @@ On A:
 This example adds the mapping for global ^A to a new database file A.dat in an A->B replication configuration. 
 
 .. parsed-literal::
-   source ./ydbenv A r1.20_x86_64 
+   source ./ydbenv A r122 
    ./db_create
    ./repl_setup
    ./originating_start A B 4001
-   source ./ydbenv B r1.20_x86_64
+   source ./ydbenv B r122
    ./db_create
    ./repl_setup
    ./replicating_start B 4001
-   source ./ydbenv A r1.20_x86_64 
+   source ./ydbenv A r122 
    $ydb_dist/mumps -r %XCMD 'for i=1:1:10 set ^A(i)=i'
    ./repl_status
-   source ./ydbenv B r1.20_x86_64
+   source ./ydbenv B r122
    ./replicating_stop
-   cp B/gtm.gld B/prior.gld
+   cp B/yottadb.gld B/prior.gld
    $ydb_dist/mumps -r ^GDE @updgld
    ./db_create
    mkdir backup_B
-   $ydb_dist/mupip backup "*" backup_B  -replinst=backup_B/ydb.repl
-   $ydb_dist/mupip set -journal=on,before_images,filename=B/gtm.mjl -noprevjnlfile -region "DEFAULT"
+   $ydb_dist/mupip backup "*" backup_B  -replinst=backup_B/yottadb.repl
+   $ydb_dist/mupip set -journal=on,before_images,filename=B/yottadb.mjl -noprevjnlfile -region "DEFAULT"
    $ydb_dist/mumps -r %XCMD 'merge ^A=^|"B/prior.gld"\|A'
    $ydb_dist/mupip set -replication=on -region AREG
    ./originating_start B A 4001
-   source ./ydbenv A r1.20_x86_64 
+   source ./ydbenv A r122 
    ./originating_stop
    ./rollback 4001 backward
-   cat A/gtm.lost  #apply lost transaction file on A. 
+   cat A/yottadb.lost  #apply lost transaction file on A. 
    ./replicating_start A 4001
    ./replicating_stop 
-   cp A/gtm.gld A/prior.gld
+   cp A/yottadb.gld A/prior.gld
    $ydb_dist/mumps -r ^GDE @updgld
    ./db_create
    mkdir backup_A
    $ydb_dist/mupip backup "*" backup_A -replinst=backup_A/ydb.repl
-   $ydb_dist/mupip set -journal=on,before_images,filename=A/gtm.mjl -noprevjnlfile -region "DEFAULT"
+   $ydb_dist/mupip set -journal=on,before_images,filename=A/yottadb.mjl -noprevjnlfile -region "DEFAULT"
    $ydb_dist/mumps -r %XCMD 'merge ^A=^|"A/prior.gld"\|A'
    $ydb_dist/mupip set -replication=on -region AREG
    ./replicating_start A 4001
@@ -2003,9 +2553,9 @@ This example adds the mapping for global ^A to a new database file A.dat in an A
 The shutdown sequence is as follows:
 
 .. parsed-literal::
-   source ./ydbenv A r1.20_x86_64
+   source ./ydbenv A r122
    ./replicating_stop
-   source ./ydbenv B r1.20_x86_64
+   source ./ydbenv B r122
    ./originating_stop
 
 ++++++++++++++++++++++++++++++++++++++
@@ -2014,7 +2564,7 @@ Rolling Software Upgrade
 
 A rolling software upgrade is the procedure of upgrading an instance in such a way that there is minimal impact on the application uptime. An upgrade may consist of changing the underlying database schema, region(s), global directory, database version, application version, triggers, and so on. There are two approaches for a rolling upgrade. The first approach is to upgrade the replicating instance and then upgrade the originating instance. The second approach is to upgrade the originating instance first while its replicating (standby) instance acts as an originating instance.
 
-The following two procedures demonstrate these rolling software upgrade approaches for upgrading an A→B replication configuration running an application using YottaDB r1.10 to YottaDB r1.20 with minimal (a few seconds) impact on the application downtime. 
+The following two procedures demonstrate these rolling software upgrade approaches for upgrading an A→B replication configuration running an application using YottaDB r1.20 to YottaDB r1.22 with minimal (a few seconds) impact on the application downtime. 
 
 **Upgrade the replicating instance first  (A→B)**
 
@@ -2029,7 +2579,7 @@ On B:
 7. Cut the back links to the prior generation journal files with a command like: 
 
    .. parsed-literal::
-      $ydb_dist/mupip set -journal=on,before_images,filename=B/gtm.mjl -noprevjnlfile -region "DEFAULT"
+      $ydb_dist/mupip set -journal=on,before_images,filename=B/yottadb.mjl -noprevjnlfile -region "DEFAULT"
 
 8. Turn on replication. 
 9. If the use of replication filters apply to your situation, bring up the replicating instance with the new-to-old filter on the Source Server of A, and the old-to-new filter on the Receiver Server of B. Otherwise, bring up the replicating instance on B. 
@@ -2047,7 +2597,7 @@ On A:
 8. Cut the back links to the prior generation journal files with a command like: 
 
    .. parsed-literal::
-      $ydb_dist/mupip set -journal=on,before_images,filename=A/gtm.mjl -noprevjnlfile -region DEFAULT
+      $ydb_dist/mupip set -journal=on,before_images,filename=A/yottadb.mjl -noprevjnlfile -region DEFAULT
 
 9. Turn on replication. 
 10. Start the Receiver Server of A. 
@@ -2066,7 +2616,7 @@ On A:
 8. Cut the back links to the prior generation journal files with a command like: 
    
    .. parsed-literal::
-      $ydb_dist/mupip set -journal=on,before_images,filename=A/gtm.mjl -noprevjnlfile -region DEFAULT
+      $ydb_dist/mupip set -journal=on,before_images,filename=A/yottadb.mjl -noprevjnlfile -region DEFAULT
 
 9. Turn on replication. 
 10. If the use of replication filters apply to your situation, bring up the Receiver Server with the old-to-new filter. Otherwise bring up the Receiver Server. 
@@ -2084,7 +2634,7 @@ on B:
 8. Cut the back links to the prior generation journal files with a command like: 
 
    .. parsed-literal::
-      $ydb_dist/mupip set -journal=on,before_images,filename=B/gtm.mjl -noprevjnlfile -region DEFAULT
+      $ydb_dist/mupip set -journal=on,before_images,filename=B/yottadb.mjl -noprevjnlfile -region DEFAULT
 
 9. Turn on replication. 
 10. Start the Receiver Server of B. 
@@ -2096,38 +2646,48 @@ on B:
 Here is an example to upgrade A and B deployed in an A→B replication configuration from r1.10 to r1.20. This example uses instructions from the “Upgrade the originating instance first (A→B)” procedure. 
 
 .. parsed-literal::
-   source ./env A r1.10_x86_64
+   source ./ydbenv A r122
    ./db_create
    ./repl_setup
    ./originating_start A B 4001
-   source ./env B r1.10_x86_64
+   source ./ydbenv B r122
    ./db_create
    ./repl_setup
    ./replicating_start B 4001
-   source ./env A r1.10_x86_64
+   source ./ydbenv A r122
    $ydb_dist/mumps -r %XCMD 'for i=1:1:100 set ^A(i)=i'
-   ./status
-   source ./env B r1.10_x86_64
+   ./repl_status
+   source ./ydbenv B r122
    ./replicating_stop
-   source ./env A r1.10_x86_64
-   ./status
+   source ./ydbenv A r122
+   ./repl_status
    ./originating_stop 
    $ydb_dist/mupip set -replication=off -region "DEFAULT"
    $ydb_dist/dse dump -f 2>&1| grep "Region Seqno"
-   #Perform a switchover to make B the originating instance. 
-   source ./env A r1.20_x86_64
+ 
+Perform a switchover to make B the originating instance. 
+
+.. parsed-literal::
+   source ./ydbenv A r122
    $ydb_dist/mumps -r ^GDE exit
-   $ydb_dist/mupip set -journal=on,before_images,filename=A/gtm.mjl -noprevjnlfile -region "DEFAULT"
+   $ydb_dist/mupip set -journal=on,before_images,filename=A/yottadb.mjl -noprevjnlfile -region "DEFAULT"
+   
    #Perform the upgrade 
+   
    $ydb_dist/dse dump -fileheader 2>&1| grep "Region Seqno"
    #If Region Seqno is greater than the Region Seqno noted previously, run $ydb_dist/dse change -fileheader -req_seqno=<previously_noted_region_seqno>.
    ./repl_setup
-   #A is now upgraded to r1.20 and is ready to resume the role of the originating instance. Shutdown B and reinstate A as the originating instance. 
+  
+A is now upgraded to r1.22 and is ready to resume the role of the originating instance. Shutdown B and reinstate A as the originating instance. 
+
+.. parsed-literal::
    ./originating_start A B 4001
    source ./env B r1.20
    $ydb_dist/mumps -r ^GDE exit
-   $ydb_dist/mupip set -journal=on,before_images,filename=B/gtm.mjl -noprevjnlfile -region "DEFAULT"
+   $ydb_dist/mupip set -journal=on,before_images,filename=B/yottadb.mjl -noprevjnlfile -region "DEFAULT"
+   
    #Perform the upgrade 
+   
    $ydb_dist/dse dump -fileheader 2>&1| grep "Region Seqno"
    #If Region Seqno is different, run $ydb_dist/dse change -fileheader -req_seqno=<previously_noted_region_seqno>.
    $ydb_dist/dse dump -f 2>&1| grep "Region Seqno"
@@ -2218,17 +2778,17 @@ Setting up a Secured TLS Replication Connection
 
 The following example creates two instances (Alice and Bob) and a basic framework required for setting up a TLS replication connection between them. Alice and Bob are `fictional characters <https://en.wikipedia.org/wiki/Alice_and_Bob>`_ and represent two instances who use certificates signed by the same root CA. This example is solely for the purpose of explaining the general steps required to encrypt replication data in motion. You must understand, and appropriately adjust, the scripts before using them in a production environment. Note that all certificates created in this example are for the sake of explaining their roles in a TLS replication environment. For practical applications, use certificates signed by a CA whose authority matches your use of TLS.
 
-1. Remove the comment tags from the following lines in the env script:
+1. Remove the comment tags from the following lines in the ydbenv script:
 
    .. parsed-literal::
       export LD_LIBRARY_PATH=/usr/local/lib
       export ydb_crypt_config=$PWD/$ydb_repl_instname/config_file
       echo -n "Enter Password for ydb_tls_passwd_${ydb_repl_instname}: ";export ydb_tls_passwd_${ydb_repl_instname}="`$ydb_dist/plugin/gtmcrypt/maskpass|tail -n 1|cut -f 3 -d " "`"
 
-2. Execute the env script as follows:
+2. Execute the ydbenv script as follows:
 
    .. parsed-literal::
-      $ source ./env Alice r1.20_x86_64
+      $ source ./ydbenv Alice r122
 
 This creates a YottaDB environment for replication instance name Alice. When prompted, enter a password for ydb_tls_passwd_Alice. 
 
@@ -2351,10 +2911,10 @@ The output of this script is like the following:
 
 On instance Bob:
     
-1. Execute the env script as follows:
+1. Execute the ydbenv script as follows:
 
    .. parsed-literal::
-      $ source ./env Bob r1.20_x86_64
+      $ source ./ydbenv Bob r122
 
 This creates a YottaDB environment for replication instance name Bob. When prompted, enter a password for ydb_tls_passwd_Bob.
 
@@ -2389,7 +2949,7 @@ Ensure that ca.key generated on Instance Alice is available on instance Bob.
 For subsequent environment setup, use the following commands:
 
 .. parsed-literal::
-   source ./env Bob r1.20_x86_64 or source ./env Alice r1.20_x86_64
+   source ./ydbenv Bob r122 or source ./ydbenv Alice r122
    ./replicating_start Bob 4001 -tlsid=Bob or ./originating_start Alice Bob 4001 -tlsid=Alice -reneg=2
 
 +++++++++++++++++++++++++++++++++++++++++++
@@ -2479,9 +3039,18 @@ If you are running a recent version of YottaDB:
 
 - Take a backup of the database and the replication instance file of the originating instance together at the same time with BACKUP -REPLINSTANCE and transfer them to the location of the replicating instance. If the originator's replicating instance file was newly created, take its backup while the Source Server is running to ensure that the backup contains at least one history record.
 
+.. parsed-literal::
+   mupip backup -replinst=backupA
+
 - Use MUPIP REPLICATE -EDITINST -NAME=<secondary-instname> to change the replicating instance's name.
 
+.. parsed-literal::
+   mupip replicate -editinstance -name=backupA backupA/ydb.repl
+
 - Start the replicating instance without -udpateresync.
+
+.. parsed-literal::
+   mupip replicate -receive -start -listenport=4000 -buffsize=1048576 -log=home/A/receive.log
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Replacing the replication instance file of a replicating instance (A→B and P→Q)
@@ -2494,7 +3063,15 @@ To replace the existing replicating instance file with a new replication instanc
 If you are running a recent version of YottaDB:
 
 - Take a backup of just the replication instance file (no database files with BACKUP -REPLINST=</path/to/bkup-orig-repl-inst-file>) and transfer it to the site of the replicating instance.
+
+.. parsed-literal::
+   mupip backup -replinst=backupA
+   mupip replicate -editinstance -name=startA
+
 - Start the replicating instance with -updateresync=</path/to/bkup-orig-repl-inst-file>. 
+
+.. parsed-literal::
+   mupip replicate -receive -start -listenport=4000 -buffsize=1048576 -log=home/A/receive.log -updateresync=startA
 
 In this case, the Receiver Server determines the current instance's journal sequence number by taking a maximum of the Region Sequence Numbers in the database file headers on the replicating instance and uses the input instance file to locate the history record corresponding to this journal sequence number, and exchanges this history information with the Source Server.
 
@@ -2506,9 +3083,18 @@ On P:
 
 - Use the -SUPPLEMENTARY qualifier with the MUPIP REPLICATE -INSTANCE_CREATE command to indicate that this is a supplementary instance file.
 
+.. parsed-literal::
+   mupip replicate -instance_create -supplementary -name=P
+
 - Start a Source Server on P with -UPDOK to indicate that local updates are enabled on P.
 
+.. parsed-literal::
+   mupip replicate -source -start -passive -buf=1048576 -log=home/P/P.log -updok
+
 - Start the Receiver Server on P with the -UPDATERESYNC=</path/to/bkup-orig-repl-inst-file> qualifier and -RESUME. -RESUME indicates that A and P had been replicating before. The Receiver Server looks at the local (stream #0) sequence numbers in the database file headers on P and takes the maximum value to determine the journal sequence number of the new stream on P. It then uses this as the instance journal sequence number on A to resume replication.
+
+.. parsed-literal::
+   mupip replicate -receive -start -listenport=4000 -buffsize=1048576 -log=home/P/P.log -updateresync=startA -resume
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Setting up a new replicating instance from a backup of the originating instance (A→P)
@@ -2518,15 +3104,27 @@ On A:
 
 -  Take a backup of the replication instance file and the database together at the same time with BACKUP -REPLINSTANCE and transfer it to P. If A's replication instance file was also freshly created, then take the backup while the Source Server is running on the originating instance. This ensures that the backed up replication instance file contains at least one history record.
 
+.. parsed-literal::
+   mupip backup -replinst=backupA
+
 On P:
 
 - Create a new replication instance file. Use the -SUPPLEMENTARY qualifier with the MUPIP REPLICATE -INSTANCE_CREATE command to indicate this is a supplementary instance file.
+
+.. parsed-literal::
+   mupip replicate -instance_create -supplementary -name=P
 
 - Restore the database backups from A to P or use MUPIP LOAD to load the data.
 
 - Start a Source Server on P with -UPDOK to indicate local updates are enabled on P.
 
+.. parsed-literal::
+   mupip replicate -source -start -passive -buf=1048576 -log=home/P/P.log -updok
+
 - Start the Receiver Server on P with the -UPDATERESYNC=</path/to/bkup-orig-repl-inst-file> qualifier and -INITIALIZE. The -INITIALIZE indicates this is the first time A and P are replicating.
+
+.. parsed-literal::
+   mupip replicate -receive -start -listenport=4000 -buffsize=1048576 -log=home/P/P.log -updateresync=startA -initialize
 
 In this case, the Receiver Server uses the current journal sequence number in the </path/to/bkup-orig-repl-inst-file> as the point where A starts sending journal records. YottaDB updates the stream sequence number of Stream # 1 in the instance file on P to reflect this value. From this point, YottaDB maps the journal sequence number on A to a stream journal sequence number (for example, stream # 1) on P.
 
@@ -2537,19 +3135,37 @@ Setting up an A→P for the first time if P is an existing instance (having its 
 On P:
 
 - Turn off passive Source Server and Receiver Server (if they are active).
+
+.. parsed-literal::
+   mupip replicate -receiver -shutdown -timeout=2 #Shut down the Receiver Server
+   mupip replicate -source -shutdown -timeout=2 #Shut down the passive Source Server
+
 - Turn off replication and run down the database.
+
+.. parsed-literal::
+   mupip replicate -source -shutdown -timeout=2 $1 #Shut down the originating Source Server
+   mupip rundown -region "*" #Perform database rundown
 
 On A:
 
 - Take a backup of the replication instance file and the database together with BACKUP -REPLINSTANCE and transfer it to P. If A's instance file was also freshly created, take the backup while the Source Server is running on the originating instance. This ensures that the backed up replication instance file contains at least one history record.
+
+.. parsed-literal::
+   mupip backup replinst=backupA
 
 On P:
 
 - Do not create a new instance file. Continue using the existing instance file to preserve updates that have already occurred on P.
 
 - Start the Source Server with -UPDOK to indicate that local updates are enabled on P.
+  
+.. parsed-literal::
+     mupip replicate -source -start -passive -buf=1048576 -log=home/P/P.log -updok
 
 - Start the Receiver Server with the -UPDATERESYNC=</path/to/bkup-orig-repl-inst-file> qualifier and -INITIALIZE. The -INITIALIZE indicates that this is the first time A and P are replicating.
+
+.. parsed-literal::
+   mupip replicate -receive -start -listenport=4000 -buffsize=1048576 -log=home/P/P.log -updateresync=startA -initialize
 
 The Receiver Server uses the current journal sequence number in the </path/to/bkup-orig-repl-inst-file> as the point where A starts sending journal records. YottaDB updates the stream sequence number (for example, of Stream # 1) in the instance file on P to reflect this value. Going forward, the journal sequence number on A will always map to a stream journal sequence number (for example, of stream # 1) on P.
 
