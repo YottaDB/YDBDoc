@@ -46,8 +46,8 @@ Local Installation
   --verbose`. 
   If you do not specify an installation directory with
   :code:`--installdir`, the script installs YottaDB in
-  :code:`/usr/local/lib/yottadb/r#.##` where :code:`r#.##` is
-  the release, e.g., :code:`r1.22`.
+  :code:`/usr/local/lib/yottadb/r###` where :code:`r###` is
+  the release, e.g., :code:`r122`.
 
 2. Choose a directory for your default environment and initialize it:
    :code:`export ydb_dir=$HOME/.yottadb ; . /usr/local/lib/yottadb/r122/ydb_env_set`
