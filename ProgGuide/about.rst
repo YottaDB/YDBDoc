@@ -112,7 +112,6 @@ YottaDB supports input and output processing with the following system component
 
 * Terminals
 * Sequential disk files
-* Magnetic tapes
 * Mailboxes
 * FIFOs
 * Null devices

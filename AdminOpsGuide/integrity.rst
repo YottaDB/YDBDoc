@@ -1526,7 +1526,7 @@ The following table lists the failure codes, whether or not they require a MUPIP
 +-----------------+----------------+-------------------------------------------------------------------------------------------------------------------------+-----------------+
 | G               |                | Cache record modified while in use by the transaction.                                                                  | R3              |
 |                 |                |                                                                                                                         |                 |
-| H*              | x              | Development of a new version of a block encountered an out of design condition.                                         | P1              |
+| H*              | x              | Development of a new version of a block encountered a likely concurrency conflict.                                      | P1              |
 |                 |                |                                                                                                                         |                 |
 | J               |                | Level on a child does not show it to be a direct descendent of its parent.                                              | O1              |
 |                 |                |                                                                                                                         |                 |
