@@ -7,7 +7,7 @@
 ====================================
 
 .. contents::
-   :depth: 2
+   :depth: 3
 
 ------------------------
 Introduction
@@ -946,11 +946,14 @@ Here is the code:
    #export ydb_crypt_config=$PWD/$ydb_repl_instname/config_file
    #echo -n "Enter Password for ydb_tls_passwd_${ydb_repl_instname}: ";export ydb_tls_passwd_${ydb_repl_instname}="`$ydb_dist/plugin/gtmcrypt/maskpass|tail -n 1|cut -f 3 -d " "`"
 
-.. note::
-   Here is an example of setting the ydb_routines environment variable:
-   if [ -e  "$ydb_dist/libgtmutil.so" ] ; then export ydb_routines="$PWD/$ydb_repl_instname $ydb_dist/libgtmutil.so"
-   else export ydb_routines="$PWD/$ydb_repl_instname* $ydb_dist" ; fi . For more examples on setting YottaDB related environment variables to reasonable values on POSIX shells, refer to the ydb_set_env script.
 
+Here is an example of setting the ydb_routines environment variable:
+
+.. parsed-literal::
+   if [ -e  "$ydb_dist/libgtmutil.so" ] ; then export ydb_routines="$PWD/$ydb_repl_instname $ydb_dist/libgtmutil.so"
+   else export ydb_routines="$PWD/$ydb_repl_instname* $ydb_dist" ; fi . 
+   
+For more examples on setting YottaDB related environment variables to reasonable values on POSIX shells, refer to the ydb_set_env script.
 
 Modify the ydbenv script according to your test environment. 
 
@@ -965,7 +968,9 @@ Here is the code:
    $ydb_dist/mumps -r ^GDE @gdemsr
    $ydb_dist/mupip create
 
-The file gdemsr contains:
+**gdemsr** 
+
+Contains settings that are given to the db_create script.
 
 .. parsed-literal::
    change -segment DEFAULT -file_name=$PWD/$ydb_repl_instname/yottadb.dat
@@ -987,6 +992,7 @@ Turns on replication for all regions and create the replication instance file wi
 Here is the code:
 
 .. parsed-literal::
+   \#!/bin/sh
    $ydb_dist/mupip set -replication=on -region "*"
    $ydb_dist/mupip replicate -instance_create -noreplace
 
@@ -1004,8 +1010,8 @@ Here is the code:
 
 .. parsed-literal::
    $ydb_dist/mupip replicate -source -start -instsecondary=$2 -secondary=localhost:$3 -buffsize=1048576 -log=$PWD/$1/$1_$2.log $4 $5
-   tail -30 $PWD/$1/$1_$2.log
    $ydb_dist/mupip replicate -source -checkhealth
+   tail -30 $PWD/$1/$1_$2.log
 
 **replicating_start**
 
@@ -1021,8 +1027,8 @@ Here is the code:
 .. parsed-literal::
    $ydb_dist/mupip replicate -source -start -passive -instsecondary=dummy -buffsize=1048576 -log=$PWD/$1/source$1_dummy.log # creates the Journal Pool
    $ydb_dist/mupip replicate -receive -start -listenport=$2 -buffsize=1048576 -log=$PWD/$1/receive.log $3 $4 # starts the Receiver Server
-   tail -20 $PWD/$1/receive.log
    $ydb_dist/mupip replicate -receive -checkhealth
+   tail -20 $PWD/$1/receive.log
 
 **suppl_setup**
 
@@ -1043,8 +1049,8 @@ Here is the code:
    $ydb_dist/mupip replicate -instance_create -supplementary -noreplace
    $ydb_dist/mupip replicate -source -start -passive -buf=1048576 -log=$PWD/$ydb_repl_instname/$1_dummy.log -instsecondary=dummy $4
    $ydb_dist/mupip replicate -receive -start -listenport=$3 -buffsize=1048576 -log=$PWD/$ydb_repl_instname/$1.log -updateresync=$2 -initialize $5
-   tail -30 $PWD/$1/$1.log
    $ydb_dist/mupip replicate -receive -checkhealth
+   tail -30 $PWD/$1/$1.log
 
 **repl_status**
 
@@ -1118,8 +1124,8 @@ Here is the code:
 .. parsed-literal::
    $ydb_dist/mupip replicate -source -start -passive -instsecondary=dummy -buffsize=1048576 -log=$PWD/$ydb_repl_instname/$12dummy.log $3 # creates the Journal Pool
    $ydb_dist/mupip replicate -receive -start -listenport=$2 -buffsize=1048576 $4 $5 -log=$PWD/$ydb_repl_instname/$1.log # starts the Receiver Server and the Update Process
-   tail -30 $PWD/$1/$1.log
    $ydb_dist/mupip replicate -receiver -checkhealth # Checks the health of the Receiver Server and the Update Process
+   tail -30 $PWD/$1/$1.log
 
 **gen_gc**
 
@@ -1189,9 +1195,9 @@ Here is the code:
    openssl ca -config $PWD/openssl.cnf -in $PWD/certs/$ydb_repl_instname.csr -out $PWD/certs/$1$ydb_repl_instname.crt
    openssl x509 -in $PWD/certs/$1$ydb_repl_instname.crt -dates -issuer -subject -noout
 
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+-------------------------------------------------------------------
 Setting up an A -> B Replication Configuration with Empty Databases
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+-------------------------------------------------------------------
 
 **On A**:
 
@@ -1235,7 +1241,7 @@ Setting up an A -> B Replication Configuration with Empty Databases
    Wed Jul 18 12:45:46 2018 : Connect hard tries count = 5, Connect hard tries period = 500
    Wed Jul 18 12:45:46 2018 : 1 hard connection attempt failed : Connection refused
 
-Once B is brought up as replicating, check the log created. For example,
+Once B is brought up as replicating, check the log created on A. For example,
 
 .. parsed-literal::
    $ tail -f A/A_B.log
@@ -1250,12 +1256,9 @@ Once B is brought up as replicating, check the log created. For example,
    Wed Jul 18 12:46:04 2018 : Sending REPL_HISTREC message with seqno 1 [0x1]
    Wed Jul 18 12:46:04 2018 : New History Content : Start Seqno = 1 [0x1] : Stream Seqno = 0 [0x0] : Root Primary = [A] : Cycle = [1] : Creator pid = 18498 : Created time = 1531932346 [0x5b4f6eba] : History number = 0 : Prev History number = -1 : Stream # = 0 : History type = 1
 
-On B:
+**On B**:
 
 * Source the environment file.
-* Create the database and the replication instance file.
-* Start the passive Source Server.
-* Start the Receiver Server.
 
 .. parsed-literal::
    source ./ydbenv B r1.20_x86_64
@@ -1266,8 +1269,7 @@ On B:
   ./db_create
   ./repl_setup
 
-* Start the passive Source Server.
-* Start the Receiver Server.
+* Start the passive Source Server and the Receiver Server.
 
 .. parsed-literal::
    $./replicating_start B 4001
@@ -1304,7 +1306,7 @@ On B:
 
 The shutdown sequence is as follows:
 
-On B:
+**On B**:
 
 .. parsed-literal::
    $./replicating_stop
@@ -1318,7 +1320,7 @@ On B:
    Wed Jul 18 13:02:36 2018 : Journal pool shared memory removed
    Wed Jul 18 13:02:36 2018 : Journal pool semaphore removed
 
-On A:
+**On A**:
 
 .. parsed-literal::
    $./originating_stop
@@ -1329,9 +1331,9 @@ On A:
    Wed Jul 18 13:03:02 2018 : Journal pool semaphore removed
    %YDB-I-MUFILRNDWNSUC, File /home/A/yottadb.dat successfully rundown
 
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+-------------------------------------------------------------------------
 Setting up an A -> B -> C Replication Configuration with Empty Databases
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+-------------------------------------------------------------------------
 
 **On A**:
 
@@ -1340,7 +1342,7 @@ Setting up an A -> B -> C Replication Configuration with Empty Databases
 .. parsed-literal::
    source ./ydbenv A r122
 
-* Create the replication instance file.
+* Create the database and the replication instance file.
 
 .. parsed-literal::
    ./db_create
@@ -1353,19 +1355,18 @@ Setting up an A -> B -> C Replication Configuration with Empty Databases
 
 **On B**:
 
-* Source the enironment variable.
+* Source the environment variable.
 
 .. parsed-literal::
    source .ydbenv B r122
 
-* Create a new replication instance file.
+* Create a new database and replication instance file.
 
 .. parsed-literal::
    ./db_create
    ./repl_setup
 
-* Start the passive Source Server.
-* Start the Receiver Server.
+* Start the passive Source Server and the Receiver Server.
 
 .. parsed-literal::
    ./replicating_start B 4001
@@ -1382,14 +1383,13 @@ Setting up an A -> B -> C Replication Configuration with Empty Databases
 .. parsed-literal::
    source ./ydbenv C r122
 
-* Create a new replication instance file.
+* Create a new database and replication instance file.
 
 .. parsed-literal::
    ./db_create
    ./repl_setup
 
-* Start the passive Source Server .
-* Start the Receiver Server.
+* Start the passive Source Server and the Receiver Server.
 
 .. parsed-literal::
    ./replicating_start C 4002
@@ -1419,9 +1419,9 @@ The shutdown sequence is as follows:
    ./originating_stop
 
 
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+--------------------------------------------------------------------
 Setting up an A -> P replication configuration with empty databases
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+--------------------------------------------------------------------
 
 **On A**:
 
@@ -1430,7 +1430,7 @@ Setting up an A -> P replication configuration with empty databases
 .. parsed-literal::
    source ./ydbenv A r122
 
-* Create a new replication instance file.
+* Create a new database and replication instance file.
 
 .. parsed-literal::
    ./db_create
@@ -1460,7 +1460,7 @@ Setting up an A -> P replication configuration with empty databases
 .. parsed-literal::
    source ./ydbenv P r122
 
-* Create a new replication instance file with the -supplementary qualifier.
+* Create a new database and replication instance file with the -supplementary qualifier.
 
 .. parsed-literal::
    ./db_create
@@ -1468,8 +1468,7 @@ Setting up an A -> P replication configuration with empty databases
    i.e.
     mupip replicate -instance_create -supplementary -name=P
 
-* Start the passive Source Server.
-* Start the Receiver Server and the Update Process with 
+* Start the passive Source Server and the Receiver Server and the Update Process with 
 
 .. parsed-literal::
   -updateresync="/path/to/bkup_orig_repl_inst_file" -initialize. 
@@ -1502,9 +1501,9 @@ The shutdown sequence is as follows:
    ./originating_stop
 
 
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+------------------------------------------------------------------------------------
 Replicating Instance Starts from Backup of Originating Instance (A -> B and A -> P)
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+------------------------------------------------------------------------------------
 
 The most common scenario for bringing up a replicating instance is to take a backup of the originating instance and bring it up as a replicating instance. If the backup is a comprehensive backup, the file headers store the journal sequence numbers.
 
@@ -1599,9 +1598,9 @@ The shutdown sequence is as follows:
 .. parsed-literal::
    ./originating_stop
 
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+------------------------------------------------------------------
 Switchover Possibilities in an A -> B replication configuration
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+------------------------------------------------------------------
 
 A switchover is the procedure of switching the roles of an originating instance and a replicating instance. A switchover is necessary for various reasons including (but not limited to) testing the preparedness of the replicating instance to take over the role of an originating instance and bringing the originating instance down for maintenance in a way that there is minimal impact on application availability.
 
@@ -1693,9 +1692,9 @@ The shutdown sequence is as follows:
 .. parsed-literal::
    ./originating_stop
 
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+--------------------------------------------------------------------------------------
 Switchover Possibilities in a B <- A -> P replication configuration
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+--------------------------------------------------------------------------------------
 
 **A requires rollback**
 
@@ -2244,9 +2243,9 @@ The shutdown sequence is as follows:
 .. parsed-literal::
    ./originating_stop
 
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+-------------------------------------------------------------------------
 Switchover possibilities in a B <- A -> P -> Q replication configuration
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+-------------------------------------------------------------------------
 
 Consider a situation where A and P are located in one data center, with BC replication to B and Q respectively, located in another data center. When the first data center fails, the SI replication from A to P is replaced by SI replication from B to Q. The following scenario describes a switchover from B←A→P→Q to A←B→Q→P with unreplicated updates on A and P.
 
@@ -2459,9 +2458,9 @@ The shutdown sequence is as follows:
 .. parsed-literal::
    ./originating_stop
 
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+---------------------------------------------------------------------
 Changing the global directory in an A -> B replication configuration
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+---------------------------------------------------------------------
 
 In a replication configuration, a global directory provides information to map global updates to their respective database files. As replication processes pick the state of the global directory at process startup, any change made to the global directory requires process restarts (at a minimum) to bring that change into effect. A switchover mechanism can ensure application availability while making global directory changes. 
 
@@ -2558,9 +2557,9 @@ The shutdown sequence is as follows:
    source ./ydbenv B r122
    ./originating_stop
 
-++++++++++++++++++++++++++++++++++++++
+-------------------------------------
 Rolling Software Upgrade
-++++++++++++++++++++++++++++++++++++++
+-------------------------------------
 
 A rolling software upgrade is the procedure of upgrading an instance in such a way that there is minimal impact on the application uptime. An upgrade may consist of changing the underlying database schema, region(s), global directory, database version, application version, triggers, and so on. There are two approaches for a rolling upgrade. The first approach is to upgrade the replicating instance and then upgrade the originating instance. The second approach is to upgrade the originating instance first while its replicating (standby) instance acts as an originating instance.
 
@@ -2703,9 +2702,9 @@ The shutdown sequence is as follows:
    source ./env A r1.20_x86_64
    ./originating_stop
 
-++++++++++++++++++++++++++++++
+------------------------------
 Shutting down an instance
-++++++++++++++++++++++++++++++
+------------------------------
 
 To shutdown an originating instance:
 
@@ -2721,9 +2720,9 @@ To shutdown a propagating instance:
 * On its replicating instances, ensure that there are no YottaDB or MUPIP processes attached to the Journal Pool as updates are disabled (they are enabled only on the originating instance).
 * Execute mupip rundown -region to ensure that the database, Journal Pool, and Receiver Pool shared memory is rundown properly.
 
-++++++++++++++++++++++++++++++++++++++++++
+------------------------------------------
 Creating a new Replication Instance File
-++++++++++++++++++++++++++++++++++++++++++
+------------------------------------------
 
 You do not need to create a new replication instance file except when you upgrade from a very old YottaDB version. Unless stated in the release notes of your YottaDB version, your instance file does not need to be upgraded. If you are creating a new replication instance file for any administration purpose, remember that doing so will remove history records which may prevent it from resuming replication with other instances. To create a new replication instance file, follow these steps:
 
@@ -2772,9 +2771,9 @@ On the receiving side:
    When the instances have different endian-ness, create a new replication instance file as described in `“Creating a new Replication Instance File” <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html#creating-a-new-replication-instance-file>`_
 
 
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+--------------------------------------------------------
 Setting up a Secured TLS Replication Connection
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+--------------------------------------------------------
 
 The following example creates two instances (Alice and Bob) and a basic framework required for setting up a TLS replication connection between them. Alice and Bob are `fictional characters <https://en.wikipedia.org/wiki/Alice_and_Bob>`_ and represent two instances who use certificates signed by the same root CA. This example is solely for the purpose of explaining the general steps required to encrypt replication data in motion. You must understand, and appropriately adjust, the scripts before using them in a production environment. Note that all certificates created in this example are for the sake of explaining their roles in a TLS replication environment. For practical applications, use certificates signed by a CA whose authority matches your use of TLS.
 
@@ -2952,9 +2951,9 @@ For subsequent environment setup, use the following commands:
    source ./ydbenv Bob r122 or source ./ydbenv Alice r122
    ./replicating_start Bob 4001 -tlsid=Bob or ./originating_start Alice Bob 4001 -tlsid=Alice -reneg=2
 
-+++++++++++++++++++++++++++++++++++++++++++
+--------------------------------------------
 Schema Change Filters
-+++++++++++++++++++++++++++++++++++++++++++
+--------------------------------------------
 
 Filters between the originating and replicating systems perform rolling upgrades that involve database schema changes. The filters manipulate the data under the different schemas when the software revision levels on the systems differ.
 
@@ -2962,9 +2961,9 @@ YottaDB provides the ability to invoke a filter; however, an application develop
 
 Filters should reside on the upgraded system and use logical database updates to update the schema before applying those updates to the database. The filters must invoke the replication Source Server (new schema to old) or the database replication Receiver Server (old schema to new), depending on the system's status as either originating or replicating. For more information on Filters, refer to the `“Filters” section <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html/#replication-architecture>`_. 
 
-+++++++++++++++++++++++++++++++++++++++++++++
+----------------------------------------------
 Recovering from the replication WAS_ON State
-+++++++++++++++++++++++++++++++++++++++++++++
+----------------------------------------------
 
 If you notice the replication WAS_ON state, correct the cause that made YottaDB turn journaling off and then execute MUPIP SET -REPLICATION=ON.
 
@@ -3006,9 +3005,9 @@ If replication does not resume properly (due to errors in the Receiver Server or
 
 - Start the Receiver Server (with no -UPDATERESYNC) the replicating instance.
 
-++++++++++++++++++++++++++++++++++++++++++++++++++++++
+------------------------------------------------------
 Rollback data from crashed (idle) regions
-++++++++++++++++++++++++++++++++++++++++++++++++++++++
+------------------------------------------------------
 
 When a rollback operation fails with CHNGTPRSLVTM, NOPREVLINK, and JNLFILEOPENERR messages, evaluate whether you have a crashed region in your global directory that is seldom used for making updates (idle). The updates in an idle region's current generation journal file may have timestamps and sequence numbers that no longer exist in the prior generation journal file chains of more frequently updated regions because of periodic pruning of existing journal files as part of routine maintenance. MUPIP SET and BACKUP commands can also remove previous generation journal file links.
 
@@ -3029,9 +3028,9 @@ As a general practice, perform an optimal recovery/rollback every time when star
 
 YottaDB recommends rotating journal files with MUPIP SET when removing old journal files or ensuring that all regions are periodically updated.
 
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+--------------------------------------------------------------------------------------
 Setting up a new replicating instance of an originating instance (A→B, P→Q, or A→P)
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+--------------------------------------------------------------------------------------
 
 To set up a new replicating instance of an originating instance for the first time or to replace a replicating instance if database and instance file get deleted, you need to create the replicating instance from a backup of the originating instance or one of its replicating instances.
 
@@ -3052,9 +3051,9 @@ If you are running a recent version of YottaDB:
 .. parsed-literal::
    mupip replicate -receive -start -listenport=4000 -buffsize=1048576 -log=home/A/receive.log
 
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+--------------------------------------------------------------------------------
 Replacing the replication instance file of a replicating instance (A→B and P→Q)
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+--------------------------------------------------------------------------------
 
 In this case, it is possible that the replicating instance's database files are older than the originating instance. Note that to resume replication there is no need to transfer the backup of the originating instance's database and replication instance files.
 
@@ -3075,9 +3074,9 @@ If you are running a recent version of YottaDB:
 
 In this case, the Receiver Server determines the current instance's journal sequence number by taking a maximum of the Region Sequence Numbers in the database file headers on the replicating instance and uses the input instance file to locate the history record corresponding to this journal sequence number, and exchanges this history information with the Source Server.
 
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+--------------------------------------------------------------------------
 Replacing the replication instance file of a replicating instance (A→P)
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+--------------------------------------------------------------------------
 
 On P:
 
@@ -3096,9 +3095,9 @@ On P:
 .. parsed-literal::
    mupip replicate -receive -start -listenport=4000 -buffsize=1048576 -log=home/P/P.log -updateresync=startA -resume
 
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+--------------------------------------------------------------------------------------
 Setting up a new replicating instance from a backup of the originating instance (A→P)
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+--------------------------------------------------------------------------------------
 
 On A:
 
@@ -3128,9 +3127,9 @@ On P:
 
 In this case, the Receiver Server uses the current journal sequence number in the </path/to/bkup-orig-repl-inst-file> as the point where A starts sending journal records. YottaDB updates the stream sequence number of Stream # 1 in the instance file on P to reflect this value. From this point, YottaDB maps the journal sequence number on A to a stream journal sequence number (for example, stream # 1) on P.
 
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+--------------------------------------------------------------------------------------------------
 Setting up an A→P for the first time if P is an existing instance (having its own set of updates)
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+--------------------------------------------------------------------------------------------------
 
 On P:
 
