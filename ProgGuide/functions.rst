@@ -1514,8 +1514,10 @@ $VIEW() provides a means to access YottaDB environmental information. When Yotta
 |               |                  | The reserved space is used to reduce the active memory usage, for example, when a process uses a large amount of memory then subsequently uses a significantly      |
 |               |                  | reduced amount.                                                                                                                                                     |
 +---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| "STATSHARE"   | region           | Returns TRUE (1) if the process is currently sharing database statistics for the region and FALSE (0) if it is not. For the process to be sharing, the database must|
-|               |                  | be enabled for sharing and the process must have opted in to share. $VIEW("STATSHARE") with no region argument indicates the process has enabled sharing.           |
+| "STATSHARE"   | region           | Returns 0 when the process has sharing disabled, 1 when it has sharing enabled, and 2 when sharing is enabled selectively for regions. For a process to store       |
+|               |                  | statistics in the stats db, the database must be enabled for sharing and the process must have opted in to share. VIEW "STATSHARE" with no region argument enables  |
+|               |                  | sharing for all regions and VIEW "STATSHARE":"REGION_NAME" enables sharing selectively for a region. $VIEW("STATSHARE","REGION_NAME") returns whether a process has |
+|               |                  | opted to share statistics for a region.                                                                                                                             |
 +---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | "STKSIZ"      | none             | Returns the YottaDB stack size in bytes.                                                                                                                            |
 +---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -3149,6 +3151,8 @@ The following table describes the values for the fourth expression for the TLS k
 |                  | \|O:0000000001520004,01                                                                                                                       |
 |                  |                                                                                                                                               |
 |                  | The values for the SSL_OP options and verify modes are defined in the include/openssl/ssl.h file provided by the OpenSSL development package. |
+|                  |                                                                                                                                               |
+|                  | Note: the TLS reference implementation plug-in disables SSLv3 by default.                                                                     |
 +------------------+-----------------------------------------------------------------------------------------------------------------------------------------------+
 | CIPHER           | The SSL protocol version prefixed by "P:" and the algorithm negotiated between the server and client prefixed by "C:". Here is an example:    |
 |                  |                                                                                                                                               |
@@ -3345,9 +3349,23 @@ The $ZTRNLNM function returns the value of an environment variable.
 The format for the $ZTRNLNM function is:
 
 .. parsed-literal::
-   $ZTRNLNM(expr)
+   $ZTRNLNM(expr1[,expr2[,expr3[,expr4[,expr5[,expr6]]]]])
 
-expr specifies the environment variable whose value needs to be returned.
+expr1 specifies the environment variable whose value needs to be returned.
+
+expr2 to expr5 are OpenVMS-related expressions that specify logical name table(s), index (numbered from 0), initial mode of the look-up, and a value indicating whether the look-up is case sensitive. To ensure interoperability between UNIX and OpenVMS versions, $ZTRNLNM() on UNIX accepts these expressions and ignores them.
+
+The optional expr6 specifies any one of the following keywords:
+
++---------------------------------+-------------------------------------------------+
+| Item Keyword                    | Data Returned                                   |
++=================================+=================================================+
+| FULL                            | Return the translation                          |
++---------------------------------+-------------------------------------------------+
+| LENGTH                          | Length of the return value in bytes.            |
++---------------------------------+-------------------------------------------------+
+| VALUE                           | Returns the translation.                        |
++---------------------------------+-------------------------------------------------+
 
 +++++++++++++++++++++++
 Examples of $ZTRNLNM()
@@ -3356,6 +3374,8 @@ Examples of $ZTRNLNM()
 Example:
 
 .. parsed-literal::
+   YDB>write $ztrnlnm("ydb_dist","","","","","VALUE")
+   /usr/local/lib/yottadb/r120/utf8
    YDB>write $ztrnlnm("ydb_dist")
    /usr/local/lib/yottadb/r120
    YDB>

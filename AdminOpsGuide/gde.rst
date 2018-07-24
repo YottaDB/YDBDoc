@@ -683,7 +683,7 @@ The format of the CHANGE command is:
 
 .. parsed-literal::
    C[HANGE] -G[BLNAME] -C[OLLATION]=collation_number
-   C[HANGE] -I[INSTANCE] -F[ILE_NAME=[repl_inst_filename|""]
+   C[HANGE] -I[INSTANCE] -F[ILE_NAME={repl_inst_filename|""}
    C[HANGE] -N[AME] namespace -R[EGION]=new-region
    C[HANGE] -R[EGION] region-name [-REGION-qualifier...]
    C[HANGE] -S[EGMENT] segment-name [-SEGMENT-qualifier...]

@@ -161,7 +161,7 @@ The format of the MUPIP BACKUP command is:
    ] region-list[,...] destination-list
 
 .. note::
-   MUPIP BACKUP does a more comprehensive job of managing backup activities than other backup techniques such as a SAN backup, breaking a disk mirror, or a file system snapshot because it integrates journal management, instance file management, and records timestamps in the database file headers. To use other techniques, you must first freeze all regions concurrently with a command such as MUPIP FREEZE -ON "*" in order to ensure a consistent copy of files with internal structural integrity. YottaDB neither endorses nor tests any third party products for backing up a YottaDB database.
+   MUPIP BACKUP does a more comprehensive job of managing backup activities than other backup techniques such as a SAN backup, disk mirroring, or a file system snapshot because it integrates journal management, instance file management, and records timestamps in the database file headers. To use other techniques, you must first freeze all regions concurrently with a command such as MUPIP FREEZE -ON "*" in order to ensure a consistent copy of files with internal structural integrity. YottaDB neither endorses nor tests any third party products for backing up a YottaDB database.
 
 * MUPIP BACKUP supports two methods of database backup: -BYTESTREAM and -DATABASE. MUPIP BACKUP -BYTESTREAM directs the output to a broad range of devices, including disks, TCP sockets, and pipes. MUPIP BACKUP -DATABASE directs the output to random access devices (i.e., disks).
 
@@ -259,9 +259,6 @@ The format of the BYTESTREAM qualifier is:
 **-Database**
 
 Creates a disk-to-disk backup copy of the files of all selected regions. DATABASE backup copy is a ready-to-use YottaDB database unlike BYTESREAM backup which is required to be restored to a random access file.
-
-.. note::
-   The DATABASE qualifier does not support backup to magnetic tape.
 
 The format of the DATABASE qualifier is:
 
@@ -731,7 +728,7 @@ Backs up certain globals or extracts data from the database for use by another s
 
 * To ensure that MUPIP EXTRACT reflects a consistent application state, suspend the database updates to all regions involved in the extract, typically with the FREEZE qualifier, or backup the database with the ONLINE qualifier and extract files from the backup.
 
-* EXTRACT places its output in the file defined by the file-name. EXTRACT may output to a UNIX file on any device that supports such files, including magnetic tapes.
+* EXTRACT places its output in the file defined by the file-name.
 
 * In UTF-8 mode, MUPIP EXTRACT writes a sequential output file in the UTF-8 character encoding. Ensure that the MUPIP EXTRACT commands and corresponding MUPIP LOAD commands execute with the same setting for the environment variable ydb_chset.
 
@@ -821,7 +818,7 @@ By default, EXTRACT operates -LOG.
 Creates an encrypted binary extract with null IVs from a database with non-null IVs, which can be restored to a version that does not support non-null IVs. The format of the -NULL_IV qualifier is:
 
 .. parsed-literal::
-   -[N]ULL_IV
+   -[NO]NULL_IV
 
 * Older versions of YottaDB used empty (all zeros or "NULL_IV") initialization vectors(IVs) to encrypt or decrypt -FORMAT="BINARY" extracts.
 

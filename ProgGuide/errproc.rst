@@ -1083,7 +1083,7 @@ To simplify record keeping, an application may set $ZTRAP to an error-handling r
 
 .. parsed-literal::
    YDB>ZPRINT ^ERR
-   ERR0;;RECORD CONTECT OF AN ERROR
+   ERR0;;RECORD CONTENT OF AN ERROR
    ;
    RECORD  SET $ZTRAP="GOTO OPEN"
            ZSHOW "*":^ERR($J,$H)
@@ -1103,7 +1103,7 @@ To simplify record keeping, an application may set $ZTRAP to an error-handling r
    OPEN    SET $ZTRAP="GOTO OPEN1"
            SET %ERRIO=$IO,%ERRZA=$ZA,%ERRZB=$ZB,%ERRZE=$ZEOF
            SET %ERRVF="REC.ERR"
-           SET %ERRVF=$ZDATE($H,"YEARMMDD2460SS")_"_"_$J_".ERR"
+           SET %ERRVF=$ZDATE($H,"YEARMMDD2460SS")_"_"_$J\_".ERR"
            OPEN %ERRVF:NEWVERSION
            USE %ERRVF
            S $ZT="S $ZT="" G WARN"" U $P:(NOCENA:CTRAP="""") G STAC"
@@ -1172,7 +1172,7 @@ Example:
            NEW
            SET (A,C,D)=$ZLEVEL
            DO BAD
-           BAD     NEW (A)
+   BAD     NEW (A)
            SET B="BAD"
            WRITE 1/0
            WRITE !,"THIS IS NOT DISPLAYED"
@@ -1183,19 +1183,8 @@ Example:
    THIS IS SUB1
    THIS IS SUB2
    THIS IS SUB3
-   PROGRAM STACK: 
-   $STACK: 5
-   $STACK(-1): 5
-   LEVEL: 5  PLACE:BAD+2^EP13    MCODE: WRITE 1/0    ECODE:,M9,Z150373210,
-   LEVEL: 4  PLACE:SUB3+3^EP13   MCODE: DO BAD       ECODE:
-   LEVEL: 3  PLACE:SUB2+3^EP13   MCODE: DO SUB3      ECODE:
-   LEVEL: 2  PLACE:SUB1+3^EP13   MCODE: DO SUB2      ECODE:
-   LEVEL: 1  PLACE:NODB+3^EP13   MCODE: DO SUB1      ECODE:
    YOU HAVE ENCOUNTERED AN ERROR
    PLEASE NOTIFY JOAN Q SUPPORT PERSON
-   %YDB-E-DIVZERO, Attempt to divide by zero
-   %YDB-I-RTSLOC,                 At M source location FATAL+1^ERR
-
 
 Example EP13 uses the error recording routine by setting $ZTRAP="GOTO ^ERR". When the routine encounters an error at label BAD, YottaDB transfers control to routine ERR. Afterwards the .ERR file would have contents like:
 
@@ -1203,11 +1192,11 @@ Example EP13 uses the error recording routine by setting $ZTRAP="GOTO ^ERR". Whe
    YDB>zwrite ^ERR
    ^ERR(4806,"62364,27842","D",1)="/dev/pts/8 OPEN TERMINAL NOPAST NOESCA NOREADS T
              YPE WIDTH=80 LENG=22 EDIT "
-   ^ERR(4806,"62364,27842","G",0)="GLD:*,REG:*,SET:68,KIL:3,GET:0,DTA:0,ORD:0,ZPR:0
+   ^ERR(4806,"62364,27842","G",0)="GLD:\*,REG:\*,SET:68,KIL:3,GET:0,DTA:0,ORD:0,ZPR:0
              ,QRY:0,LKS:0,LKF:0,CTN:0,DRD:3,DWT:0,NTW:68,NTR:6,NBW:71,NBR:154,NR0:0
              ,NR1:0,NR2:0,NR3:0,TTW:0,TTR:0,TRB:0,TBW:0,TBR:0,TR0:0,TR1:0,TR2:0,TR3
              :0,TR4:0,TC0:0,TC1:0,TC2:0,TC3:0,TC4:0,ZTR:0"
-   ^ERR(4806,"62364,27842","G",1)="GLD:/home/jdoe/.yottadb/r120/g/gtm.gld
+   ^ERR(4806,"62364,27842","G",1)="GLD:/home/jdoe/.yottadb/r120/g/yottadb.gld
              ,REG:DEFAULT,SET:69,KIL:4,GET:0,DTA:0,ORD:0,ZPR:0,QRY:0,LKS:0,LKF:0,CT
               N:69,DRD:3,DWT:0,NTW:69,NTR:7,NBW:72,NBR:160,NR0:0,NR1:0,NR2:0,NR3:0,T
               TW:0,TTR:0,TRB:0,TBW:0,TBR:0,TR0:0,TR1:0,TR2:0,TR3:0,TR4:0,TC0:0,TC1:0
@@ -1290,54 +1279,14 @@ Example EP13 uses the error recording routine by setting $ZTRAP="GOTO ^ERR". Whe
    ^ERR(4806,"62364,27842","S",6)="+1^GTM$DMOD    (Direct mode) "
    ^ERR(4806,"62364,27842","V",1)="A=5 ;*"
    ^ERR(4806,"62364,27842","V",2)="B=""BAD"""
-   File contents:
-   $DEVICE=""
-   $ECODE=",M9,Z150373210,M6,Z150373850,"
-   $ESTACK=5
-   $ETRAP=""
-   $HOROLOG="62364,27842"
-   $IO="20110930074402_4806.ERR"
-   $JOB=4806
-   $KEY=""
-   $PRINCIPAL="/dev/pts/8"
-   $QUIT=0
-   $REFERENCE="^ERR(4806,""62364,27842"",""S"",6)"
-   $STACK=5
-   $STORAGE=2147483647
-   $SYSTEM="47,gtm_sysid"
-   $TEST=1
-   $TLEVEL=0
-   $TRESTART=0
-   $X=0
-   $Y=18
-   $ZA=0
-   $ZALLOCSTOR=895460
-   $ZB=""
-   $ZCHSET="M"
-   $ZCMDLINE=""
-   $ZCOMPILE=""
-   $ZCSTATUS=0
-   $ZDATEFORM=0
-   $ZDIRECTORY="/home/jdoe/"
-   $ZEDITOR=0
-   $ZEOF=1
-   $ZERROR="Unprocessed $ZERROR, see $ZSTATUS"
-   $ZGBLDIR="/home/jdoe/.yottadb/r120/g/gtm.gld"
-   $ZININTERRUPT=0
-   $ZINTERRUPT="IF $ZJOBEXAM()"
-   $ZIO="20110930074402_4806.ERR"
-   $ZJOB=0
-   $ZLEVEL=6
-   $ZMAXTPTIME=0
-   $ZMODE="INTERACTIVE"
-   $ZPATNUMERIC="M"
-   $ZPOSITION="OPEN+7^ERR"
-   $ZPROCESS=""
-   $ZPROMPT="YDB>"
-   $ZQUIT=0
-   $ZREALSTOR=898568
-   --------------------
-   Extra lines removed
-   --------------------
+   ^ERR(13258,"64813,17382","VL",3,"V",1)="A=3"
+   ^ERR(13258,"64813,17382","VL",3,"V",2)="B=3"
+   ^ERR(13258,"64813,17382","VL",3,"V",3)="C=3"
+   ^ERR(13258,"64813,17382","VL",4,"V",1)="B=4"
+   ^ERR(13258,"64813,17382","VL",4,"V",2)="C=4"
+   ^ERR(13258,"64813,17382","VL",4,"V",3)="D=4"
+   ^ERR(13258,"64813,17382","VL",5,"V",1)="A=5"
+   ^ERR(13258,"64813,17382","VL",5,"V",2)="C=5"
+   ^ERR(13258,"64813,17382","VL",5,"V",3)="D=5"
 
 

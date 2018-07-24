@@ -222,15 +222,18 @@ Example:
    ;
    beg  for read !,"Name: ",name do name
       quit
-   name set ln=$l(name)
-      if ln,$extract("QUIT",1,ln)=$tr(name,"quit","QUIT") do quit
-      . s name="Q"
-      if ln<30,bame?1.a.1"-".a1","1" "1a.ap do print quit
-      write !,"Please use last-name, "
-      write "first-name middle-initial or 'Q' to Quit."
-      quit
-   print write !,$piece(name,", ",2)," ",$piece(name,", ")
-      quit
+   name
+   set ln=$l(name)
+     if ln,$extract("QUIT",1,ln)=$tr(name,"quit","QUIT") do
+     . s name="Q"
+     . quit
+     if ln<30,bame?1.a.1"-".a1","1" "1a.ap do print quit
+     write !,"Please use last-name, "
+     write "first-name middle-initial or 'Q' to Quit."
+     quit
+   print
+     write !,$piece(name,", ",2)," ",$piece(name,", ")
+     quit
    YDB>
 
 This uses the ZPRINT command to display the routine dmex.
@@ -494,61 +497,94 @@ The ZSHOW command displays information about the M environment.
 Example:
 
 .. parsed-literal::
-   YDB>ZSHOW "*"
+   YDB>zshow "*"
    $DEVICE=""
    $ECODE=",M6,Z150373850,"
    $ESTACK=2
    $ETRAP=""
-   $HOROLOG="59149,36200"
-   $IO="/dev/pts/17"
-   $JOB=310051
-   $KEY=""
-   $PRINCIPAL="/dev/pts/17"
+   $HOROLOG="64813,21971"
+   $IO="/dev/pts/0"
+   $JOB=14550
+   $KEY=$C(13)
+   $PRINCIPAL="/dev/pts/0"
    $QUIT=0
    $REFERENCE=""
    $STACK=2
-   $STORAGE=1072300032
-   $SYSTEM="47,gtm_sysid"
+   $STORAGE=2147483647
+   $SYSTEM="47,ydb_sysid"
    $TEST=1
    $TLEVEL=0
    $TRESTART=0
    $X=0
-   $Y=23
+   $Y=26
    $ZA=0
+   $ZALLOCSTOR=680360
    $ZB=$C(13)
+   $ZCHSET="M"
+   $ZCLOSE=0
    $ZCMDLINE=""
    $ZCOMPILE=""
    $ZCSTATUS=0
-   $ZDIRECTORY="/ext1/home/"
+   $ZDATEFORM=0
+   $ZDIRECTORY="/path/to/the/current/directory"
    $ZEDITOR=0
    $ZEOF=0
    $ZERROR="Unprocessed $ZERROR, see $ZSTATUS"
+   $ZGBLDIR="/path/to/the/global/directory"
+   $ZHOROLOG="64813,21971,720675,14400"
    $ZININTERRUPT=0
    $ZINTERRUPT="IF $ZJOBEXAM()"
-   $ZIO="/dev/pts/17"
+   $ZIO="/dev/pts/0"
    $ZJOB=0
+   $ZKEY=""
    $ZLEVEL=3
+   $ZMAXTPTIME=0
    $ZMODE="INTERACTIVE"
-   $ZPOSITION="name+3^dmex"                    
-   $ZPROCESS=""
-   $ZPROMPT="YDB>"             
-   $ZROUTINES=". /usr/library/ydb_dist"                          
-   $ZSOURCE=""       
-   $ZSTATUS="150373850,name+3^dmex, %YDB-E-UNDEF, Undefined local variable: bame"                                      
+   $ZONLNRLBK=0
+   $ZPATNUMERIC="M"
+   $ZPIN="/dev/pts/0"
+   $ZPOSITION="name+5^dmex"
+   $ZPOUT="/dev/pts/0"
+   $ZPROMPT="YDB>"
+   $ZQUIT=0
+   $ZREALSTOR=697936
+   $ZRELDATE="20180614 00:33"
+   $ZROUTINES=". /usr/local/lib/yottadb/r122 /usr/local/lib/yottadb/r122/plugin/o(/usr/local/lib/yottadb/r122/plugin/r)"
+   $ZSOURCE=""
+   $ZSTATUS="150373850,name+5^dmex,%YDB-E-UNDEF, Undefined local variable: bame"
+   $ZSTEP="B"
+   $ZSTRPLLIM=0
    $ZSYSTEM=0
+   $ZTDATA=0
+   $ZTDELIM=""
+   $ZTEXIT=""
+   $ZTLEVEL=0
+   $ZTNAME=""
+   $ZTOLDVAL=""
    $ZTRAP="B"
-   $ZVERSION="YottaDB r1.20 AIX RS6000"                                             
+   $ZTRIGGEROP=""
+   $ZTSLATE=""
+   $ZTUPDATE=""
+   $ZTVALUE=""
+   $ZTWORMHOLE=""
+   $ZUSEDSTOR=671689
+   $ZUT=1528970771720738
+   $ZVERSION="YottaDB r1.22 Linux x86_64"
    $ZYERROR=""
-           bame="?"
-           ln=12
-           name=""               
-   /dev/pts/17 OPEN TERMINAL NOPAST NOESCA NOREADS TYPE WIDTH=80 LENG=24
-   name+3^dmex($ZTRAP)                                             
-   (Direct mode)                                              
-            beg^dmex                                                          
-   ^GTM$DMOD(Direct mode)
+   ln=8
+   name="John Doe"
+   /dev/pts/0 OPEN TERMINAL NOPAST NOESCA NOREADS TYPE WIDTH=165 LENG=48
+   MLG:0,MLT:0
+   GLD:\*,REG:\*,SET:0,KIL:0,GET:0,DTA:0,ORD:0,ZPR:0,QRY:0,LKS:0,LKF:0,CTN:0,DRD:0
+   DWT:0,NTW:0,NTR:0,NBW:0,NBR:0,NR0:0,NR1:0,NR2:0,NR3:0,TTW:0,TTR:0,TRB:0,TBW:0,
+   TBR:0,TR0:0,TR1:0,TR2:0,TR3:0,TR4:0,TC0:0,TC1:0,TC2:0,TC3:0,TC4:0,ZTR:0,DFL:0,
+   DFS:0,JFL:0,JFS:0,JBB:0,JFB:0,JFW:0,JRL:0,JRP:0,JRE:0,JRI:0,JRO:0,JEX:0,DEX:0,
+   CAT:0,CFE:0,CFS:0,CFT:0,CQS:0,CQT:0,CYS:0,CYT:0,BTD:0
+   name+5^dmex    ($ZTRAP)
+       (Direct mode)
+   beg+1^dmex:51a6a6c4739b004094c4545246ce4d68
+   +1^GTM$DMOD    (Direct mode)
    YDB>
-
 
 This example uses the asterisk (*) argument to show all information that ZSHOW offers in this context. First are the Intrinsic Special Variables ($DEVICE-$ZYERROR, also available with ZSHOW "I"), then the local variables (bame, ln and name, also available with ZSHOW "V"), then the ZBREAK locations (name+3^dmex, also available with ZSHOW "B"), then the device information (also available with ZSHOW "D"), then the M stack (also available with ZSHOW "S"). ZSHOW "S" is the default for ZSHOW with no arguments.
 
@@ -598,20 +634,23 @@ Now that the routine errors have been identified, correct them in the M source f
 Example:
 
 .. parsed-literal::
-   YDB>ZEDIT "dmex"
+   YDB>ZEDIT "dmex.m"
    dmex;dmex - Direct Mode example
    ;
-   beg for read !,"Name: ",name do name q:name="Q"
-   quit
-   nameset ln=$l(name)
-   if ln,$e("QUIT",1,ln)=$tr(name,"quit","QUIT") d q
-   . s name="Q"
-   if ln<30,name?1.a.1"-".a1","1" "1a.ap do print q
-   write !,"Please use last-name, "
-   write "first-name middle-initial or 'Q' to Quit."
-   quit
-   printwrite !,$p(name,", ",2)," ",$p(name,", ")
-   quit
+   beg 
+     for read !,"Name: ",name do name q:name="Q"
+     quit
+   name
+     set ln=$l(name)
+     if ln,$e("QUIT",1,ln)=$tr(name,"quit","QUIT") d q
+     . s name="Q"
+     if ln<30,name?1.a.1"-".a1","1" "1a.ap do print q
+     write !,"Please use last-name, "
+     write "first-name middle-initial or 'Q' to Quit."
+     quit
+   print
+     write !,$p(name,", ",2)," ",$p(name,", ")
+     quit
    YDB>
 
 This example shows the final state of a ZEDIT session of dmex.m. Note that the infinite FOR loop at line beg is corrected.
