@@ -1737,9 +1737,23 @@ An unsuccessful transaction ends with a ROLLBACK. ROLLBACK is invoked explicitly
 
 A RESTART is a transfer of control to the TSTART at the beginning of the transaction. RESTART implicitly includes a ROLLBACK and may optionally restore local variables to the values they had when the initial TSTART was originally executed. A RESTART always restores $TEST and the naked reference to the values they had when the initial TSTART was executed. RESTART does not manage device state information. A RESTART is invoked by the TRESTART command or by M if it is determined that the transaction is in conflict with other database updates. RESTART can only successfully occur if the initial TSTART includes an argument that enables RESTART.
 
-+++++++++++++++++++
-TP Characteristics
-+++++++++++++++++++
++++++++++++++++++++++++++++++++++++++
+Key Considerations - Writing TP Code
++++++++++++++++++++++++++++++++++++++
+
+Some key considerations for writing application code between TSTART and TCOMMIT are as follows:
+
+* Do not use BREAK, CLOSE, JOB, OPEN, READ, USE, WRITE, LOCK, HANG, and ZSYSTEM as they violate the ACID principal of Isolation. Using these commands inside a transaction may lead to longer than usual response time, high CPU utilization, repeat execution due to transaction restart, and/or TPNOTACID messages in the operator log. If application logic requires their use, put them before TSTART or after TCOMMIT so that they do not interfere with the transaction processing mechanism. For example, placing a LOCK before TSTART and releasing it after TCOMMIT provides an additional application layer of serialization for the transaction code.
+
+* Keep your transaction code "pure" . By "pure" we mean that you restrict code to only perform database updates (SET, MERGE, and so on). The primary purpose of a YottaDB transaction is to perform database updates that commit in entirety or do not commit at all. Perform external interaction like invoking an external call before or after the transaction.
+
+* Design transactions to minimize the number of regions they use, particularly update. Like keeping transactions small, this minimizes contention and improves performance.
+
+* Keep transactions as short as possible.
+
+* Code for handling errors during transactions must include a TROLLBACK. A TROLLBACK should appear as early as possible in the error handling code. You can run commands like WRITE, OPEN, etc. after TROLLBACK because the TROLLBACK releases resources held by the transaction.
+
+* Remember that trigger code executes within an implicit transaction. So, trigger code is always subject to transaction considerations.
 
 Most transaction processing systems try to have transactions that meet the "ACID" test – Atomic, Consistent, Isolated, and Durable.
 

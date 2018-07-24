@@ -1511,69 +1511,67 @@ The following table lists the failure codes, whether or not they require a MUPIP
 
 **Run-time Database Failure Codes**
 
-+-----------------+----------------+---------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------+
-| Fail Code       | Run INTEG      | Description                                                                                 | Section                                                                                              |
-+=================+================+=============================================================================================+======================================================================================================+
-| A               | x              | Special case of code C.                                                                     | `O2 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#o2-record-errors>`_                       |
-|                 |                |                                                                                             |                                                                                                      |
-| B               | x              | Key too large to be correct.                                                                | `K1 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#k1-bad-key>`_                             |
-|                 |                |                                                                                             |                                                                                                      |
-| C               | x              | Record unaligned: properly formatted record header did not appear where expected.           | `O2 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#o2-record-errors>`_                       |
-|                 |                |                                                                                             |                                                                                                      |
-| D               | x              | Record too small to be correct.                                                             | `O2 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#o2-record-errors>`_                       |
-|                 |                |                                                                                             |                                                                                                      |
-| E               |                | History overrun prevents validation of a block.                                             | `R3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#r3-runtime-database-cache-problems>`_     |
-+-----------------+----------------+---------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------+
-| G               |                | Cache record modified while in use by the transaction.                                      | `R3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#r3-runtime-database-cache-problems>`_     |
-|                 |                |                                                                                             |                                                                                                      |
-| H*              | x              | Development of a new version of a block encountered an out of design condition.             | `P1 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#p1-process-damage>`_                      |
-|                 |                |                                                                                             |                                                                                                      |
-| J               |                | Level on a child does not show it to be a direct descendent of its parent.                  | `O1 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#o1-bad-block>`_                           |
-|                 |                |                                                                                             |                                                                                                      |
-| K               |                | Cache control problem encountered or suspected.                                             | `C1 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#c1-possible-cache-control-problems>`_     |
-|                 |                |                                                                                             |                                                                                                      |
-| L               |                | Conflicting update of a block took priority.                                                | `R3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#r3-runtime-database-cache-problems>`_     |
-+-----------------+----------------+---------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------+
-| M               | x              | Error during commit that the database logic does not handle.                                | `P1 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#p1-process-damage>`_                      |
-|                 |                |                                                                                             |                                                                                                      |
-| N               | x              | A primitive such as a file or queue operation failed.                                       | `R7 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#r7-interlocked-queue-hardware-problems>`_ |
-|                 |                |                                                                                             |                                                                                                      |
-| O               |                | Before image was lost prior to its transfer to the journal buffer.                          | `R3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#r3-runtime-database-cache-problems>`_     |
-|                 |                |                                                                                             |                                                                                                      |
-| P               |                | Multi-block update aborted - database damage likely.                                        | `I5 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i5-more-database-access-problems>`_       |
-|                 |                |                                                                                             |                                                                                                      |
-| Q               |                | Shared memory interlock failed.                                                             | `R7 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#r7-interlocked-queue-hardware-problems>`_ |
-+-----------------+----------------+---------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------+
-| R               | x              | Critical section reset (probably by DSE).                                                   | `R5 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#r5-no-more-room-in-the-file>`_            |
-|                 |                |                                                                                             |                                                                                                      |
-| S               |                | Attempt to increase the level beyond current maximum.                                       | `R8 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#r8-database-tree-maximum-level-exceeded>`_|
-|                 |                |                                                                                             |                                                                                                      |
-| U               |                | Cache record unstable while in use by the transaction.                                      | `R3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#r3-runtime-database-cache-problems>`_     |
-|                 |                |                                                                                             |                                                                                                      |
-| V               |                | Read-only process could not find room to work.                                              | `R9 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#r9-read-only-process-blocked>`_           |
-|                 |                |                                                                                             |                                                                                                      |
-| X               |                | Bitmap block header invalid.                                                                | `M2 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#m2-bitmap-header-problems>`_              |
-+-----------------+----------------+---------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------+
-| Y               | x              | Record offset outside of block bounds.                                                      | `O2 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#o2-record-errors>`_                       |
-|                 |                |                                                                                             |                                                                                                      |
-| Z               | x              | Block did not contain record predicted by the index.                                        | `O2 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#o2-record-errors>`_                       |
-|                 |                |                                                                                             |                                                                                                      |
-| a               |                | Predicted bitmap preempted by another update.                                               | `R3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#r3-runtime-database-cache-problems>`_     |
-|                 |                |                                                                                             |                                                                                                      |
-| b               |                | History overrun prevents validation of a bitmap.                                            | `R3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#r3-runtime-database-cache-problems>`_     |
-|                 |                |                                                                                             |                                                                                                      |
-| c               |                | Bitmap cache record modified while in use by the transaction.                               | `R3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#r3-runtime-database-cache-problems>`_     |
-+-----------------+----------------+---------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------+
-| d               | x              | Not currently used.                                                                         | \-                                                                                                   |
-|                 |                |                                                                                             |                                                                                                      |
-| e               |                | Attempt to read a block outside the bounds of the database.                                 | `O2 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#o2-record-errors>`_                       |
-|                 |                |                                                                                             |                                                                                                      |
-| f               |                | Conflicting update took priority on a non-isolated global and a block split requires a      | `R3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#r3-runtime-database-cache-problems>`_     |
-|                 |                | TP_RESTART                                                                                  |                                                                                                      |
-|                 |                |                                                                                             |                                                                                                      |     
-| g               |                | The number of conflicting updates on non-isolated global nodes exceed an acceptable level   | `R3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#r3-runtime-database-cache-problems>`_     |
-|                 |                | and requires a TP_RESTART                                                                   |                                                                                                      |
-+-----------------+----------------+---------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------+
++-----------------+----------------+-------------------------------------------------------------------------------------------------------------------------+-----------------+
+| Fail Code       | Run INTEG      | Description                                                                                                             | Section         |
++=================+================+=========================================================================================================================+=================+
+| A               | x              | Special case of code C.                                                                                                 | O2              |
+|                 |                |                                                                                                                         |                 |
+| B               | x              | Key too large to be correct.                                                                                            | K1              |
+|                 |                |                                                                                                                         |                 |
+| C               | x              | Record unaligned: properly formatted record header did not appear where expected.                                       | O2              |
+|                 |                |                                                                                                                         |                 |
+| D               | x              | Record too small to be correct.                                                                                         | O2              |
+|                 |                |                                                                                                                         |                 |
+| E               |                | History overrun prevents validation of a block.                                                                         | R3              |
++-----------------+----------------+-------------------------------------------------------------------------------------------------------------------------+-----------------+
+| G               |                | Cache record modified while in use by the transaction.                                                                  | R3              |
+|                 |                |                                                                                                                         |                 |
+| H*              | x              | Development of a new version of a block encountered an out of design condition.                                         | P1              |
+|                 |                |                                                                                                                         |                 |
+| J               |                | Level on a child does not show it to be a direct descendent of its parent.                                              | O1              |
+|                 |                |                                                                                                                         |                 |
+| K               |                | Cache control problem encountered or suspected.                                                                         | C1              |
+|                 |                |                                                                                                                         |                 |
+| L               |                | Conflicting update of a block took priority.                                                                            | R3              |
++-----------------+----------------+-------------------------------------------------------------------------------------------------------------------------+-----------------+
+| M               | x              | Error during commit that the database logic does not handle.                                                            | P1              |
+|                 |                |                                                                                                                         |                 |
+| N               | x              | A primitive such as a file or queue operation failed.                                                                   | R7              |
+|                 |                |                                                                                                                         |                 |
+| O               |                | Before image was lost prior to its transfer to the journal buffer.                                                      | R3              |
+|                 |                |                                                                                                                         |                 |
+| P               |                | Multi-block update aborted - database damage likely.                                                                    | I5              |
+|                 |                |                                                                                                                         |                 |
+| Q               |                | Shared memory interlock failed.                                                                                         | R7              |
++-----------------+----------------+-------------------------------------------------------------------------------------------------------------------------+-----------------+
+| R               | x              | Critical section reset (probably by DSE).                                                                               | R5              |
+|                 |                |                                                                                                                         |                 |
+| S               |                | Attempt to increase the level beyond current maximum.                                                                   | R8              |
+|                 |                |                                                                                                                         |                 |
+| U               |                | Cache record unstable while in use by the transaction.                                                                  | R3              |
+|                 |                |                                                                                                                         |                 |
+| V               |                | Read-only process could not find room to work.                                                                          | R9              |
+|                 |                |                                                                                                                         |                 |
+| X               |                | Bitmap block header invalid.                                                                                            | M2              |
++-----------------+----------------+-------------------------------------------------------------------------------------------------------------------------+-----------------+
+| Y               | x              | Record offset outside of block bounds.                                                                                  | O2              |
+|                 |                |                                                                                                                         |                 |
+| Z               | x              | Block did not contain record predicted by the index.                                                                    | O2              |
+|                 |                |                                                                                                                         |                 |
+| a               |                | Predicted bitmap preempted by another update.                                                                           | R3              |
+|                 |                |                                                                                                                         |                 |
+| b               |                | History overrun prevents validation of a bitmap.                                                                        | R3              |
+|                 |                |                                                                                                                         |                 |
+| c               |                | Bitmap cache record modified while in use by the transaction.                                                           | R3              |
++-----------------+----------------+-------------------------------------------------------------------------------------------------------------------------+-----------------+
+| d               | x              | Not currently used.                                                                                                     | \-              |
+|                 |                |                                                                                                                         |                 |
+| e               |                | Attempt to read a block outside the bounds of the database.                                                             | O2              |
+|                 |                |                                                                                                                         |                 |
+| f               |                | Conflicting update took priority on a non-isolated global and a block split requires a TP_RESTART.                      | R3              |
+|                 |                |                                                                                                                         |                 |
+| g               |                | The number of conflicting updates on non-isolated global nodes exceed an acceptable level and requires a TP_RESTART.    | R3              |
++-----------------+----------------+-------------------------------------------------------------------------------------------------------------------------+-----------------+
 
 \* Indicates a process problem
 

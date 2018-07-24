@@ -1614,7 +1614,7 @@ Flushes the database buffers and, if journaling is enabled, writes an EPOCH reco
 
 Flushes dirty global buffers from the global buffer pool. If journaling is turned on, "FLUSH" writes an EPOCH record and flushes dirty journal buffers prior to flushing dirty global buffers. If no region is specified, VIEW "FLUSH" flushes all regions in the current global directory that the YottaDB process has opened.
 
-**[NO]FULL_BOOL[EAN][WARN]**
+**[NO]FULL_BOOL[EAN|WARN]**
 
 Controls the evaluation of Boolean expressions (expressions evaluated as a logical TRUE or FALSE).
 
@@ -1624,9 +1624,9 @@ With VIEW "FULL_BOOLEAN", YottaDB ensures that all side effect expression atoms,
 
 With VIEW "FULL_BOOLWARN", YottaDB not only evaluates Boolean expressions like "FULL_BOOLEAN" but produces a BOOLSIDEFFECT warning when it encounters Boolean expressions that may induce side-effects; that is: expressions with side effects after the first Boolean operator - extrinsic functions, external calls and $INCREMENT().
 
-YottaDB picks up the value of [NO]FULL_BOOL[EAN][WARN] from the environment variable ydb_boolean. If ydb_boolean is undefined or evaluates to an integer zero (0), the initial setting is the default "NOFULL_BOOLEAN", if it evaluates to integer one (1), the initial setting is "FULL_BOOLEAN" and if it evaluates to integer two (2) the initial setting is "FULL_BOOLWARN".
+YottaDB picks up the value of [NO]FULL_BOOL[EAN|WARN] from the environment variable ydb_boolean. If ydb_boolean is undefined or evaluates to an integer zero (0), the initial setting is the default "NOFULL_BOOLEAN", if it evaluates to integer one (1), the initial setting is "FULL_BOOLEAN" and if it evaluates to integer two (2) the initial setting is "FULL_BOOLWARN".
 
-VIEW "[NO]FULL_BOOL[EAN][WARN]" takes effect immediately for indirection and XECUTE.
+VIEW "[NO]FULL_BOOL[EAN|WARN]" takes effect immediately for indirection and XECUTE.
 
 VIEW "NOFULLBOOLEAN" produces an error when ydb_side_effects is on. For more information on the ydb_side_effects environment variable, refer to the `Environment Variables section in the Basic Operations chapter <https://docs.yottadb.com/AdminOpsGuide/basicops.html#environment-variables>`_ of the Administration and Operations Guide.
 
@@ -1775,7 +1775,7 @@ Resets all the process-private global access statistics to 0. This is particular
 
 **[NO]STATSHARE[:<region-list>]**
 
-VIEW "[NO]STATSHARE"[:<region-list>] enables or disables database statistics sharing for listed regions which permit such sharing. Without the region-list, the command acts on all regions enabled for sharing. When a targeted region has sharing disabled, STATSHARE has no immediate effect, but may cause the process to start sharing if and when a MUPIP SET -STATS enables sharing for that region.
+VIEW "[NO]STATSHARE"[:<region-list>] enables or disables database statistics sharing for listed regions which permit such sharing. Without the region-list, the command acts on all regions enabled for sharing. When a targeted region has sharing disabled, STATSHARE has no effect.
 
 This provides a fast and efficient mechanism for processes to share their database access statistics for other processes to monitor. Processes opt in or out with the VIEW "[NO]STATSHARE"[:<region-list>] command, defaulting to VIEW "NOSTATSHARE". At process startup, a value of 1, or any case-independent string or leading substrings of "TRUE" or "YES" in the environment variable ydb_statshare provides an initial setting of VIEW "STATSHARE". When a process changes whether it is opting in or out, there is no change to the output of a ZSHOW "G" within that process. YottaDB does not permit this form of the VIEW command within a TP transaction. Monitoring the statistics of other processes does not require opting-in.
 
@@ -2684,7 +2684,7 @@ A ZGOTO command with an entryref performs a similar function to the GOTO command
 
 The ZGOTO command leaves the invocation stack at the level specified by the integer expression. YottaDB implicitly terminates any intervening FOR loops and unstacks variables stacked with NEW commands as appropriate.
 
-Using ZGOTO 0 results in an exit from the current YottaDB invocation.
+A ZGOTO 0 from a call-in unwinds all the M stack frames and returns to the invoking C routine. For all other cases, ZGOTO 0 terminates the process.
 
 Using ZGOTO 0:entryref invokes the "unlink all" facility. It allows a process to disassociate itself from all routines it has linked, releases memory, and continue execution with entryref as the only current entry in the M virtual stack. ZGOTO 0:entryref preserves local variables and IO devices across this transition and performs the following:
 
@@ -3298,88 +3298,66 @@ If the wildcard (\*) occurs in the list, ZSHOW uses the default order (ZSHOW "IV
 If G occurs in the list, the statistics are displayed in the following order in a comma-separated list where each item has its mnemonic followed by a colon and a counter. YottaDB maintains the counter in DECIMAL. Each counter has 8-byte (can get as high as 2**64). If these counters exceed 18 decimal digits (somewhere between 2**59 and 2**60), which is the current YottaDB numeric representation precision threshold, their use in arithmetic expressions in YottaDB results in loss of precision. The mnemonics are:
 
 .. parsed-literal::
-   SET : # of SET operations (TP and non-TP) 
-   KIL : # of KILl operations (kill as well as zwithdraw, TP and non-TP) 
-   GET : # of GET operations (TP and non-TP) 
-   CAT : total of critical section acquisitions successes
-   CFE : total attempts in CFT caused by epochs
-   CFS : sum of squares of blocked critical section acquisitions
-   CFT : total of blocked critical section acquisitions
-   CQS : sum of squares of critical section acquisition queued sleeps
-   CQT : total of critical section acquisition queued sleeps
-   CYS : sum of squares of critical section acquisition processor yields
-   CYT : total of critical section acquisition processor yields
-   DTA : # of DaTA operations (TP and non-TP) 
-   ORD : # of $ORDer() operations (TP and non-TP). The count of $Order(xxx,1) operations are reported under this item. 
-   ZPR : # of $ZPRevious() (reverse order) operations (TP and non-TP). The count of $Order(xxx,-1) operations are reported under this item. 
-   QRY : # of $QueRY() operations (TP and non-TP) 
-   LKS : # of LocK calls (mapped to this db) that Succeeded 
-   LKF : # of LocK calls (mapped to this db) that Failed 
+   BTD : # of database Block Transitions to Dirty
+   CAT : Critical section Total Acquisitions successes
+   CFE : Critical section Failed (blocked) acquisition total caused by Epochs
+   CFS : Critical section Failed (blocked) acquisition sum of Squares
+   CFT : Critical section Failed (blocked) acquisition Total
+   CQS : Critical section acquisition Queued sleeps sum of Squares
+   CQT : Critical section acquisition Queued sleeps Total
    CTN : Current Transaction Number of the database for the last committed read-write transaction (TP and non-TP) 
-   DRD : # of Disk ReaDs from the database file (TP and non-TP, committed and rolled-back).This does not include reads that are satisfied by buffered globals for databases that use the BG (Buffered Global) access method. YottaDB always reports 0 for databases that use the MM (memory-mapped) access method as this has no real meaning in that mode. 
-   DWT : # of Disk WriTes to the database file (TP and non-TP, committed and rolled-back). This does not include writes that are satisfied by buffered globals for databases that use the BG (Buffered Global) access method. YottaDB always reports 0 for databases that use the MM (memory-mapped) access method as this has no real meaning in that mode.
-   NTW : # of Non-TP committed Transactions that were read-Write on this database 
-   NTR : # of Non-TP committed Transactions that were Read-only on this database 
-   NBW : # of Non-TP committed transaction induced Block Writes on this database 
-   NBR : # of Non-TP committed transaction induced Block Reads on this database 
-   NR0 : # of Non-TP transaction Restarts at try 0 
-   NR1 : # of Non-TP transaction Restarts at try 1 
-   NR2 : # of Non-TP transaction Restarts at try 2 
-   NR3 : # of Non-TP transaction Restarts at try 3 
-   TTW : # of TP committed Transactions that were read-Write on this database 
-   TTR : # of TP committed Transactions that were Read-only on this database 
-   TRB : # of TP read-only or read-write transactions that got Rolled Back (incremental rollbacks are not counted) 
-   TBW : # of TP transaction induced Block Writes on this database 
-   TBR : # of TP transaction induced Block Reads on this database 
-   TR0 : # of TP transaction Restarts at try 0 (counted for all regions participating in restarting TP transaction)
-   TR1 : # of TP transaction Restarts at try 1 (counted for all regions participating in restarting TP transaction)
-   TR2 : # of TP transaction Restarts at try 2 (counted for all regions participating in restarting TP transaction)
-   TR3 : # of TP transaction Restarts at try 3 (counted for all regions participating in restarting TP transaction)
-   TR4 : # of TP transaction Restarts at try 4 and above (restart counted for all regions participating in restarting TP transaction) 
-   TC0 : # of TP transaction Conflicts at try 0 (counted only for that region which caused the TP transaction restart)
-   TC1 : # of TP transaction Conflicts at try 1 (counted only for that region which caused the TP transaction restart)
-   TC2 : # of TP transaction Conflicts at try 2 (counted only for that region which caused the TP transaction restart)
-   TC3 : # of TP transaction Conflicts at try 3 (counted only for that region which caused the TP transaction restart)
-   TC4 : # of TP transaction Conflicts at try 4 and above (counted only for that region which caused the TP transaction restart)
-   DFL : # of times a process flushes the entire set of dirty database global buffers in shared memory to disk.
+   CYS : Critical section acquisition processor Yields sum of Squares
+   CYT : Critical section acquisition processor Yields Total 
+   DEX : # of Database file EXtentions
+   DFL : # of Database FLushes of the entire set of dirty global buffers in shared memory to disk
    DFS : # of times a process does an fsync of the database file. For example: a) after writing an epoch journal record, b) as part of database file extension c) during database rundown d) as part of mupip reorg -truncate etc.
-   JFL : # of times a process flushes all dirty journal buffers in shared memory to disk. For example: when switching journal files etc.
-   JFS : # of times a process does an fsync of the journal file. For example: when writing an epoch record, switching a journal file etc.
-   JBB : # of bytes written to the journal buffer in shared memory.
-   JFB : # of bytes written to the journal file on disk. For performance reasons, YottaDB always aligns the beginning of these writes to file system block size boundaries. On Unix, JFB counts all bytes including those needed for alignment in order to reflect the actual IO load on the journal file. Since the bytes required to achieve alignment may have already been counted as part of the previous JFB, processes may write the same bytes more than once, causing the JFB counter to typically be higher than JBB.
-   JFW : # of times a process invokes a write system call for a journal file.
-   JRL : # of logical journal records (e.g. SET, KILL etc.)
-   JRP : # of PBLK and AIMG journal records written to the journal file (these records are seen only in a -detail journal extract)
-   JRE : # of regular EPOCH journal records written to the journal file (only seen in a -detail journal extract); these are written every time an epoch-interval boundary is crossed while processing updates
-   JRI : # of idle EPOCH journal records written to the journal file (only seen in a -detail journal extract); these are written when a burst of updates is followed by an idle period, around 5 seconds of no updates after the database flush timer has flushed all dirty global buffers to the database file on disk
-   JRO : # of all journal records other than logical, PBLK, AIMG and EPOCH records written to the journal file (for example, PINI, PFIN, and so on.)
-   JEX : # of times a process extends the journal file
-   DEX : # of times a process extends the database file
+   DRD : # of Disk ReaDs from the database file (TP and non-TP, committed and rolled-back).This does not include reads that are satisfied by buffered globals for databases that use the BG (Buffered Global) access method. GT.M always reports 0 for databases that use the MM (memory-mapped) access method as this has no real meaning in that mode. 
+   DTA : # of DaTA operations (TP and non-TP) 
+   DWT : # of Disk WriTes to the database file (TP and non-TP, committed and rolled-back). This does not include writes that are satisfied by buffered globals for databases that use the BG (Buffered Global) access method. GT.M always reports 0 for databases that use the MM (memory-mapped) access method as this has no real meaning in that mode.
+   GET : # of GET operations (TP and non-TP)
+   JBB : # of Journal Buffer Bytes updated in shared memory
+   JEX : # of Journal file EXtentions
+   JFB : # of Journal File Bytes written to the journal file on disk. For performance reasons, GT.M always aligns the beginning of these writes to file system block size boundaries. JFB counts all bytes including those needed for alignment in order to reflect the actual IO load on the journal file. Since the bytes required to achieve alignment may have already been counted as part of the previous JFB, processes may write the same bytes more than once, causing the JFB counter to typically be higher than JBB.
+   JFL : # of Journal FLushes of all dirty journal buffers in shared memory to disk. For example: when switching journal files etc.
+   JFS : # of Journal FSync operations on the journal file. For example: when writing an epoch record, switching a journal file etc.
+   JFW : # of Journal File Write system calls
+   JRE : # of Journal Regular Epoch records written to the journal file (only seen in a -detail journal extract); these are written every time an epoch-interval boundary is crossed while processing updates
+   JRI : # of JouRnal Idle epoch journal records written to the journal file (only seen in a -detail journal extract); these are written when a burst of updates is followed by an idle period, around 5 seconds of no updates after the database flush timer has flushed all dirty global buffers to the database file on disk
+   JRL : # of Journal Records with a Logical record type (e.g. SET, KILL etc.) written to the journal file 
+   JRO : # of Journal Records with a type Other than logical written to the journal file (e.g. AIMG, EPOCH, PBLK, PFIN, PINI, and so on)
+   JRP : # of Journal Records with a Physical record type (i.e. PBLK, AIMG) written to the journal file (these records are seen only in a -detail journal extract)
+   KIL : # of KILl operations (kill as well as zwithdraw, TP and non-TP) 
+   LKF : # of LocK calls (mapped to this db) that Failed 
+   LKS : # of LocK calls (mapped to this db) that Succeeded 
+   NBR : # of Non-tp committed transaction induced Block Reads on this database 
+   NBW : # of Non-tp committed transaction induced Block Writes on this database 
+   NR0 : # of Non-tp transaction Restarts at try 0 
+   NR1 : # of Non-tp transaction Restarts at try 1 
+   NR2 : # of Non-tp transaction Restarts at try 2 
+   NR3 : # of Non-tp transaction Restarts at try 3 
+   NTR : # of Non-tp committed Transactions that were Read-only on this database 
+   NTW : # of Non-tp committed Transactions that were read-Write on this database 
+   ORD : # of $ORDer(,1) (forward) operations (TP and non-TP); the count of $Order(,-1) operations are reported under ZPR. 
+   QRY : # of $QueRY() operations (TP and non-TP) 
+   SET : # of SET operations (TP and non-TP) 
+   TBR : # of Tp transaction induced Block Reads on this database 
+   TBW : # of Tp transaction induced Block Writes on this database 
+   TC0 : # of Tp transaction Conflicts at try 0 (counted only for that region which caused the TP transaction restart)
+   TC1 : # of Tp transaction Conflicts at try 1 (counted only for that region which caused the TP transaction restart)
+   TC2 : # of Tp transaction Conflicts at try 2 (counted only for that region which caused the TP transaction restart)
+   TC3 : # of Tp transaction Conflicts at try 3 (counted only for that region which caused the TP transaction restart)
+   TC4 : # of Tp transaction Conflicts at try 4 and above (counted only for that region which caused the TP transaction restart)
+   TR0 : # of Tp transaction Restarts at try 0 (counted for all regions participating in restarting TP transaction)
+   TR1 : # of Tp transaction Restarts at try 1 (counted for all regions participating in restarting TP transaction)
+   TR2 : # of Tp transaction Restarts at try 2 (counted for all regions participating in restarting TP transaction)
+   TR3 : # of Tp transaction Restarts at try 3 (counted for all regions participating in restarting TP transaction)
+   TR4 : # of Tp transaction Restarts at try 4 and above (restart counted for all regions participating in restarting TP transaction) 
+   TRB : # of Tp read-only or read-write transactions Rolled Back (excluding incremental rollbacks) 
+   TTR : # of Tp committed Transactions that were Read-only on this database 
+   TTW : # of Tp committed Transactions that were read-Write on this database 
+   ZPR : # of $order(,-1) or $ZPRevious() (reverse order) operations (TP and non-TP). The count of $Order(,1) operations are reported under ORD. 
+   ZTR : # of ZTRigger command operations
    [NT]B[WR] mnemonics are satisfied by either disk access or, for databases that use the BG (buffered global) access method, global buffers in shared memory.
-   ZTR : # of ZTRIGGER command operations
-   DFL : # of Database FLushes
-   DFS : # of Database FSyncs
-   JFL : # of Journal FLushes
-   JFS : # of Journal FSyncs
-   JBB : # of Bytes written to Journal Buffer
-   JFB : # of Bytes written to Journal File
-   JFW : # of Journal File Writes
-   JRL : # of Logical Journal Records
-   JRP : # of Pblk Journal Records
-   JRE : # of Regular Epoch Journal Records
-   JRI : # of Idle epoch Journal Records
-   JRO : # of Other Journal Records
-   JEX : # of Journal file EXtensions
-   DEX : # of Database file EXtensions
-   CAT : # of crit acquired total successes
-   CFE : # of attempts in CFT caused by epochs
-   CFS : sum of squares grab crit failed
-   CFT : # of grab crit failures
-   CQS : sum of squares grab crit queued sleeps
-   CQT : # of grab crit queued sleeps
-   CYS : sum of squares grab crit yields
-   CYT : # of grab crit yields
-   BTD : # of Block Transitions to Dirty
 
 If an operation is performed inside a TP transaction, and not committed as a consequence of a rollback, or an explicit or implicit restart, YottaDB still counts it.
 
@@ -3545,11 +3523,91 @@ Example:
    var("L",1)="LOCK ^SUCCESS1 LEVEL=1"
    var("L",2)="LOCK ^SUCCESS2 LEVEL=1"
 
-This example shows how ZSHOW "L" redirects it output into a local variable var.
+This example shows how ZSHOW "L" redirects its output into a local variable var.
 
 Example:
 
 Suppose a process runs LOCK (^SUCCESS1,^SUCCESS2) which succeeds and a LOCK +^FAIL:1 which times out due to another process holding that lock. A ZSHOW "L" at this point displays the following output.
+
+Example:
+
+.. parsed-literal::
+   YDB>ZSHOW "I"
+   $DEVICE=""
+   $ECODE=""
+   $ESTACK=0
+   $ETRAP=""
+   $HOROLOG="64813,13850"
+   $IO="/dev/pts/0"
+   $JOB=20264
+   $KEY=""
+   $PRINCIPAL="/dev/pts/0"
+   $QUIT=0
+   $REFERENCE=""
+   $STACK=0
+   $STORAGE=2147483647
+   $SYSTEM="47,ydb_sysid"
+   $TEST=1
+   $TLEVEL=0
+   $TRESTART=0
+   $X=0
+   $Y=20
+   $ZA=0
+   $ZALLOCSTOR=671584
+   $ZB=""
+   $ZCHSET="M"
+   $ZCLOSE=0
+   $ZCMDLINE=""
+   $ZCOMPILE=""
+   $ZCSTATUS=0
+   $ZDATEFORM=0
+   $ZDIRECTORY="/path/to/the/current/directory"
+   $ZEDITOR=0
+   $ZEOF=0
+   $ZERROR="Unprocessed $ZERROR, see $ZSTATUS"
+   $ZGBLDIR="/path/to/the/global/directory/$ydb_gbldir.gld"
+   $ZHOROLOG="64813,13850,790453,14400"
+   $ZININTERRUPT=0
+   $ZINTERRUPT="IF $ZJOBEXAM()"
+   $ZIO="/dev/pts/0"
+   $ZJOB=0
+   $ZKEY=""
+   $ZLEVEL=1
+   $ZMAXTPTIME=0
+   $ZMODE="INTERACTIVE"
+   $ZONLNRLBK=0
+   $ZPATNUMERIC="M"
+   $ZPIN="/dev/pts/0"
+   $ZPOSITION="+1^GTM$DMOD"
+   $ZPOUT="/dev/pts/0"
+   $ZPROMPT="YDB>"
+   $ZQUIT=0
+   $ZREALSTOR=694280
+   $ZRELDATE="20180614 00:33"
+   $ZROUTINES=". /usr/local/lib/yottadb/r122 /usr/local/lib/yottadb/r122/plugin/o(/usr/local/lib/yottadb/r122/plugin/r)"
+   $ZSOURCE=""
+   $ZSTATUS=""
+   $ZSTEP="B"
+   $ZSTRPLLIM=0
+   $ZSYSTEM=0
+   $ZTDATA=0
+   $ZTDELIM=""
+   $ZTEXIT=""
+   $ZTLEVEL=0
+   $ZTNAME=""
+   $ZTOLDVAL=""
+   $ZTRAP="B"
+   $ZTRIGGEROP=""
+   $ZTSLATE=""
+   $ZTUPDATE=""
+   $ZTVALUE=""
+   $ZTWORMHOLE=""
+   $ZUSEDSTOR=666047
+   $ZUT=1528962650791332
+   $ZVERSION="YottaDB r1.22 Linux x86_64"
+   $ZYERROR=""
+
+This example displays the current value of all intrinsic special variables. 
 
 ++++++++++++++++++++++++++++
 ZSHOW Destination Variables

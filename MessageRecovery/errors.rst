@@ -1139,11 +1139,11 @@ Action: Ensure that the environment variable GTM_COLLATE_n is properly defined, 
 COLLDATAEXISTS
 ----------------
 
-COLLDATAEXISTS, Collation type cannot be changed while data exists
+COLLDATAEXISTS, Collation type cannot be changed while xxxx data exists
 
-Run Time Error: This indicates that an attempt was made to change the local collation type while local variables exist.
+Run Time Error: This indicates that an attempt was made to change the local collation type while xxxx was either a subscripted local for a process collation change or a gvn name for global variable collation..
 
-Action: KILL or NEW the local variables before you change the local collation type.
+Action: KILL or NEW the local variables before you change the local collation type, or KILL a gvn before changing its collation.
 
 
 ----------------
@@ -1219,6 +1219,16 @@ COMMENT, Comment line. Placed zbreak at next executable line.
 Run Time Information: This indicates that a ZBREAK specified a line that had no active code. Therefore, YottaDB set the ZBREAK at the next line containing source code.
 
 Action: -
+
+-------------------
+COMMFILTERERR
+-------------------
+
+COMMFILTERERR, Error executing the command filter for FFFF DDDD
+
+Run Time Error: Reports a problem in filter code where FFFF describes the nature of the filter and DDDD some thing about the nature of the issue. There may be associated/related messages. Because filters are a potential security tool, these errors tend are generally reported to the operator log.
+
+Action: Analyze the filter code in light of the messages and revise accordingly.
 
 ----------------
 COMMITWAITPID
@@ -4051,9 +4061,9 @@ EXTRINTEGRITY
 
 EXTRINTEGRITY, Database ffff potentially contains spanning nodes or data encrypted with two different keys
 
-MUPIP Error: MUPIP EXTRACT cannot run because the database file ffff might contain spanning nodes or be partially encrypted with a particular key. Proceeding in such a situation on a live database could result in data corruption.
+MUPIP Error: MUPIP EXTRACT cannot run because the database file ffff might contain spanning nodes or be partially encrypted with a particular key. Proceeding on a live database in such a situation could result in data corruption.
 
-Action: Reformat the data to contain no spanning nodes, let MUPIP REORG -ENCRYPT complete the (re)encryption of the database, or reissue the MUPIP EXTRACT command with a -FREEZE qualifier to acquire stand-alone access for the duration of the procedure. As a final resort, use an -OVERRIDE qualifier to proceed on a live database that either contains spanning nodes or is undergoing (re)encryption. YottaDB highly discourages using the -OVERRIDE qualifier unless the database is quiescent.
+Action: If you encounter this error while running MUPIP EXTRACT with -FORMAT="BINARY", re-run the command with the -FREEZE qualifier. MUPIP EXTRACT requires -FREEZE to acquire stand-alone access to produce a consistent copy of the data. However, not using -FREEZE when you request a MUPIP EXTRACT may produce a loadable, if inconsistent output. If you encountered this error while running MUPIP EXTRACT with ZWR or GO format, it is likely that your database is encrypted with more than one key; with BINARY output it may be multiple keys or spanning node data. If the issue is a key change, run MUPIP REORG -ENCRYPT to complete the encryption of the database. As a final resort, you may use an -OVERRIDE qualifier to proceed on a live database that either contains spanning nodes or is undergoing (re)encryption. Although EXTRACT -OVERRIDE may produce text for analysis, the result is not suitable as input for MUPIP LOAD and YottaDB highly discourages using -OVERRIDE.
 
 -------------------------
 EXTSRCLIN
@@ -4074,6 +4084,16 @@ EXTSRCLOC, At column xxxx, line yyyy, source module zzzz
 Run Time Error: This indicates that there is an error in the external call table. The message indicates the line and the location within that line where the error is located.
 
 Action: Review the listed line and location and correct the error.
+
+-----------------------
+FAILEDRECCOUNT
+-----------------------
+
+FAILEDRECCOUNT, LOAD unable to process MMMM records
+
+MUPIP Error: MUPIP LOAD was unable to load MMMM records from the specified input extract.
+
+Action: Examine prior RECLOAD error messages for causes for the failed records and address them.
 
 -----------------------
 FALLINTOFLST 
@@ -5463,6 +5483,15 @@ Run Time Error: The open-source ICU module which YottaDB uses for some Unicode p
 
 Action: Consult the ICU documentation and/or refresh the ICU library with a known correct version.
 
+--------------------
+ICUNOTENABLED
+--------------------
+
+ICUNOTENABLED, ICU libraries not loaded
+
+Run Time Warning: The operation required the library containing support for International Components for Unicode (ICU) but YottaDB could not find libicu. There may be other messages.
+
+Action: If you require UTF-8 support, install an appropriate ICU library - see the Administration and Operations Guide for information on ICU setup.
 
 --------------------
 ICUSYMNOTFOUND 
@@ -7939,6 +7968,16 @@ MUPIP Information: This indicates that a MUPIP LOAD operation did not take place
 Action: Determine whether to change the current character set or retry the EXTRACT with a different character set. Alternatively, you can edit the extract file so the EXTRACT file header matches the ydb_chset environment variable. This enables an M mode MUPIP LOAD to treat the input as a byte stream or a UTF-8 mode MUPIP LOAD, which either detects BADCHAR errors or not, depending on the setting of the ydb_badchar environment variable.
 
 -------------------
+LOADRECCNT
+-------------------
+
+LOADRECCNT, Last EXTRACT record processed by LOAD: RRRR
+
+MUPIP Information: This message indicates number of records (RRRR) MUPIP LOAD processed. The number of records represents the sum of header records, successfully loaded data records, and failed records. Note LOAD may have stopped processing due to a record limit in the command or a <CTRL-C>.
+
+Action: Ensure the identified stopping point corresponds with your intentions.
+
+-------------------
 LOADRUNNING
 -------------------
 
@@ -8487,6 +8526,16 @@ MRTMAXEXCEEDED, Maximum value of xxxx for SOCKET deviceparameter MOREREADTIME ex
 Compile Time/Run Time Error: YottaDB triggers this error when MOREREADTIME exceeds its maximum value of 999ms.
 
 Action: Specify a value between 1 and 999. Never set MOREREADTIME to 0 as it may cause a CPU to "spin". See `"Input/Output Processing" Chapter of the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/ioproc.html>`_ for more information.
+
+--------------------
+MSTACKCRIT
+--------------------
+
+MSTACKCRIT, User-specified M stack size critical threshold of xxxx not appropriate; must be between mmmm and nnnn; reverting to kkkk
+
+Run Time Error: The environment variable ydb_mstack_crit_threshold was set to an invalid value - either too large, in which case YottaDB uses the largest acceptable value or too low, in which case YottaDB uses the smallest acceptable value.
+
+Action: If the adjusted value is unacceptable, revise or unset the environment variable.
 
 ---------------------
 MSTACKSZNA
@@ -9941,6 +9990,16 @@ GDE Information: This indicates that GDE encountered errors in the REGION-SEGMEN
 
 Action: Review the accompanying message(s) for additional information. Verify the mappings and modify them as appropriate.
 
+-------------------
+NOFILTERNEST
+-------------------
+
+NOFILTERNEST, Filter nesting not allowed
+
+Run Time Error: Filter code must not invoke other code that requires a filter.
+
+Action: Revise the filter code to adhere to the requirement.
+
 ---------------------
 NOFORKCORE
 ---------------------
@@ -10819,6 +10878,16 @@ Run Time Information: This indicates that the parse was completed successfully.
 Action: -
 
 ----------------------
+PATALTER2LARGE
+----------------------
+
+PATALTER2LARGE, Pattern match alternation exceeded the LLLL repetition limit on prospective matches
+
+Run Time Error: An alternation pattern applied to a long occurrence of that pattern reached a YottaDB limit (LLLL) on tracking the match.
+
+Action: Revise the logic to reduce the size of the string being matched or to otherwise break up the match into smaller parts.
+
+----------------------
 PATCLASS 
 ----------------------
 
@@ -11444,7 +11513,7 @@ REGFILENOTFOUND, Database file DDDD corresponding to region RRRR cannot be found
 
 MUPIP Error: This indicates that MUPIP cannot locate the database file DDDD mapped to region RRRR.
 
-Action: Ensure that the current global directory is the one intended to map the file intended. If the path is relative or includes environment variables, ensure that the current working directory and any environment variables are appropriate. Also ensure the file exists and has authorizations, including its path, that make it available to the user attempting to access it.
+Action: Ensure that the current global directory is the one intended to map the file intended. If the path is relative or includes environment variables, ensure that the current working directory and any environment variables are appropriate. Also ensure the file exists and has authorizations, including its path, that make it available to the user attempting to access it. If the MUPIP command involves a statsDB (for example MUPIP INTEG -STATS), ensure that the appropriate regions have STATS enabled, that the $ydb_statsdir environment variable has been properly defined, and that other processes are using shared statistics, as MUPIP by itself does not create new statsDB databases. Note that MUPIP INTEG does not create statsDB and reports any that it skips with an informational message, but exits with a normal status after such skips.
 
 --------------------
 REGIS 
@@ -15124,9 +15193,9 @@ Action: Modify the argument so it has the proper number of sub-arguments.
 VIEWCMD
 --------------------
 
-VIEWCMD, View parameter is not valid with VIEW command
+VIEWCMD, View parameter pppp is not valid with the VIEW command
 
-Run Time Error: This indicates that the VIEW command has an argument that is only valid with the $VIEW function.
+Run Time Error: This indicates that the VIEW command has an argument that is only valid with the $VIEW() function.
 
 Action: Modify the argument.
 
@@ -15134,9 +15203,9 @@ Action: Modify the argument.
 VIEWFN 
 -------------------
 
-VIEWFN, View parameter is not valid with $VIEW()
+VIEWFN, View parameter is not valid with the VIEW command
 
-Run Time Error: This indicates that the $VIEW function has an argument that is only valid with the VIEW command.
+Run Time Error: This indicates that the $VIEW() function has an argument pppp that is only valid with the VIEW command.
 
 Action: Modify the argument.
 

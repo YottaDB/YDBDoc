@@ -293,7 +293,7 @@ The optional qualifiers are:
 .. parsed-literal::
    -A[LL]
    -L[OCK] 
-   -[NO]C[RIT] 
+   -[NO]C[RITICAL] 
    -O[UTPUT]="file-name"
    -P[ID]=pid 
    -R[EGION]=region-name 

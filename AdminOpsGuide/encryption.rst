@@ -889,7 +889,7 @@ Just as there is no way to change the encryption key of a database file, it is n
 Plugin Architecture and Interface
 -------------------------------------
 
-As noted in the Tested Reference Implementations, YottaDB includes the source code to a reference implementation that uses widely available encryption packages. It is your choice: you can decide to use the packages that YottaDB was tested against, or you can choose to interface YottaDB to any other package of your choice. As noted earlier, YottaDB neither recommends nor supports any specific package (not even those that we test against) and you should ensure that you have confidence in and support for whichever package you intend to use in production. The reference implementation is provided, compiled as ready-to-compile source code that you can customize to meet your needs.
+As noted in the Tested Reference Implementations, YottaDB includes the source code to a reference implementation that uses widely available encryption packages. It is your choice: you can decide to use the packages that YottaDB was tested against, or you can choose to interface YottaDB to any other package of your choice. As noted earlier, YottaDB neither recommends nor supports any specific package (not even those that we test against) and you should ensure that you have confidence in and support for whichever package you intend to use in production. The reference implementation is provided as ready-to-compile source code that you can customize to meet your needs.
 
 Building the reference implementation from source code requires the standard development tools for your platform, including the C compiler, make, ld, standard header files, header files for encryption libraries, etc.
 
