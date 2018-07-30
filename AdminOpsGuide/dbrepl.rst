@@ -941,11 +941,10 @@ Here is the code:
    export ydb_gbldir=$PWD/$ydb_repl_instname/yottadb.gld
    export ydb_principal_editing=EDITING
    export ydb_routines="$PWD/$ydb_repl_instname $ydb_dist"
-   #export ydb_routines="$PWD/$ydb_repl_instname $ydb_dist/libgtmutil.so"
-   #export LD_LIBRARY_PATH=/usr/local/lib
+   export ydb_routines="$PWD/$ydb_repl_instname $ydb_dist/libgtmutil.so"
+   export LD_LIBRARY_PATH=/usr/local/lib
    #export ydb_crypt_config=$PWD/$ydb_repl_instname/config_file
-   #echo -n "Enter Password for ydb_tls_passwd_${ydb_repl_instname}: ";export ydb_tls_passwd_${ydb_repl_instname}="`$ydb_dist/plugin/gtmcrypt/maskpass|tail -n 1|cut -f 3 -d " "`"
-
+   #echo -n "Enter Password for ydb_tls_passwd_${ydb_repl_instname}: ";export ydb_tls_passwd_${ydb_repl_instname}="\`$ydb_dist/plugin/gtmcrypt/maskpass|tail -n 1|cut -f 3 -d " "\`"
 
 Here is an example of setting the ydb_routines environment variable:
 
@@ -1211,19 +1210,19 @@ Setting up an A -> B Replication Configuration with Empty Databases
 .. parsed-literal::
    $./db_create
    %GDE-I-LOADGD, Loading Global Directory file
-        /home/A/yottadb.gld
+        /home/user/A/yottadb.gld
    %GDE-I-VERIFY, Verification OK
 
-   %GDE-I-EXECOM, Executing command file /home/A/gdemsr
+   %GDE-I-EXECOM, Executing command file /home/user/A/gdemsr
    %GDE-I-VERIFY, Verification OK
 
    %GDE-I-GDUPDATE, Updating Global Directory file
-        /home/A/yottadb.gld
-   %YDB-I-DBFILECREATED, Database file /home/A/yottadb.dat created
+        /home/user/A/yottadb.gld
+   %YDB-I-DBFILECREATED, Database file /home/user/A/yottadb.dat created
 
 .. parsed-literal::
    $./repl_setup
-   %YDB-I-JNLCREATE, Journal file /home/A/yottadb.mjl created for region DEFAULT with BEFORE_IMAGES
+   %YDB-I-JNLCREATE, Journal file /home/user/A/yottadb.mjl created for region DEFAULT with BEFORE_IMAGES
    %YDB-I-JNLSTATE, Journaling state for region DEFAULT is now ON
    %YDB-I-REPLSTATE, Replication state for region DEFAULT is now ON
 
@@ -1234,7 +1233,7 @@ Setting up an A -> B Replication Configuration with Empty Databases
    Wed Jul 18 12:45:46 2018 : Initiating START of source server for secondary instance [B]
    Wed Jul 18 12:45:46 2018 : Initiating CHECKHEALTH operation on source server pid [18498] for secondary instance name [B]
    PID 18498 Source server is alive in ACTIVE mode
-   Wed Jul 18 12:45:46 2018 : /usr/local/lib/yottadb/r122/mupip replicate -source -start -instsecondary=B -secondary=localhost:4001 -buffsize=1048576 -log=/home/A/A_B.log
+   Wed Jul 18 12:45:46 2018 : /usr/local/lib/yottadb/r122/mupip replicate -source -start -instsecondary=B -secondary=localhost:4001 -buffsize=1048576 -log=/home/user/A/A_B.log
    Wed Jul 18 12:45:46 2018 : %YDB-I-REPLINFO, GTM Replication Source Server with Pid [18498] started for Secondary Instance [B]
    Wed Jul 18 12:45:46 2018 : Created jnlpool with shmid = [1353941014] and semid = [1447755780]
    Wed Jul 18 12:45:46 2018 : %YDB-I-REPLINFO, GTM Replication Source Server now in ACTIVE mode using port 4001
@@ -1276,7 +1275,7 @@ Once B is brought up as replicating, check the log created on A. For example,
    Wed Jul 18 12:46:01 2018 : Initiating START of source server for secondary instance [dummy]
    PID 18531 Receiver server is alive
    PID 18532 Update process is alive
-   Wed Jul 18 12:46:01 2018 : /usr/local/lib/yottadb/r122/mupip replicate -receive -start -listenport=4001 -buffsize=1048576 -log=/home/B/receive.log
+   Wed Jul 18 12:46:01 2018 : /usr/local/lib/yottadb/r122/mupip replicate -receive -start -listenport=4001 -buffsize=1048576 -log=/home/user/B/receive.log
    Wed Jul 18 12:46:01 2018 : %YDB-I-REPLINFO, GTM Replication Receiver Server with Pid [18531] started on replication instance [B]
    Wed Jul 18 12:46:01 2018 : Attached to existing jnlpool with shmid = [1354006561] and semid = [1447886856]
    Wed Jul 18 12:46:01 2018 : Created recvpool with shmid = [1354072105] and semid = [1447985163]
@@ -1304,7 +1303,7 @@ Once B is brought up as replicating, check the log created on A. For example,
    0 : sequence number of last transaction received from Source Server and written to receive pool
    0 : sequence number of last transaction processed by update process
 
-The shutdown sequence is as follows:
+**The shutdown sequence is as follows**:
 
 **On B**:
 
@@ -1329,7 +1328,7 @@ The shutdown sequence is as follows:
    Wed Jul 18 13:03:01 2018 : Waiting for upto [120] seconds for the source server to shutdown
    Wed Jul 18 13:03:02 2018 : Journal pool shared memory removed
    Wed Jul 18 13:03:02 2018 : Journal pool semaphore removed
-   %YDB-I-MUFILRNDWNSUC, File /home/A/yottadb.dat successfully rundown
+   %YDB-I-MUFILRNDWNSUC, File /home/user/A/yottadb.dat successfully rundown
 
 -------------------------------------------------------------------------
 Setting up an A -> B -> C Replication Configuration with Empty Databases
@@ -1400,7 +1399,7 @@ You can check status information using
 .. parsed-literal::
    ./repl_status
 
-The shutdown sequence is as follows:
+**The shutdown sequence is as follows**:
 
 **On C**:
 
@@ -1445,7 +1444,7 @@ Setting up an A -> P replication configuration with empty databases
 
 .. parsed-literal::
    $./backup_repl startA
-   Replication Instance file /home/A/yottadb.repl backed up in file startA
+   Replication Instance file /home/user/A/yottadb.repl backed up in file startA
    Journal Seqnos up to 0x0000000000000001 are backed up.
 
    BACKUP COMPLETED.
@@ -1488,7 +1487,7 @@ or
    ./rollback 4000 backward
    ./replicating_start_suppl_n P 4000 -updok
 
-The shutdown sequence is as follows:
+**The shutdown sequence is as follows**:
 
 **On P**:
 
@@ -1551,7 +1550,7 @@ The most common scenario for bringing up a replicating instance is to take a bac
 .. parsed-literal::
    ./replicating_start backupA 4001
 
-The shutdown sequence is as follows:
+**The shutdown sequence is as follows**:
 
 **On backupA**:
 
@@ -1586,7 +1585,7 @@ The following example demonstrates starting a replicating instance from the back
    ./suppl_setup backupA currentstateA 4011 -updok
    ./repl_status
 
-The shutdown sequence is as follows:
+**The shutdown sequence is as follows**:
 
 **On backupA**:
 
@@ -1680,7 +1679,7 @@ The following example runs a switchover in an A→B replication configuration.
    ./repl_status # To confirm whether the Receiver Server and the Update Process started correctly.
    cat A/yottadb.lost 
 
-The shutdown sequence is as follows:
+**The shutdown sequence is as follows**:
 
 **On A**:
 
@@ -1797,7 +1796,7 @@ Lost transaction file is processed.
    $ydb_dist/mumps -r ^%XCMD 'set ^B(64)=1,^B(65)=1'
    cat A/yottadb.lost
 
-The shutdown sequence is as follows:
+**The shutdown sequence is as follows**:
 
 **On B**:
 
@@ -1952,7 +1951,7 @@ Processes lost transaction files from A and P.
    cat A/yottadb.lost
    cat P/yottadb.lost
 
-The shutdown sequence is as follows:
+**The shutdown sequence is as follows**:
 
 **On B**:
 
@@ -2090,7 +2089,7 @@ A has to roll back and then become a replicating instance.
 .. parsed-literal::
    $ydb_dist/mumps -r ^%XCMD 'set ^B(64)=1,^B(65)=1'
 
-The shutdown sequence is as follows:
+**The shutdown sequence is as follows**:
 
 **On B**:
 
@@ -2226,7 +2225,7 @@ P does a rollback.
    ./replicating_start_suppl_n P 4000 -updok -autorollback
    ./replicating_start_suppl_n P 4000 -updok 
 
-The shutdown sequence is as follows:
+**The shutdown sequence is as follows**:
   
 **On A**:
 
@@ -2435,7 +2434,7 @@ The lost transaction files are processed.
    cat A/gtm.lost
    cat P/gtm.lost
 
-The shutdown sequence is as follows:
+**The shutdown sequence is as follows**:
 
 **On P**:
 
@@ -2549,7 +2548,7 @@ This example adds the mapping for global ^A to a new database file A.dat in an A
    ./repl_status
    #Perform a switchover to return to the A->B configuration. Remove the global in the prior location to release space with a command like Kill ^A=^|"A/prior.gld"\|A'.
 
-The shutdown sequence is as follows:
+**The shutdown sequence is as follows**:
 
 .. parsed-literal::
    source ./ydbenv A r122
@@ -2694,7 +2693,7 @@ A is now upgraded to r1.22 and is ready to resume the role of the originating in
    ./repl_setup
    ./replicating_start B 4001
 
-The shutdown sequence is as follows:
+**The shutdown sequence is as follows**:
 
 .. parsed-literal::
    source ./env B r1.20_x86_64
@@ -2807,7 +2806,7 @@ The output of this script is the following:
       e is 65537 (0x10001)
       Enter pass phrase for /home/jdoe/certs/ca.key:
       Verifying - Enter pass phrase for /home/jdoe/certs/ca.key:
-      Enter pass phrase for /home/jdoe/certs/ca.key:
+      Enter pass phrase for /home/user/jdoe/certs/ca.key:
       You are about to be asked to enter information that will be incorporated
       into your certificate request.
       What you are about to enter is what is called a Distinguished Name or a DN.
@@ -3049,7 +3048,7 @@ If you are running a recent version of YottaDB:
 - Start the replicating instance without -udpateresync.
 
 .. parsed-literal::
-   mupip replicate -receive -start -listenport=4000 -buffsize=1048576 -log=home/A/receive.log
+   mupip replicate -receive -start -listenport=4000 -buffsize=1048576 -log=home/user/A/receive.log
 
 --------------------------------------------------------------------------------
 Replacing the replication instance file of a replicating instance (A→B and P→Q)
@@ -3070,7 +3069,7 @@ If you are running a recent version of YottaDB:
 - Start the replicating instance with -updateresync=</path/to/bkup-orig-repl-inst-file>. 
 
 .. parsed-literal::
-   mupip replicate -receive -start -listenport=4000 -buffsize=1048576 -log=home/A/receive.log -updateresync=startA
+   mupip replicate -receive -start -listenport=4000 -buffsize=1048576 -log=home/user/A/receive.log -updateresync=startA
 
 In this case, the Receiver Server determines the current instance's journal sequence number by taking a maximum of the Region Sequence Numbers in the database file headers on the replicating instance and uses the input instance file to locate the history record corresponding to this journal sequence number, and exchanges this history information with the Source Server.
 
@@ -3088,12 +3087,12 @@ On P:
 - Start a Source Server on P with -UPDOK to indicate that local updates are enabled on P.
 
 .. parsed-literal::
-   mupip replicate -source -start -passive -buf=1048576 -log=home/P/P.log -updok
+   mupip replicate -source -start -passive -buf=1048576 -log=home/user/P/P.log -updok
 
 - Start the Receiver Server on P with the -UPDATERESYNC=</path/to/bkup-orig-repl-inst-file> qualifier and -RESUME. -RESUME indicates that A and P had been replicating before. The Receiver Server looks at the local (stream #0) sequence numbers in the database file headers on P and takes the maximum value to determine the journal sequence number of the new stream on P. It then uses this as the instance journal sequence number on A to resume replication.
 
 .. parsed-literal::
-   mupip replicate -receive -start -listenport=4000 -buffsize=1048576 -log=home/P/P.log -updateresync=startA -resume
+   mupip replicate -receive -start -listenport=4000 -buffsize=1048576 -log=home/user/P/P.log -updateresync=startA -resume
 
 --------------------------------------------------------------------------------------
 Setting up a new replicating instance from a backup of the originating instance (A→P)
@@ -3118,12 +3117,12 @@ On P:
 - Start a Source Server on P with -UPDOK to indicate local updates are enabled on P.
 
 .. parsed-literal::
-   mupip replicate -source -start -passive -buf=1048576 -log=home/P/P.log -updok
+   mupip replicate -source -start -passive -buf=1048576 -log=home/user/P/P.log -updok
 
 - Start the Receiver Server on P with the -UPDATERESYNC=</path/to/bkup-orig-repl-inst-file> qualifier and -INITIALIZE. The -INITIALIZE indicates this is the first time A and P are replicating.
 
 .. parsed-literal::
-   mupip replicate -receive -start -listenport=4000 -buffsize=1048576 -log=home/P/P.log -updateresync=startA -initialize
+   mupip replicate -receive -start -listenport=4000 -buffsize=1048576 -log=home/user/P/P.log -updateresync=startA -initialize
 
 In this case, the Receiver Server uses the current journal sequence number in the </path/to/bkup-orig-repl-inst-file> as the point where A starts sending journal records. YottaDB updates the stream sequence number of Stream # 1 in the instance file on P to reflect this value. From this point, YottaDB maps the journal sequence number on A to a stream journal sequence number (for example, stream # 1) on P.
 
@@ -3159,12 +3158,12 @@ On P:
 - Start the Source Server with -UPDOK to indicate that local updates are enabled on P.
   
 .. parsed-literal::
-     mupip replicate -source -start -passive -buf=1048576 -log=home/P/P.log -updok
+     mupip replicate -source -start -passive -buf=1048576 -log=home/user/P/P.log -updok
 
 - Start the Receiver Server with the -UPDATERESYNC=</path/to/bkup-orig-repl-inst-file> qualifier and -INITIALIZE. The -INITIALIZE indicates that this is the first time A and P are replicating.
 
 .. parsed-literal::
-   mupip replicate -receive -start -listenport=4000 -buffsize=1048576 -log=home/P/P.log -updateresync=startA -initialize
+   mupip replicate -receive -start -listenport=4000 -buffsize=1048576 -log=home/user/P/P.log -updateresync=startA -initialize
 
 The Receiver Server uses the current journal sequence number in the </path/to/bkup-orig-repl-inst-file> as the point where A starts sending journal records. YottaDB updates the stream sequence number (for example, of Stream # 1) in the instance file on P to reflect this value. Going forward, the journal sequence number on A will always map to a stream journal sequence number (for example, of stream # 1) on P.
 
