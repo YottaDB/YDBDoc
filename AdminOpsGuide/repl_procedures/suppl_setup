@@ -1,0 +1,6 @@
+$ydb_dist/mupip set -replication=on -region "*"
+$ydb_dist/mupip replicate -instance_create -supplementary -noreplace
+$ydb_dist/mupip replicate -source -start -passive -buf=1048576 -log=$PWD/$ydb_repl_instname/$1_dummy.log -instsecondary=dummy $4 
+$ydb_dist/mupip replicate -receive -start -listenport=$3 -buffsize=1048576 -log=$PWD/$ydb_repl_instname/$1.log -updateresync=$2 -initialize $5
+$ydb_dist/mupip replicate -receive -checkhealth
+tail -30 $PWD/$1/$1.log

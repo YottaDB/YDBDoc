@@ -1,0 +1,4 @@
+change -segment DEFAULT -file_name=$PWD/$ydb_repl_instname/yottadb.dat
+exit
+
+

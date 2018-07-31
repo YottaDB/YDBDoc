@@ -1,0 +1,4 @@
+$ydb_dist/mupip replicate -source -start -instsecondary=$2 -secondary=localhost:$3 -buffsize=1048576 -log=$PWD/$1/$1_$2.log $4 $5
+$ydb_dist/mupip replicate -source -checkhealth
+tail -30 $PWD/$1/$1_$2.log 
+# Use something like date +"%Y%m%d-%H:%M:%S` in the names of log files 

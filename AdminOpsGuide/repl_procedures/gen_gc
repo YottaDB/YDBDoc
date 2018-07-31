@@ -1,0 +1,17 @@
+#Creates the libconfig format configuration file
+#$ydb_dist/mumps -r CONVDBKEYS $ydb_crypt_config
+echo "tls: {">$ydb_crypt_config
+echo " verify-depth: 7;" >> $ydb_crypt_config
+echo "    CAfile: \"$PWD/certs/ca.crt\";" >> $ydb_crypt_config
+echo "     $1: {" >> $ydb_crypt_config
+echo "           format: \"PEM\";" >> $ydb_crypt_config
+echo "           cert: \"$PWD/certs/$1.crt\";" >> $ydb_crypt_config
+echo "           key: \"$PWD/certs/$1.key\";" >> $ydb_crypt_config
+echo "     };" >> $ydb_crypt_config
+echo "     $2: {" >> $ydb_crypt_config
+echo "           format: \"PEM\";" >> $ydb_crypt_config
+echo "           cert: \"$PWD/certs/$2.crt\";" >> $ydb_crypt_config
+echo "           key: \"$PWD/certs/$2.key\";" >> $ydb_crypt_config
+echo "     };" >> $ydb_crypt_config
+echo "};" >> $ydb_crypt_config
+cat $ydb_crypt_config

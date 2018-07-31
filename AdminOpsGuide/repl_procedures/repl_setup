@@ -1,0 +1,4 @@
+#!/bin/sh
+$ydb_dist/mupip set -replication=on -region "*"
+$ydb_dist/mupip replic -instance_create -noreplace
+

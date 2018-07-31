@@ -1,0 +1,11 @@
+
+echo "-----------------------------------------------------------------"
+echo "Source Server $ydb_repl_instname: "
+echo "-----------------------------------------------------------------"
+$ydb_dist/mupip replicate -source -check
+$ydb_dist/mupip replicate -source -showbacklog 
+echo "-----------------------------------------------------------------"
+echo "Receiver Server $ydb_repl_instname: "
+echo "-----------------------------------------------------------------"
+$ydb_dist/mupip replicate -receive -check
+$ydb_dist/mupip replicate -rece -showbacklog

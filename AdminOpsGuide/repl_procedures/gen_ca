@@ -1,0 +1,5 @@
+#Generates root certification authority and sets it to expire in 365 days. Ensure that you have a properly configured /etc/ssl/openssl.cnf file.
+mkdir -p $PWD/certs
+openssl genrsa -des3 -out $PWD/certs/$1ca.key
+openssl req -new -x509 -days 365 -key $PWD/certs/$1ca.key -out $PWD/certs/$1ca.crt
+#Important: Keep the self-signed root certificate authority and leaf-level certificates in a secure location. Protect their directories with 0500 permissions and the individual files with 0400 permissions so that unauthorized users cannot access them.

@@ -1,0 +1,6 @@
+echo "Creating cert directories ...in $PWD"
+mkdir -p $PWD/certs/newcerts
+touch $PWD/certs/index.txt
+echo "01" > $PWD/certs/serial
+echo "Generating root CA...."
+./gen_ca
