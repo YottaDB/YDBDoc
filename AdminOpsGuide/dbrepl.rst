@@ -921,7 +921,7 @@ The folder `repl_procedures <https://github.com/YottaDB/YottaDBDoc/tree/master/A
 
 The folder repl_procedures includes the following scripts:
 
-`ydbenv <https://github.com/YottaDB/YottaDBDoc/raw/master/AdminOpsGuide/repl_procedures/ydbenv>`_
+`ydbenv <https://github.com/YottaDB/YottaDBDoc/blob/master/AdminOpsGuide/repl_procedures/ydbenv>`_
 
 Sets a default environment for YottaDB replication. It takes two arguments: 
 
@@ -954,9 +954,9 @@ For more examples on setting YottaDB related environment variables to reasonable
 
 Modify the ydbenv script according to your test environment. 
 
-`db_create <https://github.com/YottaDB/YottaDBDoc/raw/master/AdminOpsGuide/repl_procedures/db_create>`_
+`db_create <https://github.com/YottaDB/YottaDBDoc/blob/master/AdminOpsGuide/repl_procedures/db_create>`_
 
-Creates a new sub-directory in the current directory, a global directory file with settings taken from `gdemsr <https://github.com/YottaDB/YottaDBDoc/raw/master/AdminOpsGuide/repl_procedures/gdemsr>`_, and the YottaDB database file.
+Creates a new sub-directory in the current directory, a global directory file with settings taken from `gdemsr <https://github.com/YottaDB/YottaDBDoc/blob/master/AdminOpsGuide/repl_procedures/gdemsr>`_, and the YottaDB database file.
 
 Here is the code:
 
@@ -965,15 +965,15 @@ Here is the code:
    $ydb_dist/mumps -r ^GDE @gdemsr
    $ydb_dist/mupip create
 
-`gdemsr <https://github.com/YottaDB/YottaDBDoc/raw/master/AdminOpsGuide/repl_procedures/gdemsr>`_
+`gdemsr <https://github.com/YottaDB/YottaDBDoc/blob/master/AdminOpsGuide/repl_procedures/gdemsr>`_
 
-Contains settings that are given to the `db_create <https://github.com/YottaDB/YottaDBDoc/raw/master/AdminOpsGuide/repl_procedures/db_create>`_ script.
+Contains settings that are given to the `db_create <https://github.com/YottaDB/YottaDBDoc/blob/master/AdminOpsGuide/repl_procedures/db_create>`_ script.
 
 .. parsed-literal::
    change -segment DEFAULT -file_name=$PWD/$ydb_repl_instname/yottadb.dat
    exit
 
-`backup_repl <https://github.com/YottaDB/YottaDBDoc/raw/master/AdminOpsGuide/repl_procedures/backup_repl>`_
+`backup_repl <https://github.com/YottaDB/YottaDBDoc/blob/master/AdminOpsGuide/repl_procedures/backup_repl>`_
 
 Creates a backup of the replication instance file. The first argument specifies the location of the backed up replication instance file.
 
@@ -982,7 +982,7 @@ Here is the code:
 .. parsed-literal::
    $ydb_dist/mupip backup -replinst=$1
 
-`repl_setup <https://github.com/YottaDB/YottaDBDoc/raw/master/AdminOpsGuide/repl_procedures/repl_setup>`_
+`repl_setup <https://github.com/YottaDB/YottaDBDoc/blob/master/AdminOpsGuide/repl_procedures/repl_setup>`_
 
 Turns on replication for all regions and create the replication instance file with the -noreplace qualifier for a BC instance.
 
@@ -993,7 +993,7 @@ Here is the code:
    $ydb_dist/mupip set -replication=on -region "*"
    $ydb_dist/mupip replicate -instance_create -noreplace
 
-`originating_start <https://github.com/YottaDB/YottaDBDoc/raw/master/AdminOpsGuide/repl_procedures/originating_start>`_
+`originating_start <https://github.com/YottaDB/YottaDBDoc/blob/master/AdminOpsGuide/repl_procedures/originating_start>`_
 
 Starts the Source Server of the originating instance in a BC replication configuration. It takes five arguments:
 
@@ -1010,7 +1010,7 @@ Here is the code:
    $ydb_dist/mupip replicate -source -checkhealth
    tail -30 $PWD/$1/$1_$2.log
 
-`replicating_start <https://github.com/YottaDB/YottaDBDoc/raw/master/AdminOpsGuide/repl_procedures/replicating_start>`_
+`replicating_start <https://github.com/YottaDB/YottaDBDoc/blob/master/AdminOpsGuide/repl_procedures/replicating_start>`_
 
 Starts the passive Source Server and the Receiver Server in a BC replication configuration. It takes four arguments:
 
@@ -1027,7 +1027,7 @@ Here is the code:
    $ydb_dist/mupip replicate -receive -checkhealth
    tail -20 $PWD/$1/receive.log
 
-`suppl_setup <https://github.com/YottaDB/YottaDBDoc/raw/master/AdminOpsGuide/repl_procedures/suppl_setup>`_
+`suppl_setup <https://github.com/YottaDB/YottaDBDoc/blob/master/AdminOpsGuide/repl_procedures/suppl_setup>`_
 
 Turns on replication for all regions, creates the supplementary replication instance file with the -noreplace qualifier, starts the passive Source Server, starts the Receiver Server of an SI replicating instance, and displays the health status of the Receiver Server and the Update Process. Use this to start an SI replicating instance for the first time. It takes four arguments:
 
@@ -1049,7 +1049,7 @@ Here is the code:
    $ydb_dist/mupip replicate -receive -checkhealth
    tail -30 $PWD/$1/$1.log
 
-`repl_status <https://github.com/YottaDB/YottaDBDoc/raw/master/AdminOpsGuide/repl_procedures/repl_status>`_
+`repl_status <https://github.com/YottaDB/YottaDBDoc/blob/master/AdminOpsGuide/repl_procedures/repl_status>`_
 
 Displays health and backlog status information for the Source Server and Receiver Server in the current environment.
 
@@ -1067,7 +1067,7 @@ Here is the code:
    $ydb_dist/mupip replicate -receive -check
    $ydb_dist/mupip replicate -rece -showbacklog
 
-`rollback <https://github.com/YottaDB/YottaDBDoc/raw/master/AdminOpsGuide/repl_procedures/rollback>`_
+`rollback <https://github.com/YottaDB/YottaDBDoc/blob/master/AdminOpsGuide/repl_procedures/rollback>`_
 
 Performs an ONLINE FETCHRESYNC rollback and creates a lost and/or broken transaction file. It takes two arguments:
 
@@ -1082,7 +1082,7 @@ Here is the code:
 .. parsed-literal::
    $ydb_dist/mupip journal -rollback -fetchresync=$1 -$2 "*"
 
-`originating_stop <https://github.com/YottaDB/YottaDBDoc/raw/master/AdminOpsGuide/repl_procedures/originating_stop>`_
+`originating_stop <https://github.com/YottaDB/YottaDBDoc/blob/master/AdminOpsGuide/repl_procedures/originating_stop>`_
 
 Shuts down the Source Server with a two second timeout and performs a MUPIP RUNDOWN operation.
 
@@ -1094,7 +1094,7 @@ Here is the code:
    $ydb_dist/mupip replicate -source -shutdown -timeout=2 $1 #Shut down the originating Source Server
    $ydb_dist/mupip rundown -region "*" #Perform database rundown
 
-`replicating_stop <https://github.com/YottaDB/YottaDBDoc/raw/master/AdminOpsGuide/repl_procedures/replicating_stop>`_
+`replicating_stop <https://github.com/YottaDB/YottaDBDoc/blob/master/AdminOpsGuide/repl_procedures/replicating_stop>`_
 
 Shuts down the Receiver Server with a two seconds timeout and then shuts down the passive Source Server.
 
@@ -1104,7 +1104,7 @@ Here is the code:
    $ydb_dist/mupip replicate -receiver -shutdown -timeout=2 #Shut down the Receiver Server
    $ydb_dist/mupip replicate -source -shutdown -timeout=2 #Shut down the passive Source Server
 
-`replicating_start_suppl_n <https://github.com/YottaDB/YottaDBDoc/raw/master/AdminOpsGuide/repl_procedures/replicating_start_suppl_n>`_
+`replicating_start_suppl_n <https://github.com/YottaDB/YottaDBDoc/blob/master/AdminOpsGuide/repl_procedures/replicating_start_suppl_n>`_
 
 Starts the passive Source Server and the Receiver Server of the supplementary instance for all startups except the first. It takes three arguments:
 
@@ -1124,7 +1124,7 @@ Here is the code:
    $ydb_dist/mupip replicate -receiver -checkhealth # Checks the health of the Receiver Server and the Update Process
    tail -30 $PWD/$1/$1.log
 
-`gen_gc <https://github.com/YottaDB/YottaDBDoc/raw/master/AdminOpsGuide/repl_procedures/gen_gc>`_
+`gen_gc <https://github.com/YottaDB/YottaDBDoc/blob/master/AdminOpsGuide/repl_procedures/gen_gc>`_
 
 Creates the libconfig format configuration file for use with the TLS example.
 
@@ -1152,7 +1152,7 @@ Here is the code:
    echo "     };" >> $ydb_crypt_config
    echo "};" >> $ydb_crypt_config
 
-`cert_setup <https://github.com/YottaDB/YottaDBDoc/raw/master/AdminOpsGuide/repl_procedures/cert_setup>`_
+`cert_setup <https://github.com/YottaDB/YottaDBDoc/blob/master/AdminOpsGuide/repl_procedures/cert_setup>`_
 
 Sets up the $PWD/certs directory for use with the TLS example.
 
@@ -1166,7 +1166,7 @@ Here is the code:
    echo "Generating root CA...."
    ./gen_ca
 
-`gen_ca <https://github.com/YottaDB/YottaDBDoc/raw/master/AdminOpsGuide/repl_procedures/gen_ca>`_
+`gen_ca <https://github.com/YottaDB/YottaDBDoc/blob/master/AdminOpsGuide/repl_procedures/gen_ca>`_
 
 Creates the root certification authority in the $PWD/certs directory for use with the TLS example.
 
@@ -1179,7 +1179,7 @@ Here is the code:
    openssl req -new -x509 -days 365 -key $PWD/certs/$1ca.key -out $PWD/certs/$1ca.crt
    #Important: Keep the self-signed root certificate authority and leaf-level certificates in a secure location. Protect their directories with 0500 permissions and the individual files with 0400 permissions so that unauthorized users cannot access them.
 
-`gen_leaf <https://github.com/YottaDB/YottaDBDoc/raw/master/AdminOpsGuide/repl_procedures/gen_leaf>`_
+`gen_leaf <https://github.com/YottaDB/YottaDBDoc/blob/master/AdminOpsGuide/repl_procedures/gen_leaf>`_
 
 Creates the leaf-level certificate and gets it signed by the root certification authority for use with the TLS example.
 
