@@ -1,0 +1,5 @@
+#!/bin/sh
+$ydb_dist/mupip replicate -source -shutdown -timeout=2 $1 #Shut down the originating Source Server
+$ydb_dist/mupip rundown -region "*" #Perform database rundown 
+
+

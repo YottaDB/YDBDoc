@@ -1,0 +1,5 @@
+#Generates leaf-level certificates in $PWD/certs
+openssl genrsa -des3 -out $PWD/certs/$1${ydb_repl_instname}.key
+openssl req -new -key $PWD/certs/$1${ydb_repl_instname}.key -out $PWD/certs/$ydb_repl_instname.csr
+openssl ca -config $PWD/openssl.cnf -in $PWD/certs/$ydb_repl_instname.csr -out $PWD/certs/$1$ydb_repl_instname.crt
+openssl x509 -in $PWD/certs/$1$ydb_repl_instname.crt -dates -issuer -subject -noout

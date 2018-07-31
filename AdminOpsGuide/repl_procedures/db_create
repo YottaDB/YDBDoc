@@ -1,0 +1,5 @@
+mkdir -p $PWD/$ydb_repl_instname/
+$ydb_dist/mumps -r ^GDE @gdemsr
+$ydb_dist/mupip create
+
+

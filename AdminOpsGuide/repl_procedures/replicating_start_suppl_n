@@ -1,0 +1,5 @@
+$ydb_dist/mupip replicate -source -start -passive -instsecondary=dummy -buffsize=1048576 -log=$PWD/$ydb_repl_instname/$12dummy.log $3 # creates the Journal Pool
+$ydb_dist/mupip replicate -receive -start -listenport=$2 -buffsize=1048576 $4 $5 -log=$PWD/$ydb_repl_instname/$1.log # starts the Receiver Server and the Update Process
+tail -30 $PWD/$1/$1.log
+$ydb_dist/mupip replicate -receiver -checkhealth # Checks the health of the Receiver Server and the Update Process
+
