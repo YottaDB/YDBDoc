@@ -8,4 +8,3 @@ export ydb_routines="$PWD/$ydb_repl_instname $ydb_dist/libgtmutil.so"
 export LD_LIBRARY_PATH=/usr/local/lib
 #export ydb_crypt_config=$PWD/$ydb_repl_instname/config_file
 #echo -n "Enter Password for ydb_tls_passwd_${ydb_repl_instname}: ";export ydb_tls_passwd_${ydb_repl_instname}="`$ydb_dist/plugin/gtmcrypt/maskpass|tail -n 1|cut -f 3 -d " "`"
-
