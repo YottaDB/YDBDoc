@@ -403,6 +403,8 @@ A certain number of each type of helper process maximizes throughput. As a pract
 .. note::
    There may be other reasons for a replicating instance to lag behind its originating instance during replication. Helper processes cannot improve situations such as the following: There is a bottleneck in the network between the originating and replicating instances (increase the network bandwidth or use compression) or the hardware of the replicating instance is not as capable as that of the hardware on the originating instance (upgrade the hardware of the replicating instance).
 
+.. _Filters:
+
 **Filters**
 
 A Filter is a conversion program that transforms a replication stream to a desired schema. It operates as a traditional UNIX filter, reading from STDIN and writing to STDOUT. Both input and output use the YottaDB journal extract format. A filter can operate on an originating instance or a replicating instance. When the originating instance is an older application version, a filter can change the update records from the old schema to the new schema. When the originating instance is the newer application version, a filter can change the update records from the new schema to the old schema. Once you have logic for converting records in the old schema to the new schema, the per record code serves as the basis for the filter by replacing the scanning logic with logic to read the extract format and extract the update and completing the filter by reassembling the revised record(s) into the YottaDB extract format.
@@ -2958,7 +2960,7 @@ Filters between the originating and replicating systems perform rolling upgrades
 
 YottaDB provides the ability to invoke a filter; however, an application developer must write the filters specifically as part of each application release upgrade when schema changes are involved.
 
-Filters should reside on the upgraded system and use logical database updates to update the schema before applying those updates to the database. The filters must invoke the replication Source Server (new schema to old) or the database replication Receiver Server (old schema to new), depending on the system's status as either originating or replicating. For more information on Filters, refer to the `“Filters” section <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html/#replication-architecture>`_. 
+Filters should reside on the upgraded system and use logical database updates to update the schema before applying those updates to the database. The filters must invoke the replication Source Server (new schema to old) or the database replication Receiver Server (old schema to new), depending on the system's status as either originating or replicating. For more information on Filters, refer to the Filters_ section. 
 
 ----------------------------------------------
 Recovering from the replication WAS_ON State
