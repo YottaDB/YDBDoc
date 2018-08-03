@@ -1937,13 +1937,22 @@ YottaDB Go methods and functions return a return code using an
 :code:`error` interface. Where a method or function returns two
 values, as permitted by Go, the second is the return code.
 
-XYZ – The :code:`error` interface needs to be better described, to be
-done during the implementation. The implementation will be
-idiomatically and culturally comfortable to Go programmers. In the
-text below, where the text refers to a return code such as
-:code:`C.YDB_OK` or :code:`C.YDB_ERR_INVSTRLEN`, that return code is
-available to callers through the :code:`error` interface.
+YottaDB error reporting has a structure and a method.
 
+.. code-block:: go
+
+    type YDBError struct {
+        errcode         int       // The error value (e.g. C.YDB_OK, C.YDB_ERR_DBFILERR, etc)
+        errmsg          string    // The error string – nil if status is C.YDB_OK, $zstatus if otherwise
+    }
+
+    func (err *YDBError) Error() string {
+	return err.errmsg
+    }
+
+XYZ – The :code:`error` interface needs to be better described.  The
+implementation will be idiomatically and culturally comfortable to Go
+programmers.
 
 Go Symbolic Constants
 =====================
