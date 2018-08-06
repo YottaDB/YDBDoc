@@ -1940,7 +1940,7 @@ YottaDB uses the INVSTRLEN error code, which has the numeric value
 the numeric values and mnemonics from release to release, to ensure
 applications remain compatible when the underlying YottaDB releases
 are upgraded. While the Go :code:`error` interface provides for a call
-to return an error as a string (with the empty string for a successful
+to return an error as a string (with :code:`nil` for a successful
 return), applications in other languages, such as C, expect a numeric
 return value.
 
@@ -1948,21 +1948,18 @@ Where C application code calling YottaDB functions will check the
 return code, and if it is not :code:`YDB_OK` access the intrinsic
 special variable `$zstatus`_ for more detailed information, Go
 application code calling YottaDB methods and functions will check the
-:code:`error` return value of the function to determine whether it is
-the empty string. If it is not, the code has a choice of examining
-the string which is the `$zstatus`_ for the error or accessing the
-numeric value. In the event the return code is the empty string, the
-numeric value will be :code:`C.YDB_OK`; as a practical matter,
-applications will never access the numeric value when the
-:code:`error` return is an empty string.
+:code:`error` interface to determine whether it is :code:`nil`. If it
+is not, the code has a choice of examining the string which is the
+`$zstatus`_ for the error or accessing the numeric value. This means
+that Go application code will not see a :code:`C.YDB_OK` return.
 
 The YottaDB Go :code:`error` interface has a structure and a method.
 
 .. code-block:: go
 
     type YDBError struct {
-        errcode         int       // The error value (e.g. C.YDB_OK, C.YDB_ERR_DBFILERR, etc)
-        errmsg          string    // The error string – nil if no error; $zstatus if otherwise
+        errcode         int       // The error value (e.g. C.YDB_ERR_DBFILERR)
+        errmsg          string    // The error string – $zstatus
     }
 
     func (err *YDBError) Error() string {
@@ -2127,7 +2124,7 @@ return value (zero if the structure has not yet been allocated, i.e.,
 
 If the :code:`len_used` field of the :code:`C.ydb_buffer_t` structure
 is greater than its :code:`len_alloc` field (owing to a prior
-INVSTRLEN error), the return code is INVSTRLEN.
+INVSTRLEN error), the error return is INVSTRLEN.
 
 Go BufferT GetValBAry()
 -----------------------
@@ -2140,7 +2137,7 @@ If the :code:`len_used` field of the :code:`C.ydb_buffer_t` structure
 referenced by :code:`cbuft` is greater than its :code:`len_alloc`
 field (owing to a prior INVSTRLEN error), return :code:`len_alloc`
 bytes of the buffer referenced by the :code:`C.ydb_buffer_t` structure
-referenced by :code:`cbuft` as a byte array, and a return code of
+referenced by :code:`cbuft` as a byte array, and an error return of
 INVSTRLEN.
 
 Otherwise, return :code:`len_used` bytes of the buffer as a byte array
@@ -2158,7 +2155,7 @@ If the :code:`len_used` field of the :code:`C.ydb_buffer_t` structure
 referenced by :code:`cbuft` is greater than its :code:`len_alloc`
 field (owing to a prior INVSTRLEN error), return :code:`len_alloc`
 bytes of the buffer referenced by the :code:`C.ydb_buffer_t` structure
-referenced by :code:`cbuft` as a string, and a return code of
+referenced by :code:`cbuft` as a string, and an error return of
 INVSTRLEN.
 
 Otherwise, return :code:`len_used` bytes of the buffer as a string (a
@@ -2178,8 +2175,8 @@ length of a used substring of the contents of the buffer referenced by
 the :code:`buf_addr` field of the referenced :code:`C.ydb_buffer_t`.
 
 - If :code:`newLen` is greater than the :code:`len_alloc` field of the
-  referenced :code:`C.ydb_buffer_t`, make no changes and return with a
-  return code of INVSTRLEN.
+  referenced :code:`C.ydb_buffer_t`, make no changes and return with
+  an error return of INVSTRLEN.
 - Otherwise, set the :code:`len_used` field of the referenced
   :code:`C.ydb_buffer_t` to :code:`newLen`.
 
@@ -2325,7 +2322,7 @@ Go BufferTArray GetLenUsed()
     GetLenUsed(idx uint) (uint, error)
 
 - If :code:`idx` is greater than the :code:`elemsAlloc` of the
-  :code:`BufferTArray` structure, return with a return code of
+  :code:`BufferTArray` structure, return with an error return of
   INSUFFSUBS. In this case, the return value (the
   :code:`uint` returned) is not meaningful.
 - Otherwise, return the :code:`len_used` field of the array element
@@ -2349,13 +2346,12 @@ Go BufferTArray GetValBAry()
     GetValBAry(idx uint) (*[]byte, error)
 
 - If :code:`idx` is greater than :code:`elemsAlloc`, return a zero
-  length byte array and a return code of INSUFFSUBS.
+  length byte array and an error return of INSUFFSUBS.
 - If the :code:`len_used` field of the :code:`C.ydb_buffer_t`
   structure specified by :code:`idx` is greater than its
-  :code:`len_alloc` field (owing to a previous
-  INVSTRLEN error), return a byte array
-  containing the :code:`len_alloc` bytes at :code:`buf_addr` and a
-  return code of INVSTRLEN.
+  :code:`len_alloc` field (owing to a previous INVSTRLEN error),
+  return a byte array containing the :code:`len_alloc` bytes at
+  :code:`buf_addr` and an error return of INVSTRLEN.
 - Otherwise, return a byte array containing the :code:`len_used` bytes
   at :code:`buf_addr`.
 
@@ -2367,13 +2363,12 @@ Go BufferTArray GetValStr()
     GetValStr(idx uint) (*string, error)
 
 - If :code:`idx` is greater than :code:`elemsAlloc`, return a zero
-  length string and a return code of INSUFFSUBS.
+  length string and an error return of INSUFFSUBS.
 - If the :code:`len_used` field of the :code:`C.ydb_buffer_t`
   structure specified by :code:`idx` is greater than its
-  :code:`len_alloc` field (owing to a previous
-  INVSTRLEN error), return a string
-  containing the :code:`len_alloc` bytes at :code:`buf_addr` and a
-  return code of INVSTRLEN.
+  :code:`len_alloc` field (owing to a previous INVSTRLEN error),
+  return a string containing the :code:`len_alloc` bytes at
+  :code:`buf_addr` and an error return of INVSTRLEN.
 - Otherwise, return a string containing the :code:`len_used` bytes at
   :code:`buf_addr`.
 
@@ -2391,8 +2386,8 @@ of the contents of the buffer referenced by the :code:`buf_addr` field
 of the referenced :code:`C.ydb_buffer_t`.
 
 - If :code:`newLen` is greater than the :code:`len_alloc` field of the
-  referenced :code:`C.ydb_buffer_t`, make no changes and return with a
-  return code of INVSTRLEN.
+  referenced :code:`C.ydb_buffer_t`, make no changes and return with
+  an error return of INVSTRLEN.
 - Otherwise, set the :code:`len_used` field of the referenced
   :code:`C.ydb_buffer_t` to :code:`newLen`.
 
@@ -2412,7 +2407,7 @@ Use this method to set the current number of valid strings (subscripts
 or variable names) in the :code:`BufferTArray`.
 
 - If :code:`newUsed` is greater than :code:`elemsAlloc`, make no
-  changes and return with a return code of
+  changes and return with an error return of
   INSUFFSUBS.
 - Otherwise, set :code:`elemsUsed` to :code:`newUsed`.
 
@@ -2429,7 +2424,7 @@ Go BufferTArray SetValBAry()
     SetValBAry(idx int, val *[]byte) error
 
 - If :code:`idx` is greater than :code:`elemsAlloc` make no changes
-  and return with a return code of INSUFFSUBS.
+  and return with an error return of INSUFFSUBS.
 - Otherwise, if the length of :code:`val` is greater than the
   :code:`len_alloc` field of the array element specified by :code:`idx`,
   set the :code:`len_used` field of that array element to the required
@@ -2447,7 +2442,7 @@ Go BufferTArray SetValStr()
     SetValStr(idx int, val *string) error
 
 - If :code:`idx` is greater than :code:`elemsAlloc` make no changes
-  and return with a return code of INSUFFSUBS.
+  and return with an error return of INSUFFSUBS.
 - Otherwise, if the length of :code:`val` is greater than the
   :code:`len_alloc` field of the array element specified by :code:`idx`,
   set the :code:`len_used` field of that array element to the required
@@ -2465,7 +2460,7 @@ Go BufferTArray SetValStrLit()
     SetVarStrLit(idx int, val string) error
 
 - If :code:`idx` is greater than :code:`elemsAlloc` make no changes
-  and return with a return code of INSUFFSUBS.
+  and return with an error return of INSUFFSUBS.
 - If the length of :code:`val` is greater than the :code:`len_alloc`
   field of the :code:`C.ydb_buffer_t` structure indexed by :code:`idx`
   and referenced by :code:`cbuft`, make no changes and return
@@ -2543,7 +2538,7 @@ The method wraps `ydb_str2zwr_s()`_ to provide the string in `zwrite
 format`_.
 
 - If :code:`len_alloc` is not large enough, set :code:`len_used` to
-  the required length, and return with a return code of
+  the required length, and return with an error return of
   INVSTRLEN. In this case, :code:`len_used` will be
   greater than :code:`len_alloc` until corrected by application code.
 - Otherwise, set the buffer referenced by :code:`buf_addr` to the
@@ -2560,13 +2555,12 @@ This method wraps `ydb_zwr2str_s()`_ and is the inverse of `Go
 Str2ZwrS()`_.
 
 - If :code:`len_alloc` is not large enough, set :code:`len_used` to
-  the required length, and return with a return code of
+  the required length, and return with an error return of
   INVSTRLEN. In this case, :code:`len_used` will be
   greater than :code:`len_alloc` until corrected by application code.
 - If :code:`str` has errors and is not in valid `zwrite format`_,, set
   :code:`len_used` to zero, and return the error code returned by
-  `ydb_zwr2str_s()`_ prefixed by :code:`C.`, e.g.,
-  INVZWRITECHAR`.
+  `ydb_zwr2str_s()`_ e.g., INVZWRITECHAR`.
 - Otherwise, set the buffer referenced by :code:`buf_addr` to the
   unencoded string, set :code:`len_used` to the length.
 
@@ -2592,8 +2586,7 @@ trees. If your application mixes M and Go code, be sure to read and
 understand the warning in the description of `ydb_delete_excl_s()`_.
 
 In the unlikely event that the :code:`elemsUsed` exceeds
-:code:`C.YDB_MAX_NAMES`, the return code is
-:code:`C.YDB_ERRNAMECOUNT2HI`.
+:code:`C.YDB_MAX_NAMES`, the error return is ERRNAMECOUNT2HI.
 
 Go TpS()
 --------
@@ -2696,13 +2689,13 @@ referenced global or local variable node, or intrinsic special
 variable, in the buffer referenced by the :code:`BufferT` structure
 referenced by :code:`retval`.
 
-- If `ydb_get_s()`_ returns an error code such as GVUNDEF, INVSVN,
-  LVUNDEF, the method makes no changes to the structures under
-  :code:`retval` and returns the error code.
+- If `ydb_get_s()`_ returns an error such as GVUNDEF, INVSVN, LVUNDEF,
+  the method makes no changes to the structures under :code:`retval`
+  and returns the error.
 - Otherwise, if the length of the data to be returned exceeds
   :code:`retval.getLenAlloc()`, the method sets the :code:`len_used`
   of the :code:`C.ydb_buffer_t` referenced by :code:`retval`
-  to the required length, and returns with a return code of
+  to the required length, and returns with an error return of
   INVSTRLEN.
 - Otherwise, it copies the data to the buffer referenced by the
   :code:`retval.buf_addr`, and sets :code:`retval.lenUsed` to its
@@ -2721,13 +2714,13 @@ referenced global or local variable node coerced to a number with
 and returned through the :code:`BufferT` structure referenced by
 :code:`retval`.
 
-- If `ydb_incr_s()`_ returns an error codes such as NUMOFLOW,
-  INVSTRLEN, the method makes no changes to the structures under
-  :code:`retval` and returns the error code.
+- If `ydb_incr_s()`_ returns an error such as NUMOFLOW, INVSTRLEN, the
+  method makes no changes to the structures under :code:`retval` and
+  returns the error.
 - Otherwise, if the length of the data to be returned exceeds
   :code:`retval.lenAlloc`, the method sets the :code:`len_used`
   of the :code:`C.ydb_buffer_t` referenced by :code:`retval`
-  to the required length, and returns with a return code of
+  to the required length, and returns with an error return of
   INVSTRLEN.
 - Otherwise, it copies the data to the buffer referenced by the
   :code:`retval.buf_addr`, sets :code:`retval.lenUsed` to its
@@ -2758,8 +2751,7 @@ locks the process already holds.
 - If the process already holds the lock resource named, the method
   increments the count and returns.
 - If :code:`timeoutNsec` exceeds :code:`C.YDB_MAX_TIME_NSEC`, the
-  method returns with an error return code of
-  TIME2LONG.
+  method returns with an error return TIME2LONG.
 - If it is able to aquire the lock resource within :code:`timeoutNsec`
   nanoseconds, it returns holding the lock, otherwise it returns
   LOCK_TIMEOUT. If :code:`timeoutNsec` is zero, the method makes
@@ -2780,7 +2772,7 @@ first traversal of a local or global variable tree.
   - If the number of subscripts of that next node exceeds
     :code:`next.elemsAlloc`, the method sets
     :code:`next.elemsUsed` to the number of subscripts
-    required, and returns with a return code of
+    required, and returns with an error return of
     INSUFFSUBS. In this case the :code:`elemsUsed`
     is greater than :code:`elemsAlloc`.
   - If one of the :code:`C.ydb_buffer_t` structures referenced by
@@ -2788,7 +2780,7 @@ first traversal of a local or global variable tree.
     insufficient space for the corresponding subscript, the method sets
     :code:`next.elemsUsed` to :code:`n`, and the
     :code:`len_alloc` of that :code:`C.ydb_buffer_t` structure to the
-    actual space required. The method returns with a return code of
+    actual space required. The method returns with an error return of
     INVSTRLEN. In this case the :code:`len_used` of
     that structure is greater than its :code:`len_alloc`.
   - Otherwise, it sets the structure :code:`next` to reference the
@@ -2812,7 +2804,7 @@ reverse depth first traversal of a local or global variable tree.
   - If the number of subscripts of that previous node exceeds
     :code:`prev.elemsAlloc`, the method sets
     :code:`prev.elemsUsed` to the number of subscripts
-    required, and returns with a return code of
+    required, and returns with an error return of
     INSUFFSUBS. In this case the :code:`elemsUsed`
     is greater than :code:`elemsAlloc`.
   - If one of the :code:`C.ydb_buffer_t` structures referenced by
@@ -2820,7 +2812,7 @@ reverse depth first traversal of a local or global variable tree.
     insufficient space for the corresponding subscript, the method sets
     :code:`prev.elemsUsed` to :code:`n`, and the :code:`len_alloc` of
     that :code:`C.ydb_buffer_t` structure to the actual space
-    required. The method returns with a return code of
+    required. The method returns with an error return of
     INVSTRLEN. In this case the :code:`len_used` of
     that structure is greater than its :code:`len_alloc`.
   - Otherwise, it sets the structure :code:`prev` to reference the
@@ -2854,10 +2846,10 @@ breadth-first traversal of a local or global variable sub-tree.
   with a node and/or a subtree:
 
   - If the length of that next subscript exceeds
-    :code:`sub.len_alloc`, the method sets :code:`sub.len_used` to
-    the actual length of that subscript, and returns with a return
-    code of INVSTRLEN. In this case 
-    :code:`sub.len_used` is greater than :code:`sub.len_alloc`.
+    :code:`sub.len_alloc`, the method sets :code:`sub.len_used` to the
+    actual length of that subscript, and returns with an error return of
+    INVSTRLEN. In this case :code:`sub.len_used` is greater than
+    :code:`sub.len_alloc`.
   - Otherwise, it copies that subscript to the buffer referenced by
     :code:`sub.buf_addr`, and sets :code:`buf.len_used` to its length.
   
@@ -2878,10 +2870,10 @@ reverse breadth-first traversal of a local or global variable sub-tree.
   with a node and/or a subtree:
 
   - If the length of that previous subscript exceeds
-    :code:`sub.len_alloc`, the method sets :code:`sub.len_used` to
-    the actual length of that subscript, and returns with a return
-    code of INVSTRLEN. In this case 
-    :code:`sub.len_used` is greater than :code:`sub.len_alloc`.
+    :code:`sub.len_alloc`, the method sets :code:`sub.len_used` to the
+    actual length of that subscript, and returns with an error return of
+    INVSTRLEN. In this case :code:`sub.len_used` is greater than
+    :code:`sub.len_alloc`.
   - Otherwise, it copies that subscript to the buffer referenced by
     :code:`sub.buf_addr`, and sets :code:`buf.len_used` to its length.
   
@@ -2905,8 +2897,7 @@ resources referenced. Upon return, the process will have acquired all
 of the named lock resources or none of the named lock resources.
 
 - If :code:`timeoutNsec` exceeds :code:`C.YDB_MAX_TIME_NSEC`, the
-  method returns with an error return code of
-  TIME2LONG.
+  method returns with an error return of TIME2LONG.
 - If it is able to aquire the lock resources within :code:`timeoutNsec`
   nanoseconds, it returns holding the lock resource;
   otherwise it returns LOCK_TIMEOUT. If :code:`timeoutNsec` is zero, the
@@ -2972,7 +2963,7 @@ The function wraps `ydb_fork_n_core()`_ to generate a core file
 snapshot of a process for debugging purposes. See `ydb_fork_n_core()`_
 for more information.
 
-:code:`ForkNCore()` has no parameters and returns no return code.
+:code:`ForkNCore()` has no parameters and returns nothing.
 
 ---------
 Go Free()
@@ -3054,7 +3045,7 @@ Go TimerCancel()
 
 The function wraps `ydb_timer_cancel()`_ to cancel a timer previously
 established using :code:`TimerStart()`. :code:`timerid` is the id
-of the timer. The function returns no return code.
+of the timer. The function returns nothing.
 
 ---------------
 Go TimerStart()
