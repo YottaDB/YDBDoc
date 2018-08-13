@@ -2552,7 +2552,7 @@ Returns the full specification of the file into which the function places a ZSHO
 The optional expression argument is a template output device specification. It can be a device, a file directory, or a file name. The template is an expression that is pre-processed to create a file specification as the target for the ZSHOW. The preprocessing is equivalent to $ZPARSE(), as illustrated by the following M code:
 
 .. parsed-literal::
-   set deffn="GTM_JOBEXAMINE.ZSHOW_DMP\_"_$JOB\_"_"_<cntr>
+   set deffn="YDB_JOBEXAM.ZSHOW_DMP\_"_$JOB\_"_"_<cntr>
    set filespec=$zparse(expr1,"",deffn)
 
 The $ZJOBEXAM()does not trigger error processing except when there is a problem storing its return value, so no error is reported to the process until after any dump is complete. In the event of any error encountered during the $ZJOBEXAM(), YottaDB sends an appropriate message to operator log facility and returns control to the caller. Note that this special error handling applies only to the $ZJOBEXAM(), and is not a property of the $ZINTERRUPT interrupt handler, which uses $ZJOBEXAM() by default.
@@ -2568,7 +2568,7 @@ Example:
 .. parsed-literal::
    YDB>set x=$zjobexam()
    YDB>write x
-   /home/ydbuser1/yottadb/r1.10/r/GTM_JOBEXAM.ZSHOW_DMP_28760_1
+   /home/ydbuser1/yottadb/r1.10/r/YDB_JOBEXAM.ZSHOW_DMP_28760_1
    YDB>set x=$zjobexam("test.file")
    YDB>write x
    /home/ydbuser1/yottadb/r1.10/r/test.file
