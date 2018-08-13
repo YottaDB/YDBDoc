@@ -109,7 +109,6 @@ The optional qualifiers are:
 .. parsed-literal::
    -A[LL] 
    -L[OCK] 
-   -[NO]C[RIT] 
    -[NO]EXACT
    -[NO]I[NTERACTIVE] 
    -O[UTPUT]="file-name" 
@@ -132,16 +131,6 @@ Specifies all current LOCKs.
 * Issue a CLEAR - ALL only when there are no active YottaDB processes using LOCKs, or when you can predict the effect on the application.
 
 * By default, CLEAR -ALL operates interactively (-INTERACTIVE).
-
-.. parsed-literal::
-   -[NO]C[RIT]
-
-Allows LKE CLEAR to work even if another process is holding a critical section.
-
-.. note::
-   This can damage current LOCKs and the LOCK mechanism. It is intended for use only under the direction of YottaDB.
-
-By default, LKE operates in CRIT mode and ensures a consistent view of LOCKs by using the database critical section(s).
 
 .. parsed-literal::
    -[NO]EXACT
@@ -521,7 +510,7 @@ Summary
 +------------------------------+----------------------------------------------------------+---------------------------------------------------------+
 | Command                      | Qualifier                                                | Comments                                                |
 +==============================+==========================================================+=========================================================+
-| C[LEAR]                      | -ALL, -L[OCK], -[NO]CRIT, -[NO]EXACT, -[NO]I[NTERACTIVE],| Use CLEAR with care and planning.                       |
+| C[LEAR]                      | -ALL, -L[OCK], -[NO]EXACT, -[NO]I[NTERACTIVE],           | Use CLEAR with care and planning.                       |
 |                              | -O[UTPUT]=file-name, -P[ID]=pid, -R[EGION]=name          |                                                         |
 +------------------------------+----------------------------------------------------------+---------------------------------------------------------+
 | E[XIT]                       | None                                                     | \-                                                      |
