@@ -133,9 +133,18 @@ Specifies all current LOCKs.
 
 * By default, CLEAR -ALL operates interactively (-INTERACTIVE).
 
-~~~~~~~~~~  
--[NO]EXACT
-~~~~~~~~~~
+.. parsed-literal::
+   -[NO]C[RIT]
+
+Allows LKE CLEAR to work even if another process is holding a critical section.
+
+.. note::
+   This can damage current LOCKs and the LOCK mechanism. It is intended for use only under the direction of YottaDB.
+
+By default, LKE operates in CRIT mode and ensures a consistent view of LOCKs by using the database critical section(s).
+
+.. parsed-literal::
+   -[NO]EXACT
 
 Limits the CLEAR command to the exact resource name specified with -LOCK=resource_name. NOEXACT (the default) treats the specified resource name as a prefix and works not only on it, but also on any of its descendants, since their existence effectively LOCKs their parent tree.
 
@@ -342,9 +351,8 @@ resource_name specifies a single lock.
 
 * When used with the SHOW command, the LOCK qualifier provides a precise way to examine the specified lock and any descendant LOCKed resources.
 
-~~~~~~~~~~~~  
--[NO]C[RIT]
-~~~~~~~~~~~~
+.. parsed-literal::
+   -[NO]C[RIT]
 
 Allows the SHOW command to work even if another process is holding a critical section.
 
