@@ -141,7 +141,7 @@ Allows LKE CLEAR to work even if another process is holding a critical section.
 .. note::
    This can damage current LOCKs and the LOCK mechanism. It is intended for use only under the direction of YottaDB.
 
-By default, LKE operates in CRIT[ICAL] mode and ensures a consistent view of LOCKs by using the database critical section(s).
+By default, LKE operates in CRIT mode and ensures a consistent view of LOCKs by using the database critical section(s).
 
 .. parsed-literal::
    -[NO]EXACT
@@ -297,7 +297,7 @@ The optional qualifiers are:
 .. parsed-literal::
    -A[LL]
    -L[OCK] 
-   -[NO]C[[RIT]ICAL] 
+   -[NO]C[RITICAL] 
    -O[UTPUT]="file-name"
    -P[ID]=pid 
    -R[EGION]=region-name 
@@ -345,13 +345,13 @@ resource_name specifies a single lock.
 * When used with the SHOW command, the LOCK qualifier provides a precise way to examine the specified lock and any descendant LOCKed resources.
 
 .. parsed-literal::
-   -[NO]C[[RIT]ICAL]
+   -[NO]C[RIT]
 
 Allows the SHOW command to work even if another process is holding a critical section.
 
-* By default, LKE operates in CRIT[ICAL] mode and ensures a consistent view of LOCKs by using the database critical section(s).
+* By default, LKE operates in CRIT mode and ensures a consistent view of LOCKs by using the database critical section(s).
 
-* Use NOCRIT[ICAL] with SHOW only when normal operation is unsuccessful, as NOCRIT[ICAL] may cause LKE to report incomplete or inconsistent information.
+* Use NOCRIT with SHOW only when normal operation is unsuccessful, as NOCRIT may cause LKE to report incomplete or inconsistent information.
 
 .. parsed-literal::
    -O[UTPUT]="file-name"
@@ -435,11 +435,6 @@ Example:
 This command shows lock ^a("b") in the default region.
 
 Example:
-
-.. parsed-literal::
-   LKE>SHOW -CRITICAL
-
-or
 
 .. parsed-literal::
    LKE>SHOW -CRIT
@@ -526,14 +521,14 @@ Summary
 +------------------------------+----------------------------------------------------------+---------------------------------------------------------+
 | Command                      | Qualifier                                                | Comments                                                |
 +==============================+==========================================================+=========================================================+
-| C[LEAR]                      | -ALL, -L[OCK], -[NO]EXACT, -[NO]I[NTERACTIVE],           | Use CLEAR with care and planning.                       |
+| C[LEAR]                      | -ALL, -L[OCK], -[NO]CRIT, -[NO]EXACT, -[NO]I[NTERACTIVE],| Use CLEAR with care and planning.                       |
 |                              | -O[UTPUT]=file-name, -P[ID]=pid, -R[EGION]=name          |                                                         |
 +------------------------------+----------------------------------------------------------+---------------------------------------------------------+
 | E[XIT]                       | None                                                     | \-                                                      |
 +------------------------------+----------------------------------------------------------+---------------------------------------------------------+
 | H[ELP]                       | [option]                                                 | \-                                                      |
 +------------------------------+----------------------------------------------------------+---------------------------------------------------------+
-| SH[OW]                       | -ALL, -L[OCK], -[NO]CRIT[ICAL], -N[OINTERACTIVE],        | \-                                                      |
+| SH[OW]                       | -ALL, -L[OCK], -[NO]CRIT, -N[OINTERACTIVE],              | \-                                                      |
 |                              | -O[UTPUT]=file-name, -P[ID]=pid, -R[EGION]=name, -W[AIT] |                                                         |
 +------------------------------+----------------------------------------------------------+---------------------------------------------------------+
 | SP[AWN]                      | none                                                     | shellcommand                                            |
