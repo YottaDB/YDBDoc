@@ -1915,7 +1915,7 @@ Socket Device Examples
 
 The sockexamplemulti31.m routine shows the use of $KEY and $ZKEY in a basic socket I/O setup. It's functionality is atypical in order to demonstrate a number of features. It launches two jobs: a server process which opens a listening socket and a client process which makes five connections to the server. The server sends a message to each connection socket. Even-numbered client sockets read the message partially but do not send a response back to the server. Odd-numbered client sockets receive the full message and respond to the server with the message "Ok.". The server reads two characters (but the client sends three) and $ZKEY shows sockets with unread characters.
 
-You can download sockexamplemulti31.m from `here <http://github.com/YottaDB/YottaDBdoc/blob/master/ProgGuide/sockexamplemulti31.m>`_ and follow the instructions in the comments near the top of the program file. 
+You can download `sockexamplemulti31.m <https://gitlab.com/YottaDB/DB/YDBDoc/raw/master/ProgGuide/sockexamplemulti31.m>`_ from GitLab and follow the instructions in the comments near the top of the program file. 
 
 You can start a YottaDB process in response to a connection request made using inetd/xinetd. The following example uses inetd/xinetd to implement a listener which responds to connections and messages just as the prior example.
 

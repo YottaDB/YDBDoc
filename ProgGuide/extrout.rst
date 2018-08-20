@@ -700,11 +700,11 @@ Here are some working examples of C programs that use call-ins to invoke YottaDB
 +--------------------------------+----------------------------------------------------------------------------------------------+
 | Example                        | Download Information                                                                         |
 +================================+==============================================================================================+
-| gtmaccess.c (gtm_ci interface) | https://github.com/YottaDB/YottaDBdoc/tree/master/ProgGuide/gtmci_gtmaccess.zip              |
+| gtmaccess.c (gtm_ci interface) | https://gitlab.com/YottaDB/DB/YDBDoc/blob/master/ProgGuide/gtmci_gtmaccess.zip               |
 +--------------------------------+----------------------------------------------------------------------------------------------+
-| gtmaccess.c (gtm_cip interface)| https://github.com/YottaDB/YottaDBdoc/tree/master/ProgGuide/gtmcip_gtmaccess.zip             |
+| gtmaccess.c (gtm_cip interface)| https://gitlab.com/YottaDB/DB/YDBDoc/blob/master/ProgGuide/gtmcip_gtmaccess.zip              |
 +--------------------------------+----------------------------------------------------------------------------------------------+
-| cpiece.c (gtm_ci interface)    | https://github.com/YottaDB/YottaDBdoc/tree/master/ProgGuide/gtmci_cpiece.zip                 |
+| cpiece.c (gtm_ci interface)    | https://gitlab.com/YottaDB/DB/YDBDoc/blob/master/ProgGuide/gtmci_cpiece.zip                  |
 +--------------------------------+----------------------------------------------------------------------------------------------+
 
 **Print Error Messages**

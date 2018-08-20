@@ -15,7 +15,7 @@ This chapter describes the installation procedure for YottaDB. Always read the r
 Obtaining YottaDB Distribution Media
 -------------------------------------
 
-YottaDB LLC prefers to distribute YottaDB online via the Internet. YottaDB for selected platforms, including GNU/Linux on the popular x86 architecture and Raspberry Pi hardware, can be downloaded under the terms of the Affero GNU General Public License (AGPL) version 3, from Github (https://raw.githubusercontent.com/YottaDB/YottaDB/master/sr_unix/ydbinstall.sh). Contact YottaDB Support (info@yottadb.com) to obtain a copy of a YottaDB distribution for other platforms or on physical media. 
+YottaDB LLC prefers to distribute YottaDB online via the Internet. YottaDB for selected platforms, including GNU/Linux on the popular x86 architecture and Raspberry Pi hardware, can be downloaded under the terms of the Affero GNU General Public License (AGPL) version 3, from GitLab (https://gitlab.com/YottaDB/DB/YDB/blob/master/sr_unix/ydbinstall.sh). Contact YottaDB Support (info@yottadb.com) to obtain a copy of a YottaDB distribution for other platforms or on physical media. 
 
 ---------------------------
 Before You Begin
@@ -23,7 +23,7 @@ Before You Begin
 
 Before you begin installing YottaDB, perform the following tasks:
 
-* Read the YottaDB Release Notes Documentation. The release documents contain the latest information that may be critical for installing and configuring YottaDB. They are located under the `Releases tab on the YottaDB Github repository <https://github.com/YottaDB/YottaDB/releases>`_ and can also be reached from the `Documentation page on the YottaDB website <https://yottadb.com/resources/documentation/>`_
+* Read the YottaDB Release Notes Documentation. The release documents contain the latest information that may be critical for installing and configuring YottaDB. They are located under the `Tags in the YottaDB GitLab repository <https://gitlab.com/YottaDB/DB/YDB/tags>`_ and can also be reached from the `Documentation page on the YottaDB website <https://yottadb.com/resources/documentation/>`_
 
 * Determine whether or not YottaDB access is restricted to a specific group. Keep the group name handy as you will have to enter it during the installation process.
 
@@ -44,7 +44,7 @@ Installation Procedure
 
 * Create a temporary directory and change to it, e.g.: mkdir /tmp/tmp ; cd /tmp/tmp
 
-* Get the YottaDB installer: wget https://raw.githubusercontent.com/YottaDB/YottaDB/master/sr_unix/ydbinstall.sh
+* Get the YottaDB installer: wget https://gitlab.com/YottaDB/DB/YDB/blob/master/sr_unix/ydbinstall.sh
 
 * Make it executable: chmod +x ydbinstall.sh
 

@@ -663,7 +663,7 @@ This example creates an alternate collation sequence that collates alphabets in 
 
 Please ensure that you have a correctly configured YottaDB installation and correctly configured environment variables with appropriate directories and files.
 
-Download col_reverse_32.c from `Github <https://github.com/YottaDB/YottaDBdoc/tree/master/ProgGuide/col_reverse_32.c>`_. It contains code for the transformation routine (gtm_ac_xform_1), reverse transformation routine (gtm_ac_xback_1) and the version control routines (gtm_ac_version and gtm_ac_verify).
+Download `col_reverse_32.c <https://gitlab.com/YottaDB/DB/YDBDoc/raw/master/ProgGuide/col_reverse_32.c>`_ from GitLab. It contains code for the transformation routine (gtm_ac_xform_1), reverse transformation routine (gtm_ac_xback_1) and the version control routines (gtm_ac_version and gtm_ac_verify).
 
 Save and compile col_reverse_32.c. On x86 GNU/Linux (64-bit Ubuntu 10.10), execute a command like the following:
 
