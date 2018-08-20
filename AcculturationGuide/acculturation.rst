@@ -139,7 +139,7 @@ Using kvm on a Linux host, the following command boots the vmdk image with port 
 Legal Stuff
 +++++++++++
 
-YottaDB is owned and copyrighted by `YottaDB LLC <http://yottadb.com/>`_ and is available for the GNU/Linux platforms on x86_64 and Raspberry Pi hardware under the terms of the `GNU Affero General Public License Version 3 <http://www.gnu.org/licenses/agpl.txt>`_ . Source and binary can be downloaded from the `YottaDB project page at Github <https://github.com/YottaDB/YottaDB>`_ .
+YottaDB is owned and copyrighted by `YottaDB LLC <http://yottadb.com/>`_ and is available for the GNU/Linux platforms on x86_64 and Raspberry Pi hardware under the terms of the `GNU Affero General Public License Version 3 <http://www.gnu.org/licenses/agpl.txt>`_ . Source and binary can be downloaded from the `YottaDB project page at GitLab <https://gitlab.com/YottaDB/DB/YDB>`_ .
 
 GT.M is owned and copyrighted by `Fidelity Information Services, LLC <http://www.fisglobal.com/>`_, and is available for the x86_64 GNU/Linux platform under the terms of the `GNU Affero General Public License version 3 <http://www.gnu.org/licenses/agpl.txt>`_. Source and binary can be downloaded from the `GT.M project page at Source Forge <http://sourceforge.net/projects/fis-gtm>`_ .
 
@@ -171,7 +171,7 @@ With a terminal emulator, initiate an ssh connection to port 2222 on localhost a
 Install YottaDB
 ++++++++++++++++
 
-- Get the YottaDB install script: wget https://raw.githubusercontent.com/YottaDB/YottaDB/master/sr_unix/ydbinstall.sh
+- Get the YottaDB install script: wget https://gitlab.com/YottaDB/DB/YDB/raw/master/sr_unix/ydbinstall.sh
 - Make it executable: chmod +x ydbinstall.sh
 - Run it where you want it installed (omit the --verbose option for less output): The below command installs YottaDB in /usr/local/lib/ 
   
@@ -3280,7 +3280,7 @@ Installations of large applications often have local or modifications. In such c
     alias mupip=$ydb_dist/mupip
     yottadbuser\@yottadbworkshop:~$
 
-Now you can look at this in operation by applying some modifications to VistA that allow it to operate better with YottaDB to the /home/yottadbuser/VistA/p directory. Download the file KSBVistAPatches.zip from `YottaDB on Github <https://github.com/YottaDB/YottaDBdoc/tree/master/AcculturationGuide>`_, and put it in the /Distrib/VistA directory. Then unpack it to /home/yottadbuser/VistA/p directory.
+Now you can look at this in operation by applying some modifications to VistA that allow it to operate better with YottaDB to the /home/yottadbuser/VistA/p directory. Download the file KSBVistAPatches.zip from `YottaDB on GitLab <https://gitlab.com/YottaDB/DB/YDBDoc/blob/master/AcculturationGuide/KSBVistAPatches.zip>`_, and put it in the /Distrib/VistA directory. Then unpack it to /home/yottadbuser/VistA/p directory.
 
 .. parsed-literal::
    yottadbuser@yottadbworkshop:~$ ls -l /Distrib/VistA/KSBVistAPatches.zip
@@ -3414,7 +3414,7 @@ Now, you can run VistA with the local modifications. In this case, one of the mo
 
 When you work on an application, either to enhance it or to fix a bug, you typically modify only a small part of the application. With YottaDB, you do not need to make a copy of an entire application environment to work on your project. Nor do you need to work in the same environment as other developers, with the risk of stepping on one another's toes. All you need is to to set up your processes so that their $ZROUTINES search path finds your development routines before finding the main application routines. If your work involves changes to global variables, you can set up your own copy of the database – or, even, if it makes sense, a part of the database with the remaining globals mapped to the parent environment. Of course, in a large project, your environment's parent may itself have a parent.
 
-Delete the r1.20 subdirectory, and obtain the files inc and install from `here <https://github.com/YottaDB/YottaDBdoc/tree/master/AcculturationGuide>`_, and make install executable.
+Delete the r1.20 subdirectory, and obtain the files `inc <https://gitlab.com/YottaDB/DB/YDBDoc/blob/master/AcculturationGuide/inc>`_ and `install <https://gitlab.com/YottaDB/DB/YDBDoc/blob/master/AcculturationGuide/install>`_ from GitLab, and make install executable.
 
 .. parsed-literal::
    yottadbuser@yottadbworkshop:~$ ls -l VistA/

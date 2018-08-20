@@ -81,7 +81,7 @@ To compile and run the monthstarting.zip example, perform the following steps:
 
 Download monthstarting.zip.
 
-monthstarting.zip contains monthstarting.m, month_starting.c, and monthstarting.ci. To download monthstarting.zip, go to `Github <https://github.com/YottaDB/YottaDBdoc/tree/master/AdminOpsGuide/monthstarting.zip>`_.
+monthstarting.zip contains monthstarting.m, month_starting.c, and monthstarting.ci. To download monthstarting.zip, go to `GitLab <https://gitlab.com/YottaDB/DB/YDBDoc/blob/master/AdminOpsGuide/monthstarting.zip>`_.
 
 Run the monthstarting.m program that lists months starting with the specified day of the week and year range.
 

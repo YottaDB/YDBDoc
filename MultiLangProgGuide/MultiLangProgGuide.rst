@@ -38,7 +38,7 @@ Local Installation
 
 - Create a temporary directory and change to it, e.g.: :code:`mkdir /tmp/tmp ; cd /tmp/tmp`
 - Get the YottaDB installer: :code:`wget
-  https://raw.githubusercontent.com/YottaDB/YottaDB/master/sr_unix/ydbinstall.sh`
+  https://gitlab.com/YottaDB/DB/YDB/raw/master/sr_unix/ydbinstall.sh`
 - Make it executable: :code:`chmod +x ydbinstall.sh`
 - Run it with your choice of directory where you want it installed
   (omit the :code:`--verbose` option for less output): :code:`sudo
@@ -55,11 +55,11 @@ Local Installation
    :code:`#include` the file :code:`/usr/local/lib/yottadb/r122/libyottadb.h`
    in your C program and compile it. As a sample program, you can
    download the `wordfreq.c
-   <https://raw.githubusercontent.com/YottaDB/YottaDBtest/master/simpleapi/inref/wordfreq.c>`_
+   <https://gitlab.com/YottaDB/DB/YDBTest/raw/master/simpleapi/inref/wordfreq.c>`_
    program, with a `reference input file
-   <https://raw.githubusercontent.com/YottaDB/YottaDBtest/master/simpleapi/outref/wordfreq_input.txt>`_
+   <https://gitlab.com/YottaDB/DB/YDBTest/raw/master/simpleapi/outref/wordfreq_input.txt>`_
    and `corresponding reference output file
-   <https://raw.githubusercontent.com/YottaDB/YottaDBtest/master/simpleapi/outref/wordfreq_output.txt>`_
+   <https://gitlab.com/YottaDB/DB/YDBTest/raw/master/simpleapi/outref/wordfreq_output.txt>`_
    and compile it with :code:`gcc -I $ydb_dist -L $ydb_dist -o wordfreq wordfreq.c -lyottadb`.
 
 #. Run your program and verify that the output matches the reference output. For example:
@@ -1739,7 +1739,7 @@ requested size, or NULL if it is unable to satisfy the request.
 provides debugging functionality under the control of the environment
 variable :code:`ydb_dbglvl` whose values are a mask as described in
 `gtmdbglvl.h
-<https://github.com/YottaDB/YottaDB/blob/master/sr_port/gtmdbglvl.h>`_.
+<https://gitlab.com/YottaDB/DB/YDB/blob/master/sr_port/gtmdbglvl.h>`_.
 
 --------------------------
 ydb_stdout_stderr_adjust()
@@ -2009,7 +2009,7 @@ the API, it initializes signal handling as follows:
 As database operations such as `ydb_set_s()`_ set timers, subsequent
 system calls can terminate prematurely with an EINTR. Such system
 calls should be wrapped to restart them when this occurs. The file
-`eintr_wrappers.h <https://github.com/YottaDB/YottaDB/blob/master/sr_port/eintr_wrappers.h>`_
+`eintr_wrappers.h <https://gitlab.com/YottaDB/DB/YDB/blob/master/sr_port/eintr_wrappers.h>`_
 demonstrates how YottaDB itself is coded to handle this situation.
 
 If YottaDB is used within a process with other code that cannot
