@@ -976,17 +976,6 @@ constants. :code:`YDB_SEVERITY()` is only meaningful for `error return
 codes`_ and not other numbers. Use  :code:`YDB_IS_YDBERR()` to
 determine whether a return code is a YottaDB `error return code`_.
 
-:code:`YDB_STRING_TO_BUFFER(string, buffer)` – Use this macro to set a
-:code:`ydb_buffer_t` structure to refer to a null-terminated string
-referred to by a pointer. This macro requires the code to also
-:code:`#include <string.h>`. With :code:`string` pointing to a null terminated
-string, and :code:`buffer` a pointer to a :code:`ydb_buffer_t` structure, set:
-
-- :code:`buffer->buf_addr` to :code:`string`; and
-- :code:`buffer->len_used` and :code:`buffer->len_alloc` to
-  :code:`strlen(string)`.
-
-
 YottaDB functions are divided into:
 
 - Simple API — a core set of functions that provides easy-to-use
