@@ -22,7 +22,7 @@ YottaDB® is a trademark of YottaDB LLC. GT.M™ is a trademark of Fidelity Nati
 Acculturation Workshop Expectations
 -----------------------------------
 
-The Acculturation Workshop is a hands-on “boot camp” for those interested in the configuration, administration and operation of applications on YottaDB. This file is the script, or workbook, for the workshop, and consists of the exercises below.
+The Acculturation Workshop is a hands-on “boot camp” for those interested in the configuration, administration and operation of applications on YottaDB. This file is the script, or workbook, for the workshop, consisting of the exercises below.
 
 At the end of these exercises, you will have a basic working knowledge of the essential aspects of YottaDB administration and operations. While this workshop alone will not make you a YottaDB expert by any means, the basic working knowledge will help you quickly understand the concepts explained in the user documentation and put you on the path to becoming an expert.
 
