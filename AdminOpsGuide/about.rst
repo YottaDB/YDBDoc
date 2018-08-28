@@ -14,7 +14,7 @@
 .. contents::
    :depth: 2
 
-YottaDB is a high-end performance database application development and deployment platform from YottaDB LLC. YottaDB provides an M language subsystem, a database engine, and a complete set of utilities for administration and operation. One can install and manage YottaDB using the utilities described in this manual and standard operating system tools. This chapter provides an overview of the YottaDB system environment and utilities. 
+YottaDB® is a high-end performance database application development and deployment platform from YottaDB LLC. YottaDB provides an M language subsystem, a database engine, and a complete set of utilities for administration and operation. One can install and manage YottaDB using the utilities described in this manual and standard operating system tools. This chapter provides an overview of the YottaDB system environment and utilities. 
 
 --------------------------------------
 Hardware/ Operating System Environment
