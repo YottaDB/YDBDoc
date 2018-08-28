@@ -14,7 +14,7 @@ Permission is granted to copy, distribute and/or modify this document under the 
 
 Copyright © 2014 Fidelity National Information Services, Inc. and/or its subsidiaries. All Rights Reserved.
 
-YottaDB™ is a trademark of YottaDB LLC. GT.M™ is a trademark of Fidelity National Information Services, Inc. Other trademarks are the property of their respective owners.
+YottaDB® is a trademark of YottaDB LLC. GT.M™ is a trademark of Fidelity National Information Services, Inc. Other trademarks are the property of their respective owners.
 
 .. contents:: Navigation
 
@@ -139,9 +139,9 @@ Using kvm on a Linux host, the following command boots the vmdk image with port 
 Legal Stuff
 +++++++++++
 
-YottaDB is owned and copyrighted by `YottaDB LLC <http://yottadb.com/>`_ and is available for the GNU/Linux platforms on x86_64 and Raspberry Pi hardware under the terms of the `GNU Affero General Public License Version 3 <http://www.gnu.org/licenses/agpl.txt>`_ . Source and binary can be downloaded from the `YottaDB project page at GitLab <https://gitlab.com/YottaDB/DB/YDB>`_ .
+YottaDB® is owned and copyrighted by `YottaDB LLC <http://yottadb.com/>`_ and is available for the GNU/Linux platforms on x86_64 and Raspberry Pi hardware under the terms of the `GNU Affero General Public License Version 3 <http://www.gnu.org/licenses/agpl.txt>`_ . Source and binary can be downloaded from the `YottaDB project page at GitLab <https://gitlab.com/YottaDB/DB/YDB>`_ .
 
-GT.M is owned and copyrighted by `Fidelity Information Services, LLC <http://www.fisglobal.com/>`_, and is available for the x86_64 GNU/Linux platform under the terms of the `GNU Affero General Public License version 3 <http://www.gnu.org/licenses/agpl.txt>`_. Source and binary can be downloaded from the `GT.M project page at Source Forge <http://sourceforge.net/projects/fis-gtm>`_ .
+GT.M™ is owned and copyrighted by `Fidelity Information Services, LLC <http://www.fisglobal.com/>`_, and is available for the x86_64 GNU/Linux platform under the terms of the `GNU Affero General Public License version 3 <http://www.gnu.org/licenses/agpl.txt>`_. Source and binary can be downloaded from the `GT.M project page at Source Forge <http://sourceforge.net/projects/fis-gtm>`_ .
 
 The core of VistA (so called “FOIA VistA”) is in the public domain through the US Freedom of Information Act. Source and object code are available on one of the hard drive images. As noted above, no understanding of VistA itself is required or assumed for the workshop.
 
@@ -189,7 +189,7 @@ Run YottaDB
 
 **Default Environment**
 
-YottaDB needs several environment variables to be set up. YottaDB provides a script that sets up reasonable defaults and allows you to start using YottaDB immediately. When you set up environments in YottaDB, you should set up your own scripting, but the default is a good place to start. You can source the ydb_env_set file in the directory in which you have installed YottaDB (e.g, /usr/local/lib/yottadb/r1.20_x86_64/ydb_env_set) to set up reasonable defaults or simply execute the script ydb to execute YottaDB. A default environment is created only if it does not exist already.
+YottaDB needs several environment variables to be set up. YottaDB provides a script that sets up reasonable defaults and allows you to start using YottaDB immediately. When you set up environments in YottaDB, you should set up your own scripting, but the default is a good place to start. You can source the ydb_env_set file in the directory in which you have installed YottaDB (e.g, /usr/local/lib/yottadb/r120/ydb_env_set) to set up reasonable defaults or simply execute the script ydb to execute YottaDB. A default environment is created only if it does not exist already.
 
 .. parsed-literal::
    yottadbuser@yottadbworkshop:~$ source /usr/local/lib/yottadb/r120/ydb_env_set
