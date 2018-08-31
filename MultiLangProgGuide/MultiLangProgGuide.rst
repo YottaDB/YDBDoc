@@ -478,7 +478,7 @@ of four space separated pieces:
 
 1. Always “YottaDB”.
 #. The release number, which starts with “r” and is followed by two
-   numbers separated by a period (“.”), e.g., “r1.22”. The first is a
+   numbers separated by a period (“.”), e.g., “r1.24”. The first is a
    major release number and the second is a minor release number under
    the major release. Even minor release numbers indicate formally
    released software. Odd minor release numbers indicate software
@@ -1809,6 +1809,28 @@ variable :code:`ydb_dbglvl` whose values are a mask as described in
 `gtmdbglvl.h
 <https://gitlab.com/YottaDB/DB/YDB/blob/master/sr_port/gtmdbglvl.h>`_.
 
+-------------
+ydb_message()
+-------------
+
+.. code-block:: C
+
+	int ydb_message(int errnum, ydb_buffer_t *errmsg)
+
+Returns the error message text template for the error number specified
+by :code:`errnum`.
+
+- If :code:`errnum` does not correspond to an error that YottaDB
+  recognizes, it returns the error :code:`YDB_ERR_UNKNOWNSYSERR`,
+  leaving the structures referenced by :code:`errmsg` unaltered.
+- Otherwise, if the length of the text exceeds
+  :code:`errmsg.len_alloc` it returns the error
+  :code:`YDB_ERR_INVSTRLEN`. In this case :code:`errmsg.len_used` is
+  greater than :code:`errmsg.len_alloc`.
+- Otherwise, it copies the text to the buffer specified by
+  :code:`errmsg.buf_addr` and sets :code:`errmsg.len_used` to its
+  length, and returns :code:`YDB_OK`.
+
 --------------------------
 ydb_stdout_stderr_adjust()
 --------------------------
@@ -1894,26 +1916,34 @@ Programming in Go
 =================
 
 Programming YottaDB in the `Go language <https://golang.org/>`_ is
-accomplished through a wrapper that uses `cgo
-<https://golang.org/cmd/cgo/>`_ to provide a “yottadb” package for
-access from Go application code to YottaDB releases installed on a
-system. YottaDB C functions are wrapped by Go methods where a method
-can meaningfully be associated with a Go structure, and by Go
-functions otherwise.
+accomplished through a wrapper for `Simple API`_ functions that uses
+`cgo <https://golang.org/cmd/cgo/>`_ to provide a “yottadb” package
+for access from Go application code. There are two Go APIs:
 
-Note: the YotaDB Go wrapper does not implement direct calls from Go
-to M. To call an M function from Go, create a C function that calls
-the M function (see `Calls from External Routines: Call-Ins
-<https://docs.yottadb.com/ProgrammersGuide/extrout.html#calls-from-external-routines-call-ins>`_),
-and call the C function from Go.
+- `Go Easy API`_ aims to be a straighforward, easy-to-use API to access
+  YottaDB without limiting the functionality of YottaDB. The `Go Easy
+  API`_ consists of `Go Easy API Functions`_ that use standard Go data
+  types and structures.
+- `Go Simple API`_ aims to improve performance by reducing the overhead
+  of copying between Go and YottaDB heaps by defining structures
+  :code:`BufferT`, :code:`BufferTArray`, and :code:`KeyT` which are
+  allocated in the YottaDB heap and pointed to by Go
+  variables. `Simple API`_ functionality is provided by Go methods
+  where a method can meaningfully be associated with a structure, and
+  by Go functions otherwise.
+
+Note: Go and M application code cannot exist in the same process. This
+does not apply to `triggers
+<https://docs.yottadb.com/ProgrammersGuide/triggers.html>`_, which are
+written in M, i.e., triggers and Go application code can exist in the
+same process.
 
 As the Go language has important differences from C (for example, it
 has structures with methods but lacks macros), below are Go-specific
 sections of the `Quick Start`_, `Concepts`_, `Symbolic Constants`_,
 `Data Structures & Type Definitions`_, `Simple API`_ and `Utility
 Functions`_ sections above. The sections below that are specific to Go
-are intended to supplement, but not subsume their general (C)
-counterparts.
+are intended to supplement, but not subsume, their C counterparts.
 
 Go application code *must not* directly use the YottaDB C API
 structures and functions (those prefixed by :code:`C.`) as such usage
@@ -1922,8 +1952,7 @@ methods and functions exposed by the YottaDB Go wrapper. :code:`C.`
 prefixed structures and functions are mentioned only for clarity in
 documentation and brevity of explanation. For example,
 :code:`C.ydb_buffer_t` is the C :code:`ydb_buffer_t` structure defined
-in `Data Structures & Type Definitions`_ and :code:`C.ydb_lock_s()` is
-the Simple API `ydb_lock_s()`_ function.
+in `Data Structures & Type Definitions`_.
 
 All subsections of the `Programming in Go` section are prefixed with
 “Go” to ensure unique names for hyperlinking.
@@ -1931,24 +1960,25 @@ All subsections of the `Programming in Go` section are prefixed with
 Go Quick Start
 ==============
 
-The YottaDB Go wrapper requires a minimum YottaDB version of r1.20 and
+The YottaDB Go wrapper requires a minimum YottaDB version of r1.24 and
 is tested with a minimum Go version of 1.6.2. If the Golang packages
 on your operating system are older, and the Go wrapper does not work,
 please obtain and install a newer Golang implementation.
 
-The Go Quick Start assumes that YottaDB has already been installed as
-described in the `Quick Start`_ section. After completing step 1
+The `Go Quick Start`_ assumes that YottaDB has already been installed
+as described in the `Quick Start`_ section. After completing step 1
 (*Installing YottaDB*), install the Go wrapper:
 
-Download the Go wrapper from XYZ [provide URL when released].  Unpack
-the contents in its own directory (e.g, :code:`$HOME/go/src/yottadb`),
-and ensure that directory is in the search path for packages.
+- Download the Go wrapper from XYZ [provide URL when released].
+  Unpack the contents in its own directory (e.g,
+  :code:`$HOME/go/src/yottadb`), and ensure that directory is in the
+  search path for packages.
 
 Then after step 2 (*Choose a directory for your default
 environment and initialize it*) in the `Quick Start`_ section:
 
-3. Put your GO program in the :code:`$ydb_dir` directory, XYZ
-   (instructions to include headers).  As a sample program, you can
+3. Put your GO program in the :code:`$ydb_dir` directory, [XYZ
+   instructions to include headers].  As a sample program, you can
    download the wordfreq.go program [XYZ – provide actual URL for
    wordfreq.go program when ready], with a `reference input file
    <https://raw.githubusercontent.com/YottaDB/YottaDBtest/master/simpleapi/outref/wordfreq_input.txt>`_
@@ -1975,8 +2005,10 @@ Go Concepts
 XYZ - Add anything special that a Go programmer should know before
 using YottaDB.
 
-As the YottaDB wrapper is packaged as a Go package, functions calls to
-YottaDB must be prefixed in Go code with :code:`yottadb.`.
+As the YottaDB wrapper is distributed as a Go package, function calls
+to YottaDB must be prefixed in Go code with :code:`yottadb.` (e.g.,
+application code to call the :code:`GetE()` function is
+:code:`yottadb.GetE(…)`.
 
 ------------------
 Go Error Interface
@@ -2001,7 +2033,7 @@ application code calling YottaDB methods and functions will check the
 :code:`error` interface to determine whether it is :code:`nil`. If it
 is not, the code has a choice of examining the string which is the
 `$zstatus`_ for the error or accessing the numeric value. This means
-that Go application code will not see a :code:`C.YDB_OK` return.
+that Go application code will never see a :code:`C.YDB_OK` return.
 
 The YottaDB Go :code:`error` interface has a structure and a method.
 
@@ -2029,10 +2061,14 @@ A routine used to find the error return code is:
 	return -1
     }
 
-In the following documentation, error codes specific to each function
-are noted. However, common errors can also be returned. For example,
-while the `Go BufferT GetValStr()`_ method can return INVSTRLEN, it
-can also return errors from the underlying engine, e.g., GVUNDEF.
+In the documentation:
+
+- Error codes specific to each function are noted. However, common
+  errors can also be returned. For example, while the `Go BufferT
+  GetValStr()`_ method can return INVSTRLEN, it can also return errors
+  from the YottaDB engine, e.g., GVUNDEF.
+- An error name such as INVSTRLEN refers to the underlying error,
+  whether application code reads the numeric value or the string.
 
 Go Symbolic Constants
 =====================
@@ -2043,8 +2079,287 @@ For modules that use `cgo <https://golang.org/cmd/cgo/>`_ to pull-in
 :code:`C.`. For example, the numeric C error return value
 :code:`YDB_ERR_INVSTRLEN` is :code:`C.YDB_ERR_INVSTRLEN` in Go.
 
+Go Easy API
+===========
+
+A global or local variable node, or an intrinsic special variable, is
+specified using the construct :code:`varname string, subary
+[]string`. For an intrinsic special variable, :code:`subary` must be
+:code:`nil`. For a global or local variable, a :code:`nil` for
+:code:`subary` refers to the root node, the entire tree, or both,
+depending on the function and context.
+
+As the `Go Easy API`_ involves more copying of data between the Go and
+YottaDB runtime systems, it requires the CPU to perform a little more
+work than the `Go Simple API`_ does. Whether or not this has a
+measurable impact on performance depends on the application and
+workload.
+
+Strings (values and subscripts) in YottaDB are variable length, as is
+the number of subscripts a local or global variable can have. The `Go
+Simple API`_ requires application code to allocate memory for buffers,
+raising errors when allocated memory (either size or number of
+buffers) is insufficient. Requiring application code using the `Go
+Easy API`_ to similarly allocate memory would be at odds with our goal
+of having it “just work”.  Although YottaDB provides functionality to
+*a priori* determine the length of a value in order to allocate
+required memory, doing this for every call would adversely affect
+performance. The `Go Easy API`_ therefore allocates buffers initially
+of a size and number we believe to be reasonable. Whenever a result
+exceeds its allocation and returns an error, YottaDB expands the
+allocation transparently to the caller, and repeats the operation,
+retaining the expanded memory for the lifetime of the process.
+
+---------------------
+Go Easy API Functions
+---------------------
+
+Go DataE()
+----------
+
+.. code-block:: go
+
+	yottadb.DataE(varname string, subary []string) (uint, error)
+
+Matching `Go DataS()`_, :code:`DataE()` function wraps and returns the
+result of `ydb_data_s()`_. In the event of an error, the return
+value is unspecified.
+
+Go DeleteE()
+------------
+
+.. code-block:: go
+
+	yottadb.DeleteE(deltype int, varname string, subary []string) error
+
+Matching `Go DeleteS()`_, :code:`DeleteE()` wraps `ydb_delete_s()`_ to
+delete a local or global variable node or (sub)tree, with a value of
+:code:`C.YDB_DEL_NODE` for :code:`deltype` specifying that only the
+node should be deleted, leaving the (sub)tree untouched, and a value
+of :code:`C.YDB_DEL_TREE` specifying that the node as well as the
+(sub)tree are to be deleted.
+
+Go GetE()
+---------
+
+.. code-block:: go
+
+	yottadb.GetE(varname string, subary []string) (string, error)
+
+Matching `Go GetS()`_, :code:`GetE()` wraps `ydb_get_s()`_ to return
+the value at the referenced global or local variable node, or
+intrinsic special variable.
+
+- If `ydb_get_s()`_ returns an error such as GVUNDEF, INVSVN, LVUNDEF,
+  the function returns the error.
+- Otherwise, it returns the value at the node.
+
+Go IncrE()
+----------
+
+.. code-block:: go
+
+	yottadb.IncrE(incr, varname string, subary []string) (string, error)
+
+Matching `Go IncrS()`_, :code:`IncrE()` wraps `ydb_incr_s()`_ to
+atomically increment the referenced global or local variable node
+coerced to a number with :code:`incr` coerced to a number, with the
+result stored in the node and returned by the function.
+
+- If `ydb_incr_s()`_ returns an error such as NUMOFLOW or INVSTRLEN,
+  the function returns the error.
+- Otherwise, it returns the incremented value of the node.
+
+With a :code:`nil` value for :code:`incr`, the default increment is 1.
+
+Go LockDecrE()
+--------------
+
+.. code-block:: go
+
+	yottadb.LockDecrE(varname string, subary []string) error
+
+Matching `Go LockDecrS()`_ :code:`LockDecrE()` wraps
+`ydb_lock_decr_s()`_ to decrement the count of the lock name
+referenced, releasing it if the count goes to zero or ignoring the
+invocation if the process does not hold the lock.
+
+Go LockE()
+----------
+
+.. code-block:: go
+
+    yottadb.LockE(timeoutNsec uint64, lockName ... interface{}) error
+
+Matching `Go LockS()`_, :code:`LockE()` wraps `ydb_lock_s()`_ to
+release all lock resources currently held and then attempt to acquire
+the named lock resources referenced. If no lock resources are
+specified, it simply releases all lock resources currently held and
+returns.
+
+:code:`interface{}` is a series of pairs of :code:`varname string` and
+:code:`subary []string` parameters, where a value of :code:`nil` for a
+:code:`subary` parameter specifies the unsubscripted lock resource
+name.
+
+If lock resources are specified, upon return, the process will have
+acquired all of the named lock resources or none of the named lock
+resources.
+
+- If :code:`timeoutNsec` exceeds :code:`C.YDB_MAX_TIME_NSEC`, the
+  function returns with an error return of TIME2LONG.
+- If the lock resource names exceeds the maximum number supported
+  (currently eleven), the function returns a PARMOFLOW error.
+- If :code:`lockName` is not a series of alternating :code:`string`
+  and :code:`[]string` parameters, the function returns the
+  INVLNPAIRLIST error.
+- If it is able to aquire the lock resource(s) within
+  :code:`timeoutNsec` nanoseconds, the function returns holding the lock
+  resource(s); otherwise it returns LOCKTIMEOUT. If :code:`timeoutNsec`
+  is zero, the function makes exactly one attempt to acquire the lock
+  resource(s).
+
+Go LockIncrE()
+--------------
+
+.. code-block:: go
+
+    LockIncrE(timeoutNsec uint64, varname string, subary []string) error
+
+Matching `Go LockIncrS()`_, :code:`LockIncrE()` wraps
+`ydb_lock_incr_s()`_ to attempt to acquire the referenced lock
+resource name without releasing any locks the process already holds.
+
+- If the process already holds the named lock resource, the function
+  increments its count and returns.
+- If :code:`timeoutNsec` exceeds :code:`C.YDB_MAX_TIME_NSEC`, the
+  function returns with an error return TIME2LONG.
+- If it is able to aquire the lock resource within :code:`timeoutNsec`
+  nanoseconds, it returns holding the lock, otherwise it returns
+  LOCKTIMEOUT. If :code:`timeoutNsec` is zero, the function makes
+  exactly one attempt to acquire the lock.
+
+Go MessageE()
+-------------
+
+.. code-block:: go
+
+	yottadb.MessageE(errnum int) (string, error)
+
+Matching `Go MessageS()`_, wraps `ydb_message()`_ to return the text
+template for the error number specified by :code:`errnum`.
+
+- If :code:`errnum` does not correspond to an error that YottaDB
+  recognizes, it returns the error UNKNOWNSYSERR.
+- Otherwise, it returns the error message text template for the error
+  number specified by :code:`errnum`.
+
+Go NodeNextE()
+--------------
+
+.. code-block:: go
+
+	yottadb.NodeNextE(varname string, subary []string) ([]string, error)
+
+Matching `Go NodeNextS()`_, :code:`NodeNextE()` wraps
+`ydb_node_next_s()`_ to facilitate depth first traversal of a local or
+global variable tree.
+
+- If there is a next node, it returns the subscripts of that next
+  node.
+- If the node is the last in the tree, the function returns the NODEEND error.
+
+Go NodePrevE()
+--------------
+
+.. code-block:: go
+
+	yottadb.NodePrevE(varname string, subary []string) ([]string, error)
+
+Matching `Go NodePrevS()`_, :code:`NodePrevE()` wraps
+`ydb_node_previous_s()`_ to facilitate reverse depth first traversal
+of a local or global variable tree.
+
+- If there is a previous node, it returns the subscripts of that
+  previous node; an empty string array if that previous node is the root.
+- If the node is the first in the tree, the function returns the NODEEND error.
+
+Go SetE()
+---------
+
+.. code-block:: go
+
+	yottadb.SetE(value, varname string, subary []string) error
+
+Matching `Go SetS()`_, at the referenced local or global variable
+node, or the intrinsic special variable, :code:`SetE()` wraps
+`ydb_set_s()`_ to set the value specified by :code:`value`.
+
+Go SubNextE()
+-------------
+
+.. code-block:: go
+
+	yottadb.SubNextE(varname string, subary []string) (string, error)
+
+Matching `Go SubNextS()`_, :code:`SubNextE()` wraps
+`ydb_subscript_next_s()`_ to facilitate breadth-first traversal of a
+local or global variable sub-tree.
+
+- At the level of the last subscript, if there is a next subscript
+  with a node and/or a subtree, it returns that subscript.  
+- If there is no next node or subtree at that level of the subtree,
+  the function returns the NODEEND error.
+
+Go SubPrevE()
+-------------
+
+.. code-block:: go
+
+	yottadb.SubPrevE(varname string, subary []string) (string, error)
+
+Matching `Go SubPrevS()`_, :code:`SubPrevE()` wraps
+`ydb_subscript_previous_s()`_ to facilitate reverse breadth-first
+traversal of a local or global variable sub-tree.
+
+- At the level of the last subscript, if there is a previous subscript
+  with a node and/or a subtree, it returns that subscript.
+- If there is no previous node or subtree at that level of the
+  subtree, the function returns the NODEEND error.
+
+Go TpE()
+--------
+
+.. code-block:: go
+
+	yottadb.TpE(tpfn unsafe.Pointer, tpfnparm unsafe.Pointer,
+		transid string, varname ... string) error
+
+Matching `Go TpS()`_, :code:`TpE()` wraps :code:`ydb_tp_s()` to
+implement `Transaction Processing`_. The :code:`varname` parameters
+are local variables whose values should be saved, and restored to
+their original values when the transaction restarts. If there are no
+:code:`varname` parameters, or a sole :code:`varname` is the empty
+string, no local variables are saved and restored; and if a sole
+:code:`varname` is "*" all local variables are saved and restored.
+
+Refer to `Go TpS()`_ for a more detailed discussion of YottaDB Go
+transaction processing.
+
+Go Simple API
+=============
+
+The Go Simple API consists of `Go Data Structures & Type
+Definitions`_, `Go Simple API BufferT Methods`_, `Go Simple API
+BufferTArray Methods`_, `Go Simple API KeyT Methods`_ and `Go Simple
+API Functions`_. Each of them wraps a function in the C `Simple API`_
+– refer to the descriptions of those functions for more detailed
+information. The majority of the functionality is in `Go Simple API
+KeyT Methods`_.
+
+-------------------------------------
 Go Data Structures & Type Definitions
-=====================================
+-------------------------------------
 
 The :code:`C.ydb_buffer_t` structure, which is the
 :code:`ydb_buffer_t` structure described in `Data Structures & Type
@@ -2056,9 +2371,9 @@ collector moves Go structures, the pointers they contain remain valid.
 
 There are three structures for the interface between YottaDB and Go:
 :code:`BufferT` for data, :code:`BufferTArray` for a list of
-subscripts or a set of variable or lock resource names, :code:`KeyT`
-for keys where a key in turn consists of a variable or lock resource
-name and subscripts, as discussed in `Concepts`_.
+subscripts or a set of variable names, :code:`KeyT` for keys where a
+key in turn consists of a variable or lock resource name and
+subscripts, as discussed in `Concepts`_.
 
 .. code-block:: go
 
@@ -2088,21 +2403,21 @@ directly accessible (because they start with lower case letters),
 there are methods associated with their containing structures to
 access and modify them.
 
-Methods for each structure are classified as either `Go Access
-Methods`_ or `Go Simple API`_ methods. `Go Access Methods`_ are
-methods implemented in the Go wrapper for managing the structures for
-data interchange. `Go Simple API`_ methods that wrap functionality
-exposed by the YottaDB API.
+Methods for each structure are classified as either `Go Simple API
+Access Methods`_ or `Go Simple API`_ methods. `Go Simple API Access
+Methods`_ are methods implemented in the Go wrapper for managing the
+structures for data interchange. `Go Simple API`_ methods wrap
+functionality exposed by the YottaDB API.
 
-Go Access Methods
-=================
+----------------------------
+Go Simple API Access Methods
+----------------------------
 
------------------------------
-Go Access Methods for BufferT
------------------------------
+Go Simple API Access Methods for BufferT
+----------------------------------------
 
 Go BufferT Alloc()
-------------------
+..................
 
 .. code-block:: go
 
@@ -2119,7 +2434,7 @@ Set :code:`cbuft` in the :code:`BufferT`
 structure to reference the :code:`C.ydb_buffer_t` structure.
 
 Go BufferT Dump()
------------------
+.................
 
 .. code-block:: go
 
@@ -2138,7 +2453,7 @@ For debugging purposes, dump on stdout:
   :code:`len_alloc` bytes in `zwrite format`_.
 
 Go BufferT Free()
------------------
+.................
 
 .. code-block:: go
 
@@ -2150,80 +2465,76 @@ release the :code:`C.ydb_buffer_t`, and set :code:`cbuft` in the
 :code:`BufferT` structure to :code:`nil`.
 
 Go BufferT GetLenAlloc()
-------------------------
+........................
 
 .. code-block:: go
 
-    GetLenAlloc() uint
+    GetLenAlloc() (uint, error)
 
-Return the :code:`len_alloc` field of the :code:`C.ydb_buffer_t`
-structure referenced by :code:`cbuft` (zero if the structure has not
-yet been allocated, i.e., :code:`cbuft` is :code:`nil`).
+- If the :code:`C.ydb_buffer_t` structure referenced by :code:`cbuft`
+  has not yet been allocated, return the STRUCTNOTALLOCD error.
+- Otherwise, return the :code:`len_alloc` field of the
+  :code:`C.ydb_buffer_t` structure referenced by :code:`cbuft`.
 
 Go BufferT GetLenUsed()
------------------------
+.......................
 
 .. code-block:: go
 
     GetLenUsed() (uint, error)
 
-Return the :code:`len_used` field of the :code:`C.ydb_buffer_t`
-structure referenced by :code:`cbuft` as the first (:code:`uint`)
-return value (zero if the structure has not yet been allocated, i.e.,
-:code:`cbuft` is :code:`nil`).
-
-If the :code:`len_used` field of the :code:`C.ydb_buffer_t` structure
-is greater than its :code:`len_alloc` field (owing to a prior
-INVSTRLEN error), the error return is INVSTRLEN.
+- If the :code:`C.ydb_buffer_t` structure referenced by :code:`cbuft`
+  has not yet been allocated, return the STRUCTNOTALLOCD error.
+- If the :code:`len_used` field of the :code:`C.ydb_buffer_t`
+  structure is greater than its :code:`len_alloc` field (owing to a
+  prior INVSTRLEN error), return an INVSRLEN error and the
+  :code:`len_used` field of the :code:`C.ydb_buffer_t` structure
+  referenced by :code:`cbuft`.
+- Otherwise, return the :code:`len_used` field of the
+  :code:`C.ydb_buffer_t` structure referenced by :code:`cbuft`.
 
 Go BufferT GetValBAry()
------------------------
+.......................
 
 .. code-block:: go
 
     GetValBAry() (*[]byte, error)
 
-If the :code:`len_used` field of the :code:`C.ydb_buffer_t` structure
-referenced by :code:`cbuft` is greater than its :code:`len_alloc`
-field (owing to a prior INVSTRLEN error), return :code:`len_alloc`
-bytes of the buffer referenced by the :code:`C.ydb_buffer_t` structure
-referenced by :code:`cbuft` as a byte array, and an error return of
-INVSTRLEN.
-
-Otherwise, return :code:`len_used` bytes of the buffer as a byte array
-(a zero length array if the structure has not yet been allocated,
-i.e., :code:`cbuft` is :code:`nil`).
+- If the :code:`C.ydb_buffer_t` structure referenced by :code:`cbuft`
+  has not yet been allocated, return the STRUCTNOTALLOCD error.
+- If the :code:`len_used` field of the :code:`C.ydb_buffer_t` structure
+  is greater than its :code:`len_alloc` field (owing to a prior
+  INVSTRLEN error), return an INVSRLEN error.
+- Otherwise, return :code:`len_used` bytes of the buffer as a byte
+  array.
 
 Go BufferT GetValStr()
-----------------------
+......................
 
 .. code-block:: go
 
     GetValStr() (*string, error)
 
-If the :code:`len_used` field of the :code:`C.ydb_buffer_t` structure
-referenced by :code:`cbuft` is greater than its :code:`len_alloc`
-field (owing to a prior INVSTRLEN error), return :code:`len_alloc`
-bytes of the buffer referenced by the :code:`C.ydb_buffer_t` structure
-referenced by :code:`cbuft` as a string, and an error return of
-INVSTRLEN.
-
-Otherwise, return :code:`len_used` bytes of the buffer as a string (a
-zero length string if the structure has not yet been allocated, i.e.,
-:code:`cbuft` is :code:`nil`).
+- If the :code:`C.ydb_buffer_t` structure referenced by :code:`cbuft`
+  has not yet been allocated, return the STRUCTNOTALLOCD error.
+- If the :code:`len_used` field of the :code:`C.ydb_buffer_t` structure
+  is greater than its :code:`len_alloc` field (owing to a prior
+  INVSTRLEN error), return an INVSRLEN error.
+- Otherwise, return :code:`len_used` bytes of the buffer as a string.
 
 Go BufferT SetLenUsed()
------------------------
+.......................
 
 .. code-block:: go
 
     SetLenUsed(newLen uint) error
 
-Use this method to set the number of bytes in :code:`C.ydb_buffer_t`
-structure referenced by :code:`cbuft`, for example to change the
-length of a used substring of the contents of the buffer referenced by
-the :code:`buf_addr` field of the referenced :code:`C.ydb_buffer_t`.
+Use this method to change the length of a used substring of the
+contents of the buffer referenced by the :code:`buf_addr` field of the
+referenced :code:`C.ydb_buffer_t`.
 
+- If the :code:`C.ydb_buffer_t` structure referenced by :code:`cbuft`
+  has not yet been allocated, return the STRUCTNOTALLOCD error.
 - If :code:`newLen` is greater than the :code:`len_alloc` field of the
   referenced :code:`C.ydb_buffer_t`, make no changes and return with
   an error return of INVSTRLEN.
@@ -2231,62 +2542,66 @@ the :code:`buf_addr` field of the referenced :code:`C.ydb_buffer_t`.
   :code:`C.ydb_buffer_t` to :code:`newLen`.
 
 Note that even if :code:`newLen` is not greater than the value of
-:code:`len_alloc`, using a :code:`len_used` value greater than the
+:code:`len_alloc`, setting a :code:`len_used` value greater than the
 number of meaningful bytes in the buffer will likely lead to
 hard-to-debug errors.
 
 Go BufferT SetValBAry()
------------------------
+.......................
 
 .. code-block:: go
 
     SetValBAry(val *[]byte) error
 
-
-If the length of :code:`val` is greater than the :code:`len_alloc`
-field of the :code:`C.ydb_buffer_t` structure referenced by
-:code:`cbuft`, make no changes and return INVSTRLEN.
-
-Otherwise, copy the bytes of :code:`val` to the location referenced by
-the :code:`buf_addr` field of the :code:`C.ydbbuffer_t` structure, set
-the :code:`len_used` field to the length of :code:`val`.
+- If the :code:`C.ydb_buffer_t` structure referenced by :code:`cbuft`
+  has not yet been allocated, return the STRUCTNOTALLOCD error.
+- If the length of :code:`val` is greater than the :code:`len_alloc`
+  field of the :code:`C.ydb_buffer_t` structure referenced by
+  :code:`cbuft`, make no changes and return INVSTRLEN.
+- Otherwise, copy the bytes of :code:`val` to the location referenced
+  by the :code:`buf_addr` field of the :code:`C.ydbbuffer_t`
+  structure, set the :code:`len_used` field to the length of
+  :code:`val`.
 
 Go BufferT SetValStr()
-----------------------
+......................
 
 .. code-block:: go
 
     SetVarStr(val *string) error
 
-If the length of :code:`val` is greater than the :code:`len_alloc`
-field of the :code:`C.ydb_buffer_t` structure referenced by
-:code:`cbuft`, make no changes and return INVSTRLEN.
-
-Otherwise, copy the bytes of :code:`val` to the location referenced by
-the :code:`buf_addr` field of the :code:`C.ydbbuffer_t` structure, set
-the :code:`len_used` field to the length of :code:`val`.
+- If the :code:`C.ydb_buffer_t` structure referenced by :code:`cbuft`
+  has not yet been allocated, return the STRUCTNOTALLOCD error.
+- If the length of :code:`val` is greater than the :code:`len_alloc`
+  field of the :code:`C.ydb_buffer_t` structure referenced by
+  :code:`cbuft`, make no changes and return INVSTRLEN.
+- Otherwise, copy the bytes of :code:`val` to the location referenced
+  by the :code:`buf_addr` field of the :code:`C.ydbbuffer_t`
+  structure, set the :code:`len_used` field to the length of
+  :code:`val`.
 
 Go BufferT SetValStrLit()
--------------------------
+.........................
 
 .. code-block:: go
 
     SetVarStrLit(val string) error
 
-If the length of :code:`val` is greater than the :code:`len_alloc`
-field of the :code:`C.ydb_buffer_t` structure referenced by
-:code:`cbuft`, make no changes and return INVSTRLEN.
+- If the :code:`C.ydb_buffer_t` structure referenced by :code:`cbuft`
+  has not yet been allocated, return the STRUCTNOTALLOCD error.
+- If the length of :code:`val` is greater than the :code:`len_alloc`
+  field of the :code:`C.ydb_buffer_t` structure referenced by
+  :code:`cbuft`, make no changes and return INVSTRLEN.
+- Otherwise, copy the bytes of :code:`val` to the location referenced
+  by the :code:`buf_addr` field of the :code:`C.ydbbuffer_t`
+  structure, set the :code:`len_used` field to the length of
+  :code:`val`.
 
-Otherwise, copy the bytes of :code:`val` to the location referenced by
-the :code:`buf_addr` field of the :code:`C.ydbbuffer_t` structure, set
-the :code:`len_used` field to the length of :code:`val`.
-
-----------------------------------
-Go Access Methods for BufferTArray
-----------------------------------
+Go Simple API Access Methods for BufferTArray
+---------------------------------------------
 
 Go BufferTArray Alloc()
------------------------
+.......................
 
 .. code-block:: go
 
@@ -2314,7 +2629,7 @@ Set:
   - :code:`elemsUsed` is to zero.
 
 Go BufferTArray Dump()
-----------------------
+......................
 
 .. code-block:: go
 
@@ -2334,7 +2649,7 @@ For debugging purposes, dump on stdout:
     address :code:`buf_addr`, in `zwrite format`_.
 
 Go BufferTArray Free()
-----------------------
+......................
 
 .. code-block:: go
 
@@ -2345,85 +2660,102 @@ buffers and the :code:`C.ydb_buffer_t` array. Set :code:`cbuftary` to
 :code:`nil`, and :code:`elemsAlloc` and :code:`elemsUsed` to zero.
 
 Go BufferTArray GetAlloc()
---------------------------
+..........................
 
 .. code-block:: go
 
     GetAlloc() uint
 
-Return the :code:`elemsAlloc` field.
+- If the :code:`C.ydb_buffer_t` structures referenced by
+  :code:`cbuftary` have not yet been allocated, return the
+  STRUCTNOTALLOCD error.
+- Otherwise, return the :code:`elemsAlloc` field.
 
 Go BufferTArray GetLenAlloc()
------------------------------
+.............................
 
 .. code-block:: go
 
     GetLenAlloc() uint
 
-Return the :code:`len_alloc` from the :code:`C.ydb_buffer_t` structures
-referenced by :code:`cbuftary`, all of which have the same value (zero
-if the structure has not yet been allocated).
+- If the :code:`C.ydb_buffer_t` structures referenced by
+  :code:`cbuftary` have not yet been allocated, return the
+  STRUCTNOTALLOCD error.
+- Otherwise, return the :code:`len_alloc` from the
+  :code:`C.ydb_buffer_t` structures referenced by :code:`cbuftary`,
+  all of which have the same value.
 
 Go BufferTArray GetLenUsed()
-----------------------------
+............................
 
 .. code-block:: go
 
     GetLenUsed(idx uint) (uint, error)
 
+- If the :code:`C.ydb_buffer_t` structures referenced by
+  :code:`cbuftary` have not yet been allocated, return the
+  STRUCTNOTALLOCD error.
 - If :code:`idx` is greater than the :code:`elemsAlloc` of the
   :code:`BufferTArray` structure, return with an error return of
-  INSUFFSUBS. In this case, the return value (the
-  :code:`uint` returned) is not meaningful.
+  INSUFFSUBS.
 - Otherwise, return the :code:`len_used` field of the array element
   specifed by :code:`idx` of the :code:`C.ydb_buffer_t` array referenced
   by :code:`cbuftary`.
 
 Go BufferTArray GetUsed()
--------------------------
+.........................
 
 .. code-block:: go
 
     GetUsed() uint
 
-Return the value of the :code:`elemsUsed` field.
+- If the :code:`C.ydb_buffer_t` structures referenced by
+  :code:`cbuftary` have not yet been allocated, return the
+  STRUCTNOTALLOCD error.
+- Otherwise, return the value of the :code:`elemsUsed` field.
 
 Go BufferTArray GetValBAry()
-----------------------------
+............................
 
 .. code-block:: go
 
     GetValBAry(idx uint) (*[]byte, error)
 
+- If the :code:`C.ydb_buffer_t` structures referenced by
+  :code:`cbuftary` have not yet been allocated, return the
+  STRUCTNOTALLOCD error.
 - If :code:`idx` is greater than :code:`elemsAlloc`, return a zero
   length byte array and an error return of INSUFFSUBS.
 - If the :code:`len_used` field of the :code:`C.ydb_buffer_t`
   structure specified by :code:`idx` is greater than its
   :code:`len_alloc` field (owing to a previous INVSTRLEN error),
   return a byte array containing the :code:`len_alloc` bytes at
-  :code:`buf_addr` and an error return of INVSTRLEN.
+  :code:`buf_addr` and an INVSTRLEN error.
 - Otherwise, return a byte array containing the :code:`len_used` bytes
   at :code:`buf_addr`.
 
 Go BufferTArray GetValStr()
----------------------------
+...........................
 
 .. code-block:: go
 
     GetValStr(idx uint) (*string, error)
 
+- If the :code:`C.ydb_buffer_t` structures referenced by
+  :code:`cbuftary` have not yet been allocated, return the
+  STRUCTNOTALLOCD error.
 - If :code:`idx` is greater than :code:`elemsAlloc`, return a zero
   length string and an error return of INSUFFSUBS.
 - If the :code:`len_used` field of the :code:`C.ydb_buffer_t`
   structure specified by :code:`idx` is greater than its
   :code:`len_alloc` field (owing to a previous INVSTRLEN error),
   return a string containing the :code:`len_alloc` bytes at
-  :code:`buf_addr` and an error return of INVSTRLEN.
+  :code:`buf_addr` and the INVSTRLEN error.
 - Otherwise, return a string containing the :code:`len_used` bytes at
   :code:`buf_addr`.
 
 Go BufferTArray SetLenUsed()
-----------------------------
+............................
 
 .. code-block:: go
 
@@ -2435,6 +2767,11 @@ by :code:`idx`, for example to change the length of a used substring
 of the contents of the buffer referenced by the :code:`buf_addr` field
 of the referenced :code:`C.ydb_buffer_t`.
 
+- If the :code:`C.ydb_buffer_t` structures referenced by
+  :code:`cbuftary` have not yet been allocated, return the
+  STRUCTNOTALLOCD error.
+- If :code:`idx` is greater than :code:`elemsAlloc`, return a zero
+  length string and an error return of INSUFFSUBS.
 - If :code:`newLen` is greater than the :code:`len_alloc` field of the
   referenced :code:`C.ydb_buffer_t`, make no changes and return with
   an error return of INVSTRLEN.
@@ -2447,7 +2784,7 @@ number of meaningful bytes in the buffer will likely lead to
 hard-to-debug errors.
 
 Go BufferTArray SetUsed()
--------------------------
+.........................
 
 .. code-block:: go
 
@@ -2456,6 +2793,9 @@ Go BufferTArray SetUsed()
 Use this method to set the current number of valid strings (subscripts
 or variable names) in the :code:`BufferTArray`.
 
+- If the :code:`C.ydb_buffer_t` structures referenced by
+  :code:`cbuftary` have not yet been allocated, return the
+  STRUCTNOTALLOCD error.
 - If :code:`newUsed` is greater than :code:`elemsAlloc`, make no
   changes and return with an error return of
   INSUFFSUBS.
@@ -2467,12 +2807,15 @@ number of valid values in the array will likely lead to hard-to-debug
 errors.
 
 Go BufferTArray SetValBAry()
-----------------------------
+............................
 
 .. code-block:: go
 
     SetValBAry(idx int, val *[]byte) error
 
+- If the :code:`C.ydb_buffer_t` structures referenced by
+  :code:`cbuftary` have not yet been allocated, return the
+  STRUCTNOTALLOCD error.
 - If :code:`idx` is greater than :code:`elemsAlloc` make no changes
   and return with an error return of INSUFFSUBS.
 - Otherwise, if the length of :code:`val` is greater than the
@@ -2485,12 +2828,15 @@ Go BufferTArray SetValBAry()
   of bytes copied.
 
 Go BufferTArray SetValStr()
----------------------------
+...........................
 
 .. code-block:: go
       
     SetValStr(idx int, val *string) error
 
+- If the :code:`C.ydb_buffer_t` structures referenced by
+  :code:`cbuftary` have not yet been allocated, return the
+  STRUCTNOTALLOCD error.
 - If :code:`idx` is greater than :code:`elemsAlloc` make no changes
   and return with an error return of INSUFFSUBS.
 - Otherwise, if the length of :code:`val` is greater than the
@@ -2503,12 +2849,15 @@ Go BufferTArray SetValStr()
   of bytes copied.
 
 Go BufferTArray SetValStrLit()
-------------------------------
+..............................
 
 .. code-block:: go
 
     SetVarStrLit(idx int, val string) error
 
+- If the :code:`C.ydb_buffer_t` structures referenced by
+  :code:`cbuftary` have not yet been allocated, return the
+  STRUCTNOTALLOCD error.
 - If :code:`idx` is greater than :code:`elemsAlloc` make no changes
   and return with an error return of INSUFFSUBS.
 - If the length of :code:`val` is greater than the :code:`len_alloc`
@@ -2520,9 +2869,8 @@ Go BufferTArray SetValStrLit()
   structure, set the :code:`len_used` field to the length of
   :code:`val`.
 
---------------------------
-Go Access Methods for KeyT
---------------------------
+Go Simple API Access Methods for KeyT
+-------------------------------------
 
 As the members of :code:`KeyT` are visible to Go programs (they start
 with upper-case letters), and application code can call the
@@ -2532,7 +2880,7 @@ and `Go KeyT Free()`_ methods are available for programming
 convenience.
 
 Go KeyT Alloc()
----------------
+...............
 
 .. code-block:: go
 
@@ -2543,7 +2891,7 @@ Invoke :code:`Varnm.Alloc(varSiz)` (see `Go BufferT Alloc()`_) and
 Alloc()`_).
 
 Go KeyT Dump()
---------------
+..............
 
 .. code-block:: go
 
@@ -2553,7 +2901,7 @@ Invoke :code:`Varnm.Dump()` (see `Go BufferT Dump()`_) and
 :code:`SubAry.Dump()` (see `Go BufferTArray Dump()`_).
 
 Go KeyT Free()
---------------
+..............
 
 .. code-block:: go
 
@@ -2561,17 +2909,6 @@ Go KeyT Free()
 
 Invoke :code:`Varnm.Free()` (see `Go BufferT Free()`_) and
 :code:`SubAry.Free()` (see `Go BufferTArray Free()`_).
-
-
-Go Simple API
-=============
-
-The Go Simple API consists of `Go Simple API BufferT Methods`_, `Go
-Simple API BufferTArray Methods`_, `Go Simple API KeyT Methods`_ and
-`Go Simple API Functions`_. Each of them wraps a function in the C
-`Simple API`_ – refer to the descriptions of those functions for more
-detailed information. The majority of the functionality is in `Go
-Simple API KeyT Methods`_.
 
 -----------------------------
 Go Simple API BufferT Methods
@@ -2587,12 +2924,14 @@ Go Str2ZwrS()
 The method wraps `ydb_str2zwr_s()`_ to provide the string in `zwrite
 format`_.
 
+- If the :code:`C.ydb_buffer_t` structure referenced by :code:`cbuft`
+  has not yet been allocated, return the STRUCTNOTALLOCD error.
 - If :code:`len_alloc` is not large enough, set :code:`len_used` to
-  the required length, and return with an error return of
-  INVSTRLEN. In this case, :code:`len_used` will be
-  greater than :code:`len_alloc` until corrected by application code.
+  the required length, and return an INVSTRLEN error. In this case,
+  :code:`len_used` will be greater than :code:`len_alloc` until
+  corrected by application code.
 - Otherwise, set the buffer referenced by :code:`buf_addr` to the
-  `zwrite format`_ string, set :code:`len_used` to the length.
+  `zwrite format`_ string, and set :code:`len_used` to the length.
    
 Go Zwr2StrS()
 -------------
@@ -2604,11 +2943,13 @@ Go Zwr2StrS()
 This method wraps `ydb_zwr2str_s()`_ and is the inverse of `Go
 Str2ZwrS()`_.
 
+- If the :code:`C.ydb_buffer_t` structure referenced by :code:`cbuft`
+  has not yet been allocated, return the STRUCTNOTALLOCD error.
 - If :code:`len_alloc` is not large enough, set :code:`len_used` to
-  the required length, and return with an error return of
-  INVSTRLEN. In this case, :code:`len_used` will be
-  greater than :code:`len_alloc` until corrected by application code.
-- If :code:`str` has errors and is not in valid `zwrite format`_,, set
+  the required length, and return an INVSTRLEN error. In this case,
+  :code:`len_used` will be greater than :code:`len_alloc` until
+  corrected by application code.
+- If :code:`str` has errors and is not in valid `zwrite format`_, set
   :code:`len_used` to zero, and return the error code returned by
   `ydb_zwr2str_s()`_ e.g., INVZWRITECHAR`.
 - Otherwise, set the buffer referenced by :code:`buf_addr` to the
@@ -2631,19 +2972,22 @@ Go DeleteExclS()
 :code:`DeleteExclS()` wraps `ydb_delete_excl_s()`_ to delete all local
 variable trees except those of local variables whose names are
 specified in the :code:`BufferTArray` structure. In the special case
-where :code:`elemsUsed` is zero, the method deletes all local variable
-trees. If your application mixes M and Go code, be sure to read and
-understand the warning in the description of `ydb_delete_excl_s()`_.
+where the :code:`cbuftary` structures have not been allocated, or
+:code:`elemsUsed` is zero, the method deletes all local variable
+trees.
 
-In the unlikely event that the :code:`elemsUsed` exceeds
+In the event that the :code:`elemsUsed` exceeds
 :code:`C.YDB_MAX_NAMES`, the error return is ERRNAMECOUNT2HI.
+
+As M and Go application code cannot be mixed in the same process, the
+warning in `ydb_delete_excl_s()`_ does not apply.
 
 Go TpS()
 --------
 
 .. code-block:: go
 
-    TpS(tpfn unsafe.Pointer, tpfnparm unsafe.pointer, transid *string) error
+    TpS(tpfn unsafe.Pointer, tpfnparm unsafe.Pointer, transid *string) error
 
 :code:`TpS()` wraps `ydb_tp_s()`_ to implement `Transaction
 Processing`_. :code:`tpfn` is a pointer to a C function with one
@@ -2662,9 +3006,9 @@ routine functions.
 A function implementing logic for a transaction should return
 :code:`error` with one of the following:
 
-- A normal return to indicate that per application logic, the
-  transaction can be committed. The YottaDB database engine will
-  commit the transaction if it is able to, as discussed in
+- A normal return (:code:`nil`) to indicate that per application
+  logic, the transaction can be committed. The YottaDB database engine
+  will commit the transaction if it is able to, as discussed in
   `Transaction Processing`_, and if not, will call the function again.
 - TPRESTART to indicate that the transaction should restart, either
   because application logic has so determined or because a YottaDB
@@ -2681,10 +3025,11 @@ Go, the memory it references should be allocated using
 
 The :code:`BufferTArray` receiving the :code:`TpS()` method is a list
 of local variables whose values should be saved, and restored to their
-original values when the transaction restarts. If :code:`elemsUsed` is
-zero, no local variables are saved and restored; and if
-:code:`elemsUsed` is 1, and that sole element references the string
-"*" all local variables are saved and restored.
+original values when the transaction restarts. If the :code:`cbuftary`
+structures have not been allocated or :code:`elemsUsed` is zero, no
+local variables are saved and restored; and if :code:`elemsUsed` is 1,
+and that sole element references the string "*" all local variables
+are saved and restored.
 
 A case-insensitive value of "BA" or "BATCH" for :code:`transid`
 indicates to YottaDB that it need not ensure Durability for this
@@ -2704,6 +3049,11 @@ application to ensure the validity of the pointers passed to
 Go Simple API KeyT Methods
 --------------------------
 
+:code:`KeyT` methods return errors returned by methods that invoke the
+underlying :code:`Varnm` and :code:`SubAry` members of :code:`KeyT`
+structures, which can in turn originate in those methods or in YottaDB
+functions invoked by them.
+
 Go DataS()
 ----------
 
@@ -2711,8 +3061,9 @@ Go DataS()
 
     DataS() (uint, error)
 
-:code:`DataS()` returns the result of `ydb_data_s()`_. In the event of
-an error return, the return value is unspecified.
+Matching `Go DataE()`_, :code:`DataS()` returns the result of
+`ydb_data_s()`_. In the event an error is returned, the return value
+is unspecified.
 
 Go DeleteS()
 ------------
@@ -2721,11 +3072,12 @@ Go DeleteS()
 
     DeleteS(deltype int) error
 
-:code:`DeleteS()` wraps `ydb_delete_s()`_ to delete a local or global
-variable tree, with a value of :code:`C.YDB_DEL_NODE` for
-:code:`deltype` specifying that only the node should be deleted,
-leaving the tree untouched, and a value of :code:`C.YDB_DEL_TREE`
-specifying that the node as well as the tree are to be deleted.
+Matching `Go DeleteE()`_, :code:`DeleteS()` wraps `ydb_delete_s()`_ to
+delete a local or global variable node or (sub)tree, with a value of
+:code:`C.YDB_DEL_NODE` for :code:`deltype` specifying that only the
+node should be deleted, leaving the (sub)tree untouched, and a value
+of :code:`C.YDB_DEL_TREE` specifying that the node as well as the
+(sub)tree are to be deleted.
 
 Go GetS()
 ----------
@@ -2734,19 +3086,18 @@ Go GetS()
 
     GetS(retval *BufferT) error
 
-:code:`GetS()` wraps `ydb_get_s()`_ to return the value at the
-referenced global or local variable node, or intrinsic special
-variable, in the buffer referenced by the :code:`BufferT` structure
-referenced by :code:`retval`.
+Matching `Go GetE()`_, :code:`GetS()` wraps `ydb_get_s()`_ to return
+the value at the referenced global or local variable node, or
+intrinsic special variable, in the buffer referenced by the
+:code:`BufferT` structure referenced by :code:`retval`.
 
 - If `ydb_get_s()`_ returns an error such as GVUNDEF, INVSVN, LVUNDEF,
   the method makes no changes to the structures under :code:`retval`
   and returns the error.
-- Otherwise, if the length of the data to be returned exceeds
-  :code:`retval.getLenAlloc()`, the method sets the :code:`len_used`
-  of the :code:`C.ydb_buffer_t` referenced by :code:`retval`
-  to the required length, and returns with an error return of
-  INVSTRLEN.
+- If the length of the data to be returned exceeds
+  :code:`retval.getLenAlloc()`, the method sets the :code:`len_used` of
+  the :code:`C.ydb_buffer_t` referenced by :code:`retval` to the
+  required length, and returns an INVSTRLEN error.
 - Otherwise, it copies the data to the buffer referenced by the
   :code:`retval.buf_addr`, and sets :code:`retval.lenUsed` to its
   length.
@@ -2758,23 +3109,25 @@ Go IncrS()
 
     IncrS(incr, retval *BufferT) error
 
-:code:`IncrS()` wraps `ydb_incr_s()`_ to atomically increment the
-referenced global or local variable node coerced to a number with
-:code:`incr` coerced to a number, with the result stored in the node
-and returned through the :code:`BufferT` structure referenced by
-:code:`retval`.
+Matching `Go IncrE()`_, :code:`IncrS()` wraps `ydb_incr_s()`_ to
+atomically increment the referenced global or local variable node
+coerced to a number, with :code:`incr` coerced to a number. It stores
+the result in the node and also returns it through the :code:`BufferT`
+structure referenced by :code:`retval`.
 
 - If `ydb_incr_s()`_ returns an error such as NUMOFLOW, INVSTRLEN, the
   method makes no changes to the structures under :code:`retval` and
   returns the error.
-- Otherwise, if the length of the data to be returned exceeds
+- If the length of the data to be returned exceeds
   :code:`retval.lenAlloc`, the method sets the :code:`len_used`
   of the :code:`C.ydb_buffer_t` referenced by :code:`retval`
-  to the required length, and returns with an error return of
-  INVSTRLEN.
+  to the required length, and returns an INVSTRLEN error.
 - Otherwise, it copies the data to the buffer referenced by the
   :code:`retval.buf_addr`, sets :code:`retval.lenUsed` to its
   length.
+
+With a value of :code:`nil` for :code:`incr`, the default increment
+is 1.
 
 Go LockDecrS()
 --------------
@@ -2783,9 +3136,10 @@ Go LockDecrS()
 
     LockDecrS() error
 
-:code:`LockDecrS()` wraps `ydb_lock_decr_s()`_ to decrement the count
-of the lock name referenced, releasing it if the count goes to zero or
-ignoring the invocation if the process does not hold the lock.
+Matching `Go LockDecrE()`_ :code:`LockDecrS()` wraps
+`ydb_lock_decr_s()`_ to decrement the count of the lock name
+referenced, releasing it if the count goes to zero or ignoring the
+invocation if the process does not hold the lock.
 
 Go LockIncrS()
 --------------
@@ -2794,12 +3148,12 @@ Go LockIncrS()
 
     LockIncrS(timeoutNsec uint64) error
 
-The :code:`LockIncrS()` method wraps `ydb_lock_incr_s()`_ to attempt
-to acquire the referenced lock resource name without releasing any
-locks the process already holds.
+Matching `Go LockIncrE()`, :code:`LockIncrS()` wraps `ydb_lock_incr_s()`_
+to attempt to acquire the referenced lock resource name without
+releasing any locks the process already holds.
 
-- If the process already holds the lock resource named, the method
-  increments the count and returns.
+- If the process already holds the named lock resource, the method
+  increments its count and returns.
 - If :code:`timeoutNsec` exceeds :code:`C.YDB_MAX_TIME_NSEC`, the
   method returns with an error return TIME2LONG.
 - If it is able to aquire the lock resource within :code:`timeoutNsec`
@@ -2814,30 +3168,31 @@ Go NodeNextS()
 
     NodeNextS(next *BufferTArray) error
 
-:code:`NodeNext()` wraps `ydb_node_next_s()`_ to facilitate depth
-first traversal of a local or global variable tree.
+Matching `Go NodeNextE()`_, :code:`NodeNextS()` wraps
+`ydb_node_next_s()`_ to facilitate depth first traversal of a local or
+global variable tree.
 
 - If there is a next node:
 
   - If the number of subscripts of that next node exceeds
-    :code:`next.elemsAlloc`, the method sets
-    :code:`next.elemsUsed` to the number of subscripts
-    required, and returns with an error return of
-    INSUFFSUBS. In this case the :code:`elemsUsed`
-    is greater than :code:`elemsAlloc`.
+    :code:`next.elemsAlloc`, the method sets :code:`next.elemsUsed` to
+    the number of subscripts required, and returns an INSUFFSUBS
+    error. In this case the :code:`elemsUsed` is greater than
+    :code:`elemsAlloc`.
   - If one of the :code:`C.ydb_buffer_t` structures referenced by
     :code:`next` (call the first or only element :code:`n`) has
     insufficient space for the corresponding subscript, the method sets
-    :code:`next.elemsUsed` to :code:`n`, and the
-    :code:`len_alloc` of that :code:`C.ydb_buffer_t` structure to the
-    actual space required. The method returns with an error return of
-    INVSTRLEN. In this case the :code:`len_used` of
-    that structure is greater than its :code:`len_alloc`.
+    :code:`next.elemsUsed` to :code:`n`, and the :code:`len_alloc` of
+    that :code:`C.ydb_buffer_t` structure to the actual space
+    required. The method returns an INVSTRLEN error. In this case the
+    :code:`len_used` of that structure is greater than its
+    :code:`len_alloc`.
   - Otherwise, it sets the structure :code:`next` to reference the
-    subscripts of that next node.
+    subscripts of that next node, and :code:`next.elemsUsed` to the
+    number of subscripts.
 
-- If the node is the last in the tree, the method returns NODE_END,
-  making no changes to the structures below :code:`next`.
+- If the node is the last in the tree, the method returns the NODEEND
+  error, making no changes to the structures below :code:`next`.
 
 Go NodePrevS()
 --------------
@@ -2846,30 +3201,31 @@ Go NodePrevS()
 
     NodePrevS(prev *BufferTArray) error
 
-:code:`NodePrevS()` wraps `ydb_node_previous_s()`_ to facilitate
-reverse depth first traversal of a local or global variable tree.
+Matching `Go NodePrevE()`_, :code:`NodePrevS()` wraps
+`ydb_node_previous_s()`_ to facilitate reverse depth first traversal
+of a local or global variable tree.
 
 - If there is a previous node:
 
   - If the number of subscripts of that previous node exceeds
-    :code:`prev.elemsAlloc`, the method sets
-    :code:`prev.elemsUsed` to the number of subscripts
-    required, and returns with an error return of
-    INSUFFSUBS. In this case the :code:`elemsUsed`
-    is greater than :code:`elemsAlloc`.
+    :code:`prev.elemsAlloc`, the method sets :code:`prev.elemsUsed` to
+    the number of subscripts required, and returns an INSUFFSUBS
+    error. In this case the :code:`elemsUsed` is greater than
+    :code:`elemsAlloc`.
   - If one of the :code:`C.ydb_buffer_t` structures referenced by
     :code:`prev` (call the first or only element :code:`n`) has
     insufficient space for the corresponding subscript, the method sets
     :code:`prev.elemsUsed` to :code:`n`, and the :code:`len_alloc` of
     that :code:`C.ydb_buffer_t` structure to the actual space
-    required. The method returns with an error return of
-    INVSTRLEN. In this case the :code:`len_used` of
-    that structure is greater than its :code:`len_alloc`.
+    required. The method returns an INVSTRLEN error. In this case the
+    :code:`len_used` of that structure is greater than its
+    :code:`len_alloc`.
   - Otherwise, it sets the structure :code:`prev` to reference the
-    subscripts of that prev node.
+    subscripts of that prev node, and :code:`prev.elemsUsed` to the
+    number of subscripts.
 
-- If the node is the first in the tree, the method returns NODE_END,
-  making no changes to the structures below :code:`prev`.
+- If the node is the first in the tree, the method returns the NODEEND
+  error making no changes to the structures below :code:`prev`.
 
 Go SetS()
 ------------
@@ -2878,9 +3234,9 @@ Go SetS()
 
     SetS(val *BufferT) error
 
-At the referenced local or global variable node, or the intrinsic
-special variable, :code:`SetS()` wraps `ydb_set_s()`_ to set
-the value specified by :code:`val`.
+Matching `Go SetE()`_, at the referenced local or global variable
+node, or the intrinsic special variable, :code:`SetS()` wraps
+`ydb_set_s()`_ to set the value specified by :code:`val`.
 
 Go SubNextS()
 -------------
@@ -2889,22 +3245,23 @@ Go SubNextS()
 
     SubNextS(sub *BufferT) error
 
-:code:`SubNextS()` wraps `ydb_subscript_next_s()`_ to facilitate
-breadth-first traversal of a local or global variable sub-tree.
+Matching `Go SubNextE()`_, :code:`SubNextS()` wraps
+`ydb_subscript_next_s()`_ to facilitate breadth-first traversal of a
+local or global variable sub-tree.
 
 - At the level of the last subscript, if there is a next subscript
   with a node and/or a subtree:
 
   - If the length of that next subscript exceeds
     :code:`sub.len_alloc`, the method sets :code:`sub.len_used` to the
-    actual length of that subscript, and returns with an error return of
-    INVSTRLEN. In this case :code:`sub.len_used` is greater than
+    actual length of that subscript, and returns an INVSTRLEN error. In
+    this case :code:`sub.len_used` is greater than
     :code:`sub.len_alloc`.
   - Otherwise, it copies that subscript to the buffer referenced by
-    :code:`sub.buf_addr`, and sets :code:`buf.len_used` to its length.
+    :code:`sub.buf_addr`, and sets :code:`sub.len_used` to its length.
   
 - If there is no next node or subtree at that level of the subtree,
-  the method returns with :code:`sub.len_used` set to zero.
+  the method returns the NODEEND error.
 
 Go SubPrevS()
 -------------
@@ -2921,14 +3278,14 @@ reverse breadth-first traversal of a local or global variable sub-tree.
 
   - If the length of that previous subscript exceeds
     :code:`sub.len_alloc`, the method sets :code:`sub.len_used` to the
-    actual length of that subscript, and returns with an error return of
-    INVSTRLEN. In this case :code:`sub.len_used` is greater than
+    actual length of that subscript, and returns an INVSTRLEN error. In
+    this case :code:`sub.len_used` is greater than
     :code:`sub.len_alloc`.
   - Otherwise, it copies that subscript to the buffer referenced by
     :code:`sub.buf_addr`, and sets :code:`buf.len_used` to its length.
   
 - If there is no previous node or subtree at that level of the
-  subtree, the method returns with :code:`sub.len_used` set to zero.
+  subtree, the method returns the NODEEND error.
 
 -----------------------
 Go Simple API Functions
@@ -2941,17 +3298,49 @@ Go LockS()
 
     yottadb.LockS(timeoutNsec uint64, lockName ... *KeyT) error
 
-The :code:`LockS()` function wraps `ydb_lock_s()`_ to release all lock
-resources currently held and then attempt to acquire the named lock
-resources referenced. Upon return, the process will have acquired all
-of the named lock resources or none of the named lock resources.
+Matching `Go LockE()`_, :code:`LockS()` wraps `ydb_lock_s()`_ to
+release all lock resources currently held and then attempt to acquire
+the named lock resources referenced. If no lock resources are
+specified, it simply releases all lock resources currently held and
+returns.
+
+If lock resources are specified, upon return, the process will have
+acquired all of the named lock resources or none of the named lock
+resources.
 
 - If :code:`timeoutNsec` exceeds :code:`C.YDB_MAX_TIME_NSEC`, the
-  method returns with an error return of TIME2LONG.
-- If it is able to aquire the lock resources within :code:`timeoutNsec`
-  nanoseconds, it returns holding the lock resource;
-  otherwise it returns LOCK_TIMEOUT. If :code:`timeoutNsec` is zero, the
-  method makes exactly one attempt to acquire the lock resources.
+  method returns with a TIME2LONG error.
+- If the number of lock resource names exceeds the maximum number
+  supported (currently eleven), the function returns a PARMOFLOW
+  error.
+- If :code:`lockName` is not a series of alternating :code:`string`
+  and :code:`[]string` parameters, the function returns the
+  INVLNPAIRLIST error.
+- If it is able to aquire the lock resource(s) within
+  :code:`timeoutNsec` nanoseconds, it returns holding the lock
+  resource(s); otherwise it returns LOCKTIMEOUT. If
+  :code:`timeoutNsec` is zero, the method makes exactly one attempt to
+  acquire the lock resource(s).
+
+Go MessageS()
+-------------
+
+.. code-block:: go
+
+    yottadb.MessageS(errnum int, errmsg *BufferT) error
+
+Matching `Go MessageE()`_, wraps `ydb_message()`_ to return the text
+template for the error number specified by :code:`errnum`.
+
+- If :code:`errnum` does not correspond to an error that YottaDB
+  recognizes, it returns the error UNKNOWNSYSERR, leaving the
+  structures referenced by :code:`errmsg` unaltered.
+- If the length of the text exceeds :code:`errmsg.len_alloc` it
+  returns the error INVSTRLEN. In this case :code:`errmsg.len_used` is
+  greater than :code:`errmsg.len_alloc`.
+- Otherwise, it copies the text to the buffer specified by
+  :code:`errmsg.buf_addr` and sets :code:`errmsg.len_used` to its
+  length.
 
 Go Comprehensive API
 ====================
@@ -2972,7 +3361,7 @@ Go Exit()
 
 For a process that wishes to close YottaDB databases and no longer use
 YottaDB, the function wraps `ydb_exit()`_ so that any further calls to
-YottaDB result in a CALLINAFTEREXIT` error.
+YottaDB return a CALLINAFTEREXIT` error.
 
 Typical processes will not need to call :code:`Exit()` because
 normal process termination closes databases cleanly. However, a
@@ -2990,11 +3379,11 @@ Go ForkExec()
 
     yottadb.ForkExec(argv0 string, argv []string, attr *ProcAttr) (int, error)
 
-The function has the same signature as the `Go
-syscall.ForkExec() <https://golang.org/pkg/syscall/#ForkExec>`_, which
-it wraps. The YottaDB `Go ForkExec()`_ ensures that the child process
-is safely disconnected from YottaDB interprocess communication
-resources and database files.
+The function has the same signature as the `Go syscall.ForkExec()
+<https://golang.org/pkg/syscall/#ForkExec>`_, which it
+wraps. :code:`ForkExec()` ensures that the child process is safely
+disconnected from YottaDB interprocess communication resources and
+database files.
 
 Application code that must use :code:`syscall.Forkexec()` should call
 `Go Exit()`_ first, which means that after calling
@@ -3021,13 +3410,13 @@ Go Free()
 
 .. code-block:: go
 
-    yottadb.Free(ptr unsafe.pointer)
+    yottadb.Free(ptr unsafe.Pointer)
 
 The function wraps `ydb_free()`_ to release memory previously
-allocated using :code:`Malloc()`. As passing a :code:`ptr` not
-previously allocated using :code:`Malloc()` will result in
-unpredictable behavior, application code should be written with an
-appropriate level of diligence when calling :code:`Free()`.
+allocated using `Go Malloc()`_. As passing a :code:`ptr` not
+previously allocated using `Go Malloc()`_ will result in unpredictable
+behavior, application code should be written with an appropriate level
+of diligence when calling :code:`Free()`.
 
 ---------
 Go Init()
@@ -3055,7 +3444,7 @@ version information for the Go wrapper and underlying YottaDB release:
 
 - The first piece is always “gowr” to idenfify the Go wrapper.
 - The Go wrapper release number, which starts with “r” and is followed
-  by two numbers separated by a period (“.”), e.g., “r1.02”. The first
+  by two numbers separated by a period (“.”), e.g., “r1.24”. The first
   is a major release number and the second is a minor release number
   under the major release. Even minor release numbers indicate
   formally released software. Odd minor release numbers indicate
@@ -3070,13 +3459,13 @@ Go Malloc()
 
 .. code-block:: go
 
-    yottadb.Malloc(size uint64) unsafe.pointer
+    yottadb.Malloc(size uint64) unsafe.Pointer
 
 The function wraps `ydb_malloc()`_ to allocate :code:`size` bytes of
 storage managed by YottaDB. Use of :code:`Malloc()` to allocate
-storage provides debugging tools. Using any function other than
-:code:`Free()` to release storage allocated with
-:code:`Malloc()` has unpredictable results.
+storage provides debugging tools. Using any function other than `Go
+Free()`_ to release storage allocated with :code:`Malloc()` has
+unpredictable results.
 
 As the definition and implementation of Go protect against dangling
 pointers in pure Go code, Go application code may not be designed and
@@ -3084,47 +3473,6 @@ coded with the same level of defensiveness against dangling pointers
 that C applications are. Please take additional care in designing and
 coding your application to ensure the correct use of application
 storage allocated using :code:`Malloc()`.
-
-----------------
-Go TimerCancel()
-----------------
-
-.. code-block:: go
-
-    yottadb.TimerCancel(timerid uintptr)
-
-The function wraps `ydb_timer_cancel()`_ to cancel a timer previously
-established using :code:`TimerStart()`. :code:`timerid` is the id
-of the timer. The function returns nothing.
-
----------------
-Go TimerStart()
----------------
-
-.. code-block:: go
-
-    yottadb.TimerStart(timerid uintptr,
-        limitNsec uint64,
-	handler unsafe.pointer,
-	handlerDataLen uint,
-	handlerData unsafe.pointer) error
-
-The function wraps `ydb_timer_start()`_ to start a timer. Unless
-canceled, after the timer expires, YottaDB invokes the handler
-function referenced by :code:`handler`, passing it :code:`handlerData`
-as a parameter.
-
-Since Go does not permit a pointer to a Go function to be passed as a
-parameter to a C function, :code:`handler` is required to be a pointer
-to a C function. For a pure Go application, the C function is a glue
-routine that in turn calls the Go function. YottaDB provides a shell
-script `GenYDBGlueRoutine.sh`_ to generate glue routine functions. The
-:code:`handlerData` structure should be in memory allocated with `Go
-Malloc()`_ to protect it from Go garbage collection.
-
-Owing the need to use :code:`unsafe.Pointer` parameters, please take
-additional care in designing and coding your application to ensure the
-validity of the pointers passed to :code:`TimerStart()`.
 
 Go Programming Notes
 ====================
@@ -3156,26 +3504,25 @@ exposed in this `Programming in Go`_ section.
 GenYDBGlueRoutine.sh
 --------------------
 
-As discussed in `Go TpS()`_ and `Go TimerStart()`_, as Go does not
+As discussed in `Go TpS()`_ and referred to `Go TpE()`_, as Go does not
 permit a pointer to a Go function to be passed as a parameter to a C
 function, Go functions that encapsulate logic to be executed as an
-ACID transaction, and Go functions that serve as handlers for 
-expired timers cannot be passed as parameters to :code:`TpS()` and
-:code:`yottadb.TimerStart()`. Instead, each Go function must have a C
+ACID transaction cannot be passed as parameters to :code:`TpS()` and
+:code:`yottadb.TpE()`. Instead, each Go function must have a C
 “glue” routine whose address is passed to :code:`TpS()` or
-:code:`yottadb.TimerStart()`.
+:code:`yottadb.TpE()`.
 
 If an application has a callback routine called :code:`CallBackRtn()`,
 executing :code:`GenYDBGlueRoutine.sh CallBackRtn` will generate a
 routine :code:`CallBackRtn_cgo.go`. In the following example,
-:code:`/usr/lib/yottadb/r122` is the directory where YottaDB r1.22
+:code:`/usr/lib/yottadb/r124` is the directory where YottaDB r1.24
 (the YottaDB release to be used) resides.
 
 .. code-block:: go
 
-    // #cgo CFLAGS: -I/usr/lib/yottadb/r122
+    // #cgo CFLAGS: -I/usr/lib/yottadb/r124
     // #include "libyottadb.h"
-    // #cgo LDFLAGS: -L/usr/lib/yottadb/r122 -lyottadb -Wl,-rpath,/usr/lib/yottadb/r122
+    // #cgo LDFLAGS: -L/usr/lib/yottadb/r124 -lyottadb -Wl,-rpath,/usr/lib/yottadb/r124
     // int CallBackRtn_cgo(uintptr_t in); // Forward declaration
     import "C"
 
