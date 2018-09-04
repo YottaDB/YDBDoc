@@ -7,7 +7,7 @@
 ==============================
 
 .. contents::
-   :depth: 2
+   :depth: 3
 
 This chapter describes the M Intrinsic Special Variables implemented in YottaDB. All entries starting with the letter Z are YottaDB additions to the ANSI standard Intrinsic Special Variables. None of the Intrinsic Special Variables are case sensitive.
 
