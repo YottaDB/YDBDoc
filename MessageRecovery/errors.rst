@@ -5243,16 +5243,6 @@ Run Time Error: This indicates that a $INCREMENT command encountered a database 
 
 Action: Report this database error to the group responsible for database integrity at your operation.
 
----------------------
-GVINCRISOLATION 
----------------------
-
-GVINCRISOLATION, $INCREMENT cannot be performed on global xxxx as it has NOISOLATION turned ON
-
-Run Time Error: Global xxxx has NOISOLATION turned ON (through a VIEW "NOISOLATION" command). $INCREMENT is currently not supported for such globals.
-
-Action: Change the application either to turn OFF NOISOLATION on the global or not use $INCREMENT on it.
-
 --------------------
 GVINVALID
 --------------------
