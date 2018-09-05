@@ -1825,9 +1825,13 @@ The `YottaDB M Programmers Guide
 <https://docs.yottadb.com/ProgrammersGuide/UNIX_manual/>`_ documents
 programming YottaDB in M and is not duplicated here.
 
-=================
-Programming Notes
-=================
+============================================
+Programming Notes (Avoiding Common Pitfalls)
+============================================
+
+As YottaDB is likely different from other data management and
+persistence engines you have used, this section provides information
+about features of YottaDB intended to help you avoid common pitfalls.
 
 Numeric Considerations
 ======================
@@ -1997,9 +2001,21 @@ the API, it initializes signal handling as follows:
 
 As database operations such as `ydb_set_s()`_ set timers, subsequent
 system calls can terminate prematurely with an EINTR. Such system
-calls should be wrapped to restart them when this occurs. The file
-`eintr_wrappers.h <https://gitlab.com/YottaDB/DB/YDB/blob/master/sr_port/eintr_wrappers.h>`_
-demonstrates how YottaDB itself is coded to handle this situation.
+calls should be wrapped to restart them when this occurs. An example
+from the file `eintr_wrappers.h
+<https://gitlab.com/YottaDB/DB/YDB/blob/master/sr_port/eintr_wrappers.h>`_
+demonstrates how YottaDB itself is coded to handle system calls that
+terminate prematurely with an EINTR:
+
+.. code-block:: c
+
+    #define FGETS_FILE(BUF, LEN, FP, RC)                            \
+    {                                                               \
+	    do                                                      \
+	    {                                                       \
+		    FGETS(BUF, LEN, FP, RC);                        \
+	    } while (NULL == RC && !feof(FP) && ferror(FP) && EINTR == errno);      \
+    }
 
 If YottaDB is used within a process with other code that cannot
 co-exist, or be made to co-exist, with YottaDB, for example, by safely
