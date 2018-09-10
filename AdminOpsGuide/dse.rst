@@ -7,7 +7,7 @@
 =================================
 
 .. contents::
-   :depth: 3
+   :depth: 5
 
 ---------------------------
 Operating in DSE
@@ -125,43 +125,57 @@ The -STAR qualifier is invalid at level 0 (a data block). The ADD command requir
 
 **Qualifiers of ADD**
 
-*-B[LOCK]=block-number*
+~~~~~~~~~~~~~~~~~~~~~~
+-B[LOCK]=block-number
+~~~~~~~~~~~~~~~~~~~~~~
 
 Specifies the block to receive the new record.
 
 On commands with no -BLOCK= qualifier, DSE uses the last block handled by a DSE operation. When no block has been accessed, that is, on the first block-oriented command, DSE uses block one (1).
 
-*-D[ATA]=string*
+~~~~~~~~~~~~~~~~
+-D[ATA]=string
+~~~~~~~~~~~~~~~~
 
 Specifies the data field for records added to a data block. Use quotation marks around the string and escape codes of the form \a\b, where "a" and "b" are hexadecimal digits representing non-printing characters. \\ translates to a single backslash. \'\' translates to a NULL value.
 
 Incompatible with: -STAR,-POINTER
 
-*-K[EY]=key*
+~~~~~~~~~~~
+-K[EY]=key
+~~~~~~~~~~~
 
 Specifies the key of the new record. Enclose M-style global references, including the leading caret symbol (^), in quotation marks (" ").
 
 Incompatible with: -STAR
 
-*-O[FFSET]=offset*
+~~~~~~~~~~~~~~~~~
+-O[FFSET]=offset
+~~~~~~~~~~~~~~~~~
 
 Adds the new record at the next record boundary after the specified offset.
 
 Incompatible with: -RECORD, -STAR
 
-*-P[OINTER]=pointer*
+~~~~~~~~~~~~~~~~~~~
+-P[OINTER]=pointer
+~~~~~~~~~~~~~~~~~~~
 
 Specifies the block pointer field for records added to an index block. The -POINTER qualifier cannot be used at level 0. Note that this means that to add pointers at level 0 of the Directory Tree, you must specify a string of bytes or temporarily change the block level.
 
 Incompatible with: -DATA
 
-*-R[ECORD]=record-number*
+~~~~~~~~~~~~~~~~~~~~~~~~
+-R[ECORD]=record-number
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 Specifies a record number of the new record.
 
 Incompatible with: -OFFSET,-STAR
 
-*-S[TAR]*
+~~~~~~~~
+-S[TAR]
+~~~~~~~~
 
 Adds a star record (that is, a record that identifies the last record in an indexed block) at the end of the specified block. The -STAR qualifier cannot be used at level 0.
 
@@ -256,19 +270,25 @@ The format of the ALL command is:
 
 **Qualifiers**
 
-*-ALL*
+~~~~~~
+-ALL
+~~~~~~
 
 Displays additional information on the database most of which is useful for YottaDB in diagnosing issues.
 
 Meaningful only with: -D[UMP]
 
-**-BUFFER_FLUSH**
+~~~~~~~~~~~~~~
+-BUFFER_FLUSH
+~~~~~~~~~~~~~~
 
 Flushes to disk the file header and all pooled buffers for all regions of the current global directory.
 
 Incompatible with: -RENEW
 
-*-C[RITINIT]*
+~~~~~~~~~~~~
+-C[RITINIT]
+~~~~~~~~~~~~
 
 Initializes critical sections for all regions of the current directory.
 
@@ -277,13 +297,17 @@ Incompatible with: -RENEW, -RELEASE, -SIEZE
 .. note::
    Never use CRITINIT while concurrent updates are in progress as doing so may damage the database.
 
-*-[D]UMP*
+~~~~~~~~
+-[D]UMP
+~~~~~~~~
 
 Displays fileheader information.
 
 Compatible with: -A[LL]
 
-*-[NO]F[REEZE]*
+~~~~~~~~~~~~~~
+-[NO]F[REEZE]
+~~~~~~~~~~~~~~
 
 Freezes or prevents updates on all regions of the current global directory.
 
@@ -294,7 +318,9 @@ Freezes or prevents updates on all regions of the current global directory.
 
 Incompatible with: -RENEW
 
-*-O[VERRIDE]*
+~~~~~~~~~~~
+-O[VERRIDE]
+~~~~~~~~~~~
 
 Overrides the ALL -FREEZE or ALL -NOFREEZE operation.
 
@@ -304,7 +330,9 @@ When used with -FREEZE, -OVERRIDE freezes all GDS regions, including those froze
 
 Meaningful only with: [NO]FREEZE 
 
+~~~~~~~~~~~~
 -REF[ERENCE]
+~~~~~~~~~~~~
 
 Resets the reference count field to 1 for all regions of the current global directory.
 
@@ -313,13 +341,17 @@ Resets the reference count field to 1 for all regions of the current global dire
 
 Incompatible with: -RENEW
 
-*-REL[EASE]*
+~~~~~~~~~~
+-REL[EASE]
+~~~~~~~~~~
 
 Releases critical sections for all regions of the current global directory.
 
 Incompatible with: -CRITINIT, -RENEW, -SEIZE
 
-*-REN[EW]*
+~~~~~~~~~
+-REN[EW]
+~~~~~~~~~
 
 Reinitializes the critical sections (-CRITICAL) and buffers (-WCINIT), resets reference counts (-REFERENCE_COUNT) to 1, and clears freeze (-NOFREEZE) for all regions of the current global directory .
 
@@ -327,13 +359,17 @@ Reinitializes the critical sections (-CRITICAL) and buffers (-WCINIT), resets re
 * The RENEW action will cause all current accessors of the affected database regions to receive a fatal error on their next access attempt.
 * This operation is dangerous, drastic, and is a last resort if multiple databases have hangs that have not yielded to other resolution attempts; there is almost never a good reason to use this option.
 
-*-S[EIZE]*
+~~~~~~~~~
+-S[EIZE]
+~~~~~~~~~
 
 Seizes the critical section for all regions of the current global directory. The -SEIZE qualifier is useful when you encounter a DSEBLKRDFAIL error, generated when DSE is unable to read a block from the database.
 
 Incompatible with: -RENEW, -RELEASE, -CRITINIT
 
-*-W[CINIT]*
+~~~~~~~~~~
+-W[CINIT]
+~~~~~~~~~~
 
 Reinitializes the buffers for all regions of the current global directory.
 
@@ -504,7 +540,9 @@ or
 
 This section describes -BLOCK and all of its qualifiers.
 
-*-BL[OCK]=block_number*
+~~~~~~~~~~~~~~~~~~~~~~
+-BL[OCK]=block_number
+~~~~~~~~~~~~~~~~~~~~~~
 
 Specifies the block to modify. The -BLOCK qualifier is incompatible with the -FILEHEADER qualifier and all qualifiers related to -FILEHEADER.
 
@@ -514,7 +552,9 @@ Incompatible with: -FILEHEADER and qualifiers used with -FILEHEADER
 
 The following qualifiers operate on a block header.
 
-*-BS[IZ]=block_size*
+~~~~~~~~~~~~~~~~~~~
+-BS[IZ]=block_size
+~~~~~~~~~~~~~~~~~~~
 
 Changes the block size field of the specified block.
 
@@ -526,7 +566,9 @@ Changes the block size field of the specified block.
 
 Use only with: -BLOCK, -LEVEL, -TN
 
-*-L[EVEL]=level*
+~~~~~~~~~~~~~~~
+-L[EVEL]=level
+~~~~~~~~~~~~~~~
 
 Changes the level field for the specified block.
 
@@ -540,7 +582,9 @@ Example:
 .. parsed-literal::
    DSE> change -level=FF
 
-*-TN[=transaction_number]*
+~~~~~~~~~~~~~~~~~~~~~~~~~
+-TN[=transaction_number]
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Changes the transaction number for the current block.
 
@@ -549,19 +593,25 @@ Changes the transaction number for the current block.
 
 Use only with: -BLOCK, -BSIZ, -LEVEL
 
-*-OF[FSET]=offset*
+~~~~~~~~~~~~~~~~~
+-OF[FSET]=offset
+~~~~~~~~~~~~~~~~~
 
 Specifies the offset, in bytes, of the target record within the block. If the offset does not point to the beginning of a record, DSE rounds down to the last valid record start (for example, CHANGE -OFFSET=10 starts at -OFFSET=A, if that was the last record).
 
 Use only with: -BLOCK, -CMPC, and -RSIZ.
 
-*-RE[CORD]=record_number*
+~~~~~~~~~~~~~~~~~~~~~~~~
+-RE[CORD]=record_number
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 Specifies the record number of the target record.
 
 Use only with: -BLOCK, -CMPC, and -RSIZ.
 
-*-CM[PC]=compression_count*
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+-CM[PC]=compression_count
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Change the compression count field of the specified record.
 
@@ -570,7 +620,9 @@ Change the compression count field of the specified record.
 
 Use only with: -BLOCK, -RECORD, -OFFSET, -RSIZE
 
-*-RS[IZ]=record_size*
+~~~~~~~~~~~~~~~~~~~~
+-RS[IZ]=record_size
+~~~~~~~~~~~~~~~~~~~~
 
 Changes the record size field of the specified record.
 
@@ -590,19 +642,25 @@ This command changes the record size of record 3 block 2 to 59 (Hex: 3B) bytes.
 
 This section describes the -FILEHEADER qualifier and the other qualifiers that operate on a file header.
 
-*-FI[LEHEADER]*
+~~~~~~~~~~~~~~
+-FI[LEHEADER]
+~~~~~~~~~~~~~~
 
 Modifies a file header element that you specify with an associated qualifier.
 
 Incompatible with: -BSIZ, -CMPC, -TN, -LEVEL, -OFFSET, -RECORD, -RSIZ
 
-*-AB[ANDONED_KILLS]=value*
+~~~~~~~~~~~~~~~~~~~~~~~~~
+-AB[ANDONED_KILLS]=value
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Changes the value of the Abandoned Kills field. The value can be "NONE" or a decimal positive integer.
 
 Use only with: -FILEHEADER
 
-*-BLK[_SIZE]=block_size*
+~~~~~~~~~~~~~~~~~~~~~~~
+-BLK[_SIZE]=block_size
+~~~~~~~~~~~~~~~~~~~~~~~
 
 Changes the decimal block size field of the current file.
 
@@ -611,7 +669,9 @@ Changes the decimal block size field of the current file.
 
 Use only with: -FILEHEADER
 
-*-BLO[CKS_FREE]=free blocks*
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+-BLO[CKS_FREE]=free blocks
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Changes the hexadecimal free blocks field of the current file.
 
@@ -619,19 +679,27 @@ Use this to correct a value that MUPIP INTEG reports as needing a correction, bu
 
 Use only with: -FILEHEADER
 
-*-B[YTESTREAM]=transaction_number*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-B[YTESTREAM]=transaction_number
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Changes the transaction number in the file header of the last incremental backup to the value specified. Use this qualifier only in conjunction with the -FILEHEADER qualifier. For compatibility issues with prior versions, this can still be specified as -B_COMPREHENSIVE.
 
-*-D[ATABASE]=transaction_number*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-D[ATABASE]=transaction_number
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Changes the hexadecimal transaction number in the file header of the last comprehensive backup to the value specified. Use this qualifier only in conjunction with the -FILEHEADER qualifier. For compatibility issues with prior versions, this can still be specified as -B_COMPREHENSIVE.
 
-*-B_R[ECORD]=transaction_number*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-B_R[ECORD]=transaction_number
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Changes the hexadecimal transaction number in the file header field that maintains this information about the last -RECORD backup.
 
-*-CO[RRUPT_FILE]=boolean*
+~~~~~~~~~~~~~~~~~~~~~~~~
+-CO[RRUPT_FILE]=boolean
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 Indicates whether or not a region completed a successful recovery with the MUPIP JOURNAL -RECOVER command. Possible values are: T[RUE] or F[ALSE].
 
@@ -645,7 +713,9 @@ Changing this flag does not correct or cause database damage. When CORRUPT_FILE 
 
 Use only with: -FILEHEADER
 
-*-COM[MITWAIT_SPIN_COUNT]=value*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-COM[MITWAIT_SPIN_COUNT]=value
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Specifies the decimal number of times a YottaDB process waiting for control of a block to complete a block update should spin before yielding the CPU when YottaDB runs on SMP machines. When run on a uniprocessor system, YottaDB ignores this parameter. On SMP systems, when a process needs a critical section that another process has, and critical sections are short (as they are by design in YottaDB), spinning a little with the expectation that the process with the critical section will release it shortly provides a way to enhance performance at the cost of increased CPU usage. Eventually, a process awaiting a critical section yields the CPU if a little spinning does not get it the needed critical section. Note that on heavily loaded systems, increasing COMMITWAIT_SPIN_COUNT may not trade off CPU for throughput, but may instead degrade both. If you set the COMMITWAIT_SPIN_COUNT to 0, the waiting process performs a sequence of small sleeps instead of the spins or yields.
 
@@ -653,7 +723,9 @@ The default value is 16.
 
 Use only with: -FILEHEADER
 
-*-CU[RRENT_TN]=transaction_number*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-CU[RRENT_TN]=transaction_number
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Changes the hexadecimal current transaction number for the current region.
 
@@ -663,13 +735,17 @@ Changes the hexadecimal current transaction number for the current region.
 
 Use only with: -FILEHEADER
 
-*-DECLOCATION*
+~~~~~~~~~~~~~~
+-DECLOCATION
+~~~~~~~~~~~~~~
 
 Specifies an offset with the file header. If -VALUE is specified (in decimal), YottaDB puts it at that location.
 
 Use only with: -FILEHEADER
 
+~~~~~~~~~~~~~~~~~~~
 -E[NCRYPTION_HASH]
+~~~~~~~~~~~~~~~~~~~
 
 Changes the hash of the password stored in the database file header if and when you change the hash library. For more information on key management and reference implementation, refer to `Chapter 12: “Database Encryption” <https://docs.yottadb.com/AdminOpsGuide/encryption.html>`_.
  
@@ -678,13 +754,17 @@ Changes the hash of the password stored in the database file header if and when 
 
 Use only with: -FILEHEADER 
 
-*-[NO]EPOCHTAPER*
+~~~~~~~~~~~~~~~~
+-[NO]EPOCHTAPER
+~~~~~~~~~~~~~~~~
 
 Sets a flag that indicates whether or not epoch tapering should be done. The default value is -EPOCHTAPER.
 
 For more information, refer to “Region Qualifiers”.
 
-*-FL[USH_TIME][=delta_time]*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-FL[USH_TIME][=delta_time]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Changes the flush_time default interval (in delta_time).
 
@@ -694,7 +774,9 @@ Changes the flush_time default interval (in delta_time).
 
 Use only with: -FILEHEADER
 
-*-FR[EEZE]=value*
+~~~~~~~~~~~~~~~~
+-FR[EEZE]=value
+~~~~~~~~~~~~~~~~
 
 Sets the availability of the region for updates. Possible values are: T[RUE] or F[ALSE]. Use to "freeze" (disable database writes) or "unfreeze" the database.
 
@@ -704,31 +786,41 @@ For information about a preferred method of manipulating FREEZE, refer to `“FR
 
 DSE releases -FREEZE when it EXITs. To hold the database(s), CHANGE -FILEHEADER -FREEZE=TRUE and then SPAWN to perform other operations.
 
-*-FU[LLY_UPGRADED]=boolean*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-FU[LLY_UPGRADED]=boolean
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Sets a flag that indicates whether or not the database was fully upgraded to the latest version. The value is either T[RUE] or F[ALSE].
 
 Use only with: -FILEHEADER
 
-*-GV[STATSRESET]*
+~~~~~~~~~~~~~~~~~
+-GV[STATSRESET]
+~~~~~~~~~~~~~~~~~
 
 Resets all the database file header global access statistics to 0. Note that this erases all statistics previously accumulated in the database file header.
 
 Use only with: -FILEHEADER
 
-*-HEXLOCATION*
+~~~~~~~~~~~~~~
+-HEXLOCATION
+~~~~~~~~~~~~~~
 
 Specifies a hexadecimal offset with the file header. If -VALUE is specified, YottaDB puts it at that location.
 
 Use only with: -FILEHEADER
 
-*-INT[ERRUPTED_RECOV]=boolean*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-INT[ERRUPTED_RECOV]=boolean
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Sets a flag that indicates whether or not a recovery with the MUPIP JOURNAL -RECOVER command was interrupted. The value is either T[RUE] or F[ALSE].
 
 Use only with: -FILEHEADER
 
-*-K[EY_MAX_SIZE]=key_max_size*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-K[EY_MAX_SIZE]=key_max_size
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Changes the decimal value for the maximum allowable key size. Reducing KEY_MAX_SIZE can restrict access to existing data and cause YottaDB to report errors. Do not create incompatible key and record sizes.
 
@@ -736,13 +828,17 @@ Before permanently changing the key size using DSE, use GDE to check that the ap
 
 Use only with: -FILEHEADER
 
-*-KI[LL_IN_PROG]=value*
+~~~~~~~~~~~~~~~~~~~~~~~
+-KI[LL_IN_PROG]=value
+~~~~~~~~~~~~~~~~~~~~~~~
 
 Changes the value of the KILLs in progress field. The value can be "NONE" or a positive decimal integer.
 
 Use only with: -FILEHEADER
 
-*-N[ULL_SUBSCRIPTS]=value*
+~~~~~~~~~~~~~~~~~~~~~~~~~
+-N[ULL_SUBSCRIPTS]=value
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Controls whether YottaDB accepts null subscripts in database keys.
 
@@ -753,65 +849,89 @@ Controls whether YottaDB accepts null subscripts in database keys.
 
 Use only with: -FILEHEADER
 
-*-OV[ERRIDE]*
+~~~~~~~~~~~~
+-OV[ERRIDE]
+~~~~~~~~~~~~
 
 Releases or "steals" a FREEZE owned by another process.
 
 Use only with: -FREEZE
 
-*-[NO]Q[DBRUNDOWN]*
+~~~~~~~~~~~~~~~~~~
+-[NO]Q[DBRUNDOWN]
+~~~~~~~~~~~~~~~~~~
 
 Sets a flag that indicates whether or not the database is enabled for quick rundown. The default value is -NOQDBRUNDOWN.
 
 For more information, refer to “Region Qualifiers”.
 
-*-REC[ORD_MAX_SIZE]=record_max_size*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-REC[ORD_MAX_SIZE]=record_max_size
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Changes the decimal value for the maximum allowable record size. Use the -RECORD_MAX_SIZE qualifier only in conjunction with the -FILEHEADER qualifier. Reducing RECORD_MAX_SIZE can restrict access to existing data and cause YottaDB to report errors. Do not create incompatible key and record sizes.
 
 Before making a permanent change to the records size using DSE, use GDE to check that the appropriate Global Directory contains the same record size for the region. This prepares for future MUPIP CREATEs and performs a consistency check on the key and record size values. For more information on key and record sizes, refer to `Chapter 4: “Global Directory Editor” <https://docs.yottadb.com/AdminOpsGuide/gde.html>`_.
 
-*-REF[ERENCE_COUNT]=reference_count*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-REF[ERENCE_COUNT]=reference_count
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Sets a field that tracks how many processes are accessing the database with read/write permissions. MUPIP INTEG and DSE use decimal numbers for -REFERENCE_COUNT. To accurately determine the proper reference count, restrict CHANGE -FILEHEADER -REFERENCE_COUNT to the case where the process running DSE has exclusive (standalone) access to the database file. When DSE has sole access to a database file the -REFERENCE_COUNT should be one (1). This is an informational field and does not have any effect on processing.
 
-*-REG[_SEQNO]=sequence-number*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-REG[_SEQNO]=sequence-number
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In an LMS environment, this sets the "Region Seqno" field. For more information, refer to `Chapter 7: “Database Replication” <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html>`_.
 
-*-RESYNC_S[EQNO]=sequence-number*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-RESYNC_S[EQNO]=sequence-number
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In an LMS environment, this sets the hexadecimal value of the "Resync Seqno" field. For more information, refer to `Chapter 7: “Database Replication” <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html>`_.
 
-*-RESYNC_T[N]=sequence-number*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-RESYNC_T[N]=sequence-number
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In an LMS environment, this sets the hexadecimal value ofthe "Resync transaction" field. For more information, refer to `Chapter 7: “Database Replication” <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html>`_.
 
-*-S[PIN_SLEEP_MASK]=hexadecimal-mask*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-S[PIN_SLEEP_MASK]=hexadecimal-mask
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Changes the hexadecimal Spin sleep time mask that controls the maximum time (in nanoseconds) the process sleeps on a sleep spin; zero (0), the default causes the process to just yield to the OS scheduler.
 
 Use only with: -FILEHEADER
 
-*-SLEE[P_SPIN_COUNT]=integer*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-SLEE[P_SPIN_COUNT]=integer
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Changes the hexadecimal Mutex Sleep Spin Count that controls the number of times a process waiting on a shared resource (usually a database) suspends its activity after exhausting its Mutex Hard Spin Count and before enqeueing itself to be awakened by a process releasing the resource.
 
 Use only with: -FILEHEADER
 
-*-[NO]STD[NULLCOL]*
+~~~~~~~~~~~~~~~~~~
+-[NO]STD[NULLCOL]
+~~~~~~~~~~~~~~~~~~
 
 Changes the collation of empty string ("NULL") subscripts for the database file. Although it is not the default, STDNULLCOLL is required with certain other characteristics, and highly recommended in any case. If you change this when there are existing "NULL" subscripts the results may be problematic. YottaDB recommends you establish this characteristic with GDE and load data with a consistent setting.
 
 Use only with: -FILEHEADER
 
-*-STRM_NUM=stream-number -STRM_R[EG_SEQNO]=str_num's_region_sequence_number*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-STRM_NUM=stream-number -STRM_R[EG_SEQNO]=str_num's_region_sequence_number
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Changes the hexadecimal values of Stream and its Reg Seqno. Use -STRM_NUM and -STRM_REG_SEQNO together as part of the same CHANGE -FILEHEADER command.
 
 Use only with: -FILEHEADER
 
-*-TI[MERS_PENDING]=timers_pending*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-TI[MERS_PENDING]=timers_pending
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Sets a field that tracks the decimal number of processes considering a timed flush. Proper values are 0, 1, and 2.
 
@@ -819,20 +939,26 @@ Use the CHANGE -TIMERS_PENDING qualifier only upon receiving instructions from Y
 
 Use only with: -FILEHEADER
 
-*-TO[TAL_BLKS]=total_blocks*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-TO[TAL_BLKS]=total_blocks
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Changes the hexadecimal total blocks field of the current file. Use only with: -FILEHEADER
 
 .. note::
    The total blocks field should always reflect the actual size of the  database. Change this field only if it no longer reflects the database size.
 
-*-TR[IGGER_FLUSH]=trigger_flush*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-TR[IGGER_FLUSH]=trigger_flush
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Sets the decimal value for the triggering threshold, in buffers, for flushing the cache-modified queue.
 
 Use the CHANGE -TRIGGER_FLUSH qualifier only upon receiving instructions from YottaDB, and only in conjunction with the -FILEHEADER qualifier.
 
-*-WR[ITES_PER_FLUSH]=writes_per_flush*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-WR[ITES_PER_FLUSH]=writes_per_flush
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Sets the decimal number of block to write in each flush. The default value is 7.
 
@@ -1010,18 +1136,24 @@ Operates on the cache of a database having BG access method. The format of the C
 
 **Qualifiers of CACHE**
 
-*-RE[COVER] [-ALL]*
+~~~~~~~~~~~~~~~~~~
+-RE[COVER] [-ALL]
+~~~~~~~~~~~~~~~~~~
 
 Resets the cache of a database having BG access method to a "clean" state.
 
 * With -ALL specified, DSE includes all region of the current global directory for cache recovery.
 * Attempt DSE CACHE -RECOVER only if a DSE CACHE -VERIFY commands reports the cache is "NOT clean".
 
-*-SH[OW]*
+~~~~~~~~
+-SH[OW]
+~~~~~~~~
 
 Displays the cache data structure information. All values are in 8-byte hexadecimal form. If the database has encryption turned on, SHOW additionally displays an element that gives information about the encrypted global buffer section in shared memory.
 
-*-VE[RIFY] [-ALL]*
+~~~~~~~~~~~~~~~~~
+-VE[RIFY] [-ALL]
+~~~~~~~~~~~~~~~~~
 
 Verifies the integrity of the cache data structures as well as the internal consistency of any GDS blocks in the global buffers of the current region.
 
@@ -1112,11 +1244,15 @@ Displays and/or modifies the status and contents of the critical section for the
 
 **Qualifiers of CRITICAL**
 
-*-A[LL]*
+~~~~~~~
+-A[LL]
+~~~~~~~
 
 Display all ids of processes owning critical section from all regions. If there are no processes owning critical section in a region, ALL displays "the CRIT is currently unowned" message for each region.
 
-*-I[NIT]*
+~~~~~~~~
+-I[NIT]
+~~~~~~~~
 
 Reinitializes the critical section.
 
@@ -1125,7 +1261,9 @@ Reinitializes the critical section.
 
 Use only with: -RESET
 
-*-O[WNER]*
+~~~~~~~~
+-O[WNER]
+~~~~~~~~
 
 Displays the ID of the process at the head of the critical section. DSE displays a warning message when the current process owns the critical section.
 
@@ -1137,13 +1275,17 @@ Example:
    DSE> critical -OWNER
    Write critical section is currently unowned
 
-*-REL[EASE]*
+~~~~~~~~~~~
+-REL[EASE]
+~~~~~~~~~~~
 
 Releases the critical section if the process running DSE owns the section.
 
 Use alone.
 
-*-REM[OVE]*
+~~~~~~~~~~
+-REM[OVE]
+~~~~~~~~~~
 
 Terminates any write ownership of the critical section. Use this when the critical section is owned by a process that is nonexistent or is known to no longer be running a YottaDB image.
 
@@ -1152,7 +1294,9 @@ Use alone.
 .. note::
    Using CRITICAL -REMOVE when the write owner of a critical section is an active YottaDB process may cause structural database damage.
 
-*-RES[ET]*
+~~~~~~~~~
+-RES[ET]
+~~~~~~~~~
 
 Displays the number of times the critical section has been through an online reinitialization.
 
@@ -1160,7 +1304,9 @@ Using -RESET with -INIT causes an error for processes that are attempting to get
 
 Use only with: -INIT
 
-*-S[EIZE]*
+~~~~~~~~~
+-S[EIZE]
+~~~~~~~~~
 
 Seizes the critical section (if available).
 
@@ -1205,45 +1351,61 @@ Use the error messages reported by MUPIP INTEG to determine what to DUMP and exa
 
 **Qualifiers of DUMP**
 
-*-A[LL]*
+~~~~~~~
+-A[LL]
+~~~~~~~
 
 When used with -FILEHEADER, the -A[LL] qualifier displays additional information on the database most of which is useful to YottaDB in diagnosing issues. A complete description of all the elements that show up with the DSE DUMP -FILEHEADER -ALL command are beyond the scope of this book.
 
 Meaningful only with: -FILEHEADER
 
-*-B[LOCK]=block-number*
+~~~~~~~~~~~~~~~~~~~~~~
+-B[LOCK]=block-number
+~~~~~~~~~~~~~~~~~~~~~~
 
 Specifies the starting block of the dump. For commands without an object qualifier, DSE uses the last block handled by a DSE operation. When no block has been accessed, (that is, on the first block-oriented command), DSE uses block one (1).
 
 Incompatible with: -ALL, -FILEHEADER and -UPDPROC.
 
-*-C[OUNT]=count*
+~~~~~~~~~~~~~~~
+-C[OUNT]=count
+~~~~~~~~~~~~~~~
 
 Specifies the number of blocks, block headers, or records to DUMP.
 
 Incompatible with: -ALL, -FILEHEADER and -UPDPROC.
 
-*-F[ILEHEADER]*
+~~~~~~~~~~~~~~
+-F[ILEHEADER]
+~~~~~~~~~~~~~~
 
 Dumps file header information. A DSE dump of a database file header prints a 0x prefix for all fields printed in hexadecimal format. 
 
 Use only with -ALL or -UPDPROC
 
-*-G[LO]*
+~~~~~~~
+-G[LO]
+~~~~~~~
 
 Dumps the specified record or blocks into the current output file in Global Output (GO) format. YottaDB strongly suggests using -ZWR rather than -GLO as the ZWR format handles all possible content values, including some that are problematic with -GLO (The GLO format is not supported for UTF-8 mode - use the ZWR format with UTF-8 mode.).
 
 Incompatible with: -ALL, -FILEHEADER, -UPDPROC and -ZWR.
 
-*-G[VSTATS]*
+~~~~~~~~~~~
+-G[VSTATS]
+~~~~~~~~~~~
 
 Displays the access statistics for global variables and database file(s).
 
-*-NO[CRIT]*
+~~~~~~~~~~
+-NO[CRIT]
+~~~~~~~~~~
 
 Allows DSE DUMP to work even if another process is holding a critical section. Since results in this mode may be inconsistent, it should only be used if the critical section mechanism is not operating normally.
 
-*-[NO]H[EADER]*
+~~~~~~~~~~~~~~
+-[NO]H[EADER]
+~~~~~~~~~~~~~~
 
 Specifies whether the dump of the specified blocks or records is restricted to, or excludes, headers. -HEADER displays only the header, -NOHEADER displays the block or record with the header suppressed. DUMP without the -[NO]HEADER qualifier dumps both the block/record and the header.
 
@@ -1251,25 +1413,33 @@ By default, DUMP displays all information in a block or record.
 
 Incompatible with: -ALL, -FILEHEADER, -GLO, -UPDPROC and -ZWR.
 
-*-O[FFSET]=offset*
+~~~~~~~~~~~~~~~~~
+-O[FFSET]=offset
+~~~~~~~~~~~~~~~~~
 
 Specifies the offset, in bytes, of the starting record for the dump. If the offset does not point to the beginning of a record, DSE rounds down to the last valid record start (e.g., DUMP -OFF=10 starts at -OFF=A if that was the beginning of the record containing offset 10).
 
 Incompatible with: -ALL, -FILEHEADER, and -RECORD.
 
-*-R[ECORD]=record_number*
+~~~~~~~~~~~~~~~~~~~~~~~~~
+-R[ECORD]=record_number
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Specifies the record number of the starting record of the dump. If you try to dump a record number that is larger than the last actual record in the block, a DSE error message provides the number of the last record in the block.
 
 Incompatible with: -ALL, -FILEHEADER, and -OFFSET.
 
-*-U[PDPROC]*
+~~~~~~~~~~~
+-U[PDPROC]
+~~~~~~~~~~~
 
 Displays the helper process parameters with the fileheader elements.
 
 Use only with -FILEHEADER.
 
-*-Z[WR]*
+~~~~~~~
+-Z[WR]
+~~~~~~~
 
 Dumps the specified record or blocks into the current output file in ZWRITE (ZWR) format.
 
@@ -1358,19 +1528,25 @@ The -DECIMAL and -HEXADECIMAL qualifiers specify the input base for the number. 
 
 **Qualifiers of EVALUATE**
 
-*-D[ECIMAL]*
+~~~~~~~~~~~
+-D[ECIMAL]
+~~~~~~~~~~~
 
 Specifies that the input number has a decimal base.
 
 Incompatible with: -HEXADECIMAL .
 
-*-H[EXADECIMAL]*
+~~~~~~~~~~~~~~~
+-H[EXADECIMAL]
+~~~~~~~~~~~~~~~
 
 Specifies that the input number has a hexadecimal base.
 
 Incompatible with: -DECIMAL
 
-*-N[UMBER]=number*
+~~~~~~~~~~~~~~~~~
+-N[UMBER]=number
+~~~~~~~~~~~~~~~~~
 
 Specifies the number to evaluate. Required.
 
@@ -1436,7 +1612,9 @@ Locates a given block or region. The format of the FIND command is:
 
 **Qualifiers of FIND**
 
-*-B[LOCK]=block_number*
+~~~~~~~~~~~~~~~~~~~~~~
+-B[LOCK]=block_number
+~~~~~~~~~~~~~~~~~~~~~~
 
 Specifies the block to find.
 
@@ -1444,7 +1622,9 @@ On commands without the -BLOCK= qualifier, DSE uses the last block handled by a 
 
 Incompatible with: -KEY, -REGION
 
-*-E[XHAUSTIVE]*
+~~~~~~~~~~~~~~
+-E[XHAUSTIVE]
+~~~~~~~~~~~~~~
 
 Searches the entire index structure for the desired path or siblings.
 
@@ -1456,7 +1636,9 @@ Searches the entire index structure for the desired path or siblings.
 
 Incompatible with: -KEY, -REGION, -FREEBLOCK
 
-*-F[REEBLOCK]*
+~~~~~~~~~~~~~
+-F[REEBLOCK]
+~~~~~~~~~~~~~
 
 Finds the nearest free block to the block specified by -HINT. FREEBLOCK accepts bit maps as starting or ending points.
 
@@ -1466,7 +1648,9 @@ Finds the nearest free block to the block specified by -HINT. FREEBLOCK accepts 
 
 Required with -HINT; compatible with -BLOCK and [NO]CRIT.
 
-*-H[INT]=block_number*
+~~~~~~~~~~~~~~~~~~~~~
+-H[INT]=block_number
+~~~~~~~~~~~~~~~~~~~~~
 
 Designates the starting point of a -FREEBLOCK search.
 
@@ -1474,7 +1658,9 @@ FIND -FREE -HINT locates the "closest" free block to the hint. This provides a t
 
 Required with: -FREEBLOCK; compatible with -BLOCK and [NO]CRIT. 
 
-*-K[EY]=key*
+~~~~~~~~~~~
+-K[EY]=key
+~~~~~~~~~~~
 
 Searches the database for the block containing the specified key or if the key does not exist, the block that would contain it, if it existed.
 
@@ -1484,13 +1670,17 @@ Searches the database for the block containing the specified key or if the key d
 
 Compatible only with [NO]CRIT.
 
-*-[NO]C[RIT]*
+~~~~~~~~~~~~
+-[NO]C[RIT]
+~~~~~~~~~~~~
 
 Allows FIND to work even if another process is holding a critical section.
 
 As results in this mode may be inconsistent, it should only be used if the critical section mechanism is not operating normally
 
-*-R[EGION][=region]*
+~~~~~~~~~~~~~~~~~~
+-R[EGION][=region]
+~~~~~~~~~~~~~~~~~~
 
 Switches to the named Global Directory region.
 
@@ -1498,7 +1688,9 @@ Switches to the named Global Directory region.
 
 Use Alone. 
 
-*-S[IBLINGS]*
+~~~~~~~~~~~~
+-S[IBLINGS]
+~~~~~~~~~~~~
 
 Displays the block number of the specified block and its logical siblings in hexadecimal format.
 
@@ -1588,11 +1780,15 @@ The format of the INTEGRIT command is:
 
 **Qualifiers of INTEGRIT**
 
-*-B[LOCK]=block_number*
+~~~~~~~~~~~~~~~~~~~~~~~
+-B[LOCK]=block_number
+~~~~~~~~~~~~~~~~~~~~~~~
 
 Specifies the block for DSE to check. On commands with no -BLOCK qualifier, DSE uses the last block handled by a DSE operation. When no block has been accessed, that is, on the first block-oriented command, DSE uses block one (1).
 
-*-NO[CRIT]*
+~~~~~~~~~~~
+-NO[CRIT]
+~~~~~~~~~~~
 
 Allows DSE INTEG to work even if another process is holding a critical section. Since results in this mode may be inconsistent, it should only be used if the critical section mechanism is not operating normally.
 
@@ -1618,7 +1814,9 @@ By default, MAPS shows the status of the bitmap for the specified block.
 
 **Qualifiers for MAP**
 
-*-BL[OCK]=block_number*
+~~~~~~~~~~~~~~~~~~~~~~
+-BL[OCK]=block_number
+~~~~~~~~~~~~~~~~~~~~~~
 
 Specifies the target block for MAPS. The -BLOCK qualifier is incompatible with the -RESTORE_ALL qualifier.
 
@@ -1626,25 +1824,33 @@ On commands with no -BLOCK= or -RESTORE_ALL qualifier, DSE uses the last block h
 
 Incompatible with: -RESTORE_ALL
 
-*-BU[SY]*
+~~~~~~~~
+-BU[SY]
+~~~~~~~~
 
 Marks the current block as busy in the block's local map and appropriately updates the master bitmap. BUSY accepts bit map blocks.
 
 Compatible only with: -BLOCK
 
-*-F[REE]*
+~~~~~~~~~
+-F[REE]
+~~~~~~~~~
 
 Marks the current block as free in the block's local map and appropriately updates the master bitmap.
 
 Compatible only with: -BLOCK
 
-*-M[ASTER]*
+~~~~~~~~~~
+-M[ASTER]
+~~~~~~~~~~
 
 Sets the bit in the master bitmap associated with the current block's local map according to whether or not that local map is full. MASTER accepts bit map blocks.
 
 Use only with: -BLOCK.
 
-*-R[ESTORE_ALL]*
+~~~~~~~~~~~~~~~
+-R[ESTORE_ALL]
+~~~~~~~~~~~~~~~
 
 Sets all local bitmaps and the master bitmap to reflect the blocks used in the database file.
 
@@ -1731,7 +1937,9 @@ Use the OPEN command to open a file for sequential output of global variable dat
 
 **Qualifiers for OPEN**
 
-*-F[ILE]=file-name*
+~~~~~~~~~~~~~~~~~~
+-F[ILE]=file-name
+~~~~~~~~~~~~~~~~~~
 
 Specifies the file to open.
 
@@ -1769,15 +1977,21 @@ The format of the OVERWRITE command is:
 
 **Qualifiers for OVERWRITE**
 
-*-B[LOCK]=block number*
+~~~~~~~~~~~~~~~~~~~~~~~
+-B[LOCK]=block number
+~~~~~~~~~~~~~~~~~~~~~~~
 
 Directs DSE to OVERWRITE a specific block. If no block number is specified, the default is the current block.
 
-*-D[ATA]=string*
+~~~~~~~~~~~~~~~
+-D[ATA]=string
+~~~~~~~~~~~~~~~
 
 Specifies the data to be written. Use quotation marks around the string and escape codes of the form \a or \ab, where "a" and "b" are hexadecimal digits representing non-printing characters. \\\\ translates to a single backslash.
 
-*-O[FFSET]=offset*
+~~~~~~~~~~~~~~~~~
+-O[FFSET]=offset
+~~~~~~~~~~~~~~~~~
 
 Specifies the offset in the current block where the overwrite should begin. 
 
@@ -1827,41 +2041,59 @@ The format of the RANGE command is:
 
 **Qualifiers of RANGE**
 
-*-F[ROM]=block_number*
+~~~~~~~~~~~~~~~~~~~~~
+-F[ROM]=block_number
+~~~~~~~~~~~~~~~~~~~~~
 
 Specifies a starting block number for the range search. DSE RANGE accepts bit maps as starting or ending points.
 
 By default, RANGE starts processing at the beginning of the file.
 
-*-T[O]=block-number*
+~~~~~~~~~~~~~~~~~~~
+-T[O]=block-number
+~~~~~~~~~~~~~~~~~~~
 
 Specifies an ending block number for the range search. DSE RANGE accepts bit maps as starting or ending points. By default, RANGE stops processing at the end of the file.
 
-*-I[NDEX]*
+~~~~~~~~~
+-I[NDEX]
+~~~~~~~~~
 
 Restricts a search to index blocks.
 
-*-LOS[T]=block_number*
+~~~~~~~~~~~~~~~~~~~~
+-LOS[T]=block_number
+~~~~~~~~~~~~~~~~~~~~
 
 Restricts a search to blocks not found by a FIND -BLOCK.
 
-*-LOW[ER]=key*
+~~~~~~~~~~~~~~
+-LOW[ER]=key
+~~~~~~~~~~~~~~
 
 Specifies the lower bound for the key range.
 
-*-[NO]BU[SY]=busy/free*
+~~~~~~~~~~~~~~~~~~~~~~
+-[NO]BU[SY]=busy/free
+~~~~~~~~~~~~~~~~~~~~~~
 
 Restricts a search to either BUSY or FREE blocks.
 
-*-[NO]C[RIT]*
+~~~~~~~~~~~~
+-[NO]C[RIT]
+~~~~~~~~~~~~
 
 Allows DSE RANGE to work even if another process is holding a critical section. Since results in this mode may be inconsistent, it should only be used if the critical section mechanism is not operating normally.
 
-*-S[TAR]*
+~~~~~~~~~~
+-S[TAR]
+~~~~~~~~~~
 
 Includes index blocks that contain a single star key.
 
-*-U[PPER]=key*
+~~~~~~~~~~~~~~
+-U[PPER]=key
+~~~~~~~~~~~~~~
 
 Specifies the upper bound for the key range.
 
@@ -1932,7 +2164,9 @@ The version number is specified in decimal.
 
 **Qualifiers of REMOVE**
 
-*-B[LOCK]=block_number*
+~~~~~~~~~~~~~~~~~~~~~~
+-B[LOCK]=block_number
+~~~~~~~~~~~~~~~~~~~~~~
 
 Specifies the block associated with the record or buffer being deleted.
 
@@ -1940,7 +2174,9 @@ On commands with no -BLOCK= qualifier, DSE uses the last block handled by a DSE 
 
 BLOCK accepts blocks higher than the current database size because they deal with a set of saved block copies rather than the database and there are situations where a saved block may be outside the current database size (for example, due to a concurrent MUPIP REORG -TRUNCATE).
 
-*-C[OUNT]=count*
+~~~~~~~~~~~~~~~
+-C[OUNT]=count
+~~~~~~~~~~~~~~~
 
 Specifies the number of records to remove.
 
@@ -1948,19 +2184,25 @@ By default, REMOVE deletes a single record.
 
 Incompatible with: -VERSION
 
-*-O[FFSET]=offset*
+~~~~~~~~~~~~~~~~~~
+-O[FFSET]=offset
+~~~~~~~~~~~~~~~~~~
 
 Specifies the offset (in bytes) of the record to be removed. If the offset does not point to the beginning of a record, DSE rounds down to the beginning of the record containing the offset (for example, REMOVE -OFF=10 starts at OFF=A if that was the last prior record boundary).
 
 Incompatible with: -VERSION, -RECORD
 
-*-R[ECORD]=record_number*
+~~~~~~~~~~~~~~~~~~~~~~~~
+-R[ECORD]=record_number
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 Specifies the number that identifies the record to be removed. The -RECORD qualifier is incompatible with the -OFFSET and -VERSION qualifiers.
 
 Incompatible with: -VERSION, -OFFSET
 
-*-V[ERSION]=version_number*
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+-V[ERSION]=version_number
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Specifies the version number, in decimal, of the save buffer to be removed. If there is more than one version of a block, -VERSION is required; otherwise REMOVE works on that sole version. -VERSION is incompatible with all qualifiers except -BLOCK.
 
@@ -1987,7 +2229,9 @@ The version number is specified in decimal.
 
 **Qualifiers of RESTORE**
 
-*-B[LOCK]=block_number*
+~~~~~~~~~~~~~~~~~~~~~~
+-B[LOCK]=block_number
+~~~~~~~~~~~~~~~~~~~~~~
 
 Specifies the block to restore.
 
@@ -1995,7 +2239,9 @@ For commands with no -BLOCK= qualifier, DSE uses the last block handled by a DSE
 
 BLOCK accepts blocks higher than the current database size because it deals with a set of saved block copies rather than the database and there are situations where a saved block may be outside the current database size (for example, due to a concurrent MUPIP REORG -TRUNCATE).
 
-*-F[ROM]=block_number*
+~~~~~~~~~~~~~~~~~~~~~~
+-F[ROM]=block_number
+~~~~~~~~~~~~~~~~~~~~~~
 
 Specifies the block number of the SAVE buffer to restore.
 
@@ -2003,13 +2249,17 @@ DSE restores the block specified with -BLOCK qualifier with the block specified 
 
 By default, RESTORE uses the target block number as the -FROM block number.
 
-*-R[EGION]=region*
+~~~~~~~~~~~~~~~~~
+-R[EGION]=region
+~~~~~~~~~~~~~~~~~
 
 Specifies the region of the saved buffer to restore.
 
 By default, RESTORE uses SAVE buffers from the current region.
 
-*-V[ERSION]=version_number*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-V[ERSION]=version_number
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Specifies the decimal version number of the block to restore. The version number is required.
 
@@ -2034,19 +2284,25 @@ The format of the SAVE command is:
 
 **Qualifiers of SAVE**
 
-*-B[LOCK]=block_number*
+~~~~~~~~~~~~~~~~~~~~~~
+-B[LOCK]=block_number
+~~~~~~~~~~~~~~~~~~~~~~
 
 Specifies the block to restore.
 
 On commands with no -BLOCK= qualifier, DSE uses the last block handled by a DSE operation. When no block has been accessed, that is, on the first block-oriented command, DSE uses block one (1).
 
-*-C[OMMENT]=string*
+~~~~~~~~~~~~~~~~~~~
+-C[OMMENT]=string
+~~~~~~~~~~~~~~~~~~~
 
 Specifies a comment to save with the block. Enclose the comment in quotation marks (" ").
 
 Incompatible with: -LIST
 
-*-L[IST]*
+~~~~~~~~~
+-L[IST]
+~~~~~~~~~
 
 Lists saved versions of specified blocks. The -LIST qualifier is incompatible with the -COMMENT qualifier.
 
@@ -2056,7 +2312,9 @@ LIST may display blocks higher than the current database size because it deals w
 
 Incompatible with: -COMMENT
 
-*-[NO]C[RIT]*
+~~~~~~~~~~~~~
+-[NO]C[RIT]
+~~~~~~~~~~~~~
 
 Allows DSE SAVE to work even if another process is holding a critical section. Since results in this mode may be inconsistent, it should only be used if the critical section mechanism is not operating normally. 
 
@@ -2079,27 +2337,33 @@ b_shift must always be less than or equal to offset. This means that DSE SHIFT i
 
 **Qualifiers of SHIFT**
 
-*-B[ACKWARD]=shift*
+~~~~~~~~~~~~~~~~~~
+-B[ACKWARD]=shift
+~~~~~~~~~~~~~~~~~~
 
 Specifies the number of bytes to shift data in the direction of the block header.
 
 Incompatible with: -FORWARD
 
-*-BL[OCK]=block_number*
+~~~~~~~~~~~~~~~~~~~~~~~
+-BL[OCK]=block_number
+~~~~~~~~~~~~~~~~~~~~~~~
 
 Specifies the block number to perform the DSE SHIFT.
 
-*-F[ORWARD]=shift*
+~~~~~~~~~~~~~~~~~
+-F[ORWARD]=shift
+~~~~~~~~~~~~~~~~~
 
 Specifies the number of bytes to shift data toward the end of the block.
 
 Incompatible with: -BACKWARD
 
-*-O[FFSET]=offset*
+~~~~~~~~~~~~~~~~~~
+-O[FFSET]=offset
+~~~~~~~~~~~~~~~~~~
 
 Specifies the starting offset, in bytes, of the portion of the block to shift.
-
-*-SPawn*
 
 +++++++++
 SPAWN
