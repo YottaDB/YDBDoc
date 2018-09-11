@@ -7,7 +7,7 @@
 ======================================
 
 .. contents::
-   :depth: 2
+   :depth: 5
 
 GDS is a proprietary internal database structure used to store global variables and lock resource names. A high-level understanding of GDS can help database administrators correctly interpret YottaDB logs/error messages, and maintain database metrics. You should always consult YottaDB support (info@yottadb.com) in the unlikely event of getting database integrity issues.
 
@@ -269,7 +269,7 @@ These two bits are internally represented as:
 
 * ':' - REUSABLE
 
-The interpreted form of the local bitmap is like the following: >
+The interpreted form of the local bitmap is like the following: 
 
 .. parsed-literal::
    Block 0  Size 90  Level -1  TN 1 V5   Master Status: Free Space 
@@ -293,7 +293,7 @@ The interpreted form of the local bitmap is like the following: >
   'X' == BUSY '.' == FREE ':' == REUSABLE '?' == CORRUPT
 
 .. note::
-   The first block described by the bitmap is itself and is, therefore, always marked busy. 
+   The first block described by the bitmap is itself and is therefore always marked busy. 
 
 If bitmaps are marked as "?", they denote that they are corrupted (not currently in a legal combination) bitmaps. The consequences of corrupted bitmaps are:
 
