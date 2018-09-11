@@ -7,7 +7,7 @@
 ===========================
 
 .. contents::
-   :depth: 2
+   :depth: 3
 
 YottaDB runs on a wide variety of computer platforms. Consult YottaDB for the current list of supported platforms.
 

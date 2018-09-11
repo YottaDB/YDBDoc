@@ -7,7 +7,7 @@
 =========================================
 
 .. contents::
-   :depth: 2
+   :depth: 5
 
 Direct Mode is an important tool in YottaDB because it allows you to interactively debug, modify, and execute M routines. Direct Mode is a shell that immediately compiles and executes YottaDB commands providing an interpretive-like interface. M simplifies debugging by using the same commands for debugging that are used for programming.
 
@@ -52,7 +52,9 @@ Functionality Available in Direct Mode
 
 This section provides an overview of basic functionality and concepts that enhance your use of Direct Mode.
 
-**Command Recall**
+~~~~~~~~~~~~~~~
+Command Recall
+~~~~~~~~~~~~~~~
 
 Direct Mode includes a line command recall function to display previously entered command lines. Use <CTRL-B> or the Up Arrow key at the YDB> prompt to scroll back through command lines. Use the Down Arrow key to scroll forward through the command lines. YottaDB displays one command line at a time. You may delete and reenter characters starting at the end of a recalled line.
 
@@ -106,7 +108,9 @@ Example:
 
 This RECALLs "WRITE", the command most recently beginning with this text. Note that the RECALL command text is case sensitive. The RECALL command with a text argument treats WRITE and write differently, that is, it treats them case sensitively. If you first type the WRITE command in lower-case and then type WRITE in upper-case to recall it, the RECALL command does not find a match.
 
-**Line Editing**
+~~~~~~~~~~~~~
+Line Editing
+~~~~~~~~~~~~~
 
 YottaDB permits the use of the YottaDB command line editor at the Direct Mode prompt and during M READs from a terminal. The YottaDB line editor allows cursor positioning using the <CTRL> key, edit keypad and function keys.
 
@@ -150,7 +154,9 @@ YottaDB deletes the character under the cursor when you press the key on the key
 
 When modifying terminfo capabilities, always look for unintended changes in the behavior of other applications, for example, text editors, that also rely on those capabilities. In the worst case, you may need to toggle between alternate terminfo entries for YottaDB and other applications while you evaluate different options. Also, for terminfo entries without the cud1 capability, YottaDB uses a linefeed when moving to the next line in direct mode.
 
-**The M Invocation Stack**
+~~~~~~~~~~~~~~~~~~~~~~~~
+The M Invocation Stack
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 The ANSI M Standard describes certain M operations in terms of how a stack-based virtual machine would operate. A stack is a repository for tracking temporary information on a "last-in/first-out" (LIFO) basis. M program behavior can be understood using a stack-based model. However, the standard is not explicit in defining how an implementation must maintain a stack or even whether it must use one at all.
 
@@ -423,7 +429,9 @@ M DOs, XECUTEs, and extrinsics add a level to the invocation stack. Matching QUI
 .. note::
    In the M stack model, a FOR command does not add a stack frame, and a QUIT that terminates a FOR loop does not remove a stack frame.
 
-**Determining Levels of Nesting**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Determining Levels of Nesting
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 $STACK contains an integer value indicating the "level of nesting" caused by DO commands, XECUTE commands, and extrinsic functions in the M virtual stack.
 
@@ -440,7 +448,9 @@ Example:
 
 This example shows the current values for $STACK and $ZLEVEL. $ZLEVEL is like $STACK except that uses one (1) as the starting level for the M stack, which $STACK uses zero (0), which means that $ZLEVEL is always one more than $STACK. Using $ZLEVEL with "Z" commands and functions, and $STACK with standard functions avoids the need to calculate the adjustment.
 
-**Looking at the Invocation Stack**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Looking at the Invocation Stack
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The $STACK intrinsic special variable and the $STACK() function provide a mechanism to access M stack context information.
 
@@ -487,7 +497,9 @@ Example:
 
 This example shows that there was no error at $STACK level one, as well as the "place" and "mcode" information for that level.
 
-**Using ZSHOW to examine Context Information**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Using ZSHOW to examine Context Information
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The ZSHOW command displays information about the M environment.
 

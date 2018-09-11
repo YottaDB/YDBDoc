@@ -7,7 +7,7 @@
 ===================
 
 .. contents::
-   :depth: 2
+   :depth: 5
 
 --------------------
 Triggers
@@ -57,6 +57,7 @@ To apply this trigger definition file to YottaDB, all you do is to load it using
 
 {-triggername\|-triggername-prefix\*\|-\*\|{+|-}trigvn -commands=cmd[,...] -xecute=strlit1 [-[z]delim=expr][-pieces=[lvn=]int1[:int2][;...]] [-options={[no]i[solation]|[no]c[onsistencycheck]}...] [-name=strlit2]}
 
+
 **-triggername\|-trigger-name-prefix\*\|-\* .**
 
 -triggername deletes a user-specified trigger name called triggername from the database. -triggername* deletes all those user-defined triggers whose starting name match triggername. -* deletes all triggers; if the MUPIP TRIGGER command does not specify -NOPROMPT , YottaDB displays a warning and asks for user confirmation before deleting all triggers. If MUPIP TRIGGER command specifies -NOPROMPT and the definition file includes a -* line, YottaDB deletes all the triggers without user confirmation. $ZTRIGGER() performs deletions -NOPROMPT.+triggername issues an error; to add a new user-specified trigger name, use -name=strlit2.
@@ -83,7 +84,7 @@ cmd is the trigger invocation command. Currently, you can specify one or more of
 * A ZKILL or ZWITHDRAW of a node that has descendents but no data and a trigger with cmd=ZK.
 * The trigger uses the "piece" syntax (described below) and no triggering piece changes in the update.
 
-**-xecute="|<<strlit1"|>>**
+**-xecute="\|<<strlit1"\|>>**
 
 strlit1 specifies the trigger code that is executed when an update matches trigvn. If strlit1 is a single line, enclose it with quotes (") and make sure that the quotes inside strlit1 are doubled as in normal M syntax.
 
@@ -481,9 +482,9 @@ The following sample journal extract shows how YottaDB journals records updates 
 
 .. parsed-literal::
    GDSJEX04
-   01\61731,15123\1\16422\gtm.node1\gtmuser1\21\0\\\
+   01\61731,15123\1\16422\gtm.node1\ydbuser1\21\0\\\
    02\61731,15123\1\16422\0
-   01\61731,15126\1\16423\gtm.node1\gtmuser1\21\0\\\
+   01\61731,15126\1\16423\gtm.node1\ydbuser1\21\0\\\
    08\61731,15126\1\16423\0\4294967297
    05\61731,15126\1\16423\0\4294967297\1\4\^#t("trigvn","#LABEL")="1"
    05\61731,15126\1\16423\0\4294967297\2\4\^#t("trigvn","#CYCLE")="1"
@@ -502,7 +503,7 @@ The following sample journal extract shows how YottaDB journals records updates 
    Code:CR""1"
    09\61731,15126\1\16423\0\4294967297\1\1\
    02\61731,15127\2\16423\0
-   01\61731,15224\2\16429\gtm.node1\gtmuser1\21\0\\\
+   01\61731,15224\2\16429\gtm.node1\ydbuser1\21\0\\\
    08\61731,15224\2\16429\0\8589934593
    11\61731,15224\2\16429\0\8589934593\1\"A process context like--> Discount:10%;Country:IN"
    05\61731,15224\2\16429\0\8589934593\1\1\^trigvn="Initial Update"
@@ -516,18 +517,18 @@ The following sample journal extract shows how YottaDB journals records updates 
    05\61731,15260\4\16429\0\17179869185\1\1\^trigvn="Another Update"
    09\61731,15260\4\16429\0\17179869185\1\1\BA
    02\61731,15263\5\16429\0
-   01\61731,15865\5\26697\gtm.node1\gtmuser1\21\0\\\
+   01\61731,15865\5\26697\gtm.node1\ydbuser1\21\0\\\
    08\61731,15865\5\26697\0\21474836481
    05\61731,15865\5\26697\0\21474836481\1\2\^trigvn(1)="Updated outside the trigger."
    09\61731,15865\5\26697\0\21474836481\1\1\BA
    02\61731,15870\6\26697\0
-   01\61731,15886\6\26769\gtm.node1\gtmuser1\21\0\\\
+   01\61731,15886\6\26769\gtm.node1\ydbuser1\21\0\\\
    08\61731,15886\6\26769\0\25769803777
    11\61731,15886\6\26769\0\25769803777\1\" Code:CR"
    05\61731,15886\6\26769\0\25769803777\1\1\^trigvn="1"
    09\61731,15886\6\26769\0\25769803777\1\1\BA
    02\61731,15895\7\26769\0
-   01\61731,15944\7\26940\gtm.node1\gtmuser1\21\0\\\
+   01\61731,15944\7\26940\gtm.node1\ydbuser1\21\0\\\
    08\61731,15944\7\26940\0\30064771073
    05\61731,15944\7\26940\0\30064771073\1\3\^trigvn="Another Update"
    09\61731,15944\7\26940\0\30064771073\1\1\BA
@@ -540,7 +541,7 @@ The following sample journal extract shows how YottaDB journals records updates 
    05\61731,16178\9\26940\0\38654705665\1\1\^trigvn="Another update"
    09\61731,16178\9\26940\0\38654705665\1\1\BA
    02\61731,16210\10\26940\0
-   01\61731,16517\10\5337\gtm.node1\gtmuser1\21\0\\\
+   01\61731,16517\10\5337\gtm.node1\ydbuser1\21\0\\\
    08\61731,16517\10\5337\0\42949672961
    05\61731,16517\10\5337\0\42949672961\1\2\^trigvn(1)="4567"
    09\61731,16517\10\5337\0\42949672961\1\1\BA

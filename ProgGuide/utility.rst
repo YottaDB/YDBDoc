@@ -7,7 +7,7 @@
 ======================
 
 .. contents::
-   :depth: 2
+   :depth: 5
 
 YottaDB provides library utilities to perform frequently used tasks, and to access frequently used information. Most of the utilities are for YottaDB programmers, but some provide tools for system administration and operation.
 
