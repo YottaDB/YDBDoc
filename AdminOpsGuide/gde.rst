@@ -7,7 +7,7 @@
 =============================
 
 .. contents::
-   :depth: 2
+   :depth: 5
 
 ----------------------
 Global Directory
@@ -546,7 +546,9 @@ namespace specifies a global name or a global name with subscript(s) or a global
 
 Name spaces and file-names are case-sensitive; other objects are not case-sensitive.
 
-**-Name**
+~~~~~~~
+-Name
+~~~~~~~
 
 Maps a namespace to a region in the global directory. The format of the ADD -NAME command is:
 
@@ -631,7 +633,9 @@ This example performs the following mapping:
 
 * from ^x(20,40,50) through the last subscript in ^x maps to REG 3
 
-**-Segment**
+~~~~~~~~~  
+-Segment
+~~~~~~~~~
 
 Maps a segment to a database file. The syntax of the ADD -SEGMENT command is:
 
@@ -645,14 +649,18 @@ Example:
 
 This command creates a segment-name TEMP and maps it to the file scratch.dat in the current working directory. However, if you were to specify scratch as the file-name, in other words an environment variable, each process uses the file using the translation of that environment variable at run-time.
 
-**-Region**
+~~~~~~~~
+-Region
+~~~~~~~~
 
 Maps a region to a segment. The syntax of the ADD -REGION command is:
 
 .. parsed-literal::
    A[DD]-R[EGION] region-name -D[YNAMIC]=segment-name [-REGION-qualifier...]
 
-**-Gblname**
+~~~~~~~~~
+-Gblname
+~~~~~~~~~
 
 Provides a mechanism to specify the collation for global variables sharing the same unsubscripted name. Specifying a collation is necessary for globals that span multiple regions and and use an alternate collation. Because the global name EURCentral (described in the Introduction section) uses an alternate collation, it requires an entry in the GBLNAME section. The format of the ADD -GBLNAME command is:
 
@@ -1109,7 +1117,7 @@ Example:
 
 This command creates the namespace a*, if it does not exist, and maps it to the region areg.
 
-*Summary*
+**Summary**
 
 +-------------------------------------+-------------------+-------------------------+-----------------------------------+
 | Qualifier                           | Default           |  Minimum                | Maximum                           |
@@ -1123,13 +1131,17 @@ Region Qualifiers
 
 The following -REGION qualifiers can be used with the ADD, CHANGE, or TEMPLATE commands.
 
-**-[NO]AU[TODB]**
+~~~~~~~~~~~~~~
+-[NO]AU[TODB]
+~~~~~~~~~~~~~~
 
 Specifies whether YottaDB should implicitly create a database file for the region if none exists when a process attempts to access it. Because it carries lower operational risk and provides better operational control, the common practice is to create database files with MUPIP CREATE. However, AUTODB may simplify operations when you have scratch or temporary databases which are best deleted and recreated as a part of standard operation procedures.
 
 The default is NOAUTODB.
 
-**-C[OLLATION_DEFAULT]=number**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-C[OLLATION_DEFAULT]=number
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Specifies the number of the collation sequence definition to be used as the default for this database file. The number can be any integer from 0 to 255. The number you assign as a value must match the number of a defined collation sequence that resides in the shared library pointed to by the environment variable ydb_collate_n. For information on defining this environment variable and creating an alternate collation sequence, refer to the `"Internationalization" chapter in the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/internatn.html>`_.
 
@@ -1139,7 +1151,9 @@ The maximum COLLATION_DEFAULT number is 255.
 
 By default, GDE uses zero (0) as the COLLATION_DEFAULT.
 
-**-D[YNAMIC_SEGMENT]=segment-name**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-D[YNAMIC_SEGMENT]=segment-name
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Specifies the name of the segment to which the region is mapped. Segment-names are not case-sensitive, but are displayed as uppercase by GDE.
 
@@ -1147,11 +1161,15 @@ The minimum length is one alphabetic character.
 
 The maximum length is 31 alphanumeric characters.
 
-**-[NO]EPOCHTAPER**
+~~~~~~~~~~~~~~~~~
+-[NO]EPOCHTAPER
+~~~~~~~~~~~~~~~~~
 
 Tries to minimize epoch duration by reducing the number of buffers to flush by YottaDB and the file system (via an fsync()) as the epoch (time-based or due to a journal file auto-switch) approaches. By default, EPOCHTAPER is enabled.
 
-**-[NO]INST[_FREEZE_ON_ERROR]**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-[NO]INST[_FREEZE_ON_ERROR]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Controls whether custom errors in a region should automatically cause an Instance Freeze. This qualifier modifies the value of "Inst Freeze on Error" file header element.
 
@@ -1159,7 +1177,9 @@ For more information on setting up a list of custom errors that automatically in
 
 For more information on setting or clearing an Instance Freeze on an instance irrespective of whether any region is enabled for the Instance, refer to “Starting the Source Server”.
 
-**-[NO]J[OURNAL][=journal-option-list]**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-[NO]J[OURNAL][=journal-option-list]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This qualifier establishes characteristics for the journal file on newly created databases.
 
@@ -1187,17 +1207,17 @@ The journal-option-list includes:
 
 The following section describes some -JOURNAL options.
 
-*-AU[TOSWITCHLIMIT]=blocks*
+**-AU[TOSWITCHLIMIT]=blocks**
 
 Specifies the limit on the size of a journal file. When the journal file size reaches the limit, YottaDB automatically switches to a new journal file with a back-pointer to the prior journal file.
 
-*-[NO]BE[FORE_IMAGE]*
+**-[NO]BE[FORE_IMAGE]**
 
 [NO]BEFORE_IMAGE controls whether the journal should include before-image records.
 
 The BEFORE_IMAGE option is required if you plan to consider "roll-back" (Backward) recovery of the associated database file or if you plan to use certain database replication options. For a description of this type of recovery, refer to the "YottaDB Journaling" chapter.
 
-*-F[ILE_NAME]="file-name"*
+**-F[ILE_NAME]="file-name"**
 
 Specifies the name of the journal file.
 
@@ -1209,7 +1229,7 @@ By default, GDE derives the file-specification-name from the database "file-name
 
 By default, GDE uses a journal file extension of .mjl.
 
-*Journal Options Summary*
+**Journal Options Summary**
 
 With GDE, you can create the journal files and define the journal parameters; however, you must use MUPIP SET to explicitly turn it ON, and you must specify BEFORE/NOBEFORE at that time.
 
@@ -1220,9 +1240,9 @@ Example:
 
 For information on all Journal options and their allowable minimum and maximum values, see “SET -JOURNAL Options ” in the "YottaDB Journaling" chapter.
 
-*Summary*
-
-**-K[EY_SIZE]=size in bytes**
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+-K[EY_SIZE]=size in bytes
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Specifies the maximum size of keys, in bytes, which can be stored in the region. The KEY_SIZE must be less than the RECORD_SIZE. GDE rejects the command if the KEY_SIZE is inappropriate for the RECORD_SIZE.
 
@@ -1242,13 +1262,17 @@ For example, the key ^ACN ("Name", "Type") internally occupies 17 bytes.
 
 By default, GDE uses a KEY_SIZE of 64 bytes
 
-**-[NO]L[OCK_CRIT]**
+~~~~~~~~~~~~~~~~~
+-[NO]L[OCK_CRIT]
+~~~~~~~~~~~~~~~~~
 
 Specifies whether YottaDB should share the resource management between a database and its corresponding LOCKs or use separate and different resource management for the two. Because, in the current implementation, YottaDB has not identified any reason to share resource management between LOCKs and database actions, we have no recommendations other than to choose what seems to work better for your application.
 
 By default, GDE uses NOLOCK_CRIT-Sep(arate) resource management for LOCKs and database actions.
 
-**-[NO]N[ULL_SUBSCRIPTS]=[ALWAYS|NEVER|EXISTING]**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-[NO]N[ULL_SUBSCRIPTS]=[ALWAYS|NEVER|EXISTING]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Indicates whether YottaDB allows null subscripts for global variables stored in the region (that is, whether YottaDB permits references such as ^aaa("",1)).
 
@@ -1260,7 +1284,9 @@ EXISTING indicates that null subscripts for global variables can be accessed and
 
 By default, regions have -NULL_SUBSCRIPTS=NEVER.
 
-**-[NO]Q[DBRUNDOWN]**
+~~~~~~~~~~~~~~~~~~
+-[NO]Q[DBRUNDOWN]
+~~~~~~~~~~~~~~~~~~
 
 Shortens normal process shutdown when a large number of processes accessing a database file need to shutdown almost simultaneously, for example, in benchmarking scenarios or emergencies.
 
@@ -1270,7 +1296,9 @@ Note that with QDBRUNDOWN there is a possibility that the last process to exit m
 
 When a database has QDBRUNDOWN enabled, if the number of attached processes ever exceeds 32Ki, YottaDB stops tracking the number of attached processes, which means that it cannot recognize when the number reaches zero (0) and the shared resources can be released. The process that detects this event issues a NOMORESEMCNT in the system log. This means an orderly, safe shutdown requires a MUPIP JOURNAL -ROLLBACK -BACKWARD for replicated databases, a MUPIP JOURNAL -RECOVER -BACKWARD for unreplicated journaled databases and a MUPIP RUNDOWN for journal-free databases.
 
-**-R[ECORD_SIZE]=size in bytes**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-R[ECORD_SIZE]=size in bytes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Specifies the maximum size (in bytes) of a global variable node's value that can be stored in a region.
 
@@ -1282,7 +1310,9 @@ The maximum RECORD_SIZE is 1,048,576 bytes (1MiB).
 
 By default, GDE uses a RECORD_SIZE of 256 bytes.
 
-**-[NO][STA[TS]**
+~~~~~~~~~~~~~~
+-[NO][STA[TS]
+~~~~~~~~~~~~~~
 
 Specifies whether YottaDB should permit processes to share their database access statistics for other processes to monitor. When on, this characteristic causes YottaDB to create a small MM database for the associated region to hold the shared statistics. There may be operational or security reasons to prohibit sharing of statistics. For example, YottaDB does not share statistics on database files that exist solely to support YottaDB features. 
 
@@ -1290,7 +1320,9 @@ By default, GDE uses STATS.
 
 For more information, refer to VIEW "[NO]STATSHARE" and ^%YGBLSTAT in the Programmer's Guide and ydb_statshare and ydb_statsdir in “Environment Variables”.
 
-**-[NO]STD[NULLCOLL]**
+~~~~~~~~~~~~~~~~~~~~
+-[NO]STD[NULLCOLL]
+~~~~~~~~~~~~~~~~~~~~
 
 Determines whether YottaDB null subscripts collate in conformance to the M standard.
 
@@ -1336,7 +1368,9 @@ Segment Qualifiers
 
 The following -SEGMENT qualifiers can be used with the ADD, CHANGE, or TEMPLATE commands.
 
-**-AC[CESS_METHOD]=code**
+~~~~~~~~~~~~~~~~~~~~~~
+-AC[CESS_METHOD]=code
+~~~~~~~~~~~~~~~~~~~~~~
 
 Specifies the access method or the YottaDB buffering strategy for storing and retrieving data from the global database file.
 
@@ -1361,7 +1395,9 @@ Example:
 
 This command sets MM as the access method or the YottaDB buffering strategy for storing and retrieving the database for segment DEFAULT.
 
-**-AL[LOCATION]=blocks**
+~~~~~~~~~~~~~~~~~~~~~
+-AL[LOCATION]=blocks
+~~~~~~~~~~~~~~~~~~~~~
 
 Specifies the number of blocks YottaDB allocates to a disk file when MUPIP creates the file. For GDS files, the number of bytes allocated is the size of the database file header plus the ALLOCATION size times the BLOCK_SIZE. 
 
@@ -1375,7 +1411,9 @@ Specifies the number of blocks YottaDB allocates to a disk file when MUPIP creat
 
 * The default ALLOCATION was chosen for initial development and experimentation with YottaDB. Because file fragmentation impairs performance, make the initial allocation for production files and large projects large enough to hold the anticipated contents of the file for a length of time consistent with your UNIX file reorganization schedule.
 
-**--[NO]AS[YNCIO]**
+~~~~~~~~~~~~~~~
+-[NO]AS[YNCIO]
+~~~~~~~~~~~~~~~
 
 Determines whether an access method BG database file uses asynchronous I/O rather than using synchronous I/O through the file system cache.
 
@@ -1398,7 +1436,9 @@ In YottaDB development, we have not benchmarked asynchronous IO on the types of 
 
 By default, GDE uses NOASYNCIO. On segments with an access method of MM, YottaDB ignores this setting.
 
-**-BL[OCK_SIZE]=size**
+~~~~~~~~~~~~~~~~~~~
+-BL[OCK_SIZE]=size
+~~~~~~~~~~~~~~~~~~~
 
 Specifies the size, in bytes, of each database block in the file system. The BLOCK_SIZE must be a multiple of 512. If the BLOCK_SIZE is not a multiple of 512, GDE rounds up the BLOCK_SIZE to the next highest multiple of 512 and issues a warning message.
 
@@ -1422,15 +1462,21 @@ The maximum BLOCK_SIZE is 65,024 bytes.
 
 By default, GDE uses a BLOCK_SIZE of 1024 bytes.
 
-**--[NO]DEFER_ALLOCATE**
+~~~~~~~~~~~~~~~~~~~~
+-[NO]DEFER_ALLOCATE
+~~~~~~~~~~~~~~~~~~~~
 
 Determines whether MUPIP CREATE preallocates blocks on database creation, and determines whether subsequent extensions also preallocate. The default is DEFER_ALLOCATE. This provides an option to preallocate blocks from the file system when creating or extending a database file; by default, UNIX file systems and YottaDB use sparse (or lazy) allocation, which defers actual allocation until blocks are first written. Failures to preallocate space produce a PREALLOCATEFAIL error.
 
-**-[NO]ENcryption**
+~~~~~~~~~~~~~~~~
+-[NO]ENcryption
+~~~~~~~~~~~~~~~~
 
 Specifies whether or not the database file for a segment is flagged for encryption. Note that MUPIP CREATE acquires an encryption key for this file and puts a cryptographic hash of the key in the database file header.
 
-**-EX[TENSION_COUNT]=blocks**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-EX[TENSION_COUNT]=blocks
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Specifies the number of extra GDS blocks of disk space by which the file should extend. The extend amount is interpreted as the number of usable GDS blocks to create with the extension. To calculate the number of host operating system blocks added with each extension, multiply the number of GDS blocks added by (GDS BLOCK_SIZE/host BLOCK_SIZE); add one local bitmap block for each 512 blocks added in each extension to the amount from step 1. If the extension is not a multiple of 512, remember to round up when figuring out the number of bitmap blocks.
 
@@ -1448,7 +1494,9 @@ By default, GDE uses an EXTENSION of 100 blocks.
 
 Like allocation, the default extension amount was chosen for initial development and experimentation. Use larger extensions for larger actual applications. Because multiple file extensions adversely affect performance, set up extensions appropriate to the file allocation.
 
-**-F[ILE_NAME]=file-name**
+~~~~~~~~~~~~~~~~~~~~~~~~~
+-F[ILE_NAME]=file-name
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Specifies the file for a segment.
 
@@ -1456,7 +1504,9 @@ The maximum file name length is 255 characters.
 
 By default, GDE uses a file-name of "mumps" followed by the default extension, which is .dat. You can specify any filename and extension of your choice for a database file as long as it is valid on your operating system.
 
-**-G[LOBAL_BUFFER_COUNT]=size**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-G[LOBAL_BUFFER_COUNT]=size
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Specifies the number of global buffers for a file. Global buffers reside in shared memory and are part of the database caching mechanisms. Global buffers do not apply to MM databases.
 
@@ -1479,7 +1529,9 @@ By default, GDE uses a GLOBAL_BUFFER_COUNT that is appropriate for initial devel
 .. note::
    If global buffers are "paged out," improvements in system performance resulting from more global buffers will be more than offset by the dramatic slowdown that results from global buffers that are "paged out." Out of the requested allocation, YottaDB always reserves 32 global buffers for BG access method for read-only use to ensure that non-dirty global buffers are always available.
 
-**-L[OCK_SPACE]=integer**
+~~~~~~~~~~~~~~~~~~~~~~~
+-L[OCK_SPACE]=integer
+~~~~~~~~~~~~~~~~~~~~~~~
 
 Specifies the number of pages of space to use for the lock database stored with this segment. The size of a page is always 512 bytes.
 
@@ -1503,11 +1555,15 @@ LOCK_SPACE usage depends on the number of locks and the number of processes wait
 
 Generally, you would limit LOCK_SPACE only when memory is scarce or when you want to be made aware of unexpected levels of LOCK usage. For most other cases, there is no reason to limit the LOCK_SPACE. If you are introducing new code, YottaDB recommends using TSTART and TCOMMIT as a more efficient alternative for most LOCKs because it pushes the responsibility for Isolation onto YottaDB, which internally manages them with optimistic algorithms.
 
-**-M[UTEX_SLOTS]=integer**
+~~~~~~~~~~~~~~~~~~~~~~~
+-M[UTEX_SLOTS]=integer
+~~~~~~~~~~~~~~~~~~~~~~~
 
 Specifies the number of mutex slots for a database file. YottaDB uses mutex slots to manage database contention. YottaDB recommends you configure the slots to cover the maximum number of processes you expect to concurrently access the database file, as an insufficient number of slots can lead to much steeper and more severe degradation of performance under heavy loads. The minimum is 1Ki and the maximum is 32Ki.
 
-**-R[ESERVED_BYTES]=size**
+~~~~~~~~~~~~~~~~~~~~~~~
+-R[ESERVED_BYTES]=size
+~~~~~~~~~~~~~~~~~~~~~~~
 
 Specifies the size to be reserved in each database block. RESERVED_BYTES is generally used to reserve room for compatibility with other implementations of M or to observe communications protocol restrictions. RESERVED_BYTES may also be used as a user-managed fill factor.
 
@@ -1517,7 +1573,7 @@ The maximum Reserved_Bytes is the block size minus the size of the block header 
 
 By default, GDE uses a RESERVED_BYTES size of zero bytes.
 
-*Summary*
+**Summary**
 
 The following table summarizes GDE segment qualifiers. It provides abbreviations, defaults (as provided by YottaDB), and allowable minimum and maximum values.
 
@@ -1561,7 +1617,9 @@ Gblname Qualifiers
 
 The following -GBLNAME qualifier can be used with the ADD, CHANGE, or TEMPLATE commands.
 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -C[OLLATION]=collation_number
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Specifies the collation number for a global name; a value of 0 specifies standard M collation. The first time that a YottaDB process accesses a global variable name in a database file, it determines the collation sequence as follows:
 
@@ -1587,7 +1645,9 @@ Instance Qualifier
 
 The following -INSTANCE qualifier is used with the CHANGE command.
 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -F[ILE_NAME=[repl_inst_filename|""] 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * -FILE_NAME=repl_inst_filename maps a replication instance file with the global directory. -FILE_NAME="" removes the mapping of a global directory with a replication instance file. 
 

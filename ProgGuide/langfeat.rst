@@ -7,7 +7,7 @@
 ==================================
 
 .. contents::
-   :depth: 2
+   :depth: 5
 
 This chapter describes general features of the M language, as well as general information about the operation of YottaDB. Commands, Functions, and Intrinsic Special Variables are each described in separate chapters. This chapter contains information about exceptions, as well as information about general M features.
 

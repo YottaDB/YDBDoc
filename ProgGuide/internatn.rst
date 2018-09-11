@@ -7,7 +7,7 @@
 ============================
 
 .. contents::
-   :depth: 2
+   :depth: 5
 
 This chapter describes YottaDB facilities for applications using characters that are encoded in other than eight-bit bytes (octets). Before continuing with the use of UTF-8 features, you will need to ensure that your system has installed and configured the needed infrastructure for the languages you wish to support, including International Components for Unicode (ICU/libicu), UTF-8 locale(s), and terminal emulators with appropriate fonts. This chapter addresses the specific issues of defining alternative collation sequences, and defining unique patterns for use with the pattern match operator.
 

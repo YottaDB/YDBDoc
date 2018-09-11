@@ -6,7 +6,7 @@
 =======================
 
 .. contents::
-   :depth: 2
+   :depth: 5
 
 ------------------------------
 YottaDB Environment Setup

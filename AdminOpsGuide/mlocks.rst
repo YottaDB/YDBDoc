@@ -7,7 +7,7 @@
 ====================================
 
 .. contents::
-   :depth: 2
+   :depth: 5
 
 -----------------------------
 Introduction
@@ -119,8 +119,9 @@ By default, CLEAR operates interactively (-INTERACTIVE).
 
 Qualifiers for CLEAR:
 
-.. parsed-literal::
-   -A[LL]
+~~~~~~~
+-A[LL]
+~~~~~~~
 
 Specifies all current LOCKs.
 
@@ -132,13 +133,15 @@ Specifies all current LOCKs.
 
 * By default, CLEAR -ALL operates interactively (-INTERACTIVE).
 
-.. parsed-literal::
-   -[NO]EXACT
+~~~~~~~~~~  
+-[NO]EXACT
+~~~~~~~~~~
 
 Limits the CLEAR command to the exact resource name specified with -LOCK=resource_name. NOEXACT (the default) treats the specified resource name as a prefix and works not only on it, but also on any of its descendants, since their existence effectively LOCKs their parent tree.
 
-.. parsed-literal::
-   -L[OCK]=""resource_name""
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+-L[OCK]=""resource_name""
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Unless used with -EXACT, specifies the leading prefix for an implicit wild card search of all locks that start with the resource_name.
 
@@ -148,8 +151,9 @@ Unless used with -EXACT, specifies the leading prefix for an implicit wild card 
 
 * When used with SHOW,-LOCK provides a precise way to examine the specified lock.
 
-.. parsed-literal::
-   -[NO]I[NTERACTIVE]
+~~~~~~~~~~~~~~~~~~~  
+-[NO]I[NTERACTIVE]
+~~~~~~~~~~~~~~~~~~~
 
 Interactively clears one LOCK at a time. LKE displays each current LOCK with the PID of the owner process and prompts for verification that the LOCK should be cleared. LKE retains the LOCK for any response other than Y[ES].
 
@@ -159,8 +163,9 @@ Interactively clears one LOCK at a time. LKE displays each current LOCK with the
 
 * -NOINTERACTIVE forces the action to take place without user confirmation of each change. Using -NOINTERACTIVE prevents the LKE operator from controlling the LOCK subsystem for potentially long periods of time when many locks are held. To do this, it limits the amount of time it waits for each response.
 
-.. parsed-literal::
-   -O[UTPUT]="file-name"
+~~~~~~~~~~~~~~~~~~~~~~~  
+-O[UTPUT]="file-name"
+~~~~~~~~~~~~~~~~~~~~~~~
 
 Directs the reporting of all specified LOCKs to a file.
 
@@ -172,8 +177,9 @@ Directs the reporting of all specified LOCKs to a file.
 
 * By default, CLEAR sends output messages to stdout.
 
-.. parsed-literal::
-   -P[ID]=pid
+~~~~~~~~~~~  
+-P[ID]=pid
+~~~~~~~~~~~
 
 Specifies the process identification number that holds a LOCK on a resource name.
 
@@ -185,8 +191,9 @@ Specifies the process identification number that holds a LOCK on a resource name
 
 * The -PID qualifier is compatible with all other qualifiers.
 
-.. parsed-literal::
-   -R[EGION]=region-name
+~~~~~~~~~~~~~~~~~~~~~~  
+-R[EGION]=region-name
+~~~~~~~~~~~~~~~~~~~~~~
 
 region-name specifies the region that holds the locked resource names.
 
@@ -309,8 +316,9 @@ The optional qualifiers are:
 .. note::
    GT.CM is an RPC-like way of remotely accessing a YottaDB database.
 
-.. parsed-literal::
-   -ALL
+~~~~~
+-ALL
+~~~~~
 
 Specifies all current LOCKs.
 
@@ -322,8 +330,9 @@ Specifies all current LOCKs.
 
 * SHOW -ALL and -WAIT displays both -ALL and -WAIT information.
 
-.. parsed-literal::
-   -L[OCK]=resource_name
+~~~~~~~~~~~~~~~~~~~~~~  
+-L[OCK]=resource_name
+~~~~~~~~~~~~~~~~~~~~~~
 
 resource_name specifies a single lock.
 
@@ -333,8 +342,9 @@ resource_name specifies a single lock.
 
 * When used with the SHOW command, the LOCK qualifier provides a precise way to examine the specified lock and any descendant LOCKed resources.
 
-.. parsed-literal::
-   -[NO]C[RIT]
+~~~~~~~~~~~~  
+-[NO]C[RIT]
+~~~~~~~~~~~~
 
 Allows the SHOW command to work even if another process is holding a critical section.
 
@@ -342,8 +352,9 @@ Allows the SHOW command to work even if another process is holding a critical se
 
 * Use NOCRIT with SHOW only when normal operation is unsuccessful, as NOCRIT may cause LKE to report incomplete or inconsistent information.
 
-.. parsed-literal::
-   -O[UTPUT]="file-name"
+~~~~~~~~~~~~~~~~~~~~~~  
+-O[UTPUT]="file-name"
+~~~~~~~~~~~~~~~~~~~~~~
 
 Directs the reporting of all specified LOCKs to a file.
 
@@ -353,8 +364,9 @@ Directs the reporting of all specified LOCKs to a file.
 
 * By default, the SHOW command sends output messages to stdout.
 
-.. parsed-literal::
-   -P[ID]=pid
+~~~~~~~~~~~  
+-P[ID]=pid
+~~~~~~~~~~~
 
 Specifies the process identification number that holds a LOCK on a resource name.
 
@@ -366,8 +378,9 @@ Specifies the process identification number that holds a LOCK on a resource name
 
 * By default, SHOW displays the LOCKs for all PIDs.
 
-.. parsed-literal::
-   -R[EGION]=region-name
+~~~~~~~~~~~~~~~~~~~~~~  
+-R[EGION]=region-name
+~~~~~~~~~~~~~~~~~~~~~~
 
 Specifies the region that holds the locked resource names.
 
@@ -377,8 +390,9 @@ Specifies the region that holds the locked resource names.
 
 * By default, SHOW displays the LOCKs for all regions.
 
-.. parsed-literal::
-   -W[AIT]
+~~~~~~~~  
+-W[AIT]
+~~~~~~~~
 
 Displays the LOCK resource name and the process state information of all processes waiting for the LOCK to be granted.
 

@@ -7,7 +7,7 @@
 ============================
 
 .. contents::
-   :depth: 2
+   :depth: 5
 
 This chapter describes YottaDB features and techniques for handling errors. Errors in programs may be classified as "predictable" meaning foreseen, or "unpredictable" meaning unforeseen.
 

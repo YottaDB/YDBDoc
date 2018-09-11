@@ -7,7 +7,7 @@
 =======================
 
 .. contents::
-   :depth: 2
+   :depth: 5
 
 This chapter introduces program development in the YottaDB environment. The YottaDB environment differs from other M implementations in a number of ways. These differences, which include maintaining data and code in separate files and compiling rather than interpreting source code, allow greater programmer control over the development cycle.
 
@@ -535,7 +535,9 @@ Qualifiers for the mumps command
 
 The mumps command allows qualifiers that customize the type and form of the compiler output to meet specific programming needs. MUMPS command qualifiers may also appear as a modifier to the argument to the ZLINK and ZCOMPILE commands. The following section describes the mumps command qualifiers. Make sure the arguments are specified ahead of file name and after the command itself.
 
-**-di[rect_mode]**
+~~~~~~~~~~~~~~~
+-di[rect_mode]
+~~~~~~~~~~~~~~~
 
 Invokes a small YottaDB image that immediately initiates Direct Mode.
 
@@ -543,7 +545,9 @@ Invokes a small YottaDB image that immediately initiates Direct Mode.
 
 The -direct_mode qualifier is incompatible with a file specification and with all other qualifiers.
 
-**-dy[namic_literals]**
+~~~~~~~~~~~~~~~~~~~~
+-dy[namic_literals]
+~~~~~~~~~~~~~~~~~~~~
 
 Compiles certain data structures associated with literals used in the source code in a way that they are dynamically loaded and unloaded from the object code. The dynamic loading and unloading of these data structures:
 
@@ -554,12 +558,15 @@ Compiles certain data structures associated with literals used in the source cod
 
 With no -DYNAMIC_LITERALS specified, these data structures continue to be generated when a routine is linked and stay in the private memory of each process. As the use of -DYNAMIC_LITERALS increases object code size, and as the dynamic loading and unloading only saves memory when the object code is in shared libraries, YottaDB recommends restricting the use of -DYNAMIC_LITERALS to only when compiling object code to be loaded into shared libraries or executed from an auto relink enabled directory.
 
-**-[no]embed_source**
+~~~~~~~~~~~~~~~~~~
+-[no]embed_source
+~~~~~~~~~~~~~~~~~~
 
 Instructs YottaDB to embeds routine source code in the object code. The default is NOEMBED_SOURCE. Like other YottaDB compilation qualifiers, this qualifier can be specified through the $ZCOMPILE intrinsic special variable and ydb_compile environment variable. EMBED_SOURCE provides $TEXT and ZPRINT access to the correct source code, even if the original M source file has been edited or removed. Where the source code is not embedded in the object code, YottaDB attempts to locate the source code file. If it cannot find source code matching the object code, $TEXT() returns a null string. ZPRINT prints whatever source code found and also prints a TXTSRCMAT message in direct mode; if it cannot find a source file, ZPRINT issues a FILENOTFND error. 
 
-
-**-[no]i[gnore]**
+~~~~~~~~~~~~~
+-[no]i[gnore]
+~~~~~~~~~~~~~
 
 Instructs the compiler to produce an object file even when the compiler detects errors in the source code (-ignore), or not to produce an object file when the compiler encounters an error (-noignore).
 
@@ -571,7 +578,9 @@ This compile-as-written mode facilitates a flexible approach to debugging and ex
 
 By default, the compiler operates in -ignore mode and produces an object module even when the source routine contains errors.
 
-**-le[ngth]=lines**
+~~~~~~~~~~~~~~~~
+-le[ngth]=lines
+~~~~~~~~~~~~~~~~
 
 Controls the page length of the listing file.
 
@@ -579,7 +588,9 @@ The M compiler ignores the -length qualifier unless it appears with the -list qu
 
 By default, the listing has -length=66.
 
-**-[no]li[st][=filename]**
+~~~~~~~~~~~~~~~~~~~~~~~
+-[no]li[st][=filename]
+~~~~~~~~~~~~~~~~~~~~~~~
 
 Instructs the compiler to produce a source program listing file, and optionally specifies a name for the listing file. The listing file contains numbered source program text lines. When the routine has errors, the listing file also includes an error count, information about the location, and the cause of the errors.
 
@@ -589,14 +600,18 @@ The -length and -space qualifiers modify the format and content of the listing f
 
 By default, the compiler operates -nolist and does not produce listings.
 
-**-noin[line_literals]**
+~~~~~~~~~~~~~~~~~~~~~
+-noin[line_literals]
+~~~~~~~~~~~~~~~~~~~~~
 
 Compiles routines to use library code in order to load literals instead of generating in-line code thereby reducing the routine size. At the cost of a small increase in CPU, the use of -NOINLINE_LITERAL may help counteract growth in object size due to -DYNAMIC_LITERALS.
 
 .. note::
    Both -DYNAMIC_LITERALS and -NOINLINE_LITERALS help optimize performance and virtual memory usage for applications whose source code includes literals. As the scalability and performance from reduced per-process memory usage may or may not compensate for the incremental cost of dynamically loading and unloading the data structures, and as the performance of routines vs. inline code can be affected by the availability of routines in cache, YottaDB suggests benchmarking to determine the combination of qualifiers best suited to each workload. Note that applications can freely mix routines compiled with different combinations of qualifiers.
 
-**-[no]o[bject][=filename]**
+~~~~~~~~~~~~~~~~~~~~~~~~~
+-[no]o[bject][=filename]
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Instructs the compiler to produce an output object file and optionally specifies a name for the object file using the optional filename argument.
 
@@ -608,7 +623,9 @@ The -noobject qualifier suppresses the production of an object file and is usual
 
 By default, the compiler produces object modules.
 
-**-[no]w[arning]**
+~~~~~~~~~~~~~~~
+-[no]w[arning]
+~~~~~~~~~~~~~~~
 
 Instructs the compiler to suppress error output; the default is -warning.
 
@@ -617,13 +634,17 @@ When used with the -list qualifier, the -nowarning qualifier does not affect err
 .. note::
    When used with the -noobject qualifier, the -nowarning qualifier instructs the compiler to produce no object with no indication of the fact or the cause of any errors.
 
-**-r[un]**
+~~~~~~~~
+-r[un]
+~~~~~~~~
 
 Invokes YottaDB in Autostart Mode.
 
 The next argument is taken to be an M entryref. That routine is immediately executed, bypassing Direct Mode. Depending on the shell, you may need to put the entryref in quotation marks (""). This qualifier does not invoke the M compiler and is not compatible with any other qualifier.
 
-**-s[pace]=lines**
+~~~~~~~~~~~~~~~~
+-s[pace]=lines
+~~~~~~~~~~~~~~~~
 
 Controls the spacing of the output in the listing file. -space=n specifies n-1 blank lines separating every source line in the listing file. If n<1, the M command uses single spacing in the listing.
 
