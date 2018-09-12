@@ -22,9 +22,9 @@ YottaDB® is a trademark of YottaDB LLC. GT.M™ is a trademark of Fidelity Nati
 Acculturation Workshop Expectations
 -----------------------------------
 
-The Acculturation Workshop is a hands-on “boot camp” for those interested in the configuration, administration and operation of applications on YottaDB. This file is the script, or workbook, for the workshop, consisting of the exercises below.
+The Acculturation Workshop is a hands-on “boot camp” for those interested in the configuration, administration and operation of applications on YottaDB. This file is the script (or workbook) for the workshop, consisting of the exercises below.
 
-At the end of these exercises, you will have a basic working knowledge of the essential aspects of YottaDB administration and operations. While this workshop alone will not make you a YottaDB expert by any means, the basic working knowledge will help you quickly understand the concepts explained in the user documentation and put you on the path to becoming an expert.
+At the end of these exercises, you will have a basic working knowledge of the essential aspects of YottaDB Administration and Operation. While this workshop alone will not by any means make you a YottaDB expert, the basic working knowledge it will give you will help you to quickly understand the concepts explained in the user documentation and put you on the path to becoming an expert.
 
 The workshop is not a course in M programming. Familiarity with Linux® (or at least UNIX®) will allow you to move faster through the material, but is not absolutely required. If you have no experience whatsoever with Linux or UNIX, supplementary tutorial material on the side will increase your level of comfort.
 
@@ -34,7 +34,7 @@ As the differences between YottaDB and other M implementations are more in the a
 YottaDB
 -------------
 
-`YottaDB <http://yottadb.com>`_ is an implementation of the ISO standard scripting & application development language M, commonly known as MUMPS, developed and released by YottaDB LLC. The codebase YottaDB is built on is the most widely used M implementation in banking and finance, including several of the largest real time core processing systems that are live at any bank anywhere in the world. The codebase is also increasingly used in healthcare. The implementation of YottaDB on the GNU/Linux operating system on industry standard x86_64 architecture and Raspberry Pi hardware is the M implementation used for the FOSS (Free / Open Source Software) stack for `VistA <http://worldvista.org/AboutVistA>`_.
+`YottaDB <http://yottadb.com>`_ is an implementation of the ISO standard scripting & application development language M, commonly known as `MUMPS <https://en.wikipedia.org/wiki/MUMPS>`_, developed and released by YottaDB LLC. The codebase YottaDB is built on is the most widely used M implementation in banking and finance, including several of the largest real time core processing systems that are live at any bank anywhere in the world. The codebase is also increasingly used in healthcare. The implementation of YottaDB on the GNU/Linux operating system on industry standard x86_64 architecture and Raspberry Pi hardware is the M implementation used for the FOSS (Free/Open Source Software) stack for `VistA <http://worldvista.org/AboutVistA>`_.
 
 YottaDB is architected with the following objectives:
 
@@ -43,17 +43,17 @@ YottaDB is architected with the following objectives:
 - Continuity of business – YottaDB has unique functionality for the deployment of mission-critical applications that must be available 24 hours a day, 365 days a year, with no down time even for planned events.
 - Throughput, performance and scalability to meet the needs of the largest institutions in the world.
 
-Free support for YottaDB is available from the community on various mailing lists and forums. Support for YottaDB with assured service levels is available from YottaDB LLC on a commercial basis.
+Free support for YottaDB is available from the community on `various mailing lists and forums <https://yottadb.com/resources/communities/>`_. Support for YottaDB with assured service levels is available from YottaDB LLC on a commercial basis.
 
 YottaDB provides:
 
 - Full `ACID (Atomic, Consistent, Isolated, Durable) <https://en.wikipedia.org/wiki/ACID>`_ transaction semantics
 - Throughput that scales to the needs of enterprise-wide applications
-- Unique functionality for creating logical multi-site configurations for mission critical applications that must always be available, including doing upgrades, and upgrades involving changes to the database schema.
+- Unique functionality for creating logical multi-site configurations for mission critical applications that must always be available - including upgrades that involve changes to the database schema.
 
-With the exception of Structured System Variable Names (SSVNs), YottaDB mostly implements ISO standard M (ISO/IEC 11756:1999), including a full implementation of transaction processing (TP) that provides ACID (Atomic, Consistent, Isolated, Durable) transactions. As with any M implementation, there are extensions. IO parameters are implementation specific, as are parameters of the VIEW command, and commands & variables starting with the letter Z.
+With the exception of Structured System Variable Names (SSVNs), YottaDB mostly implements ISO standard M (ISO/IEC 11756:1999), including a full implementation of transaction processing (TP) that provides ACID (Atomic, Consistent, Isolated, Durable) transactions. As with any M implementation, there are extensions. Commands and variables that start with the letter Z, IO parameters and VIEW command parameters are implementation specific.
 
-Despite the fact that the dialect of M implemented by YottaDB shares so much in common with other M implementations, operationally, YottaDB is unlike any other M implementation.
+Despite the fact that the dialect of M implemented by YottaDB has much in common with other M implementations, operationally, YottaDB is unlike any other M implementation.
 
 This Acculturation Workshop is largely based on YottaDB r1.20, but any more recent version of YottaDB should also work well.
 
@@ -62,6 +62,8 @@ Packaging
 ---------
 
 **The exercises in this workshop are carried out by booting guest virtual machines (also called software appliances) on your host computer**. Think of a virtual machine as a “computer within a computer”. A guest virtual machine can run a different operating system from that of the host computer. The host computer might itself run Linux, Windows, OS X, or any other operating system and the guest can run Linux with YottaDB as well as other applications. "Emulation" or "virtualization" software helps you set up a guest system on a host computer. On the host computer, the disk images of the Acculturation Workshop guide look like ordinary files in the file system.
+
+**Make sure to download the virtual machine before you begin the exercises**
 
 +++++
 Linux
@@ -173,7 +175,7 @@ Install YottaDB
 
 - Get the YottaDB install script: wget https://gitlab.com/YottaDB/DB/YDB/raw/master/sr_unix/ydbinstall.sh
 - Make it executable: chmod +x ydbinstall.sh
-- Run it where you want it installed (omit the --verbose option for less output): The below command installs YottaDB in /usr/local/lib/ 
+- Run it where you want it installed (omit the --verbose option for less output): The below command installs YottaDB in /usr/local/lib/. The rest of the document assumes installation in this directory.
   
  .. parsed-literal::
      sudo ./ydbinstall.sh --utf8 default --verbose
@@ -189,17 +191,17 @@ Run YottaDB
 
 **Default Environment**
 
-YottaDB needs several environment variables to be set up. YottaDB provides a script that sets up reasonable defaults and allows you to start using YottaDB immediately. When you set up environments in YottaDB, you should set up your own scripting, but the default is a good place to start. You can source the ydb_env_set file in the directory in which you have installed YottaDB (e.g, /usr/local/lib/yottadb/r120/ydb_env_set) to set up reasonable defaults or simply execute the script ydb to execute YottaDB. A default environment is created only if it does not exist already.
+YottaDB needs several environment variables to be set up. YottaDB provides a script that sets up reasonable defaults and allows you to start using YottaDB immediately. When you set up environments in YottaDB, you can set up your own scripting, but the default is a good place to start. You can source the ydb_env_set file in the directory in which you have installed YottaDB (e.g, /usr/local/lib/yottadb/r120/ydb_env_set) to set up reasonable defaults or simply execute the script ydb to execute YottaDB. A default environment is created only if it does not exist already.
 
 .. parsed-literal::
    yottadbuser@yottadbworkshop:~$ source /usr/local/lib/yottadb/r120/ydb_env_set
 
-You can run the script that runs YottaDB as follows:
+Or you can run the script that runs YottaDB as follows:
 
 .. parsed-literal::
    yottadbuser@yottadbworkshop:~$ ydb
 
-Now you are in the “direct mode” where you can execute commands interactively. For example:
+Now you are in the “direct mode” where you can execute commands interactively. For example, type:
 
 .. parsed-literal::
    YDB>set ^Animal("Mammal")="Bear"
@@ -234,7 +236,7 @@ The operation of YottaDB is controlled by a number of environment variables. In 
    ydb_dist=/usr/local/lib/yottadb/r1.20_x86_64/
    yottadbuser@yottadbworkshop:~$ 
 
-YottaDB databases can also be configured so that they can be recovered after a system crash. Simulate a crash by either clicking on the “X” in the top right corner of your virtual machine console window to instantly “power down” your virtual machine, or, if you started it headless, perform a hard power-down using a command on the host (in the case of virtualization using qemu/kvm on Linux, a kill -9 of the virtual machine process). Then reboot the virtual machine, run ydb and use a zwrite ^Animal command to confirm that the data in the database is still intact.
+YottaDB databases can be configured so that they can be recovered after a system crash. Simulate a crash by either clicking on the “X” in the top right corner of your virtual machine console window to instantly “power down” your virtual machine, or, if you started it headless, perform a hard power-down using a command on the host (in the case of virtualization using qemu/kvm on Linux, a kill -9 of the virtual machine process). Then reboot the virtual machine, run ydb and use a zwrite ^Animal command to confirm that the data in the database is still intact.
 
 The tree program shows the default environment YottaDB creates in your home directory. 
 
@@ -286,17 +288,17 @@ The Basics
 
 To use YottaDB, at a minimum you need:
 
-- User documentation
-- To specify the location of YottaDB on your computer, in the ydb_dist environment variable
-- To provide a search path for a YottaDB process to routines - the ydb_routines environment variable and the $zroutines intrinsic special variable (or "ISV" - all ISVs are case insensitive, as are YottaDB commands).
-- To map its global variables to database files - the ydb_gbldir environment variable and the $zgbldir ISV point to a global directory file with the mapping.
+- `User documentation <https://yottadb.com/resources/documentation/>`_
+- To specify the location of YottaDB on your computer in the ydb_dist environment variable
+- To provide a search path to routines for a YottaDB process - the ydb_routines environment variable and the `$zroutines intrinsic special variable <https://docs.yottadb.com/ProgrammersGuide/isv.html#zroutines>`_ (or "ISV" - all ISVs are case insensitive, as are YottaDB commands).
+- To map its global variables to database files - the ydb_gbldir environment variable and the `$zgbldir ISV <https://docs.yottadb.com/ProgrammersGuide/isv.html#zgbldir>`_ point to a global directory file with the mapping.
 
 **User Documentation**
 
 YottaDB user documentation is organized into Manuals and Release Notes. Current YottaDB documentation is available on the `YottaDB Documentation page <https://yottadb.com/resources/documentation/>`_.
 
 - Each software release has accompanying Release Notes to document changes between that release and its immediate predecessor, as well as release-specific information such as supported platforms. While a software release is frozen for all time, e.g., there will never be another YottaDB r1.20, release notes may be updated from time to time to correct and clarify the information within.
-- Manuals are published periodically. Within manuals with chapters, the content for each chapter is updated independently, reflecting information that is current as of the update date.
+- Manuals are published periodically. The content within manuals is updated frequently, reflecting information that is current as of the latest software release.
 
 **Routines in the File System**
 
@@ -389,7 +391,7 @@ Now you now also have an object file. YottaDB dynamically, and automatically, co
    YDB>
 
 .. note::
-   Since YottaDB is a compiler, it can generate error messages at compile time as well as at run time. Indeed when compiling an application such as VistA, there may be hundreds of lines of error messages triggered by lines of code that are legal for other M implementations but not for YottaDB. These lines are protected in VistA and are inside conditional statements that are executed only on the appropriate M implementation, so they are nothing to be concerned about.
+   Since YottaDB is a compiler, it can generate error messages at compile time as well as at run time. Indeed, when compiling an application such as VistA, there may be hundreds of lines of error messages triggered by lines of code that are legal for other M implementations but not for YottaDB. These lines are protected in VistA and are inside conditional statements that are executed only on the appropriate M implementation, so they are nothing to be concerned about.
 
 Let's also get the time stamps of the files; notice that the source code file is older than the object code file:
 
@@ -402,7 +404,10 @@ Let's also get the time stamps of the files; notice that the source code file is
 
 Now edit the program with zedit "greeting" then change it, e.g., make it print "Goodbye!" instead and save it.
 
-Again execute do ^greeting and note that YottaDB still prints "Hello!". This is because YottaDB already has a greeting module linked in its address space, and does not go out every time to check if there is a new version. This is “clobber protection” and a YottaDB feature.
+Again execute do ^greeting and note that YottaDB still prints "Hello!". This is because YottaDB already has a greeting module linked in its address space, and does not go out every time to check if there is a new version. This is \"`clobber <https://en.wikipedia.org/wiki/Clobbering>`_ protection" and a YottaDB feature.
+
+.. note::
+   YottaDB currently provides a mechanism for processes to indicate that instead of explicitly relinking newer versions of routines, they would like to “subscribe” to and automatically execute the latest updated (“published”) object code of routines. Because of this, this example may not work with the latest version of YottaDB.
 
 Execute zLink "greeting" which tells YottaDB to re-link greeting even if it already has one linked in its address space, followed by do ^greeting and note that it now prints "Goodbye!" . Verify that the source file is newer and that YottaDB has created a new object file.
 
@@ -463,7 +468,7 @@ The ZEDIT command always puts new routines in the first source directory in the 
 
 YottaDB also provides a mechanism for processes to indicate that instead of explicitly relinking newer versions of routines, they would like to “subscribe” to and automatically execute the latest updated (“published”) object code of routines. Processes indicate this interest by appending an asterisk (“*”) to each directory name from which they wish to execute the latest object code.
 
-The ydb_env_set script would have already appended the requisite asterisk to $zroutines. 
+**The ydb_env_set script would have already appended the requisite asterisk to $zroutines.** 
 
 
 .. parsed-literal::
@@ -492,7 +497,7 @@ In the original session, again run the greeting program, and notice that even wi
 
    YDB>
 
-The `Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/index.html>`_ explains the use of $ZROUTINES in more detail.
+The `Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/isv.html#zroutines>`_ explains the use of $ZROUTINES in more detail.
 
 **Exercise - Default Directory Structure for an Application**
 
@@ -588,7 +593,7 @@ Notice how the database file is defined using the environment variables $gtmdir 
 .. note:: 
    The parameters in the global directory are used only by mupip create to create a new database file. At other times, the global directory is used only to map global variable names to database files. So, if you change the global directory, existing database files are not changed. If you change a parameter in a database file, unless you also change the global directory used to create the database file, the next time you create that file, it will use old parameters in the global directory.
 
-The show map command gives a good visualization of mapping of names to database files in the global directory.
+The show map command gives a good visualization of the mapping of names to database files in the global directory.
 
 .. parsed-literal::
    GDE> show -map
@@ -622,7 +627,7 @@ Start from the shell. Assign a value to $ydb_gbldir so as to not overwrite any e
 
    GDE>
 
-While not essential, it may be conceptually helpful to build the global directory from the bottom up – first create the segments, then the regions, and then the name spaces. First edit the default to make the parameters more useful – the out-of-the-box defaults are suitable for experimentation but not real use. Using a template reduces the work needed to create multiple regions and segments. Notice the use of different access methods for MAMMALS and CRUSTACEANS.
+While not essential, it may be conceptually helpful to build the global directory from the bottom up – first create the segments, then the regions, and then the name spaces. First, edit the default to make the parameters more useful – the out-of-the-box defaults are suitable for experimentation but not real use. Using a template reduces the work needed to create multiple regions and segments. Notice the use of different access methods for MAMMALS and CRUSTACEANS.
 
 .. parsed-literal::
    GDE> change -segment DEFAULT -block_size=4096 -allocation=1000 -extension=1000 -global_buffer_count=1000 -file_name=/home/yottadbuser/mumps.dat
@@ -817,59 +822,62 @@ In an Application Service Provider (ASP) environment, the same application code 
 The majority of routines are shared, with:
 
 - source routines that are independent of the YottaDB version in /opt/bank/yottadb/r,
-- source routines that are dependent on the YottaDB version in /opt/bank/yottadb/r1.20_x86_64/r (note that in the typical case, this directory will be empty, but if a release of YottaDB has a new feature that a routine XYZ.m can take advantage of, you would put the new XYZ.m in this directory and leave the old XYZ.m in the previous directory), and
-- object files in /opt/bank/yottadb/r1.20_x86_64/o.
+- source routines that are dependent on the YottaDB version in /opt/bank/yottadb/r120/r (note that in the typical case, this directory will be empty, but if a release of YottaDB has a new feature that a routine XYZ.m can take advantage of, you would put the new XYZ.m in this directory and leave the old XYZ.m in the previous directory), and
+- object files in /opt/bank/yottadb/r120/o.
 
-Custom routines for Financial Institution in /var/opt/bank/yottadb/fi/r and /var/opt/bank/yottadb/fi/r1.20_x86_64/r with object code in /var/opt/bank/yottadb/fi/r1.20_x86_64/o.
+Custom routines for Financial Institution in /var/opt/bank/yottadb/fi/r and /var/opt/bank/yottadb/fi/r120/r with object code in /var/opt/bank/yottadb/fi/r120/o.
 
-Similarly, custom routines for the Credit Bank are in /var/opt/bank/yottadb/cb/r and /var/opt/bank/yottadb/cb/r1.20_x86_64/r with object code in /var/opt/bank/yottadb/cb/r1.20_x86_64/o.
+Similarly, custom routines for the Credit Bank are in /var/opt/bank/yottadb/cb/r and /var/opt/bank/yottadb/cb/r120/r with object code in /var/opt/bank/yottadb/cb/r120/o.
 
-What should $ydb_routines be for an FI user and what should it be for a CB user? Create a shell script to be sourced by a FI user and another to be sourced by a CB user. [The shell scripts can reside in /var/opt/bank/yottadb/cb/r1.20_x86_64 and /var/opt/bank/yottadb/fi/r1.20_x86_64.]
+What should $ydb_routines be for an FI user and what should it be for a CB user? Create a shell script to set ydb_routines to be sourced by an FI user and another to be sourced by a CB user. [The shell scripts can reside in /var/opt/bank/yottadb/cb/r120 and /var/opt/bank/yottadb/fi/r120.]
 
-The approved Tax Rate is in the global variable ^TXR and is shared by both institutions with read only access to users. The Tax Rate is in the database file /opt/bank/yottadb/r1.20_x86_64/g/txr.dat. All other globals are in database files that are specific to FI and CB, in /var/opt/bank/yottadb/fi/r1.20_x86_64/g/main.dat and /var/opt/bank/yottadb/cb/r1.20_x86_64/g/main.dat.
+The approved Tax Rate is in the global variable ^TXR and is shared by both institutions with read only access to users. The Tax Rate is in the database file /opt/bank/yottadb/r120/g/txr.dat. All other globals are in database files that are specific to FI and CB, in /var/opt/bank/yottadb/fi/r120/g/main.dat and /var/opt/bank/yottadb/cb/r120/g/main.dat.
 
 First, create the directory structure.
 
 .. parsed-literal::
    yottadbuser@yottadbworkshop:~$ sudo mkdir -p /opt/bank/yottadb
    yottadbuser@yottadbworkshop:~$ sudo chown -R yottadbuser.users /opt/bank/yottadb
-   yottadbuser@yottadbworkshop:~$ cd /opt/bank/yottadb ; mkdir -p r r1.20_x86_64/r r1.20_x86_64/o r1.20_x86_64/g
+   yottadbuser@yottadbworkshop:~$ cd /opt/bank/yottadb ; mkdir -p r r120/r r120/o r120/g
    yottadbuser@yottadbworkshop:/opt/bank/yottadb$ sudo mkdir -p /var/opt/bank/yottadb
    yottadbuser@yottadbworkshop:opt/bank/yottadb$ sudo chown -R yottadbuser.users /var/opt/bank/yottadb
-   yottadbuser@yottadbworkshop:opt/bank/yottadb$ cd /var/opt/bank/yottadb ; mkdir -p fi/r fi/r1.20_x86_64/r fi/r1.20_x86_64/o fi/r1.20_x86_64/g
-   yottadbuser@yottadbworkshop:/var/opt/bank/yottadb$ mkdir -p cb/r cb/r1.20_x86_64/r cb/r1.20_x86_64/o cb/r1.20_x86_64/g
+   yottadbuser@yottadbworkshop:opt/bank/yottadb$ cd /var/opt/bank/yottadb ; mkdir -p fi/r fi/r120/r fi/r120/o fi/r120/g
+   yottadbuser@yottadbworkshop:/var/opt/bank/yottadb$ mkdir -p cb/r cb/r120/r cb/r120/o cb/r120/g
    yottadbuser@yottadbworkshop:/var/opt/bank/yottadb$ tree -d
    .
    ├── cb
    │ ├── r
-   │ └── r1.20_x86_64
+   │ └── r120
    │     ├── g
    │     ├── o
    │     └── r
    └── fi
     ├── r
-    └── r1.20_x86_64
+    └── r120
           ├── g
           ├── o
           └── r
  12 directories
  yottadbuser@yottadbworkshop:~$
 
-*What should $ydb_gbldir be for an FI user and what should it be for a CB user? Add these to the command files you created earlier. Create a file of commands to be fed to GDE either with a heredoc or with GDE's @ command that will create the global directories and then create the global directories.*
+What should $ydb_gbldir be for an FI user and what should it be for a CB user? Add these to the command files you created earlier. Create a file of commands to be fed to GDE either with a heredoc or with GDE's @ command that will create the global directories and then create the global directories.
 
-*Create the three database files with mupip create (remember that the database file /opt/bank/yotadb/r1.20_x86_64/ g/txr.dat will be created by the first mupip create, and the second mupip create will only create the institution specific database file.*
+Create the three database files with mupip create (remember that the database file /opt/bank/yotadb/r120/g/txr.dat will be created by the first mupip create, and the second mupip create will only create the institution specific database file.
 
-*In one environment assign values to the global variables ^TXR and ^X. In the other environment, confirm that you are able to read the value of ^TXR (i.e., it is shared), but not the value in ^X (i.e., it is not shared).*
+In one environment (fi or cb) , assign values to the global variables ^TXR and ^X. In the other environment, confirm that you are able to read the value of ^TXR (i.e., it is shared), but not the value in ^X (i.e., it is not shared).
 
-*Set a value for ^X in the second environment, and in the first environment confirm that you still see the original value of ^X that you set up in that environment.*
+Set a value for ^X in the second environment, and in the first environment confirm that you still see the original value of ^X that you set up in that environment.
 
-*Create a program ABC.m to write “Hello!” in /opt/bank/yottadb/r and two programs with the same name DEF.m in /var/opt/bank/yottadb/fi to write “Hello, Financial Institution!” and in /var/opt/bank/yottadb/cb to say “Hello, Credit Bank!”. Verify that a process in either environment gets “Hello!” when it executes ABC.m and either “Hello, Financial Institution!” or “Hello, Credit Bank!” depending on its environment when it executes DEF.m.*
+Create a program ABC.m to write “Hello!” in /opt/bank/yottadb/r and two programs with the same name DEF.m in /var/opt/bank/yottadb/fi to write “Hello, Financial Institution!” and in /var/opt/bank/yottadb/cb to say “Hello, Credit Bank!”. Verify that a process in either environment gets “Hello!” when it executes ABC.m and either “Hello, Financial Institution!” or “Hello, Credit Bank!” depending on its environment when it executes DEF.m.
 
 **No Special Startup or Shut Down**
 
-The first process to open a database file sets up all the shared memory control structures needed. The last one out tears it down. There is no daemon that needs to run with elevated provileges, can be a single point of failure, a performance bottleneck, or a potential security vulnerability. Note that if replication is in use, then at least one Source Server process (see the section on Replication) must be brought up first, but that is not a database daemon.
+The first process to open a database file sets up all the shared memory control structures needed. The last one out tears it down. There is no daemon that needs to run with elevated privileges or can be a single point of failure, a performance bottleneck or a potential security vulnerability. Note that if replication is in use, then at least one Source Server process (see the section on Replication further on) must be brought up first, but that is not a database daemon.
 
-Upon bringing the system back up, if the system crashes, or is forcibly brought down: if journaling is in use, mupip journal -recover (or mupip journal -rollback if replication is in use) will recover the database. If journaling is not in use, mupip rundown -region "*" will clean up the database control structures in the file header, but cannot fix any integrity errors resulting from shutting down a computer without cleanly terminating YottaDB processes.
+Upon bringing the system back up, if the system crashes, or is forcibly brought down: 
+
+* If journaling is in use, mupip journal -recover (or mupip journal -rollback if replication is in use) will recover the database. 
+* If journaling is not in use, mupip rundown -region "*" will clean up the database control structures in the file header, but cannot fix any integrity errors resulting from shutting down a computer without cleanly terminating YottaDB processes.
 
 .. note::
    Do not use mupip rundown if journaling is in use and you plan to recover the database after a crash with a mupip journal operation.
@@ -1310,6 +1318,7 @@ To avoid confusion when you are working with multiple machines, change the name 
    ff00::0 ip6-mcastprefix
    ff02::1 ip6-allnodes
    ff02::2 ip6-allrouters
+   
    yottadbuser@santiago:~$ cat /etc/hostname
    santiago
    yottadbuser@santiago:~$ 
@@ -1318,7 +1327,7 @@ You may also want to change the window/tab labels on your terminal emulator on t
 
 To make it more realistic (and to reduce the probability of operator error) on each machine, execute sudo dpkg-reconfigure tzdata to specify the “local” time zone. Select Paris and Santiago.
 
-In each machine. Edit exDir/env in each instance and change the line export ydb_repl_instname=dummy and the line export ydb_repl_instance=/home/yottadbuser/exDir/yottadb.repl to an instance file name for that instance. For example, on the Santiago instance:
+On each machine, edit exDir/env in each instance and change the line export ydb_repl_instname=dummy and the line export ydb_repl_instance=/home/yottadbuser/exDir/yottadb.repl to an instance file name for that instance. For example, on the Santiago instance:
 
 .. parsed-literal::
    yottadbuser@santiago:~/exDir$ cat ydbenv 
@@ -2132,7 +2141,7 @@ Notice that Paris now reports no backlog:
 
    YDB>
 
-If your application uses the $ZQGBLMOD() function to process unreplicated transactions, read the `Database Replication chapter in the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html#processing-lost-transactions-file>`_ for information about the mupip replicate source losttncomplete command to be executed after processing unreplicated transactions from all originating instances.
+If your application uses the $ZQGBLMOD() function to process unreplicated transactions, read the `Database Replication chapter in the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html#processing-lost-transactions-file>`_ for information about the ``mupip replicate source -losttncomplete command`` to be executed after processing unreplicated transactions from all originating instances.
 
 Shut down whichever were the replicating secondary instances - Santiago and Melbourne in the example above – and use the originating primary instance (Paris) for the backup exercises.
 
@@ -2142,7 +2151,7 @@ Backup
 
 Backup **when an application is not running** is straightforward – just copy the database files. (However, remember that the copy will have the same journal file name in the database file header and the system now potentially has two database files pointing to the same journal file. Before using that file on the same computer system as the original database file, disable journaling and re-enable it if appropriate (do not simply switch journal files).)
 
-Backup when an application is operating normally, without impacting the application (except of course for the additional IO load of the backup activity) is easy with YottaDB, and can be accomplished in two ways, one non-YottaDB and other YottaDB:
+Backup **when an application is operating normally**, without impacting the application (except of course for the additional IO load of the backup activity) is easy with YottaDB, and can be accomplished in two ways, one non-YottaDB and other YottaDB:
 
 - The non-YottaDB way is to use a disk mirror (e.g., RAID or SAN). Issue a mupip freeze to momentarily freeze updates and flush updates to disk, break the mirror; then release the freeze. After backing up the mirror, rebuild it, and let it “catch up.” This is not discussed further here.
 
@@ -2171,7 +2180,7 @@ Note that the global variables ^a and ^b go into different database files, but t
 
 Since the database is a replicated environment, if no Source Servers are running, start at least one. (A replicated environment needs at least one source server to be running before updates are permitted. You can certainly start the second Source Server now – or you can start it up later for the **Replication Briefly Revisited** exercise below.)
 
-Start the program as a background process from the shell: mumps -run XYZ </dev/null 1>/dev/null 2>&1 &
+Start the program as a background process from the shell: ``mumps -run XYZ </dev/null 1>/dev/null 2>&1 &``
 
 Notice that the journal files are growing, indicating that the program is running:
 
@@ -2208,7 +2217,7 @@ Take a backup of the entire database (a "comprehensive backup"):
 
 Take a backup of the part of the database that has changed (a "bytestream" backup). Note:
 
-- The use of the -since=database qualifier to only backup those database blocks that have changed since the last backup of the entire database).
+- The use of the ``-since=database`` qualifier to only backup those database blocks that have changed since the last backup of the entire database).
 
 - The fact that the backup files for others.dat have the name yottadb*.bck – YottaDB does not care what you name the files, but maps the targets in the alphabetic order of region name.
 
@@ -2237,7 +2246,7 @@ Take a backup of the part of the database that has changed (a "bytestream" backu
    -rw-rw-rw- 1 yottadbuser yottadbuser 20783616 Jan  23 17:54 others.dat
    yottadbuser@paris:~/exDir$
 
-Take further bytestream backups of that part of the database that has changed – as many as desired (note the use of the -since=bytestream qualifier to backup only those blocks that have changed since the last bytestream backup):
+Take further bytestream backups of the part of the database that has changed – as many as desired (note the use of the ``-since=bytestream`` qualifier to backup only those blocks that have changed since the last bytestream backup):
 
 .. parsed-literal::
    yottadbuser@paris:~/exDir$ mupip backup -bytestream -since=bytestream "*" backup/aA`date +%Y%m%d%H%M%S`.bck,backup/yottadb`date +%Y%m%d%H%M%S`.bck
@@ -2314,7 +2323,7 @@ Take a final backup, and note the values of the final nodes ^a and ^b (and verif
 
 Now it's time to work on restoring the backup. The first backup (the database backup) provides a complete, ready-to-run database. The subsequent bytestream backups can be applied to the database backup using the mupip restore command.
 
-Create an environment to restore the backup. It may be easiest if you simply use the backup directory you created, and working in a new shell session, copy exDir/env and exDir/yottadb.gld to the backup directory and edit them to reflect their new locations. (Note that since global directories are used only to create databases, there is no reason to change the default journal file names in the regions of the global directory file in backup. Nevertheless, it is good practice to keep global directories correct, since that global directory may be used at a future time to create new database files.)
+Create an environment to restore the backup. It may be easiest if you simply use the backup directory that you created, and working in a new shell session, copy exDir/env and exDir/yottadb.gld to the backup directory and edit them to reflect their new locations. (Note that since global directories are used only to create databases, there is no reason to change the default journal file names in the regions of the global directory file in backup. Nevertheless, it is good practice to keep global directories correct, since that global directory may be used at a future time to create new database files.)
 
 .. parsed-literal::
    yottadbuser\@paris:~/exDir$ cp ydbenv yottadb.gld backup/
@@ -2408,7 +2417,7 @@ Create an environment to restore the backup. It may be easiest if you simply use
    %GDE-I-GDUPDATE, Updating Global Directory file /home/yottadbuser/exDir/backup/yottadb.gld
    yottadbuser@paris:~/exDir/backup$
 
-Confirm the values of the last global nodes of ^a and ^b are equal and opposite (demonstrating the value of transaction processing):
+Confirm that the values of the last global nodes of ^a and ^b are equal and opposite (demonstrating the value of transaction processing):
 
 .. parsed-literal::
    yottadbuser@paris:~$ mumps -run %XCMD 'set x=$order(^a(""),-1) write x," ",^a(x)," ",^b(x)," ",^a(x)+^b(x),!'
