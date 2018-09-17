@@ -184,7 +184,7 @@ called a *subtree* (e.g., :code:`Population("USA")` is a subtree of the
        JSON. However, note while any data that can be represented in
        JSON can be stored in a YottaDB tree not all trees that YottaDB
        is capable of storing can be represented in JSON, or at least,
-       may require some encoding in order to be represented in JSON.
+       may require some encoding (for example, see `JSON-M <https://fwslc.blogspot.com/2014/10/json-m.html>`_) - in order to be represented in JSON.
 
 With this representation, the :code:`Population` tree can be represented as
 follows:
