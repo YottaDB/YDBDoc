@@ -13,7 +13,6 @@
 body {
 	background-color: #3b1a68;
 	width: 150%;
-	-webkit-text-stroke: 0.3px;
 }
 .cse .gsc-search-button input.gsc-search-button-v2,
 input.gsc-search-button-v2 {
