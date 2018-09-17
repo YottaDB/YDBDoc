@@ -178,13 +178,17 @@ all nodes under a variable and a leading set of its subscripts is
 called a *subtree* (e.g., :code:`Population("USA")` is a subtree of the
 :code:`Population` tree). [#]_
 
+.. |JSONM| raw:: html
+
+   <a href="https://fwslc.blogspot.com/2014/10/json-m.html" target="_blank"> JSON-M</a>
+
 .. [#] Of course, the ability to represent the data this way does not
        in any way detract from the ability to represent the same data
        another way with which you are comfortable, such as XML or
        JSON. However, note while any data that can be represented in
        JSON can be stored in a YottaDB tree not all trees that YottaDB
        is capable of storing can be represented in JSON, or at least,
-       may require some encoding (for example, see `JSON-M <https://fwslc.blogspot.com/2014/10/json-m.html>`_) - in order to be represented in JSON.
+       may require some encoding (for example, see |JSONM|) - in order to be represented in JSON.
 
 With this representation, the :code:`Population` tree can be represented as
 follows:
