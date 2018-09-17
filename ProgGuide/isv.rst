@@ -557,12 +557,12 @@ $ZDIRECTORY is a read-write Intrinsic Special Variable, that is, it can appear o
 At image exit, YottaDB restores the current directory to the directory that was the current directory when YottaDB was invoked even if that directory does not exist.
 
 -----------------
-$ZEDIT
+$ZEDITOR
 -----------------
 
-$ZED[IT] holds the value of the status code for the last edit session invoked by a ZEDIT command.
+$ZED[ITOR] holds the value of the status code for the last edit session invoked by a ZEDIT command.
 
-YottaDB does not permit the SET or NEW command to modify $ZEDIT.
+YottaDB does not permit the SET or NEW command to modify $ZEDITOR.
 
 -----------------------
 $ZEOF
