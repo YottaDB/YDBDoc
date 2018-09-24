@@ -263,9 +263,10 @@ Note that you may have to install the program 'tree' before running the above co
 
 **UTF-8 Mode**
 
-With YottaDB, you can write applications that implement international character sets using Unicode or ISO/IEC-10646 (the two standards track each other). Connect to the virtual machine with your terminal emulator configured to support the UTF-8 character set. In a fresh terminal session execute the following (the non-printable characters may look different on your session from the screen here, depending on how your terminal emulator renders them):
+With YottaDB, you can write applications that implement international character sets using Unicode or ISO/IEC-10646 (the two standards track each other). Connect to the virtual machine with your terminal emulator configured to support the UTF-8 character set. Execute the following commands (the non-printable characters may look different on your session from the screen here, depending on how your terminal emulator renders them):
 
 .. parsed-literal::
+   yottadbuser@yottadbworkshop:~$ source /usr/local/lib/yottadb/r120/ydb_env_unset
    yottadbuser@yottadbworkshop:~$ export ydb_chset=UTF-8 LC_CTYPE=en_US.utf8
    yottadbuser@yottadbworkshop:~$ source /usr/local/lib/yottadb/r120/ydb_env_set
    yottadbuser@yottadbworkshop:~$ ydb
