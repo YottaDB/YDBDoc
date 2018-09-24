@@ -795,166 +795,166 @@ Repair Dangerous and Access errors immediately. You may assess the benefits of d
 
 **MUPIP INTEG Error Messages**
 
-+--------------------------+-------------------------------------------------+----------------------------------------------+
-| Severity                 | Error Message                                   | Section                                      |
-+==========================+=================================================+==============================================+
-| I                        | Bad key name.                                   | K1                                           |
-|                          |                                                 |                                              |
-| I                        | Bad numeric subscript.                          | K1                                           |
-|                          |                                                 |                                              |
-| D                        | Bad pointer value in directory.                 | K4                                           |
-|                          |                                                 |                                              |
-| D                        | Bitmap block number as pointer.                 | K4                                           |
-|                          |                                                 |                                              |
-| D                        | Block at incorrect level.                       | O1                                           |
-|                          |                                                 |                                              |
-| D                        | Block busy/free status unknown (local bitmap    | M1                                           |
-|                          | corrupted).                                     |                                              |
-|                          |                                                 |                                              |
-| D                        | Block doubly allocated.                         | K3                                           |
-+--------------------------+-------------------------------------------------+----------------------------------------------+
-| B                        | Block incorrectly marked busy.                  | M1                                           |
-|                          |                                                 |                                              |
-| D                        | Block incorrectly marked free.                  | M1                                           |
-|                          |                                                 |                                              |
-| I                        | Block larger than file block size.              | O1                                           |
-|                          |                                                 |                                              |
-| D                        | Block pointer larger than file maximum.         | K4                                           |
-|                          |                                                 |                                              |
-| D                        | Block pointer negative.                         | K4                                           |
-+--------------------------+-------------------------------------------------+----------------------------------------------+
-| A                        | Block size equals zero.                         | I3                                           |
-|                          |                                                 |                                              |
-| A                        | Block size is greater than 64K.                 | I3                                           |
-|                          |                                                 |                                              |
-| A                        | Block size not a multiple of 512 bytes.         | I3                                           |
-|                          |                                                 |                                              |
-| I                        | Block too small.                                | O1                                           |
-|                          |                                                 |                                              |
-| T                        | Block transaction number too large.             | I6                                           |
-+--------------------------+-------------------------------------------------+----------------------------------------------+
-| D                        | Blocks per local map is less than 512.          | I3                                           |
-|                          |                                                 |                                              |
-| D                        | Blocks per local map is greater than 2K.        | I3                                           |
-|                          |                                                 |                                              |
-| D                        | Blocks per local map is not a multiple of 512.  | I3                                           |
-|                          |                                                 |                                              |
-| B                        | Cannot INTEG region across network.             | I5                                           |
-|                          |                                                 |                                              |
-| T                        | Cannot determine access method;trying with BG.  | I6                                           |
-+--------------------------+-------------------------------------------------+----------------------------------------------+
-| I                        | Compression count not maximal.                  | K6                                           |
-|                          |                                                 |                                              |
-| T                        | Current tn and early tn are not equal.          | I6                                           |
-|                          |                                                 |                                              |
-| A                        | Database for region rrr is already frozen, not  | I6                                           |
-|                          | INTEGing                                        |                                              |
-|                          |                                                 |                                              |
-| T                        | Database requires flushing.                     | I7                                           |
-|                          |                                                 |                                              |
-| B                        | File size larger than block count would         | I4                                           |
-|                          | indicate.                                       |                                              |
-+--------------------------+-------------------------------------------------+----------------------------------------------+
-| D                        | File size smaller than block count would        | I4                                           |
-|                          | indicate                                        |                                              |
-|                          |                                                 |                                              |
-| A                        | File smaller than database header.              | I3                                           |
-|                          |                                                 |                                              |
-| I                        | First record of block has nonzero compression   | O1                                           |
-|                          | count.                                          |                                              |
-|                          |                                                 |                                              |
-| B                        | Free blocks counter in file header: nnn is      | I3                                           |
-|                          | incorrect, should be mmm.                       |                                              |
-|                          |                                                 |                                              |
-| A                        | Header indicates file creation did not complete.| I3                                           |
-+--------------------------+-------------------------------------------------+----------------------------------------------+
-| A                        | Header indicates file is corrupt.               | I8                                           |
-|                          |                                                 |                                              |
-| A                        | Header size not valid for database.             | I3                                           |
-|                          |                                                 |                                              |
-| D                        | Block xxxx doubly allocated in index block.     | K3                                           |
-|                          |                                                 |                                              |
-| A                        | Incorrect version of YottaDB database.          | I2                                           |
-|                          |                                                 |                                              |
-| D                        | Invalid mixing of global names.                 | K3                                           |
-+--------------------------+-------------------------------------------------+----------------------------------------------+
-| I                        | Key greater than index key.                     | K2                                           |
-|                          |                                                 |                                              |
-| I                        | Key larger than database maximum.               | K7                                           |
-|                          |                                                 |                                              |
-| I                        | Key larger than maximum allowed length.         | K1                                           |
-|                          |                                                 |                                              |
-| I                        | Key too long.                                   | K1                                           |
-|                          |                                                 |                                              |
-| I                        | Key too short.                                  | K1                                           |
-+--------------------------+-------------------------------------------------+----------------------------------------------+
-| I                        | Keys less than sibling's index key.             | K2                                           |
-|                          |                                                 |                                              |
-| I                        | Keys out of order.                              | K2                                           |
-|                          |                                                 |                                              |
-| I                        | Last record of block has invalid size.          | K5                                           |
-|                          |                                                 |                                              |
-| D                        | Last record of block has nonzero compression    | K5                                           |
-|                          | count.                                          |                                              |
-|                          |                                                 |                                              |
-| B                        | Local bitmap incorrect.                         | M1                                           |
-+--------------------------+-------------------------------------------------+----------------------------------------------+
-| B                        | Local map block level incorrect.                | M2                                           |
-|                          |                                                 |                                              |
-| B                        | Map block too large.                            | M2                                           |
-|                          |                                                 |                                              |
-| B                        | Map block too small.                            | M2                                           |
-|                          |                                                 |                                              |
-| T                        | Map block transaction number too large.         | I6                                           |
-|                          |                                                 |                                              |
-| B                        | Master bitmap incorrectly asserts this local    | M1                                           |
-|                          | map has free space.                             |                                              |
-+--------------------------+-------------------------------------------------+----------------------------------------------+
-| B                        | Master bitmap incorrectly marks this local map  | M1                                           |
-|                          | full.                                           |                                              |
-|                          |                                                 |                                              |
-| B                        | Master bitmap shows this map full, agreeing with| M1                                           |
-|                          | disk local map.                                 |                                              |
-|                          |                                                 |                                              |
-| B                        | Master bitmap shows this map full, agreeing with| M1                                           |
-|                          | MUPIP INTEG                                     |                                              |
-|                          |                                                 |                                              |
-| B                        | Master bitmap shows this map full, in           | M1                                           |
-|                          | disagreement with both disk and mu_int result.  |                                              |
-|                          |                                                 |                                              |
-| B                        | Master bitmap shows this map has space, agreeing| M1                                           |
-|                          | with disk local map.                            |                                              |
-+--------------------------+-------------------------------------------------+----------------------------------------------+
-| B                        | Master bitmap shows this map has space, agreeing| M1                                           |
-|                          | with MUPIP INTEG.                               |                                              |
-|                          |                                                 |                                              |
-| D                        | Read error on bitmap.                           | H7                                           |
-|                          |                                                 |                                              |
-| I                        | Record has too large compression count.         | O2                                           |
-|                          |                                                 |                                              |
-| ..                       | Record too large.                               | O2                                           |
-|                          |                                                 |                                              |
-| I                        | Record too small.                               | O2                                           |
-+--------------------------+-------------------------------------------------+----------------------------------------------+
-| D                        | Reference count should be zero, is nnn.         | I6                                           |
-|                          |                                                 |                                              |
-| D                        | Root block number greater than last block       | K4                                           |
-|                          | number in file.                                 |                                              |
-|                          |                                                 |                                              |
-| D                        | Root block number is a local bitmap number.     | K4                                           |
-|                          |                                                 |                                              |
-| D                        | Root block number negative.                     | K4                                           |
-|                          |                                                 |                                              |
-| D                        | Root level higher than maximum.                 | O1                                           |
-+--------------------------+-------------------------------------------------+----------------------------------------------+
-| D                        | Root level less than one.                       | O1                                           |
-|                          |                                                 |                                              |
-| A                        | Start VBN smaller than possible.                | I3                                           |
-|                          |                                                 |                                              |
-| A                        | Total blocks equals zero.                       | I4                                           |
-|                          |                                                 |                                              |
-| A                        | Unable to verify that this is a database file.  | I3                                           |
-+--------------------------+-------------------------------------------------+----------------------------------------------+
++--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
+| Severity                 | Error Message                                   | Section                                                                                         |
++==========================+=================================================+=================================================================================================+
+| I                        | Bad key name.                                   | `K1 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#k1-bad-key>`_                        |
+|                          |                                                 |                                                                                                 |
+| I                        | Bad numeric subscript.                          | `K1 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#k1-bad-key>`_                        |
+|                          |                                                 |                                                                                                 |
+| D                        | Bad pointer value in directory.                 | `K4 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#k4-pointer-problems>`_               |
+|                          |                                                 |                                                                                                 |
+| D                        | Bitmap block number as pointer.                 | `K4 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#k4-pointer-problems>`_               |
+|                          |                                                 |                                                                                                 |
+| D                        | Block at incorrect level.                       | `O1 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#o1-bad-block>`_                      |
+|                          |                                                 |                                                                                                 |
+| D                        | Block busy/free status unknown (local bitmap    | `M1 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#m1-bitmap-errors>`_                  |
+|                          | corrupted).                                     |                                                                                                 |
+|                          |                                                 |                                                                                                 |
+| D                        | Block doubly allocated.                         | `K3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#k3-blocks-doubly-allocated>`_        |
++--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
+| B                        | Block incorrectly marked busy.                  | `M1 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#m1-bitmap-errors>`_                  |
+|                          |                                                 |                                                                                                 |
+| D                        | Block incorrectly marked free.                  | `M1 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#m1-bitmap-errors>`_                  |
+|                          |                                                 |                                                                                                 |
+| I                        | Block larger than file block size.              | `O1 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#o1-bad-block>`_                      |
+|                          |                                                 |                                                                                                 |
+| D                        | Block pointer larger than file maximum.         | `K4 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#k4-pointer-problems>`_               |
+|                          |                                                 |                                                                                                 |
+| D                        | Block pointer negative.                         | `K4 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#k4-pointer-problems>`_               |
++--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
+| A                        | Block size equals zero.                         | `I3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i3-file-header-errors>`_             |
+|                          |                                                 |                                                                                                 |
+| A                        | Block size is greater than 64K.                 | `I3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i3-file-header-errors>`_             |
+|                          |                                                 |                                                                                                 |
+| A                        | Block size not a multiple of 512 bytes.         | `I3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i3-file-header-errors>`_             |
+|                          |                                                 |                                                                                                 |
+| I                        | Block too small.                                | `O1 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#o1-bad-block>`_                      |
+|                          |                                                 |                                                                                                 |
+| T                        | Block transaction number too large.             | `I6 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i6-transient-errors>`_               |
++--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
+| D                        | Blocks per local map is less than 512.          | `I3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i3-file-header-errors>`_             |
+|                          |                                                 |                                                                                                 |
+| D                        | Blocks per local map is greater than 2K.        | `I3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i3-file-header-errors>`_             |
+|                          |                                                 |                                                                                                 |
+| D                        | Blocks per local map is not a multiple of 512.  | `I3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i3-file-header-errors>`_             |
+|                          |                                                 |                                                                                                 |
+| B                        | Cannot INTEG region across network.             | `I5 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i5-more-database-access-problems>`_  |
+|                          |                                                 |                                                                                                 |
+| T                        | Cannot determine access method;trying with BG.  | `I6 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i6-transient-errors>`_               |
++--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
+| I                        | Compression count not maximal.                  | `K6 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#k6-compression-count-error>`_        |
+|                          |                                                 |                                                                                                 |
+| T                        | Current tn and early tn are not equal.          | `I6 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i6-transient-errors>`_               |
+|                          |                                                 |                                                                                                 |
+| A                        | Database for region rrr is already frozen, not  | `I6 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i6-transient-errors>`_               |
+|                          | INTEGing                                        |                                                                                                 |
+|                          |                                                 |                                                                                                 |
+| T                        | Database requires flushing.                     | `I7 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i7-database-rundown-problem>`_       |
+|                          |                                                 |                                                                                                 |
+| B                        | File size larger than block count would         | `I4 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i4-file-size-errors>`_               |
+|                          | indicate.                                       |                                                                                                 |
++--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
+| D                        | File size smaller than block count would        | `I4 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i4-file-size-errors>`_               |
+|                          | indicate                                        |                                                                                                 |
+|                          |                                                 |                                                                                                 |
+| A                        | File smaller than database header.              | `I3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i3-file-header-errors>`_             |
+|                          |                                                 |                                                                                                 |
+| I                        | First record of block has nonzero compression   | `O1 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#o1-bad-block>`_                      |
+|                          | count.                                          |                                                                                                 |
+|                          |                                                 |                                                                                                 |
+| B                        | Free blocks counter in file header: nnn is      | `I3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i3-file-header-errors>`_             |
+|                          | incorrect, should be mmm.                       |                                                                                                 |
+|                          |                                                 |                                                                                                 | 
+| A                        | Header indicates file creation did not complete.| `I3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i3-file-header-errors>`_             |
++--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
+| A                        | Header indicates file is corrupt.               | `I8 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i8-repair-induced-problems>`_        |
+|                          |                                                 |                                                                                                 |
+| A                        | Header size not valid for database.             | `I3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i3-file-header-errors>`_             |
+|                          |                                                 |                                                                                                 |
+| D                        | Block xxxx doubly allocated in index block.     | `K3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#k3-blocks-doubly-allocated>`_        |
+|                          |                                                 |                                                                                                 |
+| A                        | Incorrect version of YottaDB database.          | `I2 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i2-yottadb-version-mismatch>`_       |
+|                          |                                                 |                                                                                                 |
+| D                        | Invalid mixing of global names.                 | `K3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#k3-blocks-doubly-allocated>`_        |
++--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
+| I                        | Key greater than index key.                     | `K2 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#k2-keys-misplaced>`_                 |
+|                          |                                                 |                                                                                                 |
+| I                        | Key larger than database maximum.               | `K7 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#k7-key-warning>`_                    |
+|                          |                                                 |                                                                                                 |
+| I                        | Key larger than maximum allowed length.         | `K1 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#k1-bad-key>`_                        |
+|                          |                                                 |                                                                                                 |
+| I                        | Key too long.                                   | `K1 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#k1-bad-key>`_                        |
+|                          |                                                 |                                                                                                 |
+| I                        | Key too short.                                  | `K1 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#k1-bad-key>`_                        |
++--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
+| I                        | Keys less than sibling's index key.             | `K2 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#k2-keys-misplaced>`_                 |
+|                          |                                                 |                                                                                                 |
+| I                        | Keys out of order.                              | `K2 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#k2-keys-misplaced>`_                 |
+|                          |                                                 |                                                                                                 |
+| I                        | Last record of block has invalid size.          | `K5 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#k5-star-key-problems>`_              |
+|                          |                                                 |                                                                                                 |
+| D                        | Last record of block has nonzero compression    | `K5 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#k5-star-key-problems>`_              |
+|                          | count.                                          |                                                                                                 |
+|                          |                                                 |                                                                                                 |
+| B                        | Local bitmap incorrect.                         | `M1 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#m1-bitmap-errors>`_                  |
++--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
+| B                        | Local map block level incorrect.                | `M2 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#m2-bitmap-header-problems>`_         |
+|                          |                                                 |                                                                                                 |
+| B                        | Map block too large.                            | `M2 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#m2-bitmap-header-problems>`_         |
+|                          |                                                 |                                                                                                 |
+| B                        | Map block too small.                            | `M2 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#m2-bitmap-header-problems>`_         |
+|                          |                                                 |                                                                                                 |
+| T                        | Map block transaction number too large.         | `I6 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i6-transient-errors>`_               |
+|                          |                                                 |                                                                                                 |
+| B                        | Master bitmap incorrectly asserts this local    | `M1 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#m1-bitmap-errors>`_                  |
+|                          | map has free space.                             |                                                                                                 |
++--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
+| B                        | Master bitmap incorrectly marks this local map  | `M1 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#m1-bitmap-errors>`_                  |
+|                          | full.                                           |                                                                                                 |
+|                          |                                                 |                                                                                                 |
+| B                        | Master bitmap shows this map full, agreeing with| `M1 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#m1-bitmap-errors>`_                  |
+|                          | disk local map.                                 |                                                                                                 |
+|                          |                                                 |                                                                                                 |
+| B                        | Master bitmap shows this map full, agreeing with| `M1 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#m1-bitmap-errors>`_                  |
+|                          | MUPIP INTEG                                     |                                                                                                 |
+|                          |                                                 |                                                                                                 |
+| B                        | Master bitmap shows this map full, in           | `M1 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#m1-bitmap-errors>`_                  |
+|                          | disagreement with both disk and mu_int result.  |                                                                                                 |
+|                          |                                                 |                                                                                                 |
+| B                        | Master bitmap shows this map has space, agreeing| `M1 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#m1-bitmap-errors>`_                  |
+|                          | with disk local map.                            |                                                                                                 |
++--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
+| B                        | Master bitmap shows this map has space, agreeing| `M1 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#m1-bitmap-errors>`_                  |
+|                          | with MUPIP INTEG.                               |                                                                                                 |
+|                          |                                                 |                                                                                                 |
+| D                        | Read error on bitmap.                           | `H7 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#h7-disk-hardware-problems>`_         |
+|                          |                                                 |                                                                                                 |
+| I                        | Record has too large compression count.         | `O2 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#o2-record-errors>`_                  |
+|                          |                                                 |                                                                                                 |
+| ..                       | Record too large.                               | `O2 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#o2-record-errors>`_                  |
+|                          |                                                 |                                                                                                 |
+| I                        | Record too small.                               | `O2 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#o2-record-errors>`_                  |
++--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
+| D                        | Reference count should be zero, is nnn.         | `I6 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i6-transient-errors>`_               |
+|                          |                                                 |                                                                                                 |
+| D                        | Root block number greater than last block       | `K4 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#k4-pointer-problems>`_               |
+|                          | number in file.                                 |                                                                                                 |
+|                          |                                                 |                                                                                                 |
+| D                        | Root block number is a local bitmap number.     | `K4 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#k4-pointer-problems>`_               |
+|                          |                                                 |                                                                                                 |
+| D                        | Root block number negative.                     | `K4 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#k4-pointer-problems>`_               |
+|                          |                                                 |                                                                                                 |
+| D                        | Root level higher than maximum.                 | `O1 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#o1-bad-block>`_                      |
++--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
+| D                        | Root level less than one.                       | `O1 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#o1-bad-block>`_                      |
+|                          |                                                 |                                                                                                 |
+| A                        | Start VBN smaller than possible.                | `I3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i3-file-header-errors>`_             |
+|                          |                                                 |                                                                                                 |
+| A                        | Total blocks equals zero.                       | `I4 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i4-file-size-errors>`_               |
+|                          |                                                 |                                                                                                 |
+| A                        | Unable to verify that this is a database file.  | `I3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i3-file-header-errors>`_             |
++--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
 
 +++++++++++++++++++++++++++++++++++
 I2 - YottaDB Version Mismatch
@@ -1433,69 +1433,69 @@ The following table lists run-time errors, alphabetically by mnemonic, each with
 
 **Run-Time Error Messages Identifying Potential System Problems**
 
-+--------------------------------------+-----------------------------------------------------------------------------------------------------+--------------------+
-| Error Mnemonic                       | Error Message Text                                                                                  | Section            |
-+======================================+=====================================================================================================+====================+
-| BADDVER                              | Incorrect database version vvv                                                                      | I2                 |
-|                                      |                                                                                                     |                    | 
-| BITMAPSBAD                           | Database bitmaps are incorrect                                                                      | M1                 |
-|                                      |                                                                                                     |                    |
-| BTFAIL                               | The database block table is corrupt                                                                 | R3                 |
-|                                      |                                                                                                     |                    |
-| CCPINTQUE                            | Interlock failure accessing Cluster Control Program queue                                           | R7                 |
-|                                      |                                                                                                     |                    |
-| CRITRESET                            | The critical section crash count for rrr region has been incremented                                | I8                 |
-+--------------------------------------+-----------------------------------------------------------------------------------------------------+--------------------+
-| DBCCERR                              | Interlock instruction failure in critical mechanism for region rrr                                  | R7                 |
-|                                      |                                                                                                     |                    |
-| DBCRPT                               | Database is flagged corrupt                                                                         | I8                 |
-|                                      |                                                                                                     |                    |
-| DBFILERR                             | Error with database file                                                                            | I5                 |
-|                                      |                                                                                                     |                    |
-| DBNOFILEP                            | No database file has been successfully opened                                                       | I5                 |
-|                                      |                                                                                                     |                    |
-| DBNOTGDS                             | Unrecognized database file format                                                                   | I5                 |
-+--------------------------------------+-----------------------------------------------------------------------------------------------------+--------------------+
-| DBOPNERR                             | Error opening database file                                                                         | I5                 |
-|                                      |                                                                                                     |                    |
-| DBRDERR                              | Cannot read database file after opening                                                             | I5                 |
-|                                      |                                                                                                     |                    |
-| FORCEDHALT                           | Image HALTed by MUPIP STOP                                                                          | R4                 |
-|                                      |                                                                                                     |                    |
-| GBLDIRACC                            | Global Directory access failed, cannot perform database functions                                   | I5                 |
-|                                      |                                                                                                     |                    |
-| GBLOFLOW                             | Database segment is full                                                                            | R5                 |
-+--------------------------------------+-----------------------------------------------------------------------------------------------------+--------------------+
-| GVKILLFAIL                           | Global variable KILL failed. Failure code: cccc                                                     | R2                 |
-|                                      |                                                                                                     |                    |
-| GVORDERFAIL                          | Global variable $ORDER or $NEXT function failed. Failure code: cccc                                 | R2                 |
-|                                      |                                                                                                     |                    |
-| GVPUTFAIL                            | Global variable put failed. Failure code: cccc                                                      | R2                 |
-|                                      |                                                                                                     |                    |
-| GVQUERYFAIL                          | Global variable $QUERY function failed. Failure code: cccc                                          | R2                 |
-|                                      |                                                                                                     |                    |
-| GVRUNDOWN                            | Error during global database rundown                                                                | I5                 |
-+--------------------------------------+-----------------------------------------------------------------------------------------------------+--------------------+
-| GDINVALID                            | Unrecognized Global Directory format: fff                                                           | I5                 |
-|                                      |                                                                                                     |                    |
-| GTMCHECK                             | Internal error–report to YottaDB                                                                    | R6                 |
-|                                      |                                                                                                     |                    |
-| GVDATAFAIL                           | Global variable $DATA function failed. Failure code: cccc                                           | R2                 |
-|                                      |                                                                                                     |                    |
-| GVDIRECT                             | Global variable name could not be found in global directory                                         | I5                 |
-|                                      |                                                                                                     |                    |
-| GVGETFAIL                            | Global variable retrieval failed. Failure code: cccc                                                | R2                 |
-+--------------------------------------+-----------------------------------------------------------------------------------------------------+--------------------+
-| GVZPREVFAIL                          | Global variable $ZPREVIOUS function failed. Failure code: cccc                                      | R2                 |
-|                                      |                                                                                                     |                    |
-| MUFILRNDWNFL                         | File rundown failed                                                                                 | I5                 |
-|                                      |                                                                                                     |                    |
-| UNKNOWNFOREX                         | Process halted by a forced exit from a source other than MUPIP                                      | R4                 |
-|                                      |                                                                                                     |                    |
-| TOTALBLKMAX                          | Extension exceeds maximum total blocks, not extending                                               | R5                 |
-|                                      |                                                                                                     |                    |
-| WCFAIL                               | The database cache is corrupt                                                                       | R3                 |
-+--------------------------------------+-----------------------------------------------------------------------------------------------------+--------------------+
++--------------------------------------+---------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
+| Error Mnemonic                       | Error Message Text                                                        | Section                                                                                                    |
++======================================+===========================================================================+============================================================================================================+
+| BADDVER                              | Incorrect database version vvv                                            | `I2 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i2-yottadb-version-mismatch>`_                  |
+|                                      |                                                                           |                                                                                                            | 
+| BITMAPSBAD                           | Database bitmaps are incorrect                                            | `M1 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#m1-bitmap-errors>`_                             |
+|                                      |                                                                           |                                                                                                            | 
+| BTFAIL                               | The database block table is corrupt                                       | `R3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#r3-runtime-database-cache-problems>`_           |
+|                                      |                                                                           |                                                                                                            |
+| CCPINTQUE                            | Interlock failure accessing Cluster Control Program queue                 | `R7 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#r7-interlocked-queue-hardware-problems>`_       |
+|                                      |                                                                           |                                                                                                            |
+| CRITRESET                            | The critical section crash count for rrr region has been incremented      | `I8 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i8-repair-induced-problems>`_                   |
++--------------------------------------+---------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
+| DBCCERR                              | Interlock instruction failure in critical mechanism for region rrr        | `R7 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#r7-interlocked-queue-hardware-problems>`_       |
+|                                      |                                                                           |                                                                                                            |
+| DBCRPT                               | Database is flagged corrupt                                               | `I8 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i8-repair-induced-problems>`_                   |
+|                                      |                                                                           |                                                                                                            |
+| DBFILERR                             | Error with database file                                                  | `I5 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i5-more-database-access-problems>`_             |
+|                                      |                                                                           |                                                                                                            |
+| DBNOFILEP                            | No database file has been successfully opened                             | `I5 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i5-more-database-access-problems>`_             |
+|                                      |                                                                           |                                                                                                            |
+| DBNOTGDS                             | Unrecognized database file format                                         | `I5 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i5-more-database-access-problems>`_             |
++--------------------------------------+---------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
+| DBOPNERR                             | Error opening database file                                               | `I5 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i5-more-database-access-problems>`_             |
+|                                      |                                                                           |                                                                                                            |
+| DBRDERR                              | Cannot read database file after opening                                   | `I5 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i5-more-database-access-problems>`_             |
+|                                      |                                                                           |                                                                                                            |
+| FORCEDHALT                           | Image HALTed by MUPIP STOP                                                | `R4 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#r4-stopped-processes>`_                         |
+|                                      |                                                                           |                                                                                                            |
+| GBLDIRACC                            | Global Directory access failed, cannot perform database functions         | `I5 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i5-more-database-access-problems>`_             |
+|                                      |                                                                           |                                                                                                            |
+| GBLOFLOW                             | Database segment is full                                                  | `R5 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#r5-no-more-room-in-the-file>`_                  |
++--------------------------------------+---------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
+| GVKILLFAIL                           | Global variable KILL failed. Failure code: cccc                           | `R2 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#r2-structural-database-integrity-errors>`_      |
+|                                      |                                                                           |                                                                                                            |
+| GVORDERFAIL                          | Global variable $ORDER or $NEXT function failed. Failure code: cccc       | `R2 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#r2-structural-database-integrity-errors>`_      |
+|                                      |                                                                           |                                                                                                            |
+| GVPUTFAIL                            | Global variable put failed. Failure code: cccc                            | `R2 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#r2-structural-database-integrity-errors>`_      |
+|                                      |                                                                           |                                                                                                            |
+| GVQUERYFAIL                          | Global variable $QUERY function failed. Failure code: cccc                | `R2 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#r2-structural-database-integrity-errors>`_      |
+|                                      |                                                                           |                                                                                                            |
+| GVRUNDOWN                            | Error during global database rundown                                      | `I5 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i5-more-database-access-problems>`_             |
++--------------------------------------+---------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
+| GDINVALID                            | Unrecognized Global Directory format: fff                                 | `I5 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i5-more-database-access-problems>`_             |
+|                                      |                                                                           |                                                                                                            |
+| GTMCHECK                             | Internal error–report to YottaDB                                          | `R6 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#r6-gtmassert-and-gtmcheck-errors>`_             |
+|                                      |                                                                           |                                                                                                            |
+| GVDATAFAIL                           | Global variable $DATA function failed. Failure code: cccc                 | `R2 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#r2-structural-database-integrity-errors>`_      |
+|                                      |                                                                           |                                                                                                            |
+| GVDIRECT                             | Global variable name could not be found in global directory               | `I5 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i5-more-database-access-problems>`_             |
+|                                      |                                                                           |                                                                                                            |
+| GVGETFAIL                            | Global variable retrieval failed. Failure code: cccc                      | `R2 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#r2-structural-database-integrity-errors>`_      |
++--------------------------------------+---------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
+| GVZPREVFAIL                          | Global variable $ZPREVIOUS function failed. Failure code: cccc            | `R2 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#r2-structural-database-integrity-errors>`_      |
+|                                      |                                                                           |                                                                                                            |
+| MUFILRNDWNFL                         | File rundown failed                                                       | `I5 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i5-more-database-access-problems>`_             |
+|                                      |                                                                           |                                                                                                            |
+| UNKNOWNFOREX                         | Process halted by a forced exit from a source other than MUPIP            | `R4 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#r4-stopped-processes>`_                         |
+|                                      |                                                                           |                                                                                                            |
+| TOTALBLKMAX                          | Extension exceeds maximum total blocks, not extending                     | `R5 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#r5-no-more-room-in-the-file>`_                  |
+|                                      |                                                                           |                                                                                                            |
+| WCFAIL                               | The database cache is corrupt                                             | `R3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#r3-runtime-database-cache-problems>`_           |
++--------------------------------------+---------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
 
 ++++++++++++++++++++++++++++++++++++++++++
 R2 - Structural Database Integrity Errors
@@ -1511,67 +1511,69 @@ The following table lists the failure codes, whether or not they require a MUPIP
 
 **Run-time Database Failure Codes**
 
-+-----------------+----------------+-------------------------------------------------------------------------------------------------------------------------+-----------------+
-| Fail Code       | Run INTEG      | Description                                                                                                             | Section         |
-+=================+================+=========================================================================================================================+=================+
-| A               | x              | Special case of code C.                                                                                                 | O2              |
-|                 |                |                                                                                                                         |                 |
-| B               | x              | Key too large to be correct.                                                                                            | K1              |
-|                 |                |                                                                                                                         |                 |
-| C               | x              | Record unaligned: properly formatted record header did not appear where expected.                                       | O2              |
-|                 |                |                                                                                                                         |                 |
-| D               | x              | Record too small to be correct.                                                                                         | O2              |
-|                 |                |                                                                                                                         |                 |
-| E               |                | History overrun prevents validation of a block.                                                                         | R3              |
-+-----------------+----------------+-------------------------------------------------------------------------------------------------------------------------+-----------------+
-| G               |                | Cache record modified while in use by the transaction.                                                                  | R3              |
-|                 |                |                                                                                                                         |                 |
-| H*              | x              | Development of a new version of a block encountered an out of design condition.                                         | P1              |
-|                 |                |                                                                                                                         |                 |
-| J               |                | Level on a child does not show it to be a direct descendent of its parent.                                              | O1              |
-|                 |                |                                                                                                                         |                 |
-| K               |                | Cache control problem encountered or suspected.                                                                         | C1              |
-|                 |                |                                                                                                                         |                 |
-| L               |                | Conflicting update of a block took priority.                                                                            | R3              |
-+-----------------+----------------+-------------------------------------------------------------------------------------------------------------------------+-----------------+
-| M               | x              | Error during commit that the database logic does not handle.                                                            | P1              |
-|                 |                |                                                                                                                         |                 |
-| N               | x              | A primitive such as a file or queue operation failed.                                                                   | R7              |
-|                 |                |                                                                                                                         |                 |
-| O               |                | Before image was lost prior to its transfer to the journal buffer.                                                      | R3              |
-|                 |                |                                                                                                                         |                 |
-| P               |                | Multi-block update aborted - database damage likely.                                                                    | I5              |
-|                 |                |                                                                                                                         |                 |
-| Q               |                | Shared memory interlock failed.                                                                                         | R7              |
-+-----------------+----------------+-------------------------------------------------------------------------------------------------------------------------+-----------------+
-| R               | x              | Critical section reset (probably by DSE).                                                                               | R5              |
-|                 |                |                                                                                                                         |                 |
-| S               |                | Attempt to increase the level beyond current maximum.                                                                   | R8              |
-|                 |                |                                                                                                                         |                 |
-| U               |                | Cache record unstable while in use by the transaction.                                                                  | R3              |
-|                 |                |                                                                                                                         |                 |
-| V               |                | Read-only process could not find room to work.                                                                          | R9              |
-|                 |                |                                                                                                                         |                 |
-| X               |                | Bitmap block header invalid.                                                                                            | M2              |
-+-----------------+----------------+-------------------------------------------------------------------------------------------------------------------------+-----------------+
-| Y               | x              | Record offset outside of block bounds.                                                                                  | O2              |
-|                 |                |                                                                                                                         |                 |
-| Z               | x              | Block did not contain record predicted by the index.                                                                    | O2              |
-|                 |                |                                                                                                                         |                 |
-| a               |                | Predicted bitmap preempted by another update.                                                                           | R3              |
-|                 |                |                                                                                                                         |                 |
-| b               |                | History overrun prevents validation of a bitmap.                                                                        | R3              |
-|                 |                |                                                                                                                         |                 |
-| c               |                | Bitmap cache record modified while in use by the transaction.                                                           | R3              |
-+-----------------+----------------+-------------------------------------------------------------------------------------------------------------------------+-----------------+
-| d               | x              | Not currently used.                                                                                                     | \-              |
-|                 |                |                                                                                                                         |                 |
-| e               |                | Attempt to read a block outside the bounds of the database.                                                             | O2              |
-|                 |                |                                                                                                                         |                 |
-| f               |                | Conflicting update took priority on a non-isolated global and a block split requires a TP_RESTART.                      | R3              |
-|                 |                |                                                                                                                         |                 |
-| g               |                | The number of conflicting updates on non-isolated global nodes exceed an acceptable level and requires a TP_RESTART.    | R3              |
-+-----------------+----------------+-------------------------------------------------------------------------------------------------------------------------+-----------------+
++-----------------+----------------+---------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------+
+| Fail Code       | Run INTEG      | Description                                                                                 | Section                                                                                              |
++=================+================+=============================================================================================+======================================================================================================+
+| A               | x              | Special case of code C.                                                                     | `O2 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#o2-record-errors>`_                       |
+|                 |                |                                                                                             |                                                                                                      |
+| B               | x              | Key too large to be correct.                                                                | `K1 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#k1-bad-key>`_                             |
+|                 |                |                                                                                             |                                                                                                      |
+| C               | x              | Record unaligned: properly formatted record header did not appear where expected.           | `O2 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#o2-record-errors>`_                       |
+|                 |                |                                                                                             |                                                                                                      |
+| D               | x              | Record too small to be correct.                                                             | `O2 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#o2-record-errors>`_                       |
+|                 |                |                                                                                             |                                                                                                      |
+| E               |                | History overrun prevents validation of a block.                                             | `R3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#r3-runtime-database-cache-problems>`_     |
++-----------------+----------------+---------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------+
+| G               |                | Cache record modified while in use by the transaction.                                      | `R3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#r3-runtime-database-cache-problems>`_     |
+|                 |                |                                                                                             |                                                                                                      |
+| H*              | x              | Development of a new version of a block encountered an out of design condition.             | `P1 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#p1-process-damage>`_                      |
+|                 |                |                                                                                             |                                                                                                      |
+| J               |                | Level on a child does not show it to be a direct descendent of its parent.                  | `O1 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#o1-bad-block>`_                           |
+|                 |                |                                                                                             |                                                                                                      |
+| K               |                | Cache control problem encountered or suspected.                                             | `C1 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#c1-possible-cache-control-problems>`_     |
+|                 |                |                                                                                             |                                                                                                      |
+| L               |                | Conflicting update of a block took priority.                                                | `R3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#r3-runtime-database-cache-problems>`_     |
++-----------------+----------------+---------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------+
+| M               | x              | Error during commit that the database logic does not handle.                                | `P1 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#p1-process-damage>`_                      |
+|                 |                |                                                                                             |                                                                                                      |
+| N               | x              | A primitive such as a file or queue operation failed.                                       | `R7 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#r7-interlocked-queue-hardware-problems>`_ |
+|                 |                |                                                                                             |                                                                                                      |
+| O               |                | Before image was lost prior to its transfer to the journal buffer.                          | `R3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#r3-runtime-database-cache-problems>`_     |
+|                 |                |                                                                                             |                                                                                                      |
+| P               |                | Multi-block update aborted - database damage likely.                                        | `I5 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i5-more-database-access-problems>`_       |
+|                 |                |                                                                                             |                                                                                                      |
+| Q               |                | Shared memory interlock failed.                                                             | `R7 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#r7-interlocked-queue-hardware-problems>`_ |
++-----------------+----------------+---------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------+
+| R               | x              | Critical section reset (probably by DSE).                                                   | `R5 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#r5-no-more-room-in-the-file>`_            |
+|                 |                |                                                                                             |                                                                                                      |
+| S               |                | Attempt to increase the level beyond current maximum.                                       | `R8 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#r8-database-tree-maximum-level-exceeded>`_|
+|                 |                |                                                                                             |                                                                                                      |
+| U               |                | Cache record unstable while in use by the transaction.                                      | `R3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#r3-runtime-database-cache-problems>`_     |
+|                 |                |                                                                                             |                                                                                                      |
+| V               |                | Read-only process could not find room to work.                                              | `R9 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#r9-read-only-process-blocked>`_           |
+|                 |                |                                                                                             |                                                                                                      |
+| X               |                | Bitmap block header invalid.                                                                | `M2 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#m2-bitmap-header-problems>`_              |
++-----------------+----------------+---------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------+
+| Y               | x              | Record offset outside of block bounds.                                                      | `O2 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#o2-record-errors>`_                       |
+|                 |                |                                                                                             |                                                                                                      |
+| Z               | x              | Block did not contain record predicted by the index.                                        | `O2 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#o2-record-errors>`_                       |
+|                 |                |                                                                                             |                                                                                                      |
+| a               |                | Predicted bitmap preempted by another update.                                               | `R3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#r3-runtime-database-cache-problems>`_     |
+|                 |                |                                                                                             |                                                                                                      |
+| b               |                | History overrun prevents validation of a bitmap.                                            | `R3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#r3-runtime-database-cache-problems>`_     |
+|                 |                |                                                                                             |                                                                                                      |
+| c               |                | Bitmap cache record modified while in use by the transaction.                               | `R3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#r3-runtime-database-cache-problems>`_     |
++-----------------+----------------+---------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------+
+| d               | x              | Not currently used.                                                                         | \-                                                                                                   |
+|                 |                |                                                                                             |                                                                                                      |
+| e               |                | Attempt to read a block outside the bounds of the database.                                 | `O2 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#o2-record-errors>`_                       |
+|                 |                |                                                                                             |                                                                                                      |
+| f               |                | Conflicting update took priority on a non-isolated global and a block split requires a      | `R3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#r3-runtime-database-cache-problems>`_     |
+|                 |                | TP_RESTART                                                                                  |                                                                                                      |
+|                 |                |                                                                                             |                                                                                                      |     
+| g               |                | The number of conflicting updates on non-isolated global nodes exceed an acceptable level   | `R3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#r3-runtime-database-cache-problems>`_     |
+|                 |                | and requires a TP_RESTART                                                                   |                                                                                                      |
++-----------------+----------------+---------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------+
 
 \* Indicates a process problem
 
