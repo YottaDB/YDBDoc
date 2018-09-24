@@ -144,11 +144,15 @@ $KEY
 
 $K[EY] contains the string that terminated the most recent READ command from the current device (including any introducing and terminating characters). If no READ command is issued to the current device or if no terminator is used, the value of $KEY is an empty string.
 
-* For PIPE device: $KEY contains the UNIX process id of the created process shell which executes the command connected to the PIPE.
+* For PIPE devices:
+ 
+  * $KEY contains the UNIX process id of the created process shell which executes the command connected to the PIPE.
 
-* For SOCKET devices: $KEY includes information about a new socket in the form of CONNECT|handle|<address> where <address> is the IP address for TCP sockets and path for LOCAL sockets. Read more about `SOCKET device operation <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#socket-device-operation>`_.
-
-* As an OPEN deviceparameter: For LISTEN, $KEY is set to the format of “LISTENING|<socket_handle>|{<portnumber>|</path/to/LOCAL_socket>}” when listening for a connection is successful. Otherwise, $KEY is assigned the empty string. Read more about `LISTEN deviceparameter <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#listen>`_.  
+* For SOCKET devices: 
+  
+  * $KEY includes information about a new socket in the form of CONNECT|handle|<address> where <address> is the IP address for TCP sockets and path for LOCAL sockets. Read more about `SOCKET device operation <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#socket-device-operation>`_.
+  
+  * As an OPEN deviceparameter: For LISTEN, $KEY is set to the format of “LISTENING|<socket_handle>|{<portnumber>|</path/to/LOCAL_socket>}” when listening for a connection is successful. Otherwise, $KEY is assigned the empty string. Read more about `LISTEN deviceparameter <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#listen>`_.  
 
 
 ~~~
