@@ -144,9 +144,12 @@ $KEY
 
 $K[EY] contains the string that terminated the most recent READ command from the current device (including any introducing and terminating characters). If no READ command is issued to the current device or if no terminator is used, the value of $KEY is an empty string.
 
-For PIPE:
+* For PIPE device: $KEY contains the UNIX process id of the created process shell which executes the command connected to the PIPE.
 
-$KEY contains the UNIX process id of the created process shell which executes the command connected to the PIPE.
+* For SOCKET devices: $KEY includes information about a new socket in the form of CONNECT|handle|<address> where <address> is the IP address for TCP sockets and path for LOCAL sockets. Read more about `SOCKET device operation <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#socket-device-operation>`_.
+
+* As an OPEN deviceparameter: For LISTEN, $KEY is set to the format of “LISTENING|<socket_handle>|{<portnumber>|</path/to/LOCAL_socket>}” when listening for a connection is successful. Otherwise, $KEY is assigned the empty string. Read more about `LISTEN deviceparameter <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#listen>`_.  
+
 
 ~~~
 $ZA
@@ -2552,6 +2555,18 @@ For LOCAL sockets:
 * LISTEN creates the file if it doesn't exist. If the OPEN command specifies the NEWVERSION deviceparameter, the file specified by the pathname exists, and is a socket file, that file is deleted and YottaDB creates a new file.
 * LISTEN with an OPEN processes the GROUP, OWNER, SYSTEM, WORLD, UIC, and NEWVERSION deviceparameters the same as OPEN for sequential files.
 
+.. note::
+   To access the listening socket through $KEY, one needs to USE the value of the socket device first, otherwise $KEY will show the value of the current device instead. i.e.
+
+.. code::
+  
+  > cat x.m
+   set s="socketdev" open s:(LISTEN="5000:TCP"):1:"SOCKET"
+   if $test  use s set x=$key  use $p  write x,!
+  > mumps -run x
+   LISTENING\|h1537723881000\|5000
+
+     
 ~~~~~~~~~~~~~
 MOREREADTIME
 ~~~~~~~~~~~~~
