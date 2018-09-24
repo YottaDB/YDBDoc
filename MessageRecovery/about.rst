@@ -308,6 +308,5 @@ The following table outlines the MUPIP INTEG error messages with their severity 
 
 
 .. note::
-   Section * refers to the specified section in `Managing Database Integrity chapter of Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/integrity.html>`_. The section details a description along with the action item to be taken on encountering the error message.
-
+   Section * refers to the specified section in  the `Finding and Fixing Database Errors <https://docs.yottadb.com/AdminOpsGuide/integrity.html#finding-and-fixing-database-errors>`_ chapter of the Administration and Operations Guide. The section details a description along with the action item to be taken on encountering the error message.
 
