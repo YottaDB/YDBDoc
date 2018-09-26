@@ -905,7 +905,7 @@ When possible, ydb_env_set provides reasonable defaults for any of the following
 
 - **ydb_gbldir** - points to the global directory.
 
-- **ydb_icu_version** - this is meaningful only when $ydb_chset is "UTF-8". YottaDB requires libicu version 3.6 or higher. If libicu has been compiled with symbol renaming enabled (as is the case with Ubuntu Linux), YottaDB requires ydb_icu_version to be explicitly set (see the release notes for your YottaDB release). Note that ICU changed its version numbering system so that the version after 4.8 was 49. As YottaDB retains the old numbering scheme, for ICU versions after 4.8, please set ydb_icu_version using the old scheme, e.g., if your Linux system has ICU version 52, set ydb_icu_version to 5.2.
+- **ydb_icu_version** - this is meaningful only when $ydb_chset is "UTF-8". YottaDB requires libicu version 3.6 or higher. If libicu has been compiled with symbol renaming enabled (as is the case with Ubuntu Linux), YottaDB requires ydb_icu_version to be explicitly set (see the release notes for your YottaDB release). Note that ICU changed its version numbering system so that the version after 4.8 was 49. As YottaDB retains the old numbering scheme, for ICU versions after 4.8, please set ydb_icu_version using the old scheme, e.g., if your Linux system has ICU version 55, set ydb_icu_version to 5.5.
 
 - **ydb_log** - this is where the gtmsecshr process creates log files and all processes that use an installation of YottaDB (from one directory) should have the same value of this environment variable. In conformance with the `Filesystem Hierarchy Standard <http://www.pathname.com/fhs/>`_ /var/log/yottadb/$ydb_rel is suggested (unless the same version of YottaDB is installed in multiple directories).
 
@@ -2630,7 +2630,7 @@ This exercise uses two sessions, one with a mumps process in UTF-8 mode and the 
    export ydb_routines="$HOME/utf8demo* $ydb_dist/libyottadbutil.so"
    export ydb_chset=UTF-8
    export LC_CTYPE=en_US.utf8 # or other UTF-8 locale
-   export ydb_icu_version=5.2 # or other version that you are using
+   export ydb_icu_version=5.5 # or other version that you are using
    export ydb_prompt="UTF8>"
    mkdir -p $ydb_tmp
    alias mumps=$ydb_dist/mumps
@@ -2640,7 +2640,7 @@ This exercise uses two sessions, one with a mumps process in UTF-8 mode and the 
 Create a global directory and database file, as you did before. Only now, do this in the UTF-8 session to so that you can see that the operation of the GDE utility program is the same.
 
 .. parsed-literal::
-   yottadbuser\@yottadbworkshop:~/utf8demo$ source ydbenv_UTF8
+   yottadbuser\@yottadbworkshop:~/utf8demo$ source ydbenv_utf8
    yottadbuser\@yottadbworkshop:~/utf8demo$ mumps -run GDE
    %GDE-I-GDUSEDEFS, Using defaults for Global Directory 
            /home/yottadbuser/utf8demo/yottadb.gld
@@ -3521,7 +3521,7 @@ Now run the dev environment and notice the values of the environment variables. 
    ydb_log=/tmp/yottadb/r110
    ydb_retention=42
    ydb_rel=110
-   ydb_icu_version=5.2
+   ydb_icu_version=5.5
    ydb_gbldir=/home/yottadbuser/dev/r110/g/yottadb.gld
    ydb_routines=/home/yottadbuser/dev/r110/o*(/home/yottadbuser/dev/r110/p /home/yottadbuser/dev/r110/r /home/yottadbuser/dev/p /home/yottadbuser/dev/r) /home/yottadbuser/dev/parent/r110/o*(/home/yottadbuser/dev/parent/r110/p /home/yottadbuser/dev/parent/r110/r /home/yottadbuser/dev/parent/p /home/yottadbuser/dev/parent/r) /home/yottadbuser/dev/r110/ydb/libyottadbutil.so
    gtmdir=/home/yottadbuser/dev/parent
