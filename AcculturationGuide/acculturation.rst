@@ -3047,7 +3047,7 @@ VistA is written to be portable across different MUMPS implementations. This mea
 
 .. parsed-literal::
    yottadbuser\@yottadbworkshop:~$ cd VistA/o
-   yottadbuser\@yottadbworkshop:~/VistA/o$ find ../r -name \*.m -print -exec $ydb_dist/mumps {} \;
+   yottadbuser\@yottadbworkshop:~/VistA/o$ find ../r -name "\*.m" -print -exec $ydb_dist/mumps {} \\;
 
    …
 
