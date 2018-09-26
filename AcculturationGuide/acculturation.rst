@@ -3111,7 +3111,7 @@ Fixing the above (starting with the environment file, since it points to the glo
 
 .. parsed-literal::
    yottadbuser@yottadbworkshop:~$ mv VistA/ydbenv VistA/r122/
-   yottadbuser@yottadbworkshop:~$ vim VistA/r1.22/ydbenv ;  cat VistA/r1.22/ydbenv
+   yottadbuser@yottadbworkshop:~$ vim VistA/r122/ydbenv ;  cat VistA/r122/ydbenv
    export gtmdir=$HOME/VistA
    export ydb_rel=r122
    export ydb_dist=/usr/local/lib/yottadb/$ydb_rel
@@ -3172,7 +3172,7 @@ Now re-enable journaling so that the database and journal pointers are correct. 
 .. parsed-literal::
    yottadbuser\@yottadbworkshop:~$ rm /home/yottadbuser/VistA/r122/g/yottadb.mjl
    yottadbuser\@yottadbworkshop:~$ mupip set -journal="enable,on,before,file=$gtmdir/$ydb_rel/g/yottadb.mjl" -region DEFAULT
-   %YDB-I-JNLCREATE, Journal file /home/yottadbuser/VistA/r1.22/g/yottadb.mjl created for region DEFAULT with BEFORE_IMAGES
+   %YDB-I-JNLCREATE, Journal file /home/yottadbuser/VistA/r122/g/yottadb.mjl created for region DEFAULT with BEFORE_IMAGES
    %YDB-W-JNLBUFFREGUPD, Journal file buffer size for region DEFAULT has been adjusted from 2308 to 2312.
    %YDB-I-JNLSTATE, Journaling state for region DEFAULT is now ON
    yottadbuser@yottadbworkshop:~$
@@ -3197,6 +3197,7 @@ We can add additional directories for other versions of YottaDB. e.g.,
 .. parsed-literal::
    yottadbuser@yottadbworkshop:~$ mkdir -p VistA/r110/{g,o}
    yottadbuser@yottadbworkshop:~$ tree -d VistA
+   
    VistA
    ├── r
    ├── r122
@@ -3218,6 +3219,7 @@ In general, program source code is independent of the YottaDB version. On occasi
 .. parsed-literal::
    yottadbuser\@yottadbworkshop:~$ for i in VistA/r1* ; do mkdir $i/r ; done
    yottadbuser\@yottadbworkshop:~$ tree -d VistA/
+   
    VistA
    ├── r
    ├── r122
@@ -3230,8 +3232,8 @@ In general, program source code is independent of the YottaDB version. On occasi
        └── r
 
     9 directories
-    yottadbuser\@yottadbworkshop:~$ vim VistA/r122/env
-    yottadbuser\@yottadbworkshop:~$ cat VistA/r122/env
+    yottadbuser\@yottadbworkshop:~$ vim VistA/r122/ydbenv
+    yottadbuser\@yottadbworkshop:~$ cat VistA/r122/ydbenv
     export gtmdir=$HOME/VistA
     export ydb_rel=r122
     export ydb_dist=/usr/local/lib/yottadb/$ydb_rel
@@ -3259,7 +3261,8 @@ Installations of large applications often have local or modifications. In such c
 .. parsed-literal::
    yottadbuser\@yottadbworkshop:~$ for i in VistA/r1* ; do mkdir $i/p ; done
    yottadbuser\@yottadbworkshop:~$ mkdir $gtmdir/p
-   yottadbuser\@yottadbworkshop:~$ tree -d VistA\
+   yottadbuser\@yottadbworkshop:~$ tree -d VistA
+   
    VistA
    ├── p
    ├── r
@@ -3275,7 +3278,7 @@ Installations of large applications often have local or modifications. In such c
        └── r
 
     12 directories
-    yottadbuser\@yottadbworkshop:~$ vim VistA/r122/ydbenv ;  cat VistA/r1.22/ydbenv
+    yottadbuser\@yottadbworkshop:~$ vim VistA/r122/ydbenv ;  cat VistA/r122/ydbenv
     export gtmdir=$HOME/VistA
     export ydb_rel=r122
     export ydb_dist=/usr/local/lib/yottadb/$ydb_rel
@@ -3313,7 +3316,7 @@ Then compile it with the object files in the VistA/r122/o directory
    yottadbuser\@yottadbworkshop:~/VistA/r122/o$ mumps ../../p/\*.m
    yottadbuser\@yottadbworkshop:~/VistA/r122/o$
 
-Now, you can run VistA with the local modifications. In this case, one of the modifications is a fix to a minor bug in VistA: it treats spaces separating source directories in a parenthesized list as part of the directory name, rather than as a separator. With the change, when you run a function - for example, to apply a patch - it correctly puts the new routine in the first source directory even if it is within a parenthesized list of directories. In this example, you will run the ^ZTMGRTSET function. Notice that the VistA/r1.10/p directory is initially empty, but has some tens of files afterwards.
+Now, you can run VistA with the local modifications. In this case, one of the modifications is a fix to a minor bug in VistA: it treats spaces separating source directories in a parenthesized list as part of the directory name, rather than as a separator. With the change, when you run a function - for example, to apply a patch - it correctly puts the new routine in the first source directory even if it is within a parenthesized list of directories. In this example, you will run the ^ZTMGRTSET function. Notice that the VistA/r110/p directory is initially empty, but has some tens of files afterwards.
 
 .. parsed-literal::
    yottadbuser\@yottadbworkshop:~$ ls -l VistA/r110/p
@@ -3467,7 +3470,7 @@ Starting with a clean environment (no ydb* environment variables defined), creat
    drwxrwxr-x 2 yottadbuser yottadbuser    1 2010-09-14 17:33 p
    lrwxrwxrwx 1 yottadbuser yottadbuser   19 2010-09-14 17:33 parent -> /home/yottadbuser/VistA
    drwxrwxr-x 2 yottadbuser yottadbuser    1 2010-09-14 17:33 r
-   drwxrwxr-x 7 yottadbuser yottadbuser   88 2010-09-14 17:33 V6.2-000_x86_64
+   drwxrwxr-x 7 yottadbuser yottadbuser   88 2010-09-14 17:33 r110
 
    dev/p:
    total 0
@@ -3510,10 +3513,10 @@ Now run the dev environment and notice the values of the environment variables. 
 
 .. parsed-literal::
 
-   yottadbuser\@yottadbworkshop:~$ dev/r1.10/run
+   yottadbuser\@yottadbworkshop:~$ dev/r110/run
 
    YDB>write $zgbldir
-   /home/yottadbuser/dev/r1.10/g/yottadb.gld
+   /home/yottadbuser/dev/r110/g/yottadb.gld
    YDB>write $zroutines
    /home/yottadbuser/dev/r110/o(/home/yottadbuser/dev/r110/p /home/yottadbuser/dev/r110/r /home/yottadbuser/dev/p /home/yottadbuser/dev/r) /home/yottadbuser/dev/parent/r110/o(/home/yottadbuser/dev/parent/r110/p /home/yottadbuser/dev/parent/r110/r /home/yottadbuser/dev/parent/p /home/yottadbuser/dev/parent/r) /home/yottadbuser/dev/r110/ydb/libyottadbutil.so
    YDB>zsystem "env | grep ^ydb"
