@@ -3081,14 +3081,14 @@ YottaDB object files are specific to each release of YottaDB – so r1.22 cannot
 By creating another layer in the directory structure, the same VistA routines can be made to work in multiple YottaDB releases, for example, if we had:
 
 .. parsed-literal::
-   yottadbuser@yottadbworkshop:~$ mkdir VistA/r1.22
+   yottadbuser@yottadbworkshop:~$ mkdir VistA/r122
    yottadbuser@yottadbworkshop:~$ mupip set -journal=disable -region DEFAULT
    %YDB-I-JNLSTATE, Journaling state for region DEFAULT is now DISABLED
-   yottadbuser@yottadbworkshop:~$ mv VistA/{g,o} VistA/r1.22/
+   yottadbuser@yottadbworkshop:~$ mv VistA/{g,o} VistA/r122/
    yottadbuser@yottadbworkshop:~$ tree -d VistA/
    VistA/
    ├── r
-   └── r1.22
+   └── r122
         ├── g
         └── o
 
@@ -3110,10 +3110,10 @@ Notice that we simply moved the object, journal, global directory and database f
 Fixing the above (starting with the environment file, since it points to the global directory, and then the global directory, since it points to the database file):
 
 .. parsed-literal::
-   yottadbuser@yottadbworkshop:~$ mv VistA/ydbenv VistA/r1.22/
+   yottadbuser@yottadbworkshop:~$ mv VistA/ydbenv VistA/r122/
    yottadbuser@yottadbworkshop:~$ vim VistA/r1.22/ydbenv ;  cat VistA/r1.22/ydbenv
    export gtmdir=$HOME/VistA
-   export ydb_rel=r1.22_x86_64
+   export ydb_rel=r122
    export ydb_dist=/usr/local/lib/yottadb/$ydb_rel
    export ydb_gbldir=$gtmdir/$ydb_rel/g/yottadb.gld
    export ydb_log=/tmp/yottadb/$ydb_rel
@@ -3129,10 +3129,10 @@ Fixing the above (starting with the environment file, since it points to the glo
 Notice that since the YottaDB version occurs in multiple locations, it has been abstracted to the environment variable $ydb_rel. Also, /home/yottadbuser/VistA can be abstracted into an environment variable $gtmdir. By modifying the global directory to use the environment variables, the global directory becomes more portable.
 
 .. parsed-literal::
-   yottadbuser\@yottadbworkshop:~$ source VistA/r1.22/ydbenv
+   yottadbuser\@yottadbworkshop:~$ source VistA/r122/ydbenv
    yottadbuser\@yottadbworkshop:~$ mumps -run GDE
    %GDE-I-LOADGD, Loading Global Directory file
-           /home/yottadbuser/VistA/r1.22/g/yottadb.gld
+           /home/yottadbuser/VistA/r122/g/yottadb.gld
    %GDE-I-VERIFY, Verification OK
    
    GDE> change -segment DEFAULT -file=$gtmdir/$ydb_rel/g/yottadb.dat
@@ -3164,13 +3164,13 @@ Notice that since the YottaDB version occurs in multiple locations, it has been 
    %GDE-I-VERIFY, Verification OK
 
    %GDE-I-GDUPDATE, Updating Global Directory file 
-           /home/yottadbuser/VistA/r1.22/g/yottadb.gld
+           /home/yottadbuser/VistA/r122/g/yottadb.gld
    yottadbuser\@yottadbworkshop:~$
 
 Now re-enable journaling so that the database and journal pointers are correct. You will need to delete the prior journal file, because the database file does not have a pointer to it, and YottaDB will refuse to create a new journal file where a file already exists that is not pointed to by the database file.
 
 .. parsed-literal::
-   yottadbuser\@yottadbworkshop:~$ rm /home/yottadbuser/VistA/r1.22/g/yottadb.mjl
+   yottadbuser\@yottadbworkshop:~$ rm /home/yottadbuser/VistA/r122/g/yottadb.mjl
    yottadbuser\@yottadbworkshop:~$ mupip set -journal="enable,on,before,file=$gtmdir/$ydb_rel/g/yottadb.mjl" -region DEFAULT
    %YDB-I-JNLCREATE, Journal file /home/yottadbuser/VistA/r1.22/g/yottadb.mjl created for region DEFAULT with BEFORE_IMAGES
    %YDB-W-JNLBUFFREGUPD, Journal file buffer size for region DEFAULT has been adjusted from 2308 to 2312.
@@ -3195,14 +3195,14 @@ And now VistA is again ready for use with the new directory structure:
 We can add additional directories for other versions of YottaDB. e.g.,
 
 .. parsed-literal::
-   yottadbuser@yottadbworkshop:~$ mkdir -p VistA/r1.10/{g,o}
+   yottadbuser@yottadbworkshop:~$ mkdir -p VistA/r110/{g,o}
    yottadbuser@yottadbworkshop:~$ tree -d VistA
    VistA
    ├── r
-   ├── r1.22
+   ├── r122
    │   ├── g
    │   └── o
-   └── r1.10
+   └── r110
        ├── g
        └── o
 
@@ -3220,20 +3220,20 @@ In general, program source code is independent of the YottaDB version. On occasi
    yottadbuser\@yottadbworkshop:~$ tree -d VistA/
    VistA
    ├── r
-   ├── r1.22
+   ├── r122
    │   ├── g
    │   ├── o
    │   └── r
-   └── r1.10
+   └── r110
        ├── g
        ├── o
        └── r
 
     9 directories
-    yottadbuser\@yottadbworkshop:~$ vim VistA/r1.22/env
-    yottadbuser\@yottadbworkshop:~$ cat VistA/r1.22/env
+    yottadbuser\@yottadbworkshop:~$ vim VistA/r122/env
+    yottadbuser\@yottadbworkshop:~$ cat VistA/r122/env
     export gtmdir=$HOME/VistA
-    export ydb_rel=r1.22_x86_64
+    export ydb_rel=r122
     export ydb_dist=/usr/local/lib/yottadb/$ydb_rel
     export ydb_gbldir=$gtmdir/$ydb_rel/g/yottadb.gld
     export ydb_log=/tmp/yottadb/$ydb_rel
@@ -3244,11 +3244,11 @@ In general, program source code is independent of the YottaDB version. On occasi
     mkdir -p $ydb_tmp
     alias mumps=$ydb_dist/mumps
     alias mupip=$ydb_dist/mupip
-    yottadbuser\@yottadbworkshop:~$ source VistA/r1.22/ydbenv
+    yottadbuser\@yottadbworkshop:~$ source VistA/r122/ydbenv
     yottadbuser\@yottadbworkshop:~$ mumps -dir
 
     YDB>write $zroutines
-    /home/yottadbuser/VistA/r1.22_x86_64/o*(/home/yottadbuser/VistA/r1.22_x86_64/r /home/yottadbuser/VistA/r) /usr/local/lib/yottadb/r1.22_x86_64/libyottadbutil.so
+    /home/yottadbuser/VistA/r122_x86_64/o*(/home/yottadbuser/VistA/r1.22_x86_64/r /home/yottadbuser/VistA/r) /usr/local/lib/yottadb/r1.22_x86_64/libyottadbutil.so
     YDB>halt
     yottadbuser\@yottadbworkshop:~$
 
@@ -3263,21 +3263,21 @@ Installations of large applications often have local or modifications. In such c
    VistA
    ├── p
    ├── r
-   ├── r1.22
+   ├── r122
    │   ├── g
    │   ├── o
    │   ├── p
    │   └── r
-   └── r1.10
+   └── r110
        ├── g
        ├── o
        ├── p
        └── r
 
     12 directories
-    yottadbuser\@yottadbworkshop:~$ vim VistA/r1.22/ydbenv ;  cat VistA/r1.22/ydbenv
+    yottadbuser\@yottadbworkshop:~$ vim VistA/r122/ydbenv ;  cat VistA/r1.22/ydbenv
     export gtmdir=$HOME/VistA
-    export ydb_rel=r1.22_x86_64
+    export ydb_rel=r122
     export ydb_dist=/usr/local/lib/yottadb/$ydb_rel
     export ydb_gbldir=$gtmdir/$ydb_rel/g/yottadb.gld
     export ydb_log=/tmp/yottadb/$ydb_rel
@@ -3306,17 +3306,17 @@ Now you can look at this in operation by applying some modifications to VistA th
    inflating: VistA/p/ZTMGRSET.m 
    yottadbuser@yottadbworkshop:~$
 
-Then compile it with the object files in the VistA/r1.22/o directory
+Then compile it with the object files in the VistA/r122/o directory
 
 .. parsed-literal::
-   yottadbuser\@yottadbworkshop:~$ cd VistA/r1.22/o
-   yottadbuser\@yottadbworkshop:~/VistA/r1.22/o$ mumps ../../p/\*.m
-   yottadbuser\@yottadbworkshop:~/VistA/r1.22/o$
+   yottadbuser\@yottadbworkshop:~$ cd VistA/r122/o
+   yottadbuser\@yottadbworkshop:~/VistA/r122/o$ mumps ../../p/\*.m
+   yottadbuser\@yottadbworkshop:~/VistA/r122/o$
 
 Now, you can run VistA with the local modifications. In this case, one of the modifications is a fix to a minor bug in VistA: it treats spaces separating source directories in a parenthesized list as part of the directory name, rather than as a separator. With the change, when you run a function - for example, to apply a patch - it correctly puts the new routine in the first source directory even if it is within a parenthesized list of directories. In this example, you will run the ^ZTMGRTSET function. Notice that the VistA/r1.10/p directory is initially empty, but has some tens of files afterwards.
 
 .. parsed-literal::
-   yottadbuser\@yottadbworkshop:~$ ls -l VistA/r1.10/p
+   yottadbuser\@yottadbworkshop:~$ ls -l VistA/r110/p
    total 0
    yottadbuser\@yottadbworkshop:~$ mumps -dir
 
@@ -3416,7 +3416,7 @@ Now, you can run VistA with the local modifications. In this case, one of the mo
    Now, I will check your % globals...........
    ALL DONE
    YDB>halt
-   yottadbuser\@yottadbworkshop:~$ ls -l VistA/r1.10/p|wc
+   yottadbuser\@yottadbworkshop:~$ ls -l VistA/r110/p|wc
         57     506    3132
    yottadbuser\@yottadbworkshop:~$
 
@@ -3433,16 +3433,16 @@ Delete the r1.22 subdirectory, and obtain the files `inc <https://gitlab.com/Yot
    -rwxr-xr-x 1 yottadbuser yottadbuser   4416 Jan 16 13:20 install
    drwxrwxr-x 2 yottadbuser yottadbuser    114 Jan 15 17:54 p
    drwxr-x--- 2 yottadbuser yottadbuser 606208 Feb  6  2009 r
-   drwxrwxr-x 6 yottadbuser yottadbuser    108 Jan 16 13:20 r1.10
+   drwxrwxr-x 6 yottadbuser yottadbuser    108 Jan 16 13:20 r110
    yottadbuser@yottadbworkshop:~$
 
-Similarly, to VistA/r1.10 copy the files wvehrstop, wvehrstart, run, newjnls and ydbenv (yes, the latter overwrites the ydbenv file you already have there). Make wvehrstop, wvehrstart, run and newjnls executable. Also, replace the env in VistA/r1.10 with the new env file. Create a symbolic link called ydb to /usr/local/lib/yottadb/r1.10.
+Similarly, to VistA/r110 copy the files wvehrstop, wvehrstart, run, newjnls and ydbenv (yes, the latter overwrites the ydbenv file you already have there). Make wvehrstop, wvehrstart, run and newjnls executable. Also, replace the env in VistA/r110 with the new env file. Create a symbolic link called ydb to /usr/local/lib/yottadb/r110.
 
 .. parsed-literal::
-   yottadbuser@yottadbworkshop:~$ ls -l VistA/r1.10/
+   yottadbuser@yottadbworkshop:~$ ls -l VistA/r110/
    total 896
    drwxrwxr-x 2 yottadbuser yottadbuser     48 Jan 15 16:47 g
-   lrwxrwxrwx 1 yottadbuser yottadbuser     32 Jan 16 13:24 ydb -> /usr/local/lib/yottadb/r1.10
+   lrwxrwxrwx 1 yottadbuser yottadbuser     32 Jan 16 13:24 ydb -> /usr/local/lib/yottadb/r110
    -rw-rw-r-- 1 yottadbuser yottadbuser    735 Jan 16 13:20 ydbenv
    -rwxr-xr-x 1 yottadbuser yottadbuser    181 Jan 16 13:20 newjnls
    drwxrwxr-x 2 yottadbuser yottadbuser 610304 Jan 16 11:57 o
@@ -3479,7 +3479,7 @@ Starting with a clean environment (no ydb* environment variables defined), creat
    total 20
    -r--r--r-- 1 yottadbuser yottadbuser 731 2010-09-14 17:33 env
    drwxrwxr-x 2 yottadbuser yottadbuser   8 2010-09-14 17:33 g
-   lrwxrwxrwx 1 yottadbuser yottadbuser  36 2010-09-14 17:33 ydb -> /home/yottadbuser/VistA/r1.10/ydb
+   lrwxrwxrwx 1 yottadbuser yottadbuser  36 2010-09-14 17:33 ydb -> /home/yottadbuser/VistA/r110/ydb
    -r-xr-xr-x 1 yottadbuser yottadbuser 181 2010-09-14 17:33 newjnls
    drwxrwxr-x 2 yottadbuser yottadbuser   1 2010-09-14 17:33 o
    drwxrwxr-x 2 yottadbuser yottadbuser   1 2010-09-14 17:33 p
