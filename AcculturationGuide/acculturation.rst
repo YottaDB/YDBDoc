@@ -55,7 +55,7 @@ With the exception of Structured System Variable Names (SSVNs), YottaDB mostly i
 
 Despite the fact that the dialect of M implemented by YottaDB has much in common with other M implementations, operationally, YottaDB is unlike any other M implementation.
 
-This Acculturation Workshop is largely based on YottaDB r1.20, but any more recent version of YottaDB should also work well.
+This Acculturation Workshop is largely based on YottaDB r1.22, but any more recent version of YottaDB should also work well.
 
 ---------
 Packaging
@@ -191,10 +191,10 @@ Run YottaDB
 
 **Default Environment**
 
-YottaDB needs several environment variables to be set up. YottaDB provides a script that sets up reasonable defaults and allows you to start using YottaDB immediately. When you set up environments in YottaDB, you can set up your own scripting, but the default is a good place to start. You can source the ydb_env_set file in the directory in which you have installed YottaDB (e.g, /usr/local/lib/yottadb/r120/ydb_env_set) to set up reasonable defaults or simply execute the script ydb to execute YottaDB. A default environment is created only if it does not exist already.
+YottaDB needs several environment variables to be set up. YottaDB provides a script that sets up reasonable defaults and allows you to start using YottaDB immediately. When you set up environments in YottaDB, you can set up your own scripting, but the default is a good place to start. You can source the ydb_env_set file in the directory in which you have installed YottaDB (e.g, /usr/local/lib/yottadb/r122/ydb_env_set) to set up reasonable defaults or simply execute the script ydb to execute YottaDB. A default environment is created only if it does not exist already.
 
 .. parsed-literal::
-   yottadbuser@yottadbworkshop:~$ source /usr/local/lib/yottadb/r120/ydb_env_set
+   yottadbuser@yottadbworkshop:~$ source /usr/local/lib/yottadb/r122/ydb_env_set
 
 Or you can run the script that runs YottaDB as follows:
 
@@ -225,15 +225,15 @@ The operation of YottaDB is controlled by a number of environment variables. In 
 .. parsed-literal::
    yottadbuser@yottadbworkshop:~$ env | grep ^ydb
    ydb_retention=42
-   ydb_log=/tmp/yottadb/r1.20_x86_64
-   ydb_gbldir=/home/yottadbuser/.yottadb/r1.20_x86_64/g/yottadb.gld
+   ydb_log=/tmp/yottadb/r1.22_x86_64
+   ydb_gbldir=/home/yottadbuser/.yottadb/r1.22_x86_64/g/yottadb.gld
    ydb_etrap=Write:(0=$STACK) "Error occurred: ",$ZStatus,!
    gtmdir=/home/yottadbuser/.yottadb
-   ydb_rel=r1.20_x86_64
-   ydb_routines=/home/yottadbuser/.yottadb/r1.20_x86_64/o*(/home/yottadbuser/.yottadb/r1.20_x86_64/r /home/yottadbuser/.yottadb/r) /usr/local/lib/yottadb/r1.20_x86_64/libyottadbutil.so
-   ydb_repl_instance=/home/yottadbuser/.yottadb/r1.20_x86_64/g/yottadb.repl
-   ydb_tmp=/tmp/yottadb/r1.20_x86_64
-   ydb_dist=/usr/local/lib/yottadb/r1.20_x86_64/
+   ydb_rel=r1.22_x86_64
+   ydb_routines=/home/yottadbuser/.yottadb/r1.22_x86_64/o*(/home/yottadbuser/.yottadb/r1.22_x86_64/r /home/yottadbuser/.yottadb/r) /usr/local/lib/yottadb/r1.22_x86_64/libyottadbutil.so
+   ydb_repl_instance=/home/yottadbuser/.yottadb/r1.22_x86_64/g/yottadb.repl
+   ydb_tmp=/tmp/yottadb/r1.22_x86_64
+   ydb_dist=/usr/local/lib/yottadb/r1.22_x86_64/
    yottadbuser@yottadbworkshop:~$ 
 
 YottaDB databases can be configured so that they can be recovered after a system crash. Simulate a crash by either clicking on the “X” in the top right corner of your virtual machine console window to instantly “power down” your virtual machine, or, if you started it headless, perform a hard power-down using a command on the host (in the case of virtualization using qemu/kvm on Linux, a kill -9 of the virtual machine process). Then reboot the virtual machine, run ydb and use a zwrite ^Animal command to confirm that the data in the database is still intact.
@@ -244,7 +244,7 @@ The tree program shows the default environment YottaDB creates in your home dire
    yottadbuser@yottadbworkshop:~$ tree .yottadb/
    .yottadb/
    ├── r
-   └── r1.20_x86_64
+   └── r1.22_x86_64
        ├── g
        │ ├── yottadb.dat
        │ ├── yottadb.gld
@@ -266,9 +266,9 @@ Note that you may have to install the program 'tree' before running the above co
 With YottaDB, you can write applications that implement international character sets using Unicode or ISO/IEC-10646 (the two standards track each other). Connect to the virtual machine with your terminal emulator configured to support the UTF-8 character set. Execute the following commands (the non-printable characters may look different on your session from the screen here, depending on how your terminal emulator renders them):
 
 .. parsed-literal::
-   yottadbuser@yottadbworkshop:~$ source /usr/local/lib/yottadb/r120/ydb_env_unset
+   yottadbuser@yottadbworkshop:~$ source /usr/local/lib/yottadb/r122/ydb_env_unset
    yottadbuser@yottadbworkshop:~$ export ydb_chset=UTF-8 LC_CTYPE=en_US.utf8
-   yottadbuser@yottadbworkshop:~$ source /usr/local/lib/yottadb/r120/ydb_env_set
+   yottadbuser@yottadbworkshop:~$ source /usr/local/lib/yottadb/r122/ydb_env_set
    yottadbuser@yottadbworkshop:~$ ydb
    YDB>write $zchset
    UTF-8
@@ -298,12 +298,12 @@ To use YottaDB, at a minimum you need:
 
 YottaDB user documentation is organized into Manuals and Release Notes. Current YottaDB documentation is available on the `YottaDB Documentation page <https://yottadb.com/resources/documentation/>`_.
 
-- Each software release has accompanying Release Notes to document changes between that release and its immediate predecessor, as well as release-specific information such as supported platforms. While a software release is frozen for all time, e.g., there will never be another YottaDB r1.20, release notes may be updated from time to time to correct and clarify the information within.
+- Each software release has accompanying Release Notes to document changes between that release and its immediate predecessor, as well as release-specific information such as supported platforms. While a software release is frozen for all time, e.g., there will never be another YottaDB r1.22, release notes may be updated from time to time to correct and clarify the information within.
 - Manuals are published periodically. The content within manuals is updated frequently, reflecting information that is current as of the latest software release.
 
 **Routines in the File System**
 
-Routines in YottaDB are simply files in the file system; they do not reside in databases. You can edit routines from the YDB> prompt. Start ydb and at the YDB> prompt, type zedit "greeting" and hit ENTER. This starts the vi editor editing the source routine for ^greeting, /home/yottadbuser/.yottadb/r1.20_x86_64/r/greeting.m. Use the five key-sequence ESCAPE:q!ENTER to exit vi without changing the file.
+Routines in YottaDB are simply files in the file system; they do not reside in databases. You can edit routines from the YDB> prompt. Start ydb and at the YDB> prompt, type zedit "greeting" and hit ENTER. This starts the vi editor editing the source routine for ^greeting, /home/yottadbuser/.yottadb/r1.22_x86_64/r/greeting.m. Use the five key-sequence ESCAPE:q!ENTER to exit vi without changing the file.
 
 .. note::
   although vi always puts a newline at the end of your file; other editors may not. A YottaDB program file should always end with a newline.
@@ -367,7 +367,7 @@ Within YottaDB, use zedit "greeting" to start the editor. Create a simple progra
 .. parsed-literal::
    YDB>do SILENT^%RSEL("greeting") zwrite %ZR
    %ZR=1
-   %ZR("greeting")="/home/yottadbuser/.yottadb/r1.20_x86_64/r/"
+   %ZR("greeting")="/home/yottadbuser/.yottadb/r1.22_x86_64/r/"
 
    YDB>do SILENT^%RSEL("greeting","OBJ") zwrite %ZR
    %ZR=0
@@ -387,7 +387,7 @@ Now you now also have an object file. YottaDB dynamically, and automatically, co
 .. parsed-literal::
    YDB>do SILENT^%RSEL("greeting","OBJ") zwrite %ZR
    %ZR=1
-   %ZR("greeting")="/home/yottadbuser/.yottadb/r1.20_x86_64/o/"
+   %ZR("greeting")="/home/yottadbuser/.yottadb/r1.22_x86_64/o/"
 
    YDB>
 
@@ -398,8 +398,8 @@ Let's also get the time stamps of the files; notice that the source code file is
 
 .. parsed-literal::
    YDB>zsystem "find .yottadb -name greeting.[mo] -exec ls -l {} \;"
-   -rw-rw-r-- 1 yottadbuser yottadbuser 1048 Jan 22 10:16 .yottadb/r1.20_x86_64/o/greeting.o
-   -rw-rw-r-- 1 yottadbuser yottadbuser 35 Jan 22 10:14 .yottadb/r1.20_x86_64/r/greeting.m
+   -rw-rw-r-- 1 yottadbuser yottadbuser 1048 Jan 22 10:16 .yottadb/r1.22_x86_64/o/greeting.o
+   -rw-rw-r-- 1 yottadbuser yottadbuser 35 Jan 22 10:14 .yottadb/r1.22_x86_64/r/greeting.m
 
    YDB>
 
@@ -424,8 +424,8 @@ Execute zLink "greeting" which tells YottaDB to re-link greeting even if it alre
    Goodbye!
 
    YDB>zsystem "find .yottadb -name greeting.[mo] -exec ls -l {} \;"
-   -rw-rw-r-- 1 yottadbuser yottadbuser 1048 Jan 22 10:20 .yottadb/r1.20_x86_64/o/greeting.o
-   -rw-rw-r-- 1 yottadbuser yottadbuser 35 Jan 22 10:20 .yottadb/r1.20_x86_64/r/greeting.m
+   -rw-rw-r-- 1 yottadbuser yottadbuser 1048 Jan 22 10:20 .yottadb/r1.22_x86_64/o/greeting.o
+   -rw-rw-r-- 1 yottadbuser yottadbuser 35 Jan 22 10:20 .yottadb/r1.22_x86_64/r/greeting.m
 
    YDB>
 
@@ -436,7 +436,7 @@ The $zroutines ISV tells YottaDB where to find routines:
 
 .. parsed-literal::
    YDB>write $zroutines
-   /home/yottadbuser/.yottadb/r1.20_x86_64/o*(/home/yottadbuser/.yottadb/r1.20_x86_64/r /home/yottadbuser/.yottadb/r) usr/local/lib/yottadb/r1.20_x86_64/libyottadbutil.so 
+   /home/yottadbuser/.yottadb/r1.22_x86_64/o*(/home/yottadbuser/.yottadb/r1.22_x86_64/r /home/yottadbuser/.yottadb/r) usr/local/lib/yottadb/r1.22_x86_64/libyottadbutil.so 
    YDB>
 
 At process startup, $zroutines is initialized from the environment variable $ydb_routines, but it can be altered from within the YottaDB process.
@@ -445,9 +445,9 @@ At process startup, $zroutines is initialized from the environment variable $ydb
    YDB>set $zroutines=". "_$ztrnlnm("ydb_dist")
 
    YDB>write $zroutines
-   . /usr/local/lib/yottadb/r120
+   . /usr/local/lib/yottadb/r122
    YDB>write $ztrnlnm("ydb_routines")
-   /home/yottadbuser/.yottadb/r1.20_x86_64/o*(/home/yottadbuser/.yottadb/r1.20_x86_64/r /home/yottadbuser/.yottadb/r) /usr/local/lib/yottadb/r1.20_x86_64/libyottadbutil.so
+   /home/yottadbuser/.yottadb/r1.22_x86_64/o*(/home/yottadbuser/.yottadb/r1.22_x86_64/r /home/yottadbuser/.yottadb/r) /usr/local/lib/yottadb/r1.22_x86_64/libyottadbutil.so
    YDB>
 
 The ZEDIT command always puts new routines in the first source directory in the search path. Use it to create a new routine to print the current date and time at the Universal Time Coordinate. After the change to $zroutines above, notice how a newly created program and object file are created in the current directory (.).
@@ -476,7 +476,7 @@ YottaDB also provides a mechanism for processes to indicate that instead of expl
    yottadbuser@yottadbworkshop:~$ ydb
 
    YDB>write $zroutines
-   /home/yottadbuser/.yottadb/r1.20_x86_64/o*(/home/yottadbuser/.yottadb/r1.20_x86_64/r /home/yottadbuser/.yottadb/r) /usr/local/lib/yottadb/r1.20_x86_64/libyottadbutil.so 
+   /home/yottadbuser/.yottadb/r1.22_x86_64/o*(/home/yottadbuser/.yottadb/r1.22_x86_64/r /home/yottadbuser/.yottadb/r) /usr/local/lib/yottadb/r1.22_x86_64/libyottadbutil.so 
 
    YDB>
 
@@ -530,14 +530,14 @@ The ISV $zgbldir points a YottaDB process to the global directory. $zgbldir is i
 
 .. parsed-literal::
    YDB>write $zgbldir
-   /home/yottadbuser/.yottadb/r1.20_x86_64/g/yottadb.gld
+   /home/yottadbuser/.yottadb/r1.22_x86_64/g/yottadb.gld
    YDB>
 
 GDE, the Global Directory Editor, is a program used to manipulate global directories. GDE is itself written in M, and you can invoke it from the shell with "mumps -run GDE" or from inside the direct mode with "do ^GDE".
 
 .. parsed-literal::
    yottadbuser@yottadbworkshop:~$ $ydb_dist/mumps -run GDE
-   %GDE-I-LOADGD, Loading Global Directory file /home/yottadbuser/.yottadb/r1.20_x86_64/g/yottadb.gld
+   %GDE-I-LOADGD, Loading Global Directory file /home/yottadbuser/.yottadb/r1.22_x86_64/g/yottadb.gld
    %GDE-I-VERIFY, Verification OK
 
 
@@ -823,38 +823,38 @@ In an Application Service Provider (ASP) environment, the same application code 
 The majority of routines are shared, with:
 
 - source routines that are independent of the YottaDB version in /opt/bank/yottadb/r,
-- source routines that are dependent on the YottaDB version in /opt/bank/yottadb/r120/r (note that in the typical case, this directory will be empty, but if a release of YottaDB has a new feature that a routine XYZ.m can take advantage of, you would put the new XYZ.m in this directory and leave the old XYZ.m in the previous directory), and
-- object files in /opt/bank/yottadb/r120/o.
+- source routines that are dependent on the YottaDB version in /opt/bank/yottadb/r122/r (note that in the typical case, this directory will be empty, but if a release of YottaDB has a new feature that a routine XYZ.m can take advantage of, you would put the new XYZ.m in this directory and leave the old XYZ.m in the previous directory), and
+- object files in /opt/bank/yottadb/r122/o.
 
-Custom routines for Financial Institution in /var/opt/bank/yottadb/fi/r and /var/opt/bank/yottadb/fi/r120/r with object code in /var/opt/bank/yottadb/fi/r120/o.
+Custom routines for Financial Institution in /var/opt/bank/yottadb/fi/r and /var/opt/bank/yottadb/fi/r122/r with object code in /var/opt/bank/yottadb/fi/r122/o.
 
-Similarly, custom routines for the Credit Bank are in /var/opt/bank/yottadb/cb/r and /var/opt/bank/yottadb/cb/r120/r with object code in /var/opt/bank/yottadb/cb/r120/o.
+Similarly, custom routines for the Credit Bank are in /var/opt/bank/yottadb/cb/r and /var/opt/bank/yottadb/cb/r122/r with object code in /var/opt/bank/yottadb/cb/r122/o.
 
-What should $ydb_routines be for an FI user and what should it be for a CB user? Create a shell script to set ydb_routines to be sourced by an FI user and another to be sourced by a CB user. [The shell scripts can reside in /var/opt/bank/yottadb/cb/r120 and /var/opt/bank/yottadb/fi/r120.]
+What should $ydb_routines be for an FI user and what should it be for a CB user? Create a shell script to set ydb_routines to be sourced by an FI user and another to be sourced by a CB user. [The shell scripts can reside in /var/opt/bank/yottadb/cb/r122 and /var/opt/bank/yottadb/fi/r122.]
 
-The approved Tax Rate is in the global variable ^TXR and is shared by both institutions with read only access to users. The Tax Rate is in the database file /opt/bank/yottadb/r120/g/txr.dat. All other globals are in database files that are specific to FI and CB, in /var/opt/bank/yottadb/fi/r120/g/main.dat and /var/opt/bank/yottadb/cb/r120/g/main.dat.
+The approved Tax Rate is in the global variable ^TXR and is shared by both institutions with read only access to users. The Tax Rate is in the database file /opt/bank/yottadb/r122/g/txr.dat. All other globals are in database files that are specific to FI and CB, in /var/opt/bank/yottadb/fi/r122/g/main.dat and /var/opt/bank/yottadb/cb/r122/g/main.dat.
 
 First, create the directory structure.
 
 .. parsed-literal::
    yottadbuser@yottadbworkshop:~$ sudo mkdir -p /opt/bank/yottadb
    yottadbuser@yottadbworkshop:~$ sudo chown -R yottadbuser.users /opt/bank/yottadb
-   yottadbuser@yottadbworkshop:~$ cd /opt/bank/yottadb ; mkdir -p r r120/r r120/o r120/g
+   yottadbuser@yottadbworkshop:~$ cd /opt/bank/yottadb ; mkdir -p r r122/r r122/o r122/g
    yottadbuser@yottadbworkshop:/opt/bank/yottadb$ sudo mkdir -p /var/opt/bank/yottadb
    yottadbuser@yottadbworkshop:opt/bank/yottadb$ sudo chown -R yottadbuser.users /var/opt/bank/yottadb
-   yottadbuser@yottadbworkshop:opt/bank/yottadb$ cd /var/opt/bank/yottadb ; mkdir -p fi/r fi/r120/r fi/r120/o fi/r120/g
-   yottadbuser@yottadbworkshop:/var/opt/bank/yottadb$ mkdir -p cb/r cb/r120/r cb/r120/o cb/r120/g
+   yottadbuser@yottadbworkshop:opt/bank/yottadb$ cd /var/opt/bank/yottadb ; mkdir -p fi/r fi/r122/r fi/r122/o fi/r122/g
+   yottadbuser@yottadbworkshop:/var/opt/bank/yottadb$ mkdir -p cb/r cb/r122/r cb/r122/o cb/r122/g
    yottadbuser@yottadbworkshop:/var/opt/bank/yottadb$ tree -d
    .
    ├── cb
    │ ├── r
-   │ └── r120
+   │ └── r122
    │     ├── g
    │     ├── o
    │     └── r
    └── fi
     ├── r
-    └── r120
+    └── r122
           ├── g
           ├── o
           └── r
@@ -863,7 +863,7 @@ First, create the directory structure.
 
 What should $ydb_gbldir be for an FI user and what should it be for a CB user? Add these to the command files you created earlier. Create a file of commands to be fed to GDE either with a heredoc or with GDE's @ command that will create the global directories and then create the global directories.
 
-Create the three database files with mupip create (remember that the database file /opt/bank/yotadb/r120/g/txr.dat will be created by the first mupip create, and the second mupip create will only create the institution specific database file.
+Create the three database files with mupip create (remember that the database file /opt/bank/yotadb/r122/g/txr.dat will be created by the first mupip create, and the second mupip create will only create the institution specific database file.
 
 In one environment (fi or cb) , assign values to the global variables ^TXR and ^X. In the other environment, confirm that you are able to read the value of ^TXR (i.e., it is shared), but not the value in ^X (i.e., it is not shared).
 
@@ -889,7 +889,7 @@ Environment Variables
 
 The operation of YottaDB is controlled by a number of environment variables. The most important ones are ydb_dist, ydb_routines and ydb_gbldir, which are discussed above. The file ydb_env_set that is supplied with YottaDB, and which must be sourced rather than executed, attempts to provide reasonable default values. By setting environment variables either before sourcing it or after (the former is preferred, because ydb_env_set can attempt to deal with interactions), you can provide your own values instead of using the defaults.
 
-Review the file /usr/local/lib/yottadb/r120/ydb_env_set to see how the environment variables are set. Study the order in which they are set and see if you can understand why.
+Review the file /usr/local/lib/yottadb/r122/ydb_env_set to see how the environment variables are set. Study the order in which they are set and see if you can understand why.
 
 The following environment variable is explicitly set by ydb_env_set:
 
@@ -947,18 +947,18 @@ Here are the environment variables set by the default ydb_env_set file (which th
 
 .. parsed-literal::
    yottadbuser@yottadbworkshop:~$ env | grep ^ydb # No ydb environment variables defined initially
-   yottadbuser@yottadbworkshop:~$ source /usr/local/lib/yottadb/r120/ydb_env_set
+   yottadbuser@yottadbworkshop:~$ source /usr/local/lib/yottadb/r122/ydb_env_set
    yottadbuser@yottadbworkshop:~$ env | grep ^ydb
    ydb_retention=42
-   ydb_log=/tmp/yottadb/r1.20_x86_64
-   ydb_gbldir=/home/yottadbuser/.yottadb/r1.20_x86_64/g/yottadb.gld
+   ydb_log=/tmp/yottadb/r1.22_x86_64
+   ydb_gbldir=/home/yottadbuser/.yottadb/r1.22_x86_64/g/yottadb.gld
    ydb_etrap=Write:(0=$STACK) "Error occurred: ",$ZStatus,!
    gtmdir=/home/yottadbuser/.yottadb
-   ydb_rel=r1.20_x86_64
-   ydb_routines=/home/yottadbuser/.yottadb/r1.20_x86_64/o*(/home/yottadbuser/.yottadb/r1.20_x86_64/r /home/yottadbuser/.yottadb/r) /usr/local/lib/yottadb/r1.20_x86_64/libyottadbutil.so
-   ydb_repl_instance=/home/yottadbuser/.yottadb/r1.20_x86_64/g/yottadb.repl
-   ydb_tmp=/tmp/yottadb/r1.20_x86_64
-   ydb_dist=/usr/local/lib/yottadb/r120/
+   ydb_rel=r1.22_x86_64
+   ydb_routines=/home/yottadbuser/.yottadb/r1.22_x86_64/o*(/home/yottadbuser/.yottadb/r1.22_x86_64/r /home/yottadbuser/.yottadb/r) /usr/local/lib/yottadb/r1.22_x86_64/libyottadbutil.so
+   ydb_repl_instance=/home/yottadbuser/.yottadb/r1.22_x86_64/g/yottadb.repl
+   ydb_tmp=/tmp/yottadb/r1.22_x86_64
+   ydb_dist=/usr/local/lib/yottadb/r122/
    yottadbuser@yottadbworkshop:~$ 
 
 While ydb_env_set and ydb are good resources when you initially start with YottaDB, once you get to a certain level of expertise, you may prefer to create your own scripting.
@@ -983,11 +983,11 @@ Start with a fresh session to discard environment variables from the last exerci
 Verify that you can read from and write to your default database and change the permissions to make it not accessible to the world, and to make it read-only by others in the group.
 
 .. parsed-literal::
-   yottadbuser@yottadbworkshop:~$ ls -l .yottadb/r1.20_x86_64/g/yottadb.dat
-   -rw-rw-rw- 1 yottadbuser gtmuser 20783616 Jan 22 13:56 .yottadb/r1.20_x86_64/g/yottadb.dat
-   yottadbuser@yottadbworkshop:~$ chmod o-rw,g-w .yottadb/r1.20_x86_64/g/yottadb.dat
-   yottadbuser@yottadbworkshop:~$ ls -l .yottadb/r1.20_x86_64/g/yottadb.dat
-   -rw-r----- 1 yottadbuser gtmuser 20783616 Jan 22 13:56 .yottadb/r1.20_x86_64/g/yottadb.dat
+   yottadbuser@yottadbworkshop:~$ ls -l .yottadb/r1.22_x86_64/g/yottadb.dat
+   -rw-rw-rw- 1 yottadbuser gtmuser 20783616 Jan 22 13:56 .yottadb/r1.22_x86_64/g/yottadb.dat
+   yottadbuser@yottadbworkshop:~$ chmod o-rw,g-w .yottadb/r1.22_x86_64/g/yottadb.dat
+   yottadbuser@yottadbworkshop:~$ ls -l .yottadb/r1.22_x86_64/g/yottadb.dat
+   -rw-r----- 1 yottadbuser gtmuser 20783616 Jan 22 13:56 .yottadb/r1.22_x86_64/g/yottadb.dat
    yottadbuser@yottadbworkshop:~$ ydb
 
    YDB>set ^X=1
@@ -1004,8 +1004,8 @@ Create another user who is also a member of the group. See that the user can rea
    yottadbuser@yottadbworkshop:~$ sudo su - staffuser
    staffuser@yottadbworkshop:~$ pwd
    /home/staffuser
-   staffuser@yottadbworkshop:~$ export ydb_dist=/usr/local/lib/yottadb/r120/
-   staffuser@yottadbworkshop:~$ export ydb_rel=r1.20_x86_64
+   staffuser@yottadbworkshop:~$ export ydb_dist=/usr/local/lib/yottadb/r122/
+   staffuser@yottadbworkshop:~$ export ydb_rel=r1.22_x86_64
    staffuser@yottadbworkshop:~$ export gtmdir=/home/yottadbuser/.yottadb
    staffuser@yottadbworkshop:~$ export ydb_gbldir=$gtmdir/$ydb_rel/g/yottadb.gld
    staffuser@yottadbworkshop:~$ $ydb_dist/mumps -dir
@@ -1014,7 +1014,7 @@ Create another user who is also a member of the group. See that the user can rea
    ^X=1
 
    YDB>set ^X=2
-   %YDB-E-DBPRIVERR, No privilege for attempted update operation for file: /home/yottadbuser/.yottadb/r1.20_x86_64/g/ydb.dat
+   %YDB-E-DBPRIVERR, No privilege for attempted update operation for file: /home/yottadbuser/.yottadb/r1.22_x86_64/g/ydb.dat
 
    YDB>halt
    staffuser@yottadbworkshop:~$ exit
@@ -1049,13 +1049,13 @@ In this exercise, we will crash your virtual machine and then recover the databa
 First, clean out old journal files. Verify that there are no shared memory segments in use. Then go into YottaDB and perform a database operation and verify that there is now a new shared memory segment.
 
 .. parsed-literal::
-   yottadbuser@yottadbworkshop:~$ rm -f .yottadb/r1.20_x86_64/g/yottadb.mjl_*
+   yottadbuser@yottadbworkshop:~$ rm -f .yottadb/r1.22_x86_64/g/yottadb.mjl_*
    yottadbuser@yottadbworkshop:~$ ipcs -m
 
    ------ Shared Memory Segments --------
    key        shmid      owner      perms      bytes      nattch     status
 
-   yottadbuser@yottadbworkshop:~$ /usr/local/lib/yottadb/r1.20_x86_64/yottadb
+   yottadbuser@yottadbworkshop:~$ /usr/local/lib/yottadb/r1.22_x86_64/yottadb
 
    YDB>set ^X=$zdate($horolog,"MON DD, YEAR") ; opens database file and creates a shared memory segment
 
@@ -1074,11 +1074,11 @@ First, clean out old journal files. Verify that there are no shared memory segme
 Now kill the virtual machine by clicking on the “X” of the console window, or with a kill -9 of the virtual machine process, and then reboot it. Go back into YottaDB and verify that the data is still there. Instead of running the ydb script (which performs an automatic recovery), run mumps and try to access the database. Note: you should not run the ydb script for this exercise, since it performs a recovery as part of its operation.
 
 .. parsed-literal::
-   yottadbuser@yottadbworkshop:~$ source /usr/local/lib/yottadb/r120/ydb_env_set
+   yottadbuser@yottadbworkshop:~$ source /usr/local/lib/yottadb/r122/ydb_env_set
    yottadbuser@yottadbworkshop:~$ mumps -dir
 
    YDB>zwrite ^X
-   %YDB-E-REQRECOV, Error accessing database /home/yottadbuser/.yottadb/r1.20_x86_64/g/yottadb.dat.  Must be recovered on cluster node yottadbworkshop.
+   %YDB-E-REQRECOV, Error accessing database /home/yottadbuser/.yottadb/r1.22_x86_64/g/yottadb.dat.  Must be recovered on cluster node yottadbworkshop.
    %YDB-I-TEXT, Error with database control shmctl
    %SYSTEM-E-ENO22, Invalid argument
 
@@ -1097,7 +1097,7 @@ Now kill the virtual machine by clicking on the “X” of the console window, o
 
 
    YDB>zsystem "ls -lR $ydb_tmp" ; and no log files from the ydb script
-   /tmp/yottadb/r1.20_x86_64:
+   /tmp/yottadb/r1.22_x86_64:
    total 0
 
   YDB>halt
@@ -1127,7 +1127,7 @@ Now, try the ydb script instead of running the mumps executable directly.
 
 
    YDB>zsystem "ls -lR $ydb_tmp" ; and log files from the commands in the ydb script
-   /tmp/yottadb/r1.20_x86_64:
+   /tmp/yottadb/r1.22_x86_64:
    total 8
    -rw-rw-r-- 1 yottadbuser yottadbuser 617 Jan  22 14:30 yottadbuser_20181201165831UTC_mupip_recover
    -rw-rw-r-- 1 yottadbuser yottadbuser 339 Jan  22 14:30 yottadbuser_20181201165831UTC_mupip_set
@@ -1137,7 +1137,7 @@ Now, try the ydb script instead of running the mumps executable directly.
 How did the recovery happen? The answer is in the ydb script.
 
 .. parsed-literal::
-   yottadbuser\@yottadbworkshop:/usr/local/lib/yottadb/r120$ vim ydb
+   yottadbuser\@yottadbworkshop:/usr/local/lib/yottadb/r122$ vim ydb
    #!/bin/sh
    #################################################################
    #       Copyright 2014-2018 Fidelity National Information       #
@@ -1154,9 +1154,9 @@ How did the recovery happen? The answer is in the ydb script.
    #                                                               #
    #################################################################
 
-   if [ ! -f "/usr/local/lib/yottadb/r120"/ydb_env_set ] ; then echo Cannot find file "/usr/local/lib/yottadb/r120"/ydb_env_set to source
+   if [ ! -f "/usr/local/lib/yottadb/r122"/ydb_env_set ] ; then echo Cannot find file "/usr/local/lib/yottadb/r122"/ydb_env_set to source
    else
-       . "/usr/local/lib/yottadb/r120"/ydb_env_set
+       . "/usr/local/lib/yottadb/r122"/ydb_env_set
        timestamp=`date -u +%Y%m%d%H%M%S`"UTC"
        ( cd `dirname $ydb_gbldir` ; \\
           $ydb_dist/mupip journal -recover -backward "*" 2>$ydb_tmp/"$USER"_$timestamp"_mupip_recover" && \\
@@ -1184,15 +1184,15 @@ The mupip journal recover command performs the recovery. Review the output of th
    %YDB-I-MUJNLSTAT, Initial processing started at Mon Jan  1 11:58:31 2018
    %YDB-I-MUJNLSTAT, Backward processing started at Mon Jan  1 11:58:31 2018
    %YDB-I-MUJNLSTAT, Before image applying started at Mon Jan  1 11:58:31 2018
-   %YDB-I-FILERENAME, File /home/yottadbuser/.yottadb/r1.20_x86_64/g/gtm.mjl is renamed to /home/yottadbuser/.yottadb/r1.20_x86_64/g/yottadb.mjl_2018335115831
+   %YDB-I-FILERENAME, File /home/yottadbuser/.yottadb/r1.22_x86_64/g/gtm.mjl is renamed to /home/yottadbuser/.yottadb/r1.22_x86_64/g/yottadb.mjl_2018335115831
    %YDB-I-MUJNLSTAT, Forward processing started at Mon Jan  1 11:58:32 2018
    %YDB-S-JNLSUCCESS, Show successful
    %YDB-S-JNLSUCCESS, Verify successful
    %YDB-S-JNLSUCCESS, Recover successful
    %YDB-I-MUJNLSTAT, End processing at Mon Jan  1 11:58:32 2018
    yottadbuser@yottadbworkshop:~$ cat $ydb_tmp/yottadbuser_20111107223555UTC_mupip_set 
-   %YDB-I-FILERENAME, File /home/yottadbuser/.yottadb/r1.20_x86_64/g/gtm.mjl is renamed to /home/yottadbuser/.yottadb/r1.20_x86_64/g/yottadb.mjl_2018335115832
-   %YDB-I-JNLCREATE, Journal file /home/yottadbuser/.yottadb/r1.20_x86_64/g/yottadb.mjl created for region DEFAULT with BEFORE_IMAGES
+   %YDB-I-FILERENAME, File /home/yottadbuser/.yottadb/r1.22_x86_64/g/gtm.mjl is renamed to /home/yottadbuser/.yottadb/r1.22_x86_64/g/yottadb.mjl_2018335115832
+   %YDB-I-JNLCREATE, Journal file /home/yottadbuser/.yottadb/r1.22_x86_64/g/yottadb.mjl created for region DEFAULT with BEFORE_IMAGES
    %YDB-I-JNLSTATE, Journaling state for region DEFAULT is now ON
    yottadbuser@yottadbworkshop:~$ 
 
@@ -1210,9 +1210,9 @@ Hints:
 
 - Start with an environment that does not have YottaDB environment variables already defined, e.g., from sourcing the ydb_env_set file. You can always logout and login to get a fresh session
 
-- Create an ydbenv file in the directory to set up the environment variables. You can then source it with a command such as source ./ydbenv to set up the environment. Set up the environment variables yourself and do not source /usr/local/lib/yottadb/r1.20_x86_64/ydb_env_set because it will recover the database when you source it and you will miss the point of the exercise. At a minimum, the env file should specify values for the following environment variables: ydb_dist (set to /usr/local/lib/yottadb/r1.20_x86_64), ydb_gbldir (set to $HOME/exDir/yottadb.gld), ydb_log and ydb_tmp (set to /tmp/yottadb/r1.20_x86_64; make sure it exists), ydb_principal_editing (set to EDITING), ydb_routines (set to "$HOME/exDir* $ydb_dist/libyottadbutil.so"). Make sure the directory /tmp/yottadb/r120 exists by creating it in the ydbenv file with a mkdir -p command. It may be convenient to alias mumps to $ydb_dist/mumps and mupip to $ydb_dist/mupip. [Hint: if you read a little further, you may find a ydbenv file that you can copy and paste into an editor.]
+- Create an ydbenv file in the directory to set up the environment variables. You can then source it with a command such as source ./ydbenv to set up the environment. Set up the environment variables yourself and do not source /usr/local/lib/yottadb/r1.22_x86_64/ydb_env_set because it will recover the database when you source it and you will miss the point of the exercise. At a minimum, the env file should specify values for the following environment variables: ydb_dist (set to /usr/local/lib/yottadb/r1.22_x86_64), ydb_gbldir (set to $HOME/exDir/yottadb.gld), ydb_log and ydb_tmp (set to /tmp/yottadb/r1.22_x86_64; make sure it exists), ydb_principal_editing (set to EDITING), ydb_routines (set to "$HOME/exDir* $ydb_dist/libyottadbutil.so"). Make sure the directory /tmp/yottadb/r122 exists by creating it in the ydbenv file with a mkdir -p command. It may be convenient to alias mumps to $ydb_dist/mumps and mupip to $ydb_dist/mupip. [Hint: if you read a little further, you may find a ydbenv file that you can copy and paste into an editor.]
 
-- In GDE, source the commands in the file /usr/local/lib/yottadb/r120/gdedefaults to set reasonable defaults for the global directory and then change the database file names in the segment and the journal file names in the region to place the database and journal files in /home/yottadbuser/exDir.
+- In GDE, source the commands in the file /usr/local/lib/yottadb/r122/gdedefaults to set reasonable defaults for the global directory and then change the database file names in the segment and the journal file names in the region to place the database and journal files in /home/yottadbuser/exDir.
 
 - Look at the example with mammalogists and carcinologists for commands to set up journaling.
 
@@ -1230,9 +1230,9 @@ Because replication builds on journaling, use the directory exDir created above.
 
 .. parsed-literal::
    yottadbuser@yottadbworkshop:~$ cd exDir ; cat ydbenv
-   export ydb_dist=/usr/local/lib/yottadb/r120
+   export ydb_dist=/usr/local/lib/yottadb/r122
    export ydb_gbldir=$HOME/exDir/gtm.gld
-   export ydb_log=/tmp/yottadb/r120
+   export ydb_log=/tmp/yottadb/r122
    export ydb_tmp=$ydb_log
    export ydb_principal_editing=EDITING
    export ydb_repl_instance=$HOME/exDir/yottadb.repl
@@ -1332,9 +1332,9 @@ On each machine, edit exDir/env in each instance and change the line export ydb_
 
 .. parsed-literal::
    yottadbuser@santiago:~/exDir$ cat ydbenv 
-   export ydb_dist=/usr/local/lib/yottadb/r120
+   export ydb_dist=/usr/local/lib/yottadb/r122
    export ydb_gbldir=$HOME/exDir/yottadb.gld
-   export ydb_log=/tmp/yottadb/r120
+   export ydb_log=/tmp/yottadb/r122
    export ydb_tmp=$ydb_log
    export ydb_principal_editing=EDITING
    export ydb_repl_instance=$HOME/exDir/yottadb.repl
@@ -2293,7 +2293,7 @@ When you are satisfied, terminate the mumps process updating the database:
 
 .. parsed-literal::
    yottadbuser@paris:~/exDir$ ps -ef | grep mumps | grep -v grep
-   yottadbuser   1080   988  0 17:52 pts/0    00:00:02 /usr/local/lib/yottadb/r1.20_x86_64/mumps -run XYZ
+   yottadbuser   1080   988  0 17:52 pts/0    00:00:02 /usr/local/lib/yottadb/r1.22_x86_64/mumps -run XYZ
    yottadbuser@paris:~/exDir$ mupip stop 1080
    STOP issued to process 1080
    yottadbuser@paris:~/exDir$
@@ -2330,9 +2330,9 @@ Create an environment to restore the backup. It may be easiest if you simply use
    yottadbuser\@paris:~/exDir$ cp ydbenv yottadb.gld backup/
    yottadbuser\@paris:~/exDir$ cd backup; vim backup/ydbenv # edit to point to backup directory
    yottadbuser\@paris:~/exDir/backup$ cat ydbenv
-   export ydb_dist=/usr/local/lib/yottadb/r1.20_x86_64/
+   export ydb_dist=/usr/local/lib/yottadb/r1.22_x86_64/
    export ydb_gbldir=$HOME/exDir/backup/yottadb.gld
-   export ydb_log=/tmp/yottadb/r1.20_x86_64
+   export ydb_log=/tmp/yottadb/r1.22_x86_64
    export ydb_tmp=$ydb_log
    export ydb_principal_editing=EDITING
    export ydb_repl_instance=$HOME/exDir/backup/yottadb.repl
@@ -2608,9 +2608,9 @@ This exercise uses two sessions, one with a mumps process in UTF-8 mode and the 
 
 .. parsed-literal::
    yottadbuser@yottadbworkshop:~/utf8demo$ cd utf8demo; vim ydbenv_m ; cat ydbenv_m
-   export ydb_dist=/usr/local/lib/yottadb/r120
+   export ydb_dist=/usr/local/lib/yottadb/r122
    export ydb_gbldir=$HOME/utf8demo/yottadb.gld
-   export ydb_log=/tmp/yottadb/r120
+   export ydb_log=/tmp/yottadb/r122
    export ydb_tmp=$ydb_log
    export ydb_principal_editing=EDITING
    export ydb_repl_instance=$HOME/utf8demo/yottadb.repl
@@ -2620,9 +2620,9 @@ This exercise uses two sessions, one with a mumps process in UTF-8 mode and the 
    alias mumps=$ydb_dist/mumps
    alias mupip=$ydb_dist/mupip
    yottadbuser@yottadbworkshop:~/utf8demo$ cp ydbenv_m ydbenv_utf8 ; vim ydbenv_utf8 ; cat ydbenv_utf8 
-   export ydb_dist=/usr/local/lib/yottadb/r120/utf8
+   export ydb_dist=/usr/local/lib/yottadb/r122/utf8
    export ydb_gbldir=$HOME/utf8demo/yottadb.gld
-   export ydb_log=/tmp/yottadb/r120
+   export ydb_log=/tmp/yottadb/r122
    export ydb_tmp=$ydb_log
    export ydb_principal_editing=EDITING
    export ydb_repl_instance=$HOME/utf8demo/yottadb.repl
@@ -2645,8 +2645,8 @@ Create a global directory and database file, as you did before. Only now, do thi
    %GDE-I-GDUSEDEFS, Using defaults for Global Directory 
            /home/yottadbuser/utf8demo/yottadb.gld
 
-   GDE> @/usr/local/lib/yottadb/r120/utf8/gdedefaults
-   %GDE-I-EXECOM, Executing command file /usr/local/lib/yottadb/r120/utf8/gdedefaults
+   GDE> @/usr/local/lib/yottadb/r122/utf8/gdedefaults
+   %GDE-I-EXECOM, Executing command file /usr/local/lib/yottadb/r122/utf8/gdedefaults
 
    GDE> show -segment
 
@@ -2892,9 +2892,9 @@ Create a VistA directory. Use a g subdirectory for global variables, an o subdir
 .. parsed-literal::
    yottadbuser\@yottadbworkshop:~$ mkdir -p VistA/{g,o,r}
    yottadbuser\@yottadbworkshop:~$ vim VistA/ydbenv ; cat VistA/ydbenv
-   export ydb_dist=/usr/local/lib/yottadb/r120/
+   export ydb_dist=/usr/local/lib/yottadb/r122/
    export ydb_gbldir=$HOME/VistA/g/yottadb.gld
-   export ydb_log=/tmp/yottadb/r120
+   export ydb_log=/tmp/yottadb/r122
    export ydb_tmp=$ydb_log
    export ydb_repl_instance=$HOME/VistA/g/yottadb.repl
    export ydb_repl_instname=dummy
@@ -2907,8 +2907,8 @@ Create a VistA directory. Use a g subdirectory for global variables, an o subdir
    %GDE-I-GDUSEDEFS, Using defaults for Global Directory 
            /home/yottadbuser/VistA/g/yottadb.gld
 
-   GDE> @/usr/local/lib/yottadb/r120/gdedefaults
-   %GDE-I-EXECOM, Executing command file /usr/local/lib/yottadb/r120/gdedefaults
+   GDE> @/usr/local/lib/yottadb/r122/gdedefaults
+   %GDE-I-EXECOM, Executing command file /usr/local/lib/yottadb/r122/gdedefaults
 
    GDE> change -segment DEFAULT -file=$HOME/VistA/g/yottadb.dat
    GDE> show -segment
@@ -3066,7 +3066,7 @@ Make sure you can start and run VistA after recompiling the modules.
 
 **Multiple YottaDB Versions**
 
-YottaDB object files are specific to each release of YottaDB – so r1.20 cannot use object files generated by r1.10, for example. Although the database format is more stable, a database file can only be concurrently open only by processes of one YottaDB. The same source code, however, can be used by an unlimited number of YottaDB releases. Also, even within a single YottaDB release, the same source code can be used by processes running in M mode and UTF-8 mode – but the object files are different. The directory tree structure implemented in the simple environment allows only processes of only one YottaDB release operating in only one mode to use a set of YottaDB source modules.
+YottaDB object files are specific to each release of YottaDB – so r1.22 cannot use object files generated by r1.10, for example. Although the database format is more stable, a database file can only be concurrently open only by processes of one YottaDB. The same source code, however, can be used by an unlimited number of YottaDB releases. Also, even within a single YottaDB release, the same source code can be used by processes running in M mode and UTF-8 mode – but the object files are different. The directory tree structure implemented in the simple environment allows only processes of only one YottaDB release operating in only one mode to use a set of YottaDB source modules.
 
 .. parsed-literal::
    yottadbuser@yottadbworkshop:~$ tree -d VistA/
@@ -3081,14 +3081,14 @@ YottaDB object files are specific to each release of YottaDB – so r1.20 cannot
 By creating another layer in the directory structure, the same VistA routines can be made to work in multiple YottaDB releases, for example, if we had:
 
 .. parsed-literal::
-   yottadbuser@yottadbworkshop:~$ mkdir VistA/r1.20
+   yottadbuser@yottadbworkshop:~$ mkdir VistA/r1.22
    yottadbuser@yottadbworkshop:~$ mupip set -journal=disable -region DEFAULT
    %YDB-I-JNLSTATE, Journaling state for region DEFAULT is now DISABLED
-   yottadbuser@yottadbworkshop:~$ mv VistA/{g,o} VistA/r1.20/
+   yottadbuser@yottadbworkshop:~$ mv VistA/{g,o} VistA/r1.22/
    yottadbuser@yottadbworkshop:~$ tree -d VistA/
    VistA/
    ├── r
-   └── r1.20
+   └── r1.22
         ├── g
         └── o
 
@@ -3105,15 +3105,15 @@ Notice that we simply moved the object, journal, global directory and database f
 
 - Global directories have pointers to database files. The global directory should be edited with GDE to correct this. Also, although the journal file information in the DEFAULT region is not meaningful once the database is created, it should be edited since it may be used in the future to create a database file, and the journal file name from the global is placed in the database file header when a new database file is created.
 
-- Environment setup should be updated. Although our env file can exist anywhere, since it sets environment variables that include path information, it is probably best to move it to the r1.20 directory.
+- Environment setup should be updated. Although our env file can exist anywhere, since it sets environment variables that include path information, it is probably best to move it to the r1.22 directory.
 
 Fixing the above (starting with the environment file, since it points to the global directory, and then the global directory, since it points to the database file):
 
 .. parsed-literal::
-   yottadbuser@yottadbworkshop:~$ mv VistA/ydbenv VistA/r1.20/
-   yottadbuser@yottadbworkshop:~$ vim VistA/r1.20/ydbenv ;  cat VistA/r1.20/ydbenv
+   yottadbuser@yottadbworkshop:~$ mv VistA/ydbenv VistA/r1.22/
+   yottadbuser@yottadbworkshop:~$ vim VistA/r1.22/ydbenv ;  cat VistA/r1.22/ydbenv
    export gtmdir=$HOME/VistA
-   export ydb_rel=r1.20_x86_64
+   export ydb_rel=r1.22_x86_64
    export ydb_dist=/usr/local/lib/yottadb/$ydb_rel
    export ydb_gbldir=$gtmdir/$ydb_rel/g/yottadb.gld
    export ydb_log=/tmp/yottadb/$ydb_rel
@@ -3129,10 +3129,10 @@ Fixing the above (starting with the environment file, since it points to the glo
 Notice that since the YottaDB version occurs in multiple locations, it has been abstracted to the environment variable $ydb_rel. Also, /home/yottadbuser/VistA can be abstracted into an environment variable $gtmdir. By modifying the global directory to use the environment variables, the global directory becomes more portable.
 
 .. parsed-literal::
-   yottadbuser\@yottadbworkshop:~$ source VistA/r1.20/ydbenv
+   yottadbuser\@yottadbworkshop:~$ source VistA/r1.22/ydbenv
    yottadbuser\@yottadbworkshop:~$ mumps -run GDE
    %GDE-I-LOADGD, Loading Global Directory file
-           /home/yottadbuser/VistA/r1.20/g/yottadb.gld
+           /home/yottadbuser/VistA/r1.22/g/yottadb.gld
    %GDE-I-VERIFY, Verification OK
    
    GDE> change -segment DEFAULT -file=$gtmdir/$ydb_rel/g/yottadb.dat
@@ -3164,15 +3164,15 @@ Notice that since the YottaDB version occurs in multiple locations, it has been 
    %GDE-I-VERIFY, Verification OK
 
    %GDE-I-GDUPDATE, Updating Global Directory file 
-           /home/yottadbuser/VistA/r1.20/g/yottadb.gld
+           /home/yottadbuser/VistA/r1.22/g/yottadb.gld
    yottadbuser\@yottadbworkshop:~$
 
 Now re-enable journaling so that the database and journal pointers are correct. You will need to delete the prior journal file, because the database file does not have a pointer to it, and YottaDB will refuse to create a new journal file where a file already exists that is not pointed to by the database file.
 
 .. parsed-literal::
-   yottadbuser\@yottadbworkshop:~$ rm /home/yottadbuser/VistA/r1.20/g/yottadb.mjl
+   yottadbuser\@yottadbworkshop:~$ rm /home/yottadbuser/VistA/r1.22/g/yottadb.mjl
    yottadbuser\@yottadbworkshop:~$ mupip set -journal="enable,on,before,file=$gtmdir/$ydb_rel/g/yottadb.mjl" -region DEFAULT
-   %YDB-I-JNLCREATE, Journal file /home/yottadbuser/VistA/r1.20/g/yottadb.mjl created for region DEFAULT with BEFORE_IMAGES
+   %YDB-I-JNLCREATE, Journal file /home/yottadbuser/VistA/r1.22/g/yottadb.mjl created for region DEFAULT with BEFORE_IMAGES
    %YDB-W-JNLBUFFREGUPD, Journal file buffer size for region DEFAULT has been adjusted from 2308 to 2312.
    %YDB-I-JNLSTATE, Journaling state for region DEFAULT is now ON
    yottadbuser@yottadbworkshop:~$
@@ -3199,7 +3199,7 @@ We can add additional directories for other versions of YottaDB. e.g.,
    yottadbuser@yottadbworkshop:~$ tree -d VistA
    VistA
    ├── r
-   ├── r1.20
+   ├── r1.22
    │   ├── g
    │   └── o
    └── r1.10
@@ -3209,7 +3209,7 @@ We can add additional directories for other versions of YottaDB. e.g.,
    7 directories
    yottadbuser@yottadbworkshop:~$
  
-This facilitates simple upgrades. For example, if you wanted to migrate from r1.20 to (an as yet unreleased as of this writing) r1.30, you could effect a rolling upgrade using replicating between the r1.20 and r1.30 sub-directories within the same directory.
+This facilitates simple upgrades. For example, if you wanted to migrate from r1.22 to (an as yet unreleased as of this writing) r1.30, you could effect a rolling upgrade using replicating between the r1.22 and r1.30 sub-directories within the same directory.
 
 **A Minor Refinement – YottaDB Version Dependent Source**
 
@@ -3220,7 +3220,7 @@ In general, program source code is independent of the YottaDB version. On occasi
    yottadbuser\@yottadbworkshop:~$ tree -d VistA/
    VistA
    ├── r
-   ├── r1.20
+   ├── r1.22
    │   ├── g
    │   ├── o
    │   └── r
@@ -3230,10 +3230,10 @@ In general, program source code is independent of the YottaDB version. On occasi
        └── r
 
     9 directories
-    yottadbuser\@yottadbworkshop:~$ vim VistA/r1.20/env
-    yottadbuser\@yottadbworkshop:~$ cat VistA/r1.20/env
+    yottadbuser\@yottadbworkshop:~$ vim VistA/r1.22/env
+    yottadbuser\@yottadbworkshop:~$ cat VistA/r1.22/env
     export gtmdir=$HOME/VistA
-    export ydb_rel=r1.20_x86_64
+    export ydb_rel=r1.22_x86_64
     export ydb_dist=/usr/local/lib/yottadb/$ydb_rel
     export ydb_gbldir=$gtmdir/$ydb_rel/g/yottadb.gld
     export ydb_log=/tmp/yottadb/$ydb_rel
@@ -3244,11 +3244,11 @@ In general, program source code is independent of the YottaDB version. On occasi
     mkdir -p $ydb_tmp
     alias mumps=$ydb_dist/mumps
     alias mupip=$ydb_dist/mupip
-    yottadbuser\@yottadbworkshop:~$ source VistA/r1.20/ydbenv
+    yottadbuser\@yottadbworkshop:~$ source VistA/r1.22/ydbenv
     yottadbuser\@yottadbworkshop:~$ mumps -dir
 
     YDB>write $zroutines
-    /home/yottadbuser/VistA/r1.20_x86_64/o*(/home/yottadbuser/VistA/r1.20_x86_64/r /home/yottadbuser/VistA/r) /usr/local/lib/yottadb/r1.20_x86_64/libyottadbutil.so
+    /home/yottadbuser/VistA/r1.22_x86_64/o*(/home/yottadbuser/VistA/r1.22_x86_64/r /home/yottadbuser/VistA/r) /usr/local/lib/yottadb/r1.22_x86_64/libyottadbutil.so
     YDB>halt
     yottadbuser\@yottadbworkshop:~$
 
@@ -3263,7 +3263,7 @@ Installations of large applications often have local or modifications. In such c
    VistA
    ├── p
    ├── r
-   ├── r1.20
+   ├── r1.22
    │   ├── g
    │   ├── o
    │   ├── p
@@ -3275,9 +3275,9 @@ Installations of large applications often have local or modifications. In such c
        └── r
 
     12 directories
-    yottadbuser\@yottadbworkshop:~$ vim VistA/r1.20/ydbenv ;  cat VistA/r1.20/ydbenv
+    yottadbuser\@yottadbworkshop:~$ vim VistA/r1.22/ydbenv ;  cat VistA/r1.22/ydbenv
     export gtmdir=$HOME/VistA
-    export ydb_rel=r1.20_x86_64
+    export ydb_rel=r1.22_x86_64
     export ydb_dist=/usr/local/lib/yottadb/$ydb_rel
     export ydb_gbldir=$gtmdir/$ydb_rel/g/yottadb.gld
     export ydb_log=/tmp/yottadb/$ydb_rel
@@ -3306,12 +3306,12 @@ Now you can look at this in operation by applying some modifications to VistA th
    inflating: VistA/p/ZTMGRSET.m 
    yottadbuser@yottadbworkshop:~$
 
-Then compile it with the object files in the VistA/r1.20/o directory
+Then compile it with the object files in the VistA/r1.22/o directory
 
 .. parsed-literal::
-   yottadbuser\@yottadbworkshop:~$ cd VistA/r1.20/o
-   yottadbuser\@yottadbworkshop:~/VistA/r1.20/o$ mumps ../../p/\*.m
-   yottadbuser\@yottadbworkshop:~/VistA/r1.20/o$
+   yottadbuser\@yottadbworkshop:~$ cd VistA/r1.22/o
+   yottadbuser\@yottadbworkshop:~/VistA/r1.22/o$ mumps ../../p/\*.m
+   yottadbuser\@yottadbworkshop:~/VistA/r1.22/o$
 
 Now, you can run VistA with the local modifications. In this case, one of the modifications is a fix to a minor bug in VistA: it treats spaces separating source directories in a parenthesized list as part of the directory name, rather than as a separator. With the change, when you run a function - for example, to apply a patch - it correctly puts the new routine in the first source directory even if it is within a parenthesized list of directories. In this example, you will run the ^ZTMGRTSET function. Notice that the VistA/r1.10/p directory is initially empty, but has some tens of files afterwards.
 
@@ -3424,7 +3424,7 @@ Now, you can run VistA with the local modifications. In this case, one of the mo
 
 When you work on an application, either to enhance it or to fix a bug, you typically modify only a small part of the application. With YottaDB, you do not need to make a copy of an entire application environment to work on your project. Nor do you need to work in the same environment as other developers, with the risk of stepping on one another's toes. All you need is to to set up your processes so that their $ZROUTINES search path finds your development routines before finding the main application routines. If your work involves changes to global variables, you can set up your own copy of the database – or, even, if it makes sense, a part of the database with the remaining globals mapped to the parent environment. Of course, in a large project, your environment's parent may itself have a parent.
 
-Delete the r1.20 subdirectory, and obtain the files `inc <https://gitlab.com/YottaDB/DB/YDBDoc/blob/master/AcculturationGuide/inc>`_ and `install <https://gitlab.com/YottaDB/DB/YDBDoc/blob/master/AcculturationGuide/install>`_ from GitLab, and make install executable.
+Delete the r1.22 subdirectory, and obtain the files `inc <https://gitlab.com/YottaDB/DB/YDBDoc/blob/master/AcculturationGuide/inc>`_ and `install <https://gitlab.com/YottaDB/DB/YDBDoc/blob/master/AcculturationGuide/install>`_ from GitLab, and make install executable.
 
 .. parsed-literal::
    yottadbuser@yottadbworkshop:~$ ls -l VistA/
