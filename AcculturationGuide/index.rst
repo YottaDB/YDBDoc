@@ -7,7 +7,7 @@ Welcome to the Acculturation Guide!
 =========================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 5
   
    Main YottaDB Documentation Page <https://yottadb.com/resources/documentation>
    acculturation
