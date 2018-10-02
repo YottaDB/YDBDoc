@@ -11,7 +11,7 @@ Welcome to the Multi-Language Programmer's Guide!
    self
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 5
    
    Main YottaDB Documentation Page <https://yottadb.com/resources/documentation/>
    MultiLangProgGuide
