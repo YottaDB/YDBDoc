@@ -338,14 +338,14 @@ Examples of Using External Calls
 .. parsed-literal::
    foo: void bar (I:gtm_float_t*, O:gtm_float_t*)
 
-There is one external call table for each package. The environment variable "GTMXC" must name the external call table file for the default package. External call table files for packages other than the default must be identified by environment variables of the form "GTMXC_name".
+There is one external call table for each package. The environment variable "ydb_xc" must name the external call table file for the default package. External call table files for packages other than the default must be identified by environment variables of the form "ydb_xc_name".
 
 The first of the external call tables is the location of the shareable library. The location can include environment variable names.
 
 Example: 
 
 .. parsed-literal::
-   % echo $GTMXC_mathpak
+   % echo $ydb_xc_mathpak
    /user/joe/mathpak.xc
    % echo lib /usr/
    % cat mathpak.xc
@@ -368,7 +368,7 @@ Example:
 Example : For preallocation: 
 
 .. parsed-literal::
-   % echo $GTMXC_extcall
+   % echo $ydb_xc_extcall
    /usr/joe/extcall.xc
    % cat extcall.xc
    /usr/lib/extcall.sl
@@ -386,7 +386,7 @@ Example : For preallocation:
 Example : for call-back mechanism
 
 .. parsed-literal::
-   % echo $GTMXC 
+   % echo $ydb_xc 
    /usr/joe/callback.xc 
    % cat /usr/joe/callback.xc 
    $MYLIB/callback.sl 
@@ -465,7 +465,7 @@ Example : for call-back mechanism
 Example:gtm_malloc/gtm_free callbacks using gtm_pointertofunc_t
 
 .. parsed-literal::
-   % echo $GTMXC
+   % echo $ydb_xc
    /usr/joe/callback.xc
    % cat /usr/joe/callback.xc
    /usr/lib/callback.sl

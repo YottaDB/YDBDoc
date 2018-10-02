@@ -200,6 +200,8 @@ Environment Variables
 
 YottaDB supports both ydb_* environment variables and gtm* environment variables. If the ydb* environment variable is not defined, but the gtm* environment variable is defined, the ydb* environment variable is also defined to have the same value as the gtm* environment variable the first time the gtm* environment variable is read. If the ydb* environment variable and the gtm* environment variable are both defined, the ydb* environment variable value takes precedence.
 
+Environment variables of the form ydb_xc_<package> are used to point to the call-out tables for external calls, and the GT.M names of these variables are of the form GTMXC_<package>.
+
 A comprehensive list of environment variables that are directly or indirectly used by YottaDB follows:
 
 **EDITOR** is a standard system environment variable that specifies the full path to the editor to be invoked by YottaDB in response to the ZEDit command (defaults to vi, if $EDITOR is not set).
