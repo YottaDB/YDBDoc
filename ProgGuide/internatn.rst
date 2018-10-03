@@ -618,7 +618,7 @@ Save and compile polish.c. On x86 GNU/Linux (64-bit Ubuntu 10.10), execute a com
    gcc -c polish.c -I$ydb_dist
 
 .. note::
-   The -I$ydb_dist option includes gtmxc_types.h.
+   The -I$ydb_dist option includes libyottadb.h.
 
 Create a new shared library or add the above routines to an existing one. The following command adds these alternative sequence routines to a shared library called altcoll.so on x86 GNU/Linux (64-bit Ubuntu 10.10).
 
@@ -671,7 +671,7 @@ Save and compile col_reverse_32.c. On x86 GNU/Linux (64-bit Ubuntu 10.10), execu
    gcc -c col_reverse_32.c -I$ydb_dist
 
 .. note::
-   The -I$ydb_dist option includes gtmxc_types.h.
+   The -I$ydb_dist option includes libyottadb.h.
 
 Create a new shared library or add the routines to an existing one. The following command adds these alternative sequence routines to a shared library called altcoll.so on x86 GNU/Linux (64-bit Ubuntu 10.10).
 

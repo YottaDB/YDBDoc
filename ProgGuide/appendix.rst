@@ -187,9 +187,9 @@ Except when using triggers for debugging, use journaling on any region that uses
 
 **Call-in/Call-outs**
 
-Use gtm_malloc/gtm_free in the external functions for enhanced performance and better debugging capability in case memory management problems occur with external calls.
+Use ydb_malloc/ydb_free in the external functions for enhanced performance and better debugging capability in case memory management problems occur with external calls.
 
-Use gtm \*t types defined in gtmxc_types.h instead of the native types (int, float, char, etc) to avoid potential size mismatches with the parameter types.
+Use ydb \*t types defined in libyottadb.h instead of the native types (int, float, char, etc) to avoid potential size mismatches with the parameter types.
 
 **Autorelink**
 

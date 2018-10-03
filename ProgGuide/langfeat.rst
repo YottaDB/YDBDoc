@@ -575,24 +575,24 @@ Using this facility impacts the performance of every global access that uses env
 
 The use of this facility is enabled by the definition of the environment variable ydb_env_translate, which contains the path of a shared library with the following entry point:
 
-**gtm_env_xlate**
+**ydb_env_xlate**
 
 If the shared object is not accessible or the entry point is not accessible, YottaDB reports an error.
 
-The gtm_env_xlate() routine has the following C prototype:
+The ydb_env_xlate() routine has the following C prototype:
 
 .. parsed-literal::
-   int gtm_env_xlate(gtm_string_t \*in1, gtm_st
-      ring_t \*in2, gtm_string \*in3, gtm_string_t \*out)
+   int ydb_env_xlate(ydb_string_t \*in1, ydb_st
+      ring_t \*in2, ydb_string \*in3, ydb_string_t \*out)
 
-where gtm_string_t is a structure defined in gtmxc_types.h as follows:
+where ydb_string_t is a structure defined in libyottadb.h as follows:
 
 .. parsed-literal::
    typedef struct
    {
-     int length;
-     char \*address;
-   }gtm_string_t;
+	unsigned long	length;
+	char		\*address;
+   } ydb_string_t;
 
 The purpose of the function is to use its three input arguments to derive and return an output argument that can be used as an environment specification by YottaDB. Note that the input values passed (in1, in2 and in3) are the result of M evaluation and must not be modified. The first two arguments are the expressions passed within the up-bars "| \|" or the square-brackets "[ ]", and the third argument is the current working directory as described by $ZDIRECTORY.
 
@@ -619,14 +619,14 @@ The routine may have to deal with a case where one or both of the inputs have ze
 Example:
 
 .. parsed-literal::
-   $ cat ydb_env_translate.c
+   $ cat ydb_env_xlate.c
    #include <stdio.h>
    #include <string.h>
-   #include "gtmxc_types.h"
+   #include "libyottadb.h"
    static int init = 0;
    typedef struct
    {
-     gtm_string_t field1, field2, ret;
+     ydb_string_t field1, field2, ret;
    } line_entry ;
    static line_entry table[5], \*line, linetmp;
    /* Since these errors may occur before setup is complete, they are statics \*/
@@ -635,7 +635,7 @@ Example:
    #define ENV_VAR"GTM_CALLIN_START"
    typedef int(\*int_fptr)();
    int_fptr GTM_MALLOC;
-   int init_functable(gtm_string_t \*ptr)
+   int init_functable(ydb_string_t \*ptr)
    {
    /* This function demonstrates the initialization of other function pointers as well (if the user-code needs them for any reason, they should be defined as globals) \*/
    char \*pcAddress;
@@ -667,11 +667,11 @@ Example:
    void copy_string(char \*\*loc1, char \*loc2, int length)
    {
    char \*ptr;
-   ptr = (char \*) gtm_malloc(length);
+   ptr = (char \*) ydb_malloc(length);
    strncpy( ptr, loc2, length);
    \*loc1 = ptr;
    }
-   int init_table(gtm_string_t \*ptr)
+   int init_table(ydb_string_t \*ptr)
    {
    int i = 0;
    char buf[100];
@@ -708,7 +708,7 @@ Example:
    line->ret.length = strlen(errorstr2);
    return 0;
    }
-   int cmp_string(gtm_string_t str1, gtm_string_t str2)
+   int cmp_string(ydb_string_t str1, ydb_string_t str2)
    {
    if (str1.length == str2.length)
    return strncmp(str1.address, str2.address, (int) str1.length);
@@ -719,7 +719,7 @@ Example:
    {
    return (((cmp_string(line1->field1, line2->field1))||(cmp_string(line1->field2, line2->field2))));
    }
-   int look_up_table(line_entry \*aline, gtm_string_t \*ret_ptr)
+   int look_up_table(line_entry \*aline, ydb_string_t \*ret_ptr)
    {
    int i;
    int ret_v;
@@ -740,7 +740,7 @@ Example:
    ret_ptr->address = line->ret.address;
    return 1;
    }
-   int gtm_env_xlate(gtm_string_t \*ptr1, gtm_string_t \*ptr2, gtm_string_t \*ptr_zdir, gtm_string_t \*ret_ptr)
+   int ydb_env_xlate(ydb_string_t \*ptr1, ydb_string_t \*ptr2, ydb_string_t \*ptr_zdir, ydb_string_t \*ret_ptr)
    {
    int return_val, return_val_init;
    if (!init)

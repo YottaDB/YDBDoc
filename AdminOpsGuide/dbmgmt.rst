@@ -2305,7 +2305,7 @@ Set the environment variable gtmcrypt_config to point to this config file.
 .. parsed-literal::
    export gtmcrypt_config=$PWD/config 
 
-Set the enviroment varible ydb_passwd. 
+Set the environment variable ydb_passwd. 
 
 .. parsed-literal::
    echo -n "Enter passphrase for ydb.key: " ; export ydb_passwd=`$ydb_dist/plugin/gtmcrypt/maskpass|cut -f 3 -d " "`

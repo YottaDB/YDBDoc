@@ -2448,7 +2448,7 @@ Example:
    YDB>DO ^%FREECNT
    Region          Free     Total          Database file
    ------          ----     -----          -------------
-   DEFAULT           81       100 ( 81.0%) /home/gtmuser1/.yottadb/r1.20_x86/g/mumps.dat
+   DEFAULT           81       100 ( 81.0%) /home/yottadbuser1/.yottadb/r1.20_x86/g/mumps.dat
 
    YDB>
 

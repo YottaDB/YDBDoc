@@ -85,7 +85,7 @@ You take all responsibility for the selection and use of a specific encryption p
 * All encryption libraries that run within the address space of a YottaDB process must conform to the rules of any functions for YottaDB, as documented, including but not limited to being single threaded, not altering YottaDB's signal handlers, restricting the use of timers to the API provided by YottaDB, etc.
 
 .. note::
-   YottaDB provides functions gtm_hiber_start(), gtm_hiber_start_any(), gtm_start_timer(), gtm_cancel_timer(), gtm_jnlpool_detach(), gtm_malloc() and gtm_free() which can be freely used by plug-ins. 
+   YottaDB provides functions ydb_hiber_start(), ydb_hiber_start_any(), ydb_start_timer(), ydb_cancel_timer(), ydb_jnlpool_detach(), ydb_malloc() and ydb_free() which can be freely used by plug-ins. 
 
 * Malfunction of encryption software or hardware can render your data irrecoverable. As part of your comprehensive organizational risk management strategy, please consider the use of logical multi-site application configurations, possibly with different encryption packages and certainly with different encryption keys. 
 

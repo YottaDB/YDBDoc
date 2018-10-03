@@ -103,7 +103,7 @@ YottaDB uses an "external call table" to map the typeless data of M into the typ
 .. parsed-literal::
    entryref: return-value routine-name (parameter, parameter, ... )        
 
-where entryref is an M entryref, return-value is gtm_long_t, gtm_status_t, or void, and parameters are in the format: 
+where entryref is an M entryref, return-value is ydb_long_t, ydb_status_t, or void, and parameters are in the format: 
 
 .. parsed-literal::
    direction:type [num]
@@ -112,39 +112,39 @@ where [num] indicates a pre-allocation value explained later in this chapter.
 
 Legal directions are I, O, or IO for input, output, or input/output, respectively.
 
-The following table describes the legal types defined in the C header file $ydb_dist/gtmxc_types.h:
+The following table describes the legal types defined in the C header file $ydb_dist/libyottadb.h:
 
 **Type: Usage**
 
 Void: Specifies that the function does not return a value.
 
-gtm_status_t : Type int. If the function returns zero (0), then the call was successful. If it returns a non-zero value, YottaDB will signal an error upon returning to M.
+ydb_status_t : Type int. If the function returns zero (0), then the call was successful. If it returns a non-zero value, YottaDB will signal an error upon returning to M.
 
-gtm_long_t : 32-bit signed integer on 32-bit platforms and 64-bit signed integer on 64-bit platforms.
+ydb_long_t : 32-bit signed integer on 32-bit platforms and 64-bit signed integer on 64-bit platforms.
 
-gtm_ulong_t : 32-bit unsigned integer on 32-bit platforms and 64-bit signed integer on 64-bit platforms.
+ydb_ulong_t : 32-bit unsigned integer on 32-bit platforms and 64-bit signed integer on 64-bit platforms.
 
-gtm_long_t* : For passing a pointer to long [integers].
+ydb_long_t* : For passing a pointer to long [integers].
 
-gtm_float_t* : For passing a pointer to floating point numbers.
+ydb_float_t* : For passing a pointer to floating point numbers.
 
-gtm_double_t* : Same as above, but double precision.
+ydb_double_t* : Same as above, but double precision.
 
-gtm_char_t*: For passing a "C" style string - null terminated.
+ydb_char_t*: For passing a "C" style string - null terminated.
 
-gtm_char_t** : For passing a pointer to a "C" style string.
+ydb_char_t** : For passing a pointer to a "C" style string.
 
-gtm_string_t* : For passing a structure in the form {int length;char \*address}. Useful for moving blocks of memory to or from YottaDB.
+ydb_string_t* : For passing a structure in the form {int length;char \*address}. Useful for moving blocks of memory to or from YottaDB.
 
-gtm_pointertofunc_t : For passing callback function pointers. For details see `“Callback Mechanism” <https://docs.yottadb.com/ProgrammersGuide/extrout.html#callback-mechanism>`_.
+ydb_pointertofunc_t : For passing callback function pointers. For details see `“Callback Mechanism” <https://docs.yottadb.com/ProgrammersGuide/extrout.html#callback-mechanism>`_.
 
 **Note:**
 
 If an external call's function argument is defined in the external call table, YottaDB allows invoking that function without specifying a value of the argument. All non-trailing and output-only arguments which do not specify a value translate to the following default values in C: 
 
 * All numeric types: 0 
-* gtm_char_t * and gtm_char_t \*\*: Empty string 
-* gtm_string_t \*: A structure with 'length' field matching the preallocation size and 'address' field being a NULL pointer. 
+* ydb_char_t * and ydb_char_t \*\*: Empty string 
+* ydb_string_t \*: A structure with 'length' field matching the preallocation size and 'address' field being a NULL pointer. 
 
 In the mathpak package example, the following invocation translate inval to the default value, that is, 0.
 
@@ -153,13 +153,13 @@ In the mathpak package example, the following invocation translate inval to the 
 
 If an external call's function argument is defined in the external call table and that function is invoked without specifying the argument, ensure that the external call function appropriately handles the missing argument. As a good programming practice, always ensure that count of arguments defined in the external call table matches the function invocation. 
 
-gtmxc_types.h also includes definitions for the following entry points exported from libgtmshr: 
+libyottadb.h also includes definitions for the following entry points exported from libgtmshr: 
 
 .. parsed-literal::
-   void gtm_hiber_start(gtm_uint_t mssleep);
-   void gtm_hiber_start_wait_any(gtm_uint_t mssleep)
-   void gtm_start_timer(gtm_tid_t tid, gtm_int_t time_to_expir, void (\*handler)(), gtm_int_t hdata_len, void \\\*hdata);
-   void gtm_cancel_timer(gtm_tid_t tid);
+   void ydb_hiber_start(ydb_uint_t mssleep);
+   void ydb_hiber_start_wait_any(ydb_uint_t mssleep)
+   void ydb_start_timer(ydb_tid_t tid, ydb_int_t time_to_expir, void (\*handler)(), ydb_int_t hdata_len, void \\\*hdata);
+   void ydb_cancel_timer(ydb_tid_t tid);
 
 where:
 
@@ -170,18 +170,18 @@ where:
 * hdata_len - 0 or length of data to pass to handler as a parameter
 * hdata - NULL or address of data to pass to handler as a parameter
 
-gtm_hiber_start() always sleeps until the time expires; gtm_hiber_start_wait_any() sleeps until the time expires or an interrupt by any signal (including another timer). gtm_start_timer() starts a timer but returns immediately (no sleeping) and drives the given handler when time expires unless the timer is canceled.
+ydb_hiber_start() always sleeps until the time expires; ydb_hiber_start_wait_any() sleeps until the time expires or an interrupt by any signal (including another timer). ydb_start_timer() starts a timer but returns immediately (no sleeping) and drives the given handler when time expires unless the timer is canceled.
 
 .. note::
-   YottaDB continues to support xc_* equivalent types of gtm_* for upward compatibility. gtmxc_types.h explicitly marks the xc_* equivalent types as deprecated.
+   YottaDB continues to support xc_* equivalent types of ydb_* for upward compatibility. gtmxc_types.h explicitly marks the xc_* equivalent types as deprecated.
 
 * Parameter-types that interface YottaDB with non-M code using C calling conventions must match the data-types on their target platforms. Note that most addresses on 64-bit platforms are 8 bytes long and require 8 byte alignment in structures whereas all addresses on 32-bit platforms are 4 bytes long and require 4-byte alignment in structures.
-* Though strings with embedded zeroes are sent as input to external routines, embedded zeroes in output (or return value) strings of type gtm_char_t may cause string truncation because they are treated as terminators.
-* If your interface uses gtm_long_t or gtm_ulong_t types but your interface code uses int or signed int types, failure to revise the types so they match on a 64-bit platform will cause the code to fail in unpleasant, potentially dangerous and hard to diagnose ways.
+* Though strings with embedded zeroes are sent as input to external routines, embedded zeroes in output (or return value) strings of type ydb_char_t may cause string truncation because they are treated as terminators.
+* If your interface uses ydb_long_t or ydb_ulong_t types but your interface code uses int or signed int types, failure to revise the types so they match on a 64-bit platform will cause the code to fail in unpleasant, potentially dangerous and hard to diagnose ways.
 
 The first parameter of each called routine is an int (for example, int argc in decrement.c and increment.c) that specifies the number of parameters passed. This parameter is implicit and only appears in the called routine. It does not appear in the call table specification, or in the M invocation. If there are no explicit parameters, the call table specification will have a zero (0) value because this value does not include itself in the count. If there are fewer actual parameters than formal parameters, the call is determined from the parameters specified by the values supplied by the M program. The remaining parameters are undefined. If there are more actual parameters than formal parameters, YottaDB reports an error.
 
-There may be only a single occurrence of the type gtm_status_t for each entryref.
+There may be only a single occurrence of the type ydb_status_t for each entryref.
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Database Encryption Extensions to the YottaDB External Interface
@@ -196,16 +196,16 @@ The reference implementation includes:
 * $ydb_dist/plugin/libgtmcrypt.so is the shared library containing the executables which is dynamically linked by YottaDB and which in turn calls the encryption packages. If the $ydb_dist/utf8 directory exists, then it should contain a symbolic link to ../plugin.
 * Source code is provided in the file $ydb_dist/plugin/gtmcrypt/source.tar which includes build.sh and install.sh scripts to respectively compile and install libgtmcrypt.so from the source code.
 
-To support the implementation of a reference implementation, YottaDB provides additional C structure types (in the gtmxc_types.h file):
+To support the implementation of a reference implementation, YottaDB provides additional C structure types (in the libyottadb.h file):
 
 * gtmcrypt_key_t - a datatype that is a handle to a key. The YottaDB database engine itself does not manipulate keys. The plug-in keeps the keys, and provides handles to keys that the YottaDB database engine uses to refer to keys.
 * xc_fileid_ptr_t - a pointer to a structure maintained by YottaDB to uniquely identify a file. Note that a file may have multiple names - not only as a consequence of absolute and relative path names, but also because of symbolic links and also because a file system can be mounted at more than one place in the file name hierarchy. YottaDB needs to be able to uniquely identify files.
 
 Although not required to be used by a customized plugin implementation, YottaDB provides (and the reference implementation uses) the following functions for uniquely identifying files:
 
-* xc_status_t gtm_filename_to_id(xc_string_t \*filename, xc_fileid_ptr_t \*fileid) - function that takes a file name and provides the file id structure for that file.
-* xc_status_t gtm_is_file_identical(xc_fileid_ptr_t fileid1, xc_fileid_ptr_t fileid2) - function that determines whether two file ids map to the same file.
-* gtm_xcfileid_free(xc_fileid_ptr_t fileid) - function to release a file id structure.
+* xc_status_t ydb_filename_to_id(xc_string_t \*filename, xc_fileid_ptr_t \*fileid) - function that takes a file name and provides the file id structure for that file.
+* xc_status_t ydb_is_file_identical(xc_fileid_ptr_t fileid1, xc_fileid_ptr_t fileid2) - function that determines whether two file ids map to the same file.
+* ydb_xcfileid_free(xc_fileid_ptr_t fileid) - function to release a file id structure.
 
 Mumps, MUPIP and DSE processes dynamically link to the plugin interface functions that reside in the shared library. The functions serve as software "shims" to interface with an encryption library such as libmcrypt or libgpgme/libgcrypt.
 
@@ -222,7 +222,7 @@ The plugin interface functions are:
 
 A YottaDB database consists of multiple database files, each of which has its own encryption key, although you can use the same key for multiple files. Thus, the gtmcrypt* functions are capable of managing multiple keys for multiple database files. Prototypes for these functions are in gtmcrypt_interface.h.
 
-The core plugin interface functions, all of which return a value of type gtm_status_t are:
+The core plugin interface functions, all of which return a value of type ydb_status_t are:
 
 * gtmcrypt_init() performs initialization. If the environment variable $ydb_passwd exists and has an empty string value, YottaDB calls gtmcrypt_init() before the first M program is loaded; otherwise it calls gtmcrypt_init() when it attempts the first operation on an encrypted database file.
 * Generally, gtmcrypt_getkey_by_hash or, for MUPIP CREATE, gtmcrypt_getkey_by_name perform key acquisition, and place the keys where gtmcrypt_decode() and gtmcrypt_encode() can find them when they are called.
@@ -232,10 +232,10 @@ The core plugin interface functions, all of which return a value of type gtm_sta
 
 More detailed descriptions follow.
 
-* gtmcrypt_key_t \*gtmcrypt_getkey_by_name(gtm_string_t \*filename) - MUPIP CREATE uses this function to get the key for a database file. This function searches for the given filename in the memory key ring and returns a handle to its symmetric cipher key. If there is more than one entry for the given filename , the reference implementation returns the entry matching the last occurrence of that filename in the master key file.
-* gtm_status_t gtmcrypt_hash_gen(gtmcrypt_key_t \*key, gtm_string_t \*hash) - MUPIP CREATE uses this function to generate a hash from the key then copies that hash into the database file header. The first parameter is a handle to the key and the second parameter points to 256 byte buffer. In the event the hash algorithm used provides hashes smaller than 256 bytes, gtmcrypt_hash_gen() must fill any unused space in the 256 byte buffer with zeros.
-* gtmcrypt_key_t \*gtmcrypt_getkey_by_hash(gtm_string_t \*hash) - YottaDB uses this function at database file open time to obtain the correct key using its hash from the database file header. This function searches for the given hash in the memory key ring and returns a handle to the matching symmetric cipher key. MUPIP LOAD, MUPIP RESTORE, MUPIP EXTRACT, MUPIP JOURNAL and MUPIP BACKUP -BYTESTREAM all use this to find keys corresponding to the current or prior databases from which the files they use for input were derived.
-* gtm_status_t gtmcrypt_encode(gtmcrypt_key_t \*key, gtm_string_t \*inbuf, gtm_string_t \*outbuf) and gtm_status_t gtmcrypt_decode(gtmcrypt_key_t \*key, gtm_string_t \*inbuf, gtm_string_t \*outbuf)- YottaDB uses these functions to encode and decode data. The first parameter is a handle to the symmetric cipher key, the second is a pointer to the block of data to encode or decode, and the third is a pointer to the resulting block of encoded or decoded data. Using the appropriate key (same key for a symmetric cipher), gtmcrypt_decode() must be able to decode any data buffer encoded by gtmcrypt_encode(), otherwise the encrypted data is rendered unrecoverable. As discussed earlier, YottaDB requires the encrypted and cleartext versions of a string to have the same length.
+* gtmcrypt_key_t \*gtmcrypt_getkey_by_name(ydb_string_t \*filename) - MUPIP CREATE uses this function to get the key for a database file. This function searches for the given filename in the memory key ring and returns a handle to its symmetric cipher key. If there is more than one entry for the given filename , the reference implementation returns the entry matching the last occurrence of that filename in the master key file.
+* ydb_status_t gtmcrypt_hash_gen(gtmcrypt_key_t \*key, ydb_string_t \*hash) - MUPIP CREATE uses this function to generate a hash from the key then copies that hash into the database file header. The first parameter is a handle to the key and the second parameter points to 256 byte buffer. In the event the hash algorithm used provides hashes smaller than 256 bytes, gtmcrypt_hash_gen() must fill any unused space in the 256 byte buffer with zeros.
+* gtmcrypt_key_t \*gtmcrypt_getkey_by_hash(ydb_string_t \*hash) - YottaDB uses this function at database file open time to obtain the correct key using its hash from the database file header. This function searches for the given hash in the memory key ring and returns a handle to the matching symmetric cipher key. MUPIP LOAD, MUPIP RESTORE, MUPIP EXTRACT, MUPIP JOURNAL and MUPIP BACKUP -BYTESTREAM all use this to find keys corresponding to the current or prior databases from which the files they use for input were derived.
+* ydb_status_t gtmcrypt_encode(gtmcrypt_key_t \*key, ydb_string_t \*inbuf, ydb_string_t \*outbuf) and ydb_status_t gtmcrypt_decode(gtmcrypt_key_t \*key, ydb_string_t \*inbuf, ydb_string_t \*outbuf)- YottaDB uses these functions to encode and decode data. The first parameter is a handle to the symmetric cipher key, the second is a pointer to the block of data to encode or decode, and the third is a pointer to the resulting block of encoded or decoded data. Using the appropriate key (same key for a symmetric cipher), gtmcrypt_decode() must be able to decode any data buffer encoded by gtmcrypt_encode(), otherwise the encrypted data is rendered unrecoverable. As discussed earlier, YottaDB requires the encrypted and cleartext versions of a string to have the same length.
 * char \*gtmcrypt_strerror() - YottaDB uses this function to retrieve addtional error context from the plug-in after the plug-in returns an error status. This function returns a pointer to additional text related to the last error that occurred. YottaDB displays this text as part of an error report. In a case where an error has no additional context or description, this function returns a null string.
 
 The complete source code for reference implementations of these functions is provided, licensed under the same terms as YottaDB. You are at liberty to modify them to suit your specific YottaDB database encryption needs. 
@@ -246,18 +246,18 @@ For more information and examples, refer to `Database Encryption <https://docs.y
 Pre-allocation of Output Parameters
 ++++++++++++++++++++++++++++++++++++
 
-The definition of parameters passed by reference with direction output can include specification of a pre-allocation value. This is the number of units of memory that the user wants YottaDB to allocate before passing the parameter to the external routine. For example, in the case of type gtm_char_t \*, the pre-allocation value would be the number of bytes to be allocated before the call to the external routine.
+The definition of parameters passed by reference with direction output can include specification of a pre-allocation value. This is the number of units of memory that the user wants YottaDB to allocate before passing the parameter to the external routine. For example, in the case of type ydb_char_t \*, the pre-allocation value would be the number of bytes to be allocated before the call to the external routine.
 
 Specification of a pre-allocation value should follow these rules:
 
 * Pre-allocation is an unsigned integer value specifying the number of bytes to be allocated on the system heap with a pointer passed into the external call.
 * Pre-allocating on a type with a direction of input or input/output results in a YottaDB error.
-* Pre-allocation is meaningful only on types gtm_char_t * and gtm_string_t \*. On all other types the pre-allocation value specified will be ignored and the parameter will be allocated a default value for that type. With gtm_string_t * arguments make sure to set the 'length' field appropriately before returning control to YottaDB. On return from the external call, YottaDB uses the value in the length field as the length of the returned value, in bytes.
+* Pre-allocation is meaningful only on types ydb_char_t * and ydb_string_t \*. On all other types the pre-allocation value specified will be ignored and the parameter will be allocated a default value for that type. With ydb_string_t * arguments make sure to set the 'length' field appropriately before returning control to YottaDB. On return from the external call, YottaDB uses the value in the length field as the length of the returned value, in bytes.
 * If the user does not specify any value, then the default pre-allocation value would be assigned to the parameter.
 * Specification of pre-allocation for "scalar" types (parameters which are passed by value) is an error.
 
 .. note::
-   Pre-allocation is optional for all output-only parameters except gtm_string_t * and gtm_char_t \*. Pre-allocation yields better management of memory for the external call. 
+   Pre-allocation is optional for all output-only parameters except ydb_string_t * and ydb_char_t \*. Pre-allocation yields better management of memory for the external call. 
 
 +++++++++++++++++++++++++++++
 Callback Mechanism
@@ -292,7 +292,7 @@ YottaDB exposes certain functions that are internal to the YottaDB runtime libra
 +----------+---------------------+--------------------+--------------------+----------------------------------------------------------------------------------------------------------------------------+
 |          |                     | tid                | integer            | unique user specified identifier of the timer to cancel                                                                    |
 +----------+---------------------+--------------------+--------------------+----------------------------------------------------------------------------------------------------------------------------+
-| 4        | gtm_malloc          |                    |                    | allocates process memory from the heap                                                                                     |
+| 4        | ydb_malloc          |                    |                    | allocates process memory from the heap                                                                                     |
 +----------+---------------------+--------------------+--------------------+----------------------------------------------------------------------------------------------------------------------------+
 |          |                     | <return-value>     | pointer to void    | address of the allocated space                                                                                             |
 +----------+---------------------+--------------------+--------------------+----------------------------------------------------------------------------------------------------------------------------+
@@ -304,7 +304,7 @@ YottaDB exposes certain functions that are internal to the YottaDB runtime libra
 |          |                     |                    | 64-bit unsigned    |                                                                                                                            |
 |          |                     |                    | integer            |                                                                                                                            |
 +----------+---------------------+--------------------+--------------------+----------------------------------------------------------------------------------------------------------------------------+
-| 5        | gtm_free            |                    |                    | return memory previously allocated with gtm_malloc()                                                                       |
+| 5        | ydb_free            |                    |                    | return memory previously allocated with ydb_malloc()                                                                       |
 +----------+---------------------+--------------------+--------------------+----------------------------------------------------------------------------------------------------------------------------+
 |          |                     | free_address       | pointer to void    | address of the previously allocated space                                                                                  |
 +----------+---------------------+--------------------+--------------------+----------------------------------------------------------------------------------------------------------------------------+
@@ -312,7 +312,7 @@ YottaDB exposes certain functions that are internal to the YottaDB runtime libra
 The external routine can access and invoke a call-back function in any of the following mechanisms: 
 
 * While making an external call, YottaDB sets the environment variable GTM_CALLIN_START to point to a string containing the start address (decimal integer value) of the table described above. The external routine needs to read this environment variable, convert the string into an integer value and should index into the appropriate entry to call the appropriate YottaDB function.
-* YottaDB also provides an input-only parameter type gtm_pointertofunc_t that can be used to obtain call-back function pointers via parameters in the external routine. If a parameter is specified as I:gtm_pointertofunc_t and if a numeric value (between 0-5) is passed for this parameter in M, YottaDB interprets this value as the index into the callback table and passes the appropriate callback function pointer to the external routine.
+* YottaDB also provides an input-only parameter type ydb_pointertofunc_t that can be used to obtain call-back function pointers via parameters in the external routine. If a parameter is specified as I:ydb_pointertofunc_t and if a numeric value (between 0-5) is passed for this parameter in M, YottaDB interprets this value as the index into the callback table and passes the appropriate callback function pointer to the external routine.
 
 .. note::
    YottaDB strongly discourages the use of signals, especially SIGALARM, in user written C functions. YottaDB assumes that it has complete control over any signals that occur and depends on that behavior for recovery if anything should go wrong. The use of exposed timer APIs should be considered for timer needs.
@@ -324,7 +324,7 @@ Limitations on the External Program
 Since both YottaDB runtime environment and the external C functions execute in the same process space, the following restrictions apply to the external functions:
 
 * YottaDB is designed to use signals and has signal handlers that must function for YottaDB to operate properly. The timer related call-backs should be used in place of any library or system call which uses SIGALRM such as sleep(). Use of signals by external call code may cause YottaDB to fail.
-* Use of the YottaDB provided malloc and free, creates an integrated heap management system, which has a number of debugging tools. YottaDB recommends the usage of gtm_malloc/gtm_free in the external functions that provides better debugging capability in case memory management problems occur with external calls.
+* Use of the YottaDB provided malloc and free, creates an integrated heap management system, which has a number of debugging tools. YottaDB recommends the usage of ydb_malloc/ydb_free in the external functions that provides better debugging capability in case memory management problems occur with external calls.
 * Use of exit system call in external functions is strongly discouraged. Since YottaDB uses exit handlers to properly shutdown runtime environment and any active resources, the system call _exit should never be used in external functions.
 * YottaDB uses timer signals so often that the likelihood of a system call being interrupted is high. So, all system calls in the external program can return EINTR if interrupted by a signal.
 * Handler functions invoked with start_timer must not invoke services that are identified by the Operating System documentation as unsafe for signal handlers (or not identified as safe) - consult the system documentation or man pages for this information. Such services cause non-deterministic failures when they are interrupted by a function that then attempts to call them, wrongly assuming they are re-entrant.
@@ -336,7 +336,7 @@ Examples of Using External Calls
 ++++++++++++++++++++++++++++++++++++++++
 
 .. parsed-literal::
-   foo: void bar (I:gtm_float_t*, O:gtm_float_t*)
+   foo: void bar (I:ydb_float_t*, O:ydb_float_t*)
 
 There is one external call table for each package. The environment variable "ydb_xc" must name the external call table file for the default package. External call table files for packages other than the default must be identified by environment variables of the form "ydb_xc_name".
 
@@ -350,7 +350,7 @@ Example:
    % echo lib /usr/
    % cat mathpak.xc
    $lib/mathpak.sl
-   exp: gtm_status_t xexp(I:gtm_float_t*, O:gtm_float_t*)
+   exp: ydb_status_t xexp(I:ydb_float_t*, O:ydb_float_t*)
    % cat exp.c
    ...
    int xexp(count, invar, outvar)
@@ -372,12 +372,12 @@ Example : For preallocation:
    /usr/joe/extcall.xc
    % cat extcall.xc
    /usr/lib/extcall.sl
-   prealloc: void gtm_pre_alloc_a(O:gtm_char_t \*[12])
+   prealloc: void ydb_pre_alloc_a(O:ydb_char_t \*[12])
    % cat extcall.c
    #include <stdio.h>
    #include <string.h>
-   #include "gtmxc_types.h"
-   void gtm_pre_alloc_a (int count, char \*arg_prealloca)
+   #include "libyottadb.h"
+   void ydb_pre_alloc_a (int count, char \*arg_prealloca)
    {
     strcpy(arg_prealloca, "New Message");
     return;
@@ -391,13 +391,13 @@ Example : for call-back mechanism
    % cat /usr/joe/callback.xc 
    $MYLIB/callback.sl 
    init:     void   init_callbacks() 
-   tstslp:  void   tst_sleep(I:gtm_long_t) 
-   strtmr: void   start_timer(I:gtm_long_t, I:gtm_long_t) 
+   tstslp:  void   tst_sleep(I:ydb_long_t) 
+   strtmr: void   start_timer(I:ydb_long_t, I:ydb_long_t) 
    % cat /usr/joe/callback.c 
    #include <stdio.h> 
    #include <stdlib.h> 
     
-   #include "gtmxc_types.h" 
+   #include "libyottadb.h" 
  
    void \*\*functable; 
    void (\*setup_timer)(int , int , void (*)() , int , char \*); 
@@ -462,21 +462,21 @@ Example : for call-back mechanism
      (\*free_fn)(ptr); 
    }
 
-Example:gtm_malloc/gtm_free callbacks using gtm_pointertofunc_t
+Example:ydb_malloc/ydb_free callbacks using ydb_pointertofunc_t
 
 .. parsed-literal::
    % echo $ydb_xc
    /usr/joe/callback.xc
    % cat /usr/joe/callback.xc
    /usr/lib/callback.sl
-   init: void init_callbacks(I:gtm_pointertofunc_t, I:gtm_pointertofunc_t)
+   init: void init_callbacks(I:ydb_pointertofunc_t, I:ydb_pointertofunc_t)
    % ydb
    YDB> do &.init(4,5)
    YDB>
    % cat /usr/joe/callback.c
    #include <stdio.h>
    #include <stdlib.h>
-   #include "gtmxc_types.h"
+   #include "libyottadb.h"
    void* (\*malloc_fn)(int);
    void (\*free_fn)(void*);
    void init_callbacks(int count, void* (\*m)(int), void (\*f)(void*))
@@ -499,63 +499,63 @@ To facilitate Call-Ins to M routines, the YottaDB distribution directory ($ydb_d
 
 * libgtmshr.so - A shared library that implements the YottaDB run-time system, including the Call-In API. If Call-Ins are used from a standalone C/C++ program, this library needs to be explicitly linked into the program. See “Building Standalone Programs”, which describes the necessary linker options on each supported platforms.
 * mumps - The YottaDB startup program that dynamically links with libgtmshr.so.
-* gtmxc_types.h - A C-header file containing the declarations of Call-In API.
+* libyottadb.h - A C-header file containing the declarations of Call-In API.
 
 .. note::
    .so is the recognized shared library file extension on most UNIX platforms.
 
 The following sections describe the files relevant to using Call-Ins.
 
-**gtmxc_types.h**
+**libyottadb.h**
 
 The header file provides signatures of all Call-In interface functions and definitions of those valid data types that can be passed from C to M. YottaDB strongly recommends that these types be used instead of native types (int, char, float, and so on), to avoid possible mismatch problems during parameter passing.
 
-gtmxc_types.h defines the following types that can be used in Call-Ins.
+libyottadb.h defines the following types that can be used in Call-Ins.
 
 +-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Type                  | Usage                                                                                                                                                        |
 +=======================+==============================================================================================================================================================+
 | void                  | Used to express that there is no function return value                                                                                                       |
 +-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| gtm_int_t             | gtm_int_t has 32-bit length on all platforms.                                                                                                                |
+| ydb_int_t             | ydb_int_t has 32-bit length on all platforms.                                                                                                                |
 +-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| gtm_uint_t            | gtm_uint_t has 32-bit length on all platforms                                                                                                                |
+| ydb_uint_t            | ydb_uint_t has 32-bit length on all platforms                                                                                                                |
 +-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| gtm_long_t            | gtm_long_t has 32-bit length on 32-bit platforms and 64-bit length on 64-bit platforms. It is much the same as the C language long type.                     |
+| ydb_long_t            | ydb_long_t has 32-bit length on 32-bit platforms and 64-bit length on 64-bit platforms. It is much the same as the C language long type.                     |
 +-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| gtm_ulong_t           | gtm_ulong_t is much the same as the C language unsigned long type.                                                                                           |
+| ydb_ulong_t           | ydb_ulong_t is much the same as the C language unsigned long type.                                                                                           |
 +-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| gtm_float_t           | floating point number                                                                                                                                        |
+| ydb_float_t           | floating point number                                                                                                                                        |
 +-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| gtm_double_t          | Same as above but double precision.                                                                                                                          |
+| ydb_double_t          | Same as above but double precision.                                                                                                                          |
 +-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| gtm_status_t          | type int. If it returns zero then the call was successful. If it is non-zero, when control returns to YottaDB, it issues a trappable error.                  |
+| ydb_status_t          | type int. If it returns zero then the call was successful. If it is non-zero, when control returns to YottaDB, it issues a trappable error.                  |
 +-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| gtm_long_t*           | Pointer to gtm_long_t. Good for returning integers.                                                                                                          |
+| ydb_long_t*           | Pointer to ydb_long_t. Good for returning integers.                                                                                                          |
 +-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| gtm_ulong_t*          | Pointer to gtm_ulong_t. Good for returning unsigned integers.                                                                                                |
+| ydb_ulong_t*          | Pointer to ydb_ulong_t. Good for returning unsigned integers.                                                                                                |
 +-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
 .. parsed-literal::
    typedef struct {
-       gtm_long_t length;
-       gtm_char_t* address;
-   } gtm_string_t;
+       ydb_long_t length;
+       ydb_char_t* address;
+   } ydb_string_t;
 
-The pointer types defined above are 32-bit addresses on all 32-bit platforms. For 64-bit platforms, gtm_string_t* is a 64-bit address.
+The pointer types defined above are 32-bit addresses on all 32-bit platforms. For 64-bit platforms, ydb_string_t* is a 64-bit address.
 
-gtmxc_types.h also provides an input-only parameter type gtm_pointertofunc_t that can be used to obtain call-back function pointers via parameters in the external routine. If a parameter is specified as I:gtm_pointertofunc_t and if a numeric value (between 0-5) is passed for this parameter in M, YottaDB interprets this value as the index into the callback table and passes the appropriate callback function pointer to the external routine.
+libyottadb.h also provides an input-only parameter type ydb_pointertofunc_t that can be used to obtain call-back function pointers via parameters in the external routine. If a parameter is specified as I:ydb_pointertofunc_t and if a numeric value (between 0-5) is passed for this parameter in M, YottaDB interprets this value as the index into the callback table and passes the appropriate callback function pointer to the external routine.
 
 .. note::
    YottaDB represents values that fit in 18 digits as numeric values, and values that require more than 18 digits as strings.
 
-gtmxc_types.h also includes definitions for the following entry points exported from libgtmshr: 
+libyottadb.h also includes definitions for the following entry points exported from libgtmshr: 
 
 .. parsed-literal::
-   void gtm_hiber_start(gtm_uint_t mssleep);
-   void gtm_hiber_start_wait_any(gtm_uint_t mssleep)
-   void gtm_start_timer(gtm_tid_t tid, gtm_int_t time_to_expir, void (\*handler)(), gtm_int_t hdata_len, void \\*hdata);
-   void gtm_cancel_timer(gtm_tid_t tid);
+   void ydb_hiber_start(ydb_uint_t mssleep);
+   void ydb_hiber_start_wait_any(ydb_uint_t mssleep)
+   void ydb_start_timer(ydb_tid_t tid, ydb_int_t time_to_expir, void (\*handler)(), ydb_int_t hdata_len, void \\*hdata);
+   void ydb_cancel_timer(ydb_tid_t tid);
 
 where:
 
@@ -566,10 +566,10 @@ where:
 * hdata_len - 0 or length of data to pass to handler as a parameter
 * hdata - NULL or address of data to pass to handler as a parameter
 
-gtm_hiber_start() always sleeps until the time expires; gtm_hiber_start_wait_any() sleeps until the time expires or an interrupt by any signal (including another timer). gtm_start_timer() starts a timer but returns immediately (no sleeping) and drives the given handler when time expires unless the timer is canceled.
+ydb_hiber_start() always sleeps until the time expires; ydb_hiber_start_wait_any() sleeps until the time expires or an interrupt by any signal (including another timer). ydb_start_timer() starts a timer but returns immediately (no sleeping) and drives the given handler when time expires unless the timer is canceled.
 
 .. note::
-   YottaDB continues to support xc_* equivalent types of gtm_* for upward compatibility. gtmxc_types.h explicitly marks the xc_* equivalent types as deprecated.
+   libyottadb.h continues to be upward compatible with gtmxc_types.h. gtmxc_types.h explicitly marks the xc_* equivalent types as deprecated.
 
 **Call-In table**
 
@@ -598,20 +598,20 @@ The <direction> indicates the type of operation that YottaDB performs on the par
 +-------------------+---------------------------------------------------------------------------------------------------------------------------------------------+
 | Directions        | Allowed Parameter Types                                                                                                                     |
 +===================+=============================================================================================================================================+
-| I                 | gtm_long_t, gtm_ulong_t, gtm_float_t, gtm_double_t,_gtm_long_t*, gtm_ulong_t*, gtm_float_t*, gtm_double_t*,_gtm_char_t*, gtm_string_t*      |
+| I                 | ydb_long_t, ydb_ulong_t, ydb_float_t, ydb_double_t,_ydb_long_t*, ydb_ulong_t*, ydb_float_t*, ydb_double_t*,_ydb_char_t*, ydb_string_t*      |
 +-------------------+---------------------------------------------------------------------------------------------------------------------------------------------+
-| O/IO              | gtm_long_t*, gtm_ulong_t*, gtm_float_t*, gtm_double_t*,_gtm_char_t*, gtm_string_t*                                                          |
+| O/IO              | ydb_long_t*, ydb_ulong_t*, ydb_float_t*, ydb_double_t*,_ydb_char_t*, ydb_string_t*                                                          |
 +-------------------+---------------------------------------------------------------------------------------------------------------------------------------------+
 
 Here is an example of Call-In table (calltab.ci) for piece.m (see “Example: Calling YottaDB from a C Program”):
 
 .. parsed-literal::
    print     :void            display^piece()
-   getpiece  :gtm_char_t*     get^piece(I:gtm_char_t*, I:gtm_char_t*, I:gtm_long_t)
-   setpiece  :void            set^piece(IO:gtm_char_t*, I:gtm_char_t*, I:gtm_long_t, I:gtm_char_t*)
-   pow       :gtm_double_t*   pow^piece(I:gtm_double_t, I:gtm_long_t)
-   powequal  :void            powequal^piece(IO:gtm_double_t*, I:gtm_long_t)
-   piece     :gtm_double_t*   pow^piece(I:gtm_double_t, I:gtm_long_t)
+   getpiece  :ydb_char_t*     get^piece(I:ydb_char_t*, I:ydb_char_t*, I:ydb_long_t)
+   setpiece  :void            set^piece(IO:ydb_char_t*, I:ydb_char_t*, I:ydb_long_t, I:ydb_char_t*)
+   pow       :ydb_double_t*   pow^piece(I:ydb_double_t, I:ydb_long_t)
+   powequal  :void            powequal^piece(IO:ydb_double_t*, I:ydb_long_t)
+   piece     :ydb_double_t*   pow^piece(I:ydb_double_t, I:ydb_long_t)
 
 .. note::
    The same entryref can be called by different C call names (for example, pow, and piece). However, if there are multiple lines with the same call name, only the first entry will be used by YottaDB. YottaDB ignores all subsequent entries using a call name.
@@ -625,36 +625,36 @@ This section is further broken down into 6 subsections for an easy understanding
 **Initialize YottaDB**
 
 .. parsed-literal::
-   gtm_status_t gtm_init(void);
+   ydb_status_t ydb_init(void);
 
-If the base program is not an M routine but a standalone C program, gtm_init() must be called (before calling any YottaDB functions), to initialize the YottaDB run-time system.
+If the base program is not an M routine but a standalone C program, ydb_init() must be called (before calling any YottaDB functions), to initialize the YottaDB run-time system.
 
-gtm_init() returns zero (0) on success. On failure, it returns the YottaDB error status code whose message can be read into a buffer by immediately calling gtm_zstatus(). Duplicate invocations of gtm_init() are ignored by YottaDB.
+ydb_init() returns zero (0) on success. On failure, it returns the YottaDB error status code whose message can be read into a buffer by immediately calling ydb_zstatus(). Duplicate invocations of ydb_init() are ignored by YottaDB.
 
-If Call-Ins are used from an external call function (that is, a C function that has itself been called from M code), gtm_init() is not needed, because YottaDB is initialized before the External Call. All gtm_init() calls from External Calls functions are ignored by YottaDB.
+If Call-Ins are used from an external call function (that is, a C function that has itself been called from M code), ydb_init() is not needed, because YottaDB is initialized before the External Call. All ydb_init() calls from External Calls functions are ignored by YottaDB.
 
 **Call an M Routine from C**
 
 YottaDB provides 2 interfaces for calling a M routine from C. These are:
 
-* gtm_cip
-* gtm_ci
+* ydb_cip
+* ydb_ci
 
-gtm_cip offers better performance on calls after the first one. 
+ydb_cip offers better performance on calls after the first one. 
 
-**gtm_cip**
+**ydb_cip**
 
 .. parsed-literal::
-   gtm_status_t gtm_cip(ci_name_descriptor \*ci_info, ...);
+   ydb_status_t ydb_cip(ci_name_descriptor \*ci_info, ...);
 
-The variable argument function gtm_cip() is the interface that invokes the specified M routine and returns the results via parameters.
+The variable argument function ydb_cip() is the interface that invokes the specified M routine and returns the results via parameters.
 
 ci_name_descriptor has the following structure:
 
 .. parsed-literal::
    typedef struct
    {
-     gtm_string_t rtn_name;
+     ydb_string_t rtn_name;
      void* handle;
    } ci_name_descriptor;
 
@@ -662,10 +662,10 @@ rtn_name is a C character string indicating the corresponding <lab-ref> entry in
 
 The handle is YottaDB private information initialized by YottaDB on the first call-in and to be provided unmodified to YottaDB on subsequent calls. If application code modifies it, it will corrupt the address space of the process, and potentially cause just about any bad behavior that it is possible for the process to cause, including but not limited to process death, database damage and security violations.
 
-The gtm_cip() call must follow the following format:
+The ydb_cip() call must follow the following format:
 
 .. parsed-literal::
-   status = gtm_cip(<ci_name_descriptor> [, ret_val] [, arg1] ...);
+   status = ydb_cip(<ci_name_descriptor> [, ret_val] [, arg1] ...);
 
 First argument: ci_name_descriptor, a null-terminated C character string indicating the alias name for the corresponding <lab-ref> entry in the Call-In table.
 
@@ -673,17 +673,17 @@ Optional second argument: ret_val, a pre-allocated pointer through which YottaDB
 
 Optional list of arguments to be passed to the M routine's formallist: the number of arguments and the type of each argument must match the number of parameters, and parameter types specified in the corresponding Call-In table entry. All pointer arguments must be pre-allocated. YottaDB assumes that any pointer, which is passed for O/IO-parameter points to valid write-able memory.
 
-The status value returned by gtm_cip() indicates the YottaDB status code; zero (0), if successful, or a non-zero; $ZSTATUS error code on failure. The $ZSTATUS message of the failure can be read into a buffer by immediately calling gtm_zstatus().
+The status value returned by ydb_cip() indicates the YottaDB status code; zero (0), if successful, or a non-zero; $ZSTATUS error code on failure. The $ZSTATUS message of the failure can be read into a buffer by immediately calling ydb_zstatus().
 
-**gtm_ci**
-
-.. parsed-literal::
-   gtm_status_t gtm_ci(const gtm_char_t* c_call_name, ...);
-
-The variable argument function gtm_ci() is the interface that actually invokes the specified M routine and returns the results via parameters. The gtm_ci() call must be in the following format:
+**ydb_ci**
 
 .. parsed-literal::
-   status = gtm_ci(<c_call_name> [, ret_val] [, arg1] ...);
+   ydb_status_t ydb_ci(const ydb_char_t* c_call_name, ...);
+
+The variable argument function ydb_ci() is the interface that actually invokes the specified M routine and returns the results via parameters. The ydb_ci() call must be in the following format:
+
+.. parsed-literal::
+   status = ydb_ci(<c_call_name> [, ret_val] [, arg1] ...);
 
 First argument: c_call_name, a null-terminated C character string indicating the alias name for the corresponding <lab-ref> entry in the Call-In table.
 
@@ -691,7 +691,7 @@ Optional second argument: ret_val, a pre-allocated pointer through which YottaDB
 
 Optional list of arguments to be passed to the M routine's formallist: the number of arguments and the type of each argument must match the number of parameters, and parameter types specified in the corresponding Call-In table entry. All pointer arguments must be pre-allocated. YottaDB assumes that any pointer, which is passed for O/IO-parameter points to valid write-able memory.
 
-The status value returned by gtm_ci() indicates the YottaDB status code; zero (0), if successful, or a non-zero; $ZSTATUS error code on failure. The $ZSTATUS message of the failure can be read into a buffer by immediately calling gtm_zstatus(). For more details, see “Print Error Messages”.
+The status value returned by ydb_ci() indicates the YottaDB status code; zero (0), if successful, or a non-zero; $ZSTATUS error code on failure. The $ZSTATUS message of the failure can be read into a buffer by immediately calling ydb_zstatus(). For more details, see “Print Error Messages”.
 
 **Example: Calling YottaDB from a C Program**
 
@@ -700,36 +700,36 @@ Here are some working examples of C programs that use call-ins to invoke YottaDB
 +--------------------------------+----------------------------------------------------------------------------------------------+
 | Example                        | Download Information                                                                         |
 +================================+==============================================================================================+
-| gtmaccess.c (gtm_ci interface) | https://gitlab.com/YottaDB/DB/YDBDoc/blob/master/ProgGuide/gtmci_gtmaccess.zip               |
+| gtmaccess.c (ydb_ci interface) | https://gitlab.com/YottaDB/DB/YDBDoc/blob/master/ProgGuide/gtmci_gtmaccess.zip               |
 +--------------------------------+----------------------------------------------------------------------------------------------+
-| gtmaccess.c (gtm_cip interface)| https://gitlab.com/YottaDB/DB/YDBDoc/blob/master/ProgGuide/gtmcip_gtmaccess.zip              |
+| gtmaccess.c (ydb_cip interface)| https://gitlab.com/YottaDB/DB/YDBDoc/blob/master/ProgGuide/gtmcip_gtmaccess.zip              |
 +--------------------------------+----------------------------------------------------------------------------------------------+
-| cpiece.c (gtm_ci interface)    | https://gitlab.com/YottaDB/DB/YDBDoc/blob/master/ProgGuide/gtmci_cpiece.zip                  |
+| cpiece.c (ydb_ci interface)    | https://gitlab.com/YottaDB/DB/YDBDoc/blob/master/ProgGuide/gtmci_cpiece.zip                  |
 +--------------------------------+----------------------------------------------------------------------------------------------+
 
 **Print Error Messages**
 
 .. parsed-literal::
-   void gtm_zstatus (gtm_char_t* msg_buffer, gtm_long_t buf_len);
+   void ydb_zstatus (ydb_char_t* msg_buffer, ydb_long_t buf_len);
 
-This function returns the null-terminated $ZSTATUS message of the last failure via the buffer pointed by msg_buffer of size buf_len. The message is truncated to size buf_len if it does not fit into the buffer. gtm_zstatus() is useful if the external application needs the text message corresponding to the last YottaDB failure. A buffer of 2048 is sufficient to fit in any YottaDB message.
+This function returns the null-terminated $ZSTATUS message of the last failure via the buffer pointed by msg_buffer of size buf_len. The message is truncated to size buf_len if it does not fit into the buffer. ydb_zstatus() is useful if the external application needs the text message corresponding to the last YottaDB failure. A buffer of 2048 is sufficient to fit in any YottaDB message.
 
 **Exit from YottaDB**
 
 .. parsed-literal::
-   gtm_status_t  gtm_exit (void);
+   ydb_status_t  ydb_exit (void);
 
-gtm_exit() can be used to shut down all databases and exit from the YottaDB environment that was created by a previous gtm_init().
+ydb_exit() can be used to shut down all databases and exit from the YottaDB environment that was created by a previous ydb_init().
 
-Note that gtm_init() creates various YottaDB resources and keeps them open across multiple invocations of gtm_ci() until gtm_exit() is called to close all such resources. On successful exit, gtm_exit() returns zero (0), else it returns the $ZSTATUS error code.
+Note that ydb_init() creates various YottaDB resources and keeps them open across multiple invocations of ydb_ci() until ydb_exit() is called to close all such resources. On successful exit, ydb_exit() returns zero (0), else it returns the $ZSTATUS error code.
 
-gtm_exit() cannot be called from an external call function. YottaDB reports the error YDB-E-INVGTMEXIT if an external call function invokes gtm_exit(). Since the YottaDB run-time system must be operational even after the external call function returns, gtm_exit() is meant to be called only once during a process lifetime, and only from the base C/C++ program when YottaDB functions are no longer required by the program.
+ydb_exit() cannot be called from an external call function. YottaDB reports the error YDB-E-INVGTMEXIT if an external call function invokes ydb_exit(). Since the YottaDB run-time system must be operational even after the external call function returns, ydb_exit() is meant to be called only once during a process lifetime, and only from the base C/C++ program when YottaDB functions are no longer required by the program.
 
 +++++++++++++++++++++++++++++
 Building Standalone Programs
 +++++++++++++++++++++++++++++
 
-All external C functions that use call-ins should include the header file gtmxc_types.h that defines various types and provides signatures of call-in functions. To avoid potential size mismatches with the parameter types, YottaDB strongly recommends that gtm \*t types defined in gtmxc_types.h be used instead of the native types (int, float, char, etc).
+All external C functions that use call-ins should include the header file libyottadb.h that defines various types and provides signatures of call-in functions. To avoid potential size mismatches with the parameter types, YottaDB strongly recommends that gtm \*t types defined in libyottadb.h be used instead of the native types (int, float, char, etc).
 
 To use call-ins from a standalone C program, it is necessary that the YottaDB runtime library (libgtmshr.so) is explicitly linked into the program. If call-ins are used from an External Call function (which in turn was called from YottaDB through the existing external call mechanism), the External Call library does not need to be linked explicitly with libgtmshr.so since YottaDB would have already loaded it.
 
@@ -750,13 +750,13 @@ The following sections describe compiler and linker options that must be used on
 Nested Call-Ins
 ++++++++++++++++++++++++++++++
 
-Call-ins can be nested by making an external call function in-turn call back into YottaDB. Each gtm_ci() called from an External Call library creates a call-in base frame at $ZLEVEL 1 and executes the M routine at $ZLEVEL 2. The nested call-in stack unwinds automatically when the External Call function returns to YottaDB.
+Call-ins can be nested by making an external call function in-turn call back into YottaDB. Each ydb_ci() called from an External Call library creates a call-in base frame at $ZLEVEL 1 and executes the M routine at $ZLEVEL 2. The nested call-in stack unwinds automatically when the External Call function returns to YottaDB.
 
 YottaDB currently allows up to 10 levels of nesting, if TP is not used, and less than 10 if YottaDB supports call-ins from a transaction (see “Rules to Follow in Call-Ins”). YottaDB reports the error YDB-E-CIMAXLEVELS when the nesting reaches its limit.
 
 Following are the YottaDB commands, Intrinsic Special Variables, and functions whose behavior changes in the context of every new nested call-in environment.
 
-ZGOTO operates only within the current nested M stack. ZGOTO zero (0) unwinds all frames in the current nested call-in M stack (including the call-in base frame) and returns to C. ZGOTO one (1) unwinds all current stack frame levels up to (but not inclusive) the call-in base frame and returns to C, while keeping the current nested call-in environment active for any following gtm_ci() calls.
+ZGOTO operates only within the current nested M stack. ZGOTO zero (0) unwinds all frames in the current nested call-in M stack (including the call-in base frame) and returns to C. ZGOTO one (1) unwinds all current stack frame levels up to (but not inclusive) the call-in base frame and returns to C, while keeping the current nested call-in environment active for any following ydb_ci() calls.
 
 $ZTRAP/$ETRAP NEW'd at level 1 (in GTM$CI frame).
 
@@ -776,8 +776,8 @@ Rules to Follow in Call-Ins
 ++++++++++++++++++++++++++++++++++++
 
 1. External calls must not be fenced with TSTART/TCOMMIT if the external routine calls back into mumps using the call-in mechanism. YottaDB reports the error YDB-E-CITPNESTED if nested call-ins are invoked within a TP fence since YottaDB currently does not handle TP support across multiple call-in invocations.
-2. The external application should never call exit() unless it has called gtm_exit() previously. YottaDB internally installs an exit handler that should never be bypassed.
-3. The external application should never use any signals when YottaDB is active since YottaDB reserves them for its internal use. YottaDB provides the ability to handle SIGUSR1 within M (see “$ZINTerrupt” for more information). An interface is provided by YottaDB for timers. Although not required, YottaDB recommends the use of gtm_malloc() and gtm_free() for memory management by C code that executes in a YottaDB process space for enhanced performance and improved debugging.
+2. The external application should never call exit() unless it has called ydb_exit() previously. YottaDB internally installs an exit handler that should never be bypassed.
+3. The external application should never use any signals when YottaDB is active since YottaDB reserves them for its internal use. YottaDB provides the ability to handle SIGUSR1 within M (see “$ZINTerrupt” for more information). An interface is provided by YottaDB for timers. Although not required, YottaDB recommends the use of ydb_malloc() and ydb_free() for memory management by C code that executes in a YottaDB process space for enhanced performance and improved debugging.
 4. YottaDB performs device input using the read() system service. UNIX documentation recommends against mixing this type of input with buffered input services in the fgets() family and ignoring this recommendation is likely to cause a loss of input that is difficult to diagnose and understand.
 
 --------------------------------------
@@ -799,31 +799,31 @@ In the following table, the YottaDB->C limit applies to 1 and the C->YottaDB lim
 +==================================================================================+====================+==============================================+============================+=========================================+
 | **Type**                                                                         | **Precision**      | **Range**                                    | **Precision**              | **Range**                               |
 +----------------------------------------------------------------------------------+--------------------+----------------------------------------------+----------------------------+-----------------------------------------+
-| gtm_int_t, gtm_int_t *                                                           | Full               | [-2^31+1, 2^31-1]                            | Full                       | [-2^31, 2^31-1]                         |
+| ydb_int_t, ydb_int_t *                                                           | Full               | [-2^31+1, 2^31-1]                            | Full                       | [-2^31, 2^31-1]                         |
 +----------------------------------------------------------------------------------+--------------------+----------------------------------------------+----------------------------+-----------------------------------------+
-| gtm_uint_t, gtm_uint_t *                                                         | Full               | [0, 2^32-1]                                  | Full                       | [0, 2^32-1]                             |
+| ydb_uint_t, ydb_uint_t *                                                         | Full               | [0, 2^32-1]                                  | Full                       | [0, 2^32-1]                             |
 +----------------------------------------------------------------------------------+--------------------+----------------------------------------------+----------------------------+-----------------------------------------+
-| gtm_long_t, gtm_long_t * (64-bit)                                                | 18 digits          | [-2^63+1, 2^63-1]                            | 18 digits                  | [-2^63, 2^63-1]                         |
+| ydb_long_t, ydb_long_t * (64-bit)                                                | 18 digits          | [-2^63+1, 2^63-1]                            | 18 digits                  | [-2^63, 2^63-1]                         |
 +----------------------------------------------------------------------------------+--------------------+----------------------------------------------+----------------------------+-----------------------------------------+
-| gtm_long_t, gtm_long_t * (32-bit)                                                | Full               | [-2^31+1, 2^31-1]                            | Full                       | [-2^31, 2^31-1]                         |
+| ydb_long_t, ydb_long_t * (32-bit)                                                | Full               | [-2^31+1, 2^31-1]                            | Full                       | [-2^31, 2^31-1]                         |
 +----------------------------------------------------------------------------------+--------------------+----------------------------------------------+----------------------------+-----------------------------------------+
-| gtm_ulong_t, gtm_ulong_t * (64-bit)                                              | 18 digits          | [0, 2^64-1]                                  | 18 digits                  | [0, 2^64-1]                             |
+| ydb_ulong_t, ydb_ulong_t * (64-bit)                                              | 18 digits          | [0, 2^64-1]                                  | 18 digits                  | [0, 2^64-1]                             |
 +----------------------------------------------------------------------------------+--------------------+----------------------------------------------+----------------------------+-----------------------------------------+
-| gtm_ulong_t, gtm_ulong_t * (32-bit)                                              | Full               | [0, 2^32-1]                                  | Full                       | [0, 2^32-1]                             |
+| ydb_ulong_t, ydb_ulong_t * (32-bit)                                              | Full               | [0, 2^32-1]                                  | Full                       | [0, 2^32-1]                             |
 +----------------------------------------------------------------------------------+--------------------+----------------------------------------------+----------------------------+-----------------------------------------+
-| gtm_float_t, gtm_float_t *                                                       | 6-9 digits         | [1E-43, 3.4028235E38]                        | 6 digits                   | [1E-43, 3.4028235E38]                   |
+| ydb_float_t, ydb_float_t *                                                       | 6-9 digits         | [1E-43, 3.4028235E38]                        | 6 digits                   | [1E-43, 3.4028235E38]                   |
 +----------------------------------------------------------------------------------+--------------------+----------------------------------------------+----------------------------+-----------------------------------------+
-| gtm_double_t, gtm_double_t *                                                     | 15-17 digits       | [1E-43, 1E47]                                | 15 digits                  | [1E-43, 1E47]                           |
+| ydb_double_t, ydb_double_t *                                                     | 15-17 digits       | [1E-43, 1E47]                                | 15 digits                  | [1E-43, 1E47]                           |
 +----------------------------------------------------------------------------------+--------------------+----------------------------------------------+----------------------------+-----------------------------------------+
-| gtm_char_t *                                                                     | N/A                | ["", 1MiB]                                   | N/A                        | ["", 1MiB]                              |
+| ydb_char_t *                                                                     | N/A                | ["", 1MiB]                                   | N/A                        | ["", 1MiB]                              |
 +----------------------------------------------------------------------------------+--------------------+----------------------------------------------+----------------------------+-----------------------------------------+
-| gtm_char_t **                                                                    | N/A                | ["", 1MiB]                                   | N/A                        | ["", 1MiB]                              |
+| ydb_char_t **                                                                    | N/A                | ["", 1MiB]                                   | N/A                        | ["", 1MiB]                              |
 +----------------------------------------------------------------------------------+--------------------+----------------------------------------------+----------------------------+-----------------------------------------+
-| gtm_string_t *                                                                   | N/A                | ["", 1MiB]                                   | N/A                        | ["", 1MiB]                              |
+| ydb_string_t *                                                                   | N/A                | ["", 1MiB]                                   | N/A                        | ["", 1MiB]                              |
 +----------------------------------------------------------------------------------+--------------------+----------------------------------------------+----------------------------+-----------------------------------------+
 
 .. note::
-   gtm_char_t ** is not supported for call-ins but they are included for IO and O direction usage with call-outs. For call-out use of gtm_char_t \* and gtm_string_t \*, the specification in the interface definition for preallocation sets the range for IO and O, with a maximum of 1MiB.
+   ydb_char_t ** is not supported for call-ins but they are included for IO and O direction usage with call-outs. For call-out use of ydb_char_t \* and ydb_string_t \*, the specification in the interface definition for preallocation sets the range for IO and O, with a maximum of 1MiB.
 
 
 
