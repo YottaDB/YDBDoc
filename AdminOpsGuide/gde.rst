@@ -1268,7 +1268,7 @@ By default, GDE uses a KEY_SIZE of 64 bytes
 
 Specifies whether YottaDB should share the resource management between a database and its corresponding LOCKs or use separate and different resource management for the two. Because, in the current implementation, YottaDB has not identified any reason to share resource management between LOCKs and database actions, we have no recommendations other than to choose what seems to work better for your application.
 
-By default, GDE uses NOLOCK_CRIT-Sep(arate) resource management for LOCKs and database actions.
+By default, GDE uses LOCK_CRIT Sep(arate) resource management for LOCKs and database actions.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -[NO]N[ULL_SUBSCRIPTS]=[ALWAYS|NEVER|EXISTING]
@@ -1349,7 +1349,7 @@ The following table summarizes GDE region qualifiers. It provides their abbrevia
 +---------------------------------------------------------------------------------------+--------------------------------+------------------------------+----------------------------+
 | -K[EY_SIZE]=size in bytes (integer)                                                   | 64                             | 3                            | 1019                       |
 +---------------------------------------------------------------------------------------+--------------------------------+------------------------------+----------------------------+
-| -[NO]L[OCK_CRIT]                                                                      | DISABLED (not shared)          | \-                           | \-                         |
+| -[NO]L[OCK_CRIT]                                                                      | ENABLED (Separate)             | \-                           | \-                         |
 +---------------------------------------------------------------------------------------+--------------------------------+------------------------------+----------------------------+
 | -N[ULL_SUBSCRIPTS]=[ALWAYS|NEVER|EXISTING]                                            | NEVER                          | \-                           | \-                         |
 +---------------------------------------------------------------------------------------+--------------------------------+------------------------------+----------------------------+
