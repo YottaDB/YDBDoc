@@ -1311,7 +1311,7 @@ The maximum RECORD_SIZE is 1,048,576 bytes (1MiB).
 By default, GDE uses a RECORD_SIZE of 256 bytes.
 
 ~~~~~~~~~~~~~~
--[NO][STA[TS]
+-[NO]STA[TS]
 ~~~~~~~~~~~~~~
 
 Specifies whether YottaDB should permit processes to share their database access statistics for other processes to monitor. When on, this characteristic causes YottaDB to create a small MM database for the associated region to hold the shared statistics. There may be operational or security reasons to prohibit sharing of statistics. For example, YottaDB does not share statistics on database files that exist solely to support YottaDB features. 
