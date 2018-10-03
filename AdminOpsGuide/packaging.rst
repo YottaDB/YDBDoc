@@ -133,7 +133,7 @@ The month_starting.c program accomplishes this by calling the same YottaDB entry
 
 .. parsed-literal::
    /* Initialize and call calcprint^monthstarting() \*/
-   if ( 0 == gtm_init() ) gtm_ci("calcprint", &status, argv[0], argc>1 ? argv[1] : "", argc>2 ? argv[2] : "");
+   if ( 0 == ydb_init() ) ydb_ci("calcprint", &status, argv[0], argc>1 ? argv[1] : "", argc>2 ? argv[2] : "");
 
 Prior to calling the YottaDB entryref, the C program also needs to set environment variables if they are not set: ydb_dist to point to the directory where YottaDB is installed, ydb_routines to enable YottaDB to find the monthstarting M routine as well as YottaDB's %DATE utility program, and ydb_ci to point to the call-in table:
 
@@ -159,8 +159,8 @@ Prior to calling the YottaDB entryref, the C program also needs to set environme
             setenv( "ydb_routines", strbuf, 1 );
             }
             setenv( "ydb_ci", "monthstarting.ci", 0 );
-            if ( 0 == gtm_init() ) gtm_ci("calcprint", &status, argv[0], argc>1 ? argv[1] : "", argc>2 ? argv[2] : "");
-            gtm_exit(); /* Discard status from gtm_exit and return status from function call \*/
+            if ( 0 == ydb_init() ) ydb_ci("calcprint", &status, argv[0], argc>1 ? argv[1] : "", argc>2 ? argv[2] : "");
+            ydb_exit(); /* Discard status from ydb_exit and return status from function call \*/
 
 
 Note that on 32-bit platforms, the last element of ydb_routines is $ydb_dist, whereas on 64-bit platforms, it is $ydb_dist/libgtmutil.so. If you are creating a wrapper to ensure that environment variables are set correctly because their values cannot be trusted, you should also review and set the environment variables discussed in “Setting up a Captive User Application with YottaDB” above.
@@ -168,7 +168,7 @@ Note that on 32-bit platforms, the last element of ydb_routines is $ydb_dist, wh
 All the C program needs to do is to set environment variables and call a YottaDB entryref. A call-in table is a text file that maps C names and parameters to M names and parameters. In this case, the call-in table is just a single line to map the C function calcprint() to the YottaDB entryref calcprint^monthstarting():
 
 .. parsed-literal::
-   calcprint : gtm_int_t* calcprint^monthstarting(I:gtm_char_t*, I:gtm_char_t*, I:gtm_char_t*)
+   calcprint : ydb_int_t* calcprint^monthstarting(I:ydb_char_t*, I:ydb_char_t*, I:ydb_char_t*)
 
 --------------------------------
 Defensive Practices

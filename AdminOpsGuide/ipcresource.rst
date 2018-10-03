@@ -202,16 +202,16 @@ This command produces a sample output like the following:
 .. parsed-literal::
    ------ Shared Memory Segments --------
    key  shmid owner perms bytes nattch status
-   0x00000000 11632641 gtmuser 777 1048576 3
-   0x00000000 11665410 gtmuser 777 2629632 2
-   0x00000000 11698179 gtmuser 777 1048576 2
+   0x00000000 11632641 yottadbuser 777 1048576 3
+   0x00000000 11665410 yottadbuser 777 2629632 2
+   0x00000000 11698179 yottadbuser 777 1048576 2
    ------ Semaphore Arrays --------
    key  semid owner perms nsems
-   0x2c0ae6d1 229376 gtmuser 777 3
-   0x00000000 262145 gtmuser 777 5
-   0x2b0ae6cf 294914 gtmuser 777 3
-   0x00000000 327683 gtmuser 777 3
-   0x00000000 360452 gtmuser 777 5
+   0x2c0ae6d1 229376 yottadbuser 777 3
+   0x00000000 262145 yottadbuser 777 5
+   0x2b0ae6cf 294914 yottadbuser 777 3
+   0x00000000 327683 yottadbuser 777 3
+   0x00000000 360452 yottadbuser 777 5
    ------ Message Queues --------
    key  msqid owner perms used-bytes messages 
 

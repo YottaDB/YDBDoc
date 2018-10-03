@@ -918,7 +918,7 @@ CIMAXPARAM
 
 CIMAXPARAM, Exceeded maximum number of parameters in the call-in table entry. An M routine cannot accept more than 32 parameters.
 
-Call in/Run Time Error: This indicates that the call-in table specified by $ydb_ci contains more than 32 parameters. Since an M formallist can only accept up to 32 parameters, the user cannot pass more than 32 arguments to gtm_ci(), excluding <c-call-name> and <ret-type>.
+Call in/Run Time Error: This indicates that the call-in table specified by $ydb_ci contains more than 32 parameters. Since an M formallist can only accept up to 32 parameters, the user cannot pass more than 32 arguments to ydb_ci(), excluding <c-call-name> and <ret-type>.
 
 Action: Reduce the number of parameters to be less than 32 in the call-in table as well as in the M routine.
 
@@ -1002,7 +1002,7 @@ CITPNESTED
 
 CITPNESTED, Call-ins can not be used inside a TP transaction
 
-Call in/Run Time Error: This indicates that a nested call-in (gtm_ci()) was invoked from an external call function that was called within a TSTART/TCOMMIT fence.
+Call in/Run Time Error: This indicates that a nested call-in (ydb_ci()) was invoked from an external call function that was called within a TSTART/TCOMMIT fence.
 
 Action: YottaDB currently does not handle TP support across multiple call-in invocations. Make sure all external call C functions, that invoke call-in functionality are not fenced within a TSTART/TCOMMIT boundary.
 
@@ -7745,7 +7745,7 @@ LIBYOTTAMISMTCH
 
 LIBYOTTAMISMTCH, $ydb_dist/libyottadb.so does not match the shared library path.
 
-Runtime Error: This indicates that the full path of the currently running libyottadb.so shared library does not match the path described by $ydb_dist. This is possible for example if a C program tries to directly invoke a base image function (e.g. gtm_main, dse_main, mupip_main etc.) for more than one build/release of YottaDB in the same process.
+Runtime Error: This indicates that the full path of the currently running libyottadb.so shared library does not match the path described by $ydb_dist. This is possible for example if a C program tries to directly invoke a base image function (e.g. ydb_main, dse_main, mupip_main etc.) for more than one build/release of YottaDB in the same process.
 
 Action:  Make sure a C program invokes a base image function of only one libyottadb.so executable.
 
@@ -8405,7 +8405,7 @@ MIXIMAGE
 
 MIXIMAGE, Cannot load more than one base image function on a process.
 
-Run Time Error: This indicates that a C function tries to invoke more than one base image function included in libyottadb.so (e.g. gtm_main, dse_main, mupip_main etc.). Only one base image function can be invoked and only once for the lifetime of the process.
+Run Time Error: This indicates that a C function tries to invoke more than one base image function included in libyottadb.so (e.g. ydb_main, dse_main, mupip_main etc.). Only one base image function can be invoked and only once for the lifetime of the process.
 
 Action: Make sure only one base image function is invoked for the lifetime of one process.
 
@@ -14882,9 +14882,9 @@ Action: Review the call-in table and ensure that the parameter types match the f
 +-------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 | Directions                    |  Allowed Parameter Types                                                                                                               |
 +===============================+========================================================================================================================================+
-| I                             | gtm_long_t, gtm_ulong_t, gtm_float_t, gtm_double_t,_gtm_long_t*, gtm_ulong_t*, gtm_float_t*, gtm_double_t*,_gtm_char_t*, gtm_string_t* |
+| I                             | ydb_long_t, ydb_ulong_t, ydb_float_t, ydb_double_t,_ydb_long_t*, ydb_ulong_t*, ydb_float_t*, ydb_double_t*,_ydb_char_t*, ydb_string_t* |
 +-------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-| O/IO                          | gtm_long_t*, gtm_ulong_t*, gtm_float_t*, gtm_double_t*,_gtm_char_t*, gtm_string_t*                                                     |
+| O/IO                          | ydb_long_t*, ydb_ulong_t*, ydb_float_t*, ydb_double_t*,_ydb_char_t*, ydb_string_t*                                                     |
 +-------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 
 ---------------

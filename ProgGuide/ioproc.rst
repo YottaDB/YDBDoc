@@ -1952,28 +1952,28 @@ You can download `sockexamplemulti31.m <https://gitlab.com/YottaDB/DB/YDBDoc/raw
 
 You can start a YottaDB process in response to a connection request made using inetd/xinetd. The following example uses inetd/xinetd to implement a listener which responds to connections and messages just as the prior example.
 
-In the configuration file for xinetd, define a new service called gtmserver. Set socket_type to "stream" and wait to "no" as in the following snippet:
+In the configuration file for xinetd, define a new service called ydbserver. Set socket_type to "stream" and wait to "no" as in the following snippet:
 
 .. parsed-literal::
-   service gtmserver 
+   service ydbserver 
    { 
    disable = no 
    type = UNLISTED 
    port = 7777 
    socket_type = stream 
    wait = no 
-   user = gtmuser 
-   server = /path/to/startgtm 
+   user = yottadbuser 
+   server = /path/to/startyottadb 
    }
 
 If you define the server in /etc/services, the type and port options are not needed. For more information, the xinetd.conf man page for more details.
 
-If you are using inetd, add a line to /etc/inetd.conf with the sockettype "stream", protocol "tcp", and specify the "nowait" flag as in the example below, which assumes a gtmserver service is defined in /etc/services:
+If you are using inetd, add a line to /etc/inetd.conf with the sockettype "stream", protocol "tcp", and specify the "nowait" flag as in the example below, which assumes a ydbserver service is defined in /etc/services:
 
 .. parsed-literal::
-   gtmserver stream tcp nowait gtmuser /path/to/startgtm 
+   ydbserver stream tcp nowait yottadbuser /path/to/startyottadb 
 
-In both of the above examples, "gtmuser" is the name of the user to own and run the gtmserver service, and "/path/to/startgtm" is the name of a script which defines some environment variables needed before invoking YottaDB. Please check the man page for inetd.conf on your system as the details may be slightly different.
+In both of the above examples, "yottadbuser" is the name of the user to own and run the ydbserver service, and "/path/to/startyottadb" is the name of a script which defines some environment variables needed before invoking YottaDB. Please check the man page for inetd.conf on your system as the details may be slightly different.
 
 The minimum variables are: $ydb_dist, which specifies the directory containing the YottaDB distribution, and $ydb_routines, which specifies the paths used to locate the YottaDB routines. As an example: 
 
@@ -2355,8 +2355,8 @@ Example:
 Example:
 
 .. parsed-literal::
-   YDB>zprint ^gtmcp
-   gtmcp ; Copy a binary file using YottaDB
+   YDB>zprint ^ydbcp
+   ydbcp ; Copy a binary file using YottaDB
      new dest,line,max,src
      if 2>$length($zcmdline," ") write "$ydb_dist/mumps -r source target",!
      set dest=$piece($zcmdline," ",2)
@@ -2493,7 +2493,7 @@ The basic steps to use a key and IV to create an encrypted file and decrypt its 
 .. parsed-literal::
    export LD_LIBRARY_PATH=/usr/local/lib
    export GNUPGHOME=$PWD/mygnupg
-   $ydb_dist/plugin/gtmcrypt/gen_keypair.sh mykeypair@gtm Keymaster
+   $ydb_dist/plugin/gtmcrypt/gen_keypair.sh mykeypair@yottadb Keymaster
    $ydb_dist/plugin/gtmcrypt/gen_sym_key.sh 0 Sunday.key
    $ydb_dist/plugin/gtmcrypt/gen_sym_key.sh 0 Monday.key
    $ydb_dist/plugin/gtmcrypt/gen_sym_key.sh 0 Tuesday.key
