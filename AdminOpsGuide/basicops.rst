@@ -240,6 +240,8 @@ All values are case-independent. When ydb_autorelink_keeprtn is defined and TRUE
 
 * If ydb_boolean evaluates to an integer two (2), YottaDB enables VIEW "FULL_BOOLWARN" behavior, which means that YottaDB not only evaluates Boolean expressions like "FULL_BOOLEAN" but produces a BOOLSIDEFFECT warning when it encounters Boolean expressions that may induce side-effects; that is: expressions with side effects after the first Boolean operator - extrinsic functions, external calls, and $INCREMENT().
 
+* Boolean expressions without side effects will continue to be short-circuited whether or not ydb_boolean is 1 or 0. Error messages that could result if an expression were fully evaluated may not occur even with this setting enabled.
+
 **ydb_chset** (gtm_chset) determines the mode in which YottaDB compiles and operates. If it has a value of "UTF-8", YottaDB assumes that strings are encoded in UTF-8. In response to a value of "M" (or indeed anything other than "UTF-8"), YottaDB treats all 256 combinations of the 8 bits in a byte as a single character.
 
 **ydb_chset_locale** (gtm_chset_locale) (z/OS only) specifies the locale for UTF-8 operations on z/OS.
