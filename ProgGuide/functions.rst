@@ -1148,6 +1148,20 @@ Example:
 
 This uses $SELECT() to perform complex logic as the truth-valued expression argument to an IF command.
 
+.. note::
+   When extrinsics are within a $SELECT expression, boolean short-circuiting does not prevent them from being evaluated during the execution of the statement.
+
+.. parsed-literal::
+   echoAndRet(A,B)
+    write A,!
+    quit B
+
+   YDB>write 1!$$^echoAndRet("Hello",0)!$S($$^echoAndRet("World",0):5)
+       World
+   %YDB-E-SELECTFALSE, No argument to $SELECT was true
+
+   YDB>
+
 --------------------
 $STack()
 --------------------
