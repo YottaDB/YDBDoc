@@ -396,7 +396,7 @@ All values are case-independent. When ydb_autorelink_keeprtn is defined and TRUE
 
 **ydb_non_blocked_write_retries** (gtm_non_blocked_write_retries) modifies FIFO or PIPE write behavior. A WRITE which would block is retried up to the number specified with a 100 milliseconds delay between each retry. The default value is 10 times.
 
-**ydb_nontprestart_log_delta** (gtm_nontprestart_log_delta) specifies the number of non-transaction restarts for which YottaDB should wait before reporting a non-transaction restart to the operator logging facility. If ydb_nontprestart_log_delta is not defined, YorttaDB initializes ydb_nontprestart_log_delta to 0.
+**ydb_nontprestart_log_delta** (gtm_nontprestart_log_delta) specifies the number of non-transaction restarts for which YottaDB should wait before reporting a non-transaction restart to the operator logging facility. If ydb_nontprestart_log_delta is not defined, YottaDB initializes ydb_nontprestart_log_delta to 0.
 
 **ydb_nontprestart_log_first** (gtm_nontprestart_log_first) specifies the initial number of non-transaction restarts which YottaDB should report before placing non-transaction restart reports to the operator logging facility using the ydb_nontprestart_log_delta value. If ydb_nontprestart_log_delta is defined and ydb_nontprestart_log_first is not defined, YottaDB initializes ydb_nontprestart_log_first to 1.
 
