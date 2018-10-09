@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# GTMMessageRecovery documentation build configuration file, created by
+# MessageRecovery documentation build configuration file, created by
 # sphinx-quickstart on Mon Nov 27 13:42:48 2017.
 #
 # This file is execfile()d with the current directory set to its
@@ -36,7 +36,7 @@ def setup(app):
 # ones.
 extensions = ['sphinx.ext.autodoc',
     'sphinx.ext.mathjax',
-    'sphinx.ext.githubpages','sphinxcontrib.fulltoc']
+    'sphinx.ext.githubpages']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
