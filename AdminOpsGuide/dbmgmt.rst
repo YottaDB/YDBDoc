@@ -2696,9 +2696,9 @@ Enables or disables custom errors in a region to automatically cause an Instance
 .. parsed-literal::
    -[NO]INST[_FREEZE_ON_ERROR]
 
-For more information on creating a list of custom errors that automatically cause an Instance Freeze, refer to “Instance Freeze”.
+For more information on creating a list of custom errors that automatically cause an Instance Freeze, refer to `Instance Freeze <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html#instance-freeze>`_.
 
-For more information on promptly setting or clearing an Instance Freeze on an instance irrespective of whether any region is enabled for Instance, refer to the “Starting the Source Server” section of the Database Replication chapter.
+For more information on promptly setting or clearing an Instance Freeze on an instance irrespective of whether any region is enabled for Instance, refer to the `Starting the Source Server <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html#starting-the-source-server>`_ section of the Database Replication chapter.
 
 ~~~~~~~~
 -JOURNAL
@@ -2718,7 +2718,7 @@ The format of the JOURNAL qualifier is:
 
 * -JOURNAL specifies journaling is allowed. It takes one or more arguments in a journal-option-list.
 
-For detailed description of the all JOURNAL qualifiers and its keywords, refer to “SET -JOURNAL Options ”. 
+For detailed description of the all JOURNAL qualifiers and its keywords, refer to `SET -JOURNAL Options <https://docs.yottadb.com/AdminOpsGuide/ydbjournal.html#set-action-qualifiers>`_. 
 
 ~~~~~~~~~~
 -KEY_SIZE
@@ -3005,7 +3005,7 @@ The 2 sigma column for the two sampling techniques shows the dispersion of the s
 -ADJACENCY=integer
 ~~~~~~~~~~~~~~~~~~~
 
-Specifies the logical adjacency of data blocks that MUPIP SIZE should assume during estimation. By default, MUPIP SIZE assumes -ADJACENCY=10 and reports the logical adjacency in the "Adjacent" column of the MUPIP SIZE report. Note that adjacency is only a proxy for database organization and its usefulness may be limited by the technology and configuration of your secondary storage. See the INTEG section of this chapter for additional comments on adjacency.
+Specifies the logical adjacency of data blocks that MUPIP SIZE should assume during estimation. By default, MUPIP SIZE assumes -ADJACENCY=10 and reports the logical adjacency in the "Adjacent" column of the MUPIP SIZE report. Note that adjacency is only a proxy for database organization and its usefulness may be limited by the technology and configuration of your secondary storage. See the `INTEG <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#integ>`_ section of this chapter for additional comments on adjacency.
 
 ~~~~~~~~
 -SELECT

@@ -277,7 +277,7 @@ The following schematic illustrates the acquisition of the password for the key 
 
 **Master Key File and Key Files**
 
-The reference implementation uses a master key file for each user to obtain the symmetric keys for each database or journal file. The environment variable $ydb_crypt_config specifies the master key configuration file used for database encryption and TLS. The configuration file leverages the popular libconfig library (http://www.hyperrealm.com/libconfig). Please refer to the section called “Creating a configuration file” for instructions on creating the configuration file.
+The reference implementation uses a master key file for each user to obtain the symmetric keys for each database or journal file. The environment variable $ydb_crypt_config specifies the master key configuration file used for database encryption and TLS. The configuration file leverages the popular libconfig library (http://www.hyperrealm.com/libconfig). Please refer to the section called `Creating a TLS configuration file <https://docs.yottadb.com/AdminOpsGuide/tls.html#creating-a-tls-configuration-file>`_ for instructions on creating the configuration file.
 
 The functions look for a key file ~/.ydb_dbkeys (i.e., in the home directory of the process' userid). The master key file contains sections as follows:
 
