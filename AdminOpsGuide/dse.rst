@@ -706,7 +706,7 @@ Indicates whether or not a region completed a successful recovery with the MUPIP
 Changing this flag does not correct or cause database damage. When CORRUPT_FILE is set to TRUE, the DSE DUMP command displays a message like the following:
 
 .. parsed-literal::
-   %YDB-W-DBFLCORRP, /home/gtmnode1/mumps.dat Header indicates database file is corrupt
+   %YDB-W-DBFLCORRP, /home/ydbnode1/mumps.dat Header indicates database file is corrupt
 
 .. note::
    After a CHANGE -FILEHEADER -CORRUPT=TRUE, the file is unavailable to future YottaDB access other than DSE. Under normal conditions, there should never be a need to change this flag manually. A MUPIP SET -PARTIAL_BYPASS_RECOV sets this flag to false.
@@ -863,7 +863,7 @@ Use only with: -FREEZE
 
 Sets a flag that indicates whether or not the database is enabled for quick rundown. The default value is -NOQDBRUNDOWN.
 
-For more information, refer to “Region Qualifiers”.
+For more information, refer to `Region Qualifiers <https://docs.yottadb.com/AdminOpsGuide/gde.html#region-qualifiers>`_.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -REC[ORD_MAX_SIZE]=record_max_size
@@ -1506,7 +1506,7 @@ This command displays the fileheader elements along with the following helper pr
    Upd reserved area [% global buffers]   50  Avg blks read per 100 records                200
    Pre read trigger factor [% upd rsrvd]    50  Upd writer trigger [%flshTrgr]                 33
 
-For more information, refer to the fileheader elements section in “YottaDB Database Structure(GDS)”.
+For more information, refer to the `fileheader elements section <https://docs.yottadb.com/AdminOpsGuide/gds.html#file-header-data-elements>`_ in “YottaDB Database Structure(GDS)”.
 
 +++++++++++++
 EVALUATE
