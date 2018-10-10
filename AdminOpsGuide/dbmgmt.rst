@@ -2525,6 +2525,7 @@ The format of the SET command is:
     -[NO]REA[D_ONLY]
     -REC[ORD_SIZE]=bytes
     -REG[ION] region-list
+    -REORG_SLEEP_NSEC=integer
     -REP[LICATION]={ON|OFF}
     -RES[ERVED_BYTES]=integer]
     -SL[EEP_SPIN_COUNT]=integer
@@ -2839,6 +2840,12 @@ Specifies the maximum record size in bytes for storing and retrieving data from 
    -REC[ORD_SIZE]=bytes
 
 For more information on KEY_SIZE, refer to `“Region Qualifiers” <https://docs.yottadb.com/AdminOpsGuide/gde.html#region-qualifiers>`_.
+
+~~~~~~~~~~~~~~~~~~
+-REORG_SLEEP_NSEC
+~~~~~~~~~~~~~~~~~~
+
+Specifies the number of nanoseconds that a MUPIP REORG process operating between blocks takes to process, with default value of 0 and a maximum of 999999999 (i.e. 999,999,999, or 1 nanosecond less than 1 second). Using non-zero values reduces the IO impact of MUPIP REORG, at the cost of increasing the duration of the operation. Note that the existing environment variable ydb_poollimit is the appropriate technique to limit the impact of MUPIP REORG on global buffers; the -reorg_sleep_nsec can be used to limit the impact on the IO subsystem.
 
 ~~~~~~~~~~~~~~~~
 -RESERVED_BYTES
