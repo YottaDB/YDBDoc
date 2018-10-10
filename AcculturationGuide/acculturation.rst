@@ -145,7 +145,7 @@ YottaDB® is owned and copyrighted by `YottaDB LLC <http://yottadb.com/>`_ and i
 
 GT.M™ is owned and copyrighted by `Fidelity Information Services, LLC <http://www.fisglobal.com/>`_, and is available for the x86_64 GNU/Linux platform under the terms of the `GNU Affero General Public License version 3 <http://www.gnu.org/licenses/agpl.txt>`_. Source and binary can be downloaded from the `GT.M project page at Source Forge <http://sourceforge.net/projects/fis-gtm>`_ .
 
-The core of VistA (so called “FOIA VistA”) is in the public domain through the US Freedom of Information Act. Source and object code are available on one of the hard drive images. As noted above, no understanding of VistA itself is required or assumed for the workshop.
+The core of VistA (so called `FOIA VistA <https://www.osehra.org/content/foia-vista>`_) is in the public domain through the US Freedom of Information Act. Source and object code are available on one of the hard drive images. As noted above, no understanding of VistA itself is required or assumed for the workshop.
 
 The Linux kernel, GNU utilities, the WorldVistA EHR extensions to VistA and all other software on the CD-ROM and hard drive images are FOSS and available under their respective FOSS licenses. Copyrights and trademarks of all content are hereby acknowledged as being held by their owners.
 
@@ -153,7 +153,7 @@ The Linux kernel, GNU utilities, the WorldVistA EHR extensions to VistA and all 
 Getting Started
 ---------------
 
-With a terminal emulator, initiate an ssh connection to port 2222 on localhost and login with userid 'yottadbuser' and password 'YottaDB Rocks!' (including a space and an exclamation point). For example, on Linux, you can use the command: ssh -p 2222 -X yottadbuser@localhost to connect as user yottadbuser to port 2222 on the host which is forwarded to port 22 on the guest.
+With a terminal emulator, initiate an ssh connection to port 2222 on localhost and login with userid 'yottadbuser' and password 'YottaDB Rocks!' (including a space and an exclamation point). For example, on Linux, you can use the command: ``ssh -p 2222 -X yottadbuser@localhost`` to connect as user yottadbuser to port 2222 on the host which is forwarded to port 22 on the guest.
 
 .. parsed-literal::
 
@@ -173,8 +173,8 @@ With a terminal emulator, initiate an ssh connection to port 2222 on localhost a
 Install YottaDB
 ++++++++++++++++
 
-- Get the YottaDB install script: wget https://gitlab.com/YottaDB/DB/YDB/raw/master/sr_unix/ydbinstall.sh
-- Make it executable: chmod +x ydbinstall.sh
+- Get the YottaDB install script: ``wget https://gitlab.com/YottaDB/DB/YDB/raw/master/sr_unix/ydbinstall.sh``
+- Make it executable: ``chmod +x ydbinstall.sh``
 - Run it where you want it installed (omit the --verbose option for less output): The below command installs YottaDB in /usr/local/lib/. The rest of the document assumes installation in this directory.
   
  .. parsed-literal::
