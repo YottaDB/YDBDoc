@@ -516,7 +516,7 @@ Job
 
 The JOB command initiates another YottaDB process that executes the named routine.
 
-$ZJOB is set to the pid of the process created by the JOB command. For more details, refer to “$ZJob”.
+$ZJOB is set to the pid of the process created by the JOB command. For more details, refer to `$ZJob <https://docs.yottadb.com/ProgrammersGuide/isv.html#zjob>`_.
 
 The format of the JOB command is:
 
@@ -1313,7 +1313,7 @@ and
 * isv on the left-hand side of the equal-sign specifies an Intrinsic Special Variable. Not all ISVs permit SET updates by the application - see the description of the individual ISV.
 * When the portion of the argument to the left of the equal-sign is in the form of a list of setlefts enclosed in parentheses, SET assigns the value of the expression on the right of the equal sign to all the destinations.
 * If a SET updates a global node matching a trigger definition, YottaDB executes the trigger code after the node has been updated in the process address space, but before it is applied to the database. When the trigger execution completes, the trigger logic commits the value of a node from the process address space only if $ZTVALUE is not set. if $ZTVALUE is set during trigger execution, the trigger logic commits the value of a node from the value of $ZTVALUE. For more information on using SET in Triggers, refer to the `“Set” section in the Triggers chapter <https://docs.yottadb.com/ProgrammersGuide/triggers.html#set>`_.
-* A SET * command explicitly makes the lvn on the left-hand side of the equal-sign an alias if it is an unsubscripted lvn (the root of an array) or an alias container if it is a subscripted lvn. If the portion of the argument on the right-hand side of the equal-sign is other than an lname (the root of an array), it must evaluate to an alias or alias container. Extrinsic functions and extrinsic special variables return an alias container if they terminate with a QUIT \*. For more information on Alias Variables, refer to “Alias Variables Extensions”.
+* A SET * command explicitly makes the lvn on the left-hand side of the equal-sign an alias if it is an unsubscripted lvn (the root of an array) or an alias container if it is a subscripted lvn. If the portion of the argument on the right-hand side of the equal-sign is other than an lname (the root of an array), it must evaluate to an alias or alias container. Extrinsic functions and extrinsic special variables return an alias container if they terminate with a QUIT \*. For more information on Alias Variables, refer to `Alias Variables Extensions <https://docs.yottadb.com/ProgrammersGuide/langext.html#alias-variable-extensions>`_.
 * In a SET * command, any previous array associated with the lvn on the left-hand side of the equal-sign ceases to be associated with it, and if lvn was the only lvn associated with that (old) array in any scope, YottaDB may reclaim the space it occupied. Alias assignment does not require that any data set exist for a name on the right-hand side of the equal-sign - the assignment simply creates an association.
 * SET * left-hand side arguments cannot be parenthetically enclosed lists such as SET (a,*b)=c or SET (\*a,\*b)=c.
 * SET and SET * assignments can be combined into one command in a comma separated list, for example, SET \*a=b,^c(3)=d(4).
@@ -1859,7 +1859,7 @@ Example:
      quit
    order(y)
      new i,ordval
-     set x="",i=0,y=y_"(x)",x=$order(@y)
+     set x="",i=0,y=y\_"(x)",x=$order(@y)
      for  quit:x=""  do
      .      set:i#2 ordval(i)=x
      .      set x=$order(@y)
@@ -2811,7 +2811,7 @@ The format of the ZKILL command is:
 .. parsed-literal::
    ZK[ILL][:tvexpr] glvn
 
-The functionality of ZKILL is identical to ZWITHDRAW. For a comprehensive description of the format and usage, refer to “ZWIthdraw”.
+The functionality of ZKILL is identical to ZWITHDRAW. For a comprehensive description of the format and usage, refer to `ZWIthdraw <https://docs.yottadb.com/ProgrammersGuide/commands.html#zwithdraw>`_.
 
 -------------------
 ZLink
@@ -2881,7 +2881,7 @@ If ZLINK compiles a routine and the -OBJECT= qualifier does not redirect the out
 
 If the command does not specify compile qualifiers (with expr2) and $ZCOMPILE is null, YottaDB uses the default M command qualifiers, -ignore, -labels=lower, -nolist, and -object. For more information on $ZCOMPILE, refer to the appropriate section in Chapter 8: “Intrinsic Special Variables”. For detailed descriptions of the M command qualifiers, see `Chapter 3: “Development Cycle” <https://docs.yottadb.com/ProgrammersGuide/devcycle.html>`_.
 
-For information on producing object files, but not adding them to the current image, see “ZCOMpile”.
+For information on producing object files, but not adding them to the current image, see `ZCOMpile <https://docs.yottadb.com/ProgrammersGuide/commands.html#zcompile>`_.
 
 ++++++++++++++++++++
 Examples of ZLINK
@@ -2949,7 +2949,7 @@ If the path to a file is non-existent, the request is ignored except in the case
 
 For each auto-relink enabled directory which a YottaDB process accesses while searching through $ZROUTINES, YottaDB creates a small control file (Relinkctl) in the directory identified by $ydb_linktmpdir (defaulting to $ydb_tmp, which in turn defaults to /tmp, if unspecified). The names of these files are of the form ydb-relinkctl-<murmur> where <murmur> is a hash of the realpath() to an auto-relink directory; for example: /tmp/ydb-relinkctl-f0938d18ab001a7ef09c2bfba946f002). With each Relinkctl file, YottaDB creates and associates a block of shared memory that contains associated control structures. Among the structures is a cycle number corresponding to each routine found in the routine directory; a change in the cycle number informs a process that it may need to determine whether there is a new version of a routine. Although YottaDB only creates relinkctl records for routines that actually exist on disk, it may increment cycle numbers for existing relinkctl records even if they no longer exist on disk.
 
-YottaDB creates both the Relinkctl file and shared memory with permissions based on the logic described in the "IPC Permissions" column of the "Shared Resource Authorization Permissions" section in the `Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/index.html>`_, except that the object directory, rather than the database file, provides the base permissions.
+YottaDB creates both the Relinkctl file and shared memory with permissions based on the logic described in the "IPC Permissions" column of the `Shared Resource Authorization Permissions <https://docs.yottadb.com/AdminOpsGuide/securityph.html#shared-resource-authorization-permissions>`_ section in the `Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/index.html>`_, except that the object directory, rather than the database file, provides the base permissions.
 
 The MUPIP RCTLDUMP command reports information related to relinkctl files and their associated shared memory segments.
 
@@ -2958,7 +2958,7 @@ The environment variable ydb_autorelink_keeprtn if set to 1, t[rue], or y[es] ca
 * Process exit is simplified, with the performance gain - faster process termination - likely to be observable only when a large number of processes exit concurrently.
 * Where routines are likely to be repeatedly used by other processes, such as in a production environment, leaving a routine in shared memory even when no longer used by existing processes, results in slightly faster linking of that routine by future processes, although the effect may not be observable except when an application frequently uses short-lived processes, such as YottaDB routines invoked by web servers using a CGI interface.
 
-YottaDB recommends that a directory in the $zroutines of a process be either auto-relink-enabled or auto-relink-disabled for the life of the process. Changing the auto-relink mode of the directory within a process is likely to result in counter-intuitive results..
+YottaDB recommends that a directory in the $zroutines of a process be either auto-relink-enabled or auto-relink-disabled for the life of the process. Changing the auto-relink mode of the directory within a process is likely to result in counter-intuitive results.
 
 As arguments, ZRUPDATE takes object file names, including wild-cards of the form accepted by $ZSEARCH(). If ZRUPDATE fails to find at least one file to match an argument with a wild card, it issues an INFO message (seen only if $PRINCIPAL has CENABLE). When the argument specifies an explicit name without a wild card, but there is no file in the directory or a corresponding entry in the Relinkctl, ZRUPDATE produces an error. ZRUPDATE issues most errors as FILEPARSE errors with a secondary error describing the actual issue although some errors, depending on the reason and path by which ZRUPDATE detects them, can be rather cryptic.
 
@@ -3082,7 +3082,7 @@ The optional truth-valued expression immediately following the command is a comm
 
 The required integer expression specifies the message code. There are two types of message codes:
 
-* Message codes from 150339592 are raised from YottaDB. For examining the text of a message code, refer to $ZMESSAGE().
+* Message codes from 150339592 are raised from YottaDB. For examining the text of a message code, refer to `$ZMESSAGE() <https://docs.yottadb.com/ProgrammersGuide/functions.html#zmessage>`_.
 
 The three least significant bits (lsb) of these message codes indicate the severity which determines the error handling action: 
 
@@ -3247,7 +3247,7 @@ The format of the ZSHOW command is:
 * The optional global or local variable name specifies the destination for the ZSHOW output; if the ZSHOW argument does not contain a global or local variable name, ZSHOW directs its display to the current device ($IO).
 * When the desination for the ZSHOW output is a local variable or the current device ($IO), ZSHOW sets the maximum length of a ZSHOW line output to 8192 bytes. ZSHOW stores information that does not fit within 8192 bytes in the next line.
 * When the destination for the ZSHOW output is a global variable, ZSHOW sets the maximum length of a ZSHOW line output to the maximum database record size. ZSHOW stores information that does not fit within the maximum database record size as immediate descendants, using ordinal subscripts starting at one (1), of the node holding the beginning of the information.
-* When the destination for the ZSHOW "V" output is a global variable, the %ZSHOWVTOLCL utility program can be used to restore data from that global variable into its original local variables. For more information refer to “ %ZSHOWVTOLCL”.
+* When the destination for the ZSHOW "V" output is a global variable, the %ZSHOWVTOLCL utility program can be used to restore data from that global variable into its original local variables. For more information refer to `%ZSHOWVTOLCL <https://docs.yottadb.com/ProgrammersGuide/utility.html#zshowvtolcl>`_.
 * An indirection operator and an expression atom evaluating to a list of one or more ZSHOW arguments form a legal argument for a ZSHOW.
 
 ++++++++++++++++++++++++++
@@ -3608,7 +3608,7 @@ Use ZSHOW as
 * part of a context-switching mechanism in a server program that must manage multiple contexts.
 * a development tool to determine the external call table entries available from the current process.
 
-To minimize confusing data interactions, limit instances of directing ZSHOW output into variables holding other kinds of information and directing ZSHOW "V" output into local variables. For a comparison of ZSHOW "V" and ZWRITE, refer to “ZWRite”.
+To minimize confusing data interactions, limit instances of directing ZSHOW output into variables holding other kinds of information and directing ZSHOW "V" output into local variables. For a comparison of ZSHOW "V" and ZWRITE, refer to `ZWRite <https://docs.yottadb.com/ProgrammersGuide/commands.html#zwrite>`_.
 
 --------------------
 ZSTep

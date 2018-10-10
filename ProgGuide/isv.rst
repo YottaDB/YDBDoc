@@ -105,7 +105,7 @@ Example:
 
 Produces the result 58883,55555 at 3:25:55 pm on 20 March, 2002.
 
-For further information on formatting $HOROLOG for external use, refer to “$ZDate()”.
+For further information on formatting $HOROLOG for external use, refer to `$ZDate() <https://docs.yottadb.com/ProgrammersGuide/functions.html#zdate>`_.
 
 ---------
 $IO
@@ -224,7 +224,7 @@ When a process is initiated but before any command is executed, the value of $ST
 
 The value of $STACK is "absolute" since the start of a YottaDB process, whereas the value of $ESTACK is "relative" to the most recent "anchoring point".
 
-For examples on the use of special variable $STACK, see “$STack()”.
+For examples on the use of special variable $STACK, see `$STack() <https://docs.yottadb.com/ProgrammersGuide/functions.html#stack>`_.
 
 --------------
 $STORAGE
@@ -520,7 +520,7 @@ $ZDATEFORM
 
 $ZDA[TEFORM] contains an integer value, specifying the output year format of $ZDATE(). $ZDATEFORM can be modified using the SET command. YottaDB initializes $ZDATEFORM to the translation of the environment variable ydb_zdate_form. If ydb_zdate_form is not defined, YottaDB initializes $ZDATEFORM to zero (0).
 
-See “$ZDate()” for the usage of $ZDATEFORM. $ZDATEFORM also defines the behavior of some date and time utility routines; refer `"Utility Routines" <https://docs.yottadb.com/ProgrammersGuide/utility.html>`_.
+See `$ZDate() <https://docs.yottadb.com/ProgrammersGuide/functions.html#zdate>`_ for the usage of $ZDATEFORM. $ZDATEFORM also defines the behavior of some date and time utility routines; refer `"Utility Routines" <https://docs.yottadb.com/ProgrammersGuide/utility.html>`_.
 
 Example:
 
@@ -582,13 +582,13 @@ For more information on $ZEOF, refer to the `"Input/Output Processing" chapter <
 $ZERROR
 --------------------
 
-$ZE[RROR] is supposed to hold the application-specific error-code corresponding to the YottaDB error-code stored in $ECODE/$ZSTATUS (see “$ECode” and “$ZStatus”).
+$ZE[RROR] is supposed to hold the application-specific error-code corresponding to the YottaDB error-code stored in $ECODE/$ZSTATUS (see `$ECode <https://docs.yottadb.com/ProgrammersGuide/isv.html#ecode>`_ and `$ZStatus <https://docs.yottadb.com/ProgrammersGuide/isv.html#zstatus>`_).
 
 $ZERROR contains a default value of "Unprocessed $ZERROR, see $ZSTATUS" at process startup.
 
 $ZERROR can be SET but not NEWed.
 
-The mapping of a YottaDB error-code to the application-specific error-code is achieved as follows. Whenever YottaDB encounters an error, $ECODE/$ZSTATUS gets set first. It then invokes the code that $ZYERROR points to if it is not null. It is intended that the code invoked by $ZYERROR use the value of $ZSTATUS to select or construct a value to which it SETs $ZERROR. If an error is encountered by the attempt to execute the code specified in $ZYERROR, YottaDB sets $ZERROR to the error status encountered. If $ZYERROR is null, YottaDB does not change the value of $ZERROR. In all cases, YottaDB proceeds to return control to the code specified by $ETRAP/$ZTRAP or device EXCEPTION whichever is applicable. For details, see “$ZYERror”.
+The mapping of a YottaDB error-code to the application-specific error-code is achieved as follows. Whenever YottaDB encounters an error, $ECODE/$ZSTATUS gets set first. It then invokes the code that $ZYERROR points to if it is not null. It is intended that the code invoked by $ZYERROR use the value of $ZSTATUS to select or construct a value to which it SETs $ZERROR. If an error is encountered by the attempt to execute the code specified in $ZYERROR, YottaDB sets $ZERROR to the error status encountered. If $ZYERROR is null, YottaDB does not change the value of $ZERROR. In all cases, YottaDB proceeds to return control to the code specified by $ETRAP/$ZTRAP or device EXCEPTION whichever is applicable. For details, see `$ZYERror <https://docs.yottadb.com/ProgrammersGuide/isv.html#zyerror>`_.
 
 -------------------
 $ZGBLDIR
@@ -1018,7 +1018,7 @@ $ZPIN
 
 When $PRINCIPAL has different input/output devices, the USE command recognizes intrinsic special variable $ZPIN to apply appropriate deviceparameters to the input side of $PRINCIPAL. A USE with $ZPIN sets $IO to $PRINCIPAL for READs and WRITEs from the input and output side of $PRINCIPAL. $ZSOCKET() also accepts $ZPIN as its first argument and, if the device is a split SOCKET device, supplies information on the input SOCKET device. In any context other than USE or $ZSOCKET(), or if $PRINCIPAL is not a split device, $PRINCIPAL, $ZPIN and $ZPOUT are synonyms. In the case of a split $PRINCIPAL, $ZPIN returns the value of $PRINCIPAL followed by the string "< /" Any attempt to OPEN $ZPIN results in a DEVOPENFAIL error.
 
-For more information refer to “$Principal”, “$ZPOUT”, and “$ZSOCKET()”.
+For more information refer to `$Principal <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#principal>`_, `$ZPOUT <https://docs.yottadb.com/ProgrammersGuide/isv.html#zpout>`_, and `$ZSOCKET() <https://docs.yottadb.com/ProgrammersGuide/functions.html#zsocket>`_.
 
 -----------------
 $ZPOSITION
@@ -1041,7 +1041,7 @@ $ZPOUT
 
 When $PRINCIPAL has different input/output devices, the USE command recognizes intrinsic special variables $ZPOUT to apply appropriate deviceparameters to the output side of $PRINCIPAL. A USE with $ZPOUT sets $IO to $PRINCIPAL for READs and WRITEs from the input and output side of $PRINCIPAL. $ZSOCKET() also accepts $ZPOUT as its first argument and, if the device is a split SOCKET device, supplies information on the output SOCKET device. In any context other than USE or $ZSOCKET(), or if $PRINCIPAL is not a split device, $PRINCIPAL, $ZPIN and $ZPOUT are synonyms. In the case of a split $PRINCIPAL, $ZPOUT returns the value of $PRINCIPAL followed by the string "> /" Any attempt to OPEN $ZPOUT results in a DEVOPENFAIL error.
 
-For more information refer to “$Principal”, “$ZPIN”, and “$ZSOCKET()”.
+For more information refer to `$Principal <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#principal>`_, `$ZPIN <https://docs.yottadb.com/ProgrammersGuide/isv.html#zpin>`_, and `$ZSOCKET() <https://docs.yottadb.com/ProgrammersGuide/functions.html#zsocket>`_.
 
 Example:
 
@@ -1106,7 +1106,7 @@ This example changes the YottaDB prompt to Test01> and then back to YDB>.
 $ZREALSTOR
 ---------------
 
-$ZREALSTOR contains the total memory (in bytes) allocated by the YottaDB process, which may or may not actually be in use. It provides one view (see also “$ZALlocstor” and “$ZUSedstor”) of the process memory utilization and can help identify storage related problems. YottaDB does not permit $ZREALSTOR to be SET or NEWed.
+$ZREALSTOR contains the total memory (in bytes) allocated by the YottaDB process, which may or may not actually be in use. It provides one view (see also `$ZALlocstor <https://docs.yottadb.com/ProgrammersGuide/isv.html#zallocstor>`_ and `$ZUSedstor <https://docs.yottadb.com/ProgrammersGuide/isv.html#zusedstor>`_) of the process memory utilization and can help identify storage related problems. YottaDB does not permit $ZREALSTOR to be SET or NEWed.
 
 -----------------
 $ZROUTINES
@@ -1320,7 +1320,7 @@ For example, if libshare.so is built with foo.o compiled from ./shrsrc/foo.m, th
    YDB>ZLINK "foo";re-compile ./shrsrc/foo.m to generate ./obj/foo.o.
    YDB>W $TEXT(+0^foo);prints foo
 
-Note that ZPRINT reports an error, as foo.m does not match the routine already linked into image. Also note that, to recompile and re-link the ZEDITed foo.m, its source directory needs to be attached to the object directory [./obj] in $ZROUTINES. The example assumes the shared library (libshare.so) has been built using shell commands. For the procedure to build a shared library from a list of YottaDB generated object (.o) files, see “Linking YottaDB Shared Images”.
+Note that ZPRINT reports an error, as foo.m does not match the routine already linked into image. Also note that, to recompile and re-link the ZEDITed foo.m, its source directory needs to be attached to the object directory [./obj] in $ZROUTINES. The example assumes the shared library (libshare.so) has been built using shell commands. For the procedure to build a shared library from a list of YottaDB generated object (.o) files, see "Linking YottaDB Shared Images" below.
 
 
 **Linking YottaDB Shared Images**
@@ -1613,7 +1613,7 @@ The four settings of ydb_ztrap_form are:
 $ZUSEDSTOR
 -----------------
 
-$ZUSEDSTOR is the value in $ZALLOCSTOR minus storage management overhead and represents the actual memory, in bytes, requested by current activities. It provides one view (see also “$ZALlocstor” and “$ZREalstor”) of the process memory utilization and can help identify storage related problems. YottaDB does not permit $ZUSEDSTOR to be SET or NEWed. 
+$ZUSEDSTOR is the value in $ZALLOCSTOR minus storage management overhead and represents the actual memory, in bytes, requested by current activities. It provides one view (see also `$ZALlocstor <https://docs.yottadb.com/ProgrammersGuide/isv.html#zallocstor>`_ and `$ZREalstor <https://docs.yottadb.com/ProgrammersGuide/isv.html#zrealstor>`_) of the process memory utilization and can help identify storage related problems. YottaDB does not permit $ZUSEDSTOR to be SET or NEWed. 
 
 -----------------
 $ZUT
@@ -1825,7 +1825,8 @@ The following table summarizes the read/write permissions assigned to all trigge
 | Intrinsic Special Variable   | Within Trigger Context           | Notes                                                                                                                                                 |
 +==============================+==================================+=======================================================================================================================================================+
 | $ETRAP                       | Read/Write                       | Set to ydb_trigger_etrap or the empty string when entering trigger context. For more information on using the $ETRAP mechanism for handling errors    |
-|                              |                                  | during trigger execution, refer to “Error Handling during Trigger Execution”.                                                                         |
+|                              |                                  | during trigger execution, refer to                                                                                                                    |
+|                              |                                  | `Error Handling during Trigger Execution <https://docs.yottadb.com/ProgrammersGuide/triggers.html#error-handling-during-trigger-execution>`_.         |
 +------------------------------+----------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------+
 | $REFERENCE                   | Read Only                        | Restored at the completion of a trigger.                                                                                                              |
 +------------------------------+----------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------+
