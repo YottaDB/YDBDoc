@@ -242,7 +242,7 @@ To force execution of an error trap or to flag a user-defined error ("U" errors)
 $ZSTATUS Content
 ++++++++++++++++++
 
-$ZSTATUS contains a string value specifying the error condition code and location of the last exception condition that occurred during routine execution. For further details, see “$ZStatus”.
+$ZSTATUS contains a string value specifying the error condition code and location of the last exception condition that occurred during routine execution. For further details, see `$ZStatus <https://docs.yottadb.com/ProgrammersGuide/isv.html#zstatus>`_.
 
 +++++++++++++++++++++++
 $ZERROR and $ZYERROR

@@ -495,7 +495,7 @@ YottaDB also allows:
 
 Where the first expression identifies the Global Directory and the second expression is accepted but ignored by YottaDB.
 
-To improve compatibility with some other M implementations, YottaDB also accepts another non-standard syntax. In this syntax, the leading and trailing up-bar (|) are respectively replaced by a left square-bracket ([) and a right square-bracket (]). This syntax also requires expratoms, rather than expressions. For additional information on expratoms, see “Expressions”.
+To improve compatibility with some other M implementations, YottaDB also accepts another non-standard syntax. In this syntax, the leading and trailing up-bar (|) are respectively replaced by a left square-bracket ([) and a right square-bracket (]). This syntax also requires expratoms, rather than expressions. For additional information on expratoms, see `Expressions <https://docs.yottadb.com/ProgrammersGuide/langfeat.html#expressions>`_.
 
 The formats for this non-standard syntax are:
 
