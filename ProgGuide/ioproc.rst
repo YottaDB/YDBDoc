@@ -120,7 +120,7 @@ In UTF-8 mode, YottaDB maintains $X in the following measurement units:
 | TRM                                        | display columns                                  | display columns                                   |
 +--------------------------------------------+--------------------------------------------------+---------------------------------------------------+
 
-YottaDB provides two modes of character filtering. When filtering is enabled, certain <CTRL> characters and/or escape sequences have special effects on the cursor position (for example, <BS> (ASCII 8) may decrement $X, if $X is non-zero). For more information on write filtering, refer to “FILTER”.
+YottaDB provides two modes of character filtering. When filtering is enabled, certain <CTRL> characters and/or escape sequences have special effects on the cursor position (for example, <BS> (ASCII 8) may decrement $X, if $X is non-zero). For more information on write filtering, refer to `FILTER <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#filter>`_.
 
 +++++++++++++++++++++++++++++++++
 Status Variables
@@ -150,7 +150,7 @@ $K[EY] contains the string that terminated the most recent READ command from the
 
 * For SOCKET devices: 
   
-  * $KEY includes information about a new socket in the form of CONNECT|handle|<address> where <address> is the IP address for TCP sockets and path for LOCAL sockets. Read more about `SOCKET device operation <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#socket-device-operation>`_.
+  * $KEY includes information about a new socket in the form of CONNECT|handle|<address> where <address> is the IP address for TCP sockets and path for LOCAL sockets. Read more about `SOCKET device operation <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#id3`_.
   
   * As an OPEN deviceparameter: For LISTEN, $KEY is set to the format of “LISTENING|<socket_handle>|{<portnumber>|</path/to/LOCAL_socket>}” when listening for a connection is successful. Otherwise, $KEY is assigned the empty string. Read more about `LISTEN deviceparameter <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#listen>`_.  
 
@@ -307,7 +307,7 @@ Deviceparameters often relate to a specific device type. YottaDB ignores any dev
 
 When reopening a device that it previously closed, a YottaDB process restores all characteristics not specified on the OPEN to the values the device had when it was last CLOSEd. YottaDB treats FIFO, PIPE, and SD differently and uses defaults for unspecified device characteristics on every OPEN (that is, YottaDB does not retain devices characteristics on a CLOSE of SD, FIFO, and PIPE).
 
-The ZSHOW command with an argument of "D" displays the current characteristics for all devices OPENed by the process. ZSHOW can direct its output into a YottaDB variable. For more information on ZSHOW, refer to “ZSHow”.
+The ZSHOW command with an argument of "D" displays the current characteristics for all devices OPENed by the process. ZSHOW can direct its output into a YottaDB variable. For more information on ZSHOW, refer to `ZSHow <https://docs.yottadb.com/ProgrammersGuide/commands.html#zshow>`_.
 
 +++++++++++++++++++++++++++++++
 Abbreviating Device Parameters
@@ -459,7 +459,7 @@ Generally, YottaDB performs the same maintenance on $ZB for a READ X#maxlen as f
 Terminal Deviceparameter Summary
 +++++++++++++++++++++++++++++++++
 
-The following tables provide a brief summary of deviceparameters for terminals, grouped into related areas. For detailed information, refer to “Open”, “Use”, and “Close”.
+The following tables provide a brief summary of deviceparameters for terminals, grouped into related areas. For detailed information, refer to `Open <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#open>`_, `Use <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#use>`_, and `Close <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#close>`_.
 
 **Error Processing Deviceparameters**
 
@@ -636,7 +636,7 @@ USE Device Parameters
 
 Applies to : TRM
 
-When EDITING mode is enabled for the $PRINCIPAL device, the use of the left and right cursor movement keys and certain <CTRL> characters are allowed within the current input line. The last input can be recalled using the up or down arrow key. The editing functions are the same as during direct mode command input as described in the `"Line Editing" section of the "Operating & Debugging in Direct Mode" chapter <https://docs.yottadb.com/ProgrammersGuide/opdebug.html#functionality-available-in-direct-mode>`_ except backspace is not treated the same as the erase character from termcap which is usually delete (ASCII 127).
+When EDITING mode is enabled for the $PRINCIPAL device, the use of the left and right cursor movement keys and certain <CTRL> characters are allowed within the current input line. The last input can be recalled using the up or down arrow key. The editing functions are the same as during direct mode command input as described in the `"Line Editing" section of the "Operating & Debugging in Direct Mode" chapter <https://docs.yottadb.com/ProgrammersGuide/opdebug.html#line-editing>`_ except backspace is not treated the same as the erase character from termcap which is usually delete (ASCII 127).
 
 When EDITING mode is enabled, escape sequences do not terminate READs.
 
@@ -847,7 +847,7 @@ Example:
 Sequential File Deviceparameter Summary
 ++++++++++++++++++++++++++++++++++++++++
 
-The following tables provide a brief summary of deviceparameters for sequential files grouped into related areas. For more detailed information, refer to “Open”, “Use”, and “Close”.
+The following tables provide a brief summary of deviceparameters for sequential files grouped into related areas. For more detailed information, refer to `Open <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#open>`_, `Use <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#use>`_, and `Close <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#close>`_.
 
 **Error Processing Deviceparameters**
 
@@ -1151,7 +1151,7 @@ A null device discards all output. YottaDB maintains a virtual cursor position f
 NULL Deviceparameter Summary
 ++++++++++++++++++++++++++++
 
-The following table provides a brief summary of deviceparameters for null devices. For more detailed information, refer to “Open”, “Use”, and “Close”.
+The following table provides a brief summary of deviceparameters for null devices. For more detailed information, refer to `Open <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#open>`_, `Use <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#use>`_, and `Close <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#close>`_.
 
 +----------------------------+------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------+
 | Deviceparameter            | Command                      | Comment                                                                                                                                     |
@@ -1691,7 +1691,7 @@ Socket Read Operation
 
 TCP/IP is a stream-based protocol that guarantees that bytes arrive in the order in which they were sent. However, it does not guarantee that they will be grouped in the same packets.
 
-If packets arrive infrequently, or at varying rates that are sometimes slow, a short interval can waste CPU cycles checking for an unlikely event. On the other hand, if the handling of packets is time critical, a long interval can introduce an undesirable latency. If packets arrive in a rapid and constant flow (an unusual situation), the interval doesn't matter as much, as there is always something in the buffer for the READ to work with. If you do not specify MOREREADTIME, SOCKET READ implements a dynamic approach of using a longer first interval of 200 ms when it finds no data, then shortening the interval to 10 ms when data starts to arrive. If you specify an interval, the SOCKET device always uses the specified interval and does not adjust dynamically. For more information on MOREREADTIME, refer to “MOREREADTIME”.
+If packets arrive infrequently, or at varying rates that are sometimes slow, a short interval can waste CPU cycles checking for an unlikely event. On the other hand, if the handling of packets is time critical, a long interval can introduce an undesirable latency. If packets arrive in a rapid and constant flow (an unusual situation), the interval doesn't matter as much, as there is always something in the buffer for the READ to work with. If you do not specify MOREREADTIME, SOCKET READ implements a dynamic approach of using a longer first interval of 200 ms when it finds no data, then shortening the interval to 10 ms when data starts to arrive. If you specify an interval, the SOCKET device always uses the specified interval and does not adjust dynamically. For more information on MOREREADTIME, refer to `MOREREADTIME <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#morereadtime>`_.
 
 Most SOCKET READ operations terminate as a result of the first condition detected from (a) receipt of delimiters, (b) receipt of the maximum number of characters, or (c) expiration of a timeout. Note that all of these conditions are optional, and a specific READ may specify zero or more of them. This section refers to these three conditions as "defined terminating conditions". If a SOCKET READ is not subject to any of the defined terminating conditions, it terminates after it has received at least one character followed by an interval with no new characters. An error can also terminate a READ. While none of the terminating conditions is satisfied, the READ continues.
 
@@ -2150,7 +2150,7 @@ ATTACH=expr Applies to: SOC
 
 ATTACH assigns expr as the handle name to the newly created socket. When ATTACH is used and one of LISTEN or CONNECT is specified on the same OPEN, the value of expr becomes the identifier of the newly created socket. If neither LISTEN nor CONNECT is specified, ATTACH is ignored.
 
-For information on using the ATTACH with USE, refer to “ATTACH” in the USE Deviceparameters section.
+For information on using the ATTACH with USE, refer to `ATTACH in the USE Deviceparameters section <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#id5>`_.
 
 Example:
 
@@ -2165,7 +2165,7 @@ CHSET
 
 CHSET=expr Applies to: All devices
 
-Establishes a common encoding for both input and output devices for the device being OPENed in UTF-8 mode. The value of the expression can be M, UTF-8, UTF-16, UTF-16LE, or UTF-16BE. For more information, refer to “ICHSET” and “OCHSET”.
+Establishes a common encoding for both input and output devices for the device being OPENed in UTF-8 mode. The value of the expression can be M, UTF-8, UTF-16, UTF-16LE, or UTF-16BE. For more information, refer to `ICHSET <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#ichset>`_ and `OCHSET <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#ochset>`_.
 
 ~~~~~~~~
 COMMAND
@@ -2173,7 +2173,7 @@ COMMAND
 
 COMMAND=expr Applies to: PIPE
 
-Specifies the UNIX command the newly created shell process performs. An invalid command value triggers an error in the new process, not the process issuing the OPEN. This can make diagnosis difficult - see the “PARSE” deviceparameter for potential assistance.
+Specifies the UNIX command the newly created shell process performs. An invalid command value triggers an error in the new process, not the process issuing the OPEN. This can make diagnosis difficult - see the `PARSE <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#parse>`_ deviceparameter for potential assistance.
 
 ~~~~~~~~
 CONNECT
@@ -2581,7 +2581,7 @@ MOREREADTIME specifies the polling interval (in milliseconds) that a SOCKET devi
 
 With no MOREREADTIME specified, SOCKET READ implements a dynamic approach of using a longer first interval of 200 ms when it finds no data, then shortening the interval to 10 ms when data starts to arrive.
 
-If an interval is specified, the SOCKET device always uses the specified interval and doesn't adjust dynamically. This applies to any SOCKET READ. For more information on implementing SOCKET READ, refer to “Socket Read Operation”.
+If an interval is specified, the SOCKET device always uses the specified interval and doesn't adjust dynamically. This applies to any SOCKET READ. For more information on implementing SOCKET READ, refer to `Socket Read Operation <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#socket-read-operation>`_.
 
 If a SOCKET READ is not subject to any of the defined terminating conditions, it terminates either after it has at least one character followed by an interval with no new packets, or reading 1,048,576 bytes.
 
@@ -2615,7 +2615,7 @@ Example:
    YDB>open file1:newversion:recordsize=5000 
    YDB>
 
-This example creates a new version of sequential file foo.txtwith RECORDSIZE of 5000 bytes.
+This example creates a new version of sequential file foo.txt with a RECORDSIZE of 5000 bytes.
 
 Example:
 
@@ -2666,7 +2666,7 @@ OKEY="key_name [IV]"
 
 key_name is case-sensitive and must match a key name in the "files" section of the ydb_crypt_config file. The optional IV specifies an initialization vector to use for encryption and decryption.
 
-For more information, refer to the description of KEY deviceparameter of OPEN or USE.
+For more information, refer to the description of `KEY <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#id4>`_ deviceparameter of OPEN or USE.
    
 ~~~~~~
 OWNER
@@ -3083,7 +3083,7 @@ Specifies the VARIABLE record length format for sequential disk files.
 
 By default, records have variable length format.
 
-For more information, refer to “STREAM”.
+For more information, refer to `STREAM <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#stream>`_.
 
 ~~~~~~
 WORLD
@@ -3315,7 +3315,7 @@ ATTACH is not compatible with any other device parameters in the USE command. A 
 .. note::
    A socket does not carry [I|O]CHSET with it while being moved. Such a socket uses the [I|O]CHSET of the device it is ATTACHed to. If there is input still buffered, this may cause unintentional consequences in the application if [I|O]CHSET changes. YottaDB does not detect (or report) a change in [I|O]CHSET due to DETACH/ATTACH.
 
-For information on using the ATTACH with OPEN, refer to “ATTACH” in the OPEN Deviceparameters section.
+For information on using the ATTACH with OPEN, refer to `ATTACH <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#attach>`_ in the OPEN Deviceparameters section.
 
 ~~~~~~~~~~
 CANONICAL
@@ -3335,7 +3335,7 @@ CENABLE
 
 Enables or disables the ability to force YottaDB into Direct Mode by entering <CTRL-C> at $PRINCIPAL.
 
-If CENABLE is set, <CTRL-C> interrupts process execution. For more information on interrupt handling, refer to “Interrupt Handling”.
+If CENABLE is set, <CTRL-C> interrupts process execution. For more information on interrupt handling, refer to `Interrupt Handling <https://docs.yottadb.com/ProgrammersGuide/isv.html#interrupt-handling>`_.
 
 By default, CENABLE is set. If CTRAP contains $C(3), CENABLE is disabled.
 
@@ -3369,16 +3369,16 @@ Enables a client connection with a server, which is located by the information p
 
 expr specifies the protocol and the protocol-specific information. Currently, YottaDB supports TCP/IP and LOCAL (also known as UNIX domain) socket protocols.
 
-For more information, refer to “CONNECT”.
+For more information, refer to `CONNECT <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#connect>`_.
 
 .. note::
    CONNECT is not compatible with LISTEN.
 
-Although CONNECT can be used with USE command, YottaDB recommends not to use it that way, because unlike the OPEN command, there is no way to specify a timeout to the USE command. CONNECT in the USE command take a default timeout value of 0.
+Although CONNECT can be used with USE command, YottaDB recommends not to use it that way, because unlike the OPEN command, there is no way to specify a timeout to the USE command. CONNECT in the USE command takes a default timeout value of 0.
 
 Example:
 
-Refer to the "CONNECT" examples in “Examples of OPEN”.
+Refer to the `CONNECT <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#connect>`_ example in the OPEN section.
 
 ~~~~~~~
 CONVERT
@@ -3441,7 +3441,7 @@ expr must be a string of the following format:
 
 Example:
 
-See "Socket (server.m)" example. 
+See `Socket example <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#socket-device-examples>`_. 
 
 ~~~~~~~
 DETACH
@@ -3461,7 +3461,7 @@ Removes the socket identified by expr from the current socket device, without af
 Example:
 
 .. parsed-literal::
-   YDB>set tcp="seerv" open tcp:(listen="6321:TCP":attach="serv")::"SOCKET"
+   YDB>set tcp="serv" open tcp:(listen="6321:TCP":attach="serv")::"SOCKET"
    YDB>zshow "D"
    /dev/pts/9 OPEN TERMINAL NOPAST NOESCA NOREADS TYPE WIDTH=80 LENG=24
    seerv OPEN SOCKET TOTAL=1 CURRENT=0
@@ -3476,7 +3476,7 @@ Example:
        SOCKET[1]=serv2 DESC=4 LISTENING PASSIVE NOTRAP PORT=6322
                 ZDELAY ZBFSIZE=1024 ZIBFSIZE=87380 NODELIMITER
 
-At this point, the socket device "seerv" has two sockets associated with it.
+At this point, the socket device "serv" has two sockets associated with it.
 
 The following command moves the "serv" socket to the "socketpool" device. 
 
@@ -3679,7 +3679,7 @@ IKEY="key_name [IV]"
 
 key_name is case-sensitive and must match a key name in the "files" section of the ydb_crypt_config file. The optional IV specifies an initialization vector to use for encryption and decryption.
 
-For more information, refer to the description of KEY deviceparameter of OPEN.
+For more information, refer to the description of `KEY <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#id4>`_ deviceparameter of OPEN.
 
 ~~~~~~~~~
 INREWIND
@@ -3687,7 +3687,7 @@ INREWIND
 
 Applies to: SD
 
-Performs a REWIND on input when $PRINCIPAL identifies a device that supports REWIND. Use this deviceparameter with $PRINCIPAL when redirected from a file. For more information, refer to “SEEK=strexpr”. 
+Performs a REWIND on input when $PRINCIPAL identifies a device that supports REWIND. Use this deviceparameter with $PRINCIPAL when redirected from a file. For more information, refer to `SEEK=strexpr <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#seek-strexpr>`_. 
 
 ~~~~~~~~~~~~~~~
 INSEEK=strexpr
@@ -3695,7 +3695,7 @@ INSEEK=strexpr
 
 Applies to: SD
 
-Performs a SEEK on input when $PRINCIPAL identifies a device that supports SEEK. Use this deviceparameter with $PRINCIPAL when redirected from a file. For more information, refer to “SEEK=strexpr”. 
+Performs a SEEK on input when $PRINCIPAL identifies a device that supports SEEK. Use this deviceparameter with $PRINCIPAL when redirected from a file. For more information, refer to `SEEK=strexpr <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#seek-strexpr>`_. 
 
 ~~~~~~~
 INSERT
@@ -3737,7 +3737,7 @@ KEY="key_name [IV]"
 
 key_name is case-sensitive and must match a key name in the "files" section of the ydb_crypt_config file. The optional IV specifies an initialization vector to use for encryption and decryption.
 
-For more information and an example, refer to the description of KEY deviceparameter of OPEN.
+For more information and an example, refer to the description of `KEY <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#id4>`_ deviceparameter of OPEN.
 
 ~~~~~~~
 LENGTH
@@ -3781,7 +3781,7 @@ OKEY="key_name [IV]"
 
 key_name is case-sensitive and must match a key name in the "files" section of the ydb_crypt_config file. The optional IV specifies an initialization vector to use for encryption and decryption.
 
-For more information, refer to the description of KEY deviceparameter of OPEN. 
+For more information, refer to the description of `KEY <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#id4>`_ deviceparameter of OPEN. 
 
 ~~~~~~~~~~
 OUTREWIND
@@ -3789,7 +3789,7 @@ OUTREWIND
 
 Applies to: SD
 
-Performs a REWIND on output when $PRINCIPAL identifies a device that supports REWIND. Use this deviceparameter with $PRINCIPAL when redirected to a file. For more information, refer to “REWIND”. 
+Performs a REWIND on output when $PRINCIPAL identifies a device that supports REWIND. Use this deviceparameter with $PRINCIPAL when redirected to a file. For more information, refer to `REWIND <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#id16>`_. 
 
 ~~~~~~~~~~~~~~~~
 OUTSEEK=strexpr
@@ -3797,7 +3797,7 @@ OUTSEEK=strexpr
 
 Applies to: SD
 
-Performs a SEEK on output when $PRINCIPAL identifies a device that supports SEEK. Use this deviceparameter with $PRINCIPAL when redirected to a file. For more information, refer to “SEEK=strexpr”.
+Performs a SEEK on output when $PRINCIPAL identifies a device that supports SEEK. Use this deviceparameter with $PRINCIPAL when redirected to a file. For more information, refer to `SEEK=strexpr <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#seek-strexpr>`_.
 
 ~~~~~~~~~
 PASSTHRU
@@ -3972,7 +3972,7 @@ The combination of STREAM and NOWRAP on disk files allows you to write data of a
 
 Example:
 
-See WRAP examples in the OPEN deviceparameters section.
+See `WRAP <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#wrap>`_ in the OPEN deviceparameters section.
 
 ~~
 X
@@ -4181,7 +4181,7 @@ When a string literal appears as an argument to a READ, M writes the literal to 
 
 The READ commands adjust $X and $Y, based on the length of the input read.
 
-In UTF-8 mode, the READ command uses the character set value specified on the device OPEN as the character encoding of the input device. If character set "M" or "UTF-8" is specified, the data is read with no transformation. If character set is "UTF-16", "UTF-16LE", or "UTF-16BE", the data is read with the specified encoding and transformed to UTF-8. If the READ command encounters an illegal character or a character outside the selected representation, it produces a run-time error. The READ command recognizes all Unicode(TM) line terminators for non-FIXED devices. See "Line Terminators" section for more details. In M mode, characters and bytes have a one-to-one relationship and therefore READ can be used to read bit-streams of non-character data.
+In UTF-8 mode, the READ command uses the character set value specified on the device OPEN as the character encoding of the input device. If character set "M" or "UTF-8" is specified, the data is read with no transformation. If character set is "UTF-16", "UTF-16LE", or "UTF-16BE", the data is read with the specified encoding and transformed to UTF-8. If the READ command encounters an illegal character or a character outside the selected representation, it produces a run-time error. The READ command recognizes all Unicode(TM) line terminators for non-FIXED devices. See Line `Terminators <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#line-terminators>`_ section for more details. In M mode, characters and bytes have a one-to-one relationship and therefore READ can be used to read bit-streams of non-character data.
 
 ~~~~~~~~~~~~~~~
 READ * Command
