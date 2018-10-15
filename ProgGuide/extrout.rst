@@ -775,7 +775,7 @@ $ECODE/$STACK() initialized to null at level one (1) in GTM$CI frame.
 Rules to Follow in Call-Ins
 ++++++++++++++++++++++++++++++++++++
 
-1. External calls must not be fenced with TSTART/TCOMMIT if the external routine calls back into mumps using the call-in mechanism. YottaDB reports the error YDB-E-CITPNESTED if nested call-ins are invoked within a TP fence since YottaDB currently does not handle TP support across multiple call-in invocations.
+1. External calls must not be fenced with TSTART/TCOMMIT if the external routine calls back into mumps using the call-in mechanism.
 2. The external application should never call exit() unless it has called ydb_exit() previously. YottaDB internally installs an exit handler that should never be bypassed.
 3. The external application should never use any signals when YottaDB is active since YottaDB reserves them for its internal use. YottaDB provides the ability to handle SIGUSR1 within M (see “$ZINTerrupt” for more information). An interface is provided by YottaDB for timers. Although not required, YottaDB recommends the use of ydb_malloc() and ydb_free() for memory management by C code that executes in a YottaDB process space for enhanced performance and improved debugging.
 4. YottaDB performs device input using the read() system service. UNIX documentation recommends against mixing this type of input with buffered input services in the fgets() family and ignoring this recommendation is likely to cause a loss of input that is difficult to diagnose and understand.

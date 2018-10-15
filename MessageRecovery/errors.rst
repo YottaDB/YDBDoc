@@ -996,17 +996,6 @@ Call in/Run Time Error: This indicates that the call-in table defined by the env
 Action: Check if the file path specified by ydb_ci is correct and has at least read permissions for the user running YottaDB. Check for secondary message(s) accompanying this error.
 
 
------------
-CITPNESTED
------------
-
-CITPNESTED, Call-ins can not be used inside a TP transaction
-
-Call in/Run Time Error: This indicates that a nested call-in (ydb_ci()) was invoked from an external call function that was called within a TSTART/TCOMMIT fence.
-
-Action: YottaDB currently does not handle TP support across multiple call-in invocations. Make sure all external call C functions, that invoke call-in functionality are not fenced within a TSTART/TCOMMIT boundary.
-
-
 -------------
 CIUNTYPE
 -------------
