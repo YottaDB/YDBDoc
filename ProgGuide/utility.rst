@@ -1781,7 +1781,7 @@ The routine utilities are:
 
 The %FL utility lists the comment lines at the beginning of source programs. %FL writes the routines in alphabetical order to the specified device. If the output device is not the principal device, %FL displays the name of each routine on the principal device as it writes the routine to the output device.
 
-%FL uses %RSEL to select routines. For more information, see “ %RSEL”.
+%FL uses %RSEL to select routines. For more information, see `%RSEL <https://docs.yottadb.com/ProgrammersGuide/utility.html#rsel>`_.
 
 **Prompts**
 
@@ -2074,7 +2074,7 @@ Example:
 
 The %RO utility writes M source code for one or more routines to a sequential device such as, a disk file or a printer. .
 
-%RO uses %RSEL to select routines. For more information, see “ %RSEL”.
+%RO uses %RSEL to select routines. For more information, see `%RSEL <https://docs.yottadb.com/ProgrammersGuide/utility.html#rsel>`_.
 
 %RO writes the routines in alphabetical order to the specified device. %RO displays the name of each routine as it writes the routine to the device.
 
@@ -2138,7 +2138,7 @@ This example adds and subtracts %D from the selection, then adds all routines st
 
 The %RSE utility searches for every occurrence of a text string in a routine or a list of routines.
 
-%RSE uses %RSEL to select routines. For more information, see “ %RSEL”.
+%RSE uses %RSEL to select routines. For more information, see `%RSEL <https://docs.yottadb.com/ProgrammersGuide/utility.html#rsel>`_.
 
 %RSE searches for text strings are case-sensitive. %RSE issues a warning message if you specify a control character such as a <TAB> in the text string. %RSE confirms your selection by displaying the text string between a left and right arrow. The arrows display any blank spaces included in the text string.
 
