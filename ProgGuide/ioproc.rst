@@ -150,7 +150,7 @@ $K[EY] contains the string that terminated the most recent READ command from the
 
 * For SOCKET devices: 
   
-  * $KEY includes information about a new socket in the form of CONNECT|handle|<address> where <address> is the IP address for TCP sockets and path for LOCAL sockets. Read more about `SOCKET device operation <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#id3`_.
+  * $KEY includes information about a new socket in the form of CONNECT|handle|<address> where <address> is the IP address for TCP sockets and path for LOCAL sockets. Read more about `SOCKET device operation <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#id3>`_.
   
   * As an OPEN deviceparameter: For LISTEN, $KEY is set to the format of “LISTENING|<socket_handle>|{<portnumber>|</path/to/LOCAL_socket>}” when listening for a connection is successful. Otherwise, $KEY is assigned the empty string. Read more about `LISTEN deviceparameter <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#listen>`_.  
 
@@ -1691,7 +1691,7 @@ Socket Read Operation
 
 TCP/IP is a stream-based protocol that guarantees that bytes arrive in the order in which they were sent. However, it does not guarantee that they will be grouped in the same packets.
 
-If packets arrive infrequently, or at varying rates that are sometimes slow, a short interval can waste CPU cycles checking for an unlikely event. On the other hand, if the handling of packets is time critical, a long interval can introduce an undesirable latency. If packets arrive in a rapid and constant flow (an unusual situation), the interval doesn't matter as much, as there is always something in the buffer for the READ to work with. If you do not specify MOREREADTIME, SOCKET READ implements a dynamic approach of using a longer first interval of 200 ms when it finds no data, then shortening the interval to 10 ms when data starts to arrive. If you specify an interval, the SOCKET device always uses the specified interval and does not adjust dynamically. For more information on MOREREADTIME, refer to `MOREREADTIME <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#morereadtime>`_.
+If packets arrive infrequently, or at varying rates that are sometimes slow, a short interval can waste CPU cycles checking for an unlikely event. On the other hand, if the handling of packets is time critical, a long interval can introduce an undesirable latency. If packets arrive in a rapid and constant flow (an unusual situation), the interval doesn't matter as much, as there is always something in the buffer for the READ to work with. If you do not specify MOREREADTIME, SOCKET READ implements a dynamic approach of using a longer first interval of 200 ms when it finds no data, then shortening the interval to 10 ms when data starts to arrive. If you specify an interval, the SOCKET device always uses the specified interval and does not adjust dynamically. For more information on MOREREADTIME, refer to `MOREREADTIME <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#id12>`_.
 
 Most SOCKET READ operations terminate as a result of the first condition detected from (a) receipt of delimiters, (b) receipt of the maximum number of characters, or (c) expiration of a timeout. Note that all of these conditions are optional, and a specific READ may specify zero or more of them. This section refers to these three conditions as "defined terminating conditions". If a SOCKET READ is not subject to any of the defined terminating conditions, it terminates after it has received at least one character followed by an interval with no new characters. An error can also terminate a READ. While none of the terminating conditions is satisfied, the READ continues.
 
@@ -2150,7 +2150,7 @@ ATTACH=expr Applies to: SOC
 
 ATTACH assigns expr as the handle name to the newly created socket. When ATTACH is used and one of LISTEN or CONNECT is specified on the same OPEN, the value of expr becomes the identifier of the newly created socket. If neither LISTEN nor CONNECT is specified, ATTACH is ignored.
 
-For information on using the ATTACH with USE, refer to `ATTACH in the USE Deviceparameters section <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#id5>`_.
+For information on using the ATTACH with USE, refer to `ATTACH in the USE Deviceparameters section <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#id19>`_.
 
 Example:
 
