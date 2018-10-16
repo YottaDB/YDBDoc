@@ -3035,7 +3035,7 @@ Sends a signal to a process. The format for the $ZSIGPROC function is:
    $ZSIGPROC(expr1,expr2)
 
 * The first expression is the pid of the process to which the signal is to be sent.
-* The second expression is the system signal number. Because a signal number of a signal name can be different for various platforms, YottaDB recommends using signal names to maintain code portability across different platforms. For example, the signal number for SIGUSR1 is 10 on Linux, 30 on AIX, and 16 for some other platforms. Use the $&gtmposix.signalval(signame,.sigval) function available in the gtmposix plugin to determine the signal number of a signal name.
+* The second expression is the system signal number. Because a signal number of a signal name can be different for various platforms, YottaDB recommends using signal names to maintain code portability across different platforms. For example, the signal number for SIGUSR1 is 10 on Linux, 30 on AIX, and 16 for some other platforms. Use the $&ydbposix.signalval(signame,.sigval) function available in the ydbposix plugin to determine the signal number of a signal name.
 
 If the second expression is 0, $ZSIGPROC() checks the validity of the pid specified in the first expression.
 
@@ -3064,7 +3064,7 @@ Example:
 
 .. parsed-literal:: 
    YDB>job ^Somejob
-   YDB>set ret=$&gtmposix.signalval("SIGUSR1",.sigusr1) zwrite 
+   YDB>set ret=$&ydbposix.signalval("SIGUSR1",.sigusr1) zwrite 
        ret=0
        sigusr1=10
    YDB>write $zsigproc($zjob,sigusr1)
