@@ -891,7 +891,7 @@ The show-option-list includes (these are not case-sensitive):
    SHOW output for journal file /home/jdoe/.yottadb/r1.20_x86_64/g/yottadb.mjl
    -----------------------------------------------------------------------------
    Journal file name       /home/jdoe/.yottadb/r120/g/yottadb.mjl
-   Journal file label      GDSJNL23
+   Journal file label      YDBJNL44
    Database file name      /home/jdoe/.yottadb/r120/g/yottadb.dat
    Prev journal file name /home/jdoe/.yottadb/r120/g/yottadb.mjl_2018310190106
    Next journal file name 
@@ -1351,7 +1351,7 @@ By default, JOURNAL processes database updates regardless of the user who initia
 JOURNAL EXTRACT FORMATS
 -----------------------------
 
-Journal EXTRACT files always start with a label. For the current release of YottaDB, the label is GDSJEX07 for a simple journal extract file. This label is necessary to identify the format of the file.
+Journal EXTRACT files always start with a label. For the current release of YottaDB, the label is YDBJEX08 for a simple journal extract file. This label is necessary to identify the format of the file.
 
 If the environment variable ydb_chset is set of UTF-8, then file format label is followed by another label called "UTF-8" to indicate UTF-8 mode.
 
@@ -1364,21 +1364,21 @@ Records of type SET, KILL, ZKILL, TSTART, and TCOMMIT include the token_seq as p
 The format of the plain journal extract is as follows:
 
 .. parsed-literal::
-   NULL    00\time\tnum\pid\clntpid\jsnum\strm_num\strm_seq
-   PINI(U) 01\time\tnum\pid\nnam\unam\term\clntpid\clntnnam\clntunam\clntterm
-   PINI(V) 01\time\tnum\pid\nnam\unam\term\mode\logintime\image_count\pname\clntpid\clntnnam\clntunam\clntterm\clntmode\clntlogintime\clntimage_count\clntpname
-   PFIN    02\time\tnum\pid\clntpid
-   EOF     03\time\tnum\pid\clntpid\jsnum
-   KILL    04\time\tnum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
-   SET     05\time\tnum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node=sarg
-   ZTSTART 06\time\tnum\pid\clntpid\token
-   ZTCOM   07\time\tnum\pid\clntpid\token\partners
-   TSTART  08\time\tnum\pid\clntpid\token_seq\strm_num\strm_seq
-   TCOM    09\time\tnum\pid\clntpid\token_seq\strm_num\strm_seq\partners\tid
-   ZKILL   10\time\tnum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
-   ZTWORM  11\time\tnum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\ztwormhole
-   ZTRIG   12\time\tnum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
-   LGTRIG  13\time\tnum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\trigdefinition
+   NULL    00\\time\\tnum\\pid\\clntpid\\jsnum\\strm_num\\strm_seq\\salvaged
+   PINI    01\\time\\tnum\\pid\\nnam\\unam\\term\\clntpid\\clntnnam\\clntunam\\clntterm
+   PFIN    02\\time\\tnum\\pid\\clntpid
+   EOF     03\\time\\tnum\\pid\\clntpid\\jsnum
+   KILL    04\\time\\tnum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\nodeflags\\node
+   SET     05\\time\\tnum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\nodeflags\\node=sarg
+   ZTSTART 06\\time\\tnum\\pid\\clntpid\\token
+   ZTCOM   07\\time\\tnum\\pid\\clntpid\\token\\partners
+   TSTART  08\\time\\tnum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq
+   TCOM    09\\time\\tnum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\partners\\tid
+   ZKILL   10\\time\\tnum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\nodeflags\\node
+   ZTWORM  11\\time\\tnum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\ztwormhole
+   ZTRIG   12\\time\\tnum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\nodeflags\\node
+   LGTRIG  13\\time\\tnum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\trigdefinition
+
 
 where:
 
@@ -1420,44 +1420,44 @@ Journal extracts contain NULL records only in a multisite replication configurat
 The format of the detail journal extract is as follows: 
 
 .. parsed-literal::
-   PINI(U)  time\tnum\chksum\pid\nnam\unam\term\clntpid\clntnnam\clntunam\clntterm
-   PINI(V)  time\tnum\chksum\pid\nnam\unam\term\mode\logintime\image_count\pname\clntpid\clntnnam\clntunam\clntterm\clntmode\clntlogintime\clntimage_count\clntpname
-   PFIN     time\tnum\chksum\pid\clntpid
-   EOF      time\tnum\chksum\pid\clntpid\jsnum
-   SET      time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node=sarg
-   KILL     time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
-   ZKILL    time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
-   ZTWORM   time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\ztwormhole
-   ZTRIG    time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
-   TSTART   time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq
-   TSET     time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node=sarg
-   TKILL    time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
-   TZKILL   time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
-   TZTWORM  time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\ztwormhole
-   TZTRIG   time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
-   TLGTRIG  time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\trigdefinition
-   USET     time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node=sarg
-   UKILL    time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
-   UZKILL   time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
-   UZTWORM  time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\ztwormhole
-   UZTRIG   time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
-   ULGTRIG  time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\trigdefinition
-   TCOM     time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\partners\tid
-   INCTN    time\tnum\chksum\pid\clntpid\opcode\incdetail
-   EPOCH    time\tnum\chksum\pid\clntpid\jsnum\blks_to_upgrd\free_blocks\total_blks\fully_upgraded[\strm_num\strm_seq]...
-   PBLK     time\tnum\chksum\pid\clntpid\blknum\bsiz\blkhdrtn\ondskbver
-   AIMG     time\tnum\chksum\pid\clntpid\blknum\bsiz\blkhdrtn\ondskbver
-   NULL     time\tnum\chksum\pid\clntpid\jsnum\strm_num\strm_seq
-   ZTSTART  time\tnum\chksum\pid\clntpid\token
-   FSET     time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node=sarg
-   FKILL    time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
-   FZKILL   time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
-   GSET     time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node=sarg
-   GKILL    time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
-   GZKILL   time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
-   ZTCOM    time\tnum\chksum\pid\clntpid\token\partners
-   ALIGN    time\tnum\chksum\pid\clntpid
 
+   PINI    time\\tnum\\chksum\\pid\\nnam\\unam\\term\\clntpid\\clntnnam\\clntunam\\clntterm
+   PFIN    time\\tnum\\chksum\\pid\clntpid
+   EOF     time\\tnum\\chksum\\pid\\clntpid\\jsnum
+   SET     time\\tnum\\chksum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\nodeflags\\node=sarg
+   KILL    time\\tnum\\chksum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\nodeflags\\node
+   ZKILL   time\\tnum\\chksum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\nodeflags\\node
+   ZTWORM  time\\tnum\\chksum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\ztwormhole
+   ZTRIG   time\\tnum\\chksum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\nodeflags\\node
+   TSTART  time\\tnum\\chksum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq
+   TSET    time\\tnum\\chksum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\nodeflags\\node=sarg
+   TKILL   time\\tnum\\chksum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\nodeflags\\node
+   TZKILL  time\\tnum\\chksum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\nodeflags\\node
+   TZTWORM time\\tnum\\chksum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\ztwormhole
+   TZTRIG  time\\tnum\\chksum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\nodeflags\\node
+   TLGTRIG time\\tnum\\chksum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\trigdefinition
+   USET    time\\tnum\\chksum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\nodeflags\\node=sarg
+   UKILL   time\\tnum\\chksum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\nodeflags\\node
+   UZKILL  time\\tnum\\chksum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\nodeflags\\node
+   UZTWORM time\\tnum\\chksum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\ztwormhole
+   UZTRIG  time\\tnum\\chksum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\nodeflags\\node
+   ULGTRIG time\\tnum\\chksum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\trigdefinition
+   TCOM    time\\tnum\\chksum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\partners\\tid
+   INCTN   time\\tnum\\chksum\\pid\\clntpid\\opcode\\incdetail
+   EPOCH   time\\tnum\\chksum\\pid\\clntpid\\jsnum\\blks_to_upgrd\\free_blocks\\total_blks\\fully_upgraded[\\strm_num\\strm_seq]...
+   PBLK    time\\tnum\\chksum\\pid\\clntpid\\blknum\\bsiz\\blkhdrtn\\ondskbver
+   AIMG    time\\tnum\\chksum\\pid\\clntpid\\blknum\\bsiz\\blkhdrtn\\ondskbver
+   NULL    time\\tnum\\chksum\\pid\\clntpid\\jsnum\\strm_num\\strm_seq\\salvaged
+   ZTSTART time\\tnum\\chksum\\pid\\clntpid\\token
+   FSET    time\\tnum\\chksum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\nodeflags\\node=sarg
+   FKILL   time\\tnum\\chksum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\nodeflags\\node
+   FZKILL  time\\tnum\\chksum\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\nodeflags\\node
+   GSET    time\\tnum\\chksum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\nodeflags\\node=sarg
+   GKILL   time\\tnum\\chksum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\nodeflags\\node
+   GZKILL  time\\tnum\\chksum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\nodeflags\\node
+   ZTCOM   time\\tnum\\chksum\\pid\\clntpid\\token\\partners
+   ALIGN   time\\tnum\\chksum\\pid\\clntpid
+    
 where:
 
 AIMG records are unique to DSE action and exist because those actions do not have a "logical" representation.
@@ -1591,5 +1591,18 @@ Legend (All hexadecimal fields have a 0x prefix. All numeric fields otherwise ar
 | clntunam                                 | If non-empty, clntunam is the name of the GT.CM client that      |
 |                                          | initiated this update on the server side.                        |
 +------------------------------------------+------------------------------------------------------------------+
+| free_blocks                              | # of free blocks in the db file header at the time of writing the|
+|                                          | EPOCH                                                            |
++------------------------------------------+------------------------------------------------------------------+
+| total_blks                               | # of total blocks in the db file header at the time of writing   |
+|                                          | the EPOCH                                                        |
++------------------------------------------+------------------------------------------------------------------+
+| salvaged                                 | 1 if the NULL record is auto-generated due to a kill -9 of a     |
+|                                          | process in commit logic.                                         |
+|                                          |                                                                  |
+|                                          | 0 if the NULL record was user-generated (i.e. by an external     |
+|                                          | M-filter etc.)                                                   |
++------------------------------------------+------------------------------------------------------------------+
+
 
 
