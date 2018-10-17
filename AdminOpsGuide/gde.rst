@@ -972,7 +972,7 @@ This displays only the TEMPLATES section of the Global Directory.
    TEMPLATE -REGION -NOQDBRUNDOWN
    TEMPLATE -REGION -RECORD_SIZE=256
    TEMPLATE -REGION -STATS
-   TEMPLATE -REGION -NOSTDNULLCOLL
+   TEMPLATE -REGION -STDNULLCOLL
    !
    TEMPLATE -REGION -NOJOURNAL
    !
@@ -1328,7 +1328,9 @@ Determines whether YottaDB null subscripts collate in conformance to the M stand
 
 If STDNULLCOLL is specified, subscripts of globals in the database follow the M standard where the null subscript collates before all other subscripts.
 
-If NOSTDNULLCOLL is specified, null subscripts collate between numeric and string subscripts. YottaDB strongly recommends that you use STDNULL and against using the non-standard null collation, which is the default for historical reasons.
+If NOSTDNULLCOLL is specified, null subscripts collate between numeric and string subscripts.
+
+By default, GDE uses STDNULLCOLL.  YottaDB strongly recommends that you use STDNULLCOLL.
 
 The following table summarizes GDE region qualifiers. It provides their abbreviations, defaults (as provided by YottaDB), and allowable minimum and maximum values.
 
@@ -1815,7 +1817,7 @@ The following table summarizes all qualifiers for the ADD, CHANGE, and TEMPLATE 
 +-----------------------------------------------------+----------------+----------------+--------------------------+--------------------+--------------+---------------+
 | -N[ULL_SUBSCRIPTS]=[ALWAYS|NEVER|EXISTING]          | NEVER or \*\*\*| \-             | \-                       | \-                 | X            | \-            |
 +-----------------------------------------------------+----------------+----------------+--------------------------+--------------------+--------------+---------------+
-| -[NO]STDNULLCOLL[=TRUE|FALSE]                       | FALSE          | \-             | \-                       | \-                 | X            | \-            |
+| -[NO]STDNULLCOLL                                    | TRUE           | \-             | \-                       | \-                 | X            | \-            |
 +-----------------------------------------------------+----------------+----------------+--------------------------+--------------------+--------------+---------------+
 | -R[ECORD_SIZE]=size (bytes)                         | 256            | 7              | 1048576                  | \-                 | X            | \-            |
 +-----------------------------------------------------+----------------+----------------+--------------------------+--------------------+--------------+---------------+
