@@ -155,8 +155,8 @@ To establish the null collation method for a specified database, GDE supports a 
 
 For M local variables, the null collation can be established either at startup or during run time. Since the same local collation method is established for all locals in a process, changing the null collation within the process is allowed only if there are no local variables defined at that time. At process startup, YottaDB uses the following:
 
-* The M standard null collation if an environment variable ydb_lct_stdnull is defined to either TRUE or YES (or a case-insensitive leading substring thereof) or a non-zero integer.
-* The YottaDB standard null collation if the environment variable or the logical name is not defined or defined to any other value.
+* The YottaDB standard null collation if the environment variable is defined to either FALSE or NO (or a case-insensitive leading substring thereof) or 0.
+* The M standard null collation if an environment variable ydb_lct_stdnull is defined to either TRUE or YES (or a case-insensitive leading substring thereof) or a non-zero integer or if the environment variable is undefined.
 
 To establish a default collation version for local variables within the process, the percent utility %LCLCOL supports establishing the null collation method as well. set^%LCLCOL(col,ncol) accepts an optional parameter ncol that determines the null collation type to be used with the collation type col.
 
