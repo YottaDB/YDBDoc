@@ -958,11 +958,11 @@ the code to also :code:`#include <string.h>`. It sets:
   of the string to be copied and the underlying :code:`memcpy()`
   completed successfully, and :CODE:`FALSE` otherwise.
 
-:code:`YDB_LITERAL_TO_BUFFER(literal, buffer)` – Use this macro to set
-:code:a `ydb_buffer_t` structure to refer to a literal (such as a
-:code:variable name). With :code:`literal` a string literal, and
-:code::code:`buffer` a pointer to a :code:`ydb_buffer_t` structure,
-:code:set:
+:code:`YDB_LITERAL_TO_BUFFER(literal, buffer)` – Use this macro to set a
+:code:`ydb_buffer_t` structure to refer to a literal (such as a
+:code:`variable name`). With a string :code:`literal`, and a
+:code:`buffer` pointer to a :code:`ydb_buffer_t` structure,
+:code:`set`:
 
 - :code:`buffer->buf_addr` to the address of :code:`literal`; and
 - :code:`buffer->len_used` and :code:`buffer->len_alloc` to the length of
