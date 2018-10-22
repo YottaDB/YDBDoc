@@ -1826,7 +1826,7 @@ Future of YottaDB
 that mostly conforms to `ISO/IEC 11756:1999
 <http://www.iso.ch/iso/en/CatalogueDetailPage.CatalogueDetail?CSNUMBER=29268&ICS1=35&ICS2=60&ICS3=&scopelist>`_.
 The `YottaDB M Programmers Guide
-<https://docs.yottadb.com/ProgrammersGuide/UNIX_manual/>`_ documents
+<https://docs.yottadb.com/ProgrammersGuide/index.html>`_ documents
 programming YottaDB in M and is not duplicated here.
 
 ============================================
