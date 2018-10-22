@@ -958,11 +958,15 @@ the code to also :code:`#include <string.h>`. It sets:
   of the string to be copied and the underlying :code:`memcpy()`
   completed successfully, and :CODE:`FALSE` otherwise.
 
-:code:`YDB_LITERAL_TO_BUFFER(literal, buffer)` – Use this macro to set a
-:code:`ydb_buffer_t` structure to refer to a literal (such as a
-:code:`variable name`). With a string :code:`literal`, and a
-:code:`buffer` pointer to a :code:`ydb_buffer_t` structure,
-:code:`set`:
+:code:`YDB_FREE_BUFFER(BUFFERP)` - Use this macro to free the buffer malloced using :code:`YDB_MALLOC_BUFFER`.
+
+- `ydb_free() <https://docs.yottadb.com/MultiLangProgGuide/MultiLangProgGuide.html#ydb-free>`_ is used on :code:`BUFFERP->buf_addr`.
+
+:code:`YDB_LITERAL_TO_BUFFER(literal, buffer)` – Use this macro to set
+:code:a `ydb_buffer_t` structure to refer to a literal (such as a
+:code:variable name). With :code:`literal` a string literal, and
+:code::code:`buffer` a pointer to a :code:`ydb_buffer_t` structure,
+:code:set:
 
 - :code:`buffer->buf_addr` to the address of :code:`literal`; and
 - :code:`buffer->len_used` and :code:`buffer->len_alloc` to the length of
@@ -971,6 +975,15 @@ the code to also :code:`#include <string.h>`. It sets:
 :code:`YDB_IS_YDBERR(msgnum)` – returns TRUE if the absolute value of
 :code:`msgnum` lies between :code:`YDB_MIN_YDBERR` and
 :code:`YDB_MAX_YDBERR`.
+
+:code:`YDB_MALLOC_BUFFER(BUFFERP,LEN)` - Use this macro to to allocate a buffer using :code:`ydb_malloc` 
+of length LEN and assign it to an already allocated :code:`ydb_buffer_t` structure.
+
+- :code:`BUFFERP->buf_addr` is set to the malloced buffer.
+
+- :code:`BUFFERP->len_alloc` is set to the malloced length.
+
+- :code:`BUFFERP->len_used` is set to 0.
 
 :code:`YDB_SEVERITY(msgnum, severity)` – The `error return code`_ from a
 function indicates both the nature of an error as well as its
