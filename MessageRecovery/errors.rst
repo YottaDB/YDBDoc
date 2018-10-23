@@ -4173,7 +4173,7 @@ FILEEXISTS, File xxxx already exists
 
 MUPIP Error: This indicates that MUPIP discovered a file with the filename xxxx already existing, and did not overwrite it while executing the specified command(s).
 
-Action: Rename the already existing file xxxx and reissue the MUPIP command(s), or modify the MUPIP command to name (explicitly/implicitly) a file different from xxxx.
+Action: Rename the already existing file xxxx and reissue the MUPIP command(s), or modify the MUPIP command to name (explicitly/implicitly) a file different from xxxx. If this error is from a MUPIP SET -JOURNAL command after switching to a new version of YottaDB (i.e. the current journal file is known to have been created by a prior version of YottaDB) specifying -NOPREVJNLFILE in the MUPIP SET -JOURNAL command will avoid this error.
 
 ---------------------
 FILEIDGBLSEC 
