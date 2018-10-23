@@ -359,8 +359,6 @@ Alias container variables are subscripted lvns that protect arrays for subsequen
    1:0:
    YDB>
 
-
-
 * The value of an alias container is the empty string.
 * Use the SET * command to associate an lname with the container to obtain an alias that provides access to the array in a container.
 * SET with an alias container as left-hand side target replaces the value at that node of the container variable and destroys any prior alias association with an array.

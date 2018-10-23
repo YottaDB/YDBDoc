@@ -1154,7 +1154,7 @@ This example invokes %TRIM as a command line utility which reads STDIN and write
 %MPIECE
 +++++++++++
 
-The %MPIECE utility replaces one or more consecutive occurrences of the second argument in the first argument with one occurrence of the third argument. This lets $PIECE operate on the resulting string like UNIX awk.
+The %MPIECE utility replaces one or more consecutive occurrences of the second argument in the first argument with one occurrence of the third argument. This lets $PIECE operate on the resulting string like UNIX `awk <https://en.wikipedia.org/wiki/AWK>`_.
 
 You can use the %MPIECE utility in Direct Mode or include it in a source application program in the following format:
 
@@ -1512,7 +1512,7 @@ The %GED utility enables you to edit the globals in a full-screen editor environ
 
 Edit^: Requests the name, in ZWRITE format, of a global to edit.
 
-Only one global can be edited at a time with %GED, see “ Prompts” for descriptions of valid input for subscripts.
+Only one global can be edited at a time with %GED, see “Prompts” above for descriptions of valid input for subscripts.
 
 **Examples of %GED**
 
@@ -1851,7 +1851,7 @@ charset: Specifies a string of non-zero length. If specified, %RANDSTR generates
 
 The %RCE utility replaces every occurrence of a text string with another text string in a routine or a list of routines.
 
-%RCE uses %RSEL to select routines. For more information, see “ %RSEL”.
+%RCE uses %RSEL to select routines. For more information, see `%RSEL <https://docs.yottadb.com/ProgrammersGuide/utility.html#id3>`_.
 
 %RCE prompts for a text string to replace and its replacement. %RCE searches for text strings in a case-sensitive manner. %RCE issues a warning message if you specify a control character such as a <TAB> in the text string or its replacement. %RCE confirms your selection by displaying the text string and its replacement between a left and right arrow. The arrows highlight any blank spaces that you might have included in the text string or its replacement.
 
@@ -2427,7 +2427,7 @@ The first parameter is a required pass-by-reference variable that the caller use
 
 The second parameter is the path and name for the database file on which to report information.
 
-The format of the output array is fdump(sgmnt_data.<FIELD NAME>)=<value>; refer to the ^%PEEKBYNAME and its documentation for additional information on the names and values.
+The format of the output array is fdump(sgmnt_data.<FIELD NAME>)=<value>; refer to `%PEEKBYNAME <https://docs.yottadb.com/ProgrammersGuide/utility.html#peekbyname>`_ for additional information on the names and values.
 
 The $ETRAP handler simply QUITs as it defers error handling to the caller. Application developers should define an appropriate $ETRAP prior to calling %DUMPFHEAD.
 
@@ -2458,7 +2458,7 @@ This example invokes %FREECNT at the YDB> prompt that displays the number of fre
 %PEEKBYNAME()
 ++++++++++++++++++
 
-%PEEKBYNAME() provides a stable interface to $ZPEEK() that uses control structure field names. $ZPEEK() provides a read-only mechanism to access selected fields in selected control structures in the address space of a process, including process private memory, database shared memory segments and Journal Pools. Although application code can call $ZPEEK() directly, such direct access must use numeric arguments that can vary from release to release. Access by name using %PEEKBYNAME makes application code more stable across YottaDB releases. For more information, refer to “$ZPEEK()”. YottaDB intends to maintain the stability of a name from release to release where that name refers to the same data item; however, we may add or obsolete names, or modify the type and size associated with existing names at our discretion, to reflect changes in the implementation. The format of the %PEEKBYNAME() function is:
+%PEEKBYNAME() provides a stable interface to $ZPEEK() that uses control structure field names. $ZPEEK() provides a read-only mechanism to access selected fields in selected control structures in the address space of a process, including process private memory, database shared memory segments and Journal Pools. Although application code can call $ZPEEK() directly, such direct access must use numeric arguments that can vary from release to release. Access by name using %PEEKBYNAME makes application code more stable across YottaDB releases. For more information, refer to `$ZPEEK() <https://docs.yottadb.com/ProgrammersGuide/functions.html#zpeek>`_. YottaDB intends to maintain the stability of a name from release to release where that name refers to the same data item; however, we may add or obsolete names, or modify the type and size associated with existing names at our discretion, to reflect changes in the implementation. The format of the %PEEKBYNAME() function is:
 
 .. parsed-literal::
    %PEEKBYNAME(field[,regindex][,format])
@@ -2466,7 +2466,7 @@ This example invokes %FREECNT at the YDB> prompt that displays the number of fre
 * The first expression specifies the memory location to access in the format: CONTROL_BLOCK[.FIELD].* (For example, "gd_region.max_key_size").
 * The optional second expression specifies a region name, structure index or a base address associated with the first (field name) argument. The choice is governed by the following rules applied in the following order:
 
-  1. If the value is a hex value in the form of 0xhhhhhhhh[hhhhhhhh], then PEEKBYNAME uses it as the base address of the data to fetch. Also in this case, the offset, length, and type are taken from the field specified in the first expression (field). For more information, see the description of the "PEEK" mnemonic in “$ZPEEK()”.
+  1. If the value is a hex value in the form of 0xhhhhhhhh[hhhhhhhh], then PEEKBYNAME uses it as the base address of the data to fetch. Also in this case, the offset, length, and type are taken from the field specified in the first expression (field). For more information, see the description of the "PEEK" mnemonic in `$ZPEEK() <https://docs.yottadb.com/ProgrammersGuide/functions.html#zpeek>`_.
   2. If the first expression refers to one of the region-related structures supported by the $ZPEEK() function, PEEKBYNAME treats this second expression as a region name.
   3. If the first expression refers to one of the replication related structures supported by the $ZPEEK() function that are indexed, PEEKBYNAME treats this second expression as a numerical (base 10) index value.
   4.  For those structures supported by the $ZPEEK() function that do not accept an argument, this second expression must be NULL or not specified.
@@ -2738,9 +2738,9 @@ The low level API implemented by $$SHOW^%YGBLSTAT(glvn[,strexp]) reports raw sta
  
 * $$SHOW^%YGBLSTAT() reports a zero value for any statistic whose name is unrecognized. This facilitates application code written for a version of YottaDB that includes a statistic, but which also needs to run on an earlier version without that statistic.
 
-*  Because a process sharing statistics can exit, deleting its node, between the time a monitoring process decides to access its statistics, e.g., finding it using $$ORDERPID^%YGBLSTAT() or $ORDER(^%YGS()), and the time the monitoring process performs the database access, any direct access to ^%YGBLSTAT should be wrapped in $GET().
+* Because a process sharing statistics can exit, deleting its node, between the time a monitoring process decides to access its statistics, e.g., finding it using $$ORDERPID^%YGBLSTAT() or $ORDER(^%YGS()), and the time the monitoring process performs the database access, any direct access to ^%YGBLSTAT should be wrapped in $GET().
 
-*  As raw statistics are binary data, processes in UTF-8 mode that gather and monitor statistics should use code with appropriate BADCHAR handling. Note that processes sharing statistics and processes gathering statistics for monitoring and reporting need not run in the same UTF-8/M mode. Statistics sharing by processes is identical in M and UTF-8 modes. YottaDB suggests that processes gathering statistics run in M mode
+* As raw statistics are binary data, processes in UTF-8 mode that gather and monitor statistics should use code with appropriate BADCHAR handling. Note that processes sharing statistics and processes gathering statistics for monitoring and reporting need not run in the same UTF-8/M mode. Statistics sharing by processes is identical in M and UTF-8 modes. YottaDB suggests that processes gathering statistics run in M mode
 
 YottaDB strongly recommends that except as documented here for sharing and gathering statistics, you not access statistics database files except under the direction of your YottaDB support channel.
 

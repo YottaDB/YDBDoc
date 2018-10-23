@@ -3858,7 +3858,7 @@ Makes the socket specified by the handle named in expr the current socket for th
 .. note::
    SOCKET is compatible with DELIMITER only.
 
-For a usage example, refer to the socketexamplemulti2.m in the Section : `“Socket Device Examples” <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#socket-device-examples>`_. 
+For a usage example, refer to the socketexamplemulti2.m in `“Socket Device Examples” <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#socket-device-examples>`_. 
 
 ~~~~~~~~~~~
 TERMINATOR
