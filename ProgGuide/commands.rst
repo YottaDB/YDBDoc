@@ -2934,8 +2934,17 @@ YottaDB auto-ZLINKs the routine if the following conditions are met:
 * ZLINK can locate and process the routine file, as indicated in the previous ZLINK Operation Summary table
 * The name of the routine is the same as the name of the source file; the only exception is that YottaDB converts a leading percent sign (%) in a file name to an underscore (_).
 
+++++++++++++++++++++++++++++++++++++
+ZLINK, auto-ZLINK and Routine Names
+++++++++++++++++++++++++++++++++++++
+
+In YottaDB, the name of the source file determines the name of the YottaDB routine. The file name of the object file is not required to match the name of the routine. Linking the object file makes the internal routine name (derived from the source file) known to YottaDB. This can lead to potential confusion, however, since both ZLINK and auto-ZLINK use the name of the object file to find the routine. When the object file name differs from the name of the routine, auto-ZLINK generates a run-time error.
+
+.. note::
+   Auto-ZLINK and ZLINK commands without a .m or .o file extension in their argument determine the need to recompile based on whether the object file was more recently modified than the source file using time in nanoseconds, as provided by the underlying system call. Note that, although the format of the file modification timestamps provides a nanosecond granularity, many supported OSs currently update the file timestamps with an accuracy of one second.
+
 ++++++++++++++++++
-Auto ZLINK Setup
+Auto-Relink Setup
 ++++++++++++++++++
 
 This section describes the procedure to setup the auto-relink functionality. YottaDB loads an object file linked from an object directory (in $ZROUTINES) with a \*-suffix (i.e. auto-relink-enabled) into a shared memory segment (referred to henceforth as a Rtnobj shared memory segment). At the invocation of DO, GOTO, or ZGOTO, extrinsic functions, ZBREAK, ZPRINT or $TEXT() that specify an entryref which includes a routine name (in contrast to a label without a routine name), YottaDB processes (and MUPIP processes executing trigger logic) automatically relink ("auto-relink") and execute published new versions of routines.
@@ -2975,7 +2984,7 @@ Any ZBREAK in a routine disables that routine from auto-relinking by a process u
 
 If recursive relink is not enabled, routines currently active in the M virtual machine stack are disabled from auto-relinking until they complete (or are removed from the stack by a ZGOTO).
 
-**Auto-Zlink Benefits and Example**
+**Auto-Relink Benefits and Example**
 
 The benefits of auto-relink are as follows:
 
@@ -3057,15 +3066,6 @@ and produces a result like the following:
    rec#1: rtnname: myprogram2 cycle: 1 objhash: 0x436c855d5891e7cf numvers: 1 objlen: 0x370 shmlen: 0x400
    rec#2: rtnname: myprogram cycle: 1 objhash: 0xd81f1cdcc275e13d numvers: 1 objlen: 0x280 shmlen: 0x400
    YDB>
-
-++++++++++++++++++++++++++++++++++++
-ZLINK, auto-ZLINK and Routine Names
-++++++++++++++++++++++++++++++++++++
-
-In YottaDB, the name of the source file determines the name of the YottaDB routine. The file name of the object file is not required to match the name of the routine. Linking the object file makes the internal routine name (derived from the source file) known to YottaDB. This can lead to potential confusion, however, since both ZLINK and auto-ZLINK use the name of the object file to find the routine. When the object file name differs from the name of the routine, auto-ZLINK generates a run-time error.
-
-.. note::
-   Auto-ZLINK and ZLINK commands without a .m or .o file extension in their argument determine the need to recompile based on whether the object file was more recently modified than the source file using time in nanoseconds, as provided by the underlying system call. Note that, although the format of the file modification timestamps provides a nanosecond granularity, many supported OSs currently update the file timestamps with an accuracy of one second.
 
 ------------------
 ZMessage
