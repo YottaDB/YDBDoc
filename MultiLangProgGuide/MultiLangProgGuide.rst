@@ -23,7 +23,7 @@ languages can call one another to the extent that such calling is
 permitted by the Supported language implementations.
 
 As C is the *lingua franca* of programming, the C API provides access
-the YottaDB engine from any language. As YottaDB adds standard APIs
+to the YottaDB engine from any language. As YottaDB adds standard APIs
 for other languages, additional sections will be added to the
 Programmers Guide.
 
@@ -490,7 +490,7 @@ optimistic concurrency control:
   block when read. Other processes are free to update the database
   during this time.
 - The process retains updates in its memory, without committing them
-  to the database, so that it's own logic sees the updates, but no
+  to the database, so that its own logic sees the updates, but no
   other process does. As every block that the process wishes to write
   must also be read, tracking the transaction numbers of blocks read
   suffices to track them for blocks to be written.
@@ -856,7 +856,7 @@ the process.
 message.
 
 :CODE:`YDB_SEVERITY_SUCCESS` – The number corresponds to the successful
-completion of a requested opertion.
+completion of a requested operation.
 
 :CODE:`YDB_SEVERITY_WARNING` – The number corresponds to a warning, i.e.,
 it indicates a possible problem.
@@ -873,7 +873,7 @@ delete an entire subtree or just the node at the root, leaving the
 subtree intact.
 
 :CODE:`YDB_NODE_END` — In the event a call to :code:`ydb_node_next_s()` or
-:code:`ydb_node_previous_s()` wish to report that there no further nodes,
+:code:`ydb_node_previous_s()` wishes to report that there no further nodes,
 the :code:`*ret_subs_used` parameter is set to this value. Application code
 should make no assumption about this constant other than that it is
 negative (<0).
