@@ -3400,6 +3400,7 @@ MUPIP Command Summary
 |                                      |                                             | * -[NO][MAP]=integer                                                                     |
 |                                      |                                             | * -[NO]MAXK[EYSIZE]=integer                                                              |
 |                                      |                                             | * -R[EGION]                                                                              |
+|                                      |                                             | * -[NO]O[NLINE]
 |                                      |                                             | * -[NO]ST[ATS]                                                                           |
 |                                      |                                             | * -SU[BSCRIPT]=subscript                                                                 |
 |                                      |                                             | * -TN[_RESET]                                                                            |
