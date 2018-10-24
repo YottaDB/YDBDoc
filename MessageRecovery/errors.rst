@@ -13864,6 +13864,16 @@ All YottaDB Components Error: An attempt was made to use a statistics database i
 
 Action: Identify and remove the inappropriate action(s).
 
+------------------
+STDERRALREADYOPEN
+------------------
+
+STDERRALREADYOPEN, STDERR deviceparameter specifies an already open device xxxx
+
+Run Time Error: This indicates that the STDERR deviceparameter in the OPEN command of a PIPE device specifies a device name xxxx that is already open in the process.
+
+Action: Specify a device name that is not already an open device in the process.
+
 -----------------
 STDNULLCOLLREQ 
 -----------------
