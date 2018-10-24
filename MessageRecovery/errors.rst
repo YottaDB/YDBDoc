@@ -11549,7 +11549,7 @@ Action: None necessary.
 REGSSFAIL 
 ---------------------
 
-REGSSFAIL, Process pppp encountered error contributing to the snapshot for region rrrr - the snapshot is no longer valid.
+REGSSFAIL, Process pppp encountered error eeee contributing to the snapshot for region rrrr - the snapshot is no longer valid.
 
 MUPIP Error: A YottaDB process encountered failure while opening snapshot file or attaching to shared memory or writing a block to the snapshot file, any of which invalidate the snapshot file. The original error should be in the operator log.
 
