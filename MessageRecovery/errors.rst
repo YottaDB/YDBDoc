@@ -11551,9 +11551,9 @@ REGSSFAIL
 
 REGSSFAIL, Process pppp encountered error eeee contributing to the snapshot for region rrrr - the snapshot is no longer valid.
 
-MUPIP Error: A YottaDB process encountered failure while opening snapshot file or attaching to shared memory or writing a block to the snapshot file, any of which invalidate the snapshot file. The original error should be in the syslog.
+MUPIP Error: A YottaDB process encountered failure while opening snapshot file or attaching to shared memory or writing a block to the snapshot file, any of which invalidate the snapshot file. The original error eeee that process pppp encountered follows the REGSSFAIL error message and can also be found in the syslog (search for messages from process pppp).
 
-Action: Examine the  syslog for messages issued by process pppp to obtain details of the failure and take action, possibly by modifying file access characteristics or user roles, to address the problem.
+Action: Examine the syslog for messages issued by process pppp to obtain details of the failure and take action, possibly by modifying file access characteristics or user roles, to address the problem.
 
 ----------------------
 RELINKCTLERR 
