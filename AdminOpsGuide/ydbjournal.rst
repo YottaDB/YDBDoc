@@ -1446,7 +1446,7 @@ The format of the detail journal extract is as follows:
    INCTN   time\\tnum\\chksum\\pid\\clntpid\\opcode\\incdetail
    EPOCH   time\\tnum\\chksum\\pid\\clntpid\\jsnum\\blks_to_upgrd\\free_blocks\\total_blks\\fully_upgraded[\\strm_num\\strm_seq]...
    PBLK    time\\tnum\\chksum\\pid\\clntpid\\blknum\\bsiz\\blkhdrtn\\ondskbver
-   AIMG    time\\tnum\\chksum\\pid\\clntpid\\blknum\\bsiz\\blkhdrtn\\ondskbver
+   AIMG    time\\tnum\\chksum\\pid\\clntpid\\blknum\\bsiz\\blkhdrtn\\ondskbver\\dsecmdline
    NULL    time\\tnum\\chksum\\pid\\clntpid\\jsnum\\strm_num\\strm_seq\\salvaged
    ZTSTART time\\tnum\\chksum\\pid\\clntpid\\token
    FSET    time\\tnum\\chksum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\nodeflags\\node=sarg
@@ -1603,6 +1603,7 @@ Legend (All hexadecimal fields have a 0x prefix. All numeric fields otherwise ar
 |                                          | 0 if the NULL record was user-generated (i.e. by an external     |
 |                                          | M-filter etc.)                                                   |
 +------------------------------------------+------------------------------------------------------------------+
-
-
+| dsecmdline                               | The full DSE command that caused this AIMG journal record to be  |
+|                                          | written in this journal file.                                    |
++------------------------------------------+------------------------------------------------------------------+
 
