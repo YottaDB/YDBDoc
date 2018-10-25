@@ -279,7 +279,7 @@ GDE uses the following abbreviations to display the output of a global directory
 +-----------------------------------------+----------------------------------------+
 | LOCK                                    | -LOCK_SPACE                            |
 +-----------------------------------------+----------------------------------------+
-| LOCK Crit                               | -[NO]LOCK_CRIT                         |
+| LOCK Crit Separate                      | -[NO]LOCK_CRIT_SEPARATE                |
 +-----------------------------------------+----------------------------------------+
 | MSLT                                    | -MUTEX_SLOTS                           |
 +-----------------------------------------+----------------------------------------+
@@ -967,7 +967,7 @@ This displays only the TEMPLATES section of the Global Directory.
    TEMPLATE -REGION -NOINST_FREEZE_ON_ERROR
    TEMPLATE -REGION -JOURNAL=(ALLOCATION=2048,AUTOSWITCHLIMIT=8386560,BEFORE_IMAGE,BUFFER_SIZE=2312,EXTENSION=2048)
    TEMPLATE -REGION -KEY_SIZE=64
-   TEMPLATE -REGION -NOLOCK_CRIT
+   TEMPLATE -REGION -LOCK_CRIT_SEPARATE
    TEMPLATE -REGION -NULL_SUBSCRIPTS=NEVER
    TEMPLATE -REGION -NOQDBRUNDOWN
    TEMPLATE -REGION -RECORD_SIZE=256
@@ -1262,13 +1262,15 @@ For example, the key ^ACN ("Name", "Type") internally occupies 17 bytes.
 
 By default, GDE uses a KEY_SIZE of 64 bytes
 
-~~~~~~~~~~~~~~~~~
--[NO]L[OCK_CRIT]
-~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+-[NO]L[OCK_CRIT_SEPARATE]
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Specifies whether YottaDB should share the resource management between a database and its corresponding LOCKs or use separate and different resource management for the two. Because, in the current implementation, YottaDB has not identified any reason to share resource management between LOCKs and database actions, we have no recommendations other than to choose what seems to work better for your application.
+Specifies whether YottaDB should share the resource management between a database and its corresponding LOCKs or use separate (i.e. different) resource management for the two. Because, in the current implementation, YottaDB has not identified any reason to share resource management between LOCKs and database actions, we have no recommendations other than to choose what seems to work better for your application.
 
-By default, GDE uses LOCK_CRIT Sep(arate) resource management for LOCKs and database actions.
+A specification of LOCK_CRIT_SEPARATE shows up as "Sep" in the "Lock Crit" column in a GDE SHOW -REGION output. A specification of NOLOCK_CRIT_SEPARATE shows up as "DB" in the "Lock Crit" column in a GDE SHOW -REGION output.
+
+By default, GDE uses LOCK_CRIT_SEPARATE.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -[NO]N[ULL_SUBSCRIPTS]=[ALWAYS|NEVER|EXISTING]
