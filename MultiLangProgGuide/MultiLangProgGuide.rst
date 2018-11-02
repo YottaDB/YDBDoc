@@ -979,7 +979,7 @@ thus:
 	typedef int (*ydb_tp2fnptr_t)(uint64_t tptoken, void *tpfnparm)
 
 Functions to implement transaction processing logic for
-single-threaded applications are referenced by:code:`ydb_tpfnptr_t`
+single-threaded applications are referenced by :code:`ydb_tpfnptr_t`
 and functions to implement transaction processing logic for
 multi-threaded applications are referenced by :code:`ydb_tp2fnptr_t`.
 
@@ -1333,6 +1333,7 @@ Notes:
 
 - Intrinsic special variables cannot be atomically incremented, and an
   attempt to do so returns the :CODE:`YDB_ERR_UNIMPLOP` error.
+- The value of the empty string coerced to a numeric value is 0.
 
 .. _ydb_lock_s():
 .. _ydb_lock_st():
@@ -2180,7 +2181,7 @@ There are two Go APIs:
   YottaDB heap and pointed to by Go variables. `Simple API`_
   functionality is provided by Go methods where a method can
   meaningfully be associated with a structure, and by Go functions
-  otherwise.
+  where there is no meaningful association with a structure.
 
 Except for `triggers
 <https://docs.yottadb.com/ProgrammersGuide/triggers.html>`_, which are
@@ -2210,7 +2211,7 @@ All subsections of the `Programming in Go` section are prefixed with
 
 As Go implementations are inherently multi-threaded, where the C
 `Simple API`_ provides separate functions for use in multi-threaded
-applications, e.g., `ydb_get_s()`_ vs `ydb_get_st()`_), the Go wrapper
+applications, e.g., `ydb_get_s()`_ vs. `ydb_get_st()`_), the Go wrapper
 wraps the function for use in multi-threaded applications.
 
 Go Quick Start
@@ -2324,7 +2325,7 @@ In the documentation:
   GetValStr()`_ method can return INVSTRLEN, it can also return errors
   from the YottaDB engine, e.g., GVUNDEF.
 - An error name such as INVSTRLEN refers to the underlying error,
-  whether application code reads the numeric value or the string.
+  whether application code references the numeric value or the string.
 
 Go Symbolic Constants
 =====================
@@ -2416,7 +2417,7 @@ has no elements, :code:`DeleteExclE()` deletes all local variables.
 
 In the event that the number of variable names in :code:`varnames`
 exceeds :code:`C.YDB_MAX_NAMES`, the error return is
-ERRNAMECOUNT2HI. Otherwise, if `ydb_delete_excl_s()`_ returns an
+ERRNAMECOUNT2HI. Otherwise, if `ydb_delete_excl_st()`_ returns an
 error, the function returns the error.
 
 As M and Go application code cannot be mixed in the same process, the
@@ -2451,11 +2452,13 @@ atomically increment the referenced global or local variable node
 coerced to a number with :code:`incr` coerced to a number, with the
 result stored in the node and returned by the function.
 
-- If `ydb_incr_s()`_ returns an error such as NUMOFLOW or INVSTRLEN,
+- If `ydb_incr_st()`_ returns an error such as NUMOFLOW or INVSTRLEN,
   the function returns the error.
 - Otherwise, it returns the incremented value of the node.
 
-With a :code:`nil` value for :code:`incr`, the default increment is 1.
+With a :code:`nil` value for :code:`incr`, the default increment
+is 1. Note that the value of the empty string coerced to an integer is
+zero.
 
 Go LockDecrE()
 --------------
@@ -2466,7 +2469,7 @@ Go LockDecrE()
 		varname string, subary []string) error
 
 Matching `Go LockDecrST()`_ :code:`LockDecrE()` wraps
-`ydb_lock_decr_s()`_ to decrement the count of the lock name
+`ydb_lock_decr_st()`_ to decrement the count of the lock name
 referenced, releasing it if the count goes to zero or ignoring the
 invocation if the process does not hold the lock.
 
@@ -2515,7 +2518,7 @@ Go LockIncrE()
 		varname string, subary []string) error
 
 Matching `Go LockIncrST()`_, :code:`LockIncrE()` wraps
-`ydb_lock_incr_s()`_ to attempt to acquire the referenced lock
+`ydb_lock_incr_st()`_ to attempt to acquire the referenced lock
 resource name without releasing any locks the process already holds.
 
 - If the process already holds the named lock resource, the function
@@ -2532,7 +2535,7 @@ Go MessageE()
 
 .. code-block:: go
 
-	func yottadb.MessageE(tptoken uint64, errnum int) (string, error)
+	func yottadb.MessageE(errnum int) (string, error)
 
 Matching `Go MessageST()`_, wraps `ydb_message()`_ to return the text
 template for the error number specified by :code:`errnum`.
@@ -2541,6 +2544,8 @@ template for the error number specified by :code:`errnum`.
   recognizes, it returns the error UNKNOWNSYSERR.
 - Otherwise, it returns the error message text template for the error
   number specified by :code:`errnum`.
+
+Note that :code:`MessageE()` does not require a :code:`tptoken` parameter.
 
 Go NodeNextE()
 --------------
@@ -2551,7 +2556,7 @@ Go NodeNextE()
 		varname string, subary []string) ([]string, error)
 
 Matching `Go NodeNextST()`_, :code:`NodeNextE()` wraps
-`ydb_node_next_s()`_ to facilitate depth first traversal of a local or
+`ydb_node_next_st()`_ to facilitate depth first traversal of a local or
 global variable tree.
 
 - If there is a next node, it returns the subscripts of that next
@@ -2567,7 +2572,7 @@ Go NodePrevE()
 		varname string, subary []string) ([]string, error)
 
 Matching `Go NodePrevST()`_, :code:`NodePrevE()` wraps
-`ydb_node_previous_s()`_ to facilitate reverse depth first traversal
+`ydb_node_previous_st()`_ to facilitate reverse depth first traversal
 of a local or global variable tree.
 
 - If there is a previous node, it returns the subscripts of that
@@ -2584,7 +2589,7 @@ Go SetE()
 
 Matching `Go SetST()`_, at the referenced local or global variable
 node, or the intrinsic special variable, :code:`SetE()` wraps
-`ydb_set_s()`_ to set the value specified by :code:`value`.
+`ydb_set_st()`_ to set the value specified by :code:`value`.
 
 Go SubNextE()
 -------------
@@ -2595,13 +2600,18 @@ Go SubNextE()
 		varname string, subary []string) (string, error)
 
 Matching `Go SubNextST()`_, :code:`SubNextE()` wraps
-`ydb_subscript_next_s()`_ to facilitate breadth-first traversal of a
+`ydb_subscript_next_st()`_ to facilitate breadth-first traversal of a
 local or global variable sub-tree.
 
 - At the level of the last subscript, if there is a next subscript
   with a node and/or a subtree, it returns that subscript.  
 - If there is no next node or subtree at that level of the subtree,
   the function returns the NODEEND error.
+
+In the special case where :code:`subary` is :code:`nil`,
+:code:`SubNextE()` returns the name of the next global or local
+variable, and the NODEEND error if :code:`varname` is the last global
+or local variable.
 
 Go SubPrevE()
 -------------
@@ -2612,13 +2622,18 @@ Go SubPrevE()
 		varname string, subary []string) (string, error)
 
 Matching `Go SubPrevST()`_, :code:`SubPrevE()` wraps
-`ydb_subscript_previous_s()`_ to facilitate reverse breadth-first
+`ydb_subscript_previous_st()`_ to facilitate reverse breadth-first
 traversal of a local or global variable sub-tree.
 
 - At the level of the last subscript, if there is a previous subscript
   with a node and/or a subtree, it returns that subscript.
 - If there is no previous node or subtree at that level of the
   subtree, the function returns the NODEEND error.
+
+In the special case where :code:`subary` is :code:`nil`,
+:code:`SubNextE()` returns the name of the previous global or local
+variable, and the NODEEND error if :code:`varname` is the first global
+or local variable.
 
 Go TpE()
 --------
@@ -2629,13 +2644,14 @@ Go TpE()
 		tpfn unsafe.Pointer, tpfnparm unsafe.Pointer,
 		transid string, varnames []string) error
 
-Matching `Go TpST()`_, :code:`TpE()` wraps :code:`ydb_tp_s()` to
-implement `Transaction Processing`_. The :code:`varname` parameters
-are local variables whose values should be saved, and restored to
-their original values when the transaction restarts. If there are no
-:code:`varname` parameters, or a sole :code:`varname` is the empty
-string, no local variables are saved and restored; and if a sole
-:code:`varname` is "*" all local variables are saved and restored.
+Matching `Go TpST()`_, :code:`TpE()` wraps :code:`ydb_tp_st()` to
+implement `Transaction Processing`_. The :code:`varnames` array
+elements are local variable names whose values should be saved, and
+restored to their original values when the transaction restarts. If
+there are no :code:`varnames` array elements, or a sole
+:code:`varnames` element is the empty string, no local variables are
+saved and restored; and if a sole :code:`varnames` element is "*" all
+local variables are saved and restored.
 
 Refer to `Go TpST()`_ for a more detailed discussion of YottaDB Go
 transaction processing.
@@ -3261,7 +3277,7 @@ Go DeleteExclST()
 
 .. code-block:: go
 
-	func (buftary *BufferTArray) DeleteExclST(tptoken uint6 4) error
+	func (buftary *BufferTArray) DeleteExclST(tptoken uint64) error
 
 :code:`DeleteExclST()` wraps `ydb_delete_excl_st()`_ to delete all local
 variable trees except those of local variables whose names are
@@ -3274,7 +3290,7 @@ In the event that the :code:`elemsUsed` exceeds
 :code:`C.YDB_MAX_NAMES`, the error return is ERRNAMECOUNT2HI.
 
 As M and Go application code cannot be mixed in the same process, the
-warning in `ydb_delete_excl_st()`_ does not apply.
+warning in `ydb_delete_excl_s()`_ does not apply.
 
 Go TpST()
 ---------
@@ -3296,9 +3312,8 @@ Transaction Processing`_ for details.
 Since Go does not permit a pointer to a Go function to be passed as a
 parameter to a C function, :code:`tpfn` is required to be a pointer to
 a C function. For a pure Go application, the C function is a glue
-routine that in turn calls the Go function. The YottaDB Go wrapper
-provides a shell script `GenYDBGlueRoutine.sh`_ to generate glue
-routine functions.
+routine that in turn calls the Go function. The shell script
+`GenYDBGlueRoutine.sh`_ generates glue routine functions.
 
 Any function implementing logic for a transaction should return
 :code:`error` with one of the following:
@@ -3359,7 +3374,7 @@ Go DataST()
 	func (key *KeyT) DataST(tptoken uint64) (uint, error)
  
 Matching `Go DataE()`_, :code:`DataST()` returns the result of
-`ydb_data_s()`_. In the event an error is returned, the return value
+`ydb_data_st()`_. In the event an error is returned, the return value
 is unspecified.
 
 Go DeleteST()
@@ -3367,7 +3382,7 @@ Go DeleteST()
 
 .. code-block:: go
 
-	func (key *KeyT) DeleteS(deltype int) error
+	func (key *KeyT) DeleteS(tptoken uint64, deltype int) error
 
 Matching `Go DeleteE()`_, :code:`DeleteST()` wraps `ydb_delete_st()`_ to
 delete a local or global variable node or (sub)tree, with a value of
@@ -3381,7 +3396,7 @@ Go GetST()
 
 .. code-block:: go
 
-	func (key *KeyT) GetST(retval *BufferT) error
+	func (key *KeyT) GetST(tptoken uint64, retval *BufferT) error
 
 Matching `Go GetE()`_, :code:`GetST()` wraps `ydb_get_st()`_ to return
 the value at the referenced global or local variable node, or
@@ -3404,7 +3419,7 @@ Go IncrST()
 
 .. code-block:: go
 
-	func (key *KeyT) IncrST(incr, retval *BufferT) error
+	func (key *KeyT) IncrST(tptoken uint64, incr, retval *BufferT) error
 
 Matching `Go IncrE()`_, :code:`IncrST()` wraps `ydb_incr_st()`_ to
 atomically increment the referenced global or local variable node
@@ -3423,15 +3438,16 @@ structure referenced by :code:`retval`.
   :code:`retval.buf_addr`, sets :code:`retval.lenUsed` to its
   length.
 
-With a value of :code:`nil` for :code:`incr`, the default increment
-is 1.
+With a :code:`nil` value for :code:`incr`, the default increment
+is 1. Note that the value of the empty string coerced to an integer is
+zero.
 
 Go LockDecrST()
 ---------------
 
 .. code-block:: go
 
-	func (key *KeyT) LockDecrS() error
+	func (key *KeyT) LockDecrS(tptoken uint64) error
 
 Matching `Go LockDecrE()`_ :code:`LockDecrST()` wraps
 `ydb_lock_decr_st()`_ to decrement the count of the lock name
@@ -3443,7 +3459,7 @@ Go LockIncrST()
 
 .. code-block:: go
 
-	func (key *KeyT) LockIncrST(timeoutNsec uint64) error
+	func (key *KeyT) LockIncrST(tptoken uint64, timeoutNsec uint64) error
 
 Matching `Go LockIncrE()`, :code:`LockIncrST()` wraps
 `ydb_lock_incr_st()`_ to attempt to acquire the referenced lock
@@ -3463,7 +3479,7 @@ Go NodeNextST()
 
 .. code-block:: go
 
-	func (key *KeyT) NodeNextST(next *BufferTArray) error
+	func (key *KeyT) NodeNextST(tptoken uint64, next *BufferTArray) error
 
 Matching `Go NodeNextE()`_, :code:`NodeNextST()` wraps
 `ydb_node_next_st()`_ to facilitate depth first traversal of a local or
@@ -3496,7 +3512,7 @@ Go NodePrevST()
 
 .. code-block:: go
 
-	func (key *KEyT) NodePrevST(prev *BufferTArray) error
+	func (key *KEyT) NodePrevST(tptoken uint64, prev *BufferTArray) error
 
 Matching `Go NodePrevE()`_, :code:`NodePrevST()` wraps
 `ydb_node_previous_st()`_ to facilitate reverse depth first traversal
@@ -3529,7 +3545,7 @@ Go SetST()
 
 .. code-block:: go
 
-	func (key *KeyT) SetST(val *BufferT) error
+	func (key *KeyT) SetST(tptoken uint64, val *BufferT) error
 
 Matching `Go SetE()`_, at the referenced local or global variable
 node, or the intrinsic special variable, :code:`SetST()` wraps
@@ -3540,7 +3556,7 @@ Go SubNextST()
 
 .. code-block:: go
 
-	func (key *KeyT) SubNextST(sub *BufferT) error
+	func (key *KeyT) SubNextST(tptoken uint64, sub *BufferT) error
 
 Matching `Go SubNextE()`_, :code:`SubNextST()` wraps
 `ydb_subscript_next_st()`_ to facilitate breadth-first traversal of a
@@ -3565,7 +3581,7 @@ Go SubPrevST()
 
 .. code-block:: go
 
-	func (key *KeyT) SubPrevS(sub *BufferT) error
+	func (key *KeyT) SubPrevS(tptoken uint64, sub *BufferT) error
 
 :code:`SubPrevST()` wraps `ydb_subscript_previous_st()`_ to facilitate
 reverse breadth-first traversal of a local or global variable sub-tree.
@@ -3593,7 +3609,8 @@ Go LockST()
 
 .. code-block:: go
 
-	func yottadb.LockST(timeoutNsec uint64, namesnsubs ... *KeyT) error
+	func yottadb.LockST(tptoken uint64, timeoutNsec uint64,
+		namesnsubs ... *KeyT) error
 
 Matching `Go LockE()`_, :code:`LockST()` wraps `ydb_lock_st()`_ to
 release all lock resources currently held and then attempt to acquire
@@ -3851,6 +3868,8 @@ The `YottaDB M Programmers Guide
 <https://docs.yottadb.com/ProgrammersGuide/index.html>`_ documents
 programming YottaDB in M and is not duplicated here.
 
+.. _Programming Notes:
+
 ============================================
 Programming Notes (Avoiding Common Pitfalls)
 ============================================
@@ -4078,7 +4097,7 @@ functions to support single-threaded applications are tested and
 released as production grade).
 
 Even though the YottaDB data management engine is single-threaded and
-operates in a single thread,[#]_ it supports both single- and
+operates in a single thread, [#]_ it supports both single- and
 multi-threaded applications. Single-threaded applications may call the
 `Simple API`_ single-threaded functions – those whose names end in
 :code:`_s()` – as well as utility functions. Multi-threaded
@@ -4100,11 +4119,11 @@ synchronous calls.
 
 In a multi-threaded application, the YottaDB engine runs in its own
 thread, which is distinct from any application thread. When a
-mult-threaded application calls a YottaDB function, the function puts
+multi-threaded application calls a YottaDB function, the function puts
 a request on a queue for the YottaDB engine, and blocks awaiting a
 response – in other words, any call to YottaDB is synchronous as far
 as the caller is concerned, even if servicing that call results in
-asynchronous activity within the implementation. Meanwhile, other
+asynchronous activity within the process. Meanwhile, other
 application threads continue to run, with the YottaDB engine handling
 queued requests one at at time. While this is conceptually simple for
 applications that do not use `Transaction Processing`_, transaction
@@ -4122,17 +4141,18 @@ The following generate errors:
 
 - Attempting to call M code after a process has called a
   multi-threaded function.
-- Attempting to call a multi-threaded function from C code that has
-  been called from M code.
+- Attempting to call a multi-threaded function after a process has
+  executed M code.
 - From C code called by M code, attempting to call back into M code
   from any thread other than the one in which M code is executing.
 - From C code which is called by a database trigger in turn attempting
   to call a multi-threaded function.
 
 Since YottaDB executes within the address space of an application
-process, it is certainly technically possible to subvert protections
-YottaDB has in place prevent the above scenarios. Doing so will almost
-certainly result in a buggy application that is hard to debug.
+process, it is certainly technically possible for a programmer to
+write code that when run subverts protections YottaDB has in place
+prevent the above scenarios. Doing so will almost certainly result in
+a buggy application that is hard to debug.
 
 ----------------------------------
 Threads and Transaction Processing
