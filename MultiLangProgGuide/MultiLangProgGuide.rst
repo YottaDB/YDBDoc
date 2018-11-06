@@ -1099,7 +1099,7 @@ should be NULL.
 of parameters passed in :code:`*subsarray` will almost certainly result in
 an unpleasant bug that is difficult to troubleshoot.
 
-Functions qspecific to the YottaDB Simple API for single-threaded
+Functions specific to the YottaDB Simple API for single-threaded
 applications end in :code:`_s()` and those for multi-threaded
 applications end in :code:`_st()`. Other functions are utility
 functions common to both. The discussion in `Threads`_ provides more
@@ -2177,8 +2177,8 @@ There are two Go APIs:
   types and structures.
 - `Go Simple API`_ aims to improve performance by reducing copying
   between Go and YottaDB heaps by defining structures :code:`BufferT`,
-  :code:`BufferTArray`, and :code:`KeyT` which are allocated in the
-  YottaDB heap and pointed to by Go variables. `Simple API`_
+  :code:`BufferTArray`, and :code:`KeyT` which contain pointers to
+  structures and data in the YottaDB heap. `Go Simple API`_
   functionality is provided by Go methods where a method can
   meaningfully be associated with a structure, and by Go functions
   where there is no meaningful association with a structure.
@@ -2331,10 +2331,11 @@ Go Symbolic Constants
 =====================
 
 For modules that use `cgo <https://golang.org/cmd/cgo/>`_ to pull-in
-:code:`$ydb_dist/libyottadb.h`, Go symbolic constants are the C
-`Symbolic Constants`_ with each C symbolic constant prefixed with
-:code:`C.`. For example, the numeric C error return value
-:code:`YDB_ERR_INVSTRLEN` is :code:`C.YDB_ERR_INVSTRLEN` in Go.
+:code:`libyott adb.h` by specifying the path to the file, Go symbolic
+constants are the C `Symbolic Constants`_ with each C symbolic
+constant prefixed with :code:`C.`. For example, the numeric C error
+return value :code:`YDB_ERR_INVSTRLEN` is :code:`C.YDB_ERR_INVSTRLEN`
+in Go.
 
 :code:`yottadb.NOTTP` as a value for parameter :code:`tptoken`
 indicates to the invoked YottaDB method or function that the caller is
@@ -2346,9 +2347,9 @@ Go Easy API
 A global or local variable node, or an intrinsic special variable, is
 specified using the construct :code:`varname string, subary
 []string`. For an intrinsic special variable, :code:`subary` must be
-:code:`nil`. For a global or local variable, a :code:`nil` for
-:code:`subary` refers to the root node, the entire tree, or both,
-depending on the function and context.
+the null array, :code:`[]string{}`. For a global or local variable, a
+null array for :code:`subary` refers to the root node, the entire
+tree, or both, depending on the function and context.
 
 As the `Go Easy API`_ involves more copying of data between the Go and
 YottaDB runtime systems, it requires the CPU to perform a little more
@@ -2369,7 +2370,7 @@ performance. The `Go Easy API`_ therefore allocates buffers initially
 of a size and number we believe to be reasonable. Whenever a result
 exceeds its allocation and returns an error, YottaDB expands the
 allocation transparently to the caller, and repeats the operation,
-retaining the expanded memory for the lifetime of the process.
+remembering the expanded size for future allocations in the process.
 
 ---------------------
 Go Easy API Functions
@@ -2412,8 +2413,9 @@ Go DeleteExclE()
 
 Matching `Go DeleteExclST()`_, :code:`DeleteExclE()` wraps
 `ydb_delete_excl_st()`_ to delete all local variables except those
-specified. In the event :code:`varnames` is :code:`nil`, or the array
-has no elements, :code:`DeleteExclE()` deletes all local variables.
+specified. In the event :code:`varnames` has no elements (i.e.,
+:code:`[]string{}`), :code:`DeleteExclE()` deletes all local
+variables.
 
 In the event that the number of variable names in :code:`varnames`
 exceeds :code:`C.YDB_MAX_NAMES`, the error return is
@@ -2481,15 +2483,14 @@ Go LockE()
 	func yottadb.LockE(tptoken uint64,
 		timeoutNsec uint64, namesnsubs ... interface{}) error
 
-Matching `Go LockST()`_, :code:`LockE()` wraps `ydb_lock_st()`_ to
-release all lock resources currently held and then attempt to acquire
-the named lock resources referenced. If no lock resources are
-specified, it simply releases all lock resources currently held and
-returns.
+Matching `Go LockST()`_, :code:`LockE()` releases all lock resources
+currently held and then attempt to acquire the named lock resources
+referenced. If no lock resources are specified, it simply releases all
+lock resources currently held and returns.
 
 :code:`interface{}` is a series of pairs of :code:`varname string` and
-:code:`subary []string` parameters, where a value of :code:`nil` for a
-:code:`subary` parameter specifies the unsubscripted lock resource
+:code:`subary []string` parameters, where a null `subary` parameter
+(:code;`[]string{}`) specifies the unsubscripted lock resource
 name.
 
 If lock resources are specified, upon return, the process will have
@@ -2529,23 +2530,6 @@ resource name without releasing any locks the process already holds.
   nanoseconds, it returns holding the lock, otherwise it returns
   LOCKTIMEOUT. If :code:`timeoutNsec` is zero, the function makes
   exactly one attempt to acquire the lock.
-
-Go MessageE()
--------------
-
-.. code-block:: go
-
-	func yottadb.MessageE(errnum int) (string, error)
-
-Matching `Go MessageST()`_, wraps `ydb_message()`_ to return the text
-template for the error number specified by :code:`errnum`.
-
-- If :code:`errnum` does not correspond to an error that YottaDB
-  recognizes, it returns the error UNKNOWNSYSERR.
-- Otherwise, it returns the error message text template for the error
-  number specified by :code:`errnum`.
-
-Note that :code:`MessageE()` does not require a :code:`tptoken` parameter.
 
 Go NodeNextE()
 --------------
@@ -2608,7 +2592,7 @@ local or global variable sub-tree.
 - If there is no next node or subtree at that level of the subtree,
   the function returns the NODEEND error.
 
-In the special case where :code:`subary` is :code:`nil`,
+In the special case where :code:`subary` is the null array,
 :code:`SubNextE()` returns the name of the next global or local
 variable, and the NODEEND error if :code:`varname` is the last global
 or local variable.
@@ -2630,7 +2614,7 @@ traversal of a local or global variable sub-tree.
 - If there is no previous node or subtree at that level of the
   subtree, the function returns the NODEEND error.
 
-In the special case where :code:`subary` is :code:`nil`,
+In the special case where :code:`subary` is the null array
 :code:`SubNextE()` returns the name of the previous global or local
 variable, and the NODEEND error if :code:`varname` is the first global
 or local variable.
@@ -2797,7 +2781,7 @@ Go BufferT GetLenUsed()
   has not yet been allocated, return the STRUCTNOTALLOCD error.
 - If the :code:`len_used` field of the :code:`C.ydb_buffer_t`
   structure is greater than its :code:`len_alloc` field (owing to a
-  prior INVSTRLEN error), return an INVSRLEN error and the
+  prior INVSTRLEN error), return an INVSTRLEN error and the
   :code:`len_used` field of the :code:`C.ydb_buffer_t` structure
   referenced by :code:`cbuft`.
 - Otherwise, return the :code:`len_used` field of the
@@ -2814,7 +2798,7 @@ Go BufferT GetValBAry()
   has not yet been allocated, return the STRUCTNOTALLOCD error.
 - If the :code:`len_used` field of the :code:`C.ydb_buffer_t` structure
   is greater than its :code:`len_alloc` field (owing to a prior
-  INVSTRLEN error), return an INVSRLEN error.
+  INVSTRLEN error), return an INVSTRLEN error.
 - Otherwise, return :code:`len_used` bytes of the buffer as a byte
   array.
 
@@ -2829,7 +2813,7 @@ Go BufferT GetValStr()
   has not yet been allocated, return the STRUCTNOTALLOCD error.
 - If the :code:`len_used` field of the :code:`C.ydb_buffer_t` structure
   is greater than its :code:`len_alloc` field (owing to a prior
-  INVSTRLEN error), return an INVSRLEN error.
+  INVSTRLEN error), return an INVSTRLEN error.
 - Otherwise, return :code:`len_used` bytes of the buffer as a string.
 
 Go BufferT SetLenUsed()
@@ -3080,11 +3064,11 @@ of the referenced :code:`C.ydb_buffer_t`.
 - If the :code:`C.ydb_buffer_t` structures referenced by
   :code:`cbuftary` have not yet been allocated, return the
   STRUCTNOTALLOCD error.
-- If :code:`idx` is greater than :code:`elemsAlloc`, return a zero
-  length string and an error return of INSUFFSUBS.
+- If :code:`idx` is greater than :code:`elemsAlloc`, make no changes
+  and return an INSUFFSUBS error.
 - If :code:`newLen` is greater than the :code:`len_alloc` field of the
-  referenced :code:`C.ydb_buffer_t`, make no changes and return with
-  an error return of INVSTRLEN.
+  referenced :code:`C.ydb_buffer_t`, make no changes and return an
+  INVSTRLEN error.
 - Otherwise, set the :code:`len_used` field of the referenced
   :code:`C.ydb_buffer_t` to :code:`newLen`.
 
@@ -3279,11 +3263,10 @@ Go DeleteExclST()
 
 	func (buftary *BufferTArray) DeleteExclST(tptoken uint64) error
 
-:code:`DeleteExclST()` wraps `ydb_delete_excl_st()`_ to delete all local
-variable trees except those of local variables whose names are
+:code:`DeleteExclST()` wraps `ydb_delete_excl_st()`_ to delete all
+local variable trees except those of local variables whose names are
 specified in the :code:`BufferTArray` structure. In the special case
-where the :code:`cbuftary` structures have not been allocated, or
-:code:`elemsUsed` is zero, the method deletes all local variable
+where :code:`elemsUsed` is zero, the method deletes all local variable
 trees.
 
 In the event that the :code:`elemsUsed` exceeds
@@ -3636,26 +3619,6 @@ resources.
   :code:`timeoutNsec` is zero, the method makes exactly one attempt to
   acquire the lock resource(s).
 
-Go MessageST()
---------------
-
-.. code-block:: go
-
-	func yottadb.MessageST(errnum int, errmsg *BufferT) error
-
-Matching `Go MessageE()`_, wraps `ydb_message()`_ to return the text
-template for the error number specified by :code:`errnum`.
-
-- If :code:`errnum` does not correspond to an error that YottaDB
-  recognizes, it returns the error UNKNOWNSYSERR, leaving the
-  structures referenced by :code:`errmsg` unaltered.
-- If the length of the text exceeds :code:`errmsg.len_alloc` it
-  returns the error INVSTRLEN. In this case :code:`errmsg.len_used` is
-  greater than :code:`errmsg.len_alloc`.
-- Otherwise, it copies the text to the buffer specified by
-  :code:`errmsg.buf_addr` and sets :code:`errmsg.len_used` to its
-  length.
-
 Go Comprehensive API
 ====================
 
@@ -3677,11 +3640,12 @@ For a process that wishes to close YottaDB databases and no longer use
 YottaDB, the function wraps `ydb_exit()`_ so that any further calls to
 YottaDB return a CALLINAFTEREXIT` error.
 
-Typical processes will not need to call :code:`Exit()` because
-normal process termination closes databases cleanly. However, a
-process that has completed its use of YottaDB, but intends to continue
-with other work for some non-trivial period of time, should call
-:code:`Exit()`.
+Although in theory typical processes should not need to call
+:code:`Exit()` because normal process termination should close
+databases cleanly, in practice thread shutdown may not always ensure
+that databases are closed cleanly. So, application code should invoke
+:code:`Exit()` prior to process exit, or when an application intends
+to continue with other work beyond use of YottaDB.
 
 See also `Go ForkExec()`_.
 
@@ -3699,25 +3663,6 @@ The function has the same signature as the `Go syscall.ForkExec()
 wraps. :code:`ForkExec()` ensures that the child process is safely
 disconnected from YottaDB interprocess communication resources and
 database files.
-
-Application code that must use :code:`syscall.Forkexec()` should call
-`Go Exit()`_ first, which means that after calling
-:code:`syscall.ForkExec()`, a process can no longer call the YottaDB
-runtime system.
-
---------------
-Go ForkNCore()
---------------
-
-.. code-block:: go
-
-	func yottadb.ForkNCore()
-
-The function wraps `ydb_fork_n_core()`_ to generate a core file
-snapshot of a process for debugging purposes. See `ydb_fork_n_core()`_
-for more information.
-
-:code:`ForkNCore()` has no parameters and returns nothing.
 
 ---------
 Go Free()
@@ -3745,6 +3690,22 @@ The function wraps `ydb_init()`_ to initialize the YottaDB runtime
 system. This call is normally not required as YottaDB initializes
 itself on its first call, the exception being when an application
 wishes to set its own signal handlers (see `Signals`_).
+
+------------
+Go Message()
+------------
+
+.. code-block:: go
+
+	func yottadb.Message(errnum int) (string, error)
+
+:code:`Message()` returns the text template for the error number
+specified by :code:`errnum`.
+
+- If :code:`errnum` does not correspond to an error that YottaDB
+  recognizes, it returns the error UNKNOWNSYSERR.
+- Otherwise, it returns the error message text template for the error
+  number specified by :code:`errnum`.
 
 ------------
 Go Release()
@@ -3828,25 +3789,44 @@ ACID transaction cannot be passed as parameters to :code:`TpST()` and
 
 If an application has a callback routine called :code:`CallBackRtn()`,
 executing :code:`GenYDBGlueRoutine.sh CallBackRtn` will generate a
-routine :code:`CallBackRtn_cgo.go`. In the following example,
-:code:`/usr/lib/yottadb/r124` is the directory where YottaDB r1.24
-(the YottaDB release to be used) resides.
+routine :code:`CallBackRtn_cgo.go` which has the code to call
+:code:`CallBackRtn()`. In the following example,
+:code:`/usr/local/lib/yottadb/r124` is the directory where YottaDB
+r1.24 (the YottaDB release to be used) resides.
+
+:code:`CallBackRtn_cgo.go` looks like this:
 
 .. code-block:: go
 
-    // #cgo CFLAGS: -I/usr/lib/yottadb/r124
+	package main
+	/*
+	#include <inttypes.h>
+	int CallBackRtn(uint64_t tptoken, void *tpfnparm)
+	int CallBackRtn_cgo(uint_t tptoken, void *tpfnparm)
+	{
+		return CallBackRtn(tptoken, tpfnparm);
+	}
+	*/
+	import "C"
+
+The main Go program shoud include a forward declaration like this to
+reference the glue routine:
+
+.. code-block:: go
+
+    // #cgo CFLAGS: -I/usr/local/lib/yottadb/r124
     // #include "libyottadb.h"
-    // #cgo LDFLAGS: -L/usr/lib/yottadb/r124 -lyottadb -Wl,-rpath,/usr/lib/yottadb/r124
-    // int CallBackRtn_cgo(uintptr_t in); // Forward declaration
-    import "C"
+    // #include "libydberrors.h"
+    // int CallBackRtn_cgo(uint64 tptoken, uintptr_t in);
 
-The module in which :code:`CallBackRtn()` is defined should be
-structured thus:
+The Go code module that includes the acutal transaction logic,
+:code:`CallBackRtn()` should be structured thus, with no space between
+:code:`//` and :code:`export`:
 
 .. code-block:: go
 
-    //export CallBackRtn // no space between "//" and "export"
-    func CallBackRtn(parm uintptr) int {
+    //export CallBackRtn
+    func CallBackRtn(tptoken uint64, tpfnparm unsafe.Pointer) int {
         // code for function
     }
 
@@ -4091,10 +4071,27 @@ There are two considerations when executing :code:`fork()`.
 Threads
 =======
 
-Note: In YottaDB r1.24, the multi-threaded API is released as
-field-test grade functionality in a production release (i.e., the
-functions to support single-threaded applications are tested and
-released as production grade).
+Important Notes:
+
+- In YottaDB r1.24, the multi-threaded API is released as
+  field-test grade functionality in a production release (i.e., the
+  functions to support single-threaded applications are tested and
+  released as production grade).
+- Local variables, locks and transaction contexts are held by the
+  process and not by the thread. In other words, these resources are
+  shared by threads in a multi-threaded application, and YottaDB
+  assumes that the threads of an application cooperate to manage the
+  resources, e.g.
+
+  - One thread may set a local variable node, and another thread may
+    delete it.
+  - One thread may acquire a lock and another may release it.
+  - A global variable set within a transaction by one thread is
+    visible to another within the process, but not to other processes.
+
+- It is the responsibility of the application to avoid race conditions
+  between threads in their use of resources managed by YottaDB at the
+  level of the process.
 
 Even though the YottaDB data management engine is single-threaded and
 operates in a single thread, [#]_ it supports both single- and
