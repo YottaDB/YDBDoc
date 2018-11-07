@@ -3814,10 +3814,11 @@ reference the glue routine:
 
 .. code-block:: go
 
-    // #cgo CFLAGS: -I/usr/local/lib/yottadb/r124
-    // #include "libyottadb.h"
-    // #include "libydberrors.h"
-    // int CallBackRtn_cgo(uint64 tptoken, uintptr_t in);
+	// #cgo CFLAGS: -I/usr/local/lib/yottadb/r124
+	// #include "libyottadb.h"
+	// #include "libydberrors.h"
+	// int CallBackRtn_cgo(uint64 tptoken, uintptr_t in);
+	import "C"
 
 The Go code module that includes the acutal transaction logic,
 :code:`CallBackRtn()` should be structured thus, with no space between
@@ -3825,10 +3826,10 @@ The Go code module that includes the acutal transaction logic,
 
 .. code-block:: go
 
-    //export CallBackRtn
-    func CallBackRtn(tptoken uint64, tpfnparm unsafe.Pointer) int {
-        // code for function
-    }
+	//export CallBackRtn
+	func CallBackRtn(tptoken uint64, tpfnparm unsafe.Pointer) int {
+	    // code for function
+	}
 
 :code:`CallBackRtn_cgo.go` and the module defining
 :code:`CallBackRtn()` should reside in the same directory.
