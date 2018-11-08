@@ -25,7 +25,7 @@ Here is a sample configuration file:
    /* Database encryption section \*/
     database: {
         keys: (
-              { 
+              {
                  dat: "/tmp/mumps.dat";  /* Encrypted database file. \*/
                  key: "/tmp/mumps.key";  /* Encrypted symmetric key. \*/
               },
@@ -36,17 +36,17 @@ Here is a sample configuration file:
               ...
         );
     }
-                                                                                                                                                 
+
     /* TLS section \*/
-                                                                                                                            
+
     tls: {
            verify-depth: 7;
-           CAfile: "/home/jdoe/current/tls/certs/CA/gtmCA.crt";
+           CAfile: "/home/jdoe/current/tls/certs/CA/ydbCA.crt";
            CApath: "/home/jdoe/current/tls/certs/CA/";
            dh512: "/home/jdoe/current/tls/dh512.pem";
            dh1024: "/home/jdoe/current/tls/dh1024.pem";
            session-timeout: 600;
-                                                                                                                                                                                
+
            /* List of certificate/key pairs specified by identifiers. \*/
            PRODUCTION: {
                          format: "PEM";
@@ -54,7 +54,7 @@ Here is a sample configuration file:
                          cert: "/home/jdoe/current/tls/certs/Malvern.crt";
                          key: "/home/jdoe/current/tls/certs/Malvern.key";
            };
-                                                                                                                                                                                                                                     
+
            DEVELOPMENT: {
                           format: "PEM";
                           cert: "/home/jdoe/current/tls/certs/BrynMawr.crt";

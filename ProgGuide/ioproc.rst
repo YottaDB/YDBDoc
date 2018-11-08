@@ -84,7 +84,7 @@ Every OPEN device has a $Y. However, YottaDB only accesses $Y of the current dev
 
 When YottaDB finishes the logical record in progress, it generally increments $Y. YottaDB recognizes the end of a logical record when it processes certain YottaDB format control characters, or when the record reaches its maximum size, as determined by the device WIDTH, and the device is set to WRAP. The definition of "logical record" varies from device to device. For an exact definition, see the sections on each device type. FILTER and the device LENGTH also have an effect on $Y.
 
-As $Y is only a counter to help a program track output, SET $Y does not reposition the cursor or perform any other IO. Conversely, if a sequence of characters sent to a terminal or other device with a WRITE causes it to be repositioned except as described below, $Y will not reflect this change. 
+As $Y is only a counter to help a program track output, SET $Y does not reposition the cursor or perform any other IO. Conversely, if a sequence of characters sent to a terminal or other device with a WRITE causes it to be repositioned except as described below, $Y will not reflect this change.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 Maintenance of $X and $Y
@@ -130,13 +130,13 @@ Status Variables
 $DEVICE
 ~~~~~~~~
 
-If the last commanded resulted in no error-condition, the value of $DEVICE, when interpreted as a truth-value is 0 (FALSE). If the status of the device reflects an error-condition, the value of $DEVICE, when interpreted as a truth-value is 1 (TRUE). When $DEVICE starts with 1, it is followed by a comma (,) and then by the text that would be in $ZSTATUS at the time of the error. 
+If the last commanded resulted in no error-condition, the value of $DEVICE, when interpreted as a truth-value is 0 (FALSE). If the status of the device reflects an error-condition, the value of $DEVICE, when interpreted as a truth-value is 1 (TRUE). When $DEVICE starts with 1, it is followed by a comma (,) and then by the text that would be in $ZSTATUS at the time of the error.
 
 Examples:
 
 0 indicates for READ with a zero (0) timeout that the available data has been read.
 
-"1 , Device detected EOF" indicates the device reached an end-of-file condition. 
+"1 , Device detected EOF" indicates the device reached an end-of-file condition.
 
 ~~~~~
 $KEY
@@ -145,14 +145,14 @@ $KEY
 $K[EY] contains the string that terminated the most recent READ command from the current device (including any introducing and terminating characters). If no READ command is issued to the current device or if no terminator is used, the value of $KEY is an empty string.
 
 * For PIPE devices:
- 
+
   * $KEY contains the UNIX process id of the created process shell which executes the command connected to the PIPE.
 
-* For SOCKET devices: 
-  
+* For SOCKET devices:
+
   * $KEY includes information about a new socket in the form of CONNECT|handle|<address> where <address> is the IP address for TCP sockets and path for LOCAL sockets. Read more about `SOCKET device operation <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#id3>`_.
-  
-  * As an OPEN deviceparameter: For LISTEN, $KEY is set to the format of “LISTENING|<socket_handle>|{<portnumber>|</path/to/LOCAL_socket>}” when listening for a connection is successful. Otherwise, $KEY is assigned the empty string. Read more about `LISTEN deviceparameter <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#listen>`_.  
+
+  * As an OPEN deviceparameter: For LISTEN, $KEY is set to the format of “LISTENING|<socket_handle>|{<portnumber>|</path/to/LOCAL_socket>}” when listening for a connection is successful. Otherwise, $KEY is assigned the empty string. Read more about `LISTEN deviceparameter <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#listen>`_.
 
 
 ~~~
@@ -217,7 +217,7 @@ Example:
 
 This example displays the series of ASCII codes for the characters in $ZB.
 
-$ZB refers to the last READ terminator of the current device. Therefore, be careful when sequencing USE commands and references to $ZB. 
+$ZB refers to the last READ terminator of the current device. Therefore, be careful when sequencing USE commands and references to $ZB.
 
 ~~~~~~
 $ZEOF
@@ -227,13 +227,13 @@ $ZEOF contains a truth-valued expression indicating whether the last READ operat
 
 $ZEOF refers to the end-of-file status of the current device. Therefore, be careful when sequencing USE commands and references to $ZEOF.
 
-$ZEOF is set for terminals if the connection dropped on read. 
+$ZEOF is set for terminals if the connection dropped on read.
 
 ~~~~~~
 $ZPIN
 ~~~~~~
 
-When $PRINCIPAL has different input/output devices, the USE command recognizes intrinsic special variable $ZPIN to apply appropriate deviceparameters to the input side of $PRINCIPAL. A USE with $ZPIN sets $IO to $PRINCIPAL for READs and WRITEs from the input and output side of $PRINCIPAL. $ZSOCKET() also accepts $ZPIN as its first argument and, if the device is a split SOCKET device, supplies information on the input SOCKET device. In any context other than USE or $ZSOCKET(), or if $PRINCIPAL is not a split device, $PRINCIPAL, $ZPIN and $ZPOUT are synonyms. In the case of a split $PRINCIPAL, $ZPIN returns the value of $PRINCIPAL followed by the string "< /" Any attempt to OPEN $ZPIN results in a DEVOPENFAIL error. 
+When $PRINCIPAL has different input/output devices, the USE command recognizes intrinsic special variable $ZPIN to apply appropriate deviceparameters to the input side of $PRINCIPAL. A USE with $ZPIN sets $IO to $PRINCIPAL for READs and WRITEs from the input and output side of $PRINCIPAL. $ZSOCKET() also accepts $ZPIN as its first argument and, if the device is a split SOCKET device, supplies information on the input SOCKET device. In any context other than USE or $ZSOCKET(), or if $PRINCIPAL is not a split device, $PRINCIPAL, $ZPIN and $ZPOUT are synonyms. In the case of a split $PRINCIPAL, $ZPIN returns the value of $PRINCIPAL followed by the string "< /" Any attempt to OPEN $ZPIN results in a DEVOPENFAIL error.
 
 ~~~~~~
 $ZPOUT
@@ -373,7 +373,7 @@ A YottaDB process assigns $PRINCIPAL to the UNIX standard input of the process (
 
 While all terminals support the CTRAP deviceparameter, only $PRINCIPAL supports CENABLE. While CTRAP allows terminal input to redirect program flow, CENABLE allows the terminal user to invoke the Direct Mode.
 
-Directly connected printers often appear to YottaDB as a terminal (although printers generally do not provide input) regardless of whether the printer is connected to the computer with a high speed parallel interface, or an asynchronous terminal controller. 
+Directly connected printers often appear to YottaDB as a terminal (although printers generally do not provide input) regardless of whether the printer is connected to the computer with a high speed parallel interface, or an asynchronous terminal controller.
 
 +++++++++++++++++++++++++++++++++
 Setting Terminal Characteristics
@@ -387,7 +387,7 @@ UNIX enforces standard device security for explicit OPENs of terminals other tha
 
 USE of a terminal causes the device driver to flush the output buffer. This feature of the USE command provides routine control over the timing of output, which is occasionally required. However, it also means that redundant USE commands may induce an unnecessary performance penalty. Therefore, YottaDB recommends restricting USE commands to redirecting I/O, modifying deviceparameters, and initiating specifically required flushes.
 
-The terminal input buffer size is fixed at 1024 on UNIX and a variable read terminates after 1023 characters. 
+The terminal input buffer size is fixed at 1024 on UNIX and a variable read terminates after 1023 characters.
 
 **Setting the Environment Variable TERM**
 
@@ -398,7 +398,7 @@ Some terminfo entries may seem to work properly but fail to recognize function k
 YottaDB uses the following terminfo capabilities. The full variable name is followed by the capname in parenthesis:
 
 .. parsed-literal::
-   auto_right_margin(am), clr_eos(ed), clr_eol(el), columns(cols), cursor_address(cup), cursor_down(cud1),cursor_left(cub1), cursor_right(cuf1), cursor_up(cuu1), eat_newline_glitch(xenl), key_backspace(kbs), key_dc(kdch1),key_down(kcud1), key_left(kcub1), key_right(kcuf1), key_up(kcuu1), key_insert(kich1), keypad_local(rmkx),keypad_xmit(smkx), lines(lines). 
+   auto_right_margin(am), clr_eos(ed), clr_eol(el), columns(cols), cursor_address(cup), cursor_down(cud1),cursor_left(cub1), cursor_right(cuf1), cursor_up(cuu1), eat_newline_glitch(xenl), key_backspace(kbs), key_dc(kdch1),key_down(kcud1), key_left(kcub1), key_right(kcuf1), key_up(kcuu1), key_insert(kich1), keypad_local(rmkx),keypad_xmit(smkx), lines(lines).
 
 YottaDB sends keypad_xmit before terminal reads for direct mode and READs (other than READ \*) if EDITING is enabled. YottaDB sends keypad_local after these terminal reads.
 
@@ -406,7 +406,7 @@ YottaDB sends keypad_xmit before terminal reads for direct mode and READs (other
 Logical Records for Terminals
 ++++++++++++++++++++++++++++++
 
-A logical record for a terminal equates to a line on the physical screen. The WIDTH device characteristic specifies the width of the screen, while the LENGTH device characteristic specifies the number of lines on the screen. 
+A logical record for a terminal equates to a line on the physical screen. The WIDTH device characteristic specifies the width of the screen, while the LENGTH device characteristic specifies the number of lines on the screen.
 
 +++++++++++++++++++++++++++++
 Read \* Command for Terminals
@@ -747,7 +747,7 @@ If a device has TRUNCATE enabled, a WRITE issued when the file pointer is not at
 Line Terminators
 ++++++++++++++++++++++++
 
-LF ($CHAR(10)) terminates the logical record for all M mode sequential files, TRM, PIPE, and FIFO. For non FIXED format sequential files and terminal devices for which character set is not M, all the standard Unicode line terminators terminate the logical record. These are U+000A (LF), U+0000D (CR), U+000D followed by U+000A (CRLF), U+0085 (NEL), U+000C (FF), U+2028 (LS) and U+2029 (PS). 
+LF ($CHAR(10)) terminates the logical record for all M mode sequential files, TRM, PIPE, and FIFO. For non FIXED format sequential files and terminal devices for which character set is not M, all the standard Unicode line terminators terminate the logical record. These are U+000A (LF), U+0000D (CR), U+000D followed by U+000A (CRLF), U+0085 (NEL), U+000C (FF), U+2028 (LS) and U+2029 (PS).
 
 ++++++++++++++++++++++++
 READ/WRITE Operations
@@ -790,7 +790,7 @@ The following table describes all READ and WRITE operations for STREAM, VARIABLE
 
 **Notes**
 
-* EOF == end-of-file; <FF>== ASCII form feed; <LF> == ASCII line feed; 
+* EOF == end-of-file; <FF>== ASCII form feed; <LF> == ASCII line feed;
 * In M mode, and by default in UTF-8 mode PAD == <SP> == ASCII space.
 * "READ format" in this table means READ ? or READ <strlit>
 * A change to WIDTH implicitly sets WRAP unless NOWRAP follows in the deviceparameter list
@@ -800,18 +800,18 @@ The following table describes all READ and WRITE operations for STREAM, VARIABLE
 * In UTF-8 mode, RECORDSIZE is in bytes and WIDTH is in characters and the smaller acts as the WIDTH limit in the table.
 * In UTF-8 mode, FIXED mode writes <SP> to the RECORDSIZE when the next character won't fit.
 * In UTF-8 mode, all READ forms do not return trailing  PAD characters.
-* In UTF-8 mode, all characters returned by all forms of FIXED mode READ are from a single record. 
+* In UTF-8 mode, all characters returned by all forms of FIXED mode READ are from a single record.
 * WRITE for a Sequential Disk (SD) device works at the current file position, whether attained with APPEND, REWIND or SEEK.
 * YottaDB manages any BOM for UTF mode files by ensuring they are at the beginning of the file and produces a BOMMISMATCH error for an attempt to change the byte-ordering on OPEN for an existing file.
 * An attempt to OPEN a non-zero length file WRITEONLY without either NEWVERSION or TRUNCATE in UTF mode produces an OPENDEVFAIL due to the fact that any existing BOM information cannot be verified.
-* Note that with YottaDB SD encryption, because of the state information associated with encryption processing, encrypted files require the file to be WRITEn or READ from the beginning rather than from an arbitrary position. 
+* Note that with YottaDB SD encryption, because of the state information associated with encryption processing, encrypted files require the file to be WRITEn or READ from the beginning rather than from an arbitrary position.
 
 
 ++++++++++++++++++++++++++++
 Writing Binary Files
 ++++++++++++++++++++++++++++
 
-To write a binary data file, open it with FIXED:WRAP:CHSET="M" and set $X to zero before the WRITE to avoid filling the last record with spaces (the default PAD byte value). 
+To write a binary data file, open it with FIXED:WRAP:CHSET="M" and set $X to zero before the WRITE to avoid filling the last record with spaces (the default PAD byte value).
 
 .. note::
    With CHSET not "M", FIXED has a different definition. Each record is really the same number of bytes as specified by RECORDSIZE. Padding bytes are added as needed to each record.
@@ -828,7 +828,7 @@ Example:
      open inname:(readonly:fixed:recordsize=rsize:exception="goto eof")
      open outname:(newversion:stream:nowrap:chset="M")
      for nrec=1:1 use inname read x use outname write x
-   eof     
+   eof
      if $zstatus["IOEOF" do  quit
      . set $ecode=""
      . close inname
@@ -837,7 +837,7 @@ Example:
      . set $x=0 close outname
      . write !,"Copied ",$select((nrec-1)<adj:adj,1:((nrec-1)*rsize)+adj)," bytes from ",inname," to ",outname
      else  use $principal write !,"Error with file ",inname,":"
-  error   
+  error
      write !,$zstatus
      close inname,outname
      quit
@@ -936,7 +936,7 @@ Example:
 .. parsed-literal::
    YDB>do ^FREAD
    FREAD;
-    zprint ^FREAD 
+    zprint ^FREAD
     read "File > ",sd
     set retry=0
     set $ztrap="BADAGAIN"
@@ -948,21 +948,21 @@ Example:
     close sd
     quit
    BADOPEN;
-    set retry=retry+1 
+    set retry=retry+1
     if retry=2 open sd
     if retry=4 halt
-    if $piece($zstatus,",",1)=2 do  
+    if $piece($zstatus,",",1)=2 do
     . write !,"The file ",sd," does not exist. Retrying in about 2 seconds ..."
     . hang 2.1
-    . quit 
-    if $piece($zstatus,",",1)=13 do  
+    . quit
+    if $piece($zstatus,",",1)=13 do
     . write !,"The file ",sd," is not accessible. Retrying in about 3 seconds ..."
     . hang 3.1
     . quit
     quit
    BADAGAIN;
     w !,"BADAGAIN",!
-                           
+
   File >
 
 This example asks for the name of the file and displays its contents. It OPENs that file as READONLY and specifies an EXCEPTION. The exception handler for the OPEN deals with file-not-found and file-access errors and retries the OPEN command on error. The first USE sets the EXCEPTION to handle end-of-file. The FOR loop reads the file one record at a time and transfers each record to the principal device. The GOTO in the EXCEPTION terminates the FOR loop. At label EOF, if $ZEOF is false, the code reissues the error that triggered the exception. Otherwise, the CLOSE releases the file.
@@ -972,11 +972,11 @@ Example:
 .. parsed-literal::
    YDB>do ^formatACCT
    formatACCT;
-    zprint ^formatACCT; 
+    zprint ^formatACCT;
     set sd="temp.dat",acct=""
-    open sd:newversion 
+    open sd:newversion
     use sd:width=132
-    for  set acct=$order(^ACCT(acct)) quit:acct=""  do  
+    for  set acct=$order(^ACCT(acct)) quit:acct=""  do
     . set rec=$$FORMAT(acct)
     . write:$y>55 #,hdr write !,rec
     close sd
@@ -995,10 +995,10 @@ The following characteristics of FIFO behavior may be helpful in using them effe
 
 With READ:
 
-* If a READ is done while there is no data in the FIFO: 
+* If a READ is done while there is no data in the FIFO:
 * The process hangs until data is put into the FIFO by another process, or the READ times out, when a timeout is specified.
 
-The following table shows the result and the values of I/O status variables for different types of READ operations on a FIFO device. 
+The following table shows the result and the values of I/O status variables for different types of READ operations on a FIFO device.
 
 +-------------------------+-----------------------------------------+----------------------------------+----------------------------+-------------------+------------------+------------------+
 | Operation               | Result                                  | $DEVICE                          | $ZA                        | $TEST             | X                | $ZEOF            |
@@ -1015,7 +1015,7 @@ The following table shows the result and the values of I/O status variables for 
 +-------------------------+-----------------------------------------+----------------------------------+----------------------------+-------------------+------------------+------------------+
 | READ X:0                | No data available                       | 0                                | 0                          | 0                 | empty string     | 0                |
 +-------------------------+-----------------------------------------+----------------------------------+----------------------------+-------------------+------------------+------------------+
-| READ X:0                | Timeout with partial data read          | 0                                | 0                          | 0                 | Partial data     | 0                | 
+| READ X:0                | Timeout with partial data read          | 0                                | 0                          | 0                 | Partial data     | 0                |
 +-------------------------+-----------------------------------------+----------------------------------+----------------------------+-------------------+------------------+------------------+
 | READ X:0                | End of File                             | 1,Device detected EOF            | 9                          | 1                 | empty string     | 1                |
 +-------------------------+-----------------------------------------+----------------------------------+----------------------------+-------------------+------------------+------------------+
@@ -1033,7 +1033,7 @@ With CLOSE:
 * If a process closes the FIFO with the DELETE qualifier, the FIFO becomes unavailable to new users at that time.
 * All processes currently USEing the FIFO may continue to use it, until the last process attached to it CLOSES it, and is destroyed.
 * Any process OPENing a FIFO with the same name as a deleted FIFO creates a new one to which subsequent OPENs attach.
-* The default access permissions on a FIFO are the same as the mask settings of the process that created the FIFO. Use the SYSTEM, GROUP, WORLD, and UIC deviceparameters to specify FIFO access permissions. File permissions have no affect on a process that already has the FIFO open. 
+* The default access permissions on a FIFO are the same as the mask settings of the process that created the FIFO. Use the SYSTEM, GROUP, WORLD, and UIC deviceparameters to specify FIFO access permissions. File permissions have no affect on a process that already has the FIFO open.
 
 ++++++++++++++++++++++++++++++++++++++
 Considerations in implementing FIFOs
@@ -1206,7 +1206,7 @@ Example:
 
 .. parsed-literal::
    job ^X:(in="/dev/null":out="/dev/null":err="error.log")
-   JOB ^X:(IN="/dev/null":OUT="/dev/null":ERR="error.log") 
+   JOB ^X:(IN="/dev/null":OUT="/dev/null":ERR="error.log")
 
 This example issues a YottaDB JOB command to execute the routine ^X in another process. This routine processes a large number of global variables and produces no output. In the example, the JOBbed process takes its input from a null device, and sends its output to a null device. If the JOBbed process encounters an error, it directs the error message to error.log.
 
@@ -1218,7 +1218,7 @@ A PIPE device is used to access and manipulate the input and/or output of a shel
 
 A PIPE is akin to a FIFO device. Both FIFO and PIPE map YottaDB devices to UNIX pipes, the conceptual difference being that whereas a FIFO device specifies a named pipe, but does not specify the process on the other end of the pipe, a PIPE device specifies a process to communicate with, but the pipes are unnamed. Specifically, an OPEN of a PIPE creates a subprocess with which the YottaDB process communicates.
 
-A PIPE device is specified with a "PIPE" value for mnemonicspace on an OPEN command. 
+A PIPE device is specified with a "PIPE" value for mnemonicspace on an OPEN command.
 
 .. note::
    YottaDB ignores the mnemonicspace specification on an OPEN of a previously OPEN device and leaves the existing device with its original characteristics.
@@ -1233,7 +1233,7 @@ Example:
 
 .. parsed-literal::
    set p="Printer"
-   open p:(command="lpr":writeonly)::"PIPE" 
+   open p:(command="lpr":writeonly)::"PIPE"
 
 This shows the use of a PIPE device to spool data to the default printer by spooling to the lpr command, opened via the default shell (the shell specified by the SHELL environment variable, and the shell used to start YottaDB if SHELL is unspecified). The WRITEONLY device parameter specifies that the YottaDB process not read data back from the lpr command. Use WRITEONLY when no errors are expected from the application(s) in the pipe. WRITEONLY tends not to serve most applications well.
 
@@ -1246,7 +1246,7 @@ Example:
 This shows the use of a PIPE device to identify processes belonging to the current userid. The READONLY device parameter specifies that the YottaDB process only read the output of the pipe, and not provide it with any input. This example illustrates the fact that the command can be any shell command, can include environment variables and pipes within the command.
 
 .. note::
-   Flags to the ps command vary for different UNIX platforms. 
+   Flags to the ps command vary for different UNIX platforms.
 
 Example:
 
@@ -1262,7 +1262,7 @@ Example:
 .. parsed-literal::
    set p="Files"
    set e="Errors"
-   open p:(command="find /var/log -type d -print":readonly:stderr=e)::"PIPE" 
+   open p:(command="find /var/log -type d -print":readonly:stderr=e)::"PIPE"
 
 YottaDB uses the standard system utility find to obtain a list of subdirectories of /var/log, which are read back via the device with handle "Files" with any errors (for example, "Permission denied" messages for sub-directories that the find command cannot process) read back via the device with handle "Errors".
 
@@ -1326,16 +1326,16 @@ Example:
 
 .. parsed-literal::
    pipe1;
-  set p1="test1" 
+  set p1="test1"
   open p1:(shell="/bin/sh":comm="cat")::"PIPE"
   for i=1:1:10 do
-  . use p1 
-  . write i,":abcdefghijklmnopqrstuvwxyz abcdefghijklmnopqrstuvwxyz ",! 
+  . use p1
+  . write i,":abcdefghijklmnopqrstuvwxyz abcdefghijklmnopqrstuvwxyz ",!
   . read x
-  . use $P 
-  . write x,! 
+  . use $P
+  . write x,!
   close p1
-  quit    
+  quit
 
 This WRITEs 10 lines of output to the cat command and reads the cat output back into the local variable x. The YottaDB process WRITEs each line READ from the PIPE to the principal device. This example works because "cat" is not a buffering command. The example above would not work for a command such as tr that buffers its input.
 
@@ -1349,12 +1349,12 @@ Example :
   . use p1
   . write i,":abcdefghijklmnopqrstuvwxyz abcdefghijklmnopqrstuvwxyz ",!
   . read x:0
-  . if '+$device use $principal write x,! 
+  . if '+$device use $principal write x,!
   use p1
   write /EOF
   for  read x quit:$zeof  use $principal write x,! use p1
   close p1
-  quit           
+  quit
 
 This shows the use of tr (a buffering command) in the created process for the PIPE device. To see the buffering effect the YottaDB process WRITEs 1000 lines to the PIPE device. Different operating systems may have different buffer sizes. Notice the use of the r x:0 and the check on $DEVICE in the loop. If $DEVICE is 0, WRITE x writes the data read to the principal device. No actual READs complete, however, until tr reaches its buffer size and writes to its stdout. The final few lines remain buffered by tr after the process finishes the first loop. The YottaDB process then issues a WRITE /EOF to the PIPE causing tr to flush its buffered lines. In the final for loop the YottaDB process uses the simple form of READ x from the PIPE followed by a WRITE of each line to the principal device until $zeof becomes TRUE.
 
@@ -1364,7 +1364,7 @@ Example :
    pipe4;
   set a="test"
   open a:(command="nestin":independent)::"PIPE"
-  use a 
+  use a
   set key=$KEY
   write "Show ntestin still running after CLOSE of a",!
   write "The parent process of 1 shows the parent shell has exited after CLOSE of a"
@@ -1382,7 +1382,7 @@ Example :
   set c="psout"
   open c:(command=k2:writeonly)::"PIPE"
   close c
-  quit      
+  quit
 
 This demonstrates that the created process nestin keeps running as an INDEPENDENT process after the YottaDB process CLOSEs the pipe. This YottaDB process uses another PIPE device to return the process id of ntestin and READ it into pid so that it may be killed by this or another process, should that be appropriate.
 
@@ -1446,16 +1446,16 @@ Example:
   if $zeof quit
   if a=0 set a=i/2
   set z=$za
-  ; use $device to make sure ztrap is caused by blocked write to pipe 
+  ; use $device to make sure ztrap is caused by blocked write to pipe
   set d=$device
-  if "1,Resource temporarily unavailable"=d DO 
+  if "1,Resource temporarily unavailable"=d DO
   . use $p
   . write "pipe full, i= ",i," $ZA = ",z,!
-  . set i=i-1 
+  . set i=i-1
   . use p1
   . for j=1:1:a  read x use $principal write j,"-",x,! use p1
-  quit    
-   
+  quit
+
 
 This demonstrates how to deal with write blocking of a PIPE device. The loop doing the WRITE does not READ from the PIPE. Eventually causing the output of cat to block on its output and stop reading input from the pipe. When the process takes the $ZTRAP to cont1 it tests $DEVICE to determine if the trap is caused by the full pipe. If so, it uses the for loop to read half the number of lines output by the main loop. It decrements i and returns to the original WRITE loop to retry the failed line and continue with the WRITEs to the pipe. Depending upon the configuration of the environment, it may trap several times before processing all lines.
 
@@ -1569,9 +1569,9 @@ Example:
 
 .. parsed-literal::
    sh> mumps -run pipexample induceEAGAIN
-   The active device is pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/mumps -run induceEAGAIN^pipexample" STDERR="piperr" 
+   The active device is pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/mumps -run induceEAGAIN^pipexample" STDERR="piperr"
    $ZSTATUS="11,pipexample+9^pipexample,%SYSTEM-E-ENO11, Resource temporarily unavailable"
-        
+
    sh> mumps -run retry^pipexample induceEAGAIN
    Try 0   pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/mumps -run induceEAGAIN^pipexample 0" STDERR="piperr"
    ...Failed to perform non-blocked writes... Retrying write # 54
@@ -1584,23 +1584,23 @@ This example demonstrates handling WRITE errors, like ENO11 or EAGAIN, that do n
 
 .. parsed-literal::
    sh> mumps -run pipexample induceEPIPE
-   The active device is pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/mumps -run induceEPIPE^pipexample" STDERR="piperr" 
+   The active device is pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/mumps -run induceEPIPE^pipexample" STDERR="piperr"
        stdout:My PID is 12808
        stderr:%YDB-F-FORCEDHALT, Image HALTed by MUPIP STOP
    $ZSTATUS="32,pipexample+9^pipexample,%SYSTEM-E-ENO32, Broken pipe"
-        
+
    sh> mumps -run retry^pipexample induceEPIPE
-   Try 0   pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/mumps -run induceEPIPE^pipexample 0" STDERR="piperr" 
+   Try 0   pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/mumps -run induceEPIPE^pipexample 0" STDERR="piperr"
    ...Caught on try 0, write 49... 32,retry+13^pipexample,%SYSTEM-E-ENO32, Broken pipe
        stdout:My PID is 16252
        stderr:%YDB-F-FORCEDHALT, Image HALTed by MUPIP STOP
-   Try 1   pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/mumps -run induceEPIPE^pipexample 1" STDERR="piperr" 
+   Try 1   pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/mumps -run induceEPIPE^pipexample 1" STDERR="piperr"
    ...Caught on try 1, write 697... 32,retry+13^pipexample,%SYSTEM-E-ENO32, Broken pipe
        stdout:My PID is 16403
        stdout:$ZSTATUS="150373210,induceEPIPE+5^pipexample,%YDB-E-DIVZERO, Attempt to divide by zero"
-   Try 2   pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/mumps -run induceEPIPE^pipexample 2" STDERR="piperr" 
+   Try 2   pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/mumps -run induceEPIPE^pipexample 2" STDERR="piperr"
        Writes completed
-      
+
 This example demonstrates how to create a separate STDERR pipe device from which to read the STDERR output of the program(s) inside the pipe. Reading the STDERR is important when dealing with failures from Unix programs. It is possible to read the errors without creating a STDERR pipe device, however the error messages are commingled with the output of the programs inside the pipe which could make diagnosis of the underlying problem harder. Notice that YottaDB writes fatal errors, YDB-F types, to STDERR, but all others go to STDOUT.
 
 Additionally, this example demonstrates handling errors that terminate the PIPE device. In this example, the PIPE device is terminated when a program inside the pipe terminates before reading all of the driving MUMPS program's output causing an EPIPE or ENO32, a broken pipe. In such a situation the MUMPS program must capture the error that caused the termination and respond accordingly. The program may need to call out to other programs to determine the status of a service it is using or to alert the operator of an error with an external program or service. To operate successfully, the program must recreate the pipe and retry the operation.
@@ -1659,7 +1659,7 @@ Sockets can be attached and detached from the collection of sockets associated w
 
 .. note::
    Currently, YottaDB does not produce an error if a socket is attached to a device having a different CHSET.
-   
+
 .. note::
    Exception handler (EXCEPTION) operates at the SOCKET device level and error trapping (IOERROR) operates at the socket-level. So, one EXCEPTION operates on all sockets of a SOCKET device and IOEROR can be individually turned on or off for each socket.
 
@@ -1675,7 +1675,7 @@ From an application perspective, the transport layers used by a socket device ar
       Write $Justify($Length(x),4),x
 
 A corresponding simplistic reader might be:
-   
+
    .. parsed-literal::
       read len#4,x#len
 
@@ -1948,22 +1948,22 @@ Socket Device Examples
 
 The sockexamplemulti31.m routine shows the use of $KEY and $ZKEY in a basic socket I/O setup. It's functionality is atypical in order to demonstrate a number of features. It launches two jobs: a server process which opens a listening socket and a client process which makes five connections to the server. The server sends a message to each connection socket. Even-numbered client sockets read the message partially but do not send a response back to the server. Odd-numbered client sockets receive the full message and respond to the server with the message "Ok.". The server reads two characters (but the client sends three) and $ZKEY shows sockets with unread characters.
 
-You can download `sockexamplemulti31.m <https://gitlab.com/YottaDB/DB/YDBDoc/raw/master/ProgGuide/sockexamplemulti31.m>`_ from GitLab and follow the instructions in the comments near the top of the program file. 
+You can download `sockexamplemulti31.m <https://gitlab.com/YottaDB/DB/YDBDoc/raw/master/ProgGuide/sockexamplemulti31.m>`_ from GitLab and follow the instructions in the comments near the top of the program file.
 
 You can start a YottaDB process in response to a connection request made using inetd/xinetd. The following example uses inetd/xinetd to implement a listener which responds to connections and messages just as the prior example.
 
 In the configuration file for xinetd, define a new service called ydbserver. Set socket_type to "stream" and wait to "no" as in the following snippet:
 
 .. parsed-literal::
-   service ydbserver 
-   { 
-   disable = no 
-   type = UNLISTED 
-   port = 7777 
-   socket_type = stream 
-   wait = no 
-   user = yottadbuser 
-   server = /path/to/startyottadb 
+   service ydbserver
+   {
+   disable = no
+   type = UNLISTED
+   port = 7777
+   socket_type = stream
+   wait = no
+   user = yottadbuser
+   server = /path/to/startyottadb
    }
 
 If you define the server in /etc/services, the type and port options are not needed. For more information, the xinetd.conf man page for more details.
@@ -1971,29 +1971,29 @@ If you define the server in /etc/services, the type and port options are not nee
 If you are using inetd, add a line to /etc/inetd.conf with the sockettype "stream", protocol "tcp", and specify the "nowait" flag as in the example below, which assumes a ydbserver service is defined in /etc/services:
 
 .. parsed-literal::
-   ydbserver stream tcp nowait yottadbuser /path/to/startyottadb 
+   ydbserver stream tcp nowait yottadbuser /path/to/startyottadb
 
 In both of the above examples, "yottadbuser" is the name of the user to own and run the ydbserver service, and "/path/to/startyottadb" is the name of a script which defines some environment variables needed before invoking YottaDB. Please check the man page for inetd.conf on your system as the details may be slightly different.
 
-The minimum variables are: $ydb_dist, which specifies the directory containing the YottaDB distribution, and $ydb_routines, which specifies the paths used to locate the YottaDB routines. As an example: 
+The minimum variables are: $ydb_dist, which specifies the directory containing the YottaDB distribution, and $ydb_routines, which specifies the paths used to locate the YottaDB routines. As an example:
 
 .. parsed-literal::
-   #!/bin/bash 
-   cd /path/to/workarea 
-   export ydb_dist=/usr/local/ydb 
-   export ydb_routines="/var/myApp/o(/var/myApp/r) $ydb_dist" 
-   export ydb_gbldir=/var/myApp/g/mumps.dat 
-   $ydb_dist/mumps -r start^server 
+   #!/bin/bash
+   cd /path/to/workarea
+   export ydb_dist=/usr/local/ydb
+   export ydb_routines="/var/myApp/o(/var/myApp/r) $ydb_dist"
+   export ydb_gbldir=/var/myApp/g/mumps.dat
+   $ydb_dist/mumps -r start^server
 
 When start^server begins, the $PRINCIPAL device is the current device connected a socket and $KEY contains "ESTABLISHED|socket_handle| remote_ip_address". In most cases, a USE command near the beginning of the routine sets various device parameters such as delimiters.
 
 The ZSHOW "D" command reports available information on both the local and remote sides of a TCP socket including local and remove addresses and ports.
 
 .. parsed-literal::
-   0 OPEN SOCKET TOTAL=1 CURRENT=0 
-   SOCKET[0]=h11135182870 DESC=0 CONNECTED ACTIVE NOTRAP 
-   REMOTE=10.1.2.3@53731 LOCAL=10.2.3.4@7777 
-   ZDELAY ZIBFSIZE=1024 ZIBFSIZE=0 
+   0 OPEN SOCKET TOTAL=1 CURRENT=0
+   SOCKET[0]=h11135182870 DESC=0 CONNECTED ACTIVE NOTRAP
+   REMOTE=10.1.2.3@53731 LOCAL=10.2.3.4@7777
+   ZDELAY ZIBFSIZE=1024 ZIBFSIZE=0
 
 
 ++++++++++++++++++++
@@ -2009,9 +2009,9 @@ TLS (Transport Layer Security) can be turned on for YottaDB using the following 
      tar x < source.tar
 
 * Make sure the openssl-dev, libconfig-dev, and gpgme-dev libraries are installed before the next step.
-  
+
   .. parsed-literal::
-     ydb_dist=../.. make 
+     ydb_dist=../.. make
      ydb_dist=../.. make install
 
 * In your application directory, make a directory for certificates.
@@ -2025,7 +2025,7 @@ TLS (Transport Layer Security) can be turned on for YottaDB using the following 
       openssl genrsa -aes128 -passout pass:ydbpass -out ./mycert.key 2048
       openssl req -new -key ./mycert.key -passin pass:ydbpass -subj '/C=US/ST=Pennsylvania/L=Malvern/CN=www.yottadb.com' -out ./mycert.csr
       openssl req -x509 -days 365 -sha256 -in ./mycert.csr -key .//mycert.key -passin pass:ydbpass -out ./mycert.pem
-      mv cert* certs/ 
+      mv cert* certs/
 
 * Create a file called ydb_crypt_config.libconfig with the following contents.
 
@@ -2036,23 +2036,23 @@ TLS (Transport Layer Security) can be turned on for YottaDB using the following 
            cert: "/home/ydbuser/workspace/db/certs/mycert.pem";
            key:  "/home/ydbuser/workspace/db/certs/mycert.key";
              }
-          } 
+          }
 
 * Set the environment variable ydb_crypt_config to be the path to your config file:
-  
-  .. parsed-literal::
-     export ydb_crypt_config=$.../ydb_crypt_config.libconfig"  
-
-* Find out the hash of your key password using the maskpass utility. 
 
   .. parsed-literal::
-     ydb_dist/plugin/gtmcrypt/maskpass <<< 'ydbpass' | cut -d ":" -f2 | tr -d '
-     7064420FDCAEE313B222 
+     export ydb_crypt_config=ydb_crypt_config.libconfig"
+
+* Find out the hash of your key password using the maskpass utility.
+
+  .. parsed-literal::
+     echo "ydbpass" | $ydb_dist/plugin/gtmcrypt/maskpass | cut -d ":" -f2 | tr -d ' '
+     7064420FDCAEE313B222
 
 * In your environment file, set ydb_tls_passwd_{section name} to be that hash.
 
   .. parsed-literal::
-     export ydb_tls_passwd_dev="7064420FDCAEE313B222" 
+     export ydb_tls_passwd_dev="7064420FDCAEE313B222"
 
 * Start the server
 
@@ -2091,7 +2091,7 @@ The format of the OPEN command is:
 * A triple colon for the PIPE menemonicspace produces an error.
 * An indirection operator and an expression atom evaluating to a list of one or more OPEN arguments form a legal argument for an OPEN.
 * For sequential files, multiple processes can open the same file for reading with the OPEN command.
- 
+
 By default, when a device is unavailable, YottaDB retries the OPEN indefinitely at approximately one second intervals. A device is unavailable when another process is using it exclusively, or when the OPENing process does not have the resources left to open the device.
 
 All other errors on OPEN raise an error condition and interrupt program flow. A timeout is a tool that lets a YottaDB routine regain program control when a device remains unavailable. When the OPEN specifies a timeout, YottaDB keeps retrying until either the OPEN succeeds or the timeout expires.
@@ -2110,7 +2110,7 @@ In UTF-8 mode, the OPEN command recognizes ICHSET, OCHSET, and CHSET as three ad
 
 In M mode, the OPEN command ignores ICHSET, OCHSET, CHSET, and PAD device parameters.
 
-If an I/O device uses a multi-byte character encoding, every READ and WRITE operation of that device checks for well-formed characters according to the specified character encoding with ICHSET or OCHSET. If the I/O commands encounter an illegal sequence of bytes, they always trigger a run-time error; a VIEW "NOBADCHAR" does not prevent such errors. Strings created by $ZCHAR() and other Z equivalent functions may contain illegal sequences. The only way to input or output such illegal sequences is to specify character set "M" with one of these deviceparameters. 
+If an I/O device uses a multi-byte character encoding, every READ and WRITE operation of that device checks for well-formed characters according to the specified character encoding with ICHSET or OCHSET. If the I/O commands encounter an illegal sequence of bytes, they always trigger a run-time error; a VIEW "NOBADCHAR" does not prevent such errors. Strings created by $ZCHAR() and other Z equivalent functions may contain illegal sequences. The only way to input or output such illegal sequences is to specify character set "M" with one of these deviceparameters.
 
 Example:
 
@@ -2154,10 +2154,10 @@ For information on using the ATTACH with USE, refer to `ATTACH in the USE Device
 
 Example:
 
-.. parsed-literal:: 
+.. parsed-literal::
    open tcpdev:(ichset="M":connect=hostname\_":"_portno\_":TCP":attach="client"):timeout:"SOCKET"
 
-This example uses the ATTACH deviceparameter to specify "client" as the identifier of the newly created socket. Note that YottaDB recognizes ICHSET only in UTF-8 mode. 
+This example uses the ATTACH deviceparameter to specify "client" as the identifier of the newly created socket. Note that YottaDB recognizes ICHSET only in UTF-8 mode.
 
 ~~~~~~
 CHSET
@@ -2200,7 +2200,7 @@ If the OPEN does not specify a timeout, a SOCKET OPEN waits for the connection t
 Example:
 
 .. parsed-literal::
-   open tcpdev:(connect=hostname\_":"_portno\_":TCP":attach="client":ioerror="TRAP"):timeout:"SOCKET" 
+   open tcpdev:(connect=hostname\_":"_portno\_":TCP":attach="client":ioerror="TRAP"):timeout:"SOCKET"
 
 This example establishes a client connect with the server using the connection string in the format of "hostname:port:TCP".
 
@@ -2242,7 +2242,7 @@ Example:
 .. parsed-literal::
    YDB>do ^FREAD
    FREAD;
-    zprint ^FREAD 
+    zprint ^FREAD
     read "File > ",sd
     set retry=0
     set $ztrap="BADAGAIN"
@@ -2254,24 +2254,24 @@ Example:
     close sd
     quit
    BADOPEN;
-    set retry=retry+1 
+    set retry=retry+1
     if retry=2 open sd
     if retry=4 halt
-    if $piece($zstatus,",",1)=2 do  
+    if $piece($zstatus,",",1)=2 do
     . write !,"The file ",sd," does not exist. Retrying in about 2 seconds ..."
     . hang 2.1
-    . quit 
-    if $piece($zstatus,",",1)=13 do  
+    . quit
+    if $piece($zstatus,",",1)=13 do
     . write !,"The file ",sd," is not accessible. Retrying in about 3 seconds ..."
     . hang 3.1
     . quit
     quit
    BADAGAIN;
     w !,"BADAGAIN",!
- 
+
    File >
 
-This example asks for the name of the file and displays its contents. It OPENs that file as READONLY and specifies an EXCEPTION. The exception handler for the OPEN deals with file-not-found and file-access errors and retries the OPEN command on error. The first USE sets the EXCEPTION to handle end-of-file. The FOR loop reads the file one record at a time and transfers each record to the principal device. The GOTO in the EXCEPTION terminates the FOR loop. At label EOF, if $ZEOF is false, the code reissues the error that triggered the exception. Otherwise, the CLOSE releases the file. 
+This example asks for the name of the file and displays its contents. It OPENs that file as READONLY and specifies an EXCEPTION. The exception handler for the OPEN deals with file-not-found and file-access errors and retries the OPEN command on error. The first USE sets the EXCEPTION to handle end-of-file. The FOR loop reads the file one record at a time and transfers each record to the principal device. The GOTO in the EXCEPTION terminates the FOR loop. At label EOF, if $ZEOF is false, the code reissues the error that triggered the exception. Otherwise, the CLOSE releases the file.
 
 ~~~~~~~~
 EMPTERM
@@ -2296,7 +2296,7 @@ Specifies that the device for the OPEN is a FIFO name. YottaDB creates the FIFO 
 Example:
 
 .. parsed-literal::
-   open file:(fifo:read:recordsize=1048576):100 
+   open file:(fifo:read:recordsize=1048576):100
 
 ~~~~~~
 FIXED
@@ -2371,7 +2371,7 @@ Example:
      close dest
      quit
 
-This example copies a binary file using YottaDB. 
+This example copies a binary file using YottaDB.
 
 ~~~~~~~
 FOLLOW
@@ -2398,7 +2398,7 @@ If none of GROUP, SYSTEM, OWNER, or WORLD are specified on OPEN, YottaDB does no
 Example:
 
 .. parsed-literal::
-   open "test52.txt":(append:group="rw") 
+   open "test52.txt":(append:group="rw")
 
 This examples open file test52.txt in append mode with Read Write group access. Note that the user who opens file text52.txt must have ownership permissions for it.
 
@@ -2417,7 +2417,7 @@ If ICHSET is not specified, YottaDB assumes UTF-8 as the default character set f
 If expr is set to a value other than M, UTF-8, UTF-16, UTF-16LE or UTF-16BE, YottaDB produces a run-time error. UTF-16, UTF-LE, and UTF-16BE are not supported for $Principal and Terminal devices.
 
 .. note::
-   ICHSET is a deviceparameter of both the OPEN and USE commands. As ICHSET can change the character set of an already OPENed device, it can help deal with binary data intermixed with character data. 
+   ICHSET is a deviceparameter of both the OPEN and USE commands. As ICHSET can change the character set of an already OPENed device, it can help deal with binary data intermixed with character data.
 
 ~~~~~~~~~~~~
 INDEPENDENT
@@ -2455,7 +2455,7 @@ Enables exception handling in socket devices. expr specifies the I/O error trapp
 Example:
 
 .. parsed-literal::
-   open sock:(connect=host\_":"_port\_":TCP":delim=$char(13,10):ioerror="TRAP")::"SOCKET" 
+   open sock:(connect=host\_":"_port\_":TCP":delim=$char(13,10):ioerror="TRAP")::"SOCKET"
 
 This example opens a socket connection and specifies that I/O errors on the device raises error conditions.
 
@@ -2563,14 +2563,14 @@ For LOCAL sockets:
    To access the listening socket through $KEY, one needs to USE the value of the socket device first, otherwise $KEY will show the value of the current device instead. i.e.
 
 .. code::
-  
+
   > cat x.m
    set s="socketdev" open s:(LISTEN="5000:TCP"):1:"SOCKET"
    if $test  use s set x=$key  use $p  write x,!
   > mumps -run x
    LISTENING\|h1537723881000\|5000
 
-     
+
 ~~~~~~~~~~~~~
 MOREREADTIME
 ~~~~~~~~~~~~~
@@ -2594,7 +2594,7 @@ If you use the MOREREADTIME behavior, bear in mind that:
 Example:
 
 .. parsed-literal::
-   Use tcpdev:morereadtime=200 
+   Use tcpdev:morereadtime=200
 
 This example specifies that all READs for socket device tcpdev must wait for 200 milliseconds for input.
 
@@ -2612,7 +2612,7 @@ Example:
 
 .. parsed-literal::
    YDB>file1="foo.txt"
-   YDB>open file1:newversion:recordsize=5000 
+   YDB>open file1:newversion:recordsize=5000
    YDB>
 
 This example creates a new version of sequential file foo.txt with a RECORDSIZE of 5000 bytes.
@@ -2639,18 +2639,18 @@ If \*CHSET is not specified, YottaDB assumes UTF-8 as the default character set 
 If expr is set to a value other than M, UTF-8, UTF-16, UTF-16LE or UTF-16BE, YottaDB produces a run-time error. UTF-16, UTF-LE, and UTF-16BE are not supported for $Principal and Terminal devices.
 
 .. note::
-   OCHSET is a deviceparameter of both the OPEN and USE commands. As OCHSET can change the character set of an already OPENed device, it can help deal with binary data intermixed with character data. 
+   OCHSET is a deviceparameter of both the OPEN and USE commands. As OCHSET can change the character set of an already OPENed device, it can help deal with binary data intermixed with character data.
 
 Example:
 
 .. parsed-literal::
-   YDB>SET file1="mydata.out" 
-   YDB>SET expr="UTF-16LE" 
-   YDB>OPEN file1:(ochset=expr) 
+   YDB>SET file1="mydata.out"
+   YDB>SET expr="UTF-16LE"
+   YDB>OPEN file1:(ochset=expr)
    YDB>SET DS=$CHAR($$FUNC^%HD("0905"))_$CHAR($$FUNC^%HD("091A"))
    YDB>SET DS=DS_$CHAR($$FUNC^%HD("094D"))_$CHAR($$FUNC^%HD("091B"))_$CHAR($$FUNC^%HD("0940"))
-   YDB>USE file1 WRITE DS,! 
-   YDB>CLOSE file1 
+   YDB>USE file1 WRITE DS,!
+   YDB>CLOSE file1
 
 This example opens a new file called mydata.out and writes Devanagari characters in the UTF-16LE encoding.
 
@@ -2667,7 +2667,7 @@ OKEY="key_name [IV]"
 key_name is case-sensitive and must match a key name in the "files" section of the ydb_crypt_config file. The optional IV specifies an initialization vector to use for encryption and decryption.
 
 For more information, refer to the description of `KEY <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#id4>`_ deviceparameter of OPEN or USE.
-   
+
 ~~~~~~
 OWNER
 ~~~~~~
@@ -2702,13 +2702,13 @@ In UTF-8 mode, there are three cases that cause YottaDB to insert PAD characters
 * The next character won't fit in the remaining RECORDSIZE.
 
 .. note::
-   In all UTF-16 character sets, RECORDSIZE must be even and PAD bytes occupy two bytes with the high order byte zero. 
+   In all UTF-16 character sets, RECORDSIZE must be even and PAD bytes occupy two bytes with the high order byte zero.
 
 Example:
 
 .. parsed-literal::
    YDB>do ^padexample
-   padexample 
+   padexample
     zprint ^padexample
     set a="主要雨在西班牙停留在平原"
     set encoding="UTF-8"
@@ -2718,9 +2718,9 @@ Example:
     write a
     close filename
     halt
-   $ cat bomUTF-8.txt 
+   $ cat bomUTF-8.txt
    主要BB雨在BB西班BB牙停BB留在BB平原
-   $ od -tcd1 bomUTF-8.txt 
+   $ od -tcd1 bomUTF-8.txt
    0000000  344  270  273  350  246  201    B    B  351  233  250  345  234  250    B    B
             -28  -72  -69  -24  -90 -127   66   66  -23 -101  -88  -27 -100  -88   66   66
    0000020  350  245  277  347  217  255    B    B  347  211  231  345  201  234    B    B
@@ -2767,7 +2767,7 @@ The following example fails:
      OPEN a:(SHELL="/usr/local/bin/tcsh":COMM="/bin/cat \|& nl":PARSE)::"PIPE"
      OPEN a:(COMM="mupip integ -file mumps.dat":PARSE)::"PIPE"
      OPEN a:(COMM="$ydb_dist/mupip integ -file mumps.dat":PARSE)::"PIPE"
-     OPEN a:(COMM="nohup cat":PARSE)::"PIPE" 
+     OPEN a:(COMM="nohup cat":PARSE)::"PIPE"
 
 ~~~~~~~~~
 READONLY
@@ -2787,7 +2787,7 @@ Example:
 
 .. parsed-literal::
    YDB>set filename="foo.txt"
-   YDB>open filename:(readonly:recordsize=1048576) 
+   YDB>open filename:(readonly:recordsize=1048576)
    YDB>
 
 This example opens the file foo.txt with read permission.
@@ -2828,12 +2828,12 @@ When $PRINCIPAL identifies a device that supports REWIND, the REWIND or INREWIND
 
 By default, OPEN does not REWIND.
 
-Example: 
+Example:
 
 .. parsed-literal::
-   OPEN "test40.txt":(REWIND:RECORDSIZE=70:NOWRAP) 
+   OPEN "test40.txt":(REWIND:RECORDSIZE=70:NOWRAP)
 
-This example opens file test40.txt and places the file pointer at the beginning of the file. 
+This example opens file test40.txt and places the file pointer at the beginning of the file.
 
 ~~~~~~~~~~~~~
 SEEK=strexpr
@@ -2857,7 +2857,7 @@ Example:
      use p
      ; create file with 9 records of length 60 bytes each
      ; number from 0 to correspond to record offset
-                
+
      for i=0:1:8 write $justify(i\_\" - [\-05\-\|-10-\|-15-\|-20-\|-25-\|-30-\|-35-\|-40-\|-45-\|-50-\|-55-\|\",60)
      use p:rewind
      for i=0:1:8 read x set zk=$zkey use $p write "x= ",x," $zkey= ",zk,! use p
@@ -2927,9 +2927,9 @@ Example:
      use $p write "x= ",x," $zkey= \",ZKEY,!
      close p
      quit
-                                                                                                                                                       
-                                                                                                                                                       
-                                                                                                                                                     
+
+
+
    YDB>do ^seekdemo
    x= 0 - [-05-\|-10-\|-15-\|-20-\|-25-\|-30-\|-35-\|-40-\|-45-\|-50-\|-55-\| $zkey= 1,0
    x= 1 - [-05-\|-10-\|-15-\|-20-\|-25-\|-30-\|-35-\|-40-\|-45-\|-50-\|-55-\| $zkey= 2,0
@@ -2960,12 +2960,12 @@ Example:
    x= 2 - [-05-\|-10-\|-15-\|-20-\|-25-\|-30-\|-35-\|-40-\|-45-\|-50-\|-55-\| $zkey= 180
    ** CLOSE NODESTROY and reOPEN with append:SEEK="-60" and read last 60 bytes
    x= 8 - [-05-\|-10-\|-15-\|-20-\|-25-\|-30-\|-35-\|-40-\|-45-\|-50-\|-55-\| $zkey= 540
-                                                                                                                                                       
+
    YDB>
 
 This program demonstrates the use of the SEEK deviceparameter on OPEN and USE and reOPEN after CLOSE NODESTROY. This test is shown as an M program which may be executed, followed by the expected test output. First the test creates the file called "seekfixed" with 9, 60-byte records and then REWINDs and reads each record and outputs the record followed by $ZKEY which is a record,byte pair. Note that the records are numbered from 0 to match the SEEK record offset. Later in the test the same file is OPENed VARIABLE so $ZKEY will be a byte offset in that case. Details are given after the file output.
 
-The first OPEN has deviceparameters set to (FIXED:RECORDSIZE=60:SEEK="5") which SEEKs to record offset 5 or physical record 6. Note, FIXED length records and RECORDSIZE remain in effect after a CLOSE NODESTROY unless changed on a reOPEN. Record offset 5 is read and output along with $ZKEY= 6,0 which points to the beginning of record offset 6. Next, a USE with SEEK="-3" is done to move back 3 records to read and output record followed by $ZKEY= 4,0. A USE with SEEK="-1" moves back one record to the beginning of the record just processed. A partial read of 20 bytes is done to show a record offset 3 with a byte offset of 20 or $ZKEY= 3,20. A read of 40 bytes is then done to finish processing that record for a $ZKEY= 4,0. Next a sequence of CLOSE NODESTROY and reOPENs are done. After the first CLOSE NODESTROY a reOPEN is done with no deviceparameters. The state of the file device, including file position, is restored and a read is done of record offset 4 which is output followed by $ZKEY= 5,0. The file device is then CLOSEd NODESTROY and a reOPEN is done with the only deviceparameter being SEEK="+2". The state of the file device is restored and a relative SEEK is done 2 records later in the file with a read which outputs record offset 7 followed by $ZKEY= 8,0. The file device is then CLOSEd NODESTORY and a reOPEN is done with deviceparameters (M:SEEK="+3"). The file device is OPENed at the beginning of the file due to the presence of a deviceparameter (M) other than SEEK on reOPEN. A relative SEEK forward of 3 records is then done from the beginning of the file and record offset 3 is read and output followed by $ZKEY= 4,0. The file device is then CLOSEd NODESTORY and a reOPEN is done with the (APPEND:SEEK="-1"). APPEND moves the file position to the EOF and then the SEEK="-1" moves the file position to the beginning of record 8 - the final record in the file. Note, the APPEND is applied prior to the SEEK - regardless of deviceparameter order. The file device is then CLOSEd (DESTROY is the default) and OPENed with the only deviceparameter being absolute SEEK="120" to byte offset 120. This processing is NOFIXED by default and a read of x#60 is done and output followed by $ZKEY= 180. The output is the same as record 2 in FIXED format. Finally, the file device is then CLOSEd NODESTROY and a reOPEN is done with deviceparameters (APPEND:SEEK="-60"). This will move the file position to the EOF and go back 60 bytes which is the starting offset to the final record in the file. Another read of x#60 and is done and output followed by $ZKEY= 540 - which is the size of the file. 
+The first OPEN has deviceparameters set to (FIXED:RECORDSIZE=60:SEEK="5") which SEEKs to record offset 5 or physical record 6. Note, FIXED length records and RECORDSIZE remain in effect after a CLOSE NODESTROY unless changed on a reOPEN. Record offset 5 is read and output along with $ZKEY= 6,0 which points to the beginning of record offset 6. Next, a USE with SEEK="-3" is done to move back 3 records to read and output record followed by $ZKEY= 4,0. A USE with SEEK="-1" moves back one record to the beginning of the record just processed. A partial read of 20 bytes is done to show a record offset 3 with a byte offset of 20 or $ZKEY= 3,20. A read of 40 bytes is then done to finish processing that record for a $ZKEY= 4,0. Next a sequence of CLOSE NODESTROY and reOPENs are done. After the first CLOSE NODESTROY a reOPEN is done with no deviceparameters. The state of the file device, including file position, is restored and a read is done of record offset 4 which is output followed by $ZKEY= 5,0. The file device is then CLOSEd NODESTROY and a reOPEN is done with the only deviceparameter being SEEK="+2". The state of the file device is restored and a relative SEEK is done 2 records later in the file with a read which outputs record offset 7 followed by $ZKEY= 8,0. The file device is then CLOSEd NODESTORY and a reOPEN is done with deviceparameters (M:SEEK="+3"). The file device is OPENed at the beginning of the file due to the presence of a deviceparameter (M) other than SEEK on reOPEN. A relative SEEK forward of 3 records is then done from the beginning of the file and record offset 3 is read and output followed by $ZKEY= 4,0. The file device is then CLOSEd NODESTORY and a reOPEN is done with the (APPEND:SEEK="-1"). APPEND moves the file position to the EOF and then the SEEK="-1" moves the file position to the beginning of record 8 - the final record in the file. Note, the APPEND is applied prior to the SEEK - regardless of deviceparameter order. The file device is then CLOSEd (DESTROY is the default) and OPENed with the only deviceparameter being absolute SEEK="120" to byte offset 120. This processing is NOFIXED by default and a read of x#60 is done and output followed by $ZKEY= 180. The output is the same as record 2 in FIXED format. Finally, the file device is then CLOSEd NODESTROY and a reOPEN is done with deviceparameters (APPEND:SEEK="-60"). This will move the file position to the EOF and go back 60 bytes which is the starting offset to the final record in the file. Another read of x#60 and is done and output followed by $ZKEY= 540 - which is the size of the file.
 
 ~~~~~~
 SHELL
@@ -2983,7 +2983,7 @@ STDERR Applies to: PIPE
 
 The STDERR deviceparameter specifies that the stderr output from the created process goes to a PIPE device with the name of the STDERR value. This PIPE device acts as a restricted device that can appear only as the argument to USE, READ and CLOSE commands. It is implicitly READONLY and an attempt to WRITE to it triggers an error. If it has not previously acted as the argument to an explicit CLOSE command, the CLOSE of the PIPE device implicitly closes the the STDERR device.
 
-If the OPEN command does not specify STDERR, YottaDB redirects the stderr output of the co-process created by the COMMAND to the standard output of the co-process. Specify STDERR when there is a need to read the standard error of the COMMAND separately. 
+If the OPEN command does not specify STDERR, YottaDB redirects the stderr output of the co-process created by the COMMAND to the standard output of the co-process. Specify STDERR when there is a need to read the standard error of the COMMAND separately.
 
 ~~~~~~~
 STREAM
@@ -2999,7 +2999,7 @@ For STREAM or VARIABLE record format files, a READ returns when it encounters an
 
 By default, records are VARIABLE, NOSTREAM.
 
-Example: 
+Example:
 
 .. parsed-literal::
    set sd="foo.txt"
@@ -3009,9 +3009,9 @@ Example:
    use sd:(rewind:width=100)
    for i=1:1 use sd read x quit:$zeof use $principal write !,i,?5,x
    close sd
-   quit 
+   quit
 
-The output of this example is as follows: 
+The output of this example is as follows:
 
 .. parsed-literal::
    1     the quick brown fox jumped over the lazy dog 46
@@ -3025,26 +3025,26 @@ The output of this example is as follows:
    9     the quick brown fox jumped over the lazy dog 46
    10    the quick brown fox jumped over the lazy dog 46
 
-If you change the FORMAT to VARIABLE, the same example produces the following output. 
+If you change the FORMAT to VARIABLE, the same example produces the following output.
 
 .. parsed-literal::
-   1     the quick brown fox 
-   2     the quick brown fox 
-   3     the quick brown fox 
-   4     the quick brown fox 
-   5     the quick brown fox 
-   6     the quick brown fox 
-   7     the quick brown fox 
-   8     the quick brown fox 
-   9     the quick brown fox 
-   10    the quick brown fox 
+   1     the quick brown fox
+   2     the quick brown fox
+   3     the quick brown fox
+   4     the quick brown fox
+   5     the quick brown fox
+   6     the quick brown fox
+   7     the quick brown fox
+   8     the quick brown fox
+   9     the quick brown fox
+   10    the quick brown fox
 
-If you remove the "!" format from the WRITE sequence for VARIABLE, the same example produces the following output: 
+If you remove the "!" format from the WRITE sequence for VARIABLE, the same example produces the following output:
 
 .. parsed-literal::
-   1     the quick brown fox 
+   1     the quick brown fox
 
-With STREAM, the same example produces the following output: 
+With STREAM, the same example produces the following output:
 
 .. parsed-literal::
    1     the quick brown fox jumped over the lazy dog 46 the quick brown fox jumped over the lazy dog 94 the
@@ -3071,7 +3071,7 @@ UIC=expr Applies to: SOC(LOCAL) SD FIFO
 
 Specifies the owner and group for the file.
 
-Specifies the group that has access to the file. The format of the string is "o,g" where g is a decimal number representing the group portion of the UIC and o is a decimal number representing the owner portion. The super-user can set the file UIC to any value. See the man page for the chown() system call for the rules for regular users since they vary by platform and system configuration. 
+Specifies the group that has access to the file. The format of the string is "o,g" where g is a decimal number representing the group portion of the UIC and o is a decimal number representing the owner portion. The super-user can set the file UIC to any value. See the man page for the chown() system call for the rules for regular users since they vary by platform and system configuration.
 
 ~~~~~~~~~
 VARIABLE
@@ -3097,12 +3097,12 @@ To modify file security, the user who issues the OPEN must have ownership.
 
 By default, OPEN and CLOSE do not modify the permissions on an existing file. Unless otherwise specified, when OPEN creates a new file, it establishes security using standard defaulting rules.
 
-Example: 
+Example:
 
 .. parsed-literal::
    OPEN "test51.txt":(NEWVERSION:WORLD="rw")
 
-This example opens file test51.txt and specifies Read Write permission for users not in owner's group. 
+This example opens file test51.txt and specifies Read Write permission for users not in owner's group.
 
 ~~~~~
 WRAP
@@ -3148,12 +3148,12 @@ Controls buffering of data packets by the system TCP stack using the TCP_NODELAY
 
 LOCAL sockets ignore the ZDELAY deviceparameter.
 
-Example: 
+Example:
 
 .. parsed-literal::
    open tcpdev:(LISTEN=portno\_":TCP":attach="server":zbfsize=2048:zibfsize=1024):timeout:"SOCKET"
 
-This example opens the socket device tcpdev and allocates a buffer size of 2048 bytes. 
+This example opens the socket device tcpdev and allocates a buffer size of 2048 bytes.
 
 ~~~~
 ZFF
@@ -3173,7 +3173,7 @@ Sets the buffer size used by the network software (setsockopt SO_RCVBUF).
 
 The default and the maximum values depend on the platform and/or system parameters.
 
-Note that LOCAL sockets ignore the ZIBFSIZE deviceparameter. 
+Note that LOCAL sockets ignore the ZIBFSIZE deviceparameter.
 
 **OPEN Deviceparameter Table**
 
@@ -3339,10 +3339,10 @@ If CENABLE is set, <CTRL-C> interrupts process execution. For more information o
 
 By default, CENABLE is set. If CTRAP contains $C(3), CENABLE is disabled.
 
-Example: 
+Example:
 
 .. parsed-literal::
-   use $principal:(nocenable:ctrap="":exception="") 
+   use $principal:(nocenable:ctrap="":exception="")
 
 ~~~~~~~~~~~~
 CLEARSCREEN
@@ -3390,13 +3390,13 @@ Enables or disables YottaDB from converting lowercase input to uppercase during 
 
 By default, the terminal device driver operates NOCONVERT.
 
-Example: 
+Example:
 
 .. parsed-literal::
-   use $principal:(convert) 
+   use $principal:(convert)
    READ X
 
-This example converts all lowercase to uppercase during READ X. 
+This example converts all lowercase to uppercase during READ X.
 
 ~~~~~~
 CTRAP
@@ -3431,7 +3431,7 @@ DELIMITER
 
 DELIMITER establishes or replaces the list of delimiters used by the current socket. The default is NODELIMITER.
 
-expr must be a string of the following format: 
+expr must be a string of the following format:
 
 * ':' is used to separate delimiters (it is the delimiter for delimiters).
 * '/' serves as an escape character.
@@ -3441,7 +3441,7 @@ expr must be a string of the following format:
 
 Example:
 
-See `Socket example <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#socket-device-examples>`_. 
+See `Socket example <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#socket-device-examples>`_.
 
 ~~~~~~~
 DETACH
@@ -3478,7 +3478,7 @@ Example:
 
 At this point, the socket device "serv" has two sockets associated with it.
 
-The following command moves the "serv" socket to the "socketpool" device. 
+The following command moves the "serv" socket to the "socketpool" device.
 
 .. parsed-literal::
    YDB>use tcp:detach="serv"
@@ -3541,12 +3541,12 @@ Enables or disables the echo of terminal input. If you disable ECHO, the EDITING
 
 By default, terminal input ECHOes.
 
-Example: 
+Example:
 
 .. parsed-literal::
    use $principal:noecho
 
-This example disables the echo of terminal input. 
+This example disables the echo of terminal input.
 
 ~~~~~~~~
 EDITING
@@ -3564,10 +3564,10 @@ If you enable the EDITING mode, escape sequences do not terminate READs.
 
 Enabling PASTHRU mode supersedes EDITING mode.
 
-If any of the EDITING <CTRL> characters are in the CTRAP list, their editing functions are not available since CTRAP takes precedence. However the EDITING <CTRL> characters takes precedence over the TERMINATOR list. 
+If any of the EDITING <CTRL> characters are in the CTRAP list, their editing functions are not available since CTRAP takes precedence. However the EDITING <CTRL> characters takes precedence over the TERMINATOR list.
 
 .. note::
-   M READ EDITING depends on the values of $X and $Y being correct. If the application sends its own escape sequences or control characters, which change the cursor position, it must properly update $X and $Y before doing a M READ with EDITING enabled to ensure correct formatting during input. 
+   M READ EDITING depends on the values of $X and $Y being correct. If the application sends its own escape sequences or control characters, which change the cursor position, it must properly update $X and $Y before doing a M READ with EDITING enabled to ensure correct formatting during input.
 
 ~~~~~~~~
 EMPTERM
@@ -3605,12 +3605,12 @@ An application that operates with (NOESCAPE:TERM=$C(13)) must provide successive
 
 By default, ESCAPE processing is disabled.
 
-Example: 
+Example:
 
 .. parsed-literal::
-   use $principal:(noescape:term=$c(13)) 
+   use $principal:(noescape:term=$c(13))
 
-This example disables the escape sequence processing and set $c(13) as the line terminator. 
+This example disables the escape sequence processing and set $c(13) as the line terminator.
 
 ~~~~~~~~~
 EXCEPTION
@@ -3640,12 +3640,12 @@ The valid values for expr:
 
 By default, YottaDB does not perform output filtering. For YottaDB to maintain $X for non-graphic characters as described by the standard, FILTER="CHARACTERS" must be enabled. Output filtering adds additional overhead to I/O processing.
 
-Example: 
+Example:
 
 .. parsed-literal::
-   use tcpdev:filter="NOESCAPE" 
+   use tcpdev:filter="NOESCAPE"
 
-This example removes the effect of escape sequences on the maintenance $X and $Y. 
+This example removes the effect of escape sequences on the maintenance $X and $Y.
 
 ~~~~~~~
 FOLLOW
@@ -3665,7 +3665,7 @@ HOSTSYNC
 
 Enables or disables the use of XON/XOFF by the host to throttle input and prevent impending buffer overruns for a terminal. This deviceparameter provides a control mechanism for the host over asynchronous communication lines to help prevent data loss when hardware is slow and/or processing load is high.
 
-By default, HOSTSYNC is disabled. 
+By default, HOSTSYNC is disabled.
 
 ~~~~~
 IKEY
@@ -3687,7 +3687,7 @@ INREWIND
 
 Applies to: SD
 
-Performs a REWIND on input when $PRINCIPAL identifies a device that supports REWIND. Use this deviceparameter with $PRINCIPAL when redirected from a file. For more information, refer to `SEEK=strexpr <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#seek-strexpr>`_. 
+Performs a REWIND on input when $PRINCIPAL identifies a device that supports REWIND. Use this deviceparameter with $PRINCIPAL when redirected from a file. For more information, refer to `SEEK=strexpr <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#seek-strexpr>`_.
 
 ~~~~~~~~~~~~~~~
 INSEEK=strexpr
@@ -3695,7 +3695,7 @@ INSEEK=strexpr
 
 Applies to: SD
 
-Performs a SEEK on input when $PRINCIPAL identifies a device that supports SEEK. Use this deviceparameter with $PRINCIPAL when redirected from a file. For more information, refer to `SEEK=strexpr <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#seek-strexpr>`_. 
+Performs a SEEK on input when $PRINCIPAL identifies a device that supports SEEK. Use this deviceparameter with $PRINCIPAL when redirected from a file. For more information, refer to `SEEK=strexpr <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#seek-strexpr>`_.
 
 ~~~~~~~
 INSERT
@@ -3703,7 +3703,7 @@ INSERT
 
 [NO]INSERT Applies to: TRM
 
-Enables or disables insert mode for the $PRINCIPAL device. If INSERT mode is enabled, YottaDB inserts input characters at the logical position in the input stream designated by the virtual cursor as defined by $X and $Y, for example in the middle of the line/record. If INSERT mode is disabled, input characters overwrite the existing characters in the input stream at the logical position designated by the virtual cursor. You can toggle the insert mode within a direct mode line or if EDITING is enabled for a single READ argument's input using the terminal's INSERT key. The INSERT mode is reset to the default or what was last specified with USE at the beginning of each direct mode line or READ argument. 
+Enables or disables insert mode for the $PRINCIPAL device. If INSERT mode is enabled, YottaDB inserts input characters at the logical position in the input stream designated by the virtual cursor as defined by $X and $Y, for example in the middle of the line/record. If INSERT mode is disabled, input characters overwrite the existing characters in the input stream at the logical position designated by the virtual cursor. You can toggle the insert mode within a direct mode line or if EDITING is enabled for a single READ argument's input using the terminal's INSERT key. The INSERT mode is reset to the default or what was last specified with USE at the beginning of each direct mode line or READ argument.
 
 ~~~~~~~~
 IOERROR
@@ -3719,7 +3719,7 @@ Enables exception handling in socket devices. expr specifies the I/O error trapp
 Example:
 
 .. parsed-literal::
-   use sock:(ioerror="TRAP":exception="zgoto "_$zlevel\_":error") 
+   use sock:(ioerror="TRAP":exception="zgoto "_$zlevel\_":error")
 
 This example enables exception handling in socket device sock and specifies that all I/O errors on sock raise the error condition.
 
@@ -3751,12 +3751,12 @@ By default, for terminals, YottaDB uses the terminfo variable lines (which may b
 
 Setting LENGTH to zero prevents resetting $Y to zero.
 
-Example: 
+Example:
 
 .. parsed-literal::
-   use sock:(width=80:znoff:zlength=24) 
+   use sock:(width=80:znoff:zlength=24)
 
-This example sets the virtual page length to 24 for socket device sock. 
+This example sets the virtual page length to 24 for socket device sock.
 
 .. parsed-literal::
    YDB>set tcp="seerv" open tcp:(listen="6321:TCP":attach="serv")::"SOCKET"
@@ -3781,7 +3781,7 @@ OKEY="key_name [IV]"
 
 key_name is case-sensitive and must match a key name in the "files" section of the ydb_crypt_config file. The optional IV specifies an initialization vector to use for encryption and decryption.
 
-For more information, refer to the description of `KEY <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#id4>`_ deviceparameter of OPEN. 
+For more information, refer to the description of `KEY <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#id4>`_ deviceparameter of OPEN.
 
 ~~~~~~~~~~
 OUTREWIND
@@ -3789,7 +3789,7 @@ OUTREWIND
 
 Applies to: SD
 
-Performs a REWIND on output when $PRINCIPAL identifies a device that supports REWIND. Use this deviceparameter with $PRINCIPAL when redirected to a file. For more information, refer to `REWIND <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#id16>`_. 
+Performs a REWIND on output when $PRINCIPAL identifies a device that supports REWIND. Use this deviceparameter with $PRINCIPAL when redirected to a file. For more information, refer to `REWIND <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#id16>`_.
 
 ~~~~~~~~~~~~~~~~
 OUTSEEK=strexpr
@@ -3813,7 +3813,7 @@ Exercise caution with PASTHRU in debugging, because using a PASTHRU terminal in 
 
 By default, the device driver operates NOPASTHRU.
 
-PASTHRU supersedes line editing. 
+PASTHRU supersedes line editing.
 
 ~~~~~~~~~
 READSYNC
@@ -3823,7 +3823,7 @@ READSYNC
 
 Enables or disables automatic output of <XON> before a READ and <XOFF> after a READ.
 
-By default, the terminal drivers operate NOREADSYNC. 
+By default, the terminal drivers operate NOREADSYNC.
 
 ~~~~~~~
 REWIND
@@ -3858,7 +3858,7 @@ Makes the socket specified by the handle named in expr the current socket for th
 .. note::
    SOCKET is compatible with DELIMITER only.
 
-For a usage example, refer to the socketexamplemulti2.m in `“Socket Device Examples” <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#socket-device-examples>`_. 
+For a usage example, refer to the socketexamplemulti2.m in `“Socket Device Examples” <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#socket-device-examples>`_.
 
 ~~~~~~~~~~~
 TERMINATOR
@@ -3907,7 +3907,7 @@ TTSYNC
 
 [NO]TTSYNC Applies to: TRM
 
-Enables or disables recognition of XON/XOFF for terminal output. 
+Enables or disables recognition of XON/XOFF for terminal output.
 
 .. note::
    A terminal may have its own handling of XON/XOFF, controlled by a set-up mode or by switches. If an application requires program recognition of <CTRL-S> and <CTRL-Q>, the terminals may require reconfiguration.
@@ -4029,9 +4029,9 @@ expr specifies a string of characters, typically in $CHAR() format to send to so
 Example:
 
 .. parsed-literal::
-   u tcpdev:(zwidth=80:zff=$char(13):zlength=24) 
+   u tcpdev:(zwidth=80:zff=$char(13):zlength=24)
 
-This example sends $char(13) to the current socket of device tcpdev on every WRITE #. 
+This example sends $char(13) to the current socket of device tcpdev on every WRITE #.
 
 ~~~~~~~~~
 ZIBFSIZE
@@ -4043,7 +4043,7 @@ Sets the buffer size used by the network software (setsockopt SO_RCVBUF).
 
 The default and the maximum values depend on the platform and/or system parameters.
 
-Note that LOCAL sockets ignore the ZIBFSIZE deviceparameter. 
+Note that LOCAL sockets ignore the ZIBFSIZE deviceparameter.
 
 **USE Deviceparameters Summary**
 
@@ -4212,7 +4212,7 @@ If a timeout occurs before YottaDB reads a character, the READ * returns a negat
    YDB>Write $char(x)
    主
 
-In this example, the READ * command reads the first character of the file mydata.out according to the encoding specified by ICHSET. 
+In this example, the READ * command reads the first character of the file mydata.out according to the encoding specified by ICHSET.
 
 ~~~~~~~~~~~~~~~~~~~~~
 Read X#maxlen command
@@ -4259,7 +4259,7 @@ The WRITE command also has several format control characters that allow the mani
 * WRITE ?n: If n is greater than $X, writes n-$X spaces to the device, bringing $X to n. If n is less than or equal to $X, WRITE ?n has no effect. When WRAP is enabled and n exceeds the LENGTH of the line, WRITE ?n increments $Y.
 
 .. note::
-   If $X is less than WIDTH, WRITE ! writes WIDTH - $X spaces. 
+   If $X is less than WIDTH, WRITE ! writes WIDTH - $X spaces.
 
 For devices OPENed with a Unicode CHSET, WRITE * takes intexpr as a code-point and writes the associated Unicode character in the encoding specified by CHSET. For devices OPENed in M mode, WRITE * takes intexpr as an ASCII value and writes the associated ASCII character.
 
@@ -4273,7 +4273,7 @@ WRITE *
 
 When the argument of a WRITE command consists of a leading asterisk (*) followed by an integer expression, the WRITE command outputs the character represented by the code-point value of that integer expression.
 
-With character set M specified at device OPEN, the WRITE * command transfers the character (byte) associated with the numeric value of the integer expression. With character UTF-8 specified at device OPEN, the WRITE command outputs the character associated with the numeric code-point value. If character set "UTF-16", "UTF-16LE" or "UTF-16BE" is specified, WRITE * transforms the character code to the mapping specified by that character set. 
+With character set M specified at device OPEN, the WRITE * command transfers the character (byte) associated with the numeric value of the integer expression. With character UTF-8 specified at device OPEN, the WRITE command outputs the character associated with the numeric code-point value. If character set "UTF-16", "UTF-16LE" or "UTF-16BE" is specified, WRITE * transforms the character code to the mapping specified by that character set.
 
 +++++++++++
 CLOSE
@@ -4356,7 +4356,7 @@ Specifies access permission on a UNIX file for other users in the file owner's g
 
 In order to modify file security, the user who issues the CLOSE must have ownership.
 
-By default, CLOSE does not modify the permissions on an existing file. 
+By default, CLOSE does not modify the permissions on an existing file.
 
 ~~~~~~
 OWNER
@@ -4368,7 +4368,7 @@ Specifies access permission on a UNIX file for the owner of the file. The expres
 
 In order to modify file security, the user who issues the CLOSE must have ownership.
 
-By default, CLOSE does not modify the permissions on an existing file. 
+By default, CLOSE does not modify the permissions on an existing file.
 
 ~~~~~~~
 RENAME
