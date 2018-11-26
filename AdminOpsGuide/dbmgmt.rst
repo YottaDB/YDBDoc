@@ -3484,180 +3484,184 @@ MUPIP Command Summary
 
 The following table summarizes the qualifiers.
 
-+------------------------------------------------------------------------+----------------------------------------------------------+----------------------------------------------------------------------+
-| Main Qualifier                                                         |  MUPIP Command                                           | Options/Qualifiers                                                   |
-+========================================================================+==========================================================+======================================================================+
-| -EDITINSTANCE                                                          | REPLICATE                                                | * -CHANGE                                                            |
-|                                                                        |                                                          | * -DETAIL                                                            |
-|                                                                        |                                                          | * -OFFSET=hexa                                                       |
-|                                                                        |                                                          | * -VALUE=hexa                                                        |
-|                                                                        |                                                          | * -SIZE=hexa                                                         |
-|                                                                        |                                                          | * -[NO]QDBRUNDOWN                                                    |
-+------------------------------------------------------------------------+----------------------------------------------------------+----------------------------------------------------------------------+
-| -FENCES=<fence-options-list>                                           | JOURNAL-RECOVER-ROLLBACK                                 | * ALWAYS                                                             |
-|                                                                        |                                                          | * NONE                                                               |
-|                                                                        |                                                          | * PROCESS                                                            |
-+------------------------------------------------------------------------+----------------------------------------------------------+----------------------------------------------------------------------+
-| -OFF                                                                   | FREEZE                                                   | * -OVERRIDE                                                          |
-|                                                                        |                                                          | * -RECORD                                                            |
-+------------------------------------------------------------------------+----------------------------------------------------------+----------------------------------------------------------------------+
-| -ON                                                                    | FREEZE                                                   | * -[NO]ONLINE                                                        |
-|                                                                        |                                                          | * -[NO]AUTORELEASE                                                   |
-+------------------------------------------------------------------------+----------------------------------------------------------+----------------------------------------------------------------------+
-| -INSTANCE_CREATE                                                       | REPLICATE                                                | * -NAME                                                              |
-|                                                                        |                                                          | * -NOREPLACE                                                         |
-|                                                                        |                                                          | * -SUPPLEMENTARY                                                     |
-|                                                                        |                                                          | * -[NO]QDBRUNDOWN                                                    |
-+------------------------------------------------------------------------+----------------------------------------------------------+----------------------------------------------------------------------+
-| -JOURNAL=<journal-options-list>                                        | BACKUP and SET                                           | * ALIGNSIZE=integer                                                  |
-|                                                                        |                                                          | * ALLOCATION=integer                                                 |
-|                                                                        |                                                          | * AUTOSWITCHLIMIT=integer                                            |
-|                                                                        |                                                          | * BEFORE_IMAGES                                                      |
-|                                                                        |                                                          | * BUFFER_SIZE=integer                                                |
-|                                                                        |                                                          | * DISABLE                                                            |
-|                                                                        |                                                          | * ENABLE                                                             |
-|                                                                        |                                                          | * EPOCH_INTERVAL=integer                                             |
-|                                                                        |                                                          | * EXTENSION=integer                                                  |
-|                                                                        |                                                          | * FILENAME=file_name                                                 |
-|                                                                        |                                                          | * OFF                                                                |
-|                                                                        |                                                          | * ON                                                                 |
-|                                                                        |                                                          | * SYNC_IO                                                            |
-|                                                                        |                                                          | * YIELD_LIMIT=integer                                                |
-+------------------------------------------------------------------------+----------------------------------------------------------+----------------------------------------------------------------------+
-| -LOOKBACK_LIMIT=lookback-option-list                                   | -RECOVER                                                 | * TIME="time"                                                        |
-|                                                                        | -ROLLBACK                                                | * OPERATIONS=integer                                                 |
-+------------------------------------------------------------------------+----------------------------------------------------------+----------------------------------------------------------------------+
-| -RECEIVER                                                              | REPLICATE                                                | * -BUFFSIZE=integer                                                  |
-|                                                                        |                                                          | * -CHANGELOG                                                         |
-|                                                                        |                                                          | * -CHECKHEALTH                                                       |
-|                                                                        |                                                          | * -CMPLVL=integer                                                    |
-|                                                                        |                                                          | * -FILTER=filter_name                                                |
-|                                                                        |                                                          | * -he[lpers]=[m[,n]]                                                 |
-|                                                                        |                                                          | * -INITIALIZE                                                        |
-|                                                                        |                                                          | * -CMPLVL=n                                                          |
-|                                                                        |                                                          | * -LISTENPORT=integer                                                |
-|                                                                        |                                                          | * -LOG=logfile                                                       |
-|                                                                        |                                                          | * -LOG_INTERVAL=integer                                              |
-|                                                                        |                                                          | * -NORESYNC                                                          |
-|                                                                        |                                                          | * -RESUME=strm_num                                                   |
-|                                                                        |                                                          | * -REUSE=instname                                                    |
-|                                                                        |                                                          | * -SHOWBACKLOG                                                       |
-|                                                                        |                                                          | * -SHUTDOWN                                                          |
-|                                                                        |                                                          | * -START                                                             |
-|                                                                        |                                                          | * -STATSLOG=[ON|OFF]                                                 |
-|                                                                        |                                                          | * -STOPSOURCEFILTER                                                  |
-|                                                                        |                                                          | * TIMEOUT=seconds                                                    |
-|                                                                        |                                                          | * TLSID=label                                                        |
-|                                                                        |                                                          | * -UPDATEONLY                                                        |
-|                                                                        |                                                          | * -UPDATERESYNC=/path/to/bkup-orig-inst                              |
-+------------------------------------------------------------------------+----------------------------------------------------------+----------------------------------------------------------------------+
-| -RECOVER                                                               | JOURNAL                                                  | * -AFTER=time                                                        |
-|                                                                        |                                                          | * -APPLY_AFTER_IMAGE                                                 |
-|                                                                        |                                                          | * -BACKWARD                                                          |
-|                                                                        |                                                          | * -BEFORE=time                                                       |
-|                                                                        |                                                          | * -BROKENTRANS=file                                                  |
-|                                                                        |                                                          | * -CHAIN                                                             |
-|                                                                        |                                                          | * -CHECKTN                                                           |
-|                                                                        |                                                          | * -[NO]ER[ROR_LIMIT][=integer]                                       |
-|                                                                        |                                                          | * -FENCES=fence-option-list                                          |
-|                                                                        |                                                          | * -FORWARD                                                           |
-|                                                                        |                                                          | * -FULL                                                              |
-|                                                                        |                                                          | * -GLOBAL=<global_list>                                              |
-|                                                                        |                                                          | * -ID=<pid_list>                                                     |
-|                                                                        |                                                          | * -INTERACTIVE                                                       |
-|                                                                        |                                                          | * -LOOKBACK_LIMIT=<lookback_limit_options>                           |
-|                                                                        |                                                          | * -LOSTTRANS[=file]                                                  |
-|                                                                        |                                                          | * -RED[IRECT]=file-pair-list                                         |
-|                                                                        |                                                          | * -SINCE=time                                                        |
-|                                                                        |                                                          | * -VERBOSE                                                           |
-|                                                                        |                                                          | * -VERIFY                                                            |
-+------------------------------------------------------------------------+----------------------------------------------------------+----------------------------------------------------------------------+
-| -EXTRACT                                                               | JOURNAL                                                  | * -AFTER=time                                                        |
-|                                                                        |                                                          | * -BEFORE=time                                                       |
-|                                                                        |                                                          | * -BROKENTRANS=file                                                  |
-|                                                                        |                                                          | * -CHAIN                                                             |
-|                                                                        |                                                          | * -CHECKTN                                                           |
-|                                                                        |                                                          | * -[NO]ER[ROR_LIMIT]=integer]                                        |
-|                                                                        |                                                          | * -FENCES=fence-option-list                                          |
-|                                                                        |                                                          | * -FULL                                                              |
-|                                                                        |                                                          | * -GLOBAL=<global_list>                                              |
-|                                                                        |                                                          | * -ID=<pid_list>                                                     |
-|                                                                        |                                                          | * -INTERACTIVE                                                       |
-|                                                                        |                                                          | * -LOOKBACK_LIMIT=<lookback_limit_options>                           |
-|                                                                        |                                                          | * -LOSTTRANS[=file]                                                  |
-|                                                                        |                                                          | * -REGION                                                            |
-|                                                                        |                                                          | * -SINCE=time                                                        |
-|                                                                        |                                                          | * -VERBOSE                                                           |
-|                                                                        |                                                          | * -VERIFY                                                            |
-+------------------------------------------------------------------------+----------------------------------------------------------+----------------------------------------------------------------------+
-| -ROLLBACK                                                              | JOURNAL                                                  | * -APPLY_AFTER_IMAGE                                                 |
-|                                                                        |                                                          | * -BACKWARD                                                          |
-|                                                                        |                                                          | * -BEFORE=time                                                       |
-|                                                                        |                                                          | * -BROKENTRANS=file                                                  |
-|                                                                        |                                                          | * -[NO]ER[ROR_LIMIT][=integer]                                       |
-|                                                                        |                                                          | * -FENCES=fence-option-list                                          |
-|                                                                        |                                                          | * -FETCHRESYNC                                                       |
-|                                                                        |                                                          | * -LOOKBACK_LIMIT=<lookback_limit_options>                           |
-|                                                                        |                                                          | * -LOSTTRANS[=file]                                                  |
-|                                                                        |                                                          | * -RES[YNC]=hexa;journal_sequence_number                             |
-|                                                                        |                                                          | * -VERBOSE                                                           |
-|                                                                        |                                                          | * -VERIFY                                                            |
-+------------------------------------------------------------------------+----------------------------------------------------------+----------------------------------------------------------------------+
-| -SHOW=<show-option-list>                                               | JOURNAL                                                  | * -ACTIVE_PROCESSES                                                  |
-|                                                                        |                                                          | * -ALL                                                               |
-|                                                                        |                                                          | * -BROKEN_TRANSACTIONS                                               |
-|                                                                        |                                                          | * -HEADER                                                            |
-|                                                                        |                                                          | * -PROCESSES                                                         |
-|                                                                        |                                                          | * -STATISTICS                                                        |
-|                                                                        |                                                          | * -AFTER=time                                                        |
-|                                                                        |                                                          | * -USER=user-list                                                    |
-|                                                                        |                                                          | * -TRANSACTION=[KILL|SET]                                            |
-|                                                                        |                                                          | * -INTERACTIVE                                                       |
-|                                                                        |                                                          | * -GLOBAL=<global_list>                                              |
-|                                                                        |                                                          | * -ID=<pid_list>                                                     |
-|                                                                        |                                                          | * -INTERACTIVE                                                       |
-+------------------------------------------------------------------------+----------------------------------------------------------+----------------------------------------------------------------------+
-| -SINCE                                                                 | BACKUP                                                   | * -BYTESTREAM                                                        |
-|                                                                        |                                                          | * -COMPREHENSIVE                                                     |
-|                                                                        |                                                          | * -DATABASE                                                          |
-|                                                                        |                                                          | * -INCREMENTAL                                                       |
-|                                                                        |                                                          | * -RECORD                                                            |
-+------------------------------------------------------------------------+----------------------------------------------------------+----------------------------------------------------------------------+
-| -SO[URCE]                                                              | REPLICATE                                                | * -ACTIVATE                                                          |
-|                                                                        |                                                          | * -BUFFSIZE=Buffer_size                                              |
-|                                                                        |                                                          | * -CHANGELOG                                                         |
-|                                                                        |                                                          | * -CHECKHEALTH                                                       |
-|                                                                        |                                                          | * -CMPLVL=integer                                                    |
-|                                                                        |                                                          | * -CONNECTPARAMS=connection_options                                  |
-|                                                                        |                                                          | * -DEACTIVATE                                                        |
-|                                                                        |                                                          | * -DETAIL                                                            |
-|                                                                        |                                                          | * -FILTER=filter_name                                                |
-|                                                                        |                                                          | * -FREEZE=on/off                                                     |
-|                                                                        |                                                          | * -[NO]COMMENT=string                                                |
-|                                                                        |                                                          | * -INSTSECONDARY=secondary_instance name                             |
-|                                                                        |                                                          | * -NOJNLFILEONLY                                                     |
-|                                                                        |                                                          | * -JNLPOOL-LOG=log_file                                              |
-|                                                                        |                                                          | * -LOG_INTERVAL=integer                                              |
-|                                                                        |                                                          | * -LOSTTNCOMPLETE                                                    |
-|                                                                        |                                                          | * -NEEDRESTART                                                       |
-|                                                                        |                                                          | * -PASSIVE                                                           |
-|                                                                        |                                                          | * -[NO]PLAINTEXTFALLBACK                                             |
-|                                                                        |                                                          | * -PROPAGATEPRIMARY                                                  |
-|                                                                        |                                                          | * -RENEGOTIATE_INTERVAL=minutes                                      |
-|                                                                        |                                                          | * -ROOTPRIMARY                                                       |
-|                                                                        |                                                          | * -SECONDARY=secondary_instance_name                                 |
-|                                                                        |                                                          | * -SHOWBACKLOG                                                       |
-|                                                                        |                                                          | * -SHUTDOWN                                                          |
-|                                                                        |                                                          | * -START                                                             |
-|                                                                        |                                                          | * -STATSLOG                                                          |
-|                                                                        |                                                          | * -STOPSOURCEFILTER                                                  |
-|                                                                        |                                                          | * -TIMEOUT=seconds                                                   |
-|                                                                        |                                                          | * -TLSID=label                                                       |
-|                                                                        |                                                          | * -UPDOK                                                             |
-|                                                                        |                                                          | * -UPDNOTOK                                                          |
-|                                                                        |                                                          | * -ZEROBACKLOG                                                       |
-+------------------------------------------------------------------------+----------------------------------------------------------+----------------------------------------------------------------------+
-| -VERSION={V4|V5}                                                       | DOWNGRADE and UPGRADE                                    | * file-name                                                          |
-+------------------------------------------------------------------------+----------------------------------------------------------+----------------------------------------------------------------------+
++----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
+| Main Qualifier                               |  MUPIP Command                                                               | Options/Qualifiers                                                   |
++==============================================+==============================================================================+======================================================================+
+| -EDITINSTANCE                                | `REPLICATE <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#replicate>`_  | * -CHANGE                                                            |
+|                                              |                                                                              | * -DETAIL                                                            |
+|                                              |                                                                              | * -OFFSET=hexa                                                       |
+|                                              |                                                                              | * -VALUE=hexa                                                        |
+|                                              |                                                                              | * -SIZE=hexa                                                         |
+|                                              |                                                                              | * -[NO]QDBRUNDOWN                                                    |
++----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
+| -FENCES=<fence-options-list>                 | `JOURNAL <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#journal>`_      | * ALWAYS                                                             |
+|                                              |                                                                              | * NONE                                                               |
+|                                              | -RECOVER                                                                     | * PROCESS                                                            |
+|                                              |                                                                              |                                                                      |
+|                                              | -ROLLBACK                                                                    |                                                                      |
++----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
+| -OFF                                         | `FREEZE <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#id2>`_           | * -OVERRIDE                                                          |
+|                                              |                                                                              | * -RECORD                                                            |
++----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
+| -ON                                          | `FREEZE <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#id2>`_           | * -[NO]ONLINE                                                        |
+|                                              |                                                                              | * -[NO]AUTORELEASE                                                   |
++----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
+| -INSTANCE_CREATE                             | `REPLICATE <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#replicate>`_  | * -NAME                                                              |
+|                                              |                                                                              | * -NOREPLACE                                                         |
+|                                              |                                                                              | * -SUPPLEMENTARY                                                     |
+|                                              |                                                                              | * -[NO]QDBRUNDOWN                                                    |
++----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
+| -JOURNAL=<journal-options-list>              | `BACKUP <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#backup>`_ and    | * ALIGNSIZE=integer                                                  |
+|                                              | `SET <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#set>`_              | * ALLOCATION=integer                                                 |
+|                                              |                                                                              | * AUTOSWITCHLIMIT=integer                                            |
+|                                              |                                                                              | * BEFORE_IMAGES                                                      |
+|                                              |                                                                              | * BUFFER_SIZE=integer                                                |
+|                                              |                                                                              | * DISABLE                                                            |
+|                                              |                                                                              | * ENABLE                                                             |
+|                                              |                                                                              | * EPOCH_INTERVAL=integer                                             |
+|                                              |                                                                              | * EXTENSION=integer                                                  |
+|                                              |                                                                              | * FILENAME=file_name                                                 |
+|                                              |                                                                              | * OFF                                                                |
+|                                              |                                                                              | * ON                                                                 |
+|                                              |                                                                              | * SYNC_IO                                                            |
+|                                              |                                                                              | * YIELD_LIMIT=integer                                                |
++----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
+| -LOOKBACK_LIMIT=lookback-option-list         | -RECOVER                                                                     | * TIME="time"                                                        |
+|                                              |                                                                              |                                                                      |
+|                                              | -ROLLBACK                                                                    | * OPERATIONS=integer                                                 |
++----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
+| -RECEIVER                                    | `REPLICATE <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#replicate>`_  | * -BUFFSIZE=integer                                                  |
+|                                              |                                                                              | * -CHANGELOG                                                         |
+|                                              |                                                                              | * -CHECKHEALTH                                                       |
+|                                              |                                                                              | * -CMPLVL=integer                                                    |
+|                                              |                                                                              | * -FILTER=filter_name                                                |
+|                                              |                                                                              | * -he[lpers]=[m[,n]]                                                 |
+|                                              |                                                                              | * -INITIALIZE                                                        |
+|                                              |                                                                              | * -CMPLVL=n                                                          |
+|                                              |                                                                              | * -LISTENPORT=integer                                                |
+|                                              |                                                                              | * -LOG=logfile                                                       |
+|                                              |                                                                              | * -LOG_INTERVAL=integer                                              |
+|                                              |                                                                              | * -NORESYNC                                                          |
+|                                              |                                                                              | * -RESUME=strm_num                                                   |
+|                                              |                                                                              | * -REUSE=instname                                                    |
+|                                              |                                                                              | * -SHOWBACKLOG                                                       |
+|                                              |                                                                              | * -SHUTDOWN                                                          |
+|                                              |                                                                              | * -START                                                             |
+|                                              |                                                                              | * -STATSLOG=[ON|OFF]                                                 |
+|                                              |                                                                              | * -STOPSOURCEFILTER                                                  |
+|                                              |                                                                              | * TIMEOUT=seconds                                                    |
+|                                              |                                                                              | * TLSID=label                                                        |
+|                                              |                                                                              | * -UPDATEONLY                                                        |
+|                                              |                                                                              | * -UPDATERESYNC=/path/to/bkup-orig-inst                              |
++----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
+| -RECOVER                                     | `JOURNAL <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#journal>`_      | * -AFTER=time                                                        |
+|                                              |                                                                              | * -APPLY_AFTER_IMAGE                                                 |
+|                                              |                                                                              | * -BACKWARD                                                          |
+|                                              |                                                                              | * -BEFORE=time                                                       |
+|                                              |                                                                              | * -BROKENTRANS=file                                                  |
+|                                              |                                                                              | * -CHAIN                                                             |
+|                                              |                                                                              | * -CHECKTN                                                           |
+|                                              |                                                                              | * -[NO]ER[ROR_LIMIT][=integer]                                       |
+|                                              |                                                                              | * -FENCES=fence-option-list                                          |
+|                                              |                                                                              | * -FORWARD                                                           |
+|                                              |                                                                              | * -FULL                                                              |
+|                                              |                                                                              | * -GLOBAL=<global_list>                                              |
+|                                              |                                                                              | * -ID=<pid_list>                                                     |
+|                                              |                                                                              | * -INTERACTIVE                                                       |
+|                                              |                                                                              | * -LOOKBACK_LIMIT=<lookback_limit_options>                           |
+|                                              |                                                                              | * -LOSTTRANS[=file]                                                  |
+|                                              |                                                                              | * -RED[IRECT]=file-pair-list                                         |
+|                                              |                                                                              | * -SINCE=time                                                        |
+|                                              |                                                                              | * -VERBOSE                                                           |
+|                                              |                                                                              | * -VERIFY                                                            |
++----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
+| -EXTRACT                                     | `JOURNAL <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#journal>`_      | * -AFTER=time                                                        |
+|                                              |                                                                              | * -BEFORE=time                                                       |
+|                                              |                                                                              | * -BROKENTRANS=file                                                  |
+|                                              |                                                                              | * -CHAIN                                                             |
+|                                              |                                                                              | * -CHECKTN                                                           |
+|                                              |                                                                              | * -[NO]ER[ROR_LIMIT]=integer]                                        |
+|                                              |                                                                              | * -FENCES=fence-option-list                                          |
+|                                              |                                                                              | * -FULL                                                              |
+|                                              |                                                                              | * -GLOBAL=<global_list>                                              |
+|                                              |                                                                              | * -ID=<pid_list>                                                     |
+|                                              |                                                                              | * -INTERACTIVE                                                       |
+|                                              |                                                                              | * -LOOKBACK_LIMIT=<lookback_limit_options>                           |
+|                                              |                                                                              | * -LOSTTRANS[=file]                                                  |
+|                                              |                                                                              | * -REGION                                                            |
+|                                              |                                                                              | * -SINCE=time                                                        |
+|                                              |                                                                              | * -VERBOSE                                                           |
+|                                              |                                                                              | * -VERIFY                                                            |
++----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
+| -ROLLBACK                                    | `JOURNAL <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#journal>`_      | * -APPLY_AFTER_IMAGE                                                 |
+|                                              |                                                                              | * -BACKWARD                                                          |
+|                                              |                                                                              | * -BEFORE=time                                                       |
+|                                              |                                                                              | * -BROKENTRANS=file                                                  |
+|                                              |                                                                              | * -[NO]ER[ROR_LIMIT][=integer]                                       |
+|                                              |                                                                              | * -FENCES=fence-option-list                                          |
+|                                              |                                                                              | * -FETCHRESYNC                                                       |
+|                                              |                                                                              | * -LOOKBACK_LIMIT=<lookback_limit_options>                           |
+|                                              |                                                                              | * -LOSTTRANS[=file]                                                  |
+|                                              |                                                                              | * -RES[YNC]=hexa;journal_sequence_number                             |
+|                                              |                                                                              | * -VERBOSE                                                           |
+|                                              |                                                                              | * -VERIFY                                                            |
++----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
+| -SHOW=<show-option-list>                     | `JOURNAL <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#journal>`_      | * -ACTIVE_PROCESSES                                                  |
+|                                              |                                                                              | * -ALL                                                               |
+|                                              |                                                                              | * -BROKEN_TRANSACTIONS                                               |
+|                                              |                                                                              | * -HEADER                                                            |
+|                                              |                                                                              | * -PROCESSES                                                         |
+|                                              |                                                                              | * -STATISTICS                                                        |
+|                                              |                                                                              | * -AFTER=time                                                        |
+|                                              |                                                                              | * -USER=user-list                                                    |
+|                                              |                                                                              | * -TRANSACTION=[KILL|SET]                                            |
+|                                              |                                                                              | * -INTERACTIVE                                                       |
+|                                              |                                                                              | * -GLOBAL=<global_list>                                              |
+|                                              |                                                                              | * -ID=<pid_list>                                                     |
+|                                              |                                                                              | * -INTERACTIVE                                                       |
++----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
+| -SINCE                                       | `BACKUP <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#backup>`_        | * -BYTESTREAM                                                        |
+|                                              |                                                                              | * -COMPREHENSIVE                                                     |
+|                                              |                                                                              | * -DATABASE                                                          |
+|                                              |                                                                              | * -INCREMENTAL                                                       |
+|                                              |                                                                              | * -RECORD                                                            |
++----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
+| -SO[URCE]                                    | `REPLICATE <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#replicate>`_  | * -ACTIVATE                                                          |
+|                                              |                                                                              | * -BUFFSIZE=Buffer_size                                              |
+|                                              |                                                                              | * -CHANGELOG                                                         |
+|                                              |                                                                              | * -CHECKHEALTH                                                       |
+|                                              |                                                                              | * -CMPLVL=integer                                                    |
+|                                              |                                                                              | * -CONNECTPARAMS=connection_options                                  |
+|                                              |                                                                              | * -DEACTIVATE                                                        |
+|                                              |                                                                              | * -DETAIL                                                            |
+|                                              |                                                                              | * -FILTER=filter_name                                                |
+|                                              |                                                                              | * -FREEZE=on/off                                                     |
+|                                              |                                                                              | * -[NO]COMMENT=string                                                |
+|                                              |                                                                              | * -INSTSECONDARY=secondary_instance name                             |
+|                                              |                                                                              | * -NOJNLFILEONLY                                                     |
+|                                              |                                                                              | * -JNLPOOL-LOG=log_file                                              |
+|                                              |                                                                              | * -LOG_INTERVAL=integer                                              |
+|                                              |                                                                              | * -LOSTTNCOMPLETE                                                    |
+|                                              |                                                                              | * -NEEDRESTART                                                       |
+|                                              |                                                                              | * -PASSIVE                                                           |
+|                                              |                                                                              | * -[NO]PLAINTEXTFALLBACK                                             |
+|                                              |                                                                              | * -PROPAGATEPRIMARY                                                  |
+|                                              |                                                                              | * -RENEGOTIATE_INTERVAL=minutes                                      |
+|                                              |                                                                              | * -ROOTPRIMARY                                                       |
+|                                              |                                                                              | * -SECONDARY=secondary_instance_name                                 |
+|                                              |                                                                              | * -SHOWBACKLOG                                                       |
+|                                              |                                                                              | * -SHUTDOWN                                                          |
+|                                              |                                                                              | * -START                                                             |
+|                                              |                                                                              | * -STATSLOG                                                          |
+|                                              |                                                                              | * -STOPSOURCEFILTER                                                  |
+|                                              |                                                                              | * -TIMEOUT=seconds                                                   |
+|                                              |                                                                              | * -TLSID=label                                                       |
+|                                              |                                                                              | * -UPDOK                                                             |
+|                                              |                                                                              | * -UPDNOTOK                                                          |
+|                                              |                                                                              | * -ZEROBACKLOG                                                       |
++----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
+| -VERSION={V4|V5}                             | `DOWNGRADE <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#downgrade>`_  | * file-name                                                          |
+|                                              | and `UPGRADE <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#id40>`_     |                                                                      |
++----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
 
 
