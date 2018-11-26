@@ -459,6 +459,94 @@ The format of the BUFFER_FLUSH command is:
 
 The BUFFER_FLUSH command has no qualifiers.
 
++++++++++++++
+CACHE
++++++++++++++
+
+Operates on the cache of a database having BG access method. The format of the CACHE command is:
+
+.. parsed-literal::
+   CA[CHE] 
+   [
+   -ALL
+   -RE[COVER]
+   -SH[OW]
+   -VE[RIFY]
+   ] 
+
+**Qualifiers of CACHE**
+
+~~~~~~~~~~~~~~~~~~
+-RE[COVER] [-ALL]
+~~~~~~~~~~~~~~~~~~
+
+Resets the cache of a database having BG access method to a "clean" state.
+
+* With -ALL specified, DSE includes all region of the current global directory for cache recovery.
+* Attempt DSE CACHE -RECOVER only if a DSE CACHE -VERIFY commands reports the cache is "NOT clean".
+
+~~~~~~~~
+-SH[OW]
+~~~~~~~~
+
+Displays the cache data structure information. All values are in 8-byte hexadecimal form. If the database has encryption turned on, SHOW additionally displays an element that gives information about the encrypted global buffer section in shared memory.
+
+~~~~~~~~~~~~~~~~~
+-VE[RIFY] [-ALL]
+~~~~~~~~~~~~~~~~~
+
+Verifies the integrity of the cache data structures as well as the internal consistency of any GDS blocks in the global buffers of the current region.
+
+* With -ALL specified, DSE performs cache verification on all regions of the current global directory.
+* It reports the time, the region and a boolean result indicating whether the cache is clean or NOT clean. If you see "NOT clean" in report, execute DSE CACHE -RECOVER as soon as possible to reset the cache in a clean state.
+
+**Examples for CACHE**
+
+Example:
+
+.. parsed-literal::
+   DSE> CACHE -VERIFY
+
+This command checks the integrity of the cache data structures as well as the internal consistency of GDS blocks in the global buffers of the current region.
+
+Example:
+
+.. parsed-literal::
+   DSE> CACHE -VERIFY -ALL
+   Time 26-FEB-2011 14:31:30 : Region DEFAULT : Cache verification is clean
+   Execute CACHE recover command if Cache verification is "NOT" clean.
+
+This command reports the state of database cache for all regions.
+
+Example:
+
+.. parsed-literal::
+   DSE> CACHE -RECOVER
+
+This command reinitializes the cache data structures of the current region and reverts the cache of a database having BG access to "clean" state.
+
+Example:
+
+.. parsed-literal::
+   DSE> CACHE -SHOW
+   File    /home/jdoe/node1/areg.dat
+   Region  AREG
+   Region AREG : Shared_memory       = 0x00002B6845040000
+   Region AREG :  node_local         = 0x0000000000000000
+   Region AREG :  critical           = 0x0000000000010000
+   Region AREG :  shmpool_buffer     = 0x0000000000023000
+   Region AREG :  lock_space         = 0x0000000000125000
+   Region AREG :  cache_queues_state = 0x000000000012A000
+   Region AREG :  cache_que_header   = 0x000000000012A030 : Numelems = 0x00000407 : Elemsize = 0x00000098
+   Region AREG :  cache_record       = 0x0000000000150458 : Numelems = 0x00000400 : Elemsize = 0x00000098
+   Region AREG :  global_buffer      = 0x0000000000177000 : Numelems = 0x00000400 : Elemsize = 0x00000400
+   Region AREG :  db_file_header     = 0x0000000000277000
+   Region AREG :  bt_que_header      = 0x00000000002B7000 : Numelems = 0x00000407 : Elemsize = 0x00000040
+   Region AREG :  th_base            = 0x00000000002C71D0
+   Region AREG :  bt_record          = 0x00000000002C7200 : Numelems = 0x00000400 : Elemsize = 0x00000040
+   Region AREG :  shared_memory_size = 0x00000000002D8000
+   DSE>
+
 ++++++++++++++
 CHANGE
 ++++++++++++++
@@ -1118,94 +1206,6 @@ Example:
    DSE> change -fileheader -zqgblmod_seqno=FF
 
 This command changes the ZGBLMOD_SEQNO field to 255(Hex: FF). 
-
-+++++++++++++
-CACHE
-+++++++++++++
-
-Operates on the cache of a database having BG access method. The format of the CACHE command is:
-
-.. parsed-literal::
-   CA[CHE] 
-   [
-   -ALL
-   -RE[COVER]
-   -SH[OW]
-   -VE[RIFY]
-   ] 
-
-**Qualifiers of CACHE**
-
-~~~~~~~~~~~~~~~~~~
--RE[COVER] [-ALL]
-~~~~~~~~~~~~~~~~~~
-
-Resets the cache of a database having BG access method to a "clean" state.
-
-* With -ALL specified, DSE includes all region of the current global directory for cache recovery.
-* Attempt DSE CACHE -RECOVER only if a DSE CACHE -VERIFY commands reports the cache is "NOT clean".
-
-~~~~~~~~
--SH[OW]
-~~~~~~~~
-
-Displays the cache data structure information. All values are in 8-byte hexadecimal form. If the database has encryption turned on, SHOW additionally displays an element that gives information about the encrypted global buffer section in shared memory.
-
-~~~~~~~~~~~~~~~~~
--VE[RIFY] [-ALL]
-~~~~~~~~~~~~~~~~~
-
-Verifies the integrity of the cache data structures as well as the internal consistency of any GDS blocks in the global buffers of the current region.
-
-* With -ALL specified, DSE performs cache verification on all regions of the current global directory.
-* It reports the time, the region and a boolean result indicating whether the cache is clean or NOT clean. If you see "NOT clean" in report, execute DSE CACHE -RECOVER as soon as possible to reset the cache in a clean state.
-
-**Examples for CACHE**
-
-Example:
-
-.. parsed-literal::
-   DSE> CACHE -VERIFY
-
-This command checks the integrity of the cache data structures as well as the internal consistency of GDS blocks in the global buffers of the current region.
-
-Example:
-
-.. parsed-literal::
-   DSE> CACHE -VERIFY -ALL
-   Time 26-FEB-2011 14:31:30 : Region DEFAULT : Cache verification is clean
-   Execute CACHE recover command if Cache verification is "NOT" clean.
-
-This command reports the state of database cache for all regions.
-
-Example:
-
-.. parsed-literal::
-   DSE> CACHE -RECOVER
-
-This command reinitializes the cache data structures of the current region and reverts the cache of a database having BG access to "clean" state.
-
-Example:
-
-.. parsed-literal::
-   DSE> CACHE -SHOW
-   File    /home/jdoe/node1/areg.dat
-   Region  AREG
-   Region AREG : Shared_memory       = 0x00002B6845040000
-   Region AREG :  node_local         = 0x0000000000000000
-   Region AREG :  critical           = 0x0000000000010000
-   Region AREG :  shmpool_buffer     = 0x0000000000023000
-   Region AREG :  lock_space         = 0x0000000000125000
-   Region AREG :  cache_queues_state = 0x000000000012A000
-   Region AREG :  cache_que_header   = 0x000000000012A030 : Numelems = 0x00000407 : Elemsize = 0x00000098
-   Region AREG :  cache_record       = 0x0000000000150458 : Numelems = 0x00000400 : Elemsize = 0x00000098
-   Region AREG :  global_buffer      = 0x0000000000177000 : Numelems = 0x00000400 : Elemsize = 0x00000400
-   Region AREG :  db_file_header     = 0x0000000000277000
-   Region AREG :  bt_que_header      = 0x00000000002B7000 : Numelems = 0x00000407 : Elemsize = 0x00000040
-   Region AREG :  th_base            = 0x00000000002C71D0
-   Region AREG :  bt_record          = 0x00000000002C7200 : Numelems = 0x00000400 : Elemsize = 0x00000040
-   Region AREG :  shared_memory_size = 0x00000000002D8000
-   DSE>
 
 ++++++++++
 CLOSE
