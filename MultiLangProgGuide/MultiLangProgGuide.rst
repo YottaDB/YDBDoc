@@ -962,10 +962,6 @@ the code to also :code:`#include <string.h>`. It sets:
 
 - `ydb_free() <https://docs.yottadb.com/MultiLangProgGuide/MultiLangProgGuide.html#ydb-free>`_ is used on :code:`BUFFERP->buf_addr`.
 
-:code:`YDB_FREE_BUFFER_T(BUFFERP)` - Use this macro to free the buffer malloced using :code:`YDB_MALLOC_BUFFER_T`.
-
-- :code:`ydb_free_t()` is used on :code:`BUFFERP->buf_addr`.
-
 :code:`YDB_LITERAL_TO_BUFFER(literal, buffer)` – Use this macro to set
 :code:a `ydb_buffer_t` structure to refer to a literal (such as a
 :code:variable name). With :code:`literal` a string literal, and
@@ -988,15 +984,6 @@ of length LEN and assign it to an already allocated :code:`ydb_buffer_t` structu
 - :code:`BUFFERP->len_alloc` is set to the malloced length.
 
 - :code:`BUFFERP->len_used` is set to 0.
-
-:code:`YDB_MALLOC_BUFFER_T(BUFFERP,LEN)` - Use this macro to allocate a buffer using :code:`ydb_malloc_t`
-of length LEN and assign it to an already allocated :code:`ydb_buffer_t` structure.
-
-- :code:`BUFFERP->buf_addr` is set to the malloced buffer.
-
-- :code:`BUFFERP->len_alloc` is set to the malloced length.
-
-- :code:`BUFFERP->len_used` is set to 0
 
 :code:`YDB_SEVERITY(msgnum, severity)` – The `error return code`_ from a
 function indicates both the nature of an error as well as its
