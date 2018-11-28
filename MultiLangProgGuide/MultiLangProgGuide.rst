@@ -1632,8 +1632,8 @@ When the :code:`fileid` structure for a file is no longer needed, an
 application should call `ydb_file_id_free()`_ to release the structure
 and avoid a memory leak.
 
-:code:`ydb_file_name_to_id()` returns :CODE:`YDB_OK`, `YDB_NOTOK` if
-:code:the :code:`filename` is NULL, or an `error return code`_.
+:code:`ydb_file_name_to_id()` returns :CODE:`YDB_OK`, :CODE:`YDB_NOTOK` if
+the :code:`filename` is NULL, or an `error return code`_.
 
 -----------------
 ydb_fork_n_core()
