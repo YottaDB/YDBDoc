@@ -715,59 +715,66 @@ For more information on syntax and run-time errors during Direct Mode, see `Chap
 **Debugging Tools**
 
 +--------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------+
-| Extension                | Explanation                                                                                                                                        |
-+==========================+====================================================================================================================================================+
-| $ECode                   | Contains a list of errors since it was last cleared                                                                                                |
-+--------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------+
-| $STack                   | Contains the current level of DO/XECUTE nesting from a base of zero (0).                                                                           |
-+--------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------+
-| $STack()                 | Returns information about the M virtual stack context, most of which freezes when an error changes $ECODE from the empty string to a list value.   |
-+--------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------+
-| ZBreak                   | Establishes a temporary breakpoint, with optional count and M action.                                                                              |
-+--------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------+
-| ZCOMpile                 | Invokes the YottaDB compiler without a corresponding ZLINK.                                                                                        |
-+--------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------+
-| ZContinue                | Continues routine execution from a break.                                                                                                          |
-+--------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------+
-| ZEDit                    | Invokes the UNIX text editor specified by the EDITOR environment variable.                                                                         |
-+--------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------+
-| ZGoto                    | Removes zero or more levels from the M invocation stack and transfers control.                                                                     |
-+--------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------+
-| ZLink                    | Includes a new or modified M routine in the current M image; automatically recompiles if necessary.                                                |
-+--------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------+
-| ZMessage                 | Signals a specified condition.                                                                                                                     |
-+--------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------+
-| ZPrint                   | Displays lines of source code.                                                                                                                     |
-+--------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------+
-| ZSHow                    | Displays information about the M environment.                                                                                                      |
-+--------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------+
-| ZSTep                    | Incrementally executes a routine to the beginning of the next line of the specified type.                                                          |
-+--------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------+
-| ZSYstem                  | Invokes the shell, creating a forked process.                                                                                                      |
-+--------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------+
-| ZWRite                   | Displays all or some local or global variables.                                                                                                    |
-+--------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------+
-| $ZCSTATUS                | Contains the value of the status code for the last compile performed by a ZCOMPILE command.                                                        |
-+--------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------+
-| $ZEDit                   | Contains the status code for the last ZEDit.                                                                                                       |
-+--------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------+
-| $ZLEVel                  | Contains the current level of DO/EXECUTE nesting.                                                                                                  |
-+--------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------+
-| $ZMessage()              | Returns the text associated with an error condition code.                                                                                          |
-+--------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------+
-| $ZPOSition               | Contains a string indicating the current execution location.                                                                                       |
-+--------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------+
-| $ZPROmpt                 | Controls the symbol displayed as the direct mode prompt.                                                                                           |
-+--------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------+
-| $ZROutines               | Contains a string specifying a directory list containing the object, and optionally the source, files.                                             |
-+--------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------+
-| $ZSOurce                 | Contains the name of the M source program most recently ZLINKed or ZEDITed; default name for next ZEDIT or ZLINK.                                  |
-+--------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------+
-| $ZStatus                 | Contains error condition code and location of the last exception condition occurring during routine execution.                                     |
-+--------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------+
-| $ZSTep                   | Controls the default ZSTep action.                                                                                                                 |
-+--------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------+
-| $ZSYstem                 | Contains the status code of the last ZSYSTEM.                                                                                                      |
-+--------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------+
+| Extension                                                                               | Explanation                                                                         |
++=========================================================================================+=====================================================================================+
+| `$ECode <https://docs.yottadb.com/ProgrammersGuide/isv.html#ecode>`_                    | Contains a list of errors since it was last cleared                                 |
++-----------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| `$STack <https://docs.yottadb.com/ProgrammersGuide/isv.html#id1>`_                      | Contains the current level of DO/XECUTE nesting from a base of zero (0).            |
++-----------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| `$STack() <https://docs.yottadb.com/ProgrammersGuide/functions.html#stack>`_            | Returns information about the M virtual stack context, most of which freezes when   |
+|                                                                                         | an error changes $ECODE from the empty string to a list value.                      |
++-----------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| `ZBreak <https://docs.yottadb.com/ProgrammersGuide/commands.html#zbreak>`_              | Establishes a temporary breakpoint, with optional count and M action.               |
++-----------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| `ZCOMpile <https://docs.yottadb.com/ProgrammersGuide/commands.html#zcompile>`_          | Invokes the YottaDB compiler without a corresponding ZLINK.                         |
++-----------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| `ZContinue <https://docs.yottadb.com/ProgrammersGuide/commands.html#zcontinue>`_        | Continues routine execution from a break.                                           |
++-----------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| `ZEDit <https://docs.yottadb.com/ProgrammersGuide/commands.html#zedit>`_                | Invokes the UNIX text editor specified by the EDITOR environment variable.          |
++-----------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| `ZGoto <https://docs.yottadb.com/ProgrammersGuide/commands.html#zgoto>`_                | Removes zero or more levels from the M invocation stack and transfers control.      |
++-----------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| `ZLink <https://docs.yottadb.com/ProgrammersGuide/commands.html#zlink>`_                | Includes a new or modified M routine in the current M image; automatically          |
+|                                                                                         | recompiles if necessary.                                                            |
++-----------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| `ZMessage <https://docs.yottadb.com/ProgrammersGuide/commands.html#zmessage>`_          | Signals a specified condition.                                                      |
++-----------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| `ZPrint <https://docs.yottadb.com/ProgrammersGuide/commands.html#zprint>`_              | Displays lines of source code.                                                      |
++-----------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| `ZSHow <https://docs.yottadb.com/ProgrammersGuide/commands.html#zshow>`_                | Displays information about the M environment.                                       |
++-----------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| `ZSTep <https://docs.yottadb.com/ProgrammersGuide/commands.html#zstep>`_                | Incrementally executes a routine to the beginning of the next line of the specified |
+|                                                                                         | type.                                                                               |
++-----------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| `ZSYstem <https://docs.yottadb.com/ProgrammersGuide/commands.html#zsystem>`_            | Invokes the shell, creating a forked process.                                       |
++-----------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| `ZWRite <https://docs.yottadb.com/ProgrammersGuide/commands.html#id18>`_                | Displays all or some local or global variables.                                     |
++-----------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| `$ZCSTATUS <https://docs.yottadb.com/ProgrammersGuide/isv.html#zcstatus>`_              | Contains the value of the status code for the last compile performed by a ZCOMPILE  |
+|                                                                                         | command.                                                                            |
++-----------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| `$ZEDit <https://docs.yottadb.com/ProgrammersGuide/commands.html#zedit>`_               | Contains the status code for the last ZEDit.                                        |
++-----------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| `$ZLEVel <https://docs.yottadb.com/ProgrammersGuide/isv.html#zlevel>`_                  | Contains the current level of DO/EXECUTE nesting.                                   |
++-----------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| `$ZMessage() <https://docs.yottadb.com/ProgrammersGuide/functions.html#zmessage>`_      | Returns the text associated with an error condition code.                           |
++-----------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| `$ZPOSition <https://docs.yottadb.com/ProgrammersGuide/isv.html#zposition>`_            | Contains a string indicating the current execution location.                        |
++-----------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| `$ZPROmpt <https://docs.yottadb.com/ProgrammersGuide/isv.html#zprompt>`_                | Controls the symbol displayed as the direct mode prompt.                            |
++-----------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| `$ZROutines <https://docs.yottadb.com/ProgrammersGuide/isv.html#zroutines>`_            | Contains a string specifying a directory list containing the object, and optionally,|
+|                                                                                         | the source files.                                                                   |
++-----------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| `$ZSOurce <https://docs.yottadb.com/ProgrammersGuide/isv.html#zsource>`_                | Contains the name of the M source program most recently ZLINKed or ZEDITed; default |
+|                                                                                         | name for next ZEDIT or ZLINK.                                                       |
++-----------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| `$ZStatus <https://docs.yottadb.com/ProgrammersGuide/isv.html#id12>`_                   | Contains error condition code and location of the last exception condition          |
+|                                                                                         | occurring during routine execution.                                                 |
++-----------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| `$ZSTep <https://docs.yottadb.com/ProgrammersGuide/isv.html#zstep>`_                    | Controls the default ZSTep action.                                                  |
++-----------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| `$ZSYstem <https://docs.yottadb.com/ProgrammersGuide/isv.html#zsystem>`_                | Contains the status code of the last ZSYSTEM.                                       |
++-----------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
 
 
