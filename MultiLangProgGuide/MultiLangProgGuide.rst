@@ -43,7 +43,7 @@ Local Installation
 - Run it with your choice of directory where you want it installed
   (omit the :code:`--verbose` option for less output): :code:`sudo
   ./ydbinstall.sh --utf8 default
-  --verbose`. 
+  --verbose`.
   If you do not specify an installation directory with
   :code:`--installdir`, the script installs YottaDB in
   :code:`/usr/local/lib/yottadb/r###` where :code:`r###` is
@@ -69,7 +69,7 @@ Local Installation
 	$ cd $ydb_dir
 	$ gcc -I $ydb_dist -L $ydb_dist -o wordfreq wordfreq.c -lyottadb
 	$ ./wordfreq <wordfreq_input.txt >wordfreq_output.tmp
-	$ diff wordfreq_output.tmp wordfreq_output.txt 
+	$ diff wordfreq_output.tmp wordfreq_output.txt
 	$
 
 Note that the :code:`wordfreq.c` program randomly uses local or
@@ -751,7 +751,7 @@ underlying operating system.
   Messages and Recovery Procedures Manual
   <https://docs.yottadb.com/MessageRecovery/>`_.
 - Linux error messages are described in Linux documentation,
-  e.g. `errno <https://linux.die.net/man/3/errno>`_. 
+  e.g. `errno <https://linux.die.net/man/3/errno>`_.
 
 Remember that the error codes returned by YottaDB functions are the
 negated numeric values of the error codes above.
@@ -1287,7 +1287,7 @@ Notes:
 
 .. _ydb_incr_s():
 .. _ydb_incr_st():
-  
+
 ----------------------------
 ydb_incr_s() / ydb_incr_st()
 ----------------------------
@@ -1852,48 +1852,17 @@ multi-threaded applications, and those which do not are for
 single-threaded applications. The discussion in `Threads`_ provides
 more detailed information.
 
-.. _ydb_child_init():
-.. _ydb_child_init_t():
+----------------
+ydb_child_init()
+----------------
 
--------------------------------------
-ydb_child_init() / ydb_child_init_t()
--------------------------------------
+YottaDB r1.22 and before required the use of a function :code:`ydb_child_init()`
+immediately after a :code:`fork()` to avoid database damage and other possible
+side-effects.
 
-.. code-block:: C
-
-	int ydb_child_init(void *param)
-
-	int ydb_child_init_t(uint64_t tptoken, void *param)
-
-As the YottaDB engine resides in the address space of the process,
-child processes **must** call :code:`ydb_child_init()` or
-:code:`ydb_child_init_t()` to
-re-initialize data structures immediately after a :code:`fork()` or
-equivalent in other languages (e.g., :code:`os.fork()` in Python).
-
-Notes:
-
-- A child process that fails to call :code:`ydb_child_init()` or
-  :code:`ydb_child_init_t()` immediately after a :code:`fork()` can
-  cause structural damage to database files, as well as other possible
-  side-effects.
-- After a :code:`fork()`, a parent process should not exit until the child
-  process has executed :code:`ydb_child_init()` or :code:`ydb_child_init_t()`. One way to
-  implement this would be for the parent to set a node such as
-  :code:`^Proc(ppid)=1` where :code:`ppid` is the parent's pid, and for the
-  child to set it to zero or to delete the node. A parent process that
-  wishes to :code:`fork()` a number of child processes can use
-  :code:`ydb_incr_s()`  or :code:`ydb_incr_st()` to increment a node such as :code:`^Proc(ppid)` and
-  each child can decrement it after executing
-  :code:`ydb_child_init()` or :code:`ydb_child_init_t()`. When the value at the node is zero, the parent
-  process knows that it is safe for it to exit.
-
-The :code:`void *param` is reserved for future enhancements. As the
-initial release of YottaDB ignores it, we recommend using
-NULL. :code:`ydb_child_init()` and :code:`ydb_child_init_t()` return:
-
-- :CODE:`YDB_OK`; or
-- an `error return code`_.
+Effective YottaDB r1.24, this function is not needed. It gets automatically
+invoked by YottaDB as needed. Any existing usages of this function in an application
+can be safely removed assuming YottaDB r1.24 or later is in use.
 
 .. _ydb_exit():
 .. _ydb_exit_t():
@@ -1920,7 +1889,7 @@ Note that a typical application should not need to call
 
 .. _ydb_file_id_free():
 .. _ydb_file_id_free_t():
-   
+
 -----------------------------------------
 ydb_file_id_free() / ydb_file_id_free_t()
 -----------------------------------------
@@ -2374,7 +2343,7 @@ environment and initialize it*) in the `Quick Start`_ section:
 	$ cd $ydb_dir
 	$ # XYZ instructions to compile wordfreq.go to executable
 	$ ./wordfreq <wordfreq_input.txt >wordfreq_output_go.txt
-	$ diff wordfreq_output_go.txt wordfreq_output.txt 
+	$ diff wordfreq_output_go.txt wordfreq_output.txt
 	$
 
 Note that the :code:`wordfreq.go` program randomly uses local or
@@ -2730,7 +2699,7 @@ Matching `Go SubNextST()`_, :code:`SubNextE()` wraps
 local or global variable sub-tree.
 
 - At the level of the last subscript, if there is a next subscript
-  with a node and/or a subtree, it returns that subscript.  
+  with a node and/or a subtree, it returns that subscript.
 - If there is no next node or subtree at that level of the subtree,
   the function returns the NODEEND error.
 
@@ -3060,7 +3029,7 @@ Set:
   - :code:`buf_addr` to the address of a buffer;
   - :code:`len_alloc` to :code:`bufSiz`; and
   - :code:`len_used` to zero.
-  
+
 - In the :code:`BufferTArray` structure:
 
   - :code:`cbuftary` to reference the beginning of the :code:`C.ydb_buffer_t` array;
@@ -3270,7 +3239,7 @@ Go BufferTArray SetValStr()
 ...........................
 
 .. code-block:: go
-      
+
 	func (buftary *BufferTArray) SetValStr(idx int, val *string) error
 
 - If the :code:`C.ydb_buffer_t` structures referenced by
@@ -3371,7 +3340,7 @@ format`_.
   corrected by application code.
 - Otherwise, set the buffer referenced by :code:`buf_addr` to the
   `zwrite format`_ string, and set :code:`len_used` to the length.
-   
+
 Go Zwr2StrST()
 --------------
 
@@ -3500,7 +3469,7 @@ Go DataST()
 .. code-block:: go
 
 	func (key *KeyT) DataST(tptoken uint64) (uint, error)
- 
+
 Matching `Go DataE()`_, :code:`DataST()` returns the result of
 `ydb_data_st()`_. In the event an error is returned, the return value
 is unspecified.
@@ -3700,7 +3669,7 @@ local or global variable sub-tree.
     :code:`sub.len_alloc`.
   - Otherwise, it copies that subscript to the buffer referenced by
     :code:`sub.buf_addr`, and sets :code:`sub.len_used` to its length.
-  
+
 - If there is no next node or subtree at that level of the subtree,
   the method returns the NODEEND error.
 
@@ -3724,7 +3693,7 @@ reverse breadth-first traversal of a local or global variable sub-tree.
     :code:`sub.len_alloc`.
   - Otherwise, it copies that subscript to the buffer referenced by
     :code:`sub.buf_addr`, and sets :code:`buf.len_used` to its length.
-  
+
 - If there is no previous node or subtree at that level of the
   subtree, the method returns the NODEEND error.
 
@@ -4195,8 +4164,6 @@ There are two considerations when executing :code:`fork()`.
   that M code within a parent process may have executed :code:`write`
   commands which are still buffered when C code within the same
   process calls :code:`fork()`.
-- After a :code:`fork()`, the child process must immediately execute
-  `ydb_child_init()`_ (see discussion at `ydb_child_init()`_).
 
 Threads
 =======
