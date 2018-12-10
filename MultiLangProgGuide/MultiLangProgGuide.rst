@@ -641,6 +641,13 @@ the return code of calls to acquire locks. As a practical matter, it
 is possible to set timeouts that are long enough that users may
 perceive applications to be hung.
 
+Since YottaDB resources such as locks belong to a process rather than
+a thread within a process (see discussion under `Threads`_), design
+rules to avoid deadlocks (such as acquiring locks in a predefined
+order that all processes must respect) must be respected by all
+threads in a process (or for a language such as Go, by all Goroutines
+in a process).
+
 --------------------------------
 Locks and Transaction Processing
 --------------------------------
@@ -3870,6 +3877,13 @@ may result in unpredictable results (Murphy says that unpredictable
 results will occur when you least expect them). Therefore, Go
 application code should only call the YottaDB API exposed in this
 `Programming in Go`_ section.
+
+Goroutines in a process are dynamically mapped by the Go
+implementation to run on threads within that process. Since YottaDB
+resources are held by the process rather than by the thread or the
+Goroutine, refer to the `Threads`_ discussion about the need for
+applications to avoid race conditions when accessing YottaDB
+resources.
 
 --------------------
 GenYDBGlueRoutine.sh
