@@ -2419,7 +2419,7 @@ A routine used to find the error return code is:
 
 Note that the :code:`errcode` is the definitive return from the
 call. The :code:`Error()` function accesses `$zstatus`_, which could
-potentially altered by a subsequent call to YottaDB from another
+potentially be altered by a subsequent call to YottaDB from another
 Goroutine, as a consequence of the race condition noted in the
 description of `$zstatus`_.
 
@@ -2760,7 +2760,7 @@ there are no :code:`varnames` array elements, or a sole
 saved and restored; and if a sole :code:`varnames` element is "*" all
 local variables are saved and restored.
 
-Refer to `Go TpST()`_ for a more detailed discussion of YottaDB Go
+See `Go TpST()`_ for a more detailed discussion of YottaDB Go
 transaction processing.
 
 Go TpE2()
@@ -4261,7 +4261,7 @@ Important Notes:
   between the time a function returns with an `error return code`_,
   and a subsequent call to `ydb_get_st()`_ to get the value of
   `$zstatus`_, another thread may call YottaDB, and the `$zstatus`_
-  returned wil be from that subsequent call.
+  returned will be from that subsequent call.
 
 - A multi-threaded application is permitted to use the YottaDB
   single-thread functions *as long as the application ensures that all
