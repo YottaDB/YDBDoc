@@ -471,7 +471,8 @@ several comma-separated substrings.
 
 Note that a race condition exists for a multi-threaded application:
 after a call that returns an error, it is possible for another call
-from a different thread to perturb the value of $zstatus.
+from a different thread to perturb the value of $zstatus. See the
+Important Notes in the `Threads`_ discussion.
 
 ----------
 $zyrelease
@@ -2416,6 +2417,12 @@ A routine used to find the error return code is:
 	return -1
     }
 
+Note that the :code:`errcode` is the definitive return from the
+call. The :code:`Error()` function accesses `$zstatus`_, which could
+potentially altered by a subsequent call to YottaDB from another
+Goroutine, as a consequence of the race condition noted in the
+description of `$zstatus`_.
+
 In the documentation:
 
 - Error codes specific to each function are noted. However, common
@@ -2752,6 +2759,24 @@ there are no :code:`varnames` array elements, or a sole
 :code:`varnames` element is the empty string, no local variables are
 saved and restored; and if a sole :code:`varnames` element is "*" all
 local variables are saved and restored.
+
+Refer to `Go TpST()`_ for a more detailed discussion of YottaDB Go
+transaction processing.
+
+Go TpE2()
+---------
+
+.. code-block:: go
+
+	func yottadb.TpE2(tptoken uint64, tpfn func(uint64) int,
+		transid string, varnames []string) error
+
+Matching `Go TpST2()`_, :code:`TpE()` wraps :code:`ydb_tp_st()` to
+implement `Transaction Processing`_. The difference between
+:code:`TpE()` and :code:`TpE2()` is that the former uses C glue code
+to pass a parameter to the function implementing transaction logic,
+whereas the latter is a pure Go function call (which may be a
+closure).
 
 Refer to `Go TpST()`_ for a more detailed discussion of YottaDB Go
 transaction processing.
@@ -3458,6 +3483,24 @@ dangling pointers that C applications are. In the case of
 parameters, please take additional care in designing and coding your
 application to ensure the validity of the pointers passed to
 :code:`TpST()`.
+
+Go TpST2()
+----------
+
+.. code-block:: go
+
+	func (buftary *BufferTArray) TpST2(tptoken uint64,
+		tpfn func(uint64) int, transid string) error
+
+Matching `Go TpE2()`_, :code:`TpST2()` wraps :code:`ydb_tp_st()` to
+implement `Transaction Processing`_. The difference between
+:code:`TpST()` and :code:`TpST2()` is that the former uses C glue code
+to pass a parameter to the function implementing transaction logic,
+whereas the latter is a pure Go function call (which may be a
+closure).
+
+Refer to `Go TpST()`_ for a more detailed discussion of YottaDB Go
+transaction processing.
 
 --------------------------
 Go Simple API KeyT Methods
@@ -4201,7 +4244,24 @@ Important Notes:
 
 - It is the responsibility of the application to avoid race conditions
   between threads in their use of resources managed by YottaDB at the
-  level of the process.
+  level of the process. YottaDB does not ensure the absence of race
+  conditions in accessing these resources because to do so would
+  unduly restrict the freedom of application designers. For example,
+  it is a legitimate design pattern to have one thread that provides
+  one subscript of a node, and a different thread that provides a
+  different subscript.
+
+- Error message text in a multi-threaded application is not guaranteed
+  to be correct. When a YottaDB function returns an `error return
+  code`_, the application calls `ydb_get_s()`_ / `ydb_get_st()`_ for
+  the value of `$zstatus`_ for the complete error text. For a
+  single-threaded application, `$zstatus`_ has correct and current
+  information, since calls to YottaDB are entirely under the control
+  of that single application thread. For a multi-threaded application,
+  between the time a function returns with an `error return code`_,
+  and a subsequent call to `ydb_get_st()`_ to get the value of
+  `$zstatus`_, another thread may call YottaDB, and the `$zstatus`_
+  returned wil be from that subsequent call.
 
 - A multi-threaded application is permitted to use the YottaDB
   single-thread functions *as long as the application ensures that all
