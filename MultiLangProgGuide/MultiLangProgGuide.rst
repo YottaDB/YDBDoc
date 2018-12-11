@@ -1514,8 +1514,10 @@ Return values of :code:`ydb_node_next_s()` and
   subscript. In this case, :code:`*ret_subs_used` is the index into the
   :code:`*ret_subsarray` array with the error, and the :code:`len_used` field
   of that structure specifies the size required.
-- :CODE:`YDB_ERR_PARAMINVALID`  when :code:`len_alloc` < :code:`len_used` or the :code:`len_used` is non-zero
-  and :code:`buf_addr` is NULL in at least one subscript in :code:`subsarray`.
+- :CODE:`YDB_ERR_PARAMINVALID` if :code:`ret_subs_used` is NULL or :code:`ret_subsarray`
+  is NULL or one of the :code:`ydb_buffer_t` structures pointed to by :code:`*ret_subsarray`
+  has a NULL buf_addr. In the last case, :code:`*ret_subs_used` is the index into the
+  :code:`*ret_subsarray` array with the NULL buf_addr.
 - Another `error return code`_, in which case the application should
   consider the values of :code:`*ret_subs_used` and the :code:`*ret_subsarray`
   to be undefined.
@@ -1566,8 +1568,10 @@ Return values of :code:`ydb_node_previous_s()` and
   subscript. In this case, :code:`*ret_subs_used` is the index into the
   :code:`*ret_subsarray` array with the error, and the :code:`len_used` field
   of that structure specifies the size required.
-- :CODE:`YDB_ERR_PARAMINVALID` when :code:`len_alloc` < :code:`len_used` or the :code:`len_used` is non-zero
-  and :code:`buf_addr` is NULL in at least one subscript in :code:`subsarray`.
+- :CODE:`YDB_ERR_PARAMINVALID` if :code:`ret_subs_used` is NULL or :code:`ret_subsarray`
+  is NULL or one of the :code:`ydb_buffer_t` structures pointed to by :code:`*ret_subsarray`
+  has a NULL buf_addr. In the last case, :code:`*ret_subs_used` is the index into the
+  :code:`*ret_subsarray` array with the NULL buf_addr.
 - Another `error return code`_, in which case the application should
   consider the values of :code:`*ret_subs_used` and the :code:`*ret_subsarray`
   to be undefined.
@@ -2129,23 +2133,25 @@ ydb_message() / ydb_message_t()
 
 .. code-block:: C
 
-	int ydb_message(int errnum, ydb_buffer_t *errmsg)
+	int ydb_message(int errnum, ydb_buffer_t *msg_buff)
 
 	int ydb_message_t(uint64_t tptoken,
-		int errnum, ydb_buffer_t *errmsg)
+		int errnum, ydb_buffer_t *msg_buff)
 
 The functions return the error message text template for the error
 number specified by :code:`errnum`.
 
 - If :code:`errnum` does not correspond to an error that YottaDB
   recognizes, the return the error :code:`YDB_ERR_UNKNOWNSYSERR`,
-  leaving the structures referenced by :code:`errmsg` unaltered.
+  leaving the structures referenced by :code:`msg_buff` unaltered.
 - Otherwise, if the length of the text exceeds
-  :code:`errmsg.len_alloc` they return the error
-  :code:`YDB_ERR_INVSTRLEN`. In this case :code:`errmsg.len_used` is
-  greater than :code:`errmsg.len_alloc`.
+  :code:`msg_buff->len_alloc` they return the error
+  :code:`YDB_ERR_INVSTRLEN`. In this case :code:`msg_buff->len_used` is
+  greater than :code:`msg_buff->len_alloc`.
+- Otherwise, if :code:`msg_buff->buf_addr` is NULL, they return the
+  error :code:`YDB_ERR_PARAMINVALID`.
 - Otherwise, the copy the text to the buffer specified by
-  :code:`errmsg.buf_addr`, set :code:`errmsg.len_used` to its
+  :code:`msg_buff->buf_addr`, set :code:`msg_buff->len_used` to its
   length, and return :code:`YDB_OK`.
 
 .. _ydb_stdout_stderr_adjust():
@@ -2357,9 +2363,6 @@ global variables (see `Local and Global Variables`_).
 
 Go Concepts
 ===========
-
-XYZ - Add anything special that a Go programmer should know before
-using YottaDB.
 
 As the YottaDB wrapper is distributed as a Go package, function calls
 to YottaDB are prefixed in Go code with :code:`yottadb.` (e.g.,
@@ -4049,7 +4052,6 @@ prefix their subscripts with a character such as "x" which ensures
 that subscripts are not canonical numbers.
 
 .. _canonical number:
-
 .. _canonical numbers:
 
 -----------------
@@ -4091,7 +4093,6 @@ set that represents a decimal number in a standard, concise, form.
    through .1E47.
 
 .. _zwrite format:
-
 .. _zwrite formatted:
 
 Zwrite Format
