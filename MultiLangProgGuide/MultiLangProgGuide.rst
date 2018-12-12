@@ -2329,7 +2329,7 @@ please obtain and install a newer Golang implementation.
 
 The `Go Quick Start`_ assumes that YottaDB has already been installed
 as described in the `Quick Start`_ section. After completing step 1
-(*Installing YottaDB*), download the Go wrapper, install it and and
+(*Installing YottaDB*), download the Go wrapper, install it and
 test it.
 
 .. code-block:: bash
@@ -2346,14 +2346,15 @@ There are a number of programs in the
 :code:`go/src/lang.yottadb.com/go/yottadb` directory that you can
 look at.
 
-3. Put your GO program in the :code:`$ydb_dir` directory, [XYZ
-   instructions to include headers].  As a sample program, you can
-   download the wordfreq.go program [XYZ – provide actual URL for
-   wordfreq.go program when ready], with a `reference input file
+3. Put your GO program in a directory of your choice, e.g.,
+   :code:`$ydb_dir` directory and change to that directory.
+   As a sample program, you can download the wordfreq.go program [XYZ
+   – provide actual URL for wordfreq.go program when ready], with a
+   `reference input file
    <https://raw.githubusercontent.com/YottaDB/YottaDBtest/master/simpleapi/outref/wordfreq_input.txt>`_
    and `corresponding reference output file
    <https://raw.githubusercontent.com/YottaDB/YottaDBtest/master/simpleapi/outref/wordfreq_output.txt>`_.
-   Compile it thus: [XYZ compilation instructions / command].
+   Compile it thus: :code:`go build wordfreq.go`.
 
 #. Run your program and verify that the output matches the reference output. For example:
 
