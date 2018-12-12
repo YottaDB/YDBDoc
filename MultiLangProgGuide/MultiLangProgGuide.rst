@@ -1048,8 +1048,8 @@ error. :code:`ydb_data_s()` returns :CODE:`YDB_OK` or an `error return code`_.
 The error :CODE:`YDB_ERR_PARAMINVALID` is returned when 
 
 - :code:`ret_value` is NULL or
-- :code:`ret_value->buf_addr` is NULL and the return value has a non-zero :code:`len_used`.
-- in :code:`subsarray`, :code:`len_alloc` < :code:`len_used` or the :code:`len_used` is non-zero and :code:`buf_addr` is NULL in at least one subscript.
+- :code:`ret_value->buf_addr` is NULL and the return value has a non-zero :code:`len_used` or
+- :code:`len_alloc` < :code:`len_used` or the :code:`len_used` is non-zero and :code:`buf_addr` is NULL in at least one subscript, in :code:`subsarray`.
 
 --------------
 ydb_delete_s()
@@ -1071,10 +1071,10 @@ leaving the (sub)tree intact, or to delete the node as well as the
 Intrinsic special variables cannot be deleted.
 
 :code:`ydb_delete_s()` returns :CODE:`YDB_OK`, a :CODE:`YDB_ERR_UNIMPLOP` if
-:code:`deltype` is neither :CODE:`YDB_DEL_NODE` nor :CODE:`YDB_DEL_TREE`, or
-another `error return code`_. :CODE:`YDB_ERR_PARAMINVALID` is returned when
-in :code:`subsarray`, :code:`len_alloc` < :code:`len_used` or the :code:`len_used` is non-zero
-and :code:`buf_addr` is NULL in at least one subscript.
+:code:`deltype` is neither :CODE:`YDB_DEL_NODE` nor :CODE:`YDB_DEL_TREE`, :CODE:`YDB_ERR_PARAMINVALID` is returned when
+:code:`len_alloc` < :code:`len_used` or the :code:`len_used` is non-zero
+and :code:`buf_addr` is NULL in at least one subscript in :code:`subsarray`,
+or another `error return code`_.
 
 -------------------
 ydb_delete_excl_s()
@@ -1102,8 +1102,8 @@ not apply to applications that do not include M code.
 :CODE:`YDB_ERR_NAMECOUNT2HI` if more
 than :CODE:`YDB_MAX_NAMES` are specified, or another `error return
 code`_. :CODE:`YDB_ERR_PARAMINVALID`
-is returned when, in the :code:`varnames` list, :code:`len_alloc` < :code:`len_used` or the :code:`len_used` is non-zero
-and :code:`buf_addr` is NULL in at least one subscript.
+is returned when :code:`len_alloc` < :code:`len_used` or the :code:`len_used` is non-zero
+and :code:`buf_addr` is NULL in at least one variable name in "code:`varnames`.
 
 Note that specifying a larger value for :code:`namecount` than the
 number of variable names actually provided in :code:`*varnames`
@@ -1132,8 +1132,8 @@ setting :code:`ret_value->len_used` on both normal and error returns
   the value at the node;
 - :CODE:`YDB_ERR_PARAMINVALID` when :code:`ret_value` is NULL or
   :code:`ret_value->buf_addr` is NULL and the return value has a non-zero :code:`len_used`; or
-  in :code:`subsarray`, :code:`len_alloc` < :code:`len_used` or the :code:`len_used` is non-zero
-  and :code:`buf_addr` is NULL in at least one subscript.
+  :code:`len_alloc` < :code:`len_used` or the :code:`len_used` is non-zero
+  and :code:`buf_addr` is NULL in at least one subscript in :code:`subsarray`; or
 - another applicable `error return code`_.
 
 Notes:
@@ -1184,8 +1184,8 @@ Return values:
 - :CODE:`YDB_ERR_INVSTRLEN` if :code:`ret_value->len_alloc` is
   insufficient for the result. As with `ydb_get_s()`_, in this case
   :CODE:`ret_value->len_used` is set to the required length.
-- :CODE:`YDB_ERR_PARAMINVALID` when in :code:`subsarray` or :code:`increment`, :code:`len_alloc` < :code:`len_used` or the :code:`len_used` is non-zero
-  and :code:`buf_addr` is NULL in at least one subscript.
+- :CODE:`YDB_ERR_PARAMINVALID` when :code:`len_alloc` < :code:`len_used` or the :code:`len_used` is non-zero
+  and :code:`buf_addr` is NULL in at least one subscript in :code:`subsarray` or :code:`increment`.
 - Other errors return the corresponding `error return code`_.
 
 Notes:
@@ -1227,8 +1227,8 @@ If all requested locks are successfully acquired, the function returns
 :CODE:`YDB_OK`. If the requested :code:`timeout_nsec` exceeds
 :code:`YDB_MAX_TIME_NSEC`, the function immediately returns
 :code:`YDB_ERR_TIME2LONG`. :CODE:`YDB_ERR_PARAMINVALID`
-is returned when, in :code:`subsarray` or :code:`varname`, :code:`len_alloc` < :code:`len_used` or the :code:`len_used` is non-zero
-and :code:`buf_addr` is NULL in at least one subscript. In other cases, the function returns an
+is returned when :code:`len_alloc` < :code:`len_used` or the :code:`len_used` is non-zero
+and :code:`buf_addr` is NULL in at least one subscript in :code:`subsarray` or variable name in :code:`varname`. In other cases, the function returns an
 `error return code`_.
 
 -----------------
@@ -1250,8 +1250,8 @@ As releasing a lock cannot fail, the function returns :CODE:`YDB_OK`,
 unless there is an error such as an invalid name that results in the
 return of an error code such as :CODE:`YDB_ERR_INVVARNAME`. Errors
 result in an appropriate `error return code`_. :CODE:`YDB_ERR_PARAMINVALID`
-is returned when, in :code:`subsarray`, :code:`len_alloc` < :code:`len_used` or the :code:`len_used` is non-zero
-and :code:`buf_addr` is NULL in at least one subscript.
+is returned when :code:`len_alloc` < :code:`len_used` or the :code:`len_used` is non-zero
+and :code:`buf_addr` is NULL in at least one subscript in :code:`subsarray`.
 
 -----------------
 ydb_lock_incr_s()
@@ -1279,8 +1279,8 @@ If the requested lock is successfully acquired, the function returns
 :code:`YDB_MAX_TIME_NSEC`, the function immediately returns
 :code:`YDB_ERR_TIME2LONG`. Errors result in an appropriate `error
 return code`_. :CODE:`YDB_ERR_PARAMINVALID`
-is returned when, in :code:`subsarray`, :code:`len_alloc` < :code:`len_used` or the :code:`len_used` is non-zero
-and :code:`buf_addr` is NULL in at least one subscript.
+is returned when :code:`len_alloc` < :code:`len_used` or the :code:`len_used` is non-zero
+and :code:`buf_addr` is NULL in at least one subscript in :code:`subsarray`.
 
 -----------------
 ydb_node_next_s()
@@ -1320,8 +1320,8 @@ Return values of :code:`ydb_node_next_s()` are:
   subscript. In this case, :code:`*ret_subs_used` is the index into the
   :code:`*ret_subsarray` array with the error, and the :code:`len_used` field
   of that structure specifies the size required.
-- :CODE:`YDB_ERR_PARAMINVALID`  when, in :code:`subsarray`, :code:`len_alloc` < :code:`len_used` or the :code:`len_used` is non-zero
-  and :code:`buf_addr` is NULL in at least one subscript.
+- :CODE:`YDB_ERR_PARAMINVALID`  when :code:`len_alloc` < :code:`len_used` or the :code:`len_used` is non-zero
+  and :code:`buf_addr` is NULL in at least one subscript in :code:`subsarray`.
 - Another `error return code`_, in which case the application should
   consider the values of :code:`*ret_subs_used` and the :code:`*ret_subsarray`
   to be undefined.
@@ -1359,8 +1359,8 @@ Return values of :code:`ydb_node_previous_s()` are:
   subscript. In this case, :code:`*ret_subs_used` is the index into the
   :code:`*ret_subsarray` array with the error, and the :code:`len_used` field
   of that structure specifies the size required.
-- :CODE:`YDB_ERR_PARAMINVALID` when, in :code:`subsarray`, :code:`len_alloc` < :code:`len_used` or the :code:`len_used` is non-zero
-  and :code:`buf_addr` is NULL in at least one subscript.
+- :CODE:`YDB_ERR_PARAMINVALID` when :code:`len_alloc` < :code:`len_used` or the :code:`len_used` is non-zero
+  and :code:`buf_addr` is NULL in at least one subscript in :code:`subsarray`.
 - Another `error return code`_, in which case the application should
   consider the values of :code:`*ret_subs_used` and the :code:`*ret_subsarray`
   to be undefined.
@@ -1383,8 +1383,8 @@ to a :code:`ydb_buffer_t` specifying an empty string. Return values are:
 
 - :CODE:`YDB_OK` for a normal return;
 - :CODE:`YDB_ERR_INVSVN` if no such intrinsic special variable exists;
-- :CODE:`YDB_ERR_PARAMINVALID` when, in :code:`subsarray` or :code:`increment`, :code:`len_alloc` < :code:`len_used` or the :code:`len_used` is non-zero
-  and :code:`buf_addr` is NULL in at least one subscript; or
+- :CODE:`YDB_ERR_PARAMINVALID` when :code:`len_alloc` < :code:`len_used` or the :code:`len_used` is non-zero
+  and :code:`buf_addr` is NULL in at least one subscript in :code:`subsarray` or :code:`increment`; or
 - another applicable `error return code`_.
 
 ---------------
@@ -1439,7 +1439,7 @@ The error :CODE:`YDB_ERR_PARAMINVALID` is returned when
 
 - :code:`ret_value` is NULL; 
 - :code:`ret_value->buf_addr` is NULL and the return value has a non-zero :code:`len_used`;
-- in :code:`subsarray`, :code:`len_alloc` < :code:`len_used` or the :code:`len_used` is non-zero and :code:`buf_addr` is NULL in at least one subscript.
+- :code:`len_alloc` < :code:`len_used` or the :code:`len_used` is non-zero and :code:`buf_addr` is NULL in at least one subscript in :code:`subsarray`.
 
 --------------------------
 ydb_subscript_previous_s()
@@ -1480,9 +1480,9 @@ Notes:
 
 The error :CODE:`YDB_ERR_PARAMINVALID` is returned when
 
-- :code:`ret_value` is NULL;
-- :code:`ret_value->buf_addr` is NULL and the return value has a non-zero :code:`len_used`;
-- in :code:`subsarray`, :code:`len_alloc` < :code:`len_used` or the :code:`len_used` is non-zero and :code:`buf_addr` is NULL in at least one subscript.
+- :code:`ret_value` is NULL; or
+- :code:`ret_value->buf_addr` is NULL and the return value has a non-zero :code:`len_used`; or
+- :code:`len_alloc` < :code:`len_used` or the :code:`len_used` is non-zero and :code:`buf_addr` is NULL in at least one subscript in :code:`subsarray`.
 
 ----------
 ydb_tp_s()
@@ -1511,8 +1511,8 @@ pointed to by :code:`tpfn` should return one of the following:
   transaction should restart.
 - :CODE:`YDB_TP_ROLLBACK` — application logic indicates that the
   transaction should not be committed.
-- :CODE:`YDB_ERR_PARAMINVALID` when in :code:`varnames`, :code:`len_alloc` < :code:`len_used` or the :code:`len_used` is non-zero
-  and :code:`buf_addr` is NULL in at least one subscript.
+- :CODE:`YDB_ERR_PARAMINVALID` when :code:`len_alloc` < :code:`len_used` or the :code:`len_used` is non-zero
+  and :code:`buf_addr` is NULL in at least one variable name in :code:`varnames`.
 - An `error return code`_ returned by a YottaDB function called by the
   function pointed to by :code:`tpfn`.
 
