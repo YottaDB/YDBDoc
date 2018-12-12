@@ -2329,15 +2329,22 @@ please obtain and install a newer Golang implementation.
 
 The `Go Quick Start`_ assumes that YottaDB has already been installed
 as described in the `Quick Start`_ section. After completing step 1
-(*Installing YottaDB*), install the Go wrapper:
+(*Installing YottaDB*), download the Go wrapper, install it and and
+test it.
 
-- Download the latest Go wrapper from `the YottaDB Go wrapper
-  repository <https://gitlab.com/YottaDB/Lang/YDBGo>`_.  Unpack the
-  contents in its own directory (e.g, :code:`$HOME/go/src/yottadb`),
-  and ensure that directory is in the search path for packages.
+.. code-block:: bash
 
-Then after step 2 (*Choose a directory for your default
-environment and initialize it*) in the `Quick Start`_ section:
+	$ go get lang.yottadb.com/go/yottadb
+	$ go build lang.yottadb.com/go/yottadb
+	$ source $(pkg-config --variable=prefix yottadb)/ydb_env_set
+	$ go get -t lang.yottadb.com/go/yottadb
+	$ go test lang.yottadb.com/go/yottadb
+	ok  	lang.yottadb.com/go/yottadb	0.194s
+	$
+
+There are a number of programs in the
+:code:`go/src/lang.yottadb.com/go/yottadb` directory that you can
+look at.
 
 3. Put your GO program in the :code:`$ydb_dir` directory, [XYZ
    instructions to include headers].  As a sample program, you can
