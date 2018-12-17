@@ -635,12 +635,14 @@ If Call-Ins are used from an external call function (that is, a C function that 
 
 **Call an M Routine from C**
 
-YottaDB provides 2 interfaces for calling a M routine from C. These are:
+YottaDB provides 4 interfaces for calling a M routine from C. These are:
 
 * ydb_cip
 * ydb_ci
+* ydb_cip_t
+* ydb_ci_t  
 
-ydb_cip offers better performance on calls after the first one. 
+ydb_cip  and ydb_cip_t offer better performance on calls after the first one. 
 
 **ydb_cip**
 
@@ -675,6 +677,23 @@ Optional list of arguments to be passed to the M routine's formallist: the numbe
 
 The status value returned by ydb_cip() indicates the YottaDB status code; zero (0), if successful, or a non-zero; $ZSTATUS error code on failure. The $ZSTATUS message of the failure can be read into a buffer by immediately calling ydb_zstatus().
 
+**ydb_cip_t**
+
+.. parsed-literal::
+   int ydb_cip_t(uint64_t tptoken, const char \*c_rtn_name, ...);
+
+The function ydb_cip_t is an interface that invokes an M routine when YottaDB's Simple Threaded API is active and returns results through parameters.
+
+The ydb_cip_t() call must follow the following format:
+
+.. parsed-literal::
+   status = ydb_cip_t(<tptoken>, <ci_name_descriptor> [,ret_val] [,arg1] ...);
+
+First argument: tptoken, a unique transaction processing token that refers to the active transaction.
+
+ydb_cip_t() works in the same way and returns the same values as ydb_cip().
+
+
 **ydb_ci**
 
 .. parsed-literal::
@@ -692,6 +711,25 @@ Optional second argument: ret_val, a pre-allocated pointer through which YottaDB
 Optional list of arguments to be passed to the M routine's formallist: the number of arguments and the type of each argument must match the number of parameters, and parameter types specified in the corresponding Call-In table entry. All pointer arguments must be pre-allocated. YottaDB assumes that any pointer, which is passed for O/IO-parameter points to valid write-able memory.
 
 The status value returned by ydb_ci() indicates the YottaDB status code; zero (0), if successful, or a non-zero; $ZSTATUS error code on failure. The $ZSTATUS message of the failure can be read into a buffer by immediately calling ydb_zstatus(). For more details, see “Print Error Messages”.
+
+**ydb_ci_t**
+
+.. parsed-literal::
+   int ydb_ci_t(uint64_t tptoken, const char \*c_rtn_name, ...);
+
+The function ydb_ci_t() is an interface that invokes an M routine when YottaDB's Simple Threaded API is active and returns results through its parameters.
+
+The ydb_ci_t() call must be in the following format:
+
+.. parsed-literal::
+   status= ydb_ci_t( <tptoken>, <ci_rtn_name> [,ret_val] [,arg1]...);
+
+First argument: tptoken, a unique transaction processing token that refers to the active transaction.
+
+Second argument: ci_rtn_name, a null-terminated C character string indicating the alias name for the corresponding <lab-ref> entry in the Call-In table.
+
+ydb_ci_t() works in the same way and returns the same values as ydb_ci().
+
 
 **Example: Calling YottaDB from a C Program**
 
