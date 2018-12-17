@@ -667,7 +667,7 @@ The ydb_cip() call must follow the following format:
 .. parsed-literal::
    status = ydb_cip(<ci_name_descriptor> [, ret_val] [, arg1] ...);
 
-First argument: ci_name_descriptor, a null-terminated C character string indicating the alias name for the corresponding <lab-ref> entry in the Call-In table.
+First argument: ci_name_descriptor, as described above, within which rtn_name indicates the alias name for the corresponding <lab-ref> entry in the Call-In table.
 
 Optional second argument: ret_val, a pre-allocated pointer through which YottaDB returns the value of QUIT argument from the (extrinsic) M routine. ret_val must be the same type as specified for <ret-type> in the Call-In table entry. The ret_val argument is needed if and only if <ret-type> is not void.
 
