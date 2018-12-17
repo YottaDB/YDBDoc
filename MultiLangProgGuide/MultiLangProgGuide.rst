@@ -4013,6 +4013,11 @@ The `YottaDB M Programmers Guide
 <https://docs.yottadb.com/ProgrammersGuide/index.html>`_ documents
 programming YottaDB in M and is not duplicated here.
 
+YottaDB supports calling between M and C application code, as
+ documented in `Chapter 11 (Integrating External Routines) of the M
+ Programmers Guide
+ <https://docs.yottadb.com/ProgrammersGuide/extrout.html>`_.
+
 .. _Programming Notes:
 
 ============================================
@@ -4316,29 +4321,31 @@ applications that do not use `Transaction Processing`_, transaction
 processing in a threaded environment requires special consideration
 (see `Threads and Transaction Processing`_).
 
-As `Programming in M`_ is single-threaded, single-threaded
+`Programming in M`_ is single-threaded and single-threaded
 applications can call into M code, and M code can call single threaded
-C code, but multi-threaded C code and M code cannot coexist. The sole
-exception is for database triggers, which are written in M, and work
-whether an application calls single-threaded or multi-threaded
-functions.
+C code as documented in `Chapter 11 (Integrating External Routines) of
+the M Programmers Guide
+<https://docs.yottadb.com/ProgrammersGuide/extrout.html>`_
+Multi-threaded C applications are able to call M code through the
+functions :code:`ydb_ci_t()` and :code:`ydb_cip_t()` functions as
+documented there with the restriction that :code:`ydb_ci_t()` and
+:code:`ydb_cip_t()` may not be called recursively. Both of the
+following cases result in a `SIMPLEAPINEST
+<https://docs.yottadb.com/MessageRecovery/errors.html#simpleapinest>`_
+error.
 
-The following generate errors:
+- A multi-threaded process' top level C code can invoke M code through
+  :code:`ydb_ci_t()` or :code:`ydb_cip_t()`, and that M code can invoke
+  C code, but that invoked C code may not call :code:`ydb_ci_t()` or
+  :code:`ydb_cip_t()`
+- A process whose top level is M code can invoke C code, that C code
+  can invoke M code using :code:`ydb_ci_t()` or :code:`ydb_cip_t()`,
+  and that M code can invoke C code, but that invoked C code may not
+  call :code:`ydb_ci_t()` or :code:`ydb_cip_t()`
 
-- Attempting to call M code after a process has called a
-  multi-threaded function.
-- Attempting to call a multi-threaded function after a process has
-  executed M code.
-- From C code called by M code, attempting to call back into M code
-  from any thread other than the one in which M code is executing.
-- From C code which is called by a database trigger in turn attempting
-  to call a multi-threaded function.
-
-Since YottaDB executes within the address space of an application
-process, it is certainly technically possible for a programmer to
-write code that when run subverts protections YottaDB has in place
-prevent the above scenarios. Doing so will almost certainly result in
-a buggy application that is hard to debug.
+Note that triggers, which are written in M, run in an isolated
+environment, and run appropriately regardless of application code
+calls between M and C.
 
 ----------------------------------
 Threads and Transaction Processing
