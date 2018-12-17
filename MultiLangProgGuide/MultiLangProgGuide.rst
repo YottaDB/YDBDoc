@@ -4333,8 +4333,7 @@ the M Programmers Guide
 <https://docs.yottadb.com/ProgrammersGuide/extrout.html>`_
 Multi-threaded C applications are able to call M code through the
 functions :code:`ydb_ci_t()` and :code:`ydb_cip_t()` functions as
-documented there with the restriction that :code:`ydb_ci_t()` and
-:code:`ydb_cip_t()`.
+documented there.
 
 Note that triggers, which are written in M, run in the thread of the
 YottaDB engine, and are unaffected by multi-threaded Simple API calls
