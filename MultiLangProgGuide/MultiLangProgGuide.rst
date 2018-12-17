@@ -4314,12 +4314,17 @@ multi-threaded application calls a YottaDB function, the function puts
 a request on a queue for the YottaDB engine, and blocks awaiting a
 response – in other words, any call to YottaDB is synchronous as far
 as the caller is concerned, even if servicing that call results in
-asynchronous activity within the process. Meanwhile, other
-application threads continue to run, with the YottaDB engine handling
-queued requests one at at time. While this is conceptually simple for
-applications that do not use `Transaction Processing`_, transaction
-processing in a threaded environment requires special consideration
-(see `Threads and Transaction Processing`_).
+asynchronous activity within the process. Meanwhile, other application
+threads continue to run, with the YottaDB engine handling queued
+requests one at at time. An implication of this architecture is that
+multi-threaded functions of the Simple API cannot recurse – a call to
+a multi-threaded function when another is already on the C stack of a
+thread results in a `SIMPLEAPINEST
+<https://docs.yottadb.com/MessageRecovery/errors.html#simpleapinest>`_
+error. While this is conceptually simple for applications that do not
+use `Transaction Processing`_, transaction processing in a threaded
+environment requires special consideration (see `Threads and
+Transaction Processing`_).
 
 `Programming in M`_ is single-threaded and single-threaded
 applications can call into M code, and M code can call single threaded
@@ -4329,23 +4334,13 @@ the M Programmers Guide
 Multi-threaded C applications are able to call M code through the
 functions :code:`ydb_ci_t()` and :code:`ydb_cip_t()` functions as
 documented there with the restriction that :code:`ydb_ci_t()` and
-:code:`ydb_cip_t()` may not be called recursively. Both of the
-following cases result in a `SIMPLEAPINEST
-<https://docs.yottadb.com/MessageRecovery/errors.html#simpleapinest>`_
-error.
+:code:`ydb_cip_t()`.
 
-- A multi-threaded process' top level C code can invoke M code through
-  :code:`ydb_ci_t()` or :code:`ydb_cip_t()`, and that M code can invoke
-  C code, but that invoked C code may not call :code:`ydb_ci_t()` or
-  :code:`ydb_cip_t()`
-- A process whose top level is M code can invoke C code, that C code
-  can invoke M code using :code:`ydb_ci_t()` or :code:`ydb_cip_t()`,
-  and that M code can invoke C code, but that invoked C code may not
-  call :code:`ydb_ci_t()` or :code:`ydb_cip_t()`
-
-Note that triggers, which are written in M, run in an isolated
-environment, and run appropriately regardless of application code
-calls between M and C.
+Note that triggers, which are written in M, run in the thread of the
+YottaDB engine, and are unaffected by multi-threaded Simple API calls
+already on an application process thread's stack. However, if a
+trigger calls C code, and that C code calls :code:`ydb_ci_t()` or
+:code:`ydb_cip_t()`, no nested Simple API calls are permitted.
 
 ----------------------------------
 Threads and Transaction Processing
