@@ -644,6 +644,8 @@ YottaDB provides 4 interfaces for calling a M routine from C. These are:
 
 ydb_cip  and ydb_cip_t offer better performance on calls after the first one. 
 
+While ydb_ci() and ydb_cip() are for single threaded applications, ydb_ci_t() and ydb_cip_t() are for multi-threaded applications that call M routines. See the "Threads" section in the Multi-Language Programmer's Guide for details.
+
 **ydb_cip**
 
 .. parsed-literal::
@@ -682,7 +684,7 @@ The status value returned by ydb_cip() indicates the YottaDB status code; zero (
 .. parsed-literal::
    int ydb_cip_t(uint64_t tptoken, const char \*c_rtn_name, ...);
 
-The function ydb_cip_t is an interface that invokes an M routine when YottaDB's Simple Threaded API is active and returns results through parameters.
+The function ydb_cip_t is an interface for a multi-threaded application to invoke an M routine.
 
 The ydb_cip_t() call must follow the following format:
 
@@ -717,7 +719,7 @@ The status value returned by ydb_ci() indicates the YottaDB status code; zero (0
 .. parsed-literal::
    int ydb_ci_t(uint64_t tptoken, const char \*c_rtn_name, ...);
 
-The function ydb_ci_t() is an interface that invokes an M routine when YottaDB's Simple Threaded API is active and returns results through its parameters.
+The function ydb_ci_t() is an interface for a multi-threaded application to invoke an M routine..
 
 The ydb_ci_t() call must be in the following format:
 
