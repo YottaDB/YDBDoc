@@ -2601,7 +2601,7 @@ resources.
   function returns with an error return of TIME2LONG.
 - If the lock resource names exceeds the maximum number supported
   (currently eleven), the function returns a PARMOFLOW error.
-- If :code:`namesubs` is not a series of alternating :code:`string`
+- If :code:`namesnsubs` is not a series of alternating :code:`string`
   and :code:`[]string` parameters, the function returns the
   INVLNPAIRLIST error.
 - If it is able to aquire the lock resource(s) within
@@ -3809,7 +3809,7 @@ Go LockST()
 .. code-block:: go
 
 	func yottadb.LockST(tptoken uint64, timeoutNsec uint64,
-		namesnsubs ... *KeyT) error
+		lockname ... *KeyT) error
 
 Matching `Go LockE()`_, :code:`LockST()` wraps `ydb_lock_st()`_ to
 release all lock resources currently held and then attempt to acquire
@@ -3826,9 +3826,6 @@ resources.
 - If the number of lock resource names exceeds the maximum number
   supported (currently eleven), the function returns a PARMOFLOW
   error.
-- If :code:`namesubs` is not a series of alternating :code:`string`
-  and :code:`[]string` parameters, the function returns the
-  INVLNPAIRLIST error.
 - If it is able to aquire the lock resource(s) within
   :code:`timeoutNsec` nanoseconds, it returns holding the lock
   resource(s); otherwise it returns LOCKTIMEOUT. If
@@ -3906,6 +3903,17 @@ The function wraps `ydb_init()`_ to initialize the YottaDB runtime
 system. This call is normally not required as YottaDB initializes
 itself on its first call, the exception being when an application
 wishes to set its own signal handlers (see `Signals`_).
+
+-------------------
+Go IsLittleEndian()
+-------------------
+
+.. code-block:: go
+
+	func yottadb.IsLittleEndian() bool
+
+The function returns :code:`true` if the underlying computing infrastructure
+is little endian and :code:`false` otherwise.
 
 -------------
 Go MessageT()
