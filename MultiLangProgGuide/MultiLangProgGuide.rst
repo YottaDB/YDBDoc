@@ -829,7 +829,7 @@ ydb_node_next_st()`_, `ydb_node_previous_s() /
 ydb_node_previous_st()`_, `ydb_subscript_next_s() /
 ydb_subscript_next_st()`_, or `ydb_subscript_previous_s() /
 ydb_subscript_previous_st()`_ wish to report that there no further
-nodes in their traversals, they return this value.
+nodes/subscripts in their traversals, they return this value.
 
 :code:`YDB_NOTOK` – `ydb_file_name_to_id()`_ was called with a NULL
 pointer to a filename.
@@ -1685,7 +1685,8 @@ and :code:`ydb_subscript_next_st()` return:
 
 In the special case where :code:`subs_used` is zero, and the function
 returns :code:`YDB_OK`, :code:`ret_value->buf_addr` points to the next
-local or global variable name.
+local or global variable name, with :code:`YDB_ERR_NODEEND` indicating
+an end to the traversal.
 
 .. _ydb_subscript_previous_s():
 .. _ydb_subscript_previous_st():
@@ -1736,7 +1737,8 @@ empty string. :code:`ydb_subscript_previous_s()` and
 
 In the special case where :code:`subs_used` is zero, and the function
 returns :code:`YDB_OK`, :code:`ret_value->buf_addr` points to the
-previous local or global variable name.
+previous local or global variable name, with :code:`YDB_ERR_NODEEND`
+indicating an end to the traversal.
 
 .. _ydb_tp_s():
 .. _ydb_tp_st():
@@ -4385,7 +4387,12 @@ response – in other words, any call to YottaDB is synchronous as far
 as the caller is concerned, even if servicing that call results in
 asynchronous activity within the process. Meanwhile, other application
 threads continue to run, with the YottaDB engine handling queued
-requests one at at time. While this is conceptually simple for
+requests one at at time. An implication of this architecture is that
+multi-threaded functions of the Simple API cannot recurse – a call to
+a multi-threaded function when another is already on the C stack of a
+thread results in a `SIMPLEAPINEST
+<https://docs.yottadb.com/MessageRecovery/errors.html#simpleapinest>`_
+error. While this is conceptually simple for
 applications that do not use `Transaction Processing`_, transaction
 processing in a threaded environment requires special consideration
 (see `Threads and Transaction Processing`_).
