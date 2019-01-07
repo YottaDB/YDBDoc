@@ -1047,9 +1047,7 @@ error. :code:`ydb_data_s()` returns :CODE:`YDB_OK` or an `error return code`_.
 
 The error :CODE:`YDB_ERR_PARAMINVALID` is returned when 
 
-- :code:`ret_value` is NULL or
-- :code:`ret_value->buf_addr` is NULL and the return value has a non-zero :code:`len_used` or
-- :code:`len_alloc` < :code:`len_used` or the :code:`len_used` is non-zero and :code:`buf_addr` is NULL in at least one subscript, in :code:`subsarray`.
+- :code:`ret_value` is NULL
 
 --------------
 ydb_delete_s()
