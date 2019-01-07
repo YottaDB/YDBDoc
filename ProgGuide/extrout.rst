@@ -779,6 +779,7 @@ Rules to Follow in Call-Ins
 2. The external application should never call exit() unless it has called ydb_exit() previously. YottaDB internally installs an exit handler that should never be bypassed.
 3. The external application should never use any signals when YottaDB is active since YottaDB reserves them for its internal use. YottaDB provides the ability to handle SIGUSR1 within M (see “$ZINTerrupt” for more information). An interface is provided by YottaDB for timers. Although not required, YottaDB recommends the use of ydb_malloc() and ydb_free() for memory management by C code that executes in a YottaDB process space for enhanced performance and improved debugging.
 4. YottaDB performs device input using the read() system service. UNIX documentation recommends against mixing this type of input with buffered input services in the fgets() family and ignoring this recommendation is likely to cause a loss of input that is difficult to diagnose and understand.
+5. ydb_ci() can cause SIG-11s or weird-symptoms/non-deterministic-output if the correct number of parameters are not specified.
 
 --------------------------------------
 Type Limits for Call-Ins and Call-Outs
