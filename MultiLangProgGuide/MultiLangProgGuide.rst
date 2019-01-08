@@ -1167,7 +1167,7 @@ ydb_incr_s()
 :code:`ydb_incr_s()` atomically:
 
 - converts the value in the specified node to a number if it is not
-  one already, using a zero value if the node does not exist;
+  a `canonical number`_, using a zero value if the node does not exist;
 - increments it by the value specified by :code:`*increment`, converting
   the value to a number if it is not a `canonical number`_, defaulting to
   1 if the parameter is NULL; and
