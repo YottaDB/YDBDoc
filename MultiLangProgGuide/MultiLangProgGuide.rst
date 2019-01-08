@@ -49,11 +49,11 @@ Local Installation
   :code:`/usr/local/lib/yottadb/r###` where :code:`r###` is
   the release, e.g., :code:`r122`.
 
-2. Set up the environment: :code:`source
-    $(pkg-config --variable=prefix yottadb)/ydb_env_set`. This
-    defaults to an environment in :code:`$HOME/.yottadb`; to use
-    another directory, set the environment variable :code:`ydb_dir` to
-    the desired directory.
+2. Set up the environment: :code:`source $(pkg-config --variable=prefix yottadb)/ydb_env_set`.
+   This defaults to an environment in :code:`$HOME/.yottadb`; to use
+   another directory, set the environment variable :code:`ydb_dir` to
+   the desired directory.
+
 #. Put your C program in the :code:`$ydb_dir` directory,
    :code:`#include` the file :code:`libyottadb.h`
    in your C program and compile it. As a sample program, you can
@@ -474,8 +474,9 @@ several comma-separated substrings.
 
 Note that a race condition exists for a multi-threaded application:
 after a call that returns an error, it is possible for another call
-from a different thread to perturb the value of $zstatus. See the
-Important Notes in the `Threads`_ discussion.
+from a different thread to perturb the value of :code:`$zstatus`. Use
+the `errstr`_ parameter discussed in `Threads`_ to get the correct
+:code:`$zstatus` in a multi-threaded application.
 
 ----------
 $zyrelease
@@ -974,20 +975,21 @@ fields:
   address of a string.
 - :code:`length` — the length of the string starting at the :code:`address` field.
 
-:code:`ydb_tpfnptr_t` is a pointer to a function with one parameter, a
-pointer, and which returns an integer, defined thus:
+:code:`ydb_tpfnptr_t` is a pointer to a function which returns an
+integer, with one parameter, a pointer to an arbitrary structure:
 
 .. code-block:: C
 		
 	typedef int (*ydb_tpfnptr_t)(void *tpfnparm);
 
-:code:`ydb_tp2fnptr_t` is a pointer to a function with two parameters,
-a :code:`tptoken`, a pointer, and which returns an integer, defined
-thus:
+:code:`ydb_tp2fnptr_t` is a pointer to a function which returns an
+integer, with three parameters, a :code:`tptoken`, a :code:`*errstr`
+pointer, and a pointer to an arbitrary structure:
 
 .. code-block:: C
 
-	typedef int (*ydb_tp2fnptr_t)(uint64_t tptoken, void *tpfnparm)
+	typedef int (*ydb_tp2fnptr_t)(uint64_t tptoken,
+		ydb_buffer_t *errstr, void *tpfnparm)
 
 Functions to implement transaction processing logic for
 single-threaded applications are referenced by :code:`ydb_tpfnptr_t`
@@ -1112,8 +1114,10 @@ an unpleasant bug that is difficult to troubleshoot.
 
 Functions specific to the YottaDB Simple API for single-threaded
 applications end in :code:`_s()` and those for multi-threaded
-applications end in :code:`_st()`. The discussion in `Threads`_
-provides more detailed information.
+applications end in :code:`_st()`, with the latter functions typically
+differing from their counterparts of the former type with two
+additional parameters, :code:`tptoken`, and :code:`errstr`. The
+discussion in `Threads`_ provides more detailed information.
 
 .. _ydb_data_s():
 .. _ydb_data_st():
@@ -1130,6 +1134,7 @@ ydb_data_s() / ydb_data_st()
 		unsigned int *ret_value);
 
 	int ydb_data_st(uint64_t tptoken,
+		ydb_buffer_t *errstr,
 		ydb_buffer_t *varname,
 		int subs_used,
 		ydb_buffer_t *subsarray,
@@ -1173,6 +1178,7 @@ ydb_delete_s() / ydb_delete_st()
 		int deltype);
 
 	int ydb_delete_st(uint64_t tptoken,
+		ydb_buffer_t *errstr,
 		ydb_buffer_t *varname,
 		int subs_used,
 		ydb_buffer_t *subsarray,
@@ -1210,6 +1216,7 @@ ydb_delete_excl_s() / ydb_delete_excl_st()
 		ydb_buffer_t *varnames);
 
 	int ydb_delete_excl_st(uint64_t tptoken,
+		ydb_buffer_t *errstr,
 		int namecount, ydb_buffer_t *varnames);
 
 :code:`ydb_delete_excl_s()` and :code:`ydb_delete_excl_st()` delete
@@ -1253,6 +1260,7 @@ ydb_get_s() / ydb_get_st()
 		ydb_buffer_t *ret_value);
 
 	int ydb_get_st(uint64_t tptoken,
+		ydb_buffer_t *errstr,
 		ydb_buffer_t *varname,
 		int subs_used,
 		ydb_buffer_t *subsarray,
@@ -1312,6 +1320,7 @@ ydb_incr_s() / ydb_incr_st()
 		ydb_buffer_t *ret_value);
 
 	int ydb_incr_st(uint64_t tptoken,
+		ydb_buffer_t *errstr,
 		ydb_buffer_t *varname,
 		int subs_used,
 		ydb_buffer_t *subsarray,
@@ -1361,6 +1370,7 @@ ydb_lock_s() / ydb_lock_st()
 		ydb_buffer_t *subsarray], ...]);
 
 	int ydb_lock_st(uint64_t tptoken,
+		ydb_buffer_t *errstr,
 		unsigned long long timeout_nsec,
 		int namecount[,
 		[ydb_buffer_t *varname,
@@ -1391,6 +1401,7 @@ Return values:
   :code:`YDB_MAX_TIME_NSEC`, the function immediately returns
   :code:`YDB_ERR_TIME2LONG`.
 - :CODE:`YDB_ERR_PARAMINVALID`
+
 is returned when :code:`len_alloc` < :code:`len_used` or the :code:`len_used` is non-zero
 and :code:`buf_addr` is NULL in at least one subscript in :code:`subsarray`.
 - In other cases, the function returns an `error return code`_.
@@ -1409,6 +1420,7 @@ ydb_lock_decr_s() / ydb_lock_decr_st()
 		ydb_buffer_t *subsarray);
 
 	int ydb_lock_decr_st(uint64_t tptoken,
+		ydb_buffer_t *errstr,
 		ydb_buffer_t *varname,
 		int subs_used,
 		ydb_buffer_t *subsarray);
@@ -1440,6 +1452,7 @@ ydb_lock_incr_s() / ydb_lock_incr_st()
 		ydb_buffer_t *subsarray);
 
 	int ydb_lock_incr_st(uint64_t tptoken,
+		ydb_buffer_t *errstr,
 		unsigned long long timeout_nsec,
 		ydb_buffer_t *varname,
 		int subs_used,
@@ -1463,6 +1476,7 @@ Return values:
   :code:`YDB_MAX_TIME_NSEC`, the function immediately returns
   :code:`YDB_ERR_TIME2LONG`.
 - :CODE:`YDB_ERR_PARAMINVALID`
+
 is returned when :code:`len_alloc` < :code:`len_used` or the :code:`len_used` is non-zero
 and :code:`buf_addr` is NULL in at least one subscript in :code:`subsarray`.
 - In other cases, the function returns an `error return code`_.
@@ -1483,6 +1497,7 @@ ydb_node_next_s() / ydb_node_next_st()
 		ydb_buffer_t *ret_subsarray);
 
 	int ydb_node_next_st(uint64_t tptoken,
+		ydb_buffer_t *errstr,
 		ydb_buffer_t *varname,
 		int subs_used,
 		ydb_buffer_t *subsarray,
@@ -1542,6 +1557,7 @@ ydb_node_previous_s() / ydb_node_previous_st()
 		ydb_buffer_t *ret_subsarray);
 
 	int ydb_node_previous_st(uint64_t tptoken,
+		ydb_buffer_t *errstr,
 		ydb_buffer_t *varname,
 		int subs_used,
 		ydb_buffer_t *subsarray,
@@ -1596,6 +1612,7 @@ ydb_set_s() / ydb_set_st()
 		ydb_buffer_t *value);
 
 	int ydb_set_st(uint64_t tptoken,
+		ydb_buffer_t *errstr,
 		ydb_buffer_t *varname,
 		int subs_used,
 		ydb_buffer_t *subsarray,
@@ -1625,6 +1642,7 @@ ydb_str2zwr_s() / ydb_str2zwr_st()
 	int ydb_str2zwr_s(ydb_buffer_t *str, ydb_buffer_t *zwr);
 
 	int ydb_str2zwr_st(uint64_t tptoken,
+		ydb_buffer_t *errstr,
 		ydb_buffer_t *str, ydb_buffer_t *zwr);
 
 In the buffer referenced by :code:`*zwr`, :code:`ydb_str2zwr_s()` and
@@ -1652,6 +1670,7 @@ ydb_subscript_next_s() / ydb_subscript_next_st()
 		ydb_buffer_t *ret_value);
 
 	int ydb_subscript_next_st(uint64_t tptoken,
+		ydb_buffer_t *errstr,
 		ydb_buffer_t *varname,
 		int subs_used,
 		ydb_buffer_t *subsarray,
@@ -1703,6 +1722,7 @@ ydb_subscript_previous_s() / ydb_subscript_previous_st()
 		ydb_buffer_t *ret_value);
 
 	int ydb_subscript_previous_st(uint64_t tptoken,
+		ydb_buffer_t *errstr,
 		ydb_buffer_t *varname,
 		int subs_used,
 		ydb_buffer_t *subsarray,
@@ -1756,6 +1776,7 @@ ydb_tp_s() / ydb_tp_st()
 		ydb_buffer_t *varnames);
 
 	int ydb_tp_st(uint64_t tptoken,
+		ydb_buffer_t *errstr,
 		ydb_tp2fnptr_t tpfn,
 		void *tpfnparm,
 		const char *transid,
@@ -1838,6 +1859,7 @@ ydb_zwr2str_s() / ydb_zwr2str_st()
 	int ydb_zwr2str_s(ydb_buffer_t *zwr, ydb_buffer_t *str);
 
 	int ydb_zwr2str_st(uint64_t tptoken,
+		ydb_buffer_t *errstr,
 		ydb_buffer_t *zwr, ydb_buffer_t *str);
 
 In the buffer referenced by :code:`*str`, :code:`ydb_zwr2str_s()` and
@@ -1861,10 +1883,18 @@ Utility Functions
 Utility functions are functions that are not core to YottaDB
 functionality, but which are useful to application code.
 
-Utility functions whose names end in :code:`_st()` are for use by
+Utility functions whose names end in :code:`_t()` are for use by
 multi-threaded applications, and those which do not are for
 single-threaded applications. The discussion in `Threads`_ provides
 more detailed information.
+
+Functions such as `ydb_exit()`_, `ydb_fork_n_core()`_, and
+`ydb_init()`_, which do not have separate variants for single- and
+multi-threaded applications, are suitable for both.
+
+See also the description of the :code:`ydb_ci_t()` and
+:code:`ydb_cip_t()` functions in the `Programmers Guide
+<https://docs.yottadb.com/ProgrammersGuide/extrout.html#call-in-interface>`_.
 
 ----------------
 ydb_child_init()
@@ -1879,26 +1909,23 @@ invoked by YottaDB as needed. Any existing usages of this function in an applica
 can be safely removed assuming YottaDB r1.24 or later is in use.
 
 .. _ydb_exit():
-.. _ydb_exit_t():
 
--------------------------
-ydb_exit() / ydb_exit_t()
--------------------------
+----------
+ydb_exit()
+----------
 
 .. code-block:: C
 
 	int ydb_exit(void)
 
-	int ydb_exit_t(uint64_t tptoken, void)
-
 When a caller no longer wishes to use YottaDB, a call to
-:code:`ydb_exit()` or :code:`ydb_exit_t()` cleans up the process
+:code:`ydb_exit()` cleans up the process
 connection/access to all databases and cleans up its data
 structures. Therafter, any attempt to call a YottaDB function produces
 a :code:`YDB_ERR_CALLINAFTEREXIT` error.
 
 Note that a typical application should not need to call
-:code:`ydb_exit()` or :code:`ydb_exit_t()`, but should instead just terminate with a call to
+:code:`ydb_exit()`, but should instead just terminate with a call to
 :code:`exit()` which will perform any cleanup needed by YottaDB.
 
 .. _ydb_file_id_free():
@@ -1912,7 +1939,8 @@ ydb_file_id_free() / ydb_file_id_free_t()
 
 	int ydb_file_id_free(ydb_fileid_ptr_t fileid)
 
-	int ydb_file_id_free_t(uint64_t tptoken, ydb_fileid_ptr_t fileid)
+	int ydb_file_id_free_t(uint64_t tptoken,
+		ydb_buffer_t *errstr, ydb_fileid_ptr_t fileid)
 
 Releases the memory used by a :code:`fileid` structure previously
 generated by `ydb_file_name_to_id()`_ or
@@ -1934,20 +1962,22 @@ ydb_file_is_identical() / ydb_file_is_identical_t()
 		ydb_fileid_ptr_t fileid2)
 
 	int ydb_file_is_identical_t(uint64_t tptoken,
+		ydb_buffer_t *errstr,
 		ydb_fileid_ptr_t fileid1,
 		ydb_fileid_ptr_t fileid2)
 
 Given two pointers to :code:`fileid` structures (see
 `ydb_file_name_to_id()`_ / `ydb_file_name_to_id_t()`_),
 :code:`ydb_file_is_identical()` and :code:`ydb_file_is_identical_t()`
-return YDB_OK if the two :code:`fileid` structures are the same file.
+return YDB_OK if the two :code:`fileid` structures are the same file
+and YDB_NOTOK otherwise.
 
 .. _ydb_file_name_to_id():
 .. _ydb_file_name_to_id_t():
 
----------------------
-ydb_file_name_to_id()
----------------------
+-----------------------------------------------
+ydb_file_name_to_id() / ydb_file_name_to_id_t()
+-----------------------------------------------
 
 .. code-block:: C
 
@@ -1955,6 +1985,7 @@ ydb_file_name_to_id()
 		ydb_fileid_ptr_t *fileid)
 
 	int ydb_file_name_to_id_t(uint64_t tptoken,
+		ydb_buffer_t *errstr,
 		ydb_string_t *filename,
 		ydb_fileid_ptr_t *fileid)
 
@@ -1978,21 +2009,18 @@ leak.
 :code:NULL, or an `error return code`_.
 
 .. _ydb_fork_n_core():
-.. _ydb_fork_n_core_t():
 
----------------------------------------
-ydb_fork_n_core() / ydb_fork_n_core_t()
----------------------------------------
+-----------------
+ydb_fork_n_core()
+-----------------
 
 .. code-block:: C
 
 	void ydb_fork_n_core(void)
 
-	void ydb_fork_n_core(uint64_t tptoken, void)
-
 A core is a snapshot of a process, to help debug application code, for
 example to troubleshoot an out-of-design condition. When a process
-executes :code:`ydb_fork_n_core()` or :code:`ydb_fork_n_core_t()`, it
+executes :code:`ydb_fork_n_core()`, it
 forks. The child process sends itself a signal to generate a core and
 terminate. On termination of the child process, the parent process
 continues execution. Note that depending on the nature of the
@@ -2014,9 +2042,9 @@ child and is dumped.
 
 .. _ydb_free():
 
--------------------------
+----------
 ydb_free()
--------------------------
+----------
 
 .. code-block:: C
 
@@ -2034,79 +2062,64 @@ multiple threads in multi-threaded programs. (See the `Threads`_ section for det
 to use in multiple threads.
 
 .. _ydb_hiber_start():
-.. _ydb_hiber_start_t():
 
----------------------------------------
-ydb_hiber_start() / ydb_hiber_start_t()
----------------------------------------
+-----------------
+ydb_hiber_start()
+-----------------
 
 .. code-block:: C
 
 	int ydb_hiber_start(unsigned long long sleep_nsec)
 
-	int ydb_hiber_start_t(uint64_t tptoken,
-		unsigned long long sleep_nsec)
-
 The process or thread sleeps for the time in nanoseconds specified by
 :code:`sleep_nsec`. If a value greater than :code:`YDB_MAX_TIME_NSEC`
-is specified, :code:`ydb_hiber_start()` or :code:`ydb_hiber_start_t()`
-immediately return with a :code:`YDB_ERR_TIME2LONG` error; otherwise
+is specified, :code:`ydb_hiber_start()`
+immediately returns with a :code:`YDB_ERR_TIME2LONG` error; otherwise
 they return :code:`YDB_OK` after the elapsed time.
 
 .. _ydb_hiber_start_wait_any():
-.. _ydb_hiber_start_wait_any_t():
 
----------------------------------------------------------
-ydb_hiber_start_wait_any() / ydb_hiber_start_wait_any_t()
----------------------------------------------------------
+--------------------------
+ydb_hiber_start_wait_any()
+--------------------------
 
 .. code-block:: C
 
 	int ydb_hiber_start_wait_any(unsigned long long sleep_nsec)
 
-	int ydb_hiber_start_wait_any_t(uint64_t tptoken,
-		unsigned long long sleep_nsec)
-
 The process or thread sleeps for the time in nanoseconds specified by
 :code:`sleep_nsec` or until it receives a signal. If a value greater
 than :code:`YDB_MAX_TIME_NSEC` is specified, :code:`ydb_hiber_start_wait_any()`
-and :code:`ydb_hiber_start_wait_any_t()` immediately return with a
+immediately returns with a
 :code:`YDB_ERR_TIME2LONG` error; otherwise they return :code:`YDB_OK`
 after the elapsed time or when the wait is terminated by a signal.
 
 .. _ydb_init():
-.. _ydb_init_t():
 
--------------------------
-ydb_init() / ydb_init_t()
--------------------------
+----------
+ydb_init()
+----------
 
 .. code-block:: C
 
 	int ydb_init(void)
 
-	int ydb_init_t(void)
-
-:code:`ydb_init()` and :code:`ydb_init_t()` initialize the YottaDB
+:code:`ydb_init()` initializes the YottaDB
 runtime environment. As YottaDB automatically initializes the runtime
 on the first call to its API or first M code invocation, there is
-usually no need to explicitly call :code:`ydb_init()` or
-:code:`ydb_init_t()`. The exception is when an application wishes to
-set its own signal handlers (see `Signals`_): :code:`ydb_init()` and
-:code:`ydb_init_t()` set signal handlers, and in case an application
+usually no need to explicitly call :code:`ydb_init()`.
+The exception is when an application wishes to
+set its own signal handlers (see `Signals`_): :code:`ydb_init()`
+sets signal handlers, and in case an application
 wishes to set its own signal handlers for signals not used by YottaDB,
-it can call :code:`ydb_init()` or :code:`ydb_init_t()` before setting
+it can call :code:`ydb_init()` before setting
 its signal handlers.
-
-Note tha as :code:`ydb_init()` and :code:`ydb_init_t()` are expected
-to be an application's first calls to YottaDB, they don't require a
-:code:`tptoken` parameter.
 
 .. _ydb_malloc():
 
------------------------------
+------------
 ydb_malloc()
------------------------------
+------------
 
 .. code-block:: C
 
@@ -2137,7 +2150,7 @@ ydb_message() / ydb_message_t()
 
 	int ydb_message(int errnum, ydb_buffer_t *msg_buff)
 
-	int ydb_message_t(uint64_t tptoken,
+	int ydb_message_t(uint64_t tptoken, ydb_buffer_t *errstr,
 		int errnum, ydb_buffer_t *msg_buff)
 
 The functions return the error message text template for the error
@@ -2167,7 +2180,8 @@ ydb_stdout_stderr_adjust() / ydb_stdout_stderr_adjust_t()
 
 	int ydb_stdout_stderr_adjust(void)
 
-	int ydb_stdout_stderr_adjust_t(void)
+	int ydb_stdout_stderr_adjust_t(uint64 tptoken,
+		ydb_buffer_t *errstr)
 
 The functions check whether stdout (file descriptor 1) and stderr
 (file descriptor 2) are the same file, and if so, route stderr writes
@@ -2181,17 +2195,14 @@ redirection. :code:`ydb_stdout_stderr_adjust()` and
 :code:`ydb_stdout_stderr_adjust_t()` return :code:`YDB_OK`.
 
 .. _ydb_thread_is_main():
-.. _ydb_thread_is_main_t():
 
----------------------------------------------
-ydb_thread_is_main() / ydb_thread_is_main_t()
----------------------------------------------
+--------------------
+ydb_thread_is_main()
+--------------------
 
 .. code-block:: C
 
 	int ydb_thread_is_main(void)
-
-	int ydb_thread_is_main_t(uint64_t tptoken, void)
 
 The functions return :code:`YDB_OK` if the thread is the main thread
 of the process, and another value if the thread is not. YottaDB
@@ -2210,7 +2221,8 @@ ydb_timer_cancel() / ydb_timer_cancel_t()
 
 	void ydb_timer_cancel(intptr_t timer_id)
 
-	void ydb_timer_cancel(uint64_t tptoken, intptr_t timer_id)
+	void ydb_timer_cancel_t(uint64_t tptoken,
+		ydb_buffer_t *errstr, intptr_t timer_id)
 
 Cancel a timer identified by :code:`timer_id` and previously started with
 `ydb_timer_start()`_ or `ydb_timer_start_t()`_.
@@ -2235,6 +2247,7 @@ ydb_timer_start() / ydb_timer_start_t()
 		char *handler_data);
 
 	int ydb_timer_start_t(uint64_t tptoken,
+		ydb_buffer_t *errstr,
 		intptr_t timer_id,
 		unsigned long long limit_nsec,
 		ydb_funcptr_retvoid_t handler,
@@ -2319,7 +2332,9 @@ All subsections of the `Programming in Go` section are prefixed with
 As Go implementations are inherently multi-threaded, where the C
 `Simple API`_ provides separate functions for use in multi-threaded
 applications, e.g., `ydb_get_s()`_ vs. `ydb_get_st()`_), the Go wrapper
-wraps the function for use in multi-threaded applications.
+wraps the function for use in multi-threaded applications. Also, as
+Go is multi-threaded, calls include a `errstr`_ parameter to get the
+correct `$zstatus`_ for each call.
 
 Go Quick Start
 ==============
@@ -2434,7 +2449,10 @@ Note that the :code:`errcode` is the definitive return from the
 call. The :code:`Error()` function accesses `$zstatus`_, which could
 potentially be altered by a subsequent call to YottaDB from another
 Goroutine, as a consequence of the race condition noted in the
-description of `$zstatus`_.
+description of `$zstatus`_. For an application where the race
+condition can potentially occur, the `errstr`_ parameter provides
+access to the actual `$zstatus`_ for each call. Pass a :code:`nil`
+parameter for `errstr`_ where the text is not needed.
 
 In the documentation:
 
@@ -2499,7 +2517,7 @@ Go DataE()
 
 .. code-block:: go
 
-	func yottadb.DataE(tptoken uint64,
+	func yottadb.DataE(tptoken uint64, errstr *BufferT,
 		varname string, subary []string) (uint32, error)
 
 Matching `Go DataST()`_, :code:`DataE()` function wraps and returns the
@@ -2511,8 +2529,8 @@ Go DeleteE()
 
 .. code-block:: go
 
-	yottadb.DeleteE(tptoken uint64, deltype int,
-		varname string, subary []string) error
+	yottadb.DeleteE(tptoken uint64,  errstr *BufferT,
+		deltype int, varname string, subary []string) error
 
 Matching `Go DeleteST()`_, :code:`DeleteE()` wraps `ydb_delete_st()`_ to
 delete a local or global variable node or (sub)tree, with a value of
@@ -2527,7 +2545,7 @@ Go DeleteExclE()
 .. code-block:: go
 
 	func yottadb.DeleteExclE(tptoken uint64,
-		varnames []string) error
+		 errstr *BufferT, varnames []string) error
 
 Matching `Go DeleteExclST()`_, :code:`DeleteExclE()` wraps
 `ydb_delete_excl_st()`_ to delete all local variables except those
@@ -2548,7 +2566,7 @@ Go IncrE()
 
 .. code-block:: go
 
-	func yottadb.IncrE(tptoken uint64,
+	func yottadb.IncrE(tptoken uint64, errstr *BufferT,
 		incr, varname string, subary []string) (string, error)
 
 Matching `Go IncrST()`_, :code:`IncrE()` wraps `ydb_incr_st()`_ to
@@ -2569,7 +2587,7 @@ Go LockDecrE()
 
 .. code-block:: go
 
-	func yottadb.LockDecrE(tptoken uint64,
+	func yottadb.LockDecrE(tptoken uint64, errstr *BufferT,
 		varname string, subary []string) error
 
 Matching `Go LockDecrST()`_ :code:`LockDecrE()` wraps
@@ -2582,7 +2600,7 @@ Go LockE()
 
 .. code-block:: go
 
-	func yottadb.LockE(tptoken uint64,
+	func yottadb.LockE(tptoken uint64, errstr *BufferT,
 		timeoutNsec uint64, namesnsubs ... interface{}) error
 
 Matching `Go LockST()`_, :code:`LockE()` releases all lock resources
@@ -2617,7 +2635,8 @@ Go LockIncrE()
 
 .. code-block:: go
 
-	func yottadb.LockIncrE(tptoken uint64, timeoutNsec uint64,
+	func yottadb.LockIncrE(tptoken uint64, errstr *BufferT,
+		timeoutNsec uint64,
 		varname string, subary []string) error
 
 Matching `Go LockIncrST()`_, :code:`LockIncrE()` wraps
@@ -2638,7 +2657,7 @@ Go NodeNextE()
 
 .. code-block:: go
 
-	func yottadb.NodeNextE(tptoken uint64,
+	func yottadb.NodeNextE(tptoken uint64, errstr *BufferT,
 		varname string, subary []string) ([]string, error)
 
 Matching `Go NodeNextST()`_, :code:`NodeNextE()` wraps
@@ -2654,7 +2673,7 @@ Go NodePrevE()
 
 .. code-block:: go
 
-	func yottadb.NodePrevE(tptoken uint64,
+	func yottadb.NodePrevE(tptoken uint64, errstr *BufferT,
 		varname string, subary []string) ([]string, error)
 
 Matching `Go NodePrevST()`_, :code:`NodePrevE()` wraps
@@ -2670,10 +2689,10 @@ Go SetValE()
 
 .. code-block:: go
 
-	func yottadb.SetValE(tptoken uint64,
+	func yottadb.SetValE(tptoken uint64, errstr *BufferT,
 		value, varname string, subary []string) error
 
-Matching `Go SetST()`_, at the referenced local or global variable
+Matching `Go SetValST()`_, at the referenced local or global variable
 node, or the intrinsic special variable, :code:`SetValE()` wraps
 `ydb_set_st()`_ to set the value specified by :code:`value`.
 
@@ -2682,7 +2701,7 @@ Go SubNextE()
 
 .. code-block:: go
 
-	func yottadb.SubNextE(tptoken uint64,
+	func yottadb.SubNextE(tptoken uint64, errstr *BufferT,
 		varname string, subary []string) (string, error)
 
 Matching `Go SubNextST()`_, :code:`SubNextE()` wraps
@@ -2704,7 +2723,7 @@ Go SubPrevE()
 
 .. code-block:: go
 
-	func yottadb.SubPrevE(tptoken uint64,
+	func yottadb.SubPrevE(tptoken uint64, errstr *BufferT,
 		varname string, subary []string) (string, error)
 
 Matching `Go SubPrevST()`_, :code:`SubPrevE()` wraps
@@ -2726,7 +2745,7 @@ Go TpE()
 
 .. code-block:: go
 
-	func yottadb.TpE(tptoken uint64,
+	func yottadb.TpE(tptoken uint64, errstr *BufferT,
 		tpfn unsafe.Pointer, tpfnparm unsafe.Pointer,
 		transid string, varnames []string) error
 
@@ -2747,8 +2766,9 @@ Go TpE2()
 
 .. code-block:: go
 
-	func yottadb.TpE2(tptoken uint64, tpfn func(uint64) int,
-		transid string, varnames []string) error
+	func yottadb.TpE2(tptoken uint64, errstr *BufferT,
+		tpfn func(uint64, *BufferT) int32, transid string,
+		varnames []string) error
 
 Matching `Go TpST2()`_, :code:`TpE()` wraps :code:`ydb_tp_st()` to
 implement `Transaction Processing`_. The difference between
@@ -2765,7 +2785,7 @@ Go ValE()
 
 .. code-block:: go
 
-	func yottadb.GetE(tptoken uint64,
+	func yottadb.GetE(tptoken uint64, errstr *BufferT,
 		varname string, subary []string) (string, error)
 
 Matching `Go ValST()`_, :code:`ValE()` wraps `ydb_get_st()`_ to return
@@ -2916,12 +2936,29 @@ YottaDB heap space referenced by the :code:`C.ydb_buffer_t` structure,
 release the :code:`C.ydb_buffer_t`, and set :code:`cbuft` in the
 :code:`BufferT` structure to :code:`nil`.
 
+Go BufferT FromPtr()
+....................
+
+.. code-block:: go
+
+	func (buffer *BufferT) BufferTFromPtr(errstr unsafe.Pointer)
+
+Intended for use by functions implementing transaction logic, the
+method sets :code:`cbuft` in the :code:`BufferT` structure to
+:code:`errstr`.
+
+Note: Modifying :code:`errstr`, or accessing memory it references may
+lead to code that behaves unpredictably and is hard to debug. Always
+“wrap” it using :code:`FromPtr()` and use the methods for the
+:code:`BufferT` structure.
+
 Go BufferT LenAlloc()
 .....................
 
 .. code-block:: go
 
-	func (buffer *BufferT) LenAlloc(tptoken uint64) (uint32, error)
+	func (buffer *BufferT) LenAlloc(tptoken uint64,
+		errstr *BufferT) (uint32, error)
 
 - If the :code:`C.ydb_buffer_t` structure referenced by :code:`cbuft`
   has not yet been allocated, return the STRUCTNOTALLOCD error.
@@ -2933,7 +2970,8 @@ Go BufferT LenUsed()
 
 .. code-block:: go
 
-	func (buffer *BufferT) LenUsed(tptoken uint64) (uint32, error)
+	func (buffer *BufferT) LenUsed(tptoken uint64,
+		errstr *BufferT) (uint32, error)
 
 - If the :code:`C.ydb_buffer_t` structure referenced by :code:`cbuft`
   has not yet been allocated, return the STRUCTNOTALLOCD error.
@@ -2951,7 +2989,7 @@ Go BufferT SetLenUsed()
 .. code-block:: go
 
 	func (buffer *BufferT) SetLenUsed(tptoken uint64,
-		newLen uint32) error
+		errstr *BufferT, newLen uint32) error
 
 Use this method to change the length of a used substring of the
 contents of the buffer referenced by the :code:`buf_addr` field of the
@@ -2976,7 +3014,7 @@ Go BufferT SetValBAry()
 .. code-block:: go
 
 	func (buffer *BufferT) SetValBAry(tptoken uint64,
-		val *[]byte) error
+		errstr *BufferT, val *[]byte) error
 
 - If the :code:`C.ydb_buffer_t` structure referenced by :code:`cbuft`
   has not yet been allocated, return the STRUCTNOTALLOCD error.
@@ -2994,7 +3032,7 @@ Go BufferT SetValStr()
 .. code-block:: go
 
 	func (buffer *BufferT) SetVarStr(tptoken uint64,
-		val *string) error
+		errstr *BufferT, val *string) error
 
 - If the :code:`C.ydb_buffer_t` structure referenced by :code:`cbuft`
   has not yet been allocated, return the STRUCTNOTALLOCD error.
@@ -3012,7 +3050,7 @@ Go BufferT SetValStrLit()
 .. code-block:: go
 
 	func (buffer *BufferT) SetVarStrLit(tptoken uint64,
-		val string) error
+		errstr *BufferT, val string) error
 
 - If the :code:`C.ydb_buffer_t` structure referenced by :code:`cbuft`
   has not yet been allocated, return the STRUCTNOTALLOCD error.
@@ -3061,7 +3099,7 @@ Go BufferTArray Alloc()
 
 .. code-block:: go
 
-	func (buftary *BufferTArray) Alloc(numSubs, bufSiz uint32)
+	func (buftary *BufferTArray) Alloc(numBufs, nBytes uint32)
 
 Allocate:
 
@@ -3137,11 +3175,12 @@ Go BufferTArray ElemAlloc()
 - Otherwise, return the :code:`elemsAlloc` field.
 
 Go BufferTArray ElemLenAlloc()
-.............................
+..............................
 
 .. code-block:: go
 
-	func (buftary *BufferTArray) ElemLenAlloc(tptoken uint64) uint32
+	func (buftary *BufferTArray)
+		ElemLenAlloc(tptoken uint64) uint32
 
 - If the :code:`C.ydb_buffer_t` structures referenced by
   :code:`cbuftary` have not yet been allocated, return the
@@ -3155,7 +3194,8 @@ Go BufferTArray ElemLenUsed()
 
 .. code-block:: go
 
-	func (buftary *BufferTArray) ElemLenUsed(idx uint32) (uint32, error)
+	func (buftary *BufferTArray) ElemLenUsed(tptoken uint64,
+		errstr *BufferT, idx uint32) (uint32, error)
 
 - If the :code:`C.ydb_buffer_t` structures referenced by
   :code:`cbuftary` have not yet been allocated, return the
@@ -3168,7 +3208,7 @@ Go BufferTArray ElemLenUsed()
   by :code:`cbuftary`.
 
 Go BufferTArray ElemUsed()
-.........................
+..........................
 
 .. code-block:: go
 
@@ -3195,7 +3235,8 @@ Go BufferTArray SetElemLenUsed()
 
 .. code-block:: go
 
-	func (buftary *BufferTArray) SetElemLenUsed(tptoken uint64,
+	func (buftary *BufferTArray)
+		SetElemLenUsed(tptoken uint64, errstr *BufferT,
 		idx, newLen uint32) error
 
 Use this method to set the number of bytes in :code:`C.ydb_buffer_t`
@@ -3225,7 +3266,8 @@ Go BufferTArray SetElemUsed()
 
 .. code-block:: go
 
-	func (buftary *BufferTArray) SetElemUsed(tptoken uint64,
+	func (buftary *BufferTArray)
+		SetElemUsed(tptoken uint64, errstr *BufferT,
 		newUsed uint32) error
 
 Use this method to set the current number of valid strings (subscripts
@@ -3249,8 +3291,8 @@ Go BufferTArray SetValBAry()
 
 .. code-block:: go
 
-	func (buftary *BufferTArray) SetValBAry(tptoken uint64
-		idx uint32, val *[]byte) error
+	func (buftary *BufferTArray) SetValBAry(tptoken uint64,
+		errstr *BufferT, idx uint32, val *[]byte) error
 
 - If the :code:`C.ydb_buffer_t` structures referenced by
   :code:`cbuftary` have not yet been allocated, return the
@@ -3271,8 +3313,9 @@ Go BufferTArray SetValStr()
 
 .. code-block:: go
 
-	func (buftary *BufferTArray) SetValStr(tptoken uint64,
-		idx uint32, val *string) error
+	func (buftary *BufferTArray)
+		SetValStr(tptoken uint64, errstr *BufferT,
+		idx uint32, value *string) error
 
 - If the :code:`C.ydb_buffer_t` structures referenced by
   :code:`cbuftary` have not yet been allocated, return the
@@ -3293,8 +3336,9 @@ Go BufferTArray SetValStrLit()
 
 .. code-block:: go
 
-	func (buftary *BufferTArray) SetVarStrLit(tptoken uint64,
-		idx uint32, val string) error
+	func (buftary *BufferTArray)
+		SetVarStrLit(tptoken uint64, errstr *BufferT,
+		idx uint32, value string) error
 
 - If the :code:`C.ydb_buffer_t` structures referenced by
   :code:`cbuftary` have not yet been allocated, return the
@@ -3315,7 +3359,8 @@ Go BufferTArray ValBAry()
 
 .. code-block:: go
 
-	func (buftary *BufferTArray) GetValBAry(tptoken uint64,
+	func (buftary *BufferTArray)
+		ValBAry(tptoken uint64, errstr *BufferT,
 		idx uint32) (*[]byte, error)
 
 - If the :code:`C.ydb_buffer_t` structures referenced by
@@ -3336,7 +3381,8 @@ Go BufferTArray ValStr()
 
 .. code-block:: go
 
-	func (buftary *BufferTArray) GetValStr(tptoken uint64,
+	func (buftary *BufferTArray)
+		ValStr(tptoken uint64, errstr *BufferT,
 		idx uint32) (*string, error)
 
 - If the :code:`C.ydb_buffer_t` structures referenced by
@@ -3413,7 +3459,8 @@ Go Str2ZwrST()
 
 .. code-block:: go
 
-	func (buft *BufferT) Str2ZwrST(tptoken uint64, zwr *BufferT) error
+	func (buft *BufferT) Str2ZwrST(tptoken uint64,
+		errstr *BufferT, zwr *BufferT) error
 
 The method wraps `ydb_str2zwr_st()`_ to provide the string in `zwrite
 format`_.
@@ -3432,7 +3479,8 @@ Go Zwr2StrST()
 
 .. code-block:: go
 
-	func (buft *BufferT) Zwr2StrST(tptoken uint64, str *BufferT) error
+	func (buft *BufferT) Zwr2StrST(tptoken uint64,
+		errstr *BufferT, str *BufferT) error
 
 This method wraps `ydb_zwr2str_st()`_ and is the inverse of `Go
 Str2ZwrST()`_.
@@ -3461,7 +3509,8 @@ Go DeleteExclST()
 
 .. code-block:: go
 
-	func (buftary *BufferTArray) DeleteExclST(tptoken uint64) error
+	func (buftary *BufferTArray)
+		DeleteExclST(tptoken uint64, errstr *BufferT) error
 
 :code:`DeleteExclST()` wraps `ydb_delete_excl_st()`_ to delete all
 local variable trees except those of local variables whose names are
@@ -3481,8 +3530,8 @@ Go TpST()
 .. code-block:: go
 
 	func (buftary *BufferTArray) TpST(tptoken uint64,
-		tpfn unsafe.Pointer, tpfnparm unsafe.Pointer,
-		transid *string) error
+		errstr *BufferT, tpfn unsafe.Pointer,
+		tpfnparm unsafe.Pointer, transid *string) error
 
 :code:`TpST()` wraps `ydb_tp_st()`_ to implement `Transaction
 Processing`_. :code:`tpfn` is a pointer to a C function with two
@@ -3546,6 +3595,7 @@ Go TpST2()
 .. code-block:: go
 
 	func (buftary *BufferTArray) TpST2(tptoken uint64,
+		errstr *BufferT,
 		tpfn func(uint64) int, transid string) error
 
 Matching `Go TpE2()`_, :code:`TpST2()` wraps :code:`ydb_tp_st()` to
@@ -3572,7 +3622,8 @@ Go DataST()
 
 .. code-block:: go
 
-	func (key *KeyT) DataST(tptoken uint64) (uint32, error)
+	func (key *KeyT) DataST(tptoken uint64,
+		errstr *BufferT) (uint32, error)
 
 Matching `Go DataE()`_, :code:`DataST()` returns the result of
 `ydb_data_st()`_. In the event an error is returned, the return value
@@ -3583,7 +3634,8 @@ Go DeleteST()
 
 .. code-block:: go
 
-	func (key *KeyT) DeleteS(tptoken uint64, deltype int) error
+	func (key *KeyT) DeleteS(tptoken uint64,
+		errstr *BufferT, deltype int) error
 
 Matching `Go DeleteE()`_, :code:`DeleteST()` wraps `ydb_delete_st()`_ to
 delete a local or global variable node or (sub)tree, with a value of
@@ -3597,7 +3649,8 @@ Go IncrST()
 
 .. code-block:: go
 
-	func (key *KeyT) IncrST(tptoken uint64, incr, retval *BufferT) error
+	func (key *KeyT) IncrST(tptoken uint64,
+		errstr *BufferT, incr, retval *BufferT) error
 
 Matching `Go IncrE()`_, :code:`IncrST()` wraps `ydb_incr_st()`_ to
 atomically increment the referenced global or local variable node
@@ -3625,7 +3678,8 @@ Go LockDecrST()
 
 .. code-block:: go
 
-	func (key *KeyT) LockDecrS(tptoken uint64) error
+	func (key *KeyT) LockDecrS(tptoken uint64,
+		errstr *BufferT) error
 
 Matching `Go LockDecrE()`_ :code:`LockDecrST()` wraps
 `ydb_lock_decr_st()`_ to decrement the count of the lock name
@@ -3637,7 +3691,8 @@ Go LockIncrST()
 
 .. code-block:: go
 
-	func (key *KeyT) LockIncrST(tptoken uint64, timeoutNsec uint64) error
+	func (key *KeyT) LockIncrST(tptoken uint64,
+		errstr *BufferT, timeoutNsec uint64) error
 
 Matching `Go LockIncrE()`, :code:`LockIncrST()` wraps
 `ydb_lock_incr_st()`_ to attempt to acquire the referenced lock
@@ -3657,7 +3712,8 @@ Go NodeNextST()
 
 .. code-block:: go
 
-	func (key *KeyT) NodeNextST(tptoken uint64, next *BufferTArray) error
+	func (key *KeyT) NodeNextST(tptoken uint64,
+		errstr *BufferT, next *BufferTArray) error
 
 Matching `Go NodeNextE()`_, :code:`NodeNextST()` wraps
 `ydb_node_next_st()`_ to facilitate depth first traversal of a local or
@@ -3690,7 +3746,8 @@ Go NodePrevST()
 
 .. code-block:: go
 
-	func (key *KEyT) NodePrevST(tptoken uint64, prev *BufferTArray) error
+	func (key *KEyT) NodePrevST(tptoken uint64,
+		errstr *BufferT, prev *BufferTArray) error
 
 Matching `Go NodePrevE()`_, :code:`NodePrevST()` wraps
 `ydb_node_previous_st()`_ to facilitate reverse depth first traversal
@@ -3723,7 +3780,8 @@ Go SetValST()
 
 .. code-block:: go
 
-	func (key *KeyT) SetST(tptoken uint64, val *BufferT) error
+	func (key *KeyT) SetST(tptoken uint64,
+		errstr *BufferT, value *BufferT) error
 
 Matching `Go SetValE()`_, at the referenced local or global variable
 node, or the intrinsic special variable, :code:`SetST()` wraps
@@ -3734,7 +3792,8 @@ Go SubNextST()
 
 .. code-block:: go
 
-	func (key *KeyT) SubNextST(tptoken uint64, sub *BufferT) error
+	func (key *KeyT) SubNextST(tptoken uint64,
+		errstr *BufferT, retval *BufferT) error
 
 Matching `Go SubNextE()`_, :code:`SubNextST()` wraps
 `ydb_subscript_next_st()`_ to facilitate breadth-first traversal of a
@@ -3759,7 +3818,8 @@ Go SubPrevST()
 
 .. code-block:: go
 
-	func (key *KeyT) SubPrevS(tptoken uint64, sub *BufferT) error
+	func (key *KeyT) SubPrevST(tptoken uint64,
+		errstr *BufferT, retval *BufferT) error
 
 :code:`SubPrevST()` wraps `ydb_subscript_previous_st()`_ to facilitate
 reverse breadth-first traversal of a local or global variable sub-tree.
@@ -3783,7 +3843,8 @@ Go ValST()
 
 .. code-block:: go
 
-	func (key *KeyT) GetST(tptoken uint64, retval *BufferT) error
+	func (key *KeyT) ValST(tptoken uint64,
+		errstr *BufferT, retval *BufferT) error
 
 Matching `Go ValE()`_, :code:`ValST()` wraps `ydb_get_st()`_ to return
 the value at the referenced global or local variable node, or
@@ -3810,8 +3871,8 @@ Go LockST()
 
 .. code-block:: go
 
-	func yottadb.LockST(tptoken uint64, timeoutNsec uint64,
-		lockname ... *KeyT) error
+	func yottadb.LockST(tptoken uint64, errstr *BufferT,
+		timeoutNsec uint64, lockname ... *KeyT) error
 
 Matching `Go LockE()`_, :code:`LockST()` wraps `ydb_lock_st()`_ to
 release all lock resources currently held and then attempt to acquire
@@ -3862,50 +3923,6 @@ that databases are closed cleanly. So, application code should invoke
 :code:`Exit()` prior to process exit, or when an application intends
 to continue with other work beyond use of YottaDB.
 
-See also `Go ForkExec()`_.
-
--------------
-Go ForkExec()
--------------
-
-.. code-block:: go
-
-	func yottadb.ForkExec(argv0 string, argv []string,
-		attr *ProcAttr) (int, error)
-
-The function has the same signature as the `Go syscall.ForkExec()
-<https://golang.org/pkg/syscall/#ForkExec>`_, which it
-wraps. :code:`ForkExec()` ensures that the child process is safely
-disconnected from YottaDB interprocess communication resources and
-database files.
-
----------
-Go Free()
----------
-
-.. code-block:: go
-
-	func yottadb.Free(ptr unsafe.Pointer)
-
-The function wraps `ydb_free()`_ to release memory previously
-allocated using `Go Malloc()`_. As passing a :code:`ptr` not
-previously allocated using `Go Malloc()`_ will result in unpredictable
-behavior, application code should be written with an appropriate level
-of diligence when calling :code:`Free()`.
-
----------
-Go Init()
----------
-
-.. code-block:: go
-
-	func yottadb.Init() error
-
-The function wraps `ydb_init()`_ to initialize the YottaDB runtime
-system. This call is normally not required as YottaDB initializes
-itself on its first call, the exception being when an application
-wishes to set its own signal handlers (see `Signals`_).
-
 -------------------
 Go IsLittleEndian()
 -------------------
@@ -3923,7 +3940,7 @@ Go MessageT()
 
 .. code-block:: go
 
-	func yottadb.Message(tptoken uint64,
+	func yottadb.Message(tptoken uint64, errstr *BufferT,
 		status int) (string, error)
 
 :code:`MessageT()` returns the text template for the error number
@@ -3934,13 +3951,13 @@ specified by :code:`status`.
 - Otherwise, it returns the error message text template for the error
   number specified by :code:`status`.
 
-------------
-Go Release()
-------------
+-------------
+Go ReleaseT()
+-------------
 
 .. code-block:: go
 
-	func yottadb.Release() string
+	func yottadb.ReleaseT(tptoken uint64, errstr *BufferT) string
 
 Returns a string consisting of six space separated pieces to provide
 version information for the Go wrapper and underlying YottaDB release:
@@ -3955,29 +3972,8 @@ version information for the Go wrapper and underlying YottaDB release:
   releases. Note that although they follow the same format, Go wrapper
   release numbers are different from the release numbers of the
   underlying YottaDB release as reported by `$zyrelease`_.
-- The fourth through sixth pieces are `$zyrelease`_ from the underlying
+- The third through sixth pieces are `$zyrelease`_ from the underlying
   YottaDB relase.
-
------------
-Go Malloc()
------------
-
-.. code-block:: go
-
-	func yottadb.Malloc(size uint64) unsafe.Pointer
-
-The function wraps `ydb_malloc()`_ to allocate :code:`size` bytes of
-storage managed by YottaDB. Use of :code:`Malloc()` to allocate
-storage provides debugging tools. Using any function other than `Go
-Free()`_ to release storage allocated with :code:`Malloc()` has
-unpredictable results.
-
-As the definition and implementation of Go protect against dangling
-pointers in pure Go code, Go application code may not be designed and
-coded with the same level of defensiveness against dangling pointers
-that C applications are. Please take additional care in designing and
-coding your application to ensure the correct use of application
-storage allocated using :code:`Malloc()`.
 
 Go Programming Notes
 ====================
@@ -4035,7 +4031,7 @@ r1.24 (the YottaDB release to be used) resides.
 	package main
 	/*
 	#include <inttypes.h>
-	int CallBackRtn(uint64_t tptoken, void *tpfnparm)
+	int CallBackRtn(uint64_t tptoken, ydb_buffer_t *errstr, void *tpfnparm)
 	int CallBackRtn_cgo(uint_t tptoken, void *tpfnparm)
 	{
 		return CallBackRtn(tptoken, tpfnparm);
@@ -4051,7 +4047,7 @@ reference the glue routine:
 	// #cgo CFLAGS: -I/usr/local/lib/yottadb/r124
 	// #include "libyottadb.h"
 	// #include "libydberrors.h"
-	// int CallBackRtn_cgo(uint64 tptoken, uintptr_t in);
+	// int CallBackRtn_cgo(uint64 tptoken, errstr *BufferT, uintptr_t in);
 	import "C"
 
 The Go code module that includes the acutal transaction logic,
@@ -4061,7 +4057,7 @@ The Go code module that includes the acutal transaction logic,
 .. code-block:: go
 
 	//export CallBackRtn
-	func CallBackRtn(tptoken uint64, tpfnparm unsafe.Pointer) int {
+	func CallBackRtn(tptoken uint64, errstr *BufferT, tpfnparm unsafe.Pointer) int {
 	    // code for function
 	}
 
@@ -4310,10 +4306,6 @@ Threads
 
 Important Notes:
 
-- In YottaDB r1.24, the multi-threaded API is released as
-  field-test grade functionality in a production release (i.e., the
-  functions to support single-threaded applications are tested and
-  released as production grade).
 - Local variables, locks and transaction contexts are held by the
   process and not by the thread. In other words, these resources are
   shared by threads in a multi-threaded application, and YottaDB
@@ -4336,22 +4328,30 @@ Important Notes:
   one subscript of a node, and a different thread that provides a
   different subscript.
 
-- Error message text in a multi-threaded application is not guaranteed
-  to be correct. When a YottaDB function returns an `error return
-  code`_, the application calls `ydb_get_s()`_ / `ydb_get_st()`_ for
-  the value of `$zstatus`_ for the complete error text. For a
-  single-threaded application, `$zstatus`_ has correct and current
-  information, since calls to YottaDB are entirely under the control
-  of that single application thread. For a multi-threaded application,
-  between the time a function returns with an `error return code`_,
-  and a subsequent call to `ydb_get_st()`_ to get the value of
-  `$zstatus`_, another thread may call YottaDB, and the `$zstatus`_
-  returned will be from that subsequent call.
+.. _errstr:
+.. _*errstr:
+
+- Simple API functions
+  use an :code:`*errstr` parameter to avoid a race condition and
+  ensure they get the correct `$zstatus`_ when function has an error
+  return. If an application calls `ydb_get_s()`_ / `ydb_get_st()`_ for
+  the value of `$zstatus`_ for the complete error text when a YottaDB
+  function returns an `error return code`_, for a single-threaded
+  application, `$zstatus`_ has correct and current information, since
+  calls to YottaDB are entirely under the control of that single
+  application thread. For a multi-threaded application, between the
+  time a function returns with an `error return code`_, and a
+  subsequent call to `ydb_get_st()`_ to get the value of `$zstatus`_,
+  another thread may call YottaDB, and the `$zstatus`_ returned will
+  be from that subsequent call. In the event of an error, YottaDB
+  provides the `$zstatus`_ for that error in :code:`*errstr`. An
+  application that does not want the `$zstatus`_ can pass a
+  :code:`NULL` value for :code:`*errstr`.
 
 - A multi-threaded application is permitted to use the YottaDB
   single-thread functions *as long as the application ensures that all
   YottaDB access is performed only by one thread.* A thread may use
-  the `ydb_thread_is_main()`_ and `ydb_thread_is_main_t()`_ functions
+  the `ydb_thread_is_main()`_
   to determine whether it is the thread that is calling
   YottaDB. YottaDB strongly recommends against this application design
   pattern: this functionality only exists to provide backward
@@ -4404,10 +4404,11 @@ the M Programmers Guide
 <https://docs.yottadb.com/ProgrammersGuide/extrout.html>`_
 Multi-threaded C applications are able to call M code through the
 functions :code:`ydb_ci_t()` and :code:`ydb_cip_t()` functions as
-documented there, with the restriction that if M code called through
-:code:`ydb_ci_t()` or :code:`ydb_cip_t()` calls out to C code, that C
-code is not permitted to start a transaction using
-:code:`ydb_tp_st()`.
+documented `there
+<https://docs.yottadb.com/ProgrammersGuide/extrout.html#call-in-interface>`_,
+with the restriction that if M code called through :code:`ydb_ci_t()`
+or :code:`ydb_cip_t()` calls out to C code, that C code is not
+permitted to start a transaction using :code:`ydb_tp_st()`.
 
 Note that triggers, which are written in M, run in the thread of the
 YottaDB engine, and are unaffected by multi-threaded Simple API calls
@@ -4415,6 +4416,8 @@ already on an application process thread's stack. However, if a
 trigger calls C code, and that C code calls :code:`ydb_ci_t()` or
 :code:`ydb_cip_t()`, that C code is not permitted to call
 :code:`ydb_tp_st()`.
+
+.. _tptoken:
 
 ----------------------------------
 Threads and Transaction Processing
@@ -4454,7 +4457,9 @@ context of a thread.
 - When an application calls `ydb_tp_st()`_, it generates provides a
   :code:`tptoken` as the first parameter when it calls the function
   that implements the logic for the transaction. Any threads that this
-  function spawns must provide this :code:`tptoken` to YottaDB.
+  function spawns must provide this :code:`tptoken` to
+  YottaDB. Passing in a different or incorrect :code:`tptoken` can
+  result in hard-to-debug application behavior, including deadlocks.
 - When a `Simple API`_ function is called:
 
   - If :code:`tptoken` is that of the current transaction, the request
@@ -4466,6 +4471,27 @@ context of a thread.
   - If :code:`tptoken` does not correspond to a higher level
     transaction (e.g., if it corresponds to a closed transaction or a
     nonexistent one), YottaDB returns an error.
+
+Note: if the function implementing a transaction spawns threads (or
+coroutines executing in threads), those threads/coroutines must:
+
+- terminate before the function returns to YottaDB;
+- use a current :code:`tptoken` when invoking YottaDB (in effect,
+  switching transaction contexts ­ technically this violates ACID
+  transaction properties but perhaps reasonable in a few restricted
+  cases, such as creating background worker threads); or
+- not invoke YottaDB.
+
+Should a thread/coroutine spawned in a function implementing
+transaction logic invoke YottaDB after the function has returned, the
+thread/coroutine will get an invalid token error message unless it
+uses a current :code:`tptoken`.
+
+Note: Sharing or passing :code:`tptoken` values between
+threads/coroutines can lead to deadlocks and other hard-to-debug
+situations. YottaDB strongly recommends against such usage. If you
+have a legitimate use case, design it so that you can debug it when
+the inevitable error condition occurs.
 
 Timers and Timeouts
 ===================
