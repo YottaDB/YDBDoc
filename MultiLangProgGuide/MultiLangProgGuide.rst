@@ -2558,9 +2558,6 @@ exceeds :code:`C.YDB_MAX_NAMES`, the error return is
 ERRNAMECOUNT2HI. Otherwise, if `ydb_delete_excl_st()`_ returns an
 error, the function returns the error.
 
-As M and Go application code cannot be mixed in the same process, the
-warning in `ydb_delete_excl_s()`_ does not apply.
-
 Go IncrE()
 ----------
 
@@ -3521,9 +3518,6 @@ trees.
 In the event that the :code:`elemsUsed` exceeds
 :code:`C.YDB_MAX_NAMES`, the error return is ERRNAMECOUNT2HI.
 
-As M and Go application code cannot be mixed in the same process, the
-warning in `ydb_delete_excl_s()`_ does not apply.
-
 Go TpST()
 ---------
 
@@ -3694,7 +3688,7 @@ Go LockIncrST()
 	func (key *KeyT) LockIncrST(tptoken uint64,
 		errstr *BufferT, timeoutNsec uint64) error
 
-Matching `Go LockIncrE()`, :code:`LockIncrST()` wraps
+Matching `Go LockIncrE()`_, :code:`LockIncrST()` wraps
 `ydb_lock_incr_st()`_ to attempt to acquire the referenced lock
 resource name without releasing any locks the process already holds.
 
@@ -3784,7 +3778,7 @@ Go SetValST()
 		errstr *BufferT, value *BufferT) error
 
 Matching `Go SetValE()`_, at the referenced local or global variable
-node, or the intrinsic special variable, :code:`SetST()` wraps
+node, or the intrinsic special variable, :code:`SetValST()` wraps
 `ydb_set_st()`_ to set the value specified by :code:`val`.
 
 Go SubNextST()
@@ -3821,7 +3815,7 @@ Go SubPrevST()
 	func (key *KeyT) SubPrevST(tptoken uint64,
 		errstr *BufferT, retval *BufferT) error
 
-:code:`SubPrevST()` wraps `ydb_subscript_previous_st()`_ to facilitate
+Matching `Go SubPrevE()`_, :code:`SubPrevST()` wraps `ydb_subscript_previous_st()`_ to facilitate
 reverse breadth-first traversal of a local or global variable sub-tree.
 
 - At the level of the last subscript, if there is a previous subscript
