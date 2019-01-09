@@ -3562,9 +3562,10 @@ Any function implementing logic for a transaction should return
 In order to provide the function implementing the transaction logic
 with a parameter or parameters, :code:`tpfnparm` is passed to the glue
 routine, in turn be passed to the Go function called by the glue
-routine. As :code:`tpfnparm` is passed from Go to YottaDB and back to
-Go, the memory it references should be allocated using
-`Malloc()` to protect it from the Go garbage collector.
+routine. Therefore, the memory :code:`tpfnparm` references must follow
+the rules for cgo and any structure pointed to by it cannot have
+pointers to memory allocated in Go, otherwise cgo will panic. Allocate
+memory using :code:`C.malloc()`.
 
 The :code:`BufferTArray` receiving the :code:`TpST()` method is a list
 of local variables whose values should be saved, and restored to their
@@ -4342,10 +4343,28 @@ Important Notes:
   time a function returns with an `error return code`_, and a
   subsequent call to `ydb_get_st()`_ to get the value of `$zstatus`_,
   another thread may call YottaDB, and the `$zstatus`_ returned will
-  be from that subsequent call. In the event of an error, YottaDB
-  provides the `$zstatus`_ for that error in :code:`*errstr`. An
-  application that does not want the `$zstatus`_ can pass a
-  :code:`NULL` value for :code:`*errstr`.
+  be from that subsequent call. A :code:`*errstr` parameter in
+  functions for multi-threaded applications provides the `$zstatus`_ for
+  that call to the caller.
+
+  - An application that does not want the `$zstatus`_ string can pass
+    a :code:`NULL` value for :code:`*errstr`.
+
+   - The string in `errstr->buf_addr` is always null terminated, which
+    allows :code:`*errstr` to be passed to standard system functions
+    like :code:`printf()`.
+
+  - In the event a buffer provided by an application is not long
+    enough for a `$zstatus`_, YottaDB truncates the string to be
+    reported, rather than issuing an INVSTRLEN error (since a second
+    error while attempting to report an error is likely to add
+    confusion rather than enlightenment).
+
+    - :code:`errstr->len_used` is always set to the length of `$zstatus`_,
+      whether or not it is truncated.
+    - If :code:`errstr->len_used` is greater than
+      :code:`errstr->len_alloc-1` it means `$zstatus`_ has been
+      truncated.
 
 - A multi-threaded application is permitted to use the YottaDB
   single-thread functions *as long as the application ensures that all
