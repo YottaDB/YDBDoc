@@ -3031,7 +3031,7 @@ BufferT SetValStr()
 
 .. code-block:: go
 
-	func (buffer *BufferT) SetVarStr(tptoken uint64,
+	func (buffer *BufferT) SetValStr(tptoken uint64,
 		errstr *BufferT, val *string) error
 
 - If the :code:`C.ydb_buffer_t` structure referenced by :code:`cbuft`
@@ -3049,7 +3049,7 @@ BufferT SetValStrLit()
 
 .. code-block:: go
 
-	func (buffer *BufferT) SetVarStrLit(tptoken uint64,
+	func (buffer *BufferT) SetValStrLit(tptoken uint64,
 		errstr *BufferT, val string) error
 
 - If the :code:`C.ydb_buffer_t` structure referenced by :code:`cbuft`
@@ -3337,7 +3337,7 @@ BufferTArray SetValStrLit()
 .. code-block:: go
 
 	func (buftary *BufferTArray)
-		SetVarStrLit(tptoken uint64, errstr *BufferT,
+		SetValStrLit(tptoken uint64, errstr *BufferT,
 		idx uint32, value string) error
 
 - If the :code:`C.ydb_buffer_t` structures referenced by
