@@ -4350,7 +4350,7 @@ Important Notes:
   - An application that does not want the `$zstatus`_ string can pass
     a :code:`NULL` value for :code:`*errstr`.
 
-   - The string in `errstr->buf_addr` is always null terminated, which
+  - The string in `errstr->buf_addr` is always null terminated, which
     allows :code:`*errstr` to be passed to standard system functions
     like :code:`printf()`.
 
