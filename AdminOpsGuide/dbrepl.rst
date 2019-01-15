@@ -2744,7 +2744,7 @@ You do not need to create a new replication instance file except when you upgrad
        mupip replicate -instance_create
 
 .
-   * If a replication instance file already exists, these commands will create a backup copy of the replicating instance (by renaming the file with a timestamp suffix) and then create a new replication instance file. If you want to prevent accidentally renaming your existing replication instance file, use the -noreplace qualifier with these commands.
+   * If a replication instance file already exists, these commands will create a backup copy of the replicating instance (by renaming the file with a timestamp suffix) and then create a new replication instance file. If you use the -noreplace qualifier when the replication file already exists, you will encounter an error FILEXISTS. If a replication file does not already exist, you can use the -noreplace qualifier with these commands to make sure to prevent accidentally renaming your existing replication instance file.
 
 * Prepare it to accept a replication stream:
 
