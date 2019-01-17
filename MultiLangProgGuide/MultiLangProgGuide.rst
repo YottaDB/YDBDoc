@@ -3067,7 +3067,7 @@ BufferT ValBAry()
 
 .. code-block:: go
 
-	func (buffer *BufferT) ValBAry() (*[]byte, error)
+	func (buffer *BufferT) ValBAry(tptoken uint64, errstr *BufferT) (*[]byte, error)
 
 - If the :code:`C.ydb_buffer_t` structure referenced by :code:`cbuft`
   has not yet been allocated, return the STRUCTNOTALLOCD error.
@@ -3082,7 +3082,7 @@ BufferT ValStr()
 
 .. code-block:: go
 
-	func (buffer *BufferT) ValStr() (*string, error)
+	func (buffer *BufferT) ValStr(tptoken uint64, errstr *BufferT) (*string, error)
 
 - If the :code:`C.ydb_buffer_t` structure referenced by :code:`cbuft`
   has not yet been allocated, return the STRUCTNOTALLOCD error.
@@ -3533,39 +3533,43 @@ TpST()
 		tpfnparm unsafe.Pointer, transid *string) error
 
 :code:`TpST()` wraps `ydb_tp_st()`_ to implement `Transaction
-Processing`_. :code:`tpfn` is a pointer to a C function with two
-parameters, the first of which is a :code:`tptoken` and the second of
-which is :code:`tpfnparm`, a pointer to an arbitrary data structure in
+Processing`_. :code:`tpfn` is a pointer to a C function with three
+parameters, the first of which is a :code:`tptoken`, second is a :code:`errstr`,
+and the third of which is :code:`tpfnparm`, a pointer to an arbitrary data structure in
 YottaDB heap space. Please see both the description of `ydb_tp_st()`_
 and the sections on `Transaction Processing`_ and `Threads and
 Transaction Processing`_ for details.
 
+The second parameter, :code:`errstr`, is passed in as an :code:`unsafe.Pointer`; this should be
+immediately passed to BufferT.BufferTFromPtr, and the BufferT object used here passed to
+all YottaDB wrapper calls as :code:`errstr`.
+The raw :code:`unsafe.Pointer` should not be used or modified.
+
 Since Go does not permit a pointer to a Go function to be passed as a
 parameter to a C function, :code:`tpfn` is required to be a pointer to
 a C function. For a pure Go application, the C function is a glue
-routine that in turn calls the Go function. The shell script
-`GenYDBGlueRoutine.sh`_ generates glue routine functions.
+routine that in turn calls the Go function. The Go utility
+`ydb-dev-tools generate`_ generates glue routine functions.
 
 Any function implementing logic for a transaction should return
-:code:`error` with one of the following:
+:code:`int` with one of the following:
 
-- A normal return (:code:`nil`) to indicate that per application
+- A normal return (:code:`yottadb.YDB_OK`) to indicate that per application
   logic, the transaction can be committed. The YottaDB database engine
   will commit the transaction if it is able to, as discussed in
   `Transaction Processing`_, and if not, will call the function again.
-- TPRESTART to indicate that the transaction should restart, either
+- :code:`yottadb.YDB_TP_RESTART` to indicate that the transaction should restart, either
   because application logic has so determined or because a YottaDB
   function called by the function has returned TPRESTART.
-- ROLLBACK to indicate that :code:`TpST()` should not commit the
+- :code:`yottadb.YDB_TP_ROLLBACK` to indicate that :code:`TpST()` should not commit the
   transaction, and should return ROLLBACK to the caller.
 
 In order to provide the function implementing the transaction logic
 with a parameter or parameters, :code:`tpfnparm` is passed to the glue
 routine, in turn be passed to the Go function called by the glue
-routine. Therefore, the memory :code:`tpfnparm` references must follow
-the rules for cgo and any structure pointed to by it cannot have
-pointers to memory allocated in Go, otherwise cgo will panic. Allocate
-memory using :code:`C.malloc()`.
+routine. As :code:`tpfnparm` is passed from Go to YottaDB and back to
+Go, the memory it references should be allocated using
+`Go Malloc()`_ to protect it from the Go garbage collector.
 
 The :code:`BufferTArray` receiving the :code:`TpST()` method is a list
 of local variables whose values should be saved, and restored to their
@@ -3596,7 +3600,7 @@ TpST2()
 
 	func (buftary *BufferTArray) TpST2(tptoken uint64,
 		errstr *BufferT,
-		tpfn func(uint64) int, transid string) error
+		tpfn func(uint64, *BufferT) int, transid string) error
 
 Matching `TpE2()`_, :code:`TpST2()` wraps :code:`ydb_tp_st()` to
 implement `Transaction Processing`_. The difference between
@@ -4005,22 +4009,31 @@ Goroutine, refer to the `Threads`_ discussion about the need for
 applications to avoid race conditions when accessing YottaDB
 resources.
 
---------------------
-GenYDBGlueRoutine.sh
---------------------
+----------------------
+ydb-dev-tools generate
+----------------------
 
 As discussed in `TpST()`_ and referred to `TpE()`_, as Go does not
 permit a pointer to a Go function to be passed as a parameter to a C
 function, Go functions that encapsulate logic to be executed as an
 ACID transaction cannot be passed as parameters to :code:`TpST()` and
 :code:`yottadb.TpE()`. Instead, each Go function must have a C
-“glue” routine whose address is passed to :code:`TpST()` or
+"glue" routine whose address is passed to :code:`TpST()` or
 :code:`yottadb.TpE()`.
 
-If an application has a callback routine called :code:`CallBackRtn()`,
-executing :code:`GenYDBGlueRoutine.sh CallBackRtn` will generate a
+Installing ydb-dev-tools can be done via :code:`go get lang.yottadb.com/go/yottadb/cmd/ydb-dev-tools`.
+Ensure that :code:`$GOPATH/bin` is your :code:`$PATH`.
+      
+If an application has a callback routine called :code:`CallBackRtn()`
+in package :code:`MyPackage`, executing
+:code:`ydb-dev-tools generate -pkg MyPackage -func CallBackRtn` will generate a
 routine :code:`CallBackRtn_cgo.go` which has the code to call
-:code:`CallBackRtn()`. In the following example,
+:code:`CallBackRtn()`. In addition to this file, one needs to add the
+magic comment :code:`//export CallBackRtn` directly in front of the Go routine's
+function definition. It is also essential that one adds :code:`import "C"` to this file
+to ensure that Go generated C code for linking against.
+
+In the following example,
 :code:`/usr/local/lib/yottadb/r124` is the directory where YottaDB
 r1.24 (the YottaDB release to be used) resides.
 
@@ -4028,27 +4041,26 @@ r1.24 (the YottaDB release to be used) resides.
 
 .. code-block:: go
 
-	package main
+	package MyPackage
+	package MyPackage
+
+	import "unsafe"
+
 	/*
+	#cgo pkg-config: yottadb
+	#include <libyottadb.h>
 	#include <inttypes.h>
-	int CallBackRtn(uint64_t tptoken, ydb_buffer_t *errstr, void *tpfnparm)
-	int CallBackRtn_cgo(uint_t tptoken, void *tpfnparm)
-	{
-		return CallBackRtn(tptoken, tpfnparm);
+	int CallBackRtn(uint64_t tptoken, ydb_buffer_t *errstr, void *tpfnparm);
+	int CallBackRtn_cgo(uint64_t tptoken, ydb_buffer_t *errstr, void *tpfnparm) {
+		return CallBackRtn(tptoken, errstr, tpfnparm);
 	}
 	*/
 	import "C"
 
-The main Go program shoud include a forward declaration like this to
-reference the glue routine:
-
-.. code-block:: go
-
-	// #cgo CFLAGS: -I/usr/local/lib/yottadb/r124
-	// #include "libyottadb.h"
-	// #include "libydberrors.h"
-	// int CallBackRtn_cgo(uint64 tptoken, errstr *BufferT, uintptr_t in);
-	import "C"
+	// GetCallBackRtnCgo returns a pointer to the C wrapper for CallBackRtn to pass to yottadb.TpE
+	func GetCallBackRtnCgo() unsafe.Pointer {
+		return C.CallBackRtn_cgo
+	}
 
 The Go code module that includes the acutal transaction logic,
 :code:`CallBackRtn()` should be structured thus, with no space between
@@ -4056,8 +4068,13 @@ The Go code module that includes the acutal transaction logic,
 
 .. code-block:: go
 
+	import "C"
+	
 	//export CallBackRtn
-	func CallBackRtn(tptoken uint64, errstr *BufferT, tpfnparm unsafe.Pointer) int {
+	func CallBackRtn(tptoken uint64, errptr *BufferT, tpfnparm unsafe.Pointer) int {
+	    var errstr yottadb.BufferT
+	    errstr.BufferTFromPtr(errptr)
+	    defer errstr.Free()
 	    // code for function
 	}
 
