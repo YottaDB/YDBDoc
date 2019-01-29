@@ -5359,9 +5359,9 @@ GVSUBOFLOW
 
 GVSUBOFLOW, Maximum combined length of global subscripts exceeded
 
-Run Time Error: This indicates that a global variable reference specified a total subscript length that exceeds the maximum length specified in the Global Directory for the current region.
+Run Time Error: This indicates that a subscripted global variable reference required a key size (which includes the length of the specified global variable name and subscripts) that exceeds the maximum key size specified in the database file header for the region mapping this subscripted global reference. This message is accompanied by a GVIS message which indicates the subscripted global reference. If the subscripted global reference in the GVIS message has a * at the end, it indicates a truncated part of the specified global reference. If it does not have a * at the end, it accurately identifies the complete specified global reference. Note that if the unsubscripted global variable name exceeds the maximum key size, a KEY2BIG error is issued instead of a GVSUBOFLOW error.
 
-Action: Ensure that the subscript is correct. Then, use DSE DUMP and the FILEHEADER qualifier to examine the key size for the region.
+Action: Use $VIEW("REGION") to identify the region corresponding to the specified subscripted global reference and DSE DUMP -FILE to identify the Maximum key size of the corresponding region. Specify smaller subscripted global references OR use MUPIP SET -REGION command with the -KEY_SIZE qualifier to modify the maximum key size as required by the application.
 
 ------------------
 GVSUBSERR
@@ -7456,9 +7456,9 @@ KEY2BIG
 
 KEY2BIG, Key size (xxxx) is greater than maximum (yyyy) for region zzzz
 
-Run Time Error: This indicates that a SET command attempted to establish a global variable with a total subscript length xxxx, which exceeds the maximum length yyyy specified in the file header for the current region zzzz.
+Run Time Error: This indicates that the key size of xxxx bytes for the specified global variable name (which includes an overhead of 2 bytes in addition to the length of the global name) exceeds the maximum key size yyyy specified in the database file header for the current region zzzz.
 
-Action: Verify that the subscripts are as intended. Use the DSE DUMP command and qualifier FILEHEADER to examine the key size for the region. Modify KEYSIZE if required by the application.
+Action: Use global variable names mapping to region zzzz that are smaller in length OR use MUPIP SET -REGION zzzz command with the -KEY_SIZE qualifier to modify the maximum key size as required by the application.
 
 --------------------
 KEYFORBLK 
