@@ -50,7 +50,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Release Notes'
-copyright = u'2017-2018, YottaDB LLC'
+copyright = u'2017-2019, YottaDB LLC'
 author = u'Ranjani Hathaway'
 
 # The version info for the project you're documenting, acts as replacement for
