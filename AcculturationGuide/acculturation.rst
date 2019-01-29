@@ -111,7 +111,7 @@ The Acculturation Workshop is distributed as a `vmdk format <https://en.wikipedi
 Virtual Machine Download
 +++++++++++++++++++++++++++
 
-Download: (`ubuntu-16.04_yottadbworkshop10.vmdk <https://docs.yottadb.com/ubuntu-16.04_yottadbworkshop10.zip>`_) 
+Download: (`ubuntu-18.04_yottadbworkshop11.zip <https://docs.yottadb.com/ubuntu-18.04_yottadbworkshop11.zip>`_) 
 
 
 +++++++++++++++++++++++++++++
