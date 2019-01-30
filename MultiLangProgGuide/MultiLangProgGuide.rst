@@ -4226,11 +4226,13 @@ the API, it initializes signal handling as follows:
   safe to suspend.
 - :code:`SIGCONT` - YottaDB sets a handler that continues a suspended
   process, and nothing if the process is not suspended.
-- :code:`SIGINT` – If the top level invocation of the process is the
-  :code:`mumps` executable, the handler is the YottaDB Ctrl-C handler
-  for M. Otherwise, if the handler is :code:`SIG_DFL`, it is replaced
-  by the YottaDB Ctrl-C handler for M, and if it is something else,
-  YottaDB does not change it.
+- :code:`SIGINT` – YottaDB sets a handler for Ctrl-C. In call-in or
+  simple API mode, this handler first calls the non-YDB main program's 
+  Ctrl-C handler (if one exists) and if that call returns, exits with a
+  -1 return code. Also, if a call-in is done in this environment and the
+  M code uses either the CENABLE or NOCENABLE device parameters, those 
+  parameters are IGNORED. In M mode with a mumps executable, behavior is
+  as documented in the `M Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/index.html>`_.
 - :code:`SIGUSR1` – As YottaDB uses this signal to asynchronously
   execute the M code in the `$zinterrupt intrinsic special variable
   <https://docs.yottadb.com/ProgrammersGuide/isv.html#zinterrupt>`_,
@@ -4262,11 +4264,10 @@ the API, it initializes signal handling as follows:
   these signals, it must either save YottaDB's handler, and drive
   it before process termination or call `ydb_exit()`_ prior to
   process exit. [#]_
-- Handlers for all signals other than those mentioned above are set to
-  :code:`SIG_IGN`. If an application sets a signal hander for anther
-  signal, it *must* ensure that :code:`ydb_exit()` is explicitly
-  called prior to process exit. An application can set its own signal
-  handler after the first YottaDB API call.
+- YottaDB saves an application's signal handler during
+  initialization and restores it if :code:`ydb_exit()` is explicitly
+  called prior to process exit. YottaDB does not reset existing signal handlers
+  for signals it does not handle but calls the saved signal handler if the YottaDB handler returns (and doesn't exit).
 
 .. [#] Other YottaDB processes will attempt to automatically clean up
        after a process terminates abnormally. However, this is not
