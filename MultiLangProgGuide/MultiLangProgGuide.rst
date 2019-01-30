@@ -1044,7 +1044,7 @@ the code to also :code:`#include <string.h>`. It sets:
 
 :code:`YDB_LITERAL_TO_BUFFER(literal, buffer)` – Use this macro to set
 a :code:`ydb_buffer_t` structure to refer to a literal (such as a
-:code:`variable name`). With a string :code:`literal`, and
+variable name). With a string literal, and
 a pointer to a :code:`ydb_buffer_t` structure,
 :code:`set`:
 
