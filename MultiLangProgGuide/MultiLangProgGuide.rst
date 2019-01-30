@@ -1046,7 +1046,7 @@ the code to also :code:`#include <string.h>`. It sets:
 a :code:`ydb_buffer_t` structure to refer to a literal (such as a
 variable name). With a string literal, and
 a pointer to a :code:`ydb_buffer_t` structure,
-:code:`set`:
+set:
 
 - :code:`buffer->buf_addr` to the address of :code:`literal`; and
 - :code:`buffer->len_used` and :code:`buffer->len_alloc` to the length of
