@@ -3568,8 +3568,7 @@ In order to provide the function implementing the transaction logic
 with a parameter or parameters, :code:`tpfnparm` is passed to the glue
 routine, in turn be passed to the Go function called by the glue
 routine. As :code:`tpfnparm` is passed from Go to YottaDB and back to
-Go, the memory it references should be allocated using
-`Go Malloc()`_ to protect it from the Go garbage collector.
+Go, the memory it references should be allocated to protect it from the Go garbage collector.
 
 The :code:`BufferTArray` receiving the :code:`TpST()` method is a list
 of local variables whose values should be saved, and restored to their
@@ -4307,16 +4306,14 @@ To reiterate because of its importance: **never** replace YottaDB's
 Forking
 =======
 
-There are two considerations when executing :code:`fork()`.
-
-- Before a process that performs buffered IO executes :code:`fork()`, it
-  should execute :code:`fflush()`. Otherwise, the child process will
-  inherit unflushed buffers from the parent, which the child process
-  will flush when it executes an :code:`fflush()`. This is a general
-  programming admonition, not specific to YottaDB except to the extent
-  that M code within a parent process may have executed :code:`write`
-  commands which are still buffered when C code within the same
-  process calls :code:`fork()`.
+Before a process that performs buffered IO executes :code:`fork()`, it
+should execute :code:`fflush()`. Otherwise, the child process will
+inherit unflushed buffers from the parent, which the child process
+will flush when it executes an :code:`fflush()`. This is a general
+programming admonition, not specific to YottaDB except to the extent
+that M code within a parent process may have executed :code:`write`
+commands which are still buffered when C code within the same
+process calls :code:`fork()`.
 
 
 Threads
@@ -4368,7 +4365,7 @@ Important Notes:
   - An application that does not want the `$zstatus`_ string can pass
     a :code:`NULL` value for :code:`*errstr`.
 
-  - The string in `errstr->buf_addr` is always null terminated, which
+  - The string in :code:`errstr->buf_addr` is always null terminated, which
     allows :code:`*errstr` to be passed to standard system functions
     like :code:`printf()`.
 
