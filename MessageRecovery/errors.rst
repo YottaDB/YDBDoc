@@ -6017,11 +6017,11 @@ Action: Enter a comma-separated list of valid sequence numbers (‘0’ or posit
 INVSPECREC 
 ---------------------
 
-INVSPECREC, Invalid global modifier record
+INVSPECREC, pppp Invalid global modifier record
 
-Run Time Error: This indicates that YottaDB could not access the header information for a global; therefore, it could not determine the collation characteristics of the global.
+MUPIP Error: This indicates that MUPIP INTEG found a corrupt 4-byte collation record was found for a global variable (that is the 1st of the 4 bytes is not 1). pppp identifies the path in the directory tree (each element of the path consisting of a block#/offset) leading to the error.
 
-Action: Use the %gbldef utility routine to investigate the current state of the global header and correct it.
+Action: Use DSE to examine the corrupt record and fix it. Report the entire incident context to your YottaDB support channel.
 
 --------------------
 INVSTACODE 
@@ -11279,9 +11279,9 @@ RECLOAD
 
 RECLOAD, Error loading record number: nnnn
 
-MUPIP Error: This message identifies a record nnnn that MUPIP could not LOAD and follows a message about the cause. If this message is Fatal, which it can be for BIN format, it produces a core file for diagnostic analysis.
+MUPIP Error: This message identifies nnnn, a record or a range of records, that MUPIP could not LOAD and follows a message about the cause. If this message is Fatal, which it can be for BIN format, it produces a core file for diagnostic analysis.
 
-Action: Address the cause or, for GO and ZWR format input files, examine the record with a text editor for possible correction or alternate action and for BIN format if fixing the cause does not resolve the error switch to ZWR format EXTRACT.
+Action: Address the cause or, for GO and ZWR format input files, examine the record or range of records with a text editor for possible correction or alternate action and for BIN format if fixing the cause does not resolve the error switch to ZWR format EXTRACT.
 
 --------------------
 RECNOCREJNL
