@@ -11565,17 +11565,6 @@ MUPIP Error: This indicates that MUPIP could not create semaphore for replicatio
 
 Action: Review the accompanying message(s) for more information.
 
-
---------------------------
-REPLGBL2LONG 
---------------------------
-
-REPLGBL2LONG, Global names longer than 8 characters cannot be handled at the secondary
-
-Source Server log Error: A journal record contains a global variable name longer than 8 characters and the version running at the secondary does not support global variables longer than 8 characters.
-
-Action: Upgrade the secondary to V5.0-FT01 or later. If upgrade is not possible, avoid replicating regions that contain globals longer than 8 characters.
-
 --------------------------
 REPLINFO 
 --------------------------
@@ -11944,16 +11933,6 @@ REPLNOTON, Replication is not on for journal file xxxx, rollback will not contin
 MUPIP Error: This indicates that ROLLBACK cannot proceed because MUPIP encountered xxxx, a journal file for which replication is not turned ON.
 
 Action: ROLLBACK cannot be used for a journal file if it does not have replication state ON, use MUPIP JOURNAL RECOVER instead.
-
---------------------
-REPLNOXENDIAN
---------------------
-
-REPLNOXENDIAN, SSSS side is running on a YottaDB version that does not support cross-endian replication. Cannot continue.
-
-MUPIP Error: The originating or the replicating instance in a cross-endian replication environment issues this error when a replication startup detects that the other side is running on a YottaDB version without needed cross-endian support.
-
-Action: Upgrade the instance for which the error was reported to a version with support for cross-endian replication.
 
 --------------------
 REPLOFFJNLON
