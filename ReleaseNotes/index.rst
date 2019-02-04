@@ -13,6 +13,7 @@ Welcome to the YottaDB Release Notes!
    ydbr110
    ydbr120
    ydbr122
+   ydbr124
    LICENSE
 
 Indices and tables
