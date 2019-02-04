@@ -13002,16 +13002,6 @@ Run Time Error: This indicates that the process pppp appears to be holding the l
 Action: Analyze the behavior of process pppp, and terminate it if appropriate. This error may indicate that the system is under-configured for the workload.
 
 -------------------
-SEQNUMSEARCHTIMEOUT 
--------------------
-
-SEQNUMSEARCHTIMEOUT, Timed out trying to find sequence number ssss in Journal File(s). See above messages for details. Source server exiting.
-
-Source Server log/MUPIP Error: The Source Server was unable to access a journal record corresponding to sequence number ssss as requested by the Replicating instance.
-
-Action: Check to see that the journal chain is intact and all the files in the Source Server have authorization to all the files in the chain. Review the accompanying message for more information.
-
--------------------
 SERVERERR
 -------------------
 
