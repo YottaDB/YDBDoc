@@ -8097,6 +8097,16 @@ MUPIP Warning: This indicates that the database file xxxx was created but it was
 
 Action: Check the allocations and extension sizes specified in the Global Directory. If no extensions are anticipated, no action is required. Otherwise, consider moving some files to another file system/volume, or reconfiguring the file system/volume housing the database file.
 
+-----------------
+LOWSPC
+-----------------
+
+LOWSPC, WARNING: Database DDDD has less than PPPP% of the total block space remaining. Blocks Used: UUUU Total Blocks Available: AAAA
+
+Operator log Information: The database has UUUU block in use and is appoaching its current limit of AAAA blocks. When the database reaches the 88% size threshold, and for every 1% increase in size and beyond, YottaDB reports the blocks used in the LOWSPC warning as the sum of the data blocks and the local bit map blocks.
+
+Action: Purge data if possible. Consider a MUPIP REORG to compact the remaining data. Investigate whether migrating to a database created by a current version has a higher limit. Move some data to another, possibly new, region and delete it from this one.
+
 -------------------
 LPARENMISSING
 -------------------
