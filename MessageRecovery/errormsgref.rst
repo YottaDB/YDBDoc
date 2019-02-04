@@ -172,12 +172,6 @@ Standard Error Codes
 +------------------------------------------------------------+------------------------------------------------------------------------------------+
 | M69, Attempted tape I/O while no tape mounted              | None                                                                               |
 +------------------------------------------------------------+------------------------------------------------------------------------------------+
-| M70, Illegal value for BLOCKSIZE parameter                 | * MTBLKTOOBIG, Magtape BLOCK_SIZE exceeds maximum size allowed                     |
-|                                                            | * MTBLKTOOSM, Magtape BLOCK_SIZE is less than xxxx bytes                           |
-|                                                            | * MTFIXRECSZ, BLOCK_SIZE xxxx must be a multiple of fixed record size yyyy         |
-+------------------------------------------------------------+------------------------------------------------------------------------------------+
-| M71, Attempt to read data block larger than buffer size    | MTRECGTRBLK, Magtape record size cannot exceed block size                          |
-+------------------------------------------------------------+------------------------------------------------------------------------------------+
 | M72, Illegal value for recordsize parameter                | GVUNDEF, Global variable undefined: xxxx                                           |
 +------------------------------------------------------------+------------------------------------------------------------------------------------+
 | M73, Invalid usage of _devicekeyword_ NEWFILE              | None                                                                               |
