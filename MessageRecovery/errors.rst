@@ -12850,6 +12850,16 @@ Run Time Error: This indicates that an error trap occured because $ECODE got alt
 
 Action: Make sure that either $ETRAP or $ZTRAP is set to the valid value, if the error needs to be handled by YottaDB.
 
+---------------------
+SETENVFAIL
+---------------------
+
+SETENVFAIL, VIEW "SETENV":"eeee" failed in setenv() system call
+
+Run Time Error: This indicates that a setenv() system call failed for the environment variable named eeee.
+
+Action: Examine the accompanying SYSCALL error message which has more detail on the error returned by the setenv() call.
+
 -------------------
 SETEXTRENV 
 -------------------
@@ -13179,6 +13189,16 @@ SIMPLEAPINEST, Attempt to nest a SimpleAPI call with another SimpleAPI call.
 Run Time Error: This indicates that a SimpleAPI call (function name identified in the message text) was attempted while another SimpleAPI call (whose function name is also identified in the message text) is still running (possible for example, through a call-in or trigger invocation). Nesting of such SimpleAPI calls is not currently permitted.
 
 Action: Avoid nesting SimpleAPI calls. Finish one SimpleAPI call before attempting another.
+
+--------------------
+SIMPLEAPINOTALLOWED
+--------------------
+
+SIMPLEAPINOTALLOWED, Process cannot switch to using Simple API while already using threaded Simple API
+
+Run Time Error: This indicates a process has started using the threaded Simple API functions (e.g. ydb_set_st()) and is now trying to use the Simple API functions (e.g. ydb_set_s()).
+
+Action: A process can only use either Simple API functions or threaded Simple API functions, not both.
 
 ------------------
 SIZENOTVALID4 
@@ -13623,6 +13643,16 @@ Run Time Error: This indicates that the process stack was corrupt.
 
 Action: Review the accompanying messages for additional information. If necessary, report the entire incident context to your YottaDB support channel for further analysis.
 
+-------------------
+STAPIFORKEXEC
+-------------------
+
+STAPIFORKEXEC, Calls to YottaDB are not supported after a fork() if threaded Simple API functions were in use in parent. Call exec() first
+
+Run Time Error: This indicates a process that has already used at least one threaded Simple API function did a fork() to create a child process and is trying to use YottaDB (e.g. Simple API functions like ydb_set_s(), or threaded Simple API functions like ydb_set_st()).
+
+Action: Once a process that has used threaded Simple API functions or threaded Simple API functions does a fork(), the child process has to do an exec() before it can call again into YottaDB (using Simple API functions or threaded Simple API functions).
+
 -----------------
 STARFILE
 -----------------
@@ -13992,6 +14022,16 @@ TEXTARG, Invalid argument to $TEXT function
 Compile Time Error: This indicates that a $TEXT function specified an invalid argument.
 
 Action: Modify the $TEXT() argument so it is in the format of an entryref.
+
+----------------------
+THREADEDAPINOTALLOWED
+----------------------
+
+THREADEDAPINOTALLOWED, Process cannot switch to using threaded Simple API while already using Simple API
+
+Run Time Error: This indicates a process has started using the Simple API functions (e.g. ydb_set_s()) and is now trying to use the threaded Simple API functions (e.g. ydb_set_st()).
+
+Action: A process can only use either Simple API functions or threaded Simple API functions, not both. If the base program corresponding to this process is an M program, it can only use Simple API functions.
 
 ------------------
 TIME2LONG
@@ -14794,6 +14834,16 @@ UNSDDTYPE, Unsupported descriptor data type
 Run Time Error: This indicates that an external call or $ZCALL function encountered an unsupported data type in the external call table.
 
 Action: Review the external call table for invalid data types.
+
+-------------------
+UNSETENVFAIL
+-------------------
+
+UNSETENVFAIL, VIEW "UNSETENV":"eeee" failed in unsetenv() system call
+
+Run Time Error: This indicates that a unsetenv() system call failed for the environment variable named eeee.
+
+Action: Examine the accompanying SYSCALL error message which has more detail on the error returned by the unsetenv() call.
 
 -------------------
 UNSOLCNTERR 
