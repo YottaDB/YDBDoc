@@ -4830,16 +4830,6 @@ Run Time Error: gtmsecshr is running with a name other than the one it is allowe
 
 Action: Verify that YottaDB (and gtmsecshr) are correctly installed following documented procedures and that filesystem mount points have not changed. If YottaDB is correctly installed and filesystem mount points have not changed, investigate this as an attempt to break system security.
 
-----------------------
-GTMSECSHRLOGSWH
-----------------------
-
-GTMSECSHRLOGSWH, Error switching GTMSECSHR log file
-
-Run Time Error: This indicates that an operator attempt to start a new log file failed.
-
-Action: Refer to the associated message(s) for more information.
-
 ------------------
 GTMSECSHRNOARG0
 ------------------
@@ -6366,7 +6356,7 @@ MUPIP Error: This indicates that an error was encountered while trying to write 
 Action: Review the accompanying message(s) for additional information.
 
 --------------------------
-JNLEXTRSEQNO
+JNLEXTRCTSEQNO
 --------------------------
 
 JNLEXTRCTSEQNO, Journal Extracts based on sequence numbers are restricted to a single region when replication is OFF
