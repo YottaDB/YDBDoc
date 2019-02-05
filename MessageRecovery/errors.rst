@@ -875,6 +875,7 @@ Action: If different CHSETs are needed for different sockets, place them in diff
 ----------------
 CIDIRECTIVE 
 ----------------
+
 CIDIRECTIVE, Invalid directive parameter passing. Expected I, O or IO.
 
 Syntax Error: This indicates that a missing directive or syntactically invalid directive was found for the parameter, pointed to by the previous messages EXTSRCLIN and EXTSRCLOC.
@@ -8705,6 +8706,7 @@ Action: Report this error to the group responsible for database integrity within
 -------------------
 MUREPLPOOL 
 -------------------
+
 MUREPLPOOL, Error with replpool section xxxx
 
 MUPIP Error: This indicates that the MUPIP RUNDOWN command found the specified replication pool shared memory section that had a problem.
