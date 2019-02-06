@@ -5712,6 +5712,16 @@ Run Time Error: Indicates the process cannot access directory dddd, which it nee
 
 Action: The directory specification comes from $ydb_linktmpdir if it is defined, otherwise from $ydb_tmp if that is defined; otherwise it defaults to the system temporary directory, typically /tmp. Either correct the environment variable definition or ensure directory dddd is appropriately set up. Note that all users of auto-relink for a directory normally need to use the same temporary directory for their relink control files.
 
+-----------------------
+INVLNPAIRLIST
+-----------------------
+
+INVLNPAIRLIST, Invalid lockname/subscript pair list (uneven number of lockname/subscript parameters)
+
+Runtime Error: This message comes only from the Golang wrapper. When specifying the locks to be acquired in the parameter list of LockE(), each lock is represented by a pair of arguments - a lock name and a list of subscripts. If the arguments aren't paired properly such that the last lock name read has no subscripts specified, this error is given.
+
+Action: Determine why the parameter list is not paired up correctly and fix it.
+
 ------------------------
 INVLOCALE 
 ------------------------
@@ -5912,6 +5922,16 @@ INVTMPDIR, Value for $ydb_tmp is either not found or not a directory: dddd - Rev
 Error: Indicates the process cannot access directory dddd, which it may need for a number of actions; the directory may not exist as a directory or the process lacks authorization to locate the directory.
 
 Action: The directory specification comes from $ydb_tmp if it is defined, otherwise it defaults to the system temporary directory, typically /var/tmp on Solaris and /tmp in other environments. Either correct the environment variable definition or ensure directory dddd is appropriately set up. Note that all users of a particular YottaDB instance normally need to use the same temporary directory to ensure proper interprocess communication.
+
+---------------------
+INVTPTRANS
+---------------------
+
+INVTPTRANS, Invalid TP transaction - either invalid TP token or transaction not in progress
+
+Runtime Error: This message comes from the threaded Simple API engine (both C and Golang). Each TP callback routine is given a 'tptoken' when it is driven. This token (unmodified!) must be used in all calls to the runtime from THIS TP callback routine at this level or this error message is returned.
+
+Action: Determine why the tptoken value is incorrect and correct it.
 
 ------------------
 INVTRCGRP 
@@ -9427,6 +9447,16 @@ NOCRENETFILE, Database file DDDD not created; cannot create across network
 All YottaDB Components Error: While creating a database with the AUTODB flag on, YottaDB discovered that the database is configured to be a remote GT.CM database. This configuration is not supported.
 
 Action: Either change the file to be local or remove the AUTODB flag from the file description in the global directory and retry.
+
+--------------------
+NODEEND
+--------------------
+
+NODEEND, End of list of nodes/subscripts
+
+Runtime Error: This 'error' is indicator (like EOF) that the list of nodes or subscripts being fetched via ydb_node_next/ydb_node_previous or ydb_subscript_next/ydb_subscript_previous or their equivalent Golang wrappers, is at an end.
+
+Action: Not an error strictly speaking - Terminate the loop the list is being read in as it is complete.
 
 ------------------------
 NODFRALLOCSUPP
@@ -13191,6 +13221,16 @@ DSE Error: This error shows in DSE when there is a string input that cannot be c
 
 Action: Review and correct typographical errors.
 
+-------------------
+STRUCTNOTALLOCD
+-------------------
+
+STRUCTNOTALLOCD, Structure not previously called with Alloc() method
+
+Runtime Error: This message comes only from the Golang wrapper. If a BufferT or BufferTArray structure is used without having been allocated by the Alloc() message, the wrapper can return this error.
+
+Action: Be sure the structure has been allocated before attempting to use it.
+
 ----------------
 STRUNXEOR
 ----------------
@@ -13320,6 +13360,16 @@ TCOMMITDISALLOW, TROLLBACK required after an unhandled error in trigger context
 Run Time Error: This transaction did an update that invoked a trigger which in turn encountered an error that was not handled by the application error trap inside the trigger context. Because of this, the exit from the trigger context was abnormal. YottaDB does not commit such transactions since they would not preserve the atomicity of trigger updates (triggering update + triggered updates).
 
 Action: Such transactions can only be rolled back. If this is a nested TSTART (subtransaction), it can optionally be rolled back incrementally, that is, only the nested TSTART needs to be rolled back while the parent TSTART can still be committed.
+
+----------------------
+TCPCONNTIMEOUT
+----------------------
+
+TCPCONNTIMEOUT, Connection wait timeout (ssss seconds) has expired
+
+Runtime Error: When MUPIP RESTORE or MUPIP BACKUP are pushing/pulling data over a socket, the attempt to attach to "the other side" can timeout. If it does timeout, this is the error that is returned.
+
+Action: Determine the source of the connection delay, fix and retry.
 
 -------------------
 TCSETATTR 
@@ -14102,6 +14152,15 @@ Run Time Warning: This indicates that a process has been terminated by a source 
 
 Action: Investigate why an operator or program is stopping YottaDB processes without using MUPIP STOP.
 
+-----------------
+UNKNOWNSYSERROR
+-----------------
+
+UNKNOWNSYSERR, An unknown system error has occurred: <errorstring>
+
+Runtime Error:  An unrecognized error code has been passed to ydb_message_t() (C) or MessageT() (Golang)
+
+Action: Determine the source and meaning of the unknown message code such that a proper error message code can be passed in.
 
 -----------------
 UNSDCLASS 
