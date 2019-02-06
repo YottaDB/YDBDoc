@@ -60,9 +60,9 @@ Local Installation
    download the `wordfreq.c
    <https://gitlab.com/YottaDB/DB/YDBTest/raw/master/simpleapi/inref/wordfreq.c>`_
    program, with a `reference input file
-   <https://gitlab.com/YottaDB/DB/YDBTest/raw/master/simpleapi/outref/wordfreq_input.txt>`_
+   <https://gitlab.com/YottaDB/DB/YDBTest/blob/master/simpleapi/outref/wordfreq_input.txt>`_
    and `corresponding reference output file
-   <https://gitlab.com/YottaDB/DB/YDBTest/raw/master/simpleapi/outref/wordfreq_output.txt>`_
+   <https://gitlab.com/YottaDB/DB/YDBTest/blob/master/simpleapi/outref/wordfreq_output.txt>`_
    and compile it with :code:`gcc $(pkg-config --libs --cflags yottadb) -o wordfreq wordfreq.c -lyottadb`.
 
 #. Run your program and verify that the output matches the reference output. For example:
