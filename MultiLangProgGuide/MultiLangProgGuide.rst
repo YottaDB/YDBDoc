@@ -58,7 +58,7 @@ Local Installation
    :code:`#include` the file :code:`libyottadb.h`
    in your C program and compile it. As a sample program, you can
    download the `wordfreq.c
-   <https://gitlab.com/YottaDB/DB/YDBTest/raw/master/simpleapi/inref/wordfreq.c>`_
+   <https://gitlab.com/YottaDB/DB/YDBTest/blob/master/simpleapi/inref/wordfreq.c>`_
    program, with a `reference input file
    <https://gitlab.com/YottaDB/DB/YDBTest/blob/master/simpleapi/outref/wordfreq_input.txt>`_
    and `corresponding reference output file
@@ -2379,7 +2379,10 @@ look at.
 .. code-block:: bash
 
 	$ cd $ydb_dir
+	$ wget https://gitlab.com/YottaDB/DB/YDBTest/raw/master/go/inref/wordfreq.go
 	$ go build wordfreq.go
+	$ wget https://gitlab.com/YottaDB/DB/YDBTest/raw/master/simpleapi/outref/wordfreq_input.txt
+	$ wget https://gitlab.com/YottaDB/DB/YDBTest/raw/master/simpleapi/outref/wordfreq_output.txt
 	$ ./wordfreq <wordfreq_input.txt >wordfreq_output_go.txt
 	$ diff wordfreq_output_go.txt wordfreq_output.txt
 	$
@@ -2392,8 +2395,8 @@ Go Concepts
 
 As the YottaDB wrapper is distributed as a Go package, function calls
 to YottaDB are prefixed in Go code with :code:`yottadb.` (e.g.,
-application code to call the :code:`GetET()` function would be written
-:code:`yottadb.GetET(…)`.
+application code to call the :code:`ValST()` function would be written
+:code:`yottadb.ValST(…)`.
 
 ------------------
 Go Error Interface
@@ -2403,7 +2406,7 @@ YottaDB has a comprehensive set of error return codes. Each has a
 unique number and a mnemonic. Thus, for example, to return an error
 that a buffer allocated for a return value is not large enough,
 YottaDB uses the INVSTRLEN error code, which has the numeric value
-:code:`C.YDB_ERR_INVSTRLEN`. YottaDB attempts to maintain stability of
+:code:`yottadb.YDB_ERR_INVSTRLEN`. YottaDB attempts to maintain stability of
 the numeric values and mnemonics from release to release, to ensure
 applications remain compatible when the underlying YottaDB releases
 are upgraded. While the Go :code:`error` interface provides for a call
@@ -2417,32 +2420,15 @@ special variable `$zstatus`_ for more detailed information (through
 the :code:`errstr` parameter in a multi-threaded application), Go
 application code calling YottaDB methods and functions will check the
 :code:`error` interface to determine whether it is :code:`nil`. This means
-that Go application code will never see a :code:`C.YDB_OK` return.
+that Go application code will never see a :code:`yottadb.YDB_OK` return.
 
-The YottaDB Go :code:`error` interface has a structure and a method.
+The YottaDB Go :code:`error` interface has a structure and a method. Sample usage:
 
 .. code-block:: go
 
-    type YDBError struct {
-        errcode         int       // The error value (e.g. C.YDB_ERR_DBFILERR)
-        errmsg          string    // The error string – $zstatus
-    }
-
-    func (err *YDBError) Error() string {
-	return err.errmsg
-    }
-
-A routine used to find the error return code is:
-
-.. code-block:: go 
-
-    func ErrorCode(err error) int {
-	yerr, ok := err.(*YDBError)
-	if ok {
-	    rc := yerr.errcode
-	    return rc
-	}
-	return -1
+    _, err := yottadb.ValE(yottadb.NOTTP, nil, "^hello", []string{})
+   if err != nil {
+       errcode := yottadb.ErrorCode(err)
     }
 
 In the documentation:
@@ -2450,19 +2436,17 @@ In the documentation:
 - Error codes specific to each function are noted. However, common
   errors can also be returned. For example, while the `Go BufferT
   ValStr()`_ method can return INVSTRLEN, it can also return errors
-  from the YottaDB engine, e.g., GVUNDEF.
+  from the YottaDB engine.
 - An error name such as INVSTRLEN refers to the underlying error,
   whether application code references the numeric value or the string.
 
 Go Symbolic Constants
 =====================
 
-For modules that use `cgo <https://golang.org/cmd/cgo/>`_ to pull-in
-:code:`libyottadb.h` by specifying the path to the file, Go symbolic
-constants are the C `Symbolic Constants`_ with each C symbolic
-constant prefixed with :code:`C.`. For example, the numeric C error
-return value :code:`YDB_ERR_INVSTRLEN` is :code:`C.YDB_ERR_INVSTRLEN`
-in Go.
+`YottaDB symbolic constants
+<https://godoc.org/lang.yottadb.com/go/yottadb#pkg-constants>`_ are
+available in the YottaDB package, for example,
+:code:`yottadb.YDB_ERR_INVSTRLEN`.
 
 :code:`NOTTP` (:code:`yottadb.NOTTP`) as a value for parameter :code:`tptoken`
 indicates to the invoked YottaDB method or function that the caller is
@@ -2474,8 +2458,8 @@ Go Easy API
 A global or local variable node, or an intrinsic special variable, is
 specified using the construct :code:`varname string, subary
 []string`. For an intrinsic special variable, :code:`subary` must be
-the null array, :code:`[]string{}`. For a global or local variable, a
-null array for :code:`subary` refers to the root node, the entire
+the null array, :code:`[]string{}`, or :code:`nil`. For a global or local variable, a
+null array or :code:`nil` for :code:`subary` refers to the root node, the entire
 tree, or both, depending on the function and context.
 
 As the `Go Easy API`_ involves more copying of data between the Go and
@@ -2512,7 +2496,7 @@ Go DataE()
 		varname string, subary []string) (uint32, error)
 
 Matching `Go DataST()`_, :code:`DataE()` function wraps and returns the
-result of `ydb_data_st()`_. In the event of an error, the return
+result of `ydb_data_st()`_ (0, 1, 10, or 11). In the event of an error, the return
 value is unspecified.
 
 Go DeleteE()
@@ -2525,9 +2509,9 @@ Go DeleteE()
 
 Matching `Go DeleteST()`_, :code:`DeleteE()` wraps `ydb_delete_st()`_ to
 delete a local or global variable node or (sub)tree, with a value of
-:code:`C.YDB_DEL_NODE` for :code:`deltype` specifying that only the
+:code:`yottadb.YDB_DEL_NODE` for :code:`deltype` specifying that only the
 node should be deleted, leaving the (sub)tree untouched, and a value
-of :code:`C.YDB_DEL_TREE` specifying that the node as well as the
+of :code:`yottadb.YDB_DEL_TREE` specifying that the node as well as the
 (sub)tree are to be deleted.
 
 Go DeleteExclE()
@@ -2545,7 +2529,7 @@ specified. In the event :code:`varnames` has no elements (i.e.,
 variables.
 
 In the event that the number of variable names in :code:`varnames`
-exceeds :code:`C.YDB_MAX_NAMES`, the error return is
+exceeds :code:`yottadb.YDB_MAX_NAMES`, the error return is
 ERRNAMECOUNT2HI. Otherwise, if `ydb_delete_excl_st()`_ returns an
 error, the function returns the error.
 
@@ -2609,7 +2593,7 @@ If lock resources are specified, upon return, the process will have
 acquired all of the named lock resources or none of the named lock
 resources.
 
-- If :code:`timeoutNsec` exceeds :code:`C.YDB_MAX_TIME_NSEC`, the
+- If :code:`timeoutNsec` exceeds :code:`yottadb.YDB_MAX_TIME_NSEC`, the
   function returns with an error return of TIME2LONG.
 - If the lock resource names exceeds the maximum number supported
   (currently eleven), the function returns a PARMOFLOW error.
@@ -2637,7 +2621,7 @@ resource name without releasing any locks the process already holds.
 
 - If the process already holds the named lock resource, the function
   increments its count and returns.
-- If :code:`timeoutNsec` exceeds :code:`C.YDB_MAX_TIME_NSEC`, the
+- If :code:`timeoutNsec` exceeds :code:`yottadb.YDB_MAX_TIME_NSEC`, the
   function returns with an error return TIME2LONG.
 - If it is able to aquire the lock resource within :code:`timeoutNsec`
   nanoseconds, it returns holding the lock, otherwise it returns
@@ -2771,7 +2755,7 @@ Go Simple API
 =============
 
 The Go Simple API consists of `Go Data Structures & Type
-Definitions`_, `Go Simple API BufferT Methods`_, `Go Simple API
+Definitions`_, `Go Simple API Access Methods`_, `Go Simple API BufferT Methods`_, `Go Simple API
 BufferTArray Methods`_, `Go Simple API KeyT Methods`_ and `Go Simple
 API Functions`_. Each of them wraps a function in the C `Simple API`_
 – refer to the descriptions of those functions for more detailed
@@ -2796,28 +2780,6 @@ subscripts or a set of variable names, :code:`KeyT` for keys where a
 key in turn consists of a variable or lock resource name and
 subscripts, as discussed in `Concepts`_.
 
-.. code-block:: go
-
-	type BufferT struct {
-		cbuft      *C.ydb_buffer_t // Pointer to C structure describing data
-	}
-
-	type BufferTArray struct {
-		elemsAlloc uint            // Number of elements allocated in array
-		elemsUsed  uint            // Number of elements in use
-		cbuftarray *C.ydb_buffer_t // Pointer to start of array of C structures describing data
-	}
-
-	type KeyT struct {
-		Varnm      *BufferT        // Pointer to variable name struct
-		SubAry     *BufferTArray   // Pointer to subscript struct
-	}
-
-For those fields in the structures described here that are not
-directly accessible (because they start with lower case letters),
-there are methods associated with their containing structures to
-access and modify them.
-
 Methods for each structure are classified as either `Go Simple API
 Access Methods`_ or `Go Simple API`_ methods. `Go Simple API Access
 Methods`_ are methods implemented in the Go wrapper for managing the
@@ -2838,15 +2800,9 @@ Go BufferT Alloc()
 
 	func (buffer *BufferT) Alloc(nBytes uint32)
 
-Allocate:
-
-- a buffer in YottaDB heap space of size :code:`nBytes`; and
-- a :code:`C.ydb_buffer_t` structure, also in YottaDB heap space, with
-  its :code:`buf_addr` referencing the buffer, its :code:`len_alloc`
-  set to :code:`nBytes` and its :code:`len_used` set to zero.
-
-Set :code:`cbuft` in the :code:`BufferT`
-structure to reference the :code:`C.ydb_buffer_t` structure.
+Allocate a buffer in YottaDB heap space of size :code:`nBytes`; and
+set :code:`BufferT`
+structure to provide access to that buffer.
 
 Go BufferT Dump()
 .................
@@ -2867,6 +2823,11 @@ For debugging purposes, dump on stdout:
 - at the address :code:`buf_addr`, the lower of :code:`len_used` or
   :code:`len_alloc` bytes in `zwrite format`_.
 
+As this function is intended for debugging and provides details of
+internal structures, its output is likely to change as internal
+implementations change, even when stability of the external API is
+maintained.
+
 Go BufferT DumpToWriter()
 .........................
 
@@ -2885,6 +2846,11 @@ For debugging purposes, dump on :code:`writer`:
 
 - at the address :code:`buf_addr`, the lower of :code:`len_used` or
   :code:`len_alloc` bytes in `zwrite format`_.
+
+	As this function is intended for debugging and provides details of
+internal structures, its output is likely to change as internal
+implementations change, even when stability of the external API is
+maintained.
 
 Go BufferT Free()
 .................
@@ -2905,14 +2871,12 @@ Go BufferT BufferTFromPtr()
 
 	func (buffer *BufferT) BufferTFromPtr(errstr unsafe.Pointer)
 
-Intended for use by functions implementing transaction logic, the
-method sets :code:`cbuft` in the :code:`BufferT` structure to
-:code:`errstr`.
+This method is intended for use in advanced cases, such as those
+encountered internally to the wrapper, when a :code:`BufferT` object
+must wrap an existing :code:`C.ydb_buffer_t` struct.
 
 Note: Modifying :code:`errstr`, or accessing memory it references may
-lead to code that behaves unpredictably and is hard to debug. Always
-“wrap” it using :code:`BufferTFromPtr()` and use the methods for the
-:code:`BufferT` structure.
+lead to code that behaves unpredictably and is hard to debug.
 
 Go BufferT LenAlloc()
 .....................
@@ -2922,8 +2886,8 @@ Go BufferT LenAlloc()
 	func (buffer *BufferT) LenAlloc(tptoken uint64,
 		errstr *BufferT) (uint32, error)
 
-- If the :code:`C.ydb_buffer_t` structure referenced by :code:`cbuft`
-  has not yet been allocated, return the STRUCTNOTALLOCD error.
+- If the underlying structures
+  have not yet been allocated, return the STRUCTNOTALLOCD error.
 - Otherwise, return the :code:`len_alloc` field of the
   :code:`C.ydb_buffer_t` structure referenced by :code:`cbuft`.
 
@@ -2935,8 +2899,8 @@ Go BufferT LenUsed()
 	func (buffer *BufferT) LenUsed(tptoken uint64,
 		errstr *BufferT) (uint32, error)
 
-- If the :code:`C.ydb_buffer_t` structure referenced by :code:`cbuft`
-  has not yet been allocated, return the STRUCTNOTALLOCD error.
+- If the underlying structures
+  have not yet been allocated, return the STRUCTNOTALLOCD error.
 - If the :code:`len_used` field of the :code:`C.ydb_buffer_t`
   structure is greater than its :code:`len_alloc` field (owing to a
   prior INVSTRLEN error), return an INVSTRLEN error and the
@@ -2957,8 +2921,8 @@ Use this method to change the length of a used substring of the
 contents of the buffer referenced by the :code:`buf_addr` field of the
 referenced :code:`C.ydb_buffer_t`.
 
-- If the :code:`C.ydb_buffer_t` structure referenced by :code:`cbuft`
-  has not yet been allocated, return the STRUCTNOTALLOCD error.
+- If the underlying structures
+  have not yet been allocated, return the STRUCTNOTALLOCD error.
 - If :code:`newLen` is greater than the :code:`len_alloc` field of the
   referenced :code:`C.ydb_buffer_t`, make no changes and return with
   an error return of INVSTRLEN.
@@ -2978,14 +2942,13 @@ Go BufferT SetValBAry()
 	func (buffer *BufferT) SetValBAry(tptoken uint64,
 		errstr *BufferT, val *[]byte) error
 
-- If the :code:`C.ydb_buffer_t` structure referenced by :code:`cbuft`
-  has not yet been allocated, return the STRUCTNOTALLOCD error.
+- If the underlying structures
+  have not yet been allocated, return the STRUCTNOTALLOCD error.
 - If the length of :code:`val` is greater than the :code:`len_alloc`
   field of the :code:`C.ydb_buffer_t` structure referenced by
   :code:`cbuft`, make no changes and return INVSTRLEN.
-- Otherwise, copy the bytes of :code:`val` to the location referenced
-  by the :code:`buf_addr` field of the :code:`C.ydbbuffer_t`
-  structure, set the :code:`len_used` field to the length of
+- Otherwise, copy the bytes of :code:`val` to the referenced buffer
+  and set the :code:`len_used` field to the length of
   :code:`val`.
 
 Go BufferT SetValStr()
@@ -2996,14 +2959,13 @@ Go BufferT SetValStr()
 	func (buffer *BufferT) SetValStr(tptoken uint64,
 		errstr *BufferT, val *string) error
 
-- If the :code:`C.ydb_buffer_t` structure referenced by :code:`cbuft`
-  has not yet been allocated, return the STRUCTNOTALLOCD error.
+- If the underlying structures
+  have not yet been allocated, return the STRUCTNOTALLOCD error.
 - If the length of :code:`val` is greater than the :code:`len_alloc`
   field of the :code:`C.ydb_buffer_t` structure referenced by
   :code:`cbuft`, make no changes and return INVSTRLEN.
-- Otherwise, copy the bytes of :code:`val` to the location referenced
-  by the :code:`buf_addr` field of the :code:`C.ydbbuffer_t`
-  structure, set the :code:`len_used` field to the length of
+- Otherwise, copy the bytes of :code:`val` to the referenced buffer
+  and set the :code:`len_used` field to the length of
   :code:`val`.
 
 Go BufferT SetValStrLit()
@@ -3014,14 +2976,13 @@ Go BufferT SetValStrLit()
 	func (buffer *BufferT) SetValStrLit(tptoken uint64,
 		errstr *BufferT, val string) error
 
-- If the :code:`C.ydb_buffer_t` structure referenced by :code:`cbuft`
-  has not yet been allocated, return the STRUCTNOTALLOCD error.
+- If the the underlying structures
+  have not yet been allocated, return the STRUCTNOTALLOCD error.
 - If the length of :code:`val` is greater than the :code:`len_alloc`
   field of the :code:`C.ydb_buffer_t` structure referenced by
   :code:`cbuft`, make no changes and return INVSTRLEN.
-- Otherwise, copy the bytes of :code:`val` to the location referenced
-  by the :code:`buf_addr` field of the :code:`C.ydbbuffer_t`
-  structure, set the :code:`len_used` field to the length of
+- Otherwise, copy the bytes of :code:`val` to the referenced buffer
+  and set the :code:`len_used` field to the length of
   :code:`val`.
 
 Go BufferT ValBAry()
@@ -3032,11 +2993,12 @@ Go BufferT ValBAry()
 	func (buffer *BufferT) ValBAry(tptoken uint64,
 		errstr *BufferT) (*[]byte, error)
 
-- If the :code:`C.ydb_buffer_t` structure referenced by :code:`cbuft`
-  has not yet been allocated, return the STRUCTNOTALLOCD error.
+- If the the underlying structures
+  have not yet been allocated, return the STRUCTNOTALLOCD error.
 - If the :code:`len_used` field of the :code:`C.ydb_buffer_t` structure
   is greater than its :code:`len_alloc` field (owing to a prior
-  INVSTRLEN error), return an INVSTRLEN error.
+  INVSTRLEN error), return an INVSTRLEN error and :code:`len_alloc`
+  bytes as a byte array.
 - Otherwise, return :code:`len_used` bytes of the buffer as a byte
   array.
 
@@ -3048,11 +3010,12 @@ Go BufferT ValStr()
 	func (buffer *BufferT) ValStr(tptoken uint64,
 		errstr *BufferT) (*string, error)
 
-- If the :code:`C.ydb_buffer_t` structure referenced by :code:`cbuft`
-  has not yet been allocated, return the STRUCTNOTALLOCD error.
+- If the the underlying structures
+  have not yet been allocated, return the STRUCTNOTALLOCD error.
 - If the :code:`len_used` field of the :code:`C.ydb_buffer_t` structure
   is greater than its :code:`len_alloc` field (owing to a prior
-  INVSTRLEN error), return an INVSTRLEN error.
+  INVSTRLEN error), return an INVSTRLEN error and :code:`len_alloc`
+  bytes as a string.
 - Otherwise, return :code:`len_used` bytes of the buffer as a string.
 
 Go Simple API Access Methods for BufferTArray
@@ -3065,26 +3028,8 @@ Go BufferTArray Alloc()
 
 	func (buftary *BufferTArray) Alloc(numBufs, nBytes uint32)
 
-Allocate:
-
-- :code:`numSubs` buffers in YottaDB heap space, each of of size
-  :code:`bufSiz`; and
-- an array of :code:`numSubs` :code:`C.ydb_buffer_t` structures, also
-  in YottaDB heap space.
-
-Set:
-
-- In each :code:`C.ydb_buffer_t` structure:
-
-  - :code:`buf_addr` to the address of a buffer;
-  - :code:`len_alloc` to :code:`bufSiz`; and
-  - :code:`len_used` to zero.
-
-- In the :code:`BufferTArray` structure:
-
-  - :code:`cbuftary` to reference the beginning of the :code:`C.ydb_buffer_t` array;
-  - :code:`elemsAlloc` field to :code:`numSubs`; and
-  - :code:`elemsUsed` is to zero.
+Allocate an array of :code:`numSubs` buffers in YottaDB heap space, each of of size
+:code:`bufSiz`, referenced by the :code:`BufferTArray` structure.
 
 Go BufferTArray Dump()
 ......................
@@ -3106,6 +3051,11 @@ For debugging purposes, dump on stdout:
   - the smaller of :code:`len_used` and :code:`len_alloc` bytes at the
     address :code:`buf_addr`, in `zwrite format`_.
 
+As this function is intended for debugging and provides details of
+internal structures, its output is likely to change as internal
+implementations change, even when stability of the external API is
+maintained.
+
 Go BufferTArray DumpToWriter()
 ...............................
 
@@ -3126,6 +3076,11 @@ For debugging purposes, dump on :code:`writer`:
   - the smaller of :code:`len_used` and :code:`len_alloc` bytes at the
     address :code:`buf_addr`, in `zwrite format`_.
 
+As this function is intended for debugging and provides details of
+internal structures, its output is likely to change as internal
+implementations change, even when stability of the external API is
+maintained.
+
 Go BufferTArray ElemAlloc()
 ...........................
 
@@ -3133,10 +3088,9 @@ Go BufferTArray ElemAlloc()
 
 	func (buftary *BufferTArray) ElemAlloc() uint32
 
-- If the :code:`C.ydb_buffer_t` structures referenced by
-  :code:`cbuftary` have not yet been allocated, return the
-  STRUCTNOTALLOCD error.
-- Otherwise, return the :code:`elemsAlloc` field.
+- If the underlying structures
+  have not yet been allocated, return the STRUCTNOTALLOCD error.
+- Otherwise, return the number of allocated buffers.
 
 Go BufferTArray ElemLenAlloc()
 ..............................
@@ -3146,9 +3100,8 @@ Go BufferTArray ElemLenAlloc()
 	func (buftary *BufferTArray)
 		ElemLenAlloc(tptoken uint64) uint32
 
-- If the :code:`C.ydb_buffer_t` structures referenced by
-  :code:`cbuftary` have not yet been allocated, return the
-  STRUCTNOTALLOCD error.
+- If the underlying structures
+  have not yet been allocated, return the STRUCTNOTALLOCD error.
 - Otherwise, return the :code:`len_alloc` from the
   :code:`C.ydb_buffer_t` structures referenced by :code:`cbuftary`,
   all of which have the same value.
@@ -3161,9 +3114,8 @@ Go BufferTArray ElemLenUsed()
 	func (buftary *BufferTArray) ElemLenUsed(tptoken uint64,
 		errstr *BufferT, idx uint32) (uint32, error)
 
-- If the :code:`C.ydb_buffer_t` structures referenced by
-  :code:`cbuftary` have not yet been allocated, return the
-  STRUCTNOTALLOCD error.
+- If the underlying structures
+  have not yet been allocated, return the STRUCTNOTALLOCD error.
 - If :code:`idx` is greater than or equal to the :code:`elemsAlloc` of the
   :code:`BufferTArray` structure, return with an error return of
   INSUFFSUBS.
@@ -3178,9 +3130,8 @@ Go BufferTArray ElemUsed()
 
 	func (buftary *BufferTArray) ElemUsed() uint32
 
-- If the :code:`C.ydb_buffer_t` structures referenced by
-  :code:`cbuftary` have not yet been allocated, return the
-  STRUCTNOTALLOCD error.
+- If the underlying structures
+  have not yet been allocated, return the STRUCTNOTALLOCD error.
 - Otherwise, return the value of the :code:`elemsUsed` field.
 
 Go BufferTArray Free()
@@ -3209,9 +3160,8 @@ by :code:`idx`, for example to change the length of a used substring
 of the contents of the buffer referenced by the :code:`buf_addr` field
 of the referenced :code:`C.ydb_buffer_t`.
 
-- If the :code:`C.ydb_buffer_t` structures referenced by
-  :code:`cbuftary` have not yet been allocated, return the
-  STRUCTNOTALLOCD error.
+- If the underlying structures
+  have not yet been allocated, return the STRUCTNOTALLOCD error.
 - If :code:`idx` is greater than or equal to :code:`elemsAlloc`, make no changes
   and return an INSUFFSUBS error.
 - If :code:`newLen` is greater than the :code:`len_alloc` field of the
@@ -3237,10 +3187,9 @@ Go BufferTArray SetElemUsed()
 Use this method to set the current number of valid strings (subscripts
 or variable names) in the :code:`BufferTArray`.
 
-- If the :code:`C.ydb_buffer_t` structures referenced by
-  :code:`cbuftary` have not yet been allocated, return the
-  STRUCTNOTALLOCD error.
-- If :code:`newUsed` is greater than or equal to :code:`elemsAlloc`, make no
+- If the underlying structures
+  have not yet been allocated, return the STRUCTNOTALLOCD error.
+- If :code:`newUsed` is greater than :code:`elemsAlloc`, make no
   changes and return with an error return of
   INSUFFSUBS.
 - Otherwise, set :code:`elemsUsed` to :code:`newUsed`.
@@ -3258,18 +3207,16 @@ Go BufferTArray SetValBAry()
 	func (buftary *BufferTArray) SetValBAry(tptoken uint64,
 		errstr *BufferT, idx uint32, val *[]byte) error
 
-- If the :code:`C.ydb_buffer_t` structures referenced by
-  :code:`cbuftary` have not yet been allocated, return the
-  STRUCTNOTALLOCD error.
+- If the underlying structures
+  have not yet been allocated, return the STRUCTNOTALLOCD error.
 - If :code:`idx` is greater than or equal to :code:`elemsAlloc` make no changes
   and return with an error return of INSUFFSUBS.
 - If the length of :code:`val` is greater than the
   :code:`len_alloc` field of the array element specified by :code:`idx`,
   make no changes, and return INVSTRLEN.
-- Otherwise, copy the bytes of :code:`val` to the location referenced
-  by the :code:`buf_addr` field of the :code:`C.ydb_buffer_t`
-  structure referenced, set its :code:`len_used` field to the number
-  of bytes copied.
+- Otherwise, copy the bytes of :code:`val` to the referenced buffer
+  and set the :code:`len_used` field to the length of
+  :code:`val`.
 
 Go BufferTArray SetValStr()
 ...........................
@@ -3280,18 +3227,16 @@ Go BufferTArray SetValStr()
 		SetValStr(tptoken uint64, errstr *BufferT,
 		idx uint32, value *string) error
 
-- If the :code:`C.ydb_buffer_t` structures referenced by
-  :code:`cbuftary` have not yet been allocated, return the
-  STRUCTNOTALLOCD error.
+- If the underlying structures
+  have not yet been allocated, return the STRUCTNOTALLOCD error.
 - If :code:`idx` is greater than or equal to :code:`elemsAlloc` make no changes
   and return with an error return of INSUFFSUBS.
 - If the length of :code:`val` is greater than the
   :code:`len_alloc` field of the array element specified by :code:`idx`,
   make no changes, and return INVSTRLEN.
-- Otherwise, copy the bytes of :code:`val` to the location referenced
-  by the :code:`buf_addr` field of the :code:`C.ydb_buffer_t`
-  structure referenced, set its :code:`len_used` field to the number
-  of bytes copied.
+- Otherwise, copy the bytes of :code:`val` to the referenced buffer
+  and set the :code:`len_used` field to the length of
+  :code:`val`.
 
 Go BufferTArray SetValStrLit()
 ..............................
@@ -3302,18 +3247,16 @@ Go BufferTArray SetValStrLit()
 		SetValStrLit(tptoken uint64, errstr *BufferT,
 		idx uint32, value string) error
 
-- If the :code:`C.ydb_buffer_t` structures referenced by
-  :code:`cbuftary` have not yet been allocated, return the
-  STRUCTNOTALLOCD error.
+- If the underlying structures
+  have not yet been allocated, return the STRUCTNOTALLOCD error.
 - If :code:`idx` is greater than or equal to :code:`elemsAlloc` make no changes
   and return with an error return of INSUFFSUBS.
 - If the length of :code:`val` is greater than the :code:`len_alloc`
   field of the :code:`C.ydb_buffer_t` structure indexed by :code:`idx`
   and referenced by :code:`cbuft`, make no changes and return
   INVSTRLEN.
-- Otherwise, copy the bytes of :code:`val` to the location referenced by
-  the :code:`buf_addr` field of the referenced :code:`C.ydbbuffer_t`
-  structure, set the :code:`len_used` field to the length of
+- Otherwise, copy the bytes of :code:`val` to the referenced buffer
+  and set the :code:`len_used` field to the length of
   :code:`val`.
 
 Go BufferTArray ValBAry()
@@ -3325,9 +3268,8 @@ Go BufferTArray ValBAry()
 		ValBAry(tptoken uint64, errstr *BufferT,
 		idx uint32) (*[]byte, error)
 
-- If the :code:`C.ydb_buffer_t` structures referenced by
-  :code:`cbuftary` have not yet been allocated, return the
-  STRUCTNOTALLOCD error.
+- If the underlying structures
+  have not yet been allocated, return the STRUCTNOTALLOCD error.
 - If :code:`idx` is greater than or equal to :code:`elemsAlloc`, return a zero
   length byte array and an error return of INSUFFSUBS.
 - If the :code:`len_used` field of the :code:`C.ydb_buffer_t`
@@ -3347,9 +3289,8 @@ Go BufferTArray ValStr()
 		ValStr(tptoken uint64, errstr *BufferT,
 		idx uint32) (*string, error)
 
-- If the :code:`C.ydb_buffer_t` structures referenced by
-  :code:`cbuftary` have not yet been allocated, return the
-  STRUCTNOTALLOCD error.
+- If the underlying structures
+  have not yet been allocated, return the STRUCTNOTALLOCD error.
 - If :code:`idx` is greater than or equal to :code:`elemsAlloc`, return a zero
   length string and an error return of INSUFFSUBS.
 - If the :code:`len_used` field of the :code:`C.ydb_buffer_t`
@@ -3427,12 +3368,13 @@ Go Str2ZwrST()
 The method wraps `ydb_str2zwr_st()`_ to provide the string in `zwrite
 format`_.
 
-- If the :code:`C.ydb_buffer_t` structure referenced by :code:`cbuft`
-  has not yet been allocated, return the STRUCTNOTALLOCD error.
+- If the underlying structures
+  have not yet been allocated, return the STRUCTNOTALLOCD error.
 - If :code:`len_alloc` is not large enough, set :code:`len_used` to
   the required length, and return an INVSTRLEN error. In this case,
   :code:`len_used` will be greater than :code:`len_alloc` until
-  corrected by application code.
+  corrected by application code, and the value referenced by
+  :code:`zwr` is unspecified.
 - Otherwise, set the buffer referenced by :code:`buf_addr` to the
   `zwrite format`_ string, and set :code:`len_used` to the length.
 
@@ -3449,8 +3391,8 @@ Go Zwr2StrST()
 
 This method wraps `ydb_zwr2str_st()`_ and is the inverse of `Go Str2ZwrST()`_.
 
-- If the :code:`C.ydb_buffer_t` structure referenced by :code:`cbuft`
-  has not yet been allocated, return the STRUCTNOTALLOCD error.
+- If the underlying structures
+  have not yet been allocated, return the STRUCTNOTALLOCD error.
 - If :code:`len_alloc` is not large enough, set :code:`len_used` to
   the required length, and return an INVSTRLEN error. In this case,
   :code:`len_used` will be greater than :code:`len_alloc` until
@@ -3480,7 +3422,7 @@ where :code:`elemsUsed` is zero, the method deletes all local variable
 trees.
 
 In the event that the :code:`elemsUsed` exceeds
-:code:`C.YDB_MAX_NAMES`, the error return is ERRNAMECOUNT2HI.
+:code:`yottadb.YDB_MAX_NAMES`, the error return is ERRNAMECOUNT2HI.
 
 As mixing M and Go application code in the same process is not supported, the
 warning in `ydb_delete_excl_s()`_ does not apply.
@@ -3537,8 +3479,7 @@ Go Simple API KeyT Methods
 
 :code:`KeyT` methods return errors returned by methods that invoke the
 underlying :code:`Varnm` and :code:`SubAry` members of :code:`KeyT`
-structures, which can in turn originate in those methods or in YottaDB
-functions invoked by them.
+structures.
 
 Go DataST()
 -----------
@@ -3548,9 +3489,9 @@ Go DataST()
 	func (key *KeyT) DataST(tptoken uint64,
 		errstr *BufferT) (uint32, error)
 
-Matching `Go DataE()`_, :code:`DataST()` returns the result of
-`ydb_data_st()`_. In the event an error is returned, the return value
-is unspecified.
+Matching `Go DataE()`_, :code:`DataST()` returns the
+result of `ydb_data_st()`_ (0, 1, 10, or 11). In the event of an error, the return
+value is unspecified.
 
 Go DeleteST()
 -------------
@@ -3562,9 +3503,9 @@ Go DeleteST()
 
 Matching `Go DeleteE()`_, :code:`DeleteST()` wraps `ydb_delete_st()`_ to
 delete a local or global variable node or (sub)tree, with a value of
-:code:`C.YDB_DEL_NODE` for :code:`deltype` specifying that only the
+:code:`yottadb.YDB_DEL_NODE` for :code:`deltype` specifying that only the
 node should be deleted, leaving the (sub)tree untouched, and a value
-of :code:`C.YDB_DEL_TREE` specifying that the node as well as the
+of :code:`yottadb.YDB_DEL_TREE` specifying that the node as well as the
 (sub)tree are to be deleted.
 
 Go IncrST()
@@ -3587,7 +3528,8 @@ structure referenced by :code:`retval`.
 - If the length of the data to be returned exceeds
   :code:`retval.lenAlloc`, the method sets the :code:`len_used`
   of the :code:`C.ydb_buffer_t` referenced by :code:`retval`
-  to the required length, and returns an INVSTRLEN error.
+  to the required length, and returns an INVSTRLEN error. The value
+  referenced by :code:`retval` is unspecified.
 - Otherwise, it copies the data to the buffer referenced by the
   :code:`retval.buf_addr`, sets :code:`retval.lenUsed` to its
   length.
@@ -3624,7 +3566,7 @@ resource name without releasing any locks the process already holds.
 
 - If the process already holds the named lock resource, the method
   increments its count and returns.
-- If :code:`timeoutNsec` exceeds :code:`C.YDB_MAX_TIME_NSEC`, the
+- If :code:`timeoutNsec` exceeds :code:`yottadb.YDB_MAX_TIME_NSEC`, the
   method returns with an error return TIME2LONG.
 - If it is able to aquire the lock resource within :code:`timeoutNsec`
   nanoseconds, it returns holding the lock, otherwise it returns
@@ -3663,8 +3605,9 @@ specified key.
     subscripts of that next node, and :code:`next.elemsUsed` to the
     number of subscripts.
 
-- If there is no subsequent node, the method returns the NODEEND
-  error, making no changes to the structures below :code:`next`.
+- If there is no subsequent node, the method returns the NODEEND error
+  (:code:`yottadb.YDB_ERR_NODEEND`), making no changes to the
+  structures below :code:`next`.
 
 Go NodePrevST()
 ---------------
@@ -3710,7 +3653,7 @@ Go SetValST()
 		errstr *BufferT, value *BufferT) error
 
 Matching `Go SetValE()`_, at the referenced local or global variable
-node, or the intrinsic special variable, :code:`SetST()` wraps
+node, or the intrinsic special variable, :code:`SetValST()` wraps
 `ydb_set_st()`_ to set the value specified by :code:`value`.
 
 Go SubNextST()
@@ -3785,12 +3728,12 @@ intrinsic special variable, in the buffer referenced by the
   the method makes no changes to the structures under :code:`retval`
   and returns the error.
 - If the length of the data to be returned exceeds
-  :code:`retval.getLenAlloc()`, the method sets the :code:`len_used` of
+  :code:`retval.GetLenAlloc()`, the method sets the :code:`len_used` of
   the :code:`C.ydb_buffer_t` referenced by :code:`retval` to the
   required length, and returns an INVSTRLEN error.
 - Otherwise, it copies the data to the buffer referenced by the
-  :code:`retval.buf_addr`, and sets :code:`retval.lenUsed` to its
-  length.
+  :code:`retval.buf_addr`, and sets :code:`retval.lenUsed` to the
+  length of the returned value.
 
 -----------------------
 Go Simple API Functions
@@ -3814,7 +3757,7 @@ If lock resources are specified, upon return, the process will have
 acquired all of the named lock resources or none of the named lock
 resources.
 
-- If :code:`timeoutNsec` exceeds :code:`C.YDB_MAX_TIME_NSEC`, the
+- If :code:`timeoutNsec` exceeds :code:`yottadb.YDB_MAX_TIME_NSEC`, the
   method returns with a TIME2LONG error.
 - If the number of lock resource names exceeds the maximum number
   supported (currently eleven), the function returns a PARMOFLOW
@@ -3893,10 +3836,12 @@ Returns a string consisting of six space separated pieces to provide
 version information for the Go wrapper and underlying YottaDB release:
 
 - The first piece is always “gowr” to idenfify the Go wrapper.
-- The Go wrapper release number, which starts with “r” and is followed
-  by two numbers separated by a period (“.”), e.g., “r1.32”. The first
-  is a major release number and the second is a minor release number
-  under the major release. Even minor release numbers indicate
+- The Go wrapper release number, which starts with “v” and is followed
+  by three numbers separated by a period (“.”), e.g., “v0.90.0”
+  mimicking `Semantic Versioning <https://semver.org/>`_. The first
+  is a major release number, the second is a minor release number
+  under the major release and the third is a patch level. Even minor
+  and patch release numbers indicate
   formally released software. Odd minor release numbers indicate
   software builds from “in flight” code under development, between
   releases. Note that although they follow the same format, Go wrapper
@@ -4000,6 +3945,10 @@ use:
 Applications that are affected by automatic internal conversion should
 prefix their subscripts with a character such as "x" which ensures
 that subscripts are not canonical numbers.
+
+In contexts where a string is coerced to a number (for example
+`ydb_incr_s() / ydb_incr_st()`_) the coercion rules are the same as the
+`M “+” unary operator <https://docs.yottadb.com/ProgrammersGuide/langfeat.html#arithmetic-operators>`_.
 
 .. _canonical number:
 .. _canonical numbers:
