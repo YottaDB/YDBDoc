@@ -342,7 +342,7 @@ The following sections describe the details of the database structures.
 GDS Blocks
 +++++++++++++++
 
-Index and data blocks consist of a block header followed by a series of records. The block header has four fields that contain information. The first field, of two bytes, specifies the block version. The second field, of two bytes, specifies the number of bytes currently in use in the block. The third field, of one byte, specifies the block level. The last field of eight bytes represents the transaction number at which the block was last changed. An interpreted form of a block header looks like the following:
+Index and data blocks consist of a block header followed by a series of records. The block header has five fields. The first field, of two bytes, specifies the block version. The second field, of one byte, is a filler byte. The third field, of one byte, specifies the block level. The fourth field, of two bytes, specifies the number of bytes currently in use in the block. The last field of eight bytes represents the transaction number at which the block was last changed. An interpreted form of a block header looks like the following:
 
 .. parsed-literal::
    File      /home/jdoe/.yottadb/r1.20_x86_64/g/yottadb.dat
@@ -361,7 +361,7 @@ Records consist of a record header, a key, and either a block pointer or the act
 The record header has two fields that contain information. The first field, of two bytes, specifies the record size. The second field, of one byte, specifies the compression count. 
 
 .. note::
-   Like the GDS block headers, a filler byte may be added, depending on the platform. 
+   Like the GDS block headers, a filler byte may be added in the third field, depending on the platform. For example, "61" in the following example is added as a filler byte. 
 
 The interpreted form of a block with global ^A("Name",1)="Brad" looks like the following: 
 
