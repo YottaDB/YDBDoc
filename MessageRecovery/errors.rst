@@ -9454,7 +9454,7 @@ NODEEND
 
 NODEEND, End of list of nodes/subscripts
 
-Runtime Error: This 'error' is indicator (like EOF) that the list of nodes or subscripts being fetched via ydb_node_next/ydb_node_previous or ydb_subscript_next/ydb_subscript_previous or their equivalent Golang wrappers, is at an end.
+Runtime Error: This 'error' is an indicator (like EOF) that the list of nodes or subscripts being fetched via ydb_node_next/ydb_node_previous or ydb_subscript_next/ydb_subscript_previous or their equivalent Golang wrappers, is at an end.
 
 Action: Not an error strictly speaking - Terminate the loop the list is being read in as it is complete.
 
@@ -14156,7 +14156,7 @@ Action: Investigate why an operator or program is stopping YottaDB processes wit
 UNKNOWNSYSERROR
 -----------------
 
-UNKNOWNSYSERR, An unknown system error has occurred: <errorstring>
+UNKNOWNSYSERR, An unknown system error ssss has occurred: <errorstring>
 
 Runtime Error:  An unrecognized error code has been passed to ydb_message_t() (C) or MessageT() (Golang)
 
