@@ -2245,7 +2245,7 @@ ydb_timer_start() / ydb_timer_start_t()
 	int ydb_timer_start(intptr_t timer_id,
 		unsigned long long limit_nsec,
 		ydb_funcptr_retvoid_t handler,
-		unsigned int handler_data_len
+		unsigned int handler_data_len,
 		char *handler_data);
 
 	int ydb_timer_start_t(uint64_t tptoken,
@@ -2253,7 +2253,7 @@ ydb_timer_start() / ydb_timer_start_t()
 		intptr_t timer_id,
 		unsigned long long limit_nsec,
 		ydb_funcptr_retvoid_t handler,
-		unsigned int handler_data_len
+		unsigned int handler_data_len,
 		char *handler_data);
 
 Start a timer. Unless canceled, when the timer expires,
