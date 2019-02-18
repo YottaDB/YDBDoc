@@ -561,7 +561,7 @@ Example:
    $ZQUIT=0
    $ZREALSTOR=697936
    $ZRELDATE="20180614 00:33"
-   $ZROUTINES=". /usr/local/lib/yottadb/r122 /usr/local/lib/yottadb/r122/plugin/o(/usr/local/lib/yottadb/r122/plugin/r)"
+   $ZROUTINES=". /usr/local/lib/yottadb/r124 /usr/local/lib/yottadb/r124/plugin/o(/usr/local/lib/yottadb/r124/plugin/r)"
    $ZSOURCE=""
    $ZSTATUS="150373850,name+5^dmex,%YDB-E-UNDEF, Undefined local variable: bame"
    $ZSTEP="B"
@@ -650,18 +650,18 @@ Example:
    dmex;dmex - Direct Mode example
    ;
    beg 
-     for read !,"Name: ",name do name q:name="Q"
+     for read !,"Name: ",name do name
      quit
    name
      set ln=$l(name)
-     if ln,$e("QUIT",1,ln)=$tr(name,"quit","QUIT") d q
-     . s name="Q"
+     if ln, $extract("QUIT",1,ln)=$tr(name,"quit","QUIT") do
+     . set name="Q"
      if ln<30,name?1.a.1"-".a1","1" "1a.ap do print q
      write !,"Please use last-name, "
      write "first-name middle-initial or 'Q' to Quit."
      quit
    print
-     write !,$p(name,", ",2)," ",$p(name,", ")
+     write !,$piece(name,", ",2)," ",$piece(name,", ")
      quit
    YDB>
 
