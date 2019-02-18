@@ -2210,6 +2210,12 @@ On executing fortypes, the output looks something like the following:
    ^trc("fortypes","fortypes",38,"FOR_LOOP",2)=3
    ^trc("fortypes","fortypes",38,"FOR_LOOP",3)=7
 
+**"[UN]SETENV":"envvar"**
+
+Environment variables can be set and unset inside M using VIEW commands. 
+
+VIEW "SETENV":"envvar":value sets the environment variable named envvar to value and VIEW "UNSETENV":"envvar" unsets the environment variable envvar.
+
 **"ZDATE_FORM":"value"**
 
 Determines whether four digit year code is active for $ZDATE() function. YottaDB defaults to zero (0), that is, two digit output. For more usage information, refer to `“$ZDate()” <https://docs.yottadb.com/ProgrammersGuide/functions.html#zdate>`_.
