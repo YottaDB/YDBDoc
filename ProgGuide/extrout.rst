@@ -796,7 +796,7 @@ YottaDB currently allows up to 10 levels of nesting, if TP is not used, and less
 
 Following are the YottaDB commands, Intrinsic Special Variables, and functions whose behavior changes in the context of every new nested call-in environment.
 
-ZGOTO operates only within the current nested M stack. ZGOTO zero (0) unwinds all frames in the current nested call-in M stack (including the call-in base frame) and returns to C. ZGOTO one (1) unwinds all current stack frame levels up to (but not inclusive) the call-in base frame and returns to C, while keeping the current nested call-in environment active for any following gtm_ci() calls.
+ZGOTO 0 (zero) returns to the processing of the invoking non-M routine as does ZGOTO 1 (one) with no entryref, while ZGOTO 1:entryref replaces the originally invoked M routine and continues M execution.
 
 $ZTRAP/$ETRAP NEW'd at level 1 (in GTM$CI frame).
 
