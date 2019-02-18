@@ -789,7 +789,10 @@ Here is a sample configuration file:
       * is reused to speed up the TLS handshake. A value of 0 forces sessions to not be reused. The default value is 1 hour.
       \*/
       session-timeout: 600;
-                                                   
+
+    /* Disable SSLv2 (default) and SSLv3 \*/
+      ssl-options: "SSL_OP_NO_SSLv2:SSL_OP_NO_SSLv3";
+                                                 
       /* List of certificate/key pairs specified by identifiers. \*/
       PRODUCTION: {
                    /* Format of the certificate and private key pair. Currently, the YottaDB TLS plug-in only supports PEM format. \*/
