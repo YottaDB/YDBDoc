@@ -654,7 +654,7 @@ Example:
      quit
    name
      set ln=$l(name)
-     if ln, $extract("QUIT",1,ln)=$tr(name,"quit","QUIT") do
+     if ln,$extract("QUIT",1,ln)=$tr(name,"quit","QUIT") do
      . set name="Q"
      if ln<30,name?1.a.1"-".a1","1" "1a.ap do print q
      write !,"Please use last-name, "
