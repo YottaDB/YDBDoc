@@ -472,11 +472,11 @@ At journal extension time, including journal autoswitch time, if (ALLOCATION+EXT
 
 **[NO]BEFORE_IMAGES**
 
-Controls whether the journal should capture BEFORE_IMAGES of GDS blocks that an update is about to modify. A SET -JOURNAL=ON must include either BEFORE_IMAGES or NOBEFORE_IMAGES in the accompanying journal-option-list.
+Controls whether the journal should capture BEFORE_IMAGES of GDS blocks that an update is about to modify. A SET -JOURNAL=ON can include either BEFORE_IMAGES or NOBEFORE_IMAGES in the accompanying journal-option-list.
 
 If you specify both NOBEFORE_IMAGES and BEFORE_IMAGES in the same journal-option-list, the last specification overrides any previous one(s).
 
-As YottaDB creates new journal files only with the ON option and every ON specification must include either BEFORE_IMAGES or NOBEFORE_IMAGES. If the user specifies [NO]BEFORE_IMAGES along with the OFF option, it serves no purpose.
+As YottaDB creates new journal files only with the ON option, if SET -JOURNAL=ON and neither option is specified, the prior journal type from the database file header is used for the new journal file.
 
 Although it is possible to perform an online switch of a database from (or to) NOBEFORE-IMAGE journaling to (or from) BEFORE-IMAGE journaling, it is important to understand that backward recovery can never succeed if it encounters even one journal file in a set without BEFORE-IMAGES.
 
