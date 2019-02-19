@@ -3,8 +3,8 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to the Multi-Language Programmer's Guide!
-=================================================
+Index
+========
 .. toctree::
    :hidden:
   
@@ -15,6 +15,9 @@ Welcome to the Multi-Language Programmer's Guide!
    
    Main YottaDB Documentation Page <https://yottadb.com/resources/documentation/>
    MultiLangProgGuide
+   cprogram
+   goprogram
+   programmingnotes
    LICENSE
 
 Indices and tables
