@@ -258,7 +258,7 @@ Note that YottaDB implements M code introspection in two ways:
   default). To provide introspection with this option the M routines
   should be placed in :code:`$ydb_dist/plugin/r` and then compiled.
 
-  Databases
+Databases
 +++++++++
 
 Database files and global directories used to access them are located
