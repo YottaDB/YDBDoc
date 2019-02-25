@@ -88,8 +88,8 @@ Based on the security model, the following are recommended best practices for se
 * Ensure that database file ownership (user and group), UNIX user and group ids, and permissions at the UNIX level match the intended access. If finer grained access controls than those provided by user/group ids and permissions are needed, consider using (where appropriate and available) security products layered on top of the operating system.
 * Under typical conditions, YottaDB shared resources - journal files, shared memory, and semaphores - have the same group ids and access permissions as their database files, but may not be owned by the same userid, since the process creating the shared resource may have a different userid from the one that created the database. There are two edge cases to consider:
 
-  * Where the owner of the database file is not a member of the group of the database file, but is a member of the group of YottaDB's libgtmshr.so file. In this case, if a process with a userid other than the owner were to create a shared resource, a process with the userid of the owner would not have access to them. Therefore, YottaDB uses the group id of the libgtmshr.so file if the process creating the shared resource is also a member of that group. In this case it would also restrict access to the resource to members of that group. If the process creating this resource is not a member of the libgtmshr.so group, the group id of the shared resource remains that of the creating resource but the permissions allow world access. YottaDB advises against using a database file whose owner is not a member of the group of that file.
-  * Where the owner of the database file is neither a member of the group nor a member of the group of libgtmshr.so. In this case, YottaDB uses world read-write permissions for the shared resources. YottaDB advises against the use of a database file whose owner is neither a member of the group of the file nor a member of the group of libgtmshr.so.
+  * Where the owner of the database file is not a member of the group of the database file, but is a member of the group of YottaDB's libyottadb.so file. In this case, if a process with a userid other than the owner were to create a shared resource, a process with the userid of the owner would not have access to them. Therefore, YottaDB uses the group id of the libyottadb.so file if the process creating the shared resource is also a member of that group. In this case it would also restrict access to the resource to members of that group. If the process creating this resource is not a member of the libyottadb.so group, the group id of the shared resource remains that of the creating resource but the permissions allow world access. YottaDB advises against using a database file whose owner is not a member of the group of that file.
+  * Where the owner of the database file is neither a member of the group nor a member of the group of libyottadb.so. In this case, YottaDB uses world read-write permissions for the shared resources. YottaDB advises against the use of a database file whose owner is neither a member of the group of the file nor a member of the group of libyottadb.so.
 
 
 * The Mapped Memory (MM) access method does not use a shared memory segment for a buffer pool for database blocks - shared memory is used only for control structures. Therefore, consider using MM if there are processes that are are not considered trustworthy but which need read-only access to database files. Even with MM, processes that have read-only access to the database file still have read-write access to the control structures (for example, for M locks). It is conceivable that a rogue process with read-only access may somehow place information in the control structures (for example, bad M lock information) to induce a normal process with read-write access to record inconsistent information in the database.
@@ -150,8 +150,8 @@ YottaDB takes a number of factors into account to determine the resulting permis
 * The owner of the database file or object directory
 * The group of the database file or object directory
 * The group memberships of the database file's or object directory's owner
-* The owner/group/other permissions of the libgtmshr file
-* The group of the libgtmshr file
+* The owner/group/other permissions of the libyottadb file
+* The group of the libyottadb file
 * The effective user id of the creating process
 * The effective group id of the creating process
 * The group memberships of the creating process' user
@@ -227,7 +227,7 @@ The following table describes how these factors are combined to determine the pe
 
 * The resulting group ownership and permissions are found by matching the database file permissions, then determining which question columns produce the correct "Y" or "N" answer; "-" answers are "don't care".
 * An asterisk ("*") in the Database File Permissions matches writable or not writable. An asterisk in the Resulting File Permissions means that YottaDB uses the write permissions from the database file.
-* YottaDB determines group restrictions by examining the permissions of the libgtmshr file. If it is not executable to others, YottaDB treats it as restricted to members of the group of the libgtmshr file.
+* YottaDB determines group restrictions by examining the permissions of the libyottadb file. If it is not executable to others, YottaDB treats it as restricted to members of the group of the libyottadb file.
 * Group membership can either be established by the operating system's group configuration or by the effective group id of the process.
 * A YottaDB process requires read access in order to write to a database file - a write access permission without read access is an error.
 * YottaDB treats the "root" user the same as other users, except that when it is not the file owner and not a member of the group, it is treated as if it were a member of the group.

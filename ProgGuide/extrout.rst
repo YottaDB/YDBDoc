@@ -125,7 +125,7 @@ In the mathpak package example, the following invocation translate inval to the 
 
 If an external call's function argument is defined in the external call table and that function is invoked without specifying the argument, ensure that the external call function appropriately handles the missing argument. As a good programming practice, always ensure that count of arguments defined in the external call table matches the function invocation. 
 
-libyottadb.h also includes definitions for the following entry points exported from libgtmshr: 
+libyottadb.h also includes definitions for the following entry points exported from libyottadb: 
 
 .. parsed-literal::
    void ydb_hiber_start(ydb_uint_t mssleep);
@@ -469,8 +469,8 @@ Relevant Files for Call-Ins
 
 To facilitate Call-Ins to M routines, the YottaDB distribution directory ($ydb_dist) contains the following files:
 
-* libgtmshr.so - A shared library that implements the YottaDB run-time system, including the Call-In API. If Call-Ins are used from a standalone C/C++ program, this library needs to be explicitly linked into the program. See “Building Standalone Programs”, which describes the necessary linker options on each supported platforms.
-* mumps - The YottaDB startup program that dynamically links with libgtmshr.so.
+* libyottadb.so - A shared library that implements the YottaDB run-time system, including the Call-In API. If Call-Ins are used from a standalone C/C++ program, this library needs to be explicitly linked into the program. See “Building Standalone Programs”, which describes the necessary linker options on each supported platforms.
+* mumps - The YottaDB startup program that dynamically links with libyottadb.so.
 * libyottadb.h - A C-header file containing the declarations of Call-In API.
 
 .. note::
@@ -521,7 +521,7 @@ libyottadb.h also provides an input-only parameter type ydb_pointertofunc_t that
 .. note::
    YottaDB represents values that fit in 18 digits as numeric values, and values that require more than 18 digits as strings.
 
-libyottadb.h also includes definitions for the following entry points exported from libgtmshr: 
+libyottadb.h also includes definitions for the following entry points exported from libyottadb: 
 
 .. parsed-literal::
    void ydb_hiber_start(ydb_uint_t mssleep);
@@ -743,7 +743,7 @@ Building Standalone Programs
 
 All external C functions that use call-ins should include the header file libyottadb.h that defines various types and provides signatures of call-in functions. To avoid potential size mismatches with the parameter types, YottaDB strongly recommends that gtm \*t types defined in libyottadb.h be used instead of the native types (int, float, char, etc).
 
-To use call-ins from a standalone C program, it is necessary that the YottaDB runtime library (libgtmshr.so) is explicitly linked into the program. If call-ins are used from an External Call function (which in turn was called from YottaDB through the existing external call mechanism), the External Call library does not need to be linked explicitly with libgtmshr.so since YottaDB would have already loaded it.
+To use call-ins from a standalone C program, it is necessary that the YottaDB runtime library (libyottadb.so) is explicitly linked into the program. If call-ins are used from an External Call function (which in turn was called from YottaDB through the existing external call mechanism), the External Call library does not need to be linked explicitly with libyottadb.so since YottaDB would have already loaded it.
 
 The following section describes compiler and linker options that must be used for call-ins to work from a standalone C/C++ program. 
 

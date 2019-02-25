@@ -83,7 +83,7 @@ The package names vary by distribution/version.
   
   * Copy and paste the commands from the README to compile and install the encryption plugin with the permissions defined at install time
 
-* Compare the permissions of $ydb_dist/libgtmshr.so to the newly installed shared libraries in $ydb_dist/plugin. Adjust the permission of the newly installed libraries as necessary.
+* Compare the permissions of $ydb_dist/libyottadb.so to the newly installed shared libraries in $ydb_dist/plugin. Adjust the permission of the newly installed libraries as necessary.
 
 ---------------------
 ydbinstall Script

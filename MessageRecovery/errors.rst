@@ -10590,7 +10590,7 @@ PERMGENDIAG
 
 PERMGENDIAG, Permissions: Proc(uid:uuuu,gid:gggg), DB File(uid:vvvv,gid:hhhh,perm:pppp), Lib File(gid:iiii,perm:qqqq), Group Mem(opener:jjjj,owner:kkkk)
 
-Run Time Information: This shows the permissions involved in resource creation for the process, the associated database file, the libgtmshr and the process group membership.
+Run Time Information: This shows the permissions involved in resource creation for the process, the associated database file, the libyottadb and the process group membership.
 
 Action: Typically none, but if you have a permission issue, use this key information for diagnosis.
 
@@ -10602,7 +10602,7 @@ PERMGENFAIL, Failed to determine access permissions to use for creation of xxxx 
 
 Run Time/MUPIP Error: This message indicates that YottaDB was unable to determine the permissions to use when creating a file or resource associated with database file yyyy. xxxx may be "ipc resources", "journal file", "backup file", or "snapshot file".
 
-Action: Note the user and group ownership of the database file and $gtm_exe/libgtmshr.*, and the user and group permissions of the YottaDB process, and report them to your YottaDB support channel.
+Action: Note the user and group ownership of the database file and $ydb_dist/libyottadb.*, and the user and group permissions of the YottaDB process, and report them to your YottaDB support channel.
 
 ------------------
 PINENTRYERR
