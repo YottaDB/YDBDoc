@@ -1366,16 +1366,12 @@ In order to share M routines, YottaDB generates objects (.o) with position indep
 To create a shared library, use the following syntax:
 
 .. parsed-literal::
-   ld -brtl -G -bexpfull -bnoentry -b64 -o libshr.so file1.o file2.o (on AIX)
-   ld -shared -o libshr.so file1.o file2.o (on Linux)
+   ld -shared -o libshr.so file1.o file2.o
 
-Where libshr.so is replaced with name of the shared library one wishes to create. The file1.o and file2.o are replaced with one or more object files created by the YottaDB compiler that the user wishes to put into the shared library. Note that the list of input files can also be put into a file and then specified on the command line with the -f option (AIX). Refer to the ld man page on specific platform for details on each option mentioned above.
+Where libshr.so is replaced with name of the shared library one wishes to create. The file1.o and file2.o are replaced with one or more object files created by the YottaDB compiler that the user wishes to put into the shared library. Refer to the ld man page on specific platform for details.
 
 .. note::
    Source directories cannot be specified with a shared library in $ZROUTINES, as YottaDB does not support additions or modifications to active shared libraries. Searching for a routine in a shared library is a two step process: (1) Load the library and (2) Lookup the symbol corresponding to the M entryref. Since YottaDB always performs the first step (even on platforms with no shared binary support), use shared libraries in $ZROUTINES with care to keep the process footprint minimal. On all platforms, it is strongly recommended not to include unused shared libraries in $ZROUTINES.
-
-.. note::
-   There are some tools on AIX that can aid in mitigating the problems of shared library allocation. The /usr/bin/genkld command on AIX lists all of the shared libraries currently loaded. This command requires root privileges on AIX 4.3.3 but seems to be a general user command on AIX 5. The /usr/sbin/slibclean command requires root privileges and will purge the shared library segment of unused shared libraries making room for new libraries to be loaded.
 
 * *Establish $ZROUTINES from ydb_routines*
 

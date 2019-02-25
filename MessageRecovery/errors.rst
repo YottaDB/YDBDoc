@@ -7317,17 +7317,6 @@ Run Time Error: This indicates that the process failed due to a signal, sent by 
 
 Action: Preserve the core (dump) files and report the entire incident context to your YottaDB support channel for further analysis.
 
---------------------
-KRNLKILL 
---------------------
-
-KRNLKILL, Process was terminated by SIGDANGER signal from the system - System swap space is too low - Report to System Administrator
-
-Run Time Error: This indicates that a YottaDB process received the SIGDANGER signal from AIX, which means that virtual memory is critically low. This message is sent to the user and the system log, notifying that the YottaDB process is terminating.
-
-Action: Report this condition to the system administrator as soon as possible. Check the system configuration to ensure sufficient swap space for the expected workload. Investigate whether the paging space is adequate.
-
-
 -----------------
 LABELEXPECTED 
 -----------------
@@ -9466,7 +9455,7 @@ NODFRALLOCSUPP, The NODEFER_ALLOCATE qualifier is not allowed on this operating 
 
 MUPIP Error: Indicates that disk space preallocation is not supported on the current operating system.
 
-Action: Consider using an external utility, such as FALLOCATE, to fulfill the need. Currently, Linux and AIX are the supported operating systems for the NODEFER_ALLOCATE feature.
+Action: Consider using an external utility, such as FALLOCATE, to fulfill the need.
 
 ---------------------
 NOEDITOR

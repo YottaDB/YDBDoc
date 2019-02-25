@@ -54,35 +54,7 @@ The called routines follow the C calling conventions. They must be compiled as p
 Creating a Shareable Library
 ----------------------------------
 
-The method of creating a shareable library varies by the operating system. The following examples illustrate the commands on an IBM pSeries (formerly RS/6000) AIX system.
-
-Example:
-
-.. parsed-literal::
-   $ cat increment.c
-   int increment(int count, float \*invar, float \*outvar)
-   {
-       \*outvar=*invar+1.0;
-        return 0;
-   }
-   $ cat decrement.c
-   int decrement(int count, float \*invar, float \*outvar)
-   {
-    \*outvar=\*invar-1.0;
-     return 0;
-    }        
-
-
-On IBM pSeries AIX:
-
-Example:
-
-.. parsed-literal::
-   $ cc -c -I$ydb_dist increment.c decrement.c
-   $ ld -o libcrement.so increment.o decrement.o -G -bexpall -bnoentry -bh:4 -lc
-
-.. note::
-   Refer to the AIX V4.2 documentation of the ld(1) AIX command for information on shareable libraries under AIX V4.2. 
+The method of creating a shareable library varies by the operating system.
 
 On Linux x86:
 
@@ -773,14 +745,7 @@ All external C functions that use call-ins should include the header file libyot
 
 To use call-ins from a standalone C program, it is necessary that the YottaDB runtime library (libgtmshr.so) is explicitly linked into the program. If call-ins are used from an External Call function (which in turn was called from YottaDB through the existing external call mechanism), the External Call library does not need to be linked explicitly with libgtmshr.so since YottaDB would have already loaded it.
 
-The following sections describe compiler and linker options that must be used on each platform for call-ins to work from a standalone C/C++ program. 
-
-**IBM pSeries (RS/6000) AIX**
-
-* Compiler: -I$ydb_dist
-* Linker: -L$ydb_dist -lgtmshr
-
-**X86 GNU/Linux**
+The following section describes compiler and linker options that must be used for call-ins to work from a standalone C/C++ program. 
 
 * Compiler: -I$ydb_dist
 * Linker: -L$ydb_dist -lgtmshr -rpath $ydb_dist

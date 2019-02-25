@@ -26,8 +26,6 @@ Welcome to the Administration and Operations Guide!
    gtcm
    ipcresource
    monitoring
-   compilingicu
-   buildenclib
    securityph
    dockercontainer
    packaging
