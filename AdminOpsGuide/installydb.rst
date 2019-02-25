@@ -27,7 +27,7 @@ Before you begin installing YottaDB, perform the following tasks:
 
 * Determine whether or not YottaDB access is restricted to a specific group. Keep the group name handy as you will have to enter it during the installation process.
 
-* Set the environment variable ydb_log to a directory where YottaDB should create log files. If you do not set ydb_log, YottaDB creates log files in a directory in /tmp (AIX, GNU/Linux). However, this is not recommended because it makes YottaDB log files vulnerable to the retention policy of a temporary directory.
+* Set the environment variable ydb_log to a directory where YottaDB should create log files. If you do not set ydb_log, YottaDB creates log files in a directory in /tmp. However, this is not recommended because it makes YottaDB log files vulnerable to the retention policy of a temporary directory.
 
 .. note::
    In the latest version, gtmsecshr logs its messages in the system log and the environment variable ydb_log is ignored.

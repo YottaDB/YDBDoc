@@ -133,17 +133,7 @@ When a GT.CM server has a key for an encrypted database, any client connecting t
 FIPS Mode
 ++++++++++++++
 
-For database encryption, the plugin reference implementation also provides an option to use libgcrypt (from GnuPG) and libcrypto (OpenSSL) in "FIPS mode" removing a need to modify the plugin for sites that require certification for compliance with FIPS 140-2. When the environment variable $ydb_crypt_fips is set to 1 (or evaluates to a non-zero integer, or any case-independent string or leading substring of "TRUE" or "YES"), the plugin reference implementation attempts to use either OpenSSL or Libgcrypt to provide database encryption that complies with FIPS 140-2. The supported platforms are as follows:
-
-+-------------------+---------------------------+------------------------------+--------------------------+
-| Platform          | Libgcrypt                 | OpenSSL                      | OpenSSL FIPS             |
-+===================+===========================+==============================+==========================+
-| Linux x86_64      | 1.4.5                     | 1.0.0                        | 1.0.1e                   |
-+-------------------+---------------------------+------------------------------+--------------------------+
-| Linux x86         | 1.4.5                     | 1.0.0                        | 1.0.1e                   |
-+-------------------+---------------------------+------------------------------+--------------------------+
-| AIX RS600         | 1.5.1                     | 1.0.0e                       | 1.0.1e                   |
-+-------------------+---------------------------+------------------------------+--------------------------+
+For database encryption, the plugin reference implementation also provides an option to use libgcrypt (from GnuPG) and libcrypto (OpenSSL) in "FIPS mode" removing a need to modify the plugin for sites that require certification for compliance with FIPS 140-2. When the environment variable $ydb_crypt_fips is set to 1 (or evaluates to a non-zero integer, or any case-independent string or leading substring of "TRUE" or "YES"), the plugin reference implementation attempts to use either OpenSSL or Libgcrypt to provide database encryption that complies with FIPS 140-2. 
 
 Before using FIPS mode on these platforms, ensure that your OpenSSL or Libgcrypt installation provides a validated FIPS 140-2 implementation (see http://www.openssl.org/docs/fips/). 
 
@@ -611,10 +601,6 @@ For each platform on which YottaDB supports encryption, the following table list
 +--------------------------------------+-------------------------+------------------------------+------------------------------------------------------------------------------------------+-----------------+
 | RHEL 7                               | 1.3.2                   | 1.12                         | libgcrypt 1.5.3                                                                          | 2.0.22          |
 +--------------------------------------+-------------------------+------------------------------+------------------------------------------------------------------------------------------+-----------------+
-| AIX 6.1 and 7.1                      | 1.1.8 + fix             | 1.7                          | libcrypto from OpenSSL - (version >= 1.5)                                                | 1.4.10          |
-|                                      |                         |                              |                                                                                          |                 |
-|                                      |                         |                              | AES256CFB as implemented by OpenSSL - (version >= 0.9.8)                                 |                 |
-+--------------------------------------+-------------------------+------------------------------+------------------------------------------------------------------------------------------+-----------------+
 
 Where the table lists a package version number followed by "+ fix" it means that in the process of testing, we identified issues with the package that we fixed.
 
@@ -629,7 +615,7 @@ The reference implementation uses:
 
 When a YottaDB process first opens a shared library providing an encryption plugin, it ensures that the library resides in $ydb_dist/plugin or a subdirectory thereof. This ensures that any library implementing an encryption plugin requires the same permissions to install, and is protected by the same access controls as the YottaDB installation itself.
 
-On all platforms on which YottaDB supports encryption, compiling the source reference implementation produces the shared library plugins, libgtmcrypt_gcrypt_AES256CFB.so and libgtmcrypt_openssl_AES256CFB.so. On installation on platforms other than AIX, libgtmcrypt.so is a symbolic link to libgtmcrypt_gcrypt_AES256CFB.so; on AIX, the symbolic link is to libgtmcrypt_openssl_AESCFB.so.
+On all platforms on which YottaDB supports encryption, compiling the source reference implementation produces the shared library plugins, libgtmcrypt_gcrypt_AES256CFB.so and libgtmcrypt_openssl_AES256CFB.so. libgtmcrypt.so is a symbolic link to libgtmcrypt_gcrypt_AES256CFB.so.
 
 .. note::
    Encrypted database files are compatible between different endian platforms as long as they use the same key and the same cipher. The sample shell scripts in the reference implementation use the standard shell (/bin/sh). 

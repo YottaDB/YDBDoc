@@ -3590,16 +3590,9 @@ Whenever the source and receiver server connect with each other, if the source s
 The Source and Receiver Servers log all compression related events and/or messages in their respective logs. The source server also logs the length of the compressed data (in addition to the uncompressed data length) in its logfile.
  
 .. note::
-   If you plan to use the optional compression facility for replication, you must provide the compression library. The YottaDB interface for compression libraries accepts the zlib compression libraries without any need for adaptation. These libraries are included in many UNIX distributions and are downloadable from the zlib home page. YottaDB supports the use of the IBM provided zlib library for AIX. If you prefer to use other compression libraries, you need to configure or adapt them to provide the same API provided by zlib. Simple instructions for compiling zlib on a number of platforms follow. Although YottaDB uses zlib, zlib is not YottaDB software and YottaDB does not support zlib. These instructions are merely provided as a convenience to you.
+   If you plan to use the optional compression facility for replication, you must provide the compression library. The YottaDB interface for compression libraries accepts the zlib compression libraries without any need for adaptation. These libraries are included in many UNIX distributions and are downloadable from the zlib home page. If you prefer to use other compression libraries, you need to configure or adapt them to provide the same API provided by zlib. Simple instructions for compiling zlib on a number of platforms follow. Although YottaDB uses zlib, zlib is not YottaDB software and YottaDB does not support zlib. These instructions are merely provided as a convenience to you.
 
 If a package for zlib is available with your operating system, YottaDB suggests that you use it rather than building your own.
-
-AIX/XL compiler:
-
-.. parsed-literal::
-   ./configure --shared
-   Add -q64 to the LDFLAGS line of the Makefile
-   make CFLAGS="-q64"
 
 Linux/gcc:
 
@@ -3616,7 +3609,7 @@ Download the latest vrsion of zlib from the libpng project's download page on `S
 
 Build and install the zlib DLL, placing the xlc compilers in compatibility to mode by setting the environment variable C89_CCMODE to 1. When not in compatibility mode, xlc follows strict placement of command line options. Configure and build the zlib software with ./configure --shared && make. By default, the configure script places zlib in /usr/local/lib. Install the software with make install. To ensure that YottaDB finds zlib, include /usr/local/lib in LIBPATH, the environment variable that provides a search path for processes to use when they link DLLs.
 
-By default, YottaDB searches for the libz.so shared library in the standard system library directories (for example, /usr/lib, /usr/local/lib, /usr/local/lib64). If the shared library is installed in a non-standard location, before starting replication, you must ensure that the environment variable $LIBPATH (AIX and z/OS) or $LD_LIBRARY_PATH (other UNIX platforms) includes the directory containing the library. The Source and Receiver Server link the shared library at runtime. If this fails for any reason (such as file not found, or insufficient authorization), the replication logic logs a DLLNOOPEN error and continues with no compression.
+By default, YottaDB searches for the libz.so shared library in the standard system library directories (for example, /usr/lib, /usr/local/lib, /usr/local/lib64). If the shared library is installed in a non-standard location, before starting replication, you must ensure that the environment variable $LD_LIBRARY_PATH includes the directory containing the library. The Source and Receiver Server link the shared library at runtime. If this fails for any reason (such as file not found, or insufficient authorization), the replication logic logs a DLLNOOPEN error and continues with no compression.
 
 *-tlsid=<label>*
 

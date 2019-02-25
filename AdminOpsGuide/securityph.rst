@@ -58,7 +58,7 @@ Whenever a YottaDB process lacks adequate permissions to effect any of the above
 
 In order to run as root, and to be invoked by a process that has normal user and group ids, the invocation chain for gtmsecshr requires an executable image that is owned by root and which has the setuid bit turned on in its file permissions.
 
-Communication between YottaDB processes and gtmsecshr uses socket files in $ydb_tmp, which is also inherited from the YottaDB process that first invokes gtmsecshr. If the environment variable $ydb_tmp is undefined, if its value is longer than YottaDB can handle, or if it is defined to a value that is not an absolute pathname (starting with a /), $ydb_tmp is assumed to be the directory /tmp (AIX, GNU/Linux).
+Communication between YottaDB processes and gtmsecshr uses socket files in $ydb_tmp, which is also inherited from the YottaDB process that first invokes gtmsecshr. If the environment variable $ydb_tmp is undefined, if its value is longer than YottaDB can handle, or if it is defined to a value that is not an absolute pathname (starting with a /), $ydb_tmp is assumed to be the directory /tmp.
 
 The gtmsecshr process receives messages via a socket file owned by root with a name of the form ydb_secshrnnnnnnnn, the nnnnnnnn being replaced by the hexadecimal ftok value of the gtmsecshr executable file. This value is reported by the YottaDB ftok utility on the gtmsecshr file, for example, $ydb_dist/ftok $ydb_dist/gtmsecshr.
 
@@ -96,7 +96,7 @@ Based on the security model, the following are recommended best practices for se
 * If MM cannot be used, and processes that are not considered trustworthy need read-only access to database files, run those processes on a replicating instance specifically set up for that purpose.
 * If a database file does not change during normal operation (for example, it contains configuration parameters), make its permissions read only for everyone. On rare occasions when they need to be changed, shut down the application to get stand-alone access, temporarily make it read-write, make the changes, and then make it read-only once more.
 * YottaDB uses a wrapper for gtmsecshr by default. Source code for the wrapper is published. If processes that start up gtmsecshr cannot be trusted or coerced to have the correct values of $ydb_log and $ydb_tmp, modify the source code to set $ydb_log and $ydb_tmp to required values, recompile and reinstall your modified wrapper.
-* Consider implementing layered security software if it exists for your platform, for example, SELinux, Trusted AIX.
+* Consider implementing layered security software if it exists for your platform, for example, SELinux.
 
 .. note::
    YottaDB neither endorses nor has tested any specific layered security product.
