@@ -1,0 +1,74 @@
+
+.. index::
+   Extending YottaDB
+
+=================
+Extending YottaDB
+=================
+
+.. contents
+   :depth: 2
+
+--------------------
+Plugins and Wrappers
+--------------------
+
+YottaDB's native APIs in M and C provide it with robust mechanisms to
+extend it. There are conceptually two ways to extend YottaDB: wrappers
+and plugins.
+
+YottaDB's native APIs are C and M. A wrapper accesses the native APIs
+to expose the functionality in those APIs, for example, to application
+programs in another language, but does not necessarily add
+functionality. The [Go
+wrapper](https://docs.yottadb.com/MultiLangProgGuide/goprogram.html)
+is a wrapper developed by YottaDB.
+[NodeM](https://github.com/dlwicksell/nodem) and the [Perl YottaDB
+module](https://metacpan.org/pod/YottaDB) are examples of wrappers
+from the YottaDB community.
+
+A plugin adds new functionality to YottaDB, and if a wrapper is
+appropriately extended, can make that additional functionality
+available through the
+wrapper. [Octo](https://gitlab.com/YottaDB/DBMS/YDBOcto) and the [GDE
+GUI](https://gitlab.com/YottaDB/UI/YDBGDEGUI) are examples of plugins
+under development by YottaDB. From the community, the [M web
+server](https://github.com/shabiel/M-Web-Server) and
+[JDS-GTM](https://github.com/ChristopherEdwards/JDS-GTM) could be
+plugins if appropriately packaged.
+
+As one can certainly conceive of an extension that can be
+characterized as either a wrapper or a plugin, a working distinction
+is:
+
+- A wrapper is installed using the directory structure, and packaging
+  of the language or other environment where it exposes its
+  API. Installing and using a wrapper feels culturally appropriate to
+  its users.
+- A plugin is installed under the YottaDB directory
+  structure. Installing and using a plugin is culturally matched to
+  YottaDB as used by all users.
+
+As the installation and use of wrappers is entirely external to
+YottaDB, and there is no YottaDB requirement of uniqueness (there
+could well be two very different wrappers called “Chocolate”, both of
+which access YottaDB) they are not discussed further here.
+
+As plugins are installed in the YottaDB directory (under
+:code:`$ydb_dist`), they need to conform to rules described here.
+
++++++++
+Plugins
++++++++
+
+As M does not provide information hiding except for global variables
+(through global directories), plugins use namespacing to avoid
+colliding with applications and with one another. Some of the
+namespacing rules result from historical conventions.
+
+Each plugin is identifed by a developer (an individual or an
+organization) and a plugin name.  A developer name has a long form
+(e.g., “YottaDB”) and a short form (e.g., “YDB”). While developer and
+plugin names are case-insensitive, file names and variable names may
+need to use specific cases, as described below.  As developer names
+must be unique, please 

@@ -32,6 +32,7 @@ Welcome to the Administration and Operations Guide!
    tls
    pluginpackaging
    glossary
+   extending
    LICENSE
 
 Indices and tables
