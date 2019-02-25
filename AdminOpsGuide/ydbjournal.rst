@@ -50,7 +50,25 @@ YottaDB tries all numbers from the order in the above sequence until it finds a 
 .. note::
    In a very short time window just before switching a journal file, YottaDB creates a temporary file with a .mjl_new extension and attempts to write a few initialization journal records. After performing an initial verification, YottaDB renames the .mjl_new file to the current .mjl file. In rare cases, you might see a .mjl_new file if the journal file creation process was interrupted midway (possibly due to permission or disk space issues). If a subsequent MUPIP process detects a .mjl_new file and no .mjl file, it automatically deletes it and creates a new .mjl file.
 
-There are two switches to turn on journaling - ENable/DISable and ON/OFF. Enabling or disabling journaling requires stand alone access to the database. Turning journaling on and off can be done when the database is in use. Note: Whenever YottaDB implicitly turns off journaling due to run-time conditions such as no available disk space or no authorization for a process attempting to auto-switch a journal file (and so on) , it produces an error with accompanying messages to alert operation staff. YottaDB on selected platforms can encrypt data in database and journal files. Encryption protects against unauthorized access to data by an unauthorized process which is able to access disk files, that is, encryption protects data at rest (DAR). Rather than build encryption into YottaDB, a plug-in architecture facilitates use of your preferred encryption software. For more information, refer to `Chapter 12: “Database Encryption” <https://docs.yottadb.com/AdminOpsGuide/encryption.html>`_.
+~~~~~~~~~~~~~~~~~~~~~~
+Turning on Journaling
+~~~~~~~~~~~~~~~~~~~~~~
+
+There are two switches to turn on journaling - ENable/DISable and ON/OFF. 
+
+i.e. To turn on journaling, use either:
+
+.. parsed-literal::
+   mupip set -journal=enable -region '*'
+
+or
+
+.. parsed-literal::
+   mupip set -journal=on -region '*'
+
+Enabling or disabling journaling requires stand alone access to the database. Turning journaling on and off can be done when the database is in use. See `Set Action Qualifiers <https://docs.yottadb.com/AdminOpsGuide/ydbjournal.html#set-action-qualifiers>`_ for more information about options and settings.
+
+Note: Whenever YottaDB implicitly turns off journaling due to run-time conditions such as no available disk space or no authorization for a process attempting to auto-switch a journal file (and so on) , it produces an error with accompanying messages to alert operation staff. YottaDB on selected platforms can encrypt data in database and journal files. Encryption protects against unauthorized access to data by an unauthorized process which is able to access disk files, that is, encryption protects data at rest (DAR). Rather than build encryption into YottaDB, a plug-in architecture facilitates use of your preferred encryption software. For more information, refer to `Chapter 12: “Database Encryption” <https://docs.yottadb.com/AdminOpsGuide/encryption.html>`_.
 
 ++++++++++++++++++++++++++++++++++
 Recovery from a Journal File
