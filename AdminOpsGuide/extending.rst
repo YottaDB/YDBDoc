@@ -160,6 +160,12 @@ installed as shared libraries.
   :code:`libydboctodbg.so` and :code:`libydboctoopt.so`. Shared
   libraries of C functions are installed in :code:`$ydb_dist/plugin`.
 
+- If a package exports any C functions, or makes M functions available
+  to C code, it should provide a C function
+  :code:`<developername>_<pluginname>_version()` which returns a
+  version number for the package that complies with `Semantic Versioning
+  <https://semver.org/>`_.
+
 C functions can optionally be made available to M application code.
 
 - Call-out tables to make C functions available to M code (as
@@ -213,7 +219,13 @@ applications are written to avoid names starting with :code:`%Y` or
   code is in :code:`$ydb_dist/plugin/o/utf8` with the same
   recommendation to use shared libraries rather than individual object
   files.
-  
+
+- If a package provides any M routines, or makes any C functions
+  available to M code, it should provide an entryref
+  :code:`$$version^<packagename>()` which returns a version number for
+  the package that complies with `Semantic Versioning
+  <https://semver.org/>`_.
+
 M routines can optionally be made available to C application code.
 
 - Call-in tables (as described in `Chapter 11. Integrating External
@@ -235,8 +247,18 @@ any shared libraries in :code:`$ydb_dist/plugin/o/utf8` in
 :code:`$ydb_routines` as well as
 :code:`$ydb_dist/plugin/o/utf8($ydb_dist/plugin/r)` if there are any
 :code:`.o` files in :code:`$ydb_dist/plugin/o/utf8`.
-  
-Databases
+
+Note that YottaDB implements M code introspection in two ways:
+
+- Embedding the soure code in the object file. This is accomplished
+  with the :code:`-embed_source` `compiler command line option
+  <https://docs.yottadb.com/ProgrammersGuide/devcycle.html#no-embed-source>`_.
+
+- Embedding the path to the source code in the object file (the
+  default). To provide introspection with this option the M routines
+  should be placed in :code:`$ydb_dist/plugin/r` and then compiled.
+
+  Databases
 +++++++++
 
 Database files and global directories used to access them are located
@@ -290,6 +312,21 @@ package name, invoking the binary executable as
 Sourcing the :code:`ydb_env_set` file creates aliases for all 
 executable files in :code:`$ydb_dist/plugin/bin` except executable
 :code:`.bin` files.
+
+Other than :code:`.bin` files, executable files provided by packages
+should have a :code:`--version` or :code:`-v` command line option that
+reports a version number for the package that complies with `Semantic
+Versioning <https://semver.org/>`_.
+
+Other (non-executable) files
+++++++++++++++++++++++++++++
+
+Non-executable files (e.g., configuration files, meta data, header
+files) belong in the directory
+:code:`ydb_dist/plugin/etc/<packagename>`. When creating the package
+name directory, the package installer should create the :code:`etc`
+sub-directory if it does not exist. Package installers must ensure
+that files in this directory do not have any execute bits set.
 
 Local Variables
 +++++++++++++++
