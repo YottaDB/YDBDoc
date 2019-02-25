@@ -1724,14 +1724,14 @@ Example:
 This UTF-8 mode example displays the result of $ZASCII() specifying a byte position before, first, second and third positions, and after the sequence of octets (8-bit bytes) represented by 主. In the above example, 228, 184, and 187 represents the numeric byte value of the three-byte in the sequence of octets (8-bit bytes) represented by 主.
 
 -----------------------
-$ZATRansform
+$ZATRansform()
 -----------------------
 
 Returns the transformed representation of the first argument expr in a normalized form using the alternative transform specified by the second argument intexpr; the return can be used as an operand to the follows (]) or sorts-after (]]) operator such that, if both operands are in the normalized form, the result is independent of alternative collation. The format for the $ZATRANSFORM() function is:
 
 
 .. parsed-literal::
-   $ZTRANSFORM(expr,intexpr[,{0|1}][,{0|1}])
+   $ZATRANSFORM(expr,intexpr[,{0|1}][,{0|1}])
 
 * The expression specifies the string to transform.
 * The intexpr specifies the ID of the alternative transform to use.
@@ -1740,14 +1740,14 @@ Returns the transformed representation of the first argument expr in a normalize
 
 Please see the section on $ZCOLLATE() for a similar alternative.
 
-+++++++++++++++++++++++
-Examples of $ZTRANSFORM
-+++++++++++++++++++++++
++++++++++++++++++++++++++++
+Examples of $ZATRANSFORM()
++++++++++++++++++++++++++++
 
 Example:
 
 .. parsed-literal::
-   YDB>write $ztransform("John Smythe",1)]$zatransform("Jane Smith",2)
+   YDB>write $zatransform("John Smythe",1)]$zatransform("Jane Smith",2)
    0
    YDB>
 
