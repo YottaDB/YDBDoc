@@ -548,9 +548,9 @@ While creating an environment for multiple processes accessing the same version 
 
 * In conformance with the Filesystem Hierarchy Standard, YottaDB recommends /var/log/yottadb/$ydb_rel as the value for $ydb_log. Note that $ydb_rel can be in the form of the current YottaDB release and platform information.
 
-* YottaDB recommends setting $ydb_tmp to a temporary directory /tmp. The ydb_env_set script sets $ydb_tmp to /tmp/yottadb/$ydb_rel.
+* YottaDB recommends setting $ydb_tmp to a temporary directory. The ydb_env_set script sets $ydb_tmp to /tmp/yottadb/$ydb_rel.
 
-* If you do not set $ydb_log, YottaDB creates log files in a directory in /tmp. However, this is not recommended because it makes YottaDB log files vulnerable to the retention policy of a temporary directory. 
+* If you do not set $ydb_log, YottaDB creates log files in a directory in the temporary directory. However, this is not recommended because it makes YottaDB log files vulnerable to the retention policy of a temporary directory. 
 
 Always set the same value of $ydb_tmp for all processes using the same YottaDB version. Having different $ydb_tmp for multiple processes accessing the same YottaDB version may prevent processes from being able to communicate with gtmsecshr and cause performance issues.
 
