@@ -550,7 +550,7 @@ While creating an environment for multiple processes accessing the same version 
 
 * YottaDB recommends setting $ydb_tmp to a temporary directory. The ydb_env_set script sets $ydb_tmp to /tmp/yottadb/$ydb_rel.
 
-* If you do not set $ydb_log, YottaDB creates log files in a directory in the temporary directory. However, this is not recommended because it makes YottaDB log files vulnerable to the retention policy of a temporary directory. 
+* YottaDB recommends setting $ydb_log to a temporary directory. The ydb_env_set script sets $ydb_log to /tmp/yottadb/$ydb_rel.
 
 Always set the same value of $ydb_tmp for all processes using the same YottaDB version. Having different $ydb_tmp for multiple processes accessing the same YottaDB version may prevent processes from being able to communicate with gtmsecshr and cause performance issues.
 
