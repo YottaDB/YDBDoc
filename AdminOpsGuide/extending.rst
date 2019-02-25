@@ -41,9 +41,8 @@ functionality available through the wrapper. `Octo
 <https://gitlab.com/YottaDB/DBMS/YDBOcto>`_ and the `GDE GUI
 <https://gitlab.com/YottaDB/UI/YDBGDEGUI>`_ are examples of plugins
 developed by YottaDB. The `M web server
-<https://github.com/shabiel/M-Web-Server>`_ and `JDS-GTM
-<https://github.com/ChristopherEdwards/JDS-GTM>`_ are examples of
-plugins developed by the YottaDB community.
+<https://github.com/shabiel/M-Web-Server>`_ is an example of a
+plugin developed by the YottaDB community.
 
 As one can certainly conceive of an extension that can be
 characterized as either a wrapper or a plugin, a working distinction
