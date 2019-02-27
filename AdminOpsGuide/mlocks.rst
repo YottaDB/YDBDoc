@@ -83,6 +83,8 @@ LKE uses the environment variable ydb_gbldir to identify the active global direc
 LKE Commands and Qualifiers
 ------------------------------------
 
+(Last updated: `r1.24 <https://gitlab.com/YottaDB/DB/YDB/tags/r1.24>`_)
+
 The general format of LKE commands is:
 
 .. parsed-literal::

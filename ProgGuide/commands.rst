@@ -1556,6 +1556,8 @@ The format of the VIEW command is:
 Key Words in VIEW Command
 +++++++++++++++++++++++++
 
+(Last updated: `r1.24 <https://gitlab.com/YottaDB/DB/YDB/tags/r1.24>`_)
+
 The following sections describe the keywords available for the VIEW command in YottaDB.
 
 **"BREAKMSG":value**

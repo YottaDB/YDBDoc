@@ -1326,6 +1326,8 @@ For more information, refer to VIEW "[NO]STATSHARE" and ^%YGBLSTAT in the Progra
 -[NO]STD[NULLCOLL]
 ~~~~~~~~~~~~~~~~~~~~
 
+(Last updated: `r1.24 <https://gitlab.com/YottaDB/DB/YDB/tags/r1.24>`_)
+
 Determines whether YottaDB null subscripts collate in conformance to the M standard.
 
 If STDNULLCOLL is specified, subscripts of globals in the database follow the M standard where the null subscript collates before all other subscripts.

@@ -584,6 +584,8 @@ At image exit, YottaDB restores the current directory to the directory that was 
 $ZEDITOR
 -----------------
 
+(Last updated: `r1.24 <https://gitlab.com/YottaDB/DB/YDB/tags/r1.24>`_)
+
 $ZED[ITOR] holds the value of the status code for the last edit session invoked by a ZEDIT command.
 
 YottaDB does not permit the SET or NEW command to modify $ZEDITOR.
