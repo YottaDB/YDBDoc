@@ -3,7 +3,7 @@
    Extending YottaDB
 
 =============================
-Appendix I: Extending YottaDB
+Appendix G: Extending YottaDB
 =============================
 
 .. contents
@@ -77,7 +77,7 @@ and with one another. Some of the namespacing conventions are
 historical, as are the terms call-in (calling from C to M) and
 call-out (calling from M to C). Names of entities (variables, files,
 functions, etc.) in plugins are conceptually identified using a triple
-of names of (developer, plugin, entitity).
+of (developer, plugin, entity).
 
 A developer name has a long form (e.g., “YottaDB”) and a short form
 (e.g., “YDB”). “YottaDB” and “YDB” are used in the examples below;
@@ -176,7 +176,7 @@ C functions can optionally be made available to M application code.
   library name, e.g., :code:`$ydb_dist/plugin/libydbocto.so`. [#]_
 
 .. [#] Since environment variables are permitted in the shared library
-  file name reference, an environment variable can be used to chose
+  file name reference, an environment variable can be used to choose
   between the :code:`libydboctodbg.so` and :code:`libydboctoopt.so`
   examples above.
 
@@ -249,7 +249,7 @@ any shared libraries in :code:`$ydb_dist/plugin/o/utf8` in
 
 Note that YottaDB implements M code introspection in two ways:
 
-- Embedding the soure code in the object file. This is accomplished
+- Embedding the source code in the object file. This is accomplished
   with the :code:`-embed_source` `compiler command line option
   <https://docs.yottadb.com/ProgrammersGuide/devcycle.html#no-embed-source>`_.
 
