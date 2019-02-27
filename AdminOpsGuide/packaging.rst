@@ -3,7 +3,7 @@
    Packaging YottaDB Applications
 
 =================================================
-Appendix G : Packaging YottaDB Applications
+Appendix E : Packaging YottaDB Applications
 =================================================
 
 .. contents::

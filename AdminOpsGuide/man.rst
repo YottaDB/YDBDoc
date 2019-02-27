@@ -71,12 +71,6 @@ This manual contains twelve chapters and an Appendix. Here is a brief overview o
 
 `Chapter 12: “Database Encryption” <https://docs.yottadb.com/AdminOpsGuide/encryption.html>`_ describes procedures for encrypting data in the database and journal files.
 
-`Appendix A: “YottaDB's IPC Resource Usage” <https://docs.yottadb.com/AdminOpsGuide/ipcresource.html>`_ describes how YottaDB processes use UNIX Interprocess Communication (IPC).
-
-`Appendix C: “Compiling ICU on YottaDB supported platforms” <https://docs.yottadb.com/AdminOpsGuide/compilingicu.html>`_ contains sample ICU installation instructions. Although YottaDB uses ICU to enable the support for Unicode™, ICU is not YottaDB software and YottaDB does not support ICU. The sample instructions for installing and configuring ICU are merely provided as a convenience.
-
-"Appendix C" describes security considerations for deploying applications on YottaDB.
-
 -------------------------------
 Conventions Used in this Manual
 -------------------------------

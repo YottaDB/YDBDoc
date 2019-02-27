@@ -3,7 +3,7 @@
    YottaDB Security Philosophy
 
 ===============================================
-Appendix E : YottaDB Security Philosophy
+Appendix C : YottaDB Security Philosophy
 ===============================================
 
 .. contents::

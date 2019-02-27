@@ -3,7 +3,7 @@
    Docker Container
 
 =====================================
-Appendix F: YottaDB Docker Container
+Appendix D : YottaDB Docker Container
 =====================================
 
 The YottaDB Docker container can be found `here <https://hub.docker.com/r/yottadb/yottadb/>`_.
