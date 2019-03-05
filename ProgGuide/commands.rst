@@ -3179,7 +3179,7 @@ The format of the ZPRINT command is:
 
 Note that the routinename may only appear before the colon (:) delimiter. The integer expression offsets may be positive or negative, but they must always be delimited by a plus sign (+).
 
-For more information on entryrefs, refer to `Chapter 5: “General Language Features of M” <https://docs.yottadb.com/ProgGuide/langfeat.html>`__.
+For more information on entryrefs, refer to `Chapter 5: “General Language Features of M” <https://docs.yottadb.com/ProgrammersGuide/langfeat.html>`_.
 
 ++++++++++++++++++++++++
 Examples of ZPRINT
