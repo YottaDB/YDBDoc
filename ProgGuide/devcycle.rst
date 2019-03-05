@@ -609,6 +609,14 @@ Compiles routines to use library code in order to load literals instead of gener
 .. note::
    Both -DYNAMIC_LITERALS and -NOINLINE_LITERALS help optimize performance and virtual memory usage for applications whose source code includes literals. As the scalability and performance from reduced per-process memory usage may or may not compensate for the incremental cost of dynamically loading and unloading the data structures, and as the performance of routines vs. inline code can be affected by the availability of routines in cache, YottaDB suggests benchmarking to determine the combination of qualifiers best suited to each workload. Note that applications can freely mix routines compiled with different combinations of qualifiers.
 
+~~~~~~~~~~~~~~~~~~~~
+-noline_entry
+~~~~~~~~~~~~~~~~~~~~
+
+YottaDB allows calls and transfer of control to label±offset^routine targets. If an application code uses only label^routine targets without offsets, compiling with -noline_entry produces more compact object code.
+
+Any attempt to use a label±offset^routine entryref in code compiled with -noline_entry raises the `LABELONLY error <https://docs.yottadb.com/MessageRecovery/errors.html#labelonly>`_. As the more compact object code produced by -noline_entry may or may not run faster than object code produced without using it, even if your application can use -noline_entry, you should benchmark to decide which is more performant.
+
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 -[no]o[bject][=filename]
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -670,6 +678,8 @@ By default, listings use single spaced output (-space=1).
 | “-[no]li[st][=filename]”                     | -nolist                                    |
 +----------------------------------------------+--------------------------------------------+
 | “-noin[line_literals]”                       | N/A                                        |
++----------------------------------------------+--------------------------------------------+
+| "-noline_entry"                              | N/A                                        |
 +----------------------------------------------+--------------------------------------------+
 | “-[no]o[bject][=filename]”                   | -object                                    |
 +----------------------------------------------+--------------------------------------------+
