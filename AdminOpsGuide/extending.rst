@@ -13,6 +13,54 @@ Appendix G: Extending YottaDB
 Applications, Wrappers, and Plugins 
 ------------------------------------
 
+.. figure:: ArchitectureBefore.svg
+    :width: 75%
+    :alt: Figure 1 – Software Layers
+
+    Figure 1 – Software Layers
+
+Figure 1 shows a representative application software stack for YottaDB
+applications. YottaDB calls system libraries, which in turn rely on
+services provided by the operating system. On a system, there is
+typically one copy of each version of a system library or a release of
+YottaDB – although a release of YottaDB can be installed in multiple
+directories on a system, there is no benefit to doing so.
+
+YottaDB installed in a directory can be used by any number of
+applications on the system. Sometimes, these are different
+applications; at other times, they may be multiple installations of
+the same application, corresponding to multiple development and
+testing needs, or different production environments.
+
+YottaDB's native APIs are in C and M. Wrappers, such as the `Go
+wrapper
+<https://docs.yottadb.com/MultiLangProgGuide/goprogram.html>`_, extend
+the YottaDB API to other languages. Whether a wrapper is installed in
+the same directory as YottaDB or whether it is installed elsewhere
+depends on the language implementation. For example, `Go
+<https://golang.org>`_ expects the YottaDB wrapper to reside in its
+directory structure, whereas a C++ wrapper could reside in the YottaDB
+directory. From the perspective of YottaDB, there needs to be only one
+copy of a language wrapper for each language implementation; where
+multiple copies are needed, the need arises from the language
+implementation rather than from YottaDB.
+
+Also as shown in Figure 1, applications can call packages and
+libraries other than YottaDB, and packages may also have common
+code. In Figure 1, Applications 1 and 2 may both include code to
+serialize a YottaDB local or global variable structure into `JSON
+<https://json.org>`_ and back. Applications 1 and 3 may both store
+time-series data in YottaDB, and include an interface to an external
+`Discrete Fourier Transform
+<https://en.wikipedia.org/wiki/Discrete_Fourier_transform>`_ package
+or library.
+
+Plugins provide a mechanism to extend the functionality installed with
+YottaDB. Potential benefits include:
+
+- Simpler application configuration – a plugin that
+
+
 Broadly speaking, there are three ways to extend YottaDB
 functionality: applications, wrappers, and plugins.  YottaDB is
 systems software, i.e., infrastructure that is generally useful rather
