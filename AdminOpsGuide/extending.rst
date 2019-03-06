@@ -9,44 +9,61 @@ Appendix G: Extending YottaDB
 .. contents
    :depth: 2
 
-------------------------------------
++++++++++++++++++++++++++++++++++++
 Applications, Wrappers, and Plugins 
-------------------------------------
++++++++++++++++++++++++++++++++++++
 
-.. figure:: ArchitectureBefore.svg
+Broadly speaking, there are three ways to extend YottaDB
+functionality: applications, wrappers, and plugins.  YottaDB is
+systems software, i.e., infrastructure that is generally useful rather
+than solving the needs of specific end users. Applications like
+library catalogs, electronic health records, vehicle fleet managers,
+factory automation, and banking systems can be built on YottaDB
+to solve end user needs.
+
+Native APIs in C and M expose the functionality of YottaDB. A wrapper
+accesses the native APIs to expand the availability of functionality
+in those APIs, for example, to application programs in another
+language. A wrapper does not necessarily add functionality. The `Go
+wrapper <https://docs.yottadb.com/MultiLangProgGuide/goprogram.html>`_
+is a wrapper developed by YottaDB. `NodeM
+<https://github.com/dlwicksell/nodem>`_ and the `Perl YottaDB module
+<https://metacpan.org/pod/YottaDB>`_ are examples of wrappers
+developed by the YottaDB community.
+
+Whether a wrapper is installed in the same directory as YottaDB or
+whether it is installed elsewhere depends on the language
+implementation. For example, `Go <https://golang.org>`_ expects the
+YottaDB wrapper to reside in its directory structure, whereas a C++
+wrapper could reside in the YottaDB directory. From the perspective of
+YottaDB, there needs to be only one copy of a language wrapper for
+each language implementation; where multiple copies are needed, the
+need arises from the language implementation rather than from YottaDB.
+
+Figure 1 shows a representative
+application software stack for YottaDB applications. YottaDB calls
+system libraries, which in turn rely on services provided by the
+operating system.
+
+.. figure:: ArchitectureBasic.svg
     :width: 75%
+    :align: center
     :alt: Figure 1 – Software Layers
 
     Figure 1 – Software Layers
 
-Figure 1 shows a representative application software stack for YottaDB
-applications. YottaDB calls system libraries, which in turn rely on
-services provided by the operating system. On a system, there is
-typically one copy of each version of a system library or a release of
-YottaDB – although a release of YottaDB can be installed in multiple
-directories on a system, there is no benefit to doing so.
-
-YottaDB installed in a directory can be used by any number of
-applications on the system. Sometimes, these are different
-applications; at other times, they may be multiple installations of
-the same application, corresponding to multiple development and
-testing needs, or different production environments.
-
-YottaDB's native APIs are in C and M. Wrappers, such as the `Go
-wrapper
-<https://docs.yottadb.com/MultiLangProgGuide/goprogram.html>`_, extend
-the YottaDB API to other languages. Whether a wrapper is installed in
-the same directory as YottaDB or whether it is installed elsewhere
-depends on the language implementation. For example, `Go
-<https://golang.org>`_ expects the YottaDB wrapper to reside in its
-directory structure, whereas a C++ wrapper could reside in the YottaDB
-directory. From the perspective of YottaDB, there needs to be only one
-copy of a language wrapper for each language implementation; where
-multiple copies are needed, the need arises from the language
-implementation rather than from YottaDB.
+On a system, there is typically one copy of each version of a system
+library or a release of YottaDB – although a release of YottaDB can be
+installed in multiple directories on a system, there is no benefit to
+doing so. That single installation of YottaDB installed in a
+directory can be used by any number of applications on the
+system. Sometimes, these are different applications; at other times,
+they may be multiple installations of the same application,
+corresponding to multiple development and testing needs, or different
+production environments.
 
 Also as shown in Figure 1, applications can call packages and
-libraries other than YottaDB, and packages may also have common
+libraries other than YottaDB, and packages may have common
 code. In Figure 1, Applications 1 and 2 may both include code to
 serialize a YottaDB local or global variable structure into `JSON
 <https://json.org>`_ and back. Applications 1 and 3 may both store
@@ -55,33 +72,18 @@ time-series data in YottaDB, and include an interface to an external
 <https://en.wikipedia.org/wiki/Discrete_Fourier_transform>`_ package
 or library.
 
-Plugins provide a mechanism to extend the functionality installed with
-YottaDB. Potential benefits include:
+Although YottaDB itself is extended by YottaDB developers, additional
+functionality can be installed in :code:`$ydb_dist` so that
+applications using YottaDB can access the additional functionality as
+if that were part of YottaDB.  Installed in the YottaDB directory,
+:code:`$ydb_dist`, plugins increase the breadth of YottaDB's
+functionality. Potential benefits include:
 
-- Simpler application configuration – a plugin that
-
-
-Broadly speaking, there are three ways to extend YottaDB
-functionality: applications, wrappers, and plugins.  YottaDB is
-systems software, i.e., infrastructure that is generally useful rather
-than solving the needs of specific end users. Applications like
-library catalogs, electronic health records, vehicle fleet managers,
-factory automation, and banking systems can be built on YottaDB
-to solve end user needs. As all `YottaDB documentation
-<https://yottadb.com/resources/documentation/>`_ is written to enable
-the development and operation of applications, applications are not
-discussed further in this appendix.
-
-Native APIs that expose the functionality of YottaDB are in C and M. A
-wrapper accesses the native APIs to expand the availability of the
-functionality in those APIs, for example, to application programs in
-another language. A wrapper does not necessarily add
-functionality. The `Go wrapper
-<https://docs.yottadb.com/MultiLangProgGuide/goprogram.html>`_ is a
-wrapper developed by YottaDB. `NodeM
-<https://github.com/dlwicksell/nodem>`_ and the `Perl YottaDB module
-<https://metacpan.org/pod/YottaDB>`_ are examples of wrappers
-developed by the YottaDB community.
+- Simpler application configuration – access to a plugin residing in
+  :code:`$ydb_dist` can be accessible to applications as part of their
+  configuration to access YottaDB.
+- Code sharing – common functionality can be reusably packaged,
+  resulting in standardized code and in turn, less code to maintain.
 
 A plugin increases the breadth of YottaDB's functionality, and if a
 wrapper is appropriately extended, can make that additional
@@ -92,24 +94,19 @@ developed by YottaDB. The `M web server
 <https://github.com/shabiel/M-Web-Server>`_ is an example of a
 plugin developed by the YottaDB community.
 
-As one can certainly conceive of an extension that can be
-characterized as either a wrapper or a plugin, a working distinction
-is:
+Figure 2 shows the same software with functionality moved to
+plugins. The common functionality shared by Applications 1 and 2 has
+moved to Plugin 2. The external package / library called by
+Applications 1 and 3 has moved to Plugin 1. Depending on specific
+details of the functionality in and API of Plugin 1, the Language
+Wrapper may need an extension to access it.
 
-- A wrapper is installed using the directory structure, and packaging
-  of the language or other environment where it exposes its
-  API. Installing and using a wrapper feels culturally appropriate to
-  its users.
+.. figure:: ArchitecturePlugin.svg
+    :width: 75%
+    :align: center
+    :alt: Figure 1 – Software Layers with Plugins
 
-- A plugin is installed under the YottaDB directory structure, i.e.,
-  under :code:`$ydb_dist`. Installing and using a plugin is culturally
-  matched to YottaDB as made available to all users.
-
-As the installation and use of wrappers is entirely external to
-YottaDB, and there is no YottaDB requirement of uniqueness (there
-could well be two very different wrappers called “Chocolate”,
-installed in different directories, and both accessing YottaDB) they
-are not discussed further here.
+    Figure 2 – Software Layers with Plugins
 
 As plugins are installed in the YottaDB directory (under
 :code:`$ydb_dist`), and need to be available to all wrappers and all
@@ -168,10 +165,13 @@ An installed plugin consists of:
 - Executable files (either binary images or shell scripts) that can be
   executed directly from the shell.
 
-- Other (non-executable) files, such as configuration files. Source
-  code for C and other languages is traditionally not installed in the
-  same sub-directories as executable code, since C programs are not
-  introspective.
+- Include files, such as those needed to compile software that
+  accesses plugins.
+
+- Other (non-executable) files, such as configuration files. As C
+  programs are not introspective, source
+  code for C and other non-introspective languages would not be
+  installed with plugins.
 
 In addition to files installed under :code:`$ydb_dist` which are
 common to all application processes using them, when a plugin executes
@@ -365,12 +365,23 @@ should have a :code:`--version` or :code:`-v` command line option that
 reports a version number for the package that complies with `Semantic
 Versioning <https://semver.org/>`_.
 
-Other (non-executable) files
+Include Files
++++++++++++++
+
+Include (header) files with templates and prototypes are optionally
+prefixed with a traditional prefix for the language (e.g.,
+:code:`lib`), the package name, and optionally, additional names if a
+package has more than one include file. Include files are placed in
+:code:`$ydb_dist/plugin/inc`. For example, if there were a YottaDB
+time-series package called :code:`Times`, its C header file might be
+:code:`$ydb_dist/plugin/inc/libydbtimes.h`.
+
+Other (non-executable) Files
 ++++++++++++++++++++++++++++
 
 Non-executable files (e.g., configuration files, meta data, header
 files) belong in the directory
-:code:`ydb_dist/plugin/etc/<packagename>`. When creating the package
+:code:`$db_dist/plugin/etc/<packagename>`. When creating the package
 name directory, the package installer should create the :code:`etc`
 sub-directory if it does not exist. Package installers must ensure
 that files in this directory do not have any execute bits set.
