@@ -1504,6 +1504,26 @@ The Go Comprehensive API is a project for the future, to follow the C
 Go Utility Functions
 ====================
 
+----------------
+Go Error()
+----------------
+
+.. code-block:: go
+
+        func (err *YDBError) Error() string
+
+:code:`Error()` is a method to return the expected error message string. 
+
+---------------
+Go ErrorCode()
+---------------
+
+.. code-block:: go
+
+        func ErrorCode(err error) int
+
+:code:`ErrorCode()` is a function used to find the error return code.
+
 ---------
 Go Exit()
 ---------
@@ -1550,6 +1570,16 @@ specified by :code:`status`.
   recognizes, it returns the error UNKNOWNSYSERR.
 - Otherwise, it returns the error message text template for the error
   number specified by :code:`status`.
+
+---------------
+Go NewError()
+---------------
+
+.. code-block:: go
+
+        func NewError(tptoken uint64, errstr *BufferT, errnum int) error
+
+:code:`NewError()` is a function to create a new YDBError from :code:`errstr` and :code:`errnum`, setting the two private fields in the returned YDBError to the provided values.
 
 -------------
 Go ReleaseT()
