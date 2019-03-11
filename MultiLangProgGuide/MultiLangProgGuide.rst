@@ -560,6 +560,8 @@ function.
   transaction and the `ydb_tp_s() or ydb_tp_st() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-tp-s-ydb-tp-st>`_ functions return
   the :CODE:`YDB_ERR_TPTIMEOUT` error.
 
+.. note:: If the transaction logic receives a :code:`YDB_TP_RESTART` or :code:`YDB_TP_ROLLBACK` from a YottaDB function that it calls, it *must* return that value to `ydb_tp_s() or ydb_tp_st() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-tp-s-ydb-tp-st>`_. Failure to do so could result in application level data inconsistencies and hard to debug application code.
+
 Sections `Threads <https://docs.yottadb.com/MultiLangProgGuide/programmingnotes.html#threads>`_ and 
 `Threads and Transaction Processing <https://docs.yottadb.com/MultiLangProgGuide/programmingnotes.html#threads-and-transaction-processing>`_ provide
 important information pertinent to transaction processing in a

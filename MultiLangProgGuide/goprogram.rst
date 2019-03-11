@@ -1199,6 +1199,8 @@ Please see both the description of `ydb_tp_st() <https://docs.yottadb.com/MultiL
 and the sections on `Transaction Processing <https://docs.yottadb.com/MultiLangProgGuide/MultiLangProgGuide.html#transaction-processing>`_ and `Threads and
 Transaction Processing <https://docs.yottadb.com/MultiLangProgGuide/programmingnotes.html#threads-and-transaction-processing>`_ for details.
 
+.. note:: If the transaction logic receives a :code:`YDB_TP_RESTART` or :code:`YDB_TP_ROLLBACK` from a YottaDB function or method that it calls, it *must* return that value to the calling :code:`TpE()` or :code:`TpST()`. Failure to do so could result in application level data inconsistencies and hard to debug application code.
+	  
 --------------------------
 Go Simple API KeyT Methods
 --------------------------

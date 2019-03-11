@@ -1168,6 +1168,8 @@ another transaction (i.e., a nested transaction) can also return
        from a `ydb_delete_s() / ydb_delete_st()`_, or `ydb_set_s() /
        ydb_set_st()`_.
 
+.. note:: If the transaction logic receives a :code:`YDB_TP_RESTART` or :code:`YDB_TP_ROLLBACK` from a YottaDB function that it calls, it *must* return that value to the calling :code:`ydb_tp_s()` or :code:`ydb_tp_st()`. Failure to do so could result in application level data inconsistencies and hard to debug application code.
+
 .. _ydb_zwr2str_s():
 .. _ydb_zwr2str_st():
 
