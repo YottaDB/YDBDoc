@@ -7959,7 +7959,7 @@ MAXARGCNT
 
 MAXARGCNT, Maximum number of arguments xxxx exceeded
 
-Compile Time/Run Time Error: If this error occurs during compilation, it indicates that a command or function specified more than xxxx arguments. If this error occurs during run-time execution, it indicates that a SET of $ZROUTINES has more than the allowed number of elements in an array. The maximum number of arguments is xxxx.
+Compile Time/Run Time Error: If this error occurs during compilation, it indicates that a command or function specified more than xxxx arguments. If this error occurs during run-time execution, it indicates that a SET of $ZROUTINES has more than the allowed number of elements in an array. The maximum number of arguments is xxxx. This error can also occur if more than 253 arguments are concatenated. Concatenation in M is described in the `String Operators <https://docs.yottadb.com/ProgrammersGuide/langfeat.html#string-operators>`_ section.
 
 Action: If this error occurs during compilation, it indicates that a command or function specified more than xxxx arguments. If this error occurs during run-time execution, it indicates that a SET of $ZROUTINES has more than the allowed number of elements in an array. The maximum number of arguments is xxxx.
 
