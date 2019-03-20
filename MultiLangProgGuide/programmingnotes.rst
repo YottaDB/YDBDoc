@@ -212,6 +212,10 @@ To reiterate because of its importance: **never** replace YottaDB's
 Forking
 =======
 
+In this section, :code:`fork()` refers to the :code:`fork()` system
+call as well as other functions that may use :code:`fork()` under the
+covers or effect similar functionality by other means.
+
 Before a process that performs buffered IO executes :code:`fork()`, it
 should execute :code:`fflush()`. Otherwise, the child process will
 inherit unflushed buffers from the parent, which the child process
@@ -220,6 +224,12 @@ programming admonition, not specific to YottaDB except to the extent
 that M code within a parent process may have executed :code:`write`
 commands which are still buffered when C code within the same
 process calls :code:`fork()`.
+
+An application that calls YottaDB functions from multiple threads
+within a process *must* ensure that only one thread at a time calls
+:code:`fork()`. Failure to do so can result in unanticipated results,
+including abnormal process termination and structural damage to
+database files.
 
 Threads
 =======
