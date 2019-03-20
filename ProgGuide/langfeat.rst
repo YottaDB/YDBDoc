@@ -94,7 +94,8 @@ The format for an M global or local variable is:
 * The name specifies a particular array.
 * The optional expressions specify the subscripts and must be enclosed in parentheses and separated by commas (,).
 
-The body of the M standard places no restrictions on variable names. However, the portability section of the standard does suggest limits on the length of an individual subscript expression, and on the total length of a variable name. The measurement for the length of names includes the length of the global variable name itself, the sum of the lengths of all the evaluated subscripts, and an allowance for an overhead of two (2) times the number of subscripts. The total must not exceed 237. For globals, YottaDB permits this total to be modified with GDE up to 255. For locals, YottaDB limits the length of individual subscripts to the maximum string length of 1,048,576 bytes. YottaDB restricts the number of subscripts for local or global variables to 31.
+Although there is no restriction on variable names in source code, the first 31 characters of a variable name are significant and subsequent characters are dropped internally. A variable can have up to 31 subscripts.
+(Learn more about the maximum length and subscript representation `here <gde.html#k-ey-size-size-in-bytes>`_.)
 
 ++++++++++++++++++++++++++
 M Collation Sequences
