@@ -1438,6 +1438,8 @@ wishes to set its own signal handlers for signals not used by YottaDB,
 it can call :code:`ydb_init()` before setting
 its signal handlers.
 
+:code:`ydb_init()` returns :code:`YDB_OK` on success, and a positive non-zero value on error.
+
 .. _ydb_malloc():
 
 ------------
