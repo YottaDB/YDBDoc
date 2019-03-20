@@ -1258,7 +1258,7 @@ When determining the maximum key size, applications should consider the followin
 
 * YottaDB adds an extra byte for every string element, including the global name.
 
-For example, the key ^ACN(\\"Name\\",\\"Type\\") internally occupies 17 bytes. Look at the `String Subscripts <https://docs.yottadb.com/AdminOpsGuide/gds.html#string-subscripts>`_ and `Numeric Subscripts <gds.html#numeric-subscripts>`_ sections for details on interpreted representations of global variables. The `"YGVN2GDS" argument of $VIEW() <functions.html#argument-keywords-of-view>`_ provides you with the representation of a global variable node when stored in the database.
+For example, the key ^ACN(\\"Name\\",\\"Type\\") internally occupies 17 bytes. Look at the `String Subscripts <https://docs.yottadb.com/AdminOpsGuide/gds.html#string-subscripts>`_ and `Numeric Subscripts <gds.html#numeric-subscripts>`_ sections for details on interpreted representations of global variables. The `"YGVN2GDS" argument of $VIEW() <https://docs.yottadb.com/ProgrammersGuide/functions.html#argument-keywords-of-view>`_ provides you with the representation of a global variable node when stored in the database.
 
 For example,
 
