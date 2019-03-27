@@ -1603,3 +1603,14 @@ valid when the timer expires.
 If the requested :code:`timeout_nsec` exceeds
 :code:`YDB_MAX_TIME_NSEC`, the functions return
 :code:`YDB_ERR_TIME2LONG`; otherwise they return :code:`YDB_OK`.
+
+Calling M Routines
+===================
+
+M routines can be called from C with the following functions which are described in the `M Programmers Guide <https://docs.yottadb.com/ProgrammersGuide/extrout.html#calls-from-external-routines-call-ins>`_:
+
+* `ydb_ci() <https://docs.yottadb.com/ProgrammersGuide/extrout.html#ydb-ci>`_
+* `ydb_ci_t() <https://docs.yottadb.com/ProgrammersGuide/extrout.html#ydb-ci-t>`_
+* `ydb_cip() <https://docs.yottadb.com/ProgrammersGuide/extrout.html#ydb-cip>`_
+* `ydb_cip_t() <https://docs.yottadb.com/ProgrammersGuide/extrout.html#ydb-cip-t>`_
+* `ydb_zstatus() <https://docs.yottadb.com/ProgrammersGuide/extrout.html#ydb-zstatus>`_
