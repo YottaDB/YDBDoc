@@ -9071,9 +9071,9 @@ Action: Use MUPIP ROLLBACK to restore the normal state of the database.
 NAMECOUNT2HI
 ---------------------
 
-NAMECOUNT2HI, Number of varnames specified exceeds maximum xxxx allowed.
+NAMECOUNT2HI, Number of varnames specified as the namecount parameter in xxxx (vvvv) exceeds the maximum (mmmm).
 
-Runtime Error: This indicates that the number of variable names specified in a SimpleAPI call (identified in the message text) exceeds the maximum number of allowed variable names (also identified in the message text).
+Runtime Error: This indicates that the number of variable names vvvv, specified in the SimpleAPI call identified xxxx, exceeds the maximum number of allowed variable names mmmm.
 
 Action: Retry the SimpleAPI call with fewer variable names specified.
 
