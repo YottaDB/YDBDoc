@@ -609,16 +609,58 @@ If Call-Ins are used from an external call function (that is, a C function that 
 
 YottaDB provides 4 interfaces for calling a M routine from C. These are:
 
-* ydb_cip
 * ydb_ci
+* ydb_ci_t
+* ydb_cip
 * ydb_cip_t
-* ydb_ci_t  
 
 ydb_cip  and ydb_cip_t offer better performance on calls after the first one. 
 
 While ydb_ci() and ydb_cip() are for single threaded applications, ydb_ci_t() and ydb_cip_t() are for multi-threaded applications that call M routines. See the "Threads" section in the Multi-Language Programmer's Guide for details.
 
-**ydb_cip**
+~~~~~~
+ydb_ci
+~~~~~~
+
+.. parsed-literal::
+   ydb_status_t ydb_ci(const ydb_char_t* c_call_name, ...);
+
+The variable argument function ydb_ci() is the interface that actually invokes a specified M routine and returns the results via parameters. The ydb_ci() call must be in the following format:
+
+.. parsed-literal::
+   status = ydb_ci(<c_call_name> [, ret_val] [, arg1] ...);
+
+First argument: c_call_name, a null-terminated C character string indicating the alias name for the corresponding <lab-ref> entry in the Call-In table.
+
+Optional second argument: ret_val, a pre-allocated pointer through which YottaDB returns the value of QUIT argument from the (extrinsic) M routine. ret_val must be the same type as specified for <ret-type> in the Call-In table entry. The ret_val argument is needed if and only if <ret-type> is not void.
+
+Optional list of arguments to be passed to the M routine's formallist: the number of arguments and the type of each argument must match the number of parameters, and parameter types specified in the corresponding Call-In table entry. All pointer arguments must be pre-allocated. YottaDB assumes that any pointer, which is passed for O/IO-parameter points to valid write-able memory.
+
+The status value returned by ydb_ci() indicates the YottaDB status code; zero (0), if successful, or a non-zero; $ZSTATUS error code on failure. The $ZSTATUS message of the failure can be read into a buffer by immediately calling ydb_zstatus(). For more details, see “Print Error Messages”.
+
+~~~~~~~~
+ydb_ci_t
+~~~~~~~~
+
+.. parsed-literal::
+   int ydb_ci_t(uint64_t tptoken, const char \*c_rtn_name, ...);
+
+The function ydb_ci_t() is an interface for a multi-threaded application to invoke an M routine..
+
+The ydb_ci_t() call must be in the following format:
+
+.. parsed-literal::
+   status= ydb_ci_t( <tptoken>, <ci_rtn_name> [,ret_val] [,arg1]...);
+
+First argument: tptoken, a unique transaction processing token that refers to the active transaction.
+
+Second argument: ci_rtn_name, a null-terminated C character string indicating the alias name for the corresponding <lab-ref> entry in the Call-In table.
+
+ydb_ci_t() works in the same way and returns the same values as ydb_ci().
+
+~~~~~~~~
+ydb_cip
+~~~~~~~~
 
 .. parsed-literal::
    ydb_status_t ydb_cip(ci_name_descriptor \*ci_info, ...);
@@ -651,7 +693,9 @@ Optional list of arguments to be passed to the M routine's formallist: the numbe
 
 The status value returned by ydb_cip() indicates the YottaDB status code; zero (0), if successful, or a non-zero; $ZSTATUS error code on failure. The $ZSTATUS message of the failure can be read into a buffer by immediately calling ydb_zstatus().
 
-**ydb_cip_t**
+~~~~~~~~~~
+ydb_cip_t
+~~~~~~~~~~
 
 .. parsed-literal::
    int ydb_cip_t(uint64_t tptoken, const char \*c_rtn_name, ...);
@@ -666,44 +710,6 @@ The ydb_cip_t() call must follow the following format:
 First argument: tptoken, a unique transaction processing token that refers to the active transaction.
 
 ydb_cip_t() works in the same way and returns the same values as ydb_cip().
-
-
-**ydb_ci**
-
-.. parsed-literal::
-   ydb_status_t ydb_ci(const ydb_char_t* c_call_name, ...);
-
-The variable argument function ydb_ci() is the interface that actually invokes the specified M routine and returns the results via parameters. The ydb_ci() call must be in the following format:
-
-.. parsed-literal::
-   status = ydb_ci(<c_call_name> [, ret_val] [, arg1] ...);
-
-First argument: c_call_name, a null-terminated C character string indicating the alias name for the corresponding <lab-ref> entry in the Call-In table.
-
-Optional second argument: ret_val, a pre-allocated pointer through which YottaDB returns the value of QUIT argument from the (extrinsic) M routine. ret_val must be the same type as specified for <ret-type> in the Call-In table entry. The ret_val argument is needed if and only if <ret-type> is not void.
-
-Optional list of arguments to be passed to the M routine's formallist: the number of arguments and the type of each argument must match the number of parameters, and parameter types specified in the corresponding Call-In table entry. All pointer arguments must be pre-allocated. YottaDB assumes that any pointer, which is passed for O/IO-parameter points to valid write-able memory.
-
-The status value returned by ydb_ci() indicates the YottaDB status code; zero (0), if successful, or a non-zero; $ZSTATUS error code on failure. The $ZSTATUS message of the failure can be read into a buffer by immediately calling ydb_zstatus(). For more details, see “Print Error Messages”.
-
-**ydb_ci_t**
-
-.. parsed-literal::
-   int ydb_ci_t(uint64_t tptoken, const char \*c_rtn_name, ...);
-
-The function ydb_ci_t() is an interface for a multi-threaded application to invoke an M routine..
-
-The ydb_ci_t() call must be in the following format:
-
-.. parsed-literal::
-   status= ydb_ci_t( <tptoken>, <ci_rtn_name> [,ret_val] [,arg1]...);
-
-First argument: tptoken, a unique transaction processing token that refers to the active transaction.
-
-Second argument: ci_rtn_name, a null-terminated C character string indicating the alias name for the corresponding <lab-ref> entry in the Call-In table.
-
-ydb_ci_t() works in the same way and returns the same values as ydb_ci().
-
 
 **Example: Calling YottaDB from a C Program**
 
@@ -720,6 +726,10 @@ Here are some working examples of C programs that use call-ins to invoke YottaDB
 +--------------------------------+----------------------------------------------------------------------------------------------+
 
 **Print Error Messages**
+
+~~~~~~~~~~~~
+ydb_zstatus
+~~~~~~~~~~~~
 
 .. parsed-literal::
    void ydb_zstatus (ydb_char_t* msg_buffer, ydb_long_t buf_len);
