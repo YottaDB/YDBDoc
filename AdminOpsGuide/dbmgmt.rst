@@ -581,24 +581,25 @@ DUMPFHEAD
 The MUPIP DUMPFHEAD command displays information about one or more database files. The format of the MUPIP DUMPFHEAD command is:
 
 .. parsed-literal::
-   DU[MPFHEAD]  {-FI[LE] file-name \|-REG[ION] region-list} 
+   DU[MPFHEAD] {-F[ILE] file-name \| -R[EGION] region-list} 
 
-~~~~~~~~~~
--FILE=file
-~~~~~~~~~~
+
+~~~~~~~~~~~~~~~~
+-FILE file-name
+~~~~~~~~~~~~~~~~
 
 Specifies the name of the database file for the MUPIP DUMPFHEAD operation. -FILE does not require a Global Directory. The format of the FILE qualifier is:
 
 .. parsed-literal::
-   -FI[LE] database-file-name
+   -F[ILE] file-name
 
 * The database filename must include the absolute or relative path.
 
 * The -FILE qualifier is incompatible with the -REGION qualifier.
 
-~~~~~~~~~~~~~~
--REGION=region
-~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~
+-REGION region-list
+~~~~~~~~~~~~~~~~~~~~
 
 Specifies that the INTEG parameter identifies one or more regions rather than a database file. The format of the REGION qualifier is:
 
