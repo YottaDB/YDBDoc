@@ -3956,7 +3956,7 @@ The format of the ZWRITE command is:
 * Long ZWRITE format records can be loaded.
 * ZWRITE as applied to local variables and ZSHOW "V" are conceptually similar, with two differences:
 
-  * ZWRITE allows the use of patterns to specify variables and subscripts to display whereas ZSHOW "V" applies to all local variables.
+  * ZWRITE allows the use of `patterns <https://docs.yottadb.com/ProgrammersGuide/langfeat.html#pattern-match-operator>`_ to specify variables and subscripts to display whereas ZSHOW "V" applies to all local variables.
   * ZSHOW "V" optionally allows the output to be directed to a global or local variable, whereas ZWRITE always directs its output to the current output device.
 
 +++++++++++++++++++++++++++++++++++

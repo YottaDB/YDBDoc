@@ -35,7 +35,7 @@ A trigger definition file is a text file used for adding new triggers, modifying
 * **Trigger signature**: A trigger signature consists of a global variable, subscripts, a value, a command, and a trigger code. YottaDB uses a combination of the global variable, subscripts, value, and command to find the matching trigger to invoke for a database update.
 
   * Global Variable: The name of a specific global to which this trigger applies.
-  * Subscripts: Subscripts for global variable nodes of the named global, specified using the same patterns as the ZWRITE command.
+  * Subscripts: Subscripts for global variable nodes of the named global. This is mostly specified using the same patterns as the `ZWRITE <https://docs.yottadb.com/ProgrammersGuide/commands.html#id19>`_ command, with ";" separating subscript values, and an asterisk "*"  matching any subscript value. 
   * Value: For commands that SET or update the value at a node, YottaDB honors an optional pattern to screen for changes to delimited parts of the value. A value pattern includes a piece separator and a list of pieces of interest.
   * Command: There are four commands: SET, KILL, ZTRIGGER, and ZKILL (ZWITHDRAW is identical to ZKILL) the shorter name for the command is used when specifying triggers. MERGE is logically treated as equivalent to a series of SET operations performed in a loop. YottaDB handles $INCREMENT() of a global matching a SET trigger definition as a triggering update.
   * Trigger code: A string containing M code that YottaDB executes when application code updates, including deletions by KILL and like commands, a global node with a matching trigger. The specified code can invoke additional routines and subroutines.
@@ -66,12 +66,13 @@ To apply this trigger definition file to YottaDB, all you do is to load it using
 
 trigvn is a global node on which you set up a trigger. -trigvn deletes any triggers in the database that match the specified trigger. +trigvn adds or replaces the specified trigger. If the specified trigger exists (with a matching specification), MUPIP TRIGGER or $ZTRIGGER() treats the matching definition as a no-op, resulting in no database update. If you want to specify more than one global node for the same trigger code, the following rules apply:
 
-1. You can use patterns and ranges for subscripts.
-2. You can specify a semicolon (;) separated list for subscripts.
-3. You can specify a selection list that includes a mix of points, ranges and patterns, but a pattern cannot serve as either end of a range. For example, :,"a":"d";?1U is a valid specification but :,"a":?1A is not.
-4. You can specify a local variable name for each subscript. For example instead of ^X(1,:,:), you can specify ^X(1,lastname=:,firstname=:). This causes YottaDB to define local variables lastname and firstname to the actual second and third level subscripts respectively from the global node invoking this trigger. The trigger code can then use these variables just like any other M local variable. As described in the Trigger Execution Environment section, trigger code executes in a clean environment - as if all code is preceded by an implicit NEW - the implicit assignments apply only within the scope of the trigger code and don't conflict or affect any run-time code or other triggers.
-5. You cannot use the @ operator, unspecified subscripts (for example, ^A() or ^A(:,)) or local or global variable names as subscripts.
-6. You cannot use patterns and ranges for the global variable name. Therefore, you cannot set a single trigger for ^Acct*.
+1. You can use `patterns <https://docs.yottadb.com/ProgrammersGuide/langfeat.html#pattern-match-operator>`_ and ranges (using ":") for subscripts.
+2. You can specify a semicolon (;) separated list for subscripts. For example: ^A(1;2;3).
+3. An asterisk (*) can be used to match any subscript value. For example, ^A(\*,2) matches ^A(1,2) and ^A(2,2) but not ^A(1,3). 
+4. You can specify a selection list that includes a mix of points, ranges and patterns, but a pattern cannot serve as either end of a range. For example, :,"a":"d";?1U is a valid specification but :,"a":?1A is not.
+5. You can specify a local variable name for each subscript. For example instead of ^X(1,:,:), you can specify ^X(1,lastname=:,firstname=:). This causes YottaDB to define local variables lastname and firstname to the actual second and third level subscripts respectively from the global node invoking this trigger. The trigger code can then use these variables just like any other M local variable. As described in the Trigger Execution Environment section, trigger code executes in a clean environment - as if all code is preceded by an implicit NEW - the implicit assignments apply only within the scope of the trigger code and don't conflict or affect any run-time code or other triggers.
+6. You cannot use the @ operator, unspecified subscripts (for example, ^A() or ^A(:,)) or local or global variable names as subscripts.
+7. You cannot use patterns and ranges for the global variable name. Therefore, you cannot set a single trigger for ^Acct*.
 
 In order to account for any non-standard collation, YottaDB evaluates string subscript ranges using the global specific collation when an application update first invokes a trigger - as a consequence, it detects and reports range issues at run-time rather than from MUPIP TRIGGER or $ZTRIGGER(), so test appropriately. For example, YottaDB reports a run-time error for an inverted subscript range such as (ASCII) C:A.
 
