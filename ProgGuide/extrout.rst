@@ -678,7 +678,7 @@ ci_name_descriptor has the following structure:
 
 rtn_name is a C character string indicating the corresponding <lab-ref> entry in the Call-In table.
 
-The handle is YottaDB private information initialized by YottaDB on the first call-in and to be provided unmodified to YottaDB on subsequent calls. If application code modifies it, it will corrupt the address space of the process, and potentially cause just about any bad behavior that it is possible for the process to cause, including but not limited to process death, database damage and security violations.
+The :code:`handle` is YottaDB private information that YottaDB expects to be initialized to NULL before the first :code:`ydb_cip()` call using this :code:`ci_name_descriptor` structure. YottaDB initializes this field in the first call-in and uses this cached information on future :code:`ydb_cip()` calls to avoid a lookup of the routine name (compared to a :code:`ydb_ci()` call where routine name lookup happens on all calls). This :code:`handle` must be provided unmodified to YottaDB on subsequent calls. If application code modifies it, it will corrupt the address space of the process, and potentially cause just about any bad behavior that it is possible for the process to cause, including but not limited to process death, database damage and security violations.
 
 The ydb_cip() call must follow the following format:
 
