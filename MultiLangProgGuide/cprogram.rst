@@ -1291,6 +1291,13 @@ Returns:
   :code:`ydb_ci_tab_open()`/:code:`ydb_ci_tab_open_t()`) call); or
 - a negative error return code
 
+Note that application code using the :code:`ydb_cip()`/:code:`ydb_cip_t()` functions provides
+YottaDB with a pointer to a :code:`ci_name_descriptor` structure that includes a handle. YottaDB uses the
+current call-in table to set the handle the first time that the associated function is called. Thereafter,
+the handle is immutable, and switching the call-in table leaves unchanged the mapping for functions whose
+handles have already been set. Use :code:`ydb_ci()`/:code:`ydb_ci_t()` for application code that requires
+the called function to change when the call-in table changes.
+
 .. _ydb_exit():
 
 ----------
