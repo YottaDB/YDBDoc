@@ -1253,9 +1253,10 @@ handle in a later :code:`ydb_ci_tab_switch()`/:code:`ydb_ci_tab_switch_t()` call
 this call-in table as the currently active call-in table. All calls to
 :code:`ydb_cip()`/:code:`ydb_cip_t()`/:code:`ydb_ci()`/:code:`ydb_ci_t()` use the currently active
 call-in table. This lets applications open any number of call-in tables across the lifetime of a process.
-The :code:`ydb_ci` environment variable points to an initial table that YottaDB uses unless the call-in
-table is switched using :code:`ydb_ci_tab_switch()`/:code:`ydb_ci_tab_switch_t()`. The call-in table
-pointed to by :code:`ydb_ci` need not be explicitly opened with :code:`ydb_ci_tab_open()`/:code:`ydb_ci_tab_open_t()`.
+The :code:`ydb_ci` environment variable, if set, points to the default call-in table that YottaDB uses
+unless the active call-in table is switched using :code:`ydb_ci_tab_switch()`/:code:`ydb_ci_tab_switch_t()`.
+The call-in table pointed to by :code:`ydb_ci`, the default call-in table, need not be explicitly opened
+with :code:`ydb_ci_tab_open()`/:code:`ydb_ci_tab_open_t()`.
 
 Returns:
 
@@ -1278,7 +1279,9 @@ Switches the currently active call-in table to the handle :code:`new_handle` (re
 to :code:`ydb_ci_tab_open()`/:code:`ydb_ci_tab_open_t()`) and fills in the previously
 active call-in table handle in :code:`*ret_old_handle`. An application that wishes to switch back to the
 previous call-in table at a later point would call :code:`ydb_ci_tab_switch()`/:code:`ydb_ci_tab_switch_t()`
-again with :code:`*ret_old_handle` as the :code:`new_handle` parameter.
+again with :code:`*ret_old_handle` as the :code:`new_handle` parameter. The special value of NULL passed in
+:code:`new_handle` switches the active call-in table to the default call-in table (the call-in table pointed
+to by the :code:`ydb_ci` environment variable).
 
 Returns:
 
