@@ -88,7 +88,7 @@ underlying operating system.
 Remember that the error codes returned by YottaDB functions are the
 negated numeric values of the error codes above.
 
-:CODE:`YDB_ERR_CALLINAFTEREXIT` – A YottaDB function was called after
+:CODE:`YDB_ERR_CALLINAFTERXIT` – A YottaDB function was called after
 :code:`ydb_exit()` was called.
 
 :CODE:`YDB_ERR_FATALERROR1` – A fatal error occurred. The process is
@@ -1245,7 +1245,7 @@ When a caller no longer wishes to use YottaDB, a call to
 :code:`ydb_exit()` cleans up the process
 connection/access to all databases and cleans up its data
 structures. Therafter, any attempt to call a YottaDB function produces
-a :code:`YDB_ERR_CALLINAFTEREXIT` error.
+a :code:`YDB_ERR_CALLINAFTERXIT` error.
 
 Note that a typical application should not need to call
 :code:`ydb_exit()`, but should instead just terminate with a call to
