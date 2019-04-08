@@ -1400,6 +1400,8 @@ is specified, :code:`ydb_hiber_start()`
 immediately returns with a :code:`YDB_ERR_TIME2LONG` error; otherwise
 they return :code:`YDB_OK` after the elapsed time.
 
+:code:`ydb_hiber_start()` should not be used in multiple threads in multi-threaded programs. (See the `Threads <https://docs.yottadb.com/MultiLangProgGuide/programmingnotes.html#threads>`_ section for details).
+
 .. _ydb_hiber_start_wait_any():
 
 --------------------------
@@ -1416,6 +1418,8 @@ than :code:`YDB_MAX_TIME_NSEC` is specified, :code:`ydb_hiber_start_wait_any()`
 immediately returns with a
 :code:`YDB_ERR_TIME2LONG` error; otherwise they return :code:`YDB_OK`
 after the elapsed time or when the wait is terminated by a signal.
+
+:code:`ydb_hiber_start_wait_any()` should not be used in multiple threads in multi-threaded programs. (See the `Threads <https://docs.yottadb.com/MultiLangProgGuide/programmingnotes.html#threads>`_ section for details).
 
 .. _ydb_init():
 
