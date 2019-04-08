@@ -1211,9 +1211,12 @@ multi-threaded applications, and those which do not are for
 single-threaded applications. The discussion in `Threads <https://docs.yottadb.com/MultiLangProgGuide/programmingnotes.html#threads>`_ provides
 more detailed information.
 
-Functions such as `ydb_exit()`_, `ydb_fork_n_core()`_, and
-`ydb_init()`_, which do not have separate variants for single- and
-multi-threaded applications, are suitable for both.
+`ydb_hiber_start()`_ and `ydb_hiber_start_wait_any()`_ are for use only with the SimpleAPI and not with the 
+threaded Simple API.
+
+`ydb_exit()`_, `ydb_fork_n_core()`_, and
+`ydb_init()`_ do not have separate variants for single- and
+multi-threaded applications and are suitable for both.
 
 See also the description of the :code:`ydb_ci_t()` and
 :code:`ydb_cip_t()` functions in the `Programmers Guide
@@ -1250,6 +1253,14 @@ a :code:`YDB_ERR_CALLINAFTERXIT` error.
 Note that a typical application should not need to call
 :code:`ydb_exit()`, but should instead just terminate with a call to
 :code:`exit()` which will perform any cleanup needed by YottaDB.
+
+:code:`ydb_exit()` returns :code:`YDB_OK` on success, and a positive non-zero value on error.
+
+If an external call attempts to call :code:`ydb_exit()`, a - :code:`YDB_ERR_INVYDBEXIT` error is returned, since YottaDB
+is required to remain operational even after the external call returns. For information about this error, see
+`INVYDBEXIT <https://docs.yottadb.com/MessageRecovery/errors.html#invydbexit>`_ in the Messages and Recovery Procedures guide.
+
+:code:`ydb_exit()` can be used with both the Simple API and threaded Simple API.
 
 .. _ydb_file_id_free():
 .. _ydb_file_id_free_t():
@@ -1363,6 +1374,8 @@ In a multi-threaded environment, only the thread that executes
 :code:`ydb_fork_n_core()` or :code:`ydb_fork_n_core()` survives in the
 child and is dumped.
 
+:code:`ydb_fork_n_core()` can be used with both the Simple API and threaded Simple API.
+
 .. _ydb_free():
 
 ----------
@@ -1380,7 +1393,7 @@ application by `ydb_malloc()`_ can result in
 unpredictable behavior. The signature of :code:`ydb_free()` matches
 that of the POSIX :code:`free()` call.
 
-Just like other SimpleAPI functions, :code:`ydb_free()` should not be used in
+:code:`ydb_free()` should not be used in
 multiple threads in multi-threaded programs. (See the `Threads <https://docs.yottadb.com/MultiLangProgGuide/programmingnotes.html#threads>`_ section for details). However, the :CODE:`YDB_FREE_BUFFER` macro is safe
 to use in multiple threads.
 
@@ -1444,6 +1457,8 @@ its signal handlers.
 
 :code:`ydb_init()` returns :code:`YDB_OK` on success, and a positive non-zero value on error.
 
+:code:`ydb_init()` can be used with both the Simple API and threaded Simple API.
+
 .. _ydb_malloc():
 
 ------------
@@ -1464,7 +1479,7 @@ variable :code:`ydb_dbglvl` whose values are a mask as described in
 `gtmdbglvl.h
 <https://gitlab.com/YottaDB/DB/YDB/blob/master/sr_port/gtmdbglvl.h>`_.
 
-Just like other SimpleAPI functions, :code:`ydb_malloc()` should not be used in
+:code:`ydb_malloc()` should not be used in
 multiple threads in multi-threaded programs. (See the `Threads <https://docs.yottadb.com/MultiLangProgGuide/programmingnotes.html#threads>`_ section for details). However, the :CODE:`YDB_MALLOC_BUFFER` macro is safe
 to use in multiple threads.
 
