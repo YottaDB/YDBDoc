@@ -643,7 +643,7 @@ ydb_ci_t
 ~~~~~~~~
 
 .. parsed-literal::
-   int ydb_ci_t(uint64_t tptoken, const char \*c_rtn_name, ...);
+   int ydb_ci_t(uint64_t tptoken,  ydb_buffer_t \*errstr, const char \*c_rtn_name, ...);
 
 The function ydb_ci_t() is an interface for a multi-threaded application to invoke an M routine..
 
@@ -698,7 +698,7 @@ ydb_cip_t
 ~~~~~~~~~~
 
 .. parsed-literal::
-   int ydb_cip_t(uint64_t tptoken, const char \*c_rtn_name, ...);
+   int ydb_cip_t(uint64_t tptoken, ydb_buffer_t \*errstr, const char \*c_rtn_name, ...);
 
 The function ydb_cip_t is an interface for a multi-threaded application to invoke an M routine.
 
