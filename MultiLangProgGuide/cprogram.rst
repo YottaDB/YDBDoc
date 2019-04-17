@@ -887,7 +887,7 @@ ydb_node_previous_s() / ydb_node_previous_st()
 
 Analogous to `ydb_node_next_s() / ydb_node_next_st()`_,
 :code:`ydb_node_previous_s()` and :code:`ydb_node_previous_st()`
-facilitate reverse breadth-first traversal of a local or global
+facilitate reverse depth-first traversal of a local or global
 variable tree, except that :code:`ydb_node_previous_s()` and
 :code:`ydb_node_previous_st()` search for and report the predecessor
 node. Unlike `ydb_node_next_s() / ydb_node_next_st()`_,
