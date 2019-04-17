@@ -1545,9 +1545,13 @@ $VIEW() provides a means to access YottaDB environmental information. When Yotta
 | "UNDEF"       | none             | Truth value showing whether undefined variables should be treated as having a null value (1 for "UNDEF"; 0 for "NOUNDEF"); YottaDB defaults to 0.                   |
 +---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | "YGVN2GDS"    | string           | When string is the name of a global variable node, e.g., "^ACN(""NAME"",""TYPE"")", returns the bytes in a database block that store the name,                      |
-|               |                  | e.g., "ACN"_$C(0,255)_"NAME"_$C(0,255)_"TYPE"_$C(0,0).                                                                                                              |
+|               | [,<collation>]   | e.g., "ACN"_$C(0,255)_"NAME"_$C(0,255)_"TYPE"_$C(0,0). An optional additional parameter is an alternative collation sequence number, which specifies the type of    |
+|               |                  | collation desired. Refer to `Collation <https://docs.yottadb.com/ProgrammersGuide/internatn.html#collation-sequence-definitions>`_ for more details on              |
+|               |                  | specifying alternative collation.                                                                                                                                   |
 +---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| "YGDS2GVN"    | string           | When string contains the subscript representation of a global variable, returns the name of the global.                                                             |
+| "YGDS2GVN"    | string           | When string contains the subscript representation of a global variable, returns the name of the global. An optional additional parameter is an alternative          |
+|               | [,<collation>]   | collation sequence number, which specifies the type of collation desired. Refer to                                                                                  |
+|               |                  | `Collation <https://docs.yottadb.com/ProgrammersGuide/internatn.html#collation-sequence-definitions>`_  for more details on specifying alternative collation.       |
 +---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | "ZDATE_FORM"  | none             | Integer value showing whether four digit year code is active for $ZDATE(); YottaDB defaults to 0 (for "YY" format). Use the environment variable ydb_zdate_form     |
 |               |                  | to set the initial value of this factor. For usage examples, refer to “$ZDate()”.                                                                                   |
