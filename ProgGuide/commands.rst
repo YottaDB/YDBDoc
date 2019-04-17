@@ -1,4 +1,3 @@
-
 .. index::
    Commands
 
@@ -15,7 +14,7 @@ This chapter describes M language commands implemented in YottaDB. All commands 
 Break
 ------------
 
-The BREAK command pauses execution of the code and initiates Direct Mode.
+The BREAK command pauses execution of the code, issues BREAK warning, and initiates Direct Mode.
 
 The format of the BREAK command is:
 
@@ -34,6 +33,8 @@ Issuing a BREAK command inside an M transaction destroys the Isolation of that t
 Generally, programs in production must not include BREAK commands. Therefore, YottaDB provides the ZBREAK and ZSTEP commands, which insert temporary breakpoints into the process rather than the source code. BREAKs inserted with ZBREAK only exist until the image terminates or until explicitly removed by another ZBREAK command. ZSTEP also inserts temporary BREAKs in the image that only exist for the execution of the ZSTEP command. In the YottaDB debugging environment, ZBREAKs and ZSTEPs that insert BREAKs provide a more flexible and less error-prone means of setting breakpoints than coding BREAKs directly into a routine. For more information on ZBREAK and ZSTEP, refer to the sections that describe those commands. Any BREAK commands in code intended for production should be conditionalized on something that is FALSE in production, as, unlike ZBREAK commands, YottaDB currently has no means to "turn off" BREAK commands.
 
 ZCONTINUE resumes execution of the interrupted program.
+
+The USE command allows one to enable the CTRLC on a device denoted using the intrinsic special variables $IO or $PRINCIPAL by setting the device to CENABLE mode, using this command: USE $PRINCIPAL:(CENABLE) or USE $O:(CENABLE). When the sequence for CTRLC is typed on that device, the program will receive an BREAK warning and initiate Direct Mode.
 
 YottaDB displays messages identifying the source of a BREAK as:
 
@@ -2579,7 +2580,7 @@ The format of the ZCONTINUE command is:
    ZC[ONTINUE][:tvexpr]
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
-* Because ZCONTINUE changes the flow of execution away from control of the principal device back to the current routine, it is usually the final command on a line; however, if it is not, because the ZCONTINUE has no argument, at least two (2) spaces must follow the command to separate it from the next command on the line.
+* Because ZCONTINUE changes the flow of execution away from control of the principal device ($PRINCIPAL) back to the current routine, it is usually the final command on a line; however, if it is not, because the ZCONTINUE has no argument, at least two (2) spaces must follow the command to separate it from the next command on the line.
 * If the process is not in Direct Mode, ZCONTINUE has no effect.
 
 
@@ -2977,7 +2978,7 @@ The environment variable ydb_autorelink_keeprtn if set to 1, t[rue], or y[es] ca
 
 YottaDB recommends that a directory in the $zroutines of a process be either auto-relink-enabled or auto-relink-disabled for the life of the process. Changing the auto-relink mode of the directory within a process is likely to result in counter-intuitive results.
 
-As arguments, ZRUPDATE takes object file names, including wild-cards of the form accepted by $ZSEARCH(). If ZRUPDATE fails to find at least one file to match an argument with a wild card, it issues an INFO message (seen only if $PRINCIPAL has CENABLE). When the argument specifies an explicit name without a wild card, but there is no file in the directory or a corresponding entry in the Relinkctl, ZRUPDATE produces an error. ZRUPDATE issues most errors as FILEPARSE errors with a secondary error describing the actual issue although some errors, depending on the reason and path by which ZRUPDATE detects them, can be rather cryptic.
+As arguments, ZRUPDATE takes object file names, including wild-cards of the form accepted by $ZSEARCH(). If ZRUPDATE fails to find at least one file to match an argument with a wild card, it issues an INFO message (seen only if $PRINCIPAL is in CENABLE mode). When the argument specifies an explicit name without a wild card, but there is no file in the directory or a corresponding entry in the Relinkctl, ZRUPDATE produces an error. ZRUPDATE issues most errors as FILEPARSE errors with a secondary error describing the actual issue although some errors, depending on the reason and path by which ZRUPDATE detects them, can be rather cryptic.
 
 An explicit ZLINK or an auto-relink check the hash of an object and its replacement. If they are identical, YottaDB may take no action to replace the current object, saving both memory and time. YottaDB bypasses the dynamic link of a routine when it determines the requested object matches the currently linked object file under either of the following circumstances:
 
