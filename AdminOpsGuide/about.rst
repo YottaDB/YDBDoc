@@ -1,8 +1,3 @@
-.. header::
-   YottaDB - About YottaDB
-
-.. footer::
-   Page ###Page### of ###Total###
 
 .. index::
     About YottaDB

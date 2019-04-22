@@ -1,8 +1,3 @@
-.. header::
-   YottaDB - Admin and Ops - About this manual
-
-.. footer::
-   Page ###Page### of ###Total###
 
 .. index::
     About this Manual

@@ -1,8 +1,3 @@
-.. header::
-   YottaDB — Multi-Language Programmers Guide
-
-.. footer::
-   Page ###Page### of ###Total###
 
 .. index:: Multi-language Programming Guide
 
