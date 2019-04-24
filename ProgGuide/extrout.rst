@@ -73,9 +73,11 @@ The functions in programs increment and decrement are now available to YottaDB t
 YottaDB uses an "external call table" to map the typeless data of M into the typed data of C, and vice versa. The external call table has a first line containing the pathname of the shareable library file followed by one or more specification lines in the following format:
 
 .. parsed-literal::
-   entryref: return-value routine-name (parameter, parameter, ... )        
+   entryref: return-value routine-name (parameter, parameter, ... ) [: SIGSAFE]         
 
-where entryref is an M entryref, return-value is ydb_long_t, ydb_status_t, or void, and parameters are in the format: 
+The optional case-insensitive keyword SIGSAFE following the parameter list specifies that the external call does not create its own signal handlers. This allows YottaDB to avoid burdensome signal handler coordination for the external call. By default, YottaDB saves and restores signal setups for external calls.
+
+entryref is an M entryref, return-value is ydb_long_t, ydb_status_t, or void, and parameters are in the format: 
 
 .. parsed-literal::
    direction:type [num]
@@ -229,7 +231,7 @@ Specification of a pre-allocation value should follow these rules:
 * Specification of pre-allocation for "scalar" types (parameters which are passed by value) is an error.
 
 .. note::
-   Pre-allocation is optional for all output-only parameters except ydb_string_t * and ydb_char_t \*. Pre-allocation yields better management of memory for the external call. 
+   Pre-allocation is optional for all output-only parameters except ydb_string_t * and ydb_char_t \*. Pre-allocation yields better management of memory for the external call. When an external call exceeds its specified preallocation (ydb_string_t * or ydb_char_t * output), YottaDB produces the EXCEEDSPREALLOC error. In the case that the user allocates space for the character pointer inside a ydb_string_t * type output parameter, a length field longer than the specified preallocated size for the output parameter does not cause an EXCEEDSPREALLOC error.
 
 +++++++++++++++++++++++++++++
 Callback Mechanism
@@ -792,9 +794,9 @@ Rules to Follow in Call-Ins
 
 1. External calls must not be fenced with TSTART/TCOMMIT if the external routine calls back into mumps using the call-in mechanism.
 2. The external application should never call exit() unless it has called ydb_exit() previously. YottaDB internally installs an exit handler that should never be bypassed.
-3. The external application should never use any signals when YottaDB is active since YottaDB reserves them for its internal use. YottaDB provides the ability to handle SIGUSR1 within M (see “$ZINTerrupt” for more information). An interface is provided by YottaDB for timers. Although not required, YottaDB recommends the use of ydb_malloc() and ydb_free() for memory management by C code that executes in a YottaDB process space for enhanced performance and improved debugging.
-4. YottaDB performs device input using the read() system service. UNIX documentation recommends against mixing this type of input with buffered input services in the fgets() family and ignoring this recommendation is likely to cause a loss of input that is difficult to diagnose and understand.
-5. ydb_ci() can cause SIG-11s or weird-symptoms/non-deterministic-output if the correct number of parameters are not specified.
+3. The external application should never use any signals when YottaDB is active since YottaDB reserves them for its internal use. YottaDB provides the ability to handle SIGUSR1 within M (see “$ZINTerrupt” for more information). An interface is provided by YottaDB for timers.
+4. YottaDB recommends the use of ydb_malloc() and ydb_free() for memory management by C code that executes in a YottaDB process space for enhanced performance and improved debugging. Always use ydb_malloc() to allocate returns for pointer types to prevent memory leaks. 
+5. YottaDB performs device input using the read() system service. UNIX documentation recommends against mixing this type of input with buffered input services in the fgets() family and ignoring this recommendation is likely to cause a loss of input that is difficult to diagnose and understand.
 
 --------------------------------------
 Type Limits for Call-Ins and Call-Outs

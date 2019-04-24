@@ -3895,6 +3895,16 @@ Run Time Error: This indicates that a job interrupt was signaled but there was a
 
 Action: Correct the $ZINTERRUPT to contain valid YottaDB commands.
 
+--------------------
+ERRWZTIMEOUT
+--------------------
+
+ERRWZTIMEOUT, Error while processing $ZTIMEOUT
+
+Run Time Error: This indicates a problem invoking the current $ZTIMEOUT vector and usually accompanies other error messages
+
+Action: Examine and correct the code vector specified by $ZTIMEOUT, or if there is none, examine the current value for $ETRAP or $ZTRAP. Unlike $ETRAP and code values for $ZTRAP, which are evaluated when they are assigned, compilation of $ZTIMEOUT vectors occurs when the vector is invoked by the expiration of the specified time.
+
 -------------------
 ERRWZTRAP 
 -------------------
@@ -3914,6 +3924,16 @@ EVENTLOGERR, Error in event logging subsystem
 Run Time Error: This indicates that the user is unable to access the event logging shared library or an event logging routine within the shared library.
 
 Action: Review accompanying messages for additional information.
+
+------------------
+EXCEEDSPREALLOC
+------------------
+
+EXCEEDSPREALLOC, Preallocated size ssss for M external call label LLLL exceeded by string of length SSSS
+
+Call out Error: The code invoked as externroutinename LLLL returned a string of length SSSS, but the call table specified a maximum length of ssss for the return.
+
+Action: Revise the external routine to abide by the call table size or change the call table to preallocate a suitably larger size.
 
 ------------------
 EXCLUDEREORG
@@ -3944,6 +3964,16 @@ EXPR, Expression expected but not found
 Compile Time Error: This indicates that YottaDB did not encounter a valid expression when it expected one.
 
 Action: Look for missing expressions or extra delimiters, such as a space, comma, or colon.
+
+--------------------------
+EXTCALLBOUNDS
+--------------------------
+
+EXTCALLBOUNDS, Wrote outside bounds of external call buffer. M label: LLLL
+
+Call out Fatal: The code invoked as externroutinename LLLL violated the bounds of its allocated buffers.
+
+Action: Ensure the non-YottaDB code uses appropriate allocations, pointer management logic and bounds checking.
 
 --------------------------
 EXTGBLDEL 
@@ -4141,9 +4171,9 @@ FILEEXISTS
 
 FILEEXISTS, File xxxx already exists
 
-MUPIP Error: This indicates that MUPIP discovered a file with the filename xxxx already existing, and did not overwrite it while executing the specified command(s).
+MUPIP Error: This indicates that MUPIP discovered a file with the filename xxxx already existing, and did not overwrite it while executing the specified command(s). In many cases, this is an expected outcome when the action has an explicit or implicit target of multiple database files which may be in differing states.
 
-Action: Rename the already existing file xxxx and reissue the MUPIP command(s), or modify the MUPIP command to name (explicitly/implicitly) a file different from xxxx. If this error is from a MUPIP SET -JOURNAL command after switching to a new version of YottaDB (i.e. the current journal file is known to have been created by a prior version of YottaDB) specifying -NOPREVJNLFILE in the MUPIP SET -JOURNAL command will avoid this error.
+Action: Rename the already existing file xxxx and reissue the MUPIP command(s), or modify the MUPIP command to name (explicitly/implicitly) a file different from xxxx. If you encountered this error with MUPIP BACKUP, use the -REPLACE qualifier if you want to replace the existing backup files. 
 
 ---------------------
 FILEIDGBLSEC 
@@ -4223,7 +4253,7 @@ FILERENAME, File xxxx is renamed to yyyy
 
 Run Time Information: This indicates that an existing file xxxx has been renamed to yyyy so that a new file created with the original name does not overwrite the existing one. YottaDB renames files during an automatic journal switch in case no explicit journal file name is specified, in which case the message is sent to the operator log. The utilities (MUPIP, GT.CM) rename files while opening log files or journal extract files and they send the message to the terminal. YottaDB or utilities rename files only if the new file name specified already exists.
 
-Action: -
+Action: This information messages confirms the success of the file rename operation. No futher action is necessary unless there are other WARNING, FATAL, and/or ERROR category messages.
 
 -----------------------
 FILTERBADCONV 
@@ -4855,11 +4885,11 @@ Action: If this is the proper mode of operation, ignore the warning. Normally GT
 GTMSECSHRPERM 
 -------------------
 
-GTMSECSHRPERM, The GTMSECSHR module in $ydb_dist does not have the correct permission and UID
+GTMSECSHRPERM, The GTMSECSHR module in $ydb_dist (DDDD) does not have the correct permission and UID (permission: PPPP, and UID: UUUU)
 
-Run Time Warning: This indicates that a client did not start a GTMSECSHR because the executable was not owned by root and did not have setuid permission.
+Run Time Warning: This indicates that a client did not start a GTMSECSHR, installed to DDDD, because the executable was not owned by root (UUUU is the actual owner) and/or did not have setuid and/or execute permissions (actual permissions are PPPP).
 
-Action: Arrange to provide the GTMSECSHR executable with the proper characteristics.
+Action: Arrange to provide the GTMSECSHR executable with the proper characteristics. The executable must be SETUID root with execute permissions for the current user.
 
 -------------------
 GTMSECSHRRECVF
@@ -6274,7 +6304,7 @@ JNLCREATE, Journal file xxxx created for <database/region> yyyy with aaaa
 
 MUPIP Information: This indicates that a journal file xxxx is created for database/region yyyy with the NOBEFORE_IMAGES or BEFORE_IMAGES journaling options (aaaa).
 
-Action: -
+Action: This informational message confirms the success of the new journal file creation operation for a region. No futher action is necessary unless there are other WARNING, FATAL, and/or ERROR category messages. 
 
 --------------------
 JNLCRESTATUS
@@ -6826,9 +6856,9 @@ JNLSPACELOW
 
 JNLSPACELOW, Journal file jjjj nearing maximum size, nnnn blocks to go
 
-Run Time Information: This indicates that the journal file jjjj is approaching the maximum size specified for it. The system creates a new journal file when the limit is reached.
+Run Time Information: Depending on your settings for ALLOCATION, AUTOSWITCHLIMIT, and EXTENSION journaling options, you may see one to three JNLSPACELOW messages for each generation of a journal file. When the difference between AUTOSWITCHLIMIT and ALLOCATION is an exact multiple of EXTENSION, YottaDB attempts to write the JNLSPACELOW message to the operator log three times as a journal file reaches its maximum size. The first JNLSPACELOW message appears in the operator log when the available free space (blocks) in a journal file is equal to twice the EXTENSION, the second appears when the available free space is equal to EXTENSION, and the third appears when the journal file reaches the maximum size (AUTOSWITCHLIMIT). With EXTENSION=0 or EXTENSION=AUTOSWITCHLIMIT, YottaDB logs the JNLSPACELOW message only once per journal file to the operator log. 
 
-Action: None required except as part of monitoring journaling space requirements or when operational practice uses this as a trigger to intervene in journal file management.
+Action:  The JNLSPACELOW message is an information message and requires no action. However, you can use the JNLSPACELOW messages as part of monitoring journaling space requirements or as an operational practice to a trigger to intervene in journal file management. Use the frequency of JNLSPACELOW messages to proactively monitor how fast a journal file grows and as part of a monitoring alorithm that helps predict how soon the disk is likely to hit a quota limit. 
 
 -----------------
 JNLSTATE
@@ -6838,7 +6868,7 @@ JNLSTATE, Journaling state for <database/region> xxxx is now yyyy
 
 MUPIP Information: This indicates that journal state for the database/region xxxx is now yyyy.
 
-Action: -
+Action: This information message confirms the success of the journal state change operation. No further action is necessary unless there are other WARNING, FATAL, and/or ERROR category messages.
 
 -----------------
 JNLSTATEOFF 
@@ -6885,11 +6915,11 @@ Action: n/a
 JNLSWITCHSZCHG 
 --------------------
 
-JNLSWITCHSZCHG, Journal AUTOSWITCHLIMIT [aaaa blocks] is rounded down to [bbbb blocks] to equal the sum of journal ALLOCATION
+JNLSWITCHSZCHG, Journal AUTOSWITCHLIMIT [aaaa blocks] is rounded down to [bbbb blocks] to equal the sum of journal ALLOCATION [cccc blocks] and a multiple of journal EXTENSION [dddd blocks] 
 
 MUPIP Information: This indicates that the specified AUTOSWITCHLIMIT value was rounded down as little as possible to make it aligned to the ALLOCATION + a multiple of EXTENSION. Any subsequently created journal file will use this value for AUTOSWITCHLIMIT.
 
-Action: If the rounded value is inappropriate examine the alignsize, allocation and extension values and choose a more suitable value.
+Action:  If the automatically rounded value for AUTOSWITCHLIMIT is inappropriate, specify an appropriate value for ALIGNSIZE, ALLOCATION, and/or EXTENSION.
 
 
 --------------------
@@ -6898,9 +6928,9 @@ JNLSWITCHTOOSM
 
 JNLSWITCHTOOSM, Journal AUTOSWITCHLIMIT [aaaa blocks] is less than journal ALLOCATION [bbbb blocks] for database file dddd
 
-Run Time Error: This indicates that the value of AUTOSWITCHLIMIT specified in a MUPIP SET JOURNAL command is less than the default or specified value of ALLOCATION. This error also indicates that the AUTOSWITCHLIMIT value specified was greater than or equal to the ALLOCATION but in turn got rounded down, and this rounded down value is lesser than the ALLOCATION.
+Run Time Error: This indicates that the specified value or the automatically calculated value for AUTOSWITCHLIMIT specified in a MUPIP SET JOURNAL command is less than the default or specified value of ALLOCATION. This error also indicates that the AUTOSWITCHLIMIT value specified was greater than or equal to the ALLOCATION but in turn got rounded down, and this rounded down value is less than the ALLOCATION.
 
-Action: Specify a higher value of AUTOSWITCHLIMIT.
+Action: Specify a higher value of AUTOSWITCHLIMIT or specify an ALLOCATION value that is less than the AUTOSWITCHLIMIT.
 
 ------------------
 JNLTMQUAL1 
@@ -7703,6 +7733,16 @@ Run Time Error: The operation attempted requires a LOCAL socket, and a non-LOCAL
 
 Action: Make sure the correct socket is being used and that the socket is OPENed with the ":LOCAL" suffix. ZSHOW "D" may provide useful details on the current socket state.
 
+----------------------
+LOCKCRITOWNER
+----------------------
+
+LOCKCRITOWNER, LOCK crit is held by: PPPP
+
+Run Time/LKE Information: This shows any current owner of the resource managing M LOCKs.
+
+Action: If a process persists in this state investigate what it's doing and, if appropriate, consider terminating it.
+
 ------------------------
 LOCKINCR2HIGH 
 ------------------------
@@ -7737,7 +7777,7 @@ Action: Analyze the LOCK protocol for efficiency. Use mupip set -file -lock_spac
 LOCKSPACEINFO 
 -------------------
 
-LOCKSPACEINFO, Region: rrrr: processes on queue: pppp/qqqq; LOCK slots in use: llll/kkkk; name space not full.
+LOCKSPACEINFO, Region: rrrr: processes on queue: pppp/qqqq; LOCK slots in use: llll/kkkk; SUBSCRIPT slot bytes in use: ssss/tttt.
 
 Run Time Error: This indicates that the environment attempted more concurrent M LOCKs than the configured LOCK_SPACE for region rrrr can support. pppp processes are waiting on a lock. llll locks are in use. qqqq and kkkk indicate maximum number of process queue entries, and maximum number of locks respectively.
 
@@ -7819,7 +7859,7 @@ LOWSPC
 
 LOWSPC, WARNING: Database DDDD has less than PPPP% of the total block space remaining. Blocks Used: UUUU Total Blocks Available: AAAA
 
-Operator log Information: The database has UUUU block in use and is appoaching its current limit of AAAA blocks. When the database reaches the 88% size threshold, and for every 1% increase in size and beyond, YottaDB reports the blocks used in the LOWSPC warning as the sum of the data blocks and the local bit map blocks.
+Operator log Information: The database has UUUU blocks in use and is appoaching its current limit of AAAA blocks. When the database reaches the 88% size threshold, and for every 1% increase in size and beyond, YottaDB reports the blocks used in the LOWSPC warning as the sum of the data blocks and the local bit map blocks.
 
 Action: Purge data if possible. Consider a MUPIP REORG to compact the remaining data. Investigate whether migrating to a database created by a current version has a higher limit. Move some data to another, possibly new, region and delete it from this one.
 
@@ -8132,6 +8172,56 @@ MIXIMAGE, Cannot load more than one base image function on a process.
 Run Time Error: This indicates that a C function tries to invoke more than one base image function included in libyottadb.so (e.g. ydb_main, dse_main, mupip_main etc.). Only one base image function can be invoked and only once for the lifetime of the process.
 
 Action: Make sure only one base image function is invoked for the lifetime of one process.
+
+--------------------
+MLKCLEANED
+--------------------
+
+MLKCLEANED, LOCK garbage collection freed aaaa lock slots for region rrrr
+
+LKE Information: LKE CLNUP was able to free lock slots when requested.
+
+Action: No action required.
+
+--------------------
+MLKHASHRESIZE
+--------------------
+
+MLKHASHRESIZE, LOCK hash table increased in size from aaaa to bbbb and placed in shared memory (id = mmmm)
+
+Operator log Information: YottaDB needed to expand a hash table used for managing LOCK information.
+
+Action: No user action is required, but shared memory monitoring will show an additional shared memory segment with id mmmm.
+
+-------------------
+MLKHASHRESIZEFAIL
+-------------------
+
+MLKHASHRESIZEFAIL, Failed to increase LOCK hash table size from aaaa to bbbb. Will retry with larger size.
+
+Operator log Warning: YottaDB needed to expand a hash table used for managing LOCK information needed to be expanded, but the initial attempt failed, necessitating a retry.
+
+Action: A subsequent MLKHASHRESIZE indicates that the retry succeeded and no user action is required.
+
+-------------------
+MLKHASHTABERR
+-------------------
+
+MLKHASHTABERR, A LOCK control structure is damaged and could not be corrected. Lock entry for LLLL is invalid.
+
+LKE Error: LKE CLNUP -INTEG encountered an out-of-design situation for LOCK LLLL and was unable to repair it automatically.
+
+Action: Immediately report the entire incident context with information from the operator log and any other relevant information to your YottaDB support channel.
+
+--------------------
+MLKHASHWRONG
+--------------------
+
+MLKHASHWRONG, A LOCK control structure has an invalid state; LOCK table failed integrity check. TTTT
+
+LKE Error: MLK CLNUP -INTEG encountered damage to the data structures related to LOCK management. The text in TTTT describes whether LKE was able to correct the error or not.
+
+Action: If LKE was not able to correct the error, immediately report the entire incident context with information from the operator log and any other relevant information to your YottaDB support channel as soon as possible.
 
 ----------------------
 MMBEFOREJNL
@@ -8490,7 +8580,7 @@ MUNOACTION, MUPIP unable to perform requested action
 
 MUPIP Error: This indicates that MUPIP encountered an error, which prevented the requested action.
 
-Action: Review the accompanying message(s) for additional information to identify the cause.
+Action: Review the accompanying message(s) to identify the cause that prevented MUPIP from performing the requested operation.
 
 --------------------
 MUNODBNAME 
@@ -9922,6 +10012,16 @@ NOTGBL, Expected a global variable name starting with an up-arrow (^): xxxx
 Run Time/MUPIP Error: This indicates that the VIEW argument expression for tracing specifies xxxx, which is not a valid global name. In case of MUPIP error, it indicates that LOAD aborted because it encountered xxxx in its input stream, which is not a valid global name.
 
 Action: Correct the argument of the VIEW command to point to a valid global name. For MUPIP error, refer to the topic MUPIP LOAD Errors in the `About This Manual section of this manual <https://docs.yottadb.com/MessageRecovery/about.html>`_. 
+
+------------------
+NOTMNAME
+------------------
+
+NOTMNAME, XXXX is not a valid M name
+
+Compile Time Error: M names must be ASCII, start with a "%" or an alpha and thereafter contain only alphanumeric characters. In YottaDB M, names are currently functionally limited to 31 characters, in most cases, by truncation.
+
+Action: Correct the (typically) routine name to comply with the supported format. Names are also used for labels and both global and local variables. Note that YottaDB usually truncates names longer than its supported maximum - which YottaDB recommends against, because while it can provide embedded information, it can lead to ambiguity or other unintended behavior.
 
 ------------------
 NOTPOSITIVE 
@@ -14545,6 +14645,16 @@ Run Time Warning: This operator log message indicates process wwww needed access
 Action: Investigate the state and activities of process hhhh (possibly using the ydb_procstuckexec facility); try to identify any coincident operating system, file system or storage sub-system issues that might contribute to this unexpected behavior.
 
 ------------------
+XCRETNULLREF
+------------------
+
+XCRETNULLREF, Returned null reference from external call LLLL
+
+Call out Error: The code invoked as externroutinename LLLL returned a NULL pointer. While YottaDB accepts returns of a zero (0) value or an empty string, it does not support the return of a NULL pointer.
+
+Action: Revise the external call code to return a pointer to an appropriate value.
+
+------------------
 XCVOIDRET 
 ------------------
 
@@ -15268,6 +15378,16 @@ ZSTEPARG, ZSTEP argument expected
 Compile Time Error: This indicates that ZSTEP command did not specify an argument or a <SP> to hold the place of the missing argument.
 
 Action: Modify the ZSTEP command so it has an argument or a trailing double space.
+
+------------------
+ZTIMEOUT
+------------------
+
+ZTIMEOUT, ZTIMEOUT Time expired
+
+Run Time Warning: This warning message appears when $ZTIMEOUT expires and there were no vectors defined. If no error handlers are defined, YottaDB invokes the default trap which puts the control to Direct Mode.
+
+Action: Check the message(s) for more information on where the timer expired in the current process. If needed, set an appropriate error handler to specify an action associated with $ZTIMEOUT expiry or define a $ZTIMEOUT with a vector.
 
 -----------------
 ZTRIGINVACT

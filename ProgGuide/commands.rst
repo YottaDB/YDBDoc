@@ -1281,7 +1281,7 @@ The format of the READ command is:
 * The optional numeric expression specifies a time in seconds at most, for which the command waits for input to be terminated. When a timeout is specified, if the input has been terminated before the timeout expires, $TEST is set to 1 (true), otherwise, $TEST is set to 0 (false). When a READ times out, the target variable takes the value of the string received before the timeout.
 * To provide a concise means of issuing prompts, YottaDB sends string literal and format control character (!,?intexpr,#) arguments of a READ to the current device as if they were arguments of a WRITE.
 * An indirection operator and an expression atom evaluating to a list of one or more READ arguments form a legal argument for a READ.
-* In UTF-8 mode, the READ command uses the character set value specified on the device OPEN as the character encoding of the input device. If character set "M" or "UTF-8" is specified, the data is read with no transformation. If character set is "UTF-16", "UTF-16LE", or "UTF-16BE", the data is read with the specified encoding and transformed to UTF-8. If the READ command encounters an illegal character or a character outside the selected representation, it generates a run-time error. The READ command recognizes all Unicode line terminators for non-FIXED devices.
+* In UTF-8 mode, the READ command uses the character set value specified on the device OPEN as the character encoding of the input device. If character set "M" or "UTF-8" is specified, the data is read with no transformation. If character set is "UTF-16", "UTF-16LE", or "UTF-16BE", the data is read with the specified encoding and transformed to UTF-8. If the READ command encounters an illegal character or a character outside the selected representation, it generates a run-time error. The READ command recognizes all Unicode® line terminators for non-FIXED devices.
 
 For more information on READ, devices, input, output and format control characters, refer to `Chapter 9: “Input/Output Processing” <https://docs.yottadb.com/ProgrammersGuide/ioproc.html>`_.
 
@@ -1599,7 +1599,7 @@ At process startup, YottaDB initializes BADCHAR from the environment variable yd
 With VIEW "BADCHAR", YottaDB functions generate the BADCHAR error when they encounter malformed byte sequences. With this setting, YottaDB detects and clearly reports potential application program logic errors as soon as they appear. As an illegal UTF-8 character in the argument of a character-oriented function likely indicates a logic issue, YottaDB recommends using VIEW "BADCHAR" in production environments.
 
 .. parsed-literal::
-   When all strings consist of well-formed characters, the value of VIEW [NO]BADCHAR has no effect whatsoever. With VIEW "NOBADCHAR", the same functions treat malformed byte sequences as valid characters. During the migration of an application to add support for Unicode, illegal character errors are likely to be frequent and indicative of application code that is yet to be modified. VIEW "NOBADCHAR" suppresses these errors at times when their presence impedes development.
+   When all strings consist of well-formed characters, the value of VIEW [NO]BADCHAR has no effect whatsoever. With VIEW "NOBADCHAR", the same functions treat malformed byte sequences as valid characters. During the migration of an application to add support for UTF-8 mode, illegal character errors are likely to be frequent and indicative of application code that is yet to be modified. VIEW "NOBADCHAR" suppresses these errors at times when their presence impedes development.
 
 ~~~~~~~~~~~~~~~~~~~~~~
 "DBFLUSH"[:REGION[:N]]
@@ -2610,7 +2610,7 @@ The format of the ZCOMPILE command is:
    ZCOM[PILE][:tvexpr] expr[,...]
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
-* The expression argument specifies one or more relative or absolute paths to filenames, which must include the .m extension. Wildcards are acceptable in the path specification. The specification can be optionally prefixed by qualifiers valid for a mumps command.
+* The expression argument specifies one or more relative or absolute paths to filenames, which must include the .m extension. If the file specification does not include a .m extension, ZCOMPILE assumes a default file extension of ".m". Wildcards are acceptable in the path specification. The specification can be optionally prefixed by qualifiers valid for a mumps command.
 
 The $ZCSTATUS intrinsic special variable holds the value of the status code for the compilation performed by a ZCOMPILE command.
 
@@ -3835,7 +3835,7 @@ This sequence uses ZSTEP to invoke Direct Mode at the beginning of the first lin
 ZSYstem
 ------------------------
 
-The ZSYSTEM command creates a child of the current process .
+The ZSYSTEM command creates a child of the current process.
 
 The format of the ZSYSTEM command is:
 

@@ -1110,45 +1110,46 @@ String Utilities
 %TRIM
 +++++++++++
 
-The %TRIM utility removes leading and trailing whitespace (spaces and tabs) from a string. You can use the %TRIM utility in Direct Mode or include it in a source application program in the following format:
+%TRIM removes leading and trailing characters from a string. The format of the %TRIM utility function is:
 
 .. parsed-literal::
-   $$FUNC^%TRIM(exp)
+   $$FUNC|$$L|$$R^%TRIM(expr1[,expr2])
+
+
+* The first expression specifies the string. The optional second expression specifies a list of trailing and leading characters to remove from expr1. When expr2 is not specified, ^%TRIM assumes expr2 as $char(9,32) which removes all trailing and leading whitespaces (spaces and tabs) from expr1. Note that ^%TRIM treats expr2 as a list of characters (not a substring).
+
+* The $$FUNC label trims leading and trailing characters.
+
+* The $$L label trims leading characters.
+
+* The $$R label trims trailing characters.
 
 You can also use %TRIM as a command line utility to read from STDIN and write to STDOUT in the following format:
 
 .. parsed-literal::
-   %XCMD 'do ^%TRIM'
-
-**Utility Labels**
-
-The following labels invoke variations of %TRIM as an extrinsic function.
-
-FUNC(s): Returns a string after removing leading and trailing whitespaces from the argument.
-
-L(s): Returns a string after removing leading whitespaces from the argument.
-
-R(s): Returns a string after removing trailing whitespaces from the argument.
+   echo "  string with leading and trailing spaces  " | $ydb_dist/mumps -r ^%TRIM
 
 Example:
 
 .. parsed-literal::
-   YDB>set strToTrim=$char(9,32)_"string with spaces and tabs"_$char(32,32,32) write $length(strToTrim) 36 YDB>write "strToTrim=",?24,"""",strToTrim,"""",!,"$$L^%TRIM(strToTrim)=",?24,"""",$$L^%TRIM(strToTrim),"""",!,"$$R^%TRIM(strToTrim)=",?24,"""",$$R^%TRIM(strToTrim),"""",!,"$$FUNC^%TRIM(strToTrim)=",?24,"""",$$FUNC^%TRIM(strToTrim),""""
-   strToTrim= " string with spaces and tabs "
-   $$L^%TRIM(strToTrim)= "string with spaces and tabs "
-   $$R^%TRIM(strToTrim)= " string with spaces and tabs"
-   $$FUNC^%TRIM(strToTrim)="string with spaces and abs"
+   YDB>set strToTrim=$char(9,32)_"string with spaces and tabs"_$char(32,32,32) write $length(strToTrim) 
+   32 
+   YDB>write "strToTrim=",?24,"""",strToTrim,"""",!,"$$L^%TRIM(strToTrim)=",?24,"""",$$L^%TRIM(strToTrim),"""",!,"$$R^%TRIM(strToTrim)=",?24,"""",$$R^%TRIM(strToTrim),"""",!,"$$FUNC^%TRIM(strToTrim)=",?24,"""",$$FUNC^%TRIM(strToTrim),""""
+   strToTrim=              "        string with spaces and tabs   "
+   $$L^%TRIM(strToTrim)=   "string with spaces and tabs   "
+   $$R^%TRIM(strToTrim)=   "        string with spaces and tabs"
+   $$FUNC^%TRIM(strToTrim)="string with spaces and tabs"
 
-This example invokes %TRIM as an extrinsic function and demonstrates the use of its L,R, and FUNC labels.
+This example invokes %TRIM as an extrinsic function and demonstrates the use of its $$L,$$R, and $$FUNC labels.
 
 Example:
 
 .. parsed-literal::
-   $ echo " YottaDB Rocks! " | ydb -r %XCMD 'do ^%TRIM'
+   $ echo " YottaDB Rocks! " | $ydb_dist/mumps -r ^%TRIM
    YottaDB Rocks!
    $
 
-This example invokes %TRIM as a command line utility which reads STDIN and writes the trimmed output to STDOUT. 
+This example invokes %TRIM as a command line utility which reads STDIN and writes the trimmed output to STDOUT.
 
 +++++++++++
 %MPIECE
@@ -2749,9 +2750,9 @@ As they do for unshared statistics, shared statistics reflect all database actio
 .. note::
    See also: ydb_statsdir (which specifies the directory for database files into which processes that have opted-in to sharing global statistics place their statistics as binary data) and ydb_statshare (which specifies an initial value for the characteristic controlled by VIEW “[NO]STATSHARE” in application code) in the `Environment Variables <https://docs.yottadb.com/AdminOpsGuide/basicops.html#environment-variables>`_ section of the documentation. VIEW “[NO]STATSHARE”[:<region-list>] enables or disables database statistics sharing for listed regions which permit such sharing, more information `here <https://docs.yottadb.com/ProgrammersGuide/commands.html#key-words-in-view-command>`_.
 
----------------------------
-Unicode Utility Routines
----------------------------
+----------------------------
+UTF-8 Mode Utility Routines
+----------------------------
 
 The %UTF2HEX and %HEX2UTF M utility routines provide conversions between UTF-8 and hexadecimal code-point representations. Both these utilities run only in UTF-8 mode; in M mode, they both trigger a run-time error.
 

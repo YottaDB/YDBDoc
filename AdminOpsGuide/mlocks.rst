@@ -104,13 +104,14 @@ Use the CLEAR command to remove active LOCKs.
 The format of the CLEAR command is:
 
 .. parsed-literal::
-   C[LEAR] [-qualifier...]
+   CLE[AR] [-qualifier...]
 
 The optional qualifiers are:
 
 .. parsed-literal::
    -A[LL] 
-   -L[OCK] 
+   -L[OCK]
+  -[NO]C[RIT]
    -[NO]EXACT
    -[NO]I[NTERACTIVE] 
    -O[UTPUT]="file-name" 
@@ -290,6 +291,62 @@ Example:
 
 This command clears LOCK ^A held by process with PID 4109.
 
++++++++++++++++++++
+CLNUP
++++++++++++++++++++
+
+The CLNUP command initiates a cleanup operation of the lock space to remove any abandoned artifacts left by processes that exited without releasing their LOCKs.
+
+The CLNUP processing also checks for the evidence of any entry that has been misplaced by an "overflow" condition; if it finds any, it attempts to automatically repair it, and, if it cannot, it produces a MLKHASHTABERR warning message. On seeing such a message:
+
+* Stop all access to (at least) the affected region(s) to ensure that the database is completely quiescent.
+* Use MUPIP SET -LOCK_SPACE to set, and, if appropriate raise, the number of pages allocated to the management of M locks associated with the affected region(s) before resuming normal operations.
+
+Note that step 1 is necessary because using MUPIP SET -LOCK_SPACE is a standalone operation even with the current value.
+
+The format of the CLNUP command is:
+
+.. parsed-literal::
+   CLN[UP] [-qualifier...]
+
+The optional qualifiers are:
+
+.. parsed-literal::
+   -A[LL]
+   -I[NTEG] 
+   -P[ERIODIC]=n
+   -R[EGION]=region-name
+
+By default, CLNUP operates on all regions (-ALL).
+
+~~~~~~~~~~~
+-A[LL]
+~~~~~~~~~~~
+
+Specifies all regions
+
+~~~~~~~~~~~
+-I[NTEG]
+~~~~~~~~~~~
+
+Specifies that LKE should validate the integrity of the lock space and report any issues.
+
+~~~~~~~~~~~~~~
+-P[ERIODIC]=n
+~~~~~~~~~~~~~~
+
+Specifies that LKE perform a CLNUP every n seconds, which, if you desire active cleanup, is much lighter weight than repeated invocations of LKE from a shell script.
+
+You can stop LKE CLNUP -PERIODIC with MUPIP STOP <pid>.
+
+YottaDB recommends running LKE CLNUP -PERIODIC=n with a value of n that appears to prevent growth in the elements in the lock space as reported by LKE SHOW over substantial periods of time.
+
+~~~~~~~~~~~
+-R[EGION]
+~~~~~~~~~~~
+
+Specifies that LKE restricts CLNUP operations to a region.
+
 ++++++++++++++++++++
 SHOW
 ++++++++++++++++++++
@@ -314,7 +371,7 @@ The optional qualifiers are:
 
 * The SHOW command reports active LOCKs. Information includes the LOCK resource name and the process identification (PID) of the LOCK owner.
 
-* LKE SHOW displays lock space usage with a message in the form of: "%YDB-I-LOCKSPACEUSE, Estimated free lock space: xxx% of pppp pages." If the lock space is full, it also displays a LOCKSPACEFULL error.
+* All invocations of LKE SHOW include utilization information, in the form of available/total space, about shared subscript data space related to LOCK commands. This information appears as a message of the form: %YDB-I-LOCKSPACEINFO, Region: <region_name>: processes on queue: 0/160; LOCK slots in use: lll/120; SUBSCRIPT slot bytes in use: ssss/5052. Additionally, LKE SHOW also displays a LOCKSPACEUSE message. If the lock space is full, LKE SHOW also displays a LOCKSPACEFULL error.
 
 * A LOCK command that finds no room in LOCK_SPACE to queue a waiting LOCK, does a slow poll waiting for LOCK_SPACE to become available. If LOCK does not acquire the ownership of the named resource with the specified timeout, it returns control to the application with $TEST=0. If timeout is not specified, the LOCK command continues to do a slow poll till the space becomes available.
 

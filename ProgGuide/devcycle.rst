@@ -513,7 +513,7 @@ The format for the MUMPS command is:
    MUMPS [-qualifier[...]] pathname
 
 * Source programs must have an extension of .m.
-* Each pathname identifies an M source program to compile.
+* Each pathname identifies an M source program to compile. If you do not specify a .m file extension, the mumps command assumes the .m file extension.
 * Qualifiers determine characteristics of the compiler output.
 * Qualifiers must appear after the command, but before the file name to be properly applied.
 * YottaDB allows the UNIX * and ? wildcards in a file name.
@@ -629,7 +629,15 @@ When forming routine names, the compiler truncates object filenames to a maximum
 
 The -noobject qualifier suppresses the production of an object file and is usually used with the -list qualifier to produce only a listing file.
 
+Compilation with -object without -nameofrtn implicitly names the first routine to match the name specified with -object.
+
 By default, the compiler produces object modules.
+
+~~~~~~~~~~~~~~~~~~~~~~~
+-[n]ameofrtn=filename
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Instructs the compiler to produce an output object file with the specified name. You can use -NAMEOFRTN and -OBJECT to create two object files with different names from the same .m source file.
 
 ~~~~~~~~~~~~~~~
 -[no]w[arning]
@@ -679,7 +687,9 @@ By default, listings use single spaced output (-space=1).
 +----------------------------------------------+--------------------------------------------+
 | “-noin[line_literals]”                       | N/A                                        |
 +----------------------------------------------+--------------------------------------------+
-| "-noline_entry"                              | N/A                                        |
+| "-nolineentry"                               | N/A                                        |
++----------------------------------------------+--------------------------------------------+
+| “-[n]ameofrtn=filename”                      | N/A                                        |
 +----------------------------------------------+--------------------------------------------+
 | “-[no]o[bject][=filename]”                   | -object                                    |
 +----------------------------------------------+--------------------------------------------+

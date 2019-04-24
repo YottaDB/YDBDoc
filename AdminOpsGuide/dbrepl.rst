@@ -2785,6 +2785,9 @@ Setting up a Secured TLS Replication Connection
 
 The following example creates two instances (Alice and Bob) and a basic framework required for setting up a TLS replication connection between them. Alice and Bob are `fictional characters <https://en.wikipedia.org/wiki/Alice_and_Bob>`_ and represent two instances who use certificates signed by the same root CA. This example is solely for the purpose of explaining the general steps required to encrypt replication data in motion. You must understand, and appropriately adjust, the scripts before using them in a production environment. Note that all certificates created in this example are for the sake of explaining their roles in a TLS replication environment. For practical applications, use certificates signed by a CA whose authority matches your use of TLS.
 
+.. note::
+   Use the openssl.cnf provided with `repl_procedures <https://gitlab.com/YottaDB/DB/YDBDoc/tree/master/AdminOpsGuide/repl_procedures>`_ to create the self-signed root certification authority (ca.crt) and leaf-level certificates used in this example. In production, ensure that you configure openssl.cnf according to your environment and security requirements. For example, in production you would keep root-level certificates in directories with 0500 permissions and the individual files with 0400 permissions so that unauthorized users cannot access them.
+
 1. Remove the comment tags from the following lines in the ydbenv script:
 
    .. parsed-literal::
@@ -3318,6 +3321,13 @@ Command Syntax:
 *-editinstance*
 
 Displays or changes the attributes of the specified instance-file. Use -editinstance in combination with SHOW or CHANGE qualifiers.
+
+*-cleanslots*
+
+Goes through all 16 slots in the replication instance file, identifies the slots that are inactive, and clears them to make them available for reuse. 
+
+.. note::
+   Initially, all the slots are unused. A Source Server replicating to a secondary instance for the first time utilizes an unused slot to store the information related to that secondary. Any Source Server process replicating to the same secondary instance updates information using the same slot until -CLEANSLOT clears the slot to make it reusable. Use -CLEANSLOT to clear inactive slots when the originating instance connects to more than 16 different secondary instances throughout its lifetime.
 
 *-jnlpool*
 

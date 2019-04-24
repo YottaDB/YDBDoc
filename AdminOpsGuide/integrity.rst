@@ -1407,6 +1407,8 @@ P1 - Process Damage
 
 A damaged process is one that has become internally "confused" and is executing in a pathological way not caused by circumstances in the external environment.
 
+ If multiple processes exhibit the same symptoms, the problem is likely embedded in the database.
+
 *IF YOU HAVE DISCOVERED THAT A PROCESS WAS DAMAGED*, carefully review all events related to that process leading to the discovery of the problem. It may be possible that the process had an elevated priority and was not hanging, but rather was "hogging" system resources. It is also possible that the problem is an application loop problem, missed by not performing the steps in `section H3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#h3-database-access-problems>`_ with enough rigor.
 
 Check for evidence of any hardware problem that might damage a process.

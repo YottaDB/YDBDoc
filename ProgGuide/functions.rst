@@ -19,7 +19,7 @@ M Intrinsic Functions start with a single dollar sign ($) and have one or more a
 $ASCII()
 -----------------
 
-Returns the integer ASCII code for a character in the given string. For a mumps process started in UTF-8 mode, $ASCII() returns the integer Unicode code-point value of a character in the given string.
+Returns the integer ASCII code for a character in the given string. For a mumps process started in UTF-8 mode, $ASCII() returns the integer Unicode® UTF-8 code-point value of a character in the given string.
 
 The format for the $ASCII function is:
 
@@ -60,13 +60,13 @@ Example:
    YDB>Write $$FUNC^%DH("20027")
    00004E3B
 
-In this example, 20027 is the integer equivalent of the hexadecimal value 4E3B. U+4E3B is a character in the CJK Ideograph block of the Unicode Standard.
+In this example, 20027 is the integer equivalent of the hexadecimal value 4E3B. U+4E3B is a character in the CJK Ideograph block of the Unicode® Standard.
 
 -----------------
 $CHAR()
 -----------------
 
-Returns a string of one or more characters corresponding to integer ASCII codes specified in its argument(s). For a process started in UTF-8 mode, $CHAR() returns a string composed of characters represented by the integer equivalents of the Unicode code-points specified in its argument(s).
+Returns a string of one or more characters corresponding to integer ASCII codes specified in its argument(s). For a process started in UTF-8 mode, $CHAR() returns a string composed of characters represented by the integer equivalents of the Unicode® code-points specified in its argument(s).
 
 The format for the $CHAR function is:
 
@@ -108,7 +108,7 @@ Example:
    YDB>write $char(65)
    A
 
-In the above example, the integer value 20027 is the Unicode character "主" in the CJK Ideograph block of Unicode. Note that the output of the $CHAR() function for values of integer expression(s) from 0 through 127 does not vary with choice of the character encoding scheme. This is because 7-bit ASCII is a proper subset of UTF-8 character encoding scheme. The representation of characters returned by the $CHAR() function for values 128 through 255 differ for each character encoding scheme.
+In the above example, the integer value 20027 is the Unicode® character "主" in the CJK Ideograph block of Unicode. Note that the output of the $CHAR() function for values of integer expression(s) from 0 through 127 does not vary with choice of the character encoding scheme. This is because 7-bit ASCII is a proper subset of UTF-8 character encoding scheme. The representation of characters returned by the $CHAR() function for values 128 through 255 differ for each character encoding scheme.
 
 ----------------
 $DATA()
@@ -197,7 +197,7 @@ The format for the $EXTRACT function is:
 
 $EXTRACT() provides a tool for manipulating strings based on character positions.
 
-For a mumps process started in UTF-mode, $EXTRACT interprets the string arguments as UTF-8 encoded. With VIEW "BADCHAR" enabled, $EXTRACT() produces a run-time error when it encounters a character in the reserved range of the Unicode Standard, but it does not process the characters that fall after the span specified by the arguments. The parallel function of $EXTRACT() is $ZEXTRACT(). Use $ZEXTRACT() for byte-oriented operations. For more information, refer to `$ZExtract() <https://docs.yottadb.com/ProgrammersGuide/functions.html#zextract>`_.
+For a mumps process started in UTF-mode, $EXTRACT interprets the string arguments as UTF-8 encoded. With VIEW "BADCHAR" enabled, $EXTRACT() produces a run-time error when it encounters a character in the reserved range of the Unicode® Standard, but it does not process the characters that fall after the span specified by the arguments. The parallel function of $EXTRACT() is $ZEXTRACT(). Use $ZEXTRACT() for byte-oriented operations. For more information, refer to `$ZExtract() <https://docs.yottadb.com/ProgrammersGuide/functions.html#zextract>`_.
 
 $EXTRACT() can be used on the left-hand side of the equal sign (=) of a SET command to set a substring of a string. This construct permits easy maintenance of individual pieces within a string. It can also be used to right justify a value padded with blank characters. For more information on SET $EXTRACT(), refer to `“Set” in the Commands chapter <https://docs.yottadb.com/ProgrammersGuide/commands.html#set>`_.
 
@@ -2175,10 +2175,10 @@ The valid (case insensitive) character codes for expr2 in the two-argument form 
 
 The valid (case insensitive) codes for character set encoding for expr2 and expr3 in the three-argument form are:
 
-* "UTF-8"-- a multi-byte variable length encoding form of Unicode.
-* "UTF-16LE"-- a multi-byte 16-bit encoding form of Unicode in little-endian.
-* "UTF-16BE"-- a multi-byte 16-bit encoding form of Unicode in big-endian.
-* "UTF-16"-- a multi-byte 16-bit encoding form which uses the same endian level as that of the current system.
+* "UTF-8"-- a multi-byte variable length Unicode® encoding form.
+* "UTF-16LE"-- a multi-byte 16-bit Unicode® encoding form in little-endian.
+* "UTF-16BE"-- a multi-byte 16-bit Unicode® encoding form in big-endian.
+* "UTF-16"-- a multi-byte 16-bit Unicode® encoding form which uses the same endian level as that of the current system.
 
 .. note::
    When UTF-8 mode is enabled, YottaDB uses the ICU Library to perform case conversion. As mentioned in the Theory of Operation section, the case conversion of the strings occurs according to Unicode code-point values. This may not be the linguistically or culturally correct case conversion, for example, of the names in the telephone directories. Therefore, application developers must ensure that the actual case conversion is linguistically and culturally correct for their specific needs. The two-argument form of the $ZCONVERT() function in M mode does not use the ICU Library to perform operation related to the case conversion of the strings.
@@ -3200,7 +3200,7 @@ Returns a properly encoded string from a sequence of bytes.
 * The first expression is an expression of the byte string from which $ZSUBSTR() derives the character sequence.
 * The second expression is the starting byte position (counting from 1 for the first position) in the first expression from where $ZSUBSTR() begins to derive the character sequence.
 * The optional third expression specifies the number of bytes from the starting byte position specified by the second expression that contribute to the result. If the third expression is not specified, the $ZSUBSTR() function returns the sequence of characters starting from the byte position specified by the second expression up to the end of the byte string.
-* The $ZSUBSTR() function never returns a string with illegal or invalid characters. With VIEW "NOBADCHAR", the $ZSUBSTR() function ignores all byte sequences within the specified range that do not correspond to valid Unicode code-points, With VIEW "BADCHAR", the $ZSUBSTR() function triggers a run-time error if the specified byte sequence contains a code-point value that is not in the character set.
+* The $ZSUBSTR() function never returns a string with illegal or invalid characters. With VIEW "NOBADCHAR", the $ZSUBSTR() function ignores all byte sequences within the specified range that do not correspond to valid UTF-8 code-points, With VIEW "BADCHAR", the $ZSUBSTR() function triggers a run-time error if the specified byte sequence contains a code-point value that is not in the character set.
 * The $ZSUBSTR() is similar to the $ZEXTRACT() byte equivalent function but differs from that function in restricting its result to conform to the valid characters in the current encoding.
 
 
@@ -3242,7 +3242,7 @@ In many ways, the $ZSUBSTR() function is similar to the $ZEXTRACT() function. Fo
 * In both the modes, the third expression of $ZSUBSTR() is a byte, rather than character, position within the first expression.
 * $EXTRACT() operates on characters, irrespective of byte length.
 * $ZEXTRACT() operates on bytes, irrespective of multi-byte character boundaries.
-* $ZSUBSTR() is the only way to extract as valid UTF-8 encoded characters from a byte string containing mixed UTF-8 and non UTF-8 data. It operates on characters in Unicode so that its result does not exceed the given byte length.
+* $ZSUBSTR() is the only way to extract as valid UTF-8 encoded characters from a byte string containing mixed UTF-8 and non UTF-8 data. It operates on Unicode® characters so that its result does not exceed the given byte length.
 
 ----------------------
 $ZSYSLOG()
@@ -3416,7 +3416,7 @@ Returns the numbers of columns required to display a given string on the screen 
 .. parsed-literal::
    $ZW[IDTH] (expr)
 
-* The expression is the string which $ZWIDTH() evaluates for display length. If the expression contains a code-point value that is not a valid character in Unicode, $ZWIDTH() generates a run-time error.
+* The expression is the string which $ZWIDTH() evaluates for display length. If the expression contains a code-point value that is not a valid UTF-8 character, $ZWIDTH() generates a run-time error.
 * If the expression contains any non-graphic characters, the $ZWIDTH() function does not count those characters.
 * If the string contains any escape sequences containing graphical characters (which they typically do), $ZWIDTH() includes those characters in calculating its result, as it does not do escape processing. In such a case, the result may be larger than the actual display width.
 
@@ -3438,7 +3438,7 @@ Example:
    4
    YDB>
 
-In the above example, the local variable NG contains a non-graphic character which does not display between two double-width characters in Unicode.
+In the above example, the local variable NG contains a non-graphic character which does not display between two double-width UTF-8 characters.
 
 Example:
 

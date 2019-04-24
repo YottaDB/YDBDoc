@@ -777,7 +777,7 @@ M has both string and numeric literals.
 String Literals
 +++++++++++++++++++++++++
 
-A string literal (strlit) is enclosed in quotation marks (" ") and can contain a sequence of ASCII and Unicode characters. While the standard indicates the characters must be graphic, YottaDB accepts non-graphic characters and, at compile-time, gives a warning. Using $CHAR() and concatenate to represent non-graphic characters in strings not only avoids the warning but is less error prone and makes for easier understanding. M attempts to use character text that appears outside of quotation mark delimiters according to context, which generally means as a local variable name.
+A string literal (strlit) is enclosed in quotation marks (" ") and can contain a sequence of ASCII and Unicode® UTF-8 characters. While the standard indicates the characters must be graphic, YottaDB accepts non-graphic characters and, at compile-time, gives a warning. Using $CHAR() and concatenate to represent non-graphic characters in strings not only avoids the warning but is less error prone and makes for easier understanding. M attempts to use character text that appears outside of quotation mark delimiters according to context, which generally means as a local variable name.
 
 To include a quotation mark (") within a strlit, use a set of two quotation marks ("" "").
 

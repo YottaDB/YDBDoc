@@ -747,7 +747,7 @@ If a device has TRUNCATE enabled, a WRITE issued when the file pointer is not at
 Line Terminators
 ++++++++++++++++++++++++
 
-LF ($CHAR(10)) terminates the logical record for all M mode sequential files, TRM, PIPE, and FIFO. For non FIXED format sequential files and terminal devices for which character set is not M, all the standard Unicode line terminators terminate the logical record. These are U+000A (LF), U+0000D (CR), U+000D followed by U+000A (CRLF), U+0085 (NEL), U+000C (FF), U+2028 (LS) and U+2029 (PS).
+LF ($CHAR(10)) terminates the logical record for all M mode sequential files, TRM, PIPE, and FIFO. For non FIXED format sequential files and terminal devices for which character set is not M, all the standard Unicode® line terminators terminate the logical record. These are U+000A (LF), U+0000D (CR), U+000D followed by U+000A (CRLF), U+0085 (NEL), U+000C (FF), U+2028 (LS) and U+2029 (PS).
 
 ++++++++++++++++++++++++
 READ/WRITE Operations
@@ -2314,7 +2314,7 @@ NOFIXED specifies a variable-length record format for sequential disk files. NOF
 In UTF-8 mode, YottaDB I/O enforces a more record-oriented view of the file, treating each record as RECORDSIZE bytes long. Note that a Unicode code-point never splits across records. If a multi-byte character (when CHSET is UTF-8) or a surrogate pair (when CHSET is UTF-16) does not fit into the record (either logical as given by WIDTH or physical as given by RECORDSIZE), the WRITE command uses the byte values as specified by the PAD deviceparameter to fill the physical record. A combining character may end up in the subsequent record if it does not fit in the current record.
 
 .. note::
-   PAD is effective only for devices opened with a Unicode CHSET. In M mode PAD is always <SP>
+   PAD is effective only for devices opened with a CHSET related to Unicode® characters. In M mode PAD is always <SP>
 
 Example:
 
@@ -2808,7 +2808,7 @@ For all UTF-16 CHSET values, RECORDSIZE must be even and PAD characters each occ
 
 The maximum size of intexpr is 1,048,576 bytes. YottaDB produces an error if you specify a value greater than 1,048,576.
 
-When a Unicode CHSET is in use, YottaDB treats RECORDSIZE as a byte limit at which to wrap or truncate output depending on [Z][NO]WRAP. For any Unicode character set, YottaDB ignores RECORDSIZE for a device which is already open if any I/O has been done.
+When a CHSET related to Unicode® characters is in use, YottaDB treats RECORDSIZE as a byte limit at which to wrap or truncate output depending on [Z][NO]WRAP. For any Unicode character set, YottaDB ignores RECORDSIZE for a device which is already open if any I/O has been done.
 
 If the character set is not UTF-16, UTF-16LE, UTF-16BE, the default RECORDSIZE is 32K-1bytes.
 
@@ -3635,7 +3635,7 @@ Each FILTER deviceparameter can have only one argument. However, multiple FILTER
 The valid values for expr:
 
 * [NO]CHARACTERS enables or disables maintenance of $X and $Y according to the M ANSI standard for the characters <BS>, <LF>, <CR> and <FF>. CHARACTERS causes the device driver to examine all output for the above characters, and to adjust $X and $Y accordingly. By default, YottaDB performs special maintenance on $X and $Y only for M format control characters, WRAPped records, and certain action deviceparameters.
-* In UTF-8 mode, the usual Unicode line terminators are recognized.
+* In UTF-8 mode, FILTER recognizes the line terminators specified by the Unicode® standard.
 * [NO]ESCAPE alters the effect of ANSI escape sequences on $X and $Y. ESCAPE causes YottaDB to filter the output, searching for ANSI escape sequences and preventing them from updating $X and $Y. By default, YottaDB does not screen output for escape sequences.
 
 By default, YottaDB does not perform output filtering. For YottaDB to maintain $X for non-graphic characters as described by the standard, FILTER="CHARACTERS" must be enabled. Output filtering adds additional overhead to I/O processing.
@@ -3876,7 +3876,7 @@ You can define any control character as a terminator, but they are all single ch
 
 When the terminal is in UTF-8 mode (chset=utf8,) YottaDB limits the terminator characters to the first 127 which are common between ASCII and Unicode. In M mode, any of the 256 characters may be specified a terminator.
 
-In UTF-8 mode, if CR is in the terminator list (either by default or explicitly,) YottaDB ignore the following LF to keep with the standard Unicode line terminator scheme.
+In UTF-8 mode, if CR is in the terminator list (either by default or explicitly,) YottaDB ignores the following LF to keep with the standard Unicode® line terminator definitions.
 
 NOTERMINATOR eliminates all terminators. When a terminal has all terminators disabled, fixed length READ and READ * terminate on receipt of some number of characters, and a timed READ terminates on timeout, but any other READ only terminates when the input fills the terminal read buffer.
 
@@ -3954,7 +3954,7 @@ In M mode if WIDTH is set to 0, YottaDB uses the default WIDTH of the TRM and SO
 
 YottaDB format control characters, FILTER, and the device WIDTH and WRAP also have an effect on $X.
 
-In UTF-8 mode and SOC output, the WIDTH deviceparameter specifies the number of characters in Unicode.
+In UTF-8 mode and SOC output, the WIDTH deviceparameter specifies the number of UTF-8 characters.
 
 ~~~~~
 WRAP
@@ -4181,7 +4181,7 @@ When a string literal appears as an argument to a READ, M writes the literal to 
 
 The READ commands adjust $X and $Y, based on the length of the input read.
 
-In UTF-8 mode, the READ command uses the character set value specified on the device OPEN as the character encoding of the input device. If character set "M" or "UTF-8" is specified, the data is read with no transformation. If character set is "UTF-16", "UTF-16LE", or "UTF-16BE", the data is read with the specified encoding and transformed to UTF-8. If the READ command encounters an illegal character or a character outside the selected representation, it produces a run-time error. The READ command recognizes all Unicode(TM) line terminators for non-FIXED devices. See Line `Terminators <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#line-terminators>`_ section for more details. In M mode, characters and bytes have a one-to-one relationship and therefore READ can be used to read bit-streams of non-character data.
+In UTF-8 mode, the READ command uses the character set value specified on the device OPEN as the character encoding of the input device. If character set "M" or "UTF-8" is specified, the data is read with no transformation. If character set is "UTF-16", "UTF-16LE", or "UTF-16BE", the data is read with the specified encoding and transformed to UTF-8. If the READ command encounters an illegal character or a character outside the selected representation, it produces a run-time error. The READ command recognizes all Unicode® line terminators for non-FIXED devices. See Line `Terminators <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#line-terminators>`_ section for more details. In M mode, characters and bytes have a one-to-one relationship and therefore READ can be used to read bit-streams of non-character data.
 
 ~~~~~~~~~~~~~~~
 READ * Command
@@ -4189,7 +4189,7 @@ READ * Command
 
 The READ * command reads one character from the current device and returns the decimal ASCII representation of that character into the variable specified for the READ * command. READ * appears most frequently in communication protocols, or in interactive programs where single character answers are appropriate.
 
-In UTF-8 mode, the READ * command accepts one character in Unicode of input and puts the numeric code-point value for that character into the variable. The READ * command reads one to four bytes, depending on the encoding and returns the numeric code-point value of the character. If ICHSET specifies "UTF-16", "UTF-16LE" or "UTF-16BE", the READ * command reads a byte pair or two byte pairs (if it is a surrogate pair) and returns the numeric code-point value. If ICHSET is M, the READ * command reads a single byte and returns the numeric byte value just like in M mode.
+In UTF-8 mode, the READ * command accepts one Unicode® character input and puts the numeric code-point value for that character into the variable. The READ * command reads one to four bytes, depending on the encoding and returns the numeric code-point value of the character. If ICHSET specifies "UTF-16", "UTF-16LE" or "UTF-16BE", the READ * command reads a byte pair or two byte pairs (if it is a surrogate pair) and returns the numeric code-point value. If ICHSET is M, the READ * command reads a single byte and returns the numeric byte value just like in M mode.
 
 The following example reads the value "A", and returns the decimal ASCII representation of "A" in the variable X.
 
@@ -4252,7 +4252,7 @@ YottaDB can write up to 1,048,576 bytes (the YottaDB maximum string size) as a r
 
 Each device has a WIDTH and a LENGTH that define the virtual "page". The WIDTH determines the maximum size of a record for a device, while the LENGTH determines how many records fit on a page. When the current record size ($X) reaches the maximum WIDTH and the device has WRAP enabled, YottaDB starts a new record. When the current line ($Y) reaches the maximum LENGTH, YottaDB starts a new page.
 
-For devices OPENed with a Unicode CHSET, WRITE * takes intexpr as a code-point and writes the associated Unicode character in the encoding specified by CHSET. For devices OPENed in M mode, WRITE * takes intexpr as an ASCII value and writes the associated ASCII character.
+For devices OPENed with a Unicode CHSET, WRITE * takes intexpr as a code-point and writes the associated Unicode® character in the encoding specified by CHSET. For devices OPENed in M mode, WRITE * takes intexpr as an ASCII value and writes the associated ASCII character.
 
 The WRITE command also has several format control characters that allow the manipulation of the virtual cursor. For all I/O devices, the YottaDB format control characters do the following:
 

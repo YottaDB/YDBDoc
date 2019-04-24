@@ -759,9 +759,9 @@ Example:
   b("got")="a match"
 
 
------------------------------------------
-Extensions for Unicode™ Support
------------------------------------------
+-----------------------------------------------------
+Extensions for Unicode® standard support
+-----------------------------------------------------
 
 To represent and process strings that use international characters, YottaDB processes can use Unicode.
 
@@ -962,13 +962,13 @@ The following table summarizes YottaDB Unicode support.
 |                             | For more information and usage examples, refer to `ZSHOW Destination Variables <https://docs.yottadb.com/ProgrammersGuide/commands.html#zshow-destination-variables>`_.                    |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
-+++++++++++++++++++++++++++++++++++++++++++
-Philosophy of YottaDB Unicode Support
-+++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Philosophy of YottaDB's support for the Unicode® standard
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-With the support of Unicode, there is no change to the YottaDB database engine or to the way that data is stored and manipulated. YottaDB has always allowed indices and values of M global and local variables to be either canonical numbers or any arbitrary sequence of bytes. There is also no change to the character set used for M source programs. M source programs have always been in ASCII (standard ASCII - $C(0) through $C(127) - is a proper subset of the UTF-8 encoding specified by the Unicode standard). YottaDB accepts some non-ASCII characters in comments and string literals.
+With the support for the Unicode® standard, there is no change to the YottaDB database engine or to the way that data is stored and manipulated. YottaDB has always allowed indices and values of M global and local variables to be either canonical numbers or any arbitrary sequence of bytes. There is also no change to the character set used for M source programs. M source programs have always been in ASCII (standard ASCII - $C(0) through $C(127) - is a proper subset of the UTF-8 encoding specified by the Unicode standard). YottaDB accepts some non-ASCII characters in comments and string literals.
 
-The changes in YottaDB to support Unicode are principally enhancements to M language features. Although conceptually simple, these changes fundamentally alter certain previously ingrained assumptions. For example:
+The changes in YottaDB to support the Unicode® standard are principally enhancements to M language features. Although conceptually simple, these changes fundamentally alter certain previously ingrained assumptions. For example:
 
 1. The length of a string in characters is not the same as the length of a string in bytes. The length of a Unicode string in characters is always less than or equal to its length in bytes.
 2. The display width of a string on a terminal is different from the length of a string in characters - for example, with Unicode, a complex glyph may actually be composed of a series of glyphs or component symbols, each in turn a UTF-8 encoded character in a Unicode string.
@@ -981,13 +981,13 @@ Applications may operate on a combination of character and binary data - for exa
 
 The YottaDB design philosophy is to keep things simple, but no simpler than they need to be. There are areas of processing where the use of Unicode adds complexity. These typically arise where interpretations of lengths and interpretations of characters interact. For example:
 
-1. A sequence of bytes is never illegal when considered as binary data, but can be illegal when treated as a Unicode string. The detection and handling of illegal Unicode strings adds complexity, especially when binary and Unicode data reside in different pieces of the same string.
+1. A sequence of bytes is never illegal when considered as binary data, but can be illegal when treated as a UTF-8 string. The detection and handling of illegal UTF-8 strings adds complexity, especially when binary and UTF-8 data reside in different pieces of the same string.
 
-2. Since binary data may not map to graphic characters in Unicode, the ZWRite format must represent such characters differently. A sequence of bytes that is output by a process interpreting it as Unicode may require processing to form correctly input to a process that is interpreting that sequence as binary, and vice versa. Therefore, when performing IO operations, including MUPIP EXTRACT and MUPIP LOAD operations in ZWR format, ensure that processes have the compatible environment variables and/or logic to generate the desired output and correctly read and process the input.
+2. Since binary data may not map to graphic UTF-8 characters, the ZWRite format must represent such characters differently. A sequence of bytes that is output by a process interpreting it as UTF-8 data may require processing to form correctly input to a process that is interpreting that sequence as binary, and vice versa. Therefore, when performing IO operations, including MUPIP EXTRACT and MUPIP LOAD operations in ZWR format, ensure that processes have the compatible environment variables and/or logic to generate the desired output and correctly read and process the input.
 
 3. Application logic managing input/output that interacts with human beings or non-YottaDB applications requires even closer scrutiny. For example, fixed length records in files are always defined in terms of bytes. In Unicode-related operations, an application may output data such that a character would cross a record boundary (for example, a record may have two bytes of space left, and the next UTF-8 character may be three bytes long), in which case YottaDB fills the record with one or more pad bytes. When a padded record is read as UTF-8, trailing pad bytes are stripped by YottaDB and not provided to the application code.
 
-For some languages (such as Chinese), the ordering of strings according to Unicode code-points (character values) may not be the linguistically or culturally correct ordering. Supporting applications in such languages requires development of collation modules - YottaDB natively supports M collation, but does not include pre-built collation modules for any specific natural language.
+For some languages (such as Chinese), the ordering of strings according to UTF-8 code-points (character values) may not be the linguistically or culturally correct ordering. Supporting applications in such languages requires development of collation modules - YottaDB natively supports M collation, but does not include pre-built collation modules for any specific natural language.
 
 **Glyphs and Unicode Characters**
 
@@ -1041,7 +1041,7 @@ For all writing systems supported by Unicode, a character is a code-point for st
 ICU
 +++
 
-ICU is a widely used, defacto standard package (see http://icu-project.org for more information) that YottaDB relies on for most operations that require knowledge of the Unicode character sets, such as text boundary detection, character string conversion between UTF-8 and UTF-16, and calculating glyph display widths.
+ICU is a widely used, defacto standard package (see http://icu-project.org for more information) that YottaDB relies on for most operations that require knowledge of the Unicode® character sets, such as text boundary detection, character string conversion between UTF-8 and UTF-16, and calculating glyph display widths.
 
 .. note::
    Unless Unicode support is sought for a process (that is, unless the environment variable ydb_chset is UTF8), YottaDB processes do not need ICU. In other words, existing, non-Unicode, applications continue to work on supported platforms without ICU.
@@ -1069,7 +1069,7 @@ Discussion and Best Practices
 Data Interchange
 ~~~~~~~~~~~~~~~~~~~
 
-The support for Unicode in YottaDB only affects the interpretation of data in databases, and not databases themselves, a simple way to convert from a ZWR format extract in one mode to an extract in the other is to load it in the database using a process in the mode in which it was generated, and to once more extract it from the database using a process in the other mode.
+The support for Unicode® in YottaDB only affects the interpretation of data in databases, and not databases themselves, a simple way to convert from a ZWR format extract in one mode to an extract in the other is to load it in the database using a process in the mode in which it was generated, and to once more extract it from the database using a process in the other mode.
 
 If a sequence of 8-bit octets contains bytes other than those in the ASCII range (0 through 127), an extract in ZWR format for the same sequence of bytes is different in "M" and "UTF-8" modes. In "M" mode, the $C() values in a ZWR format extract are always equal to or less than 255. In "UTF-8" mode, they can have larger values - the code-points of legal characters in Unicode can be far greater than 255.
 

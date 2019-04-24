@@ -451,7 +451,7 @@ The portion of the key corresponding to the name of the global variable holds an
 String Subscripts
 +++++++++++++++++++++++++
 
-YottaDB stores string subscripts as a variable length sequence of 8-bit codes ranging from 0 to 255. With UTF-8 specified at process startup, YottaDB stores string subscripts as a variable length sequence of 8-bit codes with Unicode encoding.
+YottaDB stores string subscripts as a variable length sequence of 8-bit codes ranging from 0 to 255. With UTF-8 specified at process startup, YottaDB stores string subscripts as a variable length sequence of 8-bit codes with UTF-8 encoding.
 
 To distinguish strings from numerics while preserving collation sequence, YottaDB adds a byte containing hexadecimal FF to the front of all string subscripts. The interpreted form of the global variable ^A("Name",1)="Brad" looks like the following: 
 

@@ -174,7 +174,7 @@ For TCP sockets, <address> is the numeric IP address for the remote end of the c
 
 For TCP LISTENING sockets, <portnumber> is the local port on which socket_handle is listening for incoming connections. For LOCAL LISTENING sockets, it is the path of the socket.
 
-If the WRITE/WAIT was timed, $KEY returns an empty value if the wait timed out or there was no established connection. $KEY only has the selected handle, if any, immediately after a WRITE /WAIT. $KEY is also used by other socket I/O commands such as READ which sets it to the delimiter or bad Unicode character, if any, which terminated the read.
+If the WRITE /WAIT was timed, $KEY returns an empty value if the wait timed out or there was no established connection. $KEY only has the selected handle, if any, immediately after a WRITE /WAIT. $KEY is also used by other socket I/O commands such as READ which sets it to the delimiter or malformed Unicode® character, if any, which terminated the read.
 
 ---------------
 $PRINCIPAL
@@ -989,7 +989,7 @@ YottaDB populates $ZPATNUMERIC at process initialization from the environment va
 .. note::
    YottaDB performs operations on literals at compile time and the pattern codes settings may have an impact on such operations. Therefore, always compile with the same pattern code settings as those used at runtime.
 
-For characters in Unicode, YottaDB assigns patcodes based on the default classification of the Unicode character set by the ICU library with three adjustments:
+For UTF-8 characters, YottaDB assigns patcodes based on the default classification of the Unicode® character set by the ICU library with three adjustments:
 
 * If $ZPATNUMERIC is not "UTF-8", non-ASCII decimal digits are classified as A.
 * Non-decimal numerics (Nl and No) are classified as A.
@@ -1626,6 +1626,40 @@ Example:
    YDB>
 
 This uses the default value of $ZINTERRUPT to service interrupts issued to the process. The $ZJOBEXAM function executes a ZSHOW "*", and stores the output in each YDB_ZJOBEXAM_ZSHOW_DMP for the initial interrupt, and at tcommit when the interrupt is rethrown.
+
+----------------
+$ZTIMEOUT
+----------------
+
+$ZTIMEOUT controls a single process wide timer. The format of the $ZTIMEOUT ISV is:
+
+.. parsed-literal::
+   $ZTIMeout=([timeout][:labelref]) 
+
+* The optional timeout in seconds specifies with millisecond accuracy how long from the current time the timer interrupts the process. If the specified timeout is negative, YottaDB cancels the timer. If the timeout is zero, YottaDB treats it as it would a DO of the vector. 
+* The optional labelref specifies a code vector defining a fragment of M code to which YottaDB transfers control as if with a DO when the timeout expires. If the timeout is missing, the assignment must start with a colon and only changes the vector, and in this case, if the timeout is the empty string, YottaDB removes any current vector.
+
+Note that YottaDB only recognizes interrupts such as from $ZTIMEOUT at points where it can properly resume operation, such as the beginning of a line, when waiting on a command with a timeout, or when starting a FOR iteration. When a timeout occurs, if the last assignment specified no vector, YottaDB uses the current $ETRAP or $ZTRAP. YottaDB rejects an attempted KILL of $ZTIMeout with the VAREXPECTED error and an attempted NEW of $ZTIMeout with the SVNONEW error.
+
+Example:
+
+.. parsed-literal::
+   YDB>zprint ^ztimeout
+   ztimeout
+     ; Display $ztimeout
+       write !,$ztimeout               ; display $ZTIMeout - in this case the initial value -1
+                                       ; set with a vector (do ^TIMEOUT)
+       set $ztimeout="60:do ^TIMEOUT"  ; timeout of 1 minute. After timeout expires, XECUTEs do ^TIMEOUT
+       write !,$ztimeout               ; displays the remaining time:vector until timeout
+     ; set without a vector
+       set $ztimeout=120               ; set the timeout to 2 minutes without changing the vector
+       set $ztimeout="1234do ^TIMEOUT" ; missing colon creates a timeout for 1234 seconds
+       set $ztimeout="10:"             ; set the timeout to 10 seconds and vector to current etrap or ztrap
+       set $ztimeout=-1                ; set cancels the timeout
+     ; Note that set to 0 triggers an immediate timeout
+       set $ztimeout=0                 ; triggers the current vector
+       set $ztimeout="0:DO FOO"        ; this has the same effect as DO FOO
+   YDB>
 
 --------------
 $ZTrap

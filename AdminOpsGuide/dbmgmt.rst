@@ -287,7 +287,7 @@ Specifies the timeout period when a bytestream BACKUP data is sent over a TCP/IP
 
 * The default value is 30 seconds.
 
-* Use only with -BYTESTREAM
+* Use only with -BYTESTREAM and RESTORE.
 
 ~~~~~~~~~~~~~
 -NEWJNLFILES
@@ -814,7 +814,7 @@ The format code is any one of the following:
    |                            | For extracts in UTF-8 mode, YottaDB prefixes UTF-8 and a space to -LABEL.                 |
    +----------------------------+-------------------------------------------------------------------------------------------+
 
-2. GO - Global Output format, used for files to transport or archive. -FORMAT=GO stores the data in record pairs. Each global node produces one record for the key and one for the data. MUPIP EXTRACT -FORMAT=GO has two header records - the first is a test label (refer to the LABEL qualifier) and the second contains data, and time. 
+2. GO - Global Output format, used for files to transport or archive. -FORMAT=GO stores the data in record pairs. Each global node produces two records - the first contains the key and the second contains the value. MUPIP EXTRACT -FORMAT=GO has two header records - the first is a text label (refer to the LABEL qualifier) and the second is the date and time of extract in $ZDATE() format DD-MON-YEAR 24:60:SS. If -LABEL is not specified, the default first header is "YottaDB MUPIP EXTRACT". 
 
 3. ZWR - ZWRITE format, used for files to transport or archive that may contain non-graphical information. Each global node produces one record with both a key and data. MUPIP EXTRACT -FORMAT=ZWR has two header records, which are the same as for FORMAT=GO, except that the second record ends with the text " ZWR". 
 
@@ -963,7 +963,7 @@ This command instructs EXTRACT to dump the global ^Tyrannosaurus to the device (
 FREEZE
 ++++++++++++++
 
-Temporarily suspends (freezes) updates to the database. If you prefer a non-YottaDB utility to perform a backup or reorganization, you might use this facility to provide standalone access to your YottaDB database. You might use MUPIP FREEZE to suspend (and later resume) database updates for creating mirrored disk configuration or re-integrating a mirror.
+Temporarily suspends (freezes) updates to the database after ensuring a consistent state between memory and secondary storage, which, with -ACCESS_METHOD=BG, means after flushing global buffers. If you prefer a non-YottaDB utility to perform a backup or reorganization, you might use this facility to provide standalone access to your YottaDB database. You might use MUPIP FREEZE to suspend (and later resume) database updates for creating mirrored disk configuration or re-integrating a mirror.
 
 BACKUP, INTEG, and REORG operations may implicitly freeze and unfreeze database regions. However, for most operations, this freeze/unfreeze happens internally and is transparent to the application.
 
@@ -2384,16 +2384,18 @@ Integrates one or more BACKUP -INCREMENTAL files into a corresponding database. 
 The format of the RESTORE command is:
 
 .. parsed-literal::
-   RE[STORE] [-[NO]E[XTEND]] file-name file-list
+   RE[STORE] [-NET[TIMEOUT]] [-[NO]E[XTEND]] file-name bytestrm-bkup-list
 
 
 * file-name identifies the name of the database file that RESTORE uses as a starting point.
 
-* file-list specifies one or more files produced by BACKUP -INCREMENTAL to RESTORE into the database. The file-names are separated by commas (,) and must be in sequential order, from the oldest transaction number to the most recent transaction number. RESTORE may take its input from a UNIX file on any device that supports such files.
+* bytestrm-bkup-list specifies one or more bytestream backup files (generated with BACKUP -BYTESTREAM) to RESTORE into the database file specified with file-name. The file-list are separated by commas (,) and must be in sequential order, from the oldest transaction number to the most recent transaction number. RESTORE may take its input from a UNIX file on any device that supports such files. 
+
+* bytestrm-bkup-list may also include a comma separated list of pipe commands or TCP socket addresses (a combination of IPv4 or IPV6 hostname and a port number) from where MUPIP RESTORE receives bytestream backup files (produced with BACKUP -BYTESTREAM).
 
 * The current transaction number in the database must match the starting transaction number of each successive input to the RESTORE.
 
-* If the BACKUP -INCREMENTAL was created using -TRANSACTION=1, create a new database with MUPIP CREATE and do not access it, except the standalone MUPIP commands INTEG -FILE, EXTEND, and SET before initiating the RESTORE.
+* If the BACKUP -BYTESTREAM was created using -TRANSACTION=1, create a new database with MUPIP CREATE and do not access it, except the standalone MUPIP commands INTEG -FILE, EXTEND, and SET before initiating the RESTORE. 
 
 ~~~~~~~~~  
 -EXTEND
@@ -2496,7 +2498,7 @@ If the optional dir1 is not specified, MUPIP RUNDOWN -RELINKCTL examines the env
 SET
 +++++++
 
-Modifies certain database characteristics. MUPIP SET operates on either regions or files.
+Use MUPIP SET for performance tuning and/or modifying certain database and journal file attributes.
 
 The format of the SET command is:
 
@@ -2585,7 +2587,7 @@ Specifies whether replication is on or off. The format of the REPLICATION qualif
 .. parsed-literal::
    -REP[LICATION]={ON|OFF}
 
-Incompatible with: -FILE, -JNLFILE and -REGION
+Incompatible with: -JNLFILE
 
 The following sections describe the action qualifiers of the MUPIP SET command exclusive of the details related to journaling and replication, which are described in `Chapter 6: “YottaDB Journaling” <https://docs.yottadb.com/AdminOpsGuide/ydbjournal.html>`_ and `Chapter 7: “Database Replication” <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html>`_. All of these qualifiers are incompatible with the -JNLFILE and -REPLICATION qualifiers.
 
@@ -2624,16 +2626,24 @@ Specifies, in MM access mode, the multiplying factor applied to the flush time t
 -DEFER_ALLOCATE
 ~~~~~~~~~~~~~~~~
 
-Provides a mechanism to control YottaDB behavior when subsequently extending existing database files, whether using MUPIP EXTEND or auto-extend. To switch an existing database file so it immediately preallocates all blocks, first use MUPIP SET -NODEFER_ALLOCATE to set the switch in the database file header, followed by MUPIP EXTEND -BLOCKS=n, where n >= 0. Failures to preallocate space produce a PREALLOCATEFAIL error. The format of the DEFER_ALLOCATE qualifier is: 
+With -DEFER_ALLOCATE, YottaDB instructs the file system to create the database file as a sparse file. Before using -DEFER_ALLOCATE, ensure that your underlying file system supports sparse files. By default UNIX file systems, and YottaDB, use sparse (or lazy) allocation, which defers actual allocation until blocks are first written. The format of the DEFER_ALLOCATE qualifier is: 
 
 .. parsed-literal::
    -[NO]DEFER_ALLOCATE
+
+* Utilities such as du report typically show lower disk space usage for a database file with -DEFER_ALLOCATE because YottaDB instructs the file system to defer disk space allocation to the time when there is an actual need. With -NODEFER_ALLOCATE, such utilities report higher disk space usage count as YottaDB instructs the file system to preallocate disk space without waiting for a need to arise.
+
+* -DEFER_ALLOCATE makes database file extensions lighter weight. However, disk activity may tend towards causing fragmentation.
+
+* To switch an existing database file so it immediately preallocates all blocks, first use MUPIP SET -NODEFER_ALLOCATE to set the switch in the database file header, followed by MUPIP EXTEND -BLOCKS=n, where n >= 0. Failures to preallocate space produce a PREALLOCATEFAIL error.
+
+* The default is DEFER_ALLOCATE.
 
 ~~~~~~~~~~~~
 -EPOCHTAPER
 ~~~~~~~~~~~~
 
-Tries to minimize epoch duration by reducing the number of buffers to flush by YottaDB and the file system (via an fsync()) as the epoch (time-based or due to journal file auto-switch) approaches. The format of the -EPOCHTAPER qualifier is:
+Tries to minimize epoch duration by reducing the number of buffers to flush by YottaDB and the file system (via an fsync()) as the epoch (time-based or due to journal file auto-switch) approaches. Epoch tapering reduces the impact of I/O activity during an epoch event. Application that experience high load and/or need to reduce latency may benefit from epoch tapering. The format of the -EPOCHTAPER qualifier is:
 
 .. parsed-literal::
    -[NO]EPOCHTAPER
@@ -2898,7 +2908,8 @@ Specifies whether YottaDB should permit statistics sharing for this region. This
 .. parsed-literal::
    -[NO]STAT[S]
 
-At database creation, GDE controls this characteristic, which by default is specified as STATS (on). When on, this characteristic causes YottaDB to create a small MM database for the associated region to hold the shared statistics.
+* At database creation, GDE controls this characteristic, which by default is specified as STATS (on). When on, this characteristic causes YottaDB to create a small MM database for the associated region to hold the shared statistics.
+* A process disables itself from maintaining the shared statistics when it fails to open a statsDB. It does not, however, disable subsequently starting processes from maintaining the shared statistics.
 
 ~~~~~~~~~~~~~~
 -STDNULLCOLL
