@@ -1535,8 +1535,8 @@ Go Exit()
         func Exit() error
 
 For a process that wishes to close YottaDB databases and no longer use
-YottaDB, the function wraps `ydb_exit() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-exit>`_ so that any further calls to
-YottaDB return a CALLINAFTERXIT error.
+YottaDB, the function wraps `ydb_exit() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-exit>`_.
+If :code:`ydb_exit()` does not send a return value of :code:`YDB_OK`, :code:`Exit()` panics.
 
 Although in theory typical processes should not need to call
 :code:`Exit()` because normal process termination should close
