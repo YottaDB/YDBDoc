@@ -841,5 +841,6 @@ In the following table, the YottaDB->C limit applies to 1 and the C->YottaDB lim
 .. note::
    ydb_char_t ** is not supported for call-ins but they are included for IO and O direction usage with call-outs. For call-out use of ydb_char_t \* and ydb_string_t \*, the specification in the interface definition for preallocation sets the range for IO and O, with a maximum of 1MiB.
 
-
+.. note::
+   Call-ins where the return value is a string check for buffer overflows (where possible) and return an error if the return area is not large enough. Note that for string parameters, use of the :code:`ydb_string_t` type is highly recommended as it enables checking for buffer overflows. A :code:`char *` type does not enable such checks and is best avoided.
 
