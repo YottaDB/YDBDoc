@@ -1584,6 +1584,66 @@ number specified by :code:`errnum`.
   :code:`msg_buff->buf_addr`, set :code:`msg_buff->len_used` to its
   length, and return :code:`YDB_OK`.
 
+-----------------------------
+ydb_mmrhash_32()
+-----------------------------
+
+.. code-block:: C
+    
+    void ydb_mmrhash_32(const void *key, int len, uint4 seed, uint4 *out4);
+
+This function returns in :code:`*out4` the 32-bit (4-byte) MurmurHash of :code:`len` bytes at :code:`*key`.
+
+---------------------------
+ydb_mmrhash_128()
+---------------------------
+
+.. code-block:: C
+
+    void ydb_mmrhash_128(const void *key, int len, uint4 seed, ydb_uint16 *out);
+
+This function returns  in :code:`*out` the 128-bit (16-byte) MurmurHash of :code:`len` bytes at :code:`*key`.
+
+.. _ydb_mmrhash_128_ingest():
+.. _ydb_mmrhash_128_result():
+
+----------------------------------------------------
+ydb_mmrhash_128_ingest() / ydb_mmrhash_128_result()
+----------------------------------------------------
+
+.. code-block:: C
+
+    void ydb_mmrhash_128_ingest(hash128_state_t *state, const void *key, int len);
+
+    void ydb_mmrhash_128_result(hash128_state_t *state, uint4 addl_seed, ydb_uint16 *out);
+
+These functions enable users to get a MurmurHash through a series of incremental operations.
+
+The sequence is to first initialize the "state" variable using the :code:`HASH128_STATE_INIT` macro, then call :code:`ydb_mmrhash_128_ingest()` one or more times and finally call :code:`ydb_mmrhash_128_result()` to
+obtain the final hash value. "key" points to the input character array (of length "len") for the hash. "addl_seed" can either be the last four bytes of the input, or at the application's discretion, an additional seed or salt.
+An example is to set it to the sum of the "len" values passed in across all calls to :code:`ydb_mmrhash_128_ingest` before :code:`ydb_mmrhash_128_result` is called. "out" points to the structure holding the 16-byte hash result.
+
+--------------------------------
+ydb_mmrhash_128_hex()
+--------------------------------
+
+.. code-block:: C
+
+    void ydb_mmrhash_128_hex(const ydb_uint16 *hash, unsigned char *out);
+
+This function returns a hex formatted representation of a 16-byte hash value. As the function does no checking, if :code:`*out` is not at least 32 bytes, a buffer overflow can occur, potentially with unpleasant consequences such as abnormal process termination with a SIG-11, or worse.
+
+------------------------------------
+ydb_mmrhash_128_bytes()
+------------------------------------
+
+.. code-block:: C
+
+    void ydb_mmrhash_128_bytes(const ydb_uint16 *hash, unsigned char *out);
+
+This function converts the 16-byte hash stored in a "ydb_uint16" structure (2 8-byte integers) into a byte array "out" of 16 characters.
+It is also internally used by `ydb_mmrhash_128_hex()`_.
+
 .. _ydb_stdout_stderr_adjust():
 .. _ydb_stdout_stderr_adjust_t():
 
