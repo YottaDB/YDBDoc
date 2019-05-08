@@ -396,7 +396,7 @@ determine whether a return code is a YottaDB `error return code`_.
 
 .. _HASH_128_STATE_INIT():
 
-:code:`HASH_128_STATE_INIT(hash128_state_t *state, int len)`  - Use this macro to initialize a variable in order to compute a 128-bit MurMurHash using `ydb_mmrhash_128_ingest()`_.
+:code:`HASH_128_STATE_INIT(hash128_state_t *state, uint4 addl_seed)`  - Use this macro to initialize a variable in order to compute a 128-bit MurMurHash using `ydb_mmrhash_128_ingest()`_.
 
 Example:
 
