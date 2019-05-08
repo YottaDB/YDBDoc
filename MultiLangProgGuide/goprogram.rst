@@ -1497,6 +1497,62 @@ resources.
   :code:`timeoutNsec` is zero, the method makes exactly one attempt to
   acquire the lock resource(s).
 
+Go CallMT()
+-----------
+
+.. code-block:: go
+
+        func CallMT(tptoken uint64, errstr *BufferT, retvallen uint32, rtnname string, rtnargs ...interface{}) (string, error)
+
+As a wrapper for the C function `ydb_ci_t() <https://docs.yottadb.com/ProgrammersGuide/extrout.html#ydb-ci-t>`_, the :code:`CallMT()` function is used to call M routines from Go,
+used when a single call to the function is anticipated. :code:`CallMT()` only supports read-only parameters.
+
+- :code:`retvallen` needs to be of sufficient size to hold any value returned by the call. If the output value exceeds the buffer size, 
+  a SIG-11 failure is likely as it will overwrite adjacently allocated memory, damaging storage management headers.
+
+- If a return value is specified but has not been configured in the call-in descriptor file or vice-versa, a parameter mismatch situation is created.
+
+- :code:`rtnargs` refers to a list of 0 or more parameters passed to the called routine. Any type that can be converted to a string by fmt.Sprintf(“%v”, parm) can be used here. 
+  The number of parameters possible is restricted to 33 (for 64-bit systems) or 34 (for 32-bit systems).
+
+Example:
+
+.. parsed-literal::
+   fmt.Println("Golang: Invoking HelloWorld")
+      retval, err := yottadb.CallMT(yottadb.NOTTP, nil, 1024, "HelloWorld", "English", "USA")
+      if nil != err {
+      	panic(fmt.Sprintf("CallMT() call failed: %s", err))
+      }
+      fmt.Println("Golang: retval =", retval)
+
+The HelloWorld program in the example returns a "HelloWorld" string in a language "English" and a location "USA" specified in the two parameters. :code:`retvallen` is set to be 1024 bytes.
+
+Go CallMDescT()
+---------------
+
+.. code-block:: go
+
+        func (mdesc *CallMDesc) CallMDescT(tptoken uint64, errstr *BufferT, retvallen uint32, rtnargs ...interface{}) (string, error)
+
+As a wrapper for the C function `ydb_cip_t() <https://docs.yottadb.com/ProgrammersGuide/extrout.html#ydb-cip-t>`_, the :code:`CallMDescT()` is a 
+method of the :code:`CallMDesc` (call descriptor) structure which, during the first call, saves information in the :code:`CallMDesc` structure that makes all following calls
+using the same descriptor structure able to run much faster by bypassing a lookup of the function name and going straight to the M routine being called.
+:code:`CallMDescT()` only supports read-only parameters.
+
+- :code:`CallMDescT()` requires a :code:`CallMDesc` structure to have been created and initialized with the :code:`SetRtnName()` method.
+
+Example:
+
+.. parsed-literal::
+   var mrtn yottadb.CallMDesc
+
+   fmt.Println("Golang: Invoking HelloWorld")
+   mrtn.SetRtnName("HelloWorld")
+   retval, err := mrtn.CallMDescT(yottadb.NOTTP, nil, 1024, "English", "USA")
+   if nil != err { panic(fmt.Sprintf("CallMDescT() call failed: %s", err)) }
+   fmt.Println("Golang: retval =", retval)
+
+
 Go Comprehensive API
 ====================
 
