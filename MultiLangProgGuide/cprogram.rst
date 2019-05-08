@@ -394,9 +394,9 @@ constants. :code:`YDB_SEVERITY()` is only meaningful for `error return
 codes`_ and not other numbers. Use  :code:`YDB_IS_YDBERR()` to
 determine whether a return code is a YottaDB `error return code`_.
 
-.. _HASH_128_STATE_INIT():
+.. _HASH128_STATE_INIT():
 
-:code:`HASH_128_STATE_INIT(hash128_state_t *state, uint4 addl_seed)`  - Use this macro to initialize a variable in order to compute a 128-bit MurMurHash using `ydb_mmrhash_128_ingest()`_.
+:code:`HASH128_STATE_INIT(hash128_state_t *state, ydb_uint8 addl_seed)`  - Use this macro to initialize a variable in order to compute a 128-bit MurMurHash using `ydb_mmrhash_128_ingest()`_.
 
 Example:
 
@@ -1629,7 +1629,7 @@ ydb_mmrhash_128_ingest() / ydb_mmrhash_128_result()
 
 These functions enable users to get a MurmurHash through a series of incremental operations.
 
-The sequence is to first initialize the "state" variable using the `HASH_128_STATE_INIT()`_ macro, then call :code:`ydb_mmrhash_128_ingest()` one or more times and finally call :code:`ydb_mmrhash_128_result()` to
+The sequence is to first initialize the "state" variable using the `HASH128_STATE_INIT()`_ macro, then call :code:`ydb_mmrhash_128_ingest()` one or more times and finally call :code:`ydb_mmrhash_128_result()` to
 obtain the final hash value. "key" points to the input character array (of length "len") for the hash. "addl_seed" can either be the last four bytes of the input, or at the application's discretion, an additional seed or salt.
 An example is to set it to the sum of the "len" values passed in across all calls to :code:`ydb_mmrhash_128_ingest` before :code:`ydb_mmrhash_128_result` is called. "out" points to the structure holding the 16-byte hash result.
 
