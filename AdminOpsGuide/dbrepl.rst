@@ -3573,7 +3573,7 @@ This example starts the Source Server at port 1234 for the replicating instance 
    Before starting replication, always remember to rundown every replicated database region then start the Source Server.
 
 .. note::
-   YottaB updates to replicated regions are permitted only on the originating instance and disabled on ALL other replicating instances.
+   YottaDB updates to replicated regions are permitted only on the originating instance and disabled on ALL other replicating instances.
 
 The Source Server records actions and errors in A2B.log. It also periodically records statistics such as the current backlog, the number of journal records sent since the last log, the rate of transmission, the starting and current JNL_SEQNO, and the path of the filter program, if any.
 

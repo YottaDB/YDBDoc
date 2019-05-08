@@ -5369,7 +5369,7 @@ IFBADPARM
 
 IFBADPARM, External Interface Bad Parameter
 
-Run Time Error: This indicates that an external routine could not access a YottaB database library routine because it had an invalid parameter in its call argument list. The YottaDB database library routines allow an external routine to access a YottaDB database.
+Run Time Error: This indicates that an external routine could not access a YottaDB database library routine because it had an invalid parameter in its call argument list. The YottaDB database library routines allow an external routine to access a YottaDB database.
 
 Action: Look for and correct any typographical errors in the call format for the YottaDB library routine.
 
