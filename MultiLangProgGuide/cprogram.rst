@@ -394,6 +394,8 @@ constants. :code:`YDB_SEVERITY()` is only meaningful for `error return
 codes`_ and not other numbers. Use  :code:`YDB_IS_YDBERR()` to
 determine whether a return code is a YottaDB `error return code`_.
 
+:code:`HASH_128_STATE_INIT`  - Use this macro to initialize a variable in order to obtain a MurmurHash.
+
 YottaDB functions are divided into:
 
 - Simple API — a core set of functions that provides easy-to-use
