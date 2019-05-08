@@ -396,6 +396,12 @@ determine whether a return code is a YottaDB `error return code`_.
 
 :code:`HASH_128_STATE_INIT`  - Use this macro to initialize a variable in order to obtain a MurmurHash.
 
+Example:
+
+.. parsed-literal::
+   // Initialize state struct
+   HASH128_STATE_INIT(hash_state, 0);
+
 YottaDB functions are divided into:
 
 - Simple API — a core set of functions that provides easy-to-use
@@ -1625,6 +1631,18 @@ The sequence is to first initialize the "state" variable using the :code:`HASH12
 obtain the final hash value. "key" points to the input character array (of length "len") for the hash. "addl_seed" can either be the last four bytes of the input, or at the application's discretion, an additional seed or salt.
 An example is to set it to the sum of the "len" values passed in across all calls to :code:`ydb_mmrhash_128_ingest` before :code:`ydb_mmrhash_128_result` is called. "out" points to the structure holding the 16-byte hash result.
 
+Example:
+
+.. parsed-literal::
+   // Create keys/strings to ingest   
+   char \*key1 = "ifembu8r308j243h5g3h84t7yf23h0h";
+   char \*key2 = "ougoh2408rh2fhe08yh2ti8rhhrguo2r3huocdiWEN23";
+   // Add keys to hash
+   ydb_mmrhash_128_ingest(&hash_state, (void*)key1, strlen(key1));
+   ydb_mmrhash_128_ingest(&hash_state, (void*)key2, strlen(key2));
+   // Produce result
+   ydb_mmrhash_128_result(state, 0, &hash);
+
 --------------------------------
 ydb_mmrhash_128_hex()
 --------------------------------
@@ -1634,6 +1652,12 @@ ydb_mmrhash_128_hex()
     void ydb_mmrhash_128_hex(const ydb_uint16 *hash, unsigned char *out);
 
 This function returns a hex formatted representation of a 16-byte hash value. As the function does no checking, if :code:`*out` is not at least 32 bytes, a buffer overflow can occur, potentially with unpleasant consequences such as abnormal process termination with a SIG-11, or worse.
+
+Example:
+
+.. parsed-literal::
+   char out[16];
+   ydb_mmrhash_128_hex(&hash, out);
 
 ------------------------------------
 ydb_mmrhash_128_bytes()
@@ -1645,6 +1669,12 @@ ydb_mmrhash_128_bytes()
 
 This function converts the 16-byte hash stored in a "ydb_uint16" structure (2 8-byte integers) into a byte array "out" of 16 characters.
 It is also internally used by `ydb_mmrhash_128_hex()`_.
+
+Example:
+
+.. parsed-literal::
+   char out[16];
+   ydb_mmrhash_128_bytes(&hash, out);
 
 .. _ydb_stdout_stderr_adjust():
 .. _ydb_stdout_stderr_adjust_t():
