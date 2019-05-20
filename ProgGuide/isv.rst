@@ -1155,7 +1155,7 @@ Searches that use $ZROUTINES treat files as either object or source files. Yotta
 Establishing the value from $ydb_routines
 ++++++++++++++++++++++++++++++++++++++++++
 
-When the environment variable ydb_routines is defined, YottaDB initializes $ZROUTINES to the value of ydb_routines. Otherwise, YottaDB initializes $ZROUTINES to ".". When $ZROUTINES is ".", YottaDB attempts to locate all source and object files in the current working directory. $ZROUTINES="" is equivalent to $ZROUTINES=".".
+If the environment variable :code:`ydb_routines` is not set when the :code:`yottadb` / :code:`mumps` process starts, or if it is set to the empty string (:code:`""`), YottaDB sets it in the environment to :code:`$ydb_dist/libyottadbutil.so` if it exists, and to :code:`$ydb_dist` if it does not, and then uses that value.
 
 Commands or functions such as DO, GOTO, ZGOTO, ZBREAK, ZPRINT, and $TEXT may auto-ZLINK and thereby indirectly use $ZROUTINES. If their argument does not specify a directory, ZEDIT and explicit ZLINK use $ZROUTINES. ZPRINT and $TEXT use $ZROUTINES to locate a source file if YottaDB cannot find the source file pointed to by the object file. For more information on ZLINK and auto-ZLINK, see the `“Development Cycle” <https://docs.yottadb.com/ProgrammersGuide/devcycle.html>`_ and `“Commands” <https://docs.yottadb.com/ProgrammersGuide/commands.html>`_ chapters.
 
