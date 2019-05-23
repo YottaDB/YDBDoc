@@ -1059,7 +1059,7 @@ YottaDB Recognition of FIFOs
 Like a sequential file, the path of a FIFO is specified as an argument expression to the OPEN, USE, and CLOSE commands. A device OPENed with a FIFO deviceparameter becomes a FIFO unless another device of that name is already OPEN. In that case, OPENing a device that has previously been OPENed by another process as a FIFO causes the process (the process here is the process trying to open the FIFO) to attach to the existing FIFO.
 
 .. note::
-   If an existing named pipe (aka fifo special file) is OPENed even without specifying the FIFO deviceparameter, it is treated as if FIFO had been specified.
+   If an existing named pipe (fifo special file) is OPENed even without specifying the FIFO deviceparameter, it is treated as if FIFO had been specified.
 
 +++++++++++++++++++++++++++++
 FIFO Device Examples
@@ -1527,7 +1527,7 @@ Example:
      for i=1:1  quit:'$data(piperr(i))  write ?4,"stderr:",piperr(i),!
      quit
    ; Example of trapping an error and retrying the operation as necessary. Error conditions
-   ; used are EPIPE, aka "Broken pipe" or ENO32, and EAGAIN, aka ENO11.
+   ; used are EPIPE ("Broken pipe" or ENO32) and EAGAIN ("Resource temporarily unavailable" or ENO11).
    retry
      set $etrap="use $p zshow ""*"" zhalt 99"
      set pipe="pipe"
@@ -1580,7 +1580,7 @@ Example:
    ...Failed to perform non-blocked writes... Retrying write # 78
        Writes completed
 
-This example demonstrates handling WRITE errors, like ENO11 or EAGAIN, that do not terminate the PIPE device. The PIPE device does non-blocking writes. If a process tries to WRITE to a full PIPE and the WRITE would block, the device implicitly tries to complete the operation up to a default of 10 times. YottaDB sleeps 100 micro seconds between each retry. When dealing with programs that can take a while to process input, it's a good idea to either schedule a delay between WRITEs or come up with a mechanism to back off the WRITEs when the buffer fills up.
+This example demonstrates handling WRITE errors, like ENO11 or EAGAIN, that do not terminate the PIPE device. The PIPE device does non-blocking writes. If a process tries to WRITE to a full PIPE and the WRITE would block, the device implicitly tries to complete the operation up to a default of 10 times. YottaDB sleeps 100 milliseconds between each retry. When dealing with programs that can take a while to process input, it's a good idea to either schedule a delay between WRITEs or come up with a mechanism to back off the WRITEs when the buffer fills up.
 
 .. parsed-literal::
    sh> mumps -run pipexample induceEPIPE
