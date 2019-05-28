@@ -3253,7 +3253,7 @@ The format of the ZSHOW command is:
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
 * The optional expression specifies one or more codes determining the nature of the information displayed.
 * A ZSHOW with no argument defaults to ZSHOW "S"; in this case, at least two (2) spaces must follow the ZSHOW to separate it from the next command on the line.
-* The optional global or local variable name specifies the destination for the ZSHOW output; if the ZSHOW argument does not contain a global or local variable name, ZSHOW directs its display to the current device ($IO).
+* The optional global or local variable name specifies the destination for the ZSHOW output; if the ZSHOW argument does not contain a global or local variable name, 
 * When the desination for the ZSHOW output is a local variable or the current device ($IO), ZSHOW sets the maximum length of a ZSHOW line output to 8192 bytes. ZSHOW stores information that does not fit within 8192 bytes in the next line.
 * When the destination for the ZSHOW output is a global variable, ZSHOW sets the maximum length of a ZSHOW line output to the maximum database record size. ZSHOW stores information that does not fit within the maximum database record size as immediate descendants, using ordinal subscripts starting at one (1), of the node holding the beginning of the information.
 * When the destination for the ZSHOW "V" output is a global variable, the %ZSHOWVTOLCL utility program can be used to restore data from that global variable into its original local variables. For more information refer to `%ZSHOWVTOLCL <https://docs.yottadb.com/ProgrammersGuide/utility.html#zshowvtolcl>`_.
@@ -3627,6 +3627,8 @@ ZSHOW may specify an unsubscripted or subscripted global or local variable name 
 When ZSHOW directs its output to a variable, it adds two levels of descendants to that variable. The first level subscript contains a one-character string from the set of upper-case ZSHOW action codes, identifying the type of information. ZSHOW implicitly KILLs all descendants of the first level nodes. ZSHOW stores information elements at the second level using ascending integers, starting at 1.
 
 When a ZSHOW "V" directs its output to a local variable (lvn), the result does not contain a copy of the descendants of the resulting "V" node.
+
+ZSHOW targeted to a local (ZSHOW “*”:lcl) splits lines longer than 8KiB at the last character that fully fits within the 8KiB limit. ZSHOW targeted to a global (ZSHOW “*”:^CC) truncates data exceeding the maximum record size for the target global at the last character that fully fits within that record size.
 
 Example:
 
