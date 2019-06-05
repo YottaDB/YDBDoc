@@ -3179,7 +3179,7 @@ Action: Follow the primary message description and action as specified in this m
 DBTNLTCTN
 --------------------
 
-DBTNLTCTN, Transaction numbers greater than the current transaction were found
+DBTNLTCTN, Transaction numbers greater than or equal to the current transaction were found
 
 MUPIP Information: This is an auxiliary message and is preceded by a primary message. It accompanies DBTNTOOLG.
 
