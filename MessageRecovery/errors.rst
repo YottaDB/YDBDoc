@@ -150,6 +150,36 @@ Compile Time Error: This indicates that the specified deviceparameter can only b
 
 Action: Remove conflicting deviceparameters from the command.
 
+-------------
+APDCONNFAIL
+-------------
+
+APDCONNFAIL, Audit Principal Device failed to connect to audit logger
+
+Run Time Error: The facility for logging activity on principal devices is enabled, but is unable to form a connection with its configured logging program. This prevents a process from taking actions configured for logging initiated on its principal device ($PRINCIPAL).
+
+Action: Check to make sure the logger program is running and listening/accepting connections. If using a TCP or TLS-enabled logger, make sure the port number that the logger is listening/accepting on matches the port number provided in the restriction file. Ensure that the provided information (logger's connection info) in the restriction file is correct. Also make sure that the line in the restriction file is in the correct format. If you are running a TLS-enabled logger, make sure that the logger's TLS certificate is signed by a root CA that YottaDB is aware of through the TLS configuration file. Check the syslog for more information on the error. After addressing the identified issues, restart all processes subject to APD.
+
+---------------
+APDINITFAIL
+---------------
+
+APDINITFAIL, Audit Principal Device failed to initialize audit information
+
+Run Time Error: YottaDB was unable to process or initialize the provided information (e.g. IP, hostname, port number, UNIX domain socket file path, or TLS ID) from the restriction file. This prevents a process from taking actions configured for logging initiated on its principal device ($PRINCIPAL).
+
+Action: Check the restriction file to make sure information is in the proper format. After addressing identified issues, restart all processes subject to APD.
+
+--------------
+APDLOGFAIL
+--------------
+
+APDLOGFAIL, Audit Principal Device failed to log activity
+
+Run Time Error: YottaDB was unable to send the to-be-logged activitiy to the logger. This prevents a process from taking the action initiated on its principal device ($PRINCIPAL).
+
+Action: Check to make sure that YottaDB is able to successfully connect to the logger program. Check the syslog for more information on the error.
+
 ------------
 ARCTLMAXHIGH 
 ------------
@@ -1238,7 +1268,7 @@ COMMITWAITSTUCK
 
 COMMITWAITSTUCK, Pid wwww timed out after waiting tttt minute(s) for nnnn concurrent YottaDB process(es) to finish commits in database file dddd
 
-Run Time Error: This error message indicates that a process could not finish a database transaction commit and timed out waiting for other concurrent processes to finish.
+Run Time Error: This error message indicates that a process could not finish a database transaction commit and timed out waiting for other concurrent processes to finish. The process will continue to wait.
 
 Action: Check the operator log for accompanying COMMITWAITPID messages. Every concurrent YottaDB process reporting COMMITWAITSTUCK messages would have accompanying COMMITWAITPID message(s). If so, review those messages. If not, report to your YottaDB support channel with system log and operator log information.
 
@@ -4559,9 +4589,9 @@ Action: VIEW "YDIRTREE" or $VIEW("YDIRTREE") is an undocumented feature and so s
 GBLOFLOW
 ------------------
 
-GBLOFLOW, Database segment is full
+GBLOFLOW, Database file FFFF is full
 
-Run Time/MUPIP Error: This indicates that an error was encountered while extending the database file.
+Run Time/MUPIP Error: This indicates that an error was encountered while extending the database file FFFF.
 
 Action: Examine the accompanying message(s) for the cause of the error. If the error is due to insufficient authorization, address that. If the error is due to TOTALBLKMAX (refer to the explanation of that message) or a lack of enough free space on the disk to fit the size of a database file, try performing a KILL on some nodes in the database to get free blocks in the existing allocated space (you may need to KILL several subscripted nodes before you can KILL a name node).
 
@@ -5433,6 +5463,16 @@ GDE Information: This indicates that GDE encountered the invalid character xxxx 
 
 Action: Review and re-enter a valid command sequence.
 
+---------------------
+ILLEGALUSE
+---------------------
+
+ILLEGALUSE, Illegal use of the special character "?" in %GSEL
+
+Utility Error: This is an illegal use of the special character "?" in %GSEL. The special character "?" is not valid as the first character of a global name search pattern. "?" only valid as the first character of a search pattern when invoking the commands "?D" or "?d".
+
+Action: Review and re-enter a valid search pattern.
+
 ------------------
 ILLESOCKBFSIZE 
 ------------------
@@ -5583,6 +5623,16 @@ INVADDRSPEC, Invalid IP address specification
 Run Time Error: This indicates the IP address and/or port specified is not in a valid format.
 
 Action: Verify and correct the IP address and port.
+
+-----------------
+INVALIDGBL
+-----------------
+
+INVALIDGBL, Search pattern is invalid
+
+Utility Error: The search pattern used is invalid due to either using invalid characters or improper formatting.
+
+Action: Review and re-enter a valid search pattern
 
 -----------------
 INVALIDRIP 
@@ -10414,6 +10464,26 @@ MUPIP Error: Issued by MUPIP ROLLBACK -ONLINE when it finds that the region rrrr
 
 Action: Upgrade the database to the current major version before attempting to use online rollback.
 
+-------------------
+ORLBKREL
+-------------------
+
+ORLBKREL, ONLINE ROLLBACK releasing all locking resources to allow a freeze OFF to proceed
+
+MUPIP Information: MUPIP ROLLBACK -ONLINE encountered an Instance Freeze and must release its resources and restart to prevent a possible deadlock.
+
+Action: None required as this is an informational message.
+
+-------------------
+ORLBKRESTART
+-------------------
+
+ORLBKRESTART, ONLINE ROLLBACK restarted on instance iiii corresponding to rrrr
+
+MUPIP Information: MUPIP ROLLBACK -ONLINE is restarting on the instance iiii with replication journal pool rrrr
+
+Action: None required for this informational message
+
 --------------------
 ORLBKSTART
 --------------------
@@ -13180,6 +13250,16 @@ Run Time Error: The statistics database SSSS is currently associated with databa
 
 Action: Determine why two separate base databases would both be trying to use the same statistics database (often this is because statistics database names are soft linked to each other), fix the condition, and retry.
 
+------------------
+STATSDBMEMERR
+------------------
+
+STATSDBMEMERR, Process attempted to create stats block in statistics database SSSS and received SIGBUS--invalid physical address. Check file system space.
+
+Run Time Error: A process attempted to enable shared statistics collection for the region associated with SSSS, but was unable to find room to add its records, so it cannot contribute to sharing. This message goes to the operator log facility rather than the process as an error, but the process continues without shared statistics.
+
+Action: Adjust the environment so that SSSS can expand and then, if possible, have the process again attempt to enable sharing. 
+
 -----------------
 STATSDBNOTSUPP 
 -----------------
@@ -13706,7 +13786,15 @@ TOTALBLKMAX
 
 TOTALBLKMAX, Extension exceeds maximum total blocks, not extending
 
-Run Time Error: This indicates that the database file extension specified implicitly or explicitly (using MUPIP EXTEND) would cause the GDS file to exceed the maximum size of 64 million blocks.
+Run Time Error: This indicates that the database file extension specified implicitly or explicitly (using MUPIP EXTEND) would cause the GDS file to exceed its maximum size. The maximum database size is:
+
++----------------------------------------------------------------+---------------------------------------------------------------+
+| Max blocks in a DB file (MiB)                                  | Max DB Size* (GiB)                                            |
++================================================================+===============================================================+
+| 992                                                            | 7936                                                          |
++----------------------------------------------------------------+---------------------------------------------------------------+
+
+(for a database file with block size of 8192 bytes).
 
 Action: Modify the extension to use a smaller size. This may indicate that you should move some contents of the database file to another file.
 
@@ -13855,7 +13943,7 @@ TRANS2BIG, Transaction exceeded available buffer space for region rrrr
 
 Run Time Error: This indicates that a transaction updated more blocks than the global buffer could hold for a particular region rrrr or accessed more than the single transaction limit of 64K blocks.
 
-Action: Look for missing TCOMMIT commands; modify the code to reduce the total content or change content of the transaction. If the transaction is as intended and the issue is the number of updates, increase the GLOBAL_BUFFERS for the region using MUPIP SET, or modify the Global Directory to redistribute the relevant globals to more regions.
+Action: Look for missing TCOMMIT commands; modify the code to reduce the total content or change content of the transaction. If the transaction is as intended and the issue is the number of updates, increase the GLOBAL_BUFFERS for the region using MUPIP SET, or modify the Global Directory to redistribute the relevant globals to more regions.  If this occurs on a replicating instance it may indicate either a difference in configuration between the originating and replicating instances, which probably should be addressed, or a transaction that was borderline on the originating instance, but failed on the replicating instance because of difference in the database layout. In the later case, consider examining the application code to see if it's possible to reduce the size of the transaction, or alternatively increase the global buffers on both the instances. 
 
 ----------------
 TRANSMINUS 
@@ -14230,6 +14318,16 @@ Action: Review the call-in table and ensure that the parameter types match the f
 +-------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 | O/IO                          | ydb_long_t*, ydb_ulong_t*, ydb_float_t*, ydb_double_t*,_ydb_char_t*, ydb_string_t*                                                     |
 +-------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+
+-----------------
+UNIQNAME
+-----------------
+
+UNIQNAME, Cannot provide same file name (nnnn) for ffff and FFFF
+
+MUPIP Error: The command species the same name, nnnn for both output ffff and output FFFF.
+
+Action: Revise the command to use unique names for different outputs.
 
 ---------------
 UNKNOWNFOREX
