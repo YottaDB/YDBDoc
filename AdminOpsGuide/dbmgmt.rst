@@ -199,7 +199,7 @@ Perform the following tasks before you begin a database backup.
 
 * If you intend to use a -DATABASE backup at the same time in the same computer system as the source database, be sure to disable journaling in the backed up database with -BKUPDBJNL=DISABLE.
 
-* When doing a complete backup, switch journal files as part of the backup command using -NEWJNLFILES=NOPREVLINK. This aligns the journal files with the backup and simplifies journal file retention.
+* When doing a complete backup, switch journal files as part of the backup command using -NEWJNLFILES=NOPREVLINK. This aligns the journal files with the backup and simplifies journal file retention. Use the NOPREVLINK option for this qualifier with caution if the original database is used for replication. If the link to the previous generation journal file is cut, then the source server cannot supply transactions from the prior generation journal files.
 
 * If you follow separate procedures for backup and archival (moving to secondary storage), you can save time by starting archival as soon as MUPIP BACKUP completes the process of creating a backup database file for a region. You do not need to wait for MUPIP BACKUP to complete processing for all regions before starting archival. For example, a message like:
 
@@ -2058,6 +2058,9 @@ After the MUPIP REORG -ENCRYPT process completes, subsequent MUPIP REORG -ENCRYP
 Blocking subsequent MUPIP REORG -ENCRYPT operations after one completes, provides time for a backup of the entire database before enabling further key changes. MUPIP SET -ENCRYPTIONCOMPLETE reports an error for any database region for which MUPIP REORG -ENCRYPT has not completed.
 
 .. note::
+   YottaDB recommends rotating (changing) the encryption key of the database for better security. The frequency of encryption key rotation depends on your security requirements and policies.
+
+.. note::
    MUPIP REORG -ENCRYPT does not enable switching between encryption algorithms. To migrate databases from Blowfish CFB to AES CFB requires that the data be extracted and loaded into newly created database files. To minimize the time your application is unavailable, you can deploy your application in a Logical Multi-Site (LMS) configuration, and migrate using a rolling upgrade technique. Refer to the `Chapter 7: “Database Replication” <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html>`_ for more complete documentation. 
 
 ~~~~~~~~~
@@ -2533,8 +2536,10 @@ The format of the SET command is:
     -STAN[DALONENOT]
     -[NO]STAT[S]
     -NO]STD[NULLCOLL]
+    -T[RIGGER_FLUSH]=integer
     -V[ERSION]={V4|V6}
-    -W[AIT_DISK]=integer 
+    -W[AIT_DISK]=integer
+    -WR[ITES_PER_FLUSH=integer 
 
 
 * Exclusive access to the database is required if the MUPIP SET command specifies -ACCESS_METHOD, -GLOBAL_BUFFERS, -LOCK_SPACE or -NOJOURNAL, or if any of the -JOURNAL options ENABLE, DISABLE, or BUFFER_SIZE are specified.
@@ -2681,7 +2686,7 @@ For more information on ways to determine good working sizes for GLOBAL_BUFFERS,
 
 In general, increasing the number of global buffers improves performance by smoothing the peaks of I/O load on the system. However, increasing the number of global buffers also increases the memory requirements of the system, and a larger number of global buffers on memory constrained systems can increase the probability of the buffers getting swapped out. If global buffers are swapped out, any performance gain from increasing the number of global buffers will be more than offset by the performance impact of swapping global buffers. Most applications use from 1,000 to 4,000 global buffers for database regions that are heavily used. YottaDB does not recommend using fewer than 256 buffers except under special circumstances.
 
-The minimum is 64 buffers and the maximum is 65536 buffers. By default, MUPIP CREATE establishes GLOBAL_BUFFERS using information entered in the Global Directory.
+The minimum is 64 buffers and the maximum is 2,097,151 buffers. By default, MUPIP CREATE establishes GLOBAL_BUFFERS using information entered in the Global Directory.
 
 On many UNIX systems, default kernel parameters may be inadequate for YottaDB global buffers, and may need to be adjusted by a system administrator.
 
@@ -2920,6 +2925,15 @@ Specifies whether YottaDB uses standard MUMPS collation or YottaDB collation for
 .. parsed-literal::
    -[NO]STD[NULLCOLL]
 
+~~~~~~~~~~~~~~~~~~
+-TRIGGER_FLUSH
+~~~~~~~~~~~~~~~~~~
+
+Specifies the decimal value, in buffers, for the threshold at which processes start flushing dirty buffers after each update. The format of the TRIGGER_FLUSH qualifier is:
+
+.. parsed-literal::
+   -T[RIGGER_FLUSH]=integer
+
 ~~~~~~~~~~
 -VERSION
 ~~~~~~~~~~
@@ -2941,6 +2955,16 @@ Specifies the seconds to wait for disk space before giving up on a database bloc
 
 .. parsed-literal::
    -W[AIT_DISK]=seconds
+
+~~~~~~~~~~~~~~~~~~
+-WRITES_PER_FLUSH
+~~~~~~~~~~~~~~~~~~
+
+Specifies the decimal number of blocks to write in each flush. The default value is 7. The format of the WRITES_PER_FLUSH qualifier is:
+
+.. parsed-literal::
+   -WR[ITES_PER_FLUSH]=integer
+
 
 **Examples for MUPIP SET**
 
@@ -3566,7 +3590,7 @@ The following table summarizes the qualifiers.
 |                                              |                                                                              | * -APPLY_AFTER_IMAGE                                                 |
 |                                              |                                                                              | * -BACKWARD                                                          |
 |                                              |                                                                              | * -BEFORE=time                                                       |
-|                                              |                                                                              | * -BROKENTRANS=file                                                  |
+|                                              |                                                                              | * -[NO]BROKENTRANS=file                                              |
 |                                              |                                                                              | * -CHAIN                                                             |
 |                                              |                                                                              | * -CHECKTN                                                           |
 |                                              |                                                                              | * -[NO]ER[ROR_LIMIT][=integer]                                       |
@@ -3577,7 +3601,7 @@ The following table summarizes the qualifiers.
 |                                              |                                                                              | * -ID=<pid_list>                                                     |
 |                                              |                                                                              | * -INTERACTIVE                                                       |
 |                                              |                                                                              | * -LOOKBACK_LIMIT=<lookback_limit_options>                           |
-|                                              |                                                                              | * -LOSTTRANS[=file]                                                  |
+|                                              |                                                                              | * -[NO]LOSTTRANS[=file]                                              |
 |                                              |                                                                              | * -RED[IRECT]=file-pair-list                                         |
 |                                              |                                                                              | * -SINCE=time                                                        |
 |                                              |                                                                              | * -VERBOSE                                                           |
@@ -3585,7 +3609,7 @@ The following table summarizes the qualifiers.
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
 | -EXTRACT                                     | `JOURNAL <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#journal>`_      | * -AFTER=time                                                        |
 |                                              |                                                                              | * -BEFORE=time                                                       |
-|                                              |                                                                              | * -BROKENTRANS=file                                                  |
+|                                              |                                                                              | * -[NO]BROKENTRANS=file                                              |
 |                                              |                                                                              | * -CHAIN                                                             |
 |                                              |                                                                              | * -CHECKTN                                                           |
 |                                              |                                                                              | * -[NO]ER[ROR_LIMIT]=integer]                                        |
@@ -3595,7 +3619,7 @@ The following table summarizes the qualifiers.
 |                                              |                                                                              | * -ID=<pid_list>                                                     |
 |                                              |                                                                              | * -INTERACTIVE                                                       |
 |                                              |                                                                              | * -LOOKBACK_LIMIT=<lookback_limit_options>                           |
-|                                              |                                                                              | * -LOSTTRANS[=file]                                                  |
+|                                              |                                                                              | * -[NO]LOSTTRANS[=file]                                              |
 |                                              |                                                                              | * -REGION                                                            |
 |                                              |                                                                              | * -SINCE=time                                                        |
 |                                              |                                                                              | * -VERBOSE                                                           |
@@ -3604,12 +3628,12 @@ The following table summarizes the qualifiers.
 | -ROLLBACK                                    | `JOURNAL <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#journal>`_      | * -APPLY_AFTER_IMAGE                                                 |
 |                                              |                                                                              | * -BACKWARD                                                          |
 |                                              |                                                                              | * -BEFORE=time                                                       |
-|                                              |                                                                              | * -BROKENTRANS=file                                                  |
+|                                              |                                                                              | * -[NO]BROKENTRANS=file                                              |
 |                                              |                                                                              | * -[NO]ER[ROR_LIMIT][=integer]                                       |
 |                                              |                                                                              | * -FENCES=fence-option-list                                          |
 |                                              |                                                                              | * -FETCHRESYNC                                                       |
 |                                              |                                                                              | * -LOOKBACK_LIMIT=<lookback_limit_options>                           |
-|                                              |                                                                              | * -LOSTTRANS[=file]                                                  |
+|                                              |                                                                              | * -[NO]LOSTTRANS[=file]                                              |
 |                                              |                                                                              | * -RES[YNC]=hexa;journal_sequence_number                             |
 |                                              |                                                                              | * -VERBOSE                                                           |
 |                                              |                                                                              | * -VERIFY                                                            |

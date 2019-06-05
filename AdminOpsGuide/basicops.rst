@@ -408,11 +408,9 @@ All values are case-independent. When ydb_autorelink_keeprtn is defined and TRUE
 
 **ydb_noundef** (gtm_noundef) specifies the initial setting that controls whether a YottaDB process should treat undefined global or local variables as having an implicit value of an empty string. If it is defined, and evaluates to a non-zero integer or any case-independent string or leading substring of "TRUE" or "YES", then YottaDB treats undefined variables as having an implicit value of an empty string. The VIEW "[NO]UNDEF" command can alter this behavior in an active process. By default, YottaDB signals an error on an attempt to use the value of an undefined variable.
 
-**ydb_obfuscation_key** (gtm_obfuscation_key) : If $ydb_obfuscation_key specifies the name of the file readable by the process, the encryption reference plug-in uses an SHA-512 hash of the file's contents as the XOR mask for the obfuscated password in the environment variable ydb_passwd. When ydb_obfuscation_key does not point to a readable file, the plug-in creates an XOR mask based on the userid and inode of the mumps executable and then computes an SHA-512 hash of the XOR mask to use as a mask.
+**ydb_obfuscation_key** (gtm_obfuscation_key) : If $ydb_obfuscation_key specifies the name of the file readable by the process, the encryption reference plug-in uses a cryptographic hash of the file's contents as the XOR mask for the obfuscated password in the environment variable ydb_passwd. When ydb_obfuscation_key does not point to a readable file, the plugin computes a cryptographic hash using a mask based on the value of $USER and the inode of the mumps executable to use as a mask. $ydb_passwd set with a $ydb_obfuscation_key allows access to all users who have the same $ydb_obfuscation_key defined in their environments. However, $ydb_passwd set without $ydb_obfuscation_key can be used only by the same $USER using the same YottaDB distribution. 
 
-ydb_obfuscation_key can be used as a mechanism to pass an obfuscated password between unrelated processes (for example, a child process with a different userid invoked via a sudo mechanism), or even from one system to another (for example, over an ssh connection).
-
-**ydb_passwd** (gtm_passwd) used by the encryption reference plugin (not used by YottaDB directly) for the obfuscated (not encrypted) password to the GNU Privacy Guard key ring. If the environment variable ydb_patnumeric is not defined or set to a value other than "UTF-8", YottaDB initializes $ZPATNUMERIC to "M".
+**ydb_passwd** (gtm_passwd) specifies the obfuscated (not encrypted) password of the GNU Privacy Guard key ring. When the environment variable $ydb_passwd is set to "", YottaDB invokes the default GTMCRYPT passphrase prompt to obtain a passphrase at process startup and uses that value as $ydb_passwd for the duration of the process. 
 
 **ydb_patnumeric** (gtm_patnumeric) specifies the value of the read-only ISV $ZPATNUMERIC that determines how YottaDB interprets the patcode "N" used in the pattern match operator. The SET command can alter the value of $ZPATNUMERIC in an active process.
 
@@ -850,6 +848,15 @@ Restrictions apply as follows:
 +---------------------------------------------------------+----------------------------------------------------------------------------------------------------+
 | YottaDB Facility                                        | Behavior                                                                                           |
 +=========================================================+====================================================================================================+
+| APD_ENABLE                                              | YottaDB supports the ability to log actions initiated from a principal device including MUMPS      |
+|                                                         | commands typed interactively, or piped in by a script or redirect, from the principal device       |
+|                                                         | ($PRINCIPAL) and/or any information entered in response to a READ from $PRINCIPAL. An action       |
+|                                                         | initiated from $PRINCIPAL executes as usual when Audit Principal Device is disabled, which it is   |
+|                                                         | by default. However, when Audit Principal Device is enabled, YottaDB attempts to send the action   |
+|                                                         | out for logging before acting on it. Additionally, the $ZAUDIT Intrinsic Special Variable (ISV)    |
+|                                                         | provides a Boolean value that indicates whether Audit Principal Device is enabled. See the Audit   |
+|                                                         | Principal Device section below for details.                                                        |
++---------------------------------------------------------+----------------------------------------------------------------------------------------------------+
 | BREAK                                                   | YottaDB ignores any break command                                                                  |
 +---------------------------------------------------------+----------------------------------------------------------------------------------------------------+
 | HALT                                                    | any HALT produces a RESTRICTEDOP error                                                             |
@@ -934,3 +941,74 @@ The commands, Intrinsic Special Variables, and functions whose behavior changes 
 * $ECODE/$STACK() initialized to the empty string at level one (1) in GTM$CI frame.
 
 After the filter completes, YottaDB restores the above to their values at the invocation of the filter.
+
+++++++++++++++++++++++++++++++++++++++++++++
+Audit Principal Device restriction facility
+++++++++++++++++++++++++++++++++++++++++++++
+
+The "APD_ENABLE" entry in a restrictions definition file turns on APD and enables the logging of all code entered from Direct Mode and optionally any input entered on the principal device ($PRINCIPAL). To enable APD, add a line with the following format to the restriction file:
+
+.. parsed-literal::
+   APD_ENABLE:[comma-separated-list-of-options]:{path-to-sock-file|host:port}[:tls-id]
+
+* The optional "comma-separated-list-of-options" can consist of zero or more of these options:
+
+  * TLS - Enables TLS connectivity between YottaDB and the logger; this option requires the host information (e.g. IP/port or hostname/port)
+  * RD - Enables logging of all responses READ from $PRINCIPAL in addition to that entered at the Direct Mode prompt. This option is more comprehensive and captures input that might be XECUTEd, but depending on your application architecture may significantly increase the amount of logged information.
+
+* The "path-to-sock-file" is the absolute path of the UNIX domain socket file for connecting to the logger.
+
+* The "host" is the hostname or numeric IPv4/IPv6 address of the logger; numeric IP addresses must be enclosed in square brackets (i.e. '[' and ']').
+
+* The "port" is the port number the logger listens on.
+
+* The optional "tls-id" is the label of the section within the YottaDB configuration file that contains TLS options and/or certificates for YottaDB to use; APD ignores any "tls-id" if the "TLS" option is not specified.
+
+If parsing the "APD_ENABLE" line in restriction file or initializing logger information fails, YottaDB enforces all restrictions (default restriction file behavior).
+
+Examples:
+
+.. parsed-literal::
+   APD_ENABLE::/path/to/sock/file/audit.sock
+
+Adding this line to the restriction file enables APD. YottaDB connects with the logger via UNIX domain socket using the domain socket file "/path/to/sock/file/audit.sock" and sends all Direct Mode activity from $PRINCIPAL to logger.
+
+.. parsed-literal::
+   APD_ENABLE:RD:[123.456.789.100]:12345
+
+Adding this line to the restriction file enables APD. YottaDB connects with the logger (listening on port 12345 at the IPv4 address 1enable23.456.789.100) via TCP socket and sends all Direct Mode and READ activities from $PRINCIPAL to logger.
+
+.. parsed-literal::
+   APD_ENABLE::loggerhost:56789
+
+Adding this line to the restriction file enables APD. YottaDB connects with the logger (listening on port 56789 at the hostname "loggerhost") using a TCP socket and sends all Direct Mode activities from $PRINCIPAL to logger.
+
+.. parsed-literal::
+   APD_ENABLE:TLS,RD:[1234:5678:910a:bcde::f:]:12345:clicert
+
+Adding this line to the restriction file enables APD. YottaDB connects with the logger (listening on port 12345 at the IPv6 address 1234:5678:910a:bcde::f:) via TLS socket. YottaDB configures its TLS options for APD based on the contents within the section of the configuration file labeled "clicert". YottaDB sends all Direct Mode and READ activities from $PRINCIPAL to logger.
+
+~~~~~~~~~~~~~~~~~~~~~~~
+Logging
+~~~~~~~~~~~~~~~~~~~~~~~
+
+The "logger" is a separate server-like program responsible for receiving the to-be-logged information from YottaDB and logging it. This separate program must be introduced by the user, either running in foreground or background, in order for logging to actually work. YottaDB distributions include basic example logger programs.
+
+The six fields in the message, separated by semicolons (';'), contain information on the to-be-logged activity. Each to-be-logged message sent to the logger from YottaDB has the following format:
+
+.. parsed-literal::
+   dist=<path>; src={0|1|2}; uid=<uid>; euid=<euid>; pid=<pid>; command=<text>
+
+
+* The "dist" field, shows the path to location of the sender/user's $ydb_dist (YottaDB executables).
+* The "src" field shows zero (0) for input from unknown source, one (1) for Direct Mode input, or two (2) for READ input from $PRINCIPAL.
+* The next three fields ("uid", "euid", and "pid") show (respectively) decimal representations of the user ID, effective user ID, and process ID of the process that sent the message.
+* The "command" field is the input provided on the YottaDB side.
+
+Examples:
+
+.. parsed-literal::
+   dist=/path/to/ydb_dist; src=1; uid=112233445; euid=112233445; pid=987654; command=write "Hello world",! 
+   dist=/usr/library/r126/dbg; src=2; uid=998877665; euid=998877665; pid=123456; command=set a=789
+
+Click `here <https://gitlab.com/YottaDB/DB/YDBDoc/blob/master/AdminOpsGuide/dm_audit_listener.zip>`_ to download sample listener programs.

@@ -703,14 +703,14 @@ file-selection-argument is a comma-separated list of journal files.
 | One or more                     | Only One    | One or more                     | Only One                           | One or more                             | One or more                         |
 +---------------------------------+-------------+---------------------------------+------------------------------------+-----------------------------------------+-------------------------------------+
 | * -EXTRACT[=file specification] | * -BACKWARD | * -AFTER=time                   | * -FETCH_RESYNC=port-number        | * -[NO]APPLY_AFTER_IMAGE                | * -GLOBAL=global-list               |
-| * -RECOVER                      | * -FORWARD  | * -BEFORE=time                  | * -RESYNC=jnlsequence-number       | * -BROKENTRANS=extract file name        | * -ID=pid-list                      |
+| * -RECOVER                      | * -FORWARD  | * -BEFORE=time                  | * -RESYNC=jnlsequence-number       | * -[NO]BROKENTRANS=extract file name    | * -ID=pid-list                      |
 | * -ROLLBACK                     |             | * -[NO]LOOKBACK_TIME[=lookback  |                                    | * -[NO]CHAIN                            | * -TRANSACTION=transaction-type     |
 | * -SHOW[=show-option-list]      |             |    option list]                 |                                    | * -[NO]CHECKTN                          | * -USER=user-list                   |
 | * -[NO]VERIFY                   |             | * -SINCE=time                   |                                    | * -[NO]ERRORLIMIT[=integer]             |                                     |
 |                                 |             |                                 |                                    | * -FENCES=fence option                  |                                     |
 |                                 |             |                                 |                                    | * -FULL                                 |                                     |
 |                                 |             |                                 |                                    | * -[NO]INTERACTIVE                      |                                     |
-|                                 |             |                                 |                                    | * -LOSTTRANS=extract-file-name          |                                     |
+|                                 |             |                                 |                                    | * -[NO]LOSTTRANS=extract-file-name      |                                     |
 |                                 |             |                                 |                                    | * -REDIRECT=file pair list              |                                     |
 |                                 |             |                                 |                                    | * -VERBOSE                              |                                     |
 |                                 |             |                                 |                                    | * -DETAIL                               |                                     |
@@ -724,7 +724,7 @@ Also ensure that you adhere to the following rules:
 
 3. -BACKWARD is incompatible with -FORWARD, -AFTER, -CHECKTN, -NOCHAIN, and -REDIRECT.
 
-4. -BROKENTRANS is compatible only with -RECOVER, -ROLLBACK, or -EXTRACT.
+4. -[NO]BROKENTRANS is compatible only with -RECOVER, -ROLLBACK, or -EXTRACT.
 
 5. -CHAIN is only compatible with -FORWARD.
 
@@ -738,7 +738,7 @@ Also ensure that you adhere to the following rules:
 
 10. -FULL is compatible only with -EXTRACT, -SHOW, or -VERIFY.
 
-11. -LOSTTRANS is compatible only with -RECOVER, -ROLLBACK, or -EXTRACT.
+11. -[NO]LOSTTRANS is compatible only with -RECOVER, -ROLLBACK, or -EXTRACT.
 
 12. -REDIRECT is compatible only with -BACKWARD and -RECOVER.
 
@@ -1191,9 +1191,9 @@ Specifies that after image records (AIMG) be applied to the database as part of 
 By default, -RECOVER -FORWARD does not apply AIMG record into the database. -APPLY_AFTER_IMAGE is compatible with -RECOVER, or -ROLLBACK action qualifiers only.
 
 .. parsed-literal::
-   -BR[OKENTRANS]=<extract file>
+   -[NO]BR[OKENTRANS]=<extract file>
 
--BROKENTRANS is an optional qualifier for -ROLLBACK, -RECOVER and -EXTRACT. If this is not specified and a broken transaction file creation is necessary, MUPIP JOURNAL creates one using the name of the current journal file being processed with a .broken extension.
+-[NO]BROKENTRANS is an optional qualifier for -ROLLBACK, -RECOVER and -EXTRACT. If this is not specified and a broken transaction file creation is necessary, MUPIP JOURNAL creates one using the name of the current journal file being processed with a .broken extension.
 
 Note that, if selection qualifiers are specified, the broken transaction determination (and therefore lost transaction determination as well) is done based on the journal file that is filtered by the selection qualifiers. This means that a transaction's journal records may be considered complete or broken or lost, depending on the nature of the selection qualifiers. Using -FENCES=NONE along with the selection qualifiers will result in every journal record to be considered complete and hence prevent broken or lost transaction processing.
 
@@ -1267,9 +1267,9 @@ Specifies whether, for each error over the -ERROR_LIMIT, JOURNAL processing prom
 This qualifier applies when the MUPIP command is entered from a terminal. The default is -INTERACTIVE.
 
 .. parsed-literal::
-   -LOST[TRANS]=<extract file>
+   -[NO]LOST[TRANS]=<extract file>
 
--LOSTTRANS is an optional qualifier for -RECOVER, -ROLLBACK and -EXTRACT. If this is not specified and a lost transaction file creation is necessary, MUPIP JOURNAL creates one using the name of the current journal file being processed with a .lost extension.
+-[NO]LOSTTRANS is an optional qualifier for -RECOVER, -ROLLBACK and -EXTRACT. If this is not specified and a lost transaction file creation is necessary, MUPIP JOURNAL creates one using the name of the current journal file being processed with a .lost extension.
 
 Journal processing treats any complete transaction after a broken transaction as a lost transaction, and writes such transactions into the lost transaction file. -RECOVER might consider it a good transaction and apply it to the database, if -ERROR_LIMIT qualifier allows it to do so.
 

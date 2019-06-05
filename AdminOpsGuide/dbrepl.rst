@@ -1520,7 +1520,7 @@ The most common scenario for bringing up a replicating instance is to take a bac
 .. parsed-literal::
    source ./ydbenv A r122
 
-* Create a backup using -DATABASE, -REPLINST, -NEWJNLFILE=NOPREVLINK, and -BKUPDBJNL=DISABLE qualifiers. -DATABASE creates a comprehensive backup of the database file. -REPLINST backs up the replication instance file. -BKUPDBJNL=DISABLE scrubs all journal file information in the backup database file. As the backup of instance A is comprehensive, -NEWJNLFILE=NOPREVLINK cuts the back link to prior generation journal files of the database for which you are taking the backup. -NEWJNLFILE=NOPREVLINK is optional but simplifies journal file retention and aligns each database file with its backup. 
+* Create a backup using -DATABASE, -REPLINST, -NEWJNLFILE=NOPREVLINK, and -BKUPDBJNL=DISABLE qualifiers. -DATABASE creates a comprehensive backup of the database file. -REPLINST backs up the replication instance file. -BKUPDBJNL=DISABLE scrubs all journal file information in the backup database file. As the backup of instance A is comprehensive, -NEWJNLFILE=NOPREVLINK cuts the back link to prior generation journal files of the database for which you are taking the backup. 
 
 .. parsed-literal::
    ./db_create
@@ -3999,7 +3999,19 @@ Specifies the TCP port number the Receiver Server will listen to for incoming co
 
 *-autorollback[=verbose]*
 
-Allows the receiving instance of SI or BC replication to roll back as required when the source instance rolls back with a mupip journal -rollback -backward command. The optional value keyword VERBOSE allows rollback to provide more diagnostic information. 
+-AUTOROLLBACK in a Receiver Server startup command of a BC/SI replication instance performs an automatic MUPIP JOURNAL -ROLLBACK -BACKWARD -FETCHRESYNC=<portno>. Choosing between -AUTOROLLBACK and -FETCHRESYNC (with -[NO]LOSTTRANS and -[NO]BROKENTRANS) depends on your replicating configuration and how your application processes lost transaction files. Use a MUPIP JOURNAL -ROLLBACK command with -FETCHRESYNC when you need:
+
+* Control over the name and location of the lost/broken transaction files (by specifying -LOSTTRANS and -BROKENTRANS)
+* To disable lost transaction file processing if there is no need to apply lost transaction files (by specifying -LOSTTRANS=/dev/null or -NOLOSTTRANS), or
+* To disable broken transaction file processing if there is no need to research broken transaction (by specifying -BROKENTRANS=/dev/null or -NOBROKENTRANS), or
+* To enable operational intervention when there is a lost transaction file in order to capture, review or process it on the new originating/primary instance before starting the Receiver Server. 
+
+Use -AUTOROLLBACK when there are no application side restraints on the timing/need of processing of the lost transaction file. With -AUTOROLLBACK, the Receiver Server performs a connection handshake with the originating/upstream Source Server. If the upstream Source Server sends the REPL_ROLLBACK_FIRST message during the handshake, the Receiver Server with -AUTOROLLBACK performs the following operations:
+
+* Close its connection with the Source Server.
+* Uses the Source Server's connected port number stored in the memory to launch a separate MUPIP process for MUPIP JOURNAL -ROLLBACK -FETCHRESYNC which receives the rollback point (region sequence number) from the originating/upstream Source Server and rolls back the replicating instance to that rollback point and generates a lost transaction file in the default location. 
+* Once the rollback is complete, the Receiver Server re-establishes the replication connection and resumes receiving updates from the Source Server. 
+* A Receiver Server started without AUTOROLLBACK shuts down with the message "Receiver was not started with -AUTOROLLBACK. Manual ROLLBACK required. Shutting down".
 
 .. note::
    As autorollback uses mupip online rollback under the covers, it should be considered field test grade functionality as long as that function is considered field test grade functionality.
@@ -4223,22 +4235,22 @@ Use this qualifier to rollback the database. If you do not use the -fetchresync 
 
 *-fetchresync=<port number>*
 
-The <port number> is the communication port number that the rollback command uses when fetching the reference point. Always use the same <port number> on the originating instance for rollback as the one used by the Receiver Server.
+When there are unreplicated updates on a former primary/secondary instance, it cannot become a new replicating instance as its journal sequence number is higher than the journal sequence number of its new replication source. Use -ROLLBACK -FETCHRESYNC to roll back a BC/SI replicating instance to a journal sequence number that matches the journal sequence number of its replication source and generate a lost transaction file containing the unreplicated updates for the organization to reconcile. After the reconcilation (or rejection as the case may be) of the lost transaction file, run MUPIP REPLICATE -SOURCE -LOSTTNCOMPLETE to provide confirmation to GT.M that you have applied the lost transaction file. For -FETCHRESYNC to work on the replicating instance, you need to ensure that an active Source Server is running on the replication source/originating instance.
 
-.. note::
-   YottaDB recommends unconditionally scripting the mupip journal -rollback -fetchresync command prior to starting any Source Server on the replicating instance to avoid a possible out-of-sync situation.
+The format of the -FETCHRESYNC qualifier is:
 
-The reference point sent by the originating instance is the RESYNC_SEQNO (explained later) that the originating instance once maintained. The database/journal files are rolled back to the earlier RESYNC_SEQNO (that is, the one received from the originating instance or the one maintained locally). If you do not use -fetchresync, the database rolls back to the last consistent replicating instance state.
+.. parsed-literal::
+   -fetchresync=<port number> -[no]brokentrans=[/dev/null|<brokentrans.broken>] -[no]losttrans=[/dev/null|<unreplicated_updates.lost>] 
 
-A FETCHRESYNC ROLLBACK operation sends its current working directory to the Source Server log.
-
-The system stores extracted lost transactions in the file <extract file> specified by this mandatory qualifier. The starting point for the search for lost transactions is the JNL_SEQNO obtained from the originating instance in the -fetchresync operation. If -fetchresync is not specified, <extract file> lists the post-consistent-state transactions that were undone by the rollback procedure to reach a consistent state.
-
-.. note::
-   The extracted lost transactions list may contain broken transactions due to system failures that occurred during processing. Do not resolve these transactions-they are not considered to be committed.
-
-.. note::
-   The database header may get corrupted if you suspend an ongoing ROLLBACK -FETCHRESYNC operation or if the TCP connection between the two instances gets broken. The workaround is to restart the ROLLBACK -FETCHRESYNC operation or wait 60 seconds for the FETCHRESYNC operation to timeout.  
+* <portno> is the port number that the Receiver Server uses to listen for incoming connection from the Source Server of the originating instance. 
+* -LOSTTRANS and -BROKENTRANS allows you to specify the name and location of the lost transaction file and broken transaction file. 
+* -LOSTTRANS=/dev/null or -NOLOSTTRANS disables lost transaction file processing when there is no need to apply lost transaction files. 
+* Remember that unless you have a backup of the database and the journal files, you cannot undo a ROLLBACK/RECOVER operation. 
+* A lost transaction file may sometimes contain data that is critical for your application. Use -LOSTRANS=/dev/null or -NOLOSTTRANS with ROLLBACK/RECOVER only when you are sure that there is a lost transaction file whose transactions you purposely want to discard from your database.
+* Unless business considerations dictate otherwise, your database administration scripts/procedure should allow the organization to intervene when there is a need to apply or discard a lost transaction file. 
+* If you have broken transactions, they may have appeared due to system failures that occurred during processing. Do not reconcile these transactions as they are not considered to be committed.
+* In your Receiver Server startup scripts, YottaDB recommends placing MUPIP JOURNAL -ROLLBACK -BACKWARD -ONLINE -FETCHRESYNC after starting the passive Source Server but before starting the Receiver Server. 
+* Stopping a ROLLBACK operation before it completes or losing the TCP connection over which replication operates may corrupt the database file header. To recover, wait up to 60 seconds for the operation to timeout and then reissue the command.
 
 Example:
 

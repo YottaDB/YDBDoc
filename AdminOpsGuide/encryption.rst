@@ -60,11 +60,13 @@ In order to encrypt and decrypt databases, keys must exist in the address space/
 
 * If an application provides some or all users access to a shell prompt or a YottaDB direct mode prompt, or allows that user to specify arbitrary code that can be XECUTE'd, those users can find ways to view and capture keys and passphrases. Note that, if a key or passphrase can be captured, it can be misused - for example, a captured GPG keyring passphrase is captured, it can be used to change the passphrase. You must therefore ensure that your application does not provide such access to users who should not view keys and passphrases.
 
-* This limitation makes it all the more important that those who have access to shell prompts, YottaDB direct mode prompts, etc. not leave sessions unlocked, even briefly, if it is at all possible for someone who should not have knowledge of keys and passphrases to access the sessions during that time.
+* This limitation makes it all the more important that those who have access to shell prompts, YottaDB direct mode prompts, etc. not leave sessions unlocked, even briefly, if it is at all possible for someone who should not have knowledge of keys and passphrases to access the sessions during that time. Consider using the YottaDB restriction facility to restrict the access to YottaDB facilities which can be used to obtain a shell prompt or the YottaDB direct mode prompt.
+
+* If you forget the passphrase, there is no way to decrypt the data from the encrypted regions of a database. Therefore, ensure that you have secure password management procedures to handle password storage and retrieval of the keyring passphrase. 
 
 **Long lived Keys**
 
-A database file has an extended life. In typical operation, only a minuscule fraction of the data within a database changes each day. As changing an encryption key requires re-encrypting all the data, this means encryption keys for files have long lives. Since long-lived keys are security risks - for example, they cannot be changed when an employee leaves - key management must therefore be part of the overall security plan. At a minimum, long lived keys require two stage key management - a database key with a long life, not normally accessed or viewed by a human, stored in a form encrypted by another key that can be changed more easily.
+A database file has an extended life. In typical operation, only a minuscule fraction of the data within a database changes each day. As changing an encryption key requires re-encrypting all the data, this means encryption keys for files have long lives. Since long-lived keys are security risks - for example, it may not be feasible to change them when an employee leaves - key management must therefore be part of the overall security plan. At a minimum, long lived keys require two stage key management - a database key with a long life, not normally accessed or viewed by a human, stored in a form encrypted by another key that can be changed more easily.
 
 Furthermore, a key must be retained at least as long as any backup encrypted with that key; otherwise the backup becomes useless. You must have appropriate procedures to retain and manage old keys. Since successful data recovery requires both keys and algorithms, the retention processes must also preserve the encryption algorithm. 
 
@@ -222,62 +224,49 @@ For performance, a symmetric cipher is used to encrypt and decrypt data records.
 
 **Key Ring on Disk**
 
-In the reference implementation, a password-protected key ring on disk contains the private key of the asymmetric cipher. A password is required to access the key ring on disk and obtain the private key. Password acquisition happens in one of three ways: 
+A passphrase protects the key ring on disk that contains the private key uses to encrypt the asymmetric database keys. YottaDB requires this passphrase either in an obfuscated form as the value of the ydb_passwd environment variable, or,if ydb_passwd is set to "" and then typed at the GTMCRYPT passphrase prompt. YottaDB obfuscates the passphrase to prevent inadvertent disclosure, for example, in a dump of the environment that you may submit to YottaDB for product support purposes, the passphrase in the environment is obfuscated using information available to processes on the system on which the process is running, but not available on other systems.
 
-1. When the environment variable $ydb_passwd is not set, before a YottaDB MUMPS process needs to open an encrypted database file, the application calls a program such as GETPASS.m to prompt for and obtain a password for the key ring on disk. 
-2. When the environment variable $ydb_passwd is set to the null string, at process startup, YottaDB implicitly calls the program GETPASS.m to prompt for and obtain a password. The environment variable, $ydb_passwd is then set to an obfuscated version of the password required to unlock the key ring on disk.
-3. The environment variable $ydb_passwd contains an obfuscated version of the password required to unlock the key ring on disk to obtain the private key. The environment variable can be passed in to YottaDB, or it can be prompted for and set, as described below.
+You can provide the passphrase of the key ring to YottaDB in one of the following four ways: 
 
-Some graphical user interfaces, e.g., GNOME or KDE, may detect when you are being prompted for the GPG keyring password and use a graphical interface instead of the terminal interface. You may be able to disable this behavior if you unset the $DISPLAY environment variable, or use an ssh connection to localhost that disables X forwarding. Consult your Graphical User Interface documentation.
+* Set the ydb_passwd environment variable to an obfuscated form of the passphrase of the keyring using the maskpass utility but do not define $ydb_obfuscation_key. For example:
 
-In order to enable the Job command, the password for the key ring on disk exists in the environment of the process, in the environment variable $ydb_passwd, where it can be passed from a parent process to a child. In order to prevent inadvertent disclosure of the password, for example, in a dump of the environment submitted to YottaDB for product support purposes, the password in the environment is obfuscated using information available to processes on the system on which the process is running, but not available on other systems.
+  .. parsed-literal::
+      echo -n "Enter keyring passphrase: " ; export ydb_passwd=`$ydb_dist/plugin/gtmcrypt/maskpass|cut -f 3 -d " "`
 
-$ydb_passwd is the only way for a child process to receive a password from a parent. In the event that the parent process does not pass $ydb_passwd to the child, or passes an incorrect password, there is little a child without access to an input device can do except log an error and terminate.
+You should use this method when you need to restrict the access of encrypted regions to the same $USER using the same YottaDB distribution. $ydb_passwd can be passed between from the parent process to a child process with the Job command. Note that $ydb_passwd is the only way for a child process to receive a password from a parent process. 
 
-An obfuscated password in the environment is the only way that other YottaDB processes (MUPIP and DSE) can be provided with a password. If they encounter an encrypted database or journal file, and do not have an obfuscated password to the key ring on disk in the environment, they terminate with the error message "YDB-E-CRYPTINIT, Error initializing encryption library. Environment variable ydb_passwd set to empty string. Password prompting not allowed for utilities". There are (at least) two ways to provide MUPIP and DSE processes with obfuscated passwords in $ydb_passwd: 
+* Set the environment variable ydb_passwd to "". In this case, YottaDB uses the default GTMCRYPT passphrase prompt to obtain a password at process startup and uses that value as $ydb_passwd for the duration of the process. Note that you cannot change the GTMCRYPT passphrase prompt without customizing the reference implementation plugin. 
 
-1. maskpass is a stand-alone program that prompts the user for the password to the key ring on disk, and returns an obfuscated password to which $ydb_passwd can be set. The environment variable $ydb_passwd should be not set, set to a null value, or set to a value produced by maskpass. Setting $ydb_passwd to an incorrect non-null value without using maskpass could result in undefined behavior of the encryption library. You can use maskpass in shell scripts. For example:
+* When the environment variable ydb_passwd is not set, create a one line YottaDB program as in the following example: 
 
-   .. parsed-literal::
-      $ echo -n "Enter Password: ";export ydb_passwd=`$ydb_dist/plugin/gtmcrypt/maskpass|cut -f 3 -d " "`
-      Enter Password: 
-      $ 
+  .. parsed-literal::
+     echo 'zcmd ZSYstem $ZCMdline  Quit' > zcmd.m 
 
-2. Create a one line YottaDB program as follows: 
+and use it to invoke the MUPIP or DSE command. For example: 
 
-   .. parsed-literal::
-      zcmd ZSYstem $ZCMdline Quit 
+  .. parsed-literal::
+     $ ydb_passwd="" mumps -run zcmd mupip backup \\"\*\\" 
 
-and use it invoke the MUPIP or DSE command. For example: 
+The empty string value of $ydb_passwd causes the MUMPS process to prompt for and set an obfuscated password in its environment which it then passes to the MUPIP program. Shell quote processing requires the use of escapes to pass the quotes from the ZSYstem command to the shell. 
 
-   .. parsed-literal::
-      $ ydb_passwd="" mumps -run zcmd mupip backup -region \"\*\" 
+.. note::
+   An obfuscated password in the environment is the only way that other YottaDB processes (MUPIP and DSE) can be provided with a password. If they encounter an encrypted database or journal file, and do not have an obfuscated password to the key ring on disk in the environment, they terminate with the error message "YDB-E-CRYPTINIT, Error initializing encryption library. Environment variable ydb_passwd set to empty string. Password prompting not allowed for utilities". 
 
-The empty string value of $ydb_passwd causes the MUMPS process to prompt for and set an obfuscated password in its environment which it then passes to the MUPIP program. Shell quote processing requires the use of escapes to pass the quotes from the ZSYstem command to the shell.
+* Set the gtm_obfuscation_key environment variable to the absolute location of a file having any contents and then set the environment variable ydb_passwd to an obfuscated form of the passphrase of the keyring using the maskpass utility. maskpass is a stand-alone program that takes the passphrase from STDIN and writes its obfuscated value in the form of Enter Passphrase: <obfuscated_value> as its output. The <obfuscated_value> can then be set for the environment variable ydb_passwd. For example:
 
-The environment variable $ydb_passwd should be one of the following:
+  .. parsed-literal::
+     export ydb_obfuscation_key="/path/to/secret_content"
+     echo -n "Enter keyring passphrase: " ; export ydb_passwd=`$ydb_dist/plugin/gtmcrypt/maskpass|cut -f 3 -d " "`
 
-* not set
-* set to a null value
-* set to a value corresponding to an obfuscated password (e.g., produced by maskpass)
+The maskpass utility uses the hash of the contents of the $ydb_obfuscation_key file to obfuscate the passphrase. You should use this method when you need to allow multiple users to use $ydb_passwd to access the database. Note that YottaDB would not permit access to the database with the hashed passphrase set in $ydb_passwd if $ydb_obfuscation_key is not available in the environment. YottaDB recommends setting the ydb_passwd environment variable using a $ydb_obfuscation_key. 
 
-The following schematic illustrates the acquisition of the password for the key ring on disk. Note that an error (for example from the entry of an incorrect password) may not be triggered immediately - for example, DSE does not need an encryption key until you attempt to access data (since the file header is not encrypted, access to it does not require a key).
+Remember that $ydb_passwd is not a database authentication mechanism. $ydb_passwd provides the keyring passphrase to YottaDB and the requirement to put it in an obfuscated form is for better security.
 
-.. image:: key_ring_disk.png
+**Master Key Configuration File and Encryption Keys**
 
-**Master Key File and Key Files**
+The reference implementation uses the database section of the $ydb_crypt_config file to obtain the symmetric keys for encrypting a database file. The environment variable ydb_crypt_config specifies the location of the master key configuration file which contains dat and key combinations. A dat entry specifies the absolute location of the database file and the key entry specifies the absolution location of the encryption key. The master key configuration file leverages the popular libconfig library (http://www.hyperrealm.com/libconfig). 
 
-The reference implementation uses a master key file for each user to obtain the symmetric keys for each database or journal file. The environment variable $ydb_crypt_config specifies the master key configuration file used for database encryption and TLS. The configuration file leverages the popular libconfig library (http://www.hyperrealm.com/libconfig). Please refer to the section called `Creating a TLS configuration file <https://docs.yottadb.com/AdminOpsGuide/tls.html#creating-a-tls-configuration-file>`_ for instructions on creating the configuration file.
-
-The functions look for a key file ~/.ydb_dbkeys (i.e., in the home directory of the process' userid). The master key file contains sections as follows:
-
-.. parsed-literal::
-   dat database_filename
-   key key_filename
-
-where database_filename is the name of a database file, for example, /var/xyzapp/gbls/accounts.dat and key_filename is the name of a key file containing a symmetric key encrypted with a public key, for example: /home/sylvia/dbkeys/accounts.key.
-
-Key files are text files which can even be faxed or e-mailed: since they are secured with asymmetric encryption, you can transmit them over an insecure channel. As discussed below, the same database_filename can occur multiple times in a master key file.
+Note that encryption key files are text files which can even be faxed or e-mailed: since they are secured with asymmetric encryption, you can transmit them over an insecure channel. 
 
 **Memory Key Ring**
 
@@ -645,6 +634,11 @@ When invoking GPG via GPGME, there is no convenient way to avoid invoking an age
 Using the Reference Implementation's Custom pinentry Program
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+pinentry-gtm.sh is a custom pinentry program that prevents prompting for keyring passphrase by Gnu Privacy Guard operations when the environment variable ydb_passwd is already defined. When there is a GETPIN request and the ydb_passwd environment variable is defined, pinentry-gtm.sh runs pinentry.m and returns to the calling program. Custom pinentry programs like pinentry-gtm.sh are meaningful only when you set ydb_passwd to an obfuscated passphrase. When the environment variable ydb_passwd is not defined or a usable mumps or pinentry.m does not exists, pinentry-gtm.sh runs the default pinentry program and prompts for passphrase. Remember that pinentry.m can reveal the passphrase. Therefore, ensure that you restrict the access for the pinentry.m's object file to only those users who manage your keys. YottaDB provides pinentry-gtm.sh as a convenience to those users who are bothered by prompting for keyring passphrases for Gnu Privacy Guard related operations. Neither pinentry-gtm.sh nor pinentry.m is used internally by any YottaDB database operation.
+
+.. note::
+   When you set ydb_passwd to "", YottaDB obtains the passphrase using the default GTMCRYPT passphrase prompt. When ydb_passwd is set to "", you can neither use a pinentry program (custom or default) to obtain a passphrase nor customize the default GTMCRYPT passphrase prompt. 
+
 To use the custom pinentry program, you need to perform the following setup actions:
 
 At the OS level, ensure that the default pinentry program for servers is the "curses" pinentry executable and not the GUI version. Should the custom pinentry program fail, GPG invokes the default pinentry program. If the default pinentry program is for the GUI, a console user typically would not become aware of the password request.
@@ -667,7 +661,7 @@ Set up the encryption keys using the gen_keypair.sh script. This script creates 
 
 When pinetry-gtm.sh finds the environment variable $ydb_passwd defined and an executable YottaDB, it runs the pinentry.m program which provides GnuPG with the keyring password from the obfuscated password. Otherwise, it calls /usr/bin/pinentry.
 
-The custom pinentry program uses a YottaDB external call. Each YottaDB application that uses encryption must define the environment variable GTMXC_gpgagent to point to the location of gpgagent.tab. By default, the reference implementation places gpgagent.tab in the $ydb_dist/plugin/directory. gpgagent.tab is an external call table that pinentry.m uses to create a YottaDB pinentry function.
+The custom pinentry program uses a YottaDB external call. Each YottaDB application that uses encryption must define the environment variable GTMXC_gpgagent to point to the location of gpgagent.tab. By default, the reference implementation places gpgagent.tab in the $ydb_dist/plugin/directory. gpgagent.tab is an external call table that pinentry.m uses to unmask the obfusacated password stored in ydb_passwd.
 
 Direct the gpg-agent to use its standard Unix domain socket file, $GNUPGHOME/S.agent, when listening for password requests. Enabling the standard socket simplifies the gpg-agent configuration. Enable the standard socket by adding the following configuration option to $GNUPGHOME/gpg-agent.conf.
 
@@ -851,25 +845,15 @@ As there is no way to change the hash in a journal file header, make sure that y
 Changing Encryption Keys
 +++++++++++++++++++++++++
 
-The only way to change the encryption key of a database file is to extract the data and load it into a new database file created with a different key. Use a logical multi site (LMS) application configuration to change keys while keeping the application available. For example, if A is initially the initiating (primary) instance and B the replicating (secondary) instance: 
-
-* Bring down instance B and change the database keys with EXTRACT and LOAD. Remember to save the journal sequence numbers in the original database files, and to set the journal sequence number in all the newly created database files to the largest number in any original database file. 
-
-* Bring up instance B and let it catch up with A. 
-
-* At a convenient time, switchover. Now application logic executes on B and A is the replicating instance. 
-
-* Bring down instance A and change the database keys with either EXTRACT/LOAD or using a backup from B. Then bring it back up and let it catch up. 
-
-* To restore the original operating configuration, switchover at a convenient time. Now A again executes application logic which is replicated to B. 
-
-YottaDB suggests using different encryption keys for different instances, so that if the keys for one instance are compromised, the application can be kept available from another instance whose keys are not compromised, while changing the encryption keys on the instance with compromised keys. 
+YottaDB recommends rotating (changing) the encryption key of the database for better security. The frequency of encryption key rotation depends on your security requirements and policies. MUPIP REORG -ENCRYPT provides the option to encrypt a database or rotate the keys of an already encrypted database. If you are using replication, you can encrypt the replicating secondary instance first to prevent your originating primary instance from any additional IO load that MUPIP REORG -ENCRYPT may add. FIS suggests using different encryption keys for different instances, so that if the keys for one instance are compromised, the application can be kept available from another instance whose keys are not compromised, while changing the encryption keys on the instance with compromised keys. For more information, refer to “-Encrypt”. 
 
 ++++++++++++++++++
 Database Creation
 ++++++++++++++++++
 
-Just as there is no way to change the encryption key of a database file, it is not possible to turn on encryption for an unencrypted database file, or to turn it off for an encrypted database file. Once a database file is created, its encryption attributes are immutable. To create an encrypted database, use GDE to specify encryption in the global directory file. Then use MUPIP CREATE to create an encrypted database and MUPIP LOAD to load data into it. 
+To create a new encrypted database, first use GDE to flag the database file for encryption (with the -ENCRYPTION segment qualifier). Then, create a $ydb_crypt_config file and work with your security team to obtain the relevant encryption keys. Then, use the maskpass utility to set the environment variable ydb_passwd to the obfuscated form of the passphrase keyring. Finally, execute MUPIP CREATE to create an encrypted database and MUPIP REORG -ENCRYPT=<encr_key> to encrypt the blocks of the database.
+
+Once you encrypt a database, you cannot turn off encryption, it stays encrypted even if you specify MUPIP SET -NOENCRYPTABLE. If you wish any of the data in an encrypted database to be available unencrypted, you must extract the data and load it into a new database created to be unencypted and appropriately map the new database with a global directory. You can also use a MERGE command and multiple global directories to move data in either direction between encrypted and unencrypted database files.
 
 -------------------------------------
 Plugin Architecture and Interface
