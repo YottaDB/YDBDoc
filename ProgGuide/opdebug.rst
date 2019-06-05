@@ -531,6 +531,7 @@ Example:
    $Y=26
    $ZA=0
    $ZALLOCSTOR=680360
+   $ZAUDIT=0
    $ZB=$C(13)
    $ZCHSET="M"
    $ZCLOSE=0
@@ -567,6 +568,7 @@ Example:
    $ZSTEP="B"
    $ZSTRPLLIM=0
    $ZSYSTEM=0
+   $ZTIMEOUT=-1
    $ZTDATA=0
    $ZTDELIM=""
    $ZTEXIT=""

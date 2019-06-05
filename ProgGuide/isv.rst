@@ -624,13 +624,11 @@ $ZG[BLDIR] contains the value of the current Global Directory filename. When $ZG
 
 YottaDB initializes $ZGBLDIR to the translation of the environment variable ydb_gbldir. The value of the ydb_gbldir environment variable may include a reference to another environment variable. If ydb_gbldir is not defined, YottaDB initializes $ZGBLDIR to null. When $ZGBLDIR is null, YottaDB constructs a file name for the Global Directory using the name $ydb_gbldir and the extension .gld in the current working directory.
 
-$ZGBLDIR is a read-write Intrinsic Special Variable, (i.e., it can appear on the left side of the equal sign (=) in the argument to the SET command). SET $ZGBLDIR="" causes YottaDB to assign $ZGBLDIR to the translation of ydb_gbldir if that environment variable is defined. If it is not defined, then SET $ZGBLDIR="" causes YottaDB to construct a file name using the name $ydb_gbldir.gld in the current directory. YottaDB permits $ZGBLDIR to be NEW'd. A $ZGBLDIR value may include an environment variable.
+$ZGBLDIR is a read-write Intrinsic Special Variable, (i.e., it can appear on the left side of the equal sign (=) in the argument to the SET command). SET $ZGBLDIR="" causes YottaDB to assign $ZGBLDIR to the translation of ydb_gbldir if that environment variable is defined. If it is not defined, then SET $ZGBLDIR="" causes YottaDB to construct a file name using the name $ydb_gbldir.gld in the current directory. NEWing $ZGBLDIR is the same as SET $ZGBLDIR="", which as just noted may change its value. For code that immediately SETs $ZGBLDIR after NEW'ng it that behavior doesn't matter, but without an associated SET, such a change may seem counterintuitive.  A $ZGBLDIR value may include an environment variable.
 
 SETting $ZGBLDIR also causes YottaDB to attempt to open the specified file. If the file name is invalid or the file is inaccessible, YottaDB triggers an error without changing the value of $ZGBLDIR.
 
 To establish a value for $ZGBLDIR outside of M, use the appropriate shell command to assign a translation to ydb_gbldir. Defining ydb_gbldir provides a convenient way to use the same Global Directory during a session where you repeatedly invoke and leave YottaDB.
-
-Changes to the value of $ZGBLDIR during a YottaDB invocation only last for the current invocation and do not change the value of ydb_gbldir.
 
 Example:
 
@@ -665,9 +663,6 @@ This example defines the environment variable ydb_gbldir. Upon entering YottaDB 
    $
 
 The SET command attempts to change the value of $ZGBLDIR to test.gld. Because the file does not exist, YottaDB reports an error and does not change the value of $ZGBLDIR.
-
-.. note::
-   Attempting to restore an inaccessible initial Global Directory that has been NEW'd, can cause an error.
 
 -----------------
 $ZHOROLOG

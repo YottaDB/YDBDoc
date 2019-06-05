@@ -1655,7 +1655,7 @@ SOCKET devices are used to access and manipulate sockets. A SOCKET device can ha
 
 At any time, only one socket from the collection can be the current socket. If there is no current socket, an attempt to READ from, or WRITE to the device, generates an error.
 
-Sockets can be attached and detached from the collection of sockets associated with a device. Detached sockets belong to a pseudo-device called the "socketpool". A process can detach a socket from a device and later attach it to the same device or another device.
+Sockets can be attached and detached from the collection of sockets associated with a device. Detached sockets belong to a pseudo-device called the "socketpool". SOCKET devices use "YGTMSOCKETPOOL" to identify the socket pool; an attempt to OPEN a device of that name produces a DEVNAMERESERVED error. A process can detach a socket from a device and later attach it to the same device or another device.
 
 .. note::
    Currently, YottaDB does not produce an error if a socket is attached to a device having a different CHSET.
@@ -1985,7 +1985,7 @@ The minimum variables are: $ydb_dist, which specifies the directory containing t
    export ydb_gbldir=/var/myApp/g/mumps.dat
    $ydb_dist/mumps -r start^server
 
-When start^server begins, the $PRINCIPAL device is the current device connected a socket and $KEY contains "ESTABLISHED|socket_handle| remote_ip_address". In most cases, a USE command near the beginning of the routine sets various device parameters such as delimiters.
+When start^server begins, the $PRINCIPAL device is the current device which is the incoming connection and $KEY contains "ESTABLISHED|socket_handle| remote_ip_address". In most cases, a USE command near the beginning of the routine sets various device parameters such as delimiters.
 
 The ZSHOW "D" command reports available information on both the local and remote sides of a TCP socket including local and remove addresses and ports.
 
@@ -3406,7 +3406,7 @@ CTRAP=expr Applies to: TRM
 
 Establishes the <CTRL> characters in the expression as trap characters for the current device. When YottaDB receives a trap character in the input from a device, YottaDB issues a run-time exception. The device does not have to be the current device, that is $IO.
 
-The <CTRL> characters are ASCII 0 though 31.
+The <CTRL> characters are ASCII 0 though 31. However, terminal configuration may prevent of most <CTRL> characters from ever reaching YottaDB's CTRAP facility.
 
 For example, the command U $P:CTRAP=$C(26,30,7,19) sets a trap for the ASCII characters <SUB>, <RS>, <BEL> and <DC3>.
 

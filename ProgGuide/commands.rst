@@ -682,6 +682,15 @@ This passes three values (TYPE, PRNTR, and WAITIM) to the new job, which starts 
 
 Example:
 
+.. parsed-literal::
+   set jout="serverjob.mjo"
+   set jerr="serverjob.mje"
+   job @("check(a,b):(OUTPUT="""_jout_""":ERROR="""_jerr_""")")
+
+This passes two values (a and b) to the new job, which starts at the label check of the current routine. It also specifies the stdout of the jobbed process to be the file name stored in the local variable jout and stderr to be the file name stored in the local variable jerr.
+
+Example:
+
 Refer to the sockexamplemulti31.m program in the `Using Socket Devices <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#using-socket-devices>`_ section for more examples on the JOB command.
 
 ----------------
@@ -1561,9 +1570,7 @@ Key Words in VIEW Command
 
 The following sections describe the keywords available for the VIEW command in YottaDB.
 
-~~~~~~~~~~~~~~~~~
-"BREAKMSG":value
-~~~~~~~~~~~~~~~~~
+**"BREAKMSG":value**
 
 Sets the value of the BREAK message mask. When YottaDB processes a BREAK command, the BREAK message mask controls whether to display a message describing the source of the BREAK.
 
@@ -1588,9 +1595,7 @@ Example:
 
 In this example the BREAKMSG value is 5, representing the sum of 1 and 4. This enables BREAKS within the body of a program (value 1) and for a device EXCEPTION (value 4).
 
-~~~~~~~~~~~~~~
-"[NO]BADCHAR"
-~~~~~~~~~~~~~~
+**[NO]BADCHAR**
 
 Enables or disables the generation of an error when character-oriented functions encounter malformed byte sequences (illegal characters).
 
@@ -1601,39 +1606,27 @@ With VIEW "BADCHAR", YottaDB functions generate the BADCHAR error when they enco
 .. parsed-literal::
    When all strings consist of well-formed characters, the value of VIEW [NO]BADCHAR has no effect whatsoever. With VIEW "NOBADCHAR", the same functions treat malformed byte sequences as valid characters. During the migration of an application to add support for UTF-8 mode, illegal character errors are likely to be frequent and indicative of application code that is yet to be modified. VIEW "NOBADCHAR" suppresses these errors at times when their presence impedes development.
 
-~~~~~~~~~~~~~~~~~~~~~~
-"DBFLUSH"[:REGION[:N]]
-~~~~~~~~~~~~~~~~~~~~~~
+**"DBFLUSH"[:REGION[:N]]**
 
 When using the BG access method, writes modified blocks in the global buffers to the database file. By default, this command option operates on all regions under the current global directory. N specifies the number of blocks to write; by default, DBFLUSH writes all modified blocks. Normally YottaDB schedules block flushing at appropriate times, but this option exists for an application to explore the impact of flushing on their work load. See also the DBSYNC and EPOCH VIEW Options.
 
-~~~~~~~~~~~~~~~~~~
-"DBSYNC"[:REGION]
-~~~~~~~~~~~~~~~~~~
+**"DBSYNC"[:REGION]**
 
 Performs a file system hardening sync - fsync() - operation on the database file. By default, this command option operates on all regions under the current global directory. Normally YottaDB schedules block flushing at appropriate times, but this option exists for an application to explore the impact of file hardening on their work load. See also the DBFLUSH and EPOCH VIEW Options.
 
-~~~~~~~~~~~~~
-"[NO]DMTERM"
-~~~~~~~~~~~~~
+**[NO]DMTERM**
 
 Provides a mechanism to retain default line terminators for direct mode user interaction (including the BREAK command) independent of any TERMINATOR deviceparameter changes for $PRINCIPAL. With VIEW "NODMTERM", TERMINATOR deviceparameter apply to both READs from $PRINCIPAL and direct mode interactions. A case-insensitive value of the environment variable ydb_dmterm is "1", "yes", or "true" establishes a DMTERM state at process initiation; all other values, including no value, result in the default VIEW "NODMTERM" behavior. $VIEW("DMTERM") returns 1 for DMTERM mode or 0 for NODMTERM mode. 
 
-~~~~~~~~~~~~~~~~~
-"EPOCH"[:REGION]
-~~~~~~~~~~~~~~~~~
+**"EPOCH"[:REGION]**
 
 Flushes the database buffers and, if journaling is enabled, writes an EPOCH record. By default, this command option operates on all regions under the current global directory. Normally YottaDB schedules epochs as a user controlled journaling characteristic, but this option exists for an application to explore the impact of epochs on their work load. See also the DBFLUSH and DBSYNC VIEW Options. Epochs include DBFLUSH and DBSYNC actions, but performing them before the epoch may reduce the duration of these actions within the epoch.
 
-~~~~~~~~~~~~~~~~~
-"FLUSH"[:REGION]
-~~~~~~~~~~~~~~~~~
+**"FLUSH"[:REGION]**
 
 Flushes dirty global buffers from the global buffer pool. If journaling is turned on, "FLUSH" writes an EPOCH record and flushes dirty journal buffers prior to flushing dirty global buffers. If no region is specified, VIEW "FLUSH" flushes all regions in the current global directory that the YottaDB process has opened.
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-"[NO]FULL_BOOL[EAN|WARN]"
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+**[NO]FULL_BOOL[EAN|WARN]**
 
 Controls the evaluation of Boolean expressions (expressions evaluated as a logical TRUE or FALSE).
 
@@ -1679,9 +1672,7 @@ Writes or flushes journaling buffers associated with the given region to permane
 
 Normally YottaDB writes journal buffers when it completes a transaction (unless TRANSACTIONID="BATCH"), fills the journal buffer or when some period of time passes with no journal activity.
 
-~~~~~~~~~~
-"JNLWAIT"
-~~~~~~~~~~
+**JNLWAIT**
 
 Causes a process to pause until its journaling buffers have been written. JNLWAIT ensures that YottaDB successfully transfers all database updates issued by the process to the journal file before the process continues. Normally, YottaDB performs journal buffer writes synchronously for TP updates, and asynchronously, while the process continues execution, for non-TP updates or TP updates with TRANSACTIONID=BATCH.
 
@@ -1714,19 +1705,19 @@ Enables ("LINK":"RECURSIVE") or disables ("LINK":"RECURSIVE") the ZLINK command 
 The default is VIEW "LINK":"NORECURSIVE".
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-"[NO]LOGN[ONTP][=intexpr]"
+"[NO]LOGN[ONTP][:intexpr]"
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Allows a process to dynamically change the logging of NONTPRESTART messages to the operator log established at process startup by the environment variables ydb_nontprestart_log_delta and ydb_nontprestart_log_first.
 
 VIEW "NOLOGNONTP" turns off the logging of NONTPRESTART messages to the operator log.
 
-VIEW "LOGNONTP"[=intexpr] turns on logging of NONTPRESTART messages to the operator log. If no intexpr is specified, YottaDB uses the value of environment variable ydb_nontprestart_log_delta, if it is defined, and one otherwise (that is, every transaction restart will be logged). A negative value of intexpr turns off the logging of NONTPRESTART messages.
+VIEW "LOGNONTP"[:intexpr] turns on logging of NONTPRESTART messages to the operator log. If no intexpr is specified, YottaDB uses the value of environment variable ydb_nontprestart_log_delta, if it is defined, and one otherwise (that is, every transaction restart will be logged). A negative value of intexpr turns off the logging of NONTPRESTART messages.
 
-Note that it is not possible to perform the operations of ydb_nontprestart_log_first with VIEW "LOGNONTP"[=intexpr].
+Note that it is not possible to perform the operations of ydb_nontprestart_log_first with VIEW "LOGNONTP"[:intexpr].
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-"[NO]LOGT[PRESTART][=intexpr]"
+"[NO]LOGT[PRESTART][:intexpr]"
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Allows a process to dynamically change the logging of TPRESTART messages to the operator log established at process startup by the environment variables ydb_tprestart_log_delta and ydb_tprestart_log_first.
@@ -1735,7 +1726,7 @@ VIEW "NOLOGTPRESTART" turns off the logging of TPRESTART messages to the operato
 
 VIEW "LOGTPRESTART"[=intexpr] turns on logging of TPRESTART messages to the operator log. If no intexpr is specified, YottaDB uses the value of environment variable ydb_tprestart_log_delta, if it is defined, and one otherwise (that is, every transaction restart will be logged). A negative value of intexpr turns off the logging of TPRESTART messages.
 
-Note that it is not possible to perform the operations of ydb_tprestart_log_first with VIEW "LOGTPRESTART"[=intexpr].
+Note that it is not possible to perform the operations of ydb_tprestart_log_first with VIEW "LOGTPRESTART"[:intexpr].
 
 ~~~~~~~~~
 "LV_GCOL"
@@ -1776,9 +1767,7 @@ At process startup, YottaDB initializes [NEVER][NO]LVNULLSUBS from $ydb_lvnullsu
 .. note::
    Remember that for global variables, empty string subscript checking is controlled by a database region characteristic. YottaDB recommends using LVNULLSUBS, NOLVNULLSUBS, or NEVERLVNULLSUBS for local variables and NULLSUBS options ALWAYS or NEVER for global variables.
 
-~~~~~~~~~~~~~~~~~~~~~
-"NOISOLATION":<expr>
-~~~~~~~~~~~~~~~~~~~~~
+**"NOISOLATION":<expr>**
 
 where expr must evaluate to one of the following forms:
 

@@ -1495,19 +1495,20 @@ $VIEW() provides a means to access YottaDB environmental information. When Yotta
 +---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | "POOLLIMIT"   | region           | The current limit on global buffers for the region .                                                                                                                |
 +---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| "PROBECRIT"   | region           | Acquires and releases a critical section for the region (the "probe"), returning a string with the following fields:                                                |
+| "PROBECRIT"   | region           | Acquires and releases a critical section for the region (the "probe"), returning a string with the following field,                                                 |
+|               |                  | some of of which always have zero (0) values because they are no longer used:                                                                                       |
 |               |                  |                                                                                                                                                                     |
 |               |                  | * CPT - nanoseconds for the probe to get the critical section                                                                                                       |
 |               |                  |                                                                                                                                                                     |
-|               |                  | * CFN - number of failures of the probe to get the critical section                                                                                                 |
+|               |                  | * CFN - 0                                                                                                                                                           |
 |               |                  |                                                                                                                                                                     |
-|               |                  | * CQN - number of queue sleeps by the probe                                                                                                                         |
+|               |                  | * CQN - 0                                                                                                                                                           |
 |               |                  |                                                                                                                                                                     |
-|               |                  | * CYN - number of process yields by the probe                                                                                                                       |
+|               |                  | * CYN - 0                                                                                                                                                           |
 |               |                  |                                                                                                                                                                     |
-|               |                  | * CQF - number of queue fulls encountered by the probe                                                                                                              |
+|               |                  | * CQF - 0                                                                                                                                                           |
 |               |                  |                                                                                                                                                                     |
-|               |                  | * CQE - number of empty queue slots found by the probe                                                                                                              |
+|               |                  | * CQE - 0                                                                                                                                                           |
 |               |                  |                                                                                                                                                                     |
 |               |                  | * CAT - total of critical section acquisitions successes                                                                                                            |
 +---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -2653,7 +2654,8 @@ The format for the $ZLENGTH() function is:
 
 * The first expression specifies the sequence of octets that $ZLENGTH() "measures".
 * The optional second expression specifies the delimiter that defines the measure; if this argument is missing, $ZLENGTH() returns the number of bytes in the sequence of octets.
-* If the second argument is present and not null, $ZLENGTH() returns one more than the count of the number of occurrences of the second byte sequence in the first byte sequence; if the second argument is null , the M standard for the analogous $LENGTH() dictates that $ZLENGTH() returns a zero (0). $ZLENGTH() provides a tool for determining the lengths of a sequence of octets in two ways - bytes and pieces. The two argument $ZLENGTH() returns the number of existing pieces, while the one argument returns the number of bytes.
+* If the second argument is present and not null, $ZLENGTH() returns one more than the count of the number of occurrences of the second byte sequence in the first byte sequence; if the second argument is null , the M standard for the analogous $LENGTH() dictates that $ZLENGTH() returns a zero (0). 
+* $ZLENGTH() provides a tool for determining the lengths of a sequence of octets in two ways - bytes and pieces. The two argument $ZLENGTH() returns the number of existing pieces, while the one argument returns the number of bytes.
 
 +++++++++++++++++++++++
 Examples of $ZLENGTH()

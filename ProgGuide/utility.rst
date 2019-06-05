@@ -1669,11 +1669,18 @@ This example searches global ^a for the string "Hello" and displays all nodes th
 
 The %GSEL utility selects globals. %GSEL creates a variable %ZG that is a local array of the selected globals. After each selection %GSEL displays the number of globals in %ZG.
 
-%GSEL accepts the wildcard characters asterisk (*), percent sign (%) and question mark (?). The wildcards carry their usual meanings, asterisk (*) denoting a field or a portion of a field, and question mark (?) or percent sign (%) denoting a single character. The wildcards question mark (?) and percent sign (%) lose their meanings when in the first position of a global name. %GSEL interprets a percent sign (%) in the first position of a global name literally.
+%GSEL accepts the wildcard characters asterisk (*), percent sign (%) and question mark (?). The wildcards carry their usual meanings, asterisk (*) denoting a field or a portion of a field, and question mark (?) or percent sign (%) denoting a single character. 
 
-A colon (:) between two globals specifies a range.
+* The wildcards question mark (?) and percent sign (%) lose their meanings when in the first position of a global name. 
+  
+  * When '%' is in the first position of a global name, %GSEL interprets it literally. For example, "%*" means all global names starting with '%'.
+  * When you specify only '?' as a global name, %GSEL displays the online help.
+  * When you specify a '?' followed by a 'D' or 'd', %GSEL displays the global names currently in the %ZG array.
+  * %GSEL produces an error if there is '?' at the first position of a global name followed by any character other than 'D' or 'd'. For example, "?a" produces an error.
 
-A minus sign (-) or quotation mark (') preceding a global name removes that global from the %ZG array. A question mark (?) provides online help, and "?D" displays global names currently in the array.
+* A colon (:) between two globals specifies a range. %GSEL produces an error if you specify a '?' as the first character after a colon (:).
+
+* A minus sign (-) or quotation mark (')  as the first character will cause the search to remove the proceding global or range from the %ZG array.
 
 **Utility Labels**
 
@@ -1708,7 +1715,7 @@ Example:
    Global ^?D
    ^C ^c ^class
    Current total of 3 globals
-   Global ^ <RETURN>
+   Global ^
    YDB>ZWRITE 
    %ZG=3 
    %ZG("^C")=""
@@ -1725,7 +1732,7 @@ Example:
    Global ^a
    ^a
    Current total of 1 global.
-   Global ^<RETURN> 
+   Global ^ 
    YDB>ZWRITE
    %ZG=1
    %ZG("^a")=""
@@ -1735,7 +1742,7 @@ Example:
    Global ^iv
    ^iv
    Current total of 2 globals.
-   Global ^<RETURN>
+   Global ^
    YDB>ZWRITE
    %ZG=2
    %ZG("^a")=""
@@ -2576,6 +2583,8 @@ When using the following, remember to write code that allows for values other th
 +------------------------------+-----------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
 | Number of processes accessing|  "node_local.ref_cnt"                         | Integer count (always greater than zero, because the process running %PEEKBYNAME has the database open)                     |
 | the database                 |                                               |                                                                                                                             |
++------------------------------+-----------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
+| Region open                  |  "gd_region.open"                             | Boolean                                                                                                                     |
 +------------------------------+-----------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
 | Region replication sequence  |  "sgmnt_data.reg_seqno"                       | Integer Count                                                                                                               |
 | number                       |                                               |                                                                                                                             |
