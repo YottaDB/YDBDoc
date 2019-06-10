@@ -1513,7 +1513,7 @@ used when a single call to the function is anticipated. :code:`CallMT()` only su
 - If a return value is specified but has not been configured in the call-in descriptor file or vice-versa, a parameter mismatch situation is created.
 
 - :code:`rtnargs` refers to a list of 0 or more parameters passed to the called routine. Any type that can be converted to a string by fmt.Sprintf(“%v”, parm) can be used here. 
-  The number of parameters possible is restricted to 33 (for 64-bit systems) or 34 (for 32-bit systems).
+  The number of parameters possible is restricted to 34 (for 64-bit systems) or 33 (for 32-bit systems).
 
 Example:
 
