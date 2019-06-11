@@ -224,7 +224,7 @@ For performance, a symmetric cipher is used to encrypt and decrypt data records.
 
 **Key Ring on Disk**
 
-A passphrase protects the key ring on disk that contains the private key uses to encrypt the asymmetric database keys. YottaDB requires this passphrase either in an obfuscated form as the value of the ydb_passwd environment variable, or,if ydb_passwd is set to "" and then typed at the GTMCRYPT passphrase prompt. YottaDB obfuscates the passphrase to prevent inadvertent disclosure, for example, in a dump of the environment that you may submit to YottaDB for product support purposes, the passphrase in the environment is obfuscated using information available to processes on the system on which the process is running, but not available on other systems.
+A passphrase protects the key ring on disk that contains the private key uses to encrypt the asymmetric database keys. YottaDB requires this passphrase either in an obfuscated form as the value of the ydb_passwd environment variable, or,if ydb_passwd is set to "" and then typed at the GTMCRYPT passphrase prompt defined in the reference implementation of the plugin. YottaDB obfuscates the passphrase to prevent inadvertent disclosure, for example, in a dump of the environment that you may submit to YottaDB for product support purposes, the passphrase in the environment is obfuscated using information available to processes on the system on which the process is running, but not available on other systems.
 
 You can provide the passphrase of the key ring to YottaDB in one of the following four ways: 
 
@@ -235,7 +235,7 @@ You can provide the passphrase of the key ring to YottaDB in one of the followin
 
 You should use this method when you need to restrict the access of encrypted regions to the same $USER using the same YottaDB distribution. $ydb_passwd can be passed between from the parent process to a child process with the Job command. Note that $ydb_passwd is the only way for a child process to receive a password from a parent process. 
 
-* Set the environment variable ydb_passwd to "". In this case, YottaDB uses the default GTMCRYPT passphrase prompt to obtain a password at process startup and uses that value as $ydb_passwd for the duration of the process. Note that you cannot change the GTMCRYPT passphrase prompt without customizing the reference implementation plugin. 
+* Set the environment variable ydb_passwd to "". In this case, YottaDB uses the default GTMCRYPT passphrase prompt to obtain a password at process startup and uses that value as $ydb_passwd for the duration of the process. The GTMCRYPT passphrase is defined in a C macro :code:`GTMCRYPT_DEFAULT_PASSWD_PROMPT` in the gtmcrypt_util.h file of the reference implementation plugin. The default is :code:`Enter Passphrase:`.
 
 * When the environment variable ydb_passwd is not set, create a one line YottaDB program as in the following example: 
 
@@ -245,9 +245,9 @@ You should use this method when you need to restrict the access of encrypted reg
 and use it to invoke the MUPIP or DSE command. For example: 
 
   .. parsed-literal::
-     $ ydb_passwd="" mumps -run zcmd mupip backup \\"\*\\" 
+     $ ydb_passwd="" yottadb -run zcmd mupip backup \\"\*\\"
 
-The empty string value of $ydb_passwd causes the MUMPS process to prompt for and set an obfuscated password in its environment which it then passes to the MUPIP program. Shell quote processing requires the use of escapes to pass the quotes from the ZSYstem command to the shell. 
+The empty string value of $ydb_passwd causes the YottaDB process to prompt for and set an obfuscated password in its environment which it then passes to the MUPIP program. Shell quote processing requires the use of escapes to pass the quotes from the ZSYstem command to the shell. 
 
 .. note::
    An obfuscated password in the environment is the only way that other YottaDB processes (MUPIP and DSE) can be provided with a password. If they encounter an encrypted database or journal file, and do not have an obfuscated password to the key ring on disk in the environment, they terminate with the error message "YDB-E-CRYPTINIT, Error initializing encryption library. Environment variable ydb_passwd set to empty string. Password prompting not allowed for utilities". 
@@ -264,7 +264,7 @@ Remember that $ydb_passwd is not a database authentication mechanism. $ydb_passw
 
 **Master Key Configuration File and Encryption Keys**
 
-The reference implementation uses the database section of the $ydb_crypt_config file to obtain the symmetric keys for encrypting a database file. The environment variable ydb_crypt_config specifies the location of the master key configuration file which contains dat and key combinations. A dat entry specifies the absolute location of the database file and the key entry specifies the absolution location of the encryption key. The master key configuration file leverages the popular libconfig library (http://www.hyperrealm.com/libconfig). 
+The reference implementation uses the database section of the $ydb_crypt_config file to obtain the symmetric keys for encrypting a database file. The environment variable ydb_crypt_config specifies the location of the master key configuration file which contains dat and key combinations. A dat entry specifies the absolute location of the database file and the key entry specifies the absolution location of the encryption key. The master key configuration file leverages the popular libconfig library (http://www.hyperrealm.com/libconfig as well as via package managers of popular Linux distributions). 
 
 Note that encryption key files are text files which can even be faxed or e-mailed: since they are secured with asymmetric encryption, you can transmit them over an insecure channel. 
 
@@ -308,7 +308,7 @@ Helen Keymaster (helen@yottadb) is the master of keys, and provides a database k
 
 The workflow is as follows: 
 
-Helen and Phil each create a new GPG keyring and a new public-private key pair (This step can be omitted if they already have GPG keyrings and public and private keys. However, see the section below on operation with Gnu Privacy Guard version 2.). In the gen_keypair.sh script GPG generates the key pair [see note], putting public and private keys in the key ring; the latter locked with a passphrase. The public key is also exported to a text file, and its fingerprint is displayed in the terminal session. Each of them e-mails (or otherwise sends) her/his public key text file to the other. One alternative to the direct sending of public keys is to upload them to a keyserver, such as the MIT PGP Public Key Server at http://pgp.mit.edu . This is illustrated below; first Helen, then Phil (if the GNUPGHOME environment variable is not set, it will default to $HOME/.gnupg).
+Helen and Phil each create a new GPG keyring and a new public-private key pair (This step can be omitted if they already have GPG keyrings and public and private keys. However, see the section below on operation with GNU Privacy Guard version 2.). In the gen_keypair.sh script GPG generates the key pair [see note], putting public and private keys in the key ring; the latter locked with a passphrase. The public key is also exported to a text file, and its fingerprint is displayed in the terminal session. Each of them e-mails (or otherwise sends) her/his public key text file to the other. One alternative to the direct sending of public keys is to upload them to a keyserver, such as the MIT PGP Public Key Server at http://pgp.mit.edu . This is illustrated below; first Helen, then Phil (if the GNUPGHOME environment variable is not set, it will default to $HOME/.gnupg).
 
 .. note::
    Generating a public-private keypair can consume a significant amount of the entropy in a computer system. Running out of entropy can cause the operation to stall until sufficient entropy becomes available. You may need to consider external entropy sources or entropy gathering daemons for computer systems on which key generation will occur frequently. For encrypted databases on virtual machines, you may need to generate public-private keypairs on host computers and then ship the keyrings to the virtual guests.
@@ -634,7 +634,7 @@ When invoking GPG via GPGME, there is no convenient way to avoid invoking an age
 Using the Reference Implementation's Custom pinentry Program
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-pinentry-gtm.sh is a custom pinentry program that prevents prompting for keyring passphrase by Gnu Privacy Guard operations when the environment variable ydb_passwd is already defined. When there is a GETPIN request and the ydb_passwd environment variable is defined, pinentry-gtm.sh runs pinentry.m and returns to the calling program. Custom pinentry programs like pinentry-gtm.sh are meaningful only when you set ydb_passwd to an obfuscated passphrase. When the environment variable ydb_passwd is not defined or a usable mumps or pinentry.m does not exists, pinentry-gtm.sh runs the default pinentry program and prompts for passphrase. Remember that pinentry.m can reveal the passphrase. Therefore, ensure that you restrict the access for the pinentry.m's object file to only those users who manage your keys. YottaDB provides pinentry-gtm.sh as a convenience to those users who are bothered by prompting for keyring passphrases for Gnu Privacy Guard related operations. Neither pinentry-gtm.sh nor pinentry.m is used internally by any YottaDB database operation.
+pinentry-gtm.sh is a custom pinentry program that prevents prompting for keyring passphrase by GNU Privacy Guard operations when the environment variable ydb_passwd is already defined. When there is a GETPIN request and the ydb_passwd environment variable is defined, pinentry-gtm.sh runs pinentry.m and returns to the calling program. Custom pinentry programs like pinentry-gtm.sh are meaningful only when you set ydb_passwd to an obfuscated passphrase. When the environment variable ydb_passwd is not defined or a usable mumps or pinentry.m does not exists, pinentry-gtm.sh runs the default pinentry program and prompts for passphrase. Remember that pinentry.m can reveal the passphrase. Therefore, ensure that you restrict the access for the pinentry.m's object file to only those users who manage your keys. YottaDB provides pinentry-gtm.sh as a convenience to those users who are bothered by prompting for keyring passphrases for GNU Privacy Guard related operations. Neither pinentry-gtm.sh nor pinentry.m is used internally by any YottaDB database operation.
 
 .. note::
    When you set ydb_passwd to "", YottaDB obtains the passphrase using the default GTMCRYPT passphrase prompt. When ydb_passwd is set to "", you can neither use a pinentry program (custom or default) to obtain a passphrase nor customize the default GTMCRYPT passphrase prompt. 
@@ -661,7 +661,7 @@ Set up the encryption keys using the gen_keypair.sh script. This script creates 
 
 When pinetry-gtm.sh finds the environment variable $ydb_passwd defined and an executable YottaDB, it runs the pinentry.m program which provides GnuPG with the keyring password from the obfuscated password. Otherwise, it calls /usr/bin/pinentry.
 
-The custom pinentry program uses a YottaDB external call. Each YottaDB application that uses encryption must define the environment variable GTMXC_gpgagent to point to the location of gpgagent.tab. By default, the reference implementation places gpgagent.tab in the $ydb_dist/plugin/directory. gpgagent.tab is an external call table that pinentry.m uses to unmask the obfusacated password stored in ydb_passwd.
+The custom pinentry program uses a YottaDB external call. Each YottaDB application that uses encryption must define the environment variable ydb_xc_gpgagent to point to the location of gpgagent.tab. By default, the reference implementation places gpgagent.tab in the $ydb_dist/plugin/directory. gpgagent.tab is an external call table that pinentry.m uses to unmask the obfuscated password stored in ydb_passwd.
 
 Direct the gpg-agent to use its standard Unix domain socket file, $GNUPGHOME/S.agent, when listening for password requests. Enabling the standard socket simplifies the gpg-agent configuration. Enable the standard socket by adding the following configuration option to $GNUPGHOME/gpg-agent.conf.
 
@@ -845,7 +845,7 @@ As there is no way to change the hash in a journal file header, make sure that y
 Changing Encryption Keys
 +++++++++++++++++++++++++
 
-YottaDB recommends rotating (changing) the encryption key of the database for better security. The frequency of encryption key rotation depends on your security requirements and policies. MUPIP REORG -ENCRYPT provides the option to encrypt a database or rotate the keys of an already encrypted database. If you are using replication, you can encrypt the replicating secondary instance first to prevent your originating primary instance from any additional IO load that MUPIP REORG -ENCRYPT may add. FIS suggests using different encryption keys for different instances, so that if the keys for one instance are compromised, the application can be kept available from another instance whose keys are not compromised, while changing the encryption keys on the instance with compromised keys. For more information, refer to “-Encrypt”. 
+YottaDB recommends rotating (changing) the encryption key of the database for better security. The frequency of encryption key rotation depends on your security requirements and policies. MUPIP REORG -ENCRYPT provides the option to encrypt a database or rotate the keys of an already encrypted database. If you are using replication, you can encrypt the replicating secondary instance first to prevent your originating primary instance from any additional IO load that MUPIP REORG -ENCRYPT may add. YottaDB suggests using different encryption keys for different instances, so that if the keys for one instance are compromised, the application can be kept available from another instance whose keys are not compromised, while changing the encryption keys on the instance with compromised keys. For more information, refer to “-Encrypt”. 
 
 ++++++++++++++++++
 Database Creation

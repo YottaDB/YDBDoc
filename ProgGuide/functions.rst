@@ -2654,8 +2654,8 @@ The format for the $ZLENGTH() function is:
 
 * The first expression specifies the sequence of octets that $ZLENGTH() "measures".
 * The optional second expression specifies the delimiter that defines the measure; if this argument is missing, $ZLENGTH() returns the number of bytes in the sequence of octets.
-* If the second argument is present and not null, $ZLENGTH() returns one more than the count of the number of occurrences of the second byte sequence in the first byte sequence; if the second argument is null , the M standard for the analogous $LENGTH() dictates that $ZLENGTH() returns a zero (0). 
-* $ZLENGTH() provides a tool for determining the lengths of a sequence of octets in two ways - bytes and pieces. The two argument $ZLENGTH() returns the number of existing pieces, while the one argument returns the number of bytes.
+* If the second argument is present and not null, $ZLENGTH() returns one more than the count of the number of occurrences of the second byte sequence in the first byte sequence; if the second argument is null, the M standard for the analogous $LENGTH() dictates that $ZLENGTH() returns a zero (0). 
+* $ZLENGTH() provides a tool for determining the lengths of a sequence of octets in two ways - characters and delimited substrings(pieces). The two argument $ZLENGTH() returns the number of existing pieces, while the one argument returns the number of characters.
 
 +++++++++++++++++++++++
 Examples of $ZLENGTH()

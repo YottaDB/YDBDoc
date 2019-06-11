@@ -3406,7 +3406,7 @@ CTRAP=expr Applies to: TRM
 
 Establishes the <CTRL> characters in the expression as trap characters for the current device. When YottaDB receives a trap character in the input from a device, YottaDB issues a run-time exception. The device does not have to be the current device, that is $IO.
 
-The <CTRL> characters are ASCII 0 though 31. However, terminal configuration may prevent of most <CTRL> characters from ever reaching YottaDB's CTRAP facility.
+The <CTRL> characters are ASCII 0 though 31. However, terminal configuration may prevent most <CTRL> characters from ever reaching YottaDB's CTRAP facility.
 
 For example, the command U $P:CTRAP=$C(26,30,7,19) sets a trap for the ASCII characters <SUB>, <RS>, <BEL> and <DC3>.
 
