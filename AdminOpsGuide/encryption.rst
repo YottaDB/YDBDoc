@@ -987,8 +987,6 @@ gtmcrypt_close()
 
 Disable encryption and discard any sensitive data in memory.
 
-The complete source code for reference implementations of these functions is provided, licensed under the same terms as YottaDB. You are at liberty to modify them to suit your specific YottaDB database encryption needs.
-
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 gtmcrypt_encrypt_decrypt()
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
