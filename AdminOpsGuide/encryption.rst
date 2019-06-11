@@ -951,19 +951,19 @@ Mumps, MUPIP and DSE processes dynamically link to the plugin interface function
 
 The plugin interface functions are: 
 
-1. gtmcrypt_init()
-2. gtmcrypt_strerror()
-3. gtmcrypt_init_db_cipher_context_by_hash()
-4. gtmcrypt_init_device_cipher_context_by_keyname()
-5. gtmcrypt_obtain_db_key_hash_by_keyname()
-6. gtmcrypt_release_cipher_context()
-7. gtmcrypt_encrypt_decrypt()
+1. gtmcrypt_close()
+2. gtmcrypt_encrypt_decrypt()
+3. gtmcrypt_init()
+4. gtmcrypt_init_db_cipher_context_by_hash()
+5. gtmcrypt_init_device_cipher_context_by_keyname()
+6. gtmcrypt_obtain_db_key_hash_by_keyname()
+7. gtmcrypt_release_cipher_context()
 8. gtmcrypt_same_key()
-9. gtmcrypt_close()
+9. gtmcrypt_strerror()
 
-A YottaDB database consists of multiple database files, each of which has its own encryption key, although you can use the same key for multiple files. Thus, the gtmcrypt* functions are capable of managing multiple keys for multiple database files. Prototypes for these functions are in ydbcrypt_interface.h.
+A YottaDB database consists of multiple database files, each of which has its own encryption key, although you can use the same key for multiple files. Thus, the gtmcrypt* functions are capable of managing multiple keys for multiple database files. Prototypes for these functions are in ydbcrypt_interface.h, which is included with the encryption plugin..
 
-The core plugin interface functions, all of which return a value of type xc_status_t are:
+The core plugin interface functions, all of which return a value of type ydb_status_t are:
 
 * :code:`gtmcrypt_init()` performs initialization. If the environment variable $ydb_passwd exists and has an empty string value, YottaDB calls :code:`gtmcrypt_init()` before the first M program is loaded; otherwise it calls :code:`gtmcrypt_init()` when it attempts the first operation on an encrypted database file.
 
@@ -977,6 +977,28 @@ The core plugin interface functions, all of which return a value of type xc_stat
 
 More detailed descriptions follow. 
 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+gtmcrypt_close()
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. parsed-literal::
+   gtm_status_t gtmcrypt_close(void);
+
+
+Disable encryption and discard any sensitive data in memory.
+
+The complete source code for reference implementations of these functions is provided, licensed under the same terms as YottaDB. You are at liberty to modify them to suit your specific YottaDB database encryption needs.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+gtmcrypt_encrypt_decrypt()
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. parsed-literal::
+   gtm_status_t gtmcrypt_encrypt_decrypt(gtmcrypt_key_t handle, gtm_char_t \*src_block, gtm_int_t src_block_len, gtm_char_t \*dest_block, gtm_int_t operation, gtm_int_t iv_mode, gtm_string_t iv);
+
+
+Perform encryption or decryption of the provided data based on the specified encryption/decryption state. If the target buffer pointer is NULL, the operation is done in-place. It is also possible to set the initialization vector (IV) to a particular value, or reset it to the original value, before attempting the operation. Note that the changes are persistent.
+
 ~~~~~~~~~~~~~~~~~~~~~~
 gtmcrypt_init()
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -986,16 +1008,6 @@ gtmcrypt_init()
 
 
 Initializes encryption if not yet initialized. Use this function to load necessary libraries and set appropriate configuration options. Upon a successful return this function is never invoked again.
-
-~~~~~~~~~~~~~~~~~~~~~~~
-gtmcrypt_strerror()
-~~~~~~~~~~~~~~~~~~~~~~~
-
-.. parsed-literal::
-   gtm_char_t  \*gtmcrypt_strerror(void);
-
-
-Returns the error string. Use this function to provide the current error status. The function is normally invoked following a non-zero return from one of the other functions defined in the interface, which means that each of them should start by clearing the error buffer.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 gtmcrypt_init_db_cipher_context_by_hash()
@@ -1007,7 +1019,7 @@ gtmcrypt_init_db_cipher_context_by_hash()
 
 Finds the key by hash and database path and sets up database encryption and decryption state objects, if not created yet. Use this function to locate a particular key by its hash and, if found, initialize the objects for subsequent encryption and decryption operations on any database that will use this key, unless already initialized. If the db_path argument specifies a non-null string, then the key should additionally correspond to that database in the configuration file.
 
-The reason that any database relying on the same key may use the same encryption and decryption state objects is this: Every database's encryption and decryption handles are initialized with a null IV, and every block is processed using either a null IV or IV corresponding to the block number. So, for every encryption and decryption operation the IV is always preset to the  "correct" value, effectively making it suitable for every database using the same hash.
+The reason that any database relying on the same key may use the same encryption and decryption state objects is this: Every database's encryption and decryption handles are initialized with a null IV, and every block is processed using either a null IV or IV corresponding to the block number. So, for every encryption and decryption operation the IV is always preset to the  "correct" value, effectively making it suitable for every database that uses the same hash.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 gtmcrypt_init_device_cipher_context_by_keyname()
@@ -1039,16 +1051,6 @@ gtmcrypt_release_cipher_context()
 
 Release the specified encryption or decryption state object, also releasing the decryption state if database encryption state is specified.
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-gtmcrypt_encrypt_decrypt()
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. parsed-literal::
-   gtm_status_t gtmcrypt_encrypt_decrypt(gtmcrypt_key_t handle, gtm_char_t \*src_block, gtm_int_t src_block_len, gtm_char_t \*dest_block, gtm_int_t operation, gtm_int_t iv_mode, gtm_string_t iv);
-
-
-Perform encryption or decryption of the provided data based on the specified encryption/decryption state. If the target buffer pointer is NULL, the operation is done in-place. It is also possible to set the initialization vector (IV) to a particular value, or reset it to the original value, before attempting the operation. Note that the changes are persistent.
-
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 gtmcrypt_same_key()
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1058,15 +1060,15 @@ gtmcrypt_same_key()
 
 Compare the keys associated with two encryption or decryption state objects.
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-gtmcrypt_close()
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+gtmcrypt_strerror()
+~~~~~~~~~~~~~~~~~~~~~~~
 
 .. parsed-literal::
-   gtm_status_t gtmcrypt_close(void);
+   gtm_char_t  \*gtmcrypt_strerror(void);
 
 
-Disable encryption and discard any sensitive data in memory.
+Returns the error string. Use this function to provide the current error status. The function is normally invoked following a non-zero return from one of the other functions defined in the interface, which means that each of them should start by clearing the error buffer.
 
 The complete source code for reference implementations of these functions is provided, licensed under the same terms as YottaDB. You are at liberty to modify them to suit your specific YottaDB database encryption needs. 
 
