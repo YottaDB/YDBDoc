@@ -403,7 +403,7 @@ context of a thread.
 - When an application calls a `Simple API <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#simple-api>`_ function outside a
   transaction, it provides a value of :code:`YDB_NOTTP` for
   :code:`tptoken`.
-- When an application calls `ydb_tp_st() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-tp-s-ydb-tp-st>`_, it generates provides a
+- When an application calls `ydb_tp_st() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-tp-s-ydb-tp-st>`_, it generates a
   :code:`tptoken` as the first parameter when it calls the function
   that implements the logic for the transaction. Any threads that this
   function spawns must provide this :code:`tptoken` to

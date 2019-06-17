@@ -1105,10 +1105,10 @@ ydb_tp_s() / ydb_tp_st()
                 ydb_buffer_t *varnames);
 
 :code:`ydb_tp_s()` and :code:`ydp_tp_st()` call the function
-:code:referenced by :code:`tpfn` passing it `tpfnparm` as a
-:code:parameter. Additionally, :code:`ydb_tp_st()` also generates a
-:code:new :code:`tptoken` that it passes as a parameter to the
-:code:function referenced by its :code:`tpfn` parameter.
+referenced by :code:`tpfn` passing it :code:`tpfnparm` as a
+parameter. Additionally, :code:`ydb_tp_st()` also generates a
+new :code:`tptoken` that it passes as a parameter to the
+function referenced by its :code:`tpfn` parameter.
 
 As discussed under `Transaction Processing <https://docs.yottadb.com/MultiLangProgGuide/MultiLangProgGuide.html#transaction-processing>`_, a function implementing
 transaction processing logic should use the intrinsic special variable
