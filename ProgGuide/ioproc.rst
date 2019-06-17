@@ -585,7 +585,7 @@ This example disables <CTRL-C>.
 M Read Editing
 +++++++++++++++
 
-An editing capability similar to that available at the direct mode prompt has been added to the READ statement when reading from the $PRINCIPAL device if that device is a terminal. In addition to the functions currently available in direct mode, it is possible to select whether characters typed other than at the end of the current input will overwrite existing characters (overwrite mode) or be inserted at the cursor as is the case currently (insert mode). Only the previous input may be recalled during a READ unlike the multiple lines available during direct mode.
+An editing capability similar to that available at the direct mode prompt exists for the READ statement when reading from the $PRINCIPAL device if that device is a terminal. In addition to the functions currently available in direct mode, it is possible to select whether characters typed other than at the end of the current input will overwrite existing characters (overwrite mode) or be inserted at the cursor as is the case currently (insert mode). Only the previous input may be recalled during a READ unlike the multiple lines available during direct mode.
 
 The default EDITING and INSERT modes can be specified with an environment variable. Unless these features are enabled, the current functionality, which provides no line editing during M READ and insert mode during direct mode, will be retained.
 
