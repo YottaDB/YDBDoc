@@ -16,7 +16,7 @@ Several environment variables control the operation of YottaDB. Some of them mus
 
 Your YottaDB distribution comes with many scripts that set up a default YottaDB environment for the shell of your choice. These scripts are as follows: 
 
-**ydb_env_set** (gtmprofile): uses reasonable defaults to set up a system and a YottaDB application development environment for POSIX shells. The ydb_env_set script sets default values for environment variables ydb_dist, ydb_gbldir, ydb_icu_version, ydb_log, ydb_prompt, gtm_retention, ydb_routines, ydb_tmp, and ydb_rel. When you source the ydb_env_set script, it creates a default execution environment (global directory and a default database file with BEFORE_IMAGE journaling) if none exists.
+**ydb_env_set** (gtmprofile): uses reasonable defaults to set up a YottaDB application development environment that includes plugins conforming to the YottaDB standard (such as the POSIX plugin and Octo). The ydb_env_set file when sourced sets default values for the environment variables ydb_dir, ydb_dist, ydb_etrap, ydb_gbldir, ydb_log, ydb_rel, ydb_repl_instance, ydb_retention, ydb_routines, ydb_tmp, gtmdir, gtm_dist, gtm_etrap, gtmgbldir, gtm_log, gtm_repl_instance, gtm_retention, gtmroutines, gtm_tmp, and gtmver. Additionally, if $ydb_chset is set to a case independent "UTF-8", sourcing the file also sets ydb_icu_version and gtm_icu_version. The default environment is created under $ydb_dir, defaulting to $HOME/.yottadb if ydb_dir is undefined. Sourcing ydb_env_set saves environment variables that it sets such that subsequently sourcing ydb_env_unset restores the saved values.
 
 * **gtmcshrc**: sets up a default YottaDB environment for C-shell compatible shells. It sets up default values for ydb_dist, ydb_gbldir, ydb_chset and ydb_routines. It also creates aliases so you can execute YottaDB and its utilities without typing the full path.
 
@@ -38,7 +38,7 @@ On POSIX shells, ydb_env_set helps you set an environment for single-user, non-r
 ydb_env_set sets reasonable defaults for the following environment variables for normal YottaDB operation:
 
 .. parsed-literal::
-   gtmdir, ydb_dist, ydb_etrap, ydb_gbldir, ydb_icu_version, ydb_log, ydb_prompt, ydb_repl_instance, gtm_retention, ydb_routines, ydb_tmp, ydb_rel 
+   ydb_dir, ydb_dist, ydb_etrap, ydb_gbldir, ydb_log, ydb_rel, ydb_repl_instance, ydb_retention, ydb_routines, ydb_tmp, gtmdir, gtm_dist, gtm_etrap, gtmgbldir, gtm_log, gtm_repl_instance, gtm_retention, gtmroutines, gtm_tmp, gtmver 
 
 You can set the following environment variables before sourcing ydb_env_set or running the ydb script;
 
