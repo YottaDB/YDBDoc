@@ -331,7 +331,7 @@ The format for the $FNUMBER function is:
 * The optional integer expression (third argument) specifies the number of digits after the decimal point. If the numeric expression has more digits than specified by this argument, $FNUMBER() rounds to obtain the result. If the numeric expression has fewer digits than specified by this argument, $FNUMBER() zero-fills to obtain the result.
 * When the optional third argument is specified and the first argument evaluates to a fraction between -1 and 1, $FNUMBER() returns a number with a leading zero (0) before the decimal point (.).
 
-$FNUMBER() formats or edits numbers, usually for reporting. For more information on rounding performed by $FNUMBER(), refer to `$Justify() <https://docs.yottadb.com/ProgrammersGuide/functions.html#justify>`_.
+$FNUMBER() formats or edits numbers, usually for reporting. For more information on rounding performed by $FNUMBER(), refer to `$Justify() <https://docs.yottadb.com/ProgrammersGuide/functions.html#id1>`_.
 
 The formatting codes are:
 
