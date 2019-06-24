@@ -23,7 +23,7 @@ A plugin is software that extends the functionality of YottaDB for all users on 
 
 As M does not provide information hiding except for global variables (through global directories), plugins use namespacing to avoid colliding with applications and with one another.
 
-* Each plugin has a case-insensitive unique name even if there is a preferred capitalization, e.g., GDEGUI, Octo. As repositories on GitLab have YDB prefixes, e.g., YDBOcto for Octo, plugin names do not start with YDB or YottaDB.
+* Each plugin has a case-insensitive unique name even if there is a preferred capitalization, e.g., YottaDBGUI, Octo. As repositories on GitLab have YDB prefixes, e.g., YDBOcto for Octo, plugin names do not start with YDB or YottaDB.
 
 * Except where explicitly required, names use capitalization that would be comfortable for the typical user, or at least for the expected typical code maintainer.
 
