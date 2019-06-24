@@ -33,7 +33,7 @@ As M does not provide information hiding except for global variables (through gl
 
 * Environment variables start with ydb_<pluginname>_, all lower case, e.g., :code:`ydb_octo_gbldir`.
 
-* Local variable names have a %YDB prefix, e.g., all GDE GUI local variables start with %YDBGDEGUI (or %ydbgdegui).
+* Local variable names have a %YDB prefix, e.g., all YottaDB GUI local variables start with %YDBGUI (or %ydbgui).
 
 * Global variables can be either those associated with the plugin and its installation (e.g., online help content) or those associated with an application environment or instance (such as cross references and statistics). This distinction between association with the plugin / installation and the application environment / instance also applies to routines, call-in tables and call-out tables. The former should be located based on $ydb_dist and the latter based on :code:`$zroutines` and :code:`$zgbldir`.
 
