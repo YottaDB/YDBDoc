@@ -30,6 +30,7 @@ Welcome to the Administration and Operations Guide!
    dockercontainer
    packaging
    tls
+   pluginpackaging
    glossary
    LICENSE
 
