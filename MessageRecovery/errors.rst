@@ -14343,7 +14343,7 @@ Action: Investigate why an operator or program is stopping YottaDB processes wit
 UNKNOWNSYSERROR
 -----------------
 
-UNKNOWNSYSERR, An unknown system error ssss has occurred: <errorstring>
+UNKNOWNSYSERR, ssss does not correspond to a known YottaDB error code: <errorstring>
 
 Runtime Error:  An unrecognized error code has been passed to ydb_message_t() (C) or MessageT() (Golang)
 
