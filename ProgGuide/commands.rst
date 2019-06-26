@@ -1588,9 +1588,9 @@ Example:
 
 In this example the BREAKMSG value is 5, representing the sum of 1 and 4. This enables BREAKS within the body of a program (value 1) and for a device EXCEPTION (value 4).
 
-~~~~~~~~~~~~
-[NO]BADCHAR
-~~~~~~~~~~~~
+~~~~~~~~~~~~~~
+"[NO]BADCHAR"
+~~~~~~~~~~~~~~
 
 Enables or disables the generation of an error when character-oriented functions encounter malformed byte sequences (illegal characters).
 
@@ -1613,9 +1613,9 @@ When using the BG access method, writes modified blocks in the global buffers to
 
 Performs a file system hardening sync - fsync() - operation on the database file. By default, this command option operates on all regions under the current global directory. Normally YottaDB schedules block flushing at appropriate times, but this option exists for an application to explore the impact of file hardening on their work load. See also the DBFLUSH and EPOCH VIEW Options.
 
-~~~~~~~~~~~
-[NO]DMTERM
-~~~~~~~~~~~
+~~~~~~~~~~~~~
+"[NO]DMTERM"
+~~~~~~~~~~~~~
 
 Provides a mechanism to retain default line terminators for direct mode user interaction (including the BREAK command) independent of any TERMINATOR deviceparameter changes for $PRINCIPAL. With VIEW "NODMTERM", TERMINATOR deviceparameter apply to both READs from $PRINCIPAL and direct mode interactions. A case-insensitive value of the environment variable ydb_dmterm is "1", "yes", or "true" establishes a DMTERM state at process initiation; all other values, including no value, result in the default VIEW "NODMTERM" behavior. $VIEW("DMTERM") returns 1 for DMTERM mode or 0 for NODMTERM mode. 
 
@@ -1631,9 +1631,9 @@ Flushes the database buffers and, if journaling is enabled, writes an EPOCH reco
 
 Flushes dirty global buffers from the global buffer pool. If journaling is turned on, "FLUSH" writes an EPOCH record and flushes dirty journal buffers prior to flushing dirty global buffers. If no region is specified, VIEW "FLUSH" flushes all regions in the current global directory that the YottaDB process has opened.
 
-~~~~~~~~~~~~~~~~~~~~~~~~
-[NO]FULL_BOOL[EAN|WARN]
-~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+"[NO]FULL_BOOL[EAN|WARN]"
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Controls the evaluation of Boolean expressions (expressions evaluated as a logical TRUE or FALSE).
 
@@ -1679,9 +1679,9 @@ Writes or flushes journaling buffers associated with the given region to permane
 
 Normally YottaDB writes journal buffers when it completes a transaction (unless TRANSACTIONID="BATCH"), fills the journal buffer or when some period of time passes with no journal activity.
 
-~~~~~~~~
-JNLWAIT
-~~~~~~~~
+~~~~~~~~~~
+"JNLWAIT"
+~~~~~~~~~~
 
 Causes a process to pause until its journaling buffers have been written. JNLWAIT ensures that YottaDB successfully transfers all database updates issued by the process to the journal file before the process continues. Normally, YottaDB performs journal buffer writes synchronously for TP updates, and asynchronously, while the process continues execution, for non-TP updates or TP updates with TRANSACTIONID=BATCH.
 
@@ -1713,9 +1713,9 @@ Enables ("LINK":"RECURSIVE") or disables ("LINK":"RECURSIVE") the ZLINK command 
 
 The default is VIEW "LINK":"NORECURSIVE".
 
-~~~~~~~~~~~~~~~~~~~~~~~~
-[NO]LOGN[ONTP][=intexpr]
-~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+"[NO]LOGN[ONTP][=intexpr]"
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Allows a process to dynamically change the logging of NONTPRESTART messages to the operator log established at process startup by the environment variables ydb_nontprestart_log_delta and ydb_nontprestart_log_first.
 
@@ -1725,9 +1725,9 @@ VIEW "LOGNONTP"[=intexpr] turns on logging of NONTPRESTART messages to the opera
 
 Note that it is not possible to perform the operations of ydb_nontprestart_log_first with VIEW "LOGNONTP"[=intexpr].
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-[NO]LOGT[PRESTART][=intexpr]
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+"[NO]LOGT[PRESTART][=intexpr]"
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Allows a process to dynamically change the logging of TPRESTART messages to the operator log established at process startup by the environment variables ydb_tprestart_log_delta and ydb_tprestart_log_first.
 
@@ -1737,27 +1737,27 @@ VIEW "LOGTPRESTART"[=intexpr] turns on logging of TPRESTART messages to the oper
 
 Note that it is not possible to perform the operations of ydb_tprestart_log_first with VIEW "LOGTPRESTART"[=intexpr].
 
-~~~~~~~~
-LV_GCOL
-~~~~~~~~
+~~~~~~~~~
+"LV_GCOL"
+~~~~~~~~~
 
 Starts a data-space garbage collection, which normally happens automatically at appropriate times.
 
 .. note::
    There are no visible effects from LV_GCOL, LV_REHASH, and STP_GCOL except for the passage of time depending on the state of your process. YottaDB uses these VIEW "LV_GCOL","LV_REHASH","STP_GCOL" facilities in testing. They are documented to ensure completeness in product documentation. You may (or may not) find them useful during application development for debugging or performance testing implementation alternatives.
 
-~~~~~~~~~~
-LV_REHASH
-~~~~~~~~~~
+~~~~~~~~~~~~
+"LV_REHASH"
+~~~~~~~~~~~~
 
 Starts a reorganization of the local variable look-up table, which normally happens automatically at appropriate times.
 
 .. note::
    There are no visible effects from LV_REHASH, LV_GCOL, and STP_GCOL except for the passage of time depending on the state of your process. YottaDB uses these VIEW "LV_GCOL","LV_REHASH","STP_GCOL" facilities in testing. They are documented to ensure completeness in product documentation. You may (or may not) find them useful during application development for debugging or performance testing implementation alternatives.
 
-~~~~~~~~~~~~~~~~~~~~~~~
-[NEVER]|[NO]LVNULLSUBS
-~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+"LVNULLSUBS"|"NOLVNULLSUBS"|"NEVERLVNULLSUBS"
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Disallows, partially disallows, or allows local arrays to have empty string subscripts. The default is LVNULLSUBS.
 
@@ -1815,24 +1815,24 @@ Identifies the file containing definitions of unique patterns for use with the "
 
 VIEW "POOLLIMIT":<region>:expr, where expr is of the form n[%] provides a mechanism for a process that has the potential to "churn" global buffers to limit the potential impact on other processes by restricting the number of global buffers it uses. If the expression ends with a per-cent sign (%), the number is taken as a percentage of the configured global buffers and otherwise as an ordinal number of preferred buffers; standard M parsing and integer conversions apply. Preferred buffer values are limited to between 32 and one less than half the buffer pool inclusive; with the exception of zero (0) or 100 per cent, which turn off the limitation; specifications exceeding those limits provide the value of the nearer limit. If the argument specifies "*" for the region, the command applies to all regions. $VIEW("POOLLIMIT",<region>) returns the current value for the region as an ordinal number - zero (0) when there is no limit in place. Note that this facility is designed for use by a relatively small subset of processes. In addition, MUPIP REORG uses this facility to limit its buffers to a value established by the environment variable ydb_poollimit using the syntax described for VIEW "POOLLIMIT" with a default of 64 if ydb_poollimit is not specified. Note that this may slightly slow a standalone REORG but can be overridden by defining ydb_poollimit as 0 or "100%". 
 
-~~~~~~~~~~
-RCTLDUMP
-~~~~~~~~~~
+~~~~~~~~~~~
+"RCTLDUMP"
+~~~~~~~~~~~
 
 Displays the created relinkctl files and the routines looked for in their related directories. An entry in these files does not mean that a given routine was found there. It merely means it was looked for there and shows a cycle number (which ZRUPDATE bumps) whose change indicates a new published version of the given object file. As it is a diagnostic tool for the new feature, YottaDB may remove or modify this VIEW option in subsequent releases.
 
 .. note::
    YottaDB no longer supports VIEW "RCTLDUMP" as it has been supplanted by ZSHOW "A" and MUPIP RCTLDUMP.
 
-~~~~~~~~~~~~~
-RESETGVSTATS
-~~~~~~~~~~~~~
+~~~~~~~~~~~~~~
+"RESETGVSTATS"
+~~~~~~~~~~~~~~
 
 Resets all the process-private global access statistics to 0. This is particularly useful for long running processes which would periodically like to restart the counting without requiring a shut down and restart.
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-[NO]STATSHARE[:<region-list>]
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+"[NO]STATSHARE"[":<region-list>"]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 VIEW "[NO]STATSHARE"[:<region-list>] enables or disables database statistics sharing for listed regions which permit such sharing. Without the region-list, the command acts on all regions enabled for sharing. When a targeted region has sharing disabled, STATSHARE has no effect.
 
@@ -1843,18 +1843,18 @@ The processes which opt-in for STATSHARE place their statistics as binary data i
 .. note::
    A VIEW "[NO]STATSHARE" with no region sub-argument opens any unopened mapped regions and any enabled associated statsDB regions; the $ydb_statshare environment variable applies to databases as the application first uses them. When the last VIEW "[NO]STATSHARE" had no region sub-argument, regions implicitly share when the process first references them, but after a VIEW specifies selective sharing, regions don't implicitly share as they open. 
 
-~~~~~~~~~
-STP_GCOL
-~~~~~~~~~
+~~~~~~~~~~~
+"STP_GCOL"
+~~~~~~~~~~~
 
 Starts a string-pool garbage collection, which normally happens automatically at appropriate times. 
 
 .. note::
    There are no visible effects from STP_GCOL, LV_GCOL and LV_REHASH except for the passage of time depending on the state of your process. YottaDB uses these VIEW "LV_GCOL","LV_REHASH","STP_GCOL" facilities in testing. They are documented to ensure completeness in product documentation. You may (or may not) find them useful during application development for debugging or performance testing implementation alternatives.
 
-~~~~~~~~~~
-[NO]UNDEF
-~~~~~~~~~~
+~~~~~~~~~~~
+"[NO]UNDEF"
+~~~~~~~~~~~
 
 Enables or disables handling of undefined variables as errors. With UNDEF, YottaDB handles all references to undefined local or global variables as errors. With NOUNDEF, YottaDB handles all references to undefined local or global variables as if the variable had a value of the empty string. In other words, YottaDB treats all variables appearing in expressions as if they were the argument of an implicit $GET(). UNDEF is the default.
 
