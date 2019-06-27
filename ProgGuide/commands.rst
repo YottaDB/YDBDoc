@@ -3648,7 +3648,7 @@ Example:
    $ZQUIT=0
    $ZREALSTOR=694280
    $ZRELDATE="20180614 00:33"
-   $ZROUTINES=". /usr/local/lib/yottadb/r122 /usr/local/lib/yottadb/r122/plugin/o(/usr/local/lib/yottadb/r122/plugin/r)"
+   $ZROUTINES=". /usr/local/lib/yottadb/r126 /usr/local/lib/yottadb/r126/plugin/o(/usr/local/lib/yottadb/r126/plugin/r)"
    $ZSOURCE=""
    $ZSTATUS=""
    $ZSTEP="B"
@@ -3668,7 +3668,7 @@ Example:
    $ZTWORMHOLE=""
    $ZUSEDSTOR=666047
    $ZUT=1528962650791332
-   $ZVERSION="YottaDB r1.22 Linux x86_64"
+   $ZVERSION="YottaDB r1.24 Linux x86_64"
    $ZYERROR=""
 
 This example displays the current value of all intrinsic special variables. 

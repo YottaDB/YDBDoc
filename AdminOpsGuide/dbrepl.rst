@@ -935,7 +935,7 @@ Sets a default environment for YottaDB replication. It takes two arguments:
 * The name of the instance/database directory
 * The YottaDB version
 
-Example: source ./ydbenv A r122
+Example: source ./ydbenv A r126
 
 Here is the code:
 
@@ -1208,7 +1208,7 @@ Setting up an A -> B Replication Configuration with Empty Databases
 * Source the ydbenv environment file.
 
 .. parsed-literal::
-   source ./ydbenv A r122
+   source ./ydbenv A r126
 
 * Create the database and set up replication.
 
@@ -1238,7 +1238,7 @@ Setting up an A -> B Replication Configuration with Empty Databases
    Wed Jul 18 12:45:46 2018 : Initiating START of source server for secondary instance [B]
    Wed Jul 18 12:45:46 2018 : Initiating CHECKHEALTH operation on source server pid [18498] for secondary instance name [B]
    PID 18498 Source server is alive in ACTIVE mode
-   Wed Jul 18 12:45:46 2018 : /usr/local/lib/yottadb/r122/mupip replicate -source -start -instsecondary=B -secondary=localhost:4001 -buffsize=1048576 -log=/home/user/A/A_B.log
+   Wed Jul 18 12:45:46 2018 : /usr/local/lib/yottadb/r126/mupip replicate -source -start -instsecondary=B -secondary=localhost:4001 -buffsize=1048576 -log=/home/user/A/A_B.log
    Wed Jul 18 12:45:46 2018 : %YDB-I-REPLINFO, GTM Replication Source Server with Pid [18498] started for Secondary Instance [B]
    Wed Jul 18 12:45:46 2018 : Created jnlpool with shmid = [1353941014] and semid = [1447755780]
    Wed Jul 18 12:45:46 2018 : %YDB-I-REPLINFO, GTM Replication Source Server now in ACTIVE mode using port 4001
@@ -1265,7 +1265,7 @@ Setting up an A -> B Replication Configuration with Empty Databases
    Wed Jul 18 12:46:01 2018 : Initiating START of source server for secondary instance [dummy]
    PID 18531 Receiver server is alive
    PID 18532 Update process is alive
-   Wed Jul 18 12:46:01 2018 : /usr/local/lib/yottadb/r122/mupip replicate -receive -start -listenport=4001 -buffsize=1048576 -log=/home/user/B/receive.log
+   Wed Jul 18 12:46:01 2018 : /usr/local/lib/yottadb/r126/mupip replicate -receive -start -listenport=4001 -buffsize=1048576 -log=/home/user/B/receive.log
    Wed Jul 18 12:46:01 2018 : %YDB-I-REPLINFO, GTM Replication Receiver Server with Pid [18531] started on replication instance [B]
    Wed Jul 18 12:46:01 2018 : Attached to existing jnlpool with shmid = [1354006561] and semid = [1447886856]
    Wed Jul 18 12:46:01 2018 : Created recvpool with shmid = [1354072105] and semid = [1447985163]
@@ -1346,7 +1346,7 @@ Setting up an A -> B -> C Replication Configuration with Empty Databases
 * Source the environment file.
 
 .. parsed-literal::
-   source ./ydbenv A r122
+   source ./ydbenv A r126
 
 * Create the database and the replication instance file.
 
@@ -1364,7 +1364,7 @@ Setting up an A -> B -> C Replication Configuration with Empty Databases
 * Source the environment variable.
 
 .. parsed-literal::
-   source .ydbenv B r122
+   source .ydbenv B r126
 
 * Create a new database and replication instance file.
 
@@ -1387,7 +1387,7 @@ Setting up an A -> B -> C Replication Configuration with Empty Databases
 * Source the environment variable.
 
 .. parsed-literal::
-   source ./ydbenv C r122
+   source ./ydbenv C r126
 
 * Create a new database and replication instance file.
 
@@ -1434,7 +1434,7 @@ Setting up an A -> P replication configuration with empty databases
 * Source the environment file.
 
 .. parsed-literal::
-   source ./ydbenv A r122
+   source ./ydbenv A r126
 
 * Create a new database and replication instance file.
 
@@ -1464,7 +1464,7 @@ Setting up an A -> P replication configuration with empty databases
 * Source the environment variable.
 
 .. parsed-literal::
-   source ./ydbenv P r122
+   source ./ydbenv P r126
 
 * Create a new database and replication instance file with the -supplementary qualifier.
 
@@ -1518,7 +1518,7 @@ The most common scenario for bringing up a replicating instance is to take a bac
 * Source the environment file.
 
 .. parsed-literal::
-   source ./ydbenv A r122
+   source ./ydbenv A r126
 
 * Create a backup using -DATABASE, -REPLINST, -NEWJNLFILE=NOPREVLINK, and -BKUPDBJNL=DISABLE qualifiers. -DATABASE creates a comprehensive backup of the database file. -REPLINST backs up the replication instance file. -BKUPDBJNL=DISABLE scrubs all journal file information in the backup database file. As the backup of instance A is comprehensive, -NEWJNLFILE=NOPREVLINK cuts the back link to prior generation journal files of the database for which you are taking the backup. 
 
@@ -1542,7 +1542,7 @@ The most common scenario for bringing up a replicating instance is to take a bac
 * Load/restore the database. If the replicating database is not from a comprehensive or database backup from the originating instance, set the journal sequence number from the originating instance at the instant of the backup for at least one replicated region on the replicating instance.
 
 .. parsed-literal::
-   source ./ydbenv backupA r122
+   source ./ydbenv backupA r126
    ./db_create
    ./repl_setup
    cp currentstateA backupA/yottadb.repl
@@ -1574,7 +1574,7 @@ The following example demonstrates starting a replicating instance from the back
 **On A**:
 
 .. parsed-literal::
-   source ./ydbenv A r122
+   source ./ydbenv A r126
    ./db_create
    ./repl_setup
    ./originating_start A backupA 4011
@@ -1587,7 +1587,7 @@ The following example demonstrates starting a replicating instance from the back
 **On backupA**:
 
 .. parsed-literal::
-   source ./ydbenv backupA r122
+   source ./ydbenv backupA r126
    ./db_create
    ./suppl_setup backupA currentstateA 4011 -updok
    ./repl_status
@@ -1649,7 +1649,7 @@ The following example runs a switchover in an A→B replication configuration.
 **On A**:
 
 .. parsed-literal::
-   source ./ydbenv A r122 # creates a simple environment for instance A
+   source ./ydbenv A r126 # creates a simple environment for instance A
    ./db_create
    ./repl_setup # enables replication and creates the replication instance file
    ./originating_start A B 4001 # starts the active Source Server (A->B)
@@ -1659,7 +1659,7 @@ The following example runs a switchover in an A→B replication configuration.
 **On B**:
 
 .. parsed-literal::
-   source ./ydbenv B r122 # creates a simple environment for instance B
+   source ./ydbenv B r126 # creates a simple environment for instance B
    ./db_create
    ./repl_setup
    ./replicating_start B 4001 
@@ -2006,7 +2006,7 @@ The following example creates this scenario.
 A is the originating instance to B and P.
 
 .. parsed-literal::
-   source ./ydbenv A r122
+   source ./ydbenv A r126
    ./db_create
    ./repl_setup
    ./originating_start A B 4010
@@ -2019,7 +2019,7 @@ A is the originating instance to B and P.
 B is a BC replicating instance to A.
 
 .. parsed-literal::
-   source ./ydbenv B r122
+   source ./ydbenv B r126
    ./db_create
    ./repl_setup
    ./replicating_start B 4010 
@@ -2029,7 +2029,7 @@ B is a BC replicating instance to A.
 P is a supplementary instance of A.
 
 .. parsed-literal::
-   source ./ydbenv P r122
+   source ./ydbenv P r126
    ./db_create
    ./suppl_setup P startA 4011 -updok
    $ydb_dist/mumps -r ^%XCMD 'for i=1:1:40 set ^P(i)=i'
@@ -2140,7 +2140,7 @@ The following example runs this scenario.
 A is an originating instance.
 
 .. parsed-literal::
-   source ./ydbenv A r122
+   source ./ydbenv A r126
    ./db_create
    ./repl_setup
    ./originating_start A P 4000
@@ -2151,7 +2151,7 @@ On B:
 B is a BC replicating instance of A.
 
 .. parsed-literal::
-   source ./ydbenv B r122
+   source ./ydbenv B r126
    ./db_create
    ./repl_setup
    ./replicating_start B 4001
@@ -2166,7 +2166,7 @@ B is a BC replicating instance of A.
 P is a supplementary instance of A.
 
 .. parsed-literal::
-   source ./ydbenv P r122
+   source ./ydbenv P r126
    ./db_create
    ./suppl_setup P startA 4000 -updok
    $ydb_dist/mumps -r %XCMD 'for i=1:1:38 set ^P(i)=i'
@@ -2295,7 +2295,7 @@ The following example runs this scenario.
 A is the originating instance to B and P.
 
 .. parsed-literal::
-   source ./ydbenv A r122
+   source ./ydbenv A r126
    ./db_create
    ./repl_setup
    ./originating_start A P 4000
@@ -2306,7 +2306,7 @@ A is the originating instance to B and P.
 B is a BC replicating instance of A.
 
 .. parsed-literal::
-   source ./ydbenv B r122
+   source ./ydbenv B r126
    ./db_create
    ./repl_setup
    ./replicating_start B 4001
@@ -2321,7 +2321,7 @@ B is a BC replicating instance of A.
 P is a supplementary instance of A.
 
 .. parsed-literal::
-   source ./ydbenv P r122
+   source ./ydbenv P r126
    ./db_create
    ./suppl_setup P startA 4000 -updok
    ./backup_repl startP
@@ -2332,7 +2332,7 @@ P is a supplementary instance of A.
 Q is a BC replicating instance of P.
 
 .. parsed-literal::
-   source ./ydbenv Q r122
+   source ./ydbenv Q r126
    ./db_create
    ./suppl_setup Q startP 4005 -updnotok
    
@@ -2515,18 +2515,18 @@ On A:
 This example adds the mapping for global ^A to a new database file A.dat in an A->B replication configuration. 
 
 .. parsed-literal::
-   source ./ydbenv A r122 
+   source ./ydbenv A r126 
    ./db_create
    ./repl_setup
    ./originating_start A B 4001
-   source ./ydbenv B r122
+   source ./ydbenv B r126
    ./db_create
    ./repl_setup
    ./replicating_start B 4001
-   source ./ydbenv A r122 
+   source ./ydbenv A r126 
    $ydb_dist/mumps -r %XCMD 'for i=1:1:10 set ^A(i)=i'
    ./repl_status
-   source ./ydbenv B r122
+   source ./ydbenv B r126
    ./replicating_stop
    cp B/yottadb.gld B/prior.gld
    $ydb_dist/mumps -r ^GDE @updgld
@@ -2537,7 +2537,7 @@ This example adds the mapping for global ^A to a new database file A.dat in an A
    $ydb_dist/mumps -r %XCMD 'merge ^A=^|"B/prior.gld"\|A'
    $ydb_dist/mupip set -replication=on -region AREG
    ./originating_start B A 4001
-   source ./ydbenv A r122 
+   source ./ydbenv A r126 
    ./originating_stop
    ./rollback 4001 backward
    cat A/yottadb.lost  #apply lost transaction file on A. 
@@ -2558,9 +2558,9 @@ This example adds the mapping for global ^A to a new database file A.dat in an A
 **The shutdown sequence is as follows**:
 
 .. parsed-literal::
-   source ./ydbenv A r122
+   source ./ydbenv A r126
    ./replicating_stop
-   source ./ydbenv B r122
+   source ./ydbenv B r126
    ./originating_stop
 
 -------------------------------------
@@ -2651,20 +2651,20 @@ on B:
 Here is an example to upgrade A and B deployed in an A→B replication configuration from r1.10 to r1.20. This example uses instructions from the “Upgrade the originating instance first (A→B)” procedure. 
 
 .. parsed-literal::
-   source ./ydbenv A r122
+   source ./ydbenv A r126
    ./db_create
    ./repl_setup
    ./originating_start A B 4001
-   source ./ydbenv B r122
+   source ./ydbenv B r126
    ./db_create
    ./repl_setup
    ./replicating_start B 4001
-   source ./ydbenv A r122
+   source ./ydbenv A r126
    $ydb_dist/mumps -r %XCMD 'for i=1:1:100 set ^A(i)=i'
    ./repl_status
-   source ./ydbenv B r122
+   source ./ydbenv B r126
    ./replicating_stop
-   source ./ydbenv A r122
+   source ./ydbenv A r126
    ./repl_status
    ./originating_stop 
    $ydb_dist/mupip set -replication=off -region "DEFAULT"
@@ -2673,7 +2673,7 @@ Here is an example to upgrade A and B deployed in an A→B replication configura
 Perform a switchover to make B the originating instance. 
 
 .. parsed-literal::
-   source ./ydbenv A r122
+   source ./ydbenv A r126
    $ydb_dist/mumps -r ^GDE exit
    $ydb_dist/mupip set -journal=on,before_images,filename=A/yottadb.mjl -noprevjnlfile -region "DEFAULT"
    
@@ -2798,7 +2798,7 @@ The following example creates two instances (Alice and Bob) and a basic framewor
 2. Execute the ydbenv script as follows:
 
    .. parsed-literal::
-      $ source ./ydbenv Alice r122
+      $ source ./ydbenv Alice r126
 
 This creates a YottaDB environment for replication instance name Alice. When prompted, enter a password for ydb_tls_passwd_Alice. 
 
@@ -2924,7 +2924,7 @@ On instance Bob:
 1. Execute the ydbenv script as follows:
 
    .. parsed-literal::
-      $ source ./ydbenv Bob r122
+      $ source ./ydbenv Bob r126
 
 This creates a YottaDB environment for replication instance name Bob. When prompted, enter a password for ydb_tls_passwd_Bob.
 
@@ -2959,7 +2959,7 @@ Ensure that ca.key generated on Instance Alice is available on instance Bob.
 For subsequent environment setup, use the following commands:
 
 .. parsed-literal::
-   source ./ydbenv Bob r122 or source ./ydbenv Alice r122
+   source ./ydbenv Bob r126 or source ./ydbenv Alice r126
    ./replicating_start Bob 4001 -tlsid=Bob or ./originating_start Alice Bob 4001 -tlsid=Alice -reneg=2
 
 --------------------------------------------

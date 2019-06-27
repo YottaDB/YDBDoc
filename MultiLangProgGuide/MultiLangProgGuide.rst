@@ -42,7 +42,7 @@ Local Installation
   If you do not specify an installation directory with
   :code:`--installdir`, the script installs YottaDB in
   :code:`/usr/local/lib/yottadb/r###` where :code:`r###` is
-  the release, e.g., :code:`r122`.
+  the release, e.g., :code:`r126`.
 
 2. Set up the environment: :code:`source $(pkg-config --variable=prefix yottadb)/ydb_env_set`.
    This defaults to an environment in :code:`$HOME/.yottadb`; to use
@@ -483,7 +483,7 @@ of four space separated pieces:
 
 1. Always “YottaDB”.
 #. The release number, which starts with “r” and is followed by two
-   numbers separated by a period (“.”), e.g., “r1.24”. The first is a
+   numbers separated by a period (“.”), e.g., “r1.26”. The first is a
    major release number and the second is a minor release number under
    the major release. Even minor release numbers indicate formally
    released software. Odd minor release numbers indicate software

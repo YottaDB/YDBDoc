@@ -562,7 +562,7 @@ Example:
    $ZQUIT=0
    $ZREALSTOR=697936
    $ZRELDATE="20180614 00:33"
-   $ZROUTINES=". /usr/local/lib/yottadb/r124 /usr/local/lib/yottadb/r124/plugin/o(/usr/local/lib/yottadb/r124/plugin/r)"
+   $ZROUTINES=". /usr/local/lib/yottadb/r126 /usr/local/lib/yottadb/r126/plugin/o(/usr/local/lib/yottadb/r126/plugin/r)"
    $ZSOURCE=""
    $ZSTATUS="150373850,name+5^dmex,%YDB-E-UNDEF, Undefined local variable: bame"
    $ZSTEP="B"
@@ -583,7 +583,7 @@ Example:
    $ZTWORMHOLE=""
    $ZUSEDSTOR=671689
    $ZUT=1528970771720738
-   $ZVERSION="YottaDB r1.22 Linux x86_64"
+   $ZVERSION="YottaDB r1.26 Linux x86_64"
    $ZYERROR=""
    ln=8
    name="John Doe"

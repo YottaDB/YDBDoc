@@ -913,12 +913,12 @@ The show-option-list includes (these are not case-sensitive):
 
  .. parsed-literal::
    -----------------------------------------------------------------------------
-   SHOW output for journal file /home/jdoe/.yottadb/r1.24_x86_64/g/yottadb.mjl
+   SHOW output for journal file /home/jdoe/.yottadb/r1.26_x86_64/g/yottadb.mjl
    -----------------------------------------------------------------------------
-   Journal file name       /home/jdoe/.yottadb/r124/g/yottadb.mjl
+   Journal file name       /home/jdoe/.yottadb/r126/g/yottadb.mjl
    Journal file label      YDBJNL44
-   Database file name      /home/jdoe/.yottadb/r124/g/yottadb.dat
-   Prev journal file name /home/jdoe/.yottadb/r124/g/yottadb.mjl_2018310190106
+   Database file name      /home/jdoe/.yottadb/r126/g/yottadb.dat
+   Prev journal file name /home/jdoe/.yottadb/r126/g/yottadb.mjl_2018310190106
    Next journal file name 
    Before-image journal                      ENABLED
    Journal file header size                    65536 [0x00010000]
@@ -962,7 +962,7 @@ The show-option-list includes (these are not case-sensitive):
 
   .. parsed-literal::
      -------------------------------------------------------------------------------
-     SHOW output for journal file /home/jdoe/.yottadb/r124/g/yottadb.mjl
+     SHOW output for journal file /home/jdoe/.yottadb/r126/g/yottadb.mjl
      -------------------------------------------------------------------------------
      Record type    Count
      ----------------------
@@ -1376,7 +1376,7 @@ By default, JOURNAL processes database updates regardless of the user who initia
 JOURNAL EXTRACT FORMATS
 -----------------------------
 
-Journal EXTRACT files always start with a label. For the current release of YottaDB (r1.24), the label is YDBJEX08 for a simple journal extract file. This label is necessary to identify the format of the file. The label for the detail journal extract file is YDBJDX09.
+Journal EXTRACT files always start with a label. For the current release of YottaDB (r1.26), the label is YDBJEX08 for a simple journal extract file. This label is necessary to identify the format of the file. The label for the detail journal extract file is YDBJDX09.
 
 If the environment variable ydb_chset is set of UTF-8, then file format label is followed by another label called "UTF-8" to indicate UTF-8 mode.
 
