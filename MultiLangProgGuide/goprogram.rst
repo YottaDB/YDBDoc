@@ -524,7 +524,7 @@ Go BufferT Alloc()
 
 .. code-block:: go
 
-        func (buffer *BufferT) Alloc(nBytes uint32)
+        func (buft *BufferT) Alloc(nBytes uint32)
 
 Allocate a buffer in YottaDB heap space of size :code:`nBytes`; and
 set :code:`BufferT`
@@ -535,7 +535,7 @@ Go BufferT Dump()
 
 .. code-block:: go
 
-        func (buffer *BufferT) Dump()
+        func (buft *BufferT) Dump()
 
 For debugging purposes, dump on stdout:
 
@@ -559,7 +559,7 @@ Go BufferT DumpToWriter()
 
 .. code-block:: go
 
-        func (buffer *BufferT) DumpToWriter(writer io.writer)
+        func (buft *BufferT) DumpToWriter(writer io.writer)
 
 For debugging purposes, dump on :code:`writer`:
 
@@ -583,7 +583,7 @@ Go BufferT Free()
 
 .. code-block:: go
 
-        func (buffer *BufferT) Free()
+        func (buft *BufferT) Free()
 
 The inverse of the :code:`Alloc()` method: release the buffer in
 YottaDB heap space referenced by the :code:`C.ydb_buffer_t` structure,
@@ -595,7 +595,7 @@ Go BufferT BufferTFromPtr()
 
 .. code-block:: go
 
-        func (buffer *BufferT) BufferTFromPtr(errstr unsafe.Pointer)
+        func (buft *BufferT) BufferTFromPtr(errstr unsafe.Pointer)
 
 This method is intended for use in advanced cases, such as those
 encountered internally to the wrapper, when a :code:`BufferT` object
@@ -609,7 +609,7 @@ Go BufferT LenAlloc()
 
 .. code-block:: go
 
-        func (buffer *BufferT) LenAlloc(tptoken uint64,
+        func (buft *BufferT) LenAlloc(tptoken uint64,
                 errstr *BufferT) (uint32, error)
 
 - If the underlying structures
@@ -622,7 +622,7 @@ Go BufferT LenUsed()
 
 .. code-block:: go
 
-        func (buffer *BufferT) LenUsed(tptoken uint64,
+        func (buft *BufferT) LenUsed(tptoken uint64,
                 errstr *BufferT) (uint32, error)
 
 - If the underlying structures
@@ -640,7 +640,7 @@ Go BufferT SetLenUsed()
 
 .. code-block:: go
 
-        func (buffer *BufferT) SetLenUsed(tptoken uint64,
+        func (buft *BufferT) SetLenUsed(tptoken uint64,
                 errstr *BufferT, newLen uint32) error
 
 Use this method to change the length of a used substring of the
@@ -665,8 +665,7 @@ Go BufferT SetValBAry()
 
 .. code-block:: go
 
-        func (buffer *BufferT) SetValBAry(tptoken uint64,
-                errstr *BufferT, val *[]byte) error
+        func (buft *BufferT) SetValBAry(tptoken uint64, errstr *BufferT, value []byte) error
 
 - If the underlying structures
   have not yet been allocated, return the STRUCTNOTALLOCD error.
@@ -682,27 +681,9 @@ Go BufferT SetValStr()
 
 .. code-block:: go
 
-        func (buffer *BufferT) SetValStr(tptoken uint64,
-                errstr *BufferT, val *string) error
+        func (buft *BufferT) SetValStr(tptoken uint64, errstr *BufferT, value string) error
 
 - If the underlying structures
-  have not yet been allocated, return the STRUCTNOTALLOCD error.
-- If the length of :code:`val` is greater than the :code:`len_alloc`
-  field of the :code:`C.ydb_buffer_t` structure referenced by
-  :code:`cbuft`, make no changes and return INVSTRLEN.
-- Otherwise, copy the bytes of :code:`val` to the referenced buffer
-  and set the :code:`len_used` field to the length of
-  :code:`val`.
-
-Go BufferT SetValStrLit()
-.........................
-
-.. code-block:: go
-
-        func (buffer *BufferT) SetValStrLit(tptoken uint64,
-                errstr *BufferT, val string) error
-
-- If the the underlying structures
   have not yet been allocated, return the STRUCTNOTALLOCD error.
 - If the length of :code:`val` is greater than the :code:`len_alloc`
   field of the :code:`C.ydb_buffer_t` structure referenced by
@@ -716,8 +697,7 @@ Go BufferT ValBAry()
 
 .. code-block:: go
 
-        func (buffer *BufferT) ValBAry(tptoken uint64,
-                errstr *BufferT) (*[]byte, error)
+        func (buft *BufferT) ValBAry(tptoken uint64, errstr *BufferT) ([]byte, error)
 
 - If the the underlying structures
   have not yet been allocated, return the STRUCTNOTALLOCD error.
@@ -733,8 +713,7 @@ Go BufferT ValStr()
 
 .. code-block:: go
 
-        func (buffer *BufferT) ValStr(tptoken uint64,
-                errstr *BufferT) (*string, error)
+        func (buft *BufferT) ValStr(tptoken uint64, errstr *BufferT) (string, error)
 
 - If the the underlying structures
   have not yet been allocated, return the STRUCTNOTALLOCD error.
@@ -930,8 +909,7 @@ Go BufferTArray SetValBAry()
 
 .. code-block:: go
 
-        func (buftary *BufferTArray) SetValBAry(tptoken uint64,
-                errstr *BufferT, idx uint32, val *[]byte) error
+        func (buftary *BufferTArray) SetValBAry(tptoken uint64, errstr *BufferT, idx uint32, value []byte) error
 
 - If the underlying structures
   have not yet been allocated, return the STRUCTNOTALLOCD error.
@@ -949,9 +927,7 @@ Go BufferTArray SetValStr()
 
 .. code-block:: go
 
-        func (buftary *BufferTArray)
-                SetValStr(tptoken uint64, errstr *BufferT,
-                idx uint32, value *string) error
+        func (buftary *BufferTArray) SetValStr(tptoken uint64, errstr *BufferT, idx uint32, value string) error
 
 - If the underlying structures
   have not yet been allocated, return the STRUCTNOTALLOCD error.
@@ -964,35 +940,12 @@ Go BufferTArray SetValStr()
   and set the :code:`len_used` field to the length of
   :code:`val`.
 
-Go BufferTArray SetValStrLit()
-..............................
-
-.. code-block:: go
-
-        func (buftary *BufferTArray)
-                SetValStrLit(tptoken uint64, errstr *BufferT,
-                idx uint32, value string) error
-
-- If the underlying structures
-  have not yet been allocated, return the STRUCTNOTALLOCD error.
-- If :code:`idx` is greater than or equal to :code:`elemsAlloc` make no changes
-  and return with an error return of INSUFFSUBS.
-- If the length of :code:`val` is greater than the :code:`len_alloc`
-  field of the :code:`C.ydb_buffer_t` structure indexed by :code:`idx`
-  and referenced by :code:`cbuft`, make no changes and return
-  INVSTRLEN.
-- Otherwise, copy the bytes of :code:`val` to the referenced buffer
-  and set the :code:`len_used` field to the length of
-  :code:`val`.
-
 Go BufferTArray ValBAry()
 .........................
 
 .. code-block:: go
 
-        func (buftary *BufferTArray)
-                ValBAry(tptoken uint64, errstr *BufferT,
-                idx uint32) (*[]byte, error)
+        func (buftary *BufferTArray) ValBAry(tptoken uint64, errstr *BufferT, idx uint32) ([]byte, error)
 
 - If the underlying structures
   have not yet been allocated, return the STRUCTNOTALLOCD error.
@@ -1011,9 +964,7 @@ Go BufferTArray ValStr()
 
 .. code-block:: go
 
-        func (buftary *BufferTArray)
-                ValStr(tptoken uint64, errstr *BufferT,
-                idx uint32) (*string, error)
+        func (buftary *BufferTArray) ValStr(tptoken uint64, errstr *BufferT, idx uint32) (string, error)
 
 - If the underlying structures
   have not yet been allocated, return the STRUCTNOTALLOCD error.
