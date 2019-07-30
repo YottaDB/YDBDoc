@@ -1,5 +1,5 @@
 
-.. index:: 
+.. index::
    Global Directory Editor
 
 =============================
@@ -23,22 +23,22 @@ The location of the global directory is pointed to by the Intrinsic Special Vari
 
 Consider a global variable ^TMP that holds only temporary data that is no longer meaningful when a system is rebooted. A global directory can map ^TMP to region TEMP that maps to a database file called scratch.dat, with all other globals mapped to mumps.dat. A global directory allows the separation of persistent data (mumps.dat) from non-persistent data(scratch.dat), so that each database file may get appropriately configured for operations — for example, the database administrator may choose to exclude scratch.dat from backup/archival procedures or periodically delete and recreate scratch.dat using MUPIP CREATE.
 
-Consider the following illustration: 
+Consider the following illustration:
 
 .. image:: globaldir.png
 
 There are four M global variables--^Horse, ^Crab, ^Platypus, and ^Lobster. ^Horse and ^Platypus map to region MAMMALS that maps to database file linnaeus.dat and ^Crab and ^Lobster map to region CRUSTACEANS that maps to database file brunnich.dat. The default namespace * maps to a region called DEFAULT that maps to database file mumps.dat. * denotes all globals other than the explicitly named ^Horse, ^Platypus, ^Crab, and ^Lobster. All globals store data in their respective database files. Each database file has a single active journal file. To enforce access restrictions on globals so that only mammalogists have access to ^Horse and ^Platypus and only carcinologists have access to ^Crab and ^Lobster, one just needs to assign appropriate read/write permissions to linnaeus.dat and brunnich.dat.
 
 .. note::
-   Each database file can have a single active journal file. A journal can be linked to its predecessor journal file to form a chain of journal files. 
+   Each database file can have a single active journal file. A journal can be linked to its predecessor journal file to form a chain of journal files.
 
 You can also map different subscripts of the same global to different regions when subscripts have logically separable data. Consider the following global directory example:
 
 .. image:: gd.png
 
-^US and ^EURWest have logically separable subscripts that map to different regions. ^EURCentral holds data that has a different collation order than the others, so it maps to a different region. Such mapping improves operational administration and permits a larger total size. It may also improve performance if the access patterns of the distinct parts allow accesses to all or some of them to use optimizations in the YottaDB database engine, for example, to optimize serial accesses. 
+^US and ^EURWest have logically separable subscripts that map to different regions. ^EURCentral holds data that has a different collation order than the others, so it maps to a different region. Such mapping improves operational administration and permits a larger total size. It may also improve performance if the access patterns of the distinct parts allow accesses to all or some of them to use optimizations in the YottaDB database engine, for example, to optimize serial accesses.
 
-In a nutshell, the database attributes and mapping rules defined in a global directory allow you to: 
+In a nutshell, the database attributes and mapping rules defined in a global directory allow you to:
 
 * **Finer-grained Access Control**- To block access, or updates, to a portion of the data.
 
@@ -151,7 +151,7 @@ A Global Directory looks like this:
     ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     <default>                   0          256        64        NEVER           N           N              N               N             Y          N        Y      SEP
 
-   
+
     Segment                Active        Acc   Typ    Block     Alloc   Exten   Options
     ---------------------------------------------------------------------------------------
     <default>                *           BG    DYN    4096       100     100    GLOB=1024
@@ -240,7 +240,7 @@ This section of the Global Directory lists the current mapping of names to regio
 Global Directory Abbreviations
 +++++++++++++++++++++++++++++++
 
-GDE uses the following abbreviations to display the output of a global directory. The following list show global directory abbreviations with the associated qualifiers. For a description of the function of individual qualifiers, see `"GDE Command Summary" <https://docs.yottadb.com/AdminOpsGuide/gde.html#gde-command-summary>`_. 
+GDE uses the following abbreviations to display the output of a global directory. The following list show global directory abbreviations with the associated qualifiers. For a description of the function of individual qualifiers, see `"GDE Command Summary" <https://docs.yottadb.com/AdminOpsGuide/gde.html#gde-command-summary>`_.
 
 +-----------------------------------------+----------------------------------------+
 | Abbreviation                            | Full Form                              |
@@ -283,7 +283,7 @@ GDE uses the following abbreviations to display the output of a global directory
 +-----------------------------------------+----------------------------------------+
 | MSLT                                    | -MUTEX_SLOTS                           |
 +-----------------------------------------+----------------------------------------+
-| Null Subs                               | -[HO]NULL_SUBSCRIPTS                   |
+| Null Subs                               | -[NO]NULL_SUBSCRIPTS                   |
 +-----------------------------------------+----------------------------------------+
 | Qdb Rndwn                               | -[NO]QDBRUNDOWN                        |
 +-----------------------------------------+----------------------------------------+
@@ -378,9 +378,9 @@ A name space:
 * Must begin with an alphabetic character or a percent sign (%).
 * Can be a discrete "global" name, for example, aaa corresponds to the global variable ^aaa.
 * Can be a global name ending with a wild card ("*"), for example, abc* represents the set of global nodes which have abc as the starting prefix.
-* Can be a subtree of a global name, for example, abc(1) represents a subtree of the global ^abc. 
+* Can be a subtree of a global name, for example, abc(1) represents a subtree of the global ^abc.
 * Can be a subscript range, for example, abc(1:10) represents all nodes starting from ^abc(1) up to (but not including) to ^abc(10).
-* A global name can be one to 31 alphanumeric characters. However, the combined length of a global and its subscripts is limited to 1,019 bytes (the maximum key size supported by YottaDB). Note that the byte length of the subscripted global specification can exceed the maximum KeySize specified for its region. 
+* A global name can be one to 31 alphanumeric characters. However, the combined length of a global and its subscripts is limited to 1,019 bytes (the maximum key size supported by YottaDB). Note that the byte length of the subscripted global specification can exceed the maximum KeySize specified for its region.
 * Maps to only one region in the Global Directory.
 
 **REGIONS**
@@ -423,7 +423,7 @@ To complete this procedure, you must have already opened a Global Directory.
 
   .. parsed-literal::
      GDE> add -name cus -region=cusreg
-  
+
 This maps the global name cus to the region cusreg.
 
 * ADD region cusreg, if it does not exist.
@@ -446,7 +446,7 @@ To perform a consistency check of the configuration, use the VERIFY command.
 
 To exit the Global Directory and save your changes, use the EXIT command. GDE performs an automatic verification. If successful, the mappings and database specifications become part of the Global Directory, available for access by processes, utilities, and the run-time system.
 
-Only MUPIP CREATE uses the database specifications; run-time processes and other utility functions only use the map. 
+Only MUPIP CREATE uses the database specifications; run-time processes and other utility functions only use the map.
 
 -------------------------------
 Global Director Editor Commands
@@ -471,7 +471,7 @@ The format description for each individual command specifies required qualifiers
 
 The @, EXIT, HELP, LOG, QUIT, SETGD, and SPAWN commands do not use this general format. For the applicable format, refer to the section explaining each of these commands.
 
-Comments on command lines start with an exclamation mark (!) and run to the end of the line. 
+Comments on command lines start with an exclamation mark (!) and run to the end of the line.
 
 .. note::
    An exclamation mark not enclosed in quotation marks ("")(for example in a subscript) causes GDE to ignore the rest of that input line.
@@ -487,7 +487,7 @@ File names must either appear as the last item on the command line or be surroun
 Font/Capitalization Conventions Used in this Chapter
 +++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-All YottaDB and GDE commands and qualifiers may be entered in either upper or lower case at the command prompt. However, when you SHOW your current Global Directory, GDE uses the following case conventions: 
+All YottaDB and GDE commands and qualifiers may be entered in either upper or lower case at the command prompt. However, when you SHOW your current Global Directory, GDE uses the following case conventions:
 
 * Region and segment names always display in uppercase
 
@@ -524,7 +524,7 @@ Example:
 .. parsed-literal::
    GDE> @standard
 
-This command executes the GDE commands in the file "standard" in the current working directory. "standard" should contain GDE commands; comments should start with an exclamation mark (!). 
+This command executes the GDE commands in the file "standard" in the current working directory. "standard" should contain GDE commands; comments should start with an exclamation mark (!).
 
 +++
 Add
@@ -532,13 +532,13 @@ Add
 
 The ADD command inserts a new name, region, or segment into the Global Directory.
 
-The format of the ADD command is one of the following: 
+The format of the ADD command is one of the following:
 
 .. parsed-literal::
    A[DD] -G[BLNAME] global-name [-GBLNAME-qualifier ...]
    A[DD] -N[AME] namespace -R[EGION]=region-name
    A[DD] -R[EGION] region-name -D[YNAMIC]=segment-name [-REGION-qualifier...]
-   A[DD] -S[EGMENT] segment-name [-SEGMENT-qualifier...] -F[ILE_NAME]=file-name 
+   A[DD] -S[EGMENT] segment-name [-SEGMENT-qualifier...] -F[ILE_NAME]=file-name
 
 The ADD command requires specification of an object-type and an object-name. GDE supplies default values from the templates for qualifiers not explicitly supplied in the command.
 
@@ -633,7 +633,7 @@ This example performs the following mapping:
 
 * from ^x(20,40,50) through the last subscript in ^x maps to REG 3
 
-~~~~~~~~~  
+~~~~~~~~~
 -Segment
 ~~~~~~~~~
 
@@ -687,7 +687,7 @@ Change
 
 The CHANGE command alters the name-to-region or region-to-segment mapping and/or the environment for a region or segment.
 
-The format of the CHANGE command is: 
+The format of the CHANGE command is:
 
 .. parsed-literal::
    C[HANGE] -G[BLNAME] -C[OLLATION]=collation_number
@@ -713,7 +713,7 @@ Delete
 
 The DELETE command removes a name, region, or segment from the Global Directory. The DELETE command does not delete any actual data. However, YottaDB does not access database files that do not have mapped global variables except through extended references using an alternative global directory that does not map to them. Note that YottaDB replication does not support global updates made with extended references, unless they actually map to a database file that is a part of the replicated instance.
 
-The format of the DELETE command is: 
+The format of the DELETE command is:
 
 .. parsed-literal::
    D[ELETE] -G[BLNAME] global-name
@@ -734,7 +734,7 @@ Example:
 .. parsed-literal::
    GDE> del -name T*
 
-This command deletes the explicit mapping of all global names starting with the letter "T." This command does not delete any global variables. However, it may make preexisting globals starting with the letter "T" invisible, at least while using this global directory, because the T* global names map to the default namespace going forward. 
+This command deletes the explicit mapping of all global names starting with the letter "T." This command does not delete any global variables. However, it may make preexisting globals starting with the letter "T" invisible, at least while using this global directory, because the T* global names map to the default namespace going forward.
 
 ++++++++
 Exit
@@ -764,7 +764,7 @@ The format of the HELP command is:
 .. parsed-literal::
    H\[ELP\] \[topic...\]
 
-where topic specifies the GDE command for which you want information. If you omit the topic, GDE prompts you for it. 
+where topic specifies the GDE command for which you want information. If you omit the topic, GDE prompts you for it.
 
 ++++++++
 LOCKS
@@ -787,7 +787,7 @@ Example:
 This command maps all locks on resource names that don't start with the caret symbol, "^" to the region "main".
 
 .. note::
-   YottaDB associates LOCKs for global names with the database region holding the corresponding unsubscripted global name. Supposing a global called ^EURWest spans multiple regions in multiple global directories, a command like LOCK ^EURWest may not work in the same way as it would if ^EURWest did not span multiple regions. Before using a command like LOCK ^EURWest where ^EURWest spans multiple regions in multiple directories, ensure that the corresponding unsubscripted ^EURWest maps to the same region in all of the global directories. Alternatively, you can use LOCK globalname (with no leading up-arrow) and control LOCK interactions with the LOCKS global directory characteristic or use transaction processing to eliminate the use of LOCKs to protect global access. 
+   YottaDB associates LOCKs for global names with the database region holding the corresponding unsubscripted global name. Supposing a global called ^EURWest spans multiple regions in multiple global directories, a command like LOCK ^EURWest may not work in the same way as it would if ^EURWest did not span multiple regions. Before using a command like LOCK ^EURWest where ^EURWest spans multiple regions in multiple directories, ensure that the corresponding unsubscripted ^EURWest maps to the same region in all of the global directories. Alternatively, you can use LOCK globalname (with no leading up-arrow) and control LOCK interactions with the LOCKS global directory characteristic or use transaction processing to eliminate the use of LOCKs to protect global access.
 
 +++
 LOG
@@ -795,7 +795,7 @@ LOG
 
 The LOG command creates a log file of all GDE commands and displays for the current editing session. The system places an exclamation point (!) (i.e., the comment symbol) before all display lines that are not entered by the user. In the log, the log can be used with the @ symbol as a command procedure.
 
-The format of the LOG command is: 
+The format of the LOG command is:
 
 .. parsed-literal::
    LOG
@@ -859,7 +859,7 @@ SETGD
 
 The SETGD command closes edits on one Global Directory and opens edits on another.
 
-The format of the SETGD command is: 
+The format of the SETGD command is:
 
 .. parsed-literal::
    SE\[TGD\] -F\[ILE\]=file-name \[-Q\[UIT\]\]
@@ -908,7 +908,7 @@ SHOW -COMMAND displays the GDE commands for creating names, regions, and segment
 .. note::
    When GDE encounters an error while executing the @command-file command, it stops processing the command file and returns to the operator prompt, which gives the operator the option of compensating for the error. If you subsequently issue @command-file command again in the same session for the same command-file, GDE resumes processing it at the line after the last error.
 
--ALL: Displays the entire Global Directory. This qualifier corresponds to displaying "all" sections of the SHOW report: 
+-ALL: Displays the entire Global Directory. This qualifier corresponds to displaying "all" sections of the SHOW report:
 
 .. parsed-literal::
    ***TEMPLATES***, ***NAMES***, ***REGIONS***, ***SEGMENTS***, ***MAP***, ***INSTANCE***.
@@ -921,10 +921,10 @@ By default, SHOW displays -ALL.
 
 .. parsed-literal::
    ***INSTANCE***
-  
+
 -MAP: Displays the current mapping of all names, regions, segments, and files. This qualifier corresponds to the section of the SHOW report titled \*\*\*MAP\*\*\*. The output of a SHOW -MAP may be restricted to a particular region by specifying a -REGION qualifier with a region name argument.
 
--TEMPLATE: Displays the current region and segment templates. This qualifier corresponds to the section of the SHOW report titled: 
+-TEMPLATE: Displays the current region and segment templates. This qualifier corresponds to the section of the SHOW report titled:
 
 .. parsed-literal::
   \*\*\* TEMPLATES \*\*\*
@@ -960,7 +960,7 @@ Example:
 This displays only the TEMPLATES section of the Global Directory.
 
 .. parsed-literal::
-   GDE>SHOW -command 
+   GDE>SHOW -command
    TEMPLATE -REGION -NOAUTODB
    TEMPLATE -REGION -COLLATION_DEFAULT=0
    TEMPLATE -REGION -EPOCHTAPER
@@ -1032,7 +1032,7 @@ This displays only the TEMPLATES section of the Global Directory.
    ADD -NAME US("South","m":"{") -REGION=USSMZREG
    !
 
-This command displays the GDE commands to recreate the spanning region example described in the Introduction section. 
+This command displays the GDE commands to recreate the spanning region example described in the Introduction section.
 
 ++++++++++++
 Template
@@ -1055,7 +1055,7 @@ Example:
 .. parsed-literal::
    GDE> template -segment -allocation=200000
 
-This command modifies the segment template so that any segments ADDed after this time produce database files with an ALLOCATION of 200,000 GDS blocks. 
+This command modifies the segment template so that any segments ADDed after this time produce database files with an ALLOCATION of 200,000 GDS blocks.
 
 +++++++
 Verify
@@ -1063,7 +1063,7 @@ Verify
 
 The VERIFY command validates information entered into the current Global Directory. It checks the name-to-region mappings to ensure all names map to a region. The VERIFY command checks region-to-segment mappings to ensure each region maps to a segment, each segment maps to only one region, and the segment maps to a UNIX file. The EXIT command implicitly performs a VERIFY -ALL.
 
-The format of the VERIFY command is: 
+The format of the VERIFY command is:
 
 .. parsed-literal::
    V[ERIFY]
@@ -1093,7 +1093,7 @@ This command verifies the region "regis".
 Name, Region and Segment Qualifiers
 -----------------------------------
 
-The -NAME, -REGION, and -SEGMENT qualifiers each have additional qualifiers used to further define or specify characteristics of a name, region, or segment. The following sections describe these additional qualifiers. 
+The -NAME, -REGION, and -SEGMENT qualifiers each have additional qualifiers used to further define or specify characteristics of a name, region, or segment. The following sections describe these additional qualifiers.
 
 +++++++++++++++
 Name Qualifiers
@@ -1165,7 +1165,7 @@ The maximum length is 31 alphanumeric characters.
 -[NO]EPOCHTAPER
 ~~~~~~~~~~~~~~~~~
 
-Tries to minimize epoch duration by reducing the number of buffers to flush by YottaDB and the file system (via an fsync()) as the epoch (time-based or due to a journal file auto-switch) approaches. By default, EPOCHTAPER is enabled. Epoch tapering reduces the impact of I/O activity during an epoch event. Application that experience high load and/or need to reduce latency may benefit from epoch tapering. 
+Tries to minimize epoch duration by reducing the number of buffers to flush by YottaDB and the file system (via an fsync()) as the epoch (time-based or due to a journal file auto-switch) approaches. By default, EPOCHTAPER is enabled. Epoch tapering reduces the impact of I/O activity during an epoch event. Application that experience high load and/or need to reduce latency may benefit from epoch tapering.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -[NO]INST[_FREEZE_ON_ERROR]
@@ -1326,7 +1326,7 @@ By default, GDE uses a RECORD_SIZE of 256 bytes.
 -[NO]STA[TS]
 ~~~~~~~~~~~~~~
 
-Specifies whether YottaDB should permit processes to share their database access statistics for other processes to monitor. When on, this characteristic causes YottaDB to create a small MM database for the associated region to hold the shared statistics. There may be operational or security reasons to prohibit sharing of statistics. For example, YottaDB does not share statistics on database files that exist solely to support YottaDB features. 
+Specifies whether YottaDB should permit processes to share their database access statistics for other processes to monitor. When on, this characteristic causes YottaDB to create a small MM database for the associated region to hold the shared statistics. There may be operational or security reasons to prohibit sharing of statistics. For example, YottaDB does not share statistics on database files that exist solely to support YottaDB features.
 
 Note that a process disables itself from maintaining the shared statistics when it fails to open a statsDB. It does not, however, disable subsequently starting processes from maintaining the shared statistics.
 
@@ -1392,24 +1392,24 @@ The following -SEGMENT qualifiers can be used with the ADD, CHANGE, or TEMPLATE 
 
 Specifies the access method or the YottaDB buffering strategy for storing and retrieving data from the global database file.
 
-* code can have 2 values - Buffered Global (BG) or Memory Mapped (MM). The default value is BG. 
+* code can have 2 values - Buffered Global (BG) or Memory Mapped (MM). The default value is BG.
 
 * With BG, the global buffer pool manages the buffers (the OS/file system may also provide additional buffering). You get the choice of using BEFORE_IMAGE or NOBEFORE_IMAGE journaling for your database. For details on the implications of these forms of Journaling, see Chapter 6: “YottaDB Journaling”.
   - BG supports both forward and backward recovery and rollback to recover a database without a restore. For more information on forward and backward recovery and rollback, see Chapter 5: “General Database Management”.
   - BG is a likely choice when you need faster recovery times from system failures.
 
 * With MM, YottaDB bypasses the global buffer pool and relies entirely on the OS/file system to manage the data traffic between memory and disk. YottaDB has no control over the timing of disk updates, therefore there is a greater reliance on the OS/file system for database performance.
-  - MM supports NOBEFORE_IMAGE journaling only. YottaDB issues an error if you use MM with BEFORE_IMAGE Journaling. MM supports MUPIP JOURNAL -RECOVER -FORWARD and MUPIP JOURNAL -ROLLBACK -FORWARD. With MM, MUPIP JOURNAL -RECOVER -BACKWARD only generates lost and broken transaction files but cannot recover the database. 
+  - MM supports NOBEFORE_IMAGE journaling only. YottaDB issues an error if you use MM with BEFORE_IMAGE Journaling. MM supports MUPIP JOURNAL -RECOVER -FORWARD and MUPIP JOURNAL -ROLLBACK -FORWARD. With MM, MUPIP JOURNAL -RECOVER -BACKWARD only generates lost and broken transaction files but cannot recover the database.
   - Depending on your file system, MM may be an option when you need performance advantage in situations where the above restrictions are acceptable.
 
-* GDE maintains a separate set of segment qualifier values for each ACCESS_METHOD. 
+* GDE maintains a separate set of segment qualifier values for each ACCESS_METHOD.
 
 * When GDE modifies the ACCESS_METHOD, it activates the appropriate set of TEMPLATEs and sets all unspecified qualifiers to the default values of the new ACCESS_METHOD.
 
 Example:
 
 .. parsed-literal::
-   GDE> change -segment DEFAULT -access_method=MM 
+   GDE> change -segment DEFAULT -access_method=MM
 
 This command sets MM as the access method or the YottaDB buffering strategy for storing and retrieving the database for segment DEFAULT.
 
@@ -1417,7 +1417,7 @@ This command sets MM as the access method or the YottaDB buffering strategy for 
 -AL[LOCATION]=blocks
 ~~~~~~~~~~~~~~~~~~~~~
 
-Specifies the number of blocks YottaDB allocates to a disk file when MUPIP creates the file. For GDS files, the number of bytes allocated is the size of the database file header plus the ALLOCATION size times the BLOCK_SIZE. 
+Specifies the number of blocks YottaDB allocates to a disk file when MUPIP creates the file. For GDS files, the number of bytes allocated is the size of the database file header plus the ALLOCATION size times the BLOCK_SIZE.
 
 * The minimum ALLOCATION is 10 blocks.
 
@@ -1641,7 +1641,7 @@ The following table summarizes GDE segment qualifiers. It provides abbreviations
 **\* May vary by platform**
 
 ++++++++++++++++++++++++++
-Gblname Qualifiers 
+Gblname Qualifiers
 ++++++++++++++++++++++++++
 
 The following -GBLNAME qualifier can be used with the ADD, CHANGE, or TEMPLATE commands.
@@ -1653,16 +1653,16 @@ The following -GBLNAME qualifier can be used with the ADD, CHANGE, or TEMPLATE c
 Specifies the collation number for a global name; a value of 0 specifies standard M collation. The first time that a YottaDB process accesses a global variable name in a database file, it determines the collation sequence as follows:
 
 * If a Global Variable Tree (GVT) exists (that is, global variable nodes exist, or have previously existed, even if they have been KILLed), use the existing collation:
-  
+
   - If there is a collation specified in the Directory Tree (DT) for that variable, use it after confirming that this matches the collation in the global directory.
-  - else (that is, there is no collation specified in the DT): 
-    
+  - else (that is, there is no collation specified in the DT):
+
     * If there is collation specified for that global variable in the global directory, use it
     * else if there is a default for that database file, use it
     * else (i.e. neither exists), use standard M collation
 
 * else (that is, a GVT does not exist, which in turn means there is no DT):
-  
+
   - If there is collation specified for that global variable in the global directory, use it
   - else, if there is a default for that database file, use it
   - else (i.e. neither exists), use standard M collation
@@ -1675,12 +1675,12 @@ Instance Qualifier
 The following -INSTANCE qualifier is used with the CHANGE command.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
--F[ILE_NAME=[repl_inst_filename|""] 
+-F[ILE_NAME=[repl_inst_filename|""]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-* -FILE_NAME=repl_inst_filename maps a replication instance file with the global directory. -FILE_NAME="" removes the mapping of a global directory with a replication instance file. 
+* -FILE_NAME=repl_inst_filename maps a replication instance file with the global directory. -FILE_NAME="" removes the mapping of a global directory with a replication instance file.
 
-* When a global directory is used, the mapping set with CHANGE -INSTANCE FILE_NAME=repl_inst_filename overrides any setting of the ydb_repl_instance environment variable. However, other utilities (MUPIP, LKE, and DSE) use the setting of the ydb_repl_instance environment variable. 
+* When a global directory is used, the mapping set with CHANGE -INSTANCE FILE_NAME=repl_inst_filename overrides any setting of the ydb_repl_instance environment variable. However, other utilities (MUPIP, LKE, and DSE) use the setting of the ydb_repl_instance environment variable.
 
 
 -------------------------------------
