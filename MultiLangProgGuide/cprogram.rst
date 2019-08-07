@@ -242,7 +242,7 @@ process can recover.
 :CODE:`YDB_SEVERITY_FATAL` – The number corresponds to an error that terminated
 the process.
 
-:CODE:`YDB_SEVERITY_INFORMATION` – The number corresponds to an informational
+:CODE:`YDB_SEVERITY_INFORMATIONAL` – The number corresponds to an informational
 message.
 
 :CODE:`YDB_SEVERITY_SUCCESS` – The number corresponds to the successful
@@ -1221,7 +1221,7 @@ multi-threaded applications, and those which do not are for
 single-threaded applications. The discussion in `Threads <https://docs.yottadb.com/MultiLangProgGuide/programmingnotes.html#threads>`_ provides
 more detailed information.
 
-`ydb_hiber_start()`_ and `ydb_hiber_start_wait_any()`_ are for use only with the SimpleAPI and not with the 
+`ydb_hiber_start()`_ and `ydb_hiber_start_wait_any()`_ are for use only with the SimpleAPI and not with the
 threaded Simple API.
 
 `ydb_exit()`_, `ydb_fork_n_core()`_, and
@@ -1599,7 +1599,7 @@ ydb_mmrhash_32()
 -----------------------------
 
 .. code-block:: C
-    
+
     void ydb_mmrhash_32(const void *key, int len, uint4 seed, uint4 *out4);
 
 This function returns in :code:`*out4` the 32-bit (4-byte) MurmurHash of :code:`len` bytes at :code:`*key`.
@@ -1638,15 +1638,15 @@ Example:
 .. parsed-literal::
    // Initialize state struct
    HASH128_STATE_INIT(hash_state, 0);
-   
-   // Create keys/strings to ingest   
+
+   // Create keys/strings to ingest
    char \*key1 = "ifembu8r308j243h5g3h84t7yf23h0h";
    char \*key2 = "ougoh2408rh2fhe08yh2ti8rhhrguo2r3huocdiWEN23";
-   
+
    // Add keys to hash
    ydb_mmrhash_128_ingest(&hash_state, (void*)key1, strlen(key1));
    ydb_mmrhash_128_ingest(&hash_state, (void*)key2, strlen(key2));
-   
+
    // Produce result
    ydb_mmrhash_128_result(hash_state, 0, &hash);
 
