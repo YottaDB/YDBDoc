@@ -14,7 +14,7 @@ YottaDB Environment Setup
 
 Several environment variables control the operation of YottaDB. Some of them must be set up for normal operation, whereas for others, YottaDB assumes a default value if they are not set.
 
-Your YottaDB distribution comes with many scripts that set up a default YottaDB environment for the shell of your choice. These scripts are as follows: 
+Your YottaDB distribution comes with many scripts that set up a default YottaDB environment for the shell of your choice. These scripts are as follows:
 
 **ydb_env_set** (gtmprofile): uses reasonable defaults to set up a YottaDB application development environment that includes plugins conforming to the YottaDB standard (such as the POSIX plugin and Octo). The ydb_env_set file when sourced sets default values for the environment variables ydb_dir, ydb_dist, ydb_etrap, ydb_gbldir, ydb_log, ydb_rel, ydb_repl_instance, ydb_retention, ydb_routines, ydb_tmp, gtmdir, gtm_dist, gtm_etrap, gtmgbldir, gtm_log, gtm_repl_instance, gtm_retention, gtmroutines, gtm_tmp, and gtmver. Additionally, if $ydb_chset is set to a case independent "UTF-8", sourcing the file also sets ydb_icu_version and gtm_icu_version. The default environment is created under $ydb_dir, defaulting to $HOME/.yottadb if ydb_dir is undefined. Sourcing ydb_env_set saves environment variables that it sets such that subsequently sourcing ydb_env_unset restores the saved values.
 
@@ -26,7 +26,7 @@ Your YottaDB distribution comes with many scripts that set up a default YottaDB 
 
 * **gdedefaults**: a GDE command file that specifies the default values for database characteristics defined by GDE.
 
-These scripts are designed to give you a friendly out-of-the-box YottaDB experience. Even though you can set up an environment for normal YottaDB operation without using these scripts, it is important to go through these scripts to understand how to configure environments. 
+These scripts are designed to give you a friendly out-of-the-box YottaDB experience. Even though you can set up an environment for normal YottaDB operation without using these scripts, it is important to go through these scripts to understand how to configure environments.
 
 
 ++++++++++++
@@ -38,7 +38,7 @@ On POSIX shells, ydb_env_set helps you set an environment for single-user, non-r
 ydb_env_set sets reasonable defaults for the following environment variables for normal YottaDB operation:
 
 .. parsed-literal::
-   ydb_dir, ydb_dist, ydb_etrap, ydb_gbldir, ydb_log, ydb_rel, ydb_repl_instance, ydb_retention, ydb_routines, ydb_tmp, gtmdir, gtm_dist, gtm_etrap, gtmgbldir, gtm_log, gtm_repl_instance, gtm_retention, gtmroutines, gtm_tmp, gtmver 
+   ydb_dir, ydb_dist, ydb_etrap, ydb_gbldir, ydb_log, ydb_rel, ydb_repl_instance, ydb_retention, ydb_routines, ydb_tmp, gtmdir, gtm_dist, gtm_etrap, gtmgbldir, gtm_log, gtm_repl_instance, gtm_retention, gtmroutines, gtm_tmp, gtmver
 
 You can set the following environment variables before sourcing ydb_env_set or running the ydb script;
 
@@ -46,10 +46,10 @@ You can set the following environment variables before sourcing ydb_env_set or r
 
 * **gtmdir** - set this to define a directory for the environment set by ydb_env_set.
 
-The following shell variables are used by the script and left unset at its completion: 
+The following shell variables are used by the script and left unset at its completion:
 
 .. parsed-literal::
-   old_ydb_dist, old_ydb_routines, old_gtmver, tmp_ydb_tmp, tmp_passwd. 
+   old_ydb_dist, old_ydb_routines, old_gtmver, tmp_ydb_tmp, tmp_passwd.
 
 The $ydb_routines value set by the ydb_env_set script enables auto-relink by default for object files in the $gtmdir/$ydb_rel/o directory in M mode and $gtmdir/$ydb_rel/o/utf8 in UTF-8 mode. Auto-relink requires shared memory resources and limits beyond those for database operation. If your system has inadequate shared memory configured, YottaDB displays messages along the lines of:
 
@@ -67,20 +67,20 @@ When ydb sources ydb_env_set, it provides a default execution environment (globa
    .yottadb
       | -- r
       | -- r1.10
-      | | -- g 
-      | | | -- yottadb.dat 
-      | | | -- yottadb.gld 
-      | | ` -- yottadb.mjl 
-      | | -- o 
-      | | ` -- utf8 
-      | ` -- r 
+      | | -- g
+      | | | -- yottadb.dat
+      | | | -- yottadb.gld
+      | | ` -- yottadb.mjl
+      | | -- o
+      | | ` -- utf8
+      | ` -- r
       | -- r1.20
-       | -- g 
-       | | -- yottadb.dat 
-       | | -- yottadb.gld 
-          | ` -- yottadb.mjl 
-       | -- o 
-       | ` -- utf8 
+       | -- g
+       | | -- yottadb.dat
+       | | -- yottadb.gld
+          | ` -- yottadb.mjl
+       | -- o
+       | ` -- utf8
         ` -- r
 
 
@@ -128,11 +128,11 @@ Sets a default YottaDB environment for C type shell. It sets the $ydb_dist, $ydb
 To source the gtmcshrc script, type:
 
 .. parsed-literal::
-   $ source <path_to_YottaDB_installation_directory>/gtmcshrc 
+   $ source <path_to_YottaDB_installation_directory>/gtmcshrc
 
 You can also run the gtmbase script which places the above command in the .cshrc file so the script will get automatically sourced the next time you log in.
 
-gtmcshrc also creates the following aliases. 
+gtmcshrc also creates the following aliases.
 
 .. parsed-literal::
    alias ydb '$ydb_dist/mumps -direct'
@@ -144,7 +144,7 @@ gtmcshrc also creates the following aliases.
 Now you can run YottaDB and its utilities without specifying a full path to the directory in which YottaDB was installed.
 
 ++++++++++++++++
- gtmbase 
+ gtmbase
 ++++++++++++++++
 
 Adds the following line to the .profile or .cshrc file depending on the shell.
@@ -153,14 +153,14 @@ In the POSIX shell, gtmbase adds the following line to .profile:
 
 .. parsed-literal::
    . <ydb_dist pathname>/ydb_env_set
-   
+
 In the C shell, adds the following line to .cshrc:
 
 .. parsed-literal::
-   source <ydb_dist pathname>/gtmcshrc 
+   source <ydb_dist pathname>/gtmcshrc
 
 +++++++++++++
- gdedefaults 
+ gdedefaults
 +++++++++++++
 
 Specifies default or template values for database characteristics defined by GDE.
@@ -220,7 +220,7 @@ A comprehensive list of environment variables that are directly or indirectly us
 
 **ydb_autorelink_ctlmax** (gtm_autorelink_ctlmax) specifies the maximum number of entries for unique routine names in the relink control file created by a process for any directory, with a minimum of 1,000, a maximum of 16,000,000 and a default of 50,000 if unspecified. If a specified value is above or below the allowed range, the process logs the errors ARCTLMAXHIGH or ARCTLMAXLOW respectively in the syslog, and uses the nearest acceptable limit instead. MUPIP RCTLDUMP and ZSHOW "A" outputs include the maximum number of unique routine names available in a relink control file.
 
-**ydb_autorelink_keeprtn** (gtm_autorelink_keeprtn): When ydb_autorelink_keeprtn is set to 1, t[rue], or y[es] , exiting processes leave auto-relinked routines in shared memory. When the environment variable ydb_autorelink_keeprtn is undefined, 0, f[alse] or n[o], exiting processes purge auto-relinked routines in shared memory if no other processes are using them. Regardless of the value of ydb_autorelink_keeprtn, the Operating System removes an auto-relink shared memory repository when there are no processes accessing it. 
+**ydb_autorelink_keeprtn** (gtm_autorelink_keeprtn): When ydb_autorelink_keeprtn is set to 1, t[rue], or y[es] , exiting processes leave auto-relinked routines in shared memory. When the environment variable ydb_autorelink_keeprtn is undefined, 0, f[alse] or n[o], exiting processes purge auto-relinked routines in shared memory if no other processes are using them. Regardless of the value of ydb_autorelink_keeprtn, the Operating System removes an auto-relink shared memory repository when there are no processes accessing it.
 
 All values are case-independent. When ydb_autorelink_keeprtn is defined and TRUE:
 
@@ -254,7 +254,7 @@ All values are case-independent. When ydb_autorelink_keeprtn is defined and TRUE
 
 **ydb_compile** (gtmcompile) specifies the initial value of the $ZCOmpile ISV. The SET command can alter the value of $ZCOMPILE in an active process.
 
-**ydb_coredump_filter** (gtm_coredump_filter) contains case-insensitive hexadecimal digits that sets the corresponding value to /proc/<pid>/coredump_filter (see ``man 5 core``) at process startup without explicitly setting a value if unspecified. This controls the contents of core dumps generated by the process. If ydb_coredump_filter is not specified, but gtm_coredump_filter is, the latter environment variable is used. If both are specified, the former takes precedence. 
+**ydb_coredump_filter** (gtm_coredump_filter) contains case-insensitive hexadecimal digits that sets the corresponding value to /proc/<pid>/coredump_filter (see ``man 5 core``) at process startup without explicitly setting a value if unspecified. This controls the contents of core dumps generated by the process. If ydb_coredump_filter is not specified, but gtm_coredump_filter is, the latter environment variable is used. If both are specified, the former takes precedence.
 
 **ydb_crypt_config** (gtmcrypt_config) specifies the location of the configuration file required for database encryption, Sequential file, PIPE, and FIFO device encryption and/or TLS support. A configuration file is divided into two sections: the database encryption section and the TLS section. The database encryption section contains a list of database files and their corresponding key files. You do not need to add a database encryption section if you are not using an encrypted database, or a TLS section if you are not using TLS for replication or sockets. The TLS section provides information needed for OpenSSL (in the reference plugin implementation) or other encryption package, such as the location of the root certification authority certificate in PEM format and leaf-level certificates with their corresponding private key files. Note that the use of the ydb_crypt_config environment variable requires prior installation of the libconfig package.
 
@@ -264,7 +264,7 @@ All values are case-independent. When ydb_autorelink_keeprtn is defined and TRUE
 
 **ydb_custom_errors** (gtm_custom_errors) specifies the complete path to the file that contains a list of errors that should automatically stop all updates on those region(s) of an instance which have the Instance Freeze mechanism enabled.
 
-**ydb_dbfilext_syslog_disable** (gtm_dbfilext_syslog_disable) Controls whether database file extensions are logged in the syslog or not. If the environment variable is set to a non-zero numeric value or case-independent string or leading substrings of TRUE or YES, database file extensions are not logged to the syslog. 
+**ydb_dbfilext_syslog_disable** (gtm_dbfilext_syslog_disable) Controls whether database file extensions are logged in the syslog or not. If the environment variable is set to a non-zero numeric value or case-independent string or leading substrings of TRUE or YES, database file extensions are not logged to the syslog.
 
 **ydb_dbglvl** (gtmdbglvl) specifies the YottaDB debug levels. The defined values can be added together to turn on multiple features at the same time. Note that the cumulative value specified in the logical or environment variable must currently be specified in decimal.
 
@@ -335,7 +335,7 @@ All values are case-independent. When ydb_autorelink_keeprtn is defined and TRUE
 * > 0 - Seconds to wait - rounded to the nearest multiple of eight (8); if the specification is 96 or more seconds, the waiting process uses the ydb_procstuckexec mechanism at one half the wait and at the end of the wait; if the resource remains unavailable, the process issues DBFILERR error with an associated SEMWT2LONG
 
 **ydb_dist** (gtm_dist) specifies the path to the directory containing the YottaDB system distribution. ydb_dist must be defined for each user. If you are not using the ydb script or sourcing ydb_env_set, consider defining ydb_dist in the login file or as part of the default system environment. In UTF-8 mode, the ydb_dist environment variable specifies the path to the directory containing the YottaDB system distribution for Unicode. The distribution for Unicode is located in subdirectory utf8 under the YottaDB distribution directory. For example, if the YottaDB distribution is in /usr/local/lib/yottadb/r120, set ydb_dist to point to /usr/local/lib/yottadb/r120/utf8 for UTF-8 mode. Correct operation of YottaDB executable programs requires ydb_dist to be set correctly.
-  
+
 **ydb_dmterm** (gtm_dmterm) specifies a [NO]DMTERM state at process initiation where application setting applied to $PRINCIPAL also apply to direct mode interactions; a case-insensitive value of "1", "yes", or "true" establishes a DMTERM state at process initiation where direct mode uses default terminal characteristics and ignores application settings for $PRINCIPAL; all other values, including no value, result in the default VIEW "NODMTERM" behavior.
 
 **ydb_env_translate** (gtm_env_translate) specifies the path to a shared library to implement the optional YottaDB environment translation facility that can assist in resolving extended global references.
@@ -369,7 +369,7 @@ All values are case-independent. When ydb_autorelink_keeprtn is defined and TRUE
 
 **ydb_linktmpdir** (gtm_linktmpdir) identifies a directory (defaulting to $ydb_tmp, which in turn defaults to /tmp, if unspecified) where YottaDB creates a small control file (Relinkctl), for each auto-relink enabled directory which a YottaDB process accesses while searching through $ZROUTINES. The names of these files are of the form ydb-relinkctl-<murmur> where <murmur> is a hash of the realpath() to an auto-relink directory; for example: /tmp/ydb-relinkctl-f0938d18ab001a7ef09c2bfba946f002). With each Relinkctl file, YottaDB creates and associates a block of shared memory that contains associated control structures. Among the structures is a cycle number corresponding to each routine found in the routine directory; a change in the cycle number informs a process that it may need to determine whether there is a new version of a routine. Although YottaDB only creates relinkctl records for routines that actually exist on disk, it may increment cycle numbers for existing relinkctl records even if they no longer exist on disk.
 
-**ydb_locale** (gtm_locale) specifies a locale to use (LC_CTYPE would be set to this value) if the ydb_chset environment variable is set to UTF-8. If not set, the current value of LC_CTYPE is used.  This environment variable is ignored if ydb_chset is not set to UTF-8. 
+**ydb_locale** (gtm_locale) specifies a locale to use (LC_CTYPE would be set to this value) if the ydb_chset environment variable is set to UTF-8. If not set, the current value of LC_CTYPE is used.  This environment variable is ignored if ydb_chset is not set to UTF-8.
 
 **ydb_local_collate** (gtm_local_collate) specifies an alternative collation sequence for local variables.
 
@@ -378,7 +378,7 @@ All values are case-independent. When ydb_autorelink_keeprtn is defined and TRUE
 .. note::
    In the latest versions, gtmsecshr logs its messages in the system log and the environment variable ydb_log is ignored.
 
-**ydb_lvnullsubs** (gtm_lvnullsubs) specifies the initialization of [NEVER][NO]LVNULLSUBS at process startup. The value of the environment varable can be 0 which is equivalent to VIEW “NOLVNULLSUBS”, 1 (the default) which is equivalent to VIEW “LVNULLSUBS” or 2, which is equivalent to VIEW “NEVERLVNULLSUBS”. These settings disallow, partially disallow, or allow local arrays to have empty string subscripts. 
+**ydb_lvnullsubs** (gtm_lvnullsubs) specifies the initialization of [NEVER][NO]LVNULLSUBS at process startup. The value of the environment variable can be 0 which is equivalent to VIEW “NOLVNULLSUBS”, 1 (the default) which is equivalent to VIEW “LVNULLSUBS” or 2, which is equivalent to VIEW “NEVERLVNULLSUBS”. These settings disallow, partially disallow, or allow local arrays to have empty string subscripts.
 
 **ydb_maxtptime** (gtm_zmaxtptime) specifies the initial value of the $ZMAXTPTIME Intrinsic Special Variable, which controls whether and when YottaDB issues a TPTIMEOUT error for a TP transaction that runs too long. ydb_maxtptime specifies time in seconds and the default is 0, which indicates "no timeout" (unlimited time). The maximum value of ydb_maxtptime is 60 seconds and the minimum is 0; YottaDB ignores ydb_maxtptime if it contains a value outside of this recognized range. This range check does not apply to SET $ZMAXTPTIME.
 
@@ -392,9 +392,9 @@ All values are case-independent. When ydb_autorelink_keeprtn is defined and TRUE
 
 **ydb_msgprefix** ydb_msgprefix specifies a prefix for YottaDB messages generated by a process, with the prefix defaulting to "YDB", e.g., YDB-I-DBFILEXT. Previously, the prefix was always "GTM". A value of "GTM" retains the previous format.
 
-**ydb_mstack_crit** (gtm_mstack_crit) specifies an integer between 15 and 95 defining the percentage of the stack which should be used before YottaDB emits a STACKCRIT warning. If the value is below the minimum or above the maximum, YottaDB uses the minimum or maximum respectively. The default is 90. 
+**ydb_mstack_crit** (gtm_mstack_crit) specifies an integer between 15 and 95 defining the percentage of the stack which should be used before YottaDB emits a STACKCRIT warning. If the value is below the minimum or above the maximum, YottaDB uses the minimum or maximum respectively. The default is 90.
 
-**ydb_mstack_size** (gtm_stack_size) specifies the M stack size (in KiB). If ydb_mstack_size is not set or set to 0, YottaDB uses the default M stack size (that is, 272KiB). The minimum supported size is 25 KiB; YottaDB reverts values smaller than this to 25 KiB. The maximum supported size is 10000 KiB; YottaDB reverts values larger than this to 10000 KiB. 
+**ydb_mstack_size** (gtm_stack_size) specifies the M stack size (in KiB). If ydb_mstack_size is not set or set to 0, YottaDB uses the default M stack size (that is, 272KiB). The minimum supported size is 25 KiB; YottaDB reverts values smaller than this to 25 KiB. The maximum supported size is 10000 KiB; YottaDB reverts values larger than this to 10000 KiB.
 
 **ydb_mupjnl_parallel** (gtm_mupjnl_parallel) defines the number of processes or threads used by MUPIP JOURNAL -RECOVER/-ROLLBACK when the invoking command does not have a -PARALLEL qualifier. When defined with no value, it specifies one process or thread per region. When undefined or defined to one (1), it specifies MUPIP should process all regions without using additional processes or threads. When defined with an integer value greater than one (1), it specifies the maximum number of processes or threads for MUPIP to use. If the value is greater than the number of regions, MUPIP never uses more processes or threads than there are regions. If it is less than the number of regions, MUPIP allocates work to the additional processes or threads based on the time stamps in the journal files.
 
@@ -408,9 +408,9 @@ All values are case-independent. When ydb_autorelink_keeprtn is defined and TRUE
 
 **ydb_noundef** (gtm_noundef) specifies the initial setting that controls whether a YottaDB process should treat undefined global or local variables as having an implicit value of an empty string. If it is defined, and evaluates to a non-zero integer or any case-independent string or leading substring of "TRUE" or "YES", then YottaDB treats undefined variables as having an implicit value of an empty string. The VIEW "[NO]UNDEF" command can alter this behavior in an active process. By default, YottaDB signals an error on an attempt to use the value of an undefined variable.
 
-**ydb_obfuscation_key** (gtm_obfuscation_key) : If $ydb_obfuscation_key specifies the name of the file readable by the process, the encryption reference plug-in uses a cryptographic hash of the file's contents as the XOR mask for the obfuscated password in the environment variable ydb_passwd. When ydb_obfuscation_key does not point to a readable file, the plugin computes a cryptographic hash using a mask based on the value of $USER and the inode of the mumps executable to use as a mask. $ydb_passwd set with a $ydb_obfuscation_key allows access to all users who have the same $ydb_obfuscation_key defined in their environments. However, $ydb_passwd set without $ydb_obfuscation_key can be used only by the same $USER using the same YottaDB distribution. 
+**ydb_obfuscation_key** (gtm_obfuscation_key) : If $ydb_obfuscation_key specifies the name of the file readable by the process, the encryption reference plug-in uses a cryptographic hash of the file's contents as the XOR mask for the obfuscated password in the environment variable ydb_passwd. When ydb_obfuscation_key does not point to a readable file, the plugin computes a cryptographic hash using a mask based on the value of $USER and the inode of the mumps executable to use as a mask. $ydb_passwd set with a $ydb_obfuscation_key allows access to all users who have the same $ydb_obfuscation_key defined in their environments. However, $ydb_passwd set without $ydb_obfuscation_key can be used only by the same $USER using the same YottaDB distribution.
 
-**ydb_passwd** (gtm_passwd) specifies the obfuscated (not encrypted) password of the GNU Privacy Guard key ring. When the environment variable $ydb_passwd is set to "", YottaDB invokes the default GTMCRYPT passphrase prompt defined in the reference implementation of the plugin to obtain a passphrase at process startup and uses that value as $ydb_passwd for the duration of the process. 
+**ydb_passwd** (gtm_passwd) specifies the obfuscated (not encrypted) password of the GNU Privacy Guard key ring. When the environment variable $ydb_passwd is set to "", YottaDB invokes the default GTMCRYPT passphrase prompt defined in the reference implementation of the plugin to obtain a passphrase at process startup and uses that value as $ydb_passwd for the duration of the process.
 
 **ydb_patnumeric** (gtm_patnumeric) specifies the value of the read-only ISV $ZPATNUMERIC that determines how YottaDB interprets the patcode "N" used in the pattern match operator. The SET command can alter the value of $ZPATNUMERIC in an active process.
 
@@ -470,7 +470,7 @@ Each invocation generates an operator log message and if the invocation fails, a
 
 **ydb_snaptmpdir** (gtm_snaptmpdir) specifies the location to place the temporary "snapshot" file created by facilities such as on-line mupip integ. If $ydb_snaptmpdir is not defined, YottaDB uses the $ydb_baktmpdir environment variable if defined, and otherwise uses the current working directory. All processes performing updates during an online INTEG must use the same directory and have write access to it.
 
-**ydb_string_pool_limit** (gtm_string_pool_limit) is used for the initial value of $ZSTRPLLIM, when it specifies a positive value.  
+**ydb_string_pool_limit** (gtm_string_pool_limit) is used for the initial value of $ZSTRPLLIM, when it specifies a positive value.
 
 **ydb_statsdir** (gtm_statsdir) specifies the directory for database files into which processes that have opted-in to sharing global statistics place their statistics as binary data. If you do not explicitly define this environment variable for a process, YottaDB defines this to the evaluation of $ydb_tmp, which defaults to /tmp. All processes that share statistics MUST use the same value for $ydb_statsdir. YottaDB suggests that you point ydb_statsdir at a tmpfs or ramfs. These database files have a name derived from the user defined database file name and a .gst extension. They are not usable as normal database files by application code, except to read statistics. YottaDB automatically creates and deletes these database files as needed. Under normal operation, applications do not need to manage them explicitly. The mapping of ^%YGS to statistics database files is managed by YottaDB transparently to applications with global directories. The ^%YGBLSTAT utility program gathers and reports statistics from nodes of ^%YGS(region,pid).
 
@@ -553,13 +553,13 @@ While creating an environment for multiple processes accessing the same version 
 Always set the same value of $ydb_tmp for all processes using the same YottaDB version. Having different $ydb_tmp for multiple processes accessing the same YottaDB version may prevent processes from being able to communicate with gtmsecshr and cause performance issues.
 
 -------------------------------------------------------------------
- Configuring and operating YottaDB with Unicode™ support (optional) 
+ Configuring and operating YottaDB with Unicode™ support (optional)
 -------------------------------------------------------------------
 
 The configure script provides the option to install YottaDB with or without Unicode™ support for encoding international character sets. This section describes the system environment required to install and operate YottaDB with Unicode™ support. Users who handle data in ASCII or other single-byte character sets such as one of the ISO-8859 representations and do not foresee any use of character sets beyond single byte character sets, may proceed to the next section.
 
 ++++++++++++++++++++++++++++++++
-M mode and UTF-8 mode 
+M mode and UTF-8 mode
 ++++++++++++++++++++++++++++++++
 
 A YottaDB process can operate in either M mode or UTF-8 mode. In certain circumstances, both M mode and UTF-8 mode may concurrently access the same database.
@@ -572,7 +572,7 @@ If you install YottaDB with Unicode™ support, all YottaDB components related t
 
 In addition to $ydb_chset, recent versions use $ydb_icu_version to choose an ICU library version other than the default. For ICU libraries built with symbol renaming enabled, $ydb_icu_version becomes a required setting.
 
-$ydb_icu_version specifies the ICU version that YottaDB should use for Unicode operations. It is in the form of MajorVersion.MinorVersion where MajorVersion and MinorVersion specify the desired major verison and minor version of ICU. For example, 3.6 refers to ICU version 3.6. If $ydb_icu_version is defined, YottaDB works regardless of whether or not symbols are renamed in ICU. If $ydb_icu_version is not defined or does not evaluate to an installed ICU version, YottaDB looks for non-renamed symbols in the default ICU version. Note that display widths for a few characters are different starting in ICU 4.0. 
+$ydb_icu_version specifies the ICU version that YottaDB should use for Unicode operations. It is in the form of MajorVersion.MinorVersion where MajorVersion and MinorVersion specify the desired major verison and minor version of ICU. For example, 3.6 refers to ICU version 3.6. If $ydb_icu_version is defined, YottaDB works regardless of whether or not symbols are renamed in ICU. If $ydb_icu_version is not defined or does not evaluate to an installed ICU version, YottaDB looks for non-renamed symbols in the default ICU version. Note that display widths for a few characters are different starting in ICU 4.0.
 
 .. note::
    The ydb_env_set script defines $ydb_icu_version as necessary.
@@ -601,7 +601,7 @@ Starting YottaDB
 Execute ydb from your shell prompt:
 
 .. parsed-literal::
-   $ <path_to_ydb_installation_directory>/ydb 
+   $ <path_to_ydb_installation_directory>/ydb
 
 **To start YottaDB in UTF-8 mode from a POSIX shell**:
 
@@ -626,7 +626,7 @@ First source the gtmschrc script to set up a default YottaDB environment. At you
 Run the ydb alias to start YottaDB in direct mode.
 
 .. parsed-literal::
-   $ ydb 
+   $ ydb
 
 **To start YottaDB in UTF-8 mode from a C-type shell**:
 
@@ -634,7 +634,7 @@ Set the environment variable ydb_chset to UTF-8 and LC_CTYPE or LC_ALL to any us
 
 .. parsed-literal::
    $ setenv ydb_chset UTF-8
-   $ setenv LC_CTYPE en_US.utf8 
+   $ setenv LC_CTYPE en_US.utf8
 
 Source the gtmcshrc script to set up default YottaDB Unicode environment.
 
@@ -660,12 +660,12 @@ Run the ydb alias to start YottaDB in direct mode.
 
  .. parsed-literal::
     alias dse="$ydb_dist/dse"
-    alias gde="$ydb_dist/mumps -run ^GDE" 
-    alias ydb="$ydb_dist/mumps -direct" 
-    alias lke="$ydb_dist/lke" 
-    alias mupip="$ydb_dist/mupip" 
+    alias gde="$ydb_dist/mumps -run ^GDE"
+    alias ydb="$ydb_dist/mumps -direct"
+    alias lke="$ydb_dist/lke"
+    alias mupip="$ydb_dist/mupip"
 
-* Run the ydb alias to start YottaDB in direct mode. 
+* Run the ydb alias to start YottaDB in direct mode.
 
   .. parsed-literal::
      $ ydb
@@ -695,7 +695,7 @@ Run the ydb alias to start YottaDB in direct mode.
      alias dse="$ydb_dist/dse"
      alias gde="$ydb_dist/mumps -run ^GDE"
      alias ydb="$ydb_dist/mumps -direct"
-     alias lke="$ydb_dist/lke" 
+     alias lke="$ydb_dist/lke"
      alias mupip="$ydb_dist/mupip"
 
 * Type the following command to start YottaDB in direct mode.
@@ -703,15 +703,15 @@ Run the ydb alias to start YottaDB in direct mode.
   .. parsed-literal::
      $ ydb
 
-* At the YottaDB prompt, type the following command. 
+* At the YottaDB prompt, type the following command.
 
   .. parsed-literal::
-    YDB>w $ZCHSET 
-    UTF-8 ; the output confirms UTF-8 mode. 
+    YDB>w $ZCHSET
+    UTF-8 ; the output confirms UTF-8 mode.
 
 .. note::
-    If you are configuring a YottaDB environment without using the ydb_env_set script (or the ydb script which sources ydb_env_set), bear in mind the following recommendation: All YottaDB processes should use the same settings for ydb_log and ydb_tmp, especially for production environments. This is because gtmsecshr inherits these values from whichever YottaDB process first uses its services. If there are multiple YottaDB versions active on a system, YottaDB recommends different sets of ydb_log and ydb_tmp values for each version as using the same values for different distributions can cause significant performance issues. 
-     
+    If you are configuring a YottaDB environment without using the ydb_env_set script (or the ydb script which sources ydb_env_set), bear in mind the following recommendation: All YottaDB processes should use the same settings for ydb_log and ydb_tmp, especially for production environments. This is because gtmsecshr inherits these values from whichever YottaDB process first uses its services. If there are multiple YottaDB versions active on a system, YottaDB recommends different sets of ydb_log and ydb_tmp values for each version as using the same values for different distributions can cause significant performance issues.
+
 YottaDB has three invocation modes: compiler, direct, and auto-start. To invoke YottaDB in these modes, provide the following arguments to the ydb script or the mumps command.
 
 * **-direct**: Invokes YottaDB in direct mode where you can enter M commands interactively.
@@ -720,7 +720,7 @@ YottaDB has three invocation modes: compiler, direct, and auto-start. To invoke 
 
 * **-run ^routine_name**: -r invokes YottaDB in auto-start mode. The second argument is taken to be an M entryref, and that routine is automatically executed, bypassing direct mode. Depending on your shell, you may need to put the entryref in quotes.
 
-When executing M programs, YottaDB incrementally links any called programs. For example, the command YDB> do ^TEST links the object file TEST.o and executes it; if the TEST.m program calls other M routines, those are automatically compiled and linked. 
+When executing M programs, YottaDB incrementally links any called programs. For example, the command YDB> do ^TEST links the object file TEST.o and executes it; if the TEST.m program calls other M routines, those are automatically compiled and linked.
 
 .. note::
    When possible, YottaDB verifies that MUMPS, MUPIP, DSE and LKE reside in $ydb_dist. If the path to the executable and the path to $ydb_dist do not match, each executable issues an error. In cases where the executable path could not be determined, each executable defers issuing an error until it is required.
@@ -738,7 +738,7 @@ Huge pages are a Linux feature that may improve the performance of YottaDB appli
   .. note::
      At this time, huge pages have no effect for MM databases; the text, data, or bss segments for each process; or for process stack.
 
-While YottaDB recommends you configure huge pages for shared memory, you need to evaluate whether or not configuring huge pages for process-private memory is appropriate for your application. Having insufficient huge pages available during certain commands (for example, a JOB command - see complete list below) can result in a process terminating with a SIGBUS error. This is a current limitation of Linux. Before you use huge pages for process-private memory on production systems, YottaDB recommends that you perform appropriate peak load tests on your application and ensure that you have an adequate number of huge pages configured for your peak workloads or that your application is configured to perform robustly when processes terminate with SIGBUS errors. 
+While YottaDB recommends you configure huge pages for shared memory, you need to evaluate whether or not configuring huge pages for process-private memory is appropriate for your application. Having insufficient huge pages available during certain commands (for example, a JOB command - see complete list below) can result in a process terminating with a SIGBUS error. This is a current limitation of Linux. Before you use huge pages for process-private memory on production systems, YottaDB recommends that you perform appropriate peak load tests on your application and ensure that you have an adequate number of huge pages configured for your peak workloads or that your application is configured to perform robustly when processes terminate with SIGBUS errors.
 
 The following YottaDB features fork processes and may generate SIGBUS errors when huge pages are not available - JOB, OPEN a PIPE device, ZSYSTEM, interprocess signaling that requires the services of gtmsecshr when gtmsecshr is not already running, SPAWN commands in DSE, GDE, and LKE, argumentless MUPIP RUNDOWN, and replication-related MUPIP commands that start server processes and/or helper processes. As increasing the available huge pages may require a reboot, an interim workaround is to unset the environment variable HUGETLB_MORECORE for YottaDB processes until you are able to reboot or otherwise make available an adequate supply of huge pages.
 
@@ -782,7 +782,7 @@ Using huge pages
 To use huge pages for shared memory (journal buffers, replication journal pool and global buffers):
 
 * Permit YottaDB processes to use huge pages for shared memory segments (where available, YottaDB recommends option 1 below; however not all file systems support extended attributes). Either:
- 
+
  1. Set the CAP_IPC_LOCK capability needs for your mumps, mupip and dse processes with a command such as:
 
     .. parsed-literal::
@@ -790,30 +790,30 @@ To use huge pages for shared memory (journal buffers, replication journal pool a
 
 .
 
- 2. Permit the group used by YottaDB processes to use huge pages with the following command, which requires root privileges: 
+ 2. Permit the group used by YottaDB processes to use huge pages with the following command, which requires root privileges:
 
     .. parsed-literal::
        echo gid >/proc/sys/vm/hugetlb_shm_group
 
-* Set the environment variable HUGETLB_SHM for each process to "yes". 
+* Set the environment variable HUGETLB_SHM for each process to "yes".
 
 **Using huge pages for YottaDB process working space**
 
 To use huge pages for process working space and dynamically linked code:
 
-* Set the environment variable HUGETLB_MORECORE for each process to "yes". 
+* Set the environment variable HUGETLB_MORECORE for each process to "yes".
 
 Although not required to use huge pages, your application is also likely to benefit from including the path to libhugetlbfs.so in the LD_PRELOAD environment variable.
 
 If you enable huge pages for all applications (by setting HUGETLB_MORECORE, HUGETLB_SHM, and LD_PRELOAD as discussed above in /etc/profile and/or /etc/csh.login), you may find it convenient to suppress warning messages from common applications that are not configured to take advantage of huge pages by also setting the environment variable HUGETLB_VERBOSE to zero (0).
 
-Refer to the documentation of your Linux distribution for details. Other sources of information are: 
+Refer to the documentation of your Linux distribution for details. Other sources of information are:
 
 * http://www.kernel.org/doc/Documentation/vm/hugetlbpage.txt
 
 * http://lwn.net/Articles/374424/
 
-* https://www.ibm.com/developerworks/community/blogs/fe313521-2e95-46f2-817d-44a4f27eba32/entry/backing_guests_with_hugepages?lang=en 
+* https://www.ibm.com/developerworks/community/blogs/fe313521-2e95-46f2-817d-44a4f27eba32/entry/backing_guests_with_hugepages?lang=en
 
 * the HOWTO guide that comes with libhugetlbfs (http://sourceforge.net/projects/libhugetlbfs/files/)
 
@@ -908,7 +908,7 @@ The YottaDB restriction mechanism recognizes the following lines:
 
 The labelref must include a routine name. If a process is restricted by a ZSYSTEM or PIPE_OPEN line in the restrictions file, that restriction takes precedence over the corresponding filter restriction. Otherwise when a process is subject to these restrictions, YottaDB inserts an invocation of the labelref prior to the restricted command, passing a string containing the argument to the ZSYSTEM command or the command deviceparameter of the PIPE OPEN. The path to the filter routine must be included in $zroutines. YottaDB recommends that the filter routine be placed in a location with restricted access such as $ydb_dist. If the filter invocation return is -1, YottaDB produces a RESTRICTEDOP error, otherwise, it executes the command using the returned string via output parameters as a possibly identical replacement for the original string. Note that because ZSYSTEM and OPEN are not Isolated actions, YottaDB recommends against their use within a TP transaction. Filters will also increment the nested level of call-ins. A recursive filter invocation produces a NOFILTERNEST error. YottaDB reports all filter errors to the operator log accompanied by a COMMFILTERERR.
 
-An example restrict file for this: 
+An example restrict file for this:
 
 .. parsed-literal::
    cat $ydb_dist/restrict.txt
@@ -1008,7 +1008,7 @@ The six fields in the message, separated by semicolons (';'), contain informatio
 Examples:
 
 .. parsed-literal::
-   dist=/path/to/ydb_dist; src=1; uid=112233445; euid=112233445; pid=987654; command=write "Hello world",! 
+   dist=/path/to/ydb_dist; src=1; uid=112233445; euid=112233445; pid=987654; command=write "Hello world",!
    dist=/usr/library/r126/dbg; src=2; uid=998877665; euid=998877665; pid=123456; command=set a=789
 
 Click `here <https://gitlab.com/YottaDB/DB/YDBDoc/blob/master/AdminOpsGuide/dm_audit_listener.zip>`_ to download sample listener programs.
