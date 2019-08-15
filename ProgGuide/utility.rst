@@ -30,7 +30,7 @@ You may wish to examine the utilities and include some of them in your programs 
 Using the Utilities
 -------------------------------
 
-You can either use a utility in Direct Mode or include it in a source application program with one or more of the following formats. 
+You can either use a utility in Direct Mode or include it in a source application program with one or more of the following formats.
 
 * DO ^%UTILITYNAME
 * DO LABEL^%UTILITYNAME
@@ -134,8 +134,8 @@ This example invokes %D with the label INT (INT^%D). The variable %DAT contains 
 Example:
 
 .. parsed-literal::
-   YDB>WRITE $$FUNC^%D 
-   08-FEB-2018 
+   YDB>WRITE $$FUNC^%D
+   08-FEB-2018
 
 This example invokes %D as an extrinsic function with the label FUNC. $$FUNC^%D returns today's date.
 
@@ -232,7 +232,7 @@ Example:
 
 .. parsed-literal::
    YDB>WRITE $$FUNC^%DATE("02/08/2018")
-   62010 
+   62010
 
 This example invokes %DATE with the label FUNC as an extrinsic function to convert an input date to $HOROLOG. If the invocation does not supply a date for $$FUNC^%DATE, FUNC converts the current date.
 
@@ -315,7 +315,7 @@ Example:
 .. parsed-literal::
    YDB>SET %TM=$P($H,",",2) DO %CTS^%H
    YDB>ZWRITE
-   %TIM="17:41:18" 
+   %TIM="17:41:18"
    %TM=63678
 
 This example sets the variable %TM to the current time in $HOROLOG format using a $PIECE() function to return only those digits of the $HOROLOG string that represent the time. The example then invokes %H at the label %CTS. %H returns the converted time in the variable %TIM. ZWRITE displays the contents of the variables.
@@ -334,7 +334,7 @@ Example:
 
 .. parsed-literal::
    YDB>WRITE $$CDS^%H(62019)
-   11/17/2010 
+   11/17/2010
 
 This invokes CDS^%H as an extrinsic function to convert the external argument to external date format.
 
@@ -350,7 +350,7 @@ Example:
    YDB>WRITE $$CDN^%H("10/20/92")
    55445
    YDB>WRITE $ZDATE(55445)
-   10/20/1992 
+   10/20/1992
 
 This example shows the use of a year limit in $ZDATEFORM. Two digit years are interpreted to be in the interval of 1980 - 2079; since $ZDATEFORM is 1980, the input year "02" is interpreted as "2002" and "92" is interpreted as "1992". This example invokes CDN^%H to convert the argument in mm/dd/yy format to $HOROLOG format. $ZDATE() is used to convert the $HOROLOG format date to mm/dd/yyyy format.
 
@@ -393,7 +393,7 @@ Example:
 
 .. parsed-literal::
    YDB>WRITE $$FUNC^%T
-   8:30 AM 
+   8:30 AM
 
 This example invokes FUNC as an extrinsic function, which returns the current time.
 
@@ -456,7 +456,7 @@ Example:
    YDB>DO ^%TI
    Time: 4:02 PM
    YDB>ZWRITE
-   %TN=57720 
+   %TN=57720
 
 This example invokes %TI, which prompts for an input time. Press <RETURN> to convert the current time. ZWRITE displays the contents of the output variable.
 
@@ -466,7 +466,7 @@ Example:
    YDB>ZWRITE
    YDB>DO INT^%TI
    YDB>ZWRITE
-   %TN=40954 
+   %TN=40954
 
 This example invokes INT^%TI to convert the current time non-interactively. ZWRITE displays the contents of the output variable %TN.
 
@@ -477,7 +477,7 @@ Example:
    YDB>DO INT^%TI
    YDB>ZWRITE
    %TN=30600
-   %TS="8:30AM" 
+   %TS="8:30AM"
 
 This example sets the variable %TS prior to invoking INT^%TI. %TI uses %TS as the input time. ZWRITE displays the contents of the variables.
 
@@ -485,7 +485,7 @@ Example:
 
 .. parsed-literal::
    YDB>WRITE $$FUNC^%TI("8:30AM")
-   30600 
+   30600
 
 This example invokes %TI as an extrinsic function to convert the supplied time to $HOROLOG format. If there is no argument (i.e., $$FUNC^%TI), %TI converts the current time.
 
@@ -512,7 +512,7 @@ INT: Converts non-interactively %TS or if %TS is not defined, the current time t
 Example:
 
 .. parsed-literal::
-   YDB>DO INT^%TI,^%TO 
+   YDB>DO INT^%TI,^%TO
    YDB>ZWRITE
    %TN=62074
    %TS="5:14 PM"
@@ -576,11 +576,11 @@ Digits: Requests the length of the output in digits; eight by default.
 Example:
 
 .. parsed-literal::
-   YDB>DO INT^%DH 
+   YDB>DO INT^%DH
    Decimal: 12
    Digits: 1
-   YDB>ZWRITE 
-   %DH="C" 
+   YDB>ZWRITE
+   %DH="C"
 
 This example invokes %DH interactively with INT^%DH. %DH prompts for a decimal number and output length, then returns the result in the variable %DH. ZWRITE displays the contents of the variables.
 
@@ -591,7 +591,7 @@ Example:
    YDB>DO ^%DH
    YDB>ZWRITE
    %DH="0000000C"
-   %DL=8 
+   %DL=8
 
 This example sets the read-write variable %DH to 12 and invokes %DH to convert the number to a hexadecimal number. Because the number of digits was not specified, %DH used the default of 8 digits. Set %DL to specify the number of output digits.
 
@@ -636,7 +636,7 @@ Digits: Requests the length of the output in digits; 12 by default.
 Example:
 
 .. parsed-literal::
-   YDB>DO INT^%DO 
+   YDB>DO INT^%DO
    Decimal: 12
    Digits: 4
    YDB>ZWRITE
@@ -647,7 +647,7 @@ This example invokes %DO interactively with INT^%DO. %DO prompts for a decimal n
 Example:
 
 .. parsed-literal::
-   YDB>SET %DO=12 
+   YDB>SET %DO=12
    YDB>DO ^%DO
    YDB>ZWRITE
    %DO="000000000014"
@@ -658,7 +658,7 @@ Example:
 
 .. parsed-literal::
    YDB>WRITE $$FUNC^%DO(12,7)
-   0000014 
+   0000014
 
 This example invokes %DO as an extrinsic function with the label FUNC. The first argument specifies the number to be converted and the optional, second argument specifies the number of output digits. If the second argument is not specified, %DO uses the default of 12 digits.
 
@@ -701,7 +701,7 @@ This example invokes %HD in interactive mode with INT^%HD. %HD prompts for a hex
 Example:
 
 .. parsed-literal::
-   YDB>SET %HD="E" 
+   YDB>SET %HD="E"
    YDB>DO ^%HD
    YDB>ZWRITE
    %HD=14
@@ -758,7 +758,7 @@ Example:
    YDB>SET %HO="C3"
    YDB>DO ^%HO
    YDB>ZWRITE
-   %HO=303 
+   %HO=303
 
 This example sets the read-write variable %HO to "C3" and invokes %HO to convert the value of %HO non-interactively. ZWRITE displays the contents of the variable.
 
@@ -811,7 +811,7 @@ Example:
    YDB>SET %S="Hello"
    YDB>do ^%LCASE
    YDB>zwrite
-   %S="hello" 
+   %S="hello"
 
 This example sets the variable %S to the string "Hello" and invokes %LCASE non-interactively to convert the string.
 
@@ -820,7 +820,7 @@ Example:
 .. parsed-literal::
    YDB>SET ^X="Hello"
    YDB>WRITE $$FUNC^%LCASE(^X)
-   hello 
+   hello
 
 This example sets the variable ^X to the string "Hello" and invokes %LCASE as an extrinsic function that returns "hello" in lower case.
 
@@ -920,7 +920,7 @@ Example:
    YDB>SET %OH=16
    YDB>DO ^%OH
    YDB>ZWRITE
-   %OH="E" 
+   %OH="E"
 
 This example sets the read-write variable %OH to 16 and invokes %OH to convert the value of %OH non-interactively. ZWRITE displays the contents of the variable.
 
@@ -1080,7 +1080,7 @@ Example:
    YDB>DO ^%SQROOT
    YDB>ZWRITE
    %X=81
-   %Y=9 
+   %Y=9
 
 This example sets the variable %X to 81 and invokes %SQROOT to calculate the square root non-interactively. ZWRITE displays the contents of the variables.
 
@@ -1090,7 +1090,7 @@ Example:
    YDB>DO INT^%SQROOT
    The square root of: 81 is: 9
    The square root of: <RETURN>
-   YDB> 
+   YDB>
 
 This example invokes INT^%SQROOT interactively that prompts for a number. The square root of the number appears on the same line. %SQROOT then prompts for another number. Press <RETURN> to exit.
 
@@ -1132,8 +1132,8 @@ You can also use %TRIM as a command line utility to read from STDIN and write to
 Example:
 
 .. parsed-literal::
-   YDB>set strToTrim=$char(9,32)_"string with spaces and tabs"_$char(32,32,32) write $length(strToTrim) 
-   32 
+   YDB>set strToTrim=$char(9,32)_"string with spaces and tabs"_$char(32,32,32) write $length(strToTrim)
+   32
    YDB>write "strToTrim=",?24,"""",strToTrim,"""",!,"$$L^%TRIM(strToTrim)=",?24,"""",$$L^%TRIM(strToTrim),"""",!,"$$R^%TRIM(strToTrim)=",?24,"""",$$R^%TRIM(strToTrim),"""",!,"$$FUNC^%TRIM(strToTrim)=",?24,"""",$$FUNC^%TRIM(strToTrim),""""
    strToTrim=              "        string with spaces and tabs   "
    $$L^%TRIM(strToTrim)=   "string with spaces and tabs   "
@@ -1164,7 +1164,7 @@ You can use the %MPIECE utility in Direct Mode or include it in a source applica
 
 If expr1 and expr2 are not specified, %MPIECE assumes expr1 to be one or more consecutive occurrences of whitespaces and expr2 to be one space.
 
-%MPIECE removes all leading occurrences of expr1 from the result. 
+%MPIECE removes all leading occurrences of expr1 from the result.
 
 **Utility Labels**
 
@@ -1260,15 +1260,15 @@ Example:
    YDB>do ^%G
    Output Device: <terminal>: <RETURN>
    List ^C
-   ^C="CLASS" 
+   ^C="CLASS"
    ^C(1)="MARY"
-   ^C(1,2)="MATH" 
+   ^C(1,2)="MATH"
    ^C(1,2,1)=80
    ^C(1,3)="BIO"
    ^C(1,3,1)=90
    ^C(2)="JOHN"
    ^C(3)="PETER"
-   List ^ <RETURN> 
+   List ^ <RETURN>
    YDB>
 
 This example lists the nodes of global ^C. %G displays the global and its descendants and values, if the node exists.
@@ -1287,14 +1287,14 @@ Example:
 
 .. parsed-literal::
    YDB>do ^%G
-   Output Device: <terminal>: <RETURN> 
+   Output Device: <terminal>: <RETURN>
    List ^C(1,*)
    ^C(1)="MARY"
-   ^C(1,2)="MATH" 
-   ^C(1,2,1)=80 
-   ^C(1,3)="BIO" 
+   ^C(1,2)="MATH"
+   ^C(1,2,1)=80
+   ^C(1,3)="BIO"
    ^C(1,3,1)=90
-   List ^ <RETURN> 
+   List ^ <RETURN>
    YDB>
 
 This example uses the asterisk (*) wildcard to list node ^C(1), its descendants and values.
@@ -1303,14 +1303,14 @@ Example:
 
 .. parsed-literal::
    YDB>do ^%G
-   Output Device: <terminal>: <RETURN> 
+   Output Device: <terminal>: <RETURN>
    List ^?D
    Global Directory
    Global ^ <RETURN>
    ^C ^D ^S ^Y ^a
    Total of 5 globals.
    List ^
-   YDB> 
+   YDB>
 
 This example specifies "?D" as the global that invokes the %GD utility. %GD displays existing globals in the current global directory without displaying their values or descendants.
 
@@ -1344,7 +1344,7 @@ Example:
    ^g(2)=2
    ^g(3)=3
    Total 3 nodes copied.
-   From global ^<RETURN> 
+   From global ^<RETURN>
    YDB>
 
 This example makes a copy of the nodes and values of global ^b to global ^g.
@@ -1414,11 +1414,11 @@ Example:
    Global Change Every occurrence
    Global ^b
    Current total of 1 global.
-   Global ^ <RETURN> 
+   Global ^ <RETURN>
    Old String: 12
    New String: 35
    Show changed nodes <Yes>?: <RETURN>
-   Output Device: <terminal>: <RETURN> 
+   Output Device: <terminal>: <RETURN>
    ^b(12)
    Was : 12
    Now : 35
@@ -1429,7 +1429,7 @@ Example:
    Was : 12212
    Now : 35235
    5 changes made in total 5 nodes
-   Global ^ <RETURN> 
+   Global ^ <RETURN>
    YDB>DO ^%G
    Output device: <terminal>: <RETURN>
    List ^b
@@ -1437,7 +1437,7 @@ Example:
    ^b(30)=656
    ^b(45)=344
    ^b(122)=352
-   ^b(1212)=35235 
+   ^b(1212)=35235
 
 This example shows that executing %GCE replaces all occurrences of "12" in the data stored in the global ^b with "35" and displays the affected nodes before and after the change. Then the %G demonstrates that "12" as data was changed, while "12" in the subscripts remained untouched.
 
@@ -1481,10 +1481,10 @@ This example verifies that ^k exists in the global directory.
 Example:
 
 .. parsed-literal::
-   YDB>DO ^%GD 
+   YDB>DO ^%GD
    Global directory
    Global ^C:S
-   ^C ^D ^S 
+   ^C ^D ^S
    Total of 3 globals
    Global ^ <RETURN>
    YDB>
@@ -1494,12 +1494,12 @@ This example displays a range of globals that exist from ^C to ^S.
 Example:
 
 .. parsed-literal::
-   YDB>DO ^%GD Global directory 
+   YDB>DO ^%GD Global directory
    Global ^*
    ^C ^D ^S ^Y ^a
    Total of 5 globals
    Global ^ <RETURN>
-   YDB> 
+   YDB>
 
 The asterisk (*) wildcard at the Global ^ prompt displays all globals in the global directory.
 
@@ -1520,7 +1520,7 @@ Only one global can be edited at a time with %GED, see “Prompts” above for d
 Example:
 
 .. parsed-literal::
-   YDB>DO ^%GED 
+   YDB>DO ^%GED
    edit ^ b
    Beginning screen:
    ^b(1)="melons"
@@ -1669,10 +1669,10 @@ This example searches global ^a for the string "Hello" and displays all nodes th
 
 The %GSEL utility selects globals. %GSEL creates a variable %ZG that is a local array of the selected globals. After each selection %GSEL displays the number of globals in %ZG.
 
-%GSEL accepts the wildcard characters asterisk (*), percent sign (%) and question mark (?). The wildcards carry their usual meanings, asterisk (*) denoting a field or a portion of a field, and question mark (?) or percent sign (%) denoting a single character. 
+%GSEL accepts the wildcard characters asterisk (*), percent sign (%) and question mark (?). The wildcards carry their usual meanings, asterisk (*) denoting a field or a portion of a field, and question mark (?) or percent sign (%) denoting a single character.
 
-* The wildcards question mark (?) and percent sign (%) lose their meanings when in the first position of a global name. 
-  
+* The wildcards question mark (?) and percent sign (%) lose their meanings when in the first position of a global name.
+
   * When '%' is in the first position of a global name, %GSEL interprets it literally. For example, "%*" means all global names starting with '%'.
   * When you specify only '?' as a global name, %GSEL displays the online help.
   * When you specify a '?' followed by a 'D' or 'd', %GSEL displays the global names currently in the %ZG array.
@@ -1703,25 +1703,25 @@ Example:
    Global ^C
    ^C
    Current total of 1 global
-   Global ^* 
+   Global ^*
    ^S ^Y ^c ^class
    Current total of 5 globals
    Global ^-S
    ^S
    Current total of 4 globals
-   Global ^'Y 
+   Global ^'Y
    ^Y
    Current total of 3 globals
    Global ^?D
    ^C ^c ^class
    Current total of 3 globals
    Global ^
-   YDB>ZWRITE 
-   %ZG=3 
+   YDB>ZWRITE
+   %ZG=3
    %ZG("^C")=""
    %ZG("^c")=""
    %ZG("^class")=""
-   YDB> 
+   YDB>
 
 This example adds and subtracts globals from the list of selected globals. "?D" displays all globals selected. ZWRITE displays the contents of the %ZG array.
 
@@ -1732,7 +1732,7 @@ Example:
    Global ^a
    ^a
    Current total of 1 global.
-   Global ^ 
+   Global ^
    YDB>ZWRITE
    %ZG=1
    %ZG("^a")=""
@@ -1747,7 +1747,7 @@ Example:
    %ZG=2
    %ZG("^a")=""
    %ZG("^iv")=""
-   YDB> 
+   YDB>
 
 This example uses CALL^%GSEL to add to an existing %ZG array of selected globals.
 
@@ -1755,7 +1755,7 @@ This example uses CALL^%GSEL to add to an existing %ZG array of selected globals
 %ZSHOWVTOLCL
 ++++++++++++++++
 
-The %ZSHOWVTOLCL utility restores ZSHOW "V":gvn data into its original local variables. Invoke this utility with $ECODE set to the empty string. This utility facilitates automated restoration even of nodes exceeding the maximum record size of the global. 
+The %ZSHOWVTOLCL utility restores ZSHOW "V":gvn data into its original local variables. Invoke this utility with $ECODE set to the empty string. This utility facilitates automated restoration even of nodes exceeding the maximum record size of the global.
 
 **Input Variables**
 
@@ -1805,11 +1805,11 @@ Example:
 
 .. parsed-literal::
    YDB>DO ^%FL
-   First Line Lister 
+   First Line Lister
    Routine: %D
    %D
    Current total of 1 routine.
-   Routine: %GS* 
+   Routine: %GS*
    %GSE %GSEL
    Current total of 3 routines.
    Routine: - %D
@@ -1820,7 +1820,7 @@ Example:
    Routine: <RETURN>
    Output Device: <RETURN>
    Routine First Line Lister Utility
-   YottaDB 08-FEB-2018 16:44:09 
+   YottaDB 08-FEB-2018 16:44:09
    %GSE
    %GSE;YottaDB %GSE utility - global search
    ;
@@ -1904,13 +1904,13 @@ The following input variables are only applicable when invoking CALL^%RCE.
 Example:
 
 .. parsed-literal::
-   YDB>DO ^%RCE 
-   Routine Change Every occurrence 
+   YDB>DO ^%RCE
+   Routine Change Every occurrence
    Routine: BES*
    BEST BEST2 BEST3 BEST4
    Current total of 4 routines
    Routine: <RETURN>
-   Old string:^NAME 
+   Old string:^NAME
    New string:^STUDENT
    Replace all occurrences of:
    >^NAME<
@@ -1919,7 +1919,7 @@ Example:
    Show changed lines <Yes>?: <RETURN>
    Output Device: <RETURN>
    /usr/smith/work/BEST.m
-   Was: S ^NAME=SMITH 
+   Was: S ^NAME=SMITH
    Now: S ^STUDENT=SMITH
    Was: S ^NAME(1)=JOHN
    Now: S ^STUDENT(1)=JOHN
@@ -1945,7 +1945,7 @@ Example:
    BEST BEST2 BEST3 BEST4
    Current total of 4 routines
    Routine: <RETURN>
-   Old String:<TAB> 
+   Old String:<TAB>
    The find string contains control characters
    New string: <RETURN>
    Replace all occurrences of:
@@ -1956,7 +1956,7 @@ Example:
    BEST BEST2 BEST3 BEST4
    Total 4 routines parsed.
    4 occurrences changed in 2 routines.
-   YDB> 
+   YDB>
 
 This example removes all occurrences of the <TAB> key from specified routines and suppresses the display trail of changes.
 
@@ -1991,7 +1991,7 @@ SRC: Lists the source modules accessible through the current $ZROUTINES (same as
 Example:
 
 .. parsed-literal::
-   YDB>DO ^%RD 
+   YDB>DO ^%RD
    Routine directory
    Routine: TAXES
    TAXES
@@ -2007,36 +2007,36 @@ This example invokes %RD that prompts for routine TAXES and the wildcard (*). %R
 Example:
 
 .. parsed-literal::
-   YDB>DO OBJ^%RD 
+   YDB>DO OBJ^%RD
    Routine directory
    Routine:*
    EMP FICA
    Total of 2 routines
    Routine: <RETURN>
-   YDB> 
+   YDB>
 
 This example invokes %RD with the label OBJ that lists only object modules accessible through the current $ZROUTINES.
 
 Example:
 
 .. parsed-literal::
-   YDB>DO LIB^%RD 
+   YDB>DO LIB^%RD
    Routine directory
-   %D %DATE %DH %G %GD %GSEL 
-   YDB> 
+   %D %DATE %DH %G %GD %GSEL
+   YDB>
 
 This example invokes %RD with the LIB label that lists all the % routines accessible through the current $ZROUTINES.
 
 Example:
 
 .. parsed-literal::
-   YDB>DO SRC^%RD 
+   YDB>DO SRC^%RD
    Routine directory
    Routine:*
    DATACHG
    Total of 1 routines
    Routine: <RETURN>
-   YDB> 
+   YDB>
 
 This example invokes %RD with the label SRC that lists only source modules accessible through the current $ZROUTINES.
 
@@ -2125,8 +2125,8 @@ Example:
    Routine: -%D
    %D
    Current total of 0 routines.
-   Routine: BEST* 
-   BEST BEST1 BEST2 
+   Routine: BEST*
+   BEST BEST1 BEST2
    Current total of 3 routines.
    Routine: ?D
    BEST BEST1 BEST2
@@ -2134,7 +2134,7 @@ Example:
    Output Device: <terminal>: output.txt
    Header Label: Source code for the BEST modules.
    Strip comments <No>?:<RETURN>
-   BEST BEST1 BEST2 
+   BEST BEST1 BEST2
    Total of 53 lines in 3 routines
    YDB>
 
@@ -2184,13 +2184,13 @@ Example:
 
 .. parsed-literal::
    YDB>DO ^%RSE
-   Routine Search for Every occurrence 
+   Routine Search for Every occurrence
    Routine: BES*
    BEST BEST2 BEST3 BEST4
    Current total of 4 routines
    Routine: <RETURN>
    Find string:^NAME
-   Find all occurrences of: 
+   Find all occurrences of:
    >^NAME<
    Output device: <terminal>:
    /usr/smith/work/BEST.m
@@ -2216,12 +2216,12 @@ Example:
    BEST
    Current total of 1 routine
    Routine: <RETURN>
-   Find string:^NAME 
-   Find all occurrences of: 
+   Find string:^NAME
+   Find all occurrences of:
    >^NAME<
    Output Device: out.lis
    BEST
-   YDB> 
+   YDB>
 
 This example instructs ^%RSE to write all lines where the text string occurs to an output file, out.lis.
 
@@ -2280,7 +2280,7 @@ Example:
    YDB>DO ^%RSEL
    Routine: TES*
    TEST2 TEST3
-   Current total of 2 routines 
+   Current total of 2 routines
    Routine: <RETURN>
    YDB>DO OBJ^%RSEL
    Routine:TEST?
@@ -2302,7 +2302,7 @@ Example:
    BEST
    Current total of 3 routines
    Routine: ?D
-   BEST2 BEST3 BEST4 
+   BEST2 BEST3 BEST4
    Routine: 'BEST2
    BEST2
    Current total of 2 routines
@@ -2325,7 +2325,7 @@ Example:
    YDB>DO ^%RSEL
    Routine:BEST*
    BEST2 BEST3
-   Current total of 2 routines 
+   Current total of 2 routines
    Routine: <RETURN>
    YDB>ZWRITE
    %ZR=2
@@ -2342,7 +2342,7 @@ Example:
    LOCK
    Current total of 1 routine
    Routine: <RETURN>
-   YDB>ZWRITE 
+   YDB>ZWRITE
    %ZR=1
    %ZR("LOCK")="/usr/smith/work/"
    YDB>DO CALL^%RSEL
@@ -2575,6 +2575,9 @@ When using the following, remember to write code that allows for values other th
 | Mutex sleep spin count       | "sgmnt_data.mutex_spin_parms.mutex_sleep_spi  | Integer count                                                                                                               |
 |                              | n_count"                                      |                                                                                                                             |
 +------------------------------+-----------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
+| Null subscripts              | "sgmnt_data.null_subs"                        | Integer - 0 means disabled, 1 means enabled, 2 means existing null subscripts are respected but new ones cannot be created  |
+|                              |                                               |                                                                                                                             |
++------------------------------+-----------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
 | Number of global buffers     | "node_local.wcs_active_lvl"                   | Integer Count                                                                                                               |
 | (dirty)                      |                                               |                                                                                                                             |
 +------------------------------+-----------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
@@ -2662,18 +2665,18 @@ For all qualifiers, always wrap YottaDB code specified two forward slashes (/) t
 Example:
 
 .. parsed-literal::
-   /usr/local/lib/yottadb/r120/ydb -run %XCMD 'write "hello world",!' 
+   /usr/local/lib/yottadb/r120/ydb -run %XCMD 'write "hello world",!'
 
 
 produces the following output:
 
 .. parsed-literal::
-   "hello world" 
+   "hello world"
 
 Example:
 
 .. parsed-literal::
-   $ ps -ef | $gtm_exe/mumps -run LOOP^%XCMD --before='/set user=$ztrnlnm("USER") write "Number of processes owned by ",user," : "/' --xec='/if %l[user,$increment(x)/' --after='/write x,\!/' 
+   $ ps -ef | $gtm_exe/mumps -run LOOP^%XCMD --before='/set user=$ztrnlnm("USER") write "Number of processes owned by ",user," : "/' --xec='/if %l[user,$increment(x)/' --after='/write x,\!/'
    Number of processed owned by jdoe: 5
    $
    $ cat somefile.txt | $gtm_exe/mumps -run LOOP^%XCMD --before='/write "Total number of lines : "/' --xec='/set total=$increment(x)/' --after='/write total,\!/'
@@ -2718,7 +2721,7 @@ When invoked as an interactive utility program using DO, ^%YGBLSTAT, prompts for
 When invoked from a shell, the command line is:
 
 .. parsed-literal::
-   $ mumps -run %YGBLSTAT [--help] [--pid pidlist] [--reg reglist] [--stat statlist] 
+   $ mumps -run %YGBLSTAT [--help] [--pid pidlist] [--reg reglist] [--stat statlist]
 
 where
 
@@ -2745,7 +2748,7 @@ The low level API implemented by $$SHOW^%YGBLSTAT(glvn[,strexp]) reports raw sta
   * The data in the node is a series of binary bytes which are the raw statistics shared by a process
 
 * strexp specifies statistics to report with the same interpretation as the expr2 parameter of $$STAT^%YGBLSTAT.
- 
+
 * $$SHOW^%YGBLSTAT() reports a zero value for any statistic whose name is unrecognized. This facilitates application code written for a version of YottaDB that includes a statistic, but which also needs to run on an earlier version without that statistic.
 
 * Because a process sharing statistics can exit, deleting its node, between the time a monitoring process decides to access its statistics, e.g., finding it using $$ORDERPID^%YGBLSTAT() or $ORDER(^%YGS()), and the time the monitoring process performs the database access, any direct access to ^%YGBLSTAT should be wrapped in $GET().
@@ -2876,7 +2879,7 @@ Utilities Summary Table
 +----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
 | `%PATCODE <https://docs.yottadb.com/ProgrammersGuide/internatn.html#pattern-code-definition>`_                 | Loads pattern definition files for use within an active database.                                            |
 +----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%RCE <https://docs.yottadb.com/ProgrammersGuide/utility.html#rce>`_                                           | Replaces every occurrence of a text string with another string in a routine or list of routines.             |      
+| `%RCE <https://docs.yottadb.com/ProgrammersGuide/utility.html#rce>`_                                           | Replaces every occurrence of a text string with another string in a routine or list of routines.             |
 +----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
 | `%RD <https://docs.yottadb.com/ProgrammersGuide/utility.html#rd>`_                                             | Lists routine names available through your $ZROUTINES search list.                                           |
 +----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
@@ -2886,7 +2889,7 @@ Utilities Summary Table
 +----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
 | `%RSE <https://docs.yottadb.com/ProgrammersGuide/utility.html#rse>`_                                           | Searches for every occurrence of a text string in a routine or a list of routines.                           |
 +----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%RSEL <https://docs.yottadb.com/ProgrammersGuide/utility.html#id3>`_                                          | Selects M routines and places their directories and names in a local array.                                  |       
+| `%RSEL <https://docs.yottadb.com/ProgrammersGuide/utility.html#id3>`_                                          | Selects M routines and places their directories and names in a local array.                                  |
 +----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
 | `%SQROOT <https://docs.yottadb.com/ProgrammersGuide/utility.html#sqroot>`_                                     | Calculates the square root of a number.                                                                      |
 +----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
