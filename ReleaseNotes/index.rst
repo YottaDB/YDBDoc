@@ -10,11 +10,12 @@ Welcome to the YottaDB Release Notes!
    :maxdepth: 2
    
    Main YottaDB Documentation Page <https://yottadb.com/resources/documentation/>
-   ydbr110
-   ydbr120
-   ydbr122
-   ydbr124
+   ydbr128
    ydbr126
+   ydbr124
+   ydbr122
+   ydbr120
+   ydbr110
    LICENSE
 
 Indices and tables
