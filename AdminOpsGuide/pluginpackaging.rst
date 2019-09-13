@@ -6,8 +6,8 @@ Appendix G: Plugin Packaging
 A plugin is software that extends the functionality of YottaDB for all users on a system and is installed within the same directory structure as YottaDB. This is the standard structure of a YottaDB installation:
 
 .. parsed-literal::
-   $ sudo tree -d /usr/local/lib/yottadb/r126/
-   /usr/local/lib/yottadb/r126/
+   $ sudo tree -d /usr/local/lib/yottadb/r128/
+   /usr/local/lib/yottadb/r128/
    ├── gtmsecshrdir
    ├── plugin
    │   ├── gtmcrypt

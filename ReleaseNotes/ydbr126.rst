@@ -675,7 +675,7 @@ The six fields in the message, separated by semicolons (';'), contain informatio
 
 :code:`dist=/path/to/ydb_dist; src=1; uid=112233445; euid=112233445; pid=987654; command=write "Hello world",!`
 
-:code:`dist=/usr/library/r126/dbg; src=2; uid=998877665; euid=998877665; pid=123456; command=set a=789`
+:code:`dist=/usr/local/lib/yottadb/r128; src=2; uid=998877665; euid=998877665; pid=123456; command=set a=789`
 
 -------------------------
 Error Messages

@@ -1009,6 +1009,6 @@ Examples:
 
 .. parsed-literal::
    dist=/path/to/ydb_dist; src=1; uid=112233445; euid=112233445; pid=987654; command=write "Hello world",!
-   dist=/usr/library/r126/dbg; src=2; uid=998877665; euid=998877665; pid=123456; command=set a=789
+   dist=/usr/local/lib/yottadb/r128; src=2; uid=998877665; euid=998877665; pid=123456; command=set a=789
 
 Click `here <https://gitlab.com/YottaDB/DB/YDBDoc/blob/master/AdminOpsGuide/dm_audit_listener.zip>`_ to download sample listener programs.

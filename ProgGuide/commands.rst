@@ -3648,7 +3648,7 @@ Example:
    $ZQUIT=0
    $ZREALSTOR=694280
    $ZRELDATE="20180614 00:33"
-   $ZROUTINES=". /usr/local/lib/yottadb/r126 /usr/local/lib/yottadb/r126/plugin/o(/usr/local/lib/yottadb/r126/plugin/r)"
+   $ZROUTINES=". /usr/local/lib/yottadb/r128 /usr/local/lib/yottadb/r128/plugin/o(/usr/local/lib/yottadb/r128/plugin/r)"
    $ZSOURCE=""
    $ZSTATUS=""
    $ZSTEP="B"

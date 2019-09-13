@@ -67,7 +67,7 @@ correct `$zstatus <https://docs.yottadb.com/MultiLangProgGuide/MultiLangProgGuid
 Go Quick Start
 ==============
 
-The YottaDB Go wrapper requires a minimum YottaDB version of r1.24 and
+The YottaDB Go wrapper requires a minimum YottaDB version of r1.28 and
 is tested with a minimum Go version of 1.11. If the Golang packages
 on your operating system are older, and the Go wrapper does not work,
 please obtain and install a newer Golang implementation.
