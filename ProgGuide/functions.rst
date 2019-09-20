@@ -2212,9 +2212,9 @@ Example:
    YDB>Set T16=$zconvert(T8,"UTF-8","UTF-16LE")
    YDB>Write $length(T16)
    %YDB-E-BADCHAR, $ZCHAR(129,137,232,150) is not a valid character in the UTF-8 encoding form
-   YDB>Set T16=$ZCOnvert(T16,"UTF-16LE","UTF-8")
-   YDB>Write $length(T16)
-   9
+   YDB>Set T8B=$ZCOnvert(T16,"UTF-16LE","UTF-8")
+   YDB>Write $length(T8B)
+   12
 
 In the above example, $LENGTH() function triggers an error because it takes only UTF-8 encoding strings as the argument.
 
