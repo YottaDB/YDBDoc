@@ -423,6 +423,12 @@ are strings, use the :code:`sprintf()` and :code:`atoi()/strtoul()` family of
 functions to convert between numeric values and strings which are
 `canonical numbers <https://docs.yottadb.com/MultiLangProgGuide/programmingnotes.html#canonical-numbers>`_.
 
+Note that *all* parameters passed to Simple API functions must be properly allocated and initialized where needed
+prior to the function call, including return values. This also specifically includes all members of `ydb_buffer_t` structs
+for parameters containing input values, but only `buf_addr` and `len_alloc` members for return values. To facilitate
+initialization of the `ydb_buffer_t` members, you may find the `YDB_MALLOC_BUFFER` macro helpful for
+heap allocations.
+
 To allow the YottaDB Simple API functions to handle a variable tree
 whose nodes have varying numbers of subscripts, the actual number of
 subscripts is itself passed as a parameter. In the prototypes of
@@ -494,6 +500,8 @@ The error :CODE:`YDB_ERR_PARAMINVALID` is returned when
 - :code:`ret_value` is NULL
 - :code:`len_alloc` < :code:`len_used` or the :code:`len_used` is non-zero and :code:`buf_addr` is NULL in at least one subscript, in :code:`subsarray`.
 
+Please see the `Simple API introduction <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#simple-api>` for details about parameter allocation.
+
 .. _ydb_delete_s():
 .. _ydb_delete_st():
 
@@ -533,6 +541,8 @@ or another `error return code`_.
 - :CODE:`YDB_ERR_UNIMPLOP` if :code:`deltype` is neither
   :CODE:`YDB_DEL_NODE` nor :CODE:`YDB_DEL_TREE`; or
 - another `error return code`_.
+
+Please see the `Simple API introduction <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#simple-api>` for details about parameter allocation.
 
 .. _ydb_delete_excl_s():
 .. _ydb_delete_excl_st():
@@ -576,6 +586,8 @@ Note that specifying a larger value for :code:`namecount` than the
 number of variable names actually provided in :code:`*varnames`
 can result in a buffer overflow.
 
+Please see the `Simple API introduction <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#simple-api>` for details about parameter allocation.
+
 .. _ydb_get_s():
 .. _ydb_get_st():
 
@@ -597,7 +609,7 @@ ydb_get_s() / ydb_get_st()
                 ydb_buffer_t *subsarray,
                 ydb_buffer_t *ret_value);
 
-To the location pointed to by :code:`ret_value->buf_addr`,
+To the user-allocated location pointed to by :code:`ret_value->buf_addr`,
 :code:`ydb_get_s()` and :code:`ydb_get_st()` copy the value of the
 specified node or intrinsic special variable, setting
 :code:`ret_value->len_used` on both normal and error returns (the
@@ -634,6 +646,8 @@ Notes:
   ydb_get_st()`_ to access a global variable node should code in
   anticipation of a potential :CODE:`YDB_ERR_GVUNDEF`, unless it is
   known from application design that this cannot happen.
+
+Please see the `Simple API introduction <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#simple-api>` for details about parameter allocation.
 
 .. _ydb_incr_s():
 .. _ydb_incr_st():
@@ -684,6 +698,8 @@ Notes:
 - Intrinsic special variables cannot be atomically incremented, and an
   attempt to do so returns the :CODE:`YDB_ERR_UNIMPLOP` error.
 - The value of the empty string coerced to a numeric value is 0.
+
+Please see the `Simple API introduction <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#simple-api>` for details about parameter allocation.
 
 .. _ydb_lock_s():
 .. _ydb_lock_st():
@@ -737,6 +753,8 @@ is returned when :code:`len_alloc` < :code:`len_used` or the :code:`len_used` is
 and :code:`buf_addr` is NULL in at least one subscript in :code:`subsarray`.
 - In other cases, the function returns an `error return code`_.
 
+Please see the `Simple API introduction <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#simple-api>` for details about parameter allocation.
+
 .. _ydb_lock_decr_s():
 .. _ydb_lock_decr_st():
 
@@ -767,6 +785,8 @@ return of an error code such as :CODE:`YDB_ERR_INVVARNAME`. Errors
 result in an appropriate `error return code`_. :CODE:`YDB_ERR_PARAMINVALID`
 is returned when :code:`len_alloc` < :code:`len_used` or the :code:`len_used` is non-zero
 and :code:`buf_addr` is NULL in at least one subscript in :code:`subsarray`.
+
+Please see the `Simple API introduction <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#simple-api>` for details about parameter allocation.
 
 .. _ydb_lock_incr_s():
 .. _ydb_lock_incr_st():
@@ -811,6 +831,8 @@ Return values:
 is returned when :code:`len_alloc` < :code:`len_used` or the :code:`len_used` is non-zero
 and :code:`buf_addr` is NULL in at least one subscript in :code:`subsarray`.
 - In other cases, the function returns an `error return code`_.
+
+Please see the `Simple API introduction <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#simple-api>` for details about parameter allocation.
 
 .. _ydb_node_next_s():
 .. _ydb_node_next_st():
@@ -872,6 +894,8 @@ Return values of :code:`ydb_node_next_s()` and
   consider the values of :code:`*ret_subs_used` and the :code:`*ret_subsarray`
   to be undefined.
 
+Please see the `Simple API introduction <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#simple-api>` for details about parameter allocation.
+
 .. _ydb_node_previous_s():
 .. _ydb_node_previous_st():
 
@@ -928,6 +952,8 @@ Return values of :code:`ydb_node_previous_s()` and
   consider the values of :code:`*ret_subs_used` and the :code:`*ret_subsarray`
   to be undefined.
 
+Please see the `Simple API introduction <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#simple-api>` for details about parameter allocation.
+
 .. _ydb_set_s():
 .. _ydb_set_st():
 
@@ -961,6 +987,8 @@ a :code:`ydb_buffer_t` specifying an empty string. Return values are:
   and :code:`buf_addr` is NULL in at least one subscript in :code:`subsarray` or :code:`increment`; or
 - another applicable `error return code`_.
 
+Please see the `Simple API introduction <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#simple-api>` for details about parameter allocation.
+
 .. _ydb_str2zwr_s():
 .. _ydb_str2zwr_st():
 
@@ -985,6 +1013,8 @@ the string pointed to by :code:`*str`, returning:
 - :CODE:`YDB_ERR_PARAMINVALID` if :code:`zwr` is NULL or :code:`zwr->buf_addr` is
   NULL and the return value has a non-zero :code:`len_used`; or
 - another applicable `error return code`_.
+
+Please see the `Simple API introduction <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#simple-api>` for details about parameter allocation.
 
 .. _ydb_subscript_next_s():
 .. _ydb_subscript_next_st():
@@ -1038,6 +1068,8 @@ returns :code:`YDB_OK`, :code:`ret_value->buf_addr` points to the next
 local or global variable name, with :code:`YDB_ERR_NODEEND` indicating
 an end to the traversal.
 
+Please see the `Simple API introduction <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#simple-api>` for details about parameter allocation.
+
 .. _ydb_subscript_previous_s():
 .. _ydb_subscript_previous_st():
 
@@ -1090,6 +1122,8 @@ In the special case where :code:`subs_used` is zero, and the function
 returns :code:`YDB_OK`, :code:`ret_value->buf_addr` points to the
 previous local or global variable name, with :code:`YDB_ERR_NODEEND`
 indicating an end to the traversal.
+
+Please see the `Simple API introduction <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#simple-api>` for details about parameter allocation.
 
 .. _ydb_tp_s():
 .. _ydb_tp_st():
@@ -1180,6 +1214,8 @@ another transaction (i.e., a nested transaction) can also return
 
 .. note:: If the transaction logic receives a :code:`YDB_TP_RESTART` or :code:`YDB_TP_ROLLBACK` from a YottaDB function that it calls, it *must* return that value to the calling :code:`ydb_tp_s()` or :code:`ydb_tp_st()`. Failure to do so could result in application level data inconsistencies and hard to debug application code.
 
+Please see the `Simple API introduction <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#simple-api>` for details about parameter allocation.
+
 .. _ydb_zwr2str_s():
 .. _ydb_zwr2str_st():
 
@@ -1204,6 +1240,8 @@ string described by the `zwrite formatted <https://docs.yottadb.com/MultiLangPro
 - :CODE:`YDB_ERR_INVSTRLEN` error if the :code:`*str` buffer is not long enough;
 - :CODE:`YDB_ERR_PARAMINVALID` either if the :code:`*str` buffer is NULL or the return value contains a
   non-zero :code:`len_used`  and the :code:`str->buf_addr` is NULL.
+
+Please see the `Simple API introduction <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#simple-api>` for details about parameter allocation.
 
 Comprehensive API
 =================
@@ -1274,6 +1312,8 @@ Returns:
 - :code:`YDB_ERR_PARAMINVALID` if the input parameters :code:`fname` or :code:`ret_value` are NULL; or
 - a negative error return code (for example, if the call-in table in the file had parse errors).
 
+Please see the `Simple API introduction <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#simple-api>` for details about parameter allocation.
+
 -------------------------------------------
 ydb_ci_tab_switch() / ydb_ci_tab_switch_t()
 -------------------------------------------
@@ -1309,6 +1349,8 @@ handles have already been set. Use :code:`ydb_ci()`/:code:`ydb_ci_t()` for appli
 the called function to change when the call-in table changes.
 
 .. _ydb_exit():
+
+Please see the `Simple API introduction <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#simple-api>` for details about parameter allocation.
 
 ----------
 ydb_exit()
@@ -1360,6 +1402,8 @@ application error with undefined consequences.
 
 A :code:`PARAMINVALID` error is issued if the input :code:`fileid` parameter is NULL.
 
+Please see the `Simple API introduction <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#simple-api>` for details about parameter allocation.
+
 .. _ydb_file_is_identical():
 .. _ydb_file_is_identical_t():
 
@@ -1384,6 +1428,8 @@ return YDB_OK if the two :code:`fileid` structures are the same file
 and YDB_NOTOK otherwise.
 
 A :code:`PARAMINVALID` error is issued if the input :code:`fileid` parameter is NULL.
+
+Please see the `Simple API introduction <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#simple-api>` for details about parameter allocation.
 
 .. _ydb_file_name_to_id():
 .. _ydb_file_name_to_id_t():
@@ -1421,6 +1467,8 @@ leak.
 return :code:`YDB_OK`, or an error return code.
 
 A :code:`PARAMINVALID` error is issued if the input :code:`filename` or :code:`fileid` parameter is NULL.
+
+Please see the `Simple API introduction <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#simple-api>` for details about parameter allocation.
 
 .. _ydb_fork_n_core():
 
@@ -1594,6 +1642,8 @@ number specified by :code:`errnum`.
   :code:`msg_buff->buf_addr`, set :code:`msg_buff->len_used` to its
   length, and return :code:`YDB_OK`.
 
+Please see the `Simple API introduction <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#simple-api>` for details about parameter allocation.
+
 -----------------------------
 ydb_mmrhash_32()
 -----------------------------
@@ -1604,6 +1654,8 @@ ydb_mmrhash_32()
 
 This function returns in :code:`*out4` the 32-bit (4-byte) MurmurHash of :code:`len` bytes at :code:`*key`.
 
+Please see the `Simple API introduction <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#simple-api>` for details about parameter allocation.
+
 ---------------------------
 ydb_mmrhash_128()
 ---------------------------
@@ -1613,6 +1665,8 @@ ydb_mmrhash_128()
     void ydb_mmrhash_128(const void *key, int len, uint4 seed, ydb_uint16 *out);
 
 This function returns  in :code:`*out` the 128-bit (16-byte) MurmurHash of :code:`len` bytes at :code:`*key`.
+
+Please see the `Simple API introduction <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#simple-api>` for details about parameter allocation.
 
 .. _ydb_mmrhash_128_ingest():
 .. _ydb_mmrhash_128_result():
@@ -1650,6 +1704,8 @@ Example:
    // Produce result
    ydb_mmrhash_128_result(hash_state, 0, &hash);
 
+Please see the `Simple API introduction <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#simple-api>` for details about parameter allocation.
+
 --------------------------------
 ydb_mmrhash_128_hex()
 --------------------------------
@@ -1665,6 +1721,8 @@ Example:
 .. parsed-literal::
    char out[16];
    ydb_mmrhash_128_hex(&hash, out);
+
+Please see the `Simple API introduction <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#simple-api>` for details about parameter allocation.
 
 ------------------------------------
 ydb_mmrhash_128_bytes()
@@ -1685,6 +1743,8 @@ Example:
 
 .. _ydb_stdout_stderr_adjust():
 .. _ydb_stdout_stderr_adjust_t():
+
+Please see the `Simple API introduction <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#simple-api>` for details about parameter allocation.
 
 ---------------------------------------------------------
 ydb_stdout_stderr_adjust() / ydb_stdout_stderr_adjust_t()
@@ -1707,6 +1767,8 @@ explicitly redirects stdout or stderr (e.g., using :code:`dup2()`),
 should call one of these functions as soon as possible after the
 redirection. :code:`ydb_stdout_stderr_adjust()` and
 :code:`ydb_stdout_stderr_adjust_t()` return :code:`YDB_OK`.
+
+Please see the `Simple API introduction <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#simple-api>` for details about parameter allocation.
 
 .. _ydb_thread_is_main():
 
@@ -1740,6 +1802,8 @@ ydb_timer_cancel() / ydb_timer_cancel_t()
 
 Cancel a timer identified by :code:`timer_id` and previously started with
 `ydb_timer_start()`_ or `ydb_timer_start_t()`_.
+
+Please see the `Simple API introduction <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#simple-api>` for details about parameter allocation.
 
 .. _ydb_timer_start():
 .. _ydb_timer_start_t():
@@ -1792,6 +1856,8 @@ valid when the timer expires.
 If the requested :code:`timeout_nsec` exceeds
 :code:`YDB_MAX_TIME_NSEC`, the functions return
 :code:`YDB_ERR_TIME2LONG`; otherwise they return :code:`YDB_OK`.
+
+Please see the `Simple API introduction <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#simple-api>` for details about parameter allocation.
 
 Calling M Routines
 ===================
