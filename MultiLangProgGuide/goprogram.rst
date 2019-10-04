@@ -1,4 +1,3 @@
-
 ================================
 Programming in Go
 ================================
@@ -25,12 +24,6 @@ There are two Go APIs:
   functionality is provided by Go methods where a method can
   meaningfully be associated with a structure, and by Go functions
   where there is no meaningful association with a structure.
-
-Except for `triggers
-<https://docs.yottadb.com/ProgrammersGuide/triggers.html>`_, which are
-written in M and which can exist in the same process as Go code
-because they run in a special, isolated, environment, Go and M code
-in the same processs is not supported.
 
 As the Go language has important differences from C (for example, it
 has structures with methods but lacks macros), below are Go-specific
@@ -68,7 +61,7 @@ Go Quick Start
 ==============
 
 The YottaDB Go wrapper requires a minimum YottaDB version of r1.28 and
-is tested with a minimum Go version of 1.11. If the Golang packages
+is tested with a minimum Go version of 1.10.4. If the Golang packages
 on your operating system are older, and the Go wrapper does not work,
 please obtain and install a newer Golang implementation.
 
@@ -218,8 +211,7 @@ Go DataE()
 
 .. code-block:: go
 
-        func DataE(tptoken uint64, errstr *BufferT,
-                varname string, subary []string) (uint32, error)
+        func DataE(tptoken uint64, errstr *BufferT, varname string, subary []string) (uint32, error)
 
 Matching `Go DataST()`_, :code:`DataE()` function wraps and returns the
 result of `ydb_data_st() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-data-s-ydb-data-st>`_ (0, 1, 10, or 11). In the event of an error, the return
@@ -230,8 +222,7 @@ Go DeleteE()
 
 .. code-block:: go
 
-        func DeleteE(tptoken uint64,  errstr *BufferT,
-                deltype int, varname string, subary []string) error
+        func DeleteE(tptoken uint64, errstr *BufferT, deltype int, varname string, subary []string) error
 
 Matching `Go DeleteST()`_, :code:`DeleteE()` wraps `ydb_delete_st() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-delete-s-ydb-delete-st>`_ to
 delete a local or global variable node or (sub)tree, with a value of
@@ -245,8 +236,7 @@ Go DeleteExclE()
 
 .. code-block:: go
 
-        func DeleteExclE(tptoken uint64,
-                 errstr *BufferT, varnames []string) error
+        func DeleteExclE(tptoken uint64, errstr *BufferT, varnames []string) error
 
 Matching `Go DeleteExclST()`_, :code:`DeleteExclE()` wraps
 `ydb_delete_excl_st() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-delete-excl-s-ydb-delete-excl-st>`_ to delete all local variables except those
@@ -267,8 +257,7 @@ Go IncrE()
 
 .. code-block:: go
 
-        func IncrE(tptoken uint64, errstr *BufferT,
-                incr, varname string, subary []string) (string, error)
+        func IncrE(tptoken uint64, errstr *BufferT, incr, varname string, subary []string) (string, error)
 
 Matching `Go IncrST()`_, :code:`IncrE()` wraps `ydb_incr_st() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-incr-s-ydb-incr-st>`_ to
 atomically increment the referenced global or local variable node
@@ -289,8 +278,7 @@ Go LockDecrE()
 
 .. code-block:: go
 
-        func LockDecrE(tptoken uint64, errstr *BufferT,
-                varname string, subary []string) error
+        func LockDecrE(tptoken uint64, errstr *BufferT, varname string, subary []string) error
 
 Matching `Go LockDecrST()`_ :code:`LockDecrE()` wraps
 `ydb_lock_decr_st() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-lock-decr-s-ydb-lock-decr-st>`_ to decrement the count of the lock name
@@ -302,8 +290,7 @@ Go LockE()
 
 .. code-block:: go
 
-        func LockE(tptoken uint64, errstr *BufferT,
-                timeoutNsec uint64, namesnsubs ... interface{}) error
+        func LockE(tptoken uint64, errstr *BufferT, timeoutNsec uint64, namesnsubs ... interface{}) error
 
 Matching `Go LockST()`_, :code:`LockE()` releases all lock resources
 currently held and then attempts to acquire the named lock resources
@@ -337,9 +324,7 @@ Go LockIncrE()
 
 .. code-block:: go
 
-        func LockIncrE(tptoken uint64, errstr *BufferT,
-                timeoutNsec uint64,
-                varname string, subary []string) error
+        func LockIncrE(tptoken uint64, errstr *BufferT, timeoutNsec uint64, varname string, subary []string) error
 
 Matching `Go LockIncrST()`_, :code:`LockIncrE()` wraps
 `ydb_lock_incr_st() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-lock-incr-s-ydb-lock-incr-st>`_ to attempt to acquire the referenced lock
@@ -376,8 +361,7 @@ Go NodePrevE()
 
 .. code-block:: go
 
-        func NodePrevE(tptoken uint64, errstr *BufferT,
-                varname string, subary []string) ([]string, error)
+        func NodePrevE(tptoken uint64, errstr *BufferT, varname string, subary []string) ([]string, error)
 
 Matching `Go NodePrevST()`_, :code:`NodePrevE()` wraps
 `ydb_node_previous_st() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-node-previous-s-ydb-node-previous-st>`_ to facilitate reverse depth first traversal
@@ -393,8 +377,7 @@ Go SetValE()
 
 .. code-block:: go
 
-        func SetValE(tptoken uint64, errstr *BufferT,
-                value, varname string, subary []string) error
+        func SetValE(tptoken uint64, errstr *BufferT, value, varname string, subary []string) error
 
 Matching `Go SetValST()`_, at the referenced local or global variable
 node, or the intrinsic special variable, :code:`SetValE()` wraps
@@ -405,8 +388,7 @@ Go SubNextE()
 
 .. code-block:: go
 
-        func SubNextE(tptoken uint64, errstr *BufferT,
-                varname string, subary []string) (string, error)
+        func SubNextE(tptoken uint64, errstr *BufferT, varname string, subary []string) (string, error)
 
 Matching `Go SubNextST()`_, :code:`SubNextE()` wraps
 `ydb_subscript_next_st() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-subscript-next-s-ydb-subscript-next-st>`_ to facilitate breadth-first traversal of a
@@ -428,8 +410,7 @@ Go SubPrevE()
 
 .. code-block:: go
 
-        func SubPrevE(tptoken uint64, errstr *BufferT,
-                varname string, subary []string) (string, error)
+        func SubPrevE(tptoken uint64, errstr *BufferT, varname string, subary []string) (string, error)
 
 Matching `Go SubPrevST()`_, :code:`SubPrevE()` wraps
 `ydb_subscript_previous_st() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-subscript-previous-s-ydb-subscript-previous-st>`_ to facilitate reverse breadth-first
@@ -451,9 +432,8 @@ Go TpE()
 
 .. code-block:: go
 
-        func TpE(tptoken uint64, errstr *BufferT,
-                tpfn func(uint64, *BufferT) int32, transid string,
-                varnames []string) error
+        func TpE(tptoken uint64, errstr *BufferT, tpfn func(uint64, *BufferT) int32,
+		transid string, varnames []string) error
 
 Matching `Go TpST()`_, :code:`TpE()` wraps :code:`ydb_tp_st()` to
 implement `Transaction Processing <https://docs.yottadb.com/MultiLangProgGuide/MultiLangProgGuide.html#transaction-processing>`_.
@@ -466,8 +446,7 @@ Go ValE()
 
 .. code-block:: go
 
-        func ValE(tptoken uint64, errstr *BufferT,
-                varname string, subary []string) (string, error)
+        func ValE(tptoken uint64, errstr *BufferT, varname string, subary []string) (string, error)
 
 Matching `Go ValST()`_, :code:`ValE()` wraps `ydb_get_st() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-get-s-ydb-get-st>`_ to return
 the value at the referenced global or local variable node, or
@@ -500,17 +479,25 @@ structures are in memory managed by YottaDB. Go structures contain
 pointers to the YottaDB structures so that when the Go garbage
 collector moves Go structures, the pointers they contain remain valid.
 
-There are three structures for the interface between YottaDB and Go:
-:code:`BufferT` for data, :code:`BufferTArray` for a list of
-subscripts or a set of variable names, :code:`KeyT` for keys where a
-key in turn consists of a variable or lock resource name and
-subscripts, as discussed in `Concepts <https://docs.yottadb.com/MultiLangProgGuide/MultiLangProgGuide.html#concepts>`_.
+There are five structures for the interface between YottaDB and Go:
 
-Methods for each structure are classified as either `Go Simple API
-Access Methods`_ or `Go Simple API`_ methods. `Go Simple API Access
-Methods`_ are methods implemented in the Go wrapper for managing the
-structures for data interchange. `Go Simple API`_ methods wrap
-functionality exposed by the YottaDB API.
+- :code:`BufferT` for data;
+- :code:`BufferTArray` for a list of subscripts or a set of variable names;
+- :code:`KeyT` for keys where a key in turn consists of a variable or
+  lock resource name and subscripts, as discussed in `Concepts
+  <https://docs.yottadb.com/MultiLangProgGuide/MultiLangProgGuide.html#concepts>`_; and
+- :code:`CallMDesc` references an M routine and caches information to
+  accelerate calls from Go to M.
+- :code:`CallMTable` to reference `an M code call-in table
+  <https://docs.yottadb.com/ProgrammersGuide/extrout.html#calls-from-external-routines-call-ins>`_.
+
+Methods for each structure are classified as `Go Simple API Access
+Methods`_, `Go Simple API`_ methods, or `Go Utility API`_ methods. `Go
+Simple API Access Methods`_ are methods implemented in the Go wrapper
+for managing the structures for data interchange. `Go Simple API`_
+methods wrap functionality exposed by the YottaDB API. Methods for
+:code:`CallMDesc` and :code:`CallMTable` are listed in the `Go Utility
+API`_ section.
 
 ----------------------------
 Go Simple API Access Methods
@@ -590,27 +577,12 @@ YottaDB heap space referenced by the :code:`C.ydb_buffer_t` structure,
 release the :code:`C.ydb_buffer_t`, and set :code:`cbuft` in the
 :code:`BufferT` structure to :code:`nil`.
 
-Go BufferT BufferTFromPtr()
-...........................
-
-.. code-block:: go
-
-        func (buft *BufferT) BufferTFromPtr(errstr unsafe.Pointer)
-
-This method is intended for use in advanced cases, such as those
-encountered internally to the wrapper, when a :code:`BufferT` object
-must wrap an existing :code:`C.ydb_buffer_t` struct.
-
-Note: Modifying :code:`errstr`, or accessing memory it references may
-lead to code that behaves unpredictably and is hard to debug.
-
 Go BufferT LenAlloc()
 .....................
 
 .. code-block:: go
 
-        func (buft *BufferT) LenAlloc(tptoken uint64,
-                errstr *BufferT) (uint32, error)
+        func (buft *BufferT) LenAlloc(tptoken uint64, errstr *BufferT) (uint32, error)
 
 - If the underlying structures
   have not yet been allocated, return the STRUCTNOTALLOCD error.
@@ -622,8 +594,7 @@ Go BufferT LenUsed()
 
 .. code-block:: go
 
-        func (buft *BufferT) LenUsed(tptoken uint64,
-                errstr *BufferT) (uint32, error)
+        func (buft *BufferT) LenUsed(tptoken uint64, errstr *BufferT) (uint32, error)
 
 - If the underlying structures
   have not yet been allocated, return the STRUCTNOTALLOCD error.
@@ -640,8 +611,7 @@ Go BufferT SetLenUsed()
 
 .. code-block:: go
 
-        func (buft *BufferT) SetLenUsed(tptoken uint64,
-                errstr *BufferT, newLen uint32) error
+        func (buft *BufferT) SetLenUsed(tptoken uint64, errstr *BufferT, newLen uint32) error
 
 Use this method to change the length of a used substring of the
 contents of the buffer referenced by the :code:`buf_addr` field of the
@@ -802,8 +772,7 @@ Go BufferTArray ElemLenAlloc()
 
 .. code-block:: go
 
-        func (buftary *BufferTArray)
-                ElemLenAlloc(tptoken uint64) uint32
+        func (buftary *BufferTArray) ElemLenAlloc(tptoken uint64) uint32
 
 - If the underlying structures
   have not yet been allocated, return the STRUCTNOTALLOCD error.
@@ -816,8 +785,7 @@ Go BufferTArray ElemLenUsed()
 
 .. code-block:: go
 
-        func (buftary *BufferTArray) ElemLenUsed(tptoken uint64,
-                errstr *BufferT, idx uint32) (uint32, error)
+        func (buftary *BufferTArray) ElemLenUsed(tptoken uint64, errstr *BufferT, idx uint32) (uint32, error)
 
 - If the underlying structures
   have not yet been allocated, return the STRUCTNOTALLOCD error.
@@ -855,9 +823,8 @@ Go BufferTArray SetElemLenUsed()
 
 .. code-block:: go
 
-        func (buftary *BufferTArray)
-                SetElemLenUsed(tptoken uint64, errstr *BufferT,
-                idx, newLen uint32) error
+        func (buftary *BufferTArray) SetElemLenUsed(tptoken uint64,
+		errstr *BufferT, idx, newLen uint32) error
 
 Use this method to set the number of bytes in :code:`C.ydb_buffer_t`
 structure referenced by :code:`cbuft` of the array element specified
@@ -885,9 +852,7 @@ Go BufferTArray SetElemUsed()
 
 .. code-block:: go
 
-        func (buftary *BufferTArray)
-                SetElemUsed(tptoken uint64, errstr *BufferT,
-                newUsed uint32) error
+        func (buftary *BufferTArray) SetElemUsed(tptoken uint64, errstr *BufferT, newUsed uint32) error
 
 Use this method to set the current number of valid strings (subscripts
 or variable names) in the :code:`BufferTArray`.
@@ -1039,8 +1004,7 @@ Go Str2ZwrST()
 
 .. code-block:: go
 
-        func (buft *BufferT) Str2ZwrST(tptoken uint64,
-                errstr *BufferT, zwr *BufferT) error
+        func (buft *BufferT) Str2ZwrST(tptoken uint64, errstr *BufferT, zwr *BufferT) error
 
 The method wraps `ydb_str2zwr_st() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-str2zwr-s-ydb-str2zwr-st>`_ to provide the string in `zwrite
 format <https://docs.yottadb.com/MultiLangProgGuide/programmingnotes.html#zwrite-format>`_.
@@ -1063,8 +1027,7 @@ Go Zwr2StrST()
 
 .. code-block:: go
 
-        func (buft *BufferT) Zwr2StrST(tptoken uint64,
-                errstr *BufferT, str *BufferT) error
+        func (buft *BufferT) Zwr2StrST(tptoken uint64, errstr *BufferT, str *BufferT) error
 
 This method wraps `ydb_zwr2str_st() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-zwr2str-s-ydb-zwr2str-st>`_ and is the inverse of `Go Str2ZwrST()`_.
 
@@ -1089,8 +1052,7 @@ Go DeleteExclST()
 
 .. code-block:: go
 
-        func (buftary *BufferTArray)
-                DeleteExclST(tptoken uint64, errstr *BufferT) error
+        func (buftary *BufferTArray) DeleteExclST(tptoken uint64, errstr *BufferT) error
 
 :code:`DeleteExclST()` wraps `ydb_delete_excl_st() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-delete-excl-s-ydb-delete-excl-st>`_ to delete all
 local variable trees except those of local variables whose names are
@@ -1109,9 +1071,8 @@ Go TpST()
 
 .. code-block:: go
 
-        func (buftary *BufferTArray) TpST(tptoken uint64,
-                errstr *BufferT, tpfn func(uint64, *BufferT) int,
-                transid string) error
+        func (buftary *BufferTArray) TpST(tptoken uint64, errstr *BufferT,
+		tpfn func(uint64, *BufferT) int, transid string) error
 
 :code:`TpST()` wraps `ydb_tp_st() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-tp-s-ydb-tp-st>`_ to implement `Transaction
 Processing <https://docs.yottadb.com/MultiLangProgGuide/MultiLangProgGuide.html#transaction-processing>`_. :code:`tpfn` is a  function with two
@@ -1165,8 +1126,7 @@ Go DataST()
 
 .. code-block:: go
 
-        func (key *KeyT) DataST(tptoken uint64,
-                errstr *BufferT) (uint32, error)
+        func (key *KeyT) DataST(tptoken uint64, errstr *BufferT) (uint32, error)
 
 Matching `Go DataE()`_, :code:`DataST()` returns the
 result of `ydb_data_st()`_ (0, 1, 10, or 11). In the event of an error, the return
@@ -1177,8 +1137,7 @@ Go DeleteST()
 
 .. code-block:: go
 
-        func (key *KeyT) DeleteS(tptoken uint64,
-                errstr *BufferT, deltype int) error
+        func (key *KeyT) DeleteS(tptoken uint64, errstr *BufferT, deltype int) error
 
 Matching `Go DeleteE()`_, :code:`DeleteST()` wraps `ydb_delete_st() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-delete-s-ydb-delete-st>`_ to
 delete a local or global variable node or (sub)tree, with a value of
@@ -1192,8 +1151,7 @@ Go IncrST()
 
 .. code-block:: go
 
-        func (key *KeyT) IncrST(tptoken uint64,
-                errstr *BufferT, incr, retval *BufferT) error
+        func (key *KeyT) IncrST(tptoken uint64, errstr *BufferT, incr, retval *BufferT) error
 
 Matching `Go IncrE()`_, :code:`IncrST()` wraps `ydb_incr_st() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-incr-s-ydb-incr-st>`_ to
 atomically increment the referenced global or local variable node
@@ -1448,6 +1406,19 @@ resources.
   :code:`timeoutNsec` is zero, the method makes exactly one attempt to
   acquire the lock resource(s).
 
+Go Comprehensive API
+====================
+
+The Go Comprehensive API is a project for the future, to follow the C
+`Comprehensive API <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#comprehensive-api>`_
+
+Go Utility API
+==============
+
+The Go Utility API contains functions and one method for the
+:code:`CallMTable` structure.
+
+-----------
 Go CallMT()
 -----------
 
@@ -1463,8 +1434,14 @@ used when a single call to the function is anticipated. :code:`CallMT()` only su
 
 - If a return value is specified but has not been configured in the call-in descriptor file or vice-versa, a parameter mismatch situation is created.
 
-- :code:`rtnargs` refers to a list of 0 or more parameters passed to the called routine. Any type that can be converted to a string by fmt.Sprintf(“%v”, parm) can be used here. 
-  The number of parameters possible is restricted to 34 (for 64-bit systems) or 33 (for 32-bit systems).
+- :code:`rtnargs` refers to a list of 0 or more arguments passed to
+  the called routine. As all arguments are passed as strings after
+  conversion by fmt.Sprintf("%v", parm), any argument that can be so
+  converted can be used here. Any error returned by fmt.Sprintf() is
+  returned as an error by :code:`CallMT()`. Note that passing an array
+  will generate a string containing an entire array, which may be
+  unexpected. The number of parameters possible is restricted to 34
+  (for 64-bit systems) or 33 (for 32-bit systems).
 
 Example:
 
@@ -1478,8 +1455,11 @@ Example:
 
 The HelloWorld program in the example returns a "HelloWorld" string in a language "English" and a location "USA" specified in the two parameters. :code:`retvallen` is set to be 1024 bytes.
 
-Go CallMDescT()
----------------
+Note that a call-in table is required when calling from Go into M. A call-in table can be specified at process startup with the environment variable :code:`ydb_ci` or using the functions `Go CallMTableOpenT()`_ and `Go CallMTable.CallMTableSwitchT()`_.
+
+-------------------------
+Go CallMDesc.CallMDescT()
+-------------------------
 
 .. code-block:: go
 
@@ -1496,22 +1476,76 @@ Example:
 
 .. parsed-literal::
    var mrtn yottadb.CallMDesc
-
    fmt.Println("Golang: Invoking HelloWorld")
    mrtn.SetRtnName("HelloWorld")
    retval, err := mrtn.CallMDescT(yottadb.NOTTP, nil, 1024, "English", "USA")
    if nil != err { panic(fmt.Sprintf("CallMDescT() call failed: %s", err)) }
    fmt.Println("Golang: retval =", retval)
 
+-------------------
+Go CallMDesc.Free()
+-------------------
 
-Go Comprehensive API
-====================
+.. code-block:: go
 
-The Go Comprehensive API is a project for the future, to follow the C
-`Comprehensive API <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#comprehensive-api>`_
+	func (mdesc *CallMDesc) Free()
 
-Go Utility Functions
-====================
+Frees a :code:`CallMDesc` structure previously allocated 
+
+-------------------------
+Go CallMDesc.SetRtnName()
+-------------------------
+
+.. code-block:: go
+
+	func (mdesc *CallMDesc) SetRtnName(rtnname string)
+
+Allocates and initializes a structure to cache information to
+accelarate Go to M calls made by `Go
+CallMDesc.CallMDescT()`_. :code:`rtnname` is a :code:`<c-call-name>`
+in a `Call-in table
+<https://docs.yottadb.com/ProgrammersGuide/extrout.html#relevant-files-for-call-ins>`_. The
+structure can then be used by the `Go CallMDesc.CallMDescT()`_ method
+to call an M function. YottaDB looks for :code:`rtnname` in the
+current call-in table.
+
+--------------------
+Go CallMTableOpenT()
+--------------------
+
+.. code-block:: go
+
+	func CallMTableOpenT(tptoken uint64, errstr *BufferT, tablename string) (*CallMTable, error)
+
+If the environment variable :code:`ydb_ci` does not specify an `M code
+call-in table
+<https://docs.yottadb.com/ProgrammersGuide/extrout.html#calls-from-external-routines-call-ins>`_
+at process startup, function :code:`CallMTableOpen()` can be used to
+open an initial call-in table. :code:`tablename` is the filename of a
+call-in table, and the function opens the file and initializes a
+:code:`CallMTable` structure. Processes use the `zroutines intrinsic
+special variable
+<https://docs.yottadb.com/ProgrammersGuide/isv.html#zroutines>`_
+intrinsic special variable to locate M routines to execute, and
+:code:`$zroutines` is initialized at process startup from the
+:code:`ydb_routines` environment variable.
+
+---------------------------------
+Go CallMTable.CallMTableSwitchT()
+---------------------------------
+
+.. code-block:: go
+
+	func (newcmtable *CallMTable) CallMTableSwitchT(tptoken uint64, errstr *BufferT) (*CallMTable, error)
+
+Method :code:`CallMTableSwitchT()` enables switching of call-in
+tables. :code:`newcmtable` is the new call-in table to be used, which
+should have previously been opened with `Go
+CallMTableOpenT()`_. :code:`*CallMTable` returns the previously open
+call-in table, :code:`*nil` if there was none. As switching the
+call-in table does not change :code:`$zroutines`, if the new call-in
+table requires a different M routine search path, code will need to
+change :code:`$zroutines` appropriately.
 
 ----------------
 Go Error()
