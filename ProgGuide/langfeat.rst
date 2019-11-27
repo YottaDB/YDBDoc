@@ -986,7 +986,7 @@ String Operators
 
 All string operators force M to evaluate the expressions to which they apply as strings. The string operator is:
 
-_ binary operator causes M to concatenate the second expression with the first expresion
+_ binary operator causes M to concatenate the second expression with the first expression
 
 Example:
 
