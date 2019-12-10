@@ -749,6 +749,7 @@ Backs up certain globals or extracts data from the database for use by another s
     -FR[EEZE]
     -LA[BEL]=text
     -[NO]L[OG]
+    -[NO]NULL_IV
     -R[EGION]=region-list
     -SE[LECT]=global-name-list]
    ]
