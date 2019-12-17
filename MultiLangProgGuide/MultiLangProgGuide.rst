@@ -29,7 +29,11 @@ Quick Start
 Local Installation
 ==================
 
-1. Install YottaDB.
+1. Install prerequisites.
+
+- If not already installed, install *wget*, *binutils* and *pkg-config*: :code:`sudo apt install wget binutils pkg-config`
+ 
+2. Install YottaDB.
 
 - Create a temporary directory and change to it, e.g.: :code:`mkdir /tmp/tmp ; cd /tmp/tmp`
 - Get the YottaDB installer: :code:`wget
@@ -44,7 +48,7 @@ Local Installation
   :code:`/usr/local/lib/yottadb/r###` where :code:`r###` is
   the release, e.g., :code:`r128`.
 
-2. Set up the environment: :code:`source $(pkg-config --variable=prefix yottadb)/ydb_env_set`.
+3. Set up the environment: :code:`source $(pkg-config --variable=prefix yottadb)/ydb_env_set`.
    This defaults to an environment in :code:`$HOME/.yottadb`; to use
    another directory, set the environment variable :code:`ydb_dir` to
    the desired directory.
