@@ -14,13 +14,11 @@ Copyright © 2014 Fidelity National Information Services, Inc. and/or its subsid
 
 Permission is granted to copy, distribute and/or modify this document under the terms of the `GNU Free Documentation License <http://www.gnu.org/licenses/fdl.txt>`_, Version 1.3 or any later version published by the Free Software Foundation; with no Invariant Sections, no Front-Cover Texts and no Back-Cover Texts.
 
-YottaDB is owned and copyrighted by `YottaDB LLC <http://yottadb.com/>`_ and is available for the GNU/Linux platforms on x86_64 and Raspberry Pi hardware under the terms of the `GNU Affero General Public License Version 3 <http://www.gnu.org/licenses/agpl.txt>`_. Source and binary can be downloaded from the `YottaDB project page at GitLab <https://gitlab.com/YottaDB/DB/YDB>`_. YottaDB® and Octo® are trademarks of YottaDB LLC.
+YottaDB is owned and copyrighted by `YottaDB LLC <http://yottadb.com/>`_ and is available for the GNU/Linux platforms on x86_64 and Raspberry Pi hardware under the terms of the `GNU Affero General Public License Version 3 <http://www.gnu.org/licenses/agpl.txt>`_. Source and binary can be downloaded from the `YottaDB project page at GitLab <https://gitlab.com/YottaDB/DB/YDB>`_. YottaDB® and Octo® are registered trademarks of YottaDB LLC.
 
 GT.M is owned and copyrighted by `Fidelity Information Services, LLC <http://www.fisglobal.com/>`_, and is available for the x86_64 GNU/Linux platform under the terms of the `GNU Affero General Public License version 3 <http://www.gnu.org/licenses/agpl.txt>`_. Source and binary can be downloaded from the `GT.M project page at Source Forge <http://sourceforge.net/projects/fis-gtm>`_. GT.M™ is a trademark of Fidelity National Information Services, Inc.
 
-The Linux kernel, GNU utilities, the WorldVistA EHR extensions to VistA and all other software on the CD-ROM and hard drive images are FOSS and available under their respective FOSS licenses. Copyrights and trademarks of all content are hereby acknowledged as being held by their owners.
-
-The core of VistA (so called `FOIA VistA <https://www.osehra.org/content/foia-vista>`_), which is the sample application for a capstone exercise at the end, is in the public domain through the `US Freedom of Information Act <https://en.wikipedia.org/wiki/Freedom_of_Information_Act_(United_States)>`_. No understanding of VistA is required or assumed for the workshop.
+The Linux kernel, GNU utilities, and all other software on the hard drive image are free / open source software (`FOSS (Free / Open Source Software) <https://en.wikipedia.org/wiki/Free_and_open-source_software>`_) and available under their respective FOSS licenses. Copyrights and trademarks of all content are hereby acknowledged as being held by their owners.
 
 Other copyrights and trademarks are the property of their respective owners.
 
@@ -44,7 +42,7 @@ YottaDB
 
 As shown in the link, the nodes of a variable can also be visualized as a tree. As variable names are case-sensitive, `^Population`, `^population`, and `^POPULATION` are all different variables.
 
-Software is released at `https://gitlab.com/YottaDB/DB/YDB <https://gitlab.com/YottaDB/DB/YDB>`_ under a `FOSS (Free / Open Source Software) <https://en.wikipedia.org/wiki/Free_and_open-source_software>`_ license. 
+Software is released at `https://gitlab.com/YottaDB/DB/YDB <https://gitlab.com/YottaDB/DB/YDB>`_.
 
 YottaDB is architected with the following objectives:
 
@@ -61,16 +59,16 @@ YottaDB provides:
 - Throughput that scales to the needs of the largest applications
 - Unique functionality for creating logical multi-site configurations for mission critical applications that must always be available - including availability during upgrades that involve changes to the database schema.
 
-At the time of writing of this edition of the Acculturation Workshop, the latest YottaDB release is r1.28, on which the text and exercises are base. If there is a newer version of YottaDB when you go through the exercises, the same commands will work, but the output messages you see may vary, and in some exercises below you will need to explicitly specify the release.
+At the time of writing of this edition of the Acculturation Workshop, the latest YottaDB release is r1.28, on which the text and exercises are base. If there is a newer version of YottaDB when you go through the exercises, the same commands will work, but the output messages you see may vary.
 
 .. note::
 
-   Although the YottaDB database is language agnostic, the exercises in this Acculturation Workshop often use M code fragments in the YottaDB “direct” (i.e., interactive) mode. The reason is that the Acculturation Workshop simulates crashes and recovery, and simulating a crash with an open database is relatively easy with the YottaDB direct mode, but relatively harder with code fragments in other languages like Go and C which do not have an interactive mode. All the code fragments are simple and hopefully easily understood by programmers in all languages. The ``halt`` command exits from YottaDB direct mode to the shell.
+   Although the YottaDB database is language agnostic, exercises such as those involving crash recovery and replication use M code fragments (all provided to you). The reason is that simulating a crash with an open database in a known state is relatively easy with the YottaDB direct mode, but harder with code in other languages like Go and C which do not have an interactive mode. All the code fragments are simple. The ``halt`` command exits from YottaDB direct mode to the shell. While in the real world, unplanned events like crashes happen when the database is not at a predetermined state, for the exercises, it is easier to understand YottaDB administration and operations by simulating crashes with the database in a known state.
 
 Historical Background
 ---------------------
 
-YottaDB's codebase originated in the 1980s as an implementation of the ISO standard scripting & application development language M, commonly known as `MUMPS <https://en.wikipedia.org/wiki/MUMPS>`_. While YottaDB continues to support M (we are fastidious about backward compatibility, to allow existing applications to run on newer versions of YottaDB), the codebase has been continuously used and evolved over the last 30+ years, so that YottaDB today supports APIs in multiple languages. In the Acculturation Workshop, you will see code from `Go <https://golang.org>`_, `C <https://en.wikipedia.org/wiki/C_(programming_language)>`_, and M all accessing the same database. Between YottaDB and its upstream predecessor GT.M, the codebase is live at several of the largest real time core processing systems at any bank anywhere in the world. It is also increasingly used in healthcare. The implementation of YottaDB on the GNU/Linux operating system on x86_64 and ARM hardware is the basis of the FOSS stack for `VistA <http://worldvista.org/AboutVistA>`_.
+YottaDB's codebase originated in the 1980s as an implementation of the ISO standard scripting & application development language M, commonly known as `MUMPS <https://en.wikipedia.org/wiki/MUMPS>`_. While YottaDB continues to support M (we are fastidious about backward compatibility, to allow existing applications to run on newer versions of YottaDB), the codebase has been continuously used and evolved over the last 30+ years, so that YottaDB today supports APIs in multiple languages. In the Acculturation Workshop, you will see code from `Go <https://golang.org>`_, `C <https://en.wikipedia.org/wiki/C_(programming_language)>`_, and M all accessing the same database. Between YottaDB and its upstream predecessor GT.M, the codebase is live at several of the largest real time core processing systems at any bank anywhere in the world, as well as increasingly in large electronic medical record systems. The implementation of YottaDB on the GNU/Linux operating system on x86_64 and ARM hardware is the basis of the FOSS stack for `VistA <http://worldvista.org/AboutVistA>`_.
 
 ------------------
 User Documentation
@@ -88,6 +86,10 @@ Packaging
 **The exercises in this workshop are carried out by booting guest virtual machines on your host computer**. A `virtual machine <https://en.wikipedia.org/wiki/Virtual_machine>`_ is a “computer within a computer”. A guest virtual machine can run a different operating system from that of the host computer. The host computer might itself run Linux, Windows, OS X, or another operating system and the guest can run YottaDB on Linux. "Emulation" or "virtualization" software helps you set up a guest system on a host computer. On the host computer, the disk images of the Acculturation Workshop guide look like ordinary files in the file system.
 
 **Make sure to download the virtual machine before you begin the exercises**
+
+.. note::
+
+   YottaDB runs very well in containers, and indeed there are multiple Docker containers available to download, both with YottaDB and YottaDB bundled with VistA and other applications. We opted to use virtual machines for the exericses in the Acculturation Workshop because we judged that simulating and visualizing crashes, recovery, and replication would be easier with virtual machines.
 
 -----
 Linux
@@ -150,8 +152,6 @@ Terminal Emulation
 
 Even when running with a console, we recommend that you boot and minimize the virtual machine, and connect to your virtual machines with terminal sessions from a terminal emulator. On Windows, you can use a terminal emulator such as `putty <https://www.chiark.greenend.org.uk/~sgtatham/putty/>`_. Linux distributions and OS X include terminal emulation.
 
-For the Unicode exercises, you will either need a terminal emulator that can be switched between UTF-8 and single-byte characters, or you will need two emulators. If you intend to use languages that write right to left, you will need a terminal emulator with bidirectional capabilities.
-
 -----------
 Quick Start
 -----------
@@ -178,20 +178,15 @@ As newer versions of packages are likely to have been released after the Accultu
 
     yottadbuser@yottadbworkshop:~$ sudo apt update && sudo apt -y upgrade && sudo apt -y autoremove && sudo reboot now
 
-You will likely be prompted for the yottadbuser password one or more times.
+You will likely be prompted for the yottadbuser password one or more times. As the command reboots the virtual machine, you will need to reconnect your ssh session.
 
 Install YottaDB
 ---------------
 
 - Get the YottaDB install script: ``wget https://gitlab.com/YottaDB/DB/YDB/raw/master/sr_unix/ydbinstall.sh``
 - Make it executable: ``chmod +x ydbinstall.sh``
-- Run it where you want it installed (omit the --verbose option for less output): The below command installs YottaDB in /usr/local/lib/. The rest of the document assumes installation in this directory.
-  
-::
-
-   sudo ./ydbinstall.sh --utf8 default --verbose
-
-- The script has a plethora of installation options, which we will not use in the Acculturation Workshop. You can query it to list the options with the ``--help`` option, e.g., ``./ydbinstall.sh --help``.
+- Run it (omit the ``--verbose`` option if you want less output): This command installs YottaDB under ``/usr/local/lib/``:  ``sudo ./ydbinstall.sh --utf8 default --verbose``
+- The script has a plethora of installation options, which you will not use in the Acculturation Workshop. You can query it to list the options with the ``--help`` option, e.g., ``./ydbinstall.sh --help``.
 
 Run YottaDB
 -----------
@@ -200,7 +195,7 @@ Run YottaDB
 Default Environment
 +++++++++++++++++++
 
-As YottaDB needs several environment variables to be set correctly, the ``ydb_env_set`` script creates a working if one does not exist (defaulting to ``$HOME/.yottadb`` unless the environment variable ``ydb_dir`` points to another location) with sets up a default directory structure under it, with reasonable values for environment variables. You can use ``pkg-config`` to source ``ydb_env_set`` from the currently installed YottaDB release, that sets up reasonable defaults and allows you to start using YottaDB immediately. You can query YottaDB to identify the release, e.g.,
+As YottaDB needs a working environment and several environment variables to be set correctly, the ``ydb_env_set`` script creates a working environment if one does not exist (defaulting to ``$HOME/.yottadb`` unless the environment variable ``ydb_dir`` points to another location), and sets up a default directory structure under it, with reasonable values for environment variables. You can use ``pkg-config`` to source ``ydb_env_set`` from the currently installed YottaDB release to start using YottaDB immediately. You can query YottaDB to identify the release, e.g.,
 
 ::
 
@@ -210,8 +205,6 @@ As YottaDB needs several environment variables to be set correctly, the ``ydb_en
  yottadbuser@yottadbworkshop:~$ 
 
 When you set up environments in YottaDB, you will set up your own scripting, but the default is a good place to start.
-
-YottaDB databases can be configured so that they can be recovered after a system crash. Simulate a crash by either clicking on the “X” in the top right corner of your virtual machine console window to instantly “power down” your virtual machine, or, if you started it headless, perform a hard power-down using a command on the host (in the case of virtualization using qemu/kvm on Linux, a kill -9 of the virtual machine process). Then reboot the virtual machine, run ydb and use a zwrite ^Animal command to confirm that the data in the database is still intact.
 
 The ``tree`` program shows the environment sourcing ``ydb_env_set`` creates.
 
@@ -235,9 +228,8 @@ The ``tree`` program shows the environment sourcing ``ydb_env_set`` creates.
 
 We will explore the environment in more detail below.
 
-+++++++++++++
 Using YottaDB
-+++++++++++++
+-------------
 
 Now that YottaDB is installed and configured, change to the ``$ydb_dir`` directory (``$HOME/.yottadb`` in this example), and verify that the database has no nodes of the ``^hello`` global variable:
 
@@ -248,8 +240,9 @@ Now that YottaDB is installed and configured, change to the ``$ydb_dir`` directo
     %YDB-W-NOSELECT, None of the selected variables exist -- halting
     yottadbuser@yottadbworkshop:~/.yottadb$ 
 
++++++++++++++
 Access from C
--------------
++++++++++++++
 
 YottaDB comes with a `C API <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html>`_ and all you need to use it is the `gcc` compiler, which is included in the virtual machine. Download the `sayhelloC.c <./sayhelloC.c>`_ program into the .yottadb directory, compile it and run it. Notice that it has set a node in the database (the MUPIP EXTRACT command prints database contents):
 
@@ -278,8 +271,9 @@ YottaDB comes with a `C API <https://docs.yottadb.com/MultiLangProgGuide/cprogra
     %YDB-I-RECORDSTAT, TOTAL:         Key cnt: 1  max subsc len: 10  max rec len: 13  max node len: 27
     yottadbuser@yottadbworkshop:~/.yottadb$ 
 
+++++++++++++++
 Access from Go
---------------
+++++++++++++++
 
 `Accessing YottaDB from Go <https://docs.yottadb.com/MultiLangProgGuide/goprogram.html>`_ requires the Go ``yottadb`` package to be downloaded and installed, to provide a YottaDB Go “wrapper”. After installing the Go wrapper, you can run a test to ensure that it was installed successfully:
 
@@ -305,8 +299,9 @@ Download the `sayhelloGo.go <./sayhelloGo.go>`_ program into the .yottadb direct
     %YDB-I-RECORDSTAT, TOTAL:         Key cnt: 2  max subsc len: 11  max rec len: 14  max node len: 27
     yottadbuser@yottadbworkshop:~/.yottadb$
 
++++++++++++++
 Access from M
--------------
++++++++++++++
 
 YottaDB includes a complete language implementation for M. Download the `sayhelloM.m <./sayhelloM.m>`_ program into the .yottadb/r directory and run it (there is no need for a separate compilation step, as there was for C and Go):
 
@@ -365,7 +360,9 @@ Exercise - Journaling
 
 In this exercise, you will crash your virtual machine and then recover the database. As sourcing the ``ydb_env_set`` file does all the setup that you need, and recovers the database, you will not learn the underlying operation of the database if you use it. Instead, you will create a small file that explicitly sets environment variables. The exercise has two parts, preparing the directory for the exercise, to be done once, and then crashing and recovery, which you can do as often as you want.
 
-*Preparation*
++++++++++++
+Preparation
++++++++++++
 
 Create a directory with a name like ``jnlex`` (for journaling exercises) or other prefered name and change to that directory. Create a file to source that sets required environment variables and convenient aliases (``nano`` and ``vi`` editors are installed on the virtual machine; you can install your preferred editor: for example to install a character-mode emacs, run ``sudo apt install emacs-nox``). Although the code fragments are M code, they are straightforward, and you can use equivalent code from other languages if you prefer.
 
@@ -376,7 +373,7 @@ Create a directory with a name like ``jnlex`` (for journaling exercises) or othe
    export ydb_routines=". $ydb_dist/libyottadbutil.so"
    alias yottadb=$ydb_dist/yottadb
    alias mupip=$ydb_dist/mupip
-   export ydb_dir=$HOME/.jnlex
+   export ydb_dir=$HOME/jnlex
    export ydb_gbldir=$ydb_dir/ydb.gld
    yottadbuser@yottadbworkshop:~/jnlex$ source jnlex_env
    yottadbuser@yottadbworkshop:~/jnlex$
@@ -402,7 +399,9 @@ Create a global directory with the Global Directory Editor (GDE) utility (see `G
    %YDB-I-JNLSTATE, Journaling state for region DEFAULT is now ON
    yottadbuser@yottadbworkshop:~/jnlex$ 
 
-*Crashing and Recovery*
++++++++++++++++++++++
+Crashing and Recovery
++++++++++++++++++++++
 
 Start by cleaning out old journal files. Verify that there are no shared memory segments (if there are any, reboot the virtual machine). Then go into YottaDB's direct (interactive) mode, perform a database operation, and verify that there is now a new shared memory segment.
 
@@ -469,6 +468,8 @@ Now recover the database, and note that the database update you made is in the d
    %YDB-S-JNLSUCCESS, Verify successful
    %YDB-S-JNLSUCCESS, Recover successful
    %YDB-I-MUJNLSTAT, End processing at Wed Nov 13 10:21:51 2019
+   yottadbuser@yottadbworkshop:~/jnlex$ yottadb -run %XCMD 'zwrite ^X'
+   ^X="NOV 13, 2019"
    yottadbuser@yottadbworkshop:~/jnlex$ 
 
 Notice that the recovery renamed the previous journal file (from ``ydb.mjl`` to ``ydb.mjl_2019317102151`` - ``2019317102151`` is a timestamp representing 10:21:51 on the 317\ :sup:`th`\  day of 2019), and created a new journal file ``ydb.mjl``.
@@ -477,9 +478,9 @@ Practice crashing the virtual machine with an open database several times till y
 
 Look at the animation of journaling in action at the beginning of `Chapter 6: YottaDB Journaling <https://docs.yottadb.com/AdminOpsGuide/ydbjournal.html#journal-files>`_ in the Administration and Operations Guide.
 
-**Note on File System Configuration**
+.. note::
 
-Robust operation of YottaDB recovery after a crash requires robust recovery of the file system. If your file system requires an option to ensure that meta-data is written to disk only after the corresponding data is written, ensure that it is set. Also, if you are running in a virtual machine or container, ensure that it is configured so that when the guest does a “sync” to commit data to the file system, the host commits the data to the underlying storage.
+   Robust operation of YottaDB recovery after a crash requires robust recovery of the file system. If your file system requires an option to ensure that meta-data is written to disk only after the corresponding data is written, ensure that it is set. Also, if you are running in a virtual machine or container, ensure that it is configured so that when the guest does a “sync” to commit data to the file system, the host commits the data to the underlying persistent storage.
 
 --------------------------------------------
 Global Directories Point to Global Variables
@@ -497,13 +498,11 @@ In YottaDB, sets of M global variables (Names or Name spaces) are mapped to Regi
 
 .. image:: globaldir.png
 
-In this example, there are four M global variables that we would like to separate from the rest (e.g., for purposes of sharing globals between applications, or for reasons of protection – perhaps they contain special information, so that only mammalogists are to have access to globals ^Horse and ^Platypus, and only carcinologists are to have access to globals ^Crab and ^Lobster). This is accomplished by creating five name spaces (note that a name space can contain a single variable, as in this example, or a range of global variables, e.g., everything starting with ^A through ^Horse). There is always a default (*) name space.
+In this example, there are four M global variables that we would like to separate from the rest (e.g., for purposes of sharing globals between applications, or for reasons of protection – perhaps they contain special information, so that only mammalogists are to have access to globals ^Horse and ^Platypus, and only carcinologists are to have access to globals ^Crab and ^Lobster). This is accomplished by creating five name spaces (note that a name space can contain a single variable, as in this example, or a range of global variables, e.g., everything starting with ^A through ^Horse). There is always a default (``*``) name space.
 
-One or more name spaces are mapped to a Region. All global variables in a region share a common set of M global variable properties, such as the maximum record length, whether null subscripts are permitted, etc. In this case ^Horse and ^Platypus are mapped to the region "Mammals", whereas ^Crab and ^Lobster are mapped to the region "Crustaceans". The default name space * is mapped to a region called "Default".
+One or more name spaces are mapped to a Region. All global variables in a region share a common set of M global variable properties, such as the maximum record length, whether null subscripts are permitted, etc. In this case ^Horse and ^Platypus are mapped to the region MAMMALS, whereas ^Crab and ^Lobster are mapped to the region CRUSTACEANS. The default name space * is mapped to a region called DEFAULT (while region names are case insensitive, they are frequently written in upper case).
 
 Each region is mapped to a Segment. Just as a region defines properties pertaining to M global variables, the segment defines properties pertaining to the database file for that region, such as the file name, the initial allocation, number of global buffers, etc. The database file is just an ordinary file in the file system of the underlying operating system.
-
-Note: Region and Segment names are case-insensitive.
 
 Each database file can have a single active journal file. A journal file can be linked to its predecessor to form a chain of journal files.
 
@@ -524,7 +523,7 @@ GDE, the Global Directory Editor, is a program used to manipulate global directo
    export ydb_routines=". $ydb_dist/libyottadbutil.so"
    alias yottadb=$ydb_dist/yottadb
    alias mupip=$ydb_dist/mupip
-   export ydb_dir=$HOME/.jnlex
+   export ydb_dir=$HOME/jnlex
    export ydb_gbldir=$ydb_dir/ydb.gld
    export ydb_principal_editing=EDITING
    yottadbuser@yottadbworkshop:~/jnlex$ source jnlex_env 
@@ -551,8 +550,6 @@ You can use the show command to examine name spaces, regions and segments.
 In this case, there is only one name space, the default. There is also only one region, DEFAULT. Region and segment names are case insensitive, but name spaces are case sensitive, since M variable names are case sensitive.
 
 ::
-
-    GDE> show -region
 
    GDE> show -region
 
@@ -606,7 +603,16 @@ The ``show -map`` command gives visualization of the mapping of names to databas
 								     FILE = $ydb_dir/ydb.dat
    GDE> 
 
-Of course, this global directory is not very interesting as all global variables map to a single region. Let's make it a little more interesting.
+Of course, this global directory is not very interesting as all global variables map to a single region. There are many reasons why one might want a multi-region database, including but not limited to:
+
+- Database size: A single database file is limited to 992Mi [#]_ blocks, which with the common block size of 4Ki bytes, translates to a database of 3,968 Gi bytes, not including the file header. A database consists of one or more database files, and while there is a theoretical YottaDB limit on the number of database files, it is so large that all practical limits are those of the underlying storage.
+- Access control: As YottaDB uses the standard user-group-world model of access control (which may be further refined by Mandatory Access Controls; see `YottaDB Security Philosophy <https://docs.yottadb.com/AdminOpsGuide/securityph.html>`_), database file ownership and permissions can be used for access control (see `Security`_ below). For example, mammalogists might have read-write access to database files that store information about mammals, while giving carcinologists read-only access, with carcinologists doing tthe reverse for database files that store information about crustaceans.
+- Performance: Since the granularity of critical sections for committing updates is the database region, database "hot spots" can be reduced by configuring databases to map different global variables to different database files. Note however, that when using transaction processing, as concurrent critical sections are needed for all global variables updated in a transaction, it would improve peformance to map related globals to the same region.
+- Manageability: Related information can be placed in a single database file. For example, Internet of Things (IoT) application stacks often include a cloud service that complements edge devices. Such a cloud service might be configured to map the data for each edge device in a separate database file.
+
+.. [#]  YottaDB uses prefixes like Ki & Mi for binary prefixes, and K and M for decimal & prefixes whose bases are not specified.
+
+Let's make the single region database a little more interesting.
 
 Exercise - Separate Regions for Mammalogists and Carcinologists
 ---------------------------------------------------------------
@@ -653,8 +659,8 @@ Then we can map the regions to the segments. Notice that even though the segment
 
 ::
 
-   GDE> add -region MAMMALS -dynamic=mammals
-   GDE> add -region CRUSTACEANS -dynamic=crustaceans
+   GDE> add -region MAMMALS -dynamic=MAMMALS
+   GDE> add -region CRUSTACEANS -dynamic=CRUSTACEANS
    GDE> show -region
 
 				   *** REGIONS ***
@@ -671,10 +677,10 @@ Now map the name spaces to the regions.
 
 ::
 
-   GDE> add -name Horse -region=mammals
-   GDE> add -name Platypus -region=mammals
-   GDE> add -name Crab -region=crustaceans
-   GDE> add -name Lobster -region=crustaceans
+   GDE> add -name Horse -region=MAMMALS
+   GDE> add -name Platypus -region=MAMMALS
+   GDE> add -name Crab -region=CRUSTACEANS
+   GDE> add -name Lobster -region=CRUSTACEANS
    GDE> show -name
 
 	    *** NAMES ***
@@ -734,7 +740,7 @@ To interpret the above, the first column is the first global variable residing i
 - The entry with ``%`` in the first column and ``Crab`` in the second means all global variables starting with and including ``^%`` (the first global variable) up to, but not including ``^Crab`` are mapped to region and segment ``DEFAULT`` and the file ``$ydb_dir/ydb.dat``.
 - Since ``^Crab0`` is the next global variable name after ``^Crab``, the next entry states that the global variable ``^Crab`` is mapped to region and segment ``MAMMALS`` and the file `$ydb_dir/linneaus.dat``.
 
-Exiting GDE creates the global directory. You can then use a mupip create command to create the database files. Notice that journal files must be separately created.
+Exiting GDE creates the global directory. You can then use a MUPIP CREATE command to create the database files. Notice that journal files must be separately created.
 
 ::
 
@@ -902,10 +908,10 @@ The operation of YottaDB is controlled by a number of environment variables, `de
   
 - Using YottaDB requires language specific environment variables
   
-    - The plethora of environment variables for M programs includes:
+    - Environment variables for M programs include:
   
       - The required ``ydb_routines`` environment variable provides a search path for YottaDB to execute M programs.
-      - An optional ``ydb_chset`` environment variable to determine whether a process should operate in M mode or UTF-8 mode (defaulting to M mode). To choose UTF-8 mode, this must be set before sourcing ``ydb_env_set``.
+      - An optional ``ydb_chset`` environment variable to determine whether a process should operate in M mode or UTF-8 mode (defaulting to M mode). To choose UTF-8 mode, this must be set before sourcing ``ydb_env_set`` and a locale that is installed on the system must also be defined, e.g.: ``export ydb_chset=UTF-8 LC_CTYPE=C.utf8``
 
     - Other languages will require their own environment variables.
 
@@ -1034,7 +1040,7 @@ Because replication builds on journaling, use the ``jnlex`` directory created ab
    export ydb_routines=". $ydb_dist/libyottadbutil.so"
    alias yottadb=$ydb_dist/yottadb
    alias mupip=$ydb_dist/mupip
-   export ydb_dir=$HOME/.jnlex
+   export ydb_dir=$HOME/jnlex
    export ydb_gbldir=$ydb_dir/ydb.gld
    export ydb_principal_editing=EDITING
    export ydb_repl_instance=$ydb_dir/ydb.repl
@@ -1086,7 +1092,7 @@ Create new shell scripts to avoid retyping commands:
 
 Delete the prior generation journal files, to keep the directory clean, and make the newly created shell scripts executable.
 
-.. parsed-literal::
+::
 
    yottadbuser@yottadbworkshop:~/jnlex$ chmod +x originating_stop replicating_st*
    yottadbuser@yottadbworkshop:~/jnlex$ rm *.mjl_*
@@ -1127,7 +1133,8 @@ If you are using qcow2 or vmdk disk images with QEMU/kvm on Linux, you can use a
 
 Now boot the three virtual machines. Each virtual machine will need two ports to be forwarded from the host, one for ssh access forwarded to port 22 on each virtual machine and one for replication forwarded to port 3000 on each virtual machine (i.e., a total of six ports on the host for the three instances). The examples here use host ports 2221 & 4000 for Santiago, 2222 & 5000 for Paris, and 2223 & 6000 for Melbourne. The commands given here use kvm on Linux – use the commands appropriate to virtualization on your host).
 
-.. parsed-literal::
+::
+
    kvm -enable-kvm -cpu host -m 256 -display none -net nic -net user,hostfwd=tcp::2221-:22,hostfwd=tcp::4000-:3000 -hda Santiago.vmdk &
    kvm -enable-kvm -cpu host -m 256 -display none -net nic -net user,hostfwd=tcp::2222-:22,hostfwd=tcp::5000-:3000 -hda Paris.vmdk &
    kvm -enable-kvm -cpu host -m 256 -display none -net nic -net user,hostfwd=tcp::2223-:22,hostfwd=tcp::6000-:3000 -hda Melbourne.vmdk &
@@ -1154,7 +1161,7 @@ To make it more realistic (and to reduce the probability of operator error) on e
 
 On each machine, edit ``jnlex_env`` in each instance and change the line ``export ydb_repl_instname=dummy`` and the line ``export ydb_repl_instance=$ydb_dir/ydb.repl`` to an instance file name for that instance. For example, on the Santiago instance:
 
-.. parsed-literal::
+::
 
    yottadbuser@santiago:~/jnlex$ cat jnlex_env 
    export ydb_dist=$(pkg-config --variable=prefix yottadb)

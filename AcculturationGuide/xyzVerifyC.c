@@ -50,8 +50,10 @@ int main()
 		*(tCrab[0].buf_addr + tCrab[0].len_used) = '\000';
 		*(tDelta[0].buf_addr + tDelta[0].len_used) = '\000';
 		*(tHorse[0].buf_addr + tHorse[0].len_used) = '\000';
-		if (0 != memcmp(tDelta[0].buf_addr, tCrab[0].buf_addr, tDelta[0].len_used) || 0 != memcmp(tCrab[0].buf_addr, tHorse[0].buf_addr, tCrab[0].len_used)) {
-			printf("ACID fail: tDelta=%s; tCrab=%s; tHorse=%s\n", tDelta[0].buf_addr, tCrab[0].buf_addr, tDelta[0].buf_addr);
+		if (tDelta[0].len_used != tCrab[0].len_used || tCrab[0].len_used != tHorse[0].len_used ||
+				0 != memcmp(tDelta[0].buf_addr, tCrab[0].buf_addr, tDelta[0].len_used) ||
+				0 != memcmp(tCrab[0].buf_addr, tHorse[0].buf_addr, tCrab[0].len_used)) {
+			printf("ACID fail: tDelta=%s; tCrab=%s; tHorse=%s\n", tDelta[0].buf_addr, tCrab[0].buf_addr, tHorse[0].buf_addr);
 			exit(1);
 			}
 		/* if values at next nodes of ^Crab() and ^Horse() don't match, quit signaling failure */
@@ -63,7 +65,7 @@ int main()
 		*(vHorse.buf_addr + vHorse.len_used) = '\000';
 		tHorsei = strtoll(vHorse.buf_addr, NULL, 10);
 		if (0 != (strtoll(vCrab.buf_addr, NULL, 10) + tHorsei)) {
-			printf("ACID fail: ^Crab(%s)=%s; ^Horse(%s)=%s\n", *tCrab[0].buf_addr, *vCrab.buf_addr, *tHorse[0].buf_addr, *vHorse.buf_addr);
+			printf("ACID fail: ^Crab(%s)=%s; ^Horse(%s)=%s\n", tCrab[0].buf_addr, vCrab.buf_addr, tHorse[0].buf_addr, vHorse.buf_addr);
 			exit(2);
 		}
 		/* if the value at next node of ^Horse() is not the sum of this and all preceding nodes of ^Delta(), quit signaling failure */
@@ -72,7 +74,7 @@ int main()
 		*(vDelta.buf_addr + vDelta.len_used) = '\000';
 		sDeltai += strtoll(vDelta.buf_addr, NULL, 10);
 		if (sDeltai != tHorsei) {
-			printf("ACID fail: Sum ^Delta(0:%s)=%llu; ^Horse(%s)=%s\n", *tDelta[0].buf_addr, sDeltai, *tHorse[0].buf_addr, *vHorse.buf_addr);
+			printf("ACID fail: Sum ^Delta(0:%s)=%llu; ^Horse(%s)=%s\n", tDelta[0].buf_addr, sDeltai, tHorse[0].buf_addr, vHorse.buf_addr);
 			exit(3);
 		}
 	} while (1);
