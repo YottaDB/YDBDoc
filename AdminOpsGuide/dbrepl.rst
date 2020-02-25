@@ -899,7 +899,7 @@ Because tbck is less than tfwd, tsys+tbck is less than tsys+tfwd. In very round 
 Database Repair
 ++++++++++++++++++++++++
 
-A system crash can, and often will, damage a database file, leaving it structurally inconsistent. With before image journaling, normal MUPIP recovery/rollback repairs such damage automatically and restores the database to the logically consistent state as of the end of the last transaction committed to the database by the application. Certain benign errors may also occur (refer to the `"Maintaining Database Integrity" chapter <https://docs.yottadb.com/AdminOpsGuide/integrity.html>`_). These must be repaired on the (now) replicating instance at an appropriate time, and are not considered "damage" for the purpose of this discussion. Even without before image journaling, a replicating instance (particularly one that is multi-site) may have sufficient durability in the aggregate of its instances so that backups (or copies) from an undamaged instance can always repair a damaged instance.
+A system crash can, and often will, damage a database file, leaving it structurally inconsistent. With before image journaling, normal MUPIP recovery/rollback repairs such damage automatically and restores the database to the logically consistent state as of the end of the last transaction committed to the database by the application. Certain benign errors may also occur (refer to the `"Maintaining Database Integrity" chapter <./integrity.html>`_). These must be repaired on the (now) replicating instance at an appropriate time, and are not considered "damage" for the purpose of this discussion. Even without before image journaling, a replicating instance (particularly one that is multi-site) may have sufficient durability in the aggregate of its instances so that backups (or copies) from an undamaged instance can always repair a damaged instance.
 
 .. note::
    If the magnetic media of the database and/or the journal file is damaged (e.g., a head crash on a disk that is not mirrored), automatic repair is problematic. For this reason, it is strongly recommended that organizations use hardware mirroring for magnetic media.
@@ -914,7 +914,7 @@ To maintain application consistency, do not use DSE to repair or change the logi
 .. note::
    Before attempting manual database repair, YottaDB strongly recommends backing up the entire database (all regions).
 
-After repairing the database, bring up the replicating instance and backup the database with new journal files. MUPIP backup online allows replicating to continue during the backup. As stated in the `Journaling chapter <https://docs.yottadb.com/AdminOpsGuide/ydbjournal.html>`_, the journal files prior to the backup are not useful for normal recovery.
+After repairing the database, bring up the replicating instance and backup the database with new journal files. MUPIP backup online allows replicating to continue during the backup. As stated in the `Journaling chapter <./ydbjournal.html>`_, the journal files prior to the backup are not useful for normal recovery.
 
 ------------------------
 Procedures
@@ -1618,7 +1618,7 @@ In an A->B replication configuration, at any given point there can be two possib
 
 The steps described in this section perform a switchover (A->B becomes B->A) under both these possibilities. When A is ahead of B, these steps generate a lost transaction file which must be applied to the new originating instance as soon as possible. The lost transaction file contains transactions which were not replicated to B. Apply the lost transactions on the new originating instance either manually or in a semi-automated fashion using the M-intrinsic function $ZQGBLMOD(). If you use $ZQGBLMOD(), perform two additional steps (mupip replicate -source -needrestart and mupip replicate -source -losttncomplete) as part of lost transaction processing. Failure to run these steps can cause $ZQGBLMOD() to return false negatives that in turn can result in application data consistency issues.
 
-First, choose a time when there are no database updates or the rate of updates are low to minimize the chances that your application may time out. There may be a need to hold database updates briefly during the switchover. For more information on holding database updates, refer to the `Instance Freeze section <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html#instance-freeze>`_ to configure an appropriate freezing mechanism suitable for your environment.
+First, choose a time when there are no database updates or the rate of updates are low to minimize the chances that your application may time out. There may be a need to hold database updates briefly during the switchover. For more information on holding database updates, refer to the `Instance Freeze section <./dbrepl.html#instance-freeze>`_ to configure an appropriate freezing mechanism suitable for your environment.
 
 In an A→B replication configuration, follow these steps:
 
@@ -2481,7 +2481,7 @@ On B:
 * Use the MERGE command to copy a global from the prior location to the new location. Use extended references (to the prior global directory) to refer to the global in the prior location. 
 * If the globals you are moving have triggers, apply the definitions saved with MUPIP TRIGGER -SELECT earlier.
 * Turn replication on for the region of the new global location. 
-* Make B the new originating instance. For more information, refer to `“Switchover possibilities in an A→B replication configuration” <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html#switchover-possibilities-in-an-a-b-replication-configuration>`_.
+* Make B the new originating instance. For more information, refer to `“Switchover possibilities in an A→B replication configuration” <./dbrepl.html#switchover-possibilities-in-an-a-b-replication-configuration>`_.
 
 On A:
 
@@ -2776,7 +2776,7 @@ On the receiving side:
 * Allow a Source Server to connect.
 
 .. note::
-   When the instances have different endian-ness, create a new replication instance file as described in `“Creating a new Replication Instance File” <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html#creating-a-new-replication-instance-file>`_
+   When the instances have different endian-ness, create a new replication instance file as described in `“Creating a new Replication Instance File” <./dbrepl.html#creating-a-new-replication-instance-file>`_
 
 
 --------------------------------------------------------
@@ -3199,7 +3199,7 @@ Command Syntax:
 
 *-file* and *-region*
 
-Use these qualifiers in the same manner that you would use them for a MUPIP SET. For more information refer to `Chapter 5: “General Database Management” <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html>`_.
+Use these qualifiers in the same manner that you would use them for a MUPIP SET. For more information refer to `Chapter 5: “General Database Management” <./dbmgmt.html>`_.
 
 *-replication=replication-state*
 
@@ -3231,7 +3231,7 @@ Denotes an implicit replication state when YottaDB attempts to keep replication 
 
 WAS_ON is an implicit replication state. At all times during the WAS_ON state, you can see the current backlog of transactions and the content of the Journal Pool (MUPIP REPLICATE -SOURCE -SHOWBACKLOG and MUPIP REPLICATE -SOURCE -JNLPOOL -SHOW). This information is not available in the replication OFF state.
 
-For more information on recovering originating and replicating instances from WAS_ON, refer to `"Recovering from the replication WAS_ON state" <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html#recovering-from-the-replication-was-on-state>`_.
+For more information on recovering originating and replicating instances from WAS_ON, refer to `"Recovering from the replication WAS_ON state" <./dbrepl.html#recovering-from-the-replication-was-on-state>`_.
 
 Example:
 
@@ -3370,7 +3370,7 @@ The SHOW qualifier serves two purposes. When used with -editinstance, it display
 
 *-[no]qdbrundown*
 
-Controls the setting of the "HDR Quick database rundown is active" field in a replication instance file. For more information about this setting, refer to `“Creating the Replication Instance File” <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html#creating-the-replication-instance-file>`_.
+Controls the setting of the "HDR Quick database rundown is active" field in a replication instance file. For more information about this setting, refer to `“Creating the Replication Instance File” <./dbrepl.html#creating-the-replication-instance-file>`_.
 
 Example:
 
@@ -3515,7 +3515,7 @@ Promptly sets or clears an Instance Freeze on an instance irrespective of whethe
 
 For more information on enabling a region to invoke an Instance Freeze on custom errors, refer to the -INST_FREEZE_ON_ERROR section of “SET”.
 
-For more information on Instance Freeze, refer to `“Instance Freeze” <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html#instance-freeze>`_.
+For more information on Instance Freeze, refer to `“Instance Freeze” <./dbrepl.html#instance-freeze>`_.
 
 *-connectparams=<hard tries>,<hard tries period>, <soft tries period>,<alert time>,<heartbeat period><max heartbeat wait>*
 
@@ -4048,7 +4048,7 @@ To perform an updateresync, the originating instance must have at least one hist
 
 You also need use -updateresync to replace your existing replication instance files if a YottaDB version upgrade changes the instance file format. 
 
-For information on the procedures that use -updateresync, refer to `“Setting up a new replicating instance of an originating instance (A→B, P→Q, or A→P)” <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html#setting-up-a-new-replicating-instance-of-an-originating-instance-ab-pq-or-ap>`_, `“Replacing the replication instance file of a replicating instance (A→B and P→Q)” <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html#replacing-the-replication-instance-file-of-a-replicating-instance-ab-and-pq>`_, `“Replacing the replication instance file of a replicating instance (A→P)” <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html#replacing-the-replication-instance-file-of-a-replicating-instance-ap>`_, and `“Setting up a new replicating instance from a backup of the originating instance (A→P)” <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html#setting-up-a-new-replicating-instance-from-a-backup-of-the-originating-instance-ap>`_.
+For information on the procedures that use -updateresync, refer to `“Setting up a new replicating instance of an originating instance (A→B, P→Q, or A→P)” <./dbrepl.html#setting-up-a-new-replicating-instance-of-an-originating-instance-ab-pq-or-ap>`_, `“Replacing the replication instance file of a replicating instance (A→B and P→Q)” <./dbrepl.html#replacing-the-replication-instance-file-of-a-replicating-instance-ab-and-pq>`_, `“Replacing the replication instance file of a replicating instance (A→P)” <./dbrepl.html#replacing-the-replication-instance-file-of-a-replicating-instance-ap>`_, and `“Setting up a new replicating instance from a backup of the originating instance (A→P)” <./dbrepl.html#setting-up-a-new-replicating-instance-from-a-backup-of-the-originating-instance-ap>`_.
 
 *-initialize*
 

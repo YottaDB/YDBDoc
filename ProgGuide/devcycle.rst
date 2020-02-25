@@ -80,12 +80,12 @@ Each of these remaining steps can be performed either from the YottaDB prompt or
 
 The table is presented as an overview of the YottaDB routine generation process, and as a comparison of the available methods. More complete information on each of the steps can be found in the following parts of this manual set.
 
-* Debugging routines: `Chapter 4: “Operating and Debugging in Direct Mode” <https://docs.yottadb.com/ProgrammersGuide/opdebug.html>`_.
-* Defining environment variables: `“Defining Environment Variables” <https://docs.yottadb.com/ProgrammersGuide/devcycle.html#defining-environment-variables>`_.
-* Defining/creating Global Directories:`“Preparing the Database” <https://docs.yottadb.com/ProgrammersGuide/devcycle.html#preparing-the-database>`_ and the Administration and Operations Guide, `"Global Directory Editor" <https://docs.yottadb.com/AdminOpsGuide/gde.html>`_ and `"MUPIP" <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html>`_ chapters.
-* Creating/editing routines: `“Creating and Editing a Source Program” <https://docs.yottadb.com/ProgrammersGuide/devcycle.html#creating-and-editing-a-source-program>`_.
-* Compiling routines: `“Compiling a Source Program” <https://docs.yottadb.com/ProgrammersGuide/devcycle.html#compiling-a-source-program>`_.
-* Executing routines: `“Executing a Source Program” <https://docs.yottadb.com/ProgrammersGuide/devcycle.html#executing-a-source-program>`_.
+* Debugging routines: `Chapter 4: “Operating and Debugging in Direct Mode” <./opdebug.html>`_.
+* Defining environment variables: `“Defining Environment Variables” <./devcycle.html#defining-environment-variables>`_.
+* Defining/creating Global Directories:`“Preparing the Database” <./devcycle.html#preparing-the-database>`_ and the Administration and Operations Guide, `"Global Directory Editor" <https://docs.yottadb.com/AdminOpsGuide/gde.html>`_ and `"MUPIP" <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html>`_ chapters.
+* Creating/editing routines: `“Creating and Editing a Source Program” <./devcycle.html#creating-and-editing-a-source-program>`_.
+* Compiling routines: `“Compiling a Source Program” <./devcycle.html#compiling-a-source-program>`_.
+* Executing routines: `“Executing a Source Program” <./devcycle.html#executing-a-source-program>`_.
 
 ---------------------------------
 Defining Environment Variables
@@ -199,7 +199,7 @@ The following is an example of ydb_routines definition:
 
 This specifies that YottaDB search for a routine first in the current directory (.), then in the distribution directory (which is identified by the environment variable ydb_dist). The distribution directory is included in the list because it contains the percent routines. You will probably want the search list to contain these two items at a minimum. In addition, you may want to add directories of your own.
 
-For additional information about how YottaDB uses the routine search list, see `“$ZROutines” <https://docs.yottadb.com/ProgrammersGuide/isv.html#zroutines>`_.
+For additional information about how YottaDB uses the routine search list, see `“$ZROutines” <./isv.html#zroutines>`_.
 
 ++++++++++++++++
 Editor
@@ -375,7 +375,7 @@ When the program is very simple (and its lines do not need revision after they a
 Editing from YottaDB
 +++++++++++++++++++++++++
 
-If you focus on program development outside the YottaDB environment, skip this section and continue with the section `"Editing from the Shell" <https://docs.yottadb.com/ProgrammersGuide/devcycle.html#editing-from-the-shell>`_.
+If you focus on program development outside the YottaDB environment, skip this section and continue with the section `"Editing from the Shell" <./devcycle.html#editing-from-the-shell>`_.
 
 Invoke Direct Mode to create and edit a source program in YottaDB. At the YDB> prompt, invoke the editor by typing:
 
@@ -406,7 +406,7 @@ Where:
 * An element of the expression contains an environment variable evaluating to a directory specification.
 * If $ZROUTINES contains an environment variable that evaluates to a list, YottaDB uses the first name in that list.
 
-For more information on $ZROUTINES, see `Chapter 8: “Intrinsic Special Variables” <https://docs.yottadb.com/ProgrammersGuide/isv.html>`_.
+For more information on $ZROUTINES, see `Chapter 8: “Intrinsic Special Variables” <./isv.html>`_.
 
 +++++++++++++++++++++++++
 Editing from the Shell
@@ -425,13 +425,13 @@ The vi command initiates an editing session for payroll.m from the shell prompt.
 Compiling a Source Program
 ----------------------------
 
-If you wish to focus on program development outside the YottaDB environment, skip the next section and continue with the section `"Compiling from the Shell" <https://docs.yottadb.com/ProgrammersGuide/devcycle.html#compiling-from-the-shell>`_.
+If you wish to focus on program development outside the YottaDB environment, skip the next section and continue with the section `"Compiling from the Shell" <./devcycle.html#compiling-from-the-shell>`_.
 
 YottaDB compiles M source code files and produces object files for complete integration into the UNIX enviroment. The object modules have the same name as the compiled M source file with an .o file extension, unless otherwise specified. The object files contain machine instructions and information necessary to connect the routine with other routines, and map it into memory. An M routine source file must be compiled after it is created or modified. You can compile explicitly with the ZLINK command or implicitly with auto-ZLINK. At the shell command line, compile by issuing the mumps command.
 
 The compiler checks M code for syntax errors and displays error messages on the terminal, when processing is complete. Each error message provides the source line in error with an indicator pointing to the place on the line where the error is occurring. For a list and description of the compiler error messages, refer to the `Messages and Recovery Procedures Reference Manual <https://docs.yottadb.com/MessageRecovery/index.html>`_.
 
-You can generate a listing file containing the compile results by including the -list qualifier as a modifier to the argument to the ZLINK command in Direct Mode. This can also be done by redirecting the compiler messages to a file by adding >filename 2>&1 to the mumps command when compiling a program from the shell. See `“Compiling from the Shell” <https://docs.yottadb.com/ProgrammersGuide/devcycle.html#compiling-from-the-shell>`_ for an explanation of the M command describing -list, and other valid qualifiers for the M and ZLINK commands.
+You can generate a listing file containing the compile results by including the -list qualifier as a modifier to the argument to the ZLINK command in Direct Mode. This can also be done by redirecting the compiler messages to a file by adding >filename 2>&1 to the mumps command when compiling a program from the shell. See `“Compiling from the Shell” <./devcycle.html#compiling-from-the-shell>`_ for an explanation of the M command describing -list, and other valid qualifiers for the M and ZLINK commands.
 
 The compiler stops processing a routine line when it detects an error on that line. Under most conditions the compiler continues processing the remaining routine lines. This allows the compiler to produce a more complete error analysis of the routine and to generate code that may have valid executable paths. The compiler does not report multiple syntax errors on the same line. When it detects more than 127 syntax errors in a source file, the compiler ceases to process the file.
 
@@ -460,7 +460,7 @@ When a command refers to an M routine that is not part of the current image, Yot
 
 By using the DO command, you implicitly instruct YottaDB to compile, link, and execute the program. With this method, you can test your routine interactively.
 
-For complete descriptions of ZLINK and auto-ZLINK, see `Chapter 6: “Commands” <https://docs.yottadb.com/ProgrammersGuide/commands.html>`_ .
+For complete descriptions of ZLINK and auto-ZLINK, see `Chapter 6: “Commands” <./commands.html>`_ .
 
 Example:
 
@@ -483,7 +483,7 @@ Example:
 
 The first ZLINK compiles payroll.m if it cannot locate payroll, or if it finds that payroll.m has a more recent date/time stamp than payroll.o. The second ZLINK always compiles taxes.m producing a new taxes.o.
 
-For more information on debugging in Direct Mode, see `Chapter 4: “Operating and Debugging in Direct Mode” <https://docs.yottadb.com/ProgrammersGuide/opdebug.html>`_.
+For more information on debugging in Direct Mode, see `Chapter 4: “Operating and Debugging in Direct Mode” <./opdebug.html>`_.
 
 +++++++++++++++++++++++++++++++++
 Compiling from the Shell
@@ -732,7 +732,7 @@ When the argument to a ZLINK command includes a pathname, $ZSOURCE maintains tha
 
 Once you use the ZEDIT or ZLINK commands, $ZSOURCE can contain a partial file specification. The partial file specification can be a directory path (full or relative), a file name, and a file extension. You can set $ZSOURCE with an M SET command. A ZLINK without an argument is equivalent to ZLINK $ZSOURCE.
 
-For additional information on $ZSOURCE and $ZROUTINES, refer to `Chapter 8: “Intrinsic Special Variables” <https://docs.yottadb.com/ProgrammersGuide/isv.html>`_.
+For additional information on $ZSOURCE and $ZROUTINES, refer to `Chapter 8: “Intrinsic Special Variables” <./isv.html>`_.
 
 Example:
 
@@ -751,7 +751,7 @@ When the file being linked includes an explicit directory, ZLINK and auto-ZLINK 
 
 A subsequent ZLINK searching for this object file will never find the object file in the specified directory unless the directory is added to the search path in $ZROUTINES, or the object file is moved to another directory already in the search path.
 
-ZLINK cannot change a currently active routine, (e.g., a routine displayed in a ZSHOW "S" of the stack). ZLINK a currently active routine by first removing it from the M stack, using ZGOTO, or one or more QUITs. For additional information on the functionality of ZGOTO and ZSHOW, see their entries in `Chapter 6: “Commands” <https://docs.yottadb.com/ProgrammersGuide/commands.html>`_.
+ZLINK cannot change a currently active routine, (e.g., a routine displayed in a ZSHOW "S" of the stack). ZLINK a currently active routine by first removing it from the M stack, using ZGOTO, or one or more QUITs. For additional information on the functionality of ZGOTO and ZSHOW, see their entries in `Chapter 6: “Commands” <./commands.html>`_.
 
 To maintain compatibility with other editions of YottaDB that do not permit the percent sign (%) in a file name, YottaDB uses an underscore (_) in place of the percent in the file name.
 
@@ -806,4 +806,4 @@ Processing Errors from Direct Mode and Shell
 |                            |                                                                                                                                                     |
 +----------------------------+---------------------------------------------------------------------------+-------------------------------------------------------------------------+
 
-For more information, see `Chapter 13: “Error Processing” <https://docs.yottadb.com/ProgrammersGuide/errproc.html>`_.
+For more information, see `Chapter 13: “Error Processing” <./errproc.html>`_.

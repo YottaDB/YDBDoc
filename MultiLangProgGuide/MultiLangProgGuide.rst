@@ -238,7 +238,7 @@ become apparent:
   order (i.e., "Capital" always precedes "Population").
 - Subscripts are sequences of bytes from 0 bytes (the null or empty
   string, "") to 1048576 bytes (1MiB). When a subscript is a
-  `canonical number <https://docs.yottadb.com/MultiLangProgGuide/programmingnotes.html#canonical-numbers>`_, YottaDB internally converts it to, and stores
+  `canonical number <./programmingnotes.html#canonical-numbers>`_, YottaDB internally converts it to, and stores
   it as, a number. When ordering subscripts:
 
   - Empty string subscripts precede all numeric subscripts. By
@@ -267,7 +267,7 @@ Like subscripts, values are sequences of bytes, except that ordering
 of values is not meaningful unlike ordering of subscripts. YottaDB
 automatically converts between numbers and strings, depending on the
 type of operand required by an operator or argument required by a
-function (see `Numeric Considerations <https://docs.yottadb.com/MultiLangProgGuide/programmingnotes.html#numeric-considerations>`_).
+function (see `Numeric Considerations <./programmingnotes.html#numeric-considerations>`_).
 
 This means that if an application were to store the current capital of
 Thailand as :code:`Capital("Thailand","current")="Bangkok"` instead of
@@ -319,6 +319,12 @@ strongly recommends that applications use different names for local
 and global variables, except in the special case where a local
 variable is an in-process cached copy of a corresponding global
 variable.*
+
+.. note:: As global variables that start with :code:`^%Y` are used by the
+	  `%YGBLSTAT() <https://docs.yottadb.com/ProgrammersGuide/utility.html#ygblstat>`_
+	  utility program, and global variables that start with
+	  :code:`^%y` are reserved for use by YottaDB,
+	  applications should not use them.
 
 Global Directories
 ==================
@@ -418,9 +424,9 @@ Application code can read the intrinsic special variable
 transaction. :code:`$tlevel>0` means that it is inside a transaction,
 and :code:`$tlevel>1` means that it is inside a nested
 transaction. Note that a transaction can be started explicitly, e.g.,
-by calling `ydb_tp_s() or ydb_tp_st() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-tp-s-ydb-tp-st>`_,or implicitly by a trigger
-resulting from a `ydb_delete_s(), ydb_delete_st() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-delete-s-ydb-delete-st>`_, 
-`ydb_set_s() or ydb_set_st() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-set-s-ydb-set-st>`_.
+by calling `ydb_tp_s() or ydb_tp_st() <./cprogram.html#ydb-tp-s-ydb-tp-st>`_,or implicitly by a trigger
+resulting from a `ydb_delete_s(), ydb_delete_st() <./cprogram.html#ydb-delete-s-ydb-delete-st>`_, 
+`ydb_set_s() or ydb_set_st() <./cprogram.html#ydb-set-s-ydb-set-st>`_.
 
 ---------
 $trestart
@@ -455,7 +461,7 @@ Processing`_). :code:`$zmaxtptime` is initialized at process startup from
 the environment variable :code:`ydb_maxtptime`, with values greater than
 60 seconds truncated to 60 seconds. In the unlikely event that an
 application legitimately needs a timeout greater than 60 seconds, use
-`ydb_set_s() or ydb_set_st() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-set-s-ydb-set-st>`_ to set it.
+`ydb_set_s() or ydb_set_st() <./cprogram.html#ydb-set-s-ydb-set-st>`_ to set it.
 
 --------
 $zstatus
@@ -463,7 +469,7 @@ $zstatus
 
 :code:`$zstatus` provides additional details of the last
 error. Application code can retrieve :code:`$zstatus` using
-`ydb_get_s() or ydb_get_st() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-get-s-ydb-get-st>`_. :code:`$zstatus` consists of
+`ydb_get_s() or ydb_get_st() <./cprogram.html#ydb-get-s-ydb-get-st>`_. :code:`$zstatus` consists of
 several comma-separated substrings.
 
 - The first is an error number.
@@ -474,8 +480,8 @@ several comma-separated substrings.
 Note that a race condition exists for a multi-threaded application:
 after a call that returns an error, it is possible for another call
 from a different thread to perturb the value of :code:`$zstatus`. Use
-the `errstr <https://docs.yottadb.com/MultiLangProgGuide/programmingnotes.html#errstr>`_ parameter 
-discussed in `Threads <https://docs.yottadb.com/MultiLangProgGuide/programmingnotes.html#threads>`_ to get the correct
+the `errstr <./programmingnotes.html#errstr>`_ parameter 
+discussed in `Threads <./programmingnotes.html#threads>`_ to get the correct
 :code:`$zstatus` in a multi-threaded application.
 
 ----------
@@ -542,7 +548,7 @@ optimistic concurrency control:
 
 In YottaDB's API for transaction processing, an application packages
 the logic for a transaction into a function, passing the function to
-the `ydb_tp_s() or ydb_tp_st() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-tp-s-ydb-tp-st>`_ functions. YottaDB then calls that
+the `ydb_tp_s() or ydb_tp_st() <./cprogram.html#ydb-tp-s-ydb-tp-st>`_ functions. YottaDB then calls that
 function.
 
 - If the function returns a :CODE:`YDB_OK`, YottaDB attempts to commit
@@ -550,19 +556,19 @@ function.
   the called function returns a :CODE:`YDB_TP_RESTART` return code, it
   calls the function again.
 - If the function returns a :CODE:`YDB_TP_ROLLBACK`, `ydb_tp_s() or
-  ydb_tp_st() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-tp-s-ydb-tp-st>`_ return to the caller with that return code after
+  ydb_tp_st() <./cprogram.html#ydb-tp-s-ydb-tp-st>`_ return to the caller with that return code after
   discarding the uncommitted database updates and releasing any locks
   acquired within the transaction.
 - To protect applications against poorly coded transactions, if a
   transaction takes longer than the number of seconds specified by the
   intrinsic special variable :code:`$zmaxtptime`, YottaDB aborts the
-  transaction and the `ydb_tp_s() or ydb_tp_st() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-tp-s-ydb-tp-st>`_ functions return
+  transaction and the `ydb_tp_s() or ydb_tp_st() <./cprogram.html#ydb-tp-s-ydb-tp-st>`_ functions return
   the :CODE:`YDB_ERR_TPTIMEOUT` error.
 
-.. note:: If the transaction logic receives a :code:`YDB_TP_RESTART` or :code:`YDB_TP_ROLLBACK` from a YottaDB function that it calls, it *must* return that value to `ydb_tp_s() or ydb_tp_st() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-tp-s-ydb-tp-st>`_. Failure to do so could result in application level data inconsistencies and hard to debug application code.
+.. note:: If the transaction logic receives a :code:`YDB_TP_RESTART` or :code:`YDB_TP_ROLLBACK` from a YottaDB function that it calls, it *must* return that value to `ydb_tp_s() or ydb_tp_st() <./cprogram.html#ydb-tp-s-ydb-tp-st>`_. Failure to do so could result in application level data inconsistencies and hard to debug application code.
 
-Sections `Threads <https://docs.yottadb.com/MultiLangProgGuide/programmingnotes.html#threads>`_ and 
-`Threads and Transaction Processing <https://docs.yottadb.com/MultiLangProgGuide/programmingnotes.html#threads-and-transaction-processing>`_ provide
+Sections `Threads <./programmingnotes.html#threads>`_ and 
+`Threads and Transaction Processing <./programmingnotes.html#threads-and-transaction-processing>`_ provide
 important information pertinent to transaction processing in a
 multi-threaded application.
 
@@ -572,7 +578,7 @@ Nested Transactions
 
 YottaDB allows transactions to be nested. In other words, code
 executing within a transaction may itself call `ydb_tp_s() or
-ydb_tp_st() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-tp-s-ydb-tp-st>`_. Although ACID properties are only meaningful at the
+ydb_tp_st() <./cprogram.html#ydb-tp-s-ydb-tp-st>`_. Although ACID properties are only meaningful at the
 outermost level, nested transactions are nevertheless useful. For
 example:
 
@@ -649,7 +655,7 @@ is possible to set timeouts that are long enough that users may
 perceive applications to be hung.
 
 Since YottaDB resources such as locks belong to a process rather than
-a thread within a process (see discussion under `Threads <https://docs.yottadb.com/MultiLangProgGuide/programmingnotes.html#threads>`_), design
+a thread within a process (see discussion under `Threads <./programmingnotes.html#threads>`_), design
 rules to avoid deadlocks (such as acquiring locks in a predefined
 order that all processes must respect) must be respected by all
 threads in a process (or for a language such as Go, by all Goroutines

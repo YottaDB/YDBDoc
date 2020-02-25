@@ -15,7 +15,7 @@ Alternative collation sequences (or an alternative ordering of strings) can be d
 
 M has defined pattern classes that serve as arguments to the pattern match operator. YottaDB supports user definition of additional pattern classes as well as redefinition of the standard pattern classes. Specific patterns are defined in a text file that is pointed to by an environment variable. Pattern classes may be re-defined dynamically. The details of defining these pattern classes and the environment variables are described in the section called “Matching Alternative Patterns”.
 
-For some languages (such as Chinese), the ordering of strings according to Unicode code-points (character values) may or may not be the linguistically or culturally correct ordering. Supporting applications in such languages requires the development of collation modules - YottaDB natively supports M collation, but does not include pre-built collation modules for any specific natural language. Therefore, applications that use characters in Unicode may need to implement their own collation functions. For more information on developing a collation module for Unicode, refer to `“Implementing an Alternative Collation Sequence for Unicode” <https://docs.yottadb.com/ProgrammersGuide/internatn.html#implementing-an-alternative-collation-sequence-for-unicode>`_.
+For some languages (such as Chinese), the ordering of strings according to Unicode code-points (character values) may or may not be the linguistically or culturally correct ordering. Supporting applications in such languages requires the development of collation modules - YottaDB natively supports M collation, but does not include pre-built collation modules for any specific natural language. Therefore, applications that use characters in Unicode may need to implement their own collation functions. For more information on developing a collation module for Unicode, refer to `“Implementing an Alternative Collation Sequence for Unicode” <./internatn.html#implementing-an-alternative-collation-sequence-for-unicode>`_.
 
 -----------------------------------
 Collation Sequence Definitions
@@ -108,8 +108,8 @@ This piece of code illustrates $$set^LCLCOL used as an extrinsic. It would write
 
 set^%LCLCOL(n,ncol) determines the null collation type to be used with the collation type n. 
 
-* If the truth value of ncol is FALSE(0), local variables use the YottaDB standard null collation.
-* If the truth value of ncol is TRUE(1), local variables use the M standard null collation.
+* If the truth value of ncol is TRUE(1), local variables use standard null collation.
+* If the truth value of ncol is FALSE(0), local variables use historical null collation.
 
 With set^%LCLCOL(,ncol), the null collation order can be changed while keeping the alternate collation order unchanged. If subscripted local variables exist, the null collation order cannot be changed. In this case, YottaDB issues YDB-E-COLLDATAEXISTS.
 

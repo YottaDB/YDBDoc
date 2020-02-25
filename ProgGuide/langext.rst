@@ -9,7 +9,7 @@
 .. contents::
    :depth: 2
 
-In addition to providing all of the ANSI standard M features, YottaDB offers a number of language extensions. In this chapter, the language extensions are grouped by intended function to demonstrate their relationships to each other and to the programming process. A summary table is provided in each section. For a full description of a particular extension, refer to its complete entry in the `“Commands” <https://docs.yottadb.com/ProgrammersGuide/commands.html>`_, `“Functions” <https://docs.yottadb.com/ProgrammersGuide/functions.html>`_, or `“Intrinsic Special Variables” <https://docs.yottadb.com/ProgrammersGuide/isv.html>`_ chapters.
+In addition to providing all of the ANSI standard M features, YottaDB offers a number of language extensions. In this chapter, the language extensions are grouped by intended function to demonstrate their relationships to each other and to the programming process. A summary table is provided in each section. For a full description of a particular extension, refer to its complete entry in the `“Commands” <./commands.html>`_, `“Functions” <./functions.html>`_, or `“Intrinsic Special Variables” <./isv.html>`_ chapters.
 
 The following sections describe the YottaDB language extensions listed below:
 
@@ -193,9 +193,9 @@ The following table summarizes the YottaDB language extensions for journaling.
 Extensions for Additional Capability
 ---------------------------------------
 
-For ways to adjust some process operating characteristics, see the command description `“View” <https://docs.yottadb.com/ProgrammersGuide/commands.html#view>`_. For ways to get information about certain process operating characteristics, see the function description `“$View()” <https://docs.yottadb.com/ProgrammersGuide/functions.html#view>`_.
+For ways to adjust some process operating characteristics, see the command description `“View” <./commands.html#view>`_. For ways to get information about certain process operating characteristics, see the function description `“$View()” <./functions.html#view>`_.
 
-In YottaDB, support of environment specification for global names and resource names is possible. It is possible to excercise user code to customize interpretation of the environment specification. See `Chapter 5: “General Language Features of M” <https://docs.yottadb.com/ProgrammersGuide/langfeat.html>`_ for details.
+In YottaDB, support of environment specification for global names and resource names is possible. It is possible to excercise user code to customize interpretation of the environment specification. See `Chapter 5: “General Language Features of M” <./langfeat.html>`_ for details.
 
 The following table summarizes YottaDB extensions that increase general capability.
 
@@ -259,7 +259,7 @@ Device Handling Extensions
 
 In the earlier versions of the M standard, device behavior was defined as a framework, with the details left to the implementations. YottaDB supports Terminals, Sequential Disks, FIFOs, PIPEs and a Null device under this model. Subsequently device mnemonicspaces were added to the standard and some of them defined. YottaDB supports the SOCKET device under this model with some extensions identified with controlmnemonics starting with the letter "Z."
 
-For details of YottaDB device handling see `Chapter 9: “Input/Output Processing” <https://docs.yottadb.com/ProgrammersGuide/ioproc.html>`_.
+For details of YottaDB device handling see `Chapter 9: “Input/Output Processing” <./ioproc.html>`_.
 
 ---------------------------
 Alias Variable Extensions
@@ -293,40 +293,40 @@ The following table summarizes Alias Variables extensions.
 +----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Extension            | Explanation                                                                                                                                                              |
 +======================+==========================================================================================================================================================================+
-| Set *                | Explicitly creates an alias. For more information, refer to the description of SET * in `Set <https://docs.yottadb.com/ProgrammersGuide/commands.html#set>`_             |
+| Set *                | Explicitly creates an alias. For more information, refer to the description of SET * in `Set <./commands.html#set>`_                                                     |
 +----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Kill *               | Removes the association between its arguments, and any associated data cells. For more information, refer to the description of KILL * in                                |
-|                      | `Kill <https://docs.yottadb.com/ProgrammersGuide/commands.html#kill>`_                                                                                                   |
+|                      | `Kill <./commands.html#kill>`_                                                                                                                                           |
 +----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Quit *               | When QUIT * terminates an extrinsic function or an extrinsic special variable, it always returns an alias container. For more information, refer to the description of   |
-|                      | QUIT * in `Quit <https://docs.yottadb.com/ProgrammersGuide/commands.html#quit>`_.                                                                                        |
+|                      | QUIT * in `Quit <./commands.html#quit>`_.                                                                                                                                |
 +----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | ZWrite / ZSHow "V"   | Produces Alias Variables format output. For more information, refer to                                                                                                   |
-|                      | `ZWRITE Format for Alias Variables <https://docs.yottadb.com/ProgrammersGuide/commands.html#zwrite-format-for-alias-variables>`_                                         |
+|                      | `ZWRITE Format for Alias Variables <./commands.html#zwrite-format-for-alias-variables>`_                                                                                 |
 +----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | New                  | For the scope of the NEW, a NEW of a name suspends its alias association. For more information, refer to                                                                 |
-|                      | `New <https://docs.yottadb.com/ProgrammersGuide/commands.html#new>`_.                                                                                                    |
+|                      | `New <./commands.html#new>`_.                                                                                                                                            |
 +----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Exclusive New        | Create a scope in which some associations between an lname or an lvn and an array may be invisible. For more information, refer to                                       |
-|                      | `New <https://docs.yottadb.com/ProgrammersGuide/commands.html#new>`_.                                                                                                    |
+|                      | `New <./commands.html#new>`_.                                                                                                                                            |
 +----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | $ZAHandle()          | returns a unique identifier (handle) for the array associated with an lname or an alias container; for an subscripted lvn that is not an alias container, it returns an  |
-|                      | empty string. For more information, refer to `$ZAHandle() <https://docs.yottadb.com/ProgrammersGuide/functions.html#zahandle>`_.                                         |
+|                      | empty string. For more information, refer to `$ZAHandle() <./functions.html#zahandle>`_.                                                                                 |
 +----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | $ZDATA()             | Extends $DATA() to reflect the current alias state of the lvn or lname argument in order to identify alias and alias container variables. For more information, refer to |
-|                      | `$ZDATA() <https://docs.yottadb.com/ProgrammersGuide/functions.html#id7>`_.                                                                                              |
+|                      | `$ZDATA() <./functions.html#id7>`_.                                                                                                                                      |
 +----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | View and $View()     | VIEW provides LV_GCOL, LV_REHASH, and STP_GCOL to perform garbage collection and local variable lookup table reorganization operations which normally happen             |
 |                      | automatically at appropriate times. For more information on the keywords of the VIEW command, refer to                                                                   |
-|                      | `Key Words in VIEW Command <https://docs.yottadb.com/ProgrammersGuide/commands.html#key-words-in-view-command>`_.                                                        |
+|                      | `Key Words in VIEW Command <./commands.html#key-words-in-view-command>`_.                                                                                                |
 |                      |                                                                                                                                                                          |
 |                      | $VIEW() provides LV_CREF, LV_GCOL, and LV_REF. YottaDB uses the LC_CREF, LV_GCOL, LV_REF keywords in testing and is documenting them to ensure completeness in           |
 |                      | product documentation. They may (or may not) be useful during application development for debugging or performance testing implementation alternatives. For more         |
-|                      | information the keywords of $VIEW(), refer to `Argument Keywords of $VIEW() <https://docs.yottadb.com/ProgrammersGuide/functions.html#argument-keywords-of-view>`_.      |
+|                      | information the keywords of $VIEW(), refer to `Argument Keywords of $VIEW() <./functions.html#argument-keywords-of-view>`_.                                              |
 +----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | TSTART, RESTART, and | TSTART command can optionally list names whose arrays are restored on a transaction RESTART. If any of these are alias variables or have nodes which are alias container |
 | ROLLBACK             | variables, their associations are also restored on transaction RESTART. For more information, refer to                                                                   |
-|                      | Chapter 6: `Commands <https://docs.yottadb.com/ProgrammersGuide/commands.html>`_.                                                                                        |
+|                      | Chapter 6: `Commands <./commands.html>`_.                                                                                                                                |
 +----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
 +++++++++++++++++++++
@@ -386,7 +386,7 @@ ZWRITE as applied to local variables and ZSHOW "V" are conceptually similar, wit
 * ZWRITE allows the use of patterns to specify the variables and subscripts to display, whereas ZSHOW "V" applies to all local variables. 
 * ZSHOW "V" optionally allows the output to be directed to a global or local variable, whereas ZWRITE always directs its output to the current output device.
 
-For more information on the ZWRITE/ZSHOW "V" format for alias variables, refer to `ZWRITE Format for Alias Variables <https://docs.yottadb.com/ProgrammersGuide/commands.html#zwrite-format-for-alias-variables>`_.
+For more information on the ZWRITE/ZSHOW "V" format for alias variables, refer to `ZWRITE Format for Alias Variables <./commands.html#zwrite-format-for-alias-variables>`_.
 
 ++++++++++++++++++++++++
 Pass By Reference
@@ -786,86 +786,86 @@ The following table summarizes YottaDB Unicode support.
 +=============================+============================================================================================================================================================================================+
 | $ASCII()                    | IN UTF-8 mode, the $ASCII() function returns the integer Unicode code-point value of a character in the given string. Note that the name $ASCII() is somewhat anomalous for Unicode data   |
 |                             | but that name is the logical extension of the function from M mode to UTF-8 mode. For more information and usage examples, refer to                                                        |
-|                             | `$ASCII() <https://docs.yottadb.com/ProgrammersGuide/functions.html#ascii>`_.                                                                                                              |
+|                             | `$ASCII() <./functions.html#ascii>`_.                                                                                                                                                      |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | $Char()                     | In UTF-8 mode, $CHAR() returns a string composed of characters represented by the integer equivalents of the Unicode code-points specified in its argument(s). For more information and    |
-|                             | usage examples, refer to `$Char() <https://docs.yottadb.com/ProgrammersGuide/functions.html#char>`_.                                                                                       |
+|                             | usage examples, refer to `$Char() <./functions.html#char>`_.                                                                                                                               |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | $Extract()                  | The $EXTRACT() function returns a substring of a given string. For more information and usage examples, refer to                                                                           |
-|                             | `$Extract() <https://docs.yottadb.com/ProgrammersGuide/functions.html#extract>`_.                                                                                                          |
+|                             | `$Extract() <./functions.html#extract>`_.                                                                                                                                                  |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | $Find()                     | The $FIND() function returns an integer character position that locates the occurrence of a substring within a string. For more information and usage examples, refer to                   |
-|                             | `$Find() <https://docs.yottadb.com/ProgrammersGuide/functions.html#find>`_.                                                                                                                |
+|                             | `$Find() <./functions.html#find>`_.                                                                                                                                                        |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| $Justify()                  | The $JUSTIFY() function returns a formatted string. For more information and usage examples, refer to `$Justify() <https://docs.yottadb.com/ProgrammersGuide/functions.html#id1>`_.        |
+| $Justify()                  | The $JUSTIFY() function returns a formatted string. For more information and usage examples, refer to `$Justify() <./functions.html#id1>`_.                                                |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | $Length()                   | The $LENGTH() function returns the length of a string measured in characters, or in "pieces" separated by a delimiter specified by its optional second argument. For more information and  |
-|                             | usage examples, refer to `$Length() <https://docs.yottadb.com/ProgrammersGuide/functions.html#length>`_.                                                                                   |
+|                             | usage examples, refer to `$Length() <./functions.html#length>`_.                                                                                                                           |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | $Piece()                    | The $PIECE() function returns a substring delimited by a specified string delimiter made up of one or more characters. For more information and usage examples, refer to                   |
-|                             | `$Piece() <https://docs.yottadb.com/ProgrammersGuide/functions.html#piece>`_.                                                                                                              |
+|                             | `$Piece() <./functions.html#piece>`_.                                                                                                                                                      |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | $TRanslate()                | The $TRANSLATE() function returns a string that results from replacing or dropping characters in the first of its arguments as specified by the patterns of its other arguments. For more  |
-|                             | information and usage examples, refer to `$TRanslate() <https://docs.yottadb.com/ProgrammersGuide/functions.html#translate>`_.                                                             |
+|                             | information and usage examples, refer to `$TRanslate() <./functions.html#translate>`_.                                                                                                     |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | $X                          | For UTF-8 mode and TRM and SD output, $X increases by the display-columns (width in glyphs) of a given string that is written to the current device. For more information and usage        |
-|                             | examples, refer to `$X <https://docs.yottadb.com/ProgrammersGuide/isv.html#x>`_.                                                                                                           |
+|                             | examples, refer to `$X <./isv.html#x>`_.                                                                                                                                                   |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | $ZASCII()                   | The $ZASCII() function returns the numeric byte value (0 through 255) of a given sequence of octets (8-bit bytes). For more information and usage examples, refer to                       |
-|                             | `$ZAscii() <https://docs.yottadb.com/ProgrammersGuide/functions.html#zascii>`_.                                                                                                            |
+|                             | `$ZAscii() <./functions.html#zascii>`_.                                                                                                                                                    |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | $ZCHset                     | The read-only intrinsic special variable $ZCHSET takes its value from the environment variable ydb_chset. An application can obtain the character set used by a YottaDB process by the     |
 |                             | value of $ZCHSET. $ZCHSET can have only two values –"M", or "UTF-8" and it cannot appear on the left of an equal sign in the SET command. For more information and usage examples, refer to|
-|                             | `$ZCHset <https://docs.yottadb.com/ProgrammersGuide/isv.html#zchset>`_.                                                                                                                    |
+|                             | `$ZCHset <./isv.html#zchset>`_.                                                                                                                                                            |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | $ZCHar()                    | The $ZCHAR() function returns a byte sequence of one or more bytes corresponding to numeric byte value (0 through 255) specified in its argument(s). For more information and usage        |
-|                             | examples, refer to `$ZCHar() <https://docs.yottadb.com/ProgrammersGuide/functions.html#zchar>`_.                                                                                           |
+|                             | examples, refer to `$ZCHar() <./functions.html#zchar>`_.                                                                                                                                   |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | $ZCOnvert()                 | The $ZCONVERT() function returns its first argument as a string converted to a different encoding. The two argument form changes the encoding for case within a character set. The three   |
-|                             | argument form changes the encoding scheme. For more information and usage examples, refer to `$ZCOnvert() <https://docs.yottadb.com/ProgrammersGuide/functions.html#zconvert>`_.           |
+|                             | argument form changes the encoding scheme. For more information and usage examples, refer to `$ZCOnvert() <./functions.html#zconvert>`_.                                                   |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | $ZExtract()                 | The $ZEXTRACT() function returns a byte sequence of a given sequence of octets (8-bit bytes). For more information and usage examples, refer to                                            |
-|                             | `$ZExtract() <https://docs.yottadb.com/ProgrammersGuide/functions.html#zextract>`_.                                                                                                        |
+|                             | `$ZExtract() <./functions.html#zextract>`_.                                                                                                                                                |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | $ZFind()                    | The $ZFIND() function returns an integer byte position that locates the occurrence of a byte sequence within a sequence of octets(8-bit bytes). For more information and usage examples,   |
-|                             | refer to `$ZFind() <https://docs.yottadb.com/ProgrammersGuide/functions.html#zfind>`_.                                                                                                     |
+|                             | refer to `$ZFind() <./functions.html#zfind>`_.                                                                                                                                             |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | $ZJustify()                 | The $JUSTIFY() function returns a formatted and fixed length byte sequence. For more information and usage examples, refer to                                                              |
-|                             | `$ZJustify() <https://docs.yottadb.com/ProgrammersGuide/functions.html#zjustify>`_.                                                                                                        |
+|                             | `$ZJustify() <./functions.html#zjustify>`_.                                                                                                                                                |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | $ZLength()                  | The $ZLENGTH() function returns the length of a sequence of octets measured in bytes, or in "pieces" separated by a delimiter specified by its optional second argument. For more          |
-|                             | information and usage examples, refer to `$ZLength() <https://docs.yottadb.com/ProgrammersGuide/functions.html#zlength>`_.                                                                 |
+|                             | information and usage examples, refer to `$ZLength() <./functions.html#zlength>`_.                                                                                                         |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | $ZPATNumeric                | ZPATN[UMERIC] is a read-only intrinsic special variable that determines how YottaDB interprets the patcode N used in the pattern match operator. With $ZPATNUMERIC="UTF-8", the            |
 |                             | patcode N matches any numeric character as defined by Unicode. By default patcode N only matches the ASCII digits, which are the only digits which M actually treats as numerics. For more |
-|                             | information and usage examples, refer to `$ZPATNumeric <https://docs.yottadb.com/ProgrammersGuide/isv.html#zpatnumeric>`_.                                                                 |
+|                             | information and usage examples, refer to `$ZPATNumeric <./isv.html#zpatnumeric>`_.                                                                                                         |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | $ZPIece()                   | The $ZPIECE() function returns a sequence of bytes delimited by a specified byte sequence made up of one or more bytes. In M, $ZPIECE() typically returns a logical field from a logical   |
-|                             | record. For more information and usage examples, refer to `$ZPIece() <https://docs.yottadb.com/ProgrammersGuide/functions.html#zpiece>`_.                                                  |
+|                             | record. For more information and usage examples, refer to `$ZPIece() <./functions.html#zpiece>`_.                                                                                          |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | $ZPROMpt                    | $ZPROM[PT] contains a string value specifying the current Direct Mode prompt. By default, YDB> is the Direct Mode prompt. M routines can modify $ZPROMPT by means of a SET command.        |
 |                             | $ZPROMPT cannot exceed 31 bytes. If an attempt is made to assign $ZPROMPT to a longer string, YottaDB takes only the first 31 bytes and truncates the rest. With character set UTF-8       |
 |                             | specified, if the 31st byte is not the end of a valid UTF-8 character, YottaDB truncates the $ZPROMPT value at the end of last character that completely fits within the 31 byte           |
-|                             | limit. For more information and usage examples, refer to `$ZPROMpt <https://docs.yottadb.com/ProgrammersGuide/functions.html#zprompt>`_.                                                   |
+|                             | limit. For more information and usage examples, refer to `$ZPROMpt <./functions.html#zprompt>`_.                                                                                           |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | $ZSUBstr()                  | The $ZSUBSTR() function returns a properly encoded string from a sequence of bytes. For more information and usage examples, refer to                                                      |
-|                             | `$ZSUBstr() <https://docs.yottadb.com/ProgrammersGuide/functions.html#zsubstr>`_.                                                                                                          |
+|                             | `$ZSUBstr() <./functions.html#zsubstr>`_.                                                                                                                                                  |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | $ZTRanslate()               | The $ZTRANSLATE() function returns a byte sequence that results from replacing or dropping bytes in the first of its arguments as specified by the patterns of its other arguments.        |
 |                             | $ZTRANSLATE() provides a tool for tasks such as encryption. For more information and usage examples, refer to                                                                              |
-|                             | `$ZTRanslate() <https://docs.yottadb.com/ProgrammersGuide/functions.html#ztranslate>`_.                                                                                                    |
+|                             | `$ZTRanslate() <./functions.html#ztranslate>`_.                                                                                                                                            |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | $ZWidth()                   | The $ZWIDTH() function returns the numbers of columns required to display a given string on the screen or printer. For more information and usage examples, refer to                       |
-|                             | `$ZWidth() <https://docs.yottadb.com/ProgrammersGuide/functions.html#zwidth>`_.                                                                                                            |
+|                             | `$ZWidth() <./functions.html#zwidth>`_.                                                                                                                                                    |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | %HEX2UTF                    | The %HEX2UTF utility returns the encoded character string from the given bytestream in hexadecimal notation. This routine has entry points for both interactive and non-interactive use.   |
-|                             | For more information and usage examples, refer to `%HEX2UTF <https://docs.yottadb.com/ProgrammersGuide/utility.html#hex2utf>`_.                                                            |
+|                             | For more information and usage examples, refer to `%HEX2UTF <./utility.html#hex2utf>`_.                                                                                                    |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | %UTF2HEX                    | The %UTF2HEX utility returns the hexadecimal notation of the internal byte encoding of a UTF-8 encoded character string. This routine has entry points for both interactive and            |
-|                             | non-interactive use. For more information and usage examples, refer to `%UTF2HEX <https://docs.yottadb.com/ProgrammersGuide/utility.html#utf2hex>`_.                                       |
+|                             | non-interactive use. For more information and usage examples, refer to `%UTF2HEX <./utility.html#utf2hex>`_.                                                                               |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | [NO]WRAP (USE)              | Enables or disables automatic record termination. When the current record size ($X) reaches the maximum WIDTH and the device has WRAP enabled, YottaDB starts a new record, as if the      |
-|                             | routine had issued a WRITE ! command. For more information and usage examples, refer to `WRAP <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#wrap>`_.                              |
+|                             | routine had issued a WRITE ! command. For more information and usage examples, refer to `WRAP <./ioproc.html#wrap>`_.                                                                      |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | DSE and LKE                 | In UTF-8 mode, DSE and LKE accept characters in Unicode in all their command qualifiers that require file names, keys, or data (such as DSE -KEY, DSE -DATA and LKE -LOCK qualifiers).     |
 |                             | For more information, refer to the `LKE <https://docs.yottadb.com/AdminOpsGuide/mlocks.html>`_ and `DSE <https://docs.yottadb.com/AdminOpsGuide/dse.html>`_ chapter. For more information  |
@@ -880,12 +880,12 @@ The following table summarizes YottaDB Unicode support.
 |                             |                                                                                                                                                                                            | 
 |                             | In UTF-8 mode, the usual Unicode line terminators (U+000A (LF), U+0000D (CR), U+000D followed by U+000A (CRLF), U+0085 (NEL), U+000C (FF), U+2028 (LS) and U+2029 (PS)) are recognized. If |
 |                             | FILTER=CHARACTER is enabled, all of the terminators are recognized to maintain the values of $X and $Y. For more information, refer to                                                     |
-|                             | `FILTER <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#filter>`_.                                                                                                                  |
+|                             | `FILTER <./ioproc.html#filter>`_.                                                                                                                                                          |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Job                         | The Job command spawns a background process with the same environment as the M process doing the spawning. Therefore, if the parent process is operating in UTF-8 mode, the Job'd process  |
 |                             | also operates in UTF-8 mode. In the event that a background process must have a different mode from the parent, create a shell script to alter the environment as needed, and spawn it with|
 |                             | a ZSYstem command, for example, ZSYstem "/path/to/shell/script &", or start it as a PIPE device. For more information and UTF-8 mode examples, refer                                       |
-|                             | `Job <https://docs.yottadb.com/ProgrammersGuide/commands.html#job>`_.                                                                                                                      |
+|                             | `Job <./commands.html#job>`_.                                                                                                                                                              |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | MUPIP                       | MUPIP EXTRACT                                                                                                                                                                              |
 |                             |                                                                                                                                                                                            |
@@ -905,32 +905,32 @@ The following table summarizes YottaDB Unicode support.
 |                             | MUPIP EXTRACT and MUPIP LOAD, refer to the `General Database Management <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html>`_ chapter in the Administration and Operations Guide.         |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Open                        | In UTF-8 mode, the OPEN command recognizes ICHSET, OCHSET, and CHSET as three additional deviceparameters to determine the encoding of the input/output devices. For more information and  |
-|                             | usage examples, refer to `Open <https://docs.yottadb.com/ProgrammersGuide/commands.html#open>`_.                                                                                           |
+|                             | usage examples, refer to `Open <./commands.html#open>`_.                                                                                                                                   |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Pattern Match Operator (?)  | YottaDB allows the pattern string literals to contain the characters in Unicode. Additionally, YottaDB extends the M standard pattern codes (patcodes) A, C, N, U, L, P and E to           |
-|                             | the Unicode character set. For more information, refer to `Pattern Match Operator <https://docs.yottadb.com/ProgrammersGuide/langfeat.html#pattern-match-operator>`_ and                   |
-|                             | `$ZPATNumeric <https://docs.yottadb.com/ProgrammersGuide/isv.html#zpatnumeric>`_.                                                                                                          |
+|                             | the Unicode character set. For more information, refer to `Pattern Match Operator <./langfeat.html#pattern-match-operator>`_ and                                                           |
+|                             | `$ZPATNumeric <./isv.html#zpatnumeric>`_.                                                                                                                                                  |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Read                        | In UTF-8 mode, the READ command uses the character set value specified on the device OPEN as the character encoding of the input device. If character set "M" or "UTF-8" is specified, the |
 |                             | data is read with no transformation. If character set is "UTF-16", "UTF-16LE", or "UTF-16BE", the data is read with the specified encoding and transformed to UTF-8. If the READ command   |
 |                             | encounters an illegal character or a character outside the selected representation, it triggers a run-time error. The READ command recognizes all Unicode line terminators for non-FIXED   |
-|                             | devices. For more information and usage examples, refer to `Read <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#read>`_.                                                           |
+|                             | devices. For more information and usage examples, refer to `Read <./ioproc.html#read>`_.                                                                                                   |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Read #                      | When a number sign (#) and a non-zero integer expression immediately follow the variable name, the integer expression determines the maximum number of characters accepted as the input to |
 |                             | the READ command. In UTF-8 or UTF-16 modes, this can occur in the middle of a sequence of combining code-points (some of which are typically non-spacing). When this happens, any display  |
 |                             | on the input device, may not represent the characters returned by the fixed-length READ (READ #). For more information and usage examples, refer to                                        |
-|                             | `Read <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#read>`_.                                                                                                                      |
+|                             | `Read <./ioproc.html#read>`_.                                                                                                                                                              |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Read *                      | In UTF-8 or UTF-16 modes, the READ * command accepts one character in Unicode of input and puts the numeric code-point value for that character into the variable. For more information and|
-|                             | usage examples, refer to `Read <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#read>`_.                                                                                             |
+|                             | usage examples, refer to `Read <./ioproc.html#read>`_.                                                                                                                                     |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | View "[NO]BADCHAR"          | As an aid to migrating applications to Unicode, this UTF-8 mode VIEW command determines whether Unicode enabled functions trigger errors when they encounter illegal strings. For more     |
-|                             | information and usage examples, refer to `View <https://docs.yottadb.com/ProgrammersGuide/commands.html#id7>`_.                                                                            |
+|                             | information and usage examples, refer to `View <./commands.html#id7>`_.                                                                                                                    |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | User-defined Collation      | For some languages (such as Chinese), the ordering of strings according to Unicode code-points (character values) may not be the linguistically or culturally correct ordering. Supporting |
 |                             | applications in such languages requires development of collation modules - YottaDB natively supports M collation, but does not include pre-built collation modules for any specific        |
 |                             | natural language. Therefore, applications that use characters in Unicode may need to implement their own collation functions. For more information on developing a collation module for    |
-|                             | Unicode, refer to `Implementing an Alternative Collation Sequence for Unicode <https://docs.yottadb.com/ProgrammersGuide/internatn.html#id1>`_.                                            |
+|                             | Unicode, refer to `Implementing an Alternative Collation Sequence for Unicode <./internatn.html#id1>`_.                                                                                    |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Unicode Byte Order Marker   | When ICHSET is UTF-16, YottaDB uses BOM (U+FEFF) to automatically determine the endianess. For this to happen, the BOM must appear at the beginning of the file or data stream. If BOM     |
 | (BOM)                       | is not present, YottaDB assumes big endianess. SEEK or APPEND operations require specifying the endianess (UTF-16LE or UTF-16BE) because they do not go to the beginning of the file       |
@@ -945,21 +945,21 @@ The following table summarizes YottaDB Unicode support.
 |                             | write the BOM.                                                                                                                                                                             |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | WIDTH=intexpr (USE)         | In UTF-8 mode and TRM and SD output, the WIDTH deviceparameter specifies the display-columns and is used with $X to control the truncation and WRAPping of the visual representation of the|
-|                             | stream. For more information and usage examples, refer to `WIDTH <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#width>`_.                                                          |
+|                             | stream. For more information and usage examples, refer to `WIDTH <./ioproc.html#width>`_.                                                                                                  |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Write                       | In UTF-8 mode, the WRITE command uses the character set specified on the device OPEN as the character encoding of the output device. If character set specifies "M" or "UTF-8",            |
 |                             | YottaDB WRITEs the data with no transformation. If character set specifies "UTF-16", "UTF-16LE" or "UTF-16BE", the data is assumed to be encoded in UTF-8 and WRITE transforms it to       |
 |                             | the character encoding specified by the character set device parameter. For more information and usage examples, refer to                                                                  |
-|                             | `Write <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#write>`_.                                                                                                                    |
+|                             | `Write <./ioproc.html#write>`_.                                                                                                                                                            |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Write *                     | When the argument of a WRITE command consists of a leading asterisk (*) followed by an integer expression, the WRITE command outputs the character represented by the code-point value of  |
-|                             | that integer expression. For more information and usage examples, refer to `Write <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#write>`_.                                         |
+|                             | that integer expression. For more information and usage examples, refer to `Write <./ioproc.html#write>`_.                                                                                 |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | ZSHow                       | In UTF-8 mode, the ZSHOW command exhibits byte-oriented and display-oriented behavior as follows:                                                                                          |
 |                             |                                                                                                                                                                                            |
 |                             | - ZSHOW targeted to a device (ZSHOW "*") aligns the output according to the numbers of display columns specified by the WIDTH deviceparameter.                                             |
 |                             |                                                                                                                                                                                            |
-|                             | For more information and usage examples, refer to `ZSHOW Destination Variables <https://docs.yottadb.com/ProgrammersGuide/commands.html#zshow-destination-variables>`_.                    |
+|                             | For more information and usage examples, refer to `ZSHOW Destination Variables <./commands.html#zshow-destination-variables>`_.                                                            |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1079,7 +1079,7 @@ Note that the characters written to the output device are subject to the OCHSET 
 2. Each multi-byte non-graphic character (as classified by $ZCHSET) is written in $CHAR(nnnn) notation, where nnnn is the decimal character code (that is, code-point up to 1114111 if $ZCHSET="UTF-8" or up to 255 if $ZCHSET="M").
 3. If $ZCHSET="UTF-8" and a subscript or data contains a malformed UTF-8 byte sequence, ZWRITE treats each byte in the sequence as a separate malformed character. Each such byte is written in $ZCHAR(nn[,...]) notation, where each nn is the corresponding byte in the illegal UTF-8 byte sequence.
 
-Note that attempts to use ZWRITE output from a system as input to another system using a different character set may result in errors or not yield the same state as existed on the source system. Application developers can deal with this by defining and using one or more pattern tables that declare all non-ASCII characters (or any useful subset thereof) to be non-graphic. For more details on defining pattern tables, please refer to `"Pattern Code Definition" section of Chapter 12: “Internationalization” <https://docs.yottadb.com/ProgrammersGuide/internatn.html#pattern-code-definition>`_.
+Note that attempts to use ZWRITE output from a system as input to another system using a different character set may result in errors or not yield the same state as existed on the source system. Application developers can deal with this by defining and using one or more pattern tables that declare all non-ASCII characters (or any useful subset thereof) to be non-graphic. For more details on defining pattern tables, please refer to `"Pattern Code Definition" section of Chapter 12: “Internationalization” <./internatn.html#pattern-code-definition>`_.
 
 ~~~~~~~~~~~~
 Limitations

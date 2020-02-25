@@ -32,7 +32,7 @@ The format for the $ASCII function is:
 
 $ASCII() provides a means of examining non-graphic characters in a string. When used with $CHAR(), $ASCII() also provides a means to perform arithmetic operations on the codes associated with characters.
 
-$ZASCII() is the parallel function of $ASCII(). $ZASCII() interprets the string argument as a sequence of bytes (rather than a sequence of characters) and can perform all byte-oriented $ASCII() operations. For more information, refer to `$ZAscii() <https://docs.yottadb.com/ProgrammersGuide/functions.html#zascii>`_.
+$ZASCII() is the parallel function of $ASCII(). $ZASCII() interprets the string argument as a sequence of bytes (rather than a sequence of characters) and can perform all byte-oriented $ASCII() operations. For more information, refer to `$ZAscii() <./functions.html#zascii>`_.
 
 ++++++++++++++++++++
 Examples of ASCII()
@@ -76,7 +76,7 @@ The format for the $CHAR function is:
 * The integer expression(s) specify the codes of the character(s) $CHAR() returns.
 * The M standard does not restrict the number of arguments to $CHAR(). However, YottaDB does limit the number of arguments to a maximum of 254. $CHAR() provides a means of producing non-graphic characters, as such characters cannot appear directly within an M string literal. When used with $ASCII(), $CHAR() can also perform arithmetic operations on the codes associated with characters.
 * With VIEW "BADCHAR" enabled, $CHAR() produces a run-time error if any expression evaluates to a code-point value that is not a character in Unicode. YottaDB determines from ICU which characters are illegal.
-* $ZCHAR() is the parallel function of $CHAR(). $ZCHAR() returns a sequence of bytes (rather than a sequence of characters) and can perform all byte-oriented $CHAR() operations. For more information, refer to `$ZCHar() <https://docs.yottadb.com/ProgrammersGuide/functions.html#zchar>`_.
+* $ZCHAR() is the parallel function of $CHAR(). $ZCHAR() returns a sequence of bytes (rather than a sequence of characters) and can perform all byte-oriented $CHAR() operations. For more information, refer to `$ZCHar() <./functions.html#zchar>`_.
 
 ++++++++++++++++++++
 Examples of $CHAR()
@@ -126,7 +126,7 @@ The format for the $DATA function is:
 * If the variable has a value but no descendants, $DATA() returns 1.
 * If the variable has descendants but no value, $DATA() returns 10.
 * If the variable has a value and descendants, $DATA() returns 11.
-* $ZDATA() extends $DATA() to reflect the current alias state of the lvn or name argument to identify alias and alias container variables. For more information, refer to `$ZDATA() <https://docs.yottadb.com/ProgrammersGuide/functions.html#zdata>`_.
+* $ZDATA() extends $DATA() to reflect the current alias state of the lvn or name argument to identify alias and alias container variables. For more information, refer to `$ZDATA() <./functions.html#zdata>`_.
 
 The following table summarizes $DATA() return values.
 
@@ -197,9 +197,9 @@ The format for the $EXTRACT function is:
 
 $EXTRACT() provides a tool for manipulating strings based on character positions.
 
-For a mumps process started in UTF-mode, $EXTRACT interprets the string arguments as UTF-8 encoded. With VIEW "BADCHAR" enabled, $EXTRACT() produces a run-time error when it encounters a character in the reserved range of the Unicode® Standard, but it does not process the characters that fall after the span specified by the arguments. The parallel function of $EXTRACT() is $ZEXTRACT(). Use $ZEXTRACT() for byte-oriented operations. For more information, refer to `$ZExtract() <https://docs.yottadb.com/ProgrammersGuide/functions.html#zextract>`_.
+For a mumps process started in UTF-mode, $EXTRACT interprets the string arguments as UTF-8 encoded. With VIEW "BADCHAR" enabled, $EXTRACT() produces a run-time error when it encounters a character in the reserved range of the Unicode® Standard, but it does not process the characters that fall after the span specified by the arguments. The parallel function of $EXTRACT() is $ZEXTRACT(). Use $ZEXTRACT() for byte-oriented operations. For more information, refer to `$ZExtract() <./functions.html#zextract>`_.
 
-$EXTRACT() can be used on the left-hand side of the equal sign (=) of a SET command to set a substring of a string. This construct permits easy maintenance of individual pieces within a string. It can also be used to right justify a value padded with blank characters. For more information on SET $EXTRACT(), refer to `“Set” in the Commands chapter <https://docs.yottadb.com/ProgrammersGuide/commands.html#set>`_.
+$EXTRACT() can be used on the left-hand side of the equal sign (=) of a SET command to set a substring of a string. This construct permits easy maintenance of individual pieces within a string. It can also be used to right justify a value padded with blank characters. For more information on SET $EXTRACT(), refer to `“Set” in the Commands chapter <./commands.html#set>`_.
 
 ++++++++++++++++++++++
 Examples of $EXTRACT()
@@ -264,7 +264,7 @@ The format for the $FIND function is:
 * If $FIND() locates the substring, it returns the position after the last character of the substring. If the end of the substring coincides with the end of the string (expr1), it returns an integer equal to the length of the string plus one ($L(expr1)+1).
 * If $FIND() does not locate the substring, it returns zero (0).
 * For a process started in UTF-8 mode, $FIND() interprets the string arguments as UTF-8 encoded. With VIEW "BADCHAR" enabled, $FIND() produces a run-time error when it encounters a malformed character, but it does not process the characters that fall after the span specified by the arguments.
-* $ZFIND() is the Z equivalent function $FIND(). Irrespective of the settings of VIEW "BADCHAR" and $ZCHSET, $ZFIND() interprets argument as a sequence of bytes (rather than a sequence of characters) and can perform byte-oriented $FIND() operations.For more information, refer to `$ZFind() <https://docs.yottadb.com/ProgrammersGuide/functions.html#zfind>`_.
+* $ZFIND() is the Z equivalent function $FIND(). Irrespective of the settings of VIEW "BADCHAR" and $ZCHSET, $ZFIND() interprets argument as a sequence of bytes (rather than a sequence of characters) and can perform byte-oriented $FIND() operations.For more information, refer to `$ZFind() <./functions.html#zfind>`_.
 
 $FIND() provides a tool to locate substrings. The ([) operator and the two-argument $LENGTH() are other tools that provide related functionality.
 
@@ -331,7 +331,7 @@ The format for the $FNUMBER function is:
 * The optional integer expression (third argument) specifies the number of digits after the decimal point. If the numeric expression has more digits than specified by this argument, $FNUMBER() rounds to obtain the result. If the numeric expression has fewer digits than specified by this argument, $FNUMBER() zero-fills to obtain the result.
 * When the optional third argument is specified and the first argument evaluates to a fraction between -1 and 1, $FNUMBER() returns a number with a leading zero (0) before the decimal point (.).
 
-$FNUMBER() formats or edits numbers, usually for reporting. For more information on rounding performed by $FNUMBER(), refer to `$Justify() <https://docs.yottadb.com/ProgrammersGuide/functions.html#id1>`_.
+$FNUMBER() formats or edits numbers, usually for reporting. For more information on rounding performed by $FNUMBER(), refer to `$Justify() <./functions.html#id1>`_.
 
 The formatting codes are:
 
@@ -502,7 +502,7 @@ $JUSTIFY() optionally rounds the portion of the result after the decimal point. 
 * Then, it adds 5 (five) to the digit position after the digit specified by the rounding argument.
 * Finally, it truncates the result to the specified number of digits. The algorithm rounds up when excess digits specify a half or more of the last retained digit and rounds down when they specify less than a half.
 * For a process started in UTF-8 mode, $JUSTIFY() interprets the string argument as UTF-8 encoded. With VIEW "BADCHAR" enabled, $JUSTIFY() produces a run-time error when it encounters a malformed character.
-* $ZJUSTIFY() is the parallel function of $JUSTIFY(). Irrespective of the settings of VIEW "BADCHAR" and $ZCHSET, $ZJUSTIFY() interprets argument as a sequence of bytes (rather than a sequence of characters) and can perform all byte-oriented $JUSTIFY() operations. For more information, refer to `$ZJustify() <https://docs.yottadb.com/ProgrammersGuide/functions.html#zjustify>`_.
+* $ZJUSTIFY() is the parallel function of $JUSTIFY(). Irrespective of the settings of VIEW "BADCHAR" and $ZCHSET, $ZJUSTIFY() interprets argument as a sequence of bytes (rather than a sequence of characters) and can perform all byte-oriented $JUSTIFY() operations. For more information, refer to `$ZJustify() <./functions.html#zjustify>`_.
 
 ++++++++++++++++++++++++
 Examples of $JUSTIFY()
@@ -573,7 +573,7 @@ The format for the $LENGTH function is:
 * If the second argument is present and not an empty string, $LENGTH returns one more than the count of the number of occurrences of the second string in the first string; if the second argument is an empty string, the M standard specifies that $LENGTH() returns a zero (0).
 * $LENGTH() provides a tool for determining the lengths of strings in two ways, characters and pieces. The two argument $LENGTH() returns the number of existing pieces, while the one argument returns the number of characters.
 * For a process started in UTF-8 mode, $LENGTH() interprets the string argument(s) as UTF-8 encoded. With VIEW "BADCHAR" enabled, $LENGTH() produces a run-time error when it encounters a malformed character.
-* $ZLENGTH() is the parallel function of $LENGTH(). Irrespective of the setting of VIEW "BADCHAR" and $ZCHSET, $ZLENGTH() interpets string arguments as a sequence of bytes (rather than characters) and can perform all byte-oriented $LENGTH() operations. For more information, refer to `$ZLength() <https://docs.yottadb.com/ProgrammersGuide/functions.html#zlength>`_.
+* $ZLENGTH() is the parallel function of $LENGTH(). Irrespective of the setting of VIEW "BADCHAR" and $ZCHSET, $ZLENGTH() interpets string arguments as a sequence of bytes (rather than characters) and can perform all byte-oriented $LENGTH() operations. For more information, refer to `$ZLength() <./functions.html#zlength>`_.
 
 +++++++++++++++++++++++++++
 Examples of $LENGTH()
@@ -819,10 +819,10 @@ The format for the $PIECE function is:
 * The $PIECE() result never includes the "outside" delimiters; however, when the second integer argument specifies multiple pieces, the result contains the "inside" occurrences of the delimiter.
 * $PIECE() can also be used as tool for efficiently using values that contain multiple elements or fields, each of which may be variable in length.
 * Applications typically use a single character for a $PIECE() delimiter (second argument) to minimize storage overhead, and increase efficiency at run-time. The delimiter must be chosen so the data values never contain the delimiter. Failure to enforce this convention with edit checks may result in unanticipated changes in the position of pieces within the data value. The caret symbol (^), backward slash (\), and asterisk (*) characters are examples of popular visible delimiters. Multiple character delimiters may reduce the likelihood of conflict with field contents. However, they decrease storage efficiency, and are processed with less efficiency than single character delimiters. Some applications use control characters, which reduce the chances of the delimiter appearing in the data but sacrifice the readability provided by visible delimiters.
-* A SET command argument can have something that has the format of a $PIECE() on the left-hand side of its equal sign (=). This construct permits easy maintenance of individual pieces within a string. It also can be used to generate a string of delimiters. For more information on SET $PIECE(), refer to `“Set” <https://docs.yottadb.com/ProgrammersGuide/commands.html#set>`_.
-* $PIECE() can also be used as target in a SET command to change part of the value of a node. Also, when SET arguments have multiple parenthesized (set-left) targets and a target is used as a subscript in more than one item in the list of targets that follow, all the targets use the before-SET value (not the after-SET value) in conformance to the M-standard. For more information on SET $PIECE(), refer to `“Set” <https://docs.yottadb.com/ProgrammersGuide/commands.html#set>`_.
+* A SET command argument can have something that has the format of a $PIECE() on the left-hand side of its equal sign (=). This construct permits easy maintenance of individual pieces within a string. It also can be used to generate a string of delimiters. For more information on SET $PIECE(), refer to `“Set” <./commands.html#set>`_.
+* $PIECE() can also be used as target in a SET command to change part of the value of a node. Also, when SET arguments have multiple parenthesized (set-left) targets and a target is used as a subscript in more than one item in the list of targets that follow, all the targets use the before-SET value (not the after-SET value) in conformance to the M-standard. For more information on SET $PIECE(), refer to `“Set” <./commands.html#set>`_.
 * For a process started in UTF-8 mode, $PIECE() interprets the string arguments as UTF-8 encoded. With VIEW "BADCHAR" enabled, $PIECE() produces a run-time error when it encounters a malformed character, but it does not process the characters that fall after the span specified by the arguments.
-* $ZPIECE() is the parallel function of $PIECE(). Irrespective of the settings of VIEW "BADCHAR" and $ZCHSET, $ZPIECE() interprets string arguments as a sequence of bytes (rather than a sequence of characters) and can perform all byte-oriented $PIECE() operations. For more information, refer to `$ZPIece() <https://docs.yottadb.com/ProgrammersGuide/functions.html#zpiece>`_.
+* $ZPIECE() is the parallel function of $PIECE(). Irrespective of the settings of VIEW "BADCHAR" and $ZCHSET, $ZPIECE() interprets string arguments as a sequence of bytes (rather than a sequence of characters) and can perform all byte-oriented $PIECE() operations. For more information, refer to `$ZPIece() <./functions.html#zpiece>`_.
 
 ++++++++++++++++++++++++++++
 Examples of $PIECE()
@@ -901,7 +901,7 @@ Example:
    YDB>write $qlength(X)
    5
 
-The number of subscripts in x is 5. Notice that the name and the environment preceding it do not contribute to the count. Refer to `$NAme() <https://docs.yottadb.com/ProgrammersGuide/functions.html#name>`_ section earlier in this chapter for an understanding of the $NAME function.
+The number of subscripts in x is 5. Notice that the name and the environment preceding it do not contribute to the count. Refer to `$NAme() <./functions.html#name>`_ section earlier in this chapter for an understanding of the $NAME function.
 
 -------------------------
 $QSubscript()
@@ -932,7 +932,7 @@ Examples of $QSUBSCRIPT()
 
 Example:
 
-Assume that X is defined as in the `Examples of $Qlength() <https://docs.yottadb.com/ProgrammersGuide/functions.html#examples-of-qlength>`_ earlier in this chapter; 
+Assume that X is defined as in the `Examples of $Qlength() <./functions.html#examples-of-qlength>`_ earlier in this chapter; 
 
 .. parsed-literal::
    write X
@@ -1548,12 +1548,12 @@ $VIEW() provides a means to access YottaDB environmental information. When Yotta
 +---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | "YGVN2GDS"    | string           | When string is the name of a global variable node, e.g., "^ACN(""NAME"",""TYPE"")", returns the bytes in a database block that store the name,                      |
 |               | [,<collation>]   | e.g., "ACN"_$C(0,255)_"NAME"_$C(0,255)_"TYPE"_$C(0,0). An optional additional parameter is an alternative collation sequence number, which specifies the type of    |
-|               |                  | collation desired. Refer to `Collation <https://docs.yottadb.com/ProgrammersGuide/internatn.html#collation-sequence-definitions>`_ for more details on              |
+|               |                  | collation desired. Refer to `Collation <./internatn.html#collation-sequence-definitions>`_ for more details on                                                      |
 |               |                  | specifying alternative collation.                                                                                                                                   |
 +---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | "YGDS2GVN"    | string           | When string contains the subscript representation of a global variable, returns the name of the global. An optional additional parameter is an alternative          |
 |               | [,<collation>]   | collation sequence number, which specifies the type of collation desired. Refer to                                                                                  |
-|               |                  | `Collation <https://docs.yottadb.com/ProgrammersGuide/internatn.html#collation-sequence-definitions>`_  for more details on specifying alternative collation.       |
+|               |                  | `Collation <./internatn.html#collation-sequence-definitions>`_  for more details on specifying alternative collation.                                               |
 +---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | "ZDATE_FORM"  | none             | Integer value showing whether four digit year code is active for $ZDATE(); YottaDB defaults to 0 (for "YY" format). Use the environment variable ydb_zdate_form     |
 |               |                  | to set the initial value of this factor. For usage examples, refer to “$ZDate()”.                                                                                   |
@@ -1600,7 +1600,7 @@ Example:
    CAT:35,CFE:0,CFS:0,CFT:0,CQS:0,CQT:0,CYS:0,CYT:0,BTD:13
    YDB>
 
-These are statistics associated with the DEFAULT region. Refer to `“ZSHOW Information Codes” <https://docs.yottadb.com/ProgrammersGuide/commands.html#zshow-information-codes>`_ for information on the parameters.
+These are statistics associated with the DEFAULT region. Refer to `“ZSHOW Information Codes” <./commands.html#zshow-information-codes>`_ for information on the parameters.
 
 Example:
 
@@ -2261,7 +2261,7 @@ Example:
 $ZDate()
 -----------------
 
-Returns a date and/or time formatted as text based on an argument formatted in the manner of $HOROLOG. For information on the format of $HOROLOG, refer to `Chapter 8: “Intrinsic Special Variables” <https://docs.yottadb.com/ProgrammersGuide/isv.html>`_.
+Returns a date and/or time formatted as text based on an argument formatted in the manner of $HOROLOG. For information on the format of $HOROLOG, refer to `Chapter 8: “Intrinsic Special Variables” <./isv.html>`_.
 
 The format for the $ZDATE function is:
 
@@ -2574,6 +2574,9 @@ This uses $ZGETJPI() to measure the actual CPU time, measured in hundredths of a
 $ZJOBEXAM()
 --------------------
 
+.. parsed-literal::
+   $ZJOBEXAM([expr])
+
 Returns the full specification of the file into which the function places a ZSHOW "*". The return value serves as a way to save, to notify others of the exact location of the output, or to open the file for further processing. YottaDB reports each $ZJOBEXAM() to the operator log facility with its file specification.
 
 The optional expression argument is a template output device specification. It can be a device, a file directory, or a file name. The template is an expression that is pre-processed to create a file specification as the target for the ZSHOW. The preprocessing is equivalent to $ZPARSE(), as illustrated by the following M code:
@@ -2706,7 +2709,7 @@ The integer expression specifies the status code for which $ZMESSAGE() returns e
 
 $ZMESSAGE() provides a tool for examining the message and/or mnemonic associated with a particular message code as reported in $ZSTATUS.
 
-The `$ZSTATUS <https://docs.yottadb.com/ProgrammersGuide/isv.html#zstatus>`_ Intrinsic Special Variable holds the message code and the message of the last non-Direct Mode YottaDB error.
+The `$ZSTATUS <./isv.html#zstatus>`_ Intrinsic Special Variable holds the message code and the message of the last non-Direct Mode YottaDB error.
 
 ++++++++++++++++++++++++
 Examples of $ZMESSAGE()
@@ -2738,7 +2741,7 @@ The format for the $ZPARSE function is:
 * If the file extension is missing from all three of expr1, expr3, and expr4, $ZPARSE() will return a null string for the corresponding field. If the file or directory is missing from all three of expr1, expr3, and expr4, $ZPARSE() will substitute the information from your current working directory.
 * The optional fifth expression specifies the mode or type of parse that $ZPARSE() performs.
 
-$ZPARSE() provides a tool for verifying that a file name is syntactically correct, for examining specific fields of a file name, and for filling in missing pieces in a partial specification based on a hierarchy of defaults. For information about determining whether a file exists, see `$ZSEARCH() <https://docs.yottadb.com/ProgrammersGuide/functions.html#zsearch>`_.
+$ZPARSE() provides a tool for verifying that a file name is syntactically correct, for examining specific fields of a file name, and for filling in missing pieces in a partial specification based on a hierarchy of defaults. For information about determining whether a file exists, see `$ZSEARCH() <./functions.html#zsearch>`_.
 
 $ZPARSE() arguments, after the first, are optional. If you use no other arguments, a single argument is sufficient. However, if you use selected arguments $ZPARSE() requires that null strings ("") be filled in for the unspecified arguments.
 
@@ -2896,7 +2899,7 @@ The format for the $ZPIECE function is:
 * The $ZPIECE() result never includes the "outside" delimiters; however, when the second integer argument specifies multiple pieces, the result contains the "inside" occurrences of the delimiter.
 * $ZPIECE() provides a tool for efficiently using values that contain multiple elements or fields, each of which may be variable in length.
 * Applications typically use a single byte for a $ZPIECE() delimiter (second argument) to minimize storage overhead, and increase efficiency at run-time. The delimiter must be chosen so the data values never contain the delimiter. Failure to enforce this convention with edit checks may result in unanticipated changes in the position of pieces within the data value. The caret symbol (^), backward slash (\), and asterisk (*) characters are examples of popular visible delimiters. Multiple byte delimiters may reduce the likelihood of conflict with field contents. However, they decrease storage efficiency, and are processed with less efficiency than single byte delimiters. Some applications use control characters, which reduce the chances of the delimiter appearing in the data but sacrifice the readability provided by visible delimiters.
-* A SET command argument can have something that has the format of a $ZPIECE() on the left-hand side of its equal sign (=). This construct permits easy maintenance of individual pieces within a sequence of octets. It also can be used to generate a byte sequence of delimiters. For more information on SET $ZPIECE(), refer to `SET in the "Commands" chapter <https://docs.yottadb.com/ProgrammersGuide/commands.html#set>`_.
+* A SET command argument can have something that has the format of a $ZPIECE() on the left-hand side of its equal sign (=). This construct permits easy maintenance of individual pieces within a sequence of octets. It also can be used to generate a byte sequence of delimiters. For more information on SET $ZPIECE(), refer to `SET in the "Commands" chapter <./commands.html#set>`_.
 
 +++++++++++++++++++++
 Examples of $ZPIECE()
@@ -3011,7 +3014,7 @@ The format for the $ZSEARCH function is:
 * The optional integer expression specifies a "stream" number from 0 to 255 for each search; streams provide a means of having up to 256 $ZSEARCH() contexts simultaneously in progress.
 * If a $ZSEARCH() stream has never been used or if the expression differs from the argument to the last $ZSEARCH() of the stream, the function resets the context and returns the first pathname matching the expression; otherwise, it returns the next matching file in collating sequence; if the last prior pathname returned for the same expression and same stream was the last one matching the argument, $ZSEARCH() returns a null string.
 
-$ZSEARCH() provides a tool for verifying that a file exists. For information to help determine the validity of a file name, see `$ZPARSE() <https://docs.yottadb.com/ProgrammersGuide/functions.html#zparse>`_.
+$ZSEARCH() provides a tool for verifying that a file exists. For information to help determine the validity of a file name, see `$ZPARSE() <./functions.html#zparse>`_.
 
 .. note::
    You can call the POSIX stat() function to access metadata. The optional YottaDB POSIX plug-in packages the stat() function for easy access from M application code.
@@ -3100,7 +3103,7 @@ The first expression specifies the SOCKET device name; an empty string returns t
    set handlein=$ZSOCKET($ZPIN,"SOCKETHANDLE",0)
    set handleout=$ZSOCKET($ZPOUT,"SOCKETHANDLE",0)
 
-For more information, refer to `$ZPIN <https://docs.yottadb.com/ProgrammersGuide/isv.html#zpin>`_ and `$ZPOUT <https://docs.yottadb.com/ProgrammersGuide/isv.html#zpout>`_.
+For more information, refer to `$ZPIN <./isv.html#zpin>`_ and `$ZPOUT <./isv.html#zpout>`_.
 
 The second expression specifies a keyword identifying the type of information returned and the optional third expression usually specifies the index (starting at zero) of a socket attached to the device; if the index is outside the range of attached sockets, $ZSOCKET() returns an empty string. If the third expression is not specified, $ZSOCKET() returns information about the current socket. Using an invalid keyword produces a ZSOCKETATTR error. The fourth expression specifies an individual delimiter when the second expression specifies DELIMITER. For more information, see the following table. Note that changes to the socket collection for a SOCKET device using OPEN, CLOSE, USE :ATTACH, or USE :DETACH may change the index for a socket.
 

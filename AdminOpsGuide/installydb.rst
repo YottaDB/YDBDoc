@@ -44,7 +44,7 @@ Installation Procedure
 
 * Create a temporary directory and change to it, e.g.: mkdir /tmp/tmp ; cd /tmp/tmp
 
-* Get the YottaDB installer: wget https://gitlab.com/YottaDB/DB/YDB/blob/master/sr_unix/ydbinstall.sh
+* Get the YottaDB installer: wget https://gitlab.com/YottaDB/DB/YDB/raw/master/sr_unix/ydbinstall.sh
 
 * Make it executable: chmod +x ydbinstall.sh
 

@@ -1310,7 +1310,7 @@ CORRUPT, Corrupt input in Blk #xxxx, Key #yyyy; resuming with next global block
 
 MUPIP Warning: This indicates that LOAD encountered bad data in the input file.
 
-Action: Refer to the topic MUPIP LOAD Errors in `"About This Manual" section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-load-errors>`_.
+Action: Refer to the topic MUPIP LOAD Errors in `"About This Manual" section <./about.html#mupip-load-errors>`_.
 
 --------------------------
 CORRUPTNODE 
@@ -1708,7 +1708,7 @@ DBBADKYNM
 
 DBBADKYNM, xxxx is an invalid key name
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: -
 
@@ -1718,7 +1718,7 @@ DBBADNSUB
 
 DBBADNSUB, xxxx Bad numberic subscript
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: -
 
@@ -1728,7 +1728,7 @@ DBBADPNTR
 
 DBBADPNTR, xxxx Bad pointer value in directory
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: -
 
@@ -1748,7 +1748,7 @@ DBBDBALLOC
 
 DBBDBALLOC, xxxx Block doubly allocated
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: -
 
@@ -1758,7 +1758,7 @@ DBBFSTAT
 
 DBBFSTAT, xxxx Block busy/free status unknown (local bitmap corrupted)
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: -
 
@@ -1848,7 +1848,7 @@ DBBNPNTR
 
 DBBNPNTR, Bit map block number as pointer
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: -
 
@@ -1858,7 +1858,7 @@ DBBPLMGT2K
 
 DBBPLMGT2K, Blocks per local map is greater than 2k
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: -
 
@@ -1868,7 +1868,7 @@ DBBPLMLT512
 
 DBBPLMLT512, Blocks per local map is less than 512
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: -
 
@@ -1878,7 +1878,7 @@ DBBPLNOT512
 
 DBBPLNOT512, Blocks per local map is not 512
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: -
 
@@ -1909,7 +1909,7 @@ DBBSIZZRO
 
 DBBSIZZRO, Block size equals zero
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: -
 
@@ -2120,7 +2120,7 @@ DBCOMPTOOLRG
 
 DBCOMPTOOLRG, xxxx Record has too large compression count
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: -
 
@@ -2202,7 +2202,7 @@ DBDATAMX
 
 DBDATAMX, xxxx Record too large
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the `MUPIP INTEG Errors section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the `MUPIP INTEG Errors section <./about.html#mupip-integ-errors>`_.
 
 Action: N/A
 
@@ -2253,7 +2253,7 @@ DBFGTBC
 
 DBFGTBC, xxxx File size larger than block count would indicate
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: -
 
@@ -2398,7 +2398,7 @@ DBFSTBC
 
 DBFSTBC, xxxx File size smaller than block count would indicate
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: -
 
@@ -2408,7 +2408,7 @@ DBFSTHEAD
 
 DBFSTHEAD, xxxx File smaller than database header
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: -
 
@@ -2430,7 +2430,7 @@ DBGTDBMAX
 
 DBGTDBMAX, xxxx Key larger than database maximum
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: -
 
@@ -2441,7 +2441,7 @@ DBHEADINV
 
 DBHEADINV, xxxx Header size not valid for database
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: -
 
@@ -2462,7 +2462,7 @@ DBINCLVL
 
 DBINCLVL, xxxx Block at incorrect level
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: -
 
@@ -2473,7 +2473,7 @@ DBINCRVER
 
 DBINCRVER, xxxx Incorrect version of YottaDB database
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: -
 
@@ -2484,7 +2484,7 @@ DBINVGBL
 
 DBINVGBL, xxxx Invalid mixing of global names
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: -
 
@@ -2514,7 +2514,7 @@ DBKEYGTIND
 
 DBKEYGTIND, xxxx Key greater than index key
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: -
 
@@ -2554,7 +2554,7 @@ DBKGTALLW
 
 DBKGTALLW, xxxx Key larger than maximum allowed length
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: -
 
@@ -2564,7 +2564,7 @@ DBLOCMBINC
 
 DBLOCMBINC, xxxx Local bit map incorrect
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: -
 
@@ -2574,7 +2574,7 @@ DBLRCINVSZ
 
 DBLRCINVSZ, xxxx Last record of block has invalid size
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: -
 
@@ -2584,7 +2584,7 @@ DBLTSIBL
 
 DBLTSIBL, xxxx Keys less than sibling's index key
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: -
 
@@ -2595,7 +2595,7 @@ DBLVLINC
 
 DBLVLINC, xxxx Local bitmap block level incorrect
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: -
 
@@ -2606,7 +2606,7 @@ DBMAXKEYEXC
 
 DBMAXKEYEXC, xxxx Maximum key size for database exceeds design maximum
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: -
 
@@ -2636,7 +2636,7 @@ DBMBMINCFRE
 
 DBMBMINCFRE, xxxx Master bit map incorrectly asserts this local map has free space
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: -
 
@@ -2656,7 +2656,7 @@ DBMBPFLDIS
 
 DBMBPFLDIS, xxxx Master bit map shows this map full, in disagreement with both disk and INTEG results
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: -
 
@@ -2667,7 +2667,7 @@ DBMBPFLDLBM
 
 DBMBPFLDLBM, xxxx Master bit map shows this map full, agreeing with disk local map
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: -
 
@@ -2677,7 +2677,7 @@ DBMBPFLINT
 
 DBMBPFLINT, xxxx Master bit map shows this map full, agreeing with MUPIP INTEG
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: -
 
@@ -2687,7 +2687,7 @@ DBMBPFRDLBM
 
 DBMBPFRDLBM, xxxx Master bit map shows this map has space, agreeing with disk local map
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: -
 
@@ -2698,7 +2698,7 @@ DBMBPFRINT
 
 DBMBPFRINT, xxxx Master bit map shows this map has space, agreeing with MUPIP INTEG
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: -
 
@@ -2708,7 +2708,7 @@ DBMBPINCFL
 
 DBMBPINCFL, xxxx Master bit map incorrectly marks this local map full
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: -
 
@@ -2718,7 +2718,7 @@ DBMBSIZMN
 
 DBMBSIZMN, xxxx Map block too small
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: -
 
@@ -2728,7 +2728,7 @@ DBMBSIZMX
 
 DBMBSIZMX, xxxx Map block too large
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: -
 
@@ -2738,7 +2738,7 @@ DBMBTNSIZMX
 
 DBMBTNSIZMX, xxxx Map block transaction number too large
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: -
 
@@ -2769,7 +2769,7 @@ DBMRKBUSY
 
 DBMRKBUSY, xxxx Block incorrectly marked busy
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: -
 
@@ -2780,7 +2780,7 @@ DBMRKFREE
 
 DBMRKFREE, xxxx Block incorrectly marked free
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: -
 
@@ -2790,7 +2790,7 @@ DBMXRSEXCMIN
 
 DBMXRSEXCMIN, xxxx Maximum record size for database exceeds what the block size can support
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: -
 
@@ -2840,7 +2840,7 @@ DBNOTDB
 
 DBNOTDB, xxxx File does not have a valid GDS file header
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: -
 
@@ -2860,7 +2860,7 @@ DBNOTMLTP
 
 DBNOTMLTP, xxxx Block size not a multiple of 512 bytes
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: -
 
@@ -2950,7 +2950,7 @@ DBRBNLBMN
 
 DBRBNLBMN, xxxx Root block number is a local bit map number
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: -
 
@@ -2960,7 +2960,7 @@ DBRBNNEG
 
 DBRBNNEG, xxxx Root block number negative
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: -
 
@@ -2970,7 +2970,7 @@ DBRBNTOOLRG
 
 DBRBNTOOLRG, xxxx Root block number greater than the last block number in file
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: -
 
@@ -3000,7 +3000,7 @@ DBREADBM
 
 DBREADBM, xxxx Read error on bitmap
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: -
 
@@ -3021,7 +3021,7 @@ DBRLEVLTONE
 
 DBRLEVLTONE, xxxx Root level less than one
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: -
 
@@ -3031,7 +3031,7 @@ DBRLEVTOOHI
 
 DBRLEVTOOHI, xxxx Root level higher than maximum
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: -
 
@@ -3111,7 +3111,7 @@ DBSPANCHUNKORD
 
 DBSPANCHUNKORD, xxxx Chunk of yyyy blocks is out of order
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the `MUPIP INTEG Errors section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the `MUPIP INTEG Errors section <./about.html#mupip-integ-errors>`_.
 
 Action: N/A
 
@@ -3121,7 +3121,7 @@ DBSPANGLOINCMP
 
 DBSPANGLOINCMP, xxxx Spanning node is missing. Block no yyyy of spanning node is missing
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the `MUPIP INTEG Errors section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the `MUPIP INTEG Errors section <./about.html#mupip-integ-errors>`_.
 
 Action: N/A
 
@@ -3151,7 +3151,7 @@ DBSVBNMIN
 
 DBSVBNMIN, xxxx Start VBN smaller than possible
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: -
 
@@ -3161,7 +3161,7 @@ DBSZGT64K
 
 DBSZGT64K, xxxx Block size is greater than 64k
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: -
 
@@ -3191,7 +3191,7 @@ DBTNNEQ
 
 DBTNNEQ, xxxx Current tn and early tn are not equal
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: -
 
@@ -3221,7 +3221,7 @@ DBTNTOOLG
 
 DBTNTOOLG, xxxx Block transaction number too large
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: -
 
@@ -3241,7 +3241,7 @@ DBTTLBLK0
 
 DBTTLBLK0, xxxx Total blocks equal zero
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: -
 
@@ -3251,7 +3251,7 @@ DBUNDACCMT
 
 DBUNDACCMT, xxxx Cannot determine access method; trying with BG
 
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-integ-errors>`_.
+MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: N/A
 
@@ -3553,7 +3553,7 @@ DLRCTOOBIG, xxxx value cannot be greater than 255
 
 MUPIP Error: This indicates that MUPIP LOAD with the qualifier FORMAT=GO encountered xxxx in its input stream. xxxx was in the $CHAR() format used for non-graphic characters but it exceeded the maximum acceptable value of 255.
 
-Action: Refer to the topic `MUPIP LOAD Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-load-errors>`_. Edit the input file so the value falls within the range of 0-255.
+Action: Refer to the topic `MUPIP LOAD Errors in the About This Manual section <./about.html#mupip-load-errors>`_. Edit the input file so the value falls within the range of 0-255.
 
 ------------------------------
 DLRCUNXEOR
@@ -3563,7 +3563,7 @@ DLRCUNXEOR, xxxx unexpected end of record in $CHAR()/$ZCHAR() subscript
 
 MUPIP Error: This indicates that MUPIP LOAD with the qualifier FORMAT=GO encountered xxxx in its input stream. xxxx was in the $CHAR() format used for non-graphic characters but the $C() format did not complete properly.
 
-Action: Refer to the topic `MUPIP LOAD Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-load-errors>`_. Edit the input file to remove a spurious "$" or fix a $CHAR() representation.
+Action: Refer to the topic `MUPIP LOAD Errors in the About This Manual section <./about.html#mupip-load-errors>`_. Edit the input file to remove a spurious "$" or fix a $CHAR() representation.
 
 --------------------
 DSEBLKRDFAIL
@@ -3833,7 +3833,7 @@ EORNOTFND, xxxx End of record not found
 
 MUPIP Error: This indicates that LOAD encountered a database reference record containing an open parenthesis without a closiing parenthesis. xxxx is the record.
 
-Action: Refer to the topic `MUPIP LOAD Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-load-errors>`_.
+Action: Refer to the topic `MUPIP LOAD Errors in the About This Manual section <./about.html#mupip-load-errors>`_.
 
 --------------------
 EPOCHTNHI 
@@ -4543,7 +4543,7 @@ GBLNAMCOLLVER, Global directory indicates GBLNAME gggg has collation sequence #n
 
 GDE Error: This indicates that the shared library for collation sequence nnnn reported the version as vvvv when the collation properties for global name gggg were first added by GDE into the global directory and that this invocation of GDE noticed the shared library reporting an incompatible version llll.
 
-Action: See Action section for `COLLTYPVERSION error in the Message and Recovery Procedures Manual <https://docs.yottadb.com/MessageRecovery/errors.html#colltypversion>`_.
+Action: See Action section for `COLLTYPVERSION error in the Message and Recovery Procedures Manual <./errors.html#colltypversion>`_.
 
 -----------------
 GBLNAME
@@ -5191,7 +5191,7 @@ GVINVALID, xxxx Invalid global name
 
 MUPIP Error: This indicates that LOAD encountered invalid global name xxxx in the input stream.
 
-Action: Refer to the topic `MUPIP LOAD Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-load-errors>`_.
+Action: Refer to the topic `MUPIP LOAD Errors in the About This Manual section <./about.html#mupip-load-errors>`_.
 
 ------------------
 GVIS 
@@ -7641,7 +7641,7 @@ LOADABORT, Aborting load at record xxxx
 
 MUPIP Error: This indicates that LOAD encountered an error while processing input record number xxxx.
 
-Action: Refer to the topic `MUPIP LOAD Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-load-errors>`_.
+Action: Refer to the topic `MUPIP LOAD Errors in the About This Manual section <./about.html#mupip-load-errors>`_.
 
 ------------------
 LOADBGSZ 
@@ -7931,7 +7931,7 @@ LPARENREQD, xxxx Left parenthesis expected
 
 MUPIP Error: This indicates that LOAD failed because it found xxxx in the input stream where it expected to find a left parenthesis.
 
-Action: Refer to the topic `MUPIP LOAD Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-load-errors>`_.
+Action: Refer to the topic `MUPIP LOAD Errors in the About This Manual section <./about.html#mupip-load-errors>`_.
 
 -----------------
 LQLENGTHNA 
@@ -10061,7 +10061,7 @@ NOTGBL, Expected a global variable name starting with an up-arrow (^): xxxx
 
 Run Time/MUPIP Error: This indicates that the VIEW argument expression for tracing specifies xxxx, which is not a valid global name. In case of MUPIP error, it indicates that LOAD aborted because it encountered xxxx in its input stream, which is not a valid global name.
 
-Action: Correct the argument of the VIEW command to point to a valid global name. For MUPIP error, refer to the topic MUPIP LOAD Errors in the `About This Manual section of this manual <https://docs.yottadb.com/MessageRecovery/about.html>`_. 
+Action: Correct the argument of the VIEW command to point to a valid global name. For MUPIP error, refer to the topic MUPIP LOAD Errors in the `About This Manual section of this manual <./about.html>`_. 
 
 ------------------
 NOTMNAME
@@ -10221,7 +10221,7 @@ NUMUNXEOR, xxxx unexpected end of record in numeric subscript
 
 MUPIP Error: This indicates that LOAD aborted because it encountered an improperly formatted numeric subscript xxxx in its input stream.
 
-Action: Refer to the topic MUPIP LOAD Errors in the `About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html>`_.
+Action: Refer to the topic MUPIP LOAD Errors in the `About This Manual section <./about.html>`_.
 
 
 ---------------------
@@ -10822,7 +10822,7 @@ PREMATEOF, Premature end of file detected
 
 MUPIP/Run Time Error: A file read or write detected an end-of-file when it was expecting additional records.
 
-Action: Analyze accompanying messages for the type of file on which the operation failed. If the operation was a MUPIP LOAD, refer to the `About this Manual section on MUPIP LOAD errors <https://docs.yottadb.com/MessageRecovery/about.html#mupip-load-errors>`_. If the circumstances warrant, contact the group responsible for database integrity at your operation with all the diagnostic context you can gather.
+Action: Analyze accompanying messages for the type of file on which the operation failed. If the operation was a MUPIP LOAD, refer to the `About this Manual section on MUPIP LOAD errors <./about.html#mupip-load-errors>`_. If the circumstances warrant, contact the group responsible for database integrity at your operation with all the diagnostic context you can gather.
 
 ------------------
 PREVJNLLINKCUT 
@@ -12205,7 +12205,7 @@ RPARENREQD, xxxx Right parenthesis expected
 
 MUPIP Error: This indicates that LOAD failed because it encountered xxxx in its input stream when it expected to find a right parenthesis.
 
-Action: Refer to the topic MUPIP LOAD Errors in the `About This Manual section in this manual <https://docs.yottadb.com/MessageRecovery/about.html>`_.
+Action: Refer to the topic MUPIP LOAD Errors in the `About This Manual section in this manual <./about.html>`_.
 
 ----------------
 RSVDBYTE2HIGH
@@ -13286,7 +13286,7 @@ STDNULLCOLLREQ
 
 STDNULLCOLLREQ, Region rrrr needs Standard Null Collation enabled because global gggg spans through it
 
-GDE Information: This indicates that the global gggg spans through region rrrr but the region has YottaDB Null collation enabled.
+GDE Information: This indicates that the global gggg spans through region rrrr but the region has historical null collation enabled.
 
 Action: All regions containing parts of spanning globals need to have Standard Null Collation enabled. Fix region rrrr to have Standard Null Collation enabled.
 
@@ -13408,7 +13408,7 @@ STRUNXEOR, xxxx unexpected end of record in string subscript
 
 MUPIP Error: This indicates that LOAD aborted because it encountered an end of file while processing string subscript xxxx.
 
-Action: Refer to the topic `MUPIP LOAD Errors in the About This Manual section <https://docs.yottadb.com/MessageRecovery/about.html#mupip-load-errors>`_.
+Action: Refer to the topic `MUPIP LOAD Errors in the About This Manual section <./about.html#mupip-load-errors>`_.
 
 -----------------
 STUCKACT 

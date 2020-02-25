@@ -113,7 +113,7 @@ Action: Call gtmcrypt_init() before calling any other encryption functions.
 
 For more information on the plug-in errors and their fixes, see the documentation of your preferred encryption software.
 
-`Appendix B: Reference Implementation Error messages <https://docs.yottadb.com/MessageRecovery/referrormsg.html>`_ lists some errors that the YottaDB team encountered while testing YottaDB's plug-in architecture with `GNU Privacy Guard <http://gnupg.org/>`_, the widely available implementation of Pretty Good Privacy (see "PGP: Pretty Good Privacy" by Simson Garfinkel).
+`Appendix B: Reference Implementation Error messages <./referrormsg.html>`_ lists some errors that the YottaDB team encountered while testing YottaDB's plug-in architecture with `GNU Privacy Guard <http://gnupg.org/>`_, the widely available implementation of Pretty Good Privacy (see "PGP: Pretty Good Privacy" by Simson Garfinkel).
 
 ------------------
 MUPIP Integ Errors

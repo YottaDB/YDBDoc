@@ -835,7 +835,7 @@ Use only with: -FILEHEADER
 -E[NCRYPTION_HASH]
 ~~~~~~~~~~~~~~~~~~~
 
-Changes the hash of the password stored in the database file header if and when you change the hash library. For more information on key management and reference implementation, refer to `Chapter 12: “Database Encryption” <https://docs.yottadb.com/AdminOpsGuide/encryption.html>`_.
+Changes the hash of the password stored in the database file header if and when you change the hash library. For more information on key management and reference implementation, refer to `Chapter 12: “Database Encryption” <./encryption.html>`_.
  
 .. note::
    An incorrect hash renders the database useless.
@@ -870,7 +870,7 @@ Sets the availability of the region for updates. Possible values are: T[RUE] or 
 
 Use only with: -FILEHEADER
 
-For information about a preferred method of manipulating FREEZE, refer to `“FREEZE ” in the General Database Management chapter <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#freeze>`_.
+For information about a preferred method of manipulating FREEZE, refer to `“FREEZE ” in the General Database Management chapter <./dbmgmt.html#freeze>`_.
 
 DSE releases -FREEZE when it EXITs. To hold the database(s), CHANGE -FILEHEADER -FREEZE=TRUE and then SPAWN to perform other operations.
 
@@ -912,7 +912,7 @@ Use only with: -FILEHEADER
 
 Changes the decimal value for the maximum allowable key size. Reducing KEY_MAX_SIZE can restrict access to existing data and cause YottaDB to report errors. Do not create incompatible key and record sizes.
 
-Before permanently changing the key size using DSE, use GDE to check that the appropriate Global Directory contains the same key size for the region. This prepares for future MUPIP CREATEs and performs a consistency check on the key and record size values. For more information on key and record sizes, refer to `Chapter 4: “Global Directory Editor” <https://docs.yottadb.com/AdminOpsGuide/gde.html>`_.
+Before permanently changing the key size using DSE, use GDE to check that the appropriate Global Directory contains the same key size for the region. This prepares for future MUPIP CREATEs and performs a consistency check on the key and record size values. For more information on key and record sizes, refer to `Chapter 4: “Global Directory Editor” <./gde.html>`_.
 
 Use only with: -FILEHEADER
 
@@ -930,7 +930,7 @@ Use only with: -FILEHEADER
 
 Controls whether YottaDB accepts null subscripts in database keys.
 
-* value can either be T[RUE], F[ALSE], ALWAYS, NEVER, or EXISTING. See the `GDE chapter <https://docs.yottadb.com/AdminOpsGuide/gde.html>`_ for more information on these values of null_subscripts.
+* value can either be T[RUE], F[ALSE], ALWAYS, NEVER, or EXISTING. See the `GDE chapter <./gde.html>`_ for more information on these values of null_subscripts.
 * Prohibiting null subscripts can restrict access to existing data and cause YottaDB to report errors.
 * The default value is never.
 * DSE cannot change the null subscript collation order. Instead, use GDE to change the null subscript collation order, MUPIP EXTRACT the current content, MUPIP CREATE the database file(s) with the updated collation and MUPIP LOAD the content.
@@ -951,7 +951,7 @@ Use only with: -FREEZE
 
 Sets a flag that indicates whether or not the database is enabled for quick rundown. The default value is -NOQDBRUNDOWN.
 
-For more information, refer to `Region Qualifiers <https://docs.yottadb.com/AdminOpsGuide/gde.html#region-qualifiers>`_.
+For more information, refer to `Region Qualifiers <./gde.html#region-qualifiers>`_.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -REC[ORD_MAX_SIZE]=record_max_size
@@ -959,7 +959,7 @@ For more information, refer to `Region Qualifiers <https://docs.yottadb.com/Admi
 
 Changes the decimal value for the maximum allowable record size. Use the -RECORD_MAX_SIZE qualifier only in conjunction with the -FILEHEADER qualifier. Reducing RECORD_MAX_SIZE can restrict access to existing data and cause YottaDB to report errors. Do not create incompatible key and record sizes.
 
-Before making a permanent change to the records size using DSE, use GDE to check that the appropriate Global Directory contains the same record size for the region. This prepares for future MUPIP CREATEs and performs a consistency check on the key and record size values. For more information on key and record sizes, refer to `Chapter 4: “Global Directory Editor” <https://docs.yottadb.com/AdminOpsGuide/gde.html>`_.
+Before making a permanent change to the records size using DSE, use GDE to check that the appropriate Global Directory contains the same record size for the region. This prepares for future MUPIP CREATEs and performs a consistency check on the key and record size values. For more information on key and record sizes, refer to `Chapter 4: “Global Directory Editor” <./gde.html>`_.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -REF[ERENCE_COUNT]=reference_count
@@ -971,19 +971,19 @@ Sets a field that tracks how many processes are accessing the database with read
 -REG[_SEQNO]=sequence-number
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In an LMS environment, this sets the "Region Seqno" field. For more information, refer to `Chapter 7: “Database Replication” <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html>`_.
+In an LMS environment, this sets the "Region Seqno" field. For more information, refer to `Chapter 7: “Database Replication” <./dbrepl.html>`_.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -RESYNC_S[EQNO]=sequence-number
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In an LMS environment, this sets the hexadecimal value of the "Resync Seqno" field. For more information, refer to `Chapter 7: “Database Replication” <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html>`_.
+In an LMS environment, this sets the hexadecimal value of the "Resync Seqno" field. For more information, refer to `Chapter 7: “Database Replication” <./dbrepl.html>`_.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -RESYNC_T[N]=sequence-number
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In an LMS environment, this sets the hexadecimal value ofthe "Resync transaction" field. For more information, refer to `Chapter 7: “Database Replication” <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html>`_.
+In an LMS environment, this sets the hexadecimal value ofthe "Resync transaction" field. For more information, refer to `Chapter 7: “Database Replication” <./dbrepl.html>`_.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -S[PIN_SLEEP_MASK]=hexadecimal-mask
@@ -1156,7 +1156,7 @@ Example:
 .. parsed-literal::
    DSE> CHANGE -FILEHEADER -NULL_SUBSCRIPTS="EXISTING"
 
-This command changes the Null Subscripts field of the file header to EXISTING. Note that DSE cannot change the null subscript collation order. See the `GDE chapter <https://docs.yottadb.com/AdminOpsGuide/gde.html>`_ for more information on changing the null subscript collation.
+This command changes the Null Subscripts field of the file header to EXISTING. Note that DSE cannot change the null subscript collation order. See the `GDE chapter <./gde.html>`_ for more information on changing the null subscript collation.
 
 Example:
 
@@ -1506,7 +1506,7 @@ This command displays the fileheader elements along with the following helper pr
    Upd reserved area [% global buffers]   50  Avg blks read per 100 records                200
    Pre read trigger factor [% upd rsrvd]    50  Upd writer trigger [%flshTrgr]                 33
 
-For more information, refer to the `fileheader elements section <https://docs.yottadb.com/AdminOpsGuide/gds.html#file-header-data-elements>`_ in “YottaDB Database Structure(GDS)”.
+For more information, refer to the `fileheader elements section <./gds.html#file-header-data-elements>`_ in “YottaDB Database Structure(GDS)”.
 
 +++++++++++++
 EVALUATE
@@ -1632,7 +1632,7 @@ Searches the entire index structure for the desired path or siblings.
 * FIND -EXHAUSTIVE locates all paths to a "doubly allocated" block.
 
 .. note::
-   A doubly allocated block may cause inappropriate mingling of data. As long as no KILLs occur, double allocation may not cause permanent loss of additional data. However, it may cause the application programs to generate errors and/or inappropriate results. When a block is doubly allocated, a KILL may remove data outside its proper scope. See `"Maintaining Database Integrity Chapter" <https://docs.yottadb.com/AdminOpsGuide/integrity.html>`_ for more information on repairing doubly allocated blocks.
+   A doubly allocated block may cause inappropriate mingling of data. As long as no KILLs occur, double allocation may not cause permanent loss of additional data. However, it may cause the application programs to generate errors and/or inappropriate results. When a block is doubly allocated, a KILL may remove data outside its proper scope. See `"Maintaining Database Integrity Chapter" <./integrity.html>`_ for more information on repairing doubly allocated blocks.
 
 Incompatible with: -KEY, -REGION, -FREEBLOCK
 
@@ -1776,7 +1776,7 @@ The format of the INTEGRIT command is:
    I[NTEGRIT] -B[LOCK]=block-number
 
 .. note::
-   Unlike MUPIP INTEG, this command only detects errors internal to a block and cannot detect errors such as indices incorrectly pointing to another block. For information on the utility that checks multiple blocks, refer to the `“INTEG” of the General Database Management chapter <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#integ>`_.
+   Unlike MUPIP INTEG, this command only detects errors internal to a block and cannot detect errors such as indices incorrectly pointing to another block. For information on the utility that checks multiple blocks, refer to the `“INTEG” of the General Database Management chapter <./dbmgmt.html#integ>`_.
 
 **Qualifiers of INTEGRIT**
 
@@ -2423,7 +2423,7 @@ DSE Command Summary
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
 | Commands                                                                   | Qualifiers                               | Comments                                                                   |
 +============================================================================+==========================================+============================================================================+
-| `AD[D] <https://docs.yottadb.com/AdminOpsGuide/dse.html#add>`_             | -B[LOCK]=block number                    | \-                                                                         |
+| `AD[D] <./dse.html#add>`_                                                  | -B[LOCK]=block number                    | \-                                                                         |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
 | \-                                                                         | -D[ATA]=string                           | Incompatible with -POINTER, -STAR                                          |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
@@ -2437,7 +2437,7 @@ DSE Command Summary
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
 | \-                                                                         | -S[TAR]                                  | Incompatible with -DATA,-KEY, -OFFSET, -RECORD                             |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
-| `AL[L] <https://docs.yottadb.com/AdminOpsGuide/dse.html#all>`_             | -A[LL]                                   | Meaningful only with -DUMP                                                 |
+| `AL[L] <./dse.html#all>`_                                                  | -A[LL]                                   | Meaningful only with -DUMP                                                 |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
 | \-                                                                         | -B[UFFER_FLUSH]                          | Incompatible with -RENEW                                                   |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
@@ -2459,7 +2459,7 @@ DSE Command Summary
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
 | \-                                                                         | -W[CINIT]                                | Incompatible with -RENEW                                                   |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
-| `CA[CHE] <https://docs.yottadb.com/AdminOpsGuide/dse.html#cache>`_         | -ALL                                     | Used with -RECOVER, -SHOW, and -VERIFY                                     |
+| `CA[CHE] <./dse.html#cache>`_                                              | -ALL                                     | Used with -RECOVER, -SHOW, and -VERIFY                                     |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
 | \-                                                                         | -RE[COVER]                               | Use only with -ALL.                                                        |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
@@ -2467,7 +2467,7 @@ DSE Command Summary
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
 | \-                                                                         | -VE[RIFY]                                | Use only with -ALL.                                                        |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
-| `CH[ANGE] <https://docs.yottadb.com/AdminOpsGuide/dse.html#change>`_       | -BL[OCK]=block number                    | Incompatible with -FILEHEADER and qualifiers used with -FILEHEADER         |
+| `CH[ANGE] <./dse.html#change>`_                                            | -BL[OCK]=block number                    | Incompatible with -FILEHEADER and qualifiers used with -FILEHEADER         |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
 | \-                                                                         | -BS[IZ]=block-size                       | Use only with -BLOCK, -LEVEL, -TN                                          |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
@@ -2575,9 +2575,9 @@ DSE Command Summary
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
 | \-                                                                         | -Zqgblmod_T[rans]=sequence_number        | Use only with -FILEHEADER;hexa                                             |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
-| `CL[OSE] <https://docs.yottadb.com/AdminOpsGuide/dse.html#close>`_         | \-                                       | \-                                                                         |
+| `CL[OSE] <./dse.html#close>`_                                              | \-                                       | \-                                                                         |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
-| `CR[ITICAL] <https://docs.yottadb.com/AdminOpsGuide/dse.html#critical>`_   | -I[NIT]                                  | Use only with -RESET                                                       |
+| `CR[ITICAL] <./dse.html#critical>`_                                        | -I[NIT]                                  | Use only with -RESET                                                       |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
 | \-                                                                         | -O[WNER]                                 | Use alone                                                                  |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
@@ -2589,7 +2589,7 @@ DSE Command Summary
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
 | \-                                                                         | -S[EIZE]                                 | Use alone                                                                  |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
-| `D[UMP] <https://docs.yottadb.com/AdminOpsGuide/dse.html#dump>`_           | -B[LOCK]=block_number                    | Incompatible with -FILEHEADER                                              |
+| `D[UMP] <./dse.html#dump>`_                                                | -B[LOCK]=block_number                    | Incompatible with -FILEHEADER                                              |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
 | \-                                                                         | -C[OUNT]=count                           | Incompatible with -FILEHEADER                                              |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
@@ -2605,15 +2605,15 @@ DSE Command Summary
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
 | \-                                                                         | -R[ECORD]=record_number                  | Incompatible with -FILEHEADER, -OFFSET                                     |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
-| `EV[ALUATE] <https://docs.yottadb.com/AdminOpsGuide/dse.html#evaluate>`_   | -D[ECIMAL]                               | Incompatible with -HEXADECIMAL                                             |
+| `EV[ALUATE] <./dse.html#evaluate>`_                                        | -D[ECIMAL]                               | Incompatible with -HEXADECIMAL                                             |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
 | \-                                                                         | -H[EXADECIMAL]                           | Incompatible with -DECIMAL                                                 |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
 | \-                                                                         | -N[UMBER]=number                         | Required                                                                   |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
-| `EX[IT] <https://docs.yottadb.com/AdminOpsGuide/dse.html#exit>`_           | \-                                       | \-                                                                         |
+| `EX[IT] <./dse.html#exit>`_                                                | \-                                       | \-                                                                         |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
-| `F[IND] <https://docs.yottadb.com/AdminOpsGuide/dse.html#find>`_           | -B[LOCK]=block_number                    | Incompatible with -KEY, -REGION                                            |
+| `F[IND] <./dse.html#find>`_                                                | -B[LOCK]=block_number                    | Incompatible with -KEY, -REGION                                            |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
 | \-                                                                         | -E[XHAUSTIVE]                            | Incompatible with -KEY, -REGION, -FREEBLOCK                                |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
@@ -2627,11 +2627,11 @@ DSE Command Summary
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
 | \-                                                                         | -S[BLINGS]                               | Incompatible with -FREEBLOCK, -HINT, -KEY, -REGION                         |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
-| `H[ELP] <https://docs.yottadb.com/AdminOpsGuide/dse.html#help>`_           | [help topic]                             | \-                                                                         |
+| `H[ELP] <./dse.html#help>`_                                                | [help topic]                             | \-                                                                         |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
-| `I[NTEGRIT] <https://docs.yottadb.com/AdminOpsGuide/dse.html#integrit>`_   | -B[LOCK]=block_number                    | \-                                                                         |
+| `I[NTEGRIT] <./dse.html#integrit>`_                                        | -B[LOCK]=block_number                    | \-                                                                         |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
-| `M[APS] <https://docs.yottadb.com/AdminOpsGuide/dse.html#maps>`_           | -BL[OCK]=block_number                    | Incompatible with -RESTORE_ALL                                             |
+| `M[APS] <./dse.html#maps>`_                                                | -BL[OCK]=block_number                    | Incompatible with -RESTORE_ALL                                             |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
 | \-                                                                         | -BU[SY]                                  | Compatible only with -BLOCK                                                |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
@@ -2641,17 +2641,17 @@ DSE Command Summary
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
 | \-                                                                         | -R[ESTORE_ALL]                           | Use alone                                                                  |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
-| `OP[EN] <https://docs.yottadb.com/AdminOpsGuide/dse.html#open>`_           | -F[ILE]=file                             | \-                                                                         |
+| `OP[EN] <./dse.html#open>`_                                                | -F[ILE]=file                             | \-                                                                         |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
-| `OV[ERWRITE] <https://docs.yottadb.com/AdminOpsGuide/dse.html#overwrite>`_ | -B[LOCK]=block_number                    | \-                                                                         |
+| `OV[ERWRITE] <./dse.html#overwrite>`_                                      | -B[LOCK]=block_number                    | \-                                                                         |
 |                                                                            |                                          |                                                                            |
 |                                                                            | -D[ATA]=string                           |                                                                            |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
 | \-                                                                         | -O[FFSET]=offset                         | \-                                                                         |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
-| `P[AGE] <https://docs.yottadb.com/AdminOpsGuide/dse.html#page>`_           | \-                                       | \-                                                                         |
+| `P[AGE] <./dse.html#page>`_                                                | \-                                       | \-                                                                         |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
-| `RA[NGE] <https://docs.yottadb.com/AdminOpsGuide/dse.html#range>`_         | -F[ROM]=block_number                     | \-                                                                         |
+| `RA[NGE] <./dse.html#range>`_                                              | -F[ROM]=block_number                     | \-                                                                         |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
 | \-                                                                         | -T[O]=block_number                       | \-                                                                         |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
@@ -2667,7 +2667,7 @@ DSE Command Summary
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
 | \-                                                                         | -U[PPER]=key                             | \-                                                                         |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
-| `REM[OVE] <https://docs.yottadb.com/AdminOpsGuide/dse.html#remove>`_       | -B[LOCK]=block-number                    | \-                                                                         |
+| `REM[OVE] <./dse.html#remove>`_                                            | -B[LOCK]=block-number                    | \-                                                                         |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
 | \-                                                                         | -C[OUNT]=count                           | Incompatible with -VERSION                                                 |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
@@ -2677,7 +2677,7 @@ DSE Command Summary
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
 | \-                                                                         | -V[ERSION]=version-number                | Use only with -BLOCK; decimal                                              |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
-| `RES[TORE] <https://docs.yottadb.com/AdminOpsGuide/dse.html#restore>`_     | -B[LOCK]=block-number                    | \-                                                                         |
+| `RES[TORE] <./dse.html#restore>`_                                          | -B[LOCK]=block-number                    | \-                                                                         |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
 | \-                                                                         | -F[ROM]=block-number                     | \-                                                                         |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
@@ -2685,21 +2685,21 @@ DSE Command Summary
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
 | \-                                                                         | -V[ERSION]=version-number                | Required; decimal                                                          |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
-| `SA[VE] <https://docs.yottadb.com/AdminOpsGuide/dse.html#save>`_           | -B[LOCK]=block-number                    | \-                                                                         |
+| `SA[VE] <./dse.html#save>`_                                                | -B[LOCK]=block-number                    | \-                                                                         |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
 | \-                                                                         | -C[OMMENT]=string                        | Incompatible with -LIST                                                    |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
 | \-                                                                         | -L[IST]                                  | Incompatible with -COMMENT                                                 |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
-| `SH[IFT] <https://docs.yottadb.com/AdminOpsGuide/dse.html#shift>`_         | -B[ACKWARD]=shift                        | Incompatible with -FORWARD                                                 |
+| `SH[IFT] <./dse.html#shift>`_                                              | -B[ACKWARD]=shift                        | Incompatible with -FORWARD                                                 |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
 | \-                                                                         | -F[ORWARD]=shift                         | Incompatible with -BACKWARD                                                |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
 | \-                                                                         | -O[FFSET]=offset                         | \-                                                                         |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
-| `SP[AWN] <https://docs.yottadb.com/AdminOpsGuide/dse.html#spawn>`_         | [CLI command]                            | \-                                                                         |
+| `SP[AWN] <./dse.html#spawn>`_                                              | [CLI command]                            | \-                                                                         |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
-| `W[CINIT] <https://docs.yottadb.com/AdminOpsGuide/dse.html#wcinit>`_       | \-                                       | \-                                                                         |
+| `W[CINIT] <./dse.html#wcinit>`_                                            | \-                                       | \-                                                                         |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
 
 \* Use these qualifiers only with instructions from YottaDB. 

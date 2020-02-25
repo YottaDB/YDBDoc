@@ -1789,7 +1789,7 @@ The routine utilities are:
 
 The %FL utility lists the comment lines at the beginning of source programs. %FL writes the routines in alphabetical order to the specified device. If the output device is not the principal device, %FL displays the name of each routine on the principal device as it writes the routine to the output device.
 
-%FL uses %RSEL to select routines. For more information, see `%RSEL <https://docs.yottadb.com/ProgrammersGuide/utility.html#id3>`_.
+%FL uses %RSEL to select routines. For more information, see `%RSEL <./utility.html#id3>`_.
 
 **Prompts**
 
@@ -1859,7 +1859,7 @@ charset: Specifies a string of non-zero length. If specified, %RANDSTR generates
 
 The %RCE utility replaces every occurrence of a text string with another text string in a routine or a list of routines.
 
-%RCE uses %RSEL to select routines. For more information, see `%RSEL <https://docs.yottadb.com/ProgrammersGuide/utility.html#id3>`_.
+%RCE uses %RSEL to select routines. For more information, see `%RSEL <./utility.html#id3>`_.
 
 %RCE prompts for a text string to replace and its replacement. %RCE searches for text strings in a case-sensitive manner. %RCE issues a warning message if you specify a control character such as a <TAB> in the text string or its replacement. %RCE confirms your selection by displaying the text string and its replacement between a left and right arrow. The arrows highlight any blank spaces that you might have included in the text string or its replacement.
 
@@ -2082,7 +2082,7 @@ Example:
 
 The %RO utility writes M source code for one or more routines to a sequential device such as, a disk file or a printer. .
 
-%RO uses %RSEL to select routines. For more information, see `%RSEL <https://docs.yottadb.com/ProgrammersGuide/utility.html#id3>`_.
+%RO uses %RSEL to select routines. For more information, see `%RSEL <./utility.html#id3>`_.
 
 %RO writes the routines in alphabetical order to the specified device. %RO displays the name of each routine as it writes the routine to the device.
 
@@ -2146,7 +2146,7 @@ This example adds and subtracts %D from the selection, then adds all routines st
 
 The %RSE utility searches for every occurrence of a text string in a routine or a list of routines.
 
-%RSE uses %RSEL to select routines. For more information, see `%RSEL <https://docs.yottadb.com/ProgrammersGuide/utility.html#id3>`_.
+%RSE uses %RSEL to select routines. For more information, see `%RSEL <./utility.html#id3>`_.
 
 %RSE searches for text strings are case-sensitive. %RSE issues a warning message if you specify a control character such as a <TAB> in the text string. %RSE confirms your selection by displaying the text string between a left and right arrow. The arrows display any blank spaces included in the text string.
 
@@ -2377,13 +2377,13 @@ Internationalization Utilities
 
 The internationalization utilities are:
 
-%GBLDEF: Manipulates the collation sequence assigned to a global. For more information and usage examples, refer to `“Using the %GBLDEF Utility” <https://docs.yottadb.com/ProgrammersGuide/internatn.html#using-the-gbldef-utility>`_.
+%GBLDEF: Manipulates the collation sequence assigned to a global. For more information and usage examples, refer to `“Using the %GBLDEF Utility” <./internatn.html#using-the-gbldef-utility>`_.
 
-%LCLCOL: Manipulates the collation sequence assigned to local variables in an active process. For more information and usage examples, refer to `“Establishing A Local Collation Sequence” <https://docs.yottadb.com/ProgrammersGuide/internatn.html#establishing-a-local-collation-sequence>`_.
+%LCLCOL: Manipulates the collation sequence assigned to local variables in an active process. For more information and usage examples, refer to `“Establishing A Local Collation Sequence” <./internatn.html#establishing-a-local-collation-sequence>`_.
 
 %PATCODE: Loads pattern definition files for use within an active database.
 
-These utilities are an integral part of the YottaDB functionality that permits you to customize your applications for use with other languages. For a description of these utilities, refer to `Chapter 12: “Internationalization” <https://docs.yottadb.com/ProgrammersGuide/internatn.html>`_.
+These utilities are an integral part of the YottaDB functionality that permits you to customize your applications for use with other languages. For a description of these utilities, refer to `Chapter 12: “Internationalization” <./internatn.html>`_.
 
 ----------------------------
 System Management Utilities
@@ -2435,7 +2435,7 @@ The first parameter is a required pass-by-reference variable that the caller use
 
 The second parameter is the path and name for the database file on which to report information.
 
-The format of the output array is fdump(sgmnt_data.<FIELD NAME>)=<value>; refer to `%PEEKBYNAME <https://docs.yottadb.com/ProgrammersGuide/utility.html#peekbyname>`_ for additional information on the names and values.
+The format of the output array is fdump(sgmnt_data.<FIELD NAME>)=<value>; refer to `%PEEKBYNAME <./utility.html#peekbyname>`_ for additional information on the names and values.
 
 The $ETRAP handler simply QUITs as it defers error handling to the caller. Application developers should define an appropriate $ETRAP prior to calling %DUMPFHEAD.
 
@@ -2466,7 +2466,7 @@ This example invokes %FREECNT at the YDB> prompt that displays the number of fre
 %PEEKBYNAME()
 ++++++++++++++++++
 
-%PEEKBYNAME() provides a stable interface to $ZPEEK() that uses control structure field names. $ZPEEK() provides a read-only mechanism to access selected fields in selected control structures in the address space of a process, including process private memory, database shared memory segments and Journal Pools. Although application code can call $ZPEEK() directly, such direct access must use numeric arguments that can vary from release to release. Access by name using %PEEKBYNAME makes application code more stable across YottaDB releases. For more information, refer to `$ZPEEK() <https://docs.yottadb.com/ProgrammersGuide/functions.html#zpeek>`_. YottaDB intends to maintain the stability of a name from release to release where that name refers to the same data item; however, we may add or obsolete names, or modify the type and size associated with existing names at our discretion, to reflect changes in the implementation. The format of the %PEEKBYNAME() function is:
+%PEEKBYNAME() provides a stable interface to $ZPEEK() that uses control structure field names. $ZPEEK() provides a read-only mechanism to access selected fields in selected control structures in the address space of a process, including process private memory, database shared memory segments and Journal Pools. Although application code can call $ZPEEK() directly, such direct access must use numeric arguments that can vary from release to release. Access by name using %PEEKBYNAME makes application code more stable across YottaDB releases. For more information, refer to `$ZPEEK() <./functions.html#zpeek>`_. YottaDB intends to maintain the stability of a name from release to release where that name refers to the same data item; however, we may add or obsolete names, or modify the type and size associated with existing names at our discretion, to reflect changes in the implementation. The format of the %PEEKBYNAME() function is:
 
 .. parsed-literal::
    %PEEKBYNAME(field[,regindex][,format])
@@ -2474,7 +2474,7 @@ This example invokes %FREECNT at the YDB> prompt that displays the number of fre
 * The first expression specifies the memory location to access in the format: CONTROL_BLOCK[.FIELD].* (For example, "gd_region.max_key_size").
 * The optional second expression specifies a region name, structure index or a base address associated with the first (field name) argument. The choice is governed by the following rules applied in the following order:
 
-  1. If the value is a hex value in the form of 0xhhhhhhhh[hhhhhhhh], then PEEKBYNAME uses it as the base address of the data to fetch. Also in this case, the offset, length, and type are taken from the field specified in the first expression (field). For more information, see the description of the "PEEK" mnemonic in `$ZPEEK() <https://docs.yottadb.com/ProgrammersGuide/functions.html#zpeek>`_.
+  1. If the value is a hex value in the form of 0xhhhhhhhh[hhhhhhhh], then PEEKBYNAME uses it as the base address of the data to fetch. Also in this case, the offset, length, and type are taken from the field specified in the first expression (field). For more information, see the description of the "PEEK" mnemonic in `$ZPEEK() <./functions.html#zpeek>`_.
   2. If the first expression refers to one of the region-related structures supported by the $ZPEEK() function, PEEKBYNAME treats this second expression as a region name.
   3. If the first expression refers to one of the replication related structures supported by the $ZPEEK() function that are indexed, PEEKBYNAME treats this second expression as a numerical (base 10) index value.
   4.  For those structures supported by the $ZPEEK() function that do not accept an argument, this second expression must be NULL or not specified.
@@ -2760,7 +2760,7 @@ YottaDB strongly recommends that except as documented here for sharing and gathe
 As they do for unshared statistics, shared statistics reflect all database actions for a TP transaction, including those during RESTARTs. Because the sharing of statistics is not a database operation that modifies the relative time stamps that YottaDB uses to maintain serialized operation preserving the Consistency and Isolation aspects of ACID operation, statistics generated by a sharing process inside a transaction (TSTART/TCOMMIT) do not cause transaction restarts as a consequence of updates to shared statistics by other processes.
 
 .. note::
-   See also: ydb_statsdir (which specifies the directory for database files into which processes that have opted-in to sharing global statistics place their statistics as binary data) and ydb_statshare (which specifies an initial value for the characteristic controlled by VIEW “[NO]STATSHARE” in application code) in the `Environment Variables <https://docs.yottadb.com/AdminOpsGuide/basicops.html#environment-variables>`_ section of the documentation. VIEW “[NO]STATSHARE”[:<region-list>] enables or disables database statistics sharing for listed regions which permit such sharing, more information `here <https://docs.yottadb.com/ProgrammersGuide/commands.html#key-words-in-view-command>`_.
+   See also: ydb_statsdir (which specifies the directory for database files into which processes that have opted-in to sharing global statistics place their statistics as binary data) and ydb_statshare (which specifies an initial value for the characteristic controlled by VIEW “[NO]STATSHARE” in application code) in the `Environment Variables <https://docs.yottadb.com/AdminOpsGuide/basicops.html#environment-variables>`_ section of the documentation. VIEW “[NO]STATSHARE”[:<region-list>] enables or disables database statistics sharing for listed regions which permit such sharing, more information `here <./commands.html#key-words-in-view-command>`_.
 
 ----------------------------
 UTF-8 Mode Utility Routines
@@ -2827,80 +2827,80 @@ Utilities Summary Table
 +----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
 | Utility Name                                                                                                   | Description                                                                                                  |
 +================================================================================================================+==============================================================================================================+
-| `%D <https://docs.yottadb.com/ProgrammersGuide/utility.html#d>`_                                               | Displays the current date in [d]d-mmm-[yy]yy format.                                                         |
+| `%D <./utility.html#d>`_                                               | Displays the current date in [d]d-mmm-[yy]yy format.                                                                                                 |
 +----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%DATE <https://docs.yottadb.com/ProgrammersGuide/utility.html#date>`_                                         | Converts input date to $HOROLOG format.                                                                      |
+| `%DATE <./utility.html#date>`_                                         | Converts input date to $HOROLOG format.                                                                                                              |
 +----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%DH <https://docs.yottadb.com/ProgrammersGuide/utility.html#dh>`_                                             | Converts decimal numbers to hexadecimal.                                                                     |
+| `%DH <./utility.html#dh>`_                                             | Converts decimal numbers to hexadecimal.                                                                                                             |
 +----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%DO <https://docs.yottadb.com/ProgrammersGuide/utility.html#do>`_                                             | Converts decimal numbers to octal.                                                                           |
+| `%DO <./utility.html#do>`_                                             | Converts decimal numbers to octal.                                                                                                                   |
 +----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%EXP <https://docs.yottadb.com/ProgrammersGuide/utility.html#exp>`_                                           | Raises number to the power of another number.                                                                |
+| `%EXP <./utility.html#exp>`_                                           | Raises number to the power of another number.                                                                                                        |
 +----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%FL <https://docs.yottadb.com/ProgrammersGuide/utility.html#fl>`_                                             | Lists comment lines at the beginning of the source programs.                                                 |
+| `%FL <./utility.html#fl>`_                                             | Lists comment lines at the beginning of the source programs.                                                                                         |
 +----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%FREECNT <https://docs.yottadb.com/ProgrammersGuide/utility.html#freecnt>`_                                   | Displays the number of free blocks in the database files associated with the current global directory.       |
+| `%FREECNT <./utility.html#freecnt>`_                                   | Displays the number of free blocks in the database files associated with the current global directory.                                               |
 +----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%G <https://docs.yottadb.com/ProgrammersGuide/utility.html#g>`_                                               | Displays global variables and their values.                                                                  |
+| `%G <./utility.html#g>`_                                               | Displays global variables and their values.                                                                                                          |
 +----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%GBLDEF <https://docs.yottadb.com/ProgrammersGuide/internatn.html#using-the-gbldef-utility>`_                 | Manipulates the collation sequence assigned to a global.                                                     |
+| `%GBLDEF <./internatn.html#using-the-gbldef-utility>`_                 | Manipulates the collation sequence assigned to a global.                                                                                             |
 +----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%GC <https://docs.yottadb.com/ProgrammersGuide/utility.html#gc>`_                                             | Copies a global or global sub-tree.                                                                          |
+| `%GC <./utility.html#gc>`_                                             | Copies a global or global sub-tree.                                                                                                                  |
 +----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%GCE <https://docs.yottadb.com/ProgrammersGuide/utility.html#gce>`_                                           | Replaces a specified value or part of a value in a set of global variables.                                  |
+| `%GCE <./utility.html#gce>`_                                           | Replaces a specified value or part of a value in a set of global variables.                                                                          |
 +----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%GD <https://docs.yottadb.com/ProgrammersGuide/utility.html#gd>`_                                             | Displays existing globals in the current global directory without displaying their values or descendants.    |
+| `%GD <./utility.html#gd>`_                                             | Displays existing globals in the current global directory without displaying their values or descendants.                                            |
 +----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%GED <https://docs.yottadb.com/ProgrammersGuide/utility.html#ged>`_                                           | Provides full-screen editing capabilities for global variables and values.                                   |
+| `%GED <./utility.html#ged>`_                                           | Provides full-screen editing capabilities for global variables and values.                                                                           |
 +----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%GI <https://docs.yottadb.com/ProgrammersGuide/utility.html#gi>`_                                             | Enters global variables and their values from a sequential file into a database.                             |
+| `%GI <./utility.html#gi>`_                                             | Enters global variables and their values from a sequential file into a database.                                                                     |
 +----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%GO <https://docs.yottadb.com/ProgrammersGuide/utility.html#go>`_                                             | Copies globals from the current database to a sequential output file.                                        |
+| `%GO <./utility.html#go>`_                                             | Copies globals from the current database to a sequential output file.                                                                                |
 +----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%GSE <https://docs.yottadb.com/ProgrammersGuide/utility.html#gse>`_                                           | Displays global variables and their values when the values contain a specified string or number.             |
+| `%GSE <./utility.html#gse>`_                                           | Displays global variables and their values when the values contain a specified string or number.                                                     |
 +----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%GSEL <https://docs.yottadb.com/ProgrammersGuide/utility.html#gsel>`_                                         | Selects globals by name.                                                                                     |
+| `%GSEL <./utility.html#gsel>`_                                         | Selects globals by name.                                                                                                                             |
 +----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%H <https://docs.yottadb.com/ProgrammersGuide/utility.html#h>`_                                               | Converts date and time to and from $HOROLOG format.                                                          |
+| `%H <./utility.html#h>`_                                               | Converts date and time to and from $HOROLOG format.                                                                                                  |
 +----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%HD <https://docs.yottadb.com/ProgrammersGuide/utility.html#hd>`_                                             | Converts hexadecimal numbers to decimal.                                                                     |
+| `%HD <./utility.html#hd>`_                                             | Converts hexadecimal numbers to decimal.                                                                                                             |
 +----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%HEX2UTF <https://docs.yottadb.com/ProgrammersGuide/utility.html#hex2utf>`_                                   | Converts the given bytestream in hexadecimal notation to YottaDB encoded character string.                   |
+| `%HEX2UTF <./utility.html#hex2utf>`_                                   | Converts the given bytestream in hexadecimal notation to YottaDB encoded character string.                                                           |
 +----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%HO <https://docs.yottadb.com/ProgrammersGuide/utility.html#ho>`_                                             | Converts hexadecimal numbers to octal.                                                                       |
+| `%HO <./utility.html#ho>`_                                             | Converts hexadecimal numbers to octal.                                                                                                               |
 +----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%LCASE <https://docs.yottadb.com/ProgrammersGuide/utility.html#lcase>`_                                       | Converts a string to all lower case.                                                                         |
+| `%LCASE <./utility.html#lcase>`_                                       | Converts a string to all lower case.                                                                                                                 |
 +----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%LCLCOL <https://docs.yottadb.com/ProgrammersGuide/internatn.html#establishing-a-local-collation-sequence>`_  | Manipulates the collation sequence assigned to local variables.                                              |
+| `%LCLCOL <./internatn.html#establishing-a-local-collation-sequence>`_  | Manipulates the collation sequence assigned to local variables.                                                                                      |
 +----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%OD <https://docs.yottadb.com/ProgrammersGuide/utility.html#od>`_                                             | Converts octal numbers to decimal.                                                                           |
+| `%OD <./utility.html#od>`_                                             | Converts octal numbers to decimal.                                                                                                                   |
 +----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%OH <https://docs.yottadb.com/ProgrammersGuide/utility.html#oh>`_                                             | Converts octal numbers to hexadecimal.                                                                       |
+| `%OH <./utility.html#oh>`_                                             | Converts octal numbers to hexadecimal.                                                                                                               |
 +----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%PATCODE <https://docs.yottadb.com/ProgrammersGuide/internatn.html#pattern-code-definition>`_                 | Loads pattern definition files for use within an active database.                                            |
+| `%PATCODE <./internatn.html#pattern-code-definition>`_                 | Loads pattern definition files for use within an active database.                                                                                    |
 +----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%RCE <https://docs.yottadb.com/ProgrammersGuide/utility.html#rce>`_                                           | Replaces every occurrence of a text string with another string in a routine or list of routines.             |
+| `%RCE <./utility.html#rce>`_                                           | Replaces every occurrence of a text string with another string in a routine or list of routines.                                                     |
 +----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%RD <https://docs.yottadb.com/ProgrammersGuide/utility.html#rd>`_                                             | Lists routine names available through your $ZROUTINES search list.                                           |
+| `%RD <./utility.html#rd>`_                                             | Lists routine names available through your $ZROUTINES search list.                                                                                   |
 +----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%RI <https://docs.yottadb.com/ProgrammersGuide/utility.html#ri>`_                                             | Transfers routines from ANSI sequential format into individual .m files in YottaDB format.                   |
+| `%RI <./utility.html#ri>`_                                             | Transfers routines from ANSI sequential format into individual .m files in YottaDB format.                                                           |
 +----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%RO <https://docs.yottadb.com/ProgrammersGuide/utility.html#ro>`_                                             | Writes M routines in ANSI transfer format.                                                                   |
+| `%RO <./utility.html#ro>`_                                             | Writes M routines in ANSI transfer format.                                                                                                           |
 +----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%RSE <https://docs.yottadb.com/ProgrammersGuide/utility.html#rse>`_                                           | Searches for every occurrence of a text string in a routine or a list of routines.                           |
+| `%RSE <./utility.html#rse>`_                                           | Searches for every occurrence of a text string in a routine or a list of routines.                                                                   |
 +----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%RSEL <https://docs.yottadb.com/ProgrammersGuide/utility.html#id3>`_                                          | Selects M routines and places their directories and names in a local array.                                  |
+| `%RSEL <./utility.html#id3>`_                                          | Selects M routines and places their directories and names in a local array.                                                                          |
 +----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%SQROOT <https://docs.yottadb.com/ProgrammersGuide/utility.html#sqroot>`_                                     | Calculates the square root of a number.                                                                      |
+| `%SQROOT <./utility.html#sqroot>`_                                     | Calculates the square root of a number.                                                                                                              |
 +----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%T <https://docs.yottadb.com/ProgrammersGuide/utility.html#t>`_                                               | Displays the current time in [h]h:mm AM/PM format.                                                           |
+| `%T <./utility.html#t>`_                                               | Displays the current time in [h]h:mm AM/PM format.                                                                                                   |
 +----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%TI <https://docs.yottadb.com/ProgrammersGuide/utility.html#ti>`_                                             | Converts time to $HOROLOG format.                                                                            |
+| `%TI <./utility.html#ti>`_                                             | Converts time to $HOROLOG format.                                                                                                                    |
 +----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%TO <https://docs.yottadb.com/ProgrammersGuide/utility.html#to>`_                                             | Converts the current time from $HOROLOG format to [h]h:mm AM/PM format.                                      |
+| `%TO <./utility.html#to>`_                                             | Converts the current time from $HOROLOG format to [h]h:mm AM/PM format.                                                                              |
 +----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%UCASE <https://docs.yottadb.com/ProgrammersGuide/utility.html#ucase>`_                                       | Converts a string to all upper case.                                                                         |
+| `%UCASE <./utility.html#ucase>`_                                       | Converts a string to all upper case.                                                                                                                 |
 +----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%UTF2HEX <https://docs.yottadb.com/ProgrammersGuide/utility.html#utf2hex>`_                                   | Converts UTF-8 encoded YottaDB character string to bytestream in hexadecimal notation.                       |
+| `%UTF2HEX <./utility.html#utf2hex>`_                                   | Converts UTF-8 encoded YottaDB character string to bytestream in hexadecimal notation.                                                               |
 +----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
 

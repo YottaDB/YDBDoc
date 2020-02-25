@@ -1,5 +1,5 @@
 
-.. index:: 
+.. index::
     Database Management
 
 ===============================
@@ -17,9 +17,9 @@ This chapter describes common database management operations such as creating da
 
 YottaDB uses M Peripheral Interchange Program (MUPIP) for database management, database journaling, and logical multisite replication (LMS). This chapter summarizes the MUPIP commands pertaining to YottaDB database management and serves as a foundation for more advanced YottaDB functionality described for Journaling and LMS.
 
-For MUPIP commands pertaining to database journaling, refer to `Chapter 6: “YottaDB Journaling” <https://docs.yottadb.com/AdminOpsGuide/ydbjournal.html>`_.
+For MUPIP commands pertaining to database journaling, refer to `Chapter 6: “YottaDB Journaling” <./ydbjournal.html>`_.
 
-For MUPIP commands pertaining to multisite database replication, refer to `Chapter 7: “Database Replication” <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html>`_. 
+For MUPIP commands pertaining to multisite database replication, refer to `Chapter 7: “Database Replication” <./dbrepl.html>`_.
 
 .. note::
    Two MUPIP operations - INTRPT and STOP - perform process management functions. All other MUPIP operations relate to the operation of the database.
@@ -37,7 +37,7 @@ MUPIP asks for commands, with the MUPIP> prompt. Enter the EXIT command at the M
 When additional information appears on the command line after the mupip program name, MUPIP processes the additional information as its command, for example:
 
 .. parsed-literal::
-   $ydb_dist/mupip stop 1158 
+   $ydb_dist/mupip stop 1158
 
 This starts MUPIP and stops the process with Process ID (PID) 1158.
 
@@ -45,7 +45,7 @@ Some MUPIP commands require information contained in the global directory. There
 
 The environment variable ydb_gbldir specifies the active global directory.
 
-A ydb_gbldir value of mumps.gld tells MUPIP to look for a global directory file mumps.gld in the current directory. For more information on the global directory, refer to `“Global Directory Editor” <https://docs.yottadb.com/AdminOpsGuide/gde.html>`_.
+A ydb_gbldir value of mumps.gld tells MUPIP to look for a global directory file mumps.gld in the current directory. For more information on the global directory, refer to `“Global Directory Editor” <./gde.html>`_.
 
 .. note::
    YottaDB recommends against running YottaDB components as root. When run as root, YottaDB components use the owner and group of the database file as the owner and group of newly created journal files, backup files, snapshot files, shared memory, and semaphores. In addition, they set the permissions on the resulting files, shared memory, and semaphores, as if running as the owner of the database file and as a member of the database file group.
@@ -54,7 +54,7 @@ A ydb_gbldir value of mumps.gld tells MUPIP to look for a global directory file 
    You can perform read operations on a YottaDB database residing on a read-only mounted filesystem. However, the filesystem must remain read-only for the duration of any process that opens a database file resident on it. If a read-only file system is switched to read-write while YottaDB processes have database files open on it, and other processes update those databases, the read-only processes are likely to read incorrect or corrupt data. When the filesystem is read-only, the shared memory resources - which are typically shared among multiple processes - become private to each process instead, so memory resource use increases with each additional concurrent process. M locks mapped to regions that map to database files on read-only filesystems are visible only to the process that owns the locks, and are invisible to other processes.
 
 +++++++++++++++++++++++++++++++++++++++++++++++
-Operations - Standalone and Concurrent Access 
+Operations - Standalone and Concurrent Access
 +++++++++++++++++++++++++++++++++++++++++++++++
 
 While most MUPIP operations can be performed when YottaDB processes are actively accessing database files, some operations require stand-alone access. When using standalone access, no other process can access the database file(s). When using concurrent access, other processes can read or update the database file(s) while MUPIP accesses them. A few operations permit concurrent access to read database files, but not to update them. All MUPIP operations can be performed with stand-alone access - there is never a requirement for another process to be accessing database files when MUPIP operates on them.
@@ -119,11 +119,11 @@ MUPIP
 The general format of MUPIP commands is:
 
 .. parsed-literal::
-   mupip command [-qualifier[...]] [object[,...]] [destination] 
+   mupip command [-qualifier[...]] [object[,...]] [destination]
 
 MUPIP allows the abbreviation of commands and qualifiers. In each section describing a command or qualifier, the abbreviation is also shown (for example, B[ACKUP]). The abbreviated version of B[ACKUP] you can use on the command line is B. To avoid future compatibility problems and improve readability, specify at least four characters when using MUPIP commands in scripts.
 
-Although you can enter commands in both upper and lower case (the mupip program name itself must be in lower case on UNIX/Linux), the typographical convention used in this chapter is all small letters for commands. Another convention is in the presentation of command syntax. If the full format of the command is too long for a single line of print, the presentation wraps around into additional lines. 
+Although you can enter commands in both upper and lower case (the mupip program name itself must be in lower case on UNIX/Linux), the typographical convention used in this chapter is all small letters for commands. Another convention is in the presentation of command syntax. If the full format of the command is too long for a single line of print, the presentation wraps around into additional lines.
 
 .. parsed-literal::
    $ mupip backup -bytestream -transaction=1 accounts,history,tables,miscellaneous /var/production/backup/
@@ -136,14 +136,14 @@ MUPIP qualifier values are restricted only by the maximum size of the command in
 Commands and Qualifiers
 --------------------------
 
-The MUPIP commands described in this section are used for common database operations and serves as the foundation for more advanced functionality like `Journaling <https://docs.yottadb.com/AdminOpsGuide/ydbjournal.html>`_ and `Replication <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html>`_.
+The MUPIP commands described in this section are used for common database operations and serves as the foundation for more advanced functionality like `Journaling <./ydbjournal.html>`_ and `Replication <./dbrepl.html>`_.
 
 ++++++++++++
 BACKUP
 ++++++++++++
 
 Saves the contents of the database. It provides a consistent application snapshot across all database regions involved in the backup operation.
-The format of the MUPIP BACKUP command is: 
+The format of the MUPIP BACKUP command is:
 
 .. parsed-literal::
    B[ACKUP]
@@ -191,7 +191,7 @@ The format of the MUPIP BACKUP command is:
 
 **Before Starting a MUPIP Backup**
 
-Perform the following tasks before you begin a database backup. 
+Perform the following tasks before you begin a database backup.
 
 * Ensure adequate disk space for target location and temporary files. Set the environment variable ydb_baktmpdir to specify the directory where MUPIP BACKUP creates temporary files. If ydb_baktmpdir is not defined, YottaDB uses the deprecated GTM_BAKTMPDIR environment variable if defined, and otherwise uses the current working directory. Do not place temporary files in the current directory for large databases in production environments.
 
@@ -209,9 +209,9 @@ Perform the following tasks before you begin a database backup.
 
 confirms that ydb.dat is backed up correctly and is ready for archival.
 
-* Determine an appropriate frequency, timing, and backup method (-BYTESTREAM or -DATABASE) based on the situation. 
+* Determine an appropriate frequency, timing, and backup method (-BYTESTREAM or -DATABASE) based on the situation.
 
-* Ensure the user issuing backup commands has appropriate permissions before starting the backup. Backup files have the ownership of the user running MUPIP BACKUP. 
+* Ensure the user issuing backup commands has appropriate permissions before starting the backup. Backup files have the ownership of the user running MUPIP BACKUP.
 
 * There is one circumstance under which a MUPIP BACKUP is not advised.  When your operational procedures call for taking backups of unmodified databases and journal files when rebooting a system after a crash, use an underlying operating system command (cp, cpio, gzip, tar, and so on) which will open the files read-only.  Note that for ordinary system crashes where the system simply stops writing to open files at power down, you can use MUPIP JOURNAL to recover journaled database files, and taking backups on reboot should not be required.  However, for system crashes with the possibility of damage to files already written to disk (for example, if the crash involved an IO controller with the potential for having written random data to disk immediately prior to power down), such backups on reboot are appropriate.
 
@@ -246,7 +246,7 @@ The format of the BKUPDBJNL qualifier is:
 Transfers MUPIP BACKUP output to a TCP connection, file (or a backup directory), or a pipe. If there are multiple .dat files, BYTESTREAM transfers output to a comma separated list of TCP connections, incremental backup files and/or directories, or pipes. When used with -SINCE or -TRANSACTION, MUPIP BACKUP allows incremental backup, that is, includes database blocks that have changed since a prior point specified by the -SINCE or -TRANSACTION.
 
 .. note::
-   MUPIP BACKUP output to a TCP connection saves disk I/O bandwidth on the current system. 
+   MUPIP BACKUP output to a TCP connection saves disk I/O bandwidth on the current system.
 
 All bytestream backups needs to be restored to a random access file (with MUPIP RESTORE) before being used as a database file. -BYTESTREAM can also send the output directly to a listening MUPIP RESTORE process via a TCP/IP connection or a pipe.
 
@@ -259,7 +259,7 @@ The format of the BYTESTREAM qualifier is:
 
 * -INCREMENTAL is deprecated in favor of -BYTESTREAM. For upward compatibility, MUPIP temporarily continues to support the deprecated -INCREMENTAL
 
-~~~~~~~~~~  
+~~~~~~~~~~
 -Database
 ~~~~~~~~~~
 
@@ -301,16 +301,16 @@ The format of the NEWJNLFILES qualifier is:
    -[NO]NEWJNLFILES[=[NO]PREVLINK], [NO]S[YNC_IO]]
 
 * -NEWJNLFILES can take the following three values:
-  
+
   * PREVLINK: Back links new journal files with the journal files of the prior generation. This is the default value.
   * NOPREVLINK: Indicates that there should be no back link between the newly created journals and the journal files of the prior generation.
-  * SYNC_IO: Specifies that every WRITE to a journal file is to be committed directly to disk. On high-end disk subsystems (for example, those that include a non-volatile cache and consider the data to be committed when it reaches this cache), this might result in a better performance than the NOSYNC_IO option. (NOSYNC_IO turns off this option). 
+  * SYNC_IO: Specifies that every WRITE to a journal file is to be committed directly to disk. On high-end disk subsystems (for example, those that include a non-volatile cache and consider the data to be committed when it reaches this cache), this might result in a better performance than the NOSYNC_IO option. (NOSYNC_IO turns off this option).
 
 * -NONEWJNLFILES causes journaling to continue with the current journal files. It does not accept any arguments.
 
-* The default is -NEWJNLFILES=PREVLINK. 
+* The default is -NEWJNLFILES=PREVLINK.
 
-~~~~~~~~~  
+~~~~~~~~~
 -Online
 ~~~~~~~~~
 
@@ -325,7 +325,7 @@ Specifies that while a MUPIP BACKUP operation is active, other processes can upd
 
 * By default, MUPIP BACKUP is -ONLINE.
 
-~~~~~~~~  
+~~~~~~~~
 -Record
 ~~~~~~~~
 
@@ -340,11 +340,11 @@ The format of the RECORD qualifier is:
 
 * -RECORD replaces the previously RECORDed transaction identifier for the database file.
 
-~~~~~~~~~  
+~~~~~~~~~
 -Replace
 ~~~~~~~~~
 
-Overwrites the existing destination files. 
+Overwrites the existing destination files.
 
 The format of the REPLACE qualifier is:
 
@@ -355,7 +355,7 @@ The format of the REPLACE qualifier is:
 
 * -REPLACE is compatible only with -DATABASE.
 
-~~~~~~~~~~~~~~  
+~~~~~~~~~~~~~~
 -REPLinstance
 ~~~~~~~~~~~~~~
 
@@ -406,7 +406,7 @@ Specifies the transaction number of a starting transaction that causes BACKUP -B
 * Incompatible with: -DATABASE, -SINCE.
 
 .. note::
-   A point in time that is consistent from an application perspective, is unlikely to have the same transaction number in all database regions. Therefore, except for -TRANSACTION=1, this qualifier is not likely to be useful for any backup involving multiple regions. 
+   A point in time that is consistent from an application perspective, is unlikely to have the same transaction number in all database regions. Therefore, except for -TRANSACTION=1, this qualifier is not likely to be useful for any backup involving multiple regions.
 
 **Examples for MUPIP BACKUP**
 
@@ -510,7 +510,7 @@ Example:
 .. parsed-literal::
    $ mupip backup -newjnlfiles=noprevlink,sync_io "*" backupdir
 
-This example creates new journal files for the current regions, cuts the previous journal file link for all regions in the global directory, enables the SYNC_IO option and takes a backup of all databases in the directory backupdir. 
+This example creates new journal files for the current regions, cuts the previous journal file link for all regions in the global directory, enables the SYNC_IO option and takes a backup of all databases in the directory backupdir.
 
 ++++++++++++++++
 CREATE
@@ -525,7 +525,7 @@ The format of the CREATE command is:
 
 The single optional -REGION qualifier specifies a region for which to create a database file.
 
-Note that one YottaDB database file grows to a maximum size of 1,040,187,392(992Mi) blocks. This means, for example, that with an 8KB block size, the maximum single database file size is 1,792GB (8KB*224M). Note that this is the size of one database file -- a logical database (an M global variable namespace) can consist of an arbitrary number of database files. 
+Note that one YottaDB database file grows to a maximum size of 1,040,187,392(992Mi) blocks. This means, for example, that with an 8KB block size, the maximum single database file size is 1,792GB (8KB*224M). Note that this is the size of one database file -- a logical database (an M global variable namespace) can consist of an arbitrary number of database files.
 
 ~~~~~~~~~~
 -Region
@@ -581,7 +581,7 @@ DUMPFHEAD
 The MUPIP DUMPFHEAD command displays information about one or more database files. The format of the MUPIP DUMPFHEAD command is:
 
 .. parsed-literal::
-   DU[MPFHEAD] {-F[ILE] file-name \| -R[EGION] region-list} 
+   DU[MPFHEAD] {-F[ILE] file-name \| -R[EGION] region-list}
 
 
 ~~~~~~~~~~~~~~~~
@@ -608,7 +608,7 @@ Specifies that the INTEG parameter identifies one or more regions rather than a 
 
 * The region-list identifies the target of DUMPFHEAD. region-list may specify more than one region of the current global directory in a list. Regions are case-insensitive, separated by a comma, and wildcards can be used to specify them. Any region-name may include the wildcard characters * and ? (remember to escape them to protect them from inappropriate expansion by the shell). Any region name expansion occurs in M (ASCII) collation order.
 
-* The region-list argument may specify more than one region of the current Global Directory in a list separated with commas. DUMPFHEAD -REGION requires the environment variable ydb_gbldir to specify a valid Global Directory. For more information on defining ydb_gbldir, refer to `Chapter 4: “Global Directory Editor” <https://docs.yottadb.com/AdminOpsGuide/gde.html>`_.
+* The region-list argument may specify more than one region of the current Global Directory in a list separated with commas. DUMPFHEAD -REGION requires the environment variable ydb_gbldir to specify a valid Global Directory. For more information on defining ydb_gbldir, refer to `Chapter 4: “Global Directory Editor” <./gde.html>`_.
 
 * The -REGION qualifier is incompatible with the -FILE qualifier.
 
@@ -648,9 +648,9 @@ Converts a database file from one endian format to the other (BIG to LITTLE or L
 
 * YottaDB displays a confirmation request with the "from" and "to" endian formats to perform the conversion. Conversion begins only upon receiving positive confirmation, which is a case-insensitive "yes".
 
-* In a multi-site replication configuration, the receiver server automatically detects the endian format of an incoming replication stream and converts it into the native endian format. See the `Database Replication chapter <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html>`_ for more information.
+* In a multi-site replication configuration, the receiver server automatically detects the endian format of an incoming replication stream and converts it into the native endian format. See the `Database Replication chapter <./dbrepl.html>`_ for more information.
 
-* Encrypted database files converted with ENDIANCVT require the same key and the same cipher that were used to encrypt them. 
+* Encrypted database files converted with ENDIANCVT require the same key and the same cipher that were used to encrypt them.
 
 .. note::
    YottaDB on a big endian platform can convert a little endian database into big endian and vice versa; as can YottaDB on a little endian platform. YottaDB (run-time and utilities other than MUPIP ENDIANCVT) on a given endian platform opens and processes only those databases that are in the same endian format. An attempt to open a database of a format other than the native endian format produces an error.
@@ -677,7 +677,7 @@ Note that the OVERRIDE qualifier does not override critical errors (database int
    Converting to new file mumps_cvt.dat
    Proceed [yes/no] ?
 
-This command detects the endian format of mumps.dat and converts it to the other endian format if you type yes to confirm. 
+This command detects the endian format of mumps.dat and converts it to the other endian format if you type yes to confirm.
 
 ++++++++++
 EXIT
@@ -709,11 +709,11 @@ The format of the MUPIP EXTEND command is:
 
 * EXTEND uses the Global Directory to map the region to the dynamic segment and the segment to the file.
 
-~~~~~~~~  
+~~~~~~~~
 -Blocks
 ~~~~~~~~
 
-Specifies the number of GDS database blocks by which MUPIP should extend the file. GDS files use additional blocks for bitmaps. MUPIP EXTEND adds the specified number of blocks plus the bitmap blocks required as overhead. For more information about bitmaps, refer to `Chapter 9: “YottaDB Database Structure(GDS)” <https://docs.yottadb.com/AdminOpsGuide/gds.html>`_.
+Specifies the number of GDS database blocks by which MUPIP should extend the file. GDS files use additional blocks for bitmaps. MUPIP EXTEND adds the specified number of blocks plus the bitmap blocks required as overhead. For more information about bitmaps, refer to `Chapter 9: “YottaDB Database Structure(GDS)” <./gds.html>`_.
 
 The format of the BLOCK qualifier is:
 
@@ -743,7 +743,7 @@ EXTRACT
 Backs up certain globals or extracts data from the database for use by another system. The MUPIP EXTRACT command copies globals from the current database to a sequential output file in one of three formats - GO, BINARY, or ZWR. The format of the MUPIP EXTRACT command is:
 
 .. parsed-literal::
-   EXTR[ACT] 
+   EXTR[ACT]
    [
     -FO[RMAT]={GO|B[INARY]|Z[WR]}
     -FR[EEZE]
@@ -767,7 +767,7 @@ Backs up certain globals or extracts data from the database for use by another s
 
 * In UTF-8 mode, MUPIP EXTRACT writes a sequential output file in the UTF-8 character encoding. Ensure that the MUPIP EXTRACT commands and corresponding MUPIP LOAD commands execute with the same setting for the environment variable ydb_chset.
 
-* The GO format is not supported for UTF-8 mode. Use BINARY or ZWR formats in UTF-8 mode. 
+* The GO format is not supported for UTF-8 mode. Use BINARY or ZWR formats in UTF-8 mode.
 
 For information on extracting globals with the %GO utility, refer to the `"Utility Routines" chapter of the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/utility.html>`_. MUPIP EXTRACT is typically faster, but %GO can be customized.
 
@@ -784,7 +784,7 @@ Specifies the format of the output file. The format of the FORMAT qualifier is:
 
 The format code is any one of the following:
 
-1. B[INARY] - Binary format, used for database reorganization or short term backups. MUPIP EXTRACT -FORMAT=BINARY works much faster than MUPIP EXTRACT -FORMAT=GO and MUPIP EXTRACT -FORMAT=ZWR. Note: There is no defined standard to transport binary data from one YottaDB implementation to another. Furthermore, YottaDB reserves the right to modify the binary format in new versions. The first record of a BINARY format data file contains the header label. The header label is 87 characters long. The following table illustrates the components of the header label. 
+1. B[INARY] - Binary format, used for database reorganization or short term backups. MUPIP EXTRACT -FORMAT=BINARY works much faster than MUPIP EXTRACT -FORMAT=GO and MUPIP EXTRACT -FORMAT=ZWR. Note: There is no defined standard to transport binary data from one YottaDB implementation to another. Furthermore, YottaDB reserves the right to modify the binary format in new versions. The first record of a BINARY format data file contains the header label. The header label is 87 characters long. The following table illustrates the components of the header label.
 
    +----------------------------+-------------------------------------------------------------------------------------------+
    | Characters                 | Explanation                                                                               |
@@ -807,17 +807,17 @@ The format code is any one of the following:
    | 56-62                      | Fixed-length ASCII text:Decimal maximum key size of the union of each region from which   |
    |                            | data is extracted                                                                         |
    +----------------------------+-------------------------------------------------------------------------------------------+
-   | 63-69                      | Fixed-length ASCII text:Boolean indicator of Standard NULL collation (1) or YottaDB       |
-   |                            | legacy collation (0).                                                                     |
+   | 63-69                      | Fixed-length ASCII text:Boolean indicator of Standard NULL collation (1) or historical    |
+   |                            | null collation (0).                                                                       |
    +----------------------------+-------------------------------------------------------------------------------------------+
    | 70-100                     | Fixed-length ASCII text: Space-padded label specified by the -LABEL qualifier; the default|
    |                            | LABEL is "MUPIP EXTRACT"                                                                  |
    |                            | For extracts in UTF-8 mode, YottaDB prefixes UTF-8 and a space to -LABEL.                 |
    +----------------------------+-------------------------------------------------------------------------------------------+
 
-2. GO - Global Output format, used for files to transport or archive. -FORMAT=GO stores the data in record pairs. Each global node produces two records - the first contains the key and the second contains the value. MUPIP EXTRACT -FORMAT=GO has two header records - the first is a text label (refer to the LABEL qualifier) and the second is the date and time of extract in $ZDATE() format DD-MON-YEAR 24:60:SS. If -LABEL is not specified, the default first header is "YottaDB MUPIP EXTRACT". 
+2. GO - Global Output format, used for files to transport or archive. -FORMAT=GO stores the data in record pairs. Each global node produces two records - the first contains the key and the second contains the value. MUPIP EXTRACT -FORMAT=GO has two header records - the first is a text label (refer to the LABEL qualifier) and the second is the date and time of extract in $ZDATE() format DD-MON-YEAR 24:60:SS. If -LABEL is not specified, the default first header is "YottaDB MUPIP EXTRACT".
 
-3. ZWR - ZWRITE format, used for files to transport or archive that may contain non-graphical information. Each global node produces one record with both a key and data. MUPIP EXTRACT -FORMAT=ZWR has two header records, which are the same as for FORMAT=GO, except that the second record ends with the text " ZWR". 
+3. ZWR - ZWRITE format, used for files to transport or archive that may contain non-graphical information. Each global node produces one record with both a key and data. MUPIP EXTRACT -FORMAT=ZWR has two header records, which are the same as for FORMAT=GO, except that the second record ends with the text " ZWR".
 
 ~~~~~~~
 -FREEZE
@@ -830,7 +830,7 @@ The format of the FREEZE qualifier is:
 .. parsed-literal::
    -FR[EEZE]
 
-By default, MUPIP EXTRACT does not "freeze" regions during operation. 
+By default, MUPIP EXTRACT does not "freeze" regions during operation.
 
 ~~~~~~~~
 -LABEL
@@ -843,9 +843,9 @@ Specifies the text string that becomes the first record in the output file. MUPI
 
 * By default, EXTRACT uses the label "MUPIP EXTRACT."
 
-* For more detailed information about the -FORMAT=BINARY header label, refer to the description of EXTRACT -FORMAT=BINARY. 
+* For more detailed information about the -FORMAT=BINARY header label, refer to the description of EXTRACT -FORMAT=BINARY.
 
-~~~~~~  
+~~~~~~
 -LOG
 ~~~~~~
 
@@ -854,7 +854,7 @@ Displays a message on stdout for each global extracted with the MUPIP EXTRACT co
 .. parsed-literal::
    -[NO]LO[G]
 
-By default, EXTRACT operates -LOG. 
+By default, EXTRACT operates -LOG.
 
 ~~~~~~~~~
 -NULL_IV
@@ -880,7 +880,7 @@ Creates an encrypted binary extract with null IVs from a database with non-null 
 Restricts MUPIP EXTRACT to a set of regions. The format of the REGION qualifier is:
 
 .. parsed-literal::
-   -R[EGION]=region-list 
+   -R[EGION]=region-list
 
 region-list may specify more than one region of the current global directory in a list. Regions are case-insensitive, separated by a comma, and wildcards can be used to specify them. Any region-name may include the wildcard characters * and % (remember to escape them to protect them from inappropriate expansion by the shell). Any region name expansion occurs in M (ASCII) collation order.
 
@@ -895,15 +895,15 @@ Specifies globals for a MUPIP EXTRACT operation. The format of the SELECT qualif
 
 * By default, EXTRACT selects all globals, as if it had the qualifier -SELECT=*
 
-* The caret symbol (^) in the specification of the global name is optional. 
+* The caret symbol (^) in the specification of the global name is optional.
 
 The global-specification can be:
 
 * A global name, such as MEF. In this case, MUPIP EXTRACT selects only global ^MEF.
 * A range of global names, such as A7:B6. In this case, MUPIP EXTRACT selects all global names between ^A7 and ^B6, inclusive.
 * A list, such as A,B,C. In this case, MUPIP EXTRACT selects globals ^A, ^B, and ^C.
-* A suffix with a global name. For example, PIGEON* selects all global names from ^PIGEON through ^PIGEONzzzzz. You can use suffixes with a global name or a list. 
-  
+* A suffix with a global name. For example, PIGEON* selects all global names from ^PIGEON through ^PIGEONzzzzz. You can use suffixes with a global name or a list.
+
 .. note::
    If the rules for selection are complex, it may be easier to construct an ad hoc Global Directory that maps the global variables to be extracted to the database file. This may not be permissible if the database file is part of a replicated instance. If this is the case, work with a backup of the database.
 
@@ -958,7 +958,7 @@ Example:
 .. parsed-literal::
    $ mupip extract -select=Tyrannosaurus /dev/tty
 
-This command instructs EXTRACT to dump the global ^Tyrannosaurus to the device (file-name) /dev/tty. 
+This command instructs EXTRACT to dump the global ^Tyrannosaurus to the device (file-name) /dev/tty.
 
 ++++++++++++++
 FREEZE
@@ -1024,7 +1024,7 @@ The format of the OFF qualifier is:
 
 * Incompatible with: -ON, -RECORD
 
-~~~~  
+~~~~
 -ON
 ~~~~
 
@@ -1066,9 +1066,9 @@ Controls the behavior of a FREEZE specified with -ONLINE when YottaDB must write
 
 * An -AUTORELEASE action requires a FREEZE -OFF to reestablish a normal database state.
 
-* Incompatible with: -OFF, -NOONLINE 
+* Incompatible with: -OFF, -NOONLINE
 
-~~~~~~~~ 
+~~~~~~~~
 -ONLINE
 ~~~~~~~~
 
@@ -1080,11 +1080,11 @@ Controls the potential impact of a FREEZE on concurrently updating processes. Th
 * ON -NOONLINE, the default, causes the freeze to last until OFF, and makes management of the FREEZE straightforward.
 
 * ON -ONLINE, causes YottaDB to attempt to minimize the impact of the FREEZE on concurrently updating processes by taking a number of actions, as appropriate:
-  
+
   * Switching journal files to provide maximum space
   * Performing an epoch to provide maximum time to the next epoch
   * Flushing the global buffers to make all available to hold updates
-  * Incompatible with: -AUTORELEASE, -OFF 
+  * Incompatible with: -AUTORELEASE, -OFF
 
 * After performing these preparations, -ONLINE allows updating processes to make updates to global buffers but defer flushing them to the database file.
 
@@ -1110,7 +1110,7 @@ Release a freeze set by a process with a different userid. YottaDB provides OVER
 
 * Incompatible with: -AUTORELEASE, -ON, -ONLINE, -RECORD
 
-~~~~~~~~  
+~~~~~~~~
 -RECORD
 ~~~~~~~~
 
@@ -1159,7 +1159,7 @@ Example:
 .. parsed-literal::
    $ mupip freeze -override -off DEFAULT
 
-This command unfreezes the DEFAULT region even if the freeze was set by a process with a different userid. 
+This command unfreezes the DEFAULT region even if the freeze was set by a process with a different userid.
 
 +++++++++
 FTOK
@@ -1199,7 +1199,7 @@ Uses a 128 bit hash based on the MurmurHash3 algorithm to provide the hash of so
 The format of the MUPIP HASH command is:
 
 .. parsed-literal::
-   MUPIP HASH <file-names> 
+   MUPIP HASH <file-names>
 
 ++++++++++++
 INTEG
@@ -1223,7 +1223,7 @@ Improving the logical and physical adjacency of global nodes may result in faste
 The format of the MUPIP INTEG command is:
 
 .. parsed-literal::
-   I[NTEG] 
+   I[NTEG]
    [
     -A[DJACENCY]=integer
     -BL[OCK]=hexa;block-number
@@ -1234,7 +1234,7 @@ The format of the MUPIP INTEG command is:
     -[NO]MAP[=integer]
     -[NO]MAXK[EYSIZE][=integer]
     -[NO]O[NLINE]
-    -S[UBSCRIPT]=subscript] 
+    -S[UBSCRIPT]=subscript]
     -TN[_RESET]
     -[NO]TR[ANSACTION][=integer]
    ]
@@ -1251,15 +1251,15 @@ The format of the MUPIP INTEG command is:
 * MUPIP INTEG operation keeps track of the number of blocks that do not have the current block version during a non-fast integ (default or full) and matches this value against the blocks to upgrade counters in the file-header. It issues an error if the values are unmatched and corrects the count in the file header if there are no other integrity errors.
 
 .. note::
-   Promptly analyze and fix all errors that MUPIP INTEG reports. Some errors may be benign while others may be signs of corruption or compromised database integrity. If operations continue without fixes to serious errors, the following problems may occur: Invalid application operation due to missing or incorrect data, Process errors (including inappropriate indefinite looping when a database access encounters an error), and degrading application level consistency as a result of incomplete update sequences caused by pre-existing database integrity issues. 
+   Promptly analyze and fix all errors that MUPIP INTEG reports. Some errors may be benign while others may be signs of corruption or compromised database integrity. If operations continue without fixes to serious errors, the following problems may occur: Invalid application operation due to missing or incorrect data, Process errors (including inappropriate indefinite looping when a database access encounters an error), and degrading application level consistency as a result of incomplete update sequences caused by pre-existing database integrity issues.
 
 YottaDB strongly recommends fixing the following errors as soon as they are discovered:
 
 * Blocks incorrectly marked free - these may cause accelerating damage when processes make updates to any part of the database region.
 
-* Integrity errors in an index block - these may cause accelerating damage when processes make updates to that area of the database region using the faulty index. For more information, refer to `Chapter 11: “Maintaining Database Integrity” <https://docs.yottadb.com/AdminOpsGuide/integrity.html>`_.
-  
-MUPIP INTEG -FAST and the "regular" INTEG both report these errors (These qualifiers are described later in this section). Other database errors do not pose the threat of rapidly spreading problems in GDS files. After the YottaDB database repair, assess the type of damage, the risk of continued operations, and the disruption in normal operation caused by the time spent repairing the database. For information on analyzing and correcting database errors, refer to `Chapter 11: “Maintaining Database Integrity” <https://docs.yottadb.com/AdminOpsGuide/integrity.html>`_. Contact your YottaDB support channel for help assessing INTEG errors.
+* Integrity errors in an index block - these may cause accelerating damage when processes make updates to that area of the database region using the faulty index. For more information, refer to `Chapter 11: “Maintaining Database Integrity” <./integrity.html>`_.
+
+MUPIP INTEG -FAST and the "regular" INTEG both report these errors (These qualifiers are described later in this section). Other database errors do not pose the threat of rapidly spreading problems in GDS files. After the YottaDB database repair, assess the type of damage, the risk of continued operations, and the disruption in normal operation caused by the time spent repairing the database. For information on analyzing and correcting database errors, refer to `Chapter 11: “Maintaining Database Integrity” <./integrity.html>`_. Contact your YottaDB support channel for help assessing INTEG errors.
 
 The following sections describe the qualifiers of the INTEG command.
 
@@ -1267,7 +1267,7 @@ The following sections describe the qualifiers of the INTEG command.
 -ADJACENCY
 ~~~~~~~~~~~~
 
-Specifies the logical adjacency of data blocks that MUPIP INTEG should assume while diagnosing the database. By default, MUPIP INTEG operates with -ADJACENCY=10 and reports the logical adjacency in the "Adjacent" column of the MUPIP INTEG report. 
+Specifies the logical adjacency of data blocks that MUPIP INTEG should assume while diagnosing the database. By default, MUPIP INTEG operates with -ADJACENCY=10 and reports the logical adjacency in the "Adjacent" column of the MUPIP INTEG report.
 
 * The complexity of contemporary disk controllers and the native file system may render this report superfluous. But when it is meaningful, this report measures the logical adjacency of data.
 
@@ -1306,7 +1306,7 @@ Displays a single summary report by database file of the total number of directo
 
 * Incompatible with: -FULL
 
-~~~~~  
+~~~~~
 -FAST
 ~~~~~
 
@@ -1343,7 +1343,7 @@ Specifies the name of the database file for the MUPIP INTEG operation. FILE requ
 
 * By default, INTEG operates on -FILE.
 
-~~~~~~  
+~~~~~~
 -FULL
 ~~~~~~
 
@@ -1359,7 +1359,7 @@ Displays an expanded report for a MUPIP INTEG operation. With -FULL specified, M
 
 * Use -FULL to have INTEG report all global names in a region or list of regions.
 
-~~~~~~~~~~~  
+~~~~~~~~~~~
 -KEYRANGES
 ~~~~~~~~~~~
 
@@ -1411,7 +1411,7 @@ Specifies the maximum number of "key size too large" errors that a MUPIP INTEG o
 
 * "Key size too large" errors normally only occur if a DSE CHANGE -FILEHEADER -KEY_MAX_SIZE command reduces the maximum key size.
 
-~~~~~~~~  
+~~~~~~~~
 -ONLINE
 ~~~~~~~~
 
@@ -1422,7 +1422,7 @@ Specifies that while a MUPIP INTEG operation is active, other processes can upda
 
 * -NOONLINE specifies that the database should be frozen during MUPIP INTEG.
 
-* By default, MUPIP INTEG is online. 
+* By default, MUPIP INTEG is online.
 
 * Since MUPIP INTEG -ONLINE does not freeze database updates, it cannot safely correct errors in the "blocks to upgrade" and "free blocks" fields in the file header, while MUPIP INTEG -NOONLINE can correct these fields.
 
@@ -1434,7 +1434,7 @@ Specifies that while a MUPIP INTEG operation is active, other processes can upda
 
 *  MUPIP INTEG -NOONLINE [-FAST] {-REGION|-FILE} clears the KILLs in progress and the Abandoned Kills flags if the run includes the entire database and there are no incorrectly marked busy blocks.
 
-* Only one online integ can be active per database region. If an online integ is already active, a subsequent one issues an error and immediately terminates. If an online integ does not successfully complete, YottaDB cleans it up in one of the following ways: 
+* Only one online integ can be active per database region. If an online integ is already active, a subsequent one issues an error and immediately terminates. If an online integ does not successfully complete, YottaDB cleans it up in one of the following ways:
 
   * A subsequent online integ detects that an earlier one did not successfully complete and releases the resources held by the prior online integ before proceeding.
   * If a MUPIP STOP was issued to the online integ process, the process cleans up any resources it held. Note: since the process was stopped the results of the integ may not be valid.
@@ -1454,7 +1454,7 @@ Specifies that the INTEG parameter identifies one or more regions rather than a 
 
 * The region-list identifies the target of INTEG. region-list may specify more than one region of the current global directory in a list. Regions are case-insensitive, separated by a comma, and wildcards can be used to specify them. Any region-name may include the wildcard characters * and ? (remember to escape them to protect them from inappropriate expansion by the shell). Any region name expansion occurs in M (ASCII) collation order.
 
-* The region-list argument may specify more than one region of the current Global Directory in a list separated with commas. INTEG -REGION requires the environment variable ydb_gbldir to specify a valid Global Directory. For more information on defining ydb_gbldir, refer to `Chapter 4: “Global Directory Editor” <https://docs.yottadb.com/AdminOpsGuide/gde.html>`_
+* The region-list argument may specify more than one region of the current Global Directory in a list separated with commas. INTEG -REGION requires the environment variable ydb_gbldir to specify a valid Global Directory. For more information on defining ydb_gbldir, refer to `Chapter 4: “Global Directory Editor” <./gde.html>`_
 
 * Because a KILL may briefly defer marking the blocks it releases "free" in the bit maps, INTEG -REGION may report spurious "block incorrectly marked busy" errors. These errors are benign. If these errors occur in conjunction with a "Kill in progress" error, resolve the errors after the "Kill in progress" error is no longer present.
 
@@ -1585,7 +1585,7 @@ This command performs a MUPIP INTEG operation only on the index block of the dat
 
 .. parsed-literal::
    No errors detected by fast integ.
-    
+
   Type           Blocks         Records          % Used      Adjacent
   Directory           2             110          25.732            NA
   Index            1170          341639          88.298             4
@@ -1601,7 +1601,7 @@ Note the NA entries for Data type. It means that the MUPIP INTEG -FAST operation
 The sample output from the above command follows:
 
 .. parsed-literal::
-   
+
    Directory tree
    Level          Blocks         Records          % Used      Adjacent
       1               1               1           0.585           NA
@@ -1618,7 +1618,7 @@ The sample output from the above command follows:
    Level          Blocks         Records          % Used      Adjacent
       1               1               2           1.464             0
       0               2             109          52.551             1
-  
+
 Example:
 
 .. parsed-literal::
@@ -1653,7 +1653,7 @@ Example:
 This example performs a MUPIP INTEG operation all global variables greater than or equal to ^Amsterdam (100) and less than or equal to ^Bolivia("Chimes") in the default region(s).
 
 .. note::
-   To specify a literal in the command string, use two double quotation marks for example, ^b(""c""). 
+   To specify a literal in the command string, use two double quotation marks for example, ^b(""c"").
 
 +++++++
 INTRPT
@@ -1673,7 +1673,7 @@ INTRPT
 JOURNAL
 ++++++++++
 
-Analyzes, extracts, reports, and recovers data using journal files. For a description of the JOURNAL command, refer to `Chapter 6: “YottaDB Journaling” <https://docs.yottadb.com/AdminOpsGuide/ydbjournal.html>`_.
+Analyzes, extracts, reports, and recovers data using journal files. For a description of the JOURNAL command, refer to `Chapter 6: “YottaDB Journaling” <./ydbjournal.html>`_.
 
 +++++++
 LOAD
@@ -1684,11 +1684,11 @@ Puts the global variable names and their corresponding data values into a YottaD
 The format of the LOAD command is:
 
 .. parsed-literal::
-   L[OAD] 
-   [-BE[GIN]=integer -E[ND]=integer 
-   -FI[LLFACTOR]=integer 
-   -FO[RMAT]={GO|B[INARY]|Z[WR]]} 
-   -[O]NERROR={STOP|PROCEED|INTERACTIVE} 
+   L[OAD]
+   [-BE[GIN]=integer -E[ND]=integer
+   -FI[LLFACTOR]=integer
+   -FO[RMAT]={GO|B[INARY]|Z[WR]]}
+   -[O]NERROR={STOP|PROCEED|INTERACTIVE}
    -S[TDIN]] file-name
 
 .. note::
@@ -1709,7 +1709,7 @@ The format of the LOAD command is:
 * Press <CTRL-C> to produce a status message from LOAD. Entering <CTRL-C> twice in quick succession stops LOAD. A LOAD that is manually stopped or stops because of an internal error is incomplete and may lack application level integrity, but will not adversely affect the database structure unless terminated with a kill -9.
 
 .. note::
-   The MUPIP EXTRACT or MUPIP LOAD procedure for large databases is time consuming due to the volume of data that has to be converted from binary to ZWR format (on source) and vice versa (on target). One must also consider the fact that the extracted file can be very large for a large database. Users must ensure there is adequate storage space to support the size of the extract file and the space occupied by the source and target databases. In order to reduce the total time and space it takes to transfer database content from one endian platform to another, it is efficient to convert the endian format in-place for a database and transfer the converted database. See MUPIP ENDIANCVT for more information on converting the endian format of a database file. 
+   The MUPIP EXTRACT or MUPIP LOAD procedure for large databases is time consuming due to the volume of data that has to be converted from binary to ZWR format (on source) and vice versa (on target). One must also consider the fact that the extracted file can be very large for a large database. Users must ensure there is adequate storage space to support the size of the extract file and the space occupied by the source and target databases. In order to reduce the total time and space it takes to transfer database content from one endian platform to another, it is efficient to convert the endian format in-place for a database and transfer the converted database. See MUPIP ENDIANCVT for more information on converting the endian format of a database file.
 
 The following sections describe the optional qualifiers of the MUPIP LOAD command.
 
@@ -1759,7 +1759,7 @@ Specifies the record number of the input file with which LOAD should begin. Dire
 
 * By default, LOAD starts at the beginning of the input file.
 
-~~~~~  
+~~~~~
 -END
 ~~~~~
 
@@ -1803,7 +1803,7 @@ Determines the MUPIP LOAD behavior when it encounters an error. The format of th
 
 - INTERACTIVE prompts to continue or stop.
 
-By default MUPIP LOAD exits on encountering an error. 
+By default MUPIP LOAD exits on encountering an error.
 
 ~~~~~~~
 -STDIN
@@ -1841,8 +1841,8 @@ This command begins the MUPIP LOAD operation from record number 5 and ends at re
    MUPIP EXTRACT
    02-MAR-2017 18:25:47 ZWR
    Beginning LOAD at record number: 5
-   LOAD TOTAL Key Cnt: 6 
-   Max Subsc Len: 7 
+   LOAD TOTAL Key Cnt: 6
+   Max Subsc Len: 7
    Max Data Len: 1
    Last LOAD record number: 10
 
@@ -1902,7 +1902,7 @@ MUPIP REORG can also encrypt a database and/or change the encryption keys for da
 The format of the MUPIP REORG command is:
 
 .. parsed-literal::
-   REO[RG] 
+   REO[RG]
    [
     -D[OWNGRADE]
     -ENCR[YPT]=key
@@ -1921,7 +1921,7 @@ The format of the MUPIP REORG command is:
 
 * As REORG is IO intensive, running a REORG concurrently with normal database access may impact the operation of normal processes. As the YottaDB database engine has a daemonless architecture, attempts to reduce the impact by reducing the priority of REORG can (perhaps counter-intuitively) exacerbate rather than alleviate the impact. To reduce the impact REORG has on other processes, use the ydb_poollimit environment variable to limit the number of global buffers used by the REORG.
 
-* MUPIP REORG does not change the logical contents of the database, and can run on either the originating instance or replicating instance of an LMS application. In such cases, resuming REORGs in process should be part of the batch restart. See the `"Database Replication" chapter <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html>`_ for more information about running REORG on a dual site application.
+* MUPIP REORG does not change the logical contents of the database, and can run on either the originating instance or replicating instance of an LMS application. In such cases, resuming REORGs in process should be part of the batch restart. See the `"Database Replication" chapter <./dbrepl.html>`_ for more information about running REORG on a dual site application.
 
 * Use MUPIP STOP (or <Ctrl-C> for an interactive REORG) to terminate a REORG process. Unless terminated with a kill -9, a REORG terminated by operator action or error is incomplete but does not adversely affect the database.
 
@@ -2062,7 +2062,7 @@ Blocking subsequent MUPIP REORG -ENCRYPT operations after one completes, provide
    YottaDB recommends rotating (changing) the encryption key of the database for better security. The frequency of encryption key rotation depends on your security requirements and policies.
 
 .. note::
-   MUPIP REORG -ENCRYPT does not enable switching between encryption algorithms. To migrate databases from Blowfish CFB to AES CFB requires that the data be extracted and loaded into newly created database files. To minimize the time your application is unavailable, you can deploy your application in a Logical Multi-Site (LMS) configuration, and migrate using a rolling upgrade technique. Refer to the `Chapter 7: “Database Replication” <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html>`_ for more complete documentation. 
+   MUPIP REORG -ENCRYPT does not enable switching between encryption algorithms. To migrate databases from Blowfish CFB to AES CFB requires that the data be extracted and loaded into newly created database files. To minimize the time your application is unavailable, you can deploy your application in a Logical Multi-Site (LMS) configuration, and migrate using a rolling upgrade technique. Refer to the `Chapter 7: “Database Replication” <./dbrepl.html>`_ for more complete documentation.
 
 ~~~~~~~~~
 -EXCLUDE
@@ -2080,7 +2080,7 @@ The format of the EXCLUDE qualifier is:
 * If global-name-list contains globals that do not exist, REORG issues a message to the terminal and continues to process any specified globals that exist. If REORG is unable to process any globals, it terminates with an error.
 
 * Global-name-list can be an individual global name, a range of global names, or a list of names and prefixes followed by the wildcard symbol. For example:
-   
+
    * A global name, such as ACN.
 
    * A range of global names, such as A7:B7.
@@ -2095,7 +2095,7 @@ The format of the EXCLUDE qualifier is:
 
 * By default, REORG does not EXCLUDE any globals.
 
-* In case any global appears in the argument lists of both -SELECT and -EXCLUDE, REORG terminates with an error. 
+* In case any global appears in the argument lists of both -SELECT and -EXCLUDE, REORG terminates with an error.
 
 ~~~~~~~~~~~~~
 -FILL_FACTOR
@@ -2132,9 +2132,9 @@ For an interrupted REORG operation, -RESUME allows the user to resume the REORG 
 .. parsed-literal::
    -R[ESUME]
 
-* With RESUME specified, the program retrieves the last key value, from the database file header, and restarts operations from that key. 
+* With RESUME specified, the program retrieves the last key value, from the database file header, and restarts operations from that key.
 
-~~~~~~~~  
+~~~~~~~~
 -REGION
 ~~~~~~~~
 
@@ -2167,17 +2167,17 @@ The format of the SELECT qualifier is:
 * Arguments for this qualifier may be an individual global name, a range of global names, or a list of names and prefixes followed by the wildcard symbol. The caret symbol (^) in the specification of the global is optional.
 
 * The global name can be:
-  
+
   * A global name, such as ACN
   * A range of global names, such as A7:B7
   * A list, such as A,B,C.
-  * Global names with the same prefix such as TMP*. 
+  * Global names with the same prefix such as TMP*.
 
 * In the first case, REORG only includes global ^ACN. In the second case, REORG includes all global names in the collating sequence A7 to B7. For the third case, REORG includes A, B, and C. In the last case, REORG includes all globals prefixed with TMP.
 
 * By default, REORG selects all globals.
 
-~~~~~~~~~~  
+~~~~~~~~~~
 -TRUNCATE
 ~~~~~~~~~~
 
@@ -2196,28 +2196,28 @@ The optional percentage (0-99) provides a minimum amount for the reclamation; in
 Example:
 
 .. parsed-literal::
-   $ mupip reorg 
+   $ mupip reorg
    Fill Factor:: Index blocks 100%: Data blocks 100%
-      
+
    Global: CUST (region DEFAULT)
-   Blocks processed    : 667340 
-   Blocks coalesced    : 601487 
-   Blocks split        : 0 
-   Blocks swapped      : 319211 
-   Blocks freed        : 646964 
-   Blocks reused       : 298814 
-   Blocks extended     : 0 
-   
+   Blocks processed    : 667340
+   Blocks coalesced    : 601487
+   Blocks split        : 0
+   Blocks swapped      : 319211
+   Blocks freed        : 646964
+   Blocks reused       : 298814
+   Blocks extended     : 0
+
    Global: HIST (region HIST)
    %YDB-I-FILERENAME, File /var/myApp/prod/journals/hist.mjl is renamed to /var/myApp/prod/journals/hist.mjl_2015289165050
-   Blocks processed    : 337069 
-   Blocks coalesced    : 12888 
-   Blocks split        : 0 
-   Blocks swapped      : 329410 
-   Blocks freed        : 315998 
+   Blocks processed    : 337069
+   Blocks coalesced    : 12888
+   Blocks split        : 0
+   Blocks swapped      : 329410
+   Blocks freed        : 315998
    Blocks reused       : 308337
-   Levels Eliminated   : 1 
-   Blocks extended     : 0 
+   Levels Eliminated   : 1
+   Blocks extended     : 0
    $
 
 In this output:
@@ -2252,13 +2252,13 @@ Example:
 If the forecasted growth of a global is 5% per month from relatively uniformly distributed updates, and REORGs are scheduled every quarter, the FILL_FACTOR for both the original LOAD and subsequent REORGs might be 80 percent 100 - ((3 months + 1 month "safety" margin) * five percent per month). The REORG command based on the above assumptions is as follows:
 
 .. parsed-literal::
-   $ mupip reorg -fill_factor=80 
+   $ mupip reorg -fill_factor=80
 
 Example:
 
 The following example uses recorg -encrypt to encrypt a database "on the fly". This is a simple example created for demonstration purposes. It is NOT recommended for production use. Consult your YottaDB support channel for specific instructions on encrypting an unencrypted database.
 
-Create an empty default unencrypted database. 
+Create an empty default unencrypted database.
 
 .. parsed-literal::
    $ydb_dist/mumps -r ^GDE exit
@@ -2267,14 +2267,14 @@ Create an empty default unencrypted database.
 Setup the GNUPG home directory.
 
 .. parsed-literal::
-   export GNUPGHOME=$PWD/.helengnupg3    
-   mkdir $GNUPGHOME # Ensure that you protect this directory with appropriate permissions.  
+   export GNUPGHOME=$PWD/.helengnupg3
+   mkdir $GNUPGHOME # Ensure that you protect this directory with appropriate permissions.
    chmod go-rwx $GNUPGHOME
 
 Create a new key. Enter demo values. Accept default values. Choose a strong passphrase.
 
 .. parsed-literal::
-   gpg --gen-key  
+   gpg --gen-key
 
 Edit the key to add a new sub-key:
 
@@ -2305,9 +2305,9 @@ Create a gtmcrypt_config file as following:
 Set the environment variable gtmcrypt_config to point to this config file.
 
 .. parsed-literal::
-   export gtmcrypt_config=$PWD/config 
+   export gtmcrypt_config=$PWD/config
 
-Set the environment variable ydb_passwd. 
+Set the environment variable ydb_passwd.
 
 .. parsed-literal::
    echo -n "Enter passphrase for ydb.key: " ; export ydb_passwd=`$ydb_dist/plugin/gtmcrypt/maskpass|cut -f 3 -d " "`
@@ -2322,7 +2322,7 @@ Execute the following commands:
    Region DEFAULT : Database is now FULLY ENCRYPTED with the following key: ydb.key
    Region DEFAULT : MUPIP REORG ENCRYPT finished
 
-Execute the following command when encryption completes. 
+Execute the following command when encryption completes.
 
 .. parsed-literal::
    $ mupip set -encryptioncomplete -region DEFAULT
@@ -2377,7 +2377,7 @@ This example combines two specifications, and carries out the REORG without swap
 REPLICATE
 ++++++++++++
 
-Control the logical multi-site operation of YottaDB. For more information on the qualifiers of the MUPIP REPLICATE command, refer to `Chapter 7: “Database Replication” <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html>`_ .
+Control the logical multi-site operation of YottaDB. For more information on the qualifiers of the MUPIP REPLICATE command, refer to `Chapter 7: “Database Replication” <./dbrepl.html>`_ .
 
 +++++++++
 RESTORE
@@ -2393,15 +2393,15 @@ The format of the RESTORE command is:
 
 * file-name identifies the name of the database file that RESTORE uses as a starting point.
 
-* bytestrm-bkup-list specifies one or more bytestream backup files (generated with BACKUP -BYTESTREAM) to RESTORE into the database file specified with file-name. The file-list are separated by commas (,) and must be in sequential order, from the oldest transaction number to the most recent transaction number. RESTORE may take its input from a UNIX file on any device that supports such files. 
+* bytestrm-bkup-list specifies one or more bytestream backup files (generated with BACKUP -BYTESTREAM) to RESTORE into the database file specified with file-name. The file-list are separated by commas (,) and must be in sequential order, from the oldest transaction number to the most recent transaction number. RESTORE may take its input from a UNIX file on any device that supports such files.
 
 * bytestrm-bkup-list may also include a comma separated list of pipe commands or TCP socket addresses (a combination of IPv4 or IPV6 hostname and a port number) from where MUPIP RESTORE receives bytestream backup files (produced with BACKUP -BYTESTREAM).
 
 * The current transaction number in the database must match the starting transaction number of each successive input to the RESTORE.
 
-* If the BACKUP -BYTESTREAM was created using -TRANSACTION=1, create a new database with MUPIP CREATE and do not access it, except the standalone MUPIP commands INTEG -FILE, EXTEND, and SET before initiating the RESTORE. 
+* If the BACKUP -BYTESTREAM was created using -TRANSACTION=1, create a new database with MUPIP CREATE and do not access it, except the standalone MUPIP commands INTEG -FILE, EXTEND, and SET before initiating the RESTORE.
 
-~~~~~~~~~  
+~~~~~~~~~
 -EXTEND
 ~~~~~~~~~
 
@@ -2457,9 +2457,9 @@ To ensure database integrity, all system shutdown algorithms should include scri
 The RUNDOWN command may include one of the following qualifiers:
 
 .. parsed-literal::
-   -F[ile] 
+   -F[ile]
    -R[egion]=region-list
-   -RELinkctl [dir1] 
+   -RELinkctl [dir1]
    -Override
 
 If the RUNDOWN command does not specify either -File or -Region, it checks all the IPC resources (shared memory) on the system and if they are associated with a YottaDB database, attempts to rundown that file. MUPIP RUNDOWN with no argument removes any statistics database file resources associated with actual database file resources it can remove.
@@ -2507,12 +2507,12 @@ Use MUPIP SET for performance tuning and/or modifying certain database and journ
 The format of the SET command is:
 
 .. parsed-literal::
-   SE[T] {-FI[LE] file-name|-JN[LFILE] journal-file-name|-REG[ION] region-list|-REP[LICATION]={ON|OFF}}  
+   SE[T] {-FI[LE] file-name|-JN[LFILE] journal-file-name|-REG[ION] region-list|-REP[LICATION]={ON|OFF}}
     -AC[CESS_METHOD]={BG|MM}
     -[NO]AS[YNCIO]
     -[NO]DE[FER_TIME][=seconds]
     -[NO]DEFER_ALLOCATE
-    -EPOCHTAPER 
+    -EPOCHTAPER
     -E[XTENSION_COUNT]=integer(no of blocks)
     -F[LUSH_TIME]=integer
     -G[LOBAL_BUFFERS]=integer
@@ -2540,7 +2540,7 @@ The format of the SET command is:
     -T[RIGGER_FLUSH]=integer
     -V[ERSION]={V4|V6}
     -W[AIT_DISK]=integer
-    -WR[ITES_PER_FLUSH=integer 
+    -WR[ITES_PER_FLUSH=integer
 
 
 * Exclusive access to the database is required if the MUPIP SET command specifies -ACCESS_METHOD, -GLOBAL_BUFFERS, -LOCK_SPACE or -NOJOURNAL, or if any of the -JOURNAL options ENABLE, DISABLE, or BUFFER_SIZE are specified.
@@ -2549,7 +2549,7 @@ The format of the SET command is:
 
 * The SET command must include one of the following target qualifiers which determine whether the argument to the SET is a file-name or a region-list.
 
-~~~~~~  
+~~~~~~
 -FILE
 ~~~~~~
 
@@ -2595,7 +2595,7 @@ Specifies whether replication is on or off. The format of the REPLICATION qualif
 
 Incompatible with: -JNLFILE
 
-The following sections describe the action qualifiers of the MUPIP SET command exclusive of the details related to journaling and replication, which are described in `Chapter 6: “YottaDB Journaling” <https://docs.yottadb.com/AdminOpsGuide/ydbjournal.html>`_ and `Chapter 7: “Database Replication” <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html>`_. All of these qualifiers are incompatible with the -JNLFILE and -REPLICATION qualifiers.
+The following sections describe the action qualifiers of the MUPIP SET command exclusive of the details related to journaling and replication, which are described in `Chapter 6: “YottaDB Journaling” <./ydbjournal.html>`_ and `Chapter 7: “Database Replication” <./dbrepl.html>`_. All of these qualifiers are incompatible with the -JNLFILE and -REPLICATION qualifiers.
 
 ~~~~~~~~~~~~~~~
 -ACCESS_METHOD
@@ -2606,7 +2606,7 @@ Specifies the access method (YottaDB buffering strategy) for storing and retriev
 .. parsed-literal::
    -AC[CESS_METHOD]=code
 
-For more information on specifying the ACCESS_METHOD,refer to `“Segment Qualifiers” <https://docs.yottadb.com/AdminOpsGuide/gde.html#segment-qualifiers>`_.
+For more information on specifying the ACCESS_METHOD,refer to `“Segment Qualifiers” <./gde.html#segment-qualifiers>`_.
 
 ~~~~~~~~~~
 -ASYNCIO
@@ -2617,7 +2617,7 @@ Specifies whether to use asynchronous I/O for an access method BG database, rath
 .. parsed-literal::
    -[NO]AS[YNCIO]
 
-For more information on specifying ASYNCIO,refer to `“Segment Qualifiers” <https://docs.yottadb.com/AdminOpsGuide/gde.html#segment-qualifiers>`_.
+For more information on specifying ASYNCIO,refer to `“Segment Qualifiers” <./gde.html#segment-qualifiers>`_.
 
 ~~~~~~~~~~~~
 -DEFER_TIME
@@ -2632,7 +2632,7 @@ Specifies, in MM access mode, the multiplying factor applied to the flush time t
 -DEFER_ALLOCATE
 ~~~~~~~~~~~~~~~~
 
-With -DEFER_ALLOCATE, YottaDB instructs the file system to create the database file as a sparse file. Before using -DEFER_ALLOCATE, ensure that your underlying file system supports sparse files. By default UNIX file systems, and YottaDB, use sparse (or lazy) allocation, which defers actual allocation until blocks are first written. The format of the DEFER_ALLOCATE qualifier is: 
+With -DEFER_ALLOCATE, YottaDB instructs the file system to create the database file as a sparse file. Before using -DEFER_ALLOCATE, ensure that your underlying file system supports sparse files. By default UNIX file systems, and YottaDB, use sparse (or lazy) allocation, which defers actual allocation until blocks are first written. The format of the DEFER_ALLOCATE qualifier is:
 
 .. parsed-literal::
    -[NO]DEFER_ALLOCATE
@@ -2661,9 +2661,9 @@ Tries to minimize epoch duration by reducing the number of buffers to flush by Y
 Specifies the number of GDS blocks by which an existing database file extends. A file or region name is required. This qualifier requires standalone access. The format of the EXTENSION_COUNT qualifier is:
 
 .. parsed-literal::
-   -E[XTENSION_COUNT]=integer 
+   -E[XTENSION_COUNT]=integer
 
-For more information on specifying the EXTENSION_COUNT, refer to `“Segment Qualifiers” <https://docs.yottadb.com/AdminOpsGuide/gde.html#segment-qualifiers>`_.
+For more information on specifying the EXTENSION_COUNT, refer to `“Segment Qualifiers” <./gde.html#segment-qualifiers>`_.
 
 ~~~~~~~~~~~~
 -FLUSH_TIME
@@ -2683,7 +2683,7 @@ Specifies the number of cache buffers for a BG database. This qualifier requires
 .. parsed-literal::
    -G[LOBAL_BUFFERS]=integer
 
-For more information on ways to determine good working sizes for GLOBAL_BUFFERS, refer to `“Segment Qualifiers” <https://docs.yottadb.com/AdminOpsGuide/gde.html#segment-qualifiers>`_.
+For more information on ways to determine good working sizes for GLOBAL_BUFFERS, refer to `“Segment Qualifiers” <./gde.html#segment-qualifiers>`_.
 
 In general, increasing the number of global buffers improves performance by smoothing the peaks of I/O load on the system. However, increasing the number of global buffers also increases the memory requirements of the system, and a larger number of global buffers on memory constrained systems can increase the probability of the buffers getting swapped out. If global buffers are swapped out, any performance gain from increasing the number of global buffers will be more than offset by the performance impact of swapping global buffers. Most applications use from 1,000 to 4,000 global buffers for database regions that are heavily used. YottaDB does not recommend using fewer than 256 buffers except under special circumstances.
 
@@ -2711,9 +2711,9 @@ Enables or disables custom errors in a region to automatically cause an Instance
 .. parsed-literal::
    -[NO]INST[_FREEZE_ON_ERROR]
 
-For more information on creating a list of custom errors that automatically cause an Instance Freeze, refer to `Instance Freeze <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html#instance-freeze>`_.
+For more information on creating a list of custom errors that automatically cause an Instance Freeze, refer to `Instance Freeze <./dbrepl.html#instance-freeze>`_.
 
-For more information on promptly setting or clearing an Instance Freeze on an instance irrespective of whether any region is enabled for Instance, refer to the `Starting the Source Server <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html#starting-the-source-server>`_ section of the Database Replication chapter.
+For more information on promptly setting or clearing an Instance Freeze on an instance irrespective of whether any region is enabled for Instance, refer to the `Starting the Source Server <./dbrepl.html#starting-the-source-server>`_ section of the Database Replication chapter.
 
 ~~~~~~~~
 -JOURNAL
@@ -2733,7 +2733,7 @@ The format of the JOURNAL qualifier is:
 
 * -JOURNAL specifies journaling is allowed. It takes one or more arguments in a journal-option-list.
 
-For detailed description of the all JOURNAL qualifiers and its keywords, refer to `SET -JOURNAL Options <https://docs.yottadb.com/AdminOpsGuide/ydbjournal.html#set-action-qualifiers>`_. 
+For detailed description of the all JOURNAL qualifiers and its keywords, refer to `SET -JOURNAL Options <./ydbjournal.html#set-action-qualifiers>`_.
 
 ~~~~~~~~~~
 -KEY_SIZE
@@ -2744,7 +2744,7 @@ Specifies the maximum key size in bytes for storing and retrieving data from the
 .. parsed-literal::
    -K[EY_SIZE]=bytes
 
-For more information on KEY_SIZE, refer to `“Region Qualifiers” <https://docs.yottadb.com/AdminOpsGuide/gde.html#region-qualifiers>`_.
+For more information on KEY_SIZE, refer to `“Region Qualifiers” <./gde.html#region-qualifiers>`_.
 
 ~~~~~~~~~~~~
 -LOCK_SPACE
@@ -2761,11 +2761,11 @@ Specifies the number of pages allocated to the management of M locks associated 
 
 * The default LOCK_SPACE is 40 pages.
 
-* For more information on LOCK_SPACE, refer to `“Segment Qualifiers” <https://docs.yottadb.com/AdminOpsGuide/gde.html#segment-qualifiers>`_.
+* For more information on LOCK_SPACE, refer to `“Segment Qualifiers” <./gde.html#segment-qualifiers>`_.
 
 * This qualifier requires standalone access.
 
-~~~~~~~~~~~~~  
+~~~~~~~~~~~~~
 -MUTEX_SLOTS
 ~~~~~~~~~~~~~
 
@@ -2793,7 +2793,7 @@ Usage:
 
 * The default value is never.
 
-~~~~~~~~~~~~~~~~~~~~  
+~~~~~~~~~~~~~~~~~~~~
 -LCK_SHARES_DB_CRIT
 ~~~~~~~~~~~~~~~~~~~~
 
@@ -2804,7 +2804,7 @@ Specifies whether LOCK actions share the same resource and management as the dat
 
 The default is Sep(arate)/FALSE.
 
-For more information, refer to `“Region Qualifiers” <https://docs.yottadb.com/AdminOpsGuide/gde.html#region-qualifiers>`_.
+For more information, refer to `“Region Qualifiers” <./gde.html#region-qualifiers>`_.
 
 ~~~~~~~~~~~~
 -QDBRUNDOWN
@@ -2819,7 +2819,7 @@ When a terminating YottaDB process observes that a large number of processes are
 
 Note that with QDBRUNDOWN there is a possibility that the last process to exit might leave the database shared memory and IPC resources in need of cleanup. Except after the number of concurrent processes exceeds 32Ki, QDBRUNDOWN minimizes the possibility of abandoned resources, but it cannot eliminate it. When using QDBRUNDOWN, use an explicit MUPIP command such as RUNDOWN or JOURNAL -RECOVER or -ROLLBACK of the database file after the last process exits, to ensure the cleanup of database shared memory and IPC resources; not doing so risks database damage.
 
-When a database has QDBRUNDOWN enabled, if the number of attached processes ever exceeds 32Ki, YottaDB stops tracking the number of attached processes, which means that it cannot recognize when the number reaches zero (0) and the shared resources can be released. The process that detects this event issues a NOMORESEMCNT in the system log. This means that an orderly, safe shutdown requires a MUPIP JOURNAL -ROLLBACK -BACKWARD for replicated databases, a MUPIP JOURNAL -RECOVER -BACKWARD for unreplicated journaled databases and a MUPIP RUNDOWN for journal-free databases. 
+When a database has QDBRUNDOWN enabled, if the number of attached processes ever exceeds 32Ki, YottaDB stops tracking the number of attached processes, which means that it cannot recognize when the number reaches zero (0) and the shared resources can be released. The process that detects this event issues a NOMORESEMCNT in the system log. This means that an orderly, safe shutdown requires a MUPIP JOURNAL -ROLLBACK -BACKWARD for replicated databases, a MUPIP JOURNAL -RECOVER -BACKWARD for unreplicated journaled databases and a MUPIP RUNDOWN for journal-free databases.
 
 ~~~~~~~~~~~~~~~~~~~~~~
 -PARTIAL_RECOV_BYPASS
@@ -2830,7 +2830,7 @@ Sets the CORRUPT_FILE flag in the database file header to FALSE. The CORRUPT_FIL
 .. parsed-literal::
    -PA[RTIAL_RECOV_BYPASS]
 
-For more information, refer to the CORRUPT_FILE qualifier in `“CHANGE -FILEHEADER Qualifiers” <https://docs.yottadb.com/AdminOpsGuide/dse.html#change>`_. 
+For more information, refer to the CORRUPT_FILE qualifier in `“CHANGE -FILEHEADER Qualifiers” <./dse.html#change>`_.
 
 ~~~~~~~~~~~
 -READ_ONLY
@@ -2842,7 +2842,7 @@ Indicates whether YottaDB should treat an MM access method segment as read only 
    -[NO]REA[D_ONLY]
 
 .. note::
-   When the first process connects to a database, it creates a access-control semaphore as part of the management of the shared resource. However, when processes connect to a -READ_ONLY database , each creates a private copy of the in-memory structures for the database and thus a private semaphore. 
+   When the first process connects to a database, it creates a access-control semaphore as part of the management of the shared resource. However, when processes connect to a -READ_ONLY database , each creates a private copy of the in-memory structures for the database and thus a private semaphore.
 
 ~~~~~~~~~~~~~
 -RECORD_SIZE
@@ -2853,7 +2853,7 @@ Specifies the maximum record size in bytes for storing and retrieving data from 
 .. parsed-literal::
    -REC[ORD_SIZE]=bytes
 
-For more information on KEY_SIZE, refer to `“Region Qualifiers” <https://docs.yottadb.com/AdminOpsGuide/gde.html#region-qualifiers>`_.
+For more information on KEY_SIZE, refer to `“Region Qualifiers” <./gde.html#region-qualifiers>`_.
 
 ~~~~~~~~~~~~~~~~~~
 -REORG_SLEEP_NSEC
@@ -2875,7 +2875,7 @@ Specifies the size to be reserved in each database block. RESERVED_BYTES is gene
 
 * The minimum RESERVED_BYTES is 0 bytes. The maximum RESERVED_BYTES is the block size minus the size of the block header which is 7 or 8 depending on your platform. Realistic determinations of this amount should leave room for at least one record of maximum size.
 
-~~~~~~~~~~~~~~~~~~  
+~~~~~~~~~~~~~~~~~~
 -SLEEP_SPIN_COUNT
 ~~~~~~~~~~~~~~~~~~
 
@@ -2890,7 +2890,7 @@ Specifies the number of times a process suspends its activity while waiting to o
 
 * Except on the advice of your YottaDB support channel, YottaDB recommends leaving the default values unchanged in production environments, until and unless you have data from testing and benchmarking that demonstrates benefits from a change.
 
-~~~~~~~~~~~~~~~~~  
+~~~~~~~~~~~~~~~~~
 -SPIN_SLEEP_MASK
 ~~~~~~~~~~~~~~~~~
 
@@ -2905,7 +2905,7 @@ Specifies the maximum number of nanoseconds for processes to sleep while waiting
 
 * Except on the advice of your YottaDB support channel, YottaDB recommends leaving the default values unchanged in production environments, until and unless you have data from testing and benchmarking that demonstrates a benefit from a change.
 
-~~~~~~~  
+~~~~~~~
 -STATS
 ~~~~~~~
 
@@ -2921,7 +2921,7 @@ Specifies whether YottaDB should permit statistics sharing for this region. This
 -STDNULLCOLL
 ~~~~~~~~~~~~~~
 
-Specifies whether YottaDB uses standard MUMPS collation or YottaDB collation for null-subscripted keys. YottaDB strongly recommends that you use STDNULLCOLL and not the non-standard null collation, which is the default for historical reasons. The format of the STDNULLCOLL qualifier is:
+Specifies whether YottaDB uses standard or historical collation for null-subscripted keys. YottaDB strongly recommends that you use STDNULLCOLL and not the historical null collation. The format of the STDNULLCOLL qualifier is:
 
 .. parsed-literal::
    -[NO]STD[NULLCOLL]
@@ -3027,7 +3027,7 @@ Specifies the estimation technique that MUPIP SIZE should use to estimate the si
 * smpls is the number of samples and must be greater than zero (0)
 * lvl is a positive or negative tree level designation and -(level of the root block) <= lvl <= (level of the root block)
 
-estimation-technique is one of the following: 
+estimation-technique is one of the following:
 
 * scan,level=<lvl> : Traverses the global variable tree and counts the actual number of records and blocks at levels from the root down to the level specified by lvl (default is 0, the data blocks). If the given level is non-negative, it is the lowest block level of the global for which the count is requested. So, 0 means all blocks, 1 means all index blocks, 2 means all index blocks of level 2 and above, and so on. SCAN counts a negative level from the root of the global tree where -1 means children of the root. The technique reports the results for levels other than 0 and shows the adjacency for the next lower (one less) level.
 
@@ -3046,7 +3046,7 @@ The 2 sigma column for the two sampling techniques shows the dispersion of the s
 -ADJACENCY=integer
 ~~~~~~~~~~~~~~~~~~~
 
-Specifies the logical adjacency of data blocks that MUPIP SIZE should assume during estimation. By default, MUPIP SIZE assumes -ADJACENCY=10 and reports the logical adjacency in the "Adjacent" column of the MUPIP SIZE report. Note that adjacency is only a proxy for database organization and its usefulness may be limited by the technology and configuration of your secondary storage. See the `INTEG <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#integ>`_ section of this chapter for additional comments on adjacency.
+Specifies the logical adjacency of data blocks that MUPIP SIZE should assume during estimation. By default, MUPIP SIZE assumes -ADJACENCY=10 and reports the logical adjacency in the "Adjacent" column of the MUPIP SIZE report. Note that adjacency is only a proxy for database organization and its usefulness may be limited by the technology and configuration of your secondary storage. See the `INTEG <./dbmgmt.html#integ>`_ section of this chapter for additional comments on adjacency.
 
 ~~~~~~~~
 -SELECT
@@ -3054,7 +3054,7 @@ Specifies the logical adjacency of data blocks that MUPIP SIZE should assume dur
 
 Specifies the global variables on which MUPIP SIZE runs. If -SELECT is not specified, MUPIP SIZE selects all global variables.
 
-The format of the SELECT qualifier is: 
+The format of the SELECT qualifier is:
 
 .. parsed-literal::
    -s[elect]=global-name-list
@@ -3069,11 +3069,11 @@ global-name-list can be:
 
 * "\*" to select all global variables.
 
-~~~~~~~~  
+~~~~~~~~
 -REGION
 ~~~~~~~~
 
-Specifies the region on which MUPIP SIZE runs. If REGION is not specified, MUPIP SIZE selects all regions. The format of the REGION qualifier is: 
+Specifies the region on which MUPIP SIZE runs. If REGION is not specified, MUPIP SIZE selects all regions. The format of the REGION qualifier is:
 
 .. parsed-literal::
    -R[EGION]=region-list
@@ -3114,7 +3114,7 @@ The format of the STOP command is:
 * To STOP a process belonging to its own account, a process requires no privileges. To STOP a process belonging to another account, MUPIP STOP must execute as root.
 
 .. note::
-   On receipt of a MUPIP STOP signal, a YottaDB process cleans up its participation in managing the database before shutting down. On receipt of three MUPIP STOP signals in a row, a YottaDB process shuts down forthwith without cleaning up - the equivalent of a kill -9 signal. This can result in structural database damage, because YottaDB does not have sufficient control of what happens in response to an immediate process termination to protect against database damage under all circumstances. In all cases, on receipt of a MUPIP STOP, a process will eventually terminate once it gets the resources needed to clean up. Use three MUPIP STOPs in a row only as a last resort, and when you do, perform a MUPIP INTEG at your earliest opportunity thereafter to check for database structural damage, and repair any damage following the procedures in `Chapter 11 (Maintaining Database Integrity) <https://docs.yottadb.com/AdminOpsGuide/integrity.html>`_.You may never have to perform a MUPIP STOP if your application is designed in a way that it reduces or eliminates the probability of a process getting in the final try of a transaction. For more information, refer to the `Programmers Guide <https://docs.yottadb.com/ProgrammersGuide/index.html>`_.
+   On receipt of a MUPIP STOP signal, a YottaDB process cleans up its participation in managing the database before shutting down. On receipt of three MUPIP STOP signals in a row, a YottaDB process shuts down forthwith without cleaning up - the equivalent of a kill -9 signal. This can result in structural database damage, because YottaDB does not have sufficient control of what happens in response to an immediate process termination to protect against database damage under all circumstances. In all cases, on receipt of a MUPIP STOP, a process will eventually terminate once it gets the resources needed to clean up. Use three MUPIP STOPs in a row only as a last resort, and when you do, perform a MUPIP INTEG at your earliest opportunity thereafter to check for database structural damage, and repair any damage following the procedures in `Chapter 11 (Maintaining Database Integrity) <./integrity.html>`_.You may never have to perform a MUPIP STOP if your application is designed in a way that it reduces or eliminates the probability of a process getting in the final try of a transaction. For more information, refer to the `Programmers Guide <https://docs.yottadb.com/ProgrammersGuide/index.html>`_.
 
 ++++++++++++++++
 TRIGGER
@@ -3123,7 +3123,7 @@ TRIGGER
 Examines or loads trigger definitions. The format of the MUPIP TRIGGER command is:
 
 .. parsed-literal::
-   TRIGGER {-TRIG[GERFILE]=<trigger_definitions_file> 
+   TRIGGER {-TRIG[GERFILE]=<trigger_definitions_file>
    [-NOPR[OMPT]]|[-SELE[CT][=name-list|*][<select-output-file>]|-UPGRADE}
 
 Before you run the MUPIP TRIGGER command:
@@ -3226,7 +3226,7 @@ This command adds a trigger for ^Acct("ID"). On successful trigger load, this co
    0 triggers deleted
    0 trigger file entries not changed
    0 triggers modified
-   ========================================= 
+   =========================================
 
 Now, every S[et] operation on the global node ^Acct("ID") executes the trigger.
 
@@ -3239,7 +3239,7 @@ This command displays the triggers. A sample output looks like the following:
 
 .. parsed-literal::
    ;trigger name: ValidateAccount# cycle: 1
-   +^Acct("ID") -name=ValidateAccount -commands=S -xecute="Write ""Hello Earth!""" 
+   +^Acct("ID") -name=ValidateAccount -commands=S -xecute="Write ""Hello Earth!"""
 
 *To modify an existing trigger for global node ^Acct("ID")*:
 
@@ -3248,7 +3248,7 @@ You cannot directly replace an existing trigger definition with a new one. With 
 Begin by executing the following command:
 
 .. parsed-literal::
-   $ mupip trigger -select="^Acct*"Output file: 
+   $ mupip trigger -select="^Acct*"Output file:
 
 Specify trigger_mod.trg as the output file. This file contains entries like the following:
 
@@ -3262,7 +3262,7 @@ Using your editor, open trigger_mod.trg and change + (plus) to - (minus) for the
    ;trigger name: ValidateAccount# cycle: 1
    -^Acct("ID") -name=ValidateAccount -commands=Set -xecute="Write ""Hello Earth!"""
    ;trigger name: ValidateAccount#
-   +^Acct("ID") -name=ValidateAccount -commands=Set -xecute="Write ""Hello Mars!""" 
+   +^Acct("ID") -name=ValidateAccount -commands=Set -xecute="Write ""Hello Mars!"""
 
 Execute a command like the following:
 
@@ -3477,8 +3477,8 @@ MUPIP Command Summary
 |                                      |                                             | * -RELINKCTL [dir]                                                                       |
 |                                      |                                             | * -OVERRIDE                                                                              |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+
-| SE[T]                                | file-name or region-name                    | * SE[T] {-FI[LE] file-name|-JN[LFILE] journal-file-name|-REG[ION] region-list|-          |
-|                                      |                                             | REP[LICATION]={ON|OFF}}                                                                  |
+| SE[T]                                | file-name or region-name                    | * SE[T] {-FI[LE] file-name|-JN[LFILE] journal-file-name|-REG[ION] region-list|           |
+|                                      |                                             |   \-REP[LICATION]={ON|OFF}}                                                              |
 |                                      |                                             | * -AC[CESS_METHOD]={BG|MM}                                                               |
 |                                      |                                             | * -[NO]AS[YNCIO]                                                                         |
 |                                      |                                             | * -[NO]DE[FER_TIME][=seconds]                                                            |
@@ -3520,32 +3520,32 @@ The following table summarizes the qualifiers.
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
 | Main Qualifier                               |  MUPIP Command                                                               | Options/Qualifiers                                                   |
 +==============================================+==============================================================================+======================================================================+
-| -EDITINSTANCE                                | `REPLICATE <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#replicate>`_  | * -CHANGE                                                            |
+| -EDITINSTANCE                                | `REPLICATE <./dbmgmt.html#replicate>`_                                       | * -CHANGE                                                            |
 |                                              |                                                                              | * -DETAIL                                                            |
 |                                              |                                                                              | * -OFFSET=hexa                                                       |
 |                                              |                                                                              | * -VALUE=hexa                                                        |
 |                                              |                                                                              | * -SIZE=hexa                                                         |
 |                                              |                                                                              | * -[NO]QDBRUNDOWN                                                    |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
-| -FENCES=<fence-options-list>                 | `JOURNAL <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#journal>`_      | * ALWAYS                                                             |
+| -FENCES=<fence-options-list>                 | `JOURNAL <./dbmgmt.html#journal>`_                                           | * ALWAYS                                                             |
 |                                              |                                                                              | * NONE                                                               |
 |                                              | -RECOVER                                                                     | * PROCESS                                                            |
 |                                              |                                                                              |                                                                      |
 |                                              | -ROLLBACK                                                                    |                                                                      |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
-| -OFF                                         | `FREEZE <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#id2>`_           | * -OVERRIDE                                                          |
+| -OFF                                         | `FREEZE <./dbmgmt.html#id2>`_                                                | * -OVERRIDE                                                          |
 |                                              |                                                                              | * -RECORD                                                            |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
-| -ON                                          | `FREEZE <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#id2>`_           | * -[NO]ONLINE                                                        |
+| -ON                                          | `FREEZE <./dbmgmt.html#id2>`_                                                | * -[NO]ONLINE                                                        |
 |                                              |                                                                              | * -[NO]AUTORELEASE                                                   |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
-| -INSTANCE_CREATE                             | `REPLICATE <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#replicate>`_  | * -NAME                                                              |
+| -INSTANCE_CREATE                             | `REPLICATE <./dbmgmt.html#replicate>`_                                       | * -NAME                                                              |
 |                                              |                                                                              | * -NOREPLACE                                                         |
 |                                              |                                                                              | * -SUPPLEMENTARY                                                     |
 |                                              |                                                                              | * -[NO]QDBRUNDOWN                                                    |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
-| -JOURNAL=<journal-options-list>              | `BACKUP <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#backup>`_ and    | * ALIGNSIZE=integer                                                  |
-|                                              | `SET <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#set>`_              | * ALLOCATION=integer                                                 |
+| -JOURNAL=<journal-options-list>              | `BACKUP <./dbmgmt.html#backup>`_ and                                         | * ALIGNSIZE=integer                                                  |
+|                                              | `SET <./dbmgmt.html#set>`_                                                   | * ALLOCATION=integer                                                 |
 |                                              |                                                                              | * AUTOSWITCHLIMIT=integer                                            |
 |                                              |                                                                              | * BEFORE_IMAGES                                                      |
 |                                              |                                                                              | * BUFFER_SIZE=integer                                                |
@@ -3563,7 +3563,7 @@ The following table summarizes the qualifiers.
 |                                              |                                                                              |                                                                      |
 |                                              | -ROLLBACK                                                                    | * OPERATIONS=integer                                                 |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
-| -RECEIVER                                    | `REPLICATE <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#replicate>`_  | * -BUFFSIZE=integer                                                  |
+| -RECEIVER                                    | `REPLICATE <./dbmgmt.html#replicate>`_                                       | * -BUFFSIZE=integer                                                  |
 |                                              |                                                                              | * -CHANGELOG                                                         |
 |                                              |                                                                              | * -CHECKHEALTH                                                       |
 |                                              |                                                                              | * -CMPLVL=integer                                                    |
@@ -3587,7 +3587,7 @@ The following table summarizes the qualifiers.
 |                                              |                                                                              | * -UPDATEONLY                                                        |
 |                                              |                                                                              | * -UPDATERESYNC=/path/to/bkup-orig-inst                              |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
-| -RECOVER                                     | `JOURNAL <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#journal>`_      | * -AFTER=time                                                        |
+| -RECOVER                                     | `JOURNAL <./dbmgmt.html#journal>`_                                           | * -AFTER=time                                                        |
 |                                              |                                                                              | * -APPLY_AFTER_IMAGE                                                 |
 |                                              |                                                                              | * -BACKWARD                                                          |
 |                                              |                                                                              | * -BEFORE=time                                                       |
@@ -3608,7 +3608,7 @@ The following table summarizes the qualifiers.
 |                                              |                                                                              | * -VERBOSE                                                           |
 |                                              |                                                                              | * -VERIFY                                                            |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
-| -EXTRACT                                     | `JOURNAL <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#journal>`_      | * -AFTER=time                                                        |
+| -EXTRACT                                     | `JOURNAL <./dbmgmt.html#journal>`_                                           | * -AFTER=time                                                        |
 |                                              |                                                                              | * -BEFORE=time                                                       |
 |                                              |                                                                              | * -[NO]BROKENTRANS=file                                              |
 |                                              |                                                                              | * -CHAIN                                                             |
@@ -3626,7 +3626,7 @@ The following table summarizes the qualifiers.
 |                                              |                                                                              | * -VERBOSE                                                           |
 |                                              |                                                                              | * -VERIFY                                                            |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
-| -ROLLBACK                                    | `JOURNAL <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#journal>`_      | * -APPLY_AFTER_IMAGE                                                 |
+| -ROLLBACK                                    | `JOURNAL <./dbmgmt.html#journal>`_                                           | * -APPLY_AFTER_IMAGE                                                 |
 |                                              |                                                                              | * -BACKWARD                                                          |
 |                                              |                                                                              | * -BEFORE=time                                                       |
 |                                              |                                                                              | * -[NO]BROKENTRANS=file                                              |
@@ -3639,7 +3639,7 @@ The following table summarizes the qualifiers.
 |                                              |                                                                              | * -VERBOSE                                                           |
 |                                              |                                                                              | * -VERIFY                                                            |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
-| -SHOW=<show-option-list>                     | `JOURNAL <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#journal>`_      | * -ACTIVE_PROCESSES                                                  |
+| -SHOW=<show-option-list>                     | `JOURNAL <./dbmgmt.html#journal>`_                                           | * -ACTIVE_PROCESSES                                                  |
 |                                              |                                                                              | * -ALL                                                               |
 |                                              |                                                                              | * -BROKEN_TRANSACTIONS                                               |
 |                                              |                                                                              | * -HEADER                                                            |
@@ -3653,13 +3653,13 @@ The following table summarizes the qualifiers.
 |                                              |                                                                              | * -ID=<pid_list>                                                     |
 |                                              |                                                                              | * -INTERACTIVE                                                       |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
-| -SINCE                                       | `BACKUP <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#backup>`_        | * -BYTESTREAM                                                        |
+| -SINCE                                       | `BACKUP <./dbmgmt.html#backup>`_                                             | * -BYTESTREAM                                                        |
 |                                              |                                                                              | * -COMPREHENSIVE                                                     |
 |                                              |                                                                              | * -DATABASE                                                          |
 |                                              |                                                                              | * -INCREMENTAL                                                       |
 |                                              |                                                                              | * -RECORD                                                            |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
-| -SO[URCE]                                    | `REPLICATE <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#replicate>`_  | * -ACTIVATE                                                          |
+| -SO[URCE]                                    | `REPLICATE <./dbmgmt.html#replicate>`_                                       | * -ACTIVATE                                                          |
 |                                              |                                                                              | * -BUFFSIZE=Buffer_size                                              |
 |                                              |                                                                              | * -CHANGELOG                                                         |
 |                                              |                                                                              | * -CHECKHEALTH                                                       |
@@ -3693,8 +3693,6 @@ The following table summarizes the qualifiers.
 |                                              |                                                                              | * -UPDNOTOK                                                          |
 |                                              |                                                                              | * -ZEROBACKLOG                                                       |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
-| -VERSION={V4|V5}                             | `DOWNGRADE <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#downgrade>`_  | * file-name                                                          |
-|                                              | and `UPGRADE <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#id40>`_     |                                                                      |
+| -VERSION={V4|V5}                             | `DOWNGRADE <./dbmgmt.html#downgrade>`_                                       | * file-name                                                          |
+|                                              | and `UPGRADE <./dbmgmt.html#id40>`_                                          |                                                                      |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
-
-

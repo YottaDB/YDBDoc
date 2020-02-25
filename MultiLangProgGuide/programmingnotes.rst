@@ -49,7 +49,7 @@ prefix their subscripts with a character such as "x" which ensures
 that subscripts are not canonical numbers.
 
 In contexts where a string is coerced to a number (for example
-`ydb_incr_s() / ydb_incr_st() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-incr-s-ydb-incr-st>`_) the coercion rules are the same as the
+`ydb_incr_s() / ydb_incr_st() <./cprogram.html#ydb-incr-s-ydb-incr-st>`_) the coercion rules are the same as the
 `M “+” unary operator <https://docs.yottadb.com/ProgrammersGuide/langfeat.html#arithmetic-operators>`_.
 
 .. _canonical number:
@@ -121,7 +121,7 @@ the API, it initializes signal handling as follows:
   own signal handler for :code:`SIGALRM`. Application code should *not*
   use :code:`SIGALRM`, and must *never* replace YottaDB's
   handler. YottaDB provides an API for applications that need timing
-  functionality (see `Utility Functions <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#utility-functions>`_).
+  functionality (see `Utility Functions <./cprogram.html#utility-functions>`_).
 - :code:`SIGCHLD` (formerly :code:`SIGCLD`) – Set to :code:`SIG_DFL` for the
   default action.
 - :code:`SIGTSTP`, :code:`SIGTTIN`, and :code:`SIGTTOU` – As
@@ -159,15 +159,15 @@ the API, it initializes signal handling as follows:
   :code:`SIGIOT`, :code:`SIGSEGV`, :code:`SIGTERM`, and
   :code:`SIGTRAP` – These signals are fatal, and the YottaDB handler
   terminates the process with a core dump. See the discussion about core
-  dumps in the description of `ydb_fork_n_core() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-fork-n-core>`_. Although YottaDB
+  dumps in the description of `ydb_fork_n_core() <./cprogram.html#ydb-fork-n-core>`_. Although YottaDB
   normally cleans up processes' interaction with databases on exit,
   these signals can indicate that the process is in a bad state and that
   its code and data cannot be trusted. The process therefore does
   not attempt to clean up before exit. After a fatal signal, *no*
-  YottaDB functions can be called except `ydb_exit() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-exit>`_.  In the
+  YottaDB functions can be called except `ydb_exit() <./cprogram.html#ydb-exit>`_.  In the
   event an application *must* use its own handler for one of
   these signals, it must either save YottaDB's handler, and drive
-  it before process termination or call `ydb_exit() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-exit>`_ prior to
+  it before process termination or call `ydb_exit() <./cprogram.html#ydb-exit>`_ prior to
   process exit. [#]_
 - YottaDB saves an application's signal handler during
   initialization and restores it if :code:`ydb_exit()` is explicitly
@@ -181,7 +181,7 @@ the API, it initializes signal handling as follows:
        processes to attempt a cleanup. Avoid using these signals to
        terminate processes unless you know what you are doing.
 
-As database operations such as `ydb_set_s() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-set-s-ydb-set-st>`_ set timers, subsequent
+As database operations such as `ydb_set_s() <./cprogram.html#ydb-set-s-ydb-set-st>`_ set timers, subsequent
 system calls can terminate prematurely with an EINTR. Such system
 calls should be wrapped to restart them when this occurs. An example
 from the file `eintr_wrappers.h
@@ -204,7 +204,7 @@ co-exist, or be made to co-exist, with YottaDB, for example, by safely
 saving and restoring handlers, separate the logic into multiple
 processes or use a client/server database configuration to place
 application logic and the database engine in separate processes (see
-`Client/Server Operation <https://docs.yottadb.com/MultiLangProgGuide/MultiLangProgGuide.html#client-server-operation>`_).
+`Client/Server Operation <./MultiLangProgGuide.html#client-server-operation>`_).
 
 To reiterate because of its importance: **never** replace YottaDB's
 :code:`SIGALRM` handler.
@@ -264,21 +264,21 @@ Important Notes:
 - Simple API functions
   use an :code:`*errstr` parameter to avoid a race condition and
   ensure they get the correct `$zstatus`_ when function has an error
-  return. If an application calls `ydb_get_s() / ydb_get_st() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-get-s-ydb-get-st>`_ for
-  the value of `$zstatus <https://docs.yottadb.com/MultiLangProgGuide/MultiLangProgGuide.html#zstatus>`_ for the complete error text when a YottaDB
-  function returns an `error return code <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#error-return-code>`_, for a single-threaded
-  application, `$zstatus <https://docs.yottadb.com/MultiLangProgGuide/MultiLangProgGuide.html#zstatus>`_ has correct and current information, since
+  return. If an application calls `ydb_get_s() / ydb_get_st() <./cprogram.html#ydb-get-s-ydb-get-st>`_ for
+  the value of `$zstatus <./MultiLangProgGuide.html#zstatus>`_ for the complete error text when a YottaDB
+  function returns an `error return code <./cprogram.html#error-return-code>`_, for a single-threaded
+  application, `$zstatus <./MultiLangProgGuide.html#zstatus>`_ has correct and current information, since
   calls to YottaDB are entirely under the control of that single
   application thread. For a multi-threaded application, between the
-  time a function returns with an `error return code <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#error-return-code>`_, and a
-  subsequent call to `ydb_get_st() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-get-s-ydb-get-st>`_ to
-  get the value of `$zstatus <https://docs.yottadb.com/MultiLangProgGuide/MultiLangProgGuide.html#zstatus>`_,
-  another thread may call YottaDB, and the `$zstatus <https://docs.yottadb.com/MultiLangProgGuide/MultiLangProgGuide.html#zstatus>`_ returned will
+  time a function returns with an `error return code <./cprogram.html#error-return-code>`_, and a
+  subsequent call to `ydb_get_st() <./cprogram.html#ydb-get-s-ydb-get-st>`_ to
+  get the value of `$zstatus <./MultiLangProgGuide.html#zstatus>`_,
+  another thread may call YottaDB, and the `$zstatus <./MultiLangProgGuide.html#zstatus>`_ returned will
   be from that subsequent call. A :code:`*errstr` parameter in
-  functions for multi-threaded applications provides the `$zstatus <https://docs.yottadb.com/MultiLangProgGuide/MultiLangProgGuide.html#zstatus>`_ for
+  functions for multi-threaded applications provides the `$zstatus <./MultiLangProgGuide.html#zstatus>`_ for
   that call to the caller.
 
-  - An application that does not want the `$zstatus <https://docs.yottadb.com/MultiLangProgGuide/MultiLangProgGuide.html#zstatus>`_ string can pass
+  - An application that does not want the `$zstatus <./MultiLangProgGuide.html#zstatus>`_ string can pass
     a :code:`NULL` value for :code:`*errstr`.
 
   - The string in :code:`errstr->buf_addr` is always null terminated, which
@@ -286,21 +286,21 @@ Important Notes:
     like :code:`printf()`.
 
   - In the event a buffer provided by an application is not long
-    enough for a `$zstatus <https://docs.yottadb.com/MultiLangProgGuide/MultiLangProgGuide.html#zstatus>`_, YottaDB truncates the string to be
+    enough for a `$zstatus <./MultiLangProgGuide.html#zstatus>`_, YottaDB truncates the string to be
     reported, rather than issuing an INVSTRLEN error (since a second
     error while attempting to report an error is likely to add
     confusion rather than enlightenment).
 
-    - :code:`errstr->len_used` is always set to the length of `$zstatus <https://docs.yottadb.com/MultiLangProgGuide/MultiLangProgGuide.html#zstatus>`_,
+    - :code:`errstr->len_used` is always set to the length of `$zstatus <./MultiLangProgGuide.html#zstatus>`_,
       whether or not it is truncated.
     - If :code:`errstr->len_used` is greater than
-      :code:`errstr->len_alloc-1` it means `$zstatus <https://docs.yottadb.com/MultiLangProgGuide/MultiLangProgGuide.html#zstatus>`_ has been
+      :code:`errstr->len_alloc-1` it means `$zstatus <./MultiLangProgGuide.html#zstatus>`_ has been
       truncated.
 
 - A multi-threaded application is permitted to use the YottaDB
   single-thread functions *as long as the application ensures that all
   YottaDB access is performed only by one thread.* A thread may use
-  the `ydb_thread_is_main() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-thread-is-main>`_
+  the `ydb_thread_is_main() <./cprogram.html#ydb-thread-is-main>`_
   to determine whether it is the thread that is calling
   YottaDB. YottaDB strongly recommends against this application design
   pattern: this functionality only exists to provide backward
@@ -309,10 +309,10 @@ Important Notes:
 Even though the YottaDB data management engine is single-threaded and
 operates in a single thread, [#]_ it supports both single- and
 multi-threaded applications. Multi-threaded applications may call
-multi-threaded `Simple API <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#simple-api>`_ functions – those whose names end in
+multi-threaded `Simple API <./cprogram.html#simple-api>`_ functions – those whose names end in
 :code:`_st()` – as well as utility functions – those whose names end
 in :code:`_t()`. Single-threaded applications may call the `Simple
-API <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#simple-api>`_ single-threaded functions – those whose names end in
+API <./cprogram.html#simple-api>`_ single-threaded functions – those whose names end in
 :code:`_s()` – as well as utility functions – those whose names do not
 end in :code:`_t()`. An application *must not* call both
 single-threaded and multi-threaded Simple API functions, and any
@@ -342,11 +342,11 @@ a multi-threaded function when another is already on the C stack of a
 thread results in a `SIMPLEAPINEST
 <https://docs.yottadb.com/MessageRecovery/errors.html#simpleapinest>`_
 error. While this is conceptually simple for
-applications that do not use `Transaction Processing <https://docs.yottadb.com/MultiLangProgGuide/MultiLangProgGuide.html#transaction-processing>`_, transaction
+applications that do not use `Transaction Processing <./MultiLangProgGuide.html#transaction-processing>`_, transaction
 processing in a threaded environment requires special consideration
 (see `Threads and Transaction Processing`_).
 
-`Programming in M <https://docs.yottadb.com/MultiLangProgGuide/MultiLangProgGuide.html#programming-in-m>`_ is single-threaded and single-threaded
+`Programming in M <./MultiLangProgGuide.html#programming-in-m>`_ is single-threaded and single-threaded
 applications can call into M code, and M code can call single threaded
 C code as documented in `Chapter 11 (Integrating External Routines) of
 the M Programmers Guide
@@ -372,8 +372,8 @@ trigger calls C code, and that C code calls :code:`ydb_ci_t()` or
 Threads and Transaction Processing
 ----------------------------------
 
-As discussed in `Transaction Processing <https://docs.yottadb.com/MultiLangProgGuide/MultiLangProgGuide.html#transaction-processing>`_,
-`ydb_tp_s() or ydb_tp_st() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-tp-s-ydb-tp-st>`_ are called with a pointer to the function that is
+As discussed in `Transaction Processing <./MultiLangProgGuide.html#transaction-processing>`_,
+`ydb_tp_s() or ydb_tp_st() <./cprogram.html#ydb-tp-s-ydb-tp-st>`_ are called with a pointer to the function that is
 called to execute an application's transaction logic.
 
 In a single-threaded application, the YottaDB engine calls the TP
@@ -386,7 +386,7 @@ function in another thread, but cannot block until it gets the message
 that the function has terminated with a value to be returned, because
 the engine must listen for messages from that function, as well as
 threads it spawns. Furthermore, one of those threads may itself call
-`ydb_tp_st() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-tp-s-ydb-tp-st>`_. Therefore
+`ydb_tp_st() <./cprogram.html#ydb-tp-s-ydb-tp-st>`_. Therefore
 
 - The YottaDB engine must know the transaction nesting level at which
   it is operating, responding to requests for service at that level,
@@ -395,21 +395,21 @@ threads it spawns. Furthermore, one of those threads may itself call
 - After a transaction has closed, any further calls from threads
   invoking YottaDB for the closed transaction must receive errors.
 
-To accomplish this, the `Simple API <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#simple-api>`_ functions for threaded
+To accomplish this, the `Simple API <./cprogram.html#simple-api>`_ functions for threaded
 applications – those ending in :code:`_st()` – have a :code:`tptoken`
 first parameter used as follows to provide the required transaction
 context of a thread.
 
-- When an application calls a `Simple API <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#simple-api>`_ function outside a
+- When an application calls a `Simple API <./cprogram.html#simple-api>`_ function outside a
   transaction, it provides a value of :code:`YDB_NOTTP` for
   :code:`tptoken`.
-- When an application calls `ydb_tp_st() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-tp-s-ydb-tp-st>`_, it generates a
+- When an application calls `ydb_tp_st() <./cprogram.html#ydb-tp-s-ydb-tp-st>`_, it generates a
   :code:`tptoken` as the first parameter when it calls the function
   that implements the logic for the transaction. Any threads that this
   function spawns must provide this :code:`tptoken` to
   YottaDB. Passing in a different or incorrect :code:`tptoken` can
   result in hard-to-debug application behavior, including deadlocks.
-- When a `Simple API <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#simple-api>`_ function is called:
+- When a `Simple API <./cprogram.html#simple-api>`_ function is called:
 
   - If :code:`tptoken` is that of the current transaction, the request
     is processed.
@@ -455,10 +455,10 @@ factors such as system load.
 Memory Allocation
 =================
 
-Memory allocated by `ydb_malloc() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-malloc>`_ must be explicitly freed by
-`ydb_free() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-free>`_. 
-`ydb_exit() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-exit>`_ does not free memory, and any
-memory allocated but not freed prior to `ydb_exit() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-exit>`_ is released
+Memory allocated by `ydb_malloc() <./cprogram.html#ydb-malloc>`_ must be explicitly freed by
+`ydb_free() <./cprogram.html#ydb-free>`_. 
+`ydb_exit() <./cprogram.html#ydb-exit>`_ does not free memory, and any
+memory allocated but not freed prior to `ydb_exit() <./cprogram.html#ydb-exit>`_ is released
 only on process exit.
 
 Syslog

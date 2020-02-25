@@ -11,7 +11,7 @@
 
 This chapter describes general features of the M language, as well as general information about the operation of YottaDB. Commands, Functions, and Intrinsic Special Variables are each described in separate chapters. This chapter contains information about exceptions, as well as information about general M features.
 
-MUMPS is a general purpose language with an embedded database system. This section describes the features of the language that are not covered in the `Commands <https://docs.yottadb.com/ProgrammersGuide/commands.html>`_, `Functions <https://docs.yottadb.com/ProgrammersGuide/functions.html>`_, or `Intrinsic Special Variables <https://docs.yottadb.com/ProgrammersGuide/isv.html>`_ chapters.
+MUMPS is a general purpose language with an embedded database system. This section describes the features of the language that are not covered in the `Commands <./commands.html>`_, `Functions <./functions.html>`_, or `Intrinsic Special Variables <./isv.html>`_ chapters.
 
 ---------------------------
 Data Types
@@ -94,8 +94,13 @@ The format for an M global or local variable is:
 * The name specifies a particular array.
 * The optional expressions specify the subscripts and must be enclosed in parentheses and separated by commas (,).
 
-Although there is no restriction on variable names in source code, the first 31 characters of a variable name are significant and subsequent characters are dropped internally. A variable can have up to 31 subscripts.
-(Learn more about the maximum length and subscript representation `here <gde.html#k-ey-size-size-in-bytes>`_.)
+Although there is no restriction on variable names in source code, the first 31 characters of a variable name are significant and subsequent characters are dropped internally. A variable can have up to 31 subscripts. The maximum size of a variable name and all its subscripts is `1,019 bytes <https://docs.yottadb.com/AdminOpsGuide/gde.html#guidelines-for-mapping>`_.  As this limit is defined by the `internal representation <https://docs.yottadb.com/AdminOpsGuide/gds.html#gds-keys>`_, it is not easily translated to a specific limit; however, in practice it appears to suffice for most applications. The value of a node can be 1MiB.
+
+.. note:: As global variables that start with :code:`^%Y` are used by the
+	  `%YGBLSTAT() <./utility.html#ygblstat>`_
+	  utility program, and global variables that start with
+	  :code:`^%y` are reserved for use by YottaDB,
+	  applications should not use them.
 
 ++++++++++++++++++++++++++
 M Collation Sequences
@@ -103,7 +108,7 @@ M Collation Sequences
 
 M collates all canonic numeric subscripts ahead of all string subscripts, including strings such as those with leading zeros that represent non-canonic numbers. Numeric subscripts collate from negative to positive in value order. String subscripts collate in ASCII sequence. In addition, YottaDB allows the empty string subscript in most contexts (the null, or empty, string collates ahead of all canonic numeric subscripts).
 
-YottaDB allows definition of alternative collation sequences. For complete information on enabling this functionality, See `Chapter 12: “Internationalization” <https://docs.yottadb.com/ProgrammersGuide/internatn.html>`_.
+YottaDB allows definition of alternative collation sequences. For complete information on enabling this functionality, See `Chapter 12: “Internationalization” <./internatn.html>`_.
 
 ++++++++++++++++++++++++++++++
 Null Subscripts and Collation
@@ -143,26 +148,26 @@ Null Subscript Collation
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-The default collation of local and global variable subscripts has been that the null subscript collates between numeric and string subscripts whereas the M standard collation requires the null subscript to collate before any other subscript. YottaDB supports both null collation methods. The collation method must be specified at the time of database creation.
+The default collation (“standard null collation”) of local and global variable subscripts is that the null subscript collates first, followed by numeric subscripts in numeric order, and finally string subscripts in lexical order. YottaDB also supports a historical collation of null subscripts, between numeric subscripts and string subscripts. For global variables, the collation method must be specified at the time of database creation.
 
-A read-only boolean parameter STDNULLCOLL is in the database fileheader to specify the type of null collation:
+A read-only boolean parameter STDNULLCOLL in the database fileheader specifies the type of null collation:
 
-* If STDNULLCOLL is set to FALSE, subscripts of globals in the database continue the previous practice where the null subscript collates between numeric and string subscripts.
-* If STDNULLCOLL is set to TRUE, subscripts of globals in the database follow the M standard where the null subscript collates before all other subscripts.
+* If STDNULLCOLL is TRUE, subscripts of globals in the database file place the null subscript before all other subscripts.
+* If STDNULLCOLL is set to FALSE, subscripts of globals in the database file place the null subscript between numeric and string subscripts.
 
-When a database is created, the STDNULLCOLL parameter is initialized to the collation specified for that region in the global directory.
+When `MUPIP CREATE <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#create>`_ creates a database file, it initializes the STDNULLCOLL parameter to the collation specified for that region in the global directory.
 
 To establish the null collation method for a specified database, GDE supports a region parameter STDNULLCOLL that can be set to TRUE or FALSE using a region qualifier -STDNULLCOLL or -NOSTDNULLCOLL respectively. These qualifiers are supported with ADD, CHANGE and TEMPLATE commands. When MUPIP creates a new database, the STDNULLCOLL value is copied from the global directory into the database file header.
 
 For M local variables, the null collation can be established either at startup or during run time. Since the same local collation method is established for all locals in a process, changing the null collation within the process is allowed only if there are no local variables defined at that time. At process startup, YottaDB uses the following:
 
-* The YottaDB standard null collation if the environment variable is defined to either FALSE or NO (or a case-insensitive leading substring thereof) or 0.
-* The M standard null collation if an environment variable ydb_lct_stdnull is defined to either TRUE or YES (or a case-insensitive leading substring thereof) or a non-zero integer or if the environment variable is undefined.
+* Standard null collation if the environment variable ``ydb_lct_stdnull`` is undefined, set to either TRUE or YES (or a case-insensitive leading substring thereof), or a non-zero integer.
+* Historical null collation if the environment variable ``ydb_lct_stdnull`` is set to either FALSE or NO (or a case-insensitive leading substring thereof) or 0.
 
 To establish a default collation version for local variables within the process, the percent utility %LCLCOL supports establishing the null collation method as well. set^%LCLCOL(col,ncol) accepts an optional parameter ncol that determines the null collation type to be used with the collation type col.
 
-* If the truth value of ncol is FALSE(0), local variables use the YottaDB standard null collation.
-* If the truth value of ncol is TRUE(1), local variables use the M standard null collation.
+* If the truth value of ncol is TRUE(1), local variables use standard null collation.
+* If the truth value of ncol is FALSE(0), local variables use historical null collation.
 * If ncol is not supplied, there is no change to the already established null collation method.
 
 Also using set^%LCLCOL(,ncol), the null collation order can be changed while keeping the alternate collation order unchanged. If subscripted local variables exist, null collation order cannot be changed. In this case, YottaDB issues YDB-E-COLLDATAEXISTS.
@@ -315,7 +320,7 @@ From the example above, the output of dump –fileheader for TEAGLOBALS.dat will
    Replication State              OFF        Region Seqno    0x0000000000000001
    Resync Seqno    0x0000000000000001        Resync transaction      0x00000001
 
-With Standard null collation, the null subscript is represented by 0x01 instead of 0xFF with YottaDB null collation. So, the output of dse dump -block for a null subscript will also be different.
+With Standard null collation, the null subscript is represented by 0x01 instead of 0xFF with historical null collation. So, the output of dse dump -block for a null subscript will also be different.
 
 .. parsed-literal::
    DSE>dump -block=3
@@ -327,7 +332,7 @@ With Standard null collation, the null subscript is represented by 0x01 instead 
                8 : | 0  A  0  0 61  0  1  0  0 31              |
                    |  .  .  .  .  a  .  .  .  . 1              |
 
-With YottaDB null collation, for the same command output will be as follows:
+With historical null collation, for the same command output will be as follows:
 
 .. parsed-literal::
    DSE>dump -block=3
@@ -353,7 +358,7 @@ Since with standard collation, null subscripts collate before numeric and string
    lcl(1)=3
    lcl("x")=4
 
-With the same data and YottaDB null collation, the output of ZWR will be as follows:
+With the same data and historical null collation, the output of ZWR will be as follows:
 
 .. parsed-literal::
    lcl(1)=3
@@ -419,7 +424,7 @@ If the last subscript in the subscripted global or local variable name is null a
 
 The output will be the same as the ZWRITE output.
 
-For more details about the behavior of these functions with YottaDB Null Collation, please consult the `M Programmer’s Guide <https://docs.yottadb.com/ProgrammersGuide/index.html>`_.
+For more details about the behavior of these functions with historical null collation, please consult the `M Programmer’s Guide <./index.html>`_.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 MUPIP Binary Extract and Load
@@ -445,7 +450,7 @@ Local Variables
 
 A local variable in M refers to a variable used solely within the scope of a single process. Local variable names have no leading delimiter.
 
-M makes a local variable available and subject to modification by all routines executed within a process from the time that variable is first SET until it is KILLed, or until the process stops executing M. However, M "protects" a local variable after that variable appears as an argument to a NEW command, or after it appears as an element in a formallist used in parameter passing. When M protects a local variable, it saves a copy of the variable's value and makes that variable undefined. M restores the variable to its saved value during execution of the QUIT that terminates the process stack level associated with the "protecting" NEW or formallist. For more information on NEW and QUIT, see `Chapter 6: “Commands” <https://docs.yottadb.com/ProgrammersGuide/commands.html>`_.
+M makes a local variable available and subject to modification by all routines executed within a process from the time that variable is first SET until it is KILLed, or until the process stops executing M. However, M "protects" a local variable after that variable appears as an argument to a NEW command, or after it appears as an element in a formallist used in parameter passing. When M protects a local variable, it saves a copy of the variable's value and makes that variable undefined. M restores the variable to its saved value during execution of the QUIT that terminates the process stack level associated with the "protecting" NEW or formallist. For more information on NEW and QUIT, see `Chapter 6: “Commands” <./commands.html>`_.
 
 M restricts the following uses of variables to local variables:
 
@@ -496,7 +501,7 @@ YottaDB also allows:
 
 Where the first expression identifies the Global Directory and the second expression is accepted but ignored by YottaDB.
 
-To improve compatibility with some other M implementations, YottaDB also accepts another non-standard syntax. In this syntax, the leading and trailing up-bar (|) are respectively replaced by a left square-bracket ([) and a right square-bracket (]). This syntax also requires expratoms, rather than expressions. For additional information on expratoms, see `Expressions <https://docs.yottadb.com/ProgrammersGuide/langfeat.html#expressions>`_.
+To improve compatibility with some other M implementations, YottaDB also accepts another non-standard syntax. In this syntax, the leading and trailing up-bar (|) are respectively replaced by a left square-bracket ([) and a right square-bracket (]). This syntax also requires expratoms, rather than expressions. For additional information on expratoms, see `Expressions <./langfeat.html#expressions>`_.
 
 The formats for this non-standard syntax are:
 
@@ -765,7 +770,7 @@ Example:
    day3 week2 b
    day4 week2 c.gld
 
-This example demonstrates the mechanism. A table is set up the first time for proper memory management, and for each reference, a table lookup is performed. Note that for the purpose of simplicity, no error checking is done, so table.dat is assumed to be in the correct format, and have exactly four entries. This routine should be built as a shared library, see `Chapter 11: “Integrating External Routines” <https://docs.yottadb.com/ProgrammersGuide/extrout.html>`_ for information on building as a shared library. The function init_functable is necessary to set up the YottaDB memory management functions.
+This example demonstrates the mechanism. A table is set up the first time for proper memory management, and for each reference, a table lookup is performed. Note that for the purpose of simplicity, no error checking is done, so table.dat is assumed to be in the correct format, and have exactly four entries. This routine should be built as a shared library, see `Chapter 11: “Integrating External Routines” <./extrout.html>`_ for information on building as a shared library. The function init_functable is necessary to set up the YottaDB memory management functions.
 
 ----------------------------
 Literals
@@ -928,7 +933,7 @@ Logical Operators
 
 M logical operators always produce a result that is TRUE (1) or FALSE (0). All logical operators force M to evaluate the expressions to which they apply as truth-valued. The logical operators are:
 
-' unary NOT operator negates current truth-value; M accepts placement of the NOT operator next to a relational operator, for example, A'=B as meaning '(A=B).
+' unary NOT operator negates current truth-value; M accepts placement of the NOT operator next to a relational operator, for example, A'=B as meaning '(A=B), i.e., NAND.
 
 & binary AND operator produces a true result only if both of the expressions are true.
 
@@ -958,27 +963,35 @@ Example:
 .. parsed-literal::
    YDB>WRITE 0&0
    0
+   YDB>WRITE 0'&0
+   1
    YDB>WRITE 1&0
    0
    YDB>WRITE 0&1
    0
    YDB>WRITE 1&1
    1
+   YDB>WRITE 1'&1
+   0
    YDB>WRITE 2&1
    1
    YDB>WRITE 0!0
    0
+   YDB>WRITE 0'!0
+   1
    YDB>WRITE 1!0
    1
    YDB>WRITE 0!1
    1
    YDB>WRITE 1!1
    1
+   YDB>WRITE 1'!1
+   0
    YDB>WRITE 2!1
    1
    YDB>
 
-The above example demonstrates all cases covered by the binary logical operators.
+The above example demonstrates cases covered by the binary logical operators.
 
 +++++++++++++++++++
 String Operators
@@ -1169,7 +1182,7 @@ The pattern codes are:
 
 **U** upper-case alphabetic characters, ASCII 65-90
 
-Pattern codes may be upper or lower case and may be replaced with a string literal. YottaDB allows the M pattern match definition of patcodes A, C, N, U, L, and P to be extended or changed, (A can only be modified implicitly by modifying L or U) and new patcodes added. For detailed information on enabling this functionality, see `Chapter 12: “Internationalization” <https://docs.yottadb.com/ProgrammersGuide/internatn.html>`_.
+Pattern codes may be upper or lower case and may be replaced with a string literal. YottaDB allows the M pattern match definition of patcodes A, C, N, U, L, and P to be extended or changed, (A can only be modified implicitly by modifying L or U) and new patcodes added. For detailed information on enabling this functionality, see `Chapter 12: “Internationalization” <./internatn.html>`_.
 
 .. note::
    The YottaDB compiler accepts pattern codes other than those explicitly defined above. If, at run-time, the pattern codes come into use and no pattern definitions are available, YottaDB issues a run-time error (PATNOTFOUND). YottaDB does not currently implement a mechanism for Y and Z patterns and continues to treat those as compile-time syntax errors. YottaDB defers literal optimizations involving patterns within an XECUTE as well as evaluations that encounter issues with the pattern table.
@@ -1266,13 +1279,13 @@ By default, GDE creates global directories mapping "local" LOCKs to the region D
 Intrinsic Functions
 ----------------------------
 
-M Intrinsic Functions start with a single dollar sign ($) and have one or more arguments enclosed in parentheses () and separated by commas (,). These functions provide an expression result by performing actions that would be impossible or difficult to perform using M commands. It is now possible to invoke a C function in a package via the external call mechanism. For information on the functions, see `Chapter 7: “Functions” <https://docs.yottadb.com/ProgrammersGuide/functions.html>`_.
+M Intrinsic Functions start with a single dollar sign ($) and have one or more arguments enclosed in parentheses () and separated by commas (,). These functions provide an expression result by performing actions that would be impossible or difficult to perform using M commands. It is now possible to invoke a C function in a package via the external call mechanism. For information on the functions, see `Chapter 7: “Functions” <./functions.html>`_.
 
 ----------------------------
 Intrinsic Special Variables
 ----------------------------
 
-M Intrinsic Special Variables start with a single dollar sign ($). YottaDB provides such variables for program examination. In some cases, the Intrinsic Special Variables may be SET to modify the corresponding part of the environment. For information, see `Chapter 8: “Intrinsic Special Variables” <https://docs.yottadb.com/ProgrammersGuide/isv.html>`_.
+M Intrinsic Special Variables start with a single dollar sign ($). YottaDB provides such variables for program examination. In some cases, the Intrinsic Special Variables may be SET to modify the corresponding part of the environment. For information, see `Chapter 8: “Intrinsic Special Variables” <./isv.html>`_.
 
 -------------------------
 Routines
@@ -1292,13 +1305,13 @@ A line of M code consists of the following elements in the following order:
 
 * An optional label.
 * A line-start delimiter. The standard defines the line-start delimiter as a space (<SP>) character. In order to enhance routine readability, YottaDB extends M by accepting one or more tab (<HT>) characters as line-start delimiters.
-* Zero or more level indicators, which are periods (.). The level indicators show the level of nesting for argumentless DO commands: the more periods, the deeper the nesting. M ignores lines that contain level indicators unless they directly follow an argumentless DO command with a matching level of nesting. For more information on the DO command, see `Chapter 6: “Commands” <https://docs.yottadb.com/ProgrammersGuide/commands.html>`_.
+* Zero or more level indicators, which are periods (.). The level indicators show the level of nesting for argumentless DO commands: the more periods, the deeper the nesting. M ignores lines that contain level indicators unless they directly follow an argumentless DO command with a matching level of nesting. For more information on the DO command, see `Chapter 6: “Commands” <./commands.html>`_.
 * Zero or more commands and their arguments. M accepts multiple commands on a line. The argument(s) of one command are separated from the next command by a command-start delimiter, consisting of one or more spaces (<SP>).
 * A terminating end-of-line, which is a line feed.
 
 **Labels**
 
-In addition to labels that follow the rules for M names, M accepts labels consisting only of digits. In a label consisting only of digits, leading zeros are considered significant. For example, labels 1 and 01 are different. Formallists may immediately follow a label. A Formallist consists of one or more names enclosed in parentheses (). Formallists identify local variables that "receive" passed values in M parameter passing. For more information, see `“Parameter Passing” <https://docs.yottadb.com/ProgrammersGuide/langfeat.html#parameter-passing>`_.
+In addition to labels that follow the rules for M names, M accepts labels consisting only of digits. In a label consisting only of digits, leading zeros are considered significant. For example, labels 1 and 01 are different. Formallists may immediately follow a label. A Formallist consists of one or more names enclosed in parentheses (). Formallists identify local variables that "receive" passed values in M parameter passing. For more information, see `“Parameter Passing” <./langfeat.html#parameter-passing>`_.
 
 In YottaDB, a colon (:) delimiter may be appended to the label, which causes the label to be treated as "local." Within the routine in which they appear, they perform exactly as they would without the trailing colon but they are available only during compilation and inaccessible to other routines and to indirection or XECUTE. Because references to local labels preceding their position in a routine produce a LABELUNKNOWN error at run-time, YottaDB recommends omitting the routinename from labelrefs to a local label. Using local labels reduces object size and linking overhead for all types of dynamic linking except indirection and XECUTE. Use of local labels may either improve or impair performance; typically any difference is modest. The more likely they are to all be used within the code block at run-time, the more likely an improvement. In other words, conditional code paths which prevent all references to local variables appearing in the block may actually impair performance.
 
@@ -1527,7 +1540,7 @@ A QUIT command terminates execution of the invoked routine. At the time of the Q
 
 A QUIT from a DO does not take an argument, while a QUIT from an extrinsic must have an argument. This represents one of the two major differences between the DO command with parameters and the extrinsics. M returns the value of the QUIT command argument as the value of the extrinsic function or special variable. The other difference is that M stacks $TEST for extrinsics.
 
-For more information, see `“Extrinsic Functions” <https://docs.yottadb.com/ProgrammersGuide/langfeat.html#extrinsic-functions>`_ and `“Extrinsic Special Variables” <https://docs.yottadb.com/ProgrammersGuide/langfeat.html#extrinsic-special-variables>`_.
+For more information, see `“Extrinsic Functions” <./langfeat.html#extrinsic-functions>`_ and `“Extrinsic Special Variables” <./langfeat.html#extrinsic-special-variables>`_.
 
 Example:
 
@@ -1656,7 +1669,7 @@ or as an expression element,
 Where packagename, like the name elements is a valid M name. Because of the parsing conventions of M, the identifier between the ampersand (&) and the optional parameter-list has precisely constrained punctuation – a later section describes how to transform this into a more richly punctuated name should that be appropriate for the called function. While the intent of the syntax is to permit the name^name to match an M labelref, there is no semantic implication to any use of the caret (^).
 
 .. note::
-   For more information on external calls, see `Chapter 11: “Integrating External Routines” <https://docs.yottadb.com/ProgrammersGuide/extrout.html>`_.
+   For more information on external calls, see `Chapter 11: “Integrating External Routines” <./extrout.html>`_.
 
 ---------------------------
 Extrinsic Functions
@@ -1858,7 +1871,7 @@ Here is an example message:
 * local_tn - This is a never-decreasing counter (starting at 1 at process startup) incremented for every new TP transaction, TP restart, and TP rollback. Two TPRESTART messages by the same process should never have the same value of local_tn. The difference between the local_tn values of two messages from the same process indicates the number of TP transactions done by that process in the time interval between the two messages.
 
 .. note::
-   Use VIEW [NO]LOGT[PRESTART][=intexpr] to enable or disable the logging of TPRESTART messages. Note that you can use the ydb_tprestart_log_delta and ydb_tprestart_log_first environment variables to set the frequency of TPRESTART messages. Use VIEW [NO]LOGN[ONTP][=intexpr] to enable or disable the logging of NONTPRESTART messages. This facility is the analog of TPRESTART tracking, but for non-TP mini-transacstions. Note that you can use the ydb_nontprestart_log_delta and ydb_nontprestart_log_first environment variables to set the frequency of the NONTPRESTART messages.For more information, refer to `“Key Words in VIEW Command” <https://docs.yottadb.com/ProgrammersGuide/commands.html#key-words-in-view-command>`_ and the `Environment Variables <https://docs.yottadb.com/AdminOpsGuide/basicops.html#environment-variables>`_ section of the Administration and Operations Guide.
+   Use VIEW [NO]LOGT[PRESTART][=intexpr] to enable or disable the logging of TPRESTART messages. Note that you can use the ydb_tprestart_log_delta and ydb_tprestart_log_first environment variables to set the frequency of TPRESTART messages. Use VIEW [NO]LOGN[ONTP][=intexpr] to enable or disable the logging of NONTPRESTART messages. This facility is the analog of TPRESTART tracking, but for non-TP mini-transacstions. Note that you can use the ydb_nontprestart_log_delta and ydb_nontprestart_log_first environment variables to set the frequency of the NONTPRESTART messages.For more information, refer to `“Key Words in VIEW Command” <./commands.html#key-words-in-view-command>`_ and the `Environment Variables <https://docs.yottadb.com/AdminOpsGuide/basicops.html#environment-variables>`_ section of the Administration and Operations Guide.
 
 
 ++++++++++++++++++++++

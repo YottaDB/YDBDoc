@@ -32,7 +32,7 @@ or as an expression element,
 .. parsed-literal::
    $&[packagename.]name[^name][parameter-list]
 
-Where packagename, like the name elements, is a valid M name. Because of the parsing conventions of M, the identifier between the ampersand (&) and the optional parameter-list has precisely constrained punctuation - a later section describes how to transform this into a more richly punctuated name, should that be appropriate for the called function. While the intent of the syntax is to permit the name^name to match an M labelref, there is no semantic implication to any use of the up-arrow (^). For more information on M names, labelrefs and parameter-lists, refer to `Chapter 5: “General Language Features of M” <https://docs.yottadb.com/ProgrammersGuide/langfeat.html>`_.
+Where packagename, like the name elements, is a valid M name. Because of the parsing conventions of M, the identifier between the ampersand (&) and the optional parameter-list has precisely constrained punctuation - a later section describes how to transform this into a more richly punctuated name, should that be appropriate for the called function. While the intent of the syntax is to permit the name^name to match an M labelref, there is no semantic implication to any use of the up-arrow (^). For more information on M names, labelrefs and parameter-lists, refer to `Chapter 5: “General Language Features of M” <./langfeat.html>`_.
 
 Example:
 
@@ -110,7 +110,7 @@ ydb_char_t** : For passing a pointer to a "C" style string.
 
 ydb_string_t* : For passing a structure in the form {int length;char \*address}. Useful for moving blocks of memory to or from YottaDB.
 
-ydb_pointertofunc_t : For passing callback function pointers. For details see `“Callback Mechanism” <https://docs.yottadb.com/ProgrammersGuide/extrout.html#callback-mechanism>`_.
+ydb_pointertofunc_t : For passing callback function pointers. For details see `“Callback Mechanism” <./extrout.html#callback-mechanism>`_.
 
 **Note:**
 
@@ -638,7 +638,7 @@ Optional second argument: ret_val, a pre-allocated pointer through which YottaDB
 
 Optional list of arguments to be passed to the M routine's formallist: the number of arguments and the type of each argument must match the number of parameters, and parameter types specified in the corresponding Call-In table entry. All pointer arguments must be pre-allocated. YottaDB assumes that any pointer, which is passed for O/IO-parameter points to valid write-able memory.
 
-The status value returned by ydb_ci() indicates the YottaDB status code: zero (0) if successful, or a non-zero error code on failure. The error string corrsponding to the failure code can be read into a buffer by immediately calling ydb_zstatus(). For more details, see the `ydb_zstatus <https://docs.yottadb.com/ProgrammersGuide/extrout.html#ydb-zstatus>`_ section below.
+The status value returned by ydb_ci() indicates the YottaDB status code: zero (0) if successful, or a non-zero error code on failure. The error string corrsponding to the failure code can be read into a buffer by immediately calling ydb_zstatus(). For more details, see the `ydb_zstatus <./extrout.html#ydb-zstatus>`_ section below.
 
 ~~~~~~~~
 ydb_ci_t

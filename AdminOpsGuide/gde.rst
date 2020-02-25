@@ -240,7 +240,7 @@ This section of the Global Directory lists the current mapping of names to regio
 Global Directory Abbreviations
 +++++++++++++++++++++++++++++++
 
-GDE uses the following abbreviations to display the output of a global directory. The following list show global directory abbreviations with the associated qualifiers. For a description of the function of individual qualifiers, see `"GDE Command Summary" <https://docs.yottadb.com/AdminOpsGuide/gde.html#gde-command-summary>`_.
+GDE uses the following abbreviations to display the output of a global directory. The following list show global directory abbreviations with the associated qualifiers. For a description of the function of individual qualifiers, see `"GDE Command Summary" <./gde.html#gde-command-summary>`_.
 
 +-----------------------------------------+----------------------------------------+
 | Abbreviation                            | Full Form                              |
@@ -318,7 +318,7 @@ If you select the -JOURNAL option when you ADD or CHANGE a region in a Global Di
    --------------------------------------------------------------------------------------------------------
    DEFAULT           $gtmdir/$ydb_rel/g/yottadb.mjl         Y         2308    2048     2048    8386560
 
-For more information about journaling, see the section on the JOURNAL qualifier in this chapter and `Chapter 6: “YottaDB Journaling” <https://docs.yottadb.com/AdminOpsGuide/ydbjournal.html>`_.
+For more information about journaling, see the section on the JOURNAL qualifier in this chapter and `Chapter 6: “YottaDB Journaling” <./ydbjournal.html>`_.
 
 -----------------------
 Using GDE
@@ -562,7 +562,7 @@ Maps a namespace to a region in the global directory. The format of the ADD -NAM
 
 * You can also use $CHAR() and $ZCHAR() to specify unprintable characters as subscripts. "" (an empty string) or no value (e.g. 20: or :20 or :) specify open-ended ranges, which span, on the left, from the first subscript ("") to on the right, the last possible string.
 
-* Regions that contain global variables sharing the same unsubscripted name that span regions must use standard null collation; attempting to use the deprecated original null collation produces an error.
+* Regions that contain global variables sharing the same unsubscripted name that span regions must use standard null collation; attempting to use the deprecated historical null collation produces an error.
 
 Example:
 
@@ -1189,7 +1189,7 @@ This qualifier establishes characteristics for the journal file on newly created
 
 Although you do not have to establish the criteria for your journaling process at this point, it is efficient to do so, even if you are not entirely sure you will use journaling. The options available for -JOURNAL set up the environment, so it is ready for you to enable with MUPIP SET -JOURNAL. You can also change or add any of the established options at that time.
 
-For more information about journaling, see `Chapter 6: “YottaDB Journaling” <https://docs.yottadb.com/AdminOpsGuide/ydbjournal.html>`_.
+For more information about journaling, see `Chapter 6: “YottaDB Journaling” <./ydbjournal.html>`_.
 
 The journal-option-list includes:
 
@@ -1258,7 +1258,7 @@ When determining the maximum key size, applications should consider the followin
 
 * YottaDB adds an extra byte for every string element, including the global name.
 
-For example, the key ^ACN(\\"Name\\",\\"Type\\") internally occupies 17 bytes. Look at the `String Subscripts <https://docs.yottadb.com/AdminOpsGuide/gds.html#string-subscripts>`_ and `Numeric Subscripts <gds.html#numeric-subscripts>`_ sections for details on interpreted representations of global variables. The `"YGVN2GDS" argument of $VIEW() <https://docs.yottadb.com/ProgrammersGuide/functions.html#argument-keywords-of-view>`_ provides you with the representation of a global variable node when stored in the database.
+For example, the key ^ACN(\\"Name\\",\\"Type\\") internally occupies 17 bytes. Look at the `String Subscripts <./gds.html#string-subscripts>`_ and `Numeric Subscripts <gds.html#numeric-subscripts>`_ sections for details on interpreted representations of global variables. The `"YGVN2GDS" argument of $VIEW() <https://docs.yottadb.com/ProgrammersGuide/functions.html#argument-keywords-of-view>`_ provides you with the representation of a global variable node when stored in the database.
 
 For example,
 
@@ -1340,9 +1340,9 @@ For more information, refer to VIEW "[NO]STATSHARE" and ^%YGBLSTAT in the Progra
 
 (Last updated: `r1.24 <https://gitlab.com/YottaDB/DB/YDB/tags/r1.24>`_)
 
-Determines whether YottaDB null subscripts collate in conformance to the M standard.
+Determines whether YottaDB null subscripts collate in conformance to the standard.
 
-If STDNULLCOLL is specified, subscripts of globals in the database follow the M standard where the null subscript collates before all other subscripts.
+If STDNULLCOLL is specified, subscripts of globals in the database follow the standard where the null subscript collates before all other subscripts.
 
 If NOSTDNULLCOLL is specified, null subscripts collate between numeric and string subscripts.
 
@@ -1692,9 +1692,9 @@ The following table summarizes GDE commands, abbreviations, object types, requir
 +--------------------------------------------------------------------------------+--------------------------------------------------+-----------------------------------------------------------------+
 | Command                                                                        | Specified Object Type                            | Required Object Name/[Optional] Qualifier                       |
 +================================================================================+==================================================+=================================================================+
-| `\@ <https://docs.yottadb.com/AdminOpsGuide/gde.html#id1>`_                    | N/A                                              | file-name                                                       |
+| `\@ <./gde.html#id1>`_                                                         | N/A                                              | file-name                                                       |
 +--------------------------------------------------------------------------------+--------------------------------------------------+-----------------------------------------------------------------+
-| `A[DD] <https://docs.yottadb.com/AdminOpsGuide/gde.html#add>`_                 |  -G[BLNAME]                                      | global-name                                                     |
+| `A[DD] <./gde.html#add>`_                                                      |  -G[BLNAME]                                      | global-name                                                     |
 |                                                                                |                                                  | -C[OLLATION]=collation                                          |
 +--------------------------------------------------------------------------------+--------------------------------------------------+-----------------------------------------------------------------+
 | \-                                                                             |  -N[AME]                                         | namespace                                                       |
@@ -1706,7 +1706,7 @@ The following table summarizes GDE commands, abbreviations, object types, requir
 | \-                                                                             |  -S[EGMENT]                                      | segment-name                                                    |
 |                                                                                |                                                  | -F[ILE_NAME]=file-name [-SEGMENT-qualifier...]                  |
 +--------------------------------------------------------------------------------+--------------------------------------------------+-----------------------------------------------------------------+
-| `C[HANGE] <https://docs.yottadb.com/AdminOpsGuide/gde.html#change>`_           |  -G[BLNAME]                                      | global-name                                                     |
+| `C[HANGE] <./gde.html#change>`_                                                |  -G[BLNAME]                                      | global-name                                                     |
 |                                                                                |                                                  | -C[OLLATION]=collation                                          |
 +--------------------------------------------------------------------------------+--------------------------------------------------+-----------------------------------------------------------------+
 | \-                                                                             | -I[NSTANCE]                                      | replication-instance                                            |
@@ -1721,7 +1721,7 @@ The following table summarizes GDE commands, abbreviations, object types, requir
 | \-                                                                             |  -S[EGMENT]                                      | segment-name                                                    |
 |                                                                                |                                                  | [-SEGMENT-qualifier]                                            |
 +--------------------------------------------------------------------------------+--------------------------------------------------+-----------------------------------------------------------------+
-| `D[ELETE] <https://docs.yottadb.com/AdminOpsGuide/gde.html#delete>`_           |  -G[BLNAME]                                      | global-name                                                     |
+| `D[ELETE] <./gde.html#delete>`_                                                |  -G[BLNAME]                                      | global-name                                                     |
 |                                                                                |                                                  | -C[OLLATION]=collation                                          |
 +--------------------------------------------------------------------------------+--------------------------------------------------+-----------------------------------------------------------------+
 | \-                                                                             |  -N[AME]                                         | namespace                                                       |
@@ -1730,18 +1730,18 @@ The following table summarizes GDE commands, abbreviations, object types, requir
 +--------------------------------------------------------------------------------+--------------------------------------------------+-----------------------------------------------------------------+
 | \-                                                                             |  -S[EGMENT]                                      | segment-name                                                    |
 +--------------------------------------------------------------------------------+--------------------------------------------------+-----------------------------------------------------------------+
-| `E[XIT] <https://docs.yottadb.com/AdminOpsGuide/gde.html#exit>`_               | N/A                                              | N/A                                                             |
+| `E[XIT] <./gde.html#exit>`_                                                    | N/A                                              | N/A                                                             |
 +--------------------------------------------------------------------------------+--------------------------------------------------+-----------------------------------------------------------------+
-| `HE[LP] <https://docs.yottadb.com/AdminOpsGuide/gde.html#help>`_               | N/A                                              | Keyword                                                         |
+| `HE[LP] <./gde.html#help>`_                                                    | N/A                                              | Keyword                                                         |
 +--------------------------------------------------------------------------------+--------------------------------------------------+-----------------------------------------------------------------+
-| `LOC[KS] <https://docs.yottadb.com/AdminOpsGuide/gde.html#locks>`_             | N/A                                              | -R[EGION]=region-name                                           |
+| `LOC[KS] <./gde.html#locks>`_                                                  | N/A                                              | -R[EGION]=region-name                                           |
 +--------------------------------------------------------------------------------+--------------------------------------------------+-----------------------------------------------------------------+
-| `LOG <https://docs.yottadb.com/AdminOpsGuide/gde.html#log>`_                   | N/A                                              | [-ON][=file-name]                                               |
+| `LOG <./gde.html#log>`_                                                        | N/A                                              | [-ON][=file-name]                                               |
 |                                                                                |                                                  | [-OF[F]]                                                        |
 +--------------------------------------------------------------------------------+--------------------------------------------------+-----------------------------------------------------------------+
-| `Q[UIT] <https://docs.yottadb.com/AdminOpsGuide/gde.html#quit>`_               | N/A                                              | N/A                                                             |
+| `Q[UIT] <./gde.html#quit>`_                                                    | N/A                                              | N/A                                                             |
 +--------------------------------------------------------------------------------+--------------------------------------------------+-----------------------------------------------------------------+
-| `R[ENAME] <https://docs.yottadb.com/AdminOpsGuide/gde.html#rename>`_           |  -N[AME]                                         | old-name new-name                                               |
+| `R[ENAME] <./gde.html#rename>`_                                                |  -N[AME]                                         | old-name new-name                                               |
 +--------------------------------------------------------------------------------+--------------------------------------------------+-----------------------------------------------------------------+
 | \-                                                                             |  -R[EGION]                                       | old-reg-name new-reg-name                                       |
 +--------------------------------------------------------------------------------+--------------------------------------------------+-----------------------------------------------------------------+
@@ -1750,9 +1750,9 @@ The following table summarizes GDE commands, abbreviations, object types, requir
 | \-                                                                             |  -G[BLNAME]                                      | global-name                                                     |
 |                                                                                |                                                  | -C[OLLATION]=collation                                          |
 +--------------------------------------------------------------------------------+--------------------------------------------------+-----------------------------------------------------------------+
-| `SE[TGD] <https://docs.yottadb.com/AdminOpsGuide/gde.html#setgd>`_             | N/A                                              | -F[ILE]=file-name [-Q[UIT]]                                     |
+| `SE[TGD] <./gde.html#setgd>`_                                                  | N/A                                              | -F[ILE]=file-name [-Q[UIT]]                                     |
 +--------------------------------------------------------------------------------+--------------------------------------------------+-----------------------------------------------------------------+
-| `SH[OW] <https://docs.yottadb.com/AdminOpsGuide/gde.html#show>`_               |  -A[LL]\*                                        | N/A                                                             |
+| `SH[OW] <./gde.html#show>`_                                                    |  -A[LL]\*                                        | N/A                                                             |
 +--------------------------------------------------------------------------------+--------------------------------------------------+-----------------------------------------------------------------+
 | \-                                                                             |  -G[BLNAME]                                      | global-name                                                     |
 |                                                                                |                                                  | -C[OLLATION]=collation                                          |
@@ -1770,11 +1770,11 @@ The following table summarizes GDE commands, abbreviations, object types, requir
 +--------------------------------------------------------------------------------+--------------------------------------------------+-----------------------------------------------------------------+
 | \-                                                                             | T[EMPLATE]                                       | N/A                                                             |
 +--------------------------------------------------------------------------------+--------------------------------------------------+-----------------------------------------------------------------+
-| `T[EMPLATE] <https://docs.yottadb.com/AdminOpsGuide/gde.html#template>`_       |  -R[EGION]                                       | [-REGION-qualifier...]                                          |
+| `T[EMPLATE] <./gde.html#template>`_                                            |  -R[EGION]                                       | [-REGION-qualifier...]                                          |
 +--------------------------------------------------------------------------------+--------------------------------------------------+-----------------------------------------------------------------+
 | \-                                                                             |  -S[EGMENT]                                      | [ -SEGMENT-qualifier...]                                        |
 +--------------------------------------------------------------------------------+--------------------------------------------------+-----------------------------------------------------------------+
-| `V[ERIFY] <https://docs.yottadb.com/AdminOpsGuide/gde.html#verify>`_           | -A[LL]*                                          | N/A                                                             |
+| `V[ERIFY] <./gde.html#verify>`_                                                | -A[LL]*                                          | N/A                                                             |
 +--------------------------------------------------------------------------------+--------------------------------------------------+-----------------------------------------------------------------+
 | \-                                                                             | -G[BLNAME]                                       | global-name                                                     |
 |                                                                                |                                                  | -C[OLLATION]=collation                                          |
