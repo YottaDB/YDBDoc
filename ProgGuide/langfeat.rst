@@ -887,7 +887,7 @@ All arithmetic operators force M to evaluate the expressions to which they apply
 
 / binary operator for fractional division.
 
-\ binary operator for integer division.
+\\ binary operator for integer division.
 
 # binary operator for modulo, that is, causes M to produce the remainder from integer division of the first argument by the second.
 
