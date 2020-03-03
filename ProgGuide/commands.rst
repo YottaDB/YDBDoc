@@ -2264,13 +2264,31 @@ On executing fortypes, the output looks something like the following:
    ^trc("fortypes","fortypes",38,"FOR_LOOP",2)=3
    ^trc("fortypes","fortypes",38,"FOR_LOOP",3)=7
 
-~~~~~~~~~~~~~~~~~~~~~~
-"[UN]SETENV":"envvar"
-~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+“[UN]SETENV”:<expr>[:value]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Environment variables can be set and unset inside M using VIEW commands. 
 
-VIEW "SETENV":"envvar":value sets the environment variable named envvar to value and VIEW "UNSETENV":"envvar" unsets the environment variable envvar.
+VIEW "SETENV":<expr>:<value> sets the environment variable named by <expr> to <value> and VIEW "UNSETENV":<expr> unsets the environment variable.
+
+Example (the default timezone of the computer is US Eastern Standard Time):
+
+.. parsed-literal::
+   YDB>WRITE $ZTRNLNM("TZ")
+
+   YDB>WRITE $ZDATE($HOROLOG,"24:60")
+   15:21
+   YDB>VIEW "SETENV":"TZ":"UTC"
+
+   YDB>WRITE $ZDATE($HOROLOG,"24:60")
+   20:21
+   YDB>VIEW "UNSETENV":"TZ"    
+
+   YDB>WRITE $ZDATE($HOROLOG,"24:60")
+   15:21
+   YDB>
+
 
 ~~~~~~~~~~~~~~~~~~~~~
 "ZDATE_FORM":"value"
@@ -2740,6 +2758,7 @@ The format of the ZGOTO command is:
 * The optional entryref specifies a location to which ZGOTO transfers control.
 * If ZGOTO specifies no entryref, it returns control to the next command at the level specified by the integer expression.
 * The optional truth-valued expression immediately following the entryref specifies the argument postconditional and controls whether YottaDB uses the argument.
+* A colon (:) before the entryref is required only if there is a preceding integer expression.
 * If the ZGOTO includes the level and the argument postconditional but not the entryref, two colons (::) separate the integer expression from the truth-valued expression.
 * An indirection operator and an expression atom evaluating to a list of one or more ZGOTO arguments form a legal argument for a ZGOTO.
 * ZGOTO accepts a trigger entryref (with a trailing hash-sign (#)); if the trigger is not currently loaded (by some previous trigger action), YottaDB generates a ZLINKFILE error. Note that ZGOTO should be reserved for error handling and testing, as it is a very unstructured operation.
@@ -2838,6 +2857,7 @@ The format of the ZHELP command is:
 * The optional second expression specifies the name of a Global Directory containing ^HELP.
 * If ZHELP does not specify the second expression, the Global Directory defaults to $ydb_dist/gtmhelp.gld.
 * An indirection operator and an expression atom evaluating to a list of one or more ZHELP arguments form a legal argument for a ZHELP
+* Inside the help system, ESCAPE or ENTER take you back out one level.
 
 ++++++++++++++++++
 Examples of ZHELP
@@ -3217,7 +3237,7 @@ The ZPRINT command displays the source code lines selected by its argument.
 The format of the ZPRINT command is:
 
 .. parsed-literal::
-   ZP[RINT][:tvexpr][entryref[:label[+intexpr]][,...]
+   ZP[RINT][:tvexpr] [entryref[:label[+intexpr]][,...]
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
 * A ZPRINT with no argument prints the entire current routine or the current trigger. The current routine is the routine closest to the top of an invocation stack, as displayed by a ZSHOW "S"; in this case, at least two (2) spaces must follow the command to separate it from the next command on the line.
@@ -3303,7 +3323,7 @@ The ZSHOW command displays information about the current YottaDB environment.
 The format of the ZSHOW command is:
 
 .. parsed-literal::
-   ZSH[OW][:tvexpr][expr[:glvn][,...]]
+   ZSH[OW][:tvexpr] [expr[:glvn][,...]]
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
 * The optional expression specifies one or more codes determining the nature of the information displayed.
