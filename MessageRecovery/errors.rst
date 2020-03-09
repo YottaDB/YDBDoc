@@ -7747,9 +7747,9 @@ Action: -
 LOADINVCHSET 
 ---------------------
 
-LOADINVCHSET, Extract file CHSET xxx is incompatible with ydb_chset.
+LOADINVCHSET, Extract file CHSET xxx is incompatible with ydb_chset/gtm_chset.
 
-MUPIP Information: This indicates that a MUPIP LOAD operation did not take place because the value of the environment variable ydb_chset at the time of creating the extract file was not the same as the current value of ydb_chset.
+MUPIP Information: This indicates that a MUPIP LOAD operation did not take place because the value of the environment variable ydb_chset or gtm_chset at the time of creating the extract file was not the same as the current value of ydb_chset or gtm_chset.
 
 Action: Determine whether to change the current character set or retry the EXTRACT with a different character set. Alternatively, you can edit the extract file so the EXTRACT file header matches the ydb_chset environment variable. This enables an M mode MUPIP LOAD to treat the input as a byte stream or a UTF-8 mode MUPIP LOAD, which either detects BADCHAR errors or not, depending on the setting of the ydb_badchar environment variable.
 
