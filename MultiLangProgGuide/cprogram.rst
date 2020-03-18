@@ -1183,7 +1183,8 @@ following:
 - :CODE:`YDB_ERR_PARAMINVALID` when :code:`len_alloc` < :code:`len_used` or the :code:`len_used` is non-zero
   and :code:`buf_addr` is NULL in at least one variable name in :code:`varnames`.
 - An `error return code`_ returned by a YottaDB function called by the
-  function.
+  function. This case is treated the same way as if `YDB_TP_ROLLBACK` was returned
+  (i.e. the application indicates that this transaction should not be committed).
 
 :code:`transid` is a string, up to the first 8 bytes of which are recorded
 in the commit record of journal files for database regions
@@ -1223,7 +1224,7 @@ another transaction (i.e., a nested transaction) can also return
        from a `ydb_delete_s() / ydb_delete_st()`_, or `ydb_set_s() /
        ydb_set_st()`_.
 
-.. note:: If the transaction logic receives a :code:`YDB_TP_RESTART` or :code:`YDB_TP_ROLLBACK` from a YottaDB function that it calls, it *must* return that value to the calling :code:`ydb_tp_s()` or :code:`ydb_tp_st()`. Failure to do so could result in application level data inconsistencies and hard to debug application code.
+.. note:: If the transaction logic receives a :code:`YDB_TP_RESTART` from a YottaDB function that it calls, it *must* return that value to the calling :code:`ydb_tp_s()` or :code:`ydb_tp_st()`. Failure to do so could result in application level data inconsistencies and hard to debug application code.
 
 Please see the `Simple API introduction <./cprogram.html#simple-api>` for details about parameter allocation.
 
