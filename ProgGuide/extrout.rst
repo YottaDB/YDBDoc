@@ -652,7 +652,7 @@ The function ydb_ci_t() is an interface for a multi-threaded application to invo
 The ydb_ci_t() call must be in the following format:
 
 .. parsed-literal::
-   status= ydb_ci_t( <tptoken>, <ci_rtn_name> [,ret_val] [,arg1]...);
+   status= ydb_ci_t( <tptoken>, <errstrptr>, <ci_rtn_name> [,ret_val] [,arg1]...);
 
 First argument: tptoken, a unique transaction processing token that refers to the active transaction.
 
@@ -707,7 +707,7 @@ The function ydb_cip_t is an interface for a multi-threaded application to invok
 The ydb_cip_t() call must follow the following format:
 
 .. parsed-literal::
-   status = ydb_cip_t(<tptoken>, <ci_name_descriptor> [,ret_val] [,arg1] ...);
+   status = ydb_cip_t(<tptoken>, <errstrptr>, <ci_name_descriptor> [,ret_val] [,arg1] ...);
 
 First argument: tptoken, a unique transaction processing token that refers to the active transaction.
 

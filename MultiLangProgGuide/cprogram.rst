@@ -511,7 +511,7 @@ The error :CODE:`YDB_ERR_PARAMINVALID` is returned when
 - :code:`ret_value` is NULL
 - :code:`len_alloc` < :code:`len_used` or the :code:`len_used` is non-zero and :code:`buf_addr` is NULL in at least one subscript, in :code:`subsarray`.
 
-Please see the `Simple API introduction <./cprogram.html#simple-api>` for details about parameter allocation.
+Please see the `Simple API introduction <./cprogram.html#simple-api>`_ for details about parameter allocation.
 
 .. _ydb_delete_s():
 .. _ydb_delete_st():
@@ -553,7 +553,7 @@ or another `error return code`_.
   :CODE:`YDB_DEL_NODE` nor :CODE:`YDB_DEL_TREE`; or
 - another `error return code`_.
 
-Please see the `Simple API introduction <./cprogram.html#simple-api>` for details about parameter allocation.
+Please see the `Simple API introduction <./cprogram.html#simple-api>`_ for details about parameter allocation.
 
 .. _ydb_delete_excl_s():
 .. _ydb_delete_excl_st():
@@ -597,7 +597,7 @@ Note that specifying a larger value for :code:`namecount` than the
 number of variable names actually provided in :code:`*varnames`
 can result in a buffer overflow.
 
-Please see the `Simple API introduction <./cprogram.html#simple-api>` for details about parameter allocation.
+Please see the `Simple API introduction <./cprogram.html#simple-api>`_ for details about parameter allocation.
 
 .. _ydb_get_s():
 .. _ydb_get_st():
@@ -658,7 +658,7 @@ Notes:
   anticipation of a potential :CODE:`YDB_ERR_GVUNDEF`, unless it is
   known from application design that this cannot happen.
 
-Please see the `Simple API introduction <./cprogram.html#simple-api>` for details about parameter allocation.
+Please see the `Simple API introduction <./cprogram.html#simple-api>`_ for details about parameter allocation.
 
 .. _ydb_incr_s():
 .. _ydb_incr_st():
@@ -710,7 +710,7 @@ Notes:
   attempt to do so returns the :CODE:`YDB_ERR_UNIMPLOP` error.
 - The value of the empty string coerced to a numeric value is 0.
 
-Please see the `Simple API introduction <./cprogram.html#simple-api>` for details about parameter allocation.
+Please see the `Simple API introduction <./cprogram.html#simple-api>`_ for details about parameter allocation.
 
 .. _ydb_lock_s():
 .. _ydb_lock_st():
@@ -764,7 +764,7 @@ is returned when :code:`len_alloc` < :code:`len_used` or the :code:`len_used` is
 and :code:`buf_addr` is NULL in at least one subscript in :code:`subsarray`.
 - In other cases, the function returns an `error return code`_.
 
-Please see the `Simple API introduction <./cprogram.html#simple-api>` for details about parameter allocation.
+Please see the `Simple API introduction <./cprogram.html#simple-api>`_ for details about parameter allocation.
 
 .. _ydb_lock_decr_s():
 .. _ydb_lock_decr_st():
@@ -797,7 +797,7 @@ result in an appropriate `error return code`_. :CODE:`YDB_ERR_PARAMINVALID`
 is returned when :code:`len_alloc` < :code:`len_used` or the :code:`len_used` is non-zero
 and :code:`buf_addr` is NULL in at least one subscript in :code:`subsarray`.
 
-Please see the `Simple API introduction <./cprogram.html#simple-api>` for details about parameter allocation.
+Please see the `Simple API introduction <./cprogram.html#simple-api>`_ for details about parameter allocation.
 
 .. _ydb_lock_incr_s():
 .. _ydb_lock_incr_st():
@@ -843,7 +843,7 @@ is returned when :code:`len_alloc` < :code:`len_used` or the :code:`len_used` is
 and :code:`buf_addr` is NULL in at least one subscript in :code:`subsarray`.
 - In other cases, the function returns an `error return code`_.
 
-Please see the `Simple API introduction <./cprogram.html#simple-api>` for details about parameter allocation.
+Please see the `Simple API introduction <./cprogram.html#simple-api>`_ for details about parameter allocation.
 
 .. _ydb_node_next_s():
 .. _ydb_node_next_st():
@@ -905,7 +905,7 @@ Return values of :code:`ydb_node_next_s()` and
   consider the values of :code:`*ret_subs_used` and the :code:`*ret_subsarray`
   to be undefined.
 
-Please see the `Simple API introduction <./cprogram.html#simple-api>` for details about parameter allocation.
+Please see the `Simple API introduction <./cprogram.html#simple-api>`_ for details about parameter allocation.
 
 .. _ydb_node_previous_s():
 .. _ydb_node_previous_st():
@@ -963,7 +963,7 @@ Return values of :code:`ydb_node_previous_s()` and
   consider the values of :code:`*ret_subs_used` and the :code:`*ret_subsarray`
   to be undefined.
 
-Please see the `Simple API introduction <./cprogram.html#simple-api>` for details about parameter allocation.
+Please see the `Simple API introduction <./cprogram.html#simple-api>`_ for details about parameter allocation.
 
 .. _ydb_set_s():
 .. _ydb_set_st():
@@ -998,7 +998,7 @@ a :code:`ydb_buffer_t` specifying an empty string. Return values are:
   and :code:`buf_addr` is NULL in at least one subscript in :code:`subsarray` or :code:`increment`; or
 - another applicable `error return code`_.
 
-Please see the `Simple API introduction <./cprogram.html#simple-api>` for details about parameter allocation.
+Please see the `Simple API introduction <./cprogram.html#simple-api>`_ for details about parameter allocation.
 
 .. _ydb_str2zwr_s():
 .. _ydb_str2zwr_st():
@@ -1025,7 +1025,7 @@ the string pointed to by :code:`*str`, returning:
   NULL and the return value has a non-zero :code:`len_used`; or
 - another applicable `error return code`_.
 
-Please see the `Simple API introduction <./cprogram.html#simple-api>` for details about parameter allocation.
+Please see the `Simple API introduction <./cprogram.html#simple-api>`_ for details about parameter allocation.
 
 .. _ydb_subscript_next_s():
 .. _ydb_subscript_next_st():
@@ -1079,7 +1079,7 @@ returns :code:`YDB_OK`, :code:`ret_value->buf_addr` points to the next
 local or global variable name, with :code:`YDB_ERR_NODEEND` indicating
 an end to the traversal.
 
-Please see the `Simple API introduction <./cprogram.html#simple-api>` for details about parameter allocation.
+Please see the `Simple API introduction <./cprogram.html#simple-api>`_ for details about parameter allocation.
 
 .. _ydb_subscript_previous_s():
 .. _ydb_subscript_previous_st():
@@ -1134,7 +1134,7 @@ returns :code:`YDB_OK`, :code:`ret_value->buf_addr` points to the
 previous local or global variable name, with :code:`YDB_ERR_NODEEND`
 indicating an end to the traversal.
 
-Please see the `Simple API introduction <./cprogram.html#simple-api>` for details about parameter allocation.
+Please see the `Simple API introduction <./cprogram.html#simple-api>`_ for details about parameter allocation.
 
 .. _ydb_tp_s():
 .. _ydb_tp_st():
@@ -1226,7 +1226,7 @@ another transaction (i.e., a nested transaction) can also return
 
 .. note:: If the transaction logic receives a :code:`YDB_TP_RESTART` from a YottaDB function that it calls, it *must* return that value to the calling :code:`ydb_tp_s()` or :code:`ydb_tp_st()`. Failure to do so could result in application level data inconsistencies and hard to debug application code.
 
-Please see the `Simple API introduction <./cprogram.html#simple-api>` for details about parameter allocation.
+Please see the `Simple API introduction <./cprogram.html#simple-api>`_ for details about parameter allocation.
 
 .. _ydb_zwr2str_s():
 .. _ydb_zwr2str_st():
@@ -1253,7 +1253,7 @@ string described by the `zwrite formatted <./programmingnotes.html#zwrite-format
 - :CODE:`YDB_ERR_PARAMINVALID` either if the :code:`*str` buffer is NULL or the return value contains a
   non-zero :code:`len_used`  and the :code:`str->buf_addr` is NULL.
 
-Please see the `Simple API introduction <./cprogram.html#simple-api>` for details about parameter allocation.
+Please see the `Simple API introduction <./cprogram.html#simple-api>`_ for details about parameter allocation.
 
 Comprehensive API
 =================
@@ -1324,7 +1324,7 @@ Returns:
 - :code:`YDB_ERR_PARAMINVALID` if the input parameters :code:`fname` or :code:`ret_value` are NULL; or
 - a negative error return code (for example, if the call-in table in the file had parse errors).
 
-Please see the `Simple API introduction <./cprogram.html#simple-api>` for details about parameter allocation.
+Please see the `Simple API introduction <./cprogram.html#simple-api>`_ for details about parameter allocation.
 
 -------------------------------------------
 ydb_ci_tab_switch() / ydb_ci_tab_switch_t()
@@ -1362,7 +1362,7 @@ the called function to change when the call-in table changes.
 
 .. _ydb_exit():
 
-Please see the `Simple API introduction <./cprogram.html#simple-api>` for details about parameter allocation.
+Please see the `Simple API introduction <./cprogram.html#simple-api>`_ for details about parameter allocation.
 
 ----------
 ydb_exit()
@@ -1414,7 +1414,7 @@ application error with undefined consequences.
 
 A :code:`PARAMINVALID` error is issued if the input :code:`fileid` parameter is NULL.
 
-Please see the `Simple API introduction <./cprogram.html#simple-api>` for details about parameter allocation.
+Please see the `Simple API introduction <./cprogram.html#simple-api>`_ for details about parameter allocation.
 
 .. _ydb_file_is_identical():
 .. _ydb_file_is_identical_t():
@@ -1441,7 +1441,7 @@ and YDB_NOTOK otherwise.
 
 A :code:`PARAMINVALID` error is issued if the input :code:`fileid` parameter is NULL.
 
-Please see the `Simple API introduction <./cprogram.html#simple-api>` for details about parameter allocation.
+Please see the `Simple API introduction <./cprogram.html#simple-api>`_ for details about parameter allocation.
 
 .. _ydb_file_name_to_id():
 .. _ydb_file_name_to_id_t():
@@ -1480,7 +1480,7 @@ return :code:`YDB_OK`, or an error return code.
 
 A :code:`PARAMINVALID` error is issued if the input :code:`filename` or :code:`fileid` parameter is NULL.
 
-Please see the `Simple API introduction <./cprogram.html#simple-api>` for details about parameter allocation.
+Please see the `Simple API introduction <./cprogram.html#simple-api>`_ for details about parameter allocation.
 
 .. _ydb_fork_n_core():
 
@@ -1654,7 +1654,7 @@ number specified by :code:`errnum`.
   :code:`msg_buff->buf_addr`, set :code:`msg_buff->len_used` to its
   length, and return :code:`YDB_OK`.
 
-Please see the `Simple API introduction <./cprogram.html#simple-api>` for details about parameter allocation.
+Please see the `Simple API introduction <./cprogram.html#simple-api>`_ for details about parameter allocation.
 
 -----------------------------
 ydb_mmrhash_32()
@@ -1666,7 +1666,7 @@ ydb_mmrhash_32()
 
 This function returns in :code:`*out4` the 32-bit (4-byte) MurmurHash of :code:`len` bytes at :code:`*key`.
 
-Please see the `Simple API introduction <./cprogram.html#simple-api>` for details about parameter allocation.
+Please see the `Simple API introduction <./cprogram.html#simple-api>`_ for details about parameter allocation.
 
 ---------------------------
 ydb_mmrhash_128()
@@ -1678,7 +1678,7 @@ ydb_mmrhash_128()
 
 This function returns  in :code:`*out` the 128-bit (16-byte) MurmurHash of :code:`len` bytes at :code:`*key`.
 
-Please see the `Simple API introduction <./cprogram.html#simple-api>` for details about parameter allocation.
+Please see the `Simple API introduction <./cprogram.html#simple-api>`_ for details about parameter allocation.
 
 .. _ydb_mmrhash_128_ingest():
 .. _ydb_mmrhash_128_result():
@@ -1716,7 +1716,7 @@ Example:
    // Produce result
    ydb_mmrhash_128_result(hash_state, 0, &hash);
 
-Please see the `Simple API introduction <./cprogram.html#simple-api>` for details about parameter allocation.
+Please see the `Simple API introduction <./cprogram.html#simple-api>`_ for details about parameter allocation.
 
 --------------------------------
 ydb_mmrhash_128_hex()
@@ -1734,7 +1734,7 @@ Example:
    char out[16];
    ydb_mmrhash_128_hex(&hash, out);
 
-Please see the `Simple API introduction <./cprogram.html#simple-api>` for details about parameter allocation.
+Please see the `Simple API introduction <./cprogram.html#simple-api>`_ for details about parameter allocation.
 
 ------------------------------------
 ydb_mmrhash_128_bytes()
@@ -1756,7 +1756,7 @@ Example:
 .. _ydb_stdout_stderr_adjust():
 .. _ydb_stdout_stderr_adjust_t():
 
-Please see the `Simple API introduction <./cprogram.html#simple-api>` for details about parameter allocation.
+Please see the `Simple API introduction <./cprogram.html#simple-api>`_ for details about parameter allocation.
 
 ---------------------------------------------------------
 ydb_stdout_stderr_adjust() / ydb_stdout_stderr_adjust_t()
@@ -1780,7 +1780,7 @@ should call one of these functions as soon as possible after the
 redirection. :code:`ydb_stdout_stderr_adjust()` and
 :code:`ydb_stdout_stderr_adjust_t()` return :code:`YDB_OK`.
 
-Please see the `Simple API introduction <./cprogram.html#simple-api>` for details about parameter allocation.
+Please see the `Simple API introduction <./cprogram.html#simple-api>`_ for details about parameter allocation.
 
 .. _ydb_thread_is_main():
 
@@ -1815,7 +1815,7 @@ ydb_timer_cancel() / ydb_timer_cancel_t()
 Cancel a timer identified by :code:`timer_id` and previously started with
 `ydb_timer_start()`_ or `ydb_timer_start_t()`_.
 
-Please see the `Simple API introduction <./cprogram.html#simple-api>` for details about parameter allocation.
+Please see the `Simple API introduction <./cprogram.html#simple-api>`_ for details about parameter allocation.
 
 .. _ydb_timer_start():
 .. _ydb_timer_start_t():
@@ -1869,7 +1869,7 @@ If the requested :code:`timeout_nsec` exceeds
 :code:`YDB_MAX_TIME_NSEC`, the functions return
 :code:`YDB_ERR_TIME2LONG`; otherwise they return :code:`YDB_OK`.
 
-Please see the `Simple API introduction <./cprogram.html#simple-api>` for details about parameter allocation.
+Please see the `Simple API introduction <./cprogram.html#simple-api>`_ for details about parameter allocation.
 
 Calling M Routines
 ===================
@@ -1881,3 +1881,12 @@ M routines can be called from C with the following functions which are described
 * `ydb_cip() <https://docs.yottadb.com/ProgrammersGuide/extrout.html#ydb-cip>`_
 * `ydb_cip_t() <https://docs.yottadb.com/ProgrammersGuide/extrout.html#ydb-cip-t>`_
 * `ydb_zstatus() <https://docs.yottadb.com/ProgrammersGuide/extrout.html#id2>`_
+
+Historically, the predecessors of the functions to call M routines
+returned positive return codes. In order to maintain backward
+compatibility, values returned by the above (except
+:code:`ydb_zstatus()` which is a :code:`void`) are positive values, whereas
+YottaDB `error return codes`_ are negative. For example, to return an
+invalid string length (`YDB_ERR_INVSTRLEN`_), the :code:`ydb_ci*()` functions
+return :code:`-YDB_ERR_INVSTRLEN`, which is a positve value because
+:code:`YDB_ERR_STRLEN` is a negative value.
