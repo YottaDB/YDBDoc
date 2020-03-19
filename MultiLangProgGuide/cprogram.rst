@@ -1378,14 +1378,18 @@ connection/access to all databases and cleans up its data
 structures. Therafter, any attempt to call a YottaDB function produces
 a :code:`YDB_ERR_CALLINAFTERXIT` error.
 
-Note that a typical application should not need to call
-:code:`ydb_exit()`, but should instead just terminate with a call to
-:code:`exit()` which will perform any cleanup needed by YottaDB.
+Note that:
+
+- a typical application should not need to call
+  :code:`ydb_exit()`, but should instead just terminate with a call to
+  :code:`exit()` which will perform any cleanup needed by YottaDB; and
+- calling :code:`ydb_exit()` before calling any other YottaDB function
+  does nothing, i.e., it is a no-op.
 
 :code:`ydb_exit()` returns :code:`YDB_OK` on success, and a positive non-zero value on error.
 If :code:`ydb_exit()` has already been called, later calls to :code:`ydb_exit()` in the same process return :code:`YDB_OK` with no further action, since all resources related to YottaDB are already cleaned up by the first call.
 
-If an external call attempts to call :code:`ydb_exit()`, a - :code:`YDB_ERR_INVYDBEXIT` error is returned, since YottaDB
+If an external call attempts to call :code:`ydb_exit()`, a :code:`YDB_ERR_INVYDBEXIT` error is returned, since YottaDB
 is required to remain operational even after the external call returns. For information about this error, see
 `INVYDBEXIT <https://docs.yottadb.com/MessageRecovery/errors.html#invydbexit>`_ in the Messages and Recovery Procedures guide.
 
