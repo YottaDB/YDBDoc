@@ -1402,7 +1402,7 @@ Example:
      . if $data(^a) write "^a = ",^a,!
      . Hang 5
    YDB>set a="test"
-   YDB>open a:(command="mumps -run ^indepserver>indout":independent)::"pipe"
+   YDB>open a:(command="yottadb -run ^indepserver>indout":independent)::"pipe"
    YDB>use a
    YDB>write "instructions",!
    YDB>close a
@@ -1423,7 +1423,7 @@ Example:
    ^a = 1
    YDB>
 
-This is a simple example using a mumps process as a server.
+This is a simple example using a yottadb process as a server.
 
 Example:
 
@@ -1470,7 +1470,7 @@ Example:
      set piperr="piperr"
      set writesize=1024
      set cmd=$piece($zcmdline," ") set:'$length(cmd) cmd="induceEPIPE"
-     open pipe:(shell="/bin/bash":command="$ydb_dist/mumps -run "_cmd_"^pipexample":stderr=piperr)::"pipe"
+     open pipe:(shell="/bin/bash":command="$ydb_dist/yottadb -run "_cmd_"^pipexample":stderr=piperr)::"pipe"
      zshow "D":devicelist write "The active device is ",devicelist("D",2),!
      use pipe
      for i=1:1:1024 write $tr($justify(i,writesize)," ","X"),!
@@ -1482,7 +1482,7 @@ Example:
      set pipe="pipe"
      set writesize=1024
      set cmd=$piece($zcmdline," ",2) set:'$length(cmd) cmd="induceEAGAIN"
-     open pipe:(shell="/bin/bash":command="$ydb_dist/mumps -run "_cmd_"^pipexample")::"pipe"
+     open pipe:(shell="/bin/bash":command="$ydb_dist/yottadb -run "_cmd_"^pipexample")::"pipe"
      zshow "D":devicelist write "The active device is ",devicelist("D",2),!
      write !,!
      use pipe
@@ -1536,7 +1536,7 @@ Example:
      set cmd=$piece($zcmdline," ") set:'$length(cmd) cmd="induceEPIPE"
      for try=0:1  do  quit:$get(readcomplete,0)
      . new $etrap set $etrap="goto retryEPIPE"
-     . open pipe:(shell="/bin/bash":command="$ydb_dist/mumps -run "_cmd_"^pipexample "_try:stderr=piperr)::"pipe"
+     . open pipe:(shell="/bin/bash":command="$ydb_dist/yottadb -run "_cmd_"^pipexample "_try:stderr=piperr)::"pipe"
      . zshow "D":devicelist write "Try ",try,$char(9),devicelist("D",2),!
      . use pipe
      . for i=1:1:1024 do
@@ -1568,12 +1568,12 @@ This example demonstrates how to handle PIPE device errors, whether with the dev
 Example:
 
 .. parsed-literal::
-   sh> mumps -run pipexample induceEAGAIN
-   The active device is pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/mumps -run induceEAGAIN^pipexample" STDERR="piperr"
+   sh> yottadb -run pipexample induceEAGAIN
+   The active device is pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/yottadb -run induceEAGAIN^pipexample" STDERR="piperr"
    $ZSTATUS="11,pipexample+9^pipexample,%SYSTEM-E-ENO11, Resource temporarily unavailable"
 
-   sh> mumps -run retry^pipexample induceEAGAIN
-   Try 0   pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/mumps -run induceEAGAIN^pipexample 0" STDERR="piperr"
+   sh> yottadb -run retry^pipexample induceEAGAIN
+   Try 0   pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/yottadb -run induceEAGAIN^pipexample 0" STDERR="piperr"
    ...Failed to perform non-blocked writes... Retrying write # 54
    ...Failed to perform non-blocked writes... Retrying write # 63
    ...Failed to perform non-blocked writes... Retrying write # 69
@@ -1583,27 +1583,27 @@ Example:
 This example demonstrates handling WRITE errors, like ENO11 or EAGAIN, that do not terminate the PIPE device. The PIPE device does non-blocking writes. If a process tries to WRITE to a full PIPE and the WRITE would block, the device implicitly tries to complete the operation up to a default of 10 times. YottaDB sleeps 100 milliseconds between each retry. When dealing with programs that can take a while to process input, it's a good idea to either schedule a delay between WRITEs or come up with a mechanism to back off the WRITEs when the buffer fills up.
 
 .. parsed-literal::
-   sh> mumps -run pipexample induceEPIPE
-   The active device is pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/mumps -run induceEPIPE^pipexample" STDERR="piperr"
+   sh> yottadb -run pipexample induceEPIPE
+   The active device is pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/yottadb -run induceEPIPE^pipexample" STDERR="piperr"
        stdout:My PID is 12808
        stderr:%YDB-F-FORCEDHALT, Image HALTed by MUPIP STOP
    $ZSTATUS="32,pipexample+9^pipexample,%SYSTEM-E-ENO32, Broken pipe"
 
-   sh> mumps -run retry^pipexample induceEPIPE
-   Try 0   pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/mumps -run induceEPIPE^pipexample 0" STDERR="piperr"
+   sh> yottadb -run retry^pipexample induceEPIPE
+   Try 0   pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/yottadb -run induceEPIPE^pipexample 0" STDERR="piperr"
    ...Caught on try 0, write 49... 32,retry+13^pipexample,%SYSTEM-E-ENO32, Broken pipe
        stdout:My PID is 16252
        stderr:%YDB-F-FORCEDHALT, Image HALTed by MUPIP STOP
-   Try 1   pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/mumps -run induceEPIPE^pipexample 1" STDERR="piperr"
+   Try 1   pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/yottadb -run induceEPIPE^pipexample 1" STDERR="piperr"
    ...Caught on try 1, write 697... 32,retry+13^pipexample,%SYSTEM-E-ENO32, Broken pipe
        stdout:My PID is 16403
        stdout:$ZSTATUS="150373210,induceEPIPE+5^pipexample,%YDB-E-DIVZERO, Attempt to divide by zero"
-   Try 2   pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/mumps -run induceEPIPE^pipexample 2" STDERR="piperr"
+   Try 2   pipe OPEN PIPE SHELL="/bin/bash" COMMAND="$ydb_dist/yottadb -run induceEPIPE^pipexample 2" STDERR="piperr"
        Writes completed
 
 This example demonstrates how to create a separate STDERR pipe device from which to read the STDERR output of the program(s) inside the pipe. Reading the STDERR is important when dealing with failures from Unix programs. It is possible to read the errors without creating a STDERR pipe device, however the error messages are commingled with the output of the programs inside the pipe which could make diagnosis of the underlying problem harder. Notice that YottaDB writes fatal errors, YDB-F types, to STDERR, but all others go to STDOUT.
 
-Additionally, this example demonstrates handling errors that terminate the PIPE device. In this example, the PIPE device is terminated when a program inside the pipe terminates before reading all of the driving MUMPS program's output causing an EPIPE or ENO32, a broken pipe. In such a situation the MUMPS program must capture the error that caused the termination and respond accordingly. The program may need to call out to other programs to determine the status of a service it is using or to alert the operator of an error with an external program or service. To operate successfully, the program must recreate the pipe and retry the operation.
+Additionally, this example demonstrates handling errors that terminate the PIPE device. In this example, the PIPE device is terminated when a program inside the pipe terminates before reading all of the driving M program's output causing an EPIPE or ENO32, a broken pipe. In such a situation the M program must capture the error that caused the termination and respond accordingly. The program may need to call out to other programs to determine the status of a service it is using or to alert the operator of an error with an external program or service. To operate successfully, the program must recreate the pipe and retry the operation.
 
 
 ++++++++++++++++++++++++++++
@@ -1982,8 +1982,8 @@ The minimum variables are: $ydb_dist, which specifies the directory containing t
    cd /path/to/workarea
    export ydb_dist=/usr/local/ydb
    export ydb_routines="/var/myApp/o(/var/myApp/r) $ydb_dist"
-   export ydb_gbldir=/var/myApp/g/mumps.dat
-   $ydb_dist/mumps -r start^server
+   export ydb_gbldir=/var/myApp/g/yottadb.dat
+   $ydb_dist/yottadb -r start^server
 
 When start^server begins, the $PRINCIPAL device is the current device which is the incoming connection and $KEY contains "ESTABLISHED|socket_handle| remote_ip_address". In most cases, a USE command near the beginning of the routine sets various device parameters such as delimiters.
 
@@ -2358,7 +2358,7 @@ Example:
    YDB>zprint ^ydbcp
    ydbcp ; Copy a binary file using YottaDB
      new dest,line,max,src
-     if 2>$length($zcmdline," ") write "$ydb_dist/mumps -r source target",!
+     if 2>$length($zcmdline," ") write "$ydb_dist/yottadb -r source target",!
      set dest=$piece($zcmdline," ",2)
      set src=$piece($zcmdline," ",1)
      set max=1024*1024 ; the maximum YottaDB string size
@@ -2513,7 +2513,7 @@ The basic steps to use a key and IV to create an encrypted file and decrypt its 
     CustomerReportKey6: "Friday.key";
     CustomerReportKey7: "Saturday.key";
    };
-   $ydb_dist/mumps -dir
+   $ydb_dist/yottadb -dir
    YDB>zprint ^encrfile
    encrfile
     set now=$horolog
@@ -2567,7 +2567,7 @@ For LOCAL sockets:
   > cat x.m
    set s="socketdev" open s:(LISTEN="5000:TCP"):1:"SOCKET"
    if $test  use s set x=$key  use $p  write x,!
-  > mumps -run x
+  > yottadb -run x
    LISTENING\|h1537723881000\|5000
 
 
@@ -2765,8 +2765,8 @@ The following example fails:
   .. parsed-literal::
      OPEN a:(COMM="tr e j | echoback":STDERR=e:exception="g BADOPEN":PARSE)::"PIPE"
      OPEN a:(SHELL="/usr/local/bin/tcsh":COMM="/bin/cat \|& nl":PARSE)::"PIPE"
-     OPEN a:(COMM="mupip integ -file mumps.dat":PARSE)::"PIPE"
-     OPEN a:(COMM="$ydb_dist/mupip integ -file mumps.dat":PARSE)::"PIPE"
+     OPEN a:(COMM="mupip integ -file yottadb.dat":PARSE)::"PIPE"
+     OPEN a:(COMM="$ydb_dist/mupip integ -file yottadb.dat":PARSE)::"PIPE"
      OPEN a:(COMM="nohup cat":PARSE)::"PIPE"
 
 ~~~~~~~~~

@@ -21,13 +21,13 @@ A set of M global variables (Names or Name spaces) and/or their subscripts map t
 
 The location of the global directory is pointed to by the Intrinsic Special Variable $ZGBLDIR. YottaDB processes initialize $ZBGLDIR at process startup from the environment variable ydb_gbldir and can modify it during execution. For example, with a simple SET $ZGBLDIR command, a process can switch back and forth between development and testing databases.
 
-Consider a global variable ^TMP that holds only temporary data that is no longer meaningful when a system is rebooted. A global directory can map ^TMP to region TEMP that maps to a database file called scratch.dat, with all other globals mapped to mumps.dat. A global directory allows the separation of persistent data (mumps.dat) from non-persistent data(scratch.dat), so that each database file may get appropriately configured for operations — for example, the database administrator may choose to exclude scratch.dat from backup/archival procedures or periodically delete and recreate scratch.dat using MUPIP CREATE.
+Consider a global variable ^TMP that holds only temporary data that is no longer meaningful when a system is rebooted. A global directory can map ^TMP to region TEMP that maps to a database file called scratch.dat, with all other globals mapped to yottadb.dat. A global directory allows the separation of persistent data (yottadb.dat) from non-persistent data(scratch.dat), so that each database file may get appropriately configured for operations — for example, the database administrator may choose to exclude scratch.dat from backup/archival procedures or periodically delete and recreate scratch.dat using MUPIP CREATE.
 
 Consider the following illustration:
 
 .. image:: globaldir.png
 
-There are four M global variables--^Horse, ^Crab, ^Platypus, and ^Lobster. ^Horse and ^Platypus map to region MAMMALS that maps to database file linnaeus.dat and ^Crab and ^Lobster map to region CRUSTACEANS that maps to database file brunnich.dat. The default namespace * maps to a region called DEFAULT that maps to database file mumps.dat. * denotes all globals other than the explicitly named ^Horse, ^Platypus, ^Crab, and ^Lobster. All globals store data in their respective database files. Each database file has a single active journal file. To enforce access restrictions on globals so that only mammalogists have access to ^Horse and ^Platypus and only carcinologists have access to ^Crab and ^Lobster, one just needs to assign appropriate read/write permissions to linnaeus.dat and brunnich.dat.
+There are four M global variables--^Horse, ^Crab, ^Platypus, and ^Lobster. ^Horse and ^Platypus map to region MAMMALS that maps to database file linnaeus.dat and ^Crab and ^Lobster map to region CRUSTACEANS that maps to database file brunnich.dat. The default namespace * maps to a region called DEFAULT that maps to database file yottadb.dat. * denotes all globals other than the explicitly named ^Horse, ^Platypus, ^Crab, and ^Lobster. All globals store data in their respective database files. Each database file has a single active journal file. To enforce access restrictions on globals so that only mammalogists have access to ^Horse and ^Platypus and only carcinologists have access to ^Crab and ^Lobster, one just needs to assign appropriate read/write permissions to linnaeus.dat and brunnich.dat.
 
 .. note::
    Each database file can have a single active journal file. A journal can be linked to its predecessor journal file to form a chain of journal files.
@@ -54,9 +54,9 @@ In a nutshell, the database attributes and mapping rules defined in a global dir
 GDE Overview
 -----------------------
 
-The Global Directory Editor (GDE) is a utility for creating, examining, and modifying a global directory. GDE is a program written in M and you can invoke it from the shell with $ydb_dist/mumps -run ^GDE. If you invoke it from the shell, GDE returns a status indicating success (0) or an issue (non-zero).
+The Global Directory Editor (GDE) is a utility for creating, examining, and modifying a global directory. GDE is a program written in M and you can invoke it from the shell with $ydb_dist/yottadb -run ^GDE. If you invoke it from the shell, GDE returns a status indicating success (0) or an issue (non-zero).
 
-Because GDE is an M program, you can also invoke GDE from a YottaDB process with DO ^GDE. If you invoke GDE with a DO and modify the map of globals that are currently directly opened by that process, you must HALT and restart the process for the process to pick up the revised mapping. YottaDB expects users to normally run GDE from the shell: --$ydb_dist/mumps -run GDE.
+Because GDE is an M program, you can also invoke GDE from a YottaDB process with DO ^GDE. If you invoke GDE with a DO and modify the map of globals that are currently directly opened by that process, you must HALT and restart the process for the process to pick up the revised mapping. YottaDB expects users to normally run GDE from the shell: --$ydb_dist/yottadb -run GDE.
 
 The input to GDE can be a command file. In a production environment, YottaDB recommends using command files to define database configurations and putting them under version control.
 
@@ -98,16 +98,16 @@ To retain the default Global Directory, quit GDE without making any changes.
 Example:
 
 .. parsed-literal::
-   $ ydb_gbldir=/usr/accntg/jones/mumps.gld
+   $ ydb_gbldir=/usr/accntg/jones/yottadb.gld
    $ export ydb_gbldir
-   $ $ydb_dist/mumps -dir
+   $ $ydb_dist/yottadb -dir
    YDB>do ^GDE
    %GDE-I-GDUSEDEFS, Using defaults for Global Directory
-   /usr/accntg/jones/mumps.gld
+   /usr/accntg/jones/yottadb.gld
    GDE> EXIT
    %GDE-I-VERIFY, Verification OK
    %GDE-I-GDCREATE, Creating Global Directory file
-   /usr/accntg/jones/mumps.gld
+   /usr/accntg/jones/yottadb.gld
 
 +++++++++++++++++++++++++++++++++++++++++++++++
  Mapping Global Variables in a Global Directory
@@ -130,7 +130,7 @@ These components may be defined in any order, but the final result must be a com
 The default Global Directory contains one complete mapping that comprises these entries for name, region, segment, and file.
 
 .. parsed-literal::
-   * --> DEFAULT --> DEFAULT --> mumps.dat
+   * --> DEFAULT --> DEFAULT --> yottadb.dat
    (NAME) (REGION) (SEGMENT) (FILE)
 
 The * wildcard identifies all possible global names. Subsequent edits create entries for individual global names or name prefixes.
@@ -182,7 +182,7 @@ A Global Directory looks like this:
                                        \*\*\* SEGMENTS \*\*\*
     Segment                File (def ext: .dat)      Acc  Typ   Block   Alloc  Exten  Options
     ---------------------------------------------------------------------------------------------
-    DEFAULT                  mumps.dat               BG   DYN    4096    100    100   GLOB=1024
+    DEFAULT                  yottadb.dat             BG   DYN    4096    100    100   GLOB=1024
                                                                                       LOCK=40
                                                                                       RES=0
                                                                                       ENCR=OFF
@@ -196,10 +196,10 @@ A Global Directory looks like this:
     ----------------------------------------------------------------------------------
     %                   ...                           REG=DEFAULT
                                                       SEG=DEFAULT
-                                                      FILE=mumps.dat
+                                                      FILE=yottadb.dat
     LOCAL LOCKS                                       REG=DEFAULT
                                                       SEG=DEFAULT
-                                                      FILE=mumps.dat
+                                                      FILE=yottadb.dat
 
 
 There are five primary sections in a Global Directory
@@ -336,12 +336,12 @@ from within YottaDB, use the command:
 from the shell, enter:
 
 .. parsed-literal::
-   $ mumps -r GDE
+   $ yottadb -r GDE
 
 GDE displays informational messages like the following, and then the GDE> prompt:
 
 .. parsed-literal::
-   %GDE-I-LOADGD, loading Global Directory file /prod/mumps.gld
+   %GDE-I-LOADGD, loading Global Directory file /prod/yottadb.gld
    %GDE-I-VERIFY, Verification OK
    GDE>
 
@@ -413,7 +413,7 @@ GDE automatically converts segment names to uppercase. GDE uses DEFAULT for the 
 
 Files are the structures provided by UNIX for the storage and retrieval of information. Files used by YottaDB must be random-access files resident on disk.
 
-By default, GDE uses the file-name mumps.dat for the DEFAULT segment. GDE adds the .dat to the file name when you do not specify an extension. Avoid non-graphic and punctuation characters with potential semantic significance to the file system in file names as they will produce operational difficulties.
+By default, GDE uses the file-name yottadb.dat for the DEFAULT segment. GDE adds the .dat to the file name when you do not specify an extension. Avoid non-graphic and punctuation characters with potential semantic significance to the file system in file names as they will produce operational difficulties.
 
 **Example of a Basic Mapping**
 
@@ -698,7 +698,7 @@ The format of the CHANGE command is:
 
 The CHANGE command requires specification of an object-type and object-name.
 
-Once you exit GDE, mapping changes take effect for any subsequent image activation (for example, the next RUN or the mumps -direct command). Changes to database parameters only take effect for new database files created with subsequent MUPIP CREATE commands that use the modified Global Directory. Use the MUPIP SET command (or in some cases DSE) to change characteristics of existing database files.
+Once you exit GDE, mapping changes take effect for any subsequent image activation (for example, the next RUN or the yottadb -direct command). Changes to database parameters only take effect for new database files created with subsequent MUPIP CREATE commands that use the modified Global Directory. Use the MUPIP SET command (or in some cases DSE) to change characteristics of existing database files.
 
 Example:
 
@@ -1014,7 +1014,7 @@ This displays only the TEMPLATES section of the Global Directory.
    ADD -REGION USSMZREG -DYNAMIC_SEGMENT=USSMZSEG
    !
    ADD -SEGMENT AUSSEG -FILE_NAME="AUS.dat"
-   ADD -SEGMENT DEFAULT -FILE_NAME="mumps.dat"
+   ADD -SEGMENT DEFAULT -FILE_NAME="yottadb.dat"
    ADD -SEGMENT FRSEG -FILE_NAME="France.dat"
    ADD -SEGMENT POSEG -FILE_NAME="Poland.dat"
    ADD -SEGMENT UKSEG -FILE_NAME="UK.dat"
@@ -1531,7 +1531,7 @@ Specifies the file for a segment.
 
 The maximum file name length is 255 characters.
 
-By default, GDE uses a file-name of "mumps" followed by the default extension, which is .dat. You can specify any filename and extension of your choice for a database file as long as it is valid on your operating system.
+By default, GDE uses a file-name of "yottadb" followed by the default extension, which is .dat. You can specify any filename and extension of your choice for a database file as long as it is valid on your operating system.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -G[LOBAL_BUFFER_COUNT]=size
@@ -1625,7 +1625,7 @@ The following table summarizes GDE segment qualifiers. It provides abbreviations
 +------------------------------------------------------------------------+------------------------+----------------------------+--------------------------------+
 | -EX[TENSION_COUNT]=size (blocks)                                       | 100                    | 0                          | 65535                          |
 +------------------------------------------------------------------------+------------------------+----------------------------+--------------------------------+
-| -F[ILE_NAME]=file-name (chars)                                         | mumps.dat              | \-                         | 255                            |
+| -F[ILE_NAME]=file-name (chars)                                         | yottadb.dat            | \-                         | 255                            |
 +------------------------------------------------------------------------+------------------------+----------------------------+--------------------------------+
 | -G[LOBAL_BUFFER_COUNT]=size (blocks)                                   | 1024                   | 64                         | 2097151\*                      |
 +------------------------------------------------------------------------+------------------------+----------------------------+--------------------------------+
@@ -1855,7 +1855,7 @@ The following table summarizes all qualifiers for the ADD, CHANGE, and TEMPLATE 
 
 **\* DEFAULT is the default region and segment name**
 
-**\*\* MUMPS is the default file name**
+**\*\* YOTTADB is the default file name**
 
 **\*\*\* May vary by platform**
 

@@ -270,7 +270,7 @@ Note that encryption key files are text files which can even be faxed or e-maile
 
 **Memory Key Ring**
 
-For each key_filename, the YottaDB process (MUMPS, MUPIP or DSE) builds a memory key ring from the key ring on disk and the master key file. The memory key ring contains a list of elements where each element consists of a filename, a symmetric cipher key, and a cryptographic hash of that symmetric cipher key. Using the private key obtained from the key ring on disk, YottaDB obtains the symmetric keys from key files pointed to by the master key file.
+For each key_filename, the YottaDB process (M, MUPIP or DSE) builds a memory key ring from the key ring on disk and the master key file. The memory key ring contains a list of elements where each element consists of a filename, a symmetric cipher key, and a cryptographic hash of that symmetric cipher key. Using the private key obtained from the key ring on disk, YottaDB obtains the symmetric keys from key files pointed to by the master key file.
 
 Database and journal file headers include a cryptographic hash of the encryption key and algorithm used for that file. When opening a file, YottaDB uses the key in the memory key ring whose hash matches that in the header - the database_filename in the key ring is ignored. Older keys need not be deleted until they are no longer required (for example, an older key may be required to access a restored backup copy of a database). Permitting the same database_filename to occur multiple times in a master key file also enables one master key file to be used for multiple instances of an application. This ensures that the correct key for a file is always used, even if the file has been renamed, copied from another location, etc. - the correct key must of course be available in the memory key ring; if no such key exists, YottaDB triggers a CRYPTKEYFETCHFAILED error.
 
@@ -439,14 +439,14 @@ Phil adds the key in phil_cust_dat.txt to his master key file $HOME/.ydb_dbkeys:
    phil_cust_dat.txt $ydb_dbkeys
    phil$ 
 
-Phil creates a global directory, where he changes the configuration parameter for the database file cust.dat specifying that it be encrypted the next time it is created. (Remember that except for mapping from global variable names to database file names, configuration parameters in the global directory are used only when MUPIP creates new database files.) He then creates the database file, runs a DSE dump fileheader to extract the hash (highlighted in the output), and sends it to Helen for verification (notice that MUPIP CREATE generates an error for the mumps.dat file that exists already, but creates a new encrypted cust.dat file): 
+Phil creates a global directory, where he changes the configuration parameter for the database file cust.dat specifying that it be encrypted the next time it is created. (Remember that except for mapping from global variable names to database file names, configuration parameters in the global directory are used only when MUPIP creates new database files.) He then creates the database file, runs a DSE dump fileheader to extract the hash (highlighted in the output), and sends it to Helen for verification (notice that MUPIP CREATE generates an error for the yottadb.dat file that exists already, but creates a new encrypted cust.dat file): 
 
 .. parsed-literal::
    phil$ export ydb_gbldir=yottadb.gld
    phil$ export ydb_passwd=""
-   phil$ $ydb_dist/mumps -dir
+   phil$ $ydb_dist/yottadb -dir
    Enter Passphrase:
-   YDB>zsystem "$ydb_dist/mumps -run GDE"
+   YDB>zsystem "$ydb_dist/yottadb -run GDE"
    %GDE-I-LOADGD, Loading Global Directory file
    /var/myApp/databases/ydb.gld
    %GDE-I-VERIFY, Verification OK
@@ -457,7 +457,7 @@ Phil creates a global directory, where he changes the configuration parameter fo
    /var/myApp/databases/yottadb.gld
    YDB>zsystem "$ydb_dist/mupip create"
    Created file /var/myApp/databases/yottadb.dat
-   Error opening file /var/myMpp/databases/mumps.dat
+   Error opening file /var/myMpp/databases/yottadb.dat
    : File exists
    %YDB-F-DBNOCRE, Not all specified database files, or their associated journal files were created
     
@@ -634,7 +634,7 @@ When invoking GPG via GPGME, there is no convenient way to avoid invoking an age
 Using the Reference Implementation's Custom pinentry Program
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-pinentry-gtm.sh is a custom pinentry program that prevents prompting for keyring passphrase by GNU Privacy Guard operations when the environment variable ydb_passwd is already defined. When there is a GETPIN request and the ydb_passwd environment variable is defined, pinentry-gtm.sh runs pinentry.m and returns to the calling program. Custom pinentry programs like pinentry-gtm.sh are meaningful only when you set ydb_passwd to an obfuscated passphrase. When the environment variable ydb_passwd is not defined or a usable mumps or pinentry.m does not exists, pinentry-gtm.sh runs the default pinentry program and prompts for passphrase. Remember that pinentry.m can reveal the passphrase. Therefore, ensure that you restrict the access for the pinentry.m's object file to only those users who manage your keys. YottaDB provides pinentry-gtm.sh as a convenience to those users who are bothered by prompting for keyring passphrases for GNU Privacy Guard related operations. Neither pinentry-gtm.sh nor pinentry.m is used internally by any YottaDB database operation.
+pinentry-gtm.sh is a custom pinentry program that prevents prompting for keyring passphrase by GNU Privacy Guard operations when the environment variable ydb_passwd is already defined. When there is a GETPIN request and the ydb_passwd environment variable is defined, pinentry-gtm.sh runs pinentry.m and returns to the calling program. Custom pinentry programs like pinentry-gtm.sh are meaningful only when you set ydb_passwd to an obfuscated passphrase. When the environment variable ydb_passwd is not defined or a usable yottadb or pinentry.m does not exists, pinentry-gtm.sh runs the default pinentry program and prompts for passphrase. Remember that pinentry.m can reveal the passphrase. Therefore, ensure that you restrict the access for the pinentry.m's object file to only those users who manage your keys. YottaDB provides pinentry-gtm.sh as a convenience to those users who are bothered by prompting for keyring passphrases for GNU Privacy Guard related operations. Neither pinentry-gtm.sh nor pinentry.m is used internally by any YottaDB database operation.
 
 .. note::
    When you set ydb_passwd to "", YottaDB obtains the passphrase using the default GTMCRYPT passphrase prompt. When ydb_passwd is set to "", you can neither use a pinentry program (custom or default) to obtain a passphrase nor customize the default GTMCRYPT passphrase prompt. 
@@ -749,13 +749,13 @@ The structure of the $ydb_dist/plugin directory on Linux x86 after plugin compil
 Administration and Operation of Encrypted Databases
 ----------------------------------------------------
 
-Utility programs written in M (such as %GO) run within mumps processes and behave like any other code written in M. Encryption keys are required if the mumps process accesses encrypted databases. A process running a utility program written in M that does not access encrypted databases (such as %RSEL) does not need encryption keys just to run the utility program.
+Utility programs written in M (such as %GO) run within yottadb processes and behave like any other code written in M. Encryption keys are required if the yottadb process accesses encrypted databases. A process running a utility program written in M that does not access encrypted databases (such as %RSEL) does not need encryption keys just to run the utility program.
 
-Utility programs not written in M (e.g., MUPIP) that need access to encryption keys do not prompt for the password to the key ring on disk. They require the obfuscated password to be available in the environment. You can use the maskpass program to set the password in the environment or a mumps wrapper process as discussed earlier to set the obfuscated password in the environment. In some cases, if a required key is not supplied, or if an incorrect key is specified, the utility program defers reporting the error at process start up in case subsequent actions don't require access to encrypted data, and instead reports it when first attempting an encryption or decryption operation.
+Utility programs not written in M (e.g., MUPIP) that need access to encryption keys do not prompt for the password to the key ring on disk. They require the obfuscated password to be available in the environment. You can use the maskpass program to set the password in the environment or an yottadb wrapper process as discussed earlier to set the obfuscated password in the environment. In some cases, if a required key is not supplied, or if an incorrect key is specified, the utility program defers reporting the error at process start up in case subsequent actions don't require access to encrypted data, and instead reports it when first attempting an encryption or decryption operation.
 
 Since they do not access application data at rest, the GDE and LKE utilities do not need access to encryption keys to operate with encrypted databases.
 
-MUPIP and DSE use the same plug-in architecture as mumps processes - gtmcrypt_init() to acquire keys, gtmcrypt_encrypt() to encrypt, etc. 
+MUPIP and DSE use the same plug-in architecture as yottadb processes - gtmcrypt_init() to acquire keys, gtmcrypt_encrypt() to encrypt, etc. 
 
 +++++++++++++++++++
 Utility Programs
@@ -798,7 +798,7 @@ MUPIP CREATE is the only command that uses the database_filename in the master k
 The MUPIP JOURNAL -SHOW command now displays the cryptographic hash of the symmetric key stored in the journal file header (the output is one long line): 
 
 .. parsed-literal::
-   $ mupip journal -show -backward mumps.mjl 2>&1 | grep hash 
+   $ mupip journal -show -backward yottadb.mjl 2>&1 | grep hash 
    Journal file hash F226703EC502E9757848 ... 
    $
 
@@ -896,7 +896,7 @@ A Makefile to build and install each of the encryption plugin libraries. The Mak
 The reference plugins are:
 
 +------------------------------------+------------------------------------------------------------------------------------------------+
-| gpgagent.tab                       | Call-out interface table to let MUMPS programs unobfuscate $ydb_passwd                         |
+| gpgagent.tab                       | Call-out interface table to let M programs unobfuscate $ydb_passwd                             |
 +------------------------------------+------------------------------------------------------------------------------------------------+
 | libgtmcrypt.so                     | A symlink to the default encryption library                                                    |
 +------------------------------------+------------------------------------------------------------------------------------------------+
@@ -906,7 +906,7 @@ The reference plugins are:
 +------------------------------------+------------------------------------------------------------------------------------------------+
 | libgtmcryptutil.so                 | A reference plugin support library                                                             |
 +------------------------------------+------------------------------------------------------------------------------------------------+
-| libgtmtls.so                       | The reference plugin that leverages OpenSSL for transport encryption features for the MUMPS    |
+| libgtmtls.so                       | The reference plugin that leverages OpenSSL for transport encryption features for the M        |
 |                                    | language                                                                                       |
 +------------------------------------+------------------------------------------------------------------------------------------------+
 | gtmpcrypt/maskpass                 | Program to mask the password stored in $ydb_passwd                                             |
@@ -931,7 +931,7 @@ Although not required to be used by a customized plugin implementation, YottaDB 
 Operation
 +++++++++++++++++
 
-Mumps, MUPIP and DSE processes dynamically link to the plugin interface functions that reside in the shared library. The functions serve as software "shims" to interface with an encryption library such as libmcrypt or libgpgme/libgcrypt.
+M, MUPIP and DSE processes dynamically link to the plugin interface functions that reside in the shared library. The functions serve as software "shims" to interface with an encryption library such as libmcrypt or libgpgme/libgcrypt.
 
 The plugin interface functions are: 
 

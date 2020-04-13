@@ -112,7 +112,7 @@ ydb_env_set creates the following aliases:
 
 .. parsed-literal::
    alias dse="$ydb_dist/dse"
-   alias gde="$ydb_dist/mumps -run GDE"
+   alias gde="$ydb_dist/yottadb -run GDE"
    alias ydb="$ydb_dist/ydb"
    alias lke="$ydb_dist/lke"
    alias mupip="$ydb_dist/mupip"
@@ -135,10 +135,10 @@ You can also run the gtmbase script which places the above command in the .cshrc
 gtmcshrc also creates the following aliases.
 
 .. parsed-literal::
-   alias ydb '$ydb_dist/mumps -direct'
+   alias ydb '$ydb_dist/yottadb -direct'
    alias mupip '$ydb_dist/mupip'
    alias lke '$ydb_dist/lke'
-   alias gde '$ydb_dist/mumps -r ^GDE'
+   alias gde '$ydb_dist/yottadb -r ^GDE'
    alias dse '$ydb_dist/dse'
 
 Now you can run YottaDB and its utilities without specifying a full path to the directory in which YottaDB was installed.
@@ -408,7 +408,7 @@ All values are case-independent. When ydb_autorelink_keeprtn is defined and TRUE
 
 **ydb_noundef** (gtm_noundef) specifies the initial setting that controls whether a YottaDB process should treat undefined global or local variables as having an implicit value of an empty string. If it is defined, and evaluates to a non-zero integer or any case-independent string or leading substring of "TRUE" or "YES", then YottaDB treats undefined variables as having an implicit value of an empty string. The VIEW "[NO]UNDEF" command can alter this behavior in an active process. By default, YottaDB signals an error on an attempt to use the value of an undefined variable.
 
-**ydb_obfuscation_key** (gtm_obfuscation_key) : If $ydb_obfuscation_key specifies the name of the file readable by the process, the encryption reference plug-in uses a cryptographic hash of the file's contents as the XOR mask for the obfuscated password in the environment variable ydb_passwd. When ydb_obfuscation_key does not point to a readable file, the plugin computes a cryptographic hash using a mask based on the value of $USER and the inode of the mumps executable to use as a mask. $ydb_passwd set with a $ydb_obfuscation_key allows access to all users who have the same $ydb_obfuscation_key defined in their environments. However, $ydb_passwd set without $ydb_obfuscation_key can be used only by the same $USER using the same YottaDB distribution.
+**ydb_obfuscation_key** (gtm_obfuscation_key) : If $ydb_obfuscation_key specifies the name of the file readable by the process, the encryption reference plug-in uses a cryptographic hash of the file's contents as the XOR mask for the obfuscated password in the environment variable ydb_passwd. When ydb_obfuscation_key does not point to a readable file, the plugin computes a cryptographic hash using a mask based on the value of $USER and the inode of the yottadb executable to use as a mask. $ydb_passwd set with a $ydb_obfuscation_key allows access to all users who have the same $ydb_obfuscation_key defined in their environments. However, $ydb_passwd set without $ydb_obfuscation_key can be used only by the same $USER using the same YottaDB distribution.
 
 **ydb_passwd** (gtm_passwd) specifies the obfuscated (not encrypted) password of the GNU Privacy Guard key ring. When the environment variable $ydb_passwd is set to "", YottaDB invokes the default GTMCRYPT passphrase prompt defined in the reference implementation of the plugin to obtain a passphrase at process startup and uses that value as $ydb_passwd for the duration of the process.
 
@@ -478,7 +478,7 @@ Each invocation generates an operator log message and if the invocation fails, a
 
 **ydb_stdxkill** (gtm_stdxkill) enables the standard-compliant behavior to kill local variables in the exclusion list if they had an alias that was not in the exclusion list. By default, this behavior is disabled.
 
-**ydb_sysid** (gtm_sysid) specifies the value for the second piece of the $SYSTEM ISV. $SYSTEM contains a string that identifies the executing M instance. The value of $SYSTEM is a string that starts with a unique numeric code that identifies the manufacturer. Codes were originally assigned by the MDC (MUMPS Development Committee). $SYSTEM in YottaDB starts with "47" followed by a comma and $ydb_sysid.
+**ydb_sysid** (gtm_sysid) specifies the value for the second piece of the $SYSTEM ISV. $SYSTEM contains a string that identifies the executing M instance. The value of $SYSTEM is a string that starts with a unique numeric code that identifies the manufacturer. Codes were originally assigned by the MDC (M Development Committee). $SYSTEM in YottaDB starts with "47" followed by a comma and $ydb_sysid.
 
 **ydb_tls_passwd_<label>** (gtmtls_passwd_<label>) specifies the obfuscated password of the encrypted private key pair. You can obfuscate passwords using the 'maskpass' utility provided along with the encryption plugin. If you choose to use unencrypted private keys, set the ydb_tls_passwd_<label> environment variable to a non-null dummy value; this prevents inappropriate prompting for a password.
 
@@ -492,7 +492,7 @@ Each invocation generates an operator log message and if the invocation fails, a
 
 **ydb_trace_gbl_name** (gtm_trace_gbl_name) enables YottaDB tracing at process startup. Setting ydb_trace_gbl_name to a valid global variable name instructs YottaDB to report the data in the specified global when a VIEW command disables the tracing, or implicitly at process termination. This setting behaves as if the process issued a VIEW "TRACE" command at process startup. However, ydb_trace_gbl_name has a capability not available with the VIEW command, such that if the environment variable is defined but evaluates to zero (0) or to the empty string, YottaDB collects the M-profiling data in memory and discards it when the process terminates (this feature is mainly used for in-house testing). Note that having this feature activated for processes that otherwise don't open a database file (such as GDE) can cause them to encounter an error.
 
-**ydb_trigger_etrap** (gtm_trigger_etrap) provides the initial value for $ETRAP in trigger context; can be used to set trigger error traps for trigger operations in both mumps and MUPIP processes.
+**ydb_trigger_etrap** (gtm_trigger_etrap) provides the initial value for $ETRAP in trigger context; can be used to set trigger error traps for trigger operations in both yottadb and MUPIP processes.
 
 **ydb_xc_gpgagent** (GTMXC_gpgagent) specifies the location of gpgagent.tab. By default, YottaDB places gpgagent.tab in the $ydb_dist/plugin/ directory. ydb_xc_gpgagent is used by pinentry-gtm.sh and is meaningful only if you are using Gnu Privacy Guard version 2.
 
@@ -660,8 +660,8 @@ Run the ydb alias to start YottaDB in direct mode.
 
  .. parsed-literal::
     alias dse="$ydb_dist/dse"
-    alias gde="$ydb_dist/mumps -run ^GDE"
-    alias ydb="$ydb_dist/mumps -direct"
+    alias gde="$ydb_dist/yottadb -run ^GDE"
+    alias ydb="$ydb_dist/yottadb -direct"
     alias lke="$ydb_dist/lke"
     alias mupip="$ydb_dist/mupip"
 
@@ -693,8 +693,8 @@ Run the ydb alias to start YottaDB in direct mode.
 
   .. parsed-literal::
      alias dse="$ydb_dist/dse"
-     alias gde="$ydb_dist/mumps -run ^GDE"
-     alias ydb="$ydb_dist/mumps -direct"
+     alias gde="$ydb_dist/yottadb -run ^GDE"
+     alias ydb="$ydb_dist/yottadb -direct"
      alias lke="$ydb_dist/lke"
      alias mupip="$ydb_dist/mupip"
 
@@ -712,7 +712,7 @@ Run the ydb alias to start YottaDB in direct mode.
 .. note::
     If you are configuring a YottaDB environment without using the ydb_env_set script (or the ydb script which sources ydb_env_set), bear in mind the following recommendation: All YottaDB processes should use the same settings for ydb_log and ydb_tmp, especially for production environments. This is because gtmsecshr inherits these values from whichever YottaDB process first uses its services. If there are multiple YottaDB versions active on a system, YottaDB recommends different sets of ydb_log and ydb_tmp values for each version as using the same values for different distributions can cause significant performance issues.
 
-YottaDB has three invocation modes: compiler, direct, and auto-start. To invoke YottaDB in these modes, provide the following arguments to the ydb script or the mumps command.
+YottaDB has three invocation modes: compiler, direct, and auto-start. To invoke YottaDB in these modes, provide the following arguments to the ydb script or the yottadb command.
 
 * **-direct**: Invokes YottaDB in direct mode where you can enter M commands interactively.
 
@@ -723,7 +723,7 @@ YottaDB has three invocation modes: compiler, direct, and auto-start. To invoke 
 When executing M programs, YottaDB incrementally links any called programs. For example, the command YDB> do ^TEST links the object file TEST.o and executes it; if the TEST.m program calls other M routines, those are automatically compiled and linked.
 
 .. note::
-   When possible, YottaDB verifies that MUMPS, MUPIP, DSE and LKE reside in $ydb_dist. If the path to the executable and the path to $ydb_dist do not match, each executable issues an error. In cases where the executable path could not be determined, each executable defers issuing an error until it is required.
+   When possible, YottaDB verifies that M, MUPIP, DSE and LKE reside in $ydb_dist. If the path to the executable and the path to $ydb_dist do not match, each executable issues an error. In cases where the executable path could not be determined, each executable defers issuing an error until it is required.
 
 --------------------------------------------------
  Configuring huge pages for YottaDB on Linux
@@ -783,10 +783,10 @@ To use huge pages for shared memory (journal buffers, replication journal pool a
 
 * Permit YottaDB processes to use huge pages for shared memory segments (where available, YottaDB recommends option 1 below; however not all file systems support extended attributes). Either:
 
- 1. Set the CAP_IPC_LOCK capability needs for your mumps, mupip and dse processes with a command such as:
+ 1. Set the CAP_IPC_LOCK capability needs for your yottadb, mupip and dse processes with a command such as:
 
     .. parsed-literal::
-       setcap 'cap_ipc_lock+ep' $ydb_dist/mumps
+       setcap 'cap_ipc_lock+ep' $ydb_dist/yottadb
 
 .
 
@@ -848,7 +848,7 @@ Restrictions apply as follows:
 +---------------------------------------------------------+----------------------------------------------------------------------------------------------------+
 | YottaDB Facility                                        | Behavior                                                                                           |
 +=========================================================+====================================================================================================+
-| APD_ENABLE                                              | YottaDB supports the ability to log actions initiated from a principal device including MUMPS      |
+| APD_ENABLE                                              | YottaDB supports the ability to log actions initiated from a principal device including M          |
 |                                                         | commands typed interactively, or piped in by a script or redirect, from the principal device       |
 |                                                         | ($PRINCIPAL) and/or any information entered in response to a READ from $PRINCIPAL. An action       |
 |                                                         | initiated from $PRINCIPAL executes as usual when Audit Principal Device is disabled, which it is   |
@@ -875,7 +875,7 @@ Restrictions apply as follows:
 +---------------------------------------------------------+----------------------------------------------------------------------------------------------------+
 | PIPE_OPEN                                               | any OPEN of a PIPE device produces a RESTRICTEDOP error                                            |
 +---------------------------------------------------------+----------------------------------------------------------------------------------------------------+
-| DIRECT_MODE                                             | mumps -direct terminates immediately with a RESTRICTEDOP error                                     |
+| DIRECT_MODE                                             | yottadb -direct terminates immediately with a RESTRICTEDOP error                                   |
 +---------------------------------------------------------+----------------------------------------------------------------------------------------------------+
 | DSE                                                     | terminates immediately with a RESTRICTEDOP error                                                   |
 +---------------------------------------------------------+----------------------------------------------------------------------------------------------------+
@@ -892,7 +892,7 @@ If the file exists, a process:
 
 * that has read-only access to restrict.txt is restricted from any listed facility unless it is a member of the group specified in the optional group-id following the facility name
 
-Note that restricting $ZCMDLINE prevents things like: mumps -run %XCMD 'for read x xecute x' which can act as substitutes for Direct Mode.
+Note that restricting $ZCMDLINE prevents things like: yottadb -run %XCMD 'for read x xecute x' which can act as substitutes for Direct Mode.
 
 In order to limit pathological looping from restricted HALT or ZHALT, if a YottaDB process issues a second occurrence of the restricted command within half a second, the process terminates after sending a fatal error to both the principal device and the syslog, and also produces a YDB_FATAL* context file, but no core file. With these restrictions in place, a process should terminate with, for example: ZGOTO 0. Note that with or without a restriction, executing these commands as part triggered logic on a replicating instance may cause the Update Server to terminate and thereby stop replication.
 

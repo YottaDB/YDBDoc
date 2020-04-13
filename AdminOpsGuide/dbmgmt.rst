@@ -45,7 +45,7 @@ Some MUPIP commands require information contained in the global directory. There
 
 The environment variable ydb_gbldir specifies the active global directory.
 
-A ydb_gbldir value of mumps.gld tells MUPIP to look for a global directory file mumps.gld in the current directory. For more information on the global directory, refer to `“Global Directory Editor” <./gde.html>`_.
+A ydb_gbldir value of yottadb.gld tells MUPIP to look for a global directory file yottadb.gld in the current directory. For more information on the global directory, refer to `“Global Directory Editor” <./gde.html>`_.
 
 .. note::
    YottaDB recommends against running YottaDB components as root. When run as root, YottaDB components use the owner and group of the database file as the owner and group of newly created journal files, backup files, snapshot files, shared memory, and semaphores. In addition, they set the permissions on the resulting files, shared memory, and semaphores, as if running as the owner of the database file and as a member of the database file group.
@@ -437,7 +437,7 @@ Example:
 
 .. parsed-literal::
    $ mupip backup -database -noonline "*" bkup
-   DB file /home/ydbnode1/yottadbuser1/mumps.dat backed up in file bkup/mumps.dat
+   DB file /home/ydbnode1/yottadbuser1/yottadb.dat backed up in file bkup/yottadb.dat
    Transactions up to 0x00000000000F42C3 are backed up.
    BACKUP COMPLETED.
 
@@ -461,7 +461,7 @@ Example:
 
 .. parsed-literal::
    $ mupip backup -online DEFAULT bkup
-   DB file /ydbnode1/yottadbuser1/mumps.dat backed up in file bkup/mumps.dat
+   DB file /ydbnode1/yottadbuser1/yottadb.dat backed up in file bkup/yottadb.dat
    Transactions up to 0x00000000483F807C are backed up.
    BACKUP COMPLETED.
 
@@ -478,15 +478,15 @@ Example:
 
 .. parsed-literal::
    $ mupip backup -online -record DEFAULT bkup1921
-   DB file /home/mammals/mumps.dat backed up in file bkup1921/mumps.dat
+   DB file /home/mammals/yottadb.dat backed up in file bkup1921/yottadb.dat
    Transactions up to 0x00000000000F4351 are backed up.
 
 Example:
 
 .. parsed-literal::
    $ mupip backup -bytestream -since=record DEFAULT bkup1921onwards
-   MUPIP backup of database file /home/mammals/mumps.dat to bkup1921onwards/mumps.dat
-   DB file /home/mammals/mumps.dat incrementally backed up in file bkup1921onwards/mumps.dat
+   MUPIP backup of database file /home/mammals/yottadb.dat to bkup1921onwards/yottadb.dat
+   DB file /home/mammals/yottadb.dat incrementally backed up in file bkup1921onwards/yottadb.dat
    6 blocks saved.
    Transactions from 0x00000000000F4351 to 0x00000000000F4352 are backed up.
    BACKUP COMPLETED.
@@ -497,8 +497,8 @@ Example:
 
 .. parsed-literal::
    $ mupip backup -bytestream -transaction=1 DEFAULT bkup_dir
-   MUPIP backup of database file /ydbnode1/yottadbuser1/mumps.dat to bkup_dir/mumps.dat
-   DB file /ydbnode1/yottadbuser1/mumps.dat incrementally backed up in file bkup/mumps.dat
+   MUPIP backup of database file /ydbnode1/yottadbuser1/yottadb.dat to bkup_dir/yotttadb.dat
+   DB file /ydbnode1/yottadbuser1/yottadb.dat incrementally backed up in file bkup/yottadb.dat
    5 blocks saved.
    Transactions from 0x0000000000000001 to 0x0000000000000003 are backed up.
    BACKUP COMPLETED.
@@ -570,9 +570,9 @@ For more information on the downgrade criteria for your database, refer to the r
 Example:
 
 .. parsed-literal::
-   $ mupip downgrade mumps.dat
+   $ mupip downgrade yottadb.dat
 
-This command changes the file-header of mumps.dat to the format in the previous version.
+This command changes the file-header of yottadb.dat to the format in the previous version.
 
 +++++++++++++++++++++
 DUMPFHEAD
@@ -617,9 +617,9 @@ Specifies that the INTEG parameter identifies one or more regions rather than a 
 Example:
 
 .. parsed-literal::
-   $ mupip dumpfhead -file mumps.dat
+   $ mupip dumpfhead -file yottadb.dat
 
-This command lists information about the database file mumps.dat in the current working directory.
+This command lists information about the database file yottadb.dat in the current working directory.
 
 .. parsed-literal::
    $ mupip dumpfhead -region "*"
@@ -672,12 +672,12 @@ Note that the OVERRIDE qualifier does not override critical errors (database int
 **Examples for MUPIP ENDIANCVT**
 
 .. parsed-literal::
-   $ mupip endiancvt mumps.dat -outdb=mumps_cvt.dat
-   Converting database file mumps.dat from LITTLE endian to BIG endian on a LITTLE endian system
-   Converting to new file mumps_cvt.dat
+   $ mupip endiancvt yottadb.dat -outdb=yottadb_cvt.dat
+   Converting database file yottadb.dat from LITTLE endian to BIG endian on a LITTLE endian system
+   Converting to new file yottadb_cvt.dat
    Proceed [yes/no] ?
 
-This command detects the endian format of mumps.dat and converts it to the other endian format if you type yes to confirm.
+This command detects the endian format of yottadb.dat and converts it to the other endian format if you type yes to confirm.
 
 ++++++++++
 EXIT
@@ -928,9 +928,9 @@ This command prevents database updates during a MUPIP EXTRACT operation.
 Example:
 
 .. parsed-literal::
-   $ mupip extract -format=GO mumps_i.go
+   $ mupip extract -format=GO yottadb_i.go
 
-This command creates an extract file called mumps_i.go in "Global Output" format. Use this format to transport or archive files. The first record of a GO format file contains the header label, "MUPIP EXTRACT," as text.
+This command creates an extract file called yottadb_i.go in "Global Output" format. Use this format to transport or archive files. The first record of a GO format file contains the header label, "MUPIP EXTRACT," as text.
 
 Example:
 
@@ -1537,9 +1537,9 @@ Specifies the maximum number of block transaction-number-too-large errors that M
 Example:
 
 .. parsed-literal::
-   $ mupip integ -block=4 mumps.dat
+   $ mupip integ -block=4 yottadb.dat
 
-This command performs a MUPIP INTEG operation on BLOCK 4 of mumps.dat.
+This command performs a MUPIP INTEG operation on BLOCK 4 of yottadb.dat.
 
 Example:
 
@@ -1562,9 +1562,9 @@ This example performs a MUPIP INTEG operation assuming that logically related da
 Example:
 
 .. parsed-literal::
-   $ mupip integ -brief mumps.dat
+   $ mupip integ -brief yottadb.dat
 
-This command performs a MUPIP INTEG operation on the database mumps.dat. A sample output from the above command follows:
+This command performs a MUPIP INTEG operation on the database yottadb.dat. A sample output from the above command follows:
 
 .. parsed-literal::
    No errors detected by integ.
@@ -1579,9 +1579,9 @@ This command performs a MUPIP INTEG operation on the database mumps.dat. A sampl
 Example:
 
 .. parsed-literal::
-   $ mupip integ -fast mumps.dat
+   $ mupip integ -fast yottadb.dat
 
-This command performs a MUPIP INTEG operation only on the index block of the database file mumps.dat. A sample output from the above command follows:
+This command performs a MUPIP INTEG operation only on the index block of the database file yottadb.dat. A sample output from the above command follows:
 
 .. parsed-literal::
    No errors detected by fast integ.
@@ -1596,7 +1596,7 @@ This command performs a MUPIP INTEG operation only on the index block of the dat
 Note the NA entries for Data type. It means that the MUPIP INTEG -FAST operation checked only index blocks.
 
 .. parsed-literal::
-   $ mupip integ -full mumps.dat
+   $ mupip integ -full yottadb.dat
 
 The sample output from the above command follows:
 
@@ -1622,28 +1622,28 @@ The sample output from the above command follows:
 Example:
 
 .. parsed-literal::
-   $ mupip integ -map=20 -maxkeysize=20 -transaction=2 mumps.dat
+   $ mupip integ -map=20 -maxkeysize=20 -transaction=2 yottadb.dat
 
 This command performs a MUPIP INTEG operation and restricts the maximum number of "key size too large" errors to 20.
 
 Example:
 
 .. parsed-literal::
-   $ mupip integ -map=20 -transaction=2 mumps.dat
+   $ mupip integ -map=20 -transaction=2 yottadb.dat
 
 This command performs a MUPIP INTEG operation and restricts the maximum number of "block transaction number too large" errors to 2.
 
 .. parsed-literal::
-   $ mupip integ -file mumps.dat -tn_reset
+   $ mupip integ -file yottadb.dat -tn_reset
 
 This command resets the transaction number to one in every database block.
 
 Example:
 
 .. parsed-literal::
-   $ mupip integ -subscript="^Parrots" mumps.dat
+   $ mupip integ -subscript="^Parrots" yottadb.dat
 
-This example performs a MUPIP INTEG operation on the global variable ^Parrots in the database file mumps.dat.
+This example performs a MUPIP INTEG operation on the global variable ^Parrots in the database file yottadb.dat.
 
 Example:
 
@@ -2261,7 +2261,7 @@ The following example uses recorg -encrypt to encrypt a database "on the fly". T
 Create an empty default unencrypted database.
 
 .. parsed-literal::
-   $ydb_dist/mumps -r ^GDE exit
+   $ydb_dist/yottadb -r ^GDE exit
    $ydb_dist/mupip create
 
 Setup the GNUPG home directory.
@@ -2296,7 +2296,7 @@ Create a gtmcrypt_config file as following:
      database: {
         keys:   (
                   {
-                   dat: "/path/to/mumps.dat" ;
+                   dat: "/path/to/yottadb.dat" ;
                    key: "/path/to/ydb.key" ;
                   }
                );
@@ -2326,7 +2326,7 @@ Execute the following command when encryption completes.
 
 .. parsed-literal::
    $ mupip set -encryptioncomplete -region DEFAULT
-   Database file /home/gtc_twinata/staff/nitin/tr11/mumps.dat now has encryption marked complete
+   Database file /home/gtc_twinata/staff/nitin/tr11/yottadb.dat now has encryption marked complete
 
 Always keep the keys in a secured location. Always set gtmcrypt_config and ydb_passwd to access the encrypted database.
 
@@ -2977,18 +2977,18 @@ Example:
 This example enables NOBEFORE image journaling and turns on journaling for all regions.
 
 .. parsed-literal::
-   $ mupip set -version=r120 -file mumps.dat
-   Database file mumps.dat now has desired DB format r120
+   $ mupip set -version=r120 -file yottadb.dat
+   Database file yottadb.dat now has desired DB format r120
 
-This example sets the block format to r1.20 for all subsequent new blocks in r1.10 database file mumps.dat.
+This example sets the block format to r1.20 for all subsequent new blocks in r1.10 database file yottadb.dat.
 
 Example:
 
 .. parsed-literal::
-   $ mupip set -version=r110 -file mumps.dat
-   Database file mumps.dat now has desired DB format r110
+   $ mupip set -version=r110 -file yottadb.dat
+   Database file yottadb.dat now has desired DB format r110
 
-This example sets the block format to r1.10 for all subsequent new blocks in r1.00 database file mumps.dat.
+This example sets the block format to r1.10 for all subsequent new blocks in r1.00 database file yottadb.dat.
 
 Example:
 
@@ -3367,9 +3367,9 @@ Upgrades the file-header of a database. The format of the MUPIP UPGRADE command 
 **Example for MUPIP UPGRADE**
 
 .. parsed-literal::
-   $ mupip upgrade mumps.dat
+   $ mupip upgrade yottadb.dat
 
-This example upgrades the file-header of mumps.dat to the latest version format.
+This example upgrades the file-header of yottadb.dat to the latest version format.
 
 -----------------------------
 MUPIP Command Summary

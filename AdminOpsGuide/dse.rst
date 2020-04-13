@@ -25,7 +25,7 @@ Example:
 
 .. parsed-literal::
    $ydb_dist/dse
-   File/usr/name/mumps.dat
+   File/usr/name/yottadb.dat
    Region  DEFAULT
    DSE>
 
@@ -400,9 +400,9 @@ Example:
 
 .. parsed-literal::
    DSE> ALL -FREEZE
-   DSE> SPAWN "mumps -dir"
+   DSE> SPAWN "yottadb -dir"
 
-The first command freezes all regions of the current global directory. The second command creates an child (shell) process and executes the "mumps -dir" command. Then type S ^A=1 at the prompt. Notice that the command hangs because of the DSE FREEZE in place.
+The first command freezes all regions of the current global directory. The second command creates an child (shell) process and executes the "yottadb -dir" command. Then type S ^A=1 at the prompt. Notice that the command hangs because of the DSE FREEZE in place.
 
 Example:
 
@@ -794,7 +794,7 @@ Indicates whether or not a region completed a successful recovery with the MUPIP
 Changing this flag does not correct or cause database damage. When CORRUPT_FILE is set to TRUE, the DSE DUMP command displays a message like the following:
 
 .. parsed-literal::
-   %YDB-W-DBFLCORRP, /home/ydbnode1/mumps.dat Header indicates database file is corrupt
+   %YDB-W-DBFLCORRP, /home/ydbnode1/yottadb.dat Header indicates database file is corrupt
 
 .. note::
    After a CHANGE -FILEHEADER -CORRUPT=TRUE, the file is unavailable to future YottaDB access other than DSE. Under normal conditions, there should never be a need to change this flag manually. A MUPIP SET -PARTIAL_BYPASS_RECOV sets this flag to false.
@@ -2387,9 +2387,9 @@ The format of the SPAWN command is:
 Example:
 
 .. parsed-literal::
-   DSE> SPAWN "mumps -run ^GDE"
+   DSE> SPAWN "yottadb -run ^GDE"
 
-This command suspends a DSE session and executes the shell command mumps -run ^GDE. 
+This command suspends a DSE session and executes the shell command yottadb -run ^GDE. 
 
 +++++++++++
 WCINIT

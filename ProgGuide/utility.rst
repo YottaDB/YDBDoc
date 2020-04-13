@@ -54,7 +54,7 @@ Example:
 This example sets the lowercase variable %ds to the date 11/22/2018. Since the %DATE routine expects the input to be provided in the uppercase %DS variable, it returns a default value in the output variable $DN. The default is the $HOROLOG format of the current date, which is 11/17/2018 in the example.
 
 .. note::
-   Utility programs written in M (such as %GO) run within mumps processes and behave like any other code written in M. Encryption keys are required if the mumps process accesses encrypted databases. A process running a utility program written in M that does not access encrypted databases (such as %RSEL) does not need encryption keys just to run the utility program.
+   Utility programs written in M (such as %GO) run within yottadb processes and behave like any other code written in M. Encryption keys are required if the yottadb process accesses encrypted databases. A process running a utility program written in M that does not access encrypted databases (such as %RSEL) does not need encryption keys just to run the utility program.
 
 -------------------------
 Date and Time Utilities
@@ -1127,7 +1127,7 @@ String Utilities
 You can also use %TRIM as a command line utility to read from STDIN and write to STDOUT in the following format:
 
 .. parsed-literal::
-   echo "  string with leading and trailing spaces  " | $ydb_dist/mumps -r ^%TRIM
+   echo "  string with leading and trailing spaces  " | $ydb_dist/yottadb -r ^%TRIM
 
 Example:
 
@@ -1145,7 +1145,7 @@ This example invokes %TRIM as an extrinsic function and demonstrates the use of 
 Example:
 
 .. parsed-literal::
-   $ echo " YottaDB Rocks! " | $ydb_dist/mumps -r ^%TRIM
+   $ echo " YottaDB Rocks! " | $ydb_dist/yottadb -r ^%TRIM
    YottaDB Rocks!
    $
 
@@ -2442,7 +2442,7 @@ The $ETRAP handler simply QUITs as it defers error handling to the caller. Appli
 Example:
 
 .. parsed-literal::
-   $ydb -run ^%XCMD 'do getfields^%DUMPFHEAD(.fields,"mumps.dat") zwrite fields'
+   $ydb -run ^%XCMD 'do getfields^%DUMPFHEAD(.fields,"yottadb.dat") zwrite fields'
 
 +++++++++++++++
 %FREECNT
@@ -2456,7 +2456,7 @@ Example:
    YDB>DO ^%FREECNT
    Region          Free     Total          Database file
    ------          ----     -----          -------------
-   DEFAULT           81       100 ( 81.0%) /home/yottadbuser1/.yottadb/r1.20_x86/g/mumps.dat
+   DEFAULT           81       100 ( 81.0%) /home/yottadbuser1/.yottadb/r1.20_x86/g/yottadb.dat
 
    YDB>
 
@@ -2676,16 +2676,16 @@ produces the following output:
 Example:
 
 .. parsed-literal::
-   $ ps -ef | $gtm_exe/mumps -run LOOP^%XCMD --before='/set user=$ztrnlnm("USER") write "Number of processes owned by ",user," : "/' --xec='/if %l[user,$increment(x)/' --after='/write x,\!/'
+   $ ps -ef | $gtm_exe/yottadb -run LOOP^%XCMD --before='/set user=$ztrnlnm("USER") write "Number of processes owned by ",user," : "/' --xec='/if %l[user,$increment(x)/' --after='/write x,\!/'
    Number of processed owned by jdoe: 5
    $
-   $ cat somefile.txt | $gtm_exe/mumps -run LOOP^%XCMD --before='/write "Total number of lines : "/' --xec='/set total=$increment(x)/' --after='/write total,\!/'
+   $ cat somefile.txt | $gtm_exe/yottadb -run LOOP^%XCMD --before='/write "Total number of lines : "/' --xec='/set total=$increment(x)/' --after='/write total,\!/'
    Total number of lines: 9
    $
-   $ cat somefile.txt | $gtm_exe/mumps -run LOOP^%XCMD --after='/write "Total number of lines : ",%NR,\!/'
+   $ cat somefile.txt | $gtm_exe/yottadb -run LOOP^%XCMD --after='/write "Total number of lines : ",%NR,\!/'
    Total number of lines: 9
    $
-   $ $gtm_exe/mumps -run LOOP^%XCMD --before='/set f="somefile.txt" open f:readonly use f/' --after='/use $p write "Total number of lines in ",f,": ",%NR,\!/'
+   $ $gtm_exe/yottadb -run LOOP^%XCMD --before='/set f="somefile.txt" open f:readonly use f/' --after='/use $p write "Total number of lines in ",f,": ",%NR,\!/'
    Total number of lines in somefile.txt: 9
    $
 
@@ -2721,7 +2721,7 @@ When invoked as an interactive utility program using DO, ^%YGBLSTAT, prompts for
 When invoked from a shell, the command line is:
 
 .. parsed-literal::
-   $ mumps -run %YGBLSTAT [--help] [--pid pidlist] [--reg reglist] [--stat statlist]
+   $ yottadb -run %YGBLSTAT [--help] [--pid pidlist] [--reg reglist] [--stat statlist]
 
 where
 

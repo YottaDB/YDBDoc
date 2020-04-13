@@ -29,13 +29,13 @@ This section provides an overview of the following basic operational issues in D
 Entering Direct Mode
 +++++++++++++++++++++
 
-To enter Direct Mode, type $ydb_dist/mumps -direct at the shell prompt.
+To enter Direct Mode, type $ydb_dist/yottadb -direct at the shell prompt.
 
 .. parsed-literal::
-   $ $ydb_dist/mumps -direct
+   $ $ydb_dist/yottadb -direct
    YDB>
 
-This shows using $ydb_dist/mumps -direct at the prompt to enter Direct Mode.
+This shows using $ydb_dist/yottadb -direct at the prompt to enter Direct Mode.
 
 Another way to enter Direct Mode for an editing or debugging session is by simply typing ydb at the shell prompt.
 
@@ -75,7 +75,7 @@ Example:
 
 .. parsed-literal::
    YDB>write $zgbldir 
-   /usr/lib/yottadb/r120/mumps.gld
+   /usr/lib/yottadb/r120/yottadb.gld
    YDB>set $zgbldir="test.gld"
    YDB>set a=10
    YDB>set b=a
@@ -623,7 +623,7 @@ ZGOTO $ZLEVEL-1 produces the same result as QUIT (followed by ZCONTINUE, if in D
 
 If the integer expression evaluates to a value greater than the current value of $ZLEVEL, or less than zero (0), YottaDB issues a run-time error.
 
-If ZGOTO has no entry reference, it performs some number of implicit QUITs and transfers control to the next command at the specified level. When no argument is specified, ZGOTO 1 is the result, and operation resumes at the lowest level M routine as displayed by ZSHOW "S". In the image invoked by mumps -direct, or a similar image, a ZGOTO without arguments returns the process to Direct Mode.
+If ZGOTO has no entry reference, it performs some number of implicit QUITs and transfers control to the next command at the specified level. When no argument is specified, ZGOTO 1 is the result, and operation resumes at the lowest level M routine as displayed by ZSHOW "S". In the image invoked by yottadb -direct, or a similar image, a ZGOTO without arguments returns the process to Direct Mode.
 
 +++++++++++++++++++++++++++++
 Displaying Source Code

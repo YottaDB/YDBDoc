@@ -51,9 +51,9 @@ Each of these remaining steps can be performed either from the YottaDB prompt or
 | Create/Edit Routine                                  | Create file with UNIX editor; assign .m       | ZEDIT "routine" .m extension added by YottaDB     |
 |                                                      | extension                                     |                                                   |
 +------------------------------------------------------+-----------------------------------------------+---------------------------------------------------+
-| Compile Routine                                      | invoke mumps routine.m                        | ZLINK "routine"                                   |
+| Compile Routine                                      | invoke yottadb routine.m                      | ZLINK "routine"                                   |
 +------------------------------------------------------+-----------------------------------------------+---------------------------------------------------+
-| Execute Routine                                      | invoke mumps -run routine                     | Do ^routine calls from other routines invoke      |
+| Execute Routine                                      | invoke yottadb -run routine                   | Do ^routine calls from other routines invoke      |
 |                                                      |                                               | auto-ZLINK                                        |
 |                                                      | calls from other routines invoke auto-ZLINK   |                                                   |
 +------------------------------------------------------+-----------------------------------------------+---------------------------------------------------+
@@ -161,10 +161,10 @@ The syntax of a ydb_gbldir definition is:
 Example:
 
 .. parsed-literal::
-   $ ydb_gbldir=/usr/staff/mumps.gld
+   $ ydb_gbldir=/usr/staff/yottadb.gld
    $ export ydb_gbldir
 
-This specifies /usr/staff as the directory containing the Global Directory file named mumps.gld.
+This specifies /usr/staff as the directory containing the Global Directory file named yottadb.gld.
 
 +++++++++++++++
 ydb_principal
@@ -427,11 +427,11 @@ Compiling a Source Program
 
 If you wish to focus on program development outside the YottaDB environment, skip the next section and continue with the section `"Compiling from the Shell" <./devcycle.html#compiling-from-the-shell>`_.
 
-YottaDB compiles M source code files and produces object files for complete integration into the UNIX enviroment. The object modules have the same name as the compiled M source file with an .o file extension, unless otherwise specified. The object files contain machine instructions and information necessary to connect the routine with other routines, and map it into memory. An M routine source file must be compiled after it is created or modified. You can compile explicitly with the ZLINK command or implicitly with auto-ZLINK. At the shell command line, compile by issuing the mumps command.
+YottaDB compiles M source code files and produces object files for complete integration into the UNIX enviroment. The object modules have the same name as the compiled M source file with an .o file extension, unless otherwise specified. The object files contain machine instructions and information necessary to connect the routine with other routines, and map it into memory. An M routine source file must be compiled after it is created or modified. You can compile explicitly with the ZLINK command or implicitly with auto-ZLINK. At the shell command line, compile by issuing the yottadb command.
 
 The compiler checks M code for syntax errors and displays error messages on the terminal, when processing is complete. Each error message provides the source line in error with an indicator pointing to the place on the line where the error is occurring. For a list and description of the compiler error messages, refer to the `Messages and Recovery Procedures Reference Manual <https://docs.yottadb.com/MessageRecovery/index.html>`_.
 
-You can generate a listing file containing the compile results by including the -list qualifier as a modifier to the argument to the ZLINK command in Direct Mode. This can also be done by redirecting the compiler messages to a file by adding >filename 2>&1 to the mumps command when compiling a program from the shell. See `“Compiling from the Shell” <./devcycle.html#compiling-from-the-shell>`_ for an explanation of the M command describing -list, and other valid qualifiers for the M and ZLINK commands.
+You can generate a listing file containing the compile results by including the -list qualifier as a modifier to the argument to the ZLINK command in Direct Mode. This can also be done by redirecting the compiler messages to a file by adding >filename 2>&1 to the yottadb command when compiling a program from the shell. See `“Compiling from the Shell” <./devcycle.html#compiling-from-the-shell>`_ for an explanation of the M command describing -list, and other valid qualifiers for the M and ZLINK commands.
 
 The compiler stops processing a routine line when it detects an error on that line. Under most conditions the compiler continues processing the remaining routine lines. This allows the compiler to produce a more complete error analysis of the routine and to generate code that may have valid executable paths. The compiler does not report multiple syntax errors on the same line. When it detects more than 127 syntax errors in a source file, the compiler ceases to process the file.
 
@@ -489,51 +489,51 @@ For more information on debugging in Direct Mode, see `Chapter 4: “Operating a
 Compiling from the Shell
 +++++++++++++++++++++++++++++++++
 
-From the shell, invoke the compiler by entering mumps file-name at the shell prompt.
+From the shell, invoke the compiler by entering yottadb file-name at the shell prompt.
 
 Example:
 
 .. parsed-literal::
-   $ mumps payroll.m
-   $ mumps taxes.m
+   $ yottadb payroll.m
+   $ yottadb taxes.m
 
-This uses the mumps command to invoke the YottaDB compiler from the shell prompt, and creates .o versions of these files.
+This uses the yottadb command to invoke the YottaDB compiler from the shell prompt, and creates .o versions of these files.
 
-Use the mumps command at the shell prompt to:
+Use the yottadb command at the shell prompt to:
 
 * Check the syntax of a newly entered program.
 * Optionally, get a formatted listing of the program.
 * Ensure that all object code is up to date before linking.
 
-The mumps command invokes the compiler to translate an M source file into object code.
+The yottadb command invokes the compiler to translate an M source file into object code.
 
-The format for the MUMPS command is:
+The format for the yottadb command is:
 
 .. parsed-literal::
-   MUMPS [-qualifier[...]] pathname
+   yottadb [-qualifier[...]] pathname
 
 * Source programs must have an extension of .m.
-* Each pathname identifies an M source program to compile. If you do not specify a .m file extension, the mumps command assumes the .m file extension.
+* Each pathname identifies an M source program to compile. If you do not specify a .m file extension, the yottadb command assumes the .m file extension.
 * Qualifiers determine characteristics of the compiler output.
 * Qualifiers must appear after the command, but before the file name to be properly applied.
 * YottaDB allows the UNIX * and ? wildcards in a file name.
-* The MUMPS command returns a status of 1 after any error in compilation.
+* The yottadb command returns a status of 1 after any error in compilation.
 
 The * wildcard accepts any legal combination of numbers and characters including a null, in the position the wildcard holds.
 
 The ? wildcard accepts exactly one legal character in its position.
 
-For example, mumps \*.m compiles all files in the current default directory with an .m extension. mumps \*pay?.m compiles .m files with names that contain any characters followed by pay, followed by one character. Unlike when using ZLINK or ZCOMPILE, the filename must be fully specified when compiling from the shell.
+For example, yottadb \*.m compiles all files in the current default directory with an .m extension. yottadb \*pay?.m compiles .m files with names that contain any characters followed by pay, followed by one character. Unlike when using ZLINK or ZCOMPILE, the filename must be fully specified when compiling from the shell.
 
 .. note::
    When forming routine names, the compiler truncates object filenames to a maximum length of 31 characters. For example, for a source file called Adatabaseenginewithscalabilityproven.m the compiler generates an object file called Adatabaseenginewithscalabilityp.o. Ensure that the first 31 characters of source file names are unique.
 
 
 +++++++++++++++++++++++++++++++++
-Qualifiers for the mumps command
+Qualifiers for the yottadb command
 +++++++++++++++++++++++++++++++++
 
-The mumps command allows qualifiers that customize the type and form of the compiler output to meet specific programming needs. MUMPS command qualifiers may also appear as a modifier to the argument to the ZLINK and ZCOMPILE commands. The following section describes the mumps command qualifiers. Make sure the arguments are specified ahead of file name and after the command itself.
+The yottadb command allows qualifiers that customize the type and form of the compiler output to meet specific programming needs. Yottadb command qualifiers may also appear as a modifier to the argument to the ZLINK and ZCOMPILE commands. The following section describes the yottadb command qualifiers. Make sure the arguments are specified ahead of file name and after the command itself.
 
 ~~~~~~~~~~~~~~~
 -di[rect_mode]
@@ -668,7 +668,7 @@ If this qualifier appears without the -list qualifier, the M compiler ignores th
 
 By default, listings use single spaced output (-space=1).
 
-**MUMPS Command Qualifiers Summary**
+**Yottadb Command Qualifiers Summary**
 
 +----------------------------------------------+--------------------------------------------+
 | Qualifier                                    | Default                                    |
@@ -769,14 +769,14 @@ Executing from the Shell
 You can run a program from the shell prompt using the following command:
 
 .. parsed-literal::
-   $ mumps -run ^filename
+   $ yottadb -run ^filename
 
-The mumps command searches the directories specified by the environment variable ydb_routines to locate the specified file name.
+The yottadb command searches the directories specified by the environment variable ydb_routines to locate the specified file name.
 
 Example:
 
 .. parsed-literal::
-   $ mumps -run ^payroll
+   $ yottadb -run ^payroll
 
 This executes a routine named payroll.
 
@@ -785,7 +785,7 @@ Processing Errors from Direct Mode and Shell
 ---------------------------------------------
 
 +----------------------------+---------------------------------------------------------------------------+-------------------------------------------------------------------------+
-|                            | Executing in Direct Mode                                                  | Executing from the Shell (mumps -run ^routine)                          |
+|                            | Executing in Direct Mode                                                  | Executing from the Shell (yottadb -run ^routine)                          |
 +============================+===========================================================================+=========================================================================+
 | Usage                      | Suitable for Development and Debugging                                    | Suitable for production                                                 |
 +----------------------------+---------------------------------------------------------------------------+-------------------------------------------------------------------------+

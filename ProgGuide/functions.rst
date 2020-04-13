@@ -19,7 +19,7 @@ M Intrinsic Functions start with a single dollar sign ($) and have one or more a
 $ASCII()
 -----------------
 
-Returns the integer ASCII code for a character in the given string. For a mumps process started in UTF-8 mode, $ASCII() returns the integer Unicode® UTF-8 code-point value of a character in the given string.
+Returns the integer ASCII code for a character in the given string. For a yottadb process started in UTF-8 mode, $ASCII() returns the integer Unicode® UTF-8 code-point value of a character in the given string.
 
 The format for the $ASCII function is:
 
@@ -197,7 +197,7 @@ The format for the $EXTRACT function is:
 
 $EXTRACT() provides a tool for manipulating strings based on character positions.
 
-For a mumps process started in UTF-mode, $EXTRACT interprets the string arguments as UTF-8 encoded. With VIEW "BADCHAR" enabled, $EXTRACT() produces a run-time error when it encounters a character in the reserved range of the Unicode® Standard, but it does not process the characters that fall after the span specified by the arguments. The parallel function of $EXTRACT() is $ZEXTRACT(). Use $ZEXTRACT() for byte-oriented operations. For more information, refer to `$ZExtract() <./functions.html#zextract>`_.
+For a yottadb process started in UTF-mode, $EXTRACT interprets the string arguments as UTF-8 encoded. With VIEW "BADCHAR" enabled, $EXTRACT() produces a run-time error when it encounters a character in the reserved range of the Unicode® Standard, but it does not process the characters that fall after the span specified by the arguments. The parallel function of $EXTRACT() is $ZEXTRACT(). Use $ZEXTRACT() for byte-oriented operations. For more information, refer to `$ZExtract() <./functions.html#zextract>`_.
 
 $EXTRACT() can be used on the left-hand side of the equal sign (=) of a SET command to set a substring of a string. This construct permits easy maintenance of individual pieces within a string. It can also be used to right justify a value padded with blank characters. For more information on SET $EXTRACT(), refer to `“Set” in the Commands chapter <./commands.html#set>`_.
 
@@ -3254,7 +3254,7 @@ In many ways, the $ZSUBSTR() function is similar to the $ZEXTRACT() function. Fo
 $ZSYSLOG()
 ----------------------
 
-Sends its string parameter to the system log and always returns TRUE (1). The text appears in the syslog with the same format as any other YottaDB syslog message (that is, in the user.info log with YDB-MUMPS[pid]" or "YDB-MUPIP[pid]" prefix along with instance information where appropriate). The format of the $ZSYSLOG function is:
+Sends its string parameter to the system log and always returns TRUE (1). The text appears in the syslog with the same format as any other YottaDB syslog message (that is, in the user.info log with YDB-M[pid]" or "YDB-MUPIP[pid]" prefix along with instance information where appropriate). The format of the $ZSYSLOG function is:
 
 .. parsed-literal::
    $ZSYSLOG(expr)

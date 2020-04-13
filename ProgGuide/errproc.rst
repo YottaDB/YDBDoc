@@ -70,7 +70,7 @@ The compile-time error message format displays the line containing the error and
 
 You may correct compile-time errors immediately by activating an editor and entering the correct syntax in the source program. Because several errors may occur on a line, examine the line carefully to avoid compiling the routine several times.
 
-The MUMPS command qualifier -ignore, which is the default, instructs YottaDB to produce an object file even if the compiler detects errors in the source code. As long as the execution path does not encounter the compile-time errors, the YottaDB run-time system executes the compiled-as-written routine. You may take advantage of this feature to exercise some parts of your program before correcting errors detected by the compiler.
+The yottadb command qualifier -ignore, which is the default, instructs YottaDB to produce an object file even if the compiler detects errors in the source code. As long as the execution path does not encounter the compile-time errors, the YottaDB run-time system executes the compiled-as-written routine. You may take advantage of this feature to exercise some parts of your program before correcting errors detected by the compiler.
 
 -----------------------------
 Run Time Error Message Format
@@ -86,9 +86,9 @@ To understand the run-time error message format, consider this short program pri
 When you try to execute this program, the last statement causes an error since the variable C is undefined. If $ETRAP="B", YottaDB displays the run-time error message:
 
 .. parsed-literal::
-   $ mumps -run printsum
+   $ yottadb -run printsum
    %YDB-E-UNDEF, Undefined local variable: C
-   At MUMPS source location GO+1^printsum
+   At yottadb source location GO+1^printsum
    YDB>
 
 YottaDB informs you of the error (Undefined local variable) and where in the routine the error occurred (GO+1). Note that the run-time system displays the YDB> prompt, indicating that the process has entered Direct Mode. YottaDB places run time error information in the intrinsic special variables $ECODE and $ZSTATUS.
@@ -357,7 +357,7 @@ If an error handling procedure was invoked through the $ETRAP method, and the va
 Choosing $ETRAP or $ZTRAP
 ++++++++++++++++++++++++++++++++++++
 
-Making a choice between the two mechanisms for error handling is mostly a matter of compatibility. If compatibility with existing YottaDB code is important, and that code happens to use $ZTRAP, then $ZTRAP is the best effort choice. If compatibility with code written in MUMPS dialects from other vendors is important, then $ETRAP or a non-default form of $ZTRAP probably is the better choice.
+Making a choice between the two mechanisms for error handling is mostly a matter of compatibility. If compatibility with existing YottaDB code is important, and that code happens to use $ZTRAP, then $ZTRAP is the best effort choice. If compatibility with code written in M dialects from other vendors is important, then $ETRAP or a non-default form of $ZTRAP probably is the better choice.
 
 When no pre-existing code exists that favors one mechanism, the features of the mechanisms themselves should be examined.
 

@@ -383,7 +383,7 @@ Because the only issue in this case is that one of the chunks' keys has been dam
 Execute:
 
 .. parsed-literal::
-   $ $ydb_dist/mumps -direct
+   $ $ydb_dist/yottadb -direct
 
 From the first error message pick :
 
@@ -1232,7 +1232,7 @@ Steps to run the salvage utility are as follows:
 
 * Ensure that there are no INTEG errors other than the incorrectly-marked-busy block errors.
 
-* Run $ydb_dist/mumps -r ^salvage.
+* Run $ydb_dist/yottadb -r ^salvage.
 
 * Specify the region name. If no region is specified, the utility assumes DEFAULT.
 

@@ -26,8 +26,8 @@ Here is a sample configuration file:
     database: {
         keys: (
               {
-                 dat: "/tmp/mumps.dat";  /* Encrypted database file. \*/
-                 key: "/tmp/mumps.key";  /* Encrypted symmetric key. \*/
+                 dat: "/tmp/yottadb.dat";  /* Encrypted database file. \*/
+                 key: "/tmp/yottadb.key";  /* Encrypted symmetric key. \*/
               },
               {
                  dat: "/tmp/a.dat";

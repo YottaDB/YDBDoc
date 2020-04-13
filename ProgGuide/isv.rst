@@ -45,7 +45,7 @@ The value of $ECODE can be SET, and when it is set to a non-NULL value, error pr
 .. note::
    See `Chapter 13: “Error Processing” <./errproc.html>`_ to learn about $ECODE's role in error processing.
 
-The list of codes in $ECODE start with a comma, and are seperated by commas. A code starts with "M", "U", or "Z", with the rest of it being numeric. "M" codes are assigned by MDC (MUMPS Development Committee), "U" by application (programmers), and "Z" codes by MUMPS implementors (in this case YottaDB).
+The list of codes in $ECODE start with a comma, and are seperated by commas. A code starts with "M", "U", or "Z", with the rest of it being numeric. "M" codes are assigned by MDC (M Development Committee), "U" by application (programmers), and "Z" codes by M implementors (in this case YottaDB).
 
 An error always has a YottaDB specified code and many errors also have an ANSI Standard code. The complete list of standardized error codes can be referenced from the `Message and Recovery Procedures Reference Manual <https://docs.yottadb.com/MessageRecovery/index.html>`_ and onwards.
 
@@ -268,7 +268,7 @@ Once a YottaDB process adds either instruction or data space, it never releases 
 $SYSTEM
 ----------------
 
-$SY[STEM] contains a string that identifies the executing M instance. The value of $SYSTEM is a string that starts with a unique numeric code that identifies the manufacturer. Codes are assigned by the MDC (MUMPS Development Committee).
+$SY[STEM] contains a string that identifies the executing M instance. The value of $SYSTEM is a string that starts with a unique numeric code that identifies the manufacturer. Codes are assigned by the MDC (M Development Committee).
        
 $SYSTEM in YottaDB starts with "47" followed by a comma and the evaluation of the environment variable ydb_sysid or gtm_sysid. If neither of the names have any evaluation (i.e. both are undefined), the value after the comma is gtm_sysid.
 
@@ -468,7 +468,7 @@ If positive, $ZCLOSE contains the exit status returned by the last co-process.
 $ZCMDLINE
 ------------
 
-$ZCM[DLINE] contains a string value specifying the "excess" portion of the command line that invoked the YottaDB process. By "excess" is meant the portion of the command line that is left after YottaDB has done all of its command line processing. For example, a command line mumps -direct extra1 extra2 causes YottaDB to process the command line upto mumps -direct and place the "excess" of the command line, that is "extra1 extra2" in $ZCMDLINE. $ZCMDLINE gives the M routine access to the shell command line input.
+$ZCM[DLINE] contains a string value specifying the "excess" portion of the command line that invoked the YottaDB process. By "excess" is meant the portion of the command line that is left after YottaDB has done all of its command line processing. For example, a command line yottadb -direct extra1 extra2 causes YottaDB to process the command line upto yottadb -direct and place the "excess" of the command line, that is "extra1 extra2" in $ZCMDLINE. $ZCMDLINE gives the M routine access to the shell command line input.
 
 Note that the actual user input command line might have been transformed by the shell (for example, removing one level of quotes, filename, and wildcard substituion, and so on.), and it is this transformed command line that YottaDB processes.
 
@@ -478,7 +478,7 @@ Example:
    $ cat > test.m
    write " $ZCMDLINE=",$ZCMDLINE,!
    quit
-   $ mumps -run test OTHER  information
+   $ yottadb -run test OTHER  information
    $ZCMDLINE=OTHER information
    $
 
@@ -492,9 +492,9 @@ Example:
    set $etrap="" ; exit if the input isn't valid
    if $length($zcmdline) do @$zcmdline quit
    quit
-   $ mumps -run foo 'BAR^FOOBAR("hello")'
+   $ yottadb -run foo 'BAR^FOOBAR("hello")'
 
-In this example, YottaDB processes the shell command line up to foo and puts the rest in $ZCMDLINE. This mechanism allows mumps -run to invoke an arbitrary entryref with or without parameters. Note that this example encloses the command line argument with single quotes to prevent inappropriate expansion in Bourne-type shells. Always remember to use the escaping and quoting conventions of the shell and YottaDB to prevent inappropriate expansion. 
+In this example, YottaDB processes the shell command line up to foo and puts the rest in $ZCMDLINE. This mechanism allows yottadb -run to invoke an arbitrary entryref with or without parameters. Note that this example encloses the command line argument with single quotes to prevent inappropriate expansion in Bourne-type shells. Always remember to use the escaping and quoting conventions of the shell and YottaDB to prevent inappropriate expansion. 
 
 .. note::
    Use the ^%XCMD utility to XECUTEs code from the shell command line and return any error status (truncated to a single byte on UNIX) that the code generates. For more information, refer to “%XCMD”. 
@@ -638,9 +638,9 @@ Example:
    $ ydb
    YDB>WRITE $zgbldir
    /usr/dev/test.gld
-   YDB>SET $zgbldir="mumps.gld"
+   YDB>SET $zgbldir="yottadb.gld"
    YDB>WRITE $zgbldir
-   mumps.gld
+   yottadb.gld
    YDB>HALT
    $ echo $ydb_gbldir
    test.gld
@@ -652,13 +652,13 @@ This example defines the environment variable ydb_gbldir. Upon entering YottaDB 
    test.gld not found
    $ ydb
    YDB>WRITE $zgbldir
-   /usr/dev/mumps.gld
+   /usr/dev/yottadb.gld
    YDB>set $zgbldir="test.gld"
    %YDB-E-ZGBLDIRACC, Cannot access global directory
-   "/usr/dev/test.gld". Retaining /usr/dev/mumps.gld"
+   "/usr/dev/test.gld". Retaining /usr/dev/yottadb.gld"
    %SYSTEM-E-ENO2, No such file or directory
    YDB>WRITE $zgbldir
-   /usr/dev/mumps.gld
+   /usr/dev/yottadb.gld
    YDB>halt
    $
 
@@ -684,7 +684,7 @@ Example:
     do displaytzdetails(zutzh,zone)
     quit
    getzutzh(zone)
-    set shcommand="TZ="_zone_" $ydb_dist/mumps -run %XCMD 'write $zut,"" "",$zhorolog,"" "",$zdate($horolog,""MON DD,YYYY 12:60:SS AM""),!'"
+    set shcommand="TZ="_zone_" $ydb_dist/yottadb -run %XCMD 'write $zut,"" "",$zhorolog,"" "",$zdate($horolog,""MON DD,YYYY 12:60:SS AM""),!'"
     set descname="tzpipe"
     open descname:(shell="/bin/sh":command=shcommand:readonly)::"pipe"
     use descname read dateline use $principal close descname
@@ -1071,7 +1071,7 @@ Example:
    ;123456789012345678901234567890123456789012345678901234567890
    ;A12345678901234567890123456789012345678901234567890123456789
    zpio
-     ; mumps -r zpio < zpioin
+     ; yottadb -r zpio < zpioin
      write "$PRINCIPAL = ",$P,!
      write "$ZPIN = ",$ZPIN,!
      write "$ZPOUT = ",$ZPOUT,!
@@ -1182,7 +1182,7 @@ Searches that use $ZROUTINES treat files as either object or source files. Yotta
 Establishing the value from $ydb_routines
 ++++++++++++++++++++++++++++++++++++++++++
 
-If the environment variable :code:`ydb_routines` is not set when the :code:`yottadb` / :code:`mumps` process starts, or if it is set to the empty string (:code:`""`), YottaDB sets it in the environment to :code:`$ydb_dist/libyottadbutil.so` if it exists, and to :code:`$ydb_dist` if it does not, and then uses that value.
+If the environment variable :code:`ydb_routines` is not set when the :code:`yottadb` process starts, or if it is set to the empty string (:code:`""`), YottaDB sets it in the environment to :code:`$ydb_dist/libyottadbutil.so` if it exists, and to :code:`$ydb_dist` if it does not, and then uses that value.
 
 Commands or functions such as DO, GOTO, ZGOTO, ZBREAK, ZPRINT, and $TEXT may auto-ZLINK and thereby indirectly use $ZROUTINES. If their argument does not specify a directory, ZEDIT and explicit ZLINK use $ZROUTINES. ZPRINT and $TEXT use $ZROUTINES to locate a source file if YottaDB cannot find the source file pointed to by the object file. For more information on ZLINK and auto-ZLINK, see the `“Development Cycle” <./devcycle.html>`_ and `“Commands” <./commands.html>`_ chapters.
 
@@ -1411,7 +1411,7 @@ Example:
 .. parsed-literal::
    $ ydb_routines="./libabc.so ./obj(./src)"
    $ export ydb_routines
-   $ mumps -direct
+   $ yottadb -direct
    YDB>w $ZROUTINES,!;writes "./libabc.so ./obj(./src)"
    YDB>do ^a;runs ^a from libabc.so
    YDB>do ^b;runs ^b from libabc.so
@@ -1421,7 +1421,7 @@ Example:
 
 * *$ZROUTINES settings for auto-relink*
 
-By suffixing one or more directory names in $ZROUTINES with a single asterisk (*), processes can subscribe to updates of object files published in those directories. At the invocation of DO, GOTO, or ZGOTO, extrinsic functions, $TEXT(), or ZPRINT that specify an entryref which includes a routine name (vs. a label without a routine name), mumps processes (and mupip processes executing trigger logic) automatically relink ("auto-relink") and execute published new versions of routines.
+By suffixing one or more directory names in $ZROUTINES with a single asterisk (*), processes can subscribe to updates of object files published in those directories. At the invocation of DO, GOTO, or ZGOTO, extrinsic functions, $TEXT(), or ZPRINT that specify an entryref which includes a routine name (vs. a label without a routine name), yottadb processes (and mupip processes executing trigger logic) automatically relink ("auto-relink") and execute published new versions of routines.
 
 * Label references (that is, without a routine name), whether direct or through indirection, always refer to the current routine, and do not invoke auto-relink logic.
 * Use shell quoting rules when appending asterisks to directory names in the ydb_routines environment variable - asterisks must be passed in to YottaDB, and not expanded by the shell.

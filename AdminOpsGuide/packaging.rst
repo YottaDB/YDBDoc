@@ -9,7 +9,7 @@ Appendix E : Packaging YottaDB Applications
 .. contents::
    :depth: 2
 
-YottaDB provides the mumps -run shell command to invoke application entryrefs directly from the shell. YottaDB recognizes a number of environment variables to determine the starting characteristics of a process; these are described in the documentation. In order to ensure that environment variables are set correctly, you should create a shell script that appropriately sets (and clears where needed) environment variables before invoking YottaDB. When users should not get to the shell prompt from the application (either for lack of skill or because they are not sufficiently trusted), or when the application needs more access to the shell command line than that provided by the $ZCMDLINE ISV, you may need to package a YottaDB application using techniques beyond, or in addition to, invocation from a shell script.
+YottaDB provides the yottadb -run shell command to invoke application entryrefs directly from the shell. YottaDB recognizes a number of environment variables to determine the starting characteristics of a process; these are described in the documentation. In order to ensure that environment variables are set correctly, you should create a shell script that appropriately sets (and clears where needed) environment variables before invoking YottaDB. When users should not get to the shell prompt from the application (either for lack of skill or because they are not sufficiently trusted), or when the application needs more access to the shell command line than that provided by the $ZCMDLINE ISV, you may need to package a YottaDB application using techniques beyond, or in addition to, invocation from a shell script.
 
 Since YottaDB is designed to integrate with the underlying OS, you should consider the entire range of services provided by operating systems when packaging a YottaDB application. For example, you can use the host based access control provided by TCP wrappers, or various controls provided by xinetd (including per_source, cps, max_load protection, only_from, no_access, and access_times).
 
@@ -28,8 +28,8 @@ The example in “Sample .profile” is for /bin/sh on GNU/Linux, and may need t
 
 At a high level, preventing a captive user from getting to a shell or YottaDB prompt involves:
 
-* trapping signals that may cause the login shell to give the user interactive access, for example, by pressing <CTRL-Z> to suspend the mumps application;
-* preventing a mumps process from responding to a <CTRL-C> until the application code sets up a handler; and
+* trapping signals that may cause the login shell to give the user interactive access, for example, by pressing <CTRL-Z> to suspend the yottadb application;
+* preventing a yottadb process from responding to a <CTRL-C> until the application code sets up a handler; and
 * preventing an error in the application, or a bug in an error handler, from putting a captive user into direct mode.
 
 Note that other users on the system who have appropriate privileges as managed by the operating system can still interfere with captive users. In order to secure a system for captive applications, you must protect it from untrusted other users. Users should only have credentials that permit them the level of access appropriate to their level of trustworthiness, thus: untrusted users should not have credentials to access a system with captive applications.
@@ -51,7 +51,7 @@ After initialization common to all users of a system, a login shell sources the 
    export ydb_routines=...
    export ydb_repl_instance=...
    export ydb_tmp=...
-   # disable mumps ^C until application code sets up handler
+   # disable yottadb ^C until application code sets up handler
    export ydb_nocenable=1
    # override default of $ZTRAP="B"
    export ydb_etrap='I 0=$ST W "Process terminated by: ",$ZS,! ZHALT 1'
@@ -62,7 +62,7 @@ After initialization common to all users of a system, a login shell sources the 
    export PATH=/usr/bin:/bin    # only the minimum needed by application
    export SHELL=/bin/false     # disable ZSYSTEM from command prompt
    # execute captive application starting with entryref ABC^DEF then exit
-   exec $ydb_dist/mumps -run ABC^DEF
+   exec $ydb_dist/yottadb -run ABC^DEF
 
 Note the use of exec to run the application - this terminates the shell and disconnects users from the system when they exit the YottaDB application.
 
@@ -72,10 +72,10 @@ If an incoming connection is via an Internet superserver such as xinetd, some of
 Invoking YottaDB in a C main() program
 --------------------------------------------
 
-There are several circumstances when it is desirable to invoke a YottaDB application with a top-level C main() program rather than with mumps -run. Examples include:
+There are several circumstances when it is desirable to invoke a YottaDB application with a top-level C main() program rather than with yottadb -run. Examples include:
 
 * A need to ensure correct values for environment variables, and a shell script cannot be used (for example, when there is a specific operational need to install an application with the setuid bit).
-* Programs that show up on a process display with meaningful names (like friday instead of mumps -run monthstarting friday, in the following example).
+* Programs that show up on a process display with meaningful names (like friday instead of yottadb -run monthstarting friday, in the following example).
 
 To compile and run the monthstarting.zip example, perform the following steps:
 
@@ -86,7 +86,7 @@ monthstarting.zip contains monthstarting.m, month_starting.c, and monthstarting.
 Run the monthstarting.m program that lists months starting with the specified day of the week and year range.
 
 .. parsed-literal::
-   $ mumps -run monthstarting Friday 1986 1988      
+   $ yottadb -run monthstarting Friday 1986 1988      
    FRI AUG 01, 1986
    FRI MAY 01, 1987
    FRI JAN 01, 1988
@@ -191,7 +191,7 @@ DONE: QUIT ; or HALT or ZHALT, as appropriate
 
 4. Setting the SHELL environment variable to /bin/false disables the ZSYSTEM command, which if executed without an argument takes the user to a shell prompt. While a correctly coded application might not have a ZSYSTEM without an argument, setting SHELL to a value such as /bin/false, as illustrated above, adds a layer of defense against a possible application bug. Of course, if an application uses the ZSYSTEM command, then an executable SHELL is required. If your application uses ZSYSTEM to run a command, consider whether a PIPE device might provide a better alternative.
 
-5. Setting the PATH environment explicitly to only those directories that contain executable files that the mumps process will need to execute, with a ZSYSTEM command or a PIPE device.
+5. Setting the PATH environment explicitly to only those directories that contain executable files that the yottadb process will need to execute, with a ZSYSTEM command or a PIPE device.
 
 6. Because some text editors include functionality to run a shell in an edit buffer, setting the EDITOR variable to an editor which does not have such functionality is a way to block shell access in the event that the application uses the ZEDIT command to edit a text file. Note that if an application allows users to edit text files, they can also edit YottaDB program source files, and application configuration should ensure that such program files cannot be accessed by the $ZROUTINES of the process unless that is the desired behavior.
 

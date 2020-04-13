@@ -41,8 +41,8 @@ With the BG access method, each open database file has a shared memory segment a
 
 Comments on the Shared Memory Exception for BG:
 
-* This only applies if a mumps process contains non-M code. If a mumps process has only M code, the YottaDB run-time environment will not allow a process to modify a database for which it lacks write permission.
-* This only applies if a database file has mixed read-only and read-write access, that is, some mumps processes have read-only access and others have read-write access. If all processes have read-only access, although the database may appear to be temporarily modified when copies of blocks in shared memory are modified, the database file on disk cannot be permanently modified because no process will have the required permission to flush dirty blocks to disk.
+* This only applies if a yottadb process contains non-M code. If a yottadb process has only M code, the YottaDB run-time environment will not allow a process to modify a database for which it lacks write permission.
+* This only applies if a database file has mixed read-only and read-write access, that is, some yottadb processes have read-only access and others have read-write access. If all processes have read-only access, although the database may appear to be temporarily modified when copies of blocks in shared memory are modified, the database file on disk cannot be permanently modified because no process will have the required permission to flush dirty blocks to disk.
 * Where processes that contain C code and have read-only database access must co-exist with processes that have read-write access, YottaDB will only "keep honest processes honest." (See below for recommendations where read-only access is required by processes that cannot be considered trustworthy).
 
 +++++++++++++++++++++++++++

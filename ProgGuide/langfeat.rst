@@ -11,7 +11,7 @@
 
 This chapter describes general features of the M language, as well as general information about the operation of YottaDB. Commands, Functions, and Intrinsic Special Variables are each described in separate chapters. This chapter contains information about exceptions, as well as information about general M features.
 
-MUMPS is a general purpose language with an embedded database system. This section describes the features of the language that are not covered in the `Commands <./commands.html>`_, `Functions <./functions.html>`_, or `Intrinsic Special Variables <./isv.html>`_ chapters.
+M is a general purpose language with an embedded database system. This section describes the features of the language that are not covered in the `Commands <./commands.html>`_, `Functions <./functions.html>`_, or `Intrinsic Special Variables <./isv.html>`_ chapters.
 
 ---------------------------
 Data Types
@@ -234,7 +234,7 @@ The other region qualifier is –[NO]STDNULLCOLL with add, change and template c
 
    Segment             File (def ext: .dat)     Acc  Typ   Block            Alloc   Exten     Options
    -----------------------------------------------------------------------------------------------------
-   DEFAULT               mumps.dat              BG   DYN   1024              100     100      GLOB=1024
+   DEFAULT               yottadb.dat              BG   DYN   1024              100     100      GLOB=1024
                                                                                               LOCK=40
                                                                                               RES=0
    TEAGLOBALS            TEAGLOBALS.dat         BG   DYN   1024              100     100      GLOB=1024
@@ -249,28 +249,28 @@ The other region qualifier is –[NO]STDNULLCOLL with add, change and template c
    ---------------------------------------------------------------------------------------------
     %                          Darjeeling                     REG=DEFAULT
                                                               SEG=DEFAULT
-                                                              FILE=mumps.dat
+                                                              FILE=yottadb.dat
    Darjeeling                  Darjeeling0                    REG=TEAGLOBALS
                                                               SEG=TEAGLOBALS
                                                               FILE=TEAGLOBALS.dat
    Darjeeling0                 LapsangSouchong                REG=DEFAULT
                                                               SEG=DEFAULT
-                                                              FILE=mumps.dat
+                                                              FILE=yottadb.dat
    LapsangSouchong             LapsangSouchong0               REG=TEAGLOBALS
                                                               SEG=TEAGLOBALS
                                                               FILE=TEAGLOBALS.dat
    LapsangSouchong0            Tea                            REG=DEFAULT
                                                               SEG=DEFAULT
-                                                              FILE=mumps.dat
+                                                              FILE=yottadb.dat
    Tea                         Teb                            REG=TEAGLOBALS
                                                               SEG=TEAGLOBALS
                                                               FILE=TEAGLOBALS.dat
    Teb                         ...                            REG=DEFAULT
                                                               SEG=DEFAULT
-                                                              FILE=mumps.dat
+                                                              FILE=yottadb.dat
    LOCAL LOCKS                                                REG=DEFAULT
                                                               SEG=DEFAULT
-                                                              FILE=mumps.dat
+                                                              FILE=yottadb.dat
    GDE>
 
 ~~~~~~
@@ -291,7 +291,7 @@ From the example above, the output of dump –fileheader for TEAGLOBALS.dat will
 .. parsed-literal::
    DSE> dump -fileheader
 
-   File            /tmp/mumps.dat
+   File            /tmp/yottadb.dat
    Region          DEFAULT
    Date/Time       19-FEB-2018 18:51:43 [$H = 60039,67903]
    Access method                   BG        Global Buffers                1024
@@ -314,7 +314,7 @@ From the example above, the output of dump –fileheader for TEAGLOBALS.dat will
    Journal Buffer Size           1000        Journal Alignsize              128
    Journal AutoSwitchLimit    8388600        Journal Epoch Interval         300
    Journal Yield Limit              8        Journal Sync IO              FALSE
-   Journal File: /tmp/mumps.mjl
+   Journal File: /tmp/yottadb.mjl
    Mutex Hard Spin Count          128        Mutex Sleep Spin Count         128
    Mutex Spin Sleep Time         2048        KILLs in progress                0
    Replication State              OFF        Region Seqno    0x0000000000000001
@@ -324,7 +324,7 @@ With Standard null collation, the null subscript is represented by 0x01 instead 
 
 .. parsed-literal::
    DSE>dump -block=3
-      File /testarea1/null_subs/mumps.dat
+      File /testarea1/null_subs/yottadb.dat
       Region DEFAULT
                                                              
       Block     3       Size    24  Level   0   TN  3
@@ -336,7 +336,7 @@ With historical null collation, for the same command output will be as follows:
 
 .. parsed-literal::
    DSE>dump -block=3
-       File /testarea1/null_subs/mumps.dat
+       File /testarea1/null_subs/yottadb.dat
        Region DEFAULT
                                                                                                                                
               3   Size 24   Level 0   TN 3
@@ -765,7 +765,7 @@ Example:
    return return_val;
    }
    > cat table.dat
-   day1 week1 mumps
+   day1 week1 yottadb
    day2 week1 a
    day3 week2 b
    day4 week2 c.gld

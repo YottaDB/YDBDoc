@@ -35,7 +35,7 @@ YottaDB uses UNIX IPC resources as follows:
 
 * The semaphore with keys starting 0x2b and 0x2c are startup and rundown semaphores. A YottaDB process uses them only while attaching to or detaching from a database.
 
-* The number of processes and the number of semaphores attached to an IPC resource may vary according to the state of your database. Some shared memory regions have 0 processes attached to them (the nattch column). If these correspond to YottaDB database regions or to global directories, they are most likely from improper process termination of YottaDB (YottaDB processes show up as "mumps" in a ps command) and YottaDB utility processes: source server, receiver server, update processes (which appear as "mupip") or other YottaDB utilities ("mupip", "dse", or "lke").
+* The number of processes and the number of semaphores attached to an IPC resource may vary according to the state of your database. Some shared memory regions have 0 processes attached to them (the nattch column). If these correspond to YottaDB database regions or to global directories, they are most likely from improper process termination of YottaDB (YottaDB processes show up as "yottadb" in a ps command) and YottaDB utility processes: source server, receiver server, update processes (which appear as "mupip") or other YottaDB utilities ("mupip", "dse", or "lke").
 
 * An instance has one journal pool, and, if a replicating instance, one receiver pool. Note that you might run multiple instances on the same computer system.
 
@@ -56,12 +56,12 @@ In Server_A and in the directory holding database files for America, give the fo
 Now execute the following command:
 
 .. parsed-literal::
-   $ ydb_dist/ftok mumps.dat multisite.repl
+   $ ydb_dist/ftok yottadb.dat multisite.repl
 
-This command produces the "public" (system generated) IPC Keys (essentially hash values) for mumps.dat and its replication instance multisite.repl. It produces a sample output like the following:
+This command produces the "public" (system generated) IPC Keys (essentially hash values) for yottadb.dat and its replication instance multisite.repl. It produces a sample output like the following:
 
 .. parsed-literal::
-   mumps.dat :: 721434869 [ 0x2b0038f5 ] 
+   yottadb.dat :: 721434869 [ 0x2b0038f5 ] 
    multisite.repl :: 721434871 [ 0x2b0038f7 ]
 
 The keys starting with 0x2b (Hexadecimal form) are the keys for the semaphores used by replication instance America with the high order hexadecimal 0x2b replaced by 0x2c for the replication instance file (YottaDB's standard prefix for semaphores for journal pools is 0x2c and the prefix for database files is 0x2b). You can observe this with the ipcs command:
@@ -81,14 +81,14 @@ The keys starting with 0x2b (Hexadecimal form) are the keys for the semaphores u
 Execute the following command and note down the shared memory id and private semaphore id on instance America.
 
 .. parsed-literal::
-   $ mupip ftok mumps.dat
+   $ mupip ftok yottadb.dat
 
 This command identifies the "private" (YottaDB generated) semaphores that a process uses for all "normal" access. The sample output of this command looks like the following:
 
 .. parsed-literal::
    File  ::   Semaphore Id   ::   Shared Memory Id  :: FileId
    ---------------------------------------------------------------------------------------------------------------
-   mumps.dat ::  1081348 [0x00108004] :: 2490370 [0x00260002] :: 0xf53803000000000000fe000000000000ffffffd2 
+   yottadb.dat ::  1081348 [0x00108004] :: 2490370 [0x00260002] :: 0xf53803000000000000fe000000000000ffffffd2 
 
 Now, execute the following command and note down the shared memory and private semaphore id for the journal pool.
 
@@ -158,12 +158,12 @@ Now connect to Server_B and give the following commands in the directory holding
 Now execute the command:
 
 .. parsed-literal::
-   $ydb_dist/ftok mumps.dat multisite1.repl
+   $ydb_dist/ftok yottadb.dat multisite1.repl
 
-This command produces the "public" (system generated) IPC Key of mumps.dat and its replication instance multisite1.repl. It produces a sample output like the following:
+This command produces the "public" (system generated) IPC Key of yottadb.dat and its replication instance multisite1.repl. It produces a sample output like the following:
 
 .. parsed-literal::
-     mumps.dat :: 722134735 [ 0x2b0ae6cf ]
+     yottadb.dat :: 722134735 [ 0x2b0ae6cf ]
      multisite1.repl :: 722134737 [ 0x2b0ae6d1 ]
 
 Note that keys starting with 0x2b in the output of the ipcs -a command are the public IPC keys for the semaphores of the database file on the replication instance Brazil.
@@ -171,14 +171,14 @@ Note that keys starting with 0x2b in the output of the ipcs -a command are the p
 Then, execute the following command and note down the shared memory id and private semaphore id on instance Brazil.
 
 .. parsed-literal::
-   $ mupip ftok mumps.dat
+   $ mupip ftok yottadb.dat
 
 This command identifies the "private" (YottaDB generated) semaphores that a process uses for all "normal" access. The sample output of this command looks like the following:
 
 .. parsed-literal::
    File :: Semaphore Id  :: Shared Memory Id :: FileId
    --------------------------------------------------------------------------------------------------------------
-   mumps.dat :: 327683 [0x00050003] :: 11665410 [0x00b20002]:: 0xcfe63400000000000a0000000000000000000000
+   yottadb.dat :: 327683 [0x00050003] :: 11665410 [0x00b20002]:: 0xcfe63400000000000a0000000000000000000000
 
 Now, execute the following command and note down the shared memory and private semaphore id for the journal pool.
 

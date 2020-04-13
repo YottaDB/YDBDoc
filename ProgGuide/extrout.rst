@@ -181,7 +181,7 @@ Although not required to be used by a customized plugin implementation, YottaDB 
 * xc_status_t ydb_is_file_identical(xc_fileid_ptr_t fileid1, xc_fileid_ptr_t fileid2) - function that determines whether two file ids map to the same file.
 * ydb_xcfileid_free(xc_fileid_ptr_t fileid) - function to release a file id structure.
 
-Mumps, MUPIP and DSE processes dynamically link to the plugin interface functions that reside in the shared library. The functions serve as software "shims" to interface with an encryption library such as libmcrypt or libgpgme/libgcrypt.
+M, MUPIP and DSE processes dynamically link to the plugin interface functions that reside in the shared library. The functions serve as software "shims" to interface with an encryption library such as libmcrypt or libgpgme/libgcrypt.
 
 The plugin interface functions are:
 
@@ -472,7 +472,7 @@ Relevant Files for Call-Ins
 To facilitate Call-Ins to M routines, the YottaDB distribution directory ($ydb_dist) contains the following files:
 
 * libyottadb.so - A shared library that implements the YottaDB run-time system, including the Call-In API. If Call-Ins are used from a standalone C/C++ program, this library needs to be explicitly linked into the program. See “Building Standalone Programs”, which describes the necessary linker options on each supported platforms.
-* mumps - The YottaDB startup program that dynamically links with libyottadb.so.
+* yottadb - The YottaDB startup program that dynamically links with libyottadb.so.
 * libyottadb.h - A C-header file containing the declarations of Call-In API.
 
 .. note::
@@ -790,7 +790,7 @@ $ECODE/$STACK() initialized to null at level one (1) in GTM$CI frame.
 Rules to Follow in Call-Ins
 ++++++++++++++++++++++++++++++++++++
 
-1. External calls must not be fenced with TSTART/TCOMMIT if the external routine calls back into mumps using the call-in mechanism.
+1. External calls must not be fenced with TSTART/TCOMMIT if the external routine calls back into yottadb using the call-in mechanism.
 2. The external application should never call exit() unless it has called ydb_exit() previously. YottaDB internally installs an exit handler that should never be bypassed.
 3. The external application should never use any signals when YottaDB is active since YottaDB reserves them for its internal use. YottaDB provides the ability to handle SIGUSR1 within M (see “$ZINTerrupt” for more information). An interface is provided by YottaDB for timers.
 4. YottaDB recommends the use of ydb_malloc() and ydb_free() for memory management by C code that executes in a YottaDB process space for enhanced performance and improved debugging. Always use ydb_malloc() to allocate returns for pointer types to prevent memory leaks.

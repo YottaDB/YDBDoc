@@ -744,8 +744,8 @@ Here is a sample configuration file:
    database: {
           keys: (
                   {
-                  dat: "/tmp/mumps.dat";  /* Encrypted database file. \*/
-                  key: "/tmp/mumps.key";  /* Encrypted symmetric key. \*/
+                  dat: "/tmp/yottadb.dat";  /* Encrypted database file. \*/
+                  key: "/tmp/yottadb.key";  /* Encrypted symmetric key. \*/
                   },
                   {
                   dat: "/tmp/a.dat";
@@ -969,7 +969,7 @@ Here is the code:
 
 .. parsed-literal::
    mkdir -p $PWD/$ydb_repl_instname/
-   $ydb_dist/mumps -r ^GDE @gdemsr
+   $ydb_dist/yottadb -r ^GDE @gdemsr
    $ydb_dist/mupip create
 
 `gdemsr <https://gitlab.com/YottaDB/DB/YDBDoc/blob/master/AdminOpsGuide/repl_procedures/gdemsr>`_
@@ -1143,7 +1143,7 @@ Here is the code:
 
 .. parsed-literal::
    #Creates the libconfig format configuration file
-   #$ydb_dist/mumps -r CONVDBKEYS $ydb_crypt_config
+   #$ydb_dist/yottadb -r CONVDBKEYS $ydb_crypt_config
    echo "tls: {">$ydb_crypt_config
    echo " verify-depth: 7;" >> $ydb_crypt_config
    echo "    CAfile: "$PWD/certs/ca.crt";" >> $ydb_crypt_config
@@ -1531,7 +1531,7 @@ The most common scenario for bringing up a replicating instance is to take a bac
 
 .. parsed-literal::
    ./backup_repl startingA   #Preserve the backup of the replicating instance file that represents the state at the time of starting the instance. 
-   $ydb_dist/mumps -r %XCMD 'for i=1:1:10 set ^A(i)=i'
+   $ydb_dist/yottadb -r %XCMD 'for i=1:1:10 set ^A(i)=i'
    mkdir backupA   
    $ydb_dist/mupip backup -replinst=currentstateA -newjnlfile=noprevlink -bkupdbjnl=disable DEFAULT backupA
 
@@ -1579,7 +1579,7 @@ The following example demonstrates starting a replicating instance from the back
    ./repl_setup
    ./originating_start A backupA 4011
    ./backup_repl startingA   
-   $ydb_dist/mumps -r %XCMD 'for i=1:1:10 set ^A(i)=i'
+   $ydb_dist/yottadb -r %XCMD 'for i=1:1:10 set ^A(i)=i'
    ./backup_repl currentstateA
    mkdir backupA
    $ydb_dist/mupip backup -newjnlfile=noprevlink -bkupdbjnl=disable DEFAULT backupA
@@ -1653,7 +1653,7 @@ The following example runs a switchover in an A→B replication configuration.
    ./db_create
    ./repl_setup # enables replication and creates the replication instance file
    ./originating_start A B 4001 # starts the active Source Server (A->B)
-   $ydb_dist/mumps -r %XCMD 'for i=1:1:100 set ^A(i)=i'
+   $ydb_dist/yottadb -r %XCMD 'for i=1:1:100 set ^A(i)=i'
    ./repl_status #-SHOWBACKLOG and -CHECKHEALTH report
 
 **On B**:
@@ -1669,7 +1669,7 @@ The following example runs a switchover in an A→B replication configuration.
 **On A**:
 
 .. parsed-literal::
-   $ydb_dist/mumps -r %XCMD 'for i=1:1:50 set ^losttrans(i)=i' # perform some updates when replicating instance is not available. 
+   $ydb_dist/yottadb -r %XCMD 'for i=1:1:50 set ^losttrans(i)=i' # perform some updates when replicating instance is not available. 
    sleep 2
    ./originating_stop # Stops the active Source Server
 
@@ -1747,7 +1747,7 @@ A has been the originating instance, and B was a BC replicating instance, P was 
 A is performing transactions.
 
 .. parsed-literal::
-   $ydb_dist/mumps -r ^%XCMD 'set ^A(98)=99'
+   $ydb_dist/yottadb -r ^%XCMD 'set ^A(98)=99'
 
 **On B**:
 
@@ -1761,7 +1761,7 @@ B stops replicating.
 Shut down the originating instance.
 
 .. parsed-literal::
-   $ydb_dist/mumps -r ^%XCMD 'set ^A(99)=100'
+   $ydb_dist/yottadb -r ^%XCMD 'set ^A(99)=100'
    ./originating_stop
    
 **On B**:
@@ -1772,7 +1772,7 @@ B becomes the new originating instance, and creates a backup of the replication 
    ./originating_start B A 4010
    ./originating_start B P 4011
    ./backup_repl startB
-   $ydb_dist/mumps -r ^%XCMD 'set ^B(61)=0'
+   $ydb_dist/yottadb -r ^%XCMD 'set ^B(61)=0'
    
 **On P**:
 
@@ -1780,12 +1780,12 @@ P creates the supplementary instance file based on B.
 
 .. parsed-literal::
    ./suppl_setup M startB 4011 -updok
-   $ydb_dist/mumps -r ^%XCMD 'for i=39:1:40 set ^P(i)=i'
+   $ydb_dist/yottadb -r ^%XCMD 'for i=39:1:40 set ^P(i)=i'
    
 **On B**:
 
 .. parsed-literal::
-   $ydb_dist/mumps -r ^%XCMD 'set ^B(62)=1,^B(63)=1'
+   $ydb_dist/yottadb -r ^%XCMD 'set ^B(62)=1,^B(63)=1'
    
 **On A**:
 
@@ -1800,7 +1800,7 @@ A performs a rollback and creates a lost transaction file, starts again as a rep
 Lost transaction file is processed.
 
 .. parsed-literal::
-   $ydb_dist/mumps -r ^%XCMD 'set ^B(64)=1,^B(65)=1'
+   $ydb_dist/yottadb -r ^%XCMD 'set ^B(64)=1,^B(65)=1'
    cat A/yottadb.lost
 
 **The shutdown sequence is as follows**:
@@ -1869,7 +1869,7 @@ A is an originating instance to both B and P.
    ./originating_start A B 4010
    ./originating_start A P 4011
    ./backup_repl startA
-   $ydb_dist/mumps -r ^%XCMD 'for i=1:1:97 set ^A(i)=i'
+   $ydb_dist/yottadb -r ^%XCMD 'for i=1:1:97 set ^A(i)=i'
    
 **On B**:
 
@@ -1889,7 +1889,7 @@ P is a supplementary instance, with its own transactions.
    source ./ydbenv P r1.20_x86_64
    ./db_create
    ./suppl_setup P startA 4011 -updok
-   $ydb_dist/mumps -r ^%XCMD 'for i=1:1:40 set ^P(i)=i'
+   $ydb_dist/yottadb -r ^%XCMD 'for i=1:1:40 set ^P(i)=i'
 
 At switchover,
 
@@ -1905,7 +1905,7 @@ B stops replicating.
 A has more transactions.
 
 .. parsed-literal::
-   $ydb_dist/mumps -r ^%XCMD 'set ^A(98)=99'
+   $ydb_dist/yottadb -r ^%XCMD 'set ^A(98)=99'
    
 **On P**:
 
@@ -1919,7 +1919,7 @@ P stops replicating.
 A is shut down.
 
 .. parsed-literal::
-   $ydb_dist/mumps -r ^%XCMD 'set ^A(99)=100'
+   $ydb_dist/yottadb -r ^%XCMD 'set ^A(99)=100'
    ./originating_stop
 
 **On B**:
@@ -1930,7 +1930,7 @@ B starts as the new originating instance.
    ./originating_start B A 4010
    ./originating_start B P 4011
    ./backup_repl startB
-   $ydb_dist/mumps -r ^%XCMD 'set ^B(61)=0,^B(62)=1'
+   $ydb_dist/yottadb -r ^%XCMD 'set ^B(61)=0,^B(62)=1'
   
 **On P**
 
@@ -1939,7 +1939,7 @@ P has to roll back and become a supplementary instance to B.
 .. parsed-literal::
    ./rollback 4011 backward
    ./suppl_setup P startB 4011 -updok
-   $ydb_dist/mumps -r ^%XCMD 'for i=39:1:40 set ^P(i)=i'
+   $ydb_dist/yottadb -r ^%XCMD 'for i=39:1:40 set ^P(i)=i'
    
 **On A**:
 
@@ -1954,7 +1954,7 @@ A has to roll back and start replicating from B.
 Processes lost transaction files from A and P.
 
 .. parsed-literal::
-   $ydb_dist/mumps -r ^%XCMD 'set ^B(64)=1,^B(65)=1'
+   $ydb_dist/yottadb -r ^%XCMD 'set ^B(64)=1,^B(65)=1'
    cat A/yottadb.lost
    cat P/yottadb.lost
 
@@ -2012,7 +2012,7 @@ A is the originating instance to B and P.
    ./originating_start A B 4010
    ./originating_start A P 4011
    ./backup_repl startA
-   $ydb_dist/mumps -r ^%XCMD 'for i=1:1:97 set ^A(i)=i'
+   $ydb_dist/yottadb -r ^%XCMD 'for i=1:1:97 set ^A(i)=i'
 
 **On B**:
 
@@ -2032,7 +2032,7 @@ P is a supplementary instance of A.
    source ./ydbenv P r128
    ./db_create
    ./suppl_setup P startA 4011 -updok
-   $ydb_dist/mumps -r ^%XCMD 'for i=1:1:40 set ^P(i)=i'
+   $ydb_dist/yottadb -r ^%XCMD 'for i=1:1:40 set ^P(i)=i'
 
 At switchover,
 
@@ -2048,7 +2048,7 @@ B stops replicating.
 A has ongoing transactions.
 
 .. parsed-literal::
-   $ydb_dist/mumps -r ^%XCMD 'set ^A(98)=99'
+   $ydb_dist/yottadb -r ^%XCMD 'set ^A(98)=99'
    
 **On P**:
 
@@ -2062,7 +2062,7 @@ P stops replicating.
 The originating instance is shut down.
 
 .. parsed-literal::
-   $ydb_dist/mumps -r ^%XCMD 'set ^A(99)=100'
+   $ydb_dist/yottadb -r ^%XCMD 'set ^A(99)=100'
    ./originating_stop
    
 **On B**:
@@ -2073,7 +2073,7 @@ B becomes the new originating instance to A and P.
    ./originating_start B A 4010
    ./originating_start B P 4011
    ./backup_repl startB
-   $ydb_dist/mumps -r ^%XCMD 'set ^B(61)=0,^B(62)=1'
+   $ydb_dist/yottadb -r ^%XCMD 'set ^B(61)=0,^B(62)=1'
    
 **On P**:
 
@@ -2081,7 +2081,7 @@ P does not need to roll back due to application design and switches to be a supp
 
 .. parsed-literal::
    ./replicating_start_suppl_n P 4011 -updok -noresync
-   $ydb_dist/mumps -r ^%XCMD 'for i=39:1:40 set ^P(i)=i'
+   $ydb_dist/yottadb -r ^%XCMD 'for i=39:1:40 set ^P(i)=i'
    
 **On A**:
 
@@ -2094,7 +2094,7 @@ A has to roll back and then become a replicating instance.
 **On B**:
 
 .. parsed-literal::
-   $ydb_dist/mumps -r ^%XCMD 'set ^B(64)=1,^B(65)=1'
+   $ydb_dist/yottadb -r ^%XCMD 'set ^B(64)=1,^B(65)=1'
 
 **The shutdown sequence is as follows**:
 
@@ -2169,12 +2169,12 @@ P is a supplementary instance of A.
    source ./ydbenv P r128
    ./db_create
    ./suppl_setup P startA 4000 -updok
-   $ydb_dist/mumps -r %XCMD 'for i=1:1:38 set ^P(i)=i'
+   $ydb_dist/yottadb -r %XCMD 'for i=1:1:38 set ^P(i)=i'
    
 **On A**:
 
 .. parsed-literal::
-   $ydb_dist/mumps -r %XCMD 'for i=1:1:97 set ^A(i)=i'
+   $ydb_dist/yottadb -r %XCMD 'for i=1:1:97 set ^A(i)=i'
 
 At switchover,
 
@@ -2190,14 +2190,14 @@ B stops replicating.
 A has ongoing transactions.
 
 .. parsed-literal::
-   $ydb_dist/mumps -r %XCMD 'set ^A(98)=50'
+   $ydb_dist/yottadb -r %XCMD 'set ^A(98)=50'
    
 **On P**:
 
 P stops replicating A.
 
 .. parsed-literal::
-   $ydb_dist/mumps -r %XCMD 'for i=39:1:40 set ^P(i)=i'
+   $ydb_dist/yottadb -r %XCMD 'for i=39:1:40 set ^P(i)=i'
    ./replicating_stop
    
 **On A**:
@@ -2205,7 +2205,7 @@ P stops replicating A.
 The originating instance is shut down.
 
 .. parsed-literal::
-   $ydb_dist/mumps -r %XCMD 'set ^A(99)=100'
+   $ydb_dist/yottadb -r %XCMD 'set ^A(99)=100'
    ./originating_stop
    
 **On B**:
@@ -2339,12 +2339,12 @@ Q is a BC replicating instance of P.
 **On A**:
 
 .. parsed-literal::
-   $ydb_dist/mumps -r ^%XCMD 'for i=1:1:96 set ^A(i)=i'
+   $ydb_dist/yottadb -r ^%XCMD 'for i=1:1:96 set ^A(i)=i'
    
 **On P**
 
 .. parsed-literal::
-   $ydb_dist/mumps -r ^%XCMD 'for i=1:1:37 set ^P(i)=i'
+   $ydb_dist/yottadb -r ^%XCMD 'for i=1:1:37 set ^P(i)=i'
 
 At switchover,
 
@@ -2360,7 +2360,7 @@ Q stops replication.
 P stops replication.
 
 .. parsed-literal::
-   $ydb_dist/mumps -r ^%XCMD 'set ^P(38)=1000'
+   $ydb_dist/yottadb -r ^%XCMD 'set ^P(38)=1000'
    ./replicating_stop
    
 **On A**:
@@ -2368,7 +2368,7 @@ P stops replication.
 Ongoing transactions.
 
 .. parsed-literal:: 
-   $ydb_dist/mumps -r ^%XCMD 'set ^A(97)=1000,^A(98)=1000'
+   $ydb_dist/yottadb -r ^%XCMD 'set ^A(97)=1000,^A(98)=1000'
    
 **On B**:
 
@@ -2382,7 +2382,7 @@ B stops replication.
 The originating instance is shut down.
 
 .. parsed-literal::
-   $ydb_dist/mumps -r ^%XCMD 'set ^A(99)=1000'
+   $ydb_dist/yottadb -r ^%XCMD 'set ^A(99)=1000'
    ./originating_stop 
    
 **On B**:
@@ -2392,7 +2392,7 @@ B becomes the new originating instance to Q.
 .. parsed-literal::
    backup_repl startB
    ./originating_start B Q 4008
-   $ydb_dist/mumps -r ^%XCMD 'for i=1:1:62 set ^B(i)=i'
+   $ydb_dist/yottadb -r ^%XCMD 'for i=1:1:62 set ^B(i)=i'
    
 **On Q**:
 
@@ -2401,12 +2401,12 @@ Q does a rollback and becomes a supplementary instance to B.
 .. parsed-literal::
    ./rollback 4008 backward
    ./suppl_setup Q startB 4008 -updok
-   $ydb_dist/mumps -r ^%XCMD 'for i=1:1:74 set ^Q(i)=i'
+   $ydb_dist/yottadb -r ^%XCMD 'for i=1:1:74 set ^Q(i)=i'
    
 **On B**:
 
 .. parsed-literal::
-   $ydb_dist/mumps -r ^%XCMD 'for i=63:1:64 set ^B(i)=i'
+   $ydb_dist/yottadb -r ^%XCMD 'for i=63:1:64 set ^B(i)=i'
    ./originating_start B A 4004
    
 **On A**:
@@ -2420,7 +2420,7 @@ A does a rollback and becomes a BC replicating instance of B.
 **On Q**:
 
 .. parsed-literal::
-   $ydb_dist/mumps -r ^%XCMD 'for i=75:1:76 set ^Q(i)=i'
+   $ydb_dist/yottadb -r ^%XCMD 'for i=75:1:76 set ^Q(i)=i'
    ./originating_start Q P 4007
    ./backup_repl startQ
    
@@ -2437,7 +2437,7 @@ P  does a rollback and becomes a BC replicating instance of Q.
 The lost transaction files are processed.
 
 .. parsed-literal::
-   $ydb_dist/mumps -r ^%XCMD 'set ^Q(77)=1000'
+   $ydb_dist/yottadb -r ^%XCMD 'set ^Q(77)=1000'
    cat A/gtm.lost
    cat P/gtm.lost
 
@@ -2524,17 +2524,17 @@ This example adds the mapping for global ^A to a new database file A.dat in an A
    ./repl_setup
    ./replicating_start B 4001
    source ./ydbenv A r128 
-   $ydb_dist/mumps -r %XCMD 'for i=1:1:10 set ^A(i)=i'
+   $ydb_dist/yottadb -r %XCMD 'for i=1:1:10 set ^A(i)=i'
    ./repl_status
    source ./ydbenv B r128
    ./replicating_stop
    cp B/yottadb.gld B/prior.gld
-   $ydb_dist/mumps -r ^GDE @updgld
+   $ydb_dist/yottadb -r ^GDE @updgld
    ./db_create
    mkdir backup_B
    $ydb_dist/mupip backup "*" backup_B  -replinst=backup_B/yottadb.repl
    $ydb_dist/mupip set -journal=on,before_images,filename=B/yottadb.mjl -noprevjnlfile -region "DEFAULT"
-   $ydb_dist/mumps -r %XCMD 'merge ^A=^|"B/prior.gld"\|A'
+   $ydb_dist/yottadb -r %XCMD 'merge ^A=^|"B/prior.gld"\|A'
    $ydb_dist/mupip set -replication=on -region AREG
    ./originating_start B A 4001
    source ./ydbenv A r128 
@@ -2544,12 +2544,12 @@ This example adds the mapping for global ^A to a new database file A.dat in an A
    ./replicating_start A 4001
    ./replicating_stop 
    cp A/yottadb.gld A/prior.gld
-   $ydb_dist/mumps -r ^GDE @updgld
+   $ydb_dist/yottadb -r ^GDE @updgld
    ./db_create
    mkdir backup_A
    $ydb_dist/mupip backup "*" backup_A -replinst=backup_A/ydb.repl
    $ydb_dist/mupip set -journal=on,before_images,filename=A/yottadb.mjl -noprevjnlfile -region "DEFAULT"
-   $ydb_dist/mumps -r %XCMD 'merge ^A=^|"A/prior.gld"\|A'
+   $ydb_dist/yottadb -r %XCMD 'merge ^A=^|"A/prior.gld"\|A'
    $ydb_dist/mupip set -replication=on -region AREG
    ./replicating_start A 4001
    ./repl_status
@@ -2660,7 +2660,7 @@ Here is an example to upgrade A and B deployed in an A→B replication configura
    ./repl_setup
    ./replicating_start B 4001
    source ./ydbenv A r128
-   $ydb_dist/mumps -r %XCMD 'for i=1:1:100 set ^A(i)=i'
+   $ydb_dist/yottadb -r %XCMD 'for i=1:1:100 set ^A(i)=i'
    ./repl_status
    source ./ydbenv B r128
    ./replicating_stop
@@ -2674,7 +2674,7 @@ Perform a switchover to make B the originating instance.
 
 .. parsed-literal::
    source ./ydbenv A r128
-   $ydb_dist/mumps -r ^GDE exit
+   $ydb_dist/yottadb -r ^GDE exit
    $ydb_dist/mupip set -journal=on,before_images,filename=A/yottadb.mjl -noprevjnlfile -region "DEFAULT"
    
    #Perform the upgrade 
@@ -2688,7 +2688,7 @@ A is now upgraded to r1.22 and is ready to resume the role of the originating in
 .. parsed-literal::
    ./originating_start A B 4001
    source ./env B r1.20
-   $ydb_dist/mumps -r ^GDE exit
+   $ydb_dist/yottadb -r ^GDE exit
    $ydb_dist/mupip set -journal=on,before_images,filename=B/yottadb.mjl -noprevjnlfile -region "DEFAULT"
    
    #Perform the upgrade 
@@ -2732,7 +2732,7 @@ Creating a new Replication Instance File
 
 You do not need to create a new replication instance file except when you upgrade from a very old YottaDB version. Unless stated in the release notes of your YottaDB version, your instance file does not need to be upgraded. If you are creating a new replication instance file for any administration purpose, remember that doing so will remove history records which may prevent it from resuming replication with other instances. To create a new replication instance file, follow these steps:
 
-* Shut down all mumps, MUPIP and DSE processes except Source and Receiver Server processes; then shut down the Receiver Server (and with it, the Update Process) and all Source Server processes. Use MUPIP RUNDOWN to confirm that all database files of the instance are closed and there are no processes accessing them.
+* Shut down all yottadb, MUPIP and DSE processes except Source and Receiver Server processes; then shut down the Receiver Server (and with it, the Update Process) and all Source Server processes. Use MUPIP RUNDOWN to confirm that all database files of the instance are closed and there are no processes accessing them.
 
 * Create a new replication instance file (you need to provide the instance name and instance file name, either with command line options or in environment variables, as described in other examples of this section):
 
@@ -3236,19 +3236,19 @@ For more information on recovering originating and replicating instances from WA
 Example:
 
 .. parsed-literal::
-   $ mupip set -replication=on -file mumps.dat
+   $ mupip set -replication=on -file yottadb.dat
 
-This example enables database replication and turns on before-image journaling for mumps.dat.
-
-.. parsed-literal::
-   $ mupip set -replication=on -journal=nobefore_image -file mumps.dat
-
-This example enables database replication and turns on no-before-image journaling for mumps.dat.
+This example enables database replication and turns on before-image journaling for yottadb.dat.
 
 .. parsed-literal::
-   $ mupip set -replication=off -file mumps.dat
+   $ mupip set -replication=on -journal=nobefore_image -file yottadb.dat
 
-This example turns off database replication for mumps.dat. 
+This example enables database replication and turns on no-before-image journaling for yottadb.dat.
+
+.. parsed-literal::
+   $ mupip set -replication=off -file yottadb.dat
+
+This example turns off database replication for yottadb.dat. 
 
 +++++++++++++++++++++++++++++++++++++++
 Creating the Replication Instance File
@@ -3449,7 +3449,7 @@ Specifies the size of the Journal Pool. The server rounds the size up or down to
 Specifies the complete path of the filter program and any associated arguments. If you specify arguments, then enclose the command string in quotation marks. If a filter is active, the Source Server passes the entire output stream to the filter as input. Then, the output from the filter stream passes to the replicating instance. If the filter program is an M program with entry-ref OLD2NEW^FILTER, specify the following path:
 
 .. parsed-literal::
-   filter='"$ydb_dist/mumps -run OLD2NEW^FILTER"'
+   filter='"$ydb_dist/yottadb -run OLD2NEW^FILTER"'
 
 Write the filter as a UNIX process that takes its input from STDIN and writes its output to STDOUT.
 
@@ -3461,7 +3461,7 @@ Example:
      extfilter
      ; A command like mupip replic -source -start -buffsize=$ydb_buffsize 
      ; -instsecondary=$secondary_instance -secondary=$IP_Address:$portno  
-     ; -filter='"$ydb_dist/mumps -run ^OLD2NEW^FILTER"' -log=$SRC_LOG_FILE 
+     ; -filter='"$ydb_dist/yottadb -run ^OLD2NEW^FILTER"' -log=$SRC_LOG_FILE 
      ; deploys this filter on the Source Server. 
      set $ztrap="goto err"
      set TSTART="08"
@@ -4338,10 +4338,10 @@ The DSE dump -fileheader -u[pdproc] command can be used to get a dump of the fil
 .. parsed-literal::
    scylla ~/demo 5:54pm 1048: dse dump -fileheader -updproc
 
-   File    /xyz/demo/mumps.dat
+   File    /xyz/demo/yottadb.dat
    Region  DEFAULT
 
-   File            /xyz/demo/mumps.dat
+   File            /xyz/demo/yottadb.dat
    Region          DEFAULT
    Date/Time       20-FEB-2018 17:54:37 [$H = 60040,64477]
    Access method                          BG  Global Buffers                1024
@@ -4367,7 +4367,7 @@ The DSE dump -fileheader -u[pdproc] command can be used to get a dump of the fil
    Journal Buffer Size                   128  Journal Alignsize              128
    Journal AutoSwitchLimit           8388600  Journal Epoch Interval         300
    Journal Yield Limit                     8  Journal Sync IO              FALSE
-   Journal File: /xyz/demo/mumps.mjl
+   Journal File: /xyz/demo/yottadb.mjl
    Mutex Hard Spin Count                 128  Mutex Sleep Spin Count         128
    Mutex Spin Sleep Time                2048  KILLs in progress                0
    Replication State                      ON  Region Seqno    0x0000000000000001

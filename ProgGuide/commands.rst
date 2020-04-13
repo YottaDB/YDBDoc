@@ -2609,7 +2609,7 @@ ZCOMpile
 
 The ZCOMPILE command invokes the YottaDB compiler from within the YottaDB run-time environment.
 
-Within YottaDB itself, ZCOMPILE provides the functionality of the mumps command, except for mumps -direct.
+Within YottaDB itself, ZCOMPILE provides the functionality of the yottadb command, except for yottadb -direct.
 
 The format of the ZCOMPILE command is:
 
@@ -2617,11 +2617,11 @@ The format of the ZCOMPILE command is:
    ZCOM[PILE][:tvexpr] expr[,...]
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
-* The expression argument specifies one or more relative or absolute paths to filenames, which must include the .m extension. If the file specification does not include a .m extension, ZCOMPILE assumes a default file extension of ".m". Wildcards are acceptable in the path specification. The specification can be optionally prefixed by qualifiers valid for a mumps command.
+* The expression argument specifies one or more relative or absolute paths to filenames, which must include the .m extension. If the file specification does not include a .m extension, ZCOMPILE assumes a default file extension of ".m". Wildcards are acceptable in the path specification. The specification can be optionally prefixed by qualifiers valid for a yottadb command.
 
 The $ZCSTATUS intrinsic special variable holds the value of the status code for the compilation performed by a ZCOMPILE command.
 
-For a description of the arguments and qualifiers of the mumps command, refer to `Chapter 3: “Development Cycle” <./devcycle.html>`_.
+For a description of the arguments and qualifiers of the yottadb command, refer to `Chapter 3: “Development Cycle” <./devcycle.html>`_.
 
 +++++++++++++++++++++++++++++
 Examples of ZCOMPILE
@@ -2781,7 +2781,7 @@ ZGOTO resembles HALT (and not QUIT) in that it causes an exit regardless of the 
 
 ZGOTO $ZLEVEL:LABEL^ROUTINE produces identical results to GOTO LABEL^ROUTINE. ZGOTO $ZLEVEL-1 responds like a QUIT (followed by ZCONTINUE, if in Direct Mode). If the integer expression evaluates to a value greater than the current value of $ZLEVEL or less than zero (0), YottaDB issues a run-time error.
 
-If ZGOTO has no entryref, it performs some number of implicit QUITs and transfers control to the next command at the specified level. If ZGOTO has no argument, it behaves like ZGOTO 1, which resumes operation of the lowest level YottaDB routine as displayed by ZSHOW "S". In the image invoked by $ydb_dist mumps -direct, a ZGOTO without arguments returns the process to Direct Mode.
+If ZGOTO has no entryref, it performs some number of implicit QUITs and transfers control to the next command at the specified level. If ZGOTO has no argument, it behaves like ZGOTO 1, which resumes operation of the lowest level YottaDB routine as displayed by ZSHOW "S". In the image invoked by $ydb_dist yottadb -direct, a ZGOTO without arguments returns the process to Direct Mode.
 
 ZGOTO provides a useful debugging tool in Direct Mode. However, because ZGOTO is not conducive to structured coding, it is best to restrict its use in production programs to error handling. For more information on YottaDB error handling, refer to `Chapter 13: “Error Processing” <./errproc.html>`_.
 
@@ -2916,7 +2916,7 @@ The format of the ZLINK command is:
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
 * The optional first expression specifies the pathname of a routine to ZLINK; if ZLINK has an argument, it not only adds the routine to the image, but also sets $ZSOURCE=expr.
 * If ZLINK has no argument, or expr="", it uses value of $ZSOURCE as the routine specification filename; at least two (2) spaces must follow a ZLINK command with no argument to separate it from the next command on the line.
-* The optional second expression specifies a string holding MUMPS command qualifiers delimited by a dash (-); the qualifiers control compile options when the current ZLINK requires a compile; if ZLINK omits the second expression, the command uses the $ZCOMPILE intrinsic special variable to determine the compile qualifiers.
+* The optional second expression specifies a string holding yottadb command qualifiers delimited by a dash (-); the qualifiers control compile options when the current ZLINK requires a compile; if ZLINK omits the second expression, the command uses the $ZCOMPILE intrinsic special variable to determine the compile qualifiers.
 * An indirection operator and an expression atom evaluating to a list of one or more ZLINK arguments form a legal argument for a ZLINK.
 * When ZLINK encounters a bad object file it produces an INVOBJFILE error that identifies the problem object file.
 
@@ -3529,7 +3529,7 @@ For process that has access to two database files produces results like the foll
    NTW:203,NTR:4,NBW:212,NBR:414,NR0:0,NR1:0,NR2:0,NR3:0,TTW:1,TTR:0,TRB:0,TBW:2,TBR:6,
    TR0:0,TR1:0,TR2:0,TR3:0,TR4:0,TC0:0,TC1:0,TC2:0,TC3:0,TC4:0,ZTR:0,DFL:0,DFS:0,JFL:0,JFS:0,JBB:0,JFB:0,JFW:0,JRL:0,JRP:0,
    JRE:0,JRI:0,JRO:0,JEX:0,DEX:0,CAT:4,CFE:0,CFS:0,CFT:0,CQS:0,CQT:0,CYS:0,CYT:0,BTD:0
-   GLD:/home/gtmuser1/.yottadb/r120/g/mumps.gld,REG:DEFAULT,SET:205,KIL:0,GET:1,
+   GLD:/home/gtmuser1/.yottadb/r120/g/yottadb.gld,REG:DEFAULT,SET:205,KIL:0,GET:1,
    DTA:0,ORD:0,ZPR:0,QRY:0,LKS:0,LKF:0,CTN:411,DRD:9,DWT:15,NTW:2
    03,NTR:4,NBW:212,NBR:414,NR0:0,NR1:0,NR2:0,NR3:0,TTW:1,TTR:0,TRB:0,TBW:2,TBR:6,TR0:0,
    TR1:0,TR2:0,TR3:0,TR4:0,TC0:0,TC1:0,TC2:0,TC3:0,TC4:0

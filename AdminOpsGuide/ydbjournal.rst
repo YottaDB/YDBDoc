@@ -554,7 +554,7 @@ YottaDB treats the filename as having two components - basename and extension. T
 
 The convention of the default value for the FILENAME is as follows:
 
-* YottaDB takes the basename of the database filename as the basename for the journal file with an extension of mjl if the database has a dat extension. For example, database name yottadb.dat results in a default name yottadb.mjl. If the database filename does not have a dat extension, YottaDB replaces all occurrences of periods (.) with underscores (_) with an extension of mjl and takes the full database filename. For example, database name mumps.acn results in a default name mumps_acn.mjl. Therefore, by default, a journal file has an extension of mjl unless you explicitly specify a different extension with the FILENAME journal option. If the new journal filename (the one specified in the FILENAME option or the default) already exists, YottaDB renames the existing file with the string "_YYYYJJJHHMMSS" appended to the existing file extension where the string denotes the time of creation of the existing journal file in the following format:
+* YottaDB takes the basename of the database filename as the basename for the journal file with an extension of mjl if the database has a dat extension. For example, database name yottadb.dat results in a default name yottadb.mjl. If the database filename does not have a dat extension, YottaDB replaces all occurrences of periods (.) with underscores (_) with an extension of mjl and takes the full database filename. For example, database name yottadb.acn results in a default name yottadb_acn.mjl. Therefore, by default, a journal file has an extension of mjl unless you explicitly specify a different extension with the FILENAME journal option. If the new journal filename (the one specified in the FILENAME option or the default) already exists, YottaDB renames the existing file with the string "_YYYYJJJHHMMSS" appended to the existing file extension where the string denotes the time of creation of the existing journal file in the following format:
 
  .. parsed-literal::
     YYYY      4-digit-year                              such as 2011 
@@ -563,11 +563,11 @@ The convention of the default value for the FILENAME is as follows:
     MM       2-digit minute                             such as 40 
     SS       2-digit seconds                            such as 30
 
-Assuming the above example for the string value, YottaDB renames a journal file mumps.mjl to mumps.mjl_2018199144030 when it switches to a new journal file.
+Assuming the above example for the string value, YottaDB renames a journal file yottadb.mjl to yottadb.mjl_2018199144030 when it switches to a new journal file.
 
 * If YottaDB detects that the rename-logic yields a filename that already exists, the string "_N[N[N[N...]]]" is appended to the renamed filename where "N[N[N...]]" denotes the sequence of numbers 0,1,2,3,4,5,6,7,8,9,90,91,92,93,94,95,96,97,98,99,990,991,....YottaDB tries all numbers from the order in the above sequence until it finds a non-existing rename-filename.
 
-  Taking the same example as above, in case mumps.mjl_2010199144030 and mumps.mjl_2010119144030_0 already exists, the rename string would be mumps.mjl_2010199144030_1.
+  Taking the same example as above, in case yottadb.mjl_2010199144030 and yottadb.mjl_2010119144030_0 already exists, the rename string would be yottadb.mjl_2010199144030_1.
 
 * If the existing file renaming scheme or the default journal file naming scheme discussed above results in a filename longer than 255 characters (due to the suffix creation rules), YottaDB produces an error and turns off journaling. 
 
@@ -808,7 +808,7 @@ The environment variable ydb_mupjnl_parallel provides a value when the MUPIP JOU
 
 Instructs MUPIP JOURNAL to initiate database recovery. -RECOVER initiates the central JOURNAL operation for non-replicated databases. From the list of JOURNAL action qualifiers, select RECOVER alone or with any other action qualifiers except -ROLLBACK.
 
--RECOVER -FORWARD with time qualifiers initiates forward recovery. Forward recovery ignores the current journaling state of the target database file. It disables journaling of the target database file, (if currently ENABLE and ON), while playing forward the database updates. However, it restores the journaling state of the database at the end of a successful recovery (if necessary), except when journaling is ENABLE'd and ON before the recovery. In the latter case, the journaling state at the end of a successful recovery, is switched to ENABLE and OFF. No journaling is performed for the logical updates to the database for JOURNAL -RECOVER -FORWARD. If the target database's current transaction number is less than the first transaction number to be processed in the specified journal file for that region, -RECOVER attempts to include previous generation journal file(s) in its processing, unless the -NOCHAIN qualifier is specified. Following the successive previous links of journal files -RECOVER tries to include previous generations of journal files until the transaction number when the journal file was created is less than, or equal to that of the target database. -RECOVER issues one or more informational messages when it includes previous generation journal files. If target database's current transaction number is not equal to the first transaction number of the earliest journal file to be processed for a region, -RECOVER exits with an error. If multiple journal files for a single region are specified with -RECOVER -FORWARD, it behaves as if -NOCHAIN was specified. If the journal files are not a complete set (for example mumps1.mjl and mumps3.mjl were specified, with mumps2.mjl missing from the command line), MUPIP JOURNAL produces an error because the journal files specified are discontinuous in terms of database transaction numbers. On the other hand, specifying just mumps3.mjl automatically includes mumps2.mjl and mumps1.mjl in the recovery.
+-RECOVER -FORWARD with time qualifiers initiates forward recovery. Forward recovery ignores the current journaling state of the target database file. It disables journaling of the target database file, (if currently ENABLE and ON), while playing forward the database updates. However, it restores the journaling state of the database at the end of a successful recovery (if necessary), except when journaling is ENABLE'd and ON before the recovery. In the latter case, the journaling state at the end of a successful recovery, is switched to ENABLE and OFF. No journaling is performed for the logical updates to the database for JOURNAL -RECOVER -FORWARD. If the target database's current transaction number is less than the first transaction number to be processed in the specified journal file for that region, -RECOVER attempts to include previous generation journal file(s) in its processing, unless the -NOCHAIN qualifier is specified. Following the successive previous links of journal files -RECOVER tries to include previous generations of journal files until the transaction number when the journal file was created is less than, or equal to that of the target database. -RECOVER issues one or more informational messages when it includes previous generation journal files. If target database's current transaction number is not equal to the first transaction number of the earliest journal file to be processed for a region, -RECOVER exits with an error. If multiple journal files for a single region are specified with -RECOVER -FORWARD, it behaves as if -NOCHAIN was specified. If the journal files are not a complete set (for example yottadb1.mjl and yottadb3.mjl were specified, with yottadb2.mjl missing from the command line), MUPIP JOURNAL produces an error because the journal files specified are discontinuous in terms of database transaction numbers. On the other hand, specifying just yottadb3.mjl automatically includes yottadb2.mjl and yottadb1.mjl in the recovery.
 
 -RECOVER -BACKWARD with time qualifiers initiates backward recovery. For backward recovery, the target database file should be the same as when YottaDB wrote the last complete transaction to the journal. Because the database may be in an indeterminate state due to a failure, exact checks for this match are not possible. If the target database has journaling DISABLE'd (or ENABLE, OFF), -RECOVER -BACKWARD exits with an error message.
 
@@ -1006,7 +1006,7 @@ The show-option-list includes (these are not case-sensitive):
 The following example displays the cryptographic hash of the symmetric key stored in the journal file header (the output is one long line). 
 
 .. parsed-literal::
-       $ mupip journal -show -backward mumps.mjl 2>&1 | grep hash
+       $ mupip journal -show -backward yottadb.mjl 2>&1 | grep hash
        Journal file hash F226703EC502E975784
        8EEC733E1C3CABE5AC146C60F922D0E7D7CB5E
        2A37ABA005CE98D908B219249A0464F5BB622B72F5FDA
@@ -1322,12 +1322,12 @@ Specifies globals for MUPIP JOURNAL to include or exclude from processing. You m
 The global-list contains one or more global-names (without subscripts) preceded by a caret symbol (^). To include more than one global, use one of the following syntaxes.
 
 .. parsed-literal::
-   $ mupip journal -forward -extract -global="^A*,^C" mumps.mjl 
+   $ mupip journal -forward -extract -global="^A*,^C" yottadb.mjl 
 
 or 
 
 .. parsed-literal::
-   $ mupip journal -forward -extract -global="(^A*,^C)" mumps.mjl 
+   $ mupip journal -forward -extract -global="(^A*,^C)" yottadb.mjl 
 
 The names may include the asterisk (*) wildcard. That is, -GLOBAL="^A*" selects all global variables with names starting with A. The entire list or each name may optionally be preceded by a tilde (~), requiring JOURNAL to exclude database updates to the specified global(s). When the global-list with a MUPIP JOURNAL -GLOBAL does not start with a tilde sign (~), JOURNAL processes only the explicitly named globals. By default, JOURNAL processes all globals.
 
@@ -1338,12 +1338,12 @@ Example:
 To extract all ^GBL* except for ^GBLTMP:
 
 .. parsed-literal::
-   $ mupip journal -extract -global="^GBL*,~^GBLTMP" -forward mumps.mjl
+   $ mupip journal -extract -global="^GBL*,~^GBLTMP" -forward yottadb.mjl
 
 To extract all ^GBL except for ^GBL(1,"TMP"):
 
 .. parsed-literal::
-   $ mupip journal -extract -global=\"^GBL,~^GBL\(1,\"\"TMP\"\"\)\" -forward mumps.mjl
+   $ mupip journal -extract -global=\"^GBL,~^GBL\(1,\"\"TMP\"\"\)\" -forward yottadb.mjl
 
 The backslash (\) delimiter characters are required in UNIX to pass MUPIP the double quotes (") of the string subscript.
 

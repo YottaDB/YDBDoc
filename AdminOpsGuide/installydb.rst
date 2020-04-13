@@ -140,7 +140,7 @@ ydbinstall is a stand-alone YottaDB installation script that installs YottaDB us
 
 * Options marked with \* are likely to be of interest primarily to YottaDB developers
         
-* Version is defaulted from the mumps file if one exists in the same directory as the installer
+* Version is defaulted from the yottadb file if one exists in the same directory as the installer
 
 * This version must run as root.
 
