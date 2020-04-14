@@ -1599,8 +1599,12 @@ wishes to set its own signal handlers for signals not used by YottaDB,
 it can call :code:`ydb_init()` before setting
 its signal handlers.
 
-:code:`ydb_init()` returns :code:`YDB_OK` on success, and a positive non-zero value on error.
-If :code:`ydb_init()` has already been called, later calls to :code:`ydb_init()` in the same process return :code:`YDB_OK` with no further action, since the YottaDB runtime has already been initialized.
+:code:`ydb_init()` returns :code:`YDB_OK` on success, and a positive non-zero value otherwise.
+On failure, the error message text corresponding to the non-zero return value can be obtained
+by immediately calling :code:`ydb_zstatus()`.
+
+If :code:`ydb_init()` has already been called, later calls to :code:`ydb_init()` in the same
+process return :code:`YDB_OK` with no further action, since the YottaDB runtime has already been initialized.
 
 :code:`ydb_init()` can be used with both the Simple API and threaded Simple API.
 
