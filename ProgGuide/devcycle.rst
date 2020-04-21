@@ -529,9 +529,9 @@ For example, yottadb \*.m compiles all files in the current default directory wi
    When forming routine names, the compiler truncates object filenames to a maximum length of 31 characters. For example, for a source file called Adatabaseenginewithscalabilityproven.m the compiler generates an object file called Adatabaseenginewithscalabilityp.o. Ensure that the first 31 characters of source file names are unique.
 
 
-+++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++
 Qualifiers for the yottadb command
-+++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++
 
 The yottadb command allows qualifiers that customize the type and form of the compiler output to meet specific programming needs. Yottadb command qualifiers may also appear as a modifier to the argument to the ZLINK and ZCOMPILE commands. The following section describes the yottadb command qualifiers. Make sure the arguments are specified ahead of file name and after the command itself.
 
@@ -785,7 +785,7 @@ Processing Errors from Direct Mode and Shell
 ---------------------------------------------
 
 +----------------------------+---------------------------------------------------------------------------+-------------------------------------------------------------------------+
-|                            | Executing in Direct Mode                                                  | Executing from the Shell (yottadb -run ^routine)                          |
+|                            | Executing in Direct Mode                                                  | Executing from the Shell (yottadb -run ^routine)                        |
 +============================+===========================================================================+=========================================================================+
 | Usage                      | Suitable for Development and Debugging                                    | Suitable for production                                                 |
 +----------------------------+---------------------------------------------------------------------------+-------------------------------------------------------------------------+
