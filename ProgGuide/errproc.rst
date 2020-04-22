@@ -163,7 +163,7 @@ YottaDB provides the error handling facilities described in the M standard. In a
 +===============================+=============================================================================================================================================================================+
 | OPEN/USE/CLOSE EXCEPTION      | Provides a deviceparameter specifying an XECUTE string or entryref that YottaDB invokes upon encountering a device-related exception condition.                             |
 +-------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| MUMPS -list ZLINK :"-list"    | Creates a listing file of all the errors detected by the compiler and detects syntax errors. Useful in the process of re-editing program to correct errors.                 |
+| yottadb -list ZLINK :"-list"  | Creates a listing file of all the errors detected by the compiler and detects syntax errors. Useful in the process of re-editing program to correct errors.                 |
 +-------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Zgoto                         | Provides for removing multiple levels from the M invocation stack.                                                                                                          |
 +-------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------+

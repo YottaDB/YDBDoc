@@ -186,7 +186,7 @@ ARCTLMAXHIGH
 
 ARCTLMAXHIGH, The environment variable XXXX = YYYY is too high. Assuming the maximum acceptable value of ZZZZ
 
-Run Time Warning: The environment variable named XXXX that controls the maximum number of auto-relink routine entries is assigned a value (YYYY) that is too high. MUMPS will set the maximum routine count to ZZZZ and continue normal operation.
+Run Time Warning: The environment variable named XXXX that controls the maximum number of auto-relink routine entries is assigned a value (YYYY) that is too high. YottaDB will set the maximum routine count to ZZZZ and continue normal operation.
 
 Action: Please set the environment variable XXXX to a value between 1,000 and 16,000,000.
 
@@ -196,7 +196,7 @@ ARCTLMAXLOW
 
 ARCTLMAXLOW, The environment variable XXXX = YYYY is too low. Assuming the minimum acceptable value of ZZZZ
 
-Run Time Warning: The environment variable named XXXX that controls the maximum number of auto-relink routine entries is assigned a value (YYYY) that is too low. MUMPS will set the maximum routine count to ZZZZ and continue normal operation.
+Run Time Warning: The environment variable named XXXX that controls the maximum number of auto-relink routine entries is assigned a value (YYYY) that is too low. YottaDB will set the maximum routine count to ZZZZ and continue normal operation.
 
 Action: Please set the environment variable XXXX to a value between 1,000 and 16,000,000.
 
@@ -5880,7 +5880,7 @@ INVOBJFILE, Cannot ZLINK object file ffff due to unexpected format
 
 Run Time Error: This indicates that ZLINK encountered invalid records in the object file ffff it was trying to integrate into the image.
 
-Action: Determine whether ZLINK has the intended argument. If the object file has been damaged, recreate it with a ZLINK that specifies the source file using a .M extension, a ZCOMPILE or a mumps command at the shell.
+Action: Determine whether ZLINK has the intended argument. If the object file has been damaged, recreate it with a ZLINK that specifies the source file using a .m extension, a ZCOMPILE or a yottadb command at the shell.
 
 
 ----------------------
@@ -8079,7 +8079,7 @@ MAXGTMPATH
 
 MAXGTMPATH, The executing module path is greater than the maximum xxxx
 
-Run Time Error: This indicates that the path specified for the mumps executable environment variable has a length limitation of xxxx.
+Run Time Error: This indicates that the path specified for the yottadb executable environment variable has a length limitation of xxxx.
 
 Action: Move the directory or use a link to shorten the path.
 
@@ -8179,7 +8179,7 @@ MERGEDESC
 
 MERGEDESC, Merge operation not possible. xxxx is descendent of yyyy.
 
-Run Time Error: This indicates that YottaDB was not able to MERGE xxxx into yyyy or vice versa, because xxxx is a descendent of yyyy. When merging global variables, specifications included extended references - the MERGE command issues a MERGDESC error if any part of the source or target tree, as mapped, is a descendant of the other. In MERGE ^|"x.gld"| a(1)=^|"mumps.gld"| ^a there is no error if mumps.gld maps ^a to different database files than those to which x.gld maps ^a(1). A MERGDESC error occurs if any part of ^a as mapped by mumps.gld overlaps any part of ^a(1) as mapped by x.gld.
+Run Time Error: This indicates that YottaDB was not able to MERGE xxxx into yyyy or vice versa, because xxxx is a descendent of yyyy. When merging global variables, specifications included extended references - the MERGE command issues a MERGDESC error if any part of the source or target tree, as mapped, is a descendant of the other. In MERGE ^\|"x.gld"\|a(1)=^\|"yottadb.gld"\|a there is no error if yottadb.gld maps ^a to different database files than those to which x.gld maps ^a(1). A MERGDESC error occurs if any part of ^a as mapped by yottadb.gld overlaps any part of ^a(1) as mapped by x.gld.
 
 Action: Modify the routine to avoid MERGE operation between two variables where one is the descendant of the other.
 
@@ -12263,9 +12263,9 @@ RUNPARAMERR
 
 RUNPARAMERR, Error accessing parameter for run command
 
-Run Time Error: This indicates that a MUMPS -RUN command had a missing or invalid argument.
+Run Time Error: This indicates that a yottadb -RUN command had a missing or invalid argument.
 
-Action: Ensure that a MUMPS -RUN has an argument that specifies a valid entryref ([label]^routinename).
+Action: Ensure that a yottadb -RUN has an argument that specifies a valid entryref ([label]^routinename).
 
 -----------------
 RWARG 

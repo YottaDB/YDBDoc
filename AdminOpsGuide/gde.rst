@@ -567,8 +567,8 @@ Maps a namespace to a region in the global directory. The format of the ADD -NAM
 Example:
 
 .. parsed-literal::
-   GDE> add    -name IMPL                             -region=OTHERMUMPS  ! Map MUMPS implementations to OTHERMUMPS
-   GDE> add    -name IMPL("YottaDB")                  -region=MYMUMPS     ! While mapping YottaDB to MYMUMPS
+   GDE> add    -name IMPL                             -region=OTHERM  ! Map M implementations to OTHERM
+   GDE> add    -name IMPL("YottaDB")                  -region=MYM     ! While mapping YottaDB to MYM
 
 These examples map an entire subtree of a global to a region.
 

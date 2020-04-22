@@ -136,7 +136,7 @@ the API, it initializes signal handling as follows:
   Ctrl-C handler (if one exists) and if that call returns, exits with a
   -1 return code. Also, if a call-in is done in this environment and the
   M code uses either the CENABLE or NOCENABLE device parameters, those
-  parameters are IGNORED. In M mode with a mumps executable, behavior is
+  parameters are IGNORED. In M mode with a yottadb executable, behavior is
   as documented in the `M Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/index.html>`_.
 - :code:`SIGUSR1` – As YottaDB uses this signal to asynchronously
   execute the M code in the `$zinterrupt intrinsic special variable

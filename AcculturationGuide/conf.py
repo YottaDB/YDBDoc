@@ -29,7 +29,7 @@ import sphinx_rtd_theme
 # needs_sphinx = '1.0'
 
 def setup(app):
-            app.add_stylesheet('css/custom.css')
+            app.add_css_file('css/custom.css')
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom

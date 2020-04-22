@@ -85,11 +85,11 @@ Examples of $CHAR()
 Example:
 
 .. parsed-literal::
-   YDB>write $char(77,85,77,80,83,7)
-   MUMPS
+   YDB>write $char(77,7)
+   M
    YDB>
 
-This example uses $CHAR() to WRITE the word MUMPS and signal the terminal "bell."
+This example uses $CHAR() to WRITE the letter M and signal the terminal "bell."
 
 Example:
 
@@ -238,11 +238,11 @@ Example:
        for i=1:1:$length(x) quit:" "'=$extract(x,i)
        for j=$length(x):-1:1 quit:" "'=$extract(x,j)
        quit $extract(x,i,j)
-   YDB>set str=" MUMPS "
+   YDB>set str=" M "
    YDB>write $length(str)
-   7
+   3
    YDB>write $length($$^trim(str))
-   5
+   1
    YDB>
 
 This extrinsic function uses $EXTRACT() to remove extra leading and trailing spaces from its argument.
@@ -303,13 +303,13 @@ This example uses a loop with $FIND() to locate all occurrences of "AN" in "BANA
 Example:
 
 .. parsed-literal::
-   YDB>set str="MUMPS databases are hierarchical"
+   YDB>set str="M databases are hierarchical"
    YDB>Write $find(str," ")
-   7
+   3
    YDB>Write $find(str,"Z")
    0
    YDB>Write $find(str,"d",1)
-   8
+   4
    YDB>Write $find(str,"d",10)
    0
 
