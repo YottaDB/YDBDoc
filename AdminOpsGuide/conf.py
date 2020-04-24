@@ -1,3 +1,14 @@
+#################################################################
+#                                                               #
+# Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.       #
+# All rights reserved.                                          #
+#                                                               #
+#       This source code contains the intellectual property     #
+#       of its copyright holder(s), and is made available       #
+#       under a license.  If you do not know the terms of       #
+#       the license, please stop and do not read further.       #
+#                                                               #
+#################################################################
 # -*- coding: utf-8 -*-
 #
 # GTMAdminOps documentation build configuration file, created by
@@ -54,8 +65,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Administration and Operations Guide'
-copyright = u'2017-2019, YottaDB LLC'
-author = u'Ranjani Hathaway'
+copyright = u'2017-2020, YottaDB LLC'
+author = u'YottaDB Team'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
