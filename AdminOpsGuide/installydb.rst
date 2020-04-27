@@ -1,3 +1,14 @@
+.. ###############################################################
+.. #                                                             #
+.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # All rights reserved.                                        #
+.. #                                                             #
+.. #     This source code contains the intellectual property     #
+.. #     of its copyright holder(s), and is made available       #
+.. #     under a license.  If you do not know the terms of       #
+.. #     the license, please stop and do not read further.       #
+.. #                                                             #
+.. ###############################################################
 
 .. index::
     Installing YottaDB
@@ -15,7 +26,7 @@ This chapter describes the installation procedure for YottaDB. Always read the r
 Obtaining YottaDB Distribution Media
 -------------------------------------
 
-YottaDB LLC prefers to distribute YottaDB online via the Internet. YottaDB for selected platforms, including GNU/Linux on the popular x86 architecture and Raspberry Pi hardware, can be downloaded under the terms of the Affero GNU General Public License (AGPL) version 3, from GitLab (https://gitlab.com/YottaDB/DB/YDB/blob/master/sr_unix/ydbinstall.sh). Contact YottaDB Support (info@yottadb.com) to obtain a copy of a YottaDB distribution for other platforms or on physical media. 
+YottaDB LLC prefers to distribute YottaDB online via the Internet. YottaDB for selected platforms, including GNU/Linux on the popular x86 architecture and Raspberry Pi hardware, can be downloaded under the terms of the Affero GNU General Public License (AGPL) version 3, from GitLab (https://gitlab.com/YottaDB/DB/YDB/blob/master/sr_unix/ydbinstall.sh). Contact YottaDB Support (info@yottadb.com) to obtain a copy of a YottaDB distribution for other platforms or on physical media.
 
 ---------------------------
 Before You Begin
@@ -48,7 +59,7 @@ Installation Procedure
 
 * Make it executable: chmod +x ydbinstall.sh
 
-* Run it with your choice of directory where you want it installed (omit the –verbose option for less output): 
+* Run it with your choice of directory where you want it installed (omit the –verbose option for less output):
 
  .. parsed-literal::
 
@@ -67,7 +78,11 @@ Compile the reference implementation plugin as follows:
 
 The package names vary by distribution/version.
 
-* Unpack $ydb_dist/plugin/gtmcrypt/source.tar to a temporary directory, for example: 
+.. note::
+
+   :code:`$ydb_dist` points to the absolute path for the directory where YottaDB is installed.
+
+* Unpack $ydb_dist/plugin/gtmcrypt/source.tar to a temporary directory, for example:
 
  .. parsed-literal::
    mkdir /tmp/plugin-build
@@ -75,12 +90,13 @@ The package names vary by distribution/version.
    cp $ydb_dist/plugin/gtmcrypt/source.tar .
    tar -xvf source.tar
 
+
 * Follow the instructions in the README.
 
   * Open Makefile with your editor; review and edit the common header (IFLAGS) and library paths (LIBFLAGS) in the Makefile to reflect those on your system.
-  
+
   * Define the ydb_dist environment variable to point to the absolute path for the directory where YottaDB is installed
-  
+
   * Copy and paste the commands from the README to compile and install the encryption plugin with the permissions defined at install time
 
 * Compare the permissions of $ydb_dist/libyottadb.so to the newly installed shared libraries in $ydb_dist/plugin. Adjust the permission of the newly installed libraries as necessary.
@@ -139,7 +155,7 @@ ydbinstall is a stand-alone YottaDB installation script that installs YottaDB us
 * Options that take a value (e.g, --group) can be specified as either --option=value or --option value
 
 * Options marked with \* are likely to be of interest primarily to YottaDB developers
-        
+
 * Version is defaulted from the yottadb file if one exists in the same directory as the installer
 
 * This version must run as root.
