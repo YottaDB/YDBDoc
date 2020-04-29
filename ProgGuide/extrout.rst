@@ -1,3 +1,14 @@
+.. ###############################################################
+.. #                                                             #
+.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # All rights reserved.                                        #
+.. #                                                             #
+.. #     This source code contains the intellectual property     #
+.. #     of its copyright holder(s), and is made available       #
+.. #     under a license.  If you do not know the terms of       #
+.. #     the license, please stop and do not read further.       #
+.. #                                                             #
+.. ###############################################################
 
 .. index::
    Integrating External Routines
@@ -575,18 +586,16 @@ The <direction> indicates the type of operation that YottaDB performs on the par
 | O/IO              | ydb_long_t*, ydb_ulong_t*, ydb_float_t*, ydb_double_t*,_ydb_char_t*, ydb_string_t*                                                          |
 +-------------------+---------------------------------------------------------------------------------------------------------------------------------------------+
 
-Here is an example of Call-In table (calltab.ci) for piece.m (see “Example: Calling YottaDB from a C Program”):
+Here is an example of Call-In table (ydb_access.ci) for _ydbaccess.m (see `Example: Calling YottaDB from a C Program`_):
 
 .. parsed-literal::
-   print     :void            display^piece()
-   getpiece  :ydb_char_t*     get^piece(I:ydb_char_t*, I:ydb_char_t*, I:ydb_long_t)
-   setpiece  :void            set^piece(IO:ydb_char_t*, I:ydb_char_t*, I:ydb_long_t, I:ydb_char_t*)
-   pow       :ydb_double_t*   pow^piece(I:ydb_double_t, I:ydb_long_t)
-   powequal  :void            powequal^piece(IO:ydb_double_t*, I:ydb_long_t)
-   piece     :ydb_double_t*   pow^piece(I:ydb_double_t, I:ydb_long_t)
-
-.. note::
-   The same entryref can be called by different C call names (for example, pow, and piece). However, if there are multiple lines with the same call name, only the first entry will be used by YottaDB. YottaDB ignores all subsequent entries using a call name.
+   ydbget    : void get^%ydbaccess( I:ydb_char_t*, O:ydb_string_t*, O:ydb_char_t* )
+   ydbkill   : void kill^%ydbaccess( I:ydb_char_t*, O:ydb_char_t* )
+   ydblock   : void lock^%ydbaccess( I:ydb_char_t*, O:ydb_char_t* )
+   ydborder  : void order^%ydbaccess( I:ydb_char_t*, O:ydb_string_t*, O:ydb_char_t* )
+   ydbquery  : void query^%ydbaccess( I:ydb_char_t*, O:ydb_string_t*, O:ydb_char_t* )
+   ydbset    : void set^%ydbaccess( I:ydb_char_t*, I:ydb_string_t*, O:ydb_char_t*)
+   ydbxecute : void xecute^%ydbaccess( I:ydb_char_t*, O:ydb_char_t* )
 
 ++++++++++++++++++++++++
 Call-In Interface
@@ -711,19 +720,18 @@ First argument: tptoken, a unique transaction processing token that refers to th
 
 ydb_cip_t() works in the same way and returns the same values as ydb_cip().
 
-**Example: Calling YottaDB from a C Program**
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Example: Calling YottaDB from a C Program
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Here are some working examples of C programs that use call-ins to invoke YottaDB. Each example is packaged in a zip file which contains a C program, a call-in table, and a YottaDB API. To run an example, download and follow the compiling and linking instructions in the comments of the C program.
+Here is a working example of a C program that uses call-ins to invoke YottaDB. The example is packaged in a zip file which contains a C program, a call-in table, and a YottaDB API. To run the example, download and follow the compiling and linking instructions in the comments of the C program.
 
 +--------------------------------+----------------------------------------------------------------------------------------------+
 | Example                        | Download Information                                                                         |
 +================================+==============================================================================================+
-| gtmaccess.c (ydb_ci interface) | https://gitlab.com/YottaDB/DB/YDBDoc/blob/master/ProgGuide/gtmci_gtmaccess.zip               |
+| ydb_access.c (ydb_ci interface)| `ydbci_ydbaccess.zip <./ydbci_ydbaccess.zip>`_                                               |
 +--------------------------------+----------------------------------------------------------------------------------------------+
-| gtmaccess.c (ydb_cip interface)| https://gitlab.com/YottaDB/DB/YDBDoc/blob/master/ProgGuide/gtmcip_gtmaccess.zip              |
-+--------------------------------+----------------------------------------------------------------------------------------------+
-| cpiece.c (ydb_ci interface)    | https://gitlab.com/YottaDB/DB/YDBDoc/blob/master/ProgGuide/gtmci_cpiece.zip                  |
-+--------------------------------+----------------------------------------------------------------------------------------------+
+
 
 **Print Error Messages**
 
