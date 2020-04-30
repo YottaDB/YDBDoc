@@ -1,3 +1,14 @@
+.. ###############################################################
+.. #                                                             #
+.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # All rights reserved.                                        #
+.. #                                                             #
+.. #     This source code contains the intellectual property     #
+.. #     of its copyright holder(s), and is made available       #
+.. #     under a license.  If you do not know the terms of       #
+.. #     the license, please stop and do not read further.       #
+.. #                                                             #
+.. ###############################################################
 
 .. index::
    Extending YottaDB
@@ -10,7 +21,7 @@ Appendix G: Extending YottaDB
    :depth: 2
 
 +++++++++++++++++++++++++++++++++++
-Applications, Wrappers, and Plugins 
+Applications, Wrappers, and Plugins
 +++++++++++++++++++++++++++++++++++
 
 Broadly speaking, there are three ways to extend YottaDB
@@ -144,7 +155,7 @@ An installed plugin consists of:
 - C functions, all or some of which may be callable from M code. C
   functions are installed in shared libraries containing object code
   Call-out tables make C functions available to M code.
-  
+
 - M routines, all or some of whose entryrefs may be callable from C
   code. M routines are installed as shared libraries or object files for object
   code (shared libraries are preferred). Call-in tables make M
@@ -356,7 +367,7 @@ executable. To implement this, create the shell script with the
 package name, invoking the binary executable as
 :code:`$ydb_dist/plugin/bin/<packagename>.bin`.
 
-Sourcing the :code:`ydb_env_set` file creates aliases for all 
+Sourcing the :code:`ydb_env_set` file creates aliases for all
 executable files in :code:`$ydb_dist/plugin/bin` except executable
 :code:`.bin` files.
 

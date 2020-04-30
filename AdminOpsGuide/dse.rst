@@ -1,3 +1,14 @@
+.. ###############################################################
+.. #                                                             #
+.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # All rights reserved.                                        #
+.. #                                                             #
+.. #     This source code contains the intellectual property     #
+.. #     of its copyright holder(s), and is made available       #
+.. #     under a license.  If you do not know the terms of       #
+.. #     the license, please stop and do not read further.       #
+.. #                                                             #
+.. ###############################################################
 
 .. index::
    Database Structure Editor
@@ -40,7 +51,7 @@ You may also specify a command when entering DSE.
 Example:
 
 .. parsed-literal::
-   $ydb_dist/dse dump -fileheader     
+   $ydb_dist/dse dump -fileheader
 
 This command displays the fileheader of the region that stands first in the list of regions arranged in alphabetical order and then returns to the shell prompt. To look at other regions, at the DSE prompt you must first issue a FIND -REGION=<desired-region> command.
 
@@ -80,14 +91,14 @@ The list of Inquiry commands is as follows:
    P[AGE]
    RA[NGE]
    SA[VE]
-   SP[AWN] 
+   SP[AWN]
 
 Although DSE can operate concurrently with other processes that access the same database file, YottaDB strongly recommends using DSE in standalone mode when using Change commands. Some DSE operations can adversely impact the database when they occur during active use of the database. Other DSE operations may be difficult to perform in a logically sound fashion because a DSE operator works on a block at a time, while normal database operations update all related blocks almost simultaneously.
 
 .. note::
    When DSE attaches to a database with a version that does not match the DSE version, DSE issues an informational message and continues. At this point, you should exit DSE and find the version of DSE that matches the database. You should continue after this warning if and only if you are certain that the DSE is indeed from the YottaDB version that has the database open (and hence the error results from a damaged database file header or shared memory that you intend to repair, following instructions from YottaDB).
 
-Use the DSE EXIT, or QUIT command to leave DSE. 
+Use the DSE EXIT, or QUIT command to leave DSE.
 
 ----------------------------
 DSE Commands and Qualifiers
@@ -109,7 +120,7 @@ Adds a record to a block. The format of the ADD command for blocks with a level 
 .. parsed-literal::
    ADD [-B[LOCK]=[block] {-OFFSET=offset|-RECORD=record} -STAR -POINTER=block
 
-or 
+or
 
 .. parsed-literal::
    ADD [-B[LOCK]=[block] {-OFFSET=offset|-RECORD=record} -KEY=key -POINTER=pointer
@@ -121,7 +132,7 @@ The format of the ADD command for level 0 blocks is:
 
 The ADD command requires either the -OFFSET or -RECORD qualifier to position the record in the block, and either the -KEY or the -STAR qualifier to define the key for the block.
 
-The -STAR qualifier is invalid at level 0 (a data block). The ADD command requires the -DATA qualifier at level 0 or the -POINTER qualifier at any other level to provide record content. 
+The -STAR qualifier is invalid at level 0 (a data block). The ADD command requires the -DATA qualifier at level 0 or the -POINTER qualifier at any other level to provide record content.
 
 **Qualifiers of ADD**
 
@@ -179,7 +190,7 @@ Incompatible with: -OFFSET,-STAR
 
 Adds a star record (that is, a record that identifies the last record in an indexed block) at the end of the specified block. The -STAR qualifier cannot be used at level 0.
 
-Incompatible with: -DATA,-KEY,-OFFSET,-RECORD 
+Incompatible with: -DATA,-KEY,-OFFSET,-RECORD
 
 **Examples for ADD**
 
@@ -234,7 +245,7 @@ This command creates a block with key ^Vegetables pointing to block 7.
 Example:
 
 .. parsed-literal::
-   DSE> add -record=2 -key="^foo" -data=\'\' 
+   DSE> add -record=2 -key="^foo" -data=\'\'
 
 This example adds a new node (set ^foo="") as the second record of the current database block.
 
@@ -251,14 +262,14 @@ The format of the ALL command is:
    [
    -B[UFFER_FLUSH]
    -C[RITINIT]
-   -D[UMP] -A[LL] 
+   -D[UMP] -A[LL]
    -[NO]F[REEZE]
    -O[VERRIDE]]
    -REF[ERENCE]
    -REL[EASE]
    -REN[EW]
    -S[EIZE]
-   -W[CINIT]           
+   -W[CINIT]
    ]
 
 
@@ -292,7 +303,7 @@ Incompatible with: -RENEW
 
 Initializes critical sections for all regions of the current directory.
 
-Incompatible with: -RENEW, -RELEASE, -SIEZE 
+Incompatible with: -RENEW, -RELEASE, -SIEZE
 
 .. note::
    Never use CRITINIT while concurrent updates are in progress as doing so may damage the database.
@@ -328,7 +339,7 @@ When used with -NOFREEZE, -OVERRIDE unfreezes all GDS regions, including those f
 
 When used with -FREEZE, -OVERRIDE freezes all GDS regions, including those frozen by other processes, associating all such freezes with the current process. The current process must then use -NOFREEZE to unfreeze the database; any other process attempting a -NOFREEZE should also have to include the -OVERRIDE qualifier.
 
-Meaningful only with: [NO]FREEZE 
+Meaningful only with: [NO]FREEZE
 
 ~~~~~~~~~~~~
 -REF[ERENCE]
@@ -376,9 +387,9 @@ Reinitializes the buffers for all regions of the current global directory.
 -WCINIT requires confirmation.
 
 .. note::
-   This operation is likely to cause database damage when used while concurrent updates are in progress. 
+   This operation is likely to cause database damage when used while concurrent updates are in progress.
 
-Incompatible with: -RENEW 
+Incompatible with: -RENEW
 
 **Examples of ALL**
 
@@ -466,13 +477,13 @@ CACHE
 Operates on the cache of a database having BG access method. The format of the CACHE command is:
 
 .. parsed-literal::
-   CA[CHE] 
+   CA[CHE]
    [
    -ALL
    -RE[COVER]
    -SH[OW]
    -VE[RIFY]
-   ] 
+   ]
 
 **Qualifiers of CACHE**
 
@@ -661,7 +672,7 @@ Use only with: -BLOCK, -LEVEL, -TN
 Changes the level field for the specified block.
 
 .. note::
-   DSE lets you change the level of a bitmap block to -1 (the value of the level for a bitmap block) when the bitmap level gets corrupted and takes on an arbitrary value. Note that you should specify -1 in hexadecimal form, that is, FF. 
+   DSE lets you change the level of a bitmap block to -1 (the value of the level for a bitmap block) when the bitmap level gets corrupted and takes on an arbitrary value. Note that you should specify -1 in hexadecimal form, that is, FF.
 
 Use only with: -BLOCK, -BSIZ, -TN
 
@@ -724,7 +735,7 @@ Example:
 .. parsed-literal::
    DSE> change -record=3 -rsiz=3B -block=2
 
-This command changes the record size of record 3 block 2 to 59 (Hex: 3B) bytes. 
+This command changes the record size of record 3 block 2 to 59 (Hex: 3B) bytes.
 
 **CHANGE -FILEHEADER Qualifiers**
 
@@ -836,11 +847,11 @@ Use only with: -FILEHEADER
 ~~~~~~~~~~~~~~~~~~~
 
 Changes the hash of the password stored in the database file header if and when you change the hash library. For more information on key management and reference implementation, refer to `Chapter 12: “Database Encryption” <./encryption.html>`_.
- 
+
 .. note::
    An incorrect hash renders the database useless.
 
-Use only with: -FILEHEADER 
+Use only with: -FILEHEADER
 
 ~~~~~~~~~~~~~~~~
 -[NO]EPOCHTAPER
@@ -1205,7 +1216,7 @@ Example:
 .. parsed-literal::
    DSE> change -fileheader -zqgblmod_seqno=FF
 
-This command changes the ZGBLMOD_SEQNO field to 255(Hex: FF). 
+This command changes the ZGBLMOD_SEQNO field to 255(Hex: FF).
 
 ++++++++++
 CLOSE
@@ -1227,9 +1238,9 @@ CRITICAL
 Displays and/or modifies the status and contents of the critical section for the current region. The format of the CRITICAL command is:
 
 .. parsed-literal::
-   CR[ITICAL] 
+   CR[ITICAL]
    [
-   -A[LL] 
+   -A[LL]
    -I[NIT]
    -O[WNER]
    -REL[EASE]
@@ -1320,7 +1331,7 @@ Example:
 .. parsed-literal::
    DSE> critical -OWNER Write critical section owner is process id 4220
 
-This command displays the ID of the process holding the critical section. Note that catching a process ID on a lightly loaded (or unloaded) system (for example, text environment) is like catching lightning in a bottle. Therefore, you can artificially hold a critical section using the DSE CRIT -SEIZE command in one session and view the owner using a different session. 
+This command displays the ID of the process holding the critical section. Note that catching a process ID on a lightly loaded (or unloaded) system (for example, text environment) is like catching lightning in a bottle. Therefore, you can artificially hold a critical section using the DSE CRIT -SEIZE command in one session and view the owner using a different session.
 
 +++++++++++
 DUMP
@@ -1328,10 +1339,10 @@ DUMP
 
 Displays blocks, records, or file headers. DUMP is one of the primary DSE examination commands.
 
-The format of the DUMP command is: 
+The format of the DUMP command is:
 
 .. parsed-literal::
-   D[UMP]  
+   D[UMP]
    [
    -A[LL]
    -B[LOCK]=block_number
@@ -1347,7 +1358,7 @@ The format of the DUMP command is:
    -Z[WR]
    ]
 
-Use the error messages reported by MUPIP INTEG to determine what to DUMP and examine in the database. DUMP also can transfer records to a sequential file for future study and/or for input to MUPIP LOAD (see the section on OPEN). The DUMP command requires specification of an object using either -BLOCK, -HEADER, -RECORD, or -FILEHEADER. 
+Use the error messages reported by MUPIP INTEG to determine what to DUMP and examine in the database. DUMP also can transfer records to a sequential file for future study and/or for input to MUPIP LOAD (see the section on OPEN). The DUMP command requires specification of an object using either -BLOCK, -HEADER, -RECORD, or -FILEHEADER.
 
 **Qualifiers of DUMP**
 
@@ -1379,7 +1390,7 @@ Incompatible with: -ALL, -FILEHEADER and -UPDPROC.
 -F[ILEHEADER]
 ~~~~~~~~~~~~~~
 
-Dumps file header information. A DSE dump of a database file header prints a 0x prefix for all fields printed in hexadecimal format. 
+Dumps file header information. A DSE dump of a database file header prints a 0x prefix for all fields printed in hexadecimal format.
 
 Use only with -ALL or -UPDPROC
 
@@ -1443,7 +1454,7 @@ Use only with -FILEHEADER.
 
 Dumps the specified record or blocks into the current output file in ZWRITE (ZWR) format.
 
-Incompatible with: -ALL, -GLO, -HEADER and -FILEHEADER. 
+Incompatible with: -ALL, -GLO, -HEADER and -FILEHEADER.
 
 **Examples for DUMP**
 
@@ -1452,7 +1463,7 @@ Example:
 .. parsed-literal::
    DSE> DUMP -FILEHEADER
 
-This command displays an output like the following: 
+This command displays an output like the following:
 
 .. parsed-literal::
    File    /home/jdoe/.yottadb/r1.20_x86_64/g/yottadb.dat
@@ -1495,12 +1506,12 @@ This command displays an output like the following:
 
 Note that certain fileheader elements appear depending on the current state of database. For example, if Journaling is not enabled in the database, DSE does not display Journal data element fields.
 
-Example: 
+Example:
 
 .. parsed-literal::
    $ dse dump -fileheader -updproc
 
-This command displays the fileheader elements along with the following helper process parameters: 
+This command displays the fileheader elements along with the following helper process parameters:
 
 .. parsed-literal::
    Upd reserved area [% global buffers]   50  Avg blks read per 100 records                200
@@ -1517,14 +1528,14 @@ Translates a hexadecimal number to decimal, and vice versa.
 The format of the EVALUATE command is:
 
 .. parsed-literal::
-   EV[ALUATE]  
+   EV[ALUATE]
    [
    -D[ECIMAL]
    -H[EXADECIMAL]
    -N[UMBER]=number
    ]
 
-The -DECIMAL and -HEXADECIMAL qualifiers specify the input base for the number. The -NUMBER qualifier is mandatory. By default, EVALUATE treats the number as having a hexadecimal base. 
+The -DECIMAL and -HEXADECIMAL qualifiers specify the input base for the number. The -NUMBER qualifier is mandatory. By default, EVALUATE treats the number as having a hexadecimal base.
 
 **Qualifiers of EVALUATE**
 
@@ -1574,7 +1585,7 @@ Example:
    $ dse evaluate -number=10
    Hex:  10   Dec:  16
 
-This command displays the decimal equivalent of Hexadecimal 10. Note that if you do not specify an qualifier with -NAME, then EVALUATE assumes Hexadecimal input. 
+This command displays the decimal equivalent of Hexadecimal 10. Note that if you do not specify an qualifier with -NAME, then EVALUATE assumes Hexadecimal input.
 
 ++++++
 EXIT
@@ -1596,7 +1607,7 @@ FIND
 Locates a given block or region. The format of the FIND command is:
 
 .. parsed-literal::
-   F[IND]  
+   F[IND]
    [
    -B[LOCK]=block-number
    -E[XHAUSTIVE]
@@ -1656,7 +1667,7 @@ Designates the starting point of a -FREEBLOCK search.
 
 FIND -FREE -HINT locates the "closest" free block to the hint. This provides a tool for locating blocks to add to the B-tree, or to hold block copies created with SAVE that would otherwise be lost when DSE exits. FIND -FREE relies on the bitmaps to locate its target, so be sure to fix any blocks incorrectly marked "FREE" before using this command.
 
-Required with: -FREEBLOCK; compatible with -BLOCK and [NO]CRIT. 
+Required with: -FREEBLOCK; compatible with -BLOCK and [NO]CRIT.
 
 ~~~~~~~~~~~
 -K[EY]=key
@@ -1686,7 +1697,7 @@ Switches to the named Global Directory region.
 
 -REGION without a specified region, or -REGION="*", displays all existing regions in the database.
 
-Use Alone. 
+Use Alone.
 
 ~~~~~~~~~~~~
 -S[IBLINGS]
@@ -1696,7 +1707,7 @@ Displays the block number of the specified block and its logical siblings in hex
 
 The logical siblings are the blocks, if any, that logically exist to the right and left of the given block in the database tree structure.
 
-Incompatible with: -FREEBLOCK, -HINT, -KEY, -REGION 
+Incompatible with: -FREEBLOCK, -HINT, -KEY, -REGION
 
 **Examples for FIND**
 
@@ -1799,7 +1810,7 @@ MAPS
 Examines or updates bitmaps. The format of the MAPS command is:
 
 .. parsed-literal::
-   M[APS] 
+   M[APS]
    [
    -BL[OCK]=block-number
    -BU[SY]
@@ -1810,7 +1821,7 @@ Examines or updates bitmaps. The format of the MAPS command is:
 
 MAPS can flag blocks as being either -BUSY or -FREE. The -MASTER qualifier reflects the current status of a local bitmap back into the master map. The -RESTORE_ALL qualifier rebuilds all maps and should be used with caution since it can destroy important information.
 
-By default, MAPS shows the status of the bitmap for the specified block. 
+By default, MAPS shows the status of the bitmap for the specified block.
 
 **Qualifiers for MAP**
 
@@ -1921,13 +1932,13 @@ This command marks block 20 as busy. A sample DSE DUMP output of block 0 is as f
    Block      1E0: |  ........  ........  ........  ........  |
    'X' == BUSY  '.' == FREE  ':' == REUSABLE  '?' == CORRUPT
 
-Note that the BLOCK 20 is marked as BUSY. 
+Note that the BLOCK 20 is marked as BUSY.
 
 ++++++
 OPEN
 ++++++
 
-Use the OPEN command to open a file for sequential output of global variable data. The format of the OPEN command is: 
+Use the OPEN command to open a file for sequential output of global variable data. The format of the OPEN command is:
 
 .. parsed-literal::
    OP[EN] F[ILE]=file
@@ -1958,7 +1969,7 @@ Example:
 .. parsed-literal::
    DSE> OPEN -FILE=var1.out
 
-The command OPEN -FILE=var1.out sets the output file to var1.out. 
+The command OPEN -FILE=var1.out sets the output file to var1.out.
 
 ++++++++++++
 OVERWRITE
@@ -1969,7 +1980,7 @@ Overwrites the specified string on the given offset in the current block. Use ex
 The format of the OVERWRITE command is:
 
 .. parsed-literal::
-   OV[ERWRITE] 
+   OV[ERWRITE]
    [
    -D[ATA]=string
    -O[FFSET]=offset
@@ -1993,7 +2004,7 @@ Specifies the data to be written. Use quotation marks around the string and esca
 -O[FFSET]=offset
 ~~~~~~~~~~~~~~~~~
 
-Specifies the offset in the current block where the overwrite should begin. 
+Specifies the offset in the current block where the overwrite should begin.
 
 **Examples for OVERWRITE**
 
@@ -2002,7 +2013,7 @@ Example:
 .. parsed-literal::
    DSE>overwrite -block=31 -data="Malvern" -offset=CA
 
-This command overwrites the data at the specified location. 
+This command overwrites the data at the specified location.
 
 ++++++++++
 PAGE
@@ -2026,7 +2037,7 @@ The RANGE command finds all blocks in the database whose first key falls in the 
 The format of the RANGE command is:
 
 .. parsed-literal::
-   RA[NGE] 
+   RA[NGE]
    [
    -F[ROM]=block-number
    -T[O]=block-number
@@ -2036,7 +2047,7 @@ The format of the RANGE command is:
    -[NO]BU[SY]
    -S[TAR]
    -LOW[ER]=key
-   -U[PPER]=key                
+   -U[PPER]=key
    ]
 
 **Qualifiers of RANGE**
@@ -2140,7 +2151,7 @@ Example:
    Block: 0000000F Level: 0
    Found 6 blocks
 
-This command searches for keys between ^Fruits(15) and ^Fruits(877). 
+This command searches for keys between ^Fruits(15) and ^Fruits(877).
 
 ++++++++++
 REMOVE
@@ -2217,12 +2228,12 @@ RESTORE
 The RESTORE command restores saved versions of blocks.
 
 .. parsed-literal::
-   RES[TORE]   
+   RES[TORE]
    [
    -B[LOCK]=block-number
    -F[ROM]=from
    -R[EGION]=region
-   -V[ERSION]=version-number  
+   -V[ERSION]=version-number
    ]
 
 The version number is specified in decimal.
@@ -2274,7 +2285,7 @@ Use with the RESTORE command to move SAVEd blocks to a permanent location, and a
 The format of the SAVE command is:
 
 .. parsed-literal::
-   SA[VE] 
+   SA[VE]
    [
    -B[LOCK]=block-number
    -C[OMMENT]=string
@@ -2316,7 +2327,7 @@ Incompatible with: -COMMENT
 -[NO]C[RIT]
 ~~~~~~~~~~~~~
 
-Allows DSE SAVE to work even if another process is holding a critical section. Since results in this mode may be inconsistent, it should only be used if the critical section mechanism is not operating normally. 
+Allows DSE SAVE to work even if another process is holding a critical section. Since results in this mode may be inconsistent, it should only be used if the critical section mechanism is not operating normally.
 
 ++++++++
 SHIFT
@@ -2325,7 +2336,7 @@ SHIFT
 Use the SHIFT command to shift data in a block, filling the block with zeros, or shortening the block. The format of the SHIFT command is:
 
 .. parsed-literal::
-   SH[IFT]  
+   SH[IFT]
    [
    -B[ACKWARD]=b_shift
    -BL[OCK]=block_number
@@ -2389,7 +2400,7 @@ Example:
 .. parsed-literal::
    DSE> SPAWN "yottadb -run ^GDE"
 
-This command suspends a DSE session and executes the shell command yottadb -run ^GDE. 
+This command suspends a DSE session and executes the shell command yottadb -run ^GDE.
 
 +++++++++++
 WCINIT
@@ -2702,6 +2713,6 @@ DSE Command Summary
 | `W[CINIT] <./dse.html#wcinit>`_                                            | \-                                       | \-                                                                         |
 +----------------------------------------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
 
-\* Use these qualifiers only with instructions from YottaDB. 
+\* Use these qualifiers only with instructions from YottaDB.
 
 

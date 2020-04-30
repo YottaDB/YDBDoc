@@ -1,3 +1,14 @@
+.. ###############################################################
+.. #                                                             #
+.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # All rights reserved.                                        #
+.. #                                                             #
+.. #     This source code contains the intellectual property     #
+.. #     of its copyright holder(s), and is made available       #
+.. #     under a license.  If you do not know the terms of       #
+.. #     the license, please stop and do not read further.       #
+.. #                                                             #
+.. ###############################################################
 
 .. index::
    YottaDB Security Philosophy
@@ -80,8 +91,8 @@ Based on the security model, the following are recommended best practices for se
 * Secure the machine on which YottaDB operates behind layers of defenses that permit only legitimate accesses.
 * Restrict access to a system on which YottaDB runs to those who legitimately need it.
 * Post installation, a system administrator can optionally add a restrict.txt file in $ydb_dist to restrict the use of certain YottaDB facilities to a group-name. The owner and group for $ydb_dist/restrict.txt can be different from those used to install YottaDB. For more information, refer to `“Configuring the Restriction facility” <./basicops.html#configuring-the-restriction-facility>`_.
-* If all users who have access to a system do not require the ability to run YottaDB, limit the access to YottaDB to a group all users who need access belong to, and remove world access to YottaDB. (The YottaDB installation script presents an option to restrict access to YottaDB to members of a group). If such a group is called yottadbusers, the following command executed as root will accomplish this (if access was not restricted when YottaDB was installed): 
-  
+* If all users who have access to a system do not require the ability to run YottaDB, limit the access to YottaDB to a group all users who need access belong to, and remove world access to YottaDB. (The YottaDB installation script presents an option to restrict access to YottaDB to members of a group). If such a group is called yottadbusers, the following command executed as root will accomplish this (if access was not restricted when YottaDB was installed):
+
   .. parsed-literal::
       chgrp -R yottadbusers $ydb_dist ; chmod -R o-rwx $ydb_dist
 
@@ -223,7 +234,7 @@ The following table describes how these factors are combined to determine the pe
 
 \*\* : rtnobj shared memory and relinkctl shared memory permissions. Note that rtnobj shared memory permissions have the x bit set wherever r or w is set.
 
-\*\*\* : relinkctl file permissions 
+\*\*\* : relinkctl file permissions
 
 * The resulting group ownership and permissions are found by matching the database file permissions, then determining which question columns produce the correct "Y" or "N" answer; "-" answers are "don't care".
 * An asterisk ("*") in the Database File Permissions matches writable or not writable. An asterisk in the Resulting File Permissions means that YottaDB uses the write permissions from the database file.

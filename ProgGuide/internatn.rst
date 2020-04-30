@@ -1,3 +1,14 @@
+.. ###############################################################
+.. #                                                             #
+.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # All rights reserved.                                        #
+.. #                                                             #
+.. #     This source code contains the intellectual property     #
+.. #     of its copyright holder(s), and is made available       #
+.. #     under a license.  If you do not know the terms of       #
+.. #     the license, please stop and do not read further.       #
+.. #                                                             #
+.. ###############################################################
 
 .. index::
    Internationalization
@@ -106,7 +117,7 @@ Example:
 
 This piece of code illustrates $$set^LCLCOL used as an extrinsic. It would write an error message and BREAK if the local collation sequence was not set to 3.
 
-set^%LCLCOL(n,ncol) determines the null collation type to be used with the collation type n. 
+set^%LCLCOL(n,ncol) determines the null collation type to be used with the collation type n.
 
 * If the truth value of ncol is TRUE(1), local variables use standard null collation.
 * If the truth value of ncol is FALSE(0), local variables use historical null collation.
@@ -220,7 +231,7 @@ out: a gtm_descriptor containing the transformed key.
 
 outlen: an unsigned long, passed by reference, giving the actual length of the output key.
 
-Example: 
+Example:
 
 .. parsed-literal::
    #include "gtm_descript.h"
@@ -360,7 +371,7 @@ Example:
 
 .. parsed-literal::
    int gtm_ac_version()
-   { 
+   {
       return 1;
    }
 
@@ -493,7 +504,7 @@ Create a new file called polish.c and put the following code:
    #define COLLATION_TABLE_SIZE     256
    #define MYAPPS_SUBSC2LONG        12345678
    #define SUCCESS     0
-   #define FAILURE     1                
+   #define FAILURE     1
    #define VERSION     0
    static unsigned char xform_table[COLLATION_TABLE_SIZE] =
              {
@@ -570,7 +581,7 @@ Add the following code for the gtm_ac_xform transformation routine:
           return SUCCESS;
          }
 
-      
+
 Add the following code for the gtm_ac_xback reverse transformation routine:
 
 .. parsed-literal::
@@ -712,7 +723,7 @@ By default, YottaDB sorts string subscripts in the default order of the UnicodeÂ
 * **Unambiguous transformation routines**: The transform and its inverse must convert each input string to a unique sequence of bytes for storage, and convert each sequence of stored bytes back to the original string.
 * **Collation sequence for all expected character sequences in subscripts**: YottaDB does not validate the subscript strings passed to/from the collation routines. If the application design allows illegal UTF-8 character sequences to be stored in the database, the collation functions must appropriately transform and inverse transform these as well.
 * **Handle different string lengths for before and after transformation**: If the lengths of the input string and transformed string differ, and, for local variables, if the output buffer passed by YottaDB is not sufficient, follow the procedure described below:
-  
+
    * Global Collation Routines: The transformed key must not exceed the lesser of the maximum key size configuration or 1019 bytes, the maximum GDS key size. YottaDB allocates a temporary buffer of size 1019 bytes in the output string descriptor (of type DSC_K_DTYPE_T) and passes it to the collation routine to return the transformed key.
    * Local Collation Routines: YottaDB allocates a temporary buffer in the output string descriptor based on the size of the input string. Both transformation and inverse transformation must check the buffer size, and if it is not sufficient, the transformation must allocate sufficient memory, set the output descriptor value (val field of the descriptor) to point to the new memory , and return the transformed key successfully. Since YottaDB copies the key from the output descriptor into its internal structures, it is important that the memory allocated remains available even after the collation routines return. Collation routines are typically called throughout the process lifetime, and therefore, YottaDB expects the collation libraries to define a large static buffer sufficient to hold all key sizes in the application. Alternatively, the collation transform can use a large heap buffer (allocated by the system malloc() or YottaDB ydb_malloc()). Application developers must choose the method best suited to their needs.
 
@@ -758,7 +769,7 @@ Example:
          230,231,232,233,234,235,236,237,238,239,240,241,242,243,244,245,246,247,248,249,250,251,252,253,254,255
    PATEND
 
-Be mindful of the following items as you define your patcode table. 
+Be mindful of the following items as you define your patcode table.
 
 * YottaDB loads a table name only once during the invocation of a process. Changes to a loaded table do not apply to running processes that have already referenced that table.
 * The table name "M" is a reserved designation for standard M, which is included in the YottaDB run-time library.
@@ -776,13 +787,13 @@ To establish a default patcode table for a database define the environment varia
    $ ydb_pattern_file=pathname
    $ export ydb_pattern_file
 
-where filename is the text file containing the patcode table definition, and 
+where filename is the text file containing the patcode table definition, and
 
 .. parsed-literal::
    $ ydb_pattern_table=tablename
    $ export ydb_pattern_table
 
-where tablename is the name of the patcode table within the file pointed to by ydb_pattern_file. 
+where tablename is the name of the patcode table within the file pointed to by ydb_pattern_file.
 
 .. note::
    YottaDB performs operations on literals at compile time and the pattern codes' settings may have an impact on such operations. Therefore, it is safest to always compile with the same pattern code settings as those used at runtime. If changes to pattern codes are required at run time, "hide" any patterns used on literal expressions from the compiler (which are uncommon) using XECUTE commands or indirection.
@@ -790,7 +801,7 @@ where tablename is the name of the patcode table within the file pointed to by y
 Within an active process, the patcode table is established using the M VIEW command and the %PATCODE utility. Before invoking the %PATCODE utility, you may use VIEW to load pattern definition files for YottaDB. The required keyword and value are:
 
 .. parsed-literal::
-   VIEW "PATLOAD":"pathname" 
+   VIEW "PATLOAD":"pathname"
 
 This allows you to use the %PATCODE utility or the VIEW command to set current patcode table. The format of the VIEW command to set the patcode table is:
 
@@ -823,6 +834,6 @@ Example:
 
 .. parsed-literal::
    YDB>Write $$get^%PATCODE
-   NEWLANGUAGE 
+   NEWLANGUAGE
 
 

@@ -1,3 +1,14 @@
+.. ###############################################################
+.. #                                                             #
+.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # All rights reserved.                                        #
+.. #                                                             #
+.. #     This source code contains the intellectual property     #
+.. #     of its copyright holder(s), and is made available       #
+.. #     under a license.  If you do not know the terms of       #
+.. #     the license, please stop and do not read further.       #
+.. #                                                             #
+.. ###############################################################
 
 .. index::
    Error Processing
@@ -35,19 +46,19 @@ Compile Time Error Message Format
 To understand the compile-time error message format, consider this incorrect source line:
 
 .. parsed-literal::
-   S=B+C        
+   S=B+C
 
 If this were line 7 of a source file ADD2.m, the compiler reports the compile-time error with the message:
 
 .. parsed-literal::
-   S=B+C 
+   S=B+C
        ^-----
    At column 4, line 7, source module ADD2
    Variable expected in this context
 
 The compile-time error message format consists of three lines. The first two lines tell you the line and location where the error occurred. The last line describes the M syntax error. The positioning accuracy of the carat pointing to the location of an issue in a source line depends on your terminal settings, particularly in UTF-8 mode where character widths are not uniform. If the line exceeds the terminal width as understood by YottaDB, it replaces the carat line with an ARROWNTDSP error.
 
-If you requested a listing file, it contains the same information and looks as follows: 
+If you requested a listing file, it contains the same information and looks as follows:
 
 .. parsed-literal::
    .
@@ -120,7 +131,7 @@ After the action, if any, invoked by $ETRAP, $ZTRAP or EXCEPTION:
 * otherwise, if $ETRAP'="" YottaDB performs a QUIT$QUIT "" QUIT and reissues the error at the new stack level.
 * otherwise, $ZTRAP must contain code and YottaDB retries the line of M on which the error occurred.
 
-YottaDB checks the syntax of code assigned to $ETRAP, $ZSTEP, $ZTRAP, and EXCEPTION at the time they are specified. Note that $ZTRAP and EXCEPTION are subject to ydb_ztrap_form, and, if that specifies entryref or adaptive, YottaDB does not check the syntax. Also, the environment variables $ydb_etrap, $ydb_trigger_etrap, and $ydb_zstep provide ways of setting some of the ISVs, so their values are verified at process initiation. Further, a SET $ETRAP uses a temporary default value of "IF $ZJOBEXAM" when shifting from $ZTRAP to $ETRAP in case the specified value has compilation errors. 
+YottaDB checks the syntax of code assigned to $ETRAP, $ZSTEP, $ZTRAP, and EXCEPTION at the time they are specified. Note that $ZTRAP and EXCEPTION are subject to ydb_ztrap_form, and, if that specifies entryref or adaptive, YottaDB does not check the syntax. Also, the environment variables $ydb_etrap, $ydb_trigger_etrap, and $ydb_zstep provide ways of setting some of the ISVs, so their values are verified at process initiation. Further, a SET $ETRAP uses a temporary default value of "IF $ZJOBEXAM" when shifting from $ZTRAP to $ETRAP in case the specified value has compilation errors.
 
 +++++++++++++++++++++++++++++++
 Run-Time Errors in Direct Mode
@@ -135,7 +146,7 @@ Example:
    ZW
    ^_____
    %YDB-E-INVCMD, Invalid command keyword encountered
-   YDB>   
+   YDB>
 
 In Direct Mode, YottaDB provides access to the RECALL command. RECALL allows you to retrieve a Direct Mode command line with a minimum of typing. The YottaDB line editor allows you to make quick changes or corrections to the command line. For more information on RECALL and the line editor, see `Chapter 4: “Operating and Debugging in Direct Mode” <./opdebug.html>`_.
 
@@ -145,7 +156,7 @@ Run-Time Errors Outside of Direct Mode
 
 If YottaDB encounters an error outside of code entered in Direct Mode, YottaDB executes the $ETRAP or $ZTRAP special variable, if either of them have a length greater than zero, which only one can have at a given point in time.
 
-The $ETRAP and $ZTRAP special variables specify an action that YottaDB should perform when an error occurs during routine execution. $ETRAP and $ZTRAP can establish one or more error handling "actions". 
+The $ETRAP and $ZTRAP special variables specify an action that YottaDB should perform when an error occurs during routine execution. $ETRAP and $ZTRAP can establish one or more error handling "actions".
 
 .. note::
    The environment variable ydb_etrap specifies an initial value of $ETRAP to override the default value of "B" for $ZTRAP as the base level error handler. The ydb_env_set script sets ydb_etrap to "Write:(0=$STACK) ""Error occurred: "",$ZStatus,!" which you can customize to suit your needs. For more information, refer to “Processing Errors from Direct Mode and Shell”.
@@ -154,7 +165,7 @@ The $ETRAP and $ZTRAP special variables specify an action that YottaDB should pe
 Program Handling of Errors
 ------------------------------
 
-YottaDB provides the error handling facilities described in the M standard. In addition, YottaDB provides a number of extensions for error handling. Both are discussed in the following sections. The following table summarizes some of the tools, which are then described in more detail within the context of various techniques and examples. 
+YottaDB provides the error handling facilities described in the M standard. In addition, YottaDB provides a number of extensions for error handling. Both are discussed in the following sections. The following table summarizes some of the tools, which are then described in more detail within the context of various techniques and examples.
 
 **Summary of YottaDB Error-Handling Facilities**
 
@@ -339,7 +350,7 @@ When a SET command assigns a value to either $ZTRAP or $ETRAP, YottaDB examines 
 For example, re-setting $ETRAP is internally processed as:
 
 .. parsed-literal::
-   NEW:$LENGTH($ZTRAP) $ZTRAP $ETRAP SET $ETRAP=code        
+   NEW:$LENGTH($ZTRAP) $ZTRAP $ETRAP SET $ETRAP=code
 
 Whereas, SET $ZTRAP=value is internally processed as:
 
@@ -494,23 +505,23 @@ Example:
 
 .. parsed-literal::
    YDB>zprint ^EP1
-   EP1    WRITE !,"THIS IS "_$TEXT(+0) 
-          KILL A 
-   BAD    WRITE A 
-          WRITE !,"THIS IS NOT DISPLAYED" 
-          QUIT 
-                         
+   EP1    WRITE !,"THIS IS "_$TEXT(+0)
+          KILL A
+   BAD    WRITE A
+          WRITE !,"THIS IS NOT DISPLAYED"
+          QUIT
+
    YDB>do ^EP1
    THIS IS EP1%YDB-E-UNDEF, Undefined local variable: A
    At M source location BAD^EP1
    YDB>ZSHOW
    BAD^EP1    ($ZTRAP)
-      (Direct mode) 
-   +1^GTM$DMOD    (Direct mode) 
+      (Direct mode)
+   +1^GTM$DMOD    (Direct mode)
    YDB>QUIT
    YDB>ZSHOW
-   EP1+1^EP1    (Direct mode) 
-   +1^GTM$DMOD    (Direct mode) 
+   EP1+1^EP1    (Direct mode)
+   +1^GTM$DMOD    (Direct mode)
    YDB>
 
 Because by default $ETRAP="" and $ZTRAP="B", this example does not explicitly set either $ETRAP or $ZTRAP. When the routine encounters an error at BAD^EP1, YottaDB initiates Direct Mode. The ZSHOW displays the M stack that has, at the bottom, the base Direct Mode frame and, at the top, EP1 with a notation that $ZTRAP has been invoked. The QUIT command at the prompt removes EP1 from the stack.
@@ -529,37 +540,37 @@ Example:
 
 .. parsed-literal::
    YDB>ZPRINT ^EP2
-   EP2     WRITE !,"THIS IS "_$TEXT(+0) 
-           SET $ECODE=""        ;this affects only $ETRAP 
-           SET $ETRAP="GOTO ET"        ;this implicitly stacks $ZTRAP 
-           ;N $ZT S $ZT="GOTO ET"  ;would give a similar result 
-           DO SUB1 
-           WRITE !,"THIS IS THE END" 
-           QUIT 
-   SUB1    WRITE !,"THIS IS SUB1" 
-           DO SUB2 
-           QUIT 
-   SUB2    WRITE !,"THIS IS SUB2" 
-           KILL A 
-   BAD     WRITE A 
-           WRITE !,"THIS IS NOT DISPLAYED" 
-           QUIT 
-   ET      ;SET $ZTRAP=""         ;if using $ZTRAP to prevent recursion 
-           WRITE !,"CONTINUING WITH ERROR TRAP AFTER AN ERROR" 
-           WRITE !,"$STACK: ",$STACK 
-           WRITE !,"$STACK(-1): ",$STACK(-1) 
-           WRITE !,"$ZLEVEL: ",$ZLEVEL 
-           FOR I=$STACK(-1):-1:1 DO 
-           . WRITE !,"LEVEL: ",I 
-           . SET K=10 
-           . FOR J="PLACE","MCODE","ECODE" DO 
-           . . WRITE ?K," ",J,": ",$STACK(I,J) 
-           . . SET K=K+20 
-           WRITE !,$ZSTATUS,!  
-           ZSHOW "S" 
-           SET $ECODE=""        ;this affects only $ETRAP 
-           QUIT 
-                                                                                                                                                                                                            
+   EP2     WRITE !,"THIS IS "_$TEXT(+0)
+           SET $ECODE=""        ;this affects only $ETRAP
+           SET $ETRAP="GOTO ET"        ;this implicitly stacks $ZTRAP
+           ;N $ZT S $ZT="GOTO ET"  ;would give a similar result
+           DO SUB1
+           WRITE !,"THIS IS THE END"
+           QUIT
+   SUB1    WRITE !,"THIS IS SUB1"
+           DO SUB2
+           QUIT
+   SUB2    WRITE !,"THIS IS SUB2"
+           KILL A
+   BAD     WRITE A
+           WRITE !,"THIS IS NOT DISPLAYED"
+           QUIT
+   ET      ;SET $ZTRAP=""         ;if using $ZTRAP to prevent recursion
+           WRITE !,"CONTINUING WITH ERROR TRAP AFTER AN ERROR"
+           WRITE !,"$STACK: ",$STACK
+           WRITE !,"$STACK(-1): ",$STACK(-1)
+           WRITE !,"$ZLEVEL: ",$ZLEVEL
+           FOR I=$STACK(-1):-1:1 DO
+           . WRITE !,"LEVEL: ",I
+           . SET K=10
+           . FOR J="PLACE","MCODE","ECODE" DO
+           . . WRITE ?K," ",J,": ",$STACK(I,J)
+           . . SET K=K+20
+           WRITE !,$ZSTATUS,!
+           ZSHOW "S"
+           SET $ECODE=""        ;this affects only $ETRAP
+           QUIT
+
    YDB>do ^EP2
    THIS IS EP2
    THIS IS SUB1
@@ -569,13 +580,13 @@ Example:
    $STACK(-1): 3
    $ZLEVEL: 4
    LEVEL: 3   PLACE: BAD^EP2      MCODE: BAD     WRITE A  ECODE: ,M6,Z150373850,
-   LEVEL: 2   PLACE: SUB1+1^EP2   MCODE:         DO SUB2  ECODE: 
-   LEVEL: 1   PLACE: EP2+4^EP2    MCODE:         DO SUB1  ECODE: 
+   LEVEL: 2   PLACE: SUB1+1^EP2   MCODE:         DO SUB2  ECODE:
+   LEVEL: 1   PLACE: EP2+4^EP2    MCODE:         DO SUB1  ECODE:
    150373850,BAD^EP2,%YDB-E-UNDEF, Undefined local variable: A
    ET+12^EP2
    SUB1+1^EP2
    EP2+4^EP2
-   +1^GTM$DMOD    (Direct mode) 
+   +1^GTM$DMOD    (Direct mode)
    THIS IS THE END
    YDB>
 
@@ -588,27 +599,27 @@ Example:
 .. parsed-literal::
    YDB>ZPRINT ^EP3
    EP3     ;
-   MENU    WRITE !,"THIS IS MENU IN ",$TEXT(0) 
-           SET $ECODE=""        ;this affects only $ETRAP 
-           SET $ETRAP="SET $ECODE="""" ZGOTO 2" 
-           ;N $ZT S $ZT="ZGOTO 2" ;would give a similar result 
-           DO SUB1 
-           WRITE !,"'MENU' AFTER $ETRAP" 
-           WRITE !,"$STACK: ",$STACK 
-           WRITE !,"$ZLEVEL: ",$ZLEVEL 
-           QUIT 
-   SUB1    WRITE !,"THIS IS SUB1" 
-           DO SUB2 
-           WRITE !,"THIS IS SKIPPED BY ZGOTO" 
-           QUIT 
-   SUB2    WRITE !,"THIS IS SUB2" 
-           KILL A 
-           BAD     WRITE A 
-           WRITE !,"THIS IS NOT DISPLAYED" 
-           QUIT 
-                                                                                                                    
+   MENU    WRITE !,"THIS IS MENU IN ",$TEXT(0)
+           SET $ECODE=""        ;this affects only $ETRAP
+           SET $ETRAP="SET $ECODE="""" ZGOTO 2"
+           ;N $ZT S $ZT="ZGOTO 2" ;would give a similar result
+           DO SUB1
+           WRITE !,"'MENU' AFTER $ETRAP"
+           WRITE !,"$STACK: ",$STACK
+           WRITE !,"$ZLEVEL: ",$ZLEVEL
+           QUIT
+   SUB1    WRITE !,"THIS IS SUB1"
+           DO SUB2
+           WRITE !,"THIS IS SKIPPED BY ZGOTO"
+           QUIT
+   SUB2    WRITE !,"THIS IS SUB2"
+           KILL A
+           BAD     WRITE A
+           WRITE !,"THIS IS NOT DISPLAYED"
+           QUIT
+
    YDB>do ^EP3
-   THIS IS MENU IN 
+   THIS IS MENU IN
    THIS IS SUB1
    THIS IS SUB2
    'MENU' AFTER $ETRAP
@@ -623,44 +634,44 @@ Example:
 
 .. parsed-literal::
    YDB>ZPRINT ^EP4
-   EP4     WRITE !,"THIS IS "_$TEXT(+0) 
-           SET $ECODE=""        ;this affects only $ETRAP 
-           DO MAIN 
-           WRITE !,"THIS IS ",$TEXT(+0)," AFTER THE ERROR" 
-           WRITE !,"$ZLEVEL: ",$ZLEVEL 
-           QUIT 
-   MAIN    WRITE !,"THIS IS MAIN" 
-           WRITE !,"$ZLEVEL: ",$ZLEVEL 
-           SET $ETRAP="ZGOTO "_$ZLEVEL\_":ET" 
-           ;N $ZT S $ZT="ZGOTO "_$ZLEVEL\_":ET ;alternative 
-           DO SUB1 
-           QUIT 
-   SUB1    WRITE !,"THIS IS SUB1" 
-           WRITE !,"$ZLEVEL: ",$ZLEVEL 
-           DO SUB2 
-           QUIT 
-   SUB2    WRITE !,"THIS IS SUB2" 
-           WRITE !,"$ZLEVEL :",$ZLEVEL 
-           KILL A 
-   BAD     WRITE A 
-           WRITE !,"THIS IS NOT DISPLAYED" 
-           QUIT 
-   ET     ;SET $ZTRAP="" ;if using $ZTRAP to prevent recursion 
-           WRITE !,"CONTINUING WITH ERROR TRAP AFTER AN ERROR" 
-           WRITE !,"$STACK: ",$STACK 
-           WRITE !,"$STACK(-1): ",$STACK(-1) 
-           WRITE !,"$ZLEVEL: ",$ZLEVEL 
-           FOR I=$STACK(-1):-1:1 DO 
-           . WRITE !,"LEVEL: ",I 
-           . SET K=10 
-           . FOR J="PLACE","MCODE","ECODE" DO 
-           . . WRITE ?K," ",J,": ",$STACK(I,J) 
-           . . SET K=K+20 
+   EP4     WRITE !,"THIS IS "_$TEXT(+0)
+           SET $ECODE=""        ;this affects only $ETRAP
+           DO MAIN
+           WRITE !,"THIS IS ",$TEXT(+0)," AFTER THE ERROR"
+           WRITE !,"$ZLEVEL: ",$ZLEVEL
+           QUIT
+   MAIN    WRITE !,"THIS IS MAIN"
+           WRITE !,"$ZLEVEL: ",$ZLEVEL
+           SET $ETRAP="ZGOTO "_$ZLEVEL\_":ET"
+           ;N $ZT S $ZT="ZGOTO "_$ZLEVEL\_":ET ;alternative
+           DO SUB1
+           QUIT
+   SUB1    WRITE !,"THIS IS SUB1"
+           WRITE !,"$ZLEVEL: ",$ZLEVEL
+           DO SUB2
+           QUIT
+   SUB2    WRITE !,"THIS IS SUB2"
+           WRITE !,"$ZLEVEL :",$ZLEVEL
+           KILL A
+   BAD     WRITE A
+           WRITE !,"THIS IS NOT DISPLAYED"
+           QUIT
+   ET     ;SET $ZTRAP="" ;if using $ZTRAP to prevent recursion
+           WRITE !,"CONTINUING WITH ERROR TRAP AFTER AN ERROR"
+           WRITE !,"$STACK: ",$STACK
+           WRITE !,"$STACK(-1): ",$STACK(-1)
+           WRITE !,"$ZLEVEL: ",$ZLEVEL
+           FOR I=$STACK(-1):-1:1 DO
+           . WRITE !,"LEVEL: ",I
+           . SET K=10
+           . FOR J="PLACE","MCODE","ECODE" DO
+           . . WRITE ?K," ",J,": ",$STACK(I,J)
+           . . SET K=K+20
            WRITE !,$ZSTATUS,!
-           ZSHOW "S" 
-           SET ECODE=""        ;this affects only $ETRAP 
-           QUIT 
-                                                                                                                                                                                                                                                            
+           ZSHOW "S"
+           SET ECODE=""        ;this affects only $ETRAP
+           QUIT
+
    YDB>do ^EP4
    THIS IS EP4
    THIS IS MAIN
@@ -674,13 +685,13 @@ Example:
    $STACK(-1): 4
    $ZLEVEL: 3
    LEVEL: 4   PLACE: BAD^EP4      MCODE: BAD     WRITE A  ECODE: ,M6,Z150373850,
-   LEVEL: 3   PLACE: SUB1+2^EP4   MCODE:         DO SUB2  ECODE: 
-   LEVEL: 2   PLACE: MAIN+4^EP4   MCODE:         DO SUB1  ECODE: 
-   LEVEL: 1   PLACE: EP4+2^EP4    MCODE:         DO MAIN  ECODE: 
+   LEVEL: 3   PLACE: SUB1+2^EP4   MCODE:         DO SUB2  ECODE:
+   LEVEL: 2   PLACE: MAIN+4^EP4   MCODE:         DO SUB1  ECODE:
+   LEVEL: 1   PLACE: EP4+2^EP4    MCODE:         DO MAIN  ECODE:
    150373850,BAD^EP4,%YDB-E-UNDEF, Undefined local variable: A
    ET+12^EP4
    EP4+2^EP4
-   +1^GTM$DMOD    (Direct mode) 
+   +1^GTM$DMOD    (Direct mode)
    THIS IS EP4 AFTER THE ERROR
    $ZLEVEL: 2
    YDB>
@@ -722,21 +733,21 @@ Example:
            WRITE !,"$ZTRAP AFTER THE TRAP: ",$ZTRAP
            SET $ECODE="";this affects only $ETRAP
            QUIT
-                                                                                                                                                                    
+
    YDB>do ^EP5
    THIS IS EP5
-   STARTING $ETRAP: 
+   STARTING $ETRAP:
    STARTING $ZTRAP: B
    THIS IS SUB1
    $ETRAP FOR SUB1: GOTO ET1
    ERROR TRAP 1
    $ETRAP AFTER THE TRAP: GOTO ET1
-   $ZTRAP AFTER THE TRAP: 
-   ENDING $ETRAP: 
+   $ZTRAP AFTER THE TRAP:
+   ENDING $ETRAP:
    ENDING $ZTRAP: B
    YDB>
 
-At SUB1, this routine NEWs $ETRAP and assigns it a value, which implicitly NEWs $ZTRAP. When the routine encounters an error at the SUB1 level, YottaDB transfers control to label ET1 without modifying the value of $ETRAP or $ZTRAP. When the routine encounters a QUIT command in routine ET1, YottaDB transfers control to the command after the DO that invoked ET1 and restores $ETRAP or $ZTRAP to the values they held before the NEW and the SET. 
+At SUB1, this routine NEWs $ETRAP and assigns it a value, which implicitly NEWs $ZTRAP. When the routine encounters an error at the SUB1 level, YottaDB transfers control to label ET1 without modifying the value of $ETRAP or $ZTRAP. When the routine encounters a QUIT command in routine ET1, YottaDB transfers control to the command after the DO that invoked ET1 and restores $ETRAP or $ZTRAP to the values they held before the NEW and the SET.
 
 .. note::
    If the transfer to ET1 was accomplished with a ZGOTO that reduced the stack level, after the trap, $ETRAP would have the value of the empty string and $ZTRAP would be "B".
@@ -781,21 +792,21 @@ Example:
 
 .. parsed-literal::
    YDB>ZPRINT ^EP6A
-   EP6A    WRITE !,"THIS IS "_$TEXT(+0) 
-           NEW 
-           NEW $ETRAP SET $ETRAP="GOTO ET" 
-           SET (CB,CE)=0 
-   BAD     SET CB=CB+1 WRITE A SET CE=CE+1 
-           WRITE !,"AFTER SUCCESSFUL EXECUTION OF BAD:",! 
-           ZWRITE 
-           QUIT 
-   ET      W !,"CONTINUING WITH ERROR TRAP AFTER AN ERROR",! 
-           ZWRITE 
-           SET A="A IS NOW DEFINED" 
-           SET RETRY=$STACK($STACK,"PLACE") 
-           SET $ECODE="" 
-           GOTO @RETRY 
-                                                                           
+   EP6A    WRITE !,"THIS IS "_$TEXT(+0)
+           NEW
+           NEW $ETRAP SET $ETRAP="GOTO ET"
+           SET (CB,CE)=0
+   BAD     SET CB=CB+1 WRITE A SET CE=CE+1
+           WRITE !,"AFTER SUCCESSFUL EXECUTION OF BAD:",!
+           ZWRITE
+           QUIT
+   ET      W !,"CONTINUING WITH ERROR TRAP AFTER AN ERROR",!
+           ZWRITE
+           SET A="A IS NOW DEFINED"
+           SET RETRY=$STACK($STACK,"PLACE")
+           SET $ECODE=""
+           GOTO @RETRY
+
    YDB>DO ^EP6A
    THIS IS EP6A
    CONTINUING WITH ERROR TRAP AFTER AN ERROR
@@ -807,7 +818,7 @@ Example:
    CB=2
    CE=1
    RETRY="BAD^EP6A"
-   YDB> 
+   YDB>
 
 This routine is an example of how $ETRAP handling can be coded to perform the same kind of resumption of the original execution stream that occurs by default with $ZTRAP when there is no unconditional transfer of control.
 
@@ -828,7 +839,7 @@ Example:
    BAD     WRITE A
            WRITE !,"THIS IS NOT DISPLAYED"
            QUIT
-                                            
+
    YDB>do ^EP7
    THIS IS EP7
    %YDB-E-UNDEF, Undefined local variable: A
@@ -851,7 +862,7 @@ Example:
            QUIT
    ET      WRITE 2/0
            QUIT
-                                           
+
    YDB>DO ^EP8
    THIS IS EP8
    %YDB-E-STACKCRIT, Stack space critical
@@ -876,12 +887,12 @@ A set $ZTRAP="" command as soon as the program enters an error-handling routine 
            WRITE !,"HERE COMES AN ERROR IN THE TRAP CODE"
            WRITE 2/0
            QUIT
-                                                                            
+
    YDB>DO ^EP8A
    THIS IS EP8A
    CONTINUING WITH ERROR TRAP AFTER AN ERRORET+1^EP8A
    BAD^EP8A    ($ZTRAP)
-   +1^GTM$DMOD    (Direct mode) 
+   +1^GTM$DMOD    (Direct mode)
    HERE COMES AN ERROR IN THE TRAP CODE
    %YDB-E-DIVZERO, Attempt to divide by zero
    YDB>
@@ -903,7 +914,7 @@ Example:
            ERROR   WRITE !,"HERE COMES AN ERROR IN THE ERROR TRAP"
            WRITE 2/0
            QUIT
-                                                            
+
    YDB>DO ^EP9
    THIS IS EP9
    THIS IS THE ERROR TRAP
@@ -912,7 +923,7 @@ Example:
    %YDB-I-RTSLOC,                 At M source location ERROR+1^EP9
    $
 
-This routine sets the value of $ZTRAP to null as soon as the program enters the error handler. This insures program termination when an error occurs in the error handler. 
+This routine sets the value of $ZTRAP to null as soon as the program enters the error handler. This insures program termination when an error occurs in the error handler.
 
 ++++++++++++++++++++++++++++++++
 Setting $ZTRAP to Other Actions
@@ -941,7 +952,7 @@ Example:
            BAD     WRITE A
            WRITE !,"THIS IS NOT DISPLAYED"
            QUIT
-                                                                                            
+
    YDB>do ^EP10
    THIS IS EP10
    THIS IS SUB1
@@ -967,10 +978,10 @@ Example:
    BAD     WRITE !,A
            WRITE !,"THIS IS NOT DISPLAYED"
            QUIT
-                                                           
+
    YDB>DO ^EP11
    THIS IS EP11
-   $ 
+   $
 
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1013,7 +1024,7 @@ Errors in $ZTRAP
 
 If $ZTRAP contains invalid source code, YottaDB displays an error message and puts the process into Direct Mode.
 
-If the action specified by $ZTRAP results in another run-time error before changing the value of $ZTRAP, it may result in a loop that iteratively invokes $ZTRAP until a stack overflow terminates the YottaDB image. Keep $ZTRAP simple and take special care to debug exception handling. 
+If the action specified by $ZTRAP results in another run-time error before changing the value of $ZTRAP, it may result in a loop that iteratively invokes $ZTRAP until a stack overflow terminates the YottaDB image. Keep $ZTRAP simple and take special care to debug exception handling.
 
 .. note::
    An error in $ETRAP code triggers an implicit TROLLBACK:$TLEVEL QUIT:$QUIT "" QUIT.
@@ -1077,7 +1088,7 @@ The $ZSTATUS special variable records the error condition code and location of t
 
 For I/O operations, YottaDB uses the $ZA, $ZB and $ZEOF special variables. $ZA contains a status determined by the last read on the current device.
 
-To simplify record keeping, an application may set $ZTRAP to an error-handling routine that records information about an error. The next section provides an example of a routine ERR.m that does this. 
+To simplify record keeping, an application may set $ZTRAP to an error-handling routine that records information about an error. The next section provides an example of a routine ERR.m that does this.
 
 **Program to Record Information on an Error using $ZTRAP**
 

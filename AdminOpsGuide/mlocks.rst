@@ -1,3 +1,14 @@
+.. ###############################################################
+.. #                                                             #
+.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # All rights reserved.                                        #
+.. #                                                             #
+.. #     This source code contains the intellectual property     #
+.. #     of its copyright holder(s), and is made available       #
+.. #     under a license.  If you do not know the terms of       #
+.. #     the license, please stop and do not read further.       #
+.. #                                                             #
+.. ###############################################################
 
 .. index::
    M Lock Utility (LKE)
@@ -25,7 +36,7 @@ When debugging an M application, you may use LKE to identify a possible deadlock
 
 .. parsed-literal::
    Process 1   Process 2
-   LOCK A     
+   LOCK A
             LOCK B
             LOCK +A
    LOCK +B
@@ -76,7 +87,7 @@ To Establish a Global Directory
 LKE uses the environment variable ydb_gbldir to identify the active global directory. ydb_gbldir should be defined by individual users in their login files.
 
 .. parsed-literal::
-   $ ydb_gbldir=prod.gld 
+   $ ydb_gbldir=prod.gld
    $ export ydb_gbldir
 
 ------------------------------------
@@ -109,12 +120,12 @@ The format of the CLEAR command is:
 The optional qualifiers are:
 
 .. parsed-literal::
-   -A[LL] 
+   -A[LL]
    -L[OCK]
   -[NO]C[RIT]
    -[NO]EXACT
-   -[NO]I[NTERACTIVE] 
-   -O[UTPUT]="file-name" 
+   -[NO]I[NTERACTIVE]
+   -O[UTPUT]="file-name"
    -P[ID]=pid
    -R[EGION]=region-name
 
@@ -163,7 +174,7 @@ Unless used with -EXACT, specifies the leading prefix for an implicit wild card 
 
 * When used with SHOW,-LOCK provides a precise way to examine the specified lock.
 
-~~~~~~~~~~~~~~~~~~~  
+~~~~~~~~~~~~~~~~~~~
 -[NO]I[NTERACTIVE]
 ~~~~~~~~~~~~~~~~~~~
 
@@ -175,7 +186,7 @@ Interactively clears one LOCK at a time. LKE displays each current LOCK with the
 
 * -NOINTERACTIVE forces the action to take place without user confirmation of each change. Using -NOINTERACTIVE prevents the LKE operator from controlling the LOCK subsystem for potentially long periods of time when many locks are held. To do this, it limits the amount of time it waits for each response.
 
-~~~~~~~~~~~~~~~~~~~~~~~  
+~~~~~~~~~~~~~~~~~~~~~~~
 -O[UTPUT]="file-name"
 ~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -189,7 +200,7 @@ Directs the reporting of all specified LOCKs to a file.
 
 * By default, CLEAR sends output messages to stdout.
 
-~~~~~~~~~~~  
+~~~~~~~~~~~
 -P[ID]=pid
 ~~~~~~~~~~~
 
@@ -203,7 +214,7 @@ Specifies the process identification number that holds a LOCK on a resource name
 
 * The -PID qualifier is compatible with all other qualifiers.
 
-~~~~~~~~~~~~~~~~~~~~~~  
+~~~~~~~~~~~~~~~~~~~~~~
 -R[EGION]=region-name
 ~~~~~~~~~~~~~~~~~~~~~~
 
@@ -260,9 +271,9 @@ Note that -NOINTERACTIVE forced the action without asking for a confirmation.
 Example:
 
 .. parsed-literal::
-   LKE>clear -lock="^a("b") 
-   Clear lock ? y 
-   Lock removed : ^a("b") 
+   LKE>clear -lock="^a("b")
+   Clear lock ? y
+   Lock removed : ^a("b")
    LKE>
 
 This command clears lock ^a("b") in the default region.
@@ -284,9 +295,9 @@ This command clears lock ^a in the default region. -NOINTERACTIVE instructs LKE 
 Example:
 
 .. parsed-literal::
-   LKE>CLEAR -PID=4109 -LOCK=""^A"" 
+   LKE>CLEAR -PID=4109 -LOCK=""^A""
    Clear lock ? Y
-   Lock removed : ^A 
+   Lock removed : ^A
    LKE>
 
 This command clears LOCK ^A held by process with PID 4109.
@@ -313,7 +324,7 @@ The optional qualifiers are:
 
 .. parsed-literal::
    -A[LL]
-   -I[NTEG] 
+   -I[NTEG]
    -P[ERIODIC]=n
    -R[EGION]=region-name
 
@@ -360,11 +371,11 @@ The optional qualifiers are:
 
 .. parsed-literal::
    -A[LL]
-   -L[OCK] 
-   -[NO]C[[RIT]ICAL] 
+   -L[OCK]
+   -[NO]C[[RIT]ICAL]
    -O[UTPUT]="file-name"
-   -P[ID]=pid 
-   -R[EGION]=region-name 
+   -P[ID]=pid
+   -R[EGION]=region-name
    -W[AIT]
 
 * By default, SHOW displays -A[LL].
@@ -398,7 +409,7 @@ Specifies all current LOCKs.
 
 * SHOW -ALL and -WAIT displays both -ALL and -WAIT information.
 
-~~~~~~~~~~~~~~~~~~~~~~  
+~~~~~~~~~~~~~~~~~~~~~~
 -L[OCK]=resource_name
 ~~~~~~~~~~~~~~~~~~~~~~
 
@@ -419,7 +430,7 @@ Allows the SHOW command to work even if another process is holding a critical se
 
 * Use NOCRIT[ICAL] with SHOW only when normal operation is unsuccessful, as NOCRIT[ICAL] may cause LKE to report incomplete or inconsistent information.
 
-~~~~~~~~~~~~~~~~~~~~~~  
+~~~~~~~~~~~~~~~~~~~~~~
 -O[UTPUT]="file-name"
 ~~~~~~~~~~~~~~~~~~~~~~
 
@@ -431,7 +442,7 @@ Directs the reporting of all specified LOCKs to a file.
 
 * By default, the SHOW command sends output messages to stdout.
 
-~~~~~~~~~~~  
+~~~~~~~~~~~
 -P[ID]=pid
 ~~~~~~~~~~~
 
@@ -445,7 +456,7 @@ Specifies the process identification number that holds a LOCK on a resource name
 
 * By default, SHOW displays the LOCKs for all PIDs.
 
-~~~~~~~~~~~~~~~~~~~~~~  
+~~~~~~~~~~~~~~~~~~~~~~
 -R[EGION]=region-name
 ~~~~~~~~~~~~~~~~~~~~~~
 
@@ -457,7 +468,7 @@ Specifies the region that holds the locked resource names.
 
 * By default, SHOW displays the LOCKs for all regions.
 
-~~~~~~~~  
+~~~~~~~~
 -W[AIT]
 ~~~~~~~~
 
@@ -477,11 +488,11 @@ Use the following procedure to display all LOCKs active in the database(s) defin
 This produces an output like the following:
 
 .. parsed-literal::
-   No locks were found in DEFAULT 
-   AREG 
-   ^a Owned by PID=2080 which is an existing process 
-   BREG 
-   ^b(2) Owned by PID= 2089 which is a nonexistent process 
+   No locks were found in DEFAULT
+   AREG
+   ^a Owned by PID=2080 which is an existing process
+   BREG
+   ^b(2) Owned by PID= 2089 which is a nonexistent process
    No locks were found in CREG
 
 Example:
@@ -656,7 +667,7 @@ Now, at Mary's prompt, execute the following command:
 This command produces output like the following:
 
 .. parsed-literal::
-   DEFAULT ^ABC Owned by PID=3657 which is an existing process 
+   DEFAULT ^ABC Owned by PID=3657 which is an existing process
    Request PID=3685 which is an existing process
 
 This output shows that the process belonging to Mary with PID 3657 currently owns the lock for global variable ^ABC and Ken's PID has requested the ownership of that lock. You can use this mechanism to create application logic that adhere to your concurrent access protocols.
@@ -670,8 +681,8 @@ Now, consider another situation where both these users (Mary and Ken) have to up
 A deadlock situation can occur in the following situation:
 
 .. parsed-literal::
-   Mary           Ken 
-   LOCK +file_1   LOCK +file_2 
+   Mary           Ken
+   LOCK +file_1   LOCK +file_2
    LOCK +file_2   LOCK +file_1
 
 Here both the users are deadlocked and neither can move forward. Note that a deadlock situation does not actually block the underlying resource.
@@ -683,8 +694,8 @@ At Mary's prompt, execute the following commands:
 .. parsed-literal::
    YDB>set file1="file_1.txt"
    YDB>lock +file1
-   YDB>open file1:APPEND 
-   YDB>use file1 
+   YDB>open file1:APPEND
+   YDB>use file1
    YDB>write "Mary",!
    YDB>close file1
 
@@ -693,10 +704,10 @@ Note that Mary has not released the LOCK on resource "file1".
 At Ken's prompt, execute the following commands:
 
 .. parsed-literal::
-   YDB> set file2="file_2.txt" 
+   YDB> set file2="file_2.txt"
    YDB> lock +file2
-   YDB> open file2:APPEND 
-   YDB> use file2 
+   YDB> open file2:APPEND
+   YDB> use file2
    YDB>write "Ken",!
    YDB>close file2
 
@@ -705,7 +716,7 @@ Note that Ken has not released the LOCK on resource "file2".
 Now, at Mary's prompt, execute the following commands.
 
 .. parsed-literal::
-   YDB>set file2="file_2.txt" 
+   YDB>set file2="file_2.txt"
    YDB>lock +file2
 
 The latter command attempts to acquire a lock on resource file2 that is already locked by Ken. Therefore, this results in a deadlock situation. Repeat the same process for Ken and attempt to lock resource file1.
@@ -713,10 +724,10 @@ The latter command attempts to acquire a lock on resource file2 that is already 
 Execute the following command at LKE prompt to view this deadlock situation.
 
 .. parsed-literal::
-   LKE>show -all -wait 
-   file1 Owned by PID=2080 which is an existing process 
-   Request PID=2089 which is an existing process 
-   file2 Owned by PID=2089 which is an existing process 
+   LKE>show -all -wait
+   file1 Owned by PID=2080 which is an existing process
+   Request PID=2089 which is an existing process
+   file2 Owned by PID=2089 which is an existing process
    Request PID=2080 which is an existing process
 
 This shows a deadlock situation where neither user can proceed because it is waiting for the other user to release the lock. You can resolve this situation by clearing the locks using the LKE CLEAR -PID command.

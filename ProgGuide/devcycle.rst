@@ -1,3 +1,14 @@
+.. ###############################################################
+.. #                                                             #
+.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # All rights reserved.                                        #
+.. #                                                             #
+.. #     This source code contains the intellectual property     #
+.. #     of its copyright holder(s), and is made available       #
+.. #     under a license.  If you do not know the terms of       #
+.. #     the license, please stop and do not read further.       #
+.. #                                                             #
+.. ###############################################################
 
 .. index::
    Development Cycle
@@ -32,7 +43,7 @@ The steps begin with your initial use of YottaDB. The first two steps are part o
 Each of these remaining steps can be performed either from the YottaDB prompt or the shell prompt. To clearly describe the two ways to perform each step, this section is set up in the format of a table with one column illustrating the YottaDB method, and one column illustrating the shell method.
 
 +------------------------------------------------------+-----------------------------------------------+---------------------------------------------------+
-| Creating a YottaDB Routine                                                                                                                               | 
+| Creating a YottaDB Routine                                                                                                                               |
 +======================================================+===============================================+===================================================+
 | Define Environment Variables (shell)                 | define:                                                                                           |
 |                                                      |                                                                                                   |
@@ -227,7 +238,7 @@ For more information on GDE and MUPIP refer to the `"Global Directory Editor" <h
 
 Example:
 
-This example is a sequence of events that illustrate steps you might typically perform in creating a new global directory, in our example PAYROLL.GLD. 
+This example is a sequence of events that illustrate steps you might typically perform in creating a new global directory, in our example PAYROLL.GLD.
 
 .. parsed-literal::
    $ ls payroll.gld
@@ -236,7 +247,7 @@ This example is a sequence of events that illustrate steps you might typically p
 The ls command verifies that there are no existing files with the name payroll.gld.
 
 .. parsed-literal::
-   $ ydb_gbldir=payroll.gld 
+   $ ydb_gbldir=payroll.gld
    $ export ydb_gbldir
 
 This establishes the current value of the environment variable ydb_gbldir as payroll.gld. YottaDB uses ydb_gbldir to identify the current Global Directory. When defined at the shell prompt, ydb_gbldir maintains the defined value only for the current login session. The next time you log into UNIX, you must again define the value of ydb_gbldir as payroll.gld to use it as the current Global Directory.
@@ -246,7 +257,7 @@ This example defines ydb_gbldir without a full pathname. The environment variabl
 .. parsed-literal::
    $ /usr/local/lib/yottadb/r128/ydb
    YDB>do ^GDE
-   %GDE-I-LOADGD, Loading Global Directory file 
+   %GDE-I-LOADGD, Loading Global Directory file
            /home/jdoe/.yottadb/r1.28_x86_64/g/payroll.gld
    %GDE-I-VERIFY, Verification OK
    GDE>
@@ -293,7 +304,7 @@ This invokes the Global Directory Editor by entering GDE from the YottaDB prompt
     ------------------------------------------------------------------------------------------------------
     DEFAULT                   $gtmdir/$ydb_rel/g/payroll.mjl    Y        128    2048     2048
 
-                                 
+
                                  \*\*\* Segments \*\*\*
     Segment                      File (def ext: .dat)           Acc  Typ  Block   Alloc  Exten   Options
     ---------------------------------------------------------------------------------------------------------
@@ -343,7 +354,7 @@ To create the database file payroll.dat, use the MUPIP CREATE utility.
 
 Example:
 
-.. parsed-literal:: 
+.. parsed-literal::
    $ mupip create
    Created file payroll.dat
 
@@ -562,7 +573,7 @@ With no -DYNAMIC_LITERALS specified, these data structures continue to be genera
 -[no]embed_source
 ~~~~~~~~~~~~~~~~~~
 
-Instructs YottaDB to embeds routine source code in the object code. The default is NOEMBED_SOURCE. Like other YottaDB compilation qualifiers, this qualifier can be specified through the $ZCOMPILE intrinsic special variable and ydb_compile environment variable. EMBED_SOURCE provides $TEXT and ZPRINT access to the correct source code, even if the original M source file has been edited or removed. Where the source code is not embedded in the object code, YottaDB attempts to locate the source code file. If it cannot find source code matching the object code, $TEXT() returns a null string. ZPRINT prints whatever source code found and also prints a TXTSRCMAT message in direct mode; if it cannot find a source file, ZPRINT issues a FILENOTFND error. 
+Instructs YottaDB to embeds routine source code in the object code. The default is NOEMBED_SOURCE. Like other YottaDB compilation qualifiers, this qualifier can be specified through the $ZCOMPILE intrinsic special variable and ydb_compile environment variable. EMBED_SOURCE provides $TEXT and ZPRINT access to the correct source code, even if the original M source file has been edited or removed. Where the source code is not embedded in the object code, YottaDB attempts to locate the source code file. If it cannot find source code matching the object code, $TEXT() returns a null string. ZPRINT prints whatever source code found and also prints a TXTSRCMAT message in direct mode; if it cannot find a source file, ZPRINT issues a FILENOTFND error.
 
 ~~~~~~~~~~~~~
 -[no]i[gnore]

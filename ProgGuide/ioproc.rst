@@ -1,3 +1,14 @@
+.. ###############################################################
+.. #                                                             #
+.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # All rights reserved.                                        #
+.. #                                                             #
+.. #     This source code contains the intellectual property     #
+.. #     of its copyright holder(s), and is made available       #
+.. #     under a license.  If you do not know the terms of       #
+.. #     the license, please stop and do not read further.       #
+.. #                                                             #
+.. ###############################################################
 
 .. index::
    Input/Output Processing
@@ -4246,9 +4257,9 @@ The format of the WRITE command is:
 * When directed to a device bound to a mnemonicspace, WRITE also accepts controlmnemonics, which are keywords specific to the binding – they are delimited by a slash (/) prefix and optionally followed by a parenthetical list of arguments. The parentheses "( )" are optional when there are no arguments, but must appear even if there is a single argument
 * An indirection operator and an expression atom evaluating to a list of one or more WRITE arguments form a legal argument for a WRITE.
 * In the UTF-8 mode, the WRITE command uses the character set specified on the device OPEN as the character encoding of the output device. If the character set specifies "M" or "UTF-8", YottaDB WRITEs the data with no transformation. If the character set specifies "UTF-16", "UTF-16LE" or "UTF-16BE", the data is assumed to be encoded in UTF-8 and WRITE transforms it to the character encoding specified by character set device parameter.
-* If a WRITE command encounters an illegal character in UTF-8 mode, it produces a run-time error irrespective of the setting of VIEW "BADCHAR". 
+* If a WRITE command encounters an illegal character in UTF-8 mode, it produces a run-time error irrespective of the setting of VIEW "BADCHAR".
 
-YottaDB can write up to 1,048,576 bytes (the YottaDB maximum string size) as a result of a single WRITE argument. YottaDB buffers output into a "logical record" for all devices except sockets without DELIMITERs and sequential devices with STREAM enabled. The WRITE command appends a string to the current record of the current device. YottaDB does not write to the output device until the buffer is full, a YottaDB format control character forces a write, a USE command, a CLOSE command, or, for terminals, the buffer becomes stale. The YottaDB compiler breaks a concatenated WRITE argument into a series of WRITE arguments to eliminate the overhead of the concatentation. If circumstances provide a reason for a single WRITE, perform the concatenation prior to the WRITE. 
+YottaDB can write up to 1,048,576 bytes (the YottaDB maximum string size) as a result of a single WRITE argument. YottaDB buffers output into a "logical record" for all devices except sockets without DELIMITERs and sequential devices with STREAM enabled. The WRITE command appends a string to the current record of the current device. YottaDB does not write to the output device until the buffer is full, a YottaDB format control character forces a write, a USE command, a CLOSE command, or, for terminals, the buffer becomes stale. The YottaDB compiler breaks a concatenated WRITE argument into a series of WRITE arguments to eliminate the overhead of the concatentation. If circumstances provide a reason for a single WRITE, perform the concatenation prior to the WRITE.
 
 Each device has a WIDTH and a LENGTH that define the virtual "page". The WIDTH determines the maximum size of a record for a device, while the LENGTH determines how many records fit on a page. When the current record size ($X) reaches the maximum WIDTH and the device has WRAP enabled, YottaDB starts a new record. When the current line ($Y) reaches the maximum LENGTH, YottaDB starts a new page.
 

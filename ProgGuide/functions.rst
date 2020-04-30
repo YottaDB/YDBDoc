@@ -1,3 +1,14 @@
+.. ###############################################################
+.. #                                                             #
+.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # All rights reserved.                                        #
+.. #                                                             #
+.. #     This source code contains the intellectual property     #
+.. #     of its copyright holder(s), and is made available       #
+.. #     under a license.  If you do not know the terms of       #
+.. #     the license, please stop and do not read further.       #
+.. #                                                             #
+.. ###############################################################
 
 .. index::
    Functions
@@ -447,7 +458,7 @@ The format of the $INCREMENT function is:
 * If $INCREMENT() occurs outside a transaction ($TLevel is zero) and glvn refers to a global variable, the function acts as a SET glvn=$GET(glvn)+numexpr performed as an Atomic, Consistent and Isolated operation. Note that $INCREMENT() performs the evaluation of numexpr before it starts the Atomic, Consistent, Isolated incrementing of the glvn. If the region containing the glvn is journaled, then the $INCREMENT() is also Durable. Only BG, MM and GT.CM GNP access methods are supported for the region containing the global variable (glvn). GT.CM OMI and GT.CM DDP access methods do not support this operation and there are no current plans to add such support.
 * $INCREMENT() does not support global variables that have NOISOLATION turned ON (through the VIEW "NOISOLATION" command), and a $INCREMENT() on such a variable, triggers at YDB-E-GVINCRISOLATION run-time error.
 * The naked reference is affected by the usage of global variables (with or without indirection) in the glvn and/or numexpr components. The evaluation of "numexpr" ahead of "glvn" determines the value of the naked reference after the $INCREMENT. If neither glvn or numexpr contain indirection, then $INCREMENT sets the naked reference as follows:
-  
+
   * glvn, if glvn is a global, or
   * the last global reference in "numexpr" if glvn is a local, or
   * unaffected if neither glvn nor numexpr has any global reference.
@@ -496,7 +507,7 @@ The format for the $JUSTIFY function is:
 
 $JUSTIFY() fills expressions to create fixed length values. However, if the length of the specified expression exceeds the specified field size, $JUSTIFY() does not truncate the result (although it may still round based on the third argument). When required, use $EXTRACT() to perform truncation.
 
-$JUSTIFY() optionally rounds the portion of the result after the decimal point. In the absence of the third argument, $JUSTIFY() does not restrict the evaluation of the expression. In the presence of the third (rounding) argument, $JUSTIFY() evaluates the expression as a numeric value. The rounding algorithm can be understood as follows: 
+$JUSTIFY() optionally rounds the portion of the result after the decimal point. In the absence of the third argument, $JUSTIFY() does not restrict the evaluation of the expression. In the presence of the third (rounding) argument, $JUSTIFY() evaluates the expression as a numeric value. The rounding algorithm can be understood as follows:
 
 * If necessary, the rounding algorithm extends the expression to the right with 0s (zeros) to have at least one more digit than specified by the rounding argument.
 * Then, it adds 5 (five) to the digit position after the digit specified by the rounding argument.
@@ -629,7 +640,7 @@ Examples of $NAME()
 Example:
 
 .. parsed-literal::
-   YDB>set X="A""B",^Y(1,X,"B",4)="" 
+   YDB>set X="A""B",^Y(1,X,"B",4)=""
    YDB>write $name(^(3),3)
    ^Y(1,"A""B","B")
    YDB>
@@ -916,7 +927,7 @@ The format of the $QSUBSCRIPT function is:
 
 The namevalue has the form of an evaluated subscripted or unsubscripted global or local variable name.
 
-The intexpr selects the component of the name as follows: 
+The intexpr selects the component of the name as follows:
 
 * -2 : is reserved but may be "error",
 * -1 : for environment,
@@ -932,7 +943,7 @@ Examples of $QSUBSCRIPT()
 
 Example:
 
-Assume that X is defined as in the `Examples of $Qlength() <./functions.html#examples-of-qlength>`_ earlier in this chapter; 
+Assume that X is defined as in the `Examples of $Qlength() <./functions.html#examples-of-qlength>`_ earlier in this chapter;
 
 .. parsed-literal::
    write X
@@ -962,7 +973,7 @@ The format for the $QUERY function is:
    $Q[UERY](glvn)
 
 * The subscripted or unsubscripted global or local variable name specifies the starting node from which $QUERY() searches for a node with a data value.
-* If $QUERY() finds no node after the specified global or local variable, it returns an empty string. 
+* If $QUERY() finds no node after the specified global or local variable, it returns an empty string.
 * With stdnullcoll, if $Data(glvn(""))=1 (or 11), $Query(glvn("")) returns glvn(1) (assuming glvn(1) exists). Applications looking for a node with a "null" subscript must use $D(glvn("")) to test the existence of glvn(""). $Q(glvn("...")) never returns the starting-point (glvn("")) even though glvn("") may exist.
 
 $QUERY() can be used as a tool for scanning an entire array for nodes that have data values. Because $QUERY() can return a result specifying a different level than its argument, the result provides a full variable name. This contrasts with $ORDER(), which returns a subscript value. To access the data value at a node, a $ORDER() return can be used as a subscript; however, a $QUERY() return must be used with indirection. Because arrays tend to have homogeneous values within a level but not between levels, $QUERY() is more useful as a tool in utility programs than in application programs. The $QUERY() can be useful in avoiding nested $ORDER loops.
@@ -1177,7 +1188,7 @@ The format for the $STACK function is:
    $ST[ACK](intexpr[,expr])
 
 * The intexpr identifies the M virtual machine stack level (as described by the standard), on which the function is to provide information.
-* The optional second argument is evaluated as a keyword that specifies a type of information to be returned as follows: 
+* The optional second argument is evaluated as a keyword that specifies a type of information to be returned as follows:
 
   * "MCODE" the line of code that was executed.
   * "PLACE" the address of the above line of code or the symbol at ("@") to indicate code executed from a string value.
@@ -1193,13 +1204,13 @@ The format for the $STACK function is:
 * $STACK(lvl) reports "ZINTR" for a stack level invoked by MUPIP INTRPT.
 * If intexpr is greater than $STACK (-1), the function returns an empty string.
 * During error handling, $STACK() return a snapshot of the state of the stack at the time of error. Even if subsequent actions add stack levels, $STACK() continues to report the same snapshot for the levels as of the time of the error. $STACK() reports the latest stack information only after the code clears $ECODE.
-* $STACK() assists in debugging programs. 
+* $STACK() assists in debugging programs.
 
 .. note::
    $STACK() returns similar information to ZSHOW "S" when ""=$ECODE, but when $ECODE contains error information, $STACK() returns information as of the time of a prior error, generally the first entry in $ECODE. For $STACK() to return current information, be sure that error handing code does a SET $ECODE="" before restoring the normal flow of control.
 
 +++++++++++++++++++++++++
-Examples of $STACK() 
+Examples of $STACK()
 +++++++++++++++++++++++++
 
 Example:
@@ -1214,15 +1225,15 @@ Example:
      write !,$$ELabel
      write !,$STACK
      quit
-                  
+
    Label
      write !,$STACK
      do DLabel
      quit
-                     
+
    ELabel()
      quit $STACK
-                       
+
    DLabel
      write !,$STACK
      quit
@@ -1560,7 +1571,7 @@ $VIEW() provides a means to access YottaDB environmental information. When Yotta
 +---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
 .. note::
-   YottaDB uses the LC_CREF, LV_GCOL, LV_REF keywords in testing and is documenting them to ensure completeness in product documentation. They may (or may not) be useful during application development for debugging or performance testing implementation alternatives. 
+   YottaDB uses the LC_CREF, LV_GCOL, LV_REF keywords in testing and is documenting them to ensure completeness in product documentation. They may (or may not) be useful during application development for debugging or performance testing implementation alternatives.
 
 ++++++++++++++++++++++++
 Examples of $VIEW()
@@ -1572,7 +1583,7 @@ Example:
    YDB>Set a=1,*b(1)=a
    YDB>write $view("LV_CREF","a")," ",$view("LV_CREF","b")
    1 0
-   YDB>write $view("LV_REF","a")," ",$view("LV_REF","b") 
+   YDB>write $view("LV_REF","a")," ",$view("LV_REF","b")
    2 1
    YDB>
 
@@ -1652,7 +1663,7 @@ Example:
    YDB>write "$zahandle(A)=""",$zahandle(A),""" $zahandle(B(1))=""",$zahandle(B(1)),""""
    $zahandle(A)="17B8810" $zahandle(B(1))="17B8810"
    YDB>merge D=A ; A copy of the data has a different $zahandle()
-   YDB>Write "$ZAHandle(A)=""",$ZAHandle(A),""" $ZAHandle(D)=""",$ZAHandle(D),""""      
+   YDB>Write "$ZAHandle(A)=""",$ZAHandle(A),""" $ZAHandle(D)=""",$ZAHandle(D),""""
    $zahandle(A)="17B8810" $zahandle(D)="17B8C10"
    YDB>
 
@@ -1667,7 +1678,7 @@ Since YottaDB does not provide a way for a function to return an array or alias 
       ;;
       zprint    ; Print this program
       new tmp1,tmp2,tmp3
-      for i=3:1 set tmp1=$text(+i),tmp2=$piece(tmp1,";;",2) quit:'$length(tmp2)  do  
+      for i=3:1 set tmp1=$text(+i),tmp2=$piece(tmp1,";;",2) quit:'$length(tmp2)  do
       .set tmp3="%"_$$NewPerson($piece(tmp2,",",1),$piece(tmp2,",",2))
       .set @("\*Relativists("_(i-2)_")="_tmp3)
       .kill @("*"_tmp3)
@@ -1676,7 +1687,7 @@ Since YottaDB does not provide a way for a function to return an array or alias 
       write "Array of objects of relativists:",!
       zwrite
       quit
-      ;    
+      ;
   NewPerson(name,birthdate)    ; Create new person object
       new lname,fname,dob,tmp1,tmp2 ; New variables used by this function
       set lname=$Piece(name," ",2),fname=$Piece(name," ",1)
@@ -1724,7 +1735,7 @@ Example:
 
 .. parsed-literal::
    YDB>for i=0:1:4 write !,$zascii("主",i)
- 
+
    -1
    228
    184
@@ -1791,13 +1802,13 @@ The format for the $ZBITAND() function is:
 **Example of $ZBITAND()**
 
 .. parsed-literal::
-   YDB> 
+   YDB>
    ; The binary representation of A is 01000001
    YDB>Set BITSTRINGB=$zbitset($zbitset($zbitstr(8,0),2,1),7,1)
    ; The binary representation of B is 01000010
    YDB>set BITSTRINGAB=$zbitand(BITSTRINGA,BITSTRINGB)
    YDB>for i=1:1:8 write $zbitget(BITSTRINGAB,I)
-   01000000 
+   01000000
 
 This examples uses $ZBITAND to perform a bitwise AND operation on A and B.
 
@@ -1816,7 +1827,7 @@ The format for the $ZBITCOUNT function is:
 
 .. parsed-literal::
    $ZBITCOUNT(expr)
-    
+
 The expression specifies the bit string to examine.
 
 **Example of $ZBITCOUNT()**
@@ -1824,12 +1835,12 @@ The expression specifies the bit string to examine.
 Example:
 
 .. parsed-literal::
-   YDB>set BITSTRINGA=$ZBITSET($ZBITSET($ZBITSTR(8,0),2,1),8,1) 
+   YDB>set BITSTRINGA=$ZBITSET($ZBITSET($ZBITSTR(8,0),2,1),8,1)
    ; The binary representation of A is 01000001
    YDB>set BITSTRINGB=$zbitset($zbitset($zbitstr(8,0),2,1),7,1)
    ; The binary representation of B is 01000010
-   YDB>Set BITSTRINGC=$zbitor(BITSTRINGA,BITSTRINGB) 
-   ; A OR B=01000011 
+   YDB>Set BITSTRINGC=$zbitor(BITSTRINGA,BITSTRINGB)
+   ; A OR B=01000011
    YDB>write $zbitcount(BITSTRINGA)
    2
    YDB>write $zbitcount(BITSTRINGB)
@@ -1862,7 +1873,7 @@ If the optional integer argument exceeds the length of the string, or if the fun
 Example:
 
 .. parsed-literal::
-   YDB>Set BITSTRINGA=$ZBITSET($ZBITSET($ZBITSTR(8,0),2,1),8,1) 
+   YDB>Set BITSTRINGA=$ZBITSET($ZBITSET($ZBITSTR(8,0),2,1),8,1)
    ; The binary representation of A is 01000001
    YDB>write $zbitfind(BITSTRINGA,1,3)
    9
@@ -1889,7 +1900,7 @@ The format for the $ZBITGET function is:
 Example:
 
 .. parsed-literal::
-   YDB>set BITSTRINGA=$zbitset($zbitset($zbitstr(8,0),2,1),8,1) 
+   YDB>set BITSTRINGA=$zbitset($zbitset($zbitstr(8,0),2,1),8,1)
    ; The binary representation of A is 01000001
    YDB>for i=1:1:8 write $zbitget(BITSTRINGA,I)
    01000001
@@ -1916,12 +1927,12 @@ Example:
 
 .. parsed-literal::
    YDB>set BITSTR=$zbitstr(6,1)
-        
+
    YDB>write $zbitlen(BITSTR)
    6
    YDB>
 
-This example displays the length of a bit string of 6 bits. 
+This example displays the length of a bit string of 6 bits.
 
 +++++++++++++++++++++
 $ZBITNOT()
@@ -1939,7 +1950,7 @@ The expression specifies the bit string whose inverted bit pattern becomes the r
 **Examples of $ZBITNOT()**
 
 .. parsed-literal::
-   YDB>set BITSTRINGA=$zbitset($zbitset($zbitstr(8,0),2,1),8,1) 
+   YDB>set BITSTRINGA=$zbitset($zbitset($zbitstr(8,0),2,1),8,1)
    ; The binary representation of A is 01000001
    YDB>for i=1:1:8 write $zbitget($zbitnot(BITSTRINGA),I)
    10111110
@@ -1966,12 +1977,12 @@ The format for the $ZBITOR function is:
 Example:
 
 .. parsed-literal::
-   YDB>set BITSTRINGA=$zbitset($zbitset($zbitstr(8,0),2,1),8,1) 
+   YDB>set BITSTRINGA=$zbitset($zbitset($zbitstr(8,0),2,1),8,1)
    ; The binary representation of A is 01000001
    YDB>set BITSTRINGB=$zbitset($zbitset($zbitstr(8,0),2,1),7,1)
    ; The binary representation of B is 01000010
-   YDB>set BITSTRINGC=$zbitor(BITSTRINGA,BITSTRINGB) 
-   ; A OR B=01000011 
+   YDB>set BITSTRINGC=$zbitor(BITSTRINGA,BITSTRINGB)
+   ; A OR B=01000011
    YDB>write BITSTRINGC
    C
    YDB>
@@ -2058,20 +2069,20 @@ Examples of $ZBIT Functions
 Example:
 
 .. parsed-literal::
-   ZCRC(X) 
-    new R,I,J,B,X1,K 
-    set R=$zbitstr(8,0) 
-    for I=1:1:$length(X) Set R=$zbitxor(R,$$bitin($A(X,I))) 
-    quit $$bitout(R) 
-      
+   ZCRC(X)
+    new R,I,J,B,X1,K
+    set R=$zbitstr(8,0)
+    for I=1:1:$length(X) Set R=$zbitxor(R,$$bitin($A(X,I)))
+    quit $$bitout(R)
+
    bitin(X) ;CONVERT A BYTE TO A BIT STRING
-     set X1=$zbitstr(8,0) 
-     for J=1:1:8 set B=X#2,X=X\2 if B set X1=$zbitset(X1,J,1) 
-     quit X1 
-      
+     set X1=$zbitstr(8,0)
+     for J=1:1:8 set B=X#2,X=X\2 if B set X1=$zbitset(X1,J,1)
+     quit X1
+
    bitout(X) ; CONVERT A BITSTRING TO A NUMBER
-     set X1=0 
-     for K=1:1:8 I $zbitget(X,K) set X1=X1+(2**(K-1)) 
+     set X1=0
+     for K=1:1:8 I $zbitget(X,K) set X1=X1+(2**(K-1))
      quit X1
 
 This uses several $ZBIT functions to turn a character into a bit stream and return a coded value.
@@ -2079,10 +2090,10 @@ This uses several $ZBIT functions to turn a character into a bit stream and retu
 While this example illustrates the use of several of the $ZBIT functions, the following example produces identical results if you need to code the function illustrated above for production.
 
 .. parsed-literal::
-   ZCRC(X) 
-    new R,I,J,B,X1,K 
-    set R=$zbitstr(8,0) 
-    for I=1:1:$length(X) Set R=$zbitxor(R,$char(0)_$extract(X,I)) 
+   ZCRC(X)
+    new R,I,J,B,X1,K
+    set R=$zbitstr(8,0)
+    for I=1:1:$length(X) Set R=$zbitxor(R,$char(0)_$extract(X,I))
     quit $ascii(R,2)
 
 This example illustrates the use of $Char() to specify the number of invalid bits that exist at the end of the character string. In this case there are zero invalid bits.
@@ -2099,7 +2110,7 @@ The format for the $ZCHAR() function is:
    $ZCH[AR](intexpr[,...])
 
 * The integer expression(s) specify the numeric byte value of the byte(s) $ZCHAR() returns.
-* YottaDB limits the number of arguments to a maximum of 254. $ZCHAR() provides a means of producing byte sequences. In the UTF-8 mode, $ZCHAR() returns a malformed characters for numeric byte values 128 to 255. In the M mode, $ZCHAR() can create valid UTF-8 characters that includes bytes in the range 128-255. 
+* YottaDB limits the number of arguments to a maximum of 254. $ZCHAR() provides a means of producing byte sequences. In the UTF-8 mode, $ZCHAR() returns a malformed characters for numeric byte values 128 to 255. In the M mode, $ZCHAR() can create valid UTF-8 characters that includes bytes in the range 128-255.
 
 .. note::
    The output of $ZCHAR() for values of integer expression(s) from 0 through 127 does not vary with choice of the character encoding scheme. This is because 7-bit ASCII is a proper subset of UTF-8 character encoding scheme. The representation of characters returned by $ZCHAR() for values 128 through 255 differ for each character encoding scheme.
@@ -2191,7 +2202,7 @@ Examples of $ZCONVERT()
 
 Example:
 
-.. parsed-literal:: 
+.. parsed-literal::
    YDB>write $zconvert("Happy New Year","U")
    HAPPY NEW YEAR
 
@@ -2409,7 +2420,7 @@ This example shows hours and minutes on a 24 hour clock. Notice that the first a
 Example:
 
 .. parsed-literal::
-   
+
   YDB>write $zdateform
   0
   YDB>write $zdate($H)
@@ -2456,9 +2467,9 @@ Examples of $ZEXTRACT()
 Example:
 
 .. parsed-literal::
-   YDB>Set A="主要雨在西班牙停留在平原" 
-        
-   YDB>For i=0:1:$zlength(A) 
+   YDB>Set A="主要雨在西班牙停留在平原"
+
+   YDB>For i=0:1:$zlength(A)
    YDB>write !,$zascii($zextract(A,i)),"|"
    YDB>
 
@@ -2658,7 +2669,7 @@ The format for the $ZLENGTH() function is:
 
 * The first expression specifies the sequence of octets that $ZLENGTH() "measures".
 * The optional second expression specifies the delimiter that defines the measure; if this argument is missing, $ZLENGTH() returns the number of bytes in the sequence of octets.
-* If the second argument is present and not null, $ZLENGTH() returns one more than the count of the number of occurrences of the second byte sequence in the first byte sequence; if the second argument is null, the M standard for the analogous $LENGTH() dictates that $ZLENGTH() returns a zero (0). 
+* If the second argument is present and not null, $ZLENGTH() returns one more than the count of the number of occurrences of the second byte sequence in the first byte sequence; if the second argument is null, the M standard for the analogous $LENGTH() dictates that $ZLENGTH() returns a zero (0).
 * $ZLENGTH() provides a tool for determining the lengths of a sequence of octets in two ways - characters and delimited substrings(pieces). The two argument $ZLENGTH() returns the number of existing pieces, while the one argument returns the number of characters.
 
 +++++++++++++++++++++++
@@ -3077,9 +3088,9 @@ Examples of $ZSIGPROC()
 
 Example:
 
-.. parsed-literal:: 
+.. parsed-literal::
    YDB>job ^Somejob
-   YDB>set ret=$&ydbposix.signalval("SIGUSR1",.sigusr1) zwrite 
+   YDB>set ret=$&ydbposix.signalval("SIGUSR1",.sigusr1) zwrite
        ret=0
        sigusr1=10
    YDB>write $zsigproc($zjob,sigusr1)
@@ -3287,12 +3298,12 @@ Examples of $ZTRANSLATE()
 Example:
 
 .. parsed-literal::
-   YDB>set hiraganaA=$char(12354) ; $zchar(227,129,130) 
+   YDB>set hiraganaA=$char(12354) ; $zchar(227,129,130)
    YDB>set temp1=$zchar(130)
    YDB>set temp2=$zchar(140)
    YDB>set tr=$ztranslate(hiraganaA,temp1,temp2)
    YDB>w $ascii(tr)
-   12364 
+   12364
    YDB>
 
 In the above example, $ZTRANSLATE() replaces byte $ZCHAR(130) in first expression and matching the first (and only) byte in the second expression with byte $ZCHAR(140) - the corresponding byte in the third expression.
@@ -3304,7 +3315,7 @@ $ZTRIgger
 Examine or load trigger definition. The format of the $ZTRIGGER() function is:
 
 .. parsed-literal::
-   $ZTRIgger(expr1[,expr2]) 
+   $ZTRIgger(expr1[,expr2])
 
 * $ZTRIGGER() returns a truth value (1 or 0) depending on the success of the specified action.
 * $ZTRIGGER() performs trigger maintenance actions similar those performed by MUPIP TRIGGER.
@@ -3324,7 +3335,7 @@ Examine or load trigger definition. The format of the $ZTRIGGER() function is:
 * YottaDB allows defining triggers with the same name and signature in different regions, but does not allow defining triggers with the same name, but different signatures, in different regions within the same global directory. When loading a trigger definition, if a user-defined name conflicts with a name in any region to which the trigger applies, $ZTRIGGER() reports an error. However, when the name is auto-generated, it generates a name in every region, so if there are multiple (spanning) regions, the same trigger might have a differing auto-generated name in each region.
 
 .. note::
-   A $ZTRIGGER() action (delete or select) applies to all triggers in all regions matching the specified signature. If the argument specifies an incomplete trigger signature, for example, only the name, the specification may match multiple triggers and apply the delete or select to all of them. YottaDB recommends you run a select and analyze the scope of the signature before any signature limited delete. 
+   A $ZTRIGGER() action (delete or select) applies to all triggers in all regions matching the specified signature. If the argument specifies an incomplete trigger signature, for example, only the name, the specification may match multiple triggers and apply the delete or select to all of them. YottaDB recommends you run a select and analyze the scope of the signature before any signature limited delete.
 
 ++++++++++++++++++++++++++
 Examples of $ZTRIGGER()
@@ -3450,7 +3461,7 @@ Example:
 
 .. parsed-literal::
    YDB>write $zwidth("The rain in Spain stays mainly in the plain.")
-   44    
+   44
    YDB>set A="主要雨在西班牙停留在平原"
    YDB>write $length(A)
    12

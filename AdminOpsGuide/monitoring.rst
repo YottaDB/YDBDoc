@@ -1,5 +1,16 @@
+.. ###############################################################
+.. #                                                             #
+.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # All rights reserved.                                        #
+.. #                                                             #
+.. #     This source code contains the intellectual property     #
+.. #     of its copyright holder(s), and is made available       #
+.. #     under a license.  If you do not know the terms of       #
+.. #     the license, please stop and do not read further.       #
+.. #                                                             #
+.. ###############################################################
 
-.. index:: 
+.. index::
    Monitoring YottaDB
 
 ====================================
@@ -23,7 +34,7 @@ This section covers information on monitoring YottaDB messages. There are severa
 
 A system management tool will help you automate monitoring messages.
 
-YottaDB sends messages to the system log at the LOG_INFO level of the LOG_USER facility. YottaDB messages are identified by a signature of the form YDB-s-abcdef where -s- is a severity indicator and abcdef is an identifier. 
+YottaDB sends messages to the system log at the LOG_INFO level of the LOG_USER facility. YottaDB messages are identified by a signature of the form YDB-s-abcdef where -s- is a severity indicator and abcdef is an identifier.
 
 The severity indicators are:
 * -I- for informational messages
@@ -66,7 +77,7 @@ While journal files automatically switch to new files when the limit is reached,
 1. gtmsecshr log file - gtm_secshr_log in the directory $ydb_log (send a SIGHUP to the gtmsecshr process to create a new log file).
 
    .. note::
-      In the latest version, YottaDB logs gtmsecshr messages in the system log and ignores the environment variable ydb_log. 
+      In the latest version, YottaDB logs gtmsecshr messages in the system log and ignores the environment variable ydb_log.
 
 2. Source Server, Receiver Server, and Update Process log files.
 
@@ -106,7 +117,7 @@ When an out-of-design situation or a fatal error causes a YottaDB process to ter
 
 As core dump files may contain non-public information, you might choose to disable core dump generation. In the absence of a core dump file, you may be asked to provide detailed information about your hardware, YottaDB version, application state, system state, and possibly a reproducible scenario of the unexpected process termination. Note that unexpected process terminations are not always reproducible. You are likely to spend a lot more time in providing post-mortem information during a YottaDB support engagement than when a core dump file is available.
 
-Core file generation and configuration are functions of your operating system. Ensure that core file generation is configured and enabled on your operating system. On Linux platforms, /proc/sys/kernel/core_pattern determines the naming convention of core files and /proc/sys/kernel/core_uses_PID determines whether the process id of the dumped process should added to the core dump file name. A core_pattern value of core creates core dump files in the current directory. Check the man page for core (on Linux) for instructions on enabling and configuring core dump file generation according to your requirements. 
+Core file generation and configuration are functions of your operating system. Ensure that core file generation is configured and enabled on your operating system. On Linux platforms, /proc/sys/kernel/core_pattern determines the naming convention of core files and /proc/sys/kernel/core_uses_PID determines whether the process id of the dumped process should added to the core dump file name. A core_pattern value of core creates core dump files in the current directory. Check the man page for core (on Linux) for instructions on enabling and configuring core dump file generation according to your requirements.
 
 .. note::
    As maintainers of YottaDB, our goal is to make the product as reliable as it can be, so you should get few, if any, core dump files. Before a public release, YottaDB goes through several rounds of automated testing which provides thorough test coverage for new functionality and possible regressions. While prioritizing fixes for a YottaDB public release, we assign a higher priority to unexpected process terminations that our regression testing cycle and customers may report. As part of any fix, we add new test cases that become an integral part of future regression testing cycles. We have followed this practice for the past several years and therefore it is very unusual for a stable production application to generate core files. YottaDB supplies a wide range of functionality in ways intended to maximize performance. Nonetheless, YottaDB is reasonably complex as the number of possible execution paths is large, and our testing coverage may not include all possible edge cases. If you encounter a core dump because of a YottaDB issue, it is likely that it is not part of our test coverage and we may find it hard to reproduce. Core dump files are a powerful tool in diagnosing and addressing issues that cause process failures. Note also that user actions can directly cause core dump files without any contributing YottaDB issue (see the following example).
@@ -126,8 +137,8 @@ The following suggestions may help with configuring core dump files:
      $ ls -l core*
      -rw------- 1 ydbnode jdoe 3506176 Aug 18 14:59 core.24573
 
-* In order to test your core generation environment, you can also generate a core dump at the YottaDB prompt with a ZMESSAGE 150377788 command. 
+* In order to test your core generation environment, you can also generate a core dump at the YottaDB prompt with a ZMESSAGE 150377788 command.
 * If you do not find the expected dump files and have already enabled core generation on your operating system, check file permissions and quotas settings.
-* As YottaDB core dumps are not configured for use with automated crash reporting systems such as apport, you might want to adjust the core naming conventions settings in such a way that core dumps are preserved safely until the time you engage your YottaDB support channel. 
+* As YottaDB core dumps are not configured for use with automated crash reporting systems such as apport, you might want to adjust the core naming conventions settings in such a way that core dumps are preserved safely until the time you engage your YottaDB support channel.
 
-Before sharing a core dump file with anyone, you must determine whether the files contain NPI and whether the recipient is permitted to view the information in the files. YottaDB Support does not accept NPI. 
+Before sharing a core dump file with anyone, you must determine whether the files contain NPI and whether the recipient is permitted to view the information in the files. YottaDB Support does not accept NPI.

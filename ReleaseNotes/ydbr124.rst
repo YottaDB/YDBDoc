@@ -1,3 +1,15 @@
+.. ###############################################################
+.. #                                                             #
+.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # All rights reserved.                                        #
+.. #                                                             #
+.. #     This source code contains the intellectual property     #
+.. #     of its copyright holder(s), and is made available       #
+.. #     under a license.  If you do not know the terms of       #
+.. #     the license, please stop and do not read further.       #
+.. #                                                             #
+.. ###############################################################
+
 =================
 YottaDB r1.24
 =================
@@ -648,7 +660,7 @@ System Administration
 
 * When a multi-threaded instance of :code:`mupip journal -rollback` runs out of memory during a rehashing operation, child threads transfer error-handling to the parent thread and terminate. Previously, child threads occasionally failed to report the error, causing MUPIP to halt without a descriptive error message. This issue was only observed in the development environment, and was never reported by a user. (`GTM-8836 <http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V6.3-005_Release_Notes.html#GTM-8836>`_)
 
-* 
+*
   The YottaDB restriction mechanism recognizes the following lines:
 
   ::
@@ -663,7 +675,7 @@ System Administration
   An example restrict file for this:
 
   ::
-     
+
        cat $ydb_dist/restrict.txt
 
        ZSYSTEM_FILTER:^filterzsy
@@ -672,7 +684,7 @@ System Administration
   The actual filter routine:
 
   ::
- 
+
        filterzsy(inarg,outarg);
        if ""=inarg set outarg="-1;must provide a command" quit
        for i=1:1 set arg=$piece(inarg,";",i) quit:""=arg  do  quit:$data(outarg)

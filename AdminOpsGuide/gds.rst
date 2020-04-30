@@ -1,3 +1,14 @@
+.. ###############################################################
+.. #                                                             #
+.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # All rights reserved.                                        #
+.. #                                                             #
+.. #     This source code contains the intellectual property     #
+.. #     of its copyright holder(s), and is made available       #
+.. #     under a license.  If you do not know the terms of       #
+.. #     the license, please stop and do not read further.       #
+.. #                                                             #
+.. ###############################################################
 
 .. index::
    GDS
@@ -42,7 +53,7 @@ All YottaDB components, except GDE, (the run-time system, DSE, LKE, MUPIP) use t
 
 The current state of the file header always determines the characteristics of the database. The MUPIP CREATE command initializes the values of the file header data elements from the global directory and creates a new .DAT file.
 
-The file header data elements are listed as follows in alphabetical order for easier access, rather than the order in which they appear in the file header. 
+The file header data elements are listed as follows in alphabetical order for easier access, rather than the order in which they appear in the file header.
 
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Data Elements                      | Description                                                                                                                                                   |
@@ -269,37 +280,37 @@ These two bits are internally represented as:
 
 * ':' - REUSABLE
 
-The interpreted form of the local bitmap is like the following: 
+The interpreted form of the local bitmap is like the following:
 
 .. parsed-literal::
-   Block 0  Size 90  Level -1  TN 1 V5   Master Status: Free Space 
-                  Low order                         High order 
-   Block        0: |  XXXXX...  ........  ........  ........  | 
-   Block       20: |  ........  ........  ........  ........  | 
-   Block       40: |  ........  ........  ........  ........  | 
-   Block       60: |  ........  ........  ........  ........  | 
-   Block       80: |  ........  ........  ........  ........  | 
-   Block       A0: |  ........  ........  ........  ........  | 
-   Block       C0: |  ........  ........  ........  ........  | 
-   Block       E0: |  ........  ........  ........  ........  | 
-   Block      100: |  ........  ........  ........  ........  | 
-   Block      120: |  ........  ........  ........  ........  | 
-   Block      140: |  ........  ........  ........  ........  | 
-   Block      160: |  ........  ........  ........  ........  | 
-   Block      180: |  ........  ........  ........  ........  | 
-   Block      1A0: |  ........  ........  ........  ........  | 
-   Block      1C0: |  ........  ........  ........  ........  | 
-   Block      1E0: |  ........  ........  ........  ........  | 
+   Block 0  Size 90  Level -1  TN 1 V5   Master Status: Free Space
+                  Low order                         High order
+   Block        0: |  XXXXX...  ........  ........  ........  |
+   Block       20: |  ........  ........  ........  ........  |
+   Block       40: |  ........  ........  ........  ........  |
+   Block       60: |  ........  ........  ........  ........  |
+   Block       80: |  ........  ........  ........  ........  |
+   Block       A0: |  ........  ........  ........  ........  |
+   Block       C0: |  ........  ........  ........  ........  |
+   Block       E0: |  ........  ........  ........  ........  |
+   Block      100: |  ........  ........  ........  ........  |
+   Block      120: |  ........  ........  ........  ........  |
+   Block      140: |  ........  ........  ........  ........  |
+   Block      160: |  ........  ........  ........  ........  |
+   Block      180: |  ........  ........  ........  ........  |
+   Block      1A0: |  ........  ........  ........  ........  |
+   Block      1C0: |  ........  ........  ........  ........  |
+   Block      1E0: |  ........  ........  ........  ........  |
   'X' == BUSY '.' == FREE ':' == REUSABLE '?' == CORRUPT
 
 .. note::
-   The first block described by the bitmap is itself and is therefore always marked busy. 
+   The first block described by the bitmap is itself and is therefore always marked busy.
 
 If bitmaps are marked as "?", they denote that they are corrupted (not currently in a legal combination) bitmaps. The consequences of corrupted bitmaps are:
 
 Possible loss of data when YottaDB overwrites a block that is incorrectly marked as free (malignant).
 
-Reduction in the effective size of the database by the number of blocks incorrectly marked as busy (benign). 
+Reduction in the effective size of the database by the number of blocks incorrectly marked as busy (benign).
 
 ---------------------------
 Master Bitmap
@@ -309,13 +320,13 @@ Using bitmaps, YottaDB efficiently locates free space in the database. A master 
 
 There is only one Master Bitmap per database. You can neither see the contents of the master bitmap directly nor change the size of the master bitmap. The maximum size of a single YottaDB database file is 992 Mi blocks. A logical database consists of an arbitrarily large number of database files.
 
-The size of the master bitmap constrains the size of the database. The size of the master map reflects current expectations for the maximum operational size of a single database file. Note: In addition to the limit imposed by the size of the master map, YottaDB currently limits a tree to a maximum number of 7 levels. This means that if a database holds only one global, depending on the density and size of the data, it might reach the level limit before the master map limit. 
+The size of the master bitmap constrains the size of the database. The size of the master map reflects current expectations for the maximum operational size of a single database file. Note: In addition to the limit imposed by the size of the master map, YottaDB currently limits a tree to a maximum number of 7 levels. This means that if a database holds only one global, depending on the density and size of the data, it might reach the level limit before the master map limit.
 
 ------------------------
 Database Structure
 ------------------------
 
-The YottaDB database structure is hierarchical, based on a form of balanced tree called a B-star tree (B*-tree) structure. The B*-tree contains blocks that are either index or data blocks. An index block contains pointers used to locate data in data blocks, while the data blocks actually store the data. Each block contains a header and records. Each record contains a key and data. 
+The YottaDB database structure is hierarchical, based on a form of balanced tree called a B-star tree (B*-tree) structure. The B*-tree contains blocks that are either index or data blocks. An index block contains pointers used to locate data in data blocks, while the data blocks actually store the data. Each block contains a header and records. Each record contains a key and data.
 
 ++++++++++++++++++
 Tree Organization
@@ -327,16 +338,16 @@ At the root of the B*-tree structure is a special GDS tree called a Directory Tr
 
 All GDS blocks in the trees have level numbers. Level zero (0) identifies the terminal nodes (that is, data blocks). Levels greater than zero (0) identify non-terminal nodes (that is, index blocks). The highest level of each tree identifies the root. All the B*-trees have the same structure. Block one (1) of the database always holds the root block of the Directory Tree.
 
-The following illustration describes the internal GDS B*-tree framework YottaDB uses to store globals. 
+The following illustration describes the internal GDS B*-tree framework YottaDB uses to store globals.
 
 .. image:: gds_struc.png
 
 YottaDB creates a new GVT when a SET results in the first use of an unsubscripted global name by referring to a subscripted or unsubscripted global variable with a name prefix that has not previously appeared in the database.
 
 .. note::
-   GVTs continue to exist even after all nodes associated with their unsubscripted name are KILLed. An empty GVT occupies negligible space and does not affect YottaDB performance. However, if you are facing performance issues because you have many empty GVTs, you need to reorganize your database file using MUPIP EXTRACT, followed by MUPIP CREATE, and the MUPIP LOAD to remove those empty GVTs. 
+   GVTs continue to exist even after all nodes associated with their unsubscripted name are KILLed. An empty GVT occupies negligible space and does not affect YottaDB performance. However, if you are facing performance issues because you have many empty GVTs, you need to reorganize your database file using MUPIP EXTRACT, followed by MUPIP CREATE, and the MUPIP LOAD to remove those empty GVTs.
 
-The following sections describe the details of the database structures. 
+The following sections describe the details of the database structures.
 
 +++++++++++++++
 GDS Blocks
@@ -347,10 +358,10 @@ Index and data blocks consist of a block header followed by a series of records.
 .. parsed-literal::
    File      /home/jdoe/.yottadb/r1.20_x86_64/g/yottadb.dat
    Region    DEFAULT
-    
+
    Block 3   Size 262   Level 0   TN 3845EE V6
 
-Depending on the platform, there may also be an empty field containing filler to produce proper alignment. The filler occurs between the second and third data field and causes the length of the header to increase from seven to eight bytes. 
+Depending on the platform, there may also be an empty field containing filler to produce proper alignment. The filler occurs between the second and third data field and causes the length of the header to increase from seven to eight bytes.
 
 +++++++++++++++++
 GDS Records
@@ -358,25 +369,25 @@ GDS Records
 
 Records consist of a record header, a key, and either a block pointer or the actual value of a global variable name (gvn). Records are also referred to as nodes.
 
-The record header has two fields that contain information. The first field, of two bytes, specifies the record size. The second field, of one byte, specifies the compression count. 
+The record header has two fields that contain information. The first field, of two bytes, specifies the record size. The second field, of one byte, specifies the compression count.
 
 .. note::
-   Like the GDS block headers, a filler byte may be added in the third field, depending on the platform. For example, "61" in the following example is added as a filler byte. 
+   Like the GDS block headers, a filler byte may be added in the third field, depending on the platform. For example, "61" in the following example is added as a filler byte.
 
-The interpreted form of a block with global ^A("Name",1)="Brad" looks like the following: 
+The interpreted form of a block with global ^A("Name",1)="Brad" looks like the following:
 
 .. parsed-literal::
-   Rec:1  Blk 3  Off 10  Size 14  Cmpc 0  Key ^A("Name",1) 
-         10 : | 14  0  0 61 41  0 FF 4E 61 6D 65  0 BF 11  0  0 42 72 61 64| 
-              |  .  .  .  a  A  .  .  N  a  m  e  .  .  .  .  .  B  r  a  d| 
+   Rec:1  Blk 3  Off 10  Size 14  Cmpc 0  Key ^A("Name",1)
+         10 : | 14  0  0 61 41  0 FF 4E 61 6D 65  0 BF 11  0  0 42 72 61 64|
+              |  .  .  .  a  A  .  .  N  a  m  e  .  .  .  .  .  B  r  a  d|
 
-The data portion of a record in any index block consists of a four-byte block pointer. Level 0 data in the Directory Tree also consists of four-byte block pointers. Level 0 data in Global Variable Trees consists of the actual values for global variable names. 
+The data portion of a record in any index block consists of a four-byte block pointer. Level 0 data in the Directory Tree also consists of four-byte block pointers. Level 0 data in Global Variable Trees consists of the actual values for global variable names.
 
 **Using GDS records to hold spanning nodes**
 
 A global variable node spans across multiple blocks if the size of its value exceeds one database block. Such a global variable node is called a "spanning node". For example, if ^a holds a value that exceeds one database block, YottaDB internally spans the value of ^a in records with keys ^a(#SPAN1), ^a(#SPAN2), ^a(#SPAN3), ^a(#SPAN4), and so on. Note that #SPAN1, #SPAN2, #SPAN3, #SPAN4, and so on are special subscripts that are visible to the database but invisible at the M application level. YottaDGB uses these special subscripts to determine the sequence of the spanning nodes.
 
-The first special subscript #SPAN1 is called a "special index". A special index contains the details about the size of the spanning node's value and the number of additional records that are necessary to hold its value. #SPAN2 and the rest of the records hold chunks of the value of the spanning node. During the load of a binary extract, YottaDB uses these chunks to reconstitute the value of a global. This allows globals to be re-spanned if the block size of the source database is different from the block size of the destination database. 
+The first special subscript #SPAN1 is called a "special index". A special index contains the details about the size of the spanning node's value and the number of additional records that are necessary to hold its value. #SPAN2 and the rest of the records hold chunks of the value of the spanning node. During the load of a binary extract, YottaDB uses these chunks to reconstitute the value of a global. This allows globals to be re-spanned if the block size of the source database is different from the block size of the destination database.
 
 .. note::
    If the destination database's block size is large enough to hold the key and value, then the global is not a spanning node (because it can fit in one database block).
@@ -391,7 +402,7 @@ A key is an internal representation of a global variable name. A byte-by-byte co
 Compression Count
 +++++++++++++++++
 
-The compression count specifies the number of bytes at the beginning of a key that are common to the previous key in the same block. The first key in each block has a compression count of zero. In a global variable tree, only the first record in a block can legitimately have a compression count of zero. 
+The compression count specifies the number of bytes at the beginning of a key that are common to the previous key in the same block. The first key in each block has a compression count of zero. In a global variable tree, only the first record in a block can legitimately have a compression count of zero.
 
 +----------------------------------------+---------------------------------------------+------------------------------------------------------------------+
 | Record Key                             | Compression Count                           | Resulting Key in Record                                          |
@@ -407,7 +418,7 @@ The compression count specifies the number of bytes at the beginning of a key th
 
 The previous table shows keys in M representation. For descriptions of the internal representations, refer to the section on keys.
 
-The non-compressed part of the record key immediately follows the record header. The data portion of the record follows the key and is separated from the key by two null (ASCII 0) bytes. 
+The non-compressed part of the record key immediately follows the record header. The data portion of the record follows the key and is separated from the key by two null (ASCII 0) bytes.
 
 +++++++++++++++++++
 Use of Keys
@@ -419,7 +430,7 @@ YottaDB does not require that the key in an index block correspond to an actual 
 
 The final record in each index block (the \*-record) contains a \*-key ("star-key"). The \*-key is a zero-length key representing the last possible value of the M collating sequence. The \*-key is the smallest possible record, consisting only of a record header and a block pointer, with a key size of zero (0).
 
-The \*-key has the following characteristics: 
+The \*-key has the following characteristics:
 
 * A record size of seven (7) or eight (8) bytes (depending on endian)
 
@@ -439,13 +450,13 @@ Keys in the Directory Tree represent unsubscripted global variable names. Unlike
 
 Single null (ASCII 0) bytes separate the variable name and each of the subscripts. Two contiguous null bytes terminate keys. YottaDB encodes string subscripts and numeric subscripts differently.
 
-During a block split the system may generate index keys which include subscripts that are numeric in form but do not correspond to legal numeric values. These keys serve in index processing because they fall in an appropriate place in the collating sequence. When DSE represents these "illegal" numbers, it may display many zero digits for the subscript. 
+During a block split the system may generate index keys which include subscripts that are numeric in form but do not correspond to legal numeric values. These keys serve in index processing because they fall in an appropriate place in the collating sequence. When DSE represents these "illegal" numbers, it may display many zero digits for the subscript.
 
 +++++++++++++++++++++++++
 Global Variable Names
 +++++++++++++++++++++++++
 
-The portion of the key corresponding to the name of the global variable holds an ASCII representation of the variable name excluding the caret symbol (^). 
+The portion of the key corresponding to the name of the global variable holds an ASCII representation of the variable name excluding the caret symbol (^).
 
 +++++++++++++++++++++++++
 String Subscripts
@@ -453,14 +464,14 @@ String Subscripts
 
 YottaDB stores string subscripts as a variable length sequence of 8-bit codes ranging from 0 to 255. With UTF-8 specified at process startup, YottaDB stores string subscripts as a variable length sequence of 8-bit codes with UTF-8 encoding.
 
-To distinguish strings from numerics while preserving collation sequence, YottaDB adds a byte containing hexadecimal FF to the front of all string subscripts. The interpreted form of the global variable ^A("Name",1)="Brad" looks like the following: 
+To distinguish strings from numerics while preserving collation sequence, YottaDB adds a byte containing hexadecimal FF to the front of all string subscripts. The interpreted form of the global variable ^A("Name",1)="Brad" looks like the following:
 
 .. parsed-literal::
-   Block 3   Size 24   Level 0   TN 1 V5 
-     
-   Rec:1  Blk 3  Off 10  Size 14  Cmpc 0  Key ^A("Name",1) 
-       10 : | 14  0  0 61 41  0 FF 4E 61 6D 65  0 BF 11  0  0 42 72 61 64| 
-            |  .  .  .  a  A  .  .  N  a  m  e  .  .  .  .  .  B  r  a  d| 
+   Block 3   Size 24   Level 0   TN 1 V5
+
+   Rec:1  Blk 3  Off 10  Size 14  Cmpc 0  Key ^A("Name",1)
+       10 : | 14  0  0 61 41  0 FF 4E 61 6D 65  0 BF 11  0  0 42 72 61 64|
+            |  .  .  .  a  A  .  .  N  a  m  e  .  .  .  .  .  B  r  a  d|
 
 Note that hexadecimal FF is in front of the subscript "Name". YottaDB permits the use of the full range of legal characters in keys. Therefore, a null (ASCII 0) is an acceptable character in a string. YottaDB handles strings with embedded nulls by mapping 0x00 to 0x0101 and 0x01 to 0x0102. YottaDB treats 0x01 as an escape code. This resolves confusion when null is used in a key, and at the same time, maintains proper collating sequence. The following rules apply to character representation:
 
@@ -468,7 +479,7 @@ All codes except 00 and 01 represent the corresponding ASCII value.
 
 00 is a terminator.
 
-01 is an indicator to translate the next code using the following: 
+01 is an indicator to translate the next code using the following:
 
 +-----------------------------+------------------------------------+-------------------------------------+
 | Code                        | Means                              | ASCII                               |
@@ -478,16 +489,16 @@ All codes except 00 and 01 represent the corresponding ASCII value.
 | 02                          | 01                                 | <SOH>                               |
 +-----------------------------+------------------------------------+-------------------------------------+
 
-With UTF-8 character-set specified, the interpreted output displays a dot character for all graphic characters and malformed characters. For example, the internal representation of the global variable ^DS=$CHAR($$FUNC^%HD("0905"))_$ZCHAR(192) looks like the following: 
+With UTF-8 character-set specified, the interpreted output displays a dot character for all graphic characters and malformed characters. For example, the internal representation of the global variable ^DS=$CHAR($$FUNC^%HD("0905"))_$ZCHAR(192) looks like the following:
 
 .. parsed-literal::
-   Rec:1  Blk 3  Off 10  Size C  Cmpc 0  Key ^DS 
-         10 : |  C  0  0  0 44 53  0  0 E0 A4 85 C0                        | 
-              |  .  .  .  .  D  S  .  .        ?  .                        | 
+   Rec:1  Blk 3  Off 10  Size C  Cmpc 0  Key ^DS
+         10 : |  C  0  0  0 44 53  0  0 E0 A4 85 C0                        |
+              |  .  .  .  .  D  S  .  .        ?  .                        |
 
 Note that DSE displays the wellformed character ? for $CHAR($$FUNC^%HD("0905")) and a dot character for malformed character $ZCHAR(192).
 
-With M character-set specified, the interpreted output displays a dot character for all non-ASCII characters and malformed characters. 
+With M character-set specified, the interpreted output displays a dot character for all non-ASCII characters and malformed characters.
 
 +++++++++++++++++++++++++++++
 Numeric Subscripts
@@ -496,13 +507,13 @@ Numeric Subscripts
 Numeric Subscripts have the format:
 
 .. parsed-literal::
-   [ sign bit ] [ biased exponent ] [ normalized mantissa ] 
+   [ sign bit ] [ biased exponent ] [ normalized mantissa ]
 
 The sign bit and biased exponent together form the first byte of the numeric subscript. Bit seven (7) is the sign bit. Bits <6:0> comprise the exponent. The remaining bytes preceding the subscript terminator of one null (ASCII 0) byte represent the variable length mantissa. The following description shows a way of understanding how YottaDB converts each numeric subscript type to its internal format:
 
-Zero (0) subscript (special case) 
+Zero (0) subscript (special case)
 
-* Represents zero as a single byte with the hexadecimal value 80 and requires no other conversion. 
+* Represents zero as a single byte with the hexadecimal value 80 and requires no other conversion.
 
 Mantissa
 
@@ -520,7 +531,7 @@ Exponent
 
 * Biases exponent by adding hexadecimal 3F.
 
-The resulting exponent falls in the hexadecimal range 3F to 7D if positive, and zero (0) to 3E if negative. 
+The resulting exponent falls in the hexadecimal range 3F to 7D if positive, and zero (0) to 3E if negative.
 
 Sign
 
@@ -528,26 +539,26 @@ Sign
 
 * If the mantissa is negative: converts each byte of the subscript (including the exponent) to its one's-complement and appends a byte containing hexadecimal FF to the mantissa.
 
-For example, the interpreted representation of the global ^NAME(.12,0,"STR",-34.56) looks like the following: 
+For example, the interpreted representation of the global ^NAME(.12,0,"STR",-34.56) looks like the following:
 
 .. parsed-literal::
-   Rec:1  Blk 5  Off 10  Size 1A  Cmpc 0  Key ^NAME(.12,0,"STR",-34.56) 
-         10 : | 1A  0  0 61 4E 41 4D 45  0 BE 13  0 80  0 FF 53 54 52  0 3F| 
-              |  .  .  .  a  N  A  M  E  .  .  .  .  .  .  .  S  T  R  .  ?| 
-         24 : | CA A8 FF  0  0 31                                          | 
-              |  .  .  .  .  .  1                                          | 
+   Rec:1  Blk 5  Off 10  Size 1A  Cmpc 0  Key ^NAME(.12,0,"STR",-34.56)
+         10 : | 1A  0  0 61 4E 41 4D 45  0 BE 13  0 80  0 FF 53 54 52  0 3F|
+              |  .  .  .  a  N  A  M  E  .  .  .  .  .  .  .  S  T  R  .  ?|
+         24 : | CA A8 FF  0  0 31                                          |
+              |  .  .  .  .  .  1                                          |
 
 Note that CA A8 ones complement representation is 35 57 and then when you subtract one (1) from each byte in the mantissa you get 34 56.
 
-Similarly, the interpreted representation of ^NAME(.12,0,"STR",-34.567) looks like the following: 
+Similarly, the interpreted representation of ^NAME(.12,0,"STR",-34.567) looks like the following:
 
 .. parsed-literal::
-   Rec:1  Blk 5  Off 10  Size 1B  Cmpc 0  Key ^NAME(.12,0,"STR",-34.567) 
-         10 : | 1B  0  0  9 4E 41 4D 45  0 BE 13  0 80  0 FF 53 54 52  0 3F| 
-              |  .  .  .  .  N  A  M  E  .  .  .  .  .  .  .  S  T  R  .  ?| 
-         24 : | CA A8 8E FF  0  0 32                                       | 
+   Rec:1  Blk 5  Off 10  Size 1B  Cmpc 0  Key ^NAME(.12,0,"STR",-34.567)
+         10 : | 1B  0  0  9 4E 41 4D 45  0 BE 13  0 80  0 FF 53 54 52  0 3F|
+              |  .  .  .  .  N  A  M  E  .  .  .  .  .  .  .  S  T  R  .  ?|
+         24 : | CA A8 8E FF  0  0 32                                       |
               |  .  .  .  .  .  .  2                                       |
 
-Note that since there is an odd number of digits, YottaDB appends zero (0) to the mantissa and one (1) to each byte in the mantissa. 
+Note that since there is an odd number of digits, YottaDB appends zero (0) to the mantissa and one (1) to each byte in the mantissa.
 
 

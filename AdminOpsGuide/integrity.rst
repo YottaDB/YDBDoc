@@ -1,3 +1,14 @@
+.. ###############################################################
+.. #                                                             #
+.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # All rights reserved.                                        #
+.. #                                                             #
+.. #     This source code contains the intellectual property     #
+.. #     of its copyright holder(s), and is made available       #
+.. #     under a license.  If you do not know the terms of       #
+.. #     the license, please stop and do not read further.       #
+.. #                                                             #
+.. ###############################################################
 
 .. index::
    Maintaining Database Integrity
@@ -86,7 +97,7 @@ Restore from Backup
 
 Restoring the database from backup is the least technically sophisticated approach to handling integrity problems. This strategy is most beneficial when the data in the database is static or can be recomputed. In other cases, it requires operational controls to identify, and people to reenter, the work performed between the backup and the failure. For more information on MUPIP BACKUP, RESTORE, EXTRACT, and LOAD, refer to the `"MUPIP" chapter <./dbmgmt.html#mupip>`_. You may also use UNIX utilities such as tar, dump, and restore.
 
-Some database regions may be set up to hold only temporary data, typically only valid for the life of a process or even just during some operation performed by a process. Rather than restoring such a region, it is generally more appropriate to delete it and recreate it using MUPIP CREATE. 
+Some database regions may be set up to hold only temporary data, typically only valid for the life of a process or even just during some operation performed by a process. Rather than restoring such a region, it is generally more appropriate to delete it and recreate it using MUPIP CREATE.
 
 ++++++++++++++++++++++++++
 Repair with DSE
@@ -126,7 +137,7 @@ Examine the accounting logs for information about recent process terminations. C
 
 * Has the system crashed recently? If so, what caused the crash?
 * Is there database damage?
-  
+
   * What region(s) are affected? What globals?
   * What are the error messages?
   * What do you see when you examine the database?
@@ -156,7 +167,7 @@ When doing repairs with DSE, understanding the nature of the information in the 
 
 For example, if you know that certain data is purged weekly, and you find damage in some of this type of data that is already five or six days old, you may be able to discard it rather than repair it. Similarly, you might find damage to a small cross-index global and have a program that can quickly rebuild it.
 
-When you know what the data "looks" like, you are in a much better position to recognize anomalies and clues in both keys and data. For example, if you understand the format of a particular type of node, you might recognize a case where two pieces of data have been combined into a single GDS record. 
+When you know what the data "looks" like, you are in a much better position to recognize anomalies and clues in both keys and data. For example, if you understand the format of a particular type of node, you might recognize a case where two pieces of data have been combined into a single GDS record.
 
 +++++++++++++++++++++++++++++++
 Using the proper database file
@@ -319,7 +330,7 @@ The conditions that lead to an LDSPANGLOINCMP error are as follows:
 The partial value can be used as the basis for reconstructing the spanning node.
 
 .. parsed-literal::
-   Case SN2 - While loading a spanning node the next record did contain the expected chunk: 
+   Case SN2 - While loading a spanning node the next record did contain the expected chunk:
    "Expected chunk number : ccccc but found chunk number : ddddd"
 
 Use the partial value and the errant chunk as the basis for reconstructing the spanning node. After encountering this error, the binary load continues looking for the next global variable. If there are additional chunks from the damaged spanning node in the binary extract file, there is a case SN3 error for each of them. Use the errant chunk dumps from them as part of the reconstruction.
@@ -331,7 +342,7 @@ Use the partial value and the errant chunk as the basis for reconstructing the s
 This can be the result of an immediately prior case SN2 error (as described in prior paragraphs) or an isolated errant chunk.
 
 .. parsed-literal::
-   Case SN4 - While loading a spanning node adding the next chunk caused the value to go over expected size: 
+   Case SN4 - While loading a spanning node adding the next chunk caused the value to go over expected size:
    "Global value too large: expected size : sssss actual size : tttttt chunk number : ccccc"
 
 Adding the next chunk caused the value to go over the expected size. Examine the partial value and errant chunk dump.
@@ -340,11 +351,11 @@ Adding the next chunk caused the value to go over the expected size. Examine the
    Case SN5 - While loading a spanning node all of the chunks have been added but the value is not the expected size:
    "Expected size : sssss actual size : ttttt
 
-All of the chunks were found but the size of the value is not what was expected. 
+All of the chunks were found but the size of the value is not what was expected.
 
 **Example- Repairing an Error in a Binary Extract**
 
-Here is an example for repairing an error in a binary extract. 
+Here is an example for repairing an error in a binary extract.
 
 Assume that during the load of a binary extract, you get the following error:
 
@@ -355,13 +366,13 @@ Assume that during the load of a binary extract, you get the following error:
            Global variable from record: ^mypoem(#SPAN32)
            Expected chunk number : 3 but found chunk number : 32
            Partial Value :
-   "Half a league, half a league, Half a league onward, All in the valley of Death Rode the six hundred. 
-   Forward, the Light Brigade! Charge for the guns he said: Into the valley of Death Rode the six hundred. 
+   "Half a league, half a league, Half a league onward, All in the valley of Death Rode the six hundred.
+   Forward, the Light Brigade! Charge for the guns he said: Into the valley of Death Rode the six hundred.
    Forward, the Light Brigade! Was there a man dismayed? Not tho the soldiers knew Some one had blundered:
    Theirs not to make reply, Theirs not to reason why, Theirs but to do and die: Into the valley of Death Rode the six hundred.
    Cannon to the right of them, Cannon to the left of "
            Errant Chunk :
-   "them, Cannon in front of them Volleyed and thundered; 
+   "them, Cannon in front of them Volleyed and thundered;
    Stormed at with shot and shell, Boldly they rode and well, Into the jaws of Death, Into the mouth of Hell Rode the six hundred.
    Flashed all their sabres bare, Flashed as they turned in air Sabring the gunners there, Charging an army while All the world wondered:
    Plunged in the battery-smoke Right thro the line they broke; Cossack and Russian Reeled from the sabre-stroke Shattered and sundered.
@@ -374,8 +385,8 @@ Assume that during the load of a binary extract, you get the following error:
    "t Not the six hundred.
    Cannon to the right of them, Cannon to the left of them, Cannon behind them Volleyed and thundered;
    Stormed at with shot and shell, While horse and hero fell, They that had fought so well Came thro the jaws of Death,
-   Back from the mouth of Hell, All that was left of them, Left of six hundred. 
-   When can their glory fade? O the wild charge they made! All the world wondered. 
+   Back from the mouth of Hell, All that was left of them, Left of six hundred.
+   When can their glory fade? O the wild charge they made! All the world wondered.
    Honour the charge they made! Honour the Light Brigade, Noble six hundred!"
 
 Because the only issue in this case is that one of the chunks' keys has been damaged, put the value back together from the partial value and the contents of the errant chunks.
@@ -394,9 +405,9 @@ Use it together with the partial value:
 
 .. parsed-literal::
    YDB>set ^mypoem="Half a league, half a league, Half a league onward, All in the valley of Death Rode the six hundred.
-   Forward, the Light Brigade! Charge for the guns he said: Into the valley of Death Rode the six hundred. 
+   Forward, the Light Brigade! Charge for the guns he said: Into the valley of Death Rode the six hundred.
    Forward, the Light Brigade! Was there a man dismayed? Not tho the soldiers knew Some one had blundered:
-   Theirs not to make reply, Theirs not to reason why, Theirs but to do and die: Into the valley of Death Rode the six hundred. 
+   Theirs not to make reply, Theirs not to reason why, Theirs but to do and die: Into the valley of Death Rode the six hundred.
    Cannon to the right of them, Cannon to the left of "
 
 Add in the chunk that has the bad internal subscript:
@@ -411,11 +422,11 @@ Add in the chunk that has the bad internal subscript:
 Finally, add the last chunk for that spanning node:
 
 .. parsed-literal::
-   YDB>set ^mypoem=^mypoem\_"t Not the six hundred. 
-   Cannon to the right of them, Cannon to the left of them, Cannon behind them Volleyed and thundered; 
+   YDB>set ^mypoem=^mypoem\_"t Not the six hundred.
+   Cannon to the right of them, Cannon to the left of them, Cannon behind them Volleyed and thundered;
    Stormed at with shot and shell, While horse and hero fell, They that had fought so well Came thro the jaws of Death,
-   Back from the mouth of Hell, All that was left of them, Left of six hundred. 
-   When can their glory fade? O the wild charge they made!  All the world wondered. 
+   Back from the mouth of Hell, All that was left of them, Left of six hundred.
+   When can their glory fade? O the wild charge they made!  All the world wondered.
    Honour the charge they made! Honour the Light Brigade, Noble six hundred!"
 
 You have successfully reconstructed the global from the damaged binary load:
@@ -507,7 +518,7 @@ Use the following diagnostic steps and references to determine an appropriate co
 * Determine whether UNIX can write to the disk.
 * Use a shell command such as mv or cp. If UNIX cannot write to the volume, the problem is not a database problem. Refer to `section H7 <./integrity.html#h7-disk-hardware-problems>`_.
 * Determine whether any database file used by the application has "Cache Freeze" set.
-  
+
   Use DSE FIND -REGION=region and DUMP -FILEHEADER to verify that CACHE FREEZE is zero (00000000) for any hung region(s).
 
   If CACHE FREEZE shows a PID, that process used MUPIP or DSE to FREEZE the database. In this case, investigate whether the process is currently producing the desired results. If the FREEZE is legitimate, do whatever is appropriate to speed up the process using FREEZE. For example, use the NICE command. If the process still exists, but should not be running at this time, stop it. If CACHE FREEZE is non-zero but not in use to protect the database, use DSE FIND -REGION=region and CHANGE -FILEHEAD -FREEZE=FALSE to clear the FREEZE state.
@@ -541,43 +552,43 @@ Example:
    S reg=$V("GVNEXT",""),com="dbcheck.com" o     m-*  com:newv u com
    W "$ DEFINE/USER SYS$OUTPUT dbcheck.lis",!,"$ DSE",!
    F  Q:reg=""  D
-   . W "FIND /REGION=",reg,!,"DUMP /FILEHEADER",! 
+   . W "FIND /REGION=",reg,!,"DUMP /FILEHEADER",!
    . S reg(reg)="",reg=$V("GVNEXT",reg)
    W "$ SEARCH dbcheck.lis ""Cache freeze""",!
-   ; CAUTION: in the above line, "Cache freeze" 
+   ; CAUTION: in the above line, "Cache freeze"
    ; MUST be mixed-case as shown
    W "$ DELETE dbcheck.lis.",!,"$ EXIT",!
-   C com ZSY "@dbcheck" 
+   C com ZSY "@dbcheck"
    O com C com:delete
    W !,"Attempting first access"
    S g="^%" D:$D(^%)  F  S g=$O(@g) Q:g=""  D
    . S reg=$V("REGION",g) Q:$l(reg(reg))
    . I $D(@g)'[0 S reg(reg)=g
-   . E  S reg(reg)=$Q(@g) 
+   . E  S reg(reg)=$Q(@g)
    . W !,"Successful Read in region: ",reg," of ",g
    S reg="" F  S reg=$O(reg(reg)) Q:reg=""  D
-   W !,"Write to region: ",reg 
+   W !,"Write to region: ",reg
    S @(reg(reg)_"="_reg(reg)) W "–OK"
    Q
    S reg=$V("GVFIRST"),com="dbcheck" o com:newv u com
    W "dse <<yz > dbcheck.lis",!
    F  Q:reg=""  D
-   . W "find -region=",reg,!,"dump -fileheader",! 
+   . W "find -region=",reg,!,"dump -fileheader",!
    . S reg(reg)="",reg=$V("GVNEXT",reg)
    W "yz",!,"cat dbcheck.lis | grep 'Cache freeze'"
-   ; CAUTION: in the above line, "Cache freeze" 
+   ; CAUTION: in the above line, "Cache freeze"
    ; MUST be mixed-case as shown
    W "\|awk '{print $1, $2, $3}'"
-   C com ZSY "/bin/csh -c ""source dbcheck""" 
+   C com ZSY "/bin/csh -c ""source dbcheck"""
    O com,dbcheck.lis C com:delete,dbcheck.lis:delete
    W !,"Attempting first access"
    S g="^%" D:$D(^%)  F  S g=$O(@g) Q:g=""  D
    . S reg=$V("REGION",g) Q:$l(reg(reg))
    . I $D(@g)'[0 S reg(reg)=g
-   . E  S reg(reg)=$Q(@g) 
+   . E  S reg(reg)=$Q(@g)
    . W !,"Successful Read in region: ",reg," of ",g
    S reg="" F  S reg=$O(reg(reg)) Q:reg=""  D
-   . W !,"Write to region: ",reg 
+   . W !,"Write to region: ",reg
    . S @(reg(reg)_"="_reg(reg)) W "–OK"
    Q
 
@@ -591,9 +602,9 @@ Example:
 .. parsed-literal::
    Mapping      Production region   Test region
    -----------------------------------------------
-   A   to   M   
+   A   to   M
    $DEFAULT            SCRATCH
-   N   to   Z   SCRATCH            
+   N   to   Z   SCRATCH
    $DEFAULT
 
 ++++++++++++++++++++++++++++
@@ -672,7 +683,7 @@ Example:
 
 .. parsed-literal::
    Process 1       Process 2
-   ---------       --------- 
+   ---------       ---------
    LOCK ^A         LOCK ^B
    LOCK +^B        LOCK +^A
 
@@ -682,7 +693,7 @@ Example:
 
 .. parsed-literal::
    Process 1       Process 2        Process 3
-   ---------       ---------        --------- 
+   ---------       ---------        ---------
    LOCK ^A         LOCK ^B          LOCK ^C
    LOCK +^B        LOCK +^C         LOCK +^A
 
@@ -713,7 +724,7 @@ Example:
 
 .. parsed-literal::
    Process 1         Process 2
-   ---------         --------- 
+   ---------         ---------
    LOCK ^A
                      OPEN "MSA0:"
                      OPEN "/dev/nrst0"
@@ -731,7 +742,7 @@ Example:
 
 .. parsed-literal::
    Process 1         Process 2
-   ---------         --------- 
+   ---------         ---------
    LOCK ^A
    READ x
                      LOCK ^A
@@ -747,7 +758,7 @@ Example:
    quit
   UPD()  set x=^ACCT(acct)
    do EDITACCT
-   lock ^ACCT(acct) 
+   lock ^ACCT(acct)
    if x=^ACCT(acct) set ^ACCT(acct)=y
    else  write !,"Update conflict–Please Reenter"
    lock
@@ -865,7 +876,7 @@ Repair Dangerous and Access errors immediately. You may assess the benefits of d
 +--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
 | B                        | Free blocks counter in file header: nnn is      | `I3 <./integrity.html#i3-file-header-errors>`_                                                  |
 |                          | incorrect, should be mmm.                       |                                                                                                 |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+ 
++--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
 | A                        | Header indicates file creation did not complete.| `I3 <./integrity.html#i3-file-header-errors>`_                                                  |
 +--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
 | A                        | Header indicates file is corrupt.               | `I8 <./integrity.html#i8-repair-induced-problems>`_                                             |
@@ -964,7 +975,7 @@ YottaDB databases and Global Directories may change with new releases of the pro
 
 *IF YOU GET AN ERROR INDICATING A VERSION MISMATCH*, first identify the YottaDB version using the M command WRITE $ZVERSION from Direct Mode.
 
-Then refer to the installation procedures for your new release. If you are running more than one release of YottaDB investigate the environment variables that define the environments, and take appropriate action. 
+Then refer to the installation procedures for your new release. If you are running more than one release of YottaDB investigate the environment variables that define the environments, and take appropriate action.
 
 ++++++++++++++++++++++++++++++++++++++
 I3 - File Header Errors
@@ -989,7 +1000,7 @@ These errors indicate that the total block count does not agree with the file si
 .. parsed-literal::
    ((file size - starting VBN + 1) / (block size / 512))
 
-A decimal number results from this formula. Convert this decimal to a hexadecimal number, then change the total block count to this hexadecimal value using DSE CHANGE FILEHEADER TOTAL_BLKS= . You may also need to adjust the free blocks count with BLOCKS_FREE=. MUPIP INTEG informs you if this is necessary and gives the correct values. 
+A decimal number results from this formula. Convert this decimal to a hexadecimal number, then change the total block count to this hexadecimal value using DSE CHANGE FILEHEADER TOTAL_BLKS= . You may also need to adjust the free blocks count with BLOCKS_FREE=. MUPIP INTEG informs you if this is necessary and gives the correct values.
 
 +++++++++++++++++++++++++++++++++++++++
 I5 - More Database Access Problems
@@ -1047,7 +1058,7 @@ However, if the access method should be MM, use MUPIP SET ACCESS_METHOD= to corr
 I7 - Database Rundown Problem
 +++++++++++++++++++++++++++++++
 
-A MUPIP INTEG may be performed without write access to the file. However, in the case where the file was improperly closed, it must be RUNDOWN prior to being INTEGed. To do this, MUPIP requires write access to the file, so either increase the privileges for the process, change the protection on the file, or use a more privileged process and repeat the MUPIP INTEG. 
+A MUPIP INTEG may be performed without write access to the file. However, in the case where the file was improperly closed, it must be RUNDOWN prior to being INTEGed. To do this, MUPIP requires write access to the file, so either increase the privileges for the process, change the protection on the file, or use a more privileged process and repeat the MUPIP INTEG.
 
 ++++++++++++++++++++++++++++++++
 I8 - Repair Induced Problems
@@ -1076,7 +1087,7 @@ After noting the pointer, SPAWN and use MUPIP INTEG BLOCK=pointer (if you have t
 
 *IF THE SUB-TREE IS INVALID*, according to the MUPIP INTEG, DSE REMOVE the record containing the reported bad key, INTEG, and refer to `section O4 <./integrity.html#o4-salvage-of-data-blocks-with-lost-indices>`_.
 
-Otherwise use the DSE command DUMP BLOCK= RECORD=9999 to find the last record in the block and examine it using the DUMP RECORD= command. Continue using DSE to follow the pointer(s) down to level 0, always choosing the right-hand branch. Note the largest key at the data level. REMOVE the record containing the reported bad key. Determine the proper placement for the noted key using FIND KEY= and ADD KEY= POINTER where the key and the pointer are those noted in the preceding actions. 
+Otherwise use the DSE command DUMP BLOCK= RECORD=9999 to find the last record in the block and examine it using the DUMP RECORD= command. Continue using DSE to follow the pointer(s) down to level 0, always choosing the right-hand branch. Note the largest key at the data level. REMOVE the record containing the reported bad key. Determine the proper placement for the noted key using FIND KEY= and ADD KEY= POINTER where the key and the pointer are those noted in the preceding actions.
 
 ++++++++++++++++++++
 K2 - Keys Misplaced
@@ -1106,7 +1117,7 @@ First, identify all pointers to the block, using FIND EXHAUSTIVE and/or informat
 
 *IF YOU CHOOSE THE SALVAGE STRATEGY*, REMOVE the records that point to the block, MAP it FREE, and refer to `section O4 <./integrity.html#o4-salvage-of-data-blocks-with-lost-indices>`_.
 
-*IF YOU DECIDE TO WORK WITH THE BLOCK*, choose the path to retain, REMOVE the other pointer record, and relocate any misplaced descendants with DSE ADD and REMOVE. 
+*IF YOU DECIDE TO WORK WITH THE BLOCK*, choose the path to retain, REMOVE the other pointer record, and relocate any misplaced descendants with DSE ADD and REMOVE.
 
 ++++++++++++++++++++++++++++++++++
 K4 - Pointer Problems
@@ -1138,7 +1149,7 @@ K6 - Compression Count Error
 
 *IF THE BLOCK HAS A LEVEL GREATER THAN ZERO (0)*, REMOVE the record and ADD it back in the same location with the same KEY=, and POINTER= or STAR.
 
-You may also adjust the compression count using CHANGE CMPC=. Because this changes the value of all subsequent keys in the block (except the star-key), you should try this alternative only if those keys also appear incorrect. 
+You may also adjust the compression count using CHANGE CMPC=. Because this changes the value of all subsequent keys in the block (except the star-key), you should try this alternative only if those keys also appear incorrect.
 
 ++++++++++++++++++++++++++
 K7 - Key Warning
@@ -1172,7 +1183,7 @@ M2 - Bitmap Header Problems
 
 Bitmaps are stored in blocks that have a unique header format with a level of minus one (-1) and a block size of 87 or 88 depending on the Euclidian ordering of the platform. The errors discussed in this section indicate a bitmap block header that violates that format.
 
-Use the DSE command CHANGE with the BSIZ=87 or 88 (depending on platform) and LEVEL=-1FF qualifiers to correct the problem. If the block size is too small, the bitmap will have to be reconstructed using MAP RESTORE or manually from INTEG error reports using MAP FREE. If there are other errors, defer any MAP RESTORE until after they have been repaired. 
+Use the DSE command CHANGE with the BSIZ=87 or 88 (depending on platform) and LEVEL=-1FF qualifiers to correct the problem. If the block size is too small, the bitmap will have to be reconstructed using MAP RESTORE or manually from INTEG error reports using MAP FREE. If there are other errors, defer any MAP RESTORE until after they have been repaired.
 
 +++++++++++++++++++++++++
 O1 - Bad Block
@@ -1190,7 +1201,7 @@ GDS organizes keys with pointers or data to form records. A record has a header,
 
 *IF THE BLOCK IS A DATA BLOCK*, that is, level zero (0), refer to `section O3 <./integrity.html#o3-data-block-errors>`_.
 
-*IF THE BLOCK IS AN INDEX BLOCK*, that is, has a level greater than zero (0), the best option is generally to use the salvage strategy discussed in section O4. REMOVE the damaged record and INTEG the block. If the block is still corrupt, repeat the last step, REMOVE the pointer to it, and MAP it FREE. In any case, refer to `section O4 <./integrity.html#o4-salvage-of-data-blocks-with-lost-indices>`_. 
+*IF THE BLOCK IS AN INDEX BLOCK*, that is, has a level greater than zero (0), the best option is generally to use the salvage strategy discussed in section O4. REMOVE the damaged record and INTEG the block. If the block is still corrupt, repeat the last step, REMOVE the pointer to it, and MAP it FREE. In any case, refer to `section O4 <./integrity.html#o4-salvage-of-data-blocks-with-lost-indices>`_.
 
 +++++++++++++++++++++++
 O3 - Data Block Errors
@@ -1200,7 +1211,7 @@ The errors described in this section include damage to the header, the records, 
 
 *IF THE BLOCK IS LEVEL ZERO (0)*, use DSE DUMP to examine the contents of the block. Note any information that might allow you to correct the problem or might help to identify and recreate the endangered data. If you are familiar with GDS and hexadecimal representations, you may be able to recognize data that DSE cannot recognize because of misalignment.
 
-*IF THE BEGINNING OF THE BLOCK IS VALID*, DUMP GLO may be able to capture its contents up to the point where it is damaged. In the worst case, REMOVE the record that points to the block, MAP it FREE, and lose its entire contents. The extent and importance of the damage depends on the size of the block and what it should be holding. In a similar but not quite as drastic case, REMOVE the record with the problem and lose the contents of that record. 
+*IF THE BEGINNING OF THE BLOCK IS VALID*, DUMP GLO may be able to capture its contents up to the point where it is damaged. In the worst case, REMOVE the record that points to the block, MAP it FREE, and lose its entire contents. The extent and importance of the damage depends on the size of the block and what it should be holding. In a similar but not quite as drastic case, REMOVE the record with the problem and lose the contents of that record.
 
 ++++++++++++++++++++++++++++++++++++++++++++++
 O4 - Salvage of Data Blocks with Lost Indices
@@ -1244,24 +1255,24 @@ After completing repairs with the salvage utility, open the <REGION>_db.zwr file
 O5 - Salvage of a Damaged Spanning Node
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-The following example shows how to salvage a damaged spanning node in ^mypoem. 
+The following example shows how to salvage a damaged spanning node in ^mypoem.
 
-Run MUPIP INTEG to find the location of the damaged spanning node. A MUPIP INTEG report of a region that has damaged spanning nodes might look something like the following: 
+Run MUPIP INTEG to find the location of the damaged spanning node. A MUPIP INTEG report of a region that has damaged spanning nodes might look something like the following:
 
 .. parsed-literal::
    Integ of region DEFAULT
    Block:Offset Level
-   %YDB-E-DBSPANGLOINCMP, 
+   %YDB-E-DBSPANGLOINCMP,
           7:10     0  Spanning node is missing. Block no 3 of spanning node is missing
                       Directory Path:  1:10, 2:10
                       Path:  4:31, 7:10
                       Spanning Node ^mypoem(#SPAN1) is suspect.
-    %YDB-E-DBKEYGTIND, 
+    %YDB-E-DBKEYGTIND,
           7:10     0  Key greater than index key
                       Directory Path:  1:10, 2:10
                       Path:  4:31, 7:10
                       Keys from ^mypoem(#SPAN48) to ^mypoem(#SPAN3*) are suspect.
-    %YDB-E-DBSPANCHUNKORD, 
+    %YDB-E-DBSPANCHUNKORD,
           3:10     0  Chunk of 1 blocks is out of order
                       Directory Path:  1:10, 2:10
                       Path:  4:3D, 3:10
@@ -1276,11 +1287,11 @@ Run MUPIP INTEG to find the location of the damaged spanning node. A MUPIP INTEG
     [Spanning Nodes:2 ; Blocks:3]
     %YDB-E-INTEGERRS, Database integrity errors
 
-Notice the lines that contain: "Block no 3 of spanning node is missing", "Key greater than index key", and ^mypoem(#SPAN48) and there is an extra chunk that is not connected to ^mypoem(#SPAN4). 
+Notice the lines that contain: "Block no 3 of spanning node is missing", "Key greater than index key", and ^mypoem(#SPAN48) and there is an extra chunk that is not connected to ^mypoem(#SPAN4).
 
-Confirm whether you have determined the spanning range of the node: 
+Confirm whether you have determined the spanning range of the node:
 
-* Is ^mypoem(#SPAN48) the last node (block number 3)? 
+* Is ^mypoem(#SPAN48) the last node (block number 3)?
 * Is ^mypoem(#SPAN4) the last node?
 
 Clearly, YottaDB did not find block 3 and ^mypoem(#SPAN4) terminated the spanning node, so ^mypoem(#SPAN4) might be the last node. So, the parts of the spanning node that contain the value are ^mypoem(#SPAN2) through ^mypoem(#SPAN4).
@@ -1304,7 +1315,7 @@ Use DSE to find the spanned nodes:
        Global tree path
        Path--blk:off
        4:31,    7:10,
-   DSE> find -key=^mypoem(#SPAN4) 
+   DSE> find -key=^mypoem(#SPAN4)
    Key found in block  3.
        Directory path
        Path--blk:off
@@ -1338,20 +1349,20 @@ Dump all the blocks in ZWRITE format to see what can be salvaged.
    $ cat mypoem.txt
    ; DSE EXTRACT
    ; ZWR
-   $ze(^mypoem,0,480)="Half a league, half a league, Half a league onward, All in the valley of Death Rode the six hundred. 
-   Forward, the Light Brigade!  Charge for the guns he said: Into the valley of Death Rode the six hundred. 
+   $ze(^mypoem,0,480)="Half a league, half a league, Half a league onward, All in the valley of Death Rode the six hundred.
+   Forward, the Light Brigade!  Charge for the guns he said: Into the valley of Death Rode the six hundred.
    Forward, the Light Brigade! Was there a man dismayed?  Not tho the soldiers knew Some one had blundered:
    Theirs not to make reply, Theirs not to reason why, Theirs but to do and die: Into the valley of Death Rode the six hundred.
    Cannon to the right of them, Cannon to the left of "
    $ze(^mypoem,22080,480)="them, Cannon in front of them Volleyed and thundered;
-   Stormed at with shot and shell, Boldly they rode and well, Into the jaws of Death, Into the mouth of Hell Rode the six hundred. 
+   Stormed at with shot and shell, Boldly they rode and well, Into the jaws of Death, Into the mouth of Hell Rode the six hundred.
    Flashed all their sabres bare, Flashed as they turned in air Sabring the gunners there, Charging an army while All the world wondered:
    Plunged in the battery-smoke Right thro the line they broke; Cossack and Russian Reeled from the sabre-stroke
    Shattered and sundered.  Then they rode back, but no"
-   $ze(^mypoem,960,468)="t Not the six hundred. 
+   $ze(^mypoem,960,468)="t Not the six hundred.
    Cannon to the right of them, Cannon to the left of them, Cannon behind them Volleyed and thundered;
    Stormed at with shot and shell, While horse and hero fell, They that had fought so well Came thro the jaws of Death,
-   Back from the mouth of Hell, All that was left of them, Left of six hundred.  
+   Back from the mouth of Hell, All that was left of them, Left of six hundred.
    When can their glory fade?  O the wild charge they made!  All the world wondered.
    Honour the charge they made!  Honour the Light Brigade, Noble six hundred!"
 
@@ -1360,13 +1371,13 @@ Notice that block 3 (which is the second block above (because you started with b
 Fix the starting position in the $ZEXTRACT statement:
 
 .. parsed-literal::
-   $ze(^mypoem,480,480)="them, Cannon in front of them Volleyed and thundered; 
+   $ze(^mypoem,480,480)="them, Cannon in front of them Volleyed and thundered;
    Stormed at with shot and shell, Boldly they rode and well, Into the jaws of Death, Into the mouth of Hell Rode the six hundred.
    Flashed all their sabres bare, Flashed as they turned in air Sabring the gunners there, Charging an army while All the world wondered:
    Plunged in the battery-smoke Right thro the line they broke; Cossack and Russian Reeled from the sabre-stroke
    Shattered and sundered.  Then they rode back, but no"
 
-Verify the value for correctness if you have knowledge of the type of data in this global. This completes data recovery (whatever was possible). 
+Verify the value for correctness if you have knowledge of the type of data in this global. This completes data recovery (whatever was possible).
 
 Kill the existing global:
 
@@ -1390,12 +1401,12 @@ Load the salvaged global:
    Forward, the Light Brigade!  Charge for the guns he said: Into the valley of Death Rode the six hundred.
    Forward, the Light Brigade! Was there a man dismayed?  Not tho the soldiers knew Some one had blundered:
    Theirs not to make reply, Theirs not to reason why, Theirs but to do and die: Into the valley of Death Rode the six hundred.
-   Cannon to right of them, Cannon to left of them, Cannon in front of them Volleyed and thundered; 
+   Cannon to right of them, Cannon to left of them, Cannon in front of them Volleyed and thundered;
    Stormed at with shot and shell, Boldly they rode and well, Into the jaws of Death, Into the mouth of Hell Rode the six hundred.
    Flashed all their sabres bare, Flashed as they turned in air Sabring the gunners there, Charging an army while All the world wondered:
-   Plunged in the battery-smoke Right thro the line they broke; Cossack and Russian Reeled from the sabre-stroke 
-   Shattered and sundered.  Then they rode back, but not Not the six hundred.  
-   Cannon to right of them, Cannon to left of them, Cannon behind them Volleyed and thundered; 
+   Plunged in the battery-smoke Right thro the line they broke; Cossack and Russian Reeled from the sabre-stroke
+   Shattered and sundered.  Then they rode back, but not Not the six hundred.
+   Cannon to right of them, Cannon to left of them, Cannon behind them Volleyed and thundered;
    Stormed at with shot and shell, While horse and hero fell, They that had fought so well Came thro the jaws of Death,
    Back from the mouth of Hell, All that was left of them, Left of six hundred.
    When can their glory fade?  O the wild charge they made!  All the world wondered.
@@ -1439,9 +1450,9 @@ The following table lists run-time errors, alphabetically by mnemonic, each with
 | Error Mnemonic                       | Error Message Text                                                        | Section                                                                                                    |
 +======================================+===========================================================================+============================================================================================================+
 | BADDVER                              | Incorrect database version vvv                                            | `I2 <./integrity.html#i2-yottadb-version-mismatch>`_                                                       |
-+--------------------------------------+---------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+ 
++--------------------------------------+---------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
 | BITMAPSBAD                           | Database bitmaps are incorrect                                            | `M1 <./integrity.html#m1-bitmap-errors>`_                                                                  |
-+--------------------------------------+---------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+ 
++--------------------------------------+---------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
 | BTFAIL                               | The database block table is corrupt                                       | `R3 <./integrity.html#r3-runtime-database-cache-problems>`_                                                |
 +--------------------------------------+---------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
 | CCPINTQUE                            | Interlock failure accessing Cluster Control Program queue                 | `R7 <./integrity.html#r7-interlocked-queue-hardware-problems>`_                                            |
@@ -1589,7 +1600,7 @@ R4 - Stopped Processes
 
 These errors indicate the process received a message from a kill system service requesting that the image terminate.
 
-The MUPIP STOP command uses kill with a distinguished code. The code provided by MUPIP STOP allows the process to include the source of the stop directive in the error message. 
+The MUPIP STOP command uses kill with a distinguished code. The code provided by MUPIP STOP allows the process to include the source of the stop directive in the error message.
 
 ++++++++++++++++++++++++++++++++++++
 R5 - No More Room in the File

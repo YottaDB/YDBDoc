@@ -1,3 +1,14 @@
+.. ###############################################################
+.. #                                                             #
+.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # All rights reserved.                                        #
+.. #                                                             #
+.. #     This source code contains the intellectual property     #
+.. #     of its copyright holder(s), and is made available       #
+.. #     under a license.  If you do not know the terms of       #
+.. #     the license, please stop and do not read further.       #
+.. #                                                             #
+.. ###############################################################
 
 .. index::
     About YottaDB
@@ -9,7 +20,7 @@
 .. contents::
    :depth: 2
 
-YottaDB® is a high-end performance database application development and deployment platform from YottaDB LLC. YottaDB provides an M language subsystem, a database engine, and a complete set of utilities for administration and operation. One can install and manage YottaDB using the utilities described in this manual and standard operating system tools. This chapter provides an overview of the YottaDB system environment and utilities. 
+YottaDB® is a high-end performance database application development and deployment platform from YottaDB LLC. YottaDB provides an M language subsystem, a database engine, and a complete set of utilities for administration and operation. One can install and manage YottaDB using the utilities described in this manual and standard operating system tools. This chapter provides an overview of the YottaDB system environment and utilities.
 
 --------------------------------------
 Hardware/ Operating System Environment
@@ -17,16 +28,16 @@ Hardware/ Operating System Environment
 
 YottaDB runs on a variety of UNIX/Linux implementations. Consult YottaDB for currently supported versions. Each YottaDB release is extensively tested by YottaDB on a set of specific versions of operating systems on specific hardware architectures (the combination of operating system and hardware architecture is referred to as a platform). This set of specific versions is considered "supported". There will be other versions of the same operating systems on which a release may not have been tested, but on which the support team knows of no reason why YottaDB would not work. This larger set of versions is considered "supportable". There is an even larger set of platforms on which YottaDB may well run satisfactorily, but where the support team lacks the knowledge to determine whether YottaDB is supportable. These are considered "unsupported". Contact YottaDB Support with inquiries about your preferred platform.
 
-System requirements vary widely depending on application needs, and should be empirically determined for each situation. 
+System requirements vary widely depending on application needs, and should be empirically determined for each situation.
 
 .. note::
-   The 32-bit version of YottaDB is compiled to require the 586 ("Pentium compatible") instruction set. 
+   The 32-bit version of YottaDB is compiled to require the 586 ("Pentium compatible") instruction set.
 
 ------------
 Installation
 ------------
 
-YottaDB installation is semi-automatic, using the ydbinstall script provided with the product. The installation procedure is described in `Chapter 2: “Installing YottaDB” <./installydb.html>`_. 
+YottaDB installation is semi-automatic, using the ydbinstall script provided with the product. The installation procedure is described in `Chapter 2: “Installing YottaDB” <./installydb.html>`_.
 
 --------
 Security
@@ -77,7 +88,7 @@ The Global Directory Editor (GDE) is a YottaDB utility program that creates and 
 2. MUPIP
 ~~~~~~~~
 
-MUPIP (M Peripheral Interchange Program) is the YottaDB utility program for general database operations, YottaDB Journaling, Multi-site Database Replication, and some non-database operations. 
+MUPIP (M Peripheral Interchange Program) is the YottaDB utility program for general database operations, YottaDB Journaling, Multi-site Database Replication, and some non-database operations.
 
 ~~~~~~
 3. LKE

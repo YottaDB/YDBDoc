@@ -1,3 +1,14 @@
+.. ###############################################################
+.. #                                                             #
+.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # All rights reserved.                                        #
+.. #                                                             #
+.. #     This source code contains the intellectual property     #
+.. #     of its copyright holder(s), and is made available       #
+.. #     under a license.  If you do not know the terms of       #
+.. #     the license, please stop and do not read further.       #
+.. #                                                             #
+.. ###############################################################
 
 .. index::
    IPC Resource Usage
@@ -48,9 +59,9 @@ Create two databases - America and Brazil - on two different servers ( Server_A 
 In Server_A and in the directory holding database files for America, give the following commands (note that the default journal pool size is 64MB, a value of 1048576 bytes - YottaDB's minimum size of 1MB for this exercise):
 
 .. parsed-literal::
-   $ export ydb_repl_instance=multisite.repl 
-   $ mupip replicate -instance_create -name=America 
-   $ mupip set -replication=on -region "*" 
+   $ export ydb_repl_instance=multisite.repl
+   $ mupip replicate -instance_create -name=America
+   $ mupip set -replication=on -region "*"
    $ mupip replicate -source -start -buf=1048576 -secondary=Server_B:1234 -log=A2B.log -instsecondary=Brazil
 
 Now execute the following command:
@@ -61,7 +72,7 @@ Now execute the following command:
 This command produces the "public" (system generated) IPC Keys (essentially hash values) for yottadb.dat and its replication instance multisite.repl. It produces a sample output like the following:
 
 .. parsed-literal::
-   yottadb.dat :: 721434869 [ 0x2b0038f5 ] 
+   yottadb.dat :: 721434869 [ 0x2b0038f5 ]
    multisite.repl :: 721434871 [ 0x2b0038f7 ]
 
 The keys starting with 0x2b (Hexadecimal form) are the keys for the semaphores used by replication instance America with the high order hexadecimal 0x2b replaced by 0x2c for the replication instance file (YottaDB's standard prefix for semaphores for journal pools is 0x2c and the prefix for database files is 0x2b). You can observe this with the ipcs command:
@@ -88,7 +99,7 @@ This command identifies the "private" (YottaDB generated) semaphores that a proc
 .. parsed-literal::
    File  ::   Semaphore Id   ::   Shared Memory Id  :: FileId
    ---------------------------------------------------------------------------------------------------------------
-   yottadb.dat ::  1081348 [0x00108004] :: 2490370 [0x00260002] :: 0xf53803000000000000fe000000000000ffffffd2 
+   yottadb.dat ::  1081348 [0x00108004] :: 2490370 [0x00260002] :: 0xf53803000000000000fe000000000000ffffffd2
 
 Now, execute the following command and note down the shared memory and private semaphore id for the journal pool.
 
@@ -127,14 +138,14 @@ Now execute the command ipcs -a to view the current IPC resources. This command 
    0x00000000 1015810 welsley 777 5
    0x2b0038f5 1048579 welsley 777 3
    0x00000000 1081348 welsley 777 3
-    
+
    ------ Message Queues --------
    key  msqid owner perms used-bytes messages
 
 Using the following formula, where n is the number of regions, to calculate YottaDB's IPC resources in a multisite replication configuration:
 
 .. parsed-literal::
-   IPCs = (n regions * (1 shm/region + 1 ftok sem/region + 1 private sem/region)) + 1 sem/journal-pool + 1 sem/receiver-pool 
+   IPCs = (n regions * (1 shm/region + 1 ftok sem/region + 1 private sem/region)) + 1 sem/journal-pool + 1 sem/receiver-pool
 
 In this case, America has one region and no receiver-pool so:
 
@@ -149,10 +160,10 @@ Therefore, assuming that instance America has 1 region, the total IPC utilized b
 Now connect to Server_B and give the following commands in the directory holding database files for Brazil:
 
 .. parsed-literal::
-   $ export ydb_repl_instance=multisite1.repl 
+   $ export ydb_repl_instance=multisite1.repl
    $ mupip replicate -instance_create -name=Brazil $ mupip rundown -region "*"
    $ mupip set -journal="enable,before,on" -replication=on -region "*"
-   $ mupip replicate -source -start -passive -buf=1048576 -log=B2dummy.log -inst=dummy 
+   $ mupip replicate -source -start -passive -buf=1048576 -log=B2dummy.log -inst=dummy
    $ mupip replicate -receive -start -listenport=1234 -buf=1048576 -log=BFrA.log
 
 Now execute the command:
@@ -213,7 +224,7 @@ This command produces a sample output like the following:
    0x00000000 327683 yottadbuser 777 3
    0x00000000 360452 yottadbuser 777 5
    ------ Message Queues --------
-   key  msqid owner perms used-bytes messages 
+   key  msqid owner perms used-bytes messages
 
 Brazil has 1 region and its receiver server is listening to America, and therefore as per the formula for calculating YottaDB IPC resources, the total IPCs utilized by YottaDB is: 5 [1 * 3 + 1 + 1].
 

@@ -1,3 +1,14 @@
+.. ###############################################################
+.. #                                                             #
+.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # All rights reserved.                                        #
+.. #                                                             #
+.. #     This source code contains the intellectual property     #
+.. #     of its copyright holder(s), and is made available       #
+.. #     under a license.  If you do not know the terms of       #
+.. #     the license, please stop and do not read further.       #
+.. #                                                             #
+.. ###############################################################
 
 .. index::
    M Coding Standards
@@ -210,7 +221,7 @@ When forming routine names, the compiler truncates object filenames to a maximum
 
 **kill -9**
 
-Killing a process with kill -9 may cause database damage. Use MUPIP STOP or MUPIP INTRPT instead. Use kill -9 as the last resort if the process does not respond to MUPIP STOP. kill -9 terminates the process abruptly and may leave database files improperly closed and require a MUPIP RUNDOWN. Because kill -9 may cause database damage, perform a MUPIP INTEG immediately after a kill -9. 
+Killing a process with kill -9 may cause database damage. Use MUPIP STOP or MUPIP INTRPT instead. Use kill -9 as the last resort if the process does not respond to MUPIP STOP. kill -9 terminates the process abruptly and may leave database files improperly closed and require a MUPIP RUNDOWN. Because kill -9 may cause database damage, perform a MUPIP INTEG immediately after a kill -9.
 
 **Operate as Root**
 
@@ -230,6 +241,6 @@ Never use exponential numeric form in the subscripts. It may lead to ambiguities
 
 Never SET $ZWRTACn "variables". They are used by YottaDB to make ZWRITE output more useful but are not supported for any other purpose. They are only mentioned here because you may see them in the output of ZWRITE and ZSHOW "V".
 
-You can use SET @ to process ZWRITE or ZSHOW "V" output containing $ZWRTACn variables for restoring an alias container variable to a prior state. While processing the output, never attempt to inject or manipulate $ZWRTACn lines as it may lead to unintended consequences or undermine the benefit you might achieve from using alias containers. Lines containing SET $ZWRTACn=<value> are no-ops unless they have a preceding SET $ZWRTAC="" and an alias container variable association. In the ZWRITE or ZSHOW "V" output of an alias container, SET $ZWRTAC lines appear in the order that YottaDB expects for restoration. YottaDB can change the use of $ZWRTAC in YottaDB at any time. 
+You can use SET @ to process ZWRITE or ZSHOW "V" output containing $ZWRTACn variables for restoring an alias container variable to a prior state. While processing the output, never attempt to inject or manipulate $ZWRTACn lines as it may lead to unintended consequences or undermine the benefit you might achieve from using alias containers. Lines containing SET $ZWRTACn=<value> are no-ops unless they have a preceding SET $ZWRTAC="" and an alias container variable association. In the ZWRITE or ZSHOW "V" output of an alias container, SET $ZWRTAC lines appear in the order that YottaDB expects for restoration. YottaDB can change the use of $ZWRTAC in YottaDB at any time.
 
 

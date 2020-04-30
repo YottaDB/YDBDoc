@@ -1,3 +1,14 @@
+.. ###############################################################
+.. #                                                             #
+.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # All rights reserved.                                        #
+.. #                                                             #
+.. #     This source code contains the intellectual property     #
+.. #     of its copyright holder(s), and is made available       #
+.. #     under a license.  If you do not know the terms of       #
+.. #     the license, please stop and do not read further.       #
+.. #                                                             #
+.. ###############################################################
 
 .. index:: Glossary
 
@@ -15,7 +26,7 @@ I
 O
 ++
 
-**Originating Instance** : An originating instance is an instance that processes business logic and generates logical updates to the database. 
+**Originating Instance** : An originating instance is an instance that processes business logic and generates logical updates to the database.
 
 ++
 R
@@ -31,4 +42,4 @@ S
 
 **Source Instance** : Within the context of a replication connection between two instances, an originating instance is referred to as source instance or source side. For example, in an B←A→C replication configuration, A is the source instance for B and C.
 
-**Supplementary Instance** : A supplementary instance is an instance that processes business logic, generates logical updates to the database, and at the same time receives updates from another instance. 
+**Supplementary Instance** : A supplementary instance is an instance that processes business logic, generates logical updates to the database, and at the same time receives updates from another instance.

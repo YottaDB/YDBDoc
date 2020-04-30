@@ -1,3 +1,14 @@
+.. ###############################################################
+.. #                                                             #
+.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # All rights reserved.                                        #
+.. #                                                             #
+.. #     This source code contains the intellectual property     #
+.. #     of its copyright holder(s), and is made available       #
+.. #     under a license.  If you do not know the terms of       #
+.. #     the license, please stop and do not read further.       #
+.. #                                                             #
+.. ###############################################################
 
 .. index::
    Operating and Debugging in Direct Mode
@@ -74,7 +85,7 @@ If the session in Direct Mode has just started, you may not have entered 99 line
 Example:
 
 .. parsed-literal::
-   YDB>write $zgbldir 
+   YDB>write $zgbldir
    /usr/lib/yottadb/r120/yottadb.gld
    YDB>set $zgbldir="test.gld"
    YDB>set a=10
@@ -314,7 +325,7 @@ Example:
    YDB>ZPRINT, name+3
    %YDB-E-SPOREOL, Either a space or an end-of-line was expected but not found
    ZP, name+3
-   ^_____ 
+   ^_____
    YDB>
 
 This example shows the result of incorrectly entering a ZPRINT command in Direct Mode. YottaDB reports the location of the syntax error in the command line with an arrow. $ECODE and $ZSTATUS do not maintain this error message because YottaDB did not produce the message during routine execution. Enter the correct syntax, (i.e., remove the comma) to re-display the routine line in error.
@@ -651,7 +662,7 @@ Example:
    YDB>ZEDIT "dmex.m"
    dmex;dmex - Direct Mode example
    ;
-   beg 
+   beg
      for read !,"Name: ",name do name
      quit
    name

@@ -1,3 +1,14 @@
+.. ###############################################################
+.. #                                                             #
+.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # All rights reserved.                                        #
+.. #                                                             #
+.. #     This source code contains the intellectual property     #
+.. #     of its copyright holder(s), and is made available       #
+.. #     under a license.  If you do not know the terms of       #
+.. #     the license, please stop and do not read further.       #
+.. #                                                             #
+.. ###############################################################
 
 .. index::
    Language Features
@@ -69,7 +80,7 @@ M does not restrict the length of names in the main body of the standard. Howeve
 * Local lock resource names
 * Global lock resource names
 
-A trigger name is up to 28 characters and a replication instance name is up to 15 characters. 
+A trigger name is up to 28 characters and a replication instance name is up to 15 characters.
 
 --------------------------------
 Variables
@@ -244,7 +255,7 @@ The other region qualifier is –[NO]STDNULLCOLL with add, change and template c
                                  \*\*\* MAP \*\*\*
 
    ---------------------------------- Names --------------------------------------------------
-   
+
    From                          Upto                      Region/Segment/File (def ext: .dat)
    ---------------------------------------------------------------------------------------------
     %                          Darjeeling                     REG=DEFAULT
@@ -326,7 +337,7 @@ With Standard null collation, the null subscript is represented by 0x01 instead 
    DSE>dump -block=3
       File /testarea1/null_subs/yottadb.dat
       Region DEFAULT
-                                                             
+
       Block     3       Size    24  Level   0   TN  3
       Rec:1  Blk 3  Off 8  Size A  Cmpc 0  Key ^a("")
                8 : | 0  A  0  0 61  0  1  0  0 31              |
@@ -338,7 +349,7 @@ With historical null collation, for the same command output will be as follows:
    DSE>dump -block=3
        File /testarea1/null_subs/yottadb.dat
        Region DEFAULT
-                                                                                                                               
+
               3   Size 24   Level 0   TN 3
        Rec:1  Blk 3  Off 8  Size A  Cmpc 0  Key ^a("")
                 8 : |  0  A  0  0 61  0  FF  0  0 31             |
@@ -377,28 +388,28 @@ If the last subscript in the subscripted global or local variable name is null a
    YDB>ZWRITE
    lcl(1)=3
    lcl("x")=4
-                                               
+
    YDB>WRITE $ORDER(lcl(""))
    1
-                                                                     
+
    YDB>WRITE $ORDER(lcl(1))
    x
-                                                                                                     
+
    YDB>WRITE $ORDER(lcl(""),-1)
    x
-                                                                                                                                    
+
    YDB>SET lcl("")=2
    YDB>ZWRITE
    lcl("")=2
    lcl(1)=3
    lcl("x")=4
-                                                                                                                                                                                            
+
    YDB>WRITE $ORDER(lcl(""))
    1
-                                                                                                                                                                                                                                            
+
    YDB>WRITE $ORDER(lcl(""),-1)
    x
-                                                                                                                                                                                                                                                                         
+
    YDB>WRITE $ORDER(lcl("x"),-1)
    1
 
@@ -417,9 +428,9 @@ If the last subscript in the subscripted global or local variable name is null a
    lcl(1,2,0)=6
    lcl(1,2,"abc",5)=7
    lcl("x")=1
-                                                                                                                                                        
+
    YDB>SET y="x”
-                                                                                                                                                      
+
    YDB>FOR SET y=$QUERY(@y) QUIT:y="" WRITE !,y,"=",@y
 
 The output will be the same as the ZWRITE output.
@@ -443,7 +454,7 @@ Replication
 In a replicated environment, all databases belonging to an instance should have the same null collation order. If this condition is not met, the source server issues the YDB-E-NULLCOLLDIFF error message on the primary. On the secondary, the update process issues the same error message if the condition is not satisfied.
 
 Although all databases belonging to an instance must have the same collation method, YottaDB allows the primary and secondary to use different null collation methods. Any needed conversion is handled internally and transparently.
-                                                                                                                                                                                                                                             
+
 +++++++++++++++++++++++++
 Local Variables
 +++++++++++++++++++++++++
@@ -521,7 +532,7 @@ Example:
    $ ydb_gbldir=Test.GLD
    $ export ydb_gbldir
    $ YDB
-     
+
    YDB>WRITE $ZGBLDIR
    TEST.GLD
    YDB>WRITE ^A
@@ -531,7 +542,7 @@ Example:
    YDB>WRITE $ZGBLDIR
    TEST.GLD
    YDB>HALT
-  
+
    $ echo ydb_gbldir
    TEST.GLD
 
@@ -692,7 +703,7 @@ Example:
    copy_string(&(ptr->address), errorstr1, strlen(errorstr1));
    return 1;
    }
-   while (fgets(buf, (int)sizeof(buf), tablefile) != (char \*)NULL) 
+   while (fgets(buf, (int)sizeof(buf), tablefile) != (char \*)NULL)
    {
    line= &table[i++];
    buf1 = buf;
@@ -741,7 +752,7 @@ Example:
    }
    }
    /\*ERROR OUT\*/
-   line = &table[4];   
+   line = &table[4];
    ret_ptr->length= line->ret.length;
    ret_ptr->address = line->ret.address;
    return 1;
@@ -753,7 +764,7 @@ Example:
    {
    return_val_init = init_functable(ret_ptr);
    if (return_val_init) return return_val_init;
-   return_val_init = init_table(ret_ptr); 
+   return_val_init = init_table(ret_ptr);
    if (return_val_init) return return_val_init;
    init = 1;
    }
@@ -836,7 +847,7 @@ Example:
 .. note::
    The exponential numeric form may lead to ambiguities in the meaning of subscripts. Because numeric subscripts collate ahead of string subscripts, the string subscript "01E5" is not the same as the numeric subscript 01E5.
 
-YottaDB handles numeric strings which are not canonical within the implementation as strings unless the application specifically requests they be treated as numbers. Any use in a context defined as numeric elicits numeric treatment; this includes operands of numeric operators, numeric literals, and some intrinsic function arguments. When the code creates a large number out of range, YottaDB gives a NUMOFLOW error. When the code creates a small fractional number out of range YottaDB treats it as zero (0). The YottaDB number range is (to the limit of accuracy) 1E-43 to 1E47. When the application creates an in-range number that exceeds the YottaDB numeric accuracy of 18 significant digits, YottaDB silently retains the most significant digits. With standard collation, YottaDB collates canonic numeric strings used as subscripts numerically, while it collates non-canonic numbers as strings. 
+YottaDB handles numeric strings which are not canonical within the implementation as strings unless the application specifically requests they be treated as numbers. Any use in a context defined as numeric elicits numeric treatment; this includes operands of numeric operators, numeric literals, and some intrinsic function arguments. When the code creates a large number out of range, YottaDB gives a NUMOFLOW error. When the code creates a small fractional number out of range YottaDB treats it as zero (0). The YottaDB number range is (to the limit of accuracy) 1E-43 to 1E47. When the application creates an in-range number that exceeds the YottaDB numeric accuracy of 18 significant digits, YottaDB silently retains the most significant digits. With standard collation, YottaDB collates canonic numeric strings used as subscripts numerically, while it collates non-canonic numbers as strings.
 
 ----------------------------
 Expressions
@@ -1328,7 +1339,7 @@ M entryrefs provide a generalized target for referring to a line within a routin
 M permits every element in an entryref to have the form of an indirection operator, followed by an element that evaluates to a legitimate occurrence of that portion of the entryref.
 
 .. note::
-   YottaDB accepts an offset without a label (for example +3^RTN) for an entryref argument to DO, GOTO and ZGOTO but prohibits the same during parameter passing with the JOB command. 
+   YottaDB accepts an offset without a label (for example +3^RTN) for an entryref argument to DO, GOTO and ZGOTO but prohibits the same during parameter passing with the JOB command.
 
 Offsets provide an extremely useful tool for debugging. However, avoid their use in production code because they generally produce maintenance problems.
 
@@ -1737,7 +1748,7 @@ Example:
 Transaction Processing
 --------------------------------
 
-Transaction Processing (TP) provides a way for M programs to organize database updates into logical groups that occur as a single event (i.e., either all the database updates in a transaction occur, or none of them occur). With a properly constructed transaction, no other actor or process behaves as if it observed any intermediate state. Transaction processing has been designed to improve throughput and minimize the possibility and impact of "live lock" conditions. 
+Transaction Processing (TP) provides a way for M programs to organize database updates into logical groups that occur as a single event (i.e., either all the database updates in a transaction occur, or none of them occur). With a properly constructed transaction, no other actor or process behaves as if it observed any intermediate state. Transaction processing has been designed to improve throughput and minimize the possibility and impact of "live lock" conditions.
 
 ++++++++++++++++
 TP Definitions
@@ -1900,7 +1911,7 @@ Here is a transaction processing example that lets you exercise the concept. If 
    ..if "?"=old write !,"Not on file" do quit
    ...;This is the code to add a new name
    ...for do quit:"?"'=data
-   ....read !,"Enter any info using '#' delimiter: ",!,data 
+   ....read !,"Enter any info using '#' delimiter: ",!,data
    ...if ""=data write !,"No entry made for ",nam quit
    ...TSTART ():SERIAL if $$trestart ;$$trestart for demo
    ...if $data(^trans(nam)) set ok=^trans(nam)=data TROLLBACK quit
@@ -1914,7 +1925,7 @@ Here is a transaction processing example that lets you exercise the concept. If 
    ..;This is the code to delete a new name
    ..if fld<0 do quit ; delete record
    ...for do quit:"YyNn"[x
-   ....write !,"Ok to delete ",nam," Y(es) or N(o) <N>? " 
+   ....write !,"Ok to delete ",nam," Y(es) or N(o) <N>? "
    ....read x set x=$extract(x)
    ...if "Yy"'[x!'$length(x) write !,"No change made" quit
    ...TSTART ():SERIAL if $$trestart ;$$trestart for demo
@@ -1932,7 +1943,7 @@ Here is a transaction processing example that lets you exercise the concept. If 
    ..TCOMMIT:$$doit; $$doit for demo
    quit
    doit()
-   ;This inserts delay and an optional 
+   ;This inserts delay and an optional
    ;rollback only to show how it works
    write !!,peekon do disp
    for do quit:"CR"[act

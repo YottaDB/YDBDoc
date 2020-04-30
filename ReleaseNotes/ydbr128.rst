@@ -1,3 +1,14 @@
+.. ###############################################################
+.. #                                                             #
+.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # All rights reserved.                                        #
+.. #                                                             #
+.. #     This source code contains the intellectual property     #
+.. #     of its copyright holder(s), and is made available       #
+.. #     under a license.  If you do not know the terms of       #
+.. #     the license, please stop and do not read further.       #
+.. #                                                             #
+.. ###############################################################
 
 =================
 YottaDB r1.28
@@ -42,7 +53,7 @@ Contact your YottaDB support channel.
 For free (to you) support from members of communities who run widely available applications on YottaDB, please use an application-specific list where appropriate.
 
 * For requests other than to the communities below, post an Issue at `https://gitlab.com/YottaDB/DB/YDB/issues <https://gitlab.com/YottaDB/DB/YDB/issues>`_ and include the words "Help Wanted" in the summary.
-  
+
 * For issues specific to the use of YottaDB from node.js via `nodem <https://github.com/dlwicksell/nodem>`_, `QewdJS <http://qewdjs.com/>`_ or `Enterprise Web Developer <http://ewdjs.com/>`_, post to the `Enterprise Web Developer community <http://groups.google.com/group/enterprise-web-developer-community>`_.
 
 * For issues specific to the use of YottaDB with `VistA <https://en.wikipedia.org/wiki/VistA>`_ flavors, post to the `Hardhats <http://groups.google.com/group/hardhats>`_ list.

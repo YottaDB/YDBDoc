@@ -1,3 +1,14 @@
+.. ###############################################################
+.. #                                                             #
+.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # All rights reserved.                                        #
+.. #                                                             #
+.. #     This source code contains the intellectual property     #
+.. #     of its copyright holder(s), and is made available       #
+.. #     under a license.  If you do not know the terms of       #
+.. #     the license, please stop and do not read further.       #
+.. #                                                             #
+.. ###############################################################
 
 .. index::
    Triggers
@@ -35,7 +46,7 @@ A trigger definition file is a text file used for adding new triggers, modifying
 * **Trigger signature**: A trigger signature consists of a global variable, subscripts, a value, a command, and a trigger code. YottaDB uses a combination of the global variable, subscripts, value, and command to find the matching trigger to invoke for a database update.
 
   * Global Variable: The name of a specific global to which this trigger applies.
-  * Subscripts: Subscripts for global variable nodes of the named global. This is mostly specified using the same patterns as the `ZWRITE <./commands.html#id19>`_ command, with ";" separating subscript values, and an asterisk "*"  matching any subscript value. 
+  * Subscripts: Subscripts for global variable nodes of the named global. This is mostly specified using the same patterns as the `ZWRITE <./commands.html#id19>`_ command, with ";" separating subscript values, and an asterisk "*"  matching any subscript value.
   * Value: For commands that SET or update the value at a node, YottaDB honors an optional pattern to screen for changes to delimited parts of the value. A value pattern includes a piece separator and a list of pieces of interest.
   * Command: There are four commands: SET, KILL, ZTRIGGER, and ZKILL (ZWITHDRAW is identical to ZKILL) the shorter name for the command is used when specifying triggers. MERGE is logically treated as equivalent to a series of SET operations performed in a loop. YottaDB handles $INCREMENT() of a global matching a SET trigger definition as a triggering update.
   * Trigger code: A string containing M code that YottaDB executes when application code updates, including deletions by KILL and like commands, a global node with a matching trigger. The specified code can invoke additional routines and subroutines.
@@ -68,7 +79,7 @@ trigvn is a global node on which you set up a trigger. -trigvn deletes any trigg
 
 1. You can use `patterns <./langfeat.html#pattern-match-operator>`_ and ranges (using ":") for subscripts.
 2. You can specify a semicolon (;) separated list for subscripts. For example: ^A(1;2;3).
-3. An asterisk (*) can be used to match any subscript value. For example, ^A(\*,2) matches ^A(1,2) and ^A(2,2) but not ^A(1,3). 
+3. An asterisk (*) can be used to match any subscript value. For example, ^A(\*,2) matches ^A(1,2) and ^A(2,2) but not ^A(1,3).
 4. You can specify a selection list that includes a mix of points, ranges and patterns, but a pattern cannot serve as either end of a range. For example, :,"a":"d";?1U is a valid specification but :,"a":?1A is not.
 5. You can specify a local variable name for each subscript. For example instead of ^X(1,:,:), you can specify ^X(1,lastname=:,firstname=:). This causes YottaDB to define local variables lastname and firstname to the actual second and third level subscripts respectively from the global node invoking this trigger. The trigger code can then use these variables just like any other M local variable. As described in the Trigger Execution Environment section, trigger code executes in a clean environment - as if all code is preceded by an implicit NEW - the implicit assignments apply only within the scope of the trigger code and don't conflict or affect any run-time code or other triggers.
 6. You cannot use the @ operator, unspecified subscripts (for example, ^A() or ^A(:,)) or local or global variable names as subscripts.
@@ -96,7 +107,7 @@ The maximum length of strlit1 (even if multi-line) is 1048576 (ASCII) characters
 To validate strlit1, MUPIP TRIGGER or $ZTRIGGER() compiles it before applying the trigger definition to the database and issues a TRGCOMPFAIL error if it contains any invalid code.
 
 .. note::
-   Trigger compilation detects compilation errors, but not run-time errors. Therefore, you should always test your trigger code before applying trigger definitions to the database. 
+   Trigger compilation detects compilation errors, but not run-time errors. Therefore, you should always test your trigger code before applying trigger definitions to the database.
 
 .. note::
    As stated in the Trigger Definition File section, the text of trigger code is a part of the trigger signature. If you use two trigger signatures that have the same semantics (global variable, subscript, value, and command) but different text (for example: set foo=$ztoldval, s foo=$ztoldval, and set foo=$ztol), their signatures become different and YottaDB treats them as different triggers. YottaDB recommends you to use comprehensive and strong coding conventions for trigger code or rely on user-specified names in managing the deletion and replacement of triggers.
@@ -244,7 +255,7 @@ Using your editor, create a trigger definition file called triggers.trg with the
 
 +^CIF(acn=:,1) -delim="|" -pieces=2 -commands=SET,KILL -xecute="Do ^XNAMEinCIF"
 
-In this definition: 
+In this definition:
 
 * ^CIF - specifies the global variable to which the trigger applies.
 * acn=: - in ZWRITE syntax, ":" specifies any value for the first subscript.
@@ -277,10 +288,10 @@ Using your editor, create an M routine called XNAMEinCIF.m with the following co
 
 .. parsed-literal::
    XNAMEinCIF ; Triggered Update for XNAME change in ^CIF(:,1)
-       Set oldxname=$Piece($ZTOLDval,"|",2) Set:'$Length(oldxname) oldxname=$zchar(254); old XNAME 
-       Kill ^XALPHA("A",oldxname,acn); remove any old xref 
+       Set oldxname=$Piece($ZTOLDval,"|",2) Set:'$Length(oldxname) oldxname=$zchar(254); old XNAME
+       Kill ^XALPHA("A",oldxname,acn); remove any old xref
                                      ; Create a new cross reference if the command is a Set
-       Do:$ZTRIggerop="S" 
+       Do:$ZTRIggerop="S"
        . Set xname=$Piece($ZTVALue,"|",2) Set:'$Length(xname) xname=$zchar(254)              ; new XNAME
        . Set^XALPHA("A",xname,acn)=""                                                                                                         ; create new xref
        ;
@@ -289,7 +300,7 @@ When the XNAME piece of a ^CIF(:,1) node is SET to a new value or KILLed, after 
 
 After obtaining the values, an unconditional KILL command deletes the previous cross reference index, if it exists. Then, only if a SET invoked the trigger (determined from the ISV `$ZTRIGGEROP <./isv.html#ztriggerop>`_), the trigger invoked routine creates a new cross reference index node. Note that because YottaDB implicitly creates a new context for the trigger logic we do not have to worry about our choice of names or explicitly NEW any variables.
 
-The following illustration shows the flow of control when the trigger is executed for Set ^CIN(ACN,1)="Paul|John, Doe, Johnny|". The initial value of ^CIN(ACN,1) is "Paul|Doe, John|" and ACN is set to "NY". 
+The following illustration shows the flow of control when the trigger is executed for Set ^CIN(ACN,1)="Paul|John, Doe, Johnny|". The initial value of ^CIN(ACN,1) is "Paul|Doe, John|" and ACN is set to "NY".
 
 .. image:: setcin.gif
 
@@ -339,12 +350,12 @@ Consider the following example:
    ;trigger name: A#1#  cycle: 1
    +^A -commands=S -xecute="set ^B=200"
    ;trigger name: B#1#  cycle: 1
-   +^B -commands=S -xecute="set $ztval=$ztval+1 " 
-   YDB>set ^A=100,^B=100 
+   +^B -commands=S -xecute="set $ztval=$ztval+1 "
+   YDB>set ^A=100,^B=100
    YDB>write ^A
    100
    YDB>write ^B
-   201 
+   201
 
 SET ^A=100 invokes trigger A#1. When the trigger execution begins, YottaDB sets ^A to 100 in the process address space, but does not apply it to the database. Therefore, the trigger logic sees ^A as set to 100. Other process accessing the database, however, see the prior value of ^A. When the trigger execution completes, the trigger logic commits the value of a node from the process address space only if $ZTVALUE is not set. The trigger logic commits the value of a node from the $ZTVALUE only if $ZTVALUE is set during trigger execution. Because $ZTVALUE is not set in A#1, YottaDB commits the value of ^A from the process address space to the database. Therefore, YottaDB commits ^A=100 to the database. SET ^B=200 invokes trigger B#2. $ZTVALUE is set during trigger execution, therefore YottaDB commits the value of $ZTVALUE to ^B at the end of trigger execution.
 
@@ -391,7 +402,7 @@ YottaDB uses the $ETRAP mechanism to handle errors during trigger execution. If 
 Consider the following trivial example:
 
 .. parsed-literal::
-   ^Acct(id=:,disc=:) -commands=Set -xecute="Set msg=""Trigger Failed"",$ETrap=""If $Increment(^count) Write msg,!"" Set $ZTVAlue=x/disc" 
+   ^Acct(id=:,disc=:) -commands=Set -xecute="Set msg=""Trigger Failed"",$ETrap=""If $Increment(^count) Write msg,!"" Set $ZTVAlue=x/disc"
 
 During trigger execution if disc (the second subscript of the triggering update) evaluates to zero, resulting in a DIVZERO (Attempt to divide by zero) error, YottaDB displays the message "Trigger Failed". Since the $ETRAP does not clear $ECODE, after printing the message, YottaDB leaves the trigger context and invokes the error handler outside the trigger, if any. In a DIVZERO case, the process neither assigns a new value to ^Acct(id,disc) nor commits the incremented value of ^count to the database.
 
@@ -419,11 +430,11 @@ Other key aspects of error handling during trigger execution are as follows:
 * It may appear that YottaDB executes trigger code as an argument for an XECUTE. However, for performance reasons, YottaDB internally converts trigger code into a pseudo routine and executes it as if it is a routine. Although this is invisible for the most part, the trigger name can appear in places like error messages and $STACK() return values.
 * Triggers are associated with a region and a process can use one or more global directories to access multiple regions, therefore, there is a possibility for triggers to have name conflicts. To avoid a potential name conflict with other resources, YottaDB attempts to add a two character suffix, delimited by a "#" character to the user-supplied or automatically generated trigger name. If this attempt to make the name unique fails, YottaDB issues a TRIGNAMEUNIQ error.
 * Defining ydb_trigger_etrap to hold M code of any complexity exposes mismatches between the quoting conventions for M code and shell scripts. YottaDB suggests an approach of enclosing the entire value in single-quotes and only escaping the single-quote ('), exclamation-point (!) and back-slash (\) characters. For a comprehensive (but hopefully not very realistic) example:
-  
+
    .. parsed-literal::
       $ export ydb_trigger_etrap='write:1\'=2 $zstatus,\!,"5\\2=",5\\2,\! halt'
       $ echo $ydb_trigger_etrap
-      write:1'=2 $zstatus,!,"5\2=",5\2,! halt 
+      write:1'=2 $zstatus,!,"5\2=",5\2,! halt
       YDB>set $etrap=$ztrnlnm("ydb_trigger_etrap")
       YDB>xecute "write 1/0"
       150373210,+1^GTM$DMOD,%YDB-E-DIVZERO, Attempt to divide by zero
@@ -494,15 +505,15 @@ The following sample journal extract shows how YottaDB journals records updates 
    05\61731,15126\1\16423\0\4294967297\3\4\^#t("trigvn","#COUNT")="1"
    05\61731,15126\1\16423\0\4294967297\4\4\^#t("trigvn",1,"TRIGNAME")="trigvn#1#
    "05\61731,15126\1\16423\0\4294967297\5\4\^#t("trigvn",1,"CMD")="S"
-   05\61731,15126\1\16423\0\4294967297\6\4\^#t("trigvn",1,"XECUTE")="W $ZTWORMHOLE 
-   s ^trigvn(1)=""Triggered Update"" if $ZTVALUE=1 s $ZTWORMHOLE=$ZTWORMHOLE\_"" 
+   05\61731,15126\1\16423\0\4294967297\6\4\^#t("trigvn",1,"XECUTE")="W $ZTWORMHOLE
+   s ^trigvn(1)=""Triggered Update"" if $ZTVALUE=1 s $ZTWORMHOLE=$ZTWORMHOLE\_""
    Code:CR"""
    05\61731,15126\1\16423\0\4294967297\7\4\^#t("trigvn",1,"CHSET")="M"
    05\61731,15126\1\16423\0\4294967297\8\4\^#t("#TRHASH",175233586,1)="trigvn"_$C(0,0,0,0,0)_
    "W $ZTWORMHOLE s ^trigvn(1)=""Triggered Update"" if $ZTVALUE=1 s $ZTWORMHOLE=$ZTWORMHOLE
    _"" Code:CR""1"
    05\61731,15126\1\16423\0\4294967297\9\4\^#t("#TRHASH",107385314,1)="trigvn"_$C(0,0)_"
-   W $ZTWORMHOLE s ^trigvn(1)=""Triggered Update"" if $ZTVALUE=1 s $ZTWORMHOLE=$ZTWORMHOLE\_"" 
+   W $ZTWORMHOLE s ^trigvn(1)=""Triggered Update"" if $ZTVALUE=1 s $ZTWORMHOLE=$ZTWORMHOLE\_""
    Code:CR""1"
    09\61731,15126\1\16423\0\4294967297\1\1\
    02\61731,15127\2\16423\0
@@ -557,7 +568,7 @@ The following sample journal extract shows how YottaDB journals records updates 
    05\61731,16544\12\5337\0\51539607553\1\1\^trigvn="1"
    09\61731,16544\12\5337\0\51539607553\1\1\BA
    02\61731,16555\13\5337\0
-   03\61731,16555\13\5337\0\0 
+   03\61731,16555\13\5337\0\0
 
 This journal extract output shows $ZTWORMHOLE information for each triggered update to ^trigvn. Notice how YottaDB stored trigger definitions as a node of a global-like structure ^#t and how YottaDB journals the trigger definition for ^trigvn and the triggered update for ^trgvn.
 

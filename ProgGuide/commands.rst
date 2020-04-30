@@ -1,3 +1,15 @@
+.. ###############################################################
+.. #                                                             #
+.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # All rights reserved.                                        #
+.. #                                                             #
+.. #     This source code contains the intellectual property     #
+.. #     of its copyright holder(s), and is made available       #
+.. #     under a license.  If you do not know the terms of       #
+.. #     the license, please stop and do not read further.       #
+.. #                                                             #
+.. ###############################################################
+
 .. index::
    Commands
 
@@ -162,7 +174,7 @@ Example:
 
 .. parsed-literal::
    ReportA ; Label for ReportA
-           SET di="" OPEN outfile USE outfile 
+           SET di="" OPEN outfile USE outfile
            FOR  SET di=$ORDER(^div(di)) QUIT:di=""  DO PREP DO  DO POST
            .SET de="",(nr,gr)=0
            .WRITE "Division ",di,! F   S de=$ORDER(^de(di,de)) QUIT:de=""   DO
@@ -183,7 +195,7 @@ Example:
      set revert=0
      if $view("undef") set revert=1 view "noundef"
      if z="" write "Missing parameter.",!     view:revert "undef" quit
-     else  write z*z,! view:revert "undef" quit  
+     else  write z*z,! view:revert "undef" quit
    YDB>do ^SQR(10)
    100
    YDB>do ^SQR
@@ -274,7 +286,7 @@ Increments and limits may be positive, negative, an integer, or a fraction. Yott
 
 NOUNDEF does not apply to an undefined FOR control variable. This prevents an increment of an undefined FOR control variable from getting into an unintended infinite loop. For example, FOR A=1:1:10 KILL A gives an UNDEF error on the increment from 1 to 2 even with VIEW "NOUNDEF".
 
-YottaDB terminates the execution of a FOR when it executes an explicit QUIT or a GOTO (or ZGOTO in YottaDB) that appears on the line after the FOR. FOR commands with arguments that have increments without limits and argumentless FORs can be indefinite loops. Such FORs must terminate with a (possibly postconditional) QUIT or a GOTO within the immediate scope of the FOR. FORs terminated by such commands act as "while" or "until" control mechanisms. Also, such FORs can, but seldom, terminate by a HALT within the scope of the FOR as extended by DOs, XECUTEs, and extrinsics. 
+YottaDB terminates the execution of a FOR when it executes an explicit QUIT or a GOTO (or ZGOTO in YottaDB) that appears on the line after the FOR. FOR commands with arguments that have increments without limits and argumentless FORs can be indefinite loops. Such FORs must terminate with a (possibly postconditional) QUIT or a GOTO within the immediate scope of the FOR. FORs terminated by such commands act as "while" or "until" control mechanisms. Also, such FORs can, but seldom, terminate by a HALT within the scope of the FOR as extended by DOs, XECUTEs, and extrinsics.
 
 ++++++++++++++++++
 Examples of FOR
@@ -550,7 +562,7 @@ If YottaDB cannot create the process because of something that is unlikely to ch
 The JOB Environment
 +++++++++++++++++++++++++++++
 
-YottaDB creates the environment for a new jobbed off process by copying the environment of the process issuing the JOB command and making a few minor modifications. By default, the standard input is assigned to the null device, the standard output is assigned to routinename.mjo, and the standard error is assigned to routinename.mje. 
+YottaDB creates the environment for a new jobbed off process by copying the environment of the process issuing the JOB command and making a few minor modifications. By default, the standard input is assigned to the null device, the standard output is assigned to routinename.mjo, and the standard error is assigned to routinename.mje.
 
 .. note::
    If the content of the $ydb_routines environment variable is different from the $ZROUTINES ISV, a jobbed off process will inherit $ydb_routines and not $ZROUTINES. If the M entryref (LABEL^PROGRAM) that is being jobbed off can be found only through $ZROUTINES, the jobbed off process will encounter a ZLINKFILE error (due to not being able to find the M program through $ydb_routines) whereas the program would be found in the jobbing process.
@@ -600,7 +612,7 @@ By default, the job uses the same specification for ydb_gbldir as that defined i
 strlit specifies the stdin of the JOBbed process. strlit can either be a file or a DETACHed socket (that is, a socket from the socket pool). To pass a DETACHed socket as the stdin of the JOBbed process, specify strlit in the form of "SOCKET:<handle>" where <handle> is the socket handle. On successful completion of the JOB command, the passed socket is closed and is no longer available to the parent process.
 
 .. note::
-   Specify a DETACHed socket in both INPUT and OUTPUT parameters to pass it as the $PRINCIPAL of the JOBbed process. 
+   Specify a DETACHed socket in both INPUT and OUTPUT parameters to pass it as the $PRINCIPAL of the JOBbed process.
 
 The maximum string length is 255 characters.
 
@@ -721,7 +733,7 @@ The format of the KILL command is:
 * An indirection operator and an expression atom evaluating to a list of one or more KILL arguments form a legal argument for a KILL.
 
 .. note::
-   Use KILL with caution because it can have a major impact on the process environment (local variables) or shared data (global variables). 
+   Use KILL with caution because it can have a major impact on the process environment (local variables) or shared data (global variables).
 
 +++++++++++++++++++++
 Examples of KILL
@@ -929,7 +941,7 @@ This LOCKs A and B, then incrementally LOCKs C. Finally it releases the LOCK on 
 Example:
 
 .. parsed-literal::
-   LOCK (A,B,C) 
+   LOCK (A,B,C)
    LOCK +(B,C)
    LOCK -(B)
 
@@ -1010,7 +1022,7 @@ Example:
 
 .. parsed-literal::
    YDB>Kill
-                   
+
    YDB>Set ^gbl(1,2)="1,2"
    YDB>Merge lcl(3,4)=^gbl(1)
    YDB>Set ^("naked")=2
@@ -1039,7 +1051,7 @@ The format of the NEW command is:
 * When an undefined variable is NEWed, the fact that it is undefined is "stacked", and when leaving the current scope, it returns to being undefined, i.e. the variable is implicitly KILLed during transfer of control.
 * Without an argument, YottaDB NEWs all currently existing local variables; in this case, at least two (2) spaces must follow the NEW to separate it from the next command on the line.
 * For the scope of the NEW, a NEW of a name suspends its alias association. The association is restored when the scope of the NEW ends. The array remains in existence - it can be modified through other alias variables with which it is associated and which remain in scope. If none of its alias variables is in scope, the array remains intact and again becomes visible when the scope is restored.
-* When a NEW argument is enclosed in parentheses, that NEW is considered "exclusive". An exclusive NEW creates a fresh data environment and effectively aliases the excluded variables with their original copies. This technique tends to improve performance and meets the M standard. However, it has two implications: The alias operation KILL \*, with no arguments, or naming an exclusively NEW'd variable, acts as a KILL in the current scope (has the same effect as a non-alias KILL), and ZWRITE, ZSHOW "V", $ZDATA() report any exclusively NEW'd variable as an alias. Refer to the section on the KILL command for a description of alternative behaviors for the interaction of KILL and exclusive NEW. 
+* When a NEW argument is enclosed in parentheses, that NEW is considered "exclusive". An exclusive NEW creates a fresh data environment and effectively aliases the excluded variables with their original copies. This technique tends to improve performance and meets the M standard. However, it has two implications: The alias operation KILL \*, with no arguments, or naming an exclusively NEW'd variable, acts as a KILL in the current scope (has the same effect as a non-alias KILL), and ZWRITE, ZSHOW "V", $ZDATA() report any exclusively NEW'd variable as an alias. Refer to the section on the KILL command for a description of alternative behaviors for the interaction of KILL and exclusive NEW.
 * When the flow of execution terminates the scope of an argumentless or an exclusive NEW, YottaDB restores all stacked variables to their previous values, and deletes all other local variables.
 * The intrinsic special variables $ESTACK, $ETRAP, $TEST, $ZGBLDIR, and $ZYERROR can be an explicit argument of a NEW. For more information, refer to `Chapter 8: “Intrinsic Special Variables” <./isv.html>`_.
 * The intrinsic special variable $ZTRAP can also be an explicit argument of a NEW; this stacks the current value of $ZTRAP and assigns $ZTRAP a null value ($ZTRAP="").
@@ -1062,7 +1074,7 @@ Example:
      Write !,"VARIABLES AFTER RETURN:",!
      ZWRite
      Quit
-  LABEL    
+  LABEL
      New A Set C=7
      Write !,"VARIABLES AFTER NEW:",!
      ZWRite
@@ -1115,7 +1127,7 @@ Produces the results:
 Example:
 
 .. parsed-literal::
-   /usr/local/lib/yottadb/r120/ydb -run ^stackalias   
+   /usr/local/lib/yottadb/r120/ydb -run ^stackalias
    stackalias ; Demonstrate New with alias
      ZPrint ; Print this program
      Set A=1,*B=A,*C(2)=A ; Create some aliases
@@ -1237,7 +1249,7 @@ The format of the QUIT command is:
 * When a QUIT terminates an extrinsic function, it must have an argument that supplies the value returned by the function; in all other cases, QUIT must not have an argument and must be followed by at least two (2) spaces to separate it from the next command on the line.
 * An indirection operator and an expression atom evaluating to a QUIT argument form a legal argument for a QUIT.
 * An unsubscripted lvn (lname) specifies the root of an array, while a subscripted lvn must specify an alias container.
-* When QUIT * terminates an extrinsic function or an extrinsic special variable, it always returns an alias container. If lvn is an lname that is not an alias, QUIT * creates an alias container. 
+* When QUIT * terminates an extrinsic function or an extrinsic special variable, it always returns an alias container. If lvn is an lname that is not an alias, QUIT * creates an alias container.
 * The QUIT performs two similar, but different, functions depending on its context. Because FORs do not add levels to the YottaDB invocation stack, QUITs inside FOR loops simply terminate the loop. QUITs that terminate DOs, XECUTEs and extrinsics remove a YottaDB invocation stack level and therefore may adjust the local variable environment resulting from previous NEWs or parameter passing. A QUIT from an extrinsic or a frame created by an argumentless DO restores $TEST to its stacked value.
 * An indirection operator and an expression atom evaluating QUIT arguments forms a legal argument for a QUIT other than from a FOR.
 * Attempting to QUIT (implicitly or explicitly) from code invoked by a DO, XECUTE or extrinsic after that code issued a TSTART not yet matched by a TCOMMIT produces an error.
@@ -1369,7 +1381,7 @@ Example:
 
 .. parsed-literal::
    YDB>Set x="I love hotdogs"
-                   
+
    YDB>Set $Extract(x,3,6)="want"
    YDB>Write x
    I want hotdogs
@@ -1384,9 +1396,9 @@ Example:
 
 .. parsed-literal::
    YDB>kill A,B
-           
+
    YDB>set A=1,A(1)=1,A(2)=2
-   YDB>set \*B=A ; A & B are aliases. 
+   YDB>set \*B=A ; A & B are aliases.
    YDB>zwrite B
    B=1 ;*
    B(1)=1
@@ -1399,7 +1411,7 @@ Example:
 
 .. parsed-literal::
    YDB>kill A,B,C
-             
+
    YDB>set A=1,*C(2)=A ; C(2) is a container
    YDB>zwrite
    A=1 ;*
@@ -1409,7 +1421,7 @@ Example:
    1:0:
    YDB>
 
-This SET * command creates an alias by dereferencing an alias container. 
+This SET * command creates an alias by dereferencing an alias container.
 
 ----------------------
 TCommit
@@ -1559,7 +1571,7 @@ The format of the VIEW command is:
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
 * The keyword specifies the environmental factor to change.
-* The optional expression following the keyword specifies the nature of the change to the environmental factor. When this expression is a region list (a comma delimited list of regions), YottaDB sorts the regions in an internal order eliminating any duplicates from the list for deadlock prevention. When region list is not specified, VIEW operates on all regions under the current global directory. 
+* The optional expression following the keyword specifies the nature of the change to the environmental factor. When this expression is a region list (a comma delimited list of regions), YottaDB sorts the regions in an internal order eliminating any duplicates from the list for deadlock prevention. When region list is not specified, VIEW operates on all regions under the current global directory.
 * An indirection operator and an expression atom evaluating to a list of one or more VIEW arguments form a legal argument for a VIEW
 
 +++++++++++++++++++++++++
@@ -1616,7 +1628,7 @@ Performs a file system hardening sync - fsync() - operation on the database file
 
 **[NO]DMTERM**
 
-Provides a mechanism to retain default line terminators for direct mode user interaction (including the BREAK command) independent of any TERMINATOR deviceparameter changes for $PRINCIPAL. With VIEW "NODMTERM", TERMINATOR deviceparameter apply to both READs from $PRINCIPAL and direct mode interactions. A case-insensitive value of the environment variable ydb_dmterm is "1", "yes", or "true" establishes a DMTERM state at process initiation; all other values, including no value, result in the default VIEW "NODMTERM" behavior. $VIEW("DMTERM") returns 1 for DMTERM mode or 0 for NODMTERM mode. 
+Provides a mechanism to retain default line terminators for direct mode user interaction (including the BREAK command) independent of any TERMINATOR deviceparameter changes for $PRINCIPAL. With VIEW "NODMTERM", TERMINATOR deviceparameter apply to both READs from $PRINCIPAL and direct mode interactions. A case-insensitive value of the environment variable ydb_dmterm is "1", "yes", or "true" establishes a DMTERM state at process initiation; all other values, including no value, result in the default VIEW "NODMTERM" behavior. $VIEW("DMTERM") returns 1 for DMTERM mode or 0 for NODMTERM mode.
 
 **"EPOCH"[:REGION]**
 
@@ -1654,7 +1666,7 @@ Database block certification causes YottaDB to check the internal integrity of e
 "GVSRESET":"<region>"
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Resets the process-specific fields that are part of the ZSHOW "G" result and database file header fields holding records reported by: GVSTAT, BG trace, buffer pool accounting and the TP block modification details. Note that a VIEW "GVSRESET" performed by a process with read-only database access changes only the process-specific information and has no effect on the database file header. DSE CHANGE -FILEHEADER -GVSTATSRESET clears the same database file header fields as VIEW "GVRESET"; 
+Resets the process-specific fields that are part of the ZSHOW "G" result and database file header fields holding records reported by: GVSTAT, BG trace, buffer pool accounting and the TP block modification details. Note that a VIEW "GVSRESET" performed by a process with read-only database access changes only the process-specific information and has no effect on the database file header. DSE CHANGE -FILEHEADER -GVSTATSRESET clears the same database file header fields as VIEW "GVRESET";
 
 ~~~~~~~~~~~~~~~~~~~~~
 "GVDUPSETNOOP":value
@@ -1784,7 +1796,7 @@ Note that if an application incorrectly specifies a global to be NOISOLATED, sev
 
 YottaDB ignores attempts to turn on (or off) the feature for globals that already have the feature turned on (or off). It is an error to modify the isolation-status of a global variable within a transaction across different references (either reads or writes) of that global variable. The VIEW command by itself is not considered to be a reference of the global variable. While not recommended programming practice, this means that a process can change a global's isolation-status within a transaction as long as it hasn't referenced it yet.
 
-Any reads on a NOISOLATION global are validated at the time of the read and not re-validated at TCOMMIT time. This means that if the value that was read changed after the read but before the TCOMMIT, the transaction would still be committed. Therefore it is important that any reads on a NOISOLATED global (if any) should be data insensitive to change with time (unchanging or where consistency with other data accessed by the transaction doesn't matter). 
+Any reads on a NOISOLATION global are validated at the time of the read and not re-validated at TCOMMIT time. This means that if the value that was read changed after the read but before the TCOMMIT, the transaction would still be committed. Therefore it is important that any reads on a NOISOLATED global (if any) should be data insensitive to change with time (unchanging or where consistency with other data accessed by the transaction doesn't matter).
 
 ~~~~~~~~~~~~~~~~~~~~~~
 "PATCODE":"tablename"
@@ -1802,7 +1814,7 @@ Identifies the file containing definitions of unique patterns for use with the "
 "POOLLIMIT":<region>:expr
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-VIEW "POOLLIMIT":<region>:expr, where expr is of the form n[%] provides a mechanism for a process that has the potential to "churn" global buffers to limit the potential impact on other processes by restricting the number of global buffers it uses. If the expression ends with a per-cent sign (%), the number is taken as a percentage of the configured global buffers and otherwise as an ordinal number of preferred buffers; standard M parsing and integer conversions apply. Preferred buffer values are limited to between 32 and one less than half the buffer pool inclusive; with the exception of zero (0) or 100 per cent, which turn off the limitation; specifications exceeding those limits provide the value of the nearer limit. If the argument specifies "*" for the region, the command applies to all regions. $VIEW("POOLLIMIT",<region>) returns the current value for the region as an ordinal number - zero (0) when there is no limit in place. Note that this facility is designed for use by a relatively small subset of processes. In addition, MUPIP REORG uses this facility to limit its buffers to a value established by the environment variable ydb_poollimit using the syntax described for VIEW "POOLLIMIT" with a default of 64 if ydb_poollimit is not specified. Note that this may slightly slow a standalone REORG but can be overridden by defining ydb_poollimit as 0 or "100%". 
+VIEW "POOLLIMIT":<region>:expr, where expr is of the form n[%] provides a mechanism for a process that has the potential to "churn" global buffers to limit the potential impact on other processes by restricting the number of global buffers it uses. If the expression ends with a per-cent sign (%), the number is taken as a percentage of the configured global buffers and otherwise as an ordinal number of preferred buffers; standard M parsing and integer conversions apply. Preferred buffer values are limited to between 32 and one less than half the buffer pool inclusive; with the exception of zero (0) or 100 per cent, which turn off the limitation; specifications exceeding those limits provide the value of the nearer limit. If the argument specifies "*" for the region, the command applies to all regions. $VIEW("POOLLIMIT",<region>) returns the current value for the region as an ordinal number - zero (0) when there is no limit in place. Note that this facility is designed for use by a relatively small subset of processes. In addition, MUPIP REORG uses this facility to limit its buffers to a value established by the environment variable ydb_poollimit using the syntax described for VIEW "POOLLIMIT" with a default of 64 if ydb_poollimit is not specified. Note that this may slightly slow a standalone REORG but can be overridden by defining ydb_poollimit as 0 or "100%".
 
 ~~~~~~~~~~~
 "RCTLDUMP"
@@ -1827,16 +1839,16 @@ VIEW "[NO]STATSHARE"[:<region-list>] enables or disables database statistics sha
 
 This provides a fast and efficient mechanism for processes to share their database access statistics for other processes to monitor. Processes opt in or out with the VIEW "[NO]STATSHARE"[:<region-list>] command, defaulting to VIEW "NOSTATSHARE". At process startup, a value of 1, or any case-independent string or leading substrings of "TRUE" or "YES" in the environment variable ydb_statshare provides an initial setting of VIEW "STATSHARE". When a process changes whether it is opting in or out, there is no change to the output of a ZSHOW "G" within that process. YottaDB does not permit this form of the VIEW command within a TP transaction. Monitoring the statistics of other processes does not require opting-in.
 
-The processes which opt-in for STATSHARE place their statistics as binary data in database files located in the directory specified by the ydb_statsdir environment variable. All processes that share statistics MUST use the same value for $ydb_statsdir. The ^%YGBLSTAT utility program gathers and reports statistics. 
+The processes which opt-in for STATSHARE place their statistics as binary data in database files located in the directory specified by the ydb_statsdir environment variable. All processes that share statistics MUST use the same value for $ydb_statsdir. The ^%YGBLSTAT utility program gathers and reports statistics.
 
 .. note::
-   A VIEW "[NO]STATSHARE" with no region sub-argument opens any unopened mapped regions and any enabled associated statsDB regions; the $ydb_statshare environment variable applies to databases as the application first uses them. When the last VIEW "[NO]STATSHARE" had no region sub-argument, regions implicitly share when the process first references them, but after a VIEW specifies selective sharing, regions don't implicitly share as they open. 
+   A VIEW "[NO]STATSHARE" with no region sub-argument opens any unopened mapped regions and any enabled associated statsDB regions; the $ydb_statshare environment variable applies to databases as the application first uses them. When the last VIEW "[NO]STATSHARE" had no region sub-argument, regions implicitly share when the process first references them, but after a VIEW specifies selective sharing, regions don't implicitly share as they open.
 
 ~~~~~~~~~~~
 "STP_GCOL"
 ~~~~~~~~~~~
 
-Starts a string-pool garbage collection, which normally happens automatically at appropriate times. 
+Starts a string-pool garbage collection, which normally happens automatically at appropriate times.
 
 .. note::
    There are no visible effects from STP_GCOL, LV_GCOL and LV_REHASH except for the passage of time depending on the state of your process. YottaDB uses these VIEW "LV_GCOL","LV_REHASH","STP_GCOL" facilities in testing. They are documented to ensure completeness in product documentation. You may (or may not) find them useful during application development for debugging or performance testing implementation alternatives.
@@ -1847,10 +1859,10 @@ Starts a string-pool garbage collection, which normally happens automatically at
 
 Enables or disables handling of undefined variables as errors. With UNDEF, YottaDB handles all references to undefined local or global variables as errors. With NOUNDEF, YottaDB handles all references to undefined local or global variables as if the variable had a value of the empty string. In other words, YottaDB treats all variables appearing in expressions as if they were the argument of an implicit $GET(). UNDEF is the default.
 
-The environment variable $ydb_noundef specifies the initial value of [NO]UNDEF at process startup. If it is defined, and evaluates to a non-zero integer or any case-independent string or leading substring of "TRUE" or "YES", then YottaDB treats undefined variables as having an implicit value of an empty string. 
+The environment variable $ydb_noundef specifies the initial value of [NO]UNDEF at process startup. If it is defined, and evaluates to a non-zero integer or any case-independent string or leading substring of "TRUE" or "YES", then YottaDB treats undefined variables as having an implicit value of an empty string.
 
 .. note::
-   NOUNDEF does not apply to an undefined FOR control variable. This prevents an increment (or decrement) of an undefined FOR control variable from getting into an unintended infinite loop. For example, FOR A=1:1:10 KILL A gives an UNDEF error on the increment from 1 to 2 even with VIEW "NOUNDEF". 
+   NOUNDEF does not apply to an undefined FOR control variable. This prevents an increment (or decrement) of an undefined FOR control variable from getting into an unintended infinite loop. For example, FOR A=1:1:10 KILL A gives an UNDEF error on the increment from 1 to 2 even with VIEW "NOUNDEF".
 
 ~~~~~~~~~~~~~~~~~~~~~~
 "TRACE":value:<expr>
@@ -1982,7 +1994,7 @@ This example produces an output like the following:
 * ^trc("profiling","merge",3)="1:8001:0:8001:8044" and others like it specifies the cumulative Execution Count, User Time, System Time, Total Time and the Elapsed Time of the code execution of line 3 of merge^profiling.
 * The M-profiling results are subject to the granularity of the operating system provided time functions. CPU time entries having 0:0:0 values indicate lightweight M mode having 0 to less than 1 microsecond.
 
-Consider the following program that presents the output of this M-profiling result in a tabular report. 
+Consider the following program that presents the output of this M-profiling result in a tabular report.
 
 .. parsed-literal::
    YDB>zprint ^tracereport
@@ -2003,7 +2015,7 @@ Consider the following program that presents the output of this M-profiling resu
       .      set zp=label\_"+"_i_"^"_rtn
       .      write "Line #",i,": ",?9
       .      zprint @zp
-   
+
    YDB>do ^tracereport("^trc","order","profiling")
    .........................................................................................
    Line #         Count          User Time      System Time    Total Time     Elapsed Time
@@ -2086,7 +2098,7 @@ To perform entryref-specific M-profiling without modifying the source program, u
    YDB>do ^profiling
    Trace
    YDB>view "TRACE":0:"^mtrc"
-    
+
    YDB>zwrite ^mtrc
    ^mtrc("\*CHILDREN")="0:0:0"
    ^mtrc("\*RUN")="132008:52003:184011"
@@ -2102,7 +2114,7 @@ To perform entryref-specific M-profiling without modifying the source program, u
    ^mtrc("profiling","profiling")="1:0:0:0:9"
    ^mtrc("profiling","profiling",8)="1:0:0:0:4"
    ^mtrc("profiling","qom")="1:0:0:0:9"
-   ^mtrc("profiling","qom",4)="1:0:0:0:4" 
+   ^mtrc("profiling","qom",4)="1:0:0:0:4"
 
 
 Example:
@@ -2198,7 +2210,7 @@ If fortypes.m is:
        for i=1,2:1:4,6  set v=0
        for i=1:1,2  set v=0  quit:i=3
        for i=1:1:2  for j=1:1:3  set v=0
-       for i=1:1:2  
+       for i=1:1:2
        .    for j=1:1:1  do
        ..        set v=0
        set j=5  for i=1:1:j  do
@@ -2268,7 +2280,7 @@ On executing fortypes, the output looks something like the following:
 “[UN]SETENV”:<expr>[:value]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Environment variables can be set and unset inside M using VIEW commands. 
+Environment variables can be set and unset inside M using VIEW commands.
 
 VIEW "SETENV":<expr>:<value> sets the environment variable named by <expr> to <value> and VIEW "UNSETENV":<expr> unsets the environment variable.
 
@@ -2283,7 +2295,7 @@ Example (the default timezone of the computer is US Eastern Standard Time):
 
    YDB>WRITE $ZDATE($HOROLOG,"24:60")
    20:21
-   YDB>VIEW "UNSETENV":"TZ"    
+   YDB>VIEW "UNSETENV":"TZ"
 
    YDB>WRITE $ZDATE($HOROLOG,"24:60")
    15:21
@@ -2306,7 +2318,7 @@ Example:
 
 .. parsed-literal::
    YDB>Kill A
-                   
+
    YDB>View "NOUNDEF"
    YDB>Write A,?10,$L(A)
          0
@@ -2376,7 +2388,7 @@ An explicit or implicit QUIT within the scope of the XECUTE, but not within the 
 
 Because XECUTE causes run-time compilation in YottaDB, and because it tends to obscure code, use XECUTE only when other approaches clearly do not meet your particular requirement.
 
-YottaDB compiles XECUTE <literal> at compile time when the literal is valid YottaDB code that has minimal impact on the M virtual machine. An XECUTE literal containing GOTO, NEW, QUIT, (nested) XECUTE and indirection can't be precompiled because of the interaction of those features with the stack architecture of the M virtual machine. Precompiled XECUTE literals do not show up in $STACK() as having a separate stack level, but rather "disappear" into the stack level of the original XECUTE. Please observe the following cautions: 
+YottaDB compiles XECUTE <literal> at compile time when the literal is valid YottaDB code that has minimal impact on the M virtual machine. An XECUTE literal containing GOTO, NEW, QUIT, (nested) XECUTE and indirection can't be precompiled because of the interaction of those features with the stack architecture of the M virtual machine. Precompiled XECUTE literals do not show up in $STACK() as having a separate stack level, but rather "disappear" into the stack level of the original XECUTE. Please observe the following cautions:
 
 * ensure you compile with the same YottaDB version, $ydb_chset, $ydb_local_collate, $ydb_patnumeric, $ydb_pattern_file and $ydb_pattern_table values (or lack thereof) as those used to run your application.
 * If the application changes the run time values controlled by those environment variables, use variable operands or indirection, rather than literals for operands with pattern match (?) or sorts-after (]]).
@@ -2579,7 +2591,7 @@ Example:
 
 .. parsed-literal::
    YDB>ZBREAK -*
-                   
+
    YDB>ZGOTO
    YDB>ZBREAK SUB^ZBTEST:"W !,""Trace"""
    YDB>Do ^ZBTEST
@@ -2693,7 +2705,7 @@ ZEdit
 
 The ZEDIT command invokes the editor specified by the EDITOR environment variable for YottaDB and opens the specified file for editing. If the EDITOR environment variable is undefined, ZEDIT tries to invoke the UNIX vi editor.
 
-By default, ZEDIT puts a new file into the first source directory in $ZROUTINES. You can specify a file path explicitly in the argument to the ZEDIT command, for example: the current working directory: 
+By default, ZEDIT puts a new file into the first source directory in $ZROUTINES. You can specify a file path explicitly in the argument to the ZEDIT command, for example: the current working directory:
 
 .. parsed-literal::
    ZEDIT "./file"
@@ -2729,7 +2741,7 @@ Example:
 
 .. parsed-literal::
    YDB>Set prog="BAL"
-                   
+
    YDB>ZEDit prog
 
 This is similar to the first example except that it uses a variable argument rather than a string literal.
@@ -2985,7 +2997,7 @@ Example:
 
 This compiles the routine "test" and produces a listing but no object file. Because the example produces no object file, it must locate an existing object file (which might be the same as any copy in the current image); if there is noexisting object file, YottaDB produces an error. While this example shows the use of compilation qualifiers with ZLINK, a -noobject -list compilation might better be done with ZCOMPILE.
 
-Example: 
+Example:
 
 .. parsed-literal::
    YDB>zlink "sockexamplemulti2"
@@ -2996,7 +3008,7 @@ Example:
    YDB>zlink "sockexamplemulti2"
    YDB>
 
-This example demonstrates how VIEW "LINK":"RECURSIVE" command ZLINKs a routine when its prior version is already there in the active M virtual stack. 
+This example demonstrates how VIEW "LINK":"RECURSIVE" command ZLINKs a routine when its prior version is already there in the active M virtual stack.
 
 ++++++++++++++++++++++
 Auto ZLINK
@@ -3088,7 +3100,7 @@ In $ZROUTINES, the \*-suffix after the object directory enables the auto-relink 
 
 With auto-relink enabled, YottaDB loads an object file from an object directory into Rtnobj shared memory segment on an explicit ZLINK, implicit ZLINK (DO, GOTO, ZPRINT, $TEXT()), and extrinsic function invocations ($$) enabling the routines to be accessed by other concurrent/future processes.
 
-With auto-relink, YottaDB creates an initial Rtnobj shared memory segment of 1 MiB (2 MiB or more if hugepages is configured) and allocates 92MiB of shared memory segment for managing the auto-relink facility. Therefore, always ensure that your system has adequate shared memory configured; if not, YottaDB displays messages along the lines of: 
+With auto-relink, YottaDB creates an initial Rtnobj shared memory segment of 1 MiB (2 MiB or more if hugepages is configured) and allocates 92MiB of shared memory segment for managing the auto-relink facility. Therefore, always ensure that your system has adequate shared memory configured; if not, YottaDB displays messages along the lines of:
 
 .. parsed-literal::
    %YDB-E-SYSCALL, Error received from system call shmget() failed
@@ -3168,7 +3180,7 @@ The required integer expression specifies the message code. There are two types 
 
 * Message codes from 150339592 are raised from YottaDB. For examining the text of a message code, refer to `$ZMESSAGE() <./functions.html#zmessage>`_.
 
-The three least significant bits (lsb) of these message codes indicate the severity which determines the error handling action: 
+The three least significant bits (lsb) of these message codes indicate the severity which determines the error handling action:
 
 +----------------+----------------------------------+---------------------------------------------------------------------------------------------------------+
 | 3 lsb          | Severity                         | Action                                                                                                  |
@@ -3272,7 +3284,7 @@ Example:
 
 .. parsed-literal::
    YDB>ZPRINT X^RTN:X+5
-       
+
    YDB>ZPRINT X+-5^RTN:X
    YDB>ZPRINT X^RTN:X+-5^RTN
 
@@ -3286,7 +3298,7 @@ Example:
      do stop^test2
    YDB>
 
-This command displays the trigger code for trigger name A#1#. 
+This command displays the trigger code for trigger name A#1#.
 
 .. parsed-literal::
    ZPRINT ^x#/BREG : Print trigger routine user-named "x" in region BREG
@@ -3328,7 +3340,7 @@ The format of the ZSHOW command is:
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
 * The optional expression specifies one or more codes determining the nature of the information displayed.
 * A ZSHOW with no argument defaults to ZSHOW "S"; in this case, at least two (2) spaces must follow the ZSHOW to separate it from the next command on the line.
-* The optional global or local variable name specifies the destination for the ZSHOW output; if the ZSHOW argument does not contain a global or local variable name, ZSHOW directs its display to the current device ($IO). 
+* The optional global or local variable name specifies the destination for the ZSHOW output; if the ZSHOW argument does not contain a global or local variable name, ZSHOW directs its display to the current device ($IO).
 * When the desination for the ZSHOW output is a local variable or the current device ($IO), ZSHOW sets the maximum length of a ZSHOW line output to 8192 bytes. ZSHOW stores information that does not fit within 8192 bytes in the next line.
 * When the destination for the ZSHOW output is a global variable, ZSHOW sets the maximum length of a ZSHOW line output to the maximum database record size. ZSHOW stores information that does not fit within the maximum database record size as immediate descendants, using ordinal subscripts starting at one (1), of the node holding the beginning of the information.
 * When the destination for the ZSHOW "V" output is a global variable, the %ZSHOWVTOLCL utility program can be used to restore data from that global variable into its original local variables. For more information refer to `%ZSHOWVTOLCL <./utility.html#zshowvtolcl>`_.
@@ -3348,7 +3360,7 @@ C: provides the list of loaded external call packages and their routines. ZSHOW 
 
 D: displays device information
 
-G: displays the access statistics for global variables and access to database file since process startup. When the process does not have access to the current shared statistics, ZSHOW "G" return a question-mark (?) at the end of the output strings. 
+G: displays the access statistics for global variables and access to database file since process startup. When the process does not have access to the current shared statistics, ZSHOW "G" return a question-mark (?) at the end of the output strings.
 
 I: displays the current values of all intrinsic special variables
 
@@ -3389,14 +3401,14 @@ If G occurs in the list, the statistics are displayed in the following order in 
    CFT : Critical section Failed (blocked) acquisition Total
    CQS : Critical section acquisition Queued sleeps sum of Squares
    CQT : Critical section acquisition Queued sleeps Total
-   CTN : Current Transaction Number of the database for the last committed read-write transaction (TP and non-TP) 
+   CTN : Current Transaction Number of the database for the last committed read-write transaction (TP and non-TP)
    CYS : Critical section acquisition processor Yields sum of Squares
-   CYT : Critical section acquisition processor Yields Total 
+   CYT : Critical section acquisition processor Yields Total
    DEX : \# of Database file EXtentions
    DFL : \# of Database FLushes of the entire set of dirty global buffers in shared memory to disk
    DFS : \# of times a process does an fsync of the database file. For example: a) after writing an epoch journal record, b) as part of database file extension c) during database rundown d) as part of mupip reorg -truncate etc.
-   DRD : \# of Disk ReaDs from the database file (TP and non-TP, committed and rolled-back).This does not include reads that are satisfied by buffered globals for databases that use the BG (Buffered Global) access method. YottaDB always reports 0 for databases that use the MM (memory-mapped) access method as this has no real meaning in that mode. 
-   DTA : \# of DaTA operations (TP and non-TP) 
+   DRD : \# of Disk ReaDs from the database file (TP and non-TP, committed and rolled-back).This does not include reads that are satisfied by buffered globals for databases that use the BG (Buffered Global) access method. YottaDB always reports 0 for databases that use the MM (memory-mapped) access method as this has no real meaning in that mode.
+   DTA : \# of DaTA operations (TP and non-TP)
    DWT : \# of Disk WriTes to the database file (TP and non-TP, committed and rolled-back). This does not include writes that are satisfied by buffered globals for databases that use the BG (Buffered Global) access method. YottaDB always reports 0 for databases that use the MM (memory-mapped) access method as this has no real meaning in that mode.
    GET : \# of GET operations (TP and non-TP)
    JBB : \# of Journal Buffer Bytes updated in shared memory
@@ -3407,25 +3419,25 @@ If G occurs in the list, the statistics are displayed in the following order in 
    JFW : \# of Journal File Write system calls
    JRE : \# of Journal Regular Epoch records written to the journal file (only seen in a -detail journal extract); these are written every time an epoch-interval boundary is crossed while processing updates
    JRI : \# of JouRnal Idle epoch journal records written to the journal file (only seen in a -detail journal extract); these are written when a burst of updates is followed by an idle period, around 5 seconds of no updates after the database flush timer has flushed all dirty global buffers to the database file on disk
-   JRL : \# of Journal Records with a Logical record type (e.g. SET, KILL etc.) written to the journal file 
+   JRL : \# of Journal Records with a Logical record type (e.g. SET, KILL etc.) written to the journal file
    JRO : \# of Journal Records with a type Other than logical written to the journal file (e.g. AIMG, EPOCH, PBLK, PFIN, PINI, and so on)
    JRP : \# of Journal Records with a Physical record type (i.e. PBLK, AIMG) written to the journal file (these records are seen only in a -detail journal extract)
-   KIL : \# of KILl operations (kill as well as zwithdraw, TP and non-TP) 
-   LKF : \# of LocK calls (mapped to this db) that Failed 
-   LKS : \# of LocK calls (mapped to this db) that Succeeded 
-   NBR : \# of Non-tp committed transaction induced Block Reads on this database 
-   NBW : \# of Non-tp committed transaction induced Block Writes on this database 
-   NR0 : \# of Non-tp transaction Restarts at try 0 
-   NR1 : \# of Non-tp transaction Restarts at try 1 
-   NR2 : \# of Non-tp transaction Restarts at try 2 
-   NR3 : \# of Non-tp transaction Restarts at try 3 
-   NTR : \# of Non-tp committed Transactions that were Read-only on this database 
-   NTW : \# of Non-tp committed Transactions that were read-Write on this database 
-   ORD : \# of $ORDer(,1) (forward) operations (TP and non-TP); the count of $Order(,-1) operations are reported under ZPR. 
-   QRY : \# of $QueRY() operations (TP and non-TP) 
-   SET : \# of SET operations (TP and non-TP) 
-   TBR : \# of Tp transaction induced Block Reads on this database 
-   TBW : \# of Tp transaction induced Block Writes on this database 
+   KIL : \# of KILl operations (kill as well as zwithdraw, TP and non-TP)
+   LKF : \# of LocK calls (mapped to this db) that Failed
+   LKS : \# of LocK calls (mapped to this db) that Succeeded
+   NBR : \# of Non-tp committed transaction induced Block Reads on this database
+   NBW : \# of Non-tp committed transaction induced Block Writes on this database
+   NR0 : \# of Non-tp transaction Restarts at try 0
+   NR1 : \# of Non-tp transaction Restarts at try 1
+   NR2 : \# of Non-tp transaction Restarts at try 2
+   NR3 : \# of Non-tp transaction Restarts at try 3
+   NTR : \# of Non-tp committed Transactions that were Read-only on this database
+   NTW : \# of Non-tp committed Transactions that were read-Write on this database
+   ORD : \# of $ORDer(,1) (forward) operations (TP and non-TP); the count of $Order(,-1) operations are reported under ZPR.
+   QRY : \# of $QueRY() operations (TP and non-TP)
+   SET : \# of SET operations (TP and non-TP)
+   TBR : \# of Tp transaction induced Block Reads on this database
+   TBW : \# of Tp transaction induced Block Writes on this database
    TC0 : \# of Tp transaction Conflicts at try 0 (counted only for that region which caused the TP transaction restart)
    TC1 : \# of Tp transaction Conflicts at try 1 (counted only for that region which caused the TP transaction restart)
    TC2 : \# of Tp transaction Conflicts at try 2 (counted only for that region which caused the TP transaction restart)
@@ -3435,11 +3447,11 @@ If G occurs in the list, the statistics are displayed in the following order in 
    TR1 : \# of Tp transaction Restarts at try 1 (counted for all regions participating in restarting TP transaction)
    TR2 : \# of Tp transaction Restarts at try 2 (counted for all regions participating in restarting TP transaction)
    TR3 : \# of Tp transaction Restarts at try 3 (counted for all regions participating in restarting TP transaction)
-   TR4 : \# of Tp transaction Restarts at try 4 and above (restart counted for all regions participating in restarting TP transaction) 
-   TRB : \# of Tp read-only or read-write transactions Rolled Back (excluding incremental rollbacks) 
-   TTR : \# of Tp committed Transactions that were Read-only on this database 
-   TTW : \# of Tp committed Transactions that were read-Write on this database 
-   ZPR : \# of $order(,-1) or $ZPRevious() (reverse order) operations (TP and non-TP). The count of $Order(,1) operations are reported under ORD. 
+   TR4 : \# of Tp transaction Restarts at try 4 and above (restart counted for all regions participating in restarting TP transaction)
+   TRB : \# of Tp read-only or read-write transactions Rolled Back (excluding incremental rollbacks)
+   TTR : \# of Tp committed Transactions that were Read-only on this database
+   TTW : \# of Tp committed Transactions that were read-Write on this database
+   ZPR : \# of $order(,-1) or $ZPRevious() (reverse order) operations (TP and non-TP). The count of $Order(,1) operations are reported under ORD.
    ZTR : \# of ZTRigger command operations
    [NT]B[WR] mnemonics are satisfied by either disk access or, for databases that use the BG (buffered global) access method, global buffers in shared memory.
 
@@ -3472,7 +3484,7 @@ In UTF-8 mode, the ZSHOW command exhibits byte-oriented and display-oriented beh
 
 * ZSHOW targeted to a device (ZSHOW "*") aligns the output according to the numbers of display columns specified by the WIDTH deviceparameter.
 * ZSHOW targeted to a local (ZSHOW "*":lcl) truncates data exceeding 2048KB at the last character that fully fits within the 2048KB limit.
-* ZSHOW targeted to a global (ZSHOW "*":^CC) truncates data exceeding the maximum record size for the target global at the last character that fully fits within that record size. 
+* ZSHOW targeted to a global (ZSHOW "*":^CC) truncates data exceeding the maximum record size for the target global at the last character that fully fits within that record size.
 * ZSHOW "L" displays the following M-lock statistics in one line just before displaying the LOCKs held by the process.
 
 ++++++++++++++++++++
@@ -3691,7 +3703,7 @@ Example:
    $ZVERSION="YottaDB r1.24 Linux x86_64"
    $ZYERROR=""
 
-This example displays the current value of all intrinsic special variables. 
+This example displays the current value of all intrinsic special variables.
 
 ++++++++++++++++++++++++++++
 ZSHOW Destination Variables
@@ -3722,9 +3734,9 @@ Example:
    YDB>ZSHow "d":a(1)
    YDB>ZWRite
    a(1)=1
-   a(1,"D",1)="/dev/pts/1 OPEN TERMINAL NOPAST NOESCA NOREADS TYPE WIDTH=80 LENG=24 
+   a(1,"D",1)="/dev/pts/1 OPEN TERMINAL NOPAST NOESCA NOREADS TYPE WIDTH=80 LENG=24
    EDIT "
-   a(1,"X",2)="" 
+   a(1,"X",2)=""
    YDB>
 
 This ZSHOW stores the current open device information under a(1). Notice how the ZSHOW overlays the prior value of a(1,"D",3,5).
@@ -3733,7 +3745,7 @@ Example:
 
 .. parsed-literal::
    YDB>KILL ^ZSHOW
-                   
+
    YDB>ZB -\*,lab^rout ZSH "B":^ZSHOW
    YDB>ZWRite ^ZSHOW
    ^ZSHOW("B",1)="LAB^ROUT"
@@ -3934,7 +3946,7 @@ ZTRigger
 Invokes all triggers with signatures matching the global variable name and the command type of ZTR[IGGER]. The format of the ZTRIGGER command is:
 
 .. parsed-literal::
-   ZTR[IGGER] gvn 
+   ZTR[IGGER] gvn
 
 * ZTRIGGER allows an application to invoke triggers without a specific global update.
 * ZTRIGGER actions are Atomic whether they are executed inside or outside a TP transaction; but inside TP they remain process-private until the TCOMMIT of the full transaction. ZTRIGGER might be associated with a series of updates grouped into a TP transaction or to perform an implicit transaction without a TSTART/TCOMMIT.
@@ -4045,7 +4057,7 @@ ZWRITE and ZSHOW "V" dump the values of alias variables, alias container variabl
 
 .. parsed-literal::
    YDB>Set C=1,C("Malvern")="Wales",*A=C,*B(-3.14)=C
-           
+
    YDB>ZSHow "V" ; ZWRite would produce the same output
    A=1 ;*
    A("Malvern")="Wales"
@@ -4067,18 +4079,18 @@ When ZWRITE / ZSHOW "V" encounters an alias container for an array with no curre
 
 .. parsed-literal::
    YDB>Kill \*A,\*C ; Delete alias variables and associations, leaving only the container
-           
+
    YDB>ZWRite
    $ZWRTAC=""
    \*B(-3.14)=$ZWRTAC1
    $ZWRTAC1=3 ;*
    $ZWRTAC1("Malvern")="Wales"
    $ZWRTAC=""
-   YDB> 
+   YDB>
 
 ZWRITE produces $ZWRTACn names to serve as data cell anchors which SET @ accepts as valid set left targets. $ZWRTACn names are created and destroyed when using ZWRITE output to drive restoration of a previously captured variable state. Except for their appearance in ZWRITE output and as left-hand side SET @ targets, they have no function. Other than SET, no other commands can use $ZWRTAC* in their syntax. Although $ZWRTACn superficially looks like an intrinsic special variable (ISV), they are not ISVs. $ZWRTACn with no subscripts can serve as the target (left side of the equals-sign) of a SET * command. SET $ZWRTAC (no trailing integer) deletes all data cell associations with the $ZWRTAC prefixed aliases. YottaDB only recognizes the upper-case unabbreviated name and prefix $ZWRTAC.
 
-When ZWRITE displays values for an alias variable, it appends a " ;*" to the name which visually tags the alias without interfering with use of ZWRITE output as arguments to a SET @. ZWRITE can only identify alias variables when at least two aliases for the same data match its argument. When ZWRITE encounters an alias container variable with no current associated alias, it uses the ZWRTAC mechanism to expose the data; SET @ can restore data exposed with the ZWRTAC mechanism. 
+When ZWRITE displays values for an alias variable, it appends a " ;*" to the name which visually tags the alias without interfering with use of ZWRITE output as arguments to a SET @. ZWRITE can only identify alias variables when at least two aliases for the same data match its argument. When ZWRITE encounters an alias container variable with no current associated alias, it uses the ZWRTAC mechanism to expose the data; SET @ can restore data exposed with the ZWRTAC mechanism.
 
 .. note::
    YottaDB strongly recommends that you should not create or manipulate your own $ZWRTACn "variables". They are not part of the supported functionality for implementing alias variables and containers, but are rather a part of the underlying implementation that is visible to you, the YottaDB user. YottaDB can arbitrarily, for its own convenience change the use of $ZWRTAC in YottaDB at any time. They are only documented here since you may see them in the output of ZWRITE and ZSHOW "V".
@@ -4112,7 +4124,7 @@ Example:
 
 .. parsed-literal::
    YDB>Set A=1,*B=A ; Create an array and an alias association
-                   
+
    YDB>ZWRite ; Show that the array and association exist
    A=1 ;*
    \*B=A

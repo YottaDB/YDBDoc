@@ -1,3 +1,14 @@
+.. ###############################################################
+.. #                                                             #
+.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # All rights reserved.                                        #
+.. #                                                             #
+.. #     This source code contains the intellectual property     #
+.. #     of its copyright holder(s), and is made available       #
+.. #     under a license.  If you do not know the terms of       #
+.. #     the license, please stop and do not read further.       #
+.. #                                                             #
+.. ###############################################################
 
 .. index::
    GT.CM Client Server
@@ -26,7 +37,7 @@ GT.CM can communicate between systems having different endian architectures.
 .. note::
    YottaDB transaction processing (TP) is not supported via GT.CM, and accessing GT.CM served databases within an M TRANSACTION may cause application level inconsistency in the data. GT.CM servers do not invoke triggers. This means that the client processes must restrict themselves to updates which don't require triggers, or explicitly call for the actions that triggers would otherwise perform. Because GT.CM bypasses triggers, it may provide a mechanism to bypass triggers for debugging or complex corrections to repair data placed in an inconsistent state by a bug in trigger logic.
 
-In the event of recovery from system crashes, application-level database consistency cannot be guaranteed for data residing in databases (M global variable namespaces) accessed via different GT.CM servers or distributed between GT.CM and local access. 
+In the event of recovery from system crashes, application-level database consistency cannot be guaranteed for data residing in databases (M global variable namespaces) accessed via different GT.CM servers or distributed between GT.CM and local access.
 
 ---------------------
 Overview
@@ -96,7 +107,7 @@ Types of Operations
 
 The GT.CM client sends messages to the GT.CM server requesting the type of operation to be performed.
 
-GT.CM server can recognize the following types of operations and process the specified operations on the "local" database. 
+GT.CM server can recognize the following types of operations and process the specified operations on the "local" database.
 
 * SET
 * KILL
@@ -170,10 +181,10 @@ Change directory (cd) to the specified location (that is /testarea/yottadb/datab
 
 Create a global directory.
 
-.. parsed-literal:: 
+.. parsed-literal::
    $ GDE
    GDE> change -segment DEFAULT -file=data.dat
-   GDE> exit 
+   GDE> exit
 
 Create the database file (data.dat).
 

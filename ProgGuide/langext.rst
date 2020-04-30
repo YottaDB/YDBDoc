@@ -1,3 +1,14 @@
+.. ###############################################################
+.. #                                                             #
+.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # All rights reserved.                                        #
+.. #                                                             #
+.. #     This source code contains the intellectual property     #
+.. #     of its copyright holder(s), and is made available       #
+.. #     under a license.  If you do not know the terms of       #
+.. #     the license, please stop and do not read further.       #
+.. #                                                             #
+.. ###############################################################
 
 .. index::
    Language Extensions
@@ -276,7 +287,7 @@ Example:
    YDB>set A=1,*B=A ; B & A are aliases
    YDB>write B
    1
-   YDB> 
+   YDB>
 
 Within the context of Alias Variables extensions:
 
@@ -286,7 +297,7 @@ Within the context of Alias Variables extensions:
 * lname is very similar to its definition in the M standard, except that in the context of alias variables, lname is just the name of an unsubscripted local variable (root of an array).
 * "Data cell" and "node" are synonyms.
 
-The following table summarizes Alias Variables extensions. 
+The following table summarizes Alias Variables extensions.
 
 **Alias Variables Extensions**
 
@@ -372,8 +383,8 @@ Performance
 
 With two exceptions, alias and alias container variables add no overhead to normal local variable performance:
 
-1. Complex patterns of aliases layered onto TSTART RESTART variables. 
-2. Complex patterns of aliases intermixed with NEW scope management, particularly when using exclusive NEW. 
+1. Complex patterns of aliases layered onto TSTART RESTART variables.
+2. Complex patterns of aliases intermixed with NEW scope management, particularly when using exclusive NEW.
 
 There is no reason to avoid aliases in any situation, but in those two contexts, YottaDB rewards attention to tidy design. YottaDB uses garbage collection to manage the storage used for local variables. Increasing the use of local variables, for example, to implement objects, will increase the need for garbage collection, even though the garbage collector and storage management are designed to be light weight and self-tuning. The use of alias variables to implement objects, however, is as efficient as any other method is likely to be, and except for the normal admonition to not keep arrays and local variables around when they are not needed, and to not create levels of contexts over and above those actually needed by application logic, use alias variables as liberally as your application needs dictate.
 
@@ -383,7 +394,7 @@ ZWRITE/ZSHOW "V" Format
 
 ZWRITE as applied to local variables and ZSHOW "V" are conceptually similar, with two differences:
 
-* ZWRITE allows the use of patterns to specify the variables and subscripts to display, whereas ZSHOW "V" applies to all local variables. 
+* ZWRITE allows the use of patterns to specify the variables and subscripts to display, whereas ZSHOW "V" applies to all local variables.
 * ZSHOW "V" optionally allows the output to be directed to a global or local variable, whereas ZWRITE always directs its output to the current output device.
 
 For more information on the ZWRITE/ZSHOW "V" format for alias variables, refer to `ZWRITE Format for Alias Variables <./commands.html#zwrite-format-for-alias-variables>`_.
@@ -443,7 +454,7 @@ YottaDB's underlying implementation of pass-by-reference and alias variables is 
 SET* and QUIT* Examples
 ++++++++++++++++++++++++++++
 
-The following table show the type of data movement of alias and alias container variables from QUIT * in a function to a SET * target: 
+The following table show the type of data movement of alias and alias container variables from QUIT * in a function to a SET * target:
 
 +-----------------------------------------------+-------------------------------+--------------------------------------+----------------------------------------------------+----------------------------------------------+
 |                                               | QUIT*                         | SET*                                 | Result                                             | ZWRITE                                       |
@@ -485,7 +496,7 @@ Example:
    YDB>Kill \*A ; Remove the association for A - it now has no association and no array
    YDB>ZWRite ; B is a traditional local variable
    B=1
-  
+
 Example:
 
 .. parsed-literal::
@@ -554,7 +565,7 @@ Example:
    C=4 ;*
    \*D=C
    ------------
-   Value of A is unchanged because of Kill \*B, but C has changed: 
+   Value of A is unchanged because of Kill \*B, but C has changed:
    A=1
    C=4
    Example:
@@ -745,7 +756,7 @@ Example:
       set i=a(1) ; Assignment applies to i - value is ""
       wet c("got")="a match" ; Assignment applies to all of {b,c,y)
       quit
-                                                                   
+
   ------------
   11
   111
@@ -877,7 +888,7 @@ The following table summarizes YottaDB Unicode support.
 |                             | `GDE <https://docs.yottadb.com/AdminOpsGuide/gde.html>`_ chapter in the Administration and Operations Guide.                                                                               |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | FILTER[=expr]               | Specifies character filtering for specified cursor movement sequences on devices where FILTER applies.                                                                                     |
-|                             |                                                                                                                                                                                            | 
+|                             |                                                                                                                                                                                            |
 |                             | In UTF-8 mode, the usual Unicode line terminators (U+000A (LF), U+0000D (CR), U+000D followed by U+000A (CRLF), U+0085 (NEL), U+000C (FF), U+2028 (LS) and U+2029 (PS)) are recognized. If |
 |                             | FILTER=CHARACTER is enabled, all of the terminators are recognized to maintain the values of $X and $Y. For more information, refer to                                                     |
 |                             | `FILTER <./ioproc.html#filter>`_.                                                                                                                                                          |
@@ -1018,7 +1029,7 @@ The Devanagari writing system (U+0900 to U+097F) is based on the representation 
 Although the half-form form consonant is a valid text element in the context of the Devanagari writing system, it does not map directly to a character in the Unicode Standard. It is obtained by combining the DEVANAGARI LETTER CA, with DEVANAGARI SIGN VIRAMA, and DEVANAGARI LETTER CHA.
 
 .. parsed-literal::
-   च + ्  +  छ  =  च्छ 
+   च + ्  +  छ  =  च्छ
 
 On a screen or a printer, the terminal font detects the glyph image of the half-consonant and displays it at the next display position. Internally, YottaDB uses ICU's glyph-related conventions for the Devanagari writing system to calculate the number of columns needed to display it. As a result, YottaDB advances $X by 1 when it encounters the combination of the 3 Unicode code-points that represent the half-form consonant.
 
@@ -1091,7 +1102,7 @@ Although the M standard patcodes (A,C,L,U,N,P,E) are extended to work with Unico
 
 **String Normalization**
 
-In YottaDB, strings are not implicitly normalized. Unicode normalization is a method of computing canonical representation of the character strings. Normalization is required if the strings contain combination characters (such as accented characters consisting of a base character followed by an accent character) as well as precomposed characters. The Unicode™ standard has assigned code-points to such precomposed characters for backward compatibility with legacy code sets. For the applications containing both versions of the same character (or combining characters), Unicode recommends one of the normal forms. Because YottaDB does not normalize strings, the application developers must develop the functionality of normalizing the strings, as needed, in order for string matching and string collation to behave in a conventional and wholesome fashion. In such a case, edit checks can be used that only accept a single representation when multiple representations are possible. 
+In YottaDB, strings are not implicitly normalized. Unicode normalization is a method of computing canonical representation of the character strings. Normalization is required if the strings contain combination characters (such as accented characters consisting of a base character followed by an accent character) as well as precomposed characters. The Unicode™ standard has assigned code-points to such precomposed characters for backward compatibility with legacy code sets. For the applications containing both versions of the same character (or combining characters), Unicode recommends one of the normal forms. Because YottaDB does not normalize strings, the application developers must develop the functionality of normalizing the strings, as needed, in order for string matching and string collation to behave in a conventional and wholesome fashion. In such a case, edit checks can be used that only accept a single representation when multiple representations are possible.
 
 **UTF-16 is not supported for $PRINCIPAL Device**
 
@@ -1113,7 +1124,7 @@ With the use of "UTF-8" as YottaDB's internal character encoding, the additional
 
 **Characters in arguments exchanged with external routines must be validated by the external routines**
 
-YottaDB does not check for illegal characters in a string before passing it to an external routine or in a returned value before assigning it to a YottaDB variable. This is because such checks add parameter-processing overhead. The application must ensure that the strings are in the encoding form expected by the respective routines. More robustly, external routines must interpret passed strings based on the value of the intrinsic variable $ZCHSET or the environment variable ydb_chset. The external routines can perform validation if needed. 
+YottaDB does not check for illegal characters in a string before passing it to an external routine or in a returned value before assigning it to a YottaDB variable. This is because such checks add parameter-processing overhead. The application must ensure that the strings are in the encoding form expected by the respective routines. More robustly, external routines must interpret passed strings based on the value of the intrinsic variable $ZCHSET or the environment variable ydb_chset. The external routines can perform validation if needed.
 
 ~~~~~~~~~~~~~~~~~~
 Maximums

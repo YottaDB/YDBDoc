@@ -1,3 +1,14 @@
+.. ###############################################################
+.. #                                                             #
+.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # All rights reserved.                                        #
+.. #                                                             #
+.. #     This source code contains the intellectual property     #
+.. #     of its copyright holder(s), and is made available       #
+.. #     under a license.  If you do not know the terms of       #
+.. #     the license, please stop and do not read further.       #
+.. #                                                             #
+.. ###############################################################
 
 .. _Programming Notes:
 
@@ -456,7 +467,7 @@ Memory Allocation
 =================
 
 Memory allocated by `ydb_malloc() <./cprogram.html#ydb-malloc>`_ must be explicitly freed by
-`ydb_free() <./cprogram.html#ydb-free>`_. 
+`ydb_free() <./cprogram.html#ydb-free>`_.
 `ydb_exit() <./cprogram.html#ydb-exit>`_ does not free memory, and any
 memory allocated but not freed prior to `ydb_exit() <./cprogram.html#ydb-exit>`_ is released
 only on process exit.

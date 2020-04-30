@@ -1,3 +1,14 @@
+.. ###############################################################
+.. #                                                             #
+.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # All rights reserved.                                        #
+.. #                                                             #
+.. #     This source code contains the intellectual property     #
+.. #     of its copyright holder(s), and is made available       #
+.. #     under a license.  If you do not know the terms of       #
+.. #     the license, please stop and do not read further.       #
+.. #                                                             #
+.. ###############################################################
 
 .. index::
    Packaging YottaDB Applications
@@ -86,7 +97,7 @@ monthstarting.zip contains monthstarting.m, month_starting.c, and monthstarting.
 Run the monthstarting.m program that lists months starting with the specified day of the week and year range.
 
 .. parsed-literal::
-   $ yottadb -run monthstarting Friday 1986 1988      
+   $ yottadb -run monthstarting Friday 1986 1988
    FRI AUG 01, 1986
    FRI MAY 01, 1987
    FRI JAN 01, 1988
@@ -98,7 +109,7 @@ Notice that this program consists of a main program that reads the command line 
 
 This step is optional as there is no need to explicitly compile monthstarting.m because YottaDB autocompiles it as needed.
 
-On x86 GNU/Linux (64-bit Ubuntu 12.04), execute the following command to compile month_starting.c and create an executable called friday. 
+On x86 GNU/Linux (64-bit Ubuntu 12.04), execute the following command to compile month_starting.c and create an executable called friday.
 
 .. parsed-literal::
    $ gcc -c month_starting.c -I$ydb_dist

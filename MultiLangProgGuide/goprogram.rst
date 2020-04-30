@@ -1,3 +1,15 @@
+.. ###############################################################
+.. #                                                             #
+.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # All rights reserved.                                        #
+.. #                                                             #
+.. #     This source code contains the intellectual property     #
+.. #     of its copyright holder(s), and is made available       #
+.. #     under a license.  If you do not know the terms of       #
+.. #     the license, please stop and do not read further.       #
+.. #                                                             #
+.. ###############################################################
+
 ================================
 Programming in Go
 ================================
@@ -27,8 +39,8 @@ There are two Go APIs:
 
 As the Go language has important differences from C (for example, it
 has structures with methods but lacks macros), below are Go-specific
-sections of the `Quick Start <https://docs.yottadb.com/MultiLangProgGuide/MultiLangProgGuide.html#quick-start>`_, 
-`Concepts <https://docs.yottadb.com/MultiLangProgGuide/MultiLangProgGuide.html#concepts>`_, 
+sections of the `Quick Start <https://docs.yottadb.com/MultiLangProgGuide/MultiLangProgGuide.html#quick-start>`_,
+`Concepts <https://docs.yottadb.com/MultiLangProgGuide/MultiLangProgGuide.html#concepts>`_,
 `Symbolic Constants <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#symbolic-constants>`_,
 `Data Structures & Type Definitions <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#data-structures-type-definitions>`_,
 `Simple API <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#simple-api>`_ and `Utility
@@ -37,7 +49,7 @@ The sections that are specific to Go are intended to supplement, but not subsume
 
 Go application code *must not* directly use the YottaDB C API
 structures and functions (those prefixed by :code:`C.` or described in
-the C `Simple API <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#simple-api>`_ 
+the C `Simple API <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#simple-api>`_
 above) as such usage bypasses important controls,
 but should instead use the structures, methods and functions exposed
 by the YottaDB Go wrapper. :code:`C.` prefixed structures and
@@ -1112,7 +1124,7 @@ and the sections on `Transaction Processing <https://docs.yottadb.com/MultiLangP
 Transaction Processing <https://docs.yottadb.com/MultiLangProgGuide/programmingnotes.html#threads-and-transaction-processing>`_ for details.
 
 .. note:: If the transaction logic receives a :code:`YDB_TP_RESTART` or :code:`YDB_TP_ROLLBACK` from a YottaDB function or method that it calls, it *must* return that value to the calling :code:`TpE()` or :code:`TpST()`. Failure to do so could result in application level data inconsistencies and hard to debug application code.
-	  
+
 --------------------------
 Go Simple API KeyT Methods
 --------------------------
@@ -1429,7 +1441,7 @@ Go CallMT()
 As a wrapper for the C function `ydb_ci_t() <https://docs.yottadb.com/ProgrammersGuide/extrout.html#ydb-ci-t>`_, the :code:`CallMT()` function is used to call M routines from Go,
 used when a single call to the function is anticipated. :code:`CallMT()` only supports read-only parameters.
 
-- :code:`retvallen` needs to be of sufficient size to hold any value returned by the call. If the output value exceeds the buffer size, 
+- :code:`retvallen` needs to be of sufficient size to hold any value returned by the call. If the output value exceeds the buffer size,
   a SIG-11 failure is likely as it will overwrite adjacently allocated memory, damaging storage management headers.
 
 - If a return value is specified but has not been configured in the call-in descriptor file or vice-versa, a parameter mismatch situation is created.
@@ -1465,7 +1477,7 @@ Go CallMDesc.CallMDescT()
 
         func (mdesc *CallMDesc) CallMDescT(tptoken uint64, errstr *BufferT, retvallen uint32, rtnargs ...interface{}) (string, error)
 
-As a wrapper for the C function `ydb_cip_t() <https://docs.yottadb.com/ProgrammersGuide/extrout.html#ydb-cip-t>`_, the :code:`CallMDescT()` is a 
+As a wrapper for the C function `ydb_cip_t() <https://docs.yottadb.com/ProgrammersGuide/extrout.html#ydb-cip-t>`_, the :code:`CallMDescT()` is a
 method of the :code:`CallMDesc` (call descriptor) structure which, during the first call, saves information in the :code:`CallMDesc` structure that makes all following calls
 using the same descriptor structure able to run much faster by bypassing a lookup of the function name and going straight to the M routine being called.
 :code:`CallMDescT()` only supports read-only parameters.
@@ -1490,7 +1502,7 @@ Go CallMDesc.Free()
 
 	func (mdesc *CallMDesc) Free()
 
-Frees a :code:`CallMDesc` structure previously allocated 
+Frees a :code:`CallMDesc` structure previously allocated
 
 -------------------------
 Go CallMDesc.SetRtnName()
@@ -1555,7 +1567,7 @@ Go Error()
 
         func (err *YDBError) Error() string
 
-:code:`Error()` is a method to return the expected error message string. 
+:code:`Error()` is a method to return the expected error message string.
 
 ---------------
 Go ErrorCode()

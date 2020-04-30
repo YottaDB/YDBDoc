@@ -1,3 +1,14 @@
+.. ###############################################################
+.. #                                                             #
+.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # All rights reserved.                                        #
+.. #                                                             #
+.. #     This source code contains the intellectual property     #
+.. #     of its copyright holder(s), and is made available       #
+.. #     under a license.  If you do not know the terms of       #
+.. #     the license, please stop and do not read further.       #
+.. #                                                             #
+.. ###############################################################
 
 .. index:: Multi-language Programming Guide
 
@@ -32,7 +43,7 @@ Local Installation
 1. Install prerequisites.
 
 - If not already installed, install *wget*, *binutils* and *pkg-config*: :code:`sudo apt install wget binutils pkg-config`
- 
+
 2. Install YottaDB.
 
 - Create a temporary directory and change to it, e.g.: :code:`mkdir /tmp/tmp ; cd /tmp/tmp`
@@ -425,7 +436,7 @@ transaction. :code:`$tlevel>0` means that it is inside a transaction,
 and :code:`$tlevel>1` means that it is inside a nested
 transaction. Note that a transaction can be started explicitly, e.g.,
 by calling `ydb_tp_s() or ydb_tp_st() <./cprogram.html#ydb-tp-s-ydb-tp-st>`_,or implicitly by a trigger
-resulting from a `ydb_delete_s(), ydb_delete_st() <./cprogram.html#ydb-delete-s-ydb-delete-st>`_, 
+resulting from a `ydb_delete_s(), ydb_delete_st() <./cprogram.html#ydb-delete-s-ydb-delete-st>`_,
 `ydb_set_s() or ydb_set_st() <./cprogram.html#ydb-set-s-ydb-set-st>`_.
 
 ---------
@@ -480,7 +491,7 @@ several comma-separated substrings.
 Note that a race condition exists for a multi-threaded application:
 after a call that returns an error, it is possible for another call
 from a different thread to perturb the value of :code:`$zstatus`. Use
-the `errstr <./programmingnotes.html#errstr>`_ parameter 
+the `errstr <./programmingnotes.html#errstr>`_ parameter
 discussed in `Threads <./programmingnotes.html#threads>`_ to get the correct
 :code:`$zstatus` in a multi-threaded application.
 
@@ -567,7 +578,7 @@ function.
 
 .. note:: If the transaction logic receives a :code:`YDB_TP_RESTART` or :code:`YDB_TP_ROLLBACK` from a YottaDB function that it calls, it *must* return that value to `ydb_tp_s() or ydb_tp_st() <./cprogram.html#ydb-tp-s-ydb-tp-st>`_. Failure to do so could result in application level data inconsistencies and hard to debug application code.
 
-Sections `Threads <./programmingnotes.html#threads>`_ and 
+Sections `Threads <./programmingnotes.html#threads>`_ and
 `Threads and Transaction Processing <./programmingnotes.html#threads-and-transaction-processing>`_ provide
 important information pertinent to transaction processing in a
 multi-threaded application.
