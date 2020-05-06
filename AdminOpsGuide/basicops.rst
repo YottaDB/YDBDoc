@@ -439,7 +439,7 @@ ydb_db_startup_max_wait
 +++++++++++
 ydb_dist
 +++++++++++
-**ydb_dist (gtm_dist)** specifies the path to the directory containing the YottaDB system distribution. ydb_dist must be defined for each user. If you are not using the ydb script or sourcing ydb_env_set, consider defining ydb_dist in the login file or as part of the default system environment. In UTF-8 mode, the ydb_dist environment variable specifies the path to the directory containing the YottaDB system distribution for Unicode. The distribution for Unicode is located in subdirectory utf8 under the YottaDB distribution directory. For example, if the YottaDB distribution is in /usr/local/lib/yottadb/r120, set ydb_dist to point to /usr/local/lib/yottadb/r120/utf8 for UTF-8 mode. Correct operation of YottaDB executable programs requires ydb_dist to be set correctly.
+**ydb_dist (gtm_dist)** specifies the path to the directory containing the YottaDB system distribution. ydb_dist must be defined for each user. If you are not using the ydb script or sourcing ydb_env_set, consider defining ydb_dist in the login file or as part of the default system environment. In UTF-8 mode, the ydb_dist environment variable specifies the path to the directory containing the YottaDB system distribution for Unicode. The distribution for Unicode is located in subdirectory utf8 under the YottaDB distribution directory. For example, if the YottaDB distribution is in /usr/local/lib/yottadb/r120, set ydb_dist to point to /usr/local/lib/yottadb/r120/utf8 for UTF-8 mode. Correct operation of YottaDB executable programs requires ydb_dist to be set correctly. Effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_, at process initialization YottaDB ensures that gtm_dist is set to $ydb_dist.
 
 +++++++++++++
 ydb_dmterm
@@ -449,7 +449,7 @@ ydb_dmterm
 ++++++++++++++++++++
 ydb_env_translate
 ++++++++++++++++++++
-**ydb_env_translate (gtm_env_translate)** specifies the path to a shared library to implement the optional YottaDB environment translation facility that can assist in resolving extended global references.
+**ydb_env_translate (gtm_env_translate)** specifies the path to a shared library to implement the optional YottaDB `environment translation facility <https://docs.yottadb.com/ProgrammersGuide/langfeat.html#optional-yottadb-environment-translation-facility>`_ to aid application portability across platforms by translating strings into global directory references.
 
 +++++++++++++++++++++++++++++
 ydb_error_on_jnl_file_lost
@@ -478,6 +478,11 @@ ydb_fullblockwrites
 ydb_gbldir
 +++++++++++++
 **ydb_gbldir (gtmgbldir)** specifies the initial value of the $ZGBLDIR ISV. $ZGBLDIR identifies the global directory. A global directory maps global variables to physical database files, and is required to access M global variables. Users who maintain multiple global directories use this environment variable to conveniently choose one to use from the time of process startup. To automate this definition, define ydb_gbldir in the user's login file. The SET command can alter the value of $ZGBLDIR in an active process.
+
++++++++++++++++++++++++
+ydb_gbldir_translate
++++++++++++++++++++++++
+**ydb_gbldir_translate** provides the path to a shared library to allow a set of $ZGBLDIR to be transformed for application portability across platforms. This is similar to the the optional YottaDB environment translation facility provided by **ydb_env_translate** above. ydb_gbldir_translate was added effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_.
 
 ++++++++++++++
 ydb_gdscert
@@ -685,6 +690,11 @@ ydb_prompt
 ydb_quiet_halt
 +++++++++++++++++
 **ydb_quiet_halt (gtm_quiet_halt)** specifies whether YottaDB should disable the FORCEDHALT message when the process is stopped via MUPIP STOP or by a SIGTERM signal (as sent by some web servers).
+
+++++++++++++++++++++++++++
+ydb_recompile_newer_src
+++++++++++++++++++++++++++
+**ydb_recompile_newer_src** when set to 1, t[rue], or y[es], specifies that a ZLINK/DO/GOTO/ZBREAK/ZGOTO/ZPRINT/$TEXT should recompile the :code:`.m` file only if it has a newer modification time than the corresponding :code:`.o` file. The default behavior is for the :code:`.m` file to be recompiled if its modification time is later than OR equal to that of the corresponding :code:`.o` file. ydb_recompile_newer_src was added effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_.
 
 ++++++++++
 ydb_rel

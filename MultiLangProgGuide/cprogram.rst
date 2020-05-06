@@ -226,7 +226,9 @@ global variable.
 :CODE:`YDB_MAX_TIME_NSEC` — The maximum value in nanoseconds that an
 application can instruct libyottab to wait, e.g., until the process is
 able to acquire locks it needs before timing out, or for
-`ydb_hiber_start()`_.
+`ydb_hiber_start()`_. Note that even if timer resolution is in
+nanoseconds, the accuracy is always determined by the underlying
+hardware and operating system, as well as factors such as system load.
 
 :code:`YDB_MAX_YDBERR` – The absolute (positive) value of any YottaDB
 function error return code. If the absolute value of an error return
@@ -1906,9 +1908,12 @@ M routines can be called from C with the following functions which are described
 
 Historically, the predecessors of the functions to call M routines
 returned positive return codes. In order to maintain backward
-compatibility, values returned by the above (except
-:code:`ydb_zstatus()` which is a :code:`void`) are positive values, whereas
+compatibility, values returned by the above are positive values, whereas
 YottaDB `error return codes`_ are negative. For example, to return an
 invalid string length (`YDB_ERR_INVSTRLEN`_), the :code:`ydb_ci*()` functions
 return :code:`-YDB_ERR_INVSTRLEN`, which is a positve value because
 :code:`YDB_ERR_STRLEN` is a negative value.
+
+Effective release
+`r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_
+:code:`ydb_zstatus()` returns an :code:`int`.

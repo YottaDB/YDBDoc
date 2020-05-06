@@ -604,9 +604,10 @@ For more information on Global Directories, refer to the `"Global Directory Edit
 Optional YottaDB Environment Translation Facility
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-For users who wish to dynamically (at run-time) determine a global directory from non-global directory information (typically UCI and VOL) in the environment specification, YottaDB provides an interface to add an appropriate translation.
+To facilitate application migration to YottaDB from other M implementations (for example to convert UCI and VOL specifications to global directories) in the environment specification, YottaDB provides an interface to translate strings to global directory filenames.
 
-Using this facility impacts the performance of every global access that uses environment specification. Make sure you use it only when static determination of the global directory is not feasible. When used, make every effort to keep the translation routines very efficient.
+.. note::
+   Using this facility impacts the performance of every global access that uses environment specification. Make sure you use it only when static determination of the global directory is not feasible. When used, maximize the efficiency of the translation routines.
 
 The use of this facility is enabled by the definition of the environment variable ydb_env_translate, which contains the path of a shared library with the following entry point:
 

@@ -2575,8 +2575,8 @@ This example invokes %FREECNT at the YDB> prompt that displays the number of fre
 %PEEKBYNAME() provides a stable interface to $ZPEEK() that uses control structure field names. $ZPEEK() provides a read-only mechanism to access selected fields in selected control structures in the address space of a process, including process private memory, database shared memory segments and Journal Pools. Although application code can call $ZPEEK() directly, such direct access must use numeric arguments that can vary from release to release. Access by name using %PEEKBYNAME makes application code more stable across YottaDB releases. For more information, refer to `$ZPEEK() <./functions.html#zpeek>`_. YottaDB intends to maintain the stability of a name from release to release where that name refers to the same data item; however, we may add or obsolete names, or modify the type and size associated with existing names at our discretion, to reflect changes in the implementation. The format of the %PEEKBYNAME() function is:
 
 .. code-block:: none
-
-   %PEEKBYNAME(field[,regindex][,format])
+		
+   %PEEKBYNAME(field[,regindex[,format[,gldpath]]])
 
 * The first expression specifies the memory location to access in the format: CONTROL_BLOCK[.FIELD].* (For example, "gd_region.max_key_size").
 * The optional second expression specifies a region name, structure index or a base address associated with the first (field name) argument. The choice is governed by the following rules applied in the following order:
@@ -2584,9 +2584,10 @@ This example invokes %FREECNT at the YDB> prompt that displays the number of fre
   1. If the value is a hex value in the form of 0xhhhhhhhh[hhhhhhhh], then PEEKBYNAME uses it as the base address of the data to fetch. Also in this case, the offset, length, and type are taken from the field specified in the first expression (field). For more information, see the description of the "PEEK" mnemonic in `$ZPEEK() <./functions.html#zpeek>`_.
   2. If the first expression refers to one of the region-related structures supported by the $ZPEEK() function, PEEKBYNAME treats this second expression as a region name.
   3. If the first expression refers to one of the replication related structures supported by the $ZPEEK() function that are indexed, PEEKBYNAME treats this second expression as a numerical (base 10) index value.
-  4.  For those structures supported by the $ZPEEK() function that do not accept an argument, this second expression must be NULL or not specified.
+  4. For those structures supported by the $ZPEEK() function that do not accept an argument, this second expression must be NULL or not specified.
 
 * The optional third expression specifies the output format in one character as defined in the "format" argument in the $ZPEEK() documentation. This argument overrides the automatic format detection by the %PEEKBYNAME utility.
+* The optional fourth agument is a global directory referencing the :code:`gtmhelp.gld` for accesssing the :code:`gtmhelp.dat` file.
 
 Example:
 
@@ -2845,6 +2846,12 @@ where
 * statlist is one or more comma separated statistics, or "*".
 * When statlist specifies a list of statistics, %YGBLSTAT reports them in the same order in which ZSHOW "G" reports those statistics, rather than in the order in which they appear within the specifying argument.
 
+^%YGBLSTAT returns an empty string for any process that has not shared statistics on any region sought by the invoking arguments. The most interesting class of such processes are probably non-YottaDB processes, but it also includes YottaDB processes that are not sharing.
+
+$$IN^%YGBLSTAT(<pid>,<global directory>,<region>) is used to query whether a process is sharing statistics, returning a TRUE (1) value if the process is sharing statistics in the region, a FALSE (0) if it is not, and an empty string if the pid is invalid or there is no sharing for a region of the specified name. If region is empty or an asterisk, the extrinsic returns a TRUE if the process is sharing statistics in any region, and a FALSE otherwise. If the global directory is not empty the function attempts to use it, but if it is unavailable the function fails into the invoking environment's specified $ETRAP or $ZTRAP.
+
+$$IN^%YGBLSTAT() was implemented effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_
+
 $$ORDERPID^%YGBLSTAT(expr1[,expr2[,expr3]]) reports PIDs of processes that have opted in and recorded statistics. Its arguments are as follows:
 
 * expr1 coerced to an intexpr specifies a PID such that the function returns the next PID after expr1 of a process that has opted in to be monitored and which has recorded statistics in any region(s) specified by expr3 from the global directory specified by expr2, or the empty string if expr1 is the last PID. A value of the empty string ("") for expr1 returns the first monitored PID meeting the specifications in expr2 and expr3.
@@ -2901,8 +2908,7 @@ Example:
 
    YDB>write $zchset
    UTF-8
-   YDB>SET %S=$CHAR($$FUNC^%HD("0905"))_$CHAR($$FUNC^%HD("091A"))_$CHAR($$FUNC^%HD(
-   "094D"))_$CHAR($$FUNC^%HD("091B"))_$CHAR($$FUNC^%HD("0940"))
+   YDB>SET %S=$CHAR($$FUNC^%HD("0905"))_$CHAR($$FUNC^%HD("091A"))_$CHAR($$FUNC^%HD("094D"))_$CHAR($$FUNC^%HD("091B"))_$CHAR($$FUNC^%HD("0940"))
    YDB>zwrite
    %S="अच्छी"
    YDB>DO ^%UTF2HEX

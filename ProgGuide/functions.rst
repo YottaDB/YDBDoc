@@ -1121,7 +1121,7 @@ Note that the result is the same as the ZWRITE output.
 $Random()
 ----------------------
 
-Returns a random integer from a range specified by its argument.
+Returns a pseudo-random integer from a range specified by its argument.
 
 The format for the $RANDOM function is:
 
@@ -1133,9 +1133,10 @@ The format for the $RANDOM function is:
 * If $RANDOM() has an argument less than one (1), it generates a run-time error.
 * $RANDOM can generate numbers up to 2147483646 (that is 2GB - 2).
 
-$RANDOM() provides a tool for generating pseudo-random patterns useful in testing or statistical calculations. $RANDOM() results fall between zero (0) and one less than the argument.
+$RANDOM() returns an integer between zero (0) and one less than the argument. $RANDOM() provides a tool for generating pseudo-random patterns useful in testing or statistical calculations. You should ensure that the statistical properties of $RANDOM() are adequate for your application needs.
 
-Random number generators use factors from the environment to create sequences of numbers. True random number generation requires a source of what is known as "noise". Pseudo-random numbers appear to have no pattern, but are developed using interactions between factors that vary in ways not guaranteed to be entirely random. In accordance with the M standard, the YottaDB implementation of $RANDOM() produces pseudo-random numbers.
+.. note::
+   $RANDOM() should never be used when cryptographic quality random numbers are needed.
 
 ++++++++++++++++++++++++++++
 Examples of $RANDOM()
@@ -1616,7 +1617,7 @@ $VIEW() provides a means to access YottaDB environmental information. When Yotta
 |               |                  |                                                                                                                                                                     |
 |               |                  | * CAT - total of critical section acquisitions successes                                                                                                            |
 +---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| "REGION"      | gvn              | Name of the region(s) holding the specified gvn.                                                                                                                    |
+| "REGION"      | gvn              | Name of the region(s) holding the specified gvn. If gvn is :code:`"^*"`, the name of the default region.                                                            |
 |               |                  |                                                                                                                                                                     |
 |               |                  | If gvn spans more than one region, this function returns region name in an order where the first region is the region to which the unsubscripted global variable    |
 |               |                  | name maps; and other regions are in the order in which they would be encountered by traversing the subscripts of gvn in order (with duplicates removed).            |
@@ -1743,6 +1744,8 @@ Here are some $VIEW("REGION",gvn) outputs:
    A5
    YDB>w $view("REGION","^a")
    DEFAULT,A1,A2,A3,A5,A4
+
+Support for $VIEW("REGION","^*") was added effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_
 
 ------------------------
 $ZAHandle
@@ -2298,7 +2301,7 @@ The first WRITE in this example shows the readable form or the value produced by
 $ZCOnvert()
 -------------------
 
-Returns its first argument as a string converted to a different encoding. The two argument form changes the encoding for case within a character set. The three argument form changes the encoding scheme.
+Returns its first argument as a string or value converted to a different encoding or numeric base. The two argument form changes the encoding for case within the ASCII character set. The three argument form changes the encoding scheme or base. Supported bases are decimal (:code:`"DEC"` and :code:`"HEX"`, case insensitive).
 
 The format for the $ZCONVERT() function is:
 
@@ -2306,16 +2309,20 @@ The format for the $ZCONVERT() function is:
 
    $ZCO[NVERT](expr1, expr2,[expr3])
 
-* The first expression is the string to convert. If the expression contains a code-point value that is not in the character set, $ZCONVERT() generates a run-time error.
-* In the two argument form, the second expression specifies a code that determines the form of the result. In the three-argument form, the second expression specifies a code that controls the character set interpretation of the first argument. If the expression does not evaluate to one of the defined codes corresponding to a valid code for the number of available arguments, $ZCONVERT() generates a run-time error.
-* The optional third expression specifies the a code that determines the character set of the result. If the expression does not evaluate to one of the defined codes $ZCONVERT() generates a run-time argument. The three-argument form is not supported in M mode.
+* The first expression is the string or value to convert. $ZCONVERT() generates a run-time error if for Unicode conversion if the string contains a code-point value that is not in the character set, or for base conversion if the value to be converted is out of range.
+* In the two argument form, the second expression specifies a code that determines the form of the result.
+* In the three-argument form
+  * The second expression is a code that specifies the character set or base of the first argument.
+  * The third expression is a code that specifies the character set or base of the result. If the expression does not evaluate to one of the defined codes, $ZCONVERT() generates a run-time argument. The three-argument form for character set conversion is supported only in UTF-8 mode.
 
-The valid (case insensitive) character codes for expr2 in the two-argument form are:
+$ZCONVERT() generates a run-time error if the second or third expression is not a valid code or a supported base. Valid bases are case-insensitive :code:`"DEC"` and :code:`"HEX"`. The valid (case insensitive) character codes for expr2 in the two-argument form are:
 
 * U converts the string to UPPER-CASE. "UPPER-CASE" refers to words where all the characters are converted to their "capital letter" equivalents. $ZCONVERT() retains characters already in UPPER-CASE "capital letter" form unchanged.
 * L converts the string to lower-case. "lower-case" refers to words where all the letters are converted to their "small letter" equivalents. $ZCONVERT() retains characters already in lower-case or having no lower-case equivalent unchanged.
 * T converts the string to title case. "Title case" refers to a string with the first character of each word in upper-case and the remaining characters in the lower-case. $ZCONVERT() retains characters already conforming to "Title case" unchanged. "T" (title case) is not supported in M mode.
 
+.. note::
+   When UTF-8 mode is enabled, YottaDB uses the ICU Library to perform case conversion. As mentioned in the Theory of Operation section, the case conversion of the strings occurs according to Unicode code-point values. This may not be the linguistically or culturally correct case conversion. Therefore, you must ensure that the actual case conversion is linguistically and culturally correct for your specific needs. The two-argument form of the $ZCONVERT() function in M mode does not use the ICU Library to perform operations related to the case conversion of the strings.
 
 The valid (case insensitive) codes for character set encoding for expr2 and expr3 in the three-argument form are:
 
@@ -2325,7 +2332,14 @@ The valid (case insensitive) codes for character set encoding for expr2 and expr
 * "UTF-16"-- a multi-byte 16-bit Unicode® encoding form which uses the same endian level as that of the current system.
 
 .. note::
-   When UTF-8 mode is enabled, YottaDB uses the ICU Library to perform case conversion. As mentioned in the Theory of Operation section, the case conversion of the strings occurs according to Unicode code-point values. This may not be the linguistically or culturally correct case conversion, for example, of the names in the telephone directories. Therefore, application developers must ensure that the actual case conversion is linguistically and culturally correct for their specific needs. The two-argument form of the $ZCONVERT() function in M mode does not use the ICU Library to perform operation related to the case conversion of the strings.
+   As YottaDB Unicode support uses UTF-8, and not other encodings, invoking functions such as $LENGTH() on UTF-16 strings are likely to result in BADCHAR errors. Conversion to and from UTF-16 encodings exists primarily to support input and output of UTF-16 data.
+
+For numeric conversion:
+
+* Unsigned numbers in the range 0 through 0xFFFFFFFFFFFFFFFF (64-bit unsigned integers) can be converted. Decimal return values greater than 999999999999999999 (18 decimal digits, YottaDB's maximum numeric size) are returned as strings.
+* Hexadecimal numbers are always converted to positive decimal numbers.
+* As conversion from hexadecimal numbers preceded by "-" to decimal is not considered meaningful, if the number to be converted is a “negative” hexadecimal number (e.g., "-F"), the result is 0.
+* Conversion from negative decimal numbers to hexadecimal returns the hexadecimal value of the 2's complement of the number, e.g., the value of $ZCONVERT(-23,"DEC","HEX") is "E9"
 
 ++++++++++++++++++++++++
 Examples of $ZCONVERT()
@@ -2334,34 +2348,36 @@ Examples of $ZCONVERT()
 Example:
 
 .. code-block:: bash
-
+		
+   YDB>write $zchset
+   M
    YDB>write $zconvert("Happy New Year","U")
    HAPPY NEW YEAR
+   YDB>
 
 Example:
 
 .. code-block:: bash
-
-   YDB>write $ZCHSET
-   M
-   YDB>Write $zconvert("HAPPY NEW YEAR","T")
-   %YDB-E-BADCASECODE, T is not a valid case conversion code
+		
+   YDB>write $zchset
+   UTF-8
+   YDB>write $zconvert("HAPPY NEW YEAR","T")
+   Happy New Year
+   YDB>
 
 Example:
 
 .. code-block:: bash
+		
+   YDB>set x="FFFF" write $zconvert(x,"hex","dec")
+   65535
+   YDB>kill x,y set $piece(x,"F",17)="" set y=$zconvert(x,"hex","dec") write x," ",y
+   FFFFFFFFFFFFFFFF 18446744073709551615
+   YDB>kill x,y set $piece(x,"9",19)="" set y=$zconvert(x,"dec","hex") write x," ",y
+   999999999999999999 DE0B6B3A763FFFF
+   YDB>
 
-   YDB>Set T8="主要雨在西班牙停留在平原"
-   YDB>Write $Length(T8)
-   12
-   YDB>Set T16=$zconvert(T8,"UTF-8","UTF-16LE")
-   YDB>Write $length(T16)
-   %YDB-E-BADCHAR, $ZCHAR(129,137,232,150) is not a valid character in the UTF-8 encoding form
-   YDB>Set T8B=$ZCOnvert(T16,"UTF-16LE","UTF-8")
-   YDB>Write $length(T8B)
-   12
-
-In the above example, $LENGTH() function triggers an error because it takes only UTF-8 encoding strings as the argument.
+Base conversion was added to $ZCONVERT() effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_
 
 -------------------
 $ZDATA()
@@ -2739,21 +2755,24 @@ $ZJOBEXAM()
 --------------------
 
 .. code-block:: none
+		
+   $ZJOBEXAM([expr1[,expr2]])
 
-   $ZJOBEXAM([expr])
+Returns the full specification of the file specified by the optional expr1 argument into which the function places a ZSHOW output specified by expr2. The return value is the name of the file. YottaDB reports each $ZJOBEXAM() to the operator log facility, along with its file specification.
 
-Returns the full specification of the file into which the function places a ZSHOW "*". The return value serves as a way to save, to notify others of the exact location of the output, or to open the file for further processing. YottaDB reports each $ZJOBEXAM() to the operator log facility with its file specification.
-
-The optional expression argument is a template output device specification. It can be a device, a file directory, or a file name. The template is an expression that is pre-processed to create a file specification as the target for the ZSHOW. The preprocessing is equivalent to $ZPARSE(), as illustrated by the following M code:
+The optional expr1 argument is a template output device specification. It can be a device, a file directory, or a file name. The template is an expression that is pre-processed to create a file specification as the target for the ZSHOW. The preprocessing is equivalent to $ZPARSE(), as illustrated by the following M code:
 
 .. code-block:: none
-
-   set deffn="YDB_JOBEXAM.ZSHOW_DMP_"_$JOB_"_"_<cntr>
+		
+   set deffn="YDB_JOBEXAM.ZSHOW_DMP\_"_$JOB\_"_"_<cntr>
    set filespec=$zparse(expr1,"",deffn)
 
 The $ZJOBEXAM()does not trigger error processing except when there is a problem storing its return value, so no error is reported to the process until after any dump is complete. In the event of any error encountered during the $ZJOBEXAM(), YottaDB sends an appropriate message to operator log facility and returns control to the caller. Note that this special error handling applies only to the $ZJOBEXAM(), and is not a property of the $ZINTERRUPT interrupt handler, which uses $ZJOBEXAM() by default.
 
-$ZJOBEXAM() dump files contain the context of a process at the time the function executes. Placement and management of these files should consider their potential size and security implications.
+Defaulting to :code:`"*"`, expr2 specifies the `ZSHOW output codes <./commands.html#zshow-information-codes>`_ of data to be included in the output. To specify expr2 while allowing expr1 to default, specify :code:`""` as the value of expr1. Invalid codes in expr2 are ignored, and can result in empty dump files.
+
+.. note::
+   As ZSHOW output files contain process-internal data that may include confidential information, e.g., in local variables, ensure that output files have access protection appropriate to their content.
 
 ++++++++++++++++++++++++
 Examples of $ZJOBEXAM()
@@ -2765,13 +2784,15 @@ Example:
 
    YDB>set x=$zjobexam()
    YDB>write x
-   /home/ydbuser1/yottadb/r1.10/r/YDB_JOBEXAM.ZSHOW_DMP_28760_1
-   YDB>set x=$zjobexam("test.file")
+   /home/ydbuser1/YDB_JOBEXAM.ZSHOW_DMP_28760_1
+   YDB>set x=$zjobexam("isvonly.txt","I")
    YDB>write x
-   /home/ydbuser1/yottadb/r1.10/r/test.file
+   /home/ydbuser1/isvonly.txt
    YDB>
 
 Shows default file name and type of the files created containing the zshow dump information and the difference when the name and type are specified.
+
+The second parameter was added to $ZJOBEXAM() effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_.
 
 -------------------
 $ZJustify()
@@ -3243,7 +3264,7 @@ Sends a signal to a process. The format for the $ZSIGPROC function is:
    $ZSIGPROC(expr1,expr2)
 
 * The first expression is the pid of the process to which the signal is to be sent.
-* The second expression is the system signal number. Because a signal number of a signal name can be different for various platforms, YottaDB recommends using signal names to maintain code portability across different platforms. For example, the signal number for SIGUSR1 is 10 on Linux and 16 for some other platforms. Use the $&ydbposix.signalval(signame,.sigval) function available in the ydbposix plugin to determine the signal number of a signal name.
+* The second expression is the system signal name (e.g., :code:`"SIGUSR1"` or just :code:`"USR1"` - YottaDB accepts either) or number (e.g., 10 for SIGUSR1). YottaDB recommends using signal names to maintain code portability across different platforms.
 
 If the second expression is 0, $ZSIGPROC() checks the validity of the pid specified in the first expression.
 
@@ -3262,7 +3283,9 @@ There are four possible return values from $ZSIGPROC():
 +------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------+
 
 .. note::
-   Although $ZSIGPROC() may work today as a way to invoke the asynchronous interrupt mechanism of YottaDB processes to XECUTE $ZINTERRUPT because the underlying mechanism uses the POSIX USR1 signal, YottaDB reserves the right to change the underlying mechanism to suit its convenience and sending a POSIX USR1 may cease to work as a way to invoke the asynchronous interrupt mechanism. Use MUPIP INTRPT as the supported and stable API to invoke the asynchronous interrupt mechanism.
+   Although $ZSIGPROC() works today as a way to invoke the asynchronous interrupt mechanism of YottaDB processes to XECUTE $ZINTERRUPT because the underlying mechanism uses the USR1 signal, YottaDB reserves the right to change the underlying mechanism to suit its convenience and sending a SIGUSR1 may cease to work as a way to invoke the asynchronous interrupt mechanism. Use MUPIP INTRPT as the supported and stable API to invoke the asynchronous interrupt mechanism.
+
+In release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_ $ZSIGPROC() was enhanced to allow signals to be specified by name.
 
 ++++++++++++++++++++++++++
 Examples of $ZSIGPROC()
@@ -3708,7 +3731,58 @@ Example:
    X
    YDB>
 
+-----------------
+$ZYHASH()
+-----------------
 
+Returns the 128-bit `MurmurHash3 <https://en.wikipedia.org/wiki/MurmurHash#MurmurHash3>`_ of a string as a hexadecimal string prefixed with :code:"0x". This is equivalent to calling the C API function `ydb_mmrhash_128() <../MultiLangProgGuide/cprogram.html#ydb-mmrhash-128>`_ and passing its return value to `ydb_mmrhash_128_hex() <../MultiLangProgGuide/cprogram.html#ydb-mmrhash-128-hex>`_
 
+.. code-block:: none
+		
+   $ZYHASH(string[,salt])
 
+* The first argument is the string to be hashed.
+* The second argument (salt) is an integer 0 through 4,294,967,295, and defaulting to zero to be used as a salt for the hash.
 
++++++++++++++++++++++
+Examples of $ZYHASH()
++++++++++++++++++++++
+
+.. code-block:: bash
+		
+   YDB>write $zyhash("YottaDB Rocks!")
+   0xa91a6a91c8d3afa118ae643d7c08c007
+   YDB>write $zyhash("YottaDB Rocks!",0)
+   0xa91a6a91c8d3afa118ae643d7c08c007
+   YDB>write $zyhash("YottaDB Rocks!",123456789)
+   0xb931c7fa5746e15dc9fdaecfb29b8626
+   YDB>
+
+.. note::
+   $ZYHASH() should never be used when cryptographic quality hashes are needed.
+
+$ZYHASH() is in YottaDB effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_.
+
+-----------------
+$ZYISSQLNULL()
+-----------------
+
+Returns 1 if its sole argument has a value `$ZYSQLNULL <./isv.html#zysqlnull>`_, and 0 otherwise.
+
+.. code-block:: none
+		
+   $ZYISSQLNULL(expr)
+
+++++++++++++++++++++++++++
+Examples of $ZYISSQLNULL()
+++++++++++++++++++++++++++
+
+.. code-block:: bash
+		
+   YDB>set x=$ZYSQLNULL write $ZYISSQLNULL(x)
+   1
+   YDB>set x="Something else" write $ZYISSQLNULL(x)
+   0
+   YDB>
+
+$ZYISSQLNULL() is in YottaDB effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_.

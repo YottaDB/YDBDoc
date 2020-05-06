@@ -659,9 +659,9 @@ $ZGBLDIR
 
 $ZG[BLDIR] contains the value of the current Global Directory filename. When $ZGBLDIR specifies an invalid or inaccessible file, YottaDB cannot successfully perform database operations.
 
-YottaDB initializes $ZGBLDIR to the translation of the environment variable ydb_gbldir. The value of the ydb_gbldir environment variable may include a reference to another environment variable. If ydb_gbldir is not defined, YottaDB initializes $ZGBLDIR to null. When $ZGBLDIR is null, YottaDB constructs a file name for the Global Directory using the name $ydb_gbldir and the extension .gld in the current working directory.
+YottaDB initializes $ZGBLDIR to the translation of the environment variable ydb_gbldir. The value of the ydb_gbldir environment variable may include a reference to another environment variable. If ydb_gbldir is not defined, YottaDB initializes $ZGBLDIR to the value of the environment variable gtm_gbldir, and if that is not defined, then to null. When $ZGBLDIR is null, YottaDB constructs a file name for the Global Directory using the string $ydb_gbldir and the extension .gld in the current working directory.
 
-$ZGBLDIR is a read-write Intrinsic Special Variable, (i.e., it can appear on the left side of the equal sign (=) in the argument to the SET command). SET $ZGBLDIR="" causes YottaDB to assign $ZGBLDIR to the translation of ydb_gbldir if that environment variable is defined. If it is not defined, then SET $ZGBLDIR="" causes YottaDB to construct a file name using the name $ydb_gbldir.gld in the current directory. NEWing $ZGBLDIR is the same as SET $ZGBLDIR="", which as just noted may change its value. For code that immediately SETs $ZGBLDIR after NEW'ng it that behavior doesn't matter, but without an associated SET, such a change may seem counterintuitive.  A $ZGBLDIR value may include an environment variable.
+$ZGBLDIR is a read-write Intrinsic Special Variable, (i.e., it can appear on the left side of the equal sign (=) in the argument to the SET command). SET $ZGBLDIR="" causes YottaDB to assign $ZGBLDIR using the same logic as at process startup. NEWing $ZGBLDIR is the same as SET $ZGBLDIR="", which as just noted may change its value. As with NEWed local variables, QUIT restores the prior value in effect at the time of call. A $ZGBLDIR value may include an environment variable.
 
 SETting $ZGBLDIR also causes YottaDB to attempt to open the specified file. If the file name is invalid or the file is inaccessible, YottaDB triggers an error without changing the value of $ZGBLDIR.
 
@@ -702,6 +702,36 @@ This example defines the environment variable ydb_gbldir. Upon entering YottaDB 
    $
 
 The SET command attempts to change the value of $ZGBLDIR to test.gld. Because the file does not exist, YottaDB reports an error and does not change the value of $ZGBLDIR.
+
+To facilitate application migration to YottaDB from other M implementations (for example to convert UCI and VOL specifications to global directories) in the environment specification, YottaDB provides an interface to translate strings to global directory filenames. With the exception of the function name, this facility is identical to that `used for extended references <./langfeat.html#optional-yottadb-environment-translation-facility>`_.
+
+.. note::
+   Using this facility impacts the performance of *every* global access. Make sure you use it only when static determination of the global directory is not feasible. When used, maximize the efficiency of the translation routines.
+
+Enable the facility by setting the environment variable :code:`ydb_gbldir_translate` to the path of a shared library with the entry point :code:`ydb_gbldir_xlate()` . The global directory used is the value assigned to $zgbldir as translated by the routine. :code:`ydb_gbldir_xlate()` has the same signature as the ydb_env_xlate() routine used for environment translation.
+
+.. parsed-literal::
+   int ydb_gbldir_xlate(ydb_string_t \*in1, ydb_string_t \*in2, ydb_string_t \*in3, ydb_string_t \*out)
+
+where ydb_string_t is a structure defined in libyottadb.h as follows:
+
+.. parsed-literal::
+   typedef struct
+   {
+	unsigned long	length;
+	char		\*address;
+   } ydb_string_t;
+
+and
+
+* :code:`in1` references the value being assigned to $zgbldir;
+* :code:`in2` is the NULL string - the parameter exists only so that the signature matches that of :code:`ydb_env_translate()`;
+* :code:`in3` references $zdirectory the current directory of the process; and
+* :code:`out` is a return value that references the actual global directory file to be used.
+
+A return value other than zero (0) indicates an error in translation, and is reported as a YottaDB error.
+
+Refer to `the extended reference facility <./langfeat.html#optional-yottadb-environment-translation-facility>`_ for more information.
 
 -----------------
 $ZHOROLOG
@@ -1822,9 +1852,9 @@ M routines cannot modify $ZVERSION.
 Example:
 
 .. code-block:: bash
-
-   YDB>w $zversion
-   GT.M V6.0-003 Linux x86_64
+		
+   YDB>write $zversion
+   GT.M V6.3-008 Linux x86_64
 
 This example displays the current version identifier for GT.M.
 
@@ -1866,6 +1896,42 @@ The $ZYRE[LEASE] intrinsic special variable contains a string value that applica
 .. note::
    $zyrelease is a read-only intrinsic special variable. As the code generator treats $zyrelease as a string constant known at compile time, and optimizes accordingly, ensure that you run object code only on the same YottaDB release on which you compiled it.
 
+
+------------------
+$ZYSQLNULL
+------------------
+
+The read-only $ZYSQLNULL intrinsic special variable is conceptually equivalent to a logical value of unknown, and can be assigned as the value or used as a subscript of a local variable.
+
+When $ZYSQLNULL is an operand, the results are as follows:
+
++-----------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+| Operator(s)                                         | Result                                                                                              |
++-----------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+| Binary :code:`!`                                    | If the other operand evaluates to true (1), the result is true, otherwise the result is $ZYSQLNULL  |
++-----------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+| Binary :code:`&`                                    | If the other operand evalutes to false (0), the result is false, otherwise the result is $ZYSQLNULL |
++-----------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+| All binary operators except :code:`!` and :code:`&` | Regardless of the value of the other operand, the result is $ZYSQLNULL                              |
++-----------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+| Unary :code:`+`                                     | $ZYSQLNULL                                                                                          |
++-----------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+| Unary :code:`-`                                     | $ZYSQLNULL                                                                                          |
++-----------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+| Unary :code:`'`                                     | $ZYSQLNULL                                                                                          |
++-----------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+
+$TEST has only 2 values: false (0) and true (1). An IF statement whose condition evaluates to $ZYSQLNULL sets $TEST to 0 and does not execute the rest the line. Commands with postconditionals that evaluate to $ZYSQLNULL do not execute the command.
+
+ZSHOW and ZWRITE of $ZYSQLNULL values show a value of $ZYSQLNULL. WRITE does not show any value for $ZYSQLNULL just as it does with :code:`""`.
+
+$ZYSQLNULL can be a subscript of a local variable. In that case, it collates after all other subscripts, i.e., $ORDER() and $QUERY() return that subscript at the very end.
+
+The function $ZYISSQLNULL() returns 1 if its sole argument has a value of $ZYSQLNULL, and 0 otherwise.
+
+Using $ZYSQLNULL as a subscript or assigning it as the value of a global variable (including implicitly with a MERGE), using it as a subscript in a LOCK/ZALLOCATE/ZDEALLOCATE command, or in a context that expects an integer or a numeric value raises the ZYSQLNULLNOTVALID error. Other than usage as an operand as discussed above, $ZYSQLNULL in a context that expects a string, e.g. :code:`$ASCII($ZYSQLNULL,1)`, is treated like the empty string  :code:`""`.
+
+$ZYSQLNULL was added to YottaDB effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_.
 
 ------------------
 Trigger ISVs
@@ -2128,6 +2194,3 @@ The code in SFeeplnACN50.m handles changes to piece 15.
      If processMode<2 Do
      . Kill ^XREF("FEEPLN",oldfeepln,cid) Set ^XREF("FEEPLN",feepln,cid)=""
      Quit
-
-
-
