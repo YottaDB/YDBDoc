@@ -1,9 +1,21 @@
 #!/usr/local/bin/tcsh -f
 
+###############################################################
+#                                                             #
+# Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+# All rights reserved.                                        #
+#                                                             #
+#     This source code contains the intellectual property     #
+#     of its copyright holder(s), and is made available       #
+#     under a license.  If you do not know the terms of       #
+#     the license, please stop and do not read further.       #
+#                                                             #
+###############################################################
+
 echo '# Step 1 : Do the following change'
 echo '# In files docs.yottadb.com/*/_static/css/theme.css, make the following replacements:'
 echo '#'
-set filelist = `ls -1 _build/html/_static/css/theme.css`
+set filelist = `ls -1 $argv/_build/html/_static/css/theme.css`
 
 echo '# "courier new",monospace -> Inconsolata,"Courier New",monospace'
 set from = '"courier new",monospace'
@@ -36,7 +48,7 @@ echo '# <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ral
 echo '# <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora" />'
 echo '# <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata" />'
 
-set filelist = `ls -1 _build/html/*.html`
+set filelist = `ls -1 $argv/_build/html/*.html`
 set from = '<link rel="stylesheet" href="_static\/css\/theme.css" type="text\/css" \/>'
 set to1  = '<link rel="stylesheet" href="https:\/\/fonts.googleapis.com\/css?family=Raleway" \/>'
 set to2  = '<link rel="stylesheet" href="https:\/\/fonts.googleapis.com\/css?family=Lora" \/>'
@@ -52,7 +64,7 @@ echo '#Step 3 : Make the following changes to the theme.css file:'
 echo '#'
 echo '# Change the colors on the admonition and fonts '
 
-set filelist = `ls -1 _build/html/_static/css/theme.css`
+set filelist = `ls -1 $argv/_build/html/_static/css/theme.css`
 set from1 = '.admonition-todo\{background:#e7f2fa\}'
 set to1 = '.admonition-todo\{background:#3b1a68\}'
 perl -p -i -e "s/$from/$to1/g" $filelist
@@ -66,5 +78,3 @@ perl -p -i -e "s/$from3/$to3/g" $filelist
 echo ""
 echo "--> Step 3 complete"
 echo ""
-
-

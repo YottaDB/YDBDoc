@@ -16,9 +16,11 @@
 # You can set these variables from the command line.
 SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
-SPHINXPROJ    = Releases
+SPHINXPROJ    = GTMAdminOps
+SOURCEDIRS    = AcculturationGuide AdminOpsGuide MessageRecovery MultiLangProgGuide ProgGuide ReleaseNotes
 SOURCEDIR     = .
 BUILDDIR      = _build
+
 
 # Put it first so that "make" without argument is like "make help".
 help:
@@ -26,7 +28,15 @@ help:
 
 .PHONY: help Makefile
 
+# Clean target: remove all files under _build directory.
+# The Sphinx command below functions the same way as that for the
+# Catch-all target.
+clean:
+	@$(foreach dir, $(SOURCEDIRS), $(SPHINXBUILD) -M $@ "$(dir)" "$(dir)/$(BUILDDIR)" $(SPHINXOPTS) $(O);)
+
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
+# All of the $(SOURCEDIRS) are built at once.
 %: Makefile
-	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+	@$(foreach dir, $(SOURCEDIRS), $(SPHINXBUILD) -M $@ "$(dir)" "$(dir)/$(BUILDDIR)" $(SPHINXOPTS) $(O);)
+	@$(foreach dir, $(SOURCEDIRS), $(SOURCEDIR)/htmlpatch.csh $(dir);)
