@@ -217,21 +217,45 @@ Environment variables of the form ydb_xc_<package> are used to point to the call
 
 A comprehensive list of environment variables that are directly or indirectly used by YottaDB follows:
 
++++++++++
+EDITOR
++++++++++
 **EDITOR** is a standard system environment variable that specifies the full path to the editor to be invoked by YottaDB in response to the ZEDit command (defaults to vi, if $EDITOR is not set).
 
++++++++++++
+LC_CTYPE
++++++++++++
 **LC_CTYPE** is a standard system environment variable used to specify a locale. When $ydb_chset has the value "UTF-8", $LC_CTYPE must specify a UTF-8 locale (e.g., "en_US.utf8").
 
++++++++++
+LC_ALL
++++++++++
 **LC_ALL** is a standard system environment variable used to select a locale with UTF-8 support. LC_ALL is an alternative to LC_TYPE, which overrides LC_TYPE and has a more pervasive effect on other aspects of the environment beyond YottaDB.
 
+++++++++++++++++++
+LD_LIBRARY_PATH
+++++++++++++++++++
 **LD_LIBRARY_PATH** is a standard system environment variable used to modify the default library search path. Use this extension when YottaDB relies on custom compiled libraries that do not reside in the default library search path. For example ICU, GPG, OpenSSL and/or zlib libraries.
 
++++++
+TZ
++++++
 **TZ** is a standard system environment variable that specifies the timezone to be used by a YottaDB process, if they are not to use the default system timezone. YottaDB uses the system clock for journal time stamps on the assumption it reflects UTC time.
 
-**ydb_aio_nr_events** (gtm_aio_nr_events): For Linux x86_64, the ydb_aio_nr_events environment variable controls the number of structures a process has per global directory to manage asynchronous writes, and therefore determines the number of concurrent writes a process can manage across all regions within a global directory. If not specified, the value controlled by ydb_aio_nr_events defaults to 128. If a process encounters a situation where it needs to perform an asynchronous write, but has no available slots with which to manage an additional one, it either falls back to synchronous writing if the write is blocking other actions, or defers the write until a slot becomes available as other writes complete. Linux allocates the structures on a system-wide basis with the setting of /proc/sys/fs/aio-max-nr. Therefore, you should configure this parameter to account for the needs (as determined by ydb_aio_nr_events or the default) of all processes using asynchronous I/O. When processes use multiple global directories with asynchronous I/O, their need for system resources increases accordingly. For example, if an environment runs 10,000 processes, each of which open two global directories and /proc/sys/fs/aio-max-nr is set to a value of 200,000 then ydb_aio_nr_events needs to be set to a value <= 200,000 / (10,000 * 2) = 10. Conversely if ydb_aio_nr_events is set to a value of 20, then aio-max-nr needs to be bumped up to (10,000 * 2 * 20) = 400,000. YottaDB captures the number of errors encountered when attempting to write database blocks for a region, and, barring problems with the storage subsystem, hitting an asynchronous write limit would constitute a primary (probably only) contribution to that value, which you can access with $$^%PEEKBYNAME("sgmnt_data.wcs_wterror_invoked_cntr",<region>)
+++++++++++++++++++++
+ydb_aio_nr_events
+++++++++++++++++++++
+**ydb_aio_nr_events (gtm_aio_nr_events)**: For Linux x86_64, the ydb_aio_nr_events environment variable controls the number of structures a process has per global directory to manage asynchronous writes, and therefore determines the number of concurrent writes a process can manage across all regions within a global directory. If not specified, the value controlled by ydb_aio_nr_events defaults to 128. If a process encounters a situation where it needs to perform an asynchronous write, but has no available slots with which to manage an additional one, it either falls back to synchronous writing if the write is blocking other actions, or defers the write until a slot becomes available as other writes complete. Linux allocates the structures on a system-wide basis with the setting of /proc/sys/fs/aio-max-nr. Therefore, you should configure this parameter to account for the needs (as determined by ydb_aio_nr_events or the default) of all processes using asynchronous I/O. When processes use multiple global directories with asynchronous I/O, their need for system resources increases accordingly. For example, if an environment runs 10,000 processes, each of which open two global directories and /proc/sys/fs/aio-max-nr is set to a value of 200,000 then ydb_aio_nr_events needs to be set to a value <= 200,000 / (10,000 * 2) = 10. Conversely if ydb_aio_nr_events is set to a value of 20, then aio-max-nr needs to be bumped up to (10,000 * 2 * 20) = 400,000. YottaDB captures the number of errors encountered when attempting to write database blocks for a region, and, barring problems with the storage subsystem, hitting an asynchronous write limit would constitute a primary (probably only) contribution to that value, which you can access with $$^%PEEKBYNAME("sgmnt_data.wcs_wterror_invoked_cntr",<region>)
 
-**ydb_autorelink_ctlmax** (gtm_autorelink_ctlmax) specifies the maximum number of entries for unique routine names in the relink control file created by a process for any directory, with a minimum of 1,000, a maximum of 16,000,000 and a default of 50,000 if unspecified. If a specified value is above or below the allowed range, the process logs the errors ARCTLMAXHIGH or ARCTLMAXLOW respectively in the syslog, and uses the nearest acceptable limit instead. MUPIP RCTLDUMP and ZSHOW "A" outputs include the maximum number of unique routine names available in a relink control file.
+++++++++++++++++++++++++
+ydb_autorelink_ctlmax
+++++++++++++++++++++++++
+**ydb_autorelink_ctlmax (gtm_autorelink_ctlmax)** specifies the maximum number of entries for unique routine names in the relink control file created by a process for any directory, with a minimum of 1,000, a maximum of 16,000,000 and a default of 50,000 if unspecified. If a specified value is above or below the allowed range, the process logs the errors ARCTLMAXHIGH or ARCTLMAXLOW respectively in the syslog, and uses the nearest acceptable limit instead. MUPIP RCTLDUMP and ZSHOW "A" outputs include the maximum number of unique routine names available in a relink control file.
 
-**ydb_autorelink_keeprtn** (gtm_autorelink_keeprtn): When ydb_autorelink_keeprtn is set to 1, t[rue], or y[es] , exiting processes leave auto-relinked routines in shared memory. When the environment variable ydb_autorelink_keeprtn is undefined, 0, f[alse] or n[o], exiting processes purge auto-relinked routines in shared memory if no other processes are using them. Regardless of the value of ydb_autorelink_keeprtn, the Operating System removes an auto-relink shared memory repository when there are no processes accessing it.
++++++++++++++++++++++++++
+ydb_autorelink_keeprtn
++++++++++++++++++++++++++
+**ydb_autorelink_keeprtn (gtm_autorelink_keeprtn)**: When ydb_autorelink_keeprtn is set to 1, t[rue], or y[es] , exiting processes leave auto-relinked routines in shared memory. When the environment variable ydb_autorelink_keeprtn is undefined, 0, f[alse] or n[o], exiting processes purge auto-relinked routines in shared memory if no other processes are using them. Regardless of the value of ydb_autorelink_keeprtn, the Operating System removes an auto-relink shared memory repository when there are no processes accessing it.
 
 All values are case-independent. When ydb_autorelink_keeprtn is defined and TRUE:
 
@@ -239,15 +263,27 @@ All values are case-independent. When ydb_autorelink_keeprtn is defined and TRUE
 
 * In a production environment, an application that frequently invokes YottaDB routines in short running processes (such as YottaDB routines invoked by web servers using interfaces such as CGI) may give better performance when setting ydb_autorelink_keeprtn or using at least one long running auto-relink process that remains attached to the shared memory to keep routines available in shared memory for use when short running processes need them.
 
-**ydb_autorelink_shm** (gtm_autorelink_shm) specifies the size (in MiB) of an initial Rtnobj shared memory segment used by the auto-relink facility. If the value of ydb_autorelink_shm is not a power of two, YottaDB rounds the value to the next higher integer power of two. If the first object (.o) file does not fit in a new Rtnobj segment, YottaDB rounds the allocation up to the smallest integer power of two required to make it fit. When YottaDB needs room for object files and existing Rtnobj segments have insufficient free space, it creates an additional shared memory segment, double the size of the last. Note that when hugepages are enabled, the actual Rtnobj shared memory size might be more than that requested implicitly or explicitly through $ydb_autorelink_shm.
++++++++++++++++++++++
+ydb_autorelink_shm
++++++++++++++++++++++
+**ydb_autorelink_shm (gtm_autorelink_shm)** specifies the size (in MiB) of an initial Rtnobj shared memory segment used by the auto-relink facility. If the value of ydb_autorelink_shm is not a power of two, YottaDB rounds the value to the next higher integer power of two. If the first object (.o) file does not fit in a new Rtnobj segment, YottaDB rounds the allocation up to the smallest integer power of two required to make it fit. When YottaDB needs room for object files and existing Rtnobj segments have insufficient free space, it creates an additional shared memory segment, double the size of the last. Note that when hugepages are enabled, the actual Rtnobj shared memory size might be more than that requested implicitly or explicitly through $ydb_autorelink_shm.
 
-**ydb_badchar** (gtm_badchar) specifies the initial setting that determines whether YottaDB should raise an error when it encounters an illegal UTF-8 character sequence. This setting can be changed with a VIEW "[NO]BADCHAR" command, and is ignored for I/O processing and in M mode.
+++++++++++++++
+ydb_badchar
+++++++++++++++
+**ydb_badchar (gtm_badchar)** specifies the initial setting that determines whether YottaDB should raise an error when it encounters an illegal UTF-8 character sequence. This setting can be changed with a VIEW "[NO]BADCHAR" command, and is ignored for I/O processing and in M mode.
 
-**ydb_baktmpdir** (gtm_baktmpdir) specifies the directory where mupip backup creates temporary files. If $ydb_baktmpdir is not defined, YottaDB currently uses the deprecated $GTM_BAKTMPDIR environment variable if defined, and otherwise uses /tmp. All processes performing updates during an online IBACKUP must have the use the same directory and have write access to it.
+++++++++++++++++
+ydb_baktmpdir
+++++++++++++++++
+**ydb_baktmpdir (gtm_baktmpdir)** specifies the directory where mupip backup creates temporary files. If $ydb_baktmpdir is not defined, YottaDB currently uses the deprecated $GTM_BAKTMPDIR environment variable if defined, and otherwise uses /tmp. All processes performing updates during an online IBACKUP must have the use the same directory and have write access to it.
 
-**ydb_boolean** (gtm_boolean) specifies the initial setting that determines how YottaDB compiles Boolean expression evaluation (expressions evaluated as a logical TRUE or FALSE). If ydb_boolean is undefined or evaluates to an integer zero (0), YottaDB behaves as it would after a VIEW "NOFULL_BOOLEAN" and compiles such that it stops evaluating a Boolean expression as soon as it establishes a definitive result . Note that:
+++++++++++++++
+ydb_boolean
+++++++++++++++
+**ydb_boolean (gtm_boolean)** specifies the initial setting that determines how YottaDB compiles Boolean expression evaluation (expressions evaluated as a logical TRUE or FALSE). If ydb_boolean is undefined or evaluates to an integer zero (0), YottaDB behaves as it would after a VIEW "NOFULL_BOOLEAN" and compiles such that it stops evaluating a Boolean expression as soon as it establishes a definitive result . Note that:
 
-*  $ydb_side_effects has an analogous impact on function argument evaluation order and implies "FULLBOOLEAN" compilation, so VIEW "NOFULLBOOLEAN" produces an error when $ydb_side_effects is on.
+*  `ydb_side_effects`_ has an analogous impact on function argument evaluation order and implies "FULLBOOLEAN" compilation, so VIEW "NOFULLBOOLEAN" produces an error when `ydb_side_effects`_ is on.
 
 * If ydb_boolean evaluates to an integer one (1), YottaDB enables VIEW "FULL_BOOLEAN" compilation, which means that YottaDB ensures that within a Boolean expression, all side effect expression atoms, extrinsic functions ($$), external functions ($&), and $INCREMENT() execute in left-to-right order.
 
@@ -255,29 +291,65 @@ All values are case-independent. When ydb_autorelink_keeprtn is defined and TRUE
 
 * Boolean expressions without side effects will continue to be short-circuited whether or not ydb_boolean is 1 or 0. Error messages that could result if an expression were fully evaluated may not occur even with this setting enabled.
 
-**ydb_chset** (gtm_chset) determines the mode in which YottaDB compiles and operates. If it has a value of "UTF-8", YottaDB assumes that strings are encoded in UTF-8. In response to a value of "M" (or indeed anything other than "UTF-8"), YottaDB treats all 256 combinations of the 8 bits in a byte as a single character.
+++++++++++++
+ydb_chset
+++++++++++++
+**ydb_chset (gtm_chset)** determines the mode in which YottaDB compiles and operates. If it has a value of "UTF-8", YottaDB assumes that strings are encoded in UTF-8. In response to a value of "M" (or indeed anything other than "UTF-8"), YottaDB treats all 256 combinations of the 8 bits in a byte as a single character.
 
-**ydb_chset_locale** (gtm_chset_locale) (z/OS only) specifies the locale for UTF-8 operations on z/OS.
++++++++++++++++++++
+ydb_chset_locale
++++++++++++++++++++
+**ydb_chset_locale (gtm_chset_locale)** (z/OS only) specifies the locale for UTF-8 operations on z/OS.
 
-**ydb_ci** (GTMCI) specifies the call-in table for function calls from C code to M code.
++++++++++
+ydb_ci
++++++++++
+**ydb_ci (GTMCI)** specifies the call-in table for function calls from C code to M code.
 
-**ydb_collate_n** (gtm_collate_n) specifies the shared library holding an alternative sequencing routine when using non-M standard (ASCII) collation. The syntax is ydb_collate_n=pathname where n is an integer from 1 to 255 that identifies the collation sequence, and pathname identifies the shared library containing the routines for that collation sequence.
+++++++++++++++++
+ydb_collate_n
+++++++++++++++++
+**ydb_collate_n (gtm_collate_n)** specifies the shared library holding an alternative sequencing routine when using non-M standard (ASCII) collation. The syntax is ydb_collate_n=pathname where n is an integer from 1 to 255 that identifies the collation sequence, and pathname identifies the shared library containing the routines for that collation sequence.
 
-**ydb_compile** (gtmcompile) specifies the initial value of the $ZCOmpile ISV. The SET command can alter the value of $ZCOMPILE in an active process.
+++++++++++++++
+ydb_compile
+++++++++++++++
+**ydb_compile (gtmcompile)** specifies the initial value of the $ZCOmpile ISV. The SET command can alter the value of $ZCOMPILE in an active process.
 
-**ydb_coredump_filter** (gtm_coredump_filter) contains case-insensitive hexadecimal digits that sets the corresponding value to /proc/<pid>/coredump_filter (see ``man 5 core``) at process startup without explicitly setting a value if unspecified. This controls the contents of core dumps generated by the process. If ydb_coredump_filter is not specified, but gtm_coredump_filter is, the latter environment variable is used. If both are specified, the former takes precedence.
+++++++++++++++++++++++
+ydb_coredump_filter
+++++++++++++++++++++++
+**ydb_coredump_filter (gtm_coredump_filter)** contains case-insensitive hexadecimal digits that sets the corresponding value to /proc/<pid>/coredump_filter (see ``man 5 core``) at process startup without explicitly setting a value if unspecified. This controls the contents of core dumps generated by the process. If ydb_coredump_filter is not specified, but gtm_coredump_filter is, the latter environment variable is used. If both are specified, the former takes precedence.
 
-**ydb_crypt_config** (gtmcrypt_config) specifies the location of the configuration file required for database encryption, Sequential file, PIPE, and FIFO device encryption and/or TLS support. A configuration file is divided into two sections: the database encryption section and the TLS section. The database encryption section contains a list of database files and their corresponding key files. You do not need to add a database encryption section if you are not using an encrypted database, or a TLS section if you are not using TLS for replication or sockets. The TLS section provides information needed for OpenSSL (in the reference plugin implementation) or other encryption package, such as the location of the root certification authority certificate in PEM format and leaf-level certificates with their corresponding private key files. Note that the use of the ydb_crypt_config environment variable requires prior installation of the libconfig package.
++++++++++++++++++++
+ydb_crypt_config
++++++++++++++++++++
+**ydb_crypt_config (gtmcrypt_config)** specifies the location of the configuration file required for database encryption, Sequential file, PIPE, and FIFO device encryption and/or TLS support. A configuration file is divided into two sections: the database encryption section and the TLS section. The database encryption section contains a list of database files and their corresponding key files. You do not need to add a database encryption section if you are not using an encrypted database, or a TLS section if you are not using TLS for replication or sockets. The TLS section provides information needed for OpenSSL (in the reference plugin implementation) or other encryption package, such as the location of the root certification authority certificate in PEM format and leaf-level certificates with their corresponding private key files. Note that the use of the ydb_crypt_config environment variable requires prior installation of the libconfig package.
 
-**ydb_crypt_fips** (gtmcrypt_FIPS) specifies whether the plugin reference implementation should attempt to use either OpenSSL or Libgcrypt to provide database encryption that complies with FIPS 140-2. When the environment variable $ydb_crypt_FIPS is set to 1 (or evaluates to a non-zero integer or any case-independent string or leading substring of "TRUE" or "YES"), the plugin reference implementation attempts to use libgcrypt (from GnuPG) and libcrypto (OpenSSL) in "FIPS mode." Note that to comply with FIPS 140-2 you should be knowledgeable with that standard and take many steps beyond setting this environment variable. By default YottaDB does not enforce "FIPS mode.
++++++++++++++++++
+ydb_crypt_fips
++++++++++++++++++
+**ydb_crypt_fips (gtmcrypt_FIPS)** specifies whether the plugin reference implementation should attempt to use either OpenSSL or Libgcrypt to provide database encryption that complies with FIPS 140-2. When the environment variable $ydb_crypt_FIPS is set to 1 (or evaluates to a non-zero integer or any case-independent string or leading substring of "TRUE" or "YES"), the plugin reference implementation attempts to use libgcrypt (from GnuPG) and libcrypto (OpenSSL) in "FIPS mode." Note that to comply with FIPS 140-2 you should be knowledgeable with that standard and take many steps beyond setting this environment variable. By default YottaDB does not enforce "FIPS mode.
 
-**ydb_crypt_plugin** (gtm_crypt_plugin): If the environment variable ydb_crypt_plugin is defined and provides the path to a shared library relative to $ydb_dist/plugin, YottaDB uses $ydb_dist/plugin/$ydb_crypt_plugin as the shared library providing the plugin. If $ydb_crypt_plugin is not defined, YottaDB expects $ydb_dist/plugin/libgtmcrypt.so to be a symbolic link to a shared library providing the plugin. The expected name of the actual shared library is libgtmcrypt_cryptlib_CIPHER.so (depending on your platform, the actual extension may differ from .so), for example, libgtmcrypt_openssl_AESCFB. YottaDB cannot and does not ensure that the cipher is actually AES CFB as implemented by OpenSSL.
++++++++++++++++++++
+ydb_crypt_plugin
++++++++++++++++++++
+**ydb_crypt_plugin (gtm_crypt_plugin)**: If the environment variable ydb_crypt_plugin is defined and provides the path to a shared library relative to $ydb_dist/plugin, YottaDB uses $ydb_dist/plugin/$ydb_crypt_plugin as the shared library providing the plugin. If $ydb_crypt_plugin is not defined, YottaDB expects $ydb_dist/plugin/libgtmcrypt.so to be a symbolic link to a shared library providing the plugin. The expected name of the actual shared library is libgtmcrypt_cryptlib_CIPHER.so (depending on your platform, the actual extension may differ from .so), for example, libgtmcrypt_openssl_AESCFB. YottaDB cannot and does not ensure that the cipher is actually AES CFB as implemented by OpenSSL.
 
-**ydb_custom_errors** (gtm_custom_errors) specifies the complete path to the file that contains a list of errors that should automatically stop all updates on those region(s) of an instance which have the Instance Freeze mechanism enabled.
+++++++++++++++++++++
+ydb_custom_errors
+++++++++++++++++++++
+**ydb_custom_errors (gtm_custom_errors)** specifies the complete path to the file that contains a list of errors that should automatically stop all updates on those region(s) of an instance which have the Instance Freeze mechanism enabled.
 
-**ydb_dbfilext_syslog_disable** (gtm_dbfilext_syslog_disable) Controls whether database file extensions are logged in the syslog or not. If the environment variable is set to a non-zero numeric value or case-independent string or leading substrings of TRUE or YES, database file extensions are not logged to the syslog.
+++++++++++++++++++++++++++++++
+ydb_dbfilext_syslog_disable
+++++++++++++++++++++++++++++++
+**ydb_dbfilext_syslog_disable (gtm_dbfilext_syslog_disable)** Controls whether database file extensions are logged in the syslog or not. If the environment variable is set to a non-zero numeric value or case-independent string or leading substrings of TRUE or YES, database file extensions are not logged to the syslog.
 
-**ydb_dbglvl** (gtmdbglvl) specifies the YottaDB debug levels. The defined values can be added together to turn on multiple features at the same time. Note that the cumulative value specified in the logical or environment variable must currently be specified in decimal.
++++++++++++++
+ydb_dbglvl
++++++++++++++
+**ydb_dbglvl (gtmdbglvl)** specifies the YottaDB debug levels. The defined values can be added together to turn on multiple features at the same time. Note that the cumulative value specified in the logical or environment variable must currently be specified in decimal.
 
 .. note::
    Use of ydb_dbglvl is intended for debugging under the guidance of your YottaDB support channel. If you set ydb_dbglvl to a non-zero value, be aware that there will be a performance impact. We do not recommend its use in production.
@@ -337,106 +409,235 @@ All values are case-independent. When ydb_autorelink_keeprtn is defined and TRUE
 | define GDL_UseSystemMalloc   | 0x80000000                                 | Use the system's malloc(), disabling all the above GDL_Sm options                          |
 +------------------------------+--------------------------------------------+--------------------------------------------------------------------------------------------+
 
-**ydb_db_startup_max_wait** (gtm_db_startup_max_wait) specifies how long to wait for a resolution of any resource conflict when they first access a database file. YottaDB uses semaphores maintained using UNIX Inter-Process Communication (IPC) services to ensure orderly initialization and shutdown of database files and associated shared memory. Normally, the IPC resources are held in an exclusive state only for very brief intervals. However, under unusual circumstances that might include extremely large numbers of simultaneous database initializations, a long-running MUPIP operation involving standalone access (like INTEG -FILE or RESTORE), an OS overload or an unpredicted process failure, the resources might remain unavailable for an unanticipated length of time. $ydb_db_startup_max_wait specifies how long to wait for the resources to become available:
+++++++++++++++++++++++++++
+ydb_db_startup_max_wait
+++++++++++++++++++++++++++
+**ydb_db_startup_max_wait (gtm_db_startup_max_wait)** specifies how long to wait for a resolution of any resource conflict when they first access a database file. YottaDB uses semaphores maintained using UNIX Inter-Process Communication (IPC) services to ensure orderly initialization and shutdown of database files and associated shared memory. Normally, the IPC resources are held in an exclusive state only for very brief intervals. However, under unusual circumstances that might include extremely large numbers of simultaneous database initializations, a long-running MUPIP operation involving standalone access (like INTEG -FILE or RESTORE), an OS overload or an unpredicted process failure, the resources might remain unavailable for an unanticipated length of time. $ydb_db_startup_max_wait specifies how long to wait for the resources to become available:
 
-* -1 - Indefinite wait until the resource becomes available; the waiting process uses the ydb_procstuckexec mechanism at approximately 48 and 96 seconds.
+* -1 - Indefinite wait until the resource becomes available; the waiting process uses the `ydb_procstuckexec`_ mechanism at approximately 48 and 96 seconds.
 
 * 0 - No wait - if the resource is not immediately available, give a DBFILERR error with an associated SEMWT2LONG
 
-* > 0 - Seconds to wait - rounded to the nearest multiple of eight (8); if the specification is 96 or more seconds, the waiting process uses the ydb_procstuckexec mechanism at one half the wait and at the end of the wait; if the resource remains unavailable, the process issues DBFILERR error with an associated SEMWT2LONG
+* > 0 - Seconds to wait - rounded to the nearest multiple of eight (8); if the specification is 96 or more seconds, the waiting process uses the `ydb_procstuckexec`_ mechanism at one half the wait and at the end of the wait; if the resource remains unavailable, the process issues DBFILERR error with an associated SEMWT2LONG
 
-**ydb_dist** (gtm_dist) specifies the path to the directory containing the YottaDB system distribution. ydb_dist must be defined for each user. If you are not using the ydb script or sourcing ydb_env_set, consider defining ydb_dist in the login file or as part of the default system environment. In UTF-8 mode, the ydb_dist environment variable specifies the path to the directory containing the YottaDB system distribution for Unicode. The distribution for Unicode is located in subdirectory utf8 under the YottaDB distribution directory. For example, if the YottaDB distribution is in /usr/local/lib/yottadb/r120, set ydb_dist to point to /usr/local/lib/yottadb/r120/utf8 for UTF-8 mode. Correct operation of YottaDB executable programs requires ydb_dist to be set correctly.
++++++++++++
+ydb_dist
++++++++++++
+**ydb_dist (gtm_dist)** specifies the path to the directory containing the YottaDB system distribution. ydb_dist must be defined for each user. If you are not using the ydb script or sourcing ydb_env_set, consider defining ydb_dist in the login file or as part of the default system environment. In UTF-8 mode, the ydb_dist environment variable specifies the path to the directory containing the YottaDB system distribution for Unicode. The distribution for Unicode is located in subdirectory utf8 under the YottaDB distribution directory. For example, if the YottaDB distribution is in /usr/local/lib/yottadb/r120, set ydb_dist to point to /usr/local/lib/yottadb/r120/utf8 for UTF-8 mode. Correct operation of YottaDB executable programs requires ydb_dist to be set correctly.
 
-**ydb_dmterm** (gtm_dmterm) specifies a [NO]DMTERM state at process initiation where application setting applied to $PRINCIPAL also apply to direct mode interactions; a case-insensitive value of "1", "yes", or "true" establishes a DMTERM state at process initiation where direct mode uses default terminal characteristics and ignores application settings for $PRINCIPAL; all other values, including no value, result in the default VIEW "NODMTERM" behavior.
++++++++++++++
+ydb_dmterm
++++++++++++++
+**ydb_dmterm (gtm_dmterm)** specifies a [NO]DMTERM state at process initiation where application setting applied to $PRINCIPAL also apply to direct mode interactions; a case-insensitive value of "1", "yes", or "true" establishes a DMTERM state at process initiation where direct mode uses default terminal characteristics and ignores application settings for $PRINCIPAL; all other values, including no value, result in the default VIEW "NODMTERM" behavior.
 
-**ydb_env_translate** (gtm_env_translate) specifies the path to a shared library to implement the optional YottaDB environment translation facility that can assist in resolving extended global references.
+++++++++++++++++++++
+ydb_env_translate
+++++++++++++++++++++
+**ydb_env_translate (gtm_env_translate)** specifies the path to a shared library to implement the optional YottaDB environment translation facility that can assist in resolving extended global references.
 
-**ydb_error_on_jnl_file_lost** (gtm_error_on_jnl_file_lost) causes a runtime error when set to 1 in case of problems with journaling (disk space issues etc.). Setting this environment variable to 0 (or having it undefined) is the default behavior which is to turn off journaling in case of problems.
++++++++++++++++++++++++++++++
+ydb_error_on_jnl_file_lost
++++++++++++++++++++++++++++++
+**ydb_error_on_jnl_file_lost (gtm_error_on_jnl_file_lost)** causes a runtime error when set to 1 in case of problems with journaling (disk space issues etc.). Setting this environment variable to 0 (or having it undefined) is the default behavior which is to turn off journaling in case of problems.
 
-**ydb_etrap** (gtm_etrap) specifies an initial value of $ETRAP to override the default value of "B" for $ZTRAP as the base level error handler. The ydb_env_set script sets ydb_etrap to "Write:(0=$STACK) ""Error occurred: "",$ZStatus,!" which you can customize to suit your needs.
+++++++++++++
+ydb_etrap
+++++++++++++
+**ydb_etrap (gtm_etrap)** specifies an initial value of $ETRAP to override the default value of "B" for $ZTRAP as the base level error handler. The ydb_env_set script sets ydb_etrap to "Write:(0=$STACK) ""Error occurred: "",$ZStatus,!" which you can customize to suit your needs.
 
-**ydb_extract_nocol** (gtm_extract_nocol) specifies whether a MUPIP JOURNAL -EXTRACT (when used without -RECOVER or -ROLLBACK) on a database with custom collation should use the default collation if it is not able to read the database file. In a situation where the database file is inaccessible or the replication instance is frozen with a critical section required for the access held by another process and the environment variable ydb_extract_nocol is defined and evaluates to a non-zero integer or any case-independent string or leading substrings of "TRUE" or "YES", MUPIP JOURNAL -EXTRACT issues the DBCOLLREQ warning and proceeds with the extract using the default collation. If ydb_extract_nocol is not set or evaluates to a value other than a positive integer or any case-independent string or leading substrings of "FALSE" or "NO", MUPIP JOURNAL -EXTRACT exits with the SETEXTRENV error.
+++++++++++++++++++++
+ydb_extract_nocol
+++++++++++++++++++++
+**ydb_extract_nocol (gtm_extract_nocol)** specifies whether a MUPIP JOURNAL -EXTRACT (when used without -RECOVER or -ROLLBACK) on a database with custom collation should use the default collation if it is not able to read the database file. In a situation where the database file is inaccessible or the replication instance is frozen with a critical section required for the access held by another process and the environment variable ydb_extract_nocol is defined and evaluates to a non-zero integer or any case-independent string or leading substrings of "TRUE" or "YES", MUPIP JOURNAL -EXTRACT issues the DBCOLLREQ warning and proceeds with the extract using the default collation. If ydb_extract_nocol is not set or evaluates to a value other than a positive integer or any case-independent string or leading substrings of "FALSE" or "NO", MUPIP JOURNAL -EXTRACT exits with the SETEXTRENV error.
 
 .. note::
     If default collation is used for a database with custom collation, the subscripts reported by MUPIP JOURNAL -EXTRACT are those stored in the database, which may differ from those used by application logic.
 
-**ydb_fullblockwrites** (gtm_fullblockwrites) specifies whether a YottaDB process should write a full filesystem, or full database block, worth of bytes when writing a database block that is not full. Depending on your IO subsystem, writing a full block worth of bytes (even when there are unused garbage bytes at the end) may result in better database IO performance by replacing a low level read-modify-read IO operation with a single write operation.
+++++++++++++++++++++++
+ydb_fullblockwrites
+++++++++++++++++++++++
+**ydb_fullblockwrites (gtm_fullblockwrites)** specifies whether a YottaDB process should write a full filesystem, or full database block, worth of bytes when writing a database block that is not full. Depending on your IO subsystem, writing a full block worth of bytes (even when there are unused garbage bytes at the end) may result in better database IO performance by replacing a low level read-modify-read IO operation with a single write operation.
 
-**ydb_gbldir** (gtmgbldir) specifies the initial value of the $ZGBLDIR ISV. $ZGBLDIR identifies the global directory. A global directory maps global variables to physical database files, and is required to access M global variables. Users who maintain multiple global directories use this environment variable to conveniently choose one to use from the time of process startup. To automate this definition, define ydb_gbldir in the user's login file. The SET command can alter the value of $ZGBLDIR in an active process.
++++++++++++++
+ydb_gbldir
++++++++++++++
+**ydb_gbldir (gtmgbldir)** specifies the initial value of the $ZGBLDIR ISV. $ZGBLDIR identifies the global directory. A global directory maps global variables to physical database files, and is required to access M global variables. Users who maintain multiple global directories use this environment variable to conveniently choose one to use from the time of process startup. To automate this definition, define ydb_gbldir in the user's login file. The SET command can alter the value of $ZGBLDIR in an active process.
 
-**ydb_gdscert** (gtm_gdscert) specifies the initial setting that controls whether YottaDB processes should test updated database blocks for structural damage. If it is defined, and evaluates to a non-zero integer or any case-independent string or leading substrings of "TRUE" or "YES", YottaDB performs a block-level integrity check on every block as a process commits it. Within a running process, VIEW "GDSCERT":value controls this setting. By default, YottaDB does not check database blocks for structural damage, because the impact on performance is usually unwarranted.
+++++++++++++++
+ydb_gdscert
+++++++++++++++
+**ydb_gdscert (gtm_gdscert)** specifies the initial setting that controls whether YottaDB processes should test updated database blocks for structural damage. If it is defined, and evaluates to a non-zero integer or any case-independent string or leading substrings of "TRUE" or "YES", YottaDB performs a block-level integrity check on every block as a process commits it. Within a running process, VIEW "GDSCERT":value controls this setting. By default, YottaDB does not check database blocks for structural damage, because the impact on performance is usually unwarranted.
 
-**ydb_icu_version** (gtm_icu_version) specifies the MAJOR VERSION and MINOR VERSION numbers of the desired ICU. For example "3.6" denotes ICU-3.6. If $ydb_chset has the value "UTF-8", YottaDB requires libicu with version 3.6 or higher. If you must chose between multiple versions of libicu or if libicu has been compiled with symbol renaming enabled, YottaDB requires ydb_icu_version to be explicitly set. Please see the section on `"Configuring and operating YottaDB with Unicode Support" <./basicops.html#configuring-and-operating-yottadb-with-unicode-support-optional>`_ for more information.
+++++++++++++++++++
+ydb_icu_version
+++++++++++++++++++
+**ydb_icu_version (gtm_icu_version)** specifies the MAJOR VERSION and MINOR VERSION numbers of the desired ICU. For example "3.6" denotes ICU-3.6. If $ydb_chset has the value "UTF-8", YottaDB requires libicu with version 3.6 or higher. If you must chose between multiple versions of libicu or if libicu has been compiled with symbol renaming enabled, YottaDB requires ydb_icu_version to be explicitly set. Please see the section on `"Configuring and operating YottaDB with Unicode Support" <./basicops.html#configuring-and-operating-yottadb-with-unicode-support-optional>`_ for more information.
 
-**ydb_ipv4_only** (gtm_ipv4_only) specifies whether a Source Server should establish only IPv4 connections with a Receiver Server or sockets associated with a SOCKET device. If it is defined, and evaluates to a non-zero integer, or any case-independent string or leading substring of "TRUE" or "YES", the Source Server establishes only IPv4 connections with the Receiver Server. ydb_ipv4_only is useful for environments where different server names are not used for IPv4 and IPv6 addresses.
+++++++++++++++++
+ydb_ipv4_only
+++++++++++++++++
+**ydb_ipv4_only (gtm_ipv4_only)** specifies whether a Source Server should establish only IPv4 connections with a Receiver Server or sockets associated with a SOCKET device. If it is defined, and evaluates to a non-zero integer, or any case-independent string or leading substring of "TRUE" or "YES", the Source Server establishes only IPv4 connections with the Receiver Server. ydb_ipv4_only is useful for environments where different server names are not used for IPv4 and IPv6 addresses.
 
-**ydb_jnl_release_timeout** (gtm_jnl_release_timeout) specifies the number of seconds that a replicating Source Server waits when there is no activity on an open journal file before closing it. The default wait period is 300 seconds (5 minutes). If $ydb_jnl_release_timeout specifies 0, the Source Server keeps the current journal files open until shutdown. The maximum value for $ydb_jnl_release_timeout is 2147483 seconds.
+++++++++++++++++++++++++++
+ydb_jnl_release_timeout
+++++++++++++++++++++++++++
+**ydb_jnl_release_timeout (gtm_jnl_release_timeout)** specifies the number of seconds that a replicating Source Server waits when there is no activity on an open journal file before closing it. The default wait period is 300 seconds (5 minutes). If $ydb_jnl_release_timeout specifies 0, the Source Server keeps the current journal files open until shutdown. The maximum value for $ydb_jnl_release_timeout is 2147483 seconds.
 
-**ydb_keep_obj** (gtm_keep_obj) specifies whether the ydbinstall script should delete the object files from the YottaDB installation directory. If ydb_keep_obj is set to "Y", the ydbinstall script leaves object files; by default, ydbinstall deletes object files after archiving them in a shared library.
++++++++++++++++
+ydb_keep_obj
++++++++++++++++
+**ydb_keep_obj (gtm_keep_obj)** specifies whether the ydbinstall script should delete the object files from the YottaDB installation directory. If ydb_keep_obj is set to "Y", the ydbinstall script leaves object files; by default, ydbinstall deletes object files after archiving them in a shared library.
 
-**ydb_lct_stdnull** (gtm_lct_stdnull) specifies whether a YottaDB process should use standard collation for local variables with null subscripts or legacy YottaDB collation.
+++++++++++++++++++
+ydb_lct_stdnull
+++++++++++++++++++
+**ydb_lct_stdnull (gtm_lct_stdnull)** specifies whether a YottaDB process should use standard collation for local variables with null subscripts or legacy YottaDB collation.
 
-**ydb_link** (gtm_link) specifies the initial setting that determines whether YottaDB permits multiple versions of the same routine to be active at different stack levels of the M virtual machine. The VIEW "LINK":"[NO]RECURSIVE" command modifies this in an active process. If ydb_link is set to "RECURSIVE", auto-relink and explicit ZLINK commands links a newer object even when a routine with the same name is active and available in the current stack. When a process links a routine with the same name as an existing routine, future calls use the new routine. Prior versions of that routine referenced by the stack remain tied to the stack until they QUIT, at which point they become inaccessible. This provides a mechanism to patch long-running processes. If ydb_link is undefined or set to NORECURSIVE, or any value other than "RECURSIVE", auto-zlink defers replacing older routines until they no longer have an invoking use by the process and a ZLINK command produces a LOADRUNNING error when it attempts to relink an active routine on the YottaDB invocation stack.
++++++++++++
+ydb_link
++++++++++++
+**ydb_link (gtm_link)** specifies the initial setting that determines whether YottaDB permits multiple versions of the same routine to be active at different stack levels of the M virtual machine. The VIEW "LINK":"[NO]RECURSIVE" command modifies this in an active process. If ydb_link is set to "RECURSIVE", auto-relink and explicit ZLINK commands links a newer object even when a routine with the same name is active and available in the current stack. When a process links a routine with the same name as an existing routine, future calls use the new routine. Prior versions of that routine referenced by the stack remain tied to the stack until they QUIT, at which point they become inaccessible. This provides a mechanism to patch long-running processes. If ydb_link is undefined or set to NORECURSIVE, or any value other than "RECURSIVE", auto-zlink defers replacing older routines until they no longer have an invoking use by the process and a ZLINK command produces a LOADRUNNING error when it attempts to relink an active routine on the YottaDB invocation stack.
 
-**ydb_linktmpdir** (gtm_linktmpdir) identifies a directory (defaulting to $ydb_tmp, which in turn defaults to /tmp, if unspecified) where YottaDB creates a small control file (Relinkctl), for each auto-relink enabled directory which a YottaDB process accesses while searching through $ZROUTINES. The names of these files are of the form ydb-relinkctl-<murmur> where <murmur> is a hash of the realpath() to an auto-relink directory; for example: /tmp/ydb-relinkctl-f0938d18ab001a7ef09c2bfba946f002). With each Relinkctl file, YottaDB creates and associates a block of shared memory that contains associated control structures. Among the structures is a cycle number corresponding to each routine found in the routine directory; a change in the cycle number informs a process that it may need to determine whether there is a new version of a routine. Although YottaDB only creates relinkctl records for routines that actually exist on disk, it may increment cycle numbers for existing relinkctl records even if they no longer exist on disk.
++++++++++++++++++
+ydb_linktmpdir
++++++++++++++++++
+**ydb_linktmpdir (gtm_linktmpdir)** identifies a directory (defaulting to $ydb_tmp, which in turn defaults to /tmp, if unspecified) where YottaDB creates a small control file (Relinkctl), for each auto-relink enabled directory which a YottaDB process accesses while searching through $ZROUTINES. The names of these files are of the form ydb-relinkctl-<murmur> where <murmur> is a hash of the realpath() to an auto-relink directory; for example: /tmp/ydb-relinkctl-f0938d18ab001a7ef09c2bfba946f002). With each Relinkctl file, YottaDB creates and associates a block of shared memory that contains associated control structures. Among the structures is a cycle number corresponding to each routine found in the routine directory; a change in the cycle number informs a process that it may need to determine whether there is a new version of a routine. Although YottaDB only creates relinkctl records for routines that actually exist on disk, it may increment cycle numbers for existing relinkctl records even if they no longer exist on disk.
 
-**ydb_locale** (gtm_locale) specifies a locale to use (LC_CTYPE would be set to this value) if the ydb_chset environment variable is set to UTF-8. If not set, the current value of LC_CTYPE is used.  This environment variable is ignored if ydb_chset is not set to UTF-8.
++++++++++++++
+ydb_locale
++++++++++++++
+**ydb_locale (gtm_locale)** specifies a locale to use (`LC_CTYPE`_ would be set to this value) if the `ydb_chset`_ environment variable is set to UTF-8. If not set, the current value of `LC_CTYPE`_ is used.  This environment variable is ignored if `ydb_chset`_ is not set to UTF-8.
 
-**ydb_local_collate** (gtm_local_collate) specifies an alternative collation sequence for local variables.
+++++++++++++++++++++
+ydb_local_collate
+++++++++++++++++++++
+**ydb_local_collate (gtm_local_collate)** specifies an alternative collation sequence for local variables.
 
-**ydb_log** (gtm_log) specifies a directory where the gtm_secshr_log file is stored. The gtm_secshr_log file stores information gathered in the gtmsecshr process. YottaDB recommends that a system-wide default be established for ydb_log so that gtmsecshr always logs its information in the same directory, regardless of which user's YottaDB process invokes gtmsecshr. In conformance with the Filesystem Hierarchy Standard, YottaDB recommends /var/log/yottadb/$ydb_rel as the value for $ydb_log unless you are installing the same version of YottaDB in multiple directories. Note that $ydb_rel can be in the form of the current YottaDB release and platform. If you do not set $ydb_log, YottaDB creates log files in a directory in /tmp. However, this is not recommended because it makes YottaDB log files vulnerable to the retention policy of a temporary directory.
+++++++++++
+ydb_log
+++++++++++
+**ydb_log (gtm_log)** specifies a directory where the gtm_secshr_log file is stored. The gtm_secshr_log file stores information gathered in the gtmsecshr process. YottaDB recommends that a system-wide default be established for ydb_log so that gtmsecshr always logs its information in the same directory, regardless of which user's YottaDB process invokes gtmsecshr. In conformance with the Filesystem Hierarchy Standard, YottaDB recommends /var/log/yottadb/$ydb_rel as the value for $ydb_log unless you are installing the same version of YottaDB in multiple directories. Note that $ydb_rel can be in the form of the current YottaDB release and platform. If you do not set $ydb_log, YottaDB creates log files in a directory in /tmp. However, this is not recommended because it makes YottaDB log files vulnerable to the retention policy of a temporary directory.
 
 .. note::
    In the latest versions, gtmsecshr logs its messages in the system log and the environment variable ydb_log is ignored.
 
-**ydb_lvnullsubs** (gtm_lvnullsubs) specifies the initialization of [NEVER][NO]LVNULLSUBS at process startup. The value of the environment variable can be 0 which is equivalent to VIEW “NOLVNULLSUBS”, 1 (the default) which is equivalent to VIEW “LVNULLSUBS” or 2, which is equivalent to VIEW “NEVERLVNULLSUBS”. These settings disallow, partially disallow, or allow local arrays to have empty string subscripts.
++++++++++++++++++
+ydb_lvnullsubs
++++++++++++++++++
+**ydb_lvnullsubs (gtm_lvnullsubs)** specifies the initialization of [NEVER][NO]LVNULLSUBS at process startup. The value of the environment variable can be 0 which is equivalent to VIEW “NOLVNULLSUBS”, 1 (the default) which is equivalent to VIEW “LVNULLSUBS” or 2, which is equivalent to VIEW “NEVERLVNULLSUBS”. These settings disallow, partially disallow, or allow local arrays to have empty string subscripts.
 
-**ydb_maxtptime** (gtm_zmaxtptime) specifies the initial value of the $ZMAXTPTIME Intrinsic Special Variable, which controls whether and when YottaDB issues a TPTIMEOUT error for a TP transaction that runs too long. ydb_maxtptime specifies time in seconds and the default is 0, which indicates "no timeout" (unlimited time). The maximum value of ydb_maxtptime is 60 seconds and the minimum is 0; YottaDB ignores ydb_maxtptime if it contains a value outside of this recognized range. This range check does not apply to SET $ZMAXTPTIME.
+++++++++++++++++
+ydb_maxtptime
+++++++++++++++++
+**ydb_maxtptime (gtm_zmaxtptime)** specifies the initial value of the $ZMAXTPTIME Intrinsic Special Variable, which controls whether and when YottaDB issues a TPTIMEOUT error for a TP transaction that runs too long. ydb_maxtptime specifies time in seconds and the default is 0, which indicates "no timeout" (unlimited time). The maximum value of ydb_maxtptime is 60 seconds and the minimum is 0; YottaDB ignores ydb_maxtptime if it contains a value outside of this recognized range. This range check does not apply to SET $ZMAXTPTIME.
 
-**ydb_max_indrcache_count** (gtm_max_indrcache_count) and **ydb_max_indrcache_memory** (gtm_max_indrcache_memory) control the cache of compiled code for indirection/execute. ydb_max_indrcache_count is the maximum number of entries in the cache (defaulting to 128) and ydb_max_indrcache_memory is maximum memory (in KiB, defaulting to 128). When the number of cache entries exceeds $ydb_max_indrcache_count, or the memory exceeds $ydb_max_indrcache_memory KiB, YottaDB discards the entire cache and starts over.
++++++++++++++++++++++++++++++++++++++++++++++++++++
+ydb_max_indrcache_count/ydb_max_indrcache_memory
++++++++++++++++++++++++++++++++++++++++++++++++++++
+**ydb_max_indrcache_count (gtm_max_indrcache_count)** and **ydb_max_indrcache_memory (gtm_max_indrcache_memory)** control the cache of compiled code for indirection/execute. ydb_max_indrcache_count is the maximum number of entries in the cache (defaulting to 128) and ydb_max_indrcache_memory is maximum memory (in KiB, defaulting to 128). When the number of cache entries exceeds $ydb_max_indrcache_count, or the memory exceeds $ydb_max_indrcache_memory KiB, YottaDB discards the entire cache and starts over.
 
-**ydb_max_sockets** (gtm_max_sockets)specifies the maximum number of client connections for socket devices. The default is 64. While it must be large enough to accommodate the actual need, each reservation requires some memory in socket structures, so setting this number unnecessarily high causes requires a bit of additional memory for no benefit.
+++++++++++++++++++
+ydb_max_sockets
+++++++++++++++++++
+**ydb_max_sockets (gtm_max_sockets)** specifies the maximum number of client connections for socket devices. The default is 64. While it must be large enough to accommodate the actual need, each reservation requires some memory in socket structures, so setting this number unnecessarily high causes requires a bit of additional memory for no benefit.
 
-**ydb_max_storalloc** (gtm_max_storalloc) limits the amount of memory (units in bytes) a YottaDB process is allowed to allocate before issuing a MEMORY (and MALLOCMAXUNIX) error. This helps in tracking memory allocation issues in the application.
+++++++++++++++++++++
+ydb_max_storalloc
+++++++++++++++++++++
+**ydb_max_storalloc (gtm_max_storalloc)** limits the amount of memory (units in bytes) a YottaDB process is allowed to allocate before issuing a MEMORY (and MALLOCMAXUNIX) error. This helps in tracking memory allocation issues in the application.
 
-**ydb_memory_reserve** (gtm_memory_reserve) specifies the size in kilobytes of the reserve memory that YottaDB should use in handling and reporting an out-of-memory condition. The default is 64 (KiB). Setting this too low can impede investigations of memory issues, but YottaDB only uses this reserve when a process runs out of memory so it almost never requires actual memory, only address space.
++++++++++++++++++++++
+ydb_memory_reserve
++++++++++++++++++++++
+**ydb_memory_reserve (gtm_memory_reserve)** specifies the size in kilobytes of the reserve memory that YottaDB should use in handling and reporting an out-of-memory condition. The default is 64 (KiB). Setting this too low can impede investigations of memory issues, but YottaDB only uses this reserve when a process runs out of memory so it almost never requires actual memory, only address space.
 
-**ydb_msgprefix** ydb_msgprefix specifies a prefix for YottaDB messages generated by a process, with the prefix defaulting to "YDB", e.g., YDB-I-DBFILEXT. Previously, the prefix was always "GTM". A value of "GTM" retains the previous format.
+++++++++++++++++
+ydb_msgprefix
+++++++++++++++++
+**ydb_msgprefix** specifies a prefix for YottaDB messages generated by a process, with the prefix defaulting to "YDB", e.g., YDB-I-DBFILEXT. Previously, the prefix was always "GTM". A value of "GTM" retains the previous format.
 
-**ydb_mstack_crit** (gtm_mstack_crit) specifies an integer between 15 and 95 defining the percentage of the stack which should be used before YottaDB emits a STACKCRIT warning. If the value is below the minimum or above the maximum, YottaDB uses the minimum or maximum respectively. The default is 90.
+++++++++++++++++++
+ydb_mstack_crit
+++++++++++++++++++
+**ydb_mstack_crit (gtm_mstack_crit)** specifies an integer between 15 and 95 defining the percentage of the stack which should be used before YottaDB emits a STACKCRIT warning. If the value is below the minimum or above the maximum, YottaDB uses the minimum or maximum respectively. The default is 90.
 
-**ydb_mstack_size** (gtm_stack_size) specifies the M stack size (in KiB). If ydb_mstack_size is not set or set to 0, YottaDB uses the default M stack size (that is, 272KiB). The minimum supported size is 25 KiB; YottaDB reverts values smaller than this to 25 KiB. The maximum supported size is 10000 KiB; YottaDB reverts values larger than this to 10000 KiB.
+++++++++++++++++++
+ydb_mstack_size
+++++++++++++++++++
+**ydb_mstack_size (gtm_stack_size)** specifies the M stack size (in KiB). If ydb_mstack_size is not set or set to 0, YottaDB uses the default M stack size (that is, 272KiB). The minimum supported size is 25 KiB; YottaDB reverts values smaller than this to 25 KiB. The maximum supported size is 10000 KiB; YottaDB reverts values larger than this to 10000 KiB.
 
-**ydb_mupjnl_parallel** (gtm_mupjnl_parallel) defines the number of processes or threads used by MUPIP JOURNAL -RECOVER/-ROLLBACK when the invoking command does not have a -PARALLEL qualifier. When defined with no value, it specifies one process or thread per region. When undefined or defined to one (1), it specifies MUPIP should process all regions without using additional processes or threads. When defined with an integer value greater than one (1), it specifies the maximum number of processes or threads for MUPIP to use. If the value is greater than the number of regions, MUPIP never uses more processes or threads than there are regions. If it is less than the number of regions, MUPIP allocates work to the additional processes or threads based on the time stamps in the journal files.
+++++++++++++++++++++++
+ydb_mupjnl_parallel
+++++++++++++++++++++++
+**ydb_mupjnl_parallel (gtm_mupjnl_parallel)** defines the number of processes or threads used by MUPIP JOURNAL -RECOVER/-ROLLBACK when the invoking command does not have a -PARALLEL qualifier. When defined with no value, it specifies one process or thread per region. When undefined or defined to one (1), it specifies MUPIP should process all regions without using additional processes or threads. When defined with an integer value greater than one (1), it specifies the maximum number of processes or threads for MUPIP to use. If the value is greater than the number of regions, MUPIP never uses more processes or threads than there are regions. If it is less than the number of regions, MUPIP allocates work to the additional processes or threads based on the time stamps in the journal files.
 
-**ydb_nocenable** (gtm_nocenable) specifies whether the $principal terminal device should ignore <CTRL-C> or use <CTRL-C> as a signal to place the process into direct mode; a USE command can modify this device characteristic. If ydb_nocenable is defined and evaluates to a non-zero integer or any case-independent string or leading substrings of "TRUE" or "YES", $principal ignores <CTRL-C>. If ydb_nocenable is not set or evaluates to a value other than a positive integer or any case-independent string or leading substrings of "FALSE" or "NO", <CTRL-C> on $principal places the process into direct mode at the next opportunity (usually at a point corresponding to the beginning of the next source line).
+++++++++++++++++
+ydb_nocenable
+++++++++++++++++
+**ydb_nocenable (gtm_nocenable)** specifies whether the $principal terminal device should ignore <CTRL-C> or use <CTRL-C> as a signal to place the process into direct mode; a USE command can modify this device characteristic. If ydb_nocenable is defined and evaluates to a non-zero integer or any case-independent string or leading substrings of "TRUE" or "YES", $principal ignores <CTRL-C>. If ydb_nocenable is not set or evaluates to a value other than a positive integer or any case-independent string or leading substrings of "FALSE" or "NO", <CTRL-C> on $principal places the process into direct mode at the next opportunity (usually at a point corresponding to the beginning of the next source line).
 
-**ydb_non_blocked_write_retries** (gtm_non_blocked_write_retries) modifies FIFO or PIPE write behavior. A WRITE which would block is retried up to the number specified with a 100 milliseconds delay between each retry. The default value is 10 times. If all retries block, the WRITE command issues a %SYSTEM-E-ENO11 (EAGAIN) error. For more details, refer to `PIPE Device Examples <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#pipe-device-examples>`_ in the Programmers Guide.
+++++++++++++++++++++++++++++++++
+ydb_non_blocked_write_retries
+++++++++++++++++++++++++++++++++
+**ydb_non_blocked_write_retries (gtm_non_blocked_write_retries)** modifies FIFO or PIPE write behavior. A WRITE which would block is retried up to the number specified with a 100 milliseconds delay between each retry. The default value is 10 times. If all retries block, the WRITE command issues a %SYSTEM-E-ENO11 (EAGAIN) error. For more details, refer to `PIPE Device Examples <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#pipe-device-examples>`_ in the Programmers Guide.
 
-**ydb_nontprestart_log_delta** (gtm_nontprestart_log_delta) specifies the number of non-transaction restarts for which YottaDB should wait before reporting a non-transaction restart to the operator logging facility. If ydb_nontprestart_log_delta is not defined, YottaDB initializes ydb_nontprestart_log_delta to 0.
++++++++++++++++++++++++++++++
+ydb_nontprestart_log_delta
++++++++++++++++++++++++++++++
+**ydb_nontprestart_log_delta (gtm_nontprestart_log_delta)** specifies the number of non-transaction restarts for which YottaDB should wait before reporting a non-transaction restart to the operator logging facility. If ydb_nontprestart_log_delta is not defined, YottaDB initializes ydb_nontprestart_log_delta to 0.
 
-**ydb_nontprestart_log_first** (gtm_nontprestart_log_first) specifies the initial number of non-transaction restarts which YottaDB should report before placing non-transaction restart reports to the operator logging facility using the ydb_nontprestart_log_delta value. If ydb_nontprestart_log_delta is defined and ydb_nontprestart_log_first is not defined, YottaDB initializes ydb_nontprestart_log_first to 1.
++++++++++++++++++++++++++++++
+ydb_nontprestart_log_first
++++++++++++++++++++++++++++++
+**ydb_nontprestart_log_first (gtm_nontprestart_log_first)** specifies the initial number of non-transaction restarts which YottaDB should report before placing non-transaction restart reports to the operator logging facility using the `ydb_nontprestart_log_delta`_ value. If `ydb_nontprestart_log_delta`_ is defined and ydb_nontprestart_log_first is not defined, YottaDB initializes ydb_nontprestart_log_first to 1.
 
-**ydb_noundef** (gtm_noundef) specifies the initial setting that controls whether a YottaDB process should treat undefined global or local variables as having an implicit value of an empty string. If it is defined, and evaluates to a non-zero integer or any case-independent string or leading substring of "TRUE" or "YES", then YottaDB treats undefined variables as having an implicit value of an empty string. The VIEW "[NO]UNDEF" command can alter this behavior in an active process. By default, YottaDB signals an error on an attempt to use the value of an undefined variable.
+++++++++++++++
+ydb_noundef
+++++++++++++++
+**ydb_noundef (gtm_noundef)** specifies the initial setting that controls whether a YottaDB process should treat undefined global or local variables as having an implicit value of an empty string. If it is defined, and evaluates to a non-zero integer or any case-independent string or leading substring of "TRUE" or "YES", then YottaDB treats undefined variables as having an implicit value of an empty string. The VIEW "[NO]UNDEF" command can alter this behavior in an active process. By default, YottaDB signals an error on an attempt to use the value of an undefined variable.
 
-**ydb_obfuscation_key** (gtm_obfuscation_key) : If $ydb_obfuscation_key specifies the name of the file readable by the process, the encryption reference plug-in uses a cryptographic hash of the file's contents as the XOR mask for the obfuscated password in the environment variable ydb_passwd. When ydb_obfuscation_key does not point to a readable file, the plugin computes a cryptographic hash using a mask based on the value of $USER and the inode of the yottadb executable to use as a mask. $ydb_passwd set with a $ydb_obfuscation_key allows access to all users who have the same $ydb_obfuscation_key defined in their environments. However, $ydb_passwd set without $ydb_obfuscation_key can be used only by the same $USER using the same YottaDB distribution.
+++++++++++++++++++++++
+ydb_obfuscation_key
+++++++++++++++++++++++
+**ydb_obfuscation_key (gtm_obfuscation_key)** : If $ydb_obfuscation_key specifies the name of the file readable by the process, the encryption reference plug-in uses a cryptographic hash of the file's contents as the XOR mask for the obfuscated password in the environment variable `ydb_passwd`_. When ydb_obfuscation_key does not point to a readable file, the plugin computes a cryptographic hash using a mask based on the value of $USER and the inode of the yottadb executable to use as a mask. $ydb_passwd set with a $ydb_obfuscation_key allows access to all users who have the same $ydb_obfuscation_key defined in their environments. However, $ydb_passwd set without $ydb_obfuscation_key can be used only by the same $USER using the same YottaDB distribution.
 
-**ydb_passwd** (gtm_passwd) specifies the obfuscated (not encrypted) password of the GNU Privacy Guard key ring. When the environment variable $ydb_passwd is set to "", YottaDB invokes the default GTMCRYPT passphrase prompt defined in the reference implementation of the plugin to obtain a passphrase at process startup and uses that value as $ydb_passwd for the duration of the process.
++++++++++++++
+ydb_passwd
++++++++++++++
+**ydb_passwd (gtm_passwd)** specifies the obfuscated (not encrypted) password of the GNU Privacy Guard key ring. When the environment variable $ydb_passwd is set to "", YottaDB invokes the default GTMCRYPT passphrase prompt defined in the reference implementation of the plugin to obtain a passphrase at process startup and uses that value as $ydb_passwd for the duration of the process.
 
-**ydb_patnumeric** (gtm_patnumeric) specifies the value of the read-only ISV $ZPATNUMERIC that determines how YottaDB interprets the patcode "N" used in the pattern match operator. The SET command can alter the value of $ZPATNUMERIC in an active process.
++++++++++++++++++
+ydb_patnumeric
++++++++++++++++++
+**ydb_patnumeric (gtm_patnumeric)** specifies the value of the read-only ISV $ZPATNUMERIC that determines how YottaDB interprets the patcode "N" used in the pattern match operator. The SET command can alter the value of $ZPATNUMERIC in an active process.
 
-**ydb_pattern_file** (gtm_pattern_file) and **ydb_pattern_table** (gtm_pattern_table) specify alternative patterns for the pattern (?) syntax. Refer to the `Internationalization chapter in the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/internatn.html>`_ for additional information.
++++++++++++++++++++++++++++++++++++++
+ydb_pattern_file/ydb_pattern_table
++++++++++++++++++++++++++++++++++++++
+**ydb_pattern_file (gtm_pattern_file)** and **ydb_pattern_table (gtm_pattern_table)** specify alternative patterns for the pattern (?) syntax. Refer to the `Internationalization chapter in the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/internatn.html>`_ for additional information.
 
-**ydb_poollimit** (gtm_poollimit) restricts the number of global buffers a process uses in order to limit the potential impact on other processes. It is intended for use by MUPIP REORG, since it has the potential to "churn" global buffers; the value is of the form n[%]. When it ends with a per-cent sign (%), the number is taken as a percentage of the configured global buffers and otherwise as an ordinal number of preferred buffers; standard M parsing and integer conversions apply. Note that this environment variable applies to all regions accessed by a process; the VIEW command for this feature allows finer grained control. MUPIP REORG uses this facility to limit its buffers with a default of 64 if ydb_poollimit is not specified. Note that this may slightly slow a standalone REORG but can be overridden by defining ydb_poollimit as 0 or "100%".
+++++++++++++++++
+ydb_poollimit
+++++++++++++++++
+**ydb_poollimit (gtm_poollimit)** restricts the number of global buffers a process uses in order to limit the potential impact on other processes. It is intended for use by MUPIP REORG, since it has the potential to "churn" global buffers; the value is of the form n[%]. When it ends with a per-cent sign (%), the number is taken as a percentage of the configured global buffers and otherwise as an ordinal number of preferred buffers; standard M parsing and integer conversions apply. Note that this environment variable applies to all regions accessed by a process; the VIEW command for this feature allows finer grained control. MUPIP REORG uses this facility to limit its buffers with a default of 64 if ydb_poollimit is not specified. Note that this may slightly slow a standalone REORG but can be overridden by defining ydb_poollimit as 0 or "100%".
 
-**ydb_principal** (gtm_principal) specifies the value for $PRINCIPAL, which designates an alternative name (synonym) for the principal $IO device.
+++++++++++++++++
+ydb_principal
+++++++++++++++++
+**ydb_principal (gtm_principal)** specifies the value for $PRINCIPAL, which designates an alternative name (synonym) for the principal $IO device.
 
-**ydb_principal_editing** (gtm_principal_editing) specifies the initial settings for $PRINCIPAL for the following colon-delimited deviceparameters: [NO]EDITING, [NO]EMPTERM and [NO]INSERT; in an active process the USE command can modify these device characteristics.
+++++++++++++++++++++++++
+ydb_principal_editing
+++++++++++++++++++++++++
+**ydb_principal_editing (gtm_principal_editing)** specifies the initial settings for $PRINCIPAL for the following colon-delimited deviceparameters: [NO]EDITING, [NO]EMPTERM and [NO]INSERT; in an active process the USE command can modify these device characteristics.
 
 .. note::
    The YottaDB direct mode commands have a more extensive capability in this regard, independent of the value of this environment variable.
 
-**ydb_procstuckexec** (gtm_procstuckexec) specifies a shell command or a script to execute when any of the following conditions occur:
+++++++++++++++++++++
+ydb_procstuckexec
+++++++++++++++++++++
+**ydb_procstuckexec (gtm_procstuckexec)** specifies a shell command or a script to execute when any of the following conditions occur:
 
 * A one minute wait on a region due to an explicit MUPIP FREEZE or an implicit freeze, such as BACKUP, INTEG -ONLINE, and so on.
 
@@ -459,67 +660,160 @@ Each invocation generates an operator log message and if the invocation fails, a
 .. note::
    Make sure that user processes have sufficient space and permissions to run the shell command/script. For example - for the script to invoke the debugger, the process must be of the same group or have a way to elevate privileges.
 
-**ydb_prompt** (gtm_prompt) specifies the initial value of the ISV $ZPROMPT, which controls the YottaDB direct mode prompt. The SET command can alter the value of $ZPROMPT in an active process. By default, the direct mode prompt is "YDB>".
++++++++++++++
+ydb_prompt
++++++++++++++
+**ydb_prompt (gtm_prompt)** specifies the initial value of the ISV $ZPROMPT, which controls the YottaDB direct mode prompt. The SET command can alter the value of $ZPROMPT in an active process. By default, the direct mode prompt is "YDB>".
 
-**ydb_quiet_halt** (gtm_quiet_halt) specifies whether YottaDB should disable the FORCEDHALT message when the process is stopped via MUPIP STOP or by a SIGTERM signal (as sent by some web servers).
++++++++++++++++++
+ydb_quiet_halt
++++++++++++++++++
+**ydb_quiet_halt (gtm_quiet_halt)** specifies whether YottaDB should disable the FORCEDHALT message when the process is stopped via MUPIP STOP or by a SIGTERM signal (as sent by some web servers).
 
-**ydb_rel** (gtmversion) (not used by YottaDB directly) - The current YottaDB version. The ydb_env_set script uses $ydb_rel to set other environment variables.
+++++++++++
+ydb_rel
+++++++++++
+**ydb_rel (gtmversion)** (not used by YottaDB directly) - The current YottaDB version. The ydb_env_set script uses $ydb_rel to set other environment variables.
 
-**ydb_repl_filter_timeout** (gtm_repl_filter_timeout) can be set to an integer value indicating the timeout (in seconds) that the replication source server sets for a response from the external filter program. A value less than 32 would be treated as if 32 was specified. A value greater than 131072 (2**17) would be treated as if 131072 was specified. The default value of the timeout (if env var is not specified) is 64 seconds. This provides the user a way to avoid seeing FILTERTIMEDOUT errors from the source server on relatively slower systems.
+++++++++++++++++++++++++++
+ydb_repl_filter_timeout
+++++++++++++++++++++++++++
+**ydb_repl_filter_timeout (gtm_repl_filter_timeout)** can be set to an integer value indicating the timeout (in seconds) that the replication source server sets for a response from the external filter program. A value less than 32 would be treated as if 32 was specified. A value greater than 131072 (2**17) would be treated as if 131072 was specified. The default value of the timeout (if env var is not specified) is 64 seconds. This provides the user a way to avoid seeing FILTERTIMEDOUT errors from the source server on relatively slower systems.
 
-**ydb_repl_instance** (gtm_repl_instance) specifies the location of the replication instance file when database replication is in use.
+++++++++++++++++++++
+ydb_repl_instance
+++++++++++++++++++++
+**ydb_repl_instance (gtm_repl_instance)** specifies the location of the replication instance file when database replication is in use.
 
-**ydb_repl_instname** (gtm_repl_instname) specifies a replication instance name that uniquely identifies an instance. The replication instance name is immutable. The maximum length of a replication instance name is 15 bytes. Note that the instance name is not the same as the name of the replication instance file (ydb_repl_instance). You need to specify a replication instance name at the time of creating a replication instance file. If you do not define ydb_repl_instname, you need to specify an instance name using -NAME=<instance_name> with MUPIP REPLICATE -INSTANCE_CREATE.
+++++++++++++++++++++
+ydb_repl_instname
+++++++++++++++++++++
+**ydb_repl_instname (gtm_repl_instname)** specifies a replication instance name that uniquely identifies an instance. The replication instance name is immutable. The maximum length of a replication instance name is 15 bytes. Note that the instance name is not the same as the name of the replication instance file (`ydb_repl_instance`_). You need to specify a replication instance name at the time of creating a replication instance file. If you do not define ydb_repl_instname, you need to specify an instance name using -NAME=<instance_name> with MUPIP REPLICATE -INSTANCE_CREATE.
 
-**ydb_repl_instsecondary** (gtm_repl_instsecondary) specifies the name of the replicating instance in the current environment. YottaDB uses $ydb_repl_instsecondary if the -instsecondary qualifer is not specified.
++++++++++++++++++++++++++
+ydb_repl_instsecondary
++++++++++++++++++++++++++
+**ydb_repl_instsecondary (gtm_repl_instsecondary)** specifies the name of the replicating instance in the current environment. YottaDB uses $ydb_repl_instsecondary if the -instsecondary qualifer is not specified.
 
-**ydb_retention** (gtm_retention) (not used by YottaDB directly) - used by the ydb script to delete old journal files and old temporary files it creates.
+++++++++++++++++
+ydb_retention
+++++++++++++++++
+**ydb_retention (gtm_retention)** (not used by YottaDB directly) - used by the ydb script to delete old journal files and old temporary files it creates.
 
-**ydb_routines** (gtmroutines) specifies the initial value of the $ZROutines ISV, which specifies where to find object and source code. The SET command can alter the value of $ZROUTINES in an active process.
++++++++++++++++
+ydb_routines
++++++++++++++++
+**ydb_routines (gtmroutines)** specifies the initial value of the $ZROutines ISV, which specifies where to find object and source code. The SET command can alter the value of $ZROUTINES in an active process.
 
-**ydb_side_effects** (gtm_side_effects): When the environment variable ydb_side_effects is set to one (1) at process startup, YottaDB generates code that performs left to right evaluation of actual list arguments, function arguments, operands for non-Boolean binary operators, SET arguments where the target destination is an indirect subscripted glvn, and variable subscripts. When the environment variable is not set or set to zero (0), YottaDB retains its traditional behavior, which re-orders the evaluation of operands using rules intended to improve computational efficiency. This reordering assumes that functions have no side effects, and may generate unexpected behavior (x+$increment(x) is a pathological example). When ydb_side_effects is set to two (2), YottaDB generates code with the left-to-right behavior, and also generates SIDEEFFECTEVAL warning messages for each construct that potentially generates different results depending on the order of evaluation. As extrinsic functions and external calls are opaque to the compiler at the point of their invocation, it cannot statically determine whether there is a real interaction. Therefore, SIDEEFFECTEVAL warnings may be much more frequent than actual side effect interactions and the warning mode may be most useful as a diagnostic tool to investigate problematic or unexpected behavior in targeted code rather than for an audit of an entire application. Note that a string of concatenations in the same expression may generate more warnings than the code warrants. Other values of the environment variable are reserved for potential future use by YottaDB. It is important to note that ydb_side_effects affects the generated code, and must be in effect when code is compiled - the value when that compiled code is executed is irrelevant. Note also that XECUTE and auto-ZLINK, explicit ZLINK and ZCOMPILE all perform run-time compilation subject to the characteristics selected when the process started. Please be aware it is an unsafe programming practice when one term of an expression changes a prior term in the same expression. The environment variable ydb_boolean may separately control short-circuit evaluation of Boolean expressions but a setting of 1 (or 2) for ydb_side_effects causes the same boolean evaluations as setting ydb_boolean to 1 (or 2). Note that warning reports for the two features are separately controlled by setting their values to 2. The differences in the compilation modes may include not only differences in results, but differences in flow of control when the code relies on side effect behavior.
++++++++++++++++++++
+ydb_side_effects
++++++++++++++++++++
+**ydb_side_effects (gtm_side_effects)**: When the environment variable ydb_side_effects is set to one (1) at process startup, YottaDB generates code that performs left to right evaluation of actual list arguments, function arguments, operands for non-Boolean binary operators, SET arguments where the target destination is an indirect subscripted glvn, and variable subscripts. When the environment variable is not set or set to zero (0), YottaDB retains its traditional behavior, which re-orders the evaluation of operands using rules intended to improve computational efficiency. This reordering assumes that functions have no side effects, and may generate unexpected behavior (x+$increment(x) is a pathological example). When ydb_side_effects is set to two (2), YottaDB generates code with the left-to-right behavior, and also generates SIDEEFFECTEVAL warning messages for each construct that potentially generates different results depending on the order of evaluation. As extrinsic functions and external calls are opaque to the compiler at the point of their invocation, it cannot statically determine whether there is a real interaction. Therefore, SIDEEFFECTEVAL warnings may be much more frequent than actual side effect interactions and the warning mode may be most useful as a diagnostic tool to investigate problematic or unexpected behavior in targeted code rather than for an audit of an entire application. Note that a string of concatenations in the same expression may generate more warnings than the code warrants. Other values of the environment variable are reserved for potential future use by YottaDB. It is important to note that ydb_side_effects affects the generated code, and must be in effect when code is compiled - the value when that compiled code is executed is irrelevant. Note also that XECUTE and auto-ZLINK, explicit ZLINK and ZCOMPILE all perform run-time compilation subject to the characteristics selected when the process started. Please be aware it is an unsafe programming practice when one term of an expression changes a prior term in the same expression. The environment variable `ydb_boolean`_ may separately control short-circuit evaluation of Boolean expressions but a setting of 1 (or 2) for ydb_side_effects causes the same boolean evaluations as setting `ydb_boolean`_ to 1 (or 2). Note that warning reports for the two features are separately controlled by setting their values to 2. The differences in the compilation modes may include not only differences in results, but differences in flow of control when the code relies on side effect behavior.
 
-**ydb_snaptmpdir** (gtm_snaptmpdir) specifies the location to place the temporary "snapshot" file created by facilities such as on-line mupip integ. If $ydb_snaptmpdir is not defined, YottaDB uses the $ydb_baktmpdir environment variable if defined, and otherwise uses the current working directory. All processes performing updates during an online INTEG must use the same directory and have write access to it.
++++++++++++++++++
+ydb_snaptmpdir
++++++++++++++++++
+**ydb_snaptmpdir (gtm_snaptmpdir)** specifies the location to place the temporary "snapshot" file created by facilities such as on-line mupip integ. If $ydb_snaptmpdir is not defined, YottaDB uses the $ydb_baktmpdir environment variable if defined, and otherwise uses the current working directory. All processes performing updates during an online INTEG must use the same directory and have write access to it.
 
-**ydb_string_pool_limit** (gtm_string_pool_limit) is used for the initial value of $ZSTRPLLIM, when it specifies a positive value.
+++++++++++++++++++++++++
+ydb_string_pool_limit
+++++++++++++++++++++++++
+**ydb_string_pool_limit (gtm_string_pool_limit)** is used for the initial value of $ZSTRPLLIM, when it specifies a positive value.
 
-**ydb_statsdir** (gtm_statsdir) specifies the directory for database files into which processes that have opted-in to sharing global statistics place their statistics as binary data. If you do not explicitly define this environment variable for a process, YottaDB defines this to the evaluation of $ydb_tmp, which defaults to /tmp. All processes that share statistics MUST use the same value for $ydb_statsdir. YottaDB suggests that you point ydb_statsdir at a tmpfs or ramfs. These database files have a name derived from the user defined database file name and a .gst extension. They are not usable as normal database files by application code, except to read statistics. YottaDB automatically creates and deletes these database files as needed. Under normal operation, applications do not need to manage them explicitly. The mapping of ^%YGS to statistics database files is managed by YottaDB transparently to applications with global directories. The ^%YGBLSTAT utility program gathers and reports statistics from nodes of ^%YGS(region,pid).
++++++++++++++++
+ydb_statsdir
++++++++++++++++
+**ydb_statsdir (gtm_statsdir)** specifies the directory for database files into which processes that have opted-in to sharing global statistics place their statistics as binary data. If you do not explicitly define this environment variable for a process, YottaDB defines this to the evaluation of $ydb_tmp, which defaults to /tmp. All processes that share statistics MUST use the same value for $ydb_statsdir. YottaDB suggests that you point ydb_statsdir at a tmpfs or ramfs. These database files have a name derived from the user defined database file name and a .gst extension. They are not usable as normal database files by application code, except to read statistics. YottaDB automatically creates and deletes these database files as needed. Under normal operation, applications do not need to manage them explicitly. The mapping of ^%YGS to statistics database files is managed by YottaDB transparently to applications with global directories. The ^%YGBLSTAT utility program gathers and reports statistics from nodes of ^%YGS(region,pid).
 
-**ydb_statshare** (gtm_statshare) specifies an initial value for the characteristic controlled by VIEW "[NO]STATSHARE" in application code. A value of 1, or any case-independent string or leading substrings of "TRUE" or "YES" in the environment variable ydb_statshare provides the equivalent of VIEW "STATSHARE" as the initial value. Leaving the ydb_statshare undefined or defined to another value, typically 0, "FALSE" or "NO" provides the equivalent of VIEW "NOSTATSHARE" as the initial value.
+++++++++++++++++
+ydb_statshare
+++++++++++++++++
+**ydb_statshare (gtm_statshare)** specifies an initial value for the characteristic controlled by VIEW "[NO]STATSHARE" in application code. A value of 1, or any case-independent string or leading substrings of "TRUE" or "YES" in the environment variable ydb_statshare provides the equivalent of VIEW "STATSHARE" as the initial value. Leaving the ydb_statshare undefined or defined to another value, typically 0, "FALSE" or "NO" provides the equivalent of VIEW "NOSTATSHARE" as the initial value.
 
-**ydb_stdxkill** (gtm_stdxkill) enables the standard-compliant behavior to kill local variables in the exclusion list if they had an alias that was not in the exclusion list. By default, this behavior is disabled.
++++++++++++++++
+ydb_stdxkill
++++++++++++++++
+**ydb_stdxkill (gtm_stdxkill)** enables the standard-compliant behavior to kill local variables in the exclusion list if they had an alias that was not in the exclusion list. By default, this behavior is disabled.
 
-**ydb_sysid** (gtm_sysid) specifies the value for the second piece of the $SYSTEM ISV. $SYSTEM contains a string that identifies the executing M instance. The value of $SYSTEM is a string that starts with a unique numeric code that identifies the manufacturer. Codes were originally assigned by the MDC (M Development Committee). $SYSTEM in YottaDB starts with "47" followed by a comma and $ydb_sysid.
+++++++++++++
+ydb_sysid
+++++++++++++
+**ydb_sysid (gtm_sysid)** specifies the value for the second piece of the $SYSTEM ISV. $SYSTEM contains a string that identifies the executing M instance. The value of $SYSTEM is a string that starts with a unique numeric code that identifies the manufacturer. Codes were originally assigned by the MDC (M Development Committee). $SYSTEM in YottaDB starts with "47" followed by a comma and $ydb_sysid.
 
-**ydb_tls_passwd_<label>** (gtmtls_passwd_<label>) specifies the obfuscated password of the encrypted private key pair. You can obfuscate passwords using the 'maskpass' utility provided along with the encryption plugin. If you choose to use unencrypted private keys, set the ydb_tls_passwd_<label> environment variable to a non-null dummy value; this prevents inappropriate prompting for a password.
++++++++++++++++++++++++++
+ydb_tls_passwd_<label>
++++++++++++++++++++++++++
+**ydb_tls_passwd_<label> (gtmtls_passwd_<label>)** specifies the obfuscated password of the encrypted private key pair. You can obfuscate passwords using the 'maskpass' utility provided along with the encryption plugin. If you choose to use unencrypted private keys, set the ydb_tls_passwd_<label> environment variable to a non-null dummy value; this prevents inappropriate prompting for a password.
 
-**ydb_tmp** (gtm_tmp) specifies a directory where socket files used for communication between gtmsecshr and YottaDB processes are stored. All processes using the same YottaDB should have the same $ydb_tmp.
+++++++++++
+ydb_tmp
+++++++++++
+**ydb_tmp (gtm_tmp)** specifies a directory where socket files used for communication between gtmsecshr and YottaDB processes are stored. All processes using the same YottaDB should have the same $ydb_tmp.
 
-**ydb_tpnotacidtime** (gtm_tpnotacidtime) specifies the maximum time that a YottaDB process waits for a non-isolated timed command (HANG, JOB, LOCK, OPEN, READ, WRITE /* or ZALLOCATE) running within a transaction to complete before it releases all critical sections it owns and sends a TPNOTACID information message to the system log. A YottaDB process owns critical sections on all or some of the regions participating in a transaction, only during final retry attempts (when $TRETRY>2). ydb_tpnotacidtime specifies time in seconds to millisecond precision (three decimal places); the default is 2 seconds. The maximum value of ydb_tpnotacidtime is 30 and the minimum is 0. If ydb_tpnotacidtime specifies a time outside of this range, YottaDB uses the default value. YottaDB releases critical sections in a final retry attempt to provide protection from certain risky coding patterns which, because they are not isolated, can cause deadlocks (in the worst case) and long hangs (in the best case). As ZSYSTEM and BREAK are neither isolated nor timed, YottaDB initiates TPNOTACID behavior for them immediately as it encounters them during execution in a final retry attempt (independent of ydb_tpnotacidtime). Rapidly repeating TPNOTACID messages are likely associated with live-lock, which means that a process is consuming critical resources repeatedly within a transaction, and is unable to commit because the transaction duration is too long to commit while maintaining ACID transaction properties.
+++++++++++++++++++++
+ydb_tpnotacidtime
+++++++++++++++++++++
+**ydb_tpnotacidtime (gtm_tpnotacidtime)** specifies the maximum time that a YottaDB process waits for a non-isolated timed command (HANG, JOB, LOCK, OPEN, READ, WRITE /* or ZALLOCATE) running within a transaction to complete before it releases all critical sections it owns and sends a TPNOTACID information message to the system log. A YottaDB process owns critical sections on all or some of the regions participating in a transaction, only during final retry attempts (when $TRETRY>2). ydb_tpnotacidtime specifies time in seconds to millisecond precision (three decimal places); the default is 2 seconds. The maximum value of ydb_tpnotacidtime is 30 and the minimum is 0. If ydb_tpnotacidtime specifies a time outside of this range, YottaDB uses the default value. YottaDB releases critical sections in a final retry attempt to provide protection from certain risky coding patterns which, because they are not isolated, can cause deadlocks (in the worst case) and long hangs (in the best case). As ZSYSTEM and BREAK are neither isolated nor timed, YottaDB initiates TPNOTACID behavior for them immediately as it encounters them during execution in a final retry attempt (independent of ydb_tpnotacidtime). Rapidly repeating TPNOTACID messages are likely associated with live-lock, which means that a process is consuming critical resources repeatedly within a transaction, and is unable to commit because the transaction duration is too long to commit while maintaining ACID transaction properties.
 
-**ydb_tprestart_log_delta** (gtm_tprestart_log_delta) specifies the number of transaction restarts for which YottaDB should wait before reporting a transaction restart to the operator logging facility. If ydb_tprestart_log_delta is not defined, YottaDB initializes ydb_tprestart_log_delta to 0.
+++++++++++++++++++++++++++
+ydb_tprestart_log_delta
+++++++++++++++++++++++++++
+**ydb_tprestart_log_delta (gtm_tprestart_log_delta)** specifies the number of transaction restarts for which YottaDB should wait before reporting a transaction restart to the operator logging facility. If ydb_tprestart_log_delta is not defined, YottaDB initializes ydb_tprestart_log_delta to 0.
 
-**ydb_tprestart_log_first** (gtm_tprestart_log_first) specifies the initial number of transaction restarts which YottaDB should report before pacing transaction restart reports to the operator logging facility using the ydb_tprestart_log_delta value. If ydb_tprestart_log_delta is defined and ydb_tprestart_log_first is not defined, YottaDB initializes ydb_tprestart_log_first to 1.
+++++++++++++++++++++++++++
+ydb_tprestart_log_first
+++++++++++++++++++++++++++
+**ydb_tprestart_log_first (gtm_tprestart_log_first)** specifies the initial number of transaction restarts which YottaDB should report before pacing transaction restart reports to the operator logging facility using the `ydb_tprestart_log_delta`_ value. If `ydb_tprestart_log_delta`_ is defined and ydb_tprestart_log_first is not defined, YottaDB initializes ydb_tprestart_log_first to 1.
 
-**ydb_trace_gbl_name** (gtm_trace_gbl_name) enables YottaDB tracing at process startup. Setting ydb_trace_gbl_name to a valid global variable name instructs YottaDB to report the data in the specified global when a VIEW command disables the tracing, or implicitly at process termination. This setting behaves as if the process issued a VIEW "TRACE" command at process startup. However, ydb_trace_gbl_name has a capability not available with the VIEW command, such that if the environment variable is defined but evaluates to zero (0) or to the empty string, YottaDB collects the M-profiling data in memory and discards it when the process terminates (this feature is mainly used for in-house testing). Note that having this feature activated for processes that otherwise don't open a database file (such as GDE) can cause them to encounter an error.
++++++++++++++++++++++
+ydb_trace_gbl_name
++++++++++++++++++++++
+**ydb_trace_gbl_name (gtm_trace_gbl_name)** enables YottaDB tracing at process startup. Setting ydb_trace_gbl_name to a valid global variable name instructs YottaDB to report the data in the specified global when a VIEW command disables the tracing, or implicitly at process termination. This setting behaves as if the process issued a VIEW "TRACE" command at process startup. However, ydb_trace_gbl_name has a capability not available with the VIEW command, such that if the environment variable is defined but evaluates to zero (0) or to the empty string, YottaDB collects the M-profiling data in memory and discards it when the process terminates (this feature is mainly used for in-house testing). Note that having this feature activated for processes that otherwise don't open a database file (such as GDE) can cause them to encounter an error.
 
-**ydb_trigger_etrap** (gtm_trigger_etrap) provides the initial value for $ETRAP in trigger context; can be used to set trigger error traps for trigger operations in both yottadb and MUPIP processes.
+++++++++++++++++++++
+ydb_trigger_etrap
+++++++++++++++++++++
+**ydb_trigger_etrap (gtm_trigger_etrap)** provides the initial value for $ETRAP in trigger context; can be used to set trigger error traps for trigger operations in both yottadb and MUPIP processes.
 
-**ydb_xc_gpgagent** (GTMXC_gpgagent) specifies the location of gpgagent.tab. By default, YottaDB places gpgagent.tab in the $ydb_dist/plugin/ directory. ydb_xc_gpgagent is used by pinentry-gtm.sh and is meaningful only if you are using Gnu Privacy Guard version 2.
+++++++++++++++++++
+ydb_xc_gpgagent
+++++++++++++++++++
+**ydb_xc_gpgagent (GTMXC_gpgagent)** specifies the location of gpgagent.tab. By default, YottaDB places gpgagent.tab in the $ydb_dist/plugin/ directory. ydb_xc_gpgagent is used by pinentry-gtm.sh and is meaningful only if you are using Gnu Privacy Guard version 2.
 
-**ydb_zdate_form** (gtm_zdate_form) specifies the initial value for the $ZDATE ISV. The SET command can alter the value of $ZDATE in an active process.
++++++++++++++++++
+ydb_zdate_form
++++++++++++++++++
+**ydb_zdate_form (gtm_zdate_form)** specifies the initial value for the $ZDATE ISV. The SET command can alter the value of $ZDATE in an active process.
 
-**ydb_zinterrupt** (gtm_zinterrupt) specifies the initial value of the ISV $ZINTERRUPT which holds the code that YottaDB executes (as if it is the argument for an XECUTE command) when a process receives a signal from a MUPIP INTRPT command. The SET command can alter the value of $ZINTERRUPT in an active process.
++++++++++++++++++
+ydb_zinterrupt
++++++++++++++++++
+**ydb_zinterrupt (gtm_zinterrupt)** specifies the initial value of the ISV $ZINTERRUPT which holds the code that YottaDB executes (as if it is the argument for an XECUTE command) when a process receives a signal from a MUPIP INTRPT command. The SET command can alter the value of $ZINTERRUPT in an active process.
 
-**ydb_zlib_cmp_level** (gtm_zlib_cmp_level) specifies the zlib compression level used in the replication stream by the source and receiver servers. By default, replication does not use compression.
++++++++++++++++++++++
+ydb_zlib_cmp_level
++++++++++++++++++++++
+**ydb_zlib_cmp_level (gtm_zlib_cmp_level)** specifies the zlib compression level used in the replication stream by the source and receiver servers. By default, replication does not use compression.
 
-**ydb_zquit_anyway** (gtm_zquit_anyway) specifies whether the code of the form QUIT <expr> execute as if it were SET <tmp>=<expr> QUIT:$QUIT tmp QUIT, where <tmp> is a temporary local variable in the YottaDB runtime system that is not visible to application code. This setting is a run-time setting, rather than a compiler-time setting. If ydb_zquit_anyway is defined and evaluates to 1 or any case-independent string or leading substrings of "TRUE" or "YES", code of the form QUIT <expr> executes as if it were SET <tmp>=<expr> QUIT:$QUIT tmp QUIT. If ydb_zquit_anyway is not defined or evaluates to 0 or any case-independent string or leading substrings of "FALSE" or "NO", YottaDB executes QUIT <expr> as specified by the standard.
++++++++++++++++++++
+ydb_zquit_anyway
++++++++++++++++++++
+**ydb_zquit_anyway (gtm_zquit_anyway)** specifies whether the code of the form QUIT <expr> execute as if it were SET <tmp>=<expr> QUIT:$QUIT tmp QUIT, where <tmp> is a temporary local variable in the YottaDB runtime system that is not visible to application code. This setting is a run-time setting, rather than a compiler-time setting. If ydb_zquit_anyway is defined and evaluates to 1 or any case-independent string or leading substrings of "TRUE" or "YES", code of the form QUIT <expr> executes as if it were SET <tmp>=<expr> QUIT:$QUIT tmp QUIT. If ydb_zquit_anyway is not defined or evaluates to 0 or any case-independent string or leading substrings of "FALSE" or "NO", YottaDB executes QUIT <expr> as specified by the standard.
 
-**ydb_zstep** (gtm_zstep) specifies the initial value of $ZSTEP, which defines the ZSTEP action; if ydb_zstep is not defined, $ZSTEP defaults to "B".
+++++++++++++
+ydb_zstep
+++++++++++++
+**ydb_zstep (gtm_zstep)** specifies the initial value of $ZSTEP, which defines the ZSTEP action; if ydb_zstep is not defined, $ZSTEP defaults to "B".
 
-**ydb_ztrap_form** (gtm_ztrap_form) and **ydb_zyerror** (gtm_zyerror) specify the behavior of error handling specified by $ZTRAP as described in the `Error Processing chapter of the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/errproc.html>`_.
++++++++++++++++++++++++++++++
+ydb_ztrap_form/ydb_zyerror
++++++++++++++++++++++++++++++
+**ydb_ztrap_form (gtm_ztrap_form)** and **ydb_zyerror (gtm_zyerror)** specify the behavior of error handling specified by $ZTRAP as described in the `Error Processing chapter of the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/errproc.html>`_.
 
-**ydb_ztrap_new** (gtm_ztrap_new) specifies whether a SET $ZTRAP also implicitly performs a NEW $ZTRAP before the SET.
+++++++++++++++++
+ydb_ztrap_new
+++++++++++++++++
+**ydb_ztrap_new (gtm_ztrap_new)** specifies whether a SET $ZTRAP also implicitly performs a NEW $ZTRAP before the SET.
 
 The ydb_env_set and gtmschrc scripts sets the following environment variables. YottaDB recommends using the ydb_env_set script (or the ydb script which sources ydb_env_set) to set up an environment for YottaDB.
 
