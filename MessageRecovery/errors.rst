@@ -423,16 +423,6 @@ Run Time Error: This indicates that the argument xxxx for $ZGETSYI() is not a va
 
 Action: Refer to the `Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/index.html>`_ for correct keyword usage.
 
--------
-BADTAG
--------
-
-BADTAG, Unable to use file ffff (CCSID tttt) with CCSID uuuu
-
-Run Time Error: This z/OS specific error indicates that the device or file ffff had a tag tttt incompatible with the tag uuuu implied by the chset associated with the OPEN command.
-
-Action: Change the [i/o]chset to match the device or file, use iconv to convert the file to an appropriate character set, or possibly use chtag to [re]tag the file.
-
 -----------
 BADTRNPARAM
 -----------
@@ -6012,7 +6002,7 @@ INVTMPDIR, Value for $ydb_tmp is either not found or not a directory: dddd - Rev
 
 Error: Indicates the process cannot access directory dddd, which it may need for a number of actions; the directory may not exist as a directory or the process lacks authorization to locate the directory.
 
-Action: The directory specification comes from $ydb_tmp if it is defined, otherwise it defaults to the system temporary directory, typically /var/tmp on Solaris and /tmp in other environments. Either correct the environment variable definition or ensure directory dddd is appropriately set up. Note that all users of a particular YottaDB instance normally need to use the same temporary directory to ensure proper interprocess communication.
+Action: The directory specification comes from $ydb_tmp if it is defined, otherwise it defaults to the system temporary directory, typically /tmp in most environments. Either correct the environment variable definition or ensure directory dddd is appropriately set up. Note that all users of a particular YottaDB instance normally need to use the same temporary directory to ensure proper interprocess communication.
 
 ---------------------
 INVTPTRANS

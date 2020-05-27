@@ -296,11 +296,6 @@ ydb_chset
 ++++++++++++
 **ydb_chset (gtm_chset)** determines the mode in which YottaDB compiles and operates. If it has a value of "UTF-8", YottaDB assumes that strings are encoded in UTF-8. In response to a value of "M" (or indeed anything other than "UTF-8"), YottaDB treats all 256 combinations of the 8 bits in a byte as a single character.
 
-+++++++++++++++++++
-ydb_chset_locale
-+++++++++++++++++++
-**ydb_chset_locale (gtm_chset_locale)** (z/OS only) specifies the locale for UTF-8 operations on z/OS.
-
 +++++++++
 ydb_ci
 +++++++++
@@ -1073,7 +1068,7 @@ Using huge pages
 | enabled                                                              | /proc/filesystems which should report: nodev hugetlbfs                                                                                |
 +----------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------+
 | libhugetlbfs.so                                                      | Use your Linux system's package manager to install the libhugetlbfs.so library in a standard location. Note that libhugetlbfs is not  |
-|                                                                      | in Debian repositories and must be manually installed; YottaDB on Debian releases is Supportable, not Supported.                      |
+|                                                                      | in certain repositories and must be manually installed.                                                                               |
 +----------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------+
 | Have sufficient number of huge pages available.                      | To reserve Huge Pages boot Linux with the hugepages=num_pages kernel boot parameter; or, shortly after bootup when unfragmented       |
 |                                                                      | memory is still available, with the command: hugeadm --pool-pages-min DEFAULT:num_pages                                               |
