@@ -17,7 +17,7 @@
 SPHINXOPTS    = -W --keep-going
 SPHINXBUILD   = sphinx-build
 SPHINXPROJ    = GTMAdminOps
-SOURCEDIRS    = AcculturationGuide AdminOpsGuide MessageRecovery MultiLangProgGuide ProgGuide ReleaseNotes
+SOURCEDIRS    = AcculturationGuide AdminOpsGuide MessageRecovery MultiLangProgGuide ProgGuide ReleaseNotes StyleGuide
 SOURCEDIR     = .
 BUILDDIR      = _build
 

@@ -47,6 +47,7 @@ DIRECTORIES=(
 	MultiLangProgGuide/
 	ProgGuide/
 	ReleaseNotes/
+	StyleGuide/
 )
 
 rsync() {
