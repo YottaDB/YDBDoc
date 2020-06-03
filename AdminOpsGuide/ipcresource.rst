@@ -48,6 +48,8 @@ YottaDB uses UNIX IPC resources as follows:
 
 * The number of processes and the number of semaphores attached to an IPC resource may vary according to the state of your database. Some shared memory regions have 0 processes attached to them (the nattch column). If these correspond to YottaDB database regions or to global directories, they are most likely from improper process termination of YottaDB (YottaDB processes show up as "yottadb" in a ps command) and YottaDB utility processes: source server, receiver server, update processes (which appear as "mupip") or other YottaDB utilities ("mupip", "dse", or "lke").
 
+* One semaphore is used for each -READ_ONLY database file accessed by a process. If there are :code:`m` processes accessing :code:`n` such database files, then the number of semaphores required for this access is :code:`m*n`. For example, when the :code:`%PEEKBYNAME()` utility function uses the -READ_ONLY database file :code:`$ydb_dist/gtmhelp.dat`, it increases semaphore use by one per process.
+
 * An instance has one journal pool, and, if a replicating instance, one receiver pool. Note that you might run multiple instances on the same computer system.
 
 * For simple YottaDB operation (that is, no multisite replication), there is no journal pool or receive pool.
