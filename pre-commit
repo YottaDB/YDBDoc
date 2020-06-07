@@ -1,0 +1,88 @@
+#!/usr/local/bin/tcsh -f
+#
+#################################################################
+#                                                               #
+# Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.       #
+# All rights reserved.                                          #
+#                                                               #
+#       This source code contains the intellectual property     #
+#       of its copyright holder(s), and is made available       #
+#       under a license.  If you do not know the terms of       #
+#       the license, please stop and do not read further.       #
+#                                                               #
+#################################################################
+#
+# -----------------------------------------------------------------
+# Pre-commit hook that
+#	1) Enforces YottaDB Copyright in changed modules
+#
+set nocopyright_extensions = "png gif svg"	# List of extensions that cannot have copyrights.
+						# .png, .gif and .svg are image format files
+
+set filelist = `git diff --name-only HEAD`
+set fixlist = ""
+set curyear = `date +%Y`
+@ exitstatus = 0
+foreach file ($filelist)
+	if (! -e $file) then
+		# If file is being deleted as part of this commit, skip copyright check on it
+		continue
+	endif
+	set skip = 0
+	if ("" != "$nocopyright_extensions") then
+		set extension = $file:e
+		foreach ext ($nocopyright_extensions)
+			if ($ext == $extension) then
+				set skip = 1
+				break
+			endif
+		end
+	endif
+	if (0 == $skip) then
+		# Below is a list of specific files that do not have a copyright so ignore them
+		set skiplist = "COPYING README.md"
+		foreach skipfile ($skiplist)
+			if ($file == $skipfile) then
+				set skip = 1
+				break
+			endif
+		end
+	endif
+	if ($skip) then
+		continue
+	endif
+	grep 'Copyright (c) .*'$curyear' YottaDB LLC' $file >& /dev/null
+	if ($status != 0) then
+		set fixlist = "$fixlist $file"
+	endif
+end
+if ("" != "$fixlist") then
+	echo "  --> Hook $0 returned non-zero status"
+	echo "  --> Below files are missing YottaDB Copyright notice and/or current year $curyear. Fix and retry commit"
+	foreach file ($fixlist)
+		echo "	$file"
+	end
+	@ exitstatus = 1
+endif
+
+# ------------------------------------------------------------------------------------------
+# 2) Removes trailing white space
+# ------------------------------------------------------------------------------------------
+foreach file ($filelist)
+	if (! -e $file) then
+		# If file is being deleted as part of this commit, skip whitespace conversion on it
+		continue
+	endif
+	grep -q '[ 	][ 	]*$' $file
+	if ! ($status) then
+		echo $file
+		sed -i 's/[ 	][ 	]*$//' $file
+		git add $file
+		if ($status) then
+			@ exitstatus = 1
+			echo "GITADD-E-FAIL : Command failed after removing trailing whitespace : git add $file"
+		endif
+	endif
+end
+
+exit $exitstatus
