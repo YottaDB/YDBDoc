@@ -1263,7 +1263,7 @@ Go NodePrevST()
 
 .. code-block:: go
 
-        func (key *KEyT) NodePrevST(tptoken uint64,
+        func (key *KeyT) NodePrevST(tptoken uint64,
                 errstr *BufferT, prev *BufferTArray) error
 
 Matching `Go NodePrevE()`_, :code:`NodePrevST()` wraps
@@ -1457,7 +1457,8 @@ used when a single call to the function is anticipated. :code:`CallMT()` only su
 
 Example:
 
-.. parsed-literal::
+.. code-block:: go
+
    fmt.Println("Golang: Invoking HelloWorld")
       retval, err := yottadb.CallMT(yottadb.NOTTP, nil, 1024, "HelloWorld", "English", "USA")
       if nil != err {
@@ -1486,7 +1487,8 @@ using the same descriptor structure able to run much faster by bypassing a looku
 
 Example:
 
-.. parsed-literal::
+.. code-block:: go
+
    var mrtn yottadb.CallMDesc
    fmt.Println("Golang: Invoking HelloWorld")
    mrtn.SetRtnName("HelloWorld")

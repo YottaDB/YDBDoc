@@ -32,13 +32,14 @@ A configuration file is divided into two sections: a database encryption section
 
 Here is a sample configuration file:
 
-.. parsed-literal::
-   /* Database encryption section \*/
+.. code-block:: none
+
+   /* Database encryption section */
     database: {
         keys: (
               {
-                 dat: "/tmp/yottadb.dat";  /* Encrypted database file. \*/
-                 key: "/tmp/yottadb.key";  /* Encrypted symmetric key. \*/
+                 dat: "/tmp/yottadb.dat";  /* Encrypted database file. */
+                 key: "/tmp/yottadb.key";  /* Encrypted symmetric key. */
               },
               {
                  dat: "/tmp/a.dat";
@@ -48,7 +49,7 @@ Here is a sample configuration file:
         );
     }
 
-    /* TLS section \*/
+    /* TLS section */
 
     tls: {
            verify-depth: 7;
@@ -58,10 +59,10 @@ Here is a sample configuration file:
            dh1024: "/home/jdoe/current/tls/dh1024.pem";
            session-timeout: 600;
 
-           /* List of certificate/key pairs specified by identifiers. \*/
+           /* List of certificate/key pairs specified by identifiers. */
            PRODUCTION: {
                          format: "PEM";
-                         /* Path to the certificate. \*/
+                         /* Path to the certificate. */
                          cert: "/home/jdoe/current/tls/certs/Malvern.crt";
                          key: "/home/jdoe/current/tls/certs/Malvern.key";
            };
@@ -82,7 +83,8 @@ The supported OpenSSL options are as follows:
 
 When used on the tls level (or the tlsid level if not provided at the tls level), it points to a file (in PEM format) describing the trusted CAs. The file can contain several CA certificates identified by sequences of:
 
-.. parsed-literal::
+.. code-block:: none
+
    -----BEGIN CERTIFICATE-----
    ... (CA certificate in base64 encoding) ...
    -----END CERTIFICATE-----
@@ -119,7 +121,8 @@ Path to the private key. If the private key is protected by a passphrase, an obf
 
 When placing the private key for a certificate at the beginning of the certificate file, you may omit the "key" item from the configuration file. The format of the combined file is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -----BEGIN RSA PRIVATE KEY-----
     [encoded key]
    -----END RSA PRIVATE KEY-----
@@ -141,7 +144,8 @@ Timeout (in seconds) for a given session. If a connection disconnects and resume
 
 The ssl_options, documented in the man page for SSL_set_options, modify the default behavior of OpenSSL. When specifying multiple options, separate them with a colon (:) delimiter. The ssl-options specified in a labeled section add to, or override, those specified at the "tls" level. An exclamation mark ("!") preceding an option in a labeled section disables any default for that option specified at the tls: level; for example:
 
-.. parsed-literal::
+.. code-block:: none
+
    tls: {
    ssl-options: "SSL_OP_CIPHER_SERVER_PREFERENCE";
    mylabel: {

@@ -61,7 +61,7 @@ Installation Procedure
 
 * Run it with your choice of directory where you want it installed (omit the –verbose option for less output):
 
- .. parsed-literal::
+ .. code-block:: bash
 
     sudo ./ydbinstall.sh --installdir /opt/yottadb/ --utf8 default --verbose
 
@@ -73,7 +73,8 @@ Compile the reference implementation plugin as follows:
 
 * Install the development headers and libraries for libgcrypt, libgpgme, libconfig, and libssl. On Linux, the package names of development libraries usually have a suffix such as -dev or -devel and are available through the package manager. For example, on Ubuntu_x86_64, the following command installs the required development libraries:
 
-.. parsed-literal::
+.. code-block:: bash
+
    sudo apt-get install libgcrypt11-dev libgpgme11-dev libconfig-dev libssl-dev
 
 The package names vary by distribution/version.
@@ -84,7 +85,8 @@ The package names vary by distribution/version.
 
 * Unpack $ydb_dist/plugin/gtmcrypt/source.tar to a temporary directory, for example:
 
- .. parsed-literal::
+ .. code-block:: bash
+
    mkdir /tmp/plugin-build
    cd /tmp/plugin-build
    cp $ydb_dist/plugin/gtmcrypt/source.tar .
@@ -165,22 +167,26 @@ To run the ydbinstall script, run it as root.
 
 **Examples**
 
-.. parsed-literal::
+.. code-block:: bash
+
    sudo ./ydbinstall.sh
 
 This example installs the latest YottaDB release at /usr/local/lib/yottadb/version/
 
-.. parsed-literal::
+.. code-block:: bash
+
    sudo ./ydbinstall.sh --utf8 default --verbose
 
 This example installs the latest YottaDB release with added support for UTF-8 and outputs diagnostic information as the script executes.
 
-.. parsed-literal::
+.. code-block:: bash
+
    sudo ./ydbinstall.sh --installdir /r120 r1.20
 
 This example installs YottaDB release r1.20 in the r120 directory.
 
-.. parsed-literal::
+.. code-block:: bash
+
    sudo ./ydbinstall.sh --gtm
 
 This example installs the latest GT.M version at /usr/local/lib/yottadb/version/

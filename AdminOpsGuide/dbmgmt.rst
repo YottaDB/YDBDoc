@@ -39,7 +39,8 @@ The YottaDB installation procedure places the MUPIP utility program in a directo
 
 Invoke MUPIP by executing the mupip program at the shell prompt. If this does not work, consult your system manager (MUPIP requires that the $ydb_dist point to the directory containing the MUPIP executable image).
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ydb_dist/mupip
    MUPIP>
 
@@ -47,7 +48,8 @@ MUPIP asks for commands, with the MUPIP> prompt. Enter the EXIT command at the M
 
 When additional information appears on the command line after the mupip program name, MUPIP processes the additional information as its command, for example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ydb_dist/mupip stop 1158
 
 This starts MUPIP and stops the process with Process ID (PID) 1158.
@@ -129,14 +131,16 @@ MUPIP
 
 The general format of MUPIP commands is:
 
-.. parsed-literal::
+.. code-block:: bash
+
    mupip command [-qualifier[...]] [object[,...]] [destination]
 
 MUPIP allows the abbreviation of commands and qualifiers. In each section describing a command or qualifier, the abbreviation is also shown (for example, B[ACKUP]). The abbreviated version of B[ACKUP] you can use on the command line is B. To avoid future compatibility problems and improve readability, specify at least four characters when using MUPIP commands in scripts.
 
 Although you can enter commands in both upper and lower case (the mupip program name itself must be in lower case on UNIX/Linux), the typographical convention used in this chapter is all small letters for commands. Another convention is in the presentation of command syntax. If the full format of the command is too long for a single line of print, the presentation wraps around into additional lines.
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip backup -bytestream -transaction=1 accounts,history,tables,miscellaneous /var/production/backup/
 
 When you enter a MUPIP command, one of its variable arguments is the region-list. region-list identifies the target of the command and may include the UNIX wildcards "?" and "*". Region-lists containing UNIX wildcard characters must always be quoted, for example, "*" to prevent inappropriate expansion by the UNIX shell. Similarly, for file and directory names you might want to avoid non-graphic characters and most punctuations except underbars (_), not because of YottaDB conventions but because of inappropriate expansion by UNIX shells.
@@ -156,7 +160,8 @@ BACKUP
 Saves the contents of the database. It provides a consistent application snapshot across all database regions involved in the backup operation.
 The format of the MUPIP BACKUP command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    B[ACKUP]
    [
     -BK[UPDBJNL]={DISABLE|OFF}]
@@ -214,7 +219,8 @@ Perform the following tasks before you begin a database backup.
 
 * If you follow separate procedures for backup and archival (moving to secondary storage), you can save time by starting archival as soon as MUPIP BACKUP completes the process of creating a backup database file for a region. You do not need to wait for MUPIP BACKUP to complete processing for all regions before starting archival. For example, a message like:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DB file /home/jdoe/.yottadb/r1.10/g/ydb.dat backed up in file /backup/ydb.dat
    Transactions up to 0x0000000000E92E04 are backed up.
 
@@ -228,7 +234,8 @@ confirms that ydb.dat is backed up correctly and is ready for archival.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip backup "*" /ydb/bkup
 
 This example creates ready-to-run database backup of all regions.
@@ -241,7 +248,8 @@ A backup database shares the same journaling characteristics of the source datab
 
 The format of the BKUPDBJNL qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -BK[UPDBJNL]={DISABLE|OFF}
 
 * Specify DISABLE to disable journaling in the backup database.
@@ -263,7 +271,8 @@ All bytestream backups needs to be restored to a random access file (with MUPIP 
 
 The format of the BYTESTREAM qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -B[YTESTREAM]
 
 * -BYTESTREAM is compatible with -SINCE and -TRANSACTION.
@@ -278,7 +287,8 @@ Creates a disk-to-disk backup copy of the files of all selected regions. DATABAS
 
 The format of the DATABASE qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -D[ATABASE]
 
 * By default, MUPIP BACKUP uses -DATABASE.
@@ -293,7 +303,8 @@ The format of the DATABASE qualifier is:
 
 Specifies the timeout period when a bytestream BACKUP data is sent over a TCP/IP connection. The format of the NETTIMEOUT qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    NET[TIMEOUT]=seconds
 
 * The default value is 30 seconds.
@@ -308,7 +319,8 @@ Determines the journaling characteristics of the database files being backed-up.
 
 The format of the NEWJNLFILES qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -[NO]NEWJNLFILES[=[NO]PREVLINK], [NO]S[YNC_IO]]
 
 * -NEWJNLFILES can take the following three values:
@@ -327,7 +339,8 @@ The format of the NEWJNLFILES qualifier is:
 
 Specifies that while a MUPIP BACKUP operation is active, other processes can update the database without affecting the result of the backup. The format of the ONLINE qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -[NO]O[NLINE]
 
 * MUPIP BACKUP -ONLINE creates a backup of the database as of the moment the backup starts. If running processes subsequently update the database, the backup does not reflect those updates.
@@ -344,7 +357,8 @@ Timestamps (in the form of a transaction number) a database file to mark a refer
 
 The format of the RECORD qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -R[ECORD]
 
 * Use -RECORD (with the hyphen) to timestamp a reference point and use RECORD as a keyword (as in -SINCE=RECORD) to specify the starting point for a MUPIP BACKUP operation.
@@ -359,7 +373,8 @@ Overwrites the existing destination files.
 
 The format of the REPLACE qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -[REPL]ACE
 
 * By default, MUPIP BACKUP protects against overwriting the destination files. -REPLACE disables this default behavior.
@@ -377,7 +392,8 @@ Specifies the target location to place the backup of the replication instance fi
 
 The format of the REPLINSTANCE qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -REPLI[NSTANCE]=<target_location>
 
 ~~~~~~~
@@ -386,7 +402,8 @@ The format of the REPLINSTANCE qualifier is:
 
 Includes blocks changed since the last specified backup. The format of the SINCE qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -S[INCE]={DATABASE|BYTESTREAM|RECORD}
 
 * D[ATABASE] - Backup all changes since the last MUPIP BACKUP -DATABASE.
@@ -405,7 +422,8 @@ Incompatible with: -TRANSACTION.
 
 Specifies the transaction number of a starting transaction that causes BACKUP -BYTESTREAM to copy all blocks that have been changed by that transaction and all subsequent transactions. The format of the TRANSACTION qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -T[RANSACTION]=transaction-number
 
 * A Transaction number is always a 16 digit hexadecimal number. It appears in a DSE DUMP -FILEHEADER with the label "Current transaction".
@@ -423,21 +441,24 @@ Specifies the transaction number of a starting transaction that causes BACKUP -B
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip backup -bytestream MAMMALS,CRUSTACEANS bkup
 
 Suppose that the environment variable ydb_gbldir has regions MAMMALS and CRUSTACEANS that map to files called LINNAEUS.DAT and BRUNNICH.DAT (no matter which directory or directories the files reside in). Then the above example creates bytestream backup files MAMMALS.DAT and CRUSTACEANS.DAT in the bkup directory since the last DATABASE backup.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip backup -bkupdbjnl="OFF" "*"
 
 This command turns off journaling in the backup database.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip backup -bytestream "*" tcp://philadelphia:7883,tcp://tokyo:8892
 
 Assuming a Global Directory with two regions pointing to ACN.DAT and HIST.DAT, this example creates a backup of ACN.DAT to a possible MUPIP RESTORE process listening at port 7883 on server philadelphia and HIST.DAT to a possible MUPIP RESTORE process listening at port 8893 on server tokyo.
@@ -446,7 +467,8 @@ Always specify the <machine name> and <port> even if both backup and restore are
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip backup -database -noonline "*" bkup
    DB file /home/ydbnode1/yottadbuser1/yottadb.dat backed up in file bkup/yottadb.dat
    Transactions up to 0x00000000000F42C3 are backed up.
@@ -456,21 +478,24 @@ This command creates a disk-to-disk backup copy of all regions of the current da
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip backup -bytestream -nettimeout=420 DEFAULT tcp://${org_host}:6200
 
 This command creates a backup copy of the DEFAULT region with timeout of 420 seconds.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip backup -bytestream DEFAULT '"| gzip -c > online5pipe.inc.gz"'
 
 This command sends (via a pipe) the backup of the DEFAULT region to a gzip command.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip backup -online DEFAULT bkup
    DB file /ydbnode1/yottadbuser1/yottadb.dat backed up in file bkup/yottadb.dat
    Transactions up to 0x00000000483F807C are backed up.
@@ -480,21 +505,24 @@ This command creates a backup copy of the DEFAULT region of the current database
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip backup -record DEFAULT bkup
 
 This command sets a reference point and creates a backup copy of the DEFAULT region of the current database in directory bkup.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip backup -online -record DEFAULT bkup1921
    DB file /home/mammals/yottadb.dat backed up in file bkup1921/yottadb.dat
    Transactions up to 0x00000000000F4351 are backed up.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip backup -bytestream -since=record DEFAULT bkup1921onwards
    MUPIP backup of database file /home/mammals/yottadb.dat to bkup1921onwards/yottadb.dat
    DB file /home/mammals/yottadb.dat incrementally backed up in file bkup1921onwards/yottadb.dat
@@ -506,7 +534,8 @@ The first command sets a reference point and creates a backup copy of the DEFAUL
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip backup -bytestream -transaction=1 DEFAULT bkup_dir
    MUPIP backup of database file /ydbnode1/yottadbuser1/yottadb.dat to bkup_dir/yotttadb.dat
    DB file /ydbnode1/yottadbuser1/yottadb.dat incrementally backed up in file bkup/yottadb.dat
@@ -518,7 +547,8 @@ This command copies all in-use blocks of the DEFAULT region of the current datab
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip backup -newjnlfiles=noprevlink,sync_io "*" backupdir
 
 This example creates new journal files for the current regions, cuts the previous journal file link for all regions in the global directory, enables the SYNC_IO option and takes a backup of all databases in the directory backupdir.
@@ -531,7 +561,8 @@ Creates and initializes database files using the information in a Global Directo
 
 The format of the CREATE command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    CR[EATE] [-R[EGION]=region-name]
 
 The single optional -REGION qualifier specifies a region for which to create a database file.
@@ -546,14 +577,16 @@ Specifies a single region for creation of a database file. By default, MUPIP CRE
 
 The format of the REGION qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -R[EGION]=region-name
 
 **Examples for MUPIP CREATE**
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip create -region=MAMMALS
 
 This command creates the database file specified by the Global Directory (named by the Global Directory environment variable) for region MAMMALS.
@@ -564,8 +597,9 @@ DOWNGRADE
 
 The MUPIP DOWNGRADE command changes the file header format to a previous version number. The format of the MUPIP DOWNGRADE command is:
 
-.. parsed-literal::
-   D[OWNGRADE] -V[ERSION]={r1.10\|r1.20} file-name
+.. code-block:: none
+
+   D[OWNGRADE] -V[ERSION]={r1.10|r1.20} file-name
 
 .. note::
    You must perform a database integrity check using the -noonline parameter prior to downgrading a database. The integrity check verifies and clears database header fields required for an orderly downgrade. If an integrity check is not possible due to time constraints, please rely on a rolling upgrade scheme using replication and/or take a backup prior to upgrading the database.
@@ -580,7 +614,8 @@ For more information on the downgrade criteria for your database, refer to the r
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip downgrade yottadb.dat
 
 This command changes the file-header of yottadb.dat to the format in the previous version.
@@ -591,8 +626,9 @@ DUMPFHEAD
 
 The MUPIP DUMPFHEAD command displays information about one or more database files. The format of the MUPIP DUMPFHEAD command is:
 
-.. parsed-literal::
-   DU[MPFHEAD] {-F[ILE] file-name \| -R[EGION] region-list}
+.. code-block:: none
+
+   DU[MPFHEAD] {-F[ILE] file-name | -R[EGION] region-list}
 
 
 ~~~~~~~~~~~~~~~~
@@ -601,7 +637,8 @@ The MUPIP DUMPFHEAD command displays information about one or more database file
 
 Specifies the name of the database file for the MUPIP DUMPFHEAD operation. -FILE does not require a Global Directory. The format of the FILE qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -F[ILE] file-name
 
 * The database filename must include the absolute or relative path.
@@ -614,7 +651,8 @@ Specifies the name of the database file for the MUPIP DUMPFHEAD operation. -FILE
 
 Specifies that the INTEG parameter identifies one or more regions rather than a database file. The format of the REGION qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -R[EGION] region-list
 
 * The region-list identifies the target of DUMPFHEAD. region-list may specify more than one region of the current global directory in a list. Regions are case-insensitive, separated by a comma, and wildcards can be used to specify them. Any region-name may include the wildcard characters * and ? (remember to escape them to protect them from inappropriate expansion by the shell). Any region name expansion occurs in M (ASCII) collation order.
@@ -627,12 +665,14 @@ Specifies that the INTEG parameter identifies one or more regions rather than a 
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip dumpfhead -file yottadb.dat
 
 This command lists information about the database file yottadb.dat in the current working directory.
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip dumpfhead -region "*"
 
 This command lists information about all the database files mapped by the global directory specified by $ydb_gbldir.
@@ -643,7 +683,8 @@ ENDIANCVT
 
 Converts a database file from one endian format to the other (BIG to LITTLE or LITTLE to BIG). The format of the MUPIP ENDIANCVT command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    ENDIANCVT [-OUTDB=<outdb-file>] -OV[ERRIDE] <db-file>
 
 * <db-file> is the source database for endian conversion. By default ENDIANCVT converts <db-file> in place.
@@ -682,7 +723,8 @@ Note that the OVERRIDE qualifier does not override critical errors (database int
 
 **Examples for MUPIP ENDIANCVT**
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip endiancvt yottadb.dat -outdb=yottadb_cvt.dat
    Converting database file yottadb.dat from LITTLE endian to BIG endian on a LITTLE endian system
    Converting to new file yottadb_cvt.dat
@@ -698,7 +740,8 @@ Stops a MUPIP process and returns control to the process from which MUPIP was in
 
 The format of the MUPIP EXIT command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    EXI[T]
 
 The EXIT command does not accept any qualifiers.
@@ -711,7 +754,8 @@ Increases the size of a database file. By default, YottaDB automatically extends
 
 The format of the MUPIP EXTEND command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    EXTE[ND] [-BLOCKS=<data-blocks-to-add>] region-name
 
 * The only qualifier for MUPIP EXTEND is BLOCKS.
@@ -728,21 +772,24 @@ Specifies the number of GDS database blocks by which MUPIP should extend the fil
 
 The format of the BLOCK qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -BLOCKS=data-blocks-to-add
 
 By default, EXTEND uses the extension value in the file header as the number of GDS blocks by which to extend the database file. You can specify as many blocks as needed as long as you are within the maximum total blocks limit (which could be as high as 224 million GDS blocks).
 
 **Examples for MUPIP EXTEND**
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip extend DEFAULT -blocks=400
 
 This command adds 400 GDE database blocks to region DEFAULT.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip extend MAMMALS -blocks=100
 
 This command adds 100 GDE database blocks to the region MAMMALS.
@@ -753,7 +800,8 @@ EXTRACT
 
 Backs up certain globals or extracts data from the database for use by another system. The MUPIP EXTRACT command copies globals from the current database to a sequential output file in one of three formats - GO, BINARY, or ZWR. The format of the MUPIP EXTRACT command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    EXTR[ACT]
    [
     -FO[RMAT]={GO|B[INARY]|Z[WR]}
@@ -790,7 +838,8 @@ The following sections describe the qualifiers of MUPIP EXTRACT command.
 
 Specifies the format of the output file. The format of the FORMAT qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -FO[RMAT]=format_code
 
 The format code is any one of the following:
@@ -838,7 +887,8 @@ Prevents database updates to all database files from which the MUPIP EXTRACT com
 
 The format of the FREEZE qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -FR[EEZE]
 
 By default, MUPIP EXTRACT does not "freeze" regions during operation.
@@ -849,7 +899,8 @@ By default, MUPIP EXTRACT does not "freeze" regions during operation.
 
 Specifies the text string that becomes the first record in the output file. MUPIP EXTRACT -FORMAT=BINARY truncates the label text to 32 characters. The format of the LABEL qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -LA[BEL]=text
 
 * By default, EXTRACT uses the label "MUPIP EXTRACT."
@@ -862,7 +913,8 @@ Specifies the text string that becomes the first record in the output file. MUPI
 
 Displays a message on stdout for each global extracted with the MUPIP EXTRACT command. The message displays the number of global nodes, the maximum subscript length and maximum data length for each global. The format of the LOG qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -[NO]LO[G]
 
 By default, EXTRACT operates -LOG.
@@ -873,7 +925,8 @@ By default, EXTRACT operates -LOG.
 
 Creates an encrypted binary extract with null IVs from a database with non-null IVs, which can be restored to a version that does not support non-null IVs. The format of the -NULL_IV qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -[NO]NULL_IV
 
 * Older versions of YottaDB used empty (all zeros or "NULL_IV") initialization vectors(IVs) to encrypt or decrypt -FORMAT="BINARY" extracts.
@@ -890,7 +943,8 @@ Creates an encrypted binary extract with null IVs from a database with non-null 
 
 Restricts MUPIP EXTRACT to a set of regions. The format of the REGION qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -R[EGION]=region-list
 
 region-list may specify more than one region of the current global directory in a list. Regions are case-insensitive, separated by a comma, and wildcards can be used to specify them. Any region-name may include the wildcard characters * and % (remember to escape them to protect them from inappropriate expansion by the shell). Any region name expansion occurs in M (ASCII) collation order.
@@ -901,7 +955,8 @@ region-list may specify more than one region of the current global directory in 
 
 Specifies globals for a MUPIP EXTRACT operation. The format of the SELECT qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -S[ELECT]= global-specification
 
 * By default, EXTRACT selects all globals, as if it had the qualifier -SELECT=*
@@ -924,49 +979,56 @@ The global-specification can be:
 
 Redirects the database extract to the standard output stream. The format of the STDOUT qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -ST[DOUT]
 
 **Examples for MUPIP EXTRACT**
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip extract -format=go -freeze big.glo
 
 This command prevents database updates during a MUPIP EXTRACT operation.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip extract -format=GO yottadb_i.go
 
 This command creates an extract file called yottadb_i.go in "Global Output" format. Use this format to transport or archive files. The first record of a GO format file contains the header label, "MUPIP EXTRACT," as text.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip extract -format=BINARY v5.bin
 
 This command creates an extract file called v5.bin in Binary format. Use this format for reorganizing a database or for short-term backups.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip extract -format=ZWR -LABEL=My_Label My_Extract_File
 
 This example extracts all globals from the current database to file My_Extract_File (in ZWRITE format) with label My_Label.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip extract -nolog FL.GLO
 
 This command creates a global output file, FL.GLO, (which consists of all global variables in the database) without displaying statistics on a global-by-global basis. As there is no label specified, the first record in FL.GLO contains the text string "MUPIP EXTRACT."
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip extract -select=Tyrannosaurus /dev/tty
 
 This command instructs EXTRACT to dump the global ^Tyrannosaurus to the device (file-name) /dev/tty.
@@ -981,7 +1043,8 @@ BACKUP, INTEG, and REORG operations may implicitly freeze and unfreeze database 
 
 The format of the MUPIP FREEZE command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    F[REEZE] {-OF[F] [-OV[ERRIDE]]|-ON [[-ONL[INE] [-[NO]AUTORELEASE]] | [-NOONL[INE]] [-R[ECORD]]]} region-list
 
 * The region-list identifies the target of the FREEZE. region-list may specify more than one region of the current global directory in a list. Regions are case-insensitive, separated by a comma, and wildcards can be used to specify them. Any region-name may include the wildcard characters * and % (remember to escape them to protect them from inappropriate expansion by the shell). Any region name expansion occurs in M (ASCII) collation order.
@@ -1006,13 +1069,15 @@ The format of the MUPIP FREEZE command is:
 
 FREEZE must include one of the qualifiers:
 
-.. parsed-literal::
+.. code-block:: none
+
    -OF[F]
    -ON
 
 The optional qualifiers are:
 
-.. parsed-literal::
+.. code-block:: none
+
    -[NO]A[UTORELEASE] - only valid with -ONLINE
    -ON[LINE] - only valid with -ON
    -OV[ERRIDE]
@@ -1026,7 +1091,8 @@ Clears a freeze set by another process with the same userid.
 
 The format of the OFF qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    OF[F]
 
 * A FREEZE -OFF which turns off a FREEZE -ONLINE -AUTORELEASE produces a OFRZNOTHELD warning to indicate that the freeze was automatically released and therefore did not protect whatever concurrent actions it was intended to guard.
@@ -1041,7 +1107,8 @@ The format of the OFF qualifier is:
 
 Specifies the start of a MUPIP FREEZE operation. The format of the ON qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -ON
 
 Incompatible with: -OFF, -OVERRIDE
@@ -1052,7 +1119,8 @@ Incompatible with: -OFF, -OVERRIDE
 
 Controls the behavior of a FREEZE specified with -ONLINE when YottaDB must write to a database file. The format of the AUTORELEASE qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -[NO]A[UTORELEASE]
 
 * -AUTORELEASE, the default, causes YottaDB to release the freeze if it needs to update the file before a FREEZE -OFF.
@@ -1085,7 +1153,8 @@ Controls the behavior of a FREEZE specified with -ONLINE when YottaDB must write
 
 Controls the potential impact of a FREEZE on concurrently updating processes. The format of the ONLINE qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -[NO]ONL[INE]
 
 * ON -NOONLINE, the default, causes the freeze to last until OFF, and makes management of the FREEZE straightforward.
@@ -1114,7 +1183,8 @@ Controls the potential impact of a FREEZE on concurrently updating processes. Th
 
 Release a freeze set by a process with a different userid. YottaDB provides OVERRIDE to allow error recovery in case a procedure with a freeze fails to release. The format of the OVERRIDE qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -OV[ERRIDE]
 
 * OVERRIDE should not be necessary (and may even be dangerous) in most schemes.
@@ -1129,7 +1199,8 @@ Specifies that a MUPIP FREEZE operation should record an event as a reference po
 
 The format of the RECORD qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -R[ECORD]
 
 * You might use -RECORD to integrate MUPIP BACKUP -BYTESTREAM with an external backup mechanism.
@@ -1142,24 +1213,27 @@ The format of the RECORD qualifier is:
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip freeze -off DEFAULT
 
 This command stops an ongoing MUPIP FREEZE operation on the region DEFAULT.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip freeze -on "*"
 
 This command prevents updates to all regions in the current Global Directory.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ set +e
    $ mupip freeze -on -record "*"
-   $ tar cvf /dev/tape /prod/appl/\*.dat
+   $ tar cvf /dev/tape /prod/appl/*.dat
    $ mupip freeze -off
    $ set -e
 
@@ -1167,7 +1241,8 @@ The set +e command instructs the shell to attempt all commands in the sequence ,
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip freeze -override -off DEFAULT
 
 This command unfreezes the DEFAULT region even if the freeze was set by a process with a different userid.
@@ -1180,7 +1255,8 @@ Produces the "public" (system generated) IPC Keys (essentially hash values) of a
 
 The format of the MUPIP FTOK command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    FT[OK] [-DB] [-JNLPOOL] [-RECVPOOL] file-name
 
 ~~~
@@ -1209,7 +1285,8 @@ Uses a 128 bit hash based on the MurmurHash3 algorithm to provide the hash of so
 
 The format of the MUPIP HASH command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    MUPIP HASH <file-names>
 
 ++++++++++++
@@ -1233,7 +1310,8 @@ Improving the logical and physical adjacency of global nodes may result in faste
 
 The format of the MUPIP INTEG command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    I[NTEG]
    [
     -A[DJACENCY]=integer
@@ -1286,7 +1364,8 @@ Specifies the logical adjacency of data blocks that MUPIP INTEG should assume wh
 
 The format of the ADJACENCY qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -AD[JACENCY]=integer
 
 ~~~~~~~
@@ -1297,7 +1376,8 @@ Specifies the block for MUPIP INTEG command to start checking a sub-tree of the 
 
 The format of the BLOCK qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -BL[OCK]=block-number
 
 * Block numbers are displayed in an INTEG error report or by using DSE.
@@ -1310,7 +1390,8 @@ The format of the BLOCK qualifier is:
 
 Displays a single summary report by database file of the total number of directory, index and data blocks. The format of the BRIEF qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -BR[IEF]
 
 * By default, MUPIP INTEG uses the BRIEF qualifier.
@@ -1325,7 +1406,8 @@ Checks only index blocks. FAST does not check data blocks.
 
 The format of the FAST qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -FA[ST]
 
 
@@ -1345,7 +1427,8 @@ The format of the FAST qualifier is:
 
 Specifies the name of the database file for the MUPIP INTEG operation. FILE requires exclusive (stand-alone) access to a database file and does not require a Global Directory. The format of the FILE qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -FI[LE]
 
 * With stand-alone access to the file, MUPIP INTEG -FILE is able to check whether the reference count is zero. A non-zero reference count indicates prior abnormal termination of the database.
@@ -1360,7 +1443,8 @@ Specifies the name of the database file for the MUPIP INTEG operation. FILE requ
 
 Displays an expanded report for a MUPIP INTEG operation. With -FULL specified, MUPIP INTEG displays the number of index and data blocks in the directory tree and in each global variable tree as well as the total number of directory, index and data blocks. The format of the FULL qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -FU[LL]
 
 
@@ -1376,7 +1460,8 @@ Displays an expanded report for a MUPIP INTEG operation. With -FULL specified, M
 
 Specify whether the MUPIP INTEG report includes key ranges that it detects which identify the data suspected of problems. The format of the KEYRANGES qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -[NO]K[EYRANGES]
 
 By default, INTEG displays -KEYRANGES.
@@ -1387,7 +1472,8 @@ By default, INTEG displays -KEYRANGES.
 
 Specifies the maximum number of "incorrectly marked busy errors" that MUPIP INTEG reports. The format of the MAP qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -[NO]MAP[=max_imb_errors]
 
 
@@ -1411,7 +1497,8 @@ An error in an index block prevents INTEG from processing potentially large area
 
 Specifies the maximum number of "key size too large" errors that a MUPIP INTEG operation reports. The format of the MAXKEYSIZE qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -[NO]MAX[KEYSIZE][=integer]
 
 * By default, INTEG reports a maximum of 10 key size errors (-MAXKEYSIZE=10).
@@ -1428,7 +1515,8 @@ Specifies the maximum number of "key size too large" errors that a MUPIP INTEG o
 
 Specifies that while a MUPIP INTEG operation is active, other processes can update the database without affecting the result of the backup. Allows checking database structural integrity to run concurrently with database updates. The format of the ONLINE qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -[NO]O[NLINE]
 
 * -NOONLINE specifies that the database should be frozen during MUPIP INTEG.
@@ -1460,7 +1548,8 @@ Specifies that while a MUPIP INTEG operation is active, other processes can upda
 
 Specifies that the INTEG parameter identifies one or more regions rather than a database file. The format of the REGION qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -R[EGION]=region-list
 
 * The region-list identifies the target of INTEG. region-list may specify more than one region of the current global directory in a list. Regions are case-insensitive, separated by a comma, and wildcards can be used to specify them. Any region-name may include the wildcard characters * and ? (remember to escape them to protect them from inappropriate expansion by the shell). Any region name expansion occurs in M (ASCII) collation order.
@@ -1479,7 +1568,8 @@ Specifies that the INTEG parameter identifies one or more regions rather than a 
 
 Specifies a global or a range of keys to INTEG. The global key may be enclosed in quotation marks (" "). Identify a range by separating two subscripts with a colon (:). -SUBSCRIPT cannot detect incorrectly marked busy errors. The format of the SUBSCRIPT qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -SU[BSCRIPT]=subscript
 
 Specify SUBSCRIPT only if the path to the keys in the subscript is not damaged. If the path is questionable or known to be damaged, use DSE to find the block(s) and INTEG -BLOCK.
@@ -1492,7 +1582,8 @@ Incompatible with: -BLOCK, -TN_RESET
 
 Specifies INTEG to check any active statistics database associated with the region(s) specified for the command. The format of the STATS qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -[NO]ST[ATS]
 
 Specify STATS only if you have reason to understand that statistics reporting is failing with database errors or reporting incorrect results. Because -FILE requires standalone access and statistic databases are automatically created and removed it is incompatible with -STATS. The default is NOSTATS.
@@ -1507,7 +1598,8 @@ Resets block transaction numbers and backup event recorded transaction numbers t
 
 The format of the TN_RESET qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -TN[_RESET]
 
 * Transaction numbers can go up to 18,446,744,073,709,551,615. This means that a transaction processing application that runs flat out at a non-stop rate of 1,000,000 updates per second would need a TN reset approximately every 584,554 years.
@@ -1532,7 +1624,8 @@ The format of the TN_RESET qualifier is:
 
 Specifies the maximum number of block transaction-number-too-large errors that MUPIP INTEG reports. The format of the TRANSACTION qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -[NO]TR[ANSACTION][=integer]
 
 * -NOTRANSACTION removes limits on transaction reporting so MUPIP INTEG reports all transaction number errors.
@@ -1547,19 +1640,22 @@ Specifies the maximum number of block transaction-number-too-large errors that M
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip integ -block=4 yottadb.dat
 
 This command performs a MUPIP INTEG operation on BLOCK 4 of yottadb.dat.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip integ -adjacency=20
 
 A sample output from the above command follows:
 
-.. parsed-literal::
+.. code-block:: bash
+
    Type           Blocks         Records          % Used      Adjacent
    Directory           2             110          25.732            NA
    Index            1170          341639          88.298             6
@@ -1572,12 +1668,14 @@ This example performs a MUPIP INTEG operation assuming that logically related da
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip integ -brief yottadb.dat
 
 This command performs a MUPIP INTEG operation on the database yottadb.dat. A sample output from the above command follows:
 
-.. parsed-literal::
+.. code-block:: bash
+
    No errors detected by integ.
    Type           Blocks         Records          % Used      Adjacent
    Directory           2             110          25.732            NA
@@ -1589,12 +1687,14 @@ This command performs a MUPIP INTEG operation on the database yottadb.dat. A sam
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip integ -fast yottadb.dat
 
 This command performs a MUPIP INTEG operation only on the index block of the database file yottadb.dat. A sample output from the above command follows:
 
-.. parsed-literal::
+.. code-block:: bash
+
    No errors detected by fast integ.
 
   Type           Blocks         Records          % Used      Adjacent
@@ -1606,12 +1706,14 @@ This command performs a MUPIP INTEG operation only on the index block of the dat
 
 Note the NA entries for Data type. It means that the MUPIP INTEG -FAST operation checked only index blocks.
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip integ -full yottadb.dat
 
 The sample output from the above command follows:
 
-.. parsed-literal::
+.. code-block:: bash
+
 
    Directory tree
    Level          Blocks         Records          % Used      Adjacent
@@ -1632,33 +1734,38 @@ The sample output from the above command follows:
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip integ -map=20 -maxkeysize=20 -transaction=2 yottadb.dat
 
 This command performs a MUPIP INTEG operation and restricts the maximum number of "key size too large" errors to 20.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip integ -map=20 -transaction=2 yottadb.dat
 
 This command performs a MUPIP INTEG operation and restricts the maximum number of "block transaction number too large" errors to 2.
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip integ -file yottadb.dat -tn_reset
 
 This command resets the transaction number to one in every database block.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip integ -subscript="^Parrots" yottadb.dat
 
 This example performs a MUPIP INTEG operation on the global variable ^Parrots in the database file yottadb.dat.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip integ -subscript="^Amsterdam(100)":"^Bolivia(""Chimes"")" -region DEFAULT
 
 This example performs a MUPIP INTEG operation all global variables greater than or equal to ^Amsterdam (100) and less than or equal to ^Bolivia("Chimes") in the default region(s).
@@ -1670,7 +1777,8 @@ This example performs a MUPIP INTEG operation all global variables greater than 
 INTRPT
 +++++++
 
-.. parsed-literal::
+.. code-block:: none
+
    INTRPT process-id
 
 .. note::
@@ -1678,7 +1786,7 @@ INTRPT
 
 * To INTRPT a process belonging to its own account, a process requires no UNIX privileges.
 
-* To INTRPT a process belonging to its own GROUP, a process requires UNIX membership in the user group of the target process privilege. To INTRPT a process belonging to an account outside its own GROUP, a process requires the UNIX superuser privilege.
+* The implementation of INTRPT uses signals, and on Linux a non-root process can send signals only to processes of the same userid. To INTRPT a process, with a different userid, but belonging to its own GROUP requires the UNIX superuser privilege. To INTRPT a process belonging to an account outside its own GROUP, a process also requires the UNIX superuser privilege.
 
 ++++++++++
 JOURNAL
@@ -1694,7 +1802,8 @@ Puts the global variable names and their corresponding data values into a YottaD
 
 The format of the LOAD command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    L[OAD]
    [-BE[GIN]=integer -E[ND]=integer
    -FI[LLFACTOR]=integer
@@ -1732,7 +1841,8 @@ Specifies the format of the input file. If the format of the input file is not s
 
 The format codes are:
 
-.. parsed-literal::
+.. code-block:: none
+
    B[INARY] - Binary format
    GO - Global Output format
    Z[WR] - ZWRITE format
@@ -1757,7 +1867,8 @@ The format codes are:
 
 Specifies the record number of the input file with which LOAD should begin. Directing LOAD to begin at a point other than the beginning of a valid key causes an error. The format of the BEGIN qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -BE[GIN]=integer
 
 .. note::
@@ -1776,7 +1887,8 @@ Specifies the record number of the input file with which LOAD should begin. Dire
 
 Specifies the record number of the input file at which LOAD should stop. -END=integer must be greater than the -BEGIN=integer for LOAD to operate. LOAD terminates after processing the record of the number specified by -END or reaching the end of the input file. The format of the END qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -E[ND]=integer
 
 The value of -FORMAT=GO input should normally be an even number. By default, LOAD continues to the end of the input file.
@@ -1787,7 +1899,8 @@ The value of -FORMAT=GO input should normally be an even number. By default, LOA
 
 Specifies the quantity of data stored in a database block. Subsequent run-time updates to the block fill the remaining available space reserved by the FILL_FACTOR. Blocks that avoid block splits operate more efficiently. The format of the FILL_FACTOR qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -FI[LL_FACTOR]=integer
 
 * Reserves room and avoids unnecessary block splits to accommodate the forecasted growth in a global variable that may experience significant rate of additions over a period of time.
@@ -1805,7 +1918,8 @@ Specifies the quantity of data stored in a database block. Subsequent run-time u
 
 Determines the MUPIP LOAD behavior when it encounters an error. The format of the ONERROR qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -[O]NERROR={STOP|PROCEED|INTERACTIVE}
 
 - STOP causes MUPIP LOAD to exit immediately.
@@ -1822,33 +1936,38 @@ By default MUPIP LOAD exits on encountering an error.
 
 Specifies that MUPIP LOAD takes input from standard input (stdin). The format of the STDIN qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -S[TDIN]
 
 **Examples for MUPIP LOAD**
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip load ex_file.go
 
 This command loads the content of the extract file ex_file.go to the current database.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip load -format=go big.glo
 
 This command loads an extract file big.glo in the current database.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip load -begin=5 -end=10 rs.glo
 
 This command begins the MUPIP LOAD operation from record number 5 and ends at record number 10. Note that the value for BEGIN is an odd number. A sample output from the above command follows:
 
-.. parsed-literal::
+.. code-block:: bash
+
    MUPIP EXTRACT
    02-MAR-2017 18:25:47 ZWR
    Beginning LOAD at record number: 5
@@ -1859,14 +1978,16 @@ This command begins the MUPIP LOAD operation from record number 5 and ends at re
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip load -fill_factor=5 reobs.glo
 
 This command sets the FILL_FACTOR to 5 for loading an extract file in the current database.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $cat big.glo | mupip load -stdin
    $mupip load -stdin < big.glo
 
@@ -1878,7 +1999,8 @@ RCTLDUMP
 
 Reports information related to relinkctl files and their associated shared memory segments. The format of the MUPIP RCTLDUMP command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    MUPIP RCTLDUMP [dir1]
 
 If the optional parameter dir1 is not specified, MUPIP RCTLDUMP dumps information on all its active auto-relink-enabled directories (those with with a \*-suffix) identified by $ydb_routines. With a directory path specified for dir1, MUPIP RCTLDUMP reports information on that directory. An example output follows. It lists the full path of the Object directory; its corresponding relinkctl file name; the number of routines currently loaded in this relinkctl file; the number of processes including the reporting MUPIP process that have this relinkctl file open; the shared memory id and length of the relinkctl shared memory segment; one or more rtnobj shared memory segment(s); and a listing of all the routine names loaded in this file (lines starting with rec#...).
@@ -1891,7 +2013,8 @@ Given a relinkctl file name, one can find the corresponding directory path using
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip rctldump .
    Object Directory         : /tmp
    Relinkctl filename       : /tmp/yottadb/r1.20_x86_64/ydb-relinkctl-61f9eb418212a24a75327f53106c1656
@@ -1912,7 +2035,8 @@ MUPIP REORG can also encrypt a database and/or change the encryption keys for da
 
 The format of the MUPIP REORG command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    REO[RG]
    [
     -D[OWNGRADE]
@@ -1945,17 +2069,20 @@ Scenario 1:
 
 At the prompt, execute the following command sequence:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>for i=1:1:10000 set ^x(i)=$justify(i,200)
 
 Then, execute the following MUPIP INTEG command.
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip integ -region "*"
 
 This command produces an output like the following:
 
-.. parsed-literal::
+.. code-block:: bash
+
    Integ of region DEFAULT
    No errors detected by integ.
    Type           Blocks         Records          % Used      Adjacent
@@ -1971,18 +2098,21 @@ Scenario 2:
 
 At the YottaDB prompt, execute the following command sequence:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>for i=1:2:10000 s ^x(i)=$justify(i,200)
    YDB>for i=2:2:10000 set ^x(i)=$justify(i,200)
 
 Then, execute the following command:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip integ -region "*"
 
 This command produces an output like the following:
 
-.. parsed-literal::
+.. code-block:: bash
+
    Integ of region DEFAULT
    No errors detected by integ.
    Type           Blocks         Records          % Used      Adjacent
@@ -2002,7 +2132,8 @@ The optional qualifiers for MUPIP REORG are:
 
 Encrypts an unencrypted database or changes the encryption key of a database while the database continues to be used by applications. Whether or not the prior encryption uses non-zero initialization vectors (IVs), database blocks encrypted with the new key use non-zero IVs. The format of the ENCRYPT qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -ENCR[YPT]=<key>
 
 MUPIP provides <key> to the encryption plugin. The reference implementation of the plugin expects a key with the specified name in the encryption configuration file identified by $ydb_crypt_config. The configuration file must contain an entry in the database section for each database file mapping to a region specified in <region-list> that names the specified key as its key. The -ENCRYPT flag is incompatible with all other command line flags of MUPIP REORG except -REGION, and performs no operation other than changing the encryption key. If the specified key is already the encryption key of a database region, MUPIP REORG -ENCRYPT moves on to the next region after displaying a message (on stderr, where MUPIP operations send their output).
@@ -2015,12 +2146,14 @@ As is the case under normal operation when MUPIP REORG -ENCRYPT is not active, j
 
 Because a database file utilizes two keys while MUPIP REORG -ENCRYPT is underway, the database section of the configuration file provides for a single database file entry to specify multiple keys. For example, if the keys of database regions CUST and HIST, mapping to database files cust.dat and hist.dat in directory /var/myApp/prod, are to be changed from key1 to key2 using the command:
 
-.. parsed-literal::
+.. code-block:: none
+
    MUPIP REORG -ENCRYPT=key2 -REGION CUST,HIST
 
 then the database section of the configuration file must at least have the following entries:
 
-.. parsed-literal::
+.. code-block:: none
+
     database: {
         keys: ({
                 dat: "/var/myApp/cust.dat";
@@ -2042,14 +2175,16 @@ In other words, each database file entry can have multiple keys, and a key can b
 
 MUPIP REORG -ENCR[YPT] can encrypt an unencrypted database only if the following command:
 
-.. parsed-literal::
+.. code-block:: none
+
    MUPIP SET -ENCRYPTABLE -REGION <region-list>
 
 has previously marked the database "encryptable".
 
 The command requires standalone access to the database.  It performs some basic encryption setup checks and requires the ydb_passwd environment variable to be defined and the GNUPGHOME environment variable to point to a valid directory in the environment. Just as encrypted databases use global buffers in pairs (for encrypted and unencrypted versions of blocks), a database marked as encryptable has global buffers allocated in pairs (i.e., the actual number of global buffers is twice the number reported by DSE DUMP -FILEHEADER) and requires correspondingly larger shared memory segments. To revert unencrypted but encryptable databases back to the "unencryptable" state, use the command:
 
-.. parsed-literal::
+.. code-block:: none
+
    MUPIP SET -NOENCRYPTABLE -REGION <region-list>
 
 The above command also requires standalone access, and the result depends on the state of the database. It:
@@ -2064,7 +2199,8 @@ Under normal operation, a database file has only one key. Upon starting a MUPIP 
 
 After the MUPIP REORG -ENCRYPT process completes, subsequent MUPIP REORG -ENCRYPT operations on the same region(s) are disallowed until the following command is run:
 
-.. parsed-literal::
+.. code-block:: none
+
    MUPIP SET -ENCRYPTIONCOMPLETE -REGION <region-list>
 
 Blocking subsequent MUPIP REORG -ENCRYPT operations after one completes, provides time for a backup of the entire database before enabling further key changes. MUPIP SET -ENCRYPTIONCOMPLETE reports an error for any database region for which MUPIP REORG -ENCRYPT has not completed.
@@ -2083,7 +2219,8 @@ Specifies that REORG not handle blocks that contain information about the global
 
 The format of the EXCLUDE qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -E[XCLUDE]=global-name-list
 
 * Assume that a single MUPIP command organizes a subset of the globals in a database or region. If a second MUPIP REORG command selects the remaining globals, it may tend to disrupt the results of the first REORG by de-optimizing the previously organized blocks. This is because there is no information passed from the previous MUPIP REORG command to the next command. The EXCLUDE qualifier allows users to list the name of the previously REORGed globals, so that the MUPIP REORG bypasses the GDS blocks containing these globals.
@@ -2114,7 +2251,8 @@ The format of the EXCLUDE qualifier is:
 
 Specifies how full you want each database block to be. This is a target number. Individual blocks may be more or less full than the fill factor. The format of the FILL_FACTOR qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    F[ILL_FACTOR]=integer
 
 * The arguments for the FILL_FACTOR qualifier must be integers from 30 to 100. These integers represent the percentage of the data block that REORG can fill. By default, the FILL_FACTOR value is 100 for maximum data density.
@@ -2129,7 +2267,8 @@ Specifies how full you want each database block to be. This is a target number. 
 
 Directs REORG to leave free space within index blocks for future updates. Arguments to this qualifier must be integers from 30 to 100 that represent the percentage of the index block that REORG can fill. REORG uses this number to decide whether to place more information in an index block, or create space by moving data to another block. The format of the INDEX_FILL_FACTOR qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -I[NDEX_FILL_FACTOR]=integer
 
 Under certain conditions, especially with large database block sizes, it may be possible to achieve faster throughput by using a smaller fill factor for index blocks than for data blocks. By default, the INDEX_FILL_FACTOR is the value of FILL_FACTOR regardless of whether that value is explicitly specified or implicitly obtained by default.
@@ -2140,7 +2279,8 @@ Under certain conditions, especially with large database block sizes, it may be 
 
 For an interrupted REORG operation, -RESUME allows the user to resume the REORG operation from the point where the operation stopped. REORG stores the last key value in the database file header. The format of the RESUME qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -R[ESUME]
 
 * With RESUME specified, the program retrieves the last key value, from the database file header, and restarts operations from that key.
@@ -2153,7 +2293,8 @@ Specifies that REORG operate in the regions in the associated list and restricts
 
 The format of the REGION qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -R[EGION] region-list
 
 region-list may specify more than one region of the current global directory in a list. Regions are case-insensitive, separated by a comma, and wildcards can be used to specify them. Any region-name may include the wildcard characters * and % (remember to escape them to protect them from inappropriate expansion by the shell). Any region name expansion occurs in M (ASCII) collation order.
@@ -2166,7 +2307,8 @@ Specifies that REORG reorganizes only the globals in the associated list; global
 
 The format of the SELECT qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -S[ELECT]=global-name-list
 
 * By default, REORG operates on all globals in all database files identified by the current Global Directory for the process executing the MUPIP command.
@@ -2194,7 +2336,8 @@ The format of the SELECT qualifier is:
 
 Specifies that REORG, after it has rearranged some or all of a region's contents, should attempt to reduce the size of the database file and return free space to the file system. The format of the TRUNCATE qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -T[RUNCATE][=percentage]
 
 The optional percentage (0-99) provides a minimum amount for the reclamation; in other words, REORG won't bother performing a file truncate unless it can give back at least this percentage of the file; the default (0) has it give back anything it can. TRUNCATE always returns space aligned with bit map boundaries, which fall at 512 database block intervals. TRUNCATE analyses the bit maps, and if appropriate, produces before image journal records as needed for recycled (formerly used) blocks; The journal extract of a truncated database file may contain INCTN records having the inctn opcode value 9 indicating that the specific block was marked from recycled to free by truncate.
@@ -2206,7 +2349,8 @@ The optional percentage (0-99) provides a minimum amount for the reclamation; in
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip reorg
    Fill Factor:: Index blocks 100%: Data blocks 100%
 
@@ -2253,7 +2397,8 @@ Note also that owing the database update activity of REORG, the hist.mjl journal
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip reorg -exclude="^b2a,^A4gsEQ2e:^A93"
 
 This example performs a MUPIP REORG operation on all globals excluding ^b2a and all globals ranging from ^A4gsEQ2e to ^A93.
@@ -2262,7 +2407,8 @@ Example:
 
 If the forecasted growth of a global is 5% per month from relatively uniformly distributed updates, and REORGs are scheduled every quarter, the FILL_FACTOR for both the original LOAD and subsequent REORGs might be 80 percent 100 - ((3 months + 1 month "safety" margin) * five percent per month). The REORG command based on the above assumptions is as follows:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip reorg -fill_factor=80
 
 Example:
@@ -2271,30 +2417,35 @@ The following example uses recorg -encrypt to encrypt a database "on the fly". T
 
 Create an empty default unencrypted database.
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ydb_dist/yottadb -r ^GDE exit
    $ydb_dist/mupip create
 
 Setup the GNUPG home directory.
 
-.. parsed-literal::
+.. code-block:: bash
+
    export GNUPGHOME=$PWD/.helengnupg3
    mkdir $GNUPGHOME # Ensure that you protect this directory with appropriate permissions.
    chmod go-rwx $GNUPGHOME
 
 Create a new key. Enter demo values. Accept default values. Choose a strong passphrase.
 
-.. parsed-literal::
+.. code-block:: bash
+
    gpg --gen-key
 
 Edit the key to add a new sub-key:
 
-.. parsed-literal::
+.. code-block:: bash
+
    gpg --edit-key helen.keymaster@yottadb
 
 Type addkey, select option 6 RSA (encrypt only), and accept default values and execute the following commands:
 
-.. parsed-literal::
+.. code-block:: bash
+
    gpg --gen-random 2 32 | gpg --encrypt --default-recipient-self --sign --armor > ydb_workshop_key.txt
    gpg --decrypt < ./ydb_workshop_key.txt | gpg --encrypt --armor --default-recipient-self --output ydb.key
 
@@ -2302,7 +2453,8 @@ Refer to the 'man gpg; a description on the qualifiers for gpg.
 
 Create a gtmcrypt_config file as following:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ cat config
      database: {
         keys:   (
@@ -2315,17 +2467,20 @@ Create a gtmcrypt_config file as following:
 
 Set the environment variable gtmcrypt_config to point to this config file.
 
-.. parsed-literal::
+.. code-block:: bash
+
    export gtmcrypt_config=$PWD/config
 
 Set the environment variable ydb_passwd.
 
-.. parsed-literal::
+.. code-block:: bash
+
    echo -n "Enter passphrase for ydb.key: " ; export ydb_passwd=`$ydb_dist/plugin/gtmcrypt/maskpass|cut -f 3 -d " "`
 
 Execute the following commands:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip set -encryptable -region DEFAULT
    $ mupip reorg -encrypt="ydb.key" -region DEFAULT
    mupip reorg -encrypt="ydb.key" -region DEFAULT
@@ -2335,7 +2490,8 @@ Execute the following commands:
 
 Execute the following command when encryption completes.
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip set -encryptioncomplete -region DEFAULT
    Database file /home/gtc_twinata/staff/nitin/tr11/yottadb.dat now has encryption marked complete
 
@@ -2359,27 +2515,32 @@ As REORG is IO intensive, an organization may opt to skip swapping or splitting 
 
 Examples of USER_DEFINED_REORG are as follows:
 
-.. parsed-literal::
+.. code-block:: bash
+
    mupip reorg -user_defined_reorg="DETAIL"
 
 This example records every block and every operation (coalesce/swap/split) and gives detailed information about the REORG.
 
-.. parsed-literal::
+.. code-block:: bash
+
    mupip reorg -user_defined_reorg="NOCOALESCE"
 
 This example carries out the REORG but does not coalesce (combine) any blocks.
 
-.. parsed-literal::
+.. code-block:: bash
+
    mupip reorg -user_defined_reorg="NOSPLIT"
 
 This example carries out the REORG but does not split any blocks.
 
-.. parsed-literal::
+.. code-block:: bash
+
    mupip reorg -user_defined_reorg="NOSWAP"
 
 This example carries out the REORG but does not swap any blocks.
 
-.. parsed-literal::
+.. code-block:: bash
+
    mupip reorg -user_defined_reorg="NOSWAP,NOCOALESCE"
 
 This example combines two specifications, and carries out the REORG without swapping or coalescing any blocks.
@@ -2398,7 +2559,8 @@ Integrates one or more BACKUP -INCREMENTAL files into a corresponding database. 
 
 The format of the RESTORE command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    RE[STORE] [-NET[TIMEOUT]] [-[NO]E[XTEND]] file-name bytestrm-bkup-list
 
 
@@ -2420,7 +2582,8 @@ Specifies whether a MUPIP RESTORE operation should extend the database file auto
 
 The format of the EXTEND qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -[NO]E[XTEND]
 
 M activity between backups may automatically extend a database file. Therefore, the database file specified as the starting point for a RESTORE may require an extension before the RESTORE. If the database needs an extension and the command specifies -NOEXTEND, MUPIP displays a message and terminates. The message provides the sizes of the input and output database files and the number of blocks by which to extend the database. If the RESTORE specifies more than one incremental backup with a file list, the database file may require more than one extension.
@@ -2429,13 +2592,15 @@ By default, RESTORE automatically extends the database file.
 
 **Examples for MUPIP RESTORE**
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip restore backup.dat $backup_dir/backup.bk1, $backup_dir/backup.bk2, $backup_dir/backup.bk3
 
 This command restores backup.dat from incremental backups stored in directory specified by the environment variable backup_dir.
 
-.. parsed-literal::
-   $ mupip restore ydb.dat '"gzip -d -c online5pipe.inc.gz \|"'
+.. code-block:: bash
+
+   $ mupip restore ydb.dat '"gzip -d -c online5pipe.inc.gz |"'
 
 This command uses a pipe to restore ydb.dat since its last DATABASE backup from the bytestream backup stored in online5pipe.inc.gz.
 
@@ -2452,7 +2617,8 @@ MUPIP RUNDOWN checks for version mismatch. If there is a mismatch, it skips the 
 
 The format of the MUPIP RUNDOWN command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    RU[NDOWN] {-FILE file-name|-REGION region-list|-RELINKCTL [dir]|-OVERRIDE}
 
 MUPIP RUNDOWN clears certain fields in a file that is already closed. This facilitates recovery from a system crash or any other operational anomaly.
@@ -2467,7 +2633,8 @@ To ensure database integrity, all system shutdown algorithms should include scri
 
 The RUNDOWN command may include one of the following qualifiers:
 
-.. parsed-literal::
+.. code-block:: none
+
    -F[ile]
    -R[egion]=region-list
    -RELinkctl [dir1]
@@ -2517,7 +2684,8 @@ Use MUPIP SET for performance tuning and/or modifying certain database and journ
 
 The format of the SET command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    SE[T] {-FI[LE] file-name|-JN[LFILE] journal-file-name|-REG[ION] region-list|-REP[LICATION]={ON|OFF}}
     -AC[CESS_METHOD]={BG|MM}
     -[NO]AS[YNCIO]
@@ -2566,7 +2734,8 @@ The format of the SET command is:
 
 Specifies that the argument is a file-name for a single database file. The format of the FILE qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -F[ILE]
 
 Incompatible with: -JNLFILE, -REGION and -REPLICATION
@@ -2577,7 +2746,8 @@ Incompatible with: -JNLFILE, -REGION and -REPLICATION
 
 Specifies that the argument is a journal-file-name. The format of the JNLFILE qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -JNLF[ILE] journal-file-name
 
 Incompatible with: -FILE, -REGION and -REPLICATION
@@ -2588,7 +2758,8 @@ Incompatible with: -FILE, -REGION and -REPLICATION
 
 Specifies that the argument is a region-list which identifies database file(s) mapped by the current Global Directory. The format of the REGION qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -R[EGION] region-list
 
 The region-list identifies the target of SET. region-list may specify more than one region of the current global directory in a list. Regions are case-insensitive, separated by a comma, and wild-cards can be used to specify them. Any region-name may include the wild-card characters * and % (remember to escape them to protect them from inappropriate expansion by the shell). Any region name expansion occurs in M (ASCII) collation order.
@@ -2601,7 +2772,8 @@ Incompatible with: -FILE, -JNLFILE and -REPLICATION
 
 Specifies whether replication is on or off. The format of the REPLICATION qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -REP[LICATION]={ON|OFF}
 
 Incompatible with: -JNLFILE
@@ -2614,7 +2786,8 @@ The following sections describe the action qualifiers of the MUPIP SET command e
 
 Specifies the access method (YottaDB buffering strategy) for storing and retrieving data from the global database file. The format of the ACCESS_METHOD qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -AC[CESS_METHOD]=code
 
 For more information on specifying the ACCESS_METHOD,refer to `“Segment Qualifiers” <./gde.html#segment-qualifiers>`_.
@@ -2625,7 +2798,8 @@ For more information on specifying the ACCESS_METHOD,refer to `“Segment Qualif
 
 Specifies whether to use asynchronous I/O for an access method BG database, rather than using synchronous I/O through the file system cache. ASYNCIO is incompatible with the MM access method and an attempt to combine the two with MUPIP SET produces a ASYNCIONOMM error. The format of the ASYNCIO qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -[NO]AS[YNCIO]
 
 For more information on specifying ASYNCIO,refer to `“Segment Qualifiers” <./gde.html#segment-qualifiers>`_.
@@ -2636,7 +2810,8 @@ For more information on specifying ASYNCIO,refer to `“Segment Qualifiers” <.
 
 Specifies, in MM access mode, the multiplying factor applied to the flush time to produce a wait after an update before ensuring a journal buffer write to disk; the default is 1. A value of 2 produces a wait of double the flush time. -NODEFER_TIME or a value of -1 turns off timed journal writing, leaving the journal, under light update conditions, to potentially get as stale as the epoch time. Note that, in MM mode without the sync_io option set, absent a VIEW("JNLFLUSH") from the application, YottaDB only fsyncs the journal at the epoch. The format of the DEFER_TIME qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -[NO]D[efer_time][=seconds]
 
 ~~~~~~~~~~~~~~~~
@@ -2645,7 +2820,8 @@ Specifies, in MM access mode, the multiplying factor applied to the flush time t
 
 With -DEFER_ALLOCATE, YottaDB instructs the file system to create the database file as a sparse file. Before using -DEFER_ALLOCATE, ensure that your underlying file system supports sparse files. By default UNIX file systems, and YottaDB, use sparse (or lazy) allocation, which defers actual allocation until blocks are first written. The format of the DEFER_ALLOCATE qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -[NO]DEFER_ALLOCATE
 
 * Utilities such as du report typically show lower disk space usage for a database file with -DEFER_ALLOCATE because YottaDB instructs the file system to defer disk space allocation to the time when there is an actual need. With -NODEFER_ALLOCATE, such utilities report higher disk space usage count as YottaDB instructs the file system to preallocate disk space without waiting for a need to arise.
@@ -2662,7 +2838,8 @@ With -DEFER_ALLOCATE, YottaDB instructs the file system to create the database f
 
 Tries to minimize epoch duration by reducing the number of buffers to flush by YottaDB and the file system (via an fsync()) as the epoch (time-based or due to journal file auto-switch) approaches. Epoch tapering reduces the impact of I/O activity during an epoch event. Application that experience high load and/or need to reduce latency may benefit from epoch tapering. The format of the -EPOCHTAPER qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -[NO]EPOCHTAPER
 
 ~~~~~~~~~~~~~~~~~
@@ -2671,7 +2848,8 @@ Tries to minimize epoch duration by reducing the number of buffers to flush by Y
 
 Specifies the number of GDS blocks by which an existing database file extends. A file or region name is required. This qualifier requires standalone access. The format of the EXTENSION_COUNT qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -E[XTENSION_COUNT]=integer
 
 For more information on specifying the EXTENSION_COUNT, refer to `“Segment Qualifiers” <./gde.html#segment-qualifiers>`_.
@@ -2682,7 +2860,8 @@ For more information on specifying the EXTENSION_COUNT, refer to `“Segment Qua
 
 Specifies the amount of time between deferred writes of stale cache buffers. The default value is 1 second and the maximum value is 1 hour. -FLUSH_TIME requires standalone access. The format of the FLUSH_TIME qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -F[LUSH_TIME]=[[[HOURS:]MINUTES:]SECONDS:]CENTISECONDS
 
 ~~~~~~~~~~~~~~~~
@@ -2691,7 +2870,8 @@ Specifies the amount of time between deferred writes of stale cache buffers. The
 
 Specifies the number of cache buffers for a BG database. This qualifier requires standalone access.The format of the GLOBAL_BUFFERS qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -G[LOBAL_BUFFERS]=integer
 
 For more information on ways to determine good working sizes for GLOBAL_BUFFERS, refer to `“Segment Qualifiers” <./gde.html#segment-qualifiers>`_.
@@ -2708,7 +2888,8 @@ On many UNIX systems, default kernel parameters may be inadequate for YottaDB gl
 
 The mutex hard spin count specifies the number of attempts to grab the mutex lock before initiating a less CPU-intensive wait period. The format of -HARD_SPIN_COUNT is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -HARD_SPIN_COUNT=integer
 
 The default value is 128. Except on the advice of your YottaDB support channel, YottaDB recommends leaving the default values unchanged in production environments, until and unless, you have data from testing and benchmarking that demonstrates a benefit from a change.
@@ -2719,7 +2900,8 @@ The default value is 128. Except on the advice of your YottaDB support channel, 
 
 Enables or disables custom errors in a region to automatically cause an Instance Freeze. This flag modifies the "Inst Freeze on Error" file header flag. The format of the INST_FREEZE_ON_ERROR qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -[NO]INST[_FREEZE_ON_ERROR]
 
 For more information on creating a list of custom errors that automatically cause an Instance Freeze, refer to `Instance Freeze <./dbrepl.html#instance-freeze>`_.
@@ -2737,7 +2919,8 @@ Specifies whether the database allows journaling and, if it does, characteristic
 
 The format of the JOURNAL qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -[NO]J[OURNAL][=journal-option-list]
 
 * -NOJOURNAL specifies that the database does not allow journaling. And also it does not accept an argument assignment.
@@ -2752,7 +2935,8 @@ For detailed description of the all JOURNAL qualifiers and its keywords, refer t
 
 Specifies the maximum key size in bytes for storing and retrieving data from the global database file. The maximum supported size is 1019 bytes. The format of the KEY_SIZE qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -K[EY_SIZE]=bytes
 
 For more information on KEY_SIZE, refer to `“Region Qualifiers” <./gde.html#region-qualifiers>`_.
@@ -2763,7 +2947,8 @@ For more information on KEY_SIZE, refer to `“Region Qualifiers” <./gde.html#
 
 Specifies the number of pages allocated to the management of M locks associated with the database. The size of a page is always 512 bytes. The format of the LOCK_SPACE qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -L[OCK]_SPACE=integer
 
 * The maximum LOCK_SPACE is 262144 pages.
@@ -2784,7 +2969,8 @@ Sets the size of a structure that YottaDB uses to manage contention for the prin
 
 The minimum value is 64 and the maximum value is 32768. The default value is 1024. The format of the MUTEX_SLOTS qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -M[UTEX_SLOTS]=integer
 
 ~~~~~~~~~~~~~~~~~
@@ -2795,7 +2981,8 @@ Controls whether YottaDB accepts null subscripts in database keys.
 
 Usage:
 
-.. parsed-literal::
+.. code-block:: none
+
    -N[ULL_SUBSCRIPTS]=value
 
 * value can either be T[RUE], F[ALSE], ALWAYS, NEVER, or EXISTING. See GDE chapter for more information on these values of null_subscript.
@@ -2810,7 +2997,8 @@ Usage:
 
 Specifies whether LOCK actions share the same resource and management as the database or use a separate resource and management. The format of the LCK_SHARES_DB_CRIT qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
     -[NO]LC[K_SHARES_DB_CRIT]
 
 The default is Sep(arate)/FALSE.
@@ -2823,7 +3011,8 @@ For more information, refer to `“Region Qualifiers” <./gde.html#region-quali
 
 Shortens normal process shutdown when a large number of processes accessing a database file need to shutdown almost simultaneously, for example, in benchmarking scenarios or emergencies. The format of the QDBRUNDOWN qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -[NO]Q[DBRUNDOWN]
 
 When a terminating YottaDB process observes that a large number of processes are attached to a database file and QDBRUNDOWN is enabled, it bypasses checking whether it is the last process accessing the database. Such a check occurs in a critical section and bypassing it also bypasses the usual RUNDOWN actions which accelerates process shutdown removing a possible impediment to process startup. By default, QDBRUNDOWN is disabled.
@@ -2838,7 +3027,8 @@ When a database has QDBRUNDOWN enabled, if the number of attached processes ever
 
 Sets the CORRUPT_FILE flag in the database file header to FALSE. The CORRUPT_FILE flag indicates whether a region completed a successful recovery. The format of the PARTIAL_RECOV_BYPASS qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -PA[RTIAL_RECOV_BYPASS]
 
 For more information, refer to the CORRUPT_FILE qualifier in `“CHANGE -FILEHEADER Qualifiers” <./dse.html#change>`_.
@@ -2849,7 +3039,8 @@ For more information, refer to the CORRUPT_FILE qualifier in `“CHANGE -FILEHEA
 
 Indicates whether YottaDB should treat an MM access method segment as read only for all users, including root. This designation augments UNIX authorizations and prevents any state updates that normally might require an operational action for a database with no current accessing (attached) processes. MUPIP emits an error on attempts to set -READ_ONLY on databases with the BG access method, or to set the access method to BG on databases with -READ_ONLY set. The YottaDB help databases have -READ_ONLY set by default. The format of the READ_ONLY qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -[NO]REA[D_ONLY]
 
 .. note::
@@ -2861,7 +3052,8 @@ Indicates whether YottaDB should treat an MM access method segment as read only 
 
 Specifies the maximum record size in bytes for storing and retrieving data from the global database file. The maximum supported size is 1MiB bytes. The format of the RECORD_SIZE qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -REC[ORD_SIZE]=bytes
 
 For more information on KEY_SIZE, refer to `“Region Qualifiers” <./gde.html#region-qualifiers>`_.
@@ -2878,7 +3070,8 @@ Specifies the number of nanoseconds that a MUPIP REORG process operating between
 
 Specifies the size to be reserved in each database block. RESERVED_BYTES is generally used to reserve room for compatibility with other implementations of M or to observe communications protocol restrictions. The format of the RESERVED_BYTES qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -RES[ERVED_BYTES]=size
 
 
@@ -2892,7 +3085,8 @@ Specifies the size to be reserved in each database block. RESERVED_BYTES is gene
 
 Specifies the number of times a process suspends its activity while waiting to obtain critical sections for shared resources, principally those involving databases. The format of the -SLEEP_SPIN_COUNT qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -SLEEP_SPIN_COUNT=integer
 
 * integer is the number of times the process yields to the OS scheduler or sleeps (depending in the SPIN_SLEEP_LIMIT) after exhausting its hard spin count and before enqueuing itself to be awakened by another process releasing the shared resource mutex.
@@ -2907,7 +3101,8 @@ Specifies the number of times a process suspends its activity while waiting to o
 
 Specifies the maximum number of nanoseconds for processes to sleep while waiting to obtain critical sections for shared resources, principally those involving databases. The format of the -SPIN_SLEEP_MASK qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -SPIN_SLEEP_MASK=hex_mask
 
 * hex_mask is a hexadecimal mask that controls the maximum time (in nanoseconds) the process sleeps on a sleep spin.
@@ -2922,7 +3117,8 @@ Specifies the maximum number of nanoseconds for processes to sleep while waiting
 
 Specifies whether YottaDB should permit statistics sharing for this region. This characteristic permits operational exclusion of statistics sharing for a region. The format of the STATS qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -[NO]STAT[S]
 
 * At database creation, GDE controls this characteristic, which by default is specified as STATS (on). When on, this characteristic causes YottaDB to create a small MM database for the associated region to hold the shared statistics.
@@ -2934,7 +3130,8 @@ Specifies whether YottaDB should permit statistics sharing for this region. This
 
 Specifies whether YottaDB uses standard or historical collation for null-subscripted keys. YottaDB strongly recommends that you use STDNULLCOLL and not the historical null collation. The format of the STDNULLCOLL qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -[NO]STD[NULLCOLL]
 
 ~~~~~~~~~~~~~~~~~~
@@ -2943,7 +3140,8 @@ Specifies whether YottaDB uses standard or historical collation for null-subscri
 
 Specifies the decimal value, in buffers, for the threshold at which processes start flushing dirty buffers after each update. The format of the TRIGGER_FLUSH qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -T[RIGGER_FLUSH]=integer
 
 ~~~~~~~~~~
@@ -2952,7 +3150,8 @@ Specifies the decimal value, in buffers, for the threshold at which processes st
 
 Sets the block format version (Desired DB Format field in the file header) for all subsequent new blocks. The format of the VERSION qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -V[ERSION]={version}
 
 * MUPIP UPGRADE and MUPIP REORG -UPGRADE set the Desired DB Format field in the database file header to the latest version while MUPIP REORG -DOWNGRADE sets it to the previous version.
@@ -2965,7 +3164,8 @@ For more information on the upgrading or downgrading your database, refer to the
 
 Specifies the seconds to wait for disk space before giving up on a database block write, where zero (0) means to give an error immediately without waiting. The format of the WAIT_DISK qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -W[AIT_DISK]=seconds
 
 ~~~~~~~~~~~~~~~~~~
@@ -2974,7 +3174,8 @@ Specifies the seconds to wait for disk space before giving up on a database bloc
 
 Specifies the decimal number of blocks to write in each flush. The default value is 7. The format of the WRITES_PER_FLUSH qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -WR[ITES_PER_FLUSH]=integer
 
 
@@ -2982,12 +3183,14 @@ Specifies the decimal number of blocks to write in each flush. The default value
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip set -journal=on,nobefore -region "*"
 
 This example enables NOBEFORE image journaling and turns on journaling for all regions.
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip set -version=r120 -file yottadb.dat
    Database file yottadb.dat now has desired DB format r120
 
@@ -2995,7 +3198,8 @@ This example sets the block format to r1.20 for all subsequent new blocks in r1.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip set -version=r110 -file yottadb.dat
    Database file yottadb.dat now has desired DB format r110
 
@@ -3003,14 +3207,16 @@ This example sets the block format to r1.10 for all subsequent new blocks in r1.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    mupip set -flush_time=01:00:00:00 -region DEFAULT
 
 This example sets flush time to 1 hour. You can also specify flush time in any combination of [[[HOURS:]MINUTES:]SECONDS:]CENTISECONDS. MUPIP interprets -FLUSH_TIME=360000 or -FLUSH_TIME=00:60:00:00 as -FLUSH_TIME=01:00:00:00.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip set -region MAMMALS -inst_freeze_on_error
 
 This example enables custom errors in region MAMMALS to cause an Instance Freeze.
@@ -3021,7 +3227,8 @@ SIZE
 
 Estimates and reports the size of global variables using a format that is similar to the one that appears at the end of the MUPIP INTEG -FULL report. In comparison with MUPIP INTEG -FAST -FULL, MUPIP SIZE provides the option of choosing any one of the three estimation techniques to estimate the size of global variables in a database file. These techniques vary in measurement speed and estimate accuracy. The format of the MUPIP SIZE command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    MUPIP SI[ZE] [-h[euristic]=estimation_technique] [-s[elect]=global-name-list] [-r[egion]=region-list] [-a[djacency]=integer]
 
 The optional qualifiers of MUPIP SIZE are:
@@ -3032,7 +3239,8 @@ The optional qualifiers of MUPIP SIZE are:
 
 Specifies the estimation technique that MUPIP SIZE should use to estimate the size of global variables. The format of the -HEURISTIC qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -h[euristic]={sc[an][,level=<lvl>] | a[rsample][,samples=<smpls>] | i[mpsample][,samples=<smpls>]}
 
 * smpls is the number of samples and must be greater than zero (0)
@@ -3067,7 +3275,8 @@ Specifies the global variables on which MUPIP SIZE runs. If -SELECT is not speci
 
 The format of the SELECT qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -s[elect]=global-name-list
 
 global-name-list can be:
@@ -3086,22 +3295,26 @@ global-name-list can be:
 
 Specifies the region on which MUPIP SIZE runs. If REGION is not specified, MUPIP SIZE selects all regions. The format of the REGION qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -R[EGION]=region-list
 
 **Examples for MUPIP SIZE**
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip size -heuristic="impsample,samples=2000" -select="y*" -region="AREG"
 
 This example estimates the size of all global variable starting with "y". It uses importance sampling with 2000 samples on the region AREG.
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip size -heuristic="scan,level=-1"
 
 This example counts the number of blocks and records at 1 level below the root of the database tree.
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip size -heuristic="arsample" -select="g1:g3"
 
 This example estimates the size of global variables g1, g2 and g3 using accept/reject sampling with the default number of samples regardless of the region in which they reside.
@@ -3117,7 +3330,8 @@ Terminates a YottaDB image. The image executes an orderly disengagement from all
 
 The format of the STOP command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    MUPIP ST[OP] process-id
 
 * Use the shell command ps to display a list of active process names and process identifiers (PIDs).
@@ -3133,7 +3347,8 @@ TRIGGER
 
 Examines or loads trigger definitions. The format of the MUPIP TRIGGER command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    TRIGGER {-TRIG[GERFILE]=<trigger_definitions_file>
    [-NOPR[OMPT]]|[-SELE[CT][=name-list|*][<select-output-file>]|-UPGRADE}
 
@@ -3151,7 +3366,8 @@ The qualifiers of the MUPIP TRIGGER command are as follows:
 
 Loads a trigger definition file to the database. The format of the TRIGGERFILE qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -TRIG[GERFILE]=<trigger_definitions_file> [-NOPR[OMPT]]
 
 * For information on the syntax and usage of a trigger definition file, refer to the `Triggers <https://docs.yottadb.com/ProgrammersGuide/triggers.html>`_ chapter and the `$ZTRIGGER() section in the Functions chapter of the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/functions.html#ztrigger>`_.
@@ -3181,7 +3397,8 @@ Loads a trigger definition file to the database. The format of the TRIGGERFILE q
 
 Provides a facility to examine the current trigger definition. SELECT produces a list of the current triggers for a comma-separate list of global variables or trigger names. The format of the SELECT qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -SELE[CT][=name-list*][ <select-output-file>]
 
 * Name-list can include global names, delimited with a leading caret (^), and/or trigger names (user-defined or auto-generated) with no leading caret. You can specify a trailing asterisk(*) with either.
@@ -3207,7 +3424,8 @@ Upgrades older trigger definitions into current format.
 
 The format of the UPGRADE qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -UPGRADE
 
 If YottaDB encounters an old trigger definition it produces a NEEDTRIGUPGRD message. To preserve the possibility of a straightforward downgrade to an earlier version, perform a select "*" action with MUPIP TRIGGER (or $ZTRIGGER() and save the result. Note that TRIGGER -UPGRADE assumes that the existing trigger definitions are properly defined; if the prior release has produced defective triggers, delete them with a wild-card ("*"), and redefine the triggers in the new release. In the event of a downgrade, delete "*" all triggers before the downgrade and insert the saved version from before the upgrade. Attempting to perform a MUPIP TRIGGER -UPGRADE on a database without write authorization to the database produces a TRIGMODREGNOTRW error. The -UPGRADE qualifier is not compatible with any other MUPIP TRIGGER qualifier. Trigger upgrades from older versions may produce journal records based on the prior format that a MUPIP JOURNAL -RECOVER cannot process correctly, therefore, YottaDB recommends you do them with journaling off, and start with a backup and fresh journal files after the trigger upgrade.
@@ -3220,17 +3438,20 @@ This section provides step-by-step instructions for creating, modifying, and del
 
 Using your editor, create a trigger definition file called triggers.trg with the following entry:
 
-.. parsed-literal::
+.. code-block:: none
+
    +^Acct("ID") -name=ValidateAccount -commands=S -xecute="Write ""Hello Earth!"""
 
 Execute a command like the following:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip trigger -triggerfile=triggers.trg
 
 This command adds a trigger for ^Acct("ID"). On successful trigger load, this command displays an output like the following:
 
-.. parsed-literal::
+.. code-block:: bash
+
    File triggers.trg, Line 1: ^Acct trigger added with index 1
    =========================================
    1 triggers added
@@ -3243,12 +3464,14 @@ Now, every S[et] operation on the global node ^Acct("ID") executes the trigger.
 
 Execute a command like the following:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip trigger -select="^Acct*"
 
 This command displays the triggers. A sample output looks like the following:
 
-.. parsed-literal::
+.. code-block:: bash
+
    ;trigger name: ValidateAccount# cycle: 1
    +^Acct("ID") -name=ValidateAccount -commands=S -xecute="Write ""Hello Earth!"""
 
@@ -3258,18 +3481,21 @@ You cannot directly replace an existing trigger definition with a new one. With 
 
 Begin by executing the following command:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip trigger -select="^Acct*"Output file:
 
 Specify trigger_mod.trg as the output file. This file contains entries like the following:
 
-.. parsed-literal::
+.. code-block:: bash
+
    ;trigger name: ValidateAccount# cycle: 1
    +^Acct("ID") -name=ValidateAccount -commands=S -xecute="Write ""Hello Earth!"""
 
 Using your editor, open trigger_mod.trg and change + (plus) to - (minus) for the trigger definition entry for ValidateAccount and add a new trigger definition for ^Acct("ID"). To avoid inconsistent application behavior, it is important to replace an old trigger with a new one in the same transaction (Atomic). The trigger_mod.trg file should have entries like:
 
-.. parsed-literal::
+.. code-block:: bash
+
    ;trigger name: ValidateAccount# cycle: 1
    -^Acct("ID") -name=ValidateAccount -commands=Set -xecute="Write ""Hello Earth!"""
    ;trigger name: ValidateAccount#
@@ -3277,12 +3503,14 @@ Using your editor, open trigger_mod.trg and change + (plus) to - (minus) for the
 
 Execute a command like the following:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip trigger -triggerfile=trigger_mod.trg
 
 This command displays an output like the following:
 
-.. parsed-literal::
+.. code-block:: bash
+
    File trigger_mod.trg, Line 1: ^Acct trigger deleted
    File trigger_mod.trg, Line 3: ^Acct trigger added with index 1
    =========================================
@@ -3298,12 +3526,14 @@ Congratulations! You have successfully modified the xecute string of ValidateAcc
 
 Begin by executing the following command:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip trigger -select="^Acct*"Output file:
 
 Specify trigger_delete.trg as the output file. This file contains entries like the following:
 
-.. parsed-literal::
+.. code-block:: bash
+
    ;trigger name: ValidateAccount# cycle: 3
    +^Acct("ID") -name=ValidateAccount -commands=S -xecute="Write ""Hello Mars!"""
 
@@ -3311,12 +3541,14 @@ Using your editor, change + (plus) to - (minus) for the trigger definition entry
 
 Now, execute a command like the following:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip trigger -triggerfile=trigger_delete.trg
 
 This command displays an output like the following:
 
-.. parsed-literal::
+.. code-block:: bash
+
     File trigger_delete.trg, Line 2: ^Acct trigger deleted
     =========================================
     0 triggers added
@@ -3331,28 +3563,33 @@ You have successfully deleted trigger "ValidateAccount".
 
 Using your editor, create a new file called trigger_rename.trg and add a trigger definition entry for ValidateAcct with the same trigger signature as ValidateAccount. Your trigger definition would look something like:
 
-.. parsed-literal::
+.. code-block:: bash
+
    +^Acct("ID") -name=ValidateAcct -commands=S -xecute="Write ""Hello Mars!"""
 
 Verify that the ValidateAccount trigger exists by executing the following command:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip trigger -select="^Acct*"Output file:
 
 Respond with an empty string (Press Enter). Confirm that the trigger summary report contains an entry like the following:
 
-.. parsed-literal::
+.. code-block:: bash
+
    ;trigger name: ValidateAccount# cycle: 3
    +^Acct("ID") -name=ValidateAccount -commands=S -xecute="Write ""Hello Mars!"""
 
 Now, execute a command like the following:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip trigger -triggerfile=trigger_rename.trg
 
 This command displays an output like the following:
 
-.. parsed-literal::
+.. code-block:: bash
+
    =========================================
    0 triggers added
    0 triggers deleted
@@ -3368,7 +3605,8 @@ UPGRADE
 
 Upgrades the file-header of a database. The format of the MUPIP UPGRADE command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    UP[GRADE]
 
 * It increases the size from 4 bytes to 8 bytes of file-header fields such as current transaction number (CTN), maximum TN and others that contain transaction numbers.
@@ -3377,7 +3615,8 @@ Upgrades the file-header of a database. The format of the MUPIP UPGRADE command 
 
 **Example for MUPIP UPGRADE**
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip upgrade yottadb.dat
 
 This example upgrades the file-header of yottadb.dat to the latest version format.

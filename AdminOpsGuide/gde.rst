@@ -86,7 +86,8 @@ To change the Global Directory used by processes, specify a new value for ydb_gb
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ export ydb_gbldir=/home/jdoe/node1/prod.gld
 
 When you invoke GDE and no Global Directory exists for ydb_gbldir, GDE creates a minimal default Global Directory that is a starting point or template for building global directories for your specific needs.
@@ -95,7 +96,8 @@ To retain the default Global Directory, exit GDE without making any changes.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ export ydb_gbldir=/home/jdoe/node1/prod.gld
 
 ++++++++++++++++++++++++++++++++++++
@@ -108,7 +110,8 @@ To retain the default Global Directory, quit GDE without making any changes.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ ydb_gbldir=/usr/accntg/jones/yottadb.gld
    $ export ydb_gbldir
    $ $ydb_dist/yottadb -dir
@@ -135,12 +138,14 @@ A complete mapping has the following four components:
 
 These components may be defined in any order, but the final result must be a complete logical path from name to file:
 
-.. parsed-literal::
+.. code-block:: none
+
    NAME(s) --> REGION --> SEGMENT --> FILE
 
 The default Global Directory contains one complete mapping that comprises these entries for name, region, segment, and file.
 
-.. parsed-literal::
+.. code-block:: none
+
    * --> DEFAULT --> DEFAULT --> yottadb.dat
    (NAME) (REGION) (SEGMENT) (FILE)
 
@@ -156,8 +161,9 @@ Examining the Default Global Directory
 
 A Global Directory looks like this:
 
-.. parsed-literal::
-                                         \*\*\* Templates \*\*\*
+.. code-block:: none
+
+                                         *** Templates ***
     Region                  Def Coll     Rec Size   Key Size   Null Subs   Std Null Coll   Jnl   Inst Freeze on Err   Qdb Rundown   Epoch Taper   AutoDb  Stats   Lock Crit
     ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     <default>                   0          256        64        NEVER           N           N              N               N             Y          N        Y      SEP
@@ -178,19 +184,19 @@ A Global Directory looks like this:
                                                                                 DALL=YES
 
 
-             \*\*\* NAMES \*\*\*
+             *** NAMES ***
     Global                      Region
     -----------------------------------
       *                       DEFAULT
 
 
-                                      \*\*\* REGIONS \*\*\*
+                                      *** REGIONS ***
     Region             Dynamic Segment        Def Coll   Rec Size   Key Size    Null Subs   Std Null Coll  Jnl  Inst Freeze on Err   Qdb Rundown  Epoch Taper  AutoDB  Stats   Lock Crit
     -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     DEFAULT            DEFAULT                  0         256         64           NEVER          N         N           N                 N            Y          N      Y       SEP
 
 
-                                       \*\*\* SEGMENTS \*\*\*
+                                       *** SEGMENTS ***
     Segment                File (def ext: .dat)      Acc  Typ   Block   Alloc  Exten  Options
     ---------------------------------------------------------------------------------------------
     DEFAULT                  yottadb.dat             BG   DYN    4096    100    100   GLOB=1024
@@ -201,7 +207,7 @@ A Global Directory looks like this:
                                                                                       DALL=YES
                                                                                       AIO=OFF
 
-                                        \*\*\* MAP \*\*\*
+                                        *** MAP ***
     ----------------------------- Names ---------------------------------------------
     From                Up to                      Region/Segment/File (def ext: .dat)
     ----------------------------------------------------------------------------------
@@ -323,8 +329,9 @@ You can also create a text file of GDE commands with a standard text editor and 
 
 If you select the -JOURNAL option when you ADD or CHANGE a region in a Global Directory, the following section is added to your Global Directory and displays when you invoke SHOW. The columns provided display the values you selected with the journal options, or defaults provided by YottaDB for any options not explicitly defined.
 
-.. parsed-literal::
-                                            \*\*\* JOURNALING INFORMATION \*\*\*
+.. code-block:: none
+
+                                            *** JOURNALING INFORMATION ***
    Region               Journal File (def extL .mjl)        Before     Buff    Alloc   Exten   Autoswitch
    --------------------------------------------------------------------------------------------------------
    DEFAULT           $gtmdir/$ydb_rel/g/yottadb.mjl         Y         2308    2048     2048    8386560
@@ -341,17 +348,20 @@ To invoke GDE:
 
 from within YottaDB, use the command:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>do ^GDE
 
 from the shell, enter:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ yottadb -r GDE
 
 GDE displays informational messages like the following, and then the GDE> prompt:
 
-.. parsed-literal::
+.. code-block:: bash
+
    %GDE-I-LOADGD, loading Global Directory file /prod/yottadb.gld
    %GDE-I-VERIFY, Verification OK
    GDE>
@@ -365,12 +375,14 @@ To leave GDE:
 
 * Use the GDE EXIT command to save all changes and return to the caller.
 
-  .. parsed-literal::
+  .. code-block:: bash
+
      GDE> EXIT
 
 * Use the GDE QUIT command to discard all changes and return to the caller. This will not save any changes.
 
-  .. parsed-literal::
+  .. code-block:: bash
+
      GDE> QUIT
 
 +++++++++++++++++++++++
@@ -432,21 +444,24 @@ To complete this procedure, you must have already opened a Global Directory.
 
 * ADD a new global variable name.
 
-  .. parsed-literal::
+  .. code-block:: bash
+
      GDE> add -name cus -region=cusreg
 
 This maps the global name cus to the region cusreg.
 
 * ADD region cusreg, if it does not exist.
 
-  .. parsed-literal::
+  .. code-block:: bash
+
      GDE> add -region cusreg -dynamic=cusseg
 
 This creates the region cusreg and connects it to the segment cusseg. -d[ynamic] is a required qualifier that takes the associated segment-name as a value.
 
 * ADD segment cusreg, if it does not exist, and link it to a file.
 
-  .. parsed-literal::
+  .. code-block:: bash
+
      GDE> add -segment cusseg -file=cus.dat
 
 This creates the segment cusseg and connects it to the file cus.dat.
@@ -469,7 +484,8 @@ Command Syntax:
 
 The general format of GDE commands is:
 
-.. parsed-literal::
+.. code-block:: bash
+
    command [-object-type] [object-name] [-qualifier]
 
 where:
@@ -523,7 +539,8 @@ The @ command executes a GDE command file. Use the @ command to execute GDE comm
 
 The format of the @ command is:
 
-.. parsed-literal::
+.. code-block:: bash
+
    @file-name
 
 The file-name specifies the command file to execute. Use the file-name alone for a file in the current working directory or specify the relative path or the full path to the file.
@@ -532,7 +549,8 @@ GDE executes each line of the command file as if it were entered at the terminal
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    GDE> @standard
 
 This command executes the GDE commands in the file "standard" in the current working directory. "standard" should contain GDE commands; comments should start with an exclamation mark (!).
@@ -545,7 +563,8 @@ The ADD command inserts a new name, region, or segment into the Global Directory
 
 The format of the ADD command is one of the following:
 
-.. parsed-literal::
+.. code-block:: bash
+
    A[DD] -G[BLNAME] global-name [-GBLNAME-qualifier ...]
    A[DD] -N[AME] namespace -R[EGION]=region-name
    A[DD] -R[EGION] region-name -D[YNAMIC]=segment-name [-REGION-qualifier...]
@@ -563,7 +582,8 @@ Name spaces and file-names are case-sensitive; other objects are not case-sensit
 
 Maps a namespace to a region in the global directory. The format of the ADD -NAME command is:
 
-.. parsed-literal::
+.. code-block:: bash
+
    A[DD]-N[AME] namespace -R[EGION]=region-name
 
 
@@ -577,7 +597,8 @@ Maps a namespace to a region in the global directory. The format of the ADD -NAM
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    GDE> add    -name IMPL                             -region=OTHERM  ! Map M implementations to OTHERM
    GDE> add    -name IMPL("YottaDB")                  -region=MYM     ! While mapping YottaDB to MYM
 
@@ -585,7 +606,8 @@ These examples map an entire subtree of a global to a region.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    GDE> add    -name PRODAGE(0:10)                    -region=DECADE0     ! Ranges are closed on the left and open on the right
    GDE> add    -name PRODAGE(10:20)                   -region=DECADE1     ! PRODAGE(10) maps to DECADE1
    GDE> add    -name PRODAGE(20:30)                   -region=DECADE2
@@ -594,7 +616,8 @@ This example uses a colon (:) to map ranges of subscripted names and their subtr
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    GDE> add    -name=PRODAGE(:10)                     -region=DECADE0     ! This line and the next are equivalent
    GDE> add    -name PRODAGE("":10)                   -region=DECADE0     ! numbers up to, but not including, 10
    GDE> add    -name PRODAGE(20:)                     -region=DECADE2     ! 20 thru all numbers (> 20) + strings
@@ -604,7 +627,8 @@ These examples demonstrate the use of $CHAR() and $ZCHAR() to specify unprintabl
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    GDE> add    -name MODELNUM                         -region=NUMERIC
    GDE> add    -name MODELNUM($char(0):)              -region=STRING
 
@@ -613,7 +637,8 @@ This example map numeric subscripts and strings to separate regions.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    GDE> add    -name DIVISION("Europe","a":"m")       -region EUROPEAL
    GDE> add    -name DIVISION("Europe","m":"z")       -region EUROPEM
    GDE> add    -name DIVISION("Australia")            -region AUSTRALIA
@@ -625,7 +650,8 @@ This example maps global variables with the same unsubscripted name at multiple 
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    GDE> add    -name x                               -region=REG1
    GDE> add    -name x(5)                            -region=REG1
    GDE> add    -name x(5,10:)                        -region=REG2
@@ -650,12 +676,14 @@ This example performs the following mapping:
 
 Maps a segment to a database file. The syntax of the ADD -SEGMENT command is:
 
-.. parsed-literal::
+.. code-block:: bash
+
    A[DD]-S[EGMENT] segment-name [-SEGMENT-qualifier...] -F[ILE_NAME]=file-name
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    GDE> add -segment temp -file_name=scratch
 
 This command creates a segment-name TEMP and maps it to the file scratch.dat in the current working directory. However, if you were to specify scratch as the file-name, in other words an environment variable, each process uses the file using the translation of that environment variable at run-time.
@@ -666,7 +694,8 @@ This command creates a segment-name TEMP and maps it to the file scratch.dat in 
 
 Maps a region to a segment. The syntax of the ADD -REGION command is:
 
-.. parsed-literal::
+.. code-block:: bash
+
    A[DD]-R[EGION] region-name -D[YNAMIC]=segment-name [-REGION-qualifier...]
 
 ~~~~~~~~~
@@ -675,7 +704,8 @@ Maps a region to a segment. The syntax of the ADD -REGION command is:
 
 Provides a mechanism to specify the collation for global variables sharing the same unsubscripted name. Specifying a collation is necessary for globals that span multiple regions and and use an alternate collation. Because the global name EURCentral (described in the Introduction section) uses an alternate collation, it requires an entry in the GBLNAME section. The format of the ADD -GBLNAME command is:
 
-.. parsed-literal::
+.. code-block:: bash
+
    A[DD] -G[BLNAME] -C[OLLATION]=collation_number
 
 * Because string subscripts are subject to collation (the unsubscripted portion of a global variable name and numeric subscripts are not), GDE needs to know the collation sequence number associated with each unsubscripted global variable name. M standard collation (the default) has a collation number of zero (0). As a consequence, when you use alternative collation(s) (other than 0), the collation transforms must be available to GDE in the same way as they are to other YottaDB components. All of a global (all nodes sharing the same unsubscripted global name) must have a single collation, which is implicitly the case for globals that do not span multiple regions.
@@ -684,10 +714,11 @@ Provides a mechanism to specify the collation for global variables sharing the s
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    GDE> add    -gblname EURCentral -collation=1
    GDE> show   -gblname
-            \*\*\* GBLNAMES \*\*\*
+            *** GBLNAMES ***
    Global                             Coll  Ver
    ------------------------------------------------------------------------------
    EURCentral                           1    0
@@ -700,7 +731,8 @@ The CHANGE command alters the name-to-region or region-to-segment mapping and/or
 
 The format of the CHANGE command is:
 
-.. parsed-literal::
+.. code-block:: bash
+
    C[HANGE] -G[BLNAME] -C[OLLATION]=collation_number
    C[HANGE] -I[NSTANCE] -F[ILE_NAME={repl_inst_filename|""}
    C[HANGE] -N[AME] namespace -R[EGION]=new-region
@@ -713,7 +745,8 @@ Once you exit GDE, mapping changes take effect for any subsequent image activati
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    GDE> change -region master -dynamic=temp -key=100
 
 This command changes the region "master" to use the segment "temp" and establishes a maximum KEY_SIZE of 100 characters for the next creation of a file for this region. The segment change takes effect the first time the system uses the Global Directory after the GDE session EXITs, while the KEY_SIZE change takes effect after the next MUPIP CREATE that creates a new database file for segment temp.
@@ -726,7 +759,8 @@ The DELETE command removes a name, region, or segment from the Global Directory.
 
 The format of the DELETE command is:
 
-.. parsed-literal::
+.. code-block:: bash
+
    D[ELETE] -G[BLNAME] global-name
    D[ELETE] -N[AME] namespace
    D[ELETE] -R[EGION] region-name
@@ -742,7 +776,8 @@ The default namespace (*) cannot be deleted.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    GDE> del -name T*
 
 This command deletes the explicit mapping of all global names starting with the letter "T." This command does not delete any global variables. However, it may make preexisting globals starting with the letter "T" invisible, at least while using this global directory, because the T* global names map to the default namespace going forward.
@@ -755,8 +790,9 @@ The EXIT command writes all changes made in the current GDE editing session to t
 
 The format of the EXIT command is:
 
-.. parsed-literal::
-   E\[XIT\]
+.. code-block:: bash
+
+   E[XIT]
 
 GDE performs a full verification test (VERIFY) on the data. If the verification succeeds, GDE writes the new Global Directory to file system and issues a verification message.
 
@@ -772,8 +808,9 @@ The HELP command displays online information about GDE commands and qualifiers.
 
 The format of the HELP command is:
 
-.. parsed-literal::
-   H\[ELP\] \[topic...\]
+.. code-block:: bash
+
+   H[ELP] [topic...]
 
 where topic specifies the GDE command for which you want information. If you omit the topic, GDE prompts you for it.
 
@@ -785,14 +822,16 @@ The LOCKS command specifies the region into which YottaDB maps "local" locks(tho
 
 The format of the LOCKS command is:
 
-.. parsed-literal::
+.. code-block:: bash
+
    LOC[KS] -R[EGION]=region-name
 
 The LOCKS -REGION= qualifier allows specification of a region for local locks. By default, GDE maps local locks to the DEFAULT region.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    GDE> lock -region=main
 
 This command maps all locks on resource names that don't start with the caret symbol, "^" to the region "main".
@@ -808,7 +847,8 @@ The LOG command creates a log file of all GDE commands and displays for the curr
 
 The format of the LOG command is:
 
-.. parsed-literal::
+.. code-block:: bash
+
    LOG
    LOG -ON[=file-name]
    LOG -OF[F]
@@ -821,7 +861,8 @@ The -ON qualifier has an optional argument of a file, which must identify a lega
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    GDE> log -on="standard.log"
 
 This command turns on logging for the session and directs the output to standard.log.
@@ -834,8 +875,9 @@ The QUIT command ends the current editing session without saving any changes to 
 
 The format of the QUIT command is:
 
-.. parsed-literal::
-   Q\[UIT\]
+.. code-block:: bash
+
+   Q[UIT]
 
 If the session made changes to the Global Directory, GDE issues a message warning that the Global Directory has not been updated.
 
@@ -847,7 +889,8 @@ The RENAME command allows you to change a namespace, the name of a region, or th
 
 The format of the RENAME command is:
 
-.. parsed-literal::
+.. code-block:: bash
+
    R[ENAME] -G[BLNAME] old-global-name new-global-name
    R[ENAME] -N[AME] old-name new-name
    R[ENAME] -R[EGION] old-region-name new-region-name
@@ -859,7 +902,8 @@ When renaming a region, GDE transfers all name mappings to the new region. When 
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    GDE> rename -segment stable table
 
 This command renames segment "stable" to "table" and shifts any region mapped to "stable" so it is mapped to "table".
@@ -872,8 +916,9 @@ The SETGD command closes edits on one Global Directory and opens edits on anothe
 
 The format of the SETGD command is:
 
-.. parsed-literal::
-   SE\[TGD\] -F\[ILE\]=file-name \[-Q\[UIT\]\]
+.. code-block:: bash
+
+   SE[TGD] -F[ILE]=file-name [-Q[UIT]]
 
 The -FILE=file-name specifies a different Global Directory file. When you provide a file-name without a full or relative pathname, GDE uses the current working directory; if the file is missing an extension, then GDE defaults the type to .gld.
 
@@ -883,7 +928,8 @@ SETGD changes the Global Directory that GDE is editing. If the current Global Di
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    GDE> SETGD -f="temp"
 
 This changes the Global Directory being edited to "temp". The quotation marks around the file name identifies the name of the file unequivocally to UNIX. If the -f is the final qualifier on the line, then the quotation marks are unnecessary.
@@ -896,7 +942,8 @@ The SHOW command displays information contained in the Global Directory about na
 
 The format of the SHOW command is:
 
-.. parsed-literal::
+.. code-block:: bash
+
    SH[OW]
    SH[OW] -A[LL]
    SH[OW] -C[OMMAND] -F[ILE]=[gde-command-file]
@@ -921,7 +968,8 @@ SHOW -COMMAND displays the GDE commands for creating names, regions, and segment
 
 -ALL: Displays the entire Global Directory. This qualifier corresponds to displaying "all" sections of the SHOW report:
 
-.. parsed-literal::
+.. code-block:: none
+
    ***TEMPLATES***, ***NAMES***, ***REGIONS***, ***SEGMENTS***, ***MAP***, ***INSTANCE***.
 
 By default, SHOW displays -ALL.
@@ -930,15 +978,17 @@ By default, SHOW displays -ALL.
 
 - INSTANCE: Displays the current Instance Mapping, if any. This qualifier corresponds to the section of the SHOW report titled:
 
-.. parsed-literal::
+.. code-block:: none
+
    ***INSTANCE***
 
 -MAP: Displays the current mapping of all names, regions, segments, and files. This qualifier corresponds to the section of the SHOW report titled \*\*\*MAP\*\*\*. The output of a SHOW -MAP may be restricted to a particular region by specifying a -REGION qualifier with a region name argument.
 
 -TEMPLATE: Displays the current region and segment templates. This qualifier corresponds to the section of the SHOW report titled:
 
-.. parsed-literal::
-  \*\*\* TEMPLATES \*\*\*
+.. code-block:: none
+
+  *** TEMPLATES ***
 
 If you want to print the Global Directory, create a log file by executing LOG -ON= before executing the SHOW command. The -LOG command captures all the commands entered and output. You can print the log file if you want a hard-copy record.
 
@@ -946,10 +996,11 @@ If you want to export the current Global Directory state, create a GDE command f
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    GDE>SHOW TEMPLATE
 
-                           \*\*\* TEMPLATES \*\*\*
+                           *** TEMPLATES ***
   Region              Def Coll     Rec Size   Key Size  Null Subs   Std Null Coll  Jnl   Inst Freeze on Err  Qdb Rndwn  Epoch Taper  AutoDB  Stats  LOCK Crit
   ------------------------------------------------------------------------------------------------------------------------------------------------------------
   <default>              0           256        64       NEVER            N         N             N              N           Y          N      Y      Sep
@@ -970,7 +1021,8 @@ Example:
 
 This displays only the TEMPLATES section of the Global Directory.
 
-.. parsed-literal::
+.. code-block:: bash
+
    GDE>SHOW -command
    TEMPLATE -REGION -NOAUTODB
    TEMPLATE -REGION -COLLATION_DEFAULT=0
@@ -1055,7 +1107,8 @@ GDE maintains a separate set of -SEGMENT qualifier values for each ACCESS_METHOD
 
 The format of the TEMPLATE command is:
 
-.. parsed-literal::
+.. code-block:: bash
+
    T[EMPLATE] -R[EGION] [-REGION-qualifier...]
    T[EMPLATE] -S[EGMENT] [-SEGMENT-qualifier...]
 
@@ -1063,7 +1116,8 @@ The TEMPLATE command requires specification of an object-type.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    GDE> template -segment -allocation=200000
 
 This command modifies the segment template so that any segments ADDed after this time produce database files with an ALLOCATION of 200,000 GDS blocks.
@@ -1076,7 +1130,8 @@ The VERIFY command validates information entered into the current Global Directo
 
 The format of the VERIFY command is:
 
-.. parsed-literal::
+.. code-block:: bash
+
    V[ERIFY]
    V[ERIFY] -A[LL]
    V[ERIFY] -G[BLNAME]
@@ -1095,7 +1150,8 @@ VERIFY with no qualifier, VERIFY -MAP, and VERIFY -ALL each check all current in
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    GDE> verify -region regis
 
 This command verifies the region "regis".
@@ -1112,7 +1168,8 @@ Name Qualifiers
 
 The following -NAME qualifier can be used with the ADD or CHANGE commands.
 
-.. parsed-literal::
+.. code-block:: bash
+
    -REGION=region-name
 
 Specifies the name of a region. Region names are not case-sensitive, but are represented as uppercase by GDE.
@@ -1123,7 +1180,8 @@ The maximum length is 31 alphanumeric characters.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    GDE> add -name a* -region=areg
 
 This command creates the namespace a*, if it does not exist, and maps it to the region areg.
@@ -1246,7 +1304,8 @@ With GDE, you can create the journal files and define the journal parameters; ho
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    CHANGE -REGION DEFAULT -JOURNAL=(ALLOCATION=2048,AUTOSWITCHLIMIT=8386560,BEFORE_IMAGE,BUFFER_SIZE=2312,EXTENSION=2048)
 
 For information on all Journal options and their allowable minimum and maximum values, see “SET -JOURNAL Options ” in the "YottaDB Journaling" chapter.
@@ -1273,7 +1332,8 @@ For example, the key ^ACN(\\"Name\\",\\"Type\\") internally occupies 17 bytes. L
 
 For example,
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>s x="^ACN(""Name"",""Type"")"
    YDB>s y=$view("YGVN2GDS",x)
    YDB>w $L(y)
@@ -1419,7 +1479,8 @@ Specifies the access method or the YottaDB buffering strategy for storing and re
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    GDE> change -segment DEFAULT -access_method=MM
 
 This command sets MM as the access method or the YottaDB buffering strategy for storing and retrieving the database for segment DEFAULT.

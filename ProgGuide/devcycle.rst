@@ -116,7 +116,8 @@ The procedure below describes how to define an environment variable. Use this pr
 
 To define an environment variable type the following commands:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ env_variable=env_variable_value
    $ export env_variable
 
@@ -132,14 +133,16 @@ ydb_dist is used to establish the location of the installed YottaDB program and 
 
 The syntax for ydb_dist is as follows:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ ydb_dist=<distribution-directory>
 
 The standard installation places these files in /usr/local/lib/yottadb.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ ydb_dist=/usr/local/lib/yottadb/r128
    $ export ydb_dist
 
@@ -149,7 +152,8 @@ Add ydb_dist to your PATH environment variable to have UNIX search the YottaDB i
 
 To add ydb_dist to your PATH type the following commands:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ PATH=$PATH:$ydb_dist
    $ export PATH
 
@@ -166,12 +170,14 @@ If you maintain multiple global directories, define ydb_gbldir to the Global Dir
 
 The syntax of a ydb_gbldir definition is:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ ydb_gbldir=/directory/filename.gld
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ ydb_gbldir=/usr/staff/yottadb.gld
    $ export ydb_gbldir
 
@@ -185,7 +191,8 @@ The ydb_principal environment variable specifies the value for $principal, which
 
 The following is an example of ydb_principal definition:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ ydb_principal=/usr/filename
    $ export ydb_principal
 
@@ -197,14 +204,16 @@ ydb_routines
 
 The ydb_routines environment variable specifies a search list of possible locations for M routines. This value is used to initialize $ZROUTINES, (the intrinsic special variable that enables YottaDB to find the routine (program) you want to run). ydb_routines is required for ZLINKing. ydb_routines is particularly helpful in calling percent utilities and the Global Directory Editor (GDE), which are in ydb_dist.
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ ydb_routines="directories in search list"
 
 The directories in the search list must be separated by a space and enclosed in quotation marks (" "). Environment variables are accepted in the search list.
 
 The following is an example of ydb_routines definition:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ ydb_routines=". $ydb_dist"
    $ export ydb_routines
 
@@ -220,7 +229,8 @@ The EDITOR environment variable specifies the UNIX text editor used when editing
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ EDITOR=/usr/bin/vi
    $ export EDITOR
 
@@ -240,13 +250,15 @@ Example:
 
 This example is a sequence of events that illustrate steps you might typically perform in creating a new global directory, in our example PAYROLL.GLD.
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ ls payroll.gld
    payroll.gld not found
 
 The ls command verifies that there are no existing files with the name payroll.gld.
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ ydb_gbldir=payroll.gld
    $ export ydb_gbldir
 
@@ -254,7 +266,8 @@ This establishes the current value of the environment variable ydb_gbldir as pay
 
 This example defines ydb_gbldir without a full pathname. The environment variable points to the payroll.gld file in the current working directory. Therefore if the default directory changes, YottaDB attempts to locate the Global Directory in the new default directory and cannot use the original file. If you intend for the Global Directory to consistently point to this file, even if the default directory changes, use a full file-specification for ydb_gbldir.
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ /usr/local/lib/yottadb/r128/ydb
    YDB>do ^GDE
    %GDE-I-LOADGD, Loading Global Directory file
@@ -264,10 +277,11 @@ This example defines ydb_gbldir without a full pathname. The environment variabl
 
 This invokes the Global Directory Editor by entering GDE from the YottaDB prompt and produces an informational message.
 
-.. parsed-literal::
+.. code-block:: bash
+
    GDE> show all
 
-                              \*\*\* Templates \*\*\*
+                              *** Templates ***
     Region                        Def Coll    Rec Size   Key Size   Null Subs    Std Null Coll   Journaling
     --------------------------------------------------------------------------------------------------------
     <default>                       0           4080       255       NEVER             Y             Y
@@ -287,25 +301,25 @@ This invokes the Global Directory Editor by entering GDE from the YottaDB prompt
                                                                                LOCK=40
 
 
-                                \*\*\* Names \*\*\*
+                                *** Names ***
     Global                                              Region
     ----------------------------------------------------------------
     *                                                  DEFAULT
 
 
-                                \*\*\* Regions \*\*\*
+                                *** Regions ***
     Region          Dynamic Segment     Def Coll    Rec Size   Key Size   Null Subs   Std Null Coll   Journaling
     ---------------------------------------------------------------------------------------------------------------
     DEFAULT         DEFAULT               0          4080       255        NEVER          Y              Y
 
 
-                                \*\*\* Journaling Information \*\*\*
+                                *** Journaling Information ***
     Region                          Jnl File (def ext: .mjl)     Before   Buff   Alloc   Exten
     ------------------------------------------------------------------------------------------------------
     DEFAULT                   $gtmdir/$ydb_rel/g/payroll.mjl    Y        128    2048     2048
 
 
-                                 \*\*\* Segments \*\*\*
+                                 *** Segments ***
     Segment                      File (def ext: .dat)           Acc  Typ  Block   Alloc  Exten   Options
     ---------------------------------------------------------------------------------------------------------
     DEFAULT                    $gtmdir/$ydb_rel/g/payroll.dat  BG   DYN  4096    5000   10000   GLOB=1000
@@ -314,7 +328,7 @@ This invokes the Global Directory Editor by entering GDE from the YottaDB prompt
                                                                                                  ENCR=OFF
 
 
-                                  \*\*\* MAP \*\*\*
+                                  *** MAP ***
     --------------------------------Names----------------------------------------------
     From              Up to              Region / Segment / File(def ext: .dat)
     ---------------------------------------------------------------------------------------
@@ -329,12 +343,14 @@ This invokes the Global Directory Editor by entering GDE from the YottaDB prompt
 
 The GDE SHOW command displays the default Global Directory.
 
-.. parsed-literal::
+.. code-block:: bash
+
    GDE> change -segment default -allocation=1000 file=payroll.dat
 
 The GDE CHANGE command sets the database file name to payroll.dat, and specifies a file size of 1000 blocks (of 1024 bytes).
 
-.. parsed-literal::
+.. code-block:: bash
+
    GDE>exit
    %GDE-I-VERIFY, Verification OK
    %GDE-I-GDCREATE, Creating Global Directory file /usr/lib/yottadb/r128/payroll.gld
@@ -342,7 +358,8 @@ The GDE CHANGE command sets the database file name to payroll.dat, and specifies
 
 The GDE EXIT command terminates GDE. The Global Directory Editor creates a default Global Directory and displays a confirmation message.
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ ls payroll.gld
    payroll.gld
 
@@ -354,7 +371,8 @@ To create the database file payroll.dat, use the MUPIP CREATE utility.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip create
    Created file payroll.dat
 
@@ -362,7 +380,8 @@ The MUPIP CREATE command generates the database file. Notice that the MUPIP CREA
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip load payroll.gld
    MUPIP EXTRACT
    02-MAY-2013  22:21:37 ZWR
@@ -390,7 +409,8 @@ If you focus on program development outside the YottaDB environment, skip this s
 
 Invoke Direct Mode to create and edit a source program in YottaDB. At the YDB> prompt, invoke the editor by typing:
 
-.. parsed-literal::
+.. code-block:: bash
+
    ZEDIT <filename>
 
 ZEDIT invokes the editor specified by the EDITOR environment variable, which creates a seperate file for each M source module.
@@ -399,7 +419,8 @@ The YottaDB environment works most efficiently if the file has the same name as 
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ ydb
    YDB>ZEDIT "payroll"
 
@@ -407,7 +428,8 @@ This syntax uses the ydb script to enter YottaDB from the shell, and uses ZEDIT 
 
 $ZROUTINES is a read-write special variable containing an ordered list of directories that certain YottaDB functions use to locate source and object files. Generally, a system manager sets up the environment to define the environment variable ydb_routines. At image invocation, YottaDB initializes $ZROUTINES to the value of ydb_routines. Once you are running M, you can SET and refer to $ZROUTINES using the format:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>SET $ZROUTINES=expr
 
 Where:
@@ -427,7 +449,8 @@ To create and edit a source program from the shell, invoke any text editor at th
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ vi payroll.m
 
 The vi command initiates an editing session for payroll.m from the shell prompt. If payroll.m does not already exist, vi creates it. Because this example uses UNIX rather than YottaDB tools, we must specify the .m file extension.
@@ -475,7 +498,8 @@ For complete descriptions of ZLINK and auto-ZLINK, see `Chapter 6: “Commands�
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>do ^payroll
    YDB>do ^taxes
 
@@ -488,7 +512,8 @@ If you receive error messages from the compilation, you may fix them immediately
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>zlink "payroll"
    YDB>zlink "taxes.m"
 
@@ -504,7 +529,8 @@ From the shell, invoke the compiler by entering yottadb file-name at the shell p
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ yottadb payroll.m
    $ yottadb taxes.m
 
@@ -520,7 +546,8 @@ The yottadb command invokes the compiler to translate an M source file into obje
 
 The format for the yottadb command is:
 
-.. parsed-literal::
+.. code-block:: bash
+
    yottadb [-qualifier[...]] pathname
 
 * Source programs must have an extension of .m.
@@ -747,7 +774,8 @@ For additional information on $ZSOURCE and $ZROUTINES, refer to `Chapter 8: “I
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZLINK "taxes"
 
 If ZLINK finds taxes.m or taxes.o, the command adds the routine taxes to the current image. When ZLINK cannot locate taxes.o, or when it finds taxes.o is older than taxes.m, it compiles taxes.m, producing a new taxes.o. Then, it adds the contents of the new object file to the image.
@@ -768,7 +796,8 @@ To maintain compatibility with other editions of YottaDB that do not permit the 
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>zlink "_MGR"
 
 This ZLINK links the M routine %MGR into the current image.
@@ -779,14 +808,16 @@ Executing from the Shell
 
 You can run a program from the shell prompt using the following command:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ yottadb -run ^filename
 
 The yottadb command searches the directories specified by the environment variable ydb_routines to locate the specified file name.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ yottadb -run ^payroll
 
 This executes a routine named payroll.

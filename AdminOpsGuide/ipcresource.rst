@@ -60,7 +60,8 @@ Create two databases - America and Brazil - on two different servers ( Server_A 
 
 In Server_A and in the directory holding database files for America, give the following commands (note that the default journal pool size is 64MB, a value of 1048576 bytes - YottaDB's minimum size of 1MB for this exercise):
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ export ydb_repl_instance=multisite.repl
    $ mupip replicate -instance_create -name=America
    $ mupip set -replication=on -region "*"
@@ -68,18 +69,21 @@ In Server_A and in the directory holding database files for America, give the fo
 
 Now execute the following command:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ ydb_dist/ftok yottadb.dat multisite.repl
 
 This command produces the "public" (system generated) IPC Keys (essentially hash values) for yottadb.dat and its replication instance multisite.repl. It produces a sample output like the following:
 
-.. parsed-literal::
+.. code-block:: bash
+
    yottadb.dat :: 721434869 [ 0x2b0038f5 ]
    multisite.repl :: 721434871 [ 0x2b0038f7 ]
 
 The keys starting with 0x2b (Hexadecimal form) are the keys for the semaphores used by replication instance America with the high order hexadecimal 0x2b replaced by 0x2c for the replication instance file (YottaDB's standard prefix for semaphores for journal pools is 0x2c and the prefix for database files is 0x2b). You can observe this with the ipcs command:
 
-.. parsed-literal::
+.. code-block:: bash
+
    ------ Semaphore Arrays --------
    key  semid owner perms nsems
    0xd74e4524 196608 welsley 660 1
@@ -93,24 +97,28 @@ The keys starting with 0x2b (Hexadecimal form) are the keys for the semaphores u
 
 Execute the following command and note down the shared memory id and private semaphore id on instance America.
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip ftok yottadb.dat
 
 This command identifies the "private" (YottaDB generated) semaphores that a process uses for all "normal" access. The sample output of this command looks like the following:
 
-.. parsed-literal::
+.. code-block:: bash
+
    File  ::   Semaphore Id   ::   Shared Memory Id  :: FileId
    ---------------------------------------------------------------------------------------------------------------
    yottadb.dat ::  1081348 [0x00108004] :: 2490370 [0x00260002] :: 0xf53803000000000000fe000000000000ffffffd2
 
 Now, execute the following command and note down the shared memory and private semaphore id for the journal pool.
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip ftok -jnl multisite.repl
 
 The sample output of this command looks like the following:
 
-.. parsed-literal::
+.. code-block:: bash
+
    File   :: Semaphore Id     ::   Shared Memory Id  :: FileId
    ---------------------------------------------------------------------------------------------------------------
    multisite.repl :: 1015810 [0x000f8002]  ::  2457601 [0x00258001] :: 0xf73803000000000000fe000000000000ffffffd2
@@ -119,7 +127,8 @@ Note that the Semaphore id 1015810 and Shared Memory ID 2457601 are in the sampl
 
 Now execute the command ipcs -a to view the current IPC resources. This command produces an output like the following:
 
-.. parsed-literal::
+.. code-block:: bash
+
    ------ Shared Memory Segments --------
    key  shmid owner perms bytes nattch status
    0x00000000 0  root  777 122880 1
@@ -146,12 +155,14 @@ Now execute the command ipcs -a to view the current IPC resources. This command 
 
 Using the following formula, where n is the number of regions, to calculate YottaDB's IPC resources in a multisite replication configuration:
 
-.. parsed-literal::
+.. code-block:: none
+
    IPCs = (n regions * (1 shm/region + 1 ftok sem/region + 1 private sem/region)) + 1 sem/journal-pool + 1 sem/receiver-pool
 
 In this case, America has one region and no receiver-pool so:
 
-.. parsed-literal::
+.. code-block:: none
+
    1 region * 3 IPCs/region + 1 IPC/journal-pool = 4 IPCs
 
 Therefore, assuming that instance America has 1 region, the total IPC utilized by YottaDB is: 4 [1 * 3 + 1 +0]. Note that there is no receiver pool for instance America.
@@ -161,7 +172,8 @@ Therefore, assuming that instance America has 1 region, the total IPC utilized b
 
 Now connect to Server_B and give the following commands in the directory holding database files for Brazil:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ export ydb_repl_instance=multisite1.repl
    $ mupip replicate -instance_create -name=Brazil $ mupip rundown -region "*"
    $ mupip set -journal="enable,before,on" -replication=on -region "*"
@@ -170,12 +182,14 @@ Now connect to Server_B and give the following commands in the directory holding
 
 Now execute the command:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ydb_dist/ftok yottadb.dat multisite1.repl
 
 This command produces the "public" (system generated) IPC Key of yottadb.dat and its replication instance multisite1.repl. It produces a sample output like the following:
 
-.. parsed-literal::
+.. code-block:: bash
+
      yottadb.dat :: 722134735 [ 0x2b0ae6cf ]
      multisite1.repl :: 722134737 [ 0x2b0ae6d1 ]
 
@@ -183,24 +197,28 @@ Note that keys starting with 0x2b in the output of the ipcs -a command are the p
 
 Then, execute the following command and note down the shared memory id and private semaphore id on instance Brazil.
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip ftok yottadb.dat
 
 This command identifies the "private" (YottaDB generated) semaphores that a process uses for all "normal" access. The sample output of this command looks like the following:
 
-.. parsed-literal::
+.. code-block:: bash
+
    File :: Semaphore Id  :: Shared Memory Id :: FileId
    --------------------------------------------------------------------------------------------------------------
    yottadb.dat :: 327683 [0x00050003] :: 11665410 [0x00b20002]:: 0xcfe63400000000000a0000000000000000000000
 
 Now, execute the following command and note down the shared memory and private semaphore id for the journal pool.
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip ftok -jnl multisite1.repl
 
 The sample output of this command looks like the following:
 
-.. parsed-literal::
+.. code-block:: bash
+
    File  :: Semaphore Id  :: Shared Memory Id :: FileId
    ---------------------------------------------------------------------------------------------------------------
    multisite1.repl :: 262145 [0x00040001] :: 11632641[0x00b18001]:: 0xd1e63400000000000a0000000000000000000
@@ -212,7 +230,8 @@ Now, execute the command ipcs -a to view the IPC resources for Brazil.
 
 This command produces a sample output like the following:
 
-.. parsed-literal::
+.. code-block:: bash
+
    ------ Shared Memory Segments --------
    key  shmid owner perms bytes nattch status
    0x00000000 11632641 yottadbuser 777 1048576 3

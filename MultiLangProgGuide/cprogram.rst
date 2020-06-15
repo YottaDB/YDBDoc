@@ -411,7 +411,8 @@ determine whether a return code is a YottaDB `error return code`_.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: C
+
    // Initialize state struct
    HASH128_STATE_INIT(hash_state, 0);
 
@@ -429,11 +430,12 @@ YottaDB functions are divided into:
 :code:`YDB_STRING_TO_BUFFER` — Sets a :code:`ydb_buffer_t` structure
 to point to an existing null-terminated C string, i.e.,
 
-.. parsed-literal::
-   #define YDB_STRING_TO_BUFFER(STRING, BUFFERP)                           \\
-   {                                                                       \\
-	   (BUFFERP)->buf_addr = STRING;                                   \\
-	   (BUFFERP)->len_used = (BUFFERP)->len_alloc = strlen(STRING);    \\
+.. code-block:: C
+
+   #define YDB_STRING_TO_BUFFER(STRING, BUFFERP)                           \
+   {                                                                       \
+	   (BUFFERP)->buf_addr = STRING;                                   \
+	   (BUFFERP)->len_used = (BUFFERP)->len_alloc = strlen(STRING);    \
    }
 
 
@@ -1720,13 +1722,14 @@ An example is to set it to the sum of the "len" values passed in across all call
 
 Example:
 
-.. parsed-literal::
+.. code-block:: C
+
    // Initialize state struct
    HASH128_STATE_INIT(hash_state, 0);
 
    // Create keys/strings to ingest
-   char \*key1 = "ifembu8r308j243h5g3h84t7yf23h0h";
-   char \*key2 = "ougoh2408rh2fhe08yh2ti8rhhrguo2r3huocdiWEN23";
+   char *key1 = "ifembu8r308j243h5g3h84t7yf23h0h";
+   char *key2 = "ougoh2408rh2fhe08yh2ti8rhhrguo2r3huocdiWEN23";
 
    // Add keys to hash
    ydb_mmrhash_128_ingest(&hash_state, (void*)key1, strlen(key1));

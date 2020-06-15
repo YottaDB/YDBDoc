@@ -200,7 +200,7 @@ from the file `eintr_wrappers.h
 demonstrates how YottaDB itself is coded to handle system calls that
 terminate prematurely with an EINTR:
 
-.. code-block:: c
+.. code-block:: C
 
     #define FGETS_FILE(BUF, LEN, FP, RC)                            \
     {                                                               \

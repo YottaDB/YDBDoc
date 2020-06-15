@@ -34,7 +34,8 @@ Returns the integer ASCII code for a character in the given string. For a yottad
 
 The format for the $ASCII function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $A[SCII](expr[,intexpr])
 
 * The expression is the source string from which $ASCII() extracts the character it decodes.
@@ -51,7 +52,8 @@ Examples of ASCII()
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>For i=0:1:3 Write !,$Ascii("Hi",i)
    -1
    72
@@ -63,7 +65,8 @@ This loop displays the result of $ASCII() specifying a character position before
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>Write $ZCHSET
    UTF-8
    YDB>Write $Ascii("主")
@@ -81,7 +84,8 @@ Returns a string of one or more characters corresponding to integer ASCII codes 
 
 The format for the $CHAR function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $C[HAR](intexpr[,...])
 
 * The integer expression(s) specify the codes of the character(s) $CHAR() returns.
@@ -95,7 +99,8 @@ Examples of $CHAR()
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write $char(77,7)
    M
    YDB>
@@ -104,14 +109,16 @@ This example uses $CHAR() to WRITE the letter M and signal the terminal "bell."
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    set nam=$extract(nam,1,$length(nam)-1)_$char($ascii(nam,$length(nam))-1)
 
 This example uses $CHAR() and $ASCII() to set the variable nam to a value that immediately precedes its previous value in the set of strings of the same length as nam.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write $zchset
    UTF-8
    YDB>write $char(20027)
@@ -129,7 +136,8 @@ Returns an integer code describing the value and descendent status of a local or
 
 The format for the $DATA function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $D[ATA](glvn)
 
 * The subscripted or unsubscripted global or local variable name specifies the target node.
@@ -161,7 +169,8 @@ Examples for $DATA()
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>Kill  Write $Data(a)
    0
    YDB>Set a(1)=1 Write $Data(a(1))
@@ -176,7 +185,8 @@ This uses $DATA to display all possible $DATA() results.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    lock ^ACCT(0)
    if '$data(^ACCT(0)) set ^ACCT(0)=0
    set (ACCT,^ACCT(0))=^ACCT(0)+1
@@ -186,7 +196,8 @@ This uses $DATA() to determine whether a global node requires initialization.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    for  set cus=$O(^cus(cus)) quit:cus=""  if $data(^(cus))>1 do WORK
 
 This uses $DATA() to determine whether a global node has descendants and requires additional processing.
@@ -199,7 +210,8 @@ Returns a substring of a given string.
 
 The format for the $EXTRACT function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $E[XTRACT](expr[,intexpr1[,intexpr2]])
 
 * The expression specifies a string from which $EXTRACT() derives a substring.
@@ -218,7 +230,8 @@ Examples of $EXTRACT()
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>for i=0:1:3 write !,$extract("HI",i),"<"
    <
    H<
@@ -230,7 +243,8 @@ This loop displays the result of $EXTRACT(), specifying no ending character posi
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>For i=0:1:3 write !,$extract("HI",1,i),"<"
    <
    H<
@@ -242,7 +256,8 @@ This loop displays the result of $EXTRACT() specifying a beginning character pos
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>zprint ^trim
    trim(x)
        new i,j
@@ -266,7 +281,8 @@ Returns an integer character position that locates the occurrence of a substring
 
 The format for the $FIND function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $F[IND](expr1,expr2[,intexpr])
 
 * The first expression specifies the string within which $FIND() searches for the substring.
@@ -285,7 +301,8 @@ Examples of $FIND()
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write $find("HIFI","I")
    3
    YDB>
@@ -294,7 +311,8 @@ This example uses $FIND() to WRITE the position of the first occurrence of the c
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write $find("HIFI","I",3)
    5
    YDB>
@@ -303,7 +321,8 @@ This example uses $FIND() to WRITE the position of the next occurrence of the ch
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    YDB>set t=1 for  set t=$find("BANANA","AN",t) quit:'t  write !,t
    4
    6
@@ -313,7 +332,8 @@ This example uses a loop with $FIND() to locate all occurrences of "AN" in "BANA
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>set str="M databases are hierarchical"
    YDB>Write $find(str," ")
    3
@@ -334,7 +354,8 @@ Returns a string containing a formatted number.
 
 The format for the $FNUMBER function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $FN[UMBER](numexpr,expr[,intexpr])
 
 * The numeric expression specifies the number that $FNUMBER() formats.
@@ -359,7 +380,8 @@ Examples of $FNUMBER()
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>do ^fnum
    fnum;
      zprint ^fnum
@@ -379,7 +401,8 @@ Example:
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    set x=$fnumber(x,"-")
 
 This example uses $FNUMBER() to SET x equal to its absolute value.
@@ -393,7 +416,8 @@ Returns the value of a local or global variable if the variable has a value. If 
 
 The format for the $GET function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $G[ET](glvn[,expr])
 
 * The subscripted or unsubscripted global or local variable name specifies the node for which $GET() returns a value.
@@ -402,12 +426,14 @@ The format for the $GET function is:
 
 M defines $GET(x,y) as equivalent to:
 
-.. parsed-literal::
+.. code-block:: none
+
    $Select($Data(x)[0:y,1:x)
 
 and $GET(x) as equivalent to:
 
-.. parsed-literal::
+.. code-block:: none
+
    $GET(x,"")
 
 $GET() provides a tool to eliminate separate initialization of variables. This technique may provide performance benefits when used to increase the density of a sparse global array by eliminating nodes that would otherwise hold absent optional information. On the other hand, some uses of one argument $GET() can mask logic problems.
@@ -420,7 +446,8 @@ Examples of $GET()
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    setstatus;
             if '$data(^PNT(NAME,TSTR)) set STATUS="NEW TEST"
             else  if ^PNT(NAME,TSTR)="" set STATUS="WAITING FOR RESULT"
@@ -428,13 +455,15 @@ Example:
 
 This example can be reduced to two lines of code by using $GET(), shown in the following example. However, by using $GET() in its one-argument form, the distinction between an undefined variable and one with a null value is lost:
 
-.. parsed-literal::
+.. code-block:: none
+
    set STATUS=$get(^PNT(NAME,TSTR))
    if STATUS="" set STATUS="WAITING FOR RESULT"
 
 This is solved by using the two-argument form of $GET():
 
-.. parsed-literal::
+.. code-block:: none
+
    set STATUS=$get(^PNT(NAME,TSTR),"NEW TEST")
    if STATUS="" set STATUS="WAITING FOR RESULT"
 
@@ -446,7 +475,8 @@ Atomically adds (increments) a global variable by a numeric value. Note that inc
 
 The format of the $INCREMENT function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $INCREMENT(glvn[,numexpr])
 
 * $I, $INCR, $INCREMENT, $ZINCR, and $ZINCREMENT are considered as valid synonyms of the full function name.
@@ -469,7 +499,8 @@ Examples of $INCREMENT()
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>set i=1
    YDB>write $increment(i)
    2
@@ -497,7 +528,8 @@ Returns a formatted string.
 
 The format for the $JUSTIFY function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $J[USTIFY](expr,intexpr1[,intexpr2])
 
 * The expression specifies the string to be formatted by $JUSTIFY().
@@ -521,17 +553,19 @@ Examples of $JUSTIFY()
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write ":",$justify("HELLO",10),":",!,":",$justify("GOODBYE",5),":"
    :     HELLO:
-   \:GOODBYE\:
+   :GOODBYE:
    YDB>
 
 This uses $JUSTIFY() to display "HELLO" in a field of 10 spaces and "GOODBYE" in a field of 5 spaces. Because the length of "GOODBYE" exceeds five spaces, the result overflows the specification.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write "1234567890",!,$justify(10.545,10,2)
    1234567890
         10.55
@@ -541,7 +575,8 @@ This uses $JUSTIFY() to WRITE a rounded value right justified in a field of 10 s
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write "1234567890",!,$justify(10.544,10,2)
    1234567890
         10.54
@@ -551,7 +586,8 @@ Again, this uses $JUSTIFY() to WRITE a rounded value right justified in a field 
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write "1234567890",!,$justify(10.5,10,2)
    1234567890
         10.50
@@ -561,7 +597,8 @@ Once again, this uses $JUSTIFY() to WRITE a rounded value right justified in a f
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write $justify(.34,0,2)
    0.34
    YDB>
@@ -576,7 +613,8 @@ Returns the length of a string measured in characters, or in "pieces" separated 
 
 The format for the $LENGTH function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $L[ENGTH](expr1[,expr2])
 
 * The first expression specifies the string that $LENGTH() "measures".
@@ -592,7 +630,8 @@ Examples of $LENGTH()
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>Write $length("KINGSTON")
    8
    YDB>
@@ -601,7 +640,8 @@ This uses $LENGTH() to WRITE the length in characters of the string "KINGSTON".
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>set x="Smith/John/M/124 Main Street/Ourtown/KA/USA"
    YDB>write $length(x,"/")
    7
@@ -611,7 +651,8 @@ This uses $LENGTH() to WRITE the number of pieces in a string, as delimited by /
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write $length("/2/3/","/")
    4
    YDB>
@@ -626,7 +667,8 @@ Returns an evaluated representation of some or all of a local or global variable
 
 The format for the $NAME function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $NA[ME](glvn[,intexpr])
 
 * The subscripted or unsubscripted global or local variable name, including naked references, specifies the name for which $NAME() returns an evaluated representation.
@@ -639,7 +681,8 @@ Examples of $NAME()
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>set X="A""B",^Y(1,X,"B",4)=""
    YDB>write $name(^(3),3)
    ^Y(1,"A""B","B")
@@ -649,7 +692,8 @@ This example sets up a naked reference and then uses $NAME() to display the firs
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write $name(^(3),0)
    ^Y
    YDB>
@@ -669,7 +713,8 @@ $NEXT() has been replaced by $ORDER(). $NEXT has been retained in the current st
 
 The format for the $NEXT function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $N[EXT](glvn)
 
 * The subscripted global or local variable name specifies the node following which $NEXT() searches for the next node with data and/or descendants; the number of subscripts contained in the argument implicitly defines the array level.
@@ -684,7 +729,8 @@ Returns the subscript of the next or prior local or global variable name in coll
 
 The format for the $ORDER function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $O[RDER](glvn[,expr])
 
 * The subscripted global or local variable name specifies the node from which $ORDER() searches for the next or previous node that has data and/or descendants. The number of subscripts contained in the argument implicitly defines the array level.
@@ -707,7 +753,8 @@ Examples of $ORDER()
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>zwrite
    lcl(1)=3
    lcl("x")=4
@@ -718,7 +765,8 @@ This example returns the first node, that is 1, because the specified last subsc
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write $order(lcl(1))
    x
 
@@ -726,13 +774,15 @@ This example returns the first node after lcl(1) that is x because lcl has no nu
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write $order(lcl(""),-1)
    x
 
 This example returns the last node that is, x, because the last subscript of the first argument is null and second argument is -1.
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>set lcl("")=2
    YDB>zwrite
    lcl("")=2
@@ -745,7 +795,8 @@ This example returns the second node at the specified level because the null sub
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write $order(lcl(""),-1)
    x
    YDB>write $order(lcl("x"),-1)
@@ -753,7 +804,8 @@ Example:
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>kill  set (a(1),a(2000),a("CAT"),a("cat"),a("ALF"),a(12))=1
    YDB>set x="" for  set x=$order(a(x)) quit:x=""  write !,x
    1
@@ -776,7 +828,8 @@ This example uses a $ORDER() loop to display all the subscripts at the first lev
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>kill set (%(1),tiva(2),A(3),tiv(4),Q(5),%a(6))=""
    YDB>set x="%"
    YDB>write:$data(@x) !,x for  set x=$order(@x) quit:x=""  write !,x
@@ -802,7 +855,8 @@ This example uses $ORDER() to display the current local variable names in both f
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    set acct="",cntt=""
    for  fet acct=$order(^acct(acct)) quit:acct=""  do
    . for  set cntt=$order(^acct(acct,cntt)) do WORK
@@ -818,7 +872,8 @@ Returns a substring delimited by a specified string delimiter made up of one or 
 
 The format for the $PIECE function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $P[IECE](expr1,expr2[,intexpr1[,intexpr2]])
 
 * The first expression specifies the string from which $PIECE() computes its result.
@@ -829,7 +884,7 @@ The format for the $PIECE function is:
 * If the second integer expression exceeds the actual number of pieces in the first expression, $PIECE() returns all of the expression after the delimiter selected by the first integer expression.
 * The $PIECE() result never includes the "outside" delimiters; however, when the second integer argument specifies multiple pieces, the result contains the "inside" occurrences of the delimiter.
 * $PIECE() can also be used as tool for efficiently using values that contain multiple elements or fields, each of which may be variable in length.
-* Applications typically use a single character for a $PIECE() delimiter (second argument) to minimize storage overhead, and increase efficiency at run-time. The delimiter must be chosen so the data values never contain the delimiter. Failure to enforce this convention with edit checks may result in unanticipated changes in the position of pieces within the data value. The caret symbol (^), backward slash (\), and asterisk (*) characters are examples of popular visible delimiters. Multiple character delimiters may reduce the likelihood of conflict with field contents. However, they decrease storage efficiency, and are processed with less efficiency than single character delimiters. Some applications use control characters, which reduce the chances of the delimiter appearing in the data but sacrifice the readability provided by visible delimiters.
+* Applications typically use a single character for a $PIECE() delimiter (second argument) to minimize storage overhead, and increase efficiency at run-time. The delimiter must be chosen so the data values never contain the delimiter. Failure to enforce this convention with edit checks may result in unanticipated changes in the position of pieces within the data value. The caret symbol (^), backward slash (\\), and asterisk (*) characters are examples of popular visible delimiters. Multiple character delimiters may reduce the likelihood of conflict with field contents. However, they decrease storage efficiency, and are processed with less efficiency than single character delimiters. Some applications use control characters, which reduce the chances of the delimiter appearing in the data but sacrifice the readability provided by visible delimiters.
 * A SET command argument can have something that has the format of a $PIECE() on the left-hand side of its equal sign (=). This construct permits easy maintenance of individual pieces within a string. It also can be used to generate a string of delimiters. For more information on SET $PIECE(), refer to `“Set” <./commands.html#set>`_.
 * $PIECE() can also be used as target in a SET command to change part of the value of a node. Also, when SET arguments have multiple parenthesized (set-left) targets and a target is used as a subscript in more than one item in the list of targets that follow, all the targets use the before-SET value (not the after-SET value) in conformance to the M-standard. For more information on SET $PIECE(), refer to `“Set” <./commands.html#set>`_.
 * For a process started in UTF-8 mode, $PIECE() interprets the string arguments as UTF-8 encoded. With VIEW "BADCHAR" enabled, $PIECE() produces a run-time error when it encounters a malformed character, but it does not process the characters that fall after the span specified by the arguments.
@@ -841,7 +896,8 @@ Examples of $PIECE()
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>for i=0:1:3 write !,$piece("1 2"," ",i),"<"
    <
    1<
@@ -853,7 +909,8 @@ This loop displays the result of $PIECE(), specifying a space as a delimiter, a 
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>for i=-1:1:3 write !,$piece("1 2"," ",i,i+1),"<"
    <
    1<
@@ -866,14 +923,16 @@ This example is similar to the previous example except that it displays two piec
 
 Example:
 
-.. parsed-literal::
-   for p=1\:1\:$length(x,"/") write ?p-1*10,$piece(x,"/",p)
+.. code-block:: none
+
+   for p=1:1:$length(x,"/") write ?p-1*10,$piece(x,"/",p)
 
 This example uses $LENGTH() and $PIECE() to display all the pieces of x in columnar format.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>set $piece(x,".",25)="" write x
    ........................
 
@@ -881,7 +940,8 @@ This SETs the 25th piece of the variable x to null, with a delimiter of a period
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>set ^x=1,$piece(^a,";",3,2)=^b
 
 This example leaves the naked indicator to pointing to the global ^b.
@@ -892,7 +952,8 @@ $Qlength()
 
 Returns the number of subscripts in a variable name. The format is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $QL[ENGTH] (namevalue)
 
 * The namevalue has the form of an evaluated subscripted or unsubscripted global variable.
@@ -905,8 +966,9 @@ Examples of $QLENGTH()
 
 Example:
 
-.. parsed-literal::
-   YDB>write $data(^|"XXX"\|ABC(1,2,3,4))
+.. code-block:: bash
+
+   YDB>write $data(^|"XXX"|ABC(1,2,3,4))
    0
    YDB>set X=$name(^(5,6))
    YDB>write $qlength(X)
@@ -922,7 +984,8 @@ Returns a component of a variable name.
 
 The format of the $QSUBSCRIPT function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $QS[UBSCRIPT](namevalue, intexpr)
 
 The namevalue has the form of an evaluated subscripted or unsubscripted global or local variable name.
@@ -945,9 +1008,10 @@ Example:
 
 Assume that X is defined as in the `Examples of $Qlength() <./functions.html#examples-of-qlength>`_ earlier in this chapter;
 
-.. parsed-literal::
+.. code-block:: none
+
    write X
-   X="^|""XXX""\|ABC(1,2,3,5,6)"
+   X="^|""XXX""|ABC(1,2,3,5,6)"
    YDB>write $qsubscript(X,-2)
    error
    YDB>WRITE $qsubscript(X,-1)
@@ -969,7 +1033,8 @@ Returns the next subscripted local or global variable node name, independent of 
 
 The format for the $QUERY function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $Q[UERY](glvn)
 
 * The subscripted or unsubscripted global or local variable name specifies the starting node from which $QUERY() searches for a node with a data value.
@@ -988,7 +1053,8 @@ Examples of $QUERY()
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    set ^X(1,2,3)="123"
    set ^X(1,2,3,7)="1237"
    set ^X(1,2,4)="124"
@@ -1002,13 +1068,15 @@ The tree diagram below represents the structure produced by the preceding routin
 
 The following routine:
 
-.. parsed-literal::
+.. code-block:: none
+
    set y="^X"
    for  set y=$query(@y) quit:y=""  write !,y,"=",@y
 
 produces the results:
 
-.. parsed-literal::
+.. code-block:: none
+
    ^X(1,2,3)=123
    ^X(1,2,3,7)=1237
    ^X(1,2,4)=124
@@ -1018,7 +1086,8 @@ produces the results:
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>zwrite lcl
    lcl("")=1
    lcl(1)=1
@@ -1034,7 +1103,8 @@ Example:
 
 This example produces the results:
 
-.. parsed-literal::
+.. code-block:: none
+
    lcl("")=1
    lcl(1)=1
    lcl(1,2)=2
@@ -1055,7 +1125,8 @@ Returns a random integer from a range specified by its argument.
 
 The format for the $RANDOM function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $R[ANDOM](intexpr)
 
 * The integer expression specifies the upper exclusive limit of a range of integers from which $RANDOM() may pick a result; $RANDOM() never returns a number less than zero (0).
@@ -1072,7 +1143,8 @@ Examples of $RANDOM()
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>for i=1:1:10 write $random(1)
    0000000000
    YDB>
@@ -1081,7 +1153,8 @@ This shows that when $RANDOM() has an argument of one (1), the result is too con
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    set x=$random(100)+1*.01
 
 This $RANDOM() example produces a number between 0 and 99. The example then shifts with addition, and scales with multiplication to create a value between .01 and 1.
@@ -1094,7 +1167,8 @@ Returns a string with the characters in the reverse order from that of its argum
 
 The format for the $REVERSE function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $RE[VERSE](expr)
 
 * The expr in the syntax is the string to be reversed.
@@ -1105,7 +1179,8 @@ Examples of $REVERSE()
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write $reverse(123)
    321
    YDB>write $reverse("AbCDe")
@@ -1119,7 +1194,8 @@ Returns a value associated with the first true truth-valued expression in a list
 
 The format for the $SELECT function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $S[ELECT](tvexpr:expr[,...])
 
 * $SELECT() evaluates expressions from left to right.
@@ -1138,7 +1214,8 @@ Examples of $SELECT()
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>for i=3:-1:0 write !,$select(i=1:"here",i=2:"come",i=3:"Watson")
    Watson
    come
@@ -1150,14 +1227,16 @@ This loop uses $SELECT() to WRITE a series of strings. Because there is no true 
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    set name=$select(sex="M":"Mr. ",sex="F":"Ms. ",1:"")_name
 
 This example uses $SELECT() to add a prefix to the name based on a sex code held in the variable sex. Notice that the default handles the case of a missing or incorrect code.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    if $select(x=+x:x,x="":0,"JANAPRJULOCT"[x:1,1:0) do THING
 
 This uses $SELECT() to perform complex logic as the truth-valued expression argument to an IF command.
@@ -1165,7 +1244,8 @@ This uses $SELECT() to perform complex logic as the truth-valued expression argu
 .. note::
    When extrinsics are within a $SELECT expression, boolean short-circuiting does not prevent them from being evaluated during the execution of the statement.
 
-.. parsed-literal::
+.. code-block:: none
+
    echoAndRet(A,B)
     write A,!
     quit B
@@ -1184,7 +1264,8 @@ Returns strings describing aspects of the execution environment.
 
 The format for the $STACK function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $ST[ACK](intexpr[,expr])
 
 * The intexpr identifies the M virtual machine stack level (as described by the standard), on which the function is to provide information.
@@ -1215,7 +1296,8 @@ Examples of $STACK()
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    /usr/local/lib/yottadb/r120/ydb -run ^dstackex
    dstackex;
      zprint ^dstackex
@@ -1245,7 +1327,8 @@ Example:
 
 Example for error processing:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>zprint ^debugerr
    debugerr;
     set dsm1=$stack(-1)
@@ -1259,7 +1342,8 @@ The above example can be used to display a trace of the code path that led to an
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>zprint ^dstacktst
    dstacktst(x)       ; check $stack() returns with and without clearing $ecode
     set $etrap="do ^debugerr"
@@ -1313,7 +1397,8 @@ Returns source text for the line specified by its argument.
 
 The format for the $TEXT function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $T[EXT](entryref)
 
 * The entryref specifies the label, offset, and routine (or trigger name) of the source line that $TEXT() returns.
@@ -1332,14 +1417,16 @@ Examples of $TEXT()
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    for i=1:1 set x=$text(+i) quit:x=""  write !,x
 
 This loop uses $TEXT() to write out the entire source for the current routine.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write $text(+0)
    GTM$DMOD
    YDB>write $text(+1)
@@ -1355,7 +1442,8 @@ Returns a string that results from replacing or dropping characters in the first
 
 The format for the $TRANSLATE function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $TR[ANSLATE](expr1[,expr2[,expr3]])
 
 
@@ -1377,7 +1465,8 @@ Examples of $TRANSLATE()
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write $translate("ABC","CB","1")
    A1
    YDB>
@@ -1391,7 +1480,8 @@ Example:
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write $translate("A","AA","BC")
    B
    YDB>
@@ -1400,7 +1490,8 @@ This $TRANSLATE() example finds the first occurrence of "A" in the second expres
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write $translate("BACKUP","AEIOU")
    BCKP
    YDB>
@@ -1415,7 +1506,8 @@ Returns information about an environmental factor selected by the arguments. In 
 
 The format for the $VIEW() function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $V[IEW](expr1[,expr2])
 
 * The first expression specifies a keyword identifying the target factor for $VIEW() to examine.
@@ -1579,7 +1671,8 @@ Examples of $VIEW()
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>Set a=1,*b(1)=a
    YDB>write $view("LV_CREF","a")," ",$view("LV_CREF","b")
    1 0
@@ -1591,9 +1684,10 @@ This example creates an alias variable and an alias container variable and check
 
 Example:
 
-.. parsed-literal::
-   YDB>Set \*a(1)=b,\*b(1)=a
-   YDB>kill \*a,\*b
+.. code-block:: bash
+
+   YDB>Set *a(1)=b,*b(1)=a
+   YDB>kill *a,*b
    YDB>write $view("LV_GCOL")
    2
    YDB>
@@ -1602,7 +1696,8 @@ This example creates two cross associated alias containers, destroys their ances
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write $view("GVSTAT","DEFAULT")
    SET:203,KIL:12,GET:203,DTA:2,ORD:23,ZPR:21,QRY:0,LKS:0,LKF:0,CTN:44,DRD:103,DWT:59,
    NTW:24,NTR:55,NBW:27,NBR:138,NR0:0,NR1:0,NR2:0,NR3:0,TTW:17,TTR:5,TRB:0,TBW:32,
@@ -1617,14 +1712,15 @@ Example:
 
 Given the following global directory configuration:
 
-.. parsed-literal::
+.. code-block:: bash
+
    GDE>add -name a(1:10)      -region=a1
    GDE>add -name a(10,1)      -region=a2
    GDE>add -name a(10,2)      -region=a3
    GDE>add -name a(120:300)   -region=a4
    GDE>add -name a(60:325)    -region=a5
    GDE> show -name
-    \*\*\* NAMES \*\*\*
+    *** NAMES ***
    Global        Region
    ------------------------------------------------------------------------------
    *             DEFAULT
@@ -1637,7 +1733,8 @@ Given the following global directory configuration:
 
 Here are some $VIEW("REGION",gvn) outputs:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write $view("REGION","^a(1)")
    A1
    YDB>write $view("REGION","^a(10)")
@@ -1655,11 +1752,12 @@ $ZAHANDLE() returns a unique identifier (handle) for the array associated with a
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>set A=1,*B(1)=A
    YDB>write "$zahandle(A)=""",$zahandle(A),""" $zahandle(B(1))=""",$zahandle(B(1)),""""
    $zahandle(A)="17B8810" $zahandle(B(1))="17B8810"
-   YDB>set A("Subscript")="Value" ; Change array - but $ZAHandle() doesn't change
+   YDB>set A("Subscript")="Value" ; Change array - but $ZAHandle() does not change
    YDB>write "$zahandle(A)=""",$zahandle(A),""" $zahandle(B(1))=""",$zahandle(B(1)),""""
    $zahandle(A)="17B8810" $zahandle(B(1))="17B8810"
    YDB>merge D=A ; A copy of the data has a different $zahandle()
@@ -1669,7 +1767,8 @@ Example:
 
 Since YottaDB does not provide a way for a function to return an array or alias variable as its result, the uniqueness of $ZAHandle() can be exploited to effect this capability, by placing the result in a local variable with an agreed prefix (e.g., "%") and its $ZAHANDLE() as a suffix. The handle can be returned as the value.
 
-.. parsed-literal::
+.. code-block:: none
+
    $ /usr/local/lib/yottadb/r120/ydb -run retval
    retval        ; Return an array / object from a function
       ;;Data for the object array
@@ -1680,7 +1779,7 @@ Since YottaDB does not provide a way for a function to return an array or alias 
       new tmp1,tmp2,tmp3
       for i=3:1 set tmp1=$text(+i),tmp2=$piece(tmp1,";;",2) quit:'$length(tmp2)  do
       .set tmp3="%"_$$NewPerson($piece(tmp2,",",1),$piece(tmp2,",",2))
-      .set @("\*Relativists("_(i-2)_")="_tmp3)
+      .set @("*Relativists("_(i-2)_")="_tmp3)
       .kill @("*"_tmp3)
       kill tmp1,tmp2,tmp3
       write "------------",!
@@ -1694,16 +1793,16 @@ Since YottaDB does not provide a way for a function to return an array or alias 
       set dob=$$FUNC^%DATE(birthdate)
       set tmp1("fname")=fname,tmp1("lname")=lname,tmp1("dob")=dob
       set tmp2=$ZAHandle(tmp1)
-      set @("\*%"_tmp2_"=tmp1")
+      set @("*%"_tmp2_"=tmp1")
       quit tmp2
   ------------
   Array of objects of relativists:
   $ZWRTAC=""
-  \*Relativists(1)=$ZWRTAC1
+  *Relativists(1)=$ZWRTAC1
   $ZWRTAC1("dob")=13952
   $ZWRTAC1("fname")="Albert"
   $ZWRTAC1("lname")="Einstein"
-  \*Relativists(2)=$ZWRTAC2
+  *Relativists(2)=$ZWRTAC2
   $ZWRTAC2("dob")=15337
   $ZWRTAC2("fname")="Arthur"
   $ZWRTAC2("lname")="Eddington"
@@ -1719,7 +1818,8 @@ Returns the numeric byte value (0 through 255) of a given sequence of octets (8-
 
 The format for the $ASCII function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $ZA[SCII](expr[,intexpr])
 
 * The expression is the sequence of octets (8-bit bytes) from which $ZASCII() extracts the byte it decodes.
@@ -1733,7 +1833,8 @@ Examples of $ZASCII()
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>for i=0:1:4 write !,$zascii("主",i)
 
    -1
@@ -1752,7 +1853,8 @@ $ZATRansform()
 Returns the transformed representation of the first argument expr in a normalized form using the alternative transform specified by the second argument intexpr; the return can be used as an operand to the follows (]) or sorts-after (]]) operator such that, if both operands are in the normalized form, the result is independent of alternative collation. The format for the $ZATRANSFORM() function is:
 
 
-.. parsed-literal::
+.. code-block:: none
+
    $ZATRANSFORM(expr,intexpr[,{0|1}][,{0|1}])
 
 * The expression specifies the string to transform.
@@ -1768,7 +1870,8 @@ Examples of $ZATRANSFORM()
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write $zatransform("John Smythe",1)]$zatransform("Jane Smith",2)
    0
    YDB>
@@ -1793,7 +1896,8 @@ Performs a logical AND function on two bit strings and returns a bit string equa
 
 The format for the $ZBITAND() function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $ZBITAND(expr1,expr2)
 
 * The first expression specifies one of the bit strings that is input to the AND operation.
@@ -1801,7 +1905,8 @@ The format for the $ZBITAND() function is:
 
 **Example of $ZBITAND()**
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>
    ; The binary representation of A is 01000001
    YDB>Set BITSTRINGB=$zbitset($zbitset($zbitstr(8,0),2,1),7,1)
@@ -1812,7 +1917,8 @@ The format for the $ZBITAND() function is:
 
 This examples uses $ZBITAND to perform a bitwise AND operation on A and B.
 
-.. parsed-literal::
+.. code-block:: none
+
    A= 01000001
    B= 01000010
    A bitwise AND B=0100000
@@ -1825,7 +1931,8 @@ Returns the number of ON bits in a bit string.
 
 The format for the $ZBITCOUNT function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $ZBITCOUNT(expr)
 
 The expression specifies the bit string to examine.
@@ -1834,7 +1941,8 @@ The expression specifies the bit string to examine.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>set BITSTRINGA=$ZBITSET($ZBITSET($ZBITSTR(8,0),2,1),8,1)
    ; The binary representation of A is 01000001
    YDB>set BITSTRINGB=$zbitset($zbitset($zbitstr(8,0),2,1),7,1)
@@ -1859,7 +1967,8 @@ Performs the analog of $FIND() on a bit string. It returns an integer that ident
 
 The format for the $ZBITFIND function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $ZBITFIND(expr,tvexpr[,intexpr])
 
 * The expression specifies the bit string to examine.
@@ -1872,7 +1981,8 @@ If the optional integer argument exceeds the length of the string, or if the fun
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>Set BITSTRINGA=$ZBITSET($ZBITSET($ZBITSTR(8,0),2,1),8,1)
    ; The binary representation of A is 01000001
    YDB>write $zbitfind(BITSTRINGA,1,3)
@@ -1889,7 +1999,8 @@ Returns the value of a specified position in the bit string.
 
 The format for the $ZBITGET function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $ZBITGET(expr,intexpr)
 
 * The expression specifies the bit string to examine.
@@ -1899,7 +2010,8 @@ The format for the $ZBITGET function is:
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>set BITSTRINGA=$zbitset($zbitset($zbitstr(8,0),2,1),8,1)
    ; The binary representation of A is 01000001
    YDB>for i=1:1:8 write $zbitget(BITSTRINGA,I)
@@ -1916,7 +2028,8 @@ Returns the length of a bit string, in bits.
 
 The format for the $ZBITLEN function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $ZBITLEN(expr)
 
 The expression specifies the bit string to examine.
@@ -1925,7 +2038,8 @@ The expression specifies the bit string to examine.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>set BITSTR=$zbitstr(6,1)
 
    YDB>write $zbitlen(BITSTR)
@@ -1942,14 +2056,16 @@ Returns a copy of the bit string with each input bit position inverted.
 
 The format for the $ZBITNOT function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $ZBITNOT(expr)
 
 The expression specifies the bit string whose inverted bit pattern becomes the result of the function.
 
 **Examples of $ZBITNOT()**
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>set BITSTRINGA=$zbitset($zbitset($zbitstr(8,0),2,1),8,1)
    ; The binary representation of A is 01000001
    YDB>for i=1:1:8 write $zbitget($zbitnot(BITSTRINGA),I)
@@ -1966,7 +2082,8 @@ Performs a bitwise logical OR on two bit strings, and returns a bit string equal
 
 The format for the $ZBITOR function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $ZBITOR(expr1,expr2)
 
 * The first expression specifies one of the bit strings that is input to the OR operation.
@@ -1976,7 +2093,8 @@ The format for the $ZBITOR function is:
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>set BITSTRINGA=$zbitset($zbitset($zbitstr(8,0),2,1),8,1)
    ; The binary representation of A is 01000001
    YDB>set BITSTRINGB=$zbitset($zbitset($zbitstr(8,0),2,1),7,1)
@@ -1997,7 +2115,8 @@ Returns an edited copy of the input bit string with a specified bit set to the v
 
 The format for the $ZBITSET function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $ZBITSET(expr,intexpr,tvexpr)
 
 * The expression specifies the input bit string.
@@ -2008,7 +2127,8 @@ The format for the $ZBITSET function is:
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>set X="A",Y=$extract($zbitset($char(0)_X,3,1),2) zwrite
    X="A"
    Y="a"
@@ -2023,7 +2143,8 @@ Returns a bit string of a specified length with all bit positions initially set 
 
 The format for the $ZBITSTR function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $ZBITSTR(intexpr[,tvexpr])
 
 * The integer expression specifies the length of the bit string to return; arguments that exceed the maximum length of 253,952 produce a run-time error.
@@ -2031,7 +2152,8 @@ The format for the $ZBITSTR function is:
 
 **Examples of $ZBITSTR()**
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>set BITSTR=$zbitstr(6,1)
 
 This example sets the value of expression BITSTR to 6 bit with all bits set to 1.
@@ -2044,7 +2166,8 @@ Performs a bitwise exclusive OR on two bit strings, and returns a bit string equ
 
 The format for the $ZBITXOR function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $ZBITXOR(expr1,expr2)
 
 * The first expression specifies one of the bit strings that is input to the XOR operation.
@@ -2052,7 +2175,8 @@ The format for the $ZBITXOR function is:
 
 **Examples of $ZBITXOR()**
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>set BITSTRINGA=$zbitset($zbitset($zbitstr(8,0),2,1),8,1) ; The binary representation of A is 01000001
    YDB>set BITSTRINGB=$zbitset($zbitset($zbitstr(8,0),2,1),7,1); The binary representation of B is 01000010
    YDB>set BITSTRINGC=$zbitor(BITSTRINGA,BITSTRINGB) ; A XOR B=00000011
@@ -2068,7 +2192,8 @@ Examples of $ZBIT Functions
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    ZCRC(X)
     new R,I,J,B,X1,K
     set R=$zbitstr(8,0)
@@ -2089,7 +2214,8 @@ This uses several $ZBIT functions to turn a character into a bit stream and retu
 
 While this example illustrates the use of several of the $ZBIT functions, the following example produces identical results if you need to code the function illustrated above for production.
 
-.. parsed-literal::
+.. code-block:: none
+
    ZCRC(X)
     new R,I,J,B,X1,K
     set R=$zbitstr(8,0)
@@ -2106,7 +2232,8 @@ Returns a string composed of bytes represented by the integer octet values speci
 
 The format for the $ZCHAR() function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $ZCH[AR](intexpr[,...])
 
 * The integer expression(s) specify the numeric byte value of the byte(s) $ZCHAR() returns.
@@ -2123,7 +2250,8 @@ Example of $ZCHAR()
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
   YDB>write $zchar(228,184,187,7)
   主
   YDB>
@@ -2138,7 +2266,8 @@ Returns the transformed representation of the first argument glvn in a normalize
 
 The format for the $ZCOLLATE() function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $ZCO[llate](glvn,intexpr[,{0|1}])
 
 * The subscripted or unsubscripted global or local variable name specifies the key to transform.
@@ -2155,7 +2284,8 @@ Examples of $ZCOLLATE()
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write $zwrite($zcollate("A(""foo"")",0))
    "A"_$C(0,255)_"foo"_$C(0,0)
    YDB>write $zcollate($zcollate("A(""foo"")",0),0,1)
@@ -2172,7 +2302,8 @@ Returns its first argument as a string converted to a different encoding. The tw
 
 The format for the $ZCONVERT() function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $ZCO[NVERT](expr1, expr2,[expr3])
 
 * The first expression is the string to convert. If the expression contains a code-point value that is not in the character set, $ZCONVERT() generates a run-time error.
@@ -2202,13 +2333,15 @@ Examples of $ZCONVERT()
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write $zconvert("Happy New Year","U")
    HAPPY NEW YEAR
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write $ZCHSET
    M
    YDB>Write $zconvert("HAPPY NEW YEAR","T")
@@ -2216,7 +2349,8 @@ Example:
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>Set T8="主要雨在西班牙停留在平原"
    YDB>Write $Length(T8)
    12
@@ -2249,7 +2383,8 @@ Examples for $ZDATA()
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>set a=1,*b(1)=a,*c=d
    YDB>write $data(a)," ",$zdata(a)
    1 101
@@ -2276,7 +2411,8 @@ Returns a date and/or time formatted as text based on an argument formatted in t
 
 The format for the $ZDATE function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $ZD[ATE](expr1[,expr2[,expr3[,expr4]]]])
 
 * The first expression specifies in $HOROLOG format the date and/or time that $ZDATE() returns in text format. If the output requires only the date or the time, the other piece of the argument that is delimited by a comma (,) may be null.
@@ -2361,7 +2497,8 @@ Examples of $ZDATE()
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write $horolog,!,$zdate($H)
    62109,60946
    01/18/18
@@ -2371,7 +2508,8 @@ This displays $HOROLOG and then uses $ZDATE() to display today's date. The outpu
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write $zdate($H,"DD-MON-YEAR")
    18-JAN-2018
    YDB>
@@ -2380,9 +2518,10 @@ This uses the second argument to specify a text format different from the defaul
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>set m="Januar,Februar,Marz,April,Mai,Juni,Juli,August,"
-   YDB>set m=m\_"September,October,November,Dezember"
+   YDB>set m=m_"September,October,November,Dezember"
    YDB>write $zdate($horolog,"DD-MON-YEAR",m)
    18-Januar-2018
    YDB>
@@ -2391,7 +2530,8 @@ This is similar to the prior example, however it uses the third argument to spec
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>set d="Dimanche,Lundi,Mardi,Mercredi,Jeudi,Vendredi,Samedi"
    YDB>write $zdate($H,"DAY, DD/MM/YY","",d)
    Mardi, 18/01/2018
@@ -2401,7 +2541,8 @@ This example displays the eighteenth of January, however it uses the fourth argu
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write !,$zdate($H,"12:60:SS AM")
    10:35:51 PM
    YDB>
@@ -2410,7 +2551,8 @@ This example shows hours, minutes, and seconds in a 12 hour clock with an AM/PM 
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write !,$zdate(",36524","24-60")
    10-08
    YDB>
@@ -2419,7 +2561,8 @@ This example shows hours and minutes on a 24 hour clock. Notice that the first a
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
 
   YDB>write $zdateform
   0
@@ -2435,7 +2578,8 @@ This example converts the output format for years from the default ("YY") format
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write $zdate(123456789,"DAY MON DD, YYYYYY")
    FRI MAR 17, 339854
    YDB>
@@ -2451,7 +2595,8 @@ Returns a byte sequence from a given sequence of octets (8-bit bytes).
 
 The format for the $ZEXTRACT function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $ZE[XTRACT](expr[,intexpr1[,intexpr2]])
 
 * The expression specifies a sequence of octets (8-bit bytes) from which $ZEXTRACT() derives a byte sequence.
@@ -2466,7 +2611,8 @@ Examples of $ZEXTRACT()
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>Set A="主要雨在西班牙停留在平原"
 
    YDB>For i=0:1:$zlength(A)
@@ -2484,7 +2630,8 @@ Returns an integer byte position that locates the occurrence of a byte sequence 
 
 The format of the $ZFIND function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $ZF[IND](expr1,expr2[,intexpr])
 
 * The first expression specifies the sequence of octets (8-bit bytes) in which $ZFIND() searches for the byte sequence.
@@ -2500,7 +2647,8 @@ Examples of $ZFIND()
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write $zfind("主要雨",$zchar(187))
    4
    YDB>
@@ -2509,7 +2657,8 @@ This example uses $ZFIND() to WRITE the position of the first occurrence of the 
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write $zfind("新年好",$zchar(229),5)
    8
    YDB>
@@ -2518,7 +2667,8 @@ This example uses $ZFIND() to WRITE the position of the next occurrence of the b
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    YDB>set t=1 for  set t=$zfind("新年好",$zchar(230,150,176),t) quit:'t  write !,t
    4
    YDB>
@@ -2531,7 +2681,8 @@ $ZGetjpi()
 
 Returns job or process information of the specified process. The format for the $ZGETJPI function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $ZGETJPI(expr1,expr2)
 
 * expr1 identifies the PID of the target job. If expr1 is an empty string (""), $ZGETJPI() returns information about the current process.
@@ -2564,7 +2715,8 @@ Examples of $ZGETJPI()
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write $zgetjpi(1975,"isprocalive")
    1
    YDB>
@@ -2573,7 +2725,8 @@ This uses $ZGETJPI() to determine whether process 1975 is alive.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>set t=$zgetjpi("","cputim")
    YDB>do ^bench write $zgetjpi("","cputim")-t
    1738
@@ -2585,15 +2738,17 @@ This uses $ZGETJPI() to measure the actual CPU time, measured in hundredths of a
 $ZJOBEXAM()
 --------------------
 
-.. parsed-literal::
+.. code-block:: none
+
    $ZJOBEXAM([expr])
 
 Returns the full specification of the file into which the function places a ZSHOW "*". The return value serves as a way to save, to notify others of the exact location of the output, or to open the file for further processing. YottaDB reports each $ZJOBEXAM() to the operator log facility with its file specification.
 
 The optional expression argument is a template output device specification. It can be a device, a file directory, or a file name. The template is an expression that is pre-processed to create a file specification as the target for the ZSHOW. The preprocessing is equivalent to $ZPARSE(), as illustrated by the following M code:
 
-.. parsed-literal::
-   set deffn="YDB_JOBEXAM.ZSHOW_DMP\_"_$JOB\_"_"_<cntr>
+.. code-block:: none
+
+   set deffn="YDB_JOBEXAM.ZSHOW_DMP_"_$JOB_"_"_<cntr>
    set filespec=$zparse(expr1,"",deffn)
 
 The $ZJOBEXAM()does not trigger error processing except when there is a problem storing its return value, so no error is reported to the process until after any dump is complete. In the event of any error encountered during the $ZJOBEXAM(), YottaDB sends an appropriate message to operator log facility and returns control to the caller. Note that this special error handling applies only to the $ZJOBEXAM(), and is not a property of the $ZINTERRUPT interrupt handler, which uses $ZJOBEXAM() by default.
@@ -2606,7 +2761,8 @@ Examples of $ZJOBEXAM()
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>set x=$zjobexam()
    YDB>write x
    /home/ydbuser1/yottadb/r1.10/r/YDB_JOBEXAM.ZSHOW_DMP_28760_1
@@ -2625,7 +2781,8 @@ Returns a formatted and fixed length byte sequence.
 
 The format for the $ZJUSTIFY() function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $ZJ[USTIFY](expr,intexpr1[,intexpr2])
 
 * The expression specifies the sequence of octets formatted by $ZJUSTIFY().
@@ -2647,7 +2804,8 @@ Examples of $ZJUSTIFY()
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write "123456789012345",! write $zjustify("新年好",15),!,$zjustify("新年好",5)
    123456789012345
         新年好
@@ -2664,7 +2822,8 @@ Returns the length of a sequence of octets measured in bytes, or in "pieces" sep
 
 The format for the $ZLENGTH() function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $ZL[ENGTH](expr1[,expr2])
 
 * The first expression specifies the sequence of octets that $ZLENGTH() "measures".
@@ -2678,7 +2837,8 @@ Examples of $ZLENGTH()
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write $zlength("主要雨在西班牙停留在平原")
    36
    YDB>
@@ -2687,7 +2847,8 @@ This uses $ZLENGTH() to WRITE the length in bytes of the sequence of octets "主
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>set x="主"_$zchar(63)_"要"_$zchar(63)_"雨"
    YDB>write $zlength(x,$zchar(63))
    3
@@ -2697,7 +2858,8 @@ This uses $ZLENGTH() to WRITE the number of pieces in a sequence of octets, as d
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>set x=$zchar(63)_"主"_$zchar(63)_"要"_$zchar(63)_"雨"_$zchar(63)"
    YDB>write $zlength(x,$zchar(63))
    5
@@ -2713,7 +2875,8 @@ Returns a message string associated with a specified status code .
 
 The format for the $ZMESSAGE function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $ZM[ESSAGE](intexpr)
 
 The integer expression specifies the status code for which $ZMESSAGE() returns error message text .
@@ -2728,7 +2891,8 @@ Examples of $ZMESSAGE()
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write $zmessage(150373210)
    %YDB-E-DIVZERO, Attempt to divide by zero
    YDB>
@@ -2743,7 +2907,8 @@ Expands a file name to a full pathname and then returns the full pathname or one
 
 The format for the $ZPARSE function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $ZPARSE(expr1[,expr2[,expr3[,expr4[,expr5]]]])
 
 * The first expression specifies the file name; if the file name is not valid, $ZPARSE() returns a null string; if the file name contains a wildcard (* and/or ?), $ZPARSE() returns a file name containing the wildcard(s).
@@ -2783,7 +2948,8 @@ Examples of $ZPARSE()
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write $zparse("test","","/usr/work/","dust.lis")
    /usr/work/test.lis
    YDB>
@@ -2792,7 +2958,8 @@ This uses $ZPARSE() to demonstrate defaulting using the third and fourth argumen
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>r!,"file :",f w ?20,$zparse(f,"directory")
    file: test.list /usr/work/
    YDB>
@@ -2801,7 +2968,8 @@ This uses $ZPARSE() to display the directory for the file name entered as input 
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ cd /usr/work/me
    $ ydb
    YDB>write $zparse("test","","x.list","y.c")/usr/work/me/test.lis
@@ -2817,7 +2985,8 @@ In the third statement, because "/usr/work" does not end with a backward slash (
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ cd /usr/work/me
    $ /usr/local/lib/yottadb/r120/ydb
    YDB>For i="DIRECTORY","NAME","TYPE","" Write $ZPARSE("test.m",i),!
@@ -2840,7 +3009,8 @@ The $ZPEEK() function returns the contents of the memory requested as a string d
 
 The format of the $ZPEEK() function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $ZPEEK("mnemonic[:argument]",offset,length[,format])
 
 mnemonic specifies the memory area $ZPEEK() is to access. Some mnemonics have arguments separated from the mnemonic by a colon (":"). The mnemonics are case independent. Possible mnemonics, their possible abbreviations and their arguments are:
@@ -2885,7 +3055,8 @@ When values from replication structures are requested and the structures are not
 
 The JNL[REG] and JBL[REG] mnemonics and characteristics are defined by the running the GTMDefinedTypesInit.m utility, which produces a cross-index in the form:
 
-.. parsed-literal::
+.. code-block:: none
+
    gtmtypfldindx(<structure-name>.<field-mnemonic>)=<n>
 
 where gtmtypes(<structure-name>,<n>,*) nodes contain the field characteristics.
@@ -2898,7 +3069,8 @@ Return a sequence of bytes delimited by a specified byte sequence made up of one
 
 The format for the $ZPIECE function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $ZPI[ECE](expr1,expr2[,intexpr1[,intexpr2]])
 
 * The first expression specifies the sequence of octets from which $ZPIECE() takes its result.
@@ -2909,7 +3081,7 @@ The format for the $ZPIECE function is:
 * If the second integer expression exceeds the actual number of pieces in the first expression, $ZPIECE() returns all of the expression after the delimiter selected by the first integer expression.
 * The $ZPIECE() result never includes the "outside" delimiters; however, when the second integer argument specifies multiple pieces, the result contains the "inside" occurrences of the delimiter.
 * $ZPIECE() provides a tool for efficiently using values that contain multiple elements or fields, each of which may be variable in length.
-* Applications typically use a single byte for a $ZPIECE() delimiter (second argument) to minimize storage overhead, and increase efficiency at run-time. The delimiter must be chosen so the data values never contain the delimiter. Failure to enforce this convention with edit checks may result in unanticipated changes in the position of pieces within the data value. The caret symbol (^), backward slash (\), and asterisk (*) characters are examples of popular visible delimiters. Multiple byte delimiters may reduce the likelihood of conflict with field contents. However, they decrease storage efficiency, and are processed with less efficiency than single byte delimiters. Some applications use control characters, which reduce the chances of the delimiter appearing in the data but sacrifice the readability provided by visible delimiters.
+* Applications typically use a single byte for a $ZPIECE() delimiter (second argument) to minimize storage overhead, and increase efficiency at run-time. The delimiter must be chosen so the data values never contain the delimiter. Failure to enforce this convention with edit checks may result in unanticipated changes in the position of pieces within the data value. The caret symbol (^), backward slash (\\), and asterisk (*) characters are examples of popular visible delimiters. Multiple byte delimiters may reduce the likelihood of conflict with field contents. However, they decrease storage efficiency, and are processed with less efficiency than single byte delimiters. Some applications use control characters, which reduce the chances of the delimiter appearing in the data but sacrifice the readability provided by visible delimiters.
 * A SET command argument can have something that has the format of a $ZPIECE() on the left-hand side of its equal sign (=). This construct permits easy maintenance of individual pieces within a sequence of octets. It also can be used to generate a byte sequence of delimiters. For more information on SET $ZPIECE(), refer to `SET in the "Commands" chapter <./commands.html#set>`_.
 
 +++++++++++++++++++++
@@ -2918,7 +3090,8 @@ Examples of $ZPIECE()
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>for i=0:1:3 write !,$zpiece("主"_$zchar(64)_"要",$zchar(64),i),"|"
    |
    主|
@@ -2930,7 +3103,8 @@ This loop displays the result of $ZPIECE(), specifying $ZCHAR(64) as a delimiter
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>for i=-1:1:3 write !,$zpiece("主"_$zchar(64)_"要",$zchar(64),i,i+1),"|"
    |
    主|
@@ -2943,14 +3117,16 @@ This example is similar to the previous example except that it displays two piec
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    For p=1:1:$ZLength(x,"/") Write ?p-1*10,$ZPIece(x,"/",p)
 
 This loop uses $ZLENGTH() and $ZPIECE() to display all the pieces of x in columnar format.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>Set $piece(x,$zchar(64),25)="" write x
    @@@@@@@@@@@@@@@@@@@@@@@@
 
@@ -2966,7 +3142,8 @@ The $ZPREVIOUS function provides compatibility with some other M implementations
 
 The format for the $ZPREVIOUS function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $ZP[REVIOUS](glvn)
 
 * The subscripted or unsubscripted global or local variable name specifies the node prior to which $ZPREVIOUS() searches backwards for a defined node with data and/or descendants. The number of subscripts contained in the argument implicitly defines the array level.
@@ -2983,7 +3160,8 @@ The $ZQGBLMOD function enables an application to determine whether it can safely
 
 The format for the $ZQGBLMOD function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $ZQGBLMOD(gvn)
 
 * The subscripted or non-subscripted global variable name (gvn) specifies the target node.
@@ -3017,7 +3195,8 @@ The $ZSEARCH function attempts to locate a file matching the specified file name
 
 The format for the $ZSEARCH function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $ZSEARCH(expr[,intexpr])
 
 * The expression contains a file name, with or without wildcards, for which $ZSEARCH() attempts to locate a matching file. Repeating $ZSEARCH with the same filename uses the same context and return a sequence of matching files when they exist; when the sequence is exhausted, $ZSEARCH() returns an empty string (""). Any change to the file name starts a new context.
@@ -3036,7 +3215,8 @@ Examples of $ZSEARCH()
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write $zsearch("data.dat")
    /usr/staff/ccc/data.dat
    YDB>
@@ -3045,9 +3225,10 @@ This uses $ZSEARCH() to display the full file path name of "data.dat" in the pro
 
 Example:
 
-.. parsed-literal::
-   YDB>set x=$zsearch("\*.c")
-   YDB>for  set x=$zsearch("\*.m") quit:x=""  write !,$zparse(x,"NAME")
+.. code-block:: bash
+
+   YDB>set x=$zsearch("*.c")
+   YDB>for  set x=$zsearch("*.m") quit:x=""  write !,$zparse(x,"NAME")
 
 This FOR loop uses $ZSEARCH() and $ZPARSE() to display M source file names in the process current working directory. To ensure that the search starts at the beginning, the example resets the context by first searching with a different argument.
 
@@ -3057,7 +3238,8 @@ $ZSIGPROC()
 
 Sends a signal to a process. The format for the $ZSIGPROC function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $ZSIGPROC(expr1,expr2)
 
 * The first expression is the pid of the process to which the signal is to be sent.
@@ -3088,7 +3270,8 @@ Examples of $ZSIGPROC()
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>job ^Somejob
    YDB>set ret=$&ydbposix.signalval("SIGUSR1",.sigusr1) zwrite
        ret=0
@@ -3105,12 +3288,14 @@ $ZSOCKET()
 
 Returns information about a SOCKET device and its attached sockets. The format of the $ZSOCKET() function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $ZSOCKET(expr1,expr2[,[expr3][,expr4]])
 
 The first expression specifies the SOCKET device name; an empty string returns the same result as the current device ($IO). If the first expression is not specified, $ZSOCKET() returns information about sockets in the socketpool. Specifying a device other than a SOCKET device for the $ZSOCKET() function produces a ZSOCKETNOTSOCK error. When a YottaDB process starts with different sockets for input and output on $PRINCIPAL, $ZSOCKET() accepts $ZPIN or $ZPOUT as its first argument and supplies information on the input or output side, respectively. The following is an example of getting the handles for the $PRINCIPAL input and output socket devices.
 
-.. parsed-literal::
+.. code-block:: none
+
    set handlein=$ZSOCKET($ZPIN,"SOCKETHANDLE",0)
    set handleout=$ZSOCKET($ZPOUT,"SOCKETHANDLE",0)
 
@@ -3211,7 +3396,8 @@ $ZSUBstr()
 
 Returns a properly encoded string from a sequence of bytes.
 
-.. parsed-literal::
+.. code-block:: none
+
    $ZSUB[STR] (expr ,intexpr1 [,intexpr2])
 
 * The first expression is an expression of the byte string from which $ZSUBSTR() derives the character sequence.
@@ -3227,7 +3413,8 @@ Examples of $ZSUBSTR()
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write $ZCHSET
    M
    YDB>set char1="a" ; one byte character
@@ -3241,7 +3428,8 @@ With character set M specified, the expression $ZSUBSTR(y,1,3)=$ZSUBSTR(y,1,5) e
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write $zchset
    UTF-8
    YDB>set char1="a" ; one byte character
@@ -3267,7 +3455,8 @@ $ZSYSLOG()
 
 Sends its string parameter to the system log and always returns TRUE (1). The text appears in the syslog with the same format as any other YottaDB syslog message (that is, in the user.info log with YDB-M[pid]" or "YDB-MUPIP[pid]" prefix along with instance information where appropriate). The format of the $ZSYSLOG function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $ZSYSLOG(expr)
 
 -------------------------
@@ -3278,7 +3467,8 @@ Returns a byte sequence that results from replacing or dropping bytes in the fir
 
 The format for the $ZTRANSLATE() function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $ZTR[ANSLATE](expr1[,expr2[,expr3]])
 
 * The first expression specifies the sequence of octets on which $ZTRANSLATE() operates. If the other arguments are omitted, $ZTRANSLATE() returns this expression.
@@ -3297,7 +3487,8 @@ Examples of $ZTRANSLATE()
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>set hiraganaA=$char(12354) ; $zchar(227,129,130)
    YDB>set temp1=$zchar(130)
    YDB>set temp2=$zchar(140)
@@ -3314,7 +3505,8 @@ $ZTRIgger
 
 Examine or load trigger definition. The format of the $ZTRIGGER() function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $ZTRIgger(expr1[,expr2])
 
 * $ZTRIGGER() returns a truth value (1 or 0) depending on the success of the specified action.
@@ -3322,7 +3514,8 @@ Examine or load trigger definition. The format of the $ZTRIGGER() function is:
 * If expr1 evaluates to case-insensitive "FILE", $ZTRIGGER() evaluates expr2 as the location of the trigger definition file. Then, it applies the trigger definitions in the file specified by expr2. If a file contains a delete all (-\*), that action produces no user confirmation.
 * If expr1 evaluates to case-insensitive "ITEM", $ZTRIGGER() evaluates expr2 as a single line or multi-line trigger definition entry. A multi-line trigger definition or a multi-line XECUTE string starts with << and uses $char(10) to denote the newline separator. expr2 with ITEM does not permit a multi-line XECUTE string to end with the >> terminator. It does not require trigger logic to appear immediately after the -xecute=<<, but a $char(10) must prefix the logic as shown in the following examples:
 
- .. parsed-literal::
+ .. code-block:: none
+
     set trigstr="+^a -xecute=<< -commands=S"_$char(10)_" do ^twork1"_$char(10)_" do ^twork2"_$char(10) write $ztrigger("item",trigstr)
     set trigstr="+^a -xecute=<< -commands=S "_$c(10)_" do ^twork1"_$c(10)_" do ^twork2"_$c(10) write $ztrigger("item",trigstr)
 
@@ -3343,13 +3536,15 @@ Examples of $ZTRIGGER()
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>set X=$ztrigger("S")
    YDB>
 
 This example displays the current trigger definitions stored in the database.
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>set X=$ztrigger("i","+^Acct(sub=:) -command=set -xecute=""set ^X($ztvalue)=sub""")
    YDB>
 
@@ -3357,21 +3552,24 @@ This example adds a trigger definition for the first level node of ^Acct.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>set trigstr="+^a -commands=S -xecute=<<"_$c(10)_" do ^twork1"_$c(10)_" do ^twork2"_$c(10) write $ztrigger("item",trigstr)
 
 This example demonstrates the usage of the $ztrigger("ITEM",<multi-line-trigger-definition>> where <<denotes the definition of a multi-line -XECUTE string and $c(10) to denote the newline separator. Unlike the $ztrigger("FILE") form, $ztrigger("ITEM",<multi-line-trigger-definition>> does not require the trigger definition to terminate with >>.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write $ztrigger("file","agbl.trg")
    1
    YDB>
 
 This example is equivalent to the previous $ztrigger("ITEM") example. In this example, agbl.trg contains the following multi-line trigger definition:
 
-.. parsed-literal::
+.. code-block:: none
+
    +^a -commands=S -xecute=<<
    do ^twork1
    do ^twork2
@@ -3390,7 +3588,8 @@ The $ZTRNLNM function returns the value of an environment variable.
 
 The format for the $ZTRNLNM function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $ZTRNLNM(expr1[,expr2[,expr3[,expr4[,expr5[,expr6]]]]])
 
 expr1 specifies the environment variable whose value needs to be returned.
@@ -3415,7 +3614,8 @@ Examples of $ZTRNLNM()
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write $ztrnlnm("ydb_dist","","","","","VALUE")
    /usr/local/lib/yottadb/r120/utf8
    YDB>write $ztrnlnm("ydb_dist")
@@ -3430,7 +3630,8 @@ $ZWidth()
 
 Returns the numbers of columns required to display a given string on the screen or printer. The format of the $ZWIDTH() function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $ZW[IDTH] (expr)
 
 * The expression is the string which $ZWIDTH() evaluates for display length. If the expression contains a code-point value that is not a valid UTF-8 character, $ZWIDTH() generates a run-time error.
@@ -3448,7 +3649,8 @@ Examples of $ZWIDTH()
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>set NG=$char($$FUNC^%HD("200B"))
    YDB>set S=$char(26032)_NG_$CHAR(26033)
    YDB>W $ZWidth(STR)
@@ -3459,7 +3661,8 @@ In the above example, the local variable NG contains a non-graphic character whi
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write $zwidth("The rain in Spain stays mainly in the plain.")
    44
    YDB>set A="主要雨在西班牙停留在平原"
@@ -3476,7 +3679,8 @@ $ZWrite()
 
 Converts its first string argument to or from ZWRITE format (quoted graphics characters concatenated with $CHAR() representations of any non-graphic characters). The second integer expression controls the direction of conversion. The format of the $ZWRITE() function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $ZWRITE(expr[,intexpr])
 
 * The first argument specifies the string to convert to or from the ZWRITE format.
@@ -3491,7 +3695,8 @@ Examples of $ZWRITE()
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>set temp="X"_$char(10)_"X" ; $CHAR(10) is the linefeed character
    YDB>write temp
    X

@@ -35,7 +35,8 @@ NOTE: You must have at least docker 17.05 as `multi-stage <https://docs.docker.c
 Docker Pull Command
 ++++++++++++++++++++
 
-.. parsed-literal::
+.. code-block:: bash
+
    docker pull yottadb/yottadb
 
 ++++++++++++++++++
@@ -48,7 +49,8 @@ The commands below assume that you want to remove the docker container after run
 
 Volumes are also supported by mounting to the /data directory. If you want to mount the local directory ydb-data into the container to save your database and routines locally and use them in the container in the future, add the following command line parameter before the yottadb/yottadb argument:
 
-.. parsed-literal::
+.. code-block:: bash
+
    -v pwd/ydb-data:/data
 
 This creates a ydb-data directory in your current working directory. This can be deleted after the container is shutdown/removed if you want to remove all data created in the YottaDB container (such as your database and routines).
@@ -60,7 +62,8 @@ This creates a ydb-data directory in your current working directory. This can be
 Running a pre-built image
 ++++++++++++++++++++++++++
 
-.. parsed-literal::
+.. code-block:: bash
+
    docker run --rm -it yottadb/yottadb # you can add a specific version after a ":" if desired
 
 
@@ -70,12 +73,14 @@ Build Steps
 
 1. Build the image
 
-   .. parsed-literal::
+   .. code-block:: bash
+
       docker build -t yottadb/yottadb:latest .
 
 2. Run the created image.
 
-   .. parsed-literal::
+   .. code-block:: bash
+
       docker run --rm -it yottadb/yottadb:latest
 
 

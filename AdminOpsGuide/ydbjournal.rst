@@ -69,12 +69,14 @@ There are two switches to turn on journaling - ENable/DISable and ON/OFF.
 
 i.e. To turn on journaling, use either:
 
-.. parsed-literal::
+.. code-block:: bash
+
    mupip set -journal=enable -region '*'
 
 or
 
-.. parsed-literal::
+.. code-block:: bash
+
    mupip set -journal=on -region '*'
 
 Enabling or disabling journaling requires stand alone access to the database. Turning journaling on and off can be done when the database is in use. See `Set Action Qualifiers <./ydbjournal.html#set-action-qualifiers>`_ for more information about options and settings.
@@ -353,22 +355,25 @@ MUPIP SET -JOURNAL can change some database characteristics when journaling is a
 
 The format for the MUPIP SET command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    MUPIP SE[T] -qualifier... {-F[ILE] file-name|-JN[LFILE journal-file|-REG[ION] region-list}
 
 The file-specification, journal file specification or region-list identifies the target of the SET. Region-names separated by commas (,) make up a region-list.
 
 To establish journaling characteristics, use the MUPIP SET command with the -[NO]JOURNAL[=journal-option-list] qualifier and one of the following SET object identifying qualifiers:
 
-.. parsed-literal::
+.. code-block:: none
+
    -F[ILE]
    -JN[LFILE]
    -R[EGION]
 
 -FILE and -REGION act together with one or more of the SET action qualifiers:
 
-.. parsed-literal::
-   -[NO]JOURNAL[=journal-option-list] -REPLICATION=<replication-option>'
+.. code-block:: none
+
+   -[NO]JOURNAL[=journal-option-list] -REPLICATION=<replication-option>
 
 +++++++++++++++++++++++++++++++++
 SET Object Identifying Qualifiers
@@ -376,21 +381,24 @@ SET Object Identifying Qualifiers
 
 The following qualifiers identify the journaling targets:
 
-.. parsed-literal::
+.. code-block:: none
+
    -F[ILE]
 
 Specifies that the argument to the SET is a file-specification for a single database file. A journal file's name can include characters in Unicode.
 
 Old journal files stay open for about 10 seconds after a switch to a new journal file.
 
-.. parsed-literal::
+.. code-block:: none
+
    -R[EGION]
 
 Specifies that the argument to the SET is a list of one or more region-names, possibly including wildcards, which, through the mapping of the current Global Directory, identifies a set of database files. SET -REGION modifies multiple files when the parameter contains more than one name.
 
 The -REGION qualifier is incompatible with the -FILE and -JNLFILE qualifiers.
 
-.. parsed-literal::
+.. code-block:: none
+
    -JN[LFILE]
 
 Specifies that the target for SET is a journal file. The format of the JNLFILE qualifier is:
@@ -567,7 +575,8 @@ The convention of the default value for the FILENAME is as follows:
 
 * YottaDB takes the basename of the database filename as the basename for the journal file with an extension of mjl if the database has a dat extension. For example, database name yottadb.dat results in a default name yottadb.mjl. If the database filename does not have a dat extension, YottaDB replaces all occurrences of periods (.) with underscores (_) with an extension of mjl and takes the full database filename. For example, database name yottadb.acn results in a default name yottadb_acn.mjl. Therefore, by default, a journal file has an extension of mjl unless you explicitly specify a different extension with the FILENAME journal option. If the new journal filename (the one specified in the FILENAME option or the default) already exists, YottaDB renames the existing file with the string "_YYYYJJJHHMMSS" appended to the existing file extension where the string denotes the time of creation of the existing journal file in the following format:
 
- .. parsed-literal::
+ .. code-block:: none
+
     YYYY      4-digit-year                              such as 2011
     JJ       3-digit-Julian-day (between 1 and 366)     such as 199
     HH       2-digit-hour in 24 hr format               such as 14
@@ -644,45 +653,52 @@ As the disk can only write entire blocks of data, many I/O subsystems perform a 
 Examples for MUPIP SET
 ++++++++++++++++++++++++++++++++++++
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip set -journal="enable,nobefore" -file ydb.dat
 
 This example enables NOBEFORE_IMAGE journaling on ydb.dat. If journaling is already enabled, this command switches the current journal file.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip set -journal=on,enable,before -region "*"
 
 This example turns on journaling with BEFORE_IMAGE journaling. If journaling is already enabled, this command switches the current journal file for all regions.
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip set -file -journal="nobefore,buff=2307" ydb.dat
 
 This example initiates NOBEFORE_IMAGE journaling for the database file ydb.dat with a journal buffer size of 2307 blocks. It also switches to a new journal file. This command assumes that some prior MUPIP SET -JOURNAL specified ENABLE for ydb.dat.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip set -region -journal=enable,before_images,allocation=50000,ext=5000 "*"
 
 This example enables journaling with BEFORE_IMAGES on all regions of the current Global Directory and gives each journal file an ALLOCATION of 50000 blocks and an EXTENSION of 5000 blocks. If the regions have significantly different levels of update, use several MUPIP SET -FILE or -REGION commands.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip set -region -journal="enable,before" areg,breg
 
 This example declares journaling active with BEFORE_IMAGES for the regions areg and breg of the current Global Directory.
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip set -file -nojournal ydb.dat
 
 This example disables journaling on the database file ydb.dat.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip set -journal="ENABLE,BEFORE_IMAGES" -region "AREG"
    $ mupip set -journal="ON,BEFORE_IMAGES" -region "*"
 
@@ -690,7 +706,8 @@ This example turns on journaling only for the region AREG. Note that AREG is the
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip set -access_method=MM -file ydb.dat
 
 This example sets MM (Memory Mapped) as the access method or the YottaDB buffering strategy for storing and retrieving data from the database file ydb.dat. Since MM is not supported with BEFORE_IMAGE journaling, this example produces an error on a database with BEFORE_IMAGE journaling enabled. You can also use -access_method=BG to set BG (Buffered Global) as your buffering strategy. For more information on the implications of these access methods, refer to `“Segment Qualifiers” <./gde.html#segment-qualifiers>`_.
@@ -701,7 +718,8 @@ JOURNAL
 
 MUPIP JOURNAL command analyzes, extracts from, reports on and recovers journal files. The format for the MUPIP JOURNAL command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    MUPIP J[OURNAL] -qualifier[...] file-selection-argument
 
 file-selection-argument is a comma-separated list of journal files.
@@ -922,7 +940,8 @@ The show-option-list includes (these are not case-sensitive):
 
 * H[EADER]: Displays the journal file header information. If the MUPIP JOURNAL command includes only the -SHOW=HEADER action qualifier, YottaDB processes only the journal file header (not the contents) even if you specify -BACKWARD or -FORWARD with it. The size of a journal file header is 64K. HEADER displays almost all the fields in the journal file header. The NODE field is printed up to a maximum of the first 12 characters. The following is an example of SHOW=HEADER output:
 
- .. parsed-literal::
+ .. code-block:: bash
+
    -----------------------------------------------------------------------------
    SHOW output for journal file /home/jdoe/.yottadb/r1.28_x86_64/g/yottadb.mjl
    -----------------------------------------------------------------------------
@@ -971,7 +990,8 @@ The show-option-list includes (these are not case-sensitive):
 
 * S[TATISTICS]: Displays a count of all journal record types processed during the period specified implicitly or explicitly by the JOURNAL command time qualifiers. The following is an example of SHOW=STATISTICS output:
 
-  .. parsed-literal::
+  .. code-block:: bash
+
      -------------------------------------------------------------------------------
      SHOW output for journal file /home/jdoe/.yottadb/r128/g/yottadb.mjl
      -------------------------------------------------------------------------------
@@ -1016,7 +1036,8 @@ The show-option-list includes (these are not case-sensitive):
 
 The following example displays the cryptographic hash of the symmetric key stored in the journal file header (the output is one long line).
 
-.. parsed-literal::
+.. code-block:: bash
+
        $ mupip journal -show -backward yottadb.mjl 2>&1 | grep hash
        Journal file hash F226703EC502E975784
        8EEC733E1C3CABE5AC146C60F922D0E7D7CB5E
@@ -1043,7 +1064,8 @@ Journal Direction Qualifiers
 
 The following two qualifiers control the journal processing direction:
 
-.. parsed-literal::
+.. code-block:: none
+
    -BACKWARD
 
 Specifies that MUPIP JOURNAL processing should proceed from the end of the journal file. If the actions include -RECOVER, JOURNAL -BACKWARD restores before-images from the end-of the file back to an explicitly or implicitly specified point (the turn around point), before it reverses and processes database updates in the forward direction (the forward phase).
@@ -1051,7 +1073,8 @@ Specifies that MUPIP JOURNAL processing should proceed from the end of the journ
 .. note::
    -BACKWARD is incompatible with -FORWARD.
 
-.. parsed-literal::
+.. code-block:: none
+
    -FO[RWARD]
 
 Specifies that MUPIP JOURNAL processing for the specified action qualifier should proceed from the beginning of the given journal file. When processing a -RECOVER action qualifier, in certain cases, MUPIP JOURNAL may need to go before the first record of the specified journal file, that is, it can start from a previous generation journal file(refer to “-RECover ” for details).
@@ -1065,7 +1088,7 @@ If multiple journal files are specified in the command line, -FORWARD sorts the 
 Journal Time Qualifiers
 ++++++++++++++++++++++++
 
-Journal qualifiers specifying time accept arguments in absolute or delta time format. Enclose time arguments in quotation marks (" "). Include a back-slash (\) delimiter before both the beginning and ending quotation marks to escape it from being processed by the UNIX shell.
+Journal qualifiers specifying time accept arguments in absolute or delta time format. Enclose time arguments in quotation marks (" "). Include a back-slash (\\) delimiter before both the beginning and ending quotation marks to escape it from being processed by the UNIX shell.
 
 Absolute format is day-mon-yyyy hh:mm:ss, where day denotes the date of the month, mon indicates the abbreviated 3-letter month name (for example, Jan, Feb,..) and the year yyyy and hour hh are separated by a space. Absolute time may indicate today's date with "-- " before the hours.
 
@@ -1078,7 +1101,8 @@ Delta time is always relative to the maximum time of the last record in all jour
 
 The following section describes the time qualifiers in more detail:
 
-.. parsed-literal::
+.. code-block:: none
+
    -A[FTER]=time
 
 Specifies the starting time stamp in the journal file after which any -FORWARD action should start processing. This time qualifier is compatible only with -EXTRACT,-SHOW, or -VERIFY.
@@ -1087,7 +1111,8 @@ If -AFTER= provides a time following the last time recorded in the journal file 
 
 Using -BEFORE with -AFTER restricts processing to a particular period of time in the journal file.
 
-.. parsed-literal::
+.. code-block:: none
+
    -BE[FORE]=time
 
 Specifies an ending time for any action -FORWARD or -BACKWARD. The time specified references time stamps in the journal files. If -BEFORE= specifies a time preceding the first time recorded in the journal file, or preceding any -AFTER= or -SINCE= time, JOURNAL processing produces no result, and MUPIP displays a warning message.
@@ -1098,7 +1123,8 @@ When used with -ROLLBACK or -RECOVER, -BEFORE specifies the the time at which MU
 
 When both -FETCHRESYNC/-RESYNC and -BEFORE are used with -ROLLBACK -BACKWARD, the qualifier corresponding to an earlier database state or point in time prevails. For example, -BEFORE prevails when the update corresponding to the sequence number obtained through the -FETCHRESYNC command happened at a later time relative to -BEFORE and vice versa.
 
-.. parsed-literal::
+.. code-block:: none
+
    -[NO]LOO[KBACK_LIMIT][=lookback-option-list]
 
 Specifies how far JOURNAL -RECOVER -BACKWARD processes past the turnaround point (the explicit or implicit point in the journal file up to which -RECOVER proceeds backward, before it reverses and processes the database in the forward direction), while attempting to resolve open transaction fences. This option is applicable only for transactions fenced with ZTSTART and ZTCOMMIT. For transaction fenced with TSTART and TCOMMIT, -RECOVER always resolves open transaction fences.
@@ -1127,7 +1153,8 @@ When -LOOKBACK_LIMIT= specifies both options, the first limit reached terminates
 
 By default, MUPIP JOURNAL uses -LOOKBACK_LIMIT=\"TIME=0 00:05\" providing five minutes of journal time prior to -SINCE= to resolve open fences. A -LOOKBACK_LIMIT that specifies a limit much before the beginning of the earliest journal file acts as if -NOLOOKBACK_LIMIT was specified.
 
-.. parsed-literal::
+.. code-block:: none
+
    -SI[NCE]=time
 
 The -SINCE time qualifier applies to MUPIP JOURNAL -BACKWARD. The -SINCE qualifier specifies how far back in time MUPIP JOURNAL should at least process (from the end of the journal file), before starting the forward processing. The actual turn-around point for -RECOVER and -ROLLBACK in each database region is an epoch in the journal file before or at the -SINCE time, but not after it.
@@ -1142,26 +1169,30 @@ Journal Sequence Number Qualifiers
 
 These qualifiers are compatible only with -EXTRACT.
 
-.. parsed-literal::
+.. code-block:: none
+
    -S[EQNO]=<sequence_number_list>
 
 Specifies a list of sequence numbers to include or exclude in the journal extract. <sequence_number_list> is a comma-separated list of sequence number(s) in decimal form. When a sequence number has a (~) prefix, -SEQNO excludes it from the journal extract. For replicated regions, EXTRACT -SEQNO uses replication sequence numbers, which may select records from multiple regions. For unreplicated regions, EXTRACT uses journal sequence numbers, but specifying sequence number selection with more than one region produces a JNLEXTRCTSEQNO error. When the sequence number list contains a sequence number involved in a TP transaction, EXTRACT reports it in a broken transaction file when the result does not contain all regions, which is commonly the case without replication, and may be the case with replication when not all regions are available to the utility.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    mupip journal -extract -seqno="~1,2,3,4,~5" -forward -broken=trans.broken -lost=trans.lost "*"
 
 This example produces a journal extract containing journal sequence numbers 2, 3 and 4. 1 and 5 are not part of the journal extract as they have the (~) prefix.
 
 The following qualifiers are compatible only with -ROLLBACK.
 
-.. parsed-literal::
+.. code-block:: none
+
    -FET[CHRESYNC]=<port number>
 
 In an LMS configuration, rolls back the replicating instance to a common synchronization point from which the originating instance can transmit updates to allow it to catch up. This command rolls back a former originating instance to the journal sequence number at which the current originating instance took over. The format of the fetchresync qualifier is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -fetchresync=<port number> -losttrans=<extract file> file-list
 
 The <port number> is the communication port number that the rollback command uses when fetching the reference point. Always use the same <port number> on the originating instance for rollback as the one used by the Receiver Server.
@@ -1178,12 +1209,14 @@ The system stores extracted lost transactions in the file <extract file> specifi
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip journal -rollback -fetchresync=2299 -losttrans="glo.lost" -backward
 
 This command performs a ROLLBACK -FETCHRESYNC operation on a replicating instance to bring it to a common synchronization point from where the originating instance can begin to transmit updates to allow it to catch up. It also generates a lost transaction file glo.lost of all those transactions that are present on the replicating instance but not on the originating instance at port 2299.
 
-.. parsed-literal::
+.. code-block:: none
+
    -RES[YNC]=<journal sequence number>
 
 Specifies the journal sequence number to which YottaDB must rollback the database/journal files need to be rolled back to a specific point. If you specify a journal sequence number that is greater than the last consistent state, YottaDB rolls back the database/journal files to the last consistent state. Under normal operating conditions, this qualifier is not needed.
@@ -1194,28 +1227,32 @@ Journal Control Qualifiers
 
 The following qualifiers control journal processing:
 
-.. parsed-literal::
+.. code-block:: none
+
    -[NO]AP[PLY_AFTER_IMAGE]
 
 Specifies that after image records (AIMG) be applied to the database as part of forward processing of -RECOVERY or -ROLLBACK. AIMG are "snapshots" of the database updates captured by YottaDB immediately after the change caused by a DSE update. By default, during forward phase of backward recovery or rollback, AIMG records are applied to the database.
 
 By default, -RECOVER -FORWARD does not apply AIMG record into the database. -APPLY_AFTER_IMAGE is compatible with -RECOVER, or -ROLLBACK action qualifiers only.
 
-.. parsed-literal::
+.. code-block:: none
+
    -[NO]BR[OKENTRANS]=<extract file>
 
 -[NO]BROKENTRANS is an optional qualifier for -ROLLBACK, -RECOVER and -EXTRACT. If this is not specified and a broken transaction file creation is necessary, MUPIP JOURNAL creates one using the name of the current journal file being processed with a .broken extension.
 
 Note that, if selection qualifiers are specified, the broken transaction determination (and therefore lost transaction determination as well) is done based on the journal file that is filtered by the selection qualifiers. This means that a transaction's journal records may be considered complete or broken or lost, depending on the nature of the selection qualifiers. Using -FENCES=NONE along with the selection qualifiers will result in every journal record to be considered complete and hence prevent broken or lost transaction processing.
 
-.. parsed-literal::
+.. code-block:: none
+
    -[NO]CHA[IN]
 
 -CHAIN allows JOURNAL processing to include previous generations of journal files with -FORWARD. If JOURNAL -RECOVER needs to process previous generation journal file(s) and -NOCHAIN is specified, MUPIP JOURNAL exits with an error.
 
 -CHAIN is the default.
 
-.. parsed-literal::
+.. code-block:: none
+
    -[NO]CHE[CKTN]
 
 -CHECKTN specifies that JOURNAL -FORWARD must verify for each region that the beginning transaction number of the earliest journal file to be processed for that region is the same as the current transaction in the database file and that the ending transaction number of every journal file is equal to the beginning transaction number of the next generation journal file for a given region. By default, -FORWARD uses -CHECKTN.
@@ -1226,7 +1263,8 @@ ROLLBACK -FORWARD accepts only -CHECKTN, which is the default, but does not acce
 
 -CHECKTN is incompatible with -BACKWARD.
 
-.. parsed-literal::
+.. code-block:: none
+
    -[NO]ER[ROR_LIMIT][=integer]
 
 Specifies the number of errors that MUPIP JOURNAL processing accepts. When the number of errors exceeds the -ERROR_LIMIT, the -INTERACTIVE qualifier determines whether JOURNAL processing halts or defers to the operator. -NOERROR_LIMIT prevents MUPIP JOURNAL from stopping because of errors. Journal processing continues until it reaches the end of the journal file, regardless of the number of errors.
@@ -1244,7 +1282,8 @@ If MUPIP JOURNAL needs to increment error count during its processing, a warning
 
 If MUPIP JOURNAL completes successfully with a non-zero value of error count, the return status is not a success, but a warning.
 
-.. parsed-literal::
+.. code-block:: none
+
    -FE[NCES][=fence-option]
 
 Specifies how JOURNAL processes fenced transactions. Fenced transactions are logical transactions made up of database updates preceded by a TSTART command followed by a TCOMMIT command. All updates between a TSTART and a TCOMMIT are designed to occur together so that after journal recovery the database contains either all the updates corresponding to a fenced transaction, or none of them.
@@ -1261,14 +1300,16 @@ The fence options are:
 
 By default, MUPIP JOURNAL uses -FENCES=PROCESS.
 
-.. parsed-literal::
+.. code-block:: none
+
    -FU[LL]
 
 -FULL when used with -EXTRACT, specifies that all journal records be extracted. A journal file's contents can be rolled back in case of backward recovery or rollback(refer to “-RECover ” or “-ROLLBACK [{-ON[LINE]|-NOO[NLINE]}] ” for more details) in order to keep the database and journal in sync. This is achieved not by truncating the contents of the journal file but instead setting a field in the journal file header, which shows up as "Prev Recovery End of Data" in a MUPIP JOURNAL -SHOW=HEADER output, to indicate the end of the journal file before rolling back and setting another field in the file header to indicate the new end of the journal file (this field shows up as "End of Data" in a MUPIP JOURNAL -SHOW=HEADER output). Once a journal file's contents are rolled back, all future MUPIP JOURNAL commands (including -EXTRACT) operate on the rolled back journal file only. But if -FULL is specified along with -EXTRACT, MUPIP extracts the entire journal file contents (including those records that were rolled back). This qualifier is to be used only as a diagnostic tool and not in normal operation.
 
 -FULL qualifier is compatible with -EXTRACT only.
 
-.. parsed-literal::
+.. code-block:: none
+
    -[NO]IN[TERACTIVE]
 
 Specifies whether, for each error over the -ERROR_LIMIT, JOURNAL processing prompts the invoking operator for a response to control continuation of processing. If the operator responds that processing should not continue, the MUPIP JOURNAL command terminates.
@@ -1277,7 +1318,8 @@ Specifies whether, for each error over the -ERROR_LIMIT, JOURNAL processing prom
 
 This qualifier applies when the MUPIP command is entered from a terminal. The default is -INTERACTIVE.
 
-.. parsed-literal::
+.. code-block:: none
+
    -[NO]LOST[TRANS]=<extract file>
 
 -[NO]LOSTTRANS is an optional qualifier for -RECOVER, -ROLLBACK and -EXTRACT. If this is not specified and a lost transaction file creation is necessary, MUPIP JOURNAL creates one using the name of the current journal file being processed with a .lost extension.
@@ -1288,7 +1330,8 @@ Note that, if selection qualifiers are specified, journal processing does the br
 
 In a replicated database, lost transactions can have an additional cause. If failover occurs (i.e. the originating Source Server A fails, and the replicating Source Server B assumes the originating instance's role), some transactions committed to A's database may not be reflected in B's database. Before the former originating instance becomes the new replicating instance, these transactions must be rolled back. These transactions are known as "lost transactions". Note that these are complete transactions and different from a broken transaction. MUPIP JOURNAL -ROLLBACK stores extracted lost transactions in the extract-file specified by this qualifier. The starting point for the search for lost transactions is the journal sequence number obtained from the originating Source Server in the -FETCHRESYNC operation.
 
-.. parsed-literal::
+.. code-block:: none
+
    -RED[IRECT]=file-pair-list
 
 Replays the journal file to a database different than the one for which it was created. Use -REDIRECT to create or maintain databases for training or testing.
@@ -1305,12 +1348,14 @@ By default, JOURNAL directs -RECOVER to the database file from which the journal
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip journal -recover -forward -redirect="bgdbb.dat=test.dat" bgdbb.mjl
 
 This JOURNAL command does a forward recovery that -REDIRECTs the updates in bgdbb.mjl from bgdbb.dat to test.dat.
 
-.. parsed-literal::
+.. code-block:: none
+
    -VERB[OSE]
 
 Prints verbose output in the course of processing. It is not negatable and it is set to OFF by default.
@@ -1325,19 +1370,22 @@ The following qualifiers control the selection criteria for journal processing.
 
 Except for -TRANSACTION, all qualifiers allow for specifying a comma (,) seperated list of values.
 
-.. parsed-literal::
+.. code-block:: none
+
    -G[LOBAL]=global-list
 
 Specifies globals for MUPIP JOURNAL to include or exclude from processing. You might find this qualifier useful for extracting and analyzing specific data.
 
 The global-list contains one or more global-names (without subscripts) preceded by a caret symbol (^). To include more than one global, use one of the following syntaxes.
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip journal -forward -extract -global="^A*,^C" yottadb.mjl
 
 or
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip journal -forward -extract -global="(^A*,^C)" yottadb.mjl
 
 The names may include the asterisk (*) wildcard. That is, -GLOBAL="^A*" selects all global variables with names starting with A. The entire list or each name may optionally be preceded by a tilde (~), requiring JOURNAL to exclude database updates to the specified global(s). When the global-list with a MUPIP JOURNAL -GLOBAL does not start with a tilde sign (~), JOURNAL processes only the explicitly named globals. By default, JOURNAL processes all globals.
@@ -1348,26 +1396,30 @@ Example:
 
 To extract all ^GBL* except for ^GBLTMP:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip journal -extract -global="^GBL*,~^GBLTMP" -forward yottadb.mjl
 
 To extract all ^GBL except for ^GBL(1,"TMP"):
 
-.. parsed-literal::
-   $ mupip journal -extract -global=\"^GBL,~^GBL\(1,\"\"TMP\"\"\)\" -forward yottadb.mjl
+.. code-block:: bash
 
-The backslash (\) delimiter characters are required in UNIX to pass MUPIP the double quotes (") of the string subscript.
+   $ mupip journal -extract -global=\"^GBL,~^GBL(1,\"\"TMP\"\")\" -forward yottadb.mjl
+
+The backslash (\\) delimiter characters are required in UNIX to pass MUPIP the double quotes (") of the string subscript.
 
 An INVGLOBALQUAL error is issued along with the error offset in the command line, whenever a parse error of the global qualifier string is encountered.
 
-.. parsed-literal::
+.. code-block:: none
+
    -ID=pid-list
 
 Specifies that JOURNAL processing include or exclude database updates generated by one or more processes, identified by process identification numbers (PIDs). The entire list or each PID may optionally be preceded by a tilde (~), requiring JOURNAL to exclude database updates initiated by the specified PID. You may use this qualifier for troubleshooting or analyzing data.
 
 By default, JOURNAL processes database updates regardless of the PID that initiated it.
 
-.. parsed-literal::
+.. code-block:: none
+
    -T[RANSACTION]=transaction-type
 
 Specifies transaction-types for JOURNAL to include or exclude from processing. For example, you may use this qualifier to report only on KILL operations to locate possible causes for missing data.
@@ -1376,7 +1428,8 @@ The transaction-types are SET and KILL and can be negated. These types correspon
 
 By default, JOURNAL processes transactions, regardless of its type.
 
-.. parsed-literal::
+.. code-block:: none
+
    -U[SER]=user-list
 
 Specifies that MUPIP JOURNAL processing include or exclude database updates generated by one or more users. You can use this qualifier to audit the actions of a particular user. The user-list contains names of one or more users. Indicate multiple users by separating the names with commas (,). The names may include the wildcard asterisk (*). The entire list or each name may optionally be preceded by a minus sign (-) or a tilde (~), requiring JOURNAL to exclude database updates initiated by the specified user(s). When the user-list with a JOURNAL -USER does not start with a tilde (~), JOURNAL processes only database updates that are generated by explicitly named users. The asterisk (*) or percent (%) specification can be used for -USER qualifier. Percent (%) matches any character, and asterisk (*) matches any string (possibly zero length too).
@@ -1391,7 +1444,7 @@ Journal EXTRACT files always start with a label. For the current release of Yott
 
 If the environment variable ydb_chset is set of UTF-8, then file format label is followed by another label called "UTF-8" to indicate UTF-8 mode.
 
-After this label, the journal record extracts follow. These journal record extracts include fields or pieces delimited by a back slash (\).
+After this label, the journal record extracts follow. These journal record extracts include fields or pieces delimited by a back slash (\\).
 
 The first piece of an -EXTRACT output record contains a two-digit decimal transaction record type (for example, 01 for a process initialization record). The second piece contains the full date and time of the operation, represented in the $HOROLOG format. The third piece contains a YottaDB assigned number (database transaction number) which uniquely identifies the transaction within the time covered by the journal file. The fourth piece contains the process ID (PID) of the process that performed the operation, represented as a decimal number. The remainder of the record depends on the record type.
 
@@ -1399,21 +1452,22 @@ Records of type SET, KILL, ZKILL, TSTART, and TCOMMIT include the token_seq as p
 
 The format of the plain journal extract is as follows:
 
-.. parsed-literal::
-   NULL    00\\time\\tnum\\pid\\clntpid\\jsnum\\strm_num\\strm_seq\\salvaged
-   PINI    01\\time\\tnum\\pid\\nnam\\unam\\term\\clntpid\\clntnnam\\clntunam\\clntterm
-   PFIN    02\\time\\tnum\\pid\\clntpid
-   EOF     03\\time\\tnum\\pid\\clntpid\\jsnum
-   KILL    04\\time\\tnum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\nodeflags\\node
-   SET     05\\time\\tnum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\nodeflags\\node=sarg
-   ZTSTART 06\\time\\tnum\\pid\\clntpid\\token
-   ZTCOM   07\\time\\tnum\\pid\\clntpid\\token\\partners
-   TSTART  08\\time\\tnum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq
-   TCOM    09\\time\\tnum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\partners\\tid
-   ZKILL   10\\time\\tnum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\nodeflags\\node
-   ZTWORM  11\\time\\tnum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\ztwormhole
-   ZTRIG   12\\time\\tnum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\nodeflags\\node
-   LGTRIG  13\\time\\tnum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\trigdefinition
+.. code-block:: none
+
+   NULL    00\time\tnum\pid\clntpid\jsnum\strm_num\strm_seq\salvaged
+   PINI    01\time\tnum\pid\nnam\unam\term\clntpid\clntnnam\clntunam\clntterm
+   PFIN    02\time\tnum\pid\clntpid
+   EOF     03\time\tnum\pid\clntpid\jsnum
+   KILL    04\time\tnum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
+   SET     05\time\tnum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node=sarg
+   ZTSTART 06\time\tnum\pid\clntpid\token
+   ZTCOM   07\time\tnum\pid\clntpid\token\partners
+   TSTART  08\time\tnum\pid\clntpid\token_seq\strm_num\strm_seq
+   TCOM    09\time\tnum\pid\clntpid\token_seq\strm_num\strm_seq\partners\tid
+   ZKILL   10\time\tnum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
+   ZTWORM  11\time\tnum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\ztwormhole
+   ZTRIG   12\time\tnum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
+   LGTRIG  13\time\tnum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\trigdefinition
 
 
 where:
@@ -1455,44 +1509,44 @@ Journal extracts contain NULL records only in a multisite replication configurat
 
 The format of the detail journal extract is as follows:
 
-.. parsed-literal::
+.. code-block:: none
 
-   PINI    time\\tnum\\chksum\\pid\\nnam\\unam\\term\\clntpid\\clntnnam\\clntunam\\clntterm
-   PFIN    time\\tnum\\chksum\\pid\clntpid
-   EOF     time\\tnum\\chksum\\pid\\clntpid\\jsnum
-   SET     time\\tnum\\chksum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\nodeflags\\node=sarg
-   KILL    time\\tnum\\chksum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\nodeflags\\node
-   ZKILL   time\\tnum\\chksum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\nodeflags\\node
-   ZTWORM  time\\tnum\\chksum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\ztwormhole
-   ZTRIG   time\\tnum\\chksum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\nodeflags\\node
-   TSTART  time\\tnum\\chksum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq
-   TSET    time\\tnum\\chksum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\nodeflags\\node=sarg
-   TKILL   time\\tnum\\chksum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\nodeflags\\node
-   TZKILL  time\\tnum\\chksum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\nodeflags\\node
-   TZTWORM time\\tnum\\chksum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\ztwormhole
-   TZTRIG  time\\tnum\\chksum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\nodeflags\\node
-   TLGTRIG time\\tnum\\chksum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\trigdefinition
-   USET    time\\tnum\\chksum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\nodeflags\\node=sarg
-   UKILL   time\\tnum\\chksum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\nodeflags\\node
-   UZKILL  time\\tnum\\chksum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\nodeflags\\node
-   UZTWORM time\\tnum\\chksum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\ztwormhole
-   UZTRIG  time\\tnum\\chksum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\nodeflags\\node
-   ULGTRIG time\\tnum\\chksum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\trigdefinition
-   TCOM    time\\tnum\\chksum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\partners\\tid
-   INCTN   time\\tnum\\chksum\\pid\\clntpid\\opcode\\incdetail
-   EPOCH   time\\tnum\\chksum\\pid\\clntpid\\jsnum\\blks_to_upgrd\\free_blocks\\total_blks\\fully_upgraded[\\strm_num\\strm_seq]...
-   PBLK    time\\tnum\\chksum\\pid\\clntpid\\blknum\\bsiz\\blkhdrtn\\ondskbver
-   AIMG    time\\tnum\\chksum\\pid\\clntpid\\blknum\\bsiz\\blkhdrtn\\ondskbver\\dsecmdline
-   NULL    time\\tnum\\chksum\\pid\\clntpid\\jsnum\\strm_num\\strm_seq\\salvaged
-   ZTSTART time\\tnum\\chksum\\pid\\clntpid\\token
-   FSET    time\\tnum\\chksum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\nodeflags\\node=sarg
-   FKILL   time\\tnum\\chksum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\nodeflags\\node
-   FZKILL  time\\tnum\\chksum\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\nodeflags\\node
-   GSET    time\\tnum\\chksum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\nodeflags\\node=sarg
-   GKILL   time\\tnum\\chksum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\nodeflags\\node
-   GZKILL  time\\tnum\\chksum\\pid\\clntpid\\token_seq\\strm_num\\strm_seq\\updnum\\nodeflags\\node
-   ZTCOM   time\\tnum\\chksum\\pid\\clntpid\\token\\partners
-   ALIGN   time\\tnum\\chksum\\pid\\clntpid
+   PINI    time\tnum\chksum\pid\nnam\unam\term\clntpid\clntnnam\clntunam\clntterm
+   PFIN    time\tnum\chksum\pid\clntpid
+   EOF     time\tnum\chksum\pid\clntpid\jsnum
+   SET     time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node=sarg
+   KILL    time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
+   ZKILL   time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
+   ZTWORM  time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\ztwormhole
+   ZTRIG   time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
+   TSTART  time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq
+   TSET    time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node=sarg
+   TKILL   time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
+   TZKILL  time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
+   TZTWORM time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\ztwormhole
+   TZTRIG  time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
+   TLGTRIG time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\trigdefinition
+   USET    time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node=sarg
+   UKILL   time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
+   UZKILL  time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
+   UZTWORM time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\ztwormhole
+   UZTRIG  time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
+   ULGTRIG time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\trigdefinition
+   TCOM    time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\partners\tid
+   INCTN   time\tnum\chksum\pid\clntpid\opcode\incdetail
+   EPOCH   time\tnum\chksum\pid\clntpid\jsnum\blks_to_upgrd\free_blocks\total_blks\fully_upgraded[\strm_num\strm_seq]...
+   PBLK    time\tnum\chksum\pid\clntpid\blknum\bsiz\blkhdrtn\ondskbver
+   AIMG    time\tnum\chksum\pid\clntpid\blknum\bsiz\blkhdrtn\ondskbver\dsecmdline
+   NULL    time\tnum\chksum\pid\clntpid\jsnum\strm_num\strm_seq\salvaged
+   ZTSTART time\tnum\chksum\pid\clntpid\token
+   FSET    time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node=sarg
+   FKILL   time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
+   FZKILL  time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
+   GSET    time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node=sarg
+   GKILL   time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
+   GZKILL  time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
+   ZTCOM   time\tnum\chksum\pid\clntpid\token\partners
+   ALIGN   time\tnum\chksum\pid\clntpid
 
 where:
 

@@ -98,7 +98,8 @@ M array subscripts are expressions, and are not restricted to numeric values.
 
 The format for an M global or local variable is:
 
-.. parsed-literal::
+.. code-block:: none
+
    [^]name[(expr1[,...])]
 
 * The optional leading caret symbol (^) designates a global variable.
@@ -189,7 +190,8 @@ GDE
 
 The -REGION qualifier –[NO]NULL_SUBCRIPTS accepts new values with change, add and template commands, default is –NONULL_SUBSCRIPTS, e.g.:
 
-.. parsed-literal::
+.. code-block:: bash
+
    GDE>add –region areg –dyn=aseg –null_subscripts=always
    GDE>change –region areg –null_subscripts=true
    GDE>change –region areg –null_subscripts=false
@@ -200,7 +202,8 @@ The -REGION qualifier –[NO]NULL_SUBCRIPTS accepts new values with change, add 
 
 The other region qualifier is –[NO]STDNULLCOLL with add, change and template command, default is –NOSTDNULLCOLL.
 
-.. parsed-literal::
+.. code-block:: bash
+
    GDE> template -region -stdnullcoll
    GDE> change -region DEFAULT -stdnullcoll
    GDE> add -segment TEAGLOBALS -file=TEAGLOBALS.dat
@@ -210,7 +213,7 @@ The other region qualifier is –[NO]STDNULLCOLL with add, change and template c
    GDE> add -name Tea* -region=TEAGLOBALS
    GDE> show -all
 
-                             \*\*\* Templates \*\*\*
+                             *** Templates ***
 
    Region                             Def Coll     Rec Size    Key Size    Null Subs    Standard Null Coll   Journaling
    -----------------------------------------------------------------------------------------------------------------------
@@ -219,21 +222,21 @@ The other region qualifier is –[NO]STDNULLCOLL with add, change and template c
 
    Segment             Active             Acc      Typ    Block                Alloc    Exten     Options
    ---------------------------------------------------------------------------------------------------------
-   <default>            \*                BG       DYN    1024                 100       100      GLOB=1024
+   <default>             *                BG       DYN    1024                 100       100      GLOB=1024
                                                                                                   LOCK=40
    <default>                              MM       DYN    1024                 100       100      DEFER
                                                                                                   LOCK=40
 
-                         \*\*\* Names \*\*\*
+                         *** Names ***
 
    Global                         Region
    ---------------------------------------
-   \*                           DEFAULT
+   *                            DEFAULT
    Darjeeling                   TEAGLOBALS
    LapsangSouchong              TEAGLOBALS
    Tea*                         TEAGLOBALS
 
-                              \*\*\* REGIONS  \*\*\*
+                              *** REGIONS  ***
 
    Region                  Dynamic Segment         Def Coll   Rec Size   Key Size   Null Subs  Standard Null Coll   Journaling
    -----------------------------------------------------------------------------------------------------------------------------
@@ -241,7 +244,7 @@ The other region qualifier is –[NO]STDNULLCOLL with add, change and template c
    TEAGLOBALS                TEAGLOBALS              0          256         64        EXISTING          Y                N
 
 
-                              \*\*\* SEGMENTS \*\*\*
+                              *** SEGMENTS ***
 
    Segment             File (def ext: .dat)     Acc  Typ   Block            Alloc   Exten     Options
    -----------------------------------------------------------------------------------------------------
@@ -252,7 +255,7 @@ The other region qualifier is –[NO]STDNULLCOLL with add, change and template c
                                                                                               LOCK=40
                                                                                               RES=0
 
-                                 \*\*\* MAP \*\*\*
+                                 *** MAP ***
 
    ---------------------------------- Names --------------------------------------------------
 
@@ -299,7 +302,8 @@ For a region, “Standard Null Collation” in DSE dump output corresponds to -s
 
 From the example above, the output of dump –fileheader for TEAGLOBALS.dat will be as follows:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> dump -fileheader
 
    File            /tmp/yottadb.dat
@@ -333,7 +337,8 @@ From the example above, the output of dump –fileheader for TEAGLOBALS.dat will
 
 With Standard null collation, the null subscript is represented by 0x01 instead of 0xFF with historical null collation. So, the output of dse dump -block for a null subscript will also be different.
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE>dump -block=3
       File /testarea1/null_subs/yottadb.dat
       Region DEFAULT
@@ -345,7 +350,8 @@ With Standard null collation, the null subscript is represented by 0x01 instead 
 
 With historical null collation, for the same command output will be as follows:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE>dump -block=3
        File /testarea1/null_subs/yottadb.dat
        Region DEFAULT
@@ -363,7 +369,8 @@ M Commands/Functions
 
 Since with standard collation, null subscripts collate before numeric and string subscripts, ZWR output will be different if nodes with null subscripts exist.
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZWR
    lcl("")=2
    lcl(1)=3
@@ -371,7 +378,8 @@ Since with standard collation, null subscripts collate before numeric and string
 
 With the same data and historical null collation, the output of ZWR will be as follows:
 
-.. parsed-literal::
+.. code-block:: bash
+
    lcl(1)=3
    lcl("")=2
    lcl("x")=4
@@ -384,7 +392,8 @@ If the last subscript in the subscripted global or local variable name passed as
 
 If the last subscript in the subscripted global or local variable name is null and second argument of $ORDER() is -1, $ORDER() will always return the last node at the specified level regardless of the existence of a subscripted global or local variable (with null subscript). This allows the user to traverse all the nodes in a specified level starting from the last.
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZWRITE
    lcl(1)=3
    lcl("x")=4
@@ -417,7 +426,8 @@ If the last subscript in the subscripted global or local variable name is null a
 
 **$QUERY()**: With stdnullcoll, if $D(glvn(""))=1 (or 11), $Q(glvn("")) will return glvn(1) [assuming glvn(1) exists]. Software should execute $D(glvn("")) to test the existence of glvn(""). $Q(glvn("...")) will never return the starting-point (glvn("")) even though glvn("") may exist.
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZWRITE lcl
    lcl("")=1
    lcl(1)=1
@@ -498,7 +508,8 @@ M recognizes an optional environment specification in global names. The environm
 
 The syntax for global variable names that include an environment specification is:
 
-.. parsed-literal::
+.. code-block:: none
+
    ^|expr|name[(subscript[,...])]
 
 In YottaDB, the expression identifies the Global Directory for mapping the global variable.
@@ -507,7 +518,8 @@ Environment specifications permit easy access to global variables in alternative
 
 YottaDB also allows:
 
-.. parsed-literal::
+.. code-block:: none
+
    ^|expr1,expr2|name[(subscript[,...])]
 
 Where the first expression identifies the Global Directory and the second expression is accepted but ignored by YottaDB.
@@ -516,19 +528,22 @@ To improve compatibility with some other M implementations, YottaDB also accepts
 
 The formats for this non-standard syntax are:
 
-.. parsed-literal::
+.. code-block:: none
+
    ^[expratom1]name[(subscript...)]
 
 or
 
-.. parsed-literal::
+.. code-block:: none
+
    ^[expratom1,expratom2]name[(subscript...)]
 
 Where expratom1 identifies the Global Directory and expratom2 is a dummy variable. Note that the first set of brackets in each format is part of the syntax. The second set of square brackets is part of the meta-language identifying an optional element.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ ydb_gbldir=Test.GLD
    $ export ydb_gbldir
    $ YDB
@@ -537,7 +552,7 @@ Example:
    TEST.GLD
    YDB>WRITE ^A
    THIS IS ^A IN DATABASE RED
-   YDB>WRITE ^|"M1.GLD"\|A
+   YDB>WRITE ^|"M1.GLD"|A
    THIS IS ^A IN DATABASE WHITE
    YDB>WRITE $ZGBLDIR
    TEST.GLD
@@ -550,12 +565,13 @@ The statement WRITE ^|"M1.GLD"\|A writes variable ^A using the Global Directory,
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>WRITE $ZGBLDIR
    M1.GLD
    YDB>WRITE ^A
    THIS IS ^A IN DATABASE WHITE
-   YDB>WRITE ^|"M1.GLD"\|A
+   YDB>WRITE ^|"M1.GLD"|A
    THIS IS ^A IN DATABASE WHITE
 
 The statement WRITE ^|"M1.GLD"\|A is equivalent to WRITE ^A.
@@ -564,9 +580,10 @@ Specifying separate Global Directories does not always translate to using separa
 
 Example:
 
-.. parsed-literal::
-   YDB>WRITE ^|"M1.GLD"\|A,!,^|"M2.GLD"\|A,!,^|"M3.GLD"
-   \|A,!
+.. code-block:: bash
+
+   YDB>WRITE ^|"M1.GLD"|A,!,^|"M2.GLD"|A,!,^|"M3.GLD"
+   |A,!
    THIS IS ^A IN DATABASE WHITE
    THIS IS ^A IN DATABASE BLUE
    THIS IS ^A IN DATABASE WHITE
@@ -575,10 +592,11 @@ In this example, the WRITE does not display ^A from three YottaDB database files
 
 This result could have occurred under the following mapping:
 
-.. parsed-literal::
-   ^|"M1.GLD"\|A --> REGIONA --> SEGMENTA --> FILE1.DAT
-   ^|"M2.GLD"\|A --> REGIONA --> SEGMENT1 --> FILE2.DAT
-   ^|"M3.GLD"\|A --> REGION3 --> SEGMENT3 --> FILE1.DAT
+.. code-block:: bash
+
+   ^|"M1.GLD"|A --> REGIONA --> SEGMENTA --> FILE1.DAT
+   ^|"M2.GLD"|A --> REGIONA --> SEGMENT1 --> FILE2.DAT
+   ^|"M3.GLD"|A --> REGION3 --> SEGMENT3 --> FILE1.DAT
 
 For more information on Global Directories, refer to the `"Global Directory Editor" <https://docs.yottadb.com/AdminOpsGuide/gde.html>`_ chapter of the Administration and Operations Guide.
 
@@ -598,17 +616,19 @@ If the shared object is not accessible or the entry point is not accessible, Yot
 
 The ydb_env_xlate() routine has the following C prototype:
 
-.. parsed-literal::
-   int ydb_env_xlate(ydb_string_t \*in1, ydb_st
-      ring_t \*in2, ydb_string \*in3, ydb_string_t \*out)
+.. code-block:: C
+
+   int ydb_env_xlate(ydb_string_t *in1, ydb_st
+      ring_t *in2, ydb_string *in3, ydb_string_t *out)
 
 where ydb_string_t is a structure defined in libyottadb.h as follows:
 
-.. parsed-literal::
+.. code-block:: C
+
    typedef struct
    {
 	unsigned long	length;
-	char		\*address;
+	char		*address;
    } ydb_string_t;
 
 The purpose of the function is to use its three input arguments to derive and return an output argument that can be used as an environment specification by YottaDB. Note that the input values passed (in1, in2 and in3) are the result of M evaluation and must not be modified. The first two arguments are the expressions passed within the up-bars "| \|" or the square-brackets "[ ]", and the third argument is the current working directory as described by $ZDIRECTORY.
@@ -635,7 +655,8 @@ The routine may have to deal with a case where one or both of the inputs have ze
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ cat ydb_env_xlate.c
    #include <stdio.h>
    #include <string.h>
@@ -645,21 +666,21 @@ Example:
    {
      ydb_string_t field1, field2, ret;
    } line_entry ;
-   static line_entry table[5], \*line, linetmp;
-   /* Since these errors may occur before setup is complete, they are statics \*/
-   static char \*errorstring1 ="Error in function initialization, environment variable GTM_CALLIN_START not defined. Environment translation failed.";
-   static char \*errorstring2 ="Error in function initialization, function pointers could not be determined. Environment translation failed.";
+   static line_entry table[5], *line, linetmp;
+   /* Since these errors may occur before setup is complete, they are statics */
+   static char *errorstring1 ="Error in function initialization, environment variable GTM_CALLIN_START not defined. Environment translation failed.";
+   static char *errorstring2 ="Error in function initialization, function pointers could not be determined. Environment translation failed.";
    #define ENV_VAR"GTM_CALLIN_START"
-   typedef int(\*int_fptr)();
+   typedef int(*int_fptr)();
    int_fptr GTM_MALLOC;
-   int init_functable(ydb_string_t \*ptr)
+   int init_functable(ydb_string_t *ptr)
    {
-   /* This function demonstrates the initialization of other function pointers as well (if the user-code needs them for any reason, they should be defined as globals) \*/
-   char \*pcAddress;
+   /* This function demonstrates the initialization of other function pointers as well (if the user-code needs them for any reason, they should be defined as globals) */
+   char *pcAddress;
    long lAddress;
-   void \*\*functable;
-   void (\*setup_timer) ();
-   void (\*cancel_timer) ();
+   void **functable;
+   void (*setup_timer) ();
+   void (*cancel_timer) ();
    pcAddress = getenv(ENV_VAR);
    if (pcAddress == NULL)
    {
@@ -675,35 +696,35 @@ Example:
    ptr->address = errorstring2;
    return 1;
    }
-   functable = (void \*)lAddress;
-   setup_timer = (void(\*)()) functable[2];
-   cancel_timer = (void(\*)()) functable[3];
+   functable = (void *)lAddress;
+   setup_timer = (void(*)()) functable[2];
+   cancel_timer = (void(*)()) functable[3];
    GTM_MALLOC = (int_fptr) functable[4];
    return 0;
    }
-   void copy_string(char \*\*loc1, char \*loc2, int length)
+   void copy_string(char **loc1, char *loc2, int length)
    {
-   char \*ptr;
-   ptr = (char \*) ydb_malloc(length);
+   char *ptr;
+   ptr = (char *) ydb_malloc(length);
    strncpy( ptr, loc2, length);
-   \*loc1 = ptr;
+   *loc1 = ptr;
    }
-   int init_table(ydb_string_t \*ptr)
+   int init_table(ydb_string_t *ptr)
    {
    int i = 0;
    char buf[100];
-   char \*buf1, \*buf2;
-   FILE \*tablefile;
-   char \*space = " ";
-   char \*errorstr1 = "Error opening table file table.dat";
-   char \*errorstr2 = "UNDETERMINED ERROR FROM GTM_ENV_XLATE";
-   if ((tablefile = fopen("table.dat","r")) == (FILE \*)NULL)
+   char *buf1, *buf2;
+   FILE *tablefile;
+   char *space = " ";
+   char *errorstr1 = "Error opening table file table.dat";
+   char *errorstr2 = "UNDETERMINED ERROR FROM GTM_ENV_XLATE";
+   if ((tablefile = fopen("table.dat","r")) == (FILE *)NULL)
    {
    ptr->length = strlen(errorstr1);
    copy_string(&(ptr->address), errorstr1, strlen(errorstr1));
    return 1;
    }
-   while (fgets(buf, (int)sizeof(buf), tablefile) != (char \*)NULL)
+   while (fgets(buf, (int)sizeof(buf), tablefile) != (char *)NULL)
    {
    line= &table[i++];
    buf1 = buf;
@@ -719,7 +740,7 @@ Example:
    copy_string( &(line->ret.address), buf1, line->ret.length);
    }
    fclose(tablefile);
-   /* In this example, the last entry in the table is the error string \*/
+   /* In this example, the last entry in the table is the error string */
    line = &table[4];
    copy_string( &(line->ret.address), errorstr2, strlen(errorstr2));
    line->ret.length = strlen(errorstr2);
@@ -732,11 +753,11 @@ Example:
    else
    return str1.length - str2.length;
    }
-   int cmp_line(line_entry \*line1, line_entry \*line2)
+   int cmp_line(line_entry *line1, line_entry *line2)
    {
    return (((cmp_string(line1->field1, line2->field1))||(cmp_string(line1->field2, line2->field2))));
    }
-   int look_up_table(line_entry \*aline, ydb_string_t \*ret_ptr)
+   int look_up_table(line_entry *aline, ydb_string_t *ret_ptr)
    {
    int i;
    int ret_v;
@@ -751,13 +772,13 @@ Example:
    return 0;
    }
    }
-   /\*ERROR OUT\*/
+   /*ERROR OUT*/
    line = &table[4];
    ret_ptr->length= line->ret.length;
    ret_ptr->address = line->ret.address;
    return 1;
    }
-   int ydb_env_xlate(ydb_string_t \*ptr1, ydb_string_t \*ptr2, ydb_string_t \*ptr_zdir, ydb_string_t \*ret_ptr)
+   int ydb_env_xlate(ydb_string_t *ptr1, ydb_string_t *ptr2, ydb_string_t *ptr_zdir, ydb_string_t *ret_ptr)
    {
    int return_val, return_val_init;
    if (!init)
@@ -799,10 +820,11 @@ To include a quotation mark (") within a strlit, use a set of two quotation mark
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write """"
    "
-   \YDB>
+   YDB>
 
 The WRITE displays a single quotation mark because the first quotation mark delimits the beginning of the string literal, the next two quotation marks denote a single quote within the string, and the last quotation mark delimits the end of the string literal.
 
@@ -810,7 +832,8 @@ Use the $CHAR function and the concatenation operator to include control charact
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>WRITE "A"_$CHAR(9)_"B"
    A B
    YDB>
@@ -825,7 +848,8 @@ In M, numeric literals (numlit) are entered without surrounding delimiters.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>WRITE 1
    1
    YDB> WRITE 1.1
@@ -837,7 +861,8 @@ M also accepts numeric literals in the form of a mantissa and an exponent, separ
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>WRITE 8E6
    8000000
    YDB> WRITE 8E-6
@@ -908,7 +933,8 @@ Remember that precedence is left to right for all arithmetic operators.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>WRITE 1+1
    2
    YDB>WRITE 2-1
@@ -929,7 +955,8 @@ This simple example demonstrates how each arithmetic binary operation uses numer
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>WRITE +"12ABC"
    12
    YDB>WRITE --"-3-4"
@@ -954,7 +981,8 @@ Remember that precedence is always left to right, and that logical operators hav
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    YDB>WRITE '0
    1
    YDB>WRITE '1
@@ -971,7 +999,8 @@ The above example demonstrates the unary NOT operation. Note that any non-zero n
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>WRITE 0&0
    0
    YDB>WRITE 0'&0
@@ -1014,7 +1043,8 @@ _ binary operator causes M to concatenate the second expression with the first e
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>WRITE "B"_"A"
    BA
    YDB>WRITE "A"_1
@@ -1049,7 +1079,8 @@ Other numeric relations are formed using the logical NOT operator apostrophe (')
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>WRITE 1>2
    0
    YDB>WRITE 1<2
@@ -1060,7 +1091,8 @@ The above example demonstrates the basic arithmetic relational operations.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>WRITE 1'<2
    0
    YDB>WRITE 2'<1
@@ -1097,7 +1129,8 @@ Other string relations are formed using the logical NOT operator apostrophe (') 
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>WRITE "A"="B"
    0
    YDB>WRITE "C"="C"
@@ -1119,7 +1152,8 @@ These examples demonstrate the string relational operators using string literals
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>WRITE 2]10
    1
    YDB>WRITE 2]]10
@@ -1133,7 +1167,8 @@ These examples illustrate that when using the primary ASCII character set, the m
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>WRITE 1=1
    1
    YDB>WRITE 1=2
@@ -1152,7 +1187,8 @@ These examples illustrate the dual nature of the equal sign operator. If both ex
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    YDB>WRITE "a"'="A"
    1
    YDB>WRITE "FRED"'["RED"
@@ -1200,7 +1236,8 @@ Pattern codes may be upper or lower case and may be replaced with a string liter
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>WRITE "ABC"?3U
    1
    YDB>WRITE "123-45-6789"?3N1"-"2N1"-"4N
@@ -1210,14 +1247,16 @@ The first WRITE has a simple one-element pattern while the second has multiple e
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    I x?.E1C.E W !,"Must not contain a control character" Q
 
 This example uses a pattern match to test for control characters.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    I acn?1U.20A1","1U.10A D
    .S acn=$G((^ACX($P(acn,","),$P(acn,",",2)))
 
@@ -1363,7 +1402,8 @@ Most commands accept indirection of their entire argument.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>set x="^INDER"
    YDB>do @x
 
@@ -1377,7 +1417,8 @@ Any expratom or any local or global variable name may be replaced by indirection
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>set x="HOOP",b="x"
    YDB>set a="HULA "_@b
    YDB>write a
@@ -1394,7 +1435,8 @@ Any element of an entryref may be replaced by indirection.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>set lab="START",routine="PROG"
    YDB>do @lab^@routine
 
@@ -1408,7 +1450,8 @@ A pattern code may be replaced by indirection.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>FOR p="1U.20A1"",""1U.20A",5N IF x?@p QUIT
    YDB>ELSE WRITE !,"Incorrect format" QUIT
 
@@ -1422,7 +1465,8 @@ Indirection may replace the prefix of a subscripted global or local variable nam
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>SET from="B",to="^A(15)",x=""
    YDB>FOR SET x=$O(@from@(x)) Q:x="" S @to@(x)=@from@(x)
 
@@ -1478,7 +1522,8 @@ An actuallist:
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>DO MULT(3,X,.RESULT)
 
 This example illustrates a DO with parameters. The actuallist contains:
@@ -1511,7 +1556,8 @@ A formallist:
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    MULT(MP,MC,RES)
    SET RES=MP*MC
    QUIT RES
@@ -1555,7 +1601,8 @@ For more information, see `“Extrinsic Functions” <./langfeat.html#extrinsic-
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    SET X=30,Z="Hello"
    DO WRTSQR(X)
    ZWRITE
@@ -1567,7 +1614,8 @@ Example:
 
 produces
 
-.. parsed-literal::
+.. code-block:: none
+
    900
    X=30
    Z="Hello"
@@ -1585,7 +1633,8 @@ A call-by-value passes a copy of the value of the actuallist expression to the i
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    SET X=30
    DO SQR(X)
    ZWRITE
@@ -1595,7 +1644,8 @@ Example:
 
 produces:
 
-.. parsed-literal::
+.. code-block:: none
+
    X=30
 
 A period followed by a name identifies an actualname and causes a call-by-reference.
@@ -1604,7 +1654,8 @@ A call-by-reference passes a pointer to the variable of the invoked routine so o
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    SET X=30
    DO SQR(.X)
    ZWRITE
@@ -1614,7 +1665,8 @@ Example:
 
 produces:
 
-.. parsed-literal::
+.. code-block:: none
+
    X=900
 
 +++++++++++++++++++++++++++++
@@ -1625,7 +1677,8 @@ The standard does not provide for indirection of a labelref because the syntax h
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    DO @X(1)
 
 This example could be:
@@ -1639,7 +1692,8 @@ Example:
 
 The syntax:
 
-.. parsed-literal::
+.. code-block:: none
+
    SET A(1)="CUBE",X=5
    DO @A(1)(.X)
    WRITE X,!
@@ -1650,7 +1704,8 @@ The syntax:
 
 Produces the result:
 
-.. parsed-literal::
+.. code-block:: none
+
    125
 
 YottaDB follows analogous syntax for routine indirection:
@@ -1669,12 +1724,14 @@ YottaDB allows references to a YottaDB database from programs written in other p
 
 In YottaDB, calls to C language routines may be made with the following syntax:
 
-.. parsed-literal::
+.. code-block:: none
+
    DO &[packagename.]name[^name][parameter-list]
 
 or as an expression element,
 
-.. parsed-literal::
+.. code-block:: none
+
    $&[packagename.]name[^name][parameter-list]
 
 Where packagename, like the name elements is a valid M name. Because of the parsing conventions of M, the identifier between the ampersand (&) and the optional parameter-list has precisely constrained punctuation – a later section describes how to transform this into a more richly punctuated name should that be appropriate for the called function. While the intent of the syntax is to permit the name^name to match an M labelref, there is no semantic implication to any use of the caret (^).
@@ -1690,7 +1747,8 @@ An extrinsic function is an M subroutine that another M routine can invoke to re
 
 The format for extrinsic functions is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $$[label][^routinename]([expr|.lname[,...]])
 
 
@@ -1703,7 +1761,8 @@ M requires a routine that implements an extrinsic function to terminate with an 
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    POWER(V,X,S,T);extrinsic to raise to a power
    ;ignores fractional powers
    SET T=1,S=0
@@ -1725,7 +1784,8 @@ An extrinsic special variable is a user-written M subroutine that another M rout
 
 The format for extrinsic special variables is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $$[label][^routinename]
 
 * The optional label and optional routinename make up the formallabel, which specifies the name of the subroutine performing the extrinsic function. The formallabel must contain at least one of its optional component.
@@ -1736,7 +1796,8 @@ M requires that a routine that implements an extrinsic special variable terminat
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZPRINT ^DAYOWEEK
    DAYOWEEK();extrinsic special variable to
    ;provide the day of the week
@@ -1838,7 +1899,8 @@ To achieve the best YottaDB performance, transactions should:
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    TSTART ():SERIAL
    SET (ACCT,^M(0))=^M(0)+1
    SET ^M(ACCT)=PREC,^PN(NAM)=ACCT
@@ -1848,7 +1910,8 @@ This transaction encapsulates these two SETs. The first increments the tally of 
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    TSTART ():SERIAL
    IF $TRESTART>3 DO QUIT
    .TROLLBACK
@@ -1864,7 +1927,8 @@ YottaDB provides a way to monitor transaction restarts by reporting them to the 
 
 Here is an example message:
 
-.. parsed-literal::
+.. code-block:: none
+
    %YDB-I-TPRESTART, Database /gbls/dtx/dtx.dat; code: L; blk: 0x00BA13DD in glbl: ^DTX; pvtmods: 0, blkmods: 1, blklvl: 1, type: 4, readset: 3, writeset: 1, local_tn: 0x00000000000002D0, zpos: LABEL+108^ROUTINENAME
 
 * pvtmods - Is always less than or equal to blkmods. This means it can be 1 only if "blkmods" is also 1. If it is 1, it means that process P1 was planning to UPDATE (not just READ) the block number (indicated as "blk: ..." in the TPRESTART message) as part of its TP transaction.
@@ -1891,7 +1955,8 @@ TP Example
 
 Here is a transaction processing example that lets you exercise the concept. If you use this example, be mindful that the functions "holdit" and "trestart" are included as tools to allow you access to information within a transaction which would normally be hidden from users. These types of functions would not normally appear in production code. Comments have been inserted into the code to explain the function of various segments.
 
-.. parsed-literal::
+.. code-block:: none
+
    trans
    ;This sets up the program constants
    ;for doit and trestart

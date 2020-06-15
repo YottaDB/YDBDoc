@@ -49,7 +49,8 @@ YottaDB messages are identified by a signature of the form YDB-s-abcdef where -s
 
 Each entry in this manual is presented in the following format as illustrated by the NOTPRINCIO message.
 
-.. parsed-literal::
+.. code-block:: none
+
    1. NOTPRINCIO
    2. NOTPRINCIO, Output currently directed to device xxxx
    3. Run Time Warning: This message displays the current device xxxx when it is not the principal device and the process enters Direct Mode.

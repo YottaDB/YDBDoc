@@ -268,7 +268,8 @@ When processes have stopped or terminated abnormally, YottaDB recommends shuttin
 
 When you have terminated all processes, do a MUPIP RUNDOWN on all database files:
 
-.. parsed-literal::
+.. code-block:: bash
+
    mupip rundown -file <name of database>
 
 Use the UNIX ipcs utility to examine the states of message queues, shared memory, and semaphores. If any of these resources are left from the processes that have just been killed, use the UNIX ipcrm utility to remove them. Refer to `"Appendix A" <./ipcresource.html>`_ for more information.
@@ -278,7 +279,8 @@ Use the UNIX ipcs utility to examine the states of message queues, shared memory
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    ipcs
    IPC status from /dev/kmem as of Sat Feb 16 13:13:11 1999
    T     ID     KEY        MODE       OWNER    GROUP
@@ -293,7 +295,8 @@ This shows the state of these resources with a user uuu working on two databases
 
 Check the integrity of the database:
 
-.. parsed-literal::
+.. code-block:: bash
+
    mupip integ -file <name of database>
 
 To preserve database integrity, always verify that all YottaDB images have terminated and all GDS databases are RUNDOWN before shutting down your system.
@@ -323,31 +326,36 @@ To fix an LDSPANGLOINCMP error, use the following to reconstruct the value of th
 
 The conditions that lead to an LDSPANGLOINCMP error are as follows:
 
-.. parsed-literal::
+.. code-block:: none
+
    Case SN1 - While loading a spanning node the next record contained a non-spanning node:
    "Expected chunk number : ccccc but found a non-spanning node"
 
 The partial value can be used as the basis for reconstructing the spanning node.
 
-.. parsed-literal::
+.. code-block:: none
+
    Case SN2 - While loading a spanning node the next record did contain the expected chunk:
    "Expected chunk number : ccccc but found chunk number : ddddd"
 
 Use the partial value and the errant chunk as the basis for reconstructing the spanning node. After encountering this error, the binary load continues looking for the next global variable. If there are additional chunks from the damaged spanning node in the binary extract file, there is a case SN3 error for each of them. Use the errant chunk dumps from them as part of the reconstruction.
 
-.. parsed-literal::
+.. code-block:: none
+
    Case SN3 - Not loading a spanning node but found a record with a spanning node chunk:
    "Not expecting a spanning node chunk but found chunk : ccccc"
 
 This can be the result of an immediately prior case SN2 error (as described in prior paragraphs) or an isolated errant chunk.
 
-.. parsed-literal::
+.. code-block:: none
+
    Case SN4 - While loading a spanning node adding the next chunk caused the value to go over expected size:
    "Global value too large: expected size : sssss actual size : tttttt chunk number : ccccc"
 
 Adding the next chunk caused the value to go over the expected size. Examine the partial value and errant chunk dump.
 
-.. parsed-literal::
+.. code-block:: none
+
    Case SN5 - While loading a spanning node all of the chunks have been added but the value is not the expected size:
    "Expected size : sssss actual size : ttttt
 
@@ -359,7 +367,8 @@ Here is an example for repairing an error in a binary extract.
 
 Assume that during the load of a binary extract, you get the following error:
 
-.. parsed-literal::
+.. code-block:: bash
+
    %YDB-E-LDSPANGLOINCMP, Incomplete spanning node found during load
            at File offset : [0x0000027E]
            Expected Spanning Global variable : ^mypoem
@@ -393,17 +402,20 @@ Because the only issue in this case is that one of the chunks' keys has been dam
 
 Execute:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ $ydb_dist/yottadb -direct
 
 From the first error message pick :
 
-.. parsed-literal::
+.. code-block:: bash
+
    Expected Spanning Global variable : ^mypoem
 
 Use it together with the partial value:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>set ^mypoem="Half a league, half a league, Half a league onward, All in the valley of Death Rode the six hundred.
    Forward, the Light Brigade! Charge for the guns he said: Into the valley of Death Rode the six hundred.
    Forward, the Light Brigade! Was there a man dismayed? Not tho the soldiers knew Some one had blundered:
@@ -412,8 +424,9 @@ Use it together with the partial value:
 
 Add in the chunk that has the bad internal subscript:
 
-.. parsed-literal::
-   YDB>set ^mypoem=^mypoem\_"them, Cannon in front of them Volleyed and thundered;
+.. code-block:: bash
+
+   YDB>set ^mypoem=^mypoem_"them, Cannon in front of them Volleyed and thundered;
    Stormed at with shot and shell, Boldly they rode and well, Into the jaws of Death, Into the mouth of Hell Rode the six hundred.
    Flashed all their sabres bare, Flashed as they turned in air Sabring the gunners there, Charging an army while All the world wondered:
    Plunged in the battery-smoke Right thro the line they broke; Cossack and Russian Reeled from the sabre-stroke Shattered and sundered.
@@ -421,8 +434,9 @@ Add in the chunk that has the bad internal subscript:
 
 Finally, add the last chunk for that spanning node:
 
-.. parsed-literal::
-   YDB>set ^mypoem=^mypoem\_"t Not the six hundred.
+.. code-block:: bash
+
+   YDB>set ^mypoem=^mypoem_"t Not the six hundred.
    Cannon to the right of them, Cannon to the left of them, Cannon behind them Volleyed and thundered;
    Stormed at with shot and shell, While horse and hero fell, They that had fought so well Came thro the jaws of Death,
    Back from the mouth of Hell, All that was left of them, Left of six hundred.
@@ -431,7 +445,8 @@ Finally, add the last chunk for that spanning node:
 
 You have successfully reconstructed the global from the damaged binary load:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>w ^mypoem
    Half a league, half a league, Half a league onward, All in the valley of Death Rode the six hundred.
    Forward, the Light Brigade! Charge for the guns he said: Into the valley of Death Rode the six hundred.
@@ -548,7 +563,8 @@ Use the following diagnostic steps and references to determine an appropriate co
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    S reg=$V("GVNEXT",""),com="dbcheck.com" o     m-*  com:newv u com
    W "$ DEFINE/USER SYS$OUTPUT dbcheck.lis",!,"$ DSE",!
    F  Q:reg=""  D
@@ -578,7 +594,7 @@ Example:
    W "yz",!,"cat dbcheck.lis | grep 'Cache freeze'"
    ; CAUTION: in the above line, "Cache freeze"
    ; MUST be mixed-case as shown
-   W "\|awk '{print $1, $2, $3}'"
+   W "|awk '{print $1, $2, $3}'"
    C com ZSY "/bin/csh -c ""source dbcheck"""
    O com,dbcheck.lis C com:delete,dbcheck.lis:delete
    W !,"Attempting first access"
@@ -599,7 +615,8 @@ This routine provides a generalized approach to automating some of the tasks des
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    Mapping      Production region   Test region
    -----------------------------------------------
    A   to   M
@@ -681,7 +698,8 @@ Deadlocks occur when two or more processes own resources and are trying to add o
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    Process 1       Process 2
    ---------       ---------
    LOCK ^A         LOCK ^B
@@ -691,7 +709,8 @@ This shows a sequence in which Process 1 owns ^A and Process 2 owns ^B. Each pro
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    Process 1       Process 2        Process 3
    ---------       ---------        ---------
    LOCK ^A         LOCK ^B          LOCK ^C
@@ -705,14 +724,15 @@ You can prevent deadlocks by using timeouts on the LOCK commands. Timeouts allow
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    for  quit:$$NEW
    quit
   NEW()  lock ^X(0)
    set ^X(0)=^X(0)+1
    quit $$STORE(^X(0))
   STORE(x)
-   lock +^X(x):10 if  set ^X(x)=name\_"^"_bal
+   lock +^X(x):10 if  set ^X(x)=name_"^"_bal
    lock
    quit $TEST
 
@@ -722,7 +742,8 @@ In addition to the LOCK command, the M JOB, OPEN, and READ commands can contribu
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    Process 1         Process 2
    ---------         ---------
    LOCK ^A
@@ -740,7 +761,8 @@ Another type of application hanging occurs when a process acquires ownership of 
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    Process 1         Process 2
    ---------         ---------
    LOCK ^A
@@ -753,7 +775,8 @@ There are two programming solutions that help avoid these situations. You can ei
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    for  quit:$$UPD
    quit
   UPD()  set x=^ACCT(acct)
@@ -997,7 +1020,8 @@ File size errors can misdirect MUPIP, but do not cause the YottaDB run-time syst
 
 These errors indicate that the total block count does not agree with the file size. Get the starting VBN and the block size for the file by using DSE DUMP FILEHEADER. Then calculate the correct value of the total blocks with the following formula:
 
-.. parsed-literal::
+.. code-block:: none
+
    ((file size - starting VBN + 1) / (block size / 512))
 
 A decimal number results from this formula. Convert this decimal to a hexadecimal number, then change the total block count to this hexadecimal value using DSE CHANGE FILEHEADER TOTAL_BLKS= . You may also need to adjust the free blocks count with BLOCKS_FREE=. MUPIP INTEG informs you if this is necessary and gives the correct values.
@@ -1259,7 +1283,8 @@ The following example shows how to salvage a damaged spanning node in ^mypoem.
 
 Run MUPIP INTEG to find the location of the damaged spanning node. A MUPIP INTEG report of a region that has damaged spanning nodes might look something like the following:
 
-.. parsed-literal::
+.. code-block:: bash
+
    Integ of region DEFAULT
    Block:Offset Level
    %YDB-E-DBSPANGLOINCMP,
@@ -1298,7 +1323,8 @@ Clearly, YottaDB did not find block 3 and ^mypoem(#SPAN4) terminated the spannin
 
 Use DSE to find the spanned nodes:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> find -key=^mypoem(#SPAN2)
    Key found in block 6.
        Directory path
@@ -1336,7 +1362,8 @@ Notice that there is #SPAN2 and #SPAN4 but no #SPAN5. Therefore, #SPAN4 is the l
 
 Dump all the blocks in ZWRITE format to see what can be salvaged.
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> open -file=mypoem.txt
    DSE> dump -block=6 -zwr
    1 ZWR records written.
@@ -1370,7 +1397,8 @@ Notice that block 3 (which is the second block above (because you started with b
 
 Fix the starting position in the $ZEXTRACT statement:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ze(^mypoem,480,480)="them, Cannon in front of them Volleyed and thundered;
    Stormed at with shot and shell, Boldly they rode and well, Into the jaws of Death, Into the mouth of Hell Rode the six hundred.
    Flashed all their sabres bare, Flashed as they turned in air Sabring the gunners there, Charging an army while All the world wondered:
@@ -1381,14 +1409,16 @@ Verify the value for correctness if you have knowledge of the type of data in th
 
 Kill the existing global:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>kill ^mypoem
    YDB>write ^mypoem
    %YDB-E-GVUNDEF, Global variable undefined: ^mypoem
 
 Load the salvaged global:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip load -format=zwr mypoem.txt
    ; DSE EXTRACT
    ; ZWR

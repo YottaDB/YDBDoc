@@ -93,7 +93,8 @@ Based on the security model, the following are recommended best practices for se
 * Post installation, a system administrator can optionally add a restrict.txt file in $ydb_dist to restrict the use of certain YottaDB facilities to a group-name. The owner and group for $ydb_dist/restrict.txt can be different from those used to install YottaDB. For more information, refer to `“Configuring the Restriction facility” <./basicops.html#configuring-the-restriction-facility>`_.
 * If all users who have access to a system do not require the ability to run YottaDB, limit the access to YottaDB to a group all users who need access belong to, and remove world access to YottaDB. (The YottaDB installation script presents an option to restrict access to YottaDB to members of a group). If such a group is called yottadbusers, the following command executed as root will accomplish this (if access was not restricted when YottaDB was installed):
 
-  .. parsed-literal::
+  .. code-block:: bash
+
       chgrp -R yottadbusers $ydb_dist ; chmod -R o-rwx $ydb_dist
 
 * Ensure that database file ownership (user and group), UNIX user and group ids, and permissions at the UNIX level match the intended access. If finer grained access controls than those provided by user/group ids and permissions are needed, consider using (where appropriate and available) security products layered on top of the operating system.

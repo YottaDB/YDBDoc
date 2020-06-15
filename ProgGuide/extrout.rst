@@ -35,19 +35,22 @@ Access to non-M Routines
 
 In YottaDB, calls to C language routines may be made with the following syntax:
 
-.. parsed-literal::
+.. code-block:: none
+
    DO &[packagename.]name[^name][parameter-list]
 
 or as an expression element,
 
-.. parsed-literal::
+.. code-block:: none
+
    $&[packagename.]name[^name][parameter-list]
 
 Where packagename, like the name elements, is a valid M name. Because of the parsing conventions of M, the identifier between the ampersand (&) and the optional parameter-list has precisely constrained punctuation - a later section describes how to transform this into a more richly punctuated name, should that be appropriate for the called function. While the intent of the syntax is to permit the name^name to match an M labelref, there is no semantic implication to any use of the up-arrow (^). For more information on M names, labelrefs and parameter-lists, refer to `Chapter 5: “General Language Features of M” <./langfeat.html>`_.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    ;Call external routine rtn1
    DO &rtn1
    ;Call int^exp in package "mathpak" with one parameter: the expression val/2
@@ -71,7 +74,8 @@ On Linux x86:
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    % gcc -c -fPIC -I$ydb_dist increment.c decrement.c
    % gcc -o libcrement.so -shared increment.o decrement.o
 
@@ -83,14 +87,16 @@ The functions in programs increment and decrement are now available to YottaDB t
 
 YottaDB uses an "external call table" to map the typeless data of M into the typed data of C, and vice versa. The external call table has a first line containing the pathname of the shareable library file followed by one or more specification lines in the following format:
 
-.. parsed-literal::
+.. code-block:: none
+
    entryref: return-value routine-name (parameter, parameter, ... ) [: SIGSAFE]
 
 The optional case-insensitive keyword SIGSAFE following the parameter list specifies that the external call does not create its own signal handlers. This allows YottaDB to avoid burdensome signal handler coordination for the external call. By default, YottaDB saves and restores signal setups for external calls.
 
 entryref is an M entryref, return-value is ydb_long_t, ydb_status_t, or void, and parameters are in the format:
 
-.. parsed-literal::
+.. code-block:: none
+
    direction:type [num]
 
 where [num] indicates a pre-allocation value explained later in this chapter.
@@ -133,17 +139,19 @@ If an external call's function argument is defined in the external call table, Y
 
 In the mathpak package example, the following invocation translate inval to the default value, that is, 0.
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>do &mathpak.increment(,.outval)
 
 If an external call's function argument is defined in the external call table and that function is invoked without specifying the argument, ensure that the external call function appropriately handles the missing argument. As a good programming practice, always ensure that count of arguments defined in the external call table matches the function invocation.
 
 libyottadb.h also includes definitions for the following entry points exported from libyottadb:
 
-.. parsed-literal::
+.. code-block:: C
+
    void ydb_hiber_start(ydb_uint_t mssleep);
    void ydb_hiber_start_wait_any(ydb_uint_t mssleep)
-   void ydb_start_timer(ydb_tid_t tid, ydb_int_t time_to_expir, void (\*handler)(), ydb_int_t hdata_len, void \\\*hdata);
+   void ydb_start_timer(ydb_tid_t tid, ydb_int_t time_to_expir, void (*handler)(), ydb_int_t hdata_len, void *hdata);
    void ydb_cancel_timer(ydb_tid_t tid);
 
 where:
@@ -320,7 +328,8 @@ The ydb_stdout_stderr_adjust() function checks whether stdout (file descriptor 1
 Examples of Using External Calls
 ++++++++++++++++++++++++++++++++++++++++
 
-.. parsed-literal::
+.. code-block:: C
+
    foo: void bar (I:ydb_float_t*, O:ydb_float_t*)
 
 There is one external call table for each package. The environment variable "ydb_xc" must name the external call table file for the default package. External call table files for packages other than the default must be identified by environment variables of the form "ydb_xc_name".
@@ -329,7 +338,8 @@ The first of the external call tables is the location of the shareable library. 
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    % echo $ydb_xc_mathpak
    /user/joe/mathpak.xc
    % echo lib /usr/
@@ -340,8 +350,8 @@ Example:
    ...
    int xexp(count, invar, outvar)
    int count;
-   float \*invar;
-   float \*outvar;
+   float *invar;
+   float *outvar;
    {
     ...
    }
@@ -352,17 +362,18 @@ Example:
 
 Example : For preallocation:
 
-.. parsed-literal::
+.. code-block:: none
+
    % echo $ydb_xc_extcall
    /usr/joe/extcall.xc
    % cat extcall.xc
    /usr/lib/extcall.sl
-   prealloc: void ydb_pre_alloc_a(O:ydb_char_t \*[12])
+   prealloc: void ydb_pre_alloc_a(O:ydb_char_t *[12])
    % cat extcall.c
    #include <stdio.h>
    #include <string.h>
    #include "libyottadb.h"
-   void ydb_pre_alloc_a (int count, char \*arg_prealloca)
+   void ydb_pre_alloc_a (int count, char *arg_prealloca)
    {
     strcpy(arg_prealloca, "New Message");
     return;
@@ -370,7 +381,8 @@ Example : For preallocation:
 
 Example : for call-back mechanism
 
-.. parsed-literal::
+.. code-block:: none
+
    % echo $ydb_xc
    /usr/joe/callback.xc
    % cat /usr/joe/callback.xc
@@ -384,27 +396,27 @@ Example : for call-back mechanism
 
    #include "libyottadb.h"
 
-   void \*\*functable;
-   void (\*setup_timer)(int , int , void (*)() , int , char \*);
-   void (\*cancel_timer)(int );
-   void (\*sleep_interrupted)(int );
-   void (\*sleep_uninterrupted)(int );
-   void* (\*malloc_fn)(int);
-   void (\*free_fn)(void*);
+   void **functable;
+   void (*setup_timer)(int , int , void (*)() , int , char *);
+   void (*cancel_timer)(int );
+   void (*sleep_interrupted)(int );
+   void (*sleep_uninterrupted)(int );
+   void* (*malloc_fn)(int);
+   void (*free_fn)(void*);
 
    void  init_callbacks (int count)
    {
-      char \*start_address;
+      char *start_address;
 
-      start_address = (char \*)getenv("GTM_CALLIN_START");
+      start_address = (char *)getenv("GTM_CALLIN_START");
 
-      if (start_address == (char \*)0)
+      if (start_address == (char *)0)
        {
         fprintf(stderr,"GTM_CALLIN_START is not set\n");
         return;
        }
-      functable = (void \*\*)atoi(start_address);
-      if (functable == (void \*\*)0)
+      functable = (void **)atoi(start_address);
+      if (functable == (void **)0)
       {
        perror("atoi : ");
        fprintf(stderr,"addresses defined by GTM_CALLIN_START not a number\n");
@@ -412,7 +424,7 @@ Example : for call-back mechanism
       }
       sleep_uninterrupted = (void (*)(int )) functable[0];
       sleep_interrupted = (void (*)(int )) functable[1];
-      setup_timer = (void (*)(int , int, void (*)(), int, char \*)) functable[2];
+      setup_timer = (void (*)(int , int, void (*)(), int, char *)) functable[2];
       cancel_timer = (void (*)(int )) functable[3];
 
       malloc_fn = (void* (*)(int)) functable[4];
@@ -423,33 +435,34 @@ Example : for call-back mechanism
 
    void  sleep (int count, int time)
    {
-      (\*sleep_uninterrupted)(time);
+      (*sleep_uninterrupted)(time);
    }
 
    void timer_handler ()
    {
       fprintf(stderr,"Timer Handler called\n");
-      /* Do something \*/
+      /* Do something */
    }
 
    void  start_timer (int count, int time_to_int, int time_to_sleep)
    {
-      (\*setup_timer)((int )start_timer, time_to_int, timer_handler, 0, 0);
+      (*setup_timer)((int )start_timer, time_to_int, timer_handler, 0, 0);
       return;
    }
    void* xmalloc (int count)
    {
-     return (\*malloc_fn)(count);
+     return (*malloc_fn)(count);
    }
 
    void  xfree(void* ptr)
    {
-     (\*free_fn)(ptr);
+     (*free_fn)(ptr);
    }
 
 Example:ydb_malloc/ydb_free callbacks using ydb_pointertofunc_t
 
-.. parsed-literal::
+.. code-block:: none
+
    % echo $ydb_xc
    /usr/joe/callback.xc
    % cat /usr/joe/callback.xc
@@ -462,9 +475,9 @@ Example:ydb_malloc/ydb_free callbacks using ydb_pointertofunc_t
    #include <stdio.h>
    #include <stdlib.h>
    #include "libyottadb.h"
-   void* (\*malloc_fn)(int);
-   void (\*free_fn)(void*);
-   void init_callbacks(int count, void* (\*m)(int), void (\*f)(void*))
+   void* (*malloc_fn)(int);
+   void (*free_fn)(void*);
+   void init_callbacks(int count, void* (*m)(int), void (*f)(void*))
    {
        malloc_fn = m;
        free_fn = f;
@@ -519,7 +532,8 @@ libyottadb.h defines the following types that can be used in Call-Ins.
 | ydb_ulong_t*          | Pointer to ydb_ulong_t. Good for returning unsigned integers.                                                                                                |
 +-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
-.. parsed-literal::
+.. code-block:: C
+
    typedef struct {
        ydb_long_t length;
        ydb_char_t* address;
@@ -534,10 +548,11 @@ libyottadb.h also provides an input-only parameter type ydb_pointertofunc_t that
 
 libyottadb.h also includes definitions for the following entry points exported from libyottadb:
 
-.. parsed-literal::
+.. code-block:: C
+
    void ydb_hiber_start(ydb_uint_t mssleep);
    void ydb_hiber_start_wait_any(ydb_uint_t mssleep)
-   void ydb_start_timer(ydb_tid_t tid, ydb_int_t time_to_expir, void (\*handler)(), ydb_int_t hdata_len, void \\*hdata);
+   void ydb_start_timer(ydb_tid_t tid, ydb_int_t time_to_expir, void (*handler)(), ydb_int_t hdata_len, void *hdata);
    void ydb_cancel_timer(ydb_tid_t tid);
 
 where:
@@ -558,7 +573,8 @@ ydb_hiber_start() always sleeps until the time expires; ydb_hiber_start_wait_any
 
 The Call-In table file is a text file that contains the signatures of all M label references that get called from C. In order to pass the typed C arguments to the type-less M formallist, the environment variable ydb_ci must be defined to point to the Call-In table file path. Each signature must be specified separately in a single line. YottaDB reads this file and interprets each line according to the following convention (specifications within box brackets "[]", are optional):
 
-.. parsed-literal::
+.. code-block:: none
+
    <c-call-name> : <ret-type> <label-ref> ([<direction>:<param-type>,...])
 
 where,
@@ -588,7 +604,8 @@ The <direction> indicates the type of operation that YottaDB performs on the par
 
 Here is an example of Call-In table (ydb_access.ci) for _ydbaccess.m (see `Example: Calling YottaDB from a C Program`_):
 
-.. parsed-literal::
+.. code-block:: none
+
    ydbget    : void get^%ydbaccess( I:ydb_char_t*, O:ydb_string_t*, O:ydb_char_t* )
    ydbkill   : void kill^%ydbaccess( I:ydb_char_t*, O:ydb_char_t* )
    ydblock   : void lock^%ydbaccess( I:ydb_char_t*, O:ydb_char_t* )
@@ -605,7 +622,8 @@ This section is further broken down into 6 subsections for an easy understanding
 
 **Initialize YottaDB**
 
-.. parsed-literal::
+.. code-block:: C
+
    ydb_status_t ydb_init(void);
 
 If the base program is not an M routine but a standalone C program, ydb_init() must be called (before calling any YottaDB functions), to initialize the YottaDB run-time system.
@@ -631,12 +649,14 @@ While ydb_ci() and ydb_cip() are for single threaded applications, ydb_ci_t() an
 ydb_ci
 ~~~~~~
 
-.. parsed-literal::
+.. code-block:: C
+
    ydb_status_t ydb_ci(const ydb_char_t* c_call_name, ...);
 
 The variable argument function ydb_ci() is the interface that actually invokes a specified M routine and returns the results via parameters. The ydb_ci() call must be in the following format:
 
-.. parsed-literal::
+.. code-block:: C
+
    status = ydb_ci(<c_call_name> [, ret_val] [, arg1] ...);
 
 First argument: c_call_name, a null-terminated C character string indicating the alias name for the corresponding <lab-ref> entry in the Call-In table.
@@ -651,14 +671,16 @@ The status value returned by ydb_ci() indicates the YottaDB status code: zero (0
 ydb_ci_t
 ~~~~~~~~
 
-.. parsed-literal::
-   int ydb_ci_t(uint64_t tptoken,  ydb_buffer_t \*errstr, const char \*c_rtn_name, ...);
+.. code-block:: C
+
+   int ydb_ci_t(uint64_t tptoken,  ydb_buffer_t *errstr, const char *c_rtn_name, ...);
 
 The function ydb_ci_t() is an interface for a multi-threaded application to invoke an M routine..
 
 The ydb_ci_t() call must be in the following format:
 
-.. parsed-literal::
+.. code-block:: C
+
    status= ydb_ci_t( <tptoken>, <errstrptr>, <ci_rtn_name> [,ret_val] [,arg1]...);
 
 First argument: tptoken, a unique transaction processing token that refers to the active transaction.
@@ -671,14 +693,16 @@ ydb_ci_t() works in the same way and returns the same values as ydb_ci().
 ydb_cip
 ~~~~~~~~
 
-.. parsed-literal::
-   ydb_status_t ydb_cip(ci_name_descriptor \*ci_info, ...);
+.. code-block:: C
+
+   ydb_status_t ydb_cip(ci_name_descriptor *ci_info, ...);
 
 The variable argument function ydb_cip() is the interface that invokes the specified M routine and returns the results via parameters.
 
 ci_name_descriptor has the following structure:
 
-.. parsed-literal::
+.. code-block:: C
+
    typedef struct
    {
      ydb_string_t rtn_name;
@@ -691,7 +715,8 @@ The :code:`handle` is YottaDB private information that YottaDB expects to be ini
 
 The ydb_cip() call must follow the following format:
 
-.. parsed-literal::
+.. code-block:: C
+
    status = ydb_cip(<ci_name_descriptor> [, ret_val] [, arg1] ...);
 
 First argument: ci_name_descriptor, as described above, within which rtn_name indicates the alias name for the corresponding <lab-ref> entry in the Call-In table.
@@ -706,14 +731,16 @@ The status value returned by ydb_cip() indicates the YottaDB status code: zero (
 ydb_cip_t
 ~~~~~~~~~~
 
-.. parsed-literal::
-   int ydb_cip_t(uint64_t tptoken, ydb_buffer_t \*errstr, const char \*c_rtn_name, ...);
+.. code-block:: C
+
+   int ydb_cip_t(uint64_t tptoken, ydb_buffer_t *errstr, const char *c_rtn_name, ...);
 
 The function ydb_cip_t is an interface for a multi-threaded application to invoke an M routine.
 
 The ydb_cip_t() call must follow the following format:
 
-.. parsed-literal::
+.. code-block:: C
+
    status = ydb_cip_t(<tptoken>, <errstrptr>, <ci_name_descriptor> [,ret_val] [,arg1] ...);
 
 First argument: tptoken, a unique transaction processing token that refers to the active transaction.
@@ -739,14 +766,16 @@ Here is a working example of a C program that uses call-ins to invoke YottaDB. T
 ydb_zstatus
 ~~~~~~~~~~~~
 
-.. parsed-literal::
+.. code-block:: C
+
    void ydb_zstatus (ydb_char_t* msg_buffer, ydb_long_t buf_len);
 
 This function returns the null-terminated $ZSTATUS message of the last failure via the buffer pointed by msg_buffer of size buf_len. The message is truncated to size buf_len if it does not fit into the buffer. ydb_zstatus() is useful if the external application needs the text message corresponding to the last YottaDB failure. A buffer of 2048 is sufficient to fit in any YottaDB message.
 
 **Exit from YottaDB**
 
-.. parsed-literal::
+.. code-block:: C
+
    ydb_status_t  ydb_exit (void);
 
 ydb_exit() can be used to shut down all databases and exit from the YottaDB environment that was created by a previous ydb_init().
@@ -810,7 +839,8 @@ Type Limits for Call-Ins and Call-Outs
 
 Depending on the direction (I, O, or IO) of a particular type, both call-ins and call-outs may transfer a value in two directions as follows:
 
-.. parsed-literal::
+.. code-block:: none
+
    Call-out: YottaDB -> C -> YottaDB       Call-in:     C -> YottaDB -> C
                |        |       |                        |      |       |
                '--------'-------'                        '------'-------'

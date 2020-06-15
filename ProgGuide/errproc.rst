@@ -45,12 +45,14 @@ Compile Time Error Message Format
 
 To understand the compile-time error message format, consider this incorrect source line:
 
-.. parsed-literal::
+.. code-block:: none
+
    S=B+C
 
 If this were line 7 of a source file ADD2.m, the compiler reports the compile-time error with the message:
 
-.. parsed-literal::
+.. code-block:: none
+
    S=B+C
        ^-----
    At column 4, line 7, source module ADD2
@@ -60,7 +62,8 @@ The compile-time error message format consists of three lines. The first two lin
 
 If you requested a listing file, it contains the same information and looks as follows:
 
-.. parsed-literal::
+.. code-block:: none
+
    .
    .
    6 .  .  .
@@ -89,14 +92,16 @@ Run Time Error Message Format
 
 To understand the run-time error message format, consider this short program printsum.m:
 
-.. parsed-literal::
+.. code-block:: none
+
        SET A=17
   GO   SET B=21
        WRITE A+C
 
 When you try to execute this program, the last statement causes an error since the variable C is undefined. If $ETRAP="B", YottaDB displays the run-time error message:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ yottadb -run printsum
    %YDB-E-UNDEF, Undefined local variable: C
    At yottadb source location GO+1^printsum
@@ -141,7 +146,8 @@ When YottaDB detects an error in Direct Mode, it reports the error with a messag
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZW
    ZW
    ^_____
@@ -226,7 +232,8 @@ The most recent error in $ECODE appears first, the oldest last. If the error is 
 
 Example (setting $ECODE):
 
-.. parsed-literal::
+.. code-block:: none
+
    SET $ECODE="" ;sets $ECODE to the empty string
    SET $ECODE=",M20," ;an ANSI M standardized error code
    SET $ECODE=",U14," ;user defined error code
@@ -243,7 +250,8 @@ SETting $ECODE to an invalid value is an error. SETting $ECODE to a valid error 
 
 To force execution of an error trap or to flag a user-defined error ("U" errors), make the value of $ECODE non-empty:
 
-.. parsed-literal::
+.. code-block:: none
+
    SET $ECODE=",U13-User defined error trap,"
 
 .. note::
@@ -271,7 +279,8 @@ $ETRAP Behavior
 
 If, at the time of any error, the value of $ETRAP is non-empty, YottaDB proceeds as if the next instruction to be excuted were the first one on "the next line" and the code on that next line would be the same as the text in the value of $ETRAP. Furthermore, YottaDB behaves as if the line following "the next line" looks like:
 
-.. parsed-literal::
+.. code-block:: none
+
    QUIT:$QUIT "" QUIT
 
 When SET assigns a value to $ETRAP, the new value replaces the previous value, and if $ZTRAP was not empty (in control), the value of $ZTRAP becomes equal to the empty string without being stacked.
@@ -349,12 +358,14 @@ When a SET command assigns a value to either $ZTRAP or $ETRAP, YottaDB examines 
 
 For example, re-setting $ETRAP is internally processed as:
 
-.. parsed-literal::
+.. code-block:: none
+
    NEW:$LENGTH($ZTRAP) $ZTRAP $ETRAP SET $ETRAP=code
 
 Whereas, SET $ZTRAP=value is internally processed as:
 
-.. parsed-literal::
+.. code-block:: none
+
    NEW:$LENGTH($ETRAP) $ETRAP SET:$LENGTH($ETRAP)="" SET $ZTRAP=value
 
 Note that, after saving the prior value, YottaDB ensures the superseded $ETRAP or $ZTRAP implicitly gets the value of the empty string. As a result, at most one of the two error handling mechanisms can be effective at any given point in time.
@@ -389,7 +400,8 @@ With $ETRAP: Set $ETRAP="Quit:$STACK>"_level_" Do proc^prog"
 
 Note that, ZGOTO can be used with $ETRAP and $STACK with $ZTRAP. Alternatively if $ESTACK were NEWed at LEVEL:
 
-.. parsed-literal::
+.. code-block:: none
+
    Set $ETRAP="Quit:$ESTACK>0 Do proc^prog"
 
 **Example 2: Ignoring an Error**
@@ -451,7 +463,8 @@ The CTRAP deviceparameter for USE establishes a set of trap characters for termi
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZPRINT ^EP12
    EP12    WRITE !,"THIS IS ",$TEXT(+0)
            SET $ECODE="";this only affects $ETRAP
@@ -503,7 +516,8 @@ When $ZTRAP is set to a BREAK command and an error occurs, YottaDB puts the proc
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>zprint ^EP1
    EP1    WRITE !,"THIS IS "_$TEXT(+0)
           KILL A
@@ -538,7 +552,8 @@ The GOTO command instructs YottaDB to transfer execution permanently to another 
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZPRINT ^EP2
    EP2     WRITE !,"THIS IS "_$TEXT(+0)
            SET $ECODE=""        ;this affects only $ETRAP
@@ -596,7 +611,8 @@ The ZGOTO command is similar to the GOTO command, however, the ZGOTO allows the 
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZPRINT ^EP3
    EP3     ;
    MENU    WRITE !,"THIS IS MENU IN ",$TEXT(0)
@@ -632,7 +648,8 @@ In general, coding ZGOTO level information based on $ZLEVEL provides a more robu
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZPRINT ^EP4
    EP4     WRITE !,"THIS IS "_$TEXT(+0)
            SET $ECODE=""        ;this affects only $ETRAP
@@ -642,8 +659,8 @@ Example:
            QUIT
    MAIN    WRITE !,"THIS IS MAIN"
            WRITE !,"$ZLEVEL: ",$ZLEVEL
-           SET $ETRAP="ZGOTO "_$ZLEVEL\_":ET"
-           ;N $ZT S $ZT="ZGOTO "_$ZLEVEL\_":ET ;alternative
+           SET $ETRAP="ZGOTO "_$ZLEVEL_":ET"
+           ;N $ZT S $ZT="ZGOTO "_$ZLEVEL_":ET ;alternative
            DO SUB1
            QUIT
    SUB1    WRITE !,"THIS IS SUB1"
@@ -706,7 +723,8 @@ The command NEW $ETRAP or NEW $ZTRAP stacks the current value of $ETRAP or $ZTRA
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZPRINT ^EP5
    EP5     WRITE !,"THIS IS "_$TEXT(+0)
            SET $ECODE="";this affects only $ETRAP
@@ -760,7 +778,8 @@ $ETRAP or $ZTRAP set to a DO command instructs YottaDB to transfer execution tem
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZPRINT ^EP6
    EP6     WRITE !,"THIS IS "_$TEXT(+0)
            NEW
@@ -790,7 +809,8 @@ This example sets $ZTRAP to a DO command. When the routine encounters an error i
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZPRINT ^EP6A
    EP6A    WRITE !,"THIS IS "_$TEXT(+0)
            NEW
@@ -830,7 +850,8 @@ If both $ETRAP and $ZTRAP are set to the empty string upon encountering an error
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZPRINT ^EP7
    EP7     WRITE !,"THIS IS ",$TEXT(+0)
            SET $ECODE="";this only affects $ETRAP
@@ -852,7 +873,8 @@ When the action specified by $ZTRAP results in another run-time error before cha
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZPRINT ^EP8
    EP8     WRITE !,"THIS IS ",$TEXT(+0)
            NEW $ZTRAP SET $ZTRAP="DO ET"
@@ -873,7 +895,8 @@ When the routine encounters an error at label BAD, YottaDB transfers control to 
 
 A set $ZTRAP="" command as soon as the program enters an error-handling routine prevents this type of "infinite" recursion.
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>zprint ^EP8A
    EP8A    WRITE !,"THIS IS ",$TEXT(+0)
            SET $ECODE=""
@@ -901,7 +924,8 @@ This demonstrates how $ETRAP behavior in this circumstance is more appropriate. 
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZPRINT ^EP9
    EP9     WRITE !,"THIS IS ",$TEXT(+0)
            SET $ZTRAP="DO ET"
@@ -935,7 +959,8 @@ The QUIT command terminates execution at that invocation level.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>zprint ^EP10
    EP10    WRITE !,"THIS IS ",$TEXT(+0)
            SET $ECODE="";this affects only $ETRAP
@@ -968,7 +993,8 @@ ZHALT acts like HALT but takes an argument, which YottaDB passes back to the OS 
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZPRINT ^EP11
    EP11    WRITE !,"THIS IS ",$TEXT(+0)
            SET $ECODE="";this affects only $ETRAP
@@ -1092,7 +1118,8 @@ To simplify record keeping, an application may set $ZTRAP to an error-handling r
 
 **Program to Record Information on an Error using $ZTRAP**
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZPRINT ^ERR
    ERR0;;RECORD CONTENT OF AN ERROR
    ;
@@ -1108,13 +1135,13 @@ To simplify record keeping, an application may set $ZTRAP to an error-handling r
            FOR %ERRVI=$STACK(-1):-1:1 DO
            . SET %ERRVK=""
            . FOR %ERRVJ="PLACE","MCODE","ECODE" DO
-           . . SET %ERRVK=%ERRVK_$STACK(%ERRVI,%ERRVJ)_"\|~\|"
+           . . SET %ERRVK=%ERRVK_$STACK(%ERRVI,%ERRVJ)_"|~|"
            . SET ^ERR($J,%ERRVH,"$STACK",%ERRVI)=%ERRVK
            GOTO WARN
    OPEN    SET $ZTRAP="GOTO OPEN1"
            SET %ERRIO=$IO,%ERRZA=$ZA,%ERRZB=$ZB,%ERRZE=$ZEOF
            SET %ERRVF="REC.ERR"
-           SET %ERRVF=$ZDATE($H,"YEARMMDD2460SS")_"_"_$J\_".ERR"
+           SET %ERRVF=$ZDATE($H,"YEARMMDD2460SS")_"_"_$J_".ERR"
            OPEN %ERRVF:NEWVERSION
            USE %ERRVF
            S $ZT="S $ZT="" G WARN"" U $P:(NOCENA:CTRAP="""") G STAC"
@@ -1158,7 +1185,8 @@ At the label FATAL, the ZMESSAGE command resignals the error. Because (with prop
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>zprint ^EP13
    EP13    WRITE !,"THIS IS ",$TEXT(+0)
            SET $ZTRAP="GOTO NODB"
@@ -1199,7 +1227,8 @@ Example:
 
 Example EP13 uses the error recording routine by setting $ZTRAP="GOTO ^ERR". When the routine encounters an error at label BAD, YottaDB transfers control to routine ERR. Afterwards the ^ERR global would have contents like:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>zwrite ^ERR
    ^ERR(13258,"64813,17382","$STACK")=0
    ^ERR(13258,"64813,17382","$STACK",-1)=5
@@ -1209,7 +1238,7 @@ Example EP13 uses the error recording routine by setting $ZTRAP="GOTO ^ERR". Whe
    ^ERR(13258,"64813,17382","$STACK",4)="SUB3+3^EP13|~|        DO BAD|~||~|"
    ^ERR(13258,"64813,17382","$STACK",5)="BAD+2^EP13|~|        WRITE 1/0|~|,M9,Z150373210,|~|"
    ^ERR(13258,"64813,17382","D",1)="/dev/pts/0 OPEN TERMINAL NOPAST NOESCA NOREADS TYPE WIDTH=165 LENG=48 "
-   ^ERR(13258,"64813,17382","G",0)="GLD:\*,REG:\*,SET:77,KIL:3,GET:0,DTA:0,ORD:0,ZPR:0,QRY:0,LKS:0,LKF:0,CTN:0,DRD:3,DWT:0,NTW:77,NTR:5,NBW:85,NBR:170,NR0:0,NR1:0,NR2:0,N
+   ^ERR(13258,"64813,17382","G",0)="GLD:*,REG:*,SET:77,KIL:3,GET:0,DTA:0,ORD:0,ZPR:0,QRY:0,LKS:0,LKF:0,CTN:0,DRD:3,DWT:0,NTW:77,NTR:5,NBW:85,NBR:170,NR0:0,NR1:0,NR2:0,N
    R3:0,TTW:0,TTR:0,TRB:0,TBW:0,TBR:0,TR0:0,TR1:0,TR2:0,TR3:0,TR4:0,TC0:0,TC1:0,TC2:0,TC3:0,TC4:0,ZTR:0,DFL:0,DFS:0,JFL:0,JFS:0"
    ^ERR(13258,"64813,17382","G",0,1)=",JBB:0,JFB:0,JFW:0,JRL:0,JRP:0,JRE:0,JRI:0,JRO:0,JEX:0,DEX:0,CAT:80,CFE:0,CFS:0,CFT:0,CQS:0,CQT:0,CYS:0,CYT:0,BTD:6"
    ^ERR(13258,"64813,17382","G",1)="GLD:/home/gtc_twinata/staff/nitin/a.gld,REG:DEFAULT,SET:79,KIL:4,GET:0,DTA:0,ORD:0,ZPR:0,QRY:0,LKS:0,LKF:0,CTN:79,DRD:3,DWT:0,NTW:79

@@ -60,7 +60,8 @@ Defining the Environment Variable
 
 YottaDB locates the alternative collation sequences through the environment variable ydb_collate_n where n is an integer from 1 to 255 that identifies the collation sequence, and pathname identifies the shared library containing the routines for that collation sequence, for example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ ydb_collate_1=/opt/yottadb/collation
    $ export ydb_collate_1
 
@@ -80,7 +81,8 @@ YottaDB lets you define an alternative collation sequence as the default when cr
 
 This default collation sequence is set as a GDE qualifier for the ADD, CHANGE, and TEMPLATE commands using the following example with CHANGE:
 
-.. parsed-literal::
+.. code-block:: bash
+
    GDE>CHANGE -REGION DEFAULT -COLLATION_DEFAULT=<0-255>
 
 This qualifier always applies to regions, and takes effect when a database is created with MUPIP CREATE. The output of GDE SHOW displays this value, and DSE DUMP -FILEHEADER also includes this information. In the absence of an alternative default collations sequence, the default used is 0, or ASCII.
@@ -97,7 +99,8 @@ All subscripted local variables for a process must use the same collation sequen
 
 To establish a default local collation sequence provide a numeric value to the environment variable ydb_local_collate to select one of the collation tables, for example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ ydb_local_collate=n
    $ export ydb_local_collate
 
@@ -111,7 +114,8 @@ If the collation sequence is not available, the routine returns a false (0) and 
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    IF '$$set^%LCLCOL(3) D
    . Write "local collation sequence not changed",! Break
 
@@ -128,7 +132,8 @@ get^%LCLCOL returns the current local type.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>Write $$get^%LCLCOL
    0
 
@@ -148,12 +153,13 @@ Creating the Alternate Collation Routines
 
 Each alternative collation sequence requires a set of four user-created routines--gtm_ac_xform_1 (or gtm_ac_xform), gtm_ac_xback_1 (or gtm_ac_xback), gtm_ac_version, and gtm_ac_verify. The original and transformed strings are passed between YottaDB and the user-created routines using parameters of type gtm_descriptor or gtm32_descriptor. An "include file" gtm_descript.h, located in the YottaDB distribution directory, defines gtm_descriptor (used with gtm_ac_xform and gtm_ac_xback) as:
 
-.. parsed-literal::
+.. code-block:: C
+
    typedef struct
    {
        short len;
        short type;
-       void \*val;
+       void *val;
     } gtm_descriptor;
 
 .. note::
@@ -161,12 +167,13 @@ Each alternative collation sequence requires a set of four user-created routines
 
 gtm_descript.h defines gtm32_descriptor (used with gtm_xc_xform_1 and gtm_xc_xback_2) as:
 
-.. parsed-literal::
+.. code-block:: C
+
    typedef struct
    {
        unsigned int len;
        unsigned int type;
-       void \*val;
+       void *val;
    } gtm32_descriptor;
 
 where len is the length of the data, type is set to DSC_K_DTYPE_T (indicating that this is an M string), and val points to the text of the string.
@@ -183,7 +190,8 @@ If the application uses subscripted lvns longer than 32,767 bytes (but less than
 
 The syntax of this routine is:
 
-.. parsed-literal::
+.. code-block:: C
+
    #include "gtm_descript.h"
    int gtm_ac_xform_1(gtm32_descriptor* in, int level, gtm32_descriptor* out, int* outlen);
 
@@ -207,9 +215,10 @@ outlen: A 32-bit signed integer, passed by reference, returning the actual lengt
 
 The syntax of gtm_ac_xform routine is:
 
-.. parsed-literal::
+.. code-block:: C
+
    #include "gtm_descript.h"
-   long gtm_ac_xform(gtm_descriptor \*in, int level, gtm_descriptor \*out, int \*outlen)
+   long gtm_ac_xform(gtm_descriptor *in, int level, gtm_descriptor *out, int *outlen)
 
 **Input Arguments**
 
@@ -233,7 +242,8 @@ outlen: an unsigned long, passed by reference, giving the actual length of the o
 
 Example:
 
-.. parsed-literal::
+.. code-block:: C
+
    #include "gtm_descript.h"
    #define MYAPP_SUBSC2LONG 12345678
    static unsigned char xform_table[256] =
@@ -257,23 +267,23 @@ Example:
    };
    long
    gtm_ac_xform (in, level, out, outlen)
-   gtm_descriptor \*in;    /* the input string \*/
-   int level;            /* the subscript level \*/
-   gtm_descriptor \*out;    /* the output buffer \*/
-   int \*outlen;        /* the length of the output string \*/
+   gtm_descriptor *in;    /* the input string */
+   int level;            /* the subscript level */
+   gtm_descriptor *out;    /* the output buffer */
+   int *outlen;        /* the length of the output string */
    {
    int n;
-   unsigned char \*cp, \*cout;
-   /* Ensure space in the output buffer for the string. \*/
+   unsigned char *cp, *cout;
+   /* Ensure space in the output buffer for the string. */
    n = in->len;
    if (n > out->len)
    return MYAPP_SUBSC2LONG;
-   /* There is space, copy the string, transforming, if necessary \*/
-   cp = in->val;            /* Address of first byte of input string \*/
-   cout = out->val;        /* Address of first byte of output buffer \*/
+   /* There is space, copy the string, transforming, if necessary */
+   cp = in->val;            /* Address of first byte of input string */
+   cout = out->val;        /* Address of first byte of output buffer */
    while (n-- > 0)
-   \*cout++ = xform_table[\*cp++];
-   \*outlen = in->len;
+   *cout++ = xform_table[*cp++];
+   *outlen = in->len;
    return 0;
    }
 
@@ -291,23 +301,26 @@ Inverse Transformation Routine (gtm_ac_xback or gtm_ac_xback_1)
 
 This routine returns altered keys to the original subscripts. The syntax of this routine is:
 
-.. parsed-literal::
+.. code-block:: C
+
    #include "gtm_descript.h"
-   long gtm_ac_xback(gtm_descriptor \*in, int level, gtm_descriptor \*out, int \*outlen)
+   long gtm_ac_xback(gtm_descriptor *in, int level, gtm_descriptor *out, int *outlen)
 
 The arguments of gtm_ac_xback are identical to those of gtm_ac_xform.
 
 The syntax of gtm_ac_xback_1 is:
 
-.. parsed-literal::
+.. code-block:: C
+
    #include "gtm_descript.h"
-   long gtm_ac_xback_1 ( gtm32_descriptor \*src, int level, gtm32_descriptor \*dst, int \*dstlen)
+   long gtm_ac_xback_1 ( gtm32_descriptor *src, int level, gtm32_descriptor *dst, int *dstlen)
 
 The arguments of gtm_ac_xback_1 are identical to those of gtm_ac_xform_1.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: C
+
    #include "gtm_descript.h"
    #define MYAPP_SUBSC2LONG 12345678
    static unsigned char inverse_table[256] =
@@ -330,23 +343,23 @@ Example:
    240,241,242,243,244,245,246,247,248,249,250,251,252,253,254,255
    };
    long gtm_ac_xback (in, level, out, outlen)
-   gtm_descriptor \*in;    /* the input string \*/
-   int level;            /* the subscript level \*/
-   gtm_descriptor \*out;    /* output buffer \*/
-   int \*outlen;        /* the length of the output string \*/
+   gtm_descriptor *in;    /* the input string */
+   int level;            /* the subscript level */
+   gtm_descriptor *out;    /* output buffer */
+   int *outlen;        /* the length of the output string */
    {
     int n;
-    unsigned char \*cp, \*cout;
-    /* Ensure space in the output buffer for the string. \*/
+    unsigned char *cp, *cout;
+    /* Ensure space in the output buffer for the string. */
     n = in->len;
     if (n > out->len)
     return MYAPP_SUBSC2LONG;
-    /* There is enough space, copy the string, transforming, if necessary \*/
-    cp = in->val;            /* Address of first byte of input string \*/
-    cout = out->val;        /* Address of first byte of output buffer \*/
+    /* There is enough space, copy the string, transforming, if necessary */
+    cp = in->val;            /* Address of first byte of input string */
+    cout = out->val;        /* Address of first byte of output buffer */
     while (n-- > 0)
-    \*cout++ = inverse_table[\*cp++];
-    \*outlen = in->len;
+    *cout++ = inverse_table[*cp++];
+    *outlen = in->len;
     return 0;
    }
 
@@ -364,12 +377,14 @@ When you write the code that matches the type and version, you can decide whethe
 
 This routine returns an integer identifier between 0 and 255. This integer provides a mechanism to enforce compatibility as a collation sequence potentially evolves. When YottaDB first uses an alternate collation sequence for a database or global, it captures the version and if it finds the version has changed it at some later startup, it generates an error. The syntax is:
 
-.. parsed-literal::
+.. code-block:: C
+
    int gtm_ac_version()
 
 Example:
 
-.. parsed-literal::
+.. code-block:: C
+
    int gtm_ac_version()
    {
       return 1;
@@ -379,22 +394,24 @@ Example:
 
 This routine verifies that the type and version associated with a global are compatible with the active set of routines. Both the type and version are unsigned characters passed by value. The syntax is:
 
-.. parsed-literal::
+.. code-block:: C
+
    #include "gtm_descript.h"
    int gtm_ac_verify(unsigned char type, unsigned char ver)
 
 Example:
 
-.. parsed-literal::
+.. code-block:: C
+
    Example:
    #include "gtm_descript.h"
-   #define MYAPP_WRONGVERSION 20406080    /* User condition \*/
+   #define MYAPP_WRONGVERSION 20406080    /* User condition */
    gtm_ac_verify (type, ver)
         unsigned char type, ver;
    {
      if (type == 3)
       {
-       if (ver > 2)        /* version checking may be more complex \*/
+       if (ver > 2)        /* version checking may be more complex */
        {
         return 0;
        }
@@ -412,7 +429,8 @@ Use the %GBLDEF utility to get, set, or kill the collation sequence of a global 
 
 To assign a collation sequence to an individual global use the extrinsic entry point:
 
-.. parsed-literal::
+.. code-block:: none
+
    set^%GBLDEF(gname,nct,act)
 
 where:
@@ -426,7 +444,8 @@ where:
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>kill ^G
    YDB>write $select($$set^%GBLDEF("^G",0,3):"ok",1:"failed")
    ok
@@ -438,7 +457,8 @@ This deletes the global variable ^G, then uses the \$\$set%GBLDEF as an extrinsi
 
 To examine the collation characteristics currently assigned to a global use the extrinsic entry point:
 
-.. parsed-literal::
+.. code-block:: none
+
    get^%GBLDEF(gname[,reg])
 
 where gname specifies the global variable name. When gname spans multiple regions, reg specifies a region in the span.
@@ -454,7 +474,8 @@ This function returns the data associated with the global name as a comma delimi
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>Write $$get^%GBLDEF("^G")
    1,3,1
 
@@ -464,7 +485,8 @@ This example returns the collation sequence information currently assigned to th
 
 To delete the collation characteristics currently assigned to a global, use the extrinsic entry point:
 
-.. parsed-literal::
+.. code-block:: none
+
    kill^%GBLDEF(gname)
 
 * If the global contains data, the function returns a false (0) and does not modify the global.
@@ -498,7 +520,8 @@ Seasoned YottaDB users may want to download polish.c used in this example and pr
 
 Create a new file called polish.c and put the following code:
 
-.. parsed-literal::
+.. code-block:: C
+
    #include <stdio.h>
    #include "gtm_descript.h"
    #define COLLATION_TABLE_SIZE     256
@@ -549,34 +572,35 @@ Elements in xform_table represent input order for transform. Elements in inverse
 
 Add the following code for the gtm_ac_xform transformation routine:
 
-.. parsed-literal::
-   long gtm_ac_xform ( gtm_descriptor \*src, int level, gtm_descriptor \*dst, int \*dstlen)
+.. code-block:: C
+
+   long gtm_ac_xform ( gtm_descriptor *src, int level, gtm_descriptor *dst, int *dstlen)
          {
           int n;
-          unsigned char  \*cp, \*cpout;
+          unsigned char  *cp, *cpout;
           #ifdef DEBUG
           char input[COLLATION_TABLE_SIZE], output[COLLATION_TABLE_SIZE];
           #endif
           n = src->len;
           if ( n > dst->len)
           return MYAPPS_SUBSC2LONG;
-          cp  = (unsigned char \*)src->val;
+          cp  = (unsigned char *)src->val;
           #ifdef DEBUG
           memcpy(input, cp, src->len);
           input[src->len] = '\0';
           #endif
-          cpout = (unsigned char \*)dst->val;
+          cpout = (unsigned char *)dst->val;
           while ( n-- > 0 )
-          \*cpout++ = xform_table[\*cp++];
-          \*cpout = '\0';
-          \*dstlen = src->len;
+          *cpout++ = xform_table[*cp++];
+          *cpout = '\0';
+          *dstlen = src->len;
           #ifdef DEBUG
           memcpy(output, dst->val, dst->len);
           output[dst->len] = '\0';
           fprintf(stderr, "\nInput = \n");
-          for (n = 0; n < \*dstlen; n++ ) fprintf(stderr," %d ",(int )input[n]);
+          for (n = 0; n < *dstlen; n++ ) fprintf(stderr," %d ",(int )input[n]);
           fprintf(stderr, "\nOutput = \n");
-          for (n = 0; n < \*dstlen; n++ ) fprintf(stderr," %d ",(int )output[n]);
+          for (n = 0; n < *dstlen; n++ ) fprintf(stderr," %d ",(int )output[n]);
           #endif
           return SUCCESS;
          }
@@ -584,23 +608,24 @@ Add the following code for the gtm_ac_xform transformation routine:
 
 Add the following code for the gtm_ac_xback reverse transformation routine:
 
-.. parsed-literal::
-   long gtm_ac_xback ( gtm_descriptor \*src, int level, gtm_descriptor \*dst, int \*dstlen)
+.. code-block:: none
+
+   long gtm_ac_xback ( gtm_descriptor *src, int level, gtm_descriptor *dst, int *dstlen)
          {
           int n;
-          unsigned char  \*cp, \*cpout;
+          unsigned char  *cp, *cpout;
           #ifdef DEBUG
           char input[256], output[256];
           #endif
           n = src->len;
           if ( n > dst->len)
           return MYAPPS_SUBSC2LONG;
-          cp  = (unsigned char \*)src->val;
-          cpout = (unsigned char \*)dst->val;
+          cp  = (unsigned char *)src->val;
+          cpout = (unsigned char *)dst->val;
           while ( n-- > 0 )
-          \*cpout++ = inverse_table[\*cp++];
-          \*cpout = '\0';
-          \*dstlen = src->len;
+          *cpout++ = inverse_table[*cp++];
+          *cpout = '\0';
+          *dstlen = src->len;
           #ifdef DEBUG
           memcpy(input, src->val, src->len);
           input[src->len] = '\';
@@ -613,7 +638,8 @@ Add the following code for the gtm_ac_xback reverse transformation routine:
 
 Add code for the version identifier routine (gtm_ac_version) or the verification routine (gtm_ac_verify):
 
-.. parsed-literal::
+.. code-block:: C
+
    int gtm_ac_version ()
          {
            return VERSION;
@@ -625,7 +651,8 @@ Add code for the version identifier routine (gtm_ac_version) or the verification
 
 Save and compile polish.c. On x86 GNU/Linux (64-bit Ubuntu 10.10), execute a command like the following:
 
-.. parsed-literal::
+.. code-block:: bash
+
    gcc -c polish.c -I$ydb_dist
 
 .. note::
@@ -633,14 +660,16 @@ Save and compile polish.c. On x86 GNU/Linux (64-bit Ubuntu 10.10), execute a com
 
 Create a new shared library or add the above routines to an existing one. The following command adds these alternative sequence routines to a shared library called altcoll.so on x86 GNU/Linux (64-bit Ubuntu 10.10).
 
-.. parsed-literal::
+.. code-block:: bash
+
    gcc -o altcoll.so -shared polish.o
 
 Set $ydb_collate_1 to point to the location of altcoll.so.
 
 At the YDB> prompt execute the following command:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>Write $SELECT($$set^%GBLDEF("^G",0,1):"OK",1:"FAILED")
          OK
 
@@ -648,7 +677,8 @@ This deletes the global variable ^G, then sets ^G to the collation sequence numb
 
 Assign the following value to ^G.
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>Set ^G("du Pont")=1
    YDB>Set ^G("Friendly")=1
    YDB>Set ^G("le Blanc")=1
@@ -656,7 +686,8 @@ Assign the following value to ^G.
 
 See how the subscript of ^G order according to the alternative collation sequence:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZWRite ^G
    ^G("du Pont")=1
    ^G("Friendly")=1
@@ -678,7 +709,8 @@ Download `col_reverse_32.c <https://gitlab.com/YottaDB/DB/YDBDoc/raw/master/Prog
 
 Save and compile col_reverse_32.c. On x86 GNU/Linux (64-bit Ubuntu 10.10), execute a command like the following:
 
-.. parsed-literal::
+.. code-block:: bash
+
    gcc -c col_reverse_32.c -I$ydb_dist
 
 .. note::
@@ -686,20 +718,23 @@ Save and compile col_reverse_32.c. On x86 GNU/Linux (64-bit Ubuntu 10.10), execu
 
 Create a new shared library or add the routines to an existing one. The following command adds these alternative sequence routines to a shared library called altcoll.so on x86 GNU/Linux (64-bit Ubuntu 10.10).
 
-.. parsed-literal::
+.. code-block:: bash
+
    gcc -o revcol.so -shared col_reverse_32.o
 
 Set the environment variable ydb_collate_2 to point to the location of revcol.so. To set the local variable collation to this alternative collation sequence, set the environment variable ydb_local_collate to 2.
 
 At the prompt, execute the following command:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>Write $SELECT($$set^%GBLDEF("^E",0,2):"OK",1:"FAILED")
    OK
 
 Assign the following values to ^E.
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>Set ^E("du Pont")=1
    YDB>Set ^E("Friendly")=1
    YDB>Set ^E("le Blanc")=1
@@ -707,7 +742,8 @@ Assign the following values to ^E.
 
 Notice how the subscripts of ^E are sorted in reverse order:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>zwrite ^E
    ^G("le Blanc")=1
    ^G("du Pont")=1
@@ -760,7 +796,8 @@ The following example illustrates a possible patcode table called "NEWLANGUAGE".
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    PATSTART
      PATTABLE NEWLANGUAGE
      PATCODE S
@@ -783,13 +820,15 @@ Pattern Code Selection
 
 To establish a default patcode table for a database define the environment variable:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ ydb_pattern_file=pathname
    $ export ydb_pattern_file
 
 where filename is the text file containing the patcode table definition, and
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ ydb_pattern_table=tablename
    $ export ydb_pattern_table
 
@@ -800,39 +839,45 @@ where tablename is the name of the patcode table within the file pointed to by y
 
 Within an active process, the patcode table is established using the M VIEW command and the %PATCODE utility. Before invoking the %PATCODE utility, you may use VIEW to load pattern definition files for YottaDB. The required keyword and value are:
 
-.. parsed-literal::
+.. code-block:: none
+
    VIEW "PATLOAD":"pathname"
 
 This allows you to use the %PATCODE utility or the VIEW command to set current patcode table. The format of the VIEW command to set the patcode table is:
 
-.. parsed-literal::
+.. code-block:: none
+
    VIEW "PATCODE":"tablename"
 
 This is equivalent to set ^%PATCODE explained below.
 
 %PATCODE has the following extrinsic entry points:
 
-.. parsed-literal::
+.. code-block:: none
+
    set^%PATCODE(tn)
 
 sets the current patcode table to the one having the name specified by tn, in the defined file specification.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>Write $$set^%PATCODE("NEWLANGUAGE")
    1
 
 If there is no table with that name, the function returns a false (0) and does not modify the current patcode table.
 
-.. parsed-literal::
+.. code-block:: none
+
    get^%PATCODE
 
 returns the current patcode table name.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>Write $$get^%PATCODE
    NEWLANGUAGE
 

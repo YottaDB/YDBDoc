@@ -33,14 +33,16 @@ $DEVICE
 
 $D[EVICE] reflects the status of the current device. If the status of the device does not reflect an error-condition, the value of $DEVICE, when interpreted as a truth-value is 0 (FALSE). If the status of the device reflects an error condition, the value of $DEVICE, when interpreted as a truth-value is 1 (TRUE).
 
-.. parsed-literal::
+.. code-block:: none
+
    The initial value of $DEVICE is implementation dependent. However, if the initial value of $IO is an empty string, then the initial value of $DEVICE is also an empty string.
 
 $DEVICE gives status code and meaning, in one access:
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    1,Connection reset by peer
 
 The above message is displayed on the server side when the socket device is closed on the client side.
@@ -60,7 +62,8 @@ The list of codes in $ECODE start with a comma, and are seperated by commas. A c
 
 An error always has a YottaDB specified code and many errors also have an ANSI Standard code. The complete list of standardized error codes can be referenced from the `Message and Recovery Procedures Reference Manual <https://docs.yottadb.com/MessageRecovery/index.html>`_ and onwards.
 
-.. parsed-literal::
+.. code-block:: none
+
    IF $ECODE[",M61," WRITE "Undefined local variable"
 
 .. note::
@@ -78,7 +81,8 @@ $ES[TACK] contains an integer count of the number of M virtual machine stack lev
 
 A NEW $ESTACK saves the value of current $ESTACK and then sets its value to zero (0). If $ESTACK has not been NEW'd in the current execution path, $ESTACK=$STACK.
 
-.. parsed-literal::
+.. code-block:: none
+
    SET $ETRAP="QUIT:$ESTACK GOTO LABEL^ROUTINE"
 
 $ESTACK maybe used as a flag to indicate error traps invoked in particular stack levels needed to perform some different action(s). $ESTACK can be most useful in setting up a layered error trapping mechanism.
@@ -94,7 +98,8 @@ $ET[RAP] contains a string value that YottaDB invokes when an error occurs durin
 
 The value of this variable is the M[UMPS] code that YottaDB executes when it encounters an error.
 
-.. parsed-literal::
+.. code-block:: none
+
    SET $ETRAP="QUIT:$ESTACK GOTO LABEL^ROUTINE"
 
 The value of $ETRAP is changed with the SET command. Changing the value of $ETRAP with the SET command initiates a new trap; it does not save the old trap.
@@ -111,7 +116,8 @@ $H[OROLOG] contains a string value specifying the number of days since "31 Decem
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>Write $HOROLOG
 
 Produces the result 58883,55555 at 3:25:55 pm on 20 March, 2002.
@@ -134,7 +140,8 @@ YottaDB uses the decimal representation of the current process identifier (PID) 
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    LOOP0 for  set itm=$order(^tmp($J,itm)) quit:itm=""  do LOOP1
 
 This uses $J as the first subscript in a temporary global to insure that every process uses separate data space in the global ^tmp.
@@ -158,27 +165,32 @@ $KEY contains the socket handle and the state information of the current SOCKET 
 
 After a successful OPEN or USE with the LISTEN deviceparameter, $KEY contains for TCP sockets:
 
-.. parsed-literal::
+.. code-block:: none
+
    "LISTENING|<socket_handle>|<portnumber>"
 
 and for LOCAL sockets:
 
-.. parsed-literal::
+.. code-block:: none
+
    "LISTENING|<socket_handle>|<address>"
 
 After a successful OPEN or USE with the CONNECT device parameter or when YottaDB was started with a socket as the $PRINCIPAL device, $KEY contains:
 
-.. parsed-literal::
+.. code-block:: none
+
    "ESTABLISHED|<socket handle>|<address>"
 
 When WRITE/WAIT selects an incoming connection, $KEY contains:
 
-.. parsed-literal::
+.. code-block:: none
+
    "CONNECT|<socket_handle>|<address>"
 
 When WRITE/WAIT selects a socket with data available for reading, $KEY contains:
 
-.. parsed-literal::
+.. code-block:: none
+
    "READ|<socket_handle>|<address>"
 
 For TCP sockets, <address> is the numeric IP address for the remote end of the connection. For LOCAL sockets it is the path to the socket.
@@ -226,7 +238,8 @@ This special variable is mainly used in error-trapping conditions. Its value tel
 
 A typical way of exiting from an error trap is:
 
-.. parsed-literal::
+.. code-block:: none
+
    QUIT:$QUIT "" QUIT
 
 .. note::
@@ -240,7 +253,8 @@ $R[EFERENCE] contains the last global reference. Until the first global referenc
 
 A typical way of using this is:
 
-.. parsed-literal::
+.. code-block:: none
+
    IF $REFERENCE="" QUIT "<undefined>"
 
 .. note::
@@ -299,7 +313,8 @@ M routines cannot modify $TEST with the SET command.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    IF x=+x DO ^WORK
    ELSE SET x=0
 
@@ -307,7 +322,8 @@ The ELSE statement causes M to use the value of $TEST to determine whether to ex
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    SET MYFLG=x=+x
    IF MYFLG DO ^WORK
    IF 'MYFLG SET x=0
@@ -316,7 +332,8 @@ This example introduces a local variable flag to address the problems of the pri
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    IF x=+x DO ^WORK IF 1
    ELSE SET x=0
 
@@ -334,7 +351,8 @@ M routines cannot modify $TLEVEL with SET.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    IF $TLEVEL TROLLBACK
 
 This example performs a TROLLBACK if a transaction is in progress. A statement like this should appear in any error handler used with transaction processing. For more information on transaction processing, see `Chapter 5: “General Language Features of M” <./langfeat.html>`_.
@@ -352,7 +370,8 @@ $TRESTART can be used by the application to limit the number of RESTARTs, or to 
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    TRANS TSTART ():SERIAL
    IF $TRESTART>2 WRITE !;"Access Conflict" QUIT
 
@@ -434,7 +453,8 @@ $ZB contains the actual character string, not a sequence of numeric ASCII codes.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    SET zb=$ZB FOR i=1:1:$L(zb) WRITE !,i,?5,$A(zb,i)
 
 This displays the series of ASCII codes for the characters in $ZB.
@@ -456,7 +476,8 @@ $ZCHSET is a read-only intrinsic special variable that takes its value from the 
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
   $ export ydb_chset=UTF-8
   $ ydb
   YDB>write $zchset
@@ -485,7 +506,8 @@ Note that the actual user input command line might have been transformed by the 
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ cat > test.m
    write " $ZCMDLINE=",$ZCMDLINE,!
    quit
@@ -497,10 +519,11 @@ This creates the program test.m, which writes the value of $ZCMDLINE. Note how t
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ cat foo.m
    foo     ; a routine to invoke an arbitrary entry with or without parameters;
-   set $etrap="" ; exit if the input isn't valid
+   set $etrap="" ; exit if the input is not valid
    if $length($zcmdline) do @$zcmdline quit
    quit
    $ yottadb -run foo 'BAR^FOOBAR("hello")'
@@ -526,7 +549,8 @@ When $ZCOMPILE is null, YottaDB uses the default M command qualifiers -IGNORE, -
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ export ydb_compile="-LIST -LENGTH=56 -SPACE=2"
    $ ydb
    YDB>WRITE $ZCOMPILE
@@ -559,7 +583,8 @@ See `$ZDate() <./functions.html#zdate>`_ for the usage of $ZDATEFORM. $ZDATEFORM
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>WRITE $ZDATEFROM
    0
    YDB>WRITE $ZDATE($H)
@@ -578,7 +603,8 @@ If the current directory does not exist at the time of YottaDB process activatio
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>WRITE $ZDIR
    /usr/tmp
    YDB>SET $ZDIR=".."
@@ -643,7 +669,8 @@ To establish a value for $ZGBLDIR outside of M, use the appropriate shell comman
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ ydb_gbldir=test.gld
    $ export ydb_gbldir
    $ ydb
@@ -658,7 +685,8 @@ Example:
 
 This example defines the environment variable ydb_gbldir. Upon entering YottaDB Direct Mode, $ZGBLDIR has the value supplied by ydb_gbldir. The SET command changes the value. After the YottaDB image terminates, the echo command demonstrates that ydb_gbldir was not modified by the M SET command.
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ ls test.gld
    test.gld not found
    $ ydb
@@ -686,7 +714,8 @@ $ZH[OROLOG] returns 4 comma-separated pieces (for example, "63638,39194,258602,1
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    YDB>zprint ^zhoro
    zhoro(zone)
     set:'$data(zone) zone="Europe/London"
@@ -708,11 +737,11 @@ Example:
     set zhtp=$piece(zh,",",3)
     set zhfop=$piece(zh,",",4)
     set tz=zhfop/3600,hours=$select(tz*tz=1:" Hour ",1:" Hours ")
-    write "Time in ",zone," ",$piece(zutzh," ",3,6)," $ZUT=",zut,!,$select(tz<0:-tz_hours\_"Ahead of",1:tz_hours\_"Behind")," UTC",!
+    write "Time in ",zone," ",$piece(zutzh," ",3,6)," $ZUT=",zut,!,$select(tz<0:-tz_hours_"Ahead of",1:tz_hours_"Behind")," UTC",!
     set zhsp=zhsp+zhfop
     if zhsp>86400 set zhfp=zhfp+1,zhsp=zhsp-86400     ; 86400 seconds in a day
     else  if zhsp<1 set zhfp=zhfp-1,zhsp=zhsp+86400
-    write "Time in UTC ",$zdate(zhfp\_","_zhsp,"MON DD,YYYY 12:60:SS AM")
+    write "Time in UTC ",$zdate(zhfp_","_zhsp,"MON DD,YYYY 12:60:SS AM")
     quit
    YDB>do ^zhoro
    Time in Europe/London APR 10,2018 05:20:29 PM $ZUT=1428682829213711
@@ -741,7 +770,8 @@ If an interrupt handler changes the current IO device (via USE), it is the respo
 
 The initial value for $ZINTERRUPT is taken from the UNIX environment variable ydb_zinterrupt if it is specified, otherwise it defaults to the following string:
 
-.. parsed-literal::
+.. code-block:: none
+
    IF $ZJOBEXAM()
 
 The IF statement executes the $ZJOBEXAM function but effectively discards the return value.
@@ -771,7 +801,8 @@ When an interrupt handler is invoked, YottaDB saves and restores the current val
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    set $zinterrupt="do ^interrupthandler($io)"
    interrupthandler(currentdev)
           do ^handleinterrupt ; handle the interrupt
@@ -790,7 +821,8 @@ If an error occurs while compiling the $ZINTERRUPT code, the error handler is no
 
 If YottaDB encounters an error during creation of the interrupt handler's stack frame (before transferring control to the application code specified by the vector), that error is prefixed with a YDB-ERRWZINTR error. The error handler then executes normal error processing associated with the interrupted routine. Any other errors that occur in code called by the interrupt vector invoke error processing as described in `Chapter 13: “Error Processing” <./errproc.html>`_.
 
-.. parsed-literal::
+.. code-block:: none
+
    The interrupt handler does not operate "outside" the current M environment but rather within the environment of the process.
 
 TP transaction is in progress (0<$TLEVEL), updates to globals are not safe since a TP restart can be signaled at any time prior to the transaction being committed - even after the interrupt handler returns. A TP restart reverses all global updates and unwinds the M stack so it is as if the interrupt never occurred. The interrupt handler is not redriven as part of a transaction restart. Referencing (reading) globals inside an interrupt handler can trigger a TP restart if a transaction is active. When programming interrupt handling, either discard interrupts when 0<$TLEVEL (forcing the interrupting party to try again), or use local variables that are not restored by a TRESTART to defer the interrupt action until after the final TCOMMIT.
@@ -807,7 +839,8 @@ An example where $ZIO contains a value different from $IO is if the environment 
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ ydb_principal="foo"
    $ export ydb_principal
    YDB>WRITE $IO
@@ -837,10 +870,12 @@ $ZKEY contains a list of sockets in the current SOCKET device which are ready fo
 
 $ZKEY contains any one of the following values:
 
-.. parsed-literal::
+.. code-block:: none
+
    "LISTENING|<listening_socket_handle>|{<portnumber>|</path/to/LOCAL_socket>}"
 
-.. parsed-literal::
+.. code-block:: none
+
    "READ|<socket_handle>|<address>"
 
 If $ZKEY contains one or more "READ|<socket_handle>|<address>" entries, it means there are ready to READ sockets that were selected by WRITE/WAIT or were partially read and there is data left in their buffer. Each entry is delimited by a ";".
@@ -865,7 +900,8 @@ Use $ZLEVEL in debugging or in an error-handling mechanism to capture a level fo
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>zprint ^zleve
    zleve;
     do B
@@ -903,7 +939,8 @@ When a $ZMAXTPTIME expires, YottaDB executes the $ETRAP/$ZTRAP exception handler
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    Test;testing TP timeouts
      set $ZMAXTPTIME=6,^X=0,^Y=0,^Z=0
      write "Start with $ZMAXTPTIME=",$ZMAXTPTIME,":",!
@@ -939,7 +976,8 @@ Example:
 
 Results:
 
-.. parsed-literal::
+.. code-block:: none
+
    Start with $ZMAXTPTIME=6:
    ^X=1,will set ^Y to 3 in 3 seconds...^Y=3...committed.
    ^X=2,will set ^Y to 5 in 5 seconds...^Y=5...committed.
@@ -966,7 +1004,8 @@ M routines cannot modify $ZMODE.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>WRITE $ZMODE
    INTERACTIVE
 
@@ -1034,7 +1073,8 @@ For a description of the Unicode general categories, refer to http://unicode.org
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write $zpatnumeric
    UTF-8
    YDB>Write $Char($$FUNC^%HD("D67"))?.N ; This is the Malayalam decimal digit 1
@@ -1062,7 +1102,8 @@ YottaDB does not permit the SET or NEW commands to modify $ZPOSITION.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>WRITE !,$ZPOS,! ZPRINT @$ZPOS
 
 This example displays the current location followed by the source code for that line.
@@ -1077,7 +1118,8 @@ For more information refer to `$Principal <./ioproc.html#principal>`_, `$ZPIN <.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    ;zpioin
    ;123456789012345678901234567890123456789012345678901234567890
    ;A12345678901234567890123456789012345678901234567890123456789
@@ -1128,7 +1170,8 @@ The environment variable ydb_prompt initializes $ZPROMPT at process startup.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>set $zprompt="Test01">"
    Test01>set $zprompt="YDB>"
 
@@ -1142,7 +1185,8 @@ $ZQUIT indicates whether the functionality associated with the ydb_zquit_anyway 
 
 If ydb_zquit_anyway is not defined or evaluates to 0 or any case-independent string or leading substrings of "FALSE" or "NO", YottaDB sets $ZQUIT to 0 and executes QUIT <expr> as specified by the standard. This feature is helpful when you want to run a block of code both as a routine and as an extrinsic function. Consider the following example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>zprint ^rtnasfunc
    rtnasfunc(expr1)
    write "Hello ",expr1,!
@@ -1150,7 +1194,8 @@ If ydb_zquit_anyway is not defined or evaluates to 0 or any case-independent str
 
 When the ydb_zquit_anyway functionality is diabled, extrinsic function invocations return an error as per the standard.
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write $zquit
    0
    YDB>write $$^rtnasfunc("jdoe")
@@ -1159,7 +1204,8 @@ When the ydb_zquit_anyway functionality is diabled, extrinsic function invocatio
 
 However, if you enable the ydb_zquit_anyway feature, extrinsic function invocations do not return an error.
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write $zquit
    1
    YDB>write $$^rtnasfunc("jdoe")
@@ -1219,14 +1265,16 @@ $ZROUTINES Examples
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>s $zroutines=".(../src) $ydb_dist"
 
 This example directs YottaDB to look for object modules first in your current directory, then in the distribution directory that contains the percent routines. YottaDB locates sources for objects in your current directory in the sibling /src directory.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ ydb_routines="/usr/jones /usr/smith"
    $ export ydb_routines
    $ ydb
@@ -1243,35 +1291,40 @@ This example defines the environment variable ydb_routines. Upon entering YottaD
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>SET $ZRO=". /usr/smith"
 
 This example sets $zroutines to a list containing two directories.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>SET $ZRO=". /usr/smith"
 
 This example sets $zroutines to a list containing two directories.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>set $zro="/usr/smith(/usr/smith/tax /usr/smith/fica)"
 
 This example specifies that YottaDB should search the directory /usr/smith for object files, and the directories /usr/smith/tax and /usr/smith/fica for source files. Note that in this example. YottaDB does not search /usr/smith for source files.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>set $zro="/usr/smith(/usr/smith /usr/smith/tax /usr/smith/fica)"
 
 This example specifies that YottaDB should search the directory /usr/smith for object files and the directories /usr/smith/tax and /usr/smith/fica for source files. Note that the difference between this example and the previous one is that YottaDB searches /usr/smith for both object and source files.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>set $zro="/usr/smith /usr/smith/tax() /usr/smith/fica"
 
 This specifies that YottaDB should search /usr/smith and /usr/smith/fica for object and source files. However, because the empty parentheses indicate directories searched only for object files, YottaDB does not search /usr/smith/tax for source files.
@@ -1332,7 +1385,8 @@ You may think of $ZROUTINES as supplying a two dimensional matrix of places to l
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>s $zro=". /usr/smi/utl() /usr/jon/utl
    (/usr/jon/utl/so /usr/smi/utl)"
 
@@ -1381,7 +1435,8 @@ The following traits of $ZROUTINES help support shared libraries:
 
 For example, if libshare.so is built with foo.o compiled from ./shrsrc/foo.m, the following commands specify that YottaDB should search the library ./libshare.so for symbol foo when do ^foo is encountered.
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>SET $ZROUTINES="./libshare.so ./obj(./shrsrc)"
    YDB>DO ^foo;auto-ZLINK foo - shared
    YDB>ZEDIT "foo";edit ./shrsrc/foo.m
@@ -1405,7 +1460,8 @@ In order to share M routines, YottaDB generates objects (.o) with position indep
 
 To create a shared library, use the following syntax:
 
-.. parsed-literal::
+.. code-block:: none
+
    ld -shared -o libshr.so file1.o file2.o
 
 Where libshr.so is replaced with name of the shared library one wishes to create. The file1.o and file2.o are replaced with one or more object files created by the YottaDB compiler that the user wishes to put into the shared library. Refer to the ld man page on specific platform for details.
@@ -1419,7 +1475,8 @@ When the environment variable ydb_routines is defined, YottaDB initializes $ZROU
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ ydb_routines="./libabc.so ./obj(./src)"
    $ export ydb_routines
    $ yottadb -direct
@@ -1458,7 +1515,8 @@ $ZSOURCE is a read-write Intrinsic Special Variable, (i.e., it can appear on the
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZEDIT "subr.m"
    .
    .
@@ -1467,7 +1525,8 @@ Example:
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZEDIT "test"
    .
    .
@@ -1477,7 +1536,8 @@ Example:
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZEDIT "/usr/smith/report.txt"
    .
    .
@@ -1487,7 +1547,8 @@ Example:
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZLINK "BASE.O"
    .
    .
@@ -1507,7 +1568,8 @@ YottaDB maintains $ZSTATUS as a string consisting of three or more substrings. T
 * The entryref of the line in error as the second substring; a comma (,) separates the first and second substrings.
 * The message detail as the third substring. The format of this is a percent sign (%) identifying the message facility, a hyphen (-) identifying the error severity, another hyphen identifying the message identification followed by a comma (,), which is followed by the message text if any:
 
-.. parsed-literal::
+.. code-block:: none
+
    Format: %<FAC>-<SEV>-<ID>, <TEXT>
    Example: %YDB-E-DIVZERO, Attempt to divide by zero
 
@@ -1517,7 +1579,8 @@ $ZSTATUS is a read-write Intrinsic Special Variable, (i.e., it can occur on the 
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>WRITE $ZSTATUS
    150373110,+1^MYFILE,%YDB-E-DIVZERO,
    Attempt to divide by zero
@@ -1534,7 +1597,8 @@ $ZSTEP initially contains the the value of the $ydb_zstep environment variable o
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>WRITE $ZSTEP
    B
    YDB>
@@ -1543,7 +1607,8 @@ This example displays the current value of $ZSTEP, which is the default.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>SET $ZSTEP="ZP @$ZPOS B"
 
 This example sets $ZSTEP to code that displays the contents of the next line to execute, and then enters Direct Mode.
@@ -1570,7 +1635,8 @@ $ZTEXIT is a read-write ISV, that is, it can appear on the left side of the equa
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ export sigusrval=10
    $ ydb
    YDB>zprint ^ztran
@@ -1618,7 +1684,8 @@ In the above call to foo^ztran, the interrupt handler is a user-defined routine,
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>w $zinterrupt
    "IF $ZJOBEXAM()"
    YDB>zsystem "ls YDB_JOBEXAM*"
@@ -1639,7 +1706,8 @@ $ZTIMEOUT
 
 $ZTIMEOUT controls a single process wide timer. The format of the $ZTIMEOUT ISV is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $ZTIMeout=([timeout][:labelref])
 
 * The optional timeout in seconds specifies with millisecond accuracy how long from the current time the timer interrupts the process. If the specified timeout is negative, YottaDB cancels the timer. If the timeout is zero, YottaDB treats it as it would a DO of the vector.
@@ -1649,7 +1717,8 @@ Note that YottaDB only recognizes interrupts such as from $ZTIMEOUT at points wh
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>zprint ^ztimeout
    ztimeout
      ; Display $ztimeout
@@ -1689,7 +1758,8 @@ Keep $ZTRAP simple and put complicated logic in another routine. If the action s
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>S $ZTRAP="ZP @$ZPOS B"
 
 This example modifies $ZTRAP to display source code for the line where YottaDB encounters an error before entering Direct Mode.
@@ -1727,7 +1797,8 @@ $ZVERSION
 
 $ZV[ERSION] contains a string value identifying the GT.M version on which the YottaDB release is built. $ZV[ERSION] is a space-delimited string with four pieces as follows:
 
-.. parsed-literal::
+.. code-block:: none
+
    <product> <release> <OS> <architecture>
 
 <product> is always "GT.M".
@@ -1750,7 +1821,8 @@ M routines cannot modify $ZVERSION.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>w $zversion
    GT.M V6.0-003 Linux x86_64
 
@@ -1774,7 +1846,8 @@ $ZYRELEASE
 
 The $ZYRE[LEASE] intrinsic special variable contains a string value that application code can use to determine the YottaDB release it is running on. $ZYRELEASE is a space delimited string with four pieces as follows:
 
-.. parsed-literal::
+.. code-block:: none
+
    <product><release><os><architecture>
 
 <product> is always "YottaDB".
@@ -1822,13 +1895,15 @@ $ZTLEVEL greater than one (>1) indicates that there are nested triggers in progr
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    +^Cycle(1) -commands=Set -xecute="Write ""$ZTLevel for ^Cycle(1) is: "",$ZTLevel Set ^Cycle(2)=1"
    +^Cycle(2) -commands=Set -xecute="Write ""$ZTLevel for ^Cycle(2) is: "",$ZTLevel Set ^Cycle(1)=1"
 
 These trigger definitions show different values of $ZTLEVEL when two triggers are called recursively (and pathologically).
 
-.. parsed-literal::
+.. code-block:: none
+
    +^Acct("ID") -commands=set -xecute="set ^Acct(1)=$ztvalue+1"
    +^Acct(sub=:) -command=set -xecute="set ^X($ztvalue)=sub"
 
@@ -1848,12 +1923,14 @@ Within trigger context, $ZTOLDVAL returns the prior (old) value of the global no
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    +^Acct(1,"ID") -commands=Set -xecute="Write:$ZTOLdval ""The prior value of ^Acct(1,ID) was: "",$ZTOLdval"
 
 This trigger gets invoked with a SET and displays the prior value (if it exists) of ^Acct(1,"ID").
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>w ^Acct(1,"ID")
    1975
    YDB>s ^Acct(1,"ID")=2011
@@ -1875,10 +1952,11 @@ You can SET $ZTSLATE only while a database trigger is active. YottaDB clears $ZT
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    TSTART ()       ; Implicitly clears $ZTSLAT
-   SET ^ACC(ACN1,BAL)=AMT          ; Trigger sets $ZTSLATE=ACN\_"|"
-   SET ^ACC(ACN2,BAL)=-AMT         ; Trigger sets $ZTSLATE=$ZTSLATE_ACN\_"|"
+   SET ^ACC(ACN1,BAL)=AMT          ; Trigger sets $ZTSLATE=ACN_"|"
+   SET ^ACC(ACN2,BAL)=-AMT         ; Trigger sets $ZTSLATE=$ZTSLATE_ACN_"|"
    ZTRIGGER ^ACT("TRANS")          ; Trigger uses $ZTSLATE to update transaction log
    TCOMMIT
 
@@ -1890,12 +1968,14 @@ Within trigger context, for SET commands where the YottaDB trigger specifies a p
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    +^trigvn -commands=Set -pieces=1;3:6 -delim="|" -xecute="Write !,$ZTUPDATE"
 
 In the above trigger definition entry, $ZTUPDATE displays a comma separated list of the changed piece numbers if one of the pieces of interest: 1,3,4,5,or 6 are modified by the update.
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write ^trigvn
    Window|Table|Chair|Curtain|Cushion|Air Conditioner
    YDB>set ^trigvn="Window|Dining Table|Chair|Vignette|Pillow|Air Conditioner"
@@ -1961,14 +2041,16 @@ The following examples are derived from the FIS Profile application.
 
 Nodes in ^ACN(CID,50) have TYPE in piece 1, CLS in piece 2, FEEPLN in piece 15 and EMPLNO in piece 31. Indexes are ^XACN(CLS,ACN,CID), ^XREF("EMPLCTA",EMPLNO,ACN,TYPE,CID) and ^XREF("FEEPLN",FEEPLN,CID) and use ACN from the first piece of ^ACN(CLS,99). These indices are maintained with four triggers: one invoked by a KILL or ZKill of an ^ACN(:,50) node and three invoked by SETs to different pieces of ^ACN(:,50) nodes. Note that ACN, CID, CLS and TYPE are required, whereas EMPLNO and FEEPLN can be null, which requires (in our convention) the use of $ZC(254) in indices. The triggerfile definitions are:
 
-.. parsed-literal::
+.. code-block:: none
+
    +^ACN(cid=:,50) -zdelim="|" -pieces=2 -commands=SET -xecute="Do ^SclsACN50"
    +^ACN(cid=:,50) -zdelim="|" -pieces=1,31 -commands=SET -xecute="Do ^SemplnoTypeACN50" +^ACN(cid=:,50) -zdelim="|" -pieces=15 -commands=SET -xecute="Do ^SfeeplnACN50"
    +^ACN(cid=:,50) -commands=KILL,ZKill -xecute="Do ^KACN50"
 
 The code in KACN50.m KILLs cross reference indices when the application deletes any ^ACN(:,50).
 
-.. parsed-literal::
+.. code-block:: none
+
    KACN50 ; KILL of entire ^ACN(:,50) node, e.g., from account deletion
      ; Capture information
      Set cls=$Piece($ZTOLD,"|",2)                   ; CLS
@@ -1985,7 +2067,8 @@ The code in KACN50.m KILLs cross reference indices when the application deletes 
 
 The routine in SclsACN50.m creates cross references for a SET or a SET $PIECE() that modifies the second piece of ^ACN(:,50).
 
-.. parsed-literal::
+.. code-block:: none
+
    SClsACN50 ; Update to CLS in ^ACN(,50)
     ; Capture information
     Set oldcls=$Piece($ZTOLD,"|",2)                ; Old CLS
@@ -1998,7 +2081,8 @@ The routine in SclsACN50.m creates cross references for a SET or a SET $PIECE() 
 
 Note that the example is written for clarity. Eliminating values that need not be assigned to temporary local variables produces:
 
-.. parsed-literal::
+.. code-block:: none
+
    SclsACN50
      S acn=$P(^ACN(cid,99),"|",1)
      I $P($ZTWORM,"|",1)<2 K ^XACN($P($ZTOLD,"|",2),acn,cid)
@@ -2007,12 +2091,14 @@ Note that the example is written for clarity. Eliminating values that need not b
 
 Indeed, this index can simply be included in the (one line) triggerfile specification itself:
 
-.. parsed-literal::
+.. code-block:: none
+
    +^ACN(cid=:,50) -zdelim="|" -pieces=2 -commands=SET -xecute="S oldcls=$P($ZTOLD,""|"",2),acn=$P(^ACN(cid,99),""|"",1) K:$P($ZTWO,""|"",1)<2 ^XACN(oldcls,acn,cid) S ^XACN($P($ZTVAL,""|"",2),acn,cid)="""""
 
 In the interest of readability most triggerfile definitions in this chapter are written as complete routines. The code in SemplnoTypeACN50.m handles changes to pieces 1 and 31 of ^ACN(:,50). Note that a SET to ^ACN(:,50) that modifies either or both pieces causes this trigger to execute just once, whereas two sequential SET $Piece() commands, to first modify one piece and then the other cause it to execute twice, at different times, once for each piece.
 
-.. parsed-literal::
+.. code-block:: none
+
    EmplnoTypeACN50 ; Update to EMPLNO and/or TYPE in ^ACN(,50)
     ; Capture information
     Set oldemplno=$Piece($ZTOLD,"|",31)
@@ -2030,7 +2116,8 @@ In the interest of readability most triggerfile definitions in this chapter are 
 
 The code in SFeeplnACN50.m handles changes to piece 15.
 
-.. parsed-literal::
+.. code-block:: none
+
    SFeeplnACN50 ; Update to FEEPLN in ^ACN(,50)
      ; Capture information
      Set oldfeepln=$Piece($ZTOLD,"|",15)

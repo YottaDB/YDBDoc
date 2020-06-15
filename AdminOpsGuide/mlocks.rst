@@ -34,7 +34,8 @@ The two primary functions of the M Lock Utility (LKE) are:
 
 When debugging an M application, you may use LKE to identify a possible deadlock situation, that is, two or more processes have LOCKs and are waiting to add resource names LOCKed by the other(s).
 
-.. parsed-literal::
+.. code-block:: none
+
    Process 1   Process 2
    LOCK A
             LOCK B
@@ -56,7 +57,8 @@ LKE requires that the environment variable ydb_gbldir be defined.
 
 Invoke LKE using the following command at the shell prompt. If this does not work, consult your system manager to investigate setup and file access issues.
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ydb_dist/lke
    LKE>
 
@@ -67,14 +69,16 @@ When LKE is ready to accept commands, it displays the LKE> prompt. To leave LKE,
 
 When additional information is entered on the command line after the LKE command, LKE processes the additional information as its command.
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ydb_dist/lke show -all
 
 This command displays all current LOCKs and then returns to the shell prompt.
 
-If your LKE argument contains quotes, precede each quote in the argument by a back-slash (\) or enclose the entire argument in a set of quotes (matching single or double). Apply this convention only for those LKE commands that you run from the shell.
+If your LKE argument contains quotes, precede each quote in the argument by a back-slash (\\) or enclose the entire argument in a set of quotes (matching single or double). Apply this convention only for those LKE commands that you run from the shell.
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ydb_dist/lke show -lock="^Account(\"Name\")"
    $ydb_dist/lke show -lock='^Account("Name")'
 
@@ -86,7 +90,8 @@ To Establish a Global Directory
 
 LKE uses the environment variable ydb_gbldir to identify the active global directory. ydb_gbldir should be defined by individual users in their login files.
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ ydb_gbldir=prod.gld
    $ export ydb_gbldir
 
@@ -98,7 +103,8 @@ LKE Commands and Qualifiers
 
 The general format of LKE commands is:
 
-.. parsed-literal::
+.. code-block:: none
+
    command [-qualifier[=qualifier-value]]
 
 LKE accepts command and qualifier abbreviations. The section describing each command provides the minimal abbreviation that can be used for that command, and the command qualifiers, if any. YottaDB recommends the use of a minimum of four characters for key words in scripts to ensure new keywords do not conflict with older scripts.
@@ -114,12 +120,14 @@ Use the CLEAR command to remove active LOCKs.
 
 The format of the CLEAR command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    CLE[AR] [-qualifier...]
 
 The optional qualifiers are:
 
-.. parsed-literal::
+.. code-block:: none
+
    -A[LL]
    -L[OCK]
   -[NO]C[RIT]
@@ -147,7 +155,8 @@ Specifies all current LOCKs.
 
 * By default, CLEAR -ALL operates interactively (-INTERACTIVE).
 
-.. parsed-literal::
+.. code-block:: none
+
    -[NO]C[RIT]
 
 Allows LKE CLEAR to work even if another process is holding a critical section.
@@ -157,7 +166,8 @@ Allows LKE CLEAR to work even if another process is holding a critical section.
 
 By default, LKE operates in CRIT[ICAL] mode and ensures a consistent view of LOCKs by using the database critical section(s).
 
-.. parsed-literal::
+.. code-block:: none
+
    -[NO]EXACT
 
 Limits the CLEAR command to the exact resource name specified with -LOCK=resource_name. NOEXACT (the default) treats the specified resource name as a prefix and works not only on it, but also on any of its descendants, since their existence effectively LOCKs their parent tree.
@@ -228,24 +238,28 @@ region-name specifies the region that holds the locked resource names.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    LKE>CLEAR -ALL
 
 This command clears all current LOCKs.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    LKE>clear -pid=2325 -interactive
 
 This command presents all LOCKs held by the process with PID equal to 2325. You can choose whether or not to clear each LOCK.
 
-.. parsed-literal::
+.. code-block:: bash
+
    LKE>clear -reg=areg -interactive
 
 This command produces an output like the following:
 
-.. parsed-literal::
+.. code-block:: bash
+
    AREG ^a Owned by PID= 2083 which is an existing process
    Clear lock ?
 
@@ -253,24 +267,28 @@ Type Yes or Y in response to the prompt.
 
 LKE responds with an informational message:
 
-.. parsed-literal::
+.. code-block:: bash
+
    %YDB-S-LCKGONE, Lock removed : ^a
 
 Type Yes or Y or No or N until all LOCKs are displayed and acted upon.
 
-.. parsed-literal::
+.. code-block:: bash
+
     LKE> clear -pid=4208 -nointeractive
 
 This command clears the lock held by a process with PID 4208. This command produces an output like the following:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DEFAULT Lock removed : ^A
 
 Note that -NOINTERACTIVE forced the action without asking for a confirmation.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    LKE>clear -lock="^a("b")
    Clear lock ? y
    Lock removed : ^a("b")
@@ -280,21 +298,24 @@ This command clears lock ^a("b") in the default region.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    LKE>clear -lock="^a" -nointeractive
 
 This command clears all the locks that start with "^a" in the default region. -NOINTERACTIVE qualifier instructs LKE to clear these locks without further user intervention.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    LKE>clear -lock="^a" -exact -nointeractive
 
 This command clears lock ^a in the default region. -NOINTERACTIVE instructs LKE to clear lock ^a without further user intervention.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    LKE>CLEAR -PID=4109 -LOCK=""^A""
    Clear lock ? Y
    Lock removed : ^A
@@ -317,12 +338,14 @@ Note that step 1 is necessary because using MUPIP SET -LOCK_SPACE is a standalon
 
 The format of the CLNUP command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    CLN[UP] [-qualifier...]
 
 The optional qualifiers are:
 
-.. parsed-literal::
+.. code-block:: none
+
    -A[LL]
    -I[NTEG]
    -P[ERIODIC]=n
@@ -364,12 +387,14 @@ SHOW
 
 Use the SHOW command to get status of the LOCK mechanism and the LOCK database. The format of the SHOW command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    SH[OW] [-qualifier...]
 
 The optional qualifiers are:
 
-.. parsed-literal::
+.. code-block:: none
+
    -A[LL]
    -L[OCK]
    -[NO]C[[RIT]ICAL]
@@ -421,7 +446,8 @@ resource_name specifies a single lock.
 
 * When used with the SHOW command, the LOCK qualifier provides a precise way to examine the specified lock and any descendant LOCKed resources.
 
-.. parsed-literal::
+.. code-block:: none
+
    -[NO]C[[RIT]ICAL]
 
 Allows the SHOW command to work even if another process is holding a critical section.
@@ -482,12 +508,14 @@ Displays the LOCK resource name and the process state information of all process
 
 Use the following procedure to display all LOCKs active in the database(s) defined by the current global directory.
 
-.. parsed-literal::
+.. code-block:: bash
+
    LKE> SHOW -ALL -WAIT
 
 This produces an output like the following:
 
-.. parsed-literal::
+.. code-block:: bash
+
    No locks were found in DEFAULT
    AREG
    ^a Owned by PID=2080 which is an existing process
@@ -497,12 +525,14 @@ This produces an output like the following:
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    LKE>SHOW -ALL
 
 This command displays all LOCKs mapped to all regions of the current global directory. It produces an output like the following:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DEFAULT
    ^A Owned by PID= 5052 which is an existing process
    ^B Owned by PID= 5052 which is an existing process
@@ -510,45 +540,52 @@ This command displays all LOCKs mapped to all regions of the current global dire
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    LKE>show -lock="^a"(""b"")"
 
 This command shows lock ^a("b") in the default region.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    LKE>SHOW -CRITICAL
 
 or
 
-.. parsed-literal::
+.. code-block:: bash
+
    LKE>SHOW -CRIT
 
 This command displays all the applicable locks held by a process that is holding a critical section.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    LKE>show -all -output="abc.lk"
 
 This command create a new file called abc.lk that contains the output of the SHOW -ALL command.
 
 Example
 
-.. parsed-literal::
+.. code-block:: bash
+
    LKE>show -pid=4109
 
 This command displays all locks held by process with PID 4109 and the total lock space usage.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    LKE>show -region=DEFAULT -lock=""^A""
 
 This command displays the lock on ^A in the region DEFAULT. It produces an output like the following:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DEFAULT
    ^A Owned by PID= 5052 which is an existing process
    %YDB-I-LOCKSPACEUSE, Estimated free lock space: 99% of 40 pages
@@ -559,7 +596,8 @@ EXIT
 
 The EXIT command ends an LKE session. The format of the EXIT command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    E[XIT]
 
 +++++++
@@ -568,14 +606,16 @@ HELP
 
 The HELP command explains LKE commands. The format of the HELP command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    H[ELP] [options...]
 
 Enter the LKE command for which you want information at the Topic prompt(s) and then press RETURN or CTRL-Z to return to the LKE prompt.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    LKE> HELP SHOW
 
 This command displays help for the SHOW command.
@@ -588,14 +628,16 @@ Use the SPAWN command to create a sub-process for access to the shell without te
 
 The format of the SPAWN command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    SP[AWN]
 
 The SPAWN command has no qualifiers.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    LKE>spawn
 
 This command creates a sub-process for access to the current shell without terminating the current LKE environment. Type exit to return to LKE.
@@ -637,36 +679,42 @@ Consider a situation when two users (Mary and Ken) have to exclusively update a 
 
 At Mary's prompt, execute the following commands:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>lock +^ABC
 
 This command places a YottaDB LOCK on "^ABC " (not the global variable^ABC). Note: LOCKs without the +/- always release all LOCKs held by the process, so they implicitly avoid dead locks. With LOCK +, a protocol must accumulate LOCKs in the same order (to avoid deadlocks).
 
 Then execute the following command to display the status of the LOCK database.
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>zsystem "lke show -all"
 
 This command produces an output like the following:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DEFAULT ^ABC Owned by PID=3657 which is an existing process
 
 Now, without releasing lock^ABC, execute the following commands at Ken's prompt.
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>lock +^ABC
 
 This command waits for the lock on resource "^ABC" to be released. Note that the LOCK command does not block global variable ^ABC in any way. This command queues the request for locking resource "^ABC" in the LOCK database. Note that you can still modify the value of global variable ^ABC even if it is locked by Mary.
 
 Now, at Mary's prompt, execute the following command:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>zsystem "LKE -show -all -wait"
 
 This command produces output like the following:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DEFAULT ^ABC Owned by PID=3657 which is an existing process
    Request PID=3685 which is an existing process
 
@@ -680,7 +728,8 @@ Now, consider another situation where both these users (Mary and Ken) have to up
 
 A deadlock situation can occur in the following situation:
 
-.. parsed-literal::
+.. code-block:: none
+
    Mary           Ken
    LOCK +file_1   LOCK +file_2
    LOCK +file_2   LOCK +file_1
@@ -691,7 +740,8 @@ Let us now create this situation.
 
 At Mary's prompt, execute the following commands:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>set file1="file_1.txt"
    YDB>lock +file1
    YDB>open file1:APPEND
@@ -703,7 +753,8 @@ Note that Mary has not released the LOCK on resource "file1".
 
 At Ken's prompt, execute the following commands:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB> set file2="file_2.txt"
    YDB> lock +file2
    YDB> open file2:APPEND
@@ -715,7 +766,8 @@ Note that Ken has not released the LOCK on resource "file2".
 
 Now, at Mary's prompt, execute the following commands.
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>set file2="file_2.txt"
    YDB>lock +file2
 
@@ -723,7 +775,8 @@ The latter command attempts to acquire a lock on resource file2 that is already 
 
 Execute the following command at LKE prompt to view this deadlock situation.
 
-.. parsed-literal::
+.. code-block:: bash
+
    LKE>show -all -wait
    file1 Owned by PID=2080 which is an existing process
    Request PID=2089 which is an existing process

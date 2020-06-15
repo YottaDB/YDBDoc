@@ -114,7 +114,8 @@ To validate strlit1, MUPIP TRIGGER or $ZTRIGGER() compiles it before applying th
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    +^multi -commands=set -name=example -xecute=<<
     do ^test1
     do stop^test2
@@ -124,9 +125,10 @@ Example:
 
 If cmd is S[et], you can specify an optional piece list sequence where int2>int1 and int1:int2 denotes a integer range from int1 to int2. The trigger gets executed only when any piece from the specified piece list changes. If your trigvn has a list "Window|Chair|Table|Door" and you want to execute the trigger only when the value of the 3rd or 4th piece changes, you might specify the following trigger definition:
 
-.. parsed-literal::
+.. code-block:: none
+
    +^trigvn -commands=S -pieces=3;4 -delim="|" -options=NOI,NOC -xecute="W ""3rd or 4th element updated."""
-   YDB>W ^trigvnWindow\|Chair\|Table\|Door\|
+   YDB>W ^trigvnWindow|Chair|Table|Door|
    YDB>s $Piece(^trigvn,"|",3)="Dining Table"
    3rd or 4th element updated.
 
@@ -203,7 +205,8 @@ Chained and Nested Triggers
 
 Triggers are chained or nested when a database update sets off more than one trigger. A nested trigger is a trigger set off by another trigger. YottaDB assigns a nesting level to each nested trigger up to 127 levels. While nested triggers are always Atomic with their triggering update, YottaDB gives each nested trigger a new trigger context rather than part of the triggering update. A chained trigger is an arbitrary sequence of matching triggers for the same database update. Consider the following trigger definition entries:
 
-.. parsed-literal::
+.. code-block:: none
+
    +^Acct("ID") -commands=Set -xecute="Set ^Acct(1)=$ZTVALUE+1"
    +^Acct(sub=:) -command=Set -xecute="Set ^X($ZTVALUE)=sub"
 
@@ -268,12 +271,14 @@ In this definition:
 
 Execute a command like the following:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip trigger -triggerfile=triggers.trg
 
 This command adds a trigger for ^CIF(:,1). On successful trigger load, this command displays an output like the following:
 
-.. parsed-literal::
+.. code-block:: bash
+
    File triggers.trg, Line 1: ^CIF trigger added with index 1
    =========================================
    1 triggers added
@@ -286,7 +291,8 @@ Now, every SET and KILL operation on the global node ^CIF(:,1) executes the rout
 
 Using your editor, create an M routine called XNAMEinCIF.m with the following code:
 
-.. parsed-literal::
+.. code-block:: none
+
    XNAMEinCIF ; Triggered Update for XNAME change in ^CIF(:,1)
        Set oldxname=$Piece($ZTOLDval,"|",2) Set:'$Length(oldxname) oldxname=$zchar(254); old XNAME
        Kill ^XALPHA("A",oldxname,acn); remove any old xref
@@ -345,7 +351,8 @@ If a SET updates a global node matching a trigger definition, YottaDB executes t
 
 Consider the following example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>set c=$ztrigger("S")
    ;trigger name: A#1#  cycle: 1
    +^A -commands=S -xecute="set ^B=200"
@@ -401,7 +408,8 @@ YottaDB uses the $ETRAP mechanism to handle errors during trigger execution. If 
 
 Consider the following trivial example:
 
-.. parsed-literal::
+.. code-block:: none
+
    ^Acct(id=:,disc=:) -commands=Set -xecute="Set msg=""Trigger Failed"",$ETrap=""If $Increment(^count) Write msg,!"" Set $ZTVAlue=x/disc"
 
 During trigger execution if disc (the second subscript of the triggering update) evaluates to zero, resulting in a DIVZERO (Attempt to divide by zero) error, YottaDB displays the message "Trigger Failed". Since the $ETRAP does not clear $ECODE, after printing the message, YottaDB leaves the trigger context and invokes the error handler outside the trigger, if any. In a DIVZERO case, the process neither assigns a new value to ^Acct(id,disc) nor commits the incremented value of ^count to the database.
@@ -429,10 +437,11 @@ Other key aspects of error handling during trigger execution are as follows:
 * Any TCOMMIT that takes $TLEVEL below what it was when at trigger initiation, causes a TRIGTLVLCHNG error. This behavior applies to any trigger, whether chained, nested or singular.
 * It may appear that YottaDB executes trigger code as an argument for an XECUTE. However, for performance reasons, YottaDB internally converts trigger code into a pseudo routine and executes it as if it is a routine. Although this is invisible for the most part, the trigger name can appear in places like error messages and $STACK() return values.
 * Triggers are associated with a region and a process can use one or more global directories to access multiple regions, therefore, there is a possibility for triggers to have name conflicts. To avoid a potential name conflict with other resources, YottaDB attempts to add a two character suffix, delimited by a "#" character to the user-supplied or automatically generated trigger name. If this attempt to make the name unique fails, YottaDB issues a TRIGNAMEUNIQ error.
-* Defining ydb_trigger_etrap to hold M code of any complexity exposes mismatches between the quoting conventions for M code and shell scripts. YottaDB suggests an approach of enclosing the entire value in single-quotes and only escaping the single-quote ('), exclamation-point (!) and back-slash (\) characters. For a comprehensive (but hopefully not very realistic) example:
+* Defining ydb_trigger_etrap to hold M code of any complexity exposes mismatches between the quoting conventions for M code and shell scripts. YottaDB suggests an approach of enclosing the entire value in single-quotes and only escaping the single-quote ('), exclamation-point (!) and back-slash (\\) characters. For a comprehensive (but hopefully not very realistic) example:
 
-   .. parsed-literal::
-      $ export ydb_trigger_etrap='write:1\'=2 $zstatus,\!,"5\\2=",5\\2,\! halt'
+   .. code-block:: bash
+
+      $ export ydb_trigger_etrap='write:1'=2 $zstatus,!,"5\2=",5\2,! halt'
       $ echo $ydb_trigger_etrap
       write:1'=2 $zstatus,!,"5\2=",5\2,! halt
       YDB>set $etrap=$ztrnlnm("ydb_trigger_etrap")
@@ -494,7 +503,8 @@ A trigger associated with a global in a region that is journaled can perform upd
 
 The following sample journal extract shows how YottaDB journals records updates to trigger definitions and information on $ZTWORMHOLE:
 
-.. parsed-literal::
+.. code-block:: none
+
    GDSJEX04
    01\61731,15123\1\16422\gtm.node1\ydbuser1\21\0\\\
    02\61731,15123\1\16422\0
@@ -506,14 +516,14 @@ The following sample journal extract shows how YottaDB journals records updates 
    05\61731,15126\1\16423\0\4294967297\4\4\^#t("trigvn",1,"TRIGNAME")="trigvn#1#
    "05\61731,15126\1\16423\0\4294967297\5\4\^#t("trigvn",1,"CMD")="S"
    05\61731,15126\1\16423\0\4294967297\6\4\^#t("trigvn",1,"XECUTE")="W $ZTWORMHOLE
-   s ^trigvn(1)=""Triggered Update"" if $ZTVALUE=1 s $ZTWORMHOLE=$ZTWORMHOLE\_""
+   s ^trigvn(1)=""Triggered Update"" if $ZTVALUE=1 s $ZTWORMHOLE=$ZTWORMHOLE_""
    Code:CR"""
    05\61731,15126\1\16423\0\4294967297\7\4\^#t("trigvn",1,"CHSET")="M"
    05\61731,15126\1\16423\0\4294967297\8\4\^#t("#TRHASH",175233586,1)="trigvn"_$C(0,0,0,0,0)_
    "W $ZTWORMHOLE s ^trigvn(1)=""Triggered Update"" if $ZTVALUE=1 s $ZTWORMHOLE=$ZTWORMHOLE
    _"" Code:CR""1"
    05\61731,15126\1\16423\0\4294967297\9\4\^#t("#TRHASH",107385314,1)="trigvn"_$C(0,0)_"
-   W $ZTWORMHOLE s ^trigvn(1)=""Triggered Update"" if $ZTVALUE=1 s $ZTWORMHOLE=$ZTWORMHOLE\_""
+   W $ZTWORMHOLE s ^trigvn(1)=""Triggered Update"" if $ZTVALUE=1 s $ZTWORMHOLE=$ZTWORMHOLE_""
    Code:CR""1"
    09\61731,15126\1\16423\0\4294967297\1\1\
    02\61731,15127\2\16423\0

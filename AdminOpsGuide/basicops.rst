@@ -48,7 +48,8 @@ On POSIX shells, ydb_env_set helps you set an environment for single-user, non-r
 
 ydb_env_set sets reasonable defaults for the following environment variables for normal YottaDB operation:
 
-.. parsed-literal::
+.. code-block:: none
+
    ydb_dir, ydb_dist, ydb_etrap, ydb_gbldir, ydb_log, ydb_rel, ydb_repl_instance, ydb_retention, ydb_routines, ydb_tmp, gtmdir, gtm_dist, gtm_etrap, gtmgbldir, gtm_log, gtm_repl_instance, gtm_retention, gtmroutines, gtm_tmp, gtmver
 
 You can set the following environment variables before sourcing ydb_env_set or running the ydb script;
@@ -59,12 +60,14 @@ You can set the following environment variables before sourcing ydb_env_set or r
 
 The following shell variables are used by the script and left unset at its completion:
 
-.. parsed-literal::
+.. code-block:: none
+
    old_ydb_dist, old_ydb_routines, old_gtmver, tmp_ydb_tmp, tmp_passwd.
 
 The $ydb_routines value set by the ydb_env_set script enables auto-relink by default for object files in the $gtmdir/$ydb_rel/o directory in M mode and $gtmdir/$ydb_rel/o/utf8 in UTF-8 mode. Auto-relink requires shared memory resources and limits beyond those for database operation. If your system has inadequate shared memory configured, YottaDB displays messages along the lines of:
 
-.. parsed-literal::
+.. code-block:: bash
+
    %YDB-E-SYSCALL, Error received from system call shmget() failed
 
 Refer to your OS documentation to configure shared memory limits (for example, on common Linux systems, the kernel.shmmax parameter in /etc/sysctl.conf).
@@ -73,7 +76,7 @@ The ydb_env_set (and ydb) scripts are idempotent by design, so calling them repe
 
 When ydb sources ydb_env_set, it provides a default execution environment (global directory and a default database (with BEFORE_IMAGE journaling)) if none exists. By default, it creates the database in $HOME/.yottadb with a structure like the following; note that this directory structure has different locations for YottaDB routines (r), object files (o), and database-related files (g):
 
-.. parsed-literal::
+.. code-block:: bash
 
    .yottadb
       | -- r
@@ -99,7 +102,8 @@ where r1.20 represents the current release and platform information and r1.10 re
 
 On 64-bit platforms in M mode, ydb_env_set sets the environment variable ydb_routines to something like the following (where $ydb_dist and $ydb_rel are as discussed above):
 
-.. parsed-literal::
+.. code-block:: bash
+
    $gtmdir/$ydb_rel/o*($gtmdir/$ydb_rel/r $gtmdir/r) $ydb_dist/plugin/o($ydb_dist/plugin/r) $ydb_dist/libgtmutil.so $ydb_dist
 
 $gtmdir/$ydb_rel/o*($gtmdir/$ydb_rel/r $gtmdir/r) specifies that YottaDB searches for routines in $gtmdir/$ydb_rel/r, then $gtmdir/r using $gtmdir/$ydb_rel/o for object code, then for routines in the plugin subdirectory of $ydb_dist, then in $ydb_dist, looking first for a shared library of routines distributed with YottaDB and then for other routines subsequently installed there. The * -suffix after the object directory enables the auto-relink facility.
@@ -108,12 +112,14 @@ For a comprehensive discussion of YottaDB source and object file management, ref
 
 When $ydb_chset is set to UTF-8, ydb_env_set sets ydb_routines to something like this:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $gtmdir/$ydb_rel/o/utf8*($gtmdir/$ydb_rel/r $gtmdir/r) $ydb_dist/plugin/o/utf8($ydb_dist/plugin/r) $ydb_dist/libgtmutil.so $ydb_dist
 
 Note that ydb_env_set sets $ydb_dist in UTF-8 mode to the utf8 subdirectory of the YottaDB installation directory. If you have installed any plugins that include shared libraries, the ydb_env_set script includes those. For example, with the POSIX and ZLIB plugins installed on a 64-bit platform, gtmdir set to /home/jdoe1 and YottaDB installed in /opt/yottadb/r120, ydb_env_set would set ydb_routines to:
 
-.. parsed-literal::
+.. code-block:: bash
+
    /home/jdoe1/.yottadb/r1.20/o*(/home/jdoe1/.yottadb/r1.20/r /home/jdoe1/.yottadb/r) /usr/local/lib/yottadb/r120/plugin/o/_POSIX.so /usr/local/lib/yottadb/r120/plugin/o/_ZLIB.so /usr/local/lib/yottadb/r120/plugin/o(/usr/local/lib/yottadb/r120/plugin/r) /usr/local/lib/yottadb/r120/libgtmutil.so /usr/local/lib/yottadb/r120
 
 .. note::
@@ -121,7 +127,8 @@ Note that ydb_env_set sets $ydb_dist in UTF-8 mode to the utf8 subdirectory of t
 
 ydb_env_set creates the following aliases:
 
-.. parsed-literal::
+.. code-block:: bash
+
    alias dse="$ydb_dist/dse"
    alias gde="$ydb_dist/yottadb -run GDE"
    alias ydb="$ydb_dist/ydb"
@@ -138,14 +145,16 @@ Sets a default YottaDB environment for C type shell. It sets the $ydb_dist, $ydb
 
 To source the gtmcshrc script, type:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ source <path_to_YottaDB_installation_directory>/gtmcshrc
 
 You can also run the gtmbase script which places the above command in the .cshrc file so the script will get automatically sourced the next time you log in.
 
 gtmcshrc also creates the following aliases.
 
-.. parsed-literal::
+.. code-block:: bash
+
    alias ydb '$ydb_dist/yottadb -direct'
    alias mupip '$ydb_dist/mupip'
    alias lke '$ydb_dist/lke'
@@ -162,12 +171,14 @@ Adds the following line to the .profile or .cshrc file depending on the shell.
 
 In the POSIX shell, gtmbase adds the following line to .profile:
 
-.. parsed-literal::
+.. code-block:: bash
+
    . <ydb_dist pathname>/ydb_env_set
 
 In the C shell, adds the following line to .cshrc:
 
-.. parsed-literal::
+.. code-block:: bash
+
    source <ydb_dist pathname>/gtmcshrc
 
 +++++++++++++
@@ -194,12 +205,14 @@ If you intend to use Database Encryption, set the ydb_passwd and ydb_crypt_confi
 
 **To run the ydb script, type:**
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ <path to your YottaDB Distribution>/ydb
 
 **To invoke the help to assist first-time users, type:**
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ <path to your YottaDB Distribution>/ydb -help
    ydb -dir[ect] to enter direct mode (halt returns to shell)
    ydb -run <entryref> to start executing at an entryref
@@ -903,50 +916,58 @@ Starting YottaDB
 
 Execute ydb from your shell prompt:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ <path_to_ydb_installation_directory>/ydb
 
 **To start YottaDB in UTF-8 mode from a POSIX shell**:
 
 First, set $ydb_chset to UTF-8 and LC_CTYPE or LC_ALL to any usable UTF-8 locale.
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ export ydb_chset="UTF-8"
    $ export LC_CTYPE="en_US.utf8"
 
 Execute the ydb script.
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ <path_to_ydb_installation_directory>/ydb
 
 **To start YottaDB from a C-type shell**:
 
 First source the gtmschrc script to set up a default YottaDB environment. At your shell prompt, type:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ source <path_to_ydb_installation_directory>/gtmcshrc
 
 Run the ydb alias to start YottaDB in direct mode.
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ ydb
 
 **To start YottaDB in UTF-8 mode from a C-type shell**:
 
 Set the environment variable ydb_chset to UTF-8 and LC_CTYPE or LC_ALL to any usable UTF-8 locale.
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ setenv ydb_chset UTF-8
    $ setenv LC_CTYPE en_US.utf8
 
 Source the gtmcshrc script to set up default YottaDB Unicode environment.
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ source <path_to_ydb_installation_directory>/gtmcshrc
 
 Run the ydb alias to start YottaDB in direct mode.
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ ydb
 
 **To start YottaDB without using any script**:
@@ -961,7 +982,8 @@ Run the ydb alias to start YottaDB in direct mode.
 
 * Set up the following aliases to run YottaDB and its utilities.
 
- .. parsed-literal::
+ .. code-block:: bash
+
     alias dse="$ydb_dist/dse"
     alias gde="$ydb_dist/yottadb -run ^GDE"
     alias ydb="$ydb_dist/yottadb -direct"
@@ -970,7 +992,8 @@ Run the ydb alias to start YottaDB in direct mode.
 
 * Run the ydb alias to start YottaDB in direct mode.
 
-  .. parsed-literal::
+  .. code-block:: bash
+
      $ ydb
 
 
@@ -994,7 +1017,8 @@ Run the ydb alias to start YottaDB in direct mode.
 
 * Set up the following aliases to run YottaDB and its utilities.
 
-  .. parsed-literal::
+  .. code-block:: bash
+
      alias dse="$ydb_dist/dse"
      alias gde="$ydb_dist/yottadb -run ^GDE"
      alias ydb="$ydb_dist/yottadb -direct"
@@ -1003,12 +1027,14 @@ Run the ydb alias to start YottaDB in direct mode.
 
 * Type the following command to start YottaDB in direct mode.
 
-  .. parsed-literal::
+  .. code-block:: bash
+
      $ ydb
 
 * At the YottaDB prompt, type the following command.
 
-  .. parsed-literal::
+  .. code-block:: bash
+
     YDB>w $ZCHSET
     UTF-8 ; the output confirms UTF-8 mode.
 
@@ -1047,7 +1073,8 @@ The following YottaDB features fork processes and may generate SIGBUS errors whe
 
 Consider the following example of a memory map report of a Source Server process running at peak load:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ pmap -d 18839
    18839: /usr/lib/yottadb/r120/mupip replicate -source -start -buffsize=1048576 -secondary=melbourne:1235 -log=/var/log/.yottadb/mal2mel.log -instsecondary=melbourne
    Address   Kbytes Mode Offset   Device Mapping
@@ -1086,7 +1113,8 @@ To use huge pages for shared memory (journal buffers, replication journal pool a
 
 * Permit the group used by YottaDB processes to use huge pages with the following command, which requires root privileges:
 
-    .. parsed-literal::
+    .. code-block:: bash
+
        echo <gid> >/proc/sys/vm/hugetlb_shm_group
 
 .. note::
@@ -1123,7 +1151,8 @@ Configuring the Restriction Facility
 
 Post installation, a system administrator can optionally add a restrict.txt file in $ydb_dist to restrict the use of certain YottaDB facilities to a group-name. The owner and group for $ydb_dist/restrict.txt can be different from those used to install YottaDB. The file may contain zero or more of the following case-insensitive lines in any order:
 
-.. parsed-literal::
+.. code-block:: none
+
    BREAK[:<group-name>]
    ZBREAK[:<group-name>]
    ZCMDLINE[:<group-name>]
@@ -1199,7 +1228,8 @@ ZSYSTEM and PIPE OPEN command restriction facility
 
 The YottaDB restriction mechanism recognizes the following lines:
 
-.. parsed-literal::
+.. code-block:: none
+
     ZSYSTEM_FILTER[:M labelref]
     PIPE_FILTER[:M labelref]
 
@@ -1207,14 +1237,16 @@ The labelref must include a routine name. If a process is restricted by a ZSYSTE
 
 An example restrict file for this:
 
-.. parsed-literal::
+.. code-block:: bash
+
    cat $ydb_dist/restrict.txt
    ZSYSTEM_FILTER:^filterzsy
    PIPE_FILTER:^filterzsy
 
 The actual filter routine:
 
-.. parsed-literal::
+.. code-block:: none
+
    filterzsy(inarg,outarg);
    if ""=inarg set outarg="-1;must provide a command" quit
    for i=1:1 set arg=$piece(inarg,";",i) quit:""=arg  do  quit:$data(outarg)
@@ -1245,7 +1277,8 @@ Audit Principal Device restriction facility
 
 The "APD_ENABLE" entry in a restrictions definition file turns on APD and enables the logging of all code entered from Direct Mode and optionally any input entered on the principal device ($PRINCIPAL). To enable APD, add a line with the following format to the restriction file:
 
-.. parsed-literal::
+.. code-block:: none
+
    APD_ENABLE:[comma-separated-list-of-options]:{path-to-sock-file|host:port}[:tls-id]
 
 * The optional "comma-separated-list-of-options" can consist of zero or more of these options:
@@ -1265,22 +1298,26 @@ If parsing the "APD_ENABLE" line in restriction file or initializing logger info
 
 Examples:
 
-.. parsed-literal::
+.. code-block:: none
+
    APD_ENABLE::/path/to/sock/file/audit.sock
 
 Adding this line to the restriction file enables APD. YottaDB connects with the logger via UNIX domain socket using the domain socket file "/path/to/sock/file/audit.sock" and sends all Direct Mode activity from $PRINCIPAL to logger.
 
-.. parsed-literal::
+.. code-block:: none
+
    APD_ENABLE:RD:[123.456.789.100]:12345
 
 Adding this line to the restriction file enables APD. YottaDB connects with the logger (listening on port 12345 at the IPv4 address 1enable23.456.789.100) via TCP socket and sends all Direct Mode and READ activities from $PRINCIPAL to logger.
 
-.. parsed-literal::
+.. code-block:: none
+
    APD_ENABLE::loggerhost:56789
 
 Adding this line to the restriction file enables APD. YottaDB connects with the logger (listening on port 56789 at the hostname "loggerhost") using a TCP socket and sends all Direct Mode activities from $PRINCIPAL to logger.
 
-.. parsed-literal::
+.. code-block:: none
+
    APD_ENABLE:TLS,RD:[1234:5678:910a:bcde::f:]:12345:clicert
 
 Adding this line to the restriction file enables APD. YottaDB connects with the logger (listening on port 12345 at the IPv6 address 1234:5678:910a:bcde::f:) via TLS socket. YottaDB configures its TLS options for APD based on the contents within the section of the configuration file labeled "clicert". YottaDB sends all Direct Mode and READ activities from $PRINCIPAL to logger.
@@ -1293,7 +1330,8 @@ The "logger" is a separate server-like program responsible for receiving the to-
 
 The six fields in the message, separated by semicolons (';'), contain information on the to-be-logged activity. Each to-be-logged message sent to the logger from YottaDB has the following format:
 
-.. parsed-literal::
+.. code-block:: none
+
    dist=<path>; src={0|1|2}; uid=<uid>; euid=<euid>; pid=<pid>; command=<text>
 
 
@@ -1304,7 +1342,8 @@ The six fields in the message, separated by semicolons (';'), contain informatio
 
 Examples:
 
-.. parsed-literal::
+.. code-block:: none
+
    dist=/path/to/ydb_dist; src=1; uid=112233445; euid=112233445; pid=987654; command=write "Hello world",!
    dist=/usr/local/lib/yottadb/r128; src=2; uid=998877665; euid=998877665; pid=123456; command=set a=789
 

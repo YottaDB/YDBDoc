@@ -16,11 +16,11 @@
 Multi-Language Programmer's Guide
 =================================
 .. contents::
-   :depth: 3
+   :depth: 4
 
-========
+---------
 Overview
-========
+---------
 
 YottaDB is a multi-language NoSQL database. The daemonless database
 engine resides in the address space of the process, and can be
@@ -33,12 +33,13 @@ to the YottaDB engine from any language. As YottaDB adds standard APIs
 for other languages, additional sections will be added to the
 Programmers Guide.
 
-===========
+------------
 Quick Start
-===========
+------------
 
++++++++++++++++++++
 Local Installation
-==================
++++++++++++++++++++
 
 1. Install prerequisites.
 
@@ -88,8 +89,9 @@ Local Installation
 Note that the :code:`wordfreq.c` program randomly uses local or
 global variables (see `Local and Global Variables`_).
 
++++++++++++++++++
 Docker Container
-================
++++++++++++++++++
 
 You must have at least `Docker
 <https://www.docker.com/community-edition>`_ 17.05
@@ -114,17 +116,18 @@ directory. After the container is shutdown and removed, delete the
 directory if you want to remove all data created in the YottaDB
 container (such as your database and routines).
 
-========
+---------
 Concepts
-========
+---------
 
++++++++++++++++++++++++++++++++++++++++++++++++
 Keys, Values, Nodes, Variables, and Subscripts
-==============================================
++++++++++++++++++++++++++++++++++++++++++++++++
 
 The fundamental core data structure provided by YottaDB is *key-value
 tuples*. For example, the following is a set of key value tuples:
 
-::
+.. code-block:: none
 
     ["Capital","Belgium","Brussels"]
     ["Capital","Thailand","Bangkok"]
@@ -145,7 +148,7 @@ While YottaDB itself assigns no meaning to the data in each node, by
 convention, application maintainability is improved by using
 meaningful keys, for example:
 
-::
+.. code-block:: none
 
     ["Capital","Belgium","Brussels"]
     ["Capital","Thailand","Bangkok"]
@@ -161,7 +164,7 @@ under "Population", the following is a perfectly valid set of tuples
 (source: `United States Census
 <https://en.wikipedia.org/wiki/United_States_Census>`_):
 
-::
+.. code-block:: none
 
     ["Capital","Belgium","Brussels"]
     ["Capital","Thailand","Bangkok"]
@@ -206,7 +209,7 @@ called a *subtree* (e.g., :code:`Population("USA")` is a subtree of the
 With this representation, the :code:`Population` tree can be represented as
 follows:
 
-::
+.. code-block:: none
 
     Population("Belgium")=1367000
     Population("Thailand")=8414000
@@ -224,7 +227,7 @@ add historical dates for capitals, the :code:`Capital("Thailand")` subtree
 might look like this (source: `The Four Capitals of Thailand
 <https://blogs.transparent.com/thai/the-four-capitals-of-thailand/>`_).
 
-::
+.. code-block:: none
 
    Capital("Thailand")="Bangkok"
    Capital("Thailand",1238,1378)="Sukhothai"
@@ -232,9 +235,9 @@ might look like this (source: `The Four Capitals of Thailand
    Capital("Thailand",1767,1782)="Thonburi"
    Capital("Thailand",1782)="Bangkok"
 
------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Variables vs. Subscripts vs. Values
------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 When viewed as :code:`["Capital","Belgium","Brussels"]` each component is
 a string, and in an abstract sense they are all conceptually the
@@ -285,7 +288,7 @@ Thailand as :code:`Capital("Thailand","current")="Bangkok"` instead of
 :code:`Capital("Thailand")="Bangkok"`, the above subtree would have the
 following order:
 
-::
+.. code-block:: none
 
    Capital("Thailand",1238,1378)="Sukhothai"
    Capital("Thailand",1350,1767)="Ayutthaya"
@@ -293,8 +296,9 @@ following order:
    Capital("Thailand",1782)="Bangkok"
    Capital("Thailand","current")="Bangkok"
 
++++++++++++++++++++++++++++
 Local and Global Variables
-==========================
++++++++++++++++++++++++++++
 
 YottaDB is a database, and data in a database must *persist* and *be
 shared*. The variables discussed above are specific to an application
@@ -316,7 +320,7 @@ variable names having a caret ("^") preceding their names. Unlike the
 local variables above, the global variables below are shared between
 processes and are persistent.
 
-::
+.. code-block:: none
 
     ^Population("Belgium")=1367000
     ^Population("Thailand")=8414000
@@ -337,8 +341,9 @@ variable.*
 	  :code:`^%y` are reserved for use by YottaDB,
 	  applications should not use them.
 
++++++++++++++++++++
 Global Directories
-==================
++++++++++++++++++++
 
 To application software, files in a file system provide
 persistence. This means that global variables must be stored in files
@@ -376,7 +381,7 @@ global directory to another.
 
 Thus, we can have:
 
-::
+.. code-block:: none
 
    $zgbldir="ThaiNames.gld"
    ^Capital("Thailand")="กรุ่งเทพฯ"
@@ -385,9 +390,9 @@ Thus, we can have:
    ^Capital("Thailand",1767,1782)="ธนบุรี"
    ^Capital("Thailand",1782)="กรุ่งเทพฯ"
 
------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~
 Client/Server Operation
------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 In common usage, database files reside on the same computer system as
 that running application code. However, as described in `Chapter 13
@@ -409,8 +414,9 @@ global variables that reside on remote database files.
 
 .. _intrinsic special variable:
 
+++++++++++++++++++++++++++++
 Intrinsic Special Variables
-===========================
+++++++++++++++++++++++++++++
 
 In addition to local and global variables, YottaDB also has a set of
 *Intrinsic Special Variables*. Just as global variables are
@@ -426,9 +432,9 @@ Guide <https://docs.yottadb.com/ProgrammersGuide/isv.html>`_ are
 useful to M application code, others are more generally useful and
 documented here.
 
--------
+~~~~~~~~
 $tlevel
--------
+~~~~~~~~
 
 Application code can read the intrinsic special variable
 :code:`$tlevel` to determine whether it is executing inside a
@@ -439,9 +445,9 @@ by calling `ydb_tp_s() or ydb_tp_st() <./cprogram.html#ydb-tp-s-ydb-tp-st>`_,or 
 resulting from a `ydb_delete_s(), ydb_delete_st() <./cprogram.html#ydb-delete-s-ydb-delete-st>`_,
 `ydb_set_s() or ydb_set_st() <./cprogram.html#ydb-set-s-ydb-set-st>`_.
 
----------
+~~~~~~~~~~
 $trestart
----------
+~~~~~~~~~~
 
 Application code inside a transaction can read the intrinsic special
 variable :code:`$trestart` to determine how many times a transaction has
@@ -450,9 +456,9 @@ resources within a transaction, logic that needs to access an external
 resource (e.g., to read data in a file), can use :code:`$trestart` to
 restrict that access to the first time it executes (:code:`$trestart=0`).
 
---------
+~~~~~~~~~
 $zgbldir
---------
+~~~~~~~~~
 
 :code:`$zgbldir` is the name of the current global directory file; any
 global variable reference that does not explicitly specify a global
@@ -462,9 +468,9 @@ intrinsic special variable :code:`$zgbldir="ThaiNames.gld"` to use the
 :code:`$zgbldir` from the environment variable value
 :code:`$ydb_gbldir`.
 
------------
+~~~~~~~~~~~~
 $zmaxtptime
------------
+~~~~~~~~~~~~
 
 :code:`$zmaxtptime` provides a limit in seconds for the time that a
 transaction can be open (see `Transaction
@@ -474,9 +480,9 @@ the environment variable :code:`ydb_maxtptime`, with values greater than
 application legitimately needs a timeout greater than 60 seconds, use
 `ydb_set_s() or ydb_set_st() <./cprogram.html#ydb-set-s-ydb-set-st>`_ to set it.
 
---------
+~~~~~~~~~
 $zstatus
---------
+~~~~~~~~~
 
 :code:`$zstatus` provides additional details of the last
 error. Application code can retrieve :code:`$zstatus` using
@@ -495,9 +501,9 @@ the `errstr <./programmingnotes.html#errstr>`_ parameter
 discussed in `Threads <./programmingnotes.html#threads>`_ to get the correct
 :code:`$zstatus` in a multi-threaded application.
 
-----------
+~~~~~~~~~~~
 $zyrelease
-----------
+~~~~~~~~~~~
 
 :code:`$zyrelease` identifies the YottaDB release in use. It consists
 of four space separated pieces:
@@ -515,8 +521,9 @@ of four space separated pieces:
 .. _transaction:
 .. _transaction processing:
 
++++++++++++++++++++++++
 Transaction Processing
-======================
++++++++++++++++++++++++
 
 YottaDB provides a mechanism for an application to implement `ACID
 (Atomic, Consistent, Isolated, Durable) transactions
@@ -583,9 +590,9 @@ Sections `Threads <./programmingnotes.html#threads>`_ and
 important information pertinent to transaction processing in a
 multi-threaded application.
 
--------------------
+~~~~~~~~~~~~~~~~~~~~
 Nested Transactions
--------------------
+~~~~~~~~~~~~~~~~~~~~
 
 YottaDB allows transactions to be nested. In other words, code
 executing within a transaction may itself call `ydb_tp_s() or
@@ -601,8 +608,9 @@ example:
   restarts, provides useful functionality that nested transactions can
   exploit.
 
+++++++
 Locks
-=====
+++++++
 
 YottaDB locks are a fast, lightweight tool for multiple processes to
 coordinate their work. An analogy with the physical world may help to
@@ -672,9 +680,9 @@ order that all processes must respect) must be respected by all
 threads in a process (or for a language such as Go, by all Goroutines
 in a process).
 
---------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Locks and Transaction Processing
---------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 `Transaction Processing`_ and Locks solve overlapping though not
 congruent use cases. For example, consider application code to

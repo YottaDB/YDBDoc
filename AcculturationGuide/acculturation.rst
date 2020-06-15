@@ -141,13 +141,13 @@ You will need to configure your virtual machine for outbound and inbound network
 
 Refer to the user documentation for your virtualization software to set up virtual machine networking so that ``Debian-10_yottadbworkshop12.vmdk`` is the disk image of the virtual machine, and port 2222 on the host is forwarded to port 22 on the guest. For example, using qemu-system-x86_64 on a Linux host, one of the following commands should work:
 
-::
+.. code-block:: bash
 
    qemu-system-x86_64 -enable-kvm -cpu host -m 256 -net nic -net user,hostfwd=tcp::2222-:22 -hda Debian-10_yottadbworkshop12.vmdk
 
 Using kvm on a Linux host, the following command boots the vmdk image with port 2222 on the host forwarded to port 22 on the guest for ssh sessions:
 
-::
+.. code-block:: bash
 
     kvm -enable-kvm -cpu host -m 256 -display none -net nic -net user,hostfwd=tcp::2222-:22 -hda Debian-10_yottadbworkshop12.vmdk
 
@@ -169,7 +169,7 @@ Quick Start
 
 With a terminal emulator, initiate an ssh connection to port 2222 on localhost and login with userid ``yottadbuser`` and password ``YottaDB Rocks!`` (including a space and an exclamation point). For example, on Linux, you can use the command: ``ssh -p 2222 yottadbuser@localhost`` to connect as user yottadbuser to port 2222 on the host which is forwarded to port 22 on the guest.
 
-::
+.. code-block:: bash
 
     $ ssh -p 2222 yottadbuser@localhost
     Linux yottadbworkshop 4.19.0-6-amd64 #1 SMP Debian 4.19.67-2+deb10u1 (2019-09-20) x86_64
@@ -185,7 +185,7 @@ With a terminal emulator, initiate an ssh connection to port 2222 on localhost a
 
 As newer versions of packages are likely to have been released after the Acculturation Workshop virtual machine was released, run the following command once before using the virtual machine, to update to current versions of packages, remove old versions, and reboot to use the new packages.
 
-::
+.. code-block:: bash
 
     yottadbuser@yottadbworkshop:~$ sudo apt update && sudo apt -y upgrade && sudo apt -y autoremove && sudo reboot now
 
@@ -208,7 +208,7 @@ Default Environment
 
 As YottaDB needs a working environment and several environment variables to be set correctly, the ``ydb_env_set`` script creates a working environment if one does not exist (defaulting to ``$HOME/.yottadb`` unless the environment variable ``ydb_dir`` points to another location), and sets up a default directory structure under it, with reasonable values for environment variables. You can use ``pkg-config`` to source ``ydb_env_set`` from the currently installed YottaDB release to start using YottaDB immediately. You can query YottaDB to identify the release, e.g.,
 
-::
+.. code-block:: bash
 
  yottadbuser@yottadbworkshop:~$ source $(pkg-config --variable=prefix yottadb)/ydb_env_set
  yottadbuser@yottadbworkshop:~$ yottadb -run %xcmd 'write $zyrelease,!'
@@ -219,7 +219,7 @@ When you set up environments in YottaDB, you will set up your own scripting, but
 
 The ``tree`` program shows the environment sourcing ``ydb_env_set`` creates.
 
-::
+.. code-block:: bash
 
    yottadbuser@yottadbworkshop:~$ tree .yottadb/
     .yottadb
@@ -244,7 +244,7 @@ Using YottaDB
 
 Now that YottaDB is installed and configured, change to the ``$ydb_dir`` directory (``$HOME/.yottadb`` in this example), and verify that the database has no nodes of the ``^hello`` global variable:
 
-::
+.. code-block:: bash
 
     yottadbuser@yottadbworkshop:~$ cd $ydb_dir
     yottadbuser@yottadbworkshop:~/.yottadb$ mupip extract -format=zwr -label="Hello" -select=hello -stdout
@@ -257,7 +257,7 @@ Access from C
 
 YottaDB comes with a `C API <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html>`_ and all you need to use it is the `gcc` compiler, which is included in the virtual machine. Download the `sayhelloC.c <./sayhelloC.c>`_ program into the .yottadb directory, compile it and run it. Notice that it has set a node in the database (the MUPIP EXTRACT command prints database contents):
 
-::
+.. code-block:: bash
 
     yottadbuser@yottadbworkshop:~/.yottadb$ ls -l
     total 12
@@ -288,7 +288,7 @@ Access from Go
 
 `Accessing YottaDB from Go <https://docs.yottadb.com/MultiLangProgGuide/goprogram.html>`_ requires the Go ``yottadb`` package to be downloaded and installed, to provide a YottaDB Go “wrapper”. After installing the Go wrapper, you can run a test to ensure that it was installed successfully:
 
-::
+.. code-block:: bash
 
     yottadbuser@yottadbworkshop:~/.yottadb$ go get -t lang.yottadb.com/go/yottadb
     yottadbuser@yottadbworkshop:~/.yottadb$ go test lang.yottadb.com/go/yottadb
@@ -297,9 +297,9 @@ Access from Go
 
 Download the `sayhelloGo.go <./sayhelloGo.go>`_ program into the .yottadb directory, compile it and run it. Notice that it too has set a node in the database:
 
-::
+.. code-block:: bash
 
-   yottadbuser@yottadbworkshop:~/.yottadb$ go build sayhelloGo.go
+    yottadbuser@yottadbworkshop:~/.yottadb$ go build sayhelloGo.go
     yottadbuser@yottadbworkshop:~/.yottadb$ ./sayhelloGo
     yottadbuser@yottadbworkshop:~/.yottadb$ mupip extract -format=zwr -label="Hello" -select=hello -stdout
     Hello
@@ -316,7 +316,7 @@ Access from M
 
 YottaDB includes a complete language implementation for M. Download the `sayhelloM.m <./sayhelloM.m>`_ program into the .yottadb/r directory and run it (there is no need for a separate compilation step, as there was for C and Go):
 
-::
+.. code-block:: bash
 
     yottadbuser@yottadbworkshop:~/.yottadb$ ls -l r
     total 4
@@ -334,7 +334,7 @@ YottaDB includes a complete language implementation for M. Download the `sayhell
 
 Notice that after running it, YottaDB has automatically compiled the source code (``sayhelloM.m``) and created a file with object code (``sayhelloM.o``) which it dynamically links and runs.
 
-::
+.. code-block:: bash
 
     yottadbuser@yottadbworkshop:~/.yottadb$ tree
     .
@@ -377,7 +377,7 @@ Preparation
 
 Create a directory with a name like ``jnlex`` (for journaling exercises) or other prefered name and change to that directory. Create a file to source that sets required environment variables and convenient aliases (``nano`` and ``vi`` editors are installed on the virtual machine; you can install your preferred editor: for example to install a character-mode emacs, run ``sudo apt install emacs-nox``). Although the code fragments are M code, they are straightforward, and you can use equivalent code from other languages if you prefer.
 
-::
+.. code-block:: bash
 
    yottadbuser@yottadbworkshop:~/jnlex$ cat jnlex_env
    export ydb_dist=$(pkg-config --variable=prefix yottadb)
@@ -391,7 +391,7 @@ Create a directory with a name like ``jnlex`` (for journaling exercises) or othe
 
 Create a global directory with the Global Directory Editor (GDE) utility (see `Global Directories Point to Global Variables`_ below), and a database file. Turn on journaling for the database file.
 
-::
+.. code-block:: bash
 
    yottadbuser@yottadbworkshop:~/jnlex$ yottadb -run GDE
    %GDE-I-GDUSEDEFS, Using defaults for Global Directory
@@ -420,7 +420,7 @@ Start by cleaning out old journal files. Verify that there are no shared memory 
 
    For those who are not familiar with M, ``$horolog`` is a comma separated string consisting of the number of days since December 31, 1840, and the number of seconds since midnight in the time zone of the process, and ``$zdate()`` converts ``$horolog`` format timestamps to friendlier formats.
 
-::
+.. code-block:: bash
 
    yottadbuser@yottadbworkshop:~/jnlex$ rm -f *.mjl_*
    yottadbuser@yottadbworkshop:~/jnlex$ ls -l
@@ -455,7 +455,7 @@ Now simulate a crash by killing the virtual machine by clicking on the “X” o
 
 Reboot the virtual machine, change to the ``jnlex`` directory, source the ``jnlex_env`` and attempt to access the data. Note the error because the database was not cleanly shut down.
 
-::
+.. code-block:: bash
 
    yottadbuser@yottadbworkshop:~$ cd jnlex/
    yottadbuser@yottadbworkshop:~/jnlex$ source jnlex_env
@@ -467,7 +467,7 @@ Reboot the virtual machine, change to the ``jnlex`` directory, source the ``jnle
 
 Now recover the database, and note that the database update you made is in the database.
 
-::
+.. code-block:: bash
 
    yottadbuser@yottadbworkshop:~/jnlex$ mupip journal -recover -backward "*"
    %YDB-I-MUJNLSTAT, Initial processing started at Wed Nov 13 10:21:50 2019
@@ -519,7 +519,7 @@ Each database file can have a single active journal file. A journal file can be 
 
 The intrinsic special variable ``$zgbldir`` points a YottaDB process to the global directory. ``$zgbldir`` is initialized from the environment variable ``ydb_gbldir`` at process startup, but it can be modified by the process during execution. Assuming you have sourced the ``jnlex_env`` file:
 
-::
+.. code-block:: bash
 
    yottadbuser@yottadbworkshop:~/jnlex$ yottadb -run %XCMD 'write $zgbldir,!'
    /home/yottadbuser/jnlex/ydb.gld
@@ -527,7 +527,7 @@ The intrinsic special variable ``$zgbldir`` points a YottaDB process to the glob
 
 GDE, the Global Directory Editor, is a program used to manipulate global directories. Before using it, add an extra line to the ``jnlex_env`` file to allow you to  recall the last line typed, in case you make a mistake and want to recall and edit the previous line:
 
-::
+.. code-block:: bash
 
    yottadbuser@yottadbworkshop:~/jnlex$ cat jnlex_env
    export ydb_dist=$(pkg-config --variable=prefix yottadb)
@@ -548,7 +548,7 @@ GDE, the Global Directory Editor, is a program used to manipulate global directo
 
 You can use the show command to examine name spaces, regions and segments.
 
-::
+.. code-block:: bash
 
    GDE> show -name
 
@@ -560,7 +560,7 @@ You can use the show command to examine name spaces, regions and segments.
 
 In this case, there is only one name space, the default. There is also only one region, DEFAULT. Region and segment names are case insensitive, but name spaces are case sensitive, since M variable names are case sensitive.
 
-::
+.. code-block:: bash
 
    GDE> show -region
 
@@ -574,7 +574,7 @@ In this case, there is only one name space, the default. There is also only one 
 
 Notice the region parameters – review them in the `Region Qualfiers section of the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/gde.html#region-qualifiers>`_. Since there is one region, there is also one segment, also called DEFAULT. (Although the region and segment names can be different; it is good practice to keep them the same).
 
-::
+.. code-block:: bash
 
    GDE> show -segment
 
@@ -598,7 +598,7 @@ Notice how the database file is defined using the environment variable ``ydb_dir
 
 The ``show -map`` command gives visualization of the mapping of names to database files in the global directory.
 
-::
+.. code-block:: bash
 
    GDE> show -map
 
@@ -632,7 +632,7 @@ Continue using the directory you created for the journaling exercise.
 
 While not essential, it may be conceptually helpful to build the global directory from the bottom up – first create the segments, then the regions, and then the name spaces.
 
-::
+.. code-block:: bash
 
    GDE> add -segment MAMMALS -file_name=$ydb_dir/linnaeus.dat
    GDE> add -segment CRUSTACEANS -file_name=$ydb_dir/brunnich.dat
@@ -668,7 +668,7 @@ While not essential, it may be conceptually helpful to build the global director
 
 Then we can map the regions to the segments. Notice that even though the segment names (specified with the ``-dynamic`` qualifier) are entered in lower case, they converted to and displayed in upper case.
 
-::
+.. code-block:: bash
 
    GDE> add -region MAMMALS -dynamic=MAMMALS
    GDE> add -region CRUSTACEANS -dynamic=CRUSTACEANS
@@ -686,7 +686,7 @@ Then we can map the regions to the segments. Notice that even though the segment
 
 Now map the name spaces to the regions.
 
-::
+.. code-block:: bash
 
    GDE> add -name Horse -region=MAMMALS
    GDE> add -name Platypus -region=MAMMALS
@@ -706,7 +706,7 @@ Now map the name spaces to the regions.
 
 You can examine the entire map, and ask GDE to perform a check for consistency.
 
-::
+.. code-block:: bash
 
    GDE> show -map
 
@@ -753,7 +753,7 @@ To interpret the above, the first column is the first global variable residing i
 
 Exiting GDE creates the global directory. You can then use a MUPIP CREATE command to create the database files. Notice that journal files must be separately created.
 
-::
+.. code-block:: bash
 
    GDE> exit
    %GDE-I-VERIFY, Verification OK
@@ -764,7 +764,7 @@ Exiting GDE creates the global directory. You can then use a MUPIP CREATE comman
 
 Now create database files using ``mupip create`` (notice that it creates two new database files, and tells you that one file already exists), and turn on journaling for the newly created database files
 
-::
+.. code-block:: bash
 
    yottadbuser@yottadbworkshop:~/jnlex$ mupip create
    %YDB-I-DBFILECREATED, Database file $ydb_dir/brunnich.dat created
@@ -788,7 +788,7 @@ Exercise - Recovering a Multi-region Database
 Recovering a multi-region database after a crash is no different than recovering a single region database.
 
 
-::
+.. code-block:: bash
 
    yottadbuser@yottadbworkshop:~/jnlex$ yottadb -dir
 
@@ -840,7 +840,7 @@ Recovering a multi-region database after a crash is no different than recovering
 
 Now crash and reboot the virtual machine and again note the inability to open any database region.
 
-::
+.. code-block:: bash
 
    yottadbuser@yottadbworkshop:~/jnlex$ yottadb -dir
 
@@ -864,7 +864,7 @@ Now crash and reboot the virtual machine and again note the inability to open an
 
 Recover the database using exactly the same command as before, and note that it recovers three regions, and you are now able to access all three regions of the database file
 
-::
+.. code-block:: bash
 
    yottadbuser@yottadbworkshop:~/jnlex$ mupip journal -recover -backward "*"
    %YDB-I-MUJNLSTAT, Initial processing started at Thu Nov 14 15:40:47 2019
@@ -930,7 +930,7 @@ The operation of YottaDB is controlled by a number of environment variables, `de
 
 The file ``ydb_env_set`` that is supplied with YottaDB, and which must be sourced rather than executed, attempts to provide reasonable default values:
 
-::
+.. code-block:: bash
 
    yottadbuser@yottadbworkshop:~$ env | grep ^ydb
    yottadbuser@yottadbworkshop:~$ source $(pkg-config --variable=prefix yottadb)/ydb_env_set
@@ -972,7 +972,7 @@ Exercise - Access Controls with Ownership and Permissions
 
 In the following, Linux file permissions are used to allow the owner to read and write all database files, and another user to have read-only access to a database file, and no access whatsoever to another database file. Change the permissions as shown, and make updates. Note that existing data in the database is added to, as this exercise is being created on a different date from the journaling exercise. If you do both exercises on the same day, your data will be overwritten. As before, this uses the YottaDB direct mode to set the variables and then loop through the variable names dumping the values. You can write code in a programming language of your choice or you can copy and paste the M commands from here in your shell session.
 
-::
+.. code-block:: bash
 
    yottadbuser@yottadbworkshop:~/jnlex$ ls -l *.dat
    -rw-rw-rw- 1 yottadbuser yottadbuser 679936 Nov 15 12:58 brunnich.dat
@@ -999,7 +999,7 @@ In the following, Linux file permissions are used to allow the owner to read and
 
 Create another user who is also a member of the yottadbuser group, and note that a process of that user can update ``ydb.dat`` (the database file for the DEFAULT region), can read but not update ``linneaus.dat`` (the database file for MAMMALS region), and not even read ``brunnich.dat`` (the database file for the CRUSTACEANS region).
 
-::
+.. code-block:: bash
 
    yottadbuser@yottadbworkshop:~/jnlex$ sudo useradd -g yottadbuser -s /bin/bash -m staffuser
    yottadbuser@yottadbworkshop:~/jnlex$ sudo -E su staffuser
@@ -1044,7 +1044,7 @@ Exercise - Replication
 
 Because replication builds on journaling, use the ``jnlex`` directory created above. Enhance the ``jnlex_env`` shell script to assign values to two more environment variables, ``ydb_repl_instance`` and ``ydb_repl_instname``. ``ydb_repl_instance`` is the name of a file where a replicated instance stores information about the state of replication and ``ydb_repl_instance`` is the name of an instance – in this case, ``dummy``, but we will change it as we create copies of the instances.
 
-::
+.. code-block:: bash
 
    yottadbuser@yottadbworkshop:~/jnlex$ cat jnlex_env
    export ydb_dist=$(pkg-config --variable=prefix yottadb)
@@ -1062,7 +1062,7 @@ After sourcing ``jnlex_env`` to set the environment variables first, turn on rep
 
 Processes in replicated instances write updates to a shared memory segment called a Journal Pool
 
-::
+.. code-block:: bash
 
    yottadbuser@yottadbworkshop:~/jnlex$ mupip set -replication=on -region "*"
    %YDB-I-FILERENAME, File /home/yottadbuser/jnlex/brunnich.mjl is renamed to /home/yottadbuser/jnlex/brunnich.mjl_2019319150241
@@ -1084,7 +1084,7 @@ Processes in replicated instances write updates to a shared memory segment calle
 
 Create new shell scripts to avoid retyping commands:
 
-::
+.. code-block:: bash
 
    yottadbuser@yottadbworkshop:~/jnlex$ cat originating_stop
    #!/bin/sh
@@ -1103,7 +1103,7 @@ Create new shell scripts to avoid retyping commands:
 
 Delete the prior generation journal files, to keep the directory clean, and make the newly created shell scripts executable.
 
-::
+.. code-block:: bash
 
    yottadbuser@yottadbworkshop:~/jnlex$ chmod +x originating_stop replicating_st*
    yottadbuser@yottadbworkshop:~/jnlex$ rm *.mjl_*
@@ -1127,7 +1127,7 @@ Shut down the Acculturation Workshop virtual machine cleanly and make three copi
 
 If you are using qcow2 or vmdk disk images with QEMU/kvm on Linux, you can use a feature that allows a disk image to be created off a base image so that the base image does not change and all changes go to the new disk image. Check with your virtualization software to determine whether it supports this feature. Execute commands such as the following on the host (with the guest shut down) – depending on the version of QEMU/kvm on your PC, the exact command may vary.
 
-::
+.. code-block:: bash
 
    $ qemu-img create -f vmdk -o zeroed_grain,backing_file=Debian-10_yottadbworkshop12.vmdk Melbourne.vmdk
    Formatting 'Melbourne.vmdk', fmt=vmdk size=107374182400 backing_file=Debian-10_yottadbworkshop12.vmdk compat6=off hwversion=undefined zeroed_grain=on
@@ -1144,7 +1144,7 @@ If you are using qcow2 or vmdk disk images with QEMU/kvm on Linux, you can use a
 
 Now boot the three virtual machines. Each virtual machine will need two ports to be forwarded from the host, one for ssh access forwarded to port 22 on each virtual machine and one for replication forwarded to port 3000 on each virtual machine (i.e., a total of six ports on the host for the three instances). The examples here use host ports 2221 & 4000 for Santiago, 2222 & 5000 for Paris, and 2223 & 6000 for Melbourne. The commands given here use kvm on Linux – use the commands appropriate to virtualization on your host).
 
-::
+.. code-block:: bash
 
    kvm -enable-kvm -cpu host -m 256 -display none -net nic -net user,hostfwd=tcp::2221-:22,hostfwd=tcp::4000-:3000 -hda Santiago.vmdk &
    kvm -enable-kvm -cpu host -m 256 -display none -net nic -net user,hostfwd=tcp::2222-:22,hostfwd=tcp::5000-:3000 -hda Paris.vmdk &
@@ -1152,7 +1152,7 @@ Now boot the three virtual machines. Each virtual machine will need two ports to
 
 To avoid confusion when you are working with multiple machines, change the name of each machine from yottadbworkshop to its location. The examples here are from the Santiago machine. You should do likewise with Paris and Melbourne. To effect a name change will need to (as root) edit the files /etc/hosts and /etc/hostname to change yottadbworkshop to santiago and then reboot.
 
-::
+.. code-block:: bash
 
    yottadbuser@santiago:~$ cat /etc/hostname
    santiago
@@ -1172,7 +1172,7 @@ To make it more realistic (and to reduce the probability of operator error) on e
 
 On each machine, edit ``jnlex_env`` in each instance and change the line ``export ydb_repl_instname=dummy`` and the line ``export ydb_repl_instance=$ydb_dir/ydb.repl`` to an instance file name for that instance. For example, on the Santiago instance:
 
-::
+.. code-block:: bash
 
    yottadbuser@santiago:~/jnlex$ cat jnlex_env
    export ydb_dist=$(pkg-config --variable=prefix yottadb)
@@ -1188,7 +1188,7 @@ On each machine, edit ``jnlex_env`` in each instance and change the line ``expor
 
 Then on each instance, create a replication instance file. From Santiago, for example:
 
-::
+.. code-block:: bash
 
    yottadbuser@santiago:~/jnlex$ source jnlex_env
    yottadbuser@santiago:~/jnlex$ ls -l *.repl
@@ -1202,7 +1202,7 @@ Start the configuration with Paris as the originating primary instance, and Sant
 
 Start Santiago as a replicating instance.
 
-::
+.. code-block:: bash
 
    yottadbuser@santiago:~/jnlex$ ./replicating_start
    Mon Nov 18 16:15:29 2019 : Initiating START of source server for secondary instance [dummy]
@@ -1210,7 +1210,7 @@ Start Santiago as a replicating instance.
 
 Start Melbourne as a replicating instance.
 
-::
+.. code-block:: bash
 
    yottadbuser@melbourne:~/jnlex$ ./replicating_start
    Tue Nov 19 06:16:05 2019 : Initiating START of source server for secondary instance [dummy]
@@ -1218,7 +1218,7 @@ Start Melbourne as a replicating instance.
 
 Start Paris as an originating instance replicating to Santiago and Melbourne (notice the use of ports on the host to reach the different replicating instances in the virtual machines).
 
-::
+.. code-block:: bash
 
    yottadbuser@paris:~/jnlex$ mupip replicate -source -start -instsecondary=santiago -secondary=10.0.2.2:4000 -buffsize=1048576 -log=/home/yottadbuser/jnlex/santiago_`date +%Y%m%d:%H:%M:%S`.log
    Mon Nov 18 20:20:47 2019 : Initiating START of source server for secondary instance [santiago]
@@ -1228,7 +1228,7 @@ Start Paris as an originating instance replicating to Santiago and Melbourne (no
 
 Start a YottaDB process in Paris and perform some database updates:
 
-::
+.. code-block:: bash
 
    yottadbuser@paris:~/jnlex$ yottadb -dir
 
@@ -1238,7 +1238,7 @@ Start a YottaDB process in Paris and perform some database updates:
 
 Verify that the data is replicated at Santiago and Melbourne. Execute the following at both instances:
 
-::
+.. code-block:: bash
 
    yottadbuser@melbourne:~/jnlex$ yottadb -dir
 
@@ -1249,7 +1249,7 @@ Verify that the data is replicated at Santiago and Melbourne. Execute the follow
 
 Bring down Melbourne (simulating system maintenance, or a network outage), but leave Santiago untouched.
 
-::
+.. code-block:: bash
 
    yottadbuser@melbourne:~/jnlex$ ./replicating_stop
    Tue Nov 19 06:31:28 2019 : Forcing immediate shutdown
@@ -1268,13 +1268,13 @@ Bring down Melbourne (simulating system maintenance, or a network outage), but l
 
 Create another update in Paris.
 
-::
+.. code-block:: bash
 
    YDB>set ^Weather("Paris",$Piece($Horolog,",",1),$Piece($Horolog,",",2))="Sunny"
 
 Verify that this is updated in Santiago.
 
-::
+.. code-block:: bash
 
    YDB>zwrite ^Weather
    ^Weather("Paris",65335,73603)="Rainy"
@@ -1284,7 +1284,7 @@ Verify that this is updated in Santiago.
 
 But it is not replicated in Melbourne.
 
-::
+.. code-block:: bash
 
    yottadbuser@melbourne:~/jnlex$ yottadb -dir
 
@@ -1296,7 +1296,7 @@ But it is not replicated in Melbourne.
 
 Restart Melbourne as a replicating instance and notice that it catches up with updates at the originating instance when replication was not active in Melbourne.
 
-::
+.. code-block:: bash
 
    yottadbuser@melbourne:~/jnlex$ ./replicating_start
    Thu Nov 10 07:33:47 2011 : Initiating START of source server for secondary instance [dummy]
@@ -1316,7 +1316,7 @@ Now, simulate an unplanned outage of Paris by clicking on the “X” of the vir
 
 Bring down Melbourne as a replicating instance and bring it up as the originating instance. Notice that you can bring up the Source Server process to replicate to Paris – it will make the connection when Paris comes up.
 
-::
+.. code-block:: bash
 
    yottadbuser@melbourne:~/jnlex$ ./replicating_stop
    Tue Nov 19 07:24:08 2019 : Forcing immediate shutdown
@@ -1339,7 +1339,7 @@ Bring down Melbourne as a replicating instance and bring it up as the originatin
 
 Both Santiago and Paris should perform a rollback fetchresync before they become secondary instances to Melbourne. First Santiago (since Paris has crashed and is down; notice that the times look very different because they show times in their local timezones).
 
-::
+.. code-block:: bash
 
    yottadbuser@santiago:~/jnlex$ ./replicating_stop
    Mon Nov 18 17:30:58 2019 : Forcing immediate shutdown
@@ -1395,7 +1395,7 @@ The purpose of the MUPIP JOURNAL ROLLBACK BACKWARD FETCHRESYNC operation is for 
 
 Now reboot Paris to simulate its recovery. When the system comes up (before performing any other database access), perform a rollback fetchresync.
 
-::
+.. code-block:: bash
 
    yottadbuser@paris:~/jnlex$ mupip journal -rollback -backward -fetchresync=3000 -losttrans=/home/yottadbuser/jnlex/Unreplic_Trans_Report_`date +%Y%m%d%H%M%S`.txt "*"
    %YDB-I-MUJNLSTAT, Initial processing started at Tue Jan  23 14:35:55 2018
@@ -1432,13 +1432,13 @@ Now reboot Paris to simulate its recovery. When the system comes up (before perf
 
 Now, create a database update in Melbourne.
 
-::
+.. code-block:: bash
 
    YDB>set ^Weather("Melbourne",$Piece($Horolog,",",1),$Piece($Horolog,",",2))="Stormy"
 
 And confirm that it is replicated to Santiago.
 
-::
+.. code-block:: bash
 
    YDB>zwrite ^Weather
    ^Weather("Melbourne",65336,27791)="Stormy"
@@ -1450,7 +1450,7 @@ And confirm that it is replicated to Santiago.
 After performing a MUPIP JOURNAL ROLLBACK BACKWARD FETCHRESYNC in Paris, start it in a secondary role to Melbourne, and let it catch up. Notice that the Melbourne weather report is replicated to Paris once it starts receiving updates.
 
 
-::
+.. code-block:: bash
 
    yottadbuser@paris:~/jnlex$ mupip journal -rollback -backward -fetchresync=3000 -losttrans=/home/yottadbuser/jnlex/Unreplic_Trans_Report_`date +%Y%m%d%H%M%S`.txt "*"
    %YDB-I-MUJNLSTAT, Initial processing started at Mon Nov 18 21:41:50 2019
@@ -1498,7 +1498,7 @@ After performing a MUPIP JOURNAL ROLLBACK BACKWARD FETCHRESYNC in Paris, start i
 
 Shut down all three instances cleanly to end the exercise. Run the ``originating_stop`` script in Melbourne:
 
-::
+.. code-block:: bash
 
    yottadbuser@melbourne:~/jnlex$ ./originating_stop
    Tue Nov 19 07:50:30 2019 : Forcing immediate shutdown
@@ -1514,7 +1514,7 @@ Shut down all three instances cleanly to end the exercise. Run the ``originating
 
  and the ``replicating_stop`` script in Paris and Santiago (only Paris is shown here; Santiago will be identical except for the times).
 
-::
+.. code-block:: bash
 
    yottadbuser@paris:~/jnlex$ ./replicating_stop
    Mon Nov 18 21:52:13 2019 : Forcing immediate shutdown
@@ -1574,7 +1574,7 @@ This exercise simulates a replication with a backlog. Start with Santiago as the
 
 Start Santiago as the originating instance:
 
-::
+.. code-block:: bash
 
    yottadbuser@santiago:~/jnlex$ mupip replicate -source -start -instsecondary=paris -secondary=10.0.2.2:5000 -buffsize=1048576 -log=/home/yottadbuser/jnlex/source_paris_`date +%Y%m%d%H%M%S`.log
    Mon Nov 18 18:57:59 2019 : Initiating START of source server for secondary instance [paris]
@@ -1584,7 +1584,7 @@ Start Santiago as the originating instance:
 
 At Paris (and also in Melbourne) perform the FETCHRESYNC operation and then start replication. You can ask YottaDB to tell you the health of replication and also the replication backlog. The following shows the interaction in Paris; do the same in Melbourne.
 
-::
+.. code-block:: bash
 
    yottadbuser@paris:~/jnlex$ mupip journal -rollback -backward -fetchresync=3000 -losttrans=/home/yottadbuser/jnlex/Unreplic_Trans_Report_`date +%Y%m%d%H%M%S`.txt "*"
    %YDB-I-MUJNLSTAT, Initial processing started at Mon Nov 18 22:59:06 2019
@@ -1632,7 +1632,7 @@ At Paris (and also in Melbourne) perform the FETCHRESYNC operation and then star
 
 You can also check replication health and the backlog on the originating instance, Santiago. Notice that if you do not specify which replication connection you want details for, you get information on all of them.
 
-::
+.. code-block:: bash
 
    yottadbuser@santiago:~/jnlex$ mupip replicate -source -checkhealth
    Mon Nov 18 19:03:17 2019 : Initiating CHECKHEALTH operation on source server pid [748] for secondary instance name [paris]
@@ -1656,13 +1656,13 @@ You can also check replication health and the backlog on the originating instanc
 
 Now create an update in Santiago.
 
-::
+.. code-block:: bash
 
    YDB>set ^Weather("Santiago",$Piece($Horolog,",",1),$Piece($Horolog,",",2))="Snowing"
 
 Verify that it is replicated in Paris and Melbourne.
 
-::
+.. code-block:: bash
 
    YDB>zwrite ^Weather
    ^Weather("Melbourne",65336,27791)="Stormy"
@@ -1674,7 +1674,7 @@ Verify that it is replicated in Paris and Melbourne.
 
 To simulate a failure with a backlog first shut down replication in Melbourne, and then make an update in Santiago. In Melbourne:
 
-::
+.. code-block:: bash
 
    yottadbuser@melbourne:~/jnlex$ ./replicating_stop
    Tue Nov 19 09:15:24 2019 : Forcing immediate shutdown
@@ -1693,7 +1693,7 @@ To simulate a failure with a backlog first shut down replication in Melbourne, a
 
 In Santiago:
 
-::
+.. code-block:: bash
 
    YDB>set ^Weather("Santiago",$Piece($Horolog,",",1),$Piece($Horolog,",",2))="Blizzards"
 
@@ -1713,7 +1713,7 @@ Notice that there is a backlog to Melbourne, but none to Paris. Now shut down re
 
 In Paris:
 
-::
+.. code-block:: bash
 
    yottadbuser@paris:~/jnlex$ ./replicating_stop
    Mon Nov 18 23:17:26 2019 : Forcing immediate shutdown
@@ -1732,7 +1732,7 @@ In Paris:
 
 In Santiago:
 
-::
+.. code-block:: bash
 
    YDB>set ^Weather("Santiago",$Piece($Horolog,",",1),$Piece($Horolog,",",2))="Cloudy"
 
@@ -1752,7 +1752,7 @@ Now crash Santiago. You have a choice of bringing up Paris or Melbourne. If you 
 
 In Paris:
 
-::
+.. code-block:: bash
 
    yottadbuser@paris:~/jnlex$ $ydb_dist/dse all -dump 2>&1 | grep "Region Seqno"
      Replication State                      ON  Region Seqno    0x0000000000000004
@@ -1762,7 +1762,7 @@ In Paris:
 
 and in Melbourne:
 
-::
+.. code-block:: bash
 
    yottadbuser@melbourne:~/jnlex$ $ydb_dist/dse all -dump 2>&1 | grep "Region Seqno"
      Replication State                      ON  Region Seqno    0x0000000000000004
@@ -1772,7 +1772,7 @@ and in Melbourne:
 
 Since the largest Region Seqno is 0x6 (region DEFAULT in Paris), that is the preferred new originating primary instance. So, make Paris the new originating primary and Santiago the new secondary to which Paris replicates.
 
-::
+.. code-block:: bash
 
    yottadbuser@paris:~/jnlex$ mupip replicate -source -start -instsecondary=melbourne -secondary=10.0.2.2:6000 -buffsize=1048576 -log=/home/yottadbuser/jnlex/source_melbourne_`date +%Y%m%d%H%M%S`.log
    Wed Nov 20 22:19:28 2019 : Initiating START of source server for secondary instance [melbourne]
@@ -1782,7 +1782,7 @@ Since the largest Region Seqno is 0x6 (region DEFAULT in Paris), that is the pre
 
 On Melbourne, perform the mupip journal -rollback -fetchresync operation and start operation as a replicating instance.
 
-::
+.. code-block:: bash
 
    yottadbuser@melbourne:~/jnlex$ mupip journal -rollback -backward -fetchresync=3000 -losttrans=/home/yottadbuser/jnlex/Unreplic_Trans_Report_`date +%Y%m%d%H%M%S`.txt "*"
    %YDB-I-MUJNLSTAT, Initial processing started at Thu Nov 21 08:21:39 2019
@@ -1823,7 +1823,7 @@ On Melbourne, perform the mupip journal -rollback -fetchresync operation and sta
 
 Perform an update in Paris and verify that there is a backlog to Santiago (the actual number may not be correct because Santiago was not recently a replicating instance to Paris, but it shows a non-zero value), but there is no backlog to Melbourne.
 
-::
+.. code-block:: bash
 
    yottadbuser@paris:~/jnlex$ yottadb -dir
 
@@ -1843,7 +1843,7 @@ Perform an update in Paris and verify that there is a backlog to Santiago (the a
 
 Notice that Paris reports a zero backlog to Melbourne. Verify that Melbourne has received the update that Paris is having a Heat Wave.
 
-::
+.. code-block:: bash
 
    yottadbuser@melbourne:~/jnlex$ yottadb -dir
 
@@ -1863,7 +1863,7 @@ Notice that Paris reports a zero backlog to Melbourne. Verify that Melbourne has
 
    YottaDB reports what the unreplicated updates were and resynchronizes the database; it is up to the application to reconcile the rolled-off unreplicated queries. YottaDB provides a `$zqgblmod() M function <https://docs.yottadb.com/ProgrammersGuide/functions.html#zqgblmod>`_ that an application can use to help with the reconciliation. If your application uses ``$zqgblmod()``, review the MUPIP REPLICATE SOURCE NEEDRESTART and MUPIP REPLICATE SOURCE LOSTTNCOMPLETE described in `Switchover Possibilities in an A -> B replication configuration <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html#switchover-possibilities-in-an-a-b-replication-configuration>`_ to ensure that ``$zqgblmod()`` reports accurate information.
 
-::
+.. code-block:: bash
 
    yottadbuser@santiago:~/jnlex$ mupip journal -rollback -backward -fetchresync=3000 -losttrans=/home/yottadbuser/jnlex/Unreplic_Trans_Report_`date +%Y%m%d%H%M%S`.txt "*"
    %YDB-I-MUJNLSTAT, Initial processing started at Wed Nov 20 18:39:07 2019
@@ -1905,7 +1905,7 @@ Notice that Paris reports a zero backlog to Melbourne. Verify that Melbourne has
 
 Santiago can now start as a replicating instance and notice that its database now includes the heat wave reported by Paris.
 
-::
+.. code-block:: bash
 
    yottadbuser@santiago:~/jnlex$ ./replicating_start
    Wed Nov 20 18:47:42 2019 : Initiating START of source server for secondary instance [dummy]
@@ -1942,7 +1942,7 @@ Exercise - Backup
 
 This exercise demonstrates backups that preserve transaction-consistency in a multi-region database with a simulated application that performs transactions that span multiple database regions. The database created in the exercises so far has three regions, CRUSTACEANS, DEFAULT, and MAMMALS. Until externally terminated, each process in the simulated workload has an infinite loop that makes updates inside a transaction to all three regions as follows:
 
-::
+.. code-block:: none
 
    Loop for ever (until terminated by an external signal like Ctrl-C or a kill from the shell)
     Start transaction
@@ -1956,7 +1956,7 @@ This exercise demonstrates backups that preserve transaction-consistency in a mu
 
 The database is initialized as follows:
 
-::
+.. code-block:: none
 
    Delete existing trees for ^Crab, ^Delta and ^Horse
    Initialize ^Crab(0) and ^Horse(0) to zero
@@ -1975,7 +1975,7 @@ Work with whichever instance was your last originating instance; if you followed
 
 Prepare for backups by creating a ``jnlex/backup`` subdirectory where you can put your backups. In that directory, copy the ``jnlex_env`` and ``ydb.gld`` files from the ``jnlex`` directory, naming the former to ``jnlex_bak_env``. Edit ``jnlex_bak_env`` to  set the ``ydb_dir`` environment variable to point to the ``backup`` subdirectory. Note that since the file names in each segent of the global directory point to the corresponding files in the ``$ydb_dir`` directory, changing the value of ``ydb_dir`` suffices to have the global directory point to the database files in the subdirectory, and no change to the global directory is required,
 
-::
+.. code-block:: bash
 
    yottadbuser@paris:~/jnlex$ mkdir backup ; cd backup
    yottadbuser@paris:~/jnlex/backup$ cp ../jnlex_env jnlex_bak_env
@@ -1999,7 +1999,7 @@ Revert to the ``jnlex`` directory. Remember to source the ``jnlex_env`` file if 
 .. note::
    If you shut down and restarted the Paris instance after the previous exercise, you will need to run a MUPIP JOURNAL ROLLBACK BACKWARD if you did not shut it down cleanly. Even if you shut it down cleanly, that is a safe command to run. Then, you will need to start at least one Source Server.
 
-::
+.. code-block:: bash
 
   yottadbuser@paris:~/jnlex$ mupip journal -rollback -backward "*"
    %YDB-I-MUJNLSTAT, Initial processing started at Sun Dec 15 19:55:08 2019
@@ -2024,7 +2024,7 @@ Download an initialization program in any of the languages, C, Go, or M. You onl
 
 To use the C initialization program, download `xyzInitC.c <./xyzInitC.c>`_, compile and run it:
 
-::
+.. code-block:: bash
 
    yottadbuser@paris:~/jnlex$ gcc $(pkg-config --libs --cflags yottadb) -o xyzInitC xyzInitC.c -lyottadb
    yottadbuser@paris:~/jnlex$ ./xyzInitC
@@ -2032,7 +2032,7 @@ To use the C initialization program, download `xyzInitC.c <./xyzInitC.c>`_, comp
 
 To use the Go initialization, download `xyzInitGo.go <./xyzInitGo.go>`_, compile and run it:
 
-::
+.. code-block:: bash
 
    yottadbuser@paris:~/jnlex$ go build xyzInitGo.go
    yottadbuser@paris:~/jnlex$ ./xyzInitGo
@@ -2040,14 +2040,14 @@ To use the Go initialization, download `xyzInitGo.go <./xyzInitGo.go>`_, compile
 
 To use the M initialization program, download `xyzInitM.m <./xyzInitM.m>`_ and run it:
 
-::
+.. code-block:: bash
 
    yottadbuser@paris:~/jnlex$ yottadb -run xyzInitM
    yottadbuser@paris:~/jnlex$
 
 As a workload, download three simulated application processes, in C (`xyztransC.c <./xyzTransC.c>`_), Go (`xyzTransGo.go <./xyzTransGo.go>`_) and M (`xyzTransM.m <./xyzTransM.m>`_). Compile the C and Go programs. Run all three in the background to create a simulated, multi-process, multi-language, workload:
 
-::
+.. code-block:: bash
 
    yottadbuser@paris:~/jnlex$ ./xyzTransC &
    [1] 797
@@ -2059,7 +2059,7 @@ As a workload, download three simulated application processes, in C (`xyztransC.
 
 Note that the journal files are growing, indicating an application actively updating the datbase:
 
-::
+.. code-block:: bash
 
    yottadbuser@paris:~/jnlex$ ls -l *.mjl
    -rw------- 1 yottadbuser yottadbuser 131072 Dec 15 20:10 brunnich.mjl
@@ -2073,7 +2073,7 @@ Note that the journal files are growing, indicating an application actively upda
 
 Take a backup of the database
 
-::
+.. code-block:: bash
 
    yottadbuser@paris:~/jnlex$ mupip backup -nojournal -replinstance=backup/paris.repl "*" backup/
    Replication Instance file /home/yottadbuser/jnlex/paris.repl backed up in file backup/paris.repl
@@ -2102,7 +2102,7 @@ Take a backup of the database
 
 After the backup is completed, you can terminate the application processes updating the database; they have done their part fo the exercise.
 
-::
+.. code-block:: bash
 
    yottadbuser@paris:~/jnlex$ kill %1
    yottadbuser@paris:~/jnlex$ %YDB-F-FORCEDHALT, Image HALTed by MUPIP STOP
@@ -2122,7 +2122,7 @@ Now change to the backup directory and ``source jnlex_bak_env`` to set the envir
 
 Download a program to verify that ACID properties are preserved in the backed up database, your choice of programs in C (`xyzVerifyC.c <./xyzVerifyC.c>`_), Go (`xyzVerifyGo.go <./xyzVerifyGo.go>`_), or M (`xyzVerifyM.m <./xyzVerifyM.m>`_). Although all three are shown here, as with initialization, you only need one.
 
-::
+.. code-block:: bash
 
    yottadbuser@paris:~/jnlex/backup$ gcc $(pkg-config --libs --cflags yottadb) -o xyzVerifyC xyzVerifyC.c -lyottadb
    yottadbuser@paris:~/jnlex/backup$ ./xyzVerifyC
@@ -2139,7 +2139,7 @@ Exercise - Replication Briefly Revisited
 
 During the backup exercise, the application has not been replicating to Melbourne and Santiago. This would have created quite a backlog, reported by the MUPIP REPLICATE SOURCE BACKLOG command.
 
-::
+.. code-block:: bash
 
    yottadbuser@paris:~/jnlex$ source jnlex_env
    yottadbuser@paris:~/jnlex$ mupip replicate -source -showbacklog
@@ -2156,7 +2156,7 @@ During the backup exercise, the application has not been replicating to Melbourn
 
 Boot Melbourne. If it was not shut down cleanly, perform a MUPIP JOURNAL ROLLBACK BACKWARD FETCHRESYNC command to recover the database and resynchronize replication with Paris. As with MUPIP JOURNAL ROLLBACK BACKWARD (without the RESYNC), this is a safe operation even if Melbourne was shut down cleanly.
 
-::
+.. code-block:: bash
 
    yottadbuser@melbourne:~/jnlex$ source ydbenv
    yottadbuser@melbourne:~/jnlex$ yottadb -run %XCMD 'set x=$order(^a(""),-1) write x," ",^a(x)," ",^b(x)," ",^a(x)+^b(x),!'
@@ -2166,7 +2166,7 @@ Boot Melbourne. If it was not shut down cleanly, perform a MUPIP JOURNAL ROLLBAC
 
 Then execute the exDir/replicating_start script and notice that Melbourne catches up.
 
-::
+.. code-block:: bash
 
    yottadbuser@melbourne:~/jnlex$ source jnlex_env
    yottadbuser@melbourne:~/jnlex$ mupip journal -rollback -backward -fetchresync=3000 -losttrans=/home/yottadbuser/jnlex/Unreplic_Trans_Report_`date +%Y%m%d%H%M%S`.txt "*"
@@ -2205,7 +2205,7 @@ Then execute the exDir/replicating_start script and notice that Melbourne catche
 
 Notice that Paris now shows a zero backlog for Melbourne, but still has a large backlog for Santiago.
 
-::
+.. code-block:: bash
 
    yottadbuser@paris:~/jnlex$ mupip replicate -source -showbacklog
    Sun Dec 15 21:23:30 2019 : Initiating SHOWBACKLOG operation on source server pid [737] for secondary instance [santiago]

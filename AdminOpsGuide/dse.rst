@@ -34,7 +34,8 @@ Invoke DSE using the "dse" command at the shell prompt. If this does not work, c
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ydb_dist/dse
    File/usr/name/yottadb.dat
    Region  DEFAULT
@@ -50,7 +51,8 @@ You may also specify a command when entering DSE.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ydb_dist/dse dump -fileheader
 
 This command displays the fileheader of the region that stands first in the list of regions arranged in alphabetical order and then returns to the shell prompt. To look at other regions, at the DSE prompt you must first issue a FIND -REGION=<desired-region> command.
@@ -63,7 +65,8 @@ Inquiry commands let you see the attributes of your database. You may frequently
 
 The list of Change commands is as follows:
 
-.. parsed-literal::
+.. code-block:: none
+
    AD[D]
    AL[L]
    B[UFFER _FLUSH]
@@ -78,7 +81,8 @@ The list of Change commands is as follows:
 
 The list of Inquiry commands is as follows:
 
-.. parsed-literal::
+.. code-block:: none
+
    CL[OSE]
    D[UMP]
    EV[ALUATE]
@@ -106,7 +110,8 @@ DSE Commands and Qualifiers
 
 The general format of DSE commands is:
 
-.. parsed-literal::
+.. code-block:: none
+
    command [-qualifier[...]] [object[,...]]
 
 DSE interprets all numeric input as hexadecimal, except for time values, the values for the following qualifiers when used with CHANGE -FILEHEADER: -BLK_SIZE=, DECLOCATION=, -KEY_MAX_SIZE=, -RECORD_MAX_SIZE, -REFERENCE_COUNT=, -TIMERS_PENDING and -WRITES_PER_FLUSH, and the value for -VERSION= when used with the REMOVE and RESTORE commands. These conventions correspond to the displays provided by DSE and by MUPIP INTEG.
@@ -117,17 +122,20 @@ ADD
 
 Adds a record to a block. The format of the ADD command for blocks with a level greater than zero (0) is:
 
-.. parsed-literal::
+.. code-block:: none
+
    ADD [-B[LOCK]=[block] {-OFFSET=offset|-RECORD=record} -STAR -POINTER=block
 
 or
 
-.. parsed-literal::
+.. code-block:: none
+
    ADD [-B[LOCK]=[block] {-OFFSET=offset|-RECORD=record} -KEY=key -POINTER=pointer
 
 The format of the ADD command for level 0 blocks is:
 
-.. parsed-literal::
+.. code-block:: none
+
    ADD [-B[LOCK]=[block] {-OFFSET=offset|-RECORD=record} -KEY=key -DATA=string
 
 The ADD command requires either the -OFFSET or -RECORD qualifier to position the record in the block, and either the -KEY or the -STAR qualifier to define the key for the block.
@@ -148,7 +156,7 @@ On commands with no -BLOCK= qualifier, DSE uses the last block handled by a DSE 
 -D[ATA]=string
 ~~~~~~~~~~~~~~~~
 
-Specifies the data field for records added to a data block. Use quotation marks around the string and escape codes of the form \a\b, where "a" and "b" are hexadecimal digits representing non-printing characters. \\ translates to a single backslash. \'\' translates to a NULL value.
+Specifies the data field for records added to a data block. Use quotation marks around the string and escape codes of the form \\ab, where "a" and "b" are hexadecimal digits representing non-printing characters. \\\\ translates to a single backslash. \\\"\" translates to a NULL value.
 
 Incompatible with: -STAR,-POINTER
 
@@ -194,26 +202,30 @@ Incompatible with: -DATA,-KEY,-OFFSET,-RECORD
 
 **Examples for ADD**
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE>add -block=6F -record=57 -key="^Capital(""Mongolia"")" -data="Ulan Bator"
 
 This command adds a new record with key ^Capital("Mongolia") at the specified location. Note that this command is applicable to level 0 blocks only.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE>add -star -bl=59A3 -pointer=2
 
 This command adds a star record in block 59A3. Note that this command is applicable to blocks > level 0.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE>add -block=3 -record=4 -key="^Fruits(4)" -data="Grapes"
 
 Suppose your database has 3 global nodes -- ^Fruits(1)="Apple", ^Fruits(2)="Banana", and ^Fruits(3)="Cherry". The above command adds a new node -- ^Fruits(4)="Grapes" at record 4. Note that this command is applicable to level 0 blocks only. The interpreted output as a result of the above command looks like the following:
 
-.. parsed-literal::
+.. code-block:: none
+
    Block 3   Size 4B   Level 0   TN 4 V6
    Rec:1  Blk 3  Off 10  Size 14  Cmpc 0  Key ^Fruits(1)
          10 : | 14  0  0  0 46 72 75 69 74 73  0 BF 11  0  0 41 70 70 6C 65|
@@ -230,22 +242,25 @@ Suppose your database has 3 global nodes -- ^Fruits(1)="Apple", ^Fruits(2)="Bana
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $dse add -star -bl=1 -pointer=2
 
 This command adds a star record in block 1. Note that this command is applicable to blocks > Level 0.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ dse add -block=4 -key="^Vegetables" -pointer=7 -offset=10
 
 This command creates a block with key ^Vegetables pointing to block 7.
 
 Example:
 
-.. parsed-literal::
-   DSE> add -record=2 -key="^foo" -data=\'\'
+.. code-block:: bash
+
+   DSE> add -record=2 -key="^foo" -data=' '
 
 This example adds a new node (set ^foo="") as the second record of the current database block.
 
@@ -257,7 +272,8 @@ Applies action(s) specified by a qualifier to all GDS regions defined by the cur
 
 The format of the ALL command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    AL[L]
    [
    -B[UFFER_FLUSH]
@@ -395,21 +411,24 @@ Incompatible with: -RENEW
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> all flush -buffer_flush
 
 This command flushes the file header and cache buffers to disk for all regions.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> ALL -CRITINIT
 
 This command initializes critical sections for all regions of the current directory.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> ALL -FREEZE
    DSE> SPAWN "yottadb -dir"
 
@@ -417,42 +436,48 @@ The first command freezes all regions of the current global directory. The secon
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> ALL -NOFREEZE -OVERRIDE
 
 This command removes the FREEZE on all current region including the FREEZE placed by other users.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> ALL -REFERENCE
 
 This command sets the reference count field in the file header(s) to 1.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> ALL -RELEASE
 
 This command releases critical sections owned by the current process for all regions of the current global directory.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> ALL -RENEW
 
 This command reinitializes critical sections, buffers, resets the reference count to 1, and clears freeze for all regions of the current global directory.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> ALL -SEIZE
 
 This command seizes all critical sections for all regions of the current global directory.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> ALL -WCINIT
 
 This command reinitializes the buffers for all regions of the current global directory.
@@ -465,7 +490,8 @@ Flushes the file header and the current region's buffers to disk.
 
 The format of the BUFFER_FLUSH command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    B[UFFER_FLUSH]
 
 The BUFFER_FLUSH command has no qualifiers.
@@ -476,7 +502,8 @@ CACHE
 
 Operates on the cache of a database having BG access method. The format of the CACHE command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    CA[CHE]
    [
    -ALL
@@ -515,14 +542,16 @@ Verifies the integrity of the cache data structures as well as the internal cons
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> CACHE -VERIFY
 
 This command checks the integrity of the cache data structures as well as the internal consistency of GDS blocks in the global buffers of the current region.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> CACHE -VERIFY -ALL
    Time 26-FEB-2011 14:31:30 : Region DEFAULT : Cache verification is clean
    Execute CACHE recover command if Cache verification is "NOT" clean.
@@ -531,14 +560,16 @@ This command reports the state of database cache for all regions.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> CACHE -RECOVER
 
 This command reinitializes the cache data structures of the current region and reverts the cache of a database having BG access to "clean" state.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> CACHE -SHOW
    File    /home/jdoe/node1/areg.dat
    Region  AREG
@@ -566,14 +597,16 @@ The CHANGE command changes fields of a block, file, or record header.
 
 The format of the CHANGE command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    CH[ANGE]
 
 The CHANGE command either has a -FILEHEADER qualifier or an implicit or explicit -BLOCK qualifier, plus one or more of their associated qualifiers, to define the target of the change.
 
 -BL[OCK]=block-number and one or more of the following qualifiers:
 
-.. parsed-literal::
+.. code-block:: none
+
    -BS[IZ]=block-size
    -L[EVEL]=level
    -TN[=transaction-number]
@@ -586,7 +619,8 @@ or
 
 -F[ILEHEADER] and one or more of the following qualifiers:
 
-.. parsed-literal::
+.. code-block:: none
+
    -AB[ANDONED_KILLS]=value
    -AVG_BLKS_READ=Average-blocks-read
    -B_B[YTESTREAM]=transaction-number
@@ -678,7 +712,8 @@ Use only with: -BLOCK, -BSIZ, -TN
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> change -level=FF
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -732,7 +767,8 @@ Use only with: -BLOCK, -RECORD, -CMPC, -OFFSET
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> change -record=3 -rsiz=3B -block=2
 
 This command changes the record size of record 3 block 2 to 59 (Hex: 3B) bytes.
@@ -804,7 +840,8 @@ Indicates whether or not a region completed a successful recovery with the MUPIP
 
 Changing this flag does not correct or cause database damage. When CORRUPT_FILE is set to TRUE, the DSE DUMP command displays a message like the following:
 
-.. parsed-literal::
+.. code-block:: bash
+
    %YDB-W-DBFLCORRP, /home/ydbnode1/yottadb.dat Header indicates database file is corrupt
 
 .. note::
@@ -1067,21 +1104,24 @@ Use only with -FILEHEADER
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> change -block=3 -bsiz=400
 
 This command changes the size of block 3 to 1024 bytes.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> change -block=4 -tn=10000
 
 This command sets the transaction number to 65536 (Hex: 10000) for block 4.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> change -block=2 -record=4 -CMPC=10 -key="^CUS(""Jones,Vic"")"
 
 This command changes the compression count of the key ^CUS(Jones,Vic) to 10. It is assumed that the key CUS(Jones,Tom) already exists. The following table illustrates how YottaDB calculates the value of CMPC in this case.
@@ -1100,49 +1140,56 @@ This command changes the compression count of the key ^CUS(Jones,Vic) to 10. It 
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> dump -fileheader
 
 This command displays fields of the file header.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> change -fileheader -blk_siz=2048
 
 This command changes the block size field of the fileheader to 2048 bytes. The block field must always be a multiple of 512 bytes.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> change -fileheader -blocks_free=5B
 
 This command changes the blocks-free fields of the file header to 91 (Hex: 5B). Example:
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> change -fileheader -b_record=FF
 
 This command sets the RECORD backup transaction to FF.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> change -fileheader corrupt_file=FALSE
 
 This command sets the CORRUPT_FILE field to false.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> change -fileheader -current_tn=1001D1BF817
 
 This command changes the current transaction number to 1100000000023 (Hex: 1001D1BF817). After you execute this command, subsequent transaction numbers will be greater than 1001D1BF817.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> change -fileheader -flush_time=00:00:02:00
 
 .. note::
@@ -1150,70 +1197,80 @@ Example:
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> change -fileheader -freeze=true
 
 This command makes the default region unavailable for updates.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> change -fileheader -key_max_size=20
 
 This command changes the maximum key size to 20. Note that the default max key size is 64.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> CHANGE -FILEHEADER -NULL_SUBSCRIPTS="EXISTING"
 
 This command changes the Null Subscripts field of the file header to EXISTING. Note that DSE cannot change the null subscript collation order. See the `GDE chapter <./gde.html>`_ for more information on changing the null subscript collation.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> change -fileheader -reserved_bytes=8 -record_max_size=496
 
 This command sets the maximum record size as 496 for the default region.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> change -fileheader -reference_count=5
 
 This command sets the reference count field of the file header to 5.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> change -fileheader -timers_pending=2
 
 This command sets the timers pending field of the file header to 2.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> change -fileheader -TOTAL_BLKS=64
 
 This command sets the total size of the database to 100 (Hex: 64) blocks.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> change -fileheader -trigger_flush=1000
 
 This command sets the Flush Trigger field of the file header to 1000. Note the default value of Flush Trigger is 960.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> change -fileheader -writes_per_flush=10
 
 This command changes the number of writes/flush field of the file header to 10. Note that the default value for the number of writes/flush is 7.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> change -fileheader -zqgblmod_seqno=FF
 
 This command changes the ZGBLMOD_SEQNO field to 255(Hex: FF).
@@ -1226,7 +1283,8 @@ The CLOSE command closes the currently open output file.
 
 The format of the CLOSE command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    CL[OSE]
 
 The CLOSE command has no qualifiers.
@@ -1237,7 +1295,8 @@ CRITICAL
 
 Displays and/or modifies the status and contents of the critical section for the current region. The format of the CRITICAL command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    CR[ITICAL]
    [
    -A[LL]
@@ -1282,7 +1341,8 @@ Use alone.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> critical -OWNER
    Write critical section is currently unowned
 
@@ -1328,7 +1388,8 @@ Seizes the critical section (if available).
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> critical -OWNER Write critical section owner is process id 4220
 
 This command displays the ID of the process holding the critical section. Note that catching a process ID on a lightly loaded (or unloaded) system (for example, text environment) is like catching lightning in a bottle. Therefore, you can artificially hold a critical section using the DSE CRIT -SEIZE command in one session and view the owner using a different session.
@@ -1341,7 +1402,8 @@ Displays blocks, records, or file headers. DUMP is one of the primary DSE examin
 
 The format of the DUMP command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    D[UMP]
    [
    -A[LL]
@@ -1460,12 +1522,14 @@ Incompatible with: -ALL, -GLO, -HEADER and -FILEHEADER.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> DUMP -FILEHEADER
 
 This command displays an output like the following:
 
-.. parsed-literal::
+.. code-block:: bash
+
    File    /home/jdoe/.yottadb/r1.20_x86_64/g/yottadb.dat
    Region  DEFAULT
    File            /home/jdoe/.yottadb/r1.20_x86_64/g/yottadb.dat
@@ -1508,12 +1572,14 @@ Note that certain fileheader elements appear depending on the current state of d
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ dse dump -fileheader -updproc
 
 This command displays the fileheader elements along with the following helper process parameters:
 
-.. parsed-literal::
+.. code-block:: bash
+
    Upd reserved area [% global buffers]   50  Avg blks read per 100 records                200
    Pre read trigger factor [% upd rsrvd]    50  Upd writer trigger [%flshTrgr]                 33
 
@@ -1527,7 +1593,8 @@ Translates a hexadecimal number to decimal, and vice versa.
 
 The format of the EVALUATE command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    EV[ALUATE]
    [
    -D[ECIMAL]
@@ -1565,7 +1632,8 @@ Specifies the number to evaluate. Required.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> evaluate -number=10 -decimal
    Hex:  A   Dec:  10
 
@@ -1573,7 +1641,8 @@ This command displays the hexadecimal equivalent of decimal number 10.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> evaluate -number=10 -hexadecimal
    Hex:  10   Dec:  16
 
@@ -1581,7 +1650,8 @@ This command displays the decimal equivalent of hexadecimal 10.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ dse evaluate -number=10
    Hex:  10   Dec:  16
 
@@ -1595,7 +1665,8 @@ The EXIT command ends a DSE session.
 
 The format of the EXIT command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    EX[IT]
 
 The EXIT command has no qualifiers.
@@ -1606,7 +1677,8 @@ FIND
 
 Locates a given block or region. The format of the FIND command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    F[IND]
    [
    -B[LOCK]=block-number
@@ -1713,7 +1785,8 @@ Incompatible with: -FREEBLOCK, -HINT, -KEY, -REGION
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> find -exhaustive -block=180
    Directory path
    Path--blk:off
@@ -1726,7 +1799,8 @@ This command locates block 180 by looking through the B-tree index for any point
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> find -free -hint=180
    Next free block is D8F.
 
@@ -1736,33 +1810,38 @@ You can use this command as a tool for locating blocks to add to the B-tree, or 
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE>find -key="^biggbl(1)"
 
 This command locates the key ^biggbl(1) in the database.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> find -freeblock -hint=232
 
 This command starts to search for free block after block 232.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> FIND -FREEBLOCK -HINT=232 -NOCRIT
 
 This command searches for freeblocks after block 232 even if another process is holding a critical section.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> find -sibling -block=10
 
 This command operates like FIND -BLOCK; however, it reports the numbers of the blocks that logically fall before and after block 180 on the same level. This command produces an output like the following:
 
-.. parsed-literal::
+.. code-block:: bash
+
    Left sibling    Current block   Right sibling
     0x0000000F      0x00000010      0x00000011
 
@@ -1772,7 +1851,8 @@ HELP
 
 The HELP command explains DSE commands. The format of the HELP command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    -H[ELP] [help topic]
 
 ++++++++++
@@ -1783,7 +1863,8 @@ Checks the internal consistency of a single non-bitmap block. INTEGRIT reports e
 
 The format of the INTEGRIT command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    I[NTEGRIT] -B[LOCK]=block-number
 
 .. note::
@@ -1809,7 +1890,8 @@ MAPS
 
 Examines or updates bitmaps. The format of the MAPS command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    M[APS]
    [
    -BL[OCK]=block-number
@@ -1876,12 +1958,14 @@ Use alone.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> MAPS -BLOCK=20 -FREE
 
 This command flags block 20 as free. A sample DSE DUMP output block 0 is as follows:
 
-.. parsed-literal::
+.. code-block:: bash
+
    Block 0  Size 90  Level -1  TN 10B76A V5   Master Status: Free Space
                    Low order                         High order
    Block        0: |  XXXXXXXX  XXXXXXXX  XXXXXXXX  XXXXXXXX  |
@@ -1906,12 +1990,14 @@ Note that BLOCK 20 is marked as REUSABLE, which means FREE but in need of a befo
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> maps -block=20 -busy
 
 This command marks block 20 as busy. A sample DSE DUMP output of block 0 is as follows:
 
-.. parsed-literal::
+.. code-block:: bash
+
    Block 0  Size 90  Level -1  TN 1 V5   Master Status: Free Space
                    Low order                         High order
    Block        0: |  XXX.....  ........  ........  ........  |
@@ -1940,7 +2026,8 @@ OPEN
 
 Use the OPEN command to open a file for sequential output of global variable data. The format of the OPEN command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    OP[EN] F[ILE]=file
 
 * OPEN a file to which you want to "dump" information.
@@ -1958,7 +2045,8 @@ Specifies the file to open.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> OPEN
    Current output file:  var.out
 
@@ -1966,7 +2054,8 @@ This command displays the current output file. In this case, the output file is 
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> OPEN -FILE=var1.out
 
 The command OPEN -FILE=var1.out sets the output file to var1.out.
@@ -1979,7 +2068,8 @@ Overwrites the specified string on the given offset in the current block. Use ex
 
 The format of the OVERWRITE command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    OV[ERWRITE]
    [
    -D[ATA]=string
@@ -1998,7 +2088,7 @@ Directs DSE to OVERWRITE a specific block. If no block number is specified, the 
 -D[ATA]=string
 ~~~~~~~~~~~~~~~
 
-Specifies the data to be written. Use quotation marks around the string and escape codes of the form \a or \ab, where "a" and "b" are hexadecimal digits representing non-printing characters. \\\\ translates to a single backslash.
+Specifies the data to be written. Use quotation marks around the string and escape codes of the form \\a or \\ab, where "a" and "b" are hexadecimal digits representing non-printing characters. \\\\ translates to a single backslash.
 
 ~~~~~~~~~~~~~~~~~
 -O[FFSET]=offset
@@ -2010,7 +2100,8 @@ Specifies the offset in the current block where the overwrite should begin.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE>overwrite -block=31 -data="Malvern" -offset=CA
 
 This command overwrites the data at the specified location.
@@ -2023,7 +2114,8 @@ Sends one form feed to the output device. Use PAGE to add form feeds to a dump f
 
 The format of the PAGE command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    P[AGE]
 
 The PAGE command has no qualifiers.
@@ -2036,7 +2128,8 @@ The RANGE command finds all blocks in the database whose first key falls in the 
 
 The format of the RANGE command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    RA[NGE]
    [
    -F[ROM]=block-number
@@ -2112,35 +2205,40 @@ Specifies the upper bound for the key range.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> range -lower="^abcdefgh" -upper="^abcdefghi" -from=A -to=CC
 
 This command searches for a specified keys between block 10 and block 204. Note that the range (between FROM and TO) of blocks must be valid blocks specified in hexadecimal.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> range -lower="^abcdefgh" -upper="^abcdefghi" -from=A -to=CC -noindex
 
 This command searches only data blocks for the specified keys between block 10 and block 204.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> range -lower="^abcdefgh" -upper="^abcdefghi" -from=A -to=CC -index
 
 This command searches only index blocks for the specified keys between block 10 and block 204.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> range -lower="^abcdefgh" -upper="^abcdefghi" -lost
 
 This command includes lost blocks while searching for the specified keys and reports only blocks which are not currently indexed.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> range -lower="^Fruits(15)" -upper="^Fruits(877)" -from=A -to=F
    Blocks in the specified key range:
    Block: 0000000A Level: 0
@@ -2161,7 +2259,8 @@ Removes one or more records or a save buffer.
 
 The format of the REMOVE command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    REM[OVE]
    [
    -B[LOCK]=block-number
@@ -2227,7 +2326,8 @@ RESTORE
 
 The RESTORE command restores saved versions of blocks.
 
-.. parsed-literal::
+.. code-block:: none
+
    RES[TORE]
    [
    -B[LOCK]=block-number
@@ -2284,7 +2384,8 @@ Use with the RESTORE command to move SAVEd blocks to a permanent location, and a
 
 The format of the SAVE command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    SA[VE]
    [
    -B[LOCK]=block-number
@@ -2335,7 +2436,8 @@ SHIFT
 
 Use the SHIFT command to shift data in a block, filling the block with zeros, or shortening the block. The format of the SHIFT command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    SH[IFT]
    [
    -B[ACKWARD]=b_shift
@@ -2384,7 +2486,8 @@ Use the SPAWN command to fork a child process for access to the shell without te
 
 The format of the SPAWN command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    SP[AWN] [shell-command]
 
 * The SPAWN command accepts an optional command string for execution by the spawned sub-process. If the SPAWN has no command string parameter, the created sub-process issues a shell prompt and accepts any legal shell command. To terminate the sub-process, use the shell logout command.
@@ -2397,7 +2500,8 @@ The format of the SPAWN command is:
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    DSE> SPAWN "yottadb -run ^GDE"
 
 This command suspends a DSE session and executes the shell command yottadb -run ^GDE.
@@ -2413,7 +2517,8 @@ Use the WCINIT command to reinitialize the global buffers of the current region.
 
 The format of the WCINIT command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    W[CINIT]
 
 * The WCINIT command has no qualifiers.
@@ -2422,7 +2527,8 @@ The format of the WCINIT command is:
 
 If you do not confirm the WCINIT, DSE issues the message:
 
-.. parsed-literal::
+.. code-block:: bash
+
     No action taken, enter yes at the CONFIRMATION prompt to initialize global buffers.
 
 * WCINIT operations are more safely performed by MUPIP RUNDOWN. Use this command only under instructions from YottaDB.

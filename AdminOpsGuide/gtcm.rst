@@ -84,19 +84,22 @@ A process starting the GT.CM server must have the environment variables required
 
 Here is an example on how to start a GT.CM server:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ydb_dist/gtcm_gnp_server -log=GTCM.log -service=6789
 
 This starts the GT.CM server in the background so that it listens at port 6789 for requests from GT.CM clients. The detailed log information of the server is written in the GTCM.log file. If -log is not specified, log information is written in $ydb_log/gtcm_gnp_server.log file. On nodes with multiple IP addresses, issue the following command to configure the GT.CM server to listen at a port specific to an IP address:
 
-.. parsed-literal::
+.. code-block:: bash
+
    -service=192.160.105.212:6789
 
 **GT.CM Server Shutdown**
 
 To shutdown the GT.CM server, identify the process id of the GT.CM server to be shutdown and issue the following command:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ydb_dist/mupip stop <GT.CM server PID>
 
 This causes the GT.CM server to shutdown normally.
@@ -139,17 +142,20 @@ When GT.CM is in use, YottaDB may deliver errors resulting from network problems
 
 Examples of Database Errors:
 
-.. parsed-literal::
+.. code-block:: none
+
    Undefined global, Global reference content not valid.
 
 Examples of Protocol Errors:
 
-.. parsed-literal::
+.. code-block:: none
+
    Message format not valid, Operation type not valid.
 
 Examples of Session Establishment Errors:
 
-.. parsed-literal::
+.. code-block:: none
+
    GNP version not supported, GNP session not established.
 
 +++++++++++++++++++
@@ -166,7 +172,8 @@ When the file specification in the Global Directory on the local node specifies 
 
 To specify a node name in a Global Directory file specification, use the format on NODE1:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ GDE
    GDE> ch -seg DEFAULT -file=NODE2:/testarea/yottadb/database/data.dat
    GDE> exit
@@ -181,14 +188,16 @@ Change directory (cd) to the specified location (that is /testarea/yottadb/datab
 
 Create a global directory.
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ GDE
    GDE> change -segment DEFAULT -file=data.dat
    GDE> exit
 
 Create the database file (data.dat).
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip create
 
 Start the GT.CM server.
@@ -199,7 +208,8 @@ Note that the global directory created on the remote node in this example is onl
 
 On NODE1, invoke YottaDB and perform the following operations:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $setenv ydb_cm_NODE2 6789
    $ydb
    YDB> s ^x=1

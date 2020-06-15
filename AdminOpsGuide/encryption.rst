@@ -242,7 +242,8 @@ You can provide the passphrase of the key ring to YottaDB in one of the followin
 
 * Set the ydb_passwd environment variable to an obfuscated form of the passphrase of the keyring using the maskpass utility but do not define $ydb_obfuscation_key. For example:
 
-  .. parsed-literal::
+  .. code-block:: bash
+
       echo -n "Enter keyring passphrase: " ; export ydb_passwd=`$ydb_dist/plugin/gtmcrypt/maskpass|cut -f 3 -d " "`
 
 You should use this method when you need to restrict the access of encrypted regions to the same $USER using the same YottaDB distribution. $ydb_passwd can be passed between from the parent process to a child process with the Job command. Note that $ydb_passwd is the only way for a child process to receive a password from a parent process.
@@ -251,13 +252,15 @@ You should use this method when you need to restrict the access of encrypted reg
 
 * When the environment variable ydb_passwd is not set, create a one line YottaDB program as in the following example:
 
-  .. parsed-literal::
+  .. code-block:: bash
+
      echo 'zcmd ZSYstem $ZCMdline  Quit' > zcmd.m
 
 and use it to invoke the MUPIP or DSE command. For example:
 
-  .. parsed-literal::
-     $ ydb_passwd="" yottadb -run zcmd mupip backup \\"\*\\"
+  .. code-block:: bash
+
+     $ ydb_passwd="" yottadb -run zcmd mupip backup \"*\"
 
 The empty string value of $ydb_passwd causes the YottaDB process to prompt for and set an obfuscated password in its environment which it then passes to the MUPIP program. Shell quote processing requires the use of escapes to pass the quotes from the ZSYstem command to the shell.
 
@@ -266,7 +269,8 @@ The empty string value of $ydb_passwd causes the YottaDB process to prompt for a
 
 * Set the gtm_obfuscation_key environment variable to the absolute location of a file having any contents and then set the environment variable ydb_passwd to an obfuscated form of the passphrase of the keyring using the maskpass utility. maskpass is a stand-alone program that takes the passphrase from STDIN and writes its obfuscated value in the form of Enter Passphrase: <obfuscated_value> as its output. The <obfuscated_value> can then be set for the environment variable ydb_passwd. For example:
 
-  .. parsed-literal::
+  .. code-block:: bash
+
      export ydb_obfuscation_key="/path/to/secret_content"
      echo -n "Enter keyring passphrase: " ; export ydb_passwd=`$ydb_dist/plugin/gtmcrypt/maskpass|cut -f 3 -d " "`
 
@@ -347,7 +351,8 @@ Below are scripts of the key management example above.
 
 Helen creates a new GPG keyring with a public and private key pair:
 
-.. parsed-literal::
+.. code-block:: bash
+
    helen$ export GNUPGHOME=$PWD/.helengnupg
    helen$ $ydb_dist/plugin/gtmcrypt/gen_keypair.sh helen@yottadb Helen Keymaster
    Passphrase for new keyring:
@@ -368,7 +373,8 @@ Helen creates a new GPG keyring with a public and private key pair:
 
 Phil creates a new GPG keyring with a public and private key pair:
 
-.. parsed-literal::
+.. code-block:: bash
+
    phil$ export GNUPGHOME=$PWD/.philgnupg
    phil$ $ydb_dist/plugin/gtmcrypt/gen_keypair.sh phil@yottadb Phil Keyuser
    Passphrase for new keyring:
@@ -391,7 +397,8 @@ Helen sends Phil the file helen@yottadb_pubkey.txt and Phil sends Helen the file
 
 Helen imports Phil's public key into her keyring, verifying the fingerprint when she imports it, and signing it to confirm that she has verified the fingerprint:
 
-.. parsed-literal::
+.. code-block:: bash
+
    helen$ $ydb_dist/plugin/gtmcrypt/import_and_sign_key.sh phil@yottadb_pubkey.txt phil@yottadb
    gpg: key A5719A99: public key "Phil Keyuser <phil@yottadb>" imported
    gpg: Total number processed: 1
@@ -409,7 +416,8 @@ Helen imports Phil's public key into her keyring, verifying the fingerprint when
 
 Phil likewise imports, verifies and signs Helen's public key:
 
-.. parsed-literal::
+.. code-block:: bash
+
    phil$ $ydb_dist/plugin/gtmcrypt/import_and_sign_key.sh helen@yottadb_pubkey.txt helen@yottadb
    gpg: key BC4D0739: public key "Helen Keymaster <helen@yottadb>" imported
    gpg: Total number processed: 1
@@ -429,13 +437,15 @@ Helen and Phil can now securely exchange information.
 
 Helen generates a symmetric cipher key for the new database file cust.dat:
 
-.. parsed-literal::
+.. code-block:: bash
+
    helen$ $ydb_dist/plugin/gtmcrypt/gen_sym_key.sh 2 helen_cust_dat.txt
    helen$
 
 Then she encrypts the symmetric cipher key with Phil's public key, signs it, and produces a file phil_cust_dat.txt that she can send Phil:
 
-.. parsed-literal::
+.. code-block:: bash
+
    helen$ $ydb_dist/plugin/gtmcrypt/encrypt_sign_db_key.sh helen_cust_dat.txt phil_cust_dat.txt phil@yottadb
    Passphrase for keyring:
    gpg: checking the trustdb
@@ -452,7 +462,7 @@ In order to create the libconfig format encryption configuration file there are 
 
    #. Create a new file using the format given below:
 
-      .. parsed-literal::
+      .. code-block:: none
 
 	 database: {
                  keys: (
@@ -465,7 +475,7 @@ In order to create the libconfig format encryption configuration file there are 
 
       An example configuration file :code:`/home/phil/config_file` is shown below:
 
-      .. parsed-literal::
+      .. code-block:: none
 
 	 database: {
                  keys: (
@@ -478,19 +488,19 @@ In order to create the libconfig format encryption configuration file there are 
 
 Once the configuration file is created set the environment variables as shown below:
 
-    .. parsed-literal::
+    .. code-block:: bash
 
        export ydb_crypt_config=*path to new config file*
 
 For example:
 
-    .. parsed-literal::
+    .. code-block:: bash
 
        export ydb_crypt_config=/home/phil/config_file
 
 Once the environment variables are set, Phil creates a global directory, where he changes the configuration parameter for the database file cust.dat specifying that it be encrypted the next time it is created. (Remember that except for mapping from global variable names to database file names, configuration parameters in the global directory are used only when MUPIP creates new database files.) He then creates the database file, runs a DSE dump fileheader to extract the hash (highlighted in the output), and sends it to Helen for verification.
 
-.. parsed-literal::
+.. code-block:: bash
 
    phil$ export ydb_gbldir=/home/phil/cust.gld
    phil$ export ydb_passwd=””
@@ -621,7 +631,8 @@ Phil calls Helen with the hash, texts her phone, or sends her an e-mail. Helen e
 
 **Instructions for Helen to verify the hash**
 
-.. parsed-literal::
+.. code-block:: bash
+
    helen$ $ydb_dist/plugin/gtmcrypt/gen_sym_hash.sh helen_cust_dat.txt
    Passphrase for keyring:
    gpg: encrypted with 2048-bit RSA key, ID B34EF4BD2C0B5B38, created 2020-04-16
@@ -641,13 +652,14 @@ GPG configuration should be updated to ensure that commands are not executed whe
 
 To prevent this behavior add the following line to the :code:`$GNUPGHOME/gpg-agent.conf` file:
 
-  .. parsed-literal::
+  .. code-block:: none
 
      default-cache-ttl 0
 
 Once gpg-agent.conf is updated, ensure that gpg-agent is restarted.
 
-  .. parsed-literal::
+  .. code-block:: bash
+
      # Executing the following command will restart gpg-agent on its next access
      gpgconf --kill gpg-agent
 
@@ -657,7 +669,7 @@ Now, the passphrase will not be cached and an error will be seen when the wrong 
 
 If you enter the wrong passphrase YDB issues an error and prevents execution when trying to access encrypted data blocks. The DSE fileheader is meta data which is not encrypted, and which should be readable whether or not the process has the password for the database file. But, even here an error is seen before the command gives a result.
 
-  .. parsed-literal::
+  .. code-block:: bash
 
      phil$ $ydb_dist/mumps -dir
      Enter Passphrase:
@@ -754,12 +766,14 @@ The YottaDB scripts must undefine GPG_AGENT_INFO.
 
 The YottaDB scripts must define GPG_TTY or the (GPG 2.1 and up) pinentry program may not work. e.g.:
 
-.. parsed-literal::
+.. code-block:: bash
+
    export GPG_TTY=$tty
 
 Set up the encryption keys using the gen_keypair.sh script. This script creates a file gpg-agent.conf in the GnuPG directory (specified by the environment variable $GNUPGHOME) with the following line directing GPG to invoke the reference implementation's custom pinentry program.
 
-.. parsed-literal::
+.. code-block:: none
+
    pinentry-program <path to $ydb_dist>/plugin/gtmcrypt/pinetry-gtm.sh
 
 When pinetry-gtm.sh finds the environment variable $ydb_passwd defined and an executable YottaDB, it runs the pinentry.m program which provides GnuPG with the keyring password from the obfuscated password. Otherwise, it calls /usr/bin/pinentry.
@@ -768,34 +782,40 @@ The custom pinentry program uses a YottaDB external call. Each YottaDB applicati
 
 Direct the gpg-agent to use its standard Unix domain socket file, $GNUPGHOME/S.agent, when listening for password requests. Enabling the standard socket simplifies the gpg-agent configuration. Enable the standard socket by adding the following configuration option to $GNUPGHOME/gpg-agent.conf.
 
-.. parsed-literal::
+.. code-block:: bash
+
    echo "use-standard-socket" >> $GNUPGHOME/gpg-agent.conf
 
 When using GPG 2.1.12 and up, enable loopback pinentry mode by adding the following configuration option to $GNUPGHOME/gpg-agent.conf. With this option in place, the agent can call back to YottaDB directly for the passphrase if GPG directs it to do so.
 
-.. parsed-literal::
+.. code-block:: bash
+
    echo "allow-loopback-pinentry" >> $GNUPGHOME/gpg-agent.conf
 
 When using GPG 2.1.12 and up with prior versions of YottaDB, you can bypass the agent by forcing GPG to use pinentry loopback mode, by adding the following configuration option to $GNUPGHOME/gpg.conf. This eliminates the custom pinentry progam configuration.
 
-.. parsed-literal::
+.. code-block:: bash
+
    echo "pinentry-mode=loopback" >> $GNUPGHOME/gpg.conf
 
 When using GPG 2.2.24 and up use the option to auto-increase secmem in gpg-agent (https://dev.gnupg.org/T3530)
 
-.. parsed-literal::
+.. code-block:: bash
+
    echo "--auto-expand-secmem" >> $GNUPGHOME/gpg-agent.conf
 
 When using GPG 2.2.24 and up use the option to increase the configurable backlog for sockets (https://dev.gnupg.org/T3473)
 
-.. parsed-literal::
+.. code-block:: bash
+
    echo "--listen-backlog 128" >> $GNUPGHOME/gpg-agent.conf
 
 
 .. note::
    The YottaDB pinentry function should not be used while changing the keyring passphrase, e.g., the passwd subcommand of the gpg --edit-key command. Depending upon the gpg version ("man gpg" to confirm) you can override the agent configuration. Otherwise, you will need to temporarily comment out the pinentry-program line in gpg-agent.conf by placing a "#" in front of the line, e.g.:
 
-.. parsed-literal::
+.. code-block:: none
+
    #pinentry-program <path to $ydb_dist>/plugin/gtmcrypt/pinetry-gtm.sh
 
 
@@ -811,7 +831,8 @@ You must also implement appropriate key management, including ensuring that user
 
 The structure of the $ydb_dist/plugin directory on Linux x86 after plugin compilation is as follows:
 
- .. parsed-literal::
+ .. code-block:: bash
+
    plugin/
    | -- gpgagent.tab
    | -- gtmcrypt
@@ -900,7 +921,8 @@ MUPIP CREATE is the only command that uses the database_filename in the master k
 
 The MUPIP JOURNAL -SHOW command now displays the cryptographic hash of the symmetric key stored in the journal file header (the output is one long line):
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ mupip journal -show -backward yottadb.mjl 2>&1 | grep hash
    Journal file hash F226703EC502E9757848 ...
    $
@@ -921,7 +943,8 @@ Please remember that DSE is a low level utility for use by knowledgeable users, 
 
 The DSE DUMP -FILEHEADER -ALL command shows the database file header, including the encryption hash (the hash is a very long line):
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ dse dump -fileheader -all 2>&1 | grep hash
    Database file encryption hash F226703EC502E9757848EEC733E1C3CABE5AC...
    $
@@ -1066,7 +1089,8 @@ More detailed descriptions follow.
 gtmcrypt_close()
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. parsed-literal::
+.. code-block:: C
+
    gtm_status_t gtmcrypt_close(void);
 
 
@@ -1076,8 +1100,9 @@ Disable encryption and discard any sensitive data in memory.
 gtmcrypt_encrypt_decrypt()
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. parsed-literal::
-   gtm_status_t gtmcrypt_encrypt_decrypt(gtmcrypt_key_t handle, gtm_char_t \*src_block, gtm_int_t src_block_len, gtm_char_t \*dest_block, gtm_int_t operation, gtm_int_t iv_mode, gtm_string_t iv);
+.. code-block:: C
+
+   gtm_status_t gtmcrypt_encrypt_decrypt(gtmcrypt_key_t handle, gtm_char_t *src_block, gtm_int_t src_block_len, gtm_char_t *dest_block, gtm_int_t operation, gtm_int_t iv_mode, gtm_string_t iv);
 
 
 Perform encryption or decryption of the provided data based on the specified encryption/decryption state. If the target buffer pointer is NULL, the operation is done in-place. It is also possible to set the initialization vector (IV) to a particular value, or reset it to the original value, before attempting the operation. Note that the changes are persistent.
@@ -1086,7 +1111,8 @@ Perform encryption or decryption of the provided data based on the specified enc
 gtmcrypt_init()
 ~~~~~~~~~~~~~~~~~~~~~~
 
-.. parsed-literal::
+.. code-block:: C
+
    gtm_status_t gtmcrypt_init(gtm_int_t flags);
 
 
@@ -1096,8 +1122,9 @@ Initializes encryption if not yet initialized. Use this function to load necessa
 gtmcrypt_init_db_cipher_context_by_hash()
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. parsed-literal::
-   gtm_status_t gtmcrypt_init_db_cipher_context_by_hash(gtmcrypt_key_t \*handle, gtm_string_t key_hash, gtm_string_t db_path, gtm_string_t iv);
+.. code-block:: C
+
+   gtm_status_t gtmcrypt_init_db_cipher_context_by_hash(gtmcrypt_key_t *handle, gtm_string_t key_hash, gtm_string_t db_path, gtm_string_t iv);
 
 
 Finds the key by hash and database path and sets up database encryption and decryption state objects, if not created yet. Use this function to locate a particular key by its hash and, if found, initialize the objects for subsequent encryption and decryption operations on any database that will use this key, unless already initialized. If the db_path argument specifies a non-null string, then the key should additionally correspond to that database in the configuration file.
@@ -1108,8 +1135,9 @@ The reason that any database relying on the same key may use the same encryption
 gtmcrypt_init_device_cipher_context_by_keyname()
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. parsed-literal::
-   gtm_status_t gtmcrypt_init_device_cipher_context_by_keyname(gtmcrypt_key_t \*handle, gtm_string_t key_name, gtm_string_t iv, gtm_int_t operation);
+.. code-block:: C
+
+   gtm_status_t gtmcrypt_init_device_cipher_context_by_keyname(gtmcrypt_key_t *handle, gtm_string_t key_name, gtm_string_t iv, gtm_int_t operation);
 
 
 Finds the key by its name and sets up device encryption or decryption state object. Use this function to locate a particular key by its name (as specified in the configuration file) and, if found, initialize an object for subsequent encryption or decryption operations (depending on the 'encrypt' parameter) with one device using this key. Note that, unlike databases, different devices relying on the same key require individual encryption and decryption state objects as their states evolve with each encryption or decryption operation.
@@ -1118,8 +1146,9 @@ Finds the key by its name and sets up device encryption or decryption state obje
 gtmcrypt_obtain_db_key_hash_by_keyname()
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. parsed-literal::
-   gtm_status_t gtmcrypt_obtain_db_key_hash_by_keyname(gtm_string_t db_path, gtm_string_t key_path, gtm_string_t \*hash_dest);
+.. code-block:: C
+
+   gtm_status_t gtmcrypt_obtain_db_key_hash_by_keyname(gtm_string_t db_path, gtm_string_t key_path, gtm_string_t *hash_dest);
 
 
 Find the key by the path of the database it corresponds to as well as its own path, and obtain its hash. Use this function to locate a particular key by the path of the database that is associated with the key in the configuration file and calculate (or copy, if precalculated) its hash to the 'hash_dest' address. If the key_path argument specifies a non-null string, then the key should have the corresponding path; otherwise, the *last* of all keys associated with the specified database in the configuration file is used.
@@ -1128,7 +1157,8 @@ Find the key by the path of the database it corresponds to as well as its own pa
 gtmcrypt_release_cipher_context()
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. parsed-literal::
+.. code-block:: C
+
    gtm_status_t gtmcrypt_release_cipher_context(gtmcrypt_key_t handle);
 
 
@@ -1138,7 +1168,8 @@ Release the specified encryption or decryption state object, also releasing the 
 gtmcrypt_same_key()
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. parsed-literal::
+.. code-block:: C
+
    gtm_int_t gtmcrypt_same_key(gtmcrypt_key_t handle1, gtmcrypt_key_t handle2);
 
 Compare the keys associated with two encryption or decryption state objects.
@@ -1147,8 +1178,9 @@ Compare the keys associated with two encryption or decryption state objects.
 gtmcrypt_strerror()
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-.. parsed-literal::
-   gtm_char_t  \*gtmcrypt_strerror(void);
+.. code-block:: C
+
+   gtm_char_t  *gtmcrypt_strerror(void);
 
 
 Returns the error string. Use this function to provide the current error status. The function is normally invoked following a non-zero return from one of the other functions defined in the interface, which means that each of them should start by clearing the error buffer.

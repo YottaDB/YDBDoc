@@ -42,7 +42,8 @@ Entering Direct Mode
 
 To enter Direct Mode, type $ydb_dist/yottadb -direct at the shell prompt.
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ $ydb_dist/yottadb -direct
    YDB>
 
@@ -52,7 +53,8 @@ Another way to enter Direct Mode for an editing or debugging session is by simpl
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ ydb
    YDB>
 
@@ -73,7 +75,8 @@ The RECALL command is another way to access previously entered Direct Mode comma
 
 The format of the RECALL command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    REC[ALL] [intlit|strlit]
 
 * The optional integer literal specifies a previously entered command by counting back from the present.
@@ -84,7 +87,8 @@ If the session in Direct Mode has just started, you may not have entered 99 line
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write $zgbldir
    /usr/lib/yottadb/r120/yottadb.gld
    YDB>set $zgbldir="test.gld"
@@ -103,7 +107,8 @@ You can also display a selected command by entering RECALL and the line number o
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>recall 2
    YDB>set a=10
 
@@ -113,7 +118,8 @@ If the RE[CALL] command includes a text parameter, YottaDB displays the most rec
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>recall write
    YDB>write $zgbldir
 
@@ -158,7 +164,8 @@ The Direct Mode line editing keys are as follows:
 
 YottaDB deletes the character under the cursor when you press the key on the keyboard that sends the escape sequence which maps to the kdch1 capability in your current terminfo entry (by convention, the Delete key). If the current terminfo entry is missing the kdch1 capability, YottaDB uses a default value derived from members of the DEC VT terminal family, as it does for selected other missing terminfo capabilities. If you wish the Backspace and Delete keys to have the same behavior, the simplest way is to configure your terminal emulator to send the same character sequences for the Delete key that it does for the Backspace key. You can alternatively modify your terminfo setting: for example, create an editable version of your terminfo entry in a temporary file with a command such as: infocmp > /tmp/$$_$TERM and edit the temporary file to replace the entry for the kbs capability with the one in the kdch1 capability. Save your changes, and compile the edited file into a usable terminfo entry, for example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    export TERMINFO=$HOME/.terminfo # You may need to add this to your login profile
    profilemkdir -p $TERMINFO
    tic /tmp/$$_$TERM # or whatever your temporary file name was
@@ -201,7 +208,8 @@ Debugging a Routine in Direct Mode
 
 To begin a debugging session on a specific routine, type the following command at the YottaDB prompt:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>DO ^routinename
 
 You can also begin a debugging session by pressing <CTRL-C> after running an M application at the shell. To invoke Direct Mode by pressing <CTRL-C>, process must have the Principal Device in the CENABLE state and not have the device set to CTRAP=$C(3).
@@ -224,7 +232,8 @@ To create or edit a routine, use the ZEDIT command. ZEDIT invokes the editor spe
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZEDIT "dmex"
 
 Once in the editor, use the standard editing commands to enter and edit text. When you finish editing, save the changes, which returns you to Direct Mode.
@@ -233,7 +242,8 @@ To display M source code for dmex, use the ZPRINT command.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZPRINT ^dmex
    dmex;dmex - Direct Mode example
    ;
@@ -266,7 +276,8 @@ To execute an M routine interactively, it is not necessary to explicitly compile
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>DO ^dmex
    Name: Revere, Paul
    %YDB-E-UNDEF, Undefined local variable: bame
@@ -286,7 +297,8 @@ $ZSTATUS is a read-write intrinsic special variable that maintains a string cont
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>WRITE $ECODE
    ,M6,Z150373850
 
@@ -294,7 +306,8 @@ This example uses a WRITE command to display $ECODE.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>WRITE $ZS
    150373850,name+3^dmex,%YDB-E-UNDEF, Undefined
    local variable: bame
@@ -305,7 +318,8 @@ You can record the error message number, and use the $ZMESSAGE function later to
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>WRITE $ZM(150373850)
    %YDB-E-UNDEF, Undefined local variable: !AD
 
@@ -321,7 +335,8 @@ To re-display the line and identify the error, use the ZPRINT command.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZPRINT, name+3
    %YDB-E-SPOREOL, Either a space or an end-of-line was expected but not found
    ZP, name+3
@@ -332,7 +347,8 @@ This example shows the result of incorrectly entering a ZPRINT command in Direct
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>WRITE $ZPOS
    name+3^dmex
 
@@ -344,7 +360,8 @@ To display the current value of every local variable defined, use the ZWRITE com
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZWRITE
    ln=12
    name="Revere, Paul"
@@ -364,7 +381,8 @@ YottaDB suspends execution during execution when the entry reference specified b
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZBREAK name+3^dmex:"set bame=name"
 
 This uses a ZBREAK with an action that SETs the variable bame equal to name.
@@ -383,7 +401,8 @@ Use ZSTEP to incrementally execute a routine or a series of routines. Execute an
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZSTEP INTO
    Break instruction encountered during ZSTEP action
    At M source location print^dmex
@@ -408,7 +427,8 @@ Use the ZCONTINUE command to continue execution from the breakpoint.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZCONTINUE
    Paul Revere
    Name: q
@@ -428,7 +448,8 @@ Press <CTRL-C> to interrupt execution, and return to the YottaDB prompt to conti
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    %YDB-I-CTRLC, CTRLC_C encountered.
    YDB>
 
@@ -453,7 +474,8 @@ $STACK has an initial value of zero (0), and increments by one with each DO, XEC
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>WRITE $STACK
    2
    YDB>WRITE $ZLEVEL
@@ -470,7 +492,8 @@ The $STACK intrinsic special variable and the $STACK() function provide a mechan
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>WRITE $STACK
    2
    YDB>WRITE $STACK(2,"ecode")
@@ -487,7 +510,8 @@ In addition to the $STACK intrinsic special variable, which provides the current
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>WRITE $STACK
    2
    YDB>WRITE $STACK(-1)
@@ -500,7 +524,8 @@ The $STACK() can return information about lower levels.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    +1^GTM$DMOD
    YDB>WRITE $STACK(1,"ecode")
    YDB>WRITE $STACK(1,"place")
@@ -519,7 +544,8 @@ The ZSHOW command displays information about the M environment.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>zshow "*"
    $DEVICE=""
    $ECODE=",M6,Z150373850,"
@@ -600,7 +626,7 @@ Example:
    name="John Doe"
    /dev/pts/0 OPEN TERMINAL NOPAST NOESCA NOREADS TYPE WIDTH=165 LENG=48
    MLG:0,MLT:0
-   GLD:\*,REG:\*,SET:0,KIL:0,GET:0,DTA:0,ORD:0,ZPR:0,QRY:0,LKS:0,LKF:0,CTN:0,DRD:0
+   GLD:*,REG:*,SET:0,KIL:0,GET:0,DTA:0,ORD:0,ZPR:0,QRY:0,LKS:0,LKF:0,CTN:0,DRD:0
    DWT:0,NTW:0,NTR:0,NBW:0,NBR:0,NR0:0,NR1:0,NR2:0,NR3:0,TTW:0,TTR:0,TRB:0,TBW:0,
    TBR:0,TR0:0,TR1:0,TR2:0,TR3:0,TR4:0,TC0:0,TC1:0,TC2:0,TC3:0,TC4:0,ZTR:0,DFL:0,
    DFS:0,JFL:0,JFS:0,JBB:0,JFB:0,JFW:0,JRL:0,JRP:0,JRE:0,JRI:0,JRO:0,JEX:0,DEX:0,
@@ -644,7 +670,8 @@ Use the ZPRINT command to display source code lines selected by its argument. ZP
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZPRINT beg
    beg for read !,"Name: ",name do name
 
@@ -658,7 +685,8 @@ Now that the routine errors have been identified, correct them in the M source f
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZEDIT "dmex.m"
    dmex;dmex - Direct Mode example
    ;
@@ -694,7 +722,8 @@ Use the ZLINK command to add the edited routine to the current image. ZLINK auto
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZLINK
    Cannot ZLINK an active routine
 
@@ -704,7 +733,8 @@ To ZLINK the routine, remove any invocation levels for the routine off of the ca
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZSHOW "S"
    name+3^dmex ($ZTRAP) (Direct mode)
    beg^dmex (Direct mode)
@@ -726,7 +756,8 @@ Execute the routine using the DO command.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>D ^dmex
    Name: Revere, Paul
    Paul Revere
@@ -742,7 +773,8 @@ The ZSYSTEM command creates a new process called the child process, and passes i
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZSYSTEM
    $ ls dmex.*
    dmex.m dmex.o

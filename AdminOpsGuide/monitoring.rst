@@ -129,7 +129,8 @@ The following suggestions may help with configuring core dump files:
 * Always configure core file generation in a way that each core gets a distinct name so that new cores do not overwrite old cores. YottaDB never overwrites an existing core file even when /proc/sys/kernel/core_uses_pid is set to 0 and /proc/sys/kernel/core_pattern is set to core. If there is a file named core in the target core directory, YottaDB renames it to core1 and creates a new core dump file called core. Likewise, if core(n) already exists, YottaDB renames the existing core to core(n+1) and creates a new core dump file called core.
 * Here are the possible steps to check core file generation on Ubuntu_x86 running YottaDB r1.20:
 
-  .. parsed-literal::
+  .. code-block:: bash
+
      $ ulimit -c unlimited
      $ /usr/local/lib/yottadb/r1.20/ydb
      YDB>zsystem "kill -SIGSEGV "_$j

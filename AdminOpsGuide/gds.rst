@@ -282,7 +282,8 @@ These two bits are internally represented as:
 
 The interpreted form of the local bitmap is like the following:
 
-.. parsed-literal::
+.. code-block:: none
+
    Block 0  Size 90  Level -1  TN 1 V5   Master Status: Free Space
                   Low order                         High order
    Block        0: |  XXXXX...  ........  ........  ........  |
@@ -355,7 +356,8 @@ GDS Blocks
 
 Index and data blocks consist of a block header followed by a series of records. The block header has five fields. The first field, of two bytes, specifies the block version. The second field, of one byte, is a filler byte. The third field, of one byte, specifies the block level. The fourth field, of two bytes, specifies the number of bytes currently in use in the block. The last field of eight bytes represents the transaction number at which the block was last changed. An interpreted form of a block header looks like the following:
 
-.. parsed-literal::
+.. code-block:: none
+
    File      /home/jdoe/.yottadb/r1.20_x86_64/g/yottadb.dat
    Region    DEFAULT
 
@@ -376,7 +378,8 @@ The record header has two fields that contain information. The first field, of t
 
 The interpreted form of a block with global ^A("Name",1)="Brad" looks like the following:
 
-.. parsed-literal::
+.. code-block:: none
+
    Rec:1  Blk 3  Off 10  Size 14  Cmpc 0  Key ^A("Name",1)
          10 : | 14  0  0 61 41  0 FF 4E 61 6D 65  0 BF 11  0  0 42 72 61 64|
               |  .  .  .  a  A  .  .  N  a  m  e  .  .  .  .  .  B  r  a  d|
@@ -466,7 +469,8 @@ YottaDB stores string subscripts as a variable length sequence of 8-bit codes ra
 
 To distinguish strings from numerics while preserving collation sequence, YottaDB adds a byte containing hexadecimal FF to the front of all string subscripts. The interpreted form of the global variable ^A("Name",1)="Brad" looks like the following:
 
-.. parsed-literal::
+.. code-block:: none
+
    Block 3   Size 24   Level 0   TN 1 V5
 
    Rec:1  Blk 3  Off 10  Size 14  Cmpc 0  Key ^A("Name",1)
@@ -491,7 +495,8 @@ All codes except 00 and 01 represent the corresponding ASCII value.
 
 With UTF-8 character-set specified, the interpreted output displays a dot character for all graphic characters and malformed characters. For example, the internal representation of the global variable ^DS=$CHAR($$FUNC^%HD("0905"))_$ZCHAR(192) looks like the following:
 
-.. parsed-literal::
+.. code-block:: none
+
    Rec:1  Blk 3  Off 10  Size C  Cmpc 0  Key ^DS
          10 : |  C  0  0  0 44 53  0  0 E0 A4 85 C0                        |
               |  .  .  .  .  D  S  .  .        ?  .                        |
@@ -506,7 +511,8 @@ Numeric Subscripts
 
 Numeric Subscripts have the format:
 
-.. parsed-literal::
+.. code-block:: none
+
    [ sign bit ] [ biased exponent ] [ normalized mantissa ]
 
 The sign bit and biased exponent together form the first byte of the numeric subscript. Bit seven (7) is the sign bit. Bits <6:0> comprise the exponent. The remaining bytes preceding the subscript terminator of one null (ASCII 0) byte represent the variable length mantissa. The following description shows a way of understanding how YottaDB converts each numeric subscript type to its internal format:
@@ -541,7 +547,8 @@ Sign
 
 For example, the interpreted representation of the global ^NAME(.12,0,"STR",-34.56) looks like the following:
 
-.. parsed-literal::
+.. code-block:: none
+
    Rec:1  Blk 5  Off 10  Size 1A  Cmpc 0  Key ^NAME(.12,0,"STR",-34.56)
          10 : | 1A  0  0 61 4E 41 4D 45  0 BE 13  0 80  0 FF 53 54 52  0 3F|
               |  .  .  .  a  N  A  M  E  .  .  .  .  .  .  .  S  T  R  .  ?|
@@ -552,7 +559,8 @@ Note that CA A8 ones complement representation is 35 57 and then when you subtra
 
 Similarly, the interpreted representation of ^NAME(.12,0,"STR",-34.567) looks like the following:
 
-.. parsed-literal::
+.. code-block:: none
+
    Rec:1  Blk 5  Off 10  Size 1B  Cmpc 0  Key ^NAME(.12,0,"STR",-34.567)
          10 : | 1B  0  0  9 4E 41 4D 45  0 BE 13  0 80  0 FF 53 54 52  0 3F|
               |  .  .  .  .  N  A  M  E  .  .  .  .  .  .  .  S  T  R  .  ?|

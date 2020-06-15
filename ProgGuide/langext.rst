@@ -282,7 +282,8 @@ YottaDB aliases provide low level facilities on which an application can impleme
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>kill A,B
    YDB>set A=1,*B=A ; B & A are aliases
    YDB>write B
@@ -359,14 +360,15 @@ Alias Variables provide access to an array through multiple names. Conceptually 
 
 Alias container variables are subscripted lvns that protect arrays for subsequent access by an alias variable. Since accessing an array requires a name, aliasing a name with the alias container regains access to an array stored in a container. For example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>kill A,B,C
    YDB>set A=1,*C(2)=A ; C(2) is a container
    YDB>zwrite
    A=1 ;*
-   \*C(2)=A
-   YDB>set \*B=C(2) ; B is now an alias
-   YDB>write B,":",$length(C(2)),":" ; An alias variable provides access but a container doesn't
+   *C(2)=A
+   YDB>set *B=C(2) ; B is now an alias
+   YDB>write B,":",$length(C(2)),":" ; An alias variable provides access but a container does not
    1:0:
    YDB>
 
@@ -405,7 +407,8 @@ Pass By Reference
 
 YottaDB's underlying implementation of pass-by-reference and alias variables is the same. As illustrated by the program "killalias" previously, ZWRITE displays variables joined though pass-by-reference using alias conventions. Pass-by-reference is distinguished from alias variables by its implicit creation and elimination. Note the interaction between pass-by-reference and alias variables when the association of a formallist parameter in a subprogram is changed:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ /usr/local/lib/yottadb/r120/ydb -run ^switchalias
    switchalias ; Demonstrate Set * on formalist parameter
      zprint ; Print this program
@@ -424,7 +427,7 @@ YottaDB's underlying implementation of pass-by-reference and alias variables is 
       write "------------",!
       write "Inside call - note alias association for formallist parameter:",!
       zwrite
-      set \*X=B,X=4 ; Change association of formallist parameter
+      set *X=B,X=4 ; Change association of formallist parameter
       write "------------",!
       write "Note changed association",!
       zwrite
@@ -437,12 +440,12 @@ YottaDB's underlying implementation of pass-by-reference and alias variables is 
     Inside call - note alias association for formallist parameter:
     A=3 ;*
     B=2
-    \*X=A
+    *X=A
     ------------
     Note changed association
     A=3
     B=4 ;*
-    \*X=B
+    *X=B
     ------------
     On return:
     A=3
@@ -470,17 +473,19 @@ The following table show the type of data movement of alias and alias container 
 
 The makealias function returns an alias of the argument:
 
-.. parsed-literal::
+.. code-block:: none
+
    makealias(var)
-   quit \*var
+   quit *var
 
 The makecntr function returns an alias container of the argument:
 
-.. parsed-literal::
+.. code-block:: none
+
    makecntnr(var)
    new cont
-   set \*cont(1)=var
-   quit \*cont(1)
+   set *cont(1)=var
+   quit *cont(1)
 
 +++++++++++++++++++
 KILL* Examples
@@ -488,18 +493,20 @@ KILL* Examples
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>Set A=1,*B=A ; Create an array and an association
    YDB>ZWRite ; Show that the array and association exist
    A=1 ;*
-   \*B=A
-   YDB>Kill \*A ; Remove the association for A - it now has no association and no array
+   *B=A
+   YDB>Kill *A ; Remove the association for A - it now has no association and no array
    YDB>ZWRite ; B is a traditional local variable
    B=1
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>Set A=2 ; add a value for A
    YDB>ZWRite ; A and B have different values and both are traditional local variables
    A=2
@@ -508,23 +515,25 @@ Example:
 
 KILL on the other hand, removes data in the array (and possibly the array itself) without affecting any alias association.
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>Set A=2,*B=A ; Create an array and an association
    YDB>ZWRite ; Both array and association exist
    A=2 ;*
-   \*B=A
+   *B=A
    YDB>Kill A ; Kill the array
-   YDB>ZWRite ; There's no data to show - only the association
-   \*B=A
+   YDB>ZWRite ; There is no data to show - only the association
+   *B=A
    YDB>Set B=3 ; Create a new value
    YDB>ZWRite ; The association was unaffected by the Kill
    A=3 ;*
-   \*B=A
+   *B=A
    YDB>
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ /usr/local/lib/yottadb/r120/ydb -run ^killalias
    killalias ; Demonstrate Kill * of pass-by-reference
           ZPrint ; Print this program
@@ -534,7 +543,7 @@ Example:
           ZWRite
           Do K1(.A,.C) ; Pass A & C by reference
           Write "------------",!
-          Write "Value of A is unchanged because of Kill \*B, but C has changed: ",!
+          Write "Value of A is unchanged because of Kill *B, but C has changed: ",!
           ZWRite
           Quit
     ;
@@ -542,10 +551,10 @@ Example:
           Write "------------",!
           Write "A & B are aliases, as are C & D:",!
           ZWRite
-          Kill \*B
+          Kill *B
           Set B=2,D=4
           Write "------------",!
-          Write "After Kill \*B, A & B are different but C & D remain associated:",!
+          Write "After Kill *B, A & B are different but C & D remain associated:",!
           ZWrite
           Quit
    ------------
@@ -555,30 +564,30 @@ Example:
    ------------
    A & B are aliases, as are C & D:
    A=1 ;*
-   \*B=A
+   *B=A
    C=3 ;*
-   \*D=C
+   *D=C
    ------------
-   After Kill \*B, A & B are different but C & D remain associated:
+   After Kill *B, A & B are different but C & D remain associated:
    A=1
    B=2
    C=4 ;*
-   \*D=C
+   *D=C
    ------------
-   Value of A is unchanged because of Kill \*B, but C has changed:
+   Value of A is unchanged because of Kill *B, but C has changed:
    A=1
    C=4
    Example:
    YDB>Set A=1,*B=A ; Create an array and association
-   YDB>ZWRite ; Verify that it's there
+   YDB>ZWRite ; Verify that it is there
    A=1 ;*
-   \*B=A
+   *B=A
    YDB>Kill (A) ; Kill everything except A
    YDB>ZWRite ; Demonstrate that A also has no array
    YDB>Set A=2 ; Create an array
    YDB>ZWRite ; The association survived the Kill
    A=2 ;*
-   \*B=A
+   *B=A
    YDB>
 
 +++++++++++++++++++++++++++++
@@ -587,24 +596,25 @@ Annotated Alias Examples
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    $ /usr/local/lib/yottadb/r120/ydb -run ^tprestart
    tprestart ; Transaction restart variable association also restored on restart
      zprint ; Print this program
      set A="Malvern",C="Pennsylvania",E="USA"
-     set \*B=C,*D(19355)=E
+     set *B=C,*D(19355)=E
      write "------------",!
      write "Initial values & association",!
      zwrite
      tstart (B,D) ; On restart: A not restored, B,D restored, C,E restored by association
      if '$TRestart Do  ; Change C,E if first time through
      .set C="Wales",E="UK"
-     .kill \*D(19355)
+     .kill *D(19355)
      .write "------------",!
      .write "First time through transaction; B,C,D,E changed",!
      .zwrite
      .set A="Brynmawr"
-     .kill \*B
+     .kill *B
      .write "------------",!
      .write "A changed; association between B & C and D & E killed; B,D have no value",!
      .zwrite
@@ -619,14 +629,14 @@ Example:
    Initial values & association
    A="Malvern"
    B="Pennsylvania" ;*
-   \*C=B
-   \*D(19355)=E
+   *C=B
+   *D(19355)=E
    E="USA" ;*
    ------------
    First time through transaction; B,C,D,E changed
    A="Malvern"
    B="Wales" ;*
-   \*C=B
+   *C=B
    E="UK" ;*
    ------------
    A changed; association between B & C and D & E killed; B,D have no value
@@ -637,30 +647,31 @@ Example:
    Second time through transaction; B,C,D,E & association restored
    A="Brynmawr"
    B="Pennsylvania" ;*
-   \*C=B
-   \*D(19355)=E
+   *C=B
+   *D(19355)=E
    E="USA" ;*
 
 Note that TROLLBACK does not restore alias variables:
 
-.. parsed-literal::
+.. code-block:: bash
+
    /usr/local/lib/yottadb/r120/ydb -run ^tprollback
    tprollback ;
      zprint ; Print this program
      set A(1)=1,A(2)=2,A(3)=3
      set B(1)="1b",*B(2)=A,B(3)=3 ; B includes a container for A
-     set \*C(1)=B   ; C includes a container for B
-     kill \*A,*B   ; C is the only way to the data
+     set *C(1)=B   ; C includes a container for B
+     kill *A,*B   ; C is the only way to the data
      write "------------",!
      write "Only containers before transaction:",!
      zwrite
      tstart (C)
      if '$trestart
-     .set \*D=C(1) ; D is now an alias for what used to be B
+     .set *D=C(1) ; D is now an alias for what used to be B
      .set D(3)=-D(3)
-     .set \*D=D(2) ; D is now an alias for what used to be A
+     .set *D=D(2) ; D is now an alias for what used to be A
      .set D(1)=-D(1)
-     .kill \*D  ; Kill D after is used to manipulate the arrays
+     .kill *D  ; Kill D after is used to manipulate the arrays
      .write "------------",!
      .write "Changed values before restart:",!
      .zwrite
@@ -680,9 +691,9 @@ Note that TROLLBACK does not restore alias variables:
    ------------
    Only containers before transaction:
    $ZWRTAC=""
-   \*C(1)=$ZWRTAC1
+   *C(1)=$ZWRTAC1
    $ZWRTAC1(1)="1b"
-   \*$ZWRTAC1(2)=$ZWRTAC2
+   *$ZWRTAC1(2)=$ZWRTAC2
    $ZWRTAC2(1)=1
    $ZWRTAC2(2)=2
    $ZWRTAC2(3)=3
@@ -691,9 +702,9 @@ Note that TROLLBACK does not restore alias variables:
    ------------
    Restored values restart:
    $ZWRTAC=""
-   \*C(1)=$ZWRTAC1
+   *C(1)=$ZWRTAC1
    $ZWRTAC1(1)="1b"
-   \*$ZWRTAC1(2)=$ZWRTAC2
+   *$ZWRTAC1(2)=$ZWRTAC2
    $ZWRTAC2(1)=1
    $ZWRTAC2(2)=2
    $ZWRTAC2(3)=3
@@ -706,22 +717,23 @@ Note that TROLLBACK does not restore alias variables:
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ /usr/local/lib/yottadb/r120/ydb -run ^aliasexample; Extended annotated alias example
        zprint
        write "------------",!
        set x="name level",x(1)=1,x(1,2)="1,2",x("foo")="bar"
        write $ZDATA(x),! ; x is a conventional lvn - output 11
-       set \*y=x ; x an y are now alias variables
+       set *y=x ; x an y are now alias variables
        write $ZDATA(x),! ; output appears as 111
-       set \*a(1)=y ; a(1) is now an alias container variable
+       set *a(1)=y ; a(1) is now an alias container variable
        set b="bness",b("b")="bbness" ; b is a conventional lvn
-       set \*b=a(1) ; b joins x and y as alias variables for the same data
+       set *b=a(1) ; b joins x and y as alias variables for the same data
        ; prior b values are lost
-       ; set \*<name> is equivalent to Kill \*<name> Set \*<name>
+       ; set *<name> is equivalent to Kill *<name> Set *<name>
        set y("hi")="sailor" ; Assignment applies to all of {b,x,y}
        kill b("foo") ; Kill applies to all of {b,x,y}
-       kill \*x ; x is undefined and no longer an alias variable
+       kill *x ; x is undefined and no longer an alias variable
        ; b and y still provide access to the data
        write a(1),"<",! ; output appears as <
        write a(1)*3,! ; output appears as 0
@@ -733,16 +745,16 @@ Example:
        set a(1)="" ; a(1) ceases to be an alias container variable
        ; has the value ""
        write $D(i),! ; output is 0
-       kill \*c,\*y ; c and y become undefined lvns
+       kill *c,*y ; c and y become undefined lvns
        zwrite b ; output is b("got")="a match"
-       ; it's no longer an alias variable
+       ; it is no longer an alias variable
        ; as everything else has gone
        quit
   sub1
       new y ; in this scope y is no longer an alias for b
-      set \*y=c ; in this scope c and y are alias variables
+      set *y=c ; in this scope c and y are alias variables
       kill y("legs") ; Kill apples to all of {c,y}
-      kill \*y ; in this scope y is no longer an alias for c
+      kill *y ; in this scope y is no longer an alias for c
       ; this is really redundant as
       ; the Quit implicitly does the same thing
       quit
@@ -750,7 +762,7 @@ Example:
       write $ZAHandle(c)=$ZAHandle(i),! ; output appears as 1
       kill b ; data for {b,y} is gone
       ; both are undefined, but remain alias variables
-      set \*c=a(1) ; c joins {b,y} as alias variable; prior value of c lost
+      set *c=a(1) ; c joins {b,y} as alias variable; prior value of c lost
       ; c is no longer alias of i
       write $ZAHandle(c)=$ZAHandle(i),! ; output appears as 0
       set i=a(1) ; Assignment applies to i - value is ""
@@ -1028,14 +1040,16 @@ The Devanagari writing system (U+0900 to U+097F) is based on the representation 
 
 Although the half-form form consonant is a valid text element in the context of the Devanagari writing system, it does not map directly to a character in the Unicode Standard. It is obtained by combining the DEVANAGARI LETTER CA, with DEVANAGARI SIGN VIRAMA, and DEVANAGARI LETTER CHA.
 
-.. parsed-literal::
+.. code-block:: none
+
    च + ्  +  छ  =  च्छ
 
 On a screen or a printer, the terminal font detects the glyph image of the half-consonant and displays it at the next display position. Internally, YottaDB uses ICU's glyph-related conventions for the Devanagari writing system to calculate the number of columns needed to display it. As a result, YottaDB advances $X by 1 when it encounters the combination of the 3 Unicode code-points that represent the half-form consonant.
 
 To view this example at the YottaDB prompt, type in the following command sequence:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write $ZCHSET
    UTF-8
    YDB>set DS=$char($$FUNC^%HD("0905"))_$char($$FUNC^%HD("091A"))_$char($$FUNC^%HD("094D"))

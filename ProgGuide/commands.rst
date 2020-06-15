@@ -30,7 +30,8 @@ The BREAK command pauses execution of the code, issues BREAK warning, and initia
 
 The format of the BREAK command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    B[REAK][:tvexpr] [expr[:tvexpr][,...]]
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
@@ -65,14 +66,16 @@ Examples of BREAK
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    LOOP0     F  S act=$O(^act(act)) Q:act=""  B:debug  D LOOP1
 
 This FOR loop contains a BREAK with a command postconditional.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    YDB>ZPRINT ^br
    br;
         kill
@@ -113,7 +116,8 @@ The CLOSE command breaks the connection between a process and a device.
 
 The format of the CLOSE command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    C[LOSE][:tvexpr] expr[:(keyword[=expr][:...])][,...]
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
@@ -130,7 +134,8 @@ The DO command makes an entry in the YottaDB invocation stack and transfers exec
 
 The format of the DO command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    D[O][:tvexpr] [entryref[(expr|.lvn[,...])][:tvexpr][,...]]
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
@@ -158,21 +163,24 @@ Examples of DO
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>DO ^%RD
 
 This example invokes the routine directory utility program (%RD) from Direct Mode. The caret symbol (^) specifies that the DO command invokes %RD as an external routine.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>DO A(3)
 
 This example invokes the subroutine at label A and passes the value 3 as a parameter. The DO argument does not have a caret symbol (^), therefore, it identifies A as a label in the current routine.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    ReportA ; Label for ReportA
            SET di="" OPEN outfile USE outfile
            FOR  SET di=$ORDER(^div(di)) QUIT:di=""  DO PREP DO  DO POST
@@ -189,7 +197,8 @@ This routine first uses a DO with a label argument (PREP) to do some pre-process
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>zprint ^SQR
    SQR(z);
      set revert=0
@@ -211,7 +220,8 @@ ELSE executes the remainder of the line after the ELSE if $TEST is FALSE (0). Yo
 
 The format of the ELSE command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    E[LSE]
 
 * Because ELSE is a conditional command, it does not support a command postconditional.
@@ -231,7 +241,8 @@ Examples of ELSE
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    If x=+x Set x=x+y
    Else  Write !,x
 
@@ -239,15 +250,17 @@ The IF command evaluates the conditional expression x=+x and sets $TEST. If $TES
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    If x=+x Do ^GOFISH
-   Else  Set x=x\_"^"_y
+   Else  Set x=x_"^"_y
 
 The DO with an argument after the IF raises the possibility that the routine ^GOFISH changes the value of $TEST, thus making it possible to execute both the commands following the IF and the commands following the ELSE.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    Open dev::0 Else  Write !,"Device unavailable" QUIT
 
 This ELSE depends on the result of the timeout on the OPEN command. If the OPEN succeeds, it sets $TEST to one (1) and YottaDB skips the rest of the line after the ELSE. If the OPEN fails, it sets $TEST to zero (0), and YottaDB executes the remainder of the line after the ELSE.
@@ -261,7 +274,8 @@ The FOR command provides a looping mechanism in YottaDB. FOR does not generate a
 
 The format of the FOR command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    F[OR][lvn=expr[:numexpr1[:numexpr2]][,...]]]
 
 * Because FOR is a conditional command, it does not support a command postconditional.
@@ -294,7 +308,8 @@ Examples of FOR
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>Kill i For i=1:1:5 Write !,i
    1
    2
@@ -309,7 +324,8 @@ This FOR loop has a control variable, i, which has the value one (1) on the firs
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>FOR x="hello",2,"goodbye" WRITE !,x
    hello
    2
@@ -320,7 +336,8 @@ This FOR loop uses the control variable x and a series of arguments that have no
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>For x="hello":1:-1 Write !,x
    YDB>ZWRite x
    x=0
@@ -330,7 +347,8 @@ Because the argument has an increment, the FOR initializes the control variable 
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>For y=-1:-3:-6,y:4:y+10,"end" Write !,y
    -1
    -4
@@ -344,7 +362,8 @@ This FOR uses two limited loop arguments and one value argument. The first argum
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>Set x="" For  Set x=$Order(ar(x)) Quit:x=""  Write !,x
 
 This example shows an argumentless FOR used to examine all first level subscripts of the local array ar. When $ORDER() indicates that this level contains no more subscripts, the QUIT with the postconditional terminates the loop.
@@ -358,7 +377,8 @@ The GOTO command transfers execution to a location specified by its argument.
 
 The format of the GOTO command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    G[OTO][:tvexpr] entryref[:tvexpr][,...]
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
@@ -377,14 +397,16 @@ Examples of GOTO
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>GOTO TIME+4
 
 This GOTO command transfers control from Direct Mode to the line that is four (4) lines after the line labeled TIME (in the currently active routine). Using an offset is typically a debugging technique and rarely used in production code.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    GOTO A:x<0,^A:x=0,A^B
 
 This GOTO command transfers control to label A in the current routine, if x is less than zero (0), to routine ^A if x is equal to zero (0), and otherwise to label A in routine ^B. Once any of the transfers occur, the rest of the arguments have no effect.
@@ -397,7 +419,8 @@ The HALT command stops program execution and causes YottaDB to return control to
 
 The format of the HALT command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    H[ALT][:tvexpr]
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether YottaDB executes the command.
@@ -409,7 +432,8 @@ Because HALT and HANG share the same abbreviation (H), YottaDB differentiates th
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ ydb
    YDB>HALT
    $
@@ -424,7 +448,8 @@ The HANG command suspends YottaDB program execution for a period of time specifi
 
 The format of the HANG command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    H[ANG][:tvexpr] numexpr[,...]
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
@@ -441,14 +466,16 @@ Examples of HANG
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    For  Quit:$Data(^CTRL(1))  Hang 30
 
 This FOR loop repeatedly tests for the existence of ^CTRL(1), and terminates when that global variable exists. Otherwise the routine HANGs for 30 seconds and tests again.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    SET t=1 For  Quit:$Data(^CTRL(1))  Hang t If t<30 Set t=t+1
 
 This is similar to the previous example, except that it uses an adaptive time that lengthens from 1 second to a limit of 30 seconds if the routine stays in the loop.
@@ -461,7 +488,8 @@ The IF command provides conditional execution of the remaining commands on the l
 
 The format of the IF command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    I[F] [tvexpr[,...]]
 
 
@@ -476,7 +504,8 @@ The format of the IF command is:
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    IF A,B ...
    is equivalent to
    IF A IF B
@@ -491,22 +520,25 @@ Examples of IF
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    IF x=+x!(x="") Do BAL
 
 In this example, the DO executes if x contains a number or a null string.
 
 Example:
 
-.. parsed-literal::
-   Write !,?50,BAL If 'BAL Write "\*\*\*\*"
+.. code-block:: none
+
+   Write !,?50,BAL If 'BAL Write "****"
    IF  Set EMPTY(acct)=""
 
 The IF in the first line changes the value of $TEST, determining the execution of the code following the argumentless IF in the second line. Such argumentless IFs may serve as a form of line continuation.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>Set X=1,Y=1,Z=2 Kill UNDEF
    YDB>If X=1,Y=1,Z=3,UNDEF=0 Write "HI"
    YDB>
@@ -515,7 +547,8 @@ The IF command causes YottaDB to cease executing the line after it determines Z 
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>Set X=1 Kill UNDEF
    YDB>If X=1!(UNDEF=3) Write "HI"
    HI
@@ -533,7 +566,8 @@ $ZJOB is set to the pid of the process created by the JOB command. For more deta
 
 The format of the JOB command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    J[OB][:tvexpr] entryref[(expr[,...])]
    [:[(keyword[=value][:...])][:numexpr]][,...]
 
@@ -680,21 +714,24 @@ Examples of JOB
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>JOB ^TEST("V54001","")
 
 This creates a job that starts doing the routine ^TEST (with 2 parameters) in the current working directory.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    JOB PRINTLABELS(TYPE,PRNTR,WAITIM)
 
 This passes three values (TYPE, PRNTR, and WAITIM) to the new job, which starts at the label PRINTLABELS of the current routine.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    set jout="serverjob.mjo"
    set jerr="serverjob.mje"
    job @("check(a,b):(OUTPUT="""_jout_""":ERROR="""_jerr_""")")
@@ -713,8 +750,9 @@ The KILL command deletes local or global variables and their descendant nodes.
 
 The format of the KILL command is:
 
-.. parsed-literal::
-   K[ILL][:tvexpr] [glvn | (lvn[,...]) | \*lname | \*lvn ]
+.. code-block:: none
+
+   K[ILL][:tvexpr] [glvn | (lvn[,...]) | *lname | *lvn ]
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
 * The optional global or local variable name specifies the variable to delete; KILL deletes not only the variable specified in the argument, but also all variables descended from that variable, that is, those starting with the identical key-prefix.
@@ -741,7 +779,8 @@ Examples of KILL
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>Kill  Set a=0,a(1)=1,a(1,1)="under" KILL a(1) ZWR
    a=0
    YDB>
@@ -750,14 +789,16 @@ This uses an argumentless KILL to get a "fresh start" by deleting all existing l
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>Kill (a,b),^AB(a,b)
 
 The first argument (an exclusive KILL) specifies to KILL all local variables except a and b. The second argument deletes ^AB(a,b) and any descendants of that global variable node.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    kill *
    write !,"ydb_stdxkill=",+$ztrnlnm("ydb_stdxkill"),!
    set (A,B,C,E)="input"
@@ -769,7 +810,7 @@ Example:
    zwrite
    write !,"____________",!
    set (A,B,C,E)="base"
-   set \*C=A,\*D=B
+   set *C=A,*D=B
    kill (C,D)
    zwrite
    quit
@@ -782,7 +823,8 @@ Example:
 
 Produces the following output:
 
-.. parsed-literal::
+.. code-block:: none
+
    ydb_stdxkill=0
    A="output"
    B="output"
@@ -794,8 +836,8 @@ Produces the following output:
    ____________
    A="base" ;*
    B="base" ;*
-   \*C=A
-   \*D=B
+   *C=A
+   *D=B
 
 ----------------------
 Lock
@@ -809,8 +851,9 @@ YottaDB recommends implementing database Consistency using transaction processin
 
 The format of the LOCK command is:
 
-.. parsed-literal::
-   L[OCK][:tvexpr] [[-\|+]nref|(nref[,...])[:numexpr] [,...]]
+.. code-block:: none
+
+   L[OCK][:tvexpr] [[-|+]nref|(nref[,...])[:numexpr] [,...]]
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
 * The nref argument specifies a resource name in the format of the YottaDB name, with or without subscripts and with or without a preceding caret (^). An nref can optionally have an environment specification, including one without a preceding caret (^).
@@ -923,7 +966,8 @@ Examples of LOCK
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    Lock A,^B,@C
    Lock (A,B,@C)
 
@@ -931,7 +975,8 @@ The first LOCK command LOCKs A and unLOCKs A before LOCKing ^B, then unLOCKs ^B 
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    LOCK (A,B)
    LOCK +C
    LOCK -B
@@ -940,7 +985,8 @@ This LOCKs A and B, then incrementally LOCKs C. Finally it releases the LOCK on 
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    LOCK (A,B,C)
    LOCK +(B,C)
    LOCK -(B)
@@ -949,7 +995,8 @@ This LOCKs A, B and C together. It then increments the lock "counts" of B and C.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    LOCK ^D:5
 
 This command attempts to LOCK ^D with a timeout of five seconds. If LOCK acquires the named resource before the timeout elapses, YottaDB sets $TEST to 1 (TRUE). If LOCK fails to acquire the named resource before the timeout elapses, YottaDB sets $TEST to 0 (FALSE).
@@ -962,7 +1009,8 @@ The MERGE command copies a variable and all its descendants into another variabl
 
 The format of MERGE command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    M[ERGE][:tvexpr] glvn1=glvn2[,...]
 
 * The optional truth-valued expression immediately following the command is a command post conditional that controls whether or not YottaDB executes the command.
@@ -985,7 +1033,8 @@ Examples of MERGE
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>Set ^gbl1="one"
    YDB>Set ^gbl1(1,1)="oneone"
    YDB>Set ^gbl1(1,1,3)="oneonethree"
@@ -1011,7 +1060,8 @@ Example:
 
 This example illustrates how MERGE copies a sub-tree of one global into another. The nodes in the sub-tree of ^gbl(2), for which $DATA() value is 1 or 11, are copied to sub-tree of ^gbl1(1) as follows:
 
-.. parsed-literal::
+.. code-block:: none
+
    ^gbl1(1) is updated from the value of ^gbl2(2)
    ^gbl1(1,1,3) is updated from the value of ^gbl2(2,1,3)
    ^gbl1(1,1,4,5) is updated from the value of ^gbl2(2,1,4,5)
@@ -1020,7 +1070,8 @@ Since ^gbl1(2,1) and ^gbl2(2,2,4) do not have values ($DATA()=0), the correspond
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>Kill
 
    YDB>Set ^gbl(1,2)="1,2"
@@ -1043,7 +1094,8 @@ The NEW command "stacks" copies of local variables and reinitializes those varia
 
 The format of the NEW command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    N[EW][:tvexpr] [[(]lvn[,...][)][,...]]
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
@@ -1065,7 +1117,8 @@ Examples of NEW
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    NEW1;
      Set A(1)=1,B=4,C=5
      Write !,"VARIABLES BEFORE NEW:",!
@@ -1082,7 +1135,8 @@ Example:
 
 Produces the results:
 
-.. parsed-literal::
+.. code-block:: none
+
    VARIABLES BEFORE NEW:
    A(1)=1
    B=4
@@ -1097,7 +1151,8 @@ Produces the results:
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    NEW2;
      Set (A,B,C,D)="TEST"
      Do LABEL
@@ -1112,7 +1167,8 @@ Example:
 
 Produces the results:
 
-.. parsed-literal::
+.. code-block:: none
+
    VARIABLES AFTER EXCLUSIVE NEW:
    A="NEW"
    B="NEW"
@@ -1126,7 +1182,8 @@ Produces the results:
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    /usr/local/lib/yottadb/r120/ydb -run ^stackalias
    stackalias ; Demonstrate New with alias
      ZPrint ; Print this program
@@ -1150,28 +1207,29 @@ Example:
    ------------
    ZWRite in the caller before subprogram
    A=1 ;*
-   \*B=A
+   *B=A
    C=3
-   \*C(2)=A
+   *C(2)=A
    D=4
    ------------
    ZWRite in the subprogram with new A and modified B
    A="I am not an alias"
    B="I am an alias" ;*
    C=3
-   \*C(2)=B
+   *C(2)=B
    D=4
    ------------
    ZWRite in the caller after subprogram - A association is restored
    A="I am an alias" ;*
-   \*B=A
+   *B=A
    C=3
-   \*C(2)=A
+   *C(2)=A
    D=4
 
 The following is essentially the same as the prior example but using an exclusive NEW:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ /usr/local/lib/yottadb/r120/ydb -run ^stackalias1
    stackalias1 ; Demonstrate New with alias
      ZPrint ; Print this program
@@ -1195,9 +1253,9 @@ The following is essentially the same as the prior example but using an exclusiv
    ------------
    ZWRite in the caller before subprogram
    A=1 ;*
-   \*B=A
+   *B=A
    C=3
-   \*C(2)=A
+   *C(2)=A
    D=4
    ------------
    ZWRite in the subprogram - Notice B is flagged as an alias
@@ -1206,9 +1264,9 @@ The following is essentially the same as the prior example but using an exclusiv
    -----------
    ZWRite in the caller after subprogram - A association is restored
    A="I am an alias" ;*
-   \*B=A
+   *B=A
    C=3
-   \*C(2)=A
+   *C(2)=A
    D=4
 
 An exclusive New can create a scope in which only one association between a name or an lvn and an array may be visible. In this case, ZWRITE nevertheless shows the existence of an alias, even when that array is accessible from only one name or lvn.
@@ -1221,7 +1279,8 @@ The OPEN command creates a connection between a YottaDB process and a device.
 
 The format of the OPEN command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    O[PEN][:tvexpr] expr[:[(keyword[=expr][:...])] [:numexpr]][,...]
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
@@ -1241,8 +1300,9 @@ Except when a QUIT appears on a line after a FOR, the QUIT command terminates th
 
 The format of the QUIT command is:
 
-.. parsed-literal::
-   Q[UIT][:tvexpr] [expr | \*lname | \*lvn]
+.. code-block:: none
+
+   Q[UIT][:tvexpr] [expr | *lname | *lvn]
 
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
@@ -1260,7 +1320,8 @@ Examples of Quit
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
         Do A
         Quit
    A    Write !,"This is label A"
@@ -1269,7 +1330,8 @@ The explicit QUIT at the line preceding the label A prevents line A from executi
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    Write $$ESV
     Quit
  ESV()
@@ -1279,7 +1341,8 @@ Because the label ESV has an argument list (which is empty), YottaDB can only le
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    Set x="" For  Set x=$Order(^BAL(x)) Quit:x]]"AR5999"!'$Length(x)  DO STF
 
 The postconditional QUIT terminates the FOR loop. Note the two spaces after the QUIT because it has no argument.
@@ -1292,8 +1355,9 @@ The READ command transfers the input from the current device to a global or loca
 
 The format of the READ command is:
 
-.. parsed-literal::
-   R[EAD][:tvexpr] (glvn|*glvn|glvn\#intexpr)[:numexpr]|strlit|fcc[,...]
+.. code-block:: none
+
+   R[EAD][:tvexpr] (glvn|*glvn|glvn#intexpr)[:numexpr]|strlit|fcc[,...]
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
 * A subscripted or unsubscripted global or local variable name specifies a variable into which to store the input; the variable does not have to exist prior to the READ; if the variable does exist prior to the READ, the READ replaces its old value.
@@ -1314,17 +1378,20 @@ SET assigns values to variables or to a selected portion of a variable.
 
 The format of the SET command is:
 
-.. parsed-literal::
-   S[ET][:tvexpr] setleft=expr | (setleft[,...])=expr | \*lvn=lname | aliascontainer[,...]
+.. code-block:: none
+
+   S[ET][:tvexpr] setleft=expr | (setleft[,...])=expr | *lvn=lname | aliascontainer[,...]
 
 where
 
-.. parsed-literal::
+.. code-block:: none
+
    setleft == glvn | $EXTRACT(glvn,[,intexpr1[,intexpr2]]) | $PIECE(glvn,expr1[,intexpr1[,intexpr2]]) | isv
 
 and
 
-.. parsed-literal::
+.. code-block:: none
+
    aliascontainer == lvn | exfunc | exvar
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
@@ -1351,7 +1418,8 @@ Examples of SET
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>Kill  Set a="x",(b,c)=1,@a="hello" ZWRite
    a=x
    b=1
@@ -1363,14 +1431,16 @@ The KILL command deletes any previously defined local variables. The SET command
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>Set ^(3,4)=^X(1,2)
 
 As YottaDB evaluates the right-hand side of the equal sign before the left-hand side within a SET argument, the right-hand expression determines the naked reference indicator prior to evaluation of the left-hand side. Therefore, this example assigns ^X(1,3,4) the value of ^X(1,2).
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>Kill x Set $Piece(x,"^",2)="piece 3" ZWRite x
    x="^^piece 3"
    YDB>
@@ -1379,7 +1449,8 @@ This SET demonstrates a "set piece" and shows how SET generates missing delimite
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>Set x="I love hotdogs"
 
    YDB>Set $Extract(x,3,6)="want"
@@ -1394,11 +1465,12 @@ The SET $EXTRACT command replaces and extracts the specified characters with the
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>kill A,B
 
    YDB>set A=1,A(1)=1,A(2)=2
-   YDB>set \*B=A ; A & B are aliases.
+   YDB>set *B=A ; A & B are aliases.
    YDB>zwrite B
    B=1 ;*
    B(1)=1
@@ -1409,15 +1481,16 @@ This SET * command creates an alias associated between A and B. It associates th
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>kill A,B,C
 
    YDB>set A=1,*C(2)=A ; C(2) is a container
    YDB>zwrite
    A=1 ;*
-   \*C(2)=A
-   YDB>set \*B=C(2) ; B is now an alias
-   YDB>write B,":",$length(C(2)),":" ; An alias variable provides access but a container doesn't
+   *C(2)=A
+   YDB>set *B=C(2) ; B is now an alias
+   YDB>write B,":",$length(C(2)),":" ; An alias variable provides access but a container does not
    1:0:
    YDB>
 
@@ -1431,7 +1504,8 @@ The TCOMMIT command marks the end of a transaction or sub-transaction and decrem
 
 The format of the TCOMMIT command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    TC[OMMIT][:tvexpr]
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
@@ -1453,7 +1527,8 @@ YottaDB limits TP restarts in the final retry due to non-availability of M-locks
 
 The format for the TRESTART command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    TRE[START][:tvexpr]
 
 The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
@@ -1481,7 +1556,8 @@ The TROLLBACK command terminates a transaction by causing a ROLLBACK, which remo
 
 The format of the TROLLBACK command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    TRO[LLBACK][:tvexpr] [intexpr]
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
@@ -1502,8 +1578,9 @@ The TSTART command marks the beginning of a transaction or sub-transaction and i
 
 The format of the TSTART command is:
 
-.. parsed-literal::
-   TS[TART][:tvexpr] [([lvn...])\|lvn|*\|][:keyword|(keyword...)]
+.. code-block:: none
+
+   TS[TART][:tvexpr] [([lvn...])|lvn|*|][:keyword|(keyword...)]
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
 * If $TLEVEL is 0 before the TSTART, the TSTART starts a transaction; otherwise it starts a sub-transaction.
@@ -1549,7 +1626,8 @@ The USE command selects the current device for READs (input) and WRITEs (output)
 
 The format of the USE command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    U[SE][:tvexpr] expr[:(keyword[=expr][:...])][,...]
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
@@ -1566,7 +1644,8 @@ The VIEW command adjusts an environmental factor selected by a keyword argument.
 
 The format of the VIEW command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    V[IEW][:tvexpr] keyword[:expr2[:...]][,...]
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
@@ -1602,7 +1681,8 @@ The default BREAKMSG mask is 31 (1+2+4+8+16) which means that YottaDB displays a
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>VIEW "BREAKMSG":5
 
 In this example the BREAKMSG value is 5, representing the sum of 1 and 4. This enables BREAKS within the body of a program (value 1) and for a device EXCEPTION (value 4).
@@ -1615,7 +1695,8 @@ At process startup, YottaDB initializes BADCHAR from the environment variable yd
 
 With VIEW "BADCHAR", YottaDB functions generate the BADCHAR error when they encounter malformed byte sequences. With this setting, YottaDB detects and clearly reports potential application program logic errors as soon as they appear. As an illegal UTF-8 character in the argument of a character-oriented function likely indicates a logic issue, YottaDB recommends using VIEW "BADCHAR" in production environments.
 
-.. parsed-literal::
+.. code-block:: none
+
    When all strings consist of well-formed characters, the value of VIEW [NO]BADCHAR has no effect whatsoever. With VIEW "NOBADCHAR", the same functions treat malformed byte sequences as valid characters. During the migration of an application to add support for UTF-8 mode, illegal character errors are likely to be frequent and indicative of application code that is yet to be modified. VIEW "NOBADCHAR" suppresses these errors at times when their presence impedes development.
 
 **"DBFLUSH"[:REGION[:N]]**
@@ -1897,7 +1978,8 @@ The M-profiling information is stored in the variable in the following format:
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>zprint ^profiling
    ; In this example, query^profiling, order^profiling, and merge^profling perform the same operation -- store even-numbered subscripts of a global to a subscripted loc
    al variable. M-profiling results show which yields the fastest execution between the three.
@@ -1925,7 +2007,7 @@ Example:
      quit
    order(y)
      new i,ordval
-     set x="",i=0,y=y\_"(x)",x=$order(@y)
+     set x="",i=0,y=y_"(x)",x=$order(@y)
      for  quit:x=""  do
      .      set:i#2 ordval(i)=x
      .      set x=$order(@y)
@@ -1941,10 +2023,11 @@ Example:
 
 This example produces an output like the following:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>do ^profiling
-   ^trc("\*CHILDREN")="0:0:0"
-   ^trc("\*RUN")="144009:76004:220013"
+   ^trc("*CHILDREN")="0:0:0"
+   ^trc("*RUN")="144009:76004:220013"
    ^trc("profiling","merge")="1:8001:12000:20001:16231"
    ^trc("profiling","merge",0)="1:0:0:0:5"
    ^trc("profiling","merge",1)="1:0:0:0:4"
@@ -1996,7 +2079,8 @@ This example produces an output like the following:
 
 Consider the following program that presents the output of this M-profiling result in a tabular report.
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>zprint ^tracereport
    tracereport(gbl,label,rtn)
      set gap=15
@@ -2007,12 +2091,12 @@ Consider the following program that presents the output of this M-profiling resu
      .      if ($length(@gbl,":")=5)&($qsubscript(gbl,1)=rtn)&($qsubscript(gbl,2)=label) do
             ..      set gap=15 set lineno=$qsubscript(gbl,3)
             ..      if lineno="" write label," total",?gap set zp=""
-            ..      else  write lineno,?gap set zp=label\_"+"_lineno_"^"_rtn
+            ..      else  write lineno,?gap set zp=label_"+"_lineno_"^"_rtn
             ..      for i=1:1:5 set gap=gap+15 write $piece(@gbl,":",i),?gap
             ..      write !
             ..      set maxlines=$qsubscript(gbl,3)
       for i=0:1:maxlines do
-      .      set zp=label\_"+"_i_"^"_rtn
+      .      set zp=label_"+"_i_"^"_rtn
       .      write "Line #",i,": ",?9
       .      zprint @zp
 
@@ -2031,7 +2115,7 @@ Consider the following program that presents the output of this M-profiling resu
    7              1              0              0              0              63
    Line #0: order(y)
    Line #1:   new i,ordval
-   Line #2:   set x="",i=0,y=y\_"(x)",x=$order(@y)
+   Line #2:   set x="",i=0,y=y_"(x)",x=$order(@y)
    Line #3:   for  quit:x=""  do
    Line #4:   .      set:i#2 ordval(i)=x
    Line #5:   .      set x=$order(@y)
@@ -2040,7 +2124,8 @@ Consider the following program that presents the output of this M-profiling resu
 
 This shows that order^profiling has an elapsed time of 25720 and the maximum elapsed time was on line #5, which was executed 1500 times.
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>do ^tracereport("^trc","merge","profiling")
    .........................................................................................
    Line #         Count          User Time      System Time    Total Time     Elapsed Time
@@ -2068,7 +2153,8 @@ Note that M-profiling results are reported for each line. While reporting time f
 
 Here is an example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>do ^tracereport("^trc","qom","profiling")
    .........................................................................................
    Line #         Count          User Time      System Time    Total Time     Elapsed Time
@@ -2093,15 +2179,16 @@ view "trace":1: "<gbl>" and view "trace":0: "<gbl>" commands enable and disable 
 
 To perform entryref-specific M-profiling without modifying the source program, use ZBREAK. For example, to perform M-profiling of the entryref merge^profiling, remove VIEW "TRACE" commands from profiling.m and then execute the following commands:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZBREAK merge^profiling:"view ""TRACE"":1:""^mtrc"" write ""Trace"""
    YDB>do ^profiling
    Trace
    YDB>view "TRACE":0:"^mtrc"
 
    YDB>zwrite ^mtrc
-   ^mtrc("\*CHILDREN")="0:0:0"
-   ^mtrc("\*RUN")="132008:52003:184011"
+   ^mtrc("*CHILDREN")="0:0:0"
+   ^mtrc("*RUN")="132008:52003:184011"
    ^mtrc("GTM$DMOD","^")="1:0:0:0:4"
    ^mtrc("profiling","merge")="1:8001:0:8001:13450"
    ^mtrc("profiling","merge",1)="1:0:0:0:6"
@@ -2121,7 +2208,8 @@ Example:
 
 If prof.m is:
 
-.. parsed-literal::
+.. code-block:: none
+
    prof;
        set start=1
        set finish=1000
@@ -2162,9 +2250,10 @@ If prof.m is:
 
 On executing prof, the output looks like the following (times in the example were chosen for clarity of illustration and are not typical).
 
-.. parsed-literal::
-   ^trc("\*CHILDREN")="0:0:0"
-   ^trc("\*RUN")="224014:12000:236014"
+.. code-block:: none
+
+   ^trc("*CHILDREN")="0:0:0"
+   ^trc("*RUN")="224014:12000:236014"
    ^trc("prof","cyclehelper")="1000:200013:0:200013:206318"
    ^trc("prof","cyclehelper",1)="1000:12001:0:12001:3202"
    ^trc("prof","cyclehelper",2)="1000:0:0:0:3766"
@@ -2200,7 +2289,8 @@ Example:
 
 If fortypes.m is:
 
-.. parsed-literal::
+.. code-block:: none
+
    fortypes;
        new i,j,k,v
        set k=1
@@ -2232,9 +2322,10 @@ If fortypes.m is:
 
 On executing fortypes, the output looks something like the following:
 
-.. parsed-literal::
-   ^trc("\*CHILDREN")="4000:0:4000"
-   ^trc("\*RUN")="468029:48003:516032"
+.. code-block:: none
+
+   ^trc("*CHILDREN")="4000:0:4000"
+   ^trc("*RUN")="468029:48003:516032"
    ^trc("fortypes","fortypes",5)="1:0:0:0:9"
    ^trc("fortypes","fortypes",5,"FOR_LOOP",1)=3
    ^trc("fortypes","fortypes",7)="1:0:0:0:6"
@@ -2286,7 +2377,8 @@ VIEW "SETENV":<expr>:<value> sets the environment variable named by <expr> to <v
 
 Example (the default timezone of the computer is US Eastern Standard Time):
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>WRITE $ZTRNLNM("TZ")
 
    YDB>WRITE $ZDATE($HOROLOG,"24:60")
@@ -2316,7 +2408,8 @@ Examples of VIEW
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>Kill A
 
    YDB>View "NOUNDEF"
@@ -2328,7 +2421,8 @@ This demonstrates how a VIEW that specifies NOUNDEF prevents UNDEFined errors.
 
 Example 2:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZLink "NOSENSE"
    %YDB-E-LABELMISSING Label referenced but
    not defined:lab
@@ -2356,8 +2450,9 @@ The WRITE command transfers a character stream specified by its arguments to the
 
 The format of the WRITE command is:
 
-.. parsed-literal::
-   W[RITE][:tvexpr] expr\|\*intexpr\|fcc[,...]
+.. code-block:: none
+
+   W[RITE][:tvexpr] expr|*intexpr|fcc[,...]
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
 * An expression argument supplies the text of a WRITE.
@@ -2375,7 +2470,8 @@ The XECUTE command makes an entry in the YottaDB invocation stack and executes t
 
 The format of the XECUTE command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    X[ECUTE]:tvexpr expr[:tvexpr][,...]
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
@@ -2401,7 +2497,8 @@ Examples of XECUTE
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>Xecute "Write ""HELLO"""
    HELLO
    YDB>
@@ -2410,7 +2507,8 @@ This demonstrates a simple use of Xecute.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    Set x="" For Set x=$Order(^%x(x)) Quit:x=""  Xecute x
 
 This $ORDER() loop XECUTEs code out of the first level of the global array ^%x. Note that, in most cases, having the code in a YottaDB source file, for example TMPX.m, and using a Do ^TMPX improves efficiency.
@@ -2427,7 +2525,8 @@ For more information on troubleshooting LOCKs with the M Lock Utility (LKE), ref
 
 The format of the ZALLOCATE command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    ZA[LLOCATE][:tvexpr] [(]nref[,...][)][:intexpr][,...]
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
@@ -2450,7 +2549,8 @@ Examples of ZALLOCATE
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    ZAllocate A
    ZAllocate ^A
    ZAllocate ^A(1)
@@ -2461,7 +2561,8 @@ The first command ZALLOCATEs A; the second, ^A; the third, ^A(1) and the fourth,
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    ZAllocate A,^B,@C
    ZALLOCATE (A,B,C)
 
@@ -2471,7 +2572,8 @@ When a process attempts to ZALLOCATE a name currently ZALLOCATEd or LOCKed (with
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    ZAllocate ^D:5
 
 This example specifies a timeout of five seconds. If YottaDB reserves ^D before the five seconds elapses, ZALLOCATE sets $TEST to TRUE. If YottaDB cannot reserve ^D within the five second timeout, ZALLOCATE sets $TEST to FALSE.
@@ -2486,7 +2588,8 @@ Also see the description of the ZDEALLOCATE command described later in this chap
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    Lock ^AR(PNT)
    .
    .
@@ -2548,7 +2651,8 @@ The ZBREAK command sets or clears routine breakpoints during debugging.
 
 The format of the ZBREAK command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    ZB[REAK][:tvexpr] [-]entryref[:[expr][:intexpr]][,...]
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
@@ -2571,7 +2675,8 @@ Examples of ZBREAK
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZPRint ^ZBTEST
    ZBTEST;
         Do SUB
@@ -2589,7 +2694,8 @@ This inserts a ZBREAK with a default action at SUB^ZBTEST. After YottaDB encount
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZBREAK -*
 
    YDB>ZGOTO
@@ -2603,14 +2709,16 @@ This removes all existing ZBREAKs with a ZBREAK -\*. Note that it is not necessa
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    ZBreak PRINT^TIME::5
 
 This BREAKs execution at line PRINT in routine just before the fifth time the line is executed.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    ZBREAK PRINT^TIME:"WRITE AVE BREAK":3
 
 This inserts a ZBREAK action of WRITE AVE and BREAK before the third execution of PRINT^TIME.
@@ -2625,7 +2733,8 @@ Within YottaDB itself, ZCOMPILE provides the functionality of the yottadb comman
 
 The format of the ZCOMPILE command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    ZCOM[PILE][:tvexpr] expr[,...]
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
@@ -2641,14 +2750,16 @@ Examples of ZCOMPILE
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    ZCOMPILE "EXAMPLE'.m"
 
 This compiles EXAMPLE.m in the current working directory.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    ZCOMPILE "-list A*.m"
 
 This compiles all files starting with a [capital] A and an extension of .m in the current working directory and produces corresponding listing files for each source / object.
@@ -2661,7 +2772,8 @@ The ZCONTINUE command continues routine execution after a BREAK command or a <CT
 
 The format of the ZCONTINUE command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    ZC[ONTINUE][:tvexpr]
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
@@ -2682,7 +2794,8 @@ The ZDEALLOCATE command provides compatibility with some other YottaDB implement
 
 The format of the ZDEALLOCATE command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    ZD[EALLOCATE][:tvexpr] [nref[,...]]
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command
@@ -2707,12 +2820,14 @@ The ZEDIT command invokes the editor specified by the EDITOR environment variabl
 
 By default, ZEDIT puts a new file into the first source directory in $ZROUTINES. You can specify a file path explicitly in the argument to the ZEDIT command, for example: the current working directory:
 
-.. parsed-literal::
+.. code-block:: none
+
    ZEDIT "./file"
 
 The format of the ZEDIT command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    ZED[IT][:tvexpr] [expr[,...]]
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
@@ -2732,14 +2847,16 @@ Examples of ZEDIT
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZEDIT "BAL"
 
 This invokes the editor for a file with a name of BAL and an extension of .m. Notice that BAL is a string literal.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>Set prog="BAL"
 
    YDB>ZEDit prog
@@ -2748,7 +2865,8 @@ This is similar to the first example except that it uses a variable argument rat
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>zedit ".login"
 
 This invokes the editor for a file with the name .login. Notice that in this case the file is not a YottaDB file, since .login starts with a period, and therefore, cannot be a YottaDB file.
@@ -2761,7 +2879,8 @@ The ZGOTO command transfers control to various levels in the YottaDB invocation 
 
 The format of the ZGOTO command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    ZG[OTO][:tvexpr] [[intexpr][:entryref[:tvexpr]],...]
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
@@ -2803,7 +2922,8 @@ Examples of ZGOTO
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZGOTO
    YDB>ZSHow
    +1^GTM$DMOD (Direct mode)
@@ -2813,8 +2933,9 @@ This uses ZGOTO to clear all levels of the YottaDB invocation stack. ZSHOW with 
 
 Example:
 
-.. parsed-literal::
-   SET $ZTRAP="ZGOTO "_$ZLEVEL\_":^ERROR"
+.. code-block:: none
+
+   SET $ZTRAP="ZGOTO "_$ZLEVEL_":^ERROR"
 
 This SETs $ZTRAP to contain a ZGOTO, so if an error causes YottaDB to XECUTE $ZTRAP, the routine ERROR executes at the same level as the SET command shown in the example.
 
@@ -2826,7 +2947,8 @@ The ZHALT command stops program execution and causes YottaDB to return control t
 
 The format of the ZHALT command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    ZHALT[:tvexpr] [intexpr]
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether YottaDB executes the command.
@@ -2840,14 +2962,16 @@ Examples of ZHALT
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>zhalt 230
    $ echo $?
    230
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>zhalt 257
    $ echo $?
    1
@@ -2860,7 +2984,8 @@ The ZHELP command accesses the help information from the YottaDB help library or
 
 The format of the ZHELP command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    ZH[ELP][:tvexpr] [expr1[:expr2],...]
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
@@ -2877,21 +3002,24 @@ Examples of ZHELP
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>zhelp "func $data"
 
 This lists the help for function $DATA, which is a subtopic of functions topic.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>zhelp
 
 This uses ZHELP to list all the keywords in the help library.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>zhelp "ZSHOW"
 
 This lists the help for command ZSHOW.
@@ -2904,7 +3032,8 @@ The ZKILL command KILLs the data value for a variable name without affecting the
 
 The format of the ZKILL command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    ZK[ILL][:tvexpr] glvn
 
 The functionality of ZKILL is identical to ZWITHDRAW. For a comprehensive description of the format and usage, refer to `ZWIthdraw <./commands.html#zwithdraw>`_.
@@ -2922,7 +3051,8 @@ With VIEW "LINK":"RECURSIVE" specified or by starting the process with the envir
 
 The format of the ZLINK command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    ZL[INK][:tvexpr] [expr1[:expr2][,...]]
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
@@ -2985,21 +3115,24 @@ Examples of ZLINK
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZLINK "test"
 
 If ZLINK finds test.m or test.o, it adds the routine test to the current image. If ZLINK does not find test.o, or finds that test.o is older than test.m, YottaDB compiles test.m to produce a new test.o, and adds the contents of the new object file to the image. This example assumes "test" is not on the current M stack - if it is on the stack, YottaDB gives an error.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>zlink "test.m":"-noobject -list"
 
 This compiles the routine "test" and produces a listing but no object file. Because the example produces no object file, it must locate an existing object file (which might be the same as any copy in the current image); if there is noexisting object file, YottaDB produces an error. While this example shows the use of compilation qualifiers with ZLINK, a -noobject -list compilation might better be done with ZCOMPILE.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>zlink "sockexamplemulti2"
    %YDB-E-LOADRUNNING, Cannot ZLINK an active routine sockexamplemulti2
    YDB>zshow "S"
@@ -3091,7 +3224,8 @@ The benefits of auto-relink are as follows:
 
 The use and setup of the auto-relink facility depends upon the requirements. Here is an example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ ydb
    YDB>w $zroutines
    /home/jdoe/.yottadb/r1.20_x86_64/o*(/home/jdoe/.yottadb/r1.20_x86_64/r /home/jdoe/.yottadb/r) /usr/local/lib/yottadb/r1.20_x86_64/plugin/o/_POSIX.so /usr/local/lib/yottadb/r1.20_x86_64/plugin/o(/usr/local/lib/yottadb/r1.20_x86_64/plugin/r) /usr/local/lib/yottadb/r1.20_x86_64/libyottadbutil.so /usr/local/lib/yottadb/r1.20
@@ -3102,27 +3236,31 @@ With auto-relink enabled, YottaDB loads an object file from an object directory 
 
 With auto-relink, YottaDB creates an initial Rtnobj shared memory segment of 1 MiB (2 MiB or more if hugepages is configured) and allocates 92MiB of shared memory segment for managing the auto-relink facility. Therefore, always ensure that your system has adequate shared memory configured; if not, YottaDB displays messages along the lines of:
 
-.. parsed-literal::
+.. code-block:: bash
+
    %YDB-E-SYSCALL, Error received from system call shmget() failed
 
 Refer to your OS documentation to configure shared memory limits (for example, on common Linux systems, the kernel.shmmax parameter in /etc/sysctl.conf).
 
 If your routines require more MiB shared memory, set the environment variable $ydb_autorelink_shm to an integer value (in powers of two). When auto-relink needs more shared memory for storing routines, YottaDB automatically allocates twice the size of $ydb_autorelink_shm MiB for auto-relink operations.
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>zedit "myprogram.m"
    YDB>
 
 ZEDIT puts a new file into the first source directory in $ZROUTINES, that is, in the /home/jdoe/.yottadb/r1.20_x86_64/r directory.
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>do ^myprogram
 
 The first invocation of an implicit ZLINK (DO, GOTO ZGOTO, ZPRINT, $TEXT() or function/extrinsic invocation) or an explicit ZLINK "myprogram.m" or ZRUPDATE "/home/jdoe/.yottadb/r1.20_x86_64/myprogram.o" creates a Relinkctl file if one does not already exist and the associated shared memory. The relinkctl file has a name associated with the hash of the directory to provide a pointer in the form of segment ids to shared memory so that processes can locate routines.
 
 As the ydb_linktmpdir environment variable is not set by default in the ydb/ydb_env_set scripts, YottaDB stores the Relinkctl file in the directory pointed to by the ydb_tmp environment variable.
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>zshow "A"
    Object Directory : /home/jdoe/.yottadb/r120/o
    Relinkctl filename : /tmp/yottadb/r120/ydb-relinkctl-43b26ca8384ddbf74b94d90a830c0bc9
@@ -3134,22 +3272,26 @@ As the ydb_linktmpdir environment variable is not set by default in the ydb/ydb_
 
 ZSHOW "A" command displays information related to relinkctl file and the routine records that it points to in the shared memory segments. The routine records appears in the order in which they were inserted into the shared memory in the context of the relinkctl file.
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>zedit "myprogram2.m"
 
 ZEDIT puts a new file into the first source directory in $ZROUTINES, that is, in the /home/jdoe/.yottadb/r1.20_x86_64/r directory.
 
-.. parsed-literal::
-   YDB> zrupdate "/home/jdoe/.yottadb/r1.20_x86_64/o/\*.o"
+.. code-block:: bash
+
+   YDB> zrupdate "/home/jdoe/.yottadb/r1.20_x86_64/o/*.o"
 
 The ZRUPDATE command increments the cycle counter of those routine records whose object hash is different than the one last loaded in the Rtnobj shared memory. In this case, it would be rec#2, that is, myprogram.o. ZRUPDATE does not recompile/relink the routines. Instead, it instructs all current and future processes that the object code is out-of-date and must be auto-relinked (if required) on the next invocation. An explicit ZLINK or an auto-relink (whichever happens first) checks the hash of an object and its replacement and initiates recompile/relink on finding that are they not identical.
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>zshow "A":zru
 
 If there are hundreds of routines, a command like ZSHOW "A":zru transfers the output of ZSHOW "A" to a local variable. The following example uses that result to display the information on all routines that contain the string passed to the disprtn function:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>zprint ^disprtn
    disprtn(rtn)
    set x="" for set x=$order(zru("A",x)) quit:x="" write:$piece(zru("A",x),":",3)[rtn zru("A",x),!
@@ -3157,7 +3299,8 @@ If there are hundreds of routines, a command like ZSHOW "A":zru transfers the ou
 
 and produces a result like the following:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>w $$^disprtn("myprogram")
    rec#1: rtnname: myprogram2 cycle: 1 objhash: 0x436c855d5891e7cf numvers: 1 objlen: 0x370 shmlen: 0x400
    rec#2: rtnname: myprogram cycle: 1 objhash: 0xd81f1cdcc275e13d numvers: 1 objlen: 0x280 shmlen: 0x400
@@ -3171,7 +3314,8 @@ The ZMESSAGE command raises an exception condition based on the specified messag
 
 The format of the ZMESSAGE command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    ZM[ESSAGE][:tvexpr] intexpr[:expr2][:...]
 
 The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
@@ -3216,7 +3360,8 @@ All of the following examples issue ZMESSAGE from Direct Mode where exception co
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZMessage 2
    %SYSTEM-E-ENO2, No such file or directory
 
@@ -3224,7 +3369,8 @@ This ZMESSAGE does not specify substitution text and the message does not includ
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZMESSAGE 150372994
    %YDB-E-GVUNDEF, Global Variable undefined:
 
@@ -3232,7 +3378,8 @@ The message specified by this ZMESSAGE command includes a substitution directive
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZMESSAGE 150373850:"x"
    %YDB-E-GVUNDEF, Undefined local variable: x
 
@@ -3248,7 +3395,8 @@ The ZPRINT command displays the source code lines selected by its argument.
 
 The format of the ZPRINT command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    ZP[RINT][:tvexpr] [entryref[:label[+intexpr]][,...]
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
@@ -3275,14 +3423,16 @@ Examples of ZPRINT
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZPRINT X^RTN
 
 This example displays the line beginning with the label X in the routine RTN.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZPRINT X^RTN:X+5
 
    YDB>ZPRINT X+-5^RTN:X
@@ -3292,7 +3442,8 @@ The first line displays the line beginning with the label X and the next 5 lines
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>zprint ^A#1#
     do ^test1
      do stop^test2
@@ -3300,7 +3451,8 @@ Example:
 
 This command displays the trigger code for trigger name A#1#.
 
-.. parsed-literal::
+.. code-block:: none
+
    ZPRINT ^x#/BREG : Print trigger routine user-named "x" in region BREG
    ZPRINT ^x#1#/BREG : Print trigger routine auto-named "x#1" in region BREG
    ZPRINT ^x#1#A/BREG : Print trigger routine auto-named "x#1", runtime disambiguated by "#A", AND in region BREG
@@ -3314,7 +3466,8 @@ ZRUPDATE
 
 Publishes the new versions of routines to subscribers. The format of the ZRUPDATE command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    ZRUP[DATE][:tvexpr] expr [,...]
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
@@ -3334,7 +3487,8 @@ The ZSHOW command displays information about the current YottaDB environment.
 
 The format of the ZSHOW command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    ZSH[OW][:tvexpr] [expr[:glvn][,...]]
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
@@ -3393,7 +3547,8 @@ If the wildcard (\*) occurs in the list, ZSHOW uses the default order (ZSHOW "IV
 
 If G occurs in the list, the statistics are displayed in the following order in a comma-separated list where each item has its mnemonic followed by a colon and a counter. YottaDB maintains the counter in DECIMAL. Each counter has 8-byte (can get as high as 2**64). If these counters exceed 18 decimal digits (somewhere between 2**59 and 2**60), which is the current YottaDB numeric representation precision threshold, their use in arithmetic expressions in YottaDB results in loss of precision. The mnemonics are:
 
-.. parsed-literal::
+.. code-block:: none
+
    BTD : # of database Block Transitions to Dirty
    CAT : Critical section Total Acquisitions successes
    CFE : Critical section Failed (blocked) acquisition total caused by Epochs
@@ -3404,55 +3559,55 @@ If G occurs in the list, the statistics are displayed in the following order in 
    CTN : Current Transaction Number of the database for the last committed read-write transaction (TP and non-TP)
    CYS : Critical section acquisition processor Yields sum of Squares
    CYT : Critical section acquisition processor Yields Total
-   DEX : \# of Database file EXtentions
-   DFL : \# of Database FLushes of the entire set of dirty global buffers in shared memory to disk
-   DFS : \# of times a process does an fsync of the database file. For example: a) after writing an epoch journal record, b) as part of database file extension c) during database rundown d) as part of mupip reorg -truncate etc.
-   DRD : \# of Disk ReaDs from the database file (TP and non-TP, committed and rolled-back).This does not include reads that are satisfied by buffered globals for databases that use the BG (Buffered Global) access method. YottaDB always reports 0 for databases that use the MM (memory-mapped) access method as this has no real meaning in that mode.
-   DTA : \# of DaTA operations (TP and non-TP)
-   DWT : \# of Disk WriTes to the database file (TP and non-TP, committed and rolled-back). This does not include writes that are satisfied by buffered globals for databases that use the BG (Buffered Global) access method. YottaDB always reports 0 for databases that use the MM (memory-mapped) access method as this has no real meaning in that mode.
-   GET : \# of GET operations (TP and non-TP)
-   JBB : \# of Journal Buffer Bytes updated in shared memory
-   JEX : \# of Journal file EXtentions
-   JFB : \# of Journal File Bytes written to the journal file on disk. For performance reasons, YottaDB always aligns the beginning of these writes to file system block size boundaries. JFB counts all bytes including those needed for alignment in order to reflect the actual IO load on the journal file. Since the bytes required to achieve alignment may have already been counted as part of the previous JFB, processes may write the same bytes more than once, causing the JFB counter to typically be higher than JBB.
-   JFL : \# of Journal FLushes of all dirty journal buffers in shared memory to disk. For example: when switching journal files etc.
-   JFS : \# of Journal FSync operations on the journal file. For example: when writing an epoch record, switching a journal file etc.
-   JFW : \# of Journal File Write system calls
-   JRE : \# of Journal Regular Epoch records written to the journal file (only seen in a -detail journal extract); these are written every time an epoch-interval boundary is crossed while processing updates
-   JRI : \# of JouRnal Idle epoch journal records written to the journal file (only seen in a -detail journal extract); these are written when a burst of updates is followed by an idle period, around 5 seconds of no updates after the database flush timer has flushed all dirty global buffers to the database file on disk
-   JRL : \# of Journal Records with a Logical record type (e.g. SET, KILL etc.) written to the journal file
-   JRO : \# of Journal Records with a type Other than logical written to the journal file (e.g. AIMG, EPOCH, PBLK, PFIN, PINI, and so on)
-   JRP : \# of Journal Records with a Physical record type (i.e. PBLK, AIMG) written to the journal file (these records are seen only in a -detail journal extract)
-   KIL : \# of KILl operations (kill as well as zwithdraw, TP and non-TP)
-   LKF : \# of LocK calls (mapped to this db) that Failed
-   LKS : \# of LocK calls (mapped to this db) that Succeeded
-   NBR : \# of Non-tp committed transaction induced Block Reads on this database
-   NBW : \# of Non-tp committed transaction induced Block Writes on this database
-   NR0 : \# of Non-tp transaction Restarts at try 0
-   NR1 : \# of Non-tp transaction Restarts at try 1
-   NR2 : \# of Non-tp transaction Restarts at try 2
-   NR3 : \# of Non-tp transaction Restarts at try 3
-   NTR : \# of Non-tp committed Transactions that were Read-only on this database
-   NTW : \# of Non-tp committed Transactions that were read-Write on this database
-   ORD : \# of $ORDer(,1) (forward) operations (TP and non-TP); the count of $Order(,-1) operations are reported under ZPR.
-   QRY : \# of $QueRY() operations (TP and non-TP)
-   SET : \# of SET operations (TP and non-TP)
-   TBR : \# of Tp transaction induced Block Reads on this database
-   TBW : \# of Tp transaction induced Block Writes on this database
-   TC0 : \# of Tp transaction Conflicts at try 0 (counted only for that region which caused the TP transaction restart)
-   TC1 : \# of Tp transaction Conflicts at try 1 (counted only for that region which caused the TP transaction restart)
-   TC2 : \# of Tp transaction Conflicts at try 2 (counted only for that region which caused the TP transaction restart)
-   TC3 : \# of Tp transaction Conflicts at try 3 (counted only for that region which caused the TP transaction restart)
-   TC4 : \# of Tp transaction Conflicts at try 4 and above (counted only for that region which caused the TP transaction restart)
-   TR0 : \# of Tp transaction Restarts at try 0 (counted for all regions participating in restarting TP transaction)
-   TR1 : \# of Tp transaction Restarts at try 1 (counted for all regions participating in restarting TP transaction)
-   TR2 : \# of Tp transaction Restarts at try 2 (counted for all regions participating in restarting TP transaction)
-   TR3 : \# of Tp transaction Restarts at try 3 (counted for all regions participating in restarting TP transaction)
-   TR4 : \# of Tp transaction Restarts at try 4 and above (restart counted for all regions participating in restarting TP transaction)
-   TRB : \# of Tp read-only or read-write transactions Rolled Back (excluding incremental rollbacks)
-   TTR : \# of Tp committed Transactions that were Read-only on this database
-   TTW : \# of Tp committed Transactions that were read-Write on this database
-   ZPR : \# of $order(,-1) or $ZPRevious() (reverse order) operations (TP and non-TP). The count of $Order(,1) operations are reported under ORD.
-   ZTR : \# of ZTRigger command operations
+   DEX : # of Database file EXtentions
+   DFL : # of Database FLushes of the entire set of dirty global buffers in shared memory to disk
+   DFS : # of times a process does an fsync of the database file. For example: a) after writing an epoch journal record, b) as part of database file extension c) during database rundown d) as part of mupip reorg -truncate etc.
+   DRD : # of Disk ReaDs from the database file (TP and non-TP, committed and rolled-back).This does not include reads that are satisfied by buffered globals for databases that use the BG (Buffered Global) access method. YottaDB always reports 0 for databases that use the MM (memory-mapped) access method as this has no real meaning in that mode.
+   DTA : # of DaTA operations (TP and non-TP)
+   DWT : # of Disk WriTes to the database file (TP and non-TP, committed and rolled-back). This does not include writes that are satisfied by buffered globals for databases that use the BG (Buffered Global) access method. YottaDB always reports 0 for databases that use the MM (memory-mapped) access method as this has no real meaning in that mode.
+   GET : # of GET operations (TP and non-TP)
+   JBB : # of Journal Buffer Bytes updated in shared memory
+   JEX : # of Journal file EXtentions
+   JFB : # of Journal File Bytes written to the journal file on disk. For performance reasons, YottaDB always aligns the beginning of these writes to file system block size boundaries. JFB counts all bytes including those needed for alignment in order to reflect the actual IO load on the journal file. Since the bytes required to achieve alignment may have already been counted as part of the previous JFB, processes may write the same bytes more than once, causing the JFB counter to typically be higher than JBB.
+   JFL : # of Journal FLushes of all dirty journal buffers in shared memory to disk. For example: when switching journal files etc.
+   JFS : # of Journal FSync operations on the journal file. For example: when writing an epoch record, switching a journal file etc.
+   JFW : # of Journal File Write system calls
+   JRE : # of Journal Regular Epoch records written to the journal file (only seen in a -detail journal extract); these are written every time an epoch-interval boundary is crossed while processing updates
+   JRI : # of JouRnal Idle epoch journal records written to the journal file (only seen in a -detail journal extract); these are written when a burst of updates is followed by an idle period, around 5 seconds of no updates after the database flush timer has flushed all dirty global buffers to the database file on disk
+   JRL : # of Journal Records with a Logical record type (e.g. SET, KILL etc.) written to the journal file
+   JRO : # of Journal Records with a type Other than logical written to the journal file (e.g. AIMG, EPOCH, PBLK, PFIN, PINI, and so on)
+   JRP : # of Journal Records with a Physical record type (i.e. PBLK, AIMG) written to the journal file (these records are seen only in a -detail journal extract)
+   KIL : # of KILl operations (kill as well as zwithdraw, TP and non-TP)
+   LKF : # of LocK calls (mapped to this db) that Failed
+   LKS : # of LocK calls (mapped to this db) that Succeeded
+   NBR : # of Non-tp committed transaction induced Block Reads on this database
+   NBW : # of Non-tp committed transaction induced Block Writes on this database
+   NR0 : # of Non-tp transaction Restarts at try 0
+   NR1 : # of Non-tp transaction Restarts at try 1
+   NR2 : # of Non-tp transaction Restarts at try 2
+   NR3 : # of Non-tp transaction Restarts at try 3
+   NTR : # of Non-tp committed Transactions that were Read-only on this database
+   NTW : # of Non-tp committed Transactions that were read-Write on this database
+   ORD : # of $ORDer(,1) (forward) operations (TP and non-TP); the count of $Order(,-1) operations are reported under ZPR.
+   QRY : # of $QueRY() operations (TP and non-TP)
+   SET : # of SET operations (TP and non-TP)
+   TBR : # of Tp transaction induced Block Reads on this database
+   TBW : # of Tp transaction induced Block Writes on this database
+   TC0 : # of Tp transaction Conflicts at try 0 (counted only for that region which caused the TP transaction restart)
+   TC1 : # of Tp transaction Conflicts at try 1 (counted only for that region which caused the TP transaction restart)
+   TC2 : # of Tp transaction Conflicts at try 2 (counted only for that region which caused the TP transaction restart)
+   TC3 : # of Tp transaction Conflicts at try 3 (counted only for that region which caused the TP transaction restart)
+   TC4 : # of Tp transaction Conflicts at try 4 and above (counted only for that region which caused the TP transaction restart)
+   TR0 : # of Tp transaction Restarts at try 0 (counted for all regions participating in restarting TP transaction)
+   TR1 : # of Tp transaction Restarts at try 1 (counted for all regions participating in restarting TP transaction)
+   TR2 : # of Tp transaction Restarts at try 2 (counted for all regions participating in restarting TP transaction)
+   TR3 : # of Tp transaction Restarts at try 3 (counted for all regions participating in restarting TP transaction)
+   TR4 : # of Tp transaction Restarts at try 4 and above (restart counted for all regions participating in restarting TP transaction)
+   TRB : # of Tp read-only or read-write transactions Rolled Back (excluding incremental rollbacks)
+   TTR : # of Tp committed Transactions that were Read-only on this database
+   TTW : # of Tp committed Transactions that were read-Write on this database
+   ZPR : # of $order(,-1) or $ZPRevious() (reverse order) operations (TP and non-TP). The count of $Order(,1) operations are reported under ORD.
+   ZTR : # of ZTRigger command operations
    [NT]B[WR] mnemonics are satisfied by either disk access or, for databases that use the BG (buffered global) access method, global buffers in shared memory.
 
 If an operation is performed inside a TP transaction, and not committed as a consequence of a rollback, or an explicit or implicit restart, YottaDB still counts it.
@@ -3493,28 +3648,32 @@ Examples of ZSHOW
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZSHOW "db"
 
 This command displays all devices with deviceparameters reflecting their current characteristics followed by any current ZBREAK locations with their corresponding actions.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZSHOW "dbd"
 
 This command displays the same output as the previous example.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZSHOW "ax"
 
 This command generates a run-time error.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    LAB1  DO LAB2
          Quit
    LAB2  Do LAB3
@@ -3524,19 +3683,22 @@ Example:
 
 Produces the results:
 
-.. parsed-literal::
+.. code-block:: none
+
    LAB3^RTN
    LAB2^RTN
    LAB1^RTN
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZSHOW "G"
 
 For process that has access to two database files produces results like the following:
 
-.. parsed-literal::
+.. code-block:: none
+
    GLD:*,REG:*,SET:205,KIL:0,GET:1,DTA:0,ORD:0,ZPR:0,QRY:0,LKS:0,LKF:0,CTN:0,DRD:9,DWT:15,
    NTW:203,NTR:4,NBW:212,NBR:414,NR0:0,NR1:0,NR2:0,NR3:0,TTW:1,TTR:0,TRB:0,TBW:2,TBR:6,
    TR0:0,TR1:0,TR2:0,TR3:0,TR4:0,TC0:0,TC1:0,TC2:0,TC3:0,TC4:0,ZTR:0,DFL:0,DFS:0,JFL:0,JFS:0,JBB:0,JFB:0,JFW:0,JRL:0,JRP:0,
@@ -3552,12 +3714,14 @@ For process that has access to two database files produces results like the foll
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZSHOW "G"
 
 Assuming that a YottaDB process uses the global directory "/tmp/x1.gld" and opens two regions REG1 and REG2 corresponding to two database files, the above command produces results like the following:
 
-.. parsed-literal::
+.. code-block:: none
+
    GLD:*,REG:*,SET:0,KIL:0,GET:0,DTA:0,ORD:0,ZPR:0,QRY:0,LKS:0,LKF:0,CTN:0,DRD:0,DWT:0,NTW:0,
    NTR:0,NBW:0,NBR:0,NR0:0,NR1:0,NR2:0,NR3:0,TTW:0,TTR:0,TRB:0,
    TBW:0,TBR:0,TR0:0,TR1:0,TR2:0,TR3:0,TR4:0,TC0:0,TC1:0,TC2:0,TC3:0,TC4:0
@@ -3572,12 +3736,14 @@ Assuming that a YottaDB process uses the global directory "/tmp/x1.gld" and open
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZSHOW "G":zgbl
 
 This example redirects the output of ZSHOW "G" into a local variable zgbl:
 
-.. parsed-literal::
+.. code-block:: none
+
    zgbl("G",0)="GLD:*,REG:*,SET:0,KIL:0,GET:0,DTA:0,ORD:0,
    ZPR:0,QRY:0,LKS:0,LKF:0,CTN:0,DRD:0,DWT:0,NTW:0,NTR:0,NBW:0,NBR:0,NR0:0,NR1:0,NR2:0,NR3:0,TTW:0,
    TTR:0,TRB:0,TBW:0,TBR:0,TR0:0,TR1:0,TR2:0,TR3:0,TR4:0,TC0:0,TC1:0,TC2:0,TC3:0,TC4:0,ZTR:0,DFL:0,DFS:0,JFL:0,JFS:0,JBB:0,
@@ -3593,7 +3759,8 @@ This example redirects the output of ZSHOW "G" into a local variable zgbl:
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>LOCK ^FAIL:10
    YDB>lock (^SUCCESS1,^SUCCESS2)
    YDB>zshow "L"
@@ -3605,14 +3772,16 @@ This output shows that a process locked ^SUCCESS1 and ^SUCCESS2 and another the 
 
 Note that even though two lock resources ^SUCCESS1 and ^SUCCESS2 were specified in the LOCK command that succeeded, YottaDB increments the MLG counter by only 1 because they are part of the same LOCK command. A ZSHOW "L":var by the same process (redirecting the output of ZSHOW into a local or global variable) would result in <var> holding the following contents.
 
-.. parsed-literal::
+.. code-block:: none
+
    var("L",0)="MLG:1,MLT:1"
    var("L",1)="LOCK ^SUCCESS1 LEVEL=1"
    var("L",2)="LOCK ^SUCCESS2 LEVEL=1"
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZSHOW "L":var
    YDB>ZWRITE var
    var("L",0)="MLG:1,MLT:1"
@@ -3627,7 +3796,8 @@ Suppose a process runs LOCK (^SUCCESS1,^SUCCESS2) which succeeds and a LOCK +^FA
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZSHOW "I"
    $DEVICE=""
    $ECODE=""
@@ -3719,7 +3889,8 @@ ZSHOW targeted to a local (ZSHOW “*”:lcl) splits lines longer than 8KiB at t
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>Kill  Set b(1,"two")="test" ZSHow "v":a ZWRite
    a("V",1)="b(1,""two"")=""test"""
    b(1,"two")="test"
@@ -3729,7 +3900,8 @@ This ZSHow stores all local variables in the local variable a. Note that ZSHOW d
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>KILL  SET a(1,"D",3,5)="stuff",a(1,"X",2)="",a(1)=1
    YDB>ZSHow "d":a(1)
    YDB>ZWRite
@@ -3743,10 +3915,11 @@ This ZSHOW stores the current open device information under a(1). Notice how the
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>KILL ^ZSHOW
 
-   YDB>ZB -\*,lab^rout ZSH "B":^ZSHOW
+   YDB>ZB -*,lab^rout ZSH "B":^ZSHOW
    YDB>ZWRite ^ZSHOW
    ^ZSHOW("B",1)="LAB^ROUT"
    YDB>
@@ -3774,7 +3947,8 @@ The ZSTEP command provides the ability to control YottaDB execution. When a ZSTE
 
 The format of the ZSTEP command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    ZST[EP][:tvexpr] [keyword[:expr]][,...]
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
@@ -3839,14 +4013,16 @@ Examples of ZSTEP
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZSTEP INTO:"W ! ZP @$ZPOS W !"
 
 This ZSTEP resumes execution of the current routine. At the beginning of the next line executed, the ZSTEP action ZPRINTs the source code for that line. Because the specified action does not contain a BREAK command, execution continues to the next line and all subsequent lines in the program flow.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>Set curx=$get(x),zact="ZSTEP:$get(curx)=$get(x) INTO:zact Break:$get(curx)'=$get(x)"
    YDB>ZSTEP INTO:zact
 
@@ -3860,7 +4036,8 @@ The ZSYSTEM command creates a child of the current process.
 
 The format of the ZSYSTEM command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    ZSY[STEM][:tvexpr] [expr][,...]]
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
@@ -3886,12 +4063,14 @@ Examples of ZSYSTEM
 
 Example:
 
-.. parsed-literal::
-   YDB>zsystem "ls \*.m"
+.. code-block:: bash
+
+   YDB>zsystem "ls *.m"
 
 This uses ZSYSTEM to fork a process that then performs the ls command with \*.m as an argument to ls. Once the command completes, the forked process terminates.
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>zsystem "echo 'hello world'"
    hello world
 
@@ -3899,7 +4078,8 @@ This examples show a possible use of quoting with ZSYSTEM to run the echo comman
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>zsystem
    $
 
@@ -3913,7 +4093,8 @@ The ZTCOMMIT command marks the end of a logical transaction within a YottaDB pro
 
 The format of the ZTCOMMIT command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    ZTC[OMMIT][:tvexpr] [intexpr]
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
@@ -3928,7 +4109,8 @@ Examples of ZTCOMMIT
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZTCOMMIT 0
 
 This ZTCOMMIT issued from Direct Mode would close any open ZTSTARTs.
@@ -3945,7 +4127,8 @@ ZTRigger
 
 Invokes all triggers with signatures matching the global variable name and the command type of ZTR[IGGER]. The format of the ZTRIGGER command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    ZTR[IGGER] gvn
 
 * ZTRIGGER allows an application to invoke triggers without a specific global update.
@@ -3954,7 +4137,8 @@ Invokes all triggers with signatures matching the global variable name and the c
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write $ztrigger("S")
    ;trigger name: C#1#  cycle: 1
    +^C -commands=ZTR -xecute="write ""ZTR trigger invoked"""
@@ -3971,7 +4155,8 @@ The ZTSTART command marks the beginning of a logical transaction within a YottaD
 
 The format of the ZTSTART command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    ZTS[TART][:tvexpr]
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
@@ -3987,7 +4172,8 @@ The ZWITHDRAW command KILLs the data value for a variable name without affecting
 
 The format of the ZWITHDRAW command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    ZWI[THDRAW][:tvexpr] glvn
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
@@ -4002,7 +4188,8 @@ Examples of ZWITHDRAW
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    Kill A
    Set A="A",A(1)=1,A(1,1)=1
    WRite $Data(A(1)),!
@@ -4013,7 +4200,8 @@ Example:
 
 produces the result:
 
-.. parsed-literal::
+.. code-block:: none
+
    11
    10
    A="A"
@@ -4029,7 +4217,8 @@ The ZWRITE command displays the current value of one or more local , alias varia
 
 The format of the ZWRITE command is:
 
-.. parsed-literal::
+.. code-block:: none
+
    ZWR[ITE][:tvexpr] [zwrglvn[,...]]
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
@@ -4055,14 +4244,15 @@ ZWRITE Format for Alias Variables
 
 ZWRITE and ZSHOW "V" dump the values of alias variables, alias container variables, and the associated data as described below, in ZWRITE format. In the ZWRITE format, the contents of an array are displayed with the name associated with that array that appears first in the lexical ordering of names. YottaDB displays both the unsubscripted and subscripted nodes and values, appending a notational space-semicolon-asterisk (";*") sequence to the unsubscripted value, if any. The ZWRITE format output can be read into a YottaDB process with the commands Read x and Set @x (where x is any name) executed in a loop. ";*" acts as a comment ignored by the SET command. In the following example, since A and C are aliases associated with the same array, the nodes of that array are output with A, which occurs lexically before C, even though the values were assigned to C:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>Set C=1,C("Malvern")="Wales",*A=C,*B(-3.14)=C
 
    YDB>ZSHow "V" ; ZWRite would produce the same output
    A=1 ;*
    A("Malvern")="Wales"
-   \*B(-3.14)=A
-   \*C=A
+   *B(-3.14)=A
+   *C=A
    YDB>ZWRite C ; Only one is name associated with the array on this ZWRite command
    C=1 ;*
    C("Malvern")="Wales"
@@ -4070,19 +4260,21 @@ ZWRITE and ZSHOW "V" dump the values of alias variables, alias container variabl
 
 Continuing the example, if the variables selected for the ZWRITE command do not include any of the the associated alias variables, the output shows only the reference, not the data:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZWRITE B ; B only has a container
-   \*B(-3.14)=A
+   *B(-3.14)=A
    YDB>
 
 When ZWRITE / ZSHOW "V" encounters an alias container for an array with no current alias variable, it uses a name $ZWRTACn as the made-up name of an alias variable for that array, where n is an arbitrary but unique integer. The SET command recognizes this special name, thus enabling the output of a ZWRITE / ZSHOW "V" to be used to recreate alias containers without associated alias variables. Continuing the above example:
 
-.. parsed-literal::
-   YDB>Kill \*A,\*C ; Delete alias variables and associations, leaving only the container
+.. code-block:: bash
+
+   YDB>Kill *A,*C ; Delete alias variables and associations, leaving only the container
 
    YDB>ZWRite
    $ZWRTAC=""
-   \*B(-3.14)=$ZWRTAC1
+   *B(-3.14)=$ZWRTAC1
    $ZWRTAC1=3 ;*
    $ZWRTAC1("Malvern")="Wales"
    $ZWRTAC=""
@@ -4101,33 +4293,37 @@ Examples of ZWRITE
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZWRITE ^?1"%"2U(0:":",)
 
 This command displays the descendants of all subscripts between 0 and ":" of all global names starting with a "%" and having two upper case letters -- for example, "%AB".
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZWRITE A(,:,3)
 
 This command displays all of the third level nodes with a subscript of 3 for local variable A.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    ZWRITE ?1"A".E(?1"X"3N)
 
 This displays data for any local variables starting with "A", optionally followed by any characters, and having any subscripts starting with "X" followed by three numerics.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>Set A=1,*B=A ; Create an array and an alias association
 
    YDB>ZWRite ; Show that the array and association exist
    A=1 ;*
-   \*B=A
+   *B=A
 
 
 

@@ -53,7 +53,8 @@ Sample .profile
 
 After initialization common to all users of a system, a login shell sources the .profile file in the user's home directory. A captive user's .profile might look something like this, where "..." denotes a value to be provided.
 
-.. parsed-literal::
+.. code-block:: bash
+
    trap "" int quit        # terminate on SIGINT and SIGQUIT
    stty susp \000         # prevent <CTRL-Z> from sending SIGSUSP
    # set environment variables needed by YottaDB and by application, for example
@@ -96,7 +97,8 @@ monthstarting.zip contains monthstarting.m, month_starting.c, and monthstarting.
 
 Run the monthstarting.m program that lists months starting with the specified day of the week and year range.
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ yottadb -run monthstarting Friday 1986 1988
    FRI AUG 01, 1986
    FRI MAY 01, 1987
@@ -111,7 +113,8 @@ This step is optional as there is no need to explicitly compile monthstarting.m 
 
 On x86 GNU/Linux (64-bit Ubuntu 12.04), execute the following command to compile month_starting.c and create an executable called friday.
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ gcc -c month_starting.c -I$ydb_dist
    $ gcc month_starting.o -o friday -L $ydb_dist -Wl,-rpath=$ydb_dist -lyottadb
 
@@ -119,7 +122,8 @@ For compiling the month_starting.c program on other platforms, refer to the `Int
 
 Execute the following command:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ ./friday 1986 1988
    FRI AUG 01, 1986
    FRI MAY 01, 1987
@@ -130,7 +134,8 @@ Execute the following command:
 
 You can also execute the same program with the name monday. In doing so, the program displays months starting with Monday.
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ ln -s friday monday
    $ ./monday 1986 1988
    MON SEP 01, 1986
@@ -142,14 +147,16 @@ You can also execute the same program with the name monday. In doing so, the pro
 
 The month_starting.c program accomplishes this by calling the same YottaDB entryref calcprint^monthstarting(), and passing in as the first parameter the C string argv[0], which is the name by which the program is executed. If there are additional parameters, month_starting.c passes them to the M function; otherwise it passes pointers to null strings:
 
-.. parsed-literal::
-   /* Initialize and call calcprint^monthstarting() \*/
+.. code-block:: C
+
+   /* Initialize and call calcprint^monthstarting() */
    if ( 0 == ydb_init() ) ydb_ci("calcprint", &status, argv[0], argc>1 ? argv[1] : "", argc>2 ? argv[2] : "");
 
 Prior to calling the YottaDB entryref, the C program also needs to set environment variables if they are not set: ydb_dist to point to the directory where YottaDB is installed, ydb_routines to enable YottaDB to find the monthstarting M routine as well as YottaDB's %DATE utility program, and ydb_ci to point to the call-in table:
 
-.. parsed-literal::
-   /* Define environment variables if not already defined \*/
+.. code-block:: C
+
+   /* Define environment variables if not already defined */
            setenv( "ydb_dist", "/usr/local/lib/yottadb/r120", 0 );
            if (NULL == getenv( "ydb_routines" ))
            {
@@ -171,14 +178,15 @@ Prior to calling the YottaDB entryref, the C program also needs to set environme
             }
             setenv( "ydb_ci", "monthstarting.ci", 0 );
             if ( 0 == ydb_init() ) ydb_ci("calcprint", &status, argv[0], argc>1 ? argv[1] : "", argc>2 ? argv[2] : "");
-            ydb_exit(); /* Discard status from ydb_exit and return status from function call \*/
+            ydb_exit(); /* Discard status from ydb_exit and return status from function call */
 
 
 Note that on 32-bit platforms, the last element of ydb_routines is $ydb_dist, whereas on 64-bit platforms, it is $ydb_dist/libgtmutil.so. If you are creating a wrapper to ensure that environment variables are set correctly because their values cannot be trusted, you should also review and set the environment variables discussed in “Setting up a Captive User Application with YottaDB” above.
 
 All the C program needs to do is to set environment variables and call a YottaDB entryref. A call-in table is a text file that maps C names and parameters to M names and parameters. In this case, the call-in table is just a single line to map the C function calcprint() to the YottaDB entryref calcprint^monthstarting():
 
-.. parsed-literal::
+.. code-block:: none
+
    calcprint : ydb_int_t* calcprint^monthstarting(I:ydb_char_t*, I:ydb_char_t*, I:ydb_char_t*)
 
 --------------------------------
@@ -189,8 +197,9 @@ The following practices, some of which are illustrated in “Sample .profile”,
 
 1. Setting the ydb_nocenable environment variable to a value to specify that <CTRL-C> should be ignored by the application, at least until it sets up a <CTRL-C> handler. As part of its startup, the application process might execute:
 
-   .. parsed-literal::
-      USE $PRINCIPAL:(EXCEPTION="ZGOTO"_$ZLEVEL\_":DONE":CTRAP=$CHAR(3):CENABLE)
+   .. code-block:: none
+
+      USE $PRINCIPAL:(EXCEPTION="ZGOTO"_$ZLEVEL_":DONE":CTRAP=$CHAR(3):CENABLE)
 
 to set up a handler such as:
 

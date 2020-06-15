@@ -55,7 +55,8 @@ By convention, the utilities use upper-case variables for external input and out
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>SET %ds="11/22/2018"
    YDB>DO INT^%DATE
    YDB>ZWRITE
@@ -127,7 +128,8 @@ For the following examples, $ZDATEFORM is assumed to be one (1).
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>DO ^%D
    08-FEB-2018
 
@@ -135,7 +137,8 @@ This example invokes %D in Direct Mode. Then %D displays the current date.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>DO INT^%D
    YDB>ZWRITE
    %DAT="08-FEB-2018"
@@ -144,7 +147,8 @@ This example invokes %D with the label INT (INT^%D). The variable %DAT contains 
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>WRITE $$FUNC^%D
    08-FEB-2018
 
@@ -211,7 +215,8 @@ Date: Interactively requests a date for conversion to $HOROLOG format.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>DO ^%DATE
    Date:
    YDB>ZWRITE
@@ -221,7 +226,8 @@ This example invokes %DATE at the YDB> prompt. After pressing <RETURN> at the Da
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>DO INT^%DATE
    YDB>ZWRITE
    %DN=59105
@@ -230,7 +236,8 @@ This example invokes INT^%DATE, which converts the current date non-interactivel
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>SET %DS="02/08/2018"
    YDB>DO INT^%DATE
    YDB>ZWRITE
@@ -241,7 +248,8 @@ This example sets the input variable %DS prior to invoking INT^%DATE, which conv
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>WRITE $$FUNC^%DATE("02/08/2018")
    62010
 
@@ -249,7 +257,8 @@ This example invokes %DATE with the label FUNC as an extrinsic function to conve
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>WRITE $ZDATEFORM
    1975
    YDB>WRITE $$FUNC^%DATE("10/20/80")
@@ -303,7 +312,8 @@ CTN(tm): Extrinsic entry that converts the argument to $HOROLOG format.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>SET %DT=+$H DO %CDS^%H
    YDB>ZWRITE
    %DAT="10/20/2010"
@@ -313,7 +323,8 @@ This example sets %DT to the current date in $HOROLOG format and converts it to 
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>SET %DT="10/20/2002" DO %CDN^%H
    YDB>ZWRITE
    %DAT=59097
@@ -323,7 +334,8 @@ This example sets the variable %DT to a date in mm/dd/yyyy format and invokes %H
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>SET %TM=$P($H,",",2) DO %CTS^%H
    YDB>ZWRITE
    %TIM="17:41:18"
@@ -333,7 +345,8 @@ This example sets the variable %TM to the current time in $HOROLOG format using 
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>SET %TM="17:41:18" DO %CTN^%H
    YDB>ZWRITE
    %TIM=63678
@@ -343,7 +356,8 @@ This example sets the variable %TM to a time in hh:mm:ss format, and invokes %H 
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>WRITE $$CDS^%H(62019)
    11/17/2010
 
@@ -351,7 +365,8 @@ This invokes CDS^%H as an extrinsic function to convert the external argument to
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>WRITE $ZDATEFORM
    1980
    YDB>WRITE $$CDN^%H("10/20/02")
@@ -385,7 +400,8 @@ FUNC[()]: Invokes an extrinsic function returning the current time.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>DO ^%T
    8:30 AM
 
@@ -393,7 +409,8 @@ This example invokes %T, which prints the current time and does not set %TIM.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>DO INT^%T
    YDB>ZWRITE
    %TIM="8:30 AM"
@@ -402,7 +419,8 @@ This example invokes INT^%T, which sets the variable %TIM to the current time. Z
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>WRITE $$FUNC^%T
    8:30 AM
 
@@ -463,7 +481,8 @@ The following table summarizes input formats accepted by %TI.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>DO ^%TI
    Time: 4:02 PM
    YDB>ZWRITE
@@ -473,7 +492,8 @@ This example invokes %TI, which prompts for an input time. Press <RETURN> to con
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZWRITE
    YDB>DO INT^%TI
    YDB>ZWRITE
@@ -483,7 +503,8 @@ This example invokes INT^%TI to convert the current time non-interactively. ZWRI
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>SET %TS="8:30AM"
    YDB>DO INT^%TI
    YDB>ZWRITE
@@ -494,7 +515,8 @@ This example sets the variable %TS prior to invoking INT^%TI. %TI uses %TS as th
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>WRITE $$FUNC^%TI("8:30AM")
    30600
 
@@ -522,7 +544,8 @@ INT: Converts non-interactively %TS or if %TS is not defined, the current time t
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>DO INT^%TI,^%TO
    YDB>ZWRITE
    %TN=62074
@@ -586,7 +609,8 @@ Digits: Requests the length of the output in digits; eight by default.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>DO INT^%DH
    Decimal: 12
    Digits: 1
@@ -597,7 +621,8 @@ This example invokes %DH interactively with INT^%DH. %DH prompts for a decimal n
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>SET %DH=12
    YDB>DO ^%DH
    YDB>ZWRITE
@@ -608,7 +633,8 @@ This example sets the read-write variable %DH to 12 and invokes %DH to convert t
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>WRITE $$FUNC^%DH(12,4)
    000C
 
@@ -646,7 +672,8 @@ Digits: Requests the length of the output in digits; 12 by default.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>DO INT^%DO
    Decimal: 12
    Digits: 4
@@ -657,7 +684,8 @@ This example invokes %DO interactively with INT^%DO. %DO prompts for a decimal n
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>SET %DO=12
    YDB>DO ^%DO
    YDB>ZWRITE
@@ -667,7 +695,8 @@ This example sets the read-write variable %DO to 12 and invokes %DO to convert t
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>WRITE $$FUNC^%DO(12,7)
    0000014
 
@@ -701,7 +730,8 @@ Hexadecimal: Requests a hexadecimal number for conversion to decimal.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>DO INT^%HD
    Hexadecimal:E
    YDB>ZWRITE
@@ -711,7 +741,8 @@ This example invokes %HD in interactive mode with INT^%HD. %HD prompts for a hex
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>SET %HD="E"
    YDB>DO ^%HD
    YDB>ZWRITE
@@ -721,7 +752,8 @@ This example sets the read-write variable %HD to "E" and invokes %HD to convert 
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>WRITE $$FUNC^%HD("E")
    14
 
@@ -755,7 +787,8 @@ Hexadecimal: Requests a hexadecimal number for conversion to octal.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>DO INT^%HO
    Hexadecimal:C3
    YDB>ZWRITE
@@ -765,7 +798,8 @@ This example invokes %HO in interactive mode using INT^%HO. %HO prompts for a he
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>SET %HO="C3"
    YDB>DO ^%HO
    YDB>ZWRITE
@@ -775,7 +809,8 @@ This example sets the read-write variable %HO to "C3" and invokes %HO to convert
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>WRITE $$FUNC^%HO("C3")
    303
 
@@ -809,7 +844,8 @@ String: Requests a string for conversion to lower case.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>DO INT^%LCASE
    String: LABEL
    Lower: label
@@ -818,7 +854,8 @@ This example invokes %LCASE in interactive mode using INT^%LCASE. %LCASE prompts
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>SET %S="Hello"
    YDB>do ^%LCASE
    YDB>zwrite
@@ -828,7 +865,8 @@ This example sets the variable %S to the string "Hello" and invokes %LCASE non-i
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>SET ^X="Hello"
    YDB>WRITE $$FUNC^%LCASE(^X)
    hello
@@ -863,7 +901,8 @@ Octal: Requests an octal number for conversion to decimal.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>DO INT^%OD
    Octal:14
    YDB>ZWRITE
@@ -873,7 +912,8 @@ This example invokes INT^%OD to interactively convert the octal number entered. 
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>SET %OD=14
    YDB>DO ^%OD
    YDB>ZWRITE
@@ -883,7 +923,8 @@ This example sets the read-write variable %OD to 14 and invokes %OD to convert t
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>WRITE $$FUNC^%OD(14)
    12
 
@@ -917,7 +958,8 @@ Octal: Requests an octal number for conversion to hexadecimal.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>DO INT^%OH
    Octal:16
    YDB>ZWRITE
@@ -927,7 +969,8 @@ This example invokes %OH in interactive mode using INT^%OH. %OH prompts for an o
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>SET %OH=16
    YDB>DO ^%OH
    YDB>ZWRITE
@@ -937,7 +980,8 @@ This example sets the read-write variable %OH to 16 and invokes %OH to convert t
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>WRITE $$FUNC^%OH(16)
    E
 
@@ -971,7 +1015,8 @@ String: Requests a string for conversion to upper case.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>DO INT^%UCASE
    String: test
    Upper: TEST
@@ -980,7 +1025,8 @@ This example invokes %UCASE in interactive mode using INT^%UCASE. %UCASE prompts
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>SET ^X="hello"
    YDB>WRITE $$FUNC^%UCASE(^X)
    HELLO
@@ -1031,7 +1077,8 @@ Number: Requests a base number to raise by the power.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>DO INT^%EXP
    Power: 3
    Number: 12
@@ -1041,7 +1088,8 @@ This example invokes %EXP in interactive mode using INT^%EXP. %EXP prompts for a
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>SET %I=2,%J=9
    YDB>DO ^%EXP
    YDB>ZWRITE
@@ -1052,7 +1100,8 @@ This example sets the read-write variable %I to 2, variable %J to 9, and invokes
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>WRITE $$FUNC^%EXP(2,9)
    512
 
@@ -1086,7 +1135,8 @@ The square root of: Requests a number.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>SET %X=81
    YDB>DO ^%SQROOT
    YDB>ZWRITE
@@ -1097,7 +1147,8 @@ This example sets the variable %X to 81 and invokes %SQROOT to calculate the squ
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>DO INT^%SQROOT
    The square root of: 81 is: 9
    The square root of: <RETURN>
@@ -1107,7 +1158,8 @@ This example invokes INT^%SQROOT interactively that prompts for a number. The sq
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>WRITE $$FUNC^%SQROOT(81)
    9
 
@@ -1123,7 +1175,8 @@ String Utilities
 
 %TRIM removes leading and trailing characters from a string. The format of the %TRIM utility function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    $$FUNC|$$L|$$R^%TRIM(expr1[,expr2])
 
 
@@ -1137,12 +1190,14 @@ String Utilities
 
 You can also use %TRIM as a command line utility to read from STDIN and write to STDOUT in the following format:
 
-.. parsed-literal::
+.. code-block:: bash
+
    echo "  string with leading and trailing spaces  " | $ydb_dist/yottadb -r ^%TRIM
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>set strToTrim=$char(9,32)_"string with spaces and tabs"_$char(32,32,32) write $length(strToTrim)
    32
    YDB>write "strToTrim=",?24,"""",strToTrim,"""",!,"$$L^%TRIM(strToTrim)=",?24,"""",$$L^%TRIM(strToTrim),"""",!,"$$R^%TRIM(strToTrim)=",?24,"""",$$R^%TRIM(strToTrim),"""",!,"$$FUNC^%TRIM(strToTrim)=",?24,"""",$$FUNC^%TRIM(strToTrim),""""
@@ -1155,7 +1210,8 @@ This example invokes %TRIM as an extrinsic function and demonstrates the use of 
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ echo " YottaDB Rocks! " | $ydb_dist/yottadb -r ^%TRIM
    YottaDB Rocks!
    $
@@ -1170,7 +1226,8 @@ The %MPIECE utility replaces one or more consecutive occurrences of the second a
 
 You can use the %MPIECE utility in Direct Mode or include it in a source application program in the following format:
 
-.. parsed-literal::
+.. code-block:: none
+
    $$^%MPIECE(str,expr1,expr2)
 
 If expr1 and expr2 are not specified, %MPIECE assumes expr1 to be one or more consecutive occurrences of whitespaces and expr2 to be one space.
@@ -1183,7 +1240,8 @@ $$SPLIT^%MPIECE(str,expr1): Invokes %MPIECE as an extrinsic function that return
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>set strToSplit=" please split this string into six"
    YDB>set piecestring=$$^%MPIECE(strToSplit," ","|") zwrite strToSplit,piecestring write $length(piecestring,"|")
    strToSplit=" please split this string into six"
@@ -1267,7 +1325,8 @@ Arguments for %G and %GED:
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>do ^%G
    Output Device: <terminal>: <RETURN>
    List ^C
@@ -1286,7 +1345,8 @@ This example lists the nodes of global ^C. %G displays the global and its descen
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>do ^%G
    Output Device: <terminal>: <RETURN>
    List ^C(1)
@@ -1296,7 +1356,8 @@ This example lists only the node entered and its value.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>do ^%G
    Output Device: <terminal>: <RETURN>
    List ^C(1,*)
@@ -1312,7 +1373,8 @@ This example uses the asterisk (*) wildcard to list node ^C(1), its descendants 
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>do ^%G
    Output Device: <terminal>: <RETURN>
    List ^?D
@@ -1345,7 +1407,8 @@ To global: ^Request a global variable name to receive the copy.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>do ^%GC
    Global copy
    Show copied nodes <Yes>? <RETURN>
@@ -1390,7 +1453,8 @@ QUIET: Only displays the names of globals in which changes are made.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>DO ^%GCE
    Global Change Every occurrence
    Global ^a:^b
@@ -1415,7 +1479,8 @@ This example searches a range of globals and its nodes for the old string value 
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>set ^b(12)=12
    YDB>set ^b(122)=122
    YDB>set ^b(30)=656
@@ -1478,7 +1543,8 @@ Global^: Requests (using %GSEL) a global name with optional wildcards or a range
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>DO ^%GD
    Global directory
    Global ^k
@@ -1491,7 +1557,8 @@ This example verifies that ^k exists in the global directory.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>DO ^%GD
    Global directory
    Global ^C:S
@@ -1504,7 +1571,8 @@ This example displays a range of globals that exist from ^C to ^S.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>DO ^%GD Global directory
    Global ^*
    ^C ^D ^S ^Y ^a
@@ -1530,7 +1598,8 @@ Only one global can be edited at a time with %GED, see “Prompts” above for d
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>DO ^%GED
    edit ^ b
    Beginning screen:
@@ -1583,11 +1652,12 @@ OK <Yes>?: Asks for confirmation.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>DO ^%GI
    Global Input Utility
    Input device <terminal>: DATA.GBL
-   Saved from user's development area
+   Saved from users development area
    YottaDB 08-FEB-2018 14:14:09
    OK <Yes>? <RETURN>
    ^IB ^INFO
@@ -1621,7 +1691,8 @@ Requests destination device, which may be any legal filename.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>DO ^%GO
    Global Output Utility
    Global ^A
@@ -1657,7 +1728,8 @@ String: Requests a search string.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>do ^%GSE
    Global Search For Every Occurence
    Output device: <terminal>: Test.dat
@@ -1709,7 +1781,8 @@ Global^: Requests a global name with optional wildcards or a range of names.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    YDB>DO ^%GSEL
    Global ^C
    ^C
@@ -1738,7 +1811,8 @@ This example adds and subtracts globals from the list of selected globals. "?D" 
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>DO ^%GSEL
    Global ^a
    ^a
@@ -1814,7 +1888,8 @@ Requests a destination device; defaults to the principal device.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>DO ^%FL
    First Line Lister
    Routine: %D
@@ -1851,7 +1926,8 @@ This example selects %D, then selects %GSE and %GSEL and deselects %D. Because t
 
 %RANDSTR generates a random string. The format %RANDSTR is:
 
-.. parsed-literal::
+.. code-block:: none
+
    %RANDSTR (strlen,charranges,patcodes,charset)
 
 The random string is of length strlen from an alphabet defined by charset or by charranges and patcodes.
@@ -1914,7 +1990,8 @@ The following input variables are only applicable when invoking CALL^%RCE.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>DO ^%RCE
    Routine Change Every occurrence
    Routine: BES*
@@ -1949,7 +2026,8 @@ This example selects a list of routines that change the string "^NAME" to the st
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>DO ^%RCE
    Routine Change Every occurrence
    Routine: BES*
@@ -2001,7 +2079,8 @@ SRC: Lists the source modules accessible through the current $ZROUTINES (same as
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>DO ^%RD
    Routine directory
    Routine: TAXES
@@ -2017,7 +2096,8 @@ This example invokes %RD that prompts for routine TAXES and the wildcard (*). %R
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>DO OBJ^%RD
    Routine directory
    Routine:*
@@ -2030,7 +2110,8 @@ This example invokes %RD with the label OBJ that lists only object modules acces
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>DO LIB^%RD
    Routine directory
    %D %DATE %DH %G %GD %GSEL
@@ -2040,7 +2121,8 @@ This example invokes %RD with the LIB label that lists all the % routines access
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>DO SRC^%RD
    Routine directory
    Routine:*
@@ -2075,7 +2157,8 @@ Requests name of directory to output M routines.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>DO ^%RI
    Routine Input utility - Converts RO file to \*.m files
    Formfeed delimited <No>? <RETURN>
@@ -2127,7 +2210,8 @@ The following input variables are only applicable when invoking CALL^%RO.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>DO ^%RO
    Routine Output - Save selected routines into RO file.
    Routine: %D
@@ -2193,7 +2277,8 @@ The following input variables are only applicable when invoking CALL^%RSE.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>DO ^%RSE
    Routine Search for Every occurrence
    Routine: BES*
@@ -2220,7 +2305,8 @@ This example invokes %RSE that searches and finds a given string. The output dev
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>DO ^%RSE
    Routine Search for Every occurrence
    Routine: BEST
@@ -2287,7 +2373,8 @@ The following input variables are only valid when invoking CALL^%RSEL:
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>DO ^%RSEL
    Routine: TES*
    TEST2 TEST3
@@ -2304,7 +2391,8 @@ This example selects two source routines starting with "TES" as the first three 
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    YDB>DO ^%RSEL
    Routine: BES*
    BEST BEST2 BEST3 BEST4
@@ -2332,7 +2420,8 @@ By default, %RSEL bases the contents of %ZR on source files that have a .m exten
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>DO ^%RSEL
    Routine:BEST*
    BEST2 BEST3
@@ -2347,7 +2436,8 @@ This example creates a %ZR array with BEST2 and BEST3.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>DO ^%RSEL
    Routine:LOCK
    LOCK
@@ -2372,10 +2462,12 @@ This example creates a %ZR array with LOCK and adds to it using CALL%RSEL.
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>do SILENT^%RSEL("myroutine","OBJ")
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>ZWRITE
    %ZR=1
    %ZR("myroutine")="/usr/smith/work"
@@ -2429,7 +2521,8 @@ The default $ETRAP handler for %DSEWRAP terminates the application if it detects
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ydb -run ^%XCMD 'do dump^%DSEWRAP("DEFAULT",.dsefields,"","all") zwrite dsefield'
 
 +++++++++++++
@@ -2452,7 +2545,8 @@ The $ETRAP handler simply QUITs as it defers error handling to the caller. Appli
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ydb -run ^%XCMD 'do getfields^%DUMPFHEAD(.fields,"yottadb.dat") zwrite fields'
 
 +++++++++++++++
@@ -2463,7 +2557,8 @@ The %FREECNT utility displays the number of free blocks in the database files as
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>DO ^%FREECNT
    Region          Free     Total          Database file
    ------          ----     -----          -------------
@@ -2479,7 +2574,8 @@ This example invokes %FREECNT at the YDB> prompt that displays the number of fre
 
 %PEEKBYNAME() provides a stable interface to $ZPEEK() that uses control structure field names. $ZPEEK() provides a read-only mechanism to access selected fields in selected control structures in the address space of a process, including process private memory, database shared memory segments and Journal Pools. Although application code can call $ZPEEK() directly, such direct access must use numeric arguments that can vary from release to release. Access by name using %PEEKBYNAME makes application code more stable across YottaDB releases. For more information, refer to `$ZPEEK() <./functions.html#zpeek>`_. YottaDB intends to maintain the stability of a name from release to release where that name refers to the same data item; however, we may add or obsolete names, or modify the type and size associated with existing names at our discretion, to reflect changes in the implementation. The format of the %PEEKBYNAME() function is:
 
-.. parsed-literal::
+.. code-block:: none
+
    %PEEKBYNAME(field[,regindex][,format])
 
 * The first expression specifies the memory location to access in the format: CONTROL_BLOCK[.FIELD].* (For example, "gd_region.max_key_size").
@@ -2494,7 +2590,8 @@ This example invokes %FREECNT at the YDB> prompt that displays the number of fre
 
 Example:
 
-.. parsed-literal::
+.. code-block:: none
+
    ; Print the maximum key size for the DEFAULT region
    YDB>write $$^%PEEKBYNAME("gd_region.max_key_size","DEFAULT")
    64
@@ -2523,7 +2620,8 @@ Below are selected fields for which you may find %PEEKBYNAME to be a useful alte
 
 Calls to %PEEKBYNAME with the listed string as value of the first parameter, and the region name as the value of the second parameter, return the value. For example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write $$^%PEEKBYNAME("sgmnt_data.n_bts","DEFAULT") ; How many global buffers there are
    1000
    YDB>write $$^%PEEKBYNAME("node_local.wcs_active_lvl","DEFAULT") ; How many of them are dirty
@@ -2616,7 +2714,8 @@ When using the following, remember to write code that allows for values other th
 
 Calls to %PEEKBYNAME with the listed parameter as the first or only parameter return replication fields as described. For example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write $$^%PEEKBYNAME("repl_inst_hdr.inst_info.this_instname") ; Name of this instance
    Collegeville
    YDB>write $$^%PEEKBYNAME("gtmsource_local_struct.secondary_instname",0) ; Name of instance in slot 0 of replication instance file
@@ -2662,7 +2761,8 @@ The ^%XCMD utility XECUTEs input from the shell command line and returns any err
 
 **Utility Labels**
 
-.. parsed-literal::
+.. code-block:: none
+
    LOOP^%XCMD [--before=/<XECUTE_code>/] --xec=/<XECUTE_code>/ [--after=/<XECUTE_code>/]
 
 LOOP^%XCMD: XECUTEs the arguments specified in --xec=/arg1/ as YottaDB code for each line of standard input that it reads. The currently read line is stored in the variable %l; its line number is stored in %NR (starts from 1). It returns any error status (truncated to a single byte on UNIX) generated by that code.
@@ -2675,18 +2775,21 @@ For all qualifiers, always wrap YottaDB code specified two forward slashes (/) t
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    /usr/local/lib/yottadb/r120/ydb -run %XCMD 'write "hello world",!'
 
 
 produces the following output:
 
-.. parsed-literal::
+.. code-block:: bash
+
    "hello world"
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ ps -ef | $gtm_exe/yottadb -run LOOP^%XCMD --before='/set user=$ztrnlnm("USER") write "Number of processes owned by ",user," : "/' --xec='/if %l[user,$increment(x)/' --after='/write x,\!/'
    Number of processed owned by jdoe: 5
    $
@@ -2731,7 +2834,8 @@ When invoked as an interactive utility program using DO, ^%YGBLSTAT, prompts for
 
 When invoked from a shell, the command line is:
 
-.. parsed-literal::
+.. code-block:: bash
+
    $ yottadb -run %YGBLSTAT [--help] [--pid pidlist] [--reg reglist] [--stat statlist]
 
 where
@@ -2793,7 +2897,8 @@ $$FUNC^%UTF2HEX(s) returns the hexadecimal byte representation of the character 
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>write $zchset
    UTF-8
    YDB>SET %S=$CHAR($$FUNC^%HD("0905"))_$CHAR($$FUNC^%HD("091A"))_$CHAR($$FUNC^%HD(
@@ -2824,7 +2929,8 @@ $$FUNC^%HEX2UTF(s) returns the YottaDB character string specified by the hexadec
 
 Example:
 
-.. parsed-literal::
+.. code-block:: bash
+
    YDB>set u="E0A485" write $$FUNC^%HEX2UTF(u)
    अ
    YDB>set u="40E0A485" write $$FUNC^%HEX2UTF(u)
