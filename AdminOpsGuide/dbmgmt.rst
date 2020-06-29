@@ -1786,7 +1786,7 @@ INTRPT
 
 * To INTRPT a process belonging to its own account, a process requires no UNIX privileges.
 
-* The implementation of INTRPT uses signals, and on Linux a non-root process can send signals only to processes of the same userid. To INTRPT a process, with a different userid, but belonging to its own GROUP requires the UNIX superuser privilege. To INTRPT a process belonging to an account outside its own GROUP, a process also requires the UNIX superuser privilege.
+* The implementation of INTRPT uses signals, and on Linux a non-root process can only send signals to other processes of the same userid. Superuser privilege is required to send signals to processes of other userids, regardless of group membership.
 
 ++++++++++
 JOURNAL
