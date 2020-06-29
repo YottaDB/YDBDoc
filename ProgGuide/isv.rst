@@ -1949,7 +1949,7 @@ Within trigger context, $ZTDATA returns $DATA(@$REFERENCE)#2 for a SET or $DATA(
 $ZTDELIM
 ++++++++++++++
 
-Within a SET trigger context, $ZTDE[LIM] returns the piece separator, as specified by -delim in the trigger definition. This allows triggers to extract updated pieces defined in $ZTUPDATE without having the piece separator hard coded into the routine. Outside of a SET trigger context, $ZTDELIM is null.
+$ZTDE[LIM] returns the piece delimiter/separator, as specified by -delim or -zdelim in the trigger definition. This allows SET type triggers to extract updated pieces defined in $ZTUPDATE andr KILL/ZKILL type triggers to extract the relevant pieces in the node value (of the node being killed) without having the piece separator hard coded into the trigger routine. $ZTDELIM is the empty string outside of a trigger context. It is also the empty string inside a trigger context if -delim or -zdelim was not specified in the trigger definition.
 
 +++++++++++++
 $ZTLEVEL
