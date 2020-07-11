@@ -314,6 +314,11 @@ ydb_ci
 +++++++++
 **ydb_ci (GTMCI)** specifies the call-in table for function calls from C code to M code.
 
+++++++++++++++++++++
+ydb_cm_<node-name>
+++++++++++++++++++++
+**ydb_cm_<node-name>** is used by a GT.CM client process to locate the GT.CM server. <node-name> is an alphanumeric, which is used as a prefix for the GT.CM database segment file by the Global Directory of the client process. For detailed usage refer to the `GT.CM Client <https://docs.yottadb.com/AdminOpsGuide/gtcm.html#gt-cm-client>`_ section.
+
 ++++++++++++++++
 ydb_collate_n
 ++++++++++++++++

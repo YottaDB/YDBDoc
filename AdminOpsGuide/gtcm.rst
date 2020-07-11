@@ -210,7 +210,7 @@ On NODE1, invoke YottaDB and perform the following operations:
 
 .. code-block:: bash
 
-   $setenv ydb_cm_NODE2 6789
+   $export ydb_cm_NODE2=6789
    $ydb
    YDB> s ^x=1
    YDB> k ^x

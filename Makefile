@@ -39,4 +39,4 @@ clean:
 # All of the $(SOURCEDIRS) are built at once.
 %: Makefile
 	@$(foreach dir, $(SOURCEDIRS), $(SPHINXBUILD) -M $@ "$(dir)" "$(dir)/$(BUILDDIR)" $(SPHINXOPTS) $(O);)
-	@$(foreach dir, $(SOURCEDIRS), $(SOURCEDIR)/htmlpatch.csh $(dir);)
+	$(foreach dir, $(SOURCEDIRS), cd $(dir) && $(SOURCEDIR)$(SOURCEDIR)/htmlpatch.csh && cd $(SOURCEDIR)$(SOURCEDIR);)

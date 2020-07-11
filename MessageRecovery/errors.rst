@@ -1717,7 +1717,7 @@ Action: -
 DBBADNSUB
 -------------------------
 
-DBBADNSUB, xxxx Bad numberic subscript
+DBBADNSUB, xxxx Bad numeric subscript
 
 MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
