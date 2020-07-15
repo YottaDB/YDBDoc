@@ -1654,14 +1654,30 @@ The format of the VIEW command is:
 * An indirection operator and an expression atom evaluating to a list of one or more VIEW arguments form a legal argument for a VIEW
 
 +++++++++++++++++++++++++
-Key Words in VIEW Command
+Keywords in VIEW Command
 +++++++++++++++++++++++++
 
 (Last updated: `r1.24 <https://gitlab.com/YottaDB/DB/YDB/tags/r1.24>`_)
 
 The following sections describe the keywords available for the VIEW command in YottaDB.
 
-**"BREAKMSG":value**
+~~~~~~~~~~~~~~~~
+[NO]BADCHAR
+~~~~~~~~~~~~~~~~
+
+Enables or disables the generation of an error when character-oriented functions encounter malformed byte sequences (illegal characters).
+
+At process startup, YottaDB initializes BADCHAR from the environment variable ydb_badchar. Set the environment variable $ydb_badchar to a non-zero number or "YES" (or "Y") to enable VIEW "BADCHAR". Set the environment variable $ydb_badchar to 0 or "NO" or "FALSE" (or "N" or "F") to enable VIEW "NOBADCHAR". By default, YottaDB enables VIEW "BADCHAR".
+
+With VIEW "BADCHAR", YottaDB functions generate the BADCHAR error when they encounter malformed byte sequences. With this setting, YottaDB detects and clearly reports potential application program logic errors as soon as they appear. As an illegal UTF-8 character in the argument of a character-oriented function likely indicates a logic issue, YottaDB recommends using VIEW "BADCHAR" in production environments.
+
+.. code-block:: none
+
+   When all strings consist of well-formed characters, the value of VIEW [NO]BADCHAR has no effect whatsoever. With VIEW "NOBADCHAR", the same functions treat malformed byte sequences as valid characters. During the migration of an application to add support for UTF-8 mode, illegal character errors are likely to be frequent and indicative of application code that is yet to be modified. VIEW "NOBADCHAR" suppresses these errors at times when their presence impedes development.
+
+~~~~~~~~~~~~~~~~~~
+"BREAKMSG":value
+~~~~~~~~~~~~~~~~~~
 
 Sets the value of the BREAK message mask. When YottaDB processes a BREAK command, the BREAK message mask controls whether to display a message describing the source of the BREAK.
 
@@ -1687,39 +1703,39 @@ Example:
 
 In this example the BREAKMSG value is 5, representing the sum of 1 and 4. This enables BREAKS within the body of a program (value 1) and for a device EXCEPTION (value 4).
 
-**[NO]BADCHAR**
-
-Enables or disables the generation of an error when character-oriented functions encounter malformed byte sequences (illegal characters).
-
-At process startup, YottaDB initializes BADCHAR from the environment variable ydb_badchar. Set the environment variable $ydb_badchar to a non-zero number or "YES" (or "Y") to enable VIEW "BADCHAR". Set the environment variable $ydb_badchar to 0 or "NO" or "FALSE" (or "N" or "F") to enable VIEW "NOBADCHAR". By default, YottaDB enables VIEW "BADCHAR".
-
-With VIEW "BADCHAR", YottaDB functions generate the BADCHAR error when they encounter malformed byte sequences. With this setting, YottaDB detects and clearly reports potential application program logic errors as soon as they appear. As an illegal UTF-8 character in the argument of a character-oriented function likely indicates a logic issue, YottaDB recommends using VIEW "BADCHAR" in production environments.
-
-.. code-block:: none
-
-   When all strings consist of well-formed characters, the value of VIEW [NO]BADCHAR has no effect whatsoever. With VIEW "NOBADCHAR", the same functions treat malformed byte sequences as valid characters. During the migration of an application to add support for UTF-8 mode, illegal character errors are likely to be frequent and indicative of application code that is yet to be modified. VIEW "NOBADCHAR" suppresses these errors at times when their presence impedes development.
-
-**"DBFLUSH"[:REGION[:N]]**
+~~~~~~~~~~~~~~~~~~~~~~~~
+"DBFLUSH"[:REGION[:N]]
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 When using the BG access method, writes modified blocks in the global buffers to the database file. By default, this command option operates on all regions under the current global directory. N specifies the number of blocks to write; by default, DBFLUSH writes all modified blocks. Normally YottaDB schedules block flushing at appropriate times, but this option exists for an application to explore the impact of flushing on their work load. See also the DBSYNC and EPOCH VIEW Options.
 
-**"DBSYNC"[:REGION]**
+~~~~~~~~~~~~~~~~~~~
+"DBSYNC"[:REGION]
+~~~~~~~~~~~~~~~~~~~
 
 Performs a file system hardening sync - fsync() - operation on the database file. By default, this command option operates on all regions under the current global directory. Normally YottaDB schedules block flushing at appropriate times, but this option exists for an application to explore the impact of file hardening on their work load. See also the DBFLUSH and EPOCH VIEW Options.
 
-**[NO]DMTERM**
+~~~~~~~~~~~~~~~~
+[NO]DMTERM
+~~~~~~~~~~~~~~~~
 
 Provides a mechanism to retain default line terminators for direct mode user interaction (including the BREAK command) independent of any TERMINATOR deviceparameter changes for $PRINCIPAL. With VIEW "NODMTERM", TERMINATOR deviceparameter apply to both READs from $PRINCIPAL and direct mode interactions. A case-insensitive value of the environment variable ydb_dmterm is "1", "yes", or "true" establishes a DMTERM state at process initiation; all other values, including no value, result in the default VIEW "NODMTERM" behavior. $VIEW("DMTERM") returns 1 for DMTERM mode or 0 for NODMTERM mode.
 
-**"EPOCH"[:REGION]**
+~~~~~~~~~~~~~~~~~~
+"EPOCH"[:REGION]
+~~~~~~~~~~~~~~~~~~
 
 Flushes the database buffers and, if journaling is enabled, writes an EPOCH record. By default, this command option operates on all regions under the current global directory. Normally YottaDB schedules epochs as a user controlled journaling characteristic, but this option exists for an application to explore the impact of epochs on their work load. See also the DBFLUSH and DBSYNC VIEW Options. Epochs include DBFLUSH and DBSYNC actions, but performing them before the epoch may reduce the duration of these actions within the epoch.
 
-**"FLUSH"[:REGION]**
+~~~~~~~~~~~~~~~~~~
+"FLUSH"[:REGION]
+~~~~~~~~~~~~~~~~~~
 
 Flushes dirty global buffers from the global buffer pool. If journaling is turned on, "FLUSH" writes an EPOCH record and flushes dirty journal buffers prior to flushing dirty global buffers. If no region is specified, VIEW "FLUSH" flushes all regions in the current global directory that the YottaDB process has opened.
 
-**[NO]FULL_BOOL[EAN|WARN]**
+~~~~~~~~~~~~~~~~~~~~~~~~~
+[NO]FULL_BOOL[EAN|WARN]
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Controls the evaluation of Boolean expressions (expressions evaluated as a logical TRUE or FALSE).
 
@@ -1743,12 +1759,6 @@ Enables (value=1) or disables (value=0) database block certification.
 
 Database block certification causes YottaDB to check the internal integrity of every block as it writes the block. Block certification degrades performance and exists primarily as a tool for use by YottaDB. The default is GDSCERT:0.
 
-~~~~~~~~~~~~~~~~~~~~~~
-"GVSRESET":"<region>"
-~~~~~~~~~~~~~~~~~~~~~~
-
-Resets the process-specific fields that are part of the ZSHOW "G" result and database file header fields holding records reported by: GVSTAT, BG trace, buffer pool accounting and the TP block modification details. Note that a VIEW "GVSRESET" performed by a process with read-only database access changes only the process-specific information and has no effect on the database file header. DSE CHANGE -FILEHEADER -GVSTATSRESET clears the same database file header fields as VIEW "GVRESET";
-
 ~~~~~~~~~~~~~~~~~~~~~
 "GVDUPSETNOOP":value
 ~~~~~~~~~~~~~~~~~~~~~
@@ -1756,6 +1766,12 @@ Resets the process-specific fields that are part of the ZSHOW "G" result and dat
 Enables (VIEW "GVDUPSETNOOP":1) or disables (VIEW "GVDUPSETNOOP":0) duplication set optimization.
 
 Duplicate set optimization prevents a SET that does not change the value of an existing node from performing the update or executing any trigger code specified for the node. By default, duplicate set optimization is enabled.
+
+~~~~~~~~~~~~~~~~~~~~~~
+"GVSRESET":"<region>"
+~~~~~~~~~~~~~~~~~~~~~~
+
+Resets the process-specific fields that are part of the ZSHOW "G" result and database file header fields holding records reported by: GVSTAT, BG trace, buffer pool accounting and the TP block modification details. Note that a VIEW "GVSRESET" performed by a process with read-only database access changes only the process-specific information and has no effect on the database file header. DSE CHANGE -FILEHEADER -GVSTATSRESET clears the same database file header fields as VIEW "GVRESET";
 
 ~~~~~~~~~~~~~~~~~~~~
 "JNLFLUSH"[:region]
@@ -1765,7 +1781,9 @@ Writes or flushes journaling buffers associated with the given region to permane
 
 Normally YottaDB writes journal buffers when it completes a transaction (unless TRANSACTIONID="BATCH"), fills the journal buffer or when some period of time passes with no journal activity.
 
-**JNLWAIT**
+~~~~~~~~~
+JNLWAIT
+~~~~~~~~~
 
 Causes a process to pause until its journaling buffers have been written. JNLWAIT ensures that YottaDB successfully transfers all database updates issued by the process to the journal file before the process continues. Normally, YottaDB performs journal buffer writes synchronously for TP updates, and asynchronously, while the process continues execution, for non-TP updates or TP updates with TRANSACTIONID=BATCH.
 
@@ -1860,7 +1878,9 @@ At process startup, YottaDB initializes [NEVER][NO]LVNULLSUBS from $ydb_lvnullsu
 .. note::
    Remember that for global variables, empty string subscript checking is controlled by a database region characteristic. YottaDB recommends using LVNULLSUBS, NOLVNULLSUBS, or NEVERLVNULLSUBS for local variables and NULLSUBS options ALWAYS or NEVER for global variables.
 
-**"NOISOLATION":<expr>**
+~~~~~~~~~~~~~~~~~~~~~~
+"NOISOLATION":<expr>
+~~~~~~~~~~~~~~~~~~~~~~
 
 where expr must evaluate to one of the following forms:
 
@@ -1912,6 +1932,32 @@ Displays the created relinkctl files and the routines looked for in their relate
 
 Resets all the process-private global access statistics to 0. This is particularly useful for long running processes which would periodically like to restart the counting without requiring a shut down and restart.
 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+“[UN]SETENV”:<expr>[:value]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Environment variables can be set and unset inside M using VIEW commands.
+
+VIEW "SETENV":<expr>:<value> sets the environment variable named by <expr> to <value> and VIEW "UNSETENV":<expr> unsets the environment variable.
+
+Example (the default timezone of the computer is US Eastern Standard Time):
+
+.. code-block:: bash
+
+   YDB>WRITE $ZTRNLNM("TZ")
+
+   YDB>WRITE $ZDATE($HOROLOG,"24:60")
+   15:21
+   YDB>VIEW "SETENV":"TZ":"UTC"
+
+   YDB>WRITE $ZDATE($HOROLOG,"24:60")
+   20:21
+   YDB>VIEW "UNSETENV":"TZ"
+
+   YDB>WRITE $ZDATE($HOROLOG,"24:60")
+   15:21
+   YDB>
+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 "[NO]STATSHARE"[":<region-list>"]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1933,17 +1979,6 @@ Starts a string-pool garbage collection, which normally happens automatically at
 
 .. note::
    There are no visible effects from STP_GCOL, LV_GCOL and LV_REHASH except for the passage of time depending on the state of your process. YottaDB uses these VIEW "LV_GCOL","LV_REHASH","STP_GCOL" facilities in testing. They are documented to ensure completeness in product documentation. You may (or may not) find them useful during application development for debugging or performance testing implementation alternatives.
-
-~~~~~~~~~~~
-"[NO]UNDEF"
-~~~~~~~~~~~
-
-Enables or disables handling of undefined variables as errors. With UNDEF, YottaDB handles all references to undefined local or global variables as errors. With NOUNDEF, YottaDB handles all references to undefined local or global variables as if the variable had a value of the empty string. In other words, YottaDB treats all variables appearing in expressions as if they were the argument of an implicit $GET(). UNDEF is the default.
-
-The environment variable $ydb_noundef specifies the initial value of [NO]UNDEF at process startup. If it is defined, and evaluates to a non-zero integer or any case-independent string or leading substring of "TRUE" or "YES", then YottaDB treats undefined variables as having an implicit value of an empty string.
-
-.. note::
-   NOUNDEF does not apply to an undefined FOR control variable. This prevents an increment (or decrement) of an undefined FOR control variable from getting into an unintended infinite loop. For example, FOR A=1:1:10 KILL A gives an UNDEF error on the increment from 1 to 2 even with VIEW "NOUNDEF".
 
 ~~~~~~~~~~~~~~~~~~~~~~
 "TRACE":value:<expr>
@@ -2367,32 +2402,16 @@ On executing fortypes, the output looks something like the following:
    ^trc("fortypes","fortypes",38,"FOR_LOOP",2)=3
    ^trc("fortypes","fortypes",38,"FOR_LOOP",3)=7
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
-“[UN]SETENV”:<expr>[:value]
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~
+"[NO]UNDEF"
+~~~~~~~~~~~
 
-Environment variables can be set and unset inside M using VIEW commands.
+Enables or disables handling of undefined variables as errors. With UNDEF, YottaDB handles all references to undefined local or global variables as errors. With NOUNDEF, YottaDB handles all references to undefined local or global variables as if the variable had a value of the empty string. In other words, YottaDB treats all variables appearing in expressions as if they were the argument of an implicit $GET(). UNDEF is the default.
 
-VIEW "SETENV":<expr>:<value> sets the environment variable named by <expr> to <value> and VIEW "UNSETENV":<expr> unsets the environment variable.
+The environment variable $ydb_noundef specifies the initial value of [NO]UNDEF at process startup. If it is defined, and evaluates to a non-zero integer or any case-independent string or leading substring of "TRUE" or "YES", then YottaDB treats undefined variables as having an implicit value of an empty string.
 
-Example (the default timezone of the computer is US Eastern Standard Time):
-
-.. code-block:: bash
-
-   YDB>WRITE $ZTRNLNM("TZ")
-
-   YDB>WRITE $ZDATE($HOROLOG,"24:60")
-   15:21
-   YDB>VIEW "SETENV":"TZ":"UTC"
-
-   YDB>WRITE $ZDATE($HOROLOG,"24:60")
-   20:21
-   YDB>VIEW "UNSETENV":"TZ"
-
-   YDB>WRITE $ZDATE($HOROLOG,"24:60")
-   15:21
-   YDB>
-
+.. note::
+   NOUNDEF does not apply to an undefined FOR control variable. This prevents an increment (or decrement) of an undefined FOR control variable from getting into an unintended infinite loop. For example, FOR A=1:1:10 KILL A gives an UNDEF error on the increment from 1 to 2 even with VIEW "NOUNDEF".
 
 ~~~~~~~~~~~~~~~~~~~~~
 "ZDATE_FORM":"value"
