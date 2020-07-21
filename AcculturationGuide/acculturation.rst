@@ -363,6 +363,70 @@ Notice that after running it, YottaDB has automatically compiled the source code
     7 directories, 5 files
     yottadbuser@yottadbworkshop:~/.yottadb$
 
+++++++++++++++++++
+Access from Perl
+++++++++++++++++++
+
+YottaDB can also be accessed from Perl, which requires the Perl :code:`yottadb` package to be downloaded and installed, to provide a YottaDB Perl "wrapper".
+
+.. code-block:: bash
+
+   $ git clone https://gitlab.com/oesiman/yottadb-perl.git
+   $ cd yottadb-perl
+   $ perl Makefile.PL
+   $ make
+   $ make test TEST_DB=1 # optional, accesses database
+   $ sudo make install
+
+Download the `sayhelloPerl.pl <./sayhelloPerl.pl>`_ program into the yottadbuser directory, change its access permissions to make it executable and run it.
+
+.. code-block:: bash
+
+   yottadbuser@yottadbworkshop:~$ ls -l
+   total 3176
+   drwxr-xr-x 4 yottadbuser yottadbuser    4096 Aug 26 14:42 go
+   -rwxr-xr-x 1 yottadbuser yottadbuser   16600 Aug 26 14:41 sayhelloC
+   -rw-r--r-- 1 root        root            262 Jan 17  2020 sayhelloC.c
+   -rwxr-xr-x 1 yottadbuser yottadbuser 3164920 Aug 26 14:44 sayhelloGo
+   -rw-r--r-- 1 yottadbuser yottadbuser     203 Jan 17  2020 sayhelloGo.go
+   -rw-r--r-- 1 yottadbuser yottadbuser      86 Aug 26 15:21 sayhelloPerl.pl
+   -rwxr-xr-x 1 yottadbuser yottadbuser   47020 Aug 26 14:00 ydbinstall.sh
+   yottadbuser@yottadbworkshop:~$ chmod +x sayhelloPerl.pl
+   yottadbuser@yottadbworkshop:~$ ./sayhelloPerl.pl.
+   yottadbuser@yottadbworkshop:~$ mupip extract -format=zwr -select=hello -stdout
+   YottaDB MUPIP EXTRACT /usr/local/lib/yottadb/r130/mupip extract -format=zwr -select=hello -stdout UTF-8
+   26-AUG-2020  15:24:21 ZWR
+   ^hello("C")="Hello, world!"
+   ^hello("Go")="สวัสดีชาวโลก"
+   ^hello("M")="Приветствую, мир!"
+   ^hello("Perl")="Grüẞ Gott Welt"
+   %YDB-I-RECORDSTAT, ^hello:        Key cnt: 4  max subsc len: 13  max rec len: 36  max node len: 44
+   %YDB-I-RECORDSTAT, TOTAL:         Key cnt: 4  max subsc len: 13  max rec len: 36  max node len: 44
+   yottadbuser@yottadbworkshop:~$
+
+++++++++++++++++++
+Access from Rust
+++++++++++++++++++
+
+YottaDB can also be accessed from Rust, using the YottaDB wrapper for Rust `YDBRust <https://gitlab.com/YottaDB/Lang/YDBRust>`_. Run the `say_hello_rust <https://gitlab.com/YottaDB/Lang/YDBRust/-/raw/master/examples/say_hello_rust.rs>`_ example, which will add another node in the database:
+
+.. code-block:: bash
+
+   yottadbuser@yottadbworkshop:~$ git clone https://gitlab.com/YottaDB/Lang/YDBRust/
+   yottadbuser@yottadbworkshop:~$ cd YDBRust
+   yottadbuser@yottadbworkshop:~/YDBRust$ cargo run -q --example say_hello_rust
+   yottadbuser@yottadbworkshop:~/YDBRust$ mupip extract -format=zwr -select=hello -stdout
+   YottaDB MUPIP EXTRACT /usr/local/lib/yottadb/r130/mupip extract -format=zwr -select=hello -stdout UTF-8
+   28-AUG-2020  15:34:04 ZWR
+   ^hello("C")="Hello, world!"
+   ^hello("Go")="สวัสดีชาวโลก"
+   ^hello("M")="Приветствую, мир!"
+   ^hello("Perl")="Grüẞ Gott Welt"
+   ^hello("Rust")="こんにちは"
+   %YDB-I-RECORDSTAT, ^hello:        Key cnt: 5  max subsc len: 13  max rec len: 36  max node len: 44
+   %YDB-I-RECORDSTAT, TOTAL:         Key cnt: 5  max subsc len: 13  max rec len: 36  max node len: 44
+   yottadbuser@yottadbworkshop:~/YDBRust$
+
 ----------
 Journaling
 ----------
@@ -2026,7 +2090,7 @@ Revert to the ``jnlex`` directory. Remember to source the ``jnlex_env`` file if 
    Sun Dec 15 20:01:29 2019 : Initiating START of source server for secondary instance [santiago]
    yottadbuser@paris:~/jnlex$
 
-Download an initialization program in any of the languages, C, Go, or M. You only need one.
+Download an initialization program in any of the languages, C, Go, M, Perl, or Rust. You only need one.
 
 To use the C initialization program, download `xyzInitC.c <./xyzInitC.c>`_, compile and run it:
 
@@ -2051,19 +2115,42 @@ To use the M initialization program, download `xyzInitM.m <./xyzInitM.m>`_ and r
    yottadbuser@paris:~/jnlex$ yottadb -run xyzInitM
    yottadbuser@paris:~/jnlex$
 
-As a workload, download three simulated application processes, in C (`xyztransC.c <./xyzTransC.c>`_), Go (`xyzTransGo.go <./xyzTransGo.go>`_) and M (`xyzTransM.m <./xyzTransM.m>`_). Compile the C and Go programs. Run all three in the background to create a simulated, multi-process, multi-language, workload:
+To use the Perl initialization program, download `xyzInitPerl.pl <./xyzInitPerl.pl>`_, make it executable and run it:
 
 .. code-block:: bash
 
+   yottadbuser@paris:~/jnlex$ chmod +x xyzInitPerl.pl
+   yottadbuser@paris:~/jnlex$ ./xyzInitPerl.pl
+
+To use the Rust initialization program, if you have not done so already, clone the `YDBRust <https://gitlab.com/YottaDB/Lang/YDBRust>`_ repository and run `xyzInitRust.rs <https://gitlab.com/YottaDB/Lang/YDBRust/-/blob/master/examples/xyzInitRust.rs>`_:
+
+.. code-block:: bash
+
+   yottadbuser@paris:~/jnlex$ export LD_LIBRARY_PATH=$ydb_dist
+   yottadbuser@paris:~/jnlex$ git clone https://gitlab.com/YottaDB/Lang/YDBRust.git && cd YDBRust
+   yottadbuser@paris:~/jnlex/YDBRust$ cargo run -q --example xyzInitRust
+
+As a workload, download four simulated application processes, in C (`xyzTransC.c <./xyzTransC.c>`_), Go (`xyzTransGo.go <./xyzTransGo.go>`_), M (`xyzTransM.m <./xyzTransM.m>`_) and Perl (`xyzTransPerl.pl <./xyzTransPerl.pl>`_). Compile the C and Go programs. Run all four in the background to create a simulated, multi-process, multi-language, workload. Run the `xyzTransRust.rs <https://gitlab.com/YottaDB/Lang/YDBRust/-/blob/master/examples/xyzTransRust.rs>`_ program from the YDBRust directory:
+
+.. code-block:: bash
+
+   yottadbuser@paris:~/jnlex$ gcc $(pkg-config --libs --cflags yottadb) -o xyzTransC xyzTransC.c -lyottadb
    yottadbuser@paris:~/jnlex$ ./xyzTransC &
    [1] 797
+   yottadbuser@paris:~/jnlex$ go build xyzTransGo.go
    yottadbuser@paris:~/jnlex$ ./xyzTransGo &
    [2] 798
    yottadbuser@paris:~/jnlex$ yottadb -run xyzTransM &
    [3] 803
+   yottadbuser@paris:~/jnlex$ chmod +x xyzTransPerl.pl
+   yottadbuser@paris:~/jnlex$ ./xyzTransPerl.pl &
+   [4] 804
+   yottadbuser@paris:~/jnlex/YDBRust$ cd YDBRust
+   yottadbuser@paris:~/jnlex/YDBRust$ cargo run -q --example xyzTransRust &
+   [5] 817
    yottadbuser@paris:~/jnlex$
 
-Note that the journal files are growing, indicating an application actively updating the datbase:
+Note that the journal files are growing, indicating an application actively updating the database:
 
 .. code-block:: bash
 
@@ -2106,7 +2193,7 @@ Take a backup of the database
 
    yottadbuser@paris:~/jnlex$
 
-After the backup is completed, you can terminate the application processes updating the database; they have done their part fo the exercise.
+After the backup is completed, you can terminate the application processes updating the database; they have done their part for the exercise.
 
 .. code-block:: bash
 
@@ -2122,11 +2209,20 @@ After the backup is completed, you can terminate the application processes updat
    yottadbuser@paris:~/jnlex$ %YDB-F-FORCEDHALT, Image HALTed by MUPIP STOP
 
    [3]+  Exit 241                /usr/local/lib/yottadb/r128/yottadb -run xyzTransM
+   yottadbuser@paris:~/jnlex$ kill %4
+   yottadbuser@paris:~/jnlex$ %YDB-F-FORCEDHALT, Image HALTed by MUPIP STOP
+
+   [4]+  Exit 241                ./xyzTransPerl.pl
+   yottadbuser@paris:~/jnlex$ kill %5
+   yottadbuser@paris:~/jnlex$ %YDB-F-FORCEDHALT, Image HALTed by MUPIP STOP
+
+   [5]-  Exit 241                cargo run -q --example xyzTransRust  (wd: ~/jnlex/YDBRust)
+   (wd now: ~/jnlex)
    yottadbuser@paris:~/jnlex$
 
 Now change to the backup directory and ``source jnlex_bak_env`` to set the environment variables. Notice that the MUPIP BACKUP operation has created three database files and a replication instance file. If you want to create a new instance, e.g., Beijing, you can use these backed up database and replication instance files.
 
-Download a program to verify that ACID properties are preserved in the backed up database, your choice of programs in C (`xyzVerifyC.c <./xyzVerifyC.c>`_), Go (`xyzVerifyGo.go <./xyzVerifyGo.go>`_), or M (`xyzVerifyM.m <./xyzVerifyM.m>`_). Although all three are shown here, as with initialization, you only need one.
+Download a program to verify that ACID properties are preserved in the backed up database, your choice of programs in C (`xyzVerifyC.c <./xyzVerifyC.c>`_), Go (`xyzVerifyGo.go <./xyzVerifyGo.go>`_), M (`xyzVerifyM.m <./xyzVerifyM.m>`_), Perl (`xyzVerifyPerl.pl <./xyzVerifyPerl.pl>`_), or Rust( `xyzVerifyRust.rs <https://gitlab.com/YottaDB/Lang/YDBRust/-/blob/master/examples/xyzVerifyRust.rs>`_). As with previous Rust programs, run xyzVerifyRust.rs from the YDBRust directory. Although all five are shown here, as with initialization, you only need one.
 
 .. code-block:: bash
 
@@ -2138,7 +2234,12 @@ Download a program to verify that ACID properties are preserved in the backed up
    ACID test pass
    yottadbuser@paris:~/jnlex/backup$ yottadb -run xyzVerifyM
    ACID test pass
-   yottadbuser@paris:~/jnlex/backup$
+   yottadbuser@paris:~/jnlex/backup$ chmod +x xyzVerifyPerl.pl
+   yottadbuser@paris:~/jnlex/backup$ ./xyzVerifyPerl.pl
+   ACID test pass
+   yottadbuser@paris:~/jnlex/backup$ cd ../YDBRust
+   yottadbuser@paris:~/jnlex/YDBRust$ cargo run -q --example xyzVerifyRust
+   ACID test pass
 
 Exercise - Replication Briefly Revisited
 ----------------------------------------
