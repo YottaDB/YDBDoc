@@ -899,6 +899,10 @@ Operators
 
 M has both unary and binary operators.
 
+.. note::
+
+   :code:`.` is not an operator. Please refer to the `Parameter Passing`_ sub-section for more information on usage of :code:`.`
+
 +++++++++++++++++++++++
 Precedence
 +++++++++++++++++++++++
