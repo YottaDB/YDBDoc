@@ -2126,6 +2126,34 @@ Note that there are more and less dense index and data blocks used than in scena
 
 The optional qualifiers for MUPIP REORG are:
 
+~~~~~~~~~~~~
+-DOWNGRADE
+~~~~~~~~~~~~
+
+Changes the database blocks to V4 format of the upstream code base. The transaction number fields are reduced to 32 bits. In the event the CTN is too large to fit in 32 bits, a mupip integ -tn_reset will need to be performed prior to performing the mupip reorg -downgrade. The blks_to_upgrd counter increases to signify a downgrading database.
+
+.. code-block:: bash
+
+   MUPIP> reorg -downgrade -reg DEFAULT
+
+   Region DEFAULT : MUPIP REORG DOWNGRADE started
+   Region DEFAULT : Desired DB Format set to V4 by MUPIP REORG DOWNGRADE
+   Region DEFAULT : Started processing from block number [0x00000000]
+   Region DEFAULT : Stopped processing at block number [0x00000839]
+   Region DEFAULT : Statistics : Blocks Read From Disk (Bitmap)     : 0x00000005
+   Region DEFAULT : Statistics : Blocks Skipped (Free/Recycled)     : 0x00000012
+   Region DEFAULT : Statistics : Blocks Read From Disk (Non-Bitmap) : 0x00000822
+   Region DEFAULT : Statistics : Blocks Skipped (new fmt in disk)   : 0x00000000
+   Region DEFAULT : Statistics : Blocks Skipped (new fmt in cache)  : 0x00000000
+   Region DEFAULT : Statistics : Blocks Converted (Bitmap)          : 0x00000005
+   Region DEFAULT : Statistics : Blocks Converted (Non-Bitmap)      : 0x00000822
+   Region DEFAULT : Total Blocks = [0x00000839] : Free Blocks = [0x00000012] : Blocks to upgrade = [0x00000827]
+   Region DEFAULT : MUPIP REORG DOWNGRADE finished
+
+.. note::
+
+   The V4 format applies only to very old versions of the upstream code base. The ability to downgrade is inherited from the upstream code base and is not tested or supported by YottaDB. This feature is deprecated in YottaDB and will be removed from the YottaDB code base when it is removed from the upstream code base.
+
 ~~~~~~~~~
 -ENCRYPT
 ~~~~~~~~~
@@ -2496,6 +2524,46 @@ Execute the following command when encryption completes.
    Database file /home/gtc_twinata/staff/nitin/tr11/yottadb.dat now has encryption marked complete
 
 Always keep the keys in a secured location. Always set gtmcrypt_config and ydb_passwd to access the encrypted database.
+
+~~~~~~~~~~
+-UPGRADE
+~~~~~~~~~~
+
+Upgrades the GDS blocks that are still in V4 format, after completion of mupip upgrade. This variant of the mupip reorg command runs through the entire database (or until blocks-to-convert = 0) checking the block format of each block. If the block format is V4, it is updated to V5 format and rewritten.
+
+A block is considered to be too long to be upgraded from V4 format to V5 format if the records occupy more than blocksize-16 bytes. The presence of even one such block will prevent a database from being upgraded.
+
+After a database has been certified, such "too long" blocks can occur if the Reserved Bytes field is reduced with a dse change -fileheader command or if a mupip journal -recover or mupip journal -rollback command changes the state of the of the database to before the dbcertify certify operation.
+
+This condition can be detected by mupip reorg -upgrade or during normal V5.0-000 operation when blocks are upgraded from V4 to V5 format. The only way to recover from this condition is to downgrade the database to V4 format and re-run both phases of dbcertify.
+
+This condition can be avoided by not changing Reserved Bytes after any dbcertify step and before the mupip upgrade, and, in the event, a database has a mupip journal -recover or mupip journal -rollback performed on it, then to repeat the dbcertify steps before the mupip upgrade.
+
+-nosafejnl
+
+If before image journaling is active, mupip reorg -upgrade will generate before image records for these block changes even though there is no change to the data in the block. This is to ensure that backwards recovery can recover the database correctly, in the event of a system crash or power outage. In the event that a system has a battery-backed IO subsystem, or a SAN, it is unlikely that there will be incomplete writes to the journal files. As long as any pending write to the journal file is completed in the event of a system crash or power outage, the before image records are not required to recover the database. In the event your hardware guarantees that there will not be an incomplete IO write operation, you can reduce IO load on your system by suppressing the generation of these before images with the use of the -nosafejnl option. If your hardware does not provide such a guarantee, then YottaDB strongly recommends the use of the default behavior, which is to generate the before image records.
+
+.. code-block:: bash
+
+   MUPIP> reorg -upgrade -reg DEFAULT
+
+   Region DEFAULT : MUPIP REORG UPGRADE started
+   Region DEFAULT : Desired DB Format remains at V5 after MUPIP REORG UPGRADE
+   Region DEFAULT : Started processing from block number [0x00000000]
+   Region DEFAULT : Stopped processing at block number [0x00000800]
+   Region DEFAULT : Statistics : Blocks Read From Disk (Bitmap)     : 0x00000005
+   Region DEFAULT : Statistics : Blocks Skipped (Free/Recycled)     : 0x00000000
+   Region DEFAULT : Statistics : Blocks Read From Disk (Non-Bitmap) : 0x000007FC
+   Region DEFAULT : Statistics : Blocks Skipped (new fmt in disk)   : 0x00000017
+   Region DEFAULT : Statistics : Blocks Skipped (new fmt in cache)  : 0x00000000
+   Region DEFAULT : Statistics : Blocks Converted (Bitmap)          : 0x00000003
+   Region DEFAULT : Statistics : Blocks Converted (Non-Bitmap)      : 0x000007E6
+   Region DEFAULT : Total Blocks = [0x00000839] : Free Blocks = [0x00000012] : Blocks to upgrade = [0x00000000]
+   Region DEFAULT : MUPIP REORG UPGRADE finished
+
+.. note::
+
+   As YottaDB does not use the V4 format of the upstream code base, this feature exists only to migrate old databases from the upstream code base to YottaDB.
 
 +++++++++++++++++++
 USER_DEFINED_REORG
