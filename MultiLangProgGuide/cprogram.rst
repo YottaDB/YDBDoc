@@ -233,13 +233,13 @@ hardware and operating system, as well as factors such as system load.
 :code:`YDB_MAX_YDBERR` – The absolute (positive) value of any YottaDB
 function error return code. If the absolute value of an error return
 code is greater than :code:`YDB_MAX_YDBERR`, then it is an error code
-from elsewhere, e.g., e.g. `errno
+from elsewhere, e.g. `errno
 <https://linux.die.net/man/3/errno>`_. Also, see :code:`YDB_IS_YDBERR()`.
 
 :code:`YDB_MIN_YDBERR` - The absolute (positive) value of any YottaDB
 function error return code. If the absolute value of an error return
 code is less than :code:`YDB_MIN_YDBERR`, then it is an error code
-from elsewhere, e.g., e.g. `errno
+from elsewhere, e.g. `errno
 <https://linux.die.net/man/3/errno>`_. Also, see :code:`YDB_IS_YDBERR()`.
 
 --------
@@ -1375,7 +1375,32 @@ the handle is immutable, and switching the call-in table leaves unchanged the ma
 handles have already been set. Use :code:`ydb_ci()`/:code:`ydb_ci_t()` for application code that requires
 the called function to change when the call-in table changes.
 
-Please see the `Simple API introduction <./cprogram.html#simple-api>`_ for details about parameter allocation.
+.. _ydb_eintr_handler():
+.. _ydb_eintr_handler_t():
+
+-------------------------------------------
+ydb_eintr_handler() / ydb_eintr_handler_t()
+-------------------------------------------
+
+.. code-block:: C
+
+        int ydb_eintr_handler(void)
+
+        int ydb_eintr_handler_t(uint64_t tptoken, ydb_buffer_t *errstr)
+
+:code:`ydb_eintr_handler()` needs to be invoked by a SimpleAPI application whenever a system call that it invokes
+(e.g. :code:`accept()`, :code:`select()`) returns an error with `errno <https://linux.die.net/man/3/errno>`_ set
+to :code:`EINTR` (this usually means a signal interrupted the system call). This ensures that YottaDB takes
+appropriate action corresponding to the interrupting signal in a timely fashion. For example, if the signal
+:code:`SIGTERM` was sent externally to this SimpleAPI application process, the appropriate action is to terminate
+the process as soon as a safe/logical point is reached.
+
+Note that not invoking :code:`ydb_eintr_handler()` as part of an :code:`EINTR` situation can cause the SimpleAPI
+application to behave unexpectedly. For example, in the :code:`SIGTERM` case, the process would not terminate
+how many ever signals are sent.
+
+:code:`ydb_eintr_handler_t()` is very similar to :code:`ydb_eintr_handler()` except that it needs to be invoked by
+a SimpleThreadAPI application.
 
 .. _ydb_exit():
 
