@@ -1373,9 +1373,9 @@ the handle is immutable, and switching the call-in table leaves unchanged the ma
 handles have already been set. Use :code:`ydb_ci()`/:code:`ydb_ci_t()` for application code that requires
 the called function to change when the call-in table changes.
 
-.. _ydb_exit():
-
 Please see the `Simple API introduction <./cprogram.html#simple-api>`_ for details about parameter allocation.
+
+.. _ydb_exit():
 
 ----------
 ydb_exit()
