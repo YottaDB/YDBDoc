@@ -1397,7 +1397,7 @@ the process as soon as a safe/logical point is reached.
 
 Note that not invoking :code:`ydb_eintr_handler()` as part of an :code:`EINTR` situation can cause the SimpleAPI
 application to behave unexpectedly. For example, in the :code:`SIGTERM` case, the process would not terminate
-how many ever signals are sent.
+how ever many signals are sent.
 
 :code:`ydb_eintr_handler_t()` is very similar to :code:`ydb_eintr_handler()` except that it needs to be invoked by
 a SimpleThreadAPI application.
