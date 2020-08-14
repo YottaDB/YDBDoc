@@ -79,7 +79,7 @@ or
 
    mupip set -journal=on -region '*'
 
-Enabling or disabling journaling requires stand alone access to the database. Turning journaling on and off can be done when the database is in use. See `Set Action Qualifiers <./ydbjournal.html#set-action-qualifiers>`_ for more information about options and settings.
+Enabling or disabling journaling requires stand alone access to the database. Turning journaling on and off can be done when the database is in use. See `Set Action Qualifiers <./ydbjournal.html#id2>`_ for more information about options and settings.
 
 Note: Whenever YottaDB implicitly turns off journaling due to run-time conditions such as no available disk space or no authorization for a process attempting to auto-switch a journal file (and so on) , it produces an error with accompanying messages to alert operation staff. YottaDB on selected platforms can encrypt data in database and journal files. Encryption protects against unauthorized access to data by an unauthorized process which is able to access disk files, that is, encryption protects data at rest (DAR). Rather than build encryption into YottaDB, a plug-in architecture facilitates use of your preferred encryption software. For more information, refer to `Chapter 12: “Database Encryption” <./encryption.html>`_.
 
@@ -819,7 +819,7 @@ When used independent of -RECOVER (or -ROLLBACK), -EXTRACT option can produce a 
 
 If a database having custom collation is inaccessible or the replication instance is frozen with a critical section required for the access held by another process and the environment variable ydb_extract_nocol is defined and evaluates to a non-zero integer or any case-independent string or leading substrings of "TRUE" or "YES", MUPIP JOURNAL -EXTRACT issues the DBCOLLREQ warning and proceeds with the extract using the default collation. If ydb_extract_nocol is not set or evaluates to a value other than a positive integer or any case-independent string or leading substrings of "FALSE" or "NO", MUPIP JOURNAL -EXTRACT exits with the SETEXTRENV error if it encounters such a situation. Note that if default collation is used for a database with custom collation, the subscripts reported by MUPIP JOURNAL -EXTRACT are those stored in the database, which may differ from those read and written by application programs.
 
-Note that, a broken transaction, if found, is extracted to a broken transaction file (refer to `“Journal Control Qualifiers” <./ydbjournal.html#journal-control-qualifiers>`_ for details), and all future complete transactions are considered to be lost transactions, and are extracted to a lost transaction file (refer to `“Journal Control Qualifiers” <./ydbjournal.html#journal-control-qualifiers>`_ for details).
+Note that, a broken transaction, if found, is extracted to a broken transaction file (refer to `“Journal Control Qualifiers” <./ydbjournal.html#id6>`_ for details), and all future complete transactions are considered to be lost transactions, and are extracted to a lost transaction file (refer to `“Journal Control Qualifiers” <./ydbjournal.html#id6>`_ for details).
 
 To avoid broken transactions or lost transaction processing and instead extract all journal records into one file, use the control qualifier -FENCES=NONE. YottaDB strongly recommends against using -FENCES=NONE if -RECOVER/-ROLLBACK is also specified.
 
@@ -847,7 +847,7 @@ During forward processing phase of JOURNAL -RECOVER -BACKWARD, MUPIP journals th
 
 If a transaction is found with an incomplete fence, it is considered broken. During the forward phase of recovery, if a complete transaction (fenced or unfenced) is found after a broken transaction, -RECOVER increments the error count. If -ERRORLIMIT is reached, the complete transaction goes to the lost transaction file. Otherwise, it is applied to the database.
 
-All broken and lost transactions are made available as the result of the -RECOVERY. They are written as journal extract format in two different text files. They are the broken transaction file and the lost transaction file. Refer to the sections on BROKENTRANS and LOSTTRANS in `“Journal Control Qualifiers” <./ydbjournal.html#journal-control-qualifiers>`_.
+All broken and lost transactions are made available as the result of the -RECOVERY. They are written as journal extract format in two different text files. They are the broken transaction file and the lost transaction file. Refer to the sections on BROKENTRANS and LOSTTRANS in `“Journal Control Qualifiers” <./ydbjournal.html#id6>`_.
 
 When performing JOURNAL -RECOVER with fences (FENCES="PROCESS" or FENCES="ALWAYS"), it is essential for the command to include all the journal files corresponding to the complete set of database files that make up the logical database. If the specified set of journals is incomplete, the recovery reports all transactions that included any missing region as broken. Typically, this means that the results of the recovery are unsatisfactory or even unusable.
 
