@@ -1,0 +1,26 @@
+#################################################################
+#                                                               #
+# Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.  #
+# All rights reserved.                                          #
+#                                                               #
+#       This source code contains the intellectual property     #
+#       of its copyright holder(s), and is made available       #
+#       under a license.  If you do not know the terms of       #
+#       the license, please stop and do not read further.       #
+#                                                               #
+#################################################################
+
+stages:
+  - build
+
+before_script:
+    - apt-get update -qq && apt-get install -y -qq --no-install-recommends tcsh sphinx-common python3-pip python3-setuptools python3-wheel
+    - pip3 install sphinx_rtd_theme sphinxprettysearchresults
+
+deadlinks:
+  stage: build
+  image: rust:latest
+  script:
+    - cargo install --debug cargo-deadlinks
+    - make html
+    - find */_build -type d -name html | xargs -n1 cargo deadlinks -v --check-http --dir
