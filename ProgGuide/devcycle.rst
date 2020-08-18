@@ -91,12 +91,12 @@ Each of these remaining steps can be performed either from the YottaDB prompt or
 
 The table is presented as an overview of the YottaDB routine generation process, and as a comparison of the available methods. More complete information on each of the steps can be found in the following parts of this manual set.
 
-* Debugging routines: `Chapter 4: “Operating and Debugging in Direct Mode” <./opdebug.html>`_.
-* Defining environment variables: `“Defining Environment Variables” <./devcycle.html#id1>`_.
-* Defining/creating Global Directories:`“Preparing the Database” <./devcycle.html#id2>`_ and the Administration and Operations Guide, `"Global Directory Editor" <https://docs.yottadb.com/AdminOpsGuide/gde.html>`_ and `"MUPIP" <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html>`_ chapters.
-* Creating/editing routines: `“Creating and Editing a Source Program” <./devcycle.html#id5>`_.
-* Compiling routines: `“Compiling a Source Program” <./devcycle.html#id7>`_.
-* Executing routines: `“Executing a Source Program” <./devcycle.html#id11>`_.
+* Debugging routines: `Chapter 4: Operating and Debugging in Direct Mode <./opdebug.html>`_.
+* Defining environment variables: `Defining Environment Variables`_.
+* Defining/creating Global Directories:`Preparing the Database`_ and the Administration and Operations Guide, `Global Directory Editor <https://docs.yottadb.com/AdminOpsGuide/gde.html>`_ and `MUPIP <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html>`_ chapters.
+* Creating/editing routines: `Creating and Editing a Source Program`_.
+* Compiling routines: `Compiling a Source Program`_.
+* Executing routines: `Executing a Source Program`_.
 
 ---------------------------------
 Defining Environment Variables
@@ -405,7 +405,7 @@ When the program is very simple (and its lines do not need revision after they a
 Editing from YottaDB
 +++++++++++++++++++++++++
 
-If you focus on program development outside the YottaDB environment, skip this section and continue with the section `"Editing from the Shell" <./devcycle.html#id6>`_.
+If you focus on program development outside the YottaDB environment, skip this section and continue with the section `Editing from the Shell`_.
 
 Invoke Direct Mode to create and edit a source program in YottaDB. At the YDB> prompt, invoke the editor by typing:
 
@@ -459,13 +459,13 @@ The vi command initiates an editing session for payroll.m from the shell prompt.
 Compiling a Source Program
 ----------------------------
 
-If you wish to focus on program development outside the YottaDB environment, skip the next section and continue with the section `"Compiling from the Shell" <./devcycle.html#id10>`_.
+If you wish to focus on program development outside the YottaDB environment, skip the next section and continue with the section `Compiling from the Shell`_.
 
 YottaDB compiles M source code files and produces object files for complete integration into the UNIX enviroment. The object modules have the same name as the compiled M source file with an .o file extension, unless otherwise specified. The object files contain machine instructions and information necessary to connect the routine with other routines, and map it into memory. An M routine source file must be compiled after it is created or modified. You can compile explicitly with the ZLINK command or implicitly with auto-ZLINK. At the shell command line, compile by issuing the yottadb command.
 
 The compiler checks M code for syntax errors and displays error messages on the terminal, when processing is complete. Each error message provides the source line in error with an indicator pointing to the place on the line where the error is occurring. For a list and description of the compiler error messages, refer to the `Messages and Recovery Procedures Reference Manual <https://docs.yottadb.com/MessageRecovery/index.html>`_.
 
-You can generate a listing file containing the compile results by including the -list qualifier as a modifier to the argument to the ZLINK command in Direct Mode. This can also be done by redirecting the compiler messages to a file by adding >filename 2>&1 to the yottadb command when compiling a program from the shell. See `“Compiling from the Shell” <./devcycle.html#id10>`_ for an explanation of the M command describing -list, and other valid qualifiers for the M and ZLINK commands.
+You can generate a listing file containing the compile results by including the -list qualifier as a modifier to the argument to the ZLINK command in Direct Mode. This can also be done by redirecting the compiler messages to a file by adding >filename 2>&1 to the yottadb command when compiling a program from the shell. See `Compiling from the Shell`_ for an explanation of the M command describing -list, and other valid qualifiers for the M and ZLINK commands.
 
 The compiler stops processing a routine line when it detects an error on that line. Under most conditions the compiler continues processing the remaining routine lines. This allows the compiler to produce a more complete error analysis of the routine and to generate code that may have valid executable paths. The compiler does not report multiple syntax errors on the same line. When it detects more than 127 syntax errors in a source file, the compiler ceases to process the file.
 

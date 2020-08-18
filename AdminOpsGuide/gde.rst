@@ -260,7 +260,7 @@ This section of the Global Directory lists the current mapping of names to regio
 Global Directory Abbreviations
 +++++++++++++++++++++++++++++++
 
-GDE uses the following abbreviations to display the output of a global directory. The following list show global directory abbreviations with the associated qualifiers. For a description of the function of individual qualifiers, see `"GDE Command Summary" <./gde.html#id3>`_.
+GDE uses the following abbreviations to display the output of a global directory. The following list show global directory abbreviations with the associated qualifiers. For a description of the function of individual qualifiers, see `GDE Command Summary`_.
 
 +-----------------------------------------+----------------------------------------+
 | Abbreviation                            | Full Form                              |
