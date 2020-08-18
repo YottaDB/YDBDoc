@@ -449,7 +449,7 @@ Language
 
 * Application code that calls in to M code (using :code:`ydb_ci()` / :code:`ydb_cip()`) which in turn calls out to code that in turn calls the Simple API works. Previously, such usage could result in errors and otherwise behave incorrectly. [`#401 <https://gitlab.com/YottaDB/DB/YDB/issues/401>`_]
 
-* Routines :code:`gtm_ci()`, :code:`gtm_cip()`, and :code:`gtm_init()` are available for C code to call M code providing upward compatibility to allow non-M applications using `FIS GT.M <https://fis-gtm.com>`_ to run unchanged with YottaDB. Previously, while YottaDB provided upward compatibility for M applications, non-M applications had to replace the calls with :code:`ydb_ci()`, :code:`ydb_cip()`, and :code:`ydb_init()` respectively. [`#402 <https://gitlab.com/YottaDB/DB/YDB/issues/402>`_]
+* Routines :code:`gtm_ci()`, :code:`gtm_cip()`, and :code:`gtm_init()` are available for C code to call M code providing upward compatibility to allow non-M applications using `FIS GT.M <https://sourceforge.net/projects/fis-gtm>`_ to run unchanged with YottaDB. Previously, while YottaDB provided upward compatibility for M applications, non-M applications had to replace the calls with :code:`ydb_ci()`, :code:`ydb_cip()`, and :code:`ydb_init()` respectively. [`#402 <https://gitlab.com/YottaDB/DB/YDB/issues/402>`_]
 
 
 +++++++++++++++++++++
