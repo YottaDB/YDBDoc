@@ -3492,7 +3492,7 @@ In many ways, the $ZSUBSTR() function is similar to the $ZEXTRACT() function. Fo
 $ZSYSLOG()
 ----------------------
 
-Sends its string parameter to the system log and always returns TRUE (1). The text appears in the syslog with the same format as any other YottaDB syslog message (that is, in the user.info log with YDB-M[pid]" or "YDB-MUPIP[pid]" prefix along with instance information where appropriate). The format of the $ZSYSLOG function is:
+Sends its string parameter to the system log and always returns TRUE (1). The text appears in the syslog with the same format as any other YottaDB syslog message (that is, in the user.info log with YDB-MUMPS[pid]" or "YDB-MUPIP[pid]" prefix along with instance information where appropriate). The $ZSYSLOG() function sends the argument to syslog facility. The format of the $ZSYSLOG() function is: 
 
 .. code-block:: none
 
