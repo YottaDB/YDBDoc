@@ -56,7 +56,7 @@ YottaDB displays messages identifying the source of a BREAK as:
 * A device EXCEPTION
 * A ZSTEP action
 
-The VIEW "BREAKMSG" mask selectively enables or disables these messages. For an explanation of the mask, refer to `“View” <./commands.html#view>`_. By default, a process executing a YottaDB image displays all BREAK messages.
+The VIEW "BREAKMSG" mask selectively enables or disables these messages. For an explanation of the mask, refer to `View`_. By default, a process executing a YottaDB image displays all BREAK messages.
 
 When a process encounters a BREAK, it displays a prompt indicating readiness to process commands in Direct Mode. By default, Direct Mode displays the YDB> prompt. SETting the $ZPROMPT intrinsic special variable alters the prompt.
 
@@ -3956,7 +3956,7 @@ Use ZSHOW as
 * part of a context-switching mechanism in a server program that must manage multiple contexts.
 * a development tool to determine the external call table entries available from the current process.
 
-To minimize confusing data interactions, limit instances of directing ZSHOW output into variables holding other kinds of information and directing ZSHOW "V" output into local variables. For a comparison of ZSHOW "V" and ZWRITE, refer to `ZWRite <./commands.html#zwrite>`_.
+To minimize confusing data interactions, limit instances of directing ZSHOW output into variables holding other kinds of information and directing ZSHOW "V" output into local variables. For a comparison of ZSHOW "V" and ZWRITE, refer to `ZWRite`_.
 
 --------------------
 ZSTep

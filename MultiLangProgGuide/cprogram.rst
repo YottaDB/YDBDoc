@@ -1289,7 +1289,7 @@ more detailed information.
 `ydb_hiber_start()`_ and `ydb_hiber_start_wait_any()`_ are for use only with the SimpleAPI and not with the
 threaded Simple API.
 
-`ydb_exit() <cprogram.html#id30>`_, `ydb_fork_n_core()`_, and
+`ydb_exit()`_, `ydb_fork_n_core()`_, and
 `ydb_init()`_ do not have separate variants for single- and
 multi-threaded applications and are suitable for both.
 
@@ -1401,8 +1401,6 @@ how ever many signals are sent.
 
 :code:`ydb_eintr_handler_t()` is very similar to :code:`ydb_eintr_handler()` except that it needs to be invoked by
 a SimpleThreadAPI application.
-
-.. _ydb_exit():
 
 ----------
 ydb_exit()

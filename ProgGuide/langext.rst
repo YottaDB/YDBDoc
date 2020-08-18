@@ -204,7 +204,7 @@ The following table summarizes the YottaDB language extensions for journaling.
 Extensions for Additional Capability
 ---------------------------------------
 
-For ways to adjust some process operating characteristics, see the command description `“View” <./commands.html#view>`_. For ways to get information about certain process operating characteristics, see the function description `“$View()” <./functions.html#view>`_.
+For ways to adjust some process operating characteristics, see the command description `“View” <./commands.html#id7>`_. For ways to get information about certain process operating characteristics, see the function description `“$View()” <./functions.html#view>`_.
 
 In YottaDB, support of environment specification for global names and resource names is possible. It is possible to excercise user code to customize interpretation of the environment specification. See `Chapter 5: “General Language Features of M” <./langfeat.html>`_ for details.
 
@@ -326,11 +326,11 @@ The following table summarizes Alias Variables extensions.
 |                      | empty string. For more information, refer to `$ZAHandle() <./functions.html#zahandle>`_.                                                                                 |
 +----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | $ZDATA()             | Extends $DATA() to reflect the current alias state of the lvn or lname argument in order to identify alias and alias container variables. For more information, refer to |
-|                      | `$ZDATA() <./functions.html#id7>`_.                                                                                                                                      |
+|                      | `$ZDATA() <./functions.html#id8>`_.                                                                                                                                      |
 +----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | View and $View()     | VIEW provides LV_GCOL, LV_REHASH, and STP_GCOL to perform garbage collection and local variable lookup table reorganization operations which normally happen             |
 |                      | automatically at appropriate times. For more information on the keywords of the VIEW command, refer to                                                                   |
-|                      | `Key Words in VIEW Command <./commands.html#key-words-in-view-command>`_.                                                                                                |
+|                      | `Key Words in VIEW Command <./commands.html#keywords-in-view-command>`_.                                                                                                 |
 |                      |                                                                                                                                                                          |
 |                      | $VIEW() provides LV_CREF, LV_GCOL, and LV_REF. YottaDB uses the LC_CREF, LV_GCOL, LV_REF keywords in testing and is documenting them to ensure completeness in           |
 |                      | product documentation. They may (or may not) be useful during application development for debugging or performance testing implementation alternatives. For more         |
@@ -835,36 +835,36 @@ The following table summarizes YottaDB Unicode support.
 |                             | examples, refer to `$X <./isv.html#x>`_.                                                                                                                                                   |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | $ZASCII()                   | The $ZASCII() function returns the numeric byte value (0 through 255) of a given sequence of octets (8-bit bytes). For more information and usage examples, refer to                       |
-|                             | `$ZAscii() <./functions.html#zascii>`_.                                                                                                                                                    |
+|                             | `$ZAscii() <./functions.html#id6>`_.                                                                                                                                                       |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | $ZCHset                     | The read-only intrinsic special variable $ZCHSET takes its value from the environment variable ydb_chset. An application can obtain the character set used by a YottaDB process by the     |
 |                             | value of $ZCHSET. $ZCHSET can have only two values –"M", or "UTF-8" and it cannot appear on the left of an equal sign in the SET command. For more information and usage examples, refer to|
 |                             | `$ZCHset <./isv.html#zchset>`_.                                                                                                                                                            |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | $ZCHar()                    | The $ZCHAR() function returns a byte sequence of one or more bytes corresponding to numeric byte value (0 through 255) specified in its argument(s). For more information and usage        |
-|                             | examples, refer to `$ZCHar() <./functions.html#zchar>`_.                                                                                                                                   |
+|                             | examples, refer to `$ZCHar() <./functions.html#id7>`_.                                                                                                                                     |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | $ZCOnvert()                 | The $ZCONVERT() function returns its first argument as a string converted to a different encoding. The two argument form changes the encoding for case within a character set. The three   |
 |                             | argument form changes the encoding scheme. For more information and usage examples, refer to `$ZCOnvert() <./functions.html#zconvert>`_.                                                   |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | $ZExtract()                 | The $ZEXTRACT() function returns a byte sequence of a given sequence of octets (8-bit bytes). For more information and usage examples, refer to                                            |
-|                             | `$ZExtract() <./functions.html#zextract>`_.                                                                                                                                                |
+|                             | `$ZExtract() <./functions.html#id9>`_.                                                                                                                                                     |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | $ZFind()                    | The $ZFIND() function returns an integer byte position that locates the occurrence of a byte sequence within a sequence of octets(8-bit bytes). For more information and usage examples,   |
-|                             | refer to `$ZFind() <./functions.html#zfind>`_.                                                                                                                                             |
+|                             | refer to `$ZFind() <./functions.html#id10>`_.                                                                                                                                              |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | $ZJustify()                 | The $JUSTIFY() function returns a formatted and fixed length byte sequence. For more information and usage examples, refer to                                                              |
-|                             | `$ZJustify() <./functions.html#zjustify>`_.                                                                                                                                                |
+|                             | `$ZJustify() <./functions.html#id11>`_.                                                                                                                                                    |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | $ZLength()                  | The $ZLENGTH() function returns the length of a sequence of octets measured in bytes, or in "pieces" separated by a delimiter specified by its optional second argument. For more          |
-|                             | information and usage examples, refer to `$ZLength() <./functions.html#zlength>`_.                                                                                                         |
+|                             | information and usage examples, refer to `$ZLength() <./functions.html#id12>`_.                                                                                                            |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | $ZPATNumeric                | ZPATN[UMERIC] is a read-only intrinsic special variable that determines how YottaDB interprets the patcode N used in the pattern match operator. With $ZPATNUMERIC="UTF-8", the            |
 |                             | patcode N matches any numeric character as defined by Unicode. By default patcode N only matches the ASCII digits, which are the only digits which M actually treats as numerics. For more |
 |                             | information and usage examples, refer to `$ZPATNumeric <./isv.html#zpatnumeric>`_.                                                                                                         |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | $ZPIece()                   | The $ZPIECE() function returns a sequence of bytes delimited by a specified byte sequence made up of one or more bytes. In M, $ZPIECE() typically returns a logical field from a logical   |
-|                             | record. For more information and usage examples, refer to `$ZPIece() <./functions.html#zpiece>`_.                                                                                          |
+|                             | record. For more information and usage examples, refer to `$ZPIece() <./functions.html#id13>`_.                                                                                            |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | $ZPROMpt                    | $ZPROM[PT] contains a string value specifying the current Direct Mode prompt. By default, YDB> is the Direct Mode prompt. M routines can modify $ZPROMPT by means of a SET command.        |
 |                             | $ZPROMPT cannot exceed 31 bytes. If an attempt is made to assign $ZPROMPT to a longer string, YottaDB takes only the first 31 bytes and truncates the rest. With character set UTF-8       |
@@ -903,7 +903,7 @@ The following table summarizes YottaDB Unicode support.
 |                             |                                                                                                                                                                                            |
 |                             | In UTF-8 mode, the usual Unicode line terminators (U+000A (LF), U+0000D (CR), U+000D followed by U+000A (CRLF), U+0085 (NEL), U+000C (FF), U+2028 (LS) and U+2029 (PS)) are recognized. If |
 |                             | FILTER=CHARACTER is enabled, all of the terminators are recognized to maintain the values of $X and $Y. For more information, refer to                                                     |
-|                             | `FILTER <./ioproc.html#filter>`_.                                                                                                                                                          |
+|                             | `FILTER <./ioproc.html#id29>`_.                                                                                                                                                            |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Job                         | The Job command spawns a background process with the same environment as the M process doing the spawning. Therefore, if the parent process is operating in UTF-8 mode, the Job'd process  |
 |                             | also operates in UTF-8 mode. In the event that a background process must have a different mode from the parent, create a shell script to alter the environment as needed, and spawn it with|
@@ -953,7 +953,7 @@ The following table summarizes YottaDB Unicode support.
 | User-defined Collation      | For some languages (such as Chinese), the ordering of strings according to Unicode code-points (character values) may not be the linguistically or culturally correct ordering. Supporting |
 |                             | applications in such languages requires development of collation modules - YottaDB natively supports M collation, but does not include pre-built collation modules for any specific        |
 |                             | natural language. Therefore, applications that use characters in Unicode may need to implement their own collation functions. For more information on developing a collation module for    |
-|                             | Unicode, refer to `Implementing an Alternative Collation Sequence for Unicode <./internatn.html#id1>`_.                                                                                    |
+|                             | Unicode, refer to `Implementing an Alternative Collation Sequence for Unicode <./internatn.html#implementing-an-alternative-collation-sequence-for-unicode-characters>`_.                  |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Unicode Byte Order Marker   | When ICHSET is UTF-16, YottaDB uses BOM (U+FEFF) to automatically determine the endianess. For this to happen, the BOM must appear at the beginning of the file or data stream. If BOM     |
 | (BOM)                       | is not present, YottaDB assumes big endianess. SEEK or APPEND operations require specifying the endianess (UTF-16LE or UTF-16BE) because they do not go to the beginning of the file       |

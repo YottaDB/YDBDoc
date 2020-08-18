@@ -651,7 +651,7 @@ $ZERROR contains a default value of "Unprocessed $ZERROR, see $ZSTATUS" at proce
 
 $ZERROR can be SET but not NEWed.
 
-The mapping of a YottaDB error-code to the application-specific error-code is achieved as follows. Whenever YottaDB encounters an error, $ECODE/$ZSTATUS gets set first. It then invokes the code that $ZYERROR points to if it is not null. It is intended that the code invoked by $ZYERROR use the value of $ZSTATUS to select or construct a value to which it SETs $ZERROR. If an error is encountered by the attempt to execute the code specified in $ZYERROR, YottaDB sets $ZERROR to the error status encountered. If $ZYERROR is null, YottaDB does not change the value of $ZERROR. In all cases, YottaDB proceeds to return control to the code specified by $ETRAP/$ZTRAP or device EXCEPTION whichever is applicable. For details, see `$ZYERror <./isv.html#zyerror>`_.
+The mapping of a YottaDB error-code to the application-specific error-code is achieved as follows. Whenever YottaDB encounters an error, $ECODE/$ZSTATUS gets set first. It then invokes the code that $ZYERROR points to if it is not null. It is intended that the code invoked by $ZYERROR use the value of $ZSTATUS to select or construct a value to which it SETs $ZERROR. If an error is encountered by the attempt to execute the code specified in $ZYERROR, YottaDB sets $ZERROR to the error status encountered. If $ZYERROR is null, YottaDB does not change the value of $ZERROR. In all cases, YottaDB proceeds to return control to the code specified by $ETRAP/$ZTRAP or device EXCEPTION whichever is applicable. For details, see `$ZYERror`_.
 
 -------------------
 $ZGBLDIR
@@ -1120,7 +1120,7 @@ $ZPIN
 
 When $PRINCIPAL has different input/output devices, the USE command recognizes intrinsic special variable $ZPIN to apply appropriate deviceparameters to the input side of $PRINCIPAL. A USE with $ZPIN sets $IO to $PRINCIPAL for READs and WRITEs from the input and output side of $PRINCIPAL. $ZSOCKET() also accepts $ZPIN as its first argument and, if the device is a split SOCKET device, supplies information on the input SOCKET device. In any context other than USE or $ZSOCKET(), or if $PRINCIPAL is not a split device, $PRINCIPAL, $ZPIN and $ZPOUT are synonyms. In the case of a split $PRINCIPAL, $ZPIN returns the value of $PRINCIPAL followed by the string "< /" Any attempt to OPEN $ZPIN results in a DEVOPENFAIL error.
 
-For more information refer to `$Principal <./ioproc.html#principal>`_, `$ZPOUT <./isv.html#zpout>`_, and `$ZSOCKET() <./functions.html#zsocket>`_.
+For more information refer to `$Principal <./ioproc.html#principal>`_, `$ZPOUT`_, and `$ZSOCKET() <./functions.html#zsocket>`_.
 
 -----------------
 $ZPOSITION
@@ -1246,7 +1246,7 @@ However, if you enable the ydb_zquit_anyway feature, extrinsic function invocati
 $ZREALSTOR
 ---------------
 
-$ZREALSTOR contains the total memory (in bytes) allocated by the YottaDB process, which may or may not actually be in use. It provides one view (see also `$ZALlocstor <./isv.html#zallocstor>`_ and `$ZUSedstor <./isv.html#zusedstor>`_) of the process memory utilization and can help identify storage related problems. YottaDB does not permit $ZREALSTOR to be SET or NEWed.
+$ZREALSTOR contains the total memory (in bytes) allocated by the YottaDB process, which may or may not actually be in use. It provides one view (see also `$ZALlocstor <./isv.html#zallocstor>`_ and `$ZUSedstor`_) of the process memory utilization and can help identify storage related problems. YottaDB does not permit $ZREALSTOR to be SET or NEWed.
 
 ---------------
 $ZRELDATE
@@ -1852,7 +1852,7 @@ M routines cannot modify $ZVERSION.
 Example:
 
 .. code-block:: bash
-		
+
    YDB>write $zversion
    GT.M V6.3-008 Linux x86_64
 

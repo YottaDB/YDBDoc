@@ -524,7 +524,7 @@ YottaDB also allows:
 
 Where the first expression identifies the Global Directory and the second expression is accepted but ignored by YottaDB.
 
-To improve compatibility with some other M implementations, YottaDB also accepts another non-standard syntax. In this syntax, the leading and trailing up-bar (|) are respectively replaced by a left square-bracket ([) and a right square-bracket (]). This syntax also requires expratoms, rather than expressions. For additional information on expratoms, see `Expressions <./langfeat.html#expressions>`_.
+To improve compatibility with some other M implementations, YottaDB also accepts another non-standard syntax. In this syntax, the leading and trailing up-bar (|) are respectively replaced by a left square-bracket ([) and a right square-bracket (]). This syntax also requires expratoms, rather than expressions. For additional information on expratoms, see `Expressions`_.
 
 The formats for this non-standard syntax are:
 
@@ -1366,7 +1366,7 @@ A line of M code consists of the following elements in the following order:
 
 **Labels**
 
-In addition to labels that follow the rules for M names, M accepts labels consisting only of digits. In a label consisting only of digits, leading zeros are considered significant. For example, labels 1 and 01 are different. Formallists may immediately follow a label. A Formallist consists of one or more names enclosed in parentheses (). Formallists identify local variables that "receive" passed values in M parameter passing. For more information, see `“Parameter Passing” <./langfeat.html#parameter-passing>`_.
+In addition to labels that follow the rules for M names, M accepts labels consisting only of digits. In a label consisting only of digits, leading zeros are considered significant. For example, labels 1 and 01 are different. Formallists may immediately follow a label. A Formallist consists of one or more names enclosed in parentheses (). Formallists identify local variables that "receive" passed values in M parameter passing. For more information, see `Parameter Passing`_.
 
 In YottaDB, a colon (:) delimiter may be appended to the label, which causes the label to be treated as "local." Within the routine in which they appear, they perform exactly as they would without the trailing colon but they are available only during compilation and inaccessible to other routines and to indirection or XECUTE. Because references to local labels preceding their position in a routine produce a LABELUNKNOWN error at run-time, YottaDB recommends omitting the routinename from labelrefs to a local label. Using local labels reduces object size and linking overhead for all types of dynamic linking except indirection and XECUTE. Use of local labels may either improve or impair performance; typically any difference is modest. The more likely they are to all be used within the code block at run-time, the more likely an improvement. In other words, conditional code paths which prevent all references to local variables appearing in the block may actually impair performance.
 
@@ -1602,7 +1602,7 @@ A QUIT command terminates execution of the invoked routine. At the time of the Q
 
 A QUIT from a DO does not take an argument, while a QUIT from an extrinsic must have an argument. This represents one of the two major differences between the DO command with parameters and the extrinsics. M returns the value of the QUIT command argument as the value of the extrinsic function or special variable. The other difference is that M stacks $TEST for extrinsics.
 
-For more information, see `“Extrinsic Functions” <./langfeat.html#extrinsic-functions>`_ and `“Extrinsic Special Variables” <./langfeat.html#extrinsic-special-variables>`_.
+For more information, see `Extrinsic Functions`_ and `Extrinsic Special Variables`_.
 
 Example:
 
@@ -1951,7 +1951,7 @@ Here is an example message:
 * local_tn - This is a never-decreasing counter (starting at 1 at process startup) incremented for every new TP transaction, TP restart, and TP rollback. Two TPRESTART messages by the same process should never have the same value of local_tn. The difference between the local_tn values of two messages from the same process indicates the number of TP transactions done by that process in the time interval between the two messages.
 
 .. note::
-   Use VIEW [NO]LOGT[PRESTART][=intexpr] to enable or disable the logging of TPRESTART messages. Note that you can use the ydb_tprestart_log_delta and ydb_tprestart_log_first environment variables to set the frequency of TPRESTART messages. Use VIEW [NO]LOGN[ONTP][=intexpr] to enable or disable the logging of NONTPRESTART messages. This facility is the analog of TPRESTART tracking, but for non-TP mini-transacstions. Note that you can use the ydb_nontprestart_log_delta and ydb_nontprestart_log_first environment variables to set the frequency of the NONTPRESTART messages.For more information, refer to `“Key Words in VIEW Command” <./commands.html#key-words-in-view-command>`_ and the `Environment Variables <https://docs.yottadb.com/AdminOpsGuide/basicops.html#environment-variables>`_ section of the Administration and Operations Guide.
+   Use VIEW [NO]LOGT[PRESTART][=intexpr] to enable or disable the logging of TPRESTART messages. Note that you can use the ydb_tprestart_log_delta and ydb_tprestart_log_first environment variables to set the frequency of TPRESTART messages. Use VIEW [NO]LOGN[ONTP][=intexpr] to enable or disable the logging of NONTPRESTART messages. This facility is the analog of TPRESTART tracking, but for non-TP mini-transacstions. Note that you can use the ydb_nontprestart_log_delta and ydb_nontprestart_log_first environment variables to set the frequency of the NONTPRESTART messages.For more information, refer to `“Key Words in VIEW Command” <./commands.html#keywords-in-view-command>`_ and the `Environment Variables <https://docs.yottadb.com/AdminOpsGuide/basicops.html#environment-variables>`_ section of the Administration and Operations Guide.
 
 
 ++++++++++++++++++++++

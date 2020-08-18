@@ -19,7 +19,7 @@ Acculturation Workshop
 
 Welcome to the YottaDB Acculturation Workshop!
 
-Copyright © 2017-2019 YottaDB LLC and/or its subsidiaries. All Rights Reserved.
+Copyright © 2017-2020 YottaDB LLC and/or its subsidiaries. All Rights Reserved.
 
 Copyright © 2014 Fidelity National Information Services, Inc. and/or its subsidiaries. All Rights Reserved.
 

@@ -44,7 +44,7 @@ The format for the $ASCII function is:
 
 $ASCII() provides a means of examining non-graphic characters in a string. When used with $CHAR(), $ASCII() also provides a means to perform arithmetic operations on the codes associated with characters.
 
-$ZASCII() is the parallel function of $ASCII(). $ZASCII() interprets the string argument as a sequence of bytes (rather than a sequence of characters) and can perform all byte-oriented $ASCII() operations. For more information, refer to `$ZAscii() <./functions.html#zascii>`_.
+$ZASCII() is the parallel function of $ASCII(). $ZASCII() interprets the string argument as a sequence of bytes (rather than a sequence of characters) and can perform all byte-oriented $ASCII() operations. For more information, refer to `$ZAscii()`_.
 
 ++++++++++++++++++++
 Examples of ASCII()
@@ -91,7 +91,7 @@ The format for the $CHAR function is:
 * The integer expression(s) specify the codes of the character(s) $CHAR() returns.
 * The M standard does not restrict the number of arguments to $CHAR(). However, YottaDB does limit the number of arguments to a maximum of 254. $CHAR() provides a means of producing non-graphic characters, as such characters cannot appear directly within an M string literal. When used with $ASCII(), $CHAR() can also perform arithmetic operations on the codes associated with characters.
 * With VIEW "BADCHAR" enabled, $CHAR() produces a run-time error if any expression evaluates to a code-point value that is not a character in Unicode. YottaDB determines from ICU which characters are illegal.
-* $ZCHAR() is the parallel function of $CHAR(). $ZCHAR() returns a sequence of bytes (rather than a sequence of characters) and can perform all byte-oriented $CHAR() operations. For more information, refer to `$ZCHar() <./functions.html#zchar>`_.
+* $ZCHAR() is the parallel function of $CHAR(). $ZCHAR() returns a sequence of bytes (rather than a sequence of characters) and can perform all byte-oriented $CHAR() operations. For more information, refer to `$ZCHar()`_.
 
 ++++++++++++++++++++
 Examples of $CHAR()
@@ -145,7 +145,7 @@ The format for the $DATA function is:
 * If the variable has a value but no descendants, $DATA() returns 1.
 * If the variable has descendants but no value, $DATA() returns 10.
 * If the variable has a value and descendants, $DATA() returns 11.
-* $ZDATA() extends $DATA() to reflect the current alias state of the lvn or name argument to identify alias and alias container variables. For more information, refer to `$ZDATA() <./functions.html#zdata>`_.
+* $ZDATA() extends $DATA() to reflect the current alias state of the lvn or name argument to identify alias and alias container variables. For more information, refer to `$ZDATA()`_.
 
 The following table summarizes $DATA() return values.
 
@@ -220,7 +220,7 @@ The format for the $EXTRACT function is:
 
 $EXTRACT() provides a tool for manipulating strings based on character positions.
 
-For a yottadb process started in UTF-mode, $EXTRACT interprets the string arguments as UTF-8 encoded. With VIEW "BADCHAR" enabled, $EXTRACT() produces a run-time error when it encounters a character in the reserved range of the Unicode® Standard, but it does not process the characters that fall after the span specified by the arguments. The parallel function of $EXTRACT() is $ZEXTRACT(). Use $ZEXTRACT() for byte-oriented operations. For more information, refer to `$ZExtract() <./functions.html#zextract>`_.
+For a yottadb process started in UTF-mode, $EXTRACT interprets the string arguments as UTF-8 encoded. With VIEW "BADCHAR" enabled, $EXTRACT() produces a run-time error when it encounters a character in the reserved range of the Unicode® Standard, but it does not process the characters that fall after the span specified by the arguments. The parallel function of $EXTRACT() is $ZEXTRACT(). Use $ZEXTRACT() for byte-oriented operations. For more information, refer to `$ZExtract()`_.
 
 $EXTRACT() can be used on the left-hand side of the equal sign (=) of a SET command to set a substring of a string. This construct permits easy maintenance of individual pieces within a string. It can also be used to right justify a value padded with blank characters. For more information on SET $EXTRACT(), refer to `“Set” in the Commands chapter <./commands.html#set>`_.
 
@@ -291,7 +291,7 @@ The format for the $FIND function is:
 * If $FIND() locates the substring, it returns the position after the last character of the substring. If the end of the substring coincides with the end of the string (expr1), it returns an integer equal to the length of the string plus one ($L(expr1)+1).
 * If $FIND() does not locate the substring, it returns zero (0).
 * For a process started in UTF-8 mode, $FIND() interprets the string arguments as UTF-8 encoded. With VIEW "BADCHAR" enabled, $FIND() produces a run-time error when it encounters a malformed character, but it does not process the characters that fall after the span specified by the arguments.
-* $ZFIND() is the Z equivalent function $FIND(). Irrespective of the settings of VIEW "BADCHAR" and $ZCHSET, $ZFIND() interprets argument as a sequence of bytes (rather than a sequence of characters) and can perform byte-oriented $FIND() operations.For more information, refer to `$ZFind() <./functions.html#zfind>`_.
+* $ZFIND() is the Z equivalent function $FIND(). Irrespective of the settings of VIEW "BADCHAR" and $ZCHSET, $ZFIND() interprets argument as a sequence of bytes (rather than a sequence of characters) and can perform byte-oriented $FIND() operations.For more information, refer to `$ZFind()`_.
 
 $FIND() provides a tool to locate substrings. The ([) operator and the two-argument $LENGTH() are other tools that provide related functionality.
 
@@ -545,7 +545,7 @@ $JUSTIFY() optionally rounds the portion of the result after the decimal point. 
 * Then, it adds 5 (five) to the digit position after the digit specified by the rounding argument.
 * Finally, it truncates the result to the specified number of digits. The algorithm rounds up when excess digits specify a half or more of the last retained digit and rounds down when they specify less than a half.
 * For a process started in UTF-8 mode, $JUSTIFY() interprets the string argument as UTF-8 encoded. With VIEW "BADCHAR" enabled, $JUSTIFY() produces a run-time error when it encounters a malformed character.
-* $ZJUSTIFY() is the parallel function of $JUSTIFY(). Irrespective of the settings of VIEW "BADCHAR" and $ZCHSET, $ZJUSTIFY() interprets argument as a sequence of bytes (rather than a sequence of characters) and can perform all byte-oriented $JUSTIFY() operations. For more information, refer to `$ZJustify() <./functions.html#zjustify>`_.
+* $ZJUSTIFY() is the parallel function of $JUSTIFY(). Irrespective of the settings of VIEW "BADCHAR" and $ZCHSET, $ZJUSTIFY() interprets argument as a sequence of bytes (rather than a sequence of characters) and can perform all byte-oriented $JUSTIFY() operations. For more information, refer to `$ZJustify()`_.
 
 ++++++++++++++++++++++++
 Examples of $JUSTIFY()
@@ -622,7 +622,7 @@ The format for the $LENGTH function is:
 * If the second argument is present and not an empty string, $LENGTH returns one more than the count of the number of occurrences of the second string in the first string; if the second argument is an empty string, the M standard specifies that $LENGTH() returns a zero (0).
 * $LENGTH() provides a tool for determining the lengths of strings in two ways, characters and pieces. The two argument $LENGTH() returns the number of existing pieces, while the one argument returns the number of characters.
 * For a process started in UTF-8 mode, $LENGTH() interprets the string argument(s) as UTF-8 encoded. With VIEW "BADCHAR" enabled, $LENGTH() produces a run-time error when it encounters a malformed character.
-* $ZLENGTH() is the parallel function of $LENGTH(). Irrespective of the setting of VIEW "BADCHAR" and $ZCHSET, $ZLENGTH() interpets string arguments as a sequence of bytes (rather than characters) and can perform all byte-oriented $LENGTH() operations. For more information, refer to `$ZLength() <./functions.html#zlength>`_.
+* $ZLENGTH() is the parallel function of $LENGTH(). Irrespective of the setting of VIEW "BADCHAR" and $ZCHSET, $ZLENGTH() interpets string arguments as a sequence of bytes (rather than characters) and can perform all byte-oriented $LENGTH() operations. For more information, refer to `$ZLength()`_.
 
 +++++++++++++++++++++++++++
 Examples of $LENGTH()
@@ -888,7 +888,7 @@ The format for the $PIECE function is:
 * A SET command argument can have something that has the format of a $PIECE() on the left-hand side of its equal sign (=). This construct permits easy maintenance of individual pieces within a string. It also can be used to generate a string of delimiters. For more information on SET $PIECE(), refer to `“Set” <./commands.html#set>`_.
 * $PIECE() can also be used as target in a SET command to change part of the value of a node. Also, when SET arguments have multiple parenthesized (set-left) targets and a target is used as a subscript in more than one item in the list of targets that follow, all the targets use the before-SET value (not the after-SET value) in conformance to the M-standard. For more information on SET $PIECE(), refer to `“Set” <./commands.html#set>`_.
 * For a process started in UTF-8 mode, $PIECE() interprets the string arguments as UTF-8 encoded. With VIEW "BADCHAR" enabled, $PIECE() produces a run-time error when it encounters a malformed character, but it does not process the characters that fall after the span specified by the arguments.
-* $ZPIECE() is the parallel function of $PIECE(). Irrespective of the settings of VIEW "BADCHAR" and $ZCHSET, $ZPIECE() interprets string arguments as a sequence of bytes (rather than a sequence of characters) and can perform all byte-oriented $PIECE() operations. For more information, refer to `$ZPIece() <./functions.html#zpiece>`_.
+* $ZPIECE() is the parallel function of $PIECE(). Irrespective of the settings of VIEW "BADCHAR" and $ZCHSET, $ZPIECE() interprets string arguments as a sequence of bytes (rather than a sequence of characters) and can perform all byte-oriented $PIECE() operations. For more information, refer to `$ZPIece()`_.
 
 ++++++++++++++++++++++++++++
 Examples of $PIECE()
@@ -2348,7 +2348,7 @@ Examples of $ZCONVERT()
 Example:
 
 .. code-block:: bash
-		
+
    YDB>write $zchset
    M
    YDB>write $zconvert("Happy New Year","U")
@@ -2358,7 +2358,7 @@ Example:
 Example:
 
 .. code-block:: bash
-		
+
    YDB>write $zchset
    UTF-8
    YDB>write $zconvert("HAPPY NEW YEAR","T")
@@ -2368,7 +2368,7 @@ Example:
 Example:
 
 .. code-block:: bash
-		
+
    YDB>set x="FFFF" write $zconvert(x,"hex","dec")
    65535
    YDB>kill x,y set $piece(x,"F",17)="" set y=$zconvert(x,"hex","dec") write x," ",y
@@ -2755,7 +2755,7 @@ $ZJOBEXAM()
 --------------------
 
 .. code-block:: none
-		
+
    $ZJOBEXAM([expr1[,expr2]])
 
 Returns the full specification of the file specified by the optional expr1 argument into which the function places a ZSHOW output specified by expr2. The return value is the name of the file. YottaDB reports each $ZJOBEXAM() to the operator log facility, along with its file specification.
@@ -2763,7 +2763,7 @@ Returns the full specification of the file specified by the optional expr1 argum
 The optional expr1 argument is a template output device specification. It can be a device, a file directory, or a file name. The template is an expression that is pre-processed to create a file specification as the target for the ZSHOW. The preprocessing is equivalent to $ZPARSE(), as illustrated by the following M code:
 
 .. code-block:: none
-		
+
    set deffn="YDB_JOBEXAM.ZSHOW_DMP\_"_$JOB\_"_"_<cntr>
    set filespec=$zparse(expr1,"",deffn)
 
@@ -2904,7 +2904,7 @@ The integer expression specifies the status code for which $ZMESSAGE() returns e
 
 $ZMESSAGE() provides a tool for examining the message and/or mnemonic associated with a particular message code as reported in $ZSTATUS.
 
-The `$ZSTATUS <./isv.html#zstatus>`_ Intrinsic Special Variable holds the message code and the message of the last non-Direct Mode YottaDB error.
+The `$ZSTATUS <./isv.html#id13>`_ Intrinsic Special Variable holds the message code and the message of the last non-Direct Mode YottaDB error.
 
 ++++++++++++++++++++++++
 Examples of $ZMESSAGE()
@@ -2938,7 +2938,7 @@ The format for the $ZPARSE function is:
 * If the file extension is missing from all three of expr1, expr3, and expr4, $ZPARSE() will return a null string for the corresponding field. If the file or directory is missing from all three of expr1, expr3, and expr4, $ZPARSE() will substitute the information from your current working directory.
 * The optional fifth expression specifies the mode or type of parse that $ZPARSE() performs.
 
-$ZPARSE() provides a tool for verifying that a file name is syntactically correct, for examining specific fields of a file name, and for filling in missing pieces in a partial specification based on a hierarchy of defaults. For information about determining whether a file exists, see `$ZSEARCH() <./functions.html#zsearch>`_.
+$ZPARSE() provides a tool for verifying that a file name is syntactically correct, for examining specific fields of a file name, and for filling in missing pieces in a partial specification based on a hierarchy of defaults. For information about determining whether a file exists, see `$ZSEARCH()`_.
 
 $ZPARSE() arguments, after the first, are optional. If you use no other arguments, a single argument is sufficient. However, if you use selected arguments $ZPARSE() requires that null strings ("") be filled in for the unspecified arguments.
 
@@ -3322,7 +3322,7 @@ The first expression specifies the SOCKET device name; an empty string returns t
    set handlein=$ZSOCKET($ZPIN,"SOCKETHANDLE",0)
    set handleout=$ZSOCKET($ZPOUT,"SOCKETHANDLE",0)
 
-For more information, refer to `$ZPIN <./isv.html#zpin>`_ and `$ZPOUT <./isv.html#zpout>`_.
+For more information, refer to `$ZPIN <./isv.html#zpin>`_ and `$ZPOUT <./isv.html#id8>`_.
 
 The second expression specifies a keyword identifying the type of information returned and the optional third expression usually specifies the index (starting at zero) of a socket attached to the device; if the index is outside the range of attached sockets, $ZSOCKET() returns an empty string. If the third expression is not specified, $ZSOCKET() returns information about the current socket. Using an invalid keyword produces a ZSOCKETATTR error. The fourth expression specifies an individual delimiter when the second expression specifies DELIMITER. For more information, see the following table. Note that changes to the socket collection for a SOCKET device using OPEN, CLOSE, USE :ATTACH, or USE :DETACH may change the index for a socket.
 
@@ -3738,7 +3738,7 @@ $ZYHASH()
 Returns the 128-bit `MurmurHash3 <https://en.wikipedia.org/wiki/MurmurHash#MurmurHash3>`_ of a string as a hexadecimal string prefixed with :code:"0x". This is equivalent to calling the C API function `ydb_mmrhash_128() <../MultiLangProgGuide/cprogram.html#ydb-mmrhash-128>`_ and passing its return value to `ydb_mmrhash_128_hex() <../MultiLangProgGuide/cprogram.html#ydb-mmrhash-128-hex>`_
 
 .. code-block:: none
-		
+
    $ZYHASH(string[,salt])
 
 * The first argument is the string to be hashed.
@@ -3749,7 +3749,7 @@ Examples of $ZYHASH()
 +++++++++++++++++++++
 
 .. code-block:: bash
-		
+
    YDB>write $zyhash("YottaDB Rocks!")
    0xa91a6a91c8d3afa118ae643d7c08c007
    YDB>write $zyhash("YottaDB Rocks!",0)
@@ -3770,7 +3770,7 @@ $ZYISSQLNULL()
 Returns 1 if its sole argument has a value `$ZYSQLNULL <./isv.html#zysqlnull>`_, and 0 otherwise.
 
 .. code-block:: none
-		
+
    $ZYISSQLNULL(expr)
 
 ++++++++++++++++++++++++++
@@ -3778,7 +3778,7 @@ Examples of $ZYISSQLNULL()
 ++++++++++++++++++++++++++
 
 .. code-block:: bash
-		
+
    YDB>set x=$ZYSQLNULL write $ZYISSQLNULL(x)
    1
    YDB>set x="Something else" write $ZYISSQLNULL(x)
