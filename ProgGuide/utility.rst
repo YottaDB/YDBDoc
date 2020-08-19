@@ -1874,7 +1874,7 @@ The routine utilities are:
 
 The %FL utility lists the comment lines at the beginning of source programs. %FL writes the routines in alphabetical order to the specified device. If the output device is not the principal device, %FL displays the name of each routine on the principal device as it writes the routine to the output device.
 
-%FL uses %RSEL to select routines. For more information, see `%RSEL <./utility.html#id3>`_.
+%FL uses %RSEL to select routines. For more information, see `%RSEL`_.
 
 **Prompts**
 
@@ -1946,7 +1946,7 @@ charset: Specifies a string of non-zero length. If specified, %RANDSTR generates
 
 The %RCE utility replaces every occurrence of a text string with another text string in a routine or a list of routines.
 
-%RCE uses %RSEL to select routines. For more information, see `%RSEL <./utility.html#id3>`_.
+%RCE uses %RSEL to select routines. For more information, see `%RSEL`_.
 
 %RCE prompts for a text string to replace and its replacement. %RCE searches for text strings in a case-sensitive manner. %RCE issues a warning message if you specify a control character such as a <TAB> in the text string or its replacement. %RCE confirms your selection by displaying the text string and its replacement between a left and right arrow. The arrows highlight any blank spaces that you might have included in the text string or its replacement.
 
@@ -2176,7 +2176,7 @@ Example:
 
 The %RO utility writes M source code for one or more routines to a sequential device such as, a disk file or a printer. .
 
-%RO uses %RSEL to select routines. For more information, see `%RSEL <./utility.html#id3>`_.
+%RO uses %RSEL to select routines. For more information, see `%RSEL`_.
 
 %RO writes the routines in alphabetical order to the specified device. %RO displays the name of each routine as it writes the routine to the device.
 
@@ -2241,7 +2241,7 @@ This example adds and subtracts %D from the selection, then adds all routines st
 
 The %RSE utility searches for every occurrence of a text string in a routine or a list of routines.
 
-%RSE uses %RSEL to select routines. For more information, see `%RSEL <./utility.html#id3>`_.
+%RSE uses %RSEL to select routines. For more information, see `%RSEL`_.
 
 %RSE searches for text strings are case-sensitive. %RSE issues a warning message if you specify a control character such as a <TAB> in the text string. %RSE confirms your selection by displaying the text string between a left and right arrow. The arrows display any blank spaces included in the text string.
 
@@ -2539,7 +2539,7 @@ The first parameter is a required pass-by-reference variable that the caller use
 
 The second parameter is the path and name for the database file on which to report information.
 
-The format of the output array is fdump(sgmnt_data.<FIELD NAME>)=<value>; refer to `%PEEKBYNAME <./utility.html#peekbyname>`_ for additional information on the names and values.
+The format of the output array is fdump(sgmnt_data.<FIELD NAME>)=<value>; refer to `%PEEKBYNAME()`_ for additional information on the names and values.
 
 The $ETRAP handler simply QUITs as it defers error handling to the caller. Application developers should define an appropriate $ETRAP prior to calling %DUMPFHEAD.
 
@@ -2575,7 +2575,7 @@ This example invokes %FREECNT at the YDB> prompt that displays the number of fre
 %PEEKBYNAME() provides a stable interface to $ZPEEK() that uses control structure field names. $ZPEEK() provides a read-only mechanism to access selected fields in selected control structures in the address space of a process, including process private memory, database shared memory segments and Journal Pools. Although application code can call $ZPEEK() directly, such direct access must use numeric arguments that can vary from release to release. Access by name using %PEEKBYNAME makes application code more stable across YottaDB releases. For more information, refer to `$ZPEEK() <./functions.html#zpeek>`_. YottaDB intends to maintain the stability of a name from release to release where that name refers to the same data item; however, we may add or obsolete names, or modify the type and size associated with existing names at our discretion, to reflect changes in the implementation. The format of the %PEEKBYNAME() function is:
 
 .. code-block:: none
-		
+
    %PEEKBYNAME(field[,regindex[,format[,gldpath]]])
 
 * The first expression specifies the memory location to access in the format: CONTROL_BLOCK[.FIELD].* (For example, "gd_region.max_key_size").
@@ -2947,83 +2947,83 @@ Example:
 Utilities Summary Table
 -------------------------------
 
-+----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| Utility Name                                                                                                   | Description                                                                                                  |
-+================================================================================================================+==============================================================================================================+
-| `%D <./utility.html#d>`_                                               | Displays the current date in [d]d-mmm-[yy]yy format.                                                                                                 |
-+----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%DATE <./utility.html#date>`_                                         | Converts input date to $HOROLOG format.                                                                                                              |
-+----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%DH <./utility.html#dh>`_                                             | Converts decimal numbers to hexadecimal.                                                                                                             |
-+----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%DO <./utility.html#do>`_                                             | Converts decimal numbers to octal.                                                                                                                   |
-+----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%EXP <./utility.html#exp>`_                                           | Raises number to the power of another number.                                                                                                        |
-+----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%FL <./utility.html#fl>`_                                             | Lists comment lines at the beginning of the source programs.                                                                                         |
-+----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%FREECNT <./utility.html#freecnt>`_                                   | Displays the number of free blocks in the database files associated with the current global directory.                                               |
-+----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%G <./utility.html#g>`_                                               | Displays global variables and their values.                                                                                                          |
-+----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%GBLDEF <./internatn.html#using-the-gbldef-utility>`_                 | Manipulates the collation sequence assigned to a global.                                                                                             |
-+----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%GC <./utility.html#gc>`_                                             | Copies a global or global sub-tree.                                                                                                                  |
-+----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%GCE <./utility.html#gce>`_                                           | Replaces a specified value or part of a value in a set of global variables.                                                                          |
-+----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%GD <./utility.html#gd>`_                                             | Displays existing globals in the current global directory without displaying their values or descendants.                                            |
-+----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%GED <./utility.html#ged>`_                                           | Provides full-screen editing capabilities for global variables and values.                                                                           |
-+----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%GI <./utility.html#gi>`_                                             | Enters global variables and their values from a sequential file into a database.                                                                     |
-+----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%GO <./utility.html#go>`_                                             | Copies globals from the current database to a sequential output file.                                                                                |
-+----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%GSE <./utility.html#gse>`_                                           | Displays global variables and their values when the values contain a specified string or number.                                                     |
-+----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%GSEL <./utility.html#gsel>`_                                         | Selects globals by name.                                                                                                                             |
-+----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%H <./utility.html#h>`_                                               | Converts date and time to and from $HOROLOG format.                                                                                                  |
-+----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%HD <./utility.html#hd>`_                                             | Converts hexadecimal numbers to decimal.                                                                                                             |
-+----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%HEX2UTF <./utility.html#hex2utf>`_                                   | Converts the given bytestream in hexadecimal notation to YottaDB encoded character string.                                                           |
-+----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%HO <./utility.html#ho>`_                                             | Converts hexadecimal numbers to octal.                                                                                                               |
-+----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%LCASE <./utility.html#lcase>`_                                       | Converts a string to all lower case.                                                                                                                 |
-+----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%LCLCOL <./internatn.html#establishing-a-local-collation-sequence>`_  | Manipulates the collation sequence assigned to local variables.                                                                                      |
-+----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%OD <./utility.html#od>`_                                             | Converts octal numbers to decimal.                                                                                                                   |
-+----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%OH <./utility.html#oh>`_                                             | Converts octal numbers to hexadecimal.                                                                                                               |
-+----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%PATCODE <./internatn.html#pattern-code-definition>`_                 | Loads pattern definition files for use within an active database.                                                                                    |
-+----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%RCE <./utility.html#rce>`_                                           | Replaces every occurrence of a text string with another string in a routine or list of routines.                                                     |
-+----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%RD <./utility.html#rd>`_                                             | Lists routine names available through your $ZROUTINES search list.                                                                                   |
-+----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%RI <./utility.html#ri>`_                                             | Transfers routines from ANSI sequential format into individual .m files in YottaDB format.                                                           |
-+----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%RO <./utility.html#ro>`_                                             | Writes M routines in ANSI transfer format.                                                                                                           |
-+----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%RSE <./utility.html#rse>`_                                           | Searches for every occurrence of a text string in a routine or a list of routines.                                                                   |
-+----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%RSEL <./utility.html#id3>`_                                          | Selects M routines and places their directories and names in a local array.                                                                          |
-+----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%SQROOT <./utility.html#sqroot>`_                                     | Calculates the square root of a number.                                                                                                              |
-+----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%T <./utility.html#t>`_                                               | Displays the current time in [h]h:mm AM/PM format.                                                                                                   |
-+----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%TI <./utility.html#ti>`_                                             | Converts time to $HOROLOG format.                                                                                                                    |
-+----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%TO <./utility.html#to>`_                                             | Converts the current time from $HOROLOG format to [h]h:mm AM/PM format.                                                                              |
-+----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%UCASE <./utility.html#ucase>`_                                       | Converts a string to all upper case.                                                                                                                 |
-+----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
-| `%UTF2HEX <./utility.html#utf2hex>`_                                   | Converts UTF-8 encoded YottaDB character string to bytestream in hexadecimal notation.                                                               |
-+----------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------+
++-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+| Utility Name                                                          | Description                                                                                              |
++=======================================================================+==========================================================================================================+
+| `%D`_                                                                 | Displays the current date in [d]d-mmm-[yy]yy format.                                                     |
++-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+| `%DATE`_                                                              | Converts input date to $HOROLOG format.                                                                  |
++-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+| `%DH`_                                                                | Converts decimal numbers to hexadecimal.                                                                 |
++-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+| `%DO`_                                                                | Converts decimal numbers to octal.                                                                       |
++-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+| `%EXP`_                                                               | Raises number to the power of another number.                                                            |
++-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+| `%FL`_                                                                | Lists comment lines at the beginning of the source programs.                                             |
++-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+| `%FREECNT`_                                                           | Displays the number of free blocks in the database files associated with the current global directory.   |
++-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+| `%G`_                                                                 | Displays global variables and their values.                                                              |
++-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+| `%GBLDEF <./internatn.html#using-the-gbldef-utility>`_                | Manipulates the collation sequence assigned to a global.                                                 |
++-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+| `%GC`_                                                                | Copies a global or global sub-tree.                                                                      |
++-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+| `%GCE`_                                                               | Replaces a specified value or part of a value in a set of global variables.                              |
++-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+| `%GD`_                                                                | Displays existing globals in the current global directory without displaying their values or descendants.|
++-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+| `%GED`_                                                               | Provides full-screen editing capabilities for global variables and values.                               |
++-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+| `%GI`_                                                                | Enters global variables and their values from a sequential file into a database.                         |
++-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+| `%GO`_                                                                | Copies globals from the current database to a sequential output file.                                    |
++-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+| `%GSE`_                                                               | Displays global variables and their values when the values contain a specified string or number.         |
++-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+| `%GSEL`_                                                              | Selects globals by name.                                                                                 |
++-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+| `%H`_                                                                 | Converts date and time to and from $HOROLOG format.                                                      |
++-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+| `%HD`_                                                                | Converts hexadecimal numbers to decimal.                                                                 |
++-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+| `%HEX2UTF`_                                                           | Converts the given bytestream in hexadecimal notation to YottaDB encoded character string.               |
++-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+| `%HO`_                                                                | Converts hexadecimal numbers to octal.                                                                   |
++-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+| `%LCASE`_                                                             | Converts a string to all lower case.                                                                     |
++-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+| `%LCLCOL <./internatn.html#establishing-a-local-collation-sequence>`_ | Manipulates the collation sequence assigned to local variables.                                          |
++-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+| `%OD`_                                                                | Converts octal numbers to decimal.                                                                       |
++-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+| `%OH`_                                                                | Converts octal numbers to hexadecimal.                                                                   |
++-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+| `%PATCODE <./internatn.html#pattern-code-definition>`_                | Loads pattern definition files for use within an active database.                                        |
++-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+| `%RCE`_                                                               | Replaces every occurrence of a text string with another string in a routine or list of routines.         |
++-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+| `%RD`_                                                                | Lists routine names available through your $ZROUTINES search list.                                       |
++-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+| `%RI`_                                                                | Transfers routines from ANSI sequential format into individual .m files in YottaDB format.               |
++-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+| `%RO`_                                                                | Writes M routines in ANSI transfer format.                                                               |
++-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+| `%RSE`_                                                               | Searches for every occurrence of a text string in a routine or a list of routines.                       |
++-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+| `%RSEL`_                                                              | Selects M routines and places their directories and names in a local array.                              |
++-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+| `%SQROOT`_                                                            | Calculates the square root of a number.                                                                  |
++-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+| `%T`_                                                                 | Displays the current time in [h]h:mm AM/PM format.                                                       |
++-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+| `%TI`_                                                                | Converts time to $HOROLOG format.                                                                        |
++-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+| `%TO`_                                                                | Converts the current time from $HOROLOG format to [h]h:mm AM/PM format.                                  |
++-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+| `%UCASE`_                                                             | Converts a string to all upper case.                                                                     |
++-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+| `%UTF2HEX`_                                                           | Converts UTF-8 encoded YottaDB character string to bytestream in hexadecimal notation.                   |
++-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
 

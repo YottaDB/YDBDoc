@@ -198,7 +198,7 @@ The following table briefly describes all ISVs (Intrinsic Special Variables) ava
 |                                                                                  | requires careful design and implementation.                                                                                                    |
 +----------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------+
 
-The `Trigger Execution Environment <./triggers.html#trigger-execution-environment>`_ section describes the interactions of the following ISVs with triggers: `$ETRAP <./isv.html#etrap>`_, `$REFERENCE <./isv.html#reference>`_, `$TEST <./isv.html#test>`_, `$TLEVEL <./isv.html#tlevel>`_, and `$ZTRAP <./isv.html#ztrap>`_.
+The `Trigger Execution Environment`_ section describes the interactions of the following ISVs with triggers: `$ETRAP <./isv.html#etrap>`_, `$REFERENCE <./isv.html#reference>`_, `$TEST <./isv.html#test>`_, `$TLEVEL <./isv.html#tlevel>`_, and `$ZTRAP <./isv.html#ztrap>`_.
 
 -----------------------------------
 Chained and Nested Triggers

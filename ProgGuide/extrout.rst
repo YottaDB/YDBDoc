@@ -127,7 +127,7 @@ ydb_char_t** : For passing a pointer to a "C" style string.
 
 ydb_string_t* : For passing a structure in the form {int length;char \*address}. Useful for moving blocks of memory to or from YottaDB.
 
-ydb_pointertofunc_t : For passing callback function pointers. For details see `“Callback Mechanism” <./extrout.html#callback-mechanism>`_.
+ydb_pointertofunc_t : For passing callback function pointers. For details see `Callback Mechanism`_.
 
 **Note:**
 
@@ -671,7 +671,7 @@ Optional second argument: ret_val, a pre-allocated pointer through which YottaDB
 
 Optional list of arguments to be passed to the M routine's formallist: the number of arguments and the type of each argument must match the number of parameters, and parameter types specified in the corresponding Call-In table entry. All pointer arguments must be pre-allocated. YottaDB assumes that any pointer, which is passed for O/IO-parameter points to valid write-able memory.
 
-The status value returned by ydb_ci() indicates the YottaDB status code: zero (0) if successful, or a non-zero error code on failure. The error string corrsponding to the failure code can be read into a buffer by immediately calling ydb_zstatus(). For more details, see the `ydb_zstatus <./extrout.html#ydb-zstatus>`_ section below.
+The status value returned by ydb_ci() indicates the YottaDB status code: zero (0) if successful, or a non-zero error code on failure. The error string corrsponding to the failure code can be read into a buffer by immediately calling ydb_zstatus(). For more details, see the `ydb_zstatus`_ section below.
 
 ~~~~~~~~
 ydb_ci_t
@@ -773,7 +773,7 @@ ydb_zstatus
 ~~~~~~~~~~~~
 
 .. code-block:: C
-		
+
    int ydb_zstatus (ydb_char_t* msg_buffer, ydb_long_t buf_len);
 
 This function returns the null-terminated $ZSTATUS message of the last failure via the buffer pointed by msg_buffer of size buf_len. The message is truncated to size buf_len if it does not fit into the buffer. ydb_zstatus() is useful if the external application needs the text message corresponding to the last YottaDB failure. A buffer of 2048 is sufficient to fit in any YottaDB message.
@@ -783,7 +783,7 @@ Effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_, yd
 **Exit from YottaDB**
 
 .. code-block:: C
-		
+
    ydb_status_t  ydb_exit (void);
 
 ydb_exit() can be used to shut down all databases and exit from the YottaDB environment that was created by a previous ydb_init().

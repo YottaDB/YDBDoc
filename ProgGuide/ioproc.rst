@@ -131,7 +131,7 @@ In UTF-8 mode, YottaDB maintains $X in the following measurement units:
 | TRM                                        | display columns                                  | display columns                                   |
 +--------------------------------------------+--------------------------------------------------+---------------------------------------------------+
 
-YottaDB provides two modes of character filtering. When filtering is enabled, certain <CTRL> characters and/or escape sequences have special effects on the cursor position (for example, <BS> (ASCII 8) may decrement $X, if $X is non-zero). For more information on write filtering, refer to `FILTER <./ioproc.html#filter>`_.
+YottaDB provides two modes of character filtering. When filtering is enabled, certain <CTRL> characters and/or escape sequences have special effects on the cursor position (for example, <BS> (ASCII 8) may decrement $X, if $X is non-zero). For more information on write filtering, refer to `FILTER`_.
 
 +++++++++++++++++++++++++++++++++
 Status Variables
@@ -161,7 +161,7 @@ $K[EY] contains the string that terminated the most recent READ command from the
 
 * For SOCKET devices:
 
-  * $KEY includes information about a new socket in the form of CONNECT|handle|<address> where <address> is the IP address for TCP sockets and path for LOCAL sockets. Read more about `SOCKET device operation <./ioproc.html#id3>`_.
+  * $KEY includes information about a new socket in the form of CONNECT|handle|<address> where <address> is the IP address for TCP sockets and path for LOCAL sockets. Read more about `Socket Device Operation`_.
 
   * As an OPEN deviceparameter: For LISTEN, $KEY is set to the format of “LISTENING|<socket_handle>|{<portnumber>|</path/to/LOCAL_socket>}” when listening for a connection is successful. Otherwise, $KEY is assigned the empty string. Read more about `LISTEN deviceparameter <./ioproc.html#listen>`_.
 
@@ -476,7 +476,7 @@ Generally, YottaDB performs the same maintenance on $ZB for a READ X#maxlen as f
 Terminal Deviceparameter Summary
 +++++++++++++++++++++++++++++++++
 
-The following tables provide a brief summary of deviceparameters for terminals, grouped into related areas. For detailed information, refer to `Open <./ioproc.html#open>`_, `Use <./ioproc.html#use>`_, and `Close <./ioproc.html#close>`_.
+The following tables provide a brief summary of deviceparameters for terminals, grouped into related areas. For detailed information, refer to `Open`_, `USE`_, and `CLOSE`_.
 
 **Error Processing Deviceparameters**
 
@@ -871,7 +871,7 @@ Example:
 Sequential File Deviceparameter Summary
 ++++++++++++++++++++++++++++++++++++++++
 
-The following tables provide a brief summary of deviceparameters for sequential files grouped into related areas. For more detailed information, refer to `Open <./ioproc.html#open>`_, `Use <./ioproc.html#use>`_, and `Close <./ioproc.html#close>`_.
+The following tables provide a brief summary of deviceparameters for sequential files grouped into related areas. For more detailed information, refer to `Open`_, `USE`_, and `CLOSE`_.
 
 **Error Processing Deviceparameters**
 
@@ -1179,7 +1179,7 @@ A null device discards all output. YottaDB maintains a virtual cursor position f
 NULL Deviceparameter Summary
 ++++++++++++++++++++++++++++
 
-The following table provides a brief summary of deviceparameters for null devices. For more detailed information, refer to `Open <./ioproc.html#open>`_, `Use <./ioproc.html#use>`_, and `Close <./ioproc.html#close>`_.
+The following table provides a brief summary of deviceparameters for null devices. For more detailed information, refer to `Open`_, `USE`_, and `CLOSE`_.
 
 +----------------------------+------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------+
 | Deviceparameter            | Command                      | Comment                                                                                                                                     |
@@ -1735,7 +1735,7 @@ Socket Read Operation
 
 TCP/IP is a stream-based protocol that guarantees that bytes arrive in the order in which they were sent. However, it does not guarantee that they will be grouped in the same packets.
 
-If packets arrive infrequently, or at varying rates that are sometimes slow, a short interval can waste CPU cycles checking for an unlikely event. On the other hand, if the handling of packets is time critical, a long interval can introduce an undesirable latency. If packets arrive in a rapid and constant flow (an unusual situation), the interval doesn't matter as much, as there is always something in the buffer for the READ to work with. If you do not specify MOREREADTIME, SOCKET READ implements a dynamic approach of using a longer first interval of 200 ms when it finds no data, then shortening the interval to 10 ms when data starts to arrive. If you specify an interval, the SOCKET device always uses the specified interval and does not adjust dynamically. For more information on MOREREADTIME, refer to `MOREREADTIME <./ioproc.html#id12>`_.
+If packets arrive infrequently, or at varying rates that are sometimes slow, a short interval can waste CPU cycles checking for an unlikely event. On the other hand, if the handling of packets is time critical, a long interval can introduce an undesirable latency. If packets arrive in a rapid and constant flow (an unusual situation), the interval doesn't matter as much, as there is always something in the buffer for the READ to work with. If you do not specify MOREREADTIME, SOCKET READ implements a dynamic approach of using a longer first interval of 200 ms when it finds no data, then shortening the interval to 10 ms when data starts to arrive. If you specify an interval, the SOCKET device always uses the specified interval and does not adjust dynamically. For more information on MOREREADTIME, refer to `MOREREADTIME`_.
 
 Most SOCKET READ operations terminate as a result of the first condition detected from (a) receipt of delimiters, (b) receipt of the maximum number of characters, or (c) expiration of a timeout. Note that all of these conditions are optional, and a specific READ may specify zero or more of them. This section refers to these three conditions as "defined terminating conditions". If a SOCKET READ is not subject to any of the defined terminating conditions, it terminates after it has received at least one character followed by an interval with no new characters. An error can also terminate a READ. While none of the terminating conditions is satisfied, the READ continues.
 
@@ -2215,7 +2215,7 @@ ATTACH=expr Applies to: SOC
 
 ATTACH assigns expr as the handle name to the newly created socket. When ATTACH is used and one of LISTEN or CONNECT is specified on the same OPEN, the value of expr becomes the identifier of the newly created socket. If neither LISTEN nor CONNECT is specified, ATTACH is ignored.
 
-For information on using the ATTACH with USE, refer to `ATTACH in the USE Deviceparameters section <./ioproc.html#id19>`_.
+For information on using the ATTACH with USE, refer to `ATTACH in the USE Deviceparameters section <./ioproc.html#id20>`_.
 
 Example:
 
@@ -2231,7 +2231,7 @@ CHSET
 
 CHSET=expr Applies to: All devices
 
-Establishes a common encoding for both input and output devices for the device being OPENed in UTF-8 mode. The value of the expression can be M, UTF-8, UTF-16, UTF-16LE, or UTF-16BE. For more information, refer to `ICHSET <./ioproc.html#ichset>`_ and `OCHSET <./ioproc.html#ochset>`_.
+Establishes a common encoding for both input and output devices for the device being OPENed in UTF-8 mode. The value of the expression can be M, UTF-8, UTF-16, UTF-16LE, or UTF-16BE. For more information, refer to `ICHSET`_ and `OCHSET`_.
 
 ~~~~~~~~
 COMMAND
@@ -2239,7 +2239,7 @@ COMMAND
 
 COMMAND=expr Applies to: PIPE
 
-Specifies the UNIX command the newly created shell process performs. An invalid command value triggers an error in the new process, not the process issuing the OPEN. This can make diagnosis difficult - see the `PARSE <./ioproc.html#parse>`_ deviceparameter for potential assistance.
+Specifies the UNIX command the newly created shell process performs. An invalid command value triggers an error in the new process, not the process issuing the OPEN. This can make diagnosis difficult - see the `PARSE`_ deviceparameter for potential assistance.
 
 ~~~~~~~~
 CONNECT
@@ -2658,7 +2658,7 @@ MOREREADTIME specifies the polling interval (in milliseconds) that a SOCKET devi
 
 With no MOREREADTIME specified, SOCKET READ implements a dynamic approach of using a longer first interval of 200 ms when it finds no data, then shortening the interval to 10 ms when data starts to arrive.
 
-If an interval is specified, the SOCKET device always uses the specified interval and doesn't adjust dynamically. This applies to any SOCKET READ. For more information on implementing SOCKET READ, refer to `Socket Read Operation <./ioproc.html#socket-read-operation>`_.
+If an interval is specified, the SOCKET device always uses the specified interval and doesn't adjust dynamically. This applies to any SOCKET READ. For more information on implementing SOCKET READ, refer to `Socket Read Operation`_.
 
 If a SOCKET READ is not subject to any of the defined terminating conditions, it terminates either after it has at least one character followed by an interval with no new packets, or reading 1,048,576 bytes.
 
@@ -2747,7 +2747,7 @@ OKEY="key_name [IV]"
 
 key_name is case-sensitive and must match a key name in the "files" section of the ydb_crypt_config file. The optional IV specifies an initialization vector to use for encryption and decryption.
 
-For more information, refer to the description of `KEY <./ioproc.html#id4>`_ deviceparameter of OPEN or USE.
+For more information, refer to the description of `KEY <./ioproc.html#id3>`_ deviceparameter of OPEN or USE.
 
 ~~~~~~
 OWNER
@@ -3175,7 +3175,7 @@ Specifies the VARIABLE record length format for sequential disk files.
 
 By default, records have variable length format.
 
-For more information, refer to `STREAM <./ioproc.html#stream>`_.
+For more information, refer to `STREAM`_.
 
 ~~~~~~
 WORLD
@@ -3786,7 +3786,7 @@ IKEY="key_name [IV]"
 
 key_name is case-sensitive and must match a key name in the "files" section of the ydb_crypt_config file. The optional IV specifies an initialization vector to use for encryption and decryption.
 
-For more information, refer to the description of `KEY <./ioproc.html#id4>`_ deviceparameter of OPEN.
+For more information, refer to the description of `KEY <./ioproc.html#id3>`_ deviceparameter of OPEN.
 
 ~~~~~~~~~
 INREWIND
@@ -3845,7 +3845,7 @@ KEY="key_name [IV]"
 
 key_name is case-sensitive and must match a key name in the "files" section of the ydb_crypt_config file. The optional IV specifies an initialization vector to use for encryption and decryption.
 
-For more information and an example, refer to the description of `KEY <./ioproc.html#id4>`_ deviceparameter of OPEN.
+For more information and an example, refer to the description of `KEY <./ioproc.html#id3>`_ deviceparameter of OPEN.
 
 ~~~~~~~
 LENGTH
@@ -3891,7 +3891,7 @@ OKEY="key_name [IV]"
 
 key_name is case-sensitive and must match a key name in the "files" section of the ydb_crypt_config file. The optional IV specifies an initialization vector to use for encryption and decryption.
 
-For more information, refer to the description of `KEY <./ioproc.html#id4>`_ deviceparameter of OPEN.
+For more information, refer to the description of `KEY <./ioproc.html#id3>`_ deviceparameter of OPEN.
 
 ~~~~~~~~~~
 OUTREWIND
@@ -3899,7 +3899,7 @@ OUTREWIND
 
 Applies to: SD
 
-Performs a REWIND on output when $PRINCIPAL identifies a device that supports REWIND. Use this deviceparameter with $PRINCIPAL when redirected to a file. For more information, refer to `REWIND <./ioproc.html#id16>`_.
+Performs a REWIND on output when $PRINCIPAL identifies a device that supports REWIND. Use this deviceparameter with $PRINCIPAL when redirected to a file. For more information, refer to `REWIND <./ioproc.html#rewind>`_.
 
 ~~~~~~~~~~~~~~~~
 OUTSEEK=strexpr
@@ -4294,7 +4294,7 @@ When a string literal appears as an argument to a READ, M writes the literal to 
 
 The READ commands adjust $X and $Y, based on the length of the input read.
 
-In UTF-8 mode, the READ command uses the character set value specified on the device OPEN as the character encoding of the input device. If character set "M" or "UTF-8" is specified, the data is read with no transformation. If character set is "UTF-16", "UTF-16LE", or "UTF-16BE", the data is read with the specified encoding and transformed to UTF-8. If the READ command encounters an illegal character or a character outside the selected representation, it produces a run-time error. The READ command recognizes all Unicode® line terminators for non-FIXED devices. See Line `Terminators <./ioproc.html#line-terminators>`_ section for more details. In M mode, characters and bytes have a one-to-one relationship and therefore READ can be used to read bit-streams of non-character data.
+In UTF-8 mode, the READ command uses the character set value specified on the device OPEN as the character encoding of the input device. If character set "M" or "UTF-8" is specified, the data is read with no transformation. If character set is "UTF-16", "UTF-16LE", or "UTF-16BE", the data is read with the specified encoding and transformed to UTF-8. If the READ command encounters an illegal character or a character outside the selected representation, it produces a run-time error. The READ command recognizes all Unicode® line terminators for non-FIXED devices. See `Line Terminators`_ section for more details. In M mode, characters and bytes have a one-to-one relationship and therefore READ can be used to read bit-streams of non-character data.
 
 ~~~~~~~~~~~~~~~
 READ * Command
