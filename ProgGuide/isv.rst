@@ -645,13 +645,13 @@ For more information on $ZEOF, refer to the `"Input/Output Processing" chapter <
 $ZERROR
 --------------------
 
-$ZE[RROR] is supposed to hold the application-specific error-code corresponding to the YottaDB error-code stored in $ECODE/$ZSTATUS (see `$ECode <./isv.html#ecode>`_ and `$ZStatus <./isv.html#zstatus>`_).
+$ZE[RROR] is supposed to hold the application-specific error-code corresponding to the YottaDB error-code stored in $ECODE/$ZSTATUS (see `$ECODE`_ and `$ZSTATUS`_).
 
 $ZERROR contains a default value of "Unprocessed $ZERROR, see $ZSTATUS" at process startup.
 
 $ZERROR can be SET but not NEWed.
 
-The mapping of a YottaDB error-code to the application-specific error-code is achieved as follows. Whenever YottaDB encounters an error, $ECODE/$ZSTATUS gets set first. It then invokes the code that $ZYERROR points to if it is not null. It is intended that the code invoked by $ZYERROR use the value of $ZSTATUS to select or construct a value to which it SETs $ZERROR. If an error is encountered by the attempt to execute the code specified in $ZYERROR, YottaDB sets $ZERROR to the error status encountered. If $ZYERROR is null, YottaDB does not change the value of $ZERROR. In all cases, YottaDB proceeds to return control to the code specified by $ETRAP/$ZTRAP or device EXCEPTION whichever is applicable. For details, see `$ZYERror`_.
+The mapping of a YottaDB error-code to the application-specific error-code is achieved as follows. Whenever YottaDB encounters an error, $ECODE/$ZSTATUS gets set first. It then invokes the code that $ZYERROR points to if it is not null. It is intended that the code invoked by $ZYERROR use the value of $ZSTATUS to select or construct a value to which it SETs $ZERROR. If an error is encountered by the attempt to execute the code specified in $ZYERROR, YottaDB sets $ZERROR to the error status encountered. If $ZYERROR is null, YottaDB does not change the value of $ZERROR. In all cases, YottaDB proceeds to return control to the code specified by $ETRAP/$ZTRAP or device EXCEPTION whichever is applicable. For details, see `$ZYERROR`_.
 
 -------------------
 $ZGBLDIR
@@ -1144,7 +1144,7 @@ $ZPOUT
 
 When $PRINCIPAL has different input/output devices, the USE command recognizes intrinsic special variables $ZPOUT to apply appropriate deviceparameters to the output side of $PRINCIPAL. A USE with $ZPOUT sets $IO to $PRINCIPAL for READs and WRITEs from the input and output side of $PRINCIPAL. $ZSOCKET() also accepts $ZPOUT as its first argument and, if the device is a split SOCKET device, supplies information on the output SOCKET device. In any context other than USE or $ZSOCKET(), or if $PRINCIPAL is not a split device, $PRINCIPAL, $ZPIN and $ZPOUT are synonyms. In the case of a split $PRINCIPAL, $ZPOUT returns the value of $PRINCIPAL followed by the string "> /" Any attempt to OPEN $ZPOUT results in a DEVOPENFAIL error.
 
-For more information refer to `$Principal <./ioproc.html#principal>`_, `$ZPIN <./isv.html#zpin>`_, and `$ZSOCKET() <./functions.html#zsocket>`_.
+For more information refer to `$Principal <./ioproc.html#principal>`_, `$ZPIN`_, and `$ZSOCKET() <./functions.html#zsocket>`_.
 
 Example:
 
@@ -1246,7 +1246,7 @@ However, if you enable the ydb_zquit_anyway feature, extrinsic function invocati
 $ZREALSTOR
 ---------------
 
-$ZREALSTOR contains the total memory (in bytes) allocated by the YottaDB process, which may or may not actually be in use. It provides one view (see also `$ZALlocstor <./isv.html#zallocstor>`_ and `$ZUSedstor`_) of the process memory utilization and can help identify storage related problems. YottaDB does not permit $ZREALSTOR to be SET or NEWed.
+$ZREALSTOR contains the total memory (in bytes) allocated by the YottaDB process, which may or may not actually be in use. It provides one view (see also `$ZALLOCSTOR`_ and `$ZUSEDSTOR`_) of the process memory utilization and can help identify storage related problems. YottaDB does not permit $ZREALSTOR to be SET or NEWed.
 
 ---------------
 $ZRELDATE
@@ -1813,7 +1813,7 @@ The four settings of ydb_ztrap_form are:
 $ZUSEDSTOR
 -----------------
 
-$ZUSEDSTOR is the value in $ZALLOCSTOR minus storage management overhead and represents the actual memory, in bytes, requested by current activities. It provides one view (see also `$ZALlocstor <./isv.html#zallocstor>`_ and `$ZREalstor <./isv.html#zrealstor>`_) of the process memory utilization and can help identify storage related problems. YottaDB does not permit $ZUSEDSTOR to be SET or NEWed.
+$ZUSEDSTOR is the value in $ZALLOCSTOR minus storage management overhead and represents the actual memory, in bytes, requested by current activities. It provides one view (see also `$ZALLOCSTOR`_ and `$ZREALSTOR`_) of the process memory utilization and can help identify storage related problems. YottaDB does not permit $ZUSEDSTOR to be SET or NEWed.
 
 -----------------
 $ZUT
