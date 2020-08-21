@@ -684,7 +684,7 @@ The processparameters are summarized in the following table.
 +---------------------------+--------------------------+---------------------------------+------------------------------------+
 | Parameter                 | Default                  | Minimum                         | Maximum                            |
 +===========================+==========================+=================================+====================================+
-| CMD[LINE]="strlit"        |                          |                                 |                                    |
+| CMD[LINE]="strlit"        | Empty string             | none                            | none                               |
 +---------------------------+--------------------------+---------------------------------+------------------------------------+
 | DEF[AULT]=strlit          | Same directory as the    | none                            | 255 characters                     |
 |                           | process issuing the JOB  |                                 |                                    |
