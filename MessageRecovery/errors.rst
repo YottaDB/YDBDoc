@@ -131,6 +131,16 @@ Run Time Error: Pid pppp timed out waiting for a pending asynchronous IO operati
 
 Action: While terminating its connection with file ffff, process pppp gave up after waiting approximately one minute without receiving notification that an asynchronous IO it had initiated was successfully completed or canceled.
 
+---------------
+AIOQUEUESTUCK
+---------------
+
+AIOQUEUESTUCK, Waited mmmm minutes for AIO work queue to complete (cr = rrrr)
+
+All Components Run Time Error: A process is taking over mmmm minutes for asynchronous IO (AIO) activity to complete on cache record rrrr. A zero value for rrrr indicates that the process is waiting for all AIO activity to complete.
+
+Action: Check for trouble in the I/O subsystem. The process continues to wait for AIO activity to complete.
+
 -------------
 ALIASEXPECTED
 -------------
@@ -639,6 +649,16 @@ Run Time Error: A Byte Order Marker (BOM) for character set XXX was found at the
 
 Action: Specify the proper character set when opening the file. For UTF-16 data, specifying CHSET="UTF-16" will use the BOM to determine whether the data is Little Endian or Big Endian. If no BOM is found, YottaDB assumes Big Endian.
 
+-----------------
+BOOLEXPRTOODEEP
+-----------------
+
+BOOLEXPRTOODEEP,Boolean expression depth exceeds maximum supported limit of 2047
+
+Compile / Run Time Error: The nesting depth of a Boolean expression exceeds 2047, the YottaDB limit.
+
+Action: Fix the coding issue. Exceeding the nesting depth limit of 2047 is a pathological error that is most likely to occur in generated code.
+
 --------------
 BOOLSIDEFFECT
 --------------
@@ -758,6 +778,16 @@ BUFSIZIS, Journal Buffer size is xxxx
 GDE Information: This message reports xxxx as the size of the journal buffer.
 
 Action: Review the accompanying message(s) for additional information.
+
+-------------
+BUFSPCDELAY
+-------------
+
+BUFSPCDELAY, Request for bbbb blocks in region rrrr delayed
+
+All Components Run Time Warning: A process is taking longer than expected to obtain bbbb free database buffers for region rrrr. If bbbb is zero, then the process was attempting to free one particular buffer.
+
+Action: Check for trouble in the I/O subsystem. The process continues its attempt to obtain the free buffer(s).
 
 ---------------
 BUFTOOSMALL
@@ -3566,6 +3596,16 @@ MUPIP Error: This indicates that MUPIP LOAD with the qualifier FORMAT=GO encount
 
 Action: Refer to the topic `MUPIP LOAD Errors in the About This Manual section <./about.html#mupip-load-errors>`_. Edit the input file to remove a spurious "$" or fix a $CHAR() representation.
 
+-----------
+DONOBLOCK
+-----------
+
+DONOBLOCK, Argumentless DO not followed by a block
+
+Compile Time Warning: This indicates the compiler detected an argumentless DO with no subsequent block with an appropriate level, and optimized it away.
+
+Action: This indicates a coding issue where the block is missing or has the wrong level indication. This may occur in code under development where the block is yet to be coded, or code being debugged where the block has been commented out. Otherwise, it likely indicates a logic bug where a programmer intended to provide a block of code but did not provide one. Correct as appropriate.
+
 --------------------
 DSEBLKRDFAIL
 --------------------
@@ -5813,6 +5853,16 @@ All YottaDB Components Error: YottaDB found the value of $ydb_locale xxxx did no
 
 Action: Correct the locale setup and restart the process.
 
+-------------
+INVMAINLANG
+-------------
+
+INVMAINLANG, Invalid main routine language id specified: xxxx
+
+Run Time Error: This indicates that an internal feature of YottaDB, an alternative signal handling mechanism, is used by an unsupported language.
+
+Action: If this error occurs for a language wrapper provided by YottaDB, contact your YottaDB support channel. Otherwise, contact the developer of the language wrapper the application is using.
+
 ---------------------
 INVMEMRESRV
 ---------------------
@@ -6034,6 +6084,17 @@ MUPIP Error: This indicates that an invalid value was assigned to the -TRANSACTI
 
 Action: Specify appropriate value to the -TRANSACTION qualifier.
 
+----------
+INVVALUE
+----------
+
+INVVALUE, VVVV is invalid DEC value for $ZCONVERT(). Range is -9223372036854775808 to 18446744073709551615
+INVVALUE, VVVV is invalid HEX value for $ZCONVERT(). Range is 1 to 16 unsigned hexadecimal digits
+
+Run Time Error: This message has two forms both of which indicate that the value VVVV is not valid input for $ZCONVERT() in the specified base.
+
+Action: If the input value is expected to be within the range supported by $ZCONVERT(), the actual results from a coding issue or from input that is not validated, correct the issue. If input values are legitimately expected outside the range supported by $ZCONVERT() use the `%DH <https://docs.yottadb.com/ProgrammersGuide/utility.html#dh>`_ and `%HD <https://docs.yottadb.com/ProgrammersGuide/utility.html#hd>`_ utility programs.
+
 -----------
 INVVARNAME
 -----------
@@ -6070,6 +6131,16 @@ INVZBREAK, Cannot set ZBREAK in direct mode routine (GTM$DMOD)
 Run Time Error: GTM$DMOD is an embedded routine that provides direct mode and it does not permit insertion of a ZBREAK.
 
 Action: Issue ZBREAK only for application code
+
+-------------
+INVZCONVERT
+-------------
+
+INVZCONVERT, Translation supported only between DEC/HEX OR between UTF-8/UTF-16/UTF-16LE/UTF-16BE
+
+Run Time Error: This indicates that the base from which a number is to be converted is the same as that to which it is to be coverted, or for a string that conversion between the requested character sets is not supported. Numeric conversion is not meaningful when the bases are the same.
+
+Action: Review the code, and modify as necessary to ensure that $ZCONVERT() is being used correctly.
 
 --------------------
 INVZDIRFORM
@@ -13799,6 +13870,16 @@ Run Time Error: This indicates that the database file extension specified implic
 
 Action: Modify the extension to use a smaller size. This may indicate that you should move some contents of the database file to another file.
 
+---------------------
+TPCALLBACKINVRETVAL
+---------------------
+
+TPCALLBACKINVRETVAL, Invalid return type for TP callback function
+
+Run Time Error: This is not an error that YottaDB generates, but one generated by a language wrapper for a dynamically typed language such as `Python <https://www.python.org/>`_. When an application function that implements transaction logic returns an inappropriately typed value to the wrapper, it raises the TPCALLBACKINVRETVAL error.
+
+Action: Examine application logic and ensure that transaction logic returns an appropriately typed return value to the wrapper.
+
 --------------------
 TPFAIL
 --------------------
@@ -14673,6 +14754,16 @@ MUPIP Error: This indicates that SET could not modify database characteristics f
 
 Action: Review the accompanying message(s) for additional information.
 
+--------------
+WCSFLUFAILED
+--------------
+
+WCSFLUFAILED, EEEE error while flushing buffers at transaction number TTTT for database file DDDD
+
+Run Time Error: For a BG database file, this means that a process attempting to flush modified global buffers to disk encountered an error. EEEE is the error it encountered, for database file DDDD when attempting to flush the blocks for database transaction number TTTT. This is usually accompanied by other messages that can together help provide more information and context. If you need further assistance and have purchased support, contact your YottaDB support channel.
+
+Action: Refer to the description of error EEEE and take appropriate action.
+
 ------------------
 WCWRNNOTCHG
 ------------------
@@ -15527,3 +15618,13 @@ ZWRSPONE, Subscript patterns in ZWRITE are atomic; Invalid delimiter
 Compile Time Error: This indicates that ZWRITE specification contained a pattern match that held or terminated with a punctuation character that was not within a string literal.
 
 Action: Look for missing quotes or typographical errors and make any corrections that are necessary.
+
+-------------------
+ZYSQLNULLNOTVALID
+-------------------
+
+ZYSQLNULLNOTVALID, $ZYSQLNULL cannot be used as an integer, numeric, gvn subscript/value or lock subscript
+
+Compile / Run Time Error: $ZYSQLNULL can only be used in expressions, as a local variable subscript, or the value of a local variable node.
+
+Action: Correct the coding issue resulting in the incorrect $ZYSQLNULL usage.

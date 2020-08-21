@@ -608,6 +608,8 @@ The <direction> indicates the type of operation that YottaDB performs on the par
 | O/IO              | ydb_long_t*, ydb_ulong_t*, ydb_float_t*, ydb_double_t*,_ydb_char_t*, ydb_string_t*                                                          |
 +-------------------+---------------------------------------------------------------------------------------------------------------------------------------------+
 
+Call-In tables support comments effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_ YottaDB ignores text from a double slash (//) on a line to the end of the line.
+
 Here is an example of Call-In table (ydb_access.ci) for _ydbaccess.m (see `Example: Calling YottaDB from a C Program`_):
 
 .. code-block:: none

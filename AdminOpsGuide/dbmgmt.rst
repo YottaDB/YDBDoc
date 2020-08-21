@@ -1068,7 +1068,7 @@ The format of the MUPIP FREEZE command is:
 
 * A FREEZE specifying -ONLINE attempts to minimize the impact of the FREEZE on concurrently updating processes.
 
-* A FREEZE specifying -ONLINE -AUTORELEASE allows updates to continue immediately when YottaDB needs to update the database file.
+* A FREEZE specifying -ONLINE -AUTORELEASE allows updates to continue immediately when YottaDB needs to update the database file. The processes release the freeze if they cannot find global buffers to do their work.
 
 * After MUPIP FREEZE -ON -NOONLINE, processes that are attempting updates "hang" until the FREEZE is removed by the MUPIP FREEZE -OFF command or DSE. Make sure that procedures for using MUPIP FREEZE, whether manual or automated, include provisions for removing the FREEZE in all appropriate cases, including when errors disrupt the normal flow.
 
@@ -1920,6 +1920,18 @@ Specifies the quantity of data stored in a database block. Subsequent run-time u
 
 .. note::
    FILL_FACTOR is useful when updates add or grow records reasonably uniformly across a broad key range. If updates are at ever-ascending or ever-descending keys, or if the record set and record sizes are relatively static in the face of updates, FILL_FACTOR does not provide much benefit.
+
+~~~~~~~~~~~~~~
+-IGNORECHSET
+~~~~~~~~~~~~~~
+
+Notifies MUPIP LOAD to load the extract file even if it was created by a MUPIP process in another mode (UTF-8 mode vs. M mode).
+
+.. note::
+
+   As using -IGNORECHSET bypasses YottaDB checks, use it only if you are sure that the extract file can be loaded correctly.
+
+-IGNORECHSET was added to YottaDB effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_.
 
 ~~~~~~~~~
 -ONERROR

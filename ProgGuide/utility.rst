@@ -1170,6 +1170,65 @@ String Utilities
 ----------------------
 
 +++++++++++
+%MPIECE
++++++++++++
+
+The %MPIECE utility replaces one or more consecutive occurrences of the second argument in the first argument with one occurrence of the third argument. This lets $PIECE operate on the resulting string like UNIX `awk <https://en.wikipedia.org/wiki/AWK>`_.
+
+You can use the %MPIECE utility in Direct Mode or include it in a source application program in the following format:
+
+.. code-block:: none
+
+   $$^%MPIECE(str,expr1,expr2)
+
+If expr1 and expr2 are not specified, %MPIECE assumes expr1 to be one or more consecutive occurrences of whitespaces and expr2 to be one space.
+
+%MPIECE removes all leading occurrences of expr1 from the result.
+
+**Utility Labels**
+
+$$SPLIT^%MPIECE(str,expr1): Invokes %MPIECE as an extrinsic function that returns an alias local array of string divided into pieces by expr1. If expr1 is not specified, MPIECE assumes expr1 to be one or more consecutive occurrences of whitespaces.
+
+Example:
+
+.. code-block:: bash
+
+   YDB>set strToSplit=" please split this string into six"
+   YDB>set piecestring=$$^%MPIECE(strToSplit," ","|") zwrite strToSplit,piecestring write $length(piecestring,"|")
+   strToSplit=" please split this string into six"
+   piecestring="please|split|this|string|into|six
+   6
+   YDB>set \*fields=$$SPLIT^%MPIECE(strToSplit) zwrite fields
+   fields(1)="please"
+   fields(2)="split"
+   fields(3)="this"
+   fields(4)="string"
+   fields(5)="into"
+   fields(6)="six"
+
++++++++++++++++++++++
+%RANDSTR
++++++++++++++++++++++
+
+%RANDSTR generates a random string.
+
+The format of %RANDSTR is:
+
+.. code-block:: none
+
+   %RANDSTR (strlen,charranges,patcodes,charset)
+
+The random string is of length strlen from an alphabet defined by charset or by charranges and patcodes.
+
+strlen: the length of the random string.
+
+charranges: Range of alphabets defined by charset. By default charranges is 1:1:127. charranges uses the same syntax used for FOR loop ranges, for example, 48:2:57 to select the even decimal digits or 48:1:57,65:1:70 to select hexadecimal digits.
+
+patcodes: specifies pattern codes used to restrict the characters to those that match the selected codes. By default, patcodes is "AN".
+
+charset: Specifies a string of non-zero length. If specified, %RANDSTR generates the random string using the characters in charset, otherwise it takes its alphabet as specified by charranges and patcodes. If charset is of zero length, and is passed by reference, %RANDSTR() initializes it to the alphabet of characters defined by charranges and patcodes. If not specified, strlen defaults to 8, charranges defaults to 1:1:127 and patcodes to "AN".
+
++++++++++++
 %TRIM
 +++++++++++
 
@@ -1217,43 +1276,6 @@ Example:
    $
 
 This example invokes %TRIM as a command line utility which reads STDIN and writes the trimmed output to STDOUT.
-
-+++++++++++
-%MPIECE
-+++++++++++
-
-The %MPIECE utility replaces one or more consecutive occurrences of the second argument in the first argument with one occurrence of the third argument. This lets $PIECE operate on the resulting string like UNIX `awk <https://en.wikipedia.org/wiki/AWK>`_.
-
-You can use the %MPIECE utility in Direct Mode or include it in a source application program in the following format:
-
-.. code-block:: none
-
-   $$^%MPIECE(str,expr1,expr2)
-
-If expr1 and expr2 are not specified, %MPIECE assumes expr1 to be one or more consecutive occurrences of whitespaces and expr2 to be one space.
-
-%MPIECE removes all leading occurrences of expr1 from the result.
-
-**Utility Labels**
-
-$$SPLIT^%MPIECE(str,expr1): Invokes %MPIECE as an extrinsic function that returns an alias local array of string divided into pieces by expr1. If expr1 is not specified, MPIECE assumes expr1 to be one or more consecutive occurrences of whitespaces.
-
-Example:
-
-.. code-block:: bash
-
-   YDB>set strToSplit=" please split this string into six"
-   YDB>set piecestring=$$^%MPIECE(strToSplit," ","|") zwrite strToSplit,piecestring write $length(piecestring,"|")
-   strToSplit=" please split this string into six"
-   piecestring="please|split|this|string|into|six
-   6
-   YDB>set \*fields=$$SPLIT^%MPIECE(strToSplit) zwrite fields
-   fields(1)="please"
-   fields(2)="split"
-   fields(3)="this"
-   fields(4)="string"
-   fields(5)="into"
-   fields(6)="six"
 
 --------------------
 Global Utilities
@@ -1854,8 +1876,6 @@ The routine utilities are:
 
 %FL: Lists the comment lines at the beginning of source programs.
 
-%RANDSTR: Generates a random string.
-
 %RCE: Replaces every occurrence of a text string with another text string in a routine or a list of routines.
 
 %RD: Lists routine names available through $ZROUTINES.
@@ -1919,26 +1939,6 @@ Example:
    YDB>
 
 This example selects %D, then selects %GSE and %GSEL and deselects %D. Because the example enters <RETURN> at the Output Device: <terminal>: prompt, the output goes to the principal device.
-
-+++++++++++++++++++++
-%RANDSTR
-+++++++++++++++++++++
-
-%RANDSTR generates a random string. The format %RANDSTR is:
-
-.. code-block:: none
-
-   %RANDSTR (strlen,charranges,patcodes,charset)
-
-The random string is of length strlen from an alphabet defined by charset or by charranges and patcodes.
-
-strlen: the length of the random string.
-
-charranges: Range of alphabets defined by charset. By default charranges is 1:1:127. charranges uses the same syntax used for FOR loop ranges, for example, 48:2:57 to select the even decimal digits or 48:1:57,65:1:70 to select hexadecimal digits.
-
-patcodes: specifies pattern codes used to restrict the characters to those that match the selected codes. By default, patcodes is "AN".
-
-charset: Specifies a string of non-zero length. If specified, %RANDSTR generates the random string using the characters in charset, otherwise it takes its alphabet as specified by charranges and patcodes. If charset is of zero length, and is passed by reference, %RANDSTR() initializes it to the alphabet of characters defined by charranges and patcodes. If not specified, strlen defaults to 8, charranges defaults to 1:1:127 and patcodes to "AN".
 
 +++++++++++
 %RCE
@@ -2803,6 +2803,27 @@ Example:
    $ $gtm_exe/yottadb -run LOOP^%XCMD --before='/set f="somefile.txt" open f:readonly use f/' --after='/use $p write "Total number of lines in ",f,": ",%NR,\!/'
    Total number of lines in somefile.txt: 9
    $
+
++++++++++++++++++++
+%YDBPROCSTUCKEXEC
++++++++++++++++++++
+
+%YDBPROCSTUCKEXEC is a standard utility program to capture diagnostics when invoked by the `ydb_procstuckexec <https://docs.yottadb.com/AdminOpsGuide/basicops.html#ydb-procstuckexec>`_ mechanism. To use it, set the :code:`ydb_procstuckexec` environment variable to :code:`$ydb_dist/yottadb -run %YDBPROCSTUCKEXEC` with :code:`$ydb_dist` expanded to the actual directory where YottaDB is installed, or to :code:`yottadb -run %YDBPROCSTUCKEXEC` when :code:`yottadb` is located by :code:`$PATH`. Also :code:`$ydb_dist/libyottadbutil.so` must be in the routine search path defined by :code:`$ydb_routines` at process startup, or in the :code:`$ZROUTINES` intrinsic special variable.
+
+When invoked by :code:`yottadb -run %YDBPROCSTUCKEXEC <msg> <callingpid> <blockingpid> <count>` as described in the ydb_procstuckexec documentation, it creates in the directory specified by :code:`$ydb_log`, :code:`$gtm_log`, :code:`$ydb_tmp`, or :code:`$gtm_tmp` (defaulting to :code:`/tmp`) a file whose name is :code:`%YDBPROCSTUCKEXEC_<date>,<time>_<msg>_<callingpid>_<blockingpid>_<count>_<%YDBPROCSTUCEXECpid>.out` where the , timestamp is generated by `$ZDATE() <https://docs.yottadb.com/AdminOpsGuide/functions.html#zdate>`_ with a format string of :code:`"YEAR.MM.DD,24.60.SS"`, e.g., :code:`%YDBPROCSTUCKEXEC_2020.05.22,17.58.38_ABCD_91998_91987_1_92045.out`.
+
+The file contains:
+
+ - A summary of the invocation, e.g., Invoked on 91987 by 91998 for 1st time; reason: MUTEXLCKALERT.
+ - The command line of the blocking process.
+ - The environment of the blocking process.
+ - The value of /proc/sys/kernel/yama/ptrace_scope (if non-zero, gdb may not be able to capture the blocking process for a snapshot of its state).
+ - A snapshot of the state of the blocking process, captured by gdb.
+ - The value returned by `$ZSIGPROC() <https://docs.yottadb.com/AdminOpsGuide/functions.html#zsigproc>`_ used to send SIGUSR1 (a `MUPIP INTRPT <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#intrpt>`_) to the blocking pid. If appropriately configured (with `ydb_zinterrupt <https://docs.yottadb.com/AdminOpsGuide/basicops.html#ydb-zinterrupt>`_ / `$ZINTERRUPT <./isv.html#zinterrupt>`_, the blocking process will create a dump file of its process state.
+
+If the calling pid and blocking pid are of different uids, the functionality of %YDBPROCSTUCKEXEC is reduced. Depending on security and system administration considerations of the system, it may be appropriate in such cases to create a small setuid root shell script to invoke %YDBPROCSTUCKEXEC. Depending your specific requirements, it may be appropriate to copy and adapt the standard routine for your environment.
+
+%YDBPROCSTUCKEXEC was added to YottaDB effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_.
 
 ++++++++++++++++++++
 %YGBLSTAT()

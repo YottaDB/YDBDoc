@@ -692,22 +692,6 @@ YottaDB database encryption comes with a source reference implementation that sh
 
 The Plugin Architecture and Interface section below details the reference implementation, which is provided with full source code that you can freely modify for your own use.
 
-For each platform on which YottaDB supports encryption, the following table lists the encryption packages and versions against which YottaDB was tested. Note that YottaDB was tested for operation against these packages; not the robustness of the encryption packages themselves.
-
-+--------------------------------------+-------------------------+------------------------------+------------------------------------------------------------------------------------------+-----------------+
-| OS (HW)                              | libgpgme                | libgpg-error                 | libgcrypt / libcrypto                                                                    | GPG             |
-+======================================+=========================+==============================+==========================================================================================+=================+
-| Ubuntu 14.04 LTS (x86_64)            | 1.4.3-0.1ubuntu5.1      | 1.12-0.2ubuntu1              | libgcrypt 1.5.3-2ubuntu4.4                                                               | 2.0.22          |
-+--------------------------------------+-------------------------+------------------------------+------------------------------------------------------------------------------------------+-----------------+
-| Ubuntu 16.04 LTS (x86_64)            | 1.6.0-1                 | 1.21-2ubuntu1                | libgcrypt 1.6.5-2                                                                        | 2.1.11          |
-+--------------------------------------+-------------------------+------------------------------+------------------------------------------------------------------------------------------+-----------------+
-| RHEL 6 (x86_64)                      | 1.1.6                   | 1.4-2                        | libgcrypt 1.4.4-5                                                                        | 2.0.14          |
-+--------------------------------------+-------------------------+------------------------------+------------------------------------------------------------------------------------------+-----------------+
-| RHEL 7                               | 1.3.2                   | 1.12                         | libgcrypt 1.5.3                                                                          | 2.0.22          |
-+--------------------------------------+-------------------------+------------------------------+------------------------------------------------------------------------------------------+-----------------+
-
-Where the table lists a package version number followed by "+ fix" it means that in the process of testing, we identified issues with the package that we fixed.
-
 The reference implementation uses:
 
 * The key ring on disk implemented by GPG.

@@ -1256,13 +1256,22 @@ $ZREALSTOR contains the total memory (in bytes) allocated by the YottaDB process
 $ZRELDATE
 ---------------
 
-$ZRELDATE provides the UTC date/time of the YottaDB build in the form YYYYMMDD 24:60 (using $ZDATE() notation). While $ZVERSION is probably a better identifier for most uses, $ZRELDATE may be a helpful alternative for those testing pre-release builds.
+$ZRELDATE provides the UTC date/time of the YottaDB build in the form YYYYMMDD 24:60 ffffffffffffffffffffffffffffffffffffffff (where date/time stamp is in $ZDATE() notation). The third part of the timestamp is the hexadecimal hash assigned by the version control system to identify the last source code commit. While $ZYRELEASE is probably a better identifier for most uses, $ZRELDATE may be a helpful alternative for those testing pre-release builds.
+
+For example:
+
+.. code-block:: bash
+
+   YDB>write $zreldate
+   20200813 12:10 177eb8e48098204dafe564cac2bcb84312b2853a
 
 -----------------
 $ZROUTINES
 -----------------
 
 $ZRO[UTINES] contains a string value specifying a directory or list of directories containing object files. Each object directory may also have an associated directory, or list of directories, containing the corresponding source files. These directory lists are used by certain YottaDB functions, primarily auto-ZLINK, to locate object and source files. The order in which directories appear in a given list determines the order in which they are searched for the appropriate item.
+
+Any environment variables that are part of the string used to set $ZROUTINES, either at process startup or explicitly during execution, are expanded to absolute path names. This eliminates the need for application code using $ZROUTINES to do the expansion.
 
 Searches that use $ZROUTINES treat files as either object or source files. YottaDB treats files with an extension of .o as object files and files with an extension of .m as source files.
 
@@ -1955,7 +1964,7 @@ Within trigger context, $ZTDATA returns $DATA(@$REFERENCE)#2 for a SET or $DATA(
 $ZTDELIM
 ++++++++++++++
 
-$ZTDE[LIM] returns the piece delimiter/separator, as specified by -delim or -zdelim in the trigger definition. This allows SET type triggers to extract updated pieces defined in $ZTUPDATE andr KILL/ZKILL type triggers to extract the relevant pieces in the node value (of the node being killed) without having the piece separator hard coded into the trigger routine. $ZTDELIM is the empty string outside of a trigger context. It is also the empty string inside a trigger context if -delim or -zdelim was not specified in the trigger definition.
+$ZTDE[LIM] returns the piece delimiter/separator, as specified by -delim or -zdelim in the trigger definition. This allows SET type triggers to extract updated pieces defined in $ZTUPDATE and KILL/ZKILL type triggers to extract the relevant pieces in the node value (of the node being killed) without having the piece separator hard coded into the trigger routine. $ZTDELIM is the empty string outside of a trigger context. It is also the empty string inside a trigger context if -delim or -zdelim was not specified in the trigger definition.
 
 +++++++++++++
 $ZTLEVEL

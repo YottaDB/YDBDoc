@@ -1747,7 +1747,7 @@ Here are some $VIEW("REGION",gvn) outputs:
    YDB>w $view("REGION","^a")
    DEFAULT,A1,A2,A3,A5,A4
 
-Support for $VIEW("REGION","^*") was added effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_
+Support for $VIEW("REGION","^*"), which returns the name of the region in the global directory mapped to by the * namespace, was added effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_
 
 ------------------------
 $ZAHandle
@@ -2777,7 +2777,7 @@ The optional expr1 argument is a template output device specification. It can be
    set deffn="YDB_JOBEXAM.ZSHOW_DMP\_"_$JOB\_"_"_<cntr>
    set filespec=$zparse(expr1,"",deffn)
 
-The $ZJOBEXAM()does not trigger error processing except when there is a problem storing its return value, so no error is reported to the process until after any dump is complete. In the event of any error encountered during the $ZJOBEXAM(), YottaDB sends an appropriate message to operator log facility and returns control to the caller. Note that this special error handling applies only to the $ZJOBEXAM(), and is not a property of the $ZINTERRUPT interrupt handler, which uses $ZJOBEXAM() by default.
+The $ZJOBEXAM() does not trigger error processing except when there is a problem storing its return value, so no error is reported to the process until after any dump is complete. In the event of any error encountered during the $ZJOBEXAM(), YottaDB sends an appropriate message to operator log facility and returns control to the caller. Note that this special error handling applies only to the $ZJOBEXAM(), and is not a property of the $ZINTERRUPT interrupt handler, which uses $ZJOBEXAM() by default.
 
 Defaulting to :code:`"*"`, expr2 specifies the `ZSHOW output codes <./commands.html#zshow-information-codes>`_ of data to be included in the output. To specify expr2 while allowing expr1 to default, specify :code:`""` as the value of expr1. Invalid codes in expr2 are ignored, and can result in empty dump files.
 
@@ -3513,6 +3513,7 @@ The format for the $ZTRANSLATE() function is:
 * The first expression specifies the sequence of octets on which $ZTRANSLATE() operates. If the other arguments are omitted, $ZTRANSLATE() returns this expression.
 * The optional second expression specifies the byte for $TRANSLATE() to replace. If a byte occurs more than once in the second expression, the first occurrence controls the translation, and $ZTRANSLATE() ignores subsequent occurrences. If this argument is omitted, $ZTRANSLATE() returns the first expression without modification.
 * The optional third expression specifies the replacement bytes for the positionally corresponding bytes in the second expression. If this argument is omitted or shorter than the second expression, $ZTRANSLATE() drops all occurrences of the bytes in the second expression that have no replacement in the corresponding position of the third expression.
+* A first call to $ZTRANSLATE where the first argument is defined but the second and third are undefined results in an error.
 * $ZTRANSLATE() provides a tool for tasks such as encryption.
 
 The $ZTRANSLATE() algorithm can be understood as follows:

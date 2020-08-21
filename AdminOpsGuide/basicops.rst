@@ -446,6 +446,12 @@ ydb_dmterm
 +++++++++++++
 **ydb_dmterm (gtm_dmterm)** specifies a [NO]DMTERM state at process initiation where application setting applied to $PRINCIPAL also apply to direct mode interactions; a case-insensitive value of "1", "yes", or "true" establishes a DMTERM state at process initiation where direct mode uses default terminal characteristics and ignores application settings for $PRINCIPAL; all other values, including no value, result in the default VIEW "NODMTERM" behavior.
 
+++++++++++++++++
+ydb_dollartest
+++++++++++++++++
+
+**ydb_dollartest** provides an initial value for $TEST. When ydb_dollartest is set to 0 or 1, the value of $TEST will be set to 0 or 1 respectively. If ydb_dollartest is undefined then the value of $TEST will be set to 1.
+
 ++++++++++++++++++++
 ydb_env_translate
 ++++++++++++++++++++
@@ -482,7 +488,7 @@ ydb_gbldir
 +++++++++++++++++++++++
 ydb_gbldir_translate
 +++++++++++++++++++++++
-**ydb_gbldir_translate** provides the path to a shared library to allow a set of $ZGBLDIR to be transformed for application portability across platforms. This is similar to the the optional YottaDB environment translation facility provided by **ydb_env_translate** above. ydb_gbldir_translate was added effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_.
+**ydb_gbldir_translate** provides the path to a shared library to allow a set of $ZGBLDIR to be transformed for application portability across platforms. This is similar to the the optional YottaDB environment translation facility provided by `ydb_env_translate`_ above. ydb_gbldir_translate was added effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_.
 
 ++++++++++++++
 ydb_gdscert

@@ -198,6 +198,18 @@ Install YottaDB
 - Make it executable: ``chmod +x ydbinstall.sh``
 - Run it (omit the ``--verbose`` option if you want less output): This command installs YottaDB under ``/usr/local/lib/``:  ``sudo ./ydbinstall.sh --utf8 default --verbose``
 - The script has a plethora of installation options, which you will not use in the Acculturation Workshop. You can query it to list the options with the ``--help`` option, e.g., ``./ydbinstall.sh --help``.
+- :code:`yottadb -version` provides a detailed report on the YottaDB build, e.g.,
+
+  .. code-block:: bash
+
+     $ yottadb -version
+     YottaDB release:         r1.30
+     Upstream base version:   GT.M V6.3-008
+     Platform:                Linux x86_64
+     Build date/time:         2020-08-11 20:55
+     Build commit SHA:        177eb8e48098204dafe564cac2bcb84312b2853a
+     $
+
 
 Run YottaDB
 -----------
@@ -212,7 +224,7 @@ As YottaDB needs a working environment and several environment variables to be s
 
  yottadbuser@yottadbworkshop:~$ source $(pkg-config --variable=prefix yottadb)/ydb_env_set
  yottadbuser@yottadbworkshop:~$ yottadb -run %xcmd 'write $zyrelease,!'
- YottaDB r1.28 Linux x86_64
+ YottaDB r1.30 Linux x86_64
  yottadbuser@yottadbworkshop:~$
 
 When you set up environments in YottaDB, you will set up your own scripting, but the default is a good place to start.
@@ -223,9 +235,9 @@ The ``tree`` program shows the environment sourcing ``ydb_env_set`` creates.
 
    yottadbuser@yottadbworkshop:~$ tree .yottadb/
     .yottadb
-    |-- V6.3-007_x86_64 -> r1.28_x86_64
+    |-- V6.3-008_x86_64 -> r1.30_x86_64
     |-- r
-    `-- r1.28_x86_64
+    `-- r1.30_x86_64
 	|-- g
 	|   |-- yottadb.dat
 	|   |-- yottadb.gld
@@ -255,32 +267,28 @@ Now that YottaDB is installed and configured, change to the ``$ydb_dir`` directo
 Access from C
 +++++++++++++
 
-YottaDB comes with a `C API <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html>`_ and all you need to use it is the `gcc` compiler, which is included in the virtual machine. Download the `sayhelloC.c <./sayhelloC.c>`_ program into the .yottadb directory, compile it and run it. Notice that it has set a node in the database (the MUPIP EXTRACT command prints database contents):
+YottaDB comes with a `C API <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html>`_ and all you need to use it is the `gcc` compiler, which is included in the virtual machine. Download the `sayhelloC.c <./sayhelloC.c>`_ program into the yottadbuser directory, compile it and run it. Notice that it has set a node in the database (the MUPIP EXTRACT command prints database contents):
 
 .. code-block:: bash
 
-    yottadbuser@yottadbworkshop:~/.yottadb$ ls -l
-    total 12
-    lrwxrwxrwx 1 yottadbuser yottadbuser   12 Oct 24 14:37 V6.3-007_x86_64 -> r1.28_x86_64
-    drwxr-xr-x 2 yottadbuser yottadbuser 4096 Oct 24 14:37 r
-    drwxr-xr-x 5 yottadbuser yottadbuser 4096 Oct 24 14:37 r1.28_x86_64
-    -rw-r--r-- 1 yottadbuser yottadbuser  262 Oct 30 17:17 sayhelloC.c
-    yottadbuser@yottadbworkshop:~/.yottadb$ gcc $(pkg-config --libs --cflags yottadb) -o sayhelloC sayhelloC.c -lyottadb
-    yottadbuser@yottadbworkshop:~/.yottadb$ ls -l
-    total 32
-    lrwxrwxrwx 1 yottadbuser yottadbuser    12 Oct 24 14:37 V6.3-007_x86_64 -> r1.28_x86_64
-    drwxr-xr-x 2 yottadbuser yottadbuser  4096 Oct 24 14:37 r
-    drwxr-xr-x 5 yottadbuser yottadbuser  4096 Oct 24 14:37 r1.28_x86_64
-    -rwxr-xr-x 1 yottadbuser yottadbuser 16600 Oct 30 17:19 sayhelloC
-    -rw-r--r-- 1 yottadbuser yottadbuser   262 Oct 30 17:17 sayhelloC.c
-    yottadbuser@yottadbworkshop:~/.yottadb$ ./sayhelloC
-    yottadbuser@yottadbworkshop:~/.yottadb$ mupip extract -format=zwr -label="Hello" -select=hello -stdout
-    Hello
-    30-OCT-2019  17:21:14 ZWR
+    yottadbuser@yottadbworkshop:~$ ls -l
+    total 52
+    -rw-r--r-- 1 root        root            262 Jan 17  2020 sayhelloC.c
+    -rwxr-xr-x 1 yottadbuser yottadbuser   47020 Aug 26 14:00 ydbinstall.sh
+    yottadbuser@yottadbworkshop:~$ gcc $(pkg-config --libs --cflags yottadb) -o sayhelloC sayhelloC.c -lyottadb
+    yottadbuser@yottadbworkshop:~$ ls -l
+    total 72
+    -rwxr-xr-x 1 yottadbuser yottadbuser   16600 Aug 26 14:41 sayhelloC
+    -rw-r--r-- 1 root        root            262 Jan 17  2020 sayhelloC.c
+    -rwxr-xr-x 1 yottadbuser yottadbuser   47020 Aug 26 14:00 ydbinstall.sh
+    yottadbuser@yottadbworkshop:~$ ./sayhelloC
+    yottadbuser@yottadbworkshop:~$ mupip extract -format=zwr -label="Hello label" -select=hello -stdout
+    Hello label UTF-8
+    26-AUG-2020  15:00:13 ZWR
     ^hello("C")="Hello, world!"
     %YDB-I-RECORDSTAT, ^hello:        Key cnt: 1  max subsc len: 10  max rec len: 13  max node len: 27
     %YDB-I-RECORDSTAT, TOTAL:         Key cnt: 1  max subsc len: 10  max rec len: 13  max node len: 27
-    yottadbuser@yottadbworkshop:~/.yottadb$
+    yottadbuser@yottadbworkshop:~$
 
 ++++++++++++++
 Access from Go
@@ -290,25 +298,25 @@ Access from Go
 
 .. code-block:: bash
 
-    yottadbuser@yottadbworkshop:~/.yottadb$ go get -t lang.yottadb.com/go/yottadb
-    yottadbuser@yottadbworkshop:~/.yottadb$ go test lang.yottadb.com/go/yottadb
+    yottadbuser@yottadbworkshop:~$ go get -t lang.yottadb.com/go/yottadb
+    yottadbuser@yottadbworkshop:~$ go test lang.yottadb.com/go/yottadb
     ok      lang.yottadb.com/go/yottadb     5.259s
-    yottadbuser@yottadbworkshop:~/.yottadb$
+    yottadbuser@yottadbworkshop:~$
 
-Download the `sayhelloGo.go <./sayhelloGo.go>`_ program into the .yottadb directory, compile it and run it. Notice that it too has set a node in the database:
+Download the `sayhelloGo.go <./sayhelloGo.go>`_ program into the yottadbuser directory, compile it and run it. Notice that it too has set a node in the database:
 
 .. code-block:: bash
 
-    yottadbuser@yottadbworkshop:~/.yottadb$ go build sayhelloGo.go
-    yottadbuser@yottadbworkshop:~/.yottadb$ ./sayhelloGo
-    yottadbuser@yottadbworkshop:~/.yottadb$ mupip extract -format=zwr -label="Hello" -select=hello -stdout
-    Hello
-    30-OCT-2019  17:47:58 ZWR
+    yottadbuser@yottadbworkshop:~$ go build sayhelloGo.go
+    yottadbuser@yottadbworkshop:~$ ./sayhelloGo
+    yottadbuser@yottadbworkshop:~$ mupip extract -format=zwr -label="Hello" -select=hello -stdout
+    YottaDB MUPIP EXTRACT /usr/local/lib/yottadb/r130/mupip extract -format=zwr -select=hello -stdout UTF-8
+    26-AUG-2020  15:08:23 ZWR
     ^hello("C")="Hello, world!"
-    ^hello("Go")="Aloha, galaxy!"
-    %YDB-I-RECORDSTAT, ^hello:        Key cnt: 2  max subsc len: 11  max rec len: 14  max node len: 27
-    %YDB-I-RECORDSTAT, TOTAL:         Key cnt: 2  max subsc len: 11  max rec len: 14  max node len: 27
-    yottadbuser@yottadbworkshop:~/.yottadb$
+    ^hello("Go")="สวัสดีชาวโลก"
+    %YDB-I-RECORDSTAT, ^hello:        Key cnt: 2  max subsc len: 11  max rec len: 36  max node len: 44
+    %YDB-I-RECORDSTAT, TOTAL:         Key cnt: 2  max subsc len: 11  max rec len: 36  max node len: 44
+    yottadbuser@yottadbworkshop:~$
 
 +++++++++++++
 Access from M
@@ -320,16 +328,16 @@ YottaDB includes a complete language implementation for M. Download the `sayhell
 
     yottadbuser@yottadbworkshop:~/.yottadb$ ls -l r
     total 4
-    -rw-r--r-- 1 yottadbuser yottadbuser 51 Oct 30 17:51 sayhelloM.m
+    -rw-r--r-- 1 yottadbuser yottadbuser 67 Jan 17  2020 sayhelloM.m
     yottadbuser@yottadbworkshop:~/.yottadb$ yottadb -run sayhelloM
     yottadbuser@yottadbworkshop:~/.yottadb$ mupip extract -format=zwr -label="Hello" -select=hello -stdout
-    Hello
-    30-OCT-2019  17:52:06 ZWR
+    YottaDB MUPIP EXTRACT /usr/local/lib/yottadb/r130/mupip extract -format=zwr -select=hello -stdout UTF-8
+    26-AUG-2020  15:12:49 ZWR
     ^hello("C")="Hello, world!"
-    ^hello("Go")="Aloha, galaxy!"
-    ^hello("M")="Hola, universe!"
-    %YDB-I-RECORDSTAT, ^hello:        Key cnt: 3  max subsc len: 11  max rec len: 15  max node len: 27
-    %YDB-I-RECORDSTAT, TOTAL:         Key cnt: 3  max subsc len: 11  max rec len: 15  max node len: 27
+    ^hello("Go")="สวัสดีชาวโลก"
+    ^hello("M")="Приветствую, мир!"
+    %YDB-I-RECORDSTAT, ^hello:        Key cnt: 3  max subsc len: 11  max rec len: 36  max node len: 44
+    %YDB-I-RECORDSTAT, TOTAL:         Key cnt: 3  max subsc len: 11  max rec len: 36  max node len: 44
     yottadbuser@yottadbworkshop:~/.yottadb$
 
 Notice that after running it, YottaDB has automatically compiled the source code (``sayhelloM.m``) and created a file with object code (``sayhelloM.o``) which it dynamically links and runs.
@@ -338,24 +346,20 @@ Notice that after running it, YottaDB has automatically compiled the source code
 
     yottadbuser@yottadbworkshop:~/.yottadb$ tree
     .
-    |-- V6.3-007_x86_64 -> r1.28_x86_64
-    |-- r
-    |   `-- sayhelloM.m
-    |-- r1.28_x86_64
-    |   |-- g
-    |   |   |-- yottadb.dat
-    |   |   |-- yottadb.gld
-    |   |   `-- yottadb.mjl
-    |   |-- o
-    |   |   |-- sayhelloM.o
-    |   |   `-- utf8
-    |   `-- r
-    |-- sayhelloC
-    |-- sayhelloC.c
-    |-- sayhelloGo
-    `-- sayhelloGo.go
+    ├── V6.3-008_x86_64 -> r1.30_x86_64
+    ├── r
+    │   └── sayhelloM.m
+    └── r1.30_x86_64
+	├── g
+        │   ├── yottadb.dat
+        │   ├── yottadb.gld
+        │   └── yottadb.mjl
+        ├── o
+        │   └── utf8
+        │       └── sayhelloM.o
+        └── r
 
-    7 directories, 9 files
+    7 directories, 5 files
     yottadbuser@yottadbworkshop:~/.yottadb$
 
 ----------
@@ -935,15 +939,16 @@ The file ``ydb_env_set`` that is supplied with YottaDB, and which must be source
    yottadbuser@yottadbworkshop:~$ env | grep ^ydb
    yottadbuser@yottadbworkshop:~$ source $(pkg-config --variable=prefix yottadb)/ydb_env_set
    yottadbuser@yottadbworkshop:~$ env | grep ^ydb
-   ydb_dist=/usr/local/lib/yottadb/r128
-   ydb_log=/tmp/yottadb/r1.28_x86_64
-   ydb_repl_instance=/home/yottadbuser/.yottadb/r1.28_x86_64/g/yottadb.repl
-   ydb_rel=r1.28_x86_64
-   ydb_routines=/home/yottadbuser/.yottadb/r1.28_x86_64/o*(/home/yottadbuser/.yottadb/r1.28_x86_64/r /home/yottadbuser/.yottadb/r) /usr/local/lib/yottadb/r128/plugin/o/ydbmwebserver.so /usr/local/lib/yottadb/r128/libyottadbutil.so
-   ydb_unset_711=ydb_dir gtmdir ydb_rel gtmver ydb_dist gtm_dist ydb_repl_instance gtm_repl_instance ydb_retention gtm_retention ydb_gbldir gtmgbldir ydb_routines gtmroutines ydb_log gtm_log ydb_tmp gtm_tmp ydb_etrap gtm_etrap LD_LIBRARY_PATH ydb_sav_711_PATH
-   ydb_sav_711_PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games
-   ydb_tmp=/tmp/yottadb/r1.28_x86_64
-   ydb_gbldir=/home/yottadbuser/.yottadb/r1.28_x86_64/g/yottadb.gld
+   ydb_dist=/usr/local/lib/yottadb/r130
+   ydb_sav_512_PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games
+   ydb_log=/tmp/yottadb/r1.30_x86_64
+   ydb_repl_instance=/home/yottadbuser/.yottadb/r1.30_x86_64/g/yottadb.repl
+   ydb_rel=r1.30_x86_64
+   ydb_routines=/home/yottadbuser/.yottadb/r1.30_x86_64/o*(/home/yottadbuser/.yottadb/r1.30_x86_64/r /home/yottadbuser/.yottadb/r) /usr/local/lib/yottadb/r130/libyottadbutil.so
+   ydb_procstuckexec=/usr/local/lib/yottadb/r130/yottadb -run %YDBPROCSTUCKEXEC
+   ydb_unset_512=ydb_dir gtmdir ydb_rel gtmver ydb_dist gtm_dist ydb_repl_instance gtm_repl_instance ydb_retention gtm_retention ydb_gbldir gtmgbldir ydb_routines gtmroutines ydb_log gtm_log ydb_tmp gtm_tmp ydb_etrap gtm_etrap ydb_procstuckexec gtm_procstuckexec LD_LIBRARY_PATH ydb_sav_512_PATH
+   ydb_tmp=/tmp/yottadb/r1.30_x86_64
+   ydb_gbldir=/home/yottadbuser/.yottadb/r1.30_x86_64/g/yottadb.gld
    ydb_etrap=Write:(0=$STACK) "Error occurred: ",$ZStatus,!
    ydb_retention=42
    ydb_dir=/home/yottadbuser/.yottadb
@@ -951,7 +956,7 @@ The file ``ydb_env_set`` that is supplied with YottaDB, and which must be source
 
 .. note::
 
-   ``ydb_unset_711`` and ``ydb_sav_711`` above are used when sourcing the ``ydb_env_unset`` file to restore environment variables set by sourcing ``ydb_env_set``; the 711 is the pid of the shell.
+   ``ydb_unset_512`` and ``ydb_sav_512_PATH`` above are used when sourcing the ``ydb_env_unset`` file to restore environment variables set by sourcing ``ydb_env_set``; the 512 is the pid of the shell.
 
 While ``ydb_env_set`` is a good resource when you initially start with YottaDB, once you get to a certain level of expertise, you may prefer to create your own scripting.
 
@@ -1012,7 +1017,7 @@ Create another user who is also a member of the yottadbuser group, and note that
    ^Horse("NOV 14, 2019")="Shetland"
    ^Horse("NOV 15, 2019")="Clydesdale"
 
-   YDB>zwrite ^Crab ; reading brunnich.data fails
+   YDB>zwrite ^Crab ; reading brunnich.dat fails
    %YDB-E-DBFILERR, Error with database file /home/yottadbuser/jnlex/brunnich.dat
    %SYSTEM-E-ENO13, Permission denied
 

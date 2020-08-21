@@ -584,6 +584,7 @@ The format of the JOB command is:
 * An indirection operator and an expression atom, evaluating to a list of one or more JOB command arguments, form a legal argument for a JOB command.
 * The maximum command-line length for a JOB command is 8192 bytes.
 * If the parent process is operating in UTF-8 mode, the JOB'd process also operates in UTF-8 mode.
+* JOB'd processes have the same process name as the parent process, displayed by :code:`ps`.
 * If your background process must have a different mode from its parent, then create a shell script to alter the environment as needed, and spawn it with a ZSYstem command using ZSYstem "/path/to/shell/script &".
 
 The operating system deletes the resultant process when the execution of its YottaDB process is complete. The resultant process executes asynchronously with the current process. Once YottaDB starts the resultant process, the current process continues.

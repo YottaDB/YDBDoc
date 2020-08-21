@@ -65,6 +65,18 @@ Installation Procedure
 
     sudo ./ydbinstall.sh --installdir /opt/yottadb/ --utf8 default --verbose
 
+* :code:`yottadb -version` provides a detailed report on the YottaDB build, e.g.,
+
+  .. code-block:: bash
+
+     $ yottadb -version
+     YottaDB release:         r1.30
+     Upstream base version:   GT.M V6.3-008
+     Platform:                Linux x86_64
+     Build date/time:         2020-08-11 20:55
+     Build commit SHA:        177eb8e48098204dafe564cac2bcb84312b2853a
+     $
+
 +++++++++++++++++++++++++++++++++++++++++++++
 Compiling the Reference Implementation Plugin
 +++++++++++++++++++++++++++++++++++++++++++++
@@ -193,3 +205,5 @@ This example installs YottaDB release r1.20 in the r120 directory.
 This example installs the latest GT.M version in a subdirectory of :code:`/usr/local/lib/yottadb/`.
 
 The :code:`--encplugin`, :code:`--octo` and :code:`--posix` options were added to the :code:`ydbinstall` / :code:`ydbinstall.sh` script effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_.
+
+If the build of any plugin (those installed by :code:`--encplugin`, :code:`--octo`, :code:`--posix`, and :code:`--zlib` command line options) does not succeed, the :code:`ydbinstall` script retains the directory where it built the plugin.
