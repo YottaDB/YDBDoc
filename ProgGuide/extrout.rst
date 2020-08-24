@@ -768,6 +768,8 @@ Here is a working example of a C program that uses call-ins to invoke YottaDB. T
 
 **Print Error Messages**
 
+.. _ydb-zstatus:
+
 ~~~~~~~~~~~~
 ydb_zstatus
 ~~~~~~~~~~~~

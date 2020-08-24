@@ -175,10 +175,10 @@ the API, it initializes signal handling as follows:
   these signals can indicate that the process is in a bad state and that
   its code and data cannot be trusted. The process therefore does
   not attempt to clean up before exit. After a fatal signal, *no*
-  YottaDB functions can be called except `ydb_exit() <./cprogram.html#id30>`_.  In the
+  YottaDB functions can be called except `ydb_exit() <./cprogram.html#ydb-exit>`_.  In the
   event an application *must* use its own handler for one of
   these signals, it must either save YottaDB's handler, and drive
-  it before process termination or call `ydb_exit() <./cprogram.html#id30>`_ prior to
+  it before process termination or call `ydb_exit() <./cprogram.html#ydb-exit>`_ prior to
   process exit. [#]_
 - YottaDB saves an application's signal handler during
   initialization and restores it if :code:`ydb_exit()` is explicitly
@@ -468,8 +468,8 @@ Memory Allocation
 
 Memory allocated by `ydb_malloc() <./cprogram.html#ydb-malloc>`_ must be explicitly freed by
 `ydb_free() <./cprogram.html#ydb-free>`_.
-`ydb_exit() <./cprogram.html#id30>`_ does not free memory, and any
-memory allocated but not freed prior to `ydb_exit() <./cprogram.html#id30>`_ is released
+`ydb_exit() <./cprogram.html#ydb-exit>`_ does not free memory, and any
+memory allocated but not freed prior to `ydb_exit() <./cprogram.html#ydb-exit>`_ is released
 only on process exit.
 
 Syslog

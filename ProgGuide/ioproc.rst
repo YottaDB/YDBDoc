@@ -2215,7 +2215,7 @@ ATTACH=expr Applies to: SOC
 
 ATTACH assigns expr as the handle name to the newly created socket. When ATTACH is used and one of LISTEN or CONNECT is specified on the same OPEN, the value of expr becomes the identifier of the newly created socket. If neither LISTEN nor CONNECT is specified, ATTACH is ignored.
 
-For information on using the ATTACH with USE, refer to `ATTACH in the USE Deviceparameters section <./ioproc.html#id20>`_.
+For information on using the ATTACH with USE, refer to :ref:`ATTACH <attach-use>` in the USE Deviceparameters section.
 
 Example:
 
@@ -2540,6 +2540,8 @@ Note that an OPEN command does not change the current device. Therefore, $DEVICE
 
 $DEVICE holds status information only after a socket is successfully ATTACHed to a socket device. To properly trap IOERRORs related to connection handling, it is best to create an empty SOCKET device (with something like open tcpdev::timeout:"SOCKET") before opening a socket connection with the OPEN (with LISTEN or CONNECT deviceparameters) command. Then, use ATTACH to bring it to the current SOCKET device. This method ensures that a device exists that would update $DEVICE with status information.
 
+.. _key-open:
+
 ~~~~
 KEY
 ~~~~
@@ -2747,7 +2749,7 @@ OKEY="key_name [IV]"
 
 key_name is case-sensitive and must match a key name in the "files" section of the ydb_crypt_config file. The optional IV specifies an initialization vector to use for encryption and decryption.
 
-For more information, refer to the description of `KEY <./ioproc.html#id3>`_ deviceparameter of OPEN or USE.
+For more information, refer to the description of :ref:`KEY <key-open>` deviceparameter of OPEN or USE.
 
 ~~~~~~
 OWNER
@@ -3398,6 +3400,8 @@ This example USEs the principal device. If that device is a terminal, the device
 
 **USE Deviceparameters**
 
+.. _attach-use:
+
 ~~~~~~~~
 ATTACH
 ~~~~~~~~
@@ -3728,6 +3732,8 @@ Defines an error handler for an I/O device. The expression must contain a fragme
 
 For more information on error handling, refer to `Chapter 13: “Error Processing” <./errproc.html>`_.
 
+.. _no-filter:
+
 ~~~~~~~
 FILTER
 ~~~~~~~
@@ -3786,7 +3792,7 @@ IKEY="key_name [IV]"
 
 key_name is case-sensitive and must match a key name in the "files" section of the ydb_crypt_config file. The optional IV specifies an initialization vector to use for encryption and decryption.
 
-For more information, refer to the description of `KEY <./ioproc.html#id3>`_ deviceparameter of OPEN.
+For more information, refer to the description of :ref:`KEY <key-open>` deviceparameter of OPEN.
 
 ~~~~~~~~~
 INREWIND
@@ -3845,7 +3851,7 @@ KEY="key_name [IV]"
 
 key_name is case-sensitive and must match a key name in the "files" section of the ydb_crypt_config file. The optional IV specifies an initialization vector to use for encryption and decryption.
 
-For more information and an example, refer to the description of `KEY <./ioproc.html#id3>`_ deviceparameter of OPEN.
+For more information and an example, refer to the description of :ref:`KEY <key-open>` deviceparameter of OPEN.
 
 ~~~~~~~
 LENGTH
@@ -3891,7 +3897,7 @@ OKEY="key_name [IV]"
 
 key_name is case-sensitive and must match a key name in the "files" section of the ydb_crypt_config file. The optional IV specifies an initialization vector to use for encryption and decryption.
 
-For more information, refer to the description of `KEY <./ioproc.html#id3>`_ deviceparameter of OPEN.
+For more information, refer to the description of :ref:`KEY <key-open>` deviceparameter of OPEN.
 
 ~~~~~~~~~~
 OUTREWIND

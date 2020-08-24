@@ -1040,6 +1040,8 @@ Example:
 
 This command instructs EXTRACT to dump the global ^Tyrannosaurus to the device (file-name) /dev/tty.
 
+.. _mupip-freeze:
+
 ++++++++++++++
 FREEZE
 ++++++++++++++
@@ -3491,6 +3493,8 @@ Provides a facility to examine the current trigger definition. SELECT produces a
 .. note::
    The output from the MUPIP TRIGGER -SELECT command may not be identical to your trigger definition file. This is because YottaDB converts semantically identical syntax into a single internal representation; while -SELECT output may not be identical to the -TRIGGERFILE input, it has the same meaning. Additionally, MUPIP TRIGGER -SELECT displays a field called "Cycle" as part of a comment. Cycle is the number of trigger definition updates (addition, modification, or deletion) performed on a global node. MUPIP TRIGGER treats the deletion of a non-existent trigger as a success; if that is the only operation, or one of a set of successful operations, it returns success 0 to the shell. Also, MUPIP TRIGGER returns failure in case of trigger selection using trigger names where the number after the pound-sign (#) starts with a 0 (which is an impossible auto-generated trigger name).
 
+.. _mupip-upgrade:
+
 ~~~~~~~~~
 -UPGRADE
 ~~~~~~~~~
@@ -3858,10 +3862,10 @@ The following table summarizes the qualifiers.
 |                                              |                                                                              |                                                                      |
 |                                              | -ROLLBACK                                                                    |                                                                      |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
-| -OFF                                         | `FREEZE <./dbmgmt.html#id2>`_                                                | * -OVERRIDE                                                          |
+| -OFF                                         | :ref:`FREEZE <mupip-freeze>`                                                 | * -OVERRIDE                                                          |
 |                                              |                                                                              | * -RECORD                                                            |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
-| -ON                                          | `FREEZE <./dbmgmt.html#id2>`_                                                | * -[NO]ONLINE                                                        |
+| -ON                                          | :ref:`FREEZE <mupip-freeze>`                                                 | * -[NO]ONLINE                                                        |
 |                                              |                                                                              | * -[NO]AUTORELEASE                                                   |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
 | -INSTANCE_CREATE                             | `REPLICATE <./dbmgmt.html#replicate>`_                                       | * -NAME                                                              |
@@ -4019,5 +4023,5 @@ The following table summarizes the qualifiers.
 |                                              |                                                                              | * -ZEROBACKLOG                                                       |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
 | -VERSION={V4|V5}                             | `DOWNGRADE <./dbmgmt.html#downgrade>`_                                       | * file-name                                                          |
-|                                              | and `UPGRADE <./dbmgmt.html#id40>`_                                          |                                                                      |
+|                                              | and :ref:`UPGRADE <mupip-upgrade>`                                           |                                                                      |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+

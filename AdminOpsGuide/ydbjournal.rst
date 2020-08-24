@@ -430,6 +430,8 @@ Cuts the generation link of the journal file jnl_file. The name of the previous 
 
 Change the replication state of a journal file; this command is intended for use only under instructions from your YottaDB support provider.
 
+.. _set-action-qualifiers:
+
 ++++++++++++++++++++++
 SET Action Qualifiers
 ++++++++++++++++++++++

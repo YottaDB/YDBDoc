@@ -534,6 +534,8 @@ The descriptions of these commands and qualifiers appear in various cases and fo
 
 * In examples: the entire command line is shown in lower case.
 
+.. _gde-at:
+
 +++
 \@
 +++
@@ -1767,7 +1769,7 @@ The following table summarizes GDE commands, abbreviations, object types, requir
 +--------------------------------------------------------------------------------+--------------------------------------------------+-----------------------------------------------------------------+
 | Command                                                                        | Specified Object Type                            | Required Object Name/[Optional] Qualifier                       |
 +================================================================================+==================================================+=================================================================+
-| `\@ <./gde.html#id1>`_                                                         | N/A                                              | file-name                                                       |
+| :ref:`\@ <gde-at>`                                                             | N/A                                              | file-name                                                       |
 +--------------------------------------------------------------------------------+--------------------------------------------------+-----------------------------------------------------------------+
 | `A[DD] <./gde.html#add>`_                                                      |  -G[BLNAME]                                      | global-name                                                     |
 |                                                                                |                                                  | -C[OLLATION]=collation                                          |

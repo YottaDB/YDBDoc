@@ -1138,6 +1138,8 @@ Example:
 
 This example displays the current location followed by the source code for that line.
 
+.. _zpout:
+
 -----------------
 $ZPOUT
 -----------------
@@ -1585,6 +1587,8 @@ Example:
    .
    YDB>WRITE $ZSOURCE
    BASE
+
+.. _ztatus:
 
 -------------------
 $ZSTATUS

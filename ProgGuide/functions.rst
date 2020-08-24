@@ -363,7 +363,7 @@ The format for the $FNUMBER function is:
 * The optional integer expression (third argument) specifies the number of digits after the decimal point. If the numeric expression has more digits than specified by this argument, $FNUMBER() rounds to obtain the result. If the numeric expression has fewer digits than specified by this argument, $FNUMBER() zero-fills to obtain the result.
 * When the optional third argument is specified and the first argument evaluates to a fraction between -1 and 1, $FNUMBER() returns a number with a leading zero (0) before the decimal point (.).
 
-$FNUMBER() formats or edits numbers, usually for reporting. For more information on rounding performed by $FNUMBER(), refer to `$Justify() <./functions.html#id1>`_.
+$FNUMBER() formats or edits numbers, usually for reporting. For more information on rounding performed by $FNUMBER(), refer to `$Justify()`_.
 
 The formatting codes are:
 
@@ -519,6 +519,8 @@ Example:
    YDB>
 
 This example increments the value of i by 1 and at the end decrements it by 2. Note that the default value for incrementing a variable is 1.
+
+.. _justify-function:
 
 -------------------
 $Justify()
@@ -1813,6 +1815,8 @@ Since YottaDB does not provide a way for a function to return an array or alias 
   $ZWRTAC=""
   $
 
+.. _zascii-function:
+
 ---------------------
 $ZAscii()
 ---------------------
@@ -2227,6 +2231,8 @@ While this example illustrates the use of several of the $ZBIT functions, the fo
 
 This example illustrates the use of $Char() to specify the number of invalid bits that exist at the end of the character string. In this case there are zero invalid bits.
 
+.. _zchar-function:
+
 ---------------
 $ZCHar()
 ---------------
@@ -2378,6 +2384,8 @@ Example:
    YDB>
 
 Base conversion was added to $ZCONVERT() effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_
+
+.. _zdata-function:
 
 -------------------
 $ZDATA()
@@ -2602,6 +2610,7 @@ Example:
 
 This example displays year as a six-digit number.
 
+.. _zextract-function:
 
 ---------------------
 $ZExtract()
@@ -2637,6 +2646,7 @@ Example:
 
 This example displays the numeric byte sequence of the sequence of octets ("主要雨在西班牙停留在平原").
 
+.. _zfind-function:
 
 -----------------------
 $ZFind()
@@ -2794,6 +2804,8 @@ Shows default file name and type of the files created containing the zshow dump 
 
 The second parameter was added to $ZJOBEXAM() effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_.
 
+.. _zjustify-function:
+
 -------------------
 $ZJustify()
 -------------------
@@ -2834,6 +2846,8 @@ Example:
    YDB>
 
 This example uses $ZJUSTIFY() to display the sequence of octets represented by "新年好" in fields of 15 space octets and 5 space octets. Because the byte length of "新年好" is 9, it exceeds 5 spaces, the result overflows the specification.
+
+.. _zlength-function:
 
 -------------------------
 $ZLength()
@@ -2904,7 +2918,7 @@ The integer expression specifies the status code for which $ZMESSAGE() returns e
 
 $ZMESSAGE() provides a tool for examining the message and/or mnemonic associated with a particular message code as reported in $ZSTATUS.
 
-The `$ZSTATUS <./isv.html#id13>`_ Intrinsic Special Variable holds the message code and the message of the last non-Direct Mode YottaDB error.
+The `$ZSTATUS <./isv.html#zstatus>`_ Intrinsic Special Variable holds the message code and the message of the last non-Direct Mode YottaDB error.
 
 ++++++++++++++++++++++++
 Examples of $ZMESSAGE()
@@ -3081,6 +3095,8 @@ The JNL[REG] and JBL[REG] mnemonics and characteristics are defined by the runni
    gtmtypfldindx(<structure-name>.<field-mnemonic>)=<n>
 
 where gtmtypes(<structure-name>,<n>,*) nodes contain the field characteristics.
+
+.. _zpiece-function:
 
 --------------------------
 $ZPIece()
@@ -3322,7 +3338,7 @@ The first expression specifies the SOCKET device name; an empty string returns t
    set handlein=$ZSOCKET($ZPIN,"SOCKETHANDLE",0)
    set handleout=$ZSOCKET($ZPOUT,"SOCKETHANDLE",0)
 
-For more information, refer to `$ZPIN <./isv.html#zpin>`_ and `$ZPOUT <./isv.html#id8>`_.
+For more information, refer to `$ZPIN <./isv.html#zpin>`_ and `$ZPOUT <./isv.html#zpout>`_.
 
 The second expression specifies a keyword identifying the type of information returned and the optional third expression usually specifies the index (starting at zero) of a socket attached to the device; if the index is outside the range of attached sockets, $ZSOCKET() returns an empty string. If the third expression is not specified, $ZSOCKET() returns information about the current socket. Using an invalid keyword produces a ZSOCKETATTR error. The fourth expression specifies an individual delimiter when the second expression specifies DELIMITER. For more information, see the following table. Note that changes to the socket collection for a SOCKET device using OPEN, CLOSE, USE :ATTACH, or USE :DETACH may change the index for a socket.
 

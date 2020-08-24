@@ -1402,6 +1402,8 @@ how ever many signals are sent.
 :code:`ydb_eintr_handler_t()` is very similar to :code:`ydb_eintr_handler()` except that it needs to be invoked by
 a SimpleThreadAPI application.
 
+.. _ydb-exit:
+
 ----------
 ydb_exit()
 ----------
@@ -1927,7 +1929,7 @@ M routines can be called from C with the following functions which are described
 * `ydb_ci_t() <https://docs.yottadb.com/ProgrammersGuide/extrout.html#ydb-ci-t>`_
 * `ydb_cip() <https://docs.yottadb.com/ProgrammersGuide/extrout.html#ydb-cip>`_
 * `ydb_cip_t() <https://docs.yottadb.com/ProgrammersGuide/extrout.html#ydb-cip-t>`_
-* `ydb_zstatus() <https://docs.yottadb.com/ProgrammersGuide/extrout.html#id2>`_
+* `ydb_zstatus() <https://docs.yottadb.com/ProgrammersGuide/extrout.html#ydb-zstatus>`_
 
 Historically, the predecessors of the functions to call M routines
 returned positive return codes. In order to maintain backward

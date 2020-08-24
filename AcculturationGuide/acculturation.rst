@@ -1929,13 +1929,13 @@ Backup
 
 Backup when an application is not running is straightforward – just copy the database files. Backup when an application is operating normally, without impacting the application (except of course for the additional IO load of the backup activity) is easy with YottaDB, and can be accomplished in two ways, one non-YottaDB and other YottaDB:
 
-- The non-YottaDB way is to use a disk mirror (e.g., RAID or SAN). Issue a `MUPIP FREEZE <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#id2>`_ to momentarily freeze updates and flush updates to disk. Then break the mirror and release the freeze. After backing up the mirror, rebuild it, and let it “catch up.” This is not discussed further here.
+- The non-YottaDB way is to use a disk mirror (e.g., RAID or SAN). Issue a `MUPIP FREEZE <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#mupip-freeze>`_ to momentarily freeze updates and flush updates to disk. Then break the mirror and release the freeze. After backing up the mirror, rebuild it, and let it “catch up.” This is not discussed further here.
 
 - The YottaDB way: a transaction-consistent backup of an entire multi-region database can be accomplished with a single YottaDB `MUPIP BACKUP <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#backup>`_ command. There are numerous options to satisfy virtually every type of backup need.
 
 .. note::
 
-   As a protection against operational mishaps, database files store their current journal file name in the database file header and journal file headers store their database file names. Copying database files when they are not open, or taking a snapshot with a MUPIP FREEZE will create database file copies that include journal file names. As this weakens the protection, consider a `MUPIP SET NOJOURNAL <https://docs.yottadb.com/AdminOpsGuide/ydbjournal.html#id2>`_ on copied database files to wipe journal file names from the file headers of copied database files. `MUPIP BACKUP BACKUPDBJNL=DISABLE <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#bkupdbjnl>`_ also provides this option.
+   As a protection against operational mishaps, database files store their current journal file name in the database file header and journal file headers store their database file names. Copying database files when they are not open, or taking a snapshot with a MUPIP FREEZE will create database file copies that include journal file names. As this weakens the protection, consider a `MUPIP SET NOJOURNAL <https://docs.yottadb.com/AdminOpsGuide/ydbjournal.html#set-action-qualifiers>`_ on copied database files to wipe journal file names from the file headers of copied database files. `MUPIP BACKUP BACKUPDBJNL=DISABLE <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#bkupdbjnl>`_ also provides this option.
 
 Exercise - Backup
 -----------------

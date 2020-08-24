@@ -1638,6 +1638,8 @@ The format of the USE command is:
 * The optional keywords specify deviceparameters that control device behavior; some deviceparameters take arguments delimited by an equal sign (=); if the argument only contains one deviceparameter, the surrounding parentheses are optional.
 * An indirection operator and an expression atom evaluating to a list of one or more USE arguments form a legal argument for a USE.
 
+.. _view-command:
+
 ---------------------
 View
 ---------------------
