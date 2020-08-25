@@ -260,6 +260,8 @@ A typical way of using this is:
 .. note::
    $R[EFERENCE] being a read-only variable cannot be SET or NEW'd.
 
+.. _stack-isv:
+
 ----------------
 $STACK
 ----------------

@@ -4232,6 +4232,8 @@ produces the result:
 
 This sets up local variables A and A(1) and A(1,1). It then deletes the data for A(1) with ZWITHDRAW. The ZWRITE command shows ZWITHDRAW KILLed A(1) but left A and A(1,1).
 
+.. _zwrite-command:
+
 -------------------
 ZWRite
 -------------------

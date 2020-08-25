@@ -180,7 +180,7 @@ The ANSI M Standard describes certain M operations in terms of how a stack-based
 
 The stack model provides a trail of routines currently in progress that shows the location of all the M operations that performed the invocations leading to the current point.
 
-The ZSHOW command makes this stack information available within YottaDB. For more information, see `“Using the Invocation Stack in Debugging” <./opdebug.html#id1>`_ in this chapter, and the command description at `“ZSHow” <./commands.html#zshow>`_.
+The ZSHOW command makes this stack information available within YottaDB. For more information, see `Using the Invocation Stack in Debugging`_ in this chapter, and the command description at `“ZSHow” <./commands.html#zshow>`_.
 
 +++++++++++++++++++++++++++++++
 Exiting Direct Mode
@@ -803,7 +803,7 @@ For more information on syntax and run-time errors during Direct Mode, see `Chap
 +=================================================+=============================================================================================================================+
 | `$ECode <./isv.html#ecode>`_                    | Contains a list of errors since it was last cleared                                                                         |
 +-------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
-| `$STack <./isv.html#id1>`_                      | Contains the current level of DO/XECUTE nesting from a base of zero (0).                                                    |
+| `$STack <./isv.html#stack-isv>`_                | Contains the current level of DO/XECUTE nesting from a base of zero (0).                                                    |
 +-------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
 | `$STack() <./functions.html#stack>`_            | Returns information about the M virtual stack context, most of which freezes when an error changes $ECODE from the empty    |
 |                                                 | string to a list value.                                                                                                     |
@@ -830,7 +830,7 @@ For more information on syntax and run-time errors during Direct Mode, see `Chap
 +-------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
 | `ZSYstem <./commands.html#zsystem>`_            | Invokes the shell, creating a forked process.                                                                               |
 +-------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
-| `ZWRite <./commands.html#id19>`_                | Displays all or some local or global variables.                                                                             |
+| `ZWRite <./commands.html#zwrite-command>`_      | Displays all or some local or global variables.                                                                             |
 +-------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
 | `$ZCSTATUS <./isv.html#zcstatus>`_              | Contains the value of the status code for the last compile performed by a ZCOMPILE command.                                 |
 +-------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
@@ -848,7 +848,7 @@ For more information on syntax and run-time errors during Direct Mode, see `Chap
 +-------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
 | `$ZSOurce <./isv.html#zsource>`_                | Contains the name of the M source program most recently ZLINKed or ZEDITed; default name for next ZEDIT or ZLINK.           |
 +-------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
-| `$ZStatus <./isv.html#id13>`_                   | Contains error condition code and location of the last exception condition occurring during routine execution.              |
+| `$ZStatus <./isv.html#zstatus>`_                | Contains error condition code and location of the last exception condition occurring during routine execution.              |
 +-------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
 | `$ZSTep <./isv.html#zstep>`_                    | Controls the default ZSTep action.                                                                                          |
 +-------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
