@@ -147,6 +147,9 @@ When you enter a MUPIP command, one of its variable arguments is the region-list
 
 MUPIP qualifier values are restricted only by the maximum size of the command input line, which is 4KB on some systems and upto 64KB on others.
 
+.. note::
+   MUPIP sends its output to stderr not stdout. On shells such as :code:`bash` stderr can be redirected to stdout by `specifying 2>&1 on the command line <https://www.gnu.org/software/bash/manual/bash.html#Redirecting-Standard-Output-and-Standard-Error>`_.
+
 --------------------------
 Commands and Qualifiers
 --------------------------

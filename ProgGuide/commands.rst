@@ -1680,6 +1680,9 @@ With VIEW "BADCHAR", YottaDB functions generate the BADCHAR error when they enco
 
    When all strings consist of well-formed characters, the value of VIEW [NO]BADCHAR has no effect whatsoever. With VIEW "NOBADCHAR", the same functions treat malformed byte sequences as valid characters. During the migration of an application to add support for UTF-8 mode, illegal character errors are likely to be frequent and indicative of application code that is yet to be modified. VIEW "NOBADCHAR" suppresses these errors at times when their presence impedes development.
 
+.. note::
+   VIEW "NOBADCHAR" applies to internal processing by YottaDB, and not to IO devices.
+
 ~~~~~~~~~~~~~~~~~~
 "BREAKMSG":value
 ~~~~~~~~~~~~~~~~~~

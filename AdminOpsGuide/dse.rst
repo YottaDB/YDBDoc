@@ -104,6 +104,9 @@ Although DSE can operate concurrently with other processes that access the same 
 
 Use the DSE EXIT, or QUIT command to leave DSE.
 
+.. note::
+   DSE sends its output to stderr not stdout. On shells such as :code:`bash` stderr can be redirected to stdout by `specifying 2>&1 on the command line <https://www.gnu.org/software/bash/manual/bash.html#Redirecting-Standard-Output-and-Standard-Error>`_.
+
 ----------------------------
 DSE Commands and Qualifiers
 ----------------------------

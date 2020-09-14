@@ -95,6 +95,9 @@ LKE uses the environment variable ydb_gbldir to identify the active global direc
    $ ydb_gbldir=prod.gld
    $ export ydb_gbldir
 
+.. note::
+   LKE sends its output to stderr not stdout. On shells such as :code:`bash` stderr can be redirected to stdout by `specifying 2>&1 on the command line <https://www.gnu.org/software/bash/manual/bash.html#Redirecting-Standard-Output-and-Standard-Error>`_.
+
 ------------------------------------
 LKE Commands and Qualifiers
 ------------------------------------
@@ -208,7 +211,7 @@ Directs the reporting of all specified LOCKs to a file.
 
 * The -OUTPUT qualifier is compatible with all other qualifiers.
 
-* By default, CLEAR sends output messages to stdout.
+* By default, CLEAR sends output messages to stderr.
 
 ~~~~~~~~~~~
 -P[ID]=pid
@@ -466,7 +469,7 @@ Directs the reporting of all specified LOCKs to a file.
 
 * The -OUTPUT qualifier is compatible with all other qualifiers.
 
-* By default, the SHOW command sends output messages to stdout.
+* By default, the SHOW command sends output messages to stderr.
 
 ~~~~~~~~~~~
 -P[ID]=pid
