@@ -1820,7 +1820,8 @@ The format of the LOAD command is:
    [-BE[GIN]=integer -E[ND]=integer
    -FI[LLFACTOR]=integer
    -FO[RMAT]={GO|B[INARY]|Z[WR]]}
-   -[O]NERROR={STOP|PROCEED|INTERACTIVE}
+   -I[GNORECHSET]
+   -O[NERROR]={STOP|PROCEED|INTERACTIVE}
    -S[TDIN]] file-name
 
 .. note::
@@ -1849,7 +1850,7 @@ The following sections describe the optional qualifiers of the MUPIP LOAD comman
 -FORMAT
 ~~~~~~~~
 
-Specifies the format of the input file. If the format of the input file is not specified, MUPIP LOAD automatically detects the file format (BINARY/ZWR/GO) based on the file header of the input file. If the format is specified, it must match the actual format of the input file for LOAD to proceed.
+Specifies the format of the input file. If the format of the input file is not specified, MUPIP LOAD automatically detects the file format (BINARY/ZWR/GO) based on the file header or (when the header is absent) the key and value information in the file. If the format is specified, it must match the actual format of the input file for LOAD to proceed.
 
 The format codes are:
 
@@ -1867,7 +1868,7 @@ The format codes are:
 
 * For FORMAT={ZWR|GO} UTF-8 files not produced by MUPIP EXTRACT or %GO, the first line of the label must contain the case insensitive text "UTF-8".
 
-* For all -FORMAT={ZWR|GO} files not produced by MUPIP EXTRACT or %GO, the second line should contain the case insensitive test "ZWR" for zwr format or "GLO" for GO format and the two label lines must contain a total of more than 10 characters.
+* For all -FORMAT={ZWR|GO} files not produced by MUPIP EXTRACT or %GO, the second line should contain the case insensitive text "ZWR" for zwr format or "GLO" for GO format and the two label lines must contain a total of more than 10 characters.
 
 * -FORMAT=GO expects the data in record pairs. Each global node requires one record for the key and one for the data.
 
@@ -1928,13 +1929,17 @@ Specifies the quantity of data stored in a database block. Subsequent run-time u
 -IGNORECHSET
 ~~~~~~~~~~~~~~
 
-Notifies MUPIP LOAD to load the extract file even if it was created by a MUPIP process in another mode (UTF-8 mode vs. M mode).
+Notifies MUPIP LOAD to load the extract file even if it was created by a MUPIP process in another mode (UTF-8 mode vs. M mode). The format of the IGNORECHSET qualifier is:
+
+.. code-block:: none
+
+   -I[GNORECHSET]
 
 .. note::
 
    As using -IGNORECHSET bypasses YottaDB checks, use it only if you are sure that the extract file can be loaded correctly.
 
--IGNORECHSET was added to YottaDB effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_.
+-IGNORECHSET was added to YottaDB effective release `r1.30 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_.
 
 ~~~~~~~~~
 -ONERROR
@@ -1944,7 +1949,7 @@ Determines the MUPIP LOAD behavior when it encounters an error. The format of th
 
 .. code-block:: none
 
-   -[O]NERROR={STOP|PROCEED|INTERACTIVE}
+   -O[NERROR]={STOP|PROCEED|INTERACTIVE}
 
 - STOP causes MUPIP LOAD to exit immediately.
 

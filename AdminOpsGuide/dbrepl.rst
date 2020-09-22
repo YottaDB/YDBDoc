@@ -4094,7 +4094,7 @@ Command Syntax:
 
 *-instsecondary=<instance_name>*
 
-Identifies a Source Server process.
+Identifies the Source Server which is responsible for replicating to the secondary instance called <instance_name>.
 
 If -instsecondary is not specified, -shutdown stops all Source Server processes.
 
