@@ -5,9 +5,29 @@
 
 set -euo pipefail
 set -v
+# for rsync; this expands *.c to nothing if there are no matches, rather than '*.c'
+shopt -s nullglob
 
 target="$(realpath "${1:-target}")"
+octo="${2:-../YDBOcto}"
+posix="${3:-../YDBPosix}"
 mkdir -p "$target"
+
+usage() {
+	echo "usage: $0 [target [octo [posix]]]"
+	exit 1
+}
+
+needs_clone() {
+	if ! [ -d "$1" ]; then
+		echo "error: $1 is not a directory or does not exist"
+		echo "help: try running \`git clone $2\`"
+		usage
+	fi
+}
+
+needs_clone "$octo" https://gitlab.com/YottaDB/DBMS/YDBOcto
+needs_clone "$posix" https://gitlab.com/YottaDB/Util/YDBPosix
 
 DIRECTORIES=(
 	AcculturationGuide/
@@ -18,10 +38,35 @@ DIRECTORIES=(
 	ReleaseNotes/
 )
 
+rsync() {
+	command rsync --delete -lrtuv --exclude=\*.zip --exclude=.buildinfo --exclude=.nojekyll "$@"
+}
+
 # Copy the HTML files
 for directory in "${DIRECTORIES[@]}"; do
-    pushd $directory
-    output="$target/${directory%?}"
-    rsync --delete -lrtuv --exclude=\*.zip --exclude=.buildinfo --exclude=.nojekyll --exclude=_* . "$output"
-    popd
+	pushd $directory
+	output="$target/${directory%?}"
+	rsync _build/html/ "$output/"
+	rsync *.c *.m *.go "$output/"
+	popd
 done
+cp index.html "$target"
+
+# Build the documentation from other repositories
+pushd "$octo"/doc
+make html
+rsync _build/html/ "$target/Octo"
+popd
+
+pushd "$posix"/doc
+make html
+rsync _build/html/ "$target/YDBPosix"
+popd
+
+# The source directory for the programmer's guide does not have the same name
+# as the page the index links to
+if [ -d "$target/ProgrammersGuide" ]; then
+	rm -r "$target/ProgrammersGuide"
+fi
+mv "$target"/ProgGuide/ "$target"/ProgrammersGuide/
+cp ProgGuide/ydbci_ydbaccess.zip "$target"/ProgrammersGuide/

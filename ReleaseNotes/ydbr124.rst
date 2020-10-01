@@ -55,7 +55,7 @@ Contact your YottaDB support channel.
 
 For free (to you) support from members of communities who run widely available applications on YottaDB, please use an application-specific list where appropriate.
 
-* For issues specific to the use of YottaDB from node.js via `nodem <https://github.com/dlwicksell/nodem>`_, `QewdJS <http://qewdjs.com/>`_ or `Enterprise Web Developer <http://ewdjs.com/>`_, post to the `Enterprise Web Developer community <http://groups.google.com/group/enterprise-web-developer-community>`_.
+* For issues specific to the use of YottaDB from node.js via `nodem <https://github.com/dlwicksell/nodem>`_ or `QEWDjs or its predecessors <https://www.qewdjs.com/>_`, post to the `Enterprise Web Developer community <http://groups.google.com/group/enterprise-web-developer-community>`_.
 
 * For issues specific to the use of YottaDB with `VistA <https://en.wikipedia.org/wiki/VistA>`_ flavors, post to the `Hardhats <http://groups.google.com/group/hardhats>`_ list.
 

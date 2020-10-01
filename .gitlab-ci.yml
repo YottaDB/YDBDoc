@@ -12,10 +12,13 @@
 
 stages:
   - build
+  - deploy
 
 before_script:
-    - apt-get update -qq && apt-get install -y -qq --no-install-recommends make rsync tcsh sphinx-common python3-pip python3-setuptools python3-wheel wget
+    - apt-get update -qq && apt-get install -y -qq --no-install-recommends git make rsync tcsh sphinx-common python3-pip python3-setuptools python3-wheel wget
     - pip3 install sphinx_rtd_theme sphinxprettysearchresults
+    - git clone --depth 1 https://gitlab.com/YottaDB/DBMS/YDBOcto ../YDBOcto
+    - git clone --depth 1 https://gitlab.com/YottaDB/Util/YDBPosix ../YDBPosix
 
 deadlinks:
   stage: build
@@ -23,6 +26,19 @@ deadlinks:
   script:
     - make html
     - ./buildall.sh target
+    # The VM zip file is many gigabytes large, so it doesn't make sense
+    # to keep it in the repository. Instead, create a dummy file so `deadlinks`
+    # thinks it exists.
+    - touch target/AcculturationGuide/Debian-Hybrid_yottadbworkshop15.zip
     - wget https://github.com/deadlinks/cargo-deadlinks/releases/download/0.4.2/deadlinks-linux
     - chmod +x ./deadlinks-linux
     - ./deadlinks-linux deadlinks -v --check-http --dir target
+
+pages:
+  stage: deploy
+  script:
+    - make html
+    - ./buildall.sh public
+  artifacts:
+    paths:
+      - public
