@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2017-2021 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -20,7 +20,7 @@ About this Manual
 .. contents::
    :depth: 2
 
-The M Programmer's Guide describes how to develop and maintain applications using YottaDB. For information on how to install the software and maintain the user environment, refer to the `Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/index.html>`_.
+The M Programmer's Guide describes how to develop and maintain applications using YottaDB. For information on how to install the software and maintain the user environment, refer to the `Administration and Operations Guide <../AdminOpsGuide/index.html>`_.
 
 --------------------------
 Intended Audience

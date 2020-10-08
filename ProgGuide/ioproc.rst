@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2018-2021 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -50,6 +50,8 @@ $IO
 ~~~~
 
 $I[O] contains the name of the current device specified by the last USE command. A SET command cannot modify $IO. USE produces the same $IO as USE $PRINCIPAL, but $P is the preferred construct.
+
+.. _principal-io-isv:
 
 ~~~~~~~~~~~
 $PRINCIPAL
@@ -1350,6 +1352,8 @@ With CLOSE:
 
 The CLOSE of a PIPE device prevents all subsequent access to the pipes associated with the device. Unless the OPEN that created the device specified INDEPENDENT, the process terminates. Note that any subsequent attempt by the created process to read from its stdin (which would be a closed pipe) returns an EOF and typical UNIX behavior would be to terminate on such an event.
 
+.. _pipe-device-ex:
+
 ++++++++++++++++++++++++++++
 PIPE Device Examples
 ++++++++++++++++++++++++++++
@@ -1689,6 +1693,8 @@ The following table summarizes PIPE access deviceparamters.
 | INDEPENDENT             | o  | Specifies that the created process continues to execute after the PIPE device is CLOSEd.                                                              |
 +-------------------------+----+-------------------------------------------------------------------------------------------------------------------------------------------------------+
 
+.. _using-sckt-devs:
+
 -------------------------------
 Using Socket Devices
 -------------------------------
@@ -1879,7 +1885,7 @@ SOCKET devices support encrypted connections with TLS using an encryption plugin
 * "renegotiate" applies only to a server socket. It allows applications to request a TLS renegotiation. Renegotiation requires the suspension of application communication and the application must read all pending data before initiating a renegotiation. This means that in the communication protocol used, both parties must be at a known state when renegotiating keys. For example, in YottaDB replication, one party sends a renegotiation request and waits for an acknowledgement before initiating the renegotiation.
 * tlsid refers to the name of a section in the configuration file specified by the ydb_crypt_config environment variable. If tlsid is not specified with the "renegotiate" option and cfg-file-options are specified, YottaDB creates a virtual section by appending "-RENEGOTIATE" to the tlsid used to enable TLS on the socket. For the renegotiate option, if no section named tlsid is present in the configuration file, YottaDB creates a virtual section with that name for the life of the process.
 * cfg-file-options specifies configuration file options. Note cfg-file-options override those options if they are already specified in the configuration file except ssl-options and verify-level which are merged.
-* Supported cfg-file-options for the "renegotiate" command are (case-sensitive): verify-depth, verify-level, verify-mode, session-id-hex, and CAfile. WRITE /TLS ignores all other configuration file options whether given on the command or in the configuration file. For more information on the supported configuration options, refer to `Creating a TLS Configuration File <https://docs.yottadb.com/AdminOpsGuide/tls.html>`_ in the Administration and Operations Guide.
+* Supported cfg-file-options for the "renegotiate" command are (case-sensitive): verify-depth, verify-level, verify-mode, session-id-hex, and CAfile. WRITE /TLS ignores all other configuration file options whether given on the command or in the configuration file. For more information on the supported configuration options, refer to `Creating a TLS Configuration File <../AdminOpsGuide/tls.html>`_ in the Administration and Operations Guide.
 
 .. note::
    Note that SOCKET device actions may produce the following errors: TLSDLLOPEN, TLSINIT, TLSCONVSOCK, TLSHANDSHAKE, TLSCONNINFO, TLSIOERROR, and TLSRENEGOTIATE.
@@ -1892,7 +1898,7 @@ YottaDB buffers WRITEs to TLS enabled sockets until a subsequent USE :FLUSH, WRI
    Because this functionality has a wide variety of user stories (use cases) and has substantial complexity, although the code appears robust, we are not confident that we have exercised a sufficient breadth of use cases in testing. Also we may make changes in future releases that are not entirely backwards compatible. We encourage you to use with this facility in development and testing, and to provide us with feedback. If you are a YottaDB customer and wish to use this in production, please contact us beforehand to discuss your use case(s).
 
 .. note::
-   Owing to the range of OpenSSL versions in use across the breadth of platforms and versions supported by YottaDB, on all platforms, but especially on non-Linux UNIX platforms, YottaDB recommends rebuilding the plugin from sources included with the YottaDB binary distribution with the specific version of OpenSSL installed on your systems for any production or production staging environments that use TLS. For more information on recompiling the reference implementation, refer to the `Installing YottaDB chapter of the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/installydb.html>`_.
+   Owing to the range of OpenSSL versions in use across the breadth of platforms and versions supported by YottaDB, on all platforms, but especially on non-Linux UNIX platforms, YottaDB recommends rebuilding the plugin from sources included with the YottaDB binary distribution with the specific version of OpenSSL installed on your systems for any production or production staging environments that use TLS. For more information on recompiling the reference implementation, refer to the `Installing YottaDB chapter of the Administration and Operations Guide <../AdminOpsGuide/installydb.html>`_.
 
 ++++++++++++++++++++++++++
 Socket Device Operation
@@ -2118,7 +2124,7 @@ TLS (Transport Layer Security) can be turned on for YottaDB using the following 
 
 * Start the server
 
-For more documentation on TLS, see `Appendix H: Creating a TLS Configuration File <https://docs.yottadb.com/AdminOpsGuide/tls.html>`_ in the Administration and Operations Guide.
+For more documentation on TLS, see `Appendix H: Creating a TLS Configuration File <../AdminOpsGuide/tls.html>`_ in the Administration and Operations Guide.
 
 ----------------------------
 I/O Commands
@@ -3199,6 +3205,8 @@ Example:
 
 This example opens file test51.txt and specifies Read Write permission for users not in owner's group.
 
+.. _wrap-ioproc:
+
 ~~~~~
 WRAP
 ~~~~~
@@ -4049,6 +4057,8 @@ UPSCROLL Applies to: TRM
 
 Moves the cursor down one line on the terminal screen. If $Y=LENGTH-1, UPSCROLL sets $Y=0. Otherwise UPSCROLL increments $Y by one. If the cursor is physically at the bottom of the page, the screen scrolls up one line. UPSCROLL does not change the column position or $X.
 
+.. _width-ioproc:
+
 ~~~~~~
 WIDTH
 ~~~~~~
@@ -4273,6 +4283,8 @@ NULL: Valid for null devices
 
 SOC: Valid for socket devices
 
+.. _read-ioproc:
+
 ++++
 READ
 ++++
@@ -4348,6 +4360,8 @@ If a terminator arrives before maxlen characters are received the READ X#maxlen 
 For fixed format files, If WIDTH - $X is greater than len, READ X#maxlen reads maxlen characters otherwise READ reads WIDTH - $X characters. Fewer may be returned if end of file is reached.
 
 For VARIABLE or STREAM format files, READ X#maxlen reads up to MIN(maxlen, WIDTH - $X) characters, stopping if it finds line terminator or end of file.
+
+.. _write-ioproc:
 
 ++++++
 WRITE

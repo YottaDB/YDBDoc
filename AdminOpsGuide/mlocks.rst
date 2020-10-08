@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2021 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2017-2021 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -24,7 +24,7 @@
 Introduction
 -----------------------------
 
-The M Lock Utility (LKE) is a tool for examining and changing the YottaDB LOCK environment. For a description of M LOCKs, refer to the `LOCKs section in the General Language Features of M <https://docs.yottadb.com/ProgrammersGuide/langfeat.html#m-locks>`_ and the description of the `LOCK command in the Commands chapter of the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/commands.html#lock>`_.
+The M Lock Utility (LKE) is a tool for examining and changing the YottaDB LOCK environment. For a description of M LOCKs, refer to the `LOCKs section in the General Language Features of M <../ProgrammersGuide/langfeat.html#m-locks>`_ and the description of the `LOCK command in the Commands chapter of the Programmer's Guide <../ProgrammersGuide/commands.html#lock-command>`_.
 
 The two primary functions of the M Lock Utility (LKE) are:
 
@@ -678,7 +678,7 @@ Exercise 1: Preventing concurrent updates using M Locks
 Consider a situation when two users (Mary and Ken) have to exclusively update a global variable ^ABC.
 
 .. note::
-   Transaction Processing may offer a more efficient and more easily managed solution to the issue of potentially conflicting updates. For more information, see the `General Language Features of M chapter of the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/langfeat.html>`_.
+   Transaction Processing may offer a more efficient and more easily managed solution to the issue of potentially conflicting updates. For more information, see the `General Language Features of M chapter of the Programmer's Guide <../ProgrammersGuide/langfeat.html>`_.
 
 At Mary's prompt, execute the following commands:
 

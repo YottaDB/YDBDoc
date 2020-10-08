@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2018-2021 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -106,6 +106,8 @@ Example:
 
 If $ZDATEFORM is 1965, an input year of 70 would be interpreted as 1970, whereas an input year of 10 would be taken as 2010.
 
+.. _d-util:
+
 +++
 %D
 +++
@@ -153,6 +155,8 @@ Example:
    08-FEB-2018
 
 This example invokes %D as an extrinsic function with the label FUNC. $$FUNC^%D returns today's date.
+
+.. _date-util:
 
 ++++++++++++
 %DATE
@@ -272,6 +276,8 @@ Example:
 
 This example shows the use of a year limit in $ZDATEFORM. Two digit years are interpreted to be in the interval (1975, 2074) since $ZDATEFORM is 1975; the input year "80" is interpreted as the year "1980" and "10" is interpreted as the year "2010". The example invokes FUNC^%DATE to convert the input date to $HOROLOG format. $ZDATE() is used to convert the $HOROLOG format date to mm/dd/yyyy format.
 
+.. _h-util:
+
 +++++++++
 %H
 +++++++++
@@ -380,6 +386,8 @@ Example:
 
 This example shows the use of a year limit in $ZDATEFORM. Two digit years are interpreted to be in the interval of 1980 - 2079; since $ZDATEFORM is 1980, the input year "02" is interpreted as "2002" and "92" is interpreted as "1992". This example invokes CDN^%H to convert the argument in mm/dd/yy format to $HOROLOG format. $ZDATE() is used to convert the $HOROLOG format date to mm/dd/yyyy format.
 
+.. _t-util:
+
 ++++
 %T
 ++++
@@ -425,6 +433,8 @@ Example:
    8:30 AM
 
 This example invokes FUNC as an extrinsic function, which returns the current time.
+
+.. _ti-util:
 
 +++++
 %TI
@@ -522,6 +532,8 @@ Example:
 
 This example invokes %TI as an extrinsic function to convert the supplied time to $HOROLOG format. If there is no argument (i.e., $$FUNC^%TI), %TI converts the current time.
 
+.. _to-util:
+
 ++++
 %TO
 ++++
@@ -576,6 +588,8 @@ The conversion utilities are:
 %UCASE: Converts a string to all upper case.
 
 The conversion utilities can be invoked as extrinsic functions.
+
+.. _dh-util:
 
 ++++++++++++++
 %DH
@@ -640,6 +654,8 @@ Example:
 
 This example invokes %DH as an extrinsic function using the FUNC label. The first argument specifies the input decimal number and the optional, second argument specifies the number of output digits. If the extrinsic does not have a second argument, the length of the output defaults to eight characters.
 
+.. _do-util:
+
 +++++
 %DO
 +++++
@@ -702,6 +718,8 @@ Example:
 
 This example invokes %DO as an extrinsic function with the label FUNC. The first argument specifies the number to be converted and the optional, second argument specifies the number of output digits. If the second argument is not specified, %DO uses the default of 12 digits.
 
+.. _hd-util:
+
 ++++
 %HD
 ++++
@@ -758,6 +776,8 @@ Example:
    14
 
 This example invokes %HD as an extrinsic function with the label FUNC and writes the results.
+
+.. _ho-util:
 
 ++++
 %HO
@@ -816,6 +836,8 @@ Example:
 
 This example invokes %HO as an extrinsic function with the FUNC label.
 
+.. _lcase-util:
+
 +++++++++
 %LCASE
 +++++++++
@@ -872,6 +894,8 @@ Example:
    hello
 
 This example sets the variable ^X to the string "Hello" and invokes %LCASE as an extrinsic function that returns "hello" in lower case.
+
+.. _od-util:
 
 +++++
 %OD
@@ -930,6 +954,8 @@ Example:
 
 This example invokes %OD as an extrinsic function with the FUNC label. The argument specifies the number to be converted.
 
+.. _oh-util:
+
 +++++
 %OH
 +++++
@@ -986,6 +1012,8 @@ Example:
    E
 
 This example invokes %OH as an extrinsic function with the FUNC label.
+
+.. _ucase-util:
 
 ++++++++++++++
 %UCASE
@@ -1044,6 +1072,8 @@ The mathematic utilities are:
 %SQROOT: Calculates the square root of a number.
 
 The mathematic utilities can be invoked as extrinsic functions.
+
+.. _exp-util:
 
 ++++++++
 %EXP
@@ -1106,6 +1136,8 @@ Example:
    512
 
 This example invokes %EXP as an extrinsic function with the label FUNC.
+
+.. _sqroot-util:
 
 ++++++++++++++
 %SQROOT
@@ -1303,6 +1335,7 @@ The Global utilities are:
 
 %ZSHOWVTOLCL: Restores ZSHOW "V":gvn data into its original local variables.
 
+.. _g-util:
 
 +++
 %G
@@ -1409,6 +1442,8 @@ Example:
 
 This example specifies "?D" as the global that invokes the %GD utility. %GD displays existing globals in the current global directory without displaying their values or descendants.
 
+.. _gc-util:
+
 +++
 %GC
 +++
@@ -1444,6 +1479,8 @@ Example:
    YDB>
 
 This example makes a copy of the nodes and values of global ^b to global ^g.
+
+.. _gce-util:
 
 +++++
 %GCE
@@ -1539,6 +1576,8 @@ Example:
 
 This example shows that executing %GCE replaces all occurrences of "12" in the data stored in the global ^b with "35" and displays the affected nodes before and after the change. Then the %G demonstrates that "12" as data was changed, while "12" in the subscripts remained untouched.
 
+.. _gd-util:
+
 +++++
 %GD
 +++++
@@ -1604,6 +1643,8 @@ Example:
 
 The asterisk (*) wildcard at the Global ^ prompt displays all globals in the global directory.
 
+.. _ged-util:
+
 +++++
 %GED
 +++++
@@ -1652,6 +1693,8 @@ Example:
 
 This example shows the use of the full-screen editor to change, add, and delete (kill) nodes. When you exit from the editor, %GED checks the syntax and reports any problems. By pressing <RETURN>, return to the full-screen editor to fix the error. At the end of the session, %GED reports how many nodes were selected, changed, killed, and added.
 
+.. _gi-util:
+
 ++++
 %GI
 ++++
@@ -1686,6 +1729,7 @@ Example:
    Restored 10 nodes in 2 globals
    YDB>
 
+.. _go-util:
 
 ++++
 %GO
@@ -1728,6 +1772,8 @@ Example:
    Total of 1 node in 1 global.
    YDB>
 
+.. _gse-util:
+
 +++++
 %GSE
 +++++
@@ -1767,6 +1813,8 @@ Example:
    YDB>
 
 This example searches global ^a for the string "Hello" and displays all nodes that contain that string.
+
+.. _gsel-util:
 
 ++++++
 %GSEL
@@ -1858,6 +1906,8 @@ Example:
 
 This example uses CALL^%GSEL to add to an existing %ZG array of selected globals.
 
+.. _zshowvtolcl-util:
+
 ++++++++++++++++
 %ZSHOWVTOLCL
 ++++++++++++++++
@@ -1888,13 +1938,15 @@ The routine utilities are:
 
 %RSEL: Selects M routines and places their directories and names in a local array.
 
+.. _fl-util:
+
 ++++
 %FL
 ++++
 
 The %FL utility lists the comment lines at the beginning of source programs. %FL writes the routines in alphabetical order to the specified device. If the output device is not the principal device, %FL displays the name of each routine on the principal device as it writes the routine to the output device.
 
-%FL uses %RSEL to select routines. For more information, see `%RSEL`_.
+%FL uses %RSEL to select routines. For more information, see :ref:`rsel-util`.
 
 **Prompts**
 
@@ -1940,13 +1992,15 @@ Example:
 
 This example selects %D, then selects %GSE and %GSEL and deselects %D. Because the example enters <RETURN> at the Output Device: <terminal>: prompt, the output goes to the principal device.
 
+.. _rce-util:
+
 +++++++++++
 %RCE
 +++++++++++
 
 The %RCE utility replaces every occurrence of a text string with another text string in a routine or a list of routines.
 
-%RCE uses %RSEL to select routines. For more information, see `%RSEL`_.
+%RCE uses %RSEL to select routines. For more information, see :ref:`rsel-util`.
 
 %RCE prompts for a text string to replace and its replacement. %RCE searches for text strings in a case-sensitive manner. %RCE issues a warning message if you specify a control character such as a <TAB> in the text string or its replacement. %RCE confirms your selection by displaying the text string and its replacement between a left and right arrow. The arrows highlight any blank spaces that you might have included in the text string or its replacement.
 
@@ -2049,6 +2103,8 @@ Example:
 
 This example removes all occurrences of the <TAB> key from specified routines and suppresses the display trail of changes.
 
+.. _rd-util:
+
 +++
 %RD
 +++
@@ -2133,6 +2189,8 @@ Example:
 
 This example invokes %RD with the label SRC that lists only source modules accessible through the current $ZROUTINES.
 
+.. _ri-util:
+
 +++
 %RI
 +++
@@ -2170,13 +2228,15 @@ Example:
    Restored 753 lines in 6 routines.
    YDB>
 
+.. _ro-util:
+
 ++++
 %RO
 ++++
 
 The %RO utility writes M source code for one or more routines to a sequential device such as, a disk file or a printer. .
 
-%RO uses %RSEL to select routines. For more information, see `%RSEL`_.
+%RO uses %RSEL to select routines. For more information, see :ref:`rsel-util`.
 
 %RO writes the routines in alphabetical order to the specified device. %RO displays the name of each routine as it writes the routine to the device.
 
@@ -2235,13 +2295,15 @@ Example:
 
 This example adds and subtracts %D from the selection, then adds all routines starting with "BEST" and confirms the current selection. The example sends output to the designated output file output.txt. %RO displays the label at the beginning of the output file. The first record of the header label is the text entered at the prompt. The second record of the header label consists of the word "YottaDB" and the current date and time.
 
+.. _rse-util:
+
 +++++++
 %RSE
 +++++++
 
 The %RSE utility searches for every occurrence of a text string in a routine or a list of routines.
 
-%RSE uses %RSEL to select routines. For more information, see `%RSEL`_.
+%RSE uses %RSEL to select routines. For more information, see :ref:`rsel-util`.
 
 %RSE searches for text strings are case-sensitive. %RSE issues a warning message if you specify a control character such as a <TAB> in the text string. %RSE confirms your selection by displaying the text string between a left and right arrow. The arrows display any blank spaces included in the text string.
 
@@ -2321,6 +2383,8 @@ Example:
    YDB>
 
 This example instructs ^%RSE to write all lines where the text string occurs to an output file, out.lis.
+
+.. _rsel-util:
 
 ++++++++++
 %RSEL
@@ -2480,9 +2544,9 @@ Internationalization Utilities
 
 The internationalization utilities are:
 
-%GBLDEF: Manipulates the collation sequence assigned to a global. For more information and usage examples, refer to `“Using the %GBLDEF Utility” <./internatn.html#using-the-gbldef-utility>`_.
+%GBLDEF: Manipulates the collation sequence assigned to a global. For more information and usage examples, refer to :ref:`use-gbldef-util`.
 
-%LCLCOL: Manipulates the collation sequence assigned to local variables in an active process. For more information and usage examples, refer to `“Establishing A Local Collation Sequence” <./internatn.html#establishing-a-local-collation-sequence>`_.
+%LCLCOL: Manipulates the collation sequence assigned to local variables in an active process. For more information and usage examples, refer to :ref:`establish-local-colln-seq`.
 
 %PATCODE: Loads pattern definition files for use within an active database.
 
@@ -2513,7 +2577,7 @@ The second parameter is a required passed-by-reference variable that the caller 
 
 The third optional parameter defaults to DUMP -FILEHEADER. Using any other command dump command has not been tested.
 
-The fourth optional parameter indicates the level of detail, -ALL, for the DUMP -FILEHEADER command. Fore more information on other -FILEHEADER qualifiers, please refer to the `DSE chapter in the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/dse.html>`_.
+The fourth optional parameter indicates the level of detail, -ALL, for the DUMP -FILEHEADER command. Fore more information on other -FILEHEADER qualifiers, please refer to the `DSE chapter in the Administration and Operations Guide <../AdminOpsGuide/dse.html>`_.
 
 The format of the output array is fdump(<REGION NAME>,<FIELD NAME>). In the event of a field collision, dump^%DSEWRAP avoids overwriting existing data by creating number descendants.
 
@@ -2539,7 +2603,7 @@ The first parameter is a required pass-by-reference variable that the caller use
 
 The second parameter is the path and name for the database file on which to report information.
 
-The format of the output array is fdump(sgmnt_data.<FIELD NAME>)=<value>; refer to `%PEEKBYNAME()`_ for additional information on the names and values.
+The format of the output array is fdump(sgmnt_data.<FIELD NAME>)=<value>; refer to :ref:`peekbyname-util` for additional information on the names and values.
 
 The $ETRAP handler simply QUITs as it defers error handling to the caller. Application developers should define an appropriate $ETRAP prior to calling %DUMPFHEAD.
 
@@ -2548,6 +2612,8 @@ Example:
 .. code-block:: bash
 
    $ydb -run ^%XCMD 'do getfields^%DUMPFHEAD(.fields,"yottadb.dat") zwrite fields'
+
+.. _freecnt-util:
 
 +++++++++++++++
 %FREECNT
@@ -2568,11 +2634,13 @@ Example:
 
 This example invokes %FREECNT at the YDB> prompt that displays the number of free blocks and percentage of free space available in the current global directory.
 
+.. _peekbyname-util:
+
 ++++++++++++++++++
 %PEEKBYNAME()
 ++++++++++++++++++
 
-%PEEKBYNAME() provides a stable interface to $ZPEEK() that uses control structure field names. $ZPEEK() provides a read-only mechanism to access selected fields in selected control structures in the address space of a process, including process private memory, database shared memory segments and Journal Pools. Although application code can call $ZPEEK() directly, such direct access must use numeric arguments that can vary from release to release. Access by name using %PEEKBYNAME makes application code more stable across YottaDB releases. For more information, refer to `$ZPEEK() <./functions.html#zpeek>`_. YottaDB intends to maintain the stability of a name from release to release where that name refers to the same data item; however, we may add or obsolete names, or modify the type and size associated with existing names at our discretion, to reflect changes in the implementation. The format of the %PEEKBYNAME() function is:
+%PEEKBYNAME() provides a stable interface to $ZPEEK() that uses control structure field names. $ZPEEK() provides a read-only mechanism to access selected fields in selected control structures in the address space of a process, including process private memory, database shared memory segments and Journal Pools. Although application code can call $ZPEEK() directly, such direct access must use numeric arguments that can vary from release to release. Access by name using %PEEKBYNAME makes application code more stable across YottaDB releases. For more information, refer to :ref:`zpeek-function`. YottaDB intends to maintain the stability of a name from release to release where that name refers to the same data item; however, we may add or obsolete names, or modify the type and size associated with existing names at our discretion, to reflect changes in the implementation. The format of the %PEEKBYNAME() function is:
 
 .. code-block:: none
 
@@ -2581,13 +2649,13 @@ This example invokes %FREECNT at the YDB> prompt that displays the number of fre
 * The first expression specifies the memory location to access in the format: CONTROL_BLOCK[.FIELD].* (For example, "gd_region.max_key_size").
 * The optional second expression specifies a region name, structure index or a base address associated with the first (field name) argument. The choice is governed by the following rules applied in the following order:
 
-  1. If the value is a hex value in the form of 0xhhhhhhhh[hhhhhhhh], then PEEKBYNAME uses it as the base address of the data to fetch. Also in this case, the offset, length, and type are taken from the field specified in the first expression (field). For more information, see the description of the "PEEK" mnemonic in `$ZPEEK() <./functions.html#zpeek>`_.
+  1. If the value is a hex value in the form of 0xhhhhhhhh[hhhhhhhh], then PEEKBYNAME uses it as the base address of the data to fetch. Also in this case, the offset, length, and type are taken from the field specified in the first expression (field). For more information, see the description of the "PEEK" mnemonic in :ref:`zpeek-function`.
   2. If the first expression refers to one of the region-related structures supported by the $ZPEEK() function, PEEKBYNAME treats this second expression as a region name.
   3. If the first expression refers to one of the replication related structures supported by the $ZPEEK() function that are indexed, PEEKBYNAME treats this second expression as a numerical (base 10) index value.
   4. For those structures supported by the $ZPEEK() function that do not accept an argument, this second expression must be NULL or not specified.
 
 * The optional third expression specifies the output format in one character as defined in the "format" argument in the $ZPEEK() documentation. This argument overrides the automatic format detection by the %PEEKBYNAME utility.
-* The optional fourth agument is a global directory referencing the :code:`gtmhelp.gld` for accesssing the :code:`gtmhelp.dat` file.
+* The optional fourth argument is a global directory referencing the :code:`ydbhelp.gld` for accesssing the :code:`ydbhelp.dat` file.
 
 Example:
 
@@ -2808,9 +2876,9 @@ Example:
 %YDBPROCSTUCKEXEC
 +++++++++++++++++++
 
-%YDBPROCSTUCKEXEC is a standard utility program to capture diagnostics when invoked by the `ydb_procstuckexec <https://docs.yottadb.com/AdminOpsGuide/basicops.html#ydb-procstuckexec>`_ mechanism. To use it, set the :code:`ydb_procstuckexec` environment variable to :code:`$ydb_dist/yottadb -run %YDBPROCSTUCKEXEC` with :code:`$ydb_dist` expanded to the actual directory where YottaDB is installed, or to :code:`yottadb -run %YDBPROCSTUCKEXEC` when :code:`yottadb` is located by :code:`$PATH`. Also :code:`$ydb_dist/libyottadbutil.so` must be in the routine search path defined by :code:`$ydb_routines` at process startup, or in the :code:`$ZROUTINES` intrinsic special variable.
+%YDBPROCSTUCKEXEC is a standard utility program to capture diagnostics when invoked by the `ydb_procstuckexec <../AdminOpsGuide/basicops.html#ydb-procstuckexec-env-var>`_ mechanism. To use it, set the :code:`ydb_procstuckexec` environment variable to :code:`$ydb_dist/yottadb -run %YDBPROCSTUCKEXEC` with :code:`$ydb_dist` expanded to the actual directory where YottaDB is installed, or to :code:`yottadb -run %YDBPROCSTUCKEXEC` when :code:`yottadb` is located by :code:`$PATH`. Also :code:`$ydb_dist/libyottadbutil.so` must be in the routine search path defined by :code:`$ydb_routines` at process startup, or in the :code:`$ZROUTINES` intrinsic special variable.
 
-When invoked by :code:`yottadb -run %YDBPROCSTUCKEXEC <msg> <callingpid> <blockingpid> <count>` as described in the ydb_procstuckexec documentation, it creates in the directory specified by :code:`$ydb_log`, :code:`$gtm_log`, :code:`$ydb_tmp`, or :code:`$gtm_tmp` (defaulting to :code:`/tmp`) a file whose name is :code:`%YDBPROCSTUCKEXEC_<date>,<time>_<msg>_<callingpid>_<blockingpid>_<count>_<%YDBPROCSTUCEXECpid>.out` where the , timestamp is generated by `$ZDATE() <./functions.html#zdate>`_ with a format string of :code:`"YEAR.MM.DD,24.60.SS"`, e.g., :code:`%YDBPROCSTUCKEXEC_2020.05.22,17.58.38_ABCD_91998_91987_1_92045.out`.
+When invoked by :code:`yottadb -run %YDBPROCSTUCKEXEC <msg> <callingpid> <blockingpid> <count>` as described in the ydb_procstuckexec documentation, it creates in the directory specified by :code:`$ydb_log`, :code:`$gtm_log`, :code:`$ydb_tmp`, or :code:`$gtm_tmp` (defaulting to :code:`/tmp`) a file whose name is :code:`%YDBPROCSTUCKEXEC_<date>,<time>_<msg>_<callingpid>_<blockingpid>_<count>_<%YDBPROCSTUCEXECpid>.out` where the , timestamp is generated by :ref:`zdate-function` with a format string of :code:`"YEAR.MM.DD,24.60.SS"`, e.g., :code:`%YDBPROCSTUCKEXEC_2020.05.22,17.58.38_ABCD_91998_91987_1_92045.out`.
 
 The file contains:
 
@@ -2819,11 +2887,13 @@ The file contains:
  - The environment of the blocking process.
  - The value of /proc/sys/kernel/yama/ptrace_scope (if non-zero, gdb may not be able to capture the blocking process for a snapshot of its state).
  - A snapshot of the state of the blocking process, captured by gdb.
- - The value returned by `$ZSIGPROC() <./functions.html#zsigproc>`_ used to send SIGUSR1 (a `MUPIP INTRPT <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#intrpt>`_) to the blocking pid. If appropriately configured (with `ydb_zinterrupt <https://docs.yottadb.com/AdminOpsGuide/basicops.html#ydb-zinterrupt>`_ / `$ZINTERRUPT <./isv.html#zinterrupt>`_, the blocking process will create a dump file of its process state.
+ - The value returned by :ref:`zsigproc-function` used to send SIGUSR1 (a `MUPIP INTRPT <../AdminOpsGuide/dbmgmt.html#mupip-intrpt>`_) to the blocking pid. If appropriately configured (with `ydb_zinterrupt <../AdminOpsGuide/basicops.html#ydb-zinterrupt-env-var>`_ / :ref:`zinterrupt-isv`, the blocking process will create a dump file of its process state.
 
 If the calling pid and blocking pid are of different uids, the functionality of %YDBPROCSTUCKEXEC is reduced. Depending on security and system administration considerations of the system, it may be appropriate in such cases to create a small setuid root shell script to invoke %YDBPROCSTUCKEXEC. Depending your specific requirements, it may be appropriate to copy and adapt the standard routine for your environment.
 
 %YDBPROCSTUCKEXEC was added to YottaDB effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_.
+
+.. _ygblstat-util:
 
 ++++++++++++++++++++
 %YGBLSTAT()
@@ -2903,13 +2973,15 @@ YottaDB strongly recommends that except as documented here for sharing and gathe
 As they do for unshared statistics, shared statistics reflect all database actions for a TP transaction, including those during RESTARTs. Because the sharing of statistics is not a database operation that modifies the relative time stamps that YottaDB uses to maintain serialized operation preserving the Consistency and Isolation aspects of ACID operation, statistics generated by a sharing process inside a transaction (TSTART/TCOMMIT) do not cause transaction restarts as a consequence of updates to shared statistics by other processes.
 
 .. note::
-   See also: ydb_statsdir (which specifies the directory for database files into which processes that have opted-in to sharing global statistics place their statistics as binary data) and ydb_statshare (which specifies an initial value for the characteristic controlled by VIEW “[NO]STATSHARE” in application code) in the `Environment Variables <https://docs.yottadb.com/AdminOpsGuide/basicops.html#environment-variables>`_ section of the documentation. VIEW “[NO]STATSHARE”[:<region-list>] enables or disables database statistics sharing for listed regions which permit such sharing, more information `here <./commands.html#keywords-in-view-command>`_.
+   See also: ydb_statsdir (which specifies the directory for database files into which processes that have opted-in to sharing global statistics place their statistics as binary data) and ydb_statshare (which specifies an initial value for the characteristic controlled by VIEW “[NO]STATSHARE” in application code) in the `Environment Variables <../AdminOpsGuide/basicops.html#env-vars>`_ section of the documentation. VIEW “[NO]STATSHARE”[:<region-list>] enables or disables database statistics sharing for listed regions which permit such sharing, more information :ref:`here <keywords-view-command>`.
 
 ----------------------------
 UTF-8 Mode Utility Routines
 ----------------------------
 
 The %UTF2HEX and %HEX2UTF M utility routines provide conversions between UTF-8 and hexadecimal code-point representations. Both these utilities run only in UTF-8 mode; in M mode, they both trigger a run-time error.
+
+.. _utf2hex-util:
 
 ++++++++++++++++
 %UTF2HEX
@@ -2942,6 +3014,8 @@ Example:
 
 Note that %UTF2HEX provides functionality similar to the UNIX binary dump utility (od -x).
 
+.. _hex2utf-util:
+
 ++++++++++++++
 %HEX2UTF
 ++++++++++++++
@@ -2968,83 +3042,83 @@ Example:
 Utilities Summary Table
 -------------------------------
 
-+-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
-| Utility Name                                                          | Description                                                                                              |
-+=======================================================================+==========================================================================================================+
-| `%D`_                                                                 | Displays the current date in [d]d-mmm-[yy]yy format.                                                     |
-+-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
-| `%DATE`_                                                              | Converts input date to $HOROLOG format.                                                                  |
-+-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
-| `%DH`_                                                                | Converts decimal numbers to hexadecimal.                                                                 |
-+-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
-| `%DO`_                                                                | Converts decimal numbers to octal.                                                                       |
-+-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
-| `%EXP`_                                                               | Raises number to the power of another number.                                                            |
-+-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
-| `%FL`_                                                                | Lists comment lines at the beginning of the source programs.                                             |
-+-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
-| `%FREECNT`_                                                           | Displays the number of free blocks in the database files associated with the current global directory.   |
-+-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
-| `%G`_                                                                 | Displays global variables and their values.                                                              |
-+-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
-| `%GBLDEF <./internatn.html#using-the-gbldef-utility>`_                | Manipulates the collation sequence assigned to a global.                                                 |
-+-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
-| `%GC`_                                                                | Copies a global or global sub-tree.                                                                      |
-+-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
-| `%GCE`_                                                               | Replaces a specified value or part of a value in a set of global variables.                              |
-+-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
-| `%GD`_                                                                | Displays existing globals in the current global directory without displaying their values or descendants.|
-+-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
-| `%GED`_                                                               | Provides full-screen editing capabilities for global variables and values.                               |
-+-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
-| `%GI`_                                                                | Enters global variables and their values from a sequential file into a database.                         |
-+-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
-| `%GO`_                                                                | Copies globals from the current database to a sequential output file.                                    |
-+-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
-| `%GSE`_                                                               | Displays global variables and their values when the values contain a specified string or number.         |
-+-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
-| `%GSEL`_                                                              | Selects globals by name.                                                                                 |
-+-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
-| `%H`_                                                                 | Converts date and time to and from $HOROLOG format.                                                      |
-+-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
-| `%HD`_                                                                | Converts hexadecimal numbers to decimal.                                                                 |
-+-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
-| `%HEX2UTF`_                                                           | Converts the given bytestream in hexadecimal notation to YottaDB encoded character string.               |
-+-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
-| `%HO`_                                                                | Converts hexadecimal numbers to octal.                                                                   |
-+-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
-| `%LCASE`_                                                             | Converts a string to all lower case.                                                                     |
-+-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
-| `%LCLCOL <./internatn.html#establishing-a-local-collation-sequence>`_ | Manipulates the collation sequence assigned to local variables.                                          |
-+-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
-| `%OD`_                                                                | Converts octal numbers to decimal.                                                                       |
-+-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
-| `%OH`_                                                                | Converts octal numbers to hexadecimal.                                                                   |
-+-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
-| `%PATCODE <./internatn.html#pattern-code-definition>`_                | Loads pattern definition files for use within an active database.                                        |
-+-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
-| `%RCE`_                                                               | Replaces every occurrence of a text string with another string in a routine or list of routines.         |
-+-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
-| `%RD`_                                                                | Lists routine names available through your $ZROUTINES search list.                                       |
-+-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
-| `%RI`_                                                                | Transfers routines from ANSI sequential format into individual .m files in YottaDB format.               |
-+-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
-| `%RO`_                                                                | Writes M routines in ANSI transfer format.                                                               |
-+-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
-| `%RSE`_                                                               | Searches for every occurrence of a text string in a routine or a list of routines.                       |
-+-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
-| `%RSEL`_                                                              | Selects M routines and places their directories and names in a local array.                              |
-+-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
-| `%SQROOT`_                                                            | Calculates the square root of a number.                                                                  |
-+-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
-| `%T`_                                                                 | Displays the current time in [h]h:mm AM/PM format.                                                       |
-+-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
-| `%TI`_                                                                | Converts time to $HOROLOG format.                                                                        |
-+-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
-| `%TO`_                                                                | Converts the current time from $HOROLOG format to [h]h:mm AM/PM format.                                  |
-+-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
-| `%UCASE`_                                                             | Converts a string to all upper case.                                                                     |
-+-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
-| `%UTF2HEX`_                                                           | Converts UTF-8 encoded YottaDB character string to bytestream in hexadecimal notation.                   |
-+-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
++-----------------------------------+----------------------------------------------------------------------------------------------------------+
+| Utility Name                      | Description                                                                                              |
++===================================+==========================================================================================================+
+| :ref:`d-util`                     | Displays the current date in [d]d-mmm-[yy]yy format.                                                     |
++-----------------------------------+----------------------------------------------------------------------------------------------------------+
+| :ref:`date-util`                  | Converts input date to $HOROLOG format.                                                                  |
++-----------------------------------+----------------------------------------------------------------------------------------------------------+
+| :ref:`dh-util`                    | Converts decimal numbers to hexadecimal.                                                                 |
++-----------------------------------+----------------------------------------------------------------------------------------------------------+
+| :ref:`do-util`                    | Converts decimal numbers to octal.                                                                       |
++-----------------------------------+----------------------------------------------------------------------------------------------------------+
+| :ref:`exp-util`                   | Raises number to the power of another number.                                                            |
++-----------------------------------+----------------------------------------------------------------------------------------------------------+
+| :ref:`fl-util`                    | Lists comment lines at the beginning of the source programs.                                             |
++-----------------------------------+----------------------------------------------------------------------------------------------------------+
+| :ref:`freecnt-util`               | Displays the number of free blocks in the database files associated with the current global directory.   |
++-----------------------------------+----------------------------------------------------------------------------------------------------------+
+| :ref:`g-util`                     | Displays global variables and their values.                                                              |
++-----------------------------------+----------------------------------------------------------------------------------------------------------+
+| :ref:`use-gbldef-util`            | Manipulates the collation sequence assigned to a global.                                                 |
++-----------------------------------+----------------------------------------------------------------------------------------------------------+
+| :ref:`gc-util`                    | Copies a global or global sub-tree.                                                                      |
++-----------------------------------+----------------------------------------------------------------------------------------------------------+
+| :ref:`gce-util`                   | Replaces a specified value or part of a value in a set of global variables.                              |
++-----------------------------------+----------------------------------------------------------------------------------------------------------+
+| :ref:`gd-util`                    | Displays existing globals in the current global directory without displaying their values or descendants.|
++-----------------------------------+----------------------------------------------------------------------------------------------------------+
+| :ref:`ged-util`                   | Provides full-screen editing capabilities for global variables and values.                               |
++-----------------------------------+----------------------------------------------------------------------------------------------------------+
+| :ref:`gi-util`                    | Enters global variables and their values from a sequential file into a database.                         |
++-----------------------------------+----------------------------------------------------------------------------------------------------------+
+| :ref:`go-util`                    | Copies globals from the current database to a sequential output file.                                    |
++-----------------------------------+----------------------------------------------------------------------------------------------------------+
+| :ref:`gse-util`                   | Displays global variables and their values when the values contain a specified string or number.         |
++-----------------------------------+----------------------------------------------------------------------------------------------------------+
+| :ref:`gsel-util`                  | Selects globals by name.                                                                                 |
++-----------------------------------+----------------------------------------------------------------------------------------------------------+
+| :ref:`h-util`                     | Converts date and time to and from $HOROLOG format.                                                      |
++-----------------------------------+----------------------------------------------------------------------------------------------------------+
+| :ref:`hd-util`                    | Converts hexadecimal numbers to decimal.                                                                 |
++-----------------------------------+----------------------------------------------------------------------------------------------------------+
+| :ref:`hex2utf-util`               | Converts the given bytestream in hexadecimal notation to YottaDB encoded character string.               |
++-----------------------------------+----------------------------------------------------------------------------------------------------------+
+| :ref:`ho-util`                    | Converts hexadecimal numbers to octal.                                                                   |
++-----------------------------------+----------------------------------------------------------------------------------------------------------+
+| :ref:`lcase-util`                 | Converts a string to all lower case.                                                                     |
++-----------------------------------+----------------------------------------------------------------------------------------------------------+
+| :ref:`establish-local-colln-seq`  | Manipulates the collation sequence assigned to local variables.                                          |
++-----------------------------------+----------------------------------------------------------------------------------------------------------+
+| :ref:`od-util`                    | Converts octal numbers to decimal.                                                                       |
++-----------------------------------+----------------------------------------------------------------------------------------------------------+
+| :ref:`oh-util`                    | Converts octal numbers to hexadecimal.                                                                   |
++-----------------------------------+----------------------------------------------------------------------------------------------------------+
+| :ref:`pattern-code-defn`          | Loads pattern definition files for use within an active database.                                        |
++-----------------------------------+----------------------------------------------------------------------------------------------------------+
+| :ref:`rce-util`                   | Replaces every occurrence of a text string with another string in a routine or list of routines.         |
++-----------------------------------+----------------------------------------------------------------------------------------------------------+
+| :ref:`rd-util`                    | Lists routine names available through your $ZROUTINES search list.                                       |
++-----------------------------------+----------------------------------------------------------------------------------------------------------+
+| :ref:`ri-util`                    | Transfers routines from ANSI sequential format into individual .m files in YottaDB format.               |
++-----------------------------------+----------------------------------------------------------------------------------------------------------+
+| :ref:`ro-util`                    | Writes M routines in ANSI transfer format.                                                               |
++-----------------------------------+----------------------------------------------------------------------------------------------------------+
+| :ref:`rse-util`                   | Searches for every occurrence of a text string in a routine or a list of routines.                       |
++-----------------------------------+----------------------------------------------------------------------------------------------------------+
+| :ref:`rsel-util`                  | Selects M routines and places their directories and names in a local array.                              |
++-----------------------------------+----------------------------------------------------------------------------------------------------------+
+| :ref:`sqroot-util`                | Calculates the square root of a number.                                                                  |
++-----------------------------------+----------------------------------------------------------------------------------------------------------+
+| :ref:`t-util`                     | Displays the current time in [h]h:mm AM/PM format.                                                       |
++-----------------------------------+----------------------------------------------------------------------------------------------------------+
+| :ref:`ti-util`                    | Converts time to $HOROLOG format.                                                                        |
++-----------------------------------+----------------------------------------------------------------------------------------------------------+
+| :ref:`to-util`                    | Converts the current time from $HOROLOG format to [h]h:mm AM/PM format.                                  |
++-----------------------------------+----------------------------------------------------------------------------------------------------------+
+| :ref:`ucase-util`                 | Converts a string to all upper case.                                                                     |
++-----------------------------------+----------------------------------------------------------------------------------------------------------+
+| :ref:`utf2hex-util`               | Converts UTF-8 encoded YottaDB character string to bytestream in hexadecimal notation.                   |
++-----------------------------------+----------------------------------------------------------------------------------------------------------+
 

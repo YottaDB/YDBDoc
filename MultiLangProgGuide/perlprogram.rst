@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2021 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2021-2021 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -25,7 +25,7 @@ The `YottaDB Perl pod <https://metacpan.org/pod/YottaDB>`_ (wrapper) was develop
 
 The YottaDB Perl wrapper requires a minimum YottaDB version of r1.28.
 
-The `Perl Quick Start`_ assumes that YottaDB has been already installed as described in the `Quick Start <../MultiLangProgGuide/MultiLangProgGuide.html#quick-start>`_ section. After installing YottaDB, download the Perl wrapper, install and test it.
+The `Perl Quick Start`_ assumes that YottaDB has been already installed as described in the :ref:`mlpg-quick-start` section. After installing YottaDB, download the Perl wrapper, install and test it.
 
 .. code-block:: bash
 

@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2021 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2017-2021 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -29,7 +29,7 @@ ABNCOMPTINC, Deviceparameter xxxx and deviceparameter yyyy are not compatible in
 
 Compile Time Error: The command specifies incompatible deviceparameters (e.g., specifying both FIXED and VARIABLE).
 
-Action: Refer to `Chapter 9 Input Output Processing in the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/ioproc.html>`_ and modify the list.
+Action: Refer to `Chapter 9 Input Output Processing in the Programmer's Guide <../ProgrammersGuide/ioproc.html>`_ and modify the list.
 
 ----------
 ACOMPTBINC
@@ -89,7 +89,7 @@ ACTRANGE, Alternate Collating Type xxxx is out of range
 
 Run Time Error: The alternate collation sequence type does not fall in the expected range of 0 to 255.
 
-Action: Define a new collation sequence type that has a value between 0 and 255 inclusive. For more information, refer the `"Internationalization" chapter of the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/internatn.html>`_.
+Action: Define a new collation sequence type that has a value between 0 and 255 inclusive. For more information, refer the `"Internationalization" chapter of the Programmer's Guide <../ProgrammersGuide/internatn.html>`_.
 
 ------------
 ADDRTOOLONG
@@ -319,7 +319,7 @@ BADCHAR, XXX is not a valid character in the YYY encoding form.
 
 Run Time Error: YottaDB triggers this error when it encounters a byte sequence that is not legal according to the given character set of the current device.
 
-Action: Correct your application or its configuration to handle this situation. Depending on application requirements, the code may need to handle the illegal byte sequence or disable the triggering of the BADCHAR error using the VIEW "NOBADCHAR" command. If the error is from a READ or WRITE command to a device other than $PRINCIPAL, the application can perform I/O in M-mode and then handle any needed conversion, correction, or other manipulation. For more information, refer to the `Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/index.html>`_.
+Action: Correct your application or its configuration to handle this situation. Depending on application requirements, the code may need to handle the illegal byte sequence or disable the triggering of the BADCHAR error using the VIEW "NOBADCHAR" command. If the error is from a READ or WRITE command to a device other than $PRINCIPAL, the application can perform I/O in M-mode and then handle any needed conversion, correction, or other manipulation. For more information, refer to the `Programmer's Guide <../ProgrammersGuide/index.html>`_.
 
 --------
 BADCHSET
@@ -369,7 +369,7 @@ BADJPIPARAM, xxxx is not a legal parameter for $ZGETJPI()
 
 Run Time Error: This indicates that the argument xxxx is not a valid keyword for $ZGETJPI().
 
-Action: Refer to the `Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/index.html>`_ for correct keyword usage.
+Action: Refer to the `Programmer's Guide <../ProgrammersGuide/index.html>`_ for correct keyword usage.
 
 -------------
 BADLKIPARAM
@@ -379,7 +379,7 @@ BADLKIPARAM, xxxx is not a legal parameter for $ZGETLKI()
 
 Run Time Error: This indicates that the argument xxxx is not a valid keyword for $ZGETLKI().
 
-Action: Refer to the `Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/index.html>`_ for correct keyword usage.
+Action: Refer to the `Programmer's Guide <../ProgrammersGuide/index.html>`_ for correct keyword usage.
 
 -----------
 BADLOCKNEST
@@ -431,7 +431,7 @@ BADSYIPARAM, xxxx is not a legal parameter to $ZGETSYI()
 
 Run Time Error: This indicates that the argument xxxx for $ZGETSYI() is not a valid keyword.
 
-Action: Refer to the `Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/index.html>`_ for correct keyword usage.
+Action: Refer to the `Programmer's Guide <../ProgrammersGuide/index.html>`_ for correct keyword usage.
 
 -----------
 BADTRNPARAM
@@ -441,7 +441,7 @@ BADTRNPARAM, xxxx is not a legal parameter to $ZTRNLNM
 
 Run Time Error: This indicates that the argument xxxx for $ZTRNLNM() is not a valid keyword.
 
-Action: Refer to the `Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/index.html>`_ for correct keyword usage.
+Action: Refer to the `Programmer's Guide <../ProgrammersGuide/index.html>`_ for correct keyword usage.
 
 -------------
 BADZPEEKARG
@@ -982,7 +982,7 @@ CINOENTRY, No entry specified for xxxx in the call-in table
 
 Run Time Error: This indicates that the call-name invoked by the C program does not have a corresponding entry in the call-in table specified by ydb_ci environment variable.
 
-Action: Add an entry to the call-in table for the call-name. Refer to the `External Calls chapter in the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/langfeat.html#external-calls>`_.
+Action: Add an entry to the call-in table for the call-name. Refer to the `External Calls section in the Programmer's Guide <../ProgrammersGuide/langfeat.html#ext-calls>`_.
 
 -----------------------
 CIPARTYPE
@@ -992,7 +992,7 @@ CIPARTYPE, Invalid type specification for O/IO directive - expected pointer type
 
 Syntax/Call in Error: This indicates that non-pointer types were specified for the parameters to be passed by output-only (O) and input-output (IO) conventions.
 
-Action: Make sure one of the valid pointer types is specified for O and IO parameters. Refer to the `External Calls chapter in the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/langfeat.html#external-calls>`_.
+Action: Make sure one of the valid pointer types is specified for O and IO parameters. Refer to the `External Calls section in the Programmer's Guide <../ProgrammersGuide/langfeat.html#ext-calls>`_.
 
 
 ------------------
@@ -1013,7 +1013,7 @@ CIRPARMNAME, Invalid parameter specification for call-in table
 
 Syntax/Call in Error: This indicates that a syntax error was found in parameter specification in the call-in table.
 
-Action: Correct the syntax errors and make sure the parameters are correctly specified. Refer to the `External Calls chapter in the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/langfeat.html#external-calls>`_.
+Action: Correct the syntax errors and make sure the parameters are correctly specified. Refer to the `External Calls section in the Programmer's Guide <../ProgrammersGuide/langfeat.html#ext-calls>`_.
 
 
 ------------------
@@ -1056,7 +1056,7 @@ CIUNTYPE, Unknown parameter type encountered
 
 Syntax/Call in Error: This indicates that missing or invalid parameter type specified for the entry displayed by the previous messages EXTSRCLIN and EXTSRCLOC.
 
-Action: Make sure one of the valid parameter types is specified for the parameter in the entry displayed. Refer to the `External Calls chapter in Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/langfeat.html#external-calls>`_.
+Action: Make sure one of the valid parameter types is specified for the parameter in the entry displayed. Refer to the `External Calls section in Programmer's Guide <../ProgrammersGuide/langfeat.html#ext-calls>`_.
 
 
 -----------------
@@ -1185,7 +1185,7 @@ COLLATIONUNDEF, Collation type xxxx is not defined
 
 Run Time Error: This indicates that an attempt was made to reference a collation sequence that is not available.
 
-Action: Ensure that the environment variable GTM_COLLATE_n is properly defined, where n is the identification number of the failing collation type. Ensure that the file referencing GTM_COLLATE_n is available to the process. Use host shell commands to verify its location and protections. Examine the executable (and/or the objects that comprise it) to determine whether it has the proper entry points. For more information, refer to the `"Internationalization" chapter of the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/internatn.html>`_.
+Action: Ensure that the environment variable GTM_COLLATE_n is properly defined, where n is the identification number of the failing collation type. Ensure that the file referencing GTM_COLLATE_n is available to the process. Use host shell commands to verify its location and protections. Examine the executable (and/or the objects that comprise it) to determine whether it has the proper entry points. For more information, refer to the `"Internationalization" chapter of the Programmer's Guide <../ProgrammersGuide/internatn.html>`_.
 
 ----------------
 COLLDATAEXISTS
@@ -1621,7 +1621,7 @@ CTLMNEXPECTED, Control mnemonic is expected in this context
 
 Run Time Error: This indicates that YottaDB requires a control mnemonic in this context.
 
-Action: Modify the spelling of the control mnemonic. Refer to the `Input Output Processing chapter in the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/ioproc.html>`_.
+Action: Modify the spelling of the control mnemonic. Refer to the `Input Output Processing chapter in the Programmer's Guide <../ProgrammersGuide/ioproc.html>`_.
 
 -----------------
 CTRAP
@@ -2184,7 +2184,7 @@ DBCREINCOMP, xxxx Header indicates database file creation was interrupted before
 
 Run Time/MUPIP Error: This is either a MUPIP Integ error, or this indicates that a database operation tried to activate a database file that was improperly initialized.
 
-Action: Delete the damaged file and use MUPIP CREATE to recreate the database. Refer to `'MUPIP INTEG Error Messages' table in Chapter 11 - Maintaining Database Integrity of the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/integrity.html>`_.
+Action: Delete the damaged file and use MUPIP CREATE to recreate the database. Refer to `'MUPIP INTEG Error Messages' table in Chapter 11 - Maintaining Database Integrity of the Administration and Operations Guide <../AdminOpsGuide/integrity.html>`_.
 
 
 ----------------
@@ -2863,7 +2863,7 @@ DBNOREGION, None of the database regions accessible
 
 DSE/MUPIP Error: MUPIP INTEG or DSE can report this error. This indicates that none of the database files specified in the Global Directory could be opened (or they do not exist).
 
-Action: Ensure the proper assignment for the environment variable, ydb_gbldir/logical name GTM$GBLDIR. Verify that the database files specified in the Global Directory exist and that their protection allows access. Also, refer to the 'MUPIP INTEG Error Messages' table in the `Chapter 11 - Maintaining Database Integrity of the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/integrity.html>`_.
+Action: Ensure the proper assignment for the environment variable, ydb_gbldir/logical name GTM$GBLDIR. Verify that the database files specified in the Global Directory exist and that their protection allows access. Also, refer to the 'MUPIP INTEG Error Messages' table in the `Chapter 11 - Maintaining Database Integrity of the Administration and Operations Guide <../AdminOpsGuide/integrity.html>`_.
 
 -------------------
 DBNOTDB
@@ -3564,7 +3564,7 @@ DLLVERSION, Routine aaaa in library bbbb was compiled with an incompatible versi
 
 Run Time Error: This indicates that the routine aaaa that was loaded out of the shared library bbbb was compiled with a version of YottaDB that is not compatible with the current version of YottaDB.
 
-Action: Recompile the M routine aaaa and re-link (recreate) the shared library. The linker options for creating a shared library are platform dependant. Refer to the `Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/index.html>`_ for details.
+Action: Recompile the M routine aaaa and re-link (recreate) the shared library. The linker options for creating a shared library are platform dependant. Refer to the `Programmer's Guide <../ProgrammersGuide/index.html>`_ for details.
 
 --------------------------
 DLRCILLEGAL
@@ -6103,7 +6103,7 @@ INVVALUE, VVVV is invalid HEX value for $ZCONVERT(). Range is 1 to 16 unsigned h
 
 Run Time Error: This message has two forms both of which indicate that the value VVVV is not valid input for $ZCONVERT() in the specified base.
 
-Action: If the input value is expected to be within the range supported by $ZCONVERT(), the actual results from a coding issue or from input that is not validated, correct the issue. If input values are legitimately expected outside the range supported by $ZCONVERT() use the `%DH <https://docs.yottadb.com/ProgrammersGuide/utility.html#dh>`_ and `%HD <https://docs.yottadb.com/ProgrammersGuide/utility.html#hd>`_ utility programs.
+Action: If the input value is expected to be within the range supported by $ZCONVERT(), the actual results from a coding issue or from input that is not validated, correct the issue. If input values are legitimately expected outside the range supported by $ZCONVERT() use the `%DH <../ProgrammersGuide/utility.html#dh-util>`_ and `%HD <../ProgrammersGuide/utility.html#hd-util>`_ utility programs.
 
 -----------
 INVVARNAME
@@ -6121,6 +6121,8 @@ f) The variable name starts with a character other than a % or an alpha characte
 g) The variable name starts with a % or alpha character (lower or upper case) but at least one of the following characters is not an alphanumeric character (lower or upper case alphabet or a decimal digit)
 
 Action: Determine which of the described failures scenarios is the issue and accordingly fix the variable name passed in to the SimpleAPI call.
+
+.. _invydbexit-error:
 
 --------------------
 INVYDBEXIT
@@ -7305,7 +7307,7 @@ JOBPARUNK, Job parameter unknown
 
 Compile Time Error: This indicates that a JOB command specified an invalid jobparameter keyword.
 
-Action: Specify a valid jobparameter keyword. Refer to the `Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/index.html>`_ for a valid keyword.
+Action: Specify a valid jobparameter keyword. Refer to the `Programmer's Guide <../ProgrammersGuide/index.html>`_ for a valid keyword.
 
 -----------------------
 JOBPARVALREQ
@@ -7509,6 +7511,8 @@ Run Time Error: A GOTO referenced a label with neither a routine nor an offset b
 
 Action: Check the errors from the compilation, as they provide the name of the missing label. As appropriate, add the label or a routine, or better yet - refactor to remove the GOTO.
 
+.. _labelonly-error:
+
 ---------------------
 LABELONLY
 ---------------------
@@ -7623,7 +7627,7 @@ MUPIP Error: This error indicates that MUPIP LOAD encountered an issue with a sp
 - Global value too large: expected size : sssss actual size : tttttt chunk number : ccccc
 - Expected size : sssss actual size : ttttt
 
-Action: Refer to the LDSPANGLOINCMP Errors section in the `Maintaining Database Integrity chapter of the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/integrity.html>`_.
+Action: Refer to the LDSPANGLOINCMP Errors section in the `Maintaining Database Integrity chapter of the Administration and Operations Guide <../AdminOpsGuide/integrity.html>`_.
 
 ----------------------
 LIBYOTTAMISMTCH
@@ -8053,7 +8057,7 @@ LVNULLSUBS, LVNULLSUBS Null subscripts not allowed in local variables
 
 Run Time Error: This indicates that an attempt was made to set a local variable with a null subscript.
 
-Action: Modify the generation of subscripts to avoid the null subscript or change the LVNULLSUBS parameter for this job or process. For information on changing LVNULLSUBS, refer to documentation on GTM$DEFAULTS and the VIEW command in the `Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/index.html>`_.
+Action: Modify the generation of subscripts to avoid the null subscript or change the LVNULLSUBS parameter for this job or process. For information on changing LVNULLSUBS, refer to documentation on GTM$DEFAULTS and the VIEW command in the `Programmer's Guide <../ProgrammersGuide/index.html>`_.
 
 -----------------
 LVORDERARG
@@ -8131,7 +8135,7 @@ MAXARGCNT
 
 MAXARGCNT, Maximum number of arguments xxxx exceeded
 
-Compile Time/Run Time Error: If this error occurs during compilation, it indicates that a command or function specified more than xxxx arguments. If this error occurs during run-time execution, it indicates that a SET of $ZROUTINES has more than the allowed number of elements in an array. The maximum number of arguments is xxxx. This error can also occur if more than 253 arguments are concatenated. Concatenation in M is described in the `String Operators <https://docs.yottadb.com/ProgrammersGuide/langfeat.html#string-operators>`_ section.
+Compile Time/Run Time Error: If this error occurs during compilation, it indicates that a command or function specified more than xxxx arguments. If this error occurs during run-time execution, it indicates that a SET of $ZROUTINES has more than the allowed number of elements in an array. The maximum number of arguments is xxxx. This error can also occur if more than 253 arguments are concatenated. Concatenation in M is described in the `String Operators <../ProgrammersGuide/langfeat.html#m-string-operators>`_ section.
 
 Action: If this error occurs during compilation, it indicates that a command or function specified more than xxxx arguments. If this error occurs during run-time execution, it indicates that a SET of $ZROUTINES has more than the allowed number of elements in an array. The maximum number of arguments is xxxx.
 
@@ -8194,6 +8198,8 @@ MAXSSREACHED, Maximum snapshots - mmmm - for region rrrr reached. Please wait fo
 MUPIP Error: Starting this snapshot would exceed the maximum number of snapshots.
 
 Action: Wait for a currently active process using snapshots to complete or terminate an existing snapshot activity.
+
+.. _maxstrlen-error:
 
 ---------------------
 MAXSTRLEN
@@ -8453,7 +8459,7 @@ MRTMAXEXCEEDED, Maximum value of xxxx for SOCKET deviceparameter MOREREADTIME ex
 
 Compile Time/Run Time Error: YottaDB triggers this error when MOREREADTIME exceeds its maximum value of 999ms.
 
-Action: Specify a value between 1 and 999. Never set MOREREADTIME to 0 as it may cause a CPU to "spin". See `"Input/Output Processing" Chapter of the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/ioproc.html>`_ for more information.
+Action: Specify a value between 1 and 999. Never set MOREREADTIME to 0 as it may cause a CPU to "spin". See `"Input/Output Processing" Chapter of the Programmer's Guide <../ProgrammersGuide/ioproc.html>`_ for more information.
 
 --------------------
 MSTACKCRIT
@@ -9102,7 +9108,7 @@ MUSIZEINVARG, MUPIP SIZE : Invalid parameter value for: xxxx
 
 MUPIP Error: This indicates that MUPIP SIZE encountered a qualifier or parameter xxxx with an invalid value
 
-Action: Review the proper syntax for MUPIP SIZE. Refer to the `Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/index.html>`_ or the online help for the MUPIP SIZE command.
+Action: Review the proper syntax for MUPIP SIZE. Refer to the `Administration and Operations Guide <../AdminOpsGuide/index.html>`_ or the online help for the MUPIP SIZE command.
 
 ---------------------
 MUSTANDALONE
@@ -9817,7 +9823,7 @@ NOJNL, ssss segments do not support journaling.
 
 MUPIP Error: This error indicates that the segment type ssss does not support journaling.
 
-Action: For more information on Journaling, refer to the `Journaling chapter in the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/ydbjournal.html>`_.
+Action: For more information on Journaling, refer to the `Journaling chapter in the Administration and Operations Guide <../AdminOpsGuide/ydbjournal.html>`_.
 
 --------------------
 NOJNLPOOL
@@ -9887,7 +9893,7 @@ NONEGATE, Qualifier xxxx cannot be negated
 
 GDE Error: This indicates that the qualifier does not support this usage.
 
-Action: Review the `Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/index.html>`_ or the `Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/index.html>`_ for the correct usage.
+Action: Review the `Administration and Operations Guide <../AdminOpsGuide/index.html>`_ or the `Programmer's Guide <../ProgrammersGuide/index.html>`_ for the correct usage.
 
 -------------------
 NONTPRESTART
@@ -9895,7 +9901,7 @@ NONTPRESTART
 
 NONTPRESTART, Database dddd; code: cccc; blk: bbbb in glbl: ^gggg; blklvl: llll, type: tttt, zpos: pppp
 
-Run Time Information: This is an informational message for non-TP transaction messages. The frequency of this message can be set by $ydb_nontprestart_log_delta and $ydb_nontprestart_log_first environment variables. dddd is the database where the restart occurred; cccc is the code described in the `Maintaining Database Integrity chapter of the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/integrity.html>`_; bbbb is the block where YottaDB detected a concurrency conflict that caused the restart; gggg shows the global reference within that block; llll is the level of that block; tttt indicates the type of activity that detected the conflict; pppp is the source line where restart ocurred on. Non-graphic codes are reported as :code:`0xnn`.
+Run Time Information: This is an informational message for non-TP transaction messages. The frequency of this message can be set by $ydb_nontprestart_log_delta and $ydb_nontprestart_log_first environment variables. dddd is the database where the restart occurred; cccc is the code described in the `Maintaining Database Integrity chapter of the Administration and Operations Guide <../AdminOpsGuide/integrity.html>`_; bbbb is the block where YottaDB detected a concurrency conflict that caused the restart; gggg shows the global reference within that block; llll is the level of that block; tttt indicates the type of activity that detected the conflict; pppp is the source line where restart ocurred on.
 
 Action: None required in most cases. If the messages are too frequent, either investigate the processes that reference to that particular global and its block, or reduce the number of messages by tweaking the $ydb_nontprestart_log_delta and $ydb_nontprestart_log_first environment variables.
 
@@ -10794,7 +10800,7 @@ PATTABSYNTAX, Error in xxxx at line yyyy
 
 Compile Time/Run Time Error: This indicates that YottaDB found an error on line yyyy of the file xxxx that defines the patterns to be used by the pattern match operator.
 
-Action: Modify the pattern match file and reload it. For more information, refer to the `"Internationalization" chapter in the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/internatn.html>`_.
+Action: Modify the pattern match file and reload it. For more information, refer to the `"Internationalization" chapter in the Programmer's Guide <../ProgrammersGuide/internatn.html>`_.
 
 ---------------------
 PATUPPERLIM
@@ -11098,7 +11104,7 @@ QUERY2, Invalid second argument to $QUERY. Must be -1 or 1.
 
 Run Time Error: This indicates that there is an invalid second argument passed to the function $QUERY. It must be either -1 or 1.
 
-Action: Refer to `$QUERY in the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/functions.html#query>`_ for correct usage.
+Action: Refer to `$QUERY in the Programmer's Guide <../ProgrammersGuide/functions.html#query-function>`_ for correct usage.
 
 ------------------
 QUITALSINV
@@ -11448,7 +11454,7 @@ REPLBRKNTRANS, Replication subsystem found transaction xxxx broken or missing in
 
 MUPIP Error: This indicates that while attempting to read the transaction with journal sequence number xxxx from journal files, the source server could not find all (or any) journal records belonging to that transaction.
 
-Action: Restore the journal generation links, and/or the journal files. Deactivate and activate the source server (or shutdown and restart the source server). If the journal files that are needed are no longer available, follow the procedure for restoring the secondary from the backup of the primary detailed in the `Replication chapter of the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html>`_.
+Action: Restore the journal generation links, and/or the journal files. Deactivate and activate the source server (or shutdown and restart the source server). If the journal files that are needed are no longer available, follow the procedure for restoring the secondary from the backup of the primary detailed in the `Replication chapter of the Administration and Operations Guide <../AdminOpsGuide/dbrepl.html>`_.
 
 -----------------------
 REPLCOMM
@@ -11807,7 +11813,7 @@ REPLJNLCNFLCT, Journaling cannot be turned nnnn on database file ffff as the rep
 
 MUPIP Warning: This message indicates that the requested journaling state (nnnn) and current replication state (rrrr) do not match and the command must explicitly specify an outcome such that they do match.
 
-Action: Using DSE, dump the file header for each affected region. If the replication state is "WAS_ON" please consult the section on "Recovering from the replication WAS_ON state" from the `Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/index.html>`_. For all other cases, issue one or more commands that leave journaling and replication either both ON or both OFF.
+Action: Using DSE, dump the file header for each affected region. If the replication state is "WAS_ON" please consult the section on "Recovering from the replication WAS_ON state" from the `Administration and Operations Guide <../AdminOpsGuide/index.html>`_. For all other cases, issue one or more commands that leave journaling and replication either both ON or both OFF.
 
 -----------------------
 REPLLOGOPN
@@ -11957,7 +11963,7 @@ REPLSTATEOFF, MUPIP JOURNAL -ROLLBACK -BACKWARD cannot proceed as database xxxx 
 
 MUPIP Error: This indicates that a MUPIP JOURNAL -ROLLBACK -BACKWARD command cannot proceed because the specified database xxxx does not have replication state ON. In most situations, this error occurs when the journal file storage runs out of disk space.
 
-Action: Ensure replication is turned ON for a database, before executing the MUPIP JOURNAL -ROLLBACK -BACKWARD command. If the database is in the WAS_ON state, refer to the "Recovering from the WAS_ON state" section in the `Database Replication chapter of the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html>`_. Alternatively, if replication was not in use on the database, use MUPIP JOURNAL -RECOVER.
+Action: Ensure replication is turned ON for a database, before executing the MUPIP JOURNAL -ROLLBACK -BACKWARD command. If the database is in the WAS_ON state, refer to the "Recovering from the WAS_ON state" section in the `Database Replication chapter of the Administration and Operations Guide <../AdminOpsGuide/dbrepl.html>`_. Alternatively, if replication was not in use on the database, use MUPIP JOURNAL -RECOVER.
 
 ---------------------
 REPLTRANS2BIG
@@ -12007,7 +12013,7 @@ REQDVIEWPARM, Required View parameter is missing
 
 Run Time Error: This indicates that the failed program attempted to use the VIEW function without specifying a keyword argument or with an invalid keyword argument.
 
-Action: Programmers should consult the `Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/index.html>`_ for the correct syntax.
+Action: Programmers should consult the `Programmer's Guide <../ProgrammersGuide/index.html>`_ for the correct syntax.
 
 ---------------------------
 REQRECOV
@@ -12507,7 +12513,7 @@ SELECTSYNTAX, Argument to xxxx clause is not valid
 
 MUPIP Error: This indicates that EXTRACT encountered a qualifier with an invalid value and aborted.
 
-Action: Review the proper syntax for EXTRACT with the qualifier SELECT. Refer to the `Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/index.html>`_ or the online help for the MUPIP EXTRACT command.
+Action: Review the proper syntax for EXTRACT with the qualifier SELECT. Refer to the `Administration and Operations Guide <../AdminOpsGuide/index.html>`_ or the online help for the MUPIP EXTRACT command.
 
 --------------------
 SEMID
@@ -12898,6 +12904,8 @@ SIGPRVREG, Signal was caused by a privileged register
 Run Time Error: This message is an auxiliary message and is preceded by a primary KILLBYSIGxxx message.
 
 Action: Refer to the accompanying message(s) and take appropriate action. Refer to the user documentation. If necessary, report the entire incident context to your YottaDB support channel for further analysis.
+
+.. _simpleapinest-error:
 
 -----------------
 SIMPLEAPINEST
@@ -13440,7 +13448,7 @@ STPCRIT, String pool space critical
 
 Run Time Error: This indicates that the process has exceeded the heap (string pool) limit specified in the $ZSTRPLLIM ISV. If you do not take prompt action to reduce the process memory requirements, at the next heap expansion, YottaDB produces an STPOFLOW error, which terminates the process.
 
-Action: Investigate whether the process memory usage is appropriate, and if so, increase or remove the limit. Otherwise correct the cause(s) of the excessive memory consumption. Please see the documentation for `$ZSTRPLLIM <https://docs.yottadb.com/ProgrammersGuide/isv.html#zstrpllim>`_ for additional information.
+Action: Investigate whether the process memory usage is appropriate, and if so, increase or remove the limit. Otherwise correct the cause(s) of the excessive memory consumption. Please see the documentation for `$ZSTRPLLIM <../ProgrammersGuide/isv.html#zstrpllim-isv>`_ for additional information.
 
 ----------------
 STPEXPFAIL
@@ -13760,7 +13768,7 @@ TIMERHANDLER, Incorrect SIGALRM handler xxxx found by yyyy
 
 Run Time Information: This indicates that an external user-supplied routine (C or other language) called from YottaDB, incorrectly manipulated the system timer handler. The xxxx is the hexadecimal address of the handler installed by the external routine and yyyy is the routine within YottaDB, which discovered the problem.
 
-Action: Use the YottaDB-provided timer facility described in the `Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/index.html>`_ .
+Action: Use the YottaDB-provided timer facility described in the `Programmer's Guide <../ProgrammersGuide/index.html>`_ .
 
 -----------------
 TIMEROVFL
@@ -14238,7 +14246,7 @@ TRIGLOADFAIL
 
 TRIGLOADFAIL, MUPIP TRIGGER or $ZTRIGGER operation failed. Failure code: xxxx
 
-Trigger/Run Time Error: This indicates that a trigger install (using $ZTRIGGER() or MUPIP TRIGGER) encountered a database problem when it attempted to update a global variable. xxxx contains the failure codes for the four attempts as documented in section R2 of the `Maintaining Database Integrity chapter in the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/integrity.html>`_. It is very likely that the database may have integrity errors or that the process-private data structures are corrupted.
+Trigger/Run Time Error: This indicates that a trigger install (using $ZTRIGGER() or MUPIP TRIGGER) encountered a database problem when it attempted to update a global variable. xxxx contains the failure codes for the four attempts as documented in section R2 of the `Maintaining Database Integrity chapter in the Administration and Operations Guide <../AdminOpsGuide/integrity.html>`_. It is very likely that the database may have integrity errors or that the process-private data structures are corrupted.
 
 Action: Report this database error to the group responsible for database integrity at your operation
 
@@ -15303,7 +15311,7 @@ ZCUNTYPE, Unknown type entered
 
 Run Time Error: This indicates that the program used an invalid external call parameter.
 
-Action: Refer to the `Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/index.html>`_ for valid external call parameters.
+Action: Refer to the `Programmer's Guide <../ProgrammersGuide/index.html>`_ for valid external call parameters.
 
 --------------------
 ZCVECTORINDX

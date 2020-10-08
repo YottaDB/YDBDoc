@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2017-2021 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -81,7 +81,7 @@ While journal files automatically switch to new files when the limit is reached,
 
 2. Source Server, Receiver Server, and Update Process log files.
 
-Since database health is critical, database growth warrants special attention. Ensure every file system holding a database file has sufficient space to handle the anticipated growth of the files it holds. Remember that with the lazy allocation used by UNIX file systems, all files in a system compete for space. YottaDB issues an informational message each time it extends a database file. When extending a file, it also issues a warning if the remaining space is less than three times the extension size. You can use the `$VIEW() function <https://docs.yottadb.com/ProgrammersGuide/functions.html#view>`_ to find out the total number of blocks in a database as well as the number of free blocks.
+Since database health is critical, database growth warrants special attention. Ensure every file system holding a database file has sufficient space to handle the anticipated growth of the files it holds. Remember that with the lazy allocation used by UNIX file systems, all files in a system compete for space. YottaDB issues an informational message each time it extends a database file. When extending a file, it also issues a warning if the remaining space is less than three times the extension size. You can use the `$VIEW() function <../ProgrammersGuide/functions.html#view-function>`_ to find out the total number of blocks in a database as well as the number of free blocks.
 
 As journal files grow with every update, they use up disk faster than database files do. YottaDB issues messages when a journal file reaches within three, two or one extension-size number of blocks from the automatic journal file switch limit. YottaDB also issues messages when a journal file reaches its specified maximum size, at which time YottaDB closes the file, renames it, and creates a new journal file. Journal files covering time periods prior to the last database backup (or prior to the backup of replicating secondary instances) are not needed for continuity of business, and can be deleted or archived, depending on your retention policy. Check the amount of free space in file systems at least hourly and perhaps more often, especially file systems used for journaling, and take action if it falls below a threshold.
 

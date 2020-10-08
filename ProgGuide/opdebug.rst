@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2017-2021 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -180,7 +180,7 @@ The ANSI M Standard describes certain M operations in terms of how a stack-based
 
 The stack model provides a trail of routines currently in progress that shows the location of all the M operations that performed the invocations leading to the current point.
 
-The ZSHOW command makes this stack information available within YottaDB. For more information, see `Using the Invocation Stack in Debugging`_ in this chapter, and the command description at `“ZSHow” <./commands.html#zshow>`_.
+The ZSHOW command makes this stack information available within YottaDB. For more information, see :ref:`use-invocatn-stack-debug` in this chapter, and the command description at :ref:`zshow-command`.
 
 +++++++++++++++++++++++++++++++
 Exiting Direct Mode
@@ -455,6 +455,8 @@ Example:
 
 This invokes direct mode with a <CTRL-C>.
 
+.. _use-invocatn-stack-debug:
+
 ++++++++++++++++++++++++++++++++++++++++
 Using the Invocation Stack in Debugging
 ++++++++++++++++++++++++++++++++++++++++
@@ -641,7 +643,7 @@ This example uses the asterisk (*) argument to show all information that ZSHOW o
 
 Context information that does not exist in this example includes M LOCKs of this process (ZSHOW "L").
 
-In addition to directing its output to the current device, ZSHOW can place its output in a local or global variable array. For more information, see the command description `“ZSHow” <./commands.html#zshow>`_.
+In addition to directing its output to the current device, ZSHOW can place its output in a local or global variable array. For more information, see the command description :ref:`zshow-command`.
 
 .. note::
    ZSHOW "V" produces the same output as ZWRITE with no arguments, but ZSHOW "V" can be directed to a variable as well as a device.
@@ -798,61 +800,61 @@ For more information on syntax and run-time errors during Direct Mode, see `Chap
 
 **Debugging Tools**
 
-+-------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
-| Extension                                       | Explanation                                                                                                                 |
-+=================================================+=============================================================================================================================+
-| `$ECode <./isv.html#ecode>`_                    | Contains a list of errors since it was last cleared                                                                         |
-+-------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
-| `$STack <./isv.html#stack-isv>`_                | Contains the current level of DO/XECUTE nesting from a base of zero (0).                                                    |
-+-------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
-| `$STack() <./functions.html#stack>`_            | Returns information about the M virtual stack context, most of which freezes when an error changes $ECODE from the empty    |
-|                                                 | string to a list value.                                                                                                     |
-+-------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
-| `ZBreak <./commands.html#zbreak>`_              | Establishes a temporary breakpoint, with optional count and M action.                                                       |
-+-------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
-| `ZCOMpile <./commands.html#zcompile>`_          | Invokes the YottaDB compiler without a corresponding ZLINK.                                                                 |
-+-------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
-| `ZContinue <./commands.html#zcontinue>`_        | Continues routine execution from a break.                                                                                   |
-+-------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
-| `ZEDit <./commands.html#zedit>`_                | Invokes the UNIX text editor specified by the EDITOR environment variable.                                                  |
-+-------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
-| `ZGoto <./commands.html#zgoto>`_                | Removes zero or more levels from the M invocation stack and transfers control.                                              |
-+-------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
-| `ZLink <./commands.html#zlink>`_                | Includes a new or modified M routine in the current M image; automatically recompiles if necessary.                         |
-+-------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
-| `ZMessage <./commands.html#zmessage>`_          | Signals a specified condition.                                                                                              |
-+-------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
-| `ZPrint <./commands.html#zprint>`_              | Displays lines of source code.                                                                                              |
-+-------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
-| `ZSHow <./commands.html#zshow>`_                | Displays information about the M environment.                                                                               |
-+-------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
-| `ZSTep <./commands.html#zstep>`_                | Incrementally executes a routine to the beginning of the next line of the specified type.                                   |
-+-------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
-| `ZSYstem <./commands.html#zsystem>`_            | Invokes the shell, creating a forked process.                                                                               |
-+-------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
-| `ZWRite <./commands.html#zwrite-command>`_      | Displays all or some local or global variables.                                                                             |
-+-------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
-| `$ZCSTATUS <./isv.html#zcstatus>`_              | Contains the value of the status code for the last compile performed by a ZCOMPILE command.                                 |
-+-------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
-| `$ZEDit <./commands.html#zedit>`_               | Contains the status code for the last ZEDit.                                                                                |
-+-------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
-| `$ZLEVel <./isv.html#zlevel>`_                  | Contains the current level of DO/EXECUTE nesting.                                                                           |
-+-------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
-| `$ZMessage() <./functions.html#zmessage>`_      | Returns the text associated with an error condition code.                                                                   |
-+-------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
-| `$ZPOSition <./isv.html#zposition>`_            | Contains a string indicating the current execution location.                                                                |
-+-------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
-| `$ZPROmpt <./isv.html#zprompt>`_                | Controls the symbol displayed as the direct mode prompt.                                                                    |
-+-------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
-| `$ZROutines <./isv.html#zroutines>`_            | Contains a string specifying a directory list containing the object, and optionally, the source files.                      |
-+-------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
-| `$ZSOurce <./isv.html#zsource>`_                | Contains the name of the M source program most recently ZLINKed or ZEDITed; default name for next ZEDIT or ZLINK.           |
-+-------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
-| `$ZStatus <./isv.html#zstatus>`_                | Contains error condition code and location of the last exception condition occurring during routine execution.              |
-+-------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
-| `$ZSTep <./isv.html#zstep>`_                    | Controls the default ZSTep action.                                                                                          |
-+-------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
-| `$ZSYstem <./isv.html#zsystem>`_                | Contains the status code of the last ZSYSTEM.                                                                               |
-+-------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
++---------------------------+-----------------------------------------------------------------------------------------------------------------------------+
+| Extension                 | Explanation                                                                                                                 |
++===========================+=============================================================================================================================+
+| :ref:`ecode-isv`          | Contains a list of errors since it was last cleared                                                                         |
++---------------------------+-----------------------------------------------------------------------------------------------------------------------------+
+| :ref:`stack-isv`          | Contains the current level of DO/XECUTE nesting from a base of zero (0).                                                    |
++---------------------------+-----------------------------------------------------------------------------------------------------------------------------+
+| :ref:`stack-function`     | Returns information about the M virtual stack context, most of which freezes when an error changes $ECODE from the empty    |
+|                           | string to a list value.                                                                                                     |
++---------------------------+-----------------------------------------------------------------------------------------------------------------------------+
+| :ref:`zbreak-command`     | Establishes a temporary breakpoint, with optional count and M action.                                                       |
++---------------------------+-----------------------------------------------------------------------------------------------------------------------------+
+| :ref:`zcompile-command`   | Invokes the YottaDB compiler without a corresponding ZLINK.                                                                 |
++---------------------------+-----------------------------------------------------------------------------------------------------------------------------+
+| :ref:`zcontinue-command`  | Continues routine execution from a break.                                                                                   |
++---------------------------+-----------------------------------------------------------------------------------------------------------------------------+
+| :ref:`zedit-command`      | Invokes the UNIX text editor specified by the EDITOR environment variable.                                                  |
++---------------------------+-----------------------------------------------------------------------------------------------------------------------------+
+| :ref:`zgoto-command`      | Removes zero or more levels from the M invocation stack and transfers control.                                              |
++---------------------------+-----------------------------------------------------------------------------------------------------------------------------+
+| :ref:`zlink-command`      | Includes a new or modified M routine in the current M image; automatically recompiles if necessary.                         |
++---------------------------+-----------------------------------------------------------------------------------------------------------------------------+
+| :ref:`zmessage-command`   | Signals a specified condition.                                                                                              |
++---------------------------+-----------------------------------------------------------------------------------------------------------------------------+
+| :ref:`zprint-command`     | Displays lines of source code.                                                                                              |
++---------------------------+-----------------------------------------------------------------------------------------------------------------------------+
+| :ref:`zshow-command`      | Displays information about the M environment.                                                                               |
++---------------------------+-----------------------------------------------------------------------------------------------------------------------------+
+| :ref:`zstep-command`      | Incrementally executes a routine to the beginning of the next line of the specified type.                                   |
++---------------------------+-----------------------------------------------------------------------------------------------------------------------------+
+| :ref:`zsystem-command`    | Invokes the shell, creating a forked process.                                                                               |
++---------------------------+-----------------------------------------------------------------------------------------------------------------------------+
+| :ref:`zwrite-command`     | Displays all or some local or global variables.                                                                             |
++---------------------------+-----------------------------------------------------------------------------------------------------------------------------+
+| :ref:`zcstatus-isv`       | Contains the value of the status code for the last compile performed by a ZCOMPILE command.                                 |
++---------------------------+-----------------------------------------------------------------------------------------------------------------------------+
+| :ref:`zedit-command`      | Contains the status code for the last ZEDit.                                                                                |
++---------------------------+-----------------------------------------------------------------------------------------------------------------------------+
+| :ref:`zlevel-isv`         | Contains the current level of DO/EXECUTE nesting.                                                                           |
++---------------------------+-----------------------------------------------------------------------------------------------------------------------------+
+| :ref:`zmessage-function`  | Returns the text associated with an error condition code.                                                                   |
++---------------------------+-----------------------------------------------------------------------------------------------------------------------------+
+| :ref:`zposition-isv`      | Contains a string indicating the current execution location.                                                                |
++---------------------------+-----------------------------------------------------------------------------------------------------------------------------+
+| :ref:`zprompt-isv`        | Controls the symbol displayed as the direct mode prompt.                                                                    |
++---------------------------+-----------------------------------------------------------------------------------------------------------------------------+
+| :ref:`zroutines-isv`      | Contains a string specifying a directory list containing the object, and optionally, the source files.                      |
++---------------------------+-----------------------------------------------------------------------------------------------------------------------------+
+| :ref:`zsource-isv`        | Contains the name of the M source program most recently ZLINKed or ZEDITed; default name for next ZEDIT or ZLINK.           |
++---------------------------+-----------------------------------------------------------------------------------------------------------------------------+
+| :ref:`zstatus-isv`        | Contains error condition code and location of the last exception condition occurring during routine execution.              |
++---------------------------+-----------------------------------------------------------------------------------------------------------------------------+
+| :ref:`zstep-isv`          | Controls the default ZSTep action.                                                                                          |
++---------------------------+-----------------------------------------------------------------------------------------------------------------------------+
+| :ref:`zsystem-isv`        | Contains the status code of the last ZSYSTEM.                                                                               |
++---------------------------+-----------------------------------------------------------------------------------------------------------------------------+
 
 

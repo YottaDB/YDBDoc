@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2021 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2017-2021 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -49,9 +49,9 @@ The workshop is not a course in programming with YottaDB. Familiarity with Linux
 YottaDB
 -------------
 
-`YottaDB <http://yottadb.com>`_ is a language-agnostic, `hierarchical key-value, NoSQL database <https://yottadb.com/product/how-it-works/>`_ engine developed and released by YottaDB LLC. For historical reasons a key-value relationship such as `["^Population","Belgium",13670000]` can be written as `^Population("Belgium")=13670000` and referred to as a *global variable node*, with `^Population` referred to as a *global variable*. The caret (`"^"`) at the beginning of the variable name makes it a database reference, with the node accessible to all processes accessing the database file in which the node resides and persistent beyond the lifetime of any process. [Although not relevant to the Acculturation Workshop, omitting the caret makes the variable a *local variable* which is accessible only within a process and whose lifetime is the lifetime of the process.]
+`YottaDB <http://yottadb.com>`_ is a language-agnostic, `hierarchical key-value, NoSQL database <https://yottadb.com/product/how-it-works/>`_ engine developed and released by YottaDB LLC. For historical reasons a key-value relationship such as :code:`["^Population","Belgium",13670000]` can be written as :code:`^Population("Belgium")=13670000` and referred to as a *global variable node*, with :code:`^Population` referred to as a *global variable*. The caret (:code:`"^"`) at the beginning of the variable name makes it a database reference, with the node accessible to all processes accessing the database file in which the node resides and persistent beyond the lifetime of any process. [Although not relevant to the Acculturation Workshop, omitting the caret makes the variable a *local variable* which is accessible only within a process and whose lifetime is the lifetime of the process.]
 
-As shown in the link, the nodes of a variable can also be visualized as a tree. As variable names are case-sensitive, `^Population`, `^population`, and `^POPULATION` are all different variables.
+As shown in the link, the nodes of a variable can also be visualized as a tree. As variable names are case-sensitive, :code:`^Population`, :code:`^population`, and :code:`^POPULATION` are all different variables.
 
 Software is released at `https://gitlab.com/YottaDB/DB/YDB <https://gitlab.com/YottaDB/DB/YDB>`_.
 
@@ -70,16 +70,17 @@ YottaDB provides:
 - Throughput that scales to the needs of the largest applications
 - Unique functionality for creating logical multi-site configurations for mission critical applications that must always be available - including availability during upgrades that involve changes to the database schema.
 
-At the time of writing of this edition of the Acculturation Workshop, the latest YottaDB release is r1.28, on which the text and exercises are base. If there is a newer version of YottaDB when you go through the exercises, the same commands will work, but the output messages you see may vary.
+At the time of writing of this edition of the Acculturation Workshop, the latest YottaDB release is r1.30, on which the text and exercises are based. If there is a newer version of YottaDB when you go through the exercises, the same commands will work, but the output messages you see may vary.
 
 .. note::
 
-   Although the YottaDB database is language agnostic, exercises such as those involving crash recovery and replication use M code fragments (all provided to you). The reason is that simulating a crash with an open database in a known state is relatively easy with the YottaDB direct mode, but harder with code in other languages like Go and C which do not have an interactive mode. All the code fragments are simple. The ``halt`` command exits from YottaDB direct mode to the shell. While in the real world, unplanned events like crashes happen when the database is not at a predetermined state, for the exercises, it is easier to understand YottaDB administration and operations by simulating crashes with the database in a known state.
+   Although the YottaDB database is language agnostic, exercises such as those involving crash recovery and replication use M code fragments (all provided to you). The reason is that simulating a crash with an open database in a known state is relatively easy with the YottaDB direct mode, but harder with code in other languages like Go and C which do not have an interactive mode. All the code fragments are simple. The :code:`halt` command exits from YottaDB direct mode to the shell. While in the real world, unplanned events like crashes happen when the database is not at a predetermined state, for the exercises, it is easier to understand YottaDB administration and operations by simulating crashes with the database in a known state.
 
++++++++++++++++++++++
 Historical Background
----------------------
++++++++++++++++++++++
 
-YottaDB's codebase originated in the 1980s as an implementation of the ISO standard scripting & application development language M, commonly known as `MUMPS <https://en.wikipedia.org/wiki/MUMPS>`_. While YottaDB continues to support M (we are fastidious about backward compatibility, to allow existing applications to run on newer versions of YottaDB), the codebase has been continuously used and evolved over the last 30+ years, so that YottaDB today supports APIs in multiple languages. In the Acculturation Workshop, you will see code from `Go <https://golang.org>`_, `C <https://en.wikipedia.org/wiki/C_(programming_language)>`_, `M <https://docs.yottadb.com/ProgrammersGuide/>`_, `Perl <https://www.perl.org/>`_, and `Rust <https://www.rust-lang.org/>`_ all accessing the same database. Between YottaDB and its upstream predecessor GT.M, the codebase is live at several of the largest real time core processing systems at any bank anywhere in the world, as well as increasingly in large electronic medical record systems. The implementation of YottaDB on the GNU/Linux operating system on x86_64 and ARM hardware is the basis of the FOSS stack for `VistA <http://worldvista.org/AboutVistA>`_.
+YottaDB's codebase originated in the 1980s as an implementation of the ISO standard scripting & application development language M, commonly known as `MUMPS <https://en.wikipedia.org/wiki/MUMPS>`_. While YottaDB continues to support M (we are fastidious about backward compatibility, to allow existing applications to run on newer versions of YottaDB), the codebase has been continuously used and evolved over the last 30+ years, so that YottaDB today supports APIs in multiple languages. In the Acculturation Workshop, you will see code from `Go <https://golang.org>`_, `C <https://en.wikipedia.org/wiki/C_(programming_language)>`_, `M <../ProgrammersGuide/langfeat.html>`_, `Perl <https://www.perl.org/>`_, and `Rust <https://www.rust-lang.org/>`_ all accessing the same database. Between YottaDB and its upstream predecessor GT.M, the codebase is live at several of the largest real time core processing systems at any bank anywhere in the world, as well as increasingly in large electronic medical record systems. The implementation of YottaDB on the GNU/Linux operating system on x86_64 and ARM hardware is the basis of the FOSS stack for `VistA <http://worldvista.org/AboutVistA>`_.
 
 ------------------
 User Documentation
@@ -100,7 +101,7 @@ Packaging
 
 .. note::
 
-   YottaDB runs very well in containers, and indeed there are multiple Docker containers available to download, both with YottaDB and YottaDB bundled with VistA and other applications. We opted to use virtual machines for the exericses in the Acculturation Workshop because we judged that simulating and visualizing crashes, recovery, and replication would be easier with virtual machines.
+   YottaDB runs very well in containers, and indeed there are multiple Docker containers available to download, both with YottaDB and YottaDB bundled with VistA and other applications. We opted to use virtual machines for the exercises in the Acculturation Workshop because we judged that simulating and visualizing crashes, recovery, and replication would be easier with virtual machines.
 
 -----
 Linux
@@ -120,26 +121,27 @@ Virtualization
 
 The software used for virtualization and used for the examples in this document is `QEMU <https://www.qemu.org/>`_ which is available for many popular computing platforms, including Linux, Windows, and more. Instructions are provided below for Windows and Linux hosts. On Linux hosts, `kvm <https://www.linux-kvm.org/page/Main_Page>`_ may be the preferred choice (kvm and QEMU provide a very similar user interface - kvm is a fork of QEMU focusing on the kernel module). `VirtualBox <https://www.virtualbox.org/>`_ is another popular FOSS (Free and Open Source Software) virtualization application. There is also proprietary virtualization software. Even though the examples used below are QEMU, you should be able to use the virtualization software of your choice.
 
+++++++++++++
 Disk Formats
-------------
+++++++++++++
 
 The Acculturation Workshop is distributed as a `vmdk format <https://en.wikipedia.org/wiki/VMDK>`_ disk image file that should work with most virtualization software, both FOSS and proprietary.
 
-
+++++++++++++++++++++++++
 Virtual Machine Download
-------------------------
+++++++++++++++++++++++++
 
 Download `Debian-Hybrid_yottadbworkshop15.zip <https://docs.yottadb.com/AcculturationGuide/Debian-Hybrid_yottadbworkshop15.zip>`_ and unzip it to access the disk image file Debian-Hybrid_yottadbworkshop15.vmdk.
 
-
++++++++++++++++++++++++++++++
 Virtual Machine Configuration
------------------------------
++++++++++++++++++++++++++++++
 
 Virtualization software configures virtual machines either with their own IP addresses where the network connection (wired or wireless) of the host has multiple IP addresses, or, more commonly - using network address translation (NAT). In the latter case, the network connection of the host has one IP address that it presents to the outside world, but each virtual machine has an IP address in a subnet within the host (the host acts just like a home wifi access point / router).
 
 You will need to configure your virtual machine for outbound and inbound network access. While outbound access should require no configuration to work with either type of virtual machine network connection, inbound network access in a NAT'd environment will require a TCP port on the host to be forwarded to the virtual machine for each port at which a service on the virtual machine needs to respond. For example, each virtual machine has a secure shell (ssh) server listening at port 22 for incoming connections, and you might choose to forward port 2222 on the host to port 22 on your virtual machine.
 
-Refer to the user documentation for your virtualization software to set up virtual machine networking so that ``Debian-Hybrid_yottadbworkshop15.vmdk`` is the disk image of the virtual machine, and port 2222 on the host is forwarded to port 22 on the guest. For example, using qemu-system-x86_64 on a Linux host, one of the following commands should work:
+Refer to the user documentation for your virtualization software to set up virtual machine networking so that :code:`Debian-Hybrid_yottadbworkshop15.vmdk` is the disk image of the virtual machine, and port 2222 on the host is forwarded to port 22 on the guest. For example, using qemu-system-x86_64 on a Linux host, one of the following commands should work:
 
 .. code-block:: bash
 
@@ -151,23 +153,23 @@ Using kvm on a Linux host, the following command boots the vmdk image with port 
 
     kvm -enable-kvm -cpu host -m 256 -display none -net nic -net user,hostfwd=tcp::2222-:22 -hda Debian-Hybrid_yottadbworkshop15.vmdk
 
-
++++++++++++++++++++++++++++++++
 Control of the Keyboard & Mouse
--------------------------------
++++++++++++++++++++++++++++++++
 
 When you boot a guest virtual machine, booting it “headless” (i.e., without a console - no keyboard and mouse attached), means that the host always has control of the keyboard and mouse. If it is not headless, ownership of the keyboard or mouse may need to toggle between the host and guest. The software you use for virtualization determines how to transfer control.
 
-
+++++++++++++++++++
 Terminal Emulation
-------------------
+++++++++++++++++++
 
-Even when running with a console, we recommend that you boot and minimize the virtual machine, and connect to your virtual machines with terminal sessions from a terminal emulator. On Windows, you can use a terminal emulator such as `putty <https://www.chiark.greenend.org.uk/~sgtatham/putty/>`_. Linux distributions and OS X include terminal emulation.
+Even when running with a console, we recommend that you boot and minimize the virtual machine, and connect to your virtual machines with terminal sessions from a terminal emulator. On Windows, you can use a terminal emulator such as `PuTTY <https://www.chiark.greenend.org.uk/~sgtatham/putty/>`_. Linux distributions and OS X include terminal emulation.
 
 -----------
 Quick Start
 -----------
 
-With a terminal emulator, initiate an ssh connection to port 2222 on localhost and login with userid ``yottadbuser`` and password ``YottaDB Rocks!`` (including a space and an exclamation point). For example, on Linux, you can use the command: ``ssh -p 2222 yottadbuser@localhost`` to connect as user yottadbuser to port 2222 on the host which is forwarded to port 22 on the guest.
+With a terminal emulator, initiate an ssh connection to port 2222 on localhost and login with userid :code:`yottadbuser` and password :code:`YottaDB Rocks!` (including a space and an exclamation point). For example, on Linux, you can use the command: :code:`ssh -p 2222 yottadbuser@localhost` to connect as user yottadbuser to port 2222 on the host which is forwarded to port 22 on the guest.
 
 .. code-block:: bash
 
@@ -191,14 +193,15 @@ As newer versions of packages are likely to have been released after the Accultu
 
 You will likely be prompted for the yottadbuser password one or more times. As the command reboots the virtual machine, you will need to reconnect your ssh session.
 
++++++++++++++++
 Install YottaDB
----------------
++++++++++++++++
 
 - Create a temporary directory and change to it, e.g.: :code:`mkdir /tmp/tmp ; cd /tmp/tmp`
-- Get the YottaDB install script: ``wget https://gitlab.com/YottaDB/DB/YDB/raw/master/sr_unix/ydbinstall.sh``
-- Make it executable: ``chmod +x ydbinstall.sh``
-- Run it (omit the ``--verbose`` option if you want less output): ``sudo ./ydbinstall.sh --utf8 default --verbose`` (This command installs YottaDB under :code:`/usr/local/lib/`.)
-- The script has a plethora of installation options, which you will not use in the Acculturation Workshop. You can query it to list the options with the ``--help`` option, e.g., ``./ydbinstall.sh --help``.
+- Get the YottaDB install script: :code:`wget https://gitlab.com/YottaDB/DB/YDB/raw/master/sr_unix/ydbinstall.sh`
+- Make it executable: :code:`chmod +x ydbinstall.sh`
+- Run it (omit the :code:`--verbose` option if you want less output): :code:`sudo ./ydbinstall.sh --utf8 default --verbose` (This command installs YottaDB under :code:`/usr/local/lib/`.)
+- The script has a plethora of installation options, which you will not use in the Acculturation Workshop. You can query it to list the options with the :code:`--help` option, e.g., :code:`./ydbinstall.sh --help`.
 - :code:`yottadb -version` provides a detailed report on the YottaDB build, e.g.,
 
   .. code-block:: bash
@@ -211,15 +214,15 @@ Install YottaDB
      Build commit SHA:        177eb8e48098204dafe564cac2bcb84312b2853a
      $
 
-
++++++++++++
 Run YottaDB
------------
++++++++++++
 
-+++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~
 Default Environment
-+++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~
 
-As YottaDB needs a working environment and several environment variables to be set correctly, the ``ydb_env_set`` script creates a working environment if one does not exist (defaulting to ``$HOME/.yottadb`` unless the environment variable ``ydb_dir`` points to another location), and sets up a default directory structure under it, with reasonable values for environment variables. You can use ``pkg-config`` to source ``ydb_env_set`` from the currently installed YottaDB release to start using YottaDB immediately. You can query YottaDB to identify the release, e.g.,
+As YottaDB needs a working environment and several environment variables to be set correctly, the :code:`ydb_env_set` script creates a working environment if one does not exist (defaulting to :code:`$HOME/.yottadb` unless the environment variable :code:`ydb_dir` points to another location), and sets up a default directory structure under it, with reasonable values for environment variables. You can use :code:`pkg-config` to source :code:`ydb_env_set` from the currently installed YottaDB release to start using YottaDB immediately. You can query YottaDB to identify the release, e.g.,
 
 .. code-block:: bash
 
@@ -230,7 +233,7 @@ As YottaDB needs a working environment and several environment variables to be s
 
 When you set up environments in YottaDB, you will set up your own scripting, but the default is a good place to start.
 
-The ``tree`` program shows the environment sourcing ``ydb_env_set`` creates.
+The :code:`tree` program shows the environment sourcing :code:`ydb_env_set` creates.
 
 .. code-block:: bash
 
@@ -252,10 +255,11 @@ The ``tree`` program shows the environment sourcing ``ydb_env_set`` creates.
 
 We will explore the environment in more detail below.
 
++++++++++++++
 Using YottaDB
--------------
++++++++++++++
 
-Now that YottaDB is installed and configured, change to the ``$ydb_dir`` directory (``$HOME/.yottadb`` in this example), and verify that the database has no nodes of the ``^hello`` global variable:
+Now that YottaDB is installed and configured, change to the :code:`$ydb_dir` directory (:code:`$HOME/.yottadb` in this example), and verify that the database has no nodes of the :code:`^hello` global variable:
 
 .. code-block:: bash
 
@@ -264,11 +268,11 @@ Now that YottaDB is installed and configured, change to the ``$ydb_dir`` directo
     %YDB-W-NOSELECT, None of the selected variables exist -- halting
     yottadbuser@yottadbworkshop:~/.yottadb$
 
-+++++++++++++
+~~~~~~~~~~~~~
 Access from C
-+++++++++++++
+~~~~~~~~~~~~~
 
-YottaDB comes with a `C API <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html>`_ and all you need to use it is the `gcc` compiler, which is included in the virtual machine. Download the `sayhelloC.c <./sayhelloC.c>`_ program into the yottadbuser directory, compile it and run it. Notice that it has set a node in the database (the MUPIP EXTRACT command prints database contents):
+YottaDB comes with a `C API <../MultiLangProgGuide/cprogram.html>`_ and all you need to use it is the :code:`gcc` compiler, which is included in the virtual machine. Download the `sayhelloC.c <./sayhelloC.c>`_ program into the yottadbuser directory, compile it and run it. Notice that it has set a node in the database (the MUPIP EXTRACT command prints database contents):
 
 .. code-block:: bash
 
@@ -291,11 +295,11 @@ YottaDB comes with a `C API <https://docs.yottadb.com/MultiLangProgGuide/cprogra
     %YDB-I-RECORDSTAT, TOTAL:         Key cnt: 1  max subsc len: 10  max rec len: 13  max node len: 27
     yottadbuser@yottadbworkshop:~$
 
-++++++++++++++
+~~~~~~~~~~~~~~
 Access from Go
-++++++++++++++
+~~~~~~~~~~~~~~
 
-`Accessing YottaDB from Go <https://docs.yottadb.com/MultiLangProgGuide/goprogram.html>`_ requires the Go ``yottadb`` package to be downloaded and installed, to provide a YottaDB Go “wrapper”. After installing the Go wrapper, you can run a test to ensure that it was installed successfully:
+`Accessing YottaDB from Go <../MultiLangProgGuide/goprogram.html>`_ requires the Go :code:`yottadb` package to be downloaded and installed, to provide a YottaDB Go “wrapper”. After installing the Go wrapper, you can run a test to ensure that it was installed successfully:
 
 .. code-block:: bash
 
@@ -319,9 +323,9 @@ Download the `sayhelloGo.go <./sayhelloGo.go>`_ program into the yottadbuser dir
     %YDB-I-RECORDSTAT, TOTAL:         Key cnt: 2  max subsc len: 11  max rec len: 36  max node len: 44
     yottadbuser@yottadbworkshop:~$
 
-+++++++++++++
+~~~~~~~~~~~~~
 Access from M
-+++++++++++++
+~~~~~~~~~~~~~
 
 YottaDB includes a complete language implementation for M. Download the `sayhelloM.m <./sayhelloM.m>`_ program into the .yottadb/r directory and run it (there is no need for a separate compilation step, as there was for C and Go):
 
@@ -341,7 +345,7 @@ YottaDB includes a complete language implementation for M. Download the `sayhell
     %YDB-I-RECORDSTAT, TOTAL:         Key cnt: 3  max subsc len: 11  max rec len: 36  max node len: 44
     yottadbuser@yottadbworkshop:~/.yottadb$
 
-Notice that after running it, YottaDB has automatically compiled the source code (``sayhelloM.m``) and created a file with object code (``sayhelloM.o``) which it dynamically links and runs.
+Notice that after running it, YottaDB has automatically compiled the source code (:code:`sayhelloM.m`) and created a file with object code (:code:`sayhelloM.o`) which it dynamically links and runs.
 
 .. code-block:: bash
 
@@ -435,16 +439,17 @@ You should journal any database files whose integrity you care about. Conversely
 
 YottaDB uses journaling (called “logging” by some databases) to restore data integrity and provide continuity of business after an unplanned event such as a system crash. There are two switches to turn on journaling – ENABLE / DISABLE and ON / OFF. Enabling or disabling journaling requires stand alone access to the database. Turning journaling on and off can be done when the database is in use.
 
++++++++++++++++++++++
 Exercise - Journaling
----------------------
++++++++++++++++++++++
 
-In this exercise, you will crash your virtual machine and then recover the database. As sourcing the ``ydb_env_set`` file does all the setup that you need, and recovers the database, you will not learn the underlying operation of the database if you use it. Instead, you will create a small file that explicitly sets environment variables. The exercise has two parts, preparing the directory for the exercise, to be done once, and then crashing and recovery, which you can do as often as you want.
+In this exercise, you will crash your virtual machine and then recover the database. As sourcing the :code:`ydb_env_set` file does all the setup that you need, and recovers the database, you will not learn the underlying operation of the database if you use it. Instead, you will create a small file that explicitly sets environment variables. The exercise has two parts, preparing the directory for the exercise, to be done once, and then crashing and recovery, which you can do as often as you want.
 
-+++++++++++
+~~~~~~~~~~~
 Preparation
-+++++++++++
+~~~~~~~~~~~
 
-Create a directory with a name like ``jnlex`` (for journaling exercises) or other prefered name and change to that directory. Create a file to source that sets required environment variables and convenient aliases (``nano`` and ``vi`` editors are installed on the virtual machine; you can install your preferred editor: for example to install a character-mode emacs, run ``sudo apt install emacs-nox``). Although the code fragments are M code, they are straightforward, and you can use equivalent code from other languages if you prefer.
+Create a directory with a name like :code:`jnlex` (for journaling exercises) or other prefered name and change to that directory. Create a file to source that sets required environment variables and convenient aliases (:code:`nano` and :code:`vi` editors are installed on the virtual machine; you can install your preferred editor: for example to install a character-mode emacs, run :code:`sudo apt install emacs-nox`). Although the code fragments are M code, they are straightforward, and you can use equivalent code from other languages if you prefer.
 
 .. code-block:: bash
 
@@ -458,7 +463,7 @@ Create a directory with a name like ``jnlex`` (for journaling exercises) or othe
    yottadbuser@yottadbworkshop:~/jnlex$ source jnlex_env
    yottadbuser@yottadbworkshop:~/jnlex$
 
-Create a global directory with the Global Directory Editor (GDE) utility (see `Global Directories Point to Global Variables`_ below), and a database file. Turn on journaling for the database file.
+Create a global directory with the Global Directory Editor (GDE) utility (see :ref:`gbl-dir-gbl-var` below), and a database file. Turn on journaling for the database file.
 
 .. code-block:: bash
 
@@ -479,15 +484,15 @@ Create a global directory with the Global Directory Editor (GDE) utility (see `G
    %YDB-I-JNLSTATE, Journaling state for region DEFAULT is now ON
    yottadbuser@yottadbworkshop:~/jnlex$
 
-+++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~
 Crashing and Recovery
-+++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~
 
 Start by cleaning out old journal files. Verify that there are no shared memory segments (if there are any, reboot the virtual machine). Then go into YottaDB's direct (interactive) mode, perform a database operation, and verify that there is now a new shared memory segment.
 
 .. note::
 
-   For those who are not familiar with M, ``$horolog`` is a comma separated string consisting of the number of days since December 31, 1840, and the number of seconds since midnight in the time zone of the process, and ``$zdate()`` converts ``$horolog`` format timestamps to friendlier formats.
+   For those who are not familiar with M, :code:`$horolog` is a comma separated string consisting of the number of days since December 31, 1840, and the number of seconds since midnight in the time zone of the process, and :code:`$zdate()` converts :code:`$horolog` format timestamps to friendlier formats.
 
 .. code-block:: bash
 
@@ -520,9 +525,9 @@ Start by cleaning out old journal files. Verify that there are no shared memory 
 
    YDB>
 
-Now simulate a crash by killing the virtual machine by clicking on the “X” of the console window, or with a ``kill -9`` of the virtual machine process on the host. It is important that you kill the virtual machine with the database open by the ``yottadb`` process, because otherwise the process will shut down the database cleanly on exit and you will not simulate a crash with an open database file.
+Now simulate a crash by killing the virtual machine by clicking on the “X” of the console window, or with a :code:`kill -9` of the virtual machine process on the host. It is important that you kill the virtual machine with the database open by the :code:`yottadb` process, because otherwise the process will shut down the database cleanly on exit and you will not simulate a crash with an open database file.
 
-Reboot the virtual machine, change to the ``jnlex`` directory, source the ``jnlex_env`` and attempt to access the data. Note the error because the database was not cleanly shut down.
+Reboot the virtual machine, change to the :code:`jnlex` directory, source the :code:`jnlex_env` and attempt to access the data. Note the error because the database was not cleanly shut down.
 
 .. code-block:: bash
 
@@ -552,33 +557,39 @@ Now recover the database, and note that the database update you made is in the d
    ^X="NOV 13, 2019"
    yottadbuser@yottadbworkshop:~/jnlex$
 
-Notice that the recovery renamed the previous journal file (from ``ydb.mjl`` to ``ydb.mjl_2019317102151`` - ``2019317102151`` is a timestamp representing 10:21:51 on the 317\ :sup:`th`\  day of 2019), and created a new journal file ``ydb.mjl``.
+Notice that the recovery renamed the previous journal file (from :code:`ydb.mjl` to :code:`ydb.mjl_2019317102151` - :code:`2019317102151` is a timestamp representing 10:21:51 on the 317\ :sup:`th`\  day of 2019), and created a new journal file :code:`ydb.mjl`.
 
 Practice crashing the virtual machine with an open database several times till you get the hang of recovery after a crash.
 
-Look at the animation of journaling in action at the beginning of `Chapter 6: YottaDB Journaling <https://docs.yottadb.com/AdminOpsGuide/ydbjournal.html#journal-files>`_ in the Administration and Operations Guide.
+Look at the animation of journaling in action at the beginning of `Chapter 6: YottaDB Journaling <../AdminOpsGuide/ydbjournal.html#journal-files>`_ in the Administration and Operations Guide.
 
 .. note::
 
    Robust operation of YottaDB recovery after a crash requires robust recovery of the file system. If your file system requires an option to ensure that meta-data is written to disk only after the corresponding data is written, ensure that it is set. Also, if you are running in a virtual machine or container, ensure that it is configured so that when the guest does a “sync” to commit data to the file system, the host commits the data to the underlying persistent storage.
 
+.. _gbl-dir-gbl-var:
+
 --------------------------------------------
 Global Directories Point to Global Variables
 --------------------------------------------
 
-Global variables reside in  database files. Given a person's name, a telephone directory helps you find the person by giving you their phone number, and sometimes their address as well. Analogously, a global directory helps a YottaDB process find a global variable node bypointing it to the database file where that node resides. *While the most common, and efficient, use case has an entire global variable  residing in a database file, YottaDB permits subtrees of a global variable to reside in different database files.*
+Global variables reside in  database files. Given a person's name, a telephone directory helps you find the person by giving you their phone number, and sometimes their address as well. Analogously, a global directory helps a YottaDB process find a global variable node by pointing it to the database file where that node resides. *While the most common, and efficient, use case has an entire global variable  residing in a database file, YottaDB permits subtrees of a global variable to reside in different database files.*
 
-The global directory is a binary file pointed to by the intrinsic special variable ``$zgbldir`` (an *intrinsic special variable* or ISV starts with a ``$`` and names are case-insensitive). At process start-up, ``$zgbldir`` is initialized from the environment variable ``ydb_gbldir``; a process may change global directories as it executes by setting ``$zgbldir`` to different global directory files.
+The global directory is a binary file pointed to by the intrinsic special variable :code:`$zgbldir` (an *intrinsic special variable* or ISV starts with a :code:`$` and names are case-insensitive). At process start-up, :code:`$zgbldir` is initialized from the environment variable :code:`ydb_gbldir`; a process may change global directories as it executes by setting :code:`$zgbldir` to different global directory files.
 
-The GDE utility program (invoked from the shell with ``yottadb -run ^GDE``) is used to manage global directories. [Note that the input to GDE can be a text file. In a production environment, YottaDB recommends that text files be used to define database configurations, and that these text files be put under version control.]
+The GDE utility program (invoked from the shell with :code:`yottadb -run ^GDE`) is used to manage global directories.
 
-Although there is a `GUI for GDE <https://gitlab.com/YottaDB/UI/YDBGDEGUI>`_ for the Acculturation Workshop, we will use text files as the workshop is intended to develop low-level YottaDB skills.
+.. note::
+
+   The input to GDE can be a text file. In a production environment, YottaDB recommends that text files be used to define database configurations, and that these text files be put under version control.
+
+Although there is a `GUI for GDE <https://gitlab.com/YottaDB/UI/YDBGDEGUI>`_, for the Acculturation Workshop we will use text files as the workshop is intended to develop low-level YottaDB skills.
 
 In YottaDB, sets of M global variables (Names or Name spaces) are mapped to Regions that define properties relating to the M global. Each Region is mapped to a Segment that defines properties relating to the file system. Consider the example in the figure below:
 
 .. image:: globaldir.svg
 
-In this example, there are four M global variables that we would like to separate from the rest (e.g., for purposes of sharing globals between applications, or for reasons of protection – perhaps they contain special information, so that only mammalogists are to have access to globals ^Horse and ^Platypus, and only carcinologists are to have access to globals ^Crab and ^Lobster). This is accomplished by creating five name spaces (note that a name space can contain a single variable, as in this example, or a range of global variables, e.g., everything starting with ^A through ^Horse). There is always a default (``*``) name space.
+In this example, there are four M global variables that we would like to separate from the rest (e.g., for purposes of sharing globals between applications, or for reasons of protection – perhaps they contain special information, so that only mammalogists are to have access to globals ^Horse and ^Platypus, and only carcinologists are to have access to globals ^Crab and ^Lobster). This is accomplished by creating five name spaces (note that a name space can contain a single variable, as in this example, or a range of global variables, e.g., everything starting with ^A through ^Horse). There is always a default (:code:`*`) name space.
 
 One or more name spaces are mapped to a Region. All global variables in a region share a common set of M global variable properties, such as the maximum record length, whether null subscripts are permitted, etc. In this case ^Horse and ^Platypus are mapped to the region MAMMALS, whereas ^Crab and ^Lobster are mapped to the region CRUSTACEANS. The default name space * is mapped to a region called DEFAULT (while region names are case insensitive, they are frequently written in upper case).
 
@@ -586,7 +597,7 @@ Each region is mapped to a Segment. Just as a region defines properties pertaini
 
 Each database file can have a single active journal file. A journal file can be linked to its predecessor to form a chain of journal files.
 
-The intrinsic special variable ``$zgbldir`` points a YottaDB process to the global directory. ``$zgbldir`` is initialized from the environment variable ``ydb_gbldir`` at process startup, but it can be modified by the process during execution. Assuming you have sourced the ``jnlex_env`` file:
+The intrinsic special variable :code:`$zgbldir` points a YottaDB process to the global directory. :code:`$zgbldir` is initialized from the environment variable :code:`ydb_gbldir` at process startup, but it can be modified by the process during execution. Assuming you have sourced the :code:`jnlex_env` file:
 
 .. code-block:: bash
 
@@ -594,7 +605,7 @@ The intrinsic special variable ``$zgbldir`` points a YottaDB process to the glob
    /home/yottadbuser/jnlex/ydb.gld
    yottadbuser@yottadbworkshop:~/jnlex$
 
-GDE, the Global Directory Editor, is a program used to manipulate global directories. Before using it, add an extra line to the ``jnlex_env`` file to allow you to  recall the last line typed, in case you make a mistake and want to recall and edit the previous line:
+GDE, the Global Directory Editor, is a program used to manipulate global directories. Before using it, add an extra line to the :code:`jnlex_env` file to allow you to  recall the last line typed, in case you make a mistake and want to recall and edit the previous line:
 
 .. code-block:: bash
 
@@ -641,7 +652,7 @@ In this case, there is only one name space, the default. There is also only one 
     DEFAULT                         DEFAULT                            0      256    64 NEVER     Y    N   N      N     Y     N      Y     Sep
    GDE>
 
-Notice the region parameters – review them in the `Region Qualfiers section of the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/gde.html#region-qualifiers>`_. Since there is one region, there is also one segment, also called DEFAULT. (Although the region and segment names can be different; it is good practice to keep them the same).
+Notice the region parameters – review them in the `Region Qualfiers section of the Administration and Operations Guide <../AdminOpsGuide/gde.html#region-qualifiers>`_. Since there is one region, there is also one segment, also called DEFAULT. (Although the region and segment names can be different; it is good practice to keep them the same).
 
 .. code-block:: bash
 
@@ -659,13 +670,13 @@ Notice the region parameters – review them in the `Region Qualfiers section of
 										       AIO = OFF
     GDE>
 
-Notice how the database file is defined using the environment variable ``ydb_dir``. Using environment variables allows multiple processes to share a global directory, with different processes referring to different database files, depending on environment variable values.
+Notice how the database file is defined using the environment variable :code:`ydb_dir`. Using environment variables allows multiple processes to share a global directory, with different processes referring to different database files, depending on environment variable values.
 
 .. note::
 
-    The parameters in the global directory are used only by ``mupip create`` to create a new database file. At other times, the global directory is used only to map global variable names to database files. So, if you change the global directory, existing database files are not changed. If you change a parameter in a database file, unless you also change the global directory used to create the database file, the next time you create that file, it will use old parameters in the global directory.
+    The parameters in the global directory are used only by :code:`mupip create` to create a new database file. At other times, the global directory is used only to map global variable names to database files. So, if you change the global directory, existing database files are not changed. If you change a parameter in a database file, unless you also change the global directory used to create the database file, the next time you create that file, it will use old parameters in the global directory.
 
-The ``show -map`` command gives visualization of the mapping of names to database files in the global directory.
+The :code:`show -map` command gives visualization of the mapping of names to database files in the global directory.
 
 .. code-block:: bash
 
@@ -686,7 +697,7 @@ The ``show -map`` command gives visualization of the mapping of names to databas
 Of course, this global directory is not very interesting as all global variables map to a single region. There are many reasons why one might want a multi-region database, including but not limited to:
 
 - Database size: A single database file is limited to 992Mi [#]_ blocks, which with the common block size of 4Ki bytes, translates to a database of 3,968 Gi bytes, not including the file header. A database consists of one or more database files, and while there is a theoretical YottaDB limit on the number of database files, it is so large that all practical limits are those of the underlying storage.
-- Access control: As YottaDB uses the standard user-group-world model of access control (which may be further refined by Mandatory Access Controls; see `YottaDB Security Philosophy <https://docs.yottadb.com/AdminOpsGuide/securityph.html>`_), database file ownership and permissions can be used for access control (see `Security`_ below). For example, mammalogists might have read-write access to database files that store information about mammals, while giving carcinologists read-only access, with carcinologists doing tthe reverse for database files that store information about crustaceans.
+- Access control: As YottaDB uses the standard user-group-world model of access control (which may be further refined by Mandatory Access Controls; see `YottaDB Security Philosophy <../AdminOpsGuide/securityph.html>`_), database file ownership and permissions can be used for access control (see :ref:`security` below). For example, mammalogists might have read-write access to database files that store information about mammals, while giving carcinologists read-only access, with carcinologists doing tthe reverse for database files that store information about crustaceans.
 - Performance: Since the granularity of critical sections for committing updates is the database region, database "hot spots" can be reduced by configuring databases to map different global variables to different database files. Note however, that when using transaction processing, as concurrent critical sections are needed for all global variables updated in a transaction, it would improve peformance to map related globals to the same region.
 - Manageability: Related information can be placed in a single database file. For example, Internet of Things (IoT) application stacks often include a cloud service that complements edge devices. Such a cloud service might be configured to map the data for each edge device in a separate database file.
 
@@ -694,8 +705,9 @@ Of course, this global directory is not very interesting as all global variables
 
 Let's make the single region database a little more interesting.
 
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Exercise - Separate Regions for Mammalogists and Carcinologists
----------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Continue using the directory you created for the journaling exercise.
 
@@ -735,7 +747,7 @@ While not essential, it may be conceptually helpful to build the global director
 										       AIO = OFF
    GDE>
 
-Then we can map the regions to the segments. Notice that even though the segment names (specified with the ``-dynamic`` qualifier) are entered in lower case, they converted to and displayed in upper case.
+Then we can map the regions to the segments. Notice that even though the segment names (specified with the :code:`-dynamic` qualifier) are entered in lower case, they are converted to and displayed in upper case.
 
 .. code-block:: bash
 
@@ -817,8 +829,8 @@ You can examine the entire map, and ask GDE to perform a check for consistency.
 
 To interpret the above, the first column is the first global variable residing in a region, and the second is the next global variable not in the region, i.e., the region is all global variables starting with the first, and up to, but not including the second.
 
-- The entry with ``%`` in the first column and ``Crab`` in the second means all global variables starting with and including ``^%`` (the first global variable) up to, but not including ``^Crab`` are mapped to region and segment ``DEFAULT`` and the file ``$ydb_dir/ydb.dat``.
-- Since ``^Crab0`` is the next global variable name after ``^Crab``, the next entry states that the global variable ``^Crab`` is mapped to region and segment ``MAMMALS`` and the file `$ydb_dir/linneaus.dat``.
+- The entry with :code:`%` in the first column and :code:`Crab` in the second means all global variables starting with and including :code:`^%` (the first global variable) up to, but not including :code:`^Crab` are mapped to region and segment :code:`DEFAULT` and the file :code:`$ydb_dir/ydb.dat`.
+- Since :code:`^Crab0` is the next global variable name after :code:`^Crab`, the next entry states that the global variable :code:`^Crab` is mapped to region and segment :code:`MAMMALS` and the file :code:`$ydb_dir/linneaus.dat`.
 
 Exiting GDE creates the global directory. You can then use a MUPIP CREATE command to create the database files. Notice that journal files must be separately created.
 
@@ -831,7 +843,7 @@ Exiting GDE creates the global directory. You can then use a MUPIP CREATE comman
 	   /home/yottadbuser/jnlex/ydb.gld
    yottadbuser@yottadbworkshop:~/jnlex$
 
-Now create database files using ``mupip create`` (notice that it creates two new database files, and tells you that one file already exists), and turn on journaling for the newly created database files
+Now create database files using :code:`mupip create` (notice that it creates two new database files, and tells you that one file already exists), and turn on journaling for the newly created database files
 
 .. code-block:: bash
 
@@ -850,9 +862,9 @@ Now create database files using ``mupip create`` (notice that it creates two new
 
 For production environments, we suggest that you put your GDE commands in a text file and invoke them with a heredoc or using GDE's @ command. Put the text file under version control.
 
-
++++++++++++++++++++++++++++++++++++++++++++++
 Exercise - Recovering a Multi-region Database
----------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++
 
 Recovering a multi-region database after a crash is no different than recovering a single region database.
 
@@ -972,7 +984,7 @@ Upon bringing the system back up from a crash or unclean shutdown (shutdown with
 * For database regions that are not journaled, delete the database files and create new files
 * Database regions that are journaled using before image journaling (the type in the exercises above) are recovered using the databases with the MUPIP JOURNAL RECOVER BACKWARD command.
 * Database regions that are journaled using nobefore image journaling are recovered by restoring a backup and using the MUPIP JOURNAL RECOVER FORWARD command.
-* Database regions that constitute replicated instances (see `Database Replication`_) are recovered using the MUPIP JOURNAL ROLLBACK rather than MUPIP JOURNAL RECOVER.
+* Database regions that constitute replicated instances (see ref:`db-repl`) are recovered using the MUPIP JOURNAL ROLLBACK rather than MUPIP JOURNAL RECOVER.
 
 In all cases using journaling, the recovery point after a crash is the same - the last update in the journal files.
 
@@ -980,24 +992,24 @@ In all cases using journaling, the recovery point after a crash is the same - th
 Environment Variables
 --------------------------
 
-The operation of YottaDB is controlled by a number of environment variables, `described in the YottaDB Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/basicops.html#environment-variables>`_.
+The operation of YottaDB is controlled by a number of environment variables, described in the `YottaDB Administration and Operations Guide <../AdminOpsGuide/basicops.html#env-vars>`_.
 
-- The most important one is ``ydb_gbldir``, discussed above, which allows a process to access a global directory, which in turn allows it access the database (global variables).
+- The most important one is :code:`ydb_gbldir`, discussed above, which allows a process to access a global directory, which in turn allows it to access the database (global variables).
 
-- ``ydb_dir``, defaulting to ``$HOME/.yottadb`` if not set, is used by ``ydb_env_set`` to create a directory in a standard configuration for using YottaDB. Note that a directory in a standard configuration is just a convenience, as the environment variables allow YottaDB database files and routines to be placed just about anywhere on a system
+- :code:`ydb_dir`, defaulting to :code:`$HOME/.yottadb` if not set, is used by :code:`ydb_env_set` to create a directory in a standard configuration for using YottaDB. Note that a directory in a standard configuration is just a convenience, as the environment variables allow YottaDB database files and routines to be placed just about anywhere on a system
 
 - Using YottaDB requires language specific environment variables
 
     - Environment variables for M programs include:
 
-      - The required ``ydb_routines`` environment variable provides a search path for YottaDB to execute M programs.
-      - An optional ``ydb_chset`` environment variable to determine whether a process should operate in M mode or UTF-8 mode (defaulting to M mode). To choose UTF-8 mode, this must be set before sourcing ``ydb_env_set`` and a locale that is installed on the system must also be defined, e.g.: ``export ydb_chset=UTF-8 LC_CTYPE=C.utf8``
+      - The required :code:`ydb_routines` environment variable provides a search path for YottaDB to execute M programs.
+      - An optional :code:`ydb_chset` environment variable to determine whether a process should operate in M mode or UTF-8 mode (defaulting to M mode). To choose UTF-8 mode, this must be set before sourcing :code:`ydb_env_set` and a locale that is installed on the system must also be defined, e.g.: :code:`export ydb_chset=UTF-8 LC_CTYPE=C.utf8`
 
     - Other languages will require their own environment variables.
 
-- The ``ydb_dist`` environment variable points to the location where YottaDB is installed. If not set, YottaDB will set it so that code in the process, and child processes, can easily locate the directory where YottaDB is installed.
+- The :code:`ydb_dist` environment variable points to the location where YottaDB is installed. If not set, YottaDB will set it so that code in the process, and child processes, can easily locate the directory where YottaDB is installed.
 
-The file ``ydb_env_set`` that is supplied with YottaDB, and which must be sourced rather than executed, attempts to provide reasonable default values:
+The file :code:`ydb_env_set` that is supplied with YottaDB, and which must be sourced rather than executed, attempts to provide reasonable default values:
 
 .. code-block:: bash
 
@@ -1021,9 +1033,11 @@ The file ``ydb_env_set`` that is supplied with YottaDB, and which must be source
 
 .. note::
 
-   ``ydb_unset_512`` and ``ydb_sav_512_PATH`` above are used when sourcing the ``ydb_env_unset`` file to restore environment variables set by sourcing ``ydb_env_set``; the 512 is the pid of the shell.
+   :code:`ydb_unset_512` and :code:`ydb_sav_512_PATH` above are used when sourcing the :code:`ydb_env_unset` file to restore environment variables set by sourcing :code:`ydb_env_set`; the 512 is the pid of the shell.
 
-While ``ydb_env_set`` is a good resource when you initially start with YottaDB, once you get to a certain level of expertise, you may prefer to create your own scripting.
+While :code:`ydb_env_set` is a good resource when you initially start with YottaDB, once you get to a certain level of expertise, you may prefer to create your own scripting.
+
+.. _security:
 
 --------
 Security
@@ -1035,10 +1049,11 @@ YottaDB was designed from the very beginning to be secure.
 
    Absolute security does not exist in this universe. For a discussion that bridges philosophy and technology, we highly recommend `Bruce Schneier's Secrets and Lies, ISBN 0-471-25311-1 <http://www.schneier.com/book-sandl.html>`_.
 
-A YottaDB process can access a database file only if the file ownership and permissions allow it to do so. The YottaDB security model is simple, well understood and documented. See also the `YottaDB Security Philosophy <https://docs.yottadb.com/AdminOpsGuide/securityph.html>`_.
+A YottaDB process can access a database file only if the file ownership and permissions allow it to do so. The YottaDB security model is simple, well understood and documented. See also the `YottaDB Security Philosophy <../AdminOpsGuide/securityph.html>`_.
 
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Exercise - Access Controls with Ownership and Permissions
----------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 In the following, Linux file permissions are used to allow the owner to read and write all database files, and another user to have read-only access to a database file, and no access whatsoever to another database file. Change the permissions as shown, and make updates. Note that existing data in the database is added to, as this exercise is being created on a different date from the journaling exercise. If you do both exercises on the same day, your data will be overwritten. As before, this uses the YottaDB direct mode to set the variables and then loop through the variable names dumping the values. You can write code in a programming language of your choice or you can copy and paste the M commands from here in your shell session.
 
@@ -1067,7 +1082,7 @@ In the following, Linux file permissions are used to allow the owner to read and
    YDB>halt
    yottadbuser@yottadbworkshop:~/jnlex$
 
-Create another user who is also a member of the yottadbuser group, and note that a process of that user can update ``ydb.dat`` (the database file for the DEFAULT region), can read but not update ``linneaus.dat`` (the database file for MAMMALS region), and not even read ``brunnich.dat`` (the database file for the CRUSTACEANS region).
+Create another user who is also a member of the yottadbuser group, and note that a process of that user can update :code:`ydb.dat` (the database file for the DEFAULT region), can read but not update :code:`linneaus.dat` (the database file for MAMMALS region), and not even read :code:`brunnich.dat` (the database file for the CRUSTACEANS region).
 
 .. code-block:: bash
 
@@ -1099,20 +1114,23 @@ Create another user who is also a member of the yottadbuser group, and note that
 
 There is an installation option to restrict access to YottaDB to a group. If you use this option, only those in the specified group will be able to use YottaDB.
 
+.. _db-repl:
+
 ----------------------
 Database Replication
 ----------------------
 
 When an application must have the best possible continuity of business, use database replication in addition to before-image journaling to create a logical multi-site configuration. Unlike techniques like high-availability clustering that have a single point of failure (the cluster hardware and software), YottaDB replication uses “share nothing” logical multi-site instances with no single point of failure.
 
-Furthermore, YottaDB database replication can be used to provide continuous application availability in the face of not just unplanned events, such as system crashes, but also planned events like application and system upgrades, and even most upgrades that involve application schema changes. Database replication has functionality beyond business continuity, as discussed in the `Database Replication chapter of the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html>`_.
+Furthermore, YottaDB database replication can be used to provide continuous application availability in the face of not just unplanned events, such as system crashes, but also planned events like application and system upgrades, and even most upgrades that involve application schema changes. Database replication has functionality beyond business continuity, as discussed in the `Database Replication chapter of the Administration and Operations Guide <../AdminOpsGuide/dbrepl.html>`_.
 
 The restriction of YottaDB replication today is the 20,000 kilometer distance limit on replication (since the circumference of Planet Earth is approximately 40,000 kilometers, it is difficult to place data centers more than 20,000 kilometers apart). In our example, we will simulate data centers in Santiago (33°S, 70°W), Paris (49°N, 2°E) and Melbourne (37°S, 144°E). Santiago to Paris is 11,642 kilometers, Paris to Melbourne is 16,781 kilometers, and Melbourne to Santiago is 11,269 kilometers (approximately).
 
+++++++++++++++++++++++
 Exercise - Replication
-----------------------
+++++++++++++++++++++++
 
-Because replication builds on journaling, use the ``jnlex`` directory created above. Enhance the ``jnlex_env`` shell script to assign values to two more environment variables, ``ydb_repl_instance`` and ``ydb_repl_instname``. ``ydb_repl_instance`` is the name of a file where a replicated instance stores information about the state of replication and ``ydb_repl_instance`` is the name of an instance – in this case, ``dummy``, but we will change it as we create copies of the instances.
+Because replication builds on journaling, use the :code:`jnlex` directory created above. Enhance the :code:`jnlex_env` shell script to assign values to two more environment variables, :code:`ydb_repl_instance` and :code:`ydb_repl_instname`. :code:`ydb_repl_instance` is the name of a file where a replicated instance stores information about the state of replication and :code:`ydb_repl_instname` is the name of an instance – in this case, :code:`dummy`, but we will change it as we create copies of the instances.
 
 .. code-block:: bash
 
@@ -1128,7 +1146,7 @@ Because replication builds on journaling, use the ``jnlex`` directory created ab
    export ydb_repl_instname=dummy
    yottadbuser@yottadbworkshop:~/jnlex$
 
-After sourcing ``jnlex_env`` to set the environment variables first, turn on replication. This will create a new set of journal files without a link to the prior journal files, as the journal formats differ for replicated vs. unreplicated database regions.
+After sourcing :code:`jnlex_env` to set the environment variables first, turn on replication. This will create a new set of journal files without a link to the prior journal files, as the journal formats differ for replicated vs. unreplicated database regions.
 
 Processes in replicated instances write updates to a shared memory segment called a Journal Pool
 
@@ -1220,7 +1238,7 @@ Now boot the three virtual machines. Each virtual machine will need two ports to
    kvm -enable-kvm -cpu host -m 256 -display none -net nic -net user,hostfwd=tcp::2222-:22,hostfwd=tcp::5000-:3000 -hda Paris.vmdk &
    kvm -enable-kvm -cpu host -m 256 -display none -net nic -net user,hostfwd=tcp::2223-:22,hostfwd=tcp::6000-:3000 -hda Melbourne.vmdk &
 
-To avoid confusion when you are working with multiple machines, change the name of each machine from yottadbworkshop to its location. The examples here are from the Santiago machine. You should do likewise with Paris and Melbourne. To effect a name change will need to (as root) edit the files /etc/hosts and /etc/hostname to change yottadbworkshop to santiago and then reboot.
+To avoid confusion when you are working with multiple machines, change the name of each machine from yottadbworkshop to its location. The examples here are from the Santiago machine. You should do likewise with Paris and Melbourne. To effect a name change will need to (as root) edit the files :code:`/etc/hosts` and :code:`/etc/hostname` to change yottadbworkshop to santiago and then reboot.
 
 .. code-block:: bash
 
@@ -1238,9 +1256,9 @@ To avoid confusion when you are working with multiple machines, change the name 
 
 You may also want to change the window/tab labels on your terminal emulator on the host to show which machine each session is connected to.
 
-To make it more realistic (and to reduce the probability of operator error) on each machine, execute ``sudo dpkg-reconfigure tzdata`` to specify the “local” time zone.
+To make it more realistic (and to reduce the probability of operator error) on each machine, execute :code:`sudo dpkg-reconfigure tzdata` to specify the “local” time zone.
 
-On each machine, edit ``jnlex_env`` in each instance and change the line ``export ydb_repl_instname=dummy`` and the line ``export ydb_repl_instance=$ydb_dir/ydb.repl`` to an instance file name for that instance. For example, on the Santiago instance:
+On each machine, edit :code:`jnlex_env` in each instance and change the line :code:`export ydb_repl_instname=dummy` and the line :code:`export ydb_repl_instance=$ydb_dir/ydb.repl` to an instance file name for that instance. For example, on the Santiago instance:
 
 .. code-block:: bash
 
@@ -1378,7 +1396,7 @@ Restart Melbourne as a replicating instance and notice that it catches up with u
 
    YDB>
 
-Now, simulate an unplanned outage of Paris by clicking on the “X” of the virtual machine console window, kill -9 of the process on the host, or otherwise powering down the virtual machine. Make Melbourne the new originating instance and Santiago its replicating instance. When an instance in a primary role goes down, YottaDB does not automatically bring up another instance in a primary role. As YottaDB does not have visibility of network status, a YottaDB instance in a secondary role cannot distinguish between a crashed primary and a network blip our outage that disrupts communication between it and the primary instance. YottaDB instances must be told whether to come up in a primary role or a secondary role.
+Now, simulate an unplanned outage of Paris by clicking on the “X” of the virtual machine console window, kill -9 of the process on the host, or otherwise powering down the virtual machine. Make Melbourne the new originating instance and Santiago its replicating instance. When an instance in a primary role goes down, YottaDB does not automatically bring up another instance in a primary role. As YottaDB does not have visibility of network status, a YottaDB instance in a secondary role cannot distinguish between a crashed primary and a network blip or outage that disrupts communication between it and the primary instance. YottaDB instances must be told whether to come up in a primary role or a secondary role.
 
 .. note::
 
@@ -1461,7 +1479,7 @@ Both Santiago and Paris should perform a rollback fetchresync before they become
    Mon Nov 18 17:32:48 2019 : Initiating START of source server for secondary instance [dummy]
    yottadbuser@santiago:~/jnlex$
 
-The purpose of the MUPIP JOURNAL ROLLBACK BACKWARD FETCHRESYNC operation is for Santiago to roll its database state back to a common state shared with Melbourne, so that when Santiago starts to operate in a secondary role to Melbourne in a primary role, and it catches up to Melbourne, the two instances are logically in the same state. Any transactions rolled off are called “lost” transactions (see `Replication and Backlogs`_). In this case,  no lost (unreplicated) transaction file was created as no transactions (updates) had to be rolled off to synchronize the instances.
+The purpose of the MUPIP JOURNAL ROLLBACK BACKWARD FETCHRESYNC operation is for Santiago to roll its database state back to a common state shared with Melbourne, so that when Santiago starts to operate in a secondary role to Melbourne in a primary role, and it catches up to Melbourne, the two instances are logically in the same state. Any transactions rolled off are called “lost” transactions (see :ref:`repl-bcklogs`). In this case,  no lost (unreplicated) transaction file was created as no transactions (updates) had to be rolled off to synchronize the instances.
 
 Now reboot Paris to simulate its recovery. When the system comes up (before performing any other database access), perform a rollback fetchresync.
 
@@ -1522,39 +1540,6 @@ After performing a MUPIP JOURNAL ROLLBACK BACKWARD FETCHRESYNC in Paris, start i
 
 .. code-block:: bash
 
-   yottadbuser@paris:~/jnlex$ mupip journal -rollback -backward -fetchresync=3000 -losttrans=/home/yottadbuser/jnlex/Unreplic_Trans_Report_`date +%Y%m%d%H%M%S`.txt "*"
-   %YDB-I-MUJNLSTAT, Initial processing started at Mon Nov 18 21:41:50 2019
-   %YDB-I-MUJNLSTAT, FETCHRESYNC processing started at Mon Nov 18 21:41:50 2019
-   Mon Nov 18 21:41:50 2019 : Assuming primary supports multisite functionality. Connecting using multisite communication protocol.
-   Mon Nov 18 21:41:50 2019 : Waiting for a connection...
-   Mon Nov 18 21:41:50 2019 : Connection established, using TCP send buffer size 87040 receive buffer size 374400
-   Mon Nov 18 21:41:50 2019 : Connection information:: Local: ::ffff:10.0.2.15:3000 Remote: ::ffff:10.0.2.2:34034
-   Mon Nov 18 21:41:50 2019 : Sending REPL_FETCH_RESYNC message with seqno 3 [0x3]
-   Mon Nov 18 21:41:50 2019 : Source and Receiver sides have same endianness
-   Mon Nov 18 21:41:50 2019 : Remote side source log file path is /home/yottadbuser/jnlex/source_paris_20191119:07:27:20.log; Source Server PID = 710
-   Mon Nov 18 21:41:50 2019 : Received REPL_NEED_INSTINFO message from primary instance [melbourne]
-   Mon Nov 18 21:41:50 2019 : Sending REPL_INSTINFO message
-   Mon Nov 18 21:41:50 2019 : Received REPL_NEED_HISTINFO message for Seqno 3 [0x3]
-   Mon Nov 18 21:41:50 2019 : Sending REPL_HISTINFO message with seqno 1 [0x1]
-   Mon Nov 18 21:41:50 2019 : History sent : Start Seqno = 1 [0x1] : Stream Seqno = 0 [0x0] : Root Primary = [paris] : Cycle = [1] : Creator pid = 545 : Created time = 1574104847 [0x5dd2ef0f] : History number = 0 : Prev History number = -1 : Stream # = 0 : History type = 1
-   Mon Nov 18 21:41:50 2019 : Received REPL_RESYNC_SEQNO message
-   Mon Nov 18 21:41:50 2019 : Received RESYNC SEQNO is 3 [0x3]
-   %YDB-I-MUJNLSTAT, Backward processing started at Mon Nov 18 21:41:50 2019
-   %YDB-I-RESOLVESEQNO, Resolving until sequence number 3 [0x0000000000000003]
-   %YDB-I-MUJNLSTAT, Before image applying started at Mon Nov 18 21:41:50 2019
-   %YDB-I-FILERENAME, File /home/yottadbuser/jnlex/brunnich.mjl is renamed to /home/yottadbuser/jnlex/brunnich.mjl_2019322
-   214150
-   %YDB-I-FILERENAME, File /home/yottadbuser/jnlex/linnaeus.mjl is renamed to /home/yottadbuser/jnlex/linnaeus.mjl_2019322
-   214150
-   %YDB-I-FILERENAME, File /home/yottadbuser/jnlex/ydb.mjl is renamed to /home/yottadbuser/jnlex/ydb.mjl_2019322214150
-   %YDB-I-MUJNLSTAT, Forward processing started at Mon Nov 18 21:41:50 2019
-   %YDB-I-RLBKJNSEQ, Journal seqno of the instance after rollback is 3 [0x0000000000000003]
-   %YDB-I-FILENOTCREATE, Lost transactions extract file /home/yottadbuser/jnlex/Unreplic_Trans_Report_20191118214150.txt n
-   ot created
-   %YDB-S-JNLSUCCESS, Show successful
-   %YDB-S-JNLSUCCESS, Verify successful
-   %YDB-S-JNLSUCCESS, Rollback successful
-   %YDB-I-MUJNLSTAT, End processing at Mon Nov 18 21:41:50 2019
    yottadbuser@paris:~/jnlex$ ./replicating_start
    Mon Nov 18 21:47:33 2019 : Initiating START of source server for secondary instance [dummy]
    yottadbuser@paris:~/jnlex$ yottadb -dir
@@ -1566,7 +1551,7 @@ After performing a MUPIP JOURNAL ROLLBACK BACKWARD FETCHRESYNC in Paris, start i
 
    YDB>
 
-Shut down all three instances cleanly to end the exercise. Run the ``originating_stop`` script in Melbourne:
+Shut down all three instances cleanly to end the exercise. Run the :code:`originating_stop` script in Melbourne:
 
 .. code-block:: bash
 
@@ -1582,7 +1567,7 @@ Shut down all three instances cleanly to end the exercise. Run the ``originating
    %YDB-I-MUFILRNDWNSUC, File /home/yottadbuser/jnlex/ydb.dat successfully rundown
    yottadbuser@melbourne:~/jnlex$
 
- and the ``replicating_stop`` script in Paris and Santiago (only Paris is shown here; Santiago will be identical except for the times).
+and the :code:`replicating_stop` script in Paris and Santiago (only Paris is shown here; Santiago will be identical except for the times).
 
 .. code-block:: bash
 
@@ -1600,6 +1585,8 @@ Shut down all three instances cleanly to end the exercise. Run the ``originating
    %YDB-I-MUFILRNDWNSUC, File /home/yottadbuser/jnlex/linnaeus.dat successfully rundown
    %YDB-I-MUFILRNDWNSUC, File /home/yottadbuser/jnlex/ydb.dat successfully rundown
    yottadbuser@paris:~/jnlex$
+
+.. _repl-bcklogs:
 
 ------------------------
 Replication and Backlogs
@@ -1637,10 +1624,11 @@ Adding Paris to the example above complicates it only slightly. There are two ca
 
 - Paris is at a transaction 96 or more. In this case, when Paris becomes a replicating instance to Melbourne, it performs a rollback to transaction 95 before starting replication. These transactions in the unreplicated transaction file do not need to be sent to Melbourne for reprocessing because they will be in the unreplicated transaction file from Santiago.
 
++++++++++++++++++++++++++++++++++++
 Exercise - Replication and Backlogs
------------------------------------
++++++++++++++++++++++++++++++++++++
 
-This exercise simulates a replication with a backlog. Start with Santiago as the originating instance replicating to Paris and Melbourne as replicating instances. Since Santiago most recently was a secondary instance, you should start Melbourne and Paris with MUPIP JOURNAL ROLLBACK BACKWARD FETCHRESYNC comamnds.
+This exercise simulates a replication with a backlog. Start with Santiago as the originating instance replicating to Paris and Melbourne as replicating instances. Since Santiago most recently was a secondary instance, you should start Melbourne and Paris with MUPIP JOURNAL ROLLBACK BACKWARD FETCHRESYNC commands.
 
 Start Santiago as the originating instance:
 
@@ -1850,7 +1838,7 @@ Since the largest Region Seqno is 0x6 (region DEFAULT in Paris), that is the pre
    Wed Nov 20 22:20:03 2019 : Initiating START of source server for secondary instance [santiago]
    yottadbuser@paris:~/jnlex$
 
-On Melbourne, perform the mupip journal -rollback -fetchresync operation and start operation as a replicating instance.
+On Melbourne, perform the :code:`mupip journal -rollback -fetchresync` operation and start operation as a replicating instance.
 
 .. code-block:: bash
 
@@ -1927,11 +1915,11 @@ Notice that Paris reports a zero backlog to Melbourne. Verify that Melbourne has
 
    YDB>
 
- Now boot the Santiago virtual machine, simulating it coming up after repairs, and perform a MUPIP JOURNAL ROLLBACK BACKWARD FETCHRESYNC. Note that the unreplicated transaction file ``Unreplic_Trans_Report_20191120183907.txt`` has data in it, the update that had not been replicated to Paris when Santiago crashed.
+Now boot the Santiago virtual machine, simulating it coming up after repairs, and perform a MUPIP JOURNAL ROLLBACK BACKWARD FETCHRESYNC. Note that the unreplicated transaction file :code:`Unreplic_Trans_Report_20191120183907.txt` has data in it, the update that had not been replicated to Paris when Santiago crashed.
 
 .. note::
 
-   YottaDB reports what the unreplicated updates were and resynchronizes the database; it is up to the application to reconcile the rolled-off unreplicated queries. YottaDB provides a `$zqgblmod() M function <https://docs.yottadb.com/ProgrammersGuide/functions.html#zqgblmod>`_ that an application can use to help with the reconciliation. If your application uses ``$zqgblmod()``, review the MUPIP REPLICATE SOURCE NEEDRESTART and MUPIP REPLICATE SOURCE LOSTTNCOMPLETE described in `Switchover Possibilities in an A -> B replication configuration <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html#switchover-possibilities-in-an-a-b-replication-configuration>`_ to ensure that ``$zqgblmod()`` reports accurate information.
+   YottaDB reports what the unreplicated updates were and resynchronizes the database; it is up to the application to reconcile the rolled-off unreplicated queries. YottaDB provides a `$zqgblmod() M function <../ProgrammersGuide/functions.html#zqgblmod-function>`_ that an application can use to help with the reconciliation. If your application uses :code:`$zqgblmod()`, review the MUPIP REPLICATE SOURCE NEEDRESTART and MUPIP REPLICATE SOURCE LOSTTNCOMPLETE described in `Switchover Possibilities in an A -> B replication configuration <../AdminOpsGuide/dbrepl.html#switchover-poss-a-b-repl>`_ to ensure that :code:`$zqgblmod()` reports accurate information.
 
 .. code-block:: bash
 
@@ -1999,16 +1987,17 @@ Backup
 
 Backup when an application is not running is straightforward – just copy the database files. Backup when an application is operating normally, without impacting the application (except of course for the additional IO load of the backup activity) is easy with YottaDB, and can be accomplished in two ways, one non-YottaDB and other YottaDB:
 
-- The non-YottaDB way is to use a disk mirror (e.g., RAID or SAN). Issue a `MUPIP FREEZE <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#mupip-freeze>`_ to momentarily freeze updates and flush updates to disk. Then break the mirror and release the freeze. After backing up the mirror, rebuild it, and let it “catch up.” This is not discussed further here.
+- The non-YottaDB way is to use a disk mirror (e.g., RAID or SAN). Issue a `MUPIP FREEZE <../AdminOpsGuide/dbmgmt.html#mupip-freeze>`_ to momentarily freeze updates and flush updates to disk. Then break the mirror and release the freeze. After backing up the mirror, rebuild it, and let it “catch up.” This is not discussed further here.
 
-- The YottaDB way: a transaction-consistent backup of an entire multi-region database can be accomplished with a single YottaDB `MUPIP BACKUP <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#backup>`_ command. There are numerous options to satisfy virtually every type of backup need.
+- The YottaDB way: a transaction-consistent backup of an entire multi-region database can be accomplished with a single YottaDB `MUPIP BACKUP <../AdminOpsGuide/dbmgmt.html#mupip-backup>`_ command. There are numerous options to satisfy virtually every type of backup need.
 
 .. note::
 
-   As a protection against operational mishaps, database files store their current journal file name in the database file header and journal file headers store their database file names. Copying database files when they are not open, or taking a snapshot with a MUPIP FREEZE will create database file copies that include journal file names. As this weakens the protection, consider a `MUPIP SET NOJOURNAL <https://docs.yottadb.com/AdminOpsGuide/ydbjournal.html#set-action-qualifiers>`_ on copied database files to wipe journal file names from the file headers of copied database files. `MUPIP BACKUP BACKUPDBJNL=DISABLE <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#bkupdbjnl>`_ also provides this option.
+   As a protection against operational mishaps, database files store their current journal file name in the database file header and journal file headers store their database file names. Copying database files when they are not open, or taking a snapshot with a MUPIP FREEZE will create database file copies that include journal file names. As this weakens the protection, consider a `MUPIP SET NOJOURNAL <../AdminOpsGuide/ydbjournal.html#set-action-qualifiers>`_ on copied database files to wipe journal file names from the file headers of copied database files. `MUPIP BACKUP BACKUPDBJNL=DISABLE <../AdminOpsGuide/dbmgmt.html#mupip-backup-bkupdbjnl>`_ also provides this option.
 
++++++++++++++++++
 Exercise - Backup
------------------
++++++++++++++++++
 
 This exercise demonstrates backups that preserve transaction-consistency in a multi-region database with a simulated application that performs transactions that span multiple database regions. The database created in the exercises so far has three regions, CRUSTACEANS, DEFAULT, and MAMMALS. Until externally terminated, each process in the simulated workload has an infinite loop that makes updates inside a transaction to all three regions as follows:
 
@@ -2033,17 +2022,17 @@ The database is initialized as follows:
 
 Even when multiple concurrent simulated application processes are running and updating the database, regardless of the language in which each application process is written, ACID properties require:
 
-- The series of ``time`` (``time>0``) subscripts for ``^Delta()``, ``^Crab()`` and ``^Horse`` to be the same.
-- For the ``time`` subscripts for which nodes exist:
+- The series of :code:`time` (:code:`time>0`) subscripts for :code:`^Delta()`, :code:`^Crab()` and :code:`^Horse` to be the same.
+- For the :code:`time` subscripts for which nodes exist:
 
-  - The sum of ``Crab(time)`` and ``Horse(time)`` to be zero.
-  - ``^Horse(time)`` to equal the sum of all the entries for ``^Delta()`` through ``^Delta(time)``.
+  - The sum of :code:`Crab(time)` and :code:`Horse(time)` to be zero.
+  - :code:`^Horse(time)` to equal the sum of all the entries for :code:`^Delta()` through :code:`^Delta(time)`.
 
 ACID properties require the above to be satisfied for any transaction-consistent backup of the database.
 
 Work with whichever instance was your last originating instance; if you followed the replication exercise above, this is the Paris instance. This is mostly a matter of convenience - as you know from the replication exercises, any instance can be switched to a primary role, and other instances can be swiched to secondary roles following a MUPIP JOURNAL ROLLBACK BACKWARD FETCHRESYNC command with the primary instance.
 
-Prepare for backups by creating a ``jnlex/backup`` subdirectory where you can put your backups. In that directory, copy the ``jnlex_env`` and ``ydb.gld`` files from the ``jnlex`` directory, naming the former to ``jnlex_bak_env``. Edit ``jnlex_bak_env`` to  set the ``ydb_dir`` environment variable to point to the ``backup`` subdirectory. Note that since the file names in each segent of the global directory point to the corresponding files in the ``$ydb_dir`` directory, changing the value of ``ydb_dir`` suffices to have the global directory point to the database files in the subdirectory, and no change to the global directory is required,
+Prepare for backups by creating a :code:`jnlex/backup` subdirectory where you can put your backups. In that directory, copy the :code:`jnlex_env` and :code:`ydb.gld` files from the :code:`jnlex` directory, naming the former to :code:`jnlex_bak_env`. Edit :code:`jnlex_bak_env` to  set the :code:`ydb_dir` environment variable to point to the :code:`backup` subdirectory. Note that since the file names in each segent of the global directory point to the corresponding files in the :code:`$ydb_dir` directory, changing the value of :code:`ydb_dir` suffices to have the global directory point to the database files in the subdirectory, and no change to the global directory is required,
 
 .. code-block:: bash
 
@@ -2064,7 +2053,7 @@ Prepare for backups by creating a ``jnlex/backup`` subdirectory where you can pu
    yottadbuser@paris:~/jnlex/backup$
 
 
-Revert to the ``jnlex`` directory. Remember to source the ``jnlex_env`` file if you have not already.
+Revert to the :code:`jnlex` directory. Remember to source the :code:`jnlex_env` file if you have not already.
 
 .. note::
    If you shut down and restarted the Paris instance after the previous exercise, you will need to run a MUPIP JOURNAL ROLLBACK BACKWARD if you did not shut it down cleanly. Even if you shut it down cleanly, that is a safe command to run. Then, you will need to start at least one Source Server.
@@ -2220,7 +2209,7 @@ After the backup is completed, you can terminate the application processes updat
    (wd now: ~/jnlex)
    yottadbuser@paris:~/jnlex$
 
-Now change to the backup directory and ``source jnlex_bak_env`` to set the environment variables. Notice that the MUPIP BACKUP operation has created three database files and a replication instance file. If you want to create a new instance, e.g., Beijing, you can use these backed up database and replication instance files.
+Now change to the backup directory and :code:`source jnlex_bak_env` to set the environment variables. Notice that the MUPIP BACKUP operation has created three database files and a replication instance file. If you want to create a new instance, e.g., Beijing, you can use these backed up database and replication instance files.
 
 Download a program to verify that ACID properties are preserved in the backed up database, your choice of programs in C (`xyzVerifyC.c <./xyzVerifyC.c>`_), Go (`xyzVerifyGo.go <./xyzVerifyGo.go>`_), M (`xyzVerifyM.m <./xyzVerifyM.m>`_), Perl (`xyzVerifyPerl.pl <./xyzVerifyPerl.pl>`_), or Rust( `xyzVerifyRust.rs <https://gitlab.com/YottaDB/Lang/YDBRust/-/blob/master/examples/xyzVerifyRust.rs>`_). As with previous Rust programs, run xyzVerifyRust.rs from the YDBRust directory. Although all five are shown here, as with initialization, you only need one.
 
@@ -2241,8 +2230,9 @@ Download a program to verify that ACID properties are preserved in the backed up
    yottadbuser@paris:~/jnlex/YDBRust$ cargo run --quiet --example xyzVerifyRust
    ACID test pass
 
+++++++++++++++++++++++++++++++++++++++++
 Exercise - Replication Briefly Revisited
-----------------------------------------
+++++++++++++++++++++++++++++++++++++++++
 
 During the backup exercise, the application has not been replicating to Melbourne and Santiago. This would have created quite a backlog, reported by the MUPIP REPLICATE SOURCE BACKLOG command.
 

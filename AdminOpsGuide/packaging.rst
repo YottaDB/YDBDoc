@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2017-2021 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -118,7 +118,7 @@ On x86 GNU/Linux (64-bit Ubuntu 12.04), execute the following command to compile
    $ gcc -c month_starting.c -I$ydb_dist
    $ gcc month_starting.o -o friday -L $ydb_dist -Wl,-rpath=$ydb_dist -lyottadb
 
-For compiling the month_starting.c program on other platforms, refer to the `Integrating External Routines chapter of the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/extrout.html>`_.
+For compiling the month_starting.c program on other platforms, refer to the `Integrating External Routines chapter of the Programmer's Guide <../ProgrammersGuide/extrout.html>`_.
 
 Execute the following command:
 

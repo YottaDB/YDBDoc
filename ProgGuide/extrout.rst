@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2018-2021 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -105,7 +105,9 @@ Legal directions are I, O, or IO for input, output, or input/output, respectivel
 
 The following table describes the legal types defined in the C header file $ydb_dist/libyottadb.h:
 
-**Type: Usage**
++++++++++++++
+Type: Usage
++++++++++++++
 
 Void: Specifies that the function does not return a value.
 
@@ -127,15 +129,14 @@ ydb_char_t** : For passing a pointer to a "C" style string.
 
 ydb_string_t* : For passing a structure in the form {int length;char \*address}. Useful for moving blocks of memory to or from YottaDB.
 
-ydb_pointertofunc_t : For passing callback function pointers. For details see `Callback Mechanism`_.
+ydb_pointertofunc_t : For passing callback function pointers. For details see :ref:`callback-mech`.
 
-**Note:**
+.. note::
+   If an external call's function argument is defined in the external call table, YottaDB allows invoking that function without specifying a value of the argument. All non-trailing and output-only arguments which do not specify a value translate to the following default values in C:
 
-If an external call's function argument is defined in the external call table, YottaDB allows invoking that function without specifying a value of the argument. All non-trailing and output-only arguments which do not specify a value translate to the following default values in C:
-
-* All numeric types: 0
-* ydb_char_t * and ydb_char_t \*\*: Empty string
-* ydb_string_t \*: A structure with 'length' field matching the preallocation size and 'address' field being a NULL pointer.
+   * All numeric types: 0
+   * ydb_char_t * and ydb_char_t \*\*: Empty string
+   * ydb_string_t \*: A structure with 'length' field matching the preallocation size and 'address' field being a NULL pointer.
 
 In the mathpak package example, the following invocation translate inval to the default value, that is, 0.
 
@@ -233,7 +234,7 @@ More detailed descriptions follow.
 
 The complete source code for reference implementations of these functions is provided, licensed under the same terms as YottaDB. You are at liberty to modify them to suit your specific YottaDB database encryption needs.
 
-For more information and examples, refer to `Database Encryption <https://docs.yottadb.com/AdminOpsGuide/encryption.html>`_ in the Administration and Operations Guide.
+For more information and examples, refer to `Database Encryption <../AdminOpsGuide/encryption.html>`_ in the Administration and Operations Guide.
 
 ++++++++++++++++++++++++++++++++++++
 Pre-allocation of Output Parameters
@@ -252,55 +253,57 @@ Specification of a pre-allocation value should follow these rules:
 .. note::
    Pre-allocation is optional for all output-only parameters except ydb_string_t * and ydb_char_t \*. Pre-allocation yields better management of memory for the external call. When an external call exceeds its specified preallocation (ydb_string_t * or ydb_char_t * output), YottaDB produces the EXCEEDSPREALLOC error. In the case that the user allocates space for the character pointer inside a ydb_string_t * type output parameter, a length field longer than the specified preallocated size for the output parameter does not cause an EXCEEDSPREALLOC error.
 
+ .. _callback-mech:
+
 +++++++++++++++++++++++++++++
 Callback Mechanism
 +++++++++++++++++++++++++++++
 
 YottaDB exposes certain functions that are internal to the YottaDB runtime library for the external calls via a callback mechanism. While making an external call, YottaDB populates and exposes a table of function pointers containing addresses to call-back functions.
 
-+----------+---------------------+--------------------+--------------------+----------------------------------------------------------------------------------------------------------------------------+
-| Index    | Function            | Argument           | Type               | Description                                                                                                                |
-+==========+=====================+====================+====================+============================================================================================================================+
-| 0        | hiber_start         |                    |                    | sleep for a specified time                                                                                                 |
-+----------+---------------------+--------------------+--------------------+----------------------------------------------------------------------------------------------------------------------------+
-|          |                     | slp_time           | integer            | milliseconds to sleep                                                                                                      |
-+----------+---------------------+--------------------+--------------------+----------------------------------------------------------------------------------------------------------------------------+
-| 1        | hiber_start_wait_any|                    |                    | sleep for a specified time or until any interrupt, whichever comes first                                                   |
-+----------+---------------------+--------------------+--------------------+----------------------------------------------------------------------------------------------------------------------------+
-|          |                     | slp_time           | integer            | milliseconds to sleep                                                                                                      |
-+----------+---------------------+--------------------+--------------------+----------------------------------------------------------------------------------------------------------------------------+
-| 2        | start_timer         |                    |                    | start a timer and invoke a handler function when the timer expires                                                         |
-+----------+---------------------+--------------------+--------------------+----------------------------------------------------------------------------------------------------------------------------+
-|          |                     | tid                | integer            | unique user specified identifier for this timer                                                                            |
-+----------+---------------------+--------------------+--------------------+----------------------------------------------------------------------------------------------------------------------------+
-|          |                     | time_to_expire     | integer            | milliseconds before handler is invoked                                                                                     |
-+----------+---------------------+--------------------+--------------------+----------------------------------------------------------------------------------------------------------------------------+
-|          |                     | handler            | pointer to function| specifies the entry of the handler function to invoke                                                                      |
-+----------+---------------------+--------------------+--------------------+----------------------------------------------------------------------------------------------------------------------------+
-|          |                     | hlen               | integer            | length of data to be passed via the hdata argument                                                                         |
-+----------+---------------------+--------------------+--------------------+----------------------------------------------------------------------------------------------------------------------------+
-|          |                     | hdata              | pointer to char    | data (if any) to pass to the handler function                                                                              |
-+----------+---------------------+--------------------+--------------------+----------------------------------------------------------------------------------------------------------------------------+
-| 3        | cancel_timer        |                    |                    | stop a timer previously started with start_timer(), if it has not yet expired                                              |
-+----------+---------------------+--------------------+--------------------+----------------------------------------------------------------------------------------------------------------------------+
-|          |                     | tid                | integer            | unique user specified identifier of the timer to cancel                                                                    |
-+----------+---------------------+--------------------+--------------------+----------------------------------------------------------------------------------------------------------------------------+
-| 4        | ydb_malloc          |                    |                    | allocates process memory from the heap                                                                                     |
-+----------+---------------------+--------------------+--------------------+----------------------------------------------------------------------------------------------------------------------------+
-|          |                     | <return-value>     | pointer to void    | address of the allocated space                                                                                             |
-+----------+---------------------+--------------------+--------------------+----------------------------------------------------------------------------------------------------------------------------+
-|          |                     | space needed       | 32-bit platforms:  | bytes of space to allocate. This has the same signature as the system malloc() call.                                       |
-|          |                     |                    | 32-bit unsigned    |                                                                                                                            |
-|          |                     |                    | integer            |                                                                                                                            |
-|          |                     |                    |                    |                                                                                                                            |
-|          |                     |                    | 64-bit platforms:  |                                                                                                                            |
-|          |                     |                    | 64-bit unsigned    |                                                                                                                            |
-|          |                     |                    | integer            |                                                                                                                            |
-+----------+---------------------+--------------------+--------------------+----------------------------------------------------------------------------------------------------------------------------+
-| 5        | ydb_free            |                    |                    | return memory previously allocated with ydb_malloc()                                                                       |
-+----------+---------------------+--------------------+--------------------+----------------------------------------------------------------------------------------------------------------------------+
-|          |                     | free_address       | pointer to void    | address of the previously allocated space                                                                                  |
-+----------+---------------------+--------------------+--------------------+----------------------------------------------------------------------------------------------------------------------------+
++----------+---------------------+--------------------+--------------------+-------------------------------------------------------------------------------------------+
+| Index    | Function            | Argument           | Type               | Description                                                                               |
++==========+=====================+====================+====================+===========================================================================================+
+| 0        | hiber_start         |                    |                    | sleep for a specified time                                                                |
++----------+---------------------+--------------------+--------------------+-------------------------------------------------------------------------------------------+
+|          |                     | slp_time           | integer            | milliseconds to sleep                                                                     |
++----------+---------------------+--------------------+--------------------+-------------------------------------------------------------------------------------------+
+| 1        | hiber_start_wait_any|                    |                    | sleep for a specified time or until any interrupt, whichever comes first                  |
++----------+---------------------+--------------------+--------------------+-------------------------------------------------------------------------------------------+
+|          |                     | slp_time           | integer            | milliseconds to sleep                                                                     |
++----------+---------------------+--------------------+--------------------+-------------------------------------------------------------------------------------------+
+| 2        | start_timer         |                    |                    | start a timer and invoke a handler function when the timer expires                        |
++----------+---------------------+--------------------+--------------------+-------------------------------------------------------------------------------------------+
+|          |                     | tid                | integer            | unique user specified identifier for this timer                                           |
++----------+---------------------+--------------------+--------------------+-------------------------------------------------------------------------------------------+
+|          |                     | time_to_expire     | integer            | milliseconds before handler is invoked                                                    |
++----------+---------------------+--------------------+--------------------+-------------------------------------------------------------------------------------------+
+|          |                     | handler            | pointer to function| specifies the entry of the handler function to invoke                                     |
++----------+---------------------+--------------------+--------------------+-------------------------------------------------------------------------------------------+
+|          |                     | hlen               | integer            | length of data to be passed via the hdata argument                                        |
++----------+---------------------+--------------------+--------------------+-------------------------------------------------------------------------------------------+
+|          |                     | hdata              | pointer to char    | data (if any) to pass to the handler function                                             |
++----------+---------------------+--------------------+--------------------+-------------------------------------------------------------------------------------------+
+| 3        | cancel_timer        |                    |                    | stop a timer previously started with start_timer(), if it has not yet expired             |
++----------+---------------------+--------------------+--------------------+-------------------------------------------------------------------------------------------+
+|          |                     | tid                | integer            | unique user specified identifier of the timer to cancel                                   |
++----------+---------------------+--------------------+--------------------+-------------------------------------------------------------------------------------------+
+| 4        | ydb_malloc          |                    |                    | allocates process memory from the heap                                                    |
++----------+---------------------+--------------------+--------------------+-------------------------------------------------------------------------------------------+
+|          |                     | <return-value>     | pointer to void    | address of the allocated space                                                            |
++----------+---------------------+--------------------+--------------------+-------------------------------------------------------------------------------------------+
+|          |                     | space needed       | 32-bit platforms:  | bytes of space to allocate. This has the same signature as the system malloc() call.      |
+|          |                     |                    | 32-bit unsigned    |                                                                                           |
+|          |                     |                    | integer            |                                                                                           |
+|          |                     |                    |                    |                                                                                           |
+|          |                     |                    | 64-bit platforms:  |                                                                                           |
+|          |                     |                    | 64-bit unsigned    |                                                                                           |
+|          |                     |                    | integer            |                                                                                           |
++----------+---------------------+--------------------+--------------------+-------------------------------------------------------------------------------------------+
+| 5        | ydb_free            |                    |                    | return memory previously allocated with ydb_malloc()                                      |
++----------+---------------------+--------------------+--------------------+-------------------------------------------------------------------------------------------+
+|          |                     | free_address       | pointer to void    | address of the previously allocated space                                                 |
++----------+---------------------+--------------------+--------------------+-------------------------------------------------------------------------------------------+
 
 The external routine can access and invoke a call-back function in any of the following mechanisms:
 
@@ -322,7 +325,7 @@ Since both YottaDB runtime environment and the external C functions execute in t
 * YottaDB uses timer signals so often that the likelihood of a system call being interrupted is high. So, all system calls in the external program can return EINTR if interrupted by a signal.
 * Handler functions invoked with start_timer must not invoke services that are identified by the Operating System documentation as unsafe for signal handlers (or not identified as safe) - consult the system documentation or man pages for this information. Such services cause non-deterministic failures when they are interrupted by a function that then attempts to call them, wrongly assuming they are re-entrant.
 
-The ydb_stdout_stderr_adjust() function checks whether stdout (file descriptor 1) and stderr (file descriptor 2) are the same file. If they are the same file, the function routes writes to stdout instead of stderr. This ensures that output appears in the order in which it was written. Otherwise, owing to IO buffering, output can appear in an order different from that in which it was written. Application code that mixes C and M code, and explicitly redirects stdout or stderr should call this function as soon as possible after the redirection. Refer to the function definition in the `Multi-Language Programmer's Guide <https://docs.yottadb.com/MultiLangProgGuide/MultiLangProgGuide.html#ydb-stdout-stderr-adjust>`_.
+The ydb_stdout_stderr_adjust() function checks whether stdout (file descriptor 1) and stderr (file descriptor 2) are the same file. If they are the same file, the function routes writes to stdout instead of stderr. This ensures that output appears in the order in which it was written. Otherwise, owing to IO buffering, output can appear in an order different from that in which it was written. Application code that mixes C and M code, and explicitly redirects stdout or stderr should call this function as soon as possible after the redirection. Refer to the function definition in the `Multi-Language Programmer's Guide <../MultiLangProgGuide/cprogram.html#ydb-stdout-stderr-adjust-adjustt-fn>`_.
 
 ++++++++++++++++++++++++++++++++++++++++
 Examples of Using External Calls
@@ -483,6 +486,8 @@ Example:ydb_malloc/ydb_free callbacks using ydb_pointertofunc_t
        free_fn = f;
    }
 
+.. _calls-ext-rt-call-ins:
+
 -----------------------------------------
 Calls from External Routines: Call-Ins
 -----------------------------------------
@@ -504,37 +509,39 @@ To facilitate Call-Ins to M routines, the YottaDB distribution directory ($ydb_d
 
 The following sections describe the files relevant to using Call-Ins.
 
-**libyottadb.h**
+~~~~~~~~~~~~~~
+libyottadb.h
+~~~~~~~~~~~~~~
 
 The header file provides signatures of all Call-In interface functions and definitions of those valid data types that can be passed from C to M. YottaDB strongly recommends that these types be used instead of native types (int, char, float, and so on), to avoid possible mismatch problems during parameter passing.
 
 libyottadb.h defines the following types that can be used in Call-Ins.
 
-+-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| Type                  | Usage                                                                                                                                                        |
-+=======================+==============================================================================================================================================================+
-| void                  | Used to express that there is no function return value                                                                                                       |
-+-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| ydb_int_t             | ydb_int_t has 32-bit length on all platforms.                                                                                                                |
-+-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| ydb_int64_t           | ydb_int64_t has 64-bit length on 64-bit platforms, and is unsupported on 32-bit platforms.                                                                   |
-+-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| ydb_uint_t            | ydb_uint_t has 32-bit length on all platforms                                                                                                                |
-+-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| ydb_uint64_t          | ydb_uint64_t has 64-bit length on 64-bit platforms, and is unsupported on 32-bit platforms.                                                                  |
-+-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| ydb_long_t            | ydb_long_t has 32-bit length on 32-bit platforms and 64-bit length on 64-bit platforms. It is much the same as the C language long type.                     |
-+-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| ydb_ulong_t           | ydb_ulong_t is much the same as the C language unsigned long type.                                                                                           |
-+-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| ydb_float_t           | floating point number                                                                                                                                        |
-+-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| ydb_double_t          | Same as above but double precision.                                                                                                                          |
-+-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| ydb_long_t*           | Pointer to ydb_long_t. Good for returning integers.                                                                                                          |
-+-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| ydb_ulong_t*          | Pointer to ydb_ulong_t. Good for returning unsigned integers.                                                                                                |
-+-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+
++-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------+
+| Type                  | Usage                                                                                                                                            |
++=======================+==================================================================================================================================================+
+| void                  | Used to express that there is no function return value                                                                                           |
++-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------+
+| ydb_int_t             | ydb_int_t has 32-bit length on all platforms.                                                                                                    |
++-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------+
+| ydb_int64_t           | ydb_int64_t has 64-bit length on 64-bit platforms, and is unsupported on 32-bit platforms.                                                       |
++-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------+
+| ydb_uint_t            | ydb_uint_t has 32-bit length on all platforms                                                                                                    |
++-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------+
+| ydb_uint64_t          | ydb_uint64_t has 64-bit length on 64-bit platforms, and is unsupported on 32-bit platforms.                                                      |
++-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------+
+| ydb_long_t            | ydb_long_t has 32-bit length on 32-bit platforms and 64-bit length on 64-bit platforms. It is much the same as the C language long type.         |
++-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------+
+| ydb_ulong_t           | ydb_ulong_t is much the same as the C language unsigned long type.                                                                               |
++-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------+
+| ydb_float_t           | floating point number                                                                                                                            |
++-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------+
+| ydb_double_t          | Same as above but double precision.                                                                                                              |
++-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------+
+| ydb_long_t*           | Pointer to ydb_long_t. Good for returning integers.                                                                                              |
++-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------+
+| ydb_ulong_t*          | Pointer to ydb_ulong_t. Good for returning unsigned integers.                                                                                    |
++-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------+
 
 .. code-block:: C
 
@@ -575,7 +582,11 @@ ydb_hiber_start() always sleeps until the time expires; ydb_hiber_start_wait_any
 
 ydb_int64_6 and ydb_uint64_t are supported on 64-bit platforms effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_ and have no corresponding gtm_* type.
 
-**Call-In table**
+.. _call-in-table:
+
+~~~~~~~~~~~~~~~
+Call-In table
+~~~~~~~~~~~~~~~
 
 The Call-In table file is a text file that contains the signatures of all M label references that get called from C. In order to pass the typed C arguments to the type-less M formallist, the environment variable ydb_ci must be defined to point to the Call-In table file path. Each signature must be specified separately in a single line. YottaDB reads this file and interprets each line according to the following convention (specifications within box brackets "[]", are optional):
 
@@ -610,7 +621,7 @@ The <direction> indicates the type of operation that YottaDB performs on the par
 
 Call-In tables support comments effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_ YottaDB ignores text from a double slash (//) on a line to the end of the line.
 
-Here is an example of Call-In table (ydb_access.ci) for _ydbaccess.m (see `Example: Calling YottaDB from a C Program`_):
+Here is an example of Call-In table (ydb_access.ci) for _ydbaccess.m (see :ref:`call-ydb-from-c-prog`):
 
 .. code-block:: none
 
@@ -622,13 +633,17 @@ Here is an example of Call-In table (ydb_access.ci) for _ydbaccess.m (see `Examp
    ydbset    : void set^%ydbaccess( I:ydb_char_t*, I:ydb_string_t*, O:ydb_char_t*)
    ydbxecute : void xecute^%ydbaccess( I:ydb_char_t*, O:ydb_char_t* )
 
+.. _call-in-intf:
+
 ++++++++++++++++++++++++
 Call-In Interface
 ++++++++++++++++++++++++
 
 This section is further broken down into 6 subsections for an easy understanding of the Call-In interface. The section is concluded with an elaborate example.
 
-**Initialize YottaDB**
+~~~~~~~~~~~~~~~~~~~~
+Initialize YottaDB
+~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: C
 
@@ -640,7 +655,9 @@ ydb_init() returns zero (0) on success. On failure, it returns the YottaDB error
 
 If Call-Ins are used from an external call function (that is, a C function that has itself been called from M code), ydb_init() is not needed, because YottaDB is initialized before the External Call. All ydb_init() calls from External Calls functions are ignored by YottaDB.
 
-**Call an M Routine from C**
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+Call an M Routine from C
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 YottaDB provides 4 interfaces for calling a M routine from C. These are:
 
@@ -651,11 +668,13 @@ YottaDB provides 4 interfaces for calling a M routine from C. These are:
 
 ydb_cip  and ydb_cip_t offer better performance on calls after the first one.
 
-While ydb_ci() and ydb_cip() are for single threaded applications, ydb_ci_t() and ydb_cip_t() are for multi-threaded applications that call M routines. See the `Threads <https://docs.yottadb.com/MultiLangProgGuide/programmingnotes.html#threads>`_ section in the Multi-Language Programmer's Guide for details.
+While ydb_ci() and ydb_cip() are for single threaded applications, ydb_ci_t() and ydb_cip_t() are for multi-threaded applications that call M routines. See the `Threads <../MultiLangProgGuide/programmingnotes.html#threads>`_ section in the Multi-Language Programmer's Guide for details.
 
-~~~~~~
+.. _ydb-ci-intf:
+
+^^^^^^^^
 ydb_ci
-~~~~~~
+^^^^^^^^
 
 .. code-block:: C
 
@@ -673,11 +692,13 @@ Optional second argument: ret_val, a pre-allocated pointer through which YottaDB
 
 Optional list of arguments to be passed to the M routine's formallist: the number of arguments and the type of each argument must match the number of parameters, and parameter types specified in the corresponding Call-In table entry. All pointer arguments must be pre-allocated. YottaDB assumes that any pointer, which is passed for O/IO-parameter points to valid write-able memory.
 
-The status value returned by ydb_ci() indicates the YottaDB status code: zero (0) if successful, or a non-zero error code on failure. The error string corrsponding to the failure code can be read into a buffer by immediately calling ydb_zstatus(). For more details, see the `ydb_zstatus`_ section below.
+The status value returned by ydb_ci() indicates the YottaDB status code: zero (0) if successful, or a non-zero error code on failure. The error string corrsponding to the failure code can be read into a buffer by immediately calling ydb_zstatus(). For more details, see the :ref:`ydb-zstatus` section below.
 
-~~~~~~~~
+.. _ydb-ci-t-intf:
+
+^^^^^^^^^^
 ydb_ci_t
-~~~~~~~~
+^^^^^^^^^^
 
 .. code-block:: C
 
@@ -697,9 +718,11 @@ Second argument: ci_rtn_name, a null-terminated C character string indicating th
 
 ydb_ci_t() works in the same way and returns the same values as ydb_ci().
 
-~~~~~~~~
+.. _ydb-cip-intf:
+
+^^^^^^^^^
 ydb_cip
-~~~~~~~~
+^^^^^^^^^
 
 .. code-block:: C
 
@@ -735,9 +758,11 @@ Optional list of arguments to be passed to the M routine's formallist: the numbe
 
 The status value returned by ydb_cip() indicates the YottaDB status code: zero (0) if successful, or a non-zero error code on failure. The error message corrsponding to the failure code can be read into a buffer by immediately calling ydb_zstatus().
 
-~~~~~~~~~~
+.. _ydb-cip-t-intf:
+
+^^^^^^^^^^^
 ydb_cip_t
-~~~~~~~~~~
+^^^^^^^^^^^
 
 .. code-block:: C
 
@@ -755,6 +780,8 @@ First argument: tptoken, a unique transaction processing token that refers to th
 
 ydb_cip_t() works in the same way and returns the same values as ydb_cip().
 
+.. _call-ydb-from-c-prog:
+
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Example: Calling YottaDB from a C Program
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -767,14 +794,15 @@ Here is a working example of a C program that uses call-ins to invoke YottaDB. T
 | ydb_access.c (ydb_ci interface)| `ydbci_ydbaccess.zip <./ydbci_ydbaccess.zip>`_                                               |
 +--------------------------------+----------------------------------------------------------------------------------------------+
 
-
-**Print Error Messages**
+~~~~~~~~~~~~~~~~~~~~~~
+Print Error Messages
+~~~~~~~~~~~~~~~~~~~~~~
 
 .. _ydb-zstatus:
 
-~~~~~~~~~~~~
+^^^^^^^^^^^^^
 ydb_zstatus
-~~~~~~~~~~~~
+^^^^^^^^^^^^^
 
 .. code-block:: C
 
@@ -784,7 +812,9 @@ This function returns the null-terminated $ZSTATUS message of the last failure v
 
 Effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_, ydb_zstatus() has an :code:`int` return value with a value of YDB_ERR_INVSTRLEN if the buffer supplied is not large enough to hold the message and YDB_OK otherwise. ydb_zstatus() copies what can be copied to the buffer (including a null terminator byte) if the length is non-zero.
 
-**Exit from YottaDB**
+~~~~~~~~~~~~~~~~~~~
+Exit from YottaDB
+~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: C
 
@@ -860,33 +890,33 @@ Depending on the direction (I, O, or IO) of a particular type, both call-ins and
 
 In the following table, the YottaDB->C limit applies to 1 and the C->YottaDB limit applies to 2. In other words, YottaDB->C applies to I direction for call-outs and O direction for call-ins and C->YottaDB applies to I direction for call-ins and O direction for call-outs.
 
-+----------------------------------------------------------------------------------+-------------------------------------------------------------------+----------------------------------------------------------------------+
-|                                                                                  | YottaDB->C                                                        | C->YottaDB                                                           |
-+==================================================================================+====================+==============================================+============================+=========================================+
-| **Type**                                                                         | **Precision**      | **Range**                                    | **Precision**              | **Range**                               |
-+----------------------------------------------------------------------------------+--------------------+----------------------------------------------+----------------------------+-----------------------------------------+
-| ydb_int_t, ydb_int_t *                                                           | Full               | [-2^31+1, 2^31-1]                            | Full                       | [-2^31, 2^31-1]                         |
-+----------------------------------------------------------------------------------+--------------------+----------------------------------------------+----------------------------+-----------------------------------------+
-| ydb_uint_t, ydb_uint_t *                                                         | Full               | [0, 2^32-1]                                  | Full                       | [0, 2^32-1]                             |
-+----------------------------------------------------------------------------------+--------------------+----------------------------------------------+----------------------------+-----------------------------------------+
-| ydb_long_t, ydb_long_t * (64-bit)                                                | 18 digits          | [-2^63+1, 2^63-1]                            | 18 digits                  | [-2^63, 2^63-1]                         |
-+----------------------------------------------------------------------------------+--------------------+----------------------------------------------+----------------------------+-----------------------------------------+
-| ydb_long_t, ydb_long_t * (32-bit)                                                | Full               | [-2^31+1, 2^31-1]                            | Full                       | [-2^31, 2^31-1]                         |
-+----------------------------------------------------------------------------------+--------------------+----------------------------------------------+----------------------------+-----------------------------------------+
-| ydb_ulong_t, ydb_ulong_t * (64-bit)                                              | 18 digits          | [0, 2^64-1]                                  | 18 digits                  | [0, 2^64-1]                             |
-+----------------------------------------------------------------------------------+--------------------+----------------------------------------------+----------------------------+-----------------------------------------+
-| ydb_ulong_t, ydb_ulong_t * (32-bit)                                              | Full               | [0, 2^32-1]                                  | Full                       | [0, 2^32-1]                             |
-+----------------------------------------------------------------------------------+--------------------+----------------------------------------------+----------------------------+-----------------------------------------+
-| ydb_float_t, ydb_float_t *                                                       | 6-9 digits         | [1E-43, 3.4028235E38]                        | 6 digits                   | [1E-43, 3.4028235E38]                   |
-+----------------------------------------------------------------------------------+--------------------+----------------------------------------------+----------------------------+-----------------------------------------+
-| ydb_double_t, ydb_double_t *                                                     | 15-17 digits       | [1E-43, 1E47]                                | 15 digits                  | [1E-43, 1E47]                           |
-+----------------------------------------------------------------------------------+--------------------+----------------------------------------------+----------------------------+-----------------------------------------+
-| ydb_char_t *                                                                     | N/A                | ["", 1MiB]                                   | N/A                        | ["", 1MiB]                              |
-+----------------------------------------------------------------------------------+--------------------+----------------------------------------------+----------------------------+-----------------------------------------+
-| ydb_char_t **                                                                    | N/A                | ["", 1MiB]                                   | N/A                        | ["", 1MiB]                              |
-+----------------------------------------------------------------------------------+--------------------+----------------------------------------------+----------------------------+-----------------------------------------+
-| ydb_string_t *                                                                   | N/A                | ["", 1MiB]                                   | N/A                        | ["", 1MiB]                              |
-+----------------------------------------------------------------------------------+--------------------+----------------------------------------------+----------------------------+-----------------------------------------+
++----------------------------------------------------+---------------------------------------------------+----------------------------------------------------------------------+
+|                                                    | YottaDB->C                                        | C->YottaDB                                                           |
++====================================================+====================+==============================+============================+=========================================+
+| **Type**                                           | **Precision**      | **Range**                    | **Precision**              | **Range**                               |
++----------------------------------------------------+--------------------+------------------------------+----------------------------+-----------------------------------------+
+| ydb_int_t, ydb_int_t *                             | Full               | [-2^31+1, 2^31-1]            | Full                       | [-2^31, 2^31-1]                         |
++----------------------------------------------------+--------------------+------------------------------+----------------------------+-----------------------------------------+
+| ydb_uint_t, ydb_uint_t *                           | Full               | [0, 2^32-1]                  | Full                       | [0, 2^32-1]                             |
++----------------------------------------------------+--------------------+------------------------------+----------------------------+-----------------------------------------+
+| ydb_long_t, ydb_long_t * (64-bit)                  | 18 digits          | [-2^63+1, 2^63-1]            | 18 digits                  | [-2^63, 2^63-1]                         |
++----------------------------------------------------+--------------------+------------------------------+----------------------------+-----------------------------------------+
+| ydb_long_t, ydb_long_t * (32-bit)                  | Full               | [-2^31+1, 2^31-1]            | Full                       | [-2^31, 2^31-1]                         |
++----------------------------------------------------+--------------------+------------------------------+----------------------------+-----------------------------------------+
+| ydb_ulong_t, ydb_ulong_t * (64-bit)                | 18 digits          | [0, 2^64-1]                  | 18 digits                  | [0, 2^64-1]                             |
++----------------------------------------------------+--------------------+------------------------------+----------------------------+-----------------------------------------+
+| ydb_ulong_t, ydb_ulong_t * (32-bit)                | Full               | [0, 2^32-1]                  | Full                       | [0, 2^32-1]                             |
++----------------------------------------------------+--------------------+------------------------------+----------------------------+-----------------------------------------+
+| ydb_float_t, ydb_float_t *                         | 6-9 digits         | [1E-43, 3.4028235E38]        | 6 digits                   | [1E-43, 3.4028235E38]                   |
++----------------------------------------------------+--------------------+------------------------------+----------------------------+-----------------------------------------+
+| ydb_double_t, ydb_double_t *                       | 15-17 digits       | [1E-43, 1E47]                | 15 digits                  | [1E-43, 1E47]                           |
++----------------------------------------------------+--------------------+------------------------------+----------------------------+-----------------------------------------+
+| ydb_char_t *                                       | N/A                | ["", 1MiB]                   | N/A                        | ["", 1MiB]                              |
++----------------------------------------------------+--------------------+------------------------------+----------------------------+-----------------------------------------+
+| ydb_char_t **                                      | N/A                | ["", 1MiB]                   | N/A                        | ["", 1MiB]                              |
++----------------------------------------------------+--------------------+------------------------------+----------------------------+-----------------------------------------+
+| ydb_string_t *                                     | N/A                | ["", 1MiB]                   | N/A                        | ["", 1MiB]                              |
++----------------------------------------------------+--------------------+------------------------------+----------------------------+-----------------------------------------+
 
 .. note::
    ydb_char_t ** is not supported for call-ins but they are included for IO and O direction usage with call-outs. For call-out use of ydb_char_t \* and ydb_string_t \*, the specification in the interface definition for preallocation sets the range for IO and O, with a maximum of 1MiB.

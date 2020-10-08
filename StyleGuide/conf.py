@@ -32,7 +32,7 @@ import sphinx_rtd_theme
 # -- Project information -----------------------------------------------------
 
 project = 'StyleGuide'
-copyright = '2020, YottaDB LLC'
+copyright = '2020-2021, YottaDB LLC'
 author = 'YottaDB Team'
 
 # The short X.Y version

@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2017-2021 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -60,7 +60,7 @@ YottaDB requires minimal administrative effort.
 
 M routines are stored as text files and object files in the native file system. Compilation of source text into object code is typically automatic, but may be invoked explicitly. A user may store routines in multiple libraries and/or directories organized into search hierarchies, and change the search paths as needed.
 
-For more information on the YottaDB language and programming environment, see the `Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/index.html>`_.
+For more information on the YottaDB language and programming environment, see the `Programmer's Guide <../ProgrammersGuide/index.html>`_.
 
 ------------------
 Database Subsystem
@@ -78,33 +78,33 @@ YottaDB Utility Programs
 
 YottaDB provides utility programs to administer the system. Each utility is summarized below, and described later in this manual.
 
-~~~~~~
+++++++
 1. GDE
-~~~~~~
+++++++
 
 The Global Directory Editor (GDE) is a YottaDB utility program that creates and maintains global directories. GDE provides commands for operating on the global directory.
 
-~~~~~~~~
+++++++++
 2. MUPIP
-~~~~~~~~
+++++++++
 
 MUPIP (M Peripheral Interchange Program) is the YottaDB utility program for general database operations, YottaDB Journaling, Multi-site Database Replication, and some non-database operations.
 
-~~~~~~
+++++++
 3. LKE
-~~~~~~
+++++++
 
 The M Lock Utility (LKE) is the YottaDB utility program that examines and modifies the lock space where YottaDB maintains the current M LOCK state. LKE can monitor the locking mechanism and remove locks. See `Chapter 8: “M Lock Utility (LKE)” <./mlocks.html>`_ for more information.
 
-~~~~~~
+++++++
 4. DSE
-~~~~~~
+++++++
 
 The Database Structure Editor (DSE) is the YottaDB utility program to examine and alter the internal database structures. DSE edits YottaDB Database Structure (GDS) files. It provides an extensive database "patch" facility (including block integrity checks), searches for block numbers and nodes, and provides symbolic examination and manipulation facilities. See `Chapter 10: “Database Structure Editor” <./dse.html>`_ for more information.
 
-~~~~~~~~~~~~~~~~~~~~~
++++++++++++++++++++++
 5. Command Qualifiers
-~~~~~~~~~~~~~~~~~~~~~
++++++++++++++++++++++
 
 Each utility program has its own set of commands. Qualifiers are used as arguments for a command. A qualifier is always prefixed with a hyphen (-). Some qualifier allow assigning values with an equal (=) sign where as some allow the use of sub-qualifiers as their arguments. If you specify the same qualifier more than once, MUPIP, DSE, and LKE acts upon the qualifier that appears latest. However, you cannot specify qualifiers that have sub-qualifiers more than once. With GDE, specifying the same qualifier more than once produces an error.
 

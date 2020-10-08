@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2017-2021 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -80,7 +80,7 @@ Processing Compile Time Errors
 
 At compile-time, the compiler stops processing a routine line as soon as it detects the first error on that line. By default, the compiler displays the line in error on stderr, and also in a listing file when the compiler options include -list. By default, the compiler processes the remaining source lines until it exceeds the maximum error count of 127.
 
-The compile-time error message format displays the line containing the error and the location of the error on the line. The error message also indicates what was incorrect about the M statement. For more information on the error message format, refer to the `Messages and Recovery Procedures Reference Manual <https://docs.yottadb.com/MessageRecovery/index.html>`_.
+The compile-time error message format displays the line containing the error and the location of the error on the line. The error message also indicates what was incorrect about the M statement. For more information on the error message format, refer to the `Messages and Recovery Procedures Reference Manual <../MessageRecovery/index.html>`_.
 
 You may correct compile-time errors immediately by activating an editor and entering the correct syntax in the source program. Because several errors may occur on a line, examine the line carefully to avoid compiling the routine several times.
 
@@ -173,7 +173,9 @@ Program Handling of Errors
 
 YottaDB provides the error handling facilities described in the M standard. In addition, YottaDB provides a number of extensions for error handling. Both are discussed in the following sections. The following table summarizes some of the tools, which are then described in more detail within the context of various techniques and examples.
 
-**Summary of YottaDB Error-Handling Facilities**
+++++++++++++++++++++++++++++++++++++++++++++++
+Summary of YottaDB Error-Handling Facilities
+++++++++++++++++++++++++++++++++++++++++++++++
 
 +-------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Extension                     | Explanation                                                                                                                                                                 |
@@ -246,9 +248,9 @@ The QUIT command behaves in a special fashion while the value of $ECODE is non-e
 
 SETting $ECODE to an invalid value is an error. SETting $ECODE to a valid error behaves like detection of error. SETting $ECODE="" does not cause a change in the flow, but effects $STACK(), subsequent $QUITs and errors.
 
-**Note:**
 
-To force execution of an error trap or to flag a user-defined error ("U" errors), make the value of $ECODE non-empty:
+.. note::
+   To force execution of an error trap or to flag a user-defined error ("U" errors), make the value of $ECODE non-empty:
 
 .. code-block:: none
 
@@ -261,7 +263,7 @@ To force execution of an error trap or to flag a user-defined error ("U" errors)
 $ZSTATUS Content
 ++++++++++++++++++
 
-$ZSTATUS contains a string value specifying the error condition code and location of the last exception condition that occurred during routine execution. For further details, see `$ZStatus <./isv.html#zstatus>`_.
+$ZSTATUS contains a string value specifying the error condition code and location of the last exception condition that occurred during routine execution. For further details, see :ref:`zstatus-isv`.
 
 +++++++++++++++++++++++
 $ZERROR and $ZYERROR
@@ -390,7 +392,9 @@ If the mechanisms are mixed, or there is a desire to refer to $ECODE in an envir
 .. note::
    A device EXCEPTION gets control after a non-fatal device error and $ETRAP/$ZTRAP get control after other non-fatal errors.
 
-**Example 1: Returning control to a specific execution level**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Example 1: Returning control to a specific execution level
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The following example returns control to the execution level "level" and then to an error processing routine "proc^prog".
 
@@ -404,7 +408,9 @@ Note that, ZGOTO can be used with $ETRAP and $STACK with $ZTRAP. Alternatively i
 
    Set $ETRAP="Quit:$ESTACK>0 Do proc^prog"
 
-**Example 2: Ignoring an Error**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Example 2: Ignoring an Error
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 With $ZTRAP: Set $ZTRAP="Quit"
 
@@ -412,7 +418,9 @@ With $ETRAP: Set $ETRAP="Set $ECODE="""" Quit"
 
 Note that, while it is not necessary to SET $ECODE="" when using $ZTRAP it is advisable to do it in order to permit mixing of the two mechanisms.
 
-**Example 3: Nested Error Handlers**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Example 3: Nested Error Handlers
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 With $ZTRAP: New $ZTRAP Set $ZTRAP=...
 
@@ -421,7 +429,9 @@ With $ETRAP: New $ETRAP Set $ETRAP=...
 .. note::
    In both cases, QUITting to a lower level may effectively make the other mechanism active.
 
-**Example 4: Access to "cause of error"**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Example 4: Access to "cause of error"
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 With $ZTRAP: If $ZSTATUS[...
 
@@ -920,7 +930,7 @@ A set $ZTRAP="" command as soon as the program enters an error-handling routine 
    %YDB-E-DIVZERO, Attempt to divide by zero
    YDB>
 
-This demonstrates how $ETRAP behavior in this circumstance is more appropriate. Note that the $ZTRAP="" at the lowest level, prevents exection from returning to Direct Mode when the initial value of $ZTRAP ("B") is unstacked; this step takes $ZTRAP out of the equation and should be part of initialization when the intention is to use $ETRAP exclusively.
+This demonstrates how $ETRAP behavior in this circumstance is more appropriate. Note that the $ZTRAP="" at the lowest level, prevents execution from returning to Direct Mode when the initial value of $ZTRAP ("B") is unstacked; this step takes $ZTRAP out of the equation and should be part of initialization when the intention is to use $ETRAP exclusively.
 
 Example:
 
@@ -947,7 +957,7 @@ Example:
    %YDB-I-RTSLOC,                 At M source location ERROR+1^EP9
    $
 
-This routine sets the value of $ZTRAP to null as soon as the program enters the error handler. This insures program termination when an error occurs in the error handler.
+This routine sets the value of $ZTRAP to null as soon as the program enters the error handler. This ensures program termination when an error occurs in the error handler.
 
 ++++++++++++++++++++++++++++++++
 Setting $ZTRAP to Other Actions
@@ -1116,7 +1126,9 @@ For I/O operations, YottaDB uses the $ZA, $ZB and $ZEOF special variables. $ZA c
 
 To simplify record keeping, an application may set $ZTRAP to an error-handling routine that records information about an error. The next section provides an example of a routine ERR.m that does this.
 
-**Program to Record Information on an Error using $ZTRAP**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Program to Record Information on an Error using $ZTRAP
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: bash
 

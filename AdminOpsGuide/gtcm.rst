@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2017-2021 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -54,6 +54,8 @@ GT.CM Server
 
 The GT.CM server accepts requests from GT.CM clients, processes the operation requested by the clients on the server database and sends messages back to the clients with a status and if appropriate, the results of the requested operation.
 
+.. _gt-cm-client:
+
 +++++++++++++
 GT.CM Client
 +++++++++++++
@@ -71,7 +73,9 @@ GT.CM Server Startup and Shutdown
 
 This section describes the starting up and shutting down procedure of a GT.CM server.
 
-**GT.CM Server Startup**
+~~~~~~~~~~~~~~~~~~~~
+GT.CM Server Startup
+~~~~~~~~~~~~~~~~~~~~
 
 A GT.CM server must be operating on every node of the network from which data is requested during distributed database operation, including server nodes and nodes with both client and server processes. There are two ways by which the GT.CM server can be invoked.
 
@@ -94,7 +98,9 @@ This starts the GT.CM server in the background so that it listens at port 6789 f
 
    -service=192.160.105.212:6789
 
-**GT.CM Server Shutdown**
+~~~~~~~~~~~~~~~~~~~~~
+GT.CM Server Shutdown
+~~~~~~~~~~~~~~~~~~~~~
 
 To shutdown the GT.CM server, identify the process id of the GT.CM server to be shutdown and issue the following command:
 

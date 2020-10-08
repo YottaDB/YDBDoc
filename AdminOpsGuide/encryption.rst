@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2017-2021 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -19,7 +19,7 @@
 ================================
 
 .. contents::
-   :depth: 2
+   :depth: 4
 
 ----------------------
 Introduction
@@ -55,7 +55,9 @@ Limitations of YottaDB Database Encryption
 
 Elements of your security infrastructure and management processes outside of YottaDB database encryption need to manage issues discussed in the following sections.
 
-**Data Not At Rest Not Protected**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Data Not At Rest Not Protected
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 YottaDB database encryption is designed to protect data at rest. Applications execute business logic to manipulate and produce unencrypted data. Unencrypted data must exist within application processes, and can be accessed by any process with access rights to the virtual address space of a process containing unencrypted data. Also, data in transit between systems and between processes is not protected by YottaDB database encryption.
 
@@ -64,7 +66,9 @@ YottaDB database encryption is designed to protect data at rest. Applications ex
 .. note::
    In the event core dumps are needed to troubleshoot operational issues, they can always be re-enabled.
 
-**Keys in the Process Address Space/Environment**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Keys in the Process Address Space/Environment
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This is a corollary of the fact that data not at rest is not protected by YottaDB database encryption.
 
@@ -76,17 +80,23 @@ In order to encrypt and decrypt databases, keys must exist in the address space/
 
 * If you forget the passphrase, there is no way to decrypt the data from the encrypted regions of a database. Therefore, ensure that you have secure password management procedures to handle password storage and retrieval of the keyring passphrase.
 
-**Long lived Keys**
+~~~~~~~~~~~~~~~
+Long lived Keys
+~~~~~~~~~~~~~~~
 
 A database file has an extended life. In typical operation, only a minuscule fraction of the data within a database changes each day. As changing an encryption key requires re-encrypting all the data, this means encryption keys for files have long lives. Since long-lived keys are security risks - for example, it may not be feasible to change them when an employee leaves - key management must therefore be part of the overall security plan. At a minimum, long lived keys require two stage key management - a database key with a long life, not normally accessed or viewed by a human, stored in a form encrypted by another key that can be changed more easily.
 
 Furthermore, a key must be retained at least as long as any backup encrypted with that key; otherwise the backup becomes useless. You must have appropriate procedures to retain and manage old keys. Since successful data recovery requires both keys and algorithms, the retention processes must also preserve the encryption algorithm.
 
-**Voluminous Samples of Encrypted Data**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Voluminous Samples of Encrypted Data
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Database and journal files are large (GB to hundreds of GB). This large volume makes database encryption more amenable to attack than a small encrypted message because having many samples of encrypted material makes it easier to break a key.
 
-**Encryption Algorithms Neither Endorsed nor Supported by YottaDB**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Encryption Algorithms Neither Endorsed nor Supported by YottaDB
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 YottaDB neither endorses nor supports any specific encryption algorithm.
 
@@ -105,19 +115,25 @@ You take all responsibility for the selection and use of a specific encryption p
 
 * The cipher used for database encryption must not change the length of the encrypted sequence of bytes. In other words, if the cleartext string is n bytes, the encrypted string must also be n bytes.
 
-**No Key Recovery**
+~~~~~~~~~~~~~~~
+No Key Recovery
+~~~~~~~~~~~~~~~
 
 The reference implementation of YottaDB database encryption has no "back door" or other means to recover lost keys. We are also not aware of back doors in any of the packages used by the reference implementation.
 
 Lost keys make your data indistinguishable from random ones and zeros. While YottaDB recommends implementing a documented key management process including techniques such as key escrow, ultimately, you take all responsibility for managing your keys.
 
-**Human Intervention Required**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Human Intervention Required
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 At some point in the process invocation chain, the reference implementation requires a human being to provide a password that is placed (in obfuscated form) in the process environment where child processes can inherit it. If you want to be able to access encrypted databases without any human interaction, you must modify the reference implementation, or create your own implementation.
 
 For example, if you have a YottaDB based application server process that is started by xinetd in response to an incoming connection request from a client, you may want to consider an approach where the client sends in a key that is used to extract an encrypted password for the master key ring from the local disk, obfuscates it, and places it in the environment of the server process started by xinetd. If the application protocol cannot be modified to allow the client to provide an additional password, xinetd can be started with the $ydb_passwd obfuscated password in its environment, and the xinetd passenv parameter used to pass $ydb_passwd from the xinetd process to the spawned server process.
 
-**MM Databases**
+~~~~~~~~~~~~
+MM Databases
+~~~~~~~~~~~~
 
 YottaDB database encryption is only supported for the Buffered Global (BG) access method. It is not supported for the Mapped Memory (MM) access method. See “Alternatives to Database Encryption ” below, for other options.
 
@@ -207,14 +223,18 @@ Definition of Terms
 Overview
 +++++++++++++++++++
 
-**Warning**
+~~~~~~~
+Warning
+~~~~~~~
 
 YottaDB implements database encryption with a plug-in architecture that allows for your choice of cipher. Any code statically or dynamically linked in to a YottaDB process must meet the requirements of code used for external calls. The YottaDB distribution includes a source reference implementation that interfaces to several common packages and libraries. You are free to use the reference implementations as is, but remember that the choice of cipher and package is yours, and YottaDB neither recommends nor supports any specific package.
 
 .. note::
    In any given instance, you must use the same encryption libraries for all databases accessed by the processes of an application instance, but each database file can have its own key. Of course, all processes accessing a database or journal file must use the same encryption algorithm and key.
 
-**Data in Database and Journal Files**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Data in Database and Journal Files
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 A YottaDB database file contains several parts:
 
@@ -228,13 +248,17 @@ Journal files contain data records, such as before image records, update records
 
 Records subject to encryption are collectively referred to in the document as data records.
 
-**Symmetric and Asymmetric Ciphers**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Symmetric and Asymmetric Ciphers
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 For performance, a symmetric cipher is used to encrypt and decrypt data records. Asymmetric ciphers are used by the reference implementation to secure the symmetric cipher keys stored on disk. A password is used to secure the private key which is stored on a key ring on disk. The following illustration is an overview of YottaDB database encryption in the reference implementation using GNU Privacy Guard (GPG) to provide the ciphers.
 
 .. image:: sym_asym.svg
 
-**Key Ring on Disk**
+~~~~~~~~~~~~~~~~
+Key Ring on Disk
+~~~~~~~~~~~~~~~~
 
 A passphrase protects the key ring on disk that contains the private key uses to encrypt the asymmetric database keys. YottaDB requires this passphrase either in an obfuscated form as the value of the ydb_passwd environment variable, or,if ydb_passwd is set to "" and then typed at the GTMCRYPT passphrase prompt defined in the reference implementation of the plugin. YottaDB obfuscates the passphrase to prevent inadvertent disclosure, for example, in a dump of the environment that you may submit to YottaDB for product support purposes, the passphrase in the environment is obfuscated using information available to processes on the system on which the process is running, but not available on other systems.
 
@@ -278,13 +302,17 @@ The maskpass utility uses the hash of the contents of the $ydb_obfuscation_key f
 
 Remember that $ydb_passwd is not a database authentication mechanism. $ydb_passwd provides the keyring passphrase to YottaDB and the requirement to put it in an obfuscated form is for better security.
 
-**Master Key Configuration File and Encryption Keys**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Master Key Configuration File and Encryption Keys
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The reference implementation uses the database section of the $ydb_crypt_config file to obtain the symmetric keys for encrypting a database file. The environment variable ydb_crypt_config specifies the location of the master key configuration file which contains dat and key combinations. A dat entry specifies the absolute location of the database file and the key entry specifies the absolution location of the encryption key. The master key configuration file leverages the popular libconfig library (http://www.hyperrealm.com/libconfig as well as via package managers of popular Linux distributions).
 
 Note that encryption key files are text files which can even be faxed or e-mailed: since they are secured with asymmetric encryption, you can transmit them over an insecure channel.
 
-**Memory Key Ring**
+~~~~~~~~~~~~~~~
+Memory Key Ring
+~~~~~~~~~~~~~~~
 
 For each key_filename, the YottaDB process (M, MUPIP or DSE) builds a memory key ring from the key ring on disk and the master key file. The memory key ring contains a list of elements where each element consists of a filename, a symmetric cipher key, and a cryptographic hash of that symmetric cipher key. Using the private key obtained from the key ring on disk, YottaDB obtains the symmetric keys from key files pointed to by the master key file.
 
@@ -296,11 +324,15 @@ This is illustrated by the following illustration:
 
 .. image:: memory_key_ring.svg
 
-**Key Validation and Hashing**
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+Key Validation and Hashing
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 As discussed earlier, a process uses the key in its memory key ring whose hash matches the hash in the database or journal file header; the file name is not checked. MUPIP CREATE computes the hash value for the key at database creation time, and writes it to the database file header. When YottaDB creates a new journal file for an encrypted database file, it copies the hash from the database file header into the journal file header. Similarly, MUPIP EXTRACT -FORMAT=BINARY, places the database file hash in the extract, which is encrypted; indeed, since an extract can come from multiple database files, extract places the hash from the file header of each encrypted database in the extract. When processing each section in the extract, MUPIP LOAD uses that key in its memory key ring that matches the hash for each section of the extract.
 
-**Database Operation**
+~~~~~~~~~~~~~~~~~~
+Database Operation
+~~~~~~~~~~~~~~~~~~
 
 On disk, database and journal files are always encrypted - YottaDB never writes unencrypted data to an encrypted database or journal file. YottaDB uses decryption when reading data records from disk, and encryption when it writes data records to disk.
 
@@ -629,7 +661,9 @@ Once the environment variables are set, Phil creates a global directory, where h
 
 Phil calls Helen with the hash, texts her phone, or sends her an e-mail. Helen ensures that the hash of the key she generated matches the hash of the database file created by Phil, and communicates her approval to Phil. Phil can now use the database. Either Phil or Helen can provide the key to other users who are authorized to access the database and with whom they have securely exchanged keys.
 
-**Instructions for Helen to verify the hash**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Instructions for Helen to verify the hash
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: bash
 
@@ -646,7 +680,9 @@ The following command sequence diagram illustrates how Helen and Phil operate wi
 
 .. image:: helen-phil.svg
 
-**Updating GPG configuration**
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+Updating GPG configuration
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 GPG configuration should be updated to ensure that commands are not executed when the wrong passphrase is used. The passphrase might be cached after it is entered the first time. Once a correct passphrase is entered and it is cached, incorrect passphrase entry still allows access to data blocks which is not expected.
 
@@ -665,7 +701,9 @@ Once gpg-agent.conf is updated, ensure that gpg-agent is restarted.
 
 Now, the passphrase will not be cached and an error will be seen when the wrong passphrase is used.
 
-**Test access to data blocks with wrong passphrase**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Test access to data blocks with wrong passphrase
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If you enter the wrong passphrase YDB issues an error and prevents execution when trying to access encrypted data blocks. The DSE fileheader is meta data which is not encrypted, and which should be readable whether or not the process has the password for the database file. But, even here an error is seen before the command gives a result.
 
@@ -875,7 +913,9 @@ GDE
 
 Since the global directory file is never encrypted, GDE does not need access to encryption keys.
 
-**Format/Upgrade**
+^^^^^^^^^^^^^^
+Format/Upgrade
+^^^^^^^^^^^^^^
 
 The need to support encryption brings an upgrade to the global directory format, whether or not you use encryption. Simply opening an existing global directory with GDE and closing the program with an EXIT command upgrades the global directory.
 
@@ -884,7 +924,9 @@ The need to support encryption brings an upgrade to the global directory format,
 
 If you inadvertently upgrade a global directory to the new format and wish to recreate the old global directory, execute the SHOW ALL command with the new YottaDB release and capture the output. Use the information in the SHOW ALL command to create a new global directory file with the prior YottaDB release, or better yet, create a script that you can feed to GDE to create a new global directory.
 
-**-[NO]ENcryption**
+^^^^^^^^^^^^^^^
+-[NO]ENcryption
+^^^^^^^^^^^^^^^
 
 -[NO]ENcryption is a SEGMENT qualifier. When creating the database file for a segment that is flagged as encrypted, MUPIP CREATE acquires an encryption key for that file, and puts a cryptographic hash of the key in the database file header.
 
@@ -897,11 +939,15 @@ Except for the following commands where it does not need encryption keys to oper
 .. note::
    MUPIP JOURNAL operations that only operate on the journal file without requiring access to the database - EXTRACT and SHOW - require only the key for the journal file, not the current database file key. MUPIP SET operations that require stand-alone access to the database do not need encryption keys; any command that can operate with concurrent access to the database requires encryption keys. All other MUPIP operations require access to database encryption keys. MUPIP EXTRACT -FORMAT=ZWRITE or -FORMAT=GLO and MUPIP JOURNAL -EXTRACT are intended to produce readable database content, and produce cleartext output even when database and journal files are encrypted. Since a MUPIP EXTRACT -FORMAT=BINARY extract file can contain encrypted data from multiple database files, the extract file contains the hashes for all database files from which extracted data was obtained.
 
-**MUPIP CREATE**
+^^^^^^^^^^^^
+MUPIP CREATE
+^^^^^^^^^^^^
 
 MUPIP CREATE is the only command that uses the database_filename in the master key file to obtain the key from the corresponding key_filename. As discussed elsewhere, all other commands use the key from the key ring in memory that matches the cryptographic hash for the encrypted data. If there are multiple files with the same file name, MUPIP CREATE uses the key specified in the last database_filename entry with that name in the master key file.
 
-**MUPIP JOURNAL**
+^^^^^^^^^^^^^
+MUPIP JOURNAL
+^^^^^^^^^^^^^
 
 The MUPIP JOURNAL -SHOW command now displays the cryptographic hash of the symmetric key stored in the journal file header (the output is one long line):
 
@@ -911,7 +957,9 @@ The MUPIP JOURNAL -SHOW command now displays the cryptographic hash of the symme
    Journal file hash F226703EC502E9757848 ...
    $
 
-**MUPIP LOAD**
+^^^^^^^^^^
+MUPIP LOAD
+^^^^^^^^^^
 
 Since an extract may contain the cryptographic hashes of multiple database files from which the data has been extracted, MUPIP LOAD may require multiple keys even to load one database file. Additionally, the database file into which the data is being loaded may have a different key from any data in the extract.
 
@@ -933,7 +981,9 @@ The DSE DUMP -FILEHEADER -ALL command shows the database file header, including 
    Database file encryption hash F226703EC502E9757848EEC733E1C3CABE5AC...
    $
 
-**Changing the hash in the database file header**
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Changing the hash in the database file header
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Under normal operating conditions, you should not need to change the cryptographic hash of the symmetric key. However, since there are theoretical attacks against hashes, and because there exists a new cryptographic hash standard (SHA-3) as of this date, DSE provides the ability to change the hash of the password stored in the database file header if and when you change the hash library.
 

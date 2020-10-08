@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2021 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2018-2021 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -47,6 +47,8 @@ Example:
 
 The above message is displayed on the server side when the socket device is closed on the client side.
 
+.. _ecode-isv:
+
 ------------------
 $ECODE
 ------------------
@@ -60,7 +62,7 @@ The value of $ECODE can be SET, and when it is set to a non-NULL value, error pr
 
 The list of codes in $ECODE start with a comma, and are seperated by commas. A code starts with "M", "U", or "Z", with the rest of it being numeric. "M" codes are assigned by MDC (M Development Committee), "U" by application (programmers), and "Z" codes by M implementors (in this case YottaDB).
 
-An error always has a YottaDB specified code and many errors also have an ANSI Standard code. The complete list of standardized error codes can be referenced from the `Message and Recovery Procedures Reference Manual <https://docs.yottadb.com/MessageRecovery/index.html>`_ and onwards.
+An error always has a YottaDB specified code and many errors also have an ANSI Standard code. The complete list of standardized error codes can be referenced from the `Message and Recovery Procedures Reference Manual <../MessageRecovery/index.html>`_ and onwards.
 
 .. code-block:: none
 
@@ -90,6 +92,8 @@ $ESTACK maybe used as a flag to indicate error traps invoked in particular stack
 .. note::
    YottaDB does not permit $ESTACK to be SET, however $ESTACK can be NEWed.
 
+.. _etrap-isv:
+
 --------------
 $ETRAP
 --------------
@@ -106,7 +110,7 @@ The value of $ETRAP is changed with the SET command. Changing the value of $ETRA
 
 $ETRAP may also appear as an argument to an inclusive NEW command. NEW $ETRAP causes YottaDB to stack the active condition handler's ($ETRAP) old value. NEW leaves the $ETRAP unchanged regardless of the previously active condition handler. NEW $ETRAP command puts $ETRAP in control for error handling.
 
-For more examples of the use of special variable $ETRAP, see the function `$STACK() <./functions.html#stack>`_.
+For more examples of the use of special variable $ETRAP, see the function :ref:`stack-function`.
 
 ----------------
 $HOROLOG
@@ -122,7 +126,7 @@ Example:
 
 Produces the result 58883,55555 at 3:25:55 pm on 20 March, 2002.
 
-For further information on formatting $HOROLOG for external use, refer to `$ZDate() <./functions.html#zdate>`_.
+For further information on formatting $HOROLOG for external use, refer to :ref:`zdate-function`.
 
 ---------
 $IO
@@ -245,6 +249,8 @@ A typical way of exiting from an error trap is:
 .. note::
    YottaDB does not permit $QUIT to be SET or NEWed.
 
+.. _reference-isv:
+
 --------------------
 $REFERENCE
 --------------------
@@ -275,7 +281,7 @@ When a process is initiated but before any command is executed, the value of $ST
 
 The value of $STACK is "absolute" since the start of a YottaDB process, whereas the value of $ESTACK is "relative" to the most recent "anchoring point".
 
-For examples on the use of special variable $STACK, see `$STack() <./functions.html#stack>`_.
+For examples on the use of special variable $STACK, see :ref:`stack-function`.
 
 --------------
 $STORAGE
@@ -298,6 +304,8 @@ $SYSTEM
 $SY[STEM] contains a string that identifies the executing M instance. The value of $SYSTEM is a string that starts with a unique numeric code that identifies the manufacturer. Codes are assigned by the MDC (M Development Committee).
 
 $SYSTEM in YottaDB starts with "47" followed by a comma and the evaluation of the environment variable ydb_sysid or gtm_sysid. If neither of the names have any evaluation (i.e. both are undefined), the value after the comma is gtm_sysid.
+
+.. _test-isv:
 
 ---------------
 $TEST
@@ -341,6 +349,8 @@ Example:
 
 This example uses the IF 1 to ensure that the ELSE works counter to the IF.
 
+.. _tlevel-isv:
+
 ---------------
 $TLEVEL
 ---------------
@@ -378,6 +388,8 @@ Example:
    IF $TRESTART>2 WRITE !;"Access Conflict" QUIT
 
 This example terminates the sub-routine with a message if the number of RESTARTs exceeds 2.
+
+.. _x-isv:
 
 ----------
 $X
@@ -439,6 +451,8 @@ YottaDB does not permit the SET command to modify $ZA.
 
 For more information on $ZA, refer `"Input/Output Processing" <./ioproc.html>`_.
 
+.. _zallocstor-isv:
+
 -------------
 $ZALLOCSTOR
 -------------
@@ -466,6 +480,8 @@ $ZB refers to the last READ terminator of the current device. Therefore, exercis
 YottaDB does not permit the SET command to modify $ZB.
 
 For more information on $ZB, refer to the `"Input/Output Processing" chapter <./ioproc.html>`_.
+
+.. _zchset-isv:
 
 --------------
 $ZCHSET
@@ -567,6 +583,8 @@ Example:
 
 This example uses the environment variable ydb_compile to set up $ZCOMPILE. Then it modifies $ZCOMPILE with the SET command. The ZLINK argument specifies a file with a .m extension (type), which forces a compile. The compile produces a listing for routine A.m and does not produce an object module if A.m contains compilation errors. After YottaDB terminates, the shell command echo $ydb_compile demonstrates that the SET command did not change the environment variable.
 
+.. _zcstatus-isv:
+
 -----------------
 $ZCSTATUS
 -----------------
@@ -581,7 +599,7 @@ $ZDATEFORM
 
 $ZDA[TEFORM] contains an integer value, specifying the output year format of $ZDATE(). $ZDATEFORM can be modified using the SET command. YottaDB initializes $ZDATEFORM to the translation of the environment variable ydb_zdate_form. If ydb_zdate_form is not defined, YottaDB initializes $ZDATEFORM to zero (0).
 
-See `$ZDate() <./functions.html#zdate>`_ for the usage of $ZDATEFORM. $ZDATEFORM also defines the behavior of some date and time utility routines; refer `"Utility Routines" <./utility.html>`_.
+See :ref:`zdate-function` for the usage of $ZDATEFORM. $ZDATEFORM also defines the behavior of some date and time utility routines; refer `"Utility Routines" <./utility.html>`_.
 
 Example:
 
@@ -647,13 +665,13 @@ For more information on $ZEOF, refer to the `"Input/Output Processing" chapter <
 $ZERROR
 --------------------
 
-$ZE[RROR] is supposed to hold the application-specific error-code corresponding to the YottaDB error-code stored in $ECODE/$ZSTATUS (see `$ECODE`_ and `$ZSTATUS`_).
+$ZE[RROR] is supposed to hold the application-specific error-code corresponding to the YottaDB error-code stored in $ECODE/$ZSTATUS (see :ref:`ecode-isv` and :ref:`zstatus-isv`).
 
 $ZERROR contains a default value of "Unprocessed $ZERROR, see $ZSTATUS" at process startup.
 
 $ZERROR can be SET but not NEWed.
 
-The mapping of a YottaDB error-code to the application-specific error-code is achieved as follows. Whenever YottaDB encounters an error, $ECODE/$ZSTATUS gets set first. It then invokes the code that $ZYERROR points to if it is not null. It is intended that the code invoked by $ZYERROR use the value of $ZSTATUS to select or construct a value to which it SETs $ZERROR. If an error is encountered by the attempt to execute the code specified in $ZYERROR, YottaDB sets $ZERROR to the error status encountered. If $ZYERROR is null, YottaDB does not change the value of $ZERROR. In all cases, YottaDB proceeds to return control to the code specified by $ETRAP/$ZTRAP or device EXCEPTION whichever is applicable. For details, see `$ZYERROR`_.
+The mapping of a YottaDB error-code to the application-specific error-code is achieved as follows. Whenever YottaDB encounters an error, $ECODE/$ZSTATUS gets set first. It then invokes the code that $ZYERROR points to if it is not null. It is intended that the code invoked by $ZYERROR use the value of $ZSTATUS to select or construct a value to which it SETs $ZERROR. If an error is encountered by the attempt to execute the code specified in $ZYERROR, YottaDB sets $ZERROR to the error status encountered. If $ZYERROR is null, YottaDB does not change the value of $ZERROR. In all cases, YottaDB proceeds to return control to the code specified by $ETRAP/$ZTRAP or device EXCEPTION whichever is applicable. For details, see :ref:`zyerror-isv`.
 
 -------------------
 $ZGBLDIR
@@ -705,7 +723,7 @@ This example defines the environment variable ydb_gbldir. Upon entering YottaDB 
 
 The SET command attempts to change the value of $ZGBLDIR to test.gld. Because the file does not exist, YottaDB reports an error and does not change the value of $ZGBLDIR.
 
-To facilitate application migration to YottaDB from other M implementations (for example to convert UCI and VOL specifications to global directories) in the environment specification, YottaDB provides an interface to translate strings to global directory filenames. With the exception of the function name, this facility is identical to that `used for extended references <./langfeat.html#optional-yottadb-environment-translation-facility>`_.
+To facilitate application migration to YottaDB from other M implementations (for example to convert UCI and VOL specifications to global directories) in the environment specification, YottaDB provides an interface to translate strings to global directory filenames. With the exception of the function name, this facility is identical to that :ref:`used for extended references <opt-ydb-env-xltn-fac>`.
 
 .. note::
    Using this facility impacts the performance of *every* global access. Make sure you use it only when static determination of the global directory is not feasible. When used, maximize the efficiency of the translation routines.
@@ -733,7 +751,7 @@ and
 
 A return value other than zero (0) indicates an error in translation, and is reported as a YottaDB error.
 
-Refer to `the extended reference facility <./langfeat.html#optional-yottadb-environment-translation-facility>`_ for more information.
+Refer to :ref:`the extended reference facility <opt-ydb-env-xltn-fac>` for more information.
 
 -----------------
 $ZHOROLOG
@@ -884,6 +902,8 @@ Example:
 
 Notice that $ZIO contains the actual terminal device name while $IO contains the string pointed to by the environment variable ydb_principal.
 
+.. _zjob-isv:
+
 ----------------
 $ZJOB
 ----------------
@@ -921,6 +941,8 @@ $ZKEY is empty if no sockets have data in the buffer and there are no unaccepted
 For a Sequential File Device:
 
 $ZKEY contains the current position in the file based on the last READ. This is in bytes for STREAM and VARIABLE formats, and in a record,byte pair for FIXED format. For FIXED format, SEEKs and normal READs always produce a zero byte position; a non-zero byte position in $ZKEY for FIXED format operation indicates a partially read record, caused by a READ # or READ \*. In FIXED mode, the information returned for $ZKEY is a function of record size, and, if a USE command changes record size by specifying the WIDTH deviceparameter while the file is open, $ZKEY offsets change accordingly; if record size changes, previously saved values of $ZKEY are likely inappropriate for use with SEEK.
+
+.. _zlevel-isv:
 
 -----------------
 $ZLEVEL
@@ -1053,7 +1075,9 @@ $ZONLNRLBK increments every time a process detects a concurrent MUPIP JOURNAL -O
 
 YottaDB initializes $ZONLNRLBK to zero (0) at process startup. YottaDB does not permit the SET or NEW commands to modify $ZONLNRLBK.
 
-For more information on online rollback, refer to the -ONLINE qualifier of -ROLLBACK in the `Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/index.html>`_.
+For more information on online rollback, refer to the -ONLINE qualifier of -ROLLBACK in the `Administration and Operations Guide <../AdminOpsGuide/index.html>`_.
+
+.. _zpatnumeric-isv:
 
 -------------------
 $ZPATNUMERIC
@@ -1118,13 +1142,17 @@ Example:
    YDB>Write 1+$Char($$FUNC^%HD("31")) ; This is the ASCII digit 1
    2
 
+.. _zpin-isv:
+
 ----------------
 $ZPIN
 ----------------
 
 When $PRINCIPAL has different input/output devices, the USE command recognizes intrinsic special variable $ZPIN to apply appropriate deviceparameters to the input side of $PRINCIPAL. A USE with $ZPIN sets $IO to $PRINCIPAL for READs and WRITEs from the input and output side of $PRINCIPAL. $ZSOCKET() also accepts $ZPIN as its first argument and, if the device is a split SOCKET device, supplies information on the input SOCKET device. In any context other than USE or $ZSOCKET(), or if $PRINCIPAL is not a split device, $PRINCIPAL, $ZPIN and $ZPOUT are synonyms. In the case of a split $PRINCIPAL, $ZPIN returns the value of $PRINCIPAL followed by the string "< /" Any attempt to OPEN $ZPIN results in a DEVOPENFAIL error.
 
-For more information refer to `$Principal <./ioproc.html#principal>`_, `$ZPOUT`_, and `$ZSOCKET() <./functions.html#zsocket>`_.
+For more information refer to :ref:`principal-io-isv`, :ref:`zpout-isv`, and :ref:`zsocket-function`.
+
+.. _zposition-isv:
 
 -----------------
 $ZPOSITION
@@ -1142,7 +1170,7 @@ Example:
 
 This example displays the current location followed by the source code for that line.
 
-.. _zpout:
+.. _zpout-isv:
 
 -----------------
 $ZPOUT
@@ -1150,7 +1178,7 @@ $ZPOUT
 
 When $PRINCIPAL has different input/output devices, the USE command recognizes intrinsic special variables $ZPOUT to apply appropriate deviceparameters to the output side of $PRINCIPAL. A USE with $ZPOUT sets $IO to $PRINCIPAL for READs and WRITEs from the input and output side of $PRINCIPAL. $ZSOCKET() also accepts $ZPOUT as its first argument and, if the device is a split SOCKET device, supplies information on the output SOCKET device. In any context other than USE or $ZSOCKET(), or if $PRINCIPAL is not a split device, $PRINCIPAL, $ZPIN and $ZPOUT are synonyms. In the case of a split $PRINCIPAL, $ZPOUT returns the value of $PRINCIPAL followed by the string "> /" Any attempt to OPEN $ZPOUT results in a DEVOPENFAIL error.
 
-For more information refer to `$Principal <./ioproc.html#principal>`_, `$ZPIN`_, and `$ZSOCKET() <./functions.html#zsocket>`_.
+For more information refer to :ref:`principal-io-isv`, :ref:`zpin-isv`, and :ref:`zsocket-function`.
 
 Example:
 
@@ -1193,6 +1221,8 @@ Example:
      write x,!
      quit
 
+
+.. _zprompt-isv:
 
 --------------
 $ZPROMPT
@@ -1248,11 +1278,13 @@ However, if you enable the ydb_zquit_anyway feature, extrinsic function invocati
    Hello jdoe
    YDB>
 
+.. _zrealstor-isv:
+
 ---------------
 $ZREALSTOR
 ---------------
 
-$ZREALSTOR contains the total memory (in bytes) allocated by the YottaDB process, which may or may not actually be in use. It provides one view (see also `$ZALLOCSTOR`_ and `$ZUSEDSTOR`_) of the process memory utilization and can help identify storage related problems. YottaDB does not permit $ZREALSTOR to be SET or NEWed.
+$ZREALSTOR contains the total memory (in bytes) allocated by the YottaDB process, which may or may not actually be in use. It provides one view (see also :ref:`zallocstor-isv` and :ref:`zusedstor-isv`) of the process memory utilization and can help identify storage related problems. YottaDB does not permit $ZREALSTOR to be SET or NEWed.
 
 ---------------
 $ZRELDATE
@@ -1266,6 +1298,8 @@ For example:
 
    YDB>write $zreldate
    20200813 12:10 177eb8e48098204dafe564cac2bcb84312b2853a
+
+.. _zroutines-isv:
 
 -----------------
 $ZROUTINES
@@ -1544,6 +1578,8 @@ By suffixing one or more directory names in $ZROUTINES with a single asterisk (*
 
 The ZRUPDATE command publishes new versions of routines to subscribers.
 
+.. _zsource-isv:
+
 --------------------
 $ZSOURCE
 --------------------
@@ -1601,7 +1637,7 @@ Example:
    YDB>WRITE $ZSOURCE
    BASE
 
-.. _ztatus:
+.. _zstatus-isv:
 
 -------------------
 $ZSTATUS
@@ -1634,6 +1670,8 @@ Example:
 
 This example displays the status generated by a divide by zero (0).
 
+.. _zstep-isv:
+
 ---------------
 $ZSTEP
 ---------------
@@ -1660,11 +1698,15 @@ Example:
 
 This example sets $ZSTEP to code that displays the contents of the next line to execute, and then enters Direct Mode.
 
+.. _zstrpllim-isv:
+
 -----------------
 $ZSTRPLLIM
 -----------------
 
 $ZSTRP[LLIM] provides a way for a process to limit its process private memory used for local variable and scratch storage. When the value is 0 or negative, the default, there is no limit. A positive value specifies a byte limit. When a request for additional memory exceeds the limit, YottaDB does the expansion and then produces an STPCRIT error. By default, a later request for memory produces an STPOFLOW, unless subsequent to STPCRIT , $ZSTRPLLIM has been set to the same or higher limit. Note that YottaDB allocates memory in large blocks so the interaction of $ZSTRPLLIM with memory growth is not exact. When the ydb_string_pool_limit environment variable specifies a positive value, YottaDB uses it for the initial value of $ZSTRPLLIM.
+
+.. _zsystem-isv:
 
 -----------------
 $ZSYSTEM
@@ -1783,6 +1825,8 @@ Example:
        set $ztimeout="0:DO FOO"        ; this has the same effect as DO FOO
    YDB>
 
+.. _ztrap-isv:
+
 --------------
 $ZTRAP
 --------------
@@ -1826,11 +1870,13 @@ The four settings of ydb_ztrap_form are:
 .. note::
    Like $ZTRAP values, invocation of device EXCEPTION values follow the pattern specified by the current ydb_ztrap_form setting except that there is never any implicit popping with EXCEPTION action.
 
+.. _zusedstor-isv:
+
 -----------------
 $ZUSEDSTOR
 -----------------
 
-$ZUSEDSTOR is the value in $ZALLOCSTOR minus storage management overhead and represents the actual memory, in bytes, requested by current activities. It provides one view (see also `$ZALLOCSTOR`_ and `$ZREALSTOR`_) of the process memory utilization and can help identify storage related problems. YottaDB does not permit $ZUSEDSTOR to be SET or NEWed.
+$ZUSEDSTOR is the value in $ZALLOCSTOR minus storage management overhead and represents the actual memory, in bytes, requested by current activities. It provides one view (see also :ref:`zallocstor-isv` and :ref:`zrealstor-isv`) of the process memory utilization and can help identify storage related problems. YottaDB does not permit $ZUSEDSTOR to be SET or NEWed.
 
 -----------------
 $ZUT
@@ -1877,6 +1923,8 @@ This example displays the current version identifier for GT.M.
 
 See the $ZYRELEASE intrinsic special variable to identify the YottaDB release.
 
+.. _zyerror-isv:
+
 -----------------
 $ZYERROR
 -----------------
@@ -1913,6 +1961,7 @@ The $ZYRE[LEASE] intrinsic special variable contains a string value that applica
 .. note::
    $zyrelease is a read-only intrinsic special variable. As the code generator treats $zyrelease as a string constant known at compile time, and optimizes accordingly, ensure that you run object code only on the same YottaDB release on which you compiled it.
 
+.. _zysqlnull-isv:
 
 ------------------
 $ZYSQLNULL
@@ -1950,11 +1999,15 @@ Using $ZYSQLNULL as a subscript or assigning it as the value of a global variabl
 
 $ZYSQLNULL was added to YottaDB effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_.
 
+.. _trigger-isvs:
+
 ------------------
 Trigger ISVs
 ------------------
 
 YottaDB provides nine ISVs (Intrinsic Special Variables) to facilitate trigger operations. With the exception of $ZTWORMHOLE, all numeric trigger-related ISVs return zero (0) outside of a trigger context; non-numeric ISVs return the empty string.
+
+.. _ztdata-isv:
 
 +++++++++++
 $ZTDATA
@@ -1962,11 +2015,15 @@ $ZTDATA
 
 Within trigger context, $ZTDATA returns $DATA(@$REFERENCE)#2 for a SET or $DATA(@$REFERENCE) for a KILL, ZKILL or ZWITHDRAW prior to the explicit update. This provides a fast path alternative, avoiding the need for indirection in trigger code, to help trigger code determine the characteristics of the triggering node prior to the triggering update. For a SET, it shows whether the node did or did not hold data - whether a SET is modifying the contents of an existing node or creating data at a new node. For a KILL it shows whether the node had descendants and whether it had data.
 
+.. _ztdelim-isv:
+
 ++++++++++++++
 $ZTDELIM
 ++++++++++++++
 
 $ZTDE[LIM] returns the piece delimiter/separator, as specified by -delim or -zdelim in the trigger definition. This allows SET type triggers to extract updated pieces defined in $ZTUPDATE and KILL/ZKILL type triggers to extract the relevant pieces in the node value (of the node being killed) without having the piece separator hard coded into the trigger routine. $ZTDELIM is the empty string outside of a trigger context. It is also the empty string inside a trigger context if -delim or -zdelim was not specified in the trigger definition.
+
+.. _ztlevel-isv:
 
 +++++++++++++
 $ZTLEVEL
@@ -1992,11 +2049,15 @@ These trigger definitions show different values of $ZTLEVEL when two triggers ar
 
 SET ^Acct("ID")=10 invokes both the above triggers in some order and $ZTLEVEL will have the same value in both because these triggers are chained rather than nested.
 
+.. _ztname-isv:
+
 +++++++++++++++
 $ZTNAME
 +++++++++++++++
 
 Within a trigger context, $ZTNAME returns the trigger name. Outside a trigger context, $ZTNAME returns an empty string.
+
+.. _ztoldval-isv:
 
 ++++++++++++
 $ZTOLDVAL
@@ -2019,11 +2080,15 @@ This trigger gets invoked with a SET and displays the prior value (if it exists)
    YDB>s ^Acct(1,"ID")=2011
    The prior value of ^Acct(1,ID) was: 1975
 
+.. _ztriggerop-isv:
+
 +++++++++++++++
 $ZTRIGGEROP
 +++++++++++++++
 
 Within trigger context, for SET (including MERGE and $INCREMENT() operations), $ZTRIGGEROP has the value "S". For KILL, $ZTRIGGEROP has the value "K" For ZKILL or ZWITHDRAW, $ZTRIGGEROP has the value "ZK".
+
+.. _ztslate-isv:
 
 +++++++++++++++
 $ZTSLATE
@@ -2042,6 +2107,8 @@ Example:
    SET ^ACC(ACN2,BAL)=-AMT         ; Trigger sets $ZTSLATE=$ZTSLATE_ACN_"|"
    ZTRIGGER ^ACT("TRANS")          ; Trigger uses $ZTSLATE to update transaction log
    TCOMMIT
+
+.. _ztupdate-isv:
 
 ++++++++++++
 $ZTUPDATE
@@ -2066,11 +2133,15 @@ In the above trigger definition entry, $ZTUPDATE displays a comma separated list
 
 Note that even though piece numbers 2,4 and 5 are changed, $ZTUPDATE displays only 4,5 because the trigger is not defined for updates for the second piece.
 
+.. _ztvalue-isv:
+
 +++++++++++++
 $ZTVALUE
 +++++++++++++
 
 For SET, $ZTVALUE has the value assigned to the node by the explicit SET operation. Modifying $ZTVALUE within a trigger modifies the eventual value YottaDB assigns to the node. Note that changing $ZTVALUE has a small performance impact because it causes an additional update operation on the node once all trigger code completes. If a node has multiple associated triggers, each trigger receives the current value of $ZTVALUE, however, because the triggers run in arbitrary order, YottaDB strongly recommends no more than one trigger change any given element of application data, for example: a particular piece. For KILL and its variants, $ZTVALUE returns the empty string. While YottaDB accepts updates to $ZTVALUE within the trigger code invoked for a KILL or any of its variants, it ultimately discards any such value. Outside trigger context, attempting to SET $ZTVALUE produces a SETINTRIGONLY error.
+
+.. _ztwormhole-isv:
 
 +++++++++++++
 $ZTWORMHOLE
@@ -2089,7 +2160,7 @@ The following table summarizes the read/write permissions assigned to all trigge
 +==============================+==================================+=======================================================================================================================================================+
 | $ETRAP                       | Read/Write                       | Set to ydb_trigger_etrap or the empty string when entering trigger context. For more information on using the $ETRAP mechanism for handling errors    |
 |                              |                                  | during trigger execution, refer to                                                                                                                    |
-|                              |                                  | `Error Handling during Trigger Execution <./triggers.html#error-handling-during-trigger-execution>`_.                                                 |
+|                              |                                  | :ref:`err-handling-trigger-exec`.                                                                                                                     |
 +------------------------------+----------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------+
 | $REFERENCE                   | Read Only                        | Restored at the completion of a trigger.                                                                                                              |
 +------------------------------+----------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------+

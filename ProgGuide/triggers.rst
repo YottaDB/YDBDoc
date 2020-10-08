@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2020-2021 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2018-2021 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -46,7 +46,7 @@ A trigger definition file is a text file used for adding new triggers, modifying
 * **Trigger signature**: A trigger signature consists of a global variable, subscripts, a value, a command, and a trigger code. YottaDB uses a combination of the global variable, subscripts, value, and command to find the matching trigger to invoke for a database update.
 
   * Global Variable: The name of a specific global to which this trigger applies.
-  * Subscripts: Subscripts for global variable nodes of the named global. This is mostly specified using the same patterns as the `ZWRITE <./commands.html#zwrite-command>`_ command, with ";" separating subscript values, and an asterisk "*"  matching any subscript value.
+  * Subscripts: Subscripts for global variable nodes of the named global. This is mostly specified using the same patterns as the :ref:`zwrite-command` command, with ";" separating subscript values, and an asterisk "*"  matching any subscript value.
   * Value: For commands that SET or update the value at a node, YottaDB honors an optional pattern to screen for changes to delimited parts of the value. A value pattern includes a piece separator and a list of pieces of interest.
   * Command: There are four commands: SET, KILL, ZTRIGGER, and ZKILL (ZWITHDRAW is identical to ZKILL) the shorter name for the command is used when specifying triggers. MERGE is logically treated as equivalent to a series of SET operations performed in a loop. YottaDB handles $INCREMENT() of a global matching a SET trigger definition as a triggering update.
   * Trigger code: A string containing M code that YottaDB executes when application code updates, including deletions by KILL and like commands, a global node with a matching trigger. The specified code can invoke additional routines and subroutines.
@@ -77,7 +77,7 @@ To apply this trigger definition file to YottaDB, all you do is to load it using
 
 trigvn is a global node on which you set up a trigger. -trigvn deletes any triggers in the database that match the specified trigger. +trigvn adds or replaces the specified trigger. If the specified trigger exists (with a matching specification), MUPIP TRIGGER or $ZTRIGGER() treats the matching definition as a no-op, resulting in no database update. If you want to specify more than one global node for the same trigger code, the following rules apply:
 
-1. You can use `patterns <./langfeat.html#pattern-match-operator>`_ and ranges (using ":") for subscripts.
+1. You can use :ref:`patterns <pattern-match-op>` and ranges (using ":") for subscripts.
 2. You can specify a semicolon (;) separated list for subscripts. For example: ^A(1;2;3).
 3. An asterisk (*) can be used to match any subscript value. For example, ^A(\*,2) matches ^A(1,2) and ^A(2,2) but not ^A(1,3).
 4. You can specify a selection list that includes a mix of points, ranges and patterns, but a pattern cannot serve as either end of a range. For example, :,"a":"d";?1U is a valid specification but :,"a":?1A is not.
@@ -158,49 +158,49 @@ strlit2 is a user-specified trigger name. It is an alphanumeric string of up to 
 Trigger ISVs Summary
 ---------------------------------------
 
-The following table briefly describes all ISVs (Intrinsic Special Variables) available for use by application logic using triggers. With the exception of $ZTWORMHOLE they return zero (0) if they have numeric values or an empty string when referenced by code outside of a trigger context. For more comprehensive description and usage examples of these ISVs, refer to `“Trigger ISVs” <./isv.html#trigger-isvs>`_.
+The following table briefly describes all ISVs (Intrinsic Special Variables) available for use by application logic using triggers. With the exception of $ZTWORMHOLE they return zero (0) if they have numeric values or an empty string when referenced by code outside of a trigger context. For more comprehensive description and usage examples of these ISVs, refer to :ref:`trigger-isvs`.
 
-+----------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------+
-| Trigger ISV                                                                      | Description                                                                                                                                    |
-+==================================================================================+================================================================================================================================================+
-| `$ZTNAME <./isv.html#ztname>`_                                                   | Within a trigger context, $ZTNAME returns the trigger name. Outside a trigger context, $ZTNAME returns an empty string.                        |
-+----------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------+
-| `$ZTDATA <./isv.html#ztdata>`_                                                   | A fast path alternative to $DATA(@$REFERENCE)#2 for a SET or $DATA(@$REFERENCE) of the node for a KILL update.                                 |
-+----------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------+
-| `$ZTDELIM <./isv.html#ztdelim>`_                                                 | $ZTDE[LIM] returns the piece delimiter/separator, as specified by -delim or -zdelim in the trigger definition. This allows SET type triggers   |
-|                                                                                  | to extract updated pieces defined in $ZTUPDATE andr KILL/ZKILL type triggers to extract the relevant pieces in the node value (of the          |
-|                                                                                  | node being killed) without having the piece separator hard coded into the trigger routine. $ZTDELIM is the empty string outside of a           |
-|                                                                                  | trigger context. It is also the empty string inside a trigger context if -delim or -zdelim was not specified in the trigger definition.        |
-+----------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------+
-| `$ZTLEVEL <./isv.html#ztlevel>`_                                                 | Returns the current level of trigger nesting (invocation by an update in trigger code of an additional trigger).                               |
-+----------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------+
-| `$ZTOLDVAL <./isv.html#ztoldval>`_                                               | Returns the prior (old) value of the node whose update caused the trigger invocation or an empty string if node had no value; refer to $ZTDATA |
-|                                                                                  | to determine if the node had a data value.                                                                                                     |
-+----------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------+
-| `$ZTRIGGEROP <./isv.html#ztriggerop>`_                                           | For SET (including MERGE and $INCREMENT() operations), $ZTRIGGEROP returns the value "S". For KILL, $ZTRIGGEROP returns the value "K". For     |
-|                                                                                  | ZKILL or ZWITHDRAW, $ZTRIGGEROP returns the value "ZK". For ZTR, $ZTRIGGEROP returns the value "ZTR".                                          |
-+----------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------+
-| `$ZTSLATE <./isv.html#ztslate>`_                                                 | $ZTSLATE allows you to specify a string that you want to make available in chained or nested triggers invoked for an outermost transaction     |
-|                                                                                  | (when a TSTART takes $TLEVEL from 0 to 1).                                                                                                     |
-+----------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------+
-| `$ZTVALUE <./isv.html#ztvalue>`_                                                 | For SET, $ZTVALUE has the value assigned to the node which triggered the update. Initially, this is the value specified by the explicit        |
-|                                                                                  | (triggering) SET operation. Modifying $ZTVALUE within a trigger modifies the value YottaDB eventually assigns to the node.                     |
-+----------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------+
-| `$ZTUPDATE <./isv.html#ztupdate>`_                                               | For SET commands where the YottaDB trigger specifies a piece separator, $ZTUPDATE provides a comma separated list of ordinal piece numbers of  |
-|                                                                                  | pieces that differ between the current values of $ZTOLDVAL and $ZTVALUE.                                                                       |
-+----------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------+
-| `$ZTWORMHOLE <./isv.html#ztwormhole>`_                                           | $ZTWORMHOLE allows you to specify a string up to 128KB that you want to make available during trigger execution. You can use $ZTWORMHOLE to    |
-|                                                                                  | supply application context or process context to your trigger logic. Because $ZTWORMHOLE is retained throughout the duration of the process,   |
-|                                                                                  | you can read/write $ZTWORMHOLE both from inside and outside a trigger. Note that if trigger code does not reference $ZTWORMHOLE, YottaDB does  |
-|                                                                                  | not make it available to MUPIP (via the journal files or replication stream). Therefore, if a replicating secondary has different trigger code |
-|                                                                                  | than the initiating primary (an unusual configuration) and the triggers on the replicating node require information from $ZTWORMHOLE, the      |
-|                                                                                  | triggers on the initiating node must reference $ZTWORMHOLE to ensure YottaDB maintains the data it contains for use by the update process on   |
-|                                                                                  | the replicating node. YottaDB allows you to change $ZTWORMHOLE within trigger code so that a triggered update can trigger other updates but    |
-|                                                                                  | because of the arbitrary ordering of triggers matching the same node (refer to the discussion on trigger chaining below), such an approach     |
-|                                                                                  | requires careful design and implementation.                                                                                                    |
-+----------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------+
++-----------------------+------------------------------------------------------------------------------------------------------------------------------------------------+
+| Trigger ISV           | Description                                                                                                                                    |
++=======================+================================================================================================================================================+
+| :ref:`ztdata-isv`     | A fast path alternative to $DATA(@$REFERENCE)#2 for a SET or $DATA(@$REFERENCE) of the node for a KILL update.                                 |
++-----------------------+------------------------------------------------------------------------------------------------------------------------------------------------+
+| :ref:`ztdelim-isv`    | $ZTDE[LIM] returns the piece delimiter/separator, as specified by -delim or -zdelim in the trigger definition. This allows SET type triggers   |
+|                       | to extract updated pieces defined in $ZTUPDATE andr KILL/ZKILL type triggers to extract the relevant pieces in the node value (of the          |
+|                       | node being killed) without having the piece separator hard coded into the trigger routine. $ZTDELIM is the empty string outside of a           |
+|                       | trigger context. It is also the empty string inside a trigger context if -delim or -zdelim was not specified in the trigger definition.        |
++-----------------------+------------------------------------------------------------------------------------------------------------------------------------------------+
+| :ref:`ztlevel-isv`    | Returns the current level of trigger nesting (invocation by an update in trigger code of an additional trigger).                               |
++-----------------------+------------------------------------------------------------------------------------------------------------------------------------------------+
+| :ref:`ztname-isv`     | Within a trigger context, $ZTNAME returns the trigger name. Outside a trigger context, $ZTNAME returns an empty string.                        |
++-----------------------+------------------------------------------------------------------------------------------------------------------------------------------------+
+| :ref:`ztoldval-isv`   | Returns the prior (old) value of the node whose update caused the trigger invocation or an empty string if node had no value; refer to $ZTDATA |
+|                       | to determine if the node had a data value.                                                                                                     |
++-----------------------+------------------------------------------------------------------------------------------------------------------------------------------------+
+| :ref:`ztriggerop-isv` | For SET (including MERGE and $INCREMENT() operations), $ZTRIGGEROP returns the value "S". For KILL, $ZTRIGGEROP returns the value "K". For     |
+|                       | ZKILL or ZWITHDRAW, $ZTRIGGEROP returns the value "ZK". For ZTR, $ZTRIGGEROP returns the value "ZTR".                                          |
++-----------------------+------------------------------------------------------------------------------------------------------------------------------------------------+
+| :ref:`ztslate-isv`    | $ZTSLATE allows you to specify a string that you want to make available in chained or nested triggers invoked for an outermost transaction     |
+|                       | (when a TSTART takes $TLEVEL from 0 to 1).                                                                                                     |
++-----------------------+------------------------------------------------------------------------------------------------------------------------------------------------+
+| :ref:`ztupdate-isv`   | For SET commands where the YottaDB trigger specifies a piece separator, $ZTUPDATE provides a comma separated list of ordinal piece numbers of  |
+|                       | pieces that differ between the current values of $ZTOLDVAL and $ZTVALUE.                                                                       |
++-----------------------+------------------------------------------------------------------------------------------------------------------------------------------------+
+| :ref:`ztvalue-isv`    | For SET, $ZTVALUE has the value assigned to the node which triggered the update. Initially, this is the value specified by the explicit        |
+|                       | (triggering) SET operation. Modifying $ZTVALUE within a trigger modifies the value YottaDB eventually assigns to the node.                     |
++-----------------------+------------------------------------------------------------------------------------------------------------------------------------------------+
+| :ref:`ztwormhole-isv` | $ZTWORMHOLE allows you to specify a string up to 128KB that you want to make available during trigger execution. You can use $ZTWORMHOLE to    |
+|                       | supply application context or process context to your trigger logic. Because $ZTWORMHOLE is retained throughout the duration of the process,   |
+|                       | you can read/write $ZTWORMHOLE both from inside and outside a trigger. Note that if trigger code does not reference $ZTWORMHOLE, YottaDB does  |
+|                       | not make it available to MUPIP (via the journal files or replication stream). Therefore, if a replicating secondary has different trigger code |
+|                       | than the initiating primary (an unusual configuration) and the triggers on the replicating node require information from $ZTWORMHOLE, the      |
+|                       | triggers on the initiating node must reference $ZTWORMHOLE to ensure YottaDB maintains the data it contains for use by the update process on   |
+|                       | the replicating node. YottaDB allows you to change $ZTWORMHOLE within trigger code so that a triggered update can trigger other updates but    |
+|                       | because of the arbitrary ordering of triggers matching the same node (refer to the discussion on trigger chaining below), such an approach     |
+|                       | requires careful design and implementation.                                                                                                    |
++-----------------------+------------------------------------------------------------------------------------------------------------------------------------------------+
 
-The `Trigger Execution Environment`_ section describes the interactions of the following ISVs with triggers: `$ETRAP <./isv.html#etrap>`_, `$REFERENCE <./isv.html#reference>`_, `$TEST <./isv.html#test>`_, `$TLEVEL <./isv.html#tlevel>`_, and `$ZTRAP <./isv.html#ztrap>`_.
+The :ref:`trigger-exec-env` section describes the interactions of the following ISVs with triggers: :ref:`etrap-isv`, :ref:`reference-isv`, :ref:`test-isv`, :ref:`tlevel-isv`, and :ref:`ztrap-isv`.
 
 -----------------------------------
 Chained and Nested Triggers
@@ -218,30 +218,30 @@ This example sets off a chained sequence of two triggers and one nested trigger.
 .. note::
    YottaDB recommends against using chained and nested triggers that potentially update the same piece of a global variable. You should always assess the significance of having chained triggers for a database update especially because of the arbitrary trigger execution order. The following table shows the stacking behavior of some Intrinsic Special Variables in chained and nested triggers.
 
-+-----------------------------------------------------------------------------------+------------------------------------+------------------------------------------+
-| ISV                                                                               | Chained Triggers                   | Nested Triggers                          |
-+===================================================================================+====================================+==========================================+
-| `$REFERENCE <./isv.html#reference>`_                                              | Shared                             | Stacked                                  |
-+-----------------------------------------------------------------------------------+------------------------------------+------------------------------------------+
-| `$TEST <./isv.html#test>`_                                                        | Stacked                            | Stacked                                  |
-+-----------------------------------------------------------------------------------+------------------------------------+------------------------------------------+
-| `$ZTVALUE <./isv.html#ztvalue>`_                                                  | Shared (updatable)                 | Stacked                                  |
-+-----------------------------------------------------------------------------------+------------------------------------+------------------------------------------+
-| `$ZTOLDVAL <./isv.html#ztoldval>`_                                                | Shared                             | Stacked                                  |
-+-----------------------------------------------------------------------------------+------------------------------------+------------------------------------------+
-| `$ZTDATA <./isv.html#ztdata>`_                                                    | Shared                             | Stacked                                  |
-+-----------------------------------------------------------------------------------+------------------------------------+------------------------------------------+
-| `$ZTSLATE <./isv.html#ztslate>`_                                                  | Not Stacked                        | Not Stacked                              |
-+-----------------------------------------------------------------------------------+------------------------------------+------------------------------------------+
-| `$ZTRIGGEROP <./isv.html#ztriggerop>`_                                            | Shared                             | Stacked                                  |
-+-----------------------------------------------------------------------------------+------------------------------------+------------------------------------------+
-| `$ZTWORMHOLE <./isv.html#ztwormhole>`_                                            | Not Stacked                        | Not Stacked                              |
-+-----------------------------------------------------------------------------------+------------------------------------+------------------------------------------+
-| `$ZTLEVEL <./isv.html#ztlevel>`_                                                  | Shared                             | Stacked                                  |
-+-----------------------------------------------------------------------------------+------------------------------------+------------------------------------------+
-| `$ZTUPDATE <./isv.html#ztupdate>`_                                                | depends on $ZTVALUE when trigger   | Stacked                                  |
-|                                                                                   | starts                             |                                          |
-+-----------------------------------------------------------------------------------+------------------------------------+------------------------------------------+
++--------------------------+------------------------------------+------------------------------------------+
+| ISV                      | Chained Triggers                   | Nested Triggers                          |
++==========================+====================================+==========================================+
+| :ref:`reference-isv`     | Shared                             | Stacked                                  |
++--------------------------+------------------------------------+------------------------------------------+
+| :ref:`test-isv`          | Stacked                            | Stacked                                  |
++--------------------------+------------------------------------+------------------------------------------+
+| :ref:`ztvalue-isv`       | Shared (updatable)                 | Stacked                                  |
++--------------------------+------------------------------------+------------------------------------------+
+| :ref:`ztoldval-isv`      | Shared                             | Stacked                                  |
++--------------------------+------------------------------------+------------------------------------------+
+| :ref:`ztdata-isv`        | Shared                             | Stacked                                  |
++--------------------------+------------------------------------+------------------------------------------+
+| :ref:`ztslate-isv`       | Not Stacked                        | Not Stacked                              |
++--------------------------+------------------------------------+------------------------------------------+
+| :ref:`ztriggerop-isv`    | Shared                             | Stacked                                  |
++--------------------------+------------------------------------+------------------------------------------+
+| :ref:`ztwormhole-isv`    | Not Stacked                        | Not Stacked                              |
++--------------------------+------------------------------------+------------------------------------------+
+| :ref:`ztlevel-isv`       | Shared                             | Stacked                                  |
++--------------------------+------------------------------------+------------------------------------------+
+| :ref:`ztupdate-isv`      | depends on $ZTVALUE when trigger   | Stacked                                  |
+|                          | starts                             |                                          |
++--------------------------+------------------------------------+------------------------------------------+
 
 *Stacked* denotes an ISV whose value is restored at the completion of the trigger.
 
@@ -305,9 +305,9 @@ Using your editor, create an M routine called XNAMEinCIF.m with the following co
        . Set^XALPHA("A",xname,acn)=""                                                                                                         ; create new xref
        ;
 
-When the XNAME piece of a ^CIF(:,1) node is SET to a new value or KILLed, after obtaining the values, an unconditional KILL command deletes the previous cross reference index, if it exists. The deletion can be unconditional, because if the node did not previously exist, then the KILL is a no-op. Then, only if a SET invoked the trigger (determined from the ISV `$ZTRIGGEROP <./isv.html#ztriggerop>`_), the trigger-invoked routine creates a new cross reference index node. Note that because YottaDB implicitly creates a new context for the trigger logic we do not have to worry about our choice of names or explicitly NEW any variables.
+When the XNAME piece of a ^CIF(:,1) node is SET to a new value or KILLed, after obtaining the values, an unconditional KILL command deletes the previous cross reference index, if it exists. The deletion can be unconditional, because if the node did not previously exist, then the KILL is a no-op. Then, only if a SET invoked the trigger (determined from the ISV :ref:`ztriggerop-isv`), the trigger-invoked routine creates a new cross reference index node. Note that because YottaDB implicitly creates a new context for the trigger logic we do not have to worry about our choice of names or explicitly NEW any variables.
 
-After obtaining the values, an unconditional KILL command deletes the previous cross reference index, if it exists. Then, only if a SET invoked the trigger (determined from the ISV `$ZTRIGGEROP <./isv.html#ztriggerop>`_), the trigger invoked routine creates a new cross reference index node. Note that because YottaDB implicitly creates a new context for the trigger logic we do not have to worry about our choice of names or explicitly NEW any variables.
+After obtaining the values, an unconditional KILL command deletes the previous cross reference index, if it exists. Then, only if a SET invoked the trigger (determined from the ISV :ref:`ztriggerop-isv`), the trigger invoked routine creates a new cross reference index node. Note that because YottaDB implicitly creates a new context for the trigger logic we do not have to worry about our choice of names or explicitly NEW any variables.
 
 The following illustration shows the flow of control when the trigger is executed for Set ^CIN(ACN,1)="Paul|John, Doe, Johnny|". The initial value of ^CIN(ACN,1) is "Paul|Doe, John|" and ACN is set to "NY".
 
@@ -334,7 +334,7 @@ Trigger Invocation and Execution Semantics
 
 YottaDB stores Triggers for each global variable in the database file for that global variable. When a global directory maps a global variable to its database file, it also maps triggers for that global variable to the same database file. When an extended reference uses a different global directory to map a global variable to a database file, that global directory also maps triggers for that global variable to that same database file.
 
-Although triggers for SET and KILL/ZKILL commands can be specified together, the command invoking a trigger is always unique. The ISV `$ZTRIGGEROP <./isv.html#ztriggerop>`_ provides the trigger code which matched the triggering command.
+Although triggers for SET and KILL/ZKILL commands can be specified together, the command invoking a trigger is always unique. The ISV :ref:`ztriggerop-isv` provides the trigger code which matched the triggering command.
 
 Whenever a command updates a global variable, the YottaDB runtime system first determines whether there are any triggers for that global variable. If there are any triggers, it scans the signatures for subscripts and node values to identify matching triggers. If multiple triggers match, YottaDB invokes them in an arbitrary order. Since a future version of YottaDB, potentially multi-threaded, may well choose to execute multiple triggers in parallel, you should ensure that when a node has multiple triggers, they are coded so that correct application behavior does not rely on the order in which they execute.
 
@@ -345,6 +345,8 @@ Kill/ZKill
 ++++++++++++
 
 If KILL or ZKILL updates a global node matching a trigger definition, YottaDB executes the trigger code when a database state change has been computed but before it has been applied in the process space or the database. This means that the node to be KILLed and descendants (if any) remain visible to the trigger code. Note that a KILL trigger ignores $ZTVALUE.
+
+.. _set-triggers:
 
 +++++++++
 Set
@@ -383,6 +385,8 @@ YottaDB treats a MERGE command as a series of SET commands performed in collatio
 
 YottaDB treats the $INCREMENT() function as a SET command. Since the result of a $INCREMENT() operation must be numeric, if the trigger code modifies $ZTVALUE, at the end of the trigger, YottaDB applies the value of +$ZTVALUE (that is, $ZTVALUE coerced to a number) to the target node.
 
+.. _trigger-exec-env:
+
 +++++++++++++++++++++++++++++++++++
 Trigger Execution Environment
 +++++++++++++++++++++++++++++++++++
@@ -402,6 +406,8 @@ After executing all triggers, YottaDB commits the operation initiating the trigg
 To ensure trigger actions are Atomic with respect to the update that invokes them, YottaDB always executes trigger logic and the triggering update within a transaction. If the triggering update is not within an application transaction, YottaDB implicitly starts a restartable "Batch" transaction to wrap the original update and any triggers generated by the update. In other words, when 0=$TLEVEL, YottaDB behaves as if implicit TStart \*:Transactionid="BATCH" and TCommit commands bracket the update and its triggers. Therefore, the trigger code and/or its error trap always operate inside a Transaction and can use the TRESTART command even if the main application code never uses TSTART. $ETRAP code for use in triggers may include TROLLBACK logic.
 
 The deprecated ZTSTART/ZTCOMMIT transactions are not compatible with triggers. If a ZTSTART transaction is already active when an update to a global that has any trigger defined occurs, YottaDB issues a runtime error. Likewise, YottaDB treats any attempt to issue a ZTSTART within a trigger context as an error.
+
+.. _err-handling-trigger-exec:
 
 ++++++++++++++++++++++++++++++++++++++++
 Error Handling during Trigger Execution
@@ -626,7 +632,7 @@ For any replication stream record indicating triggers were invoked, the Update P
 MUPIP Trigger and $ZTRIGGER()
 -----------------------------
 
-MUPIP TRIGGER provides a facility to examine and update triggers. The $ZTRIGGER() function performs trigger maintenance actions analogous to those performed by MUPIP TRIGGER. $ZTRIGGER() returns the truth value expression depending on the success of the specified action. You choice of MUPIP TRIGGER or $ZTRIGGER() for trigger maintenance should depend on your current application development model and configuration management practices. Both MUPIP TRIGGER and $ZTRIGGER() use the same trigger definition syntax. You should familiarize yourself with the syntax of an entry in a trigger definition file before exploring MUPIP TRIGGER and $ZTRIGGER(). For more information and usage examples of MUPIP TRIGGER, refer to the `Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/index.html>`_. For more information and usage examples of $ZTRIGGER(), refer to “$ZTRIgger()”.
+MUPIP TRIGGER provides a facility to examine and update triggers. The $ZTRIGGER() function performs trigger maintenance actions analogous to those performed by MUPIP TRIGGER. $ZTRIGGER() returns the truth value expression depending on the success of the specified action. You choice of MUPIP TRIGGER or $ZTRIGGER() for trigger maintenance should depend on your current application development model and configuration management practices. Both MUPIP TRIGGER and $ZTRIGGER() use the same trigger definition syntax. You should familiarize yourself with the syntax of an entry in a trigger definition file before exploring MUPIP TRIGGER and $ZTRIGGER(). For more information and usage examples of MUPIP TRIGGER, refer to the `Administration and Operations Guide <../AdminOpsGuide/index.html>`_. For more information and usage examples of $ZTRIGGER(), refer to “$ZTRIgger()”.
 
 
 

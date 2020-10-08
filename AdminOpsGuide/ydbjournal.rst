@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2021 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2017-2021 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -31,6 +31,8 @@ YottaDB, like virtually all high performance databases, uses journaling (called 
 Note that journaling is not a substitute for good system configuration and design. For example, if a database and its journal files are on the same disk controller, a hardware failure on that controller can damage both files, and prevent recoverability. Journaling complements other techniques to build a robust system.
 
 Journaling requires no M programming. However, the commands described later in this chapter may enhance the value of journaling.
+
+.. _journal-files:
 
 ++++++++++++++
 Journal Files
@@ -79,7 +81,7 @@ or
 
    mupip set -journal=on -region '*'
 
-Enabling or disabling journaling requires stand alone access to the database. Turning journaling on and off can be done when the database is in use. See `SET Action Qualifiers`_ for more information about options and settings.
+Enabling or disabling journaling requires stand alone access to the database. Turning journaling on and off can be done when the database is in use. See :ref:`set-action-qualifiers` for more information about options and settings.
 
 Note: Whenever YottaDB implicitly turns off journaling due to run-time conditions such as no available disk space or no authorization for a process attempting to auto-switch a journal file (and so on) , it produces an error with accompanying messages to alert operation staff. YottaDB on selected platforms can encrypt data in database and journal files. Encryption protects against unauthorized access to data by an unauthorized process which is able to access disk files, that is, encryption protects data at rest (DAR). Rather than build encryption into YottaDB, a plug-in architecture facilitates use of your preferred encryption software. For more information, refer to `Chapter 12: “Database Encryption” <./encryption.html>`_.
 
@@ -96,9 +98,9 @@ The following two procedures enable recovery of a database from a journal file:
 .. note::
    In a multi-site database replication configuration, you might use these recovery procedures to refresh a replicating instance from the backup of an originating instance. However, the steps for both these recovery procedures are different.
 
-~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~
 Forward Recovery
-~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~
 
 Forward recovery "replays" all database updates in the forward direction until the specified point in the journal file. Forward recovery on a backup database starts from when the backup was taken and continues till the specified point in the journal files. Forward recovery on an empty database starts from the beginning of the journal files.
 
@@ -108,9 +110,9 @@ Suppose a system crash occurred at 08:50 hrs and a backup of the database was ta
 
 A command like mupip journal -recover -forward -before="--8:50" yottadb.mjl performs this operation. From the current journal file, forward recovery moves back to the point where the begin transaction number of a journal file matches the current transaction number of the active database (the point when the backup was taken) and begins forward processing. Since a journal file is back-linked to its predecessor, YottaDB facilitates forward processing by activating temporary forward links between journal files that appear only during recovery. These forward links are temporary because they are expensive to maintain as new journal files are created. Note: Forward recovery, by design, begins from a journal file whose "Begin Transaction" matches the "Current Transaction" of the active database. This condition occurs only when a new journal file is created (switched) immediately after a backup. If a database is backed up with MUPIP BACKUP -NONEWJNLFILES (a backup option where journal files are not switched), forward recovery cannot find a journal file whose Begin Transaction matches the Current Transaction and therefore cannot proceed with forward recovery. Always use a backup option that switches a journal file or journal files explicitly after a backup. Also, once a database has been recovered using forward recovery, you can no longer use it for a future recovery unless you restore the database again from the backup.
 
-~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~
 Backward Recovery
-~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~
 
 Backward recovery restores a journaled database to a prior state. Backward processing starts by rolling back updates to a checkpoint (specified by -SINCE) prior to the desired state and replaying database updates forward till the desired state.
 
@@ -277,7 +279,7 @@ The four ACID properties are Atomicity, Consistency, Isolation and Durability. Y
 .. note::
    The term cascading roll-back describes the situation that occurs when dropping one transaction causes previous transactions to be sequentially dropped, until potentially all transactions are dropped. If an application violates this assumption, a JOURNAL -RECOVER may create a database with application-level integrity problems. M LOCKs ensure the isolation of a sequence of updates from interaction with any other updates. TSTART and TCOMMIT transaction fences implicitly exhibit the required isolation whether fences are used with or without associated LOCKs.
 
-For more information on TSTART/TCOMMIT, refer to the `"Commands" chapter of the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/commands.html>`_ for more information.
+For more information on TSTART/TCOMMIT, refer to the `"Commands" chapter of the Programmer's Guide <../ProgrammersGuide/commands.html>`_ for more information.
 
 .. note::
    As stated in the beginning of this chapter, ZTSTART and TZTCOMMIT are deprecated in favor of TSTART and TCOMMIT. YottaDB no longer validates the ZTSTART and ZTCOMMIT functionality so you should always use TSTART and TCOMMIT to fence your transactions.
@@ -288,9 +290,9 @@ Deciding Whether to Use Fencing
 
 You might fence some, all, or no application programs. When you program with fences, it is possible to force a recovery to ignore the fences by using additional qualifiers to MUPIP JOURNAL -RECOVER. The following lists advantages and disadvantages for fencing transactions.
 
-~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~
 Fencing Advantages
-~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~
 
 * Faster recovery
 
@@ -298,11 +300,11 @@ Fencing Advantages
 
 * Databases recovered from journals that include fences do not require post-recovery checks and repairs for logical consistency
 
-Note that TSTART/TCOMMIT pairs are the preferred method of fencing; see the sections on Transaction Processing in the `Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/index.html>`_ for additional benefits of this approach.
+Note that TSTART/TCOMMIT pairs are the preferred method of fencing; see the sections on Transaction Processing in the `Programmer's Guide <../ProgrammersGuide/index.html>`_ for additional benefits of this approach.
 
-~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
 Fencing Disadvantages
-~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
 
 * Must be programmed into the M code
 
@@ -324,7 +326,7 @@ VIEW "JNLFLUSH":region initiates a complete transfer of all buffered journal rec
 
 VIEW "JNLWAIT" causes to suspend process execution until all updates initiated by the process in all regions have been transferred to the journal file (on disk). Updates within M TRANSACTIONS typically behave as if they included an implicit VIEW "JNLWAIT" with their final TCOMMIT. TRANSACTIONS with a TRANSACTION ID="BATCH" or "BA" are exempted from the implicit "JNLWAIT". Normally, process execution for updates outside of M transactions continues asynchronously with the transfer of journal records to disk.
 
-For more information on the VIEW command, refer to the `"Commands" chapter in the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/commands.html>`_.
+For more information on the VIEW command, refer to the `"Commands" chapter in the Programmer's Guide <../ProgrammersGuide/commands.html>`_.
 
 ++++++++++++++++++++
 $VIEW() Keywords
@@ -340,7 +342,7 @@ $VIEW("REGION", expr) where expr evaluates to a gvn, returns the name of the reg
 
 $VIEW("JNLTRANSACTION") returns the difference between the number of ZTSTARTs that have been issued and the number of ZTCOMMITs. If no fenced transaction is in progress, then a zero (0) is returned. This serves an analogous function to $TLEVEL for transactions that use TSTART and TCOMMIT.
 
-For more information on $VIEW(), refer to the `"Functions" chapter in the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/functions.html>`_.
+For more information on $VIEW(), refer to the `"Functions" chapter in the Programmer's Guide <../ProgrammersGuide/functions.html>`_.
 
 ---------------
 SET
@@ -389,6 +391,10 @@ SET Object Identifying Qualifiers
 
 The following qualifiers identify the journaling targets:
 
+~~~~
+FILE
+~~~~
+
 .. code-block:: none
 
    -F[ILE]
@@ -397,6 +403,10 @@ Specifies that the argument to the SET is a file-specification for a single data
 
 Old journal files stay open for about 10 seconds after a switch to a new journal file.
 
+~~~~~~
+REGION
+~~~~~~
+
 .. code-block:: none
 
    -R[EGION]
@@ -404,6 +414,10 @@ Old journal files stay open for about 10 seconds after a switch to a new journal
 Specifies that the argument to the SET is a list of one or more region-names, possibly including wildcards, which, through the mapping of the current Global Directory, identifies a set of database files. SET -REGION modifies multiple files when the parameter contains more than one name.
 
 The -REGION qualifier is incompatible with the -FILE and -JNLFILE qualifiers.
+
+~~~~~~~
+JNLFILE
+~~~~~~~
 
 .. code-block:: none
 
@@ -415,26 +429,36 @@ Specifies that the target for SET is a journal file. The format of the JNLFILE q
 
 jnl_file specifies the name of the target journal file.
 
-**-bypass**
+^^^^^^^
+-bypass
+^^^^^^^
 
 Override the requirement that database files (or their corresponding journal files) affected by the set command be available standalone.
 
 .. note::
    Changing the previous generation file link when a rollback operation is in progress or when the Source Server is actively replicating, can damage the journal file and hamper recoverability.
 
-**-dbfilename=file_name**
+^^^^^^^^^^^^^^^^^^^^^
+-dbfilename=file_name
+^^^^^^^^^^^^^^^^^^^^^
 
 Associates a journal file with a different database file; this command may be useful in arranging unusual RECOVER or ROLLBACK scenarios.
 
-**-prevjnlfile=jnlfilename**
+^^^^^^^^^^^^^^^^^^^^^^^^
+-prevjnlfile=jnlfilename
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 Changes the name of the previous generation of the journal file in the header of jnl_file to jnlfilename (for example, when moving the previous generation journal file to a different location). The file name can be a full path-name or a relative path name; however, before the file-name is stored in the header, it is expanded to its full path-name.
 
-**-noprevjnlfile**
+^^^^^^^^^^^^^^
+-noprevjnlfile
+^^^^^^^^^^^^^^
 
 Cuts the generation link of the journal file jnl_file. The name of the previous generation journal file is nullified in the header of jnl_file. Such an operation is appropriate when it is assured that there will never be a reason for a rollback to the previous generation journal file.
 
-**-repl_state={on|off}**
+^^^^^^^^^^^^^^^^^^^^
+-repl_state={on|off}
+^^^^^^^^^^^^^^^^^^^^
 
 Change the replication state of a journal file; this command is intended for use only under instructions from your YottaDB support provider.
 
@@ -446,7 +470,13 @@ SET Action Qualifiers
 
 The -JOURNAL and -REPLICATION qualifiers are the only SET qualifiers relevant for journaling. For information on the other MUPIP SET qualifiers, refer to `Chapter 5: “General Database Management” <./dbmgmt.html>`_.
 
--[NO]J[OURNAL][=journal-option-list]
+~~~~~~~~
+-JOURNAL
+~~~~~~~~
+
+.. code-block:: none
+
+	-[NO]J[OURNAL][=journal-option-list]
 
 Enables or disables journaling for the specified database file or region(s). MUPIP SET commands with this qualifier also establish the characteristics for journal files. YottaDB believes the defaults and the minimum for journal file characteristics are in line with current hardware capabilities and suitable for a production environment.
 
@@ -478,19 +508,25 @@ The journal-option-list contains keywords separated with commas (,) enclosed in 
 
 For details on the journal-option-list refer to :ref:`set-journal-options`.
 
--REPLI[CATION]=replication-option
+~~~~~~~~~~~~
+-REPLICATION
+~~~~~~~~~~~~
+
+.. code-block:: none
+
+	-REPLI[CATION]=replication-option
 
 -REPLICATION sets journal characteristics and changes the replication state simultaneously. It can also be used with the -JOURNAL qualifier. If journaling is ENABLED and turned ON, SET -REPLICATION=ON creates a new set of journal files, cuts the back-link to the prior generation journal files, and turns replication ON.
 
 .. _set-journal-options:
 
-~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~
 SET -JOURNAL OPTIONS
-~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~
 
-^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^
 ALI[GNSIZE]=blocks
-^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^
 
 * Specifies the number of 512-byte-blocks in the ALIGNSIZE of the journal file.
 
@@ -506,9 +542,9 @@ ALI[GNSIZE]=blocks
 
 * Note that a large value of ALIGNSIZE implies infrequent boundaries for recovery to use, and hence slows backward recovery down so drastically that, for example, the maximum value of 4194304 causes backward recovery (in case of a crash) to take as much time as forward recovery using the same journal file(s).
 
-^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^
 ALL[OCATION]=blocks
-^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^
 
 Sets the allocation size of the journal file. YottaDB uses this information to determine when it should first review the disk space available for the journal file. The size of the journal file at creation time is a constant (depending on the YottaDB version) but once the journal file reaches the size specified by ALLOCATION, every extension produces a check of free space available on the device used for the journal file.
 
@@ -516,9 +552,9 @@ YottaDB issues informational messages to the system log whenever the free space 
 
 The default ALLOCATION value is 2048 blocks. The minimum value allowed is 2048. The maximum value is 8,388,607 (4GB-512 bytes, the maximum journal file size).
 
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^
 AU[TOSWITCHLIMIT]=blocks
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 Specifies the limit on the size of a journal file. When the journal file size reaches the limit, YottaDB automatically performs an implicit online switch to a new journal file.
 
@@ -531,9 +567,9 @@ If you specify values for ALLOCATION, EXTENSION, and AUTOSWITCHLIMIT for a regio
 
 At journal extension time, including journal autoswitch time, if (ALLOCATION+EXTENSION>AUTOSWITCHLIMIT) for a region, YottaDB uses the larger of EXTENSION and AUTOSWITCHLIMIT as the increment to warn of low available journal disk space. Otherwise, it uses EXTENSION.
 
-^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^
 [NO]BEFORE_IMAGES
-^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^
 
 Controls whether the journal should capture BEFORE_IMAGES of GDS blocks that an update is about to modify. A SET -JOURNAL=ON can include either BEFORE_IMAGES or NOBEFORE_IMAGES in the accompanying journal-option-list.
 
@@ -543,9 +579,9 @@ As YottaDB creates new journal files only with the ON option, if SET -JOURNAL=ON
 
 Although it is possible to perform an online switch of a database from (or to) NOBEFORE-IMAGE journaling to (or from) BEFORE-IMAGE journaling, it is important to understand that backward recovery can never succeed if it encounters even one journal file in a set without BEFORE-IMAGES.
 
-^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^
 BU[FFER_SIZE]=blocks
-^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^
 
 Specifies the amount of memory used to buffer journal file output.
 
@@ -553,21 +589,21 @@ MUPIP requires standalone access to the database to modify BUFFER_SIZE. Therefor
 
 The default value is 2312 blocks. The minimum BUFFER_SIZE is 2307 blocks. The maximum BUFFER_SIZE is 32K blocks which means that the maximum buffer you can set for your journal file output is 16MB.
 
-^^^^^^^^^
+^^^^^^^
 DISABLE
-^^^^^^^^^
+^^^^^^^
 
 Equivalent to the -NOJOURNAL qualifier of MUPIP SET. It specifies that journaling is not an option for the region or file named. If the user specifies DISABLE, then MUPIP SET ignores all other options in the journal-option-list.
 
-^^^^^^^^
+^^^^^^
 ENABLE
-^^^^^^^^
+^^^^^^
 
 Makes the database file or region available for journaling. By default, ENABLE turns journaling ON, unless OFF is specified in the same option list. A command that includes ENABLE must also specify BEFORE_IMAGES or NOBEFORE_IMAGES.
 
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^
 EP[OCH_INTERVAL]=seconds
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 seconds specifies the elapsed time interval between two successive EPOCHs. An EPOCH is a checkpoint, at which all updates to a database file are committed to disk. All journal files contain epoch records.
 
@@ -575,9 +611,9 @@ A smaller EPOCH_INTERVAL reduces the time to recover after a crash at the cost o
 
 The default EPOCH_INTERVAL value is 300 seconds (5 minutes). The minimum value is 1 second. The maximum value is 32,767 (one less than 32K) seconds, or approximately 9.1 hours. If you enable journaling and do not specify a value for EPOCH_INTERVAL, YottaDB inherits the value of EPOCH_INTERVAL of the last journal file in that region. EPOCH_INTERVAL only takes effect when the user turns journaling ON and there is no earlier journal file.
 
-^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^
 EX[TENSION]=blocks
-^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^
 
 EXTENSION=blocks specifies when YottaDB should review disk space available for the journal file after the ALLOCATION has been used up. It also specifies how much space should be available at each review.
 
@@ -597,9 +633,9 @@ As UNIX file systems use lazy allocation schemes, allocation and extension value
 
 The default EXTENSION value is 2048 blocks. The minimum EXTENSION is zero (0) blocks and the maximum is 1073741823 (one less than 1 giga) blocks.
 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 F[ILENAME]=journal_filename
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 journal_filename specifies the name of the journal file. FILENAME is incompatible with SET -REGION, if you specify more than one region.
 
@@ -641,15 +677,15 @@ The previous generation journal filename is a back link from the current generat
 
 YottaDB produces an error and makes no change to the journaling state of the database when the FILENAME is an existing file and is not the active journal file for that database. In this way, YottaDB prevents possible cycles in the back-links (such as, a3.mjl has a back-link to a2.mjl which in turn has a back-link to a1.mjl which in turn has a back-link to a3.mjl thereby creating a cycle). Cycles could prevent journal recovery. Also, note that cycles in back-links are possible only due to explicit FILENAME specifications and never due to existing FILENAME characteristics from the database or by using the default FILENAME.
 
-^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^
 NOPREVJNLFILE
-^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^
 
 Eliminates the back link of a journal file.
 
-^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^
 [NO]S[YNC_IO]
-^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^
 
 Directs YottaDB to open the journal file with certain additional IO flags (the exact set of flags varies by the platform where SYNC_IO is supported, for example on Linux you might utilize the O_DIRECT flag). Under normal operation, data is written to but not read from the journal files. Therefore, depending on your actual workload and your computer system, you may see better throughput by using the SYNC_IO journal option.
 
@@ -657,17 +693,17 @@ You should empirically determine the effect of this option, because there is no 
 
 The default is NOSYNC_IO. If you specify both NOSYNC_IO and SYNC_IO in the same journal-option-list, YottaDB uses the last occurrence.
 
-^^^^^
+^^^
 OFF
-^^^^^
+^^^
 
 Stops recording subsequent database updates in the journal file. Specify OFF to establish journaling characteristics without creating a journal file or starting journaling.
 
 The default for SET -JOURNAL= is ON.
 
-^^^^
+^^
 ON
-^^^^
+^^
 
 Records subsequent database updates in that journal file. MUPIP SET -JOURNAL=ON must include either BEFORE_IMAGES or NOBEFORE_IMAGES in the accompanying journal-option-list. By default YottaDB sets journal operation to BEFORE_IMAGE if this command changes the database replication state (refer to `Chapter 7: “Database Replication” <./dbrepl.html>`_ for more information) from OFF to ON and JOURNAL=NOBEFORE_IMAGE is not specified.
 
@@ -678,9 +714,9 @@ If the current generation journal file is damaged/missing, MUPIP SET -JOURNAL=ON
 
 The default for SET -JOURNAL= is ON.
 
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^
 Y[IELD_LIMIT]=yieldcount
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 yieldcount specifies the number of times a process that tries to flush journal buffer contents to disk yields its timeslice and waits for additional journal buffer content to be filled-in by concurrently active processes, before initiating a less than optimal I/O operation.
 
@@ -754,7 +790,7 @@ Example:
 
    $ mupip set -access_method=MM -file ydb.dat
 
-This example sets MM (Memory Mapped) as the access method or the YottaDB buffering strategy for storing and retrieving data from the database file ydb.dat. Since MM is not supported with BEFORE_IMAGE journaling, this example produces an error on a database with BEFORE_IMAGE journaling enabled. You can also use -access_method=BG to set BG (Buffered Global) as your buffering strategy. For more information on the implications of these access methods, refer to `“Segment Qualifiers” <./gde.html#segment-qualifiers>`_.
+This example sets MM (Memory Mapped) as the access method or the YottaDB buffering strategy for storing and retrieving data from the database file ydb.dat. Since MM is not supported with BEFORE_IMAGE journaling, this example produces an error on a database with BEFORE_IMAGE journaling enabled. You can also use -access_method=BG to set BG (Buffered Global) as your buffering strategy. For more information on the implications of these access methods, refer to :ref:`segment-qualifiers`.
 
 --------------------------------
 JOURNAL
@@ -847,9 +883,9 @@ Journal Action Qualifiers
 
 This section describes the journaling action qualifiers.
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -EXtract[=<file-name>|-stdout]
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Transfers information from journal files into files formatted for processing by M routines. It reports the journal time stamps using the $H format, as controlled by the time zone setting from the OS and the process environment for the process running the EXTRACT.
 
@@ -865,7 +901,7 @@ When used independent of -RECOVER (or -ROLLBACK), -EXTRACT option can produce a 
 
 If a database having custom collation is inaccessible or the replication instance is frozen with a critical section required for the access held by another process and the environment variable ydb_extract_nocol is defined and evaluates to a non-zero integer or any case-independent string or leading substrings of "TRUE" or "YES", MUPIP JOURNAL -EXTRACT issues the DBCOLLREQ warning and proceeds with the extract using the default collation. If ydb_extract_nocol is not set or evaluates to a value other than a positive integer or any case-independent string or leading substrings of "FALSE" or "NO", MUPIP JOURNAL -EXTRACT exits with the SETEXTRENV error if it encounters such a situation. Note that if default collation is used for a database with custom collation, the subscripts reported by MUPIP JOURNAL -EXTRACT are those stored in the database, which may differ from those read and written by application programs.
 
-Note that, a broken transaction, if found, is extracted to a broken transaction file (refer to `Journal Control Qualifiers`_ for details), and all future complete transactions are considered to be lost transactions, which are extracted to a lost transaction file (refer to `Journal Control Qualifiers`_ for details).
+Note that, a broken transaction, if found, is extracted to a broken transaction file (refer to :ref:`journal-control-qualifiers` for details), and all future complete transactions are considered to be lost transactions, which are extracted to a lost transaction file (refer to :ref:`journal-control-qualifiers` for details).
 
 To avoid broken transactions or lost transaction processing and instead extract all journal records into one file, use the control qualifier -FENCES=NONE. YottaDB strongly recommends against using -FENCES=NONE if -RECOVER/-ROLLBACK is also specified.
 
@@ -946,9 +982,9 @@ A value greater than one (1) specifies the maximum number of concurrent threads 
 
 The environment variable ydb_mupjnl_parallel provides a value when the MUPIP JOURNAL command has no explicit -PARALLEL qualifier; when defined with no value ydb_mupjnl_parallel acts like -PARALLEL with no value. When the -PARALLEL qualifier (or the ydb_mupjnl_parallel environment variable) specifies the use of parallel processes in the forward phase of a MUPIP JOURNAL command, MUPIP may create temporary shared memory segments and/or extract files (corresponding to -extract or -losttrans or -brokentrans qualifiers) and clean these up at the end of the command; however an abnormal termination such as a kill -9 might cause these to be orphaned. Journal extract files (created by specifying one of -extract or -brokentrans or -losttrans to a MUPIP JOURNAL command) contain journal records sorted in the exact order their corresponding updates happened in time.
 
-~~~~~~~~~~
+~~~~~~~~
 -RECover
-~~~~~~~~~~
+~~~~~~~~
 
 Instructs MUPIP JOURNAL to initiate database recovery. -RECOVER initiates the central JOURNAL operation for non-replicated databases. From the list of JOURNAL action qualifiers, select RECOVER alone or with any other action qualifiers except -ROLLBACK.
 
@@ -962,7 +998,7 @@ During forward processing phase of JOURNAL -RECOVER -BACKWARD, MUPIP journals th
 
 If a transaction is found with an incomplete fence, it is considered broken. During the forward phase of recovery, if a complete transaction (fenced or unfenced) is found after a broken transaction, -RECOVER increments the error count. If -ERRORLIMIT is reached, the complete transaction goes to the lost transaction file. Otherwise, it is applied to the database.
 
-All broken and lost transactions are made available as the result of the -RECOVERY. They are written as journal extract format in two different text files. They are the broken transaction file and the lost transaction file. Refer to the sections on BROKENTRANS and LOSTTRANS in `Journal Control Qualifiers`_.
+All broken and lost transactions are made available as the result of the -RECOVERY. They are written as journal extract format in two different text files. They are the broken transaction file and the lost transaction file. Refer to the sections on BROKENTRANS and LOSTTRANS in :ref:`journal-control-qualifiers`.
 
 When performing JOURNAL -RECOVER with fences (FENCES="PROCESS" or FENCES="ALWAYS"), it is essential for the command to include all the journal files corresponding to the complete set of database files that make up the logical database. If the specified set of journals is incomplete, the recovery reports all transactions that included any missing region as broken. Typically, this means that the results of the recovery are unsatisfactory or even unusable.
 
@@ -977,9 +1013,9 @@ YottaDB adds a prefix rolled_bak\_ to the journal file whose entire contents are
 .. note::
    Using -RECOVER on a replicated database initiates database recovery but turns replication OFF. Under most circumstances, there is no need to perform a -RECOVER operation on replicated regions.
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -ROLLBACK [{-ON[LINE]|-NOO[NLINE]}]
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 -ROLLBACK -FORWARD "*" command does what a -RECOVER -FORWARD "*" would do except that the ROLLBACK also updates sequence number related fields in the database file header and ensures update serialization across regions. -RECOVER can leave one database region ahead of another region. -RECOVER cannot ensure database Consistency across regions whereas -ROLLBACK can.
 
@@ -1009,21 +1045,21 @@ If the -FETCHRESYNC or -RESYNC qualifiers are not specified, MUPIP does an optim
 .. note::
    If ROLLBACK (either -NOONLINE or -ONLINE) terminates abnormally (say because of a kill -9), it leaves the database in a potentially inconsistent state indicated by the FILE corrupt field in the database file header. When a ROLLBACK terminates leaving this field set, all other processes receive DBFLCORRP errors any time they attempt to interact with the database. You can clear this condition in descending order of risk: Rerun ROLLBACK to completion, MUPIP SET -FILE -PARTIAL_RECOV_BYPASS, DSE CHANGE -FILEHEADER -CORRUPT=FALSE -NOCRIT. However, the MUPIP and DSE actions do not ensure that the database has a consistent state; check for database integrity with MUPIP INTEG.
 
-^^^^^^^^^^^^^
+^^^^^^^^^^^
 -NOO[NLINE]
-^^^^^^^^^^^^^
+^^^^^^^^^^^
 
 Specifies that ROLLBACK requires exclusive access to the database and the replication instance file, which means the database and the replication instance files are inaccessible during a -ROLLBACK -NOONLINE.
 
 -ROLLBACK -FORWARD does not support the -[NO]O[NLINE] qualifier.
 
-^^^^^^^^^^^
+^^^^^^^^^
 -ON[LINE]
-^^^^^^^^^^^
+^^^^^^^^^
 
 Specifies that ROLLBACK can run without requiring exclusive access to the database and the replication instance file.
 
-Any utility/command attempted while MUPIP JOURNAL -ONLINE -ROLLBACK operates, waits for ROLLBACK to complete; the $ydb_db_startup_max_wait environment variable configures the wait period. For more information on $ydb_db_startup_max_wait, refer to `“Environment Variables” <./basicops.html#environment-variables>`_.
+Any utility/command attempted while MUPIP JOURNAL -ONLINE -ROLLBACK operates, waits for ROLLBACK to complete; the $ydb_db_startup_max_wait environment variable configures the wait period. For more information on $ydb_db_startup_max_wait, refer to :ref:`Environment Variables <env-vars>`.
 
 .. note::
    Because MUPIP ROLLBACK -ONLINE can take a database backwards in state space, please make sure that you understand what you intend it to do when you invoke it. YottaDB developed it as a step towards a much larger project and anticipates that it will not be broadly useful in its current form.
@@ -1044,9 +1080,9 @@ If MUPIP JOURNAL -ONLINE -ROLLBACK changes the logical state of the database, th
 
 * In a non-TP mini-transaction, including within an implicit transaction caused by a trigger, -ONLINE -ROLLBACK produces a DBROLLEDBACK error, which, in turn, invokes the error trap if $ETRAP or $ZTRAP are in effect.
 
-~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
 -SHow=show-option-list
-~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
 
 Specifies which information for the JOURNAL command to display about a journal file.
 
@@ -1166,9 +1202,9 @@ The following example displays the cryptographic hash of the symmetric key store
        2A37ABA005CE98D908B219249A0464F5BB622B72F5FDA
        0FDF04C8ECE52A4261975B89A2
 
-~~~~~~~~~~~~~
+~~~~~~~~~~~
 -[NO]Verify
-~~~~~~~~~~~~~
+~~~~~~~~~~~
 
 Verifies journal files for integrity. This qualifier cannot have a value. -VERIFY scans journal files and checks if they have legal form, if not, it terminates without affecting the database files.
 
@@ -1344,6 +1380,8 @@ This command performs a ROLLBACK -FETCHRESYNC operation on a replicating instanc
    -RES[YNC]=<journal sequence number>
 
 Specifies the journal sequence number to which YottaDB must rollback the database/journal files need to be rolled back to a specific point. If you specify a journal sequence number that is greater than the last consistent state, YottaDB rolls back the database/journal files to the last consistent state. Under normal operating conditions, this qualifier is not needed.
+
+.. _journal-control-qualifiers:
 
 ++++++++++++++++++++++++++++++
 Journal Control Qualifiers

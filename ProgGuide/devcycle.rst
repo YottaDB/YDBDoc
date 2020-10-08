@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2017-2021 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -92,11 +92,13 @@ Each of these remaining steps can be performed either from the YottaDB prompt or
 The table is presented as an overview of the YottaDB routine generation process, and as a comparison of the available methods. More complete information on each of the steps can be found in the following parts of this manual set.
 
 * Debugging routines: `Chapter 4: Operating and Debugging in Direct Mode <./opdebug.html>`_.
-* Defining environment variables: `Defining Environment Variables`_.
-* Defining/creating Global Directories:`Preparing the Database`_ and the Administration and Operations Guide, `Global Directory Editor <https://docs.yottadb.com/AdminOpsGuide/gde.html>`_ and `MUPIP <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html>`_ chapters.
-* Creating/editing routines: `Creating and Editing a Source Program`_.
-* Compiling routines: `Compiling a Source Program`_.
-* Executing routines: `Executing a Source Program`_.
+* Defining environment variables: :ref:`def-env-var`.
+* Defining/creating Global Directories: :ref:`prep-db` and the Administration and Operations Guide, `Global Directory Editor <../AdminOpsGuide/gde.html>`_ and `MUPIP <../AdminOpsGuide/dbmgmt.html>`_ chapters.
+* Creating/editing routines: :ref:`create-edit-src-prog`.
+* Compiling routines: :ref:`compile-src-prog`.
+* Executing routines: :ref:`execute-src-prog`.
+
+.. _def-env-var:
 
 ---------------------------------
 Defining Environment Variables
@@ -219,7 +221,7 @@ The following is an example of ydb_routines definition:
 
 This specifies that YottaDB search for a routine first in the current directory (.), then in the distribution directory (which is identified by the environment variable ydb_dist). The distribution directory is included in the list because it contains the percent routines. You will probably want the search list to contain these two items at a minimum. In addition, you may want to add directories of your own.
 
-For additional information about how YottaDB uses the routine search list, see `“$ZROutines” <./isv.html#zroutines>`_.
+For additional information about how YottaDB uses the routine search list, see :ref:`zroutines-isv`.
 
 ++++++++++++++++
 Editor
@@ -236,6 +238,8 @@ Example:
 
 This defines the current text editor to vi.
 
+.. _prep-db:
+
 --------------------------
 Preparing the Database
 --------------------------
@@ -244,7 +248,7 @@ YottaDB databases consist of one or more UNIX files. Most database files have a 
 
 To define and maintain a Global Directory, use the Global Directory Editor (GDE) utility. The GDE utility automatically upgrades existing global directories to the current format. The MUPIP command CREATE uses the characteristics as defined in the Global Directory to create the associated database. In a production environment, the system manager typically maintains Global Directories.
 
-For more information on GDE and MUPIP refer to the `"Global Directory Editor" <https://docs.yottadb.com/AdminOpsGuide/gde.html>`_ and `"MUPIP" <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html>`_ chapters in the Administration and Operations Guide.
+For more information on GDE and MUPIP refer to the `"Global Directory Editor" <../AdminOpsGuide/gde.html>`_ and `"MUPIP" <../AdminOpsGuide/dbmgmt.html>`_ chapters in the Administration and Operations Guide.
 
 Example:
 
@@ -393,6 +397,8 @@ This uses the MUPIP LOAD command to load a sequential file into the database.
 
 Because MUPIP uses the environment variable ydb_gbldir to locate a Global Directory, which identifies the database file(s), the LOAD command does not require any information about the target database. With few exceptions, the YottaDB utilities work in the same way.
 
+.. _create-edit-src-prog:
+
 --------------------------------------
 Creating and Editing a Source Program
 --------------------------------------
@@ -405,7 +411,7 @@ When the program is very simple (and its lines do not need revision after they a
 Editing from YottaDB
 +++++++++++++++++++++++++
 
-If you focus on program development outside the YottaDB environment, skip this section and continue with the section `Editing from the Shell`_.
+If you focus on program development outside the YottaDB environment, skip this section and continue with the section :ref:`edit-from-shell`.
 
 Invoke Direct Mode to create and edit a source program in YottaDB. At the YDB> prompt, invoke the editor by typing:
 
@@ -441,6 +447,8 @@ Where:
 
 For more information on $ZROUTINES, see `Chapter 8: “Intrinsic Special Variables” <./isv.html>`_.
 
+.. _edit-from-shell:
+
 +++++++++++++++++++++++++
 Editing from the Shell
 +++++++++++++++++++++++++
@@ -455,17 +463,19 @@ Example:
 
 The vi command initiates an editing session for payroll.m from the shell prompt. If payroll.m does not already exist, vi creates it. Because this example uses UNIX rather than YottaDB tools, we must specify the .m file extension.
 
+.. _compile-src-prog:
+
 ----------------------------
 Compiling a Source Program
 ----------------------------
 
-If you wish to focus on program development outside the YottaDB environment, skip the next section and continue with the section `Compiling from the Shell`_.
+If you wish to focus on program development outside the YottaDB environment, skip the next section and continue with the section :ref:`compile-from-shell`.
 
 YottaDB compiles M source code files and produces object files for complete integration into the UNIX enviroment. The object modules have the same name as the compiled M source file with an .o file extension, unless otherwise specified. The object files contain machine instructions and information necessary to connect the routine with other routines, and map it into memory. An M routine source file must be compiled after it is created or modified. You can compile explicitly with the ZLINK command or implicitly with auto-ZLINK. At the shell command line, compile by issuing the yottadb command.
 
-The compiler checks M code for syntax errors and displays error messages on the terminal, when processing is complete. Each error message provides the source line in error with an indicator pointing to the place on the line where the error is occurring. For a list and description of the compiler error messages, refer to the `Messages and Recovery Procedures Reference Manual <https://docs.yottadb.com/MessageRecovery/index.html>`_.
+The compiler checks M code for syntax errors and displays error messages on the terminal, when processing is complete. Each error message provides the source line in error with an indicator pointing to the place on the line where the error is occurring. For a list and description of the compiler error messages, refer to the `Messages and Recovery Procedures Reference Manual <../MessageRecovery/index.html>`_.
 
-You can generate a listing file containing the compile results by including the -list qualifier as a modifier to the argument to the ZLINK command in Direct Mode. This can also be done by redirecting the compiler messages to a file by adding >filename 2>&1 to the yottadb command when compiling a program from the shell. See `Compiling from the Shell`_ for an explanation of the M command describing -list, and other valid qualifiers for the M and ZLINK commands.
+You can generate a listing file containing the compile results by including the -list qualifier as a modifier to the argument to the ZLINK command in Direct Mode. This can also be done by redirecting the compiler messages to a file by adding >filename 2>&1 to the yottadb command when compiling a program from the shell. See :ref:`compile-from-shell` for an explanation of the M command describing -list, and other valid qualifiers for the M and ZLINK commands.
 
 The compiler stops processing a routine line when it detects an error on that line. Under most conditions the compiler continues processing the remaining routine lines. This allows the compiler to produce a more complete error analysis of the routine and to generate code that may have valid executable paths. The compiler does not report multiple syntax errors on the same line. When it detects more than 127 syntax errors in a source file, the compiler ceases to process the file.
 
@@ -520,6 +530,8 @@ Example:
 The first ZLINK compiles payroll.m if it cannot locate payroll, or if it finds that payroll.m has a more recent date/time stamp than payroll.o. The second ZLINK always compiles taxes.m producing a new taxes.o.
 
 For more information on debugging in Direct Mode, see `Chapter 4: “Operating and Debugging in Direct Mode” <./opdebug.html>`_.
+
+.. _compile-from-shell:
 
 +++++++++++++++++++++++++++++++++
 Compiling from the Shell
@@ -596,6 +608,8 @@ Compiles certain data structures associated with literals used in the source cod
 
 With no -DYNAMIC_LITERALS specified, these data structures continue to be generated when a routine is linked and stay in the private memory of each process. As the use of -DYNAMIC_LITERALS increases object code size, and as the dynamic loading and unloading only saves memory when the object code is in shared libraries, YottaDB recommends restricting the use of -DYNAMIC_LITERALS to only when compiling object code to be loaded into shared libraries or executed from an auto relink enabled directory.
 
+.. _no-embed-src:
+
 ~~~~~~~~~~~~~~~~~~
 -[no]embed_source
 ~~~~~~~~~~~~~~~~~~
@@ -653,7 +667,7 @@ Compiles routines to use library code in order to load literals instead of gener
 
 YottaDB allows calls and transfer of control to label±offset^routine targets. If an application code uses only label^routine targets without offsets, compiling with -noline_entry produces more compact object code.
 
-Any attempt to use a label±offset^routine entryref in code compiled with -noline_entry raises the `LABELONLY error <https://docs.yottadb.com/MessageRecovery/errors.html#labelonly>`_. As the more compact object code produced by -noline_entry may or may not run faster than object code produced without using it, even if your application can use -noline_entry, you should benchmark to decide which is more performant.
+Any attempt to use a label±offset^routine entryref in code compiled with -noline_entry raises the `LABELONLY error <../MessageRecovery/errors.html#labelonly-error>`_. As the more compact object code produced by -noline_entry may or may not run faster than object code produced without using it, even if your application can use -noline_entry, you should benchmark to decide which is more performant.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 -[no]o[bject][=filename]
@@ -706,7 +720,9 @@ If this qualifier appears without the -list qualifier, the M compiler ignores th
 
 By default, listings use single spaced output (-space=1).
 
-**Yottadb Command Qualifiers Summary**
+++++++++++++++++++++++++++++++++++++
+Yottadb Command Qualifiers Summary
+++++++++++++++++++++++++++++++++++++
 
 +----------------------------------------------+--------------------------------------------+
 | Qualifier                                    | Default                                    |
@@ -735,6 +751,8 @@ By default, listings use single spaced output (-space=1).
 +----------------------------------------------+--------------------------------------------+
 | “-s[pace]=lines”                             | -space=1                                   |
 +----------------------------------------------+--------------------------------------------+
+
+.. _execute-src-prog:
 
 -------------------------------
 Executing a Source Program

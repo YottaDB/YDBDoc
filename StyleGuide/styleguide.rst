@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2020-2021 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -256,7 +256,7 @@ Following is the syntax for cross-referencing across directories:
 
    # AcculturationGuide/acculturation.rst
 
-   For more information refer to the section on `Starting the Source Server <https://docs.yottadb.com/AdminOpsGuide/dbrepl.html#start-source-server>`_.
+   For more information refer to the section on `Starting the Source Server <../AdminOpsGuide/dbrepl.html#start-source-server>`_.
 
 .. code-block:: none
 

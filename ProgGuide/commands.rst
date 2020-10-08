@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2021 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2018-2021 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -56,7 +56,7 @@ YottaDB displays messages identifying the source of a BREAK as:
 * A device EXCEPTION
 * A ZSTEP action
 
-The VIEW "BREAKMSG" mask selectively enables or disables these messages. For an explanation of the mask, refer to `View`_. By default, a process executing a YottaDB image displays all BREAK messages.
+The VIEW "BREAKMSG" mask selectively enables or disables these messages. For an explanation of the mask, refer to :ref:`view-command`. By default, a process executing a YottaDB image displays all BREAK messages.
 
 When a process encounters a BREAK, it displays a prompt indicating readiness to process commands in Direct Mode. By default, Direct Mode displays the YDB> prompt. SETting the $ZPROMPT intrinsic special variable alters the prompt.
 
@@ -145,7 +145,7 @@ The format of the DO command is:
 * The optional parameter list enclosed in parentheses ( ) contains parameters to pass to the routine entry point.
 * Label invocations using DO do not require parentheses for calls with no actuallist. If DO or a $$ that does not specify an actuallist invokes a label with a formallist, the missing parameters are undefined in the called routine.
 
- .. note::
+.. note::
     If DO or $$ specifies a routine but no label using an actuallist, then whether that routine's top label has a formallist or not, the actuallist applies to it directly, whereas before the actuallist would "fall through" to the first label with executable code.
 
 * If the DO specifies a parameter list, the entryref location must start with a label and an argument list (M prohibits entryrefs with offsets during parameter passing).
@@ -233,7 +233,7 @@ Because the scopes of both the IF and the ELSE commands extend to the rest of th
 ELSE is analogous to IF '$TEST, except the latter statement switches $TEST to its complement and ELSE never alters $TEST.
 
 .. note::
-   Use ELSE with care. Because YottaDB stacks $TEST only at the execution of an extrinsic or an argumentless DO command, any XECUTE or DO with an argument has the potential side effect of altering $TEST. For information about $TEST, refer to `“$Test” <./isv.html#test>`_.
+   Use ELSE with care. Because YottaDB stacks $TEST only at the execution of an extrinsic or an argumentless DO command, any XECUTE or DO with an argument has the potential side effect of altering $TEST. For information about $TEST, refer to :ref:`test-isv`.
 
 +++++++++++++++++
 Examples of ELSE
@@ -389,7 +389,7 @@ The format of the GOTO command is:
 
 A GOTO command within a line following a FOR command terminates that FOR command.
 
-For more information on entryrefs, refer to `Chapter 5: “General Language Features of M” <./langfeat.html>`__.
+For more information on entryrefs, refer to `Chapter 5: “General Language Features of M” <./langfeat.html>`_.
 
 ++++++++++++++++++++++++
 Examples of GOTO
@@ -512,7 +512,7 @@ Example:
 
 An IF with more than one argument behaves as if those arguments were logically "ANDed." However, execution of the line ceases with the evaluation of the first false argument. For IF argument expressions containing the "AND" operator (&), execution still ceases with the evaluation of the first false argument by default - however, any global references within the expression act in sequence to maintain the naked reference. The "FULL_BOOLEAN" and "SIDE_EFFECTS" compiler settings modify this behavior, if you desire YottaDB to provide side effects that it would otherwise bypass due to short-circuiting of Boolean expressions.
 
-Postconditionals perform a function similar to IF; however, their scope is limited to a single command or argument, and they do not modify $TEST. For more information on postconditionals, see `Chapter 5: “General Language Features of M” <./langfeat.html>`__.
+Postconditionals perform a function similar to IF; however, their scope is limited to a single command or argument, and they do not modify $TEST. For more information on postconditionals, see `Chapter 5: “General Language Features of M” <./langfeat.html>`_.
 
 ++++++++++++++++
 Examples of IF
@@ -556,13 +556,15 @@ Example:
 
 Because YottaDB recognizes that the X=1 fulfills the IF, it skips evaluation of the UNDEF variable and executes this IF command without generating an error. Because YottaDB does not require such optimizations and in fact, discourages them by requiring that all global references maintain the naked indicator, other implementations may generate an error.
 
+.. _job-command:
+
 -----------------
 Job
 -----------------
 
 The JOB command initiates another YottaDB process that executes the named routine.
 
-$ZJOB is set to the pid of the process created by the JOB command. For more details, refer to `$ZJob <./isv.html#zjob>`_.
+$ZJOB is set to the pid of the process created by the JOB command. For more details, refer to :ref:`zjob-isv`.
 
 The format of the JOB command is:
 
@@ -602,7 +604,9 @@ YottaDB creates the environment for a new jobbed off process by copying the envi
 .. note::
    If the content of the $ydb_routines environment variable is different from the $ZROUTINES ISV, a jobbed off process will inherit $ydb_routines and not $ZROUTINES. If the M entryref (LABEL^PROGRAM) that is being jobbed off can be found only through $ZROUTINES, the jobbed off process will encounter a ZLINKFILE error (due to not being able to find the M program through $ydb_routines) whereas the program would be found in the jobbing process.
 
-**JOB Implications for Directories**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+JOB Implications for Directories
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 By default, YottaDB uses the current working directory of the parent process for the working directory of the initiated process.
 
@@ -614,11 +618,15 @@ JOB processparameters
 
 The following sections describe the processparameters available for the JOB command in YottaDB.
 
-**CMD[LINE]="strlit"**
+~~~~~~~~~~~~~~~~~~~~
+CMD[LINE]="strlit"
+~~~~~~~~~~~~~~~~~~~~
 
 The string literal specifies the $ZCMDLINE of the JOBbed process.
 
-**DEF[AULT]=strlit**
+~~~~~~~~~~~~~~~~~~
+DEF[AULT]=strlit
+~~~~~~~~~~~~~~~~~~
 
 The string literal specifies the default directory.
 
@@ -626,7 +634,9 @@ The maximum directory length is 255 characters.
 
 If the JOB command does not specify a DEFAULT directory, YottaDB uses the current default directory of the parent process.
 
-**ERR[OR]=strlit**
+~~~~~~~~~~~~~~~~
+ERR[OR]=strlit
+~~~~~~~~~~~~~~~~
 
 strlit specifies the stderr of the JOBbed process. strlit can either be a file or a DETACHed socket (that is, a socket from the socket pool). To pass a DETACHed socket as the stderr of the JOBbed process, specify strlit in the form of "SOCKET:<handle>" where <handle> is the socket handle. On successful completion of the JOBbed process, the passed socket is closed and is no longer available to the parent process.
 
@@ -634,7 +644,9 @@ The maximum string length is 255 characters.
 
 By default, JOB constructs the error file from the routinename using a file extension of .mje: the default directory of the process created by the JOB command.
 
-**GBL[DIR]=strlit**
+~~~~~~~~~~~~~~~~~
+GBL[DIR]=strlit
+~~~~~~~~~~~~~~~~~
 
 The string literal specifies a value for the environment variable ydb_gbldir.
 
@@ -642,7 +654,9 @@ The maximum string length is 255 characters.
 
 By default, the job uses the same specification for ydb_gbldir as that defined in $ZGBLDIR for the process using the JOB command.
 
-**IN[PUT]=strlit**
+~~~~~~~~~~~~~~~~
+IN[PUT]=strlit
+~~~~~~~~~~~~~~~~
 
 strlit specifies the stdin of the JOBbed process. strlit can either be a file or a DETACHed socket (that is, a socket from the socket pool). To pass a DETACHed socket as the stdin of the JOBbed process, specify strlit in the form of "SOCKET:<handle>" where <handle> is the socket handle. On successful completion of the JOB command, the passed socket is closed and is no longer available to the parent process.
 
@@ -655,7 +669,9 @@ YottaDB does not supply a default file extension.
 
 By default, the job takes its input from the null device.
 
-**OUT[PUT]=strlit**
+~~~~~~~~~~~~~~~~~
+OUT[PUT]=strlit
+~~~~~~~~~~~~~~~~~
 
 strlit specifies the stdout of the JOBbed process. strlit can either be a file or a DETACHed socket (that is, a socket from the socket pool). To pass a DETACHed socket as the stdout of the JOBbed process, specify strlit in the form of "SOCKET:<handle>" where <handle> is the socket handle. On successful completion of the JOB command, the passed socket is closed and is no longer available to the parent process.
 
@@ -666,19 +682,25 @@ The maximum string length is 255 characters.
 
 By default, JOB constructs the output file pathname from the routinename using a file extension of .mjo and the current default directory of the process created by the JOB command.
 
-**PASS[CURLVN]**
+~~~~~~~~~~~~~~
+PASS[CURLVN]
+~~~~~~~~~~~~~~
 
 With the PASSCURLVN jobparameter, the JOBbed process inherits the current collation, local variables, aliases, and alias containers from the current stack level of the parent process. Therefore, a ZWRITE in the JOBbed process has the same output, except for any out of scope aliases, as a ZWRITE in the context of the JOB command. If the JOB command finds a ZWRITE representation of any lvn - consisting of its full name, subscripts, corresponding value, quotes and the equal-sign (=) exceeding 1MiB - it produces a JOBLVN2LONG error in the parent process, and a JOBLVNDETAIL error in the error output stream of the JOBbed process. If a JOB command does not specify PASSCURLVN, the JOBbed process(es) inherits no local variables from the parent, although it can receive values passed as parameters to an actuallist entryref. While not an inexpensive command, you can use the "exclusive" NEW command to control the context passed to the JOBbed process; for example, adding "NEW (LOCALA,LOCALB)" before the JOB command would pass only LOCALA and LOCALB.
 
 If a parameter in the formal list of a JOBbed entryref shares the same name with a local in the parent process, the parameter passing facility applies the actuallist in the JOB command argument to the formallist at the invoked label, superseding any local variable passed from the parent process by the PASSCURLVN option.
 
-**STA[RTUP]="/path/to/shell/script"**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+STA[RTUP]="/path/to/shell/script"
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Specifies the location of the shell script that executes before running the named routine.
 
 The JOBbed process spawns a shell session to execute the shell script. If the shell script fails, the JOBbed process terminates without running the named routine. Because STARTUP executes in a separate shell, it has no impact on the environment of the JOBbed process, which is inherited from the parent. STARTUP is useful for actions such as creating directories. Use PIPE devices instead of the JOB command to control the environment of a spawned process.
 
-**JOB Processparameter Summary Table**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+JOB Processparameter Summary Table
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The processparameters are summarized in the following table.
 
@@ -743,7 +765,9 @@ This passes two values (a and b) to the new job, which starts at the label check
 
 Example:
 
-Refer to the sockexamplemulti31.m program in the `Using Socket Devices <./ioproc.html#using-socket-devices>`_ section for more examples on the JOB command.
+Refer to the sockexamplemulti31.m program in the :ref:`using-sckt-devs` section for more examples on the JOB command.
+
+.. _kill-command:
 
 ----------------
 Kill
@@ -842,6 +866,8 @@ Produces the following output:
    *C=A
    *D=B
 
+.. _lock-command:
+
 ----------------------
 Lock
 ----------------------
@@ -889,7 +915,9 @@ Execution of the LOCK command does not affect the value or the state of a variab
 
 LOCK with a leading plus (+) or minus (-) sign (incremental LOCKing) allows the acquisition and release of locks without releasing all currently held locks. This can lead to deadlocks. For example, a deadlock occurs if two users LOCK resources named A and B in the following sequence.
 
-**Deadlock Situation**
++++++++++++++++++++
+Deadlock Situation
++++++++++++++++++++
 
 +----------------------------------+------------------------------------+
 | User X                           | User Y                             |
@@ -907,7 +935,7 @@ If a process issues a LOCK command for a named resource already ZALLOCATEd by th
 
 Currently, the LOCK of an argument within a parenthetical list where the argument includes an extrinsic function that performs LOCK, ZALLOCATE or ZDEALLOCATE actions produces a BADLOCKNEST error except where there is only one such argument. It is the first argument in the list and the LOCK'ng as a consequence of the extrinsic function(s) is simple. Note that this pattern may still produce some unintended outcomes, so YottaDB recommends against its use.
 
-For more information on troubleshooting locks with the Lock Utility (LKE), refer to the `chapter on that utility in the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/mlocks.html>`_.
+For more information on troubleshooting locks with the Lock Utility (LKE), refer to the `chapter on that utility in the Administration and Operations Guide <../AdminOpsGuide/mlocks.html>`_.
 
 +++++++++++++++++++++++++++++++++
 Using Locks within Transactions
@@ -919,7 +947,9 @@ The LOCK command locks a specified resource name that controls a tree structured
 
 For information on the use of LOCKs within transactions, refer to `Chapter 5: “General Language Features of M” <./langfeat.html>`_.
 
-**Lock Command Operation Summary**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Lock Command Operation Summary
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 +-----------------+----------------------+------------------------------------------------------------------------------------------------------------+
 | Commands Issued | Resulting Locks      | Comments                                                                                                   |
@@ -1088,6 +1118,8 @@ Example:
    YDB>
 
 This example illustrates how MERGE creates a sub-tree of a variable when the variable does not exist. Also, notice how the naked indicator is set when the source of the MERGE is a global and the destination a local.
+
+.. _new-command:
 
 -------------------
 New
@@ -1274,6 +1306,8 @@ The following is essentially the same as the prior example but using an exclusiv
 
 An exclusive New can create a scope in which only one association between a name or an lvn and an array may be visible. In this case, ZWRITE nevertheless shows the existence of an alias, even when that array is accessible from only one name or lvn.
 
+.. _open-command:
+
 --------------------
 Open
 --------------------
@@ -1294,6 +1328,8 @@ The format of the OPEN command is:
 * An indirection operator and an expression atom evaluating to a list of one or more OPEN arguments form a legal argument for an OPEN.
 * In UTF-8 mode, the OPEN command recognizes the ICHSET, OCHSET, and CHSET deviceparameters to determine the encoding of the input/output devices.
 * OPEN on a directory produces a GTMEISDIR error in both READONLY and NOREADONLY modes along with the directory name which failed to open. UNIX directories contain metadata that is only available to the file system. Note that you can use the ZSEARCH() function to identify files in a directory, and you can call the POSIX stat() function to access metadata. The optional YottaDB POSIX plug-in packages the stat() function for easy access from M application code.
+
+.. _quit-command:
 
 ---------------------
 Quit
@@ -1373,6 +1409,8 @@ The format of the READ command is:
 
 For more information on READ, devices, input, output and format control characters, refer to `Chapter 9: “Input/Output Processing” <./ioproc.html>`_.
 
+.. _set-command:
+
 --------------------
 Set
 --------------------
@@ -1404,8 +1442,8 @@ and
 * When the portion of the argument to the left of the equal sign is in the form of a $EXTRACT function, SET replaces the specified character or characters of the variable (specified as the first argument to the $EXTRACT() form) with the value of the expression on the right side of the equal-sign; if the variable did not exist prior to the SET or does not contain the characters identified by the optional second and third arguments to the $EXTRACT() form, SET adds sufficient leading spaces to make the assignment fit the $EXTRACT() form. Note that if the third argument exceeds the second argument, SET does not modify the target glvn or change the naked indicator .
 * isv on the left-hand side of the equal-sign specifies an Intrinsic Special Variable. Not all ISVs permit SET updates by the application - see the description of the individual ISV.
 * When the portion of the argument to the left of the equal-sign is in the form of a list of setlefts enclosed in parentheses, SET assigns the value of the expression on the right of the equal sign to all the destinations.
-* If a SET updates a global node matching a trigger definition, YottaDB executes the trigger code after the node has been updated in the process address space, but before it is applied to the database. When the trigger execution completes, the trigger logic commits the value of a node from the process address space only if $ZTVALUE is not set. if $ZTVALUE is set during trigger execution, the trigger logic commits the value of a node from the value of $ZTVALUE. For more information on using SET in Triggers, refer to the `“Set” section in the Triggers chapter <./triggers.html#set>`_.
-* A SET * command explicitly makes the lvn on the left-hand side of the equal-sign an alias if it is an unsubscripted lvn (the root of an array) or an alias container if it is a subscripted lvn. If the portion of the argument on the right-hand side of the equal-sign is other than an lname (the root of an array), it must evaluate to an alias or alias container. Extrinsic functions and extrinsic special variables return an alias container if they terminate with a QUIT \*. For more information on Alias Variables, refer to `Alias Variables Extensions <./langext.html#alias-variable-extensions>`_.
+* If a SET updates a global node matching a trigger definition, YottaDB executes the trigger code after the node has been updated in the process address space, but before it is applied to the database. When the trigger execution completes, the trigger logic commits the value of a node from the process address space only if $ZTVALUE is not set. if $ZTVALUE is set during trigger execution, the trigger logic commits the value of a node from the value of $ZTVALUE. For more information on using SET in Triggers, refer to the :ref:`Set section in the Triggers chapter <set-triggers>`.
+* A SET * command explicitly makes the lvn on the left-hand side of the equal-sign an alias if it is an unsubscripted lvn (the root of an array) or an alias container if it is a subscripted lvn. If the portion of the argument on the right-hand side of the equal-sign is other than an lname (the root of an array), it must evaluate to an alias or alias container. Extrinsic functions and extrinsic special variables return an alias container if they terminate with a QUIT \*. For more information on Alias Variables, refer to :ref:`alias-var-ext`.
 * In a SET * command, any previous array associated with the lvn on the left-hand side of the equal-sign ceases to be associated with it, and if lvn was the only lvn associated with that (old) array in any scope, YottaDB may reclaim the space it occupied. Alias assignment does not require that any data set exist for a name on the right-hand side of the equal-sign - the assignment simply creates an association.
 * SET * left-hand side arguments cannot be parenthetically enclosed lists such as SET (a,*b)=c or SET (\*a,\*b)=c.
 * SET and SET * assignments can be combined into one command in a comma separated list, for example, SET \*a=b,^c(3)=d(4).
@@ -1514,7 +1552,7 @@ The format of the TCOMMIT command is:
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
 * Because TCOMMIT has no argument, at least two (2) spaces must follow the command to separate it from the next command on the line.
 
-For an example of the use of the TCOMMIT command, see `Chapter 5: “General Language Features of M” <./langfeat.html>`__.
+For an example of the use of the TCOMMIT command, see `Chapter 5: “General Language Features of M” <./langfeat.html>`_.
 
 -------------------
 TREstart
@@ -1571,7 +1609,7 @@ The format of the TROLLBACK command is:
 * A TROLLBACK does not cause a transfer of control but is typically associated with one such as a QUIT (or GOTO).
 * TROLLBACK to a $TLEVEL other than zero (0) leaves $REFERENCE empty. This behavior is the same as a full TROLLBACK to $TEVEL=0.
 
-For an example of the use of the TROLLBACK command, see `Chapter 5: “General Language Features of M” <./langfeat.html>`__.
+For an example of the use of the TROLLBACK command, see `Chapter 5: “General Language Features of M” <./langfeat.html>`_.
 
 ------------------
 TStart
@@ -1603,7 +1641,7 @@ Sub-transactions cannot COMMIT independently from the transaction, nor can they 
 
 When journaling, a transaction with an initial TSTART that has an argument specifying TRANSACTIONID=expr, where expr is an expression that evaluates to the keyword (case insensitive) BA[TCH], does not wait for the journal update to be written before returning control to the application after a successful TCOMMIT. The goal of this feature is to permit application control over any performance impact of journaling on any subset of transactions that can be recreated or recovered by means other than journaling.
 
-For an example of the TSTART command, refer to `Chapter 5: “General Language Features of M” <./langfeat.html>`__.
+For an example of the TSTART command, refer to `Chapter 5: “General Language Features of M” <./langfeat.html>`_.
 
 The following keywords may appear in a TSTART argument:
 
@@ -1657,6 +1695,8 @@ The format of the VIEW command is:
 * The keyword specifies the environmental factor to change.
 * The optional expression following the keyword specifies the nature of the change to the environmental factor. When this expression is a region list (a comma delimited list of regions), YottaDB sorts the regions in an internal order eliminating any duplicates from the list for deadlock prevention. When region list is not specified, VIEW operates on all regions under the current global directory.
 * An indirection operator and an expression atom evaluating to a list of one or more VIEW arguments form a legal argument for a VIEW
+
+.. _keywords-view-command:
 
 +++++++++++++++++++++++++
 Keywords in VIEW Command
@@ -1760,7 +1800,7 @@ YottaDB picks up the value of [NO]FULL_BOOL[EAN|WARN] from the environment varia
 
 VIEW "[NO]FULL_BOOL[EAN|WARN]" takes effect immediately for indirection and XECUTE.
 
-VIEW "NOFULLBOOLEAN" produces an error when ydb_side_effects is on. For more information on the ydb_side_effects environment variable, refer to the `Environment Variables section in the Basic Operations chapter <https://docs.yottadb.com/AdminOpsGuide/basicops.html#environment-variables>`_ of the Administration and Operations Guide.
+VIEW "NOFULLBOOLEAN" produces an error when ydb_side_effects is on. For more information on the ydb_side_effects environment variable, refer to the `Environment Variables section in the Basic Operations chapter <../AdminOpsGuide/basicops.html#env-vars>`_ of the Administration and Operations Guide.
 
 ~~~~~~~~~~~~~~~~
 GDSCERT:value
@@ -1798,7 +1838,7 @@ JNLWAIT
 
 Causes a process to pause until its journaling buffers have been written. JNLWAIT ensures that YottaDB successfully transfers all database updates issued by the process to the journal file before the process continues. Normally, YottaDB performs journal buffer writes synchronously for TP updates, and asynchronously, while the process continues execution, for non-TP updates or TP updates with TRANSACTIONID=BATCH.
 
-JNLWAIT operates only on those regions for which the current process has opened journal files. As all the journal activity for a TP transaction occurs at commit time, YottaDB ignores JNLWAIT when inside a TP TRANSACTION ($TLEVEL > 0). For more information on journaling, refer to the `"YottaDB Journaling" chapter in the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/ydbjournal.html>`_.
+JNLWAIT operates only on those regions for which the current process has opened journal files. As all the journal activity for a TP transaction occurs at commit time, YottaDB ignores JNLWAIT when inside a TP TRANSACTION ($TLEVEL > 0). For more information on journaling, refer to the `"YottaDB Journaling" chapter in the Administration and Operations Guide <../AdminOpsGuide/ydbjournal.html>`_.
 
 ~~~~~~~~~~~~~~~~~
 JOBPID:value
@@ -1816,7 +1856,7 @@ Enables (value="LOWER") or disables (value="UPPER") case sensitivity for labels 
 
 It is important to have the same case handling at compile-time and run-time.
 
-Because YottaDB stores routines as regular files and file names are case sensitive on UNIX, YottaDB always treates routine names as case sensitive.
+Because YottaDB stores routines as regular files and file names are case sensitive on UNIX, YottaDB always treats routine names as case sensitive.
 
 ~~~~~~~~~~~~~~~~~~~~~~~
 LINK:[NO]RECURSIVE
@@ -2428,7 +2468,7 @@ The environment variable $ydb_noundef specifies the initial value of [NO]UNDEF a
 ZDATE_FORM:value
 ~~~~~~~~~~~~~~~~~~~~~
 
-Determines whether four digit year code is active for $ZDATE() function. YottaDB defaults to zero (0), that is, two digit output. For more usage information, refer to `“$ZDate()” <./functions.html#zdate>`_.
+Determines whether four digit year code is active for $ZDATE() function. YottaDB defaults to zero (0), that is, two digit output. For more usage information, refer to :ref:`zdate-function`.
 
 If no value is given with the VIEW command, it turns four digit code on. It is equivalent to the intrinsic special variable $ZDATEFORM. Use $ZDATEFORM to set this VIEW keyword. Also, logical name environment variable ydb_zdate_form may be used to set the initial value to this factor.
 
@@ -2551,7 +2591,7 @@ The ZALLOCATE command reserves the specified name without releasing previously r
 
 The ZALLOCATE command provides compatibility with some other YottaDB implementations. The M Development Committee chose to add the + and - delimiters to the LOCK command (incremental locking) rather than adopt the ZALLOCATE and ZDEALLOCATE approach. Therefore, when a design requires an incremental lock mechanism, LOCK +/- has the advantage over ZALLOCATE/ZDEALLOCATE of being part of the M standard. LOCK +/- also has the advantage of working symmetrically when routines using LOCKs are nested. That is, a ZALLOCATE command issued by a process for a named resource already ZALLOCATEd by that process results in no change of state. This means that routines that do ZALLOCATE followed by a ZDEALLOCATE on a named resource that is already ZALLOCATEd by the same process (at routine entry time), will end up ZDEALLOCATEing the named resource (which might not be desired). On the other hand, a LOCK + command issued by a process for a named resource already LOCKed by that process causes the LEVEL of the LOCK to be incremented (as seen in a ZSHOW "L" output). Every LOCK - command on that named resource causes the LEVEL to be decremented. When the LEVEL becomes 0, the named resource is no longer LOCKed.
 
-For more information on troubleshooting LOCKs with the M Lock Utility (LKE), refer to the `appropriate chapter of the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/mlocks.html>`_.
+For more information on troubleshooting LOCKs with the M Lock Utility (LKE), refer to the `appropriate chapter of the Administration and Operations Guide <../AdminOpsGuide/mlocks.html>`_.
 
 The format of the ZALLOCATE command is:
 
@@ -2567,7 +2607,7 @@ The format of the ZALLOCATE command is:
 * The optional numeric expression specifies a time in seconds after which the command should timeout if unsuccessful; choosing 0 results in a single attempt. If a ZALLOCATE command specifies a timeout that do not exceed $ZMAXTPTIME and the resource name is locked on the final retry, the process may generate TPNOACID messages while it tries to ensure there is no possibility of a deadlock.
 * An indirection operator and an expression atom evaluating to a list of one or more ZALLOCATE arguments form a legal argument for a ZALLOCATE.
 
-For additional information on the locking mechanism, refer to the "LOCK" section in the `M LOCK Utility chapter of the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/mlocks.html>`_.
+For additional information on the locking mechanism, refer to the "LOCK" section in the `M LOCK Utility chapter of the Administration and Operations Guide <../AdminOpsGuide/mlocks.html>`_.
 
 If a ZALLOCATE command specifies a timeout, and YottaDB acquires ownership of the named resource before the timeout elapses, ZALLOCATE sets $TEST to TRUE (1). If YottaDB cannot acquire ownership of the named resource within the specified timeout, ZALLOCATE sets $TEST to FALSE (0). If a ZALLOCATE command does not specify a timeout, the execution of the command does not affect $TEST.
 
@@ -2637,7 +2677,9 @@ This LOCKs ^AR(PNT)and all its descendents, then, after performing some unspecif
 
 Because the ZALLOCATE command reserves names without releasing previously reserved names, it can lead to deadlocks. For example, a deadlock occurs if two users ZALLOCATE names A and B in the following sequence:
 
-**Deadlock Situation**
+~~~~~~~~~~~~~~~~~~~~
+Deadlock Situation
+~~~~~~~~~~~~~~~~~~~~
 
 +------------------------+-------------------------------+
 | User X                 | User Y                        |
@@ -2649,29 +2691,33 @@ Because the ZALLOCATE command reserves names without releasing previously reserv
 
 To avoid deadlocks, use a timeout. Because unsigned LOCKs always release previously reserved names, such LOCKs inherently prevent deadlocks.
 
-**ZAllocate Operation Summary**
++++++++++++++++++++++++++++++
+ZAllocate Operation Summary
++++++++++++++++++++++++++++++
 
-+----------------------------+-------------------------------------+----------------------------------------------------------------------------------------------------------------------+
-| Preexisting Condition      | Command Issued                      | Result                                                                                                               |
-+============================+=====================================+======================================================================================================================+
-| Another user reserved M    | ZA M                                | Your process waits                                                                                                   |
-+                            +-------------------------------------+----------------------------------------------------------------------------------------------------------------------+
-|                            | LOCK M                              | Your process waits                                                                                                   |
-+                            +-------------------------------------+----------------------------------------------------------------------------------------------------------------------+
-|                            | ZD M                                | No effect                                                                                                            |
-+----------------------------+-------------------------------------+----------------------------------------------------------------------------------------------------------------------+
-| You reserved M with LOCK M | ZA M                                | M is ZALLOCATEd and LOCKed; use both ZDEALLOCATE and LOCK (L or L -M) to clear M                                     |
-+                            +-------------------------------------+----------------------------------------------------------------------------------------------------------------------+
-|                            | LOCK M                              | Release M and reserve M again                                                                                        |
-+                            +-------------------------------------+----------------------------------------------------------------------------------------------------------------------+
-|                            | ZD M                                | No effect                                                                                                            |
-+----------------------------+-------------------------------------+----------------------------------------------------------------------------------------------------------------------+
-| You reserved M with ZA M   | ZA M                                | No effect                                                                                                            |
-+                            +-------------------------------------+----------------------------------------------------------------------------------------------------------------------+
-|                            | LOCK M                              | M is ZALLOCATEd and LOCKed; use both ZDEALLOCATE and LOCK (L or L -M) to clear M                                     |
-+                            +-------------------------------------+----------------------------------------------------------------------------------------------------------------------+
-|                            | ZD M                                | No effect                                                                                                            |
-+----------------------------+-------------------------------------+----------------------------------------------------------------------------------------------------------------------+
++----------------------------+-------------------------------------+-------------------------------------------------------------------------------------------------------------+
+| Preexisting Condition      | Command Issued                      | Result                                                                                                      |
++============================+=====================================+=============================================================================================================+
+| Another user reserved M    | ZA M                                | Your process waits                                                                                          |
+|                            +-------------------------------------+-------------------------------------------------------------------------------------------------------------+
+|                            | LOCK M                              | Your process waits                                                                                          |
+|                            +-------------------------------------+-------------------------------------------------------------------------------------------------------------+
+|                            | ZD M                                | No effect                                                                                                   |
++----------------------------+-------------------------------------+-------------------------------------------------------------------------------------------------------------+
+| You reserved M with LOCK M | ZA M                                | M is ZALLOCATEd and LOCKed; use both ZDEALLOCATE and LOCK (L or L -M) to clear M                            |
+|                            +-------------------------------------+-------------------------------------------------------------------------------------------------------------+
+|                            | LOCK M                              | Release M and reserve M again                                                                               |
+|                            +-------------------------------------+-------------------------------------------------------------------------------------------------------------+
+|                            | ZD M                                | No effect                                                                                                   |
++----------------------------+-------------------------------------+-------------------------------------------------------------------------------------------------------------+
+| You reserved M with ZA M   | ZA M                                | No effect                                                                                                   |
+|                            +-------------------------------------+-------------------------------------------------------------------------------------------------------------+
+|                            | LOCK M                              | M is ZALLOCATEd and LOCKed; use both ZDEALLOCATE and LOCK (L or L -M) to clear M                            |
+|                            +-------------------------------------+-------------------------------------------------------------------------------------------------------------+
+|                            | ZD M                                | No effect                                                                                                   |
++----------------------------+-------------------------------------+-------------------------------------------------------------------------------------------------------------+
+
+.. _zbreak-command:
 
 ------------------------
 ZBREAK
@@ -2693,7 +2739,7 @@ The format of the ZBREAK command is:
 * An indirection operator and an expression atom evaluating to a list of one or more ZBREAK arguments form a legal argument for a ZBREAK.
 * If a concurrent process reloads a trigger in which a process has an active ZBREAK, YottaDB automatically removes the breakpoint and issues a TRIGZBRKREM warning message when it refreshes the trigger; the TRIGZBRKREM warning message respects a message mask of 8 as maintained by the VIEW "BREAKMSG" command.
 
-When YottaDB encounters the entryref, YottaDB suspends execution of the routine code and XECUTEs the breakpoint action before executing any of the commands on the line. For more information on entryrefs, see `Chapter 5: “General Language Features of M” <./langfeat.html>`__.
+When YottaDB encounters the entryref, YottaDB suspends execution of the routine code and XECUTEs the breakpoint action before executing any of the commands on the line. For more information on entryrefs, see `Chapter 5: “General Language Features of M” <./langfeat.html>`_.
 
 When the optional integer expression is used, YottaDB activates the breakpoint on the intexpr-th time the process encounters the breakpoint during routine execution. Once YottaDB activates the breakpoint, that breakpoint remains active for the process until explicitly replaced or removed, or until the process terminates.
 
@@ -2753,6 +2799,8 @@ Example:
 
 This inserts a ZBREAK action of WRITE AVE and BREAK before the third execution of PRINT^TIME.
 
+.. _zcompile-command:
+
 ------------------------------
 ZCOMpile
 ------------------------------
@@ -2793,6 +2841,8 @@ Example:
    ZCOMPILE "-list A*.m"
 
 This compiles all files starting with a [capital] A and an extension of .m in the current working directory and produces corresponding listing files for each source / object.
+
+.. _zcontinue-command:
 
 -------------------
 ZContinue
@@ -2842,6 +2892,8 @@ Example:
 
 For examples of ZDEALLOCATE, refer to “Examples of ZALLOCATE”.
 
+.. _zedit-command:
+
 ---------------------
 ZEdit
 ---------------------
@@ -2867,9 +2919,9 @@ The format of the ZEDIT command is:
 * YottaDB stores source code in files with standard operating system format; generally the file name is the same as the YottaDB routinename with a default extention or type of .m.
 * An indirection operator and an expression atom evaluating to a list of one or more ZEDIT arguments form a legal argument for a ZEDIT
 
-If the expression includes a directory, ZEDIT searches only that directory. If $ZROUTINES is not null, a ZEDIT command that does not specify a directory uses $ZROUTINES to locate files. If $ZROUTINES is equal to an empty string, ZEDIT edits a file in the current working directory. For more information on $ZROUTINES, see the appropriate `section in Chapter 8: “Intrinsic Special Variables” <./isv.html#zroutines>`_.
+If the expression includes a directory, ZEDIT searches only that directory. If $ZROUTINES is not null, a ZEDIT command that does not specify a directory uses $ZROUTINES to locate files. If $ZROUTINES is equal to an empty string, ZEDIT edits a file in the current working directory. For more information on $ZROUTINES, refer :ref:`$ZROUTINES section <zroutines-isv>`.
 
-When the argument to a ZEDIT includes a file or path name, $ZSOURCE maintains that as a default for ZEDIT and ZLINK. For more information on $ZSOURCE see the `appropriate section in Chapter 8: “Intrinsic Special Variables” <./isv.html#zsource>`_.
+When the argument to a ZEDIT includes a file or path name, $ZSOURCE maintains that as a default for ZEDIT and ZLINK. For more information on $ZSOURCE, refer :ref:`zsource-isv`.
 
 ++++++++++++++++++
 Examples of ZEDIT
@@ -2901,6 +2953,8 @@ Example:
 
 This invokes the editor for a file with the name .login. Notice that in this case the file is not a YottaDB file, since .login starts with a period, and therefore, cannot be a YottaDB file.
 
+.. _zgoto-command:
+
 -----------
 ZGoto
 -----------
@@ -2924,7 +2978,7 @@ The format of the ZGOTO command is:
 * An indirection operator and an expression atom evaluating to a list of one or more ZGOTO arguments form a legal argument for a ZGOTO.
 * ZGOTO accepts a trigger entryref (with a trailing hash-sign (#)); if the trigger is not currently loaded (by some previous trigger action), YottaDB generates a ZLINKFILE error. Note that ZGOTO should be reserved for error handling and testing, as it is a very unstructured operation.
 
-A ZGOTO command with an entryref performs a similar function to the GOTO command, with the additional capability of reducing the YottaDB stack level. In a single operation, ZGOTO executes ($ZLEVEL - intexpr) implicit QUITs and a GOTO operation, transferring control to the named entryref. For more information on entryrefs, refer to `Chapter 5: “General Language Features of M” <./langfeat.html>`__.
+A ZGOTO command with an entryref performs a similar function to the GOTO command, with the additional capability of reducing the YottaDB stack level. In a single operation, ZGOTO executes ($ZLEVEL - intexpr) implicit QUITs and a GOTO operation, transferring control to the named entryref. For more information on entryrefs, refer to `Chapter 5: “General Language Features of M” <./langfeat.html>`_.
 
 The ZGOTO command leaves the invocation stack at the level specified by the integer expression. YottaDB implicitly terminates any intervening FOR loops and unstacks variables stacked with NEW commands as appropriate.
 
@@ -3066,7 +3120,9 @@ The format of the ZKILL command is:
 
    ZK[ILL][:tvexpr] glvn
 
-The functionality of ZKILL is identical to ZWITHDRAW. For a comprehensive description of the format and usage, refer to :ref:`zwithdraw`.
+The functionality of ZKILL is identical to ZWITHDRAW. For a comprehensive description of the format and usage, refer to :ref:`zwithdraw-command`.
+
+.. _zlink-command:
 
 -------------------
 ZLink
@@ -3103,31 +3159,33 @@ If the filename contains an explicit file extension, ZLINK processes the file ac
 
 The following table illustrates how ZLINK processes the three possibilities of file extension.
 
-**ZLink Operation Summary**
++++++++++++++++++++++++++
+ZLink Operation Summary
++++++++++++++++++++++++++
 
-+-----------------------------+--------------------------------------------------------+------------------------------------------------------------+--------------------------------------+
-| Extension Specified         | Extension Sought by ZLINK                                                                                           | Result                               |
-+=============================+========================================================+============================================================+======================================+
-|                             | .o                                                     | .m                                                         |                                      |
-+-----------------------------+--------------------------------------------------------+------------------------------------------------------------+--------------------------------------+
-| .o                          | found                                                  | N/A                                                        | Link only                            |
-+-----------------------------+--------------------------------------------------------+------------------------------------------------------------+--------------------------------------+
-|                             | not found                                              | N/A                                                        | Error                                |
-+-----------------------------+--------------------------------------------------------+------------------------------------------------------------+--------------------------------------+
-| .m                          | N/A                                                    | found                                                      | Compile and Link                     |
-+-----------------------------+--------------------------------------------------------+------------------------------------------------------------+--------------------------------------+
-|                             | N/A                                                    | not found                                                  | Error                                |
-+-----------------------------+--------------------------------------------------------+------------------------------------------------------------+--------------------------------------+
-| none                        | not found                                              | found                                                      | Compile and Link                     |
-+-----------------------------+--------------------------------------------------------+------------------------------------------------------------+--------------------------------------+
-|                             | found                                                  | not found                                                  | Link only                            |
-+-----------------------------+--------------------------------------------------------+------------------------------------------------------------+--------------------------------------+
-|                             | not found                                              | not found                                                  | Error                                |
-+-----------------------------+--------------------------------------------------------+------------------------------------------------------------+--------------------------------------+
-|                             | found .o file newer than .m and version okay           | found .m file older than .o                                | Link only                            |
-+-----------------------------+--------------------------------------------------------+------------------------------------------------------------+--------------------------------------+
-|                             | found .o file older than .m or version mismatch        | found .m file newer than .o                                | Compile and Link                     |
-+-----------------------------+--------------------------------------------------------+------------------------------------------------------------+--------------------------------------+
++-----------------------------+--------------------------------------------------------+------------------------------------------------------------+---------------------------+
+| Extension Specified         | Extension Sought by ZLINK                                                                                           | Result                    |
++=============================+========================================================+============================================================+===========================+
+|                             | .o                                                     | .m                                                         |                           |
++-----------------------------+--------------------------------------------------------+------------------------------------------------------------+---------------------------+
+| .o                          | found                                                  | N/A                                                        | Link only                 |
++-----------------------------+--------------------------------------------------------+------------------------------------------------------------+---------------------------+
+|                             | not found                                              | N/A                                                        | Error                     |
++-----------------------------+--------------------------------------------------------+------------------------------------------------------------+---------------------------+
+| .m                          | N/A                                                    | found                                                      | Compile and Link          |
++-----------------------------+--------------------------------------------------------+------------------------------------------------------------+---------------------------+
+|                             | N/A                                                    | not found                                                  | Error                     |
++-----------------------------+--------------------------------------------------------+------------------------------------------------------------+---------------------------+
+| none                        | not found                                              | found                                                      | Compile and Link          |
++-----------------------------+--------------------------------------------------------+------------------------------------------------------------+---------------------------+
+|                             | found                                                  | not found                                                  | Link only                 |
++-----------------------------+--------------------------------------------------------+------------------------------------------------------------+---------------------------+
+|                             | not found                                              | not found                                                  | Error                     |
++-----------------------------+--------------------------------------------------------+------------------------------------------------------------+---------------------------+
+|                             | found .o file newer than .m and version okay           | found .m file older than .o                                | Link only                 |
++-----------------------------+--------------------------------------------------------+------------------------------------------------------------+---------------------------+
+|                             | found .o file older than .m or version mismatch        | found .m file newer than .o                                | Compile and Link          |
++-----------------------------+--------------------------------------------------------+------------------------------------------------------------+---------------------------+
 
 ++++++++++++++++++++++
 ZLINK Compilation
@@ -3137,7 +3195,7 @@ If ZLINK compiles a routine and the -OBJECT= qualifier does not redirect the out
 
 If the command does not specify compile qualifiers (with expr2) and $ZCOMPILE is null, YottaDB uses the default M command qualifiers, -ignore, -labels=lower, -nolist, and -object. For more information on $ZCOMPILE, refer to the appropriate section in Chapter 8: “Intrinsic Special Variables”. For detailed descriptions of the M command qualifiers, see `Chapter 3: “Development Cycle” <./devcycle.html>`_.
 
-For information on producing object files, but not adding them to the current image, see `ZCOMpile <./commands.html#zcompile>`_.
+For information on producing object files, but not adding them to the current image, see :ref:`zcompile-command`.
 
 ++++++++++++++++++++
 Examples of ZLINK
@@ -3217,7 +3275,7 @@ If the path to a file is non-existent, the request is ignored except in the case
 
 For each auto-relink enabled directory which a YottaDB process accesses while searching through $ZROUTINES, YottaDB creates a small control file (Relinkctl) in the directory identified by $ydb_linktmpdir (defaulting to $ydb_tmp, which in turn defaults to /tmp, if unspecified). The names of these files are of the form ydb-relinkctl-<murmur> where <murmur> is a hash of the realpath() to an auto-relink directory; for example: /tmp/ydb-relinkctl-f0938d18ab001a7ef09c2bfba946f002). With each Relinkctl file, YottaDB creates and associates a block of shared memory that contains associated control structures. Among the structures is a cycle number corresponding to each routine found in the routine directory; a change in the cycle number informs a process that it may need to determine whether there is a new version of a routine. Although YottaDB only creates relinkctl records for routines that actually exist on disk, it may increment cycle numbers for existing relinkctl records even if they no longer exist on disk.
 
-YottaDB creates both the Relinkctl file and shared memory with permissions based on the logic described in the "IPC Permissions" column of the `Shared Resource Authorization Permissions <https://docs.yottadb.com/AdminOpsGuide/securityph.html#shared-resource-authorization-permissions>`_ section in the `Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/index.html>`_, except that the object directory, rather than the database file, provides the base permissions.
+YottaDB creates both the Relinkctl file and shared memory with permissions based on the logic described in the "IPC Permissions" column of the `Shared Resource Authorization Permissions <../AdminOpsGuide/securityph.html#share-rsc-auth-permissions>`_ section in the `Administration and Operations Guide <../AdminOpsGuide/index.html>`_, except that the object directory, rather than the database file, provides the base permissions.
 
 The MUPIP RCTLDUMP command reports information related to relinkctl files and their associated shared memory segments.
 
@@ -3243,7 +3301,9 @@ Any ZBREAK in a routine disables that routine from auto-relinking by a process u
 
 If recursive relink is not enabled, routines currently active in the M virtual machine stack are disabled from auto-relinking until they complete (or are removed from the stack by a ZGOTO).
 
-**Auto-Relink Benefits and Example**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Auto-Relink Benefits and Example
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The benefits of auto-relink are as follows:
 
@@ -3336,6 +3396,8 @@ and produces a result like the following:
    rec#2: rtnname: myprogram cycle: 1 objhash: 0xd81f1cdcc275e13d numvers: 1 objlen: 0x280 shmlen: 0x400
    YDB>
 
+.. _zmessage-command:
+
 ------------------
 ZMessage
 ------------------
@@ -3352,7 +3414,7 @@ The optional truth-valued expression immediately following the command is a comm
 
 The required integer expression specifies the message code. There are two types of message codes:
 
-* Message codes from 150339592 are raised from YottaDB. For examining the text of a message code, refer to `$ZMESSAGE() <./functions.html#zmessage>`_.
+* Message codes from 150339592 are raised from YottaDB. For examining the text of a message code, refer to :ref:`zmessage-function`.
 
 The three least significant bits (lsb) of these message codes indicate the severity which determines the error handling action:
 
@@ -3416,6 +3478,8 @@ Example:
 This ZMESSAGE command supplies the substitution text for the message.
 
 YottaDB treats its own odd-numbered conditions as "successful." YottaDB handles successful conditions by displaying the associated message and continuing execution. YottaDB treats its own even-numbered conditions as failures. YottaDB handles failure conditions by storing the error information in $ZSTATUS and XECUTEing $ETRAP or $ZTRAP In Direct Mode, YottaDB only reports failure conditions to the principal device and does not XECUTE $ETRAP or $ZTRAP or set $ZSTATUS; if $PRINCIPAL is in CENABLE mode, YottaDB sends it Informational messages which are not errors but a form of success. System service errors do not follow the YottaDB odd/even pattern.
+
+.. _zprint-command:
 
 ---------------------
 ZPrint
@@ -3506,8 +3570,10 @@ Publishes the new versions of routines to subscribers. The format of the ZRUPDAT
 * ZRUPDATE rejects file-name arguments that are symbolic links or start with a percent-sign (%)
 * ZRUPDATE recognizes question-mark (?) as a single character wild-card
 * If the path to a file is non-existent, the request is ignored except in the case where one desires a currently shared object file (one that was accessed before it was deleted) to no longer be shared.
-* To effect auto-relink, YottaDB creates small temporary files in the directory referred to by $ydb_linktmpdir (defaulting to $ydb_tmp, which in turn defaults to /tmp, if unspecified). The names of these files are of the form ydb-relinkctl<md5sum> where <md5sum> is a hash of the realpath() to an auto-relink directory. The group and permissions match those for the directory as described in the section `Shared Resources Authorization Permissions in Appendix E (YottaDB Security Philosophy) <https://docs.yottadb.com/AdminOpsGuide/securityph.html#shared-resource-authorization-permissions>`_ of the Administration and Operations Guide. YottaDB recommends that all processes that share a directory whose contents are subject to ZRUPDATE use the same value for $ydb_linktmpdir so that all processes see update notifications - with different values of $ydb_linktmpdir, a ZRUPDATE by a process with one value of $ydb_linktmpdir would not be observed by a process with a different value of that environment variable.
+* To effect auto-relink, YottaDB creates small temporary files in the directory referred to by $ydb_linktmpdir (defaulting to $ydb_tmp, which in turn defaults to /tmp, if unspecified). The names of these files are of the form ydb-relinkctl<md5sum> where <md5sum> is a hash of the realpath() to an auto-relink directory. The group and permissions match those for the directory as described in the section `Shared Resources Authorization Permissions in Appendix E (YottaDB Security Philosophy) <../AdminOpsGuide/securityph.html#share-rsc-auth-permissions>`_ of the Administration and Operations Guide. YottaDB recommends that all processes that share a directory whose contents are subject to ZRUPDATE use the same value for $ydb_linktmpdir so that all processes see update notifications - with different values of $ydb_linktmpdir, a ZRUPDATE by a process with one value of $ydb_linktmpdir would not be observed by a process with a different value of that environment variable.
 * ZRUPDATE always updates the existing shared memory relinkctl information for a file with an existing entry.
+
+.. _zshow-command:
 
 -----------------------
 ZSHow
@@ -3527,8 +3593,10 @@ The format of the ZSHOW command is:
 * The optional global or local variable name specifies the destination for the ZSHOW output; if the ZSHOW argument does not contain a global or local variable name, ZSHOW directs its display to the current device ($IO).
 * When the desination for the ZSHOW output is a local variable or the current device ($IO), ZSHOW sets the maximum length of a ZSHOW line output to 8192 bytes. ZSHOW stores information that does not fit within 8192 bytes in the next line.
 * When the destination for the ZSHOW output is a global variable, ZSHOW sets the maximum length of a ZSHOW line output to the maximum database record size. ZSHOW stores information that does not fit within the maximum database record size as immediate descendants, using ordinal subscripts starting at one (1), of the node holding the beginning of the information.
-* When the destination for the ZSHOW "V" output is a global variable, the %ZSHOWVTOLCL utility program can be used to restore data from that global variable into its original local variables. For more information refer to `%ZSHOWVTOLCL <./utility.html#zshowvtolcl>`_.
+* When the destination for the ZSHOW "V" output is a global variable, the %ZSHOWVTOLCL utility program can be used to restore data from that global variable into its original local variables. For more information refer to :ref:`zshowvtolcl-util`.
 * An indirection operator and an expression atom evaluating to a list of one or more ZSHOW arguments form a legal argument for a ZSHOW.
+
+.. _zshow-info-codes:
 
 ++++++++++++++++++++++++++
 ZSHOW Information Codes
@@ -3984,6 +4052,8 @@ Example:
 
 This example displays the current value of all intrinsic special variables.
 
+.. _zshow-dest-vars:
+
 ++++++++++++++++++++++++++++
 ZSHOW Destination Variables
 ++++++++++++++++++++++++++++
@@ -4046,7 +4116,9 @@ Use ZSHOW as
 * part of a context-switching mechanism in a server program that must manage multiple contexts.
 * a development tool to determine the external call table entries available from the current process.
 
-To minimize confusing data interactions, limit instances of directing ZSHOW output into variables holding other kinds of information and directing ZSHOW "V" output into local variables. For a comparison of ZSHOW "V" and ZWRITE, refer to `ZWRite`_.
+To minimize confusing data interactions, limit instances of directing ZSHOW output into variables holding other kinds of information and directing ZSHOW "V" output into local variables. For a comparison of ZSHOW "V" and ZWRITE, refer to :ref:`zwrite-command`.
+
+.. _zstep-command:
 
 --------------------
 ZSTep
@@ -4136,6 +4208,8 @@ Example:
    YDB>ZSTEP INTO:zact
 
 This sequence uses ZSTEP to invoke Direct Mode at the beginning of the first line after the line that alters the value of x.
+
+.. _zsystem-command:
 
 ------------------------
 ZSYstem
@@ -4271,9 +4345,9 @@ The format of the ZTSTART command is:
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
 * Because ZTSTART has no argument, at least two (2) spaces must follow the command to separate it from the next command on the line.
 
-For more information on Journaling and transaction fencing, refer to the `"YottaDB Journaling" chapter in the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/ydbjournal.html>`_.
+For more information on Journaling and transaction fencing, refer to the `"YottaDB Journaling" chapter in the Administration and Operations Guide <../AdminOpsGuide/ydbjournal.html>`_.
 
-.. _zwithdraw:
+.. _zwithdraw-command:
 
 -------------------
 ZWIthdraw
@@ -4348,8 +4422,10 @@ The format of the ZWRITE command is:
 * Long ZWRITE format records can be loaded.
 * ZWRITE as applied to local variables and ZSHOW "V" are conceptually similar, with two differences:
 
-  * ZWRITE allows the use of `patterns <./langfeat.html#pattern-match-operator>`_ to specify variables and subscripts to display whereas ZSHOW "V" applies to all local variables.
+  * ZWRITE allows the use of :ref:`patterns <pattern-match-op>` to specify variables and subscripts to display whereas ZSHOW "V" applies to all local variables.
   * ZSHOW "V" optionally allows the output to be directed to a global or local variable, whereas ZWRITE always directs its output to the current output device.
+
+.. _zwrite-format-alias-vars:
 
 +++++++++++++++++++++++++++++++++++
 ZWRITE Format for Alias Variables

@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2017-2021 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -44,6 +44,8 @@ The fields in the file header convey the following types of information:
 * Data Elements
 
 * Master Bitmap
+
+.. _file-header-data-elements:
 
 +++++++++++++++++++++++++++
 File Header Data Elements
@@ -386,7 +388,9 @@ The interpreted form of a block with global ^A("Name",1)="Brad" looks like the f
 
 The data portion of a record in any index block consists of a four-byte block pointer. Level 0 data in the Directory Tree also consists of four-byte block pointers. Level 0 data in Global Variable Trees consists of the actual values for global variable names.
 
-**Using GDS records to hold spanning nodes**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Using GDS records to hold spanning nodes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 A global variable node spans across multiple blocks if the size of its value exceeds one database block. Such a global variable node is called a "spanning node". For example, if ^a holds a value that exceeds one database block, YottaDB internally spans the value of ^a in records with keys ^a(#SPAN1), ^a(#SPAN2), ^a(#SPAN3), ^a(#SPAN4), and so on. Note that #SPAN1, #SPAN2, #SPAN3, #SPAN4, and so on are special subscripts that are visible to the database but invisible at the M application level. YottaDGB uses these special subscripts to determine the sequence of the spanning nodes.
 
@@ -395,11 +399,13 @@ The first special subscript #SPAN1 is called a "special index". A special index 
 .. note::
    If the destination database's block size is large enough to hold the key and value, then the global is not a spanning node (because it can fit in one database block).
 
+.. _gds-keys:
+
 ++++++++++
 GDS Keys
 ++++++++++
 
-A key is an internal representation of a global variable name. A byte-by-byte comparison of two keys conforms to the collating sequence defined for global variable nodes. The default collating sequence is the one specified by the M standard. For more information on defining collating sequences, see the `"Internationalization" chapter in the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/internatn.html>`_.
+A key is an internal representation of a global variable name. A byte-by-byte comparison of two keys conforms to the collating sequence defined for global variable nodes. The default collating sequence is the one specified by the M standard. For more information on defining collating sequences, see the `"Internationalization" chapter in the Programmer's Guide <../ProgrammersGuide/internatn.html>`_.
 
 +++++++++++++++++
 Compression Count

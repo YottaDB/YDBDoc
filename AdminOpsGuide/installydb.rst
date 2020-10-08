@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2017-2021 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -178,7 +178,9 @@ ydbinstall is a stand-alone YottaDB installation script that installs YottaDB us
 * Version is defaulted from the yottadb file if one exists in the same directory as the installer
 * This script must run as root.
 
-**Examples**
+++++++++
+Examples
+++++++++
 
 .. code-block:: bash
 

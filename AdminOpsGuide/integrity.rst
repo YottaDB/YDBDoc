@@ -22,7 +22,7 @@
 
 This chapter discusses YottaDB methods for maintaining data availability and integrity.
 
-A database with GDS integrity may not be consistent from an application data point of view. That is, certain types of failures that do not damage the GDS database structures may cause logical transactions (consisting of multiple database updates within an application) to stop in an "illogical" state with some, but not all, of the updates in place. Transaction processing and database journaling are good methods for maintaining application data consistency. For more information on transaction processing, refer to the `"General Language Features of M"  <https://docs.yottadb.com/ProgrammersGuide/langfeat.html>`_ and `"Commands" <https://docs.yottadb.com/ProgrammersGuide/commands.html>`_ chapters of the Programmer's Guide. For more information on journaling, refer to the `"YottaDB Journaling" <./ydbjournal.html>`_ chapter of this manual.
+A database with GDS integrity may not be consistent from an application data point of view. That is, certain types of failures that do not damage the GDS database structures may cause logical transactions (consisting of multiple database updates within an application) to stop in an "illogical" state with some, but not all, of the updates in place. Transaction processing and database journaling are good methods for maintaining application data consistency. For more information on transaction processing, refer to the `"General Language Features of M"  <../ProgrammersGuide/langfeat.html>`_ and `"Commands" <../ProgrammersGuide/commands.html>`_ chapters of the Programmer's Guide. For more information on journaling, refer to the `"YottaDB Journaling" <./ydbjournal.html>`_ chapter of this manual.
 
 Maintaining database integrity is integral to YottaDB operation. You should seldom, if ever, need the material in this chapter, especially if you use journaling. However, databases can be corrupted by unusual events such as hardware failures, sudden loss of power, operating system failures, or improper operator actions. All such events should be followed with database integrity checks.
 
@@ -37,7 +37,7 @@ The chapter describes the following:
 Verifying Database Integrity
 --------------------------------
 
-A consistent verification strategy expedites the process of rapid identification and correction of database damage, while minimizing the overhead of integrity checking. In YottaDB, this strategy is logically developed around MUPIP INTEG and its numerous options for verifying GDS integrity. For detailed information on MUPIP INTEG, refer to the `"MUPIP" chapter <./dbmgmt.html#mupip>`_. The following sections describe situations when executing MUPIP INTEG is the appropriate action.
+A consistent verification strategy expedites the process of rapid identification and correction of database damage, while minimizing the overhead of integrity checking. In YottaDB, this strategy is logically developed around MUPIP INTEG and its numerous options for verifying GDS integrity. For detailed information on MUPIP INTEG, refer to the :ref:`MUPIP chapter <mupip>`. The following sections describe situations when executing MUPIP INTEG is the appropriate action.
 
 GTMASSERT sends an operator log message in addition to the usual user message. Because these are potentially dangerous conditions, all GTMASSERTs should be immediately reported to YottaDB. Check database integrity with the -FAST qualifier, if appropriate, as soon as possible. GTMCHECK is similar to GTMASSERT but less sophisticated. It does not send an operation log message; however, it sends a message to the Principal Device.
 
@@ -95,7 +95,7 @@ Journaling is generally the most attractive approach to recovery from integrity 
 Restore from Backup
 +++++++++++++++++++++++++++
 
-Restoring the database from backup is the least technically sophisticated approach to handling integrity problems. This strategy is most beneficial when the data in the database is static or can be recomputed. In other cases, it requires operational controls to identify, and people to reenter, the work performed between the backup and the failure. For more information on MUPIP BACKUP, RESTORE, EXTRACT, and LOAD, refer to the `"MUPIP" chapter <./dbmgmt.html#mupip>`_. You may also use UNIX utilities such as tar, dump, and restore.
+Restoring the database from backup is the least technically sophisticated approach to handling integrity problems. This strategy is most beneficial when the data in the database is static or can be recomputed. In other cases, it requires operational controls to identify, and people to reenter, the work performed between the backup and the failure. For more information on MUPIP BACKUP, RESTORE, EXTRACT, and LOAD, refer to the :ref:`MUPIP chapter <mupip>`. You may also use UNIX utilities such as tar, dump, and restore.
 
 Some database regions may be set up to hold only temporary data, typically only valid for the life of a process or even just during some operation performed by a process. Rather than restoring such a region, it is generally more appropriate to delete it and recreate it using MUPIP CREATE.
 
@@ -105,7 +105,7 @@ Repair with DSE
 
 Database repair with DSE requires more skill, and potentially more time than the other approaches. Using DSE requires vigilant attention to, and a clear understanding of GDS. DSE can generally access and change almost any data in the database file. When using DSE, you assume the responsibility that YottaDB normally carries for ensuring the integrity of the database structure. Because DSE may be used concurrently with other processes, updates by concurrent processes may interfere with repair actions. When possible, prevent other users from accessing the region during repairs.
 
-If you elect to repair the database, you may want to seek assistance from an available source of expertise such as your YottaDB support channel. If your organization plans to perform repairs beyond straightforward corrections to the file header, YottaDB strongly recommends that the responsible person(s) familiarize themselves with the material in the `INTEG section of the MUPIP chapter <./dbmgmt.html#integ>`_, the `GDS <./gds.html>`_ and `DSE <./dse.html>`_ chapters, and this chapter. YottaDB recommends using DSE on test files, in advance of any work on production files.
+If you elect to repair the database, you may want to seek assistance from an available source of expertise such as your YottaDB support channel. If your organization plans to perform repairs beyond straightforward corrections to the file header, YottaDB strongly recommends that the responsible person(s) familiarize themselves with the material in the :ref:`INTEG section of the MUPIP chapter <mupip-integ>`, the `GDS <./gds.html>`_ and `DSE <./dse.html>`_ chapters, and this chapter. YottaDB recommends using DSE on test files, in advance of any work on production files.
 
 +++++++++++++++++++++++++
 Preventative Maintenance
@@ -124,7 +124,9 @@ Use the following tools to help determine the cause of a database integrity prob
 * Copies of damaged files
 * The trail from DSE sessions in the form of notes, a script file recording the session, sequential files, and saved blocks.
 
-**Determining the cause of the Problem**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Determining the cause of the Problem
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The following questions may help you understand the type of information required to determine the nature of a database integrity problem.
 
@@ -145,11 +147,15 @@ Examine the accounting logs for information about recent process terminations. C
 
 * What version of YottaDB are you using? What version of UNIX and what UNIX platform are you running?
 
-**MUPIP Recovery**
+~~~~~~~~~~~~~~
+MUPIP Recovery
+~~~~~~~~~~~~~~
 
 Bring down the damaged application using appropriate utilities, MUPIP RUNDOWN -REGION region or -FILE file-name, naming the problem database. Restart the application. Consider writing programs or procedures to partially automate shutting down one or all applications to reduce the chance of errors.
 
-**Follow-up**
+~~~~~~~~~
+Follow-up
+~~~~~~~~~
 
 Make sure to transfer any relevant files or reports to YottaDB. Please also communicate any information regarding the circumstances surrounding the problem, including the answers to the questions above. Consider the following:
 
@@ -307,7 +313,9 @@ Terminating YottaDB abnormally with KILL-9 can leave the terminal parameters imp
 Recovering Data from Damaged Binary Extracts
 ++++++++++++++++++++++++++++++++++++++++++++
 
-**CORRUPT Errors**
+~~~~~~~~~~~~~~
+CORRUPT Errors
+~~~~~~~~~~~~~~
 
 You can recover the value of a corrupt global using the global variable name and the dump (in ZWRITE format) of the rest of the block from the point of corruption and then insert it into the database.
 
@@ -315,7 +323,9 @@ Because the ZWRITE format is used for reconstructing the value of the global, th
 
 After you reconstruct the value of a global, add it to the database using an M SET command. For very long values, build the value by using successive SETs with the concatenation operator or SET $EXTRACT().
 
-**LDSPANGLOINCMP Errors**
+~~~~~~~~~~~~~~~~~~~~~
+LDSPANGLOINCMP Errors
+~~~~~~~~~~~~~~~~~~~~~
 
 To fix an LDSPANGLOINCMP error, use the following to reconstruct the value of the global and insert it into the database.
 
@@ -462,6 +472,8 @@ You have successfully reconstructed the global from the damaged binary load:
    When can their glory fade? O the wild charge they made! All the world wondered.
    Honour the charge they made! Honour the Light Brigade, Noble six hundred!
 
+.. _find-fix-db-errs:
+
 ------------------------------------
 Finding and Fixing Database Errors
 ------------------------------------
@@ -470,11 +482,11 @@ The rest of this chapter is arranged loosely in the form of a decision tree. The
 
 As you begin the decision-making process, follow these general guidelines from this point:
 
-*IF THE SYMPTOM IS A FAILURE TO PROCESS*, refer to `section H1 <./integrity.html#h1-process-hangs>`_.
+*IF THE SYMPTOM IS A FAILURE TO PROCESS*, refer to :ref:`h1-process-hangs`.
 
-*IF THE SYMPTOM IS A MUPIP INTEG ERROR REPORT*, refer to `section I1 <./integrity.html#i1-mupip-integ-errors>`_. If you are investigating a particular error message, refer to the MUPIP INTEG errors table.
+*IF THE SYMPTOM IS A MUPIP INTEG ERROR REPORT*, refer to :ref:`i1-mupip-integ-errors`. If you are investigating a particular error message, refer to the MUPIP INTEG errors table.
 
-*IF THE SYMPTOM IS A RUN-TIME ERROR REPORT*, refer to `section R1 <./integrity.html#r1-runtime-errors>`_. If you are investigating a particular error message, refer to the Runtime Error Messages table.
+*IF THE SYMPTOM IS A RUN-TIME ERROR REPORT*, refer to :ref:`r1-runtime-errors`. If you are investigating a particular error message, refer to the Runtime Error Messages table.
 
 To facilitate use of the material as a troubleshooting guide, the text in these sections refers to other sections with alphanumeric designators. Each alphanumeric section describes suggested actions to employ in handling a particular situation.
 
@@ -488,6 +500,8 @@ When such an event occurs, YottaDB sends a series of messages to the operator fa
 
 If such events are delivered to the operator facility, you should investigate whether it is appropriate to modify your procedures to prevent abnormal termination, to reconfigure your disk subsystem, or to change the nature or schedule of disk activities so that database access is not disrupted during key periods of operation.
 
+.. _h1-process-hangs:
+
 +++++++++++++++++++++++++++
 H1 - Process Hangs
 +++++++++++++++++++++++++++
@@ -500,11 +514,11 @@ Your tools include:
 * Communication with users
 * The ps command and other UNIX system utilities
 
-*WHEN MANY PROCESSES ON A SYSTEM ARE HANGING*, determine if the hangs are confined to a particular application. If all applications are affected or if processes not using YottaDB databases are affected, the problem is not a database-specific problem but something more general, such as a UNIX problem. Refer to `section H6 <./integrity.html#h6-unix-problems>`_.
+*WHEN MANY PROCESSES ON A SYSTEM ARE HANGING*, determine if the hangs are confined to a particular application. If all applications are affected or if processes not using YottaDB databases are affected, the problem is not a database-specific problem but something more general, such as a UNIX problem. Refer to :ref:`h6-unix-problems`.
 
 *WHEN ONLY ONE PROCESS IS HANGING*, find out whether that process is the only one using a particular YottaDB application. If it is the only process, start some appropriate second process and determine whether the second process is also affected.
 
-*IF A PROCESS HANGS WHILE OTHER PROCESSES ACCESSING THE SAME DATABASE CONTINUE TO PROCESS*, the problem is not a database problem. Refer to `section H8 <./integrity.html#h8-application-problems>`_.
+*IF A PROCESS HANGS WHILE OTHER PROCESSES ACCESSING THE SAME DATABASE CONTINUE TO PROCESS*, the problem is not a database problem. Refer to :ref:`h8-application-problems`.
 
 *WHEN ONLY YottaDB PROCESSES RUNNING A PARTICULAR APPLICATION HANG*, the problem may be a database problem.
 
@@ -522,6 +536,8 @@ Is the system "hung?" If so, consider the following additional questions:
 
 The following is another way of testing the cache: If CRIT is cleared and DSE BUFFER hangs, the cache is not working. Use MUPIP STOP and/or CRIT -INIT -RESET to get everyone out of the segment, then use DSE WCINIT. After a WCINIT, make sure that you can successfully exit from DSE. Use MUPIP INTEG (-FAST) to check for damage which can be induced by WCINIT.
 
+.. _h3-database-access-problems:
+
 ++++++++++++++++++++++++++++++
 H3 - Database Access Problems
 ++++++++++++++++++++++++++++++
@@ -529,9 +545,9 @@ H3 - Database Access Problems
 Use the following diagnostic steps and references to determine an appropriate course of action for database access problems.
 
 * Determine if the disk volume is inaccessible.
-* Use the UNIX ls utility to display information retrieved from the volume. If the volume is not accessible to UNIX, the problem is not a database problem. Refer to `section H7 <./integrity.html#h7-disk-hardware-problems>`_.
+* Use the UNIX ls utility to display information retrieved from the volume. If the volume is not accessible to UNIX, the problem is not a database problem. Refer to :ref:`h7-disk-hardware-problems`.
 * Determine whether UNIX can write to the disk.
-* Use a shell command such as mv or cp. If UNIX cannot write to the volume, the problem is not a database problem. Refer to `section H7 <./integrity.html#h7-disk-hardware-problems>`_.
+* Use a shell command such as mv or cp. If UNIX cannot write to the volume, the problem is not a database problem. Refer to :ref:`h7-disk-hardware-problems`.
 * Determine whether any database file used by the application has "Cache Freeze" set.
 
   Use DSE FIND -REGION=region and DUMP -FILEHEADER to verify that CACHE FREEZE is zero (00000000) for any hung region(s).
@@ -557,9 +573,9 @@ Use the following diagnostic steps and references to determine an appropriate co
 
   SET a node in each database equal to itself.
 
-*IF THE DATA CAN BE BOTH READ AND WRITTEN*, the problem is not a database problem. Refer to `section H8 <./integrity.html#h8-application-problems>`_.
+*IF THE DATA CAN BE BOTH READ AND WRITTEN*, the problem is not a database problem. Refer to :ref:`h8-application-problems`.
 
-*IF DATA CANNOT BE READ OR WRITTEN*, some process is unable to release full ownership of the database critical section. Determine the process identification number (PID) of the process using the DSE command CRITICAL. If the process exists, refer to `section H4 <./integrity.html#h4-database-cache-problems>`_. If the process is non-existent, use DSE CRITICAL -REMOVE to emulate a release and re-examine the entire situation.
+*IF DATA CANNOT BE READ OR WRITTEN*, some process is unable to release full ownership of the database critical section. Determine the process identification number (PID) of the process using the DSE command CRITICAL. If the process exists, refer to :ref:`h4-database-cache-problems`. If the process is non-existent, use DSE CRITICAL -REMOVE to emulate a release and re-examine the entire situation.
 
 Example:
 
@@ -624,21 +640,25 @@ Example:
    N   to   Z   SCRATCH
    $DEFAULT
 
+.. _h4-database-cache-problems:
+
 ++++++++++++++++++++++++++++
 H4 - Database Cache Problems
 ++++++++++++++++++++++++++++
 
 To increase the access speed, YottaDB buffers data exchanged between processes and database files in the shared memory cache. If information in the memory cache is damaged, it can block the transfer of data to the disk.
 
-*IF A PROCESS HAS BEEN DETERMINED (FROM SECTION H3) TO NEVER RELEASE FULL OWNERSHIP OF THE DATABASE CRITICAL SECTION*, there may be a problem with the database cache. To determine where the problem is occurring terminate the process. If this clears the hang, the problem was not in the database but in the process, which was somehow damaged. Refer to `section P1 <./integrity.html#p1-process-damage>`_. Otherwise, another process showing the same symptoms takes the place of the terminated process. In this case, the cache is damaged.
+*IF A PROCESS HAS BEEN DETERMINED (FROM SECTION H3) TO NEVER RELEASE FULL OWNERSHIP OF THE DATABASE CRITICAL SECTION*, there may be a problem with the database cache. To determine where the problem is occurring terminate the process. If this clears the hang, the problem was not in the database but in the process, which was somehow damaged. Refer to :ref:`p1-process-damage`. Otherwise, another process showing the same symptoms takes the place of the terminated process. In this case, the cache is damaged.
 
-*IF THE CACHE IS DAMAGED*, it must be reinitialized. It is crucial to stop all other database activity during cache initialization. Refer to `section Q1 <./integrity.html#q1-restricting-database-access>`_ before continuing with this section.
+*IF THE CACHE IS DAMAGED*, it must be reinitialized. It is crucial to stop all other database activity during cache initialization. Refer to :ref:`q1-restricting-database-access` before continuing with this section.
 
 To minimize database damage due to cache reinitialization, and to confirm that the problem is due to a damaged cache, use the DSE command CRITICAL SEIZE followed by BUFFER_FLUSH. The DSE command BUFFER_FLUSH attempts to flush the database cache which is a benign operation. Wait at least one minute for this operation to complete.
 
-*IF THE BUFFER_FLUSH DOES NOT HANG*, the cache is not damaged, and you should review all previous steps starting with `section H1 <./integrity.html#h1-process-hangs>`_.
+*IF THE BUFFER_FLUSH DOES NOT HANG*, the cache is not damaged, and you should review all previous steps starting with :ref:`h1-process-hangs`.
 
-*IF THE BUFFER_FLUSH DOES HANG*, use the DSE command WCINIT to reinitialize the cache. This command requires confirmation. Never use WCINIT on a properly operating database. After a WCINIT always perform at least a MUPIP INTEG FAST to detect any induced damage that has a danger of spreading. If the WCINIT command hangs, clear the critical section as described in `section H5 <./integrity.html#h5-critical-section-problems>`_ and reissue the WCINIT.
+*IF THE BUFFER_FLUSH DOES HANG*, use the DSE command WCINIT to reinitialize the cache. This command requires confirmation. Never use WCINIT on a properly operating database. After a WCINIT always perform at least a MUPIP INTEG FAST to detect any induced damage that has a danger of spreading. If the WCINIT command hangs, clear the critical section as described in :ref:`h5-critical-section-problems` and reissue the WCINIT.
+
+.. _h5-critical-section-problems:
 
 ++++++++++++++++++++++++++++++
 H5 - Critical Section Problems
@@ -646,21 +666,25 @@ H5 - Critical Section Problems
 
 The concurrency control mechanism allows only one process at a time to execute code within a "critical section." To gain access to the database requires a process to first gain ownership of the critical section. The errors described in this section occur when a problem occurs in ownership control of the critical section.
 
-*IF YOU HAVE DETERMINED WHICH PROCESS IS HOLDING THE CRITICAL SECTION* (from section H2 using system utilities), try terminating that process. If this corrects the problem, the damage was to the process, rather than the critical section. Refer to `section P1 <./integrity.html#p1-process-damage>`_.
+*IF YOU HAVE DETERMINED WHICH PROCESS IS HOLDING THE CRITICAL SECTION* (from section H2 using system utilities), try terminating that process. If this corrects the problem, the damage was to the process, rather than the critical section. Refer to :ref:`p1-process-damage`.
 
-*IF YOU CANNOT IDENTIFY THE PROCESS*, or if terminating such a process causes other processes to exhibit the same problem(s), the critical section is damaged and must be reinitialized. Restrict database activity during the reinitialization. Refer to `section Q1 <./integrity.html#q1-restricting-database-access>`_ before continuing with this section.
+*IF YOU CANNOT IDENTIFY THE PROCESS*, or if terminating such a process causes other processes to exhibit the same problem(s), the critical section is damaged and must be reinitialized. Restrict database activity during the reinitialization. Refer to :ref:`q1-restricting-database-access` before continuing with this section.
 
-*TO REINITIALIZE THE DATABASE CRITICAL SECTION*: Reinitializing a critical section on an active database file carries some risk of causing database damage. You can minimize this risk by restricting database activity during the reinitialization. Refer to `section Q1 <./integrity.html#q1-restricting-database-access>`_ before continuing with this section.
+*TO REINITIALIZE THE DATABASE CRITICAL SECTION*: Reinitializing a critical section on an active database file carries some risk of causing database damage. You can minimize this risk by restricting database activity during the reinitialization. Refer to :ref:`q1-restricting-database-access` before continuing with this section.
 
 The DSE command CRITICAL INITIALIZE RESET re-establishes the database-critical section and induces errors for all processes currently accessing the database in question. You can avoid the induced errors in other processes by dropping the RESET qualifier. However, this technique may result in other processes attempting to use partially created critical section structures, possibly corrupting them or the database contents.
 
-After the CRITICAL INITIALIZE, use the DSE commands CRITICAL SEIZE and CRITICAL RELEASE to verify operation of the critical section. Actions such as those described in `section H3 <./integrity.html#h3-database-access-problems>`_ test more thoroughly for proper operation.
+After the CRITICAL INITIALIZE, use the DSE commands CRITICAL SEIZE and CRITICAL RELEASE to verify operation of the critical section. Actions such as those described in :ref:`h3-database-access-problems` test more thoroughly for proper operation.
+
+.. _h6-unix-problems:
 
 +++++++++++++++++++++++++
 H6 - UNIX Problems
 +++++++++++++++++++++++++
 
 *IF YOU HAVE DETERMINED THAT MANY PROCESSES IN THE UNIX ENVIRONMENT ARE PERFORMING BADLY*, some processes may be using priorities to "hijack" the system. If this is the case, review why priorities are being adjusted and take appropriate action. Otherwise, you may have a UNIX-related problem.
+
+.. _h7-disk-hardware-problems:
 
 ++++++++++++++++++++++++++++
 H7 - Disk Hardware Problems
@@ -672,6 +696,8 @@ H7 - Disk Hardware Problems
 
 *IF YOU CANNOT LOCATE THE PROBLEM*, run disk diagnostics. Be aware that many disk diagnostics are destructive (i.e., destroy your files). Avoid these diagnostics until you have exhausted all other avenues. If you have to run destructive disk diagnostics, or you determine that a disk spindle must be replaced, start planning for the recovery immediately.
 
+.. _h8-application-problems:
+
 ++++++++++++++++++++++++++++++
 H8 - Application Problems
 ++++++++++++++++++++++++++++++
@@ -680,19 +706,23 @@ Application problems may be caused by conflicting M LOCKs or OPEN commands in mo
 
 First, determine if processes are waiting, without relief, for M LOCKs using the LKE command SHOW ALL WAITING. M routines use LOCK commands to create mutual exclusion semaphores.
 
-*IF THE SHOW COMMAND HANGS*, you have a cache or critical section problem. Restart your evaluation in `section H5 <./integrity.html#h5-critical-section-problems>`_.
+*IF THE SHOW COMMAND HANGS*, you have a cache or critical section problem. Restart your evaluation in :ref:`h5-critical-section-problems`.
 
 *IF THE SHOW COMMAND DISPLAYS NO LOCKS WAITING*, the problem is not a LOCK problem. If repeated use of SHOW does not display the one or more LOCKs that persist every time, the problem is not a LOCK problem. However, even if the problem is not a lock problem, continue with this section because it discusses the M commands JOB, OPEN, and READ, which may also produce hangs.
 
 A LOCK identified as belonging to a non-existent process results from an abnormal process termination. YottaDB automatically clears such LOCKs when some other process requests a conflicting LOCK.
 
-**Persistent Locks**
+~~~~~~~~~~~~~~~~
+Persistent Locks
+~~~~~~~~~~~~~~~~
 
 Persistent LOCKs belonging to currently existing processes are best released by terminating those processes. Using the LKE command CLEAR with various qualifiers can clear LOCKs, but may cause the routines using the LOCKs to produce inappropriate results. For more information on LKE, refer to the `"M LOCK Utility" <./mlocks.html>`_ chapter.
 
 The two most common reasons for persistent LOCKs are deadlocks and LOCKS held during operations that take indeterminate amounts of time.
 
-**Deadlocks**
+~~~~~~~~~
+Deadlocks
+~~~~~~~~~
 
 Deadlocks occur when two or more processes own resources and are trying to add ownership of an additional resource already owned by another of the deadlocked processes.
 
@@ -718,7 +748,9 @@ Example:
 
 This is similar to the previous example, except that it involves three processes. When an application uses LOCKs in a complex fashion, deadlocks may involve many processes.
 
-**Preventing Deadlocks**
+~~~~~~~~~~~~~~~~~~~~
+Preventing Deadlocks
+~~~~~~~~~~~~~~~~~~~~
 
 You can prevent deadlocks by using timeouts on the LOCK commands. Timeouts allow the program to recognize a deadlock. Once a routine detects a deadlock, it should release its LOCKs and restart execution from the beginning of the code that accumulates LOCKs. Without timeouts, there is no way in M to break a deadlock. You must use outside intervention to terminate at least one deadlocked process, or use LKE to strip a LOCK from such a process.
 
@@ -789,6 +821,8 @@ Example:
 
 This stores the contents of ^ACCT(acct) in local variable x, before the interactive editing performed by sub-routine EDITACCT (not shown). When the interaction is complete, it LOCKs the resource name and tests whether ^ACCT(acct) has been changed by some other process. If not, it updates the global variable. Otherwise, it informs the user and restarts UPD. This technique eliminates the "open update" problem, but it introduces the possibility the user may have to re-enter work. An application that needs to minimize the possibility of re-entry may extend this technique by testing individual fields (pieces) for conflicting changes.
 
+.. _i1-mupip-integ-errors:
+
 ++++++++++++++++++++++++++++++++++++++
 I1 - MUPIP INTEG Errors
 ++++++++++++++++++++++++++++++++++++++
@@ -797,7 +831,9 @@ Database errors reported by MUPIP INTEG differ in impact and severity. Some requ
 
 The next section provides general guidelines for determining your next course of action and a table with information related to the error messages you may encounter.
 
-**Evaluating the Danger Level of a Database Problem**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Evaluating the Danger Level of a Database Problem
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If you encounter an anomaly in your database or its operations, the following list may offer some help in determining your next course of action. The heading of each section indicates the level of urgency YottaDB attributes to those items listed below it.
 
@@ -828,214 +864,217 @@ The following list of INTEG messages classifies error severity using the followi
 
 Repair Dangerous and Access errors immediately. You may assess the benefits of deferring correction of less severe errors until normally scheduled down-time.
 
-**MUPIP INTEG Error Messages**
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+MUPIP INTEG Error Messages
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| Severity                 | Error Message                                   | Section                                                                                         |
-+==========================+=================================================+=================================================================================================+
-| I                        | Bad key name.                                   | `K1 <./integrity.html#k1-bad-key>`_                                                             |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| I                        | Bad numeric subscript.                          | `K1 <./integrity.html#k1-bad-key>`_                                                             |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| D                        | Bad pointer value in directory.                 | `K4 <./integrity.html#k4-pointer-problems>`_                                                    |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| D                        | Bitmap block number as pointer.                 | `K4 <./integrity.html#k4-pointer-problems>`_                                                    |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| D                        | Block at incorrect level.                       | `O1 <./integrity.html#o1-bad-block>`_                                                           |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| D                        | Block busy/free status unknown (local bitmap    | `M1 <./integrity.html#m1-bitmap-errors>`_                                                       |
-|                          | corrupted).                                     |                                                                                                 |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| D                        | Block doubly allocated.                         | `K3 <./integrity.html#k3-blocks-doubly-allocated>`_                                             |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| B                        | Block incorrectly marked busy.                  | `M1 <./integrity.html#m1-bitmap-errors>`_                                                       |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| D                        | Block incorrectly marked free.                  | `M1 <./integrity.html#m1-bitmap-errors>`_                                                       |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| I                        | Block larger than file block size.              | `O1 <./integrity.html#o1-bad-block>`_                                                           |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| D                        | Block pointer larger than file maximum.         | `K4 <./integrity.html#k4-pointer-problems>`_                                                    |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| D                        | Block pointer negative.                         | `K4 <./integrity.html#k4-pointer-problems>`_                                                    |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| A                        | Block size equals zero.                         | `I3 <./integrity.html#i3-file-header-errors>`_                                                  |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| A                        | Block size is greater than 64K.                 | `I3 <./integrity.html#i3-file-header-errors>`_                                                  |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| A                        | Block size not a multiple of 512 bytes.         | `I3 <./integrity.html#i3-file-header-errors>`_                                                  |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| I                        | Block too small.                                | `O1 <./integrity.html#o1-bad-block>`_                                                           |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| T                        | Block transaction number too large.             | `I6 <./integrity.html#i6-transient-errors>`_                                                    |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| D                        | Block xxxx doubly allocated in index block.     | `K3 <./integrity.html#k3-blocks-doubly-allocated>`_                                             |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| T                        | Blocks-to-upgrade file-header field is          | H2                                                                                              |
-|                          | incorrect. Expected nnnn, found mmmm.           |                                                                                                 |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| D                        | Blocks per local map is less than 512.          | `I3 <./integrity.html#i3-file-header-errors>`_                                                  |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| D                        | Blocks per local map is greater than 2K.        | `I3 <./integrity.html#i3-file-header-errors>`_                                                  |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| D                        | Blocks per local map is not a multiple of 512.  | `I3 <./integrity.html#i3-file-header-errors>`_                                                  |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| B                        | Cannot INTEG region across network.             | `I5 <./integrity.html#i5-more-database-access-problems>`_                                       |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| T                        | Cannot determine access method;trying with BG.  | `I6 <./integrity.html#i6-transient-errors>`_                                                    |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| T                        | Cannot reset transaction number for this        | `I4 <./integrity.html#i4-file-size-errors>`_                                                    |
-|                          | region.                                         |                                                                                                 |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| S                        | Chunk of nnnn blocks is out of order.           | `O5 <./integrity.html#o5-salvage-of-a-damaged-spanning-node>`_                                  |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| I                        | Compression count not maximal.                  | `K6 <./integrity.html#k6-compression-count-error>`_                                             |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| A                        | Could not get exclusive access to rrrr.         | `I6 <./integrity.html#i6-transient-errors>`_                                                    |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| T                        | Current tn and early tn are not equal.          | `I6 <./integrity.html#i6-transient-errors>`_                                                    |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| T                        | Database file ffff read only.                   | `I6 <./integrity.html#i6-transient-errors>`_                                                    |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| A                        | Database for region rrr is already frozen, not  | `I6 <./integrity.html#i6-transient-errors>`_                                                    |
-|                          | INTEGing                                        |                                                                                                 |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| T                        | Database requires flushing.                     | `I7 <./integrity.html#i7-database-rundown-problem>`_                                            |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| T                        | Error flushing buffers from rrrr for database   | `I7 <./integrity.html#i7-database-rundown-problem>`_                                            |
-|                          | file ffff.                                      |                                                                                                 |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| A                        | File ffff corresponding to region rrrr cannot   | `I6 <./integrity.html#i6-transient-errors>`_                                                    |
-|                          | be found.                                       |                                                                                                 |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| B                        | File size larger than block count would         | `I4 <./integrity.html#i4-file-size-errors>`_                                                    |
-|                          | indicate.                                       |                                                                                                 |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| D                        | File size smaller than block count would        | `I4 <./integrity.html#i4-file-size-errors>`_                                                    |
-|                          | indicate                                        |                                                                                                 |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| A                        | File smaller than database header.              | `I3 <./integrity.html#i3-file-header-errors>`_                                                  |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| I                        | First record of block has nonzero compression   | `O1 <./integrity.html#o1-bad-block>`_                                                           |
-|                          | count.                                          |                                                                                                 |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| B                        | Free blocks counter in file header: nnn is      | `I3 <./integrity.html#i3-file-header-errors>`_                                                  |
-|                          | incorrect, should be mmm.                       |                                                                                                 |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| A                        | Header indicates file creation did not complete.| `I3 <./integrity.html#i3-file-header-errors>`_                                                  |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| A                        | Header indicates file is corrupt.               | `I8 <./integrity.html#i8-repair-induced-problems>`_                                             |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| A                        | Header size not valid for database.             | `I3 <./integrity.html#i3-file-header-errors>`_                                                  |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| A                        | Incorrect version of YottaDB database.          | `I2 <./integrity.html#i2-yottadb-version-mismatch>`_                                            |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| B                        | INTEG does not support operation on YottaDB     | `I5 <./integrity.html#i5-more-database-access-problems>`_                                       |
-|                          | database region.                                |                                                                                                 |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| D                        | Invalid mixing of global names.                 | `K3 <./integrity.html#k3-blocks-doubly-allocated>`_                                             |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| B                        | Key contains a numeric form of subscript in a   | `K1 <./integrity.html#k1-bad-key>`_                                                             |
-|                          | global defined to collate all subscripts as     |                                                                                                 |
-|                          | strings.                                        |                                                                                                 |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| I                        | Key greater than index key.                     | `K2 <./integrity.html#k2-keys-misplaced>`_                                                      |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| I                        | Key larger than database maximum.               | `K7 <./integrity.html#k7-key-warning>`_                                                         |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| I                        | Key larger than maximum allowed length.         | `K1 <./integrity.html#k1-bad-key>`_                                                             |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| I                        | Key too long.                                   | `K1 <./integrity.html#k1-bad-key>`_                                                             |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| I                        | Key too short.                                  | `K1 <./integrity.html#k1-bad-key>`_                                                             |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| I                        | Keys less than sibling's index key.             | `K2 <./integrity.html#k2-keys-misplaced>`_                                                      |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| I                        | Keys out of order.                              | `K2 <./integrity.html#k2-keys-misplaced>`_                                                      |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| I                        | Last record of block has invalid size.          | `K5 <./integrity.html#k5-star-key-problems>`_                                                   |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| D                        | Last record of block has nonzero compression    | `K5 <./integrity.html#k5-star-key-problems>`_                                                   |
-|                          | count.                                          |                                                                                                 |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| B                        | Local bitmap incorrect.                         | `M2 <./integrity.html#m2-bitmap-header-problems>`_                                              |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| B                        | Local bitmap block level incorrect.             | `M1 <./integrity.html#m1-bitmap-errors>`_                                                       |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| B                        | Map block too large.                            | `M2 <./integrity.html#m2-bitmap-header-problems>`_                                              |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| B                        | Map block too small.                            | `M2 <./integrity.html#m2-bitmap-header-problems>`_                                              |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| T                        | Map block transaction number too large.         | `I6 <./integrity.html#i6-transient-errors>`_                                                    |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| B                        | Master bitmap incorrectly asserts this local    | `M1 <./integrity.html#m1-bitmap-errors>`_                                                       |
-|                          | map has free space.                             |                                                                                                 |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| B                        | Master bitmap incorrectly marks this local map  | `M1 <./integrity.html#m1-bitmap-errors>`_                                                       |
-|                          | full.                                           |                                                                                                 |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| B                        | Master bitmap shows this map full, agreeing with| `M1 <./integrity.html#m1-bitmap-errors>`_                                                       |
-|                          | disk local map.                                 |                                                                                                 |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| B                        | Master bitmap shows this map full, agreeing with| `M1 <./integrity.html#m1-bitmap-errors>`_                                                       |
-|                          | MUPIP INTEG                                     |                                                                                                 |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| B                        | Master bitmap shows this map full, in           | `M1 <./integrity.html#m1-bitmap-errors>`_                                                       |
-|                          | disagreement with both disk and INTEG result.   |                                                                                                 |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| B                        | Master bitmap shows this map has space, agreeing| `M1 <./integrity.html#m1-bitmap-errors>`_                                                       |
-|                          | with disk local map.                            |                                                                                                 |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| B                        | Master bitmap shows this map has space, agreeing| `M1 <./integrity.html#m1-bitmap-errors>`_                                                       |
-|                          | with MUPIP INTEG.                               |                                                                                                 |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| I                        | Maximum number of subscripts exceeded.          | `K1 <./integrity.html#k1-bad-key>`_                                                             |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| A                        | None of the database regions accessible.        | `I6 <./integrity.html#i6-transient-errors>`_                                                    |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| I                        | NULL collation representation differs from the  | `K1 <./integrity.html#k1-bad-key>`_                                                             |
-|                          | database file header setting.                   |                                                                                                 |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| I                        | Null subscripts are not allowed for file: rrrr. | `K1 <./integrity.html#k1-bad-key>`_                                                             |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| I                        | Physical record too large.                      | `O2 <./integrity.html#o2-record-errors>`_                                                       |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| I                        | Physical record too small.                      | `O2 <./integrity.html#o2-record-errors>`_                                                       |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| D                        | Read error on bitmap.                           | `H7 <./integrity.html#h7-disk-hardware-problems>`_                                              |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| I                        | Record has too large compression count.         | `O2 <./integrity.html#o2-record-errors>`_                                                       |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| I                        | Record too large.                               | `O2 <./integrity.html#o2-record-errors>`_                                                       |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| I                        | Record too small.                               | `O2 <./integrity.html#o2-record-errors>`_                                                       |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| D                        | Reference count should be zero, is nnn.         | `I6 <./integrity.html#i6-transient-errors>`_                                                    |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| D                        | Root block number greater than last block       | `K4 <./integrity.html#k4-pointer-problems>`_                                                    |
-|                          | number in file.                                 |                                                                                                 |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| D                        | Root block number is a local bitmap number.     | `K4 <./integrity.html#k4-pointer-problems>`_                                                    |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| D                        | Root block number negative.                     | `K4 <./integrity.html#k4-pointer-problems>`_                                                    |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| D                        | Root level higher than maximum.                 | `O1 <./integrity.html#o1-bad-block>`_                                                           |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| D                        | Root level less than one.                       | `O1 <./integrity.html#o1-bad-block>`_                                                           |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| S                        | Spanning node is missing. Block no nnnn of      | `O5 <./integrity.html#o5-salvage-of-a-damaged-spanning-node>`_                                  |
-|                          | of spanning node is missing.                    |                                                                                                 |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| A                        | Start VBN smaller than possible.                | `I3 <./integrity.html#i3-file-header-errors>`_                                                  |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| A                        | Total blocks equals zero.                       | `I6 <./integrity.html#i6-transient-errors>`_                                                    |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| T                        | Transaction numbers greater than the current    | `I6 <./integrity.html#i6-transient-errors>`_                                                    |
-|                          | transaction were found.                         |                                                                                                 |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| A                        | Unable to verify that this is a database file.  | `I3 <./integrity.html#i3-file-header-errors>`_                                                  |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| A                        | Unrecognized file format.                       | `I3 <./integrity.html#i3-file-header-errors>`_                                                  |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
++------------+-------------------------------------------------+-----------------------------------------+
+| Severity   | Error Message                                   | Section                                 |
++============+=================================================+=========================================+
+| I          | Bad key name.                                   | :ref:`k1-bad-key`                       |
++------------+-------------------------------------------------+-----------------------------------------+
+| I          | Bad numeric subscript.                          | :ref:`k1-bad-key`                       |
++------------+-------------------------------------------------+-----------------------------------------+
+| D          | Bad pointer value in directory.                 | :ref:`k4-pointer-problems`              |
++------------+-------------------------------------------------+-----------------------------------------+
+| D          | Bitmap block number as pointer.                 | :ref:`k4-pointer-problems`              |
++------------+-------------------------------------------------+-----------------------------------------+
+| D          | Block at incorrect level.                       | :ref:`o1-bad-block`                     |
++------------+-------------------------------------------------+-----------------------------------------+
+| D          | Block busy/free status unknown (local bitmap    | :ref:`m1-bitmap-errors`                 |
+|            | corrupted).                                     |                                         |
++------------+-------------------------------------------------+-----------------------------------------+
+| D          | Block doubly allocated.                         | :ref:`k3-blocks-doubly-allocated`       |
++------------+-------------------------------------------------+-----------------------------------------+
+| B          | Block incorrectly marked busy.                  | :ref:`m1-bitmap-errors`                 |
++------------+-------------------------------------------------+-----------------------------------------+
+| D          | Block incorrectly marked free.                  | :ref:`m1-bitmap-errors`                 |
++------------+-------------------------------------------------+-----------------------------------------+
+| I          | Block larger than file block size.              | :ref:`o1-bad-block`                     |
++------------+-------------------------------------------------+-----------------------------------------+
+| D          | Block pointer larger than file maximum.         | :ref:`k4-pointer-problems`              |
++------------+-------------------------------------------------+-----------------------------------------+
+| D          | Block pointer negative.                         | :ref:`k4-pointer-problems`              |
++------------+-------------------------------------------------+-----------------------------------------+
+| A          | Block size equals zero.                         | :ref:`i3-file-header-errors`            |
++------------+-------------------------------------------------+-----------------------------------------+
+| A          | Block size is greater than 64K.                 | :ref:`i3-file-header-errors`            |
++------------+-------------------------------------------------+-----------------------------------------+
+| A          | Block size not a multiple of 512 bytes.         | :ref:`i3-file-header-errors`            |
++------------+-------------------------------------------------+-----------------------------------------+
+| I          | Block too small.                                | :ref:`o1-bad-block`                     |
++------------+-------------------------------------------------+-----------------------------------------+
+| T          | Block transaction number too large.             | :ref:`i6-transient-errors`              |
++------------+-------------------------------------------------+-----------------------------------------+
+| D          | Block xxxx doubly allocated in index block.     | :ref:`k3-blocks-doubly-allocated`       |
++------------+-------------------------------------------------+-----------------------------------------+
+| T          | Blocks-to-upgrade file-header field is          | H2                                      |
+|            | incorrect. Expected nnnn, found mmmm.           |                                         |
++------------+-------------------------------------------------+-----------------------------------------+
+| D          | Blocks per local map is less than 512.          | :ref:`i3-file-header-errors`            |
++------------+-------------------------------------------------+-----------------------------------------+
+| D          | Blocks per local map is greater than 2K.        | :ref:`i3-file-header-errors`            |
++------------+-------------------------------------------------+-----------------------------------------+
+| D          | Blocks per local map is not a multiple of 512.  | :ref:`i3-file-header-errors`            |
++------------+-------------------------------------------------+-----------------------------------------+
+| B          | Cannot INTEG region across network.             | :ref:`i5-more-database-access-problems` |
++------------+-------------------------------------------------+-----------------------------------------+
+| T          | Cannot determine access method;trying with BG.  | :ref:`i6-transient-errors`              |
++------------+-------------------------------------------------+-----------------------------------------+
+| T          | Cannot reset transaction number for this region.| :ref:`i4-file-size-errors`              |
++------------+-------------------------------------------------+-----------------------------------------+
+| S          | Chunk of nnnn blocks is out of order.           | :ref:`o5-salvage-damaged-spanning-node` |
++------------+-------------------------------------------------+-----------------------------------------+
+| I          | Compression count not maximal.                  | :ref:`k6-compression-count-error`       |
++------------+-------------------------------------------------+-----------------------------------------+
+| A          | Could not get exclusive access to rrrr.         | :ref:`i6-transient-errors`              |
++------------+-------------------------------------------------+-----------------------------------------+
+| T          | Current tn and early tn are not equal.          | :ref:`i6-transient-errors`              |
++------------+-------------------------------------------------+-----------------------------------------+
+| T          | Database file ffff read only.                   | :ref:`i6-transient-errors`              |
++------------+-------------------------------------------------+-----------------------------------------+
+| A          | Database for region rrr is already frozen, not  | :ref:`i6-transient-errors`              |
+|            | INTEGing                                        |                                         |
++------------+-------------------------------------------------+-----------------------------------------+
+| T          | Database requires flushing.                     | :ref:`i7-database-rundown-problem`      |
++------------+-------------------------------------------------+-----------------------------------------+
+| T          | Error flushing buffers from rrrr for database   | :ref:`i7-database-rundown-problem`      |
+|            | file ffff.                                      |                                         |
++------------+-------------------------------------------------+-----------------------------------------+
+| A          | File ffff corresponding to region rrrr cannot   | :ref:`i6-transient-errors`              |
+|            | be found.                                       |                                         |
++------------+-------------------------------------------------+-----------------------------------------+
+| B          | File size larger than block count would         | :ref:`i4-file-size-errors`              |
+|            | indicate.                                       |                                         |
++------------+-------------------------------------------------+-----------------------------------------+
+| D          | File size smaller than block count would        | :ref:`i4-file-size-errors`              |
+|            | indicate                                        |                                         |
++------------+-------------------------------------------------+-----------------------------------------+
+| A          | File smaller than database header.              | :ref:`i3-file-header-errors`            |
++------------+-------------------------------------------------+-----------------------------------------+
+| I          | First record of block has nonzero compression   | :ref:`o1-bad-block`                     |
+|            | count.                                          |                                         |
++------------+-------------------------------------------------+-----------------------------------------+
+| B          | Free blocks counter in file header: nnn is      | :ref:`i3-file-header-errors`            |
+|            | incorrect, should be mmm.                       |                                         |
++------------+-------------------------------------------------+-----------------------------------------+
+| A          | Header indicates file creation did not complete.| :ref:`i3-file-header-errors`            |
++------------+-------------------------------------------------+-----------------------------------------+
+| A          | Header indicates file is corrupt.               | :ref:`i8-repair-induced-problems`       |
++------------+-------------------------------------------------+-----------------------------------------+
+| A          | Header size not valid for database.             | :ref:`i3-file-header-errors`            |
++------------+-------------------------------------------------+-----------------------------------------+
+| A          | Incorrect version of YottaDB database.          | :ref:`i2-yottadb-version-mismatch`      |
++------------+-------------------------------------------------+-----------------------------------------+
+| B          | INTEG does not support operation on YottaDB     | :ref:`i5-more-database-access-problems` |
+|            | database region.                                |                                         |
++------------+-------------------------------------------------+-----------------------------------------+
+| D          | Invalid mixing of global names.                 | :ref:`k3-blocks-doubly-allocated`       |
++------------+-------------------------------------------------+-----------------------------------------+
+| B          | Key contains a numeric form of subscript in a   | :ref:`k1-bad-key`                       |
+|            | global defined to collate all subscripts as     |                                         |
+|            | strings.                                        |                                         |
++------------+-------------------------------------------------+-----------------------------------------+
+| I          | Key greater than index key.                     | :ref:`k2-keys-misplaced`                |
++------------+-------------------------------------------------+-----------------------------------------+
+| I          | Key larger than database maximum.               | :ref:`k7-key-warning`                   |
++------------+-------------------------------------------------+-----------------------------------------+
+| I          | Key larger than maximum allowed length.         | :ref:`k1-bad-key`                       |
++------------+-------------------------------------------------+-----------------------------------------+
+| I          | Key too long.                                   | :ref:`k1-bad-key`                       |
++------------+-------------------------------------------------+-----------------------------------------+
+| I          | Key too short.                                  | :ref:`k1-bad-key`                       |
++------------+-------------------------------------------------+-----------------------------------------+
+| I          | Keys less than sibling's index key.             | :ref:`k2-keys-misplaced`                |
++------------+-------------------------------------------------+-----------------------------------------+
+| I          | Keys out of order.                              | :ref:`k2-keys-misplaced`                |
++------------+-------------------------------------------------+-----------------------------------------+
+| I          | Last record of block has invalid size.          | :ref:`k5-star-key-problems`             |
++------------+-------------------------------------------------+-----------------------------------------+
+| D          | Last record of block has nonzero compression    | :ref:`k5-star-key-problems`             |
+|            | count.                                          |                                         |
++------------+-------------------------------------------------+-----------------------------------------+
+| B          | Local bitmap incorrect.                         | :ref:`m2-bitmap-header-problems`        |
++------------+-------------------------------------------------+-----------------------------------------+
+| B          | Local bitmap block level incorrect.             | :ref:`m1-bitmap-errors`                 |
++------------+-------------------------------------------------+-----------------------------------------+
+| B          | Map block too large.                            | :ref:`m2-bitmap-header-problems`        |
++------------+-------------------------------------------------+-----------------------------------------+
+| B          | Map block too small.                            | :ref:`m2-bitmap-header-problems`        |
++------------+-------------------------------------------------+-----------------------------------------+
+| T          | Map block transaction number too large.         | :ref:`i6-transient-errors`              |
++------------+-------------------------------------------------+-----------------------------------------+
+| B          | Master bitmap incorrectly asserts this local    | :ref:`m1-bitmap-errors`                 |
+|            | map has free space.                             |                                         |
++------------+-------------------------------------------------+-----------------------------------------+
+| B          | Master bitmap incorrectly marks this local map  | :ref:`m1-bitmap-errors`                 |
+|            | full.                                           |                                         |
++------------+-------------------------------------------------+-----------------------------------------+
+| B          | Master bitmap shows this map full, agreeing with| :ref:`m1-bitmap-errors`                 |
+|            | disk local map.                                 |                                         |
++------------+-------------------------------------------------+-----------------------------------------+
+| B          | Master bitmap shows this map full, agreeing with| :ref:`m1-bitmap-errors`                 |
+|            | MUPIP INTEG                                     |                                         |
++------------+-------------------------------------------------+-----------------------------------------+
+| B          | Master bitmap shows this map full, in           | :ref:`m1-bitmap-errors`                 |
+|            | disagreement with both disk and INTEG result.   |                                         |
++------------+-------------------------------------------------+-----------------------------------------+
+| B          | Master bitmap shows this map has space, agreeing| :ref:`m1-bitmap-errors`                 |
+|            | with disk local map.                            |                                         |
++------------+-------------------------------------------------+-----------------------------------------+
+| B          | Master bitmap shows this map has space, agreeing| :ref:`m1-bitmap-errors`                 |
+|            | with MUPIP INTEG.                               |                                         |
++------------+-------------------------------------------------+-----------------------------------------+
+| I          | Maximum number of subscripts exceeded.          | :ref:`k1-bad-key`                       |
++------------+-------------------------------------------------+-----------------------------------------+
+| A          | None of the database regions accessible.        | :ref:`i6-transient-errors`              |
++------------+-------------------------------------------------+-----------------------------------------+
+| I          | NULL collation representation differs from the  | :ref:`k1-bad-key`                       |
+|            | database file header setting.                   |                                         |  
++------------+-------------------------------------------------+-----------------------------------------+
+| I          | Null subscripts are not allowed for file: rrrr. | :ref:`k1-bad-key`                       |
++------------+-------------------------------------------------+-----------------------------------------+
+| I          | Physical record too large.                      | :ref:`o2-record-errors`                 |
++------------+-------------------------------------------------+-----------------------------------------+
+| I          | Physical record too small.                      | :ref:`o2-record-errors`                 |
++------------+-------------------------------------------------+-----------------------------------------+
+| D          | Read error on bitmap.                           | :ref:`h7-disk-hardware-problems`        |
++------------+-------------------------------------------------+-----------------------------------------+
+| I          | Record has too large compression count.         | :ref:`o2-record-errors`                 |
++------------+-------------------------------------------------+-----------------------------------------+
+| I          | Record too large.                               | :ref:`o2-record-errors`                 |
++------------+-------------------------------------------------+-----------------------------------------+
+| I          | Record too small.                               | :ref:`o2-record-errors`                 |
++------------+-------------------------------------------------+-----------------------------------------+
+| D          | Reference count should be zero, is nnn.         | :ref:`i6-transient-errors`              |
++------------+-------------------------------------------------+-----------------------------------------+
+| D          | Root block number greater than last block       | :ref:`k4-pointer-problems`              |
+|            | number in file.                                 |                                         |
++------------+-------------------------------------------------+-----------------------------------------+
+| D          | Root block number is a local bitmap number.     | :ref:`k4-pointer-problems`              |
++------------+-------------------------------------------------+-----------------------------------------+
+| D          | Root block number negative.                     | :ref:`k4-pointer-problems`              |
++------------+-------------------------------------------------+-----------------------------------------+
+| D          | Root level higher than maximum.                 | :ref:`o1-bad-block`                     |
++------------+-------------------------------------------------+-----------------------------------------+
+| D          | Root level less than one.                       | :ref:`o1-bad-block`                     |
++------------+-------------------------------------------------+-----------------------------------------+
+| S          | Spanning node is missing. Block no nnnn of      | :ref:`o5-salvage-damaged-spanning-node` |
+|            | of spanning node is missing.                    |                                         | 
++------------+-------------------------------------------------+-----------------------------------------+
+| A          | Start VBN smaller than possible.                | :ref:`i3-file-header-errors`            |
++------------+-------------------------------------------------+-----------------------------------------+
+| A          | Total blocks equals zero.                       | :ref:`i4-file-size-errors`              |
++------------+-------------------------------------------------+-----------------------------------------+
+| T          | Transaction numbers greater than the current    | :ref:`i6-transient-errors`              |
+|            | transaction were found.                         |                                         |
++------------+-------------------------------------------------+-----------------------------------------+
+| A          | Unable to verify that this is a database file.  | :ref:`i3-file-header-errors`            |
++------------+-------------------------------------------------+-----------------------------------------+
+| A          | Unrecognized file format.                       | :ref:`i3-file-header-errors`            |
++------------+-------------------------------------------------+-----------------------------------------+
+
+.. _i2-yottadb-version-mismatch:
 
 +++++++++++++++++++++++++++++++++++
 I2 - YottaDB Version Mismatch
@@ -1046,6 +1085,8 @@ YottaDB databases and Global Directories may change with new releases of the pro
 *IF YOU GET AN ERROR INDICATING A VERSION MISMATCH*, first identify the YottaDB version using the M command WRITE $ZVERSION from Direct Mode.
 
 Then refer to the installation procedures for your new release. If you are running more than one release of YottaDB investigate the environment variables that define the environments, and take appropriate action.
+
+.. _i3-file-header-errors:
 
 ++++++++++++++++++++++++++++++++++++++
 I3 - File Header Errors
@@ -1058,6 +1099,8 @@ These errors indicate damage to the control or reference information in the file
 To correct the other errors of this type use the DSE CHANGE FILEHEADER command with the BLK_SIZE=, BLOCKS_FREE=, and TOTAL_BLKS qualifiers.
 
 "Free blocks counter ..." indicates that the count of free blocks in the file header is not correct. This error only affects $VIEW("FREECNT",region) and DUMP FILEHEADER which return the information.
+
+.. _i4-file-size-errors:
 
 +++++++++++++++++++++++++++++++++++++++
 I4 - File Size Errors
@@ -1072,6 +1115,8 @@ These errors indicate that the total block count does not agree with the file si
    ((file size - starting VBN + 1) / (block size / 512))
 
 A decimal number results from this formula. Convert this decimal to a hexadecimal number, then change the total block count to this hexadecimal value using DSE CHANGE FILEHEADER TOTAL_BLKS= . You may also need to adjust the free blocks count with BLOCKS_FREE=. MUPIP INTEG informs you if this is necessary and gives the correct values.
+
+.. _i5-more-database-access-problems:
 
 +++++++++++++++++++++++++++++++++++++++
 I5 - More Database Access Problems
@@ -1095,9 +1140,11 @@ Examine the Global Directory using GDE. If the Global Directory is not appropria
 
 *IF THE FILES APPEAR TO BE PROPERLY MAPPED* by the Global Directory, properly placed given all environment variables, and properly protected to permit appropriate access, use the od or cat utility to verify access to the files, independent of YottaDB.
 
-*IF YOU SUSPECT A VERSION MISMATCH PROBLEM*, refer to `section I2 <./integrity.html#i2-yottadb-version-mismatch>`_.
+*IF YOU SUSPECT A VERSION MISMATCH PROBLEM*, refer to :ref:`i2-yottadb-version-mismatch`.
 
-*IF YOU SUSPECT A DISK HARDWARE PROBLEM*, refer to `section H7 <./integrity.html#h7-disk-hardware-problems>`_.
+*IF YOU SUSPECT A DISK HARDWARE PROBLEM*, refer to :ref:`h7-disk-hardware-problems`.
+
+.. _i6-transient-errors:
 
 ++++++++++++++++++++++++++++++++++++++
 I6 - Transient Errors
@@ -1125,11 +1172,15 @@ If you are not running TP or incremental backup this is a benign error (from the
 
 However, if the access method should be MM, use MUPIP SET ACCESS_METHOD= to correct the database.
 
+.. _i7-database-rundown-problem:
+
 +++++++++++++++++++++++++++++++
 I7 - Database Rundown Problem
 +++++++++++++++++++++++++++++++
 
 A MUPIP INTEG may be performed without write access to the file. However, in the case where the file was improperly closed, it must be RUNDOWN prior to being INTEGed. To do this, MUPIP requires write access to the file, so either increase the privileges for the process, change the protection on the file, or use a more privileged process and repeat the MUPIP INTEG.
+
+.. _i8-repair-induced-problems:
 
 ++++++++++++++++++++++++++++++++
 I8 - Repair Induced Problems
@@ -1144,21 +1195,25 @@ Any process attempting to access a database that has its "corrupt" flag set to T
 .. note::
    Using the DSE command CHANGE FILEHEADER CORRUPT=TRUE is very dangerous. If the DSE session EXITs before issuing a CHANGE FILEHEADER CORRUPT=FALSE, the database becomes entirely useless.
 
+.. _k1-bad-key:
+
 ++++++++++++++++++++++
 K1 - Bad Key
 ++++++++++++++++++++++
 
 This section describes appropriate actions when the error message indicates a damaged key. GDS transforms subscripted or unsubscripted global variable names into keys, which are part of the database record used to index the corresponding global variable data values. The keys are stored in a compressed form which omits that part of the prefix held in common with the previous key in the block. The compression count is the number of common characters. Except in the Directory Tree, all records after the first one have a non-zero count. The first record in a block always has a compression count of zero (0).
 
-*IF THE BLOCK IS A DATA BLOCK*, that is, level zero (0), refer to `section O3 <./integrity.html#o3-data-block-errors>`_.
+*IF THE BLOCK IS A DATA BLOCK*, that is, level zero (0), refer to :ref:`o3-data-block-errors`.
 
-*IF THE BLOCK HAS A LEVEL GREATER THAN ZERO (0)*, examine the record with the DSE command DUMP BLOCK= OFFSET where the block and offset values are provided by the INTEG error report. If the record appears to have a valid block pointer, note the pointer. Otherwise, refer to `section O2 <./integrity.html#o2-record-errors>`_.
+*IF THE BLOCK HAS A LEVEL GREATER THAN ZERO (0)*, examine the record with the DSE command DUMP BLOCK= OFFSET where the block and offset values are provided by the INTEG error report. If the record appears to have a valid block pointer, note the pointer. Otherwise, refer to :ref:`o2-record-errors`.
 
 After noting the pointer, SPAWN and use MUPIP INTEG BLOCK=pointer (if you have time constraints, you may use the FAST qualifier) to check the structure.
 
-*IF THE SUB-TREE IS INVALID*, according to the MUPIP INTEG, DSE REMOVE the record containing the reported bad key, INTEG, and refer to `section O4 <./integrity.html#o4-salvage-of-data-blocks-with-lost-indices>`_.
+*IF THE SUB-TREE IS INVALID*, according to the MUPIP INTEG, DSE REMOVE the record containing the reported bad key, INTEG, and refer to :ref:`o4-salvage-of-data-blocks-with-lost-indices`.
 
 Otherwise use the DSE command DUMP BLOCK= RECORD=9999 to find the last record in the block and examine it using the DUMP RECORD= command. Continue using DSE to follow the pointer(s) down to level 0, always choosing the right-hand branch. Note the largest key at the data level. REMOVE the record containing the reported bad key. Determine the proper placement for the noted key using FIND KEY= and ADD KEY= POINTER where the key and the pointer are those noted in the preceding actions.
+
+.. _k2-keys-misplaced:
 
 ++++++++++++++++++++
 K2 - Keys Misplaced
@@ -1168,7 +1223,9 @@ When the error is a misplaced key, the keys are not in proper collating sequence
 
 *IF THE BLOCK IS A DATA BLOCK*, that is, level zero (0), DUMP it GLO, REMOVE the records that point to it, MAP it FREE, and MUPIP LOAD the output of the DUMP GLO.
 
-*IF THE BLOCK HAS A LEVEL GREATER THAN ZERO (0)*, you may choose to reposition the record in its proper place or use the salvage strategy discussed in `section O4 <./integrity.html#o4-salvage-of-data-blocks-with-lost-indices>`_. In general, the salvage strategy is less demanding and less dangerous. However, it may be time consuming if the index block holding the record has a level much greater than one (1). If you decide against the salvage strategy, note the contents of the damaged record. In either case, REMOVE the record. If using salvage, refer to `section O4 <./integrity.html#o4-salvage-of-data-blocks-with-lost-indices>`_. If not, determine the proper location for the record using FIND KEY= to display the closest existing path, then follow the procedure outlined in the last paragraph of `K1 <./integrity.html#k1-bad-key>`_.
+*IF THE BLOCK HAS A LEVEL GREATER THAN ZERO (0)*, you may choose to reposition the record in its proper place or use the salvage strategy discussed in :ref:`o4-salvage-of-data-blocks-with-lost-indices`. In general, the salvage strategy is less demanding and less dangerous. However, it may be time consuming if the index block holding the record has a level much greater than one (1). If you decide against the salvage strategy, note the contents of the damaged record. In either case, REMOVE the record. If using salvage, refer to :ref:`o4-salvage-of-data-blocks-with-lost-indices`. If not, determine the proper location for the record using FIND KEY= to display the closest existing path, then follow the procedure outlined in the last paragraph of :ref:`k1-bad-key`.
+
+.. _k3-blocks-doubly-allocated:
 
 +++++++++++++++++++++++++++++
 K3 - Blocks Doubly Allocated
@@ -1184,11 +1241,13 @@ First, identify all pointers to the block, using FIND EXHAUSTIVE and/or informat
 
 *IF THE BLOCK IS A DATA BLOCK*, that is, level zero (0), DUMP it GLO, REMOVE the records that point to it, MAP it FREE, and MUPIP LOAD the output of the DUMP GLO.
 
-*IF THE BLOCK HAS A LEVEL GREATER THAN ZERO (0)*, you may sort through the block and its descendants to disentangle intermixed data. If the block has a level of more than one (1), this may be worth a try. The salvage strategy (discussed in `section O4 <./integrity.html#o4-salvage-of-data-blocks-with-lost-indices>`_) may be time consuming and there may be only one misplaced node. However, in general, the salvage strategy is less demanding and less dangerous.
+*IF THE BLOCK HAS A LEVEL GREATER THAN ZERO (0)*, you may sort through the block and its descendants to disentangle intermixed data. If the block has a level of more than one (1), this may be worth a try. The salvage strategy (discussed in :ref:`o4-salvage-of-data-blocks-with-lost-indices`) may be time consuming and there may be only one misplaced node. However, in general, the salvage strategy is less demanding and less dangerous.
 
-*IF YOU CHOOSE THE SALVAGE STRATEGY*, REMOVE the records that point to the block, MAP it FREE, and refer to `section O4 <./integrity.html#o4-salvage-of-data-blocks-with-lost-indices>`_.
+*IF YOU CHOOSE THE SALVAGE STRATEGY*, REMOVE the records that point to the block, MAP it FREE, and refer to :ref:`o4-salvage-of-data-blocks-with-lost-indices`.
 
 *IF YOU DECIDE TO WORK WITH THE BLOCK*, choose the path to retain, REMOVE the other pointer record, and relocate any misplaced descendants with DSE ADD and REMOVE.
+
+.. _k4-pointer-problems:
 
 ++++++++++++++++++++++++++++++++++
 K4 - Pointer Problems
@@ -1196,9 +1255,11 @@ K4 - Pointer Problems
 
 Each index block is made up of records that contain keys and corresponding pointers. In the case where database damage is a symptom of an incorrect key paired with a valid pointer, the repair strategy, which may be implemented with a number of tactics, is to use the pointer to locate the data and reconstruct the key.
 
-While they occur very infrequently, invalid pointers do not permit the same strategy. If there is an invalid pointer, always eliminate the record containing the bad pointer using the DSE REMOVE command. Since no data can be stored under an invalid pointer, either the pointer error was discovered on the first attempt to use it and no data has been lost, or the pointer was damaged during use. If the pointer was damaged during use, the lost data should be located by examining "Block incorrectly marked busy" errors and generally be recovered as described in `section O4 <./integrity.html#o4-salvage-of-data-blocks-with-lost-indices>`_.
+While they occur very infrequently, invalid pointers do not permit the same strategy. If there is an invalid pointer, always eliminate the record containing the bad pointer using the DSE REMOVE command. Since no data can be stored under an invalid pointer, either the pointer error was discovered on the first attempt to use it and no data has been lost, or the pointer was damaged during use. If the pointer was damaged during use, the lost data should be located by examining "Block incorrectly marked busy" errors and generally be recovered as described in :ref:`o4-salvage-of-data-blocks-with-lost-indices`.
 
 *IF MUCH DATA IS LOST*, it may be worthwhile attempting to reconstruct the bad record as follows. Before removing the record containing the bad pointer, use the DUMP command to note the key in the record. Using the error reports and/or the DSE RANGE command, locate the block to which the key should point. Then use DSE ADD to replace the previously deleted record with a new record that has the correct key and pointer in place.
+
+.. _k5-star-key-problems:
 
 ++++++++++++++++++++++++++++++++
 K5 - Star Key Problems
@@ -1209,6 +1270,8 @@ The last record in every index block must be a star-key record that points to a 
 In general, you should turn the last existing record into a star-key. This works well as long as the block holds at least one valid record. If you choose this strategy, locate the last record using DUMP RECORD=9999. Then DUMP the last record and note its pointer. Next, REMOVE the last record. Finally, ADD STAR POINTER= to the key you noted.
 
 If the star-key is the only record in a root block, you should add a new empty level 0 descendent. If you choose this strategy, add a new star-key using FIND FREEBLOCK HINT=this-block to locate a nearby block. Next, MAP the new block BUSY and CHANGE LEVEL= 0 and BSIZ=7(or 8, if your platform dictates). If the new block has a level of zero (0), return to the damaged block and ADD STAR POINTER=the-first-new-block.
+
+.. _k6-compression-count-error:
 
 ++++++++++++++++++++++++++++++++
 K6 - Compression Count Error
@@ -1222,6 +1285,8 @@ K6 - Compression Count Error
 
 You may also adjust the compression count using CHANGE CMPC=. Because this changes the value of all subsequent keys in the block (except the star-key), you should try this alternative only if those keys also appear incorrect.
 
+.. _k7-key-warning:
+
 ++++++++++++++++++++++++++
 K7 - Key Warning
 ++++++++++++++++++++++++++
@@ -1229,6 +1294,8 @@ K7 - Key Warning
 "Key too large for database maximum" indicates that the database holds a key that is legal to YottaDB but exceeds the KEY_MAX_SIZE for the database.
 
 Use the DSE command CHANGE FILEHEADER KEY_MAX_SIZE= to adjust the file limitation. Alternatively, you may remove the record, using the M command KILL on an ancestor node. If any user attempts to modify or replace the record in the database while the key is over-length, YottaDB will reject the SET with an error.
+
+.. _m1-bitmap-errors:
 
 +++++++++++++++++++++++++++
 M1 - Bitmap Errors
@@ -1248,6 +1315,8 @@ Because bitmap errors are typically secondary to other errors, correcting the pr
 
 The DSE command MAP provides a way to switch bits in local maps with FREE and BUSY, propagate the status of a local map to the master map with MASTER, and completely rebuild all maps from the B-tree with RESTORE. Never use MAP MASTER until all non-bitmap errors have been resolved.
 
+.. _m2-bitmap-header-problems:
+
 ++++++++++++++++++++++++++++
 M2 - Bitmap Header Problems
 ++++++++++++++++++++++++++++
@@ -1256,13 +1325,17 @@ Bitmaps are stored in blocks that have a unique header format with a level of mi
 
 Use the DSE command CHANGE with the BSIZ=87 or 88 (depending on platform) and LEVEL=-1FF qualifiers to correct the problem. If the block size is too small, the bitmap will have to be reconstructed using MAP RESTORE or manually from INTEG error reports using MAP FREE. If there are other errors, defer any MAP RESTORE until after they have been repaired.
 
+.. _o1-bad-block:
+
 +++++++++++++++++++++++++
 O1 - Bad Block
 +++++++++++++++++++++++++
 
 GDS organizes the B-tree into logical blocks, each of which YottaDB handles discretely. A block consists of a block header and a lexically increasing sequence of records. Blocks starting with the root block up to the data blocks are index blocks. The last block in any complete path is a data block. The errors discussed in this section indicate a damaged block.
 
-Determine if the block has other problems by using the DSE command INTEGRIT. Examine the contents of the block using the DSE command DUMP. You may also examine the block preceding this block in the path and/or blocks pointed to by records in this block. If you can determine an appropriate action, use CHANGE with the BSIZ= and/or LEVEL= qualifiers. If you cannot quickly repair the block, examine its level with DUMP HEADER. If the block is a data block, that is, level zero (0), refer to `section O3 <./integrity.html#o3-data-block-errors>`_. If the block has a level greater than zero (0), REMOVE the record that points to the block and refer to `section O4 <./integrity.html#o4-salvage-of-data-blocks-with-lost-indices>`_.
+Determine if the block has other problems by using the DSE command INTEGRIT. Examine the contents of the block using the DSE command DUMP. You may also examine the block preceding this block in the path and/or blocks pointed to by records in this block. If you can determine an appropriate action, use CHANGE with the BSIZ= and/or LEVEL= qualifiers. If you cannot quickly repair the block, examine its level with DUMP HEADER. If the block is a data block, that is, level zero (0), refer to :ref:`o3-data-block-errors`. If the block has a level greater than zero (0), REMOVE the record that points to the block and refer to :ref:`o4-salvage-of-data-blocks-with-lost-indices`.
+
+.. _o2-record-errors:
 
 +++++++++++++++++++++++
 O2 - Record Errors
@@ -1270,9 +1343,11 @@ O2 - Record Errors
 
 GDS organizes keys with pointers or data to form records. A record has a header, which holds the record size, and a compression count, which identifies how much of the preceding key is held in common by this record. Records in the block are ordered by the values of their keys. The errors discussed in this section indicate damage to a record. Record errors present an added challenge, in that they potentially prevent YottaDB from correctly interpreting subsequent records in the same block.
 
-*IF THE BLOCK IS A DATA BLOCK*, that is, level zero (0), refer to `section O3 <./integrity.html#o3-data-block-errors>`_.
+*IF THE BLOCK IS A DATA BLOCK*, that is, level zero (0), refer to :ref:`o3-data-block-errors`.
 
-*IF THE BLOCK IS AN INDEX BLOCK*, that is, has a level greater than zero (0), the best option is generally to use the salvage strategy discussed in section O4. REMOVE the damaged record and INTEG the block. If the block is still corrupt, repeat the last step, REMOVE the pointer to it, and MAP it FREE. In any case, refer to `section O4 <./integrity.html#o4-salvage-of-data-blocks-with-lost-indices>`_.
+*IF THE BLOCK IS AN INDEX BLOCK*, that is, has a level greater than zero (0), the best option is generally to use the salvage strategy discussed in section O4. REMOVE the damaged record and INTEG the block. If the block is still corrupt, repeat the last step, REMOVE the pointer to it, and MAP it FREE. In any case, refer to :ref:`o4-salvage-of-data-blocks-with-lost-indices`.
+
+.. _o3-data-block-errors:
 
 +++++++++++++++++++++++
 O3 - Data Block Errors
@@ -1283,6 +1358,8 @@ The errors described in this section include damage to the header, the records, 
 *IF THE BLOCK IS LEVEL ZERO (0)*, use DSE DUMP to examine the contents of the block. Note any information that might allow you to correct the problem or might help to identify and recreate the endangered data. If you are familiar with GDS and hexadecimal representations, you may be able to recognize data that DSE cannot recognize because of misalignment.
 
 *IF THE BEGINNING OF THE BLOCK IS VALID*, DUMP GLO may be able to capture its contents up to the point where it is damaged. In the worst case, REMOVE the record that points to the block, MAP it FREE, and lose its entire contents. The extent and importance of the damage depends on the size of the block and what it should be holding. In a similar but not quite as drastic case, REMOVE the record with the problem and lose the contents of that record.
+
+.. _o4-salvage-of-data-blocks-with-lost-indices:
 
 ++++++++++++++++++++++++++++++++++++++++++++++
 O4 - Salvage of Data Blocks with Lost Indices
@@ -1302,7 +1379,9 @@ This strategy works well when the missing indices are level one (1). However, th
 
 Once you have corrected all errors except bitmap errors, SPAWN and use MUPIP INTEG FAST REGION NOMAP to get a list of all remaining bitmap errors. If the report includes any "Blocks incorrectly marked free", MAP them BUSY. Then use DUMP HEADER BLOCK= to examine each "Block incorrectly marked busy." If the level is one (1), DUMP the block ZWR. In any case, MAP it FREE. Once all the blocks have been collected in a sequential file in this fashion, use MUPIP LOAD to reclaim the data from the sequential file.
 
-**Download salvage.m**
+~~~~~~~~~~~~~~~~~~
+Download salvage.m
+~~~~~~~~~~~~~~~~~~
 
 salvage.m is a utility that removes all incorrectly-marked-busy blocks from the specified region. During execution it displays the DSE commands that it will execute and aborts execution when it encounters an error. It dumps the zwrite formatted content of blocks incorrectly-marked-busy to a file called <region>_db.zwr. Upon completion, it sets the abandoned_kills and kill_in_prog flags in the database fileheader to false.
 
@@ -1321,6 +1400,8 @@ Steps to run the salvage utility are as follows:
 If the utility reports a DSE error, fix that error and run the salvage utility again.
 
 After completing repairs with the salvage utility, open the <REGION>_db.zwr file and examine its contents. If there is a need to recover the data from the incorrectly marked busy blocks, perform a MUPIP LOAD <REGION>_db.zwr to load that data back to the database.
+
+.. _o5-salvage-damaged-spanning-node:
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
 O5 - Salvage of a Damaged Spanning Node
@@ -1489,6 +1570,8 @@ Load the salvaged global:
    When can their glory fade?  O the wild charge they made!  All the world wondered.
    Honour the charge they made!  Honour the Light Brigade, Noble six hundred!
 
+.. _p1-process-damage:
+
 +++++++++++++++++++++++++
 P1 - Process Damage
 +++++++++++++++++++++++++
@@ -1497,9 +1580,11 @@ A damaged process is one that has become internally "confused" and is executing 
 
  If multiple processes exhibit the same symptoms, the problem is likely embedded in the database.
 
-*IF YOU HAVE DISCOVERED THAT A PROCESS WAS DAMAGED*, carefully review all events related to that process leading to the discovery of the problem. It may be possible that the process had an elevated priority and was not hanging, but rather was "hogging" system resources. It is also possible that the problem is an application loop problem, missed by not performing the steps in `section H3 <./integrity.html#h3-database-access-problems>`_ with enough rigor.
+*IF YOU HAVE DISCOVERED THAT A PROCESS WAS DAMAGED*, carefully review all events related to that process leading to the discovery of the problem. It may be possible that the process had an elevated priority and was not hanging, but rather was "hogging" system resources. It is also possible that the problem is an application loop problem, missed by not performing the steps in :ref:`h3-database-access-problems` with enough rigor.
 
 Check for evidence of any hardware problem that might damage a process.
+
+.. _q1-restricting-database-access:
 
 +++++++++++++++++++++++++++++++++
 Q1 - Restricting Database Access
@@ -1507,85 +1592,91 @@ Q1 - Restricting Database Access
 
 Prevent new users from attempting to access the database by taking steps such as bringing the system to the single-user state or removing execute access to YottaDB components for an appropriate class of users. Also, terminate or suspend all processes accessing the database in question, using the UNIX ps -af utility to find such processes. Because the DSE command CRITICAL -INITIALIZE -RESET generates errors for all processes accessing a database file, it provides a quick way to stop such processes.
 
+.. _r1-runtime-errors:
+
 +++++++++++++++++++++++++++++++++++
 R1 - Runtime Errors
 +++++++++++++++++++++++++++++++++++
 
-YottaDB processes may detect errors at run-time. These errors trigger the YottaDB error handling mechanism, which generally places the process in direct mode, or triggers the application programs to transcribe an error context to a sequential file or to a global. For more information on error handling, refer to the `"Error Processing" chapter of the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/errproc.html>`_.
+YottaDB processes may detect errors at run-time. These errors trigger the YottaDB error handling mechanism, which generally places the process in direct mode, or triggers the application programs to transcribe an error context to a sequential file or to a global. For more information on error handling, refer to the `"Error Processing" chapter of the Programmer's Guide <../ProgrammersGuide/errproc.html>`_.
 
 Most run-time errors are related to the application and its environment. However, some errors reflect the inability of a process to properly deal with a database. Some errors of this type are also, or only, generated by the YottaDB utility programs.
 
-For descriptions of individual errors, refer to the `Messages and Recovery Procedures Reference Manual <https://docs.yottadb.com/MessageRecovery/index.html>`_.
+For descriptions of individual errors, refer to the `Messages and Recovery Procedures Reference Manual <../MessageRecovery/index.html>`_.
 
-*IF YOU CANNOT REPRODUCE SUCH ERRORS WITH ANOTHER PROCESS PERFORMING THE SAME TASK*, or with an appropriately directed MUPIP INTEG, they were most likely reported by a damaged process. In this case, refer to `section P1 <./integrity.html#p1-process-damage>`_.
+*IF YOU CANNOT REPRODUCE SUCH ERRORS WITH ANOTHER PROCESS PERFORMING THE SAME TASK*, or with an appropriately directed MUPIP INTEG, they were most likely reported by a damaged process. In this case, refer to :ref:`p1-process-damage`.
 
 The following table lists run-time errors, alphabetically by mnemonic, each with a section reference for further information.
 
-**Run-Time Error Messages Identifying Potential System Problems**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Run-Time Error Messages Identifying Potential System Problems
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-+--------------------------------------+---------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
-| Error Mnemonic                       | Error Message Text                                                        | Section                                                                                                    |
-+======================================+===========================================================================+============================================================================================================+
-| BADDVER                              | Incorrect database version vvv                                            | `I2 <./integrity.html#i2-yottadb-version-mismatch>`_                                                       |
-+--------------------------------------+---------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
-| BITMAPSBAD                           | Database bitmaps are incorrect                                            | `M1 <./integrity.html#m1-bitmap-errors>`_                                                                  |
-+--------------------------------------+---------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
-| BTFAIL                               | The database block table is corrupt                                       | `R3 <./integrity.html#r3-runtime-database-cache-problems>`_                                                |
-+--------------------------------------+---------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
-| CCPINTQUE                            | Interlock failure accessing Cluster Control Program queue                 | `R7 <./integrity.html#r7-interlocked-queue-hardware-problems>`_                                            |
-+--------------------------------------+---------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
-| CRITRESET                            | The critical section crash count for rrr region has been incremented      | `I8 <./integrity.html#i8-repair-induced-problems>`_                                                        |
-+--------------------------------------+---------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
-| DBCCERR                              | Interlock instruction failure in critical mechanism for region rrr        | `R7 <./integrity.html#r7-interlocked-queue-hardware-problems>`_                                            |
-+--------------------------------------+---------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
-| DBCRPT                               | Database is flagged corrupt                                               | `I8 <./integrity.html#i8-repair-induced-problems>`_                                                        |
-+--------------------------------------+---------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
-| DBFILERR                             | Error with database file                                                  | `I5 <./integrity.html#i5-more-database-access-problems>`_                                                  |
-+--------------------------------------+---------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
-| DBNOFILEP                            | No database file has been successfully opened                             | `I5 <./integrity.html#i5-more-database-access-problems>`_                                                  |
-+--------------------------------------+---------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
-| DBNOTGDS                             | Unrecognized database file format                                         | `I5 <./integrity.html#i5-more-database-access-problems>`_                                                  |
-+--------------------------------------+---------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
-| DBOPNERR                             | Error opening database file                                               | `I5 <./integrity.html#i5-more-database-access-problems>`_                                                  |
-+--------------------------------------+---------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
-| DBRDERR                              | Cannot read database file after opening                                   | `I5 <./integrity.html#i5-more-database-access-problems>`_                                                  |
-+--------------------------------------+---------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
-| FORCEDHALT                           | Image HALTed by MUPIP STOP                                                | `R4 <./integrity.html#r4-stopped-processes>`_                                                              |
-+--------------------------------------+---------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
-| GBLDIRACC                            | Global Directory access failed, cannot perform database functions         | `I5 <./integrity.html#i5-more-database-access-problems>`_                                                  |
-+--------------------------------------+---------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
-| GBLOFLOW                             | Database segment is full                                                  | `R5 <./integrity.html#r5-no-more-room-in-the-file>`_                                                       |
-+--------------------------------------+---------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
-| GVKILLFAIL                           | Global variable KILL failed. Failure code: cccc                           | `R2 <./integrity.html#r2-structural-database-integrity-errors>`_                                           |
-+--------------------------------------+---------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
-| GVORDERFAIL                          | Global variable $ORDER or $NEXT function failed. Failure code: cccc       | `R2 <./integrity.html#r2-structural-database-integrity-errors>`_                                           |
-+--------------------------------------+---------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
-| GVPUTFAIL                            | Global variable put failed. Failure code: cccc                            | `R2 <./integrity.html#r2-structural-database-integrity-errors>`_                                           |
-+--------------------------------------+---------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
-| GVQUERYFAIL                          | Global variable $QUERY function failed. Failure code: cccc                | `R2 <./integrity.html#r2-structural-database-integrity-errors>`_                                           |
-+--------------------------------------+---------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
-| GVRUNDOWN                            | Error during global database rundown                                      | `I5 <./integrity.html#i5-more-database-access-problems>`_                                                  |
-+--------------------------------------+---------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
-| GDINVALID                            | Unrecognized Global Directory format: fff                                 | `I5 <./integrity.html#i5-more-database-access-problems>`_                                                  |
-+--------------------------------------+---------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
-| GTMCHECK                             | Internal error–report to YottaDB                                          | `R6 <./integrity.html#r6-gtmassert-and-gtmcheck-errors>`_                                                  |
-+--------------------------------------+---------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
-| GVDATAFAIL                           | Global variable $DATA function failed. Failure code: cccc                 | `R2 <./integrity.html#r2-structural-database-integrity-errors>`_                                           |
-+--------------------------------------+---------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
-| GVDIRECT                             | Global variable name could not be found in global directory               | `I5 <./integrity.html#i5-more-database-access-problems>`_                                                  |
-+--------------------------------------+---------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
-| GVGETFAIL                            | Global variable retrieval failed. Failure code: cccc                      | `R2 <./integrity.html#r2-structural-database-integrity-errors>`_                                           |
-+--------------------------------------+---------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
-| GVZPREVFAIL                          | Global variable $ZPREVIOUS function failed. Failure code: cccc            | `R2 <./integrity.html#r2-structural-database-integrity-errors>`_                                           |
-+--------------------------------------+---------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
-| MUFILRNDWNFL                         | File rundown failed                                                       | `I5 <./integrity.html#i5-more-database-access-problems>`_                                                  |
-+--------------------------------------+---------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
-| UNKNOWNFOREX                         | Process halted by a forced exit from a source other than MUPIP            | `R4 <./integrity.html#r4-stopped-processes>`_                                                              |
-+--------------------------------------+---------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
-| TOTALBLKMAX                          | Extension exceeds maximum total blocks, not extending                     | `R5 <./integrity.html#r5-no-more-room-in-the-file>`_                                                       |
-+--------------------------------------+---------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
-| WCFAIL                               | The database cache is corrupt                                             | `R3 <./integrity.html#r3-runtime-database-cache-problems>`_                                                |
-+--------------------------------------+---------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
++--------------------+---------------------------------------------------------------------------+----------------------------------------------------+
+| Error Mnemonic     | Error Message Text                                                        | Section                                            |
++====================+===========================================================================+====================================================+
+| BADDVER            | Incorrect database version vvv                                            | :ref:`i2-yottadb-version-mismatch`                 |
++--------------------+---------------------------------------------------------------------------+----------------------------------------------------+
+| BITMAPSBAD         | Database bitmaps are incorrect                                            | :ref:`m1-bitmap-errors`                            |
++--------------------+---------------------------------------------------------------------------+----------------------------------------------------+
+| BTFAIL             | The database block table is corrupt                                       | :ref:`r3-runtime-database-cache-problems`          |
++--------------------+---------------------------------------------------------------------------+----------------------------------------------------+
+| CCPINTQUE          | Interlock failure accessing Cluster Control Program queue                 | :ref:`r7-interlocked-queue-hardware-problems`      |
++--------------------+---------------------------------------------------------------------------+----------------------------------------------------+
+| CRITRESET          | The critical section crash count for rrr region has been incremented      | :ref:`i8-repair-induced-problems`                  |
++--------------------+---------------------------------------------------------------------------+----------------------------------------------------+
+| DBCCERR            | Interlock instruction failure in critical mechanism for region rrr        | :ref:`r7-interlocked-queue-hardware-problems`      |
++--------------------+---------------------------------------------------------------------------+----------------------------------------------------+
+| DBCRPT             | Database is flagged corrupt                                               | :ref:`i8-repair-induced-problems`                  |
++--------------------+---------------------------------------------------------------------------+----------------------------------------------------+
+| DBFILERR           | Error with database file                                                  | :ref:`i5-more-database-access-problems`            |
++--------------------+---------------------------------------------------------------------------+----------------------------------------------------+
+| DBNOFILEP          | No database file has been successfully opened                             | :ref:`i5-more-database-access-problems`            |
++--------------------+---------------------------------------------------------------------------+----------------------------------------------------+
+| DBNOTGDS           | Unrecognized database file format                                         | :ref:`i5-more-database-access-problems`            |
++--------------------+---------------------------------------------------------------------------+----------------------------------------------------+
+| DBOPNERR           | Error opening database file                                               | :ref:`i5-more-database-access-problems`            |
++--------------------+---------------------------------------------------------------------------+----------------------------------------------------+
+| DBRDERR            | Cannot read database file after opening                                   | :ref:`i5-more-database-access-problems`            |
++--------------------+---------------------------------------------------------------------------+----------------------------------------------------+
+| FORCEDHALT         | Image HALTed by MUPIP STOP                                                | :ref:`r4-stopped-processes`                        |
++--------------------+---------------------------------------------------------------------------+----------------------------------------------------+
+| GBLDIRACC          | Global Directory access failed, cannot perform database functions         | :ref:`i5-more-database-access-problems`            |
++--------------------+---------------------------------------------------------------------------+----------------------------------------------------+
+| GBLOFLOW           | Database segment is full                                                  | :ref:`r5-no-more-room-in-the-file`                 |
++--------------------+---------------------------------------------------------------------------+----------------------------------------------------+
+| GVKILLFAIL         | Global variable KILL failed. Failure code: cccc                           | :ref:`r2-structural-database-integrity-errors`     |
++--------------------+---------------------------------------------------------------------------+----------------------------------------------------+
+| GVORDERFAIL        | Global variable $ORDER or $NEXT function failed. Failure code: cccc       | :ref:`r2-structural-database-integrity-errors`     |
++--------------------+---------------------------------------------------------------------------+----------------------------------------------------+
+| GVPUTFAIL          | Global variable put failed. Failure code: cccc                            | :ref:`r2-structural-database-integrity-errors`     |
++--------------------+---------------------------------------------------------------------------+----------------------------------------------------+
+| GVQUERYFAIL        | Global variable $QUERY function failed. Failure code: cccc                | :ref:`r2-structural-database-integrity-errors`     |
++--------------------+---------------------------------------------------------------------------+----------------------------------------------------+
+| GVRUNDOWN          | Error during global database rundown                                      | :ref:`i5-more-database-access-problems`            |
++--------------------+---------------------------------------------------------------------------+----------------------------------------------------+
+| GDINVALID          | Unrecognized Global Directory format: fff                                 | :ref:`i5-more-database-access-problems`            |
++--------------------+---------------------------------------------------------------------------+----------------------------------------------------+
+| GTMCHECK           | Internal error–report to YottaDB                                          | :ref:`r6-gtmassert-and-gtmcheck-errors`            |
++--------------------+---------------------------------------------------------------------------+----------------------------------------------------+
+| GVDATAFAIL         | Global variable $DATA function failed. Failure code: cccc                 | :ref:`r2-structural-database-integrity-errors`     |
++--------------------+---------------------------------------------------------------------------+----------------------------------------------------+
+| GVDIRECT           | Global variable name could not be found in global directory               | :ref:`i5-more-database-access-problems`            |
++--------------------+---------------------------------------------------------------------------+----------------------------------------------------+
+| GVGETFAIL          | Global variable retrieval failed. Failure code: cccc                      | :ref:`r2-structural-database-integrity-errors`     |
++--------------------+---------------------------------------------------------------------------+----------------------------------------------------+
+| GVZPREVFAIL        | Global variable $ZPREVIOUS function failed. Failure code: cccc            | :ref:`r2-structural-database-integrity-errors`     |
++--------------------+---------------------------------------------------------------------------+----------------------------------------------------+
+| MUFILRNDWNFL       | File rundown failed                                                       | :ref:`i5-more-database-access-problems`            |
++--------------------+---------------------------------------------------------------------------+----------------------------------------------------+
+| UNKNOWNFOREX       | Process halted by a forced exit from a source other than MUPIP            | :ref:`r4-stopped-processes`                        |
++--------------------+---------------------------------------------------------------------------+----------------------------------------------------+
+| TOTALBLKMAX        | Extension exceeds maximum total blocks, not extending                     | :ref:`r5-no-more-room-in-the-file`                 |
++--------------------+---------------------------------------------------------------------------+----------------------------------------------------+
+| WCFAIL             | The database cache is corrupt                                             | :ref:`r3-runtime-database-cache-problems`          |
++--------------------+---------------------------------------------------------------------------+----------------------------------------------------+
+
+.. _r2-structural-database-integrity-errors:
 
 ++++++++++++++++++++++++++++++++++++++++++
 R2 - Structural Database Integrity Errors
@@ -1593,83 +1684,89 @@ R2 - Structural Database Integrity Errors
 
 These run-time errors indicate that the process detected an integrity error within the body of the database.
 
-Verify the error using the MUPIP command INTEG SUBSCRIPT=, specifying an immediate ancestor node of the global variable displayed in the error message. Alternatively, you may try the access by running the same routine in another process or by using Direct Mode to perform the same actions as those performed by the M line that triggered the error. If you cannot reproduce the error, refer to `section P1 <./integrity.html#p1-process-damage>`_.
+Verify the error using the MUPIP command INTEG SUBSCRIPT=, specifying an immediate ancestor node of the global variable displayed in the error message. Alternatively, you may try the access by running the same routine in another process or by using Direct Mode to perform the same actions as those performed by the M line that triggered the error. If you cannot reproduce the error, refer to :ref:`p1-process-damage`.
 
 Most of these errors terminate with a four-character failure code. Each character in the code represents the failure type for an attempt to perform the database access. In cases where the letters are not all the same, the last code is the most critical, because it reflects what happened when the process made its last retry. Earlier tries show error codes that are important to establishing the context of the last error.
 
 The following table lists the failure codes, whether or not they require a MUPIP INTEG, a brief description of the code's meaning, and a section reference for locating more information.
 
-**Run-time Database Failure Codes**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Run-time Database Failure Codes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-+-----------------+----------------+-------------------------------------------------------------------------------------------------------------------------+-----------------+
-| Fail Code       | Run INTEG      | Description                                                                                                             | Section         |
-+=================+================+=========================================================================================================================+=================+
-| A               | x              | Special case of code C.                                                                                                 | O2              |
-+-----------------+----------------+-------------------------------------------------------------------------------------------------------------------------+-----------------+
-| B               | x              | Key too large to be correct.                                                                                            | K1              |
-+-----------------+----------------+-------------------------------------------------------------------------------------------------------------------------+-----------------+
-| C               | x              | Record unaligned: properly formatted record header did not appear where expected.                                       | O2              |
-+-----------------+----------------+-------------------------------------------------------------------------------------------------------------------------+-----------------+
-| D               | x              | Record too small to be correct.                                                                                         | O2              |
-+-----------------+----------------+-------------------------------------------------------------------------------------------------------------------------+-----------------+
-| E               |                | History overrun prevents validation of a block.                                                                         | R3              |
-+-----------------+----------------+-------------------------------------------------------------------------------------------------------------------------+-----------------+
-| G               |                | Cache record modified while in use by the transaction.                                                                  | R3              |
-+-----------------+----------------+-------------------------------------------------------------------------------------------------------------------------+-----------------+
-| H*              | x              | Development of a new version of a block encountered a likely concurrency conflict.                                      | P1              |
-+-----------------+----------------+-------------------------------------------------------------------------------------------------------------------------+-----------------+
-| J               |                | Level on a child does not show it to be a direct descendent of its parent.                                              | O1              |
-+-----------------+----------------+-------------------------------------------------------------------------------------------------------------------------+-----------------+
-| K               |                | Cache control problem encountered or suspected.                                                                         | C1              |
-+-----------------+----------------+-------------------------------------------------------------------------------------------------------------------------+-----------------+
-| L               |                | Conflicting update of a block took priority.                                                                            | R3              |
-+-----------------+----------------+-------------------------------------------------------------------------------------------------------------------------+-----------------+
-| M               | x              | Error during commit that the database logic does not handle.                                                            | P1              |
-+-----------------+----------------+-------------------------------------------------------------------------------------------------------------------------+-----------------+
-| N               | x              | A primitive such as a file or queue operation failed.                                                                   | R7              |
-+-----------------+----------------+-------------------------------------------------------------------------------------------------------------------------+-----------------+
-| O               |                | Before image was lost prior to its transfer to the journal buffer.                                                      | R3              |
-+-----------------+----------------+-------------------------------------------------------------------------------------------------------------------------+-----------------+
-| P               |                | Multi-block update aborted - database damage likely.                                                                    | I5              |
-+-----------------+----------------+-------------------------------------------------------------------------------------------------------------------------+-----------------+
-| Q               |                | Shared memory interlock failed.                                                                                         | R7              |
-+-----------------+----------------+-------------------------------------------------------------------------------------------------------------------------+-----------------+
-| R               | x              | Critical section reset (probably by DSE).                                                                               | R5              |
-+-----------------+----------------+-------------------------------------------------------------------------------------------------------------------------+-----------------+
-| S               |                | Attempt to increase the level beyond current maximum.                                                                   | R8              |
-+-----------------+----------------+-------------------------------------------------------------------------------------------------------------------------+-----------------+
-| U               |                | Cache record unstable while in use by the transaction.                                                                  | R3              |
-+-----------------+----------------+-------------------------------------------------------------------------------------------------------------------------+-----------------+
-| V               |                | Read-only process could not find room to work.                                                                          | R9              |
-+-----------------+----------------+-------------------------------------------------------------------------------------------------------------------------+-----------------+
-| X               |                | Bitmap block header invalid.                                                                                            | M2              |
-+-----------------+----------------+-------------------------------------------------------------------------------------------------------------------------+-----------------+
-| Y               | x              | Record offset outside of block bounds.                                                                                  | O2              |
-+-----------------+----------------+-------------------------------------------------------------------------------------------------------------------------+-----------------+
-| Z               | x              | Block did not contain record predicted by the index.                                                                    | O2              |
-+-----------------+----------------+-------------------------------------------------------------------------------------------------------------------------+-----------------+
-| a               |                | Predicted bitmap preempted by another update.                                                                           | R3              |
-+-----------------+----------------+-------------------------------------------------------------------------------------------------------------------------+-----------------+
-| b               |                | History overrun prevents validation of a bitmap.                                                                        | R3              |
-+-----------------+----------------+-------------------------------------------------------------------------------------------------------------------------+-----------------+
-| c               |                | Bitmap cache record modified while in use by the transaction.                                                           | R3              |
-+-----------------+----------------+-------------------------------------------------------------------------------------------------------------------------+-----------------+
-| d               | x              | Not currently used.                                                                                                     | \-              |
-+-----------------+----------------+-------------------------------------------------------------------------------------------------------------------------+-----------------+
-| e               |                | Attempt to read a block outside the bounds of the database.                                                             | O2              |
-+-----------------+----------------+-------------------------------------------------------------------------------------------------------------------------+-----------------+
-| f               |                | Conflicting update took priority on a non-isolated global and a block split requires a TP_RESTART.                      | R3              |
-+-----------------+----------------+-------------------------------------------------------------------------------------------------------------------------+-----------------+
-| g               |                | The number of conflicting updates on non-isolated global nodes exceed an acceptable level and requires a TP_RESTART.    | R3              |
-+-----------------+----------------+-------------------------------------------------------------------------------------------------------------------------+-----------------+
++------------+------------+-------------------------------------------------------------------------------------------------------------------------+------------+
+| Fail Code  | Run INTEG  | Description                                                                                                             | Section    |
++============+============+=========================================================================================================================+============+
+| A          | x          | Special case of code C.                                                                                                 | O2         |
++------------+------------+-------------------------------------------------------------------------------------------------------------------------+------------+
+| B          | x          | Key too large to be correct.                                                                                            | K1         |
++------------+------------+-------------------------------------------------------------------------------------------------------------------------+------------+
+| C          | x          | Record unaligned: properly formatted record header did not appear where expected.                                       | O2         |
++------------+------------+-------------------------------------------------------------------------------------------------------------------------+------------+
+| D          | x          | Record too small to be correct.                                                                                         | O2         |
++------------+------------+-------------------------------------------------------------------------------------------------------------------------+------------+
+| E          |            | History overrun prevents validation of a block.                                                                         | R3         |
++------------+------------+-------------------------------------------------------------------------------------------------------------------------+------------+
+| G          |            | Cache record modified while in use by the transaction.                                                                  | R3         |
++------------+------------+-------------------------------------------------------------------------------------------------------------------------+------------+
+| H*         | x          | Development of a new version of a block encountered a likely concurrency conflict.                                      | P1         |
++------------+------------+-------------------------------------------------------------------------------------------------------------------------+------------+
+| J          |            | Level on a child does not show it to be a direct descendent of its parent.                                              | O1         |
++------------+------------+-------------------------------------------------------------------------------------------------------------------------+------------+
+| K          |            | Cache control problem encountered or suspected.                                                                         | C1         |
++------------+------------+-------------------------------------------------------------------------------------------------------------------------+------------+
+| L          |            | Conflicting update of a block took priority.                                                                            | R3         |
++------------+------------+-------------------------------------------------------------------------------------------------------------------------+------------+
+| M          | x          | Error during commit that the database logic does not handle.                                                            | P1         |
++------------+------------+-------------------------------------------------------------------------------------------------------------------------+------------+
+| N          | x          | A primitive such as a file or queue operation failed.                                                                   | R7         |
++------------+------------+-------------------------------------------------------------------------------------------------------------------------+------------+
+| O          |            | Before image was lost prior to its transfer to the journal buffer.                                                      | R3         |
++------------+------------+-------------------------------------------------------------------------------------------------------------------------+------------+
+| P          |            | Multi-block update aborted - database damage likely.                                                                    | I5         |
++------------+------------+-------------------------------------------------------------------------------------------------------------------------+------------+
+| Q          |            | Shared memory interlock failed.                                                                                         | R7         |
++------------+------------+-------------------------------------------------------------------------------------------------------------------------+------------+
+| R          | x          | Critical section reset (probably by DSE).                                                                               | R5         |
++------------+------------+-------------------------------------------------------------------------------------------------------------------------+------------+
+| S          |            | Attempt to increase the level beyond current maximum.                                                                   | R8         |
++------------+------------+-------------------------------------------------------------------------------------------------------------------------+------------+
+| U          |            | Cache record unstable while in use by the transaction.                                                                  | R3         |
++------------+------------+-------------------------------------------------------------------------------------------------------------------------+------------+
+| V          |            | Read-only process could not find room to work.                                                                          | R9         |
++------------+------------+-------------------------------------------------------------------------------------------------------------------------+------------+
+| X          |            | Bitmap block header invalid.                                                                                            | M2         |
++------------+------------+-------------------------------------------------------------------------------------------------------------------------+------------+
+| Y          | x          | Record offset outside of block bounds.                                                                                  | O2         |
++------------+------------+-------------------------------------------------------------------------------------------------------------------------+------------+
+| Z          | x          | Block did not contain record predicted by the index.                                                                    | O2         |
++------------+------------+-------------------------------------------------------------------------------------------------------------------------+------------+
+| a          |            | Predicted bitmap preempted by another update.                                                                           | R3         |
++------------+------------+-------------------------------------------------------------------------------------------------------------------------+------------+
+| b          |            | History overrun prevents validation of a bitmap.                                                                        | R3         |
++------------+------------+-------------------------------------------------------------------------------------------------------------------------+------------+
+| c          |            | Bitmap cache record modified while in use by the transaction.                                                           | R3         |
++------------+------------+-------------------------------------------------------------------------------------------------------------------------+------------+
+| d          | x          | Not currently used.                                                                                                     | \-         |
++------------+------------+-------------------------------------------------------------------------------------------------------------------------+------------+
+| e          |            | Attempt to read a block outside the bounds of the database.                                                             | O2         |
++------------+------------+-------------------------------------------------------------------------------------------------------------------------+------------+
+| f          |            | Conflicting update took priority on a non-isolated global and a block split requires a TP_RESTART.                      | R3         |
++------------+------------+-------------------------------------------------------------------------------------------------------------------------+------------+
+| g          |            | The number of conflicting updates on non-isolated global nodes exceed an acceptable level and requires a TP_RESTART.    | R3         |
++------------+------------+-------------------------------------------------------------------------------------------------------------------------+------------+
 
 \* Indicates a process problem
+
+.. _r3-runtime-database-cache-problems:
 
 ++++++++++++++++++++++++++++++++++++++++++
 R3 - Runtime Database Cache Problems
 ++++++++++++++++++++++++++++++++++++++++++
 
-These messages indicate probable process damage or database cache corruption. Retry the action with another process. If the second process also fails, refer to `section H4 <./integrity.html#h4-database-cache-problems>`_; otherwise, refer to `section P1 <./integrity.html#p1-process-damage>`_.
+These messages indicate probable process damage or database cache corruption. Retry the action with another process. If the second process also fails, refer to :ref:`h4-database-cache-problems`; otherwise, refer to :ref:`p1-process-damage`.
+
+.. _r4-stopped-processes:
 
 +++++++++++++++++++++++++++++++++++++++
 R4 - Stopped Processes
@@ -1678,6 +1775,8 @@ R4 - Stopped Processes
 These errors indicate the process received a message from a kill system service requesting that the image terminate.
 
 The MUPIP STOP command uses kill with a distinguished code. The code provided by MUPIP STOP allows the process to include the source of the stop directive in the error message.
+
+.. _r5-no-more-room-in-the-file:
 
 ++++++++++++++++++++++++++++++++++++
 R5 - No More Room in the File
@@ -1699,11 +1798,15 @@ Finally, you may create or add to a bound volume set with the MOUNT utility invo
 
 You can also add a new disk. If you change the placement of the files, be sure to also adjust the Global Directory and/or the environment variables to match the new environment.
 
+.. _r6-gtmassert-and-gtmcheck-errors:
+
 +++++++++++++++++++++++++++++++++++
 R6 - GTMASSERT and GTMCHECK Errors
 +++++++++++++++++++++++++++++++++++
 
 GTMASSERT and GTMCHECK errors indicate that a process has detected some sort of logical inconsistency. Consult with YottaDB after gathering all information about the circumstances surrounding the error.
+
+.. _r7-interlocked-queue-hardware-problems:
 
 +++++++++++++++++++++++++++++++++++++++++
 R7 - Interlocked Queue Hardware Problems

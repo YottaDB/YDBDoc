@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2021 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2017-2021 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -125,6 +125,8 @@ Most MUPIP operations require write access to the database files with which they
 .. note::
    MUPIP commands that need standalone access issue a MUUSERLBK error on a crashed replication-enabled database and MUUSERECOV error in case of a non-replicated-but-journaled database.
 
+.. _mupip:
+
 +++++++++++
 MUPIP
 +++++++++++
@@ -143,7 +145,7 @@ Although you can enter commands in both upper and lower case (the mupip program 
 
    $ mupip backup -bytestream -transaction=1 accounts,history,tables,miscellaneous /var/production/backup/
 
-When you enter a MUPIP command, one of its variable arguments is the region-list. region-list identifies the target of the command and may include the UNIX wildcards "?" and "*". Region-lists containing UNIX wildcard characters must always be quoted, for example, "*" to prevent inappropriate expansion by the UNIX shell. Similarly, for file and directory names you might want to avoid non-graphic characters and most punctuations except underbars (_), not because of YottaDB conventions but because of inappropriate expansion by UNIX shells.
+When you enter a MUPIP command, one of its variable arguments is the region-list. region-list identifies the target of the command and may include the UNIX wildcards "?" and "*". Region-lists containing UNIX wildcard characters must always be quoted, for example, "*" to prevent inappropriate expansion by the UNIX shell. Similarly, for file and directory names you might want to avoid non-graphic characters and most punctuations except underscores (_), not because of YottaDB conventions but because of inappropriate expansion by UNIX shells.
 
 MUPIP qualifier values are restricted only by the maximum size of the command input line, which is 4KB on some systems and upto 64KB on others.
 
@@ -155,6 +157,8 @@ Commands and Qualifiers
 --------------------------
 
 The MUPIP commands described in this section are used for common database operations and serves as the foundation for more advanced functionality like `Journaling <./ydbjournal.html>`_ and `Replication <./dbrepl.html>`_.
+
+.. _mupip-backup:
 
 ++++++++++++
 BACKUP
@@ -208,7 +212,9 @@ The format of the MUPIP BACKUP command is:
 
 * MUPIP BACKUP protects against overwriting of existing destination files. However, it cannot protect other destinations, for example, if the destination is a pipe into a shell command that overwrites a file.
 
-**Before Starting a MUPIP Backup**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Before Starting a MUPIP Backup
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Perform the following tasks before you begin a database backup.
 
@@ -242,6 +248,8 @@ Example:
    $ mupip backup "*" /ydb/bkup
 
 This example creates ready-to-run database backup of all regions.
+
+.. _mupip-backup-bkupdbjnl:
 
 ~~~~~~~~~~
 -BKupdbjnl
@@ -440,7 +448,9 @@ Specifies the transaction number of a starting transaction that causes BACKUP -B
 .. note::
    A point in time that is consistent from an application perspective, is unlikely to have the same transaction number in all database regions. Therefore, except for -TRANSACTION=1, this qualifier is not likely to be useful for any backup involving multiple regions.
 
-**Examples for MUPIP BACKUP**
+~~~~~~~~~~~~~~~~~~~~~~~~~
+Examples for MUPIP BACKUP
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Example:
 
@@ -556,6 +566,8 @@ Example:
 
 This example creates new journal files for the current regions, cuts the previous journal file link for all regions in the global directory, enables the SYNC_IO option and takes a backup of all databases in the directory backupdir.
 
+.. _mupip-create:
+
 ++++++++++++++++
 CREATE
 ++++++++++++++++
@@ -586,7 +598,9 @@ The format of the REGION qualifier is:
 
 The region-name is case-insensitive. The specified region name is converted into upper case before processing.
 
-**Examples for MUPIP CREATE**
+~~~~~~~~~~~~~~~~~~~~~~~~~
+Examples for MUPIP CREATE
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Example:
 
@@ -595,6 +609,8 @@ Example:
    $ mupip create -region=MAMMALS
 
 This command creates the database file specified by the Global Directory (named by the Global Directory environment variable) for region MAMMALS.
+
+.. _mupip-downgrade:
 
 ++++++++++
 DOWNGRADE
@@ -615,7 +631,9 @@ The MUPIP DOWNGRADE command changes the file header format to a previous version
 
 For more information on the downgrade criteria for your database, refer to the release notes document of your current YottaDB version.
 
-**Examples for MUPIP DOWNGRADE**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Examples for MUPIP DOWNGRADE
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Example:
 
@@ -666,7 +684,9 @@ Specifies that the INTEG parameter identifies one or more regions rather than a 
 
 * The -REGION qualifier is incompatible with the -FILE qualifier.
 
-**Examples for MUPIP DUMPFHEAD**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Examples for MUPIP DUMPFHEAD
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Example:
 
@@ -726,7 +746,9 @@ Enables MUPIP ENDIANCVT to continue operations even if YottaDB encounters the fo
 
 Note that the OVERRIDE qualifier does not override critical errors (database integrity errors, and so on) that prevent a successful endian format conversion.
 
-**Examples for MUPIP ENDIANCVT**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Examples for MUPIP ENDIANCVT
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: bash
 
@@ -783,13 +805,15 @@ The format of the BLOCK qualifier is:
 
 By default, EXTEND uses the extension value in the file header as the number of GDS blocks by which to extend the database file. You can specify as many blocks as needed as long as you are within the maximum total blocks limit (which could be as high as 224 million GDS blocks).
 
-**Examples for MUPIP EXTEND**
+~~~~~~~~~~~~~~~~~~~~~~~~~
+Examples for MUPIP EXTEND
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: bash
 
    $ mupip extend DEFAULT -blocks=400
 
-This command adds 400 GDE database blocks to region DEFAULT.
+This command adds 400 GDS database blocks to region DEFAULT.
 
 Example:
 
@@ -797,7 +821,7 @@ Example:
 
    $ mupip extend MAMMALS -blocks=100
 
-This command adds 100 GDE database blocks to the region MAMMALS.
+This command adds 100 GDS database blocks to the region MAMMALS.
 
 ++++++++++++++++++
 EXTRACT
@@ -833,7 +857,7 @@ Backs up certain globals or extracts data from the database for use by another s
 
 * The GO format is not supported for UTF-8 mode. Use BINARY or ZWR formats in UTF-8 mode.
 
-For information on extracting globals with the %GO utility, refer to the `"Utility Routines" chapter of the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/utility.html>`_. MUPIP EXTRACT is typically faster, but %GO can be customized.
+For information on extracting globals with the %GO utility, refer to the `"Utility Routines" chapter of the Programmer's Guide <../ProgrammersGuide/utility.html>`_. MUPIP EXTRACT is typically faster, but %GO can be customized.
 
 The following sections describe the qualifiers of MUPIP EXTRACT command.
 
@@ -870,7 +894,7 @@ The format code is any one of the following:
    | 56-62                      | Fixed-length ASCII text:Decimal maximum key size of the union of each region from which data is extracted            |
    +----------------------------+----------------------------------------------------------------------------------------------------------------------+
    | 63-69                      | Fixed-length ASCII text:Boolean indicator of Standard NULL collation (1) or                                          |
-   |                            | `historical null collation <../ProgrammersGuide/langfeat.html#null-subscript-collation>`_ (0).                       |
+   |                            | `historical null collation <../ProgrammersGuide/langfeat.html#null-subs-colltn>`_ (0).                               |
    +----------------------------+----------------------------------------------------------------------------------------------------------------------+
    | 70-100                     | Fixed-length ASCII text: Space-padded label specified by the -LABEL qualifier; the default LABEL is "MUPIP EXTRACT"  |
    |                            | For extracts in UTF-8 mode, YottaDB prefixes UTF-8 and a space to -LABEL.                                            |
@@ -880,12 +904,14 @@ The format code is any one of the following:
 
 3. ZWR - ZWRITE format, used for files to transport or archive that may contain non-graphical information. Each global node produces one record with both a key and data. Note that for non-ASCII data, M mode and UTF-8 mode extracts can differ, as the definition of printable characters differs.
 
-GO and ZWR format output files have two header records. The first is a text label (refer to the `LABEL qualifier <#label>`_), defaulting to: :code:`"YottaDB MUPIP EXTRACT"` followed by the command line used to generate the extract, including the full path to the mupip executable, followed by UTF-8 if the process ran in UTF-8 mode; the second is the date and time of extract in $ZDATE() format DD-MON-YEAR 24:60:SS, and, for ZWR extracts, the text :code:`"ZWR"`.
+GO and ZWR format output files have two header records. The first is a text label (refer to the :ref:`LABEL qualifier <mupip-extract-label>`), defaulting to: :code:`"YottaDB MUPIP EXTRACT"` followed by the command line used to generate the extract, including the full path to the mupip executable, followed by UTF-8 if the process ran in UTF-8 mode; the second is the date and time of extract in $ZDATE() format DD-MON-YEAR 24:60:SS, and, for ZWR extracts, the text :code:`"ZWR"`.
 
 .. note::
    ZWR format is suitable for all data. Use GO format for data that contains only printable characters and spaces, as some characters (such as linefeed) can corrupt the output file format.
 
 The GO and ZWR format output header was enhanced in release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_
+
+.. _mupip-extract-freeze:
 
 ~~~~~~~
 -FREEZE
@@ -900,6 +926,8 @@ The format of the FREEZE qualifier is:
    -FR[EEZE]
 
 By default, MUPIP EXTRACT does not "freeze" regions during operation.
+
+.. _mupip-extract-label:
 
 ~~~~~~~~
 -LABEL
@@ -991,7 +1019,9 @@ Redirects the database extract to the standard output stream. The format of the 
 
    -ST[DOUT]
 
-**Examples for MUPIP EXTRACT**
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+Examples for MUPIP EXTRACT
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Example:
 
@@ -1124,7 +1154,7 @@ Specifies the start of a MUPIP FREEZE operation. The format of the ON qualifier 
 Incompatible with: -OFF, -OVERRIDE
 
 ~~~~~~~~~~~~~~~~~~
--[NO]A[UTORELEASE
+-[NO]A[UTORELEASE]
 ~~~~~~~~~~~~~~~~~~
 
 Controls the behavior of a FREEZE specified with -ONLINE when YottaDB must write to a database file. The format of the AUTORELEASE qualifier is:
@@ -1219,7 +1249,9 @@ The format of the RECORD qualifier is:
 
 * Incompatiable with: -OFF and -OVERRIDE.
 
-**Examples for MUPIP FREEZE**
+~~~~~~~~~~~~~~~~~~~~~~~~~
+Examples for MUPIP FREEZE
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Example:
 
@@ -1298,6 +1330,8 @@ The format of the MUPIP HASH command is:
 .. code-block:: none
 
    MUPIP HASH <file-names>
+
+.. _mupip-integ:
 
 ++++++++++++
 INTEG
@@ -1652,7 +1686,9 @@ Specifies the maximum number of block transaction-number-too-large errors that M
 
 * By default, INTEG reports a maximum of 10 block transaction errors (-TRANSACTION=10).
 
-**Examples for MUPIP INTEG**
+~~~~~~~~~~~~~~~~~~~~~~~~
+Examples for MUPIP INTEG
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 Example:
 
@@ -1789,6 +1825,8 @@ This example performs a MUPIP INTEG operation on all global variable nodes/keys 
 .. note::
    To specify a literal in the command string, use two double quotation marks for example, ^b(""c"").
 
+.. _mupip-intrpt:
+
 +++++++
 INTRPT
 +++++++
@@ -1805,6 +1843,8 @@ Sends an interrupt signal [POSIX] SIGUSR1 to the specified process, whose signal
 * To INTRPT a process belonging to its own account, a process requires no UNIX privileges.
 
 * The implementation of INTRPT uses signals, and on Linux a non-root process can only send signals to other processes of the same userid. Superuser privilege is required to send signals to processes of other userids, regardless of group membership.
+
+.. _mupip-journal:
 
 ++++++++++
 JOURNAL
@@ -1843,7 +1883,7 @@ The format of the LOAD command is:
 
 * MUPIP LOAD command considers a sequential file as encoded in UTF-8 if the environment variable ydb_chset is set to UTF-8. Ensure that MUPIP EXTRACT commands and the corresponding MUPIP LOAD commands execute with the same setting for the environment variable ydb_chset.
 
-* For information on loading with an M "percent utility," refer to the `%GI section of the "M Utility Routines" chapter in the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/utility.html#gi>`_. LOAD is typically faster, but the %GI utility can be customized.
+* For information on loading with an M "percent utility," refer to the `%GI section of the "M Utility Routines" chapter in the Programmer's Guide <../ProgrammersGuide/utility.html#gi-util>`_. LOAD is typically faster, but the %GI utility can be customized.
 
 * Press <CTRL-C> to produce a status message from LOAD. Entering <CTRL-C> twice in quick succession stops LOAD. A LOAD that is manually stopped or stops because of an internal error is incomplete and may lack application level integrity, but will not adversely affect the database structure unless terminated with a kill -9.
 
@@ -1975,7 +2015,9 @@ Specifies that MUPIP LOAD takes input from standard input (stdin). The format of
 
    -S[TDIN]
 
-**Examples for MUPIP LOAD**
+~~~~~~~~~~~~~~~~~~~~~~~
+Examples for MUPIP LOAD
+~~~~~~~~~~~~~~~~~~~~~~~
 
 Example:
 
@@ -2455,7 +2497,9 @@ The argument to -KEEP specifies either a number of database blocks or a percenta
 .. note::
    TRUNCATE does not complete if there is a concurrent online BACKUP or use of the snapshot mechanism, for example by INTEG.
 
-**Examples for MUPIP REORG**
+~~~~~~~~~~~~~~~~~~~~~~~~
+Examples for MUPIP REORG
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 Example:
 
@@ -2621,7 +2665,9 @@ This condition can be detected by mupip reorg -upgrade or during normal V5.0-000
 
 This condition can be avoided by not changing Reserved Bytes after any dbcertify step and before the mupip upgrade, and, in the event, a database has a mupip journal -recover or mupip journal -rollback performed on it, then to repeat the dbcertify steps before the mupip upgrade.
 
+^^^^^^^^^^
 -nosafejnl
+^^^^^^^^^^
 
 If before image journaling is active, mupip reorg -upgrade will generate before image records for these block changes even though there is no change to the data in the block. This is to ensure that backwards recovery can recover the database correctly, in the event of a system crash or power outage. In the event that a system has a battery-backed IO subsystem, or a SAN, it is unlikely that there will be incomplete writes to the journal files. As long as any pending write to the journal file is completed in the event of a system crash or power outage, the before image records are not required to recover the database. In the event your hardware guarantees that there will not be an incomplete IO write operation, you can reduce IO load on your system by suppressing the generation of these before images with the use of the -nosafejnl option. If your hardware does not provide such a guarantee, then YottaDB strongly recommends the use of the default behavior, which is to generate the before image records.
 
@@ -2695,6 +2741,8 @@ This example carries out the REORG but does not swap any blocks.
 
 This example combines two specifications, and carries out the REORG without swapping or coalescing any blocks.
 
+.. _mupip-replicate:
+
 ++++++++++++
 REPLICATE
 ++++++++++++
@@ -2740,7 +2788,9 @@ M activity between backups may automatically extend a database file. Therefore, 
 
 By default, RESTORE automatically extends the database file.
 
-**Examples for MUPIP RESTORE**
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+Examples for MUPIP RESTORE
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: bash
 
@@ -2825,6 +2875,8 @@ When MUPIP RUNDOWN has no qualifier, it performs rundown on all inactive databas
 Cleans up orphaned Relinkctl files. YottaDB strongly recommends avoiding actions that tend to make such cleanup necessary - for example, kill -9 of YottaDB processes or ipcrm -m of active Relinkctl and/or Rtnobj shared memory segments.
 
 If the optional dir1 is not specified, MUPIP RUNDOWN -RELINKCTL examines the environment variable $ydb_routines, attempts to verify and correct their attach counts and runs down all its inactive auto-relink-enabled directories (those with with a \*-suffix). Alternatively, one can specify a directory path for the parameter dir1 and MUPIP RUNDOWN -RELINKCTL treats it as an auto-relink-enabled directory and runs down the resources associated with this directory. It prints a RLNKCTLRNDWNSUC message on a successful rundown and a RLNKCTLRNDWNFL message on a failure (usually because live processes are still accessing the Relinkctl file).
+
+.. _mupip-set:
 
 +++++++
 SET
@@ -2940,7 +2992,7 @@ Specifies the access method (YottaDB buffering strategy) for storing and retriev
 
    -AC[CESS_METHOD]=code
 
-For more information on specifying the ACCESS_METHOD,refer to `“Segment Qualifiers” <./gde.html#segment-qualifiers>`_.
+For more information on specifying the ACCESS_METHOD,refer to :ref:`segment-qualifiers`.
 
 ~~~~~~~~~~
 -ASYNCIO
@@ -2952,7 +3004,7 @@ Specifies whether to use asynchronous I/O for an access method BG database, rath
 
    -[NO]AS[YNCIO]
 
-For more information on specifying ASYNCIO,refer to `“Segment Qualifiers” <./gde.html#segment-qualifiers>`_.
+For more information on specifying ASYNCIO,refer to :ref:`segment-qualifiers`.
 
 ~~~~~~~~~~~~
 -DEFER_TIME
@@ -3002,7 +3054,7 @@ Specifies the number of GDS blocks by which an existing database file extends. A
 
    -E[XTENSION_COUNT]=integer
 
-For more information on specifying the EXTENSION_COUNT, refer to `“Segment Qualifiers” <./gde.html#segment-qualifiers>`_.
+For more information on specifying the EXTENSION_COUNT, refer to :ref:`segment-qualifiers`.
 
 ~~~~~~~~~~~~
 -FLUSH_TIME
@@ -3024,7 +3076,7 @@ Specifies the number of cache buffers for a BG database. This qualifier requires
 
    -G[LOBAL_BUFFERS]=integer
 
-For more information on ways to determine good working sizes for GLOBAL_BUFFERS, refer to `“Segment Qualifiers” <./gde.html#segment-qualifiers>`_.
+For more information on ways to determine good working sizes for GLOBAL_BUFFERS, refer to :ref:`segment-qualifiers`.
 
 In general, increasing the number of global buffers improves performance by smoothing the peaks of I/O load on the system. However, increasing the number of global buffers also increases the memory requirements of the system, and a larger number of global buffers on memory constrained systems can increase the probability of the buffers getting swapped out. If global buffers are swapped out, any performance gain from increasing the number of global buffers will be more than offset by the performance impact of swapping global buffers. Most applications use from 1,000 to 4,000 global buffers for database regions that are heavily used. YottaDB does not recommend using fewer than 256 buffers except under special circumstances.
 
@@ -3054,9 +3106,9 @@ Enables or disables custom errors in a region to automatically cause an Instance
 
    -[NO]INST[_FREEZE_ON_ERROR]
 
-For more information on creating a list of custom errors that automatically cause an Instance Freeze, refer to `Instance Freeze <./dbrepl.html#instance-freeze>`_.
+For more information on creating a list of custom errors that automatically cause an Instance Freeze, refer to :ref:`instance-freeze`.
 
-For more information on promptly setting or clearing an Instance Freeze on an instance irrespective of whether any region is enabled for Instance, refer to the `Starting the Source Server <./dbrepl.html#starting-the-source-server>`_ section of the Database Replication chapter.
+For more information on promptly setting or clearing an Instance Freeze on an instance irrespective of whether any region is enabled for Instance, refer to the :ref:`start-source-server` section of the Database Replication chapter.
 
 ~~~~~~~~
 -JOURNAL
@@ -3077,7 +3129,7 @@ The format of the JOURNAL qualifier is:
 
 * -JOURNAL specifies journaling is allowed. It takes one or more arguments in a journal-option-list.
 
-For detailed description of the all JOURNAL qualifiers and its keywords, refer to `SET -JOURNAL Options <./ydbjournal.html#set-action-qualifiers>`_.
+For detailed description of the all JOURNAL qualifiers and its keywords, refer to :ref:`set-action-qualifiers`.
 
 ~~~~~~~~~~
 -KEY_SIZE
@@ -3089,7 +3141,7 @@ Specifies the maximum key size in bytes for storing and retrieving data from the
 
    -K[EY_SIZE]=bytes
 
-For more information on KEY_SIZE, refer to `“Region Qualifiers” <./gde.html#region-qualifiers>`_.
+For more information on KEY_SIZE, refer to :ref:`region-qualifiers`.
 
 ~~~~~~~~~~~~
 -LOCK_SPACE
@@ -3107,7 +3159,7 @@ Specifies the number of pages allocated to the management of M locks associated 
 
 * The default LOCK_SPACE is 40 pages.
 
-* For more information on LOCK_SPACE, refer to `“Segment Qualifiers” <./gde.html#segment-qualifiers>`_.
+* For more information on LOCK_SPACE, refer to :ref:`segment-qualifiers`.
 
 * This qualifier requires standalone access.
 
@@ -3153,7 +3205,7 @@ Specifies whether LOCK actions share the same resource and management as the dat
 
 The default is Sep(arate)/FALSE.
 
-For more information, refer to `“Region Qualifiers” <./gde.html#region-qualifiers>`_.
+For more information, refer to :ref:`region-qualifiers`.
 
 ~~~~~~~~~~~~
 -QDBRUNDOWN
@@ -3181,7 +3233,7 @@ Sets the CORRUPT_FILE flag in the database file header to FALSE. The CORRUPT_FIL
 
    -PA[RTIAL_RECOV_BYPASS]
 
-For more information, refer to the CORRUPT_FILE qualifier in `“CHANGE -FILEHEADER Qualifiers” <./dse.html#change>`_.
+For more information, refer to the :ref:`CORRUPT_FILE <dse-change-corrupt-file>` qualifier.
 
 ~~~~~~~~~~~
 -READ_ONLY
@@ -3206,7 +3258,7 @@ Specifies the maximum record size in bytes for storing and retrieving data from 
 
    -REC[ORD_SIZE]=bytes
 
-For more information on KEY_SIZE, refer to `“Region Qualifiers” <./gde.html#region-qualifiers>`_.
+For more information on KEY_SIZE, refer to :ref:`region-qualifiers`.
 
 ~~~~~~~~~~~~~~~~~~
 -REORG_SLEEP_NSEC
@@ -3278,7 +3330,7 @@ Specifies whether YottaDB should permit statistics sharing for this region. This
 -STDNULLCOLL
 ~~~~~~~~~~~~~~
 
-Specifies whether YottaDB uses standard or `historical null collation <../ProgrammersGuide/langfeat.html#null-subscript-collation>`_ for null-subscripted keys. YottaDB strongly recommends that you use STDNULLCOLL and not the historical null collation. The format of the STDNULLCOLL qualifier is:
+Specifies whether YottaDB uses standard or `historical null collation <../ProgrammersGuide/langfeat.html#null-subs-colltn>`_ for null-subscripted keys. YottaDB strongly recommends that you use STDNULLCOLL and not the historical null collation. The format of the STDNULLCOLL qualifier is:
 
 .. code-block:: none
 
@@ -3328,8 +3380,9 @@ Specifies the decimal number of blocks to write in each flush. The default value
 
    -WR[ITES_PER_FLUSH]=integer
 
-
-**Examples for MUPIP SET**
+~~~~~~~~~~~~~~~~~~~~~~
+Examples for MUPIP SET
+~~~~~~~~~~~~~~~~~~~~~~
 
 Example:
 
@@ -3415,7 +3468,7 @@ The 2 sigma column for the two sampling techniques shows the dispersion of the s
 -ADJACENCY=integer
 ~~~~~~~~~~~~~~~~~~~
 
-Specifies the logical adjacency of data blocks that MUPIP SIZE should assume during estimation. By default, MUPIP SIZE assumes -ADJACENCY=10 and reports the logical adjacency in the "Adjacent" column of the MUPIP SIZE report. Note that adjacency is only a proxy for database organization and its usefulness may be limited by the technology and configuration of your secondary storage. See the `INTEG <./dbmgmt.html#integ>`_ section of this chapter for additional comments on adjacency.
+Specifies the logical adjacency of data blocks that MUPIP SIZE should assume during estimation. By default, MUPIP SIZE assumes -ADJACENCY=10 and reports the logical adjacency in the "Adjacent" column of the MUPIP SIZE report. Note that adjacency is only a proxy for database organization and its usefulness may be limited by the technology and configuration of your secondary storage. See the :ref:`mupip-integ` section of this chapter for additional comments on adjacency.
 
 ~~~~~~~~
 -SELECT
@@ -3451,7 +3504,9 @@ Specifies the region on which MUPIP SIZE runs. If REGION is not specified, MUPIP
 
 The regions in the region-list are case-insensitive. The specified region-list is converted into upper case before processing.
 
-**Examples for MUPIP SIZE**
+~~~~~~~~~~~~~~~~~~~~~~~
+Examples for MUPIP SIZE
+~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: bash
 
@@ -3491,7 +3546,7 @@ The format of the STOP command is:
 * To STOP a process belonging to its own account, a process requires no privileges. To STOP a process belonging to another account, MUPIP STOP must execute as root.
 
 .. note::
-   On receipt of a MUPIP STOP signal, a YottaDB process cleans up its participation in managing the database before shutting down. On receipt of three MUPIP STOP signals in a row, a YottaDB process shuts down forthwith without cleaning up - the equivalent of a kill -9 signal. This can result in structural database damage, because YottaDB does not have sufficient control of what happens in response to an immediate process termination to protect against database damage under all circumstances. In all cases, on receipt of a MUPIP STOP, a process will eventually terminate once it gets the resources needed to clean up. Use three MUPIP STOPs in a row only as a last resort, and when you do, perform a MUPIP INTEG at your earliest opportunity thereafter to check for database structural damage, and repair any damage following the procedures in `Chapter 11 (Maintaining Database Integrity) <./integrity.html>`_.You may never have to perform a MUPIP STOP if your application is designed in a way that it reduces or eliminates the probability of a process getting in the final try of a transaction. For more information, refer to the `Programmers Guide <https://docs.yottadb.com/ProgrammersGuide/index.html>`_.
+   On receipt of a MUPIP STOP signal, a YottaDB process cleans up its participation in managing the database before shutting down. On receipt of three MUPIP STOP signals in a row, a YottaDB process shuts down forthwith without cleaning up - the equivalent of a kill -9 signal. This can result in structural database damage, because YottaDB does not have sufficient control of what happens in response to an immediate process termination to protect against database damage under all circumstances. In all cases, on receipt of a MUPIP STOP, a process will eventually terminate once it gets the resources needed to clean up. Use three MUPIP STOPs in a row only as a last resort, and when you do, perform a MUPIP INTEG at your earliest opportunity thereafter to check for database structural damage, and repair any damage following the procedures in `Chapter 11 (Maintaining Database Integrity) <./integrity.html>`_.You may never have to perform a MUPIP STOP if your application is designed in a way that it reduces or eliminates the probability of a process getting in the final try of a transaction. For more information, refer to the `Programmers Guide <../ProgrammersGuide/index.html>`_.
 
 ++++++++++++++++
 TRIGGER
@@ -3522,7 +3577,7 @@ Loads a trigger definition file to the database. The format of the TRIGGERFILE q
 
    -TRIG[GERFILE]=<trigger_definitions_file> [-NOPR[OMPT]]
 
-* For information on the syntax and usage of a trigger definition file, refer to the `Triggers <https://docs.yottadb.com/ProgrammersGuide/triggers.html>`_ chapter and the `$ZTRIGGER() section in the Functions chapter of the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/functions.html#ztrigger>`_.
+* For information on the syntax and usage of a trigger definition file, refer to the `Triggers <../ProgrammersGuide/triggers.html>`_ chapter and the `$ZTRIGGER() section in the Functions chapter of the Programmer's Guide <../ProgrammersGuide/functions.html#ztrigger-function>`_.
 
 * A MUPIP TRIGGER -TRIGGERFILE operation occurs within a transaction boundary, therefore, if even one trigger from the trigger definition file fails to parse correctly, MUPIP TRIGGER rolls back the entire trigger definition file load. Trigger maintenance operations reserve their output until the transaction commits at which time they deliver the entire output in a consistent way. MUPIP TRIGGER operations have an implicit timeout of zero (0), meaning the read must succeed on the first try or the command will act as if it received no input.
 
@@ -3563,12 +3618,10 @@ Provides a facility to examine the current trigger definition. SELECT produces a
 
 * For Trigger definition reporting operations, $ZTRIGGER("SELECT") and MUPIP TRIGGER -SELECT, return a non-zero exit status when their selection criteria encounter an error in the select.
 
-* MUPIP TRIGGER -SELECT works even if a multi-line XECUTE string does not terminate with a newline character. For more information on multi-line XECUTE strings, refer to the -xecute="\|<<strlit1"\|>> section under Trigger Definition File in the `Triggers chapter <https://docs.yottadb.com/ProgrammersGuide/triggers.html>`_ and the `$ZTRIGGER() section in the Functions chapter of the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/functions.html#ztrigger>`_.
+* MUPIP TRIGGER -SELECT works even if a multi-line XECUTE string does not terminate with a newline character. For more information on multi-line XECUTE strings, refer to the -xecute="\|<<strlit1"\|>> section under Trigger Definition File in the `Triggers chapter </ProgrammersGuide/triggers.html>`_ and the `$ZTRIGGER() section in the Functions chapter of the Programmer's Guide <../ProgrammersGuide/functions.html#ztrigger-function>`_.
 
 .. note::
    The output from the MUPIP TRIGGER -SELECT command may not be identical to your trigger definition file. This is because YottaDB converts semantically identical syntax into a single internal representation; while -SELECT output may not be identical to the -TRIGGERFILE input, it has the same meaning. Additionally, MUPIP TRIGGER -SELECT displays a field called "Cycle" as part of a comment. Cycle is the number of trigger definition updates (addition, modification, or deletion) performed on a global node. MUPIP TRIGGER treats the deletion of a non-existent trigger as a success; if that is the only operation, or one of a set of successful operations, it returns success 0 to the shell. Also, MUPIP TRIGGER returns failure in case of trigger selection using trigger names where the number after the pound-sign (#) starts with a 0 (which is an impossible auto-generated trigger name).
-
-.. _mupip-upgrade:
 
 ~~~~~~~~~
 -UPGRADE
@@ -3584,7 +3637,9 @@ The format of the UPGRADE qualifier is:
 
 If YottaDB encounters an old trigger definition it produces a NEEDTRIGUPGRD message. To preserve the possibility of a straightforward downgrade to an earlier version, perform a select "*" action with MUPIP TRIGGER (or $ZTRIGGER() and save the result. Note that TRIGGER -UPGRADE assumes that the existing trigger definitions are properly defined; if the prior release has produced defective triggers, delete them with a wild-card ("*"), and redefine the triggers in the new release. In the event of a downgrade, delete "*" all triggers before the downgrade and insert the saved version from before the upgrade. Attempting to perform a MUPIP TRIGGER -UPGRADE on a database without write authorization to the database produces a TRIGMODREGNOTRW error. The -UPGRADE qualifier is not compatible with any other MUPIP TRIGGER qualifier. Trigger upgrades from older versions may produce journal records based on the prior format that a MUPIP JOURNAL -RECOVER cannot process correctly, therefore, YottaDB recommends you do them with journaling off, and start with a backup and fresh journal files after the trigger upgrade.
 
-**Examples for MUPIP TRIGGER**
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+Examples for MUPIP TRIGGER
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This section provides step-by-step instructions for creating, modifying, and deleting triggers. Triggers affect all processes updating a database unlike, for example, environment variables such as $ydb_routines which work on a per process basis. Therefore, YottaDB recommends that you should always have carefully planned procedures for changing triggers in your production environment.
 
@@ -3753,6 +3808,8 @@ This command displays an output like the following:
 
 You have successfully changed the trigger name ValidateAccount to ValidateAcct.
 
+.. _mupip-upgrade:
+
 +++++++++
 UPGRADE
 +++++++++
@@ -3767,7 +3824,9 @@ Upgrades the file-header of a database. The format of the MUPIP UPGRADE command 
 * It resets the various trace counters and changes the database format to the most recent version. This change does not upgrade the individual database blocks but sets the database format flag to the most recent version.
 * It also initializes a counter of the current blocks that are still in the previous version format. It decrements this counter each time an older version format block is converted to the new format. When the counter is 0, the entire database gets converted.
 
-**Example for MUPIP UPGRADE**
+~~~~~~~~~~~~~~~~~~~~~~~~~
+Example for MUPIP UPGRADE
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: bash
 
@@ -3924,32 +3983,32 @@ The following table summarizes the qualifiers.
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
 | Main Qualifier                               |  MUPIP Command                                                               | Options/Qualifiers                                                   |
 +==============================================+==============================================================================+======================================================================+
-| -EDITINSTANCE                                | `REPLICATE <./dbmgmt.html#replicate>`_                                       | * -CHANGE                                                            |
+| -EDITINSTANCE                                | :ref:`mupip-replicate`                                                       | * -CHANGE                                                            |
 |                                              |                                                                              | * -DETAIL                                                            |
 |                                              |                                                                              | * -OFFSET=hexa                                                       |
 |                                              |                                                                              | * -VALUE=hexa                                                        |
 |                                              |                                                                              | * -SIZE=hexa                                                         |
 |                                              |                                                                              | * -[NO]QDBRUNDOWN                                                    |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
-| -FENCES=<fence-options-list>                 | `JOURNAL <./dbmgmt.html#journal>`_                                           | * ALWAYS                                                             |
+| -FENCES=<fence-options-list>                 | :ref:`mupip-journal`                                                         | * ALWAYS                                                             |
 |                                              |                                                                              | * NONE                                                               |
 |                                              | -RECOVER                                                                     | * PROCESS                                                            |
 |                                              |                                                                              |                                                                      |
 |                                              | -ROLLBACK                                                                    |                                                                      |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
-| -OFF                                         | :ref:`FREEZE <mupip-freeze>`                                                 | * -OVERRIDE                                                          |
+| -OFF                                         | :ref:`mupip-freeze`                                                          | * -OVERRIDE                                                          |
 |                                              |                                                                              | * -RECORD                                                            |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
-| -ON                                          | :ref:`FREEZE <mupip-freeze>`                                                 | * -[NO]ONLINE                                                        |
+| -ON                                          | :ref:`mupip-freeze`                                                          | * -[NO]ONLINE                                                        |
 |                                              |                                                                              | * -[NO]AUTORELEASE                                                   |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
-| -INSTANCE_CREATE                             | `REPLICATE <./dbmgmt.html#replicate>`_                                       | * -NAME                                                              |
+| -INSTANCE_CREATE                             | :ref:`mupip-replicate`                                                       | * -NAME                                                              |
 |                                              |                                                                              | * -NOREPLACE                                                         |
 |                                              |                                                                              | * -SUPPLEMENTARY                                                     |
 |                                              |                                                                              | * -[NO]QDBRUNDOWN                                                    |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
-| -JOURNAL=<journal-options-list>              | `BACKUP <./dbmgmt.html#backup>`_ and                                         | * ALIGNSIZE=integer                                                  |
-|                                              | `SET <./dbmgmt.html#set>`_                                                   | * ALLOCATION=integer                                                 |
+| -JOURNAL=<journal-options-list>              | :ref:`mupip-backup` and                                                      | * ALIGNSIZE=integer                                                  |
+|                                              | :ref:`mupip-set`                                                             | * ALLOCATION=integer                                                 |
 |                                              |                                                                              | * AUTOSWITCHLIMIT=integer                                            |
 |                                              |                                                                              | * BEFORE_IMAGES                                                      |
 |                                              |                                                                              | * BUFFER_SIZE=integer                                                |
@@ -3967,7 +4026,7 @@ The following table summarizes the qualifiers.
 |                                              |                                                                              |                                                                      |
 |                                              | -ROLLBACK                                                                    | * OPERATIONS=integer                                                 |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
-| -RECEIVER                                    | `REPLICATE <./dbmgmt.html#replicate>`_                                       | * -BUFFSIZE=integer                                                  |
+| -RECEIVER                                    | :ref:`mupip-replicate`                                                       | * -BUFFSIZE=integer                                                  |
 |                                              |                                                                              | * -CHANGELOG                                                         |
 |                                              |                                                                              | * -CHECKHEALTH                                                       |
 |                                              |                                                                              | * -CMPLVL=integer                                                    |
@@ -3991,7 +4050,7 @@ The following table summarizes the qualifiers.
 |                                              |                                                                              | * -UPDATEONLY                                                        |
 |                                              |                                                                              | * -UPDATERESYNC=/path/to/bkup-orig-inst                              |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
-| -RECOVER                                     | `JOURNAL <./dbmgmt.html#journal>`_                                           | * -AFTER=time                                                        |
+| -RECOVER                                     | :ref:`mupip-journal`                                                         | * -AFTER=time                                                        |
 |                                              |                                                                              | * -APPLY_AFTER_IMAGE                                                 |
 |                                              |                                                                              | * -BACKWARD                                                          |
 |                                              |                                                                              | * -BEFORE=time                                                       |
@@ -4012,7 +4071,7 @@ The following table summarizes the qualifiers.
 |                                              |                                                                              | * -VERBOSE                                                           |
 |                                              |                                                                              | * -VERIFY                                                            |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
-| -EXTRACT                                     | `JOURNAL <./dbmgmt.html#journal>`_                                           | * -AFTER=time                                                        |
+| -EXTRACT                                     | :ref:`mupip-journal`                                                         | * -AFTER=time                                                        |
 |                                              |                                                                              | * -BEFORE=time                                                       |
 |                                              |                                                                              | * -[NO]BROKENTRANS=file                                              |
 |                                              |                                                                              | * -CHAIN                                                             |
@@ -4030,7 +4089,7 @@ The following table summarizes the qualifiers.
 |                                              |                                                                              | * -VERBOSE                                                           |
 |                                              |                                                                              | * -VERIFY                                                            |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
-| -ROLLBACK                                    | `JOURNAL <./dbmgmt.html#journal>`_                                           | * -APPLY_AFTER_IMAGE                                                 |
+| -ROLLBACK                                    | :ref:`mupip-journal`                                                         | * -APPLY_AFTER_IMAGE                                                 |
 |                                              |                                                                              | * -BACKWARD                                                          |
 |                                              |                                                                              | * -BEFORE=time                                                       |
 |                                              |                                                                              | * -[NO]BROKENTRANS=file                                              |
@@ -4043,7 +4102,7 @@ The following table summarizes the qualifiers.
 |                                              |                                                                              | * -VERBOSE                                                           |
 |                                              |                                                                              | * -VERIFY                                                            |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
-| -SHOW=<show-option-list>                     | `JOURNAL <./dbmgmt.html#journal>`_                                           | * -ACTIVE_PROCESSES                                                  |
+| -SHOW=<show-option-list>                     | :ref:`mupip-journal`                                                         | * -ACTIVE_PROCESSES                                                  |
 |                                              |                                                                              | * -ALL                                                               |
 |                                              |                                                                              | * -BROKEN_TRANSACTIONS                                               |
 |                                              |                                                                              | * -HEADER                                                            |
@@ -4057,13 +4116,13 @@ The following table summarizes the qualifiers.
 |                                              |                                                                              | * -ID=<pid_list>                                                     |
 |                                              |                                                                              | * -INTERACTIVE                                                       |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
-| -SINCE                                       | `BACKUP <./dbmgmt.html#backup>`_                                             | * -BYTESTREAM                                                        |
+| -SINCE                                       | :ref:`mupip-backup`                                                          | * -BYTESTREAM                                                        |
 |                                              |                                                                              | * -COMPREHENSIVE                                                     |
 |                                              |                                                                              | * -DATABASE                                                          |
 |                                              |                                                                              | * -INCREMENTAL                                                       |
 |                                              |                                                                              | * -RECORD                                                            |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
-| -SO[URCE]                                    | `REPLICATE <./dbmgmt.html#replicate>`_                                       | * -ACTIVATE                                                          |
+| -SO[URCE]                                    | :ref:`mupip-replicate`                                                       | * -ACTIVATE                                                          |
 |                                              |                                                                              | * -BUFFSIZE=Buffer_size                                              |
 |                                              |                                                                              | * -CHANGELOG                                                         |
 |                                              |                                                                              | * -CHECKHEALTH                                                       |
@@ -4097,6 +4156,6 @@ The following table summarizes the qualifiers.
 |                                              |                                                                              | * -UPDNOTOK                                                          |
 |                                              |                                                                              | * -ZEROBACKLOG                                                       |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
-| -VERSION={V4|V5}                             | `DOWNGRADE <./dbmgmt.html#downgrade>`_                                       | * file-name                                                          |
-|                                              | and :ref:`UPGRADE <mupip-upgrade>`                                           |                                                                      |
+| -VERSION={V4|V5}                             | :ref:`mupip-downgrade`                                                       | * file-name                                                          |
+|                                              | and :ref:`mupip-upgrade`                                                     |                                                                      |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+

@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2021 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2021-2021 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -29,13 +29,13 @@ The YottaDB Rust wrapper requires a minimum YottaDB version of r1.30 and is test
 Install YottaDB
 +++++++++++++++++
 
-Follow the instructions in the `Quick Start <../MultiLangProgGuide/MultiLangProgGuide.html#quick-start>`_ section to install YottaDB.
+Follow the instructions in the :ref:`mlpg-quick-start` section to install YottaDB.
 
 ++++++++++++++
 Install Rust
 ++++++++++++++
 
-The nest step is to install Rust. Follow the instructions provided `here <https://www.rust-lang.org/tools/install>`_ to get setup with Rust on your system.
+The next step is to install Rust. Follow the instructions provided `here <https://www.rust-lang.org/tools/install>`_ to get setup with Rust on your system.
 
 +++++++++++++++++
 Install YDBRust
@@ -57,7 +57,7 @@ There are three major APIs that are part of the Rust wrapper:
 
 .. note::
 
-   The context_api is recommended for normal use, but the others are available if your needs are more specialized.
+   The :code:`context_api` is recommended for normal use, but the others are available if your needs are more specialized.
 
 -----------------------------------------
 Comparison between Rust and Go wrappers

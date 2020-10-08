@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2017-2021 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -18,7 +18,7 @@ Appendix C : YottaDB Security Philosophy
 ===============================================
 
 .. contents::
-   :depth: 2
+   :depth: 3
 
 -------------------------
 Philosophy
@@ -37,7 +37,9 @@ YottaDB processes run with normal UNIX user and group ids. YottaDB has no databa
 
 There are two exceptions to this rule. Also, special mention is made of YottaDB triggers, which require awareness of their behavior even though they comply with the Normal User and Group ID Rule.
 
-**Exceptions**
+~~~~~~~~~~
+Exceptions
+~~~~~~~~~~
 
 Exceptions to the Normal User and Group IDs Rule exist for:
 
@@ -78,7 +80,9 @@ YottaDB processes receive responses from gtmsecshr via socket files owned by the
 * When there is no gtmsecshr process running, by starting one up with incorrect values of $ydb_log and $ydb_tmp, a gtmsecshr process can be made to log errors in the syslog. Having incorrect values can also interfere with normal YottaDB operation until the incorrect gtmsecshr process times out and terminates, because YottaDB processes and gtmsecshr will be unable to communicate with one another.
 * gtmsecshr can be made to delete client socket files by a rogue process. If a socket file is deleted under a running YottaDB process, gtmsecshr will be unable to reply to the process. It will timeout, create another and proceed. Thus, while the performance of a single process may temporarily be slowed, system operation will not be disrupted.
 
-**Triggers**
+~~~~~~~~
+Triggers
+~~~~~~~~
 
 A YottaDB trigger is a code fragment stored in the database file that all processes performing a matching update to a global variable in that file execute automatically, for example, to maintain cross-reference indices and referential integrity. Any process that has read-write permissions for a database file can change the triggers in that database file, which can in turn force other processes updating that database to execute the changed triggers.
 
@@ -90,7 +94,7 @@ Based on the security model, the following are recommended best practices for se
 
 * Secure the machine on which YottaDB operates behind layers of defenses that permit only legitimate accesses.
 * Restrict access to a system on which YottaDB runs to those who legitimately need it.
-* Post installation, a system administrator can optionally add a restrict.txt file in $ydb_dist to restrict the use of certain YottaDB facilities to a group-name. The owner and group for $ydb_dist/restrict.txt can be different from those used to install YottaDB. For more information, refer to `“Configuring the Restriction facility” <./basicops.html#configuring-the-restriction-facility>`_.
+* Post installation, a system administrator can optionally add a restrict.txt file in $ydb_dist to restrict the use of certain YottaDB facilities to a group-name. The owner and group for $ydb_dist/restrict.txt can be different from those used to install YottaDB. For more information, refer to :ref:`configuring-restriction-facility`.
 * If all users who have access to a system do not require the ability to run YottaDB, limit the access to YottaDB to a group all users who need access belong to, and remove world access to YottaDB. (The YottaDB installation script presents an option to restrict access to YottaDB to members of a group). If such a group is called yottadbusers, the following command executed as root will accomplish this (if access was not restricted when YottaDB was installed):
 
   .. code-block:: bash
@@ -145,6 +149,8 @@ gtmsecshr Commands
 |                     |                                                                                   | these fields in shared memory and gtmsecshr will write the database file header from shared memory to disk on  |
 |                     |                                                                                   | their behalf.                                                                                                  |
 +---------------------+-----------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------+
+
+.. _share-rsc-auth-permissions:
 
 ------------------------------------------
 Shared Resource Authorization Permissions

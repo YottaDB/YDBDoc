@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2021 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2017-2021 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -18,7 +18,7 @@
 ====================================
 
 .. contents::
-   :depth: 3
+   :depth: 5
 
 ------------------------
 Introduction
@@ -160,7 +160,9 @@ YottaDB allows the updating of globals belonging to a different source instance 
 
 * A TP transaction or a trigger, as it always executes within a TP transaction, must always restrict updates to globals in one replicating instance.
 
-**Notes**
+~~~~~
+Notes
+~~~~~
 
 * Like other mappings specified by a global directory, a process determines any instance mapping by a global directory at the time a process first uses uses the global directory. Processes other than MUPIP CREATE ignore other (non-mapping) global directory database characteristics, except for collation, which interacts with mapping.
 
@@ -170,7 +172,9 @@ YottaDB allows the updating of globals belonging to a different source instance 
 
 * Use $VIEW("JNLPOOL") to determine the state of the current Journal Pool. $VIEW("JNLPOOL") returns the replication instance file name for the current Journal Pool and an empty string when there is no Journal Pool. Note that the current Journal Pool may not be associated with the last global accessed by an extended reference.
 
-**Example**:
+~~~~~~~~
+Example:
+~~~~~~~~
 
 An EHR application uses a BC replication configuration (A->B) to provide continuous availability. There are two data warehouses for billing information and medical history. For research purposes, the data in these medical history warehouses is cleansed of patient identifiers. Two SI replication instances (Q->R) are setup for the two data warehouses.
 
@@ -193,7 +197,9 @@ Examples
 
 To make the following scenarios easier to understand, each update is prefixed with the system where it was originally generated and the sequence number on that system and any BC replicating secondary instances.
 
-**Simple Example**
+~~~~~~~~~~~~~~
+Simple Example
+~~~~~~~~~~~~~~
 
 The three systems initially operate in roles O (Originating primary instance), R (BC Replicating secondary instance) and S (recipient of an SI replication stream).
 
@@ -230,7 +236,9 @@ The three systems initially operate in roles O (Originating primary instance), R
 |                                       |                                        |                                           | instance and supplementary instance.                                                    |
 +---------------------------------------+----------------------------------------+-------------------------------------------+-----------------------------------------------------------------------------------------+
 
-**Ensuring consistency with rollback**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Ensuring consistency with rollback
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In the last example, Malvern was not ahead when starting SI replication from BrynMawr - whereas in this example, asynchronous processing has left it ahead and it must rollback its database state before it can receive the replication stream.
 
@@ -274,8 +282,9 @@ In the last example, Malvern was not ahead when starting SI replication from Bry
 
 .. [d] Ultimately, business logic must determine whether the rolled off transactions can simply be reapplied or whether other reprocessing is required. YottaDB's $ZQGBLMOD() function can assist application code in determining whether conflicting updates may have occurred.
 
-
-**Rollback not Desired or Required by Application Design**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Rollback not Desired or Required by Application Design
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In the example above, for Malvern to start accepting SI replication from BrynMawr with consistency requires it to rollback its database because it is ahead of BrynMawr. There may be applications where the design of the application is such that this rollback is neither required nor desired. YottaDB provides a way for SI replication to start in this situation without rolling transactions off into an Unreplicated Transaction File.
 
@@ -300,7 +309,9 @@ In the example above, for Malvern to start accepting SI replication from BrynMaw
 |                                        |                                         |                                           | by Ardmore.                                                                               |
 +----------------------------------------+-----------------------------------------+-------------------------------------------+-------------------------------------------------------------------------------------------+
 
-**Two Originating Primary Failures**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Two Originating Primary Failures
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Now consider a situation where Ardmore and Malvern are located in one data center, with BC replication to BrynMawr and Newtown respectively, located in another data center. When the first data center fails, the SI replication from Ardmore to Malvern is replaced by the SI replication from BrynMawr to Newtown.
 
@@ -337,7 +348,9 @@ Now consider a situation where Ardmore and Malvern are located in one data cente
 |                             |                                   |                                |                            | Malvern receives that transaction from Newtown as it catches up.                         |
 +-----------------------------+-----------------------------------+--------------------------------+----------------------------+------------------------------------------------------------------------------------------+
 
-**Replication and Online Rollback**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Replication and Online Rollback
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Consider the following example where Ardmore rolls back its database in state space while an application is in operation, using the MUPIP JOURNAL -ROLLBACK -BACKWARD -ONLINE feature.
 
@@ -399,7 +412,9 @@ Under typical operating conditions, with no system or network bottlenecks, Yotta
 
 On Rose and Yellow instances, a Receiver Server receives update records sent by the White Source Server and puts them in the Receive Pool, which is in a shared memory segment. Source and Receiver Server processes implement flow control to ensure that the Receive Pool does not overflow. The Update Process picks these update records and writes them to the journal file, the database file, and the Journal Pool. The Update Process on a replicating instance performs operations analogous to "Application Logic" on the originating instance.
 
-**Helper Processes**
+~~~~~~~~~~~~~~~~
+Helper Processes
+~~~~~~~~~~~~~~~~
 
 Helper processes accelerate the rate at which an Update Process can apply an incoming replication stream to the database on a replicating instance. They increase replication throughput, decrease backlog, and improve manageability.
 
@@ -417,7 +432,9 @@ A certain number of each type of helper process maximizes throughput. As a pract
 
 .. _Filters:
 
-**Filters**
+~~~~~~~
+Filters
+~~~~~~~
 
 A Filter is a conversion program that transforms a replication stream to a desired schema. It operates as a traditional UNIX filter, reading from STDIN and writing to STDOUT. Both input and output use the YottaDB journal extract format. A filter can operate on an originating instance or a replicating instance. When the originating instance is an older application version, a filter can change the update records from the old schema to the new schema. When the originating instance is the newer application version, a filter can change the update records from the new schema to the old schema. Once you have logic for converting records in the old schema to the new schema, the per record code serves as the basis for the filter by replacing the scanning logic with logic to read the extract format and extract the update and completing the filter by reassembling the revised record(s) into the YottaDB extract format.
 
@@ -435,7 +452,9 @@ This means:
 
 * If the schema change requires multiple database updates in the new schema, create a transaction, and package all the updates inside that transaction.
 
-**Replication Instance File**
+~~~~~~~~~~~~~~~~~~~~~~~~~
+Replication Instance File
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 A Replication Instance file maintains the current state of an instance. It also serves as a repository of the history of the journal sequence numbers that are generated locally or received from other instances.
 
@@ -485,7 +504,7 @@ Application Architecture
 
 YottaDB recommends you plan upfront for database consistency while designing the architecture of an LMS application. Some of the planning parameters for application's architecture may include:
 
-* Always package all database updates into transactions that are consistent at the level of the application logic using the TSTART and TCOMMIT commands. For information on commands, refer to the `"Commands" chapter in the Programmer's Guide <https://docs.yottadb.com/ProgrammersGuide/commands.html>`_. For any updates not so packaged, ensure that the database is logically consistent at the end of every M statement that updates the database; or that there is application logic to check, and restore application-level consistency when the database recovers after a crash.
+* Always package all database updates into transactions that are consistent at the level of the application logic using the TSTART and TCOMMIT commands. For information on commands, refer to the `"Commands" chapter in the Programmer's Guide <../ProgrammersGuide/commands.html>`_. For any updates not so packaged, ensure that the database is logically consistent at the end of every M statement that updates the database; or that there is application logic to check, and restore application-level consistency when the database recovers after a crash.
 
 * Ensure that internally driven batch operations store enough information in the database to enable an interrupted batch operation to resume from the last committed transaction. In case an originating instance fails in the middle of a batch process, a new originating instance (previously a replicating instance) typically must resume and complete the batch process.
 
@@ -501,7 +520,9 @@ This diagram illustrates an application architecture that can reliably perform b
 
 An application server is a YottaDB process that accepts, processes, and responds to messages provided through the Message Transport. They may exist as a bunch of application servers in a "cloud" of size determined by the size of the node and the needs of the application. On the originating instance, an application server process receives messages and processes application transactions. The application logic issues the TSTART command and a series of SET (also KILL and MERGE) commands that [potentially/provisionally] update the database, then a TCOMMIT command to finalize the transaction. The process may directly WRITE a reply, but another process may act as an agent that takes that reply from a database record and sends it to the originator.
 
-**Implement a Message Delivery System**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Implement a Message Delivery System
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This section describes how a well-designed messaging system makes an application's architecture more switchover-ready by using an example in which the originating instance fails after the TCOMMIT, but before the system generates a reply and transmits it to the client.
 
@@ -523,7 +544,9 @@ System Requirements
 
 This section describes the system requirements that are necessary to implement an application with an LMS configuration.
 
-**Root Primary Status Identification**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Root Primary Status Identification
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 YottaDB does not make any decisions regarding originating or replicating operations of an instance. You must explicitly specify -ROOTPRIMARY to identify an instance as current originating instance during application startup.
 
@@ -548,6 +571,8 @@ Implementing and managing switchover is outside the scope of YottaDB. YottaDB re
 .. note::
    A switchover is a wholesome practice for maximizing business continuity. YottaDB strongly recommends setting up a switchover mechanism to keep a YottaDB application up in the face of disruptions that arise due to errors in the underlying platform. In environments where a switchover is not feasible due to operational constraints, consider setting up an Instance Freeze mechanism for your application. For more information, refer to “Instance Freeze” below.
 
+.. _instance-freeze:
+
 +++++++++++++++++++++++++
 Instance Freeze
 +++++++++++++++++++++++++
@@ -558,7 +583,7 @@ Some operational policies prefer stopping the YottaDB application in such events
 
 The Instance Freeze mechanism provides an option to stop all updates on the region(s) of an instance as soon as a process encounters an error while writing to a journal or database file. This mechanism safeguards application data from a possible system crash after such an error.
 
-The environment variable ydb_custom_errors specifies the complete path to the file that contains a list of errors that should automatically stop all updates on the region(s) of an instance. The error list comprises of error mnemonics (one per line and in capital letters) from the `Messages and Recovery Procedures Manual <https://docs.yottadb.com/MessageRecovery/index.html>`_.
+The environment variable ydb_custom_errors specifies the complete path to the file that contains a list of errors that should automatically stop all updates on the region(s) of an instance. The error list comprises of error mnemonics (one per line and in capital letters) from the `Messages and Recovery Procedures Manual <../MessageRecovery/index.html>`_.
 
 MUPIP REPLIC -SOURCE -JNLPOOL -SHOW displays whether the custom errors file is loaded.
 
@@ -603,7 +628,9 @@ The general procedure of creating a TLS replication setup includes the following
 
 5. Enabling replication and starting the Source and Receiver Servers with the TLSID qualifier.
 
-**Creating a root-level certification authority**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Creating a root-level certification authority
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 To use TLS, the communicating parties need to authenticate each other. If the authentication succeeds, the parties encrypt the subsequent communication. TLS authentication uses certificates signed by Certificate Authorities (CAs). Certificate Authorities' certificates themselves are signed (and trusted) by other CAs eventually leading to a Root CA, which self-signs its own certificate. Although the topic of certificates, and the use of software such as OpenSSL is well beyond the scope of YottaDB documentation, the steps below illustrate the quick-start creation of a test environment using Source and Receiver certifications with a self-signed Root CA certificate.
 
@@ -635,7 +662,9 @@ Creating a root certificate authority involves three steps:
 
 3. At this point, ca.crt is a root certificate that can be used to sign other certificates (including intermediate certificate authorities). The private key of the root certificate must be protected from unauthorized access.
 
-**Creating Leaf-level certificates**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Creating Leaf-level certificates
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The root certificate is used to sign regular, leaf-level certificates. Below are steps showing the creation of a certificate to be used to authenticate a YottaDB Source Server with a YottaDB Receiver Server (and vice-versa).
 
@@ -731,7 +760,9 @@ The output of this command looks like the following:
 
 Please refer to OpenSSL documentation http://www.openssl.org/docs/ for information on how to create intermediate CAs, Diffie-Hellman parameters, Certificate Revocation Lists, and so on.
 
-**Creating a configuration file**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Creating a configuration file
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 (Last updated: `r1.24 <https://gitlab.com/YottaDB/DB/YDB/tags/r1.24>`_)
 
@@ -855,7 +886,9 @@ Between BEFORE_IMAGE journaling and NOBEFORE_IMAGE journaling, there is no diffe
 
 * the associated storage costs and IO bandwidth requirements.
 
-**Recovery**
+~~~~~~~~
+Recovery
+~~~~~~~~
 
 When an instance goes down, its recovery consists of (at least) two steps: recovery of the instance itself: hardware, OS, file systems, and so on - say tsys; tsys is almost completely independent of the type of YottaDB journaling.
 
@@ -881,7 +914,9 @@ Because tbck is less than tfwd, tsys+tbck is less than tsys+tfwd. In very round 
 .. note::
    Applications that can take advantage of the forthcoming LMX capability will essentially make tswch zero when used with a suitable front-end network.
 
-**Comparison other than recovery**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Comparison other than recovery
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 +---------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Cost                | The cost of using an LMS configuration is at least one extra instance plus network bandwidth for replication. There are trade-offs: with two instances, it may be appropriate to use |
@@ -1690,6 +1725,8 @@ The following example demonstrates starting a replicating instance from the back
 
    ./originating_stop
 
+.. _switchover-poss-a-b-repl:
+
 ------------------------------------------------------------------
 Switchover Possibilities in an A -> B replication configuration
 ------------------------------------------------------------------
@@ -1704,7 +1741,7 @@ In an A->B replication configuration, at any given point there can be two possib
 
 The steps described in this section perform a switchover (A->B becomes B->A) under both these possibilities. When A is ahead of B, these steps generate a lost transaction file which must be applied to the new originating instance as soon as possible. The lost transaction file contains transactions which were not replicated to B. Apply the lost transactions on the new originating instance either manually or in a semi-automated fashion using the M-intrinsic function $ZQGBLMOD(). If you use $ZQGBLMOD(), perform two additional steps (mupip replicate -source -needrestart and mupip replicate -source -losttncomplete) as part of lost transaction processing. Failure to run these steps can cause $ZQGBLMOD() to return false negatives that in turn can result in application data consistency issues.
 
-First, choose a time when there are no database updates or the rate of updates are low to minimize the chances that your application may time out. There may be a need to hold database updates briefly during the switchover. For more information on holding database updates, refer to the `Instance Freeze section <./dbrepl.html#instance-freeze>`_ to configure an appropriate freezing mechanism suitable for your environment.
+First, choose a time when there are no database updates or the rate of updates are low to minimize the chances that your application may time out. There may be a need to hold database updates briefly during the switchover. For more information on holding database updates, refer to the :ref:`instance-freeze` to configure an appropriate freezing mechanism suitable for your environment.
 
 In an A→B replication configuration, follow these steps:
 
@@ -2651,7 +2688,7 @@ On B:
 * Use the MERGE command to copy a global from the prior location to the new location. Use extended references (to the prior global directory) to refer to the global in the prior location.
 * If the globals you are moving have triggers, apply the definitions saved with MUPIP TRIGGER -SELECT earlier.
 * Turn replication on for the region of the new global location.
-* Make B the new originating instance. For more information, refer to `“Switchover possibilities in an A→B replication configuration” <./dbrepl.html#switchover-possibilities-in-an-a-b-replication-configuration>`_.
+* Make B the new originating instance. For more information, refer to :ref:`switchover-poss-a-b-repl`.
 
 On A:
 
@@ -2910,6 +2947,8 @@ To shutdown a propagating instance:
 * On its replicating instances, ensure that there are no YottaDB or MUPIP processes attached to the Journal Pool as updates are disabled (they are enabled only on the originating instance).
 * Execute mupip rundown -region to ensure that the database, Journal Pool, and Receiver Pool shared memory is rundown properly.
 
+.. _create-new-repl-inst-file:
+
 ------------------------------------------
 Creating a new Replication Instance File
 ------------------------------------------
@@ -2926,7 +2965,6 @@ You do not need to create a new replication instance file except when you upgrad
 
         mupip replicate -instance_create -supplementary
 
-.
 
   * Otherwise use the command:
 
@@ -2934,7 +2972,6 @@ You do not need to create a new replication instance file except when you upgrad
 
        mupip replicate -instance_create
 
-.
    * If a replication instance file already exists, these commands will create a backup copy of the current replicating instance file (by renaming the file with a timestamp suffix) and then create a new replication instance file.
 
    * If you want to prevent accidental renaming of your existing replication instance file, additionally specify the -NOREPLACE qualifier in the MUPIP REPLICATE -INSTANCE_CREATE command. Note though that if -NOREPLACE is specified and a current replication instance file exists, the command will not rename but issue a FILEEXISTS error.
@@ -2962,8 +2999,7 @@ On the receiving side:
 * Allow a Source Server to connect.
 
 .. note::
-   When the instances have different endian-ness, create a new replication instance file as described in `“Creating a new Replication Instance File” <./dbrepl.html#creating-a-new-replication-instance-file>`_
-
+   When the instances have different endian-ness, create a new replication instance file as described in :ref:`create-new-repl-inst-file`.
 
 --------------------------------------------------------
 Setting up a Secured TLS Replication Connection
@@ -3175,6 +3211,8 @@ YottaDB provides the ability to invoke a filter; however, an application develop
 
 Filters should reside on the upgraded system and use logical database updates to update the schema before applying those updates to the database. The filters must invoke the replication Source Server (new schema to old) or the database replication Receiver Server (old schema to new), depending on the system's status as either originating or replicating. For more information on Filters, refer to the Filters_ section.
 
+.. _recover-repl-was-on-state:
+
 ----------------------------------------------
 Recovering from the replication WAS_ON State
 ----------------------------------------------
@@ -3242,6 +3280,8 @@ As a general practice, perform an optimal recovery/rollback every time when star
 
 YottaDB recommends rotating journal files with MUPIP SET when removing old journal files or ensuring that all regions are periodically updated.
 
+.. _setup-new-repl-inst-orig-ab-pq-ap:
+
 --------------------------------------------------------------------------------------
 Setting up a new replicating instance of an originating instance (A→B, P→Q, or A→P)
 --------------------------------------------------------------------------------------
@@ -3268,6 +3308,8 @@ If you are running a recent version of YottaDB:
 
    mupip replicate -receive -start -listenport=4000 -buffsize=1048576 -log=home/user/A/receive.log
 
+.. _replace-repl-inst-file-repl-ab-pq:
+
 --------------------------------------------------------------------------------
 Replacing the replication instance file of a replicating instance (A→B and P→Q)
 --------------------------------------------------------------------------------
@@ -3293,6 +3335,8 @@ If you are running a recent version of YottaDB:
 
 In this case, the Receiver Server determines the current instance's journal sequence number by taking a maximum of the Region Sequence Numbers in the database file headers on the replicating instance and uses the input instance file to locate the history record corresponding to this journal sequence number, and exchanges this history information with the Source Server.
 
+.. _replace-repl-inst-file-repl-ap:
+
 --------------------------------------------------------------------------
 Replacing the replication instance file of a replicating instance (A→P)
 --------------------------------------------------------------------------
@@ -3316,6 +3360,8 @@ On P:
 .. code-block:: bash
 
    mupip replicate -receive -start -listenport=4000 -buffsize=1048576 -log=home/user/P/P.log -updateresync=startA -resume
+
+.. _setup-new-repl-inst-orig-ap:
 
 --------------------------------------------------------------------------------------
 Setting up a new replicating instance from a backup of the originating instance (A→P)
@@ -3416,34 +3462,45 @@ Command Syntax:
 
    mupip set {-file db-file|-region reg-list} -replication={ON|OFF}
 
-**Qualifiers**:
+~~~~~~~~~~~
+Qualifiers:
+~~~~~~~~~~~
 
-*-file* and *-region*
+^^^^^^^^^^^^^^^^^
+-file and -region
+^^^^^^^^^^^^^^^^^
 
 Use these qualifiers in the same manner that you would use them for a MUPIP SET. For more information refer to `Chapter 5: “General Database Management” <./dbmgmt.html>`_.
 
-*-replication=replication-state*
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-replication=replication-state
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Switches the YottaDB replication subsystem ON/OFF and possibly modify the current journaling [no-]before image field (which is stored in the database file header).
 
 replication-state is either of the following keywords:
 
-*OFF*
+^^^
+OFF
+^^^
 
 Disable replication of the database file(s) or region(s). Even if you turn off replication, journaling continues to operate as before.
 
 .. note::
    YottaDB creates a new set of journal files and cuts the back link to the previous journal files if the replication-state is OFF and then turned ON again. The database cannot rollback to a state prior to ON. Therefore, ensure that replication-state remains ON throughout the span of database replication. Turn replication-state OFF only if database replication is no longer needed or the instance is about to be refreshed from the backup of the originating instance.
 
-*ON*
-
+^^^
+ ON
+^^^
 Enables replication for the selected database file(s) or region(s). When the JOURNAL qualifier is not specified, this action turns BEFORE_IMAGE journaling on. Specify -JOURNAL=NOBEFORE_IMAGE to enable replication with no-before-image journaling. In both cases, YottaDB creates a new journal file for each database file or region, and switches the current journal file. YottaDB recommends that you specify the desired journaling characteristics (MUPIP SET -JOURNAL=BEFORE_IMAGE or MUPIP SET -JOURNAL=NOBEFORE_IMAGE).
 
 When replication is ON, a MUPIP SET REPLICATION=ON command with no JOURNAL qualifier assumes the current journaling characteristics (which are stored in the database file header). By default, YottaDB sets journal operation to BEFORE_IMAGE if this command changes the replication state from OFF to ON and JOURNAL=NOBEFORE_IMAGE is not specified. Therefore, conservative scripting should always specify the desired journaling characteristics using the JOURNAL qualifier of the MUPIP SET command.
 
 The replication state ON in the file header denotes normal replication operation.
 
-*[WAS_ON] OFF*
+^^^^^^^^^^^^
+[WAS_ON] OFF
+^^^^^^^^^^^^
 
 Denotes an implicit replication state when YottaDB attempts to keep replication working even if run-time conditions such as no available disk space or no authorization for a process attempting to auto-switch a journal file cause YottaDB to turn journaling off. Even with journaling turned off, the Source Server attempts to continue replication using the records available in the replication journal pool. In this state, replication can only continue as long as all the information it needs is in the replication journal pool. Events such as an operationally significant change on the replicating instance(s) or communication problems are likely to cause the Source Server to need information older than that in the replication journal pool and because it cannot look for that information in journal files, the Source Server shuts down at that point.
 
@@ -3452,7 +3509,7 @@ Denotes an implicit replication state when YottaDB attempts to keep replication 
 
 WAS_ON is an implicit replication state. At all times during the WAS_ON state, you can see the current backlog of transactions and the content of the Journal Pool (MUPIP REPLICATE -SOURCE -SHOWBACKLOG and MUPIP REPLICATE -SOURCE -JNLPOOL -SHOW). This information is not available in the replication OFF state.
 
-For more information on recovering originating and replicating instances from WAS_ON, refer to `"Recovering from the replication WAS_ON state" <./dbrepl.html#recovering-from-the-replication-was-on-state>`_.
+For more information on recovering originating and replicating instances from WAS_ON, refer to :ref:`recover-repl-was-on-state`.
 
 Example:
 
@@ -3474,6 +3531,8 @@ This example enables database replication and turns on no-before-image journalin
 
 This example turns off database replication for yottadb.dat.
 
+.. _create-repl-inst-file:
+
 +++++++++++++++++++++++++++++++++++++++
 Creating the Replication Instance File
 +++++++++++++++++++++++++++++++++++++++
@@ -3484,27 +3543,39 @@ Command Syntax:
 
    mupip replicate -instance_create -name=<instance name> [-noreplace] [-supplementary] [-noqdbrundown]
 
-**Qualifiers**:
+~~~~~~~~~~~
+Qualifiers:
+~~~~~~~~~~~
 
-*-instance_create*
+^^^^^^^^^^^^^^^^
+-instance_create
+^^^^^^^^^^^^^^^^
 
 Creates a replication instance file. mupip replicate -instance_create takes the file name of the replication instance file from the environment variable ydb_repl_instance.
 
 If an instance file already exists, YottaDB renames it with a timestamp suffix, and creates a new replication instance file. This behavior is similar to the manner in which YottaDB renames existing journal files while creating new journal files. Creating an instance file requires standalone access.
 
-*-name*
+^^^^^
+-name
+^^^^^
 
 Specifies the instance name that uniquely identifies the instance and is immutable. The instance name can be from 1 to 16 characters. YottaDB takes the instance name (not the same as instance file name) from the environment variable ydb_repl_instname. If ydb_repl_instname is not set and -name is not specified, YottaDB produces an error.
 
-*-noreplace*
+^^^^^^^^^^
+-noreplace
+^^^^^^^^^^
 
 Prevents the renaming of an existing replication instance file.
 
-*-supplementary*
+^^^^^^^^^^^^^^
+-supplementary
+^^^^^^^^^^^^^^
 
  Specifies that the replication instance file is suitable for use in a supplementary instance.
 
-*-noqdbrundown*
+^^^^^^^^^^^^^
+-noqdbrundown
+^^^^^^^^^^^^^
 
 Permits more than 32,767 updating processes to concurrently access the replication instance file and database file(s). The default (-noqdbrundown) permits up to 32,767 concurrent updating processes to access a database file or a replication instance file.
 
@@ -3543,61 +3614,87 @@ Command Syntax:
     [-name=<new-name>]
     [-[no]qdbrundown]
 
-**Qualifiers**
+~~~~~~~~~~
+Qualifiers
+~~~~~~~~~~
 
-*-editinstance*
+^^^^^^^^^^^^^
+-editinstance
+^^^^^^^^^^^^^
 
 Displays or changes the attributes of the specified instance-file. Use -editinstance in combination with SHOW or CHANGE qualifiers.
 
-*-cleanslots*
+^^^^^^^^^^^
+-cleanslots
+^^^^^^^^^^^
 
 Goes through all 16 slots in the replication instance file, identifies the slots that are inactive, and clears them to make them available for reuse.
 
 .. note::
    Initially, all the slots are unused. A Source Server replicating to a secondary instance for the first time utilizes an unused slot to store the information related to that secondary. Any Source Server process replicating to the same secondary instance updates information using the same slot until -CLEANSLOT clears the slot to make it reusable. Use -CLEANSLOT to clear inactive slots when the originating instance connects to more than 16 different secondary instances throughout its lifetime.
 
-*-jnlpool*
+^^^^^^^^
+-jnlpool
+^^^^^^^^
 
 Displays or changes the attributes of the Journal Pool. Always specify -source with -jnlpool. Use -jnlpool in combination with SHOW or CHANGE qualifiers.
 
-*-change*
+^^^^^^^
+-change
+^^^^^^^
 
 The CHANGE qualifier is intended only for use under the guidance of YottaDB and serves two purposes. When used with -editinstance -offset -size, it changes the contents of the replication instance file. When used with -jnlpool, it changes the contents of journal pool header. Although MUPIP does not enforce standalone access when using this feature on the instance file or the journal pool, doing so when replication is actively occurring can lead to catastrophic failures.
 
-*-name=<new-name>*
+^^^^^^^^^^^^^^^^
+-name=<new-name>
+^^^^^^^^^^^^^^^^
 
 Changes the instance name in the replication instance file header to the new-name. Note that changing an instance name preserves the instance history.
 
-*-show*
+^^^^^
+-show
+^^^^^
 
 Displays File Header, Source Server slots, and History Records from the Replication Instance file.
 
-*-detail*
+^^^^^^^
+-detail
+^^^^^^^
 
 When specified, all fields within each section are displayed along with their offset from the beginning of the file and the size of each field. Use this qualifier to find the -offset and -size of the displayed field. To edit any displayed field, use the -change qualifier.
 
-*-size*
+^^^^^
+-size
+^^^^^
 
 Indicates the new size of the new value in bytes. The value of size can be either 1, 2, 4, or 8.
 
-*-offset*
+^^^^^^^
+-offset
+^^^^^^^
 
 Takes a hexadecimal value that is a multiple of -size. With no -offset specified, YottaDB produces an error. YottaDB also produces an error if the offset is greater than the size of the instance file or the journal pool header.
 
-*-value*
+^^^^^^
+-value
+^^^^^^
 
 Specifies the new hexadecimal value of the field having the specified -offset and -size. With no value specified, YottaDB displays the current value at the specified offset and does not perform any change. Specifying -value=<new_value> makes the change and displays both the old and new values.
 
 .. note::
    Change the instance file or the journal pool only on explicit instructions from YottaDB.
 
-*-show*
+^^^^^
+-show
+^^^^^
 
 The SHOW qualifier serves two purposes. When used with -editinstance, it displays the content of the replication instance file. When used with -jnlpool, it displays the content of the journal pool.
 
-*-[no]qdbrundown*
+^^^^^^^^^^^^^^^
+-[no]qdbrundown
+^^^^^^^^^^^^^^^
 
-Controls the setting of the "HDR Quick database rundown is active" field in a replication instance file. For more information about this setting, refer to `“Creating the Replication Instance File” <./dbrepl.html#creating-the-replication-instance-file>`_.
+Controls the setting of the "HDR Quick database rundown is active" field in a replication instance file. For more information about this setting, refer to :ref:`create-repl-inst-file`.
 
 Example:
 
@@ -3614,6 +3711,8 @@ Example:
    $ mupip replicate -editinstance -change -offset=0x00000410 -size=0x0008 -value=0x010 multisite.repl
 
 This command sets the value of the field having the specified offset and size to 16. Note that mupip replicate -editinstance -show -detail command displays the offset and size of all fields in an instance file.
+
+.. _start-source-server:
 
 +++++++++++++++++++++++++++++++++++
 Starting the Source Server
@@ -3640,41 +3739,63 @@ Command Syntax:
    [-[no]plaintextfallback]
    [-renegotiate_interval=<minutes>]
 
-**Qualifiers**:
+~~~~~~~~~~~
+Qualifiers:
+~~~~~~~~~~~
 
-*-source*
+^^^^^^^
+-source
+^^^^^^^
 
 Identifies the Source Server.
 
-*-start*
+^^^^^^
+-start
+^^^^^^
 
 Starts the Source Server.
 
-*-secondary=<hostname:port>*
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+-secondary=<hostname:port>
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Identifies the replicating instance. <hostname:port> specifies an IPv4 or IPv6 address optionally encapsulated by square-brackets ([]) like "127.0.0.1", "::1", "[127.0.0.1]", or "[::1]" or a hostname that resolves to an IPv4 or IPv6 address and the port at which the Receiver Server is waiting for a connection.
 
 If, in your environment, the same hostname is used for both IPv4 and IPv6, YottaDB defaults to IPv6. If you wish to use IPv4, set the environment variable ydb_ipv4_only to "TRUE", "YES", or a non-zero integer in order to force YottaDB to use IPv4.
 
-*-passive*
+^^^^^^^^
+-passive
+^^^^^^^^
 
 Starts the Source Server in passive mode.
 
-*-log=<log file name>*
+^^^^^^^^^^^^^^^^^^^^
+-log=<log file name>
+^^^^^^^^^^^^^^^^^^^^
 
 Specifies the location of the log file. The Source Server logs its unsuccessful connection attempts starting frequently and slowing to approximately once every five minutes. This interval does not affect the rate of connection attempts. The Source Server also directs errors to the log file. Operators should check the Source Server log file for errors.
 
-*-log_interval=<integer>*
+^^^^^^^^^^^^^^^^^^^^^^^
+-log_interval=<integer>
+^^^^^^^^^^^^^^^^^^^^^^^
 
 Specifies the number of transactions for which the Source Server should wait before writing to the log file. The default logging interval is 1000 transactions.
 
-*-log_interval=0* sets the logging interval to the default value.
+^^^^^^^^^^^^^^^
+-log_interval=0
+^^^^^^^^^^^^^^^
 
-*-buffsize=<Journal Pool size in bytes>*
+Sets the logging interval to the default value.
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-buffsize=<Journal Pool size in bytes>
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Specifies the size of the Journal Pool. The server rounds the size up or down to suit its needs. Any size less than 1 MiB is rounded up to 1 MiB. If you do not specify a qualifier, the size defaults to the YottaDB default value of 64 MiB. Remember that you cannot exceed the system-provided maximum shared memory. For systems with high update rates, specify a larger buffer size to avoid the overflows and file I/O that occur when the Source Server reads journal records from journal files. The maximum value is 4294967288(4GiB-8).
 
-*-filter=<filter command>*
+^^^^^^^^^^^^^^^^^^^^^^^^
+-filter=<filter command>
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 Specifies the complete path of the filter program and any associated arguments. If you specify arguments, then enclose the command string in quotation marks. If a filter is active, the Source Server passes the entire output stream to the filter as input. Then, the output from the filter stream passes to the replicating instance. If the filter program is an M program with entry-ref OLD2NEW^FILTER, specify the following path:
 
@@ -3739,23 +3860,33 @@ Example:
 
 This example reads logical database updates associated with a transaction from STDIN and writes them to log.out and STDOUT just like the UNIX tee command. It runs on the latest version of YottaDB where it is no longer required to treat filter output as a transaction.
 
-*-freeze[=on|off] -[no]comment[='"<string>"']*
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-freeze[=on|off] -[no]comment[='"<string>"']
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Promptly sets or clears an Instance Freeze on an instance irrespective of whether a region is enabled for an Instance Freeze. -freeze with no arguments displays the current state of the Instance Freeze on the instance.
 
-*-[no]comment[='"<string>"']* allows specifying a comment/reason associated with an Instance Freeze. Specify -nocomment if you do not wish to specify a comment/reason.
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-[no]comment[='"<string>"']
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Allows specifying a comment/reason associated with an Instance Freeze. Specify -nocomment if you do not wish to specify a comment/reason.
 
 For more information on enabling a region to invoke an Instance Freeze on custom errors, refer to the -INST_FREEZE_ON_ERROR section of “SET”.
 
-For more information on Instance Freeze, refer to `“Instance Freeze” <./dbrepl.html#instance-freeze>`_.
+For more information on Instance Freeze, refer to :ref:`instance-freeze`.
 
-*-connectparams=<hard tries>,<hard tries period>, <soft tries period>,<alert time>,<heartbeat period><max heartbeat wait>*
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-connectparams=<hard tries>,<hard tries period>, <soft tries period>,<alert time>,<heartbeat period><max heartbeat wait>
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Specifies the connection retry parameters. If the connection between the Source and Receiver Servers is broken or the Source Server fails to connect to the Receiver Server at startup, the Source Server applies these parameters to the reconnection attempts.
 
 First, the Source Server makes the number of reconnection attempts specified by the <hard tries> value every <hard tries period> milliseconds. Then, the Source Server attempts reconnection every <soft tries period> seconds and logs an alert message every <alert time> seconds. If the specified <alert time> value is less than <hard tries>*<hard tries period>/1000 + lt;soft tries period>, it is set to the larger value. The Source Server sends a heartbeat message to the Receiver Server every <heartbeat period> seconds and expects a response back from the Receiver Server within <max heartbeat wait> seconds.
 
-*-instsecondary*
+^^^^^^^^^^^^^^
+-instsecondary
+^^^^^^^^^^^^^^
 
 Identifies the replicating instance to which the Source Server replicates data.
 
@@ -3775,19 +3906,27 @@ Example:
 
 This command starts the Source Server for the originating instance with instance B as its replicating instance.
 
-*-[no]jnlfileonly*
+^^^^^^^^^^^^^^^^
+-[no]jnlfileonly
+^^^^^^^^^^^^^^^^
 
 Forces the Source Server to read transactions from journal files instead of journal pool shared memory. When combined with the SYNC_IO journal option, this feature delays replication of transactions until their journal records are hardened to disk. This may be useful when replicating to a supplementary instance, as a crash and rollback on the primary could otherwise necessitate a rollback of local updates on the receiving instance. The default is -NOJNLFILEONLY.
 
-*-rootprimary*
+^^^^^^^^^^^^
+-rootprimary
+^^^^^^^^^^^^
 
 Assign the current instance as the originating instance. You can specify -rootprimary either explicitly or implicitly to start an instance as an originating instance.
 
-*-updok*
+^^^^^^
+-updok
+^^^^^^
 
 Instructs the Source Server to allow local updates on this instance. This is a synonym for -rootprimary but is named so that it better conveys its purpose.
 
-*-propagate[primary]*
+^^^^^^^^^^^^^^^^^^^
+-propagate[primary]
+^^^^^^^^^^^^^^^^^^^
 
 Use this optional qualifier to assign the current instance as a propagating instance. Specifying -propagateprimary disables updates on the current instance.
 
@@ -3822,11 +3961,15 @@ This example starts the Source Server at port 1234 for the replicating instance 
 
 The Source Server records actions and errors in A2B.log. It also periodically records statistics such as the current backlog, the number of journal records sent since the last log, the rate of transmission, the starting and current JNL_SEQNO, and the path of the filter program, if any.
 
-*-updnotok*
+^^^^^^^^^
+-updnotok
+^^^^^^^^^
 
 Instructs the Source Server not to allow local updates on this instance. This is a synonym for -propagateprimary but is named so that it better conveys its purpose.
 
-*-cmplvl=n*
+^^^^^^^^^
+-cmplvl=n
+^^^^^^^^^
 
 Specifies the desired compression level for the replication stream. n is a positive integer value indicating the level of compression desired. Level 0 offers no compression. Level 1 offers the least compression while Level 9 (as of version 1.2.3.3 of the zlib library) offers the most compression (at the cost of the most CPU usage). Specifying -cmplvl without an accompanying -start produces an error. For the Source Server, if N specifies any value outside of the range accepted by the zlib library or if -cmplvl is not specified, the compression level defaults to zero (0). For the Receiver Server, as long as N is non-zero, the decompression feature is enabled; since the Source Server setting determines the actual level, any legal non-zero value enables compressed operation at the receiver.
 
@@ -3843,15 +3986,21 @@ If a package for zlib is available with your operating system, YottaDB suggests 
 
 By default, YottaDB searches for the libz.so shared library in the standard system library directories (for example, /usr/lib, /usr/local/lib, /usr/local/lib64). If the shared library is installed in a non-standard location, before starting replication, you must ensure that the environment variable $LD_LIBRARY_PATH includes the directory containing the library. The Source and Receiver Server link the shared library at runtime. If this fails for any reason (such as file not found, or insufficient authorization), the replication logic logs a DLLNOOPEN error and continues with no compression.
 
-*-tlsid=<label>*
+^^^^^^^^^^^^^^
+-tlsid=<label>
+^^^^^^^^^^^^^^
 
 Instructs the Source or Receiver Server to use the TLS certificate and private key pairs having <label> as the TLSID in the configuration file pointed to by the ydb_crypt_config environment variable. TLSID is a required parameter if TLS/SSL is to be used to secure replication connection between instances. If private keys are encrypted, an environment variable of the form ydb_tls_passwd_<label> specifies their obfuscated password. You can obfuscate passwords using the 'maskpass' utility provided along with the encryption plugin. If you use unencrypted private keys, set the ydb_tls_passwd_<label> environment variable to a non-null dummy value; this prevents inappropriate prompting for a password.
 
-*-[NO]PLAINtextfallback*
+^^^^^^^^^^^^^^^^^^^^^^
+-[NO]PLAINtextfallback
+^^^^^^^^^^^^^^^^^^^^^^
 
 Specifies whether the replication server is permitted to fallback to plaintext communication. The default is -NOPLAINtextfallback. If NOPLAINTEXTFALLBACK is in effect, YottaDB issues a REPLNOTLS error in the event it is unable to establish a TLS connection. If PLAINTEXTFALLBACK is in effect, in the event of a failure to establish a TLS connection, YottaDB issues REPLNOTLS as a warning. Once a permitted plaintext replication connection is established for a connection session, YottaDB never attempts to switch that connection session to TLS connection.
 
-*-RENEGotiate_interval=<minutes >*
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-RENEGotiate_interval=<minutes >
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Specifies the time in minutes to wait before attempting to perform a TLS renegotiation. The default -RENEGOTIATE_INTERVAL is a little over 120 minutes. A value of zero causes YottaDB to never attempt a renegotiation. The MUPIP REPLIC -SOURCE -JNLPOOL -SHOW [-DETAIL] command shows the time at which the next TLS renegotiation is scheduled, and how many such renegotiations have occurred thus far for a given secondary instance connection. As renegotiation requires the replication pipeline to be temporarily flushed, followed by the actual renegotiation, TLS renegotiation can cause momentary spikes in the replication backlog.
 
@@ -3867,17 +4016,25 @@ Command Syntax:
    [-timeout=<timeout in seconds>]
    [-zerobacklog]
 
-**Qualifiers**:
+~~~~~~~~~~~
+Qualifiers:
+~~~~~~~~~~~
 
-*-shutdown*
+^^^^^^^^^
+-shutdown
+^^^^^^^^^
 
 Shuts down the Source Server.
 
-*-timeout=<timeout in seconds>*
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-timeout=<timeout in seconds>
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Specifies the time (in seconds) that the shutdown command should wait before signaling the Source Server to shut down. If you do not specify -timeout, the default timeout period is 120 seconds. If you specify -timeout=0 , shutdown occurs immediately.
 
-*-zerobacklog*
+^^^^^^^^^^^^
+-zerobacklog
+^^^^^^^^^^^^
 
 Shuts down the Source Server either when the backlog goes to zero or the timeout expires, whichever occurs first.
 
@@ -3899,31 +4056,43 @@ Command syntax:
    -instsecondary=<instance_name>
    {-rootprimary|-propagateprimary}
 
-**Qualifiers**:
+~~~~~~~~~~~
+Qualifiers:
+~~~~~~~~~~~
 
-*-activate*
+^^^^^^^^^
+-activate
+^^^^^^^^^
 
 Activates a passive Source Server. Once activated, the Source Server reads journal records from the Journal Pool and transports them to the system specified by -secondary.
 
 Before activation, -activate sets the Source Server to ACTIVE_REQUESTED mode. On successful activation, YottaDB sets the Source Server mode to ACTIVE. YottaDB produces an error when there is an attempt to activate a Source Server in ACTIVE_REQUESTED mode.
 
-*-instsecondary=<instance_name>*
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-instsecondary=<instance_name>
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Identifies the replicating instance to which the passive Source Server connects after activation.
 
 With no -instsecondary specified, the passive Source Server uses the environment variable ydb_repl_instsecondary as the value of -instsecondary.
 
-*-rootprimary*
+^^^^^^^^^^^^
+-rootprimary
+^^^^^^^^^^^^
 
 Specifies that the passive Source Server activation occurs on an originating instance.
 
-*-propagateprimary*
+^^^^^^^^^^^^^^^^^
+-propagateprimary
+^^^^^^^^^^^^^^^^^
 
 Specifies that the passive Source Server activation occurs on a propagating instance.
 
 If neither -rootprimary nor -propagateprimary are specified, this command assumes -propagateprimary.
 
-*-log_interval*
+^^^^^^^^^^^^^
+-log_interval
+^^^^^^^^^^^^^
 
 Specifies the number of transactions for which the Source Server should wait before writing to the log file. The default logging interval is 1000 transactions.
 
@@ -3947,25 +4116,35 @@ Command Syntax:
 
    mupip replicate -source -deactivate -instsecondary=<instance_name>
 
-**Qualifiers**:
+~~~~~~~~~~~
+Qualifiers:
+~~~~~~~~~~~
 
-*-deactivate*
+^^^^^^^^^^^
+-deactivate
+^^^^^^^^^^^
 
 Makes an active Source Server passive. To change the replicating instance with which the Source Server is communicating, deactivate the Source Server and then activate it with a different replicating instance.
 
 Before deactivation, -deactivate sets the Source Server to PASSIVE_REQUESTED mode. On successful deactivation, YottaDB sets the Source Server mode to PASSIVE. YottaDB produces an error when there is an attempt to deactivate a Source Server in PASSIVE_REQUESTED mode.
 
-*-instsecondary=<instance_name>*
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-instsecondary=<instance_name>
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Identifies the active Source Server to transition to the passive (standby) state.
 
 With no -instsecondary specified, $ydb_repl_instsecondary determines the active Source Server.
 
-*-rootprimary*
+^^^^^^^^^^^^
+-rootprimary
+^^^^^^^^^^^^
 
 Specifies that the active Source Server is on originating instance.
 
-*-propagateprimary*
+^^^^^^^^^^^^^^^^^
+-propagateprimary
+^^^^^^^^^^^^^^^^^
 
 Specifies that the active Source Server is on a propagating instance.
 
@@ -3996,15 +4175,21 @@ Command syntax:
    mupip replicate -source -checkhealth
    [-instsecondary=<instance_instance>] [-he[lpers]]
 
-**Qualifiers**:
+~~~~~~~~~~~
+Qualifiers:
+~~~~~~~~~~~
 
-*-checkhealth*
+^^^^^^^^^^^^
+-checkhealth
+^^^^^^^^^^^^
 
 Determine whether the Source Server is running. If the Source Server is running, the exit code is 0 (zero). If the Source Server is not running or an error exists, the exit code is not 0.
 
 With helpers specified, -checkhealth displays the status of Helper Processes in addition to the status of Receiver Server and Update Process.
 
-*-instsecondary=<instance_name>*
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-instsecondary=<instance_name>
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Identifies a Source Server process.
 
@@ -4034,17 +4219,25 @@ Command Syntax:
 
    mupip replicate -source -changelog -log=<log file name> [-log_interval=<integer>] -instsecondary=<instance_name>
 
-**Qualifiers**:
+~~~~~~~~~~~
+Qualifiers:
+~~~~~~~~~~~
 
-*-changelog*
+^^^^^^^^^^
+-changelog
+^^^^^^^^^^
 
 Instructs the Source Server to change its log file.
 
-*-instsecondary=<instance_name>*
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-instsecondary=<instance_name>
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Identifies a Source Server process.
 
-*-log=<log file name>*
+^^^^^^^^^^^^^^^^^^^^
+-log=<log file name>
+^^^^^^^^^^^^^^^^^^^^
 
 Use this mandatory qualifier to specify the name of the new log file. If you specify the name of the current log file, no change occurs.
 
@@ -4054,7 +4247,9 @@ Example:
 
    $ mupip replicate -source -changelog -log=/more_disk_space/newA2B.log -instsecondary=Brazil
 
-*-log_interval=<integer>*
+^^^^^^^^^^^^^^^^^^^^^^^
+-log_interval=<integer>
+^^^^^^^^^^^^^^^^^^^^^^^
 
 Specifies the number of transactions for which the Source Server should wait before writing to the log file. The default logging interval is 1000 transactions.
 
@@ -4071,13 +4266,19 @@ Command Syntax:
    mupip replicate -source -statslog={ON|OFF}
     [-log_interval=<integer>]
 
-**Qualifiers**:
+~~~~~~~~~~~
+Qualifiers:
+~~~~~~~~~~~
 
-*-statslog={ON | OFF}*
+^^^^^^^^^^^^^^^^^^^^
+-statslog={ON | OFF}
+^^^^^^^^^^^^^^^^^^^^
 
 Enables or disables detailed logging. When ON, the system logs current-state information of the Source Server and messages exchanged between the Source and Receiver Servers. By default, detailed logging is OFF. Once you enable it (ON), changing -statslog to OFF can stop detailed logging.
 
-*-log_interval=<integer>*
+^^^^^^^^^^^^^^^^^^^^^^^
+-log_interval=<integer>
+^^^^^^^^^^^^^^^^^^^^^^^
 
 Specifies the number of transactions for which the Source Server should wait before writing to the log file. The default logging interval is 1000 transactions.
 
@@ -4093,15 +4294,21 @@ Command Syntax:
 
    mupip replic -source -shutdown [-instsecondary=<instance_name>] [-timeout=<seconds>]
 
-**Qualifiers**:
+~~~~~~~~~~~
+Qualifiers:
+~~~~~~~~~~~
 
-*-instsecondary=<instance_name>*
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-instsecondary=<instance_name>
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Identifies the Source Server which is responsible for replicating to the secondary instance called <instance_name>.
 
 If -instsecondary is not specified, -shutdown stops all Source Server processes.
 
-*-timeout=<seconds>*
+^^^^^^^^^^^^^^^^^^
+-timeout=<seconds>
+^^^^^^^^^^^^^^^^^^
 
 Specifies the period of time (in seconds) a Source Server should wait before shutting down. If you do not specify -timeout, the default timeout period is 30 seconds. If you specify -timeout=0, shutdown occurs immediately.
 
@@ -4115,9 +4322,13 @@ Command Syntax:
 
    mupip replicate -source -showbacklog
 
-**Qualifiers**:
+~~~~~~~~~~~
+Qualifiers:
+~~~~~~~~~~~
 
-*-showbacklog*
+^^^^^^^^^^^^
+-showbacklog
+^^^^^^^^^^^^
 
 Reports the current backlog of journal records (in terms of JNL_SEQNO) on the output device (normally the standard output device). This qualifier does not affect the statistics logged in the log file. The backlog is the difference between the last JNL_SEQNO written to the Journal Pool and the last JNL_SEQNO sent by the Source Server to the Receiver Server. In the WAS_ON state, -showbacklog reports the backlog information even if the Source Server is shut down.
 
@@ -4149,9 +4360,13 @@ Command Syntax:
    {-losttncomplete | -needrestart}
    -instsecondary=<replicating instance name>
 
-**Qualifiers**:
+~~~~~~~~~~~
+Qualifiers:
+~~~~~~~~~~~
 
-*-losttncomplete*
+^^^^^^^^^^^^^^^
+-losttncomplete
+^^^^^^^^^^^^^^^
 
 Indicate to YottaDB that all lost transaction processing using $ZQGBLMOD() is complete. Use this qualifier either explicitly or implicitly to prevent a future $ZQGBLMOD() on an instance from returning false positives when applying future lost transactions. This ensures accuracy of future $ZQGBLMOD() results.
 
@@ -4162,7 +4377,9 @@ Always run MUPIP REPLICATE -SOURCE -LOSTTNCOMPLETE on each of the replicating in
 - The replicating instance is connected to the originating instance at the time the command is run on the originating instance.
 - The replicating instance is not connected at the time the command is run on the originating instance but connects to the originating instance, before the originating instance is brought down.
 
-*-needrestart*
+^^^^^^^^^^^^
+-needrestart
+^^^^^^^^^^^^
 
 Checks whether the originating instance ever communicated with the specified replicating instance (if the receiver server or a fetchresync rollback on the replicating instance communicated with the Source Server) since the originating instance was brought up. If so, this command displays the message SECONDARY INSTANCE xxxx DOES NOT NEED TO BE RESTARTED indicating that the replicating instance communicated with the originating instance and hence does not need to be restarted. If not, this command displays the message SECONDARY INSTANCE xxxx NEEDS TO BE RESTARTED FIRST. In this case, bring up the specified instance as a replicating instance before the lost transactions from this instance are applied. Failure to do so before applying the corresponding lost transactions causes $ZQGBLMOD() to return false negatives which can result in application data inconsistencies.
 
@@ -4188,7 +4405,9 @@ Example:
 
 This command updates the Zqgblmod Seqno and Zqgblmod Trans fields (displayed by a dse dump -fileheader command) in the database file headers of all regions in the global directory to the value 0. Doing so causes a subsequent $ZQGBLMOD() to return the safe value of one unconditionally until the next lost transaction file is created.
 
-**Lost Transaction File Format**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Lost Transaction File Format
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The first line of the lost transaction file include up to four fields. The first field displays GDSJEX04 signifying the file format version. The second field indicates whether the lost transaction file is a result of a rollback or recover. If the second field is ROLLBACK, a third field indicates whether the instance was a PRIMARY or SECONDARY immediately prior to the lost transaction file being generated. If it was a PRIMARY, the lost transaction file is termed a primary lost transaction file and it needs to be applied on the new originating instance. A fourth field holds the name of the replicating instance on which the lost transactions were generated. This instance name should be used as the -instsecondary qualifier in the mupip replic -source -needrestart command when the lost transactions are applied at the new originating instance.
 
@@ -4220,21 +4439,31 @@ Command Syntax:
    [-initialize] [-cmplvl=n]
    [-tlsid=<label>]
 
-**Qualifiers**:
+~~~~~~~~~~~
+Qualifiers:
+~~~~~~~~~~~
 
-*-receiver*
+^^^^^^^^^
+-receiver
+^^^^^^^^^
 
 Identifies the Receiver Server.
 
-*-start*
+^^^^^^
+-start
+^^^^^^
 
 Starts the Receiver Server and Update Process.
 
-*-listenport=<port number>*
+^^^^^^^^^^^^^^^^^^^^^^^^^
+-listenport=<port number>
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Specifies the TCP port number the Receiver Server will listen to for incoming connections from a Source Server. Note that the current implementation of the Receiver Server does not support machines with multiple IP addresses.
 
-*-autorollback[=verbose]*
+^^^^^^^^^^^^^^^^^^^^^^^
+-autorollback[=verbose]
+^^^^^^^^^^^^^^^^^^^^^^^
 
 -AUTOROLLBACK in a Receiver Server startup command of a BC/SI replication instance performs an automatic MUPIP JOURNAL -ROLLBACK -BACKWARD -FETCHRESYNC=<portno>. Choosing between -AUTOROLLBACK and -FETCHRESYNC (with -[NO]LOSTTRANS and -[NO]BROKENTRANS) depends on your replicating configuration and how your application processes lost transaction files. Use a MUPIP JOURNAL -ROLLBACK command with -FETCHRESYNC when you need:
 
@@ -4253,25 +4482,35 @@ Use -AUTOROLLBACK when there are no application side restraints on the timing/ne
 .. note::
    As autorollback uses mupip online rollback under the covers, it should be considered field test grade functionality as long as that function is considered field test grade functionality.
 
-*-log=<recsrv_log_file_name >*
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-log=<recsrv_log_file_name >
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Specifies the location of the log file of the Receiver Server. When -log is specified, the Update Process writes to a log file named <recsrv_log_file_name>.updproc. Note that the name of the Update Process log file name has .updproc at the end to distinguish it from the Receiver Server's log file name.
 
-*-log_interval="[integer1],[integer2]"*
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-log_interval="[integer1],[integer2]"
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 integer1 specifies the number of transactions for which the Receiver Server should wait before writing to its log file. integer2 specifies the number of transactions for which the Update Process should wait before writing to its log file. The default logging interval is 1000 transactions.
 
 If integer1 or integer2 is 0, the logging interval is set to the default value.
 
-*-stopsourcefilter*
+^^^^^^^^^^^^^^^^^
+-stopsourcefilter
+^^^^^^^^^^^^^^^^^
 
 Starting the Receiver Server with -stopsourcefilter turns off any active filter on the originating Source Server. Use this option at the time of restarting the Receiver Server after a rolling upgrade is complete.
 
-*-stopreceiverfilter*
+^^^^^^^^^^^^^^^^^^^
+-stopreceiverfilter
+^^^^^^^^^^^^^^^^^^^
 
 Starting the Receiver Server with -stopreceiverfilter turns off any active filter on the Receiver Server without turning off the Receiver Server. It is not compatible with any other -receiver qualifier. When no filter is active, using -stopreceiverfilter returns a non-success code.
 
-*-updateresync=</path/to/bkup-orig-repl-inst-file>*
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-updateresync=</path/to/bkup-orig-repl-inst-file>
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 -updateresync guarantees YottaDB that the replicating instance was, or is, in sync with the originating instance and it is now safe to resume replication. Use -updateresync only in the following situations:
 
@@ -4289,25 +4528,35 @@ To perform an updateresync, the originating instance must have at least one hist
 
 You also need use -updateresync to replace your existing replication instance files if a YottaDB version upgrade changes the instance file format.
 
-For information on the procedures that use -updateresync, refer to `“Setting up a new replicating instance of an originating instance (A→B, P→Q, or A→P)” <./dbrepl.html#setting-up-a-new-replicating-instance-of-an-originating-instance-ab-pq-or-ap>`_, `“Replacing the replication instance file of a replicating instance (A→B and P→Q)” <./dbrepl.html#replacing-the-replication-instance-file-of-a-replicating-instance-ab-and-pq>`_, `“Replacing the replication instance file of a replicating instance (A→P)” <./dbrepl.html#replacing-the-replication-instance-file-of-a-replicating-instance-ap>`_, and `“Setting up a new replicating instance from a backup of the originating instance (A→P)” <./dbrepl.html#setting-up-a-new-replicating-instance-from-a-backup-of-the-originating-instance-ap>`_.
+For information on the procedures that use -updateresync, refer to :ref:`setup-new-repl-inst-orig-ab-pq-ap`, :ref:`replace-repl-inst-file-repl-ab-pq`, :ref:`replace-repl-inst-file-repl-ap`, and :ref:`setup-new-repl-inst-orig-ap`.
 
-*-initialize*
+^^^^^^^^^^^
+-initialize
+^^^^^^^^^^^
 
 Used when starting a Receiver Server of an SI replication stream with -updateresync to specify that this is the first connection between the instances. MUPIP ignores these qualifiers when starting BC replication (that is, no updates permitted on the instance with the Receiver Server). This qualifier provides additional protection against inadvertent errors.
 
-*-resume=<strm_num>*
+^^^^^^^^^^^^^^^^^^
+-resume=<strm_num>
+^^^^^^^^^^^^^^^^^^
 
 Used when starting a Receiver Server of an SI replication stream with -updateresync in case the receiver instance has previously received from the same source but had only its instance file (not database files) recreated in between (thereby erasing all information about the source instance and the stream number it corresponds to recorded in the receiver instance file). In this case, the command mupip replic -receiv -start -updateresync=<instfile> -resume=<strm_num>, where strm_num is a number from 1 to 15, instructs the receiver server to use the database file headers to find out the current stream sequence number of the receiver instance for the stream number specified as <strm_num>, but uses the input instance file (specified with -updateresync) to locate the history record corresponding to this stream sequence number and then exchange history with the source to verify the two instances are in sync before resuming replication. Note that in case -resume is not specified and only -updateresync is specified for a SI replication stream, it uses the input instance file name specified with -updateresync to determine the stream sequence number as well as provide history records to exchange with the source instance (and verify the two are in sync). Assuming that instance files are never recreated (unless they are also accompanied by a database recreate), this qualifier should not be required in normal usage situations.
 
-*-reuse=<instname>*
+^^^^^^^^^^^^^^^^^
+-reuse=<instname>
+^^^^^^^^^^^^^^^^^
 
 Used when starting a Receiver Server of an SI replication stream with -updateresync in case the receiver instance has previously received from fifteen (all architecturally allowed) different externally sourced streams and is now starting to receive from yet another source stream. The command mupip replic -receiv -start -updateresync=<instfile> -reuse=<instname>, where instname is the name of a replication instance, instructs the receiver server to look for an existing stream in the replication instance file header whose Group Instance Name (displayed by a mupip replic -editinstance -show command on the receiver replication instance file) matches the instance name specified and if one does, reuse that stream number for the current source connection (erasing any record of the older Group using the same stream number).
 
-*-noresync*
+^^^^^^^^^
+-noresync
+^^^^^^^^^
 
 Instructs the Receiver Server to accept an SI replication stream even when the receiver is ahead of the source. In this case, the source and receiver servers exchange history records from the replication instance file to determine the common journal stream sequence number and replication resumes from that point onwards. Specifying -noresync on a BC replication stream produces a NORESYNCSUPPLONLY error. Specifying -noresync on an SI replication stream receiver server where the receiving instance was started with -UPDNOTOK (updates are disabled) produces a NORESYNCUPDATERONLY error. Note also that the noresync qualifier is not the opposite of the resync qualifier of rollback (mupip journal -rollback -resync), which is intended for use under the direction of YottaDB support.
 
-*-tlsid=<label>*
+^^^^^^^^^^^^^^
+-tlsid=<label>
+^^^^^^^^^^^^^^
 
 Instructs the Source or Receiver Server to use the TLS certificate and private key pairs having <label> as the TLSID in the configuration file pointed to by the ydb_crypt_config environment variable. TLSID is a required parameter if TLS/SSL is to be used to secure replication connection between instances. If private keys are encrypted, an environment variable of the form ydb_tls_passwd_<label> specifies their obfuscated password. You can obfuscate passwords using the 'maskpass' utility provided along with the encryption plugin. If you use unencrypted private keys, set the ydb_tls_passwd_<label> environment variable to a non-null dummy value; this prevents inappropriate prompting for a password.
 
@@ -4323,13 +4572,19 @@ Command syntax:
 
    mupip replicate -receiver -start {-updateonly|-helpers[=m[,n]]
 
-**Qualifiers**:
+~~~~~~~~~~~
+Qualifiers:
+~~~~~~~~~~~
 
-*-updateonly*
+^^^^^^^^^^^
+-updateonly
+^^^^^^^^^^^
 
 If the Update Process has been shutdown independent of the Receiver Server, use this qualifier to restart the Update Process.
 
-*-helpers[=m[,n]]*
+^^^^^^^^^^^^^^^^
+-helpers[=m[,n]]
+^^^^^^^^^^^^^^^^
 
 Starts additional processes to help improve the rate at which updates from an incoming replication stream are applied on a replicating instance.
 
@@ -4374,21 +4629,31 @@ Command Syntax:
 
    mupip replicate -receiver -shutdown [-helpers | -updateonly] [-timeout=<timeout in seconds>]
 
-**Qualifiers**:
+~~~~~~~~~~~
+Qualifiers:
+~~~~~~~~~~~
 
-*-shutdown*
+^^^^^^^^^
+-shutdown
+^^^^^^^^^
 
 Initiates the shutdown procedures of the Receiver Server, Update Process, and/or helper processes. If the Receiver Server previously shut down abnormally, -shutdown can shut down helper processes left running.
 
-*-helper*
+^^^^^^^
+-helper
+^^^^^^^
 
 Shuts down only the Helper Processes and leaves the Receiver Server and Update Process to continue operating as before. All helpers processes shut down even if -helper values are specified.
 
-*-timeout*
+^^^^^^^^
+-timeout
+^^^^^^^^
 
 Specifies the period of time (in seconds) the shutdown command should wait before signaling the Receiver Server, Update Process, and/or helper processes to shut down. If you do not specify -timeout, the default timeout period is 30 seconds. If you specify -timeout=0, shutdown occurs immediately.
 
-*-updateonly*
+^^^^^^^^^^^
+-updateonly
+^^^^^^^^^^^
 
 Use this qualifier to stop only the Update Process. If neither -updateonly nor -helper are specified, the Update Process, all helper processes (if any), and Receiver Server shut down.
 
@@ -4438,9 +4703,13 @@ Command Syntax:
 
    mupip replicate -receiver -changelog -log=<log file name> [-log_interval="[integer1],[integer2]"]
 
-**Qualifiers**:
+~~~~~~~~~~~
+Qualifiers:
+~~~~~~~~~~~
 
-*-log_interval="[integer1],[integer2]"*
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-log_interval="[integer1],[integer2]"
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 integer1 specifies the number of transactions for which the Receiver Server should wait before writing to the log file. integer2 specifies the number of transactions for which the Update Process should wait before writing to the log file. The default logging interval is 1000 transactions.
 
@@ -4457,9 +4726,13 @@ Command Syntax:
    mupip replicate -receiver -statslog={ON|OFF}
     [-log_interval="[integer1],[integer2]"]
 
-**Qualifiers**:
+~~~~~~~~~~~
+Qualifiers:
+~~~~~~~~~~~
 
-*-log_interval="[integer1],[integer2]"*
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-log_interval="[integer1],[integer2]"
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 integer1 specifies the number of transactions for which the Receiver Server should wait before writing to the log file. integer2 specifies the number of transactions for which the Update Process should wait before writing to the log file. The default logging interval is 1000 transactions.
 
@@ -4475,9 +4748,13 @@ Command Syntax:
 
    mupip replicate -receiver -showbacklog
 
-**Qualifiers**:
+~~~~~~~~~~~
+Qualifiers:
+~~~~~~~~~~~
 
-*-showbacklog*
+^^^^^^^^^^^^
+-showbacklog
+^^^^^^^^^^^^
 
 Use this qualifier to report the current backlog (that is, the difference between the last JNL_SEQNO written to the Receive Pool and the last JNLSEQNO processed by the Update Process) of journal records on the Receiver Server.
 
@@ -4494,13 +4771,19 @@ Command Syntax:
      [-rsync_strm=<strm_num>]}
      -losttrans=<extract file> -backward *
 
-**Qualifiers**:
+~~~~~~~~~~~
+Qualifiers:
+~~~~~~~~~~~
 
-*-rollback*
+^^^^^^^^^
+-rollback
+^^^^^^^^^
 
 Use this qualifier to rollback the database. If you do not use the -fetchresync qualifier, the database rolls back to the last consistent state.
 
-*-fetchresync=<port number>*
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+-fetchresync=<port number>
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 When there are unreplicated updates on a former primary/secondary instance, it cannot become a new replicating instance as its journal sequence number is higher than the journal sequence number of its new replication source. Use -ROLLBACK -FETCHRESYNC to roll back a BC/SI replicating instance to a journal sequence number that matches the journal sequence number of its replication source and generate a lost transaction file containing the unreplicated updates for the organization to reconcile. After the reconcilation (or rejection as the case may be) of the lost transaction file, run MUPIP REPLICATE -SOURCE -LOSTTNCOMPLETE to provide confirmation to GT.M that you have applied the lost transaction file. For -FETCHRESYNC to work on the replicating instance, you need to ensure that an active Source Server is running on the replication source/originating instance.
 
@@ -4528,11 +4811,15 @@ Example:
 
 This command performs a ROLLBACK -FETCHRESYNC operation on a replicating instance to bring it to a common synchronization point from where the originating instance can begin to transmit updates to allow it to catch up. It also generates a lost transaction file glo.lost of all those transactions that are present on the replicating instance but not on the originating instance at port 2299.
 
-*-resync=<JNL_SEQNO>*
+^^^^^^^^^^^^^^^^^^^
+-resync=<JNL_SEQNO>
+^^^^^^^^^^^^^^^^^^^
 
 Use this qualifier to roll back to the transaction identified by JNL_SEQNO (in decimal) only when the database/journal files need to be rolled back to a specific point. If you specify a JNL_SEQNO that is greater than the last consistent state, the database/journal files will be rolled back to the last consistent state. Under normal operating conditions, you would not need this qualifier.
 
-*-losttrans=<extract file>*
+^^^^^^^^^^^^^^^^^^^^^^^^^
+-losttrans=<extract file>
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
 If failover occurs (that is, originating instance fails and replicating instance assumes the originating instance role), some transactions committed to A's database may not be reflected in B's database. Before the former originating instance becomes the new replicating instance, these transactions must be rolled off before it can assume the role of an originating instance. These transactions are known as "lost transactions".
 
@@ -4541,7 +4828,9 @@ The system stores extracted lost transactions in the file <extract file> specifi
 .. note::
    The extracted lost transactions list may contain broken transactions due to system failures that occurred during processing. Do not resolve these transactions - they are not considered to be committed.
 
-*-rsync_strm=<strm_num>*
+^^^^^^^^^^^^^^^^^^^^^^
+-rsync_strm=<strm_num>
+^^^^^^^^^^^^^^^^^^^^^^
 
 Used when starting a rollback command with the -resync qualifier. The command mupip journal -rollback -resync=<sequence_num> -rsync_strm=<strm_num> instructs rollback to roll back the database to a sequence number specified with the -resync=<sequence_num> qualifier but that <sequence_num> is a journal stream sequence number (not a journal sequence number) corresponding to the stream number <strm_num> which can be any value from 0 to 15. Note that like the -resync qualifier, the -rsync_strm qualifier is also intended for use under the direction of your YottaDB support channel.
 

@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2021 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2017-2021 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -45,35 +45,41 @@ The scope of M data is either process local or global.
 * Local variables last only for the duration of the current session; YottaDB deletes them when the M process terminates.
 * Global variables contain data that persists beyond the process. YottaDB stores global variables on disk. A Global Directory organizes global variables and describes the organization of a database. The YottaDB administrator uses the Global Directory Editor (GDE) to create and manage Global Directories. A Global Directory maps global names to a database file. YottaDB uses this mapping when it stores and retrieves globals from the database. Several Global Directories may refer to a single database file.
 
-For more information about the data management system, refer to the `"Global Directory Editor" <https://docs.yottadb.com/AdminOpsGuide/gde.html>`_, `"MUPIP" <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html>`_ and `"YottaDB Journaling" <https://docs.yottadb.com/AdminOpsGuide/ydbjournal.html>`_ chapters in the Administration and Operations Guide.
-
-**Database Management Utilities**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Database Management Utilities
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The Global Directory Editor (GDE) creates, modifies, maintains, and displays the characteristics of Global Directories. GDE also maps LOCKs on resource names to the region of the database specified for the corresponding global variables.
 
 The M Peripheral Interchange Program (MUPIP) creates database files and provides tools for database management and database journaling.
 
-For more information regarding database utilities, refer to the `"Global Directory Editor" <https://docs.yottadb.com/AdminOpsGuide/gde.html>`_, `"MUPIP" <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html>`_ and `"YottaDB Journaling" <https://docs.yottadb.com/AdminOpsGuide/ydbjournal.html>`_ chapters in the Administration and Operations Guide.
+
+
+For more information regarding database utilities and the data management system, refer to the `"Global Directory Editor" <../AdminOpsGuide/gde.html>`_, `"MUPIP" <../AdminOpsGuide/dbmgmt.html>`_ and `"YottaDB Journaling" <../AdminOpsGuide/ydbjournal.html>`_ chapters in the Administration and Operations Guide.
 
 ++++++++++++++++++++++
 Managing Source Code
 ++++++++++++++++++++++
 
-In the YottaDB programming environment, source routines are generated and stored as standard UNIX files. They are created and edited with standard UNIX text editors. YottaDB accepts source lines of up to 8192 bytes. When YottaDB encounters a line with a length greater than 8192 bytes in a source file, it emits a %YDB-W-LSEXPECTED warning. This warning identifies cases where a line greater than 8192 bytes is split into multiple lines, which causes statements beyond the character prior to the limit to execute irrespective of any starting IF, ELSE or FOR commands. The 8192 byte limit applies to XECUTE command arguments and Direct Mode input as well.
+In the YottaDB programming environment, source routines are generated and stored as standard UNIX files. They are created and edited with standard UNIX text editors. YottaDB accepts source lines of up to 8192 bytes. When YottaDB encounters a line with a length greater than 8192 bytes in a source file, it emits a :code:`%YDB-W-LSEXPECTED` warning. This warning identifies cases where a line greater than 8192 bytes is split into multiple lines, which causes statements beyond the character prior to the limit to execute irrespective of any starting IF, ELSE or FOR commands. The 8192 byte limit applies to XECUTE command arguments and Direct Mode input as well.
 
 YottaDB is designed to work with the operating system utilities and enhances them when beneficial. The following sections describe the process of programming and debugging with YottaDB and from the operating system.
 
-**Source File Management**
+~~~~~~~~~~~~~~~~~~~~~~~~
+Source File Management
+~~~~~~~~~~~~~~~~~~~~~~~~
 
-In addition to standard M "percent" utilities, YottaDB permits the use of the standard UNIX file manipulation tools, for example, the diff, grep, cp, and mv commands. The programmer can also use the powerful facilities provided by the UNIX directory structure, such as time and date information, tree-structured directories, and file protection codes.
+In addition to standard M "percent" utilities, YottaDB permits the use of the standard UNIX file manipulation tools, for example, the :code:`diff`, :code:`grep`, :code:`cp`, and :code:`mv` commands. The programmer can also use the powerful facilities provided by the UNIX directory structure, such as time and date information, tree-structured directories, and file protection codes.
 
 YottaDB programs are compatible with version control software. For example YottaDB version control is managed using `git <https://git.kernel.org/pub/scm/git/git.git/>`_.
 
-**Programming and Debugging Facilities**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Programming and Debugging Facilities
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The programmer can use any UNIX text editor to create M source files. If you generate a program from within the Direct Mode, it also accesses the UNIX text editor specified by the environment variable EDITOR and provides additional capabilities to automate and enhance the process.
+You can use any UNIX text editor to create M source files. If you generate a program from within the Direct Mode, it also accesses the UNIX text editor specified by the environment variable :code:`EDITOR` and provides additional capabilities to automate and enhance the process.
 
-The programmer also uses the Direct Mode facility to interactively debug, modify, and execute M routines. In Direct Mode, YottaDB executes each M command immediately, as if it had been in-line at the point where YottaDB initiated Direct Mode.
+You can also use the Direct Mode facility to interactively debug, modify, and execute M routines. In Direct Mode, YottaDB executes each M command immediately, as if it had been in-line at the point where YottaDB initiated Direct Mode.
 
 The following is a list of additional enhancements available from the Direct Mode:
 
@@ -81,11 +87,15 @@ The following is a list of additional enhancements available from the Direct Mod
 * A command recall function to display and reuse previously entered commands
 * Many language extensions that specifically optimize the debugging environment
 
-**The Compiler**
+~~~~~~~~~~~~~~
+The Compiler
+~~~~~~~~~~~~~~
 
 The compiler operates on source files to produce object files consisting of position-independent, native object code, which on some platforms can be linked into shared object libraries. YottaDB provides syntax error checking at compile-time and allows you to enable or disable the compile-as-written mode. By default, YottaDB produces an object file even if the compiler detects errors in the source code. This compile-as-written mode facilitates a flexible approach to debugging.
 
-**The Run-Time System**
+~~~~~~~~~~~~~~~~~~~~~
+The Run-Time System
+~~~~~~~~~~~~~~~~~~~~~
 
 A YottaDB programmer can execute an M routine from the shell or interactively, using the M commands from Direct Mode.
 
@@ -99,7 +109,9 @@ The run-time system utilizes a YottaDB facility called ZLINK to link in an M rou
 
 The run-time system also provides incremental linking. The ZLINK command adds an M routine to the current image. This feature facilitates the addition of code modifications during a debugging session. The programmer can also use the feature to add patches and generated code to a running M process.
 
-**Error Processing**
+~~~~~~~~~~~~~~~~~~
+Error Processing
+~~~~~~~~~~~~~~~~~~
 
 The compiler detects and reports syntax errors at the following times:
 
@@ -117,7 +129,9 @@ The run-time system recognizes execution errors and reports them when they occur
 
 For more information, see `Chapter 13: “Error Processing” <./errproc.html>`_.
 
-**Input-Output Processing**
+~~~~~~~~~~~~~~~~~~~~~~~~~
+Input-Output Processing
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 YottaDB supports input and output processing with the following system components:
 

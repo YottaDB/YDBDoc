@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2017-2021 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -45,7 +45,7 @@ The YottaDB Message and Recovery Procedures Reference Manual is intended to be u
 Conventions Used in this Manual
 -------------------------------
 
-YottaDB messages are identified by a signature of the form YDB-s-abcdef where -s- is a severity indicator and abcdef is an identifier. The severity indicators are: -I- for informational messages, -W- for warnings, -E- for errors and -F- for events that cause a YottaDB process to terminate abnormally. For more information on monitoring YottaDB messages, refer to `"Appendix B: Monitoring YottaDB Messages" in the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/monitoring.html>`_.
+YottaDB messages are identified by a signature of the form YDB-s-abcdef where -s- is a severity indicator and abcdef is an identifier. The severity indicators are: -I- for informational messages, -W- for warnings, -E- for errors and -F- for events that cause a YottaDB process to terminate abnormally. For more information on monitoring YottaDB messages, refer to `"Appendix B: Monitoring YottaDB Messages" in the Administration and Operations Guide <../AdminOpsGuide/monitoring.html>`_.
 
 Each entry in this manual is presented in the following format as illustrated by the NOTPRINCIO message.
 
@@ -73,9 +73,9 @@ An "initiating instance" is always the instance that first records a transaction
 Following Up on Suggested Actions
 ---------------------------------
 
-When the suggested action is to "Report the error to the group responsible for database integrity at your operation," you may also refer to the `Maintaining Database Integrity chapter in the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/integrity.html>`_.
+When the suggested action is to "Report the error to the group responsible for database integrity at your operation," you may also refer to the `Maintaining Database Integrity chapter in the Administration and Operations Guide <../AdminOpsGuide/integrity.html>`_.
 
-For information about utility-generated messages, refer to the chapter that describes that utility in the `Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/index.html>`_.
+For information about utility-generated messages, refer to the chapter that describes that utility in the `Administration and Operations Guide <../AdminOpsGuide/index.html>`_.
 
 -----------------
 MUPIP LOAD Errors
@@ -87,11 +87,11 @@ If the input file is FORMAT=GO or ZWR, the database should contain the correct c
 
 If the input file is FORMAT=BIN, the database is probably corrupt. Fix the database intergrity issues and EXTRACT the file again.
 
-For more information on LOAD and EXTRACT, refer to the `General Database Management chapter in the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html>`_.
+For more information on LOAD and EXTRACT, refer to the `General Database Management chapter in the Administration and Operations Guide <../AdminOpsGuide/dbmgmt.html>`_.
 
-For information on salvaging damaged extracts, refer to the `Maintaining Database Integrity chapter in the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/integrity.html>`_.
+For information on salvaging damaged extracts, refer to the `Maintaining Database Integrity chapter in the Administration and Operations Guide <../AdminOpsGuide/integrity.html>`_.
 
-For details on the internals of spanning nodes, refer to the `YottaDB Database Structure (GDS) chapter in the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/gds.html>`_.
+For details on the internals of spanning nodes, refer to the `YottaDB Database Structure (GDS) chapter in the Administration and Operations Guide <../AdminOpsGuide/gds.html>`_.
 
 --------------
 Plug-In Errors
@@ -99,25 +99,33 @@ Plug-In Errors
 
 The plug-in architecture of YottaDB allows you to choose your preferred encryption software. Some plugin errors that you may encounter are as follows:
 
-**Database file <path> not found**
+++++++++++++++++++++++++++++++
+Database file <path> not found
+++++++++++++++++++++++++++++++
 
 Plugin error: The plugin is unable to find the specified database file.
 
 Action: Verify that the database file exists, the corresponding entry in the master key file points to the database file, and appropriate authorizations exist in the directory path and the database file.
 
-**Encryption handle corrupted**
++++++++++++++++++++++++++++
+Encryption handle corrupted
++++++++++++++++++++++++++++
 
 Plugin error: The plugin detected an internal error.
 
 Action: This error indicates that there is a communication error between YottaDB and the gtmcrypt plug-in. Replace the process with an undamaged one. Report the entire incident context to your YottaDB support channel.
 
-**Encryption key file <path> not found**
+++++++++++++++++++++++++++++++++++++
+Encryption key file <path> not found
+++++++++++++++++++++++++++++++++++++
 
 Plugin error: The plugin was not able to find the key file on the specified path.
 
 Action: Verify that the master key file entry for this key file points to the correct path. Verify that the key file itself exists. Verify proper authorizations on directory path and file.
 
-**Encryption library has not been initialized**
++++++++++++++++++++++++++++++++++++++++++++
+Encryption library has not been initialized
++++++++++++++++++++++++++++++++++++++++++++
 
 Plugin error: A gtmcrypt function was called before gtmcrypt_init().
 
@@ -153,172 +161,174 @@ The following table outlines the MUPIP INTEG error messages with their severity 
 |                        | database.                                         |
 +------------------------+---------------------------------------------------+
 
-**MUPIP INTEG Error Messages**
+++++++++++++++++++++++++++
+MUPIP INTEG Error Messages
+++++++++++++++++++++++++++
 
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| Error Name        | Message                       |  Severity                   |    Section *                                                                                               |
-+===================+===============================+=============================+============================================================================================================+
-| DBBADKYNM         | Bad Key Name                  |  I                          |    `K1 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#k1-bad-key>`_                                |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBBADNSUB         | Bad numeric subscript         |  I                          |    `K1 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#k1-bad-key>`_                                |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBBADPNTR         | Bad pointer value in directory|  D                          |    `K4 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#k4-pointer-problems>`_                       |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBBDBALLOC        | Block doubly allocated        |  D                          |    `K3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#k3-blocks-doubly-allocated>`_                |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBBFSTAT          | Block busy/free status unknown|  D                          |    `M1 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#m1-bitmap-errors>`_                          |
-|                   | (local bitmap corrupted)      |                             |                                                                                                            |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBBNPNTR          | Bit map block number as       |  D                          |    `K4 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#k4-pointer-problems>`_                       |
-|                   | pointer                       |                             |                                                                                                            |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBBPLMGT2K        | Blocks per local map is       |  D                          |    `I3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i3-file-header-errors>`_                     |
-|                   | greater than 2K               |                             |                                                                                                            |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBBPLMLT512       | Blocks per local map is less  |  D                          |    `I3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i3-file-header-errors>`_                     |
-|                   | than 512                      |                             |                                                                                                            |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBBPLNOT512       | Blocks per local map is not   |  D                          |    `I3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i3-file-header-errors>`_                     |
-|                   | 512                           |                             |                                                                                                            |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBBSIZZRO         | Block size equals zero        |  A                          |    `I3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i3-file-header-errors>`_                     |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBCOMPTOOLRG      | Record has too large          |  I                          |    `O2 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#o2-record-errors>`_                          |
-|                   | compression count             |                             |                                                                                                            |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBDATAMX          | Record too large              |  B                          |    `O5 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#o5-salvage-of-a-damaged-spanning-node>`_     |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBFGTBC           | File size larger than block   |  B                          |    `I4 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i4-file-size-errors>`_                       |
-|                   | count would indicate          |                             |                                                                                                            |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBFSTBC           | File size smaller than block  |  D                          |    `I4 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i4-file-size-errors>`_                       |
-|                   | count would indicate          |                             |                                                                                                            |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBFSTHEAD         | File smaller than database    |  A                          |    `I3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i3-file-header-errors>`_                     |
-|                   | header                        |                             |                                                                                                            |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBGTDBMAX         | Key larger than database      |  I                          |    `K7 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#k7-key-warning>`_                            |
-|                   | maximum                       |                             |                                                                                                            |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBHEADINV         | Header size not valid for     |  A                          |    `I3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i3-file-header-errors>`_                     |
-|                   | database                      |                             |                                                                                                            |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBINCLVL          | Block at incorrect level      |  D                          |    `O1 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#o1-bad-block>`_                              |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBINCRVER         | Incorrect version of YottaDB  |  A                          |    `I2 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i2-yottadb-version-mismatch>`_               |
-|                   | database                      |                             |                                                                                                            |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBINVGBL          | Invalid mixing of global names|  D                          |    `K3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#k3-blocks-doubly-allocated>`_                |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBKEYGTIND        | Key greater than index key    |  I or B                     |    `K2 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#k2-keys-misplaced>`_                         |
-|                   |                               |                             |    or `O5 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#o5-salvage-of-a-damaged-spanning-node>`_  |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBKGTALLW         | Key larger than maximum       |  I                          |    `K1 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#k1-bad-key>`_                                |
-|                   | allowed length                |                             |                                                                                                            |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBLOCMBINC        | Local bitmap incorrect        |  B                          |    `M1 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#m1-bitmap-errors>`_                          |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBLRCINVSZ        | Last record of block has      |  I                          |    `K5 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#k5-star-key-problems>`_                      |
-|                   | invalid size                  |                             |                                                                                                            |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBLTSIBL          | Key less than sibling’s index |  I                          |    `K2 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#k2-keys-misplaced>`_                         |
-|                   | key                           |                             |                                                                                                            |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBLVLINC          | Local map block level         |  B                          |    `M2 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#m2-bitmap-header-problems>`_                 |
-|                   | incorrect                     |                             |                                                                                                            |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBMAXKEYEXC       | Maximum key size for database |  D                          |    `I3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i3-file-header-errors>`_                     |
-|                   | exceeds design maximum        |                             |                                                                                                            |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBMAXRSEXBL       | Maximum record size for       |  D                          |    `I3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i3-file-header-errors>`_                     |
-|                   | database exceeds what the     |                             |                                                                                                            |
-|                   | block size can support        |                             |                                                                                                            |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBMBMINCFREZ      | Master bit map incorrectly    |  B                          |    `M1 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#m1-bitmap-errors>`_                          |
-|                   | asserts this local map has    |                             |                                                                                                            |
-|                   | free space.                   |                             |                                                                                                            |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBMBPFLDIS        | Master bit map shows this map |  B                          |    `M1 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#m1-bitmap-errors>`_                          |
-|                   | full, in disagreement with    |                             |                                                                                                            |
-|                   | both disk and INTEG results   |                             |                                                                                                            |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBMBPFLDLBM       | Master bit map shows this map |  B                          |    `M1 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#m1-bitmap-errors>`_                          |
-|                   | full, agreeing with disk local|                             |                                                                                                            |
-|                   | map                           |                             |                                                                                                            |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBMBPFLINT        | Master bitmap shows this map  |  B                          |    `M1 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#m1-bitmap-errors>`_                          |
-|                   | full, agreeing with MUPIP     |                             |                                                                                                            |
-|                   | INTEG                         |                             |                                                                                                            |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBMBPFRDLBM       | Master bit map shows this map |  B                          |    `M1 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#m1-bitmap-errors>`_                          |
-|                   | has space, agreeing with disk |                             |                                                                                                            |
-|                   | local map                     |                             |                                                                                                            |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBMBPFRINT        | Master bit map shows this map |  B                          |    `M1 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#m1-bitmap-errors>`_                          |
-|                   | has space, agreeing with MUPIP|                             |                                                                                                            |
-|                   | INTEG                         |                             |                                                                                                            |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBMBPINCFL        | Master bit map incorrectly    |  B                          |    `M1 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#m1-bitmap-errors>`_                          |
-|                   | marks this local map full     |                             |                                                                                                            |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBMBSIZMN         | Map block too small           |  B                          |    `M2 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#m2-bitmap-header-problems>`_                 |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBMBSIZMX         | Map block too large           |  B                          |    `M2 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#m2-bitmap-header-problems>`_                 |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBMBTNSIZMX       | Map block transaction         |  T                          |    `I6 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i6-transient-errors>`_                       |
-|                   | number too large              |                             |                                                                                                            |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBMRKBUSY         | Block incorrectly marked busy |  B                          |    `M1 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#m1-bitmap-errors>`_                          |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBMRKFREE         | Block incorrectly marked free |  D                          |    `M1 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#m1-bitmap-errors>`_                          |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBMXRSEXCMIN      | Maximum record size for       |  D                          |    `I3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i3-file-header-errors>`_                     |
-|                   | database is less than the     |                             |                                                                                                            |
-|                   | design minimum                |                             |                                                                                                            |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBNOTDB           | File does not have a valid    |  A                          |    `I3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i3-file-header-errors>`_                     |
-|                   | GDS file header               |                             |                                                                                                            |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBNOTMLTP         | Block size not a multiple of  |  A                          |    `I3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i3-file-header-errors>`_                     |
-|                   | 512 bytes.                    |                             |                                                                                                            |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBRBNLBMN         | Root block number is a local  |  D                          |    `K4 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#k4-pointer-problems>`_                       |
-|                   | bit map number                |                             |                                                                                                            |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBRBNNEG          | Root block number negative    |  D                          |    `K4 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#k4-pointer-problems>`_                       |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBRBNTOOLRG       | Root block number greater     |  D                          |    `K4 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#k4-pointer-problems>`_                       |
-|                   | than last block number in file|                             |                                                                                                            |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBREADBM          | Read error on bitmap          |  D                          |    `H7 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#h7-disk-hardware-problems>`_                 |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBRLEVLTONE       | Root level less than one      |  D                          |    `O1 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#o1-bad-block>`_                              |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBRLEVTOOHI       | Root level higher than max    |  D                          |    `O1 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#o1-bad-block>`_                              |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBSPANCHUNKORD    | Chunk of blocks is out of     |  B                          |    `O5 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#o5-salvage-of-a-damaged-spanning-node>`_     |
-|                   | order                         |                             |                                                                                                            |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBSPANGLOINCMP    | Spanning node is missing      |  B                          |    `O5 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#o5-salvage-of-a-damaged-spanning-node>`_     |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBSVBNMIN         | Start VBN smaller than        |  A                          |    `I3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i3-file-header-errors>`_                     |
-|                   | possible                      |                             |                                                                                                            |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBSZGT64K         | Block size greater than 64K   |  A                          |    `I3 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i3-file-header-errors>`_                     |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBTNNEQ           | Current tn and early tn are   |  T                          |    `I6 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i6-transient-errors>`_                       |
-|                   | not equal                     |                             |                                                                                                            |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBTNTOOLG         | Block transaction number too  |  T                          |    `I6 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i6-transient-errors>`_                       |
-|                   | large                         |                             |                                                                                                            |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBTTLBLK0         | Total blocks equal zero       |  A                          |    `I4 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i4-file-size-errors>`_                       |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
-| DBUNDACCMT        | Cannot determine access method|  T                          |    `I6 <https://docs.yottadb.com/AdminOpsGuide/integrity.html#i6-transient-errors>`_                       |
-|                   | ; Trying with BG              |                             |                                                                                                            |
-+-------------------+-------------------------------+-----------------------------+------------------------------------------------------------------------------------------------------------+
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| Error Name        | Message                       |  Severity                   |    Section *                                                                         |
++===================+===============================+=============================+======================================================================================+
+| DBBADKYNM         | Bad Key Name                  |  I                          |    `K1 <../AdminOpsGuide/integrity.html#k1-bad-key>`_                                |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBBADNSUB         | Bad numeric subscript         |  I                          |    `K1 <../AdminOpsGuide/integrity.html#k1-bad-key>`_                                |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBBADPNTR         | Bad pointer value in directory|  D                          |    `K4 <../AdminOpsGuide/integrity.html#k4-pointer-problems>`_                       |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBBDBALLOC        | Block doubly allocated        |  D                          |    `K3 <../AdminOpsGuide/integrity.html#k3-blocks-doubly-allocated>`_                |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBBFSTAT          | Block busy/free status unknown|  D                          |    `M1 <../AdminOpsGuide/integrity.html#m1-bitmap-errors>`_                          |
+|                   | (local bitmap corrupted)      |                             |                                                                                      |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBBNPNTR          | Bit map block number as       |  D                          |    `K4 <../AdminOpsGuide/integrity.html#k4-pointer-problems>`_                       |
+|                   | pointer                       |                             |                                                                                      |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBBPLMGT2K        | Blocks per local map is       |  D                          |    `I3 <../AdminOpsGuide/integrity.html#i3-file-header-errors>`_                     |
+|                   | greater than 2K               |                             |                                                                                      |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBBPLMLT512       | Blocks per local map is less  |  D                          |    `I3 <../AdminOpsGuide/integrity.html#i3-file-header-errors>`_                     |
+|                   | than 512                      |                             |                                                                                      |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBBPLNOT512       | Blocks per local map is not   |  D                          |    `I3 <../AdminOpsGuide/integrity.html#i3-file-header-errors>`_                     |
+|                   | 512                           |                             |                                                                                      |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBBSIZZRO         | Block size equals zero        |  A                          |    `I3 <../AdminOpsGuide/integrity.html#i3-file-header-errors>`_                     |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBCOMPTOOLRG      | Record has too large          |  I                          |    `O2 <../AdminOpsGuide/integrity.html#o2-record-errors>`_                          |
+|                   | compression count             |                             |                                                                                      |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBDATAMX          | Record too large              |  B                          |    `O5 <../AdminOpsGuide/integrity.html#o5-salvage-of-a-damaged-spanning-node>`_     |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBFGTBC           | File size larger than block   |  B                          |    `I4 <../AdminOpsGuide/integrity.html#i4-file-size-errors>`_                       |
+|                   | count would indicate          |                             |                                                                                      |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBFSTBC           | File size smaller than block  |  D                          |    `I4 <../AdminOpsGuide/integrity.html#i4-file-size-errors>`_                       |
+|                   | count would indicate          |                             |                                                                                      |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBFSTHEAD         | File smaller than database    |  A                          |    `I3 <../AdminOpsGuide/integrity.html#i3-file-header-errors>`_                     |
+|                   | header                        |                             |                                                                                      |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBGTDBMAX         | Key larger than database      |  I                          |    `K7 <../AdminOpsGuide/integrity.html#k7-key-warning>`_                            |
+|                   | maximum                       |                             |                                                                                      |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBHEADINV         | Header size not valid for     |  A                          |    `I3 <../AdminOpsGuide/integrity.html#i3-file-header-errors>`_                     |
+|                   | database                      |                             |                                                                                      |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBINCLVL          | Block at incorrect level      |  D                          |    `O1 <../AdminOpsGuide/integrity.html#o1-bad-block>`_                              |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBINCRVER         | Incorrect version of YottaDB  |  A                          |    `I2 <../AdminOpsGuide/integrity.html#i2-yottadb-version-mismatch>`_               |
+|                   | database                      |                             |                                                                                      |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBINVGBL          | Invalid mixing of global names|  D                          |    `K3 <../AdminOpsGuide/integrity.html#k3-blocks-doubly-allocated>`_                |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBKEYGTIND        | Key greater than index key    |  I or B                     |    `K2 <../AdminOpsGuide/integrity.html#k2-keys-misplaced>`_                         |
+|                   |                               |                             |    or `O5 <../AdminOpsGuide/integrity.html#o5-salvage-of-a-damaged-spanning-node>`_  |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBKGTALLW         | Key larger than maximum       |  I                          |    `K1 <../AdminOpsGuide/integrity.html#k1-bad-key>`_                                |
+|                   | allowed length                |                             |                                                                                      |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBLOCMBINC        | Local bitmap incorrect        |  B                          |    `M1 <../AdminOpsGuide/integrity.html#m1-bitmap-errors>`_                          |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBLRCINVSZ        | Last record of block has      |  I                          |    `K5 <../AdminOpsGuide/integrity.html#k5-star-key-problems>`_                      |
+|                   | invalid size                  |                             |                                                                                      |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBLTSIBL          | Key less than sibling’s index |  I                          |    `K2 <../AdminOpsGuide/integrity.html#k2-keys-misplaced>`_                         |
+|                   | key                           |                             |                                                                                      |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBLVLINC          | Local map block level         |  B                          |    `M2 <../AdminOpsGuide/integrity.html#m2-bitmap-header-problems>`_                 |
+|                   | incorrect                     |                             |                                                                                      |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBMAXKEYEXC       | Maximum key size for database |  D                          |    `I3 <../AdminOpsGuide/integrity.html#i3-file-header-errors>`_                     |
+|                   | exceeds design maximum        |                             |                                                                                      |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBMAXRSEXBL       | Maximum record size for       |  D                          |    `I3 <../AdminOpsGuide/integrity.html#i3-file-header-errors>`_                     |
+|                   | database exceeds what the     |                             |                                                                                      |
+|                   | block size can support        |                             |                                                                                      |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBMBMINCFREZ      | Master bit map incorrectly    |  B                          |    `M1 <../AdminOpsGuide/integrity.html#m1-bitmap-errors>`_                          |
+|                   | asserts this local map has    |                             |                                                                                      |
+|                   | free space.                   |                             |                                                                                      |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBMBPFLDIS        | Master bit map shows this map |  B                          |    `M1 <../AdminOpsGuide/integrity.html#m1-bitmap-errors>`_                          |
+|                   | full, in disagreement with    |                             |                                                                                      |
+|                   | both disk and INTEG results   |                             |                                                                                      |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBMBPFLDLBM       | Master bit map shows this map |  B                          |    `M1 <../AdminOpsGuide/integrity.html#m1-bitmap-errors>`_                          |
+|                   | full, agreeing with disk local|                             |                                                                                      |
+|                   | map                           |                             |                                                                                      |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBMBPFLINT        | Master bitmap shows this map  |  B                          |    `M1 <../AdminOpsGuide/integrity.html#m1-bitmap-errors>`_                          |
+|                   | full, agreeing with MUPIP     |                             |                                                                                      |
+|                   | INTEG                         |                             |                                                                                      |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBMBPFRDLBM       | Master bit map shows this map |  B                          |    `M1 <../AdminOpsGuide/integrity.html#m1-bitmap-errors>`_                          |
+|                   | has space, agreeing with disk |                             |                                                                                      |
+|                   | local map                     |                             |                                                                                      |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBMBPFRINT        | Master bit map shows this map |  B                          |    `M1 <../AdminOpsGuide/integrity.html#m1-bitmap-errors>`_                          |
+|                   | has space, agreeing with MUPIP|                             |                                                                                      |
+|                   | INTEG                         |                             |                                                                                      |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBMBPINCFL        | Master bit map incorrectly    |  B                          |    `M1 <../AdminOpsGuide/integrity.html#m1-bitmap-errors>`_                          |
+|                   | marks this local map full     |                             |                                                                                      |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBMBSIZMN         | Map block too small           |  B                          |    `M2 <../AdminOpsGuide/integrity.html#m2-bitmap-header-problems>`_                 |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBMBSIZMX         | Map block too large           |  B                          |    `M2 <../AdminOpsGuide/integrity.html#m2-bitmap-header-problems>`_                 |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBMBTNSIZMX       | Map block transaction         |  T                          |    `I6 <../AdminOpsGuide/integrity.html#i6-transient-errors>`_                       |
+|                   | number too large              |                             |                                                                                      |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBMRKBUSY         | Block incorrectly marked busy |  B                          |    `M1 <../AdminOpsGuide/integrity.html#m1-bitmap-errors>`_                          |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBMRKFREE         | Block incorrectly marked free |  D                          |    `M1 <../AdminOpsGuide/integrity.html#m1-bitmap-errors>`_                          |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBMXRSEXCMIN      | Maximum record size for       |  D                          |    `I3 <../AdminOpsGuide/integrity.html#i3-file-header-errors>`_                     |
+|                   | database is less than the     |                             |                                                                                      |
+|                   | design minimum                |                             |                                                                                      |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBNOTDB           | File does not have a valid    |  A                          |    `I3 <../AdminOpsGuide/integrity.html#i3-file-header-errors>`_                     |
+|                   | GDS file header               |                             |                                                                                      |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBNOTMLTP         | Block size not a multiple of  |  A                          |    `I3 <../AdminOpsGuide/integrity.html#i3-file-header-errors>`_                     |
+|                   | 512 bytes.                    |                             |                                                                                      |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBRBNLBMN         | Root block number is a local  |  D                          |    `K4 <../AdminOpsGuide/integrity.html#k4-pointer-problems>`_                       |
+|                   | bit map number                |                             |                                                                                      |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBRBNNEG          | Root block number negative    |  D                          |    `K4 <../AdminOpsGuide/integrity.html#k4-pointer-problems>`_                       |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBRBNTOOLRG       | Root block number greater     |  D                          |    `K4 <../AdminOpsGuide/integrity.html#k4-pointer-problems>`_                       |
+|                   | than last block number in file|                             |                                                                                      |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBREADBM          | Read error on bitmap          |  D                          |    `H7 <../AdminOpsGuide/integrity.html#h7-disk-hardware-problems>`_                 |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBRLEVLTONE       | Root level less than one      |  D                          |    `O1 <../AdminOpsGuide/integrity.html#o1-bad-block>`_                              |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBRLEVTOOHI       | Root level higher than max    |  D                          |    `O1 <../AdminOpsGuide/integrity.html#o1-bad-block>`_                              |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBSPANCHUNKORD    | Chunk of blocks is out of     |  B                          |    `O5 <../AdminOpsGuide/integrity.html#o5-salvage-of-a-damaged-spanning-node>`_     |
+|                   | order                         |                             |                                                                                      |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBSPANGLOINCMP    | Spanning node is missing      |  B                          |    `O5 <../AdminOpsGuide/integrity.html#o5-salvage-of-a-damaged-spanning-node>`_     |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBSVBNMIN         | Start VBN smaller than        |  A                          |    `I3 <../AdminOpsGuide/integrity.html#i3-file-header-errors>`_                     |
+|                   | possible                      |                             |                                                                                      |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBSZGT64K         | Block size greater than 64K   |  A                          |    `I3 <../AdminOpsGuide/integrity.html#i3-file-header-errors>`_                     |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBTNNEQ           | Current tn and early tn are   |  T                          |    `I6 <../AdminOpsGuide/integrity.html#i6-transient-errors>`_                       |
+|                   | not equal                     |                             |                                                                                      |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBTNTOOLG         | Block transaction number too  |  T                          |    `I6 <../AdminOpsGuide/integrity.html#i6-transient-errors>`_                       |
+|                   | large                         |                             |                                                                                      |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBTTLBLK0         | Total blocks equal zero       |  A                          |    `I4 <../AdminOpsGuide/integrity.html#i4-file-size-errors>`_                       |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
+| DBUNDACCMT        | Cannot determine access method|  T                          |    `I6 <../AdminOpsGuide/integrity.html#i6-transient-errors>`_                       |
+|                   | ; Trying with BG              |                             |                                                                                      |
++-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
 
 
 .. note::
-   Section * refers to the specified section in  the `Finding and Fixing Database Errors <https://docs.yottadb.com/AdminOpsGuide/integrity.html#finding-and-fixing-database-errors>`_ chapter of the Administration and Operations Guide. The section details a description along with the action item to be taken on encountering the error message.
+   Section * refers to the specified section in  the `Finding and Fixing Database Errors <../AdminOpsGuide/integrity.html#find-fix-db-errs>`_ chapter of the Administration and Operations Guide. The section details a description along with the action item to be taken on encountering the error message.
 

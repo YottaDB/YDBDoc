@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2021 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2017-2021 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -106,10 +106,10 @@ The format for an M global or local variable is:
 * The name specifies a particular array.
 * The optional expressions specify the subscripts and must be enclosed in parentheses and separated by commas (,).
 
-Although there is no restriction on variable names in source code, the first 31 characters of a variable name are significant and subsequent characters are dropped internally. A variable can have up to 31 subscripts. The maximum size of a variable name and all its subscripts is `1,019 bytes <https://docs.yottadb.com/AdminOpsGuide/gde.html#guidelines-for-mapping>`_.  As this limit is defined by the `internal representation <https://docs.yottadb.com/AdminOpsGuide/gds.html#gds-keys>`_, it is not easily translated to a specific limit; however, in practice it appears to suffice for most applications. The value of a node can be 1MiB.
+Although there is no restriction on variable names in source code, the first 31 characters of a variable name are significant and subsequent characters are dropped internally. A variable can have up to 31 subscripts. The maximum size of a variable name and all its subscripts is `1,019 bytes <../AdminOpsGuide/gde.html#guidelines-for-mapping>`_.  As this limit is defined by the `internal representation <../AdminOpsGuide/gds.html#gds-keys>`_, it is not easily translated to a specific limit; however, in practice it appears to suffice for most applications. The value of a node can be 1MiB.
 
 .. note:: As global variables that start with :code:`^%Y` are used by the
-	  `%YGBLSTAT() <./utility.html#ygblstat>`_
+	  :ref:`ygblstat-util`
 	  utility program, and global variables that start with
 	  :code:`^%y` are reserved for use by YottaDB,
 	  applications should not use them.
@@ -155,6 +155,8 @@ The GDE REGION qualifier NULL_SUBSCRIPTS accepts the keywords ALWAYS, NEVER and 
 
 MUPIP CREATE creates database files with the new values for NULL_SUBSCRIPTS.
 
+.. _null-subs-colltn:
+
 ~~~~~~~~~~~~~~~~~~~~~~~~
 Null Subscript Collation
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -166,14 +168,14 @@ A read-only boolean parameter STDNULLCOLL in the database fileheader specifies t
 * If STDNULLCOLL is TRUE, subscripts of globals in the database file place the null subscript before all other subscripts.
 * If STDNULLCOLL is set to FALSE, subscripts of globals in the database file place the null subscript between numeric and string subscripts.
 
-When `MUPIP CREATE <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#create>`_ creates a database file, it initializes the STDNULLCOLL parameter to the collation specified for that region in the global directory.
+When `MUPIP CREATE <../AdminOpsGuide/dbmgmt.html#mupip-create>`_ creates a database file, it initializes the STDNULLCOLL parameter to the collation specified for that region in the global directory.
 
 To establish the null collation method for a specified database, GDE supports a region parameter STDNULLCOLL that can be set to TRUE or FALSE using a region qualifier -STDNULLCOLL or -NOSTDNULLCOLL respectively. These qualifiers are supported with ADD, CHANGE and TEMPLATE commands. When MUPIP creates a new database, the STDNULLCOLL value is copied from the global directory into the database file header.
 
 For M local variables, the null collation can be established either at startup or during run time. Since the same local collation method is established for all locals in a process, changing the null collation within the process is allowed only if there are no local variables defined at that time. At process startup, YottaDB uses the following:
 
-* Standard null collation if the environment variable ``ydb_lct_stdnull`` is undefined, set to either TRUE or YES (or a case-insensitive leading substring thereof), or a non-zero integer.
-* Historical null collation if the environment variable ``ydb_lct_stdnull`` is set to either FALSE or NO (or a case-insensitive leading substring thereof) or 0.
+* Standard null collation if the environment variable :code:`ydb_lct_stdnull` is undefined, set to either TRUE or YES (or a case-insensitive leading substring thereof), or a non-zero integer.
+* Historical null collation if the environment variable :code:`ydb_lct_stdnull` is set to either FALSE or NO (or a case-insensitive leading substring thereof) or 0.
 
 To establish a default collation version for local variables within the process, the percent utility %LCLCOL supports establishing the null collation method as well. set^%LCLCOL(col,ncol) accepts an optional parameter ncol that determines the null collation type to be used with the collation type col.
 
@@ -523,7 +525,7 @@ YottaDB also allows:
 
 Where the first expression identifies the Global Directory and the second expression is accepted but ignored by YottaDB.
 
-To improve compatibility with some other M implementations, YottaDB also accepts another non-standard syntax. In this syntax, the leading and trailing up-bar (|) are respectively replaced by a left square-bracket ([) and a right square-bracket (]). This syntax also requires expratoms, rather than expressions. For additional information on expratoms, see `Expressions`_.
+To improve compatibility with some other M implementations, YottaDB also accepts another non-standard syntax. In this syntax, the leading and trailing up-bar (|) are respectively replaced by a left square-bracket ([) and a right square-bracket (]). This syntax also requires expratoms, rather than expressions. For additional information on expratoms, see :ref:`expressions`.
 
 The formats for this non-standard syntax are:
 
@@ -597,7 +599,9 @@ This result could have occurred under the following mapping:
    ^|"M2.GLD"|A --> REGIONA --> SEGMENT1 --> FILE2.DAT
    ^|"M3.GLD"|A --> REGION3 --> SEGMENT3 --> FILE1.DAT
 
-For more information on Global Directories, refer to the `"Global Directory Editor" <https://docs.yottadb.com/AdminOpsGuide/gde.html>`_ chapter of the Administration and Operations Guide.
+For more information on Global Directories, refer to the `"Global Directory Editor" <../AdminOpsGuide/gde.html>`_ chapter of the Administration and Operations Guide.
+
+.. _opt-ydb-env-xltn-fac:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Optional YottaDB Environment Translation Facility
@@ -874,6 +878,8 @@ Example:
 
 YottaDB handles numeric strings which are not canonical within the implementation as strings unless the application specifically requests they be treated as numbers. Any use in a context defined as numeric elicits numeric treatment; this includes operands of numeric operators, numeric literals, and some intrinsic function arguments. When the code creates a large number out of range, YottaDB gives a NUMOFLOW error. When the code creates a small fractional number out of range YottaDB treats it as zero (0). The YottaDB number range is (to the limit of accuracy) 1E-43 to 1E47. When the application creates an in-range number that exceeds the YottaDB numeric accuracy of 18 significant digits, YottaDB silently retains the most significant digits. With standard collation, YottaDB collates canonic numeric strings used as subscripts numerically, while it collates non-canonic numbers as strings.
 
+.. _expressions:
+
 ----------------------------
 Expressions
 ----------------------------
@@ -901,7 +907,7 @@ M has both unary and binary operators.
 
 .. note::
 
-   :code:`.` is not an operator. Please refer to the `Parameter Passing`_ sub-section for more information on usage of :code:`.`
+   :code:`.` is not an operator. Please refer to the :ref:`parameter-passing` sub-section for more information on usage of :code:`.`
 
 +++++++++++++++++++++++
 Precedence
@@ -910,6 +916,8 @@ Precedence
 All unary operations have right to left precedence.
 
 All M binary operations have strict left to right precedence. This includes all arithmetic, string, and logical operations. Hierarchies of operations require explicit establishment of precedence using parentheses (). Although this rule is counterintuitive, it is easy to remember and has no exceptions.
+
+.. _arithmetic-ops:
 
 +++++++++++++++++++++++
 Arithmetic Operators
@@ -1050,6 +1058,8 @@ Example:
    YDB>
 
 The above example demonstrates cases covered by the binary logical operators.
+
+.. _m-string-operators:
 
 +++++++++++++++++++
 String Operators
@@ -1243,6 +1253,8 @@ Example:
 
 These examples demonstrate combinations of the string relational operators with the NOT operator.
 
+.. _pattern-match-op:
+
 ++++++++++++++++++++++++
 Pattern Match Operator
 ++++++++++++++++++++++++
@@ -1350,6 +1362,8 @@ The following commands accept timeouts:
 
 When a READ times out, M returns any characters that have arrived between the start of the command and the timeout. M does not produce any partial results for any of the other timed commands.
 
+.. _m-locks:
+
 ----------------------------
 M Locks
 ----------------------------
@@ -1358,7 +1372,7 @@ The LOCK command reserves one or more resource names. Only one process at a time
 
 M LOCKs are hierarchical. If one process holds a LOCK on a resource, no other process can LOCK either an ancestor or a descendant resource. For example, a LOCK on ^A(1,2) blocks LOCKs on either ^A(1), or ^A(1,2,3), but not on, for example, ^A(2) or its descendants.
 
-A LOCK argument may contain any subscripted or unsubscripted M variable name including a name without a preceding caret symbol (^). As they have the appearance of local variable names, resource names with no preceding caret symbol (^) are commonly referred to as "local LOCKs" even though these LOCKs interact with other processes. For more information on the interaction between LOCKs and processes, refer to the `LKE chapter in the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/mlocks.html>`_.
+A LOCK argument may contain any subscripted or unsubscripted M variable name including a name without a preceding caret symbol (^). As they have the appearance of local variable names, resource names with no preceding caret symbol (^) are commonly referred to as "local LOCKs" even though these LOCKs interact with other processes. For more information on the interaction between LOCKs and processes, refer to the `LKE chapter in the Administration and Operations Guide <../AdminOpsGuide/mlocks.html>`_.
 
 The YottaDB run-time system records LOCK information in memory associated with the region holding the global of the same name. However, YottaDB does not place LOCKs in the database structures that hold the globals. Instead the LOCK manager sets up a "LOCK database" associated with each database region. Only the M commands LOCK, ZALLOCATE, and ZDEALLOCATE and the LKE utility access the information in the LOCK database.
 
@@ -1406,7 +1420,7 @@ A line of M code consists of the following elements in the following order:
 
 **Labels**
 
-In addition to labels that follow the rules for M names, M accepts labels consisting only of digits. In a label consisting only of digits, leading zeros are considered significant. For example, labels 1 and 01 are different. Formallists may immediately follow a label. A Formallist consists of one or more names enclosed in parentheses (). Formallists identify local variables that "receive" passed values in M parameter passing. For more information, see `Parameter Passing`_.
+In addition to labels that follow the rules for M names, M accepts labels consisting only of digits. In a label consisting only of digits, leading zeros are considered significant. For example, labels 1 and 01 are different. Formallists may immediately follow a label. A Formallist consists of one or more names enclosed in parentheses (). Formallists identify local variables that "receive" passed values in M parameter passing. For more information, see :ref:`parameter-passing`.
 
 In YottaDB, a colon (:) delimiter may be appended to the label, which causes the label to be treated as "local." Within the routine in which they appear, they perform exactly as they would without the trailing colon but they are available only during compilation and inaccessible to other routines and to indirection or XECUTE. Because references to local labels preceding their position in a routine produce a LABELUNKNOWN error at run-time, YottaDB recommends omitting the routinename from labelrefs to a local label. Using local labels reduces object size and linking overhead for all types of dynamic linking except indirection and XECUTE. Use of local labels may either improve or impair performance; typically any difference is modest. The more likely they are to all be used within the code block at run-time, the more likely an improvement. In other words, conditional code paths which prevent all references to local variables appearing in the block may actually impair performance.
 
@@ -1535,6 +1549,8 @@ Some M users prototype with indirection and then replace indirection with genera
 
 Run-time errors from indirection or XECUTEs maintain $STATUS and $ZSTATUS related information and cause normal error handling but do not provide compiler supplied information on the location of any error within the code fragment.
 
+.. _parameter-passing:
+
 ----------------------------------
 Parameter Passing
 ----------------------------------
@@ -1642,7 +1658,7 @@ A QUIT command terminates execution of the invoked routine. At the time of the Q
 
 A QUIT from a DO does not take an argument, while a QUIT from an extrinsic must have an argument. This represents one of the two major differences between the DO command with parameters and the extrinsics. M returns the value of the QUIT command argument as the value of the extrinsic function or special variable. The other difference is that M stacks $TEST for extrinsics.
 
-For more information, see `Extrinsic Functions`_ and `Extrinsic Special Variables`_.
+For more information, see :ref:`extrinsic-functions` and :ref:`extrinsic-special-vars`.
 
 Example:
 
@@ -1761,6 +1777,8 @@ YottaDB follows analogous syntax for routine indirection:
 
 **DO ^@X(A)(A)** invokes the routine specified by X(A) and passes the parameter A.
 
+.. _ext-calls:
+
 ---------------------------
 External Calls
 ---------------------------
@@ -1783,6 +1801,8 @@ Where packagename, like the name elements is a valid M name. Because of the pars
 
 .. note::
    For more information on external calls, see `Chapter 11: “Integrating External Routines” <./extrout.html>`_.
+
+.. _extrinsic-functions:
 
 ---------------------------
 Extrinsic Functions
@@ -1820,6 +1840,8 @@ Example:
 
 .. note::
    The POWER routine uses a formallist that is longer than the "expected" actuallist to protect local working variables. Such a practice may be encouraged or discouraged by your institution's standards.
+
+.. _extrinsic-special-vars:
 
 --------------------------------
 Extrinsic Special Variables
@@ -1991,7 +2013,7 @@ Here is an example message:
 * local_tn - This is a never-decreasing counter (starting at 1 at process startup) incremented for every new TP transaction, TP restart, and TP rollback. Two TPRESTART messages by the same process should never have the same value of local_tn. The difference between the local_tn values of two messages from the same process indicates the number of TP transactions done by that process in the time interval between the two messages.
 
 .. note::
-   Use VIEW [NO]LOGT[PRESTART][=intexpr] to enable or disable the logging of TPRESTART messages. Note that you can use the ydb_tprestart_log_delta and ydb_tprestart_log_first environment variables to set the frequency of TPRESTART messages. Use VIEW [NO]LOGN[ONTP][=intexpr] to enable or disable the logging of NONTPRESTART messages. This facility is the analog of TPRESTART tracking, but for non-TP mini-transacstions. Note that you can use the ydb_nontprestart_log_delta and ydb_nontprestart_log_first environment variables to set the frequency of the NONTPRESTART messages.For more information, refer to `“Key Words in VIEW Command” <./commands.html#keywords-in-view-command>`_ and the `Environment Variables <https://docs.yottadb.com/AdminOpsGuide/basicops.html#environment-variables>`_ section of the Administration and Operations Guide.
+   Use VIEW [NO]LOGT[PRESTART][=intexpr] to enable or disable the logging of TPRESTART messages. Note that you can use the ydb_tprestart_log_delta and ydb_tprestart_log_first environment variables to set the frequency of TPRESTART messages. Use VIEW [NO]LOGN[ONTP][=intexpr] to enable or disable the logging of NONTPRESTART messages. This facility is the analog of TPRESTART tracking, but for non-TP mini-transacstions. Note that you can use the ydb_nontprestart_log_delta and ydb_nontprestart_log_first environment variables to set the frequency of the NONTPRESTART messages.For more information, refer to `“Key Words in VIEW Command” <./commands.html#keywords-in-view-command>`_ and the `Environment Variables <../AdminOpsGuide/basicops.html#env-vars>`_ section of the Administration and Operations Guide.
 
 
 ++++++++++++++++++++++

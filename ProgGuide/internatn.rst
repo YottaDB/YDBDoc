@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2018-2021 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -26,7 +26,9 @@ Alternative collation sequences (or an alternative ordering of strings) can be d
 
 M has defined pattern classes that serve as arguments to the pattern match operator. YottaDB supports user definition of additional pattern classes as well as redefinition of the standard pattern classes. Specific patterns are defined in a text file that is pointed to by an environment variable. Pattern classes may be re-defined dynamically. The details of defining these pattern classes and the environment variables are described in the section called “Matching Alternative Patterns”.
 
-For some languages (such as Chinese), the ordering of strings according to Unicode code-points (character values) may or may not be the linguistically or culturally correct ordering. Supporting applications in such languages requires the development of collation modules - YottaDB natively supports M collation, but does not include pre-built collation modules for any specific natural language. Therefore, applications that use characters in Unicode may need to implement their own collation functions. For more information on developing a collation module for Unicode, refer to `Implementing an Alternative Collation Sequence for Unicode® Characters`_.
+For some languages (such as Chinese), the ordering of strings according to Unicode code-points (character values) may or may not be the linguistically or culturally correct ordering. Supporting applications in such languages requires the development of collation modules - YottaDB natively supports M collation, but does not include pre-built collation modules for any specific natural language. Therefore, applications that use characters in Unicode may need to implement their own collation functions. For more information on developing a collation module for Unicode, refer to :ref:`implement-alt-colltn-seq-unicode-chars`.
+
+.. _colln-seq-defn:
 
 -----------------------------------
 Collation Sequence Definitions
@@ -90,6 +92,8 @@ This qualifier always applies to regions, and takes effect when a database is cr
 The value cannot be changed once a database file is created, and will be in effect for the life of the database file. The same restriction applies to the version of the collation sequence. The version of a collation sequence implementation is also stored in the database fileheader and cannot be modified except by recreating the file.
 
 If the code of the collation sequence changes, making it incompatible with the collation sequence in use when the database was created, use the following procedure to ensure the continued validity of the database. MUPIP EXTRACT the database using the older compatible collation routines, then recreate and MUPIP LOAD using the newer collation routines.
+
+.. _establish-local-colln-seq:
 
 +++++++++++++++++++++++++++++++++++++++++++++
 Establishing A Local Collation Sequence
@@ -418,6 +422,8 @@ Example:
       }
      return MYAPP_WRONGVERSION;
    }
+
+.. _use-gbldef-util:
 
 ++++++++++++++++++++++++++++++
 Using the %GBLDEF Utility
@@ -750,6 +756,8 @@ Notice how the subscripts of ^E are sorted in reverse order:
    ^G("Madrid")=1
    ^G("Friendly")=1
 
+.. _implement-alt-colltn-seq-unicode-chars:
+
 -----------------------------------------------------------------------
 Implementing an Alternative Collation Sequence for Unicode® Characters
 -----------------------------------------------------------------------
@@ -768,6 +776,8 @@ Matching Alternative Patterns
 ------------------------------------
 
 YottaDB allows the definition of unique patterns for use with the pattern match operator, in place of, or in addition to, the standard C, N, U, L, and P. You can redefine existing pattern codes (patcodes), or add new ones. These codes are defined in a specification file. The format is described in the next section.
+
+.. _pattern-code-defn:
 
 +++++++++++++++++++++++++++++
 Pattern Code Definition
