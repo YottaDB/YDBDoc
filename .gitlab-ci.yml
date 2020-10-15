@@ -32,7 +32,7 @@ deadlinks:
     - touch target/AcculturationGuide/Debian-Hybrid_yottadbworkshop15.zip
     - wget https://github.com/deadlinks/cargo-deadlinks/releases/download/0.4.2/deadlinks-linux
     - chmod +x ./deadlinks-linux
-    - ./deadlinks-linux deadlinks -v --check-http --dir target
+    - ./deadlinks-linux deadlinks -v --dir target
 
 pages:
   stage: deploy
