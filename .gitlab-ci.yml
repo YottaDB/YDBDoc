@@ -14,11 +14,12 @@ stages:
   - build
 
 before_script:
-    - apt-get update -qq && apt-get install -y -qq --no-install-recommends rsync tcsh sphinx-common python3-pip python3-setuptools python3-wheel
+    - apt-get update -qq && apt-get install -y -qq --no-install-recommends make rsync tcsh sphinx-common python3-pip python3-setuptools python3-wheel wget
     - pip3 install sphinx_rtd_theme sphinxprettysearchresults
 
 deadlinks:
   stage: build
+  image: bitnami/minideb
   script:
     - make html
     - ./buildall.sh target
