@@ -19,9 +19,9 @@ before_script:
 
 deadlinks:
   stage: build
-  image: rust:latest
   script:
-    - cargo install --debug cargo-deadlinks
     - make html
     - ./buildall.sh target
-    - cargo deadlinks -v --check-http --dir target
+    - wget https://github.com/deadlinks/cargo-deadlinks/releases/download/0.4.2/deadlinks-linux
+    - chmod +x ./deadlinks-linux
+    - ./deadlinks-linux deadlinks -v --check-http --dir target
