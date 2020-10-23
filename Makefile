@@ -14,7 +14,7 @@
 #
 
 # You can set these variables from the command line.
-SPHINXOPTS    =
+SPHINXOPTS    = -W --keep-going
 SPHINXBUILD   = sphinx-build
 SPHINXPROJ    = GTMAdminOps
 SOURCEDIRS    = AcculturationGuide AdminOpsGuide MessageRecovery MultiLangProgGuide ProgGuide ReleaseNotes
@@ -39,4 +39,4 @@ clean:
 # All of the $(SOURCEDIRS) are built at once.
 %: Makefile
 	@$(foreach dir, $(SOURCEDIRS), $(SPHINXBUILD) -M $@ "$(dir)" "$(dir)/$(BUILDDIR)" $(SPHINXOPTS) $(O);)
-	$(foreach dir, $(SOURCEDIRS), cd $(dir) && $(SOURCEDIR)$(SOURCEDIR)/htmlpatch.csh && cd $(SOURCEDIR)$(SOURCEDIR);)
+	@$(foreach dir, $(SOURCEDIRS), cd $(dir) && $(SOURCEDIR)$(SOURCEDIR)/htmlpatch.csh && cd $(SOURCEDIR)$(SOURCEDIR);)
