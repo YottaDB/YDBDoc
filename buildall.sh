@@ -1,4 +1,15 @@
 #!/bin/bash
+ ###############################################################
+ #                                                             #
+ # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+ # All rights reserved.                                        #
+ #                                                             #
+ #     This source code contains the intellectual property     #
+ #     of its copyright holder(s), and is made available       #
+ #     under a license.  If you do not know the terms of       #
+ #     the license, please stop and do not read further.       #
+ #                                                             #
+ ###############################################################
 
 # Automatically build each documentation guide as html and copy to common location for upload.
 # Expects one argument to specify the (existing) destination path for the copy command, e.g. `./buildall.sh build_dir`
@@ -47,7 +58,7 @@ for directory in "${DIRECTORIES[@]}"; do
 	pushd $directory
 	output="$target/${directory%?}"
 	rsync _build/html/ "$output/"
-	rsync *.c *.m *.go "$output/"
+	rsync *.c *.m *.go *.pl "$output/"
 	popd
 done
 cp index.html "$target"
