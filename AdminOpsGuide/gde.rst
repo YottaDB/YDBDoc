@@ -703,6 +703,8 @@ Maps a region to a segment. The syntax of the ADD -REGION command is:
 
    A[DD]-R[EGION] region-name -D[YNAMIC]=segment-name [-REGION-qualifier...]
 
+The region name is case-insensitive.
+
 ~~~~~~~~~
 -Gblname
 ~~~~~~~~~
@@ -832,6 +834,8 @@ The format of the LOCKS command is:
    LOC[KS] -R[EGION]=region-name
 
 The LOCKS -REGION= qualifier allows specification of a region for local locks. By default, GDE maps local locks to the DEFAULT region.
+
+The region name is case-insensitive.
 
 Example:
 

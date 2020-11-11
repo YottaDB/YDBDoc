@@ -55,7 +55,7 @@ Example:
 
    $ydb_dist/dse dump -fileheader
 
-This command displays the fileheader of the region that stands first in the list of regions arranged in alphabetical order and then returns to the shell prompt. To look at other regions, at the DSE prompt you must first issue a FIND -REGION=<desired-region> command.
+This command displays the fileheader of the region that stands first in the list of regions arranged in alphabetical order and then returns to the shell prompt. To look at other regions, at the DSE prompt you must first issue a FIND -REGION=<desired-region> command. The region name is case-insensitive.
 
 As previously mentioned, DSE provides control over most of the attributes of your database. With DSE, it is possible to examine them and, with a few exceptions, change them.
 
@@ -1771,6 +1771,8 @@ As results in this mode may be inconsistent, it should only be used if the criti
 Switches to the named Global Directory region.
 
 -REGION without a specified region, or -REGION="*", displays all existing regions in the database.
+
+The region name is case-insensitive.
 
 Use Alone.
 

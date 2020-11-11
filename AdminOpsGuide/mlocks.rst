@@ -231,7 +231,7 @@ Specifies the process identification number that holds a LOCK on a resource name
 -R[EGION]=region-name
 ~~~~~~~~~~~~~~~~~~~~~~
 
-region-name specifies the region that holds the locked resource names.
+region-name specifies the region that holds the locked resource names. The region-name is case-insensitive.
 
 * REGION clears LOCKs mapped by the current global directory to a region specified by the region-name.
 
@@ -489,7 +489,7 @@ Specifies the process identification number that holds a LOCK on a resource name
 -R[EGION]=region-name
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Specifies the region that holds the locked resource names.
+Specifies the region that holds the locked resource names. The region-name is case-insensitive.
 
 * The REGION qualifier displays LOCKs of that specified region.
 

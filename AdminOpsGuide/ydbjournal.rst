@@ -359,7 +359,7 @@ The format for the MUPIP SET command is:
 
    MUPIP SE[T] -qualifier... {-F[ILE] file-name|-JN[LFILE journal-file|-REG[ION] region-list}
 
-The file-specification, journal file specification or region-list identifies the target of the SET. Region-names separated by commas (,) make up a region-list.
+The file-specification, journal file specification or region-list identifies the target of the SET. The region-list comprises of case-insensitive region-names separated by commas (,).
 
 To establish journaling characteristics, use the MUPIP SET command with the -[NO]JOURNAL[=journal-option-list] qualifier and one of the following SET object identifying qualifiers:
 

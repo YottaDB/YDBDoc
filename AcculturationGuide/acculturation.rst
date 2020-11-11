@@ -412,9 +412,9 @@ YottaDB can also be accessed from Rust, using the YottaDB wrapper for Rust `YDBR
 
 .. code-block:: bash
 
-   yottadbuser@yottadbworkshop:~$ git clone https://gitlab.com/YottaDB/Lang/YDBRust/
+   yottadbuser@yottadbworkshop:~$ git clone --quiet https://gitlab.com/YottaDB/Lang/YDBRust/ # Do this only once for the Acculturation Guide
    yottadbuser@yottadbworkshop:~$ cd YDBRust
-   yottadbuser@yottadbworkshop:~/YDBRust$ cargo run -q --example say_hello_rust
+   yottadbuser@yottadbworkshop:~/YDBRust$ cargo run --quiet --example say_hello_rust # May take some time the first time
    yottadbuser@yottadbworkshop:~/YDBRust$ mupip extract -format=zwr -select=hello -stdout
    YottaDB MUPIP EXTRACT /usr/local/lib/yottadb/r130/mupip extract -format=zwr -select=hello -stdout UTF-8
    28-AUG-2020  15:34:04 ZWR
@@ -2128,7 +2128,7 @@ To use the Rust initialization program, if you have not done so already, clone t
 
    yottadbuser@paris:~/jnlex$ export LD_LIBRARY_PATH=$ydb_dist
    yottadbuser@paris:~/jnlex$ git clone https://gitlab.com/YottaDB/Lang/YDBRust.git && cd YDBRust
-   yottadbuser@paris:~/jnlex/YDBRust$ cargo run -q --example xyzInitRust
+   yottadbuser@paris:~/jnlex/YDBRust$ cargo run --quiet --example xyzInitRust
 
 As a workload, download four simulated application processes, in C (`xyzTransC.c <./xyzTransC.c>`_), Go (`xyzTransGo.go <./xyzTransGo.go>`_), M (`xyzTransM.m <./xyzTransM.m>`_) and Perl (`xyzTransPerl.pl <./xyzTransPerl.pl>`_). Compile the C and Go programs. Run all four in the background to create a simulated, multi-process, multi-language, workload. Run the `xyzTransRust.rs <https://gitlab.com/YottaDB/Lang/YDBRust/-/blob/master/examples/xyzTransRust.rs>`_ program from the YDBRust directory:
 
@@ -2146,7 +2146,7 @@ As a workload, download four simulated application processes, in C (`xyzTransC.c
    yottadbuser@paris:~/jnlex$ ./xyzTransPerl.pl &
    [4] 804
    yottadbuser@paris:~/jnlex/YDBRust$ cd YDBRust
-   yottadbuser@paris:~/jnlex/YDBRust$ cargo run -q --example xyzTransRust &
+   yottadbuser@paris:~/jnlex/YDBRust$ cargo run --quiet --example xyzTransRust &
    [5] 817
    yottadbuser@paris:~/jnlex$
 
@@ -2216,7 +2216,7 @@ After the backup is completed, you can terminate the application processes updat
    yottadbuser@paris:~/jnlex$ kill %5
    yottadbuser@paris:~/jnlex$ %YDB-F-FORCEDHALT, Image HALTed by MUPIP STOP
 
-   [5]-  Exit 241                cargo run -q --example xyzTransRust  (wd: ~/jnlex/YDBRust)
+   [5]-  Exit 241                cargo run --quiet --example xyzTransRust  (wd: ~/jnlex/YDBRust)
    (wd now: ~/jnlex)
    yottadbuser@paris:~/jnlex$
 
@@ -2238,7 +2238,7 @@ Download a program to verify that ACID properties are preserved in the backed up
    yottadbuser@paris:~/jnlex/backup$ ./xyzVerifyPerl.pl
    ACID test pass
    yottadbuser@paris:~/jnlex/backup$ cd ../YDBRust
-   yottadbuser@paris:~/jnlex/YDBRust$ cargo run -q --example xyzVerifyRust
+   yottadbuser@paris:~/jnlex/YDBRust$ cargo run --quiet --example xyzVerifyRust
    ACID test pass
 
 Exercise - Replication Briefly Revisited

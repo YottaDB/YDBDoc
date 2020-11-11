@@ -1619,7 +1619,8 @@ $VIEW() provides a means to access YottaDB environmental information. When Yotta
 |               |                  |                                                                                                                                                                     |
 |               |                  | * CAT - total of critical section acquisitions successes                                                                                                            |
 +---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| "REGION"      | gvn              | Name of the region(s) holding the specified gvn. If gvn is :code:`"^*"`, the name of the default region.                                                            |
+| "REGION"      | gvn              | Name of the region(s) holding the specified gvn. The region names are case-insensitive. The specified region name is converted to upper case before processing.     |
+|               |                  | If gvn is :code:`"^*"`, the name of the default region.                                                                                                             |
 |               |                  |                                                                                                                                                                     |
 |               |                  | If gvn spans more than one region, this function returns region name in an order where the first region is the region to which the unsubscripted global variable    |
 |               |                  | name maps; and other regions are in the order in which they would be encountered by traversing the subscripts of gvn in order (with duplicates removed).            |
@@ -3492,7 +3493,7 @@ In many ways, the $ZSUBSTR() function is similar to the $ZEXTRACT() function. Fo
 $ZSYSLOG()
 ----------------------
 
-Sends its string parameter to the system log and always returns TRUE (1). The text appears in the syslog with the same format as any other YottaDB syslog message (that is, in the user.info log with YDB-MUMPS[pid]" or "YDB-MUPIP[pid]" prefix along with instance information where appropriate). The $ZSYSLOG() function sends the argument to syslog facility. The format of the $ZSYSLOG() function is: 
+Sends its string parameter to the system log and always returns TRUE (1). The text appears in the syslog with the same format as any other YottaDB syslog message (that is, in the user.info log with YDB-MUMPS[pid]" or "YDB-MUPIP[pid]" prefix along with instance information where appropriate). The $ZSYSLOG() function sends the argument to syslog facility. The format of the $ZSYSLOG() function is:
 
 .. code-block:: none
 

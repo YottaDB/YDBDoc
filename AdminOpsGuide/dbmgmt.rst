@@ -190,7 +190,7 @@ The format of the MUPIP BACKUP command is:
 
 * If any region name does not map to an existing accessible file, or if any element of the destination list is invalid, BACKUP rejects the command with an error.
 
-* region-list may specify more than one region of the current global directory in a list. Regions are case insensitive, separated by a comma, and wildcards can be used to specify them. Any region-name may include the wildcard characters \* and % (remember to escape them to protect them from inappropriate expansion by the shell). Any region name expansion occurs in M (ASCII) collation order.
+* region-list may specify more than one region of the current global directory in a list. Regions are case-insensitive, separated by a comma, and wildcards can be used to specify them. Any region-name may include the wildcard characters \* and % (remember to escape them to protect them from inappropriate expansion by the shell). Any region name expansion occurs in M (ASCII) collation order.
 
 * Depending on the type of backup, destination-list may be a single directory, or a comma separated list of destinations including files, piped commands, or a TCP socket address (a combination of IPv4 or IPV6 hostname and a port number).
 
@@ -583,6 +583,8 @@ The format of the REGION qualifier is:
 .. code-block:: none
 
    -R[EGION]=region-name
+
+The region-name is case-insensitive. The specified region name is converted into upper case before processing.
 
 **Examples for MUPIP CREATE**
 
@@ -3395,6 +3397,8 @@ Specifies the region on which MUPIP SIZE runs. If REGION is not specified, MUPIP
 .. code-block:: none
 
    -R[EGION]=region-list
+
+The regions in the region-list are case-insensitive. The specified region-list is converted into upper case before processing.
 
 **Examples for MUPIP SIZE**
 
