@@ -1,0 +1,782 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="756"
+   height="549"
+   viewBox="0 0 200.025 145.25625"
+   version="1.1"
+   id="svg8"
+   inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)"
+   sodipodi:docname="helen-phil.svg">
+  <defs
+     id="defs2">
+    <rect
+       x="5.2916667"
+       y="134.9375"
+       width="103.1875"
+       height="10.583333"
+       id="rect319" />
+    <rect
+       x="5.2916667"
+       y="134.9375"
+       width="103.1875"
+       height="7.9375"
+       id="rect313" />
+    <rect
+       x="7.9375"
+       y="121.70833"
+       width="119.0625"
+       height="7.9375033"
+       id="rect307" />
+    <rect
+       x="119.0625"
+       y="113.77083"
+       width="113.77083"
+       height="68.79167"
+       id="rect301" />
+    <rect
+       x="121.70833"
+       y="113.77083"
+       width="127"
+       height="10.583337"
+       id="rect295" />
+    <rect
+       x="7.9375"
+       y="113.77083"
+       width="108.47917"
+       height="7.9375"
+       id="rect287" />
+    <rect
+       x="7.9375"
+       y="97.895833"
+       width="145.52083"
+       height="13.229167"
+       id="rect281" />
+    <rect
+       x="7.9375"
+       y="79.375"
+       width="113.77083"
+       height="5.2916667"
+       id="rect246" />
+    <rect
+       x="15.875"
+       y="60.854167"
+       width="132.29167"
+       height="10.583333"
+       id="rect236" />
+    <rect
+       x="60.854167"
+       y="55.5625"
+       width="79.375"
+       height="5.2916667"
+       id="rect228" />
+    <rect
+       x="7.9375"
+       y="44.979167"
+       width="111.125"
+       height="10.583333"
+       id="rect222" />
+    <rect
+       x="7.9375"
+       y="52.916667"
+       width="92.604167"
+       height="10.583333"
+       id="rect216" />
+    <rect
+       x="7.9375"
+       y="39.6875"
+       width="119.0625"
+       height="13.229167"
+       id="rect202" />
+    <rect
+       x="7.9375"
+       y="26.458333"
+       width="95.25"
+       height="13.229167"
+       id="rect161" />
+    <rect
+       x="2.6458333"
+       y="127"
+       width="103.1875"
+       height="7.9375"
+       id="rect155" />
+    <rect
+       x="119.0625"
+       y="89.958333"
+       width="103.1875"
+       height="7.9375"
+       id="rect149" />
+    <rect
+       x="119.0625"
+       y="71.4375"
+       width="113.77083"
+       height="7.9375"
+       id="rect143" />
+    <rect
+       x="7.9375"
+       y="71.4375"
+       width="105.83333"
+       height="7.9375"
+       id="rect108" />
+    <rect
+       x="76.729167"
+       y="52.916667"
+       width="13.229167"
+       height="5.2916667"
+       id="rect73" />
+    <rect
+       x="10.583333"
+       y="47.625"
+       width="84.666667"
+       height="7.9375"
+       id="rect67" />
+    <rect
+       x="7.9375"
+       y="18.520833"
+       width="74.083333"
+       height="5.2916667"
+       id="rect32" />
+    <rect
+       x="148.16667"
+       y="7.9375"
+       width="31.75"
+       height="7.9375"
+       id="rect26" />
+    <rect
+       x="13.229167"
+       y="5.2916667"
+       width="29.104167"
+       height="7.9375"
+       id="rect20" />
+    <rect
+       x="13.229167"
+       y="5.2916667"
+       width="23.8125"
+       height="7.9375"
+       id="rect14" />
+    <rect
+       x="7.9375"
+       y="18.520832"
+       width="74.083336"
+       height="5.2916665"
+       id="rect32-8" />
+    <rect
+       x="7.9375"
+       y="18.520832"
+       width="74.083336"
+       height="5.2916665"
+       id="rect45" />
+    <rect
+       x="10.583333"
+       y="47.625"
+       width="84.666664"
+       height="7.9375"
+       id="rect67-7" />
+    <rect
+       x="10.583333"
+       y="47.625"
+       width="84.666664"
+       height="7.9375"
+       id="rect86" />
+    <rect
+       x="7.9375"
+       y="71.4375"
+       width="105.83333"
+       height="7.9375"
+       id="rect108-1" />
+    <rect
+       x="7.9375"
+       y="71.4375"
+       width="105.83333"
+       height="7.9375"
+       id="rect121" />
+    <rect
+       x="7.9375"
+       y="26.458332"
+       width="95.25"
+       height="13.229167"
+       id="rect161-5" />
+    <rect
+       x="7.9375"
+       y="26.458332"
+       width="95.25"
+       height="13.229167"
+       id="rect174" />
+    <rect
+       x="7.9375"
+       y="79.375"
+       width="124.36497"
+       height="6.064219"
+       id="rect246-7" />
+    <rect
+       x="7.9375"
+       y="79.375"
+       width="113.77083"
+       height="5.2916665"
+       id="rect259" />
+    <rect
+       x="7.9375"
+       y="18.520832"
+       width="74.083336"
+       height="5.2916665"
+       id="rect32-8-3" />
+    <rect
+       x="7.9375"
+       y="18.520832"
+       width="74.083336"
+       height="5.2916665"
+       id="rect1280" />
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath336">
+      <path
+         id="path338"
+         style="fill:#ff0000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.264583"
+         d="m 3.648873,4.4932658 v 7.3938632 c 0.00447,2.15e-4 0.00897,-2.63e-4 0.013435,0 0.044114,0.0027 0.087876,0.0077 0.131775,0.0124 0.039801,0.0043 0.079589,0.0083 0.1193726,0.0124 V 4.5222046 c -0.014928,0.0027 -0.031058,0.00346 -0.045475,0.0062 -0.00951,0.0018 -0.019767,0 -0.029456,0 H 3.6617918 v -0.03359 c -0.00424,-7.673e-4 -0.00867,-9.26e-4 -0.01292,-0.00156 z m 0,13.8032912 v 0.03462 c 0.019034,-0.0094 0.036099,-0.01402 0.043925,0.0021 0.00362,-8.6e-5 0.00723,8.5e-5 0.010853,0 -0.014578,-0.01584 -0.020053,-0.02039 -0.032556,-0.03359 -0.00738,-0.0011 -0.014854,-0.0019 -0.02222,-0.0031 z m 0.129191,0.0217 c 3.704e-4,0.0012 6.615e-4,0.0024 0.00103,0.0036 0.00108,0.0035 0.00722,0.0055 0.010335,0.0036 0.0018,-0.0011 -0.00878,-0.0049 -0.011369,-0.0072 z m 0.011885,1.30483 c -0.00449,9e-4 -0.00898,0.0015 -0.013436,0.0026 4.234e-4,0.0076 0.00101,0.01517 0.00156,0.02274 l 0.00827,0.02067 c 0.01265,-0.01013 0.013975,-0.02554 0.00362,-0.04599 z m -0.0863,0.01137 c -6.879e-4,-4.9e-5 -0.00333,6.09e-4 -0.00414,5.3e-4 0.00315,0.01578 0.00386,0.03203 0.00827,0.04754 -0.028221,-0.0037 -0.043657,-0.01756 -0.044442,-0.04599 -0.00598,0.0011 -0.00932,-3.97e-4 -0.01447,0 v 22.674067 c 0.00843,-0.0019 0.016896,-0.0034 0.025321,-0.0052 V 42.15817 c 0.1174853,0 0.1388586,-2.64e-4 0.2392619,0.0083 V 19.647896 c -0.00265,3.71e-4 -0.00287,0.0011 -0.00569,0.0016 -3.44e-4,4.3e-5 -6.879e-4,-3.3e-5 -0.00103,0 -0.04494,0.01487 -0.090729,0.02677 -0.1374592,0.03462 -0.012232,0.0011 -0.015565,-9.79e-4 -0.025321,-5.29e-4 0.00114,-1.69e-4 0.00259,-4.76e-4 0.00362,-5.29e-4 0.00438,-2e-4 0.013065,0.0013 0.01292,-0.0031 -9.02e-5,-0.0027 7.49e-5,-0.0035 0,-0.0062 -0.02014,-0.0032 -0.038517,-0.01883 -0.056844,-0.03927 z m 0.075964,0.03876 c 9.42e-5,10e-4 -9.71e-5,0.0021 0,0.0031 0.00172,-6.35e-4 0.00114,-0.0024 0.00259,-0.0031 -8.467e-4,2.3e-4 -0.00175,-1.84e-4 -0.00259,0 z M 3.9134558,49.96801 c -0.015864,0.0028 -0.031744,0.0056 -0.047543,0.0083 -0.051343,-1.75e-4 -0.1026826,0.0019 -0.1539957,-5.29e-4 l 5.292e-4,-5.29e-4 c -0.00471,-2.65e-4 -0.00924,-7.94e-4 -0.013952,-0.0011 -0.0029,-2.06e-4 -0.006,-2.54e-4 -0.00878,-5.29e-4 -0.00628,7.94e-4 -0.012293,0.0029 -0.018603,0.0036 -0.00917,1.11e-4 -0.014576,-5.29e-4 -0.02222,-5.29e-4 v 5.368147 c 0.05053,-0.0069 0.1010407,-0.01349 0.1519285,-0.0181 0.00169,-2.64e-4 0.00346,-2.51e-4 0.00517,-5.29e-4 -7.673e-4,-0.0078 -0.00183,-0.0155 -0.00259,-0.02326 0.00339,-2.64e-4 0.00695,-7.93e-4 0.010335,-0.0011 0.00363,-1.51e-4 0.00722,5.29e-4 0.010853,5.29e-4 -1.5e-5,-5.29e-4 1.49e-5,-5.29e-4 0,-0.0011 -2.429e-4,-0.0073 0.014931,2.64e-4 0.02222,5.29e-4 0.00412,8.2e-5 0.00828,5e-5 0.012404,0 5.027e-4,-1.22e-4 0.038221,-1.3e-5 0.026355,-5.29e-4 0.00156,1.93e-4 0.00732,3.7e-5 0.011369,0 -4.233e-4,-5.29e-4 0.00904,-0.0037 0.016537,-0.0062 z m -0.2557984,5.397087 c -5.821e-4,2.65e-4 -0.00278,7.94e-4 -0.00206,0.0011 0.00201,5.29e-4 0.00415,7.93e-4 0.0062,0.0011 -0.00127,-5.29e-4 -0.00235,-0.0016 -0.00362,-0.0021 0,0 -5.291e-4,0 -5.291e-4,0 z m 0.1860352,7.789188 c -0.00569,0.0028 -0.013343,0.0038 -0.020153,0.0057 0.00484,-0.0011 0.00968,-0.0019 0.01447,-0.0031 0.00198,-5.29e-4 0.00752,-0.0035 0.00569,-0.0026 z m 0.069763,0.522965 c -0.011819,0.0013 -0.023326,0.0043 -0.03514,0.0052 8.12e-5,0.01516 -2.7e-6,0.03033 0,0.04548 0.00951,0.0013 0.022474,0.0019 0.027389,0.0031 0.00259,5.29e-4 0.00516,0.0013 0.00775,0.0021 z m 0,3.427182 c -0.030142,0.01291 -0.061141,0.01958 -0.095085,0.0186 -0.022947,-2.14e-4 -0.045781,-1.8e-5 -0.06873,0 -0.019632,-2.3e-5 -0.039279,-7e-6 -0.058911,0 -0.01393,3e-6 -0.027894,0 -0.041858,0 v 68.630428 h 0.2645833 z" />
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath384">
+      <path
+         id="path386"
+         style="fill:#ff0000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.264583"
+         d="m 104.19726,4.5201374 v 3.313493 c 0.0601,0.015206 0.12096,0.026926 0.18242,0.031523 0.0273,0.00204 0.0548,0.0014 0.0822,0.00206 v -3.347076 z m 0,5.9200526 v 0.01395 c 0.002,-1.41e-4 0.005,-3.97e-4 0.007,-5.29e-4 0.0107,-0.0015 0.0216,-0.005 0.032,-0.0062 -0.013,-0.0023 -0.0259,-0.0048 -0.0393,-0.0072 z m 0.26458,7.943701 c -0.008,0.0014 -0.0155,0.0029 -0.0233,0.0047 0.008,0.0014 0.0155,0.0032 0.0233,0.0047 z m -0.26458,0.259932 v 0.02429 c 0.0183,-0.0038 0.0365,-0.008 0.0548,-0.01188 -0.0184,-0.0036 -0.0364,-0.0086 -0.0548,-0.0124 z m 0.0212,0.921908 v 0.0052 c -0.0103,-6.09e-4 -0.0143,-0.0022 -0.0212,-0.0031 V 42.08532 c 0.0856,0.03175 0.17446,0.04871 0.26458,0.05994 V 19.59622 c -0.0202,3.44e-4 -0.0407,0.0014 -0.0594,-5.3e-4 -0.0249,-0.0026 -0.0491,-0.0073 -0.0739,-0.01085 -0.0283,-0.0073 -0.0388,-0.0096 -0.0537,-0.01292 -0.0137,-0.0016 -0.0277,-8.21e-4 -0.0413,-0.0031 -0.005,-9.79e-4 -0.01,-0.0021 -0.015,-0.0031 z m 0.2434,27.891319 c -0.0194,0.0028 -0.039,0.0048 -0.0584,0.0078 -0.0292,0.0043 -0.0582,0.0089 -0.0873,0.01344 0.0233,0.004 0.0466,0.0083 0.0698,0.01241 0.0326,0.0058 0.0528,0.01003 0.076,0.01447 z m 0,0.421164 c -0.0235,0.0044 -0.0486,0.0092 -0.0791,0.01498 0.0153,0.003 0.0316,0.004 0.0455,0.0078 0.0116,0.003 0.0225,0.008 0.0336,0.01241 z m -0.10801,0.309542 c 8e-4,0.0013 8e-4,0.0011 0.002,0.0026 0.0135,0.0016 0.0249,0.0027 -0.002,-0.0026 z m 0.10801,0.0186 c -0.057,0.02669 -0.12959,0.03757 -0.19017,0.04806 -0.018,0.0031 -0.0315,0.006 -0.0475,0.0088 0.0495,0.0076 0.0985,0.01672 0.14728,0.02997 0.0303,0.0083 0.062,0.02177 0.0904,0.03979 z m 0,0.37982 c -0.0245,0.02384 -0.0495,0.04711 -0.0775,0.06666 -0.022,0.01529 -0.0519,0.01363 -0.078,0.01963 -0.0362,0.0084 -0.0727,0.01595 -0.10903,0.02379 v 0.02016 c 0.0896,0.01355 0.17911,0.02795 0.26458,0.05839 z m -0.0775,0.475424 c 0.001,0.0026 0.001,0.0013 0.002,0.0041 2.6e-4,0.0011 0.002,-0.0027 0.001,-0.0031 -0.001,-5.29e-4 -0.002,-5.29e-4 -0.003,-0.0011 z m 0.0775,0.05943 c -0.002,7.94e-4 -0.004,0.0016 -0.007,0.0026 0.002,7.94e-4 0.004,0.0019 0.007,0.0026 z m -0.26458,1.066602 v 24.684281 c 0.0608,-0.0075 0.12151,-0.01511 0.18241,-0.0217 l 0.0114,-0.04134 c -0.0116,0.01421 -0.004,0.0034 0.0486,0.0078 5.2e-4,2.9e-5 0.0172,7.94e-4 0.0222,0.0011 v -24.61874 c -0.022,5.3e-4 -0.054,5.3e-4 -0.0615,5.3e-4 -0.0491,-2.65e-4 -0.0982,-5.3e-4 -0.14727,-5.3e-4 -0.0617,-0.0094 -0.0537,-0.0097 -0.0558,-0.01138 z m 0,27.462922 v 0.0021 c 0.002,-1.72e-4 0.005,-2.38e-4 0.007,-5.29e-4 -0.002,-5.29e-4 -0.005,-0.0011 -0.007,-0.0016 z m 0.26458,2.162659 c -0.0526,-5.29e-4 -0.0724,0.01474 -0.0672,0.04134 0.0234,-0.0013 0.0455,-0.0037 0.0672,-0.0052 z m 0,6.014103 c -0.0187,1.86e-4 -0.0353,0.0029 -0.0687,0.0031 -0.0381,5.29e-4 -0.0766,5.29e-4 -0.11472,0.0016 -0.0442,0.0013 -0.0645,0.0011 -0.0811,0.0021 v 7.857403 c 0.0882,-0.0024 0.17654,-0.0028 0.26458,-0.0016 z" />
+    </clipPath>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="2.0011122"
+     inkscape:cx="418.16341"
+     inkscape:cy="327.45731"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     inkscape:document-rotation="0"
+     showgrid="true"
+     units="px"
+     inkscape:window-width="1920"
+     inkscape:window-height="1001"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1">
+    <inkscape:grid
+       type="xygrid"
+       id="grid10" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <text
+       xml:space="preserve"
+       id="text12"
+       style="font-size:2.11667px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect14);" />
+    <text
+       xml:space="preserve"
+       id="text18"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect20);"
+       transform="translate(-11.509561,-4.5111314)"><tspan
+         x="13.228516"
+         y="7.9548389"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400">Helen</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text24"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect26);"
+       transform="translate(-46.427031,-7.1518746)"><tspan
+         x="148.16602"
+         y="10.601323"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400">Phil</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text71"
+       style="font-size:4.23333px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect73);display:inline;" />
+    <text
+       xml:space="preserve"
+       id="text159"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;line-height:1.05;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect161);"
+       transform="translate(-3.0615975,-13.916014)"><tspan
+         x="7.9375"
+         y="28.840586"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400">$ export GNUPGHOME=$PWD/.helengnupg
+</tspan></tspan><tspan
+         x="7.9375"
+         y="31.803917"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400">$ gen_keypair.sh helen@ydb Helen Keymaster</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text159-5"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;line-height:1.05;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect161-5);"
+       transform="translate(97.500908,-13.894656)"><tspan
+         x="7.9375"
+         y="28.840586"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400">$ export GNUPGHOME=$PWD/.philgnupg
+</tspan></tspan><tspan
+         x="7.9375"
+         y="31.803917"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400">$ gen_keypair.sh phil@ydb Phil Keyuser</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text200"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect202);"
+       transform="translate(-2.9363361,-17.932847)"><tspan
+         x="7.9375"
+         y="42.351323"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400">helen@ydb_pubkey.txt (</tspan><tspan
+           style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400">by email</tspan><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400">)
+</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text214"
+       style="font-size:4.23333px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect216);" />
+    <text
+       xml:space="preserve"
+       id="text220"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect222);display:inline;"
+       transform="translate(-2.9027242,-20.11013)"><tspan
+         x="7.9375"
+         y="47.642339"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400">Fingerprint (</tspan><tspan
+           style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400">by text message, phone, or facsimile</tspan><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400">)</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text226"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect228);display:inline;"
+       transform="translate(0.23196521,-23.355478)"><tspan
+         x="60.853516"
+         y="58.226323"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400">phil@ydb_pubkey.txt (</tspan><tspan
+           style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400">by email</tspan><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400">)</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text234"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect236);display:inline;"
+       transform="translate(17.008335,-25.34584)"><tspan
+         x="15.875"
+         y="63.517339"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400">Fingerprint (</tspan><tspan
+           style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400">by text message, phone, or facsimile</tspan><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400">)</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text244"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect246);display:inline;"
+       transform="translate(-3.0133771,-33.127041)"><tspan
+         x="7.9375"
+         y="82.038823"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400">$ import_and_sign_key.sh phil@ydb_pubkey.txt phil@ydb</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text244-3"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect246-7);display:inline;"
+       transform="translate(97.60996,-33.150352)"><tspan
+         x="7.9375"
+         y="82.038823"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400">$ import_and_sign_key.sh helen@ydb_pubkey.txt helen@ydb</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text279"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;line-height:1.05;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect281);display:inline;"
+       transform="translate(-3.0432222,-37.772383)"><tspan
+         x="7.9375"
+         y="100.27809"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400">$ gen_sym_key.sh 2 helen_ydb_dat.txt
+</tspan></tspan><tspan
+         x="7.9375"
+         y="103.24142"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400">$ encrypt_sign_db_key.sh {helen,phil}_ydb_dat.txt phil phil@ydb</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text285"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect287);display:inline;"
+       transform="translate(-2.8135735,-43.201425)"><tspan
+         x="7.9375"
+         y="116.43531"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400">phil_ydb_dat.txt (</tspan><tspan
+           style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400">by email</tspan><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400">)</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text293"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;line-height:1.05;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect295);display:inline;"
+       transform="translate(-16.503435,-34.601915)"><tspan
+         x="121.70898"
+         y="116.15309"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400">$ export ydb_dbkeys=$HOME/.ydb_dbkeys
+</tspan></tspan><tspan
+         x="121.70898"
+         y="119.11642"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400">$ add_db_keys.sh $PWD/ydb.dat phil_ydb_dat.txt $ydb_dbkeys</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text299"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;line-height:1.05;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect301);"
+       transform="translate(-13.560012,-15.052857)"><tspan
+         x="119.0625"
+         y="116.15309"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400">phil$ export ydbgbldir=ydb.gld
+</tspan></tspan><tspan
+         x="119.0625"
+         y="119.11642"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400">phil$ export ydb_passwd=&quot;&quot;
+</tspan></tspan><tspan
+         x="119.0625"
+         y="122.07975"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400">phil$ $ydb_dist/yottadb -dir
+</tspan></tspan><tspan
+         x="119.0625"
+         y="125.04309"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400">
+</tspan></tspan><tspan
+         x="119.0625"
+         y="128.00642"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400">Enter Passphrase:
+</tspan></tspan><tspan
+         x="119.0625"
+         y="130.96975"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400">YDB&gt; do ^GDE
+</tspan></tspan><tspan
+         x="119.0625"
+         y="133.93308"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400">GDE&gt; change -segment DEFAULT -encryption
+</tspan></tspan><tspan
+         x="119.0625"
+         y="136.89642"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400">GDE&gt; exit
+</tspan></tspan><tspan
+         x="119.0625"
+         y="139.85975"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400">YDB&gt; zsystem &quot;$ydb_dist/mupip create&quot;
+</tspan></tspan><tspan
+         x="119.0625"
+         y="142.82308"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400">YDB&gt; zsystem &quot;dse dump -encryption_hash&quot;</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text305"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect307);"
+       transform="translate(19.43793,4.223668)"><tspan
+         x="7.9375"
+         y="124.37281"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400">Encryption Hash (</tspan><tspan
+           style="font-style:italic">by text message, phone, or facsimile</tspan><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400">)</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text311"
+       style="font-size:4.23333px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect313);display:inline;" />
+    <text
+       xml:space="preserve"
+       id="text317"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect319);display:inline;"
+       transform="translate(-0.38988464,5.430333)"><tspan
+         x="5.2910156"
+         y="137.60132"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400">$ gen_sym_hash.sh helen_ydb_dat.txt</tspan></tspan></text>
+    <rect
+       style="font-variation-settings:'wdth' 100, 'wght' 400;display:inline;fill:none;stroke:#000000;stroke-width:0.264583;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect1129"
+       width="91.28125"
+       height="7.9375"
+       x="3.7871222"
+       y="11.742616" />
+    <rect
+       style="font-variation-settings:'wdth' 100, 'wght' 400;fill:none;stroke:#000000;stroke-width:0.264583;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect1131"
+       width="91.28125"
+       height="3.96875"
+       x="3.7871222"
+       y="7.7738662" />
+    <path
+       style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.00210448;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="m 15.427789,9.9070357 c 0.07478,-0.0047 0.197147,-0.0047 0.271927,0 0.07478,0.0047 0.0136,0.0085 -0.135964,0.0085 -0.14956,0 -0.210743,-0.0038 -0.135963,-0.0085 z"
+       id="path1143" />
+    <path
+       style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.000744045;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="m 3.9451301,9.7584467 c 0,-1.0138667 9.79e-4,-1.4286304 0.00217,-0.921697 0.00119,0.5069335 0.00119,1.3364613 0,1.8433943 -0.00119,0.506934 -0.00217,0.09217 -0.00217,-0.9216973 z"
+       id="path1153" />
+    <path
+       style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.000744045;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="M 3.6567819,12.136885 V 7.6433503 h 9.0873901 9.087391 v 0.129581 0.129581 l -8.9599,9.79e-4 c -4.9279446,5.292e-4 -8.9534087,0.00267 -8.945476,0.00475 0.013552,0.00355 0.014563,0.070605 0.016719,1.1088291 0.00127,0.6077748 0.00127,1.4386686 -1.08e-5,1.8464306 -0.00217,0.693638 -0.00324,0.741628 -0.016719,0.745166 -0.00793,0.0021 4.0175425,0.0042 8.9454868,0.0048 l 8.9599,9.79e-4 v 0.129581 0.129581 h -8.95781 -8.9578091 v 2.378438 2.378438 h -0.129581 -0.129581 z"
+       id="path1155" />
+    <rect
+       style="font-variation-settings:'wdth' 100, 'wght' 400;display:inline;fill:none;stroke:#000000;stroke-width:0.264583;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect1129-1"
+       width="91.28125"
+       height="7.9375"
+       x="104.32039"
+       y="11.772071" />
+    <path
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.357526;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="M 104.51042,9.7818747 V 7.9375 H 149.95771 195.405 V 9.7818747 11.62625 h -45.44729 -45.44729 z"
+       id="path1269" />
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.264583;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect1267"
+       width="91.281258"
+       height="3.983665"
+       x="104.32038"
+       y="7.7884068" />
+    <text
+       xml:space="preserve"
+       id="text30-7"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:2.82222px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect32-8);display:inline;fill:#ffffff;fill-opacity:1;stroke-width:1.00013;stroke-miterlimit:4;stroke-dasharray:none;"
+       transform="translate(97.60736,-10.396753)"><tspan
+         x="7.9375"
+         y="21.185308"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:2.82222px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffffff;fill-opacity:1;stroke-width:1.00013;stroke-miterlimit:4;stroke-dasharray:none">Generate Asymmetric Keys</tspan></tspan></text>
+    <path
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.178763;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="M 3.96875,9.7582287 V 7.9375 H 46.389375 88.810002 V 9.7582287 11.578959 H 46.389375 3.96875 Z m 11.692865,0.132146 c -0.05852,-0.01127 -0.154289,-0.01127 -0.212813,0 -0.05852,0.01127 -0.01064,0.02049 0.106407,0.02049 0.117047,0 0.164929,-0.0092 0.106406,-0.02049 z"
+       id="path1305" />
+    <path
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.178763;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="M 88.904818,9.7582287 V 7.9375 h 3.003021 3.003021 v 1.8207287 1.8207303 h -3.003021 -3.003021 z"
+       id="path1309" />
+    <text
+       xml:space="preserve"
+       id="text30-7-4"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:2.82222px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect32-8-3);display:inline;fill:#ffffff;fill-opacity:1;stroke-width:1.00013;stroke-miterlimit:4;stroke-dasharray:none;"
+       transform="translate(-2.8573178,-10.405783)"><tspan
+         x="7.9375"
+         y="21.185308"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:2.82222px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffffff;fill-opacity:1;stroke-width:1.00013;stroke-miterlimit:4;stroke-dasharray:none">Generate Asymmetric Keys</tspan></tspan></text>
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.264583;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect1316"
+       width="91.28125"
+       height="3.9687526"
+       x="3.7907133"
+       y="46.134464" />
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.264583;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect1316-1"
+       width="91.28125"
+       height="3.9687526"
+       x="104.36604"
+       y="46.134464" />
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.264583;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect1333"
+       width="91.28125"
+       height="3.9687488"
+       x="3.7907133"
+       y="42.165714" />
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.264583;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect1333-4"
+       width="91.28125"
+       height="3.9687488"
+       x="104.36604"
+       y="42.165714" />
+    <path
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.146315;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="m 104.51042,44.139107 v -1.805774 h 45.47875 45.47875 v 1.805774 1.805776 h -45.47875 -45.47875 z"
+       id="path1350" />
+    <text
+       xml:space="preserve"
+       id="text65-7"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:2.82222px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect67-7);fill:#ffffff;fill-opacity:1;"
+       transform="translate(94.822526,-5.1760122)"><tspan
+         x="10.583984"
+         y="50.288823"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:2.82222px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffffff;fill-opacity:1">Import and sign helen@ydb_pubkey.txt</tspan></tspan></text>
+    <path
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.199231;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="m 3.96875,44.139107 v -1.805774 h 45.478752 45.478752 v 1.805774 1.805776 H 49.447502 3.96875 Z"
+       id="path1352" />
+    <text
+       xml:space="preserve"
+       id="text65"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:2.82222px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect67);display:inline;fill:#ffffff;fill-opacity:1;"
+       transform="translate(-5.7186915,-5.1436162)"><tspan
+         x="10.583984"
+         y="50.288823"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:2.82222px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffffff;fill-opacity:1">Import and sign phil@ydb_pubkey.txt</tspan></tspan></text>
+    <rect
+       style="font-variation-settings:'wdth' 100, 'wght' 400;display:inline;fill:none;stroke:#000000;stroke-width:0.264583;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect1129-7"
+       width="91.28125"
+       height="7.9375"
+       x="3.7803237"
+       y="59.347813" />
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.264583;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect1369"
+       width="91.28125"
+       height="3.96875"
+       x="3.7803209"
+       y="55.379063" />
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.264583;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect1369-0"
+       width="91.28125"
+       height="3.96875"
+       x="104.32322"
+       y="73.928391" />
+    <rect
+       style="font-variation-settings:'wdth' 100, 'wght' 400;display:inline;fill:none;stroke:#000000;stroke-width:0.264583;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect1129-7-7"
+       width="91.28125"
+       height="7.9375"
+       x="104.32323"
+       y="77.897141" />
+    <path
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.173831;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="M 3.96875,57.359585 V 55.5625 h 45.447294 45.44729 v 1.797085 1.797081 H 49.416044 3.96875 Z"
+       id="path1401" />
+    <text
+       xml:space="preserve"
+       id="text106"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:2.82222px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect108);fill:#ffffff;fill-opacity:1;"
+       transform="translate(-2.9439494,-15.797761)"><tspan
+         x="7.9375"
+         y="74.101323"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:2.82222px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffffff;fill-opacity:1">Generate, encrypt, and sign symmetric cipher key</tspan></tspan></text>
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.264583;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect1369-0-0"
+       width="91.28125"
+       height="3.96875"
+       x="3.8003128"
+       y="136.12135" />
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.264583;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect1369-0-8"
+       width="91.28125"
+       height="3.96875"
+       x="3.8003128"
+       y="140.0901" />
+    <path
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.16801;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="m 104.51042,75.880415 v -1.797082 h 45.4473 45.44729 v 1.797082 1.797084 h -45.44729 -45.4473 z"
+       id="path1424" />
+    <text
+       xml:space="preserve"
+       id="text141"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:2.82222px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect143);fill:#ffffff;fill-opacity:1;"
+       transform="translate(-13.027166,2.751645)"><tspan
+         x="119.0625"
+         y="74.101323"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:2.82222px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffffff;fill-opacity:1">Add phil_ydb_dat.txt to master key file .ydb_dbkeys</tspan></tspan></text>
+    <path
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.0955146;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="m 3.96875,138.09963 v -1.83921 h 45.478751 45.478753 v 1.83921 1.83922 H 49.447501 3.96875 Z"
+       id="path1426" />
+    <text
+       xml:space="preserve"
+       id="text153"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:2.82222px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect155);fill:#ffffff;fill-opacity:1;"
+       transform="translate(2.404154,9.4658993)"><tspan
+         x="2.6464844"
+         y="129.66382"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:2.82222px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffffff;fill-opacity:1">Verify the key hash matches database hash</tspan></tspan></text>
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.264583;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect1432"
+       width="91.281242"
+       height="31.749994"
+       x="104.31321"
+       y="97.709236" />
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.264583;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect1439"
+       width="91.281258"
+       height="3.968755"
+       x="104.31321"
+       y="93.740471" />
+    <path
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.173831;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="m 104.51042,95.724165 v -1.797082 h 45.4473 45.44729 v 1.797082 1.797084 h -45.44729 -45.4473 z"
+       id="path1441" />
+    <text
+       xml:space="preserve"
+       id="text147"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:2.82222px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect149);fill:#ffffff;fill-opacity:1;"
+       transform="translate(-13.53226,4.0728645)"><tspan
+         x="119.0625"
+         y="92.622808"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:2.82222px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffffff;fill-opacity:1">Create an encrypted YottaDB database</tspan></tspan></text>
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.264583;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect1443"
+       width="8.9958334"
+       height="3.7041667"
+       x="0.79374999"
+       y="0.79374999" />
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.264583;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect1443-4"
+       width="8.9958334"
+       height="3.7041667"
+       x="100.0125"
+       y="0.79374999" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:1.05833, 0.529166, 0.264583, 0.529166;stroke-dashoffset:0;stroke-opacity:1"
+       d="M 3.7809431,3.9910742 V 135.75356"
+       id="path1460"
+       clip-path="url(#clipPath336)" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:1.05833, 0.529166, 0.264583, 0.529166;stroke-dashoffset:0;stroke-opacity:1"
+       d="M 104.3297,105.85565 V 4.5202408"
+       id="path1462"
+       clip-path="url(#clipPath384)" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 3.96875,25.135416 h 100.27708 v 0"
+       id="path272" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 3.96875,35.71875 H 104.24583"
+       id="path274" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 104.24583,74.083332 H 3.96875"
+       id="path276" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 104.24583,129.38125 H 3.96875"
+       id="path278" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 6.6145832,34.395833 3.96875,35.71875 6.6145833,37.041667"
+       id="path282" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 101.6,23.8125 2.64583,1.322916 -2.64583,1.322917"
+       id="path284" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 101.6,72.760416 v 0 l 2.64583,1.322916 L 101.6,75.40625"
+       id="path286" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 6.6145832,128.05833 -2.6458332,1.32292 2.6458332,1.32292"
+       id="path288" />
+  </g>
+</svg>

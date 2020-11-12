@@ -36,7 +36,7 @@ Consider a global variable ^TMP that holds only temporary data that is no longer
 
 Consider the following illustration:
 
-.. image:: globaldir.png
+.. image:: globaldir.svg
 
 There are four M global variables--^Horse, ^Crab, ^Platypus, and ^Lobster. ^Horse and ^Platypus map to region MAMMALS that maps to database file linnaeus.dat and ^Crab and ^Lobster map to region CRUSTACEANS that maps to database file brunnich.dat. The default namespace * maps to a region called DEFAULT that maps to database file yottadb.dat. * denotes all globals other than the explicitly named ^Horse, ^Platypus, ^Crab, and ^Lobster. All globals store data in their respective database files. Each database file has a single active journal file. To enforce access restrictions on globals so that only mammalogists have access to ^Horse and ^Platypus and only carcinologists have access to ^Crab and ^Lobster, one just needs to assign appropriate read/write permissions to linnaeus.dat and brunnich.dat.
 
@@ -45,7 +45,7 @@ There are four M global variables--^Horse, ^Crab, ^Platypus, and ^Lobster. ^Hors
 
 You can also map different subscripts of the same global to different regions when subscripts have logically separable data. Consider the following global directory example:
 
-.. image:: gd.png
+.. image:: gd.svg
 
 ^US and ^EURWest have logically separable subscripts that map to different regions. ^EURCentral holds data that has a different collation order than the others, so it maps to a different region. Such mapping improves operational administration and permits a larger total size. It may also improve performance if the access patterns of the distinct parts allow accesses to all or some of them to use optimizations in the YottaDB database engine, for example, to optimize serial accesses.
 

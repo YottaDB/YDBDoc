@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2021 YottaDB LLC and/or its subsidiaries.     #
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -210,9 +210,9 @@ YottaDB recommends separate backup schemes for database files and journal files.
 
 MUPIP BACKUP uses the -BKUPDBJNL and -NEWJNLFILES to interact with journal files. As stated in the `General Database Management chapter <./dbmgmt.html>`_, BKUPDBJNL enables or turns off the journaling characteristics of the backup database and NEWJNLFILES sets the journaling characteristics of the database being backed up. The following illustration describes how MUPIP BACKUP -NEWJNLFILES=NOPREVLINK cuts the back link between the newly created journal file and the prior generation journal files.
 
-.. image:: noprevlink.gif
+.. image:: noprevlink.svg
 
-Since -NEWJNLFILES=NOPREVLINK cuts back link of the newly created journal file, any subsequent recovery or rollback will not be able to go back past this discontinuity.
+Since -NEWJNLFILES=NOPREVLINK cuts the back link of the newly created journal file, any subsequent recovery or rollback will not be able to go back past this discontinuity.
 
 .. note::
    When MUPIP SET changes the journal state from DISABLED or OFF to ON, YottaDB creates new journal files with no back-links which, like the above example, indicates a fresh start of journaling for the database.

@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="860"
+   height="225"
+   viewBox="0 0 227.54166 59.531252"
+   version="1.1"
+   id="svg8"
+   inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)"
+   sodipodi:docname="accttrig.svg">
+  <defs
+     id="defs2">
+    <rect
+       x="34.395833"
+       y="31.75"
+       width="166.6875"
+       height="10.583333"
+       id="rect62" />
+    <rect
+       x="34.395833"
+       y="15.875"
+       width="111.125"
+       height="10.583333"
+       id="rect56" />
+    <rect
+       x="148.16667"
+       y="42.333333"
+       width="50.270833"
+       height="10.583333"
+       id="rect50" />
+    <rect
+       x="195.79167"
+       y="5.2916667"
+       width="44.979164"
+       height="7.9375"
+       id="rect44" />
+    <rect
+       x="153.45833"
+       y="5.2916667"
+       width="37.04167"
+       height="7.9375"
+       id="rect38" />
+    <rect
+       x="97.895834"
+       y="5.2916667"
+       width="29.104167"
+       height="7.9375"
+       id="rect32" />
+    <rect
+       x="47.625"
+       y="5.2916667"
+       width="37.041667"
+       height="7.9375"
+       id="rect26" />
+    <rect
+       x="10.583333"
+       y="47.625"
+       width="29.104167"
+       height="5.2916667"
+       id="rect20" />
+    <rect
+       x="7.9375"
+       y="5.2916667"
+       width="29.104167"
+       height="5.2916667"
+       id="rect14" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="11.313709"
+     inkscape:cx="156.19838"
+     inkscape:cy="182.756"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     inkscape:document-rotation="0"
+     showgrid="true"
+     units="px"
+     inkscape:window-width="1920"
+     inkscape:window-height="1001"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1">
+    <inkscape:grid
+       type="xygrid"
+       id="grid10" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <text
+       xml:space="preserve"
+       id="text12"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.58611px;line-height:1.25;font-family:Lora;-inkscape-font-specification:'Lora Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect14);"
+       transform="translate(-7.3003385,-1.55833)"><tspan
+         x="7.9375"
+         y="9.4686753"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.58611px;font-family:Lora;-inkscape-font-specification:'Lora Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal">Global Node  </tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text18"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.58611px;line-height:1.25;font-family:Lora;-inkscape-font-specification:'Lora Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect20);"
+       transform="translate(14.379261,3.7168197)"><tspan
+         x="10.583984"
+         y="51.80266"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.58611px;font-family:Lora;-inkscape-font-specification:'Lora Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal">Command  </tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text24"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.58611px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect26);"
+       transform="translate(17.145857,-1.6975094)"><tspan
+         x="47.625"
+         y="9.6197309"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Lora;-inkscape-font-specification:'Lora Bold'">Database Update</tspan><tspan
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.58611px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"> </tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text30"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.58611px;line-height:1.25;font-family:Lora;-inkscape-font-specification:'Lora Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect32);"
+       transform="translate(11.865485,-1.5667956)"><tspan
+         x="97.896484"
+         y="9.4686753"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.58611px;font-family:Lora;-inkscape-font-specification:'Lora Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal">$ZTVALUE</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text36"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.58611px;line-height:1.25;font-family:Lora;-inkscape-font-specification:'Lora Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect38);"
+       transform="translate(4.2841322,-1.5272093)"><tspan
+         x="153.45898"
+         y="9.4686753"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.58611px;font-family:Lora;-inkscape-font-specification:'Lora Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal">Trigger Code </tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text42"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.58611px;line-height:1.25;font-family:Lora;-inkscape-font-specification:'Lora Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect44);"
+       transform="translate(-0.02120649,-1.5464608)"><tspan
+         x="195.79102"
+         y="9.4686753"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.58611px;font-family:Lora;-inkscape-font-specification:'Lora Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal">Trigger Name</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text48"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.58611px;line-height:1.25;font-family:Lora;-inkscape-font-specification:'Lora Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect50);"
+       transform="translate(-25.781403,9.02611)"><tspan
+         x="148.16602"
+         y="46.511644"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.58611px;font-family:Lora;-inkscape-font-specification:'Lora Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal">Triggered Update</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text54"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.58611px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect56);"
+       transform="translate(11.788615,7.5554466)"><tspan
+         x="34.396484"
+         y="20.203715"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.58611px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400">YDB&gt;Set ^Acct(&quot;ID&quot;)=3000947</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text60"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.58611px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect62);"
+       transform="translate(11.687323,0.96528532)"><tspan
+         x="34.396484"
+         y="36.078715"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.58611px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400">+^ Acct(&quot;ID&quot;) -command=S -xecute=&quot;do ^OpenAccount&quot; -name=TrigAcct </tspan></tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 55.562499,23.8125 v -5.291667 h 52.916671 v 5.291667 0"
+       id="path66" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 82.020832,18.520833 v -9.2604164 0"
+       id="path68" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 108.47917,26.458334 11.90625,-9.260417 V 9.2604173"
+       id="path70" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 44.979166,35.71875 13.229167,19.84375 V 9.2604166"
+       id="path72" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 48.947916,54.239583 h 38.364583 l 11.90625,-15.875"
+       id="path74" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 123.03125,38.364583 v 5.291666 h 37.04166 v -5.291666"
+       id="path76" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 141.55208,43.656249 v 7.9375"
+       id="path78" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 195.79166,35.71875 212.98958,21.166666 V 9.2604166"
+       id="path80" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 160.07291,35.71875 173.30208,22.489583 V 9.2604166"
+       id="path88" />
+  </g>
+</svg>

@@ -232,7 +232,7 @@ Records subject to encryption are collectively referred to in the document as da
 
 For performance, a symmetric cipher is used to encrypt and decrypt data records. Asymmetric ciphers are used by the reference implementation to secure the symmetric cipher keys stored on disk. A password is used to secure the private key which is stored on a key ring on disk. The following illustration is an overview of YottaDB database encryption in the reference implementation using GNU Privacy Guard (GPG) to provide the ciphers.
 
-.. image:: sym_asym.png
+.. image:: sym_asym.svg
 
 **Key Ring on Disk**
 
@@ -294,7 +294,7 @@ Only for MUPIP CREATE does YottaDB rely on the database_filename in the key ring
 
 This is illustrated by the following illustration:
 
-.. image:: memory_key_ring.png
+.. image:: memory_key_ring.svg
 
 **Key Validation and Hashing**
 
@@ -644,7 +644,7 @@ The encrypted database file cust.dat is now ready for use. That file, all journa
 
 The following command sequence diagram illustrates how Helen and Phil operate with one another.
 
-.. image:: helen-phil.png
+.. image:: helen-phil.svg
 
 **Updating GPG configuration**
 

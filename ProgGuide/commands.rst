@@ -4226,7 +4226,7 @@ This ZTCOMMIT issued from Direct Mode would close any open ZTSTARTs.
 
 Example:
 
-.. image:: ztcommit.gif
+.. image:: ztcommit.svg
 
 This shows a transaction with two independent nested sub-transactions. For additional examples, refer to the ZTSTART examples.
 

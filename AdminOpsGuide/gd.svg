@@ -1,0 +1,919 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="831"
+   height="238"
+   viewBox="0 0 219.86874 62.970835"
+   version="1.1"
+   id="svg8"
+   inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)"
+   sodipodi:docname="gd.svg">
+  <defs
+     id="defs2">
+    <rect
+       x="185.20833"
+       y="58.208333"
+       width="26.458335"
+       height="5.2916664"
+       id="rect419" />
+    <rect
+       x="158.75"
+       y="58.208333"
+       width="18.520833"
+       height="5.2916666"
+       id="rect413" />
+    <rect
+       x="129.64583"
+       y="58.208333"
+       width="23.8125"
+       height="5.2916666"
+       id="rect407" />
+    <rect
+       x="105.83333"
+       y="58.208333"
+       width="21.166666"
+       height="5.2916666"
+       id="rect401" />
+    <rect
+       x="71.437499"
+       y="58.208333"
+       width="23.8125"
+       height="5.2916666"
+       id="rect395" />
+    <rect
+       x="44.979166"
+       y="58.208333"
+       width="18.520833"
+       height="5.2916666"
+       id="rect389" />
+    <rect
+       x="18.520833"
+       y="58.208333"
+       width="18.520833"
+       height="5.2916666"
+       id="rect383" />
+    <rect
+       x="185.20833"
+       y="52.916666"
+       width="15.875"
+       height="5.2916666"
+       id="rect377" />
+    <rect
+       x="161.39583"
+       y="52.916666"
+       width="15.875"
+       height="5.2916666"
+       id="rect371" />
+    <rect
+       x="132.29167"
+       y="52.916666"
+       width="21.166666"
+       height="5.2916666"
+       id="rect365" />
+    <rect
+       x="108.47917"
+       y="52.916666"
+       width="21.166666"
+       height="5.2916666"
+       id="rect359" />
+    <rect
+       x="74.083333"
+       y="52.916666"
+       width="18.520833"
+       height="5.2916666"
+       id="rect353" />
+    <rect
+       x="44.979166"
+       y="50.270833"
+       width="15.875"
+       height="7.9374999"
+       id="rect347" />
+    <rect
+       x="21.166666"
+       y="52.916666"
+       width="13.229167"
+       height="5.2916666"
+       id="rect341" />
+    <rect
+       x="185.20833"
+       y="44.979166"
+       width="23.8125"
+       height="13.229167"
+       id="rect335" />
+    <rect
+       x="161.39583"
+       y="44.979166"
+       width="21.166666"
+       height="13.229167"
+       id="rect329" />
+    <rect
+       x="129.64583"
+       y="44.979166"
+       width="26.458333"
+       height="13.229167"
+       id="rect323" />
+    <rect
+       x="111.125"
+       y="47.625"
+       width="31.75"
+       height="10.583333"
+       id="rect317" />
+    <rect
+       x="76.729166"
+       y="47.625"
+       width="29.104166"
+       height="7.9374999"
+       id="rect311" />
+    <rect
+       x="47.625"
+       y="44.979166"
+       width="21.166666"
+       height="7.9374999"
+       id="rect305" />
+    <rect
+       x="21.166666"
+       y="44.979166"
+       width="21.166666"
+       height="7.9374999"
+       id="rect299" />
+    <rect
+       x="18.520833"
+       y="42.333333"
+       width="26.458333"
+       height="7.9374999"
+       id="rect293" />
+    <rect
+       x="148.16667"
+       y="50.270833"
+       width="44.979161"
+       height="15.875"
+       id="rect287" />
+    <rect
+       x="108.47917"
+       y="31.75"
+       width="47.624995"
+       height="21.166666"
+       id="rect281" />
+    <rect
+       x="79.374999"
+       y="31.75"
+       width="44.979166"
+       height="21.166666"
+       id="rect275" />
+    <rect
+       x="50.270833"
+       y="31.75"
+       width="26.458333"
+       height="21.166666"
+       id="rect269" />
+    <rect
+       x="23.8125"
+       y="29.104166"
+       width="34.395833"
+       height="18.520834"
+       id="rect263" />
+    <rect
+       x="160.07292"
+       y="34.395833"
+       width="15.875"
+       height="10.583333"
+       id="rect228" />
+    <rect
+       x="190.5"
+       y="21.166666"
+       width="11.90625"
+       height="10.583333"
+       id="rect222" />
+    <rect
+       x="162.71875"
+       y="21.166666"
+       width="14.552083"
+       height="10.583333"
+       id="rect216" />
+    <rect
+       x="132.29167"
+       y="19.84375"
+       width="10.583333"
+       height="9.2604166"
+       id="rect210" />
+    <rect
+       x="111.125"
+       y="19.84375"
+       width="15.875"
+       height="9.2604166"
+       id="rect204" />
+    <rect
+       x="80.697916"
+       y="19.84375"
+       width="10.583333"
+       height="6.6145833"
+       id="rect198" />
+    <rect
+       x="54.239583"
+       y="18.520833"
+       width="11.90625"
+       height="7.9374999"
+       id="rect192" />
+    <rect
+       x="29.104166"
+       y="18.520833"
+       width="13.229167"
+       height="9.2604166"
+       id="rect186" />
+    <rect
+       x="194.46875"
+       y="11.90625"
+       width="9.2604166"
+       height="6.6145833"
+       id="rect180" />
+    <rect
+       x="156.10417"
+       y="11.90625"
+       width="27.78125"
+       height="7.9374999"
+       id="rect174" />
+    <rect
+       x="136.26042"
+       y="11.90625"
+       width="25.135416"
+       height="7.9374999"
+       id="rect139" />
+    <rect
+       x="112.44792"
+       y="10.583333"
+       width="34.395833"
+       height="7.9374999"
+       id="rect133" />
+    <rect
+       x="72.760416"
+       y="10.583333"
+       width="30.427083"
+       height="7.9375002"
+       id="rect127" />
+    <rect
+       x="79.374999"
+       y="10.583333"
+       width="21.166666"
+       height="6.6145833"
+       id="rect119" />
+    <rect
+       x="25.135416"
+       y="9.2604166"
+       width="22.489583"
+       height="6.6145833"
+       id="rect84" />
+    <rect
+       x="27.78125"
+       y="10.583333"
+       width="17.197917"
+       height="5.2916666"
+       id="rect78" />
+    <rect
+       x="4.8108515"
+       y="3.7417734"
+       width="21.916101"
+       height="7.2162772"
+       id="rect70" />
+    <rect
+       x="3.8754081"
+       y="52.919366"
+       width="28.0633"
+       height="6.5481034"
+       id="rect64" />
+    <rect
+       x="4.2763124"
+       y="42.36222"
+       width="25.925144"
+       height="7.884451"
+       id="rect58" />
+    <rect
+       x="3.6081386"
+       y="33.408691"
+       width="25.925144"
+       height="6.4144686"
+       id="rect52" />
+    <rect
+       x="3.7417734"
+       y="22.985179"
+       width="25.657874"
+       height="6.4144686"
+       id="rect46" />
+    <rect
+       x="3.6081386"
+       y="13.630746"
+       width="23.252449"
+       height="6.2808338"
+       id="rect40" />
+    <rect
+       x="155.28359"
+       y="21.648832"
+       width="42.763124"
+       height="8.5526248"
+       id="rect34" />
+    <rect
+       x="84.991709"
+       y="3.7417734"
+       width="65.881938"
+       height="10.557146"
+       id="rect22" />
+    <rect
+       x="39.689524"
+       y="8.41899"
+       width="30.201456"
+       height="11.759859"
+       id="rect16" />
+    <rect
+       x="25.135416"
+       y="9.260417"
+       width="22.489582"
+       height="6.6145835"
+       id="rect84-2" />
+    <rect
+       x="25.135416"
+       y="9.260417"
+       width="22.489582"
+       height="6.6145835"
+       id="rect97" />
+    <rect
+       x="112.44792"
+       y="10.583333"
+       width="34.395832"
+       height="7.9375"
+       id="rect133-3" />
+    <rect
+       x="112.44792"
+       y="10.583333"
+       width="34.395832"
+       height="7.9375"
+       id="rect152" />
+    <rect
+       x="160.07292"
+       y="34.395832"
+       width="15.875"
+       height="10.583333"
+       id="rect228-4" />
+    <rect
+       x="160.07292"
+       y="34.395832"
+       width="15.875"
+       height="10.583333"
+       id="rect241" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.4712716"
+     inkscape:cx="436.41953"
+     inkscape:cy="15.482893"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     inkscape:document-rotation="0"
+     showgrid="true"
+     units="px"
+     inkscape:showpageshadow="false"
+     inkscape:window-width="1920"
+     inkscape:window-height="1001"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1">
+    <inkscape:grid
+       type="xygrid"
+       id="grid74" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:#3b1a68;stroke:#ffffff;stroke-width:0.26458331;stroke-dasharray:none;fill-opacity:1;stroke-miterlimit:4;stroke-dashoffset:0"
+       id="rect357"
+       width="220.92708"
+       height="63.5"
+       x="0"
+       y="0" />
+    <text
+       xml:space="preserve"
+       id="text14"
+       style="line-height:1.25;font-family:Inconsolata;font-size:7.05555549px;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variation-settings:'wght' 400, 'wdth' 100;white-space:pre;shape-inside:url(#rect16);" />
+    <text
+       xml:space="preserve"
+       id="text20"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:7.05556px;line-height:1.25;font-family:Lora;-inkscape-font-specification:Lora;white-space:pre;shape-inside:url(#rect22);fill:#f77825;fill-opacity:1;"
+       transform="translate(5.7462948,-4.8108515)"><tspan
+         x="84.992188"
+         y="10.169362"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93889px;font-family:Lora;-inkscape-font-specification:'Lora, @wght=400';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wght' 400;fill:#f77825;fill-opacity:1">Global Directory</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text32"
+       style="font-size:4.93889px;line-height:1.25;font-family:Lora;-inkscape-font-specification:'Lora, @wght=400';font-variation-settings:'wght' 400;white-space:pre;shape-inside:url(#rect34);fill:#f77825;fill-opacity:1;"
+       transform="rotate(-90.939491,192.02075,5.4876416)"
+       inkscape:transform-center-x="0.13363477"
+       inkscape:transform-center-y="0.4009043"><tspan
+         x="155.2832"
+         y="26.147458"><tspan
+           style="fill:#f77825;fill-opacity:1">Mapping</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text38"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:1.25;font-family:Lora;-inkscape-font-specification:'Lora, @wght=400';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wght' 400;white-space:pre;shape-inside:url(#rect40);fill:#f77825;fill-opacity:1;"
+       transform="translate(0.11070666,-3.6405639)"><tspan
+         x="3.6074219"
+         y="16.844447"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:Lora;-inkscape-font-specification:'Lora, @wght=400';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wght' 400;fill:#f77825;fill-opacity:1">Global</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text44"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:1.25;font-family:Lora;-inkscape-font-specification:'Lora, @wght=400';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wght' 400;white-space:pre;shape-inside:url(#rect46);fill:#f77825;fill-opacity:1;"
+       transform="translate(0,-5.078121)"><tspan
+         x="3.7421875"
+         y="26.197962"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:Lora;-inkscape-font-specification:'Lora, @wght=400';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wght' 400;fill:#f77825;fill-opacity:1">Collation</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text50"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:1.25;font-family:Lora;-inkscape-font-specification:'Lora, @wght=400';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wght' 400;white-space:pre;shape-inside:url(#rect52);fill:#f77825;fill-opacity:1;"
+       transform="translate(0.12691934,-3.6864198)"><tspan
+         x="3.6074219"
+         y="36.62179"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:Lora;-inkscape-font-specification:'Lora, @wght=400';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wght' 400;fill:#f77825;fill-opacity:1">Subscript</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text56"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:1.25;font-family:Lora;-inkscape-font-specification:'Lora, @wght=400';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wght' 400;white-space:pre;shape-inside:url(#rect58);fill:#f77825;fill-opacity:1;"
+       transform="translate(-0.53453907,-0.60135626)"><tspan
+         x="4.2753906"
+         y="45.574915"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:Lora;-inkscape-font-specification:'Lora, @wght=400';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wght' 400;fill:#f77825;fill-opacity:1">Region</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text62"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:1.25;font-family:Lora;-inkscape-font-specification:'Lora, @wght=400';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wght' 400;white-space:pre;shape-inside:url(#rect64);fill:#f77825;fill-opacity:1;"
+       transform="translate(-0.13363476,-3.2072345)"><tspan
+         x="3.875"
+         y="56.133509"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:Lora;-inkscape-font-specification:'Lora, @wght=400';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wght' 400;fill:#f77825;fill-opacity:1">Segment</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text68"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:1.25;font-family:Lora;-inkscape-font-specification:'Lora, @wght=400';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wght' 400;white-space:pre;shape-inside:url(#rect70);fill:#f77825;fill-opacity:1;"
+       transform="translate(-0.93544344,53.921627)"><tspan
+         x="4.8105469"
+         y="6.9557746"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:Lora;-inkscape-font-specification:'Lora, @wght=400';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wght' 400;fill:#f77825;fill-opacity:1">File</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text76"
+       style="font-size:4.93889px;line-height:1.25;font-family:Lora;-inkscape-font-specification:'Lora, @wght=400';font-variation-settings:'wght' 400;white-space:pre;shape-inside:url(#rect78);" />
+    <text
+       xml:space="preserve"
+       id="text82"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect84);fill:#f3f3f3;fill-opacity:1;"
+       transform="translate(-1.6455396,0.52307501)"><tspan
+         x="25.134766"
+         y="12.589549"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;fill:#f3f3f3;fill-opacity:1">^EURWest</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text82-0"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect84-2);fill:#f3f3f3;fill-opacity:1;"
+       transform="translate(15.471034,0.64802731)"><tspan
+         x="25.134766"
+         y="12.589549"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;fill:#f3f3f3;fill-opacity:1">^EURWest</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text117"
+       style="font-size:4.93889px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400';font-variation-settings:'wght' 400;white-space:pre;shape-inside:url(#rect119);font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;" />
+    <text
+       xml:space="preserve"
+       id="text125"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect127);fill:#f3f3f3;fill-opacity:1;"
+       transform="translate(-10.972773,-0.77216497)"><tspan
+         x="72.759766"
+         y="13.913768"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;fill:#f3f3f3;fill-opacity:1">^EURCentral</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text131"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect133);fill:#f3f3f3;fill-opacity:1;"
+       transform="translate(-28.122052,-0.68913499)"><tspan
+         x="112.44727"
+         y="13.913768"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;fill:#f3f3f3;fill-opacity:1">^US</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text137"
+       style="line-height:1.25;font-family:Inconsolata;font-size:4.93889019px;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variation-settings:'wght' 400, 'wdth' 100;white-space:pre;shape-inside:url(#rect139);" />
+    <text
+       xml:space="preserve"
+       id="text131-5"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect133-3);fill:#f3f3f3;fill-opacity:1;"
+       transform="translate(4.8411693,-0.7349912)"><tspan
+         x="112.44727"
+         y="13.913768"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;fill:#f3f3f3;fill-opacity:1">^US</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text172"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect174);fill:#f3f3f3;fill-opacity:1;"
+       transform="translate(-5.6696428,-2.0788691)"><tspan
+         x="156.10352"
+         y="15.236034"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;fill:#f3f3f3;fill-opacity:1">^Australia</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text178"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect180);fill:#f3f3f3;fill-opacity:1;"
+       transform="translate(-22.723613,-2.4014919)"><tspan
+         x="194.46875"
+         y="15.236034"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;fill:#f3f3f3;fill-opacity:1">*</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text184"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect186);fill:#f3f3f3;fill-opacity:1;"
+       transform="translate(-5.3465427,-0.80180858)"><tspan
+         x="29.103516"
+         y="21.851268"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;fill:#f3f3f3;fill-opacity:1">0</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text190"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect192);fill:#f3f3f3;fill-opacity:1;"
+       transform="translate(-13.399161,-0.66145833)"><tspan
+         x="54.240234"
+         y="21.851268"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;fill:#f3f3f3;fill-opacity:1">0</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text196"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect198);fill:#f3f3f3;fill-opacity:1;"
+       transform="translate(-18.845423,-2.00927)"><tspan
+         x="80.697266"
+         y="23.173534"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;fill:#f3f3f3;fill-opacity:1">1</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text202"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect204);fill:#f3f3f3;fill-opacity:1;"
+       transform="translate(-26.610962,-1.9863419)"><tspan
+         x="111.125"
+         y="23.173534"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;fill:#f3f3f3;fill-opacity:1">0</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text208"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect210);fill:#f3f3f3;fill-opacity:1;"
+       transform="translate(-14.768748,-2.1152282)"><tspan
+         x="132.29102"
+         y="23.173534"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;fill:#f3f3f3;fill-opacity:1">0</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text214"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect216);fill:#f3f3f3;fill-opacity:1;"
+       transform="translate(-12.067561,-3.3456176)"><tspan
+         x="162.71875"
+         y="24.495799"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;fill:#f3f3f3;fill-opacity:1">0</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text220"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect222);fill:#f3f3f3;fill-opacity:1;"
+       transform="translate(-18.812182,-3.423899)"><tspan
+         x="190.5"
+         y="24.495799"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;fill:#f3f3f3;fill-opacity:1">0</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text226"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect228);fill:#f3f3f3;fill-opacity:1;"
+       transform="translate(-9.383402,-4.7250398)"><tspan
+         x="160.07227"
+         y="37.726268"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;fill:#f3f3f3;fill-opacity:1">N/A</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text226-7"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect228-4);fill:#f3f3f3;fill-opacity:1;"
+       transform="translate(13.059231,-4.6475726)"><tspan
+         x="160.07227"
+         y="37.726268"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;fill:#f3f3f3;fill-opacity:1">N/A</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text261"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect263);fill:#f3f3f3;fill-opacity:1;"
+       transform="translate(-0.30871462,-1.4940626)"><tspan
+         x="23.8125"
+         y="32.433299"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;fill:#f3f3f3;fill-opacity:1">^EURWest
+</tspan></tspan><tspan
+         x="23.8125"
+         y="36.843025"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;fill:#f3f3f3;fill-opacity:1">(&quot;UK&quot;)</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text267"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect269);fill:#f3f3f3;fill-opacity:1;"
+       transform="translate(-9.6403597,-4.0797942)"><tspan
+         x="50.271484"
+         y="35.079784"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;fill:#f3f3f3;fill-opacity:1">^EURWest
+</tspan></tspan><tspan
+         x="50.271484"
+         y="39.489509"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;fill:#f3f3f3;fill-opacity:1">(&quot;France&quot;)</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text273"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect275);fill:#f3f3f3;fill-opacity:1;"
+       transform="translate(-17.508261,-4.1122193)"><tspan
+         x="79.375"
+         y="35.079784"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;fill:#f3f3f3;fill-opacity:1">^EURCentral
+</tspan></tspan><tspan
+         x="79.375"
+         y="39.489509"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;fill:#f3f3f3;fill-opacity:1">(&quot;Poland&quot;)</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text279"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect281);fill:#f3f3f3;fill-opacity:1;"
+       transform="translate(-24.188846,-4.0912581)"><tspan
+         x="108.47852"
+         y="35.079784"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;fill:#f3f3f3;fill-opacity:1">^US
+</tspan></tspan><tspan
+         x="108.47852"
+         y="39.489509"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;fill:#f3f3f3;fill-opacity:1">(&quot;South&quot;,&quot;a&quot;:&quot;m&quot;)</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text285"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect287);fill:#f3f3f3;fill-opacity:1;"
+       transform="translate(-30.815569,-22.629316)"><tspan
+         x="148.16602"
+         y="53.601268"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;fill:#f3f3f3;fill-opacity:1">^US
+</tspan></tspan><tspan
+         x="148.16602"
+         y="58.010993"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;fill:#f3f3f3;fill-opacity:1">(&quot;South&quot;,&quot;m&quot;:&quot;{&quot;)</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text291"
+       style="font-size:4.93889px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect293);" />
+    <text
+       xml:space="preserve"
+       id="text297"
+       style="font-size:3.52778px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect299);fill:#f3f3f3;fill-opacity:1;"
+       transform="translate(2.4537261,-3.3380874)"><tspan
+         x="21.166016"
+         y="48.308299"><tspan
+           style="fill:#f3f3f3;fill-opacity:1">UK</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text303"
+       style="font-size:3.52778px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect305);fill:#f3f3f3;fill-opacity:1;"
+       transform="translate(-6.8703888,-3.3543)"><tspan
+         x="47.625"
+         y="48.308299"><tspan
+           style="fill:#f3f3f3;fill-opacity:1">FR</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text309"
+       style="font-size:3.52778px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect311);fill:#f3f3f3;fill-opacity:1;"
+       transform="translate(-14.683751,-6.0689176)"><tspan
+         x="76.728516"
+         y="50.954784"><tspan
+           style="fill:#f3f3f3;fill-opacity:1">PO</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text315"
+       style="font-size:3.52778px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect317);fill:#f3f3f3;fill-opacity:1;"
+       transform="translate(-26.533833,-5.9419984)"><tspan
+         x="111.125"
+         y="50.954784"><tspan
+           style="fill:#f3f3f3;fill-opacity:1">USSAL</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text321"
+       style="font-size:3.52778px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect323);fill:#f3f3f3;fill-opacity:1;"
+       transform="translate(-12.039885,-3.3036953)"><tspan
+         x="129.64648"
+         y="48.308299"><tspan
+           style="fill:#f3f3f3;fill-opacity:1">USSMZ</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text327"
+       style="font-size:3.52778px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect329);fill:#f3f3f3;fill-opacity:1;"
+       transform="translate(-10.685695,-3.3543)"><tspan
+         x="161.39648"
+         y="48.308299"><tspan
+           style="fill:#f3f3f3;fill-opacity:1">AUS</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text333"
+       style="font-size:3.52778px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect335);fill:#f3f3f3;fill-opacity:1;"
+       transform="translate(-13.447798,-3.3495515)"><tspan
+         x="185.20898"
+         y="48.308299"><tspan
+           style="fill:#f3f3f3;fill-opacity:1">DEFAULT</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text339"
+       style="font-size:3.52778px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect341);fill:#f3f3f3;fill-opacity:1;"
+       transform="translate(2.4995822,-3.3685457)"><tspan
+         x="21.166016"
+         y="56.245799"><tspan
+           style="fill:#f3f3f3;fill-opacity:1">UK</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text345"
+       style="font-size:3.52778px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect347);fill:#f3f3f3;fill-opacity:1;"
+       transform="translate(-4.2597623,-0.71206312)"><tspan
+         x="44.978516"
+         y="53.601268"><tspan
+           style="fill:#f3f3f3;fill-opacity:1">FR</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text351"
+       style="font-size:3.52778px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect353);fill:#f3f3f3;fill-opacity:1;"
+       transform="translate(-12.132412,-3.4286476)"><tspan
+         x="74.083984"
+         y="56.245799"><tspan
+           style="fill:#f3f3f3;fill-opacity:1">PO</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text357"
+       style="font-size:3.52778px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect359);fill:#f3f3f3;fill-opacity:1;"
+       transform="translate(-24.012137,-3.412435)"><tspan
+         x="108.47852"
+         y="56.245799"><tspan
+           style="fill:#f3f3f3;fill-opacity:1">USSAL</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text363"
+       style="font-size:3.52778px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect365);fill:#f3f3f3;fill-opacity:1;"
+       transform="translate(-14.647729,-3.3732943)"><tspan
+         x="132.29102"
+         y="56.245799"><tspan
+           style="fill:#f3f3f3;fill-opacity:1">USSMZ</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text369"
+       style="font-size:3.52778px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect371);fill:#f3f3f3;fill-opacity:1;"
+       transform="translate(-10.641806,-3.3732944)"><tspan
+         x="161.39648"
+         y="56.245799"><tspan
+           style="fill:#f3f3f3;fill-opacity:1">AUS</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text375"
+       style="font-size:3.52778px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect377);fill:#f3f3f3;fill-opacity:1;"
+       transform="translate(-13.489721,-3.306477)"><tspan
+         x="185.20898"
+         y="56.245799"><tspan
+           style="fill:#f3f3f3;fill-opacity:1">DEFAULT</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text381"
+       style="font-size:3.52778px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect383);fill:#f3f3f3;fill-opacity:1;"
+       transform="translate(5.1521311,-0.64049715)"><tspan
+         x="18.521484"
+         y="61.538768"><tspan
+           style="fill:#f3f3f3;fill-opacity:1">UK.dat</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text387"
+       style="font-size:3.52778px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect389);fill:#f3f3f3;fill-opacity:1;"
+       transform="translate(-4.2589476,-0.75595237)"><tspan
+         x="44.978516"
+         y="61.538768"><tspan
+           style="fill:#f3f3f3;fill-opacity:1">France.dat</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text393"
+       style="font-size:3.52778px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect395);fill:#f3f3f3;fill-opacity:1;"
+       transform="translate(-9.4608687,-0.70534759)"><tspan
+         x="71.4375"
+         y="61.538768"><tspan
+           style="fill:#f3f3f3;fill-opacity:1">Poland.dat</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text399"
+       style="font-size:3.52778px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect401);fill:#f3f3f3;fill-opacity:1;"
+       transform="translate(-21.355655,-0.75595237)"><tspan
+         x="105.83398"
+         y="61.538768"><tspan
+           style="fill:#f3f3f3;fill-opacity:1">USSAL.dat</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text405"
+       style="font-size:3.52778px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect407);fill:#f3f3f3;fill-opacity:1;"
+       transform="translate(-12.051349,-0.78362904)"><tspan
+         x="129.64648"
+         y="61.538768"><tspan
+           style="fill:#f3f3f3;fill-opacity:1">USSMZ.dat</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text411"
+       style="font-size:3.52778px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect413);fill:#f3f3f3;fill-opacity:1;"
+       transform="translate(-7.960428,-0.75595237)"><tspan
+         x="158.75"
+         y="61.538768"><tspan
+           style="fill:#f3f3f3;fill-opacity:1">AUS.dat</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text417"
+       style="font-size:3.52778px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata, @wght=400,wdth=100';font-variation-settings:'wdth' 100, 'wght' 400;white-space:pre;shape-inside:url(#rect419);fill:#f3f3f3;fill-opacity:1;"
+       transform="translate(-13.470726,-0.75595237)"><tspan
+         x="185.20898"
+         y="61.538768"><tspan
+           style="fill:#f3f3f3;fill-opacity:1">yottadb.dat</tspan></tspan></text>
+    <path
+       style="fill:none;stroke:#f3f3f3;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 215.63541,17.197916 v 31.75"
+       id="path423" />
+    <path
+       style="fill:none;stroke:#f3f3f3;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 1.3229166,7.9374999 H 203.72916"
+       id="path429" />
+    <path
+       style="fill:none;stroke:#f3f3f3;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 1.3229166,15.875 H 203.72916"
+       id="path431" />
+    <path
+       style="fill:none;stroke:#f3f3f3;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 1.3229166,23.8125 H 203.72916"
+       id="path433" />
+    <path
+       style="fill:none;stroke:#f3f3f3;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 1.3229166,55.562499 H 203.72916"
+       id="path435" />
+    <path
+       style="fill:none;stroke:#f3f3f3;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 1.3229166,47.624999 H 203.72916"
+       id="path437" />
+    <path
+       style="fill:none;stroke:#f3f3f3;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 1.3229166,39.6875 H 203.72916"
+       id="path439" />
+    <path
+       style="fill:none;stroke:#f3f3f3;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 22.489583,7.9374999 V 63.499999"
+       id="path441" />
+    <path
+       style="fill:none;stroke:#f3f3f3;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 39.6875,7.9374999 V 63.499999"
+       id="path443" />
+    <path
+       style="fill:none;stroke:#f3f3f3;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 60.854166,63.499999 V 7.9374999"
+       id="path445" />
+    <path
+       style="fill:none;stroke:#f3f3f3;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 83.343749,7.9374999 V 63.499999"
+       id="path447" />
+    <path
+       style="fill:none;stroke:#f3f3f3;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 116.41667,7.9374999 V 63.499999"
+       id="path449" />
+    <path
+       style="fill:none;stroke:#f3f3f3;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 149.48958,7.9374999 V 63.499999"
+       id="path451" />
+    <path
+       style="fill:none;stroke:#f3f3f3;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 170.65625,7.9374999 V 63.499999"
+       id="path453" />
+    <path
+       style="fill:none;stroke:#f3f3f3;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 214.3125,44.979166 1.32291,3.96875 1.32292,-3.96875"
+       id="path1182" />
+  </g>
+</svg>

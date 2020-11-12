@@ -495,7 +495,7 @@ YottaDB recommends you plan upfront for database consistency while designing the
 
 * YottaDB produces an error for updates outside the set of database files defined by the instance file. External references are not prohibited as such. In other words, there can be a global directory and instance configurations where an external reference update falls within the instance and works correctly. Read references outside an instance are permitted because they currently do not engage replication.
 
-.. image:: applarch.png
+.. image:: applarch.svg
 
 This diagram illustrates an application architecture that can reliably perform batch and online updates in a tiered environment. It addresses the online updates via the Message Transport (which has to be able to reroute communications to the current originating instance after a switchover) and batch updates via an external file (which has to be made available to the current originating instance after a switchover).
 

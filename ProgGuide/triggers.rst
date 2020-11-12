@@ -62,7 +62,7 @@ An automatically generated trigger name is a string comprised of two parts. Usin
 
 Suppose you want to set up a trigger called TrigAcct on every s ^Acct("ID") to invoke the routine ^OpenAccount. Your trigger definition file may have an entry like +^Acct("ID") -command=S -xecute="do ^OpenAccount" -name=TrigAcct. The following diagram identifies the different parts of this trigger definition:
 
-.. image:: accttrig.gif
+.. image:: accttrig.svg
 
 To apply this trigger definition file to YottaDB, all you do is to load it using MUPIP TRIGGER -TRIGGERFILE or $ZTRIGGER(). YottaDB would invoke trigger name TrigAcct on every SET operation on ^Acct("ID"). Internally, YottaDB stores trigger TrigAcct in the same database file where ^Acct is stored. The syntax of an entry in a trigger definition file is:
 

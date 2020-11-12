@@ -1066,7 +1066,7 @@ Example:
 
 The tree diagram below represents the structure produced by the preceding routine.
 
-.. image:: querytree.gif
+.. image:: querytree.svg
 
 The following routine:
 
