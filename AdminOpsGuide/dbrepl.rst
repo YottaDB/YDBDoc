@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2021 YottaDB LLC and/or its subsidiaries.     #
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -4214,6 +4214,7 @@ Command Syntax:
    [-filter=<filter command>]
    [-noresync]
    [-stopsourcefilter]
+   [-stopreceiverfilter]
    [-updateresync=</path/to/bkup-orig-repl-inst-file>
    {[-resume=<strm_num>|-reuse=<instname>]}
    [-initialize] [-cmplvl=n]
@@ -4265,6 +4266,10 @@ If integer1 or integer2 is 0, the logging interval is set to the default value.
 *-stopsourcefilter*
 
 Starting the Receiver Server with -stopsourcefilter turns off any active filter on the originating Source Server. Use this option at the time of restarting the Receiver Server after a rolling upgrade is complete.
+
+*-stopreceiverfilter*
+
+Starting the Receiver Server with -stopreceiverfilter turns off any active filter on the Receiver Server without turning off the Receiver Server. It is not compatible with any other -receiver qualifier. When no filter is active, using -stopreceiverfilter returns a non-success code.
 
 *-updateresync=</path/to/bkup-orig-repl-inst-file>*
 
@@ -4394,6 +4399,22 @@ Example:
    $ mupip replicate -receiver -shutdown -helper
 
 This example shuts down only the helper processes of the current Receiver Server. Note that all helpers processes shut down even if HELPER values are specified.
+
+++++++++++++++++++++++++++++++
+Stopping the Receiver Filter
+++++++++++++++++++++++++++++++
+
+Command syntax:
+
+.. code-block:: bash
+
+   mupip replicate -receiver -stopreceiverfilter
+
+**Qualifiers**:
+
+*-stopreceiverfilter*
+
+Turns off any active filter on the Receiver Server without turning off the Receiver Server. Using -stopreceiverfilter when no filter is active returns a non-success return code. -stopreceiverfilter is not compatible with any other -receiver qualifier.
 
 ++++++++++++++++++++++++++
 Checking Server Health

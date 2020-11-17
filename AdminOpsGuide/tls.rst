@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2021 YottaDB LLC and/or its subsidiaries.     #
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -152,6 +152,8 @@ The ssl_options, documented in the man page for SSL_set_options, modify the defa
    ssl-options: "!SSL_OP_CIPHER_SERVER_PREFERENCE";
    };
    }
+
+The configuration file pointed to by :code:`$ydb_crypt_config($gtmcrypt_config)` or provided by the WRITE/TLS command recognizes SSL_OP_NO_TLSv1_3, in the **ssl-options** list.
 
 **verify-depth**
 

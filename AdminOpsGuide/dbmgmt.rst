@@ -2073,6 +2073,9 @@ The format of the MUPIP REORG command is:
     -E[XCLUDE]=global-name-list
     -FI[LL_FACTOR]=integer
     -I[NDEX_FILL_FACTOR]=integer
+    -NOCOALESCE
+    -NOSPLIT
+    -NOSWAP
     -R[ESUME]
     -S[ELECT]=global-name-list
     -T[RUNCATE][=percentage]
@@ -2330,6 +2333,42 @@ Directs REORG to leave free space within index blocks for future updates. Argume
 
 Under certain conditions, especially with large database block sizes, it may be possible to achieve faster throughput by using a smaller fill factor for index blocks than for data blocks. By default, the INDEX_FILL_FACTOR is the value of FILL_FACTOR regardless of whether that value is explicitly specified or implicitly obtained by default.
 
+~~~~~~~~~~~~~
+-NOCOALESCE
+~~~~~~~~~~~~~
+
+-NOCOALESCE specifies to MUPIP REORG to skip actions that increase block density. The format of the NOCOALESCE qualifier is :
+
+.. code-block:: none
+
+   -NOCO[ALESCE]
+
+By default, MUPIP REORG attempts to rearrange blocks which are below the specified fill-factor to pack data more densely. More tightly packed data can increase block I/O and reduce the storage requirements.
+
+~~~~~~~~~~
+-NOSPLIT
+~~~~~~~~~~
+
+-NOSPLIT specifies to MUPIP REORG to skip actions that decrease block density. The format of the NOSPLIT qualifier is:
+
+.. code-block:: none
+
+   -NOSP[LIT]
+
+By default, MUPIP REORG attempts to rearrange blocks which are above the specified fill-factor to pack data less densely. Having empty space in blocks can reduce the need for block splits going forward, which may improve performance.
+
+~~~~~~~~~
+-NOSWAP
+~~~~~~~~~
+
+-NOSWAP specifies to MUPIP REORG to skip actions that increase block adjacency. The format of the NOSWAP qualifier is:
+
+.. code-block:: none
+
+   -NOSW[AP]
+
+By default, MUPIP REORG attempts to rearrange blocks so that logically related blocks have adjacent block numbers. On rotating storage, this tends to improve performance; on solid state storage the results are device specific and may increase device wear. Swap activities tend to generate a lot of journal file volume.
+
 ~~~~~~~~~
 -RESUME
 ~~~~~~~~~
@@ -2398,6 +2437,14 @@ Specifies that REORG, after it has rearranged some or all of a region's contents
    -T[RUNCATE][=percentage]
 
 The optional percentage (0-99) provides a minimum amount for the reclamation; in other words, REORG won't bother performing a file truncate unless it can give back at least this percentage of the file; the default (0) has it give back anything it can. TRUNCATE always returns space aligned with bit map boundaries, which fall at 512 database block intervals. TRUNCATE analyses the bit maps, and if appropriate, produces before image journal records as needed for recycled (formerly used) blocks; The journal extract of a truncated database file may contain INCTN records having the inctn opcode value 9 indicating that the specific block was marked from recycled to free by truncate.
+
+MUPIP REORG -TRUNCATE recognizes the -KEEP qualifier. The format of the -KEEP qualifier is:
+
+.. code-block:: none
+
+   [-KEEP=blocks|percent%]
+
+The argument to -KEEP specifies either a number of database blocks or a percentage (0-99), followed by a percent-sign (%), of the starting total blocks to exclude from truncation.
 
 .. note::
    TRUNCATE does not complete if there is a concurrent online BACKUP or use of the snapshot mechanism, for example by INTEG.

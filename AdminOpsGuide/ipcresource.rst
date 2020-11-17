@@ -50,6 +50,12 @@ YottaDB uses UNIX IPC resources as follows:
 
 * One semaphore is used for each -READ_ONLY database file accessed by a process. If there are :code:`m` processes accessing :code:`n` such database files, then the number of semaphores required for this access is :code:`m*n`. For example, when the :code:`%PEEKBYNAME()` utility function uses the -READ_ONLY database file :code:`$ydb_dist/gtmhelp.dat`, it increases semaphore use by one per process.
 
+* YottaDB releases the semaphore IPCs associated with the region "ftok" and any associated statsDB when closing a file with the READ_ONLY characteristic. The READ_ONLY characteristic only applies to MM access method regions. Note that because of the way YottaDB handles semphores for READ_ONLY database files it does not enforce standalone access for setting the characteristic from READ_ONLY to NOREAD_ONLY. However, making a change from READ_ONLY to NOREAD_ONLY without standalone access will likely cause problems, such as errors on termination and failure to release IPC resources that would require additional MUPIP commands to clean up. Thus, YottaDB recommends using other means such as the following, based on fuser returning one(1) to verify that there are no processes accessing the file:
+
+  .. code-block:: none
+
+     fuser <db-filename> | awk -F: '{if(length($NF))exit(1)}' && $ydb_dist/mupip set -noread_only -file <db-filename>
+
 * An instance has one journal pool, and, if a replicating instance, one receiver pool. Note that you might run multiple instances on the same computer system.
 
 * For simple YottaDB operation (that is, no multisite replication), there is no journal pool or receive pool.

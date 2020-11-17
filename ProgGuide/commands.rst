@@ -4089,7 +4089,7 @@ ZSTEP OUTOF pauses at the beginning of the next line executed after an explicit 
 ZSTep OVer
 +++++++++++++++++
 
-ZSTEP OVER pauses at the beginning of the next line in the code associated with either the current YottaDB stack level or a previous YottaDB stack level if the ZSTEPed line contains an explicit or implicit QUIT from the current level. A ZSTEP OVER does not pause at lines invoked from the current line by DOs, XECUTEs or extrinsics.
+ZSTEP OVER pauses at the beginning of the next line in the code associated with either the current YottaDB stack level or a previous YottaDB stack level if the ZSTEPed line contains an explicit or implicit QUIT from the current level. A ZSTEP OVER does not pause at lines invoked from the current line by DOs, XECUTEs or extrinsics. ZSTEP OVER stops after returning from a line containing an XECUTE or indirection.
 
 +++++++++++++++++++
 ZStep Actions

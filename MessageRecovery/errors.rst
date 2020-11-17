@@ -5802,6 +5802,16 @@ MUPIP Error: This indicates a syntax error in GLOBAL qualifier value yyyy at off
 
 Action: Specify correct value for GLOBAL.
 
+----------------
+INVGVPATQUAL
+----------------
+
+INVGVPATQUAL, Invalid Global Value Pattern file qualifier value
+
+MUPIP Error: This indicates that -GVPATFILE did not specify a valid file name. The maximum file name length is 256.
+
+Action: Specify a valid file name with the appropriate path.
+
 --------------------
 INVIDQUAL
 --------------------
@@ -8346,6 +8356,16 @@ LKE Error: MLK CLNUP -INTEG encountered damage to the data structures related to
 Action: If LKE was not able to correct the error, immediately report the entire incident context with information from the operator log and any other relevant information to your YottaDB support channel as soon as possible.
 
 ----------------------
+MLKREHASH
+----------------------
+
+MLKREHASH, LOCK hash table rebuilt for region rrrr (seed = ssss)
+
+Run Time Information: YottaDB has detected an issue with the LOCK hash table for region rrrr and regenerated it using a new seed value ssss.
+
+Action: This information message confirms the success of the rehash operation. No further action is necessary unless it is issued repeatedly or with a large seed value.
+
+----------------------
 MMBEFOREJNL
 ----------------------
 
@@ -8643,6 +8663,36 @@ MUJPOOLRNDWNSUC, Jnlpool section (id = xxxx) belonging to the replication instan
 MUPIP Information: This indicates that the journal pool for instance yyyy was successfully closed and removed; xxxx is the shared memory resource id for the pool and yyyy is the instance designation.
 
 Action: -
+
+---------------------
+MUKEEPNODEC
+---------------------
+
+MUKEEPNODEC, Expected decimal integer input for keep
+
+MUPIP Error: The value for the MUPIP REORG -keep qualifier does not have the appropriate syntax.
+
+Action: Revise the argument for -keep to be a decimal integer number of blocks, or a 0-99 percentage followed by a percent sign (%).
+
+---------------------
+MUKEEPNOTRUNC
+---------------------
+
+MUKEEPNOTRUNC, Keep issued without -truncate
+
+MUPIP Error: The -keep qualifier for MUPIP REORG only applies when used with -truncate.
+
+Action: Adjust the MUPIP REORG command qualifiers to provide a valid combination.
+
+---------------------
+MUKEEPPERCENT
+---------------------
+
+MUKEEPPERCENT, Keep threshold percentage should be from 0 to 99
+
+MUPIP Error: The MUPIP REORG -KEEP qualifier can accept either a number of blocks or a percentage from 0% to 99%.
+
+Action: If you wish to specify a number of blocks, remove the trailing %; if you wish to use a percentage, ensure it is within range.
 
 ---------------------
 MUKILLIP
@@ -9198,6 +9248,16 @@ MUTRUNCNOSPACE, Region rrrr has insufficient space to meet truncate target perce
 MUPIP Information: Issued when REORG truncate determines that there is not enough free space at the end of the file; database file not truncated.
 
 Action: If appropriate, specify a larger threshold.
+
+-------------------
+MUTRUNCNOSPKEEP
+-------------------
+
+MUTRUNCNOSPKEEP, Region rrrr has insufficient space to meet truncate target percentage of pppp with keep at bbbb blocks
+
+MUPIP Information: MUPIP REORG -KEEP for region rrrr could not meet the specified percentage pppp so it left all the available blocks bbbb.
+
+Action: None required, other than evaluating the space situation for the region and file system to ensure that it is wholesome and does not require additional intervention.
 
 -------------------
 MUTRUNCNOTBG
@@ -9767,7 +9827,7 @@ NOJNLPOOL, No journal pool info found in the replication instance of xxxx
 
 Run Time/MUPIP Error: This indicates that YottaDB/MUPIP did not get replication information from the instance file specified. Replication instance file was not initialized because replication did not start, or some other process reset the replication instance file.
 
-Action: Start the source server if it was not started. If the source server was running, stop the server and perform MUPIP RUNDOWN (if MUPIP RUNDOWN fails, try MUPIP RUNDOWN region * ).
+Action: Start the source server if it was not started. Note that the first Source Server process creates the Journal Pool. Subsequent Source Server processes use the Journal Pool that the first Source Server process creates. If the source server was running, stop the server and perform an optimum recovery using MUPIP JOURNAL -ROLLBACK -BACKWARD "*" and restart the Source Server. If optimum recovery command fails, perform a MUPIP RUNDOWN (or a MUPIP RUNDOWN -REGION "*" ), and then restart the Source Server.
 
 --------------------------
 NOLBRSRC
@@ -9835,7 +9895,7 @@ NONTPRESTART
 
 NONTPRESTART, Database dddd; code: cccc; blk: bbbb in glbl: ^gggg; blklvl: llll, type: tttt, zpos: pppp
 
-Run Time Information: This is an informational message for non-TP transaction messages. The frequency of this message can be set by $ydb_nontprestart_log_delta and $ydb_nontprestart_log_first environment variables. dddd is the database where the restart occurred; cccc is the code described in the `Maintaining Database Integrity chapter of the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/integrity.html>`_; bbbb is the block where YottaDB detected a concurrency conflict that caused the restart; gggg shows the global reference within that block; llll is the level of that block; tttt indicates the type of activity that detected the conflict; pppp is the source line where restart ocurred on.
+Run Time Information: This is an informational message for non-TP transaction messages. The frequency of this message can be set by $ydb_nontprestart_log_delta and $ydb_nontprestart_log_first environment variables. dddd is the database where the restart occurred; cccc is the code described in the `Maintaining Database Integrity chapter of the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/integrity.html>`_; bbbb is the block where YottaDB detected a concurrency conflict that caused the restart; gggg shows the global reference within that block; llll is the level of that block; tttt indicates the type of activity that detected the conflict; pppp is the source line where restart ocurred on. Non-graphic codes are reported as :code:`0xnn`.
 
 Action: None required in most cases. If the messages are too frequent, either investigate the processes that reference to that particular global and its block, or reduce the number of messages by tweaking the $ydb_nontprestart_log_delta and $ydb_nontprestart_log_first environment variables.
 
@@ -10254,6 +10314,16 @@ NULLENTRYREF, JOB command did not specify entryref
 Run Time Error: This error is issued when the mandatory entryref is not specified with the JOB command.
 
 Action: Specify the entryref for JOB command.
+
+--------------------
+NULLPATTERN
+--------------------
+
+NULLPATTERN, Empty line found in the Pattern file
+
+MUPIP Warning: MUPIP JOURNAL -EXTRACT pattern file contained an empty line, which generates this message.
+
+Action: Remove the empty line
 
 --------------------
 NULSUBSC
@@ -13963,7 +14033,7 @@ TPRESTART
 
 TPRESTART, Database mmmm; code: xxxx; blk: yyyy in glbl: zzzz; pvtmods: aaaa, blkmods: bbbb, blklvl: cccc, type: dddd, readset: eeee, writeset: ffff, local_tn: gggg, zpos: hhhh
 
-Run Time Information: The UNIX environment variables GTM_TPRESTART_LOG_FIRST and GTM_TPRESTART_LOG_DELTA control the logging of TPRESTART messages. GTM_TPRESTART_LOG_FIRST indicates the number of TP restarts to log from a YottaDB invocation. Once that many have been logged, every GTM_TPRESTART_LOG_DELTA TP restarts, YottaDB logs a restart message. If GTM_TPRESTART_LOG_DELTA is undefined, YottaDB performs no operator logging. The default value for GTM_TPRESTART_LOG_FIRST is 0 (zero), which leaves the control completely with GTM_TPRESTART_LOG_DELTA. The facility that produces this message can serve as a diagnostic tool in developmental environments for investigating contention due to global updates. A zzzz of "\*BITMAP" indicates contention in block allocation which might involve multiple globals. hhhh is the $ZPOSITION of the line of M code that caused the restart of the transaction; utilities leave this field blank.
+Run Time Information: The UNIX environment variables GTM_TPRESTART_LOG_FIRST and GTM_TPRESTART_LOG_DELTA control the logging of TPRESTART messages. GTM_TPRESTART_LOG_FIRST indicates the number of TP restarts to log from a YottaDB invocation. Once that many have been logged, every GTM_TPRESTART_LOG_DELTA TP restarts, YottaDB logs a restart message. If GTM_TPRESTART_LOG_DELTA is undefined, YottaDB performs no operator logging. The default value for GTM_TPRESTART_LOG_FIRST is 0 (zero), which leaves the control completely with GTM_TPRESTART_LOG_DELTA. The facility that produces this message can serve as a diagnostic tool in developmental environments for investigating contention due to global updates. A zzzz of "\*BITMAP" indicates contention in block allocation which might involve multiple globals. hhhh is the $ZPOSITION of the line of M code that caused the restart of the transaction; utilities leave this field blank. Non-graphic codes are reported as :code:`0xnn`.
 
 Action: Disable, or adjust the frequency of, these messages with the mechanism described above. To reduce the number of restarts, consider changes to the global structure, or varying the time when work is scheduled. Consider whether the business and program logic permits the use of NOISOLATION.
 
