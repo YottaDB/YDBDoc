@@ -1507,7 +1507,7 @@ $View()
 
 Returns information about an environmental factor selected by the arguments. In YottaDB, the first argument contains a keyword identifying the environmental factor and, where appropriate, subsequent arguments select among multiple possible occurrences of that factor.
 
-The format for the $VIEW() function is:
+The format for the $VIEW function is:
 
 .. code-block:: none
 
@@ -1793,7 +1793,7 @@ Since YottaDB does not provide a way for a function to return an array or alias 
       zwrite
       quit
       ;
-  NewPerson(name,birthdate)    ; Create new person object
+   NewPerson(name,birthdate)    ; Create new person object
       new lname,fname,dob,tmp1,tmp2 ; New variables used by this function
       set lname=$Piece(name," ",2),fname=$Piece(name," ",1)
       set dob=$$FUNC^%DATE(birthdate)
@@ -1801,20 +1801,20 @@ Since YottaDB does not provide a way for a function to return an array or alias 
       set tmp2=$ZAHandle(tmp1)
       set @("*%"_tmp2_"=tmp1")
       quit tmp2
-  ------------
-  Array of objects of relativists:
-  $ZWRTAC=""
-  *Relativists(1)=$ZWRTAC1
-  $ZWRTAC1("dob")=13952
-  $ZWRTAC1("fname")="Albert"
-  $ZWRTAC1("lname")="Einstein"
-  *Relativists(2)=$ZWRTAC2
-  $ZWRTAC2("dob")=15337
-  $ZWRTAC2("fname")="Arthur"
-  $ZWRTAC2("lname")="Eddington"
-  i=5
-  $ZWRTAC=""
-  $
+   ------------
+   Array of objects of relativists:
+   $ZWRTAC=""
+   *Relativists(1)=$ZWRTAC1
+   $ZWRTAC1("dob")=13952
+   $ZWRTAC1("fname")="Albert"
+   $ZWRTAC1("lname")="Einstein"
+   *Relativists(2)=$ZWRTAC2
+   $ZWRTAC2("dob")=15337
+   $ZWRTAC2("fname")="Arthur"
+   $ZWRTAC2("lname")="Eddington"
+   i=5
+   $ZWRTAC=""
+   $
 
 .. _zascii-function:
 
@@ -1824,7 +1824,7 @@ $ZAscii()
 
 Returns the numeric byte value (0 through 255) of a given sequence of octets (8-bit bytes).
 
-The format for the $ASCII function is:
+The format for the $ZASCII function is:
 
 .. code-block:: none
 
@@ -1858,7 +1858,7 @@ This UTF-8 mode example displays the result of $ZASCII() specifying a byte posit
 $ZATRansform()
 -----------------------
 
-Returns the transformed representation of the first argument expr in a normalized form using the alternative transform specified by the second argument intexpr; the return can be used as an operand to the follows (]) or sorts-after (]]) operator such that, if both operands are in the normalized form, the result is independent of alternative collation. The format for the $ZATRANSFORM() function is:
+Returns the transformed representation of the first argument expr in a normalized form using the alternative transform specified by the second argument intexpr; the return can be used as an operand to the follows (]) or sorts-after (]]) operator such that, if both operands are in the normalized form, the result is independent of alternative collation. The format for the $ZATRANSFORM function is:
 
 
 .. code-block:: none
@@ -1902,7 +1902,7 @@ $ZBITAND()
 
 Performs a logical AND function on two bit strings and returns a bit string equal in length to the shorter of the two arguments (containing set bits in those positions where both of the input strings have set bits). Positions corresponding to positions where either of the input strings have a cleared bit, also have cleared bits in the resulting string.
 
-The format for the $ZBITAND() function is:
+The format for the $ZBITAND function is:
 
 .. code-block:: none
 
@@ -2240,7 +2240,7 @@ $ZCHar()
 
 Returns a string composed of bytes represented by the integer octet values specified in its argument(s).
 
-The format for the $ZCHAR() function is:
+The format for the $ZCHAR function is:
 
 .. code-block:: none
 
@@ -2274,7 +2274,7 @@ $ZCOllate()
 
 Returns the transformed representation of the first argument glvn in a normalized form using the alternative transform specified by the second argument intexpr; the return can be used as an operand to the follows (]) or sorts-after (]]) operator such that, if both operands are in the normalized form, the result is independent of alternative collation.
 
-The format for the $ZCOLLATE() function is:
+The format for the $ZCOLLATE function is:
 
 .. code-block:: none
 
@@ -2310,7 +2310,7 @@ $ZCOnvert()
 
 Returns its first argument as a string or value converted to a different encoding or numeric base. The two argument form changes the encoding for case within the ASCII character set. The three argument form changes the encoding scheme or base. Supported bases are decimal (:code:`"DEC"` and :code:`"HEX"`, case insensitive).
 
-The format for the $ZCONVERT() function is:
+The format for the $ZCONVERT function is:
 
 .. code-block:: none
 
@@ -2813,7 +2813,7 @@ $ZJustify()
 
 Returns a formatted and fixed length byte sequence.
 
-The format for the $ZJUSTIFY() function is:
+The format for the $ZJUSTIFY function is:
 
 .. code-block:: none
 
@@ -2856,7 +2856,7 @@ $ZLength()
 
 Returns the length of a sequence of octets measured in bytes, or in "pieces" separated by a delimiter specified by one of its arguments.
 
-The format for the $ZLENGTH() function is:
+The format for the $ZLENGTH function is:
 
 .. code-block:: none
 
@@ -3505,7 +3505,7 @@ $ZTRanslate()
 
 Returns a byte sequence that results from replacing or dropping bytes in the first of its arguments as specified by the patterns of its other arguments.
 
-The format for the $ZTRANSLATE() function is:
+The format for the $ZTRANSLATE function is:
 
 .. code-block:: none
 
