@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2021 YottaDB LLC and/or its subsidiaries.     #
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -598,7 +598,7 @@ Maps a namespace to a region in the global directory. The format of the ADD -NAM
 
 * You can also use $CHAR() and $ZCHAR() to specify unprintable characters as subscripts. "" (an empty string) or no value (e.g. 20: or :20 or :) specify open-ended ranges, which span, on the left, from the first subscript ("") to on the right, the last possible string.
 
-* Regions that contain global variables sharing the same unsubscripted name that span regions must use standard null collation; attempting to use the deprecated historical null collation produces an error.
+* Regions that contain global variables sharing the same unsubscripted name that span regions must use standard null collation; attempting to use the deprecated `historical null collation <../ProgrammersGuide/langfeat.html#null-subscript-collation>`_ produces an error.
 
 Example:
 

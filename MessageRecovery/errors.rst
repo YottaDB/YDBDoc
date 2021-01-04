@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2021 YottaDB LLC and/or its subsidiaries.     #
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -1193,7 +1193,7 @@ COLLDATAEXISTS
 
 COLLDATAEXISTS, Collation type cannot be changed while xxxx data exists
 
-Run Time Error: This indicates that an attempt was made to change the local collation type while xxxx was either a subscripted local for a process collation change or a gvn name for global variable collation..
+Run Time Error: This indicates that an attempt was made to change the local collation type while xxxx was either a subscripted local, for a process collation change, or a gvn name, for global variable collation.
 
 Action: KILL or NEW the local variables before you change the local collation type, or KILL a gvn before changing its collation.
 

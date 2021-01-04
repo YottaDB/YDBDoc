@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2021 YottaDB LLC and/or its subsidiaries.     #
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -484,9 +484,9 @@ Other
 System Administration
 ++++++++++++++++++++++++++
 
-* If the environment variable :code:`ydb_lct_stdnull` environment variable has the value 1, YottaDB uses standard collation for empty string (null) subscripts of local variables, i.e., the empty string collates first, before all numeric values. If set to 0, YottaDB uses the legacy collation, where the empty string collates between numeric and non-empty string subscripts. If the environment variable is not set, YottaDB uses the :code:`gtm_lct_stdnull` environment variable, and if neither is set, YottaDB uses standard collation. Previously, the :code:`ydb_lct_stdnull` environment variable was not recognized, and the default of legacy collation (which is not used by any application we know of) was an opportunity for an application to have an obscure, hard to troubleshoot, bug. **YottaDB strongly recommends against use of legacy collation**. [`#113 <https://gitlab.com/YottaDB/DB/YDB/issues/113>`_]
+* If the environment variable :code:`ydb_lct_stdnull` environment variable has the value 1, YottaDB uses standard collation for empty string (null) subscripts of local variables, i.e., the empty string collates first, before all numeric values. If set to 0, YottaDB uses the historical null collation, where the empty string collates between numeric and non-empty string subscripts. If the environment variable is not set, YottaDB uses the :code:`gtm_lct_stdnull` environment variable, and if neither is set, YottaDB uses standard collation. Previously, the :code:`ydb_lct_stdnull` environment variable was not recognized, and the default of historical null collation (which is not used by any application we know of) was an opportunity for an application to have an obscure, hard to troubleshoot, bug. **YottaDB strongly recommends against use of historical null collation**. [`#113 <https://gitlab.com/YottaDB/DB/YDB/issues/113>`_]
 
-* The default value for the GDE region parameter STDNULLCOLL is STDNULLCOLL. Previously it was NOSTDNULLCOLL. As we are aware of no application that uses empty string (null) subscripts and NOSTDNULLCOLL, changing the default is an opportunity to keep an application from having obscure, hard-to-troubleshoot bugs as a consequence of inadvertently using NOSTDNULLCOLL. Note that `YottaDB strongly recommends against use of legacy collation <https://docs.yottadb.com/MultiLangProgGuide/MultiLangProgGuide.html#id7>`_. (`#114 <https://gitlab.com/YottaDB/DB/YDB/issues/114>`_)
+* The default value for the GDE region parameter STDNULLCOLL is STDNULLCOLL. Previously it was NOSTDNULLCOLL. As we are aware of no application that uses empty string (null) subscripts and NOSTDNULLCOLL, changing the default is an opportunity to keep an application from having obscure, hard-to-troubleshoot bugs as a consequence of inadvertently using NOSTDNULLCOLL. Note that `YottaDB strongly recommends against use of historical null collation <https://docs.yottadb.com/MultiLangProgGuide/MultiLangProgGuide.html#id7>`_. (`#114 <https://gitlab.com/YottaDB/DB/YDB/issues/114>`_)
 
 * The :code:`ydbinstall` script checks for existence and contents of :code:`/etc/os-release`, and aborts the install of YottaDB if it detects an unsupported platform. Rerunning it with :code:`--force-install` overrides this behavior and goes ahead with the install even if it is an unsupported platform. [`#255 <https://gitlab.com/YottaDB/DB/YDB/issues/255>`_]
 

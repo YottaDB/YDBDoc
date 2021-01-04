@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2021 YottaDB LLC and/or its subsidiaries.     #
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -518,7 +518,7 @@ ydb_keep_obj
 ++++++++++++++++++
 ydb_lct_stdnull
 ++++++++++++++++++
-**ydb_lct_stdnull (gtm_lct_stdnull)** specifies whether a YottaDB process should use standard collation for local variables with null subscripts or legacy YottaDB collation.
+**ydb_lct_stdnull (gtm_lct_stdnull)** specifies whether a YottaDB process should use standard collation for local variables with null subscripts or `historical null collation <../ProgrammersGuide/langfeat.html#null-subscript-collation>`_.
 
 +++++++++++
 ydb_link

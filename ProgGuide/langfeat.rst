@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2021 YottaDB LLC and/or its subsidiaries.     #
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -158,7 +158,6 @@ MUPIP CREATE creates database files with the new values for NULL_SUBSCRIPTS.
 ~~~~~~~~~~~~~~~~~~~~~~~~
 Null Subscript Collation
 ~~~~~~~~~~~~~~~~~~~~~~~~
-
 
 The default collation (“standard null collation”) of local and global variable subscripts is that the null subscript collates first, followed by numeric subscripts in numeric order, and finally string subscripts in lexical order. YottaDB also supports a historical collation of null subscripts, between numeric subscripts and string subscripts. For global variables, the collation method must be specified at the time of database creation.
 

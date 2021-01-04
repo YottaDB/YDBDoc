@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2021 YottaDB LLC and/or its subsidiaries.     #
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -851,34 +851,30 @@ The format code is any one of the following:
 
 1. B[INARY] - Binary format, used for database reorganization or short term backups. MUPIP EXTRACT -FORMAT=BINARY works much faster than MUPIP EXTRACT -FORMAT=GO and MUPIP EXTRACT -FORMAT=ZWR. Note: There is no defined standard to transport binary data from one YottaDB implementation to another. Furthermore, YottaDB reserves the right to modify the binary format in new versions. The first record of a BINARY format data file contains the header label. The header label is 87 characters long. The following table illustrates the components of the header label.
 
-   +----------------------------+-------------------------------------------------------------------------------------------+
-   | Characters                 | Explanation                                                                               |
-   +============================+===========================================================================================+
-   | 1-2                        | Hexadecimal representation of the length of the label (by default 64 - decimal 100).      |
-   +----------------------------+-------------------------------------------------------------------------------------------+
-   | 3-28                       | Fixed-length ASCII text containing:                                                       |
-   |                            | * "GDS BINARY EXTRACT LEVEL 6": when no region is encrypted.                              |
-   |                            | * "GDS BINARY EXTRACT LEVEL 8": when one more regions are encrypted using null IVs.       |
-   |                            | * "GDS BINARY EXTRACT LEVEL 9": when one or regions are encrypted using non-null IVs.     |
-   +----------------------------+-------------------------------------------------------------------------------------------+
-   | 29-41                      | Fixed-length ASCII text: Date and time of extract in the $ZDATE() format: "YEARMMDD2460SS"|
-   +----------------------------+-------------------------------------------------------------------------------------------+
-   | 42-48                      | Fixed-length ASCII text: Decimal maximum block size of the union of each region from which|
-   |                            | data was extracted                                                                        |
-   +----------------------------+-------------------------------------------------------------------------------------------+
-   | 49-55                      | Fixed-length ASCII text: Decimal maximum record size of the union of each region from     |
-   |                            | which data is extracted                                                                   |
-   +----------------------------+-------------------------------------------------------------------------------------------+
-   | 56-62                      | Fixed-length ASCII text:Decimal maximum key size of the union of each region from which   |
-   |                            | data is extracted                                                                         |
-   +----------------------------+-------------------------------------------------------------------------------------------+
-   | 63-69                      | Fixed-length ASCII text:Boolean indicator of Standard NULL collation (1) or historical    |
-   |                            | null collation (0).                                                                       |
-   +----------------------------+-------------------------------------------------------------------------------------------+
-   | 70-100                     | Fixed-length ASCII text: Space-padded label specified by the -LABEL qualifier; the default|
-   |                            | LABEL is "MUPIP EXTRACT"                                                                  |
-   |                            | For extracts in UTF-8 mode, YottaDB prefixes UTF-8 and a space to -LABEL.                 |
-   +----------------------------+-------------------------------------------------------------------------------------------+
+   +----------------------------+----------------------------------------------------------------------------------------------------------------------+
+   | Characters                 | Explanation                                                                                                          |
+   +============================+======================================================================================================================+
+   | 1-2                        | Hexadecimal representation of the length of the label (by default 64 - decimal 100).                                 |
+   +----------------------------+----------------------------------------------------------------------------------------------------------------------+
+   | 3-28                       | Fixed-length ASCII text containing:                                                                                  |
+   |                            | * "GDS BINARY EXTRACT LEVEL 6": when no region is encrypted.                                                         |
+   |                            | * "GDS BINARY EXTRACT LEVEL 8": when one more regions are encrypted using null IVs.                                  |
+   |                            | * "GDS BINARY EXTRACT LEVEL 9": when one or regions are encrypted using non-null IVs.                                |
+   +----------------------------+----------------------------------------------------------------------------------------------------------------------+
+   | 29-41                      | Fixed-length ASCII text: Date and time of extract in the $ZDATE() format: "YEARMMDD2460SS"                           |
+   +----------------------------+----------------------------------------------------------------------------------------------------------------------+
+   | 42-48                      | Fixed-length ASCII text: Decimal maximum block size of the union of each region from which data was extracted        |
+   +----------------------------+----------------------------------------------------------------------------------------------------------------------+
+   | 49-55                      | Fixed-length ASCII text: Decimal maximum record size of the union of each region from which data is extracted        |
+   +----------------------------+----------------------------------------------------------------------------------------------------------------------+
+   | 56-62                      | Fixed-length ASCII text:Decimal maximum key size of the union of each region from which data is extracted            |
+   +----------------------------+----------------------------------------------------------------------------------------------------------------------+
+   | 63-69                      | Fixed-length ASCII text:Boolean indicator of Standard NULL collation (1) or                                          |
+   |                            | `historical null collation <../ProgrammersGuide/langfeat.html#null-subscript-collation>`_ (0).                       |
+   +----------------------------+----------------------------------------------------------------------------------------------------------------------+
+   | 70-100                     | Fixed-length ASCII text: Space-padded label specified by the -LABEL qualifier; the default LABEL is "MUPIP EXTRACT"  |
+   |                            | For extracts in UTF-8 mode, YottaDB prefixes UTF-8 and a space to -LABEL.                                            |
+   +----------------------------+----------------------------------------------------------------------------------------------------------------------+
 
 2. GO - Global Output format, used for files to transport or archive. -FORMAT=GO stores the data in record pairs. Each global node produces two records - the first contains the key and the second contains the value. GO format is only supported in M mode.
 
@@ -3227,7 +3223,7 @@ Specifies whether YottaDB should permit statistics sharing for this region. This
 -STDNULLCOLL
 ~~~~~~~~~~~~~~
 
-Specifies whether YottaDB uses standard or historical collation for null-subscripted keys. YottaDB strongly recommends that you use STDNULLCOLL and not the historical null collation. The format of the STDNULLCOLL qualifier is:
+Specifies whether YottaDB uses standard or `historical null collation <../ProgrammersGuide/langfeat.html#null-subscript-collation>`_ for null-subscripted keys. YottaDB strongly recommends that you use STDNULLCOLL and not the historical null collation. The format of the STDNULLCOLL qualifier is:
 
 .. code-block:: none
 

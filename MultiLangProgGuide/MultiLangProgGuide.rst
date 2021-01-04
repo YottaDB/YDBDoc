@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2021 YottaDB LLC and/or its subsidiaries.     #
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -268,12 +268,12 @@ become apparent:
     has a framework for an application to create and use custom
     collation routines.
 
-.. [#] The YottaDB code base includes code for a legacy subscript
+.. [#] The YottaDB code base includes code for a historical null
        collation in which empty strings collate after numeric
        subscripts and before non-empty strings. This is supported
        **only** in M code for backward compatibility reasons, and is
        not supported for use with C or any other language. Any attempt
-       to bypass protections and use this legacy collation with new
+       to bypass protections and use this historical null collation with new
        code will almost certainly result in buggy applications that
        are hard to debug.
 
