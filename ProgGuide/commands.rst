@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2021 YottaDB LLC and/or its subsidiaries.     #
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -3066,7 +3066,7 @@ The format of the ZKILL command is:
 
    ZK[ILL][:tvexpr] glvn
 
-The functionality of ZKILL is identical to ZWITHDRAW. For a comprehensive description of the format and usage, refer to `ZWIthdraw <./commands.html#zwithdraw>`_.
+The functionality of ZKILL is identical to ZWITHDRAW. For a comprehensive description of the format and usage, refer to :ref:`zwithdraw`.
 
 -------------------
 ZLink
@@ -4272,6 +4272,8 @@ The format of the ZTSTART command is:
 * Because ZTSTART has no argument, at least two (2) spaces must follow the command to separate it from the next command on the line.
 
 For more information on Journaling and transaction fencing, refer to the `"YottaDB Journaling" chapter in the Administration and Operations Guide <https://docs.yottadb.com/AdminOpsGuide/ydbjournal.html>`_.
+
+.. _zwithdraw:
 
 -------------------
 ZWIthdraw
