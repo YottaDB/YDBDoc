@@ -1787,6 +1787,8 @@ This example performs a MUPIP INTEG operation all global variables greater than 
 INTRPT
 +++++++
 
+Sends an interrupt signal [POSIX] SIGUSR1 to the specified process, whose signal handler determines how it is handled. M processes execute the `$ZINTERRUPT <../ProgrammersGuide/isv.html#zinterrupt-isv>`_ intrinsic special variable. The format of the MUPIP INTRPT command is:
+
 .. code-block:: none
 
    INTRPT process-id

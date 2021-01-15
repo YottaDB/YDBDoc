@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2021 YottaDB LLC and/or its subsidiaries.     #
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -789,6 +789,8 @@ $ZININTERRUPT
 $ZINI[NTERRUPT] evaluates to 1 (TRUE) when a process is executing code initiated by the interrupt mechanism, and otherwise 0 (FALSE).
 
 YottaDB does not permit the SET or NEW commands to modify $ZININTERRUPT.
+
+.. _zinterrupt-isv:
 
 ---------------------
 $ZINTERRUPT
