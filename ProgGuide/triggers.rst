@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2020-2021 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -123,7 +123,9 @@ Example:
 
 **[-pieces=int1[:int2][;...]]**
 
-If cmd is S[et], you can specify an optional piece list sequence where int2>int1 and int1:int2 denotes a integer range from int1 to int2. The trigger gets executed only when any piece from the specified piece list changes. If your trigvn has a list "Window|Chair|Table|Door" and you want to execute the trigger only when the value of the 3rd or 4th piece changes, you might specify the following trigger definition:
+If cmd is :code:`S[et]`, you can specify an optional piece list sequence where :code:`int2`>:code:`int1` and :code:`int1`::code:`int2` denotes a integer range from :code:`int1` to :code:`int2`. The trigger gets executed only when any piece from the specified piece list changes. Note that if the prior and new value of the node (specified by the SET command that invoked the :code:`S[et]` trigger) both contain fewer pieces than :code:`int1`, piece number :code:`int1` is considered as not having changed in value and no trigger is invoked.
+
+If your trigvn has a list "Window|Chair|Table|Door" and you want to execute the trigger only when the value of the 3rd or 4th piece changes, you might specify the following trigger definition:
 
 .. code-block:: none
 
