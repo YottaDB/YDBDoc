@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2021 YottaDB LLC and/or its subsidiaries.     #
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -129,7 +129,7 @@ The Acculturation Workshop is distributed as a `vmdk format <https://en.wikipedi
 Virtual Machine Download
 ------------------------
 
-Download `Debian-Hybrid_yottadbworkshop15.zip <./Debian-Hybrid_yottadbworkshop15.zip>`_ and unzip it to access the disk image file Debian-Hybrid_yottadbworkshop15.vmdk.
+Download `Debian-Hybrid_yottadbworkshop15.zip <https://docs.yottadb.com/AcculturationGuide/Debian-Hybrid_yottadbworkshop15.zip>`_ and unzip it to access the disk image file Debian-Hybrid_yottadbworkshop15.vmdk.
 
 
 Virtual Machine Configuration
