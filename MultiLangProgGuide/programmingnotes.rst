@@ -402,7 +402,7 @@ threads it spawns. Furthermore, one of those threads may itself call
 - The YottaDB engine must know the transaction nesting level at which
   it is operating, responding to requests for service at that level,
   and block any transaction invocations at a higher (enclosing) level
-  until the current transactio is closed (committed or rolled back).
+  until the current transaction is closed (committed or rolled back).
 - After a transaction has closed, any further calls from threads
   invoking YottaDB for the closed transaction must receive errors.
 
