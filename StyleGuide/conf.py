@@ -1,6 +1,6 @@
 #################################################################
 #                                                               #
-# Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.       #
+# Copyright (c) 2021 YottaDB LLC and/or its subsidiaries.       #
 # All rights reserved.                                          #
 #                                                               #
 #       This source code contains the intellectual property     #
@@ -94,9 +94,7 @@ pygments_style = 'sphinx'
 # a list of builtin themes.
 #
 html_theme = 'sphinx_rtd_theme'
-html_context = {
-                    'css_files': ['_static/custom.css'],
-                                }
+html_css_files = ['_static/custom.css']
 html_show_sourcelink = False
 
 # Theme options are theme-specific and customize the look and feel of a theme
