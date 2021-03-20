@@ -20,7 +20,7 @@ SPHINXPROJ    = GTMAdminOps
 SOURCEDIRS    = AcculturationGuide AdminOpsGuide MessageRecovery MultiLangProgGuide ProgGuide ReleaseNotes StyleGuide
 SOURCEDIR     = .
 BUILDDIR      = _build
-
+FONTDIR	      = html/_static/fonts
 
 # Put it first so that "make" without argument is like "make help".
 help:
@@ -40,3 +40,4 @@ clean:
 %: Makefile
 	@$(foreach dir, $(SOURCEDIRS), $(SPHINXBUILD) -M $@ "$(dir)" "$(dir)/$(BUILDDIR)" $(SPHINXOPTS) $(O);)
 	@$(foreach dir, $(SOURCEDIRS), cd $(dir) && $(SOURCEDIR)$(SOURCEDIR)/htmlpatch.csh && cd $(SOURCEDIR)$(SOURCEDIR);)
+	$(foreach dir, $(SOURCEDIRS), cd $(dir) && rm $(BUILDDIR)/$(FONTDIR)/Lato-* $(BUILDDIR)/$(FONTDIR)/RobotoSlab-* -r $(BUILDDIR)/$(FONTDIR)/Lato/ $(BUILDDIR)/$(FONTDIR)/RobotoSlab/ && cd $(SOURCEDIR)$(SOURCEDIR);)
