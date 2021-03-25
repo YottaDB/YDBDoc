@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2021 YottaDB LLC and/or its subsidiaries.     #
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -67,7 +67,7 @@ YottaDB is designed to work with the operating system utilities and enhances the
 
 In addition to standard M "percent" utilities, YottaDB permits the use of the standard UNIX file manipulation tools, for example, the diff, grep, cp, and mv commands. The programmer can also use the powerful facilities provided by the UNIX directory structure, such as time and date information, tree-structured directories, and file protection codes.
 
-YottaDB programs are compatible with most source management software, for example, RCS and SCCS.
+YottaDB programs are compatible with version control software. For example YottaDB version control is managed using `git <https://git.kernel.org/pub/scm/git/git.git/>`_.
 
 **Programming and Debugging Facilities**
 
