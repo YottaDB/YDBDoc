@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2017-2021 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -823,6 +823,7 @@ The following list of INTEG messages classifies error severity using the followi
 * B Benign: presents no risk of additional damage and has little or no effect on database performance
 * D Dangerous: presents a high risk that continuing updates may cause significant additional damage
 * I Index: if the block is an index block, continuing updates will be quite dangerous: treat as a D; if the block is a data block, continuing updates can only cause limited additional damage
+* S Spanning: prevents access to a block spanning node value
 * T Transient: usually cleared by an update to the database
 
 Repair Dangerous and Access errors immediately. You may assess the benefits of deferring correction of less severe errors until normally scheduled down-time.
@@ -867,6 +868,11 @@ Repair Dangerous and Access errors immediately. You may assess the benefits of d
 +--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
 | T                        | Block transaction number too large.             | `I6 <./integrity.html#i6-transient-errors>`_                                                    |
 +--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
+| D                        | Block xxxx doubly allocated in index block.     | `K3 <./integrity.html#k3-blocks-doubly-allocated>`_                                             |
++--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
+| T                        | Blocks-to-upgrade file-header field is          | H2                                                                                              |
+|                          | incorrect. Expected nnnn, found mmmm.           |                                                                                                 |
++--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
 | D                        | Blocks per local map is less than 512.          | `I3 <./integrity.html#i3-file-header-errors>`_                                                  |
 +--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
 | D                        | Blocks per local map is greater than 2K.        | `I3 <./integrity.html#i3-file-header-errors>`_                                                  |
@@ -877,14 +883,29 @@ Repair Dangerous and Access errors immediately. You may assess the benefits of d
 +--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
 | T                        | Cannot determine access method;trying with BG.  | `I6 <./integrity.html#i6-transient-errors>`_                                                    |
 +--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
+| T                        | Cannot reset transaction number for this        | `I4 <./integrity.html#i4-file-size-errors>`_                                                    |
+|                          | region.                                         |                                                                                                 |
++--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
+| S                        | Chunk of nnnn blocks is out of order.           | `O5 <./integrity.html#o5-salvage-of-a-damaged-spanning-node>`_                                  |
++--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
 | I                        | Compression count not maximal.                  | `K6 <./integrity.html#k6-compression-count-error>`_                                             |
 +--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
+| A                        | Could not get exclusive access to rrrr.         | `I6 <./integrity.html#i6-transient-errors>`_                                                    |
++--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
 | T                        | Current tn and early tn are not equal.          | `I6 <./integrity.html#i6-transient-errors>`_                                                    |
++--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
+| T                        | Database file ffff read only.                   | `I6 <./integrity.html#i6-transient-errors>`_                                                    |
 +--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
 | A                        | Database for region rrr is already frozen, not  | `I6 <./integrity.html#i6-transient-errors>`_                                                    |
 |                          | INTEGing                                        |                                                                                                 |
 +--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
 | T                        | Database requires flushing.                     | `I7 <./integrity.html#i7-database-rundown-problem>`_                                            |
++--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
+| T                        | Error flushing buffers from rrrr for database   | `I7 <./integrity.html#i7-database-rundown-problem>`_                                            |
+|                          | file ffff.                                      |                                                                                                 |
++--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
+| A                        | File ffff corresponding to region rrrr cannot   | `I6 <./integrity.html#i6-transient-errors>`_                                                    |
+|                          | be found.                                       |                                                                                                 |
 +--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
 | B                        | File size larger than block count would         | `I4 <./integrity.html#i4-file-size-errors>`_                                                    |
 |                          | indicate.                                       |                                                                                                 |
@@ -906,11 +927,16 @@ Repair Dangerous and Access errors immediately. You may assess the benefits of d
 +--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
 | A                        | Header size not valid for database.             | `I3 <./integrity.html#i3-file-header-errors>`_                                                  |
 +--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| D                        | Block xxxx doubly allocated in index block.     | `K3 <./integrity.html#k3-blocks-doubly-allocated>`_                                             |
-+--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
 | A                        | Incorrect version of YottaDB database.          | `I2 <./integrity.html#i2-yottadb-version-mismatch>`_                                            |
 +--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
+| B                        | INTEG does not support operation on YottaDB     | `I5 <./integrity.html#i5-more-database-access-problems>`_                                       |
+|                          | database region.                                |                                                                                                 |
++--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
 | D                        | Invalid mixing of global names.                 | `K3 <./integrity.html#k3-blocks-doubly-allocated>`_                                             |
++--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
+| B                        | Key contains a numeric form of subscript in a   | `K1 <./integrity.html#k1-bad-key>`_                                                             |
+|                          | global defined to collate all subscripts as     |                                                                                                 |
+|                          | strings.                                        |                                                                                                 |
 +--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
 | I                        | Key greater than index key.                     | `K2 <./integrity.html#k2-keys-misplaced>`_                                                      |
 +--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
@@ -931,9 +957,9 @@ Repair Dangerous and Access errors immediately. You may assess the benefits of d
 | D                        | Last record of block has nonzero compression    | `K5 <./integrity.html#k5-star-key-problems>`_                                                   |
 |                          | count.                                          |                                                                                                 |
 +--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| B                        | Local bitmap incorrect.                         | `M1 <./integrity.html#m1-bitmap-errors>`_                                                       |
+| B                        | Local bitmap incorrect.                         | `M2 <./integrity.html#m2-bitmap-header-problems>`_                                              |
 +--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| B                        | Local map block level incorrect.                | `M2 <./integrity.html#m2-bitmap-header-problems>`_                                              |
+| B                        | Local bitmap block level incorrect.             | `M1 <./integrity.html#m1-bitmap-errors>`_                                                       |
 +--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
 | B                        | Map block too large.                            | `M2 <./integrity.html#m2-bitmap-header-problems>`_                                              |
 +--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
@@ -954,7 +980,7 @@ Repair Dangerous and Access errors immediately. You may assess the benefits of d
 |                          | MUPIP INTEG                                     |                                                                                                 |
 +--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
 | B                        | Master bitmap shows this map full, in           | `M1 <./integrity.html#m1-bitmap-errors>`_                                                       |
-|                          | disagreement with both disk and mu_int result.  |                                                                                                 |
+|                          | disagreement with both disk and INTEG result.   |                                                                                                 |
 +--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
 | B                        | Master bitmap shows this map has space, agreeing| `M1 <./integrity.html#m1-bitmap-errors>`_                                                       |
 |                          | with disk local map.                            |                                                                                                 |
@@ -962,11 +988,24 @@ Repair Dangerous and Access errors immediately. You may assess the benefits of d
 | B                        | Master bitmap shows this map has space, agreeing| `M1 <./integrity.html#m1-bitmap-errors>`_                                                       |
 |                          | with MUPIP INTEG.                               |                                                                                                 |
 +--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
+| I                        | Maximum number of subscripts exceeded.          | `K1 <./integrity.html#k1-bad-key>`_                                                             |
++--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
+| A                        | None of the database regions accessible.        | `I6 <./integrity.html#i6-transient-errors>`_                                                    |
++--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
+| I                        | NULL collation representation differs from the  | `K1 <./integrity.html#k1-bad-key>`_                                                             |
+|                          | database file header setting.                   |                                                                                                 |
++--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
+| I                        | Null subscripts are not allowed for file: rrrr. | `K1 <./integrity.html#k1-bad-key>`_                                                             |
++--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
+| I                        | Physical record too large.                      | `O2 <./integrity.html#o2-record-errors>`_                                                       |
++--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
+| I                        | Physical record too small.                      | `O2 <./integrity.html#o2-record-errors>`_                                                       |
++--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
 | D                        | Read error on bitmap.                           | `H7 <./integrity.html#h7-disk-hardware-problems>`_                                              |
 +--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
 | I                        | Record has too large compression count.         | `O2 <./integrity.html#o2-record-errors>`_                                                       |
 +--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| ..                       | Record too large.                               | `O2 <./integrity.html#o2-record-errors>`_                                                       |
+| I                        | Record too large.                               | `O2 <./integrity.html#o2-record-errors>`_                                                       |
 +--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
 | I                        | Record too small.                               | `O2 <./integrity.html#o2-record-errors>`_                                                       |
 +--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
@@ -983,11 +1022,19 @@ Repair Dangerous and Access errors immediately. You may assess the benefits of d
 +--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
 | D                        | Root level less than one.                       | `O1 <./integrity.html#o1-bad-block>`_                                                           |
 +--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
+| S                        | Spanning node is missing. Block no nnnn of      | `O5 <./integrity.html#o5-salvage-of-a-damaged-spanning-node>`_                                  |
+|                          | of spanning node is missing.                    |                                                                                                 |
++--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
 | A                        | Start VBN smaller than possible.                | `I3 <./integrity.html#i3-file-header-errors>`_                                                  |
 +--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
-| A                        | Total blocks equals zero.                       | `I4 <./integrity.html#i4-file-size-errors>`_                                                    |
+| A                        | Total blocks equals zero.                       | `I6 <./integrity.html#i6-transient-errors>`_                                                    |
++--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
+| T                        | Transaction numbers greater than the current    | `I6 <./integrity.html#i6-transient-errors>`_                                                    |
+|                          | transaction were found.                         |                                                                                                 |
 +--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
 | A                        | Unable to verify that this is a database file.  | `I3 <./integrity.html#i3-file-header-errors>`_                                                  |
++--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
+| A                        | Unrecognized file format.                       | `I3 <./integrity.html#i3-file-header-errors>`_                                                  |
 +--------------------------+-------------------------------------------------+-------------------------------------------------------------------------------------------------+
 
 +++++++++++++++++++++++++++++++++++
