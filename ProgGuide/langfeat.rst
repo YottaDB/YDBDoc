@@ -915,21 +915,27 @@ All M binary operations have strict left to right precedence. This includes all 
 Arithmetic Operators
 +++++++++++++++++++++++
 
-All arithmetic operators force M to evaluate the expressions to which they apply as numeric. The arithmetic operators are:
+All arithmetic operators force M to evaluate the expressions to which they apply as numeric.
 
-\+ as a unary operator simply forces M to evaluate the expression following as numeric; as a binary operator it causes M to perform addition.
+The arithmetic operators are:
 
-\- as a unary operator causes M to negate the expression following; as a binary operator it causes M to perform subtraction.
-
-\* binary operator for multiplication.
-
-** binary operator for exponentiation.
-
-/ binary operator for fractional division.
-
-\\ binary operator for integer division.
-
-# binary operator for modulo, that is, causes M to produce the remainder from integer division of the first argument by the second.
++-----------+----------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Operator  | Description                                                                                                                                              |
++===========+==========================================================================================================================================================+
+| \+        | as a unary operator it simply forces M to evaluate the expression following as numeric; as a binary operator it causes M to perform addition             |
++-----------+----------------------------------------------------------------------------------------------------------------------------------------------------------+
+| \-        | as a unary operator it causes M to negate the expression following; as a binary operator it causes M to perform subtraction                              |
++-----------+----------------------------------------------------------------------------------------------------------------------------------------------------------+
+| \*        | binary operator for multiplication                                                                                                                       |
++-----------+----------------------------------------------------------------------------------------------------------------------------------------------------------+
+| \**       | binary operator for exponentiation                                                                                                                       |
++-----------+----------------------------------------------------------------------------------------------------------------------------------------------------------+
+| /         | binary operator for fractional division                                                                                                                  |
++-----------+----------------------------------------------------------------------------------------------------------------------------------------------------------+
+| \\        | binary operator for integer division                                                                                                                     |
++-----------+----------------------------------------------------------------------------------------------------------------------------------------------------------+
+| #         | binary operator for modulo, that is, causes M to produce the remainder from integer division of the first argument by the second                         |
++-----------+----------------------------------------------------------------------------------------------------------------------------------------------------------+
 
 Because of the practice of using it to intentionally induce an error, YottaDB does not produce a DIVZERO error at compile time, only at run time, for divide or integer divide by a literal expression that evaluates to zero (0).
 
@@ -973,13 +979,21 @@ The first WRITE shows the unary plus sign (+) operation forcing the numeric eval
 Logical Operators
 +++++++++++++++++++++++++++++++
 
-M logical operators always produce a result that is TRUE (1) or FALSE (0). All logical operators force M to evaluate the expressions to which they apply as truth-valued. The logical operators are:
+M logical operators always produce a result that is TRUE (1) or FALSE (0). All logical operators force M to evaluate the expressions to which they apply as truth-valued.
 
-' unary NOT operator negates current truth-value; M accepts placement of the NOT operator next to a relational operator, for example, A'=B as meaning '(A=B), i.e., NAND.
+The logical operators are:
 
-& binary AND operator produces a true result only if both of the expressions are true.
-
-! binary OR operator produces a true result if either of the expressions is true.
++-----------+----------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Operator  | Description                                                                                                                                              |
++===========+==========================================================================================================================================================+
+| '         | unary NOT operator negates current truth-value;                                                                                                          |
+|           | M accepts placement of the NOT operator next to a relational operator, for example, A'=B meaning '(A=B), i.e., NAND                                      |
+|           | and next to logical operators, A'& B meaning '(A & B) i.e. NAND and A'! B meaning '(A ! B) i.e. NOR                                                      |
++-----------+----------------------------------------------------------------------------------------------------------------------------------------------------------+
+| &         | binary AND operator produces a true result only if both of the expressions are true                                                                      |
++-----------+----------------------------------------------------------------------------------------------------------------------------------------------------------+
+| !         | binary OR operator produces a true result if either of the expressions is true                                                                           |
++-----------+----------------------------------------------------------------------------------------------------------------------------------------------------------+
 
 Remember that precedence is always left to right, and that logical operators have the same precedence as all other operators.
 
@@ -1041,9 +1055,15 @@ The above example demonstrates cases covered by the binary logical operators.
 String Operators
 +++++++++++++++++++
 
-All string operators force M to evaluate the expressions to which they apply as strings. The string operator is:
+All string operators force M to evaluate the expressions to which they apply as strings.
 
-_ binary operator causes M to concatenate the second expression with the first expression
+The string operator is:
+
++-----------+------------------------------------------------------------------------------------------------------------------------+
+| Operator  | Description                                                                                                            |
++===========+========================================================================================================================+
+| _         | binary operator causes M to concatenate the second expression with the first expression                                |
++-----------+------------------------------------------------------------------------------------------------------------------------+
 
 Example:
 
@@ -1061,25 +1081,35 @@ The above example demonstrates M concatenation.
 Numeric Relational Operators
 ++++++++++++++++++++++++++++
 
-M relational operators always generate a result of TRUE (1) or FALSE (0). All numeric relational operators force M to evaluate the expressions to which they apply as numeric. The numeric relational operators are:
+M relational operators always generate a result of TRUE (1) or FALSE (0). All numeric relational operators force M to evaluate the expressions to which they apply as numeric.
 
-> binary arithmetic greater than
+The numeric relational operators are:
 
-< binary arithmetic less than
++-----------+------------------------------------------+
+| Operator  | Description                              |
++===========+==========================================+
+| >         | binary arithmetic greater than           |
++-----------+------------------------------------------+
+| <         | binary arithmetic less than              |
++-----------+------------------------------------------+
 
 The equal sign (=) does not force numeric evaluation, and should be viewed as a string operator. However, the equal sign between two numeric values tests for numeric equality.
 
 Other numeric relations are formed using the logical NOT operator apostrophe (') as follows:
 
-'> not greater than, that is, less than or equal to
-
-'< not less than, that is, greater than or equal to
-
->= greater than or equal to, that is, not less than
-
-<= less than or equal to, that is, not greater than
-
-'= not equal, numeric or string operation
++-----------+----------------------------------------------------------------------+
+| Operator  | Description                                                          |
++===========+======================================================================+
+| '>        | not greater than, that is, less than or equal to                     |
++-----------+----------------------------------------------------------------------+
+| '<        | not less than, that is, greater than or equal to                     |
++-----------+----------------------------------------------------------------------+
+| >=        | greater than or equal to, that is, not less than                     |
++-----------+----------------------------------------------------------------------+
+| <=        | less than or equal to, that is, not greater than                     |
++-----------+----------------------------------------------------------------------+
+| '=        | not equal, numeric or string operation                               |
++-----------+----------------------------------------------------------------------+
 
 Example:
 
@@ -1109,27 +1139,38 @@ The above example demonstrates combinations of arithmetic, relational operators 
 String Relational Operators
 ++++++++++++++++++++++++++++
 
-M relational operators always generate a result of TRUE (1) or FALSE (0). All string relational operators force M to evaluate the expressions to which they apply as strings. The string relational operators are:
+M relational operators always generate a result of TRUE (1) or FALSE (0). All string relational operators force M to evaluate the expressions to which they apply as strings.
 
-= binary operator causes M to produce a TRUE if the expressions are equal.
+The string relational operators are:
 
-[ binary operator causes M to produce a TRUE if the first expression contains the ordered sequence of characters in the second expression.
-
-] binary operator causes M to produce a TRUE if the first expression lexically follows the second expression in the character encoding sequence, which by default is ASCII.
-
-]] binary operator causes M to produce a TRUE if the first expression lexically sorts after the second expression in the subscript collation sequence.
++-----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Operator  | Description                                                                                                                                                     |
++===========+=================================================================================================================================================================+
+| =         | binary operator causes M to produce a TRUE if the expressions are equal                                                                                         |
++-----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| [         | binary operator causes M to produce a TRUE if the first expression contains the ordered sequence of characters in the second expression                         |
++-----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| ]         | binary operator causes M to produce a TRUE if the first expression lexically follows the second expression in the character encoding sequence,                  |
+|           | which by default is ASCII                                                                                                                                       |
++-----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| ]]        | binary operator causes M to produce a TRUE if the first expression lexically sorts after the second expression in the subscript collation sequence              |
++-----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
 Note that all non-empty strings lexically follow the empty string, and every string contains the empty string.
 
 Other string relations are formed using the logical NOT operator apostrophe (') as follows:
 
-'[ does not contain.
-
-'] does not follow, that is, lexically less than or equal to.
-
-']] does not sort after, that is, lexically less than or equal to in the subscript collation sequence.
-
-'= not equal, numeric or string operation.
++-----------+----------------------------------------------------------------------------------------------------+
+| Operator  | Description                                                                                        |
++===========+====================================================================================================+
+| '[        | does not contain                                                                                   |
++-----------+----------------------------------------------------------------------------------------------------+
+| ']        | does not follow, that is, lexically less than or equal to                                          |
++-----------+----------------------------------------------------------------------------------------------------+
+| ']]       | does not sort after, that is, lexically less than or equal to in the subscript collation sequence  |
++-----------+----------------------------------------------------------------------------------------------------+
+| '=        | not equal, numeric or string operation                                                             |
++-----------+----------------------------------------------------------------------------------------------------+
 
 Example:
 
