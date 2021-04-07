@@ -13338,9 +13338,9 @@ STAPIFORKEXEC
 
 STAPIFORKEXEC, Calls to YottaDB are not supported after a fork() if threaded Simple API functions were in use in parent. Call exec() first
 
-Run Time Error: This indicates a process that has already used at least one threaded Simple API function did a fork() to create a child process and is trying to use YottaDB (e.g. Simple API functions like ydb_set_s(), or threaded Simple API functions like ydb_set_st()).
+Run Time Error: After calling at least one threaded Simple API function, a process performed a fork(), and the child called another Simple API function (threaded or non-threaded) without calling exec() first.
 
-Action: Once a process that has used threaded Simple API functions or threaded Simple API functions does a fork(), the child process has to do an exec() before it can call again into YottaDB (using Simple API functions or threaded Simple API functions).
+Action: Once a process that has used threaded Simple API functions or threaded Simple API functions does a fork(), the child process must call exec() before it can call again into YottaDB (using Simple API functions or threaded Simple API functions).
 
 -----------------
 STARFILE
