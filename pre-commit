@@ -2,7 +2,7 @@
 #
 #################################################################
 #                                                               #
-# Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.       #
+# Copyright (c) 2021 YottaDB LLC and/or its subsidiaries.       #
 # All rights reserved.                                          #
 #                                                               #
 #       This source code contains the intellectual property     #
@@ -16,7 +16,7 @@
 # Pre-commit hook that
 #	1) Enforces YottaDB Copyright in changed modules
 #
-set nocopyright_extensions = "png gif svg"	# List of extensions that cannot have copyrights.
+set nocopyright_extensions = "png gif svg css"	# List of extensions that cannot have copyrights.
 						# .png, .gif and .svg are image format files
 
 set filelist = `git diff --name-only HEAD`

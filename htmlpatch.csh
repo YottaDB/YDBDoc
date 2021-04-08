@@ -20,6 +20,7 @@ set DIRECTORIES=( \
 	ProgGuide/ \
 	ReleaseNotes/ \
 	StyleGuide/ \
+	Plugins/ \
 )
 
 echo '# Step 1 : Do the following change'

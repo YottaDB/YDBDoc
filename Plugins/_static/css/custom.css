@@ -1,0 +1,48 @@
+.wy-nav-content {
+	    max-width: 4000px;
+}
+.wy-side-nav-search {
+	background: #3b1a68;
+}
+.wy-nav-side {
+	background: #3b1a68;
+}
+.wy-side-scroll {
+	background: #3b1a68;
+}
+body {
+	background-color: #3b1a68;
+	width: 150%;
+}
+.cse .gsc-search-button input.gsc-search-button-v2,
+input.gsc-search-button-v2 {
+        height: 26px !important;
+        margin-top: 0 !important;
+        min-width: 13px !important;
+        padding: 5px 26px !important;
+        width: 68px !important;
+}
+.wy-table-responsive table td, .wy-table-responsive table th {
+        white-space: normal;
+}
+
+.wy-table-responsive {
+        margin-bottom: 24px;
+        max-width: 100%;
+        overflow: visible;
+}
+pre.literal-block {
+  white-space: pre;
+  margin: 0 !important;
+  padding: 12px 12px !important;
+  font-family: Consolas,"Andale Mono WT","Andale Mono","Lucida Console","Lucida Sans Typewriter","DejaVu Sans Mono","Bitstream Vera Sans Mono","Liberation Mono","Nimbus Mono L",Monaco,"Courier New",Courier,monospace;
+  font-size: 12px;
+  display: block;
+  overflow: auto;
+  color: #404040;
+}
+/* adds scrollbar to sidenav */
+.wy-side-scroll {
+  width: auto;
+  overflow-y: auto;
+}
