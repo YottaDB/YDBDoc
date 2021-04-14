@@ -1576,7 +1576,13 @@ Specifies that the INTEG parameter identifies one or more regions rather than a 
 -SUBSCRIPT
 ~~~~~~~~~~~
 
-Specifies a global or a range of keys to INTEG. The global key may be enclosed in quotation marks (" "). Identify a range by separating two subscripts with a colon (:). -SUBSCRIPT cannot detect incorrectly marked busy errors. The format of the SUBSCRIPT qualifier is:
+Specifies a key (an unsubscripted or subscripted global name) or a range of keys to INTEG.
+
+An unsubscripted global name key may be enclosed in single or double quotes (for example, :code:`^a` or :code:`'^a'` or :code:`"^a"` are all valid). A subscripted global name with numeric subscripts must be enclosed in single or double quotes to avoid the shell from parsing the parentheses (for example, :code:`'^a(1)'` or :code:`"^a(1)"` are both valid). A subscripted global name with string subscripts must be enclosed in a mix of single and double quotes and use 2 double quotes for every double quote in the string subscript (for example, :code:`'"^a(1,""string"")"'` is valid). See example section below for more details.
+
+Identify a range by separating the beginning key and ending key with a colon (:code:`:`).
+
+-SUBSCRIPT cannot detect incorrectly marked busy errors. The format of the SUBSCRIPT qualifier is:
 
 .. code-block:: none
 
@@ -1770,15 +1776,15 @@ Example:
 
    $ mupip integ -subscript="^Parrots" yottadb.dat
 
-This example performs a MUPIP INTEG operation on the global variable ^Parrots in the database file yottadb.dat.
+This example performs a MUPIP INTEG operation on the global variable :code:`^Parrots` in the database file yottadb.dat.
 
 Example:
 
 .. code-block:: bash
 
-   $ mupip integ -subscript="^Amsterdam(100)":"^Bolivia(""Chimes"")" -region DEFAULT
+   $ mupip integ -subscript='"^Amsterdam(100)"':'"^Bolivia(""Chimes"")"' -region DEFAULT
 
-This example performs a MUPIP INTEG operation all global variables greater than or equal to ^Amsterdam (100) and less than or equal to ^Bolivia("Chimes") in the default region(s).
+This example performs a MUPIP INTEG operation on all global variable nodes/keys greater than or equal to :code:`^Amsterdam(100)` and less than or equal to :code:`^Bolivia("Chimes")` in the DEFAULT region.
 
 .. note::
    To specify a literal in the command string, use two double quotation marks for example, ^b(""c"").
