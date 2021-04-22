@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2021 YottaDB LLC and/or its subsidiaries.     #
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -181,7 +181,7 @@ Limits the CLEAR command to the exact resource name specified with -LOCK=resourc
 
 Unless used with -EXACT, specifies the leading prefix for an implicit wild card search of all locks that start with the resource_name.
 
-* The resource_name is enclosed in two double quotation marks ("" ""). Because M resource names are formatted the same as global nodes with punctuation characters, in this context they are usually enclosed in sets of double quotation marks with string subscripts enclosed in sets of two double quotations.
+* The resource_name is enclosed in two double quotation marks ("" ""). Quotation need only be used when necessary. When the resource_name is quoted, quotation marks within the subscripts will need to be doubled.
 
 * When used with CLEAR, -LOCK removes the locks that start with resource_name.
 
@@ -292,7 +292,7 @@ Example:
 
 .. code-block:: bash
 
-   LKE>clear -lock="^a("b")
+   LKE>clear -lock=^a("b")
    Clear lock ? y
    Lock removed : ^a("b")
    LKE>
