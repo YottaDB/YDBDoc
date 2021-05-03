@@ -607,7 +607,7 @@ where,
 .. note::
    Since the return type is considered as an output-only (O) parameter, the only types allowed are pointer types and void. Void cannot be specified as parameter.
 
-<param-type>: is a valid parameter type. Empty parentheses must be specified if no argument is passed to <label-ref>
+<param-type>: is a valid parameter type. Empty parentheses must be specified if no argument is passed to <label-ref>. The number of parameters DOES NOT have to match the number of parameters in the M function. Any parameters that are not supplied will be undefined in M. For example, your call-in table can map to an M function/procedure that takes 8 paramters, but the call-in could have only 2 parameters in the call-in table. That means that parameters 3-8 will be undefined when the M function/procedure is called.
 
 The <direction> indicates the type of operation that YottaDB performs on the parameter read-only (I), write-only (O), or read-write (IO). All O and IO parameters must be passed by reference, that is, as pointers since YottaDB writes to these locations. All pointers that are being passed to YottaDB must be pre-allocated. The following table details valid type specifications for each direction.
 
@@ -688,9 +688,9 @@ The variable argument function ydb_ci() is the interface that actually invokes a
 
 First argument: c_call_name, a null-terminated C character string indicating the alias name for the corresponding <lab-ref> entry in the Call-In table.
 
-Optional second argument: ret_val, a pre-allocated pointer through which YottaDB returns the value of QUIT argument from the (extrinsic) M routine. ret_val must be the same type as specified for <ret-type> in the Call-In table entry. The ret_val argument is needed if and only if <ret-type> is not void.
+Second argument (only to be supplied <ret-type> is not void): ret_val, a pre-allocated pointer through which YottaDB returns the value of QUIT argument from the (extrinsic) M routine. ret_val must be the same type as specified for <ret-type> in the Call-In table entry.
 
-Optional list of arguments to be passed to the M routine's formallist: the number of arguments and the type of each argument must match the number of parameters, and parameter types specified in the corresponding Call-In table entry. All pointer arguments must be pre-allocated. YottaDB assumes that any pointer, which is passed for O/IO-parameter points to valid write-able memory.
+List of arguments to be passed to the M routine's formallist: the number of arguments and the type of each argument must match the number of parameters, and parameter types specified in the corresponding Call-In table entry. **Note that passing the same number of arguments as the number of arguments in the Call-in table can cause undefined behavior, as the remaining arguments are picked up from uninitialized memory locations in the C stack!** All pointer arguments must be pre-allocated. YottaDB assumes that any pointer, which is passed for O/IO-parameter points to valid write-able memory.
 
 The status value returned by ydb_ci() indicates the YottaDB status code: zero (0) if successful, or a non-zero error code on failure. The error string corrsponding to the failure code can be read into a buffer by immediately calling ydb_zstatus(). For more details, see the :ref:`ydb-zstatus` section below.
 
