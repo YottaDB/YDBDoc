@@ -3281,10 +3281,11 @@ The format for the $ZSEARCH function is:
 
    $ZSEARCH(expr[,intexpr])
 
-* The expression contains a file name, with or without wildcards, for which $ZSEARCH() attempts to locate a matching file. Repeating $ZSEARCH with the same filename uses the same context and return a sequence of matching files when they exist; when the sequence is exhausted, $ZSEARCH() returns an empty string (""). Any change to the file name starts a new context.
-* $ZSEARCH() uses the process current working directory, if the expression does not specify a directory.
-* The optional integer expression specifies a "stream" number from 0 to 255 for each search; streams provide a means of having up to 256 $ZSEARCH() contexts simultaneously in progress.
+* The first parameter :code:`expr` contains a file name, with or without wildcards, for which $ZSEARCH() attempts to locate a matching file. Repeating $ZSEARCH with the same filename uses the same context and return a sequence of matching files when they exist; when the sequence is exhausted, $ZSEARCH() returns an empty string (""). Any change to the file name starts a new context.
+* $ZSEARCH() uses the process current working directory, if :code:`expr` does not specify a directory.
+* The optional :code:`intexpr` specifies an integer expression that is a :code:`stream` number. It can be any value from :code:`0` to :code:`255` for each search; streams provide a means of having up to 256 $ZSEARCH() contexts simultaneously in progress. If no :code:`intexpr` is specified, a default value of 0 is assumed.
 * If a $ZSEARCH() stream has never been used or if the expression differs from the argument to the last $ZSEARCH() of the stream, the function resets the context and returns the first pathname matching the expression; otherwise, it returns the next matching file in collating sequence; if the last prior pathname returned for the same expression and same stream was the last one matching the argument, $ZSEARCH() returns a null string.
+* The special :code:`stream` number of :code:`-1` always resets the context and returns the first pathname matching the expression. That is, it starts a fresh sequence of matching files even if the same file name is used in repeated calls.
 
 $ZSEARCH() provides a tool for verifying that a file exists. For information to help determine the validity of a file name, see :ref:`zparse-function`.
 
