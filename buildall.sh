@@ -81,4 +81,10 @@ if [ -d "$target/ProgrammersGuide" ]; then
 	rm -r "$target/ProgrammersGuide"
 fi
 mv "$target"/ProgGuide/ "$target"/ProgrammersGuide/
+
 cp ProgGuide/ydbci_ydbaccess.zip "$target"/ProgrammersGuide/
+
+# Remove unused fonts
+echo "Removing unused fonts..."
+find $target -iname 'lato*' -delete
+find $target -iname 'roboto*' -delete

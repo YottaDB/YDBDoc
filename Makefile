@@ -40,6 +40,4 @@ clean:
 # All of the $(SOURCEDIRS) are built at once.
 %: Makefile
 	@$(foreach dir, $(SOURCEDIRS), $(SPHINXBUILD) -M $@ "$(dir)" "$(dir)/$(BUILDDIR)" $(SPHINXOPTS) $(O);)
-	@$(foreach dir, $(SOURCEDIRS), cd $(dir) && $(SOURCEDIR)$(SOURCEDIR)/htmlpatch.csh && cd $(SOURCEDIR)$(SOURCEDIR);)
-	@$(foreach dir, $(SOURCEDIRS), cd $(dir) && rm $(BUILDDIR)/$(FONTDIR)/Lato-* $(BUILDDIR)/$(FONTDIR)/RobotoSlab-* -r $(BUILDDIR)/$(FONTDIR)/Lato/ $(BUILDDIR)/$(FONTDIR)/RobotoSlab/ && cd $(SOURCEDIR)$(SOURCEDIR);)
-	@$(foreach dir, $(SOURCEDIRS), cd $(dir) && rm $(BUILDDIR)/$(CSSFONTDIR)/lato-* $(BUILDDIR)/$(CSSFONTDIR)/Roboto-Slab-* && cd $(SOURCEDIR)$(SOURCEDIR);)
+	./htmlpatch.csh
