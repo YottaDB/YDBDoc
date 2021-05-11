@@ -83,7 +83,7 @@ Example:
 Using External Calls
 --------------------------
 
-The functions in programs increment and decrement are now available to YottaDB through the shareable library libcrement.sl or libcrement.so, or though the DLL as libcrement.dll, depending on the specific platform. The suffix .sl is used throughout the following examples to represent .sl, .so, or .dll. Be sure to use the appropriate suffix for your platform.
+The functions in programs increment and decrement are now available to YottaDB through the shareable library libcrement.so.
 
 YottaDB uses an "external call table" to map the typeless data of M into the typed data of C, and vice versa. The external call table has a first line containing the pathname of the shareable library file followed by one or more specification lines in the following format:
 
@@ -140,6 +140,14 @@ The following table describes the legal types defined in the C header file $ydb_
    * ydb_char_t * and ydb_char_t \*\*: Empty string
    * ydb_string_t \*: A structure with 'length' field matching the preallocation size and 'address' field being a NULL pointer.
 
+Here is an exmaple of an external call table:
+
+.. code-block:: none
+
+   compress2   : ydb_status_t zlib_compress2(I:ydb_string_t*, O:ydb_string_t* [1048576], I:ydb_int_t)
+   uncompress  : ydb_status_t zlib_uncompress(I:ydb_string_t*, O:ydb_string_t* [1048576])
+   zlibVersion : ydb_status_t zlib_zlibVersion(O:ydb_char_t* [256])
+
 In the mathpak package example, the following invocation translate inval to the default value, that is, 0.
 
 .. code-block:: bash
@@ -181,6 +189,7 @@ Specification of a pre-allocation value should follow these rules:
 +++++++++++++++++++++++++++++
 Callback Mechanism
 +++++++++++++++++++++++++++++
+
 YottaDB exposes certain functions that are internal to the YottaDB runtime library for the external calls via a callback mechanism. While making an external call, YottaDB populates and exposes a table of function pointers containing addresses to call-back functions.
 
 Some of these callbacks (not all) can be linked at compilation time by including libyottadb.h. A fuller set can be discovered at runtime by a mechanism described after the table below.
@@ -571,13 +580,13 @@ Here is an example of Call-In table (ydb_access.ci) for _ydbaccess.m (see :ref:`
 
 .. code-block:: none
 
-   ydbget    : void get^%ydbaccess( I:ydb_char_t*, O:ydb_string_t*, O:ydb_char_t* )
-   ydbkill   : void kill^%ydbaccess( I:ydb_char_t*, O:ydb_char_t* )
-   ydblock   : void lock^%ydbaccess( I:ydb_char_t*, O:ydb_char_t* )
-   ydborder  : void order^%ydbaccess( I:ydb_char_t*, O:ydb_string_t*, O:ydb_char_t* )
-   ydbquery  : void query^%ydbaccess( I:ydb_char_t*, O:ydb_string_t*, O:ydb_char_t* )
-   ydbset    : void set^%ydbaccess( I:ydb_char_t*, I:ydb_string_t*, O:ydb_char_t*)
-   ydbxecute : void xecute^%ydbaccess( I:ydb_char_t*, O:ydb_char_t* )
+   ydbget    : void get^%ydbaccess(I:ydb_char_t*, O:ydb_string_t*, O:ydb_char_t*)
+   ydbkill   : void kill^%ydbaccess(I:ydb_char_t*, O:ydb_char_t*)
+   ydblock   : void lock^%ydbaccess(I:ydb_char_t*, O:ydb_char_t*)
+   ydborder  : void order^%ydbaccess(I:ydb_char_t*, O:ydb_string_t*, O:ydb_char_t*)
+   ydbquery  : void query^%ydbaccess(I:ydb_char_t*, O:ydb_string_t*, O:ydb_char_t*)
+   ydbset    : void set^%ydbaccess(I:ydb_char_t*, I:ydb_string_t*, O:ydb_char_t*)
+   ydbxecute : void xecute^%ydbaccess(I:ydb_char_t*, O:ydb_char_t*)
 
 .. _call-in-intf:
 

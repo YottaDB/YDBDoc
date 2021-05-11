@@ -1124,7 +1124,7 @@ information. See the `Programmers Guide Call-In Interface
 as a compilable example.
 
 +--------------------------------+----------------------------------------------------------------------------------------------+
-| API                            | Description
+| API                            | Description                                                                                  |
 +================================+==============================================================================================+
 | :code:`ydb_ci`/                |  The most common API to use. Call an M function by its name in a call-in table.              |
 | :code:`ydb_ci_t`               |                                                                                              |
