@@ -38,6 +38,7 @@ Welcome to The M Programmer's Guide!
    internatn
    errproc
    triggers
+   encrypt
    appendix
    LICENSE
 
