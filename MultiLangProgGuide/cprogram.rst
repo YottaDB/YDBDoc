@@ -17,6 +17,22 @@ Programming in C
 .. contents::
    :depth: 5
 
+--------------
+Sample Program
+--------------
+In order to help understand a lot of the description below, you can download the `wordfreq.c <https://gitlab.com/YottaDB/DB/YDBTest/blob/master/simpleapi/inref/wordfreq.c>`_ sample program, with a `reference input file <https://gitlab.com/YottaDB/DB/YDBTest/blob/master/simpleapi/outref/wordfreq_input.txt>`_ and `corresponding reference output file <https://gitlab.com/YottaDB/DB/YDBTest/blob/master/simpleapi/outref/wordfreq_output.txt>`_ and compile it. Here are some copy pastable instructions. The diff exit code should be zero, as the files should be identical. For the following example, you will need to use the bash shell, have git, diff and a C compiler (gcc here) installed.
+
+.. code-block:: bash
+
+        mkdir test
+        cd test
+        git clone https://gitlab.com/YottaDB/DB/YDBTest
+        source `pkg-config --variable=prefix yottadb`/ydb_env_set
+        gcc `pkg-config --cflags yottadb` wordfreq.c `pkg-config --libs yottadb` -o wordfreq
+        ./wordfreq < YDBTest/simpleapi/outref/wordfreq_input.txt > wordfreq.out
+        diff wordfreq.out YDBTest/simpleapi/outref/wordfreq_output.txt
+        echo $?
+
 .. _c-sym-const:
 
 ------------------

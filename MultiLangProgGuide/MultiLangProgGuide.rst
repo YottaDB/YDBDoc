@@ -49,14 +49,14 @@ Local Installation
 
 #. Set up the environment: :code:`source $(pkg-config --variable=prefix yottadb)/ydb_env_set`. This defaults to an environment in :code:`$HOME/.yottadb`; to use another directory, set the environment variable :code:`ydb_dir` to the desired directory.
 
-#. Put your C program in the :code:`$ydb_dir` directory, :code:`#include` the file :code:`libyottadb.h` in your C program and compile it. As a sample program, you can download the `wordfreq.c <https://gitlab.com/YottaDB/DB/YDBTest/blob/master/simpleapi/inref/wordfreq.c>`_ program, with a `reference input file <https://gitlab.com/YottaDB/DB/YDBTest/blob/master/simpleapi/outref/wordfreq_input.txt>`_ and `corresponding reference output file <https://gitlab.com/YottaDB/DB/YDBTest/blob/master/simpleapi/outref/wordfreq_output.txt>`_ and compile it with :code:`gcc $(pkg-config --libs --cflags yottadb) -o wordfreq wordfreq.c -lyottadb`.
+#. Put your C program in the :code:`$ydb_dir` directory, :code:`#include` the file :code:`libyottadb.h` in your C program and compile it. As a sample program, you can download the `wordfreq.c <https://gitlab.com/YottaDB/DB/YDBTest/blob/master/simpleapi/inref/wordfreq.c>`_ program, with a `reference input file <https://gitlab.com/YottaDB/DB/YDBTest/blob/master/simpleapi/outref/wordfreq_input.txt>`_ and `corresponding reference output file <https://gitlab.com/YottaDB/DB/YDBTest/blob/master/simpleapi/outref/wordfreq_output.txt>`_ and compile it.
 
 #. Run your program and verify that the output matches the reference output. For example:
 
    .. code-block:: bash
 
 	$ cd $ydb_dir
-	$ gcc $(pkg-config --libs --cflags yottadb) -o wordfreq wordfreq.c -lyottadb
+	$ gcc `pkg-config --cflags yottadb` wordfreq.c `pkg-config --libs yottadb` -o wordfreq
 	$ ./wordfreq <wordfreq_input.txt >wordfreq_output.tmp
 	$ diff wordfreq_output.tmp wordfreq_output.txt
 	$
