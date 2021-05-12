@@ -585,20 +585,6 @@ Call-In Interface
 
 This section is further broken down into 6 subsections for an easy understanding of the Call-In interface. The section is concluded with an elaborate example.
 
-~~~~~~~~~~~~~~~~~~~~
-Initialize YottaDB
-~~~~~~~~~~~~~~~~~~~~
-
-.. code-block:: C
-
-   ydb_status_t ydb_init(void);
-
-If the base program is not an M routine but a standalone C program, ydb_init() must be called (before calling any YottaDB functions), to initialize the YottaDB run-time system.
-
-ydb_init() returns zero (0) on success. On failure, it returns the YottaDB error status code whose message can be read into a buffer by immediately calling ydb_zstatus(). Duplicate invocations of ydb_init() are ignored by YottaDB.
-
-If Call-Ins are used from an external call function (that is, a C function that has itself been called from M code), ydb_init() is not needed, because YottaDB is initialized before the External Call. All ydb_init() calls from External Calls functions are ignored by YottaDB.
-
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 Call an M Routine from C
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
