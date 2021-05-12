@@ -105,31 +105,33 @@ Legal directions are I, O, or IO for input, output, or input/output, respectivel
 
 The following table describes the legal types defined in the C header file $ydb_dist/libyottadb.h:
 
-+++++++++++++
-Type: Usage
-+++++++++++++
-
-Void: Specifies that the function does not return a value.
-
-ydb_status_t : Type int. If the function returns zero (0), then the call was successful. If it returns a non-zero value, YottaDB will signal an error upon returning to M.
-
-ydb_long_t : 32-bit signed integer on 32-bit platforms and 64-bit signed integer on 64-bit platforms.
-
-ydb_ulong_t : 32-bit unsigned integer on 32-bit platforms and 64-bit signed integer on 64-bit platforms.
-
-ydb_long_t* : For passing a pointer to long [integers].
-
-ydb_float_t* : For passing a pointer to floating point numbers.
-
-ydb_double_t* : Same as above, but double precision.
-
-ydb_char_t*: For passing a "C" style string - null terminated.
-
-ydb_char_t** : For passing a pointer to a "C" style string.
-
-ydb_string_t* : For passing a structure in the form {int length;char \*address}. Useful for moving blocks of memory to or from YottaDB.
-
-ydb_pointertofunc_t : For passing callback function pointers. For details see :ref:`callback-mech`.
++-----------------------+----------------------------------------------------------------------------------------------------------+
+| Type                  | Usage                                                                                                    |
++=======================+==========================================================================================================+
+| void                  | Specifies that the function does not return a value.                                                     |
++-----------------------+----------------------------------------------------------------------------------------------------------+
+| ydb_status_t          | Type int. If the function returns zero (0), then the call was successful. If it returns a non-zero value,|
+|                       | YottaDB will signal an error upon returning to M.                                                        |
++-----------------------+----------------------------------------------------------------------------------------------------------+
+| ydb_long_t            | 32-bit signed integer on 32-bit platforms and 64-bit signed integer on 64-bit platforms.                 |
++-----------------------+----------------------------------------------------------------------------------------------------------+
+| ydb_ulong_t           | 32-bit unsigned integer on 32-bit platforms and 64-bit signed integer on 64-bit platforms.               |
++-----------------------+----------------------------------------------------------------------------------------------------------+
+| ydb_long_t*           | For passing a pointer to long [integers].                                                                |
++-----------------------+----------------------------------------------------------------------------------------------------------+
+| ydb_float_t*          | For passing a pointer to floating point numbers.                                                         |
++-----------------------+----------------------------------------------------------------------------------------------------------+
+| ydb_double_t*         | Same as above, but double precision.                                                                     |
++-----------------------+----------------------------------------------------------------------------------------------------------+
+| ydb_char_t*           | For passing a "C" style string - null terminated.                                                        |
++-----------------------+----------------------------------------------------------------------------------------------------------+
+| ydb_char_t**          | For passing a pointer to a "C" style string.                                                             |
++-----------------------+----------------------------------------------------------------------------------------------------------+
+| ydb_string_t*         | For passing a structure in the form {int length;char \*address}. Useful for moving blocks of memory to or|
+|                       | from YottaDB.                                                                                            |
++-----------------------+----------------------------------------------------------------------------------------------------------+
+| ydb_pointertofunc_t   | For passing callback function pointers. For details see :ref:`callback-mech`.                            |
++-----------------------+----------------------------------------------------------------------------------------------------------+
 
 .. note::
    If an external call's function argument is defined in the external call table, YottaDB allows invoking that function without specifying a value of the argument. All non-trailing and output-only arguments which do not specify a value translate to the following default values in C:
