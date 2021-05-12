@@ -774,7 +774,7 @@ The following section describes compiler and linker options that must be used fo
 
 * Compiler: -I$ydb_dist
 * Linker: -L$ydb_dist -lyottadb -rpath $ydb_dist
-* YottaDB advises that the C/C++ compiler front-end be used as the Linker to avoid specifying the system startup routines on the ld command. The compile can pass linker options to ld using -W option (for example, cc -W1, -R, $ydb_dist). For more details on these options, refer to the appropriate system's manual on the respective platforms.
+* YottaDB advises that the C/C++ compiler front-end be used as the Linker to avoid specifying the system startup routines on the ld command. The compile can pass linker options to ld using -W option (for example, cc -Wl, -R, $ydb_dist). For more details on these options, refer to the appropriate system's manual on the respective platforms.
 
 ++++++++++++++++++++++++++++++
 Nested Call-Ins
