@@ -148,26 +148,6 @@ In the mathpak package example, the following invocation translate inval to the 
 
 If an external call's function argument is defined in the external call table and that function is invoked without specifying the argument, ensure that the external call function appropriately handles the missing argument. As a good programming practice, always ensure that count of arguments defined in the external call table matches the function invocation.
 
-libyottadb.h also includes definitions for the following entry points exported from libyottadb:
-
-.. code-block:: C
-
-   void ydb_hiber_start(ydb_uint_t mssleep);
-   void ydb_hiber_start_wait_any(ydb_uint_t mssleep)
-   void ydb_start_timer(ydb_tid_t tid, ydb_int_t time_to_expir, void (*handler)(), ydb_int_t hdata_len, void *hdata);
-   void ydb_cancel_timer(ydb_tid_t tid);
-
-where:
-
-* mssleep - milliseconds to sleep
-* tid - unique timer id value
-* time_to_expir - milliseconds until timer drives given handler
-* handler - function pointer to handler to be driven
-* hdata_len - 0 or length of data to pass to handler as a parameter
-* hdata - NULL or address of data to pass to handler as a parameter
-
-ydb_hiber_start() always sleeps until the time expires; ydb_hiber_start_wait_any() sleeps until the time expires or an interrupt by any signal (including another timer). ydb_start_timer() starts a timer but returns immediately (no sleeping) and drives the given handler when time expires unless the timer is canceled.
-
 .. note::
    YottaDB continues to support xc_* equivalent types of ydb_* for upward compatibility. gtmxc_types.h explicitly marks the xc_* equivalent types as deprecated.
 
@@ -201,8 +181,29 @@ Specification of a pre-allocation value should follow these rules:
 +++++++++++++++++++++++++++++
 Callback Mechanism
 +++++++++++++++++++++++++++++
-
 YottaDB exposes certain functions that are internal to the YottaDB runtime library for the external calls via a callback mechanism. While making an external call, YottaDB populates and exposes a table of function pointers containing addresses to call-back functions.
+
+Some of these callbacks (not all) can be linked at compilation time by including libyottadb.h. A fuller set can be discovered at runtime by a mechanism described after the table below.
+
+libyottadb.h includes definitions for the following entry points exported from libyottadb:
+
+.. code-block:: C
+
+   void ydb_hiber_start(ydb_uint_t mssleep);
+   void ydb_hiber_start_wait_any(ydb_uint_t mssleep)
+   void ydb_start_timer(ydb_tid_t tid, ydb_int_t time_to_expir, void (*handler)(), ydb_int_t hdata_len, void *hdata);
+   void ydb_cancel_timer(ydb_tid_t tid);
+
+where:
+
+* mssleep - milliseconds to sleep
+* tid - unique timer id value
+* time_to_expir - milliseconds until timer drives given handler
+* handler - function pointer to handler to be driven
+* hdata_len - 0 or length of data to pass to handler as a parameter
+* hdata - NULL or address of data to pass to handler as a parameter
+
+ydb_hiber_start() always sleeps until the time expires; ydb_hiber_start_wait_any() sleeps until the time expires or an interrupt by any signal (including another timer). ydb_start_timer() starts a timer but returns immediately (no sleeping) and drives the given handler when time expires unless the timer is canceled.
 
 +----------+---------------------+--------------------+--------------------+-------------------------------------------------------------------------------------------+
 | Index    | Function            | Argument           | Type               | Description                                                                               |
