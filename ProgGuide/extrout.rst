@@ -644,7 +644,9 @@ The ydb_ci_t() call must be in the following format:
 
 First argument: tptoken, a unique transaction processing token that refers to the active transaction.
 
-Second argument: ci_rtn_name, a null-terminated C character string indicating the alias name for the corresponding <lab-ref> entry in the Call-In table.
+Second argument: errstr as as `ydb_buffer_t <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-buffer-t>`_ structure.
+
+Third argument: ci_rtn_name, a null-terminated C character string indicating the alias name for the corresponding <lab-ref> entry in the Call-In table.
 
 ydb_ci_t() works in the same way and returns the same values as ydb_ci().
 
@@ -707,6 +709,10 @@ The ydb_cip_t() call must follow the following format:
    status = ydb_cip_t(<tptoken>, <errstrptr>, <ci_name_descriptor> [,ret_val] [,arg1] ...);
 
 First argument: tptoken, a unique transaction processing token that refers to the active transaction.
+
+Second argument: errstr as as `ydb_buffer_t <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-buffer-t>`_ structure.
+
+Third argument: ci_rtn_name, a null-terminated C character string indicating the alias name for the corresponding <lab-ref> entry in the Call-In table.
 
 ydb_cip_t() works in the same way and returns the same values as ydb_cip().
 
