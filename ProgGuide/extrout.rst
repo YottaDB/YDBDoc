@@ -532,7 +532,9 @@ ydb_int64_6 and ydb_uint64_t are supported on 64-bit platforms effective release
 Call-In table
 ~~~~~~~~~~~~~~~
 
-The Call-In table file is a text file that contains the signatures of all M label references that get called from C. In order to pass the typed C arguments to the type-less M formallist, the environment variable ydb_ci must be defined to point to the Call-In table file path. Each signature must be specified separately in a single line. YottaDB reads this file and interprets each line according to the following convention (specifications within box brackets "[]", are optional):
+The Call-In table file is a text file that contains the signatures of all M label references that get called from C. In order to pass the typed C arguments to the type-less M formallist, either the environment variable ydb_ci must be defined to point to the Call-In table file path, or you can use the functions :code:`ydb_ci_tab_open()`/:code:`ydb_ci_tab_open_t()` with :code:`ydb_ci_tab_switch()`/:code:`ydb_ci_tab_switch_t()` to open and switch call-in tables. Usage for the functions to open and switch the tables is described below.
+
+Each signature must be specified separately in a single line. YottaDB reads this file and interprets each line according to the following convention (specifications within box brackets "[]", are optional):
 
 .. code-block:: none
 
@@ -583,7 +585,51 @@ Here is an example of Call-In table (ydb_access.ci) for _ydbaccess.m (see :ref:`
 Call-In Interface
 ++++++++++++++++++++++++
 
-This section is further broken down into 6 subsections for an easy understanding of the Call-In interface. The section is concluded with an elaborate example.
+This section is further broken down into several subsections for an easy understanding of the Call-In interface. The section is concluded with an elaborate example.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ydb_ci_tab_open() / ydb_ci_tab_open_t()
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: C
+
+        int ydb_ci_tab_open(char *fname, uintptr_t *ret_value)
+
+        int ydb_ci_tab_open_t(uint64_t tptoken,
+                ydb_buffer_t *errstr, char *fname, uintptr_t *ret_value)
+
+Opens the call-in table contained in the file name :code:`fname`. Using the filled in :code:`ret_value` handle in a later :code:`ydb_ci_tab_switch()/ydb_ci_tab_switch_t()` call, one can switch to this call-in table as the currently active call-in table. All calls to :code:`ydb_cip()/ydb_cip_t()/ydb_ci()/ydb_ci_t()` use the currently active call-in table. This lets applications open any number of call-in tables across the lifetime of a process. The :code:`ydb_ci` environment variable, if set, points to the default call-in table that YottaDB uses unless the active call-in table is switched using :code:`ydb_ci_tab_switch()/ydb_ci_tab_switch_t()`. The call-in table pointed to by :code:`ydb_ci`, the default call-in table, need not be explicitly opened with :code:`ydb_ci_tab_open()/ydb_ci_tab_open_t()`.
+
+Returns:
+
+- :code:`YDB_OK` if the open was successful and fills in a handle to the opened table in :code:`ret_value`; or
+- :code:`YDB_ERR_PARAMINVALID` if the input parameters :code:`fname` or :code:`ret_value` are NULL; or
+- a negative error return code (for example, if the call-in table in the file had parse errors).
+
+See the `Threads <../MultiLangProgGuide/programmingnotes.html#threads>`_ section in the Multi-Language Programmer's Guide for information on using the threaded (:code:`_t`) version of the code.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ydb_ci_tab_switch() / ydb_ci_tab_switch_t()
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: C
+
+        int ydb_ci_tab_switch(uintptr_t new_handle, uintptr_t *ret_old_handle)
+
+        int ydb_ci_tab_switch_t(uint64_t tptoken,
+                ydb_buffer_t *errstr, uintptr_t new_handle, uintptr_t *ret_old_handle)
+
+Switches the currently active call-in table to the handle :code:`new_handle` (returned by a previous call to :code:`ydb_ci_tab_open()/ydb_ci_tab_open_t()`) and fills in the previously active call-in table handle in :code:`*ret_old_handle`. An application that wishes to switch back to the previous call-in table at a later point would call :code:`ydb_ci_tab_switch()/ydb_ci_tab_switch_t()` again with :code:`*ret_old_handle` as the :code:`new_handle` parameter. The special value of NULL passed in :code:`new_handle` switches the active call-in table to the default call-in table (the call-in table pointed to by the :code:`ydb_ci` environment variable).
+
+Returns:
+
+- :code:`YDB_OK` if the open was successful and fills in a handle to the opened table in :code:`ret_value`; or
+- :code:`YDB_ERR_PARAMINVALID` if the output parameter :code:`ret_old_handle` is NULL or if the input parameter :code:`new_handle` points to an invalid handle (i.e. not returned by a prior :code:`ydb_ci_tab_open()/ydb_ci_tab_open_t()`) call); or
+- a negative error return code
+
+Note that application code using the :code:`ydb_cip()/ydb_cip_t()` functions provides YottaDB with a pointer to a :code:`ci_name_descriptor` structure that includes a handle. YottaDB uses the current call-in table to set the handle the first time that the associated function is called. Thereafter, the handle is immutable, and switching the call-in table leaves unchanged the mapping for functions whose handles have already been set. Use :code:`ydb_ci()/ydb_ci_t()` for application code that requires the called function to change when the call-in table changes.
+
+See the `Threads <../MultiLangProgGuide/programmingnotes.html#threads>`_ section in the Multi-Language Programmer's Guide for information on using the threaded (:code:`_t`) version of the code.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 Call an M Routine from C

@@ -1087,6 +1087,43 @@ Comprehensive API
 
 The Comprehensive API is a project for the future.
 
+-------------------
+YottaDB C to M APIs
+-------------------
+
+YottaDB C code has the ability to call M code. This allows you to reuse
+existing M mcode written previously, as well as write code in M that may be
+easier to write than writing the same code in C, then call it from C from your
+application.
+
+The C API needs a small text file called a "call-in table" that maps typed C
+parameters to the typeless M code. This call-in table can be set as an
+environment variable :code:`ydb_ci`, or it can be set from the C code at
+runtime.
+
+Here's a listing of these APIs. The APIs ending with _t are for use from
+threaded applications. The discussion in :ref:`threads` provides more detailed
+information. See the `Programmers Guide Call-In Interface
+<../ProgrammersGuide/extrout.html#call-in-intf>`_ for full description as well
+as a compilable example.
+
++--------------------------------+----------------------------------------------------------------------------------------------+
+| API                            | Description
++================================+==============================================================================================+
+| :code:`ydb_ci`/                |  The most common API to use. Call an M function by its name in a call-in table.              |
+| :code:`ydb_ci_t`               |                                                                                              |
++--------------------------------+----------------------------------------------------------------------------------------------+
+| :code:`ydb_cip`/               | :code:`ydb_ci*` looks up the function each time it is called. While this takes a very small  |
+| :code:`ydb_cip_t`              | amount of time, it can prove costly with thousands or millions of invocations. This version  |
+|                                | allows you to cache the name lookup; but it's harder to use.                                 |
++--------------------------------+----------------------------------------------------------------------------------------------+
+| :code:`ydb_ci_tab_open`/       | This opens a call-in table in a specific file.                                               |
+| :code:`ydb_ci_tab_open_t`      |                                                                                              |
++--------------------------------+----------------------------------------------------------------------------------------------+
+| :code:`ydb_ci_tab_switch`/     | This switches to a call-in table just opened above. You can have multiple call-in tables     |
+| :code:`ydb_ci_tab_switch_t`    | open at the same time and switch between them.                                               |
++--------------------------------+----------------------------------------------------------------------------------------------+
+
 .. _utility-funcs:
 
 -----------------
@@ -1101,7 +1138,6 @@ Utility functions whose names end in :code:`_t()` are for use by multi-threaded 
 
 :ref:`ydb-exit-fn`, :ref:`ydb-fork-n-core-fn`, and :ref:`ydb-init-fn` do not have separate variants for single- and multi-threaded applications and are suitable for both.
 
-See also the description of the :code:`ydb_ci_t()` and :code:`ydb_cip_t()` functions in the `Programmers Guide <../ProgrammersGuide/extrout.html#call-in-intf>`_.
 
 ++++++++++++++++
 ydb_child_init()
@@ -1110,50 +1146,6 @@ ydb_child_init()
 YottaDB r1.22 and before required the use of a function :code:`ydb_child_init()` immediately after a :code:`fork()` to avoid database damage and other possible side-effects.
 
 Effective YottaDB r1.24, this function is not needed. It gets automatically invoked by YottaDB as needed. Any existing usages of this function in an application can be safely removed assuming YottaDB r1.24 or later is in use.
-
-.. _ydb-ci-tab-open-opent-fn:
-
-+++++++++++++++++++++++++++++++++++++++
-ydb_ci_tab_open() / ydb_ci_tab_open_t()
-+++++++++++++++++++++++++++++++++++++++
-
-.. code-block:: C
-
-        int ydb_ci_tab_open(char *fname, uintptr_t *ret_value)
-
-        int ydb_ci_tab_open_t(uint64_t tptoken,
-                ydb_buffer_t *errstr, char *fname, uintptr_t *ret_value)
-
-Opens the call-in table contained in the file name :code:`fname`. Using the filled in :code:`ret_value` handle in a later :code:`ydb_ci_tab_switch()/ydb_ci_tab_switch_t()` call, one can switch to this call-in table as the currently active call-in table. All calls to :code:`ydb_cip()/ydb_cip_t()/ydb_ci()/ydb_ci_t()` use the currently active call-in table. This lets applications open any number of call-in tables across the lifetime of a process. The :code:`ydb_ci` environment variable, if set, points to the default call-in table that YottaDB uses unless the active call-in table is switched using :code:`ydb_ci_tab_switch()/ydb_ci_tab_switch_t()`. The call-in table pointed to by :code:`ydb_ci`, the default call-in table, need not be explicitly opened with :code:`ydb_ci_tab_open()/ydb_ci_tab_open_t()`.
-
-Returns:
-
-- :code:`YDB_OK` if the open was successful and fills in a handle to the opened table in :code:`ret_value`; or
-- :code:`YDB_ERR_PARAMINVALID` if the input parameters :code:`fname` or :code:`ret_value` are NULL; or
-- a negative error return code (for example, if the call-in table in the file had parse errors).
-
-Please see the :ref:`Simple API introduction <c-simple-api>` for details about parameter allocation.
-
-+++++++++++++++++++++++++++++++++++++++++++
-ydb_ci_tab_switch() / ydb_ci_tab_switch_t()
-+++++++++++++++++++++++++++++++++++++++++++
-
-.. code-block:: C
-
-        int ydb_ci_tab_switch(uintptr_t new_handle, uintptr_t *ret_old_handle)
-
-        int ydb_ci_tab_switch_t(uint64_t tptoken,
-                ydb_buffer_t *errstr, uintptr_t new_handle, uintptr_t *ret_old_handle)
-
-Switches the currently active call-in table to the handle :code:`new_handle` (returned by a previous call to :code:`ydb_ci_tab_open()/ydb_ci_tab_open_t()`) and fills in the previously active call-in table handle in :code:`*ret_old_handle`. An application that wishes to switch back to the previous call-in table at a later point would call :code:`ydb_ci_tab_switch()/ydb_ci_tab_switch_t()` again with :code:`*ret_old_handle` as the :code:`new_handle` parameter. The special value of NULL passed in :code:`new_handle` switches the active call-in table to the default call-in table (the call-in table pointed to by the :code:`ydb_ci` environment variable).
-
-Returns:
-
-- :code:`YDB_OK` if the open was successful and fills in a handle to the opened table in :code:`ret_value`; or
-- :code:`YDB_ERR_PARAMINVALID` if the output parameter :code:`ret_old_handle` is NULL or if the input parameter :code:`new_handle` points to an invalid handle (i.e. not returned by a prior :code:`ydb_ci_tab_open()/ydb_ci_tab_open_t()`) call); or
-- a negative error return code
-
-Note that application code using the :code:`ydb_cip()/ydb_cip_t()` functions provides YottaDB with a pointer to a :code:`ci_name_descriptor` structure that includes a handle. YottaDB uses the current call-in table to set the handle the first time that the associated function is called. Thereafter, the handle is immutable, and switching the call-in table leaves unchanged the mapping for functions whose handles have already been set. Use :code:`ydb_ci()/ydb_ci_t()` for application code that requires the called function to change when the call-in table changes.
 
 .. _ydb-eintr-handler-handlert-fn:
 
