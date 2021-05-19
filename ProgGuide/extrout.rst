@@ -140,7 +140,7 @@ The following table describes the legal types defined in the C header file $ydb_
    * ydb_char_t * and ydb_char_t \*\*: Empty string
    * ydb_string_t \*: A structure with 'length' field matching the preallocation size and 'address' field being a NULL pointer.
 
-Here is an exmaple of an external call table:
+Here is an example of an external call table:
 
 .. code-block:: none
 
@@ -470,31 +470,38 @@ The header file provides signatures of all Call-In interface functions and defin
 
 libyottadb.h defines the following types that can be used in Call-Ins.
 
-+-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------+
-| Type                  | Usage                                                                                                                                            |
-+=======================+==================================================================================================================================================+
-| void                  | Used to express that there is no function return value                                                                                           |
-+-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------+
-| ydb_int_t             | ydb_int_t has 32-bit length on all platforms.                                                                                                    |
-+-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------+
-| ydb_int64_t           | ydb_int64_t has 64-bit length on 64-bit platforms, and is unsupported on 32-bit platforms.                                                       |
-+-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------+
-| ydb_uint_t            | ydb_uint_t has 32-bit length on all platforms                                                                                                    |
-+-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------+
-| ydb_uint64_t          | ydb_uint64_t has 64-bit length on 64-bit platforms, and is unsupported on 32-bit platforms.                                                      |
-+-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------+
-| ydb_long_t            | ydb_long_t has 32-bit length on 32-bit platforms and 64-bit length on 64-bit platforms. It is much the same as the C language long type.         |
-+-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------+
-| ydb_ulong_t           | ydb_ulong_t is much the same as the C language unsigned long type.                                                                               |
-+-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------+
-| ydb_float_t           | floating point number                                                                                                                            |
-+-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------+
-| ydb_double_t          | Same as above but double precision.                                                                                                              |
-+-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------+
-| ydb_long_t*           | Pointer to ydb_long_t. Good for returning integers.                                                                                              |
-+-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------+
-| ydb_ulong_t*          | Pointer to ydb_ulong_t. Good for returning unsigned integers.                                                                                    |
-+-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------+
++-----------------------+----------------------------------------------------------------------------------------------------------+
+| Type                  | Usage                                                                                                    |
++=======================+==========================================================================================================+
+| void                  | Used to express that there is no function return value                                                   |
++-----------------------+----------------------------------------------------------------------------------------------------------+
+| ydb_int_t             | ydb_int_t has 32-bit length on all platforms.                                                            |
++-----------------------+----------------------------------------------------------------------------------------------------------+
+| ydb_int64_t           | ydb_int64_t has 64-bit length on 64-bit platforms, and is unsupported on 32-bit platforms.               |
++-----------------------+----------------------------------------------------------------------------------------------------------+
+| ydb_uint_t            | ydb_uint_t has 32-bit length on all platforms                                                            |
++-----------------------+----------------------------------------------------------------------------------------------------------+
+| ydb_uint64_t          | ydb_uint64_t has 64-bit length on 64-bit platforms, and is unsupported on 32-bit platforms.              |
++-----------------------+----------------------------------------------------------------------------------------------------------+
+| ydb_long_t            | ydb_long_t has 32-bit length on 32-bit platforms and 64-bit length on 64-bit platforms.                  |
+|                       | It is much the same as the C language long type.                                                         |
++-----------------------+----------------------------------------------------------------------------------------------------------+
+| ydb_ulong_t           | ydb_ulong_t is much the same as the C language unsigned long type.                                       |
++-----------------------+----------------------------------------------------------------------------------------------------------+
+| ydb_float_t           | floating point number                                                                                    |
++-----------------------+----------------------------------------------------------------------------------------------------------+
+| ydb_double_t          | Same as above but double precision.                                                                      |
++-----------------------+----------------------------------------------------------------------------------------------------------+
+| ydb_long_t*           | Pointer to ydb_long_t. Good for returning integers.                                                      |
++-----------------------+----------------------------------------------------------------------------------------------------------+
+| ydb_ulong_t*          | Pointer to ydb_ulong_t. Good for returning unsigned integers.                                            |
++-----------------------+----------------------------------------------------------------------------------------------------------+
+| ydb_string_t*         | Pointer to ydb_string_t described below. Used to move binary data in and out (in spite of its name). Also|
+|                       | you can use it if the cost of doing strlen() on a ydb_char_t* is too high for your application.          |
++-----------------------+----------------------------------------------------------------------------------------------------------+
+| ydb_char_t*           | Alias for char*. Useful for passing strings to and from YottaDB                                          |
++-----------------------+----------------------------------------------------------------------------------------------------------+
+
 
 .. code-block:: C
 
@@ -566,27 +573,41 @@ where,
 
 The <direction> indicates the type of operation that YottaDB performs on the parameter read-only (I), write-only (O), or read-write (IO). All O and IO parameters must be passed by reference, that is, as pointers since YottaDB writes to these locations. All pointers that are being passed to YottaDB must be pre-allocated. The following table details valid type specifications for each direction.
 
-+-------------------+---------------------------------------------------------------------------------------------------------------------------------------------+
-| Directions        | Allowed Parameter Types                                                                                                                     |
-+===================+=============================================================================================================================================+
-| I                 | ydb_long_t, ydb_ulong_t, ydb_float_t, ydb_double_t,_ydb_long_t*, ydb_ulong_t*, ydb_float_t*, ydb_double_t*,_ydb_char_t*, ydb_string_t*      |
-+-------------------+---------------------------------------------------------------------------------------------------------------------------------------------+
-| O/IO              | ydb_long_t*, ydb_ulong_t*, ydb_float_t*, ydb_double_t*,_ydb_char_t*, ydb_string_t*                                                          |
-+-------------------+---------------------------------------------------------------------------------------------------------------------------------------------+
++-------------------+--------------------------------------------------------------------------------------------------------------+
+| Directions        | Allowed Parameter Types                                                                                      |
++===================+==============================================================================================================+
+| I                 | ydb_int_t, ydb_int64_t, ydb_uint_t, ydb_uint64_t, ydb_long_t, ydb_ulong_t, ydb_float_t, ydb_double_t,        |
+|                   | ydb_int_t*, ydb_int64_t*, ydb_uint_t*, ydb_uint64_t*, ydb_long_t*, ydb_ulong_t*, ydb_float_t*, ydb_double_t*,|
+|                   | ydb_char_t*, ydb_string_t*                                                                                   |
++-------------------+--------------------------------------------------------------------------------------------------------------+
+| O/IO              | ydb_int_t*, ydb_int64_t*, ydb_uint_t*, ydb_uint64_t*                                                         |
+|                   | ydb_long_t*, ydb_ulong_t*, ydb_float_t*, ydb_double_t*,_ydb_char_t*, ydb_string_t*                           |
++-------------------+--------------------------------------------------------------------------------------------------------------+
 
 Call-In tables support comments effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_ YottaDB ignores text from a double slash (//) on a line to the end of the line.
 
-Here is an example of Call-In table (ydb_access.ci) for _ydbaccess.m (see :ref:`call-ydb-from-c-prog`):
+Here is an example of Call-In table (ydbaccess.ci) for _ydbaccess.m (see :ref:`call-ydb-from-c-prog`):
 
 .. code-block:: none
 
-   ydbget    : void get^%ydbaccess(I:ydb_char_t*, O:ydb_string_t*, O:ydb_char_t*)
-   ydbkill   : void kill^%ydbaccess(I:ydb_char_t*, O:ydb_char_t*)
-   ydblock   : void lock^%ydbaccess(I:ydb_char_t*, O:ydb_char_t*)
-   ydborder  : void order^%ydbaccess(I:ydb_char_t*, O:ydb_string_t*, O:ydb_char_t*)
-   ydbquery  : void query^%ydbaccess(I:ydb_char_t*, O:ydb_string_t*, O:ydb_char_t*)
-   ydbset    : void set^%ydbaccess(I:ydb_char_t*, I:ydb_string_t*, O:ydb_char_t*)
-   ydbxecute : void xecute^%ydbaccess(I:ydb_char_t*, O:ydb_char_t*)
+   get     : void get^%ydbaccess(I:ydb_char_t*, O:ydb_string_t*)
+   kill    : void kill^%ydbaccess(I:ydb_char_t*)
+   lock    : void lock^%ydbaccess(I:ydb_char_t*)
+   order   : void order^%ydbaccess(I:ydb_char_t*, O:ydb_string_t*)
+   query   : void query^%ydbaccess(I:ydb_char_t*, O:ydb_string_t*)
+   set     : void set^%ydbaccess(I:ydb_char_t*, I:ydb_string_t*)
+   xecute  : void xecute^%ydbaccess(I:ydb_char_t*, O:ydb_char_t*)
+
+Here is an example of Call-In table (ydbreturn.ci) for _ydbreturn.m (see :ref:`call-ydb-from-c-prog`):
+
+.. code-block:: none
+
+   long    : ydb_long_t*   long^%ydbreturn(I:ydb_long_t)
+   ulong   : ydb_ulong_t*  ulong^%ydbreturn(I:ydb_ulong_t)
+   float   : ydb_float_t*  float^%ydbreturn(I:ydb_float_t)
+   double  : ydb_double_t* double^%ydbreturn(I:ydb_double_t)
+   char    : ydb_char_t*   char^%ydbreturn(I:ydb_char_t*)
+   string  : ydb_string_t* string^%ydbreturn(I:ydb_string_t*)
 
 .. _call-in-intf:
 
@@ -594,7 +615,7 @@ Here is an example of Call-In table (ydb_access.ci) for _ydbaccess.m (see :ref:`
 Call-In Interface
 ++++++++++++++++++++++++
 
-This section is further broken down into several subsections for an easy understanding of the Call-In interface. The section is concluded with an elaborate example.
+This section is further broken down into several subsections for an easy understanding of the Call-In interface. The section is concluded with several examples.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ydb_ci_tab_open() / ydb_ci_tab_open_t()
@@ -651,7 +672,7 @@ YottaDB provides 4 interfaces for calling a M routine from C. These are:
 * ydb_cip
 * ydb_cip_t
 
-ydb_cip  and ydb_cip_t offer better performance on calls after the first one.
+ydb_cip and ydb_cip_t offer better performance on calls after the first one.
 
 While ydb_ci() and ydb_cip() are for single threaded applications, ydb_ci_t() and ydb_cip_t() are for multi-threaded applications that call M routines. See the `Threads <../MultiLangProgGuide/programmingnotes.html#threads>`_ section in the Multi-Language Programmer's Guide for details.
 
@@ -773,17 +794,54 @@ ydb_cip_t() works in the same way and returns the same values as ydb_cip().
 
 .. _call-ydb-from-c-prog:
 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Example: Calling YottaDB from a C Program
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Examples: Calling YottaDB from a C Program
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Here is a working example of a C program that uses call-ins to invoke YottaDB. The example is packaged in a zip file which contains a C program, a call-in table, and a YottaDB API. To run the example, download and follow the compiling and linking instructions in the comments of the C program.
+Supplied are three examples of C programs that use call-ins to invoke YottaDB. The examples are linked below. To run the examples, download the three files for each row and follow the compiling and linking instructions in the comments of the C program, or see the script below.
 
-+--------------------------------+----------------------------------------------------------------------------------------------+
-| Example                        | Download Information                                                                         |
-+================================+==============================================================================================+
-| ydb_access.c (ydb_ci interface)| `ydbci_ydbaccess.zip <./ydbci_ydbaccess.zip>`_                                               |
-+--------------------------------+----------------------------------------------------------------------------------------------+
+.. list-table:: Calling YottaDB from a C Program
+   :widths: 10 10 10 30
+   :header-rows: 1
+
+   * - C Program
+     - Call-in Table
+     - M Program
+     - Purpose
+   * - `ydbaccess_ci.c <https://gitlab.com/YottaDB/DB/YDBTest/-/raw/master/call_ins/inref/ydbaccess_ci.c>`_
+     - `ydbaccess.ci <https://gitlab.com/YottaDB/DB/YDBTest/-/raw/master/call_ins/inref/ydbaccess.ci>`_
+     - `_ydbaccess.m <https://gitlab.com/YottaDB/DB/YDBTest/-/raw/master/call_ins/inref/_ydbaccess.m>`_
+     - Show how to use ydb_ci
+   * - `ydbaccess_cip.c <https://gitlab.com/YottaDB/DB/YDBTest/-/raw/master/call_ins/inref/ydbaccess_cip.c>`_
+     - `ydbaccess.ci <https://gitlab.com/YottaDB/DB/YDBTest/-/raw/master/call_ins/inref/ydbaccess.ci>`_
+     - `_ydbaccess.m <https://gitlab.com/YottaDB/DB/YDBTest/-/raw/master/call_ins/inref/_ydbaccess.m>`_
+     - Show how to use ydb_cip
+   * - `ydbreturn_ci.c <https://gitlab.com/YottaDB/DB/YDBTest/-/raw/master/call_ins/inref/ydbreturn_ci.c>`_
+     - `ydbreturn.ci <https://gitlab.com/YottaDB/DB/YDBTest/-/raw/master/call_ins/inref/ydbreturn.ci>`_
+     - `_ydbreturn.m <https://gitlab.com/YottaDB/DB/YDBTest/-/raw/master/call_ins/inref/_ydbreturn.m>`_
+     - Show how to use ydb_ci with M extrinsic functions that return data.
+
+You can also compile and run all the samples by running this script:
+
+.. code-block:: bash
+
+        #!/bin/bash
+        source `pkg-config --variable=prefix yottadb`/ydb_env_unset
+        export ydb_dir=$PWD/db
+        source `pkg-config --variable=prefix yottadb`/ydb_env_set
+
+        cc -Wall -g ydbaccess_ci.c $(pkg-config --cflags yottadb) -o ydbaccess_ci $(pkg-config --libs yottadb)
+        ydb_routines=". $ydb_routines" ./ydbaccess_ci
+
+        echo
+
+        cc -Wall -g ydbaccess_cip.c $(pkg-config --cflags yottadb) -o ydbaccess_cip $(pkg-config --libs yottadb)
+        ydb_routines=". $ydb_routines" ./ydbaccess_cip
+
+        echo
+
+        cc -Wall -g ydbreturn_ci.c $(pkg-config --cflags yottadb) -o ydbreturn_ci $(pkg-config --libs yottadb)
+        ydb_routines=". $ydb_routines" ./ydbreturn_ci
 
 ~~~~~~~~~~~~~~~~~~~~~~
 Print Error Messages
@@ -802,20 +860,6 @@ ydb_zstatus
 This function returns the null-terminated $ZSTATUS message of the last failure via the buffer pointed by msg_buffer of size buf_len. The message is truncated to size buf_len if it does not fit into the buffer. ydb_zstatus() is useful if the external application needs the text message corresponding to the last YottaDB failure. A buffer of 2048 is sufficient to fit in any YottaDB message.
 
 Effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_, ydb_zstatus() has an :code:`int` return value with a value of YDB_ERR_INVSTRLEN if the buffer supplied is not large enough to hold the message and YDB_OK otherwise. ydb_zstatus() copies what can be copied to the buffer (including a null terminator byte) if the length is non-zero.
-
-~~~~~~~~~~~~~~~~~~~
-Exit from YottaDB
-~~~~~~~~~~~~~~~~~~~
-
-.. code-block:: C
-
-   ydb_status_t  ydb_exit (void);
-
-ydb_exit() can be used to shut down all databases and exit from the YottaDB environment that was created by a previous ydb_init().
-
-Note that ydb_init() creates various YottaDB resources and keeps them open across multiple invocations of ydb_ci() until ydb_exit() is called to close all such resources. On successful exit, ydb_exit() returns zero (0), else it returns the $ZSTATUS error code.
-
-ydb_exit() cannot be called from an external call function. YottaDB reports the error YDB-E-INVGTMEXIT if an external call function invokes ydb_exit(). Since the YottaDB run-time system must be operational even after the external call function returns, ydb_exit() is meant to be called only once during a process lifetime, and only from the base C/C++ program when YottaDB functions are no longer required by the program.
 
 +++++++++++++++++++++++++++++
 Building Standalone Programs

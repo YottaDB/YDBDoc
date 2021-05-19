@@ -1,7 +1,0 @@
-ydbget    : void get^%ydbaccess( I:ydb_char_t*, O:ydb_string_t*, O:ydb_char_t* )
-ydbkill	  : void kill^%ydbaccess( I:ydb_char_t*, O:ydb_char_t* )
-ydblock	  : void lock^%ydbaccess( I:ydb_char_t*, O:ydb_char_t* )
-ydborder  : void order^%ydbaccess( I:ydb_char_t*, O:ydb_string_t*, O:ydb_char_t* )
-ydbquery  : void query^%ydbaccess( I:ydb_char_t*, O:ydb_string_t*, O:ydb_char_t* )
-ydbset    : void set^%ydbaccess( I:ydb_char_t*, I:ydb_string_t*, O:ydb_char_t*)
-ydbxecute : void xecute^%ydbaccess( I:ydb_char_t*, O:ydb_char_t* )

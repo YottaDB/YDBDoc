@@ -82,8 +82,6 @@ if [ -d "$target/ProgrammersGuide" ]; then
 fi
 mv "$target"/ProgGuide/ "$target"/ProgrammersGuide/
 
-cp ProgGuide/ydbci_ydbaccess.zip "$target"/ProgrammersGuide/
-
 # Remove unused fonts
 echo "Removing unused fonts..."
 find $target -iname 'lato*' -delete
