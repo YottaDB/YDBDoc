@@ -71,7 +71,7 @@ To apply this trigger definition file to YottaDB, all you do is to load it using
 
 **-triggername\|-trigger-name-prefix\*\|-\* .**
 
--triggername deletes a user-specified trigger name called triggername from the database. -triggername* deletes all those user-defined triggers whose starting name match triggername. -* deletes all triggers; if the MUPIP TRIGGER command does not specify -NOPROMPT , YottaDB displays a warning and asks for user confirmation before deleting all triggers. If MUPIP TRIGGER command specifies -NOPROMPT and the definition file includes a -* line, YottaDB deletes all the triggers without user confirmation. $ZTRIGGER() performs deletions -NOPROMPT.+triggername issues an error; to add a new user-specified trigger name, use -name=strlit2.
+:code:`-triggername` deletes a user-specified trigger name called triggername from the database. :code:`-triggername*` deletes all those user-defined triggers whose starting name match triggername. :code:`-*` deletes all triggers; if the MUPIP TRIGGER command does not specify -NOPROMPT , YottaDB displays a warning and asks for user confirmation before deleting all triggers. If MUPIP TRIGGER command specifies -NOPROMPT and the definition file includes a -\* line, YottaDB deletes all the triggers without user confirmation. $ZTRIGGER() performs deletions -NOPROMPT. :code:`+triggername` issues an error; to add a new user-specified trigger name, use :code:`-name=strlit2`.
 
 **\{\+\|-\}trigvn**
 

@@ -3583,6 +3583,8 @@ Loads a trigger definition file to the database. The format of the TRIGGERFILE q
 
 * MUPIP TRIGGER -TRIGGERFILE ignores blank lines and extra whitespace within lines. It treats lines with a semi-colon in the first position as comments and ignores their content.
 
+* If the -NOPROMPT option is specified and the trigger definition file contains a :code:`-*` line,then YottaDB will delete all the triggers without user confirmation.
+
 * MUPIP TRIGGER compiles the XECUTE action string and rejects the load if the compilation has errors.
 
 * Always specify the same value for the environment variable ydb_chset during loading and executing triggers. If you specify different values of ydb_chset during loading and executing triggers, MUPIP TRIGGER generates a run-time error (TRIGINVCHSET). YottaDB does not prevent a process from updating different nodes with triggers using a different character set, however, YottaDB prevents a process from updating the same triggering node with different character sets. Your coding practice, for all database updates, should be to ensure that you provide the same value for ydb_chset during load compilation and run-time compilation.
