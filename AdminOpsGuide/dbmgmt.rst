@@ -1215,7 +1215,7 @@ Controls the potential impact of a FREEZE on concurrently updating processes. Th
 * Incompatible with: -OFF
 
 .. note::
-   If a database is nearly full, and want to use MUPIP FREEZE -ON -ONLINE, you may want to use MUPIP EXTEND first as a database file extension to either AUTORELEASE or "harden" the -ONLINE freeze effectively into a -NOONLINE freeze.
+   If any database region is nearly full, run MUPIP EXTEND before attempting a MUPIP FREEZE -ON -ONLINE. Otherwise, should a database file extension become necessary after the MUPIP FREEZE takes effect, the freeze will be released (if -AUTORELEASE was specified or implicitly assumed by default) or all updates will be blocked (if -NOAUTORELEASE was specified) effectively turning the -ONLINE freeze into a -NOONLINE freeze.
 
 ~~~~~~~~~~
 -OVERRIDE
